@@ -130,7 +130,7 @@ kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=
 Pod内で、"internal"接尾辞のないService名を使用してDorisクラスターに接続します：
 
 ```yaml
-mysql -uroot -P9030 -hdoriscluster-sample-fe-service
+mysql -uroot -P9030 -hdoriscluster-sample-fe
 ```
 ### NodePort Mode
 KubernetesクラスターからDorisに外部からアクセスするには、[NodePortサービスタイプ](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)を使用できます。NodePortモードは2つの設定方法をサポートしています：静的ホストポート割り当てと動的ホストポート割り当てです。

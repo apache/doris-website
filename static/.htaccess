@@ -1,3 +1,29 @@
 <IfModule mod_headers.c>
-    Header set Content-Security-Policy "script-src 'self' https://cdnd.selectdb.com widget.kapa.ai www.google.com https://hcaptcha.com https://*.hcaptcha.com https://www.gstatic.com 'unsafe-inline' 'unsafe-eval'; connect-src 'self' proxy.kapa.ai kapa-widget-proxy-la7dkmplpq-uc.a.run.app metrics.kapa.ai https://hcaptcha.com https://*.hcaptcha.com www.google.com; frame-src 'self' www.google.com https://hcaptcha.com https://*.hcaptcha.com; worker-src 'self' https://cdnd.selectdb.com blob:; style-src 'self' https://cdnd.selectdb.com 'unsafe-inline' https://hcaptcha.com https://*.hcaptcha.com; font-src 'self' https://cdnd.selectdb.com data:;"
+    Header set Content-Security-Policy "script-src 'self' https://cdnd.selectdb.com https://analytics.apache.org widget.kapa.ai www.google.com https://hcaptcha.com https://*.hcaptcha.com https://www.gstatic.com 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https://analytics.apache.org proxy.kapa.ai kapa-widget-proxy-la7dkmplpq-uc.a.run.app metrics.kapa.ai https://hcaptcha.com https://*.hcaptcha.com www.google.com; frame-src 'self' www.google.com https://hcaptcha.com https://*.hcaptcha.com; worker-src 'self' https://cdnd.selectdb.com blob:; style-src 'self' https://cdnd.selectdb.com 'unsafe-inline' https://hcaptcha.com https://*.hcaptcha.com; font-src 'self' https://cdnd.selectdb.com data:;"
 </IfModule>
+
+# Legacy /docs/dev/* paths whose 1:1 target was retired (renamed slugs, removed
+# pages) — server-side 301 to the new Dev docs landing. Doing it here avoids
+# the SPA hydration mismatch that results from /404.html being served on a
+# path the React router still treats as inside the docs prefix.
+# Paths emitted by createRedirects (1:1 matches) live on disk and short-circuit
+# via the -f check, so this only fires for genuinely missing slugs.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^docs/dev(/.+)$ /docs/dev/getting-started/what-is-apache-doris [R=301,L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^zh-CN/docs/dev(/.+)$ /zh-CN/docs/dev/getting-started/what-is-apache-doris [R=301,L]
+
+    # Other zh-CN misses — render the zh-CN-locale 404 so the chrome/i18n
+    # context (header/footer) is Chinese. URL is preserved.
+    RewriteCond %{REQUEST_URI} ^/zh-CN/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ /zh-CN/404.html [L]
+</IfModule>
+ErrorDocument 404 /404.html

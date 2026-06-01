@@ -679,6 +679,9 @@ This table creates partitions 3 days in advance and deletes partitions from 3 da
 [types: [DATE]; keys: [2020-01-09]; ‥types: [DATE]; keys: [2020-01-10]; )
 [types: [DATE]; keys: [2020-01-10]; ‥types: [DATE]; keys: [2020-01-11]; )
 [types: [DATE]; keys: [2020-01-11]; ‥types: [DATE]; keys: [2020-01-12]; )
+```
+
+```sql
 CREATE TABLE example_db.dynamic_partition
 (
     k1 DATE,

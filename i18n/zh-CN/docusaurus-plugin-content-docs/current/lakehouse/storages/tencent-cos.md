@@ -25,7 +25,7 @@
 | cos.secret_key                 | s3.secret_key            | COS secret key，与 access key 配合使用的访问密钥         |        | 是       |
 | cos.region                     | s3.region                | COS region，指定腾讯云 COS 的区域                        |        | 否       |
 | cos.connection.maximum         | s3.connection.maximum    | S3 最大连接数，指定与 COS 服务建立的最大连接数            | 50     | 否       |
-| cos.connection.request.timeout | s3.connection.timeout    | S3 请求超时时间，单位为毫秒，指定连接 COS 服务时的请求超时时间 | 3000   | 否       |
+| cos.connection.request.timeout | s3.connection.request.timeout | S3 请求超时时间，单位为毫秒，指定连接 COS 服务时的请求超时时间 | 3000   | 否       |
 | cos.connection.timeout         | s3.connection.timeout    | S3 连接超时时间，单位为毫秒，指定与 COS 服务建立连接时的超时时间 | 1000   | 否       | 
 
 > 3.1 版本之前，请使用曾用名。

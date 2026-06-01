@@ -99,7 +99,7 @@ MySQL Load is a synchronous import method, and the results of the import are ret
 Below is an example of a successful import result, which returns the number of imported rows:
 
 ```SQL
-Query OK, 6 row affected (0.17 sec)
+Query OK, 6 rows affected (0.17 sec)
 Records: 6  Deleted: 0  Skipped: 0  Warnings: 0
 ```
 

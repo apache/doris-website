@@ -51,7 +51,7 @@ CREATE CATALOG saphana_catalog PROPERTIES (
 | ------------------ | --------------------------------- | ------------------------------------------------------------ |
 | boolean            | boolean                           |                                                              |
 | tinyint            | tinyint                           |                                                              |
-| smalling           | smalling                          |                                                              |
+| smallint           | smallint                          |                                                              |
 | integer            | int                               |                                                              |
 | bigint             | bigint                            |                                                              |
 | smalldecimal(P, S) | decimal(P, S) or double or string | 如果没有指定精度，则使用 double 类型承接。如果精度超过 Doris 支持的最大精度，则使用 string 承接。 |

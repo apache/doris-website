@@ -40,7 +40,7 @@
 | stmt_id           				| bigint       | 语句 ID                                |
 | stmt_type                   | string    | 语句类型。3.0 版本开始支持。 |
 | is_query          				| tinyint      | 是否是查询                             |
-| is_nereids                  | booean    | 是否使用了新优化器 |
+| is_nereids                  | boolean    | 是否使用了新优化器 |
 | frontend_ip       				| varchar(128) | 连接的 Frontend 的 IP                  |
 | cpu_time_ms       				| bigint       | 语句执行消耗 Backend 的累计 CPU 毫秒数 |
 | sql_hash          				| varchar(128) | 语句的 Hash 值                         |

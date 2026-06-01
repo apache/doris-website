@@ -28,7 +28,7 @@ BE 进程启动后，会先读取 `be.conf` 中的配置项，之后再读取 `b
 
 2. 通过命令行查看
 
-   可以在 MySQL 客户端中，通过以下命令查看 BE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG)：
+   可以在 MySQL 客户端中，通过以下命令查看 BE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG)：
 
     `SHOW BACKEND CONFIG;`
 
@@ -934,8 +934,8 @@ BaseCompaction:546859:
 #### `write_buffer_size`
 
 * 描述：刷写前缓冲区的大小
-  - 导入数据在 BE 上会先写入到一个内存块，当这个内存块达到阈值后才会写回磁盘。默认大小是 100MB。过小的阈值可能导致 BE 上存在大量的小文件。可以适当提高这个阈值减少文件数量。但过大的阈值可能导致 RPC 超时
-* 默认值：104857600
+  - 导入数据在 BE 上会先写入到一个内存块，当这个内存块达到阈值后才会写回磁盘。默认大小是 200MB。过小的阈值可能导致 BE 上存在大量的小文件。可以适当提高这个阈值减少文件数量。但过大的阈值可能导致 RPC 超时
+* 默认值：209715200
 
 #### `remote_storage_read_buffer_mb`
 
@@ -1313,7 +1313,7 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 #### `group_commit_wal_path`
 
-* 描述：Group Commit 存放 WAL 文件的目录，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
+* 描述：Group Commit 存放 WAL 文件的目录，请参考 [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual.md)
 * 默认值：默认在用户配置的`storage_root_path`的各个目录下创建一个名为`wal`的目录。配置示例：
   ```
   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal

@@ -22,7 +22,7 @@ MINUTES_SUB(`<date_or_time_expr>`, `<minutes>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The input datetime value, which can be of type DATE, DATETIME or TIMESTAMPTZ. For specific datetime/date formats, see [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | The input datetime value, which can be of type DATE, DATETIME or TIMESTAMPTZ. For specific datetime/date formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<minutes>` | The number of minutes to subtract, of type BIGINT. Can be positive or negative. |
 
 ## Return Value
@@ -92,5 +92,5 @@ SELECT MINUTES_SUB(NULL, 10), MINUTES_SUB('2023-07-13 22:28:18', NULL) AS result
 
 -- Calculation result exceeds datetime range, throws error
 SELECT MINUTES_SUB('0000-01-01 00:00:00', 1) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation minutes_add of 0000-01-01 00:00:00, -1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation minute_add of 0000-01-01 00:00:00, -1 out of range
 ```

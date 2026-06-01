@@ -6,8 +6,6 @@
 }
 ---
 
-## to_ipv4_or_default
-
 ## Description
 Takes the string form of an IPv4 address and returns a value of IPv4 type. For invalid input or NULL input, returns the default value `0.0.0.0`.
 

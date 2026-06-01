@@ -1133,7 +1133,6 @@
                                         "admin-manual/http-actions/fe/meta-replay-state-action",
                                         "admin-manual/http-actions/fe/metrics-action",
                                         "admin-manual/http-actions/fe/profile-action",
-                                        "admin-manual/http-actions/fe/query-detail-action",
                                         "admin-manual/http-actions/fe/query-schema-action",
                                         "admin-manual/http-actions/fe/row-count-action",
                                         "admin-manual/http-actions/fe/set-config-action",

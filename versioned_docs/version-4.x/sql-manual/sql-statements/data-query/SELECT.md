@@ -138,6 +138,28 @@ Recursive CTE is currently not supported.
 
 ## Example
 
+Examples 1-9 below run against the following two tables. The remaining examples (UNION, WITH, JOIN, TABLESAMPLE) reference tables (`t1`, `t2`, `employee`, `left_tbl`, `tournament`, ...) that are not created on this page — those snippets are illustrative of the syntax shape; substitute your own tables to execute them.
+
+```sql
+CREATE TABLE student (Name VARCHAR(32), age INT)
+DISTRIBUTED BY HASH(Name) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO student VALUES
+  ('Alice', 18), ('Bob', 20), ('Carol', 22), ('Dave', 25), ('Eve', 30);
+
+CREATE TABLE tb_book (id INT, name VARCHAR(64), price DECIMAL(10,2), type VARCHAR(32))
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO tb_book VALUES
+  (1, 'SQL Cookbook',                          39.99, 'database'),
+  (2, 'Doris Internals',                       49.99, 'database'),
+  (3, 'The Rust Programming Language',         45.00, 'programming'),
+  (4, 'Designing Data-Intensive Applications', 55.00, 'database'),
+  (5, 'Clean Code',                            35.00, 'programming');
+```
+
 1. Query the names of students whose ages are 18, 20, 25
 
    ```sql
@@ -210,9 +232,9 @@ Recursive CTE is currently not supported.
 10. UNION Example
 
     ```sql
-    SELECT a FROM t1 WHERE a = 10 AND B = 1 ORDER by LIMIT 10
+    SELECT a FROM t1 WHERE a = 10 AND B = 1 ORDER BY a LIMIT 10
     UNION
-    SELECT a FROM t2 WHERE a = 11 AND B = 2 ORDER by LIMIT 10;
+    SELECT a FROM t2 WHERE a = 11 AND B = 2 ORDER BY a LIMIT 10;
     ```
 
 11. WITH clause example
@@ -227,7 +249,7 @@ Recursive CTE is currently not supported.
     SELECT col1, col2 FROM cte;
     ```
 
-12. JOIN Exampel
+12. JOIN Example
 
     ```sql
     SELECT * FROM t1 LEFT JOIN (t2, t3, t4)
@@ -284,7 +306,7 @@ Recursive CTE is currently not supported.
 
 ## Best Practice
 
-1. ome additional knowledge about the SELECT clause
+1. Some additional knowledge about the SELECT clause
 
    - An alias can be specified for select_expr using AS alias_name. Aliases are used as column names in expressions and can be used in GROUP BY, ORDER BY or HAVING clauses. The AS keyword is a good habit to use when specifying aliases for columns.
 
@@ -356,17 +378,17 @@ Recursive CTE is currently not supported.
 
      DISTINCT removes duplicate rows.
 
-2. The main advantage of subqueries
+3. The main advantage of subqueries
 
     - Subqueries allow structured queries so that each part of a statement can be isolated.
     - Some operations require complex unions and associations. Subqueries provide other ways to perform these operations
 
-3. Speed up queries
+4. Speed up queries
 
     - Use Doris's partition and bucket as data filtering conditions as much as possible to reduce the scope of data scanning
     - Make full use of Doris's prefix index fields as data filter conditions to speed up query speed
     
-4. UNION
+5. UNION
 
    - Using only the union keyword has the same effect as using union disitnct. Since the deduplication work is more memory-intensive, the query speed using the union all operation will be faster and the memory consumption will be less. If users want to perform order by and limit operations on the returned result set, they need to put the union operation in the subquery, then select from subquery, and finally put the subquery and order by outside the subquery.
    

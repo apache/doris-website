@@ -31,7 +31,7 @@ Dorisは様々なメタデータサービスを通じてIcebergTableデータへ
 CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = '<iceberg_catalog_type>',
-    'warehouse' = '<warehouse>' --optional
+    'warehouse' = '<warehouse>', --optional
     {MetaStoreProperties},
     {StorageProperties},
     {CommonProperties}

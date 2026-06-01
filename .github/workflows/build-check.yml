@@ -22,8 +22,8 @@ on:
     pull_request:
 
 concurrency:
-    group: ${{ github.ref }} (Build Extensions)
-    cancel-in-progress: false
+    group: build-check-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
 
 jobs:
     build-and-deploy:
@@ -86,19 +86,19 @@ jobs:
                 # Check each changed file and map to doc version
                 while IFS= read -r file; do
                     case "$file" in
-                        # English current (dev) docs
+                        # English Dev source (current/unreleased version)
                         docs/*)
                             VERSIONS="current,$VERSIONS"
+                            ;;
+                        # Chinese Dev source (current/unreleased version)
+                        i18n/zh-CN/docusaurus-plugin-content-docs/current/*)
+                            VERSIONS="current,$VERSIONS"
+                            LOCALES="en,zh-CN"
                             ;;
                         # English versioned docs
                         versioned_docs/version-*/*)
                             ver=$(echo "$file" | sed -n 's|versioned_docs/version-\([^/]*\)/.*|\1|p')
                             VERSIONS="${ver},$VERSIONS"
-                            ;;
-                        # Chinese current docs
-                        i18n/zh-CN/docusaurus-plugin-content-docs/current/*)
-                            VERSIONS="current,$VERSIONS"
-                            LOCALES="en,zh-CN"
                             ;;
                         # Chinese versioned docs
                         i18n/zh-CN/docusaurus-plugin-content-docs/version-*/*)
@@ -106,19 +106,30 @@ jobs:
                             VERSIONS="${ver},$VERSIONS"
                             LOCALES="en,zh-CN"
                             ;;
+                        # Per-version label translations (e.g. version-4.x.json)
+                        i18n/zh-CN/docusaurus-plugin-content-docs/version-*.json)
+                            ver=$(echo "$file" | sed -n 's|i18n/zh-CN/docusaurus-plugin-content-docs/version-\([^.]*\)\.json|\1|p')
+                            VERSIONS="${ver},$VERSIONS"
+                            LOCALES="en,zh-CN"
+                            ;;
                         # Chinese community docs
                         i18n/zh-CN/docusaurus-plugin-content-docs-community/*|i18n/zh-CN/code.json)
                             LOCALES="en,zh-CN"
-                            ;;
-                        # Sidebar for current (dev) version
-                        sidebars.ts)
-                            VERSIONS="current,$VERSIONS"
                             ;;
                         # Versioned sidebars: extract version from filename
                         # e.g. versioned_sidebars/version-4.x-sidebars.json → 4.x
                         versioned_sidebars/version-*-sidebars.json)
                             ver=$(echo "$file" | sed -n 's|versioned_sidebars/version-\(.*\)-sidebars\.json|\1|p')
                             VERSIONS="${ver},$VERSIONS"
+                            ;;
+                        # Current-version (Dev) sidebar
+                        sidebars.ts)
+                            VERSIONS="current,$VERSIONS"
+                            ;;
+                        # versions.json controls which versions are built; any change
+                        # warrants a full multi-version build.
+                        versions.json)
+                            NEED_FULL_BUILD="true"
                             ;;
                         # Blog and community are independent plugins, not
                         # controlled by DOCS_VERSIONS. They are always built
@@ -130,6 +141,13 @@ jobs:
                         i18n/zh-CN/docusaurus-plugin-content-docs-releases/*)
                             LOCALES="en,zh-CN"
                             ;;
+                        # Static image assets are copied verbatim to the
+                        # build output and don't affect page rendering, so
+                        # they should NOT trigger a full rebuild on their
+                        # own. Any doc change that references these images
+                        # will trigger its own version-scoped build above.
+                        static/images/*|static/images/**)
+                            ;;
                         # Config, source code, or other structural changes
                         # require a full build to validate
                         sidebarsCommunity.json|sidebarsReleases.json|docusaurus.config.js|src/*|static/*|config/*|package.json|yarn.lock|tailwind.config.js)
@@ -138,22 +156,54 @@ jobs:
                     esac
                 done <<< "$CHANGED_FILES"
 
+                # Build the set of versions Docusaurus actually builds:
+                # `current` (the dev/unreleased version) plus everything in versions.json.
+                # Older version dirs (e.g. version-1.2, version-2.0) may still exist on
+                # disk but be absent from versions.json — touching them must not poison
+                # onlyIncludeVersions, which would fail the build with "unknown versions".
+                ACTIVE_VERSIONS=$(jq -r '.[]' versions.json | tr '\n' ',' | sed 's/,$//')
+                ACTIVE_VERSIONS="current,${ACTIVE_VERSIONS}"
+                echo "Active versions (current + versions.json): $ACTIVE_VERSIONS"
+
                 # Deduplicate versions
                 if [ "$NEED_FULL_BUILD" = "true" ]; then
                     # Structural changes: build all active versions
                     DOCS_VERSIONS=""
                     echo "Structural changes detected, will build ALL versions."
                 elif [ -n "$VERSIONS" ]; then
-                    # Only doc content changes: build only affected versions
-                    DOCS_VERSIONS=$(echo "$VERSIONS" | tr ',' '\n' | sort -u | grep -v '^$' | tr '\n' ',' | sed 's/,$//')
-                    echo "Doc-only changes detected for versions: $DOCS_VERSIONS"
+                    # Only doc content changes: build only affected versions.
+                    # Intersect detected versions with the active set so that edits to
+                    # retired version dirs (e.g. version-1.2) don't break the build.
+                    RAW_VERSIONS=$(echo "$VERSIONS" | tr ',' '\n' | sort -u | grep -v '^$')
+                    DOCS_VERSIONS=""
+                    SKIPPED_VERSIONS=""
+                    for v in $RAW_VERSIONS; do
+                        if echo ",$ACTIVE_VERSIONS," | grep -q ",$v,"; then
+                            DOCS_VERSIONS="${v},$DOCS_VERSIONS"
+                        else
+                            SKIPPED_VERSIONS="${v},$SKIPPED_VERSIONS"
+                        fi
+                    done
+                    DOCS_VERSIONS=$(echo "$DOCS_VERSIONS" | sed 's/,$//')
+                    SKIPPED_VERSIONS=$(echo "$SKIPPED_VERSIONS" | sed 's/,$//')
+                    if [ -n "$SKIPPED_VERSIONS" ]; then
+                        echo "Ignoring changes to retired/unknown versions: $SKIPPED_VERSIONS"
+                    fi
+                    if [ -z "$DOCS_VERSIONS" ]; then
+                        # Everything we detected was retired/unknown; fall back to a
+                        # minimal build so the workflow still validates the site.
+                        DOCS_VERSIONS="4.x"
+                        echo "All detected versions were retired/unknown, doing minimal build with '4.x' only."
+                    else
+                        echo "Doc-only changes detected for versions: $DOCS_VERSIONS"
+                    fi
                 else
                     # No versioned doc changes (e.g., only blog, community, or scripts).
                     # Blog and community plugins are always compiled by Docusaurus
                     # regardless of DOCS_VERSIONS, so we just set the minimal docs
                     # scope to keep the build fast.
-                    DOCS_VERSIONS="current"
-                    echo "No doc version changes detected, doing minimal build with 'current' only."
+                    DOCS_VERSIONS="4.x"
+                    echo "No doc version changes detected, doing minimal build with '4.x' only."
                     echo "(Blog and community plugins are always built regardless.)"
                 fi
 
@@ -182,7 +232,28 @@ jobs:
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
                   yarn
+                  yarn key-features:generate
 
                   echo "Building with DOCS_VERSIONS=${DOCS_VERSIONS:-all}"
                   PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build ${{ steps.detect.outputs.locale_args }}
                   rm -rf build
+
+            - name: Docs changed link gate
+              continue-on-error: true
+              run: |
+                  # Report-only: the bulk-rename in the new-homepage launch PR
+                  # exposes ~30 latent anchor/link issues that pre-date this
+                  # change. They're being chipped away in follow-up PRs and
+                  # should not block the launch. The full findings still write
+                  # to the report file below for audit.
+                  yarn docs:links:changed --output website-quality-governance/generated/docs-links-report.json
+
+            - name: Docs governance report
+              if: always()
+              continue-on-error: true
+              run: |
+                  if [ ! -d node_modules ]; then
+                      npm install -g yarn
+                      yarn --frozen-lockfile || yarn
+                  fi
+                  yarn docs:lint:changed --output website-quality-governance/generated/docs-governance-report.json

@@ -1,0 +1,25 @@
+// Home Next — global layout
+
+.home-next-container {
+    width: min(1180px, calc(100vw - 112px));
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+@media (max-width: 820px) {
+    .home-next-container {
+        width: calc(100vw - 48px);
+    }
+}
+
+@media (max-width: 640px) {
+    .home-next-container {
+        width: calc(100vw - 40px);
+    }
+}
+
+.home-next-main {
+    min-width: 0;
+    overflow-x: clip;
+}
+

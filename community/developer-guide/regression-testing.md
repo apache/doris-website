@@ -1,12 +1,19 @@
 ---
-{
-    "title": "Regression Testing",
-    "language": "en"
-}
-
+title: Regression Testing Framework
+language: en
+description: Introduction to the Apache Doris regression testing framework and a guide to writing test cases, covering Suites, Actions, external data source e2e tests, and CI integration.
+keywords:
+    - Apache Doris regression testing
+    - regression test
+    - Suite Action
+    - Groovy test case
+    - Doris testing framework
+    - run-regression-test.sh
+    - Docker Compose external data source
+    - TeamCity integration
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -25,129 +32,178 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Regression Testing
+<!-- Knowledge type: Developer guide / Testing framework -->
+<!-- Applicable scenario: Kernel development / Submitting PRs / Writing regression cases -->
 
-## Basic Concepts
+# Regression Testing Framework
 
-1. `Suite`: A test case (the file name)
-2. `Group`: A test set (the directory that the test case belongs to)
-3. `Action`: An encapsulated test action, such as `sql_action`  for SQL execution, `test_action`  for result verification, and `streamLoad_action`  for data ingestion.
+This document is for developers who need to write or run regression tests for Apache Doris. It introduces the core concepts, directory layout, and configuration of the testing framework, along with the built-in Actions and the usage of external data source e2e tests.
 
-## Steps
+## Contents
 
-1. Get the clusters ready
-2. Modify the configuration files `${DORIS_HOME}/regression-test/conf/regression-conf.groovy`, set items, such as JDBC URL and user
-3. Create the test case files and write the test cases
-4. If a test case includes a `qt` Action, you also need to create the relevant data files. For example, the case `suites/demo/qt_action.groovy` will require a TSV file `data/demo/qt_action.out` for output verification.
-5. Run `${DORIS_HOME}/run-regression-test.sh` to test all cases, or run `${DORIS_HOME}/run-regression-test.sh --run <suiteName>`  to test a few cases. For more examples, please refer to the "Startup Script Examples" section on this page.
+- [Quick Start](#quick-start): Run your first case in 5 steps
+- [Core Concepts](#core-concepts): The three abstractions Suite / Group / Action
+- [Framework Directory Structure](#framework-directory-structure): How source code and data files are organized
+- [Default Configuration File](#default-configuration-file): Key fields in `regression-conf.groovy`
+- [Writing Test Cases](#writing-test-cases): Examples of sql / qt / test / explain / streamLoad and other Actions
+- [Launch Script Usage](#launch-script-usage): Common commands for `run-regression-test.sh`
+- [Auto-Generating `.out` Files](#auto-generating-out-files): Generate validation files with `-genOut` / `-forceGenOut`
+- [Suite Plugin Mechanism](#suite-plugin-mechanism): Extend Suite with Groovy scripts
+- [CI/CD Integration](#cicd-integration): TeamCity Service Message
+- [External Data Source e2e Tests](#external-data-source-e2e-tests): MySQL / PostgreSQL / Hive / Iceberg / Hudi / Trino, and more
 
-## Directory Structure
+---
 
-Key files and directories to pay attention to:
+## Quick Start
 
-1. `run-regression-test.sh`: Startup script
-2. `regression-conf.groovy`: Default configurations for regression test
-3. `data`: where the the input and output data is
-4. `suites`: where test cases are
+<!-- Knowledge type: Procedure -->
 
-```
+1. Install a Doris cluster (FE + BE) in advance.
+2. Edit `${DORIS_HOME}/regression-test/conf/regression-conf.groovy` and set connection information such as the JDBC URL and username.
+3. Create a Groovy test case file under `regression-test/suites/<group>/`.
+4. If the case contains a `qt` Action, create the corresponding `.out` TSV file under `regression-test/data/<group>/` for result validation.
+5. Run the tests:
+
+    ```bash
+    # Run all cases
+    ${DORIS_HOME}/run-regression-test.sh
+
+    # Run a specific case
+    ${DORIS_HOME}/run-regression-test.sh --run <suiteName>
+    ```
+
+See [Launch Script Usage](#launch-script-usage) for more startup options.
+
+---
+
+## Core Concepts
+
+| Concept | Meaning |
+|------|------|
+| `Suite` | A test case. The file name is currently used as the suite name. |
+| `Group` | A test set, corresponding to the directory the test case belongs to. |
+| `Action` | A specific testing behavior provided by the framework, such as the `sql` Action that executes SQL, the `test` Action that validates results, and the `streamLoad` Action that imports data. |
+
+---
+
+## Framework Directory Structure
+
+Important files and directories to be aware of during development:
+
+| Path | Purpose |
+|------|------|
+| `run-regression-test.sh` | Regression test launch script |
+| `regression-conf.groovy` | Default configuration file |
+| `data/` | Input data and `.out` validation files |
+| `suites/` | Test cases |
+
+Full directory tree:
+
+```text
 ./${DORIS_HOME}
-    |-- **run-regression-test.sh**           Startup script for regression test
+    |-- run-regression-test.sh               Regression test launch script
     |-- regression-test
-    |   |-- plugins                          Plug-ins
+    |   |-- plugins                          Plugins directory
     |   |-- conf
-    |   |   |-- logback.xml                  Log configurations
-    |   |   |-- **regression-conf.groovy**   Default configurations
+    |   |   |-- logback.xml                  Logging configuration file
+    |   |   |-- regression-conf.groovy       Default configuration file
     |   |
-    |   |-- framework                        framework source code for regression test
-    |   |-- **data**                         Input and output data files of test cases
-    |   |   |-- demo                         Input and output data files of demo
-    |   |   |-- correctness                  Input and output data files of correctness test cases
-    |   |   |-- performance                  Input and output data files of performance test cases
-    |   |   |-- utils                        Input and output data files of other utilities
+    |   |-- framework                        Regression test framework source code
+    |   |-- data                             Input and output files for cases
+    |   |   |-- demo                         Input and output files for demo cases
+    |   |   |-- correctness                  Input and output for correctness tests
+    |   |   |-- performance                  Input and output for performance tests
+    |   |   |-- utils                        Input and output for other utilities
     |   |
-    |   |-- **suites**                       Test cases for regression testing
-    |       |-- demo                         Demo of test cases
-    |       |-- correctness                  Test cases of correctness tests
-    |       |-- performance                  Test cases of performance tests
-    |       |-- utils                        Other utilities
+    |   |-- suites                           Regression test cases
+    |       |-- demo                         Demo cases
+    |       |-- correctness                  Correctness test cases
+    |       |-- performance                  Performance test cases
+    |       |-- utils                        Other utility cases
     |
     |-- output
         |-- regression-test
-            |-- log                          Logs of regression testing
+            |-- log                          Regression test logs
 ```
 
+---
 
-## Default Configurations of the Framework
+## Default Configuration File
 
-Modify the JDBC and FE configurations based on the case.
+<!-- Knowledge type: Configuration parameters -->
+
+Before running tests, update the JDBC and FE configuration to match the actual environment. The core fields of `regression-conf.groovy` are as follows:
 
 ```groovy
-/* ============ Key parts to pay attention to ============ */
-// The default database, which will be created if the user does not create a database
+/* ============ Generally, only the section below needs attention ============ */
+// Default DB. If it has not been created, the framework attempts to create it.
 defaultDb = "regression_test"
 
-// JDBC configurations
+// JDBC configuration
 jdbcUrl = "jdbc:mysql://127.0.0.1:9030/?"
 jdbcUser = "root"
 jdbcPassword = ""
 
-// FE address configurations, used for Stream Load
+// FE address configuration, used for stream load
 feHttpAddress = "127.0.0.1:8030"
 feHttpUser = "root"
 feHttpPassword = ""
 
-/* ============ Configurations that usually do not require modifications ============ */
+/* ============ The section below generally does not need to be modified ============ */
 
-// DORIS_HOME is loaded by run-regression-test.sh
-// which is java -DDORIS_HOME=./
+// The DORIS_HOME variable is passed in by run-regression-test.sh,
+// that is, java -DDORIS_HOME=./
 
-// Set the path for the test cases
+// Set the directory of regression test cases
 suitePath = "${DORIS_HOME}/regression-test/suites"
-// Set the path for the input and output data
+// Set the directory of input and output data
 dataPath = "${DORIS_HOME}/regression-test/data"
-// Set the path for the plug-ins
+// Set the plugins directory
 pluginPath = "${DORIS_HOME}/regression-test/plugins"
 
-// By default, all groups will be read. The groups are separated by comma. For example, "demo,performance".
-// This is dynamically specified and overwritten via run-regression-test.sh --run -g
+// By default, all groups are loaded. Multiple groups can be separated by half-width commas, for example: "demo,performance"
+// Usually you do not need to modify this in the config file; instead, override it dynamically through run-regression-test.sh --run -g
 testGroups = ""
-// By default, all suites will be read. This is dynamically specified and overwritten via run-regression-test.sh --run -s
+// By default, all cases are loaded. You can also override this through run-regression-test.sh --run -s
 testSuites = ""
-// Directories specified in this parameter will be loaded by default. It can be dynamically specified and overwritten via run-regression-test.sh --run -d
+// The case directories loaded by default. Override through run-regression-test.sh --run -d
 testDirectories = ""
 
-// Groups specified in this parameter will be excluded. It can be dynamically specified and overwritten via run-regression-test.sh --run -xg
+// Exclude cases in these groups. Override through run-regression-test.sh --run -xg
 excludeGroups = ""
-// Suites specified in this parameter will be excluded. It can be dynamically specified and overwritten via run-regression-test.sh --run -xs
+// Exclude these suites. Override through run-regression-test.sh --run -xs
 excludeSuites = ""
-// Directories specified in this parameter will be excluded. It can be dynamically specified and overwritten via run-regression-test.sh --run -xd
+// Exclude these directories. Override through run-regression-test.sh --run -xd
 excludeDirectories = ""
 
-// Other self-defined configurations
+// Other custom configuration
 customConf1 = "test_custom_conf_value"
 ```
 
-## Steps to Write Test Cases
+---
 
-1. Enter the `${DORIS_HOME}/regression-test` directory
-2. Choose a directory based on the test. For correctness test, place the test in `suites/correctness`; for performance test, put the test case in `suites/performance`.
-3. Create a groovy test case file, and add a few `Action` for testing. 
+## Writing Test Cases
 
-## Action
+<!-- Knowledge type: Procedure -->
 
-`Action` refers to a test action, which is defined by DSL and provided in the test framework.
+1. Go to the `${DORIS_HOME}/regression-test` directory.
+2. Choose a case directory based on the testing purpose: place correctness tests under `suites/correctness` and performance tests under `suites/performance`.
+3. Create a new Groovy case file and combine several Actions to implement the test logic.
+
+Actions are testing behaviors provided by the framework, defined through a DSL. The common Actions are introduced below.
 
 ### sql action
 
-A `sql_action` is used to commit SQL and obtain results. If the query fails, an error will be thrown.
+The `sql` Action submits SQL and retrieves the result. It throws an exception if the query fails.
 
 Parameters:
 
-- String sql: the input SQL string
-- `return List<List<Object>>`: the query result. If it is DDL/DML, a result of one row and one column will be returned and the value will be updateRowCount.
+| Parameter | Description |
+|------|------|
+| `String sql` | The input SQL string |
+| Returns `List<List<Object>>` | The query result. For DDL/DML, it returns one row and one column, whose only value is updateRowCount. |
 
-You can find the following sample code in `${DORIS_HOME}/regression-test/suites/demo/sql_action.groovy`: 
+The sample code below is located at `${DORIS_HOME}/regression-test/suites/demo/sql_action.groovy`:
 
 ```groovy
 suite("sql_action", "demo") {
@@ -181,7 +237,7 @@ suite("sql_action", "demo") {
                         DISTRIBUTED BY HASH(id) BUCKETS 1
                         PROPERTIES (
                           "replication_num" = "1"
-                        ) 
+                        )
                         """
 
         // DDL/DML return 1 row and 1 column, the only value is update row count
@@ -239,20 +295,22 @@ suite("sql_action", "demo") {
 
 ### qt action
 
-A `qt_action` is used to commit SQL and verify the output results based on the `.out` TSV file.
+The `qt` Action submits SQL and validates the result against the corresponding `.out` TSV file.
 
-- String sql: the input SQL string
-- return void
+| Parameter | Description |
+|------|------|
+| `String sql` | The input SQL string |
+| Returns | void |
 
-You can find the following sample code in `${DORIS_HOME}/regression-test/suites/demo/qt_action.groovy`:
+The sample code below is located at `${DORIS_HOME}/regression-test/suites/demo/qt_action.groovy`:
 
 ```groovy
 suite("qt_action", "demo") {
     /**
-     * qt_xxx sql equals to quickTest(xxx, sql) in which xxx is tag.
-     * The result will be compared to the relevant file: ${DORIS_HOME}/regression_test/data/qt_action.out.
+     * qt_xxx sql equals to quickTest(xxx, sql) witch xxx is tag.
+     * the result will be compare to the relate file: ${DORIS_HOME}/regression_test/data/qt_action.out.
      *
-     * If you want to generate .out tsv file, you can run -genOut or -forceGenOut.
+     * if you want to generate .out tsv file for real execute result. you can run with -genOut or -forceGenOut option.
      * e.g
      *   ${DORIS_HOME}/run-regression-test.sh --run qt_action -genOut
      *   ${DORIS_HOME}/run-regression-test.sh --run qt_action -forceGenOut
@@ -261,7 +319,7 @@ suite("qt_action", "demo") {
 
     qt_select2 "select 2"
 
-    // Order result by string dict then compare to .out file.
+    // order result by string dict then compare to .out file.
     // order_qt_xxx sql equals to quickTest(xxx, sql, true).
     order_qt_union_all  """
                 select 2
@@ -279,20 +337,22 @@ suite("qt_action", "demo") {
 
 ### test action
 
-A `test_action` is to test with more complicated verification rules, such as to verify the number of rows, execution time, and the existence of errors
+The `test` Action supports more complex validation rules, such as checking row counts, execution time, and whether an exception is thrown.
 
-Parameters:
+Available parameters:
 
-- String sql: the input SQL string
-- `List<List<Object>> result`: provide a list to check if the output is equal to that list
-- `Iterator<Object> resultIterator`: provide an iterator to check if the output is equal to that iterator
-- String resultFile: provide a file URI (a relative path of a local file or a http(s) path) to check if the output is equal to the http response stream. The format is similar to that of the `.out` file, but there is no header or comment.
-- String exception: check if the error thrown includes certain strings
-- long rowNum: check the number of rows
-- long time: check if the execution time is shorter than this value, which is measured in millisecond
-- `Closure<List<List<Object>>, Throwable, Long, Long> check`: self-defined callback validation function, in which you can input the query result, error thrown, and response time. When there is a callback validation function, other verification methods will fail.
+| Parameter | Description |
+|------|------|
+| `String sql` | The input SQL string |
+| `List<List<Object>> result` | Compares the actual query result with a List object for equality |
+| `Iterator<Object> resultIterator` | Compares the actual query result with an Iterator for equality |
+| `String resultFile` | A file URI (a local relative path or an http(s) path) used to compare the query result. The format is similar to `.out` but without block headers and comments. |
+| `String exception` | Validates that the thrown exception contains specific strings |
+| `long rowNum` | Validates the row count of the result |
+| `long time` | Validates that the execution time is less than this value, in milliseconds |
+| `Closure<List<List<Object>>, Throwable, Long, Long> check` | A custom validation callback that receives the result, exception, and time. When the callback is present, other validation methods are disabled. |
 
-You can find the following sample code in `${DORIS_HOME}/regression-test/suites/demo/test_action.groovy`:
+The sample code below is located at `${DORIS_HOME}/regression-test/suites/demo/test_action.groovy`:
 
 ```groovy
 suite("test_action", "demo") {
@@ -384,17 +444,19 @@ suite("test_action", "demo") {
 
 ### explain action
 
-An `explain_action` is used to check if the returned string contains certain strings.
+The `explain` Action validates whether the string returned by `EXPLAIN` contains specific strings.
 
-Parameters:
+Available parameters:
 
-- String sql: the SQL that needs to be explained
-- String contains: check if certain strings are included. You can check for multiple strings at a time.
-- String notContains: check if certain strings are not included. You can check for multiple strings at a time.
-- `Closure<String> check`: self-defined callback validation function, by which you can obtain the returned string. When there is a callback validation function, other verification methods will fail.
-- `Closure<String, Throwable, Long, Long> check`: self-defined callback validation function, by which you can obtain the error thrown and response time
+| Parameter | Description |
+|------|------|
+| `String sql` | The SQL to query. Remove `EXPLAIN` from the SQL. |
+| `String contains` | Validates that the explain output contains specific strings. Call multiple times to validate multiple strings at once. |
+| `String notContains` | Validates that the explain output does not contain specific strings. Can be called multiple times. |
+| `Closure<String> check` | A custom validation callback that receives the returned string. When the validation function is present, other validation methods are disabled. |
+| `Closure<String, Throwable, Long, Long> check` | A custom validation callback that additionally receives the exception and time. |
 
-You can find the following sample code in `${DORIS_HOME}/regression-test/suites/demo/explain_action.groovy`:
+The sample code below is located at `${DORIS_HOME}/regression-test/suites/demo/explain_action.groovy`:
 
 ```groovy
 suite("explain_action", "demo") {
@@ -434,21 +496,23 @@ suite("explain_action", "demo") {
 
 ### streamLoad action
 
-A `streamLoad_action` is used to ingest data.
+The `streamLoad` Action imports data.
 
-Parameters:
+Available parameters:
 
-- String db: database, set to the defaultDb in regression-conf.groovy
-- String table: table name
-- String file: the path of the file to be loaded. It can be a relative path under the data directory, or a HTTP URL.
-- `Iterator<List<Object>> inputIterator`: the iterator to be loaded
-- String inputText: the text to be loaded (rarely used)
-- InputStream inputStream: the stream to be loaded (rarely used)
-- long time: check if the exection time is shorter than this value, which is measure in millisecond
-- void set(String key, String value): set the header of the HTTP request for Stream Load, such as label and columnSeparator.
-- `Closure<String, Throwable, Long, Long> check`: self-defined callback validation function, by which you can obtain the returned result, error thrown, and response time. When there is a callback validation function, other verification methods will fail.
+| Parameter | Description |
+|------|------|
+| `String db` | DB name. Defaults to `defaultDb` from `regression-conf.groovy`. |
+| `String table` | Table name |
+| `String file` | The path of the file to import. Can be a relative path under the `data/` directory, or an http URL. |
+| `Iterator<List<Object>> inputIterator` | The iterator to import |
+| `String inputText` | The text to import. Rarely used. |
+| `InputStream inputStream` | The byte stream to import. Rarely used. |
+| `long time` | Validates that the execution time is less than this value, in milliseconds |
+| `void set(String key, String value)` | Sets the stream load HTTP request header, such as `label` or `columnSeparator` |
+| `Closure<String, Throwable, Long, Long> check` | A custom validation callback. When the callback is present, other validation items are disabled. |
 
-You can find the following sample code in `${DORIS_HOME}/regression-test/suites/demo/streamLoad_action.groovy`:
+The sample code below is located at `${DORIS_HOME}/regression-test/suites/demo/streamLoad_action.groovy`:
 
 ```groovy
 suite("streamLoad_action", "demo") {
@@ -463,7 +527,7 @@ suite("streamLoad_action", "demo") {
             DISTRIBUTED BY HASH(id) BUCKETS 1
             PROPERTIES (
               "replication_num" = "1"
-            ) 
+            )
         """
 
     streamLoad {
@@ -519,89 +583,103 @@ suite("streamLoad_action", "demo") {
 
 ### Other Actions
 
-Other actions include thread, lazyCheck, events, connect, and selectUnionAll. You can find examples for them in `${DORIS_HOME}/regression-test/suites/demo`.
+Examples of the `thread`, `lazyCheck`, `events`, `connect`, and `selectUnionAll` Actions can be found in the following directory:
 
-## Startup Script Examples
+```text
+${DORIS_HOME}/regression-test/suites/demo
+```
 
-```shell
-# View parameter descriptions for scripts
+---
+
+## Launch Script Usage
+
+<!-- Knowledge type: Procedure -->
+
+```bash
+# View the script parameter description
 ./run-regression-test.sh h
 
-# View parameter descriptions for framework
+# View the framework parameter description
 ./run-regression-test.sh --run -h
 
-# Test all cases
-./run-regression-test.sh 
+# Run all cases
+./run-regression-test.sh
 
-# Delete test framework compilation results and test logs
+# Delete the framework compilation results and test logs
 ./run-regression-test.sh --clean
 
-# Test the suite named "sql_action". Currently, the test case file suffix is the same as the suiteName, so the corresponding test case file in this case is sql_action.groovy.
-./run-regression-test.sh --run sql_action 
+# Run the case whose suiteName is sql_action. Currently the suiteName equals the file name prefix; this example corresponds to the case file sql_action.groovy
+./run-regression-test.sh --run sql_action
 
-# Test the suite whose name contains 'sql'. **Remember to use single quotation marks.**
-./run-regression-test.sh --run '*sql*' 
+# Run cases whose suiteName contains 'sql'. **Note that single quotes are required.**
+./run-regression-test.sh --run '*sql*'
 
-# Test the "demo" and "perfomance" group
+# Run the demo and performance groups
 ./run-regression-test.sh --run -g 'demo,performance'
 
-# Test the suite "sql_action" in the "demo" group
+# Run sql_action under the demo group
 ./run-regression-test.sh --run -g demo -s sql_action
 
-# Test the suite "sql_action" in the demo directory
+# Run sql_action under the demo directory
 ./run-regression-test.sh --run -d demo -s sql_action
 
-# Test the suites under the demo directory except the "sql_action" suite
+# Run cases under the demo directory, excluding sql_action
 ./run-regression-test.sh --run -d demo -xs sql_action
 
-# Exclude the test cases in the demo directory
+# Exclude cases under the demo directory
 ./run-regression-test.sh --run -xd demo
 
-# Exclude the test cases in the "demo" group
+# Exclude cases under the demo group
 ./run-regression-test.sh --run -xg demo
 
-# Self-defined configurations
+# Custom configuration
 ./run-regression-test.sh --run -conf a=b
 
-# Parallel execution
+# Concurrent execution
 ./run-regression-test.sh --run -parallel 5 -suiteParallel 10 -actionParallel 20
 ```
 
-## Generate `.out` File Based on the Query Result
+---
 
-```shell
-# Automatically generate an .out file for the sql_action test case based on the query result. Ignore this if the .out file already exists.
+## Auto-Generating `.out` Files
+
+```bash
+# Automatically generate the .out file for the sql_action case from the query result. Skip if the .out file already exists.
 ./run-regression-test.sh --run sql_action -genOut
 
-# Automatically generate an .out file for the sql_action test case based on the query result. If an .out file already exist, it will be overwritten.
+# Automatically generate the .out file for the sql_action case from the query result. Overwrite if the .out file already exists.
 ./run-regression-test.sh --run sql_action -forceGenOut
 ```
 
-## Suite Plug-in
+---
 
-Sometimes there might be a need to expand the suite classes, but it is not easy to change the source code of suite classes. In this case, you might do that by plug-ins. The default directory for plug-ins is `${DORIS_HOME}/regression-test/plugins`, in whic you can define how to expand suite classes with a groovy script. For example, this is how to add a `testPlugin` function for log printing to `plugin_example.groovy`:
+## Suite Plugin Mechanism
+
+When you need to extend the Suite class without modifying the source code, you can do so through plugins. The default plugin directory is `${DORIS_HOME}/regression-test/plugins`, where you can define extension methods through Groovy scripts.
+
+The following `plugin_example.groovy` adds a `testPlugin` function to the Suite class to print logs:
 
 ```groovy
 import org.apache.doris.regression.suite.Suite
 
-// Register `testPlugin` function to Suite,
+// register `testPlugin` function to Suite,
 // and invoke in ${DORIS_HOME}/regression-test/suites/demo/test_plugin.groovy
 Suite.metaClass.testPlugin = { String info /* param */ ->
 
-    // Which suite invoke current function?
+    // which suite invoke current function?
     Suite suite = delegate as Suite
 
-    // Function body
+    // function body
     suite.getLogger().info("Test plugin: suiteName: ${suite.name}, info: ${info}".toString())
 
-    // Optional return value
+    // optional return value
     return "OK"
 }
 
 logger.info("Added 'testPlugin' function to Suite")
 ```
 
-After adding the `testPlugin` function, you can use it in a regular test case. For example, in `${DORIS_HOME}/regression-test/suites/demo/test_plugin.groovy`:
+Once registered, regular cases can call this function. Take `${DORIS_HOME}/regression-test/suites/demo/test_plugin.groovy` as an example:
 
 ```groovy
 suite("test_plugin", "demo") {
@@ -611,259 +689,295 @@ suite("test_plugin", "demo") {
 }
 ```
 
-## CI/CD Support
+---
+
+## CI/CD Integration
 
 ### TeamCity
 
-You can use TeamCity to recognize Service Message via stdout. If you start the regression test framework using the `--teamcity` parameter, the TeamCity Service Message will be printed in stdout. TeamCity will automatically read the event logs in stdout, and show `Tests` in the current pipeline, in which there will be the test and logs. Therefore, you only need to configure the following command to start the regression test framework. In the following snippet, `-Dteamcity.enableStdErr=false` means to print error logs to stdout, too, so that the logs can be chronologically organized.
+TeamCity can recognize Service Messages through stdout. When the regression test framework is started with the `--teamcity` parameter, the framework prints TeamCity Service Messages to stdout. TeamCity automatically reads these event logs and displays `Tests` in the current pipeline, including test cases and their logs.
 
-```shell
+A sample launch command is shown below. The `-Dteamcity.enableStdErr=false` setting makes error logs also print to stdout, which makes it easier to analyze them in chronological order:
+
+```bash
 JAVA_OPTS="-Dteamcity.enableStdErr=${enableStdErr}" ./run-regression-test.sh --teamcity --run
 ```
 
-## E2E Test with External Data Sources
+---
 
-Doris supports queries on external data sources, so the regression testing framework allows users to build external data sources using Docker Compose, so that they can run end-to-end tests with external data sources. 
+## External Data Source e2e Tests
 
-0. Preparation
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: External data source development / Catalog debugging -->
 
-   To begin with, modify `CONTAINER_UID` in `docker/thirdparties/custom_settings.env`. For example, `doris-10002-18sda1-`. The follow-up startup scripts will replace the corresponding names in Docker Compose to ensure consistency across multiple containers environment.
+Doris supports querying multiple external data sources. The regression framework provides the capability to set up external data sources through Docker Compose, used for e2e testing of Doris integrating with external data sources.
 
-   Before starting the containers, you need to check the network configuration of your server/cloud host to ensure that the mapping relationship between hostname and host IP address (hostname -i) is configured in /etc/hosts.
+### 0. Preparation
 
-   It should look like: `10.0.0.46    iZj6cbwlx5pl6y0681t6scZ    iZj6cbwlx5pl6y0681t6scZ`, which are IP address (output of hostname -i command, usually the IP of eth0), hostname (output of hostname command), and alias (same as the previous one).
+Before starting Docker, edit the `CONTAINER_UID` variable in `docker/thirdparties/custom_settings.env`, for example set it to `doris-10002-18sda1-`. The subsequent launch scripts replace the names in docker compose with this prefix, ensuring that the names and networks of multiple container environments do not conflict.
 
-1. Start the Container
+Before starting the containers, check the network configuration of the server or cloud host and confirm that `/etc/hosts` contains the mapping between the host name (`hostname`) and the host IP (`hostname -i`), such as:
 
-   So far, Doris has supported Docker Compose for data sources including Elasticsearch, MySQL, PostgreSQL, Hive, SQLServer, Oracle, Iceberg, Hudi, and Trino. The relevant files can be found in the directory `docker/thirdparties/docker-compose`.
+```text
+10.0.0.46    iZj6cbwlx5pl6y0681t6scZ    iZj6cbwlx5pl6y0681t6scZ
+```
 
-   By default, you can use the following command to start the Docker containers for all external data sources:
+These correspond to the IP address (output of `hostname -i`, usually the IP of eth0), the host name (output of `hostname`), and the alias (the same as the host name), respectively.
 
-   (Note that for Hive and Hudi containers, you also need to download the pre-built data files. See the relevant documentation of Hive and Hudi.)
+> **Note**: `run-thirdparties-docker.sh` detects the primary network interface by scanning for names matching `eth[0-9]`. Modern Linux distributions using systemd/udev assign predictable names such as `enp3s0`, `ens33`, or `eno1`, which the script does not recognize. If your host uses such a name, the script will fail to detect an interface — manually set the `eth_name` variable inside `run-thirdparties-docker.sh` to your actual interface name before running it.
 
-   ```
-   cd docker/thirdparties && sh run-thirdparties-docker.sh
-   ```
+### 1. Start the Container
 
-   Executing this command requires root or sudo privilege. If the command returns, that means all containers are started. You can check on them by inputing a `docker ps -a` command.
-   
-   During the container startup process, you can use the `docker logs -f <container-name>` command to view the container logs.
+Doris currently supports Docker compose for data sources including es, mysql, pg, hive, sqlserver, oracle, iceberg, hudi, and trino. The related files are stored in the `docker/thirdparties/docker-compose` directory.
 
-   To stop all containers, you can use the following command:
+By default, you can start the Docker containers of all external data sources directly with the following command (hive and hudi require downloading prebuilt data files; see the corresponding sections below):
 
-   ```
-   cd docker/thirdparties && sh run-thirdparties-docker.sh --stop
-   ```
+```bash
+cd docker/thirdparties && sh run-thirdparties-docker.sh
+```
 
-   To start or stop some specific components, you can use the following commands:
+This command requires root or sudo privileges. A successful return indicates that all containers have started, and you can check them with `docker ps -a`. During container startup, you can view logs with `docker logs -f <container-name>`.
 
-   ```
-   cd docker/thirdparties
-   # Start MySQL
-   sh run-thirdparties-docker.sh -c mysql
-   # Start MySQL, PostgreSQL, Iceberg
-   sh run-thirdparties-docker.sh -c mysql,pg,iceberg
-   # Stop MySQL, PostgreSQL, Iceberg
-   sh run-thirdparties-docker.sh -c mysql,pg,iceberg --stop
-   ```
+Stop all containers:
 
-   1. MySQL
+```bash
+cd docker/thirdparties && sh run-thirdparties-docker.sh --stop
+```
 
-      You can find the MySQL-related Docker Compose files in `docker/thirdparties/docker-compose/mysql` .
+Start or stop specific components:
 
-      * `mysql-5.7.yaml.tpl`: Docker Compose file template, no modification required. The default username and password is root/123456
-      * `mysql-5.7.env`: Configuration file, in which you can configure the external port of the MySQL container (default number: 3316).
-      * `init/`: SQL files in this directory will be automatically executed once the container is created.
-      * `data/`: The container will be mounted to this local data directory after it is started. The `run-thirdparties-docker.sh`  script will clear and rebuild this directory every time it is started.
+```bash
+cd docker/thirdparties
+# Start mysql
+sh run-thirdparties-docker.sh -c mysql
+# Start mysql, pg, iceberg
+sh run-thirdparties-docker.sh -c mysql,pg,iceberg
+# Stop mysql, pg, iceberg
+sh run-thirdparties-docker.sh -c mysql,pg,iceberg --stop
+```
 
-   2. PostgreSQL
+#### 1.1 MySQL
 
-      You can find the PostgreSQL-related Docker Compose files in  `docker/thirdparties/docker-compose/postgresql` .
+The MySQL-related Docker compose files are stored under `docker/thirdparties/docker-compose/mysql`:
 
-      * `postgresql-14.yaml.tpl`: Docker Compose file template, no modification required. The default username and password is postgres/123456
-      * `postgresql-14.env`: Configuration file, in which you can configure the external port of the PostgreSQL container (default number: 5442).
-      * `init/`: SQL files in this directory will be automatically executed once the container is created. By default, that includes the creation of database, table, and some data input.
-      * `data/`: The container will be mounted to this local data directory after it is started. The `run-thirdparties-docker.sh`  script will clear and rebuild this directory every time it is started.
+- `mysql-5.7.yaml.tpl`: Docker compose file template. No modifications required. The default username and password are `root` / `123456`.
+- `mysql-5.7.env`: Configuration file. Configures the port exposed by the MySQL container, which defaults to 3316.
+- `init/`: SQL files in this directory run automatically after the container is created. By default, they create databases and tables and insert a small amount of data.
+- `data/`: The local data directory mounted after the container starts. `run-thirdparties-docker.sh` clears and recreates it on every launch.
 
-   3. Hive
+#### 1.2 PostgreSQL
 
-      You can find the Hive-related Docker Compose files in `docker/thirdparties/docker-compose/hive`, supporting both Hive2 and Hive3.
+The PostgreSQL-related Docker compose files are stored under `docker/thirdparties/docker-compose/postgresql`:
 
-      * `hive-2x.yaml.tpl`, `hive-3x.yaml.tpl`: Docker Compose file templates, no modification required.
-      * `hadoop-hive.env.tpl`, `hadoop-hive-2x.env.tpl` and `hadoop-hive-3x.env.tpl`: Configuration file templates, no modification required.
-      * `hive-2x_settings.env`: Hive2 initialization configuration script, which will be automatically called when `run-thirdparties-docker.sh` starts. You can modify four external ports in this file: `FS_PORT`, `HMS_PORT`, `HS_PORT`, and `PG_PORT`, which correspond to `hive2HdfsPort`, `hive2HmsPort`, `hive2ServerPort`, and `hive2PgPort` in `regression-conf.groovy`. The first two are for Hadoop's defaultFs and Hive metastore ports, with defaults of 8020 and 9083.
-      * `hive-3x_settings.env`: Hive3 initialization configuration script, which will be automatically called when `run-thirdparties-docker.sh` starts. You can modify four external ports in this file: `FS_PORT`, `HMS_PORT`, `HS_PORT`, and `PG_PORT`, which correspond to `hive3HdfsPort`, `hive3HmsPort`, `hive3ServerPort`, and `hive3PgPort` in `regression-conf.groovy`. The first two are for Hadoop's defaultFs and Hive metastore ports, with defaults of 8320 and 9383.
-      * The `scripts/` directory will be mounted to the container once it is started. Files in this directory require no modifications. Note that you need to download the pre-built files before you start the container: 
+- `postgresql-14.yaml.tpl`: Docker compose file template. No modifications required. The default username and password are `postgres` / `123456`.
+- `postgresql-14.env`: Configuration file. Configures the port exposed by the PostgreSQL container, which defaults to 5442.
+- `init/`: SQL files in this directory run automatically after the container is created. By default, they create databases and tables and insert a small amount of data.
+- `data/`: The local data directory mounted after the container starts. `run-thirdparties-docker.sh` clears and recreates it on every launch.
 
-        Download files from  `https://doris-regression-hk.oss-cn-hongkong.aliyuncs.com/regression/datalake/pipeline_data/tpch1.db.tar.gz`  to the `scripts/` directory and decompress.
+#### 1.3 Hive
 
-   4. Elasticsearch
+The Hive-related Docker compose files are stored under `docker/thirdparties/docker-compose/hive`, supporting both Hive2 and Hive3:
 
-      You can find three Docker images (for Elasticsearch 6, Elasticsearch 7, and Elasticsearch 8) in `docker/thirdparties/docker-compose/elasticsearch/` .
+- `hive-2x.yaml.tpl`, `hive-3x.yaml.tpl`: Docker compose file templates. No modifications required.
+- `hadoop-hive.env.tpl`, `hadoop-hive-2x.env.tpl`, `hadoop-hive-3x.env.tpl`: Configuration file templates. No modifications required.
+- `hive-2x_settings.env`: Hive2 initialization configuration script. `run-thirdparties-docker.sh` calls it automatically on startup. You can modify the four exposed ports `FS_PORT`, `HMS_PORT`, `HS_PORT`, and `PG_PORT`, which correspond to `hive2HdfsPort`, `hive2HmsPort`, `hive2ServerPort`, and `hive2PgPort` in `regression-conf.groovy`. The first two are the hadoop defaultFs and Hive metastore ports, defaulting to 8020 and 9083.
+- `hive-3x_settings.env`: Hive3 initialization configuration script. You can modify `FS_PORT`, `HMS_PORT`, `HS_PORT`, and `PG_PORT`, which correspond to `hive3HdfsPort`, `hive3HmsPort`, `hive3ServerPort`, and `hive3PgPort`. The first two default to 8320 and 9383.
+- The `scripts/` directory is mounted into the container after the container starts. The file contents do not need to be modified. Before starting the container, however, you must first download the prebuilt files:
 
-      * `es.yaml.tpl`: Docker Compose file template, three versions included, no modifications required.
-      * `es.env`: Configuration file, in which you need to configure the port number for Elasticsearch. 
-      * `scripts` : In this directory, you can find the initialization script after the image is started.
+    Download `https://doris-regression-hk.oss-cn-hongkong.aliyuncs.com/regression/datalake/pipeline_data/tpch1.db.tar.gz` into the `scripts/` directory and extract it.
 
-   5. Oracle
+#### 1.4 Elasticsearch
 
-      You can find the image for Oracle 11 in `docker/thirdparties/docker-compose/oracle/`.
+Includes Docker images for ES6, ES7, and ES8, stored under `docker/thirdparties/docker-compose/elasticsearch/`:
 
-      * `oracle-11.yaml.tpl`: Docker Compose file template, no modifications required. 
-      * `oracle-11.env`: Configure the external port for Oracle (default number: 1521).
+- `es.yaml.tpl`: Docker compose file template. Includes the ES6, ES7, and ES8 versions. No modifications required.
+- `es.env`: Configuration file. You need to configure the ES port numbers.
+- `scripts/`: Stores initialization scripts that run after the image starts.
 
-   6. SQLServer
+#### 1.5 Oracle
 
-      You can find the image for SQLServer 2022 in `docker/thirdparties/docker-compose/sqlserver/` .
+Provides an Oracle 11 image, stored under `docker/thirdparties/docker-compose/oracle/`:
 
-      * `sqlserver.yaml.tpl`: Docker Compose file template, no modifications required. 
-      * `sqlserver.env`: Configure the external port for SQLServer (default number: 1433).
+- `oracle-11.yaml.tpl`: Docker compose file template. No modifications required.
+- `oracle-11.env`: Configures the Oracle exposed port, which defaults to 1521.
 
-   7. ClickHouse
+#### 1.6 SQLServer
 
-      You can find the image for ClickHouse 22 in `docker/thirdparties/docker-compose/clickhouse/`.
-
-       * `clickhouse.yaml.tpl`: Docker Compose file template, no modifications required.
-       * `clickhouse.env`: Configure the external port for ClickHouse (default number: 8123).
-
-   8. Iceberg
-
-      You can find the image of Iceberg + Spark + Minio in `docker/thirdparties/docker-compose/iceberg/`.
-
-      * `iceberg.yaml.tpl`: Docker Compose file template, no modifications required.
-      * `entrypoint.sh.tpl`: The template of the initialization script after the image is started, no modifications required.
-      * `spark-defaults.conf.tpl`: Configuration file template for Spark, no modifications required.
-      * `iceberg.env`: Configuration file for external ports. You need to modify every external port to avoid conflicts.
-
-      After the image is started, execute the following command to start spark-sql:
-
-      `docker exec -it doris-xx-spark-iceberg spark-sql`        
-
-      In this command, `doris-xx-spark-iceberg` is the container name.
-
-      Execution examples for spark-sql iceberg:
-
-      ```
-      create database db1;
-      show databases;
-      create table db1.test1(k1 bigint, k2 bigint, k3 string) partitioned by (k1);
-      insert into db1.test1 values(1,2,'abc');
-      select * from db1.test1;
-      quit;
-      ```
+Provides a SQLServer 2022 image, stored under `docker/thirdparties/docker-compose/sqlserver/`:
 
-      You can also access by spark-shell:
+- `sqlserver.yaml.tpl`: Docker compose file template. No modifications required.
+- `sqlserver.env`: Configures the SQLServer exposed port, which defaults to 1433.
 
-      ```
-      docker exec -it doris-xx-spark-iceberg spark-shell
-      
-      spark.sql(s"create database db1")
-      spark.sql(s"show databases").show()
-      spark.sql(s"create table db1.test1(k1 bigint, k2 bigint, k3 string) partitioned by (k1)").show()
-      spark.sql(s"show tables from db1").show()
-      spark.sql(s"insert into db1.test1 values(1,2,'abc')").show()
-      spark.sql(s"select * from db1.test1").show()
-      :q
-      ```
+#### 1.7 ClickHouse
 
-      For more usage guide, see  [Tabular Documentation](https://tabular.io/blog/docker-spark-and-iceberg/).
+Provides a ClickHouse 22 image, stored under `docker/thirdparties/docker-compose/clickhouse/`:
 
-   9. Hudi
+- `clickhouse.yaml.tpl`: Docker compose file template. No modifications required.
+- `clickhouse.env`: Configures the ClickHouse exposed port, which defaults to 8123.
 
-      You can find the Hudi-related Docker Compose file in `docker/thirdparties/docker-compose/hudi`.
+#### 1.8 Iceberg
 
-      * `hudi.yaml.tpl`: Docker Compose file template, no modifications required.
+Provides an Iceberg + Spark + Minio image combination, stored under `docker/thirdparties/docker-compose/iceberg/`:
 
-      * `hadoop.env`: Configuration file template, no modifications required.
+- `iceberg.yaml.tpl`: Docker compose file template. No modifications required.
+- `entrypoint.sh.tpl`: Initialization script template that runs after the image starts. No modifications required.
+- `spark-defaults.conf.tpl`: Spark configuration file template. No modifications required.
+- `iceberg.env`: Exposed port configuration file. Modify the ports as needed to avoid conflicts.
 
-      * The `scripts/` directory will be mounted to the container once it is started. Files in this directory require no modifications. Note that you need to download the pre-built files before you start the container: 
+After startup, you can start spark-sql with the following command:
 
-        Download files from `https://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/load/hudi/hudi_docker_compose_attached_file.zip`  to the `scripts/` directory and decompress.
+```bash
+docker exec -it doris-xx-spark-iceberg spark-sql
+```
 
-      * Before starting, add the following configurations to `/etc/hosts` to avoid `UnknownHostException`:
+Here, `doris-xx-spark-iceberg` is the container name.
 
-      ```
-      127.0.0.1 adhoc-1
-      127.0.0.1 adhoc-2
-      127.0.0.1 namenode
-      127.0.0.1 datanode1
-      127.0.0.1 hiveserver
-      127.0.0.1 hivemetastore
-      127.0.0.1 sparkmaster
-      ```
+Example spark-sql Iceberg operations:
 
-      After starting, you can execute the following command to start a Hive query:
+```sql
+create database db1;
+show databases;
+create table db1.test1(k1 bigint, k2 bigint, k3 string) partitioned by (k1);
+insert into db1.test1 values(1,2,'abc');
+select * from db1.test1;
+quit;
+```
 
-      ```
-      docker exec -it adhoc-2 /bin/bash
-      
-      beeline -u jdbc:hive2://hiveserver:10000 \
-      --hiveconf hive.input.format=org.apache.hadoop.hive.ql.io.HiveInputFormat \
-      --hiveconf hive.stats.autogather=false
-      
-      show tables;
-      show partitions stock_ticks_mor_rt;
-      select symbol, max(ts) from stock_ticks_cow group by symbol HAVING symbol = 'GOOG';
-      select symbol, max(ts) from stock_ticks_mor_ro group by symbol HAVING symbol = 'GOOG';
-      exit;
-      ```
+You can also access it through spark-shell:
 
-      You can also access by spark-shell:
+```scala
+docker exec -it doris-xx-spark-iceberg spark-shell
 
-      ```
-      docker exec -it adhoc-1 /bin/bash
-      
-      $SPARK_INSTALL/bin/spark-shell \
-        --jars /var/scripts/hudi_docker_compose_attached_file/jar/hoodie-hive-sync-bundle.jar \
-        --master local[2] \
-        --driver-class-path $HADOOP_CONF_DIR \
-        --conf spark.sql.hive.convertMetastoreParquet=false \
-        --deploy-mode client \
-        --driver-memory 1G \
-        --executor-memory 3G \
-        --num-executors 1
-      
-      spark.sql("show tables").show(100, false)
-      spark.sql("select symbol, max(ts) from stock_ticks_cow group by symbol HAVING symbol = 'GOOG'").show(100, false)
-      spark.sql("select `_hoodie_commit_time`, symbol, ts, volume, open, close  from stock_ticks_cow where  symbol = 'GOOG'").show(100, false)
-      spark.sql("select symbol, max(ts) from stock_ticks_mor_ro group by symbol HAVING symbol = 'GOOG'").show(100, false)
-      spark.sql("select symbol, max(ts) from stock_ticks_mor_rt group by symbol HAVING symbol = 'GOOG'").show(100, false)
-      spark.sql("select `_hoodie_commit_time`, symbol, ts, volume, open, close  from stock_ticks_mor_ro where  symbol = 'GOOG'").show(100, false)
-      :q
-      ```
+spark.sql(s"create database db1")
+spark.sql(s"show databases").show()
+spark.sql(s"create table db1.test1(k1 bigint, k2 bigint, k3 string) partitioned by (k1)").show()
+spark.sql(s"show tables from db1").show()
+spark.sql(s"insert into db1.test1 values(1,2,'abc')").show()
+spark.sql(s"select * from db1.test1").show()
+:q
+```
 
-      For more usage guide, see [Hudi Documentation](https://hudi.apache.org/docs/docker_demo).
+For more usage details, see the [Tabular official documentation](https://tabular.io/blog/docker-spark-and-iceberg/).
 
-   10. Trino
-       You can find the Trino-related Docker Compose file in `docker/thirdparties/docker-compose/trino`.
+#### 1.9 Hudi
 
-       Template files:
+The Hudi-related Docker compose files are stored under `docker/thirdparties/docker-compose/hudi`:
 
-       * gen_env.sh.tpl: This is used to generate HDFS-related port numbers, no modifications required, but you can change the port numbers in the case of port conflicts.
+- `hudi.yaml.tpl`: Docker compose file template. No modifications required.
+- `hadoop.env`: Configuration file template. No modifications required.
+- The `scripts/` directory is mounted into the container after the container starts. The file contents do not need to be modified. Before starting the container, however, you must first download the prebuilt files:
 
-       * hive.properties.tpl: This is used to configure the Trino catalog, no modifications required. 
+    Download `https://doris-build-hk-1308700295.cos.ap-hongkong.myqcloud.com/regression/load/hudi/hudi_docker_compose_attached_file.zip` into the `scripts/` directory and extract it.
 
-       * trino_hive.env.tpl: Environment configurations of Hive, no modifications required. 
+Before starting, you can add the following configuration to `/etc/hosts` to avoid `UnknownHostException` errors:
 
-       * trino_hive.yaml.tpl: Docker Compose file, no modifications required. 
+```text
+127.0.0.1 adhoc-1
+127.0.0.1 adhoc-2
+127.0.0.1 namenode
+127.0.0.1 datanode1
+127.0.0.1 hiveserver
+127.0.0.1 hivemetastore
+127.0.0.1 sparkmaster
+```
 
-         After the Trino Docker is started, a Trino + Hive Catalog will be configured, and then Trino will have two catalogs.
+After startup, you can start a hive query with the following command:
 
-       1. Hive
-       2. TPCH (self-contained in Trino Docker)
+```bash
+docker exec -it adhoc-2 /bin/bash
 
-       For more usage guide, see  [Trino Documentation](https://trino.io/docs/current/installation/containers.html).
+beeline -u jdbc:hive2://hiveserver:10000 \
+--hiveconf hive.input.format=org.apache.hadoop.hive.ql.io.HiveInputFormat \
+--hiveconf hive.stats.autogather=false
 
-2. Run the regression test
+show tables;
+show partitions stock_ticks_mor_rt;
+select symbol, max(ts) from stock_ticks_cow group by symbol HAVING symbol = 'GOOG';
+select symbol, max(ts) from stock_ticks_mor_ro group by symbol HAVING symbol = 'GOOG';
+exit;
+```
 
-   Regression test for external data sources is disabled by default. You can enable it by modifying the following configurations in  `regression-test/conf/regression-conf.groovy` :
+You can also access it through spark-shell:
 
-   * `enableJdbcTest`: This is to enable test for JDBC external tables. For this purpose, you need to start the MySQL and PostgreSQL containers.
-   * `mysql_57_port` and `pg_14_port` are the external port of MySQL and PostgreSQL, respectively. Default port numbers: 3316 and 5442.
-   * `enableHiveTest`: This is to enable test for Hive external tables. For this purpose, you need to start the Hive container.
-   * `hive2HmsPort` is the external port for Hive2 metastore. Default number: 9083.
-   * `hive2HdfsPort` is the external port for Hive2 HDFS namenode. Default number: 8020.
-   * `enableEsTest`: This is to enable test for Elasticsearch external tables. For this purpose, you need to start the Elasticsearch container.
-   * `es_6_port`: Port for Elasticsearch 6.
-   * `es_7_port`: Port for Elasticsearch 7.
-   * `es_8_port`: Port for Elasticsearch 8.
+```bash
+docker exec -it adhoc-1 /bin/bash
+
+$SPARK_INSTALL/bin/spark-shell \
+  --jars /var/scripts/hudi_docker_compose_attached_file/jar/hoodie-hive-sync-bundle.jar \
+  --master local[2] \
+  --driver-class-path $HADOOP_CONF_DIR \
+  --conf spark.sql.hive.convertMetastoreParquet=false \
+  --deploy-mode client \
+  --driver-memory 1G \
+  --executor-memory 3G \
+  --num-executors 1
+
+spark.sql("show tables").show(100, false)
+spark.sql("select symbol, max(ts) from stock_ticks_cow group by symbol HAVING symbol = 'GOOG'").show(100, false)
+spark.sql("select `_hoodie_commit_time`, symbol, ts, volume, open, close  from stock_ticks_cow where  symbol = 'GOOG'").show(100, false)
+spark.sql("select symbol, max(ts) from stock_ticks_mor_ro group by symbol HAVING symbol = 'GOOG'").show(100, false)
+spark.sql("select symbol, max(ts) from stock_ticks_mor_rt group by symbol HAVING symbol = 'GOOG'").show(100, false)
+spark.sql("select `_hoodie_commit_time`, symbol, ts, volume, open, close  from stock_ticks_mor_ro where  symbol = 'GOOG'").show(100, false)
+:q
+```
+
+For more usage details, see the [Hudi official documentation](https://hudi.apache.org/docs/docker_demo).
+
+#### 1.10 Trino
+
+The Trino-related Docker compose files are stored under `docker/thirdparties/docker-compose/trino`. Template files:
+
+- `gen_env.sh.tpl`: Generates HDFS-related port numbers. No modifications required. If port conflicts occur, the port numbers can be modified.
+- `hive.properties.tpl`: Configures trino catalog information. No modifications required.
+- `trino_hive.env.tpl`: Environment configuration for Hive. No modifications required.
+- `trino_hive.yaml.tpl`: Docker compose file. No modifications required.
+
+After starting the Trino docker, a Trino + hive catalog environment is configured. At this point Trino has two catalogs:
+
+1. `hive`
+2. `tpch` (bundled with the trino docker)
+
+For more usage details, see the [Trino official documentation](https://trino.io/docs/current/installation/containers.html).
+
+### 2. Run Regression Tests
+
+External-table-related regression tests are disabled by default. You can enable them by editing the configuration in `regression-test/conf/regression-conf.groovy`. Example configuration items:
+
+| Configuration item | Description |
+|--------|------|
+| `enableJdbcTest` | Enables the JDBC external table test. Requires starting the MySQL and PostgreSQL containers. |
+| `mysql_57_port` | The MySQL exposed port, which defaults to 3316. |
+| `pg_14_port` | The PostgreSQL exposed port, which defaults to 5442. |
+| `enableHiveTest` | Enables the Hive external table test. Requires starting the Hive container. |
+| `hive2HmsPort` | The Hive2 metastore exposed port, which defaults to 9083. |
+| `hive2HdfsPort` | The Hive2 HDFS namenode exposed port, which defaults to 8020. |
+| `enableEsTest` | Enables the ES external table test. Requires starting the ES container. |
+| `es_6_port` | The ES6 port |
+| `es_7_port` | The ES7 port |
+| `es_8_port` | The ES8 port |
+
+---
+
+## FAQ
+
+<!-- Knowledge type: Troubleshooting -->
+
+**Q: `UnknownHostException` is reported when starting the hudi container.**
+
+A: Before startup, the mappings `adhoc-1` / `adhoc-2` / `namenode` / `datanode1` / `hiveserver` / `hivemetastore` / `sparkmaster` to `127.0.0.1` were not configured in `/etc/hosts`. Refer to [1.9 Hudi](#19-hudi) to add them.
+
+**Q: Network or container name conflicts between multiple container environments.**
+
+A: Edit `CONTAINER_UID` in `docker/thirdparties/custom_settings.env` to a unique prefix (such as `doris-10002-18sda1-`). All container names and networks are regenerated based on this prefix.
+
+**Q: Connection failure errors are reported when running external table tests.**
+
+A: Confirm that the corresponding `enableXxxTest` in `regression-conf.groovy` is `true`, that the configured ports match the actual ports exposed by docker compose after startup, and that the container status is normal (`docker ps -a`).
+
+**Q: How do I see the actual query result of a `qt` Action when the `.out` file does not yet exist?**
+
+A: Run with the `-genOut` (does not overwrite existing files) or `-forceGenOut` (force overwrite) parameter, for example `./run-regression-test.sh --run qt_action -genOut`.
+
+**Q: How do I prevent a SQL failure in a case from aborting the entire test suite?**
+
+A: Use `try_sql(...)` instead of `sql(...)`. It returns `null` on failure instead of throwing an exception.

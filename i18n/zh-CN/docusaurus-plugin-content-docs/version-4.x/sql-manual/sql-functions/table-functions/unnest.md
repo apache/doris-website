@@ -8,10 +8,6 @@
 ## 描述
 `unnest` 将数组/集合/映射类型表达式展开为多行（表生成函数）。支持在 SELECT 列表、FROM 中使用，并支持 WITH ORDINALITY 为每个展开行附加序号。与 `explode` 系列函数类似，但 `unnest` 支持多参数、Map 与 Bitmap 等类型，并在 FROM/LATERAL 与 JOIN 场景下支持 LEFT (outer) 语义。
 
-:::note
-该函数自4.1.0起支持
-:::
-
 ## 语法
 ```sql
 UNNEST(<expr>[, ...]) [WITH ORDINALITY] [AS alias [(col1, col2, ...)]]

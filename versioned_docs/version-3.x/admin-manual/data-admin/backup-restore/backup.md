@@ -49,8 +49,8 @@ ON LOCATION "s3://<container_name>/azure_repo"
 PROPERTIES
 (
     "azure.endpoint" = "https://<account_name>.blob.core.windows.net",
-    "azure.account_name" = "ak",
-    "azure.account_key" = "sk",
+    "azure.account_name" = "<account_name>",
+    "azure.account_key" = "<account_key>",
     "provider" = "AZURE"
 );
 ```

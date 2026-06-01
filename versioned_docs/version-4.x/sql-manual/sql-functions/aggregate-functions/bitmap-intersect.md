@@ -28,8 +28,6 @@ Returns a value of Bitmap type. If there is no valid data in the group, returns 
 
 ## Example
 
-## Example
-
 ```sql
 -- setup
 CREATE TABLE user_tags (

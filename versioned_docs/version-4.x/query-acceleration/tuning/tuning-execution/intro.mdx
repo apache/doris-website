@@ -1,0 +1,43 @@
+---
+{
+    "title": "Execution Tuning",
+    "language": "en",
+    "description": "Apache Doris execution tuning navigation: parallelism adjustment, RuntimeFilter wait time, data skew handling, and Hint-based CBO rule control."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Execution tuning addresses performance bottlenecks exposed at runtime: improper parallelism, RuntimeFilters that do not take effect in time, Shuffle data skew, and scenarios where the optimizer's choice requires manual intervention. First locate the symptom in the Profile, then choose the corresponding tuning method.
+
+## Runtime Optimization
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Parallelism Tuning"
+    description="Provides recommendations for setting `parallel_pipeline_task_num` across single-table scan, JOIN, aggregation, and high-concurrency scenarios, balancing query latency with scheduling overhead."
+    link="parallelism-tuning"
+/>
+
+<GettingStartedCard
+    title="Adjustment of RuntimeFilter Wait Time"
+    description="Identify the RuntimeFilter NOT_READY state from the Profile, and adjust `runtime_filter_wait_time_ms` so that the Probe side actually benefits from the filtering effect."
+    link="adjustment-of-runtimefilter-wait-time"
+/>
+
+<GettingStartedCard
+    title="Data Skew Handling"
+    description="Identify single-point execution bottlenecks caused by Join Key or bucket distribution, and rebalance Shuffle with techniques such as Broadcast Join and Leading Hint."
+    link="data-skew-handling"
+/>
+</div>
+
+## Optimizer Control
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Controlling CBO Rules with Hints"
+    description="When adaptive optimization is not enough, use the `USE_CBO_RULE` Hint to explicitly enable cost-based rewrite rules such as aggregate pushdown."
+    link="../tuning-plan/controlling-hints-with-cbo-rule"
+/>
+</div>

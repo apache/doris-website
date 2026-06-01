@@ -2,37 +2,78 @@
 {
     "title": "Python UDF, UDAF, UDWF, UDTF",
     "language": "en",
-    "description": "Python UDF provides users with an interface for writing UDFs in Python, facilitating the execution of custom functions using the Python language. Doris supports writing UDF, UDAF, and UDTF using Python. Unless otherwise specified, UDF is used to refer to all user-defined functions in the following text."
+    "description": "How to write UDFs, UDAFs, and UDTFs in Apache Doris using Python: covers creation, vectorization, environment configuration, and common troubleshooting.",
+    "keywords": [
+        "Doris Python UDF",
+        "Python UDAF",
+        "Python UDTF",
+        "Vectorized UDF",
+        "Pandas UDF",
+        "PYTHON_UDF runtime_version",
+        "Conda Python environment",
+        "venv Python environment",
+        "Python environment not found"
+    ]
 }
 ---
 
-## Python UDF
+<!-- Knowledge type: Feature overview + Operations guide + Configuration parameters -->
+<!-- Applicable scenario: Extending SQL capability in Doris / Implementing custom scalar, aggregate, and table functions in Python -->
 
-Python UDF (User Defined Function) is a custom scalar function extension mechanism provided by Apache Doris, allowing users to write custom functions in Python for data querying and processing. Through Python UDF, users can flexibly implement complex business logic, handle various data types, and fully leverage Python's rich ecosystem of libraries.
+Python UDF/UDAF/UDTF is the custom function extension mechanism provided by Apache Doris. It allows you to write scalar, aggregate, and table functions in Python so that SQL can express complex computation logic that is hard to implement with built-in functions, and so that you can reuse the rich Python ecosystem.
 
-Python UDF supports two execution modes:
-- **Scalar Mode**: Processes data row by row, suitable for simple transformations and calculations
-- **Vectorized Mode**: Processes data in batches, utilizing Pandas for high-performance computing
+This document starts from typical user scenarios and describes the usage, parameters, data type mapping, performance recommendations, limitations, and the deployment of multi-version Python environments for each of the three function types.
 
-:::tip Note
-**Environment Dependencies**: Before using Python UDF, you must pre-install **`pandas`** and **`pyarrow`** libraries in the Python environment on all BE nodes. These are mandatory dependencies for Doris Python UDF functionality. See [Python UDF Environment Configuration](python-user-defined-function#python-udfudafudtf-environment-configuration-and-multi-version-management).
+## When to Choose Python UDF/UDAF/UDTF
 
-**Log Path**: The Python UDF Server runtime log is located at `output/be/log/python_udf_output.log`. Users can check the Python Server's operation status, function execution information, and debug errors in this log.
+<!-- Knowledge type: Selection decision -->
+
+| Your scenario | Recommended | Relationship |
+| --- | --- | --- |
+| Per-row complex transformation, cleansing, masking, or validation | Python UDF (scalar function) | One row in to one row out |
+| Custom aggregation metrics over GROUP BY or window (OVER clause) | Python UDAF (aggregate function) | Many rows in to one row out |
+| Expanding one row into multiple rows, such as CSV/JSON parsing or sequence generation | Python UDTF (table function) | One row in to zero or many rows out |
+
+If performance is critical, prefer Doris built-in functions (implemented in C++). Python UDFs fit scenarios where built-in functions cannot satisfy the requirement and the data volume is moderate.
+
+## General Prerequisites
+
+<!-- Knowledge type: Pre-deployment check -->
+<!-- Applicable scenario: First time enabling Python UDF -->
+
+Before creating any Python UDF/UDAF/UDTF, complete the following preparations:
+
+1. **Enable Python UDF and configure the Python environment**: Enable the related parameters in the BE node `be.conf` and configure a multi-version Python environment using Conda or venv. See [Python UDF/UDAF/UDTF Environment Configuration and Multi-version Management](#python-udfudafudtf-environment-configuration-and-multi-version-management) for details.
+2. **Mandatory dependencies**: Pre-install **`pandas`** and **`pyarrow`** in the corresponding Python environment on all BE nodes. These are mandatory dependencies for the Doris Python UDF feature, and the function cannot run if they are missing.
+3. **Runtime logs**: The runtime log of the Python UDF Server is located at `output/be/log/python_udf_output.log`. You can inspect this log to view function execution and error messages for debugging.
+
+:::tip Tip
+All CREATE statements must explicitly specify `runtime_version` with a complete version number (such as `"3.10.12"`). You cannot specify only the major and minor version (such as `"3.10"`); otherwise the function call will fail.
 :::
 
-### Creating Python UDF
+## Python UDF (Scalar Function)
 
-Python UDF supports two creation modes: `Inline Mode` and `Module Mode`.
+<!-- Knowledge type: Operations guide -->
 
-:::caution Note
-If both the `file` parameter and `AS $$` inline Python code are specified, Doris will prioritize loading the **inline Python code** and run the Python UDF in inline mode.
+A Python UDF (User Defined Function) processes data row by row. The function is invoked once per row and returns a single result. It supports two execution modes:
+
+- **Scalar mode**: Processes data row by row. Suitable for simple transformations and computations.
+- **Vectorized mode**: Processes data in batches with the help of Pandas for high-performance computation.
+
+### Creating a Python UDF
+
+Python UDF supports two creation methods: **inline mode** and **module mode**.
+
+:::caution Caution
+If both the `file` parameter and the `AS $$` inline Python code are specified, Doris **prefers the inline Python code** and runs the function in inline mode.
 :::
 
 #### Inline Mode
 
-Inline mode allows writing Python code directly in SQL, suitable for simple function logic.
+Inline mode lets you write Python code directly in SQL. It is suitable for simple logic.
 
 **Syntax**:
+
 ```sql
 CREATE FUNCTION function_name(parameter_type1, parameter_type2, ...)
 RETURNS return_type
@@ -49,7 +90,8 @@ def entry_function_name(param1, param2, ...):
 $$;
 ```
 
-**Example 1: Integer Addition**
+**Example 1: Integer addition**
+
 ```sql
 DROP FUNCTION IF EXISTS py_add(INT, INT);
 
@@ -68,7 +110,8 @@ $$;
 SELECT py_add(10, 20) AS result; -- Result: 30
 ```
 
-**Example 2: String Concatenation**
+**Example 2: String concatenation (with NULL handling)**
+
 ```sql
 DROP FUNCTION IF EXISTS py_concat(STRING, STRING);
 
@@ -87,17 +130,17 @@ def evaluate(s1, s2):
 $$;
 
 SELECT py_concat('Hello', ' World') AS result; -- Result: Hello World
-SELECT py_concat(NULL, ' World') AS result; -- Result: NULL
-SELECT py_concat('Hello', NULL) AS result; -- Result: NULL
+SELECT py_concat(NULL, ' World') AS result;    -- Result: NULL
+SELECT py_concat('Hello', NULL) AS result;     -- Result: NULL
 ```
 
 #### Module Mode
 
-Module mode is suitable for complex function logic, requiring Python code to be packaged into a `.zip` archive and referenced during function creation.
+Module mode is suitable for complex logic. Package the Python code as a `.zip` archive and reference it in the `file` parameter when creating the function.
 
-**Step 1: Write Python Module**
+**Step 1: Write the Python module**
 
-Create `python_udf_scalar_ops.py` file:
+Create a file named `python_udf_scalar_ops.py`:
 
 ```python
 def add_three_numbers(a, b, c):
@@ -127,93 +170,94 @@ def is_prime(n):
     return True
 ```
 
-**Step 2: Package Python Module**
+**Step 2: Package the Python module**
 
-**Must** package Python files into `.zip` format (even for a single file):
+You **must** package the Python file in `.zip` format (even when there is only one file):
+
 ```bash
 zip python_udf_scalar_ops.zip python_udf_scalar_ops.py
 ```
 
-For multiple Python files:
+When there are multiple Python files:
+
 ```bash
 zip python_udf_scalar_ops.zip python_udf_scalar_ops.py utils.py helper.py ...
 ```
 
-**Step 3: Set Python Module Archive Path**
+**Step 3: Set the path of the `.zip` package**
 
-Python module archives support multiple deployment methods, specified through the `file` parameter for the `.zip` package path:
+Specify the `.zip` package path through the `file` parameter. Two methods are supported:
 
-**Method 1: Local Filesystem** (using `file://` protocol)
-```sql
-"file" = "file:///path/to/python_udf_scalar_ops.zip"
-```
-Suitable for scenarios where the `.zip` package is stored on the BE node's local filesystem.
+| Deployment method | Form | Applicable scenario |
+| --- | --- | --- |
+| Local file system | `"file" = "file:///path/to/python_udf_scalar_ops.zip"` | The `.zip` package is stored on the BE node local file system |
+| HTTP/HTTPS remote download | `"file" = "http://example.com/udf/xx.zip"` or `"file" = "https://s3.amazonaws.com/bucket/xx.zip"` | Download the `.zip` package from object storage (S3, OSS, COS, and so on) or an HTTP server. Doris automatically downloads and caches it locally |
 
-**Method 2: HTTP/HTTPS Remote Download** (using `http://` or `https://` protocol)
-```sql
-"file" = "http://example.com/udf/python_udf_scalar_ops.zip"
-"file" = "https://s3.amazonaws.com/bucket/python_udf_scalar_ops.zip"
-```
-Suitable for scenarios where the `.zip` package is downloaded from object storage (such as S3, OSS, COS, etc.) or HTTP servers. Doris will automatically download and cache it locally.
-
-:::caution Note
-- When using remote download method, ensure all BE nodes can access the URL
-- First call will download the file, which may have some delay
-- Files will be cached, subsequent calls do not need to download again
+:::caution Caution
+- When using remote download, ensure that all BE nodes can access the URL.
+- The first call downloads the file, which may introduce some latency.
+- The file is cached, so later calls do not download it again.
+- When using `file://`, Doris reads the package on the FE node during `CREATE FUNCTION` to compute the checksum, and reads the package on BE nodes during execution. Therefore, the same `.zip` file must exist at the same absolute path on all FE and BE nodes, and the file content must be identical. If the file exists only on BE nodes, `CREATE FUNCTION` fails. If the file content differs between FE and BE nodes, execution fails with a checksum mismatch.
 :::
 
-**Step 4: Set symbol Parameter**
+**Step 4: Set the `symbol` parameter**
 
-In module mode, the `symbol` parameter is used to specify the function's location in the ZIP package, with the format:
+In module mode, `symbol` specifies the location of the target function inside the ZIP package. The format is:
 
 ```
 [package_name.]module_name.func_name
 ```
 
-**Parameter Description**:
-- `package_name` (optional): Top-level Python package name in the ZIP archive. Can be omitted if the function is in the package's root module or if there is no package in the ZIP archive
-- `module_name` (required): Python module filename containing the target function (without `.py` suffix)
-- `func_name` (required): User-defined function name
+Parameter description:
 
-**Parsing Rules**:
-- Doris will split the `symbol` string by `.`:
-  - If **two** substrings are obtained, they are `module_name` and `func_name`
-  - If **three or more** substrings are obtained, the beginning is `package_name`, middle is `module_name`, and end is `func_name`
-- The `module_name` part is used as the module path for dynamic import via `importlib`
-- If `package_name` is specified, the entire path must form a valid Python import path, and the ZIP package structure must match this path
+- `package_name` (optional): The name of the top-level Python package inside the ZIP package. Omit this when the function lives in the root module of the package or when the ZIP package contains no package.
+- `module_name` (required): The Python module file name (without the `.py` suffix) that contains the target function.
+- `func_name` (required): The user-defined function name.
+
+Resolution rules:
+
+- Doris splits the `symbol` string by `.`:
+    - If the result has **two** substrings, they are `module_name` and `func_name`.
+    - If the result has **three or more** substrings, the first is `package_name`, the middle is `module_name`, and the last is `func_name`.
+- The `module_name` portion serves as the module path for dynamic import through `importlib`.
+- When `package_name` is specified, the entire path must form a valid Python import path, and the ZIP package structure must match the path.
 
 :::caution Warning
-Namespaces should be unique and avoid naming conflicts with the Python standard library or commonly used third-party libraries to prevent dependency conflicts and runtime exceptions caused by module overshadowing.
+The namespace should be unique. Avoid names that collide with the Python standard library or common third-party libraries to prevent dependency conflicts and runtime exceptions caused by module shadowing.
 :::
 
-**Example Illustrations**:
+**Example A: No package structure (two-part)**
 
-**Example A: No Package Structure (Two-Part)**
 ```
-ZIP Structure:
+ZIP structure:
 math_ops.py
 
 symbol = "math_ops.add"
 ```
-Indicates that the function `add` is defined in the `math_ops.py` file at the root of the ZIP package.
 
-**Example B: Package Structure (Three-Part)**
+This indicates that the function `add` is defined in `math_ops.py` at the root of the ZIP package.
+
+**Example B: With package structure (three-part)**
+
 ```
-ZIP Structure:
+ZIP structure:
 mylib/
 ├── __init__.py
 └── string_helper.py
 
 symbol = "mylib.string_helper.split_text"
 ```
-Indicates that the function `split_text` is defined in the `mylib/string_helper.py` file, where:
+
+This indicates that the function `split_text` is defined in `mylib/string_helper.py`, where:
+
 - `package_name` = `mylib`
 - `module_name` = `string_helper`
 - `func_name` = `split_text`
 
-**Example C: Nested Package Structure (Four-Part)**
+**Example C: Nested package structure (four-part)**
+
 ```
-ZIP Structure:
+ZIP structure:
 mylib/
 ├── __init__.py
 └── utils/
@@ -222,19 +266,22 @@ mylib/
 
 symbol = "mylib.utils.string_helper.split_text"
 ```
-Indicates that the function `split_text` is defined in the `mylib/utils/string_helper.py` file, where:
+
+This indicates that the function `split_text` is defined in `mylib/utils/string_helper.py`, where:
+
 - `package_name` = `mylib`
 - `module_name` = `utils.string_helper`
 - `func_name` = `split_text`
 
 > **Note**:
-> - If the `symbol` format is invalid (such as missing function name, empty module name, empty components in path, etc.), Doris will report an error during function invocation
-> - The directory structure in the ZIP package must match the path specified by `symbol`
-> - Each package directory needs to contain an `__init__.py` file (can be empty)
+> - When the `symbol` format is invalid (such as missing function name, empty module name, or empty path components), Doris reports an error at function call time.
+> - The directory structure inside the ZIP package must match the path specified by `symbol`.
+> - Each package directory must contain an `__init__.py` file (which can be empty).
 
-**Step 5: Create UDF Function**
+**Step 5: Create the UDF**
 
-**Example 1: Using Local Files (No Package Structure)**
+Example 1: Use a local file (no package structure)
+
 ```sql
 DROP FUNCTION IF EXISTS py_add_three(INT, INT, INT);
 DROP FUNCTION IF EXISTS py_reverse(STRING);
@@ -271,7 +318,8 @@ PROPERTIES (
 );
 ```
 
-**Example 2: Using HTTP/HTTPS Remote Files**
+Example 2: Use an HTTP/HTTPS remote file
+
 ```sql
 DROP FUNCTION IF EXISTS py_add_three(INT, INT, INT);
 DROP FUNCTION IF EXISTS py_reverse(STRING);
@@ -308,11 +356,12 @@ PROPERTIES (
 );
 ```
 
-**Example 3: Using Package Structure**
+Example 3: Use a package structure
+
 ```sql
 DROP FUNCTION IF EXISTS py_multiply(INT);
 
--- ZIP Structure: my_udf/__init__.py, my_udf/math_ops.py
+-- ZIP structure: my_udf/__init__.py, my_udf/math_ops.py
 CREATE FUNCTION py_multiply(INT)
 RETURNS INT
 PROPERTIES (
@@ -324,100 +373,103 @@ PROPERTIES (
 );
 ```
 
-**Step 6: Use Functions**
+**Step 6: Use the function**
 
 ```sql
 SELECT py_add_three(10, 20, 30) AS sum_result; -- Result: 60
-SELECT py_reverse('hello') AS reversed; -- Result: olleh
-SELECT py_is_prime(17) AS is_prime; -- Result: true
+SELECT py_reverse('hello') AS reversed;        -- Result: olleh
+SELECT py_is_prime(17) AS is_prime;            -- Result: true
 ```
 
-### Dropping Python UDF
+### Dropping a Python UDF
 
 ```sql
 -- Syntax
 DROP FUNCTION IF EXISTS function_name(parameter_type1, parameter_type2, ...);
 
--- Examples
+-- Example
 DROP FUNCTION IF EXISTS py_add_three(INT, INT, INT);
 DROP FUNCTION IF EXISTS py_reverse(STRING);
 DROP FUNCTION IF EXISTS py_is_prime(INT);
 ```
 
-### Parameter Description
+### Parameter Reference
 
 #### CREATE FUNCTION Parameters
 
 | Parameter | Required | Description |
-|------|---------|------|
-| `function_name` | Yes | Function name, must comply with identifier naming rules |
-| `parameter_type` | Yes | Parameter type list, supports various Doris data types |
+| --- | --- | --- |
+| `function_name` | Yes | Function name. Must comply with identifier naming rules |
+| `parameter_type` | Yes | Parameter type list. Supports the various Doris data types |
 | `return_type` | Yes | Return value type |
 
 #### PROPERTIES Parameters
 
 | Parameter | Required | Default | Description |
-|------|---------|--------|------|
-| `type` | Yes | - | Fixed as `"PYTHON_UDF"` |
-| `symbol` | Yes | - | Python function entry name.<br>• **Inline Mode**: Write function name directly, such as `"evaluate"`<br>• **Module Mode**: Format is `[package_name.]module_name.func_name`, see module mode description |
-| `file` | No | - | Python `.zip` package path, only required for module mode. Supports three protocols:<br>• `file://` - Local filesystem path<br>• `http://` - HTTP remote download<br>• `https://` - HTTPS remote download |
-| `runtime_version` | Yes | - | Python runtime version, such as `"3.10.12"`, requires complete version number |
-| `always_nullable` | No | `true` | Whether to always return nullable results |
+| --- | --- | --- | --- |
+| `type` | Yes | - | Fixed value `"PYTHON_UDF"` |
+| `symbol` | Yes | - | Python function entry name.<br/>• **Inline mode**: write the function name directly, such as `"evaluate"`<br/>• **Module mode**: format is `[package_name.]module_name.func_name`. See the module mode description for details |
+| `file` | No | - | Path to the Python `.zip` package. Required only in module mode. Supports three protocols:<br/>• `file://`: local file system path<br/>• `http://`: HTTP remote download<br/>• `https://`: HTTPS remote download |
+| `runtime_version` | Yes | - | Python runtime version, such as `"3.10.12"`. The complete version number is required |
+| `always_nullable` | No | `true` | Whether the function always returns a nullable result |
 
-#### Runtime Version Description
+#### Runtime Version Notes
 
-- Supports Python 3.x versions
-- Requires specifying complete version number (such as `"3.10.12"`), cannot use only major.minor version number (such as `"3.10"`)
-- If `runtime_version` is not specified, function invocation will report an error
+- Python 3.x is supported.
+- The complete version number must be specified (such as `"3.10.12"`); only the major and minor version (such as `"3.10"`) is not allowed.
+- When `runtime_version` is not specified, the function call fails.
 
 ### Data Type Mapping
 
-The following table lists the mapping relationship between Doris data types and Python types:
+<!-- Knowledge type: Reference -->
 
-| Type Category | Doris Type | Python Type | Description |
-|---------|-----------|------------|------|
-| Null Type | `NULL` | `None` | Null value |
-| Boolean Type | `BOOLEAN` | `bool` | Boolean value |
-| Integer Types | `TINYINT` | `int` | 8-bit integer |
-| | `SMALLINT` | `int` | 16-bit integer |
-| | `INT` | `int` | 32-bit integer |
-| | `BIGINT` | `int` | 64-bit integer |
-| | `LARGEINT` | `int` | 128-bit integer |
-| Floating Point Types | `FLOAT` | `float` | 32-bit floating point |
-| | `DOUBLE` | `float` | 64-bit floating point |
-| | `TIME` / `TIMEV2` | `float` | Time type (as floating point) |
-| String Types | `CHAR` | `str` | Fixed-length string |
-| | `VARCHAR` | `str` | Variable-length string |
-| | `STRING` | `str` | String |
-| | `JSONB` | `str` | JSON binary format (converted to string) |
-| | `VARIANT` | `str` | Variant type (converted to string) |
-| | `DATE` | `str` | Date string, format `'YYYY-MM-DD'` |
-| | `DATETIME` | `str` | DateTime string, format `'YYYY-MM-DD HH:MM:SS'` |
-| Date/Time Types | `DATEV2` | `datetime.date` | Date object |
-| | `DATETIMEV2` | `datetime.datetime` | DateTime object |
-| Decimal Types | `DECIMAL` / `DECIMALV2` | `decimal.Decimal` | High-precision decimal |
-| | `DECIMAL32` | `decimal.Decimal` | 32-bit fixed-point number |
-| | `DECIMAL64` | `decimal.Decimal` | 64-bit fixed-point number |
-| | `DECIMAL128` | `decimal.Decimal` | 128-bit fixed-point number |
-| | `DECIMAL256` | `decimal.Decimal` | 256-bit fixed-point number |
-| | `TIMESTAMPTZ` | `datetime.datetime` | DateTime object with time zone |
-| IP Data Types | `IPV4` | `ipaddress.IPv4Address` | IPv4 address |
-| | `IPV6` | `ipaddress.IPv6Address` | IPv6 address |
-| Binary Types | `BITMAP` | `bytes` | Bitmap data (currently not supported) |
-| | `HLL` | `bytes` | HyperLogLog data (currently not supported) |
-| | `QUANTILE_STATE` | `bytes` | Quantile state data (currently not supported) |
-| Complex Data Types | `ARRAY<T>` | `list` | Array, element type T |
-| | `MAP<K,V>` | `dict` | Dictionary, key type K, value type V |
-| | `STRUCT<f1:T1, f2:T2, ...>` | `dict` | Struct, field names as keys, field values as values |
+The following table lists the mapping between Doris data types and Python types:
 
-#### NULL Value Handling
+| Type category | Doris type | Python type | Description |
+| --- | --- | --- | --- |
+| Null type | `NULL` | `None` | Null value |
+| Boolean type | `BOOLEAN` | `bool` | Boolean value |
+| Integer types | `TINYINT` | `int` | 8-bit integer |
+|  | `SMALLINT` | `int` | 16-bit integer |
+|  | `INT` | `int` | 32-bit integer |
+|  | `BIGINT` | `int` | 64-bit integer |
+|  | `LARGEINT` | `int` | 128-bit integer |
+| Floating point types | `FLOAT` | `float` | 32-bit floating point |
+|  | `DOUBLE` | `float` | 64-bit floating point |
+|  | `TIME` / `TIMEV2` | `float` | Time type (represented as a floating point) |
+| String types | `CHAR` | `str` | Fixed-length string |
+|  | `VARCHAR` | `str` | Variable-length string |
+|  | `STRING` | `str` | String |
+|  | `JSONB` | `str` | JSON binary format (converted to a string) |
+|  | `VARIANT` | `str` | Variant type (converted to a string) |
+|  | `DATE` | `str` | Date string in `'YYYY-MM-DD'` format |
+|  | `DATETIME` | `str` | Datetime string in `'YYYY-MM-DD HH:MM:SS'` format |
+| Date/time types | `DATEV2` | `datetime.date` | Date object |
+|  | `DATETIMEV2` | `datetime.datetime` | Datetime object |
+|  | `TIMESTAMPTZ` | `datetime.datetime` | Datetime object with time zone |
+| Decimal types | `DECIMAL` / `DECIMALV2` | `decimal.Decimal` | High-precision decimal |
+|  | `DECIMAL32` | `decimal.Decimal` | 32-bit fixed-point |
+|  | `DECIMAL64` | `decimal.Decimal` | 64-bit fixed-point |
+|  | `DECIMAL128` | `decimal.Decimal` | 128-bit fixed-point |
+|  | `DECIMAL256` | `decimal.Decimal` | 256-bit fixed-point |
+| IP types | `IPV4` | `ipaddress.IPv4Address` | IPv4 address |
+|  | `IPV6` | `ipaddress.IPv6Address` | IPv6 address |
+| Binary types | `BITMAP` | `bytes` | Bitmap data (not supported yet) |
+|  | `HLL` | `bytes` | HyperLogLog data (not supported yet) |
+|  | `QUANTILE_STATE` | `bytes` | Quantile state data (not supported yet) |
+| Complex data types | `ARRAY<T>` | `list` | Array with element type T |
+|  | `MAP<K,V>` | `dict` | Dictionary with key type K and value type V |
+|  | `STRUCT<f1:T1, f2:T2, ...>` | `dict` | Struct with field names as keys and field values as values |
 
-- Doris `NULL` values are mapped to `None` in Python
-- If a function parameter is `NULL`, Python function receives `None`
-- If Python function returns `None`, Doris treats it as `NULL`
-- Recommend explicitly handling `None` values in functions to avoid runtime errors
+#### NULL Handling
+
+- A Doris `NULL` value maps to `None` in Python.
+- When a function argument is `NULL`, the Python function receives `None`.
+- When the Python function returns `None`, Doris treats it as `NULL`.
+- Handle `None` values explicitly in your function to avoid runtime errors.
 
 Example:
+
 ```sql
 DROP FUNCTION IF EXISTS py_safe_divide(DOUBLE, DOUBLE);
 
@@ -445,25 +497,30 @@ SELECT py_safe_divide(10.0, NULL);  -- Result: NULL
 
 ### Vectorized Mode
 
-Vectorized mode uses Pandas for batch data processing, offering better performance than scalar mode. In vectorized mode, function parameters are `pandas.Series` objects, and return values should also be `pandas.Series`.
+<!-- Applicable scenario: Large-batch data computation / Performance optimization -->
 
-:::caution Note
-To ensure the system correctly recognizes vectorized mode, please use type annotations in function signatures (such as `a: pd.Series`) and directly operate on batch data structures in function logic. If vectorized types are not explicitly used, the system will fall back to Scalar Mode.
+Vectorized mode uses Pandas to process data in batches and outperforms scalar mode. In vectorized mode, function arguments are `pandas.Series` objects, and the return value should also be a `pandas.Series`.
+
+:::caution Caution
+To make sure the system recognizes vectorized mode, use type annotations in the function signature (such as `a: pd.Series`) and operate directly on the batch data structure inside the function. Without explicit vectorized types, the system falls back to scalar mode.
+
+When the function signature mixes `pd.Series` types with regular types, the system treats the input column corresponding to a regular type parameter as a constant column (the same value is reused for the entire batch), which may produce results that do not match expectations. In vectorized mode, keep the parameter style consistent: either use `pandas.Series` type annotations for all parameters, or use regular type parameters for all (scalar mode).
 :::
 
 ```python
-## Vectorized Mode
+## Vectorized mode
 def add(a: pd.Series, b: pd.Series) -> pd.Series:
     return a + b + 1
 
-## Scalar Mode
+## Scalar mode
 def add(a, b):
     return a + b + 1
 ```
 
 #### Basic Examples
 
-**Example 1: Vectorized Integer Addition**
+**Example 1: Vectorized integer addition**
+
 ```sql
 DROP FUNCTION IF EXISTS py_vec_add(INT, INT);
 
@@ -485,7 +542,8 @@ $$;
 SELECT py_vec_add(1, 2); -- Result: 4
 ```
 
-**Example 2: Vectorized String Processing**
+**Example 2: Vectorized string processing**
+
 ```sql
 DROP FUNCTION IF EXISTS py_vec_upper(STRING);
 
@@ -507,7 +565,8 @@ $$;
 SELECT py_vec_upper('hello'); -- Result: 'HELLO'
 ```
 
-**Example 3: Vectorized Mathematical Operations**
+**Example 3: Vectorized math operations**
+
 ```sql
 DROP FUNCTION IF EXISTS py_vec_sqrt(DOUBLE);
 
@@ -530,11 +589,67 @@ $$;
 SELECT py_vec_sqrt(16); -- Result: 4.0
 ```
 
+**Example 4: Mixed parameter types in the function signature (both `pd.Series` and regular types)**
+
+```sql
+CREATE TABLE t_bug_013 (
+    id INT,
+    a INT,
+    b INT
+) ENGINE=OLAP
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO t_bug_013 VALUES
+    (1, 1, 10),
+    (2, 2, 20),
+    (3, 3, 30),
+    (4, 4, NULL),
+    (5, NULL, 50);
+
+DROP FUNCTION IF EXISTS py_mixed_vector_add(INT, INT);
+
+CREATE FUNCTION py_mixed_vector_add(INT, INT)
+RETURNS INT
+PROPERTIES (
+  "type"="PYTHON_UDF",
+  "symbol"="py_mixed_vector_add_impl",
+  "always_nullable"="true",
+  "runtime_version"="3.12.11"
+)
+AS $$
+import pandas as pd
+
+# Keep the parameter style consistent
+def py_mixed_vector_add_impl(x: pd.Series, y: int):
+    return x + y
+$$;
+
+SELECT
+	id,
+	a,
+	b,
+	py_mixed_vector_add(a, b) AS vector_val
+FROM t_bug_013
+ORDER BY id;
+-- Column b is treated as a constant column
++------+------+------+------------+
+| id   | a    | b    | vector_val |
++------+------+------+------------+
+|    1 |    1 |   10 |         11 |
+|    2 |    2 |   20 |         12 |
+|    3 |    3 |   30 |         13 |
+|    4 |    4 | NULL |         14 |
+|    5 | NULL |   50 |       NULL |
++------+------+------+------------+
+```
+
 #### Advantages of Vectorized Mode
 
-1. **Performance Optimization**: Batch processing reduces interaction frequency between Python and Doris
-2. **Leverage Pandas/NumPy**: Fully utilize vectorized computing performance advantages
-3. **Concise Code**: Pandas API allows more concise expression of complex logic
+1. **Performance optimization**: Processes data in batches and reduces the number of interactions between Python and Doris.
+2. **Leverages Pandas/NumPy**: Takes full advantage of vectorized computation.
+3. **Concise code**: The Pandas API expresses complex logic more concisely.
 
 #### Using Vectorized Functions
 
@@ -572,11 +687,12 @@ FROM test_table;
 +------+------------+------------+-------------------+
 ```
 
-### Complex Data Type Handling
+### Handling Complex Data Types
 
 #### ARRAY Type
 
-**Example: Array Element Sum**
+**Example: Sum array elements**
+
 ```sql
 DROP FUNCTION IF EXISTS py_array_sum(ARRAY<INT>);
 
@@ -590,7 +706,7 @@ PROPERTIES (
 )
 AS $$
 def evaluate(arr):
-    """ ARRAY type in Doris corresponds to list in Python """
+    """ The Doris ARRAY type maps to a Python list """
     if arr is None:
         return None
     return sum(arr)
@@ -599,7 +715,8 @@ $$;
 SELECT py_array_sum([1, 2, 3, 4, 5]) AS result; -- Result: 15
 ```
 
-**Example: Array Filtering**
+**Example: Filter an array**
+
 ```sql
 DROP FUNCTION IF EXISTS py_array_filter_positive(ARRAY<INT>);
 
@@ -623,7 +740,8 @@ SELECT py_array_filter_positive([1, -2, 3, -4, 5]) AS result; -- Result: [1, 3, 
 
 #### MAP Type
 
-**Example: Get MAP Key Count**
+**Example: Get the number of keys in a MAP**
+
 ```sql
 DROP FUNCTION IF EXISTS py_map_size(MAP<STRING, INT>);
 
@@ -637,7 +755,7 @@ PROPERTIES (
 )
 AS $$
 def evaluate(m):
-    """ MAP type in Doris corresponds to dict in Python """
+    """ The Doris MAP type maps to a Python dict """
     if m is None:
         return None
     return len(m)
@@ -646,7 +764,8 @@ $$;
 SELECT py_map_size({'a': 1, 'b': 2, 'c': 3}) AS result; -- Result: 3
 ```
 
-**Example: Get MAP Value**
+**Example: Get a value from a MAP**
+
 ```sql
 DROP FUNCTION IF EXISTS py_map_get(MAP<STRING, STRING>, STRING);
 
@@ -670,7 +789,8 @@ SELECT py_map_get({'name': 'Alice', 'age': '30'}, 'name') AS result; -- Result: 
 
 #### STRUCT Type
 
-**Example: Access STRUCT Field**
+**Example: Access STRUCT fields**
+
 ```sql
 DROP FUNCTION IF EXISTS py_struct_get_name(STRUCT<name: STRING, age: INT>);
 
@@ -684,7 +804,7 @@ PROPERTIES (
 )
 AS $$
 def evaluate(s):
-    """ STRUCT type in Doris corresponds to dict in Python """
+    """ The Doris STRUCT type maps to a Python dict """
     if s is None:
         return None
     return s.get('name')
@@ -693,7 +813,9 @@ $$;
 SELECT py_struct_get_name({'Alice', 30}) AS result; -- Result: Alice
 ```
 
-### Practical Application Scenarios
+### Real-world Scenarios
+
+<!-- Knowledge type: Scenario examples -->
 
 #### Scenario 1: Data Masking
 
@@ -787,7 +909,7 @@ $$;
 SELECT py_days_between('2024-01-01', '2024-12-31') AS days; -- Result: 365
 ```
 
-#### Scenario 4: ID Card Validation
+#### Scenario 4: ID Card Number Validation
 
 ```sql
 DROP FUNCTION IF EXISTS py_validate_id_card(STRING);
@@ -804,7 +926,7 @@ def evaluate(id_card):
     if id_card is None or len(id_card) != 18:
         return False
     
-    # Validate first 17 digits are numeric
+    # Verify that the first 17 characters are digits
     if not id_card[:17].isdigit():
         return False
     
@@ -812,79 +934,81 @@ def evaluate(id_card):
     weights = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
     check_codes = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2']
     
-    # Calculate check code
+    # Compute the check code
     total = sum(int(id_card[i]) * weights[i] for i in range(17))
     check_code = check_codes[total % 11]
     
     return id_card[17].upper() == check_code
 $$;
 
-SELECT py_validate_id_card('11010519491231002X') AS is_valid; -- Result: True
-
+SELECT py_validate_id_card('11010519491231002X') AS is_valid;  -- Result: True
 SELECT py_validate_id_card('110105194912310021x') AS is_valid; -- Result: False
 ```
 
-### Performance Optimization Recommendations
+### Performance Recommendations
 
 #### 1. Prefer Vectorized Mode
 
-Vectorized mode significantly outperforms scalar mode:
+Vectorized mode performs significantly better than scalar mode:
 
 ```python
-# Scalar Mode - Process row by row
+# Scalar mode: row-by-row processing
 def scalar_process(x):
     return x * 2
 
-# Vectorized Mode - Batch processing
+# Vectorized mode: batch processing
 import pandas as pd
 def vector_process(x: pd.Series) -> pd.Series:
     return x * 2
 ```
 
-#### 2. Use Module Mode for Complex Logic Management
+#### 2. Use Module Mode for Complex Logic
 
-Place complex function logic in separate Python files for easier maintenance and reuse.
+Place complex function logic in standalone Python files for easier maintenance and reuse.
 
-#### 3. Avoid I/O Operations in Functions
+#### 3. Avoid I/O Operations Inside Functions
 
-Not recommended to perform file read/write, network requests, and other I/O operations in UDF, which will seriously impact performance.
+Avoid file I/O, network requests, and other I/O operations in UDFs. They severely impact performance.
 
-### Limitations and Considerations
+### Limitations and Notes
 
 #### 1. Python Version Support
 
-- Only supports Python 3.x versions
-- Recommend using Python 3.10 or higher
-- Ensure Doris cluster has the corresponding Python runtime installed
+- Only Python 3.x is supported.
+- Python 3.10 or later is recommended.
+- Make sure the Doris cluster has the corresponding Python runtime installed.
 
 #### 2. Dependency Libraries
 
-- Built-in support for Python standard library
-- Third-party libraries need to be pre-installed in the cluster environment
+- The Python standard library is supported out of the box.
+- To use third-party libraries, install them in the cluster environment in advance.
 
 #### 3. Performance Considerations
 
-- Python UDF performance is lower than Doris built-in functions (C++ implementation)
-- For performance-sensitive scenarios, prioritize Doris built-in functions
-- Large data volume scenarios recommend using vectorized mode
+- Python UDF performance is lower than that of Doris built-in functions (implemented in C++).
+- For performance-sensitive scenarios, prefer Doris built-in functions.
+- For large data volumes, use vectorized mode.
 
 #### 4. Security
 
-- UDF code executes in Doris processes, must ensure code is safe and trusted
-- Avoid dangerous operations in UDF (such as system commands, file deletion, etc.)
-- Production environments recommend auditing UDF code
+- UDF code runs inside the Doris process, so the code must be safe and trusted.
+- Avoid dangerous operations in UDFs (such as system commands or file deletion).
+- Review UDF code in production environments.
 
-#### 5. Resource Limitations
+#### 5. Resource Limits
 
-- UDF execution occupies BE node CPU and memory resources
-- Heavy UDF usage may impact overall cluster performance
-- Recommend monitoring UDF resource consumption
+- UDF execution consumes CPU and memory resources on BE nodes.
+- Heavy UDF use can affect overall cluster performance.
+- Monitor the resource consumption of UDFs.
 
-### Frequently Asked Questions (FAQ)
+### Frequently Asked Questions
 
-#### Q1: How to use third-party libraries in Python UDF?
+<!-- Knowledge type: FAQ -->
 
-A: Need to install corresponding Python libraries on all BE nodes. For example:
+#### Q1: How do I use a third-party library in a Python UDF?
+
+A: Install the corresponding Python library on every BE node. For example:
+
 ```bash
 pip3 install numpy pandas
 conda install numpy pandas
@@ -892,86 +1016,86 @@ conda install numpy pandas
 
 #### Q2: Does Python UDF support recursive functions?
 
-A: Yes, but need to pay attention to recursion depth to avoid stack overflow.
+A: Yes, but be careful with recursion depth to avoid stack overflow.
 
-#### Q3: How to debug Python UDF?
+#### Q3: How do I debug a Python UDF?
 
-A: Can debug function logic in local Python environment first, ensure correctness before creating UDF. Can check BE logs for error information.
+A: Debug the function logic in a local Python environment first to make sure it is correct, then create the UDF. View BE logs for error information.
 
 #### Q4: Does Python UDF support global variables?
 
-A: Yes, but not recommended, because global variable behavior in distributed environments may not meet expectations.
+A: Yes, but they are not recommended. In a distributed environment, global variable behavior may not match expectations.
 
-#### Q5: How to update existing Python UDF?
+#### Q5: How do I update an existing Python UDF?
 
-A: Delete old UDF first, then create new one:
+A: Drop the old UDF first, then create a new one:
+
 ```sql
 DROP FUNCTION IF EXISTS function_name(parameter_types);
 CREATE FUNCTION function_name(...) ...;
 ```
 
-#### Q6: Can Python UDF access external resources?
+#### Q6: Can a Python UDF access external resources?
 
-A: Technically possible, but **strongly not recommended**. Python UDF can use network request libraries (such as `requests`) to access external APIs, databases, etc., but this will seriously impact performance and stability. Reasons include:
-- Network latency will slow down queries
-- External service unavailability will cause UDF failure
-- Large concurrent requests may cause external service pressure
-- Difficult to control timeout and error handling
+A: Technically yes, but it is **strongly discouraged**. You can use network libraries (such as `requests`) inside a Python UDF to access external APIs and databases, but this severely affects performance and stability. Reasons include:
 
-## Python UDAF
+- Network latency slows down queries.
+- The UDF fails when the external service is unavailable.
+- Heavy concurrent requests can put pressure on the external service.
+- Timeouts and error handling are hard to control.
 
-Python UDAF (User Defined Aggregate Function) is a custom aggregate function extension mechanism provided by Apache Doris, allowing users to write custom aggregate functions in Python for data grouping aggregation and window calculations. Through Python UDAF, users can flexibly implement complex aggregation logic such as statistical analysis, data collection, custom metric calculations, etc.
+## Python UDAF (Aggregate Function)
 
-Core features of Python UDAF:
-- **Distributed Aggregation**: Supports data aggregation in distributed environments, automatically handling data partitioning, merging, and final computation
-- **State Management**: Maintains aggregation state through class instances, supporting complex state objects
-- **Window Function Support**: Can be used with window functions (OVER clause) to implement advanced features like moving aggregations, ranking, etc.
-- **High Flexibility**: Can implement arbitrarily complex aggregation logic without being limited by built-in aggregate functions
+<!-- Knowledge type: Operations guide -->
 
-:::tip Note
-**Environment Dependencies**: Before using Python UDAF, you must pre-install **`pandas`** and **`pyarrow`** libraries in the Python environment on all BE nodes. These are mandatory dependencies for Doris Python UDAF functionality. See [Python UDAF Environment Configuration](python-user-defined-function#python-udfudafudtf-environment-configuration-and-multi-version-management).
+Python UDAF (User Defined Aggregate Function) lets you define custom aggregate functions for grouped aggregation and window computation. With Python UDAF, you can flexibly implement complex aggregation logic such as statistical analysis, data collection, and custom metric computation.
 
-**Log Path**: The Python UDAF Server runtime log is located at `output/be/log/python_udf_output.log`. Users can check the Python Server's operation status, aggregate function execution information, and debug errors in this log.
-:::
+Core characteristics of Python UDAF:
+
+- **Distributed aggregation**: Supports aggregation in a distributed environment, automatically handling data partitioning, merging, and final computation.
+- **State management**: Maintains aggregation state through class instances, supporting complex state objects.
+- **Window function support**: Works with window functions (the OVER clause) for moving aggregations, ranking, and other advanced features.
+- **High flexibility**: Implements arbitrarily complex aggregation logic without being limited by built-in aggregate functions.
 
 ### UDAF Basic Concepts
 
-#### Lifecycle of Aggregate Functions
+#### Aggregate Function Lifecycle
 
-Python UDAF is implemented through classes, and the execution of an aggregate function includes the following stages:
+A Python UDAF is implemented as a class. The execution of an aggregate function involves the following stages:
 
-1. **Initialization (__init__)**: Creates aggregation state object, initializes state variables
-2. **Accumulation (accumulate)**: Processes single row data, updates aggregation state
-3. **Merging (merge)**: Merges aggregation states from multiple partitions (distributed scenario)
-4. **Completion (finish)**: Computes and returns final aggregation result
+1. **Initialization (`__init__`)**: Creates the aggregation state object and initializes state variables.
+2. **Accumulation (`accumulate`)**: Processes a single row and updates the aggregation state.
+3. **Merge (`merge`)**: Merges aggregation states from multiple partitions (in distributed scenarios).
+4. **Finish (`finish`)**: Computes and returns the final aggregation result.
 
-#### Required Class Methods and Properties
+#### Required Class Methods and Attributes
 
-A complete Python UDAF class must implement the following methods:
+A complete Python UDAF class must implement the following:
 
-| Method/Property | Description | Required |
-|----------|------|---------| 
-| `__init__(self)` | Initialize aggregation state | Yes |
-| `accumulate(self, *args)` | Accumulate single row data | Yes |
-| `merge(self, other_state)` | Merge states from other partitions | Yes |
-| `finish(self)` | Return final aggregation result | Yes |
-| `aggregate_state` (property) | Return serializable aggregation state, **must support pickle serialization** | Yes |
+| Method/attribute | Description | Required |
+| --- | --- | --- |
+| `__init__(self)` | Initializes the aggregation state | Yes |
+| `accumulate(self, *args)` | Accumulates data from a single row | Yes |
+| `merge(self, other_state)` | Merges states from other partitions | Yes |
+| `finish(self)` | Returns the final aggregation result | Yes |
+| `aggregate_state` (attribute) | Returns the serializable aggregation state. **Must support pickle serialization** | Yes |
 
 ### Basic Syntax
 
-#### Creating Python UDAF
+#### Creating a Python UDAF
 
-Python UDAF supports two creation modes: `Inline Mode` and `Module Mode`.
+Python UDAF supports two creation methods: **inline mode** and **module mode**.
 
 :::tip Note
-If both the `file` parameter and `AS $$` inline Python code are specified, Doris will **prioritize loading inline Python code** and run the Python UDAF in inline mode.
+If both the `file` parameter and the `AS $$` inline Python code are specified, Doris **prefers the inline Python code** and runs the Python UDAF in inline mode.
 :::
 
 ##### Inline Mode
 
-Inline mode allows writing Python classes directly in SQL, suitable for simple aggregation logic.
+Inline mode lets you write a Python class directly in SQL. It is suitable for simple aggregation logic.
 
 **Syntax**:
+
 ```sql
 CREATE AGGREGATE FUNCTION function_name(parameter_type1, parameter_type2, ...)
 RETURNS return_type
@@ -988,7 +1112,7 @@ class ClassName:
         
     @property
     def aggregate_state(self):
-        # Return serializable state
+        # Return the serializable state
         
     def accumulate(self, *args):
         # Accumulate data
@@ -997,11 +1121,11 @@ class ClassName:
         # Merge state
         
     def finish(self):
-        # Return final result
+        # Return the final result
 $$;
 ```
 
-**Example 1: Sum Aggregation**
+**Example 1: Sum aggregation**
 
 ```sql
 DROP TABLE IF EXISTS sales;
@@ -1068,7 +1192,7 @@ ORDER BY category;
 +-------------+--------------+
 ```
 
-**Example 2: Average Aggregation**
+**Example 2: Average aggregation**
 
 ```sql
 DROP TABLE IF EXISTS employees;
@@ -1143,17 +1267,17 @@ ORDER BY department;
 
 ##### Module Mode
 
-Module mode is suitable for complex aggregation logic, requiring Python code to be packaged into a `.zip` archive and referenced during function creation.
+Module mode is suitable for complex aggregation logic. Package the Python code as a `.zip` archive and reference it when creating the function.
 
-**Step 1: Write Python Module**
+**Step 1: Write the Python module**
 
-Create `stats_udaf.py` file:
+Create a file named `stats_udaf.py`:
 
 ```python
 import math
 
 class VarianceUDAF:
-    """Calculate population variance"""
+    """Compute the population variance"""
     
     def __init__(self):
         self.count = 0
@@ -1185,7 +1309,7 @@ class VarianceUDAF:
 
 
 class StdDevUDAF:
-    """Calculate population standard deviation"""
+    """Compute the population standard deviation"""
     
     def __init__(self):
         self.count = 0
@@ -1217,7 +1341,7 @@ class StdDevUDAF:
 
 
 class MedianUDAF:
-    """Calculate median"""
+    """Compute the median"""
     
     def __init__(self):
         self.values = []
@@ -1245,56 +1369,54 @@ class MedianUDAF:
             return sorted_vals[n//2]
 ```
 
-**Step 2: Package Python Module**
+**Step 2: Package the Python module**
 
-**Must** package Python files into `.zip` format (even for a single file):
+You **must** package the Python file in `.zip` format (even when there is only one file):
+
 ```bash
 zip stats_udaf.zip stats_udaf.py
 ```
 
-**Step 3: Set Python Module Archive Path**
+**Step 3: Set the path of the `.zip` package**
 
-Supports multiple deployment methods, specified through the `file` parameter for the `.zip` package path:
+Specify the `.zip` package path through the `file` parameter:
 
-**Method 1: Local Filesystem** (using `file://` protocol)
-```sql
-"file" = "file:///path/to/stats_udaf.zip"
-```
+| Deployment method | Form |
+| --- | --- |
+| Local file system (`file://` protocol) | `"file" = "file:///path/to/stats_udaf.zip"` |
+| HTTP/HTTPS remote download (`http://` or `https://` protocol) | `"file" = "http://example.com/udaf/stats_udaf.zip"`<br/>`"file" = "https://s3.amazonaws.com/bucket/stats_udaf.zip"` |
 
-**Method 2: HTTP/HTTPS Remote Download** (using `http://` or `https://` protocol)
-```sql
-"file" = "http://example.com/udaf/stats_udaf.zip"
-"file" = "https://s3.amazonaws.com/bucket/stats_udaf.zip"
-```
+> **Note**:
+> - When using remote download, ensure that all BE nodes can access the URL.
+> - The first call downloads the file, which may introduce some latency.
+> - The file is cached, so later calls do not download it again.
+> - When using `file://`, Doris reads the package on the FE node during `CREATE AGGREGATE FUNCTION` to compute the checksum, and reads the package on BE nodes during execution. The same `.zip` file must exist at the same absolute path on all FE and BE nodes, and the file content must be identical. If the file exists only on BE nodes, function creation fails. If the file content differs between FE and BE nodes, execution fails with a checksum mismatch.
 
-> **Note**: 
-> - When using remote download method, ensure all BE nodes can access the URL
-> - First call will download the file, which may have some delay
-> - Files will be cached, subsequent calls do not need to download again
+**Step 4: Set the `symbol` parameter**
 
-**Step 4: Set symbol Parameter**
-
-In module mode, the `symbol` parameter is used to specify the class's location in the ZIP package, with the format:
+In module mode, `symbol` specifies the location of the class inside the ZIP package. The format is:
 
 ```
 [package_name.]module_name.ClassName
 ```
 
-**Parameter Description**:
-- `package_name` (optional): Top-level Python package name in the ZIP archive
-- `module_name` (required): Python module filename containing the target class (without `.py` suffix)
-- `ClassName` (required): UDAF class name
+Parameter description:
 
-**Parsing Rules**:
-- Doris will split the `symbol` string by `.`:
-  - If **two** substrings are obtained, they are `module_name` and `ClassName`
-  - If **three or more** substrings are obtained, the beginning is `package_name`, middle is `module_name`, and end is `ClassName`
+- `package_name` (optional): The name of the top-level Python package inside the ZIP package.
+- `module_name` (required): The Python module file name (without the `.py` suffix) that contains the target class.
+- `ClassName` (required): The UDAF class name.
+
+Resolution rules:
+
+- Doris splits the `symbol` string by `.`:
+    - If the result has **two** substrings, they are `module_name` and `ClassName`.
+    - If the result has **three or more** substrings, the first is `package_name`, the middle is `module_name`, and the last is `ClassName`.
 
 :::caution Warning
-Namespaces should be unique and avoid naming conflicts with the Python standard library or commonly used third-party libraries to prevent dependency conflicts and runtime exceptions caused by module overshadowing.
+The namespace should be unique. Avoid names that collide with the Python standard library or common third-party libraries to prevent dependency conflicts and runtime exceptions caused by module shadowing.
 :::
 
-**Step 5: Create UDAF Functions**
+**Step 5: Create the UDAF**
 
 ```sql
 DROP FUNCTION IF EXISTS py_variance(DOUBLE);
@@ -1332,7 +1454,7 @@ PROPERTIES (
 );
 ```
 
-**Step 6: Use Functions**
+**Step 6: Use the function**
 
 ```sql
 DROP TABLE IF EXISTS exam_results;
@@ -1379,47 +1501,48 @@ ORDER BY category;
 +----------+-------------------+-------------------+--------+
 ```
 
-#### Dropping Python UDAF
+#### Dropping a Python UDAF
 
 ```sql
 -- Syntax
 DROP FUNCTION IF EXISTS function_name(parameter_types);
 
--- Examples
+-- Example
 DROP FUNCTION IF EXISTS py_sum(INT);
 DROP FUNCTION IF EXISTS py_avg(DOUBLE);
 DROP FUNCTION IF EXISTS py_variance(DOUBLE);
 ```
 
-### Parameter Description
+### Parameter Reference
 
 #### CREATE AGGREGATE FUNCTION Parameters
 
 | Parameter | Description |
-|------|------|
-| `function_name` | Function name, follows SQL identifier naming rules |
-| `parameter_types` | Parameter type list, such as `INT`, `DOUBLE`, `STRING`, etc. |
+| --- | --- |
+| `function_name` | Function name. Follows SQL identifier naming rules |
+| `parameter_types` | Parameter type list, such as `INT`, `DOUBLE`, or `STRING` |
 | `RETURNS return_type` | Return value type |
 
 #### PROPERTIES Parameters
 
 | Parameter | Required | Default | Description |
-|------|---------|--------|------|
-| `type` | Yes | - | Fixed as `"PYTHON_UDF"` |
-| `symbol` | Yes | - | Python class name.<br>• **Inline Mode**: Write class name directly, such as `"SumUDAF"`<br>• **Module Mode**: Format is `[package_name.]module_name.ClassName` |
-| `file` | No | - | Python `.zip` package path, only required for module mode. Supports three protocols:<br>• `file://` - Local filesystem path<br>• `http://` - HTTP remote download<br>• `https://` - HTTPS remote download |
+| --- | --- | --- | --- |
+| `type` | Yes | - | Fixed value `"PYTHON_UDF"` |
+| `symbol` | Yes | - | Python class name.<br/>• **Inline mode**: write the class name directly, such as `"SumUDAF"`<br/>• **Module mode**: format is `[package_name.]module_name.ClassName` |
+| `file` | No | - | Path to the Python `.zip` package. Required only in module mode. Supports three protocols:<br/>• `file://`: local file system path<br/>• `http://`: HTTP remote download<br/>• `https://`: HTTPS remote download |
 | `runtime_version` | Yes | - | Python runtime version, such as `"3.10.12"` |
-| `always_nullable` | No | `true` | Whether to always return nullable results |
+| `always_nullable` | No | `true` | Whether the function always returns a nullable result |
 
-#### runtime_version Description
+#### runtime_version Notes
 
-- Must fill in **complete version number** of Python version, format is `x.x.x` or `x.x.xx`
-- Doris will search for matching version interpreter in configured Python environment
+- The Python version must be specified as a **complete version number** in the format `x.x.x` or `x.x.xx`.
+- Doris looks up an interpreter that matches this version in the configured Python environments.
 
 ### Window Functions
 
-Python UDAF can be used with window functions (OVER clause):
-> If Python UDAF is used in window functions (OVER clause), Doris will call the `reset` method of the UDAF after calculating each window frame, which needs to be implemented in the class to reset the aggregation state to its initial value
+You can combine Python UDAF with window functions (the OVER clause):
+
+> When you use a Python UDAF in a window function (OVER clause), Doris calls the `reset` method of the UDAF after each window frame is computed. Implement this method in the class to reset the aggregation state to its initial value.
 
 ```sql
 DROP TABLE IF EXISTS daily_sales_data;
@@ -1504,19 +1627,19 @@ ORDER BY sales_date;
 
 ### Data Type Mapping
 
-Python UDAF uses exactly the same data type mapping rules as Python UDF, including all types such as integers, floats, strings, date/time, Decimal, boolean, etc.
+Python UDAF uses the same data type mapping rules as Python UDF, including all integer, floating point, string, datetime, decimal, and boolean types.
 
-**For detailed data type mapping relationships, please refer to**: [Data Type Mapping](python-user-defined-function#data-type-mapping)
+**For the detailed type mapping, see**: [Data Type Mapping](#data-type-mapping).
 
-#### NULL Value Handling
+#### NULL Handling
 
-- Doris maps SQL `NULL` values to Python's `None`
-- In the `accumulate` method, need to check if parameters are `None`
-- Aggregate functions can return `None` to indicate result is `NULL`
+- Doris maps SQL `NULL` values to Python `None`.
+- In the `accumulate` method, check whether the parameter is `None`.
+- An aggregate function can return `None` to indicate that the result is `NULL`.
 
-### Practical Application Scenarios
+### Real-world Scenarios
 
-#### Scenario 1: Calculate Percentiles
+#### Scenario 1: Compute Percentiles
 
 ```sql
 DROP FUNCTION IF EXISTS py_percentile(DOUBLE, INT);
@@ -1531,11 +1654,11 @@ PROPERTIES (
 )
 AS $$
 class PercentileUDAF:
-    """Calculate percentile, second parameter is percentile (0-100)"""
+    """Compute a percentile. The second argument is the percentile (0-100)"""
     
     def __init__(self):
         self.values = []
-        self.percentile = 50  # Default median
+        self.percentile = 50  # Median by default
     
     @property
     def aggregate_state(self):
@@ -1611,7 +1734,7 @@ ORDER BY category;
 +----------+-------+-------+-------+-------+
 ```
 
-#### Scenario 2: String Deduplication and Aggregation
+#### Scenario 2: Deduplicated String Collection
 
 ```sql
 DROP FUNCTION IF EXISTS py_collect_set(STRING);
@@ -1626,7 +1749,7 @@ PROPERTIES (
 )
 AS $$
 class CollectSetUDAF:
-    """Deduplicate and collect strings, return comma-separated string"""
+    """Collect deduplicated strings and return a comma-separated string"""
     
     def __init__(self):
         self.items = set()
@@ -1740,19 +1863,20 @@ ORDER BY date;
 +------------+-------+-------------------+
 ```
 
-### Performance Optimization Recommendations
+### Performance Recommendations
 
-#### 1. Optimize State Object Size
+#### 1. Optimize the Size of the State Object
 
-- Avoid storing large amounts of raw data in state objects
-- Use aggregated statistics instead of complete data lists whenever possible
-- For scenarios that must store data (such as median), consider sampling or limiting data volume
+- Avoid storing large amounts of raw data in the state object.
+- Use aggregated statistics whenever possible instead of complete data lists.
+- For scenarios that must store data (such as median computation), consider sampling or limiting the data volume.
 
-**Not recommended usage**:
+**Not recommended**:
+
 ```python
 class BadMedianUDAF:
     def __init__(self):
-        self.all_values = []  # May be very large
+        self.all_values = []  # Can be very large
     
     def accumulate(self, value):
         if value is not None:
@@ -1761,145 +1885,146 @@ class BadMedianUDAF:
 
 #### 2. Reduce Object Creation
 
-- Reuse state objects, avoid frequent creation of new objects
-- Use primitive data types instead of complex objects
+- Reuse the state object and avoid creating new objects frequently.
+- Use primitive data types instead of complex objects.
 
-#### 3. Simplify merge Logic
+#### 3. Simplify Merge Logic
 
-- `merge` method is called frequently in distributed environments
-- Ensure merge operations are efficient and correct
+- The `merge` method is called frequently in distributed environments.
+- Make sure the merge operation is efficient and correct.
 
-#### 4. Use Incremental Calculation
+#### 4. Use Incremental Computation
 
-- For metrics that can be calculated incrementally (such as average), use incremental approach instead of storing all data
+- For metrics that can be computed incrementally (such as the average), use incremental computation instead of storing all data.
 
 #### 5. Avoid Using External Resources
 
-- Do not access databases or external APIs in UDAF
-- All calculations should be based on incoming data and internal state
+- Do not access databases or external APIs in a UDAF.
+- All computation should be based on the input data and internal state.
 
-### Limitations and Considerations
+### Limitations and Notes
 
 #### 1. Performance Considerations
 
-- Python UDAF performance is lower than built-in aggregate functions
-- Recommended for scenarios with complex logic but moderate data volume
-- For large data volume scenarios, prioritize built-in functions or optimize UDAF implementation
+- Python UDAF performance is lower than that of built-in aggregate functions.
+- Use it for scenarios with complex logic and moderate data volumes.
+- For large data volumes, prefer built-in functions or optimize the UDAF implementation.
 
 #### 2. State Serialization
 
-- Objects returned by `aggregate_state` **must support pickle serialization**
-- Supported types: basic types (int, float, str, bool), list, dict, tuple, set, and custom class instances that support pickle serialization
-- Not supported: file handles, database connections, socket connections, thread locks, and other objects that cannot be pickle serialized
-- If state object cannot be pickle serialized, function execution will report an error
-- **Recommend prioritizing built-in types** (dict, list, tuple) as state objects to ensure compatibility and maintainability
+- The object returned by `aggregate_state` **must support pickle serialization**.
+- Supported types: primitive types (int, float, str, bool), lists, dicts, tuples, sets, and custom class instances that support pickle serialization.
+- Not supported: file handles, database connections, socket connections, thread locks, and other objects that cannot be pickled.
+- When the state object cannot be pickled, the function fails at execution time.
+- **Prefer built-in types** (dict, list, tuple) for state objects to ensure compatibility and maintainability.
 
-#### 3. Memory Limitations
+#### 3. Memory Limits
 
-- State objects occupy memory, avoid storing too much data
-- Large state objects will affect performance and stability
+- The state object consumes memory. Avoid storing too much data.
+- Large state objects affect performance and stability.
 
 #### 4. Function Naming
 
-- Same function name can be repeatedly defined in different databases
-- Call time should specify database name (such as `db.func()`) to avoid ambiguity
+- The same function name can be defined in different databases.
+- Specify the database name when calling (such as `db.func()`) to avoid ambiguity.
 
 #### 5. Environment Consistency
 
-- Python environment on all BE nodes must be consistent
-- Including Python version, dependency package versions, environment configuration
+- The Python environment on all BE nodes must be consistent.
+- This includes the Python version, dependency package versions, and environment configuration.
 
-### Frequently Asked Questions (FAQ)
+### Frequently Asked Questions
+
+<!-- Knowledge type: FAQ -->
 
 #### Q1: What is the difference between UDAF and UDF?
 
-A: **UDF** processes single row data, returns single row result. Function is called once per row. **UDAF** processes multiple rows of data, returns single aggregation result. Used with GROUP BY.
+A: A **UDF** processes a single row and returns a single result; the function is called once per row. A **UDAF** processes multiple rows and returns a single aggregated result, used together with GROUP BY.
 
 ```sql
--- UDF: Called for each row
+-- UDF: invoked for each row
 SELECT id, py_upper(name) FROM users;
 
--- UDAF: Called once per group
+-- UDAF: invoked once per group
 SELECT category, py_sum(amount) FROM sales GROUP BY category;
 ```
 
-#### Q2: What is the purpose of the aggregate_state property?
+#### Q2: What does the `aggregate_state` attribute do?
 
-A: `aggregate_state` is used to serialize and transmit aggregation state in distributed environments:
-- **Serialization**: Convert state object to transmittable format, using **pickle protocol** for serialization
-- **Merging**: Merge partial aggregation results between different nodes
-- **Must support pickle serialization**: Can return basic types, lists, dictionaries, tuples, sets, and custom class instances that support pickle serialization
-- **Cannot return**: File handles, database connections, socket connections, thread locks, and other objects that cannot be pickle serialized, otherwise function execution will report error
+A: `aggregate_state` is used to serialize and transmit the aggregation state in a distributed environment:
 
-#### Q3: Can UDAF be used in window functions?
+- **Serialization**: Converts the state object to a transmittable format using the **pickle protocol**.
+- **Merge**: Merges partial aggregation results across nodes.
+- **Must support pickle serialization**: Can return primitive types, lists, dicts, tuples, sets, and custom class instances that support pickle serialization.
+- **Not allowed to return**: file handles, database connections, socket connections, thread locks, or other objects that cannot be pickled. Otherwise the function fails at execution time.
 
-A: Yes. Python UDAF fully supports window functions (OVER clause).
+#### Q3: Can a UDAF be used in window functions?
 
-#### Q4: When is the merge method called?
+A: Yes. Python UDAF fully supports window functions (the OVER clause).
 
-A: The `merge` method is called in the following situations:
-- **Distributed aggregation**: Merge partial aggregation results from different BE nodes
-- **Parallel processing**: Merge partial results from different threads within the same node
-- **Window functions**: Merge partial results within window frame
+#### Q4: When is the `merge` method called?
 
-Therefore, `merge` implementation must be correct, otherwise it will lead to incorrect results.
+A: `merge` is called in the following situations:
 
+- **Distributed aggregation**: Merging partial aggregation results from different BE nodes.
+- **Parallel processing**: Merging partial results from different threads on the same node.
+- **Window functions**: Merging partial results inside the window frame.
 
-## Python UDTF
+The `merge` implementation must therefore be correct, otherwise the result is wrong.
 
-Python UDTF (User Defined Table Function) is a custom table function extension mechanism provided by Apache Doris, allowing users to write custom table functions in Python to convert single-row data into multi-row output. Through Python UDTF, users can flexibly implement complex logic such as data splitting, expansion, and generation.
+## Python UDTF (Table Function)
 
-Core features of Python UDTF:
-- **One Row to Multiple Rows**: Receives single row input, outputs zero, one, or multiple rows of results
-- **Flexible Output Structure**: Can define any number and type of output columns, supports both simple types and complex STRUCT types
-- **Lateral View Support**: Used with `LATERAL VIEW` to implement data expansion and association
-- **Functional Programming**: Uses Python functions and `yield` statements, concise and intuitive
+<!-- Knowledge type: Operations guide -->
 
-:::tip Note
-**Environment Dependencies**: Before using Python UDTF, you must pre-install **`pandas`** and **`pyarrow`** libraries in the Python environment on all BE nodes. These are mandatory dependencies for Doris Python UDTF functionality. See [Python UDTF Environment Configuration](python-user-defined-function#python-udfudafudtf-environment-configuration-and-multi-version-management).
+Python UDTF (User Defined Table Function) lets you define custom table functions that turn a single row into multiple output rows. It is useful for data splitting, expansion, and generation.
 
-**Log Path**: The Python UDTF Server runtime log is located at `output/be/log/python_udf_output.log`. Users can check the Python Server's operation status, aggregate function execution information, and debug errors in this log.
-:::
+Core characteristics of Python UDTF:
+
+- **One row to many rows**: Takes a single row as input and produces zero, one, or many rows of output.
+- **Flexible output structure**: Allows any number and type of output columns, supporting simple types and complex STRUCT types.
+- **Lateral view support**: Works with `LATERAL VIEW` for data expansion and joining.
+- **Functional style**: Uses Python functions and the `yield` statement, which is concise and intuitive.
 
 ### UDTF Basic Concepts
 
-#### Execution Method of Table Functions
+#### How a Table Function Executes
 
-Python UDTF is implemented through **functions** (not classes), and the execution flow of a function is as follows:
+A Python UDTF is implemented as a **function** (not a class). The execution flow is:
 
-1. **Receive Input**: Function receives column values of single row data as parameters
-2. **Process and Produce**: Produces zero or multiple rows of results through `yield` statement
-3. **Stateless**: Each function call independently processes one row, does not retain state from previous row
+1. **Receive input**: The function takes the column values of a single row as parameters.
+2. **Process and yield**: The `yield` statement yields zero or more output rows.
+3. **Stateless**: Each function invocation processes one row independently and does not retain state from the previous row.
 
 #### Function Requirements
 
-Python UDTF functions must meet the following requirements:
+A Python UDTF function must satisfy the following requirements:
 
-- **Use yield to produce results**: Produce output rows through `yield` statement
-- **Parameter type correspondence**: Function parameters correspond to parameter types defined in SQL
-- **Output format matching**: Data format of `yield` must match `RETURNS ARRAY<...>` definition
+- **Yield results with `yield`**: Use the `yield` statement to produce output rows.
+- **Match parameter types**: The function parameters correspond to the parameter types defined in SQL.
+- **Match output format**: The format of the data yielded must match the `RETURNS ARRAY<...>` definition.
 
 #### Output Methods
 
-- **Single column output**: `yield value` produces single value
-- **Multi-column output**: `yield (value1, value2, ...)` produces tuple of multiple values
-- **Conditional skip**: Do not call `yield`, this row produces no output
+- **Single column output**: `yield value` yields a single value.
+- **Multi-column output**: `yield (value1, value2, ...)` yields a tuple of values.
+- **Conditional skip**: Not calling `yield` produces no output for that row.
 
 ### Basic Syntax
 
-#### Creating Python UDTF
+#### Creating a Python UDTF
 
-Python UDTF supports two creation modes: Inline Mode and Module Mode.
+Python UDTF supports two creation methods: **inline mode** and **module mode**.
 
-:::caution Note
-If both the `file` parameter and `AS $$` inline Python code are specified, Doris will **prioritize loading inline Python code** and run the Python UDTF in inline mode.
+:::caution Caution
+If both the `file` parameter and the `AS $$` inline Python code are specified, Doris **prefers the inline Python code** and runs the Python UDTF in inline mode.
 :::
 
 ##### Inline Mode
 
-Inline mode allows writing Python functions directly in SQL, suitable for simple table function logic.
+Inline mode lets you write a Python function directly in SQL. It is suitable for simple table function logic.
 
 **Syntax**:
+
 ```sql
 CREATE TABLES FUNCTION function_name(parameter_type1, parameter_type2, ...)
 RETURNS ARRAY<return_type>
@@ -1914,17 +2039,18 @@ def function_name(param1, param2, ...):
     '''Function description'''
     # Processing logic
     yield result  # Single column output
-    # or
+    # Or
     yield (result1, result2, ...)  # Multi-column output
 $$;
 ```
 
-> **Important Syntax Notes**:
-> - Use `CREATE TABLES FUNCTION` (note **TABLES**, plural form)
-> - Single column output: `ARRAY<type>`, such as `ARRAY<INT>`
-> - Multi-column output: `ARRAY<STRUCT<col1:type1, col2:type2, ...>>`
+> **Important syntax notes**:
+> - Use `CREATE TABLES FUNCTION` (note that **TABLES** is plural).
+> - Single column output: `ARRAY<type>`, such as `ARRAY<INT>`.
+> - Multi-column output: `ARRAY<STRUCT<col1:type1, col2:type2, ...>>`.
 
-**Example 1: String Split (Single Column Output)**
+**Example 1: String split (single column output)**
+
 ```sql
 DROP FUNCTION IF EXISTS py_split(STRING, STRING);
 
@@ -1938,11 +2064,11 @@ PROPERTIES (
 )
 AS $$
 def split_string_udtf(text, delimiter):
-    '''Split string by delimiter into multiple rows'''
+    '''Split a string into multiple rows by the delimiter'''
     if text is not None and delimiter is not None:
         parts = text.split(delimiter)
         for part in parts:
-            # Also supports yield (part.strip(),) 
+            # yield (part.strip(),) is also supported
             yield part.strip()
 $$;
 
@@ -1959,7 +2085,8 @@ LATERAL VIEW py_split(fruits, ',') tmp AS part;
 +--------+
 ```
 
-**Example 2: Generate Number Sequence (Single Column Output)**
+**Example 2: Generate a number sequence (single column output)**
+
 ```sql
 DROP FUNCTION IF EXISTS py_range(INT, INT);
 
@@ -1973,7 +2100,7 @@ PROPERTIES (
 )
 AS $$
 def generate_series_udtf(start, end):
-    '''Generate integer sequence from start to end'''
+    '''Generate an integer sequence from start to end'''
     if start is not None and end is not None:
         for i in range(start, end + 1):
             yield i
@@ -2010,7 +2137,8 @@ LATERAL VIEW py_range(start_val, end_val) tmp AS n;
 +------------+
 ```
 
-**Example 3: Multi-Column Output (STRUCT)**
+**Example 3: Multi-column output (STRUCT)**
+
 ```sql
 DROP FUNCTION IF EXISTS py_duplicate(STRING, INT);
 
@@ -2024,7 +2152,7 @@ PROPERTIES (
 )
 AS $$
 def duplicate_udtf(text, n):
-    '''Duplicate text n times, each with sequence number'''
+    '''Duplicate text n times, each with a sequence number'''
     if text is not None and n is not None:
         for i in range(n):
             yield (text, i + 1)
@@ -2043,7 +2171,8 @@ LATERAL VIEW py_duplicate(text, times) tmp AS output, idx;
 +--------+------+
 ```
 
-**Example 4: Cartesian Product (Multi-Column STRUCT)**
+**Example 4: Cartesian product (multi-column STRUCT)**
+
 ```sql
 DROP FUNCTION IF EXISTS py_cartesian(STRING, STRING);
 
@@ -2057,7 +2186,7 @@ PROPERTIES (
 )
 AS $$
 def cartesian_udtf(list1, list2):
-    '''Generate Cartesian product of two lists'''
+    '''Generate the Cartesian product of two lists'''
     if list1 is not None and list2 is not None:
         items1 = [x.strip() for x in list1.split(',')]
         items2 = [y.strip() for y in list2.split(',')]
@@ -2082,7 +2211,8 @@ LATERAL VIEW py_cartesian(list1, list2) tmp AS item1, item2;
 +-------+-------+
 ```
 
-**Example 5: JSON Array Parsing**
+**Example 5: Parse a JSON array**
+
 ```sql
 DROP FUNCTION IF EXISTS py_explode_json(STRING);
 
@@ -2098,7 +2228,7 @@ AS $$
 import json
 
 def explode_json_udtf(json_str):
-    '''Parse JSON array, output each element as one row'''
+    '''Parse a JSON array and output one row per element'''
     if json_str is not None:
         try:
             data = json.loads(json_str)
@@ -2106,7 +2236,7 @@ def explode_json_udtf(json_str):
                 for item in data:
                     yield (str(item),)
         except:
-            pass  # Skip on parsing failure
+            pass  # Skip on parse failure
 $$;
 
 SELECT element
@@ -2124,23 +2254,23 @@ LATERAL VIEW py_explode_json(json_data) tmp AS element;
 
 ##### Module Mode
 
-Module mode is suitable for complex table function logic, requiring Python code to be packaged into a `.zip` archive and referenced during function creation.
+Module mode is suitable for complex table function logic. Package the Python code as a `.zip` archive and reference it when creating the function.
 
-**Step 1: Write Python Module**
+**Step 1: Write the Python module**
 
-Create `text_udtf.py` file:
+Create a file named `text_udtf.py`:
 
 ```python
 import json
 import re
 
 def split_lines_udtf(text):
-    """Split text by lines"""
+    """Split text by line"""
     if text:
         lines = text.split('\n')
         for line in lines:
             line = line.strip()
-            if line:  # Filter empty lines
+            if line:  # Filter out empty lines
                 yield (line,)
 
 
@@ -2154,7 +2284,7 @@ def extract_emails_udtf(text):
 
 
 def parse_json_object_udtf(json_str):
-    """Parse JSON object, output key-value pairs"""
+    """Parse a JSON object and output key-value pairs"""
     if json_str:
         try:
             data = json.loads(json_str)
@@ -2166,14 +2296,14 @@ def parse_json_object_udtf(json_str):
 
 
 def expand_json_array_udtf(json_str):
-    """Expand objects in JSON array, output structured data"""
+    """Expand the objects in a JSON array and output structured data"""
     if json_str:
         try:
             data = json.loads(json_str)
             if isinstance(data, list):
                 for item in data:
                     if isinstance(item, dict):
-                        # Assume each object has id, name, score fields
+                        # Assume each object has id, name, and score fields
                         item_id = item.get('id')
                         name = item.get('name')
                         score = item.get('score')
@@ -2183,7 +2313,7 @@ def expand_json_array_udtf(json_str):
 
 
 def ngram_udtf(text, n):
-    """Generate N-gram phrases"""
+    """Generate N-grams"""
     if text and n and n > 0:
         words = text.split()
         for i in range(len(words) - n + 1):
@@ -2191,57 +2321,55 @@ def ngram_udtf(text, n):
             yield (ngram,)
 ```
 
-**Step 2: Package Python Module**
+**Step 2: Package the Python module**
 
-**Must** package Python files into `.zip` format (even for a single file):
+You **must** package the Python file in `.zip` format (even when there is only one file):
+
 ```bash
 zip text_udtf.zip text_udtf.py
 ```
 
-**Step 3: Set Python Module Archive Path**
+**Step 3: Set the path of the `.zip` package**
 
-Supports multiple deployment methods, specified through the `file` parameter for the `.zip` package path:
+Specify the `.zip` package path through the `file` parameter:
 
-**Method 1: Local Filesystem** (using `file://` protocol)
-```sql
-"file" = "file:///path/to/text_udtf.zip"
-```
+| Deployment method | Form |
+| --- | --- |
+| Local file system (`file://` protocol) | `"file" = "file:///path/to/text_udtf.zip"` |
+| HTTP/HTTPS remote download (`http://` or `https://` protocol) | `"file" = "http://example.com/udtf/text_udtf.zip"`<br/>`"file" = "https://s3.amazonaws.com/bucket/text_udtf.zip"` |
 
-**Method 2: HTTP/HTTPS Remote Download** (using `http://` or `https://` protocol)
-```sql
-"file" = "http://example.com/udtf/text_udtf.zip"
-"file" = "https://s3.amazonaws.com/bucket/text_udtf.zip"
-```
-
-:::caution Note
-- When using remote download method, ensure all BE nodes can access the URL
-- First call will download the file, which may have some delay
-- Files will be cached, subsequent calls do not need to download again
+:::caution Caution
+- When using remote download, ensure that all BE nodes can access the URL.
+- The first call downloads the file, which may introduce some latency.
+- The file is cached, so later calls do not download it again.
+- When using `file://`, Doris reads the package on the FE node during `CREATE TABLES FUNCTION` to compute the checksum, and reads the package on BE nodes during execution. Therefore, the same `.zip` file must exist at the same absolute path on all FE and BE nodes, and the file content must be identical. If the file exists only on BE nodes, function creation fails. If the file content differs between FE and BE nodes, execution fails with a checksum mismatch.
 :::
 
-**Step 4: Set symbol Parameter**
+**Step 4: Set the `symbol` parameter**
 
-In module mode, the `symbol` parameter is used to specify the function's location in the ZIP package, with the format:
+In module mode, `symbol` specifies the location of the function inside the ZIP package. The format is:
 
 ```
 [package_name.]module_name.function_name
 ```
 
-**Parameter Description**:
-- `package_name` (optional): Top-level Python package name in the ZIP archive
-- `module_name` (required): Python module filename containing the target function (without `.py` suffix)
-- `function_name` (required): UDTF function name
+Parameter description:
 
-**Parsing Rules**:
-- Doris will split the `symbol` string by `.`:
-  - If **two** substrings are obtained, they are `module_name` and `function_name`
-  - If **three or more** substrings are obtained, the beginning is `package_name`, middle is `module_name`, and end is `function_name`
+- `package_name` (optional): The name of the top-level Python package inside the ZIP package.
+- `module_name` (required): The Python module file name (without the `.py` suffix) that contains the target function.
+- `function_name` (required): The UDTF function name.
+
+Resolution rules:
+
+- Doris splits the `symbol` string by `.`:
+    - If the result has **two** substrings, they are `module_name` and `function_name`.
+    - If the result has **three or more** substrings, the first is `package_name`, the middle is `module_name`, and the last is `function_name`.
 
 :::caution Warning
-Namespaces should be unique and avoid naming conflicts with the Python standard library or commonly used third-party libraries to prevent dependency conflicts and runtime exceptions caused by module overshadowing.
+The namespace should be unique. Avoid names that collide with the Python standard library or common third-party libraries to prevent dependency conflicts and runtime exceptions caused by module shadowing.
 :::
 
-**Step 5: Create UDTF Functions**
+**Step 5: Create the UDTF**
 
 ```sql
 DROP FUNCTION IF EXISTS py_split_lines(STRING);
@@ -2301,7 +2429,7 @@ PROPERTIES (
 );
 ```
 
-**Step 6: Use Functions**
+**Step 6: Use the function**
 
 ```sql
 SELECT line
@@ -2366,65 +2494,65 @@ LATERAL VIEW py_ngram(text, 2) tmp AS ngram;
 +---------------+
 ```
 
-#### Dropping Python UDTF
+#### Dropping a Python UDTF
 
 ```sql
 -- Syntax
 DROP FUNCTION IF EXISTS function_name(parameter_types);
 
--- Examples
+-- Example
 DROP FUNCTION IF EXISTS py_split(STRING, STRING);
 DROP FUNCTION IF EXISTS py_range(INT, INT);
 DROP FUNCTION IF EXISTS py_explode_json(STRING);
 ```
 
-#### Modifying Python UDTF
+#### Modifying a Python UDTF
 
-Doris does not support directly modifying existing functions, you need to drop first and then recreate:
+Doris does not support modifying an existing function directly. Drop it first and then recreate it:
 
 ```sql
 DROP FUNCTION IF EXISTS py_split(STRING, STRING);
 CREATE TABLES FUNCTION py_split(STRING, STRING) ...;
 ```
 
-### Parameter Description
+### Parameter Reference
 
 #### CREATE TABLES FUNCTION Parameters
 
 | Parameter | Description |
-|------|------|
-| `function_name` | Function name, follows SQL identifier naming rules |
-| `parameter_types` | Parameter type list, such as `INT`, `STRING`, `DOUBLE`, etc. |
-| `RETURNS ARRAY<...>` | Returned array type, defines output structure<br>• Single column: `ARRAY<type>`<br>• Multi-column: `ARRAY<STRUCT<col1:type1, col2:type2, ...>>` |
+| --- | --- |
+| `function_name` | Function name. Follows SQL identifier naming rules |
+| `parameter_types` | Parameter type list, such as `INT`, `STRING`, or `DOUBLE` |
+| `RETURNS ARRAY<...>` | The returned array type, which defines the output structure<br/>• Single column: `ARRAY<type>`<br/>• Multi-column: `ARRAY<STRUCT<col1:type1, col2:type2, ...>>` |
 
 #### PROPERTIES Parameters
 
 | Parameter | Required | Default | Description |
-|------|---------|--------|------|
-| `type` | Yes | - | Fixed as `"PYTHON_UDF"` |
-| `symbol` | Yes | - | Python function name.<br>• **Inline Mode**: Write function name directly, such as `"split_string_udtf"`<br>• **Module Mode**: Format is `[package_name.]module_name.function_name` |
-| `file` | No | - | Python `.zip` package path, only required for module mode. Supports three protocols:<br>• `file://` - Local filesystem path<br>• `http://` - HTTP remote download<br>• `https://` - HTTPS remote download |
+| --- | --- | --- | --- |
+| `type` | Yes | - | Fixed value `"PYTHON_UDF"` |
+| `symbol` | Yes | - | Python function name.<br/>• **Inline mode**: write the function name directly, such as `"split_string_udtf"`<br/>• **Module mode**: format is `[package_name.]module_name.function_name` |
+| `file` | No | - | Path to the Python `.zip` package. Required only in module mode. Supports three protocols:<br/>• `file://`: local file system path<br/>• `http://`: HTTP remote download<br/>• `https://`: HTTPS remote download |
 | `runtime_version` | Yes | - | Python runtime version, such as `"3.10.12"` |
-| `always_nullable` | No | `true` | Whether to always return nullable results |
+| `always_nullable` | No | `true` | Whether the function always returns a nullable result |
 
-#### runtime_version Description
+#### runtime_version Notes
 
-- Must fill in **complete version number** of Python version, format is `x.x.x` or `x.x.xx`
-- Doris will search for matching version interpreter in configured Python environment
+- The Python version must be specified as a **complete version number** in the format `x.x.x` or `x.x.xx`.
+- Doris looks up an interpreter that matches this version in the configured Python environments.
 
 ### Data Type Mapping
 
-Python UDTF uses exactly the same data type mapping rules as Python UDF, including all types such as integers, floats, strings, date/time, Decimal, boolean, arrays, STRUCT, etc.
+Python UDTF uses the same data type mapping rules as Python UDF, including all integer, floating point, string, datetime, decimal, boolean, array, and STRUCT types.
 
-**For detailed data type mapping relationships, please refer to**: [Data Type Mapping](python-user-defined-function#data-type-mapping)
+**For the detailed type mapping, see**: [Data Type Mapping](#data-type-mapping).
 
-#### NULL Value Handling
+#### NULL Handling
 
-- Doris maps SQL `NULL` values to Python's `None`
-- In functions, need to check if parameters are `None`
-- Values produced by `yield` can contain `None`, indicating that column is `NULL`
+- Doris maps SQL `NULL` values to Python `None`.
+- Check whether the parameter is `None` in the function.
+- A value yielded by `yield` may contain `None`, indicating that the column is `NULL`.
 
-### Practical Application Scenarios
+### Real-world Scenarios
 
 #### Scenario 1: CSV Data Parsing
 
@@ -2441,7 +2569,7 @@ PROPERTIES (
 )
 AS $$
 def parse_csv_udtf(csv_data):
-    '''Parse multi-line data in CSV format'''
+    '''Parse multi-row CSV data'''
     if csv_data is None:
         return
     lines = csv_data.strip().split('\n')
@@ -2486,7 +2614,7 @@ AS $$
 from datetime import datetime, timedelta
 
 def date_range_udtf(start_date, end_date):
-    '''Generate date range'''
+    '''Generate a date range'''
     if start_date is None or end_date is None:
         return
     try:
@@ -2534,13 +2662,13 @@ AS $$
 import re
 
 def tokenize_udtf(text):
-    '''Tokenize text, output words and positions'''
+    '''Tokenize text and output the words and their positions'''
     if text is None:
         return
-    # Use regex to extract words
+    # Use a regex to extract words
     words = re.findall(r'\b\w+\b', text.lower())
     for i, word in enumerate(words, 1):
-        if len(word) >= 2:  # Filter single characters
+        if len(word) >= 2:  # Filter out single characters
             yield (word, i)
 $$;
 
@@ -2621,16 +2749,16 @@ PROPERTIES (
 )
 AS $$
 def expand_ip_range_udtf(start_ip, end_ip):
-    '''Expand IP address range (only supports last octet)'''
+    '''Expand an IP address range (only the last octet is supported)'''
     if start_ip is None or end_ip is None:
         return
     try:
-        # Assume format: 192.168.1.10 to 192.168.1.20
+        # Assume the format is 192.168.1.10 to 192.168.1.20
         start_parts = start_ip.split('.')
         end_parts = end_ip.split('.')
         
         if len(start_parts) == 4 and len(end_parts) == 4:
-            # Only expand last octet
+            # Expand only the last octet
             if start_parts[:3] == end_parts[:3]:
                 prefix = '.'.join(start_parts[:3])
                 start_num = int(start_parts[3])
@@ -2657,40 +2785,40 @@ LATERAL VIEW py_expand_ip_range(start_ip, end_ip) tmp AS ip;
 +--------------+
 ```
 
-### Performance Optimization Recommendations
+### Performance Recommendations
 
-#### 1. Control Output Row Count
+#### 1. Control the Output Row Count
 
-- For scenarios that may produce large amounts of output, set reasonable upper limits
-- Avoid Cartesian product explosion
+- For scenarios that may produce a large number of output rows, set a reasonable upper limit.
+- Avoid Cartesian product explosions.
 
-#### 2. Avoid Duplicate Calculations
+#### 2. Avoid Repeated Computation
 
-If you need to use the same calculation result multiple times, pre-calculate:
+If you need to use the same computed result multiple times, compute it ahead of time:
 
 ```python
 # Not recommended
 def bad_split_udtf(text):
-    for i in range(len(text.split(','))):  # Split every time
+    for i in range(len(text.split(','))):  # split is called every time
         parts = text.split(',')
         yield (parts[i],)
 
 # Recommended
 def good_split_udtf(text):
-    parts = text.split(',')  # Split only once
+    parts = text.split(',')  # split only once
     for part in parts:
         yield (part,)
 ```
 
 #### 3. Use Generator Expressions
 
-Leverage Python's generator features, avoid creating intermediate lists:
+Take advantage of Python generators to avoid creating intermediate lists:
 
 ```python
 # Not recommended
 def bad_filter_udtf(text, delimiter):
     parts = text.split(delimiter)
-    filtered = [p.strip() for p in parts if p.strip()]  # Create list
+    filtered = [p.strip() for p in parts if p.strip()]  # Creates a list
     for part in filtered:
         yield (part,)
 
@@ -2705,55 +2833,58 @@ def good_filter_udtf(text, delimiter):
 
 #### 4. Avoid Accessing External Resources
 
-- Do not access databases, files, networks in UDTF
-- All processing should be based on input parameters
+- Do not access databases, files, or networks in a UDTF.
+- All processing should be based on the input parameters.
 
-### Limitations and Considerations
+### Limitations and Notes
 
-#### 1. Stateless Limitation
+#### 1. Stateless Restriction
 
-- Python UDTF is **stateless**, each function call independently processes one row
-- Cannot retain state between multiple calls
-- If cross-row aggregation is needed, should use UDAF
+- Python UDTF is **stateless**. Each function invocation processes one row independently.
+- State cannot be retained across invocations.
+- For cross-row aggregation, use a UDAF.
 
 #### 2. Performance Considerations
 
-- Python UDTF performance is lower than built-in table functions
-- Suitable for scenarios with complex logic but moderate data volume
-- For large data volume scenarios, prioritize optimization or use built-in functions
+- Python UDTF performance is lower than that of built-in table functions.
+- Use it for scenarios with complex logic and moderate data volumes.
+- For large data volumes, prefer optimization or built-in functions.
 
 #### 3. Fixed Output Type
 
-- Type defined in `RETURNS ARRAY<...>` is fixed
-- Values produced by `yield` must match definition
-- Single column: `yield value` or `yield (value,)`, multi-column: `yield (value1, value2, ...)`
+- The type defined in `RETURNS ARRAY<...>` is fixed.
+- The values yielded by `yield` must match the definition.
+- Single column: `yield value` or `yield (value,)`. Multi-column: `yield (value1, value2, ...)`.
 
 #### 4. Function Naming
 
-- Same function name can be repeatedly defined in different databases
-- Recommend specifying database name when calling to avoid ambiguity
+- The same function name can be defined in different databases.
+- Specify the database name when calling to avoid ambiguity.
 
 #### 5. Environment Consistency
 
-- Python environment on all BE nodes must be consistent
-- Including Python version, dependency package versions, environment configuration
+- The Python environment on all BE nodes must be consistent.
+- This includes the Python version, dependency package versions, and environment configuration.
 
-### Frequently Asked Questions (FAQ)
+### Frequently Asked Questions
+
+<!-- Knowledge type: FAQ -->
 
 #### Q1: What is the difference between UDTF and UDF?
 
-A: **UDF** inputs single row, outputs single row, one-to-one relationship. **UDTF** inputs single row, outputs zero or multiple rows, one-to-many relationship.
+A: A **UDF** takes one row in and produces one row out, a one-to-one relationship. A **UDTF** takes one row in and produces zero or more rows out, a one-to-many relationship.
 
 Example:
+
 ```sql
 SELECT py_upper(name) FROM users;
 
 SELECT tag FROM users LATERAL VIEW py_split(tags, ',') tmp AS tag;
 ```
 
-#### Q2: How to output multiple columns?
+#### Q2: How do I output multiple columns?
 
-A: Multi-column output uses STRUCT to define return type, and produces tuple in `yield`:
+A: Define the return type with STRUCT for multi-column output and yield a tuple:
 
 ```sql
 CREATE TABLES FUNCTION func(...)
@@ -2764,21 +2895,22 @@ def func(...):
     yield (123, 'hello')  # Corresponds to col1 and col2
 ```
 
-#### Q3: Why doesn't my UDTF produce output?
+#### Q3: Why does my UDTF produce no output?
 
 A: Possible reasons:
-1. **Did not call yield**: Ensure `yield` is called in function
-2. **Condition filtering**: All data was filtered out
-3. **Exception caught**: Check if try-except swallowed errors
-4. **NULL input**: Input is NULL and function returns directly
 
-#### Q4: Can UDTF maintain state?
+1. **`yield` is not called**: Make sure the function calls `yield`.
+2. **Filtering**: All data is filtered out.
+3. **Exception swallowed**: Check whether a try-except block has swallowed the error.
+4. **NULL input**: The input is NULL and the function returns directly.
 
-A: No. Python UDTF is stateless, each function call independently processes one row. If cross-row aggregation or state maintenance is needed, should use Python UDAF.
+#### Q4: Can a UDTF maintain state?
 
-#### Q5: How to limit UDTF output row count?
+A: No. Python UDTF is stateless and each function invocation processes one row independently. For cross-row aggregation or state maintenance, use a Python UDAF.
 
-A: Add counter or conditional judgment in function:
+#### Q5: How do I limit the output row count of a UDTF?
+
+A: Add a counter or condition check in the function:
 
 ```python
 def limited_udtf(data):
@@ -2791,76 +2923,82 @@ def limited_udtf(data):
         count += 1
 ```
 
-#### Q6: Are there limitations on UDTF output data types?
+#### Q6: Are there limitations on the data types yielded by UDTF?
 
-A: UDTF supports all Doris data types, including basic types (INT, STRING, DOUBLE, etc.) and complex types (ARRAY, STRUCT, MAP, etc.). Output type must be explicitly defined in `RETURNS ARRAY<...>`.
+A: UDTF supports all Doris data types, including primitive types (INT, STRING, DOUBLE, and so on) and complex types (ARRAY, STRUCT, MAP, and so on). The output type must be explicitly defined in `RETURNS ARRAY<...>`.
 
-#### Q7: Can external resources be accessed in UDTF?
+#### Q7: Can I access external resources in a UDTF?
 
-A: Technically possible, but **strongly not recommended**. UDTF should be purely functional, only process based on input parameters. Accessing external resources (databases, files, networks) will cause performance issues and unpredictable behavior.
+A: Technically yes, but it is **strongly discouraged**. A UDTF should be purely functional and process only the input parameters. Accessing external resources (databases, files, network) leads to performance issues and unpredictable behavior.
 
-## Python UDF/UDAF/UDTF Environment Configuration and Multi-Version Management
+## Python UDF/UDAF/UDTF Environment Configuration and Multi-version Management
+
+<!-- Knowledge type: Deployment and configuration -->
+<!-- Applicable scenario: Cluster initialization / Coexistence of multiple Python UDF versions -->
 
 ### Python Environment Management
 
-Before using Python UDF/UDAF/UDTF, please ensure that the Backend (BE) nodes of Doris have properly configured the Python runtime environment. Doris supports managing Python environments through **Conda** or **Virtual Environment (venv)**, allowing different UDFs to use different versions of Python interpreters and dependency libraries.
+Before using Python UDF/UDAF/UDTF, make sure that the Python runtime environment is correctly configured on the Doris Backend (BE) nodes. Doris supports managing Python environments with **Conda** or **Virtual Environment (venv)**, which allows different UDFs to use different versions of the Python interpreter and dependencies.
 
-Doris provides two Python environment management methods:
-- **Conda Mode**: Use Miniconda/Anaconda to manage multi-version environments
-- **Venv Mode**: Use Python's built-in virtual environment (venv) to manage multi-version environments
+Doris provides two ways to manage Python environments:
 
-### Installation and Usage of Third-Party Libraries
+- **Conda mode**: Manage multi-version environments with Miniconda/Anaconda.
+- **Venv mode**: Manage multi-version environments with the built-in Python virtual environment (venv).
 
-Python UDF, UDAF, and UDTF can all use third-party libraries. However, due to Doris's distributed nature, third-party libraries must be uniformly installed on **all BE nodes**, otherwise some nodes will fail to execute.
+### Installing and Using Third-party Libraries
+
+Python UDF, UDAF, and UDTF can all use third-party libraries. Because Doris is distributed, you must install third-party libraries uniformly on **all BE nodes**, otherwise some nodes will fail to execute.
 
 #### Installation Steps
 
 1. **Install dependencies on each BE node**:
-   ```bash
-   # Install using pip
-   pip install numpy pandas requests
-   
-   # Or install using conda
-   conda install numpy pandas requests -y
-   ```
 
-2. **Import and use in functions**:
-   ```python
-   import numpy as np
-   import pandas as pd
-   
-   # Use in UDF/UDAF/UDTF functions
-   def my_function(x):
-       return np.sqrt(x)
-   ```
+    ```bash
+    # Install with pip
+    pip install numpy pandas requests
+    
+    # Or install with conda
+    conda install numpy pandas requests -y
+    ```
 
-:::caution Note
-- **`pandas` and `pyarrow` are mandatory dependencies**, must be pre-installed in all Python environments, otherwise Python UDF/UDAF/UDTF cannot run
-- Must install same version dependencies on **all BE nodes**, otherwise some nodes will fail to execute
-- Installation path must match Python runtime environment used by corresponding UDF/UDAF/UDTF
-- Recommend using virtual environments or Conda to manage dependencies, avoid conflicts with system Python environment
-:::
+2. **Import and use them in the function**:
+
+    ```python
+    import numpy as np
+    import pandas as pd
+    
+    # Use them in a UDF/UDAF/UDTF function
+    def my_function(x):
+        return np.sqrt(x)
+    ```
+
+#### Notes
+
+- **`pandas` and `pyarrow` are mandatory dependencies**. Pre-install them in every Python environment, otherwise Python UDF/UDAF/UDTF cannot run.
+- Install the same versions of dependencies on **all BE nodes**, otherwise some nodes will fail to execute.
+- The installation path must match the Python runtime environment used by the corresponding UDF/UDAF/UDTF.
+- Use a virtual environment or Conda environment to manage dependencies and avoid conflicts with the system Python environment.
 
 ### BE Configuration Parameters
 
-Set the following parameters in the `be.conf` configuration file on all BE nodes, and **restart BE** to make the configuration take effect.
+Set the following parameters in the `be.conf` configuration file on every BE node and **restart BE** for the configuration to take effect.
 
-#### Configuration Parameter Description
+#### Configuration Parameter Reference
 
-| Parameter Name | Type | Possible Values | Default Value | Description |
-|--------|------|--------|--------|------|
-| `enable_python_udf_support` | bool | `true` / `false` | `false` | Whether to enable Python UDF functionality |
-| `python_env_mode` | string | `conda` / `venv` | `""` | Python multi-version environment management method |
-| `python_conda_root_path` | string | Directory path | `""` | Root directory of Miniconda<br>Only effective when `python_env_mode = conda` |
-| `python_venv_root_path` | string | Directory path | `${DORIS_HOME}/lib/udf/python` | Root directory for venv multi-version management<br>Only effective when `python_env_mode = venv` |
-| `python_venv_interpreter_paths` | string | Path list (separated by `:`) | `""` | Directory list of available Python interpreters<br>Only effective when `python_env_mode = venv` |
-| `max_python_process_num` | int32 | Integer | `0` | Maximum number of processes in Python Server process pool<br>`0` means using CPU core count as default value, users can set other positive integers to override default value |
+| Parameter | Type | Allowed values | Default | Description |
+| --- | --- | --- | --- | --- |
+| `enable_python_udf_support` | bool | `true` / `false` | `false` | Whether to enable the Python UDF feature |
+| `python_env_mode` | string | `conda` / `venv` | `""` | The Python multi-version environment management mode |
+| `python_conda_root_path` | string | Directory path | `""` | The root directory of Miniconda<br/>Effective only when `python_env_mode = conda` |
+| `python_venv_root_path` | string | Directory path | `${DORIS_HOME}/lib/udf/python` | The root directory of venv multi-version management<br/>Effective only when `python_env_mode = venv` |
+| `python_venv_interpreter_paths` | string | Path list (separated by `:`) | `""` | The list of available Python interpreter directories<br/>Effective only when `python_env_mode = venv` |
+| `max_python_process_num` | int32 | Integer | `0` | The maximum number of processes in the Python Server process pool<br/>`0` means using the CPU core count as the default. You can set another positive integer to override the default |
 
-### Method 1: Using Conda to Manage Python Environment
+### Method 1: Manage Python Environments with Conda
 
 #### 1. Configure BE
 
-Add the following configuration in `be.conf`:
+Add the following configuration to `be.conf`:
 
 ```properties
 ## be.conf
@@ -2869,53 +3007,55 @@ python_env_mode = conda
 python_conda_root_path = /path/to/miniconda3
 ```
 
-#### 2. Environment Search Rules
+#### 2. Environment Lookup Rules
 
-Doris will search for Conda environments matching the `runtime_version` in UDF under the `${python_conda_root_path}/envs/` directory.
+Doris looks up Conda environments under `${python_conda_root_path}/envs/` that match the `runtime_version` specified by the UDF.
 
-**Matching Rules**:
-- `runtime_version` **must fill in the complete version number of Python version**, in the format of `x.x.x` or `x.x.xx`, such as `"3.9.18"`, `"3.12.11"`
-- Doris will traverse all Conda environments and check whether the actual version of the Python interpreter in each environment exactly matches `runtime_version`
-- If no matching environment is found, an error will be reported: `Python environment with version x.x.x not found`
+**Matching rules**:
 
-**Examples**:
-- If UDF specifies `runtime_version = "3.9.18"`, Doris will search for an environment with Python version 3.9.18 in all environments
-- The environment name can be arbitrary (such as `py39`, `my-env`, `data-science`, etc.), as long as the Python version in that environment is 3.9.18
-- Must fill in complete version number, cannot use version prefix, such as `"3.9"` or `"3.12"`
+- `runtime_version` **must be the complete Python version number**, in the format `x.x.x` or `x.x.xx`, such as `"3.9.18"` or `"3.12.11"`.
+- Doris iterates over all Conda environments and checks whether the actual Python interpreter version in each environment exactly matches `runtime_version`.
+- When no matching environment is found, Doris reports an error: `Python environment with version x.x.x not found`.
+
+**Example**:
+
+- When the UDF specifies `runtime_version = "3.9.18"`, Doris searches for an environment whose Python version is 3.9.18.
+- The environment name can be anything (such as `py39`, `my-env`, or `data-science`) as long as the Python version in that environment is 3.9.18.
+- The complete version number is required. Version prefixes such as `"3.9"` or `"3.12"` are not allowed.
 
 #### 3. Directory Structure Diagram
 
 ```
-## Doris BE Node Filesystem Structure (Conda Mode)
+## File system layout on a Doris BE node (Conda mode)
 
-/path/to/miniconda3                  ← python_conda_root_path (configured by be.conf)
+/path/to/miniconda3                  ← python_conda_root_path (configured in be.conf)
 │
 ├── bin/
-│   ├── conda                        ← conda command-line tool (used by operations)
+│   ├── conda                        ← conda CLI (used for operations)
 │   └── ...                          ← Other conda tools
 │
-├── envs/                            ← All Conda environments directory
+├── envs/                            ← Directory for all Conda environments
 │   │
-│   ├── py39/                        ← Conda environment 1 (created by user)
+│   ├── py39/                        ← Conda environment 1 (user-created)
 │   │   ├── bin/
-│   │   │   ├── python               ← Python 3.9 interpreter (directly called by Doris)
+│   │   │   ├── python               ← Python 3.9 interpreter (called directly by Doris)
 │   │   │   ├── pip
 │   │   │   └── ...
 │   │   ├── lib/
 │   │   │   └── python3.9/
-│   │   │       └── site-packages/   ← Third-party dependencies for this environment (e.g., pandas, pyarrow)
+│   │   │       └── site-packages/   ← Third-party dependencies for this environment (such as pandas, pyarrow)
 │   │   └── ...
 │   │
-│   ├── py312/                       ← Conda environment 2 (created by user)
+│   ├── py312/                       ← Conda environment 2 (user-created)
 │   │   ├── bin/
 │   │   │   └── python               ← Python 3.12 interpreter
 │   │   └── lib/
 │   │       └── python3.12/
-│   │           └── site-packages/   ← Pre-installed dependencies (e.g., torch, sklearn)
+│   │           └── site-packages/   ← Pre-installed dependencies (such as torch, sklearn)
 │   │
 │   └── ml-env/                      ← Semantic environment name (recommended)
 │       ├── bin/
-│       │   └── python               ← Possibly Python 3.12 + GPU dependencies
+│       │   └── python               ← May be Python 3.12 with GPU dependencies
 │       └── lib/
 │           └── python3.12/
 │               └── site-packages/
@@ -2923,62 +3063,62 @@ Doris will search for Conda environments matching the `runtime_version` in UDF u
 └── ...
 ```
 
-#### 4. Create Conda Environment
+#### 4. Create Conda Environments
 
-:::caution Note
-Doris Python UDF/UDAF/UDTF functionality **mandatorily depends on** `pandas` and `pyarrow` libraries, which **must** be pre-installed in all Python environments, otherwise UDF will not run normally.
+:::caution Caution
+The Doris Python UDF/UDAF/UDTF feature has **mandatory dependencies** on `pandas` and `pyarrow`. You **must** pre-install both libraries in every Python environment, otherwise UDFs will not run correctly.
 :::
 
-**Execute the following commands on all BE nodes**:
+Run the following commands **on all BE nodes** to create the Python environments:
 
 ```bash
-# Install Miniconda (if not already installed)
+# Install Miniconda (when not yet installed)
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3
 
-# Create Python 3.9.18 environment and install required dependencies (environment name can be customized)
+# Create a Python 3.9.18 environment and install required dependencies (the environment name can be customized)
 /opt/miniconda3/bin/conda create -n py39 python=3.9.18 pandas pyarrow -y
 
-# Create Python 3.12.11 environment and pre-install dependencies (Important: Python version must be precisely specified, and pandas and pyarrow must be installed)
+# Create a Python 3.12.11 environment and pre-install dependencies (Important: the Python version must be specified exactly, and pandas and pyarrow must be installed)
 /opt/miniconda3/bin/conda create -n py312 python=3.12.11 pandas pyarrow numpy -y
 
-# Activate environment and install additional dependencies
+# Activate an environment and install additional dependencies
 source /opt/miniconda3/bin/activate py39
 conda install requests beautifulsoup4 -y
 conda deactivate
 
-# Verify Python version in environment
+# Verify the Python version in the environment
 /opt/miniconda3/envs/py39/bin/python --version     # Should output: Python 3.9.18
 /opt/miniconda3/envs/py312/bin/python --version    # Should output: Python 3.12.11
 ```
 
-#### 5. Use in UDF
+#### 5. Use in a UDF
 
 ```sql
--- Use Python 3.12.11 environment
+-- Use the Python 3.12.11 environment
 CREATE FUNCTION py_ml_predict(DOUBLE)
 RETURNS DOUBLE
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.12.11",  -- Must specify complete version number, matching Python 3.12.11
+    "runtime_version" = "3.12.11",  -- Must specify the complete version number to match Python 3.12.11
     "always_nullable" = "true"
 )
 AS $$
 def evaluate(x):
-    # Can use libraries installed in Python 3.12.11 environment
+    # Libraries installed in the Python 3.12.11 environment can be used
     return x * 2
 $$;
 
--- Note: Whether the environment name is py312 or ml-env, as long as the Python version is 3.12.11, it can be used
--- runtime_version only cares about Python version, not environment name
+-- Note: Whether the environment is named py312 or ml-env, any environment whose Python version is 3.12.11 can be used
+-- runtime_version cares only about the Python version, not the environment name
 ```
 
-### Method 2: Using Venv to Manage Python Environment
+### Method 2: Manage Python Environments with Venv
 
 #### 1. Configure BE
 
-Add the following configuration in `be.conf`:
+Add the following configuration to `be.conf`:
 
 ```properties
 ## be.conf
@@ -2988,24 +3128,24 @@ python_venv_root_path = /doris/python_envs
 python_venv_interpreter_paths = /opt/python3.9/bin/python3.9:/opt/python3.12/bin/python3.12
 ```
 
-#### 2. Configuration Parameter Description
+#### 2. Configuration Parameter Notes
 
-- **`python_venv_root_path`**: Root directory of virtual environments, all venv environments will be created under this directory
-- **`python_venv_interpreter_paths`**: List of absolute paths to Python interpreters separated by English colon `:`. Doris will check the version of each interpreter and match the corresponding interpreter according to the `runtime_version` (complete version number, such as `"3.9.18"`) specified in UDF
+- **`python_venv_root_path`**: The root directory for the virtual environments. All venv environments are created under this directory.
+- **`python_venv_interpreter_paths`**: A list of absolute paths to Python interpreters separated by colons (`:`). Doris checks the version of each interpreter and matches it against the `runtime_version` (the complete version number, such as `"3.9.18"`) specified in the UDF.
 
 #### 3. Directory Structure Diagram
 
 ```
-## Doris BE Configuration (be.conf)
+## Doris BE configuration (be.conf)
 python_venv_interpreter_paths = "/opt/python3.9/bin/python3.9:/opt/python3.12/bin/python3.12"
 python_venv_root_path = /doris/python_envs
 
 /opt/python3.9/bin/python3.9                ← System pre-installed Python 3.9
 /opt/python3.12/bin/python3.12              ← System pre-installed Python 3.12
 
-/doris/python_envs/                         ← Root directory of all virtual environments (python_venv_root_path)
+/doris/python_envs/                         ← Root directory for all virtual environments (python_venv_root_path)
 │
-├── python3.9.18/                           ← Environment ID = Python complete version
+├── python3.9.18/                           ← Environment ID = complete Python version
 │   ├── bin/
 │   │   ├── python
 │   │   └── pip
@@ -3025,45 +3165,45 @@ python_venv_root_path = /doris/python_envs
     └── ...
 ```
 
-#### 4. Create Venv Environment
+#### 4. Create Venv Environments
 
-:::caution Note
-Doris Python UDF/UDAF/UDTF functionality **mandatorily depends on** `pandas` and `pyarrow` libraries, which **must** be pre-installed in all Python environments, otherwise UDF will not run normally.
+:::caution Caution
+The Doris Python UDF/UDAF/UDTF feature has **mandatory dependencies** on `pandas` and `pyarrow`. You **must** pre-install both libraries in every Python environment, otherwise UDFs will not run correctly.
 :::
 
-**Execute the following commands on all BE nodes**:
+Run the following commands **on all BE nodes**:
 
 ```bash
-# Create virtual environment root directory
+# Create the root directory for virtual environments
 mkdir -p /doris/python_envs
 
-# Use Python 3.9 to create virtual environment
+# Create a virtual environment with Python 3.9
 /opt/python3.9/bin/python3.9 -m venv /doris/python_envs/python3.9.18
 
-# Activate environment and install required dependencies (pandas and pyarrow must be installed)
+# Activate the environment and install the required dependencies (pandas and pyarrow are required)
 source /doris/python_envs/python3.9.18/bin/activate
 pip install pandas pyarrow numpy
 deactivate
 
-# Use Python 3.12 to create virtual environment
+# Create a virtual environment with Python 3.12
 /opt/python3.12/bin/python3.12 -m venv /doris/python_envs/python3.12.11
 
-# Activate environment and install required dependencies (pandas and pyarrow must be installed)
+# Activate the environment and install the required dependencies (pandas and pyarrow are required)
 source /doris/python_envs/python3.12.11/bin/activate
 pip install pandas pyarrow numpy scikit-learn
 deactivate
 ```
 
-#### 5. Use in UDF
+#### 5. Use in a UDF
 
 ```sql
--- Use Python 3.9.18 environment
+-- Use the Python 3.9.18 environment
 CREATE FUNCTION py_clean_text(STRING)
 RETURNS STRING
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.9.18",  -- Must specify complete version number, matching Python 3.9.18
+    "runtime_version" = "3.9.18",  -- Must specify the complete version number to match Python 3.9.18
     "always_nullable" = "true"
 )
 AS $$
@@ -3071,13 +3211,13 @@ def evaluate(text):
     return text.strip().upper()
 $$;
 
--- Use Python 3.12.11 environment
+-- Use the Python 3.12.11 environment
 CREATE FUNCTION py_calculate(DOUBLE)
 RETURNS DOUBLE
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.12.11",  -- Must specify complete version number, matching Python 3.12.11
+    "runtime_version" = "3.12.11",  -- Must specify the complete version number to match Python 3.12.11
     "always_nullable" = "true"
 )
 AS $$
@@ -3088,49 +3228,51 @@ def evaluate(x):
 $$;
 ```
 
-### Environment Management Best Practices
+### Best Practices for Environment Management
 
-#### 1. Choose Appropriate Management Method
+#### 1. Choose the Right Management Method
 
-| Scenario | Recommended Method | Reason |
-|------|---------|------|
-| Need to frequently switch Python versions | Conda | Good environment isolation, simple dependency management |
-| Already have Conda environment | Conda | Can directly reuse existing environment |
-| Limited system resources | Venv | Small footprint, fast startup |
-| Already have Python system environment | Venv | No need to install additional Conda |
+| Scenario | Recommended | Reason |
+| --- | --- | --- |
+| Frequent switching of Python versions | Conda | Strong environment isolation and simple dependency management |
+| Existing Conda environments | Conda | Existing environments can be reused directly |
+| Limited system resources | Venv | Smaller footprint and faster startup |
+| Existing Python system environments | Venv | No need to install Conda separately |
 
 #### 2. Environment Consistency Requirements
-:::caution Note
-All BE nodes must be configured with **exactly the same** Python environment, including:
-- Python version must be consistent
-- Installed dependency packages and their versions must be consistent
-- Environment directory paths must be consistent
+
+:::caution Caution
+The Python environments on all BE nodes must be **completely identical**, including:
+
+- The Python version must be the same.
+- The installed dependency packages and their versions must be the same.
+- The environment directory paths must be the same.
 :::
 
 ### Notes
 
-#### 1. Configuration Modification Takes Effect
+#### 1. Configuration Changes Take Effect
 
-- After modifying `be.conf`, **must restart BE process** to take effect
-- Please ensure configuration is correct before restart to avoid service interruption
+- After modifying `be.conf`, **you must restart the BE process** for the change to take effect.
+- Verify that the configuration is correct before restarting to avoid service disruption.
 
 #### 2. Path Verification
 
-Please ensure paths are correct before configuration:
+Before configuring, verify that the paths are correct:
 
 ```bash
-# Conda mode: Verify conda path
+# Conda mode: verify the conda path
 ls -la /opt/miniconda3/bin/conda
 /opt/miniconda3/bin/conda env list
 
-# Venv mode: Verify interpreter path
+# Venv mode: verify interpreter paths
 /opt/python3.9/bin/python3.9 --version
 /opt/python3.12/bin/python3.12 --version
 ```
 
 #### 3. Permission Settings
 
-Ensure Doris BE process has permission to access Python environment directory:
+Ensure the Doris BE process has permission to access the Python environment directory:
 
 ```bash
 # Conda mode
@@ -3138,29 +3280,27 @@ chmod -R 755 /opt/miniconda3
 
 # Venv mode
 chmod -R 755 /doris/python_envs
-chown -R doris:doris /doris/python_envs  # Assuming BE process user is doris
+chown -R doris:doris /doris/python_envs  # Assume the BE process user is doris
 ```
 
-#### 4. Resource Limitations
+#### 4. Resource Limits
 
-Adjust Python process pool parameters according to actual needs:
+Adjust the Python process pool parameter according to actual needs:
 
 ```properties
-## Confirm using CPU core count (recommended, max_python_process_num = 0)
+## Use the CPU core count (recommended, max_python_process_num = 0)
 max_python_process_num = 0
 
-## High concurrency scenario, manually specify process count
+## High concurrency: specify the process count manually
 max_python_process_num = 128
 
-## Resource-constrained scenario, limit process count
+## Resource-constrained: limit the process count
 max_python_process_num = 32
 ```
 
 ### Environment Verification
 
-Verify on each BE node whether the environment is correct:
-
-#### Verify the environment on each BE node:
+#### Verify the Environment on Each BE Node
 
 ```bash
 # Conda mode
@@ -3172,11 +3312,12 @@ Verify on each BE node whether the environment is correct:
 /doris/python_envs/python3.9.18/bin/python -c "import pandas; print(pandas.__version__)"
 ```
 
+#### Show Python Versions Common to All BE Nodes
 
-#### Display all Python versions shared by BE.
 ```sql
 SHOW PYTHON VERSIONS;
 ```
+
 ```text
 +---------+---------+---------+-------------------+----------------------------------------+
 | Version | EnvName | EnvType | BasePath          | ExecutablePath                         |
@@ -3185,12 +3326,16 @@ SHOW PYTHON VERSIONS;
 +---------+---------+---------+-------------------+----------------------------------------+
 ```
 
-#### Display installed dependencies in the specified version
-Use `SHOW PYTHON PACKAGES IN '<version>'` to display the installed dependencies in the specified version. If there are dependencies that differ among the BEs, they will be listed separately.
+#### Show Installed Dependencies for a Given Version
+
+Use `SHOW PYTHON PACKAGES IN '<version>'` to show the installed dependencies for the specified version. When the dependencies differ across BE nodes, the differing parts are listed.
+
 ```sql
 SHOW PYTHON PACKAGES IN '3.9.18'
 ```
-Each BE has the same installation status:
+
+When all BE nodes have identical dependencies:
+
 ```text
 +-----------------+-------------+
 | Package         | Version     |
@@ -3215,7 +3360,9 @@ Each BE has the same installation status:
 | numexpr         | 2.10.1      |
 +-----------------+-------------+
 ```
-Each BE has different installation status:
+
+When BE nodes have different dependencies:
+
 ```text
 +-----------------+-------------+------------+----------------+
 | Package         | Version     | Consistent | Backends       |
@@ -3242,80 +3389,89 @@ Each BE has different installation status:
 +-----------------+-------------+------------+----------------+
 ```
 
-### Common Problem Troubleshooting
+### Common Troubleshooting
 
-#### Q1: UDF call prompts "Python environment not found"
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenario: Errors after Python UDF deployment -->
 
-**Reason**: 
-- Version specified by `runtime_version` does not exist in the system
-- Environment path configuration is incorrect
+#### Q1: UDF call reports "Python environment not found"
+
+**Cause**:
+
+- The version specified by `runtime_version` does not exist on the system.
+- The environment path is configured incorrectly.
 
 **Solution**:
+
 ```bash
-# Check Conda environment list
+# Check the Conda environment list
 conda env list
 
-# Check if Venv interpreter exists
+# Check whether the venv interpreter exists
 ls -la /opt/python3.9/bin/python3.9
 
-# Check BE configuration
+# Check the BE configuration
 grep python /path/to/be.conf
 ```
 
-#### Q2: UDF call prompts "ModuleNotFoundError: No module named 'xxx'"
+#### Q2: UDF call reports "ModuleNotFoundError: No module named 'xxx'"
 
-**Reason**: Required dependency package not installed in Python environment
+**Cause**: The required dependency package is not installed in the Python environment.
 
-#### Q3: Execution results inconsistent across different BE nodes
+#### Q3: Different BE nodes return different results
 
-**Reason**: Python environment or dependency versions inconsistent across BE nodes
+**Cause**: The Python environment or dependency versions differ across BE nodes.
 
 **Solution**:
-1. Check Python version and dependency versions on all nodes.
+
+1. Check the Python and dependency versions on all nodes.
 2. Verify environment consistency across all nodes.
-3. Use `requirements.txt` (pip) or `environment.yml` (Conda) to deploy environments; common usage examples:
+3. Use `requirements.txt` (pip) or `environment.yml` (Conda) to deploy environments uniformly. Common usage examples:
 
 - Using `requirements.txt` (pip):
-```bash
-# Export dependencies from development environment
-pip freeze > requirements.txt
-# On BE nodes, install with target Python interpreter
-/path/to/python -m pip install -r requirements.txt
-```
+
+    ```bash
+    # Export dependencies in the development environment
+    pip freeze > requirements.txt
+    # Install dependencies on a BE node using the target Python
+    /path/to/python -m pip install -r requirements.txt
+    ```
 
 - Using `environment.yml` (Conda):
-```bash
-# export dependencies
-conda env export --from-history -n py312 -f environment.yml
-# On BE nodes, create the environment
-conda env create -f environment.yml -n py312
-# Or update an existing environment
-conda env update -f environment.yml -n py312
-```
 
-**Notes**:
-- Ensure **`pandas`** and **`pyarrow`** are included in the dependency files and installed with the same versions on all BE nodes.
-- When installing, use the Python interpreter or Conda path configured for Doris (for example, `/opt/miniconda3/bin/conda` or the venv interpreter path used by BE).
-- Keep dependency files under version control or on shared storage so operations can distribute them consistently to all BE nodes.
-- References: [pip docs](https://pip.pypa.io/en/stable/cli/pip/)，[Conda export/import](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#exporting-the-environment)
+    ```bash
+    # Export dependencies
+    conda env export --from-history -n py312 -f environment.yml
+    # Create the environment on a BE node
+    conda env create -f environment.yml -n py312
+    # Or update an existing environment
+    conda env update -f environment.yml -n py312
+    ```
 
-#### Q4: be.conf modification not effective
+:::caution Caution
+- Make sure `pandas` and `pyarrow` appear in the dependency file and that the same versions are installed on all BE nodes.
+- During installation, use the Python interpreter or Conda path that matches the Doris configuration (such as `/opt/miniconda3/bin/conda` or the specified venv interpreter).
+- Put the dependency file under version control or in shared storage so that operations can distribute it uniformly to all BE nodes.
+- Further reading: [pip official documentation](https://pip.pypa.io/en/stable/cli/pip/), [Conda environment export/import guide](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#exporting-the-environment).
+:::
 
-**Possible Reason**: BE process not restarted
+#### Q4: Changes to be.conf do not take effect
+
+**Possible cause**: The BE process was not restarted.
 
 ### Usage Limitations
 
-1. **Performance Considerations**:
-   - Python UDF performance is lower than built-in functions, recommended for scenarios with complex logic but small data volume
-   - For large data volume processing, prioritize vectorized mode
+1. **Performance considerations**:
+    - Python UDF performance is lower than that of built-in functions. Use it for scenarios with complex logic and small data volumes.
+    - For large data volumes, prefer vectorized mode.
 
-2. **Type Limitations**:
-   - Does not support special types such as HLL, Bitmap
+2. **Type limitations**:
+    - Special types such as HLL and Bitmap are not supported.
 
-3. **Environment Isolation**:
-   - Same function name can be repeatedly defined in different databases
-   - Call time should specify database name (such as `db.func()`) to avoid ambiguity
+3. **Environment isolation**:
+    - The same function name can be defined in different databases.
+    - Specify the database name when calling (such as `db.func()`) to avoid ambiguity.
 
-4. **Concurrency Limitations**:
-   - Python UDF executes through process pool, concurrency is limited by `max_python_process_num`
-   - High concurrency scenarios need to appropriately increase this parameter
+4. **Concurrency limits**:
+    - Python UDFs run via a process pool. Concurrency is bounded by `max_python_process_num`.
+    - Increase this parameter for high-concurrency scenarios.

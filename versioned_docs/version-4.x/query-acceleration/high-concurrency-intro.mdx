@@ -1,0 +1,31 @@
+---
+{
+    "title": "High-Concurrency Point Queries",
+    "language": "en",
+    "description": "Apache Doris navigation for high-concurrency and point queries: covers primary-key point query optimization based on row store and the short path, and dimension table joins accelerated by dictionaries through in-memory key-value lookups."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+On top of its analytics-oriented columnar storage, Doris provides a dedicated optimization path for online point queries and key-value lookups that demand high concurrency and low latency. Row store and the short path give Unique-table primary-key point queries high QPS and low latency. Dictionaries rewrite dimension joins into in-memory key-value lookups.
+
+## Primary-Key Point Queries
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="High-Concurrency Point Queries"
+    description="Enable row store, the short path, and PreparedStatement on Unique primary-key tables to bring QPS and response latency for primary-key point queries to online-service levels."
+    link="high-concurrent-point-query"
+/>
+</div>
+
+## Key-Value Lookups
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Dictionary Acceleration"
+    description="Preload dimension columns into memory and use the dict_get function in place of LEFT OUTER JOIN to significantly improve query performance in scenarios with frequent key-value lookups."
+    link="dictionary"
+/>
+</div>

@@ -1,0 +1,43 @@
+---
+{
+    "title": "执行调优",
+    "language": "zh-CN",
+    "description": "Apache Doris 执行调优章节导航：并行度调整、RuntimeFilter 等待时间、数据倾斜处理与基于 Hint 的 CBO 规则控制。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+执行调优主要解决运行时暴露出的性能瓶颈：并行度不合理、RuntimeFilter 未及时生效、Shuffle 数据倾斜，以及优化器选择需要人工干预的场景。先在 Profile 中定位症状，再选择对应的调优方法。
+
+## 运行时优化
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="并行度调优"
+    description="结合单表扫描、JOIN、聚合与高并发等场景，给出 `parallel_pipeline_task_num` 的设置建议，平衡查询延迟与调度开销。"
+    link="parallelism-tuning"
+/>
+
+<GettingStartedCard
+    title="RuntimeFilter 等待时间调整"
+    description="通过 Profile 识别 RuntimeFilter NOT_READY 状态，调整 `runtime_filter_wait_time_ms`，让 Probe 端真正用上过滤效果。"
+    link="adjustment-of-runtimefilter-wait-time"
+/>
+
+<GettingStartedCard
+    title="数据倾斜处理"
+    description="识别 Join Key 或分桶分布导致的单点执行瓶颈，借助 Broadcast Join 与 Leading Hint 等手段重新均衡 Shuffle。"
+    link="data-skew-handling"
+/>
+</div>
+
+## 优化器控制
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="使用 Hint 控制 CBO 规则"
+    description="当自适应优化不够时，使用 `USE_CBO_RULE` Hint 显式开启聚合下推等代价改写规则。"
+    link="../tuning-plan/controlling-hints-with-cbo-rule"
+/>
+</div>

@@ -30,9 +30,9 @@ export enum ToolsEnum {
 
 export const ORIGIN = 'https://download.selectdb.com/';
 export enum VersionEnum {
-    Latest = '4.0.5',
-    Prev = '3.1.4',
-    Earlier = '3.0.8',
+    Latest = '4.1.1',
+    Prev = '4.0.5',
+    Earlier = '3.1.4',
 }
 
 export enum DownloadTypeEnum {
@@ -40,6 +40,74 @@ export enum DownloadTypeEnum {
     Source = 'Source',
 }
 export const DORIS_VERSIONS: Option[] = [
+    {
+        label: '4.1.1',
+        value: '4.1.1',
+        majorVersion: '4.1',
+        children: [
+            {
+                label: CPUEnum.X64,
+                value: CPUEnum.X64,
+                gz: `${ORIGIN}apache-doris-4.1.1-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.1-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.1-bin-x64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.1/',
+                version: '4.1.1',
+            },
+            {
+                label: CPUEnum.X64NoAvx2,
+                value: CPUEnum.X64NoAvx2,
+                gz: `${ORIGIN}apache-doris-4.1.1-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.1-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.1-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.1/',
+                version: '4.1.1',
+            },
+            {
+                label: CPUEnum.ARM64,
+                value: CPUEnum.ARM64,
+                gz: `${ORIGIN}apache-doris-4.1.1-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.1-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.1-bin-arm64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.1/',
+                version: '4.1.1',
+            },
+        ],
+    },
+    {
+        label: '4.1.0',
+        value: '4.1.0',
+        majorVersion: '4.1',
+        children: [
+            {
+                label: CPUEnum.X64,
+                value: CPUEnum.X64,
+                gz: `${ORIGIN}apache-doris-4.1.0-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.0-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.0-bin-x64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.0/',
+                version: '4.1.0',
+            },
+            {
+                label: CPUEnum.X64NoAvx2,
+                value: CPUEnum.X64NoAvx2,
+                gz: `${ORIGIN}apache-doris-4.1.0-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.0-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.0-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.0/',
+                version: '4.1.0',
+            },
+            {
+                label: CPUEnum.ARM64,
+                value: CPUEnum.ARM64,
+                gz: `${ORIGIN}apache-doris-4.1.0-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.0-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.0-bin-arm64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.0/',
+                version: '4.1.0',
+            },
+        ],
+    },
     {
         label: '4.0.5',
         value: '4.0.5',
@@ -326,6 +394,80 @@ export type AllVersionOption = {
 };
 
 export const ALL_VERSIONS: AllVersionOption[] = [
+    {
+        label: '4.1',
+        value: '4.1',
+        children: [
+            {
+                label: '4.1.1',
+                value: '4.1.1',
+                majorVersion: '4.1',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-4.1.1-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.1-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.1-bin-x64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.1/',
+                        version: '4.1.1',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-4.1.1-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.1-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.1-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.1/',
+                        version: '4.1.1',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-4.1.1-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.1-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.1-bin-arm64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.1/',
+                        version: '4.1.1',
+                    },
+                ],
+            },
+            {
+                label: '4.1.0',
+                value: '4.1.0',
+                majorVersion: '4.1',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-4.1.0-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.0-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.0-bin-x64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.0/',
+                        version: '4.1.0',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-4.1.0-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.0-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.0-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.0/',
+                        version: '4.1.0',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-4.1.0-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.0-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.0-bin-arm64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.0/',
+                        version: '4.1.0',
+                    },
+                ],
+            },
+        ],
+    },
     {
         label: '4.0',
         value: '4.0',
@@ -2326,8 +2468,8 @@ const FLINK_SAME_SOURCE_2510 =
 const FLINK_SAME_SOURCE_2600 =
     'https://downloads.apache.org/doris/flink-connector/26.0.0/apache-doris-flink-connector-26.0.0-src.tgz';
 
-const FLINK_SAME_SOURCE_2610 =
-    'https://downloads.apache.org/doris/flink-connector/26.1.0/apache-doris-flink-connector-26.1.0-src.tgz';
+const FLINK_SAME_SOURCE_2611 =
+    'https://downloads.apache.org/doris/flink-connector/26.1.1/apache-doris-flink-connector-26.1.1-src.tgz';
 
 const SPARK_SAME_SOURCE_132 =
     'https://downloads.apache.org/doris/spark-connector/1.3.2/apache-doris-spark-connector-1.3.2-src.tar.gz';
@@ -2380,71 +2522,71 @@ export const TOOL_VERSIONS = [
         value: ToolsEnum.Flink,
         children: [
             {
-                label: '26.1.0',
-                value: '26.1.0',
+                label: '26.1.1',
+                value: '26.1.1',
                 children: [
                     {
                         value: '2.2',
                         label: 'For Flink 2.2',
-                        gz: FLINK_SAME_SOURCE_2610,
-                        Source: FLINK_SAME_SOURCE_2610,
-                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-2.2/26.1.0/flink-doris-connector-2.2-26.1.0.jar',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-2.2/26.1.1/flink-doris-connector-2.2-26.1.1.jar',
                     },
                     {
                         value: '2.1',
                         label: 'For Flink 2.1',
-                        gz: FLINK_SAME_SOURCE_2610,
-                        Source: FLINK_SAME_SOURCE_2610,
-                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-2.1/26.1.0/flink-doris-connector-2.1-26.1.0.jar',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-2.1/26.1.1/flink-doris-connector-2.1-26.1.1.jar',
                     },
                     {
                         value: '2.0',
                         label: 'For Flink 2.0',
-                        gz: FLINK_SAME_SOURCE_2610,
-                        Source: FLINK_SAME_SOURCE_2610,
-                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-2.0/26.1.0/flink-doris-connector-2.0-26.1.0.jar',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-2.0/26.1.1/flink-doris-connector-2.0-26.1.1.jar',
                     },
                     {
                         value: '1.20',
                         label: 'For Flink 1.20',
-                        gz: FLINK_SAME_SOURCE_2610,
-                        Source: FLINK_SAME_SOURCE_2610,
-                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.20/26.1.0/flink-doris-connector-1.20-26.1.0.jar',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.20/26.1.1/flink-doris-connector-1.20-26.1.1.jar',
                     },
                     {
                         value: '1.19',
                         label: 'For Flink 1.19',
-                        gz: FLINK_SAME_SOURCE_2610,
-                        Source: FLINK_SAME_SOURCE_2610,
-                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.19/26.1.0/flink-doris-connector-1.19-26.1.0.jar',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.19/26.1.1/flink-doris-connector-1.19-26.1.1.jar',
                     },
                     {
                         value: '1.18',
                         label: 'For Flink 1.18',
-                        gz: FLINK_SAME_SOURCE_2610,
-                        Source: FLINK_SAME_SOURCE_2610,
-                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.18/26.1.0/flink-doris-connector-1.18-26.1.0.jar',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.18/26.1.1/flink-doris-connector-1.18-26.1.1.jar',
                     },
                     {
                         value: '1.17',
                         label: 'For Flink 1.17',
-                        gz: FLINK_SAME_SOURCE_2610,
-                        Source: FLINK_SAME_SOURCE_2610,
-                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.17/26.1.0/flink-doris-connector-1.17-26.1.0.jar',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.17/26.1.1/flink-doris-connector-1.17-26.1.1.jar',
                     },
                     {
                         value: '1.16',
                         label: 'For Flink 1.16',
-                        gz: FLINK_SAME_SOURCE_2610,
-                        Source: FLINK_SAME_SOURCE_2610,
-                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.16/26.1.0/flink-doris-connector-1.16-26.1.0.jar',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.16/26.1.1/flink-doris-connector-1.16-26.1.1.jar',
                     },
                     {
                         value: '1.15',
                         label: 'For Flink 1.15',
-                        gz: FLINK_SAME_SOURCE_2610,
-                        Source: FLINK_SAME_SOURCE_2610,
-                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.15/26.1.0/flink-doris-connector-1.15-26.1.0.jar',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.15/26.1.1/flink-doris-connector-1.15-26.1.1.jar',
                     },
                 ],
             },

@@ -1,15 +1,47 @@
 ---
 {
-    "title": "Window Function",
+    "title": "Analytic Functions (Window Functions)",
     "language": "en",
-    "description": "Analytic functions, also known as window functions, are functions in SQL queries that perform complex calculations on rows in a data set."
+    "description": "Doris analytic function (window function) guide: partition and frame the result set with the OVER clause to support ranking, cumulative sums, moving averages, year-over-year and period-over-period comparisons.",
+    "keywords": [
+        "Doris window functions",
+        "analytic functions",
+        "OVER clause",
+        "PARTITION BY",
+        "ROWS BETWEEN",
+        "moving average",
+        "cumulative sum",
+        "ranking functions",
+        "NTILE",
+        "LAG LEAD"
+    ]
 }
 ---
 
-Analytic functions, also known as window functions, are functions in SQL queries that perform complex calculations on rows in a data set. The characteristic of window functions is that they do not reduce the number of rows in the query result, but instead add a new computed result for each row. Window functions are applicable to various analysis scenarios, such as calculating running totals, rankings, and moving averages.
-The specific syntax can be [refer](../sql-manual/sql-functions/window-functions/overview.md)
+<!-- Knowledge type: Capability definition + Operational examples -->
+<!-- Applicable scenarios: SQL data analysis / Reporting and statistics / Ranking and period-over-period calculations -->
 
-Below is an example of using a window function to calculate the three-day moving average of sales for each store before and after a given date:
+Analytic functions, also known as window functions, are SQL functions that perform complex calculations across rows of a result set. The defining characteristic of a window function is that it does not reduce the number of rows returned by the query. Instead, it adds a new computed value to each row.
+
+Window functions are useful in many data analysis scenarios, such as rolling totals, ranking, moving averages, and year-over-year or period-over-period comparisons. For detailed syntax, see [Window Functions Overview](../sql-manual/sql-functions/window-functions/overview.md).
+
+## Applicable Scenarios
+
+Window functions are mainly used in the following data analysis scenarios:
+
+| Scenario | Typical Question | Recommended Functions |
+| --- | --- | --- |
+| Ranking and grouping | "Rank the stores in each region by sales." | `RANK` / `DENSE_RANK` / `ROW_NUMBER` / `NTILE` |
+| Cumulative statistics | "Compute the monthly cumulative sales for each product category." | `SUM() OVER (... ROWS UNBOUNDED PRECEDING)` |
+| Moving average | "Compute a three-day-before-and-after moving average of store sales." | `AVG() OVER (... ROWS BETWEEN n PRECEDING AND n FOLLOWING)` |
+| Reporting analysis | "Find the product category with the highest sales each year." | `MAX() / SUM() OVER (PARTITION BY ...)` |
+| Row-to-row comparison | "Compute the year-over-year sales difference for each category." | `LAG` / `LEAD` |
+
+## Quick Start: Moving Average Example
+
+The following end-to-end example shows how to use a window function to compute the moving average of each store's sales over a window of three days before and three days after the current day.
+
+### 1. Create the Table and Load Data
 
 ```sql
 CREATE TABLE daily_sales (
@@ -18,21 +50,33 @@ CREATE TABLE daily_sales (
     sales_amount DECIMAL(10, 2)
 ) PROPERTIES ("replication_num" = "1");
 
-INSERT INTO daily_sales (store_id, sales_date, sales_amount) VALUES (1, '2023-01-01', 100.00), (1, '2023-01-02', 150.00), (1, '2023-01-03', 200.00), (1, '2023-01-04', 250.00), (1, '2023-01-05', 300.00), (1, '2023-01-06', 350.00), (1, '2023-01-07', 400.00), (1, '2023-01-08', 450.00), (1, '2023-01-09', 500.00), (2, '2023-01-01', 110.00), (2, '2023-01-02', 160.00), (2, '2023-01-03', 210.00), (2, '2023-01-04', 260.00), (2, '2023-01-05', 310.00), (2, '2023-01-06', 360.00), (2, '2023-01-07', 410.00), (2, '2023-01-08', 460.00), (2, '2023-01-09', 510.00);
-
-SELECT
-        store_id,
-        sales_date,
-        sales_amount,
-        AVG(sales_amount) OVER ( PARTITION BY store_id ORDER BY sales_date 
-        ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING ) AS moving_avg_sales
-FROM
-        daily_sales;
+INSERT INTO daily_sales (store_id, sales_date, sales_amount) VALUES
+(1, '2023-01-01', 100.00), (1, '2023-01-02', 150.00), (1, '2023-01-03', 200.00),
+(1, '2023-01-04', 250.00), (1, '2023-01-05', 300.00), (1, '2023-01-06', 350.00),
+(1, '2023-01-07', 400.00), (1, '2023-01-08', 450.00), (1, '2023-01-09', 500.00),
+(2, '2023-01-01', 110.00), (2, '2023-01-02', 160.00), (2, '2023-01-03', 210.00),
+(2, '2023-01-04', 260.00), (2, '2023-01-05', 310.00), (2, '2023-01-06', 360.00),
+(2, '2023-01-07', 410.00), (2, '2023-01-08', 460.00), (2, '2023-01-09', 510.00);
 ```
 
-The query result is as follows:
+### 2. Write the Query
 
 ```sql
+SELECT
+    store_id,
+    sales_date,
+    sales_amount,
+    AVG(sales_amount) OVER (
+        PARTITION BY store_id
+        ORDER BY sales_date
+        ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING
+    ) AS moving_avg_sales
+FROM daily_sales;
+```
+
+### 3. Query Result
+
+```text
 +----------+------------+--------------+------------------+
 | store_id | sales_date | sales_amount | moving_avg_sales |
 +----------+------------+--------------+------------------+
@@ -58,73 +102,80 @@ The query result is as follows:
 18 rows in set (0.09 sec)
 ```
 
-## Introduction to Basic Concepts
+## Basic Concepts
+
+<!-- Knowledge type: Concept explanation -->
+
+Before using window functions, you should understand a few core concepts: execution order, partitions, window frames, and the current row.
 
 ### Processing Order
 
-The processing of queries using analytic functions can be divided into three stages.
+A query that uses analytic functions is processed in three phases:
 
-1. Execute all JOIN, WHERE, GROUP BY, and HAVING clauses.
+1. All `JOIN`, `WHERE`, `GROUP BY`, and `HAVING` clauses are evaluated first.
+2. The resulting set is passed to the analytic functions, which perform all window calculations.
+3. If the query ends with an `ORDER BY` clause, that clause is processed last to determine the final output order.
 
-2. Provide the result set to the analytic functions and perform all necessary calculations.
+The processing order is shown in the diagram below:
 
-3. If the query ends with an ORDER BY clause, process this clause to achieve precise output sorting.
-
-The processing order of the query is illustrated as follows:
-
-![processing order](/images/window-function-order.png)
+![Introduction to basic concepts](/images/window-function-order.png)
 
 ### Result Set Partitioning
 
-Partitions are created after defining groups using the PARTITION BY clause. Analytic functions allow users to divide the query result set into groups of rows called partitions.
+A partition is a logical group defined by the `PARTITION BY` clause. Rows within each partition are computed independently.
 
 :::caution Note
-
-The term "partition" used in analytic functions is unrelated to the table partitioning feature. In this chapter, the term "partition" refers only to its meaning related to analytic functions.
-
+The "partition" used in analytic functions has nothing to do with table partitioning. In this chapter, "partition" refers only to its meaning in the context of analytic functions.
 :::
 
 ### Window
 
-For each row in a partition, you can define a sliding data window. This window determines the range of rows involved in performing calculations for the current row. A window has a starting row and an ending row, and depending on its definition, the window can slide at one or both ends. For example ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW, for a cumulative sum function, the starting row is fixed at the first row of its partition, while the ending row slides from the start to the last row of the partition. Conversely ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING, for a moving average, both the start and end points slide.
+For each row in a partition, you can define a sliding data window. The window determines the range of rows used in the calculation for the current row. A window has a start row and an end row, and depending on its definition, it may slide on one or both ends:
 
-The size of the window can be set to be as large as all rows in the partition or as small as a sliding window that only includes one row within the partition. It should be noted that when the window is near the boundaries of the partition, due to boundary restrictions, the range of calculations may be reduced, and the function only returns the computed results of the available rows.
+- `ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`: used for cumulative sums. The start of the window is fixed at the first row of the partition, and the end slides from the start row all the way to the last row of the partition.
+- `ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING`: used for moving averages. Both the start and the end slide together with the current row.
 
-When using window functions, the current row is included in the calculation. Therefore, when processing n items, it should be specified as (n-1). For example, if you need to calculate a five-day average, the window should be specified as "ROWS BETWEEN 4 PRECEDING AND CURRENT ROW," which can also be abbreviated as "ROWS 4 PRECEDING."
+The window can be as large as the entire partition or as small as a single row. Note that when the window is near the partition boundary, the number of rows that participate in the calculation may be reduced because of the boundary, and the function returns a result based only on the available rows.
+
+When you use a window function, **the current row is included in the calculation as well**. Therefore, when you want to operate on n items, specify (n-1). For example, to compute a 5-day average, specify the window as `ROWS BETWEEN 4 PRECEDING AND CURRENT ROW`, which can also be shortened to `ROWS 4 PRECEDING`.
 
 ### Current Row
 
-Each calculation performed using analytic functions is based on the current row within the partition. The current row serves as the reference point for determining the start and end of the window, as illustrated below.
+Every calculation performed by an analytic function is based on the current row within a partition. The current row serves as the reference point for determining the start and end of the window.
 
-For example ROWS BETWEEN 6 PRECEDING AND 6 FOLLOWING, a window can be used to define a centered moving average calculation that includes the current row, the 6 rows before the current row, and the 6 rows after the current row. This creates a sliding window containing 13 rows.
+For example, `ROWS BETWEEN 6 PRECEDING AND 6 FOLLOWING` defines a window for a centered moving average. The window contains the current row, the 6 rows before it, and the 6 rows after it, for a total of 13 rows.
 
-![Current Row](/images/window-function-rows.jpg)
+![Current row](/images/window-function-rows.jpg)
 
-## Sorting Function
+## Ranking Functions
 
-In a sorting function, query results are deterministic only when the specified sorting column is unique; if the sorting column contains duplicate values, the query results may vary each time. The more functions can be [refer](../sql-manual/sql-functions/window-functions/overview.md)
+<!-- Applicable scenarios: Ranking / Bucketing / Top-N analysis -->
+
+Ranking functions sort or group rows within a partition. Note: **the query result is deterministic only when the specified ordering column has unique values**. If the ordering column contains duplicate values, the result may vary between executions. For more functions, see [Window Functions Overview](../sql-manual/sql-functions/window-functions/overview.md).
 
 ### NTILE Function
 
-NTILE is a window function in SQL used to divide a query result set into a specified number of buckets (groups) and assign a bucket number to each row. This is particularly useful in data analysis and reporting, especially when data needs to be grouped and sorted.
+`NTILE` divides the result set into a specified number of buckets (groups) and assigns a bucket number to each row. It is commonly used in data analysis and reporting for grouped ranking scenarios.
 
-**1. Function Syntax**
+#### Syntax
 
 ```sql
 NTILE(num_buckets) OVER ([PARTITION BY partition_expression] ORDER BY order_expression)
 ```
 
-- `num_buckets`: The number of buckets into which to divide the rows.
+Parameter description:
 
-- `PARTITION BY partition_expression` (optional): Defines how to partition the data.
+| Parameter | Description |
+| --- | --- |
+| `num_buckets` | The number of buckets into which the rows are divided. |
+| `PARTITION BY partition_expression` | Optional. Defines how to partition the data. |
+| `ORDER BY order_expression` | Required. Defines how to sort the data. |
 
-- `ORDER BY order_expression`: Defines how to sort the data.
+#### Example: Bucketing Students by Score
 
-**2. Using the NTILE Function**
+Suppose there is a table of student exam scores called `class_student_scores`, and you want to divide students into 4 groups by score, with each group containing roughly the same number of students.
 
-Suppose there is a table `class_student_scores` containing students' exam scores, and you want to divide the students into 4 groups based on their scores, with the number of students in each group being as uniform as possible.
-
-First, create the `class_student_scores` table and insert data:
+First, create the table and insert data:
 
 ```sql
 CREATE TABLE class_student_scores (
@@ -132,7 +183,7 @@ CREATE TABLE class_student_scores (
     student_id INT,
     student_name VARCHAR(50),
     score INT
-)distributed by hash(student_id) properties('replication_num'=1);
+) DISTRIBUTED BY HASH(student_id) PROPERTIES('replication_num'='1');
 
 INSERT INTO class_student_scores VALUES
 (1, 1, 'Alice', 85),
@@ -145,21 +196,20 @@ INSERT INTO class_student_scores VALUES
 (2, 8, 'Hannah', 84);
 ```
 
-Then, use the NTILE function to divide the students into 4 groups based on their scores:
+Then use the `NTILE` function to bucket students by score:
 
 ```sql
-SELECT  
-    student_id,  
-    student_name,  
-    score,  
-    NTILE(4) OVER (ORDER BY score DESC) AS bucket  
-FROM  
-    class_student_scores;
+SELECT
+    student_id,
+    student_name,
+    score,
+    NTILE(4) OVER (ORDER BY score DESC) AS bucket
+FROM class_student_scores;
 ```
 
-The results are as follows:
+Query result:
 
-```sql
+```text
 +------------+--------------+-------+--------+
 | student_id | student_name | score | bucket |
 +------------+--------------+-------+--------+
@@ -175,32 +225,30 @@ The results are as follows:
 8 rows in set (0.12 sec)
 ```
 
-In this example, the `NTILE(4)` function divides the students into 4 groups (buckets) based on their scores, with the number of students in each group being as uniform as possible.
+In this example, `NTILE(4)` divides the students into 4 buckets by score, with each bucket containing roughly the same number of students.
 
 :::caution Notes
-- If rows cannot be evenly distributed into buckets, some buckets may have one extra row.
-
-- The `NTILE` function works within each partition. If the `PARTITION BY` clause is used, data within each partition will be separately assigned to buckets.
+- If the rows cannot be distributed evenly across the buckets, some buckets may have one extra row.
+- `NTILE` operates independently within each partition. When you use `PARTITION BY`, the data within each partition is bucketed separately.
 :::
 
-**3. Using NTILE with PARTITION BY**
+#### Combining with PARTITION BY
 
-Suppose you want to group students by class, and then divide them into 3 groups within each class based on their scores. You can use the `PARTITION BY` and `NTILE` functions:
+If you want to "first group by class, then divide students within each class into 3 groups by score," you can combine `NTILE` with `PARTITION BY`:
 
 ```sql
-SELECT  
-    class_id,  
-    student_id,  
-    student_name,  
-    score,  
-    NTILE(3) OVER (PARTITION BY class_id ORDER BY score DESC) AS bucket  
-FROM  
-    class_student_scores;
+SELECT
+    class_id,
+    student_id,
+    student_name,
+    score,
+    NTILE(3) OVER (PARTITION BY class_id ORDER BY score DESC) AS bucket
+FROM class_student_scores;
 ```
 
-The results are as follows:
+Query result:
 
-```sql
+```text
 +----------+------------+--------------+-------+--------+
 | class_id | student_id | student_name | score | bucket |
 +----------+------------+--------------+-------+--------+
@@ -216,39 +264,47 @@ The results are as follows:
 8 rows in set (0.05 sec)
 ```
 
-In this example, students are partitioned by class, and then within each class, they are divided into 3 groups based on their scores. The number of students in each group is as uniform as possible.
+You can see that students are partitioned by class, and within each class they are divided into 3 buckets by score, with each bucket containing roughly the same number of students.
 
-## Analytic Functions
+## Aggregate Functions
 
-### Using the Analytic Function SUM to Calculate Cumulative Values
+<!-- Applicable scenarios: Cumulative statistics / Moving averages / Range summaries -->
 
-Here is an example:
+Aggregate functions such as `SUM`, `AVG`, `MAX`, and `MIN` can be used as window functions when paired with the `OVER` clause. They compute aggregate values within a partition for each row without requiring a `GROUP BY`.
+
+### Use SUM to Compute a Cumulative Total
+
+The following query computes the monthly sales for the Books and Electronics product categories in the year 2000, along with the cumulative total sales by month:
 
 ```sql
 SELECT
-        i_category,
-        year(d_date),
-        month(d_date),
-        sum(ss_net_paid) as total_sales,
-        sum(sum(ss_net_paid)) over(partition by i_category order by year(d_date),month(d_date) ROWS UNBOUNDED PRECEDING) cum_sales
-FROM 
-        store_sales,
-        date_dim d1,
-        item
-WHERE 
-        d1.d_date_sk = ss_sold_date_sk
-        and i_item_sk = ss_item_sk
-        and year(d_date) =2000
-        and i_category in ('Books','Electronics')
-GROUP BY         
-        i_category,
-        year(d_date),
-        month(d_date)
+    i_category,
+    year(d_date),
+    month(d_date),
+    sum(ss_net_paid) AS total_sales,
+    sum(sum(ss_net_paid)) OVER (
+        PARTITION BY i_category
+        ORDER BY year(d_date), month(d_date)
+        ROWS UNBOUNDED PRECEDING
+    ) AS cum_sales
+FROM
+    store_sales,
+    date_dim d1,
+    item
+WHERE
+    d1.d_date_sk = ss_sold_date_sk
+    AND i_item_sk = ss_item_sk
+    AND year(d_date) = 2000
+    AND i_category IN ('Books', 'Electronics')
+GROUP BY
+    i_category,
+    year(d_date),
+    month(d_date);
 ```
 
-The query result is as follows:
+Query result:
 
-```sql
+```text
 +-------------+--------------+---------------+-------------+-------------+
 | i_category  | year(d_date) | month(d_date) | total_sales | cum_sales   |
 +-------------+--------------+---------------+-------------+-------------+
@@ -280,37 +336,40 @@ The query result is as follows:
 24 rows in set (0.13 sec)
 ```
 
-In this example, the analytic function SUM defines a window for each row, starting from the beginning of the partition (UNBOUNDED PRECEDING) and ending at the current row by default. In this case, nested use of SUM is required because we need to perform SUM on the result that is itself a SUM. Nested aggregation is frequently used in analytic aggregation functions.
+In this example, the `SUM` aggregate function defines a window for each row: the start is fixed at the first row of the partition (`UNBOUNDED PRECEDING`), and the end defaults to the current row. Note that `SUM` is nested here because the outer `SUM` aggregates the result of the inner `SUM`. **Nested aggregation is very common in analytic aggregate functions**.
 
-### Using the Analytic Function AVG to Calculate Moving Averages
+### Use AVG to Compute a Moving Average
 
-Here is an example:
+The following query computes a "3-month moving average" (the current month and the previous two months) of the monthly sales for the Books category in the year 2000:
 
 ```sql
 SELECT
-        i_category,
-        year(d_date),
-        month(d_date),
-        sum(ss_net_paid) as total_sales,
-        avg(sum(ss_net_paid)) over(order by year(d_date),month(d_date) ROWS 2 PRECEDING) avg
-FROM 
-        store_sales,
-        date_dim d1,
-        item
-WHERE 
-        d1.d_date_sk = ss_sold_date_sk
-        and i_item_sk = ss_item_sk
-        and year(d_date) =2000
-        and i_category='Books'
-GROUP BY         
-        i_category,
-        year(d_date),
-        month(d_date)
+    i_category,
+    year(d_date),
+    month(d_date),
+    sum(ss_net_paid) AS total_sales,
+    avg(sum(ss_net_paid)) OVER (
+        ORDER BY year(d_date), month(d_date)
+        ROWS 2 PRECEDING
+    ) AS avg
+FROM
+    store_sales,
+    date_dim d1,
+    item
+WHERE
+    d1.d_date_sk = ss_sold_date_sk
+    AND i_item_sk = ss_item_sk
+    AND year(d_date) = 2000
+    AND i_category = 'Books'
+GROUP BY
+    i_category,
+    year(d_date),
+    month(d_date);
 ```
 
-The query result is as follows:
+Query result:
 
-```sql
+```text
 +------------+--------------+---------------+-------------+---------------+
 | i_category | year(d_date) | month(d_date) | total_sales | avg           |
 +------------+--------------+---------------+-------------+---------------+
@@ -331,152 +390,155 @@ The query result is as follows:
 ```
 
 :::caution Note
-
-In the output data, the AVG column for the first two rows does not calculate a three-day moving average because there are not enough preceding rows for the boundary data (the number of rows specified in SQL is 3).
-
+In the output, the `avg` column for the first two rows is not actually computed as a true 3-month average, because there are not enough preceding rows (the SQL specifies a window of 3 rows).
 :::
 
-Additionally, it is possible to calculate window aggregate functions centered on the current row. For instance, this example calculates the centered moving average of monthly sales for products in the "Books" category in the year 2000, specifically averaging the total sales of the month before the current row, the current row, and the month after the current row.
+You can also compute a window aggregation that is "centered on the current row." The example below computes a centered moving average of the monthly sales for the Books category in the year 2000, that is, the average of the sales for "the previous month, the current month, and the next month":
 
 ```sql
-SELECT  
-        i_category,  
-        YEAR(d_date) AS year,  
-        MONTH(d_date) AS month,  
-        SUM(ss_net_paid) AS total_sales,  
-        AVG(SUM(ss_net_paid)) OVER (ORDER BY YEAR(d_date), MONTH(d_date) ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) AS avg_sales  
-FROM   
-        store_sales,  
-        date_dim d1,  
-        item  
-WHERE   
-        d1.d_date_sk = ss_sold_date_sk  
-        AND i_item_sk = ss_item_sk  
-        AND YEAR(d_date) = 2000  
-        AND i_category = 'Books'  
-GROUP BY           
-        i_category,  
-        YEAR(d_date),  
-        MONTH(d_date)
+SELECT
+    i_category,
+    year(d_date),
+    month(d_date),
+    sum(ss_net_paid) AS total_sales,
+    avg(sum(ss_net_paid)) OVER (
+        ORDER BY year(d_date), month(d_date)
+        ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING
+    ) AS avg_sales
+FROM
+    store_sales,
+    date_dim d1,
+    item
+WHERE
+    d1.d_date_sk = ss_sold_date_sk
+    AND i_item_sk = ss_item_sk
+    AND year(d_date) = 2000
+    AND i_category = 'Books'
+GROUP BY
+    i_category,
+    year(d_date),
+    month(d_date);
 ```
 
 :::caution Note
-
-The centered moving averages for the starting and ending rows in the output data are calculated based on only two days because there are not enough rows before and after the boundary data.
-
+In the output, the centered moving average for the first and last rows is computed based on only two months of data, because there are not enough rows on one side of the boundary.
 :::
 
-## Reporting Function
+## Reporting Functions
 
-A reporting function refers to a scenario where the window range for each row covers the entire Partition. The primary advantage of reporting functions is their ability to pass data multiple times within a single query block, thereby enhancing query performance. For example, queries such as "For each year, find the product category with the highest sales" do not require JOIN operations when using reporting functions. An example is provided below:
+<!-- Applicable scenarios: Reporting analysis / Whole-partition aggregation / Multiple scans within a single query -->
 
-```sql
-SELECT year, category, total_sum FROM (  
-    SELECT  
-        YEAR(d_date) AS year,  
-        i_category AS category,  
-        SUM(ss_net_paid) AS total_sum,  
-        MAX(SUM(ss_net_paid)) OVER (PARTITION BY YEAR(d_date)) AS max_sales  
-    FROM  
-        store_sales,  
-        date_dim d1,  
-        item  
-    WHERE  
-        d1.d_date_sk = ss_sold_date_sk  
-        AND i_item_sk = ss_item_sk  
-        AND YEAR(d_date) IN (1998, 1999)  
-    GROUP BY  
-        YEAR(d_date), i_category   
-) t  
-WHERE total_sum = max_sales;
-```
+A reporting function has the property that "the window for every row spans the entire partition." Its main advantage is that the same data can be referenced multiple times in a single query, which avoids explicit `JOIN`s and improves query performance.
 
-The inner query result for reporting `MAX(SUM(ss_net_paid))` is as follows:
+For example, the requirement "find the product category with the highest sales each year" can be implemented with a reporting function and does not require a `JOIN`:
 
 ```sql
-SELECT year, category, total_sum FROM (  
-    SELECT  
-        YEAR(d_date) AS year,  
-        i_category AS category,  
-        SUM(ss_net_paid) AS total_sum,  
-        MAX(SUM(ss_net_paid)) OVER (PARTITION BY YEAR(d_date)) AS max_sales  
-    FROM  
-        store_sales,  
-        date_dim d1,  
-        item  
-    WHERE  
-        d1.d_date_sk = ss_sold_date_sk  
-        AND i_item_sk = ss_item_sk  
-        AND YEAR(d_date) IN (1998, 1999)  
-    GROUP BY  
-        YEAR(d_date), i_category   
-) t  
-WHERE total_sum = max_sales;
-```
-
-The complete query result is as follows:
-
-```sql
-+------+-------------+-------------+  
-| year | category    | total_sum   |  
-+------+-------------+-------------+  
-| 1998 | Electronics | 91723676.27 |  
-| 1999 | Electronics | 90310850.54 |  
-+------+-------------+-------------+  
-2 rows in set (0.12 sec)
-```
-
-You can combine reporting aggregation with nested queries to solve some complex problems, such as finding the best-selling products within important product subcategories. For example, to "Find subcategories where product sales account for more than 20% of total sales in their product category, and select the top five products from these subcategories," the query statement is as follows:
-
-```sql
-SELECT i_category AS categ, i_class AS sub_categ, i_item_id   
-FROM  
-    (  
-    SELECT   
-        i_item_id, i_class, i_category, SUM(ss_net_paid) AS sales,  
-        SUM(SUM(ss_net_paid)) OVER (PARTITION BY i_category) AS cat_sales,  
-        SUM(SUM(ss_net_paid)) OVER (PARTITION BY i_class) AS sub_cat_sales,  
-        RANK() OVER (PARTITION BY i_class ORDER BY SUM(ss_net_paid)) AS rank_in_line  
-    FROM   
-        store_sales,  
-        item  
-    WHERE  
-        i_item_sk = ss_item_sk  
-    GROUP BY i_class, i_category, i_item_id  
-    ) t  
-WHERE sub_cat_sales > 0.2 * cat_sales AND rank_in_line <= 5;
-```
-
-## LAG / LEAD 
-
-The LAG and LEAD functions are suitable for comparisons between values. Both functions can access multiple rows in a table simultaneously without requiring self-joins, thereby enhancing the speed of query processing. Specifically, the LAG function provides access to a row at a given offset before the current row, while the LEAD function provides access to a row at a given offset after the current row.
-
-Below is an example of an SQL query using the LAG function. This query aims to select the total sales for each product category in specific years (1999, 2000, 2001, 2002), the total sales of the previous year, and the difference between them:
-
-```sql
-select year, category, total_sales, before_year_sales, total_sales - before_year_sales from
-(
-select
-        sum(ss_net_paid) as total_sales,
-        year(d_date) year,
-        i_category category,
-        lag(sum(ss_net_paid), 1,0) over(PARTITION BY i_category ORDER BY YEAR(d_date)) AS before_year_sales
-from
+SELECT year, category, total_sum FROM (
+    SELECT
+        year(d_date) AS year,
+        i_category AS category,
+        sum(ss_net_paid) AS total_sum,
+        max(sum(ss_net_paid)) OVER (PARTITION BY year(d_date)) AS max_sales
+    FROM
         store_sales,
         date_dim d1,
         item
-where
+    WHERE
         d1.d_date_sk = ss_sold_date_sk
-        and i_item_sk = ss_item_sk
-GROUP BY 
-        YEAR(d_date), i_category
+        AND i_item_sk = ss_item_sk
+        AND year(d_date) IN (1998, 1999)
+    GROUP BY
+        year(d_date), i_category
 ) t
-where year in (1999, 2000, 2001, 2002)
+WHERE total_sum = max_sales;
 ```
 
-The query results are as follows:
+The inner query reports the highest category sales for each year using `MAX(SUM(ss_net_paid))`, with the following result:
+
+```text
++------+-------------+-------------+-------------+
+| year | category    | total_sum   | max_sales   |
++------+-------------+-------------+-------------+
+| 1998 | Electronics | 91723676.27 | 91723676.27 |
+| 1998 | Books       | 91307909.84 | 91723676.27 |
+| 1999 | Electronics | 90310850.54 | 90310850.54 |
+| 1999 | Books       | 88993351.11 | 90310850.54 |
++------+-------------+-------------+-------------+
+4 rows in set (0.11 sec)
+```
+
+After the outer query filters with `total_sum = max_sales`, you get the top-selling category for each year:
+
+```text
++------+-------------+-------------+
+| year | category    | total_sum   |
++------+-------------+-------------+
+| 1998 | Electronics | 91723676.27 |
+| 1999 | Electronics | 90310850.54 |
++------+-------------+-------------+
+2 rows in set (0.12 sec)
+```
+
+Reporting aggregations can also be combined with nested queries to solve more complex problems. For example, "find the subcategories whose product sales account for more than 20% of their product category's total sales, and select the top 5 best-selling items from those subcategories":
 
 ```sql
+SELECT i_category AS categ, i_class AS sub_categ, i_item_id
+FROM (
+    SELECT
+        i_item_id, i_class, i_category,
+        sum(ss_net_paid) AS sales,
+        sum(sum(ss_net_paid)) OVER (PARTITION BY i_category) AS cat_sales,
+        sum(sum(ss_net_paid)) OVER (PARTITION BY i_class) AS sub_cat_sales,
+        rank() OVER (PARTITION BY i_class ORDER BY sum(ss_net_paid) DESC) AS rank_in_line
+    FROM
+        store_sales,
+        item
+    WHERE
+        i_item_sk = ss_item_sk
+    GROUP BY i_class, i_category, i_item_id
+) t
+WHERE sub_cat_sales > 0.2 * cat_sales AND rank_in_line <= 5;
+```
+
+## LAG / LEAD Functions
+
+<!-- Applicable scenarios: Year-over-year and period-over-period / Row-to-row comparisons / Time-series difference analysis -->
+
+The `LAG` and `LEAD` functions are designed for "row-to-row comparison" scenarios. Both functions can access multiple rows in a table without a self-join, which significantly improves query efficiency:
+
+- `LAG`: accesses the row at a given offset **before** the current row.
+- `LEAD`: accesses the row at a given offset **after** the current row.
+
+### Example 1: Use LAG to Compute Year-over-Year Sales Differences
+
+The following query selects the total sales, the previous year's total sales, and the difference between the two for each product category in the years 1999, 2000, 2001, and 2002:
+
+```sql
+SELECT year, category, total_sales, before_year_sales, total_sales - before_year_sales FROM (
+    SELECT
+        sum(ss_net_paid) AS total_sales,
+        year(d_date) AS year,
+        i_category AS category,
+        lag(sum(ss_net_paid), 1, 0) OVER (
+            PARTITION BY i_category
+            ORDER BY YEAR(d_date)
+        ) AS before_year_sales
+    FROM
+        store_sales,
+        date_dim d1,
+        item
+    WHERE
+        d1.d_date_sk = ss_sold_date_sk
+        AND i_item_sk = ss_item_sk
+    GROUP BY
+        YEAR(d_date), i_category
+) t
+WHERE year IN (1999, 2000, 2001, 2002);
+```
+
+Query result:
+
+```text
 +------+-------------+-------------+-------------------+-----------------------------------+
 | year | category    | total_sales | before_year_sales | (total_sales - before_year_sales) |
 +------+-------------+-------------+-------------------+-----------------------------------+
@@ -492,46 +554,54 @@ The query results are as follows:
 8 rows in set (0.16 sec)
 ```
 
+### Example 2: Use a Window Function to Compute a 3-Day Stock Price Average
 
-## Examples
-
-1. Assume we have the following stock data, with stock symbol JDR and daily closing prices:
+Suppose there is the following stock data, where the ticker symbol is `JDR` and `closing_price` is the daily closing price:
 
 ```sql
-create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date datetime);  
-  
-INSERT INTO stock_ticker VALUES 
-    ("JDR", 12.86, "2014-10-02 00:00:00"), 
-    ("JDR", 12.89, "2014-10-03 00:00:00"), 
-    ("JDR", 12.94, "2014-10-04 00:00:00"), 
-    ("JDR", 12.55, "2014-10-05 00:00:00"), 
-    ("JDR", 14.03, "2014-10-06 00:00:00"), 
-    ("JDR", 14.75, "2014-10-07 00:00:00"), 
-    ("JDR", 13.98, "2014-10-08 00:00:00")
-;
+CREATE TABLE stock_ticker (
+    stock_symbol STRING,
+    closing_price DECIMAL(8, 2),
+    closing_date DATETIME
+);
 
-select * from stock_ticker order by stock_symbol, closing_date
+INSERT INTO stock_ticker VALUES
+    ("JDR", 12.86, "2014-10-02 00:00:00"),
+    ("JDR", 12.89, "2014-10-03 00:00:00"),
+    ("JDR", 12.94, "2014-10-04 00:00:00"),
+    ("JDR", 12.55, "2014-10-05 00:00:00"),
+    ("JDR", 14.03, "2014-10-06 00:00:00"),
+    ("JDR", 14.75, "2014-10-07 00:00:00"),
+    ("JDR", 13.98, "2014-10-08 00:00:00");
+
+SELECT * FROM stock_ticker ORDER BY stock_symbol, closing_date;
 ```
 
 ```text
- | stock_symbol | closing_price | closing_date        |
- |--------------|---------------|---------------------|
- | JDR          | 12.86         | 2014-10-02 00:00:00 |
- | JDR          | 12.89         | 2014-10-03 00:00:00 |
- | JDR          | 12.94         | 2014-10-04 00:00:00 |
- | JDR          | 12.55         | 2014-10-05 00:00:00 |
- | JDR          | 14.03         | 2014-10-06 00:00:00 |
- | JDR          | 14.75         | 2014-10-07 00:00:00 |
- | JDR          | 13.98         | 2014-10-08 00:00:00 |
+| stock_symbol | closing_price | closing_date        |
+|--------------|---------------|---------------------|
+| JDR          | 12.86         | 2014-10-02 00:00:00 |
+| JDR          | 12.89         | 2014-10-03 00:00:00 |
+| JDR          | 12.94         | 2014-10-04 00:00:00 |
+| JDR          | 12.55         | 2014-10-05 00:00:00 |
+| JDR          | 14.03         | 2014-10-06 00:00:00 |
+| JDR          | 14.75         | 2014-10-07 00:00:00 |
+| JDR          | 13.98         | 2014-10-08 00:00:00 |
 ```
 
-2. This query uses an analytic function to generate a moving_average column, which calculates the 3-day average stock price (previous day, current day, and next day). The first day has no previous day value, and the last day has no next day value, so these rows only calculate a two-day average. The Partition By clause has no effect here since all data is for JDR, but if there were other stock information, Partition By would ensure the analytic function only operates within its own partition.
+The query below uses a window function to produce a `moving_average` column, whose value is the average of the stock prices for the previous day, the current day, and the next day. The first day has no previous day and the last day has no next day, so those two rows are actually averaged over only two days. `PARTITION BY` does not have a real grouping effect here (because all the data belongs to `JDR`), but when there are multiple stocks, `PARTITION BY` ensures that the window calculation is performed only within the same stock:
 
 ```sql
-select stock_symbol, closing_date, closing_price,    
-avg(closing_price) over (partition by stock_symbol order by closing_date    
-rows between 1 preceding and 1 following) as moving_average    
-from stock_ticker;
+SELECT
+    stock_symbol,
+    closing_date,
+    closing_price,
+    avg(closing_price) OVER (
+        PARTITION BY stock_symbol
+        ORDER BY closing_date
+        ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING
+    ) AS moving_average
+FROM stock_ticker;
 ```
 
 ```text
@@ -546,9 +616,14 @@ from stock_ticker;
 | JDR          | 2014-10-08 00:00:00 | 13.98         | 14.36          |
 ```
 
-## Reference
+## Appendix: Sample Data Preparation
 
-The table creation statement used in the example is as follows:
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Reproducing the store_sales/item/date_dim examples in this document -->
+
+The aggregate function, reporting function, and LAG/LEAD examples in this document are all based on TPC-DS-style tables (`item`, `store_sales`, `date_dim`, `customer_address`). To reproduce them, follow the steps below to prepare the data.
+
+### 1. Create the Sample Tables
 
 ```sql
 CREATE DATABASE IF NOT EXISTS doc_tpcds;
@@ -581,7 +656,7 @@ CREATE TABLE IF NOT EXISTS item (
 DUPLICATE KEY(i_item_sk)
 DISTRIBUTED BY HASH(i_item_sk) BUCKETS 12
 PROPERTIES (
-  "replication_num" = "1"
+    "replication_num" = "1"
 );
 
 CREATE TABLE IF NOT EXISTS store_sales (
@@ -612,7 +687,7 @@ CREATE TABLE IF NOT EXISTS store_sales (
 DUPLICATE KEY(ss_item_sk, ss_ticket_number)
 DISTRIBUTED BY HASH(ss_item_sk, ss_ticket_number) BUCKETS 32
 PROPERTIES (
-  "replication_num" = "1"
+    "replication_num" = "1"
 );
 
 CREATE TABLE IF NOT EXISTS date_dim (
@@ -648,7 +723,7 @@ CREATE TABLE IF NOT EXISTS date_dim (
 DUPLICATE KEY(d_date_sk)
 DISTRIBUTED BY HASH(d_date_sk) BUCKETS 12
 PROPERTIES (
-  "replication_num" = "1"
+    "replication_num" = "1"
 );
 
 CREATE TABLE IF NOT EXISTS customer_address (
@@ -669,42 +744,44 @@ CREATE TABLE IF NOT EXISTS customer_address (
 DUPLICATE KEY(ca_address_sk)
 DISTRIBUTED BY HASH(ca_address_sk) BUCKETS 12
 PROPERTIES (
-  "replication_num" = "1"
+    "replication_num" = "1"
 );
 ```
 
-Execute the following command on the terminal to download the data to the local computer and load the data into the table using the Stream Load method:
+### 2. Download and Load the Data via Stream Load
+
+In a terminal, run the following commands to download the data locally and load it using Stream Load:
 
 ```shell
 curl -L https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar -o - | tar -Jxf -
 
 curl --location-trusted \
--u "root:" \
--H "column_separator:|" \
--H "columns: i_item_sk, i_item_id, i_rec_start_date, i_rec_end_date, i_item_desc, i_current_price, i_wholesale_cost, i_brand_id, i_brand, i_class_id, i_class, i_category_id, i_category, i_manufact_id, i_manufact, i_size, i_formulation, i_color, i_units, i_container, i_manager_id, i_product_name" \
--T "doc_ddl_dir/item_1_10.dat" \
-http://127.0.0.1:8030/api/doc_tpcds/item/_stream_load
+    -u "root:" \
+    -H "column_separator:|" \
+    -H "columns: i_item_sk, i_item_id, i_rec_start_date, i_rec_end_date, i_item_desc, i_current_price, i_wholesale_cost, i_brand_id, i_brand, i_class_id, i_class, i_category_id, i_category, i_manufact_id, i_manufact, i_size, i_formulation, i_color, i_units, i_container, i_manager_id, i_product_name" \
+    -T "doc_ddl_dir/item_1_10.dat" \
+    http://127.0.0.1:8030/api/doc_tpcds/item/_stream_load
 
 curl --location-trusted \
--u "root:" \
--H "column_separator:|" \
--H "columns: d_date_sk, d_date_id, d_date, d_month_seq, d_week_seq, d_quarter_seq, d_year, d_dow, d_moy, d_dom, d_qoy, d_fy_year, d_fy_quarter_seq, d_fy_week_seq, d_day_name, d_quarter_name, d_holiday, d_weekend, d_following_holiday, d_first_dom, d_last_dom, d_same_day_ly, d_same_day_lq, d_current_day, d_current_week, d_current_month, d_current_quarter, d_current_year" \
--T "doc_ddl_dir/date_dim_1_10.dat" \
-http://127.0.0.1:8030/api/doc_tpcds/date_dim/_stream_load
+    -u "root:" \
+    -H "column_separator:|" \
+    -H "columns: d_date_sk, d_date_id, d_date, d_month_seq, d_week_seq, d_quarter_seq, d_year, d_dow, d_moy, d_dom, d_qoy, d_fy_year, d_fy_quarter_seq, d_fy_week_seq, d_day_name, d_quarter_name, d_holiday, d_weekend, d_following_holiday, d_first_dom, d_last_dom, d_same_day_ly, d_same_day_lq, d_current_day, d_current_week, d_current_month, d_current_quarter, d_current_year" \
+    -T "doc_ddl_dir/date_dim_1_10.dat" \
+    http://127.0.0.1:8030/api/doc_tpcds/date_dim/_stream_load
 
 curl --location-trusted \
--u "root:" \
--H "column_separator:|" \
--H "columns: ss_sold_date_sk, ss_sold_time_sk, ss_item_sk, ss_customer_sk, ss_cdemo_sk, ss_hdemo_sk, ss_addr_sk, ss_store_sk, ss_promo_sk, ss_ticket_number, ss_quantity, ss_wholesale_cost, ss_list_price, ss_sales_price, ss_ext_discount_amt, ss_ext_sales_price, ss_ext_wholesale_cost, ss_ext_list_price, ss_ext_tax, ss_coupon_amt, ss_net_paid, ss_net_paid_inc_tax, ss_net_profit" \
--T "doc_ddl_dir/store_sales.csv" \
-http://127.0.0.1:8030/api/doc_tpcds/store_sales/_stream_load
+    -u "root:" \
+    -H "column_separator:|" \
+    -H "columns: ss_sold_date_sk, ss_sold_time_sk, ss_item_sk, ss_customer_sk, ss_cdemo_sk, ss_hdemo_sk, ss_addr_sk, ss_store_sk, ss_promo_sk, ss_ticket_number, ss_quantity, ss_wholesale_cost, ss_list_price, ss_sales_price, ss_ext_discount_amt, ss_ext_sales_price, ss_ext_wholesale_cost, ss_ext_list_price, ss_ext_tax, ss_coupon_amt, ss_net_paid, ss_net_paid_inc_tax, ss_net_profit" \
+    -T "doc_ddl_dir/store_sales.csv" \
+    http://127.0.0.1:8030/api/doc_tpcds/store_sales/_stream_load
 
 curl --location-trusted \
--u "root:" \
--H "column_separator:|" \
--H "ca_address_sk, ca_address_id, ca_street_number, ca_street_name, ca_street_type, ca_suite_number, ca_city, ca_county, ca_state, ca_zip, ca_country, ca_gmt_offset, ca_location_type" \
--T "doc_ddl_dir/customer_address_1_10.dat" \
-http://127.0.0.1:8030/api/doc_tpcds/customer_address/_stream_load
+    -u "root:" \
+    -H "column_separator:|" \
+    -H "columns: ca_address_sk, ca_address_id, ca_street_number, ca_street_name, ca_street_type, ca_suite_number, ca_city, ca_county, ca_state, ca_zip, ca_country, ca_gmt_offset, ca_location_type" \
+    -T "doc_ddl_dir/customer_address_1_10.dat" \
+    http://127.0.0.1:8030/api/doc_tpcds/customer_address/_stream_load
 ```
 
-The data files ``item_1_10.dat``, ``date-dim_1_10.dat``, ``store_stales.csv``, and ``customer-address_1_10.dat`` can be downloaded by clicking on the [link](https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar).
+The data files `item_1_10.dat`, `date_dim_1_10.dat`, `store_sales.csv`, and `customer_address_1_10.dat` can also be downloaded from [this archive](https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar).

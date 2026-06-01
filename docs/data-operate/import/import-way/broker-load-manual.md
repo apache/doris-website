@@ -2,92 +2,96 @@
 {
     "title": "Broker Load",
     "language": "en",
-    "description": "Broker Load is initiated from the MySQL API. Doris will actively pull the data from the source based on the information in the LOAD statement."
+    "description": "Broker Load is an asynchronous import method in Doris for pulling large volumes of data from remote storage such as S3 and HDFS. It supports CSV, JSON, Parquet, and ORC.",
+    "keywords": [
+        "Broker Load",
+        "S3 Load",
+        "HDFS Load",
+        "Doris asynchronous import",
+        "object storage import",
+        "Parquet import",
+        "ORC import",
+        "max_bytes_per_broker_scanner",
+        "Kerberos authentication",
+        "HDFS HA"
+    ]
 }
 ---
 
-Broker Load is initiated from the MySQL API. Doris will actively pull the data from the source based on the information in the LOAD statement. Broker Load is an asynchronous import method. The progress and result of Broker Load tasks can be viewed by the SHOW LOAD statement.
+<!-- Knowledge type: Operating procedures + Configuration parameters + Troubleshooting -->
+<!-- Applicable scenarios: Bulk-importing large volumes of data from remote storage (S3 / HDFS / other object storage) into Doris -->
 
-Broker Load is suitable for scenarios where the source data is stored in remote storage systems, such as HDFS, and the data volume is relatively large.
+Broker Load is initiated through the MySQL API. Doris actively pulls data from a remote data source according to the information in the `LOAD` statement. It is an **asynchronous import** method. After submission, you need to use the `SHOW LOAD` statement to check the import progress and result.
 
-Direct reads from HDFS or S3 can also be imported through HDFS TVF or S3 TVF in the [Lakehouse/TVF](../../../lakehouse/file-analysis). The current "Insert Into" based on TVF is a synchronous import, while Broker Load is an asynchronous import method.
+Broker Load is suitable for the following typical scenarios:
 
-In early versions of Doris, both S3 Load and HDFS Load were implemented by connecting to specific Broker processes using `WITH BROKER`.
-In newer versions, S3 Load and HDFS Load have been optimized as the most commonly used import methods, and they no longer depend on an additional Broker process, though they still use syntax similar to Broker Load.
-Due to historical reasons and the similarity in syntax, S3 Load, HDFS Load, and Broker Load are collectively referred to as Broker Load.
+- The source data is stored in a remote system (such as object storage or HDFS).
+- The data volume of a single import is large (GB to TB level).
+- You want to import data asynchronously in batches, with Doris itself controlling concurrency and retries.
+
+> You can also import data through HDFS TVF or S3 TVF in [Lakehouse / TVF](../../../lakehouse/file-analysis) combined with `INSERT INTO`. `INSERT INTO` based on TVF is currently a synchronous import, while Broker Load is an asynchronous import.
+
+In early versions of Doris, both S3 Load and HDFS Load connected to a specific Broker process through `WITH BROKER`. As versions evolved, S3 Load and HDFS Load no longer rely on an additional Broker process, but they still use a syntax similar to Broker Load. For historical reasons and syntactic similarity, **S3 Load, HDFS Load, and Broker Load are collectively referred to as Broker Load**.
 
 ## Limitations
 
-Supported data sources:
+The following table summarizes the capabilities of Broker Load:
 
-- S3 protocol
-- HDFS protocol
-- Custom protocol (require broker process)
-
-Supported file path patterns:
-
-- Wildcards: `*`, `?`, `[abc]`, `[a-z]`
-- Range expansion: `{1..10}`, `{a,b,c}`
-- See [File Path Pattern](../../../sql-manual/basic-element/file-path-pattern) for complete syntax
-
-Supported data types:
-
-- CSV
-- JSON
-- PARQUET
-- ORC
-
-Supported compress types:
-
-- PLAIN
-- GZ
-- LZO
-- BZ2
-- LZ4FRAME
-- DEFLATE
-- LZOP
-- LZ4BLOCK
-- SNAPPYBLOCK
-- ZLIB
-- ZSTD
+| Dimension | Supported scope |
+| --- | --- |
+| Storage backend | S3 protocol, HDFS protocol, other protocols (a corresponding Broker process is required) |
+| File path pattern | Wildcards `*`, `?`, `[abc]`, `[a-z]`; range expansion `{1..10}`, `{a,b,c}`. For the full syntax, see [File Path Pattern](../../../sql-manual/basic-element/file-path-pattern). |
+| Data format | CSV, JSON, PARQUET, ORC |
+| Compression type | PLAIN, GZ, LZO, BZ2, LZ4FRAME, DEFLATE, LZOP, LZ4BLOCK, SNAPPYBLOCK, ZLIB, ZSTD |
 
 ## Basic Principles
 
-After a user submits an import task, the Frontend (FE) generates a corresponding plan. Based on the current number of Backend (BE) nodes and the size of the file, the plan is distributed to multiple BE nodes for execution, with each BE node handling a portion of the import data.
+<!-- Knowledge type: Architecture description -->
 
-During execution, the BE nodes pull data from the Broker, perform necessary transformations, and then import the data into the system. Once all BE nodes have completed the import, the FE makes the final determination on whether the import was successful.
+After you submit an import job:
 
-![Broker Load](/images/broker-load.png)
+1. The FE generates the corresponding plan and distributes it to multiple BEs for execution based on the current number of BEs and the file size.
+2. Each BE is responsible for importing part of the data: it pulls data from the Broker, performs data conversion, and writes the data into the Doris system.
+3. After all BEs complete the import, the FE makes the final decision on whether the import succeeded.
 
+![Broker Load basic principles](/images/broker-load.png)
 
-As seen in the diagram, BE nodes rely on Broker processes to read data from corresponding remote storage systems. The introduction of Broker processes primarily aims to accommodate different remote storage systems. Users can develop their own Broker processes according to established standards. These Broker processes, which can be developed using Java, offer better compatibility with various storage systems in the big data ecosystem. The separation of Broker processes from BE nodes ensures error isolation between the two, enhancing the stability of the BE.
+The BE reads data from a remote storage system through the Broker process. The main purposes of introducing the Broker are:
 
-Currently, BE nodes have built-in support for HDFS and S3 Brokers. Therefore, when importing data from HDFS or S3, there is no need to additionally start a Broker process. However, if a customized Broker implementation is required, the corresponding Broker process needs to be deployed.
+- **Ecosystem compatibility**: You can develop in Java according to the Broker standard, which makes it easy to support various storage systems in the big data ecosystem.
+- **Error isolation**: The Broker process is separated from the BE process, which improves BE stability.
 
-## Quick start
+The BE has built-in support for HDFS and S3, so **importing data from HDFS or S3 does not require starting an additional Broker process**. If you have a custom Broker implementation, you need to deploy the corresponding Broker process.
 
-This section shows a demo for S3 Load.
-For the specific syntax for usage, please refer to [BROKER LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) in the SQL manual.
+## Quick Start
 
-### Prerequisite check
+<!-- Knowledge type: Operating procedures -->
 
-1. Grant privileges on the table
+This section uses S3 Load as an example to demonstrate the complete process. For the full syntax, see [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) in the SQL manual.
 
-Broker Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) command.
+### Pre-checks
 
-2. S3 authentication and connection info
+**1. Doris table privilege**
 
-Here, we mainly introduce how to import data stored in AWS S3. For importing data from other object storage systems that support the S3 protocol, you can refer to the steps for AWS S3.
+Broker Load requires the `INSERT` privilege on the target table. If you do not have this privilege, grant it with the [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) command.
 
-- AK and SK: First, you need to find or regenerate your AWS `Access Keys`. You can find instructions on how to generate them in the AWS console under `My Security Credentials`.
+**2. S3 authentication and connection information**
 
-- REGION and ENDPOINT: The REGION can be selected when creating a bucket or viewed in the bucket list. The S3 ENDPOINT for each REGION can be found in the [AWS documentation](https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_region).
+Taking AWS S3 as an example (other object storage systems can refer to this):
 
-### Create load job
+| Information | How to obtain |
+| --- | --- |
+| AK / SK | View or create `Access keys` in `My Security Credentials` of the AWS Console. |
+| REGION | Selected when creating the bucket, or viewable in the bucket list. |
+| ENDPOINT | See [AWS documentation: S3 Endpoints](https://docs.aws.amazon.com/general/latest/gr/s3.html#s3_region). |
 
-1. Create a CSV file brokerload_example.csv. The file is stored on S3 and its content is as follows:
+### Create an Import Job
 
-```
+**Step 1: Prepare a CSV file on S3**
+
+Create `brokerload_example.csv` with the following content:
+
+```text
 1,Emily,25
 2,Benjamin,35
 3,Olivia,28
@@ -100,9 +104,7 @@ Here, we mainly introduce how to import data stored in AWS S3. For importing dat
 10,Liam,64
 ```
 
-2. Create Doris table for the load
-
-Create the imported table in Doris. The SQL statement is as follows:
+**Step 2: Create the target table in Doris**
 
 ```sql
 CREATE TABLE testdb.test_brokerload(
@@ -114,48 +116,51 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-3.  Use Broker Load to import data from S3. The bucket name and S3 authentication information should be filled in according to the actual situation:
+**Step 3: Submit the Broker Load job**
+
+Replace the bucket name and S3 authentication information with actual values:
 
 ```sql
-    LOAD LABEL broker_load_2022_04_01
-    (
-        DATA INFILE("s3://your_bucket_name/brokerload_example.csv")
-        INTO TABLE test_brokerload
-        COLUMNS TERMINATED BY ","
-        FORMAT AS "CSV"
-        (user_id, name, age)
-    )
-    WITH S3
-    (
-        "provider" = "S3",
-        "AWS_ENDPOINT" = "s3.us-west-2.amazonaws.com",
-        "AWS_ACCESS_KEY" = "<your-ak>",
-        "AWS_SECRET_KEY"="<your-sk>",
-        "AWS_REGION" = "us-west-2",
-        "compress_type" = "PLAIN"
-    )
-    PROPERTIES
-    (
-        "timeout" = "3600"
-    );
+LOAD LABEL broker_load_2022_04_01
+(
+    DATA INFILE("s3://your_bucket_name/brokerload_example.csv")
+    INTO TABLE test_brokerload
+    COLUMNS TERMINATED BY ","
+    FORMAT AS "CSV"
+    (user_id, name, age)
+)
+WITH S3
+(
+    "provider" = "S3",
+    "AWS_ENDPOINT" = "s3.us-west-2.amazonaws.com",
+    "AWS_ACCESS_KEY" = "<your-ak>",
+    "AWS_SECRET_KEY"="<your-sk>",
+    "AWS_REGION" = "us-west-2",
+    "compress_type" = "PLAIN"
+)
+PROPERTIES
+(
+    "timeout" = "3600"
+);
 ```
 
-The `provider` specifies the vendor of the S3 Service.
-Supported S3 Provider list:
+The `provider` field needs to be filled in according to the actual object storage service provider. The list of `provider` values supported by Doris is as follows:
 
-- "S3" (AWS, Amazon Web Services)
-- "AZURE" (Microsoft Azure)
-- "GCP" (GCP, Google Cloud Platform)
-- "OSS" (Alibaba Cloud)
-- "COS" (Tencent Cloud)
-- "OBS" (Huawei Cloud)
-- "BOS" (Baidu Cloud)
+| provider | Vendor |
+| --- | --- |
+| `S3` | Amazon AWS |
+| `AZURE` | Microsoft Azure |
+| `GCP` | Google GCP |
+| `OSS` | Alibaba Cloud |
+| `COS` | Tencent Cloud |
+| `OBS` | Huawei Cloud |
+| `BOS` | Baidu Cloud |
 
-If your service is not in the list (such as MinIO), you can try using "S3" (AWS compatible mode)
+If a provider is not in the list (for example, MinIO), you can try using `S3` (AWS-compatible mode).
 
-## Checking import status
+### View the Import Job
 
-Broker Load is an asynchronous import method, and the specific import results can be viewed through the [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) command.
+Broker Load is an asynchronous import. You can view the specific result through the [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) command:
 
 ```sql
 mysql> show load order by createtime desc limit 1\G;
@@ -178,28 +183,31 @@ LoadFinishTime: 2022-04-01 18:59:11
 1 row in set (0.01 sec)
 ```
 
-## Cancelling an Import
+### Cancel an Import Job
 
-When the status of a Broker Load job is not CANCELLED or FINISHED, it can be manually cancelled by the user. To cancel, the user needs to specify the label of the import task to be cancelled. The syntax for the cancel import command can be viewed by executing [CANCEL LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD).
+When the status of a Broker Load job is not `CANCELLED` or `FINISHED`, you can manually cancel it. When canceling, you need to specify the label of the job to cancel. For the syntax, see [CANCEL LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD).
 
-For example: To cancel the import job with the label "broker_load_2022_04_01" on the DEMO database.
+For example, to cancel the import job with label `broker_load_2022_04_01` in the database `demo`:
 
 ```sql
 CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_04_01";
 ```
 
-### Choosing Compute Group
-In the storage-computation separation mode, the priority logic for Broker Load to select a Compute Group is as follows:
-1. Select the Compute Group specified by the ```use db@cluster statement```;
-2. Select the Compute Group specified by the user properties ```default_compute_group```;
-3. Select one from the Compute Groups that the current user has permissions to access;
+### Bind a Compute Group
 
-In the integrated storage-computation mode, select the Compute Group specified in the user properties ```resource_tags.location```; 
-if not specified in the user properties, use the Compute Group named ```default```;
+<!-- Knowledge type: Configuration parameters -->
 
-## Reference Manual
+In **storage-compute decoupled mode**, the priority for Broker Load to select a compute group is:
 
-### SQL syntax for broker load
+1. Select the compute group specified by the `use db@cluster` statement.
+2. Select the compute group specified by the user property `default_compute_group`.
+3. Select one from the compute groups that the current user has permission on.
+
+In **storage-compute integrated mode**: select the compute group specified in the user property `resource_tags.location`. If it is not specified in the user property, use the compute group named `default`.
+
+## Reference
+
+### Import Command Syntax
 
 ```sql
 LOAD LABEL load_label
@@ -207,44 +215,51 @@ LOAD LABEL load_label
 data_desc1[, data_desc2, ...]
 [format_properties]
 )
-WITH [S3|HDFS|BROKER broker_name] 
+WITH [S3|HDFS|BROKER broker_name]
 [broker_properties]
 [load_properties]
 [COMMENT "comments"];
 ```
 
-The WITH clause specifies how to access the storage system, and `broker_properties` is the configuration parameter for the access method
+The `WITH` clause specifies how to access the storage system, and `broker_properties` provides the configuration parameters for that access method:
 
-- `S3`: Storage system using the S3 protocol
-- `HDFS`: Storage system using the HDFS protocol
-- `BROKER broker_name`: Storage system using other protocols. You can view the currently available broker_name list through `SHOW BROKER`. For more information, see "Other Broker Import" in the Common Issues section.
+| Clause | Description |
+| --- | --- |
+| `S3` | Storage system using the S3 protocol. |
+| `HDFS` | Storage system using the HDFS protocol. |
+| `BROKER broker_name` | Storage systems using other protocols. You can view the available `broker_name` list through `SHOW BROKER`. See "Other Broker imports" below for details. |
 
-### Related Configurations
+### Import Configuration Parameters
 
-**Load Properties**
+#### Load Properties
 
-| Property Name | Type | Default Value | Description |
+<!-- Knowledge type: Configuration parameters -->
+
+| Property name | Type | Default | Description |
 | --- | --- | --- | --- |
-| "timeout" | Long | 14400 | Used to specify the timeout for the import in seconds. The configurable range is from 1 second to 259200 seconds. |
-| "max_filter_ratio" | Float | 0.0 | Used to specify the maximum tolerable ratio of filterable (irregular or otherwise problematic) data, which defaults to zero tolerance. The value range is 0 to 1. If the error rate of the imported data exceeds this value, the import will fail. Irregular data does not include rows filtered out by the where condition. |
-| "strict_mode" | Boolean | false | Used to specify whether to enable strict mode for this import. |
-| "partial_columns" | Boolean | false | Used to specify whether to enable partial column update, the default value is false, this parameter is only available for Unique Key + Merge on Write tables. |
-| "timezone" | String | "Asia/Shanghai" | Used to specify the timezone to be used for this import. This parameter affects the results of all timezone-related functions involved in the import. |
-| "load_parallelism" | Integer | 8 | Limits the maximum parallel instances on each backend. |
-| "send_batch_parallelism" | Integer | 1 | The parallelism for sink node to send data, when memtable_on_sink_node is disabled. |
-| "load_to_single_tablet" | Boolean | "false" | Used to specify whether to load data only to a single tablet corresponding to the partition. This parameter is only available when loading to an OLAP table with random bucketing. |
-| "priority" | oneof "HIGH", "NORMAL", "LOW" | "NORMAL" | The priority of the task. |
+| `timeout` | Long | 14400 | Import timeout, in seconds. Range: 1 to 259200 seconds. |
+| `max_filter_ratio` | Float | 0.0 | Maximum tolerable ratio of malformed data. The default is zero tolerance. The value range is 0 to 1. If the error rate exceeds this value, the import fails. Malformed data does not include rows filtered out by the WHERE condition. |
+| `strict_mode` | Boolean | false | Whether to enable strict mode. |
+| `partial_columns` | Boolean | false | Whether to use partial column update. Only effective for Unique Key tables with Merge on Write. |
+| `timezone` | String | "Asia/Shanghai" | The time zone used for this import. It affects the result of all time-zone-related functions. |
+| `load_parallelism` | Integer | 8 | The upper limit of the number of concurrent instances on each BE. |
+| `send_batch_parallelism` | Integer | 1 | The concurrency of the sink node when sending data. Only effective when memtable-on-sink is disabled. |
+| `load_to_single_tablet` | Boolean | false | Whether to import only one tablet per partition. Only allowed on OLAP tables that use random bucketing. |
+| `priority` | `HIGH` / `NORMAL` / `LOW` | `NORMAL` | Priority of the import job. |
 
-**Format Properties**
+#### Format Properties
 
-| Property Name       | Type     | Default Value | Description |
-|---------------------|----------|----------------|-------------|
-| `skip_lines`        | Integer  | `0`            | Number of lines to skip at the start of a CSV file. Ignored if using `csv_with_names` or `csv_with_names_and_types`. |
-| `trim_double_quotes`| Boolean  | `false`        | If `true`, trims outermost double quotes from each field. |
-| `enclose`           | String   | `""`           | Enclosure character for fields containing delimiters or newlines. E.g., if delimiter is `,` and encloser is `'`, then `'b,c'` is parsed as one field. |
-| `escape`            | String   | `""`           | Escape character to include enclosure characters in field content. E.g., `'b,\'c'` keeps `'b,'c'` as one field when `'` is the enclosure and `\` is the escape. |
+| Parameter name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `skip_lines` | Integer | `0` | Skip the specified number of lines at the beginning of the CSV file. Not effective when the format is `csv_with_names` or `csv_with_names_and_types`. |
+| `trim_double_quotes` | Boolean | `false` | Whether to trim the outer double quotes of fields. |
+| `enclose` | String | `""` | The enclosing character used when a field contains a newline or delimiter. For example, when the delimiter is `,` and the enclosing character is `'`, `'b,c'` is parsed as a single field. |
+| `escape` | String | `""` | The escape character used to escape the enclosing character. For example, when the escape character is `\` and the enclosing character is `'`, the field `'b,\'c'` is correctly parsed as `'b,'c'`. |
 
-Note: Format properties define how to parse the source file (e.g., delimiters, quote handling) and must be set inside the LOAD clause. Load properties control the execution behavior (e.g., timeout, retries) and must be set outside, in the outer PROPERTIES block.
+:::tip Note: Where should each parameter go?
+- **Format parameters** are used to define how the source file is parsed (such as delimiters and quote handling). They should be set in the `PROPERTIES` clause **inside** the `LOAD` statement.
+- **Load parameters** are used to control import behavior (such as timeout and retries). They should be set in the outermost `PROPERTIES` block **outside** the `LOAD` statement.
+:::
 
 ```sql
 LOAD LABEL s3_load_example (
@@ -254,154 +269,417 @@ LOAD LABEL s3_load_example (
     FORMAT AS "CSV"
     (user_id, name, age)
     PROPERTIES (
-        "trim_double_quotes" = "true"  -- format property
+        "trim_double_quotes" = "true"  -- Format parameter
     )
 )
 WITH S3 (
     ...
 )
 PROPERTIES (
-    "timeout" = "3600"  -- load property
+    "timeout" = "3600"  -- Load parameter
 );
 ```
 
-**fe.conf**
+#### fe.conf System-level Configuration
 
-The following configurations belong to the system-level settings for Broker load, which affect all Broker load import tasks. These configurations can be adjusted by modifying the `fe.conf `file.
+The following configurations are system-level configurations of Broker Load that apply to all Broker Load import jobs. They are mainly adjusted by modifying `fe.conf`.
 
-| Session Variable | Type | Default Value | Description |
+| Configuration item | Type | Default | Description |
 | --- | --- | --- | --- |
-| min_bytes_per_broker_scanner | Long | 67108864 (64 MB) | The minimum amount of data processed by a single BE in a Broker Load job, in bytes. |
-| max_bytes_per_broker_scanner | Long | 536870912000 (500 GB) | The maximum amount of data processed by a single BE in a Broker Load job, in bytes. Usually, the maximum amount of data supported by an import job is `max_bytes_per_broker_scanner * number of BE nodes`. If you need to import a larger amount of data, you need to adjust the size of the `max_bytes_per_broker_scanner` parameter appropriately. |
-| max_broker_concurrency | Integer | 10 | Limits the maximum number of concurrent imports for a job. |
-| default_load_parallelism | Integer | 8 | Maximum number of concurrent instances per BE node |
-| broker_load_default_timeout_second | 14400 | Default timeout for Broker Load import, in seconds. |
+| `min_bytes_per_broker_scanner` | Long | 67108864 (64 MB) | The minimum amount of data processed by a single BE, in bytes. |
+| `max_bytes_per_broker_scanner` | Long | 536870912000 (500 GB) | The maximum amount of data processed by a single BE, in bytes. The maximum amount of data supported by a single import job is approximately `max_bytes_per_broker_scanner * number of BE nodes`. When a larger data volume is needed, increase this value appropriately. |
+| `max_broker_concurrency` | Integer | 10 | The maximum import concurrency of a single job. |
+| `default_load_parallelism` | Integer | 8 | The maximum number of concurrent instances per BE node. |
+| `broker_load_default_timeout_second` | Integer | 14400 | The default timeout for Broker Load imports, in seconds. |
 
-Note: The `min_bytes_per_broker_scanner`, the `max_broker_concurrency`, the size of the source file and the number of BEs in the current cluster jointly determine the number of concurrent execution instances for this load.
+> **Calculation of import concurrency**
+>
+> The minimum amount of data to process, the maximum concurrency, the source file size, and the current number of BEs in the cluster jointly determine the concurrency of this import:
+>
+> ```text
+> Concurrency of this import = Math.min(source file size / min_bytes_per_broker_scanner, max_broker_concurrency, number of current BE nodes * load_parallelism)
+> Amount processed by a single BE for this import = source file size / concurrency of this import
+> ```
 
-```Plain
-Import Concurrency = Math.min(Source File Size / min_bytes_per_broker_scanner, max_broker_concurrency, Current Number of BE Nodes * load_parallelism)
-Processing Volume per BE for this Import = Source File Size / Import Concurrency
-```
+#### Session Variables
 
-**session variables**
-
-| Session Variable | Type | Default | Description |
+| Session variable | Type | Default | Description |
 | --- | --- | --- | --- |
-| time_zone | String | "Asia/Shanghai" | Default time zone, which will affect the results of time zone related functions in import. |
-| send_batch_parallelism | Integer | 1 | The concurrency of the sink node sending data, which takes effect only when `enable_memtable_on_sink_node` is set to false. |
+| `time_zone` | String | "Asia/Shanghai" | Default time zone, which affects the result of time-zone-related functions during import. |
+| `send_batch_parallelism` | Integer | 1 | The concurrency of the sink node when sending data. Only effective when memtable-on-sink is disabled. |
 
-## Common Issues
+## Import Examples
 
-### Common Errors
+<!-- Knowledge type: Operation examples -->
 
-**1. Import Error: `Scan bytes per broker scanner exceed limit:xxx`**
+The following typical scenarios show common usage of Broker Load.
 
-Please refer to the best practices section in the documentation and modify the FE configuration items `max_bytes_per_broker_scanner` and `max_broker_concurrency.`
-
-**2. Import Error: : `failed to send batch` or `TabletWriter add batch with unknown id`**
-
-Appropriately adjust the `query_timeout` and `streaming_load_rpc_max_alive_time_sec` settings.
-
-**3. Import Error: `LOAD_RUN_FAIL; msg:Invalid Column Name:xxx`**
-
-For PARQUET or ORC format data, the column names in the file header must match the column names in the Doris table. For example:
+### Scenario 1: Import a TXT File from HDFS
 
 ```sql
-(tmp_c1,tmp_c2)
-SET
+LOAD LABEL demo.label_20220402
 (
-    id=tmp_c2,
-    name=tmp_c1
+    DATA INFILE("hdfs://host:port/tmp/test_hdfs.txt")
+    INTO TABLE `load_hdfs_file_test`
+    COLUMNS TERMINATED BY "\t"
+    (id,age,name)
+)
+with HDFS
+(
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username" = "user"
+)
+PROPERTIES
+(
+    "timeout"="1200",
+    "max_filter_ratio"="0.1"
+);
+```
+
+### Scenario 2: HDFS with NameNode HA Configuration
+
+```sql
+LOAD LABEL demo.label_20220402
+(
+    DATA INFILE("hdfs://hafs/tmp/test_hdfs.txt")
+    INTO TABLE `load_hdfs_file_test`
+    COLUMNS TERMINATED BY "\t"
+    (id,age,name)
+)
+with HDFS
+(
+    "hadoop.username" = "user",
+    "fs.defaultFS"="hdfs://hafs",
+    "dfs.nameservices" = "hafs",
+    "dfs.ha.namenodes.hafs" = "my_namenode1, my_namenode2",
+    "dfs.namenode.rpc-address.hafs.my_namenode1" = "nn1_host:rpc_port",
+    "dfs.namenode.rpc-address.hafs.my_namenode2" = "nn2_host:rpc_port",
+    "dfs.client.failover.proxy.provider.hafs" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+)
+PROPERTIES
+(
+    "timeout"="1200",
+    "max_filter_ratio"="0.1"
+);
+```
+
+### Scenario 3: Use Wildcards to Match Two Batches of Files and Import Them into Two Tables
+
+Broker Load supports wildcards (`*`, `?`, `[...]`) and range patterns (`{1..10}`) in the file path. For the full syntax, see [File Path Pattern](../../../sql-manual/basic-element/file-path-pattern).
+
+```sql
+LOAD LABEL example_db.label2
+(
+    DATA INFILE("hdfs://host:port/input/file-10*")
+    INTO TABLE `my_table1`
+    PARTITION (p1)
+    COLUMNS TERMINATED BY ","
+    (k1, tmp_k2, tmp_k3)
+    SET (
+        k2 = tmp_k2 + 1,
+        k3 = tmp_k3 + 1
+    ),
+    DATA INFILE("hdfs://host:port/input/file-20*")
+    INTO TABLE `my_table2`
+    COLUMNS TERMINATED BY ","
+    (k1, k2, k3)
+)
+with HDFS
+(
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username" = "user"
+);
+```
+
+Use wildcards to match the two batches of files `file-10*` and `file-20*` and import them into `my_table1` and `my_table2` respectively. `my_table1` is imported into partition `p1`, and the values of the second and third columns in the source file are imported after being incremented by 1.
+
+### Scenario 4: Use Wildcards to Import a Batch of Data from HDFS
+
+```sql
+LOAD LABEL example_db.label3
+(
+    DATA INFILE("hdfs://host:port/user/doris/data/*/*")
+    INTO TABLE `my_table`
+    COLUMNS TERMINATED BY "\\x01"
+)
+with HDFS
+(
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username" = "user"
+);
+```
+
+Specify the delimiter as `\\x01`, the default delimiter commonly used in Hive, and use the wildcard `*` to specify all files in all subdirectories under the `data` directory.
+
+### Scenario 5: Import Parquet-formatted Data
+
+```sql
+LOAD LABEL example_db.label4
+(
+    DATA INFILE("hdfs://host:port/input/file")
+    INTO TABLE `my_table`
+    FORMAT AS "parquet"
+    (k1, k2, k3)
+)
+with HDFS
+(
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username" = "user"
+);
+```
+
+If `FORMAT AS` is not specified, the format is determined by the file suffix by default.
+
+### Scenario 6: Extract Partition Fields from the File Path
+
+```sql
+LOAD LABEL example_db.label5
+(
+    DATA INFILE("hdfs://host:port/input/city=beijing/*/*")
+    INTO TABLE `my_table`
+    FORMAT AS "csv"
+    (k1, k2, k3)
+    COLUMNS FROM PATH AS (city, utc_date)
+)
+with HDFS
+(
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username" = "user"
+);
+```
+
+The columns of `my_table` are `k1, k2, k3, city, utc_date`.
+
+The directory `hdfs://hdfs_host:hdfs_port/user/doris/data/input/dir/city=beijing` contains the following files:
+
+```text
+hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-01/0000.csv
+hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-02/0000.csv
+hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-03/0000.csv
+hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-04/0000.csv
+```
+
+The files only contain the three columns `k1, k2, k3`. The two columns `city` and `utc_date` are extracted from the file path.
+
+### Scenario 7: Filter Imported Data
+
+```sql
+LOAD LABEL example_db.label6
+(
+    DATA INFILE("hdfs://host:port/input/file")
+    INTO TABLE `my_table`
+    (k1, k2, k3)
+    SET (
+        k2 = k2 + 1
+    )
+    PRECEDING FILTER k1 = 1
+    WHERE k1 > k2
+)
+with HDFS
+(
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username" = "user"
+);
+```
+
+Only rows where `k1 = 1` in the source data and `k1 > k2` after conversion are imported.
+
+### Scenario 8: Extract a Time Partition Field from the File Path
+
+```sql
+LOAD LABEL example_db.label7
+(
+    DATA INFILE("hdfs://host:port/user/data/*/test.txt")
+    INTO TABLE `tbl12`
+    COLUMNS TERMINATED BY ","
+    (k2,k3)
+    COLUMNS FROM PATH AS (data_time)
+    SET (
+        data_time=str_to_date(data_time, '%Y-%m-%d %H%%3A%i%%3A%s')
+    )
+)
+with HDFS
+(
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username" = "user"
+);
+```
+
+:::tip
+The time contains `%3A`. HDFS paths do not allow `:`, so all `:` characters are replaced with `%3A`.
+:::
+
+The path contains the following files:
+
+```text
+/user/data/data_time=2020-02-17 00%3A00%3A00/test.txt
+/user/data/data_time=2020-02-18 00%3A00%3A00/test.txt
+```
+
+Table schema:
+
+```sql
+CREATE TABLE IF NOT EXISTS tbl12 (
+    data_time DATETIME,
+    k2        INT,
+    k3        INT
+) DISTRIBUTED BY HASH(data_time) BUCKETS 10
+PROPERTIES (
+    "replication_num" = "3"
+);
+```
+
+### Scenario 9: Import with Merge
+
+```sql
+LOAD LABEL example_db.label8
+(
+    MERGE DATA INFILE("hdfs://host:port/input/file")
+    INTO TABLE `my_table`
+    (k1, k2, k3, v2, v1)
+    DELETE ON v2 > 100
+)
+with HDFS
+(
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username"="user"
+)
+PROPERTIES
+(
+    "timeout" = "3600",
+    "max_filter_ratio" = "0.1"
+);
+```
+
+`my_table` must be a Unique Key table. When `v2 > 100` in the imported data, the row is treated as a deletion. The import timeout is 3600 seconds, and the allowed error rate is 10%.
+
+### Scenario 10: Specify the source_sequence Column to Ensure Replacement Order
+
+```sql
+LOAD LABEL example_db.label9
+(
+    DATA INFILE("hdfs://host:port/input/file")
+    INTO TABLE `my_table`
+    COLUMNS TERMINATED BY ","
+    (k1,k2,source_sequence,v1,v2)
+    ORDER BY source_sequence
+)
+with HDFS
+(
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username"="user"
+);
+```
+
+`my_table` must be a Unique Key model table with a Sequence column specified. The data order is guaranteed by the value of the `source_sequence` column in the source data.
+
+### Scenario 11: Import JSON with json_root / jsonpaths
+
+```sql
+LOAD LABEL example_db.label10
+(
+    DATA INFILE("hdfs://host:port/input/file.json")
+    INTO TABLE `my_table`
+    FORMAT AS "json"
+    PROPERTIES(
+      "json_root" = "$.item",
+      "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
+    )
+)
+with HDFS
+(
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username"="user"
+);
+```
+
+`jsonpaths` can also be used together with the `column list` and `SET (column_mapping)`:
+
+```sql
+LOAD LABEL example_db.label10
+(
+    DATA INFILE("hdfs://host:port/input/file.json")
+    INTO TABLE `my_table`
+    FORMAT AS "json"
+    (id, code, city)
+    SET (id = id * 10)
+    PROPERTIES(
+      "json_root" = "$.item",
+      "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
+    )
+)
+with HDFS
+(
+    "fs.defaultFS"="hdfs://host:port",
+    "hadoop.username"="user"
+);
+```
+
+:::info Note
+To import the JSON object at the root node of a JSON file, set `jsonpaths` to `$.`, that is, `PROPERTIES("jsonpaths"="$.")`.
+:::
+
+## Advanced Configuration
+
+### S3 Load URL Access Style
+
+The S3 SDK uses virtual-hosted-style access by default. However, some object storage systems do not enable or do not support virtual-hosted-style. You can add the `use_path_style` parameter to force path-style:
+
+```sql
+WITH S3
+(
+    "AWS_ENDPOINT" = "AWS_ENDPOINT",
+    "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
+    "AWS_SECRET_KEY"="AWS_SECRET_KEY",
+    "AWS_REGION" = "AWS_REGION",
+    "use_path_style" = "true"
 )
 ```
 
-This represents fetching columns named (tmp_c1, tmp_c2) in the parquet or orc file and mapping them to the (id, name) columns in the Doris table. If no set is specified, the columns in the file header will be used for mapping.
+### S3 Load Temporary Credentials
 
-:::info Note
+Temporary credentials (TOKEN) are supported for accessing any object storage that supports the S3 protocol:
 
-If ORC files are generated directly using certain Hive versions, the column headers in the ORC file may not be the Hive metadata, but (_col0, _col1, _col2, ...), which may lead to the Invalid Column Name error. In this case, mapping using SET is necessary.
-:::
+```sql
+WITH S3
+(
+    "AWS_ENDPOINT" = "AWS_ENDPOINT",
+    "AWS_ACCESS_KEY" = "AWS_TEMP_ACCESS_KEY",
+    "AWS_SECRET_KEY" = "AWS_TEMP_SECRET_KEY",
+    "AWS_TOKEN" = "AWS_TEMP_TOKEN",
+    "AWS_REGION" = "AWS_REGION"
+)
+```
 
-**5. Import Error: `Failed to get S3 FileSystem for bucket is null/empty`**
+### HDFS Authentication
 
-The bucket information is incorrect or does not exist. Or the bucket format is not supported. When creating a bucket name with an underscore using GCS, such as `s3://gs_bucket/load_tbl`, the S3 Client may report an error when accessing GCS. It is recommended not to use underscores when creating buckets.
+#### 1. Simple Authentication
 
-**6. Import Timeout**
+Simple authentication means setting the Hadoop configuration `hadoop.security.authentication` to `simple`:
 
-The default timeout for imports is 4 hours. If a timeout occurs, it is not recommended to directly increase the maximum import timeout to solve the problem. If the single import time exceeds the default import timeout of 4 hours, it is best to split the file to be imported and perform multiple imports to solve the problem. Setting an excessively long timeout time can lead to high costs for retrying failed imports.
-
-You can calculate the expected maximum import file data volume for the Doris cluster using the following formula:
-
-Expected Maximum Import File Data Volume = 14400s * 10M/s * Number of BEs
-
-For example, if the cluster has 10 BEs:
-
-Expected Maximum Import File Data Volume = 14400s * 10M/s * 10 = 1440000M ≈ 1440G
-
-:::info Note
-
-In general, user environments may not reach speeds of 10M/s, so it is recommended to split files exceeding 500G before importing.
-:::
-
-### S3 Load URL style
-
-- The S3 SDK defaults to using the virtual-hosted style method for accessing objects. However, some object storage systems may not have enabled or supported the virtual-hosted style access. In such cases, we can add the `use_path_style` parameter to force the use of the path style method:
-
-  ```sql
-    WITH S3
-    (
-          "AWS_ENDPOINT" = "AWS_ENDPOINT",
-          "AWS_ACCESS_KEY" = "AWS_ACCESS_KEY",
-          "AWS_SECRET_KEY"="AWS_SECRET_KEY",
-          "AWS_REGION" = "AWS_REGION",
-          "use_path_style" = "true"
-    )
-  ```
-
-### S3 Load temporary credentials
-
-- Support for accessing all object storage systems that support the S3 protocol using temporary credentials (TOKEN) is available. The usage is as follows:
-
-  ```sql
-    WITH S3
-    (
-          "AWS_ENDPOINT" = "AWS_ENDPOINT",
-          "AWS_ACCESS_KEY" = "AWS_TEMP_ACCESS_KEY",
-          "AWS_SECRET_KEY" = "AWS_TEMP_SECRET_KEY",
-          "AWS_TOKEN" = "AWS_TEMP_TOKEN",
-          "AWS_REGION" = "AWS_REGION"
-    )
-  ```
-
-### HDFS Simple Authentication
-
-Simple authentication refers to the configuration of Hadoop where hadoop.security.authentication is set to "simple".
-
-```Plain
+```text
 (
     "username" = "user",
     "password" = ""
 );
 ```
 
-The username should be configured as the user to be accessed, and the password can be left blank.
+Set `username` to the user to access, and leave the password empty.
 
-### HDFS Kerberos Authentication
+#### 2. Kerberos Authentication
 
 This authentication method requires the following information:
 
-- **hadoop.security.authentication:** Specifies the authentication method as Kerberos.
+| Parameter | Description |
+| --- | --- |
+| `hadoop.security.authentication` | Specifies the authentication method as `kerberos`. |
+| `hadoop.kerberos.principal` | Specifies the Kerberos principal. |
+| `hadoop.kerberos.keytab` | Specifies the path of the Kerberos keytab file. The file must be an absolute path on the server where the Broker process resides, and must be accessible by the Broker process. |
+| `kerberos_keytab_content` | Specifies the base64-encoded content of the keytab file. Use either this or `hadoop.kerberos.keytab`. |
 
-- **hadoop.kerberos.principal:** Specifies the Kerberos principal.
+Example:
 
-- **hadoop.kerberos.keytab:** Specifies the file path of the Kerberos keytab. The file must be an absolute path on the server where the Broker process is located and must be accessible by the Broker process.
-
-- **kerberos_keytab_content:** Specifies the content of the Kerberos keytab file after being encoded in base64. This can be used as an alternative to the kerberos_keytab configuration.
-
-Example configuration:
-
-```Plain
+```text
 (
     "hadoop.security.authentication" = "kerberos",
     "hadoop.kerberos.principal" = "doris@YOUR.COM",
@@ -414,9 +692,9 @@ Example configuration:
 )
 ```
 
-To use Kerberos authentication, the [krb5.conf (opens new window)](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html) file is required. The krb5.conf file contains Kerberos configuration information. Typically, the krb5.conf file should be installed in the /etc directory. You can override the default location by setting the KRB5_CONFIG environment variable. An example of the krb5.conf file content is as follows:
+When using Kerberos authentication, a [krb5.conf](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html) file is required. This file contains Kerberos configuration information and is usually installed in the `/etc` directory. You can also override the default location through the `KRB5_CONFIG` environment variable. An example of `krb5.conf` content:
 
-```Plain
+```text
 [libdefaults]
     default_realm = DORIS.HADOOP
     default_tkt_enctypes = des3-hmac-sha1 des-cbc-crc
@@ -432,17 +710,16 @@ To use Kerberos authentication, the [krb5.conf (opens new window)](https://web.m
 
 ### HDFS HA Mode
 
-This configuration is used to access HDFS clusters deployed in HA (High Availability) mode.
+This configuration is used to access an HDFS cluster deployed in HA mode.
 
-- **dfs.nameservices:** Specifies the name of the HDFS service, which can be customized. For example: "dfs.nameservices" = "my_ha".
+| Parameter | Description |
+| --- | --- |
+| `dfs.nameservices` | Specifies the name of the HDFS service (user-defined), for example, `"dfs.nameservices" = "my_ha"`. |
+| `dfs.ha.namenodes.xxx` | User-defined NameNode names (multiple names are separated by commas). `xxx` is the user-defined name in `dfs.nameservices`, for example, `"dfs.ha.namenodes.my_ha" = "my_nn"`. |
+| `dfs.namenode.rpc-address.xxx.nn` | Specifies the RPC address of the NameNode. `nn` is the NameNode name in `dfs.ha.namenodes.xxx`, for example, `"dfs.namenode.rpc-address.my_ha.my_nn" = "host:port"`. |
+| `dfs.client.failover.proxy.provider.[nameservice ID]` | Specifies the provider used by the client to connect to the NameNode. The default is `org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider`. |
 
-- **dfs.ha.namenodes.xxx:** Customizes the names of the namenodes, with multiple names separated by commas. Here, xxx represents the custom name specified in dfs.nameservices. For example: "dfs.ha.namenodes.my_ha" = "my_nn".
-
-- **dfs.namenode.rpc-address.xxx.nn:** Specifies the RPC address information for the namenode. In this context, nn represents the namenode name configured in dfs.ha.namenodes.xxx. For example: "dfs.namenode.rpc-address.my_ha.my_nn" = "host:port".
-
-- **dfs.client.failover.proxy.provider.[nameservice ID]:** Specifies the provider for client connections to the namenode. The default is org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider.
-
-An example configuration is as follows:
+Example:
 
 ```sql
 (
@@ -455,7 +732,7 @@ An example configuration is as follows:
 )
 ```
 
-HA mode can be combined with the previous two authentication methods for cluster access. For example, accessing HA HDFS through simple authentication:
+HA mode can be combined with the two authentication methods above. For example, to access HA HDFS through simple authentication:
 
 ```sql
 (
@@ -470,28 +747,26 @@ HA mode can be combined with the previous two authentication methods for cluster
 )
 ```
 
-### Load with other brokers
+### Other Broker Imports
 
-The Broker for other remote storage systems is an optional process in the Doris cluster, primarily used to support Doris in reading and writing files and directories on remote storage.
-Currently, Doris provides Broker implementations for various remote storage systems.
-In earlier versions, different object storage Brokers were also available, but now it is recommended to use the `WITH S3` method to import data from object storage, and the `WITH BROKER` method is no longer recommended.
+Brokers for other remote storage systems are optional processes in a Doris cluster. They are mainly used to support reading and writing files and directories in remote storage. Doris currently provides Broker implementations for the following remote storage systems:
 
 - Tencent Cloud CHDFS
 - Tencent Cloud GFS
 - JuiceFS
 
-The Broker provides services through an RPC service port and operates as a stateless Java process. Its primary responsibility is to encapsulate POSIX-like file operations for remote storage, such as open, pread, pwrite, and more. Additionally, the Broker does not keep track of any other information, which means that all the connection details, file information, and permission details related to the remote storage must be passed to the Broker process through parameters during RPC calls. This ensures that the Broker can correctly read and write files.
+In historical versions, Doris also supported Brokers for various object storage systems, but currently **`WITH S3` is the recommended way** to import data from object storage; `WITH BROKER` is no longer recommended.
 
-The Broker serves solely as a data pathway and does not involve any computational tasks, thus requiring minimal memory usage. Typically, a Doris system would deploy one or more Broker processes. Furthermore, Brokers of the same type are grouped together and assigned a unique name (Broker name).
+The Broker is a stateless Java process that provides services through an RPC service port. It encapsulates POSIX-like file operations (such as `open`, `pread`, `pwrite`) for read/write operations on remote storage. The Broker does not record any other information. All necessary information, including the connection information, file information, and permission information of the remote storage, must be passed in as parameters of the RPC calls.
 
-This section primarily focuses on the parameters required by the Broker when accessing different remote storage systems, such as connection information, authentication details, and more. Understanding and correctly configuring these parameters is crucial for successful and secure data exchange between Doris and the remote storage systems.
+The Broker only acts as a data path and does not participate in computation, so it has low memory usage. Usually one or more Broker processes are deployed in a Doris system. Brokers of the same type form a group with a name (Broker name).
 
-**Broker Information**
+#### Broker Information
 
-The information of the Broker consists of two parts: the name (Broker name) and the authentication information. The usual syntax format is as follows:
+Broker information consists of two parts: **name** and **authentication information**. The common syntax is:
 
 ```sql
-WITH BROKER "broker_name" 
+WITH BROKER "broker_name"
 (
     "username" = "xxx",
     "password" = "yyy",
@@ -500,357 +775,127 @@ WITH BROKER "broker_name"
 );
 ```
 
-**Broker Name**
+**Name (Broker Name)**
 
-Typically, users need to specify an existing Broker Name through the `WITH BROKER "broker_name"` clause in the operation command. The Broker Name is a name designated by the user when adding a Broker process through the `ALTER SYSTEM ADD BROKER` command. One name usually corresponds to one or more Broker processes. Doris will select an available Broker process based on the name. Users can view the Brokers that currently exist in the cluster through the `SHOW BROKER` command.
+Specify an existing Broker name through the `WITH BROKER "broker_name"` clause. The Broker name is the name specified by the user when adding a Broker process through the `ALTER SYSTEM ADD BROKER` command. A name usually corresponds to one or more Broker processes, and Doris selects an available Broker process by name. You can view the existing Brokers in the cluster through `SHOW BROKER`.
 
 :::info Note
-The Broker Name is merely a user-defined name and does not represent the type of Broker.
+The Broker name is just a user-defined name and does not represent the type of the Broker.
 :::
 
-**Authentication Information**
-Different Broker types and access methods require different authentication information. The authentication information is usually provided in the Property Map in a Key-Value format after `WITH BROKER "broker_name"`.
+**Authentication information**
 
-## Broker Load examples
+Different Broker types and different access methods require different authentication information. Authentication information is usually provided as key-value pairs in the property map after `WITH BROKER "broker_name"`.
 
-### Importing TXT Files from HDFS
+#### Connection Configurations for Various Brokers
 
-  ```sql
-  LOAD LABEL demo.label_20220402
-  (
-      DATA INFILE("hdfs://host:port/tmp/test_hdfs.txt")
-      INTO TABLE `load_hdfs_file_test`
-      COLUMNS TERMINATED BY "\t"            
-      (id,age,name)
-  ) 
-  with HDFS
-  (
-    "fs.defaultFS"="hdfs://host:port",
-    "hadoop.username" = "user"
-  )
-  PROPERTIES
-  (
-      "timeout"="1200",
-      "max_filter_ratio"="0.1"
-  );
-  ```
-
-### HDFS requires the configuration of NameNode HA (High Availability)
-
-  ```sql
-  LOAD LABEL demo.label_20220402
-  (
-      DATA INFILE("hdfs://hafs/tmp/test_hdfs.txt")
-      INTO TABLE `load_hdfs_file_test`
-      COLUMNS TERMINATED BY "\t"            
-      (id,age,name)
-  ) 
-  with HDFS
-  (
-      "hadoop.username" = "user",
-      "fs.defaultFS"="hdfs://hafs"，
-      "dfs.nameservices" = "hafs",
-      "dfs.ha.namenodes.hafs" = "my_namenode1, my_namenode2",
-      "dfs.namenode.rpc-address.hafs.my_namenode1" = "nn1_host:rpc_port",
-      "dfs.namenode.rpc-address.hafs.my_namenode2" = "nn2_host:rpc_port",
-      "dfs.client.failover.proxy.provider.hafs" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
-  )
-  PROPERTIES
-  (
-      "timeout"="1200",
-      "max_filter_ratio"="0.1"
-  );
-  ```
-
-### Importing data from HDFS using wildcards to match two batches of files and importing them into two separate tables
-
-  Broker Load supports wildcards (`*`, `?`, `[...]`) and range patterns (`{1..10}`) in file paths. For detailed syntax, see [File Path Pattern](../../../sql-manual/basic-element/file-path-pattern).
-
-  ```sql
-  LOAD LABEL example_db.label2
-  (
-      DATA INFILE("hdfs://host:port/input/file-10*")
-      INTO TABLE `my_table1`
-      PARTITION (p1)
-      COLUMNS TERMINATED BY ","
-      (k1, tmp_k2, tmp_k3)
-      SET (
-          k2 = tmp_k2 + 1,
-          k3 = tmp_k3 + 1
-      ),
-      DATA INFILE("hdfs://host:port/input/file-20*")
-      INTO TABLE `my_table2`
-      COLUMNS TERMINATED BY ","
-      (k1, k2, k3)
-  )
-  with HDFS
-  (
-    "fs.defaultFS"="hdfs://host:port",
-    "hadoop.username" = "user"
-  );
-  ```
-
-To import two batches of files matching the wildcards `file-10*` and `file-20*` from HDFS and load them into two separate tables `my_table1` and `my_table2`. In this case, my_table1 specifies that the data should be imported into partition p1, and the values in the second and third columns of the source files should be incremented by 1 before being imported.
-
-### Import a batch of data from HDFS using wildcards
-
-  ```sql
-  LOAD LABEL example_db.label3
-  (
-      DATA INFILE("hdfs://host:port/user/doris/data/*/*")
-      INTO TABLE `my_table`
-      COLUMNS TERMINATED BY "\\x01"
-  )
-  with HDFS
-  (
-    "fs.defaultFS"="hdfs://host:port",
-    "hadoop.username" = "user"
-  );
-  ```
-
-To specify the delimiter as the commonly used default delimiter for Hive, which is \x01, and to use the wildcard character * to refer to all files in all directories under the data directory.
-
-### Import Parquet format data and specify the FORMAT as `parquet`
-
-  ```sql
-  LOAD LABEL example_db.label4
-  (
-      DATA INFILE("hdfs://host:port/input/file")
-      INTO TABLE `my_table`
-      FORMAT AS "parquet"
-      (k1, k2, k3)
-  )
-  with HDFS
-  (
-    "fs.defaultFS"="hdfs://host:port",
-    "hadoop.username" = "user"
-  );
-  ```
-
-The default method is to determine by file extension.
-
-### Import the data and extract the partition field from the file path
-
-  ```sql
-  LOAD LABEL example_db.label5
-  (
-      DATA INFILE("hdfs://host:port/input/city=beijing/*/*")
-      INTO TABLE `my_table`
-      FORMAT AS "csv"
-      (k1, k2, k3)
-      COLUMNS FROM PATH AS (city, utc_date)
-  )
-  with HDFS
-  (
-    "fs.defaultFS"="hdfs://host:port",
-    "hadoop.username" = "user"
-  );
-  ```
-
-The columns in the `my_table` are `k1`, `k2`, `k3`, `city`, and `utc_date`.
-
-The directory `hdfs://hdfs_host:hdfs_port/user/doris/data/input/dir/city=beijing` contains the following files:
-
-```Plain
-hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-01/0000.csv
-hdfs://hdfs_host:hdfs_port/input/city=beijing/utc_date=2020-10-02/0000.csv
-hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-03/0000.csv
-hdfs://hdfs_host:hdfs_port/input/city=tianji/utc_date=2020-10-04/0000.csv
-```
-
-The file only contains three columns of data:`k1`,`k2`, and `k3`. The other two columns,`city` and `utc_date`, will be extracted from the file path.
-
-### Filter the imported data
-
-  ```sql
-  LOAD LABEL example_db.label6
-  (
-      DATA INFILE("hdfs://host:port/input/file")
-      INTO TABLE `my_table`
-      (k1, k2, k3)
-      SET (
-          k2 = k2 + 1
-      )
-      PRECEDING FILTER k1 = 1
-      WHERE k1 > k2
-  )
-  with HDFS
-  (
-    "fs.defaultFS"="hdfs://host:port",
-    "hadoop.username" = "user"
-  );
-  ```
-
-Only the rows where k1 = 1 in the original data and k1 > k2 after transformation will be imported.
-
-### Import data and extract the time partition field from the file path.
-
-  ```sql
-  LOAD LABEL example_db.label7
-  (
-      DATA INFILE("hdfs://host:port/user/data/*/test.txt") 
-      INTO TABLE `tbl12`
-      COLUMNS TERMINATED BY ","
-      (k2,k3)
-      COLUMNS FROM PATH AS (data_time)
-      SET (
-          data_time=str_to_date(data_time, '%Y-%m-%d %H%%3A%i%%3A%s')
-      )
-  )
-  with HDFS
-  (
-    "fs.defaultFS"="hdfs://host:port",
-    "hadoop.username" = "user"
-  );
-  ```
-
-:::tip Tip
-The time contains "%3A". In HDFS paths, colons ":" are not allowed, so all colons are replaced with "%3A".
-:::
-
-There are the following files under the path:
-
-```Plain
-/user/data/data_time=2020-02-17 00%3A00%3A00/test.txt
-/user/data/data_time=2020-02-18 00%3A00%3A00/test.txt
-```
-
-The table structure is as follows:
+**Alibaba Cloud OSS**
 
 ```sql
-CREATE TABLE IF NOT EXISTS tbl12 (
-    data_time DATETIME,
-    k2        INT,
-    k3        INT
-) DISTRIBUTED BY HASH(data_time) BUCKETS 10
-PROPERTIES (
-    "replication_num" = "3"
-);
+(
+    "fs.oss.accessKeyId" = "",
+    "fs.oss.accessKeySecret" = "",
+    "fs.oss.endpoint" = ""
+)
 ```
 
-### Use Merge mode for import
+**Baidu Cloud BOS**
 
-  ```sql
-  LOAD LABEL example_db.label8
-  (
-      MERGE DATA INFILE("hdfs://host:port/input/file")
-      INTO TABLE `my_table`
-      (k1, k2, k3, v2, v1)
-      DELETE ON v2 > 100
-  )
-  with HDFS
-  (
-    "fs.defaultFS"="hdfs://host:port",
-    "hadoop.username"="user"
-  )
-  PROPERTIES
-  (
-      "timeout" = "3600",
-      "max_filter_ratio" = "0.1"
-  );
-  ```
+When using BOS, download the corresponding SDK package. For specific configuration and usage, see the [BOS HDFS official documentation](https://cloud.baidu.com/doc/BOS/s/fk53rav99). After downloading and extracting, place the JAR package in the `lib` directory of the Broker.
 
-To use Merge mode for import, the "my_table" must be a Unique Key table. When the value of the "v2" column in the imported data is greater than 100, that row will be considered a deletion row. The timeout for the import task is 3600 seconds, and an error rate of up to 10% is allowed.
+```sql
+(
+    "fs.bos.access.key" = "xx",
+    "fs.bos.secret.access.key" = "xx",
+    "fs.bos.endpoint" = "xx"
+)
+```
 
-### Specify the "source_sequence" column during import to ensure the order of replacements.
+**Huawei Cloud OBS**
 
-  ```sql
-  LOAD LABEL example_db.label9
-  (
-      DATA INFILE("hdfs://host:port/input/file")
-      INTO TABLE `my_table`
-      COLUMNS TERMINATED BY ","
-      (k1,k2,source_sequence,v1,v2)
-      ORDER BY source_sequence
-  ) 
-  with HDFS
-  (
-    "fs.defaultFS"="hdfs://host:port",
-    "hadoop.username"="user"
-  );
-  The "my_table" must be a Unique Key model table and have a specified Sequence column. The data will maintain its order based on the values in the "source_sequence" column in the source data.
-  ```
+```sql
+(
+    "fs.obs.access.key" = "xx",
+    "fs.obs.secret.key" = "xx",
+    "fs.obs.endpoint" = "xx"
+)
+```
 
-### Import the specified file format as `json`, and specify the `json_root` and jsonpaths accordingly.
+**JuiceFS**
 
-  ```sql
-  LOAD LABEL example_db.label10
-  (
-      DATA INFILE("hdfs://host:port/input/file.json")
-      INTO TABLE `my_table`
-      FORMAT AS "json"
-      PROPERTIES(
-        "json_root" = "$.item",
-        "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
-      )       
-  )
-  with HDFS
-  (
-    "fs.defaultFS"="hdfs://host:port",
-    "hadoop.username"="user"
-  );
-  ```
+```sql
+(
+    "fs.defaultFS" = "jfs://xxx/",
+    "fs.jfs.impl" = "io.juicefs.JuiceFileSystem",
+    "fs.AbstractFileSystem.jfs.impl" = "io.juicefs.JuiceFS",
+    "juicefs.meta" = "xxx",
+    "juicefs.access-log" = "xxx"
+)
+```
 
-The `jsonpaths` can also be used in conjunction with the column list and `SET (column_mapping)` :
+**GCS**
 
-  ```sql
-  LOAD LABEL example_db.label10
-  (
-      DATA INFILE("hdfs://host:port/input/file.json")
-      INTO TABLE `my_table`
-      FORMAT AS "json"
-      (id, code, city)
-      SET (id = id * 10)
-      PROPERTIES(
-        "json_root" = "$.item",
-        "jsonpaths" = "[\"$.id\", \"$.city\", \"$.code\"]"
-      )       
-  )
-  with HDFS
-  (
-    "fs.defaultFS"="hdfs://host:port",
-    "hadoop.username"="user"
-  );
-  ```
-:::info Note
-If you need to load the JSON object at the root node of a JSON file, the jsonpaths should be specified as $., e.g., `PROPERTIES("jsonpaths"="$.")`"
-:::
+When accessing GCS through the Broker, `Project ID` is required. Other parameters are optional. For all parameter configurations, see [GCS Config](https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/branch-2.2.x/gcs/CONFIGURATION.md):
 
-### Load from other brokers
+```sql
+(
+    "fs.gs.project.id" = "Your Project ID",
+    "fs.AbstractFileSystem.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS",
+    "fs.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem",
+)
+```
 
-- Alibaba Cloud OSS
+## FAQ and Troubleshooting
 
-  ```sql
-  (
-      "fs.oss.accessKeyId" = "",
-      "fs.oss.accessKeySecret" = "",
-      "fs.oss.endpoint" = ""
-  )
-  ```
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenarios: Broker Load error handling / performance tuning -->
 
-- JuiceFS
+### Common Errors
 
-  ```sql
-  (
-      "fs.defaultFS" = "jfs://xxx/",
-      "fs.jfs.impl" = "io.juicefs.JuiceFileSystem",
-      "fs.AbstractFileSystem.jfs.impl" = "io.juicefs.JuiceFS",
-      "juicefs.meta" = "xxx",
-      "juicefs.access-log" = "xxx"
-  )
-  ```
+**1. Import error: `Scan bytes per broker scanner exceed limit:xxx`**
 
-- GCS
+See the "Import timeout" section. Modify the FE configuration items `max_bytes_per_broker_scanner` and `max_broker_concurrency`.
 
-  When using a Broker to access GCS, the Project ID is required, while other parameters are optional. Please refer to the [GCS Config](https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/branch-2.2.x/gcs/CONFIGURATION.md) for all parameter configurations.
+**2. Import error: `failed to send batch` or `TabletWriter add batch with unknown id`**
 
-  ```sql
-  (
-      "fs.gs.project.id" = "Your Project ID",
-      "fs.AbstractFileSystem.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS",
-      "fs.gs.impl" = "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem",
-  )
-  ```
+Adjust `query_timeout` and `streaming_load_rpc_max_alive_time_sec` appropriately.
+
+**3. Import error: `LOAD_RUN_FAIL; msg:Invalid Column Name:xxx`**
+
+For PARQUET or ORC data, the column names in the file header must match the column names in the Doris table. For example:
+
+```sql
+(tmp_c1,tmp_c2)
+SET
+(
+    id=tmp_c2,
+    name=tmp_c1
+)
+```
+
+This means: get the columns named `(tmp_c1, tmp_c2)` from the Parquet or ORC file, and map them to the `(id, name)` columns of the Doris table. If `SET` is not specified, the columns in `column` are used as the mapping.
+
+> Note: For ORC files generated directly by some Hive versions, the file header is not the Hive metadata but `(_col0, _col1, _col2, ...)`, which may cause an `Invalid Column Name` error. In this case, use `SET` for mapping.
+
+**4. Import error: `Failed to get S3 FileSystem for bucket is null/empty`**
+
+The bucket information is incorrect or does not exist, or the bucket format is not supported. For example, when GCS is used to create a bucket name with `_` (such as `s3://gs_bucket/load_tbl`), the S3 client returns an error when accessing GCS. It is recommended not to use `_` when creating bucket paths.
+
+**5. Import timeout**
+
+The default `timeout` for an import is 4 hours. If a timeout occurs, **directly increasing the maximum timeout is not recommended**. When a single import takes more than 4 hours, it is recommended to split the file to be imported and import it in multiple batches, because setting a very large timeout makes the cost of retrying after a single failure very high.
+
+You can use the following formula to estimate the maximum data volume per import that the Doris cluster is expected to handle:
+
+```text
+Expected maximum import file data volume = 14400s * 10M/s * number of BEs
+
+For example, if the number of BEs in the cluster is 10:
+Expected maximum import file data volume = 14400s * 10M/s * 10 = 1440000M ≈ 1440G
+
+Note: A typical user environment may not reach 10M/s, so it is recommended to split files larger than 500G before importing.
+```
+
 ## More Help
 
-For more detailed syntax and best practices for using  [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) , please refer to the Broker Load command manual. You can also enter HELP BROKER LOAD in the MySQL client command line to obtain more help information.
+For more detailed syntax and best practices about Broker Load, see the [Broker Load](../../../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD) command manual. You can also run `HELP BROKER LOAD` in the MySQL client command line for more help.

@@ -32,7 +32,7 @@ CREATE [ TEMPORARY | EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
     (<columns_definition> [ <indexes_definition> ])
     [ ENGINE = <table_engine_type> ]
     [ <key_type> KEY (<key_cols>)
-        [ CLUSTER BY (<cluster_cols>) ]
+        [ ORDER BY (<cluster_cols>) ]
     ]
     [ COMMENT '<table_comment>' ]
     [ <partitions_definition> ]
@@ -47,6 +47,8 @@ CREATE [ TEMPORARY | EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
           [ , ... ]) 
     ]
 ```
+
+> Note: `ORDER BY` is supported since 4.1.0
 
 Where:
 
@@ -143,7 +145,7 @@ CREATE
     [ <index_definitions> ]
     [ ENGINE = <storage_engine_type> ]
     [ <partitioning_key_type> KEY ( <key_columns> )
-        [ CLUSTER BY ( <clustering_columns> ) ]
+        [ ORDER BY ( <clustering_columns> ) ]
     ]
     [ COMMENT '<table_description>' ]
     [ <partition_definitions> ]
@@ -157,6 +159,8 @@ CREATE
     ) ]
 [ AS ] <query>;
 ```
+
+> Note: `ORDER BY` is supported since 4.1.0
 
 ### CREATE TABLE ... LIKE
 
@@ -207,11 +211,11 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 
 **<key_type>**
 
-> The data model of the table. Optional values are DUPLICATE (detail model), UNIQUE (primary key model), AGGREGATE (aggregation model). For details on data models, see the [Data Model](../../../../table-design/data-model/overview.md) section.
+> The data model of the table. Optional values are DUPLICATE (detail model), UNIQUE (primary key model), AGGREGATE (aggregation model). For details on data models, see the [Data Model](../../../../table-design/data-model/intro.mdx) section.
 
 **<key_cols>**
 
-> The key columns of the table. In Doris, Key columns must be the first K columns of the table. Data in a single tablet will be kept in order by these columns. For restrictions on Keys and how to choose Key columns, see the various subsections in the [Data Model](../../../../table-design/data-model/overview.md) section.
+> The key columns of the table. In Doris, Key columns must be the first K columns of the table. Data in a single tablet will be kept in order by these columns. For restrictions on Keys and how to choose Key columns, see the various subsections in the [Data Model](../../../../table-design/data-model/intro.mdx) section.
 
 **<cluster_cols>**
 
@@ -678,6 +682,9 @@ This table creates partitions 3 days in advance and deletes partitions from 3 da
 [types: [DATE]; keys: [2020-01-09]; ‥types: [DATE]; keys: [2020-01-10]; )
 [types: [DATE]; keys: [2020-01-10]; ‥types: [DATE]; keys: [2020-01-11]; )
 [types: [DATE]; keys: [2020-01-11]; ‥types: [DATE]; keys: [2020-01-12]; )
+```
+
+```sql
 CREATE TABLE example_db.dynamic_partition
 (
     k1 DATE,

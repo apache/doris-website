@@ -41,6 +41,12 @@ If you execute DROP DATABASE FORCE, the system will not check whether there are 
 
 ## Example
 
+Setup — create `db_test` so the DROP example has something to remove:
+
+```sql
+CREATE DATABASE db_test;
+```
+
 - Deleting a Database db_test
 
     ```sql

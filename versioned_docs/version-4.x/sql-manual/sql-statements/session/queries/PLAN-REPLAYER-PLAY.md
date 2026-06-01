@@ -13,7 +13,7 @@ PLAN REPLAYER PLAY is a tool used by Doris developers to analyze optimizer issue
 ## Syntax
 
 ```sql
-PLAN REPLAYER PLAY <absolute-directory-of-dumpfile>；
+PLAN REPLAYER PLAY <absolute-directory-of-dumpfile>;
 ```
 
 ## Required Parameters
@@ -29,5 +29,5 @@ PLAN REPLAYER PLAY <absolute-directory-of-dumpfile>；
 When we have a `dumpfile: /home/wangwu/dumpfile.json`, we can use the following SQL to reproduce the scenario:
 
 ```sql
-PLAN REPLAYER PLAY "/home/wangwu/dumpfile.json"；
+PLAN REPLAYER PLAY "/home/wangwu/dumpfile.json";
 ```

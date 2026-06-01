@@ -2,34 +2,78 @@
 {
     "title": "SELECT INTO OUTFILE",
     "language": "zh-CN",
-    "description": "本文档将介绍如何使用 SELECT INTO OUTFILE 命令进行查询结果的导出操作。"
+    "description": "如何使用 SELECT INTO OUTFILE 将 Doris 查询结果同步导出到 S3、HDFS 等存储，含 Parquet/ORC/CSV 示例。",
+    "keywords": [
+        "SELECT INTO OUTFILE",
+        "Doris 导出",
+        "查询结果导出",
+        "导出到 S3",
+        "导出到 HDFS",
+        "Parquet 导出",
+        "ORC 导出",
+        "CSV 导出",
+        "并发导出",
+        "enable_parallel_outfile",
+        "max_file_size",
+        "success_file_name"
+    ]
 }
 ---
 
-本文档将介绍如何使用 `SELECT INTO OUTFILE` 命令进行查询结果的导出操作。
+<!-- 知识类型: 操作步骤 / 配置参数 -->
+<!-- 适用场景: 数据导出 / 查询结果落盘 / 离线分析数据交付 -->
 
-`SELECT INTO OUTFILE` 命令将 `SELECT` 部分的结果数据，以指定的文件格式导出到目标存储系统中，包括对象存储或 HDFS。
+本文档介绍如何使用 `SELECT INTO OUTFILE` 命令将 Doris 的查询结果以指定文件格式同步导出到对象存储或 HDFS。
 
-`SELECT INTO OUTFILE` 是一个同步命令，命令返回即表示导出结束。若导出成功，会返回导出的文件数量、大小、路径等信息。若导出失败，会返回错误信息。
+`SELECT INTO OUTFILE` 是 Doris 提供的**同步导出命令**，将 `SELECT` 的查询结果以 Parquet、ORC、CSV 等格式写入对象存储（S3/COS/OSS/OBS/GCS）或 HDFS，命令返回即表示导出结束。
 
-关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](./export-overview.md)。
+- 导出成功：返回导出的文件数量、大小、路径等信息
+- 导出失败：返回错误信息
 
-有关`SELECT INTO OUTFILE`命令的详细介绍，请参考：[SELECT INTO OUTFILE](../../sql-manual/sql-statements/data-modification/load-and-export/OUTFILE)
+> 关于 `SELECT INTO OUTFILE` 与 `EXPORT` 的选择，请参阅 [导出综述](./export-overview.md)。
+> 完整命令参考请见 [SELECT INTO OUTFILE 语法](../../sql-manual/sql-statements/data-modification/load-and-export/OUTFILE)。
 
 ## 适用场景
 
-`SELECT INTO OUTFILE` 适用于以下场景：
+<!-- 知识类型: 架构选型决策 -->
 
--  导出数据需要经过复杂计算逻辑的，如过滤、聚合、关联等。
--  适合需要执行同步任务的场景。
+`SELECT INTO OUTFILE` 适用于以下数据导出场景：
 
-在使用 `SELECT INTO OUTFILE` 时需要注意以下限制：
+| 场景类型     | 说明                                                      |
+| ------------ | --------------------------------------------------------- |
+| 复杂计算导出 | 导出数据需要经过复杂计算逻辑，如过滤、聚合、关联（JOIN）等 |
+| 同步任务     | 业务流程中需要等待导出完成后再执行后续操作                |
 
-- 不支持文本压缩格式的导出。
-- 2.1 版本 pipeline 引擎不支持并发导出。
+### 使用限制
+
+- 不支持文本压缩格式的导出
+- 2.1 版本 pipeline 引擎不支持并发导出
+
+## 支持能力概览
+
+<!-- 知识类型: 配置参数 -->
+
+### 支持的存储位置
+
+| 存储类型 | 具体支持                                |
+| -------- | --------------------------------------- |
+| 对象存储 | Amazon S3、腾讯云 COS、阿里云 OSS、华为云 OBS、Google GCS |
+| 分布式文件系统 | HDFS                          |
+| 本地文件系统 | 仅用于调试，需手动开启（见附录）      |
+
+### 支持的文件格式
+
+- Parquet
+- ORC
+- csv
+- csv\_with\_names
+- csv\_with\_names\_and\_types
 
 ## 快速上手
-### 建表与导入数据
+
+<!-- 知识类型: 操作步骤 -->
+
+### 第一步：建表与导入数据
 
 ```sql
 CREATE TABLE IF NOT EXISTS tbl (
@@ -48,9 +92,9 @@ insert into tbl values
     (5, null, null);
 ```
 
-### 导出到 HDFS
+### 第二步：导出到 HDFS
 
-将查询结果导出到文件 `hdfs://path/to/` 目录下，指定导出格式为 Parquet：
+将查询结果以 Parquet 格式导出至 `hdfs://path/to/` 目录：
 
 ```sql
 SELECT c1, c2, c3 FROM tbl
@@ -63,9 +107,9 @@ PROPERTIES
 );
 ```
 
-### 导出到对象存储 
+### 第三步：导出到对象存储
 
-将查询结果导出到 s3 存储的 `s3://bucket/export/` 目录下，指定导出格式为 ORC，需要提供`sk` `ak`等信息
+将查询结果以 ORC 格式导出至 S3 的 `s3://bucket/export/` 目录，需提供 `ak`、`sk` 等访问凭据：
 
 ```sql
 SELECT * FROM tbl
@@ -79,40 +123,33 @@ PROPERTIES(
 );
 ```
 
-## 导出说明
+## 进阶能力
 
-### 导出数据存储位置
+### 开启并发导出（提升导出效率）
 
-`SELECT INTO OUTFILE` 目前支持导出到以下存储位置：
+<!-- 适用场景: 大数据量导出 / 性能调优 -->
 
-- 对象存储：Amazon S3、COS、OSS、OBS、Google GCS
-- HDFS
+通过会话变量 `enable_parallel_outfile` 开启并发导出：
 
-### 导出文件类型
+```sql
+SET enable_parallel_outfile=true;
+```
 
-`SELECT INTO OUTFILE` 目前支持导出以下文件格式
+| 维度       | 说明                                                                |
+| ---------- | ------------------------------------------------------------------- |
+| 工作机制   | 利用多 BE 节点、多线程并发导出结果数据                              |
+| 优点       | 显著提升整体导出效率                                                |
+| 副作用     | 可能产生更多文件                                                    |
+| 失效场景   | 包含全局排序的查询，即使开启该参数也无法并发                        |
+| 是否生效判断 | 若导出命令返回行数大于 1 行，则表示并发导出已生效                  |
 
-* Parquet
-* ORC
-* csv
-* csv\_with\_names
-* csv\_with\_names\_and\_types
+## 典型场景示例
 
-### 导出并发度
+### 场景一：导出到开启了高可用的 HDFS 集群
 
-可以通过会话参数 `enable_parallel_outfile` 开启并发导出。
+<!-- 适用场景: 高可用 HDFS 环境 -->
 
-`SET enable_parallel_outfile=true;`
-
-并发导出会利用多节点、多线程导出结果数据，以提升整体的导出效率。但并发导出可能会产生更多的文件。
-
-注意，某些查询即使打开此参数，也无法执行并发导出，如包含全局排序的查询。如果导出命令返回的行数大于 1 行，则表示开启了并发导出。
-
-## 导出示例
-
-### 导出到开启了高可用的 HDFS 集群
-
-如果 HDFS 开启了高可用，则需要提供 HA 信息，如：
+如果 HDFS 开启了 HA 高可用，需要额外提供 nameservices 与 NameNode 的相关配置：
 
 ```sql
 SELECT c1, c2, c3 FROM tbl
@@ -130,9 +167,11 @@ PROPERTIES
 );
 ```
 
-### 导出到开启了高可用及 kerberos 认证的 HDFS 集群
+### 场景二：导出到开启 HA 与 Kerberos 认证的 HDFS 集群
 
-如果 Hdfs 集群开启了高可用并且启用了 Kerberos 认证，可以参考如下 SQL 语句：
+<!-- 适用场景: Kerberos 安全认证环境 -->
+
+如果 HDFS 集群同时开启了高可用和 Kerberos 认证，参考如下 SQL：
 
 ```sql
 SELECT * FROM tbl
@@ -147,20 +186,22 @@ PROPERTIES
     "dfs.namenode.rpc-address.hacluster.n1"="192.168.0.1:8020",
     "dfs.namenode.rpc-address.hacluster.n2"="192.168.0.2:8020",
     "dfs.client.failover.proxy.provider.hacluster"="org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
-    "dfs.namenode.kerberos.principal"="hadoop/_HOST@REALM.COM"
+    "dfs.namenode.kerberos.principal"="hadoop/_HOST@REALM.COM",
     "hadoop.security.authentication"="kerberos",
     "hadoop.kerberos.principal"="doris_test@REALM.COM",
     "hadoop.kerberos.keytab"="/path/to/doris_test.keytab"
 );
 ```
 
-### 生成导出成功标识文件示例
+### 场景三：生成导出成功标识文件
 
-`SELECT INTO OUTFILE` 命令是一个同步命令，因此有可能在 SQL 执行过程中任务连接断开了，从而无法获悉导出的数据是否正常结束或是否完整。此时可以使用 `success_file_name` 参数要求导出成功后，在目录下生成一个文件标识。
+<!-- 适用场景: 同步任务完整性校验 / 防止网络断连导致状态未知 -->
 
-类似 Hive，用户可以通过判断导出目录中是否有`success_file_name` 参数指定的文件，来判断导出是否正常结束以及导出目录中的文件是否完整。
+**问题背景**：`SELECT INTO OUTFILE` 是同步命令，若 SQL 执行过程中连接中断，无法判断导出是否完整。
 
-例如：将 select 语句的查询结果导出到对象存储：`s3://bucket/export/`。指定导出格式为 `csv`。指定导出成功标识文件名为 `SUCCESS`。导出完成后，生成一个标识文件。
+**解决方案**：使用 `success_file_name` 参数，导出成功后会在目录下生成一个标识文件（类似 Hive 的 `_SUCCESS`），通过判断该文件是否存在即可确认导出完整性。
+
+下例将查询结果以 CSV 格式导出至 S3，并在完成后生成名为 `SUCCESS` 的标识文件：
 
 ```sql
 SELECT k1,k2,v1 FROM tbl1 LIMIT 100000
@@ -178,9 +219,11 @@ PROPERTIES
 );
 ```
 
-在导出完成后，会多写出一个文件，该文件的文件名为 `SUCCESS`。
+### 场景四：导出前清空目标目录
 
-### 导出前清空导出目录
+<!-- 适用场景: 覆盖式导出 / 周期性全量替换 -->
+
+通过 `delete_existing_files` 参数可在导出前清空目标目录中已有的文件：
 
 ```sql
 SELECT * FROM tbl1
@@ -198,11 +241,17 @@ PROPERTIES
 );
 ```
 
-如果设置了 `"delete_existing_files" = "true"`，导出作业会先将 `s3://bucket/export/` 目录下所有文件及目录删除，然后导出数据到该目录下。
+**生效条件与风险**：
 
-若要使用 `delete_existing_files` 参数，还需要在 `fe.conf` 中添加配置 `enable_delete_existing_files = true` 并重启 fe，此时 `delete_existing_files` 才会生效。该操作会删除外部系统的数据，属于高危操作，请自行确保外部系统的权限和数据安全性。
+| 项目     | 说明                                                                                  |
+| -------- | ------------------------------------------------------------------------------------- |
+| 行为     | 先删除 `s3://bucket/export/` 目录下所有文件及子目录，再导出数据                       |
+| 启用条件 | 需要在 `fe.conf` 中添加配置 `enable_delete_existing_files = true` 并重启 FE           |
+| 风险提示 | 该操作会删除外部系统的数据，属于高危操作，请自行确保外部系统的权限和数据安全性          |
 
-### 设置导出文件的大小
+### 场景五：控制单个导出文件的大小
+
+通过 `max_file_size` 参数控制每个导出文件的最大大小：
 
 ```sql
 SELECT * FROM tbl
@@ -217,45 +266,50 @@ PROPERTIES(
 );
 ```
 
-由于指定了 `"max_file_size" = "2048MB"` 最终生成文件如如果不大于 2GB，则只有一个文件。如果大于 2GB，则有多个文件。
+**说明**：
+
+- 若最终生成数据不大于 2GB，仅产生一个文件
+- 若大于 2GB，则切分为多个文件
+- 文件切分会保证一行数据完整存储在单一文件中，因此实际文件大小并不严格等于 `max_file_size`
 
 ## 注意事项
 
-- 导出数据量和导出效率
+<!-- 知识类型: 配置参数 / 故障排查 -->
 
-    `SELECT INTO OUTFILE`功能本质上是执行一个 SQL 查询命令。如果不开启并发导出，查询结果是由单个 BE 节点，单线程导出的，因此整个导出的耗时包括查询本身的耗时和最终结果集写出的耗时。开启并发导出可以降低导出的时间。
+### 性能与超时
 
-- 导出超时
+| 主题         | 说明                                                                                                          |
+| ------------ | ------------------------------------------------------------------------------------------------------------- |
+| 导出耗时构成 | `SELECT INTO OUTFILE` 本质是 SQL 查询，整体耗时 = 查询耗时 + 结果集写出耗时                                   |
+| 单线程瓶颈   | 未开启并发导出时，查询结果由单个 BE 节点单线程写出                                                            |
+| 性能优化     | 开启 `enable_parallel_outfile` 进行并发导出，可显著降低耗时                                                   |
+| 导出超时     | 导出命令的超时与查询超时一致，若数据量较大可设置 `query_timeout` 适当延长                                     |
 
-    导出命令的超时时间与查询的超时时间相同，如果数据量较大导致导出数据超时，可以设置会话变量 `query_timeout` 适当的延长查询超时时间。
+### 文件管理
 
-- 导出文件的管理
+- **Doris 不管理导出文件**：无论导出成功还是失败后残留的文件，均需用户自行清理
+- **不检查路径与文件**：`SELECT INTO OUTFILE` 不会检查文件及路径是否存在；是否自动创建路径、是否覆盖已存在文件，完全由远端存储系统的语义决定
 
-    Doris 不会管理导出的文件，无论是导出成功的还是导出失败后残留的文件，都需要用户自行处理。
+### 数据与格式
 
-    另外，`SELECT INTO OUTFILE` 命令不会检查文件及文件路径是否存在。`SELECT INTO OUTFILE` 是否会自动创建路径、或是否会覆盖已存在文件，完全由远端存储系统的语义决定。
-
-- 如果查询的结果集为空
-
-    对于结果集为空的导出，依然会产生一个空文件。
-
-- 文件切分
-
-    文件切分会保证一行数据完整的存储在单一文件中。因此文件的大小并不严格等于 `max_file_size`。
-
-- 非可见字符的函数
-
-    对于部分输出为非可见字符的函数，如 BITMAP、HLL 类型，导出到 CSV 文件格式时输出为 `\N`。
+- **空结果集**：即使查询结果集为空，依然会产生一个空文件
+- **文件切分规则**：保证一行数据完整存储在单一文件中，文件大小并不严格等于 `max_file_size`
+- **非可见字符函数**：`BITMAP`、`HLL` 等输出非可见字符的函数，导出到 CSV 时输出为 `\N`
 
 ## 附录
- 
-### 导出到本地文件系统
 
-导出到本地文件系统功能默认是关闭的。这个功能仅用于本地调试和开发，请勿用于生产环境。
+### 导出到本地文件系统（仅调试）
 
-如要开启这个功能请在 `fe.conf` 中添加 `enable_outfile_to_local=true` 并且重启 FE。
+<!-- 适用场景: 本地调试 / 开发验证 -->
+<!-- 知识类型: 配置参数 -->
 
-示例：将 tbl 表中的所有数据导出到本地文件系统，设置导出作业的文件格式为 csv（默认格式），并设置列分割符为`,`。
+:::caution
+此功能仅用于本地调试和开发，**请勿用于生产环境**，并请自行确保导出目录的权限和数据安全性。
+:::
+
+**开启方式**：在 `fe.conf` 中添加 `enable_outfile_to_local=true` 并重启 FE。
+
+**示例**：将 `tbl` 表中所有数据以 CSV 格式（默认格式）导出到本地文件系统，列分隔符为 `,`：
 
 ```sql
 SELECT c1, c2 FROM db.tbl
@@ -266,13 +320,16 @@ PROPERTIES(
 );
 ```
 
-此功能会将数据导出并写入到 BE 所在节点的磁盘上，如果有多个 BE 节点，则数据会根据导出任务的并发度分散在不同 BE 节点上，每个节点有一部分数据。
+**行为说明**：
 
-如在这个示例中，最终会在 BE 节点的 `/path/to/` 下生产一组类似 `result_c6df5f01bd664dde-a2168b019b6c2b3f_0.csv` 的文件。
+- 数据会写入 BE 节点本地磁盘
+- 多 BE 节点环境下，数据会根据导出任务的并发度分散到不同 BE 节点上
+- 最终在 BE 节点的 `/path/to/` 目录下生成类似 `result_c6df5f01bd664dde-a2168b019b6c2b3f_0.csv` 的文件
+- 具体的 BE 节点 IP 会在返回结果中显示
 
-具体的 BE 节点 IP 会在返回的结果中显示，如：
+**返回结果示例**：
 
-```
+```text
 +------------+-----------+----------+--------------------------------------------------------------------------+
 | FileNumber | TotalRows | FileSize | URL                                                                      |
 +------------+-----------+----------+--------------------------------------------------------------------------+
@@ -282,7 +339,3 @@ PROPERTIES(
 |          1 |   1198880 |  4795520 | file:///172.20.32.137/path/to/result_c6df5f01bd664dde-a2168b019b6c2b45_* |
 +------------+-----------+----------+--------------------------------------------------------------------------+
 ```
-
-:::caution
-此功能不适用于生产环境，并且请自行确保导出目录的权限和数据安全性。
-:::

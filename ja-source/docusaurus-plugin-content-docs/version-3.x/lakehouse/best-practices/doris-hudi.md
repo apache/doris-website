@@ -68,10 +68,10 @@ Apache Dorisの高性能クエリ実行とApache Hudiのリアルタイムデー
 3. 開始後、以下のスクリプトを使用してSparkコマンドラインまたはDorisコマンドラインにログインできます：
 
 	```
-	-- Doris
+	-- Spark
 	sudo ./login-spark.sh
 	
-	-- Spark
+	-- Doris
 	sudo ./login-doris.sh
 	```
 ### 03 データ準備

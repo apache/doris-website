@@ -10,7 +10,7 @@
 
 ## 配置管理用户名和密码
 
-Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../admin-manual/auth/authentication-and-authorization)，节点的管理需要用户拥有 [Node_priv](../../../admin-manual/auth/authentication-and-authorization#权限类型) 权限。Doris Operator 默认使用拥有所有权限的 root 用户无密码模式对 DorisDisaggregatedCluster 资源配置的集群进行部署和管理。root 用户添加密码后，需要在 DorisDisaggregatedCluster 资源中显示配置拥有 Node_Priv 权限的用户名和密码，以便 Doris Operator 对集群进行自动化管理操作。
+Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../admin-manual/auth/authentication-and-authorization)，节点的管理需要用户拥有 [Node_priv](../../../admin-manual/auth/authentication-and-authorization#types-of-permissions) 权限。Doris Operator 默认使用拥有所有权限的 root 用户无密码模式对 DorisDisaggregatedCluster 资源配置的集群进行部署和管理。root 用户添加密码后，需要在 DorisDisaggregatedCluster 资源中显示配置拥有 Node_Priv 权限的用户名和密码，以便 Doris Operator 对集群进行自动化管理操作。
 
 无论何种方式配置密码，请注意以下几点：
 - root、admin 等已经存在用户的密码，任何情况下 operator 都不会自动进行修改，需要用户自己去配置或者修改。

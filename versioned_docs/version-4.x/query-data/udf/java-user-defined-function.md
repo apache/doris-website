@@ -2,76 +2,104 @@
 {
     "title": "Java UDF, UDAF, UDWF, UDTF",
     "language": "en",
-    "description": "Java UDF provides a Java interface for users to implement user-defined functions (UDFs) conveniently using the Java programming language."
+    "description": "How to write UDF, UDAF, UDWF, and UDTF custom functions in Apache Doris using Java, including type mapping, registration syntax, best practices, and examples.",
+    "keywords": [
+        "Doris Java UDF",
+        "Java UDAF",
+        "Java UDWF",
+        "Java UDTF",
+        "custom function",
+        "User Defined Function",
+        "Hive UDF migration",
+        "CREATE FUNCTION",
+        "Lateral View",
+        "static_load",
+        "expiration_time"
+    ]
 }
 ---
 
+<!-- Knowledge type: Capability definition / Operational steps -->
+<!-- Applicable scenario: Extend Doris SQL capabilities with Java, migrate Hive UDFs -->
+
 ## Overview
-Java UDF provides a Java interface for users to implement user-defined functions (UDFs) conveniently using the Java programming language.
-Doris supports the use of Java to develop UDFs, UDAFs, and UDTFs. Unless otherwise specified, "UDF" in the following text refers to all types of user-defined functions.
 
-1. Java UDF: A Java UDF is a commonly used scalar function, where each input row produces a corresponding output row. Common examples include ABS and LENGTH. Notably, Hive UDFs can be directly migrated to Doris, which is convenient for users.
+Java UDF provides users with an interface to write custom functions in Java, making it convenient to implement business logic in Java that cannot be expressed directly in SQL. Apache Doris supports four types of custom functions written in Java: UDF, UDAF, UDWF, and UDTF. Unless otherwise specified, the term UDF is used below to refer to all user-defined functions.
 
-2. Java UDAF: A Java UDAF is a user-defined aggregate function that aggregates multiple input rows into a single output row. Common examples include MIN, MAX, and COUNT.
+The definitions and typical examples of the four types of custom functions are as follows:
 
-3. Java UDWF: stands for User-Defined Window Function, which returns a computed value for each row based on a window (one or multiple rows). Common examples include ROW_NUMBER, RANK, and DENSE_RANK.
+| Type | Full Name | Behavior | Typical Function Examples | First Supported Version |
+| --- | --- | --- | --- | --- |
+| UDF | Scalar Function | Outputs one row of result for each input row | ABS, LENGTH | All versions |
+| UDAF | Aggregate Function | Aggregates multiple input rows and outputs one row of result | MIN, MAX, COUNT | All versions |
+| UDWF | Window Function | Returns a value for each row within a window range (one or more rows) | ROW_NUMBER, RANK, DENSE_RANK | All versions |
+| UDTF | Table Function | Outputs one or more rows for each input row; must be used with Lateral View, can implement row-to-column conversion | EXPLODE, EXPLODE_SPLIT | Doris 3.0 and later |
 
-4. Java UDTF: A Java UDTF is a user-defined table function, where a single input row can generate one or multiple output rows. In Doris, UDTFs must be used with Lateral View to achieve row-to-column transformations. Common examples include EXPLODE and EXPLODE_SPLIT. **Java UDTF is available from version 3.0.0 and onwards.**
+For users who have already accumulated a large number of custom functions on Hive, Java UDFs can be migrated directly to Doris without rewriting.
 
-## Type Correspondence
+## Applicable Scenarios
 
-| Type                  | UDF Argument Type            |
-|-----------------------|------------------------------|
-| Bool                  | Boolean                      |
-| TinyInt               | Byte                         |
-| SmallInt              | Short                        |
-| Int                   | Integer                      |
-| BigInt                | Long                         |
-| LargeInt              | BigInteger                   |
-| Float                 | Float                        |
-| Double                | Double                       |
-| Date                  | LocalDate                    |
-| Datetime              | LocalDateTime                |
-| IPV4/IPV6             | InetAddress                  |
-| String                | String                       |
-| Decimal               | BigDecimal                   |
-| `array<Type>`         | `ArrayList<Type>` or `List<Type>`          |
-| `map<Type1,Type2>`    | `HashMap<Type1,Type2>`or`Map<Type1,Type2>`     |
-| `struct<Type...>`     | `ArrayList<Object>` (from version 3.0.0) or`List<Object>`|
-| VarBinary     | byte[], Byte[] (The VARBINARY type is supported starting from version 4.0; prefer using byte[] to avoid an extra conversion layer.) |
+- Business requires scalar computation, aggregation, or row-expansion logic in SQL that the built-in Doris functions cannot cover.
+- Existing Hive Java UDF assets need to be migrated smoothly to Doris.
+- Custom functions need to load large resource files (such as dictionaries or models), or want to reuse singleton resources such as a global connection pool.
 
-:::tip
-`array/map/struct` types can be nested with other types. For instance, Doris: `array<array<int>>` corresponds to JAVA UDF Argument Type: `ArrayList<ArrayList<Integer>>`. Other types follow the same pattern.
-And `List`,`Map` class is supported from version 3.1.0
+## Data Type Mapping
+
+The following table lists the correspondence between Doris data types and Java UDF input/return types:
+
+| Doris Data Type | Java UDF Parameter Type |
+| --- | --- |
+| Bool | Boolean |
+| TinyInt | Byte |
+| SmallInt | Short |
+| Int | Integer |
+| BigInt | Long |
+| LargeInt | BigInteger |
+| Float | Float |
+| Double | Double |
+| Date | LocalDate |
+| Datetime | LocalDateTime |
+| IPV4 / IPV6 | InetAddress |
+| String | String |
+| Decimal | BigDecimal |
+| `array<Type>` | `ArrayList<Type>`, `List<Type>` (nesting supported) |
+| `map<Type1,Type2>` | `HashMap<Type1,Type2>`, `Map<Type1,Type2>` (nesting supported) |
+| `struct<Type...>` | `ArrayList<Object>` (supported since 3.0.0), `List<Type>` |
+| VarBinary | `byte[]`, `Byte[]` (the VarBinary type is supported since 4.0; `byte[]` is recommended as it avoids one extra layer of conversion) |
+
+:::tip Tip
+The `array`, `map`, and `struct` types can nest other types. For example, the Java UDF parameter type corresponding to `array<array<int>>` in Doris is `ArrayList<ArrayList<Integer>>`, and other types follow the same pattern. Support for the `List<Type>` and `Map<Type1,Type2>` forms starts from version 3.1.0.
 :::
 
-:::caution Warning
-When creating functions, avoid using `varchar` in place of `string`, as this may cause the function to fail.
+:::caution Note
+When creating a function, always use the `string` type instead of `varchar`, otherwise the function may fail to execute.
 :::
 
+## Usage Limitations
 
-## Usage Notes
+<!-- Knowledge type: Limitation -->
 
-1. Complex data types (HLL, Bitmap) are not supported.
+1. The complex data types HLL and Bitmap are not supported.
+2. Users can specify the JVM maximum heap size by themselves through the `-Xmx` part of `JAVA_OPTS` in `be.conf`; the default is 1024 MB. If the volume of aggregated data is large, increase this value appropriately to improve performance and reduce the risk of out-of-memory errors.
+3. Due to the JVM restriction on loading classes with the same name, do not use multiple classes with the same name as UDF implementations at the same time. To update a UDF that uses the same class name, restart the BE so that the classpath is reloaded.
+4. Rules for handling functions with the same name:
 
-2. Users are currently allowed to specify the maximum JVM heap size. The configuration item is the `-Xmx` part of `JAVA_OPTS` in `be.conf`. The default is 1024m. If you need to aggregate data, it is recommended to increase this value to enhance performance and reduce the risk of memory overflow.
+    - Users can create custom functions whose signatures are identical to those of built-in functions. By default, the system matches built-in functions first.
+    - If `database` is explicitly specified at call time (for example, `db.function()`), the call is forced to be identified as a user-defined function.
+    - The session variable `prefer_udf_over_builtin` was added in version 3.0.7. When it is set to `true`, user-defined functions are matched first, which helps users preserve the original function behavior of other systems when migrating to Doris without changing function names.
 
-3. Due to issues with JVM loading classes with the same name, do not use multiple classes with the same name as UDF implementations simultaneously. If you want to update a UDF with a class of the same name, you need to restart BE to reload the classpath.
+## Quick Start
 
-4. Same-named Functions
+This section describes how to develop and register Java UDFs. Sample code is provided in the `samples/doris-demo/java-udf-demo/` directory for reference, and you can also view the [demo](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo) on GitHub.
 
-    Users can create UDF with exactly the same signature as built-in functions. By default, the system will prioritize matching built-in functions. However, if you specify the `database` when using the function (i.e., `db.function()`), it will be forcibly considered as a user-defined function.
+UDFs are used in the same way as ordinary functions, with one difference:
 
-    In version 3.0.7, a new session variable `prefer_udf_over_builtin` was added. When set to `true`, it will prioritize matching user-defined functions, making it easier for users to migrate from other systems to Doris while maintaining the original system's function behavior through custom functions without changing function names.
+- The scope of built-in functions is global.
+- The scope of UDFs is within a database (DB).
 
-## Getting Started
-This section mainly introduces how to develop a Java UDF. Examples are provided in `samples/doris-demo/java-udf-demo/` for reference. Click [here](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo) to view details.
+Therefore, if the current session is inside a database, using the UDF name directly looks up the corresponding UDF in the current DB; otherwise, the database name where the UDF resides must be specified explicitly, for example `dbName.funcName`.
 
-The usage of UDFs is identical to standard functions, with the primary distinction being that built-in functions have a global scope, while UDFs are scoped within the DB.
-
-When the session is linked within the database, directly using the UDF name will search for the corresponding UDF within the current DB. Otherwise, users must explicitly specify the UDF's database name, for example, `dbName.funcName`.
-
-In the following sections, examples will use the table `test_table`. The corresponding table creation script is as follows:
+For convenience, the following examples are all tested on `test_table`. The CREATE TABLE statement is as follows:
 
 ```sql
 CREATE TABLE `test_table` (
@@ -88,11 +116,11 @@ insert into test_table values (1, 111.11, "a,b,c");
 insert into test_table values (6, 666.66, "d,e");
 ```
 
+### Java UDF Example
 
-### Introduction to Java-UDF Example
-When writing a UDF in Java, the main entry point must be the `evaluate` function. This is consistent with other engines like Hive. In this example, we write an `AddOne` UDF to perform an increment operation on integer inputs.
+When writing a UDF in Java, the main entry point must be the `evaluate` function, which is consistent with other engines such as Hive. The following example writes an `AddOne` UDF that adds one to an integer input.
 
-1. Write the corresponding Java code and package it into a JAR file.
+1. Write the Java code and package it into a JAR file:
 
     ```java
     public class AddOne extends UDF {
@@ -102,7 +130,7 @@ When writing a UDF in Java, the main entry point must be the `evaluate` function
     }
     ```
 
-2. Register and create the Java-UDF function in Doris. For more details on the syntax, refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
+2. Register the Java UDF in Doris. For more syntax, see [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
@@ -113,9 +141,13 @@ When writing a UDF in Java, the main entry point must be the `evaluate` function
     );
     ```
 
-3. To utilize UDFs, users must possess the `SELECT` privilege for the corresponding database. And to verify the successful registration of the UDF, you can use the [SHOW FUNCTIONS](../../sql-manual/sql-statements/function/SHOW-FUNCTIONS) command.
+:::caution Note
+When using `file://`, Doris reads the JAR file on the FE node during `CREATE FUNCTION` to compute the checksum, and reads the JAR file on BE nodes during execution. Therefore, the same JAR file must exist at the same absolute path on all FE and BE nodes, and the file content must be identical. If the file exists only on BE nodes, `CREATE FUNCTION` fails. If the file content differs between FE and BE nodes, execution fails with a checksum mismatch.
+:::
 
-    ``` sql
+3. Call the UDF. Calling a UDF requires the `SELECT` privilege on the corresponding database. To view registered UDFs, use the [SHOW FUNCTIONS](../../sql-manual/sql-statements/function/SHOW-FUNCTIONS) command.
+
+    ```sql
     select id,java_udf_add_one(id) from test_table;
     +------+----------------------+
     | id   | java_udf_add_one(id) |
@@ -125,18 +157,18 @@ When writing a UDF in Java, the main entry point must be the `evaluate` function
     +------+----------------------+
     ```
 
-4. If a UDF is no longer needed, it can be dropped using the following command, as detailed in [DROP FUNCTION](../../sql-manual/sql-statements/function/DROP-FUNCTION).
+4. When a UDF is no longer needed, use the [DROP FUNCTION](../../sql-manual/sql-statements/function/DROP-FUNCTION) command to delete it.
 
-Additionally, if your UDF requires loading large resource files or defining global static variables, you can refer to the method for loading static variables described later in this document.
+If the UDF needs to load large resource files, or you want to define global static variables, see the "Best Practices" section below.
 
-### Introduction to Java-UDAF Example
+### Java UDAF Example
 
-When writing a `UDAF` using Java, there are some functions that must be implemented (marked as required) along with an internal class State. The following example will illustrate how to implement them.
+When writing a UDAF in Java, you need to implement a set of required functions (marked as required) and an inner class `State`. The following two examples illustrate this.
 
 1. Write the corresponding Java UDAF code and package it into a JAR file.
 
 <details>
-<summary> Example 1: SimpleDemo will implement a simple function similar to sum, where the input parameter is INT and the output parameter is INT.</summary> 
+<summary>Example 1: SimpleDemo implements a simple aggregate function similar to sum, with INT as the input parameter and INT as the output parameter</summary>
 
 ```java
 package org.apache.doris.udf;
@@ -148,174 +180,168 @@ import java.util.logging.Logger;
 
 public class SimpleDemo  {
 
-    Logger log = Logger.getLogger("SimpleDemo");
+Logger log = Logger.getLogger("SimpleDemo");
 
-    //Need an inner class to store data
-    /*required*/
-    public static class State {
-        /*some variables if you need */
-        public int sum = 0;
-    }
+//Need an inner class to store data
+/*required*/
+public static class State {
+    /*some variables if you need */
+    public int sum = 0;
+}
 
-    /*required*/
-    public State create() {
-        /* here could do some init work if needed */
-        return new State();
-    }
+/*required*/
+public State create() {
+    /* here could do some init work if needed */
+    return new State();
+}
 
-    /*required*/
-    public void destroy(State state) {
-        /* here could do some destroy work if needed */
-    }
+/*required*/
+public void destroy(State state) {
+    /* here could do some destroy work if needed */
+}
 
-    /*Not Required*/
-    public void reset(State state) {
-        /*if you want this udaf function can work with window function.*/
-        /*Must impl this, it will be reset to init state after calculate every window frame*/
-        state.sum = 0;
-    }
+/*Not Required*/
+public void reset(State state) {
+    /*if you want this udaf function can work with window function.*/
+    /*Must impl this, it will be reset to init state after calculate every window frame*/
+    state.sum = 0;
+}
 
-    /*required*/
-    //first argument is State, then other types your input
-    public void add(State state, Integer val) throws Exception {
-        /* here doing update work when input data*/
-        if (val != null) {
-            state.sum += val;
-        }
+/*required*/
+//first argument is State, then other types your input
+public void add(State state, Integer val) throws Exception {
+    /* here doing update work when input data*/
+    if (val != null) {
+        state.sum += val;
     }
+}
 
-    /*required*/
-    public void serialize(State state, DataOutputStream out) throws Exception {
-        /* serialize some data into buffer */
-        out.writeInt(state.sum);
-    }
+/*required*/
+public void serialize(State state, DataOutputStream out) throws IOException {
+    /* serialize some data into buffer */
+    out.writeInt(state.sum);
+}
 
-    /*required*/
-    public void deserialize(State state, DataInputStream in) throws Exception {
-        /* deserialize get data from buffer before you put */
-        int val = in.readInt();
-        state.sum = val;
-    }
+/*required*/
+public void deserialize(State state, DataInputStream in) throws IOException {
+    /* deserialize get data from buffer before you put */
+    int val = in.readInt();
+    state.sum = val;
+}
 
-    /*required*/
-    public void merge(State state, State rhs) throws Exception {
-        /* merge data from state */
-        state.sum += rhs.sum;
-    }
+/*required*/
+public void merge(State state, State rhs) throws Exception {
+    /* merge data from state */
+    state.sum += rhs.sum;
+}
 
-    /*required*/
-    //return Type you defined
-    public Integer getValue(State state) throws Exception {
-        /* return finally result */
-        return state.sum;
-    }
+/*required*/
+//return Type you defined
+public Integer getValue(State state) throws Exception {
+    /* return finally result */
+    return state.sum;
+}
 }
 ```
 
 </details>
-
 
 <details>
-<summary> Example 2: MedianUDAF is a function that calculates the median. The input types are (DOUBLE, INT), and the output type is DOUBLE. </summary>
+<summary>Example 2: MedianUDAF implements the calculation of the median, with input type (DOUBLE, INT) and output type DOUBLE</summary>
 
 ```java
-package org.apache.doris.udf.demo;  
+package org.apache.doris.udf.demo;
 
-import java.io.DataInputStream;  
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
-import java.math.BigDecimal;  
-import java.util.Arrays;  
-import java.util.logging.Logger;  
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.logging.Logger;
 
-/* UDAF to calculate the median */  
-public class MedianUDAF {  
-    Logger log = Logger.getLogger("MedianUDAF");  
+/*UDAF that calculates the median*/
+public class MedianUDAF {
+Logger log = Logger.getLogger("MedianUDAF");
 
-    // State storage  
-    public static class State {  
-        // Precision of the return result  
-        int scale = 0;  
-        // Whether it is the first time to execute the add method for a certain aggregation condition under a certain tablet  
-        boolean isFirst = true;  
-        // Data storage  
-        public StringBuilder stringBuilder;  
-    }  
+// State storage
+public static class State {
+    // Precision of the returned result
+    int scale = 0;
+    // Whether this is the first time the add method is executed for the data under a certain aggregation condition of a tablet
+    boolean isFirst = true;
+    // Data storage
+    public StringBuilder stringBuilder;
+}
 
-    // Initialize the state  
-    public State create() {  
-        State state = new State();  
-        // Pre-initialize based on the amount of data that needs to be aggregated under each aggregation condition of each tablet to increase performance  
-        state.stringBuilder = new StringBuilder(1000);  
-        return state;  
-    }  
+// State initialization
+public State create() {
+    State state = new State();
+    // Pre-initialize the buffer based on the volume of data to be aggregated under each aggregation condition of each tablet, to improve performance
+    state.stringBuilder = new StringBuilder(1000);
+    return state;
+}
 
-    // Process each data under respective aggregation conditions for each tablet  
-    public void add(State state, Double val, int scale) {  
-        if (val != null && state.isFirst) {  
-            state.stringBuilder.append(scale).append(",").append(val).append(",");  
-            state.isFirst = false;  
-        } else if (val != null) {  
-            state.stringBuilder.append(val).append(",");  
-        }  
-    }  
 
-    // Data needs to be output for aggregation after processing  
-    public void serialize(State state, DataOutputStream out) throws IOException {  
-        // Currently, only DataOutputStream is provided. If serialization of objects is required, methods such as concatenating strings, converting to JSON, or serializing into byte arrays can be considered  
-        // If the State object needs to be serialized, it may be necessary to implement a serialization interface for the State inner class  
-        // Ultimately, everything needs to be transmitted via DataOutputStream  
-        out.writeUTF(state.stringBuilder.toString());  
-    }  
+// The execution unit processes each piece of data under each aggregation condition of each tablet
+public void add(State state, Double val, int scale) throws IOException {
+    if (val != null && state.isFirst) {
+        state.stringBuilder.append(scale).append(",").append(val).append(",");
+        state.isFirst = false;
+    } else if (val != null) {
+        state.stringBuilder.append(val).append(",");
+    }
+}
 
-    // Obtain the output data from the data processing execution unit  
-    public void deserialize(State state, DataInputStream in) throws IOException {  
-        String string = in.readUTF();  
-        state.scale = Integer.parseInt(String.valueOf(string.charAt(0)));  
-        StringBuilder stringBuilder = new StringBuilder(string.substring(2));  
-        state.stringBuilder = stringBuilder;   
-    }  
+// Output data after processing, waiting for aggregation
+public void serialize(State state, DataOutputStream out) throws IOException {
+    // Currently only DataOutputStream is provided. To serialize an object, consider concatenating strings, converting to JSON, or serializing into a byte array.
+    // To serialize the State object, you may need to implement the Serializable interface on the State inner class yourself.
+    // Ultimately, everything must be transmitted via DataOutputStream.
+    out.writeUTF(state.stringBuilder.toString());
+}
 
-    // The aggregation execution unit merges the processing results of data under certain aggregation conditions for a given key. The state1 parameter is the initialized instance during the first merge of each key  
-    public void merge(State state1, State state2) {  
-        state1.scale = state2.scale;  
-        state1.stringBuilder.append(state2.stringBuilder.toString());  
-    }  
+// Get the data output by the data-processing execution unit
+public void deserialize(State state, DataInputStream in) throws IOException {
+    String string = in.readUTF();
+    state.scale = Integer.parseInt(String.valueOf(string.charAt(0)));
+    StringBuilder stringBuilder = new StringBuilder(string.substring(2));
+    state.stringBuilder = stringBuilder;
+}
 
-    // Output the final result after merging the data for each key  
-    public Double getValue(State state) {  
-        String[] strings = state.stringBuilder.toString().split(",");  
-        double[] doubles = new double[strings.length];  
-        for (int i = 0; i < strings.length - 1; i++) {  
-            doubles[i] = Double.parseDouble(strings[i + 1]);  
-        }  
+// The aggregation execution unit merges the processing results of data under a certain key according to the aggregation condition. The first time each key is merged, the state1 parameter is the initialized instance.
+public void merge(State state1, State state2) throws IOException {
+    state1.scale = state2.scale;
+    state1.stringBuilder.append(state2.stringBuilder.toString());
+}
 
-        Arrays.sort(doubles);  
-        double n = doubles.length;  
-        if (n == 0) {  
-            return 0.0;  
-        }  
-        double index = (n - 1) / 2.0;  
+// Process the merged data for each key and output the final result
+public Double getValue(State state) throws IOException {
+    String[] strings = state.stringBuilder.toString().split(",");
+    double[] doubles = new double[strings.length + 1];
+    doubles = Arrays.stream(strings).mapToDouble(Double::parseDouble).toArray();
 
-        int low = (int) Math.floor(index);  
-        int high = (int) Math.ceil(index);  
+    Arrays.sort(doubles);
+    double n = doubles.length - 1;
+    double index = n * 0.5;
 
-        double value = low == high ? (doubles[low] + doubles[high]) / 2 : doubles[high];  
+    int low = (int) Math.floor(index);
+    int high = (int) Math.ceil(index);
 
-        BigDecimal decimal = new BigDecimal(value);  
-        return decimal.setScale(state.scale, BigDecimal.ROUND_HALF_UP).doubleValue();  
-    }  
+    double value = low == high ? (doubles[low] + doubles[high]) * 0.5 : doubles[high];
 
-    // Executed after each execution unit completes  
-    public void destroy(State state) {  
-    }  
+    BigDecimal decimal = new BigDecimal(value);
+    return decimal.setScale(state.scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+}
+
+// Executed after each execution unit finishes
+public void destroy(State state) {
+}
+
 }
 ```
-    
+
 </details>
 
-
-2. Register and create the Java-UDAF function in Doris. For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
+2. Register the Java UDAF in Doris. For more syntax, see [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE AGGREGATE FUNCTION simple_demo(INT) RETURNS INT PROPERTIES (
@@ -326,7 +352,7 @@ public class MedianUDAF {
     );
     ```
 
-3. When using Java-UDAF, you can perform aggregation either by grouping or by aggregating all results:
+3. Call the Java UDAF. You can aggregate by group, or aggregate over all results:
 
     ```sql
     select simple_demo(id) from test_table group by id;
@@ -347,17 +373,17 @@ public class MedianUDAF {
     +-----------------+
     ```
 
-### Introduction to Java-UDTF Example
+### Java UDWF Example
 
-### Introduction to Java-UDWF Example
+The code structure of a Java UDWF is exactly the same as that of a Java UDAF; you only need to additionally implement the `reset` interface to reset all `state` to the initial value:
 
-1. The implementation is similar to Java UDAF, but requires an additional reset() method to clear the state.
+```java
+void reset(State state)
+```
 
-    ```JAVA
-    void reset(State state)
-    ```
+1. Write and package the Java UDWF code (same as above).
 
-2. Register and create the Java-UDWF function same as UDAF in Doris. For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
+2. Register the Java UDWF in Doris. The registration is the same as for a Java UDAF. For more syntax, see [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE AGGREGATE FUNCTION simple_demo_window(INT) RETURNS INT PROPERTIES (
@@ -368,25 +394,29 @@ public class MedianUDAF {
     );
     ```
 
-3. Java UDWF allows querying computed results within specific window frames. For detailed syntax, refer to [Window Function](../window-function.md)
+3. Call the Java UDWF to compute results within a specified window range. For more syntax, see [Window Functions](../window-function.md):
 
     ```sql
     select id, simple_demo_window(id) over(partition by id order by d1 rows between 1 preceding and 1 following) as res from test_table;
-        +------+------+
-        | id   | res  |
-        +------+------+
-        |    1 |    1 |
-        |    6 |    6 |
-        +------+------+
+    +------+------+
+    | id   | res  |
+    +------+------+
+    |    1 |    1 |
+    |    6 |    6 |
+    +------+------+
     ```
 
+### Java UDTF Example
+
 :::tip
-UDTF is supported starting from Doris version 3.0.
+UDTF is supported starting from Doris 3.0.
 :::
 
-1. Similar to UDFs, UDTFs require users to implement an `evaluate` method. However, the return value of a UDTF must be of the Array type.
+Like UDF, UDTF requires you to implement the `evaluate` method, but the return value of a UDTF must be of Array type.
 
-    ```JAVA
+1. Write the corresponding Java UDTF code and package it into a JAR file:
+
+    ```java
     public class UDTFStringTest {
         public ArrayList<String> evaluate(String value, String separator) {
             if (value == null || separator == null) {
@@ -398,11 +428,10 @@ UDTF is supported starting from Doris version 3.0.
     }
     ```
 
-2. Register and create the Java-UDTF function in Doris. Two UDTF functions will be registered. Table functions in Doris may exhibit different behaviors due to the `_outer` suffix. For more details, refer to [OUTER combinator](../../sql-manual/sql-functions/table-functions/explode-numbers).
-For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
+2. Register the Java UDTF in Doris. Registration creates two UDTFs at the same time: the version with the `_outer` suffix appended to the function name handles the case where the result has zero rows specially. For details, see the [OUTER combinator](../../sql-manual/sql-functions/table-functions/explode-numbers). For more syntax, see [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
-    CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
+    CREATE TABLES FUNCTION java_utdf(string, string) RETURNS array<string> PROPERTIES (
         "file"="file:///pathTo/java-udtf.jar",
         "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
         "always_nullable"="true",
@@ -410,7 +439,7 @@ For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-
     );
     ```
 
-3. When using Java-UDTF, in Doris, UDTFs must be used with [`Lateral View`](../lateral-view.md) to achieve the row-to-column transformation effect:
+3. Call the Java UDTF. Using a UDTF in Doris requires combining it with [Lateral View](../lateral-view.md) to achieve the row-to-column effect:
 
     ```sql
     select id, str, e1 from test_table lateral view java_utdf(str,',') tmp as e1;
@@ -425,23 +454,25 @@ For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-
     +------+-------+------+
     ```
 
-## Best Practices
+## Best Practice: Loading Static Variables
 
-*Loading static variables*
+<!-- Knowledge type: Best practice -->
+<!-- Applicable scenario: UDFs that load large resource files / reuse singleton resources such as connection pools -->
 
-Currently, in Doris, executing a UDF function, e.g., `select udf(col) from table`, will load the udf.jar package for each concurrent instance, and unload the udf.jar package when the instance finish. 
+When a UDF is executed in Doris (for example, `select udf(col) from table`), each concurrent Instance loads the `udf.jar` package once and unloads it when the Instance ends.
 
-If the udf.jar file needs to load a file of several hundred MBs, the memory usage will increase sharply due to concurrency, potentially leading to OOM (Out of Memory).
+This causes two common problems:
 
-Alternatively, if you want to use a connection pool, this approach will not allow you to initialize it only once in the static area.
+- When the `udf.jar` file needs to load several hundred MB of resource files, concurrency causes memory usage to grow rapidly, which easily triggers OOM.
+- When you want to use objects such as a connection pool that need to be initialized only once in a `static` block, this is impossible under the current concurrency model.
 
-Here are two solutions, with the second solution requiring Doris version branch-3.0 or above.
+Two solutions are provided below. Solution 2 requires Doris version branch-3.0 or later.
 
-*Solution 1:*
+### Solution 1: Split Out a Resource JAR
 
-The solution is to split the resource loading code, generate a separate jar package, and have other packages directly reference this resource jar package.
+Split the resource-loading code into a separate JAR, and have other business JARs reference this resource JAR.
 
-Assume the files have been split into `DictLibrary` and `FunctionUdfAR`.
+Suppose the code has been split into two files: `DictLibrary` (resource class) and `FunctionUdf` (business class).
 
 ```java
 public class DictLibrary {
@@ -475,44 +506,54 @@ public class FunctionUdf {
 }
 ```
 
-1. Compile the DictLibrary file separately to generate an independent jar package, resulting in a resource file DictLibrary.jar:
+The steps are as follows:
+
+1. Compile the `DictLibrary` file separately to generate a standalone resource JAR `DictLibrary.jar`:
 
     ```shell
-    javac ./DictLibrary.java
+    javac   ./DictLibrary.java
     jar -cf ./DictLibrary.jar ./DictLibrary.class
     ```
 
-2. Then compile the FunctionUdf file, directly referencing the resource package from the previous step, resulting in the FunctionUdf.jar package:
+2. Compile the `FunctionUdf` file, referencing the resource package from the previous step as a dependency, to obtain the UDF business package `FunctionUdf.jar`:
 
     ```shell
-    javac -cp ./DictLibrary.jar ./FunctionUdf.java
-    jar -cvf ./FunctionUdf.jar ./FunctionUdf.class
+    javac -cp ./DictLibrary.jar  ./FunctionUdf.java
+    jar  -cvf ./FunctionUdf.jar  ./FunctionUdf.class
     ```
 
-3. After the above two steps, you will get two jar packages. To allow the resource jar package to be referenced by all concurrent instances, place it in the deployment path `be/custom_lib`. After the restarting, it will be loaded with the JVM startup. As a result, the resources will be loaded when the service starts and released when the service stops.
+3. To make the resource JAR shared by all concurrent Instances, have it loaded directly by the JVM. Place it in the specified path `be/custom_lib`. After the BE service restarts, it is loaded together with the JVM startup and is released when the service stops.
 
-4. Finally, use the `create function` statement to create a UDF function
+4. Finally, use the `CREATE FUNCTION` statement to create the UDF. Each time an instance is unloaded, only `FunctionUdf.jar` is unloaded:
 
-   ```sql
-   CREATE FUNCTION java_udf_dict(string) RETURNS string PROPERTIES (
-    "file"="file:///pathTo/FunctionUdf.jar",
-    "symbol"="org.apache.doris.udf.FunctionUdf",
-    "always_nullable"="true",
-    "type"="JAVA_UDF"
-   );
-   ```
+    ```sql
+    CREATE FUNCTION java_udf_dict(string) RETURNS string PROPERTIES (
+        "file"="file:///pathTo/FunctionUdf.jar",
+        "symbol"="org.apache.doris.udf.FunctionUdf",
+        "always_nullable"="true",
+        "type"="JAVA_UDF"
+    );
+    ```
 
-*Solution 2:*
+### Solution 2: BE Global JAR Cache
 
-The BE (Backend) globally caches the JAR file and customizes the expiration and eviction time. When creating a function, two additional properties are added:
+The BE caches JARs globally and supports a customizable expiration time. Add the following two property fields when running `CREATE FUNCTION`:
 
-static_load: This defines whether to use the static cache loading method.
-expiration_time: This defines the expiration time of the JAR file, in minutes.
-If the static cache loading method is used, the UDF instance will be cached after the first call and initialization. On subsequent calls to the UDF, the system will first search in the cache. If not found, the initialization process will be triggered.
+| Property | Description | Default Value |
+| --- | --- | --- |
+| `static_load` | Whether to use the static cache loading method | `false` |
+| `expiration_time` | JAR expiration time, in minutes | `360` |
 
-Additionally, a background thread regularly checks the cache. If the function has not been called within the configured expiration time, it will be evicted from the cache. If the function is called, the cache timestamp will be automatically updated.
+How it works:
 
-```sql
+- After static cache loading is enabled, the UDF instance is cached after initialization completes on the first call.
+- On subsequent calls to the UDF, the cache is checked first; if there is a miss, the relevant initialization is executed.
+- A background thread checks periodically. If the UDF has not been called within the configured expiration time, it is cleared from the cache.
+- If the UDF is called again before expiration, the cache timestamp is automatically refreshed.
+
+Example code:
+
+```java
 public class Print extends UDF {
     static Integer val = 0;
     public Integer evaluate() {
@@ -534,7 +575,7 @@ PROPERTIES (
 );
 ```
 
-As we can see, the result keeps incrementing, which proves that the loaded JAR file is not being unloaded and reloaded. Instead, the variables are being re-initialized to 0.
+The execution result keeps incrementing, which shows that the loaded JAR is not unloaded and reloaded (otherwise, the variable would be reinitialized to 0):
 
 ```sql
 mysql [test_query_qa]>select print_12();
@@ -560,5 +601,4 @@ mysql [test_query_qa]>select print_12();
 |          3 |
 +------------+
 1 row in set (0.04 sec)
-
 ```

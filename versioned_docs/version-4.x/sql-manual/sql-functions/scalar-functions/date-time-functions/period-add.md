@@ -20,7 +20,7 @@ This function behaves consistently with MySQL's [PERIOD_ADD function](https://de
 ## Syntax
 
 ```sql
-PERIOD_ADD(`<period>`, `month`)
+PERIOD_ADD(`<period>`, `<month>`)
 ```
 
 ## Parameters

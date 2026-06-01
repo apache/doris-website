@@ -1,0 +1,37 @@
+---
+{
+    "title": "Join Optimization",
+    "language": "en",
+    "description": "Apache Doris Join optimization chapter navigation: covers Colocation Join, adjusting shuffle methods with Distribute Hint, and controlling Join order with Leading Hint."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris provides good out-of-the-box performance in most Join query scenarios. However, in scenarios with strict performance requirements, you can still optimize by arranging table colocation and guiding the optimizer with hints. It is recommended to first use Colocation Join to eliminate the network shuffle for bucketed equi-joins, and then, when the optimizer makes a suboptimal choice, fine-tune the shuffle method and Join order with Distribute Hint and Leading Hint.
+
+## Colocation
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Colocation Join"
+    description="Place data of related tables on the same BE node according to the same bucketing rules, so that equi-joins on bucketing columns can complete locally, completely eliminating cross-node data transfer."
+    link="colocation-join"
+/>
+</div>
+
+## Hint Tuning
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Adjusting Join Shuffle Method with Hints"
+    description="Use the [shuffle] and [broadcast] Distribute Hints to override the optimizer's choice of data distribution for the right table of a Join, and manually tune for specific scenarios."
+    link="tuning/tuning-plan/adjusting-join-shuffle"
+/>
+
+<GettingStartedCard
+    title="Controlling Join Order with Leading Hint"
+    description="When the Join order chosen by the CBO is suboptimal, use Leading Hint to manually specify the multi-table Join order, supporting various shapes such as left-deep tree, right-deep tree, and bushy tree."
+    link="tuning/tuning-plan/reordering-join-with-leading-hint"
+/>
+</div>

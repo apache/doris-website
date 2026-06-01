@@ -1,75 +1,146 @@
 ---
 {
-    "title": "Workload Group Bind Compute Group",
+    "title": "Bind Workload Group to Compute Group: Resource Isolation Across Workloads",
+    "sidebar_label": "Bind Workload Group to Compute Group",
     "language": "en",
-    "description": "Doris supports logical partitioning of BE (Backend) resources within a cluster through the Compute Group feature,"
+    "description": "Learn how to bind a Workload Group to a specific Compute Group in Apache Doris to manage independent resource quotas for different workloads, applicable to both storage-compute separation and storage-compute integrated architectures.",
+    "keywords": ["Workload Group", "Compute Group", "Resource Group", "resource isolation", "multi-tenancy", "resource management", "storage-compute separation"]
 }
 ---
 
-## Background
-Doris supports logical partitioning of BE (Backend) resources within a cluster through the Compute Group feature, forming independent sub-cluster units to achieve physical isolation of computing and storage resources for different business parties. Due to the significant differences in load characteristics among business parties, their configuration requirements for Workload Groups often exhibit obvious distinctions.
+<!-- Knowledge type: Concept + Procedure -->
 
-In early versions, the Workload Groups configured by users would take effect globally across all Compute Groups, forcing different business parties to share the same set of Workload Group configurations. For example, Business A’s high-concurrency queries and Business B’s large-scale data analysis might require completely different resource quotas, but the old architecture could not meet such differentiated needs, limiting the flexibility of resource management.
+## Why Bind Workload Group to Compute Group
 
-To address this, the latest version introduces a mechanism for binding Workload Groups to Compute Groups, allowing each Compute Group to be configured with independent Workload Groups.
+Doris supports logically grouping BE nodes within a cluster through **Compute Group**, forming independent sub-clusters that isolate compute resources across different workloads.
 
-## Compute Group Introduction
-The Compute Group, initially serving as a core concept under the storage-computation separation architecture, is designed to achieve logical partitioning of independent sub-clusters within a single cluster. In the storage-computation integration architecture, the concept with equivalent functionality is called the Resource Group. Both can realize the isolation and grouped management of cluster resources.
+In earlier versions, **a Workload Group took effect globally across all Compute Groups**, forcing different workloads to share the same set of resource quota configurations. For example:
 
-When discussing Doris' computational resource management system, Compute Group and Resource Group can be regarded as logically equivalent concepts, an understanding that significantly reduces comprehension costs. At the specific interface invocation level, however, both still maintain their original independent invocation specifications and usage logic unchanged.
+- Workload A and Workload B each created their own Workload Group, and the sum of their resource quotas already reached 100%.
+- Workload A could not create any additional Workload Group.
+- The two workloads had significantly different Workload Group configuration needs, but the old architecture could not manage them independently per workload.
 
-Therefore, the concept and usage of binding Workload Groups to Compute Groups mentioned in this article are applicable to both the storage-computation integration architecture and the storage-computation separation architecture.
+To address this, the current version introduces the **Bind Workload Group to Compute Group** mechanism, which lets each Compute Group maintain its own independent set of Workload Group configurations.
 
-## Introduction to Principles
-Suppose there are two Compute Groups in the cluster, named Compute Group A and Compute Group B, which serve business party A and business party B respectively, and the two business systems operate completely independently.
+## Relationship Between Compute Group and Resource Group
 
-At the same time, two Workload Groups are configured in the cluster: group_a created by Business A and group_b created by Business B. The sum of the resource configuration quotas of the two groups exactly fills 100% of the cluster's total resources.
+<!-- Knowledge type: Concept definition -->
 
-### Design of Workload Group in Previous Versions
-In previous versions, group_1 and group_2 would take effect on all BE nodes, even if different BEs were already grouped according to Compute Groups.
-In previous designs, once Business A created group_a, no new Workload Groups could be created because the cumulative resource values of all Workload Groups had already reached 100%. Additionally, since group_b was created by Business B—and Business A and Business B are completely independent business parties—Business A could neither access nor modify group_b.
-Even if the permission policies grant both parties access to Workload Groups, due to the complete independence of business logic, there may still be significant differences in their resource configuration requirements (e.g., high-concurrency queries of Business A and batch computing of Business B requiring different resource allocations). This makes it difficult for the old architecture to meet the needs of differentiated management.
+| Architecture type | Corresponding concept | Description |
+|---------|---------|------|
+| Storage-compute separation | Compute Group | Logical partitioning unit for independent sub-clusters |
+| Storage-compute integrated | Resource Group | Functionally equivalent to Compute Group |
 
-![wg_bind_cg](/images/wg_bind_cg1.png)
+When discussing resource management, you can treat the two as logically equivalent concepts. **All descriptions in this document about binding a Workload Group to a Compute Group apply to both storage-compute separation and storage-compute integrated architectures.**
 
-### Current Design
-In the current version, Workload Group supports binding to Compute Group, which means different Compute Groups can have different Workload Group configurations. As shown in the figure below:
+## How It Works
 
-![wg_bind_cg](/images/wg_bind_cg2.png)
+<!-- Knowledge type: Concept -->
+
+### Design in Earlier Versions
+
+Assume the cluster has Compute Group A (serving Workload A) and Compute Group B (serving Workload B), along with two Workload Groups, `group_a` and `group_b`, whose resource quotas sum to 100%.
+
+In earlier versions, `group_a` and `group_b` took effect on **all BE nodes** and were not restricted by Compute Group boundaries, as shown below:
+
+![Earlier version: Workload Group takes effect globally](/images/wg_bind_cg1.png)
+
+This led to:
+
+- After Workload A created `group_a`, the resource quota was full, and no additional Workload Group could be created.
+- The Workload Group configurations of the two workloads affected each other, making differentiated management difficult.
+
+### Design in the Current Version
+
+In the current version, a Workload Group can be bound to a specific Compute Group. **Different Compute Groups have their own independent Workload Group configurations**, as shown below:
+
+![Current version: Workload Group isolated by Compute Group](/images/wg_bind_cg2.png)
 
 ## Usage
 
-:::tip
-Doris provides a default Compute Group mechanism: when a new BE node is added without a specified assignment, it is automatically placed into the default Compute Group. Specifically, in a compute-storage separation architecture, the default Compute Group is named default_compute_group, whereas in an integrated compute-storage architecture, it is named default.
+<!-- Knowledge type: Procedure -->
+
+:::tip Default Compute Group
+Doris has a default Compute Group mechanism: when a new BE node is added without specifying its affiliation, the node is automatically placed into the default Compute Group.
+
+| Architecture type | Default Compute Group name |
+|---------|----------------------|
+| Storage-compute separation | `default_compute_group` |
+| Storage-compute integrated | `default` |
 :::
 
-1. Create a Workload Group named group_a and bind it to the Compute Group named compute_group_a.
-```
-create workload group group_a for compute_group_a properties('cpu_share'='1024')
+:::caution Behavior of the `FOR` clause differs between architectures
+- **Cloud (storage-compute decoupled) mode**: CREATE / ALTER / DROP WORKLOAD GROUP **must** explicitly include the `FOR <compute_group>` clause. Omitting it raises: `Must specify compute group via 'FOR <compute_group>' in cloud mode.`
+- **Non-cloud (storage-compute coupled) mode**: The `FOR <compute_group>` clause is optional. The value here actually refers to a resource group (Tag) rather than a real compute group — the grammar is shared with cloud mode purely for consistency. When omitted, it defaults to the default resource group (`default`).
+:::
+
+### Create a Workload Group
+
+**Bind to a specific Compute Group:**
+
+```sql
+CREATE WORKLOAD GROUP group_a FOR compute_group_a PROPERTIES ('cpu_share'='1024');
 ```
 
-2. If the Compute Group is not specified during creation, the Workload Group will be bound to the default Compute Group.
-```
-create workload group group_a properties('cpu_share'='1024')
+**Without specifying a Compute Group (non-cloud mode only, binds to the default resource group):**
+
+```sql
+CREATE WORKLOAD GROUP group_a PROPERTIES ('cpu_share'='1024');
 ```
 
-3. Drop the Workload Group named group_a from compute_group_a.
-```
-create workload group group_a for compute_group_a properties('cpu_share'='1024')
+### Drop a Workload Group
+
+**Drop from a specific Compute Group:**
+
+```sql
+DROP WORKLOAD GROUP group_a FOR compute_group_a;
 ```
 
-4. If the Compute Group is not specified when deleting a Workload Group, the system will attempt to drop the Workload Group from the Compute Group named default.
-```
-create workload group group_a properties('cpu_share'='1024')
+**Without specifying a Compute Group (non-cloud mode only, drops from the default resource group):**
+
+```sql
+DROP WORKLOAD GROUP group_a;
 ```
 
-5. Similarly, when modifying a Workload Group, the Compute Group must be specified in the ALTER statement. If the Compute Group is not specified, the system will attempt to modify the Workload Group under the default Compute Group. Note that the ALTER statement only modifies the properties of the Workload Group and cannot change its binding relationship with the Compute Group.
-```
-alter workload group group_a for compute_group_a properties('cpu_share'='2048')
+### Alter Workload Group Properties
+
+**Alter the properties of a Workload Group in a specific Compute Group:**
+
+```sql
+ALTER WORKLOAD GROUP group_a FOR compute_group_a PROPERTIES ('cpu_share'='2048');
 ```
 
-## NOTE
-1. Modifying the binding relationship between a Workload Group and a Compute Group is not currently supported. A Workload Group belongs to a fixed Compute Group upon creation and cannot be moved between Compute Groups.
-2. When upgrading Doris from an older version to a newer one, the system will automatically create new Workload Groups with identical names (but different IDs) for each Compute Group based on the old Workload Groups. For example, if the old-version cluster contains two Compute Groups and there is a Workload Group named group_a, after the upgrade, Doris will create a new group_a Workload Group for each of these two Compute Groups. These new Workload Groups will have different IDs from the original group_a, and the original group_a that was not associated with any Compute Group will be automatically dropped by the system.
-3. The authentication management of Workload Groups remains unchanged. The authentication of Workload Groups is still achieved by associating with their names.
-4. In Doris, there is a default Workload Group named normal. Whenever a new Compute Group is created, Doris automatically generates a normal Workload Group for it. Conversely, when a Compute Group is dropped, its corresponding normal Workload Group is automatically removed. This means that the lifecycle management of the normal Workload Group is fully automated by Doris and does not require manual intervention.
+**Without specifying a Compute Group (non-cloud mode only, alters the Workload Group in the default resource group):**
+
+```sql
+ALTER WORKLOAD GROUP group_a PROPERTIES ('cpu_share'='2048');
+```
+
+:::note
+The `ALTER` statement is used only to modify the properties of a Workload Group. **It cannot modify the binding relationship between a Workload Group and a Compute Group.**
+:::
+
+### Referencing a Workload Group from a Workload Policy
+
+In the `workload_group` property of [CREATE WORKLOAD POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY) / [ALTER WORKLOAD POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-POLICY), because a workload group belongs to a compute group, the value must follow these rules:
+
+- **Cloud (storage-compute decoupled) mode**: The fully qualified form `<compute_group>.<workload_group>` is required, for example:
+
+    ```sql
+    CREATE WORKLOAD POLICY p1 CONDITIONS(query_time > 3000) ACTIONS(cancel_query)
+    PROPERTIES('workload_group'='compute_group_a.wg1');
+    ```
+
+- **Non-cloud (storage-compute coupled) mode**: Both `<workload_group>` (default resource group) and `<resource_group>.<workload_group>` are accepted.
+
+## Notes
+
+<!-- Knowledge type: Constraints and limitations -->
+
+1. **The binding relationship cannot be modified**: A Workload Group is assigned to a fixed Compute Group at creation time and cannot be migrated between Compute Groups.
+
+2. **Upgrade behavior**: When upgrading from an earlier version to the current version, the system automatically creates a new Workload Group with the same name but a different ID for each Compute Group, based on existing Workload Groups. For example, if the earlier version had two Compute Groups and a `group_a`, after the upgrade each Compute Group gets its own new Workload Group named `group_a`, and the original `group_a` that did not belong to any Compute Group is automatically deleted.
+
+3. **Privilege management is unchanged**: Privilege checks for Workload Groups are still performed by associating with the Workload Group name, and the management approach is the same as in earlier versions.
+
+4. **Lifecycle of the `normal` Workload Group**: Doris has a default Workload Group named `normal`. Whenever a new Compute Group is created, the system automatically creates a corresponding `normal` Workload Group for it; when a Compute Group is dropped, the associated `normal` Workload Group is automatically dropped as well. The lifecycle of the `normal` Workload Group is fully managed by the system and requires no manual operation.

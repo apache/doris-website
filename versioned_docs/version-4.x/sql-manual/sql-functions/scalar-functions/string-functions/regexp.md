@@ -2,7 +2,7 @@
 {
     "title": "REGEXP",
     "language": "en",
-    "description": "Performs a regular expression match on the string str, returning true if the match succeeds, otherwise false."
+    "description": "~ Performs a regular expression match on the string str, returning true if the match succeeds, otherwise false."
 }
 ---
 
@@ -13,7 +13,14 @@ It should be noted that when handling character set matching, Utf-8 standard cha
 
 If the `pattern` is not allowed regexp regular,throw error;
 
-Support character match classes : https://github.com/google/re2/wiki/Syntax
+Default supported character match classes : https://github.com/google/re2/wiki/Syntax
+
+Doris supports enabling more advanced regular expression features, such as look-around zero-width assertions, through the session variable `enable_extended_regex` (default is `false`).
+
+Supported character matching types when the session variable `enable_extended_regex` is set to `true`: https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
+
+Note: After enabling this variable, performance will only be affected when the regular expression contains advanced syntax (such as look-around). Therefore, for better performance, it is recommended to optimize your regular expressions as much as possible and avoid using such zero-width assertions.
+
 
 ## Syntax
 
@@ -45,6 +52,8 @@ The REGEXP function returns a BOOLEAN value. If the string <str> matches the reg
 **Pattern Modifiers**:
 
 You can override the default behavior by prefixing the `pattern` with `(?flags)`. Multiple modifiers can be combined, e.g., `(?im)`; a `-` prefix disables the corresponding option, e.g., `(?-s)`.
+
+Pattern modifiers only take effect when using the default regex engine. If `enable_extended_regex=true` is enabled while using zero-width assertions (e.g., `(?<=...)`, `(?=...)`), the query will be handled by the Boost.Regex engine, and modifier behavior may not work as expected. It is recommended not to mix them.
 
 | Flag    | Meaning                                                                      |
 | ------- | ---------------------------------------------------------------------------- |
@@ -219,6 +228,22 @@ SELECT REGEXP('Hello, World!', '([a-z');
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INTERNAL_ERROR]Invalid regex expression: ([a-z
 ```
 
+Advanced regexp
+```sql
+SELECT REGEXP('Apache/Doris', '([a-zA-Z_+-]+(?:\/[a-zA-Z_0-9+-]+)*)(?=s|$)');
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INTERNAL_ERROR]Invalid regex expression: ([a-zA-Z_+-]+(?:/[a-zA-Z_0-9+-]+)*)(?=s|$). Error: invalid perl operator: (?=
+
+SET enable_extended_regex = true;
+SELECT REGEXP('Apache/Doris', '([a-zA-Z_+-]+(?:\/[a-zA-Z_0-9+-]+)*)(?=s|$)');
+```
+```text
++-----------------------------------------------------------------------+
+| REGEXP('Apache/Doris', '([a-zA-Z_+-]+(?:\/[a-zA-Z_0-9+-]+)*)(?=s|$)') |
++-----------------------------------------------------------------------+
+|                                                                     1 |
++-----------------------------------------------------------------------+
+```
+
 Pattern Modifiers
 
 Case-insensitive matching: `(?i)` makes the match ignore case
@@ -235,7 +260,7 @@ SELECT REGEXP('Hello World', 'hello') AS case_sensitive, REGEXP('Hello World', '
 +----------------+------------------+
 ```
 
-`.` matches newline by default; with `(?-s)`, `.` does not match newline
+`.` matches newline by default; use `(?-s)` to prevent `.` from matching newline
 
 ```sql
 SELECT REGEXP('foo\nbar', '^.+$') AS dot_match_nl, REGEXP('foo\nbar', '(?-s)^.+$') AS dot_not_match_nl;
@@ -266,8 +291,7 @@ SELECT REGEXP('foo\nbar', '^bar') AS single_line, REGEXP('foo\nbar', '(?m)^bar')
 Greedy vs non-greedy: `(?U)` makes quantifiers match as little as possible
 
 ```sql
-SELECT REGEXP_EXTRACT('aXbXc', '(a.*X)', 1) AS greedy,
-       REGEXP_EXTRACT('aXbXc', '(?U)(a.*X)', 1) AS non_greedy;
+SELECT REGEXP_EXTRACT('aXbXc', '(a.*X)', 1) AS greedy, REGEXP_EXTRACT('aXbXc', '(?U)(a.*X)', 1) AS non_greedy;
 ```
 
 ```text

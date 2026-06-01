@@ -1,0 +1,87 @@
+# Ownership hints for documentation governance.
+#
+# These are routing hints for reports, AI Review context, and future CODEOWNERS
+# expansion. They do not replace GitHub CODEOWNERS.
+
+schema_version: 1
+
+default_owner: "@apache/doris-website-maintainers"
+
+owners:
+  - name: sql-functions
+    owner: "@zclllyybb"
+    paths:
+      - "versioned_docs/version-*/sql-manual/sql-functions/**"
+      - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/sql-manual/sql-functions/**"
+    doc_types:
+      - sql_function
+
+  - name: sql-statements
+    owner: "@apache/doris-sql-reviewers"
+    paths:
+      - "versioned_docs/version-*/sql-manual/sql-statements/**"
+      - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/sql-manual/sql-statements/**"
+
+  - name: install-and-deploy
+    owner: "@apache/doris-website-maintainers"
+    paths:
+      - "versioned_docs/version-*/install/**"
+      - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/install/**"
+
+  - name: lakehouse-and-ecosystem
+    owner: "@apache/doris-website-maintainers"
+    paths:
+      - "versioned_docs/version-*/lakehouse/**"
+      - "versioned_docs/version-*/ecosystem/**"
+      - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/lakehouse/**"
+      - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/ecosystem/**"
+
+  - name: data-operate
+    owner: "@apache/doris-website-maintainers"
+    paths:
+      - "versioned_docs/version-*/data-operate/**"
+      - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/data-operate/**"
+
+  - name: admin-and-observability
+    owner: "@apache/doris-website-maintainers"
+    paths:
+      - "versioned_docs/version-*/admin-manual/**"
+      - "versioned_docs/version-*/observability/**"
+      - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/admin-manual/**"
+      - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/observability/**"
+
+  - name: ai-docs
+    owner: "@apache/doris-website-maintainers"
+    paths:
+      - "versioned_docs/version-*/ai/**"
+      - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/ai/**"
+
+  - name: website-framework
+    owner: "@apache/doris-website-maintainers"
+    paths:
+      - "docusaurus.config.js"
+      - "sidebarsCommunity.json"
+      - "sidebarsReleases.json"
+      - "versioned_sidebars/**"
+      - "src/**"
+      - "static/**"
+      - "config/**"
+      - ".github/workflows/**"
+
+  - name: community-docs
+    owner: "@apache/doris-website-maintainers"
+    paths:
+      - "community/**"
+      - "i18n/zh-CN/docusaurus-plugin-content-docs-community/**"
+
+  - name: release-notes
+    owner: "@apache/doris-release-managers"
+    paths:
+      - "releasenotes/**"
+      - "i18n/zh-CN/docusaurus-plugin-content-docs-releases/**"
+
+  - name: blog
+    owner: "@apache/doris-website-maintainers"
+    paths:
+      - "blog/**"
+

@@ -10,7 +10,7 @@
 Calculates the difference in months between two periods.
 
 where `<period>` is an integer, the last two digits represent the month (01-12), and the preceding digits represent the year.
-The function returns the absolute result of period_1 - period_2.
+The function returns the signed result of period_1 - period_2.
 
 If the year part is less than 100, it will be converted to a four-digit year format according to [certain rules](#parameters).
 

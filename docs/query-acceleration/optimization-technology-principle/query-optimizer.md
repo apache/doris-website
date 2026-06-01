@@ -1,53 +1,125 @@
 ---
 {
-    "title": "Query Optimizers",
+    "title": "Query Optimizer Introduction",
     "language": "en",
-    "description": "In the current information technology landscape, query optimizers face multiple challenges: on the one hand,"
+    "description": "Learn about the development background, core advantages, and working principles of the Doris query optimizer (Nereids), and master the RBO and CBO optimization process along with common tuning session variables.",
+    "keywords": ["Doris query optimizer", "Nereids", "CBO", "RBO", "Cascades", "query optimization", "execution plan"]
 }
 ---
 
-In the current information technology landscape, query optimizers face multiple challenges: on the one hand, they need to handle increasingly complex query statements and diverse query scenarios from users; on the other hand, users have increasingly strict demands for query real-time performance, desiring instant access to required results. Furthermore, to address emerging new requirements, query optimizers must possess the capabilities of rapid iteration and flexible adaptation.
+<!-- Knowledge type: Concept introduction + Principle explanation -->
+<!-- Applicable scenario: Understand the design goals, architecture, and workflow of the new-generation Doris query optimizer -->
 
-Based on this background, Doris embarked on the development of a brand-new query optimizer. Leveraging a modern optimizer architecture, this optimizer aims to more efficiently tackle query requests in the current Doris scenarios while providing exceptional scalability, laying a solid foundation for potentially more complex future demands.
+## One-sentence definition
 
-## Advantages of the Optimizer
+The Doris query optimizer (Nereids) is a modern query optimizer built on the Cascades framework. It combines RBO (rule-based optimization) and CBO (cost-based optimization) to generate efficient execution plans for complex queries.
+
+## Reading overview
+
+Before reading this article, you are recommended to first understand the following:
+
+- The basic role of a query optimizer in a database system
+- The basic concepts of a SQL execution plan
+- The difference between rule-based optimization (RBO) and cost-based optimization (CBO)
+
+This article covers the following topics in order:
+
+- The development background of the query optimizer
+- The core advantages of the Doris query optimizer
+- The overall working principle of the optimizer
+- Common tuning session variables
+
+## Development background
+
+<!-- Knowledge type: Background explanation -->
+
+The current query optimizer faces three categories of challenges:
+
+| Challenge | Specific manifestation |
+| :--- | :--- |
+| High query complexity | User queries are becoming increasingly complex, and query scenarios are becoming increasingly diverse |
+| Strict real-time requirements | Users expect to obtain query results immediately |
+| Fast iteration speed | The optimizer needs to quickly adapt to constantly emerging new requirements |
+
+Based on this background, Doris launched the development of a brand-new query optimizer. Built on a modern optimizer architecture, this optimizer aims to handle query requests in Doris scenarios more efficiently and to provide a solid foundation for extending to more complex requirements in the future.
+
+## Advantages of the Doris query optimizer
+
+<!-- Knowledge type: Feature introduction -->
+<!-- Applicable scenario: Evaluate whether to enable Nereids, compare differences between the new and old optimizers -->
+
+The Doris query optimizer has significant advantages over the legacy optimizer in three dimensions: smarter, more stable, and more flexible.
 
 ### Smarter
 
-The optimizer clearly presents each optimization point of RBO (Rule-Based Optimization) and CBO (Cost-Based Optimization) in the form of rules. For each rule, the optimizer provides a set of patterns that describe the shape of the query plan, enabling precise matching of optimizable query plans. Therefore, the optimizer can better support more complex query statements such as nested multi-layer subqueries.
+- The optimizer presents each RBO and CBO optimization point clearly in the form of a "rule".
+- Each rule provides a set of patterns that describe the shape of a query plan, allowing the optimizer to precisely match query plans that can be optimized.
+- As a result, the optimizer can better support complex query statements such as multi-level subquery nesting.
 
-Meanwhile, the optimizer's CBO is based on the advanced Cascades framework, fully utilizing rich statistical data, data characteristic information, and a meticulously tuned cost model. This empowers the optimizer to handle complex queries like multi-table joins with ease and proficiency.
+The CBO part is based on the advanced Cascades framework and fully uses the following three categories of information:
 
-### More Stable
+1. Rich data statistics
+2. Data feature information
+3. A carefully tuned cost model
 
-All optimization rules of the optimizer are executed on the logical execution plan tree. After parsing the query syntax and semantics, the query is transformed into a tree structure. Compared to the old optimizer, the new optimizer's internal data structure is more reasonable and unified.
+With this information, the optimizer can handle complex queries such as multi-table joins with ease.
 
-Taking subquery processing as an example, the new optimizer, based on its new data structure, avoids the separate handling of subqueries by numerous rules in the old optimizer, thereby reducing the likelihood of logical errors in optimization rules.
+### More stable
 
-### More Flexible
+- All optimization rules are completed on the logical execution plan tree.
+- After the query syntax and semantics are parsed, the query is converted into a tree structure.
+- Compared with the legacy optimizer, the internal data structures of the new optimizer are more reasonable and unified.
 
-The optimizer's architecture is reasonably and modernly designed, making it very convenient to extend optimization rules and processing stages. Therefore, we can swiftly add new functionalities to meet evolving new requirements.
+Take subquery handling as an example: the new optimizer is based on the new data structure and avoids the situation in the legacy optimizer where many rules handle subqueries individually. This reduces the possibility of logical errors in optimization rules.
 
-## Principles of the Optimizer
+### More flexible
 
-![Principles of the Optimizer](/images/cost-based-optimizer.jpg)
+The optimizer architecture is well-designed and modern, making it convenient to extend optimization rules and processing stages. New features can be quickly added to meet ever-changing requirements.
 
-The execution process of the optimizer is divided into the following steps:
+## Working principle of the optimizer
 
-1. **Syntax Analysis**: The optimizer attempts to convert the SQL text into an Abstract Syntax Tree (AST). If the SQL text is valid, it proceeds to the next steps; if invalid, it reports an error and terminates execution.
+<!-- Knowledge type: Process explanation -->
 
-2. **Semantic Analysis**: The optimizer performs semantic analysis on the elements in the AST. This step checks whether tables, columns, functions, etc., in the SQL query exist and whether their usage complies with syntax and semantic rules. If the semantics are valid, execution continues; if invalid, it reports an error and terminates execution.
+### Overall workflow
 
-3. **Rewrite Query Plan (RBO):** After syntax and semantic analysis, the optimizer performs Rule-Based Optimization (RBO). This step rewrites the query plan through a series of predefined rules to deterministically optimize execution speed. Common optimization techniques include column pruning, predicate pushdown, partition pruning, etc.
+![Optimizer working principle](/images/cost-based-optimizer.jpg)
 
-4. **Optimize Query Plan (CBO)**: Finally, the optimizer performs Cost-Based Optimization (CBO). In this step, the optimizer enumerates equivalent plan sets in the search space and evaluates their execution costs. By comparing the execution costs of different plans, the optimizer selects the plan with the lowest cost as the final execution plan. This step aims to ensure that queries are executed in the most efficient manner, thereby providing optimal performance.
+The execution flow of the optimizer can be roughly divided into the following four steps:
 
-## Session Variables
+| Step | Stage | Description |
+| :--- | :--- | :--- |
+| 1 | Syntax analysis | Convert the SQL text into an abstract syntax tree (AST). If the SQL is valid, continue; otherwise, report an error and terminate |
+| 2 | Semantic analysis | Check the existence of tables, columns, and functions in the AST and whether their usage complies with syntax and semantic rules. If valid, continue; otherwise, report an error and terminate |
+| 3 | Rewrite query plan (RBO) | Rewrite the query plan through predefined rules. Common techniques include column pruning, predicate pushdown, and partition pruning |
+| 4 | Optimize query plan (CBO) | Enumerate the set of equivalent plans within the search space, evaluate the execution cost of each plan, and choose the plan with the lowest cost as the final execution plan |
 
-**1. Set Planning Timeout** **`nereids_timeout_second`**
+The goals of each step are as follows:
 
-- This variable is used to set the maximum allowed time for query planning. When the planning time exceeds this set value, query planning will be terminated, and an error message will be returned. During the process of planning query statements, the system obtains read locks for all tables involved in the SQL, primarily to maintain cluster stability and prevent excessive resource occupation and lock conflicts caused by excessively long planning times.
+- **Syntax analysis**: Ensure that the SQL text can be parsed into a valid AST.
+- **Semantic analysis**: Ensure that the objects referenced in the AST exist and are used legally.
+- **RBO rewriting**: Optimize execution speed through deterministic rules.
+- **CBO optimization**: Choose the optimal execution plan based on the cost model to ensure that the query executes in the most efficient way.
 
-- Default value: 30s
+## Common session variables
 
-- Applicable scenarios: When queries involve a large number of external tables or particularly complex query statements, this value can be appropriately increased to ensure that queries can proceed normally.
+<!-- Knowledge type: Parameter configuration -->
+<!-- Applicable scenario: Tune the timeout for the query planning stage, resolve planning timeout errors -->
+
+### nereids_timeout_second
+
+| Item | Content |
+| :--- | :--- |
+| Purpose | Sets the maximum allowed time for query planning. When the planning time exceeds this value, planning is terminated and an error message is returned |
+| Default value | 30s |
+| Applicable scenario | When a query involves a large number of external tables, or when the query statement is particularly complex, increase this value appropriately to ensure that the query can proceed normally |
+
+**Design purpose**: During the planning of a query statement, the system acquires read locks on all tables involved in the SQL. The main purposes of setting a timeout mechanism are:
+
+- To maintain cluster stability
+- To prevent excessive resource consumption caused by overly long planning times
+- To avoid lock conflicts
+
+**Tuning suggestions**:
+
+- When a planning timeout error occurs, first check whether the SQL is too complex or whether too many tables are involved.
+- If the scenario is confirmed to be reasonable, increase this value with `SET nereids_timeout_second = <seconds>;`.

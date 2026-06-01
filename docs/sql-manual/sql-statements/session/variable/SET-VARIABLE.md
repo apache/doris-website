@@ -25,7 +25,7 @@ variable_assignment
 
 ## Required Parameters
 **1. `<user_var_name>`**
-> Specifies the variable of user level, for example : @@your_variable_name, variable name starts with `@@`
+> Specifies the variable of user level, for example : @your_variable_name, variable name starts with `@`
 
 **2. `<system_var_name>`**
 > Specifies the variable of system level, for example : exec_mem_limit and so on
@@ -65,7 +65,7 @@ Users executing this SQL command must have at least the following privileges:
 - Set a user variable
 
    ```
-   SET @@your_variable_name = your_variable_value;
+   SET @your_variable_name = your_variable_value;
    ```
 
 

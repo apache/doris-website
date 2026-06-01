@@ -2,13 +2,13 @@
 {
     "title": "ARRAYS_OVERLAP",
     "language": "en",
-    "description": "ARRAYSOVERLAP is used to ◊ whether two arrays have at least one common element. Returns true if they do, otherwise returns false."
+    "description": "ARRAYSOVERLAP is used to determine whether two arrays have at least one common element. Returns true if they do, otherwise returns false."
 }
 ---
 
 ## Function
 
-`ARRAYS_OVERLAP` is used to ◊ whether two arrays have at least one common element. Returns `true` if they do, otherwise returns `false`.
+`ARRAYS_OVERLAP` is used to determine whether two arrays have at least one common element. Returns `true` if they do, otherwise returns `false`.
 
 ## Syntax
 
@@ -64,8 +64,8 @@ ARRAYS_OVERLAP(arr1, arr2)
 2. Invalid parameter type: when unsupported types are passed in, returns `INVALID_ARGUMENT`
 
     ```SQL
-    -- [INVALID_ARGUMENT] execute failed, unsupported types for function arrays_overlap
     SELECT ARRAYS_OVERLAP(ARRAY(ARRAY('hello', 'aloha'), ARRAY('hi', 'hey')), ARRAY(ARRAY('hello', 'hi', 'hey'), ARRAY('aloha', 'hi')));
+    ERROR 1105 (HY000): errCode = 2, detailMessage = arrays_overlap does not support types: ARRAY<ARRAY<TEXT>>
     ```
 
 3. If the input `ARRAY` is `NULL`, the return value is `NULL`

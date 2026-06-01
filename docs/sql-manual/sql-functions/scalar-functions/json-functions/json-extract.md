@@ -38,6 +38,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     * `*` represents a wildcard, where `$.*` represents all members of the root object, and `$[*]` represents all elements of the array.
     * `**` is used in combination with '$', '$**' represents all paths (including multi-level subpaths).
 - If `<path>` contains wildcards (`*`), the matching results will be returned in array form.
+- `<path>` does not auto-broadcast over arrays. If `<json_object>` is a JSON array and `<path>` is `$.k`, the result is NULL — `$.k` only traverses object members. To target an element by index, use `$[i].k`; to extract a field from every element of an array, use the wildcard syntax `$[*].k`, which is supported from Doris 4.0 onward.
 
 ## Examples
 1. General parameters
@@ -91,7 +92,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```
     ```
     +----------------------------------------------------------------------+
-    | JSON_EXTRACT(json_array("abc", 123, cast(now() as string)), '$.[2]') |
+    | JSON_EXTRACT(json_array("abc", 123, cast(now() as string)), '$[2]') |
     +----------------------------------------------------------------------+
     | "2025-07-16 18:35:25"                                                |
     +----------------------------------------------------------------------+
@@ -185,3 +186,27 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     | null |    0 |
     +------+------+
     ```
+
+11. Extracting a field from each element of a JSON array (Doris 4.0+)
+    ```sql
+    select json_extract('[{"k":1},{"k":2},{"k":3}]', '$.k');
+    ```
+    ```
+    +--------------------------------------------------+
+    | json_extract('[{"k":1},{"k":2},{"k":3}]', '$.k') |
+    +--------------------------------------------------+
+    | NULL                                             |
+    +--------------------------------------------------+
+    ```
+    > `$.k` does not traverse arrays; it only descends into object members.
+    ```sql
+    select json_extract('[{"k":1},{"k":2},{"k":3}]', '$[*].k');
+    ```
+    ```
+    +-----------------------------------------------------+
+    | json_extract('[{"k":1},{"k":2},{"k":3}]', '$[*].k') |
+    +-----------------------------------------------------+
+    | [1,2,3]                                             |
+    +-----------------------------------------------------+
+    ```
+    > Use `$[*].k` to extract the field from every element of the array.

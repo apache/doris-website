@@ -369,6 +369,24 @@ curl --location-trusted -u root: -T gh_2022-11-07-3.json \
 
 导入完成后可用 `SELECT count(*)` 或 `SELECT * ... LIMIT 1` 验证。为提升高并发导入性能，推荐建表选择 RANDOM 分桶并开启 Group Commit（参见官方“Group Commit”文档）。
 
+## 输出
+
+从 VARIANT 列读出的 JSON 文本与写入时的 JSON 文本并非按字节完全一致：JSON object 内的 key 会按字典序输出，与输入 JSON 中的顺序无关。
+
+```sql
+INSERT INTO variant_tbl VALUES
+  (2, '{ "b": 2, "a": 1, "c": { "y": 20, "x": 10 } }');
+
+SELECT v FROM variant_tbl WHERE k = 2;
++-----------------------------------+
+| v                                 |
++-----------------------------------+
+| {"a":1,"b":2,"c":{"x":10,"y":20}} |
++-----------------------------------+
+```
+
+排序在每一层都会生效——顶层 key 输出为 `a`、`b`、`c`，嵌套 object 内 key 输出为 `x`、`y`。
+
 ## 支持的运算与 CAST 规则
 
 - VARIANT 本身不支持与其他类型直接比较/运算，两个 VARIANT 之间也不支持直接比较。
@@ -578,3 +596,5 @@ DESCRIBE ${table_name} PARTITION ($partition_name);
    - 没有区别，两者等价。
 2. 为什么我的查询/索引没有生效？
    - 请检查是否对路径做了正确的 CAST、是否因为类型冲突被提升为 JSONB、或是否误以为给 VARIANT“整体”建的索引可用于子列。
+3. 为什么 DECIMAL 写入 VARIANT 列时出现小数位/精度丢失？
+   - 写入 VARIANT 列时，在推断子列类型时不会推断为 DECIMAL，数值会以 DOUBLE 存储，因而可能丢失末位小数。即使通过 Schema Template 将子路径显式声明为 DECIMAL（例如 `pm25 VARIANT<'xxx': DECIMAL(6, 2)>`），写入路径也会先解析为 DOUBLE 再转换为 DECIMAL，仍不能完全保证精度。如果在 JSON 中将该字段写成字符串形式（例如 `'{"num": "12.345"}'`），并配合 Schema Template 声明为对应的 DECIMAL（例如 `DECIMAL(9, 3)`），写入时会直接由字符串解析为 DECIMAL，可以保证精度。

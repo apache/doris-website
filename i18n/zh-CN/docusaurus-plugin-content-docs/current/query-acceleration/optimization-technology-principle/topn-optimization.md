@@ -1,52 +1,86 @@
 ---
 {
-    "title": "TOPN 查询优化",
+    "title": "TOPN 查询优化：ORDER BY LIMIT 加速原理与配置",
     "language": "zh-CN",
-    "description": "TOPN 查询是指下面这种 ORDER BY LIMIT 查询，在日志检索等明细查询场景中很常见，Doris 会自动对这种类型的查询进行优化。"
+    "description": "Doris 如何加速 ORDER BY LIMIT 查询？本文介绍 TOPN 优化原理、适用限制、Session 参数与执行计划检查方法。",
+    "keywords": ["Doris TOPN 优化", "ORDER BY LIMIT 加速", "topn_opt_limit_threshold", "两阶段读取", "RuntimePredicate", "Zonemap 过滤"]
 }
 ---
 
-TOPN 查询是指下面这种 ORDER BY LIMIT 查询，在日志检索等明细查询场景中很常见，Doris 会自动对这种类型的查询进行优化。
+<!-- 知识类型：概念 + 配置 + 排查 -->
+<!-- 适用场景：日志检索、明细查询、排序分页 -->
+
+## 一句话定义
+
+TOPN 查询优化是 Doris 针对 `ORDER BY ... LIMIT n` 类查询的自动加速能力，通过动态过滤、范围裁剪和延迟物化大幅减少扫描与排序开销。
+
+## 阅读前 Checklist
+
+- [ ] 我的 SQL 形如 `SELECT ... FROM t WHERE ... ORDER BY c1, c2 ... LIMIT n`
+- [ ] 表类型是 Duplicate 表或 Unique MOW 表（非 MOR）
+- [ ] `n` 不大（小于 `topn_opt_limit_threshold`，默认 1024）
+- [ ] 期望通过 EXPLAIN 与 Profile 验证优化是否生效
+
+## 典型 SQL 形态
+
+TOPN 查询常见于日志检索等明细场景，Doris 会自动识别并优化：
 
 ```sql
-SELECT * FROM tablex WHERE xxx ORDER BY c1,c2 ... LIMIT n
+SELECT * FROM tablex WHERE xxx ORDER BY c1, c2 ... LIMIT n
 ```
 
-## TOPN 查询优化的优化点
+<!-- 知识类型：原理 -->
+<!-- 适用场景：理解 Doris 内部如何加速 ORDER BY LIMIT -->
 
-1. 执行过程中动态对排序列构建范围过滤条件（比如 c1 >= 10000），读数据时自动带上前面的条件，利用 Zonemap 索引过滤掉一些数据甚至文件。
+## 三大优化点
 
-2. 如果排序字段 c1,c2 正好是 Table Key 的前缀，则更进一步优化，读数据的时候只用读数据文件的头部或者尾部 n 行。
+| 编号 | 优化点 | 原理简述 | 关键收益 |
+| :--- | :--- | :--- | :--- |
+| 优化 1 | 动态范围过滤（RuntimePredicate） | 排序过程中动态构建排序列范围条件（如 `c1 >= 10000`），下推到扫描 | 利用 Zonemap 索引过滤大量数据甚至整段文件 |
+| 优化 2 | Key 前缀短路读取 | 排序字段 `c1, c2` 正好是 Table Key 的前缀时，仅读取数据文件的头部或尾部 n 行 | 大幅减少磁盘读取 |
+| 优化 3 | 两阶段延迟物化 | 第一阶段只读排序列完成排序，得到行号后第二阶段再读其它列 | 显著减少需要读取和排序的列数 |
 
-3. SELECT * 延迟物化，读数据和排序过程中只读排序列不读其它列，得到符合条件的行号后，再去读那 n 行需要的全部列数据，大幅减少读取和排序的列。
+<!-- 知识类型：限制 -->
+<!-- 适用场景：判断当前查询能否享受 TOPN 优化 -->
 
+## 适用限制
 
-## TOPN 查询优化的限制
+1. **表类型限制**：仅支持 Duplicate 表和 Unique MOW 表。Unique MOR 表使用此优化可能导致结果错误。
+2. **n 值限制**：`n` 过大时优化的内存消耗会显著上升。超过 Session 变量 `topn_opt_limit_threshold` 的 `n` 不会启用优化。
 
-1. 只能用于 Duplicate 表和 Unique MOW 表，因为 MOR 表用这个优化可能有结果错误。
+<!-- 知识类型：配置 -->
+<!-- 适用场景：调优或关闭 TOPN 优化 -->
 
-2. 对于过大的 `n`，优化内存消耗会很大，所以超过 `topn_opt_limit_threshold` Session 变量的 `n` 不会使用优化。
+## 配置参数
 
+以下三个参数均为 Session Variable，可针对单条 SQL 设置或全局设置。
 
-## 配置参数和查询分析
+| 参数 | 默认值 | 作用 | 调优建议 |
+| :--- | :--- | :--- | :--- |
+| `topn_opt_limit_threshold` | 1024 | LIMIT n 小于该值才启用 TOPN 优化 | 设为 `0` 可关闭整个 TOPN 优化 |
+| `enable_two_phase_read_opt` | true | 是否启用优化 3（两阶段延迟物化） | 设为 `false` 可单独关闭优化 3 |
+| `topn_filter_ratio` | 0.5 | LIMIT n 与表总数据的比率阈值 | 当 LIMIT 数量超过表数据一半时不再生成 filter |
 
-下面两个参数都是 Session Variable，可以针对某个 SQL 或者全局设置。
+<!-- 知识类型：操作 -->
+<!-- 适用场景：验证 TOPN 优化是否启用 -->
 
-1. `topn_opt_limit_threshold`，LIMIT n 小于这个值才会有优化，默认值 1024，将它设置为 0 可以关闭 TOPN 查询优化。
+## 检查 TOPN 优化是否启用
 
-2. `enable_two_phase_read_opt`，是否开启优化 3，默认为 true，可以调为 false 关闭这个优化。
+**目的**：通过执行计划判断当前 SQL 启用了哪些优化点。
 
-3. `topn_filter_ratio`，LIMIT n 和表总数据的比率，默认值 0.5，表示 LIMIT 数量多于表中数据的一半则不生成 filter。
+**命令**：
 
-### 检查 TOPN 查询优化是否启用
+```sql
+EXPLAIN <your_sql>;
+```
 
-explain SQL 拿到 query plan 可以确认这个 sql 是否启用 TOPN 查询优化，以下面的为例：
+**说明**：在 Query Plan 中关注以下标记：
 
-- TOPN OPT 代表有优化 1
+- `TOPN OPT` —— 启用了 **优化 1**（动态范围过滤）
+- `VOlapScanNode` 下出现 `SORT LIMIT` —— 启用了 **优化 2**（Key 前缀短路读取）
+- `OPT TWO PHASE` —— 启用了 **优化 3**（两阶段延迟物化）
 
-- VOlapScanNode 下面有 SORT LIMIT 代表有优化 2
-
-- OPT TWO PHASE 代表有优化 3
+**示例**：
 
 ```sql
   1:VTOP-N(137)
@@ -56,7 +90,7 @@ explain SQL 拿到 query plan 可以确认这个 sql 是否启用 TOPN 查询优
   |  offset: 0
   |  limit: 10
   |  distribute expr lists: applicationName5
-  |  
+  |
   0:VOlapScanNode(106)
      TABLE: log_db.log_core_all_no_index(log_core_all_no_index), PREAGGREGATION: ON
      SORT INFO:
@@ -69,19 +103,30 @@ explain SQL 拿到 query plan 可以确认这个 sql 是否启用 TOPN 查询优
      pushAggOp=NONE
 ```
 
-### 检查 TOPN 查询优化执行时是否有效果
+<!-- 知识类型：操作 -->
+<!-- 适用场景：评估 TOPN 优化的实际收益 -->
 
-首先，可以将 `topn_opt_limit_threshold` 设置为 0 关闭 TOPN 查询优化，对比开启和关闭优化的 SQL 执行时间。
+## 检查 TOPN 优化执行效果
 
-开启 TOPN 查询优化后，在 Query Profile 中搜索 RuntimePredicate，关注下面几个指标：
+**目的**：通过对比执行时间和 Profile 指标，确认 TOPN 优化的实际过滤效果。
 
-- `RowsZonemapRuntimePredicateFiltered` 这个代表过滤掉的行数，越大越好
+**步骤**：
 
-- `NumSegmentFiltered` 这个代表过滤掉的数据文件个数，越大越好
+1. 将 `topn_opt_limit_threshold` 设为 `0` 关闭优化，记录执行时间。
+2. 恢复默认值开启优化，记录执行时间并对比。
+3. 在 Query Profile 中搜索 `RuntimePredicate`，关注下表关键指标。
 
-- `BlockConditionsFilteredZonemapRuntimePredicateTime` 代表过滤数据的耗时，越小越好
+**关键指标**：
 
-注意，2.0.3 之前的版本中 RuntimePredicate 的指标未独立，可以通过 Zonamap 指标大致观察。
+| 指标 | 含义 | 期望趋势 |
+| :--- | :--- | :--- |
+| `RowsZonemapRuntimePredicateFiltered` | 通过 RuntimePredicate 过滤掉的行数 | 越大越好 |
+| `NumSegmentFiltered` | 过滤掉的数据文件（Segment）个数 | 越大越好 |
+| `BlockConditionsFilteredZonemapRuntimePredicateTime` | RuntimePredicate 过滤数据的耗时 | 越小越好 |
+
+> 注意：2.0.3 之前的版本中 `RuntimePredicate` 的指标尚未独立统计，可通过通用 Zonemap 指标大致观察。
+
+**Profile 示例**：
 
 ```sql
     SegmentIterator:
@@ -140,3 +185,36 @@ explain SQL 拿到 query plan 可以确认这个 sql 是否启用 TOPN 查询优
           -  UncompressedBytesRead:  137.99  MB
           -  VectorPredEvalTime:  0ns
 ```
+
+<!-- 知识类型：FAQ -->
+<!-- 适用场景：常见疑问与故障排查 -->
+
+## 常见问题（FAQ / Troubleshooting）
+
+**Q1：EXPLAIN 中没有 `TOPN OPT`，可能是哪些原因？**
+
+- LIMIT n 大于 `topn_opt_limit_threshold`（默认 1024）。
+- LIMIT n 占表总行数比例超过 `topn_filter_ratio`（默认 0.5）。
+- 表是 Unique MOR 表，无法使用该优化。
+
+**Q2：开启优化后 SQL 反而变慢？**
+
+- 检查 `n` 是否过大导致内存开销升高，可适当调小 `topn_opt_limit_threshold`。
+- 通过 Profile 中 `RowsZonemapRuntimePredicateFiltered` 确认过滤效果，若过滤行数为 0 则优化未带来收益。
+
+**Q3：如何只关闭优化 3（两阶段读取）而保留优化 1、2？**
+
+设置 `enable_two_phase_read_opt = false` 即可。
+
+**Q4：MOR 表执行 ORDER BY LIMIT 结果不正确？**
+
+确认未在 MOR 表上启用 TOPN 优化。MOR 表请使用 MOW 模型或避免触发该优化路径。
+
+## 相关参数对照速查
+
+| 想要的效果 | 设置方式 |
+| :--- | :--- |
+| 完全关闭 TOPN 优化 | `SET topn_opt_limit_threshold = 0;` |
+| 仅关闭两阶段延迟物化 | `SET enable_two_phase_read_opt = false;` |
+| 放宽 LIMIT 上限以覆盖更多查询 | 适当增大 `topn_opt_limit_threshold` |
+| 调整生成 filter 的比率阈值 | 修改 `topn_filter_ratio` |

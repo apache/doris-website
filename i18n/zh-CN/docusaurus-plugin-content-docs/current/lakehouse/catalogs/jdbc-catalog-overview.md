@@ -25,10 +25,10 @@ Doris JDBC Catalog 支持连接以下数据库：
 | 支持的数据源                                      |
 |---------------------------------------------|
 | [ MySQL](./jdbc-mysql-catalog.md)           |
-| [ PostgreSQL](./jdbc-mysql-catalog.md)      |
-| [ Oracle](./jdbc-mysql-catalog.md)          |
-| [ SQL Server](./jdbc-mysql-catalog.md)      |
-| [ IBM DB2](./jdbc-mysql-catalog.md)         |
+| [ PostgreSQL](./jdbc-pg-catalog.md)      |
+| [ Oracle](./jdbc-oracle-catalog.md)          |
+| [ SQL Server](./jdbc-sqlserver-catalog.md)      |
+| [ IBM DB2](./jdbc-ibmdb2-catalog.md)         |
 | [ ClickHouse](./jdbc-clickhouse-catalog.md) |
 | [ SAP HANA](./jdbc-saphana-catalog)         |
 | [ Oceanbase](./jdbc-oceanbase-catalog.md)   |
@@ -41,7 +41,7 @@ Doris JDBC Catalog 支持连接以下数据库：
 
 ```sql
 CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
-    'type' =='jdbc', -- required
+    'type' = 'jdbc', -- required
     {JdbcProperties},
     {CommonProperties}
 );
@@ -65,7 +65,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
       
       2. 本地绝对路径。如 `file:///path/to/mysql-connector-j-8.3.0.jar`。需将 Jar 包预先存放在所有 FE/BE 节点指定的路径下。
       
-      3. Http 地址。如：`http://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar` 系统会从这个 Http 地址下载 Driver 文件。仅支持无认证的 Http 服务。  
+      3. Http 地址。如：`https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar` 系统会从这个 Http 地址下载 Driver 文件。仅支持无认证的 Http 服务。  
 
 
   * 可选属性

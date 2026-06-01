@@ -1,135 +1,249 @@
-# Parallelism Tuning
+---
+{
+    "title": "Parallelism Tuning: parallel_pipeline_task_num Configuration Guide",
+    "sidebar_label": "Parallelism Tuning",
+    "language": "en",
+    "description": "How to tune Doris query parallelism? This article explains parallel_pipeline_task_num configuration principles, SQL/session/global tuning methods, CPU utilization optimization cases, and FAQs.",
+    "keywords": ["Doris parallelism tuning", "parallel_pipeline_task_num", "Doris CPU utilization", "MPP parallel execution", "Pipeline execution engine", "query performance tuning"],
+}
+---
 
-## Overview
+<!-- Knowledge type: concept + operation -->
+<!-- Applicable scenarios: query performance tuning, CPU resource utilization optimization, high-concurrency stress testing -->
 
-Doris queries are executed in an MPP (Massively Parallel Processing) framework, where each query is executed in parallel across multiple BEs (Backend Executors). Meanwhile, within a single BE, a multi-threaded parallel approach is adopted to enhance query execution efficiency. Currently, all types of statements, including queries, DML (Data Manipulation Language), and DDL (Data Definition Language), support parallel execution.
+Doris is an MPP execution framework. Every query runs in parallel across multiple BEs, and within a single BE, multi-threaded parallelism further accelerates execution. All statements (Query, DML, DDL) support parallel execution.
 
-The control parameter for parallelism within a single BE is `parallel_pipeline_task_num`, which refers to the number of working tasks used by a single Fragment during execution. In actual production scenarios, performance issues may arise due to improper parallelism settings. The following examples illustrate cases of optimizing parallelism.
+**One-sentence definition**: `parallel_pipeline_task_num` controls the number of worker tasks used to execute a single Fragment within a single BE.
 
-## Principles of Parallelism Tuning
+### Quick Diagnosis
 
-The purpose of setting `parallel_pipeline_task_num` is to fully utilize multi-core resources and reduce query latency. However, to enable multi-core parallel execution, some data shuffle operators and synchronization logic between multiple threads are usually introduced, which may also lead to unnecessary resource wastage.
+Before you start tuning, confirm the following:
 
-The default value in Doris is 0, which is half the number of CPU cores of the BE. This value takes into account the resource utilization of both single queries and concurrent operations, and usually does not require user intervention for adjustment. When there is a performance bottleneck, refer to the following examples for necessary adjustments. Doris is continuously improving its adaptive strategy, and it is usually recommended to make necessary adjustments in specific scenarios or at the SQL level.
+- Have you used the `PROFILE` tool to confirm that the query is CPU-bound?
+- How many CPU cores does the current BE have?
+- What type of query is it: point query, JOIN/aggregation, stress test, or complex query?
+- Are you using the Duplicate or Unique Key Merge-On-Write table model?
+- Do you plan to adjust at the SQL, session, or global level?
 
-Suppose the BE has 16 CPU cores:
+> The default value is `0`, which is equivalent to half the number of CPU cores on the BE. This default value already balances single-query and concurrent resource utilization, and **typically does not require user intervention**.
 
-1. For simple operations on a single table (such as single-table point queries, `WHERE` clause scans to retrieve a small amount of data, `LIMIT` a small amount of data, or hitting a materialized view), **the parallelism can be set to 1**.
+## Parallelism Tuning Principles
 
-   Explanation: Simple operations on a single table involve only one Fragment. The bottleneck of such queries usually lies in data scanning and processing. The data scanning thread and the query execution thread are separated, and the data scanning thread will perform parallel scanning adaptively. Here, the bottleneck is not the query thread, so the parallelism can be directly set to 1.
+<!-- Knowledge type: principle -->
+<!-- Applicable scenarios: scenario-based decision reference -->
 
-2. For queries involving two-table `JOIN` or aggregation queries, if the data volume is large and it is confirmed to be a CPU-bound query, **the parallelism can be set to 16**.
-   
-   Explanation: For two-table `JOIN` or aggregation queries, which are data computation-intensive queries, if the CPU is not fully utilized, consider increasing the parallelism on the basis of the default value to take advantage of the parallel capabilities of the Pipeline execution engine and fully utilize CPU resources for computation. It cannot be guaranteed that each PipelineTask can utilize the allocated CPU resources to the fullest. Therefore, the parallelism can be adjusted appropriately, for example, set to 16, to make better use of the CPU. However, the parallelism should not be increased indefinitely. Setting it to 48 will not bring substantial benefits and will instead increase thread scheduling overhead and framework scheduling overhead.
+The purpose of `parallel_pipeline_task_num` is to fully utilize multi-core resources and reduce query latency. However, multi-core parallelism introduces data Shuffle operators and multi-thread synchronization logic, so excessive parallelism can lead to wasted resources.
 
-3. In a stress testing scenario, where the multiple queries in the stress test can fully utilize the CPU, **the parallelism can be set to 1**.
-   
-   Explanation: In a stress testing scenario, there are sufficient query tasks. Excessive parallelism also brings thread scheduling overhead and framework scheduling overhead. Setting it to 1 is more reasonable in this case.
+### Scenario and Recommended Parallelism Reference Table
 
-4. For complex queries, the parallelism should be adjusted flexibly based on the Profile and machine load. Here, it is recommended to use the default value. If it is not suitable, a stepwise adjustment of 4-2-1 can be tried, and the query performance and machine load should be observed.
+> The table below uses BE CPU cores = 16 as an example.
 
-## Methods of Parallelism Tuning
+| Query scenario | Typical characteristics | Recommended parallelism | Rationale |
+| --- | --- | --- | --- |
+| Single-table simple operation | Single-table point query, `WHERE` scanning a small amount of data, `LIMIT` returning a small amount of data, materialized view hit | **1** | Only one Fragment exists; the bottleneck is the data scan thread (adaptive parallelism), not the query execution thread |
+| Two-table JOIN / aggregation | Large data volume, CPU-intensive, CPU not saturated | **16** | Fully leverages the parallel capability of the Pipeline execution engine; do not increase without limit (for example, 48 only adds scheduling overhead) |
+| High-concurrency stress test | Multiple queries themselves can already saturate the CPU | **1** | Excessive parallelism only adds thread scheduling and framework scheduling overhead |
+| Complex query | Bottleneck is hard to identify in one shot | **Default value** | Adjust flexibly based on Profile and machine load; try the 4-2-1 step-down approach |
 
-Doris allows users to manually specify the parallelism of a query to adjust the parallel execution efficiency during query execution.
+> Doris continues to refine its adaptive strategies. Adjustments are typically recommended only at the **specific scenario or SQL level**.
 
-### SQL Level Adjustment
+---
 
-Use SQL HINT to specify the parallelism of a single SQL statement. This allows for flexible control of the parallelism of different SQL statements to achieve the best execution results.
+## Query Parallelism Tuning Methods
+
+<!-- Knowledge type: operation -->
+<!-- Applicable scenarios: actual configuration -->
+
+Doris supports manually specifying query parallelism at three granularities: SQL, session, and global.
+
+### Method 1: SQL Level (Recommended)
+
+-   **Purpose**: Affects only a single SQL statement, providing flexible and precise control.
+-   **Command**: Use a SQL HINT.
+-   **Description**: Suitable for fine-grained tuning of specific SQL statements without affecting other queries.
 
 ```sql
-select /*+SET_VAR(parallel_pipeline_task_num=8)*/ * from nation, lineitem where lineitem.l_suppkey = nation.n_nationkey
-select /*+SET_VAR(parallel_pipeline_task_num=8,runtime_filter_mode=global)*/ * from nation, lineitem where lineitem.l_suppkey = nation.n_nationkey
+SELECT /*+SET_VAR(parallel_pipeline_task_num=8)*/ *
+FROM nation, lineitem
+WHERE lineitem.l_suppkey = nation.n_nationkey;
+
+SELECT /*+SET_VAR(parallel_pipeline_task_num=8,runtime_filter_mode=global)*/ *
+FROM nation, lineitem
+WHERE lineitem.l_suppkey = nation.n_nationkey;
 ```
 
-### Session Level Adjustment
+### Method 2: Session Level
 
-Adjust the parallelism at the session level through session variables. All query statements in the session will be executed with the specified parallelism. Please note that even single-line SQL queries will use this parallelism, which may lead to performance degradation.
+-   **Purpose**: Affects all queries in the current session.
+-   **Command**: Set via session variables.
+-   **Description**: All SQL statements within the session use this parallelism, including single-row queries, which may degrade performance for some small queries.
 
-```SQL
-set parallel_pipeline_task_num = 8;
+```sql
+SET parallel_pipeline_task_num = 8;
 ```
 
-### Global Adjustment
+### Method 3: Global Level
 
-If global adjustment is required, usually involving CPU utilization adjustment, the parallelism can be set globally.
+-   **Purpose**: Affects the default behavior of the entire cluster.
+-   **Command**: Use `SET GLOBAL`.
+-   **Description**: Typically used for global CPU utilization tuning. After a `global` setting is applied, it takes effect on the current connection and newly created connections, but does not affect other existing connections. To make it take effect immediately for everything, restart the FE.
 
-```SQL
-set global parallel_pipeline_task_num = 8;
+```sql
+SET GLOBAL parallel_pipeline_task_num = 8;
 ```
 
-## Tablets and parallelism
+### Comparison of the Three Tuning Methods
 
-Since version 2.1, Doris supports decoupling parallelism from the number of tablets.
+| Tuning method | Scope | When it takes effect | Recommended scenario |
+| --- | --- | --- | --- |
+| SQL HINT | Single SQL statement | Immediate | Fine-grained tuning of a single SQL (**safest**) |
+| Session | Current session | Immediate | Tuning a group of related queries |
+| Global | Entire cluster | Takes effect on new connections | Cluster-level CPU utilization optimization |
 
-In previous versions, parallelism could not exceed the number of tablets involved in the query. For example, if a query involved 5 tablets, the maximum scan concurrency was only 5. This could prevent some large tablets from being read concurrently.
+---
 
-In the new version, Doris supports concurrent reads within a shard. This feature is enabled automatically and requires no user configuration.
+## Data Sharding and Parallelism
 
-Note that this feature only supports the Duplicate and Unique Key Merge-On-Write table models. It does not apply to the Aggregate and Unique Key Merge-On-Read models. For these two models, query parallelism is still constrained by the number of tablets.
+<!-- Knowledge type: version feature -->
+<!-- Applicable scenarios: understanding version differences, table model selection -->
 
-## Best Practice
+Starting from version **2.1**, Doris supports decoupling parallelism from the number of data shards.
 
-## Case 1: High Parallelism Leading to High CPU Usage in a High-Concurrency Pressure Scenario
+### Version Comparison
 
-When observing high CPU usage online, which affects the performance of some low-latency queries, consider adjusting the query parallelism to reduce CPU usage. Since Doris's design philosophy is to prioritize using more resources to obtain query results as quickly as possible, in some scenarios with tight online resources, this may lead to poor performance. Therefore, appropriate adjustment of parallelism can improve the overall stability and efficiency of queries under limited resources.
+| Version | Behavior | Limitation |
+| --- | --- | --- |
+| Before 2.1 | Parallelism ≤ number of shards involved in the query | 5 shards allow at most 5-way concurrency; large shards cannot be read concurrently |
+| 2.1 and later | Supports concurrent reads within a shard (enabled automatically) | Only the Duplicate and Unique Key Merge-On-Write table models are supported |
 
-Set the parallelism from the default value of 0 (half the number of CPU cores) to 4:
+> **Note**: The Aggregate model and the Unique Key Merge-On-Read model are not applicable; query parallelism is still limited by the number of shards.
 
-```SQL
-set global parallel_pipeline_task_num = 4;
+---
+
+## Best Practice Cases
+
+<!-- Knowledge type: case study -->
+<!-- Applicable scenarios: real production tuning reference -->
+
+### Case 1: Excessive CPU Usage — Lower the Parallelism
+
+**Issue**: CPU usage on the production cluster is too high, affecting the performance of low-latency queries.
+
+**Root cause analysis**: By default, Doris prioritizes using more resources to obtain query results as quickly as possible. In production scenarios where resources are tight, this can affect overall stability.
+
+**Solution**: Lower the parallelism from the default `0` (half of the CPU core count) to `4`.
+
+```sql
+SET GLOBAL parallel_pipeline_task_num = 4;
 ```
 
-After the global setting, it takes effect for the current connection and new connections. Existing other connections are not affected. If immediate global effect is required, the FE (Frontend) can be restarted. After the adjustment, the CPU usage is reduced to 60% of the previous peak value, reducing the impact on some low-latency queries.
+**Result**: CPU usage dropped to **60%** of the original peak, reducing the impact on low-latency queries.
 
-## Case 2: Increasing Parallelism to Further Utilize the CPU for Query Acceleration
+> A `GLOBAL` setting takes effect on the current connection and newly created connections; existing connections are not affected. To make it take effect immediately for everything, restart the FE.
 
-The current default parallelism in Doris is half the number of CPU cores, and some computation-intensive scenarios cannot fully utilize the CPU for query acceleration.
+### Case 2: Insufficient CPU Utilization — Increase the Parallelism
 
-```SQL
-select sum(if(t2.value is null, 0, 1)) exist_value, sum(if(t2.value is null, 1, 0)) no_exist_value
-from  t1 left join  t2 on t1.key = t2.key;
+**Issue**: A compute-intensive query takes 28 seconds to execute, with CPU utilization at only 60%.
+
+**Sample SQL** (left table 2 billion rows, right table 5 million rows):
+
+```sql
+SELECT
+    sum(if(t2.value IS NULL, 0, 1)) AS exist_value,
+    sum(if(t2.value IS NULL, 1, 0)) AS no_exist_value
+FROM t1
+LEFT JOIN t2 ON t1.key = t2.key;
 ```
 
-In a scenario with 2 billion rows in the left table and 5 million rows in the right table, the above SQL takes 28 seconds to execute. Observe the Profile:
+**Key Profile metrics**:
 
-```SQL
-HASH_JOIN_OPERATOR (id=3, nereids_id=448):
-                - PlanInfo
-                   - join op: LEFT OUTER JOIN(BROADCAST)[]
-                   - equal join conjunct: (value = value)
-                   - cardinality=2,462,330,332
-                   - vec output tuple id: 5
-                   - output tuple id: 5
-                   - vIntermediate tuple ids: 4 
-                   - hash output slot ids: 16 
-                   - projections: value
-                   - project output tuple id: 5
-                - BlocksProduced: sum 360.099K (360099), avg 45.012K (45012), max 45.014K (45014), min 45.011K (45011)
-                - CloseTime: avg 8.44us, max 13.327us, min 5.574us
-                - ExecTime: avg 26sec153ms, max 26sec261ms, min 26sec33ms
-                - InitTime: avg 7.122us, max 13.395us, min 4.541us
-                - MemoryUsage: sum, avg, max, min 
-                  - PeakMemoryUsage: sum 1.16 MB, avg 148.00 KB, max 148.00 KB, min 148.00 KB
-                  - ProbeKeyArena: sum 1.16 MB, avg 148.00 KB, max 148.00 KB, min 148.00 KB
-                - OpenTime: avg 2.967us, max 4.120us, min 1.562us
-                - ProbeRows: sum 1.4662330332B (1462330332), avg 182.791291M (182791291), max 182.811875M (182811875), min 182.782658M (182782658)
-                - ProjectionTime: avg 165.392ms, max 169.762ms, min 161.727ms
-                - RowsProduced: sum 1.462330332B (1462330332), avg 182.791291M (182791291), max 182.811875M (182811875), min 182.782658M (182782658)
+```text
+HASH_JOIN_OPERATOR (id=3 , nereids_id=448):
+  - PlanInfo
+      - join op: LEFT OUTER JOIN(BROADCAST)[]
+      - equal join conjunct: (value = value)
+      - cardinality=2,462,330,332
+      - vec output tuple id: 5
+      - output tuple id: 5
+      - vIntermediate tuple ids: 4
+      - hash output slot ids: 16
+      - projections: value
+      - project output tuple id: 5
+  - BlocksProduced: sum 360.099K (360099), avg 45.012K (45012), max 45.014K (45014), min 45.011K (45011)
+  - CloseTime: avg 8.44us, max 13.327us, min 5.574us
+  - ExecTime: avg 26sec153ms, max 26sec261ms, min 26sec33ms
+  - InitTime: avg 7.122us, max 13.395us, min 4.541us
+  - MemoryUsage: sum , avg , max , min
+    - PeakMemoryUsage: sum 1.16 MB, avg 148.00 KB, max 148.00 KB, min 148.00 KB
+    - ProbeKeyArena: sum 1.16 MB, avg 148.00 KB, max 148.00 KB, min 148.00 KB
+  - OpenTime: avg 2.967us, max 4.120us, min 1.562us
+  - ProbeRows: sum 1.462330332B (1462330332), avg 182.791291M (182791291), max 182.811875M (182811875), min 182.782658M (182782658)
+  - ProjectionTime: avg 165.392ms, max 169.762ms, min 161.727ms
+  - RowsProduced: sum 1.462330332B (1462330332), avg 182.791291M (182791291), max 182.811875M (182811875), min 182.782658M (182782658)
 ```
 
-The main time-consuming part here: `ExecTime: avg 26sec153ms, max 26sec261ms, min 26sec33ms` all occurs in the Join operator, and the total amount of data processed: `ProbeRows: sum 1.4662330332B` is 1.4 billion, which is a typical CPU-intensive computation scenario. Observing the machine monitoring, it is found that the CPU resources are not fully utilized, with a CPU utilization rate of 60%. At this time, consider increasing the parallelism to further utilize the idle CPU resources for acceleration.
+**Root cause analysis**:
 
-Set the parallelism as follows:
+-   The dominant time cost (`ExecTime: avg 26sec153ms`) is concentrated in the Join operator.
+-   The total volume of data processed (`ProbeRows: 1.466 billion`) is huge, which is a typical CPU-intensive workload.
+-   Monitoring shows CPU utilization at only 60%, indicating room for acceleration.
 
-```SQL
-set parallel_pipeline_task_num = 16;
+**Solution**: Increase the parallelism.
+
+```sql
+SET parallel_pipeline_task_num = 16;
 ```
 
-The query execution time is reduced from 28 seconds to 19 seconds, and the CPU utilization rate is increased from 60% to 90%.
+**Result comparison**:
+
+| Metric | Before | After |
+| --- | --- | --- |
+| Query duration | 28 seconds | **19 seconds** |
+| CPU utilization | 60% | **90%** |
+
+---
+
+## FAQ
+
+<!-- Knowledge type: FAQ -->
+<!-- Applicable scenarios: quick troubleshooting -->
+
+**Q1: What is the default parallelism?**
+The default value is `0`, which at runtime is equivalent to half the number of CPU cores on the BE.
+
+**Q2: Is a higher parallelism always better?**
+No. Excessive parallelism brings thread scheduling and framework scheduling overhead, which can actually reduce performance. For example, setting it to 48 on a 16-core BE provides no benefit.
+
+**Q3: Why does `SET GLOBAL` not take effect on existing connections?**
+`GLOBAL` only takes effect on the current connection and newly created connections; other existing connections are not affected. To make it take effect immediately for everything, restart the FE.
+
+**Q4: Do all table models support concurrent reads within a shard?**
+Only the Duplicate and Unique Key Merge-On-Write models support it. For the Aggregate model and the Unique Key Merge-On-Read model, query parallelism is still limited by the number of shards.
+
+**Q5: How do I tell whether a query is CPU-bound?**
+Use `PROFILE` to observe which operator concentrates the `ExecTime`, and observe the machine's CPU utilization at the same time. If the CPU is not saturated, consider increasing the parallelism.
+
+---
+
+## Troubleshooting
+
+<!-- Knowledge type: troubleshooting -->
+<!-- Applicable scenarios: performance anomalies after tuning -->
+
+| Symptom | Possible cause | Investigation suggestion |
+| --- | --- | --- |
+| Query becomes slower after raising parallelism | Thread scheduling overhead exceeds parallelism gains | Check operator time costs via Profile; step back using the 4-2-1 approach |
+| CPU utilization is saturated but the query becomes slower | Parallelism is too high, causing context switches | Lower the parallelism; for high-concurrency scenarios, set it to 1 |
+| Global adjustment does not take effect | Existing connections have not applied the new configuration | Restart the FE or reconnect the client |
+| Slow read speed for large shards | Version is below 2.1, limited by the number of shards | Upgrade to 2.1 or later, and confirm the table model is Duplicate or MoW |
 
 ## Summary
 
-Usually, users do not need to adjust the query parallelism. If adjustment is required, the following points should be noted:
+<!-- Knowledge type: summary -->
 
-1. It is recommended to start from the CPU utilization. Observe whether it is a CPU bottleneck through the PROFILE tool output and try to make reasonable modifications to the parallelism.
-2. Adjusting a single SQL is relatively safe. Try not to make overly aggressive global modifications.
+Typically, you do not need to intervene in query parallelism. If adjustment is needed, follow these principles:
+
+1.  **Start from CPU utilization**: Use the `PROFILE` tool to confirm whether the query is CPU-bound, and then decide whether to adjust.
+2.  **Prefer SQL-level adjustment**: A single-SQL HINT adjustment is the safest. Avoid aggressive global changes.
+3.  **Scenario-based decisions**: Refer to the [Scenario and Recommended Parallelism Reference Table](#scenario-and-recommended-parallelism-reference-table) to choose an appropriate value.
+4.  **Step-down trials**: For complex queries, adjust gradually using the 4-2-1 step-down approach, observing query performance and machine load.

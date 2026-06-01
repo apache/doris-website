@@ -34,7 +34,7 @@ Query partition information for partition ID 13004:
 SHOW PARTITION 13004;
 ```
 
-Results:
+If a partition with that ID exists, the output looks like the following — the IDs shown are illustrative, replace `13004` with your actual partition ID (see `SHOW PARTITIONS`). If no partition matches, `SHOW PARTITION` returns an empty result set.
 
 ```sql
 +--------+-----------+---------------+-------+---------+

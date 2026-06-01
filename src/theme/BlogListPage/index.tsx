@@ -156,7 +156,7 @@ function BlogListPageContent(props) {
         <BlogLayout sidebar={sidebar} pageType="blogList" className="lg:max-w-7xl">
             <PageHeader title="Blog" className="bg-white" {...props} />
             <HeadBlogs blogs={ALL_BLOG} />
-            <div className="flex flex-col lg:max-w-7xl">
+            <div id="blog" className="flex flex-col lg:max-w-7xl scroll-mt-24">
                 <ul className="scrollbar-none w-[100%] mt-6 custom-scrollbar m-auto flex gap-3 overflow-auto text-[#4C576C] lg:mt-[5.5rem]  lg:justify-center lg:gap-6">
                     {blogCategories.map((item: any, index) => (
                         <li className=" py-px" key={index} onClick={() => changeCategory(item.label)}>

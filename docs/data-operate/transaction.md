@@ -1,65 +1,62 @@
 ---
 {
-    "title": "Transaction",
+    "title": "Transactions",
     "language": "en",
-    "description": "A transaction is an operation that contains one or more SQL statements."
+    "description": "A transaction is an operation that contains one or more SQL statements. The execution of these statements either completes successfully in full or fails in full, forming an indivisible unit of work."
 }
 ---
 
-A transaction is an operation that contains one or more SQL statements. The execution of these statements must either be completely successful or completely fail. It is an indivisible work unit.
+A transaction is an operation that contains one or more SQL statements. The execution of these statements either completes successfully in full or fails in full, forming an indivisible unit of work.
 
-## Introduction
+## Overview
 
-Queries and DDL single statements are implicit transactions and are not supported within multi-statement transactions. Each individual write is an implicit transaction by default, and multiple writes can form an explicit transaction. Currently, Doris does not support nested transactions.
+A single query or DDL statement is an implicit transaction. Multi-statement transactions that contain queries or DDL are not supported. By default, each individual write is an implicit transaction, and multiple writes can be combined into an explicit transaction. Doris does not currently support nested transactions.
 
-## Explicit and Implicit Transactions
+### Explicit Transaction
 
-### Explicit Transactions
-
-Explicit transactions require users to actively start, commit, or roll back transactions. Currently, DDL and query statements are not supported.
+An explicit transaction requires the user to actively begin, commit, or roll back the transaction. DDL and query statements are not currently supported inside one.
 
 ```sql
-BEGIN;
+BEGIN; 
 [INSERT, UPDATE, DELETE statement]
 COMMIT; / ROLLBACK;
 ```
 
-### Implicit Transactions
+### Implicit Transaction
 
-Implicit transactions refer to SQL statements that are executed without explicitly adding statements to start and commit transactions before and after the statements.
+An implicit transaction is one in which the user does not explicitly add statements to begin and commit the transaction before and after the executed SQL statement or statements.
 
-In Doris, except for [Group Commit](../data-operate/import/group-commit-manual), each import statement opens a transaction when it starts executing. The transaction is automatically committed after the statement is executed, or automatically rolled back if the statement fails. Each query or DDL statement is also an implicit transaction.
+In Doris, except for [Group Commit](./import/load-best-practices/group-commit-manual.md), every load statement opens a transaction when it starts to execute. The transaction is automatically committed after the statement completes successfully, or automatically rolled back when the statement fails. Each query or DDL is also an implicit transaction.
 
 ### Isolation Level
+The only isolation level currently supported by Doris is READ COMMITTED. Under the READ COMMITTED isolation level, a statement can only see data that was committed before the statement began executing; it cannot see uncommitted data.
 
-The only isolation level currently supported by Doris is READ COMMITTED. Under the READ COMMITTED isolation level, a statement sees only data that was committed before the statement began execution. It does not see uncommitted data.
+When a single statement runs, it captures a snapshot of the tables it touches at the start of the statement. That is, a single statement can only see commits from other transactions that completed before the statement started; commits made by other transactions during the statement's execution are not visible.
 
-When a single statement is executed, it captures a snapshot of the tables involved at the start of the statement, meaning that a single statement can only see commits from other transactions made before it began execution. Other transactions' commits are not visible during the execution of a single statement.
+When a statement runs inside a multi-statement transaction:
 
-When a statement is executed inside a multi-statement transaction:
+* It can only see data that was committed before the statement began executing. If another transaction commits between the first and second statements, two consecutive statements in the same transaction may see different data.
+* It cannot currently see changes made by previous statements in the same transaction.
 
-* It sees only data that was committed before the statement began execution. If another transaction commits between the execution of the first and the second statements, two successive statements in the same transaction may see different data.
-* Currently, it cannot see changes made by previous statements within the same transaction.
+### No Loss, No Duplication
 
-### No Duplicates, No Loss
-
-Doris supports mechanisms to ensure no duplicates and no loss during data writes. The Label mechanism ensures no duplicates within a single transaction, while two-phase commit coordinates to prevent duplicates across multiple transactions.
+Doris provides two mechanisms to support no-loss, no-duplication writes. The Label mechanism guarantees no duplication for a single transaction, and two-phase commit provides the ability to coordinate no duplication across multiple transactions.
 
 #### Label Mechanism
 
-Transactions or writes in Doris can be assigned a Label. This Label is typically a user-defined string with some business logic attributes. If not set, a UUID string will be generated internally. The main purpose of a Label is to uniquely identify a transaction or import task and ensure that a transaction or import with the same Label will only execute successfully once. The Label mechanism ensures that data imports are neither lost nor duplicated. If the upstream data source guarantees at-least-once semantics, combined with Doris's Label mechanism, exactly-once semantics can be achieved. Labels are unique within a database.
+A Doris transaction or load can have a Label set on it. This Label is usually a user-defined string with some business-logic meaning; if it is not set, an internal UUID string is generated. The main purpose of the Label is to uniquely identify a transaction or load task and to ensure that transactions or loads with the same Label are executed successfully only once. The Label mechanism guarantees that loaded data is neither lost nor duplicated. If the upstream data source can guarantee At-Least-Once semantics, then together with the Doris Label mechanism, Exactly-Once semantics can be achieved. A Label is unique within a database.
 
-Doris will clean up Labels based on time and number. By default, if the number of Labels exceeds 2000, cleanup will be triggered. Labels older than three days will also be cleaned up by default. Once a Label is cleaned up, a Label with the same name can execute successfully again, meaning it no longer has deduplication semantics.
+Doris cleans up Labels based on time and count. By default, eviction is triggered once the number of Labels exceeds 2000, and Labels older than 3 days are also evicted by default. After a Label is evicted, a Label with the same name can be executed successfully again, that is, deduplication semantics no longer apply.
 
-Labels are usually set in the format of `business_logic+timestamp`, such as `my_business1_20220330_125000`. This Label typically represents a batch of data generated by the business `my_business1` at `2022-03-30 12:50:00`. By setting Labels this way, the business can query the import task status using the Label to clearly determine whether the batch of data at that time has been successfully imported. If not, the import can be retried using the same Label.
+A Label is typically set in the format `business logic + time`, such as `my_business1_20220330_125000`. This Label is generally used to indicate: a batch of data produced by the business `my_business1` at `2022-03-30 12:50:00`. With this kind of Label scheme, the business can query the load task status by Label to clearly determine whether the data for that batch and time has already been loaded successfully. If it has not, the same Label can be used to retry the load.
 
 #### StreamLoad 2PC
 
-[StreamLoad 2PC](#stream-load) is mainly used to support exactly-once semantics (EOS) when writing to Doris with Flink.
+[StreamLoad 2PC](#stream-load) is mainly used to support EOS semantics when Flink writes to Doris.
 
-## Transaction Operations
+## Explicit Transaction Operations
 
-### Start a Transaction
+### Begin a Transaction
 
 ```sql
 BEGIN;
@@ -67,33 +64,33 @@ BEGIN;
 BEGIN WITH LABEL {user_label}; 
 ```
 
-If this statement is executed while the current session is in the middle of a transaction, Doris will ignore the statement, which can also be understood as transactions cannot be nested.
+If this statement is executed while the current Session is already in the middle of a transaction, Doris ignores the statement. In other words, transactions cannot be nested.
 
 ### Commit a Transaction
 
-```sql
+```sql 
 COMMIT;
 ```
 
-Used to commit all modifications made in the current transaction.
+This is used to commit all modifications made in the current transaction.
 
-### Rollback a Transaction
+### Roll Back a Transaction
 
 ```sql
 ROLLBACK;
 ```
 
-Used to roll back all modifications made in the current transaction.
+This is used to undo all modifications in the current transaction.
 
-Transactions are session-level, so if a session is terminated or closed, the transaction will automatically be rolled back.
+A transaction is at the Session level. If the Session is aborted or closed, the transaction is automatically rolled back as well.
 
-## Transaction with multiple sql statements
+## Writing Multiple SQL Statements
 
-Currently, Doris supports two ways of transaction loading.
+Doris currently supports two ways to write within a transaction.
 
-### Multiple `INSERT INTO VALUES` for one table
+### Multiple `INSERT INTO VALUES` Writes to a Single Table
 
-Suppose the table schema is:
+Suppose the table structure is:
 
 ```sql
 CREATE TABLE `dt` (
@@ -108,7 +105,7 @@ PROPERTIES (
 );
 ```
 
-Do transaction load:
+Write data:
 
 ```sql
 mysql> BEGIN;
@@ -128,13 +125,13 @@ Query OK, 0 rows affected (1.02 sec)
 {'label':'txn_insert_b55db21aad7451b-b5b6c339704920c5', 'status':'VISIBLE', 'txnId':'10013'}
 ```
 
-This method not only achieves atomicity, but also in Doris, it enhances the writing performance of `INSERT INTO VALUES`.
+This way of writing not only achieves write atomicity, but also improves the write performance of `INSERT INTO VALUES` in Doris.
 
-If user enables `Group Commit` and transaction insert at the same time, the transaction insert will work. 
+If the user enables both `Group Commit` and transactional writes, transactional writes take effect.
 
-### Multiple `INSERT INTO SELECT`, `UPDATE`, `DELETE` for multiple tables
+### Multiple `INSERT INTO SELECT`, `UPDATE`, and `DELETE` Writes Across Tables
 
-Suppose there are 3 tables: `dt1`, `dt2`, `dt3`, with the same schema as above, and the data in the tables are:
+Suppose there are three tables `dt1`, `dt2`, and `dt3`, with the same schema as above. Their data is as follows:
 
 ```sql
 mysql> SELECT * FROM dt1;
@@ -165,14 +162,14 @@ mysql> SELECT * FROM dt3;
 Empty set (0.03 sec)
 ```
 
-Do transaction load, write the data from `dt1` and `dt2` to `dt3`, and update the scores in `dt1` and delete the data in `dt2`:
+Perform a transactional write that loads data from `dt1` and `dt2` into `dt3`, while also updating the scores in table `dt1` and deleting data from table `dt2`:
 
 ```sql
 mysql> BEGIN;
 Query OK, 0 rows affected (0.00 sec)
 {'label':'txn_insert_442a6311f6c541ae-b57d7f00fa5db028', 'status':'PREPARE', 'txnId':''}
 
-# 导入任务的状态是 PREPARE
+# The status of the load task is PREPARE
 mysql> INSERT INTO dt3 SELECT * FROM dt1;
 Query OK, 5 rows affected (0.07 sec)
 {'label':'txn_insert_442a6311f6c541ae-b57d7f00fa5db028', 'status':'PREPARE', 'txnId':'11024'}
@@ -194,10 +191,10 @@ Query OK, 0 rows affected (0.03 sec)
 {'label':'txn_insert_442a6311f6c541ae-b57d7f00fa5db028', 'status':'VISIBLE', 'txnId':'11024'}
 ```
 
-Select data:
+Query the data:
 
 ```sql
-# the score column of id >= 4 records is updated 
+# Scores for rows with id >= 4 are increased by 10
 mysql> SELECT * FROM dt1;
 +------+-----------+-------+
 | id   | name      | score |
@@ -210,7 +207,7 @@ mysql> SELECT * FROM dt1;
 +------+-----------+-------+
 5 rows in set (0.01 sec)
 
-# the records of id >= 9 are deleted
+# Rows with id >= 9 are deleted
 mysql> SELECT * FROM dt2;
 +------+---------+-------+
 | id   | name    | score |
@@ -221,7 +218,7 @@ mysql> SELECT * FROM dt2;
 +------+---------+-------+
 3 rows in set (0.02 sec)
 
-# the data of dt1 and dt2 is written to dt3
+# The committed data from dt1 and dt2 is written into dt3
 mysql> SELECT * FROM dt3;
 +------+-----------+-------+
 | id   | name      | score |
@@ -242,9 +239,9 @@ mysql> SELECT * FROM dt3;
 
 #### Isolation Level
 
-Doris provides the `READ COMMITTED` isolation level. Please note the following:
+The isolation level provided by Doris transactional writes is `READ COMMITTED`. Note the following two points:
 
-* In a transaction, each statement reads the data that was committed at the time the statement began executing:
+* For multiple statements in a transaction, each statement reads the data that was committed at the time the statement starts executing. For example:
 
     ```sql
      timestamp | ------------ Session 1 ------------  |  ------------ Session 2 ------------
@@ -253,28 +250,28 @@ Doris provides the `READ COMMITTED` isolation level. Please note the following:
                | INSERT INTO dt3 SELECT * FROM dt1;   |
        t3      |                                      | # write 2 rows to dt1 table
                |                                      | INSERT INTO dt1 VALUES(...), (...);
-       t4      | # read n + 2 rows FROM dt1 table     |
+       t4      | # read n + 2 rows from dt1 table     |
                | INSERT INTO dt3 SELECT * FROM dt1;   |
        t5      | COMMIT;                              |
     ```
 
-* In a transaction, each statement cannot read the modifications made by other statements within the same transactio:
+* For multiple statements in a transaction, each statement cannot read modifications made by other statements within the same transaction. For example:
 
-    Suppose `dt1` has 5 rows, `dt2` has 5 rows, `dt3` has 0 rows. And execute the following SQL:
+    Suppose that before the transaction begins, table `dt1` has 5 rows, table `dt2` has 5 rows, and table `dt3` is empty. The following statements are executed:
 
     ```sql
     BEGIN;
-    # write 5 rows to dt2, 
+    # 5 rows are written into dt2; after the transaction commits, dt2 has 10 rows in total
     INSERT INTO dt2 SELECT * FROM dt1;
-    # write 5 rows to dt3, and cannot read the new data written to dt2 in the previous step
+    # 5 rows are written into dt3; the rows newly written to dt2 in the previous step cannot be read here
     INSERT INTO dt3 SELECT * FROM dt2;
     COMMIT;
     ```
 
-    One example:
+    A concrete example:
 
     ```sql
-    # create table and insert data
+    # Create tables and write data
     CREATE TABLE `dt1` (
         `id` INT(11) NOT NULL,
         `name` VARCHAR(50) NULL,
@@ -289,14 +286,14 @@ Doris provides the `READ COMMITTED` isolation level. Please note the following:
     CREATE TABLE dt3 LIKE dt1;
     INSERT INTO dt1 VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (4, "Alexander", 60), (5, "Ava", 17);
     INSERT INTO dt2 VALUES (6, "William", 69), (7, "Sophia", 32), (8, "James", 64), (9, "Emma", 37), (10, "Liam", 64);
-    
-    # Do transaction write
+
+    # Transactional writes
     BEGIN;
     INSERT INTO dt2 SELECT * FROM dt1;
     INSERT INTO dt3 SELECT * FROM dt2;
     COMMIT;
-    
-    # Select data
+
+    # Query
     mysql> SELECT * FROM dt2;
     +------+-----------+-------+
     | id   | name      | score |
@@ -313,7 +310,7 @@ Doris provides the `READ COMMITTED` isolation level. Please note the following:
     |    5 | Ava       |    17 |
     +------+-----------+-------+
     10 rows in set (0.01 sec)
-    
+
     mysql> SELECT * FROM dt3;
     +------+---------+-------+
     | id   | name    | score |
@@ -327,11 +324,11 @@ Doris provides the `READ COMMITTED` isolation level. Please note the following:
     5 rows in set (0.01 sec)
     ```
 
-#### Failed Statements Within a Transaction
+#### Failed Statements in a Transaction
 
-When a statement within a transaction fails, that operation is rolled back. However, other statements within the transaction that have executed successfully are still able to either commit or rollback. Once the transaction is successfully committed, the modifications made by the successfully executed statements within the transaction are applied.
+When a statement in a transaction fails, that operation has already been automatically rolled back. However, other statements in the transaction that executed successfully can still be committed or rolled back. After the transaction is committed successfully, the modifications from the successfully executed statements take effect.
 
-One example:
+For example:
 
 ```sql
 mysql> BEGIN;
@@ -342,22 +339,22 @@ mysql> INSERT INTO dt3 SELECT * FROM dt1;
 Query OK, 5 rows affected (0.07 sec)
 {'label':'txn_insert_c5940d31bf364f57-a48b628886415442', 'status':'PREPARE', 'txnId':'11058'}
 
-# The failed insert is rolled back
+# A failed write is automatically rolled back
 mysql> INSERT INTO dt3 SELECT * FROM dt2;
 ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=http://172.21.16.12:9082/api/_load_error_log?file=__shard_3/error_log_insert_stmt_3d1fed266ce443f2-b54d2609c2ea6b11_3d1fed266ce443f2_b54d2609c2ea6b11
 
 mysql> INSERT INTO dt3 SELECT * FROM dt2 WHERE id = 7;
-Query OK, 0 rows affected (0.07 sec)
+Query OK, 1 row affected (0.07 sec)
 
 mysql> COMMIT;
 Query OK, 0 rows affected (0.02 sec)
 {'label':'txn_insert_c5940d31bf364f57-a48b628886415442', 'status':'VISIBLE', 'txnId':'11058'}
 ```
 
-Select data:
+Query:
 
 ```sql
-# The data in dt1 is written to dt3, the data with id = 7 in dt2 is written successfully, and the other data is written failed
+# The data from dt1 is written into dt3, the row with id = 7 from dt2 is written successfully, and the other writes failed
 mysql> SELECT * FROM dt3;
 +------+----------+-------+
 | id   | name     | score |
@@ -365,33 +362,34 @@ mysql> SELECT * FROM dt3;
 |    1 | Emily    |    25 |
 |    2 | Benjamin |    35 |
 |    3 | Olivia   |    28 |
-|    4 | Alexande |    60 |
+|    4 | Alexander |    60 |
 |    5 | Ava      |    17 |
 |    7 | Sophia   |    32 |
 +------+----------+-------+
 6 rows in set (0.01 sec)
 ```
 
-#### QA
+#### Common Issues
 
-* Writing to multiple tables must belong to the same Database; otherwise, you will encounter the error `Transaction insert must be in the same database`
+* Multiple tables written to must belong to the same Database, otherwise the error `Transaction insert must be in the same database` will be raised.
 
-* Mixing the two transaction load of `INSERT INTO SELECT`, `UPDATE`, `DELETE` and `INSERT INTO VALUES` is not allowed; otherwise, you will encounter the error `Transaction insert can not insert into values and insert into select at the same time`.
+* The two transactional write modes, `INSERT INTO SELECT` / `UPDATE` / `DELETE` and `INSERT INTO VALUES`, cannot be mixed, otherwise the error `Transaction insert can not insert into values and insert into select at the same time` will be raised.
 
-* [Delete Command](delete/delete-manual.md) supports delete by specifying a filter predicate or using clause, to guarantee the isolation, currently only support that, the delete operations must before the insert operations for one table in one transaction, otherwise, you will encounter the error `Can not delete because there is a insert operation for the same table`.  
+* The [Delete operation](delete/delete-manual.md) provides two ways to delete: by predicate and using the Using clause. To preserve the isolation level, within a transaction, deletions on the same table must occur before writes; otherwise the error `Can not delete because there is a insert operation for the same table` will be raised.
 
-* If the time-consuming from `BEGIN` statement exceeds the timeout configured in Doris, the transaction will be rolled back. Currently, the timeout uses the maximum value of session variables `insert_timeout` and `query_timeout`.
+* When a load that started from `BEGIN` exceeds the timeout configured in Doris, the transaction is rolled back and the load fails. The current timeout uses the maximum of the Session variables `insert_timeout` and `query_timeout`.
 
-* When using JDBC to connect to Doris for transaction operations, please add `useLocalSessionState=true` in the JDBC URL; otherwise, you may encounter the error `This is in a transaction, only insert, update, delete, commit, rollback is acceptable`.
+* When using JDBC to connect to Doris for transactional operations, add `useLocalSessionState=true` in the JDBC URL; otherwise the error `This is in a transaction, only insert, update, delete, commit, rollback is acceptable.` may be raised.
 
-* In cloud mode, transaction load does not support `merge on write` unique tables, otherwise, you will encounter the error `Transaction load is not supported for merge on write unique keys table in cloud mode`.  
+* In compute-storage decoupled mode, transactional writes do not support Merge-on-Write tables. Otherwise the error `Transaction load is not supported for merge on write unique keys table in cloud mode` will be raised.
+
 
 ## Stream Load 2PC
 
-**1. Enable two-phase commit by setting `two_phase_commit:true` in the HTTP Header.**
+**1. Set `two_phase_commit:true` in the HTTP Header to enable two-phase commit.**
 
 ```shell
-curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt http://fe_host:http_port/api/{db}/{table}/_stream_load
+curl  --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt http://fe_host:http_port/api/{db}/{table}/_stream_load
 {
     "TxnId": 18036,
     "Label": "55c8ffc9-1c40-4d51-b75e-f2265b3602ef",
@@ -412,9 +410,9 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
 }
 ```
 
-**2. Trigger the commit operation for a transaction (can be sent to FE or BE).**
+**2. Trigger a commit operation on the transaction (the request can be sent to either FE or BE).**
 
-- Specify the transaction using the Transaction ID:
+- The transaction can be specified by transaction id:
 
   ```shell
   curl -X PUT --location-trusted -u user:passwd -H "txn_id:18036" -H "txn_operation:commit" http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
@@ -424,43 +422,43 @@ curl --location-trusted -u user:passwd -H "two_phase_commit:true" -T test.txt ht
   }
   ```
 
-- Specify the transaction using the label:
+- The transaction can also be specified by label:
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:commit"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
+  curl -X PUT --location-trusted -u user:passwd  -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:commit"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
       "status": "Success",
       "msg": "label [55c8ffc9-1c40-4d51-b75e-f2265b3602ef] commit successfully."
   }
   ```
 
-**3. Trigger the abort operation for a transaction (can be sent to FE or BE).**
+**3. Trigger an abort operation on the transaction (the request can be sent to either FE or BE).**
 
-- Specify the transaction using the Transaction ID:
+- The transaction can be specified by transaction id:
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "txn_id:18037" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
+  curl -X PUT --location-trusted -u user:passwd  -H "txn_id:18037" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
       "status": "Success",
       "msg": "transaction [18037] abort successfully."
   }
   ```
 
-- Specify the transaction using the label:
+- The transaction can also be specified by label:
 
   ```shell
-  curl -X PUT --location-trusted -u user:passwd -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
+  curl -X PUT --location-trusted -u user:passwd  -H "label:55c8ffc9-1c40-4d51-b75e-f2265b3602ef" -H "txn_operation:abort"  http://fe_host:http_port/api/{db}/{table}/_stream_load_2pc
   {
       "status": "Success",
       "msg": "label [55c8ffc9-1c40-4d51-b75e-f2265b3602ef] abort successfully."
   }
   ```
 
-## Broker Load into muti tables with a transaction
+## Broker Load Multi-Table Transactions
 
-All Broker Load tasks are atomic and ensure atomicity even when loading multiple tables within the same task. The Label mechanism can be used to ensure data load without loss or duplication.
+All Broker Load load tasks take effect atomically. Loads into multiple tables within the same load task are also guaranteed to be atomic. The Label mechanism can also be used to ensure no-loss, no-duplication data loading.
 
-The following example demonstrates loading data from HDFS by using wildcard patterns to match two sets of files and load them into two different tables.
+The following example loads data from HDFS, using wildcards to match two batches of files and load them into two tables.
 
 ```sql
 LOAD LABEL example_db.label2
@@ -486,4 +484,4 @@ WITH BROKER hdfs
 );
 ```
 
-The wildcard pattern is used to match and load two sets of files, `file-10*` and `file-20*`, into `my_table1` and `my_table2` respectively. In the case of `my_table1`, the load is specified to the `p1` partition, and the values of thesecond and third columns in the source file are incremented by 1 before being loaded.
+Wildcards are used to match and load two batches of files, `file-10*` and `file-20*`, into two tables, `my_table1` and `my_table2`, respectively. Among them, `my_table1` is loaded into partition `p1`, with the values from the second and third columns of the source file incremented by 1 before being loaded.

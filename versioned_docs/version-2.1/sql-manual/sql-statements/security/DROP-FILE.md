@@ -10,7 +10,7 @@
 
 This statement is used to delete an uploaded file.
 
-## grammar:
+## Syntax
 
 ```sql
 DROP FILE "<file_name>" [ { FROM | IN } <database>] PROPERTIES ("<key>"="<value>" [ , ... ])

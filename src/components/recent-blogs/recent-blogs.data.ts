@@ -1,18 +1,19 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: 'When to Scale PostgreSQL Analytics? Advancing Analytics without unnecessary tool sprawl',
-        link: 'https://www.velodb.io/blog/when-to-scale-postgresql-analytics',
+        label: 'NetEase Games: From Elasticsearch, HBase, and ClickHouse to a Unified Apache Doris Lakehouse',
+        link: 'https://www.velodb.io/blog/netease-games-from-elasticsearch-and-clickhouse-to-a-unified-apache-doris-lakehouse',
     },
     {
-        label: 'From ClickHouse + Elasticsearch to Apache Doris: How Kwai Unified Trillion-Scale Ad Analytics',
-        link: 'https://www.velodb.io/blog/from-clickhouse-elasticsearch-to-apache-doris-how-kwai-unified-trillion-scale-ad-analytics',
+        label: 'From Data Silos to Context Silos: What Database History Teaches Us About the AI Infrastructure Problem',
+        link: 'https://www.velodb.io/blog/from-data-silos-to-context-silos',
     },
     {
-        label: 'Why a Mexican Mining Giant Migrated from Azure Synapse to Apache Doris',
-        link: 'https://www.velodb.io/blog/mexican-mining-giant-migrated-from-azure-synapse-to-apache-doris',
+        label: 'Apache Doris 4.1 on Iceberg V3: Running the Full Lakehouse Lifecycle from One SQL Engine',
+        link: 'https://www.velodb.io/blog/apache-doris-4-1-on-iceberg-v3-full-lakehouse-lifecycle',
     },
     {
-        label: 'How Xanh SM, Leading EV ride hailer in Vietnam, Built Real-Time Recommendations with Apache Doris',
-        link: 'https://www.velodb.io/blog/how-xanhsm-built-real-time-recommendations-with-apache-doris',
+        label: 'The Chunking and Embedding Cookbook for Production Context Engineering',
+        link: 'https://www.velodb.io/blog/the-chunking-and-embedding-cookbook-for-production-context-engineering',
     },
+
 ];

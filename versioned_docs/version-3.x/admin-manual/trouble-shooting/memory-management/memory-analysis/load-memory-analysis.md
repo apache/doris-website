@@ -26,7 +26,7 @@ MemTracker Label=AllMemTableMemory, Parent Label=DetailsTrackerSet, Used=25.08 M
 
 ## Load Memory Analysis
 
-If the value of ``Label=AllMemTableMemory` is small, the main memory used by the load task is the execution fragment. The analysis method is the same as [Query Memory Analysis](./query-memory-analysis.md), so it will not be repeated here.
+If the value of `Label=AllMemTableMemory` is small, the main memory used by the load task is the execution fragment. The analysis method is the same as [Query Memory Analysis](./query-memory-analysis.md), so it will not be repeated here.
 
 If the value of `Label=AllMemTableMemory` is large, MemTable may not be flushed in time. You can consider reducing the values ​​of `load_process_max_memory_limit_percent` and `load_process_soft_mem_limit_percent` in `be.conf`. This can make MemTable flush more frequently, so that fewer MemTables are cached in memory, but the number of files written will increase. If too many small files are written, the pressure of compaction will increase. If compaction is not timely, the metadata memory will increase, the query will slow down, and even the load will report an error after the number of files exceeds the limit.
 

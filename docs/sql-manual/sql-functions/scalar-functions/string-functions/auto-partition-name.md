@@ -2,7 +2,7 @@
 {
     "title": "AUTO_PARTITION_NAME",
     "language": "en",
-    "description": "The AUTOPARTITIONNAME function is used to generate partition names for auto partitions."
+    "description": "The AUTO_PARTITION_NAME function is used to generate partition names for auto partitions. It supports two modes: RANGE mode generates partition names based on time units, and LIST mode generates partition names based on string values."
 }
 ---
 

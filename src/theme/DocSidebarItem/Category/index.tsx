@@ -164,7 +164,9 @@ export default function DocSidebarItemCategory({
                 })}
             >
                 {level === 1 && isDocsPage ? (
-                    <p className={clsx('title_level_1')}>{label}</p>
+                    <p className={clsx('title_level_1')}>
+                        <span className="title_level_1__label">{label}</span>
+                    </p>
                 ) : (
                     <>
                         <Link

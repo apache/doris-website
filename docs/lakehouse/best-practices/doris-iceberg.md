@@ -130,7 +130,7 @@ Create an Iceberg table using `CREATE TABLE AS SELECT`:
 
 ```
 mysql> CREATE TABLE iceberg.nyc.taxis2 AS SELECT * FROM iceberg.nyc.taxis;
-Query OK, 6 rows affected (0.25 sec)
+Query OK, 4 rows affected (0.25 sec)
 {'status':'COMMITTED', 'txnId':'10088'}
 ```
 

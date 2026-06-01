@@ -45,7 +45,7 @@ CREATE OR REPLACE TABLE test.sales_data (
     amount        NUMERIC(10,2),
     country       STRING
 )
-PARTITION BY  order_date
+PARTITION BY  order_date;
 
 
 INSERT INTO test.sales_data (order_id, customer_name, order_date, amount, country) VALUES
@@ -99,7 +99,7 @@ PROPERTIES (
 
 2.2. **查看 GCS 上的导出文件**
 
-   以上命令会将 sales_data 的数据导出到 GCS 上，并且每个分区会产生一个或多个文件，文件名递增，具体可参考[exporting-data](https://cloud.google.com/bigquerydocs/exporting-data#exporting_data_into_one_or_more_files)，如下
+   以上命令会将 sales_data 的数据导出到 GCS 上，并且每个分区会产生一个或多个文件，文件名递增，具体可参考[exporting-data](https://cloud.google.com/bigquery/docs/exporting-data#exporting_data_into_one_or_more_files)，如下
    ![gcs_export](/images/data-operate/gcs_export.png)
 
 ## 3. 导入数据到 Doris
@@ -135,7 +135,7 @@ PROPERTIES (
   由于 S3Load 导入是异步提交的，所以需要通过 show load 可以查看指定 label 的导入情况：
 
    ```yaml
-   mysql> show load where label = "label_sales_data_2025_04_08"\G
+   mysql> show load where label = "sales_data_2025_04_08"\G
    *************************** 1. row ***************************
            JobId: 17956078
            Label: label_sales_data_2025_04_08

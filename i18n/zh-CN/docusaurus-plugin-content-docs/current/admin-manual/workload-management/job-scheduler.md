@@ -1,206 +1,260 @@
 ---
 {
-    "title": "调度管理",
+    "title": "Job Scheduler 定时任务调度",
+    "sidebar_label": "定时任务调度",
     "language": "zh-CN",
-    "description": "在数据管理愈加精细化的需求背景下，定时调度在其中扮演着重要的角色。它通常被应用于以下场景："
+    "description": "Apache Doris Job Scheduler 支持秒级定时任务调度，无需外部调度系统，可实现数据定期导入、ETL、多数据源同步等自动化操作。",
+    "keywords": ["Job Scheduler", "定时任务", "任务调度", "定时调度", "数据同步", "ETL", "Doris 定时任务"]
 }
 ---
 
-## 背景
+<!-- 知识类型: 功能概述 + 操作步骤 -->
 
-在数据管理愈加精细化的需求背景下，定时调度在其中扮演着重要的角色。它通常被应用于以下场景：
+## 概述
 
-- 定期数据更新，如周期性数据导入和 ETL 操作，减少人工干预，提高数据处理的效率和准确性。
+Apache Doris 内置的 **Job Scheduler** 是一个基于预设计划运行的任务管理系统，能够在指定时间点或按照固定时间间隔自动触发 SQL 操作，无需依赖外部调度工具。自 2.1 版本起，Job Scheduler 的调度精度可达秒级。
 
-- 结合 Catalog 实现外部数据源数据定期同步，确保多源数据高效、准确的整合到目标系统中，满足复杂的业务分析需求。
+**典型应用场景：**
 
-- 定期清理过期/无效数据，释放存储空间，避免过多过期/无效数据对系统性能产生影响。
+- 周期性数据导入与 ETL 处理，减少人工干预
+- 结合 Multi-Catalog 实现多数据源定期同步
+- 定期清理过期或无效数据，释放存储空间
+- 异步物化视图的定期刷新
 
-在 Apache Doris 之前版本中，通常需要依赖于外部调度系统，如通过业务代码定时调度或者引入第三方调度工具、分布式调度平台来满足上述需求。然而，因受限于外部系统自身能力，可能无法满足 Doris 对调度策略及资源管理灵活性的要求。此外，如果外部调度系统出现故障，这不仅会增加业务风险，还需投入额外的运维时间和人力来应对。
+**核心特性：**
 
-## Job Scheduler
-为解决上述问题，Apache Doris 在 2.1 版本中引入了 Job Scheduler 功能，实现了自主任务调度能力，调度的精准度可达到秒级。该功能的推出不仅保障了数据导入的完整性和一致性，更让用户能够灵活、便捷调整调度策略。同时，因减少了对外部系统的依赖，也降低了系统故障的风险和运维成本，为社区用户带来更加统一、可靠的使用体验。
+| 特性 | 说明 |
+|------|------|
+| 秒级精度 | 采用时间轮（TimingWheel）算法，事件触发精度达秒级 |
+| 灵活调度 | 支持一次性调度和周期性调度，周期可设置开始/结束时间 |
+| 高性能队列 | 基于 Disruptor 构建高性能生产消费者模型，避免任务执行过载 |
+| 执行记录可追溯 | 保存最近 Task 执行记录（数量可配置），可通过命令查询 |
+| 高可用 | 依托 Doris 自身高可用机制，支持自动故障恢复 |
 
-Doris Job Scheduler 是一种基于预设计划运行的任务管理系统，能够在特定时间点或按照指定时间间隔触发预定义操作，实现任务的自动化执行。Job Scheduler 具备以下特点：
-- 高效调度：Job Scheduler 可以在指定的时间间隔内安排任务和事件，确保数据处理的高效性。采用时间轮算法保证事件能够精准做到秒级触发。
-- 灵活调度：Job Scheduler 提供了多种调度选项，如按 分、小时、天或周的间隔进行调度，同时支持一次性调度以及循环（周期）事件调度，并且周期调度也可以指定开始时间、结束时间。
-- 事件池和高性能处理队列：Job Scheduler 采用 Disruptor 实现高性能的生产消费者模型，最大可能的避免任务执行过载。
-- 调度记录可追溯：Job Scheduler 会存储最新的 Task 执行记录（可配置），通过简单的命令即可查看任务执行记录，确保过程可追溯。
-- 高可用：依托于 Doris 自身的高可用机制，Job Schedule 可以很轻松的做到自恢复、高可用。
+**相关文档：** [CREATE JOB](../../sql-manual/sql-statements/job/CREATE-JOB)
 
-**相关文档：** [CREATE-JOB](../../sql-manual/sql-statements/job/CREATE-JOB.md)
+---
 
 ## 语法说明
-一条有效的 Job 语句需包含以下内容：
-- 关键字 CREATE JOB 需加作业名称，它在数据库中标识唯一事件。
 
-- ON SCHEDULE 子句用于指定 Job 作业的类型、触发时间和频率。
+<!-- 知识类型: 参考 -->
 
-    - AT timestamp 用于一次性事件。它指定 JOB 仅在给定的日期和时间执行一次，AT current_timestamp  指定当前日期和时间。因 JOB 一旦创建则会立即运行，也可用于异步任务创建。
-
-    - EVERY：用于周期性作业，可指定作业的执行频率，关键字后需指定时间间隔（周、天、小时、分钟）。
-
-        - Interval：用于指定作业执行频率。1 DAY 表示每天执行一次，1 HOUR 表示每小时执行一次，1 MINUTE 表示每分钟执行一次，1 WEEK 表示每周执行一次。
-
-        - 子句 EVERY 包含可选 STARTS 子句。STARTS 后面为 timestamp 值，该值用于定义开始重复的时间，CURRENT_TIMESTAMP  用于指定当前日期和时间。JOB 一旦创建则会立即运行。
-
-        - 子句 EVERY 包含可选 ENDS 子句。ENDS 关键字后面为 timestamp 值，该值定义 JOB 事件停止运行的时间。
-
-- DO 子句用于指定 Job 作业触发时所需执行的操作，目前仅支持 Insert 语句。
-
-    ```sql 
-    CREATE
-    JOB
-      job_name
-      ON SCHEDULE schedule
-      [COMMENT 'string']
-      DO execute_sql;
-
-    schedule: {
-        AT timestamp
-        | EVERY interval
-        [STARTS timestamp ]
-        [ENDS timestamp ]
-    }
-    interval:
-        quantity { WEEK |DAY | HOUR | MINUTE}
-    ```
-
-下方为简单的示例：
+一条完整的 Job 创建语句包含以下三个部分：
 
 ```sql
-CREATE JOB my_job ON SCHEDULE EVERY 1 MINUTE DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
+CREATE JOB job_name
+    ON SCHEDULE schedule
+    [COMMENT 'string']
+    DO execute_sql;
+
+schedule: {
+    AT timestamp
+    | EVERY interval
+      [STARTS timestamp]
+      [ENDS timestamp]
+}
+
+interval:
+    quantity { WEEK | DAY | HOUR | MINUTE }
 ```
 
-该语句表示创建一个名为 my_job 的作业，每分钟执行一次，执行的操作是将 db2.tbl2 中的数据导入到 db1.tbl1 中。
+**语法组成说明：**
+
+| 子句 | 说明 |
+|------|------|
+| `CREATE JOB job_name` | 指定 Job 名称，在数据库中唯一标识该任务 |
+| `ON SCHEDULE AT timestamp` | 一次性调度：在指定时间点执行一次；使用 `CURRENT_TIMESTAMP` 表示立即执行 |
+| `ON SCHEDULE EVERY interval` | 周期性调度：按指定时间间隔重复执行 |
+| `STARTS timestamp` | （可选）周期调度的开始时间；使用 `CURRENT_TIMESTAMP` 表示立即开始 |
+| `ENDS timestamp` | （可选）周期调度的结束时间 |
+| `DO execute_sql` | 触发时执行的 SQL 语句（目前仅支持 INSERT 语句） |
+
+**interval 支持的单位：** `WEEK`、`DAY`、`HOUR`、`MINUTE`
+
+---
 
 ## 使用示例
-创建一次性的 Job：在 2025-01-01 00:00:00 时执行一次，将 db2.tbl2 中数据导入到 db1.tbl1 中。
+
+<!-- 知识类型: 操作步骤 -->
+
+### 一次性任务
+
+在 2025-01-01 00:00:00 执行一次，将 `db2.tbl2` 的数据导入到 `db1.tbl1`：
 
 ```sql
-CREATE JOB my_job ON SCHEDULE AT '2025-01-01 00:00:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
+CREATE JOB my_job
+    ON SCHEDULE AT '2025-01-01 00:00:00'
+    DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
 ```
-创建周期性的 Job，未指定结束时间：在 22025-01-01 00:00:00 时开始每天执行 1 次，将 db2.tbl2 中数据导入到 db1.tbl1 中。
+
+### 周期性任务（不设结束时间）
+
+从 2025-01-01 00:00:00 开始，每天执行一次增量导入：
 
 ```sql
-CREATE JOB my_job ON SCHEDULE EVERY 1 DAY STARTS '2025-01-01 00:00:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2 WHERE  create_time >=  days_add(now(),-1);
+CREATE JOB my_job
+    ON SCHEDULE EVERY 1 DAY
+    STARTS '2025-01-01 00:00:00'
+    DO INSERT INTO db1.tbl1
+       SELECT * FROM db2.tbl2
+       WHERE create_time >= days_add(now(), -1);
 ```
-创建周期性的 Job，指定结束时间：在 2025-01-01 00:00:00 时开始每天执行 1 次，将 db2.tbl2 中的数据导入到 db1.tbl1 中，在 2026-01-01 00:10:00 时结束。
+
+### 周期性任务（设置结束时间）
+
+从 2025-01-01 开始每天导入，至 2026-01-01 00:10:00 自动停止：
 
 ```sql
-CREATE JOB my_job ON SCHEDULE EVERY 1 DAY STARTS '2025-01-01 00:00:00' ENDS '2026-01-01 00:10:00' DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2 WHERE create_time >=  days_add(now(),-1);
+CREATE JOB my_job
+    ON SCHEDULE EVERY 1 DAY
+    STARTS '2025-01-01 00:00:00'
+    ENDS '2026-01-01 00:10:00'
+    DO INSERT INTO db1.tbl1
+       SELECT * FROM db2.tbl2
+       WHERE create_time >= days_add(now(), -1);
 ```
-借助 Job 实现异步执行：由于 Job 在 Doris 中是以同步任务的形式创建的，但其执行过程却是异步进行的，这一特性使得 Job 非常适合用于实现异步任务，例如常见的 insert into select 任务。
 
-假设需要将 db2.tbl2 中的数据导入到 db1.tbl1 中，这里只需要指定 JOB 为一次性任务，且开始时间设置为当前时间即可。
+### 异步执行任务
+
+Job 在 Doris 中以同步方式创建，但实际执行是异步进行的，适合实现异步任务（如耗时较长的 `INSERT INTO SELECT`）。
+
+将开始时间设为 `CURRENT_TIMESTAMP`，Job 创建后会立即异步执行：
 
 ```sql
-CREATE JOB my_job ON SCHEDULE AT current_timestamp DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
+CREATE JOB my_job
+    ON SCHEDULE AT CURRENT_TIMESTAMP
+    DO INSERT INTO db1.tbl1 SELECT * FROM db2.tbl2;
 ```
 
-## 基于 Catalog 与 Job Scheduler 的数据自动同步
+---
 
-以某电商场景为例，用户常常需要从 MySQL 中提取业务数据，并将这些数据同步到 Doris 中进行数据分析，从而支持精准的营销活动。而 Job Scheduler 可与数据湖能力 Multi Catalog 配合，高效完成跨数据源的定期数据同步。
+## 基于 Catalog 与 Job Scheduler 实现数据自动同步
+
+<!-- 知识类型: 操作步骤 -->
+
+以电商场景为例：用户需要定期从 MySQL 中提取业务数据，同步到 Doris 中进行数据分析，支持精准营销。Job Scheduler 可与 Multi-Catalog 配合，高效完成跨数据源的定期数据同步。
+
+**步骤一：准备 MySQL 源数据**
+
+假设 MySQL 中存在如下用户活动数据表：
 
 ```sql
 CREATE TABLE IF NOT EXISTS user.activity (
-    `user_id` INT NOT NULL,
-    `date` DATE NOT NULL,
-    `city` VARCHAR(20),
-    `age` SMALLINT,
-    `sex` TINYINT,
+    `user_id`        INT      NOT NULL,
+    `date`           DATE     NOT NULL,
+    `city`           VARCHAR(20),
+    `age`            SMALLINT,
+    `sex`            TINYINT,
     `last_visit_date` DATETIME DEFAULT '1970-01-01 00:00:00',
-    `cost` BIGINT DEFAULT '0',
-    `max_dwell_time` INT DEFAULT '0',
-    `min_dwell_time` INT DEFAULT '99999'
+    `cost`           BIGINT   DEFAULT '0',
+    `max_dwell_time` INT      DEFAULT '0',
+    `min_dwell_time` INT      DEFAULT '99999'
 );
+
 INSERT INTO user.activity VALUES
-    (10000, '2017-10-01', '北京', 20, 0, '2017-10-01 06:00:00', 20, 10, 10),
-    (10000, '2017-10-01', '北京', 20, 0, '2017-10-01 07:00:00', 15, 2, 2),
-    (10001, '2017-10-01', '北京', 30, 1, '2017-10-01 17:05:00', 2, 22, 22),
-    (10002, '2017-10-02', '上海', 20, 1, '2017-10-02 12:59:00', 200, 5, 5),
-    (10003, '2017-10-02', '广州', 32, 0, '2017-10-02 11:20:00', 30, 11, 11),
-    (10004, '2017-10-01', '深圳', 35, 0, '2017-10-01 10:00:00', 100, 3, 3),
-    (10004, '2017-10-03', '深圳', 35, 0, '2017-10-03 10:20:00', 11, 6, 6);
+    (10000, '2017-10-01', '北京', 20, 0, '2017-10-01 06:00:00', 20,  10, 10),
+    (10000, '2017-10-01', '北京', 20, 0, '2017-10-01 07:00:00', 15,  2,  2),
+    (10001, '2017-10-01', '北京', 30, 1, '2017-10-01 17:05:00', 2,   22, 22),
+    (10002, '2017-10-02', '上海', 20, 1, '2017-10-02 12:59:00', 200, 5,  5),
+    (10003, '2017-10-02', '广州', 32, 0, '2017-10-02 11:20:00', 30,  11, 11),
+    (10004, '2017-10-01', '深圳', 35, 0, '2017-10-01 10:00:00', 100, 3,  3),
+    (10004, '2017-10-03', '深圳', 35, 0, '2017-10-03 10:20:00', 11,  6,  6);
 ```
 
-| user_id | date      | city | age  | sex  | last_visit_date | cost | max_dwell_time | min_dwell_time |
-| ------- | --------- | ---- | ---- | ---- | --------------- | ---- | -------------- | -------------- |
-| 10000   | 2017/10/1 | 北京 | 20   | 0    | 2017/10/1 6:00  | 20   | 10             | 10             |
-| 10000   | 2017/10/1 | 北京 | 20   | 0    | 2017/10/1 7:00  | 15   | 2              | 2              |
-| 10001   | 2017/10/1 | 北京 | 30   | 1    | 2017/10/1 17:05 | 2    | 22             | 22             |
-| 10002   | 2017/10/2 | 上海 | 20   | 1    | 2017/10/2 12:59 | 200  | 5              | 5              |
-| 10003   | 2017/10/2 | 广州 | 32   | 0    | 2017/10/2 11:20 | 30   | 11             | 11             |
-| 10004   | 2017/10/1 | 深圳 | 35   | 0    | 2017/10/1 10:00 | 100  | 3              | 3              |
-| 10004   | 2017/10/3 | 深圳 | 35   | 0    | 2017/10/3 10:20 | 11   | 6              | 6              |
+| user_id | date       | city | age | sex | last_visit_date     | cost | max_dwell_time | min_dwell_time |
+|---------|------------|------|-----|-----|---------------------|------|----------------|----------------|
+| 10000   | 2017-10-01 | 北京 | 20  | 0   | 2017-10-01 06:00:00 | 20   | 10             | 10             |
+| 10000   | 2017-10-01 | 北京 | 20  | 0   | 2017-10-01 07:00:00 | 15   | 2              | 2              |
+| 10001   | 2017-10-01 | 北京 | 30  | 1   | 2017-10-01 17:05:00 | 2    | 22             | 22             |
+| 10002   | 2017-10-02 | 上海 | 20  | 1   | 2017-10-02 12:59:00 | 200  | 5              | 5              |
+| 10003   | 2017-10-02 | 广州 | 32  | 0   | 2017-10-02 11:20:00 | 30   | 11             | 11             |
+| 10004   | 2017-10-01 | 深圳 | 35  | 0   | 2017-10-01 10:00:00 | 100  | 3              | 3              |
+| 10004   | 2017-10-03 | 深圳 | 35  | 0   | 2017-10-03 10:20:00 | 11   | 6              | 6              |
 
-以上表为例，用户希望查询符合总消费金额、最后一次访问时间、性别、所在城市这几个数值条件的用户，并将满足条件的用户信息导入到 Doris 中，以便后续的定向推送。
+目标是查询满足消费金额、访问时间、性别、城市等条件的用户，并将其导入 Doris 进行后续精准推送。
 
-1. 首先，创建一张 Doris 表
+**步骤二：在 Doris 中创建目标表**
+
+```sql
+CREATE TABLE IF NOT EXISTS user_activity (
+    `user_id`        LARGEINT NOT NULL COMMENT "用户 id",
+    `date`           DATE     NOT NULL COMMENT "数据灌入日期时间",
+    `city`           VARCHAR(20)      COMMENT "用户所在城市",
+    `age`            SMALLINT         COMMENT "用户年龄",
+    `sex`            TINYINT          COMMENT "用户性别",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
+    `cost`           BIGINT SUM DEFAULT "0"     COMMENT "用户总消费",
+    `max_dwell_time` INT    MAX DEFAULT "0"     COMMENT "用户最大停留时间",
+    `min_dwell_time` INT    MIN DEFAULT "99999" COMMENT "用户最小停留时间"
+)
+AGGREGATE KEY(`user_id`, `date`, `city`, `age`, `sex`)
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
+PROPERTIES (
+    "replication_allocation" = "tag.location.default: 1"
+);
+```
+
+**步骤三：创建 MySQL Catalog**
+
+```sql
+CREATE CATALOG activity PROPERTIES (
+    "type"       = "jdbc",
+    "user"       = "root",
+    "password"   = "123456",
+    "jdbc_url"   = "jdbc:mysql://127.0.0.1:3306/user?useSSL=false",
+    "driver_url" = "mysql-connector-java-5.1.49.jar",
+    "driver_class" = "com.mysql.jdbc.Driver"
+);
+```
+
+**步骤四：创建调度 Job 执行数据同步**
+
+全量导入可能引发系统波动，通常安排在业务低峰期（如凌晨）执行。
+
+- **一次性调度**（全量导入，在凌晨 3:00 触发一次）：
 
     ```sql
-    CREATE TABLE IF NOT EXISTS user_activity
-      (
-      `user_id` LARGEINT NOT NULL COMMENT "用户 id",
-      `date` DATE NOT NULL COMMENT "数据灌入日期时间",
-      `city` VARCHAR(20) COMMENT "用户所在城市",
-      `age` SMALLINT COMMENT "用户年龄",
-      `sex` TINYINT COMMENT "用户性别",
-      `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
-      `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
-      `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
-      `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
-      )
-      AGGREGATE KEY(`user_id`, `date`, `city`, `age`, `sex`)
-      DISTRIBUTED BY HASH(`user_id`) BUCKETS 1
-      PROPERTIES (
-      "replication_allocation" = "tag.location.default: 1"
-      );
-    ```  
-2. 其次，创建对应 MySQL 库的 Catalog
-
-    ```sql    
-    CREATE CATALOG activity PROPERTIES (
-      "type"="jdbc",
-      "user"="root",
-      "password"="123456",
-      "jdbc_url" = "jdbc:mysql://127.0.0.1:3306/user?useSSL=false",
-      "driver_url" = "mysql-connector-java-5.1.49.jar",
-      "driver_class" = "com.mysql.jdbc.Driver"
-      );
-    ```  
-3. 最后，将 MySQL 数据导入到 Doris 中。采用 Catalog + Insert Into 的方式来导入全量数据，由于全量导入操作可能会引发系统服务波动，通常选择在业务闲暇时进行操作。
-
-- 一次性调度：如下方代码所示，使用一次性任务来定时触发全量导入任务，触发时间为凌晨 3:00。
-
-    ```sql    
     CREATE JOB one_time_load_job
-      ON SCHEDULE
-      AT '2024-8-10 03:00:00'
-      DO
-      INSERT INTO user_activity SELECT * FROM activity.user.activity
-    ```  
-- 周期调度：用户也可以创建一个周期性的调度任务，定期更新最新的数据。
+        ON SCHEDULE AT '2024-08-10 03:00:00'
+        DO INSERT INTO user_activity
+           SELECT * FROM activity.user.activity;
+    ```
 
-    ```sql    
+- **周期性调度**（每日增量同步最新数据）：
+
+    ```sql
     CREATE JOB schedule_load
-      ON SCHEDULE EVERY 1 DAY
-      DO
-      INSERT INTO user_activity SELECT * FROM activity.user.activity where last_visit_date >=  days_add(now(),-1)
-    ```  
-## 设计与实现
-高效的调度通常伴随着大量的资源消耗，高精度的调度更是如此。传统的实现方式是直接使用 Java 内置的定时调度能力——定时调度线程周期访问，或采用一些定时调度的工具类库，但其在精度以及内存占用上存在较大的问题。为更好保障性能的前提下降低资源的占用，我们选择 TimingWheel 算法与 Disruptor 结合，实现秒级别的任务调度。
+        ON SCHEDULE EVERY 1 DAY
+        DO INSERT INTO user_activity
+           SELECT * FROM activity.user.activity
+           WHERE last_visit_date >= days_add(now(), -1);
+    ```
 
-具体来说，利用 Netty 的 HashedWheelTimer 实现时间轮算法，Job Manager 会周期性（默认十分钟）地将未来事件放入时间轮中调度。为了保证任务高效触发并避免资源过度占用，采用 Disruptor 构建单生产者多消费者模型。时间轮仅负责触发，并不直接执行任务。对于到期需触发的任务时，会将其放入 Diapatch 线程，由其负责将任务分发至相应的执行线程池，对于需立即执行的任务，则直接将其投递至相应的任务执行线程池中。
+---
 
-对于单次执行事件，将在调度完成后删除事件定义；对于周期性事件，时间轮中的系统事件将定期拉取下一个周期的执行任务。这样可以避免大量任务集中在一个 Bucket 中，减少无意义的遍历、提高处理效率。
+## 设计与实现原理
 
-而对于事务型任务，Job Scheduler 能够通过与事务的强关联以及事务回调机制，确保事务型任务的执行结果与预期一致，从而保证数据的完整性和一致性。
+<!-- 知识类型: 概念解释 -->
 
+高精度调度面临高资源消耗的挑战。传统 Java 定时线程方案在调度精度和内存占用上存在明显不足。为此，Job Scheduler 采用 **TimingWheel 算法 + Disruptor** 的组合方案，在保障性能的同时降低资源占用。
+
+**核心机制：**
+
+1. **时间轮触发**：利用 Netty 的 `HashedWheelTimer` 实现时间轮算法，Job Manager 每十分钟（默认）将未来事件预先放入时间轮进行调度。
+2. **Disruptor 分发**：时间轮仅负责触发，不直接执行任务。到期任务先进入 Dispatch 线程，再由其分发至对应的执行线程池；需立即执行的任务则直接投递至执行线程池。
+3. **事件生命周期管理**：一次性任务在调度完成后自动删除事件定义；周期性任务则由时间轮定期拉取下一周期的执行计划，避免大量任务集中在同一 Bucket 中，提高处理效率。
+4. **事务一致性保障**：对于事务型任务，Job Scheduler 通过与事务的强关联及回调机制，确保任务执行结果与预期一致，保证数据完整性。
+
+---
 
 ## 未来规划
-Doris Job Scheduler 是一款强大且灵活的任务调度工具，是数据处理中必不可少的功能之一。除了在数据湖分析、内部 ETL 等常见场景的应用外，Job Scheduler 对于异步物化视图的实现也起到关键的作用。异步物化视图是一个预先计算并存储的结果集，其数据更新的频率与源表的变动紧密相关。当源表数据更新频繁时，为确保物化视图中数据保持最新状态，就需要对物化视图定期刷新。因此在 2.1 版本中，我们巧妙地利用 JOB 定时调度功能，保障了物化视图与源表数据的一致性，大幅降低了人工干预的成本。
-未来，Doris Job Scheduler 还会支持以下特性：
-- 支持通过 UI 界面查看不同时段执行的任务分布情况。
-- 支持 JOB 流程编排，即 DAG JOB。这意味着我们可以在内部实现数仓任务编排，与 Catalog 功能叠加将会更高效地完成数据处理和分析工作。
-- 支持对导入任务、UPDATE、DELETE 操作进行定时调度。
+
+<!-- 知识类型: 路线图 -->
+
+Job Scheduler 在异步物化视图场景中同样发挥关键作用——当源表数据频繁更新时，Job Scheduler 负责定期触发物化视图刷新，确保视图数据与源表保持一致。
+
+后续版本计划新增以下能力：
+
+- **可视化任务分布**：支持通过 UI 界面查看不同时段的任务执行分布情况。
+- **DAG 流程编排**：支持 JOB 流程编排（DAG JOB），在 Doris 内部实现数仓任务依赖编排，结合 Catalog 功能可更高效地完成数据处理与分析。
+- **更多操作支持**：支持对 UPDATE、DELETE 等操作进行定时调度。

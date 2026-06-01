@@ -29,7 +29,7 @@ FE 的配置项有两种方式进行查看：
 
 2. 通过命令查看
 
-   FE 启动后，可以在 MySQL 客户端中，通过以下命令查看 FE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG)：
+   FE 启动后，可以在 MySQL 客户端中，通过以下命令查看 FE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG)：
 
    `SHOW FRONTEND CONFIG;`
 
@@ -2167,9 +2167,9 @@ tablet 状态更新间隔
 
 #### `default_compression_type`
 
-默认值：lz4（4.0.3 之前），zstd（4.0.3 及之后）
+默认值：LZ4F（4.0.3 之前），ZSTD（4.0.3 及之后）
 
-创建表时可以指定其压缩算法。如果未设置，则此配置项指定创建表时的默认压缩类型。有效值包括：lz4、zstd。
+创建表时可以指定其压缩算法。如果未设置，则此配置项指定创建表时的默认压缩类型。有效值：LZ4、LZ4F、LZ4HC、ZLIB、ZSTD、SNAPPY、NONE（大小写不敏感）。
 
 #### `enable_storage_policy`
 

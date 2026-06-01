@@ -1,0 +1,73 @@
+name: Check Markdown Links
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-md-links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Collect added/modified Markdown files
+        id: changed
+        run: |
+          # Only added (A) or modified (M) files in this PR — deletions and renames-source are skipped.
+          # Three-dot diff (BASE...HEAD) gives the PR's own changes vs. the merge-base,
+          # so commits that landed on the base branch after this PR diverged are excluded.
+          {
+            echo 'files<<EOF'
+            git diff --name-only --diff-filter=AM \
+              "${{ github.event.pull_request.base.sha }}...HEAD" \
+              -- 'docs/**/*.md' 'docs/**/*.mdx' \
+                 'i18n/zh-CN/docusaurus-plugin-content-docs/current/**/*.md' \
+                 'i18n/zh-CN/docusaurus-plugin-content-docs/current/**/*.mdx'
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Check links in changed Markdown files
+        run: |
+          set -u
+          FILES="${{ steps.changed.outputs.files }}"
+          if [ -z "$FILES" ]; then
+            echo "No Markdown files added or modified in this PR. Skipping."
+            exit 0
+          fi
+
+          echo "Markdown files to check:"
+          echo "$FILES"
+          echo "------------------------------------------------------------"
+
+          FAILED=()
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            if [ ! -f "$file" ]; then
+              echo "Skip (not found in working tree): $file"
+              continue
+            fi
+            echo
+            echo "=== Checking: $file ==="
+            if ! python3 scripts/check_md_links_single.py "$file" --no-external; then
+              FAILED+=("$file")
+            fi
+          done <<< "$FILES"
+
+          echo
+          echo "============================================================"
+          if [ ${#FAILED[@]} -gt 0 ]; then
+            echo "❌ Broken internal links found in ${#FAILED[@]} file(s):"
+            for f in "${FAILED[@]}"; do
+              echo "   - $f"
+            done
+            exit 1
+          fi
+          echo "✅ All checked Markdown files have valid internal links."

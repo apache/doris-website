@@ -1,0 +1,56 @@
+schema_version: 1
+description: >
+  Shared terminology for Apache Doris documentation translation, AI review, and
+  future companion PR workflows. Product names, component abbreviations, and
+  feature names should remain stable across locales unless this file is updated.
+
+terms:
+  - source: "Doris"
+    zh-CN: "Doris"
+    ja: "Doris"
+    policy: "Do not translate. Use Apache Doris on first mention when the product name is needed."
+
+  - source: "FE"
+    zh-CN: "FE"
+    ja: "FE"
+    policy: "Do not expand or translate when referring to the Frontend process/component."
+
+  - source: "BE"
+    zh-CN: "BE"
+    ja: "BE"
+    policy: "Do not expand or translate when referring to the Backend process/component."
+
+  - source: "Tablet"
+    zh-CN: "Tablet"
+    ja: "Tablet"
+    policy: "Keep as Tablet for the Doris storage unit. Do not translate as a consumer device."
+
+  - source: "Routine Load"
+    zh-CN: "Routine Load"
+    ja: "Routine Load"
+    policy: "Keep the feature name in English."
+
+  - source: "Lakehouse"
+    zh-CN: "Lakehouse"
+    ja: "Lakehouse"
+    policy: "Keep the architecture term in English unless surrounding prose clearly needs explanation."
+
+  - source: "Catalog"
+    zh-CN: "Catalog"
+    ja: "Catalog"
+    policy: "Keep as Catalog when referring to Doris external catalog objects."
+
+  - source: "Stream Load"
+    zh-CN: "Stream Load"
+    ja: "Stream Load"
+    policy: "Keep the load method name in English."
+
+  - source: "Broker Load"
+    zh-CN: "Broker Load"
+    ja: "Broker Load"
+    policy: "Keep the load method name in English."
+
+  - source: "Compaction"
+    zh-CN: "Compaction"
+    ja: "Compaction"
+    policy: "Keep as Compaction for storage engine operations."

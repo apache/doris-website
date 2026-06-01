@@ -10,10 +10,6 @@
 
 Returns the type name (in uppercase) of a given geometry object. Used to identify the specific type of a geometric shape.
 
-:::info Note
-Supported since Apache Doris 4.0.4
-:::
-
 ## Syntax
 
 ```sql

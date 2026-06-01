@@ -2,14 +2,12 @@
 {
     "title": "IPV6_STRING_TO_NUM_OR_DEFAULT",
     "language": "en",
-    "description": "The reverse function of IPv6NumToString, it accepts an IP address string and returns the IPv6 address in binary format."
+    "description": "The reverse function of IPV6_NUM_TO_STRING, it accepts an IP address string and returns the IPv6 address in binary format."
 }
 ---
 
-## ipv6_string_to_num_or_default
-
 ## Description
-The reverse function of IPv6NumToString, it accepts an IP address string and returns the IPv6 address in binary format.
+The reverse function of IPV6_NUM_TO_STRING, it accepts an IP address string and returns the IPv6 address in binary format.
 
 ## Syntax
 ```sql

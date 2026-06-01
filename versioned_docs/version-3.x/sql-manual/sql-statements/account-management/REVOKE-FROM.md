@@ -104,7 +104,7 @@ Users executing this SQL command must have at least the following privileges:
 
 | Privilege | Object | Notes                |
 | :---------------- | :------------- | :---------------------------- |
-| GRANT_PRIV        | User or Role   | Only users or roles with the GRANT_PRIV privilege can perform the GRANT operation. |
+| GRANT_PRIV        | User or Role   | Only users or roles with the GRANT_PRIV privilege can perform the REVOKE operation. |
 
 ## Examples
 
@@ -136,12 +136,6 @@ Users executing this SQL command must have at least the following privileges:
 
    ```sql
    REVOKE USAGE_PRIV ON WORKLOAD GROUP '%' FROM 'jack'@'%';
-   ```
-
-- Revoke roles from a user:
-
-   ```sql
-   REVOKE 'role1','role2' FROM ROLE 'test_role';
    ```
 
 - Revoke the usage privilege on all compute groups from a user:

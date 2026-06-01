@@ -12,7 +12,6 @@ The WEEK function returns the week number for a specified date, with default Mod
 
 The effect of the mode parameter is shown in the following table:
 
-```sql
 |Mode |First day of week |Week number range |Definition of the first week                     |
 |:----|:-----------------|:-----------------|:------------------------------------------------|
 |0    |Sunday            |0-53             |The week containing the first Sunday of the year |
@@ -23,7 +22,7 @@ The effect of the mode parameter is shown in the following table:
 |5    |Monday            |0-53             |The week containing the first Monday of the year |
 |6    |Sunday            |1-53             |The first week with 4 or more days in this year  |
 |7    |Monday            |1-53             |The week containing the first Monday of the year |
-```
+
 
 This function is consistent with the [week function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_week) in MySQL.
 
@@ -37,7 +36,7 @@ WEEK(`<date_or_time_expr>`, `<mode>`)
 
 | Parameter | Description |
 |-----------|-------------|
-| `<datetime_or_date>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | `mode` | Specified calculation method for the first week of the year, type INT, range 0-7 |
 
 ## Return Value

@@ -34,7 +34,7 @@ WHERE [LABEL = "<load_label>" | LABEL like "<label_pattern>" | STATE = { "PENDIN
 
 > If `LABEL LIKE "<label_pattern>"` is used, it matches import tasks whose labels contain the `label_pattern`.
 
-**3. STATE = { " PENDING " | " ETL " | " LOADING " | " FINISHED " | " CANCELLED " }**
+**3. STATE = { " PENDING " | " ETL " | " LOADING " }**
 
 > Specifying `PENDING` means cancelling jobs with the `STATE = "PENDING"` status. The same applies to other statuses.
 
@@ -67,7 +67,7 @@ Users executing this SQL command must have at least the following permissions:
    ```sql
    CANCEL LOAD
    FROM example_db
-   WHERE LABEL like "example_";
+   WHERE LABEL like "%example_%";
    ```
 
 3. Cancel import jobs in the `LOADING` state.

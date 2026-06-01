@@ -87,7 +87,7 @@ The user executing this SQL command must have at least the following permissions
   
 
   ```sql
-  CREATE INDEX index1 ON table1 USING INVERTED;
+  CREATE INDEX index1 ON table1(col1) USING INVERTED;
   ```
 
 - Create an NGram BloomFilter index `index2` on `table1`
@@ -95,15 +95,17 @@ The user executing this SQL command must have at least the following permissions
   
 
   ```sql
-  CREATE INDEX index2 ON table1 USING NGRAM_BF PROPERTIES("gram_size"="3", "bf_size"="1024");
+  CREATE INDEX index2 ON table1(col1) USING NGRAM_BF PROPERTIES("gram_size"="3", "bf_size"="1024");
   ```
+
 
 - Create an ANN index `index3` on `table1` (`embedding`) vector column.
 
+
   ```sql
   CREATE INDEX index3 ON table1 (`embedding`) USING ANN PROPERTIES(
-      "index_type"="hnsw",
-      "metric_type"="l2_distance",
-      "dim"="128"
+    "index_type"="hnsw",
+    "metric_type"="l2_distance",
+    "dim"="128"
   );
-  ```
+    ```

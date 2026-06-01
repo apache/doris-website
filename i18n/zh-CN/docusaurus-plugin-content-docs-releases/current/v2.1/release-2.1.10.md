@@ -26,7 +26,7 @@
 - 支持了更多的 GEO 类型的计算函数`ST_CONTAINS ` , `ST_INTERSECTS`, `ST_TOUCHES`，`GeometryFromText`，`ST_Intersects`, `ST_Disjoint`, `ST_Touches`。[#49665](https://github.com/apache/doris/pull/49665) [#48695](https://github.com/apache/doris/pull/48695)
 - 支持 `years_of_week` 函数。[#48870](https://github.com/apache/doris/pull/48870)
 
-## 湖仓一体
+### 湖仓一体
 
 - Hive Catalog 支持 Catalog 级别的分区缓存开关控制 [#50724](https://github.com/apache/doris/pull/50724)
   - 更多详情，可参考[文档](https://doris.apache.org/zh-CN/docs/dev/lakehouse/meta-cache#关闭-hive-catalog-元数据缓存)

@@ -22,17 +22,32 @@
 
 @font-face {
     font-family: 'Inter';
-    src: url('/fonts/Inter-VariableFont_opsz,wght.ttf');
+    src: url('/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype-variations');
+    font-weight: 100 900;
+    font-display: swap;
 }
 
 @font-face {
-    font-family: 'Noto Sans';
-    src: url('/fonts/NotoSansSC-VariableFont_wght.ttf');
+    font-family: 'Noto Sans SC';
+    src: url('/fonts/NotoSansSC-VariableFont_wght.ttf') format('truetype-variations');
+    font-weight: 100 900;
+    font-display: swap;
 }
 
 @font-face {
-    font-family: 'Montserrat';
-    src: url('/fonts/Montserrat-VariableFont_wght.ttf');
+    font-family: 'JetBrains Mono';
+    src: url('/fonts/JetBrainsMono-VariableFont_wght.ttf') format('truetype-variations');
+    font-weight: 100 800;
+    font-display: swap;
+}
+
+:root {
+    --font-sans-en: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --font-sans-zh: 'Noto Sans SC', 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --font-family-base: var(--font-sans-en);
+    --ifm-font-family-base: var(--font-sans-en);
+    --ifm-font-family-monospace: var(--font-mono);
 }
 
 @layer utilities {
@@ -54,19 +69,16 @@
 }
 
 html[lang='zh-Hans-CN'] {
-    --font-family-base: 'Noto Sans';
-    font-family: 'Noto Sans', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-family-base: var(--font-sans-zh);
+    --ifm-font-family-base: var(--font-sans-zh);
+    font-family: var(--font-family-base);
 }
 
 html[lang='en-US'] {
-    --font-family-base: 'Inter';
-    font-family: 'Inter', 'MiSans Latin', 'Montserrat', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial,
-        sans-serif;
+    --font-family-base: var(--font-sans-en);
+    --ifm-font-family-base: var(--font-sans-en);
+    font-family: var(--font-family-base);
 }
-
-// :root {
-//     --font-family-base: 'SF Pro Display', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-// }
 .markdown :where(p, h1, h2, h3, h4, h5, h6, li, blockquote) {
     font-family: var(--font-family-base);
     color: #1f1f26;
@@ -126,3 +138,32 @@ body {
 .ant-pagination-item-container .ant-pagination-item-link-icon {
     color: var(--ifm-color-primary) !important;
 }
+
+.markdown .doris-doc-intro-animation {
+    width: 100%;
+    max-width: 960px;
+    aspect-ratio: 16 / 9;
+    margin: 0 auto 32px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #0a0c0e;
+}
+
+.markdown .doris-doc-intro-animation__frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/**
+ * Lift Kapa's shadow-host above the sticky NavbarNext (z-index 300). The
+ * Mantine modal/overlay live inside the shadow root and inherit stacking
+ * from this host, so raising the host is enough.
+ */
+#kapa-widget-container {
+    z-index: 9999 !important;
+}
+
+// Centering the Kapa modal itself is done by injecting CSS into its shadow
+// root from static/js/custom-script.js, since light-DOM rules can't pierce it.

@@ -67,7 +67,7 @@ SELECT MICROSECOND_TIMESTAMP('2025-01-23 12:34:56.123456 +15:00');
 -- If the input datetime is before 1970 (standard UTC), returns a negative value
 SELECT MICROSECOND_TIMESTAMP('1960-01-01 00:00:00 UTC');
 +---------------------------------------------------+
-| MICROSECOND_TIMESTAMP('1960-01-01 00:00:00 UTC') |
+| MICROSECOND_TIMESTAMP('1960-01-01 00:00:00 UTC')  |
 +---------------------------------------------------+
 |                                  -315619200000000 |
 +---------------------------------------------------+

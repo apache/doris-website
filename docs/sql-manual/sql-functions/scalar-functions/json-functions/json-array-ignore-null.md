@@ -24,7 +24,7 @@ JSON_ARRAY_IGNORE_NULL([<expression>, ...])
 
 ## Usage Notes
 - JSON_ARRAY_IGNORE_NULL implementation converts different types of parameters to JSON values by implicitly calling the [`TO_JSON`](./to-json.md) function, so parameters must be types supported by [`TO_JSON`](./to-json.md).
-- NULL will be ingored. If you DO want to retain null values in the array, you can use the function [`JSON_ARRAY`](./json-array.md).
+- NULL will be ignored. If you DO want to retain null values in the array, you can use the function [`JSON_ARRAY`](./json-array.md).
 - If the parameter type is not supported by [`TO_JSON`](./to-json.md), you will get an error. You can first convert that parameter to String type, for example:
     ```sql
     select JSON_ARRAY_IGNORE_NULL(CAST(NOW() as String));

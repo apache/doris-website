@@ -2,23 +2,118 @@
 {
     "title": "Backup",
     "language": "en",
-    "description": "For concepts related to backup, please refer to Backup and Restore. This guide provides the steps to create a Repository and back up data."
+    "description": "Use the Doris backup feature to back up databases, tables, or partitions as snapshots to remote storage such as S3, Azure, GCP, OSS, MinIO, and HDFS. This guide provides the complete procedure.",
+    "keywords": [
+        "Doris backup",
+        "BACKUP SNAPSHOT",
+        "CREATE REPOSITORY",
+        "data backup",
+        "full backup",
+        "snapshot",
+        "Repository",
+        "S3 backup",
+        "Azure backup",
+        "HDFS backup",
+        "OSS backup",
+        "MinIO backup",
+        "GCP backup",
+        "partition backup",
+        "database backup",
+        "show backup",
+        "cancel backup"
+    ]
 }
 ---
 
-For concepts related to backup, please refer to [Backup and Restore](./overview.md). This guide provides the steps to create a Repository and back up data.
+<!-- Knowledge type: Operational procedure -->
+<!-- Applicable scenarios: Data backup / Disaster recovery setup / Cross-cluster migration -->
 
-## Step 1. Create Repository
+Doris provides backup capabilities to back up databases, tables, or partitions as snapshots to a remote storage system, and to [restore](./restore) them when needed. This document is intended for DBAs and operations engineers who need to perform routine backups, disaster recovery drills, or cross-cluster data migration. It describes the key concepts, prerequisites, and complete operational procedure for backups.
+
+## Applicable scenarios
+
+| Scenario | Description |
+| --- | --- |
+| Routine data backup | Periodically perform full backups of databases, tables, or partitions to prevent data loss caused by accidental deletion or hardware failure. |
+| Disaster recovery | Save backups to off-site remote storage (S3, HDFS, and so on) for recovery in the event of a full cluster failure. |
+| Cross-cluster data migration | Back up on the source cluster and restore on the target cluster to migrate data between clusters. |
+| Test environment data preparation | Back up part of a production environment's tables or partitions and restore them to a test cluster. |
+| Approximate incremental backup | Back up only newly added or changed partitions to approximate incremental backup behavior (Doris does not yet support native incremental backup). |
+
+## Prerequisites
+
+Before performing a backup operation, confirm that the following conditions are met:
+
+- **Privileges**: The operating account has **ADMIN** privileges (required for both backup and restore).
+- **Deployment mode**: The current cluster is in compute-storage coupled mode (**compute-storage decoupled mode does not support** backup/restore).
+- **Remote storage**: An accessible remote storage system (S3, Azure, GCP, OSS, COS, MinIO, HDFS, or other S3-compatible object storage) is ready, and the corresponding access credentials have been obtained.
+- **Network connectivity**: Both FE and BE nodes can access the remote storage endpoint.
+- **Object restrictions**: The objects to be backed up do not belong to the following unsupported types:
+    - Asynchronous materialized views (MTMV)
+    - Tables using a [storage policy](../../../table-design/tiered-storage/remote-storage)
+
+## Key concepts
+
+| Concept | Definition |
+| --- | --- |
+| Snapshot | A point-in-time capture of the data in a database, table, or partition. When creating a snapshot, you must specify a snapshot Label, and a timestamp is generated when the snapshot completes. A snapshot is uniquely identified by the Repository, snapshot Label, and timestamp. |
+| Repository | The remote location where backup files are stored. Supports S3, Azure, GCP, OSS, COS, MinIO, HDFS, and other S3-compatible object storage. |
+| Backup operation | Creates a snapshot of a database, table, or partition, uploads the snapshot files to a remote Repository, and stores metadata related to the backup. |
+| Restore operation | Downloads a snapshot from a remote Repository and restores it to a Doris cluster. |
+
+## Usage limitations
+
+| Limitation | Description |
+| --- | --- |
+| Compute-storage decoupled mode is not supported | Backup and restore functions are unavailable in the deployment mode where storage and compute are decoupled. |
+| Asynchronous materialized views (MTMV) are not supported | Backup and restore operations do not include asynchronous materialized views. |
+| Tables with a storage policy are not supported | Tables using a [storage policy](../../../table-design/tiered-storage/remote-storage) do not support backup and restore operations. |
+| Only full backups are supported | Doris currently supports only full backups. Incremental backup (storing only data changed since the last backup) is not yet supported. You can approximate incremental backup behavior by backing up specific partitions. |
+| The `colocate_with` property is not preserved | During a backup or restore operation, Doris does not preserve a table's `colocate_with` property. You may need to reconfigure colocate tables after restoration. |
+| Dynamic partitioning must be re-enabled | After a table is restored, you need to manually enable the dynamic partitioning property using the `ALTER TABLE` command. |
+| Single-concurrency limit | Only one backup or restore task can run at a time within a database. |
+
+## Backup workflow overview
+
+The complete backup workflow consists of the following 5 steps:
+
+1. **Create a Repository**: Register a remote storage location in Doris.
+2. **Perform the backup**: Trigger a backup task with `BACKUP SNAPSHOT`.
+3. **View backup progress**: Use `SHOW BACKUP` to check task execution status.
+4. **View existing snapshots in the Repository**: Use `SHOW SNAPSHOT` to list available backups.
+5. **(Optional) Cancel the backup**: Terminate the task with `CANCEL BACKUP` in case of an exception.
+
+The following sections describe each step in this order.
+
+## Step 1: Create a Repository
+
+<!-- Knowledge type: Operational procedure -->
+<!-- Applicable scenarios: Remote storage integration / Backup preparation -->
 
 <!--
 suites/backup_restore/test_create_and_drop_repository.groovy
 -->
 
-Use the appropriate statement to create a Repository based on your storage choice. For detailed usage, please refer to [Create Repository](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY). When backing up using the same path for the Repository across different clusters, ensure to use different labels to avoid conflicts that may cause data confusion.
+Choose the corresponding repository creation statement based on the type of remote storage you use. For detailed usage, see [CREATE REPOSITORY](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY).
 
-### Option 1: Create Repository on S3
+:::tip
+When using Repositories with the same path across different clusters for backups, make sure to use different Labels to avoid path conflicts and data corruption.
+:::
 
-To create a Repository on S3 storage, use the following SQL command:
+The repository creation methods for each remote storage type are as follows:
+
+| Method | Remote storage | Notes |
+| --- | --- | --- |
+| Method 1 | S3 | AWS S3 or S3-compatible object storage |
+| Method 2 | Azure Blob Storage | Supported since Doris 3.1.3 |
+| Method 3 | GCP (Google Cloud Storage) | A dummy `s3.region` must be specified |
+| Method 4 | OSS (Alibaba Cloud Object Storage) | None |
+| Method 5 | MinIO | `use_path_style=true` is required when Virtual Host-style is not enabled |
+| Method 6 | HDFS | None |
+
+### Method 1: Create a Repository on S3
+
+Create a Repository on AWS S3:
 
 ```sql
 CREATE REPOSITORY `s3_repo`
@@ -33,14 +128,16 @@ PROPERTIES
 );
 ```
 
-- Replace `bucket_name` with your S3 bucket name.
-- Provide the appropriate endpoint, access key, secret key, and region for S3 setup.
+Notes:
 
-### Option 2: Create Repository on Azure
+- Replace `bucket_name` with the name of your S3 bucket.
+- Provide the appropriate `endpoint`, `access key`, `secret key`, and `region` for S3 setup.
 
-**Azure is supported since 3.1.3**
+### Method 2: Create a Repository on Azure
 
-To create a Repository on Azure storage, use the following SQL command:
+**Supported since Doris 3.1.3.**
+
+Create a Repository on Azure Blob Storage:
 
 ```sql
 CREATE REPOSITORY `azure_repo`
@@ -49,19 +146,21 @@ ON LOCATION "s3://<container_name>/azure_repo"
 PROPERTIES
 (
     "azure.endpoint" = "https://<account_name>.blob.core.windows.net",
-    "azure.account_name" = "ak",
-    "azure.account_key" = "sk",
+    "azure.account_name" = "<account_name>",
+    "azure.account_key" = "<account_key>",
     "provider" = "AZURE"
 );
 ```
 
-- Replace `container_name` with your Azure container name.
+Notes:
+
+- Replace `<container_name>` with the name of your Azure container.
 - Provide your Azure storage account and key for authentication.
-- The `provider` must be set to `AZURE` for Azure storage.
+- `provider` must be `AZURE`.
 
-### Option 3: Create Repository on GCP
+### Method 3: Create a Repository on GCP
 
-To create a Repository on Google Cloud Platform (GCP) storage, use the following SQL command:
+Create a Repository on Google Cloud Platform (GCP) storage:
 
 ```sql
 CREATE REPOSITORY `gcp_repo`
@@ -76,13 +175,15 @@ PROPERTIES
 );
 ```
 
-- Replace `bucket_name` with your GCP bucket name.
-- Provide your GCP endpoint, access key, and secret key.
-- `s3.region` is a dummy but required field.
+Notes:
 
-### Option 4: Create Repository on OSS (Alibaba Cloud Object Storage Service)
+- Replace `bucket_name` with the name of your GCP bucket.
+- Provide your GCP `endpoint`, `access key`, and `secret key`.
+- `s3.region` is only a dummy region. You can specify any value, but it must be specified.
 
-To create a Repository on OSS, use the following SQL command:
+### Method 4: Create a Repository on OSS (Alibaba Cloud Object Storage Service)
+
+Create a Repository on OSS:
 
 ```sql
 CREATE REPOSITORY `oss_repo`
@@ -96,12 +197,15 @@ PROPERTIES
     "s3.secret_key" = "sk"
 );
 ```
-- Replace `bucket_name` with your OSS bucket name.
-- Provide your OSS endpoint, region, access key, and secret key.
 
-### Option 5: Create Repository on MinIO
+Notes:
 
-To create a Repository on MinIO storage, use the following SQL command:
+- Replace `bucket_name` with the name of your OSS bucket.
+- Provide your OSS `endpoint`, `region`, `access key`, and `secret key`.
+
+### Method 5: Create a Repository on MinIO
+
+Create a Repository on MinIO storage:
 
 ```sql
 CREATE REPOSITORY `minio_repo`
@@ -117,14 +221,16 @@ PROPERTIES
 );
 ```
 
-- Replace `bucket_name` with your MinIO bucket name.
-- Provide your MinIO endpoint, access key, and secret key.
-- `s3.region` is a dummy but required field.
-- If you do not enable Virtual Host-style, then `use_path_style` must be true.
+Notes:
 
-### Option 6: Create Repository on HDFS
+- Replace `bucket_name` with the name of your MinIO bucket.
+- Provide your MinIO `endpoint`, `access key`, and `secret key`.
+- `s3.region` is only a dummy region. You can specify any value, but it must be specified.
+- If Virtual Host-style is not enabled, `use_path_style` must be set to `true`.
 
-To create a Repository on HDFS storage, use the following SQL command:
+### Method 6: Create a Repository on HDFS
+
+Create a Repository on HDFS:
 
 ```sql
 CREATE REPOSITORY `hdfs_repo`
@@ -137,36 +243,53 @@ PROPERTIES
 )
 ```
 
+Notes:
+
 - Replace `prefix_path` with the actual path.
-- Provide your HDFS endpoint and username.
+- Provide your HDFS `endpoint` and username.
 
-## Step 2. Backup
+## Step 2: Perform the backup
 
-Refer to the following statements to back up databases, tables, or partitions. For detailed usage, please refer to [Backup](../../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP).
+<!-- Knowledge type: Operational procedure -->
+<!-- Applicable scenarios: Database/table/partition backup -->
 
-It is recommended to use meaningful label names, such as those containing the databases and tables included in the backup.
+Trigger a backup task with `BACKUP SNAPSHOT`. For detailed usage, see [BACKUP](../../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP).
 
-### Option 1: Backup Current Database
+:::tip
+It is recommended to use a meaningful Label name, for example one that includes the databases and tables contained in the backup, to make later identification and management easier.
+:::
 
-The following SQL statement backs up the current database to a Repository named `example_repo`, using the snapshot label `exampledb_20241225`.
+You can choose different forms based on the backup target:
+
+| Method | Backup target | Applicable scenario |
+| --- | --- | --- |
+| Method 1 | Current database | Full-database backup using the currently `USE`d database |
+| Method 2 | Specified database | Full-database backup with an explicitly specified database name |
+| Method 3 | Specified tables | Back up only certain tables |
+| Method 4 | Specified partitions | Back up specific partitions of a table, can be mixed with full tables |
+| Method 5 | Exclude certain tables | Full-database backup, excluding specified tables |
+
+### Method 1: Back up the current database
+
+The following SQL statement backs up the current database to a Repository named `example_repo`, using the snapshot Label `exampledb_20241225`:
 
 ```sql
 BACKUP SNAPSHOT exampledb_20241225
 TO example_repo;
 ```
 
-### Option 2: Backup Specified Database
+### Method 2: Back up a specified database
 
-The following SQL statement backs up a database named `destdb` to a Repository named `example_repo`, using the snapshot label `destdb_20241225`.
+The following SQL statement backs up the database named `destdb` to a Repository named `example_repo`, using the snapshot Label `destdb_20241225`:
 
 ```sql
 BACKUP SNAPSHOT destdb.`destdb_20241225`
 TO example_repo;
 ```
 
-### Option 3: Backup Specified Tables
+### Method 3: Back up specified tables
 
-The following SQL statement backs up two tables to a Repository named `example_repo`, using the snapshot label `exampledb_tbl_tbl1_20241225`.
+The following SQL statement backs up two tables to a Repository named `example_repo`, using the snapshot Label `exampledb_tbl_tbl1_20241225`:
 
 ```sql
 BACKUP SNAPSHOT exampledb_tbl_tbl1_20241225
@@ -174,9 +297,9 @@ TO example_repo
 ON (example_tbl, example_tbl1);
 ```
 
-### Option 4: Backup Specified Partitions
+### Method 4: Back up specified partitions
 
-The following SQL statement backs up a table named `example_tbl2` and two partitions named `p1` and `p2` to a Repository named `example_repo`, using the snapshot label `example_tbl_p1_p2_tbl1_20241225`.
+The following SQL statement backs up the table named `example_tbl2`, along with partitions `p1` and `p2` of the table named `example_tbl`, to a Repository named `example_repo`, using the snapshot Label `example_tbl_p1_p2_tbl1_20241225`:
 
 ```sql
 BACKUP SNAPSHOT example_tbl_p1_p2_tbl1_20241225
@@ -188,9 +311,9 @@ ON
 );
 ```
 
-### Option 5: Backup Current Database Excluding Certain Tables
+### Method 5: Back up the current database, excluding certain tables
 
-The following SQL statement backs up the current database to a Repository named `example_repo`, using the snapshot label `exampledb_20241225`, excluding two tables named `example_tbl` and `example_tbl1`.
+The following SQL statement backs up the current database to a Repository named `example_repo`, using the snapshot Label `exampledb_20241225`, excluding two tables named `example_tbl` and `example_tbl1`:
 
 ```sql
 BACKUP SNAPSHOT exampledb_20241225
@@ -202,9 +325,12 @@ EXCLUDE
 );
 ```
 
-## Step 3. View Recent Backup Job Execution Status
+## Step 3: View the execution status of recent backup jobs
 
-The following SQL statement can be used to view the execution status of recent backup jobs.
+<!-- Knowledge type: Operational procedure -->
+<!-- Applicable scenarios: Backup progress tracking / Troubleshooting -->
+
+Use the following SQL to view the execution status of recent backup jobs:
 
 ```sql
 mysql> show BACKUP\G;
@@ -226,9 +352,25 @@ mysql> show BACKUP\G;
    1 row in set (0.01 sec)
 ```
 
-## Step 4. View Existing Backups in Repository
+Key field descriptions:
 
-The following SQL statement can be used to view existing backups in a Repository named `example_repo`, where the Snapshot column is the snapshot label, and the Timestamp is the timestamp.
+| Field | Meaning |
+| --- | --- |
+| `JobId` | The backup task ID. |
+| `SnapshotName` | The snapshot Label, corresponding to the name specified in `BACKUP SNAPSHOT`. |
+| `DbName` | The database the backup belongs to. |
+| `State` | The task state. For example, `FINISHED` indicates completion. |
+| `BackupObjs` | The list of objects actually backed up. |
+| `CreateTime` / `SnapshotFinishedTime` / `UploadFinishedTime` / `FinishedTime` | Timestamps for task creation, snapshot completion, upload completion, and overall completion. |
+| `Status` | The task result status. `[OK]` indicates success; otherwise it contains error information. |
+| `Timeout` | The task timeout (in seconds). |
+
+## Step 4: View existing backups in the Repository
+
+<!-- Knowledge type: Operational procedure -->
+<!-- Applicable scenarios: Backup inventory / Pre-restore verification -->
+
+Use the following SQL to view existing backups in the Repository named `example_repo`. The `Snapshot` column is the snapshot Label, and `Timestamp` is the timestamp:
 
 ```sql
 mysql> SHOW SNAPSHOT ON example_repo;
@@ -240,6 +382,69 @@ mysql> SHOW SNAPSHOT ON example_repo;
 1 row in set (0.15 sec)
 ```
 
-## Step 5. Cancel Backup (if necessary)
+When performing a [restore](./restore) operation, you need to combine `Snapshot` and `Timestamp` to uniquely identify a backup version.
 
-You can use `CANCEL BACKUP FROM db_name;` to cancel a backup task in a database. For more specific usage, refer to [Cancel Backup](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP).
+## Step 5: Cancel a backup (if needed)
+
+<!-- Knowledge type: Operational procedure -->
+<!-- Applicable scenarios: Abnormal termination / Rolling back accidental operations -->
+
+When a backup task encounters an exception or needs to be aborted, use the following SQL to cancel a running backup task under a database:
+
+```sql
+CANCEL BACKUP FROM db_name;
+```
+
+For more detailed usage, see [CANCEL BACKUP](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP).
+
+## FAQ
+
+### Q: What should I do if creating a Repository fails?
+
+This is usually caused by incorrect remote storage credentials, an unreachable Endpoint, or a non-existent Bucket/container. Check whether the `endpoint`, `access key`, `secret key`, and Bucket name are correct, and make sure the FE/BE nodes can access the remote storage.
+
+### Q: What should I do if backups to MinIO fail?
+
+This usually happens when Virtual Host-style is not enabled but the `use_path_style` parameter is missing. Add `"use_path_style" = "true"` to `PROPERTIES`.
+
+### Q: What should I do if GCP/MinIO reports a missing region error?
+
+`s3.region` must be specified even with a placeholder value, for example `dummy-region`.
+
+### Q: What should I do if creating an Azure Repository fails?
+
+Versions of Doris earlier than 3.1.3 do not support Azure Blob Storage. Upgrade to Doris 3.1.3 or later, and confirm that `provider = AZURE`.
+
+### Q: What should I do if a backup/restore conflict is reported within the same database?
+
+Only one backup or restore task can run at a time within a database. Wait for the existing task to complete, or cancel it with `CANCEL BACKUP FROM db_name;` before starting a new task.
+
+### Q: What should I do if a compute-storage decoupled cluster cannot perform backups?
+
+Backup/restore is not supported in compute-storage decoupled mode. Switch to compute-storage coupled mode, or use an alternative data export approach.
+
+### Q: Why was the materialized view not backed up?
+
+Asynchronous materialized views (MTMV) are not included in the backup scope. After restoration, you need to recreate the corresponding materialized views on the target cluster.
+
+### Q: How do I resolve data corruption when different clusters back up to the same path?
+
+This is caused by using the same snapshot Label, which leads to path conflicts. When different clusters back up to the same Repository path, use different Labels.
+
+### Q: Why is dynamic partitioning not effective after restoration?
+
+Backup/restore does not automatically enable dynamic partitioning. After restoration, manually enable the dynamic partitioning property using `ALTER TABLE`.
+
+### Q: What should I do if colocate tables behave abnormally after restoration?
+
+Backup/restore does not preserve the `colocate_with` property. After restoration, reconfigure the `colocate_with` property of the colocate tables.
+
+## Related documents
+
+- [Restore](./restore)
+- [CREATE REPOSITORY](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY)
+- [BACKUP](../../../sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP)
+- [CANCEL BACKUP](../../../sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP)
+- [SHOW SNAPSHOT](../../../sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-SNAPSHOT)
+- [SHOW REPOSITORIES](../../../sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-REPOSITORIES)
+- [Storage policy](../../../table-design/tiered-storage/remote-storage)

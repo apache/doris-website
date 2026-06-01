@@ -6,8 +6,6 @@
 }
 ---
 
-## is_ipv4_mapped
-
 ## Description
 Checks if an IPv6 address is an IPv4-mapped address. IPv4-mapped addresses are a special IPv6 address format used to represent IPv4 addresses in IPv6 networks.
 

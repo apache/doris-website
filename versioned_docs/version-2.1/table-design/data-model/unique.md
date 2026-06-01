@@ -70,12 +70,12 @@ When creating a table, the `UNIQUE KEY` keyword can be used to specify a Unique 
 CREATE TABLE IF NOT EXISTS example_tbl_unique
 (
     user_id         LARGEINT        NOT NULL,
-    username        VARCHAR(50)     NOT NULL,
+    user_name       VARCHAR(50)     NOT NULL,
     city            VARCHAR(20),
     age             SMALLINT,
     sex             TINYINT
 )
-UNIQUE KEY(user_id, username)
+UNIQUE KEY(user_id, user_name)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10
 PROPERTIES (
     "enable_unique_key_merge_on_write" = "false"
@@ -105,14 +105,14 @@ INSERT INTO example_tbl_unique VALUES
 
 -- check updated data
 SELECT * FROM example_tbl_unique;
-+---------+----------+------+------+------+
-| user_id | username | city | age  | sex  |
-+---------+----------+------+------+------+
-| 101     | Tom      | BJ   |   27 |    1 |
-| 102     | Jason    | SH   |   28 |    1 |
-| 104     | Olivia   | SZ   |   22 |    2 |
-| 103     | Juice    | SH   |   20 |    2 |
-+---------+----------+------+------+------+
++---------+-----------+------+------+------+
+| user_id | user_name | city | age  | sex  |
++---------+-----------+------+------+------+
+| 101     | Tom       | BJ   |   27 |    1 |
+| 102     | Jason     | SH   |   28 |    1 |
+| 104     | Olivia    | SZ   |   22 |    2 |
+| 103     | Juice     | SH   |   20 |    2 |
++---------+-----------+------+------+------+
 ```
 
 ## Notes

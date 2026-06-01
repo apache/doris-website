@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_CONTAINS",
     "language": "zh-CN",
-    "description": "<version since=\"1.2.0\">"
+    "description": "检查数组中是否包含指定的值。如果找到则返回 true，否则返回 false。如果数组为 NULL，则返回 NULL。"
 }
 ---
 
@@ -89,7 +89,7 @@ PROPERTIES (
 INSERT INTO array_contains_test VALUES
 (1, [1000, 2000, 3000], ['apple', 'banana', 'cherry']),
 (2, [], []),
-(3, NULL, NULL);
+(3, NULL, NULL),
 (4, [1000, null, 3000], ['apple', null, 'cherry']);
 ```
 
@@ -168,7 +168,7 @@ SELECT array_contains([1, 2, 3], 'string');
 ```
 
 当查找值类型无法和数组元素进行类型转换时, 会返回错误
-```
+```sql
 SELECT array_contains([1, 2, 3], [4, 5, 6]);
 ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from origin type ARRAY<TINYINT> to target type=TINYINT
 ```

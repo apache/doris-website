@@ -19,9 +19,3 @@ export function isDocsPath(pathname: string, locales: string[]): boolean {
     const normalizedPathname = normalizePathname(pathname, locales);
     return normalizedPathname === '/docs' || normalizedPathname.startsWith('/docs/');
 }
-
-export function isCommunityPath(pathname: string, locales: string[]): boolean {
-    const normalizedPathname = normalizePathname(pathname, locales);
-    return normalizedPathname === '/community' || normalizedPathname.startsWith('/community/')
-        || normalizedPathname === '/releases' || normalizedPathname.startsWith('/releases/');
-}

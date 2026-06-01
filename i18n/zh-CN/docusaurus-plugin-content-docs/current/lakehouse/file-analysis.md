@@ -19,6 +19,15 @@ Doris 提供以下 TVF 用于访问不同的存储系统：
 | [HTTP](../sql-manual/sql-functions/table-valued-functions/http.md) | HTTP | 支持从 HTTP 地址访问文件（自 4.0.2 版本起） |
 | [FILE](../sql-manual/sql-functions/table-valued-functions/file.md) | S3/HDFS/HTTP/Local | 统一表函数，支持多种存储（自 3.1.0 版本起） |
 
+## 支持的文件格式
+
+TVF 支持读取和分析以下文件格式，点击链接可查看对应格式的详细说明和参数：
+
+- [Parquet](./file-formats/parquet.md)
+- [ORC](./file-formats/orc.md)
+- [Text / CSV / JSON](./file-formats/text.md)
+- [Lance](./file-formats/lance.md)（实验性功能，自 5.0.0 版本起支持）
+
 ## 使用场景
 
 ### 场景一：直接查询分析文件

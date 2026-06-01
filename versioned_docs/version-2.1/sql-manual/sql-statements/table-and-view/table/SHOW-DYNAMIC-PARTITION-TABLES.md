@@ -10,7 +10,7 @@
 
 This statement is used to display the status of all dynamic partition tables in the current database.
 
-## Syntax：
+## Syntax
 
 ```sql
 SHOW DYNAMIC PARTITION TABLES [FROM <db_name>];
@@ -19,7 +19,7 @@ SHOW DYNAMIC PARTITION TABLES [FROM <db_name>];
 ## Required Parameters
 **1. `<db_name>`**
 
-pecify the `DB` name to display the status of dynamic partition tables. If not specified, the status of all dynamic partition tables in the current `DB` will be displayed by default.
+Specify the `DB` name to display the status of dynamic partition tables. If not specified, the status of all dynamic partition tables in the current `DB` will be displayed by default.
 ## Return Value
 
 | Column                 | DataType | Note                                                                                                                                                                                                                                                                                                                                                                    |
@@ -33,7 +33,7 @@ pecify the `DB` name to display the status of dynamic partition tables. If not s
 | Buckets                | varchar  | The number of buckets corresponding to the dynamically created partition.                                                                                                                                                                                                                                                                                               |
 | ReplicationNum         | varchar  | The number of replicas corresponding to the dynamically created partition. If not specified, it defaults to the number of replicas specified when the table was created.                                                                                                                                                                                                |
 | ReplicaAllocation      | varchar  | The replica distribution strategy corresponding to the dynamically created partition. If not specified, it defaults to the replica distribution strategy specified when the table was created.                                                                                                                                                                          |
-| StartOf                | varchar  | The starting point of each partition granularity for dynamic partitioning. When time_unit is WEEK, this field represents the starting point of each week, with values ranging from MONDAY to SUNDAY. When time_unit is MONTH, it represents the starting date of each month, with values ranging from 1rd to 28rd. When time_unit is MONTH, this value defaults to NULL. |
+| StartOf                | varchar  | The starting point of each partition granularity for dynamic partitioning. When time_unit is WEEK, this field represents the starting point of each week, with values ranging from MONDAY to SUNDAY. When time_unit is MONTH, it represents the starting date of each month, with values ranging from 1st to 28th. When time_unit is MONTH, this value defaults to NULL. |
 | LastUpdateTime         | datetime | The last update time of the dynamic partition, which defaults to NULL.                                                                                                                                                                                                                                                                                                  |
 | LastSchedulerTime      | datetime | The last scheduling time of the dynamic partition.                                                                                                                                                                                                                                                                                                                      |
 | State                  | varchar  | The state of the dynamic partition.                                                                                                                                                                                                                                                                                                                                     |

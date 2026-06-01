@@ -34,7 +34,7 @@ MINUTE_FLOOR(`<datetime>`, `<period>`, `<origin>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<datetime>` | 需要向下取整的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<datetime>` | 需要向下取整的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 分钟周期值，类型为 INT，表示每个周期包含的分钟数 |
 | `<origin>` | 周期的起始时间点，类型为 DATETIME ，默认值为 0001-01-01 00:00:00 |
 
@@ -69,7 +69,7 @@ SELECT MINUTE_FLOOR('2023-07-13 22:28:18.123', 5) AS result;
 +----------------------------+
 | result                     |
 +----------------------------+
-| 2023-07-13 22:25:00.000    |
+| 2023-07-13 22:25:00.000000 |
 +----------------------------+
 
 -- 输入日期时间恰好是周期起点，则返回输入日期时间
@@ -105,7 +105,7 @@ SELECT MINUTE_FLOOR('2023-07-13 22:28:18.456789', 5) AS result;
 +----------------------------+
 
 --- 若 <origin> 日期时间在 <period> 之后，也会按照上述公式计算，不过周期 k 为负数。
-SELECT MINUTE_floor('0001-01-01 12:32:18', 5, '2028-07-03 22:20:00') AS result;
+SELECT MINUTE_FLOOR('0001-01-01 12:32:18', 5, '2028-07-03 22:20:00') AS result;
 +---------------------+
 | result              |
 +---------------------+

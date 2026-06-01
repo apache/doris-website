@@ -1,38 +1,76 @@
 ---
 {
-    "title": "EXPORT | Export",
+    "title": "Export Asynchronous Export",
     "language": "en",
-    "description": "This document will introduce how to use the EXPORT command to export the data stored in Doris.",
-    "sidebar_label": "EXPORT"
+    "description": "Use the EXPORT command to asynchronously export Doris table or partition data to HDFS, S3, or object storage, with support for Parquet/ORC/CSV formats.",
+    "keywords": [
+        "Doris EXPORT",
+        "asynchronous export",
+        "export to S3",
+        "export to HDFS",
+        "Parquet export",
+        "ORC export",
+        "CSV export",
+        "SHOW EXPORT",
+        "CANCEL EXPORT",
+        "SELECT INTO OUTFILE"
+    ]
 }
 ---
 
-# EXPORT
+<!-- Knowledge type: Operating procedure / Configuration parameters / Architectural selection decision -->
+<!-- Applicable scenarios: Data export / Data archiving / Cross-system data movement -->
 
-This document will introduce how to use the `EXPORT` command to export the data stored in Doris.
+This document describes how to use the `EXPORT` command to asynchronously export data stored in Doris to an external storage system.
 
-`Export` is a function provided by Doris for asynchronously exporting data. This function can export the data of the tables or partitions specified by users in the specified file format to the target storage systems, including object storage, HDFS or local file system.
+`EXPORT` is the **asynchronous data export** capability provided by Doris. It exports data from a specified table or partition to object storage, HDFS, or the local file system, in a specified file format.
 
-`Export` is an asynchronously executed command. Once the command is executed successfully, it will return the result immediately. Users can view the detailed information of the Export task through the `Show Export` command.
-
-For the detailed introduction of the `EXPORT` command, please refer to: [EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT)
-
-Regarding how to choose between `SELECT INTO OUTFILE` and `EXPORT`, please refer to [Export Overview](../../data-operate/export/export-overview.md).
+The command returns immediately after submission. You can query the task status with `SHOW EXPORT`.
 
 ## Applicable Scenarios
 
-`Export` is applicable to the following scenarios:
+| Scenario Type                       | Recommended for EXPORT | Description                                                |
+| ----------------------------------- | ---------------------- | ---------------------------------------------------------- |
+| Exporting a single large table      | Recommended            | Only simple filter conditions are required                 |
+| Asynchronous job submission         | Recommended            | The command returns immediately and does not block the client |
+| Exporting a SELECT result set       | Not supported          | Use [OUTFILE export](../../data-operate/export/outfile.md) instead |
+| Compressed text file export         | Not supported          | The current version does not support compressed text formats |
 
-- Exporting a single table with a large amount of data, only requiring simple filtering conditions.
-- Scenarios where tasks need to be submitted asynchronously.
+For guidance on choosing between `SELECT INTO OUTFILE` and `EXPORT`, see [Export Overview](../../data-operate/export/export-overview.md).
 
-The following limitations should be noted when using `Export`:
+For the full syntax of the `EXPORT` command, see [EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT).
 
-- Currently, exporting in compressed text file formats is not supported.
-- Exporting the result set of `Select` is not supported. If you need to export the `Select` result set, please use [OUTFILE Export](../../data-operate/export/outfile.md).
+## Capability Overview
+
+### Supported Data Sources
+
+`EXPORT` supports exporting the following types of tables and views:
+
+- Doris internal tables
+- Doris logical views
+- Tables in External Catalogs (such as Hive external tables)
+
+### Supported Storage Locations
+
+| Storage Type             | Specifically Supported                              |
+| ------------------------ | --------------------------------------------------- |
+| Object storage           | Amazon S3, Tencent Cloud COS, Alibaba Cloud OSS, Huawei Cloud OBS, Google GCS |
+| Distributed file system  | HDFS                                                |
+| Local file system        | For local debugging and development only, must be enabled manually |
+
+### Supported File Formats
+
+- Parquet
+- ORC
+- CSV
+- csv\_with\_names
+- csv\_with\_names\_and\_types
 
 ## Quick Start
-### Table Creation and Data Import
+
+<!-- Knowledge type: Operating procedure -->
+
+### Step 1: Create a table and load data
 
 ```sql
 CREATE TABLE IF NOT EXISTS tbl (
@@ -43,37 +81,36 @@ CREATE TABLE IF NOT EXISTS tbl (
 DISTRIBUTED BY HASH(c1) BUCKETS 20
 PROPERTIES("replication_num" = "1");
 
-
-insert into tbl values
+INSERT INTO tbl VALUES
     (1, 'doris', 18),
     (2, 'nereids', 20),
     (3, 'pipelibe', 99999),
     (4, 'Apache', 122123455),
-    (5, null, null);
+    (5, NULL, NULL);
 ```
 
-### Create an Export Job
+### Step 2: Create an export job
 
 #### Export to HDFS
 
-Export all data from the `tbl` table to HDFS. Set the file format of the export job to csv (the default format) and set the column delimiter to `,`. 
+Export all data from the `tbl` table to HDFS, using the default CSV format with `,` as the column separator:
 
 ```sql
 EXPORT TABLE tbl
-TO "hdfs://host/path/to/export/" 
+TO "hdfs://host/path/to/export_" 
 PROPERTIES
 (
     "line_delimiter" = ","
 )
-with HDFS (
+WITH HDFS (
     "fs.defaultFS"="hdfs://hdfs_host:port",
     "hadoop.username" = "hadoop"
 );
 ```
 
-#### Export to Object Storage
+#### Export to object storage (S3)
 
-Export all the data in the `tbl` table to the object storage, set the file format of the export job to csv (the default format), and set the column delimiter to `,`.
+Export all data from the `tbl` table to S3 object storage, using the default CSV format with `,` as the column separator:
 
 ```sql
 EXPORT TABLE tbl TO "s3://bucket/export/export_" 
@@ -87,12 +124,12 @@ PROPERTIES (
 );
 ```
 
-### View Export Jobs
+### Step 3: Check the export job status
 
-After submitting a job, you can query the status of the export job via the [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT) command. An example of the result is as follows: 
+Use the [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT) command to query the progress and result of an export task:
 
 ```sql
-mysql> show export\G
+mysql> SHOW EXPORT\G
 *************************** 1. row ***************************
       JobId: 143265
       Label: export_0aa6c944-5a09-4d0b-80e1-cb09ea223f65
@@ -118,48 +155,23 @@ OutfileInfo: [
 1 row in set (0.00 sec)
 ```
 
-For the detailed usage of the `show export` command and the meaning of each column in the returned results, please refer to [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT).
+For the meaning of each column in the result, see [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT).
 
-### Cancel Export Jobs
+### Step 4: Cancel an export job (optional)
 
-After submitting an Export job, the export job can be cancelled via the [CANCEL EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT) command before the Export task succeeds or fails. An example of the cancellation command is as follows: 
+Before an Export task succeeds or fails, you can cancel it with the [CANCEL EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT) command:
 
 ```sql
 CANCEL EXPORT FROM dbName WHERE LABEL like "%export_%";
 ```
 
-## Export Instructions
+## Advanced Usage Examples
 
-### Export Data Sources
+<!-- Knowledge type: Operating procedure -->
 
-`EXPORT` currently supports exporting the following types of tables or views:
+### Export to a high-availability HDFS cluster
 
-- Internal tables in Doris
-- Logical views in Doris
-- Tables in External Catalog
-
-### Export Data Storage Locations
-
-`Export` currently supports exporting to the following storage locations:
-
-- Object storage: Amazon S3, COS, OSS, OBS, Google GCS
-- HDFS
-
-### Export File Types
-
-`EXPORT` currently supports exporting to the following file formats:
-
-* Parquet
-* ORC
-* csv
-* csv\_with\_names
-* csv\_with\_names\_and\_types
-
-## Examples
-
-### Export to an HDFS Cluster with High Availability Enabled
-
-If the HDFS has high availability enabled, HA information needs to be provided. For example:
+If HDFS has high availability (HA) enabled, you must provide additional HA-related parameters:
 
 ```sql
 EXPORT TABLE tbl 
@@ -168,7 +180,7 @@ PROPERTIES
 (
     "line_delimiter" = ","
 )
-with HDFS (
+WITH HDFS (
     "fs.defaultFS" = "hdfs://HDFS8000871",
     "hadoop.username" = "hadoop",
     "dfs.nameservices" = "your-nameservices",
@@ -179,9 +191,9 @@ with HDFS (
 );
 ```
 
-### Export to an HDFS Cluster with High Availability and Kerberos Authentication Enabled
+### Export to an HDFS cluster with HA and Kerberos authentication
 
-If the HDFS cluster has both high availability enabled and Kerberos authentication enabled, you can refer to the following SQL statements: 
+If a Hadoop cluster has both high availability and Kerberos authentication enabled, refer to the following SQL:
 
 ```sql
 EXPORT TABLE tbl 
@@ -190,7 +202,7 @@ PROPERTIES
 (
     "line_delimiter" = ","
 )
-with HDFS (
+WITH HDFS (
     "fs.defaultFS"="hdfs://hacluster/",
     "hadoop.username" = "hadoop",
     "dfs.nameservices"="hacluster",
@@ -198,16 +210,16 @@ with HDFS (
     "dfs.namenode.rpc-address.hacluster.n1"="192.168.0.1:8020",
     "dfs.namenode.rpc-address.hacluster.n2"="192.168.0.2:8020",
     "dfs.client.failover.proxy.provider.hacluster"="org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
-    "dfs.namenode.kerberos.principal"="hadoop/_HOST@REALM.COM"
+    "dfs.namenode.kerberos.principal"="hadoop/_HOST@REALM.COM",
     "hadoop.security.authentication"="kerberos",
     "hadoop.kerberos.principal"="doris_test@REALM.COM",
     "hadoop.kerberos.keytab"="/path/to/doris_test.keytab"
 );
 ```
 
-### Specify Partition for Export
+### Export only specified partitions
 
-The export job supports exporting only some partitions of the internal tables in Doris. For example, only export partitions p1 and p2 of the `test` table. 
+To export only some partitions of a Doris internal table, for example only the `p1` and `p2` partitions of the `test` table:
 
 ```sql
 EXPORT TABLE test
@@ -223,9 +235,9 @@ PROPERTIES (
 );
 ```
 
-### Filter Data During Export
+### Export with predicate filtering
 
-The export job supports filtering data according to predicate conditions during the export process, exporting only the data that meets the conditions. For example, only export the data that satisfies the condition `k1 < 50`. 
+Use a `WHERE` clause to filter data and export only the rows that match the condition. For example, export only rows where `k1 < 50`:
 
 ```sql
 EXPORT TABLE test
@@ -242,18 +254,18 @@ PROPERTIES (
 );
 ```
 
-### Export External Table Data
+### Export data from External Catalog external tables
 
-The export job supports the data of tables in External Catalog.
+`EXPORT` supports exporting data from External Catalog external tables (such as Hive external tables):
 
 ```sql
--- Create a hive catalog
+-- Create a Hive Catalog
 CREATE CATALOG hive_catalog PROPERTIES (
     'type' = 'hms',
     'hive.metastore.uris' = 'thrift://172.0.0.1:9083'
 );
 
--- Export hive table
+-- Export the Hive table
 EXPORT TABLE hive_catalog.sf1.lineitem TO "s3://bucket/export/export_"
 PROPERTIES(
     "format" = "csv",
@@ -266,7 +278,9 @@ PROPERTIES(
 );
 ```
 
-### Clearing the Export Directory Before Exporting
+### Clear the target directory before export
+
+Use the `delete_existing_files` parameter to clear the target directory before exporting:
 
 ```sql
 EXPORT TABLE test TO "s3://bucket/export/export_"
@@ -282,13 +296,18 @@ PROPERTIES (
 );
 ```
 
-If `"delete_existing_files" = "true"` is set, the export job will first delete all files and directories under the `s3://bucket/export/` directory, and then export the data to this directory.
+Activation conditions and behavior:
 
-If you want to use the `delete_existing_files` parameter, you also need to add the configuration `enable_delete_existing_files = true` in the `fe.conf` and restart the FE. Only then will the `delete_existing_files` take effect. This operation will delete the data of the external system and is a high-risk operation. Please ensure the permissions and data security of the external system on your own.
+- When `"delete_existing_files" = "true"` is set, the export job **first deletes** all files and subdirectories under the `s3://bucket/export/` directory, and then exports the data.
+- For this parameter to take effect, you must add `enable_delete_existing_files = true` to `fe.conf` and restart the FE.
 
-### Setting the Size of Exported Files
+:::caution
+This operation deletes data in an external system and is a **high-risk operation**. Please ensure permission control and data security in the external system on your own.
+:::
 
-The export job supports setting the size of the export file. If the size of a single file exceeds the set value, it will be divided into multiple files for export according to the specified size.
+### Control the size of a single export file
+
+Use `max_file_size` to control the size of a single export file. Files exceeding the configured value are split automatically:
 
 ```sql
 EXPORT TABLE test TO "s3://bucket/export/export_"
@@ -303,69 +322,80 @@ PROPERTIES (
 );
 ```
 
-By setting `"max_file_size" = "512MB"`, the maximum size of a single exported file is 512MB.
+The valid range for `max_file_size` is as follows:
 
-`max_file_size` cannot be less than 5MB and cannot be greater than 2GB.
+| Version Range                          | Minimum | Maximum   |
+| -------------------------------------- | ------- | --------- |
+| Before 2.1.11 / before 3.0.7           | 5MB     | 2GB       |
+| 2.1.11 and later / 3.0.7 and later     | 5MB     | Unlimited |
 
-In versions 2.1.11 and 3.0.7, the maximum limit of 2GB was removed, leaving only the minimum limit of 5MB.
+## Notes and Best Practices
 
-## Notice
+<!-- Knowledge type: Best practices / Troubleshooting -->
+<!-- Applicable scenarios: Production usage / Fault diagnosis -->
 
-* Export Data Volume
-
-	It is not recommended to export a large amount of data at one time. The recommended maximum export data volume for an Export job is several tens of gigabytes. Excessive exports will lead to more junk files and higher retry costs. If the table data volume is too large, it is recommended to export by partitions.
-
-	In addition, the Export job will scan data and occupy IO resources, which may affect the query latency of the system.
-
-* Export File Management
-
-	If the Export job fails, the files that have already been generated will not be deleted, and users need to delete them manually.
-
-* Export Timeout
-
-	If the amount of exported data is very large and exceeds the export timeout period, the Export task will fail. At this time, you can specify the `timeout` parameter in the Export command to increase the timeout period and retry the Export command.
-
-* Export Failure
-
-	During the operation of the Export job, if the FE restarts or switches the master, the Export job will fail, and the user needs to resubmit it. You can check the status of the Export task through the `show export` command.
-
-* Number of Exported Partitions
-
-	The maximum number of partitions allowed to be exported by an Export Job is 2000. You can add the parameter `maximum_number_of_export_partitions` in fe.conf and restart the FE to modify this setting.
-
-* Data Integrity
-
-	After the export operation is completed, it is recommended to verify whether the exported data is complete and correct to ensure the quality and integrity of the data.
+| Concern                  | Recommendations and Notes                                                                                              |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| Per-job data volume      | A single Export job is recommended to be no more than tens of GB. For large tables, export by partition in batches to avoid generating more garbage files and incurring higher retry cost |
+| System resource impact   | Export jobs scan data and consume IO resources, which may affect query latency                                         |
+| Failed file management   | When a job fails, the files already generated are not deleted automatically and must be cleaned up manually            |
+| Export timeout           | Very large data volumes may trigger timeouts. You can extend the timeout with the `timeout` parameter in the Export command and retry |
+| FE restart or master switch | If the FE restarts or switches master during execution, the job fails. Check the status with `SHOW EXPORT` and resubmit |
+| Partition count limit    | A single Export Job can export at most 2000 partitions. You can adjust `maximum_number_of_export_partitions` in `fe.conf` and restart the FE |
+| Data integrity check     | After the export completes, verify the row count and correctness of the data to ensure data quality                     |
 
 ## Appendix
 
-### Basic Principle
+### Basic Principles
 
-The underlying layer of the Export task is to execute the `SELECT INTO OUTFILE` SQL statement. After a user initiates an Export task, Doris will construct one or more `SELECT INTO OUTFILE` execution plans according to the table to be exported by Export, and then submit these `SELECT INTO OUTFILE` execution plans to the Job Schedule task scheduler of Doris. The Job Schedule task scheduler will automatically schedule and execute these tasks.
+<!-- Knowledge type: Architectural principles -->
 
-### Exporting to the Local File System
+`EXPORT` tasks are executed under the hood based on the `SELECT INTO OUTFILE` SQL statement. The overall flow is:
 
-The function of exporting to the local file system is disabled by default. This function is only used for local debugging and development, and should not be used in the production environment.
+1. The user submits an `EXPORT` task.
+2. Based on the table to be exported, Doris constructs one or more `SELECT INTO OUTFILE` execution plans.
+3. These execution plans are submitted to the Doris Job Schedule task scheduler.
+4. The Job Schedule schedules and executes the tasks automatically, ultimately producing the export files.
 
-If you want to enable this function, please add `enable_outfile_to_local=true` in the `fe.conf` and restart the FE.
+### Export to the local file system
 
-Example: Export all the data in the `tbl` table to the local file system, set the file format of the export job to csv (the default format), and set the column delimiter to `,`.
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenarios: Local debugging / Development environment -->
+
+:::caution
+Exporting to the local file system is **for local debugging and development only. Do not use it in production**, and please ensure permission control and data security of the export directory on your own.
+:::
+
+#### How to enable
+
+This feature is disabled by default. To enable it:
+
+1. Add `enable_outfile_to_local=true` to `fe.conf`.
+2. Restart the FE for the configuration to take effect.
+
+#### Usage example
+
+Export all data from the `tbl` table to the local file system, using the default CSV format with `,` as the column separator:
 
 ```sql
-EXPORT TABLE tbl TO "file:///path/to/result_"
+EXPORT TABLE db.tbl TO "file:///path/to/result_"
 PROPERTIES (
   "format" = "csv",
   "line_delimiter" = ","
 );
 ```
 
-This function will export and write data to the disk of the node where the BE is located. If there are multiple BE nodes, the data will be scattered on different BE nodes according to the concurrency of the export task, and each node will have a part of the data.
+#### Data distribution
 
-As in this example, a set of files similar to `result_7052bac522d840f5-972079771289e392_0.csv` will eventually be produced under `/path/to/` of the BE node.
+- Data is written to the local disks of BE nodes.
+- In a multi-BE environment, data is distributed across different BE nodes according to the export task's parallelism, with each node storing a portion of the data.
+- In the example above, files such as `result_7052bac522d840f5-972079771289e392_0.csv` are generated under the `/path/to/` directory on the BE nodes.
 
-The specific BE node IP can be viewed in the `OutfileInfo` column in the `SHOW EXPORT` result, such as:
+#### Find the specific BE nodes
 
-```
+The IPs of the specific BE nodes can be found in the `OutfileInfo` column of the `SHOW EXPORT` result:
+
+```text
 [
     [
         {
@@ -385,8 +415,3 @@ The specific BE node IP can be viewed in the `OutfileInfo` column in the `SHOW E
     ]
 ]
 ```
-
-:::caution
-This function is not applicable to the production environment, and please ensure the permissions of the export directory and data security on your own.
-:::
-

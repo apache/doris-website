@@ -637,7 +637,6 @@ BaseCompaction:546859:
 
 #### `update_replica_infos_interval_seconds`
 
-* Type: int32
 * Description: Minimal interval (s) to update peer replica infos
 * Default value: 60 (s)
 
@@ -658,7 +657,6 @@ BaseCompaction:546859:
 * Type: int32
 * Description: The time interval in seconds between triggers for cold data compaction. A shorter interval means compaction on cold data will be considered more frequently, potentially leading to faster cleanup but higher resource consumption.
 * Default value: 1800 (seconds)
-
 
 ### Load
 
@@ -856,7 +854,7 @@ BaseCompaction:546859:
 #### `webserver_num_workers`
 
 * Description: Webserver default number of worker threads
-* Default value: 128
+* Default value: 48
 
 #### `send_batch_thread_pool_thread_num`
 
@@ -945,8 +943,8 @@ BaseCompaction:546859:
 #### `write_buffer_size`
 
 * Description: The size of the buffer before flashing
-  - Imported data is first written to a memory block on the BE, and only written back to disk when this memory block reaches the threshold. The default size is 100MB. too small a threshold may result in a large number of small files on the BE. This threshold can be increased to reduce the number of files. However, too large a threshold may cause RPC timeouts
-* Default value: 104,857,600
+  - Imported data is first written to a memory block on the BE, and only written back to disk when this memory block reaches the threshold. The default size is 200MB. too small a threshold may result in a large number of small files on the BE. This threshold can be increased to reduce the number of files. However, too large a threshold may cause RPC timeouts
+* Default value: 209,715,200
 
 #### `remote_storage_read_buffer_mb`
 

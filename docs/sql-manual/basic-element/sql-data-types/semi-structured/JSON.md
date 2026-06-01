@@ -93,7 +93,7 @@ Doris JSONB supports all standard JSON types. The main difference is that Doris 
   - Input Only: When inputting data into a JSONB column, STRING type can be implicitly converted to JSONB (provided the string content is valid JSON text). Other Doris types cannot be implicitly converted to JSONB.
 
 
-## JSON 的分组支持
+## GROUP BY and DISTINCT support for JSON
 
 ### Example 1: GROUP BY on JSON columns
 ```sql
@@ -152,7 +152,7 @@ mysql> SELECT DISTINCT j FROM test_jsonb_groupby;
    +------+----------+
    ```
 
-   This is because the first `123` is of type `BIGINT`, while the second `123` is of type `TINYINT`, resulting in different binary representations. You can verify their types with the following query:
+   This is because the first `123` is stored internally as a 64-bit integer (`json_type` reports `bigint`), while the second `123` is stored as a narrow integer (`json_type` reports `int` for all sub-`bigint` integer widths), resulting in different binary representations. You can verify their types with the following query:
    ```sql
    mysql> SELECT j, json_type(j, '$') FROM test_jsonb;
    +------+------------------+
@@ -310,8 +310,7 @@ mysql> SELECT cast('[1,                 2]' as json);
 ```
 
 ### Key Differences and Notes:
-- CAST(string AS JSON): Used to parse strings that conform to JSON syntax.
-- CAST(string AS JSON): For Number types, it will only parse Int8, Int16, Int32, Int64, Int128, and Double types, not Decimal type.
+- CAST(string AS JSON): Used to parse strings that conform to JSON syntax. For Number types, it will only parse Int8, Int16, Int32, Int64, Int128, and Double types, not Decimal type.
 - Unlike most other JSON implementations, Doris's JSONB type supports up to Int128 precision. Numbers exceeding Int128 precision may overflow.
 - If the input number string is 12.34, it will be parsed as a Double; if there's no decimal point, it will be parsed as an integer (if the size exceeds Int128 range, it will be converted to Double but with precision loss)
 
@@ -479,7 +478,7 @@ PROPERTIES("replication_num" = "1");
 25	[123, abc]
 ```
 
-- due to the 28% of rows is invalid, stream load with default configuration will fail with error message "too many filtered rows"
+- due to the 28% of rows are invalid, stream load with default configuration will fail with error message "too many filtered rows"
 
 ```
 curl --location-trusted -u root: -T test_json.csv http://127.0.0.1:8840/api/testdb/test_json/_stream_load

@@ -1,12 +1,25 @@
 ---
-{
-    "title": "Debugging Tools",
-    "language": "en",
-    "description": "A comprehensive guide to debugging tools and methods for Apache Doris, including FE and BE debugging techniques, memory profiling with Jemalloc and TCMalloc, memory leak detection with LSAN and ASAN, and CPU profiling with pprof and perf."
-}
+title: FE/BE Debug Tools
+language: en
+description: "Common debug tools for Apache Doris FE/BE: JVM monitoring, memory analysis, and BE debugging methods."
+keywords:
+    - Apache Doris
+    - FE debugging
+    - BE debugging
+    - jmap
+    - jstat
+    - jstack
+    - Jemalloc
+    - TCMalloc
+    - Heap Profile
+    - ASAN
+    - LSAN
+    - perf
+    - FlameGraph
+    - memory leak
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -25,23 +38,38 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Debugging Tools
+# FE/BE Debug Tools
 
-During Doris usage and development, debugging is often necessary. This document introduces commonly used debugging tools and methods.
+<!-- Knowledge type: Tool usage -->
+<!-- Applicable scenarios: Troubleshooting / Performance tuning -->
 
-**Note: The BE binary file name `doris_be` mentioned in this document was `palo_be` in earlier versions.**
+During development and operations of Apache Doris, you often need to debug the FE and BE processes. This document summarizes common tools for JVM monitoring, heap memory analysis, CPU flame graphs, and memory legality checks.
+
+> Note: The BE binary file name `doris_be` referenced in this document was named `palo_be` in earlier versions.
+
+## Tool Quick Reference
+
+| Category | Tool | Applicable process | Main purpose |
+|------|------|---------|---------|
+| JVM monitoring | `jmap` / `jstat` / `jstack` | FE | Inspect object memory, GC, and thread stacks |
+| Heap Profile | Jemalloc + `jeprof` | BE | Record heap memory allocation in real time or periodically |
+| Heap Profile | TCMalloc + `pprof` | BE (older versions) | Heap memory sampling and remote analysis |
+| Memory legality | LSAN / ASAN | BE | Detect memory leaks and illegal access |
+| CPU analysis | `pprof` / `perf + FlameGraph` | BE | Function-level CPU consumption and flame graphs |
 
 ## FE Debugging
 
-FE is a Java process. Below are some commonly used Java debugging commands.
+FE is a Java process, so you can debug it with the commands provided by the JDK.
 
-### 1. Memory Usage Statistics
+### 1. Show Current Memory Usage Details
 
 ```bash
 jmap -histo:live pid > 1.jmp
 ```
 
-This command lists the memory usage of live objects sorted by size (replace pid with the FE process ID).
+Replace `pid` with the FE process ID. This command lists the memory occupied by live objects in sorted order, with the total usage shown at the end of the file.
+
+Example output:
 
 ```text
  num     #instances         #bytes  class name
@@ -55,157 +83,154 @@ This command lists the memory usage of live objects sorted by size (replace pid 
    7:         15483        1057416  [Ljava.lang.Object;
 ```
 
-This method allows you to view the total memory occupied by live objects (at the end of the file) and analyze which objects consume more memory.
+> Note: Passing the `:live` parameter triggers a FullGC, so use it with caution in production.
 
-**Note:** This method triggers a FullGC due to the `:live` parameter.
-
-### 2. JVM Memory Usage
+### 2. Inspect JVM Memory Usage
 
 ```bash
 jstat -gcutil pid 1000 1000
 ```
 
-This command checks JVM memory usage in each region every second (replace pid with the FE process ID).
+Replace `pid` with the FE process ID. This command checks memory usage of each JVM region once per second.
+
+Example output:
 
 ```text
   S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT
   0.00   0.00  22.61   3.03  95.74  92.77     68    1.249     5    0.794    2.043
   0.00   0.00  22.61   3.03  95.74  92.77     68    1.249     5    0.794    2.043
-  0.00   0.00  22.61   3.03  95.74  92.77     68    1.249     5    0.794    2.043
-  0.00   0.00  22.92   3.03  95.74  92.77     68    1.249     5    0.794    2.043
   0.00   0.00  22.92   3.03  95.74  92.77     68    1.249     5    0.794    2.043
 ```
 
-Focus on the Old generation (O) percentage (3.03% in the example). High usage may lead to OOM or FullGC.
+Pay attention to the usage percentage of the Old generation (O). When it is too high, OOM or FullGC may occur.
 
-### 3. Print FE Thread Stack
+### 3. Print FE Thread Stacks
 
 ```bash
 jstack -l pid > 1.js
 ```
 
-This command prints the current FE thread stack (replace pid with the FE process ID).
+Replace `pid` with the FE process ID. The `-l` parameter also checks for deadlocks. You can use it to investigate FE thread blocking, deadlocks, hot functions, and similar issues.
 
-The `-l` parameter also detects deadlocks. This method can be used to view FE thread execution status, detect deadlocks, and locate blocking positions.
+## BE Memory Debugging
 
-## BE Debugging
+BE memory debugging mainly focuses on two categories of problems:
 
-### Memory Debugging
+1. **Whether memory usage is reasonable**: Excessive usage may indicate a memory leak or improper use.
+2. **Whether memory access is legal**: Whether there is out-of-bounds access, uninitialized access, and so on.
 
-Memory debugging focuses on two aspects:
+### Doris Debug Tools
 
-1. **Memory usage reasonability**: Excessive memory usage may indicate memory leaks or improper memory usage.
-2. **Memory access legality**: Detecting memory overflows, illegal access, accessing invalid addresses, or using uninitialized memory.
+[Doris Debug Tools](https://github.com/morningman/doris-debug-tools) provides packaged CPU flame graph and memory analysis tools. Download page: [Releases](https://github.com/morningman/doris-debug-tools/releases).
 
-The following tools can be used for tracking and analysis.
+> Note: This is an unofficial tool, intended only for development debugging.
 
-#### Doris Debug Tools
+### Jemalloc Heap Profile
 
-[Doris Debug Tools](https://github.com/morningman/doris-debug-tools) provides packaged CPU flame graph and memory analysis tools that can be downloaded and used directly.
+> Note: Apache Doris uses Jemalloc as the default memory allocator starting from version 1.2.2.
 
-- [Releases](https://github.com/morningman/doris-debug-tools/releases)
+For the principles of Heap Profile, see [Heap Profiling Principles Explained](https://cn.pingcap.com/blog/an-explanation-of-the-heap-profiling-principle/). Note that Heap Profile records virtual memory.
 
-> Note: Unofficial tool, for development and debugging purposes only.
+Jemalloc supports both real-time and periodic Heap Dump modes. The resulting Heap Profile is then parsed with the `jeprof` tool.
 
-#### Jemalloc Heap Profile
+#### 1. Real-Time Heap Dump (for analyzing live memory)
 
-> **Note:** Doris 1.2.2 and later versions use Jemalloc as the default memory allocator.
+Steps:
 
-For Heap Profiling principles, refer to [Heap Profiling Principle Explanation](https://cn.pingcap.com/blog/an-explanation-of-the-heap-profiling-principle/). Note that Heap Profile records virtual memory.
+1. Modify `JEMALLOC_CONF` in `be.conf`:
 
-Jemalloc supports both real-time and periodic Heap Dump methods, then uses the `jeprof` tool to parse the generated Heap Profile.
+    - Change `prof:false` to `prof:true`
+    - Change `prof_active:false` to `prof_active:true`
 
-##### 1. Real-time Heap Dump (for analyzing real-time memory)
+2. Restart Doris BE.
 
-In `be.conf`, change `prof:false` to `prof:true` and `prof_active:false` to `prof_active:true` in `JEMALLOC_CONF`, then restart Doris BE. Use the Jemalloc Heap Dump HTTP interface to generate Heap Profile files on the BE machine.
+3. Call the HTTP interface on the BE machine to generate a Heap Profile file:
 
-> **Version Notes:**
-> - Doris 2.1.8, 3.0.4 and later: `prof` is already `true` by default in `JEMALLOC_CONF`, no modification needed.
-> - Before Doris 2.1.8 and 3.0.4: `JEMALLOC_CONF` doesn't have `prof_active` option, just change `prof:false` to `prof:true`.
+    ```bash
+    curl http://be_host:be_webport/jeheap/dump
+    ```
 
-```bash
-curl http://be_host:be_webport/jeheap/dump
-```
+Version notes:
 
-**Configuration:**
+| Doris version | Behavior |
+|-----------|------|
+| 2.1.8 / 3.0.4 and later | `prof` in `JEMALLOC_CONF` defaults to `true`; no modification needed |
+| Before 2.1.8 / 3.0.4 | `JEMALLOC_CONF` has no `prof_active` option; only change `prof:false` to `prof:true` |
 
-- **Heap Profile directory**: Configure via `jeprofile_dir` in `be.conf`, defaults to `${DORIS_HOME}/log`.
-- **Sampling interval**: Defaults to 512KB, typically recording ~10% of memory with <10% performance impact. Modify `lg_prof_sample` in `JEMALLOC_CONF` (default `19`, i.e., 2^19 B = 512KB). Decreasing `lg_prof_sample` increases sampling frequency for more accurate profiles but higher overhead.
+Key configurations:
 
-**Performance tip:** Keep `prof:false` during performance testing to avoid Heap Dump overhead.
+| Configuration | Description | Default |
+|--------|------|--------|
+| `jeprofile_dir` | Output directory for Heap Profile | `${DORIS_HOME}/log` |
+| `lg_prof_sample` | Sampling interval (`2^N` bytes) | `19` (i.e., 512KB) |
 
-##### 2. Periodic Heap Dump (for long-term memory observation)
+Reducing `lg_prof_sample` makes the Heap Profile closer to real memory, but increases the performance cost. The default sampling records only about 10% of memory, and the performance impact is usually less than 10%.
 
-Change `prof:false` to `prof:true` in `JEMALLOC_CONF` in `be.conf`. Heap Profile files default to `${DORIS_HOME}/log` with prefix specified by `JEMALLOC_PROF_PRFIX` (default `jemalloc_heap_profile_`).
+> Performance tip: In performance test scenarios, keep `prof:false` to avoid the overhead of Heap Dump.
 
-> **Note:** Before Doris 2.1.6, `JEMALLOC_PROF_PRFIX` was empty and needs to be set.
+#### 2. Periodic Heap Dump (for long-term memory observation)
 
-**Dump triggers:**
+Change `prof:false` to `prof:true` in `JEMALLOC_CONF` in `be.conf`. By default, Heap Profile files are saved to `${DORIS_HOME}/log`, with file names prefixed by `JEMALLOC_PROF_PRFIX` (default `jemalloc_heap_profile_`).
 
-1. **Dump after cumulative memory allocation**
+> Note: Before Doris 2.1.6, `JEMALLOC_PROF_PRFIX` is empty, so you need to set it to any value as the profile file name.
 
-   Change `lg_prof_interval` to `34` in `JEMALLOC_CONF` to dump after cumulative 16GB allocation (2^34 B = 16GB).
+Dump trigger methods:
 
-   > **Note:** Before Doris 2.1.6, `lg_prof_interval` defaulted to `32`.
+| Trigger method | Configuration | Description |
+|---------|------|------|
+| Dump when cumulative memory allocation reaches threshold | `lg_prof_interval=34` | Dump every 16GB (`2^34 B`) of cumulative allocation; the default before 2.1.6 was `32` |
+| Dump when memory reaches a new high | `prof_gdump=true` | Restart BE after modification |
+| Dump on program exit and detect leaks | `prof_leak=true`, `prof_final=true` | Restart BE after modification |
+| Dump cumulative value (growth) | `prof_accum=true` | Use `jeprof --alloc_space` to display the cumulative value |
 
-2. **Dump on memory peak**
+#### 3. Parse Heap Profile with jeprof
 
-   Change `prof_gdump` to `true` in `JEMALLOC_CONF` and restart BE.
+Use `be/bin/jeprof` to parse the dumped Heap Profile. If the process memory is large, parsing may take several minutes.
 
-3. **Dump on exit and detect leaks**
+If there is no `jeprof` binary in the `be/bin` directory, you can package and upload the `jeprof` under the `doris/tools` directory to the server.
 
-   Change `prof_leak` and `prof_final` to `true` in `JEMALLOC_CONF` and restart BE.
+> Notes:
+> - `addr2line` version 2.35.2 or later is required. See QA-1 below for details.
+> - Try to perform Heap Dump and `jeprof` parsing on the same machine that runs Doris BE. See QA-2 below for details.
 
-4. **Dump cumulative (growth) instead of real-time values**
-
-   Change `prof_accum` to `true` in `JEMALLOC_CONF` and restart BE. Use `jeprof --alloc_space` to display cumulative heap dump.
-
-##### 3. Parse Heap Profile with `jeprof`
-
-Use `be/bin/jeprof` to parse dumped Heap Profiles. Parsing may take minutes for large memory processes.
-
-If `jeprof` binary is missing from `be/bin`, upload `jeprof` from `doris/tools` directory.
-
-> **Notes:**
-> - Requires addr2line version 2.35.2+, see QA-1 below.
-> - Execute Heap Dump and `jeprof` parsing on the same machine running Doris BE, see QA-2 below.
-
-**1. Analyze single Heap Profile**
+**(1) Analyze a single Heap Profile file**
 
 ```bash
 jeprof --dot ${DORIS_HOME}/lib/doris_be ${DORIS_HOME}/log/profile_file
 ```
 
-Paste terminal output to [online dot visualization](http://www.webgraphviz.com/) to generate memory allocation diagram.
+Paste the text output from the terminal into an [online dot rendering site](http://www.webgraphviz.com/) to generate a memory allocation relationship graph.
 
-To generate PDF directly (requires dependencies):
+If the server allows file transfer, you can generate a PDF directly:
 
 ```bash
 yum install ghostscript graphviz
 jeprof --pdf ${DORIS_HOME}/lib/doris_be ${DORIS_HOME}/log/profile_file > result.pdf
 ```
 
-**2. Analyze diff between two Heap Profiles**
+After installing [graphviz](http://www.graphviz.org/), `pprof` can output more readable formats such as SVG and PDF.
+
+**(2) Analyze the diff between two Heap Profiles**
 
 ```bash
 jeprof --dot ${DORIS_HOME}/lib/doris_be --base=${DORIS_HOME}/log/profile_file ${DORIS_HOME}/log/profile_file2
 ```
 
-Compare heap files from different times to analyze diff by using earlier file as baseline.
+By comparing Heap Profiles taken at an earlier and a later time, you can locate incremental memory allocations during that interval.
 
-##### 4. Common Issues (QA)
+#### 4. Frequently Asked Questions (QA)
 
-**QA-1: Errors after running jeprof: `addr2line: Dwarf Error: found dwarf version xxx, this reader only handles version xxx`**
+**QA-1: Running `jeprof` produces many `addr2line: Dwarf Error: found dwarf version xxx, this reader only handles version xxx` errors**
 
-GCC 11+ defaults to DWARF-v5, requiring Binutils 2.35.2+. Doris Ldb_toolchain uses GCC 11.
+Cause: GCC 11 and later use DWARF-v5 by default, which requires Binutils 2.35.2 or later. Doris LDB-toolchain uses GCC 11. See [GCC 11 changes](https://gcc.gnu.org/gcc-11/changes.html).
 
-Solution: Upgrade addr2line to 2.35.2.
+Solution: Upgrade `addr2line` to version 2.35.2.
 
 ```bash
-# Download addr2line source
+# Download the addr2line source code
 wget https://ftp.gnu.org/gnu/binutils/binutils-2.35.tar.bz2
 
-# Install dependencies if needed
+# Install dependencies (if needed)
 yum install make gcc gcc-c++ binutils
 
 # Compile & install addr2line
@@ -227,23 +252,24 @@ cp addr2line /usr/bin/addr2line
 hash -r
 ```
 
-**Note:** Don't use addr2line 2.3.9, which may be incompatible and cause memory growth.
+> Note: Do not use `addr2line 2.3.9`. That version may be incompatible and cause memory to keep growing.
 
-**QA-2: Errors after running `jeprof`: `addr2line: DWARF error: invalid or unhandled FORM value: 0x25`, parsed heap stacks show memory addresses instead of function names**
+**QA-2: Running `jeprof` reports `addr2line: DWARF error: invalid or unhandled FORM value: 0x25`, and the stack shows memory addresses instead of function names**
 
-Usually occurs when Heap Dump and `jeprof` parsing are on different servers, causing symbol table resolution failure.
+Cause: Usually because Heap Dump and `jeprof` were not run on the same server, so `jeprof` fails to parse the symbol table.
 
-Solution:
-- Execute Dump Heap and `jeprof` parsing on the same machine running Doris BE.
-- Or download `be/bin/doris_be` binary and Heap Profile to a machine with matching Linux kernel version and run `jeprof`.
+Solutions:
 
-**QA-3: If heap stacks still show memory addresses instead of function names after parsing on the BE machine**
+- Run Heap Dump and `jeprof` parsing on the same machine whenever possible.
+- Or check the Linux kernel version of the machine running Doris BE, download `be/bin/doris_be` and the Heap Profile file to a machine with the same kernel version, and then run `jeprof`.
 
-Use this script for manual parsing. Modify these variables:
+**QA-3: After parsing on the same machine that runs Doris BE, the stack still shows memory addresses**
 
-- `heap`: Heap Profile filename.
-- `bin`: `be/bin/doris_be` binary filename.
-- `llvm_symbolizer`: Path to llvm symbolizer, preferably the version used to compile the binary.
+Use the script below to parse the Heap Profile manually. Modify these variables:
+
+- `heap`: file name of the Heap Profile.
+- `bin`: file name of the `be/bin/doris_be` binary.
+- `llvm_symbolizer`: path to the llvm symbol-table parser, preferably the same version used to compile the `be/bin/doris_be` binary.
 
 ```bash
 #!/bin/bash
@@ -296,28 +322,28 @@ fi
 # vim: et tw=80 ts=2 sw=2 cc=80:
 ```
 
-**QA-4: If none of the above methods work**
+**QA-4: None of the methods above work**
 
-- Try recompiling `be/bin/doris_be` on the BE machine to compile, run, and parse on the same machine.
-- If heap stacks still show addresses, try compiling with TCMalloc using `USE_JEMALLOC=OFF ./build.sh --be`, then use TCMalloc Heap Profile as described below.
+- Try recompiling the `be/bin/doris_be` binary on the machine that runs Doris BE, so that compilation, execution, and `jeprof` parsing all happen on the same machine.
+- If that still does not work, try compiling a BE that uses TCMalloc with `USE_JEMALLOC=OFF ./build.sh --be`, then analyze memory by following the TCMalloc Heap Profile section below.
 
-#### TCMalloc Heap Profile
+### TCMalloc Heap Profile
 
-> **Note:** Doris 1.2.1 and earlier use TCMalloc. Doris 1.2.2+ default to Jemalloc. To switch back to TCMalloc, compile with `USE_JEMALLOC=OFF sh build.sh --be`.
+> Note: Apache Doris 1.2.1 and earlier use TCMalloc; starting from 1.2.2, Jemalloc is the default. To switch back to TCMalloc, compile with `USE_JEMALLOC=OFF sh build.sh --be`.
 
-When using TCMalloc, large memory allocations print stacks to `be.out`:
+When using TCMalloc, large memory allocations print the stack to `be.out` in the following form:
 
 ```text
 tcmalloc: large alloc 1396277248 bytes == 0x3f3488000 @  0x2af6f63 0x2c4095b 0x134d278 0x134bdcb 0x133d105 0x133d1d0 0x19930ed
 ```
 
-This indicates Doris BE attempted to allocate `1396277248 bytes` at this stack. Use `addr2line` to convert to readable information:
+This indicates that BE tried to allocate `1396277248 bytes` of memory at this stack. Use `addr2line` to restore the readable stack:
 
 ```bash
 addr2line -e lib/doris_be 0x2af6f63 0x2c4095b 0x134d278 0x134bdcb 0x133d105 0x133d1d0 0x19930ed
 ```
 
-Output example:
+Example output:
 
 ```text
 /home/ssd0/zc/palo/doris/core/thirdparty/src/gperftools-gperftools-2.7/src/tcmalloc.cc:1335
@@ -329,22 +355,22 @@ Output example:
 thread.cpp:?
 ```
 
-Sometimes memory issues come from accumulating small allocations, not visible in logs. Use TCMalloc's [HEAP PROFILE](https://gperftools.github.io/gperftools/heapprofile.html) feature. Set `HEAPPROFILE` environment variable before starting Doris BE:
+When many small allocations accumulate and inflate total memory, a single log line cannot locate the problem. In that case, enable TCMalloc's [HEAP PROFILE](https://gperftools.github.io/gperftools/heapprofile.html) feature by setting the `HEAPPROFILE` environment variable before starting BE:
 
 ```bash
 export TCMALLOC_SAMPLE_PARAMETER=64000 HEAP_PROFILE_ALLOCATION_INTERVAL=-1 HEAP_PROFILE_INUSE_INTERVAL=-1 HEAP_PROFILE_TIME_INTERVAL=5 HEAPPROFILE=/tmp/doris_be.hprof
 ./bin/start_be.sh --daemon
 ```
 
-> **Note:** HEAPPROFILE requires absolute path, and directory must exist.
+> Note: `HEAPPROFILE` must be an absolute path, and the directory must already exist.
 
-When HEAPPROFILE dump conditions are met, memory usage writes to specified file. Use `pprof` tool to analyze output.
+Analyze the output with `pprof`:
 
 ```bash
 pprof --text lib/doris_be /tmp/doris_be.hprof.0012.heap | head -30
 ```
 
-Output example:
+Example output:
 
 ```text
 Using local file lib/doris_be.
@@ -363,33 +389,38 @@ Total: 668.6 MB
      1.7   0.3%  98.4%      1.7   0.3% doris::SegmentReader::_load_index
 ```
 
-**Column meanings:**
+Column meanings:
 
-- **Column 1**: Memory directly allocated by function (MB).
-- **Column 2**: Percentage of column 1.
-- **Column 3**: Cumulative value of column 2.
-- **Column 4**: Total memory occupied by function and all called functions (MB).
-- **Column 5**: Percentage of column 4.
+| Column | Meaning |
+|----|------|
+| Column 1 | Memory directly allocated by the function (MB) |
+| Column 2 | Percentage of column 1 |
+| Column 3 | Cumulative value of column 2 |
+| Column 4 | Total memory used by the function and all functions it calls (MB) |
+| Column 5 | Percentage of column 4 |
 
-Generate call relationship graph in SVG format:
+Generate an SVG call graph:
 
 ```bash
 pprof --svg lib/doris_be /tmp/doris_be.hprof.0012.heap > heap.svg
 ```
 
-**Performance tip:** This option affects performance. Use cautiously on production instances.
+> Performance tip: Enabling this option affects program performance. Enable it on production instances with caution.
 
-##### pprof Remote Server
+#### pprof Remote Server
 
-HEAP PROFILE has limitations: 1. Requires BE restart; 2. Continuous enabling impacts performance.
+`HEAP PROFILE` can capture complete memory usage information, but it has the following limitations:
 
-Doris BE supports dynamic heap profiling. Doris supports GPerftools [remote server debugging](https://gperftools.github.io/gperftools/pprof_remote_servers.html). Use `pprof` to dynamically profile remote running Doris BE. Example for viewing memory usage increment:
+1. It requires a BE restart.
+2. It must stay enabled, which continuously impacts process performance.
+
+For this reason, Doris BE has built-in support for GPerftools [remote server debugging](https://gperftools.github.io/gperftools/pprof_remote_servers.html), allowing dynamic capture of memory increments without restarting BE:
 
 ```bash
 pprof --text --seconds=60 http://be_host:be_webport/pprof/heap
 ```
 
-Output example:
+Example output:
 
 ```text
 Total: 1296.4 MB
@@ -408,17 +439,17 @@ Total: 1296.4 MB
     10.0   0.8%  93.4%     10.0   0.8% doris::PlainTextLineReader::PlainTextLineReader
 ```
 
-Output and viewing method match HEAP PROFILE. This command only enables statistics during execution, causing less performance impact than HEAP PROFILE.
+This command only collects statistics during its execution, so its impact on process performance is smaller than a full `HEAP PROFILE`.
 
-#### LSAN (Memory Leak Detection)
+### LSAN (Memory Leak Detection)
 
-[LSAN](https://github.com/google/sanitizers/wiki/AddressSanitizerLeakSanitizer) is an address checking tool integrated in GCC. Enable during compilation to activate this feature. When determinable memory leaks occur, leak stacks are printed. Doris BE has integrated this tool. Compile with:
+[LSAN](https://github.com/google/sanitizers/wiki/AddressSanitizerLeakSanitizer) is integrated into GCC and is available simply by enabling it at compile time. Doris BE already integrates this tool. The compile command is:
 
 ```bash
 BUILD_TYPE=LSAN ./build.sh
 ```
 
-When memory leaks are detected, corresponding information outputs to `be.out`. For demonstration, we intentionally inject a memory leak in the `StorageEngine` `open` function:
+When a memory leak is detected, the leak stack is printed to `be.out`. For example, insert the following leak code into the `open` function of `StorageEngine`:
 
 ```cpp
 char* leak_buf = new char[1024];
@@ -426,7 +457,7 @@ strcpy(leak_buf, "hello world");
 LOG(INFO) << leak_buf;
 ```
 
-Then `be.out` shows:
+`be.out` output:
 
 ```text
 =================================================================
@@ -441,21 +472,19 @@ Direct leak of 1024 byte(s) in 1 object(s) allocated from:
 SUMMARY: LeakSanitizer: 1024 byte(s) leaked in 1 allocation(s).
 ```
 
-Output shows 1024 bytes leaked with memory allocation stack trace.
+> Performance tip: Enabling LSAN affects program performance. Enable it on production instances with caution.
 
-**Performance tip:** This option affects performance. Use cautiously on production instances.
+> Note: Once LSAN is enabled, TCMalloc is automatically turned off.
 
-**Note:** Enabling LSAN automatically disables TCMalloc.
+### ASAN (Address Legality Detection)
 
-#### ASAN (Address Legality Detection)
-
-Besides improper memory usage and leaks, illegal address access errors can occur. Use [ASAN](https://github.com/google/sanitizers/wiki/AddressSanitizer) to find root causes. Like LSAN, ASAN is integrated in GCC. Compile Doris with:
+[ASAN](https://github.com/google/sanitizers/wiki/AddressSanitizer) is also integrated into GCC, and is used to detect memory out-of-bounds access, illegal address access, and similar issues. Compile command:
 
 ```bash
 BUILD_TYPE=ASAN ./build.sh
 ```
 
-When abnormal access is detected, the binary exits immediately and outputs illegal access stack to `be.out`. ASAN output analysis uses the same method as LSAN. For demonstration, inject an address access error in the `StorageEngine` `open` function:
+When ASAN detects an illegal access, it exits immediately and prints the stack to `be.out`. For example, inject the following illegal access code into the `open` function of `StorageEngine`:
 
 ```cpp
 char* invalid_buf = new char[1024];
@@ -465,7 +494,7 @@ for (int i = 0; i < 1025; ++i) {
 LOG(INFO) << invalid_buf;
 ```
 
-Then `be.out` shows:
+`be.out` output:
 
 ```text
 =================================================================
@@ -486,77 +515,92 @@ allocated by thread T0 here:
 SUMMARY: AddressSanitizer: heap-buffer-overflow /home/ssd0/zc/palo/doris/core/be/src/olap/storage_engine.cpp:106 in doris::StorageEngine::open(doris::EngineOptions const&, doris::StorageEngine**)
 ```
 
-This shows an attempted one-byte write to illegal address `0x61900008bf80`, and the allocation stack for region `[0x61900008bb80,0x61900008bf80)`.
+From the output you can read the illegal address `0x61900008bf80`, the allocated region `[0x61900008bb80,0x61900008bf80)`, and its allocation stack.
 
-**Performance tip:** This option affects performance. Use cautiously on production instances.
+> Performance tip: Enabling ASAN affects program performance. Enable it on production instances with caution.
 
-**Note:** Enabling ASAN automatically disables TCMalloc.
+> Note: Once ASAN is enabled, TCMalloc is automatically turned off.
 
-If `be.out` stack output lacks function symbols, manual processing is needed. Use the [asan_symbolize](https://llvm.org/svn/llvm-project/compiler-rt/trunk/lib/asan/scripts/asan_symbolize.py) script to parse ASAN output:
+If the stack output to `be.out` does not contain function symbols, use the [asan_symbolize](https://llvm.org/svn/llvm-project/compiler-rt/trunk/lib/asan/scripts/asan_symbolize.py) script to parse it manually:
 
 ```bash
 cat be.out | python asan_symbolize.py | c++filt
 ```
 
-This command produces readable stack information.
+## BE CPU Debugging
 
-### CPU Debugging
+When CPU Idle stays low for an extended period, CPU has become the main bottleneck. Doris BE offers several ways to analyze CPU usage.
 
-When system CPU Idle is low, CPU is the main bottleneck. Analyze current CPU usage. For Doris BE, there are serveral methods to analyze CPU bottlenecks.
+### Comparison of CPU Analysis Tools
 
-#### Doris Debug Tools
+| Tool | Requires login to physical machine | Sampling method | Output |
+|------|----------------|---------|------|
+| Doris Debug Tools | No (packaged tool) | Remote pulling | Flame graph |
+| `pprof` + GPerf REST | No | Timed sampling | SVG/PDF |
+| `perf` + FlameGraph | Yes | Event-driven sampling | Flame graph |
 
-[Doris Debug Tools](https://github.com/morningman/doris-debug-tools) provides packaged CPU flame graph and memory analysis tools that can be downloaded and used directly.
+### Doris Debug Tools (CPU Analysis)
 
-- [Releases](https://github.com/morningman/doris-debug-tools/releases)
+[Doris Debug Tools](https://github.com/morningman/doris-debug-tools) provides packaged CPU flame graph and memory analysis tools. Download page: [Releases](https://github.com/morningman/doris-debug-tools/releases).
 
-> Note: Unofficial tool, for development and debugging purposes only.
+> Note: This is an unofficial tool, intended only for development debugging.
 
-#### pprof
+### pprof (Remote REST Sampling)
 
-[pprof](https://github.com/google/pprof) from gperftools converts gperftools output to readable formats like PDF, SVG, Text.
-
-Since Doris has integrated and is compatible with GPerf REST interface, use `pprof` tool to analyze remote Doris BE:
+[pprof](https://github.com/google/pprof) comes from gperftools and can convert gperftools output into readable formats such as PDF, SVG, and Text. Doris BE is compatible with the GPerf REST interface:
 
 ```bash
 pprof --svg --seconds=60 http://be_host:be_webport/pprof/profile > be.svg
 ```
 
-This command generates a BE CPU consumption graph.
+This command generates a graph of BE CPU consumption over a 60-second window:
 
 ![CPU Pprof](/images/cpu-pprof-demo.png)
 
-#### perf + FlameGraph
+### perf + FlameGraph
 
-This is a very general CPU analysis method. Unlike `pprof`, this method requires login to the physical machine. But compared to pprof's timed sampling, perf can collect stack information through different events.
+This is a more general CPU analysis approach. Compared with `pprof`, it requires you to log in to the physical machine being analyzed; however, while `pprof` only does timed sampling, `perf` can collect stacks based on different events.
 
-**Tool introduction:**
+Tool references:
 
-- [perf](https://perf.wiki.kernel.org/index.php/Main_Page): Linux kernel built-in performance analysis tool. [Here](http://www.brendangregg.com/perf.html) are some perf usage examples.
-- [FlameGraph](https://github.com/brendangregg/FlameGraph): Visualization tool to display perf output as flame graphs.
+| Tool | Link |
+|------|------|
+| `perf` | [perf homepage](https://perf.wiki.kernel.org/index.php/Main_Page), [usage examples](http://www.brendangregg.com/perf.html) |
+| FlameGraph | [GitHub repository](https://github.com/brendangregg/FlameGraph) |
 
-**Usage:**
+Steps:
 
-```bash
-perf record -g -p be_pid -- sleep 60
-```
+1. Collect 60 seconds of BE CPU data:
 
-This command profiles BE CPU usage for 60 seconds and generates `perf.data` file. Analyze `perf.data` with perf command:
+    ```bash
+    perf record -g -p be_pid -- sleep 60
+    ```
 
-```bash
-perf report
-```
+2. View the collected report:
 
-Analysis example:
+    ```bash
+    perf report
+    ```
 
-![Perf Report](/images/perf-report-demo.png)
+    Example analysis result:
 
-Or visualize with FlameGraph:
+    ![Perf Report](/images/perf-report-demo.png)
 
-```bash
-perf script | ./FlameGraph/stackcollapse-perf.pl | ./FlameGraph/flamegraph.pl > be.svg
-```
+3. Use FlameGraph to generate a visualized flame graph:
 
-This also generates a CPU consumption graph.
+    ```bash
+    perf script | ./FlameGraph/stackcollapse-perf.pl | ./FlameGraph/flamegraph.pl > be.svg
+    ```
 
-![CPU Flame](/images/cpu-flame-demo.svg)
+    Example output:
+
+    ![CPU Flame](/images/cpu-flame-demo.svg)
+
+## Troubleshooting
+
+| Symptom | Possible cause | Action |
+|------|---------|---------|
+| `addr2line: Dwarf Error` | DWARF-v5 is incompatible with older binutils | Upgrade `addr2line` to 2.35.2+. See QA-1 for details |
+| `jeprof` output is all memory addresses | Heap Dump and parsing are not on the same machine, or the symbol table does not match | Parse on the same machine or align the kernel versions. See QA-2/QA-3 for details |
+| Frequent FullGC; Old generation close to 100% | FE JVM heap is insufficient or a large object leak exists | Investigate with `jmap -histo:live` and `jstat -gcutil` |
+| Performance degrades after BE startup | Heap Profile / ASAN / LSAN enabled by mistake | Disable the corresponding configuration; use only for debugging |

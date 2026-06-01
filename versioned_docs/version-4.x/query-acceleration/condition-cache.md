@@ -1,115 +1,182 @@
 ---
-{
-    "title": "Condition Cache",
-    "language": "en",
-    "description": "In large-scale analytical workloads, queries often include repeated filtering conditions (Conditions)"
-}
+title: Condition Cache Accelerates Repeated Filter Queries
+sidebar_label: Condition Cache
+description: How does Doris Condition Cache accelerate repeated condition queries by caching Segment filter results? This article explains the principles, configuration, and hit-rate monitoring in detail.
+keywords:
+    - Doris Condition Cache
+    - condition cache
+    - query acceleration
+    - repeated filter optimization
+    - Segment filter cache
+    - LRU cache
+    - OLAP high-concurrency query
+    - enable_condition_cache
 ---
 
-## Introduction
+<!-- Knowledge type: capability definition / configuration parameter / performance tuning -->
+<!-- Applicable scenario: high-frequency repeated condition queries / query performance optimization -->
 
-In large-scale analytical workloads, queries often include **repeated filtering conditions (Conditions)**, for example:
+**Condition Cache** is a query acceleration mechanism in Apache Doris designed for repeated condition queries. It caches the result of a specific filter condition on a given Segment as a compressed bit vector. When a subsequent query hits the cache, the result can be reused directly, avoiding repeated scans and filtering. This reduces CPU and IO overhead and shortens query latency.
 
-```
+In large-scale analytical scenarios, queries often contain repeated filter conditions, for example:
+
+```sql
 SELECT * FROM orders WHERE region = 'ASIA';
 SELECT count(*) FROM orders WHERE region = 'ASIA';
 ```
 
-Such queries repeatedly execute the same filtering logic on identical data segments, leading to **redundant CPU and I/O overhead**.
-
-To address this, **Apache Doris introduces the Condition Cache mechanism**.
- It caches the filtering results of specific conditions on a given segment, allowing subsequent queries to **reuse those results directly**, thereby **reducing unnecessary scans and filtering operations** and significantly lowering query latency.
+Such queries repeatedly execute the same filter logic on the same data shards (Segments), causing **redundant CPU and IO overhead**. Condition Cache reuses filter results to **reduce unnecessary scans and filtering**, significantly lowering query latency.
 
 ## Working Principle
 
-The core concept of the Condition Cache is:
+<!-- Knowledge type: architectural principle -->
 
-- **The same filtering condition produces the same result on the same data segment.**
-- Doris generates a **64-bit digest** from the combination of “condition expression + key range,” which serves as a unique cache identifier.
-- Each segment can then look up existing filtering results in the cache using this digest.
+The core idea of Condition Cache is: **the same filter condition on the same data shard produces the same result**.
 
-Cached results are stored as compressed **bit vectors (`std::vector<bool>`)**:
+1. Doris generates a **64-bit digest** from "filter expression + Key Range" as the unique identifier for the cache.
+2. Each Segment can use this digest to look up an existing filter result in the cache.
+3. The cached result is stored as a compressed **bit vector (`std::vector<bool>`)**.
 
-- **0** indicates that the row range does not meet the condition and can be skipped directly;
-- **1** indicates that the range may contain matching data and needs further scanning.
+The semantics of the bit vector are as follows:
 
-Through this mechanism, Doris can quickly eliminate irrelevant data blocks at a coarse granularity, performing fine-grained filtering only when necessary.
+| Bit value | Meaning                                                       |
+| --------- | ------------------------------------------------------------- |
+| `0`       | The row range does not satisfy the condition and can be skipped |
+| `1`       | The range may contain rows that satisfy the condition and needs further scanning |
+
+In this way, Doris can quickly eliminate invalid data blocks at a coarse granularity and apply precise filtering only when necessary.
 
 ## Applicable Scenarios
 
-Condition Cache is most effective in the following cases:
+<!-- Knowledge type: architecture selection decision -->
 
-- **Repeated conditions**: Identical or similar filter conditions are frequently used.
-- **Relatively stable data**: Data inside a segment is typically immutable (new segments are generated after INSERT/Compaction, naturally invalidating old caches).
-- **High selectivity**: When filters leave only a small subset of rows, it maximizes scan reduction.
+### Recommended Scenarios
 
-Condition Cache will **not** be used in the following situations:
+Condition Cache is most effective in the following scenarios:
 
-- Queries containing **delete predicates** (to ensure correctness, caching is disabled).
-- **TopN runtime filters** generated at runtime (currently unsupported).
+| Scenario             | Description                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------- |
+| **Repeated conditions** | The same or similar filter conditions are used frequently                              |
+| **Relatively stable data** | Data inside a Segment is generally immutable (INSERT/Compaction generates new Segments, and old caches are naturally evicted) |
+| **High selectivity** | The condition retains only a few rows after filtering, which maximizes scan reduction  |
+
+### Scenarios Where Condition Cache Does Not Apply
+
+Condition Cache does not take effect in the following scenarios:
+
+- The query contains a **Delete condition** (delete markers must guarantee correctness, so the cache is disabled).
+- A **TopN Runtime Filter** generated at runtime (not yet supported).
 
 ## Configuration and Management
 
-### Enable or Disable
+<!-- Knowledge type: configuration parameter -->
 
-```
-SET enable_condition_cache = true;
-```
+### Enable and Disable
+
+- **Purpose**: Enable Condition Cache at the session level.
+- **Command**:
+
+    ```sql
+    set enable_condition_cache = true;
+    ```
+
+- **Description**: This parameter controls whether the current session uses Condition Cache.
 
 ### Memory Management
 
-- Condition Cache uses an **LRU policy** for cache eviction.
-- When exceeding `condition_cache_limit`, the least recently used entries are automatically cleared.
+The memory usage of Condition Cache follows these rules:
 
-You can modify the memory limit in `be.conf`:
+| Item              | Description                                                          |
+| ----------------- | -------------------------------------------------------------------- |
+| Eviction policy   | **LRU (Least Recently Used)**, evicts the least recently used entries automatically once the capacity limit is exceeded |
+| Capacity parameter | `condition_cache_limit`, in MB, default `1024`                       |
+| Configuration location | `be.conf`                                                       |
+| Natural expiration | After a Segment goes through Compaction, old cache entries are naturally evicted by LRU |
 
+Example of modifying the capacity limit:
+
+```properties
+# be.conf
+condition_cache_limit = 1024
 ```
-condition_cache_limit = 1024  # Unit: MB
-```
 
-- After segment compaction, old cache entries are naturally invalidated through LRU eviction.
+## Cache Statistics and Monitoring
 
-## Cache Statistics
+<!-- Knowledge type: operational steps -->
 
-Doris provides comprehensive metrics to help users monitor the effectiveness of Condition Cache:
+Doris provides rich statistical metrics for observing the effectiveness of Condition Cache. You can use these metrics to evaluate cache benefits and hit rates.
 
-- **Profile-level metrics** (visible in query execution plans)
-  - `ConditionCacheSegmentHit`: Number of segments that hit the cache
-  - `ConditionCacheFilteredRows`: Number of rows skipped directly by cached results
-- **System metrics** (viewable via the monitoring system or `/metrics`)
-  - `condition_cache_search_count`: Total cache lookup count
-  - `condition_cache_hit_count`: Number of successful cache hits
+### Profile-Level Metrics
 
-These metrics help evaluate the cache’s benefit and hit ratio.
+The following metrics are visible in the query execution plan (Profile):
+
+| Metric name                    | Meaning                          |
+| ------------------------------ | -------------------------------- |
+| `ConditionCacheSegmentHit`     | Number of Segments that hit the cache |
+| `ConditionCacheFilteredRows`   | Number of rows directly filtered out by the cache |
+
+### System Metrics
+
+View these metrics through the monitoring system or the `metrics` interface:
+
+| Metric name                     | Meaning           |
+| ------------------------------- | ----------------- |
+| `condition_cache_search_count`  | Number of cache lookups |
+| `condition_cache_hit_count`     | Number of cache hits   |
 
 ## Usage Example
 
 ### Typical Scenario
 
-Consider the following query:
+Suppose you have the following query:
 
-```
+```sql
 SELECT order_id, amount
 FROM orders
 WHERE region = 'ASIA' AND order_date >= '2023-01-01';
 ```
 
-- **First execution**: The query performs a full scan and evaluates the filter; the Condition Cache stores the result in the LRU cache.
-- **Subsequent identical queries**: They reuse the cached results, skipping most irrelevant row ranges and scanning only potential matches.
+Execution flow:
 
-When multiple queries share the same filtering condition (e.g., `region = 'ASIA' AND order_date >= '2023-01-01'`), they can reuse each other’s Condition Cache entries, reducing overall workload.
+1. **First execution**: A full scan and condition evaluation are required. Condition Cache stores the result in the LRU cache.
+2. **Subsequent identical queries**: The cache is used directly to skip most invalid row ranges, scanning only the parts that may satisfy the condition.
+
+When multiple queries share the same filter condition (for example, `region = 'ASIA' AND order_date >= '2023-01-01'`), they can also reuse Condition Cache among each other, reducing overall overhead.
 
 ## Notes
 
-- **Cache is not persistent**: The Condition Cache is cleared upon Doris restart.
-- **Delete operations disable caching**: Segments with delete markers require strict consistency and thus do not use the cache.
+- **The cache is not persisted**: Condition Cache is cleared after Doris restarts.
+- **Delete operations disable the cache**: Segments involving delete markers must guarantee strong consistency, so Condition Cache is not used.
+
+## FAQ
+
+**Q1: What is the difference between Condition Cache and Query Cache?**
+
+Condition Cache caches "the hit status of a filter condition on a Segment" (a bit vector). Its granularity is finer and it can be reused across different queries. It is an optimization mechanism at the query execution layer.
+
+**Q2: Why is the query not faster after enabling Condition Cache?**
+
+You can investigate from the following angles:
+
+- The query condition contains a Delete marker or a TopN Runtime Filter, so the cache does not take effect.
+- Data is written frequently. After Compaction, old Segments are replaced by new ones, and the cache is evicted.
+- The condition has low selectivity, and many rows are still retained after filtering, so the benefit is limited.
+- Use `condition_cache_hit_count` / `condition_cache_search_count` to check whether the hit rate is low.
+
+**Q3: How can I confirm whether a query hits Condition Cache?**
+
+Check the `ConditionCacheSegmentHit` and `ConditionCacheFilteredRows` metrics in the Profile. If the values are greater than 0, the cache was hit and produced filtering benefits.
+
+**Q4: Do I need to restart after adjusting `condition_cache_limit`?**
+
+`condition_cache_limit` is configured in `be.conf`. After modification, you need to restart the BE for it to take effect.
 
 ## Summary
 
-Condition Cache is an optimization mechanism in Doris designed for **repeated conditional queries**. Its advantages include:
+Condition Cache is an optimization mechanism in Doris for **repeated condition queries**. Its advantages are:
 
-- Avoiding redundant computation and reducing CPU/I/O overhead
-- Automatically and transparently effective without user intervention
-- Lightweight in memory consumption and highly efficient when hit and filter rates are high
+- It avoids redundant computation and reduces CPU/IO consumption.
+- It works transparently and automatically, with no user intervention required.
+- It uses little memory, and the effect is significant when hit rate and filter rate are high.
 
-By leveraging the Condition Cache effectively, users can achieve significantly faster response times in high-frequency OLAP query scenarios.
+By making good use of Condition Cache, you can achieve faster response times in high-frequency OLAP query scenarios.

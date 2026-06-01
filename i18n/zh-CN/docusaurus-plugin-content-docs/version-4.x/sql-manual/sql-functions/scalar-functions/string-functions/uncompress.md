@@ -52,7 +52,7 @@ select uncompress(compress(''));
 +--------------------------+
 ```
 ```sql
-select uncompress(compress(abc));
+select uncompress('abc');
 ```
 ```text 
 +-------------------+

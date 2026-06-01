@@ -22,7 +22,7 @@ MINUTES_ADD(`<date_or_time_expr>`, `<minutes>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| ``<date_or_time_expr>`` | 输入的日期时间值，类型可以是 DATE、DATETIME、TIMESTAMPTZ，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion), |
+| ``<date_or_time_expr>`` | 输入的日期时间值，类型可以是 DATE、DATETIME、TIMESTAMPTZ，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion), |
 | ``<minutes>`` | 要增加的分钟数，类型为 BIGINT，可以为正数或负数 |
 
 ## 返回值
@@ -91,5 +91,5 @@ SELECT MINUTES_ADD(NULL, 10), MINUTES_ADD('2023-07-13 22:28:18', NULL) AS result
 
 --- 计算结果超出日期时间范围，报错
 SELECT MINUTES_ADD('9999-12-31 23:59:59', 2) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation minutes_add of 9999-12-31 23:59:59, 2 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation minute_add of 9999-12-31 23:59:59, 2 out of range
 ```

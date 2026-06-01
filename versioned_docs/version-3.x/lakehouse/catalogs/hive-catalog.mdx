@@ -30,7 +30,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type'='hms', -- required
     'hive.metastore.type' = '<hive_metastore_type>', -- optional
     'hive.version' = '<hive_version>', -- optional
-    'fs.defaultFS' = '<fs_defaultfs>', -- optional
+    'fs.defaultFS' = '<fs_defaultfs>', -- required for write, optional for read-only
     {MetaStoreProperties},
     {StorageProperties},
     {HiveProperties},
@@ -256,7 +256,7 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
@@ -326,7 +326,7 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -359,7 +359,7 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -481,7 +481,7 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
             CREATE CATALOG test_two_hive_kerberos PROPERTIES (
                 'type' = 'hms',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
                 'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
                 'hadoop.kerberos.min.seconds.before.relogin' = '5',
@@ -613,6 +613,7 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
                 'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
                 'glue.role_arn' = '<role_arn>'
             );
+            ```
         </TabItem>
     </Tabs>
 </details>

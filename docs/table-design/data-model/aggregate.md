@@ -1,45 +1,34 @@
 ---
 {
-    "title": "Aggregate Key Table",
+    "title": "Aggregate Model",
     "language": "en",
-    "description": "Doris's Aggregate Key Table is designed to efficiently handle aggregation operations in large-scale data queries."
+    "description": "The Doris Aggregate Model uses pre-aggregation to reduce redundant computation, improve performance for large-scale aggregate queries, and save storage space. It fits multidimensional summary and reporting analysis scenarios."
 }
 ---
 
-Doris's **Aggregate Key Table** is designed to efficiently handle aggregation operations in large-scale data queries. By performing pre-aggregation on the data, it reduces redundancy in computations and improves query performance. The table stores only aggregated data, omitting raw data, which saves storage space and enhances query performance.
+<!-- Knowledge type: Table model selection / Table creation syntax -->
+<!-- Applicable scenarios: Multidimensional summary analysis / Reporting / Pre-aggregation -->
 
-## Use Cases
+The Doris Aggregate Key Model is designed to efficiently handle aggregate operations on large-scale data queries. By performing pre-aggregation during data ingestion and the background merge stage, it reduces redundant computation and stores only the aggregated results, saving storage space and accelerating queries.
 
-* **Summarizing Detailed Data**: The Aggregate Key Table is used in scenarios like e-commerce platforms evaluating monthly sales, financial risk control calculating customer transaction totals, or advertising campaigns analyzing total ad clicks, for multidimensional summarization of detailed data.
+## Applicable Scenarios
 
-* **No Need to Query Raw Detailed Data**: For use cases such as dashboard reports or user transaction behavior analysis, where the raw data is stored in a data lake and does not need to be retained in the database, only the aggregated data is stored.
+The Aggregate Model fits the following two types of business scenarios:
 
-## Principle
+- **Detail data summarization**: multidimensional summary analysis such as monthly sales performance on e-commerce platforms, total customer transaction amounts in financial risk control, and ad click counts.
+- **Queries that do not depend on raw details**: such as cockpit reports and user transaction behavior analysis. Raw detail data is kept in the data lake, and the warehouse only needs to store the summarized results.
 
-Each data import creates a version in the Aggregate Key Table, and during the **Compaction** stage, versions are merged. When querying, data is aggregated by the primary key:
+## How It Works
 
-* **Data Import Stage**
+Each data ingestion creates a new version in the Aggregate Model. Versions are merged during the background Compaction stage, and the data is aggregated again by the primary key at query time. The overall flow is divided into three stages:
 
-  * Data is imported into the aggregate key table in batches, with each batch creating a new version.
+1. **Data ingestion stage**: Data is ingested in batches. Each batch generates a version, and rows with the same aggregate key are pre-aggregated (for example, sum or count).
+2. **Background merge stage (Compaction)**: Multiple version files are merged periodically to reduce redundancy and optimize storage.
+3. **Query stage**: The system performs a final aggregation on the data by the aggregate key to ensure accurate query results.
 
-  * Within each version, data with the same aggregation keys is pre-aggregated (e.g., sum, count, etc.).
+## Table Creation Syntax
 
-* **Background File Merging Stage (Compaction)**
-
-  * Multiple batches generate multiple version files, which are periodically merged into a larger version file.
-
-  * During the merge process, data with the same aggregation key is re-aggregated to reduce redundancy and optimize storage.
-
-* **Query Stage**
-
-  * During queries, the system aggregates data with the same aggregation key from all versions to ensure accurate results.
-
-  * This process ensures that aggregation operations are performed efficiently, even with large data volumes. The aggregated results are optimized for fast querying, providing a significant performance improvement over raw data queries
-
-
-## Table Creation Instructions
-
-When creating a table, the **AGGREGATE KEY** keyword can be used to specify the Aggregate Key Table. The Aggregate Key Table must specify Key columns, which are used to aggregate Value columns during storage.
+Use the `AGGREGATE KEY` keyword to specify the Aggregate Model, and declare Key columns used to aggregate Value columns.
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_agg
@@ -48,51 +37,47 @@ CREATE TABLE IF NOT EXISTS example_tbl_agg
     load_date           DATE        NOT NULL,
     city                VARCHAR(20),
     last_visit_dt       DATETIME    REPLACE DEFAULT "1970-01-01 00:00:00",
-    cost                BIGINT      SUM DEFAULT "0",
-    max_dwell           INT         MAX DEFAULT "0",
+    cost                BIGINT      SUM     DEFAULT "0",
+    max_dwell           INT         MAX     DEFAULT "0"
 )
 AGGREGATE KEY(user_id, load_date, city)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-In the example above, a fact table for user information and access behavior is defined, where `user_id`, `load_date`, and `city` are used as Key columns for aggregation. During data import, the Key columns are aggregated into one row, and the Value columns are aggregated according to the specified aggregation types. 
+The example above defines a table of user information and visit behavior, using `user_id`, `load_date`, and `city` as Key columns for aggregation. During data ingestion, rows with the same Key column values are aggregated into a single row, and Value columns are aggregated by dimension according to the declared aggregate type.
 
-The following types of dimension aggregation are supported in the Aggregate Key Table:
+### Supported Aggregation Methods
 
+Value columns in an aggregate table support the following aggregation methods:
 
-| Aggregation Method       | Description                                                         |
-|--------------------------|---------------------------------------------------------------------|
-| SUM                      | Sum, accumulates multiple Value rows.                               |
-| REPLACE                  | Replacement, the Value in the next batch replaces the previously inserted Value. |
-| MAX                      | Retain the maximum value.                                           |
-| MIN                      | Retain the minimum value.                                           |
-| REPLACE_IF_NOT_NULL      | Replace non-null values. Unlike REPLACE, null values are not replaced. |
-| HLL_UNION                | Aggregation method for HLL type columns, using the HyperLogLog algorithm. |
-| BITMAP_UNION             | Aggregation method for BITMAP type columns, performing bitmap union aggregation. |
+| Aggregation Method  | Description                                                                |
+| ------------------- | -------------------------------------------------------------------------- |
+| SUM                 | Sums values; accumulates Values across multiple rows.                       |
+| REPLACE             | Replaces; the Value in the next batch replaces the Value from previous rows. |
+| MAX                 | Keeps the maximum value.                                                    |
+| MIN                 | Keeps the minimum value.                                                    |
+| REPLACE_IF_NOT_NULL | Replaces with non-null values. Differs from REPLACE in that it does not replace `null` values. |
+| HLL_UNION           | Used for HLL-type columns; aggregates with the HyperLogLog algorithm.        |
+| BITMAP_UNION        | Used for BITMAP-type columns; performs a bitmap union aggregation.           |
 
-
-
-:::info Tip:
-
-If the aggregation methods above do not meet your business requirements, consider using the `agg_state` type.
-
+:::info Note
+If the aggregation methods above do not meet your business needs, you can use the [AGG_STATE](#agg_state) type.
 :::
 
+## Data Write and Aggregation Example
 
-## Data Insertion and Storage
+Data in the aggregate table is aggregated based on Key columns, and the aggregation is completed once the write finishes.
 
-In the Aggregate Key table, data is aggregated based on the primary key. After data insertion, aggregation operations are completed.
+![aggrate-key-model-insert](/images/table-desigin/aggrate-key-model-insert.png)
 
-![aggrate-key-table-insert](/images/table-desigin/aggrate-key-model-insert.png)
-
-In the example above, there were originally 4 rows of data in the table. After inserting 2 rows, aggregation operations on the dimension columns are performed based on the Key columns:
+In the following example, the table originally contains 4 rows. After inserting 2 more rows, the Value columns are aggregated based on the Key columns.
 
 ```sql
 -- 4 rows raw data
 INSERT INTO example_tbl_agg VALUES
 (101, '2024-11-01', 'BJ', '2024-10-29', 10, 20),
 (102, '2024-10-30', 'BJ', '2024-10-29', 20, 20),
-(101, '2024-10-30', 'BJ', '2024-10-28', 5, 40),
+(101, '2024-10-30', 'BJ', '2024-10-28',  5, 40),
 (101, '2024-10-30', 'SH', '2024-10-29', 10, 20);
 
 -- insert into 2 rows
@@ -103,7 +88,7 @@ INSERT INTO example_tbl_agg VALUES
 -- check the rows of table
 SELECT * FROM example_tbl_agg;
 +---------+------------+------+---------------------+------+----------------+
-| user_id | load_date  | city | last_visit_date     | cost | max_dwell_time |
+| user_id | load_date  | city | last_visit_dt       | cost | max_dwell       |
 +---------+------------+------+---------------------+------+----------------+
 | 102     | 2024-10-30 | BJ   | 2024-10-29 00:00:00 |   20 |             20 |
 | 102     | 2024-11-01 | BJ   | 2024-10-30 00:00:00 |   10 |             30 |
@@ -115,42 +100,54 @@ SELECT * FROM example_tbl_agg;
 
 ## AGG_STATE
 
-::: Info Tips:
-AGG_STATE is an experimental feature and is recommended for use in development and testing environments.
+:::info Note
+AGG_STATE is an experimental feature. It is recommended for use in development and test environments.
 :::
 
-AGG_STATE cannot be used as a Key column. The aggregation function's signature must be declared when creating the table. Users don’t need to specify length or default values. The data storage size depends on the function implementation.
+`AGG_STATE` fits scenarios where the built-in aggregation methods cannot meet your needs. Note the following constraints when using it:
+
+- It cannot be used as a Key column.
+- The aggregate function signature must be declared at table creation.
+- No length or default value needs to be specified; the actual storage size depends on the function implementation.
+
+### Table Creation Example
 
 ```sql
 set enable_agg_state = true;
-CREATE TABLE aggstate(
-    k1   int  NULL,
-    v1   int  SUM,
+
+CREATE TABLE aggstate
+(
+    k1   INT  NULL,
+    v1   INT  SUM,
     v2   agg_state<group_concat(string)> generic
 )
 AGGREGATE KEY(k1)
 DISTRIBUTED BY HASH(k1) BUCKETS 3;
 ```
 
-In this case, `agg_state` is used to declare the data type as `agg_state`, and `sum/group_concat` is the signature of the aggregation function. Note that `agg_state` is a data type, just like `int`, `array`, or `string`. `agg_state` can only be used with combinators such as [state](../../sql-manual/sql-functions/combinators/state), [merge](../../sql-manual/sql-functions/combinators/merge), or [union](../../sql-manual/sql-functions/combinators/union). `agg_state` represents the intermediate result of an aggregation function. For example, for the aggregation function `group_concat`, `agg_state` can represent the intermediate state of `group_concat('a', 'b', 'c')`, rather than the final result.
+In the example above, `agg_state` is used to declare the data type, and `sum` / `group_concat` are aggregate function signatures. `agg_state` is a data type (similar to `int`, `array`, or `string`) and can only be used together with the three function combinators [state](../../sql-manual/sql-functions/combinators/state), [merge](../../sql-manual/sql-functions/combinators/merge), and [union](../../sql-manual/sql-functions/combinators/union). It represents the intermediate result of an aggregate function (for example, the intermediate state of `group_concat`), not the final result.
 
-The `agg_state` type needs to be generated using the `state` function. For this table, you need to use `group_concat_state`:
+### Write: Use state to Generate Intermediate Results
+
+Data of the `agg_state` type must be generated using the `state` function. For this table, use `group_concat_state`:
 
 ```sql
-insert into aggstate values(1, 1, group_concat_state('a'));
-insert into aggstate values(1, 2, group_concat_state('b'));
-insert into aggstate values(1, 3, group_concat_state('c'));
-insert into aggstate values(2, 4, group_concat_state('d'));
+INSERT INTO aggstate VALUES (1, 1, group_concat_state('a'));
+INSERT INTO aggstate VALUES (1, 2, group_concat_state('b'));
+INSERT INTO aggstate VALUES (1, 3, group_concat_state('c'));
+INSERT INTO aggstate VALUES (2, 4, group_concat_state('d'));
 ```
 
-The calculation method in the table is shown in the diagram below:
+The computation in the table at this point is shown in the following figure:
 
 ![state-func-group-concat-state-result-1](/images/table-desigin/state-func-group-concat-state-result-1.png)
 
-When querying the table, the [merge](../../sql-manual/sql-functions/combinators/merge/) operation can be used to merge multiple `state` values and return the final aggregation result. Since `group_concat` requires ordering, the result may be unstable.
+### Query: Use merge to Return the Final Result
+
+At query time, you can use the [merge](../../sql-manual/sql-functions/combinators/merge) operation to combine multiple states and return the final aggregated result. Because `group_concat` is order-sensitive, the result is unstable:
 
 ```sql
-select group_concat_merge(v2) from aggstate;
+SELECT group_concat_merge(v2) FROM aggstate;
 +------------------------+
 | group_concat_merge(v2) |
 +------------------------+
@@ -158,30 +155,33 @@ select group_concat_merge(v2) from aggstate;
 +------------------------+
 ```
 
-If you do not want the final aggregation result, you can use `union` to combine multiple intermediate aggregation results and generate a new intermediate result.
+### Retain Intermediate Results: Use the union Operation
+
+If you do not need the final aggregated result and instead want to retain the intermediate result, use the `union` operation:
 
 ```sql
-insert into aggstate select 3,sum_union(k2),group_concat_union(k3) from aggstate;
+INSERT INTO aggstate
+SELECT 3, sum(v1), group_concat_union(v2) FROM aggstate;
 ```
 
-The calculations in the table are as follows:
+The computation in the table at this point is shown in the following figure:
 
 ![state-func-group-concat-state-result-2](/images/table-desigin/state-func-group-concat-state-result-2.png)
 
-The query result is as follows:
+The query results are as follows:
 
 ```sql
-mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate;
-+---------------+------------------------+
-| sum_merge(k2) | group_concat_merge(k3) |
-+---------------+------------------------+
-|            20 | c,b,a,d,c,b,a,d        |
-+---------------+------------------------+
+mysql> SELECT sum(v1), group_concat_merge(v2) FROM aggstate;
++---------+------------------------+
+| sum(v1) | group_concat_merge(v2) |
++---------+------------------------+
+|      20 | c,b,a,d,c,b,a,d        |
++---------+------------------------+
 
-mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate where k1 != 2;
-+---------------+------------------------+
-| sum_merge(k2) | group_concat_merge(k3) |
-+---------------+------------------------+
-|            16 | c,b,a,d,c,b,a          |
-+---------------+------------------------+
+mysql> SELECT sum(v1), group_concat_merge(v2) FROM aggstate WHERE k1 != 2;
++---------+------------------------+
+| sum(v1) | group_concat_merge(v2) |
++---------+------------------------+
+|      16 | c,b,a,d,c,b,a          |
++---------+------------------------+
 ```

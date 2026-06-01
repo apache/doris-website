@@ -40,7 +40,7 @@ Return a list of nodes that can be decommissioned
 {
 	"msg": "OK",
 	"code": 0,
-	"data": ["192.168.10.11:9050", "192.168.10.11:9050"],
+	"data": ["192.168.10.11:9050", "192.168.10.12:9050"],
 	"count": 0
 }
 ```
@@ -50,13 +50,13 @@ Return a list of nodes that can be decommissioned
 1. Check whether the specified BE node can be decommissioned
 
     ```
-    GET /api/check_decommission?host_ports=192.168.10.11:9050,192.168.10.11:9050
+    GET /api/check_decommission?host_ports=192.168.10.11:9050,192.168.10.12:9050
     
     Response:
     {
     	"msg": "OK",
     	"code": 0,
-    	"data": ["192.168.10.11:9050"],
+    	"data": ["192.168.10.11:9050", "192.168.10.12:9050"],
     	"count": 0
     }
     ```

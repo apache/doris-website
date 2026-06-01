@@ -13,7 +13,7 @@ Determines whether one geometric shape (shape1) completely contains another geom
 - For points: The point must lie inside or on the boundary of the polygon.
 - For lines: All points of the line must lie inside or on the boundary of the polygon.
 - For polygons: The contained polygon must be entirely inside the outer polygon (boundaries can overlap).
-## Sytax
+## Syntax
 
 ```sql
 ST_CONTAINS( <shape1>, <shape2>)
@@ -23,10 +23,10 @@ ST_CONTAINS( <shape1>, <shape2>)
 
 | Parameters       | Description                     |
 |----------|------------------------|
-| `<shape1>` | The geometric shape used to check if it contains another shape, supporting the Polygon type.。 |
+| `<shape1>` | The geometric shape used to check if it contains another shape, supporting the Polygon type. |
 | `<shape2>` | The geometric shape used to check if it is contained, supporting types such as Point, Line, Polygon, etc. |
 
-## Retuen value
+## Return Value
 
 - 1: Indicates that shape1 completely contains shape2.
 - 0: Indicates that shape1 does not contain shape2.

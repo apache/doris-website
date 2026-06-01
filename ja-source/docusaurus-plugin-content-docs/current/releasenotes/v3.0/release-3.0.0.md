@@ -288,7 +288,7 @@ V3.0とV2.1のブラインドテストでは、新バージョンがTPC-DSとTPC
 - UDTFの作成: デフォルトでは、対応する2つの関数が作成されます - `java-utdf`と`java-utdf_outer`です。`_outer`サフィックスは、テーブル関数が0行の出力を生成する際に、`NULL`データの単一行を追加します。
 
   ```sql
-  CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
+  CREATE TABLES FUNCTION java_utdf(string, string) RETURNS array<string> PROPERTIES (
       "file"="file:///pathTo/java-udaf.jar",
       "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
       "always_nullable"="true",

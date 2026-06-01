@@ -25,13 +25,13 @@ CREATE CATALOG mysql_catalog properties(
 
 -- 通过 insert 导入
 INSERT INTO internal.doris_db.tbl1
-SELECT * FROM iceberg_catalog.iceberg_db.table1;
+SELECT * FROM mysql_catalog.mysql_db.table1;
 
 -- 通过 ctas 导入
 CREATE TABLE internal.doris_db.tbl1
 PROPERTIES('replication_num' = '1')
 AS
-SELECT * FROM iceberg_catalog.iceberg_db.table1;
+SELECT * FROM mysql_catalog.mysql_db.table1;
 ```
 
 具体可参考 [Catalog 数据导入](../../../data-operate/import/import-way/insert-into-manual)。

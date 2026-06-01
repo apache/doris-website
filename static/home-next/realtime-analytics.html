@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Apache Doris — Real-Time Analytics</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; min-height: 100vh;
+    background: transparent;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  body { display: flex; align-items: center; justify-content: center; padding: 0; }
+  .canvas {
+    position: relative;
+    width: min(720px, 92vmin);
+    aspect-ratio: 1 / 1;
+    border-radius: 26px;
+    overflow: hidden;
+  }
+  svg.scene { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<div class="canvas">
+<svg class="scene" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0F5C3B"/>
+      <stop offset="1" stop-color="#0A3F2A"/>
+    </linearGradient>
+
+    <!-- Diagonal stripe pattern overlay -->
+    <pattern id="stripes" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+      <line x1="0" y1="0" x2="0" y2="22" stroke="#1a6b4a" stroke-width="1" stroke-opacity="0.2"/>
+    </pattern>
+
+    <!-- Vignette -->
+    <radialGradient id="vignette" cx="0.5" cy="0.5" r="0.78">
+      <stop offset="0.55" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.5"/>
+    </radialGradient>
+
+    <!-- Glow filter (yellow data streaks / lines) -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3"/>
+      <feComponentTransfer><feFuncA type="linear" slope="1.6"/></feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Soft glow (Doris halo) -->
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+
+    <!-- Doris yellow halo radial -->
+    <radialGradient id="dorisHalo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#F4C542" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#F4C542" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Glass panel gradient -->
+    <linearGradient id="glassGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a6b4a" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#08321f" stop-opacity="0.7"/>
+    </linearGradient>
+
+    <!-- Connection paths.
+         Sources (left)  : Kafka top-left, CDC bottom-left  -> Doris  (data ingest)
+         Consumers(right): BI top-right,  Apps bottom-right <- Doris (query results out) -->
+    <path id="p-kafka" d="M 200 145 C 280 165, 340 200, 400 235" fill="none"/>
+    <path id="p-cdc"   d="M 200 400 C 280 380, 340 350, 400 305" fill="none"/>
+    <path id="p-bi"    d="M 600 235 C 660 200, 720 165, 800 145" fill="none"/>
+    <path id="p-apps"  d="M 600 305 C 660 350, 720 380, 800 400" fill="none"/>
+
+    <!-- Latency chart clip -->
+    <clipPath id="latClip">
+      <rect x="375" y="785" width="245" height="115" rx="6"/>
+    </clipPath>
+
+    <!-- Throughput lanes clip -->
+    <clipPath id="thrClip">
+      <rect x="660" y="790" width="262" height="86" rx="6"/>
+    </clipPath>
+    <!-- Throughput lane motion paths (5 horizontal lanes, slightly extended off-clip
+         so chunks can enter from left and exit to right cleanly) -->
+    <path id="lane-0" d="M 632 802 L 950 802" fill="none"/>
+    <path id="lane-1" d="M 632 818 L 950 818" fill="none"/>
+    <path id="lane-2" d="M 632 834 L 950 834" fill="none"/>
+    <path id="lane-3" d="M 632 850 L 950 850" fill="none"/>
+    <path id="lane-4" d="M 632 866 L 950 866" fill="none"/>
+  </defs>
+
+  <style>
+    /* ========== Type ========== */
+    .card-text { fill: #0c3a25; font-weight: 600; font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .doris-logo { filter: brightness(0) invert(1); }
+    .mono { font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+
+    /* ========== Doris pulse ========== */
+    @keyframes dorisPulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.035); }
+    }
+    .doris-card { transform-box: fill-box; transform-origin: 500px 270px; animation: dorisPulse 3.2s ease-in-out infinite; }
+    .doris-card rect, .doris-card text { transform-box: fill-box; }
+    .doris-group { transform-origin: 500px 270px; animation: dorisPulse 3.2s ease-in-out infinite; }
+
+    /* ========== Doris halo ========== */
+    @keyframes haloPulse {
+      0%, 100% { opacity: 0.45; }
+      50%      { opacity: 0.95; }
+      90%      { opacity: 1; }
+      95%      { opacity: 0.6; }
+    }
+    .doris-halo { animation: haloPulse 10s ease-in-out infinite; transform-origin: 500px 270px; }
+
+    /* ========== Source ingest glow (cards softly highlight as data leaves) ========== */
+    @keyframes ingestGlow {
+      0%, 100% { filter: drop-shadow(0 0 0 rgba(244, 197, 66, 0)); }
+      50%      { filter: drop-shadow(0 4px 14px rgba(244, 197, 66, 0.55)); }
+    }
+    .src-kafka { animation: ingestGlow 3s ease-in-out infinite; animation-delay: 0s;   }
+    .src-cdc   { animation: ingestGlow 3s ease-in-out infinite; animation-delay: 0.7s; }
+
+    /* Consumers (BI / Apps) glow green when queries return (6-9s window) */
+    @keyframes consumerReturn {
+      0%, 60%   { filter: drop-shadow(0 0 0 rgba(125, 243, 176, 0)); }
+      65%, 85%  { filter: drop-shadow(0 4px 16px rgba(125, 243, 176, 0.6)); }
+      90%, 100% { filter: drop-shadow(0 0 0 rgba(125, 243, 176, 0)); }
+    }
+    .src-bi   { animation: consumerReturn 10s ease-in-out infinite; animation-delay: -0.2s; }
+    .src-apps { animation: consumerReturn 10s ease-in-out infinite; }
+
+    /* ========== LIVE blink ========== */
+    @keyframes liveBlink {
+      0%, 70% { opacity: 1; }
+      80%     { opacity: 0.25; }
+      90%, 100% { opacity: 1; }
+    }
+    .live-dot { animation: liveBlink 1.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+    /* ========== QPS bars ========== */
+    @keyframes barPulse {
+      0%, 100% { transform: scaleY(0.35); }
+      50%      { transform: scaleY(1);    }
+    }
+    .qps-bar { transform-box: fill-box; transform-origin: bottom; animation: barPulse 1.6s ease-in-out infinite; }
+
+    /* ========== Latency chart scroll ========== */
+    @keyframes scrollLine {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-240px); }
+    }
+    .lat-line-group { animation: scrollLine 5s linear infinite; }
+
+    /* ========== Throughput chunks ========== */
+    /* Subtle pulsing brightness on each chunk so the stream feels alive */
+    @keyframes chunkBreathe {
+      0%, 100% { fill-opacity: 0.85; }
+      50%      { fill-opacity: 1;    }
+    }
+    .thr-chunk { animation: chunkBreathe 0.8s ease-in-out infinite; }
+    /* Lane "fill" shimmer behind chunks — gives the lane a hot/active feel */
+    @keyframes laneShimmer {
+      0%, 100% { opacity: 0.18; }
+      50%      { opacity: 0.32; }
+    }
+    .lane-glow { animation: laneShimmer 2.4s ease-in-out infinite; }
+
+    /* ========== Caption ========== */
+    @keyframes captionFade {
+      0%, 70% { opacity: 0; }
+      78%, 92% { opacity: 0.85; }
+      100% { opacity: 0; }
+    }
+    .caption { animation: captionFade 10s ease-in-out infinite; }
+  </style>
+
+  <!-- ====================================================== -->
+  <!-- BACKGROUND                                             -->
+  <!-- ====================================================== -->
+  <rect width="1000" height="1000" fill="url(#bgGrad)"/>
+  <rect width="1000" height="1000" fill="url(#stripes)"/>
+  <rect width="1000" height="1000" fill="url(#vignette)"/>
+
+  <!-- Subtle separator between top and bottom regions -->
+  <line x1="60" y1="555" x2="940" y2="555" stroke="#a4d8b8" stroke-opacity="0.1" stroke-dasharray="2 6"/>
+
+  <!-- ====================================================== -->
+  <!-- TOP SECTION: Data Flow Architecture                    -->
+  <!-- ====================================================== -->
+
+  <!-- Doris halo behind everything in top section -->
+  <ellipse class="doris-halo" cx="500" cy="270" rx="240" ry="140" fill="url(#dorisHalo)" filter="url(#softGlow)"/>
+
+  <!-- Connection lines: glow pass + crisp pass -->
+  <g stroke="#F4C542" fill="none" stroke-linecap="round">
+    <g stroke-width="6" opacity="0.35" filter="url(#glow)">
+      <use href="#p-kafka"/><use href="#p-cdc"/><use href="#p-bi"/><use href="#p-apps"/>
+    </g>
+    <g stroke-width="1.4" opacity="0.85">
+      <use href="#p-kafka"/><use href="#p-cdc"/><use href="#p-bi"/><use href="#p-apps"/>
+    </g>
+  </g>
+
+  <!-- Flowing data dots: continuous streams along each ingest path -->
+  <g fill="#FFE08A" filter="url(#glow)">
+    <!-- Kafka stream -->
+    <circle r="5"><animateMotion dur="2.0s" repeatCount="indefinite" begin="0s"   ><mpath href="#p-kafka"/></animateMotion></circle>
+    <circle r="4"><animateMotion dur="2.0s" repeatCount="indefinite" begin="0.7s" ><mpath href="#p-kafka"/></animateMotion></circle>
+    <circle r="4"><animateMotion dur="2.0s" repeatCount="indefinite" begin="1.4s" ><mpath href="#p-kafka"/></animateMotion></circle>
+    <!-- CDC stream -->
+    <circle r="5"><animateMotion dur="2.2s" repeatCount="indefinite" begin="0.3s" ><mpath href="#p-cdc"/></animateMotion></circle>
+    <circle r="4"><animateMotion dur="2.2s" repeatCount="indefinite" begin="1.0s" ><mpath href="#p-cdc"/></animateMotion></circle>
+    <circle r="4"><animateMotion dur="2.2s" repeatCount="indefinite" begin="1.7s" ><mpath href="#p-cdc"/></animateMotion></circle>
+    <!-- BI stream -->
+    <circle r="5"><animateMotion dur="2.4s" repeatCount="indefinite" begin="0.5s" ><mpath href="#p-bi"/></animateMotion></circle>
+    <circle r="4"><animateMotion dur="2.4s" repeatCount="indefinite" begin="1.4s" ><mpath href="#p-bi"/></animateMotion></circle>
+    <!-- Doris -> Apps stream -->
+    <circle r="5"><animateMotion dur="2.2s" repeatCount="indefinite" begin="0.2s" ><mpath href="#p-apps"/></animateMotion></circle>
+    <circle r="4"><animateMotion dur="2.2s" repeatCount="indefinite" begin="1.1s" ><mpath href="#p-apps"/></animateMotion></circle>
+  </g>
+
+  <!-- "Query firing" reverse pulses from consumers -> Doris (visible during 6-9s of 10s loop) -->
+  <g fill="#7DF3B0" filter="url(#glow)">
+    <!-- BI -> Doris -->
+    <circle r="6" opacity="0">
+      <animate attributeName="opacity"
+        values="0;0;1;1;0;0"
+        keyTimes="0;0.6;0.62;0.88;0.9;1"
+        dur="10s" repeatCount="indefinite"/>
+      <animateMotion dur="10s" repeatCount="indefinite"
+        keyPoints="1;1;0;0"
+        keyTimes="0;0.6;0.9;1"
+        calcMode="linear">
+        <mpath href="#p-bi"/>
+      </animateMotion>
+    </circle>
+    <circle r="5" opacity="0">
+      <animate attributeName="opacity"
+        values="0;0;1;1;0;0"
+        keyTimes="0;0.68;0.7;0.92;0.94;1"
+        dur="10s" repeatCount="indefinite"/>
+      <animateMotion dur="10s" repeatCount="indefinite"
+        keyPoints="1;1;0;0"
+        keyTimes="0;0.68;0.94;1"
+        calcMode="linear">
+        <mpath href="#p-bi"/>
+      </animateMotion>
+    </circle>
+    <!-- Apps -> Doris -->
+    <circle r="6" opacity="0">
+      <animate attributeName="opacity"
+        values="0;0;1;1;0;0"
+        keyTimes="0;0.62;0.64;0.9;0.92;1"
+        dur="10s" repeatCount="indefinite"/>
+      <animateMotion dur="10s" repeatCount="indefinite"
+        keyPoints="1;1;0;0"
+        keyTimes="0;0.62;0.92;1"
+        calcMode="linear">
+        <mpath href="#p-apps"/>
+      </animateMotion>
+    </circle>
+    <circle r="5" opacity="0">
+      <animate attributeName="opacity"
+        values="0;0;1;1;0;0"
+        keyTimes="0;0.7;0.72;0.94;0.96;1"
+        dur="10s" repeatCount="indefinite"/>
+      <animateMotion dur="10s" repeatCount="indefinite"
+        keyPoints="1;1;0;0"
+        keyTimes="0;0.7;0.96;1"
+        calcMode="linear">
+        <mpath href="#p-apps"/>
+      </animateMotion>
+    </circle>
+  </g>
+
+  <!-- ============== Source Cards ============== -->
+  <!-- LEFT side: Kafka (top), CDC (bottom) — sources flowing INTO Doris -->
+  <g class="src-kafka">
+    <rect x="135" y="105" width="130" height="56" rx="14" ry="14" fill="#F2EDE4"/>
+    <circle cx="166" cy="133" r="8" fill="#0c3a25" fill-opacity="0.85"/>
+    <text x="190" y="140" class="card-text" font-size="20">Kafka</text>
+  </g>
+  <g class="src-cdc">
+    <rect x="135" y="380" width="130" height="56" rx="14" ry="14" fill="#F2EDE4"/>
+    <circle cx="166" cy="408" r="8" fill="#0c3a25" fill-opacity="0.85"/>
+    <text x="190" y="415" class="card-text" font-size="20">CDC</text>
+  </g>
+
+  <!-- RIGHT side: BI (top), Apps (bottom) — consumers receiving FROM Doris -->
+  <g class="src-bi">
+    <rect x="735" y="105" width="130" height="56" rx="14" ry="14" fill="#F2EDE4"/>
+    <circle cx="766" cy="133" r="8" fill="#0c3a25" fill-opacity="0.85"/>
+    <text x="790" y="140" class="card-text" font-size="20">BI</text>
+  </g>
+  <g class="src-apps">
+    <rect x="735" y="380" width="130" height="56" rx="14" ry="14" fill="#F2EDE4"/>
+    <circle cx="766" cy="408" r="8" fill="#0c3a25" fill-opacity="0.85"/>
+    <text x="790" y="415" class="card-text" font-size="20">Apps</text>
+  </g>
+
+  <!-- ============== Doris central card ============== -->
+  <g class="doris-group">
+    <!-- soft outer ring -->
+    <rect x="389" y="214" width="222" height="112" rx="26" ry="26"
+      fill="none" stroke="#F4C542" stroke-opacity="0.35" stroke-width="2"/>
+    <rect x="395" y="220" width="210" height="100" rx="22" ry="22"
+      fill="#F4C542" stroke="#FFD96B" stroke-width="1.5"/>
+    <image href="/images/logo-doris.svg" x="430" y="240" width="140" height="60"
+      preserveAspectRatio="xMidYMid meet" class="doris-logo"/>
+  </g>
+
+  <!-- ====================================================== -->
+  <!-- BOTTOM SECTION: Real-time Performance Monitor          -->
+  <!-- ====================================================== -->
+
+  <!-- Glass panel -->
+  <rect x="60" y="580" width="880" height="370" rx="22" ry="22"
+    fill="url(#glassGrad)"
+    stroke="#a4d8b8" stroke-opacity="0.22" stroke-width="1"/>
+
+  <!-- Header: title + LIVE indicator -->
+  <text x="92" y="624" font-size="22" font-weight="700" fill="#F2EDE4" letter-spacing="0.3">
+    Live Query Performance
+  </text>
+
+  <g class="live-indicator">
+    <rect x="820" y="603" width="92" height="30" rx="15" ry="15"
+      fill="#16d57e" fill-opacity="0.18"
+      stroke="#7DF3B0" stroke-opacity="0.55" stroke-width="1"/>
+    <circle class="live-dot" cx="838" cy="618" r="5" fill="#7DF3B0"/>
+    <text x="852" y="624" font-size="13" font-weight="800" fill="#7DF3B0" letter-spacing="2.5">LIVE</text>
+  </g>
+
+  <!-- Column dividers -->
+  <line x1="362" y1="654" x2="362" y2="918" stroke="#a4d8b8" stroke-opacity="0.12"/>
+  <line x1="640" y1="654" x2="640" y2="918" stroke="#a4d8b8" stroke-opacity="0.12"/>
+
+  <!-- ============== METRIC 1: QPS ============== -->
+  <g>
+    <text x="92" y="678" font-size="12" font-weight="700" fill="#a4d8b8" letter-spacing="2.5">QPS</text>
+    <text id="qps-value" x="92" y="730" class="mono" font-size="42" font-weight="800" fill="#F2EDE4">9,247</text>
+    <text x="92" y="755" font-size="11" font-weight="500" fill="#7DF3B0" opacity="0.85">▲ peak 10,500+</text>
+
+    <!-- Bars: 14 bars from x=92 to x=92+14*18=344, base at y=900 -->
+    <g class="qps-bars" fill="#F4C542">
+      <rect class="qps-bar" x="92"  y="830" width="10" height="70" rx="2" style="animation-delay:-0.1s"/>
+      <rect class="qps-bar" x="110" y="830" width="10" height="70" rx="2" style="animation-delay:-0.4s"/>
+      <rect class="qps-bar" x="128" y="830" width="10" height="70" rx="2" style="animation-delay:-0.7s"/>
+      <rect class="qps-bar" x="146" y="830" width="10" height="70" rx="2" style="animation-delay:-1.0s"/>
+      <rect class="qps-bar" x="164" y="830" width="10" height="70" rx="2" style="animation-delay:-1.3s"/>
+      <rect class="qps-bar" x="182" y="830" width="10" height="70" rx="2" style="animation-delay:-0.2s"/>
+      <rect class="qps-bar" x="200" y="830" width="10" height="70" rx="2" style="animation-delay:-0.6s"/>
+      <rect class="qps-bar" x="218" y="830" width="10" height="70" rx="2" style="animation-delay:-0.9s"/>
+      <rect class="qps-bar" x="236" y="830" width="10" height="70" rx="2" style="animation-delay:-1.2s"/>
+      <rect class="qps-bar" x="254" y="830" width="10" height="70" rx="2" style="animation-delay:-1.5s"/>
+      <rect class="qps-bar" x="272" y="830" width="10" height="70" rx="2" style="animation-delay:-0.3s"/>
+      <rect class="qps-bar" x="290" y="830" width="10" height="70" rx="2" style="animation-delay:-0.8s"/>
+      <rect class="qps-bar" x="308" y="830" width="10" height="70" rx="2" style="animation-delay:-1.1s"/>
+      <rect class="qps-bar" x="326" y="830" width="10" height="70" rx="2" style="animation-delay:-0.5s"/>
+    </g>
+    <line x1="92" y1="903" x2="346" y2="903" stroke="#a4d8b8" stroke-opacity="0.18"/>
+  </g>
+
+  <!-- ============== METRIC 2: Latency ============== -->
+  <g>
+    <text x="378" y="678" font-size="12" font-weight="700" fill="#a4d8b8" letter-spacing="2.5">LATENCY</text>
+    <text id="lat-value" x="378" y="730" class="mono" font-size="42" font-weight="800" fill="#F2EDE4">0.42s</text>
+    <text x="378" y="755" font-size="11" font-weight="500" fill="#7DF3B0" opacity="0.85">▼ well below 1s</text>
+
+    <!-- Chart -->
+    <g clip-path="url(#latClip)">
+      <!-- baseline at 1s threshold (top of chart, dotted red-ish) -->
+      <line x1="375" y1="795" x2="620" y2="795" stroke="#F4C542" stroke-opacity="0.25" stroke-dasharray="3 4"/>
+      <text x="615" y="808" text-anchor="end" font-size="9" fill="#F4C542" opacity="0.5" letter-spacing="0.5">1s threshold</text>
+
+      <!-- Scrolling line group -->
+      <g class="lat-line-group">
+        <!-- Area fill -->
+        <path d="
+          M 375 855
+          C 405 825, 435 880, 465 850
+          C 495 820, 525 880, 555 850
+          C 585 820, 615 880, 645 850
+          C 675 825, 705 880, 735 850
+          C 765 820, 795 880, 825 850
+          C 855 820, 885 880, 915 850
+          L 915 900 L 375 900 Z"
+          fill="#F4C542" fill-opacity="0.12"/>
+        <!-- Line stroke -->
+        <path d="
+          M 375 855
+          C 405 825, 435 880, 465 850
+          C 495 820, 525 880, 555 850
+          C 585 820, 615 880, 645 850
+          C 675 825, 705 880, 735 850
+          C 765 820, 795 880, 825 850
+          C 855 820, 885 880, 915 850"
+          stroke="#F4C542" stroke-width="2" fill="none" stroke-linecap="round"
+          filter="url(#glow)"/>
+      </g>
+    </g>
+    <line x1="375" y1="903" x2="620" y2="903" stroke="#a4d8b8" stroke-opacity="0.18"/>
+  </g>
+
+  <!-- ============== METRIC 3: Load Throughput ============== -->
+  <g>
+    <text x="660" y="678" font-size="12" font-weight="700" fill="#a4d8b8" letter-spacing="2.5">LOAD THROUGHPUT</text>
+
+    <!-- Value + unit on the same baseline (Stripe-dashboard style) -->
+    <text x="660" y="730" class="mono" font-weight="800" fill="#F2EDE4">
+      <tspan id="thr-value" font-size="42">10,247</tspan>
+      <tspan dx="8" font-size="18" fill="#a4d8b8" font-weight="700">MB/s</tspan>
+    </text>
+    <text x="660" y="755" font-size="11" font-weight="500" fill="#7DF3B0" opacity="0.85">▲ peak 12,400+ · ingest rate</text>
+
+    <!-- Lane visualization: 5 parallel data streams, chunks of varying sizes
+         flowing left → right at different speeds. Reads as "high-throughput pipeline". -->
+    <g clip-path="url(#thrClip)">
+      <!-- Lane shimmer fill behind chunks -->
+      <rect class="lane-glow" x="660" y="794" width="262" height="80" rx="6"
+        fill="#F4C542" fill-opacity="0.08"/>
+
+      <!-- Lane track guides -->
+      <g stroke="#a4d8b8" stroke-opacity="0.09" stroke-width="1" stroke-dasharray="2 5">
+        <line x1="660" y1="802" x2="922" y2="802"/>
+        <line x1="660" y1="818" x2="922" y2="818"/>
+        <line x1="660" y1="834" x2="922" y2="834"/>
+        <line x1="660" y1="850" x2="922" y2="850"/>
+        <line x1="660" y1="866" x2="922" y2="866"/>
+      </g>
+
+      <!-- Flowing data chunks -->
+      <g fill="#F4C542" filter="url(#glow)">
+        <!-- Lane 0 (fast) -->
+        <rect class="thr-chunk" x="-11" y="-2" width="22" height="4" rx="2">
+          <animateMotion dur="1.0s" repeatCount="indefinite" begin="0s"  ><mpath href="#lane-0"/></animateMotion>
+        </rect>
+        <rect class="thr-chunk" x="-7"  y="-2" width="14" height="4" rx="2">
+          <animateMotion dur="1.0s" repeatCount="indefinite" begin="0.28s"><mpath href="#lane-0"/></animateMotion>
+        </rect>
+        <rect class="thr-chunk" x="-9"  y="-2" width="18" height="4" rx="2">
+          <animateMotion dur="1.0s" repeatCount="indefinite" begin="0.55s"><mpath href="#lane-0"/></animateMotion>
+        </rect>
+        <rect class="thr-chunk" x="-7"  y="-2" width="14" height="4" rx="2">
+          <animateMotion dur="1.0s" repeatCount="indefinite" begin="0.82s"><mpath href="#lane-0"/></animateMotion>
+        </rect>
+
+        <!-- Lane 1 (slow) -->
+        <rect class="thr-chunk" x="-9"  y="-2" width="18" height="4" rx="2">
+          <animateMotion dur="1.5s" repeatCount="indefinite" begin="0.1s" ><mpath href="#lane-1"/></animateMotion>
+        </rect>
+        <rect class="thr-chunk" x="-12" y="-2" width="24" height="4" rx="2">
+          <animateMotion dur="1.5s" repeatCount="indefinite" begin="0.55s"><mpath href="#lane-1"/></animateMotion>
+        </rect>
+        <rect class="thr-chunk" x="-7"  y="-2" width="14" height="4" rx="2">
+          <animateMotion dur="1.5s" repeatCount="indefinite" begin="1.05s"><mpath href="#lane-1"/></animateMotion>
+        </rect>
+
+        <!-- Lane 2 (medium-fast) -->
+        <rect class="thr-chunk" x="-7"  y="-2" width="14" height="4" rx="2">
+          <animateMotion dur="1.15s" repeatCount="indefinite" begin="0s"  ><mpath href="#lane-2"/></animateMotion>
+        </rect>
+        <rect class="thr-chunk" x="-10" y="-2" width="20" height="4" rx="2">
+          <animateMotion dur="1.15s" repeatCount="indefinite" begin="0.32s"><mpath href="#lane-2"/></animateMotion>
+        </rect>
+        <rect class="thr-chunk" x="-7"  y="-2" width="14" height="4" rx="2">
+          <animateMotion dur="1.15s" repeatCount="indefinite" begin="0.62s"><mpath href="#lane-2"/></animateMotion>
+        </rect>
+        <rect class="thr-chunk" x="-9"  y="-2" width="18" height="4" rx="2">
+          <animateMotion dur="1.15s" repeatCount="indefinite" begin="0.92s"><mpath href="#lane-2"/></animateMotion>
+        </rect>
+
+        <!-- Lane 3 (slow-medium) -->
+        <rect class="thr-chunk" x="-11" y="-2" width="22" height="4" rx="2">
+          <animateMotion dur="1.7s" repeatCount="indefinite" begin="0s"   ><mpath href="#lane-3"/></animateMotion>
+        </rect>
+        <rect class="thr-chunk" x="-7"  y="-2" width="14" height="4" rx="2">
+          <animateMotion dur="1.7s" repeatCount="indefinite" begin="0.6s" ><mpath href="#lane-3"/></animateMotion>
+        </rect>
+        <rect class="thr-chunk" x="-9"  y="-2" width="18" height="4" rx="2">
+          <animateMotion dur="1.7s" repeatCount="indefinite" begin="1.15s"><mpath href="#lane-3"/></animateMotion>
+        </rect>
+
+        <!-- Lane 4 (fast) -->
+        <rect class="thr-chunk" x="-9"  y="-2" width="18" height="4" rx="2">
+          <animateMotion dur="1.05s" repeatCount="indefinite" begin="0.15s"><mpath href="#lane-4"/></animateMotion>
+        </rect>
+        <rect class="thr-chunk" x="-12" y="-2" width="24" height="4" rx="2">
+          <animateMotion dur="1.05s" repeatCount="indefinite" begin="0.45s"><mpath href="#lane-4"/></animateMotion>
+        </rect>
+        <rect class="thr-chunk" x="-7"  y="-2" width="14" height="4" rx="2">
+          <animateMotion dur="1.05s" repeatCount="indefinite" begin="0.78s"><mpath href="#lane-4"/></animateMotion>
+        </rect>
+      </g>
+    </g>
+
+    <line x1="660" y1="903" x2="918" y2="903" stroke="#a4d8b8" stroke-opacity="0.18"/>
+  </g>
+
+  <!-- ====================================================== -->
+  <!-- Caption                                                -->
+  <!-- ====================================================== -->
+  <text class="caption" x="500" y="978" text-anchor="middle" font-size="13" font-weight="500"
+    fill="#F2EDE4" opacity="0" letter-spacing="2.5">
+    Real-time data. Real-time insight.
+  </text>
+</svg>
+</div>
+
+<script>
+  // Smoothly drive the metric numbers (QPS / Latency / Concurrency).
+  // Pure-text content can't be interpolated by CSS or SMIL, so this is the
+  // minimal JS we need. Everything else (motion, glow, scroll) is pure CSS/SVG.
+  (function () {
+    const qpsEl = document.getElementById('qps-value');
+    const latEl = document.getElementById('lat-value');
+    const thrEl = document.getElementById('thr-value');
+    const t0 = performance.now();
+    const fmt = new Intl.NumberFormat('en-US');
+    const frameInterval = 80; // ~12.5fps is enough for text-only metrics.
+    let timerId = 0;
+    let running = false;
+
+    function tick(now) {
+      if (!running) {
+        return;
+      }
+      const t = ((now - t0) / 1000) % 10; // 0..10 (matches loop)
+
+      // QPS: ramps from ~8k toward 10.5k around t=7s, then settles
+      const ramp = 0.5 - 0.5 * Math.cos((t / 10) * Math.PI * 2);
+      const qpsBase  = 8200 + 2300 * ramp;
+      const qpsNoise = Math.sin(t * 7.3) * 110 + Math.sin(t * 13.1) * 55;
+      qpsEl.textContent = fmt.format(Math.round(qpsBase + qpsNoise));
+
+      // Latency: oscillates 0.28 - 0.65s
+      const latBase = 0.46 + 0.16 * Math.sin(t * 1.2) + 0.05 * Math.sin(t * 4.4);
+      latEl.textContent = latBase.toFixed(2) + 's';
+
+      // Load throughput: fluctuates around 10,000 MB/s (range ~8.5k - 11.8k)
+      const thr = 10000 + 1200 * Math.sin(t * 1.5) + 350 * Math.sin(t * 4.9) + 120 * Math.sin(t * 11.7);
+      thrEl.textContent = fmt.format(Math.round(thr));
+
+      timerId = setTimeout(() => tick(performance.now()), frameInterval);
+    }
+
+    function start() {
+      if (running) return;
+      running = true;
+      timerId = setTimeout(() => tick(performance.now()), frameInterval);
+    }
+
+    function stop() {
+      running = false;
+      clearTimeout(timerId);
+      timerId = 0;
+    }
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        stop();
+        return;
+      }
+      start();
+    });
+
+    start();
+  })();
+</script>
+</body>
+</html>

@@ -1,39 +1,26 @@
-import React, { useEffect, createContext, useState, useRef, JSX } from 'react';
-import { useLocation } from '@docusaurus/router';
+import React, { useEffect, JSX } from 'react';
+import { useHistory, useLocation } from '@docusaurus/router';
 import clsx from 'clsx';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import { PageMetadata, SkipToContentFallbackId, ThemeClassNames } from '@docusaurus/theme-common';
 import { useKeyboardNavigation } from '@docusaurus/theme-common/internal';
 import SkipToContent from '@theme/SkipToContent';
-import AnnouncementBar from '@theme/AnnouncementBar';
-import Navbar from '@theme/Navbar';
 import Footer from '@theme/Footer';
 import LayoutProvider from '@theme/Layout/Provider';
 import ErrorPageContent from '@theme/ErrorPageContent';
-import NavbarSearch from '../Navbar/Search';
-import SearchBar from '@theme/SearchBar';
 import type { Props } from '@theme/Layout';
 import styles from './styles.module.css';
-import { useHistory } from '@docusaurus/router';
-interface DataType {
-    showSearchPageMobile: boolean;
-    setShowSearchPageMobile: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export const DataContext = createContext<DataType>(null);
+import { NavbarNext } from '@site/src/components/home-next/NavbarNext';
 
 export default function Layout(props: Props): JSX.Element {
     const {
         children,
         noFooter,
         wrapperClassName,
-        // Not really layout-related, but kept for convenience/retro-compatibility
         title,
         description,
     } = props;
     const history = useHistory();
-    const [showSearchPageMobile, setShowSearchPageMobile] = useState(false);
-    const searchPageDom = useRef<HTMLDivElement>(null);
     const { hash } = useLocation();
     useKeyboardNavigation();
 
@@ -48,15 +35,9 @@ export default function Layout(props: Props): JSX.Element {
     }, [history.location]);
 
     useEffect(() => {
-        if (showSearchPageMobile) {
-            window.scroll(0, 0);
-            document.body.style.overflow = 'hidden';
-            searchPageDom.current.style.height = '100vh';
-        } else {
-            window.scroll(0, 0);
-            document.body.style.overflow = 'auto';
-        }
-    }, [showSearchPageMobile]);
+        window.scroll(0, 0);
+        document.body.style.overflow = 'auto';
+    }, [history.location.pathname]);
 
     useEffect(() => {
         if (hash) {
@@ -73,30 +54,20 @@ export default function Layout(props: Props): JSX.Element {
     }, [hash]);
 
     return (
-        <DataContext.Provider value={{ showSearchPageMobile, setShowSearchPageMobile }}>
-            <LayoutProvider>
-                <PageMetadata title={title} description={description} />
+        <LayoutProvider>
+            <PageMetadata title={title} description={description} />
 
-                <SkipToContent />
-                <AnnouncementBar />
-                <Navbar />
-                {showSearchPageMobile ? (
-                    <div ref={searchPageDom}>
-                        <NavbarSearch>
-                            <SearchBar />
-                        </NavbarSearch>
-                    </div>
-                ) : null}
+            <SkipToContent />
+            <NavbarNext />
 
-                <div
-                    id={SkipToContentFallbackId}
-                    className={clsx(ThemeClassNames.wrapper.main, styles.mainWrapper, wrapperClassName)}
-                >
-                    <ErrorBoundary fallback={params => <ErrorPageContent {...params} />}>{children}</ErrorBoundary>
-                </div>
+            <div
+                id={SkipToContentFallbackId}
+                className={clsx(ThemeClassNames.wrapper.main, styles.mainWrapper, wrapperClassName)}
+            >
+                <ErrorBoundary fallback={params => <ErrorPageContent {...params} />}>{children}</ErrorBoundary>
+            </div>
 
-                {!noFooter && <Footer />}
-            </LayoutProvider>
-        </DataContext.Provider>
+            {!noFooter && <Footer />}
+        </LayoutProvider>
     );
 }

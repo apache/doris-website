@@ -13,7 +13,7 @@
 
 CDC Stream 表函数（table-valued-function, tvf）可以让用户通过 CDC 方式读取关系型数据库（如 MySQL、PostgreSQL）的增量变更数据。通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 的读取能力，持续读取数据库的变更日志（Binlog/WAL）并写入 Doris。
 
-通常与 `CREATE JOB ON STREAMING` 配合使用，实现持续的单表增量数据同步。详细使用方式请参考 [MySQL 单表导入](../../../data-operate/import/streaming-job/continuous-load-mysql-single.md) 和 [PostgreSQL 单表导入](../../../data-operate/import/streaming-job/continuous-load-postgresql-single.md)。
+通常与 `CREATE JOB ON STREAMING` 配合使用，实现持续的单表 SQL 映射增量同步。详细使用方式请参考 [MySQL CDC SQL 映射同步](../../../data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md) 和 [PostgreSQL CDC SQL 映射同步](../../../data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md)。
 
 :::note
 CDC Stream TVF 单独使用时仅支持增量数据同步，不支持全量快照读取。配合 [CREATE STREAMING JOB](../../sql-statements/job/CREATE-STREAMING-JOB.md) 使用时支持全量 + 增量同步。

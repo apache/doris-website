@@ -1,33 +1,82 @@
 ---
 {
-    "title": "High-Concurrency Point Query Optimization",
+    "title": "High-Concurrency Point Query",
     "language": "en",
-    "description": "Doris is built on a columnar storage format engine. In high-concurrency service scenarios,"
+    "description": "How to enable high-concurrency point queries in Doris? Significantly improve primary-key point-query QPS and response latency through row store, short-circuit path, PreparedStatement, and row cache.",
+    "keywords": [
+        "Doris high-concurrency point query",
+        "primary-key point-query optimization",
+        "PreparedStatement",
+        "row store store_row_column",
+        "Merge-On-Write point query",
+        "SHORT-CIRCUIT short path",
+        "row cache",
+        "FE high CPU point-query bottleneck"
+    ]
 }
 ---
 
-:::tip Tips
-This feature is supported since the Apache Doris 2.0 version
-:::
+<!-- Knowledge type: Capability definition / Configuration parameter / Performance tuning -->
+<!-- Applicable scenarios: High-concurrency primary-key point queries, KV-style queries, low-latency online services -->
 
-## Description
+## What Is a High-Concurrency Point Query
 
-Doris is built on a columnar storage format engine. In high-concurrency service scenarios, users always want to retrieve entire rows of data from the system. However, when tables are wide, the columnar format greatly amplifies random read IO. Doris query engine and planner are too heavy for some simple queries, such as point queries. A short path needs to be planned in the FE's query plan to handle such queries. FE is the access layer service for SQL queries, written in Java. Parsing and analyzing SQL also leads to high CPU overhead for high-concurrency queries. To solve these problems, we have introduced row storage, short query path, and PreparedStatement in Doris. Below is a guide to enable these optimizations.
+A high-concurrency point query is a dedicated optimization capability in Doris for **primary-key equality query** scenarios. In high-concurrency service scenarios, users want to fetch a whole row of data from the system by primary key. However, Doris's default columnar storage format and query planning path are not well suited to this kind of KV-style request.
 
-## Row Store Format
+To address this, Doris applies optimizations at the following layers:
 
-We support a row format for olap table to reduce point lookup io cost,
-but to enable this format, you need to spend more disk space for row format store.
-Currently, we store row in an extra column called `row column` for simplicity.
-The Row Storage mode can only be turned on when creating a table. You need to specify the following properties in the property of the table creation statement:
+| Optimization | Problem solved |
+| -------------------- | ----------------------------------------------------------- |
+| Row Store | Columnar storage amplifies random IO when reading whole rows of wide tables; row store reduces IO overhead |
+| Short-Circuit query path (SHORT-CIRCUIT) | FE query planning and parsing is too heavy for simple queries; the short-circuit path bypasses the regular planning flow |
+| PreparedStatement | SQL parsing and expression evaluation consume FE CPU; caching the plan and expressions reduces overhead |
+| Row Cache | The Page Cache is easily evicted by large queries; a dedicated row cache improves hit rate |
 
-```
+## Quick Enablement Checklist
+
+Before using high-concurrency point queries, confirm that all of the following conditions are met:
+
+- The table uses the **Unique Key model** with `enable_unique_key_merge_on_write = true` enabled
+- `store_row_column = true` is set at table creation to enable row store
+- `light_schema_change = true` is enabled at table creation
+- The query contains only **equality conditions on Key columns**, with no joins or nested subqueries
+- The JDBC URL has `useServerPrepStmts=true` enabled to use PreparedStatement
+- (Optional) BE configuration `disable_storage_row_cache = false` is set to enable row cache
+- Use `EXPLAIN` to verify that the execution plan contains the `SHORT-CIRCUIT` marker
+
+## Row Store
+
+<!-- Knowledge type: Configuration parameter -->
+
+Row store mode is used to reduce the random IO overhead when reading whole rows of wide tables. The current implementation encodes a row of data and stores it in a separate column.
+
+- It can only be enabled **at table creation** and cannot be modified afterwards.
+- Specify the following property in the `PROPERTIES` of the `CREATE TABLE` statement:
+
+```sql
 "store_row_column" = "true"
 ```
 
-## Accelerate point query for unique model
+- Enabling row store causes space inflation. **Starting from Doris 3.0**, if only some columns need to be queried, it is recommended to use `row_store_columns` to include only the required columns in the row store:
 
-The above row storage is used to enable the Merge-On-Write strategy under the Unique model to reduce the IO overhead during enumeration. When `enable_unique_key_merge_on_write` and `store_row_column` are enabled when creating a Unique table, the query of the primary key will take a short path to optimize SQL execution, and only one RPC is required to complete the query. The following is an example of enabling the Merge-On-Write strategy under the Unique model by combining the query and row existence:
+```sql
+"row_store_columns" = "key,v1,v2"
+```
+
+Queries only need to access these columns, for example:
+
+```sql
+SELECT k1, v1, v2 FROM tbl_point_query WHERE k1 = 1;
+```
+
+## Point-Query Optimization Under the Unique Model
+
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Primary-key point-query table creation -->
+
+After both Merge-On-Write and row store are enabled on the Unique model, primary-key point queries automatically take the **short-circuit path**, optimizing SQL execution so that only one RPC is required to complete the query.
+
+### Table Creation Example
 
 ```sql
 CREATE TABLE `tbl_point_query` (
@@ -42,7 +91,7 @@ CREATE TABLE `tbl_point_query` (
 ) ENGINE=OLAP
 UNIQUE KEY(`k1`)
 COMMENT 'OLAP'
-DISTRIBUTED BY HASH(`k1)` BUCKETS 1
+DISTRIBUTED BY HASH(`k1`) BUCKETS 1
 PROPERTIES (
     "replication_allocation" = "tag.location.default: 1",
     "enable_unique_key_merge_on_write" = "true",
@@ -51,137 +100,158 @@ PROPERTIES (
 );
 ```
 
-**Note:**
-1. `enable_unique_key_merge_on_write` should be enabled, since we need primary key for quick point lookup in storage engine
+### Key Constraints and Notes
 
-2. when condition only contains primary key like `select * from tbl_point_query where key = 123`, such query will go through the short fast path
+| Constraint / Property | Description |
+| ---------------------------------- | -------------------------------------------------------------------- |
+| `enable_unique_key_merge_on_write` | Must be enabled. The storage engine relies on this property for fast primary-key point queries |
+| `light_schema_change` | Must be enabled. Primary-key point queries depend on its `column unique id` to locate columns |
+| Query conditions | Only single-table **equality queries** on Key columns are supported. Joins and nested subqueries are not supported |
+| Predicate form | The `WHERE` clause must contain **only equality conditions on Key columns**, which can be regarded as a KV-style query |
+| Row store space | Enabling row store causes space inflation. From 3.0+, it is recommended to use `row_store_columns` to specify a subset of columns |
 
-3. `light_schema_change` should also been enabled since we rely on `column unique id` of each column when doing a point query.
+For example, `SELECT * FROM tbl_point_query WHERE k1 = 123` meets the conditions and takes the short-circuit optimization path.
 
-4. It only supports equality queries on the key column of a single table and does not support joins or nested subqueries. The WHERE condition should consist of the key column alone and be an equality comparison. It can be considered as a type of key-value query.
+## Using PreparedStatement
 
-5. Enabling rowstore may lead to space expansion and occupy more disk space. For scenarios where querying only specific columns is needed, starting from Doris 3.0, it is recommended to use `"row_store_columns"="k1,v1,v2"` to specify certain columns for rowstore storage. Queries can then selectively access these columns, for example:
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: FE CPU becomes the point-query bottleneck -->
 
-   ```sql
-   SELECT k1, v1, v2 FROM tbl_point_query WHERE k1 = 1
-   ```
+To reduce the overhead of SQL parsing and expression evaluation, Doris provides a `PreparedStatement` feature on the FE side that is **fully compatible** with the MySQL protocol (currently only primary-key point queries are supported).
 
-## Using `PreparedStatement`
+- Once enabled, SQL and expressions are computed in advance and cached in a session-level memory cache.
+- Subsequent queries reuse the cached objects directly, avoiding repeated parsing and computation.
+- When CPU is the bottleneck for primary-key point queries, enabling `PreparedStatement` can deliver a performance improvement of **more than 4x**.
 
-In order to reduce CPU cost for parsing query SQL and SQL expressions, we provide `PreparedStatement` feature in FE fully compatible with mysql protocol (currently only support point queries like above mentioned).Enable it will pre calculate PreparedStatement SQL and expressions and caches it in a session level memory buffer and will be reused later on.We could improve 4x+ performance by using `PreparedStatement` when CPU became bottleneck doing such queries.Bellow is an JDBC example of using `PreparedStatement`.
+### Step 1: Enable Server-Side PreparedStatement in the JDBC URL
 
-1. Setup JDBC url and enable server side prepared statement
-
-   ```
-   url = jdbc:mysql://127.0.0.1:9030/ycsb?useServerPrepStmts=true
-   ```
-
-2. Using `PreparedStatement`
-
-   ```java
-   // use `?` for placement holders, readStatement should be reused
-   PreparedStatement readStatement = conn.prepareStatement("select * from tbl_point_query where k1 = ?");
-   ...
-   readStatement.setInt(1,1234);
-   ResultSet resultSet = readStatement.executeQuery();
-   ...
-   readStatement.setInt(1,1235);
-   resultSet = readStatement.executeQuery();
-   ...
-   ```
-
-## Enable row cache
-Doris has a page-level cache that stores data for a specific column in each page. Therefore, the page cache is a column-based cache. For the row storage mentioned earlier, a row contains data for multiple columns, and the cache may be evicted by large queries, which can reduce the hit rate. To increase the hit rate of the row cache, a separate row cache is introduced, which reuses the LRU cache mechanism in Doris to ensure memory usage. You can enable it by specifying the following BE configuration:
-
-- `disable_storage_row_cache` : Whether to enable the row cache. It is not enabled by default.
-
-- `row_cache_mem_limit` : Specifies the percentage of memory occupied by the row cache. The default is 20% of memory.
-
-## Performance Optimization
-
-1. Generally, it is effective to improve query processing capabilities by increasing the number of Observers.
-
-2. Query load balancing: During the enumeration, if it is found that the FE CPU that accepts enumeration requests is used too high, or the request response becomes slow, you can use jdbc load balance for load balancing, and distribute the requests to multiple nodes to share the pressure (and also You can use other methods for query load balancing configuration, such as Nginx, proxySQL)
-
-3. By directing the query requests to the Observer role to share the request pressure of high-concurrency queries and reducing the number of query requests sent to the fe master, it can usually solve the problem of the time-consuming fluctuation of the Fe Master node query to obtain better performance and stability
-
-## FAQ
-
-#### **1. How to confirm that the configuration is correct and short path optimization using concurrent enumeration is used ?**
-
-A: explain sql, when SHORT-CIRCUIT appears in the execution plan, it proves that short path optimization is used
-
-```sql
-mysql> explain select * from tbl_point_query where k1 = -2147481418 ;                                                                                                                                
-   +-----------------------------------------------------------------------------------------------+                                                                                                       
-   | Explain String(Old Planner)                                                                   |                                                                                                       
-   +-----------------------------------------------------------------------------------------------+                                                                                                       
-   | PLAN FRAGMENT 0                                                                               |                                                                                                       
-   |   OUTPUT EXPRS:                                                                               |                                                                                                       
-   |     `test`.`tbl_point_query`.`k1`                                                            |                                                                                                       
-   |     `test`.`tbl_point_query`.`v1`                                                             |                                                                                                       
-   |     `test`.`tbl_point_query`.`v2`                                                             |                                                                                                       
-   |     `test`.`tbl_point_query`.`v3`                                                             |                                                                                                       
-   |     `test`.`tbl_point_query`.`v4`                                                             |                                                                                                       
-   |     `test`.`tbl_point_query`.`v5`                                                             |                                                                                                       
-   |     `test`.`tbl_point_query`.`v6`                                                             |                                                                                                       
-   |     `test`.`tbl_point_query`.`v7`                                                             |                                                                                                       
-   |   PARTITION: UNPARTITIONED                                                                    |                                                                                                       
-   |                                                                                               |                                                                                                       
-   |   HAS_COLO_PLAN_NODE: false                                                                   |                                                                                                       
-   |                                                                                               |                                                                                                       
-   |   VRESULT SINK                                                                                |                                                                                                       
-   |      MYSQL_PROTOCAL                                                                           |                                                                                                       
-   |                                                                                               |                                                                                                       
-   |   0:VOlapScanNode                                                                             |                                                                                                       
-   |      TABLE: test.tbl_point_query(tbl_point_query), PREAGGREGATION: ON                         |                                                                                                       
-   |      PREDICATES: `k1` = -2147481418 AND `test`.`tbl_point_query`.`__DORIS_DELETE_SIGN__` = 0 |                                                                                                       
-   |      partitions=1/1 (tbl_point_query), tablets=1/1, tabletList=360065                         |                                                                                                       
-   |      cardinality=9452868, avgRowSize=833.31323, numNodes=1                                    |                                                                                                       
-   |      pushAggOp=NONE                                                                           |                                                                                                       
-   |      SHORT-CIRCUIT                                                                            |                                                                                                       
-   +-----------------------------------------------------------------------------------------------+
+```text
+url = jdbc:mysql://127.0.0.1:9030/ycsb?useServerPrepStmts=true
 ```
 
-#### **2. How to confirm that prepared statement is effective ?**
+### Step 2: Use PreparedStatement in Code
 
-A: After sending the request to Doris, find the corresponding query request in fe.audit.log and find Stmt=EXECUTE(), indicating that prepared statement is effective
+```java
+// use `?` for placement holders, readStatement should be reused
+PreparedStatement readStatement = conn.prepareStatement("select * from tbl_point_query where k1 = ?");
+...
+readStatement.setInt(1, 1234);
+ResultSet resultSet = readStatement.executeQuery();
+...
+readStatement.setInt(1, 1235);
+resultSet = readStatement.executeQuery();
+...
+```
+
+## Enabling Row Cache
+
+<!-- Knowledge type: Configuration parameter -->
+<!-- Applicable scenarios: Low row-store hit rate, Page Cache easily evicted -->
+
+By default, Doris provides a **Page-level cache**, where each page stores data for a single column, so the Page Cache is column-oriented. For row store, a row contains multiple columns, and the cache may be flushed by large queries.
+
+To improve the hit rate, Doris introduces a separate **Row Cache** that reuses the LRU Cache mechanism to control memory usage. Enable it through the following BE configurations:
+
+| Configuration | Default | Description |
+| ---------------------------- | ---------- | --------------------------------- |
+| `disable_storage_row_cache` | `true` (disabled by default) | Whether to disable row cache. Set to `false` to enable |
+| `row_cache_mem_limit` | `20%` | Percentage of memory used by the Row Cache |
+
+## Performance Tuning Recommendations
+
+<!-- Knowledge type: Performance tuning -->
+
+After the capabilities above are enabled, you can further improve point-query throughput and stability based on your deployment architecture:
+
+1. **Increase the number of Observer nodes**: Adding more Observers is generally an effective way to improve query-handling capacity.
+2. **Query load balancing**: If the FE receiving point-query requests has high CPU usage or slows down, use JDBC Load Balance to distribute requests across multiple nodes. You can also use other solutions such as Nginx or ProxySQL.
+3. **Direct point-query requests to Observers**: Reducing the number of point-query requests sent to the FE Master generally alleviates fluctuations in FE Master query latency, leading to better performance and stability.
+
+## FAQs
+
+### Q1: How can I confirm that the configuration is correct and that high-concurrency point queries use the short-circuit optimization?
+
+Run `EXPLAIN`. If `SHORT-CIRCUIT` appears in the execution plan, the short-circuit optimization is in use:
+
+```sql
+mysql> explain select * from tbl_point_query where k1 = -2147481418 ;
++-----------------------------------------------------------------------------------------------+
+| Explain String(Old Planner)                                                                   |
++-----------------------------------------------------------------------------------------------+
+| PLAN FRAGMENT 0                                                                               |
+|   OUTPUT EXPRS:                                                                               |
+|     `test`.`tbl_point_query`.`k1`                                                             |
+|     `test`.`tbl_point_query`.`v1`                                                             |
+|     `test`.`tbl_point_query`.`v2`                                                             |
+|     `test`.`tbl_point_query`.`v3`                                                             |
+|     `test`.`tbl_point_query`.`v4`                                                             |
+|     `test`.`tbl_point_query`.`v5`                                                             |
+|     `test`.`tbl_point_query`.`v6`                                                             |
+|     `test`.`tbl_point_query`.`v7`                                                             |
+|   PARTITION: UNPARTITIONED                                                                    |
+|                                                                                               |
+|   HAS_COLO_PLAN_NODE: false                                                                   |
+|                                                                                               |
+|   VRESULT SINK                                                                                |
+|      MYSQL_PROTOCAL                                                                           |
+|                                                                                               |
+|   0:VOlapScanNode                                                                             |
+|      TABLE: test.tbl_point_query(tbl_point_query), PREAGGREGATION: ON                         |
+|      PREDICATES: `k1` = -2147481418 AND `test`.`tbl_point_query`.`__DORIS_DELETE_SIGN__` = 0  |
+|      partitions=1/1 (tbl_point_query), tablets=1/1, tabletList=360065                         |
+|      cardinality=9452868, avgRowSize=833.31323, numNodes=1                                    |
+|      pushAggOp=NONE                                                                           |
+|      SHORT-CIRCUIT                                                                            |
++-----------------------------------------------------------------------------------------------+
+```
+
+### Q2: How can I confirm that PreparedStatement is in effect?
+
+After sending a request to Doris, find the corresponding query request in `fe.audit.log`. If `Stmt=EXECUTE()` appears, PreparedStatement is in effect:
 
 ```text
 2024-01-02 11:15:51,248 [query] |Client=192.168.1.82:53450|User=root|Db=test|State=EOF|ErrorCode=0|ErrorMessage=|Time(ms)=49|ScanBytes=0|ScanRows=0|ReturnRows=1|StmtId=51|QueryId=b63d30b908f04dad-ab4a
-   3ba21d2c776b|IsQuery=true|isNereids=false|feIp=10.16.10.6|Stmt=EXECUTE(-2147481418)|CpuTimeMS=0|SqlHash=eee20fa2ac13a4f93bd4503a87921024|peakMemoryBytes=0|SqlDigest=|TraceId=|WorkloadGroup=|FuzzyVaria
-   bles=
+3ba21d2c776b|IsQuery=true|isNereids=false|feIp=10.16.10.6|Stmt=EXECUTE(-2147481418)|CpuTimeMS=0|SqlHash=eee20fa2ac13a4f93bd4503a87921024|peakMemoryBytes=0|SqlDigest=|TraceId=|WorkloadGroup=|FuzzyVariables=
 ```
 
-#### **3. Can non-primary key queries use special optimization of high-concurrency point lookups?**
+### Q3: Can non-primary-key queries use the special high-concurrency point-query optimization?
 
-A: No, high-concurrency query only targets the equivalent query of the key column, and the query cannot contain join or nested subqueries.
+No. High-concurrency point queries only target **equality queries on Key columns**, and the query **must not contain joins or nested subqueries**.
 
-#### **4. Is useServerPrepStmts useful in ordinary queries?**
+### Q4: Is `useServerPrepStmts` useful for ordinary queries?
 
-A: Prepared Statement currently only takes effect when primary key is checked.
+PreparedStatement currently takes effect **only for primary-key point queries**.
 
-#### **5. Does optimizer selection require global settings?**
+### Q5: Do I need to set the optimizer choice globally?
 
-A: When using prepared statement for query, Doris will choose the query method with the best performance, and there is no need to manually set the optimizer.
+No. When using PreparedStatement for queries, Doris automatically selects the best-performing query method, with no need to set the optimizer manually.
 
-#### **6. What should we do when the FE becomes a bottleneck?**
+### Q6: What should I do when the FE becomes the bottleneck?
 
-A: If the FE is consuming too much CPU (i.e., high %CPU usage), enable the following configuration in the JDBC URL:
+If FE CPU usage is too high (`%CPU` is high), it is recommended to enable the following load-balancing and caching configurations in the JDBC URL:
 
-```
+```text
 jdbc:mysql:loadbalance://[host1][:port],[host2][:port][,[host3][:port]]/${tbl_name}?useServerPrepStmts=true&cachePrepStmts=true&prepStmtCacheSize=500&prepStmtCacheSqlLimit=1024
 ```
-- Enable loadbalance to ensure multiple FEs can serve requests, and the more FE instances, the better (deploy one per instance).
-- Enable useServerPrepStmts to reduce parsing and planning overhead on the FE.
-- Enable cachePrepStmts so the client caches prepared statements, reducing the need to frequently send prepare requests to the FE.
-- Adjust prepStmtCacheSize to set the maximum number of cached query templates.
-- Adjust prepStmtCacheSqlLimit to set the maximum length of a single cached SQL template.
 
-#### **7. How to optimize query performance under a compute-storage separation architecture?**
+| Parameter | Purpose |
+| ----------------------- | ---------------------------------------------------------- |
+| `loadbalance` | Ensures multiple FEs can serve requests. The more FEs, the better (deploy one instance per node) |
+| `useServerPrepStmts` | Reduces FE parsing and planning overhead |
+| `cachePrepStmts` | Caches PreparedStatement on the client side, avoiding frequent prepared requests to the FE |
+| `prepStmtCacheSize` | Sets the maximum number of cacheable query templates |
+| `prepStmtCacheSqlLimit` | Sets the maximum length of a single cached SQL template |
 
-A:
+### Q7: How can I optimize query performance under the storage-compute separation deployment?
 
-- `set global enable_snapshot_point_query = false`. Point queries require an additional RPC to the meta service to obtain the version, which can easily become a bottleneck under high QPS. Setting it to false can speed up queries but reduces data visibility (requires a trade-off between performance and consistency).
+You can adjust from the following two directions:
 
-- Configure the BE parameter enable_file_cache_keep_base_compaction_output=1 so that the result data after base compaction is stored in the cache, avoiding query jitter caused by remote access.
+- **Disable snapshot point queries**:
+
+    ```sql
+    SET GLOBAL enable_snapshot_point_query = false;
+    ```
+
+    Point queries fetching the version from Meta Service incur an extra RPC, and Meta Service can easily become a bottleneck under high QPS. Setting it to `false` speeds up queries but reduces data visibility (**balance performance against visibility**).
+
+- **Enable Base Compaction output cache**: Set the BE parameter `enable_file_cache_keep_base_compaction_output=1` so that the result data after Base Compaction is placed into the cache, avoiding query jitter caused by remote access.

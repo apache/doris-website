@@ -13,7 +13,7 @@
 ## 语法
 
 ```sql
-DROP [ GLOBAL ] <function_name> ( <arg_type> )
+DROP [ GLOBAL ] FUNCTION <function_name> ( <arg_type> )
 ```
 
 ## 必选参数

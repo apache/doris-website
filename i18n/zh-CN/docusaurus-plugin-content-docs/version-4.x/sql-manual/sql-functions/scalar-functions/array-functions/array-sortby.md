@@ -41,7 +41,7 @@
 
 - 高阶用法：先执行 `lambda` 表达式产生 `keys`，然后再排序。
   - `ARRAY_SORTBY(x -> x + 1, [3,1,2])` -> `[1,2,3]` （ `key`为 `[4,2,3]`）
-  - `ARRAY_SORTBY(x -> x*2 <= 2, [1,2,3])` -> `[1,2,3]`（ `key`为 `[true,false,false]`）
+  - `ARRAY_SORTBY(x -> x*2 <= 2, [1,2,3])` -> `[2,3,1]`（ `key`为 `[true,false,false]`）
 
 - 当 `keys` 或者 `values` 为 `NULL` 时，返回 `values` 保持不变。
   - `array_sortby([10,20,30], NULL)` -> `[10, 20, 30]`
@@ -49,4 +49,3 @@
 
 - 多维数组排序：key 的排序规则按照内部元素的类型排序。
   - `ARRAY_SORTBY(x -> x[1], [[1,2],[0,1]])` -> `[[0, 1], [1, 2]]`
-

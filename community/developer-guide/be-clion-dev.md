@@ -1,5 +1,14 @@
 ---
-{ 'title': 'Development and Debugging of Apache Doris BE -- Clion', 'language': 'en' }
+title: BE Development Environment Setup - CLion
+language: en
+description: Set up an Apache Doris BE development environment with CLion using either remote development or macOS local development.
+keywords:
+    - CLion
+    - Apache Doris BE
+    - BE development environment
+    - remote development
+    - macOS BE debugging
+    - CMake
 ---
 
 <!--
@@ -21,75 +30,167 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Using Clion for Remote Development and Debugging of Apache Doris BE
+# Setting Up a BE Development Environment with CLion
 
-## Downloading and Compiling Code on Remote Server
+This document covers two typical CLion development modes for BE (Backend):
 
-1. Download Doris source code on the remote server, such as in the directory `/mnt/datadisk0/chenqi/doris`.
+- **Option 1: Remote development** (recommended). Local CLion connects to a remote Linux server through SSH/SFTP, with code synchronized to the remote machine for compilation and execution. This is the most common Doris BE development setup, because BE depends on a complete Linux toolchain.
+- **Option 2: macOS local development**. Compile and debug BE directly on macOS, with no remote server required.
 
-```
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: IDE configuration / Debug setup -->
+
+## Option 1: Remote Development (Linux)
+
+### 1. Download and compile the code on the remote server
+
+On the remote Linux server, download and compile Doris:
+
+```bash
 git clone https://github.com/apache/doris.git
+cd doris
 ```
 
-2. Modify the `env.sh` file located in the root directory of the Doris code on the remote server.
-Add the configuration for `DORIS_HOME` at the beginning, for example, `DORIS_HOME=/mnt/datadisk0/chenqi/doris.`
+Edit `env.sh` and add a `DORIS_HOME` configuration at the top, for example:
 
-3. Execute commands to compile the code. The detailed compilation process [compilation-with-ldb-toolchain](https://doris.apache.org/zh-CN/docs/dev/install/source-install/compilation-with-ldb-toolchain).
-
+```bash
+DORIS_HOME=/mnt/datadisk0/chenqi/doris
 ```
-cd /mnt/datadisk0/chenqi/doris
+
+Run the build (for the detailed process, see [LDB Toolchain compilation](../source-install/compilation-with-ldb-toolchain)):
+
+```bash
 ./build.sh
 ```
 
-## Clion Installation and Configuration for Remote Development Environment
+### 2. Configure the remote development environment in local CLion
 
-1. Download and install Clion on your local env, then import the Doris BE source code.
+1. Download and install CLion locally, then import the Doris BE code.
 
-2. Set up a remote development environment on your local env by navigating to **Preferences -> Build, Execution, Deployment -> Deployment** in Clion.
-Add the connection and login information for the remote development server using **SFTP** and set the **Mappings** paths.
-For example, where Local Path is the local path `/User/kaka/Programs/doris/be` and Deployment Path is the remote server path `/mnt/datadisk0/chenqi/clion/doris/be`.
+2. In CLion, open **Preferences → Build, Execution, Deployment → Deployment** and use **SFTP** to add the login information for the remote development server. Set the **Mappings** paths, for example:
+    - Local Path: `/User/kaka/Programs/doris/be`
+    - Deployment Path: `/mnt/datadisk0/chenqi/clion/doris/be`
 
-![Deployment1](/images/clion-deployment1.png)
+    ![Deployment1](/images/clion-deployment1.png)
 
-![Deployment2](/images/clion-deployment2.png)
+    ![Deployment2](/images/clion-deployment2.png)
 
-3. Copy the `gensrc` path on the remote server, for example `/mnt/datadisk0/chenqi/doris/gensrc`, to the parent directory of the **Deployment Path**.
-For example, the final directory path on the remote server should be `/mnt/datadisk0/chenqi/clion/doris/gensrc`.
+3. Copy the `gensrc` directory that was generated on the remote server during compilation to the parent directory of the **Deployment Path**:
 
+    ```bash
+    cp -R /mnt/datadisk0/chenqi/doris/gensrc /mnt/datadisk0/chenqi/clion/doris/gensrc
+    ```
+
+4. Open **Preferences → Build, Execution, Deployment → Toolchains** and add the toolchain for the remote environment (CMake, GCC, G++, GDB, and so on).
+
+    :::caution Important
+    In the **Environment file** field, fill in the path to the `env.sh` file in the Doris code on the remote server.
+    :::
+
+    ![Toolchains](/images/clion-toolchains.png)
+
+5. Open **Preferences → Build, Execution, Deployment → CMake** and add the following to CMake options:
+
+    ```bash
+    -DDORIS_JAVA_HOME=/path/to/remote/JAVA_HOME
+    ```
+
+    Set this to the `JAVA_HOME` path on the remote server. Otherwise, `jni.h` cannot be found.
+
+6. In CLion, right-click and select **Load CMake Project**. This action synchronizes the code to the remote server and generates the CMake build files.
+
+### 3. Run and debug remote BE from local CLion
+
+1. In **Preferences → Build, Execution, Deployment → CMake**, configure CMake. You can configure different targets such as Debug or Release, and set **ToolChain** to the remote toolchain you configured earlier.
+
+    To run and debug unit tests, add `-DMAKE_TEST=ON` to CMake options (it is off by default).
+
+2. On the remote server, copy the `output` directory to a separate path:
+
+    ```bash
+    cp -R /mnt/datadisk0/chenqi/doris/output /mnt/datadisk0/chenqi/clion/doris/doris_be
+    ```
+
+    ![Output Tree](/images/doris-dist-output-tree.png)
+
+3. In CLion, select the `doris_be` target (Debug or Release) and configure it. Use the environment variables exported in `be/bin/start_be.sh` as a reference, and point each variable to the corresponding path on the remote server:
+
+    ![Run Debug Conf1](/images/clion-run-debug-conf1.png)
+    ![Run Debug Conf2](/images/clion-run-debug-conf2.png)
+
+4. Click **Run** to compile and start BE, or click **Debug** to compile and debug BE.
+
+## Option 2: macOS Local Development
+
+On macOS, you can compile and debug BE entirely locally, with no remote server required. Before you start, complete the dependency installation and code checkout described in [macOS compilation](../source-install/compilation-mac).
+
+### 1. Open the Doris source root directory
+
+![deployment1](/images/mac-clion-deployment1.png)
+
+### 2. Configure CLion
+
+**Configure the toolchain**: configure according to the figure below. All detections should pass.
+
+![deployment2](/images/mac-clion-deployment2.png)
+
+**Configure CMake**: configure according to the figure below.
+
+![deployment3](/images/mac-clion-deployment3.png)
+
+After confirming the configuration, CLion automatically loads the CMake file the first time. If it does not load automatically, right-click `$DORIS_HOME/be/CMakeLists.txt` and select Load.
+
+### 3. Configure Debug BE
+
+Select Edit Configurations:
+
+![deployment4](/images/mac-clion-deployment4.png)
+
+<!-- Knowledge type: Configuration parameters -->
+
+Add environment variables for `doris_be`. Use the environment variables exported in `be/bin/start_be.sh` as a reference. The Doris directory values in the environment variables should point to the runtime directory you copied out. Reference environment variables:
+
+| Environment variable | Example value                                                                                                                                       | Description           |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| `JAVA_OPTS`          | `-Xmx1024m -DlogPath=$DORIS_HOME/log/jni.log -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -DJDBC_MIN_POOL=1 -DJDBC_MAX_POOL=100 -DJDBC_MAX_IDLE_TIME=300000` | JVM startup arguments |
+| `LOG_DIR`            | `~/DorisDev/doris-run/be/log`                                                                                                                       | BE log directory      |
+| `NLS_LANG`           | `AMERICAN_AMERICA.AL32UTF8`                                                                                                                         | Oracle JDBC encoding  |
+| `ODBCSYSINI`         | `~/DorisDev/doris-run/be/conf`                                                                                                                      | ODBC config directory |
+| `PID_DIR`            | `~/DorisDev/doris-run/be/log`                                                                                                                       | PID file directory    |
+| `UDF_RUNTIME_DIR`    | `~/DorisDev/doris-run/be/lib/udf-runtime`                                                                                                           | UDF runtime directory |
+| `DORIS_HOME`         | `~/DorisDev/doris-run/be`                                                                                                                           | BE runtime directory  |
+
+```bash
+JAVA_OPTS=-Xmx1024m -DlogPath=$DORIS_HOME/log/jni.log -Dsun.java.command=DorisBE -XX:-CriticalJNINatives -DJDBC_MIN_POOL=1 -DJDBC_MAX_POOL=100 -DJDBC_MAX_IDLE_TIME=300000
+LOG_DIR=~/DorisDev/doris-run/be/log
+NLS_LANG=AMERICAN_AMERICA.AL32UTF8
+ODBCSYSINI=~/DorisDev/doris-run/be/conf
+PID_DIR=~/DorisDev/doris-run/be/log
+UDF_RUNTIME_DIR=~/DorisDev/doris-run/be/lib/udf-runtime
+DORIS_HOME=~/DorisDev/doris-run/be
 ```
-cp -R /mnt/datadisk0/chenqi/doris/gensrc /mnt/datadisk0/chenqi/clion/doris/gensrc
-```
 
-4. In Clion, navigate to **Preferences -> Build, Execution, Deployment -> Toolchains** and add the necessary remote environment toolchains such as cmake, gcc, g++, gdb, etc.
-**The most important step is to add the path of **env.sh** on the remote server to **Environment file**.**
+![deployment5](/images/mac-clion-deployment5.png)
+![deployment6](/images/mac-clion-deployment6.png)
 
-![Toolchains](/images/clion-toolchains.png)
+### 4. Start debugging
 
-5. In Clion, navigate to **Preferences -> Build, Execution, Deployment -> CMake** and add the compilation option -DDORIS_JAVA_HOME=/path/to/remote/JAVA_HOME in CMake options, set DORIS_JAVA_HOME to the JAVA_HOME path of the remote server, otherwise jni.h will not be found.
+Click **Run** or **Debug**. CLion starts compiling, and BE starts after compilation completes.
 
-6. Right-click on **Load Cmake Project** in Clion. This will synchronize the code to the remote server and generate the Cmake build files.
+![deployment7](/images/mac-clion-deployment7.png)
 
-## Running and debugging Doris BE remotely in Clion
+## FAQ
 
-1. Configure CMake in **Preferences -> Build, Execution, Deployment -> CMake**. Different targets such as Debug / Release can be configured, and the **ToolChain** should be set to the previously configured.
-If you want to run and debug Unit Tests, you need to add ·-DMAKE_TEST=ON· to CMake Options (this option is disabled by default, and needs to be enabled to compile the Test code)
-Copy the output directory in Doris source code to a separate path on the remote server, such as /mnt/datadisk0/chenqi/clion/doris/doris_be/.
+<!-- Knowledge type: Troubleshooting -->
 
-2. Copy the output directory in Doris source code to a separate path on the remote server, such as `/mnt/datadisk0/chenqi/clion/doris/doris_be/`.
+### Q1: Remote compilation reports `jni.h not found`
 
-```
-cp -R /mnt/datadisk0/chenqi/doris/output /mnt/datadisk0/chenqi/clion/doris/doris_be
-```
+The `-DDORIS_JAVA_HOME` option in CMake options is not correctly set to the remote `JAVA_HOME`. See step 5 under Option 1, section 2.
 
-![Output Tree](/images/doris-dist-output-tree.png)
+### Q2: CLion cannot find symbols or shows a lot of red underlines
 
-3. Select the relevant Target for doris_be in Clion, such as Debug or Release, and configure the run.
+The `gensrc` directory was not copied to the parent directory of the Deployment Path, or **Load CMake Project** was not clicked to reload.
 
-![Run Debug Conf1](/images/clion-run-debug-conf1.png)
+### Q3: BE exits immediately after startup
 
-Refer to the environment variables exported in `be/bin/start_be.sh` in the Doris root directory for environment variable configuration. The value of each environment variable should point to the corresponding path on the remote server.**
-Environment variables reference:
-
-![Run Debug Conf2](/images/clion-run-debug-conf2.png)
-
-4. Click **Run** to compile and run the BE, or click **Debug** to compile and debug the BE.
+The environment variables `DORIS_HOME`, `PID_DIR`, or `LOG_DIR` are not configured, or the paths do not exist. Check the environment variable table above; all paths must be created in advance.

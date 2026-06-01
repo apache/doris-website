@@ -33,7 +33,7 @@ Users can access Iceberg tables using Hive Metastore as metadata through the Hiv
 CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = '<iceberg_catalog_type>',
-    'warehouse' = '<warehouse>' --optional
+    'warehouse' = '<warehouse>', --optional
     {MetaStoreProperties},
     {StorageProperties},
     {IcebergProperties},
@@ -54,6 +54,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   * `glue`: Uses AWS Glue as the metadata service.
 
   * `dlf`: Uses Alibaba Cloud DLF as the metadata service.
+
+  * `jdbc`: Uses Iceberg JDBC Catalog as the metadata service.
 
   * `s3tables`: Uses AWS S3 Tables Catalog to visit [S3 Table Bucket](https://aws.amazon.com/s3/features/tables/).
 
@@ -80,6 +82,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         For Iceberg Catalog that uses Hive Metastore as the metadata service. Default is `true`. By default, the `SHOW TABLES` operation will list all types of tables in the current Database (Hive Metastore may store non-Iceberg type tables). This approach has the best performance.
 
         If set to `false`, Doris will check the type of each table one by one and only return Iceberg type tables. This mode will have poor performance when there are many tables.
+
+    - `iceberg.rest.view-enabled`
+
+        Supported since version 4.0.6.
+
+        Only effective for Iceberg REST Catalog. Whether to enable View-related operations (including `listViews`, `loadView`, `viewExists`, `dropView`, etc.). Default is `true`.
+
+        Some Iceberg REST Catalog implementations expose Table APIs but the View APIs are unavailable or return errors. When executing `SHOW TABLES`, Doris calls `ViewCatalog.listViews()` to filter Views out of the Table list, so such REST services may cause `SHOW TABLES` and table metadata loading to fail.
+
+        In this case, set this parameter to `false`, and Doris will skip all View-related operations, allowing metadata operations such as `SHOW TABLES` to work normally.
 
 * `{CommonProperties}`
 
@@ -307,7 +319,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -370,7 +382,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'hive.metastore.client.keytab' = '/keytabs/presto-server.keytab',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
@@ -406,7 +418,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
                 'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-                'hive.metastore.client.keytab' = '/keytabs/keytabs/hive-presto-master.keytab',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hadoop.security.auth_to_local' = 'RULE:[2:$1@$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:$1@$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
                 RULE:[2:$1@$0](.*@OTHERREALM.COM)s/@.*//
@@ -539,7 +551,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-hms-hdfs-warehouse',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
                 'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -1062,6 +1074,7 @@ This is an experimental feature, supported since version 4.1.0.
             CREATE CATALOG iceberg_jdbc_postgresql PROPERTIES (
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_postgresql',
                 'iceberg.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/iceberg_db',
                 'iceberg.jdbc.user' = 'iceberg_user',
                 'iceberg.jdbc.password' = 'password',
@@ -1083,6 +1096,7 @@ This is an experimental feature, supported since version 4.1.0.
             CREATE CATALOG iceberg_jdbc_mysql PROPERTIES (
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_mysql',
                 'iceberg.jdbc.uri' = 'jdbc:mysql://127.0.0.1:3306/iceberg_db',
                 'iceberg.jdbc.user' = 'iceberg_user',
                 'iceberg.jdbc.password' = 'password',
@@ -1104,6 +1118,7 @@ This is an experimental feature, supported since version 4.1.0.
             CREATE CATALOG iceberg_jdbc_sqlite PROPERTIES (
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_sqlite',
                 'iceberg.jdbc.uri' = 'jdbc:sqlite:/tmp/iceberg_catalog.db',
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',

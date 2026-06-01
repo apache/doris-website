@@ -6,8 +6,6 @@
 }
 ---
 
-## is_ip_address_in_range
-
 ## Description
 Checks if a specified IP address is within a given CIDR network range. Supports both IPv4 and IPv6 addresses.
 

@@ -1,0 +1,23 @@
+# Exceptions for documentation governance checks.
+#
+# Every real exception must have an owner, a reason, and an expiration date.
+# Do not use this file as a permanent ignore list. Expired exceptions should
+# fail scheduled governance checks.
+
+schema_version: 1
+
+exceptions: []
+
+# Example:
+# exceptions:
+#   - id: missing-ja-sql-function-2026-05-01
+#     type: missing_locale
+#     scope:
+#       doc_id: "sql-manual/sql-functions/scalar-functions/string-functions/example"
+#       locale: ja
+#       version: "4.x"
+#     reason: "Japanese docs are report-only until the ja-source publishing flow is unified."
+#     owner: "@apache/doris-website-maintainers"
+#     expires: "2026-07-01"
+#     tracking_issue: "https://github.com/apache/doris-website/issues/TBD"
+

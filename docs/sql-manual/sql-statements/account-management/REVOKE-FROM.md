@@ -104,9 +104,32 @@ Users executing this SQL command must have at least the following privileges:
 
 | Privilege | Object | Notes                |
 | :---------------- | :------------- | :---------------------------- |
-| GRANT_PRIV        | User or Role   | Only users or roles with the GRANT_PRIV privilege can perform the GRANT operation. |
+| GRANT_PRIV        | User or Role   | Only users or roles with the GRANT_PRIV privilege can perform the REVOKE operation. |
 
 ## Examples
+
+Setup — create the users / roles / database / workload group that the examples below revoke from, and the prerequisite `GRANT`s that make each `REVOKE` meaningful (you can't revoke a privilege that was never granted):
+
+```sql
+CREATE DATABASE db1;
+CREATE USER jack@'192.%' IDENTIFIED BY 'jack_pwd';
+CREATE USER jack@'%' IDENTIFIED BY 'jack_pwd';
+CREATE ROLE role1;
+CREATE ROLE role2;
+CREATE ROLE my_role;
+CREATE WORKLOAD GROUP g1 PROPERTIES("max_cpu_percent"="10");
+
+GRANT SELECT_PRIV ON db1.* TO 'jack'@'192.%';
+GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO 'jack'@'192.%';
+GRANT 'role1','role2' TO 'jack'@'192.%';
+GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'jack'@'%';
+GRANT USAGE_PRIV ON WORKLOAD GROUP '%' TO 'jack'@'%';
+GRANT USAGE_PRIV ON COMPUTE GROUP 'group1' TO 'jack'@'%';
+GRANT USAGE_PRIV ON COMPUTE GROUP 'group1' TO ROLE 'my_role';
+GRANT USAGE_PRIV ON STORAGE VAULT 'vault1' TO 'jack'@'%';
+GRANT USAGE_PRIV ON STORAGE VAULT 'vault1' TO ROLE 'my_role';
+GRANT USAGE_PRIV ON STORAGE VAULT '%' TO 'jack'@'%';
+```
 
 - Revoke the SELECT privilege on a specific database from a user:
 
@@ -136,12 +159,6 @@ Users executing this SQL command must have at least the following privileges:
 
    ```sql
    REVOKE USAGE_PRIV ON WORKLOAD GROUP '%' FROM 'jack'@'%';
-   ```
-
-- Revoke roles from a user:
-
-   ```sql
-   REVOKE 'role1','role2' FROM ROLE 'test_role';
    ```
 
 - Revoke the usage privilege on all compute groups from a user:

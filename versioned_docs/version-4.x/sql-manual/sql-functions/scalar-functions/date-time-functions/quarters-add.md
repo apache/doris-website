@@ -22,7 +22,7 @@ QUARTERS_ADD(`<date_or_time_expr>`, `<quarters>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The input date or datetime value. Supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | The input date or datetime value. Supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<quarters>` | The number of quarters to add or subtract. Positive integers indicate addition, negative integers indicate subtraction. |
 
 ## Return Value
@@ -104,8 +104,8 @@ SELECT QUARTERS_ADD('2025-10-10 11:22:33.123+07:00', 1);
 
 --- Calculation result exceeds date range
 SELECT QUARTERS_ADD('9999-10-31', 2) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation month_add of 9999-10-31, 6 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation quarters_add of 9999-10-31, 6 out of range
 
 SELECT QUARTERS_ADD('0000-01-01',-2) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation month_add of 0000-01-01, -6 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation quarters_add of 0000-01-01, -6 out of range
 ```
