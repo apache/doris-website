@@ -27,7 +27,7 @@ datasketches_hll_union_agg(<sketch>)
 
 | Parameter | Description |
 | -- | -- |
-| `<sketch>` | The serialized bytes of an Apache DataSketches HLL sketch. Supported types: STRING / VARCHAR / BINARY / VARBINARY. NULL values are ignored. Empty strings are treated as invalid input and will throw an error. |
+| `<sketch>` | The serialized bytes of an Apache DataSketches HLL sketch. Supported types: STRING / VARCHAR / VARBINARY. NULL values are ignored. Empty strings are treated as invalid input and will throw an error. |
 
 ## Return Value
 

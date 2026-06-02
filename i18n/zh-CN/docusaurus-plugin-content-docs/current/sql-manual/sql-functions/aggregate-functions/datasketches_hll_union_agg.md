@@ -27,7 +27,7 @@ datasketches_hll_union_agg(<sketch>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<sketch>` | DataSketches HLL sketch 的序列化字节串。支持类型：STRING / VARCHAR / BINARY / VARBINARY。NULL 会被忽略；空字符串属于非法输入，将报错。 |
+| `<sketch>` | DataSketches HLL sketch 的序列化字节串。支持类型：STRING / VARCHAR / VARBINARY。NULL 会被忽略；空字符串属于非法输入，将报错。 |
 
 ## 返回值
 
