@@ -28,6 +28,12 @@ GROUP_BIT_XOR(<expr>)
 
 ## 举例
 
+```sql
+-- setup
+create table group_bit(value int) distributed by hash(value) buckets 1 properties ("replication_num"="1");
+insert into group_bit values (3),(1),(2),(4);
+```
+
 ```
 select * from group_bit;
 ```
