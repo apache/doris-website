@@ -37,6 +37,11 @@ select ipv4_string_to_num_or_null('192.168.0.1');
 | 3232235521                                | 
 +-------------------------------------------+ 
 ```
+<!-- setup-sql
+CREATE TABLE ipv4_str (str VARCHAR(50)) DISTRIBUTED BY HASH(str) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO ipv4_str VALUES ('0.0.0.0'),('127.0.0.1'),('255.255.255.255'),('invalid');
+-->
+
 ```sql
 select str, ipv4_string_to_num_or_null(str) from ipv4_str; 
 ```

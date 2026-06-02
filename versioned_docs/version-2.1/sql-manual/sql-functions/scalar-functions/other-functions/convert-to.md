@@ -29,6 +29,11 @@ Returns a VARCHAR value with the converted encoding, allowing proper pinyin-base
 
 ## Examples
 
+<!-- setup-sql
+CREATE TABLE class_test (class_id INT, class_name VARCHAR(50), student_ids ARRAY<INT>) DISTRIBUTED BY HASH(class_id) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO class_test VALUES (1,'啊',[1]),(2,'哈',[2]),(3,'哦',[3]),(4,'张',[4]),(5,'我',[5]),(6,'asd',[6]),(7,'qwe',[7]),(8,'z',[8]);
+-->
+
 ```sql
 SELECT * FROM class_test ORDER BY class_name;
 ```
