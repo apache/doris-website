@@ -201,7 +201,7 @@ This scenario requires two configuration files:
     table your_table
     # add 'collect_time' to the record
     time_key collect_time
-    # 'collect_time' is timestamp, change it to datatime
+    # 'collect_time' is timestamp, change it to datetime
     header columns collect_time=from_unixtime(collect_time)
     log_request true
     log_progress_interval 10
