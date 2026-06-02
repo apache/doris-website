@@ -32,6 +32,20 @@ GROUP_CONCAT([DISTINCT] <str>[, <sep>] [ORDER BY { <col_name> | <expr>} [ASC | D
 ## 举例
 
 ```sql
+-- setup
+create table test(
+    value varchar(10)
+) distributed by hash(value) buckets 1
+properties ("replication_num"="1");
+
+insert into test values
+    ("a"),
+    ("b"),
+    ("c"),
+    ("c");
+```
+
+```sql
 select value from test;
 ```
 
