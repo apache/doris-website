@@ -57,6 +57,13 @@ TIME_FORMAT(<time_or_datetime_expr>, <format>)
 
 ## 举例
 
+<!-- setup-sql
+CREATE TABLE test_time_format (id INT, tm VARCHAR(30)) DISTRIBUTED BY HASH(id) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO test_time_format VALUES (1,'00:00:00'),(2,'00:00:00.123456'),(3,'12:34:56'),(4,'12:34:56.789012'),(5,'23:59:59'),(6,'23:59:59.999999'),(7,'08:00:00'),(8,'15:00:00'),(9,'100:00:00'),(10,'123:45:56'),(11,'838:59:59.999999'),(12,'-00:00:01'),(13,'-12:34:56.000001'),(14,'-838:59:59.999999');
+CREATE TABLE test_format (fmt VARCHAR(10)) DISTRIBUTED BY HASH(fmt) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO test_format VALUES ('%Y'),('%y'),('%m'),('%d'),('%c'),('%e');
+-->
+
 ```sql
 SELECT * FROM test_time_format;
 ```

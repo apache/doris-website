@@ -40,6 +40,11 @@ PERIOD_ADD(`<period>`, `<month>`)
 
 ## 举例
 
+<!-- setup-sql
+CREATE TABLE test_period_add (period BIGINT, month BIGINT) DISTRIBUTED BY HASH(period) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO test_period_add VALUES (200803,2),(200809,5),(803,2),(6910,3),(7001,1),(12345611,123456),(NULL,10),(202510,NULL);
+-->
+
 ```sql
 SELECT `period`, `month`, PERIOD_ADD(`period`, `month`) AS ans FROM test_period_add;
 ```
