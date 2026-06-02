@@ -124,6 +124,30 @@ The STRUCT type is used to combine multiple fields into a single structure, wher
   +-------------------------------------------------------------------+
   ```
 
+- You can also use the subscript operator `struct[k]` or `struct['field_name']` to access a specific subcolumn, which is equivalent to `STRUCT_ELEMENT`.
+
+  - `k` represents the position, starting from 1.
+
+  - `field_name` is the name of the subcolumn in the `STRUCT`, and must be a string constant.
+
+  ```SQL
+  SELECT NAMED_STRUCT("name", "Jack", "id", 1728923)[1];
+
+  +-----------------------------------------------+
+  | NAMED_STRUCT('name', 'Jack', 'id', 1728923)[1] |
+  +-----------------------------------------------+
+  | Jack                                          |
+  +-----------------------------------------------+
+
+  SELECT NAMED_STRUCT("name", "Jack", "id", 1728923)['id'];
+
+  +--------------------------------------------------+
+  | NAMED_STRUCT('name', 'Jack', 'id', 1728923)['id'] |
+  +--------------------------------------------------+
+  |                                          1728923 |
+  +--------------------------------------------------+
+  ```
+
 ## Examples
 
 - Nested Complex Types

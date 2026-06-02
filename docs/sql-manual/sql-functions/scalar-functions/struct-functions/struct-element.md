@@ -36,6 +36,7 @@ Return value meaning:
 - Supports accessing by field name, field name must match exactly
 - The second parameter must be a constant (cannot be a column)
 - The function is marked as AlwaysNullable, return value may be null
+- The subscript operators `<struct>[<index>]` and `<struct>['<field_name>']` are equivalent to `STRUCT_ELEMENT(<struct>, <index>)` and `STRUCT_ELEMENT(<struct>, '<field_name>')` respectively
 
 ## Examples
 
@@ -59,6 +60,17 @@ select struct_element(named_struct('name', 'Alice', 'age', 25, 'city', 'Beijing'
 +------------------------------------------------------------------------------------+
 |                                                                                 25 |
 +------------------------------------------------------------------------------------+
+```
+
+Access using the subscript operator (equivalent to the calls above):
+```sql
+select named_struct('name', 'Alice', 'age', 25, 'city', 'Beijing')[1] as by_index,
+       named_struct('name', 'Alice', 'age', 25, 'city', 'Beijing')['age'] as by_name;
++----------+---------+
+| by_index | by_name |
++----------+---------+
+| Alice    |      25 |
++----------+---------+
 ```
 
 Accessing struct containing complex types:
