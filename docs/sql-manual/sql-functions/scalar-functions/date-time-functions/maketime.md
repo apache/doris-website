@@ -35,6 +35,11 @@ Returns a value of type TIME, in the format `hour:minute:second`. When the input
 
 ## Example
 
+<!-- setup-sql
+CREATE TABLE test_maketime (id INT, `hour` BIGINT, `minute` BIGINT, sec FLOAT) DISTRIBUTED BY HASH(id) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO test_maketime VALUES (1,12,15,30),(2,14,56,12.5789),(3,1234,11,4),(4,-1234,6,52),(5,20,60,12),(6,14,51,66),(7,NULL,15,16),(8,7,NULL,8),(9,1,2,NULL),(10,23,-40,12),(11,20,6,-12);
+-->
+
 ```sql
 SELECT `hour`, `minute`, `sec`, MAKETIME(`hour`, `minute`, `sec`) AS ans FROM `test_maketime`;
 ```

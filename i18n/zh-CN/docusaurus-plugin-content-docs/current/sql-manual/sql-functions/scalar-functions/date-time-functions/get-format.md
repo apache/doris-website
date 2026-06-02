@@ -43,6 +43,11 @@ GET_FORMAT({DATE|DATETIME|TIME}, {'EUR'|'USA'|'JIS'|'ISO'|'INTERNAL'})
 当第二个参数不为 `'USA', 'JIS', 'ISO', 'EUR', 'INTERNAL'` 之一或者为 NULL 时返回 NULL
 
 ## 举例
+<!-- setup-sql
+CREATE TABLE get_format_test (id INT, lc VARCHAR(20)) DISTRIBUTED BY HASH(id) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO get_format_test VALUES (1,'USA'),(2,'JIS'),(3,'ISO'),(4,'EUR'),(5,'INTERNAL'),(6,'Doris');
+-->
+
 ```sql
 SELECT * FROM get_format_test
 ```
