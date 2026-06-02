@@ -32,6 +32,13 @@ UNIFORM( <min> , <max> , <gen> )
 
 ## 举例
 
+<!-- setup-sql
+CREATE TABLE it (k0 INT) DISTRIBUTED BY HASH(k0) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO it VALUES (NULL),(1),(2),(3),(4),(5);
+CREATE TABLE fn_test (ksint INT) DISTRIBUTED BY HASH(ksint) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO fn_test VALUES (1);
+-->
+
 输入参数全为整数时，返回整数：
 
 ```sql

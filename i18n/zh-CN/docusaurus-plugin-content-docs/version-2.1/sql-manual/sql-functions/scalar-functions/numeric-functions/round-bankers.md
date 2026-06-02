@@ -59,6 +59,11 @@ ROUND_BANKERS(<x> [ , <d>])
 
 ## 举例
 
+<!-- setup-sql
+CREATE TABLE test_enhanced_round (rid INT, number INT) DISTRIBUTED BY HASH(rid) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO test_enhanced_round VALUES (1,1);
+-->
+
 ```sql
 select round_bankers(0.4);
 ```
