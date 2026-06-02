@@ -131,7 +131,7 @@ The configuration items are explained below:
 | `ldap_user_basedn` | The base `dn` for user search |
 | `ldap_user_filter` | User match filter. `{login}` is replaced with the login user name |
 | `ldap_group_basedn` | The base `dn` for group search, used for group authorization |
-| `ldap_default_roles` | Optional. Comma-separated Doris roles granted to every LDAP-authenticated user. These roles are added in addition to LDAP group roles |
+| `ldap_default_roles` | Optional. Comma-separated Doris roles granted to every LDAP-authenticated user. These roles are added in addition to LDAP group roles (Supported since version 4.0.7 and 4.1.3) |
 
 :::tip
 To enable LDAPS (encrypted connection to the LDAP server), see the [LDAPS (Encrypted Connection)](#ldaps-encrypted-connection) section below.
@@ -342,6 +342,9 @@ Suppose user jack belongs to the LDAP groups `doris_rd`, `doris_qa`, and `doris_
 
 <!-- Knowledge type: Configuration parameters -->
 <!-- Applicable scenario: Granting baseline Doris privileges to all LDAP-authenticated users -->
+
+:::info Supported since version 4.0.7 and 4.1.3
+:::
 
 `ldap_default_roles` is used to grant baseline Doris roles to every LDAP-authenticated user. It is useful when all LDAP users should have the same basic privileges, but maintaining a dedicated LDAP group that contains all LDAP users is impractical.
 

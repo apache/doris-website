@@ -131,7 +131,7 @@ ldap_default_roles = ldap_readonly,ldap_query_user
 | `ldap_user_basedn` | 用户搜索的基准 `dn` |
 | `ldap_user_filter` | 用户匹配过滤器，`{login}` 会被替换为登录用户名 |
 | `ldap_group_basedn` | 组搜索的基准 `dn`，用于组授权 |
-| `ldap_default_roles` | 可选。为所有 LDAP 认证用户授予的 Doris 角色，多个角色用逗号分隔。这些角色会在 LDAP 组角色之外额外授予 |
+| `ldap_default_roles` | 可选。为所有 LDAP 认证用户授予的 Doris 角色，多个角色用逗号分隔。这些角色会在 LDAP 组角色之外额外授予（自 4.0.7、4.1.3 版本开始支持） |
 
 :::tip
 如需启用 LDAPS（加密连接至 LDAP 服务器），请参阅下文 [LDAPS（加密连接）](#ldaps加密连接) 章节。
@@ -342,6 +342,9 @@ member: uid=jack,ou=aidp,dc=domain,dc=com
 
 <!-- 知识类型: 配置参数 -->
 <!-- 适用场景: 为所有 LDAP 认证用户授予基础 Doris 权限 -->
+
+:::info 自 4.0.7、4.1.3 版本开始支持
+:::
 
 `ldap_default_roles` 用于为所有通过 LDAP 认证的用户授予基础 Doris 角色。当所有 LDAP 用户都需要一组相同的基础权限，但不适合在 LDAP 中维护一个包含所有用户的专用组时，可以使用该配置。
 
