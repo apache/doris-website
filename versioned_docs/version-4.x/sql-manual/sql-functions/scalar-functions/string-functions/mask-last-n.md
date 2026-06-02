@@ -144,7 +144,7 @@ SELECT mask_last_n('ABC-123-xyz', 7);
 
 10. UTF-8 character handling (masks by byte)
 ```sql
-SELECT mask_last_n('Helloṭṛ123', 9);
+SELECT mask_last_n('Hello你好123', 9);
 ```
 ```text
 +--------------------------------+
