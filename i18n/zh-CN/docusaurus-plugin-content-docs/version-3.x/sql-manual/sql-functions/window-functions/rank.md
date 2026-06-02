@@ -22,6 +22,11 @@ RANK()
 
 ## 举例
 
+<!-- setup-sql
+CREATE TABLE employees (department VARCHAR(20), employee_name VARCHAR(20), salary INT) DISTRIBUTED BY HASH(employee_name) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO employees VALUES ('Sales','Alice',10000),('Sales','Bob',10000),('Sales','Charlie',8000),('IT','David',12000),('IT','Eve',11000),('IT','Frank',11000),('IT','Grace',9000);
+-->
+
 ```sql
 SELECT 
     department,
