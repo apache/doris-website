@@ -1,125 +1,93 @@
 ---
 {
-    "title": "CROSS_PRODUCT",
-    "language": "en"
+    "title": "ARRAY_CROSS_PRODUCT",
+    "language": "en",
+    "description": "Calculates the cross product of two three-dimensional numeric arrays."
 }
 ---
 
 ## Description
 
-Computes the cross product of two arrays of size 3.
+Calculates the cross product of two three-dimensional numeric arrays.
+
+For `lhs = [x1, x2, x3]` and `rhs = [y1, y2, y3]`, the result is:
+
+`lhs x rhs = [x2 * y3 - x3 * y2, x3 * y1 - x1 * y3, x1 * y2 - x2 * y1]`
+
+:::note
+Since 4.1.2
+:::
+
+## Alias
+
+- `cross_product`
 
 ## Syntax
 
 ```sql
-CROSS_PRODUCT(<array1>, <array2>)
+array_cross_product(ARRAY<T> lhs, ARRAY<T> rhs)
 ```
 
 ## Parameters
 
 | Parameter | Description |
-| -- |--|
-| `<array1>` | The first vector, the subtype of the input array supports: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, the number of elements must be consistent with array2. Neither the array itself nor any of its elements can be NULL.|
-| `<array2>` | The second vector, the subtype of the input array supports: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, the number of elements must be consistent with array1. Neither the array itself nor any of its elements can be NULL.|
+|---|---|
+| `lhs` | The first three-dimensional numeric array |
+| `rhs` | The second three-dimensional numeric array |
+
+`T` supports `FLOAT`, and integer array element types such as `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, and `LARGEINT`.
 
 ## Return Value
 
-Returns the cross product of two arrays of size 3.
+Returns `ARRAY<FLOAT>`.
+
+- Returns `NULL` if any input array is `NULL`.
+- Returns an error if any input array contains `NULL` elements.
+- An error is returned if either input array does not contain exactly three elements.
 
 ## Examples
 
-### normal cases
-simple queries:
 ```sql
-SELECT CROSS_PRODUCT([1, 2, 3], [2, 3, 4]);
-+-------------------------------------+
-| CROSS_PRODUCT([1, 2, 3], [2, 3, 4]) |
-+-------------------------------------+
-| [-1, 2, -1]                         |
-+-------------------------------------+
-SELECT CROSS_PRODUCT([1, 2, 3], [0, 0, 0]);
-+-------------------------------------+
-| CROSS_PRODUCT([1, 2, 3], [0, 0, 0]) |
-+-------------------------------------+
-| [0, 0, 0]                           |
-+-------------------------------------+
-SELECT CROSS_PRODUCT([1, 0, 0], [0, 1, 0]);
-+-------------------------------------+
-| CROSS_PRODUCT([1, 0, 0], [0, 1, 0]) |
-+-------------------------------------+
-| [0, 0, 1]                           |
-+-------------------------------------+
-SELECT CROSS_PRODUCT([0, 1, 0], [1, 0, 0]);
-+-------------------------------------+
-| CROSS_PRODUCT([0, 1, 0], [1, 0, 0]) |
-+-------------------------------------+
-| [0, 0, -1]                          |
-+-------------------------------------+
-SELECT CROSS_PRODUCT(NULL, [1, 2, 3]);
-+--------------------------------+
-| CROSS_PRODUCT(NULL, [1, 2, 3]) |
-+--------------------------------+
-| NULL                           |
-+--------------------------------+
-SELECT CROSS_PRODUCT([1, 2, 3], NULL);
-+--------------------------------+
-| CROSS_PRODUCT([1, 2, 3], NULL) |
-+--------------------------------+
-| NULL                           |
-+--------------------------------+
-```
-query with table:
-```sql
-CREATE TABLE array_cross_product_test (
-    id INT,
-    vec1 ARRAY<DOUBLE>,
-    vec2 ARRAY<DOUBLE>
-)
-DUPLICATE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS 3
-PROPERTIES (
-    "replication_num" = "1"
-);
-INSERT INTO array_cross_product_test VALUES
-(1, [1, 2, 3], [2, 3, 4]),
-(2, [1, 2, 3], [0, 0, 0]),
-(3, [1, 0, 0], [0, 1, 0]),
-(4, [0, 1, 0], [1, 0, 0]),
-(5, NULL, [1, 0, 0]);
-
-SELECT id, CROSS_PRODUCT(vec1, vec2) from array_cross_product_test order by id;
-+------+---------------------------+
-| id   | CROSS_PRODUCT(vec1, vec2) |
-+------+---------------------------+
-|    1 | [-1, 2, -1]               |
-|    2 | [0, 0, 0]                 |
-|    3 | [0, 0, 1]                 |
-|    4 | [0, 0, -1]                |
-|    5 | NULL                      |
-+------+---------------------------+
+SELECT array_cross_product([2.5, -3.0, 4.25], [-7.5, 0.5, 1.25]);
 ```
 
-### abnormal cases
-One of the elements in the argument array is NULL.
-```sql
-SELECT CROSS_PRODUCT([1, NULL, 3], [1, 2, 3])
-First argument for function cross_product cannot have null elements
+```text
++--------------------------------------------------------------+
+| array_cross_product([2.5, -3.0, 4.25], [-7.5, 0.5, 1.25])    |
++--------------------------------------------------------------+
+| [-5.875, -35, -21.25]                                        |
++--------------------------------------------------------------+
 ```
+
 ```sql
-SELECT CROSS_PRODUCT([1, 2, 3], [NULL, 2, 3]);
-Second argument for function cross_product cannot have null elements
+SELECT array_cross_product(CAST([-128, 0, 127] AS ARRAY<TINYINT>),
+                           CAST([3, -5, 7] AS ARRAY<TINYINT>));
 ```
-The two argument arrays have different lengths.
-```sql
-SELECT CROSS_PRODUCT([1, 2, 3], [1, 2]);
-function cross_product have different input element sizes of array: 3 and 2
+
+```text
++---------------------------------------------------------------------------------------------------+
+| array_cross_product(CAST([-128, 0, 127] AS ARRAY<TINYINT>), CAST([3, -5, 7] AS ARRAY<TINYINT>)) |
++---------------------------------------------------------------------------------------------------+
+| [635, 1277, 640]                                                                                  |
++---------------------------------------------------------------------------------------------------+
 ```
-The argument arrays have the same length, but the length is not 3.
+
 ```sql
-SELECT CROSS_PRODUCT([1, 2, 3, 4], [1, 2, 3, 4]);
-function cross_product requires arrays of size 3
+SELECT array_cross_product(CAST(NULL AS ARRAY<FLOAT>), [4.0, 5.0, 6.0]);
 ```
+
+```text
++--------------------------------------------------------------------------+
+| array_cross_product(CAST(NULL AS ARRAY<FLOAT>), [4.0, 5.0, 6.0])         |
++--------------------------------------------------------------------------+
+| NULL                                                                     |
++--------------------------------------------------------------------------+
+```
+
 ```sql
-SELECT CROSS_PRODUCT([1, 2], [3, 4]);
-function cross_product requires arrays of size 3
+SELECT array_cross_product([-11, NULL, 13], [17, -19, 23]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = function array_cross_product cannot have null
 ```
