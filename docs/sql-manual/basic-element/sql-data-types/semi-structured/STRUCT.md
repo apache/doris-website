@@ -124,7 +124,7 @@ The STRUCT type is used to combine multiple fields into a single structure, wher
   +-------------------------------------------------------------------+
   ```
 
-- You can also use the subscript operator `struct[k]` or `struct['field_name']` to access a specific subcolumn, which is equivalent to `STRUCT_ELEMENT`.
+- You can also use `ELEMENT_AT(struct, k/field_name)` or the subscript operator `struct[k]` / `struct['field_name']` to access a specific subcolumn, all of which are equivalent to `STRUCT_ELEMENT`.
 
   - `k` represents the position, starting from 1.
 

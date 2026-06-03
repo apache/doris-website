@@ -36,7 +36,7 @@ Return value meaning:
 - Supports accessing by field name, field name must match exactly
 - The second parameter must be a constant (cannot be a column)
 - The function is marked as AlwaysNullable, return value may be null
-- The subscript operators `<struct>[<index>]` and `<struct>['<field_name>']` are equivalent to `STRUCT_ELEMENT(<struct>, <index>)` and `STRUCT_ELEMENT(<struct>, '<field_name>')` respectively
+- `ELEMENT_AT(<struct>, ...)` and the subscript operators `<struct>[<index>]` / `<struct>['<field_name>']` are equivalent to `STRUCT_ELEMENT(<struct>, <index>)` and `STRUCT_ELEMENT(<struct>, '<field_name>')` respectively
 
 ## Examples
 

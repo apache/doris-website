@@ -36,7 +36,7 @@ STRUCT_ELEMENT( <struct>, <field_location_or_name> )
 - 支持通过字段名访问，字段名必须完全匹配
 - 第二个参数必须是常量（不能是列）
 - 函数标记为 AlwaysNullable，返回值可能为 null
-- 下标运算符 `<struct>[<index>]` 和 `<struct>['<field_name>']` 分别等价于 `STRUCT_ELEMENT(<struct>, <index>)` 和 `STRUCT_ELEMENT(<struct>, '<field_name>')`
+- `ELEMENT_AT(<struct>, ...)` 以及下标运算符 `<struct>[<index>]` / `<struct>['<field_name>']` 分别等价于 `STRUCT_ELEMENT(<struct>, <index>)` 和 `STRUCT_ELEMENT(<struct>, '<field_name>')`
 
 ## 举例
 
