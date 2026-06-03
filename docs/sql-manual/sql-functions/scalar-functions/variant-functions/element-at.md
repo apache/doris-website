@@ -27,7 +27,7 @@ ELEMENT_AT(container, key_or_index)
 - `key_or_index`:
   - For `ARRAY`: An integer, with indexing starting from **1**.  
   - For `MAP`: The key type (`K`) of the `MAP`, which can be any supported primitive type.  
-  - For `STRUCT`: A constant integer field position (starting from **1**) or a constant string field name.  
+  - For `STRUCT`: A constant integer field position (starting from **1**) or a constant string field name (matched **case-insensitively**).  
   - For `VARIANT`: A string type.
 
 ## Return Value

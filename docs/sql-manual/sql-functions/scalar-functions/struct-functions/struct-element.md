@@ -33,10 +33,10 @@ Return value meaning:
 ## Usage
 
 - Supports accessing by field position (index), index starts from 1
-- Supports accessing by field name, field name must match exactly
+- Supports accessing by field name; the field name is matched **case-insensitively**
 - The second parameter must be a constant (cannot be a column)
 - The function is marked as AlwaysNullable, return value may be null
-- `ELEMENT_AT(<struct>, ...)` and the subscript operators `<struct>[<index>]` / `<struct>['<field_name>']` are equivalent to `STRUCT_ELEMENT(<struct>, <index>)` and `STRUCT_ELEMENT(<struct>, '<field_name>')` respectively
+- `ELEMENT_AT(<struct>, ...)`, the subscript operators `<struct>[<index>]` / `<struct>['<field_name>']`, and the dot operator `<struct_col>.<field_name>` are all equivalent ways to access a struct field. `STRUCT_ELEMENT` is now an alias of `ELEMENT_AT` and is kept for backward compatibility.
 
 ## Examples
 
@@ -110,7 +110,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = the specified field index out o
 Second parameter is not a constant:
 ```sql
 select struct_element(named_struct('name', 'Alice', 'age', 25), inv) from var_with_index where k = 4;
-ERROR 1105 (HY000): errCode = 2, detailMessage = struct_element only allows constant int or string second parameter: struct_element(named_struct('name', 'Alice', 'age', 25), inv)
+ERROR 1105 (HY000): errCode = 2, detailMessage = element_at over a struct only allows a constant int or string second parameter: element_at(named_struct('name', 'Alice', 'age', 25), inv)
 ```
 
 Input struct is NULL, will report error:

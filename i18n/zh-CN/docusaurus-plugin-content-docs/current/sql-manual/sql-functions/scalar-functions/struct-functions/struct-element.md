@@ -33,10 +33,10 @@ STRUCT_ELEMENT( <struct>, <field_location_or_name> )
 ## 使用说明
 
 - 支持通过字段位置（索引）访问，索引从1开始
-- 支持通过字段名访问，字段名必须完全匹配
+- 支持通过字段名访问，字段名按**大小写不敏感**匹配
 - 第二个参数必须是常量（不能是列）
 - 函数标记为 AlwaysNullable，返回值可能为 null
-- `ELEMENT_AT(<struct>, ...)` 以及下标运算符 `<struct>[<index>]` / `<struct>['<field_name>']` 分别等价于 `STRUCT_ELEMENT(<struct>, <index>)` 和 `STRUCT_ELEMENT(<struct>, '<field_name>')`
+- `ELEMENT_AT(<struct>, ...)`、下标运算符 `<struct>[<index>]` / `<struct>['<field_name>']` 以及点运算符 `<struct_col>.<field_name>` 都是访问 struct 字段的等价写法。`STRUCT_ELEMENT` 现在是 `ELEMENT_AT` 的别名，为保持向后兼容而保留。
 
 ## 举例
 
@@ -109,7 +109,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = the specified field index out o
 访问的第二个参数不是常量：
 ```sql
 select struct_element(named_struct('name', 'Alice', 'age', 25), inv) from var_with_index where k = 4;
-ERROR 1105 (HY000): errCode = 2, detailMessage = struct_element only allows constant int or string second parameter: struct_element(named_struct('name', 'Alice', 'age', 25), inv)
+ERROR 1105 (HY000): errCode = 2, detailMessage = element_at over a struct only allows a constant int or string second parameter: element_at(named_struct('name', 'Alice', 'age', 25), inv)
 ```
 
 输入的struct 为NULL，会报错：

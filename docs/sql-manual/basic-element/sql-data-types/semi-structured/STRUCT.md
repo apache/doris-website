@@ -148,6 +148,15 @@ The STRUCT type is used to combine multiple fields into a single structure, wher
   +--------------------------------------------------+
   ```
 
+- For a `STRUCT` column, you can also use the dot operator `struct_col.field_name` to access a subcolumn by name, including nested access such as `struct_col.a.b`.
+
+  ```SQL
+  -- struct_col is a STRUCT<name: STRING, id: INT> column
+  SELECT struct_col.name, struct_col.id FROM struct_table;
+  ```
+
+- Field names are matched **case-insensitively**. Accessing a non-existent field name or an out-of-bound position reports an error, and the index/field name must be a constant.
+
 ## Examples
 
 - Nested Complex Types
