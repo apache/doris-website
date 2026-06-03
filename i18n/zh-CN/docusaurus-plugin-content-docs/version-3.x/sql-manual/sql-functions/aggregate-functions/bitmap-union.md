@@ -29,6 +29,22 @@ BITMAP_UNION(<expr>)
 ## 举例
 
 ```sql
+-- setup
+CREATE TABLE pv_bitmap (
+  dt INT,
+  page VARCHAR(10),
+  user_id BITMAP BITMAP_UNION
+) AGGREGATE KEY(dt, page)
+DISTRIBUTED BY HASH(dt) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO pv_bitmap VALUES
+  (1, '100', to_bitmap(100)),
+  (1, '100', to_bitmap(200)),
+  (1, '100', to_bitmap(300)),
+  (2, '200', to_bitmap(300));
+```
+
+```sql
 select dt,page,bitmap_to_string(user_id) from pv_bitmap;
 ```
 
