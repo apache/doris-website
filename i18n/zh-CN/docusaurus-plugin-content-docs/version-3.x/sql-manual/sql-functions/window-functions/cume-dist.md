@@ -23,6 +23,25 @@ CUME_DIST()
 ## 举例
 假设有一个表格 sales 包含销售数据，其中包括销售员姓名 (sales_person)、销售额 (sales_amount) 和销售日期 (sales_date)。我们想要计算每个销售员在每个销售日期的销售额占当日总销售额的累积百分比。
 
+<!-- setup-sql
+CREATE TABLE sales (
+    id INT,
+    sales_person VARCHAR(32),
+    sales_date DATE,
+    sales_amount INT
+) DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO sales VALUES
+    (1, 'Alice', '2024-02-01', 2000),
+    (2, 'Bob',   '2024-02-01', 1500),
+    (3, 'Alice', '2024-02-02', 1800),
+    (4, 'Bob',   '2024-02-02', 1200),
+    (5, 'Alice', '2024-02-03', 2200),
+    (6, 'Bob',   '2024-02-03', 1900),
+    (7, 'Tom',   '2024-02-03', 2000),
+    (8, 'Jerry', '2024-02-03', 2000);
+-->
+
 ```sql
 SELECT 
     sales_person,
