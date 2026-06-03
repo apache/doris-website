@@ -32,6 +32,13 @@ Note that unlike Snowflake's [common usage](https://docs.snowflake.com/en/sql-re
 
 ## Example
 
+<!-- setup-sql
+CREATE TABLE it (k0 INT) DISTRIBUTED BY HASH(k0) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO it VALUES (NULL),(1),(2),(3),(4),(5);
+CREATE TABLE fn_test (ksint INT) DISTRIBUTED BY HASH(ksint) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO fn_test VALUES (1);
+-->
+
 When all input parameters are integers, return an integer:
 
 ```sql
