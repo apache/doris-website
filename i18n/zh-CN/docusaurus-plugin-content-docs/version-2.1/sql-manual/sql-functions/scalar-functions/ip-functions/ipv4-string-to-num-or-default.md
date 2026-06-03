@@ -36,6 +36,13 @@ select ipv4_string_to_num_or_default('192.168.0.1');
 ```
 
 ```sql
+create table ipv4_str(
+    str varchar(20)
+) properties('replication_num' = '1');
+insert into ipv4_str values('0.0.0.0'),('127.0.0.1'),('255.255.255.255'),('invalid');
+```
+
+```sql
 select str, ipv4_string_to_num_or_default(str) from ipv4_str; 
 ```
 ```text
