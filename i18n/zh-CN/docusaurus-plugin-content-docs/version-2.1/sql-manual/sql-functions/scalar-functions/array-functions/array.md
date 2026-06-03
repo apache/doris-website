@@ -29,6 +29,12 @@ ARRAY([ <element> [, ...] ])
 ## 举例
 
 ```sql
+-- setup
+create table nested(qid int, creationDate datetime) distributed by hash(creationDate) buckets 1 properties ("replication_num"="1");
+insert into nested values (null,'2009-06-16 07:40:56'),(null,'2009-06-16 07:50:05'),(null,'2009-06-16 08:09:18'),(null,'2009-06-16 08:15:45');
+```
+
+```sql
 select array("1", 2, 1.1);
 ```
 ```text

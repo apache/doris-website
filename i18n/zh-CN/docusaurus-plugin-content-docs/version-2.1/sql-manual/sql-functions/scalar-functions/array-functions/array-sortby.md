@@ -34,6 +34,14 @@ ARRAY_SORTBY(<lambda>, <arr> [, ...])
 ## 举例
 
 ```sql
+-- setup
+create table test_array_sortby(id int, c_array1 array<int>, c_array2 array<int>) distributed by hash(id) buckets 1 properties ("replication_num"="1");
+insert into test_array_sortby values (0,null,[2]),(1,[1,2,3,4,5],[10,20,-40,80,-100]),(2,[6,7,8],[10,12,13]),(3,[1],[-100]),(4,null,null),(5,[3],null),(6,[1,2],[2,1]),(7,[null],[null]),(8,[1,2,3],[3,2,1]);
+create table array_test2(id int, c_array1 array<int>, c_array2 array<int>) distributed by hash(id) buckets 1 properties ("replication_num"="1");
+insert into array_test2 values (1,[1,2,3],[10,11,12]),(2,[4,3,5],[10,20,30]),(3,[-40,30,-100],[30,10,20]);
+```
+
+```sql
 select array_sortby(['a','b','c'],[3,2,1]);
 ```
 
