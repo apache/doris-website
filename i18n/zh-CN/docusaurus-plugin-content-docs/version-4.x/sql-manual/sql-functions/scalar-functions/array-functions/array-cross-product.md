@@ -1,125 +1,93 @@
 ---
 {
-    "title": "CROSS_PRODUCT",
-    "language": "zh-CN"
+    "title": "ARRAY_CROSS_PRODUCT",
+    "language": "zh-CN",
+    "description": "计算两个三维数值数组的叉积。"
 }
 ---
 
 ## 描述
 
-计算两个三维向量的叉积
+计算两个三维数值数组的叉积。
+
+对于 `lhs = [x1, x2, x3]` 和 `rhs = [y1, y2, y3]`，返回结果为：
+
+`lhs x rhs = [x2 * y3 - x3 * y2, x3 * y1 - x1 * y3, x1 * y2 - x2 * y1]`
+
+:::note
+Since 4.1.2
+:::
+
+## 别名
+
+- `cross_product`
 
 ## 语法
 
 ```sql
-CROSS_PRODUCT(<array1>, <array2>)
+array_cross_product(ARRAY<T> lhs, ARRAY<T> rhs)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
-| -- |--|
-| `<array1>` | 第一个向量，输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与 array2 保持一致，数组本身与数组元素均不允许为NULL|
-| `<array2>` | 第二个向量，输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素数量需与 array1 保持一致，数组本身与数组元素均不允许为NULL|
+|---|---|
+| `lhs` | 第一个三维数值数组 |
+| `rhs` | 第二个三维数值数组 |
+
+`T` 支持 `FLOAT`，以及元素类型为 `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT` 的整数数组。
 
 ## 返回值
 
-返回两个三维向量的叉积。
+返回 `ARRAY<FLOAT>`。
 
-## 举例
+- 如果任一输入数组为 `NULL`，返回 `NULL`。
+- 如果输入数组内部存在 `NULL` 元素，返回错误。
+- 如果任一输入数组的元素个数不是 3，返回错误。
 
-### 正常情况
-简单查询
+## 示例
+
 ```sql
-SELECT CROSS_PRODUCT([1, 2, 3], [2, 3, 4]);
-+-------------------------------------+
-| CROSS_PRODUCT([1, 2, 3], [2, 3, 4]) |
-+-------------------------------------+
-| [-1, 2, -1]                         |
-+-------------------------------------+
-SELECT CROSS_PRODUCT([1, 2, 3], [0, 0, 0]);
-+-------------------------------------+
-| CROSS_PRODUCT([1, 2, 3], [0, 0, 0]) |
-+-------------------------------------+
-| [0, 0, 0]                           |
-+-------------------------------------+
-SELECT CROSS_PRODUCT([1, 0, 0], [0, 1, 0]);
-+-------------------------------------+
-| CROSS_PRODUCT([1, 0, 0], [0, 1, 0]) |
-+-------------------------------------+
-| [0, 0, 1]                           |
-+-------------------------------------+
-SELECT CROSS_PRODUCT([0, 1, 0], [1, 0, 0]);
-+-------------------------------------+
-| CROSS_PRODUCT([0, 1, 0], [1, 0, 0]) |
-+-------------------------------------+
-| [0, 0, -1]                          |
-+-------------------------------------+
-SELECT CROSS_PRODUCT(NULL, [1, 2, 3]);
-+--------------------------------+
-| CROSS_PRODUCT(NULL, [1, 2, 3]) |
-+--------------------------------+
-| NULL                           |
-+--------------------------------+
-SELECT CROSS_PRODUCT([1, 2, 3], NULL);
-+--------------------------------+
-| CROSS_PRODUCT([1, 2, 3], NULL) |
-+--------------------------------+
-| NULL                           |
-+--------------------------------+
-```
-表查询
-```sql
-CREATE TABLE array_cross_product_test (
-    id INT,
-    vec1 ARRAY<DOUBLE>,
-    vec2 ARRAY<DOUBLE>
-)
-DUPLICATE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS 3
-PROPERTIES (
-    "replication_num" = "1"
-);
-INSERT INTO array_cross_product_test VALUES
-(1, [1, 2, 3], [2, 3, 4]),
-(2, [1, 2, 3], [0, 0, 0]),
-(3, [1, 0, 0], [0, 1, 0]),
-(4, [0, 1, 0], [1, 0, 0]),
-(5, NULL, [1, 0, 0]);
-
-SELECT id, CROSS_PRODUCT(vec1, vec2) from array_cross_product_test order by id;
-+------+---------------------------+
-| id   | CROSS_PRODUCT(vec1, vec2) |
-+------+---------------------------+
-|    1 | [-1, 2, -1]               |
-|    2 | [0, 0, 0]                 |
-|    3 | [0, 0, 1]                 |
-|    4 | [0, 0, -1]                |
-|    5 | NULL                      |
-+------+---------------------------+
+SELECT array_cross_product([2.5, -3.0, 4.25], [-7.5, 0.5, 1.25]);
 ```
 
-### 异常情况
-参数数组中某一元素为NULL
-```sql
-SELECT CROSS_PRODUCT([1, NULL, 3], [1, 2, 3])
-First argument for function cross_product cannot have null elements
+```text
++--------------------------------------------------------------+
+| array_cross_product([2.5, -3.0, 4.25], [-7.5, 0.5, 1.25])    |
++--------------------------------------------------------------+
+| [-5.875, -35, -21.25]                                        |
++--------------------------------------------------------------+
 ```
+
 ```sql
-SELECT CROSS_PRODUCT([1, 2, 3], [NULL, 2, 3]);
-Second argument for function cross_product cannot have null elements
+SELECT array_cross_product(CAST([-128, 0, 127] AS ARRAY<TINYINT>),
+                           CAST([3, -5, 7] AS ARRAY<TINYINT>));
 ```
-两个参数数组长度不一致
-```sql
-SELECT CROSS_PRODUCT([1, 2, 3], [1, 2]);
-function cross_product have different input element sizes of array: 3 and 2
+
+```text
++---------------------------------------------------------------------------------------------------+
+| array_cross_product(CAST([-128, 0, 127] AS ARRAY<TINYINT>), CAST([3, -5, 7] AS ARRAY<TINYINT>)) |
++---------------------------------------------------------------------------------------------------+
+| [635, 1277, 640]                                                                                  |
++---------------------------------------------------------------------------------------------------+
 ```
-参数数组长度不为3
+
 ```sql
-SELECT CROSS_PRODUCT([1, 2, 3, 4], [1, 2, 3, 4]);
-function cross_product requires arrays of size 3
+SELECT array_cross_product(CAST(NULL AS ARRAY<FLOAT>), [4.0, 5.0, 6.0]);
 ```
+
+```text
++--------------------------------------------------------------------------+
+| array_cross_product(CAST(NULL AS ARRAY<FLOAT>), [4.0, 5.0, 6.0])         |
++--------------------------------------------------------------------------+
+| NULL                                                                     |
++--------------------------------------------------------------------------+
+```
+
 ```sql
-SELECT CROSS_PRODUCT([1, 2], [3, 4]);
-function cross_product requires arrays of size 3
+SELECT array_cross_product([-11, NULL, 13], [17, -19, 23]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = function array_cross_product cannot have null
 ```
