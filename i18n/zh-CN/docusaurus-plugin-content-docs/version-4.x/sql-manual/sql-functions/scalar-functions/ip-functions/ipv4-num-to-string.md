@@ -40,6 +40,11 @@ select ipv4_num_to_string(3232235521);
 | 192.168.0.1                    |
 +--------------------------------+
 ```
+<!-- setup-sql
+CREATE TABLE ipv4_bi (num BIGINT) DISTRIBUTED BY HASH(num) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO ipv4_bi VALUES (-1),(0),(2130706433),(4294967295),(4294967296);
+-->
+
 ```sql
 select num,ipv4_num_to_string(num) from ipv4_bi;
 ```
