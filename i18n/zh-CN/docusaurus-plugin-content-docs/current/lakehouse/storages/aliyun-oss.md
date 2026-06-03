@@ -25,6 +25,7 @@ Doris 使用 S3 Client，通过 S3 兼容协议访问阿里云 OSS。
 | oss.endpoint                   | s3.endpoint                  | OSS endpoint，指定阿里云 OSS 的访问端点。注意，OSS 和 OSS HDFS 的 endpoint 不相同。 | 无     |
 | oss.access_key                 | s3.access_key                | OSS Access Key，用于身份验证                                 | 无     |
 | oss.secret_key                 | s3.secret_key                | OSS Secret Key，与 Access Key 配合使用                       | 无     |
+| oss.session_token              | s3.session_token             | OSS 临时安全令牌（STS Security Token），使用临时访问凭证时与临时 AK/SK 配合使用。自 4.0.6 版本起支持。 | 无     |
 | oss.region                     | s3.region                    | OSS region，指定阿里云 OSS 的区域                             | 无     |
 | oss.use_path_style             | s3.use_path_style            | 是否使用 path-style（路径风格）访问。兼容 MinIO 等非 AWS S3 服务建议设置为 true | FALSE  |
 | oss.connection.maximum         | s3.connection.maximum        | 最大连接数，指定与 OSS 服务建立的最大连接数                  | 50     |
