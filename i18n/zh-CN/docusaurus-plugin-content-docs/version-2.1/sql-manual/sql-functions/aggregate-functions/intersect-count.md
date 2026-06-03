@@ -31,6 +31,12 @@ INTERSECT_COUNT(<bitmap_column>, <column_to_filter>, <filter_values>)
 ## 举例
 
 ```sql
+-- setup
+create table pv_bitmap(dt int, user_id bitmap bitmap_union) aggregate key(dt) distributed by hash(dt) buckets 1 properties ("replication_num"="1");
+insert into pv_bitmap values (4,bitmap_from_string('1,2,3')),(3,bitmap_from_string('1,2,3,4,5'));
+```
+
+```sql
 select dt,bitmap_to_string(user_id) from pv_bitmap where dt in (3,4);
 ```
 

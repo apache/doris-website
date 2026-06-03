@@ -33,6 +33,12 @@ ANY_VALUE(<expr>)
 ## 举例
 
 ```sql
+-- setup
+create table cost2(id int, name varchar(20)) distributed by hash(id) buckets 1 properties ("replication_num"="1");
+insert into cost2 values (2,'jack'),(3,'jack');
+```
+
+```sql
 select id, any_value(name) from cost2 group by id;
 ```
 

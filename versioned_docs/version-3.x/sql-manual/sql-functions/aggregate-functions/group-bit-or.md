@@ -29,6 +29,12 @@ Returns an integer value
 ## Example
 
 ```sql
+-- setup
+create table group_bit(value int) distributed by hash(value) buckets 1 properties ("replication_num"="1");
+insert into group_bit values (3),(1),(2),(4);
+```
+
+```sql
 select * from group_bit;
 ```
 

@@ -33,6 +33,12 @@ Returns a value of ARRAY type.Special cases:
 ## Example
 
 ```sql
+-- setup
+create table test_doris_array_agg(c1 int, c2 varchar(20)) distributed by hash(c1) buckets 1 properties ("replication_num"="1");
+insert into test_doris_array_agg values (1,'a'),(1,'b'),(2,'c'),(2,null),(3,null);
+```
+
+```sql
 select * from test_doris_array_agg;
 ```
 
