@@ -22,6 +22,11 @@ Returns a BIGINT sequence number, starting from 1 and incrementing continuously.
 
 ## Examples
 
+<!-- setup-sql
+CREATE TABLE int_t (x INT, y INT) DISTRIBUTED BY HASH(x) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO int_t VALUES (1,1),(1,2),(1,2),(2,1),(2,2),(2,3),(3,1),(3,1),(3,2);
+-->
+
 ```sql
 select x, y, row_number() over(partition by x order by y) as rank from int_t;
 ```
