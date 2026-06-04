@@ -629,12 +629,6 @@ BaseCompaction:546859:
 * Description: select the time interval in seconds for rowset to be compacted.
 * Default value: 86400
 
-#### `max_single_replica_compaction_threads`
-
-* Type: int32
-* Description: The maximum of thread number in single replica compaction thread pool. -1 means one thread per disk.
-* Default value: -1
-
 #### `update_replica_infos_interval_seconds`
 
 * Description: Minimal interval (s) to update peer replica infos

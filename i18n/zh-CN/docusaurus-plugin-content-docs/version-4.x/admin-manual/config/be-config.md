@@ -634,12 +634,6 @@ BaseCompaction:546859:
 * 描述：选取 rowset 去合并的时间间隔，单位为秒
 * 默认值：86400
 
-#### `max_single_replica_compaction_threads`
-
-* 类型：int32
-* 描述：Single Replica Compaction 线程池中线程数量的最大值，-1 表示每个磁盘一个线程。
-* 默认值：-1
-
 #### `update_replica_infos_interval_seconds`
 
 * 类型：int32
