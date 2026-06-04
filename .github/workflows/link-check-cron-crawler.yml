@@ -14,4 +14,4 @@ jobs:
     steps:
       - name: Run Crawler Link Checker
         run: |
-          npx linkinator https://doris.apache.org --recurse --check-images --skip "^(?!https?://(www\.)?doris\.apache\.org)"
+          npx -y linkinator https://doris.apache.org --recurse --check-images --skip "^(?!https?://(www\.)?doris\.apache\.org)"
