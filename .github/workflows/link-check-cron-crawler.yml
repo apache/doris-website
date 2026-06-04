@@ -1,0 +1,17 @@
+name: link-check-cron-crawler
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cron-crawler:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Crawler Link Checker
+        run: |
+          npx linkinator https://doris.apache.org --recurse --check-images --skip "^(?!https?://(www\.)?doris\.apache\.org)"

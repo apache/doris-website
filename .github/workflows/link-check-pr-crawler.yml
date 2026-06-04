@@ -1,0 +1,44 @@
+name: link-check-pr-crawler
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'i18n/**'
+      - 'src/**'
+      - 'static/**'
+      - 'docusaurus.config.js'
+      - 'sidebars.ts'
+
+concurrency:
+  group: link-check-pr-crawler-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pr-crawler:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build website
+        run: yarn build
+
+      - name: Serve build folder and scan for 404s/broken images
+        run: |
+          npx serve build -l 3000 &
+          # Wait for server to start
+          sleep 5
+          npx linkinator http://localhost:3000 --recurse --check-images --skip "^(?!http://localhost:3000)"
