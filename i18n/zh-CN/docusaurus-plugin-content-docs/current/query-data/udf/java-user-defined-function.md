@@ -137,7 +137,8 @@ insert into test_table values (6, 666.66, "d,e");
         "file"="file:///path/to/java-udf-demo-jar-with-dependencies.jar",
         "symbol"="org.apache.doris.udf.AddOne",
         "always_nullable"="true",
-        "type"="JAVA_UDF"
+        "type"="JAVA_UDF",
+        "volatility"="immutable"
     );
     ```
 
@@ -348,7 +349,8 @@ public void destroy(State state) {
         "file"="file:///pathTo/java-udaf.jar",
         "symbol"="org.apache.doris.udf.SimpleDemo",
         "always_nullable"="true",
-        "type"="JAVA_UDF"
+        "type"="JAVA_UDF",
+        "volatility"="immutable"
     );
     ```
 
@@ -390,7 +392,8 @@ void reset(State state)
         "file"="file:///pathTo/java-udaf.jar",
         "symbol"="org.apache.doris.udf.SimpleDemo",
         "always_nullable"="true",
-        "type"="JAVA_UDF"
+        "type"="JAVA_UDF",
+        "volatility"="immutable"
     );
     ```
 
@@ -435,7 +438,8 @@ UDTF 与 UDF 一样需要用户实现 `evaluate` 方法，但 UDTF 的返回值�
         "file"="file:///pathTo/java-udtf.jar",
         "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
         "always_nullable"="true",
-        "type"="JAVA_UDF"
+        "type"="JAVA_UDF",
+        "volatility"="immutable"
     );
     ```
 
@@ -531,7 +535,8 @@ public class FunctionUdf {
         "file"="file:///pathTo/FunctionUdf.jar",
         "symbol"="org.apache.doris.udf.FunctionUdf",
         "always_nullable"="true",
-        "type"="JAVA_UDF"
+        "type"="JAVA_UDF",
+        "volatility"="immutable"
     );
     ```
 

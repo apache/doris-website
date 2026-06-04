@@ -75,6 +75,10 @@ CREATE [ GLOBAL ]
 > - `symbol`: Indicates the class name containing the UDF class. This parameter is mandatory.
 > - `type`: Indicates the UDF call type. The default is Native. Use JAVA_UDF when using a Java UDF.
 > - `always_nullable`: Indicates whether the UDF result may contain NULL values. This is an optional parameter with a default value of true.
+> - `volatility`: Indicates how stable the function result is. This parameter is supported since 4.1.2. It is optional. The default value is `volatile` for scalar UDFs, and `immutable` for UDAF/UDTF. Valid values are:
+>   - `immutable`: The same input always produces the same output. Most deterministic UDFs should be marked as `immutable` so that the optimizer can apply more plan optimizations.
+>   - `stable`: The result is stable within a single SQL statement but may change between statements, similar to `now()`. SQL cache and materialized view rewrite are disabled for this type of function.
+>   - `volatile`: The result may change on each call, similar to `random()`. SQL cache, materialized view rewrite, and many optimizer rewrite rules are disabled for this type of function.
 
 ## Access Control Requirements
 
@@ -91,7 +95,8 @@ To execute this command, the user must have `ADMIN_PRIV` privileges.
        "file"="file:///path/to/java-udf-demo-jar-with-dependencies.jar",
        "symbol"="org.apache.doris.udf.AddOne",
        "always_nullable"="true",
-       "type"="JAVA_UDF"
+       "type"="JAVA_UDF",
+       "volatility"="immutable"
    );
    ```
 
@@ -136,3 +141,91 @@ To execute this command, the user must have `ADMIN_PRIV` privileges.
    ```sql
    CREATE GLOBAL ALIAS FUNCTION id_masking(INT) WITH PARAMETER(id) AS CONCAT(LEFT(id, 3), '****', RIGHT(id, 4));
    ```
+
+6. Create a volatile Python UDF. Functions such as `uuid.uuid4()` that depend on randomness should keep the default `volatility = volatile` and must not be incorrectly marked as `immutable`.
+
+   ```sql
+   CREATE TABLE cte_uuid_seed (id INT) ENGINE=OLAP DUPLICATE KEY(id)
+   DISTRIBUTED BY HASH(id) BUCKETS 1 PROPERTIES ("replication_num" = "1");
+   INSERT INTO cte_uuid_seed VALUES (1),(2),(3);
+
+   DROP FUNCTION IF EXISTS py_uuid_token(INT);
+   CREATE FUNCTION py_uuid_token(INT)
+   RETURNS STRING
+   PROPERTIES (
+       "type" = "PYTHON_UDF",
+       "symbol" = "py_uuid_token_impl",
+       "always_nullable" = "false",
+       "runtime_version" = "3.12.11",
+       "volatility" = "volatile"
+   )
+   AS $$
+import uuid
+def py_uuid_token_impl(x):
+    return f"{x}-{uuid.uuid4()}"
+$$;
+
+   SET enable_cte_materialize = true;
+   SET inline_cte_referenced_threshold = 10;
+
+   WITH cte AS (SELECT id, py_uuid_token(id) AS token FROM cte_uuid_seed)
+   SELECT id, COUNT(DISTINCT token) AS distinct_tokens
+   FROM (SELECT id, token FROM cte UNION ALL SELECT id, token FROM cte) u
+   GROUP BY id ORDER BY id;
+   ```
+
+   Correct result:
+
+   ```text
+   +------+-----------------+
+   | id   | distinct_tokens |
+   +------+-----------------+
+   |    1 |               1 |
+   |    2 |               1 |
+   |    3 |               1 |
+   +------+-----------------+
+   ```
+
+   For this function, the following definition is incorrect:
+
+   ```sql
+   DROP FUNCTION IF EXISTS py_uuid_token(INT);
+   CREATE FUNCTION py_uuid_token(INT)
+   RETURNS STRING
+   PROPERTIES (
+       "type" = "PYTHON_UDF",
+       "symbol" = "py_uuid_token_impl",
+       "always_nullable" = "false",
+       "runtime_version" = "3.12.11",
+       "volatility" = "immutable"
+   )
+   AS $$
+import uuid
+def py_uuid_token_impl(x):
+    return f"{x}-{uuid.uuid4()}"
+$$;
+   ```
+
+   Run the same query again:
+
+   ```sql
+   WITH cte AS (SELECT id, py_uuid_token(id) AS token FROM cte_uuid_seed)
+   SELECT id, COUNT(DISTINCT token) AS distinct_tokens
+   FROM (SELECT id, token FROM cte UNION ALL SELECT id, token FROM cte) u
+   GROUP BY id ORDER BY id;
+   ```
+
+   Incorrect result:
+
+   ```text
+   +------+-----------------+
+   | id   | distinct_tokens |
+   +------+-----------------+
+   |    1 |               2 |
+   |    2 |               2 |
+   |    3 |               2 |
+   +------+-----------------+
+   ```
+
+   Why this is wrong:
+   Because `py_uuid_token` is volatile, each call to `uuid.uuid4()` generates a new value. If the function is incorrectly marked as `volatility = immutable`, the optimizer may treat repeated references as safe to rewrite and may choose a plan that evaluates the UDF separately on both sides of `UNION ALL`. As a result, the same `id` can produce two different `token` values, and `COUNT(DISTINCT token)` changes from `1` to `2`.

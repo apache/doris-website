@@ -74,6 +74,10 @@ CREATE [ GLOBAL ]
 > - `symbol`: 表示的是包含 UDF 类的类名。这个参数是必须设定的
 > - `type`: 表示的 UDF 调用类型，默认为 Native，使用 Java UDF 时传 JAVA_UDF。
 > - `always_nullable`：表示的 UDF 返回结果中是否有可能出现 NULL 值，是可选参数，默认值为 true。
+> - `volatility`：表示函数结果的稳定性，是可选参数。标量 UDF 的默认值为 `volatile`，UDAF/UDTF 的默认值为 `immutable`。可选值为：
+>   - `immutable`：相同输入始终产生相同输出。大部分确定性 UDF 建议设置为 `immutable`，这样优化器可以应用更多计划优化。
+>   - `stable`：在同一条 SQL 语句内结果稳定，但不同语句之间可能变化，类似 `now()`。这类函数会禁用 SQL Cache 和物化视图改写。
+>   - `volatile`：每次调用结果都可能变化，类似 `random()`。这类函数会禁用 SQL Cache、物化视图改写以及很多优化器改写规则。
 
 ## 权限控制
 
@@ -88,7 +92,8 @@ CREATE [ GLOBAL ]
        "file"="file:///path/to/java-udf-demo-jar-with-dependencies.jar",
        "symbol"="org.apache.doris.udf.AddOne",
        "always_nullable"="true",
-       "type"="JAVA_UDF"
+       "type"="JAVA_UDF",
+       "volatility"="immutable"
    );
    ```
 
@@ -125,3 +130,91 @@ CREATE [ GLOBAL ]
     ```sql
     CREATE GLOBAL ALIAS FUNCTION id_masking(INT) WITH PARAMETER(id) AS CONCAT(LEFT(id, 3), '****', RIGHT(id, 4));
     ```
+
+6. 创建一个 volatile Python UDF。像 `uuid.uuid4()` 这类依赖随机数的函数，应保持 `volatility` 的默认值 `volatile`，不要错误标记为 `immutable`。
+
+    ```sql
+    CREATE TABLE cte_uuid_seed (id INT) ENGINE=OLAP DUPLICATE KEY(id)
+    DISTRIBUTED BY HASH(id) BUCKETS 1 PROPERTIES ("replication_num" = "1");
+    INSERT INTO cte_uuid_seed VALUES (1),(2),(3);
+
+    DROP FUNCTION IF EXISTS py_uuid_token(INT);
+    CREATE FUNCTION py_uuid_token(INT)
+    RETURNS STRING
+    PROPERTIES (
+        "type" = "PYTHON_UDF",
+        "symbol" = "py_uuid_token_impl",
+        "always_nullable" = "false",
+        "runtime_version" = "3.12.11",
+        "volatility" = "volatile"
+    )
+    AS $$
+import uuid
+def py_uuid_token_impl(x):
+    return f"{x}-{uuid.uuid4()}"
+$$;
+
+    SET enable_cte_materialize = true;
+    SET inline_cte_referenced_threshold = 10;
+
+    WITH cte AS (SELECT id, py_uuid_token(id) AS token FROM cte_uuid_seed)
+    SELECT id, COUNT(DISTINCT token) AS distinct_tokens
+    FROM (SELECT id, token FROM cte UNION ALL SELECT id, token FROM cte) u
+    GROUP BY id ORDER BY id;
+    ```
+
+    正确结果：
+
+    ```text
+    +------+-----------------+
+    | id   | distinct_tokens |
+    +------+-----------------+
+    |    1 |               1 |
+    |    2 |               1 |
+    |    3 |               1 |
+    +------+-----------------+
+    ```
+
+    对于上述函数，不应写成下面这样：
+
+    ```sql
+    DROP FUNCTION IF EXISTS py_uuid_token(INT);
+    CREATE FUNCTION py_uuid_token(INT)
+    RETURNS STRING
+    PROPERTIES (
+        "type" = "PYTHON_UDF",
+        "symbol" = "py_uuid_token_impl",
+        "always_nullable" = "false",
+        "runtime_version" = "3.12.11",
+        "volatility" = "immutable"
+    )
+    AS $$
+import uuid
+def py_uuid_token_impl(x):
+    return f"{x}-{uuid.uuid4()}"
+$$;
+    ```
+
+    重新执行同一条查询：
+
+    ```sql
+    WITH cte AS (SELECT id, py_uuid_token(id) AS token FROM cte_uuid_seed)
+    SELECT id, COUNT(DISTINCT token) AS distinct_tokens
+    FROM (SELECT id, token FROM cte UNION ALL SELECT id, token FROM cte) u
+    GROUP BY id ORDER BY id;
+    ```
+
+    错误结果：
+
+    ```text
+    +------+-----------------+
+    | id   | distinct_tokens |
+    +------+-----------------+
+    |    1 |               2 |
+    |    2 |               2 |
+    |    3 |               2 |
+    +------+-----------------+
+    ```
+
+    错误原因：
+    `py_uuid_token` 是 volatile 函数，`uuid.uuid4()` 每次调用都会生成新值。如果错误地将它标记为 `volatility = immutable`，优化器可能会把重复引用视为可安全改写，并选择在 `UNION ALL` 两侧分别执行 UDF 的计划。这样同一个 `id` 会生成两个不同的 `token`，`COUNT(DISTINCT token)` 就会从 `1` 变成 `2`。
