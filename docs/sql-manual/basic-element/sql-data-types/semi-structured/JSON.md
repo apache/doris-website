@@ -422,6 +422,7 @@ Object{
 - Size limit can be adjusted via the BE configuration parameter string_type_length_soft_limit_bytes
 - Maximum adjustment up to 2,147,483,643 bytes (approximately 2 GB)
 - In Doris JSON type Objects, key length cannot exceed 255 bytes
+- JSON supports a maximum nesting depth of 100 levels
 
 ## Usage Example
 A tutorial for JSON datatype including create table, load data and query.

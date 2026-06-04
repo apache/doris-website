@@ -428,6 +428,7 @@ Object{
 - 可通过 BE 配置 string_type_length_soft_limit_bytes 参数调整大小限制
 - 最大可调整至 2,147,483,643 字节（约 2 GB）
 - Doris JSON 类型的 Object 中，key 长度不能超过 255 个字节
+- JSON 的嵌套层级最多支持 100 层
 
 ## 使用示例
     用一个从建表、导数据、查询全周期的例子说明JSON数据类型的功能和用法。
