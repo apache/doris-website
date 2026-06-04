@@ -21,7 +21,7 @@ IS_IPV4_STRING(<ipv4_str>)
 - `<ipv4_str>`: String to check
 
 ### Return Value
-Return Type: TINYINT
+Return Type: BOOLEAN
 
 Return Value Meaning:
 - Returns 1: indicates the input is a valid IPv4 address format

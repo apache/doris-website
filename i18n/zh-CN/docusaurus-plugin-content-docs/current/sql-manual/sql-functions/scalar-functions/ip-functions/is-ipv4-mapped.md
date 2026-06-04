@@ -20,7 +20,7 @@ IS_IPV4_MAPPED(<ipv6_address>)
 - `<ipv6_address>`：IPv6 地址的二进制表示（VARCHAR 类型，16 字节）
 
 ### 返回值
-返回类型：TINYINT
+返回类型：BOOLEAN
 
 返回值含义：1 表示是 IPv4 映射地址，0 表示不是 IPv4 映射地址
 

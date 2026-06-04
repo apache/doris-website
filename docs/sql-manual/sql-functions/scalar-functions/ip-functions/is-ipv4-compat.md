@@ -18,7 +18,7 @@ IS_IPV4_COMPAT(<ipv6_address>)
 - `<ipv6_address>`: Binary representation of IPv6 address (VARCHAR type, 16 bytes)
 
 ### Return Value
-Return Type: TINYINT
+Return Type: BOOLEAN
 
 Return Value Meaning: 1 indicates it is an IPv4-compatible address, 0 indicates it is not an IPv4-compatible address
 

@@ -21,7 +21,7 @@ IS_IPV6_STRING(<ipv6_str>)
 - `<ipv6_str>`: String to check
 
 ### Return Value
-Return Type: TINYINT
+Return Type: BOOLEAN
 
 Return Value Meaning:
 - Returns 1: indicates the input is a valid IPv6 address format
