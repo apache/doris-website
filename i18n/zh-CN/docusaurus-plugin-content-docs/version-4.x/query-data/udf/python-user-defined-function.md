@@ -81,7 +81,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "entry_function_name",
     "runtime_version" = "python_version",
-    "always_nullable" = "true|false"
+    "always_nullable" = "true|false",
+    "volatility" = "immutable|stable|volatile"
 )
 AS $$
 def entry_function_name(param1, param2, ...):
@@ -100,7 +101,8 @@ RETURNS INT
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.10.12"
+    "runtime_version" = "3.10.12",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(a, b):
@@ -120,7 +122,8 @@ RETURNS STRING
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.10.12"
+    "runtime_version" = "3.10.12",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(s1, s2):
@@ -293,7 +296,8 @@ PROPERTIES (
     "file" = "file:///path/to/python_udf_scalar_ops.zip",
     "symbol" = "python_udf_scalar_ops.add_three_numbers",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 
 CREATE FUNCTION py_reverse(STRING)
@@ -303,7 +307,8 @@ PROPERTIES (
     "file" = "file:///path/to/python_udf_scalar_ops.zip",
     "symbol" = "python_udf_scalar_ops.reverse_string",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 
 CREATE FUNCTION py_is_prime(INT)
@@ -313,7 +318,8 @@ PROPERTIES (
     "file" = "file:///path/to/python_udf_scalar_ops.zip",
     "symbol" = "python_udf_scalar_ops.is_prime",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 ```
 
@@ -331,7 +337,8 @@ PROPERTIES (
     "file" = "https://your-storage.com/udf/python_udf_scalar_ops.zip",
     "symbol" = "python_udf_scalar_ops.add_three_numbers",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 
 CREATE FUNCTION py_reverse(STRING)
@@ -341,7 +348,8 @@ PROPERTIES (
     "file" = "https://your-storage.com/udf/python_udf_scalar_ops.zip",
     "symbol" = "python_udf_scalar_ops.reverse_string",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 
 CREATE FUNCTION py_is_prime(INT)
@@ -351,7 +359,8 @@ PROPERTIES (
     "file" = "https://your-storage.com/udf/python_udf_scalar_ops.zip",
     "symbol" = "python_udf_scalar_ops.is_prime",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 ```
 
@@ -368,7 +377,8 @@ PROPERTIES (
     "file" = "file:///path/to/my_udf.zip",
     "symbol" = "my_udf.math_ops.multiply_by_two",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 ```
 
@@ -411,6 +421,7 @@ DROP FUNCTION IF EXISTS py_is_prime(INT);
 | `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议：<br/>• `file://` —— 本地文件系统路径<br/>• `http://` —— HTTP 远程下载<br/>• `https://` —— HTTPS 远程下载 |
 | `runtime_version` | 是 | - | Python 运行时版本，如 `"3.10.12"`，需填写完整的版本号 |
 | `always_nullable` | 否 | `true` | 是否总是返回可空结果 |
+| `volatility` | 否 | `volatile` | 函数易变性，自 4.1.2 起支持。可选值为 `immutable`、`stable`、`volatile`。<br/>`immutable`：相同输入始终产生相同输出。大部分确定性 UDF 建议设置为 `immutable`，这样计划优化效果更好。<br/>`stable`：在同一条 SQL 语句内结果稳定，但不同语句之间可能变化，类似 `now()`。这类函数会禁用 SQL Cache 和物化视图改写。<br/>`volatile`：每次调用结果都可能变化，类似 `random()`。这类函数会禁用 SQL Cache、物化视图改写以及很多优化器改写规则。 |
 
 #### 运行时版本说明
 
@@ -478,7 +489,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(a, b):
@@ -529,7 +541,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "add",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 import pandas as pd
@@ -552,7 +565,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "to_upper",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 import pandas as pd
@@ -575,7 +589,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "sqrt",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 import pandas as pd
@@ -615,7 +630,8 @@ PROPERTIES (
   "type"="PYTHON_UDF",
   "symbol"="py_mixed_vector_add_impl",
   "always_nullable"="true",
-  "runtime_version"="3.12.11"
+  "runtime_version"="3.12.11",
+  "volatility"="immutable"
 )
 AS $$
 import pandas as pd
@@ -701,7 +717,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(arr):
@@ -725,7 +742,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(arr):
@@ -750,7 +768,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(m):
@@ -774,7 +793,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(m, key):
@@ -799,7 +819,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(s):
@@ -826,7 +847,8 @@ RETURNS STRING
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.10.12"
+    "runtime_version" = "3.10.12",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(email):
@@ -852,7 +874,8 @@ RETURNS INT
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.10.12"
+    "runtime_version" = "3.10.12",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(s1, s2):
@@ -889,7 +912,8 @@ RETURNS INT
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.10.12"
+    "runtime_version" = "3.10.12",
+    "volatility" = "immutable"
 )
 AS $$
 from datetime import datetime
@@ -918,7 +942,8 @@ RETURNS BOOLEAN
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.10.12"
+    "runtime_version" = "3.10.12",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(id_card):
@@ -1155,7 +1180,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "SumUDAF",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 class SumUDAF:
@@ -1222,7 +1248,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "AvgUDAF",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 class AvgUDAF:
@@ -1428,7 +1455,8 @@ PROPERTIES (
     "file" = "file:///path/to/stats_udaf.zip",
     "symbol" = "stats_udaf.VarianceUDAF",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 
 CREATE AGGREGATE FUNCTION py_stddev(DOUBLE)
@@ -1438,7 +1466,8 @@ PROPERTIES (
     "file" = "file:///path/to/stats_udaf.zip",
     "symbol" = "stats_udaf.StdDevUDAF",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 
 CREATE AGGREGATE FUNCTION py_median(DOUBLE)
@@ -1448,7 +1477,8 @@ PROPERTIES (
     "file" = "file:///path/to/stats_udaf.zip",
     "symbol" = "stats_udaf.MedianUDAF",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 ```
 
@@ -1530,6 +1560,7 @@ DROP FUNCTION IF EXISTS py_variance(DOUBLE);
 | `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议：<br/>• `file://` —— 本地文件系统路径<br/>• `http://` —— HTTP 远程下载<br/>• `https://` —— HTTPS 远程下载 |
 | `runtime_version` | 是 | - | Python 运行时版本，如 `"3.10.12"` |
 | `always_nullable` | 否 | `true` | 是否总是返回可空结果 |
+| `volatility` | 否 | `immutable` | 函数易变性，自 4.1.2 起支持。可选值为 `immutable`、`stable`、`volatile`。<br/>`immutable`：相同输入始终产生相同输出。大部分确定性 UDF 建议设置为 `immutable`，这样计划优化效果更好。<br/>`stable`：在同一条 SQL 语句内结果稳定，但不同语句之间可能变化，类似 `now()`。这类函数会禁用 SQL Cache 和物化视图改写。<br/>`volatile`：每次调用结果都可能变化，类似 `random()`。这类函数会禁用 SQL Cache、物化视图改写以及很多优化器改写规则。 |
 
 #### runtime_version 说明
 
@@ -1572,7 +1603,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "RunningSumUDAF",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 class RunningSumUDAF:
@@ -1648,7 +1680,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "PercentileUDAF",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 class PercentileUDAF:
@@ -1743,7 +1776,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "CollectSetUDAF",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 class CollectSetUDAF:
@@ -2058,7 +2092,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "split_string_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def split_string_udtf(text, delimiter):
@@ -2094,7 +2129,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "generate_series_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def generate_series_udtf(start, end):
@@ -2146,7 +2182,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "duplicate_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def duplicate_udtf(text, n):
@@ -2180,7 +2217,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "cartesian_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def cartesian_udtf(list1, list2):
@@ -2220,7 +2258,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "explode_json_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 import json
@@ -2382,7 +2421,8 @@ PROPERTIES (
     "file" = "file:///path/to/text_udtf.zip",
     "symbol" = "text_udtf.split_lines_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 
 CREATE TABLES FUNCTION py_extract_emails(STRING)
@@ -2392,7 +2432,8 @@ PROPERTIES (
     "file" = "file:///path/to/text_udtf.zip",
     "symbol" = "text_udtf.extract_emails_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 
 CREATE TABLES FUNCTION py_parse_json(STRING)
@@ -2402,7 +2443,8 @@ PROPERTIES (
     "file" = "file:///path/to/text_udtf.zip",
     "symbol" = "text_udtf.parse_json_object_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 
 CREATE TABLES FUNCTION py_expand_json(STRING)
@@ -2412,7 +2454,8 @@ PROPERTIES (
     "file" = "file:///path/to/text_udtf.zip",
     "symbol" = "text_udtf.expand_json_array_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 
 CREATE TABLES FUNCTION py_ngram(STRING, INT)
@@ -2422,7 +2465,8 @@ PROPERTIES (
     "file" = "file:///path/to/text_udtf.zip",
     "symbol" = "text_udtf.ngram_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 );
 ```
 
@@ -2531,6 +2575,7 @@ CREATE TABLES FUNCTION py_split(STRING, STRING) ...;
 | `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议：<br/>• `file://` —— 本地文件系统路径<br/>• `http://` —— HTTP 远程下载<br/>• `https://` —— HTTPS 远程下载 |
 | `runtime_version` | 是 | - | Python 运行时版本，如 `"3.10.12"` |
 | `always_nullable` | 否 | `true` | 是否总是返回可空结果 |
+| `volatility` | 否 | `immutable` | 函数易变性，自 4.1.2 起支持。可选值为 `immutable`、`stable`、`volatile`。<br/>`immutable`：相同输入始终产生相同输出。大部分确定性 UDF 建议设置为 `immutable`，这样计划优化效果更好。<br/>`stable`：在同一条 SQL 语句内结果稳定，但不同语句之间可能变化，类似 `now()`。这类函数会禁用 SQL Cache 和物化视图改写。<br/>`volatile`：每次调用结果都可能变化，类似 `random()`。这类函数会禁用 SQL Cache、物化视图改写以及很多优化器改写规则。 |
 
 #### runtime_version 说明
 
@@ -2562,7 +2607,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "parse_csv_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def parse_csv_udtf(csv_data):
@@ -2605,7 +2651,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "date_range_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 from datetime import datetime, timedelta
@@ -2653,7 +2700,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "tokenize_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 import re
@@ -2696,7 +2744,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "parse_url_params_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 from urllib.parse import urlparse, parse_qs
@@ -2742,7 +2791,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "expand_ip_range_udtf",
     "runtime_version" = "3.10.12",
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def expand_ip_range_udtf(start_ip, end_ip):
@@ -3099,7 +3149,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.12.11",  -- 必须指定完整版本号，匹配 Python 3.12.11
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(x):
@@ -3201,7 +3252,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.9.18",  -- 必须指定完整版本号，匹配 Python 3.9.18
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(text):
@@ -3215,7 +3267,8 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.12.11",  -- 必须指定完整版本号，匹配 Python 3.12.11
-    "always_nullable" = "true"
+    "always_nullable" = "true",
+    "volatility" = "immutable"
 )
 AS $$
 import numpy as np
