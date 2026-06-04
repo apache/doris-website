@@ -18,17 +18,19 @@ JOBS(
 )
 ```
 
-## 必填参数 (Required Parameters)
-| 字段名          | 描述                                                            |
+## 参数
+| 参数          | 描述                                                            |
 |--------------|---------------------------------------------------------------|
 | **`<type>`** | 任务的类型：<br/> `insert`：insert into 类型的任务。 <br/> `mv`：物化视图类型的任务。 |
 
 
 ## 返回值
 
+该表函数返回 0 行或多行结果。函数本身不返回 NULL；当对应元数据不可用时，部分字段可能为空或 `NULL`。
+
 - **`jobs("type"="insert")`** insert 类型的 job 返回值
-    
-    | 字段名             | 描述                           |
+
+    | 参数          | 描述                           |
     |--------------------|--------------------------------|
     | Id                 | job id                        |
     | Name               | job 名称                       |
@@ -45,37 +47,88 @@ JOBS(
 
 
 - **`jobs("type"="mv")`** MV 类型的 job 返回值
-    
-    | 字段名              | 描述                                 |
+
+    | 参数          | 描述                                 |
     |---------------------|--------------------------------------|
-    | Id                  | job id                               |
-    | Name                | job 名称                              |
-    | MvId                | 物化视图 id                           |
-    | MvName              | 物化视图名称                         |
-    | MvDatabaseId        | 物化视图所属 db id                    |
-    | MvDatabaseName      | 物化视图所属 db 名称                   |
-    | ExecuteType         | 执行类型                             |
-    | RecurringStrategy   | 循环策略                             |
-    | Status              | job 状态                              |
-    | CreateTime          | task 创建时间                         |
+    | Id                  | job ID。对于 MV job，该字段对应 `tasks("type"="mv").JobId`。 |
+    | Name                | job 名称。对于 MV job，该字段对应 `mv_infos("database"="...").JobName` 和 `tasks("type"="mv").JobName`。 |
+    | MvId                | 该 job 维护的物化视图 ID。 |
+    | MvName              | 该 job 维护的物化视图名称。 |
+    | MvDatabaseId        | 物化视图所属数据库 ID。 |
+    | MvDatabaseName      | 物化视图所属数据库名称。 |
+    | ExecuteType         | job 执行类型。MV job 可取值为 `MANUAL` 和 `RECURRING`。`MANUAL` 表示刷新 task 由手动刷新、提交触发或系统内部事件触发；`RECURRING` 表示按周期调度刷新。 |
+    | RecurringStrategy   | 根据 `ExecuteType` 生成的调度描述。`MANUAL TRIGGER` 表示该 job 不按定时器自动运行；`EVERY ... STARTS ... [ENDS ...]` 表示周期调度。 |
+    | Status              | job 状态。可取值：`PENDING` 表示等待调度；`RUNNING` 表示 job 可生成 task；`PAUSED` 表示 job 已暂停且可恢复；`STOPPED` 表示 job 已停止且不可恢复；`FINISHED` 表示 job 已结束。 |
+    | CreateTime          | job 创建时间。 |
+
+### MV job 枚举字段说明
+
+查看物化视图刷新 job 时，下面这些枚举字段最常用：
+
+- `ExecuteType`：job 创建刷新 task 的方式。
+  - `MANUAL`：job 不按自己的定时器运行。只有手动刷新、提交触发刷新或系统触发刷新时，才会创建 task。
+  - `RECURRING`：job 按调度周期运行，会周期性创建刷新 task。
+- `RecurringStrategy`：根据 `ExecuteType` 生成的可读调度规则。
+  - `MANUAL TRIGGER`：job 不按周期调度。`ExecuteType` 为 `MANUAL` 时通常显示这个值。
+  - `EVERY <interval> <unit> STARTS <time> [ENDS <time>]`：job 按周期调度。例如 `EVERY 10 MINUTE STARTS 2025-01-17 14:42:53`。
+- `Status`：job 自身当前状态。
+  - `PENDING`：job 正在等待调度。
+  - `RUNNING`：job 处于运行状态，可以创建刷新 task。
+  - `PAUSED`：job 已暂停。恢复前不会创建新的刷新 task。
+  - `STOPPED`：job 已停止，不能恢复。
+  - `FINISHED`：job 已结束。对于长期存在的物化视图刷新 job 不常见，但通用 job 框架中可能出现。
+
+对于物化视图，一个物化视图对应一个刷新 job，一个刷新 job 可以创建多个刷新 task。可以用 `jobs("type"="mv").Name` 关联 `mv_infos("database"="...").JobName` 和 `tasks("type"="mv").JobName`。
 
 
 ## 示例
 
-查看所有物化视图的 job
+查看某个物化视图的刷新 job。
 
 ```sql
-select * from jobs("type"="mv");
+select *
+from jobs("type"="mv")
+where MvDatabaseName = "test" and MvName = "mv1"\G
 ```
 ```text
-+-------+------------------+-------+--------------------------+--------------+--------------------------------------------------------+-------------+-------------------+---------+---------------------+
-| Id    | Name             | MvId  | MvName                   | MvDatabaseId | MvDatabaseName                                         | ExecuteType | RecurringStrategy | Status  | CreateTime          |
-+-------+------------------+-------+--------------------------+--------------+--------------------------------------------------------+-------------+-------------------+---------+---------------------+
-| 23369 | inner_mtmv_23363 | 23363 | range_date_up_union_mv1  | 21805        | regression_test_nereids_rules_p0_mv_create_part_and_up | MANUAL      | MANUAL TRIGGER    | RUNNING | 2025-01-08 18:19:10 |
-| 23377 | inner_mtmv_23371 | 23371 | range_date_up_union_mv2  | 21805        | regression_test_nereids_rules_p0_mv_create_part_and_up | MANUAL      | MANUAL TRIGGER    | RUNNING | 2025-01-08 18:19:10 |
-| 21794 | inner_mtmv_21788 | 21788 | test_tablet_type_mtmv_mv | 16016        | zd                                                     | MANUAL      | MANUAL TRIGGER    | RUNNING | 2025-01-08 12:26:06 |
-| 19508 | inner_mtmv_19494 | 19494 | mv1                      | 16016        | zd                                                     | MANUAL      | MANUAL TRIGGER    | RUNNING | 2025-01-07 22:13:31 |
-+-------+------------------+-------+--------------------------+--------------+--------------------------------------------------------+-------------+-------------------+---------+---------------------+
+*************************** 1. row ***************************
+               Id: 19508
+             Name: inner_mtmv_19494
+             MvId: 19494
+           MvName: mv1
+     MvDatabaseId: 16016
+   MvDatabaseName: test
+      ExecuteType: MANUAL
+RecurringStrategy: MANUAL TRIGGER
+           Status: RUNNING
+       CreateTime: 2025-01-07 22:13:31
+```
+
+该结果中：
+
+- `Id` 是物化视图刷新 job ID，与 `tasks("type"="mv")` 中的 `JobId` 相同。
+- `Name` 是物化视图刷新 job 名称，与 `mv_infos("database"="test")` 和 `tasks("type"="mv")` 中的 `JobName` 相同。
+- `MvId` 和 `MvName` 标识该 job 维护的物化视图。
+- `MvDatabaseId` 和 `MvDatabaseName` 标识物化视图所属数据库。
+- `ExecuteType` 为 `MANUAL`，表示该 job 不按自身定时器运行。当物化视图被手动刷新、提交触发刷新或系统触发刷新时，才会生成刷新 task。
+- `RecurringStrategy` 为 `MANUAL TRIGGER`，与 `ExecuteType = MANUAL` 对应。如果是定时刷新的物化视图，该字段会显示为 `EVERY ... STARTS ...`。
+- `Status` 为 `RUNNING`，表示该 job 可以生成刷新 task。如果为 `PAUSED`，需要先恢复物化视图 job，才会继续产生新 task。
+- `CreateTime` 表示该物化视图刷新 job 的创建时间。
+
+查看该 job 生成的刷新 task：
+
+```sql
+select TaskId, JobName, MvName, Status, CreateTime, FinishTime
+from tasks("type"="mv")
+where JobName = "inner_mtmv_19494"
+order by CreateTime desc;
+```
+```text
++-----------------+------------------+--------+---------+---------------------+---------------------+
+| TaskId          | JobName          | MvName | Status  | CreateTime          | FinishTime          |
++-----------------+------------------+--------+---------+---------------------+---------------------+
+| 437156301250803 | inner_mtmv_19494 | mv1    | SUCCESS | 2025-01-07 22:13:48 | 2025-01-07 22:17:45 |
++-----------------+------------------+--------+---------+---------------------+---------------------+
 ```
 
 查看所有 insert 任务的 job
