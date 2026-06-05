@@ -125,13 +125,13 @@ SELECT array_concat(int_array1, int_array2) FROM array_concat_test WHERE id = 5;
 +--------------------------------------+
 ```
 
-Type compatibility example: concatenating int_array1 and string_array1, string elements cannot be converted to int, resulting in null.
+Type compatibility example: concatenating int_array1 and string_array1 converts integer elements to strings and retains all elements.
 ```sql
 SELECT array_concat(int_array1, string_array1) FROM array_concat_test WHERE id = 1;
 +-----------------------------------------+
 | array_concat(int_array1, string_array1) |
 +-----------------------------------------+
-| [1, 2, 3, null, null]                   |
+| ["1", "2", "3", "a", "b"]            |
 +-----------------------------------------+
 ```
 

@@ -80,7 +80,7 @@ json path syntax:
 
 ## Return Values
 According to the type of the field to be extracted, return the data type of the specified JSON_PATH in the target JSON. Special case handling is as follows:
-* If the field specified by json_path does not exist in the JSON, return NULL.
+* If none of the fields specified by json_path exist in the JSON, return NULL. Otherwise, skip the non-existent fields.
 * If the actual type of the field specified by json_path in the JSON is inconsistent with the type specified by json_extract_t.
 * if it can be losslessly converted to the specified type, return the specified type t; if not, return NULL.
 
@@ -125,7 +125,7 @@ SELECT json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name');
 +-----------------------------------------------------------------+
 | json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name') |
 +-----------------------------------------------------------------+
-| [null,"doris"]                                                  |
+| ["doris"]                                                       |
 +-----------------------------------------------------------------+
 ```
 ```sql
