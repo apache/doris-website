@@ -67,7 +67,13 @@ The following enum fields are commonly used when checking materialized view defi
 - `MvPartitionInfo.partitionType`: how the materialized view is partitioned.
   - `FOLLOW_BASE_TABLE`: materialized view partitions follow a base table partition column.
   - `SELF_MANAGE`: the materialized view manages its own partitions.
-  - `EXPR`: materialized view partitions are defined by an expression.
+
+:::info Version
+
+Doris 2.1.x supports `FOLLOW_BASE_TABLE` and `SELF_MANAGE` for `MvPartitionInfo.partitionType`. The `EXPR` partition type is supported since Doris 3.0.0.
+
+:::
+
 - `SyncWithBaseTables`: whether materialized view data is synchronized with base tables.
   - `1` or `true`: synchronized.
   - `0` or `false`: not fully synchronized. For partitioned materialized views, use `SHOW PARTITIONS FROM <mv_name>` to check partition-level synchronization.
@@ -108,7 +114,7 @@ In this result:
 - `QuerySql` is the query definition of the materialized view.
 - `EnvInfo` records the environment information when the materialized view was created.
 - `MvProperties` shows the properties of the materialized view. In this example, partition synchronization is limited by `partition_sync_limit=100` and `partition_sync_time_unit=YEAR`.
-- `MvPartitionInfo` shows how the materialized view is partitioned. `FOLLOW_BASE_TABLE` means the materialized view follows a base table partition column. `SELF_MANAGE` means the materialized view manages its own partitions. `EXPR` means the materialized view uses an expression-based partition definition.
+- `MvPartitionInfo` shows how the materialized view is partitioned. In Doris 2.1.x, `FOLLOW_BASE_TABLE` means the materialized view follows a base table partition column, and `SELF_MANAGE` means the materialized view manages its own partitions. The `EXPR` partition type is supported since Doris 3.0.0.
 - `SyncWithBaseTables` is `1`, which means the materialized view data is synchronized with its base tables. `0` means it is not fully synchronized. For partitioned materialized views, use `SHOW PARTITIONS FROM <mv_name>` to check partition-level synchronization.
 
 To view the latest refresh task of this materialized view:

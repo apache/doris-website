@@ -68,7 +68,13 @@ MV_INFOS("database"="<database>")
 - `MvPartitionInfo.partitionType`：物化视图的分区方式。
   - `FOLLOW_BASE_TABLE`：物化视图分区跟随基表分区列。
   - `SELF_MANAGE`：物化视图自己管理分区。
-  - `EXPR`：物化视图使用表达式定义分区。
+
+:::info 版本说明
+
+Doris 2.1.x 的 `MvPartitionInfo.partitionType` 支持 `FOLLOW_BASE_TABLE` 和 `SELF_MANAGE`。`EXPR` 分区类型从 Doris 3.0.0 开始支持。
+
+:::
+
 - `SyncWithBaseTables`：物化视图数据是否和基表同步。
   - `1` 或 `true`：已同步。
   - `0` 或 `false`：未完全同步。对于分区物化视图，可以用 `SHOW PARTITIONS FROM <mv_name>` 查看分区级同步状态。
@@ -110,7 +116,7 @@ SyncWithBaseTables: 1
 - `QuerySql` 是物化视图定义的查询 SQL。
 - `EnvInfo` 记录物化视图创建时的环境信息。
 - `MvProperties` 展示物化视图属性。本例中，分区同步由 `partition_sync_limit=100` 和 `partition_sync_time_unit=YEAR` 控制。
-- `MvPartitionInfo` 展示物化视图分区方式。`FOLLOW_BASE_TABLE` 表示跟随基表分区列；`SELF_MANAGE` 表示物化视图自己管理分区；`EXPR` 表示基于表达式定义分区。
+- `MvPartitionInfo` 展示物化视图分区方式。在 Doris 2.1.x 中，`FOLLOW_BASE_TABLE` 表示跟随基表分区列，`SELF_MANAGE` 表示物化视图自己管理分区。`EXPR` 分区类型从 Doris 3.0.0 开始支持。
 - `SyncWithBaseTables` 为 `1`，表示物化视图数据和基表数据同步。`0` 表示不完全同步。对于分区物化视图，可使用 `SHOW PARTITIONS FROM <mv_name>` 查看分区级同步状态。
 
 查看该物化视图最近一次刷新 task：
