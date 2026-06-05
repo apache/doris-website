@@ -20,7 +20,7 @@ IS_IP_ADDRESS_IN_RANGE(<ip_address>, <cidr_range>)
 - `<cidr_range>`: CIDRネットワーク範囲（"192.168.1.0/24"などの文字列形式）
 
 ### 戻り値
-戻り値の型: TINYINT
+戻り値の型: BOOLEAN
 
 戻り値の意味:
 - 1を返す: IPアドレスが指定されたCIDR範囲内にあることを示す

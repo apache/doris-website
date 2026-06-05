@@ -19,7 +19,7 @@ IS_IPV4_COMPAT(<ipv6_address>)
 - `<ipv6_address>`: IPv6アドレスのバイナリ表現（VARCHAR型、16バイト）
 
 ### 戻り値
-戻り値の型: TINYINT
+戻り値の型: BOOLEAN
 
 戻り値の意味: 1はIPv4互換アドレスであることを示し、0はIPv4互換アドレスでないことを示します
 
