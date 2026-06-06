@@ -41,7 +41,7 @@ IPV6_CIDR_TO_RANGE(<ipv6_address>, <cidr_prefix>)
 
 计算 /64 网段的地址范围。
 ```sql
-SELECT ipv6_cidr_to_range(INET6_ATON('2001:db8::1'), 64) as range;
+SELECT ipv6_cidr_to_range(to_ipv6('2001:db8::1'), 64) as `range`;
 +----------------------------------------+
 | range                                  |
 +----------------------------------------+
@@ -51,19 +51,19 @@ SELECT ipv6_cidr_to_range(INET6_ATON('2001:db8::1'), 64) as range;
 
 计算 /48 网段的地址范围。
 ```sql
-SELECT ipv6_cidr_to_range(INET6_ATON('2001:db8:1::1'), 48) as range;
+SELECT ipv6_cidr_to_range(to_ipv6('2001:db8:1::1'), 48) as `range`;
 +----------------------------------------+
 | range                                  |
 +----------------------------------------+
-| {"min": "2001:db8:1::", "max": "2001:db8:1:ffff:ffff:ffff:ffff"} |
+| {"min": "2001:db8:1::", "max": "2001:db8:1:ffff:ffff:ffff:ffff:ffff"} |
 +----------------------------------------+
 ```
 
 访问结构体中的具体字段。
 ```sql
 SELECT 
-  ipv6_cidr_to_range(INET6_ATON('2001:db8::1'), 64).min as min_ip,
-  ipv6_cidr_to_range(INET6_ATON('2001:db8::1'), 64).max as max_ip;
+  ipv6_cidr_to_range(to_ipv6('2001:db8::1'), 64).min as min_ip,
+  ipv6_cidr_to_range(to_ipv6('2001:db8::1'), 64).max as max_ip;
 +-------------+----------------------------------+
 | min_ip      | max_ip                           |
 +-------------+----------------------------------+
@@ -73,7 +73,7 @@ SELECT
 
 CIDR 前缀超出范围会抛出异常。
 ```sql
-SELECT ipv6_cidr_to_range(INET6_ATON('2001:db8::1'), 129);
+SELECT ipv6_cidr_to_range(to_ipv6('2001:db8::1'), 129);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (...)[INVALID_ARGUMENT]Illegal cidr value '129'
 ```
 
