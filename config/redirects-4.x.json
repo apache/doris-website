@@ -712,14 +712,6 @@
     "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
-    "from": "/docs/4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-object-flatten",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
-  },
-  {
-    "from": "/zh-CN/docs/4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-object-flatten",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
-  },
-  {
     "from": "/docs/4.x/table-design/best-practice",
     "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
