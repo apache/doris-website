@@ -6,6 +6,10 @@
 }
 ---
 
+:::caution
+The `STRUCT_ELEMENT` function has been removed since version 4.1.3. Please use the [`ELEMENT_AT`](../variant-functions/element-at.md) function instead (or the equivalent subscript `s[k]` / `s['field_name']` and dot `s.field_name` syntax).
+:::
+
 ## Description
 
 Returns a specific field within a struct data column. The function supports accessing fields in a struct through field position (index) or field name.
@@ -36,7 +40,7 @@ Return value meaning:
 - Supports accessing by field name; the field name is matched **case-insensitively**
 - The second parameter must be a constant (cannot be a column)
 - The function is marked as AlwaysNullable, return value may be null
-- `ELEMENT_AT(<struct>, ...)`, the subscript operators `<struct>[<index>]` / `<struct>['<field_name>']`, and the dot operator `<struct_col>.<field_name>` are all equivalent ways to access a struct field. `STRUCT_ELEMENT` is now an alias of `ELEMENT_AT` and is kept for backward compatibility.
+- Since version 4.1.3, `STRUCT_ELEMENT` is removed. Use `ELEMENT_AT(<struct>, ...)`, the subscript operators `<struct>[<index>]` / `<struct>['<field_name>']`, or the dot operator `<struct_col>.<field_name>` instead — these are all equivalent ways to access a struct field.
 
 ## Examples
 
