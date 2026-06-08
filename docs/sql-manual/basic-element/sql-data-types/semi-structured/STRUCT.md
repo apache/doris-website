@@ -100,44 +100,30 @@ The STRUCT type is used to combine multiple fields into a single structure, wher
 
 ## Element Access
 
-- Use `STRUCT_ELEMENT(struct, k/field_name)` to access a specific subcolumn inside the `STRUCT`.
+A specific subcolumn inside a `STRUCT` can be accessed in the following equivalent ways:
 
-  - k represents the position, starting from 1.
+- `ELEMENT_AT(struct, k/field_name)` function.
 
-  - `field_name` is the name of the subcolumn in the `STRUCT`.
+- The subscript operator `struct[k]` / `struct['field_name']`.
 
-  ```SQL
-  SELECT STRUCT_ELEMENT(NAMED_STRUCT("name", "Jack", "id", 1728923), 1);
+- The dot operator `struct_col.field_name` (only for a `STRUCT` column).
 
-  +----------------------------------------------------------------+
-  | STRUCT_ELEMENT(NAMED_STRUCT("name", "Jack", "id", 1728923), 1) |
-  +----------------------------------------------------------------+
-  | Jack                                                           |
-  +----------------------------------------------------------------+
+Where `k` is the position (a constant starting from 1) and `field_name` is the subcolumn name (a string constant). Field names are matched **case-insensitively**. Accessing a non-existent field name or an out-of-bound position reports an error.
 
-  SELECT STRUCT_ELEMENT(NAMED_STRUCT("name", "Jack", "id", 1728923), "id");
+:::caution
+The `STRUCT_ELEMENT` function has been removed since version 4.1.3. Use `ELEMENT_AT` or the subscript / dot operators instead.
+:::
 
-  +-------------------------------------------------------------------+
-  | STRUCT_ELEMENT(NAMED_STRUCT("name", "Jack", "id", 1728923), "id") |
-  +-------------------------------------------------------------------+
-  |                                                           1728923 |
-  +-------------------------------------------------------------------+
-  ```
-
-- You can also use `ELEMENT_AT(struct, k/field_name)` or the subscript operator `struct[k]` / `struct['field_name']` to access a specific subcolumn, all of which are equivalent to `STRUCT_ELEMENT`.
-
-  - `k` represents the position, starting from 1.
-
-  - `field_name` is the name of the subcolumn in the `STRUCT`, and must be a string constant.
+- Use `ELEMENT_AT` or the subscript operator to access by position or field name.
 
   ```SQL
-  SELECT NAMED_STRUCT("name", "Jack", "id", 1728923)[1];
+  SELECT ELEMENT_AT(NAMED_STRUCT("name", "Jack", "id", 1728923), 1);
 
-  +-----------------------------------------------+
-  | NAMED_STRUCT('name', 'Jack', 'id', 1728923)[1] |
-  +-----------------------------------------------+
-  | Jack                                          |
-  +-----------------------------------------------+
+  +------------------------------------------------------------+
+  | ELEMENT_AT(NAMED_STRUCT('name', 'Jack', 'id', 1728923), 1) |
+  +------------------------------------------------------------+
+  | Jack                                                       |
+  +------------------------------------------------------------+
 
   SELECT NAMED_STRUCT("name", "Jack", "id", 1728923)['id'];
 
@@ -148,14 +134,15 @@ The STRUCT type is used to combine multiple fields into a single structure, wher
   +--------------------------------------------------+
   ```
 
-- For a `STRUCT` column, you can also use the dot operator `struct_col.field_name` to access a subcolumn by name, including nested access such as `struct_col.a.b`.
+- For a `STRUCT` column, use the dot operator to access a subcolumn by name, including nested access such as `s.a.b`.
 
   ```SQL
-  -- struct_col is a STRUCT<name: STRING, id: INT> column
-  SELECT struct_col.name, struct_col.id FROM struct_table;
-  ```
+  -- Table with a STRUCT column: s STRUCT<a: INT, b: DOUBLE>
+  SELECT s.a, s.b FROM struct_table;
 
-- Field names are matched **case-insensitively**. Accessing a non-existent field name or an out-of-bound position reports an error, and the index/field name must be a constant.
+  -- Nested STRUCT column: s STRUCT<s: STRUCT<s: STRUCT<s: INT>>>
+  SELECT s.s.s.s FROM nested_struct_table;
+  ```
 
 ## Examples
 
@@ -190,22 +177,22 @@ The STRUCT type is used to combine multiple fields into a single structure, wher
     STRUCT('2021-01-01 00:00:00', '2021-01-02 00:00:00', STRUCT(100, 50))
   ));
 
-  -- Query
-  SELECT STRUCT_ELEMENT(STRUCT_ELEMENT(struct_complex, 'basic_info'), 'name')  FROM struct_table ORDER BY id;
+  -- Query (use the dot operator for nested struct field access)
+  SELECT struct_complex.basic_info.name FROM struct_table ORDER BY id;
 
-  +----------------------------------------------------------------------+
-  | STRUCT_ELEMENT(STRUCT_ELEMENT(struct_complex, 'basic_info'), 'name') |
-  +----------------------------------------------------------------------+
-  | John                                                                 |
-  +----------------------------------------------------------------------+
+  +--------------------------------+
+  | struct_complex.basic_info.name |
+  +--------------------------------+
+  | John                           |
+  +--------------------------------+
 
-  SELECT STRUCT_ELEMENT(STRUCT_ELEMENT(STRUCT_ELEMENT(struct_complex, 'metadata'), 'stats'), 'views') FROM struct_table ORDER BY id;
+  SELECT struct_complex.metadata.stats.views FROM struct_table ORDER BY id;
 
-  +----------------------------------------------------------------------------------------------+
-  | STRUCT_ELEMENT(STRUCT_ELEMENT(STRUCT_ELEMENT(struct_complex, 'metadata'), 'stats'), 'views') |
-  +----------------------------------------------------------------------------------------------+
-  |                                                                                          100 |
-  +----------------------------------------------------------------------------------------------+
+  +-------------------------------------+
+  | struct_complex.metadata.stats.views |
+  +-------------------------------------+
+  |                                 100 |
+  +-------------------------------------+
   ```
 
 - Modifying Type
