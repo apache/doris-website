@@ -13,6 +13,10 @@ This document presents a summary of Apache Doris versions released within one ye
 
 <br />
 
+🎉 Version 4.0.6 is released. Check out the 🔗[Release Notes](./v4.0/release-4.0.6) here. Apache Doris 4.0 is a major milestone that focuses on four areas: new AI capabilities with vector search and AI functions, stronger full-text search via the new SEARCH() function, better ETL/ELT processing with Spill Disk, and performance optimization through TopN lazy materialization and SQL cache. By unifying vector search, full-text search, and structured analytics in a single engine (HSAP), Doris 4.0 lets keyword search, semantic matching, and complex analytics run seamlessly in one SQL workflow.
+
+<br />
+
 🎉 Version 3.1.4 is released. Check out the 🔗[Release Notes](./v3.1/release-3.1.4) here. Doris 3.1 introduces a sparse column and schema template for the VARIANT data type, making it more efficient to store and query large datasets with dynamic fields, such as logs and JSON data. For lakehouse capabilities, it enhances asynchronous materialized views and expands support for Iceberg and Paimon to build a stronger bridge between data lakes and data warehouses.
 
 <br />
@@ -27,6 +31,8 @@ This document presents a summary of Apache Doris versions released within one ye
 
 
 <br />
+
+- [2026-06-08, Apache Doris 4.0.6 is released](./v4.0/release-4.0.6.md)
 
 - [2026-05-24, Apache Doris 4.1.1 is released](./v4.1/release-4.1.1.md)
 

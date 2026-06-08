@@ -763,6 +763,13 @@ Iceberg 的元数据层级关系是 Catalog -> Namespace -> Table。其中 Names
 </details>
 
 ### Iceberg Rest Catalog
+
+:::note
+自 4.0.6 版本起，Iceberg REST Catalog 与 AWS S3 Tables 支持通过 IAM Assumed Role 获取访问凭证：
+- REST Catalog：使用 `iceberg.rest.role_arn` 指定要扮演的 Role ARN，并可选地通过 `iceberg.rest.external-id` 指定 External ID。
+- AWS S3 Tables：使用 `s3.role_arn` 与 `s3.external_id`（参见下文 AWS S3 Tables 章节）。
+:::
+
 <details>
     <summary>3.1+ 版本</summary>
 

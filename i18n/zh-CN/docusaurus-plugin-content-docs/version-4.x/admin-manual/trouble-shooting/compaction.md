@@ -88,7 +88,7 @@ time_series compaction 策略是为日志、时序等场景优化的策略。它
 
 time_series compaction 策略在下面 3 个条件任意一个满足的时候触发小文件合并：
 - 未合并的文件大小超过 `time_series_compaction_goal_size_mbytes` (默认 1GB)
-- 未合并的文件个数超过 `time_series_compaction_file_count_threshold` (默认 2000)
+- 未合并的文件个数超过 `time_series_compaction_file_count_threshold` (默认 1000，自 4.0.6 版本起由 2000 调整为 1000)
 - 距离上次合并的时间超过 `time_series_compaction_time_threshold_seconds` (默认 1 小时)
 
 上述参数在表的 PROPERTIES 中设置，可以在建表时指定，或者通过 `ALTER TABLE table_name SET("name" = "value")` 修改。
