@@ -46,12 +46,14 @@ STRUCT type is used to store and process structured data, which can contain fiel
 5. Field-value pairs must either all use the "fieldname:value" format or all use the "value" format.
 6. Field names and values can optionally be enclosed in matching single quotes (`'`) or double quotes (`"`). The content inside the quotes is treated as a single entity.
 7. Whitespace is allowed before and after elements within the STRUCT.
-8. During parsing, parts that match `<value-token>` continue to apply the parsing rules of the value type. If there are `<field-token>` parts, they must match the number and order of names defined in the STRUCT.
+8. During parsing, parts that match `<value-token>` continue to apply the parsing rules of the value type. How `<field-token>` parts are handled depends on whether field names are provided:
+   - **When field names are provided:** fields are matched **by name**, case-insensitively. The order of the input fields does **not** need to match the order defined in the STRUCT. Fields defined in the STRUCT but missing from the input are filled with NULL. In strict mode, an input field name that does not exist in the STRUCT causes an error.
+   - **When no field names are provided:** fields are matched by position, and the number of values **must** be exactly equal to the number of fields defined in the STRUCT.
 9. Elements can use "null" to represent a null value.
 
 If the STRUCT format does not meet the requirements, an error is reported, for example:
-1. The number of field-value pairs does not match the number defined in the STRUCT.
-2. The order of field-values does not match the order defined in the STRUCT.
+1. When no field names are provided, the number of values is not equal to the number of fields defined in the STRUCT.
+2. When field names are provided, the input contains a field name that does not exist in the STRUCT.
 3. Some field-value pairs have field names while others do not (they must either all have field names or none have field names).
 
 If a value in the STRUCT does not meet the requirements of the corresponding type, an error is reported.
@@ -64,10 +66,13 @@ If a value in the STRUCT does not meet the requirements of the corresponding typ
 | "  {}" | Error | Does not start with a brace, parsing fails |
 | '{"a":1,"b":1}' | Cast to STRUCT\<a:int, b:int\>: {"a":1, "b":1} | Valid STRUCT with field names |
 | '{a:1,"b":3.14}' | Cast to STRUCT\<a:int, b:double\>: {"a":1, "b":3.14} | Field names can be quoted or unquoted |
-| '{1,3.14}' | Cast to STRUCT\<a:int, b:double\>: {"a":1, "b":3.14} | No field names provided, parsing succeeds |
+| '{1,3.14}' | Cast to STRUCT\<a:int, b:double\>: {"a":1, "b":3.14} | No field names provided, matched by position |
+| '{b:3.14,a:1}' | Cast to STRUCT\<a:int, b:double\>: {"a":1, "b":3.14} | When field names are provided, fields are matched by name; the input order may differ from the schema |
+| '{A:1,B:3.14}' | Cast to STRUCT\<a:int, b:double\>: {"a":1, "b":3.14} | Field names are matched case-insensitively |
+| '{a:1}' | Cast to STRUCT\<a:int, b:double\>: {"a":1, "b":null} | Field b is missing from the input and is filled with NULL |
+| '{a:1,c:100}' | Cast to STRUCT\<a:int, b:double\>: Error | Field name c does not exist in the STRUCT; strict mode reports an error |
 | '{a:1,3.1,c:100}' | Error | Mixed format with some having field names and others not |
-| '{a:1}' | Cast to STRUCT\<a:int, b:double\>: Error | Number of field-value pairs does not match defined count |
-| '{b:1,a:1}' | Cast to STRUCT\<a:int, b:double\>: Error | Incorrect order of fields |
+| '{1,3.14,100}' | Cast to STRUCT\<a:int, b:double\>: Error | When no field names are provided, the value count does not match the number of fields defined |
 | '{"a":"abc","b":1}' | Cast to STRUCT\<a:int, b:int\>: Error | "abc" cannot be converted to int type |
 | '{null,1}' | Cast to STRUCT\<a:int, b:int\>: {"a":null, "b":1} | Valid STRUCT with null value |
 | '{"name":"John","age":25}' | Cast to STRUCT\<name:string, age:int\>: {"name":"John", "age":25} | STRUCT with string values |
@@ -107,13 +112,14 @@ If a value in the STRUCT does not meet the requirements of the corresponding typ
 5. Field-value pairs must either all use the "fieldname:value" format or all use the "value" format.
 6. Field names and values can optionally be enclosed in matching single quotes (`'`) or double quotes (`"`). The content inside the quotes is treated as a single entity.
 7. Whitespace is allowed before and after elements within the STRUCT.
-8. During parsing, parts that match `<value-token>` continue to apply the parsing rules of the value type. If there are `<field-token>` parts, they must match the number and order of names defined in the STRUCT.
+8. During parsing, parts that match `<value-token>` continue to apply the parsing rules of the value type. How `<field-token>` parts are handled depends on whether field names are provided:
+   - **When field names are provided:** fields are matched **by name**, case-insensitively. The order of the input fields does **not** need to match the order defined in the STRUCT. Fields defined in the STRUCT but missing from the input are filled with NULL. An input field name that does not exist in the STRUCT is ignored.
+   - **When no field names are provided:** fields are matched by position, and the number of values **must** be exactly equal to the number of fields defined in the STRUCT.
 9. Elements can use "null" to represent a null value.
 
 If the STRUCT format does not meet the requirements, NULL is returned, for example:
-1. The number of field-value pairs does not match the number defined in the STRUCT.
-2. The order of field-values does not match the order defined in the STRUCT.
-3. Some field-value pairs have field names while others do not (they must either all have field names or none have field names).
+1. When no field names are provided, the number of values is not equal to the number of fields defined in the STRUCT.
+2. Some field-value pairs have field names while others do not (they must either all have field names or none have field names).
 
 If a value in the STRUCT does not meet the requirements of the corresponding type, the corresponding position is set to null.
 
@@ -125,10 +131,13 @@ If a value in the STRUCT does not meet the requirements of the corresponding typ
 | "  {}" | NULL | Does not start with a brace, parsing fails |
 | '{"a":1,"b":1}' | Cast to STRUCT\<a:int, b:int\>: {"a":1, "b":1} | Valid STRUCT with field names |
 | '{a:1,"b":3.14}' | Cast to STRUCT\<a:int, b:double\>: {"a":1, "b":3.14} | Field names can be quoted or unquoted |
-| '{1,3.14}' | Cast to STRUCT\<a:int, b:double\>: {"a":1, "b":3.14} | No field names provided, parsing succeeds |
+| '{1,3.14}' | Cast to STRUCT\<a:int, b:double\>: {"a":1, "b":3.14} | No field names provided, matched by position |
+| '{b:3.14,a:1}' | Cast to STRUCT\<a:int, b:double\>: {"a":1, "b":3.14} | When field names are provided, fields are matched by name; the input order may differ from the schema |
+| '{A:1,B:3.14}' | Cast to STRUCT\<a:int, b:double\>: {"a":1, "b":3.14} | Field names are matched case-insensitively |
+| '{a:1}' | Cast to STRUCT\<a:int, b:double\>: {"a":1, "b":null} | Field b is missing from the input and is filled with NULL |
+| '{a:1,c:100}' | Cast to STRUCT\<a:int, b:double\>: {"a":1, "b":null} | Unknown field c is ignored; missing field b is filled with NULL |
 | '{a:1,3.1,c:100}' | NULL | Mixed format with some having field names and others not |
-| '{a:1}' | Cast to STRUCT\<a:int, b:double\>: NULL | Number of field-value pairs does not match defined count |
-| '{b:1,a:1}' | Cast to STRUCT\<a:int, b:double\>: NULL | Incorrect order of fields |
+| '{1,3.14,100}' | Cast to STRUCT\<a:int, b:double\>: NULL | When no field names are provided, the value count does not match the number of fields defined |
 | '{"a":"abc","b":1}' | Cast to STRUCT\<a:int, b:int\>: {"a":null, "b":1} | "abc" cannot be converted to int type, position set to null |
 | '{null,1}' | Cast to STRUCT\<a:int, b:int\>: {"a":null, "b":1} | Valid STRUCT with null value |
 | '{"name":"John","age":"twenty-five"}' | Cast to STRUCT\<name:string, age:int\>: {"name":"John", "age":null} | "twenty-five" cannot be converted to int type, position set to null |
