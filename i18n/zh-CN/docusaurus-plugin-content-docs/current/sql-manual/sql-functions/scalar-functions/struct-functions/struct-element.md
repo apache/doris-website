@@ -7,7 +7,7 @@
 ---
 
 :::caution
-`STRUCT_ELEMENT` 函数自 4.1.3 版本起已被删除。由于其他所有数据库和查询引擎都不支持该函数，因此我们将其移除。请改用 [`ELEMENT_AT`](../variant-functions/element-at.md) 函数（或等价的下标 `s[k]` / `s['field_name']`、点运算符 `s.field_name` 语法）。
+因业界其他数据库和查询引擎均无此函数，`STRUCT_ELEMENT` 自 4.1.3 版本起已移除，请改用 [`ELEMENT_AT`](../variant-functions/element-at.md) 函数（或等价的下标 `s[k]` / `s['field_name']`、点运算符 `s.field_name` 语法）。
 :::
 
 ## 描述
