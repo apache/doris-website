@@ -93,7 +93,7 @@ PROPERTIES (
 );
 ```
 
-- `sync_event`: The type of event that triggers synchronization. Currently, set this parameter to `load` to enable event-driven warm-up for this data.
+- `sync_event`: Set this parameter to `load` when creating an event-driven warm-up job.
 
 ---
 
