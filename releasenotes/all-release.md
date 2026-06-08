@@ -32,7 +32,7 @@ This document presents a summary of Apache Doris versions released within one ye
 
 <br />
 
-- [2026-XX-XX, Apache Doris 4.0.6 is released](./v4.0/release-4.0.6.md)
+- [2026-06-08, Apache Doris 4.0.6 is released](./v4.0/release-4.0.6.md)
 
 - [2026-05-24, Apache Doris 4.1.1 is released](./v4.1/release-4.1.1.md)
 
