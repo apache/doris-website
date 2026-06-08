@@ -6,6 +6,10 @@
 }
 ---
 
+:::caution
+As no other database or query engine provides such a function, `STRUCT_ELEMENT` has been removed since version 4.1.3. Please use the [`ELEMENT_AT`](../variant-functions/element-at.md) function instead (or the equivalent subscript `s[k]` / `s['field_name']` and dot `s.field_name` syntax).
+:::
+
 ## Description
 
 Returns a specific field within a struct data column. The function supports accessing fields in a struct through field position (index) or field name.
@@ -33,9 +37,10 @@ Return value meaning:
 ## Usage
 
 - Supports accessing by field position (index), index starts from 1
-- Supports accessing by field name, field name must match exactly
+- Supports accessing by field name; the field name is matched **case-insensitively**
 - The second parameter must be a constant (cannot be a column)
 - The function is marked as AlwaysNullable, return value may be null
+- Since version 4.1.3, `STRUCT_ELEMENT` is removed. Use `ELEMENT_AT(<struct>, ...)`, the subscript operators `<struct>[<index>]` / `<struct>['<field_name>']`, or the dot operator `<struct_col>.<field_name>` instead — these are all equivalent ways to access a struct field.
 
 ## Examples
 
@@ -59,6 +64,17 @@ select struct_element(named_struct('name', 'Alice', 'age', 25, 'city', 'Beijing'
 +------------------------------------------------------------------------------------+
 |                                                                                 25 |
 +------------------------------------------------------------------------------------+
+```
+
+Access using the subscript operator (equivalent to the calls above):
+```sql
+select named_struct('name', 'Alice', 'age', 25, 'city', 'Beijing')[1] as by_index,
+       named_struct('name', 'Alice', 'age', 25, 'city', 'Beijing')['age'] as by_name;
++----------+---------+
+| by_index | by_name |
++----------+---------+
+| Alice    |      25 |
++----------+---------+
 ```
 
 Accessing struct containing complex types:
@@ -98,7 +114,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = the specified field index out o
 Second parameter is not a constant:
 ```sql
 select struct_element(named_struct('name', 'Alice', 'age', 25), inv) from var_with_index where k = 4;
-ERROR 1105 (HY000): errCode = 2, detailMessage = struct_element only allows constant int or string second parameter: struct_element(named_struct('name', 'Alice', 'age', 25), inv)
+ERROR 1105 (HY000): errCode = 2, detailMessage = element_at over a struct only allows a constant int or string second parameter: element_at(named_struct('name', 'Alice', 'age', 25), inv)
 ```
 
 Input struct is NULL, will report error:
