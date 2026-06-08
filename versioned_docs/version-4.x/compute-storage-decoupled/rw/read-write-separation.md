@@ -34,7 +34,7 @@ The File Cache active incremental warm-up feature was introduced in Apache Doris
 
 File Cache active warm-up supports the following two types of cache synchronization:
 
-1. **Event-triggered warm-up**: Automatically triggers synchronization after write operations such as Load, Compaction, and Schema Change complete, reducing query jitter.
+1. **Event-triggered warm-up**: Automatically warms up data generated during Load, Compaction, and Schema Change, reducing query jitter.
 2. **Periodic hot-data sync**: Continuously syncs hot-query data to the target cluster through periodic scanning, ensuring stable performance of the standby cluster during primary/standby switchover.
 
 ---
@@ -50,7 +50,7 @@ The applicable scenarios for the three sync modes are as follows:
 |------|--------|----------|
 | One-time sync | `ONCE` | Manually triggered; suitable for initial warm-up when a new cluster comes online |
 | Periodic sync | `PERIODIC` | Scheduled sync of hot data; suitable for continuous warm-keeping scenarios |
-| Event-driven sync | `EVENT_DRIVEN` | Automatically triggered after Load, Compaction, or Schema Change operations |
+| Event-driven sync | `EVENT_DRIVEN` | Automatically warms up data generated during Load, Compaction, and Schema Change |
 
 ---
 
@@ -83,7 +83,7 @@ PROPERTIES (
 
 ### Event-Driven Sync
 
-Suitable for read/write separation scenarios, where new data is automatically warmed up to the read cluster after a write operation completes:
+Suitable for read/write separation scenarios, where data generated during Load, Compaction, and Schema Change is automatically warmed up to the read cluster:
 
 ```sql
 WARM UP COMPUTE GROUP <target_cluster> WITH COMPUTE GROUP <source_cluster>
@@ -93,7 +93,7 @@ PROPERTIES (
 );
 ```
 
-- `sync_event`: The type of event that triggers synchronization. Accepted values include `load`, `compaction`, and `schema_change`.
+- `sync_event`: Set this parameter to `load` when creating an event-driven warm-up job.
 
 ---
 

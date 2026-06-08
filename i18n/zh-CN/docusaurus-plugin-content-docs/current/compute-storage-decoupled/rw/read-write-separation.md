@@ -34,7 +34,7 @@ File Cache 主动增量预热功能已在 Apache Doris **3.1.0** 版本中引入
 
 File Cache 主动预热支持以下两类缓存同步方式：
 
-1. **事件触发预热**：在 Load、Compaction、Schema Change 等写操作完成后自动触发同步，减少查询抖动。
+1. **事件触发预热**：自动预热 Load、Compaction、Schema Change 过程中产生的数据，减少查询抖动。
 2. **热点周期同步**：通过周期性扫描，持续将热点查询数据同步到目标集群，保障主备切换时备集群性能稳定。
 
 ---
@@ -50,7 +50,7 @@ File Cache 主动预热支持以下两类缓存同步方式：
 |------|--------|----------|
 | 一次性同步 | `ONCE` | 手动触发，适用于新集群上线时的初始预热 |
 | 周期性同步 | `PERIODIC` | 定时同步热点数据，适用于持续保温场景 |
-| 事件驱动同步 | `EVENT_DRIVEN` | 导入、Compaction、Schema Change 操作后自动触发 |
+| 事件驱动同步 | `EVENT_DRIVEN` | 自动预热 Load、Compaction、Schema Change 过程中产生的数据 |
 
 ---
 
@@ -83,7 +83,7 @@ PROPERTIES (
 
 ### 事件驱动同步
 
-适用于读写分离场景，在写操作完成后自动将新数据预热到读集群：
+适用于读写分离场景，自动将 Load、Compaction、Schema Change 过程中产生的数据预热到读集群：
 
 ```sql
 WARM UP COMPUTE GROUP <target_cluster> WITH COMPUTE GROUP <source_cluster>
@@ -93,7 +93,7 @@ PROPERTIES (
 );
 ```
 
-- `sync_event`：触发事件类型，可选值包括 `load`（导入）、`compaction`（合并）、`schema_change`（结构变更）。
+- `sync_event`：创建事件驱动预热任务时，当前请配置为 `load`。
 
 ---
 
