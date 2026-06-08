@@ -7,7 +7,7 @@
 ---
 
 :::caution
-The `STRUCT_ELEMENT` function has been removed since version 4.1.3. Please use the [`ELEMENT_AT`](../variant-functions/element-at.md) function instead (or the equivalent subscript `s[k]` / `s['field_name']` and dot `s.field_name` syntax).
+The `STRUCT_ELEMENT` function has been removed since version 4.1.3. Since no other database or query engine provides this function, we removed it. Please use the [`ELEMENT_AT`](../variant-functions/element-at.md) function instead (or the equivalent subscript `s[k]` / `s['field_name']` and dot `s.field_name` syntax).
 :::
 
 ## Description

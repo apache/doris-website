@@ -111,7 +111,7 @@ A specific subcolumn inside a `STRUCT` can be accessed in the following equivale
 Where `k` is the position (a constant starting from 1) and `field_name` is the subcolumn name (a string constant). Field names are matched **case-insensitively**. Accessing a non-existent field name or an out-of-bound position reports an error.
 
 :::caution
-The `STRUCT_ELEMENT` function has been removed since version 4.1.3. Use `ELEMENT_AT` or the subscript / dot operators instead.
+The `STRUCT_ELEMENT` function has been removed since version 4.1.3. Since no other database or query engine provides this function, we removed it. Use `ELEMENT_AT` or the subscript / dot operators instead.
 :::
 
 - Use `ELEMENT_AT` or the subscript operator to access by position or field name.
