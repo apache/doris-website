@@ -6,6 +6,10 @@
 }
 ---
 
+:::caution
+因业界其他数据库和查询引擎均无此函数，`STRUCT_ELEMENT` 自 4.1.3 版本起已移除，请改用 [`ELEMENT_AT`](../variant-functions/element-at.md) 函数（或等价的下标 `s[k]` / `s['field_name']`、点运算符 `s.field_name` 语法）。
+:::
+
 ## 描述
 
 返回 struct 数据列内的某一字段。函数支持通过字段位置（索引）或字段名来访问结构体中的字段。
@@ -33,9 +37,10 @@ STRUCT_ELEMENT( <struct>, <field_location_or_name> )
 ## 使用说明
 
 - 支持通过字段位置（索引）访问，索引从1开始
-- 支持通过字段名访问，字段名必须完全匹配
+- 支持通过字段名访问，字段名按**大小写不敏感**匹配
 - 第二个参数必须是常量（不能是列）
 - 函数标记为 AlwaysNullable，返回值可能为 null
+- 自 4.1.3 版本起 `STRUCT_ELEMENT` 已被删除，请改用 `ELEMENT_AT(<struct>, ...)`、下标运算符 `<struct>[<index>]` / `<struct>['<field_name>']` 或点运算符 `<struct_col>.<field_name>` —— 它们都是访问 struct 字段的等价写法。
 
 ## 举例
 
@@ -59,6 +64,17 @@ select struct_element(named_struct('name', 'Alice', 'age', 25, 'city', 'Beijing'
 +------------------------------------------------------------------------------------+
 |                                                                                 25 |
 +------------------------------------------------------------------------------------+
+```
+
+使用下标运算符访问（等价于上述调用）：
+```sql
+select named_struct('name', 'Alice', 'age', 25, 'city', 'Beijing')[1] as by_index,
+       named_struct('name', 'Alice', 'age', 25, 'city', 'Beijing')['age'] as by_name;
++----------+---------+
+| by_index | by_name |
++----------+---------+
+| Alice    |      25 |
++----------+---------+
 ```
 
 访问包含有复杂类型的struct：
@@ -97,7 +113,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = the specified field index out o
 访问的第二个参数不是常量：
 ```sql
 select struct_element(named_struct('name', 'Alice', 'age', 25), inv) from var_with_index where k = 4;
-ERROR 1105 (HY000): errCode = 2, detailMessage = struct_element only allows constant int or string second parameter: struct_element(named_struct('name', 'Alice', 'age', 25), inv)
+ERROR 1105 (HY000): errCode = 2, detailMessage = element_at over a struct only allows a constant int or string second parameter: element_at(named_struct('name', 'Alice', 'age', 25), inv)
 ```
 
 输入的struct 为NULL，会报错：
