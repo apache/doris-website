@@ -39,6 +39,7 @@ Each rule is defined by the following properties that determine its behavior and
 | `cardinality` | Maximum number of rows allowed to scan | Positive integer |
 | `partition_num` | Maximum number of partitions allowed to scan | Positive integer |
 | `tablet_num` | Maximum number of tablets allowed to scan | Positive integer |
+| `require_partition_filter` | Whether partitioned internal table and Hive table queries must include an effective partition filter. Supported in Doris 4.0.7 and later in the 4.0 series, and in Doris 4.1.2 and later in the 4.1 series. | `"true"` or `"false"` |
 | `global` | Whether the rule is global | `"true"` (global) / `"false"` (only applies to bound users) |
 | `enable` | Whether the rule is enabled | `"true"` / `"false"` |
 
@@ -166,6 +167,22 @@ Similarly, you can use regular expressions to block `set global` (to prevent uni
 
 - To bind multiple rules to a user: separate all rule names in the rule list with commas, for example `'rule_001,rule_002'`.
 - To remove all rules from a user: set the rule list to an empty string, for example `SET PROPERTY FOR 'root' 'SQL_block_rules' = '';`.
+
+#### Case 6: Requiring Partition Filters
+
+For partitioned internal tables and Hive tables, missing partition-column filters can cause full partition scans. You can require queries on these partitioned tables to include an effective partition filter:
+
+```sql
+CREATE SQL_BLOCK_RULE rule_require_partition_filter
+PROPERTIES
+(
+   "require_partition_filter" = "true",
+   "global" = "true",
+   "enable" = "true"
+);
+```
+
+After the rule is enabled, a query such as `SELECT * FROM partitioned_table` will be blocked. Queries with partition predicates, such as `SELECT * FROM partitioned_table WHERE dt = '2024-01-01'`, can continue to run.
 
 ### Notes
 
