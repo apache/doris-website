@@ -220,7 +220,9 @@ function writeStepSummary() {
     if (uniqueBrokenLinks.length === 0) {
         markdown += `| - | 无失效链接 | - |\n`;
     } else {
-        for (const item of uniqueBrokenLinks) {
+        const limit = 100;
+        const displayed = uniqueBrokenLinks.slice(0, limit);
+        for (const item of displayed) {
              const refLinks = item.references.map(ref => {
                 if (ref.link) {
                     return `[\`${ref.file}\`](${encodeURI(ref.link)})`;
@@ -229,6 +231,10 @@ function writeStepSummary() {
             }).join('<br>');
 
             markdown += `| \`${item.url}\` | \`${item.errorReason}\` | ${refLinks} |\n`;
+        }
+        if (uniqueBrokenLinks.length > limit) {
+            markdown += `\n> [!NOTE]\n`;
+            markdown += `> 由于失效链接数量较多，GitHub 步骤总结（Step Summary）已做截断，仅显示前 ${limit} 个。其余 ${uniqueBrokenLinks.length - limit} 个失效链接已省略，请通过 Feishu 报警消息或运行日志获取完整列表。\n\n`;
         }
     }
 
