@@ -38,7 +38,8 @@ function resolveSourceFile(cleanParent) {
     if (!cleanParent || cleanParent === 'Unknown' || cleanParent === '/') {
         return {
             file: 'src/pages/index.tsx (首页)',
-            link: `${serverUrl}/${repoName}/blob/${commitSha}/src/pages/index.tsx`
+            link: `${serverUrl}/${repoName}/blob/${commitSha}/src/pages/index.tsx`,
+            localPath: 'src/pages/index.tsx'
         };
     }
     
@@ -49,7 +50,8 @@ function resolveSourceFile(cleanParent) {
     if (decodedPath === '') {
         return {
             file: 'src/pages/index.tsx (首页)',
-            link: `${serverUrl}/${repoName}/blob/${commitSha}/src/pages/index.tsx`
+            link: `${serverUrl}/${repoName}/blob/${commitSha}/src/pages/index.tsx`,
+            localPath: 'src/pages/index.tsx'
         };
     }
 
@@ -73,7 +75,8 @@ function resolveSourceFile(cleanParent) {
         if (fs.existsSync(path.join(process.cwd(), cand))) {
             return {
                 file: cand,
-                link: `${serverUrl}/${repoName}/blob/${commitSha}/${cand}`
+                link: `${serverUrl}/${repoName}/blob/${commitSha}/${cand}`,
+                localPath: cand
             };
         }
     }
@@ -82,21 +85,64 @@ function resolveSourceFile(cleanParent) {
     if (decodedPath.startsWith('blog/detail')) {
         return {
             file: 'src/pages/blog/detail/index.tsx (博客详情页)',
-            link: `${serverUrl}/${repoName}/blob/${commitSha}/src/pages/blog/detail/index.tsx`
+            link: `${serverUrl}/${repoName}/blob/${commitSha}/src/pages/blog/detail/index.tsx`,
+            localPath: 'src/pages/blog/detail/index.tsx'
         };
     }
     if (decodedPath === 'blog') {
         return {
             file: 'src/pages/blog/index.tsx (博客列表页)',
-            link: `${serverUrl}/${repoName}/blob/${commitSha}/src/pages/blog/index.tsx`
+            link: `${serverUrl}/${repoName}/blob/${commitSha}/src/pages/blog/index.tsx`,
+            localPath: 'src/pages/blog/index.tsx'
         };
     }
     
     // Return decoded path as fallback
     return {
         file: decodedPath,
-        link: `${serverUrl}/${repoName}/blob/${commitSha}/${decodedPath}`
+        link: `${serverUrl}/${repoName}/blob/${commitSha}/${decodedPath}`,
+        localPath: decodedPath
     };
+}
+
+function findLineNumber(localPath, targetUrl) {
+    if (!localPath || !fs.existsSync(localPath)) return 0;
+    try {
+        const content = fs.readFileSync(localPath, 'utf8');
+        const lines = content.split('\n');
+        
+        // 1. Search for the exact URL string
+        for (let i = 0; i < lines.length; i++) {
+            if (lines[i].includes(targetUrl)) {
+                return i + 1;
+            }
+        }
+        
+        // 2. Search for path segment
+        const urlObj = new URL(targetUrl, 'http://localhost:3000');
+        const searchPath = urlObj.pathname.replace(/^\/|\/$/g, '');
+        if (searchPath) {
+            const searchDecoded = decodeURIComponent(searchPath);
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].includes(searchPath) || lines[i].includes(searchDecoded)) {
+                    return i + 1;
+                }
+            }
+            // Try searching for the last segment of the path
+            const segments = searchDecoded.split('/');
+            const lastSegment = segments[segments.length - 1];
+            if (lastSegment && lastSegment.length > 3) {
+                for (let i = 0; i < lines.length; i++) {
+                    if (lines[i].includes(lastSegment)) {
+                        return i + 1;
+                    }
+                }
+            }
+        }
+    } catch (err) {
+        // Silent catch
+    }
+    return 0;
 }
 
 // Process and group broken links by URL
@@ -114,18 +160,28 @@ for (const link of brokenLinks) {
     if (link.status === 200 && link.url.includes('#')) {
         const hashMatch = link.url.match(/#.*/);
         const hash = hashMatch ? hashMatch[0] : '';
-        errorReason = `200 (锚点 ${hash} 未找到)`;
+        errorReason = `200 (锚点 ${hash} 未找到 / Anchor Not Found)`;
         cntAnchor++;
     } else if (link.status === 404) {
+        errorReason = '404 (页面不存在 / Page Not Found)';
         cnt404++;
+    } else if (link.status === 403) {
+        errorReason = '403 (无访问权限 / Forbidden)';
+        cntOther++;
+    } else if (link.status >= 500) {
+        errorReason = `${link.status} (服务器内部错误 / Internal Server Error)`;
+        cntOther++;
     } else if (!link.status || link.status === 0) {
-        errorReason = 'Timeout / Network Error';
+        errorReason = '连接超时或网络异常 (Timeout / Network Error)';
         cntTimeout++;
     } else {
         cntOther++;
     }
 
-    const { file: resolvedFile, link: fileLink } = resolveSourceFile(cleanParent);
+    const { file: resolvedFile, link: fileLink, localPath } = resolveSourceFile(cleanParent);
+    const line = findLineNumber(localPath, link.url);
+    const finalLink = line ? `${fileLink}#L${line}` : fileLink;
+    const displayFile = line ? `${resolvedFile}:${line}` : resolvedFile;
 
     if (!urlMap.has(cleanUrl)) {
         urlMap.set(cleanUrl, {
@@ -135,8 +191,8 @@ for (const link of brokenLinks) {
         });
     }
     urlMap.get(cleanUrl).references.push({
-        file: resolvedFile,
-        link: fileLink
+        file: displayFile,
+        link: finalLink
     });
 }
 
@@ -163,13 +219,12 @@ function writeStepSummary() {
         markdown += `| - | 无失效链接 | - |\n`;
     } else {
         for (const item of uniqueBrokenLinks) {
-            const refLinks = item.references.map(ref => {
+             const refLinks = item.references.map(ref => {
                 if (ref.link) {
                     return `[\`${ref.file}\`](${encodeURI(ref.link)})`;
                 }
                 return `\`${ref.file}\``;
             }).join('<br>');
-
 
             markdown += `| \`${item.url}\` | \`${item.errorReason}\` | ${refLinks} |\n`;
         }
