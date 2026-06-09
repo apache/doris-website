@@ -164,7 +164,7 @@ LOAD LABEL db.label_wildcard
 )
 WITH S3 (
     "provider" = "S3",
-    "AWS_ENDPOINT" = "s3.us-west-2.amazonaws.com",
+    "AWS_ENDPOINT" = "https://s3.us-west-2.amazonaws.com",
     "AWS_ACCESS_KEY" = "xxx",
     "AWS_SECRET_KEY" = "xxx",
     "AWS_REGION" = "us-west-2"
@@ -184,7 +184,7 @@ LOAD LABEL db.label_range
 )
 WITH S3 (
     "provider" = "S3",
-    "AWS_ENDPOINT" = "s3.us-west-2.amazonaws.com",
+    "AWS_ENDPOINT" = "https://s3.us-west-2.amazonaws.com",
     "AWS_ACCESS_KEY" = "xxx",
     "AWS_SECRET_KEY" = "xxx",
     "AWS_REGION" = "us-west-2"

@@ -157,7 +157,7 @@ PROPERTIES (
 CREATE STORAGE VAULT IF NOT EXISTS s3_demo_vault
 PROPERTIES (
     "type" = "S3",                                      -- required
-    "s3.endpoint" = "s3.us-east-1.amazonaws.com",       -- required
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",       -- required
     "s3.access_key" = "xxxxxx",                         -- required,  Your S3 access key
     "s3.secret_key" = "xxxxxx",                         -- required,  Your S3 secret key
     "s3.region" = "us-east-1",                          -- required

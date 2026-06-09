@@ -26,7 +26,7 @@ WITH S3
 ON LOCATION "s3://bucket_name/s3_repo"
 PROPERTIES
 (
-    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.access_key" = "ak",
     "s3.secret_key" = "sk"
