@@ -36,20 +36,37 @@ const branchName = process.env.GITHUB_REF_NAME || 'master';
 
 function resolveSourceFile(cleanParent) {
     if (!cleanParent || cleanParent === 'Unknown' || cleanParent === '/') {
-        return { file: 'Unknown', link: '' };
+        return {
+            file: 'src/pages/index.tsx (首页)',
+            link: `${serverUrl}/${repoName}/blob/${commitSha}/src/pages/index.tsx`
+        };
     }
-    const relativePath = decodeURIComponent(cleanParent.replace(/^\/|\/$/g, ''));
+    
+    // 1. Remove query parameters and hash fragments
+    const pathOnly = cleanParent.split(/[?#]/)[0];
+    const decodedPath = decodeURIComponent(pathOnly.replace(/^\/|\/$/g, ''));
+    
+    if (decodedPath === '') {
+        return {
+            file: 'src/pages/index.tsx (首页)',
+            link: `${serverUrl}/${repoName}/blob/${commitSha}/src/pages/index.tsx`
+        };
+    }
 
-    // Default: look up in the current repository
+    // 2. Candidate files list for local lookup (markdown/docs/pages)
     const candidates = [
-        relativePath + '.md',
-        relativePath + '.mdx',
-        relativePath + '/index.md',
-        relativePath + '/index.mdx',
-        'docs/' + relativePath + '.md',
-        'docs/' + relativePath + '.mdx',
-        'docs/' + relativePath + '/index.md',
-        'docs/' + relativePath + '/index.mdx',
+        decodedPath + '.md',
+        decodedPath + '.mdx',
+        decodedPath + '/index.md',
+        decodedPath + '/index.mdx',
+        'docs/' + decodedPath + '.md',
+        'docs/' + decodedPath + '.mdx',
+        'docs/' + decodedPath + '/index.md',
+        'docs/' + decodedPath + '/index.mdx',
+        'src/pages/' + decodedPath + '.tsx',
+        'src/pages/' + decodedPath + '/index.tsx',
+        'src/pages/' + decodedPath + '.js',
+        'src/pages/' + decodedPath + '/index.js',
     ];
 
     for (const cand of candidates) {
@@ -61,9 +78,24 @@ function resolveSourceFile(cleanParent) {
         }
     }
     
+    // 3. Special Docusaurus components mapping / fallbacks
+    if (decodedPath.startsWith('blog/detail')) {
+        return {
+            file: 'src/pages/blog/detail/index.tsx (博客详情页)',
+            link: `${serverUrl}/${repoName}/blob/${commitSha}/src/pages/blog/detail/index.tsx`
+        };
+    }
+    if (decodedPath === 'blog') {
+        return {
+            file: 'src/pages/blog/index.tsx (博客列表页)',
+            link: `${serverUrl}/${repoName}/blob/${commitSha}/src/pages/blog/index.tsx`
+        };
+    }
+    
+    // Return decoded path as fallback
     return {
-        file: relativePath,
-        link: `${serverUrl}/${repoName}/blob/${commitSha}/${relativePath}`
+        file: decodedPath,
+        link: `${serverUrl}/${repoName}/blob/${commitSha}/${decodedPath}`
     };
 }
 
