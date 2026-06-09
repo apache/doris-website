@@ -119,7 +119,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
     WITH S3
     (
         "provider" = "S3",
-        "AWS_ENDPOINT" = "s3.us-west-2.amazonaws.com",
+        "AWS_ENDPOINT" = "https://s3.us-west-2.amazonaws.com",
         "AWS_ACCESS_KEY" = "<your-ak>",
         "AWS_SECRET_KEY"="<your-sk>",
         "AWS_REGION" = "us-west-2",

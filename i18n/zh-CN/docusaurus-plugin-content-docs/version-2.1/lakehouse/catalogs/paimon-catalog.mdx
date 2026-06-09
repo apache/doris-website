@@ -184,7 +184,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 'warehouse' = 's3://bucket/paimon_warehouse',
                 's3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
@@ -318,7 +318,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 's3.region' = 'ap-east-1',
                 'paimon.s3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 'paimon.s3.endpoint' = 'ap-east-1',
                 's3.access_key' = '<ak>',
                 'paimon.s3.access-key' = '<ak>',
@@ -472,7 +472,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 's3://bucket/paimon_warehouse',
                 's3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
@@ -592,7 +592,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 's3://bucket/paimon_warehouse',
                 's3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
@@ -1154,12 +1154,12 @@ SELECT `bucket` , COUNT(*) as file_count, SUM(file_size_in_bytes)/1024/1024 as t
         "s3.access_key" = "<ak>",
         "s3.secret_key" = "<sk>",
         "s3.region" = "ap-east-1",
-        "s3.endpoint" = "s3.ap-east-1.amazonaws.com",
+        "s3.endpoint" = "https://s3.ap-east-1.amazonaws.com",
         -- explicitly add s3a parameters
         "fs.s3a.access.key"="<ak>",
         "fs.s3a.secret.key"="<sk>",
         "fs.s3a.endpoint.region"="ap-east-1",
-        "fs.s3a.endpoint"="s3.ap-east-1.amazonaws.com",
+        "fs.s3a.endpoint"="https://s3.ap-east-1.amazonaws.com",
         "fs.s3a.impl"= "org.apache.hadoop.fs.s3a.S3AFileSystem",
     ); 
     ``` 
@@ -1173,7 +1173,7 @@ SELECT `bucket` , COUNT(*) as file_count, SUM(file_size_in_bytes)/1024/1024 as t
         'warehouse' = 's3://bucket-hk/paimon_warehouse',
         'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
         's3.region' = 'ap-east-1',
-        's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+        's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
         's3.access_key' = '<ak>',
         's3.secret_key' = '<sk>',
         -- explicitly add s3 parameters

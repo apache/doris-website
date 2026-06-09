@@ -131,7 +131,7 @@ The user executing this SQL command must have at least the following privileges:
         "uri" = "s3://bucket/s3/demo/*.csv",
         "format" = "csv",
         "column_separator" = ",",
-        "s3.endpoint" = "s3.ap-southeast-1.amazonaws.com",
+        "s3.endpoint" = "https://s3.ap-southeast-1.amazonaws.com",
         "s3.region" = "ap-southeast-1",
         "s3.access_key" = "",
         "s3.secret_key" = ""

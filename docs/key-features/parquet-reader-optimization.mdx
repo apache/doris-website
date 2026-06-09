@@ -65,7 +65,7 @@ SELECT region, count(*) AS orders, sum(amount) AS revenue
 FROM s3(
   "uri"    = "s3://demo-bucket/orders/year=2026/*.parquet",
   "format" = "parquet",
-  "s3.endpoint"   = "s3.us-east-1.amazonaws.com",
+  "s3.endpoint"   = "https://s3.us-east-1.amazonaws.com",
   "s3.access_key" = "AK...",
   "s3.secret_key" = "SK..."
 )

@@ -36,7 +36,7 @@ CREATE CATALOG iceberg_catalog PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = 'hadoop',
     'warehouse' = 's3://bucket/dir/key',
-    's3.endpoint' = 's3.us-east-1.amazonaws.com',
+    's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.access_key' = 'ak',
     's3.secret_key' = 'sk'
 );

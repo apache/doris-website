@@ -75,7 +75,7 @@ LOAD LABEL s3_load_2022_04_01
 WITH S3
 (
     "provider" = "S3",
-    "s3.endpoint" = "s3.us-west-2.amazonaws.com",
+    "s3.endpoint" = "https://s3.us-west-2.amazonaws.com",
     "s3.region" = "us-west-2",
     "s3.access_key" = "<your-ak>",
     "s3.secret_key" = "<your-sk>"
@@ -170,7 +170,7 @@ SELECT * FROM S3
 (
     "uri" = "s3://your_bucket_name/s3load_example.csv",
     "format" = "csv",
-    "s3.endpoint" = "s3.us-west-2.amazonaws.com",
+    "s3.endpoint" = "https://s3.us-west-2.amazonaws.com",
     "s3.region" = "us-west-2",
     "s3.access_key" = "<your-ak>",
     "s3.secret_key" = "<your-sk>",

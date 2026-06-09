@@ -364,7 +364,7 @@ Storage Vaults are an important component of the Doris storage-compute separatio
    CREATE STORAGE VAULT IF_NOT_EXISTS s3_vault
        PROPERTIES (
        "type"="S3",
-       "s3.endpoint"="s3.us-east-1.amazonaws.com",
+       "s3.endpoint"="https://s3.us-east-1.amazonaws.com",
        "s3.access_key" = "ak",
        "s3.secret_key" = "sk",
        "s3.region" = "us-east-1",
