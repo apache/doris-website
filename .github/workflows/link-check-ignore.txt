@@ -1,0 +1,9 @@
+# Ignore Mozilla domains which often return 403 to crawlers
+^https?://([^/]+\.)?mozilla\.org
+
+# Ignore LinkedIn which blocks GitHub Action runners
+^https?://([^/]+\.)?linkedin\.com
+
+# Ignore Docker Hub / GitHub internal API URLs which might throttle/block automated requests
+^https?://hub\.docker\.com
+^https?://github\.com/apache/doris-website/pull/

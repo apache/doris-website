@@ -12,9 +12,23 @@ jobs:
   cron-crawler:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Run Crawler Link Checker
         run: |
-          npx -y linkinator https://doris.apache.org --recurse --check-images --skip "^(?!https?://(www\.)?doris\.apache\.org)" --format json > link_results.json || echo "HAS_BROKEN=true"
+          # Read ignore list and build linkinator skips
+          skips=()
+          if [ -f .github/workflows/link-check-ignore.txt ]; then
+            while IFS= read -r line || [ -n "$line" ]; do
+              # Skip empty lines and comments
+              if [[ ! "$line" =~ ^# ]] && [[ -n "$line" ]]; then
+                skips+=("--skip" "$line")
+              fi
+            done < .github/workflows/link-check-ignore.txt
+          fi
+
+          npx -y linkinator https://doris.apache.org --recurse --check-images --skip "^(?!https?://(www\.)?doris\.apache\.org)" "${skips[@]}" --format json > link_results.json || echo "HAS_BROKEN=true"
 
       - name: Send Feishu Notification on failure
         if: always()
