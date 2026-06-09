@@ -21,7 +21,7 @@ try {
     process.exit(0);
 }
 
-const brokenLinks = (data.links || []).filter(link => !link.success);
+const brokenLinks = (data.links || []).filter(link => link.state === 'BROKEN');
 
 // Resolve repo name to determine specific doc mappings
 const repoName = process.env.GITHUB_REPOSITORY || 'doris-website';
@@ -160,23 +160,25 @@ for (const link of brokenLinks) {
     if (link.status === 200 && link.url.includes('#')) {
         const hashMatch = link.url.match(/#.*/);
         const hash = hashMatch ? hashMatch[0] : '';
-        errorReason = `200 (锚点 ${hash} 未找到 / Anchor Not Found)`;
+        errorReason = `锚点失效: 页面可访问但 ${hash} 锚点不存在 (Anchor Not Found)`;
         cntAnchor++;
     } else if (link.status === 404) {
-        errorReason = '404 (页面不存在 / Page Not Found)';
+        errorReason = '404: 页面不存在，请检查链接拼写或目标是否已被删除 (Page Not Found)';
         cnt404++;
     } else if (link.status === 403) {
-        errorReason = '403 (无访问权限 / Forbidden)';
+        errorReason = '403: 服务器拒绝访问，可能是鉴权过期或有防爬虫限制 (Forbidden)';
         cntOther++;
     } else if (link.status >= 500) {
-        errorReason = `${link.status} (服务器内部错误 / Internal Server Error)`;
+        errorReason = `${link.status}: 目标网站服务错误，请确认服务是否正常运行 (Server Error)`;
         cntOther++;
     } else if (!link.status || link.status === 0) {
-        errorReason = '连接超时或网络异常 (Timeout / Network Error)';
+        errorReason = '网络超时/异常: 连接被拒绝或超时，请确认目标链接能否正常访问 (Timeout/Network)';
         cntTimeout++;
     } else {
+        errorReason = `HTTP ${link.status}: 异常状态码，请点击死链地址确认 (Unexpected Status)`;
         cntOther++;
     }
+
 
     const { file: resolvedFile, link: fileLink, localPath } = resolveSourceFile(cleanParent);
     const line = findLineNumber(localPath, link.url);
