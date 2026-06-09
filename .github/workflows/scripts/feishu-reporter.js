@@ -23,6 +23,84 @@ try {
 
 const brokenLinks = (data.links || []).filter(link => !link.success);
 
+function resolveSourceFile(cleanParent) {
+    if (!cleanParent || cleanParent === 'Unknown' || cleanParent === '/') {
+        return 'Unknown';
+    }
+    const relativePath = cleanParent.replace(/^\/|\/$/g, '');
+    const candidates = [
+        relativePath + '.md',
+        relativePath + '.mdx',
+        relativePath + '/index.md',
+        relativePath + '/index.mdx',
+        'docs/' + relativePath + '.md',
+        'docs/' + relativePath + '.mdx',
+        'docs/' + relativePath + '/index.md',
+        'docs/' + relativePath + '/index.mdx',
+    ];
+
+    for (const cand of candidates) {
+        if (fs.existsSync(path.join(process.cwd(), cand))) {
+            return cand;
+        }
+    }
+    return relativePath;
+}
+
+function writeStepSummary(brokenLinks) {
+    const summaryFile = process.env.GITHUB_STEP_SUMMARY;
+    if (!summaryFile) return;
+
+    const repoName = process.env.GITHUB_REPOSITORY || 'doris-website';
+    const commitSha = process.env.GITHUB_SHA || 'master';
+    const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com';
+    const eventName = process.env.GITHUB_EVENT_NAME === 'schedule' ? 'Schedule (凌晨例行巡检)' : (process.env.GITHUB_EVENT_NAME || 'manual');
+    const branchName = process.env.GITHUB_REF_NAME || 'master';
+
+    let markdown = `# 🔍 链路检测排错报告 (Link Checker Report)\n\n`;
+
+    if (brokenLinks.length > 0) {
+        markdown += `> [!WARNING]\n`;
+        markdown += `> **本次检测共发现 ${brokenLinks.length} 处失效链接！** 请开发人员点击下表中【引用源文件】中的蓝色链接，直接跳转到 GitHub 代码行进行修复。\n\n`;
+    } else {
+        markdown += `> [!NOTE]\n`;
+        markdown += `> **本次检测未发现失效链接。** 链路状态良好！\n\n`;
+    }
+
+    markdown += `| 📌 引用源文件 (Where Referenced) | 🔗 失效链接 (Broken Link) | ❌ 错误原因 (Error Reason) |\n`;
+    markdown += `| :--- | :--- | :--- |\n`;
+
+    if (brokenLinks.length === 0) {
+        markdown += `| - | 无失效链接 | - |\n`;
+    } else {
+        for (const link of brokenLinks) {
+            const cleanUrl = link.url.replace(/^http:\/\/localhost:\d+/, '');
+            const cleanParent = link.parent ? link.parent.replace(/^http:\/\/localhost:\d+/, '') : 'Unknown';
+            const resolvedFile = resolveSourceFile(cleanParent);
+            const fileLink = resolvedFile !== 'Unknown' ? `${serverUrl}/${repoName}/blob/${commitSha}/${resolvedFile}` : '';
+            const fileDisplay = resolvedFile !== 'Unknown' ? resolvedFile : 'Unknown';
+            
+            const fileCol = fileLink ? `[\`${fileDisplay}\`](${fileLink})` : `\`${fileDisplay}\``;
+            markdown += `| ${fileCol} | \`${cleanUrl}\` | \`${link.status || 'Broken'}\` |\n`;
+        }
+    }
+
+    markdown += `\n---\n`;
+    markdown += `**📊 运行元信息：**\n`;
+    markdown += `* **检测分支**: \`${branchName}\`\n`;
+    markdown += `* **触发类型**: \`${eventName}\`\n`;
+    markdown += `* **检测时间**: \`${new Date().toISOString().replace('T', ' ').substring(0, 19)} (UTC)\`\n`;
+
+    try {
+        fs.appendFileSync(summaryFile, markdown);
+    } catch (err) {
+        console.error('Failed to write GITHUB_STEP_SUMMARY:', err.message);
+    }
+}
+
+// Write Step Summary in all cases
+writeStepSummary(brokenLinks);
+
 if (brokenLinks.length === 0) {
     console.log('No broken links found. Exiting with success.');
     process.exit(0);
@@ -30,7 +108,6 @@ if (brokenLinks.length === 0) {
 
 console.log(`Found ${brokenLinks.length} broken links.`);
 
-// Gather env variables from GitHub Actions
 const repoName = process.env.GITHUB_REPOSITORY || 'doris-website';
 const runId = process.env.GITHUB_RUN_ID || '';
 const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com';
@@ -39,19 +116,17 @@ const prNumber = process.env.GITHUB_EVENT_NAME === 'pull_request' ? (process.env
 const actor = process.env.GITHUB_ACTOR || 'system';
 const eventName = process.env.GITHUB_EVENT_NAME === 'schedule' ? '每日例行巡检' : 'PR 提交';
 
-// Format broken links to Markdown
 const limit = 10;
 const displayedBroken = brokenLinks.slice(0, limit);
 const brokenListMd = displayedBroken.map((link, idx) => {
-    // Strip domain prefix for cleaner log
-    const cleanUrl = link.url.replace(/^https?:\/\/(www\.)?doris\.apache\.org/, '');
-    const cleanParent = link.parent ? link.parent.replace(/^https?:\/\/(www\.)?doris\.apache\.org/, '') : 'Unknown';
-    return `${idx + 1}. ❌ **[${link.status || 'Broken'}]** ${cleanUrl}\n    🔍 引用源文件: \`${cleanParent}\``;
+    const cleanUrl = link.url.replace(/^http:\/\/localhost:\d+/, '');
+    const cleanParent = link.parent ? link.parent.replace(/^http:\/\/localhost:\d+/, '') : 'Unknown';
+    const resolvedFile = resolveSourceFile(cleanParent);
+    return `${idx + 1}. ❌ **[${link.status || 'Broken'}]** ${cleanUrl}\n    🔍 引用源文件: \`${resolvedFile}\``;
 }).join('\n');
 
-const totalText = brokenLinks.length > limit ? `\n\n...以及其他 ${brokenLinks.length - limit} 个死链，请点击下方按钮查看完整日志。` : '';
+const totalText = brokenLinks.length > limit ? `\n\n...以及其他 ${brokenLinks.length - limit} 个死链，请点击下方按钮查看完整排错报告。` : '';
 
-// Construct Feishu Card Payload
 const payload = {
     msg_type: 'interactive',
     card: {
@@ -87,7 +162,7 @@ const payload = {
                         tag: 'button',
                         text: {
                             tag: 'plain_text',
-                            content: '查看 GitHub Actions 完整日志'
+                            content: '查看详细排错报告'
                         },
                         type: 'primary',
                         url: runUrl
@@ -98,7 +173,6 @@ const payload = {
     }
 };
 
-// Send to Feishu Webhook
 const payloadStr = JSON.stringify(payload, null, 2);
 if (process.env.DEBUG === 'true') {
     console.log('--- Generated Feishu Card Payload ---');
@@ -128,14 +202,12 @@ const req = protocol.request(options, (res) => {
     res.on('end', () => {
         console.log(`Feishu response status: ${res.statusCode}`);
         console.log(`Feishu response body: ${body}`);
-        // Exit with 1 to indicate step failure to GitHub
         process.exit(1);
     });
 });
 
 req.on('error', (e) => {
     console.error(`Problem sending request to Feishu: ${e.message}`);
-    // Still exit with 1 to fail the check
     process.exit(1);
 });
 
