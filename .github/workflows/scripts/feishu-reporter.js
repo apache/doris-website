@@ -165,10 +165,11 @@ function writeStepSummary() {
         for (const item of uniqueBrokenLinks) {
             const refLinks = item.references.map(ref => {
                 if (ref.link) {
-                    return `[\`${ref.file}\`](${ref.link})`;
+                    return `[\`${ref.file}\`](${encodeURI(ref.link)})`;
                 }
                 return `\`${ref.file}\``;
             }).join('<br>');
+
 
             markdown += `| \`${item.url}\` | \`${item.errorReason}\` | ${refLinks} |\n`;
         }
