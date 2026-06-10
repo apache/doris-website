@@ -29,6 +29,8 @@ const prNumber = process.env.GITHUB_EVENT_NAME === 'pull_request' ? (process.env
 const actor = process.env.GITHUB_ACTOR || 'system';
 const eventName = process.env.GITHUB_EVENT_NAME === 'schedule' ? '每日例行巡检' : 'PR 提交';
 const branchName = process.env.GITHUB_REF_NAME || 'master';
+const linkCheckMode = process.env.LINK_CHECK_MODE || 'online';
+const linkCheckTarget = process.env.LINK_CHECK_TARGET || 'https://doris.apache.org';
 
 function resolveSourceFile(cleanParent) {
     if (!cleanParent || cleanParent === 'Unknown' || cleanParent === '/') {
@@ -39,9 +41,8 @@ function resolveSourceFile(cleanParent) {
         };
     }
     
-    // 1. Remove query parameters and hash fragments
-    const pathOnly = cleanParent.split(/[?#]/)[0];
-    let decodedPath = decodeURIComponent(pathOnly.replace(/^\/|\/$/g, ''));
+    // 1. Normalize absolute or relative URLs to a pathname without query/hash.
+    let decodedPath = decodeURIComponent(new URL(cleanParent, 'http://localhost:3000').pathname.replace(/^\/|\/$/g, ''));
 
     // Normalize Docusaurus static-build URLs emitted by `serve build`.
     decodedPath = decodedPath
@@ -277,6 +278,8 @@ function writeStepSummary() {
 
     markdown += `\n---\n`;
     markdown += `**📊 运行元信息：**\n`;
+    markdown += `* **扫描模式**: \`${linkCheckMode}\`\n`;
+    markdown += `* **扫描目标**: \`${linkCheckTarget}\`\n`;
     markdown += `* **检测分支**: \`${branchName}\`\n`;
     markdown += `* **触发类型**: \`${eventName}\`\n`;
     markdown += `* **检测时间**: \`${new Date().toISOString().replace('T', ' ').substring(0, 19)} (UTC)\`\n`;
@@ -323,7 +326,7 @@ const payload = {
                 tag: 'div',
                 text: {
                     tag: 'lark_md',
-                    content: `**触发场景**: ${eventName}\n**提交人**: @${actor}${prNumber ? `\n**PR号**: #${prNumber}` : ''}\n**总失效链接数**: **${brokenLinks.length}** 个`
+                    content: `**触发场景**: ${eventName}\n**扫描模式**: ${linkCheckMode}\n**扫描目标**: ${linkCheckTarget}\n**提交人**: @${actor}${prNumber ? `\n**PR号**: #${prNumber}` : ''}\n**总失效链接数**: **${brokenLinks.length}** 个`
                 }
             },
             {
