@@ -63,4 +63,4 @@ set parallel_pipeline_task_num = 0;
 
 ### 导入
 
-导入的引擎选择设置，详见[导入](../../data-operate/import/load-manual)文档。
+导入的引擎选择设置，详见导入文档。

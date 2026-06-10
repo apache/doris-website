@@ -30,9 +30,9 @@
 
 	For more infomation, please see the documentations:
 	
-	- [Log Management - FE Log](../../admin-manual/log-management/fe-log)
+	- [Log Management - FE Log](../../versioned_docs/version-2.1/admin-manual/log-management/fe-log.md)
 
-	- [Log Management - BE Log](../../admin-manual/log-management/be-log)
+	- [Log Management - BE Log](../../versioned_docs/version-2.1/admin-manual/log-management/be-log.md)
 
 - If no table comment is provided when creating a table, the default comment will be empty instead of using the table type as the default comment. [#36025](https://github.com/apache/doris/pull/36025)
 
@@ -44,7 +44,7 @@
 
 - Support FE flame graph tool
   
-  For more information, see the [documentation](/community/developer-guide/fe-profiler.md)
+  For more information, see the [documentation](../../community/developer-guide/fe-profiler.md)
   
 - Support `SELECT DISTINCT` to be used with aggregation.
 
@@ -64,9 +64,9 @@
 
 - Build support for internal table triggered updates, where if a materialized view uses an internal table and the data in the internal table changes, it can trigger a refresh of the materialized view, specifying REFRESH ON COMMIT when creating the materialized view.
 
-- Support transparent rewriting for single tables. For more information, see [Querying Async Materialized View](../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands.md).
+- Support transparent rewriting for single tables. For more information, see [Querying Async Materialized View](../../versioned_docs/version-2.1/query-acceleration/materialized-view/async-materialized-view/functions-and-demands.md).
 
-- Transparent rewriting supports aggregation roll-up for agg_state, agg_union types; materialized views can be defined as agg_state or agg_union, queries can use specific aggregation functions, or use agg_merge. For more information, see [AGG_STATE](../../sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE.md)
+- Transparent rewriting supports aggregation roll-up for agg_state, agg_union types; materialized views can be defined as agg_state or agg_union, queries can use specific aggregation functions, or use agg_merge. For more information, see [AGG_STATE](../../versioned_docs/version-2.1/sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE.md)
 
 ### Others
 
@@ -75,8 +75,6 @@
 	For more information, see [documentation]../sql-manual/sql-functions/string-functions/replace_empty).
 
 - Support `show storage policy using` statement.
-
-	For more information, see [documentation](../../sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY-USING).
 
 - Support JVM metrics on the BE side.
 

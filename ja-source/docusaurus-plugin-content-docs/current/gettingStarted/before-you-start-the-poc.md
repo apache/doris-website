@@ -6,6 +6,8 @@
   "sidebar_label": "Before You Start the POC"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 # POCを開始する前に
 
 この文書は、新規ユーザーが遭遇する可能性のある一般的な問題をハイライトし、POCプロセスを加速することを目的としています。
@@ -104,6 +106,6 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 ### Query
 
 - **データの偏り。** `SHOW TABLETS` でタブレットサイズを確認してください。サイズが大幅に異なる場合は、Random bucketing またはより高いカーディナリティのバケット列に切り替えてください。
-- **間違ったソートキーの順序。** [Sort Key](#sort-key) を参照してください。
+- **間違ったソートキーの順序。** [Sort Key](#pocを開始する前に) を参照してください。
 
 遅いクエリを診断するには [Query Profile](../query-acceleration/query-profile) を参照してください。

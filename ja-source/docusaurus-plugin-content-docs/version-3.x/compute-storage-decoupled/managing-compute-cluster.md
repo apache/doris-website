@@ -5,6 +5,9 @@
   "description": "コンピュート・ストレージ分離アーキテクチャにおいて、1つ以上のコンピュートノード（BE）をCompute Groupにグループ化することができます。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="setting-default-compute-group"></a>
 コンピュート・ストレージ分離アーキテクチャでは、1つまたは複数のコンピュートノード（BE）をCompute Groupにグループ化できます。このドキュメントでは、以下のような操作を含むcompute groupsの使用方法について説明します：
 
 - 全compute groupsの表示

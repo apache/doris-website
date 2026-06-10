@@ -223,7 +223,7 @@ mysql> select * from test_s3load;
 
 <!-- Knowledge type: Configuration / Authentication -->
 
-In addition to using Access Key / Secret Key, Doris also supports authenticating S3 Load and TVF via `AWS Assume Role`. This is suitable for enterprises with restrictions on distributing credentials. For detailed configuration, see [AWS Integration - Assumed Role Authentication](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+In addition to using Access Key / Secret Key, Doris also supports authenticating S3 Load and TVF via `AWS Assume Role`. This is suitable for enterprises with restrictions on distributing credentials. For detailed configuration, see [AWS Integration - Assumed Role Authentication](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication-and-authorization).
 
 ## FAQ
 
@@ -263,4 +263,4 @@ Increase `timeout` in `PROPERTIES` (in seconds) appropriately. The example uses 
 ## Related documents
 
 - [Broker Load Manual](../import-way/broker-load-manual.md)
-- [AWS Integration - Assumed Role Authentication](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)
+- [AWS Integration - Assumed Role Authentication](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication-and-authorization)

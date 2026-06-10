@@ -5,6 +5,8 @@
 }
 ---
 
+
+<!-- Compatibility anchors for historical inbound links. -->
 # JDBC
 
 JDBC Catalog 通过标准 JDBC 协议，连接其他数据源。
@@ -483,8 +485,8 @@ set enable_odbc_transcation = true;
 
 ### OceanBase
 
-MySQL 模式请参考 [MySQL 类型映射](#MySQL)
-Oracle 模式请参考 [Oracle 类型映射](#Oracle)
+MySQL 模式请参考 [MySQL 类型映射](#mysql)
+Oracle 模式请参考 [Oracle 类型映射](#oracle)
 
 ## 常见问题
 

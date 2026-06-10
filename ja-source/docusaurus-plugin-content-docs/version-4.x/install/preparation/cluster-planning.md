@@ -9,9 +9,9 @@
 
 Dorisをデプロイする際は、ビジネスニーズに基づいて統合ストレージ・コンピュートアーキテクチャまたは分離ストレージ・コンピュートアーキテクチャを選択できます：
 
-- [Integrated Storage-Compute](../../gettingStarted/what-is-apache-doris.md#Integrated-Storage-Compute)：統合ストレージ・コンピュートアーキテクチャは、デプロイが容易で優れたパフォーマンスを発揮し、外部の共有ストレージデバイスに依存しません。スケーリングにおける極端な弾力性を必要としないビジネスシナリオに適しています。
+- [Integrated Storage-Compute](../../gettingStarted/what-is-apache-doris.md#apache-dorisとは)：統合ストレージ・コンピュートアーキテクチャは、デプロイが容易で優れたパフォーマンスを発揮し、外部の共有ストレージデバイスに依存しません。スケーリングにおける極端な弾力性を必要としないビジネスシナリオに適しています。
 
-- [Decoupled Storage-Compute](../../gettingStarted/what-is-apache-doris.md#Decoupled-Storage-Compute)：分離ストレージ・コンピュートアーキテクチャは、共有ストレージに依存し、コンピュートリソースの弾力的スケーリングを可能にします。コンピュートリソースの動的調整が必要なビジネスシナリオに適しています。
+- [Decoupled Storage-Compute](../../gettingStarted/what-is-apache-doris.md#apache-dorisとは)：分離ストレージ・コンピュートアーキテクチャは、共有ストレージに依存し、コンピュートリソースの弾力的スケーリングを可能にします。コンピュートリソースの動的調整が必要なビジネスシナリオに適しています。
 
 ## ポート計画
 

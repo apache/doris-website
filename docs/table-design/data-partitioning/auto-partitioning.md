@@ -293,7 +293,7 @@ The remaining partition list:
 
 ## Used Together with Auto Bucketing
 
-Only AUTO RANGE PARTITION can be used together with the [auto bucketing](./data-bucketing.md#auto-set-bucket-number) feature.
+Only AUTO RANGE PARTITION can be used together with the [auto bucketing](./data-bucketing.md#2-automatically-set-the-number-of-buckets) feature.
 
 When using this combination, Doris assumes that data is loaded into the table incrementally in time order, and that each load involves only one partition. Therefore, **this combination is recommended only for tables loaded incrementally in batches**.
 

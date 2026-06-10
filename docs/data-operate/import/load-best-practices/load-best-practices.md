@@ -116,7 +116,7 @@ When using Random bucketing, you can enable single-tablet load mode by setting `
 - Concentrating writes on a single Tablet reduces the generation of small Segment files and avoids the write amplification caused by frequent Compaction.
 - It significantly improves the concurrency and throughput of large-scale data load.
 
-For details, see [Random Bucketing](../../../table-design/data-partitioning/data-bucketing#random-bucketing).
+For details, see [Random Bucketing](../../../table-design/data-partitioning/data-bucketing#2-random-bucketing).
 
 ### Batching Strategy
 
@@ -162,7 +162,7 @@ Concurrency strategies vary by file type:
 - **Compressed files / Parquet / ORC files**: split into multiple smaller files before loading to enable concurrent loads.
 - **Uncompressed CSV and JSON files**: Doris automatically splits the files internally and loads them concurrently.
 
-For the concurrency strategy, see [Broker Load Configuration Parameters](../import-way/broker-load-manual#load-configuration-parameters).
+For the concurrency strategy, see [Broker Load Configuration Parameters](../import-way/broker-load-manual#import-configuration-parameters).
 
 ### Stream Load Concurrency
 
@@ -279,7 +279,7 @@ Therefore, while meeting the latency requirements of your business, **maximize t
 
 #### Flink End-to-End Latency
 
-The test uses the Flink Connector in batched-write mode, focusing on end-to-end latency and load throughput. The batching interval is controlled by the Flink Connector parameter `sink.buffer-flush.interval`. For details on using the Flink Connector, see [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector#usage).
+The test uses the Flink Connector in batched-write mode, focusing on end-to-end latency and load throughput. The batching interval is controlled by the Flink Connector parameter `sink.buffer-flush.interval`. For details on using the Flink Connector, see [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector#use-cases).
 
 **Machine configuration:**
 

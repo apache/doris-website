@@ -18,7 +18,7 @@ UTC_DATE()
 ## 戻り値
 現在のUTC日付を返します。型はDATEです。
 
-DATE型を返します（フォーマット：YYYY-MM-DD）。戻り値に対して数値演算を実行する場合、型変換が実行され、[integer format](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-date)（フォーマット：YYYYMMDD）を返します。
+DATE型を返します（フォーマット：YYYY-MM-DD）。戻り値に対して数値演算を実行する場合、型変換が実行され、[integer format](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#文字列から)（フォーマット：YYYYMMDD）を返します。
 
 ## Examples
 

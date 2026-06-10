@@ -40,7 +40,7 @@ The user who executes this SQL must have at least the following permissions:
 
 ## Usage Notes
 
-If further filtering of the query results is required, the table-valued function [frontends_disks()](../../../sql-functions/table-valued-functions/frontends_disks.md) can be used. SHOW BACKENDS is equivalent to the following statement:
+If further filtering of the query results is required, the table-valued function frontends_disks() can be used. SHOW BACKENDS is equivalent to the following statement:
 
 ```sql
 SELECT * FROM FRONTENDS_DISKS();

@@ -337,7 +337,7 @@ When the above types cannot be compatible, they will be transformed into JSON ty
 **Other limitations include:**
 
 - VARIANT columns can only create inverted indexes or bloom filter to speed up query.
-- Using the **RANDOM** mode or [group commit](/docs/data-operate/import/group-commit-manual.md) mode is recommended for higher write performance.
+- Using the **RANDOM** mode or [group commit](../../../../data-operate/import/group-commit-manual) mode is recommended for higher write performance.
 - Non-standard JSON types such as date and decimal should ideally use static types for better performance, since these types are infered to text type.
 - Arrays with dimensions of 2 or higher will be stored as JSONB encoding, which might perform less efficiently than native arrays.
 - Not supported as primary or sort keys.
@@ -368,7 +368,7 @@ Note: If the number of sub-columns exceeds 5,000, higher requirements for memory
 
 2. Be aware that extracting too many columns will put heavy pressure on compaction (import throughput must be throttled accordingly). Increasing the client-side import `batch_size`—based on memory usage—can reduce write amplification during compaction. Alternatively, enable `group_commit` (a table property) and appropriately increase `group_commit_interval_ms` and `group_commit_data_bytes`.
 
-3. If your queries do not require bucket pruning, use random bucketing and enable the [load_to_single_tablet](../../../../table-design/data-partitioning/data-bucketing#bucketing) import setting (an import configuration) to reduce compaction write amplification.
+3. If your queries do not require bucket pruning, use random bucketing and enable the [load_to_single_tablet](../../../../table-design/data-partitioning/data-bucketing#hash-bucketing) import setting (an import configuration) to reduce compaction write amplification.
 
 4. In BE configuration, adjust `max_cumu_compaction_threads` according to import pressure; ensure at least 8 threads.
 

@@ -5,6 +5,8 @@
 }
 ---
 
+
+<!-- Compatibility anchors for historical inbound links. -->
 # JDBC
 
 JDBC Catalogs in Doris are connected to external data sources using the standard JDBC protocol.
@@ -458,8 +460,8 @@ Currently, only Hive connected to Trino has been tested. Other data sources conn
 
 ### OceanBase
 
-For MySQL mode, please refer to [MySQL type mapping](#MySQL)
-For Oracle mode, please refer to [Oracle type mapping](#Oracle)
+For MySQL mode, please refer to [MySQL type mapping](#mysql)
+For Oracle mode, please refer to [Oracle type mapping](#oracle)
 
 ## FAQ
 

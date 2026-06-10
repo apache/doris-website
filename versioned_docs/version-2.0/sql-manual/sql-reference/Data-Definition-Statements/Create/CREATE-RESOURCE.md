@@ -183,7 +183,7 @@ illustrate:
 
 6. Create HMS resource
 
-   HMS resource is used to create [hms catalog](../../../../lakehouse/datalake/hive)
+   HMS resource is used to create hms catalog
    ```sql
    CREATE RESOURCE hms_resource PROPERTIES (
       'type'='hms',

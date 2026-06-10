@@ -40,7 +40,7 @@ SHOW FRONTENDS DISKS;
 
 ## 注意事项
 
-如果需要对查询结果进行进一步的过滤，可以使用表值函数[frontends_disks()](../../../sql-functions/table-valued-functions/frontends_disks.md)。`SHOW FRONTENDS DISKS` 与下面语句等价：
+如果需要对查询结果进行进一步的过滤，可以使用表值函数frontends_disks()。`SHOW FRONTENDS DISKS` 与下面语句等价：
 
 ```sql
 SELECT * FROM FRONTENDS_DISKS();

@@ -39,7 +39,7 @@ CREATE CATALOG mc PROPERTIES (
 
 ## 列类型映射
 
-和 Hive Catalog 一致，可参阅 [Hive Catalog](../../lakehouse/datalake/hive) 中 **列类型映射** 一节。
+和 Hive Catalog 一致，可参阅 Hive Catalog 中 **列类型映射** 一节。
 
 ## 自定义服务地址
 

@@ -13,9 +13,9 @@
 
 更多使用方式可参阅 Table Value Function 文档：
 
-* [S3](../sql-manual/sql-functions/table-functions/s3.md)：支持 S3 兼容的对象存储上的文件分析。
+* S3：支持 S3 兼容的对象存储上的文件分析。
 
-* [HDFS](../sql-manual/sql-functions/table-functions/hdfs.md)：支持 HDFS 上的文件分析。
+* HDFS：支持 HDFS 上的文件分析。
 
 :::
 

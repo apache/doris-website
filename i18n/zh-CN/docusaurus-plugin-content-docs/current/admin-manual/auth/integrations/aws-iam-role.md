@@ -156,4 +156,4 @@ PROPERTIES (
 | `s3.external_id` | 否 | 填入 Trust Relationships Policies 中配置的 externalId 的值 |
 | `timeout` | 否 | 操作超时时间，单位秒 |
 
-更多功能 SQL 语句的详细使用方式，参考：[AWS 认证和鉴权](../../../admin-manual/auth/integrations/aws-authentication-and-authorization#assumed-role-authentication)。
+更多功能 SQL 语句的详细使用方式，参考：[AWS 认证和鉴权](../../../admin-manual/auth/integrations/aws-authentication-and-authorization#assumed-role-认证鉴权)。

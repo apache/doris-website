@@ -185,7 +185,7 @@ insert into doris_sink select id,name from cdc_mysql_source;
     --table-conf replication_num=1
 ```
 
-更多细节参见 [整库同步](../../../connection-integration/data-integration/flink-doris-connector.md#整库同步)。
+更多细节参见 [整库同步](../../../connection-integration/data-integration/flink-doris-connector.md#整库同步配置项)。
 
 ---
 
@@ -213,7 +213,7 @@ val jdbcDF = spark.read
 相关文档：
 
 - [JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)
-- [Spark Doris Connector 批量写入](../../../connection-integration/data-integration/spark-doris-connector.md#批量写入)
+- [Spark Doris Connector 批量写入](../../../connection-integration/data-integration/spark-doris-connector.md#场景二批量写入-doris-数据)
 
 ---
 

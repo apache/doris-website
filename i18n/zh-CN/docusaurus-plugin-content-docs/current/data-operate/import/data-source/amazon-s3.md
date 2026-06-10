@@ -223,7 +223,7 @@ mysql> select * from test_s3load;
 
 <!-- 知识类型: 配置参数 / 鉴权 -->
 
-除了使用 Access Key / Secret Key，Doris 也支持通过 `AWS Assume Role` 的方式使用 S3 Load 与 TVF 进行鉴权，适合企业内对密钥下发受限的场景。详细配置请参考 [AWS 集成 - Assumed Role 认证](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)。
+除了使用 Access Key / Secret Key，Doris 也支持通过 `AWS Assume Role` 的方式使用 S3 Load 与 TVF 进行鉴权，适合企业内对密钥下发受限的场景。详细配置请参考 [AWS 集成 - Assumed Role 认证](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-认证鉴权)。
 
 ## FAQ
 
@@ -263,4 +263,4 @@ mysql> select * from test_s3load;
 ## 相关文档
 
 - [Broker Load 手册](../import-way/broker-load-manual.md)
-- [AWS 集成 - Assumed Role 认证](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)
+- [AWS 集成 - Assumed Role 认证](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-认证鉴权)

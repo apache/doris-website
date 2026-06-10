@@ -5,6 +5,9 @@
   "language": "ja"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="flexible-partial-column-updates"></a>
 このドキュメントでは、さまざまなロード方法を使用してDorisユニークキーモデルでデータを更新する方法について説明します。
 
 ## 全行更新

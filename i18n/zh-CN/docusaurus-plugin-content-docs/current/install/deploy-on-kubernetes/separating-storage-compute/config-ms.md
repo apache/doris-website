@@ -57,7 +57,7 @@ spec:
 - `${foundationdbConfigMapName}`：ConfigMap 的名称
 - `${namespace}`：FoundationDB 部署所在的命名空间
 
-查找 `fdb-kubernetes-operator` 生成的 ConfigMap，请参考部署 FoundationDB 章节的 [获取包含 FoundationDB 访问信息的 ConfigMap](install-fdb.md#get-the-configmap-that-contains-foundationdb-access-information)。
+查找 `fdb-kubernetes-operator` 生成的 ConfigMap，请参考部署 FoundationDB 章节的 [获取包含 FoundationDB 访问信息的 ConfigMap](install-fdb.md#获取包含-foundationdb-访问信息的-configmap)。
 
 ### 方式二：直接配置访问地址
 
@@ -105,7 +105,7 @@ spec:
       memory: 4Gi
 ```
 
-将上述配置更新到需要[部署的 DorisDisaggregatedCluster 资源](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源)中。
+将上述配置更新到需要[部署的 DorisDisaggregatedCluster 资源](./install-doris-cluster.md#第-3-步部署存算分离集群)中。
 
 ## 4. 定制化启动配置
 
@@ -175,7 +175,7 @@ spec:
 - `${msConfigMapName}`：包含 MetaService 启动配置的 ConfigMap 名称
 - `mountPath`：挂载点必须为 `/etc/doris`
 
-将上述配置更新到需要部署的 [DorisDisaggregatedCluster 资源](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源)中。
+将上述配置更新到需要部署的 [DorisDisaggregatedCluster 资源](./install-doris-cluster.md#第-3-步部署存算分离集群)中。
 
 ## 5. 配置服务探测超时
 

@@ -53,8 +53,8 @@ CREATE CATALOG iceberg_catalog PROPERTIES (
 | `include_database_list` | 支持只同步指定的多个 Database，以 `,` 分隔。默认同步所有 Database。Database 名称是大小写敏感的。当外部数据源有大量 Database，但仅需访问个别 Database 时，可以使用此参数，避免大量的元数据同步。          | `'include_database_list' = 'db1,db2'` |
 | `exclude_database_list` | 支持指定不需要同步的多个 Database，以 `,` 分隔。默认不做任何过滤，同步所有 Database。Database 名称是大小写敏感的。适用场景同上，反向排除不需要访问的数据库。如果冲突，`exclude` 优先级高于 `include`。 | `'exclude_database_list' = 'db1,db2'` |
 | `include_table_list`    | 支持只同步指定的多个表，以 `db.tbl` 格式指定，多个表之间以 `,` 分隔。设置后，列举某个 Database 下的表时将仅返回指定的表，而不会从远端元数据服务获取完整的表列表。适用于外部数据源表数量庞大、获取全量表列表可能超时的场景。 | `'include_table_list' = 'db1.tbl1,db1.tbl2,db2.tbl3'` |
-| `lower_case_table_names`  | Catalog 级别的表名大小写控制。取值及含义见下方 [表名大小写](#表名大小写lower_case_table_names) 小节。默认值继承全局变量 `lower_case_table_names` 的设置。 | `'lower_case_table_names' = '1'`   |
-| `lower_case_database_names` | Catalog 级别的数据库名大小写控制。取值及含义见下方 [数据库名大小写](#数据库名大小写lower_case_database_names) 小节。默认值为 `0`（大小写敏感）。 | `'lower_case_database_names' = '2'` |
+| `lower_case_table_names`  | Catalog 级别的表名大小写控制。取值及含义见下方 [表名大小写](#表名大小写) 小节。默认值继承全局变量 `lower_case_table_names` 的设置。 | `'lower_case_table_names' = '1'`   |
+| `lower_case_database_names` | Catalog 级别的数据库名大小写控制。取值及含义见下方 [数据库名大小写](#数据库名大小写) 小节。默认值为 `0`（大小写敏感）。 | `'lower_case_database_names' = '2'` |
 
 ### 指定表列表
 

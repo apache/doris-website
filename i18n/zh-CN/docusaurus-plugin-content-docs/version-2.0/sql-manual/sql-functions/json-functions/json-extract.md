@@ -50,7 +50,7 @@ json path的语法如下
 
 ## 举例
 
-参考 [json tutorial](../../sql-reference/Data-Types/JSON.md) 中的示例
+参考 json tutorial 中的示例
 
 ```
 mysql> SELECT json_extract('{"id": 123, "name": "doris"}', '$.id');

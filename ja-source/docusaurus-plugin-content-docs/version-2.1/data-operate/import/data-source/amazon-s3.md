@@ -5,6 +5,9 @@
   "description": "DorisはAWS S3からファイルを読み込む2つの方法を提供します："
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="load-with-tvf"></a>
 DorisはAWS S3からファイルを読み込む2つの方法を提供しています：
 - S3 Loadを使用してS3ファイルをDorisに読み込む方法で、これは非同期読み込み方法です。
 - TVFを使用してS3ファイルをDorisに読み込む方法で、これは同期読み込み方法です。

@@ -177,7 +177,7 @@ If you encounter any problems with use, please feel free to contact us through G
 
 GitHub Forum: [https://github.com/apache/doris/discussions](https://github.com/apache/doris/discussions)
 
-Mailing list: [dev@doris.apache.org](dev@doris.apache.org)
+Mailing list: [dev@doris.apache.org](mailto:dev@doris.apache.org)
 
 ## Thanks
 

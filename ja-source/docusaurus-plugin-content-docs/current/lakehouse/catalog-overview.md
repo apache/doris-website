@@ -5,6 +5,11 @@
   "description": "Apache Doris Data カタログの概念と使用方法について学習します。外部データカタログを作成してHive、Iceberg、Paimon、PostgreSQL、その他のデータソースに接続し、フェデレーテッドクロスソースクエリ、データ取り込み、ライトバックを行います。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="data-import"></a>
+<a id="database-name-case-sensitivity-lower_case_database_names"></a>
+<a id="table-name-case-sensitivity-lower_case_table_names"></a>
 Data カタログは、データソースのプロパティを記述します。
 
 Dorisでは、異なるデータソース（Hive、Iceberg、Paimon、PostgreSQLなど）を指す複数のdata catalogを作成できます。Dorisは、data catalogを通じて対応するデータソースからデータベース、テーブル、スキーマ、パーティション、およびデータの場所を自動的に取得します。ユーザーは標準のSQL文を使用してこれらのdata catalogにアクセスしてデータ分析を行い、複数のdata catalog間のデータで結合クエリを実行できます。

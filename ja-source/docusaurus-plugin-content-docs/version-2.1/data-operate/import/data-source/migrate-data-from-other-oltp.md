@@ -155,7 +155,7 @@ val jdbcDF = spark.read
   .option("password", "")
   .save() 
 ```
-詳細については、[JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)、[Spark Doris Connector](../../../ecosystem/spark-doris-connector.md#batch-write)を参照してください。
+詳細については、[JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)、[Spark Doris Connector](../../../ecosystem/spark-doris-connector.md#spark-doris-connector)を参照してください。
 
 ## DataX / Seatunnel / CloudCanalおよびその他のサードパーティツール
 

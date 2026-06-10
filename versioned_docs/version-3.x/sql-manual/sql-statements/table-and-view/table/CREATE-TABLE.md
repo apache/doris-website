@@ -225,7 +225,7 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 
 **<distribute_cols> and <bucket_count>**
 
-> Bucketing columns and bucket counts. Detail model bucket columns can be any columns, aggregation model and primary key model bucket columns must be consistent with key columns. Bucket count is any positive integer. For details on bucketing, see the [Manual Bucketing](../../../../table-design/data-partitioning/data-bucketing#manual-setting-bucket-count) and [Automatic Bucketing](../../../../table-design/data-partitioning/data-bucketing#automatic-setting-bucket-count) sections.
+> Bucketing columns and bucket counts. Detail model bucket columns can be any columns, aggregation model and primary key model bucket columns must be consistent with key columns. Bucket count is any positive integer. For details on bucketing, see the [Manual Bucketing](../../../../table-design/data-partitioning/data-bucketing#manually-setting-the-number-of-buckets) and [Automatic Bucketing](../../../../table-design/data-partitioning/data-bucketing#automatic-bucket-number-setting) sections.
 
 ### Column Default Value Related Parameters
 
@@ -369,7 +369,7 @@ The functionality of creating synchronized materialized views with rollup is lim
 | group_commit_data_bytes | Configures the Group Commit batch data size for this table. The unit is bytes, with a default value of 134217728, i.e., 128MB. The timing of Group Commit depends on which of `group_commit_interval_ms` and `group_commit_data_bytes` reaches the set value first. |
 | enable_mow_light_delete | Whether to enable writing Delete predicate with Delete statements on Unique tables with Mow. If enabled, it will improve the performance of Delete statements, but partial column updates after Delete may result in some data errors. If disabled, it will reduce the performance of Delete statements to ensure correctness. The default value of this property is `false`. This property can only be enabled on Unique Merge-on-Write tables. |
 | Dynamic Partitioning Related Properties | For dynamic partitioning, refer to [Data Partitioning - Dynamic Partitioning](../../../../table-design/data-partitioning/dynamic-partitioning) |
-| enable_unique_key_skip_bitmap_column | Whether to enable the [Flexible Column Update feature](../../../../data-operate/update/update-of-unique-model.md#flexible-partial-column-updates) on Unique Merge-on-Write tables. This property can only be enabled on Unique Merge-on-Write tables. (Supported since version 3.1.0) |
+| enable_unique_key_skip_bitmap_column | Whether to enable the [Flexible Column Update feature](../../../../data-operate/update/update-of-unique-model.md#partial-column-update) on Unique Merge-on-Write tables. This property can only be enabled on Unique Merge-on-Write tables. (Supported since version 3.1.0) |
 
 
 ## Access Control Requirements

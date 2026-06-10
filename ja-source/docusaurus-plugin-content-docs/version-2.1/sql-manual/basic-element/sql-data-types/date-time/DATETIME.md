@@ -19,7 +19,7 @@ DATETIME([P])
 
 ### 注記
 
-DATETIMEはマイクロ秒までの時刻精度をサポートします。BE側を使用してインポートされたDATETIME型データを解析する場合（Stream load、Spark loadなどを使用）、またはFE側で[Nereids](/docs/query/nereids/nereids-new)を有効にして使用する場合、現在の精度を超える小数点以下の桁は**四捨五入**されます。
+DATETIMEはマイクロ秒までの時刻精度をサポートします。BE側を使用してインポートされたDATETIME型データを解析する場合（Stream load、Spark loadなどを使用）、またはFE側でNereidsを有効にして使用する場合、現在の精度を超える小数点以下の桁は**四捨五入**されます。
 小数秒部分を持つDATETIME値を、同じ型だが小数桁数が少ない列に挿入すると、**四捨五入**されます。
 DATETIMEの読み取りでは、元のDATETIMEリテラルの形式にタイムゾーンが続く形式でのタイムゾーン解決をサポートします：
 

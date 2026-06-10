@@ -11,7 +11,7 @@
 
 ## DorisでサポートされているJOINタイプ
 
-- **INNER JOIN**: JOIN条件に基づいて左tableの各行を右tableのすべての行と比較し、両tableから一致する行を返します。詳細については、[SELECT](../../sql-manual/sql-statements/data-query/SELECT)のJOINクエリの構文定義を参照してください。
+- **INNER JOIN**: JOIN条件に基づいて左tableの各行を右tableのすべての行と比較し、両tableから一致する行を返します。詳細については、SELECTのJOINクエリの構文定義を参照してください。
 
 - **LEFT JOIN**: INNER JOINの結果セットに加えて、左tableの行が右tableに一致するものがない場合、左tableのすべての行が返され、右tableの対応する列はNULLとして表示されます。
 

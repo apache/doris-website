@@ -5,6 +5,10 @@
   "language": "ja"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="flexible-partial-column-update"></a>
+<a id="partial-column-update-for-unique-key-model"></a>
 部分列更新により、table内のすべてのフィールドを変更することなく、特定のフィールドを更新できます。このドキュメントでは、Unique Key ModelとAggregate Key Modelの両方のtableに対して部分列更新を実行する方法について説明します。
 
 ## 概要

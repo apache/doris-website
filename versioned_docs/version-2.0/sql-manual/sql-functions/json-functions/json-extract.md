@@ -74,7 +74,7 @@ There are two extra functions to check field existence and type
 
 ### example
 
-refer to [json tutorial](../../sql-reference/Data-Types/JSON.md) for more.
+refer to json tutorial for more.
 
 ```
 mysql> SELECT json_extract('{"id": 123, "name": "doris"}', '$.id');

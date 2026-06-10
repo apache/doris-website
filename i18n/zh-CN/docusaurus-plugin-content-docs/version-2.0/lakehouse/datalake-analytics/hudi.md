@@ -14,11 +14,11 @@
   | Copy On Write  | Snapshot Query + Time Travel |
   | Merge On Read  | Snapshot Queries + Read Optimized Queries + Time Travel |
 
-1. 目前支持 Hive Metastore 和兼容 Hive Metastore 类型，例如[AWS Glue](../../lakehouse/datalake/hive.md)/Alibaba DLF 的 Catalog。
+1. 目前支持 Hive Metastore 和兼容 Hive Metastore 类型，例如AWS Glue/Alibaba DLF 的 Catalog。
 
 ## 创建 Catalog
 
-和 Hive Catalog 基本一致，这里仅给出简单示例。其他示例可参阅 [Hive Catalog](../../lakehouse/datalake/hive.md)。
+和 Hive Catalog 基本一致，这里仅给出简单示例。其他示例可参阅 Hive Catalog。
 
 ```sql
 CREATE CATALOG hudi PROPERTIES (
@@ -41,7 +41,7 @@ CREATE CATALOG hudi PROPERTIES (
 
 ## 列类型映射
 
-和 Hive Catalog 一致，可参阅 [Hive Catalog](../../lakehouse/datalake/hive) 中 **列类型映射** 一节。
+和 Hive Catalog 一致，可参阅 Hive Catalog 中 **列类型映射** 一节。
 
 ## Skip Merge
 

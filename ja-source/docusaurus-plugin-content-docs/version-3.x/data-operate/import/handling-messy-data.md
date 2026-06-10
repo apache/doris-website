@@ -5,6 +5,9 @@
   "language": "ja"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="restricting-partial-column-updates-to-existing-columns-only"></a>
 データをロードする際、ソース列とターゲット列のデータ型が一致しないことがあります。システムはこれらの不一致を修正しようとしますが、間違った型、フィールドが長すぎる、または精度が間違っているなどの問題によりエラーが発生する可能性があります。
 
 これらの問題に対処するため、Dorisには2つの重要な設定があります：

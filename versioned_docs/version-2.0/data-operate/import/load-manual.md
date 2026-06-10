@@ -28,7 +28,7 @@ Doris provides a variety of data import solutions, and you can choose different 
 | Routine Load       | [Import Kafka data](./stream-load-manual)   |
 | Insert Into        | [External table imports data through INSERT](./insert-into-manual) |
 | S3 Load            | [Object storage data import of S3 protocol](./broker-load-manual#s3-load) |
-| MySQL Load         | [Local data import of MySql protocol](./mysql-load-) |
+| MySQL Load         | Local data import of MySql protocol |
 
 ## Supported Data Formats
 

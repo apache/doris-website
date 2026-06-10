@@ -5,6 +5,8 @@
   "language": "ja"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 トランザクションとは、1つ以上のSQL文を含む操作です。これらの文の実行は、完全に成功するか完全に失敗するかのいずれかでなければなりません。これは不可分な作業単位です。
 
 ## はじめに
@@ -53,7 +55,7 @@ Labelは通常、`my_business1_20220330_125000`のように`business_logic+times
 
 #### StreamLoad 2PC
 
-[StreamLoad 2PC](#stream-load)は主にFlinkでDorisに書き込む際のexactly-once semantics（EOS）をサポートするために使用されます。
+[StreamLoad 2PC](#stream-load-2pc)は主にFlinkでDorisに書き込む際のexactly-once semantics（EOS）をサポートするために使用されます。
 
 ## Transaction 運用
 

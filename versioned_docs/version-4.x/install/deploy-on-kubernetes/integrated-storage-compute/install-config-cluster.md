@@ -684,7 +684,7 @@ mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com
 
 ## Configure Admin Username and Password
 
-Doris node management requires connecting to a live FE node via the MySQL protocol with a username and password. Doris implements an [RBAC-like permission management mechanism](../../../admin-manual/auth/authentication-and-authorization). Node management requires the user to have [Node_priv](../../../admin-manual/auth/authentication-and-authorization#permission-types) privilege. By default, Doris Operator deploys and manages the cluster configured by the DorisCluster resource using the root user with all privileges and no password. After a password is set for the root user, you must explicitly configure a username and password with Node_Priv privilege in the DorisCluster resource so that Doris Operator can perform automated management on the cluster.
+Doris node management requires connecting to a live FE node via the MySQL protocol with a username and password. Doris implements an [RBAC-like permission management mechanism](../../../admin-manual/auth/authentication-and-authorization). Node management requires the user to have [Node_priv](../../../admin-manual/auth/authentication-and-authorization#permission-levels) privilege. By default, Doris Operator deploys and manages the cluster configured by the DorisCluster resource using the root user with all privileges and no password. After a password is set for the root user, you must explicitly configure a username and password with Node_Priv privilege in the DorisCluster resource so that Doris Operator can perform automated management on the cluster.
 
 The DorisCluster resource provides two ways to configure the username and password used to manage cluster nodes: configuration via environment variables, and configuration via [Secret](https://kubernetes.io/docs/concepts/configuration/secret/). There are 3 scenarios for configuring the cluster admin username and password:
 
@@ -851,7 +851,7 @@ During the first deployment, if you do not set the root initialization password,
 
 ### Set the Root User Password After Cluster Deployment
 
-After a Doris cluster is deployed, if no password has been set for the root user, you need to configure a user with [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#permission-types) privilege so that Doris Operator can manage cluster nodes automatically. It is recommended not to use the root user. Refer to the [user creation and privilege grant section](../../../sql-manual/sql-statements/account-management/CREATE-USER) to create a new user and grant Node_priv privilege. After creating the user, configure the new admin user and password via environment variables or a Secret, and set them in the DorisCluster resource.
+After a Doris cluster is deployed, if no password has been set for the root user, you need to configure a user with [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#permission-levels) privilege so that Doris Operator can manage cluster nodes automatically. It is recommended not to use the root user. Refer to the [user creation and privilege grant section](../../../sql-manual/sql-statements/account-management/CREATE-USER) to create a new user and grant Node_priv privilege. After creating the user, configure the new admin user and password via environment variables or a Secret, and set them in the DorisCluster resource.
 
 #### Step 1: Create a User With Node_priv Privilege
 
@@ -973,7 +973,7 @@ Doris Operator uses a `ConfigMap` resource to mount the krb5.conf file, and a `S
         keytabSecretName: ${keytabSecretName}
         keytabPath: ${keytabPath}
     ```
-   ${krb5ConfigMapName} is the name of the ConfigMap that contains the `krb5.conf` file to use. ${keytabSecretName} is the name of the Secret that contains the keytab file. ${keytabPath} is the path where the Secret is mounted into the container. This path is the directory where the keytab file resides, as specified by `hadoop.kerberos.keytab` when creating the catalog. For creating a catalog, refer to the [Hive Catalog](../../../lakehouse/catalogs/hive-catalog.mdx#configure-catalog) documentation.
+   ${krb5ConfigMapName} is the name of the ConfigMap that contains the `krb5.conf` file to use. ${keytabSecretName} is the name of the Secret that contains the keytab file. ${keytabPath} is the path where the Secret is mounted into the container. This path is the directory where the keytab file resides, as specified by `hadoop.kerberos.keytab` when creating the catalog. For creating a catalog, refer to the [Hive Catalog](../../../lakehouse/catalogs/hive-catalog.mdx#configuring-catalog) documentation.
 
 ## Configure Shared Storage
 Starting from version 25.4.0, Doris Operator supports mounting a `ReadWriteMany` shared storage to all Pods of multiple components. Before use, create the shared storage `PersistentVolume` and `PersistentVolumeClaim` resources in advance. Configure the `DorisCluster` resource as follows before deploying the Doris cluster:

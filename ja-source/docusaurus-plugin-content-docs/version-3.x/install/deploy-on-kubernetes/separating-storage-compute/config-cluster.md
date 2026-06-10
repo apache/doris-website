@@ -252,4 +252,4 @@ Doris Operatorは、ConfigMapリソースを使用してkrb5.confファイルを
         keytabSecretName: ${keytabSecretName}
         keytabPath: ${keytabPath}
     ```
-`${krb5ConfigMapName}`: krb5.confファイルを含むConfigMapの名前。`${keytabSecretName}`: keytabファイルを含むSecretの名前。`${keytabPath}`: Secretがkeytabファイルをマウントするコンテナ内のディレクトリパス。このパスは、カタログ作成時にhadoop.kerberos.keytabで指定するディレクトリと一致している必要があります。カタログ設定の詳細については、[Hive Catalog configuration](../../../lakehouse/catalogs/hive-catalog.mdx)のドキュメントを参照してください。
+`${krb5ConfigMapName}`: krb5.confファイルを含むConfigMapの名前。`${keytabSecretName}`: keytabファイルを含むSecretの名前。`${keytabPath}`: Secretがkeytabファイルをマウントするコンテナ内のディレクトリパス。このパスは、カタログ作成時にhadoop.kerberos.keytabで指定するディレクトリと一致している必要があります。カタログ設定の詳細については、Hive Catalog configurationのドキュメントを参照してください。

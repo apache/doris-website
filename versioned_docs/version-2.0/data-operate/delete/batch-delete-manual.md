@@ -168,4 +168,4 @@ mysql> DESC table1;
 ```
 
 ### Stream Load Usage Examples
-Please refer to the sections "Specifying merge_type for DELETE operations" and "Specifying merge_type for MERGE operations" in the [Stream Load Manual](../import/import-way/stream-load-manual.md)
+Please refer to the sections "Specifying merge_type for DELETE operations" and "Specifying merge_type for MERGE operations" in the Stream Load Manual

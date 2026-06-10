@@ -18,7 +18,7 @@ SUB_TIME(`<date_or_time_expr>`, `<time>`)
 
 | パラメータ             | 説明 |
 | ---------------------| ----------- |
-| `<date_or_time_expr>`| 有効な日付式。timestamptz/datetime/date/time型の入力をサポートします。型がdateの場合、その日の開始時刻（00:00:00）に変換されます。具体的な形式については、[timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)、[datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)、[time conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/time-conversion)を参照してください。 |
+| `<date_or_time_expr>`| 有効な日付式。timestamptz/datetime/date/time型の入力をサポートします。型がdateの場合、その日の開始時刻（00:00:00）に変換されます。具体的な形式については、[timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)、datetime conversion、time conversionを参照してください。 |
 | `<time>`             | 有効な時間式で、`<date_or_time_expr>`から減算する時間値を表します。負の値の場合は加算を意味します。time型の入力をサポートします。 |
 
 ## 戻り値

@@ -44,7 +44,7 @@ spec:
             memory: 8Gi
 ```
 
-将上述配置信息更新到[需要部署的 `DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#配置-dorisdisaggregatedcluster-资源)中。
+将上述配置信息更新到[需要部署的 `DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#第-3-步部署存算分离集群)中。
 
 ## 配置 Follower 节点数量
 
@@ -123,7 +123,7 @@ kubectl apply -n ${namespace} -f ${feConfigMapName}.yaml
 
 ### 第 3 步：在 DorisDisaggregatedCluster 中引用 ConfigMap
 
-更新[`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#配置-dorisdisaggregatedcluster-资源)，通过 `feSpec.configMaps` 数组挂载 ConfigMap，示例如下：
+更新[`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#第-3-步部署存算分离集群)，通过 `feSpec.configMaps` 数组挂载 ConfigMap，示例如下：
 
 ```yaml
 spec:

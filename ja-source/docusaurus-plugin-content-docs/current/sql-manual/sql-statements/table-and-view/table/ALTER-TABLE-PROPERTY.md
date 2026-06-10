@@ -13,7 +13,7 @@
   - 未作成のauto partitionsについては、ALTER TABLE {tableName} SET ({key} = {value})を使用してそれらの属性を変更できます。
   - ユーザーがpartition attributesを変更したい場合、既に作成されたパーティションの属性と、未作成のパーティションの属性の両方を変更する必要があります。
 - 上記の属性以外は、すべてテーブルレベルです。
-- 具体的な属性については、[create table attributes](../../../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md#properties)を参照してください
+- 具体的な属性については、[create table attributes](../../../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md#説明)を参照してください
 :::
 
 ## 説明

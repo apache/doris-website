@@ -61,6 +61,10 @@ test('buildManifest maps docs across roots to stable identities', () => {
     byPath.get('docs/sql-manual/sql-functions/concat.md').doc_type,
     'sql_function',
   );
+  assert.equal(
+    byPath.get('src/pages/download/index.tsx').route_path,
+    '/download',
+  );
 });
 
 test('lintFrontmatter reports missing required metadata without mutating files', () => {
@@ -123,7 +127,23 @@ test('lintLinks validates markdown links, images, routes, anchors, and code excl
           '',
           'Missing anchor: [Missing anchor](./what-is-apache-doris.md#missing-anchor)',
           '',
+          'Single-line triple-backtick code before target anchor: [Anchor](./what-is-apache-doris.md#anchor-after-inline-code)',
+          '',
+          'Site page route: [Download](/download)',
+          '',
           'External link: [Apache](https://apache.org/)',
+          '',
+        ].join('\n'),
+        'utf8',
+      );
+      fs.appendFileSync(
+        path.join(rootDir, 'docs/gettingStarted/what-is-apache-doris.md'),
+        [
+          '',
+          '```inline-code```',
+          '',
+          '<a id="anchor-after-inline-code"></a>',
+          '## Anchor After Inline Code',
           '',
         ].join('\n'),
         'utf8',
@@ -162,6 +182,13 @@ test('lintLinks validates markdown links, images, routes, anchors, and code excl
     !findings.some(
       (finding) =>
         finding.path === 'docs/gettingStarted/with-links.mdx' &&
+        finding.message.includes('#anchor-after-inline-code'),
+    ),
+  );
+  assert.ok(
+    !findings.some(
+      (finding) =>
+        finding.path === 'docs/gettingStarted/with-links.mdx' &&
         finding.message.includes('ignored-code-link.md'),
     ),
   );
@@ -177,6 +204,13 @@ test('lintLinks validates markdown links, images, routes, anchors, and code excl
       (finding) =>
         finding.path === 'docs/gettingStarted/with-links.mdx' &&
         finding.message.includes('/docs/dev/gettingStarted/what-is-apache-doris#overview'),
+    ),
+  );
+  assert.ok(
+    !findings.some(
+      (finding) =>
+        finding.path === 'docs/gettingStarted/with-links.mdx' &&
+        finding.message.includes('/download'),
     ),
   );
 });

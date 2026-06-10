@@ -7,6 +7,8 @@
 }
 ---
 
+
+<!-- Compatibility anchors for historical inbound links. -->
 # Flink Doris Connector
 
 
@@ -43,14 +45,14 @@
   <groupId>org.apache.doris</groupId>
   <artifactId>flink-doris-connector-1.16</artifactId>
   <version>24.0.1</version>
-</dependency>  
+</dependency>
 ```
 
 **备注**
 
 1.请根据不同的 Flink 版本替换对应的 Connector 和 Flink 依赖版本。
 
-2.也可从[这里](https://repo.maven.apache.org/maven2/org/apache/doris/)下载相关版本 jar 包。 
+2.也可从[这里](https://repo.maven.apache.org/maven2/org/apache/doris/)下载相关版本 jar 包。
 
 ### 编译
 
@@ -72,7 +74,7 @@ CREATE TABLE flink_doris_source (
     age INT,
     price DECIMAL(5,2),
     sale DOUBLE
-    ) 
+    )
     WITH (
       'connector' = 'doris',
       'fenodes' = 'FE_IP:HTTP_PORT',
@@ -88,7 +90,7 @@ Flink Connector 24.0.0 版本之后支持使用[Arrow Flight SQL](https://doris.
 CREATE TABLE doris_source (
 name STRING,
 age int
-) 
+)
 WITH (
   'connector' = 'doris',
   'fenodes' = 'FE_IP:HTTP_PORT',
@@ -133,7 +135,7 @@ CREATE TABLE flink_doris_sink (
     age INT,
     price DECIMAL(5,2),
     sale DOUBLE
-    ) 
+    )
     WITH (
       'connector' = 'doris',
       'fenodes' = 'FE_IP:HTTP_PORT',
@@ -174,11 +176,11 @@ Properties properties = new Properties();
 DorisExecutionOptions.Builder  executionBuilder = DorisExecutionOptions.builder();
 executionBuilder.setLabelPrefix("label-doris") //streamload label prefix
                 .setDeletable(false)
-                .setStreamLoadProp(properties); 
+                .setStreamLoadProp(properties);
 
 builder.setDorisReadOptions(DorisReadOptions.builder().build())
         .setDorisExecutionOptions(executionBuilder.build())
-        .setSerializer(new SimpleStringSerializer()) //serialize according to string 
+        .setSerializer(new SimpleStringSerializer()) //serialize according to string
         .setDorisOptions(dorisBuilder.build());
 
 //mock csv string source
@@ -224,7 +226,7 @@ DataType[] types = {DataTypes.VARCHAR(256), DataTypes.DOUBLE(), DataTypes.DOUBLE
 
 builder.setDorisReadOptions(DorisReadOptions.builder().build())
         .setDorisExecutionOptions(executionBuilder.build())
-        .setSerializer(RowDataSerializer.builder()    //serialize according to rowdata 
+        .setSerializer(RowDataSerializer.builder()    //serialize according to rowdata
                            .setFieldNames(fields)
                            .setType("json")           //json format
                            .setFieldType(types).build())
@@ -308,7 +310,7 @@ create table dim_city(
   'password' = ''
 );
 
-SELECT a.id, a.name, a.city, c.province, c.country,c.level 
+SELECT a.id, a.name, a.city, c.province, c.country,c.level
 FROM fact_table a
 LEFT JOIN dim_city FOR SYSTEM_TIME AS OF a.process_time AS c
 ON a.city = c.city
@@ -357,9 +359,9 @@ ON a.city = c.city
 | Key                         | Default Value | Required | Comment                                                                                                                                                                                                                                                                                                                         |
 | --------------------------- | ------------- | -------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | sink.label-prefix           | --            | Y        | Stream load 导入使用的 label 前缀。2pc 场景下要求全局唯一，用来保证 Flink 的 EOS 语义。                                                                                                                                                                                                                                                                   |
-| sink.properties.*           | --            | N        | Stream Load 的导入参数。<br />例如： 'sink.properties.column_separator' = ', ' 定义列分隔符，  'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，`\x01`会被转换为二进制的 0x01。  <br /><br />JSON 格式导入<br />'sink.properties.format' = 'json' 'sink.properties.read_json_by_line' = 'true'<br />详细参数参考[这里](../data-operate/import/import-way/stream-load-manual)。<br /><br />Group Commit 模式 <br /> 例如：'sink.properties.group_commit' = 'sync_mode' 设置 group commit 为同步模式。flink connector 从 1.6.2 开始支持导入配置 group commit，详细使用和限制参考 [group commit](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/group-commit-manual/) 。 
+| sink.properties.*           | --            | N        | Stream Load 的导入参数。<br />例如： 'sink.properties.column_separator' = ', ' 定义列分隔符，  'sink.properties.escape_delimiters' = 'true' 特殊字符作为分隔符，`\x01`会被转换为二进制的 0x01。  <br /><br />JSON 格式导入<br />'sink.properties.format' = 'json' 'sink.properties.read_json_by_line' = 'true'<br />详细参数参考这里。<br /><br />Group Commit 模式 <br /> 例如：'sink.properties.group_commit' = 'sync_mode' 设置 group commit 为同步模式。flink connector 从 1.6.2 开始支持导入配置 group commit，详细使用和限制参考 [group commit](https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/group-commit-manual/) 。
 | sink.enable-delete          | TRUE          | N        | 是否启用删除。此选项需要 Doris 表开启批量删除功能 (Doris0.15+ 版本默认开启)，只支持 Unique 模型。                                                                                                                                                                                                                                                                 |
-| sink.enable-2pc             | TRUE          | N        | 是否开启两阶段提交 (2pc)，默认为 true，保证 Exactly-Once 语义。关于两阶段提交可参考[这里](../data-operate/import/import-way/stream-load-manual)。                                                                                                                                                                                                                       |
+| sink.enable-2pc             | TRUE          | N        | 是否开启两阶段提交 (2pc)，默认为 true，保证 Exactly-Once 语义。关于两阶段提交可参考这里。                                                                                                                                                                                                                       |
 | sink.buffer-size            | 1MB           | N        | 写数据缓存 buffer 大小，单位字节。不建议修改，默认配置即可                                                                                                                                                                                                                                                                                               |
 | sink.buffer-count           | 3             | N        | 写数据缓存 buffer 个数。不建议修改，默认配置即可                                                                                                                                                                                                                                                                                                    |
 | sink.max-retries            | 3             | N        | Commit 失败后的最大重试次数，默认 3 次                                                                                                                                                                                                                                                                                                        |
@@ -456,7 +458,7 @@ CREATE TABLE cdc_mysql_source (
 CREATE TABLE doris_sink (
 id INT,
 name STRING
-) 
+)
 WITH (
   'connector' = 'doris',
   'fenodes' = '127.0.0.1:8030',
@@ -498,7 +500,7 @@ CREATE TABLE doris_sink (
     name STRING,
     bank STRING,
     age int
-) 
+)
 WITH (
   'connector' = 'doris',
   'fenodes' = '127.0.0.1:8030',
@@ -587,7 +589,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     --sink-conf password=123456 \
     --sink-conf jdbc-url=jdbc:mysql://127.0.0.1:9030 \
     --sink-conf sink.label-prefix=label \
-    --table-conf replication_num=1 
+    --table-conf replication_num=1
 ```
 
 ### Oracle 多表同步示例
@@ -691,7 +693,7 @@ insert into doris_sink select id,name,bank,age from cdc_mysql_source;
     --sink-conf password=123456 \
     --sink-conf jdbc-url=jdbc:mysql://127.0.0.1:9030 \
     --sink-conf sink.label-prefix=label \
-    --table-conf replication_num=1 
+    --table-conf replication_num=1
 ```
 
 ### MongoDB 多表同步示例
@@ -766,8 +768,8 @@ CREATE TABLE DORIS_SINK(
 
 INSERT INTO DORIS_SINK
 SELECT json_value(data,'$.id') as id,
-json_value(data,'$.name') as name, 
-if(op_type='delete',1,0) as __DORIS_DELETE_SIGN__ 
+json_value(data,'$.name') as name,
+if(op_type='delete',1,0) as __DORIS_DELETE_SIGN__
 from KAFKA_SOURCE;
 ```
 
@@ -784,7 +786,7 @@ from KAFKA_SOURCE;
 ### 其他
 
 1. Flink Doris Connector 主要是依赖 Checkpoint 进行流式写入，所以 Checkpoint 的间隔即为数据的可见延迟时间。
-2. 为了保证 Flink 的 Exactly Once 语义，Flink Doris Connector 默认开启两阶段提交，Doris 在 1.1 版本后默认开启两阶段提交。1.0 可通过修改 BE 参数开启，可参考[two_phase_commit](../data-operate/import/import-way/stream-load-manual)。
+2. 为了保证 Flink 的 Exactly Once 语义，Flink Doris Connector 默认开启两阶段提交，Doris 在 1.1 版本后默认开启两阶段提交。1.0 可通过修改 BE 参数开启，可参考two_phase_commit。
 
 ## 常见问题
 
@@ -802,7 +804,7 @@ from KAFKA_SOURCE;
 CREATE TABLE bitmap_sink (
 dt int,
 page string,
-user_id int 
+user_id int
 )
 WITH (
   'connector' = 'doris',

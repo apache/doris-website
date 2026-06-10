@@ -47,7 +47,7 @@ CREATE [READ ONLY] REPOSITORY <repo_name>
 
 **Note:&#x20;**
 
-Doris支持使用`AWS Assume Role`的方式创建位于AWS S3上的Repository，请参考[AWS集成](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+Doris支持使用`AWS Assume Role`的方式创建位于AWS S3上的Repository，请参考[AWS集成](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-认证鉴权).
 
 
 ## 权限控制
@@ -85,7 +85,7 @@ PROPERTIES
 
 **Note:&#x20;**
 
-Doris支持使用`AWS Assume Role`的方式创建位于AWS S3上的Repository，请参考[AWS集成](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+Doris支持使用`AWS Assume Role`的方式创建位于AWS S3上的Repository，请参考[AWS集成](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-认证鉴权).
 
 创建名为 hdfs_repo 的仓库
 

@@ -14,11 +14,11 @@
 | Copy On Write  | Snapshot Query + Time Travel |
 | Merge On Read  | Snapshot Queries + Read Optimized Queries + Time Travel |
 
-2. Doris supports Hive Metastore(Including catalogs compatible with Hive MetaStore, like [AWS Glue](../../lakehouse/datalake/hive#hive-with-aws-glue)/[Alibaba DLF](../../lakehouse/datalake/hive)) Catalogs.
+2. Doris supports Hive Metastore(Including catalogs compatible with Hive MetaStore, like AWS Glue/Alibaba DLF) Catalogs.
 
 ## Create Catalog
 
-Same as creating Hive Catalogs. A simple example is provided here. See [Hive](../../lakehouse/datalake/hive) for more information.
+Same as creating Hive Catalogs. A simple example is provided here. See Hive for more information.
 
 ```sql
 CREATE CATALOG hudi PROPERTIES (
@@ -41,13 +41,13 @@ Optional configuration parameters:
 
 ## Column Type Mapping
 
-Same as that in Hive Catalogs. See the relevant section in [Hive](../../lakehouse/datalake/hive).
+Same as that in Hive Catalogs. See the relevant section in Hive.
 
 ## Skip Merge
 Spark will create the read optimize table with `_ro` suffix when generating hudi mor table. Doris will skip the log files when reading optimize table. Doris does not determine whether a table is read optimize by the `_ro` suffix instead of the hive inputformat. Users can observe whether the inputformat of the 'cow/mor/read optimize' table is the same through the `SHOW CREATE TABLE` command. In addition, Doris supports adding hoodie related configurations to catalog properties, which are compatible with [Spark Datasource Configs](https://hudi.apache.org/docs/configurations/#Read-Options), so users can add `hoodie.datasource.merge.type=skip_merge` in catalog properties to skip merge logs files.
 
 ## Query Optimization
-Doris uses the parquet native reader to read the data files of the COW table, and uses the Java SDK (By calling hudi-bundle through JNI) to read the data files of the MOR table. In `upsert` scenario, there may still remains base files that have not been updated in the MOR table, which can be read through the parquet native reader. Users can view the execution plan of hudi scan through the [explain](../../query/query-analysis/query-analysis) command, where `hudiNativeReadSplits` indicates how many split files are read through the parquet native reader.
+Doris uses the parquet native reader to read the data files of the COW table, and uses the Java SDK (By calling hudi-bundle through JNI) to read the data files of the MOR table. In `upsert` scenario, there may still remains base files that have not been updated in the MOR table, which can be read through the parquet native reader. Users can view the execution plan of hudi scan through the explain command, where `hudiNativeReadSplits` indicates how many split files are read through the parquet native reader.
 
 ```
 |0:VHUDI_SCAN_NODE                                                             |

@@ -70,7 +70,7 @@ Unable to find a suitable base table for partitioning
 
 出现该报错通常指的是物化视图的 SQL 定义和物化视图分区字段的选择，导致不能分区增量更新，所以创建分区物化视图会报错。
 
-- 物化视图想要分区增量更新，需要满足以下要求，详情见[物化视图刷新模式](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters)
+- 物化视图想要分区增量更新，需要满足以下要求，详情见[物化视图刷新模式](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数)
 
 - 最新的代码可以提示分区构建失败的原因，原因摘要和说明见附录 2
 
@@ -312,7 +312,7 @@ your_query_sql;
 
 - 物化视图可能处于不可用状态，从而导致透明改写无法命中。要查看物化视图的构建状态，请参见查看物化视图状态。
 
-- 若经过前两步的检查后，物化视图仍然无法命中，那么可能是物化视图的定义 SQL 和查询 SQL 不在当前物化视图改写能力的范围内。详情请参考 [物化视图透明改写能力](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands#透明改写能力)。
+- 若经过前两步的检查后，物化视图仍然无法命中，那么可能是物化视图的定义 SQL 和查询 SQL 不在当前物化视图改写能力的范围内。详情请参考 [物化视图透明改写能力](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands#查询透明改写)。
 
 - 对于失败命中的详细信息和说明，请查阅[附录 1](#附录)。
 

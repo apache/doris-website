@@ -6,6 +6,8 @@
   "sidebar_label": "Deploy Doris クラスター"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 # Dorisクラスターのデプロイ
 
 Kubernetes上で機能的な分離ストレージとコンピュートDorisクラスターをデプロイするには、4つの主要なステップがあります：

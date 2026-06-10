@@ -5,6 +5,9 @@
   "description": "Dorisは、​​IAM User​​と​​Assumed Role​​の2つの認証方法を通じてAWSサービスリソースへのアクセスをサポートしています。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="assumed-role-authentication"></a>
 Dorisは2つの認証方法でAWSサービスリソースへのアクセスをサポートしています：`IAM User`と`Assumed Role`。この記事では、両方の方法でセキュリティ認証情報を設定し、Dorisの機能を使用してAWSサービスと連携する方法を説明します。
 
 # 認証方法の概要

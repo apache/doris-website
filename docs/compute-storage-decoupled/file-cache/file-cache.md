@@ -305,7 +305,7 @@ Cache-related metrics in the SQL Profile are located under the `SegmentIterator`
 | `RemoteIOUseTimer` | Time spent reading from remote storage |
 | `WriteCacheIOUseTimer` | Time spent writing into the file cache |
 
-You can view the complete query performance report through [Query Performance Analysis](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile).
+You can view the complete query performance report through [Query Performance Analysis](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile-analyzing-execution-layer-bottlenecks).
 
 ## TTL Cache Policy
 

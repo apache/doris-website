@@ -25,7 +25,7 @@
 
 以 TPC-H 为例，全新优化器在未进行任何手工调优和 SQL 改写的情况下，绝大多数 SQL 仍领先于旧优化器手工调优后的性能表现！而在超过百家 2.0 版本提前体验用户的真实业务场景中，绝大多数原始 SQL 执行效率得以极大提升！
 
-参考文档：[更智能的全新查询优化器](../../query-acceleration/optimization-technology-principle/query-optimizer.md)
+参考文档：[更智能的全新查询优化器](../../../docusaurus-plugin-content-docs/version-2.0/query/nereids/nereids-new.md)
 
 如何开启：`SET enable_nereids_planner=true` 在 Apache Doris 2.0-beta 版本中全新查询优化器已经默认开启
 
@@ -51,7 +51,7 @@
 
 在实现极速分析体验的同时，为了保证多个混合分析负载的执行效率以及查询的稳定性，在 2.0.0 版本中我们引入了 Pipeline 执行模型作为查询执行引擎。在 Pipeline 执行引擎中，查询的执行是由数据来驱动控制流变化的，各个查询执行过程之中的阻塞算子被拆分成不同 Pipeline，各个 Pipeline 能否获取执行线程调度执行取决于前置数据是否就绪，实现了阻塞操作的异步化、可以更加灵活地管理系统资源，同时减少了线程频繁创建和销毁带来的开销，并提升了 Apache Doris 对于 CPU 的利用效率。因此 Apache Doris 在混合负载场景中的查询性能和稳定性都得到了全面提升。
 
-参考文档：[查询执行引擎](../../query-acceleration/optimization-technology-principle/pipeline-execution-engine.md)
+参考文档：[查询执行引擎](../../../docusaurus-plugin-content-docs/version-2.0/query/pipeline-execution-engine.md)
 
 如何开启：` Set enable_pipeline_engine = true  `
 - 该功能在 Apache Doris 2.0 版本中将默认开启，BE 在进行查询执行时默认将 SQL 的执行模型转变 Pipeline 的执行方式。
@@ -189,7 +189,7 @@
 - 限制了表达式树的深度，默认为 200；
 - array string 返回值 单引号变双引号；
 - 对 Doris 的进程名重命名为 DorisFE 和 DorisBE；
-- AES 和 SM4 加解密函数的两参数版本行为变化，详见[对应函数文档](../../sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-encrypt.md)
+- AES 和 SM4 加解密函数的两参数版本行为变化，详见[对应函数文档](../../../docusaurus-plugin-content-docs/version-2.0/sql-manual/sql-functions/encrypt-digest-functions/sm4-encrypt.md)
 
 ## 正式踏上 2.0 之旅
 

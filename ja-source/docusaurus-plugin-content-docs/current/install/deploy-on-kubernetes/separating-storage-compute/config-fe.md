@@ -5,6 +5,9 @@
   "description": "FEは主に、分離されたストレージとコンピュートモードにおけるクエリの解析、プランニング、および関連するタスクを担当します。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="custom-startup-configuration"></a>
 FEは、分離されたストレージとコンピュート モードにおいて、主にクエリ解析、プランニング、および関連タスクを担当します。
 
 ## Compute リソースの設定
@@ -20,7 +23,7 @@ spec:
       cpu: 8
       memory: 8Gi
 ```
-デプロイしようとしている[DorisDisaggregatedClusterリソース](./install-doris-cluster.md#step-3-deploy-the-compute-storage-decoupled-cluster)で上記の設定を更新してください。
+デプロイしようとしている[DorisDisaggregatedClusterリソース](./install-doris-cluster.md#doris-クラスタのデプロイ)で上記の設定を更新してください。
 
 ## Followerノード数の設定
 Doris Frontend（FE）サービスには、FollowerとObserverという2つのタイプのロールがあります。Followerノードは、SQLパース、メタデータ管理、およびストレージを担当します。ObserverノードはおもにSQLパースを処理してFollowerからクエリおよび書き込みトラフィックの負荷を軽減します。Dorisはメタデータ管理にbdbjeストレージシステムを使用しており、Paxosプロトコルに類似したアルゴリズムを実装しています。

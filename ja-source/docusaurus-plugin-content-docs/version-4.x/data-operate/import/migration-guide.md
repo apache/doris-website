@@ -78,7 +78,7 @@
 
 典型的な完全な移行プロセスは以下の通りです：
 
-![whiteboard-exported-image](/images/whiteboard-exported-image.png)
+whiteboard-exported-image
 
 ### 3.3 メタデータ移行
 
@@ -162,7 +162,7 @@ python routine_load_info.py
 ```
 戻り値の結果は以下のスクリーンショットに示されています。
 
-![result img](/images/screenshot-show.png)
+result img
 
 - DorisでRoutineloadを一時停止する
 
@@ -180,7 +180,7 @@ python routine_load_info.py
 ```
 返される結果は、以下のスクリーンショットのとおりです。
 
-![result img](/images/screenshot-show-2.png)
+result img
 - VeloDB CloudでRoutineloadを作成する
 
 以下はデモで、各Tableに対して生成されたRoutineload CREATE文を使用しています

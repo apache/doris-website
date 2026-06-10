@@ -56,7 +56,7 @@
 
 - SQL 拦截功能现在支持外部表
 
-  - 更多内容，参考文档[SQL 拦截](../../admin-manual/workload-management/sql-blocking.md)
+  - 更多内容，参考文档[SQL 拦截](../../../docusaurus-plugin-content-docs/version-3.x/admin-manual/workload-management/sql-blocking.md)
 
 - Insert Overwrite 现在支持 Iceberg 表。[#37191](https://github.com/apache/doris/pull/37191)
 
@@ -90,7 +90,7 @@
 
 - 新增加了 FE 参数 `skip_audit_user_list`，在此配置项中的用户操作将不会被记录到审计日志中。[#38310](https://github.com/apache/doris/pull/38310)
   
-  - 更多内容，参考文档[审计插件](../../admin-manual/audit-plugin/)
+  - 更多内容，参考文档[审计插件](../../../docusaurus-plugin-content-docs/version-3.x/admin-manual/audit-plugin.md)
 
 ## 改进
 

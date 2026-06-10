@@ -10,7 +10,7 @@
 
 ## テーブルの作成
 
-ユーザーは[CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)文を使用してDorisでテーブルを作成できます。また、[CREATE TABLE LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#create-table--like)または[CREATE TABLE AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#create-table--as-select-also-referred-to-as-ctas)句を使用して、他のテーブルからテーブル定義を派生させることも可能です。
+ユーザーは[CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)文を使用してDorisでテーブルを作成できます。また、[CREATE TABLE LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#create-table--like)または[CREATE TABLE AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#説明)句を使用して、他のテーブルからテーブル定義を派生させることも可能です。
 
 ## テーブル名
 
@@ -18,7 +18,7 @@ Dorisでは、テーブル名はデフォルトで大文字と小文字が区別
 
 ## テーブルプロパティ
 
-DorisのCREATE TABLE文では、以下を含む[テーブルプロパティ](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#properties)を指定できます：
+DorisのCREATE TABLE文では、以下を含む[テーブルプロパティ](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#説明)を指定できます：
 
 - **buckets**: テーブル内でのデータの分散を決定します。
 

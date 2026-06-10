@@ -5,6 +5,8 @@
   "description": "Spark Doris ConnectorはApache DorisとApache Sparkの間のコネクタで、RDD、DataFrame、Spark SQLを通じてDorisデータの読み取りと書き込みをサポートします。バッチおよびストリーミング書き込み、データフィルタプッシュダウン、Arrow Flight SQL高速伝送などの機能をサポートし、Spark 2.xおよび3.xバージョンと互換性があります。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 # Spark Doris Connector
 
 Spark Doris Connectorは、Sparkを通じてDorisに保存されたデータの読み込みと、Sparkを通じてDorisへのデータ書き込みをサポートします。

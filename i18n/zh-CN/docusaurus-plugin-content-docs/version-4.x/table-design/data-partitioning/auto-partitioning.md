@@ -293,7 +293,7 @@ properties(
 
 ## 与自动分桶联用
 
-只有 AUTO RANGE PARTITION 可以同时使用[自动分桶](./data-bucketing.md#自动设置分桶数)功能。
+只有 AUTO RANGE PARTITION 可以同时使用[自动分桶](./data-bucketing.md#2-自动设置分桶数)功能。
 
 使用此组合时，Doris 假设表的数据导入按时间顺序增量进行，每次导入仅涉及一个分区。因此，**该组合仅推荐用于逐批次增量导入的表**。
 

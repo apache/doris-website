@@ -64,4 +64,4 @@ You can limit the automatically configured concurrency by setting `max_instance_
 
 ### Load
 
-The engine selected for import are detailed in the [Import](../../data-operate/import/load-manual) documentation.
+The engine selected for import are detailed in the Import documentation.

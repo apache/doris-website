@@ -9,7 +9,7 @@
 
 このステートメントはデータの更新に使用されます。UPDATE ステートメントは現在 UNIQUE KEY モデルのみをサポートしています。
 
-UPDATE 操作は現在 Value カラムの更新のみをサポートしています。Key カラムの更新については [Using FlinkCDC to update Key column](../../../../ecosystem/flink-doris-connector.md#use-flink-cdc-to-update-key-column) を参照してください。
+UPDATE 操作は現在 Value カラムの更新のみをサポートしています。Key カラムの更新については [Using FlinkCDC to update Key column](../../../../ecosystem/flink-doris-connector.md#flinkcdc主キー列の更新) を参照してください。
 
 #### Syntax
 

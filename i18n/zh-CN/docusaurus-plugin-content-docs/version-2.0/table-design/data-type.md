@@ -44,7 +44,7 @@ Apache Doris 已支持的数据类型列表如下：
 | [MAP](../sql-manual/sql-data-types/semi-structured/MAP)            | 不定长     | 由 K, V 类型元素组成的 map，不能作为 Key 列使用。目前支持在 Duplicate 和 Unique 模型的表中使用。 |
 | [STRUCT](../sql-manual/sql-data-types/semi-structured/STRUCT)         | 不定长	    | 由多个 Field 组成的结构体，也可被理解为多个列的集合。不能作为 Key 使用，目前 STRUCT 仅支持在 Duplicate 模型的表中使用。一个 Struct 中的 Field 的名字和数量固定，总是为 Nullable。|
 | [JSON](../sql-manual/sql-data-types/semi-structured/JSON)           | 不定长     | 二进制 JSON 类型，采用二进制 JSON 格式存储，通过 JSON 函数访问 JSON 内部字段。长度限制和配置方式与 String 相同 |
-| [VARIANT](../sql-manual/sql-data-types/semi-structured/VARIANT)        | 不定长     | 动态可变数据类型，专为半结构化数据如 JSON 设计，可以存入任意 JSON，自动将 JSON 中的字段拆分成子列存储，提升存储效率和查询分析性能。长度限制和配置方式与 String 相同。Variant 类型只能用在 Value 列，不能用在 Key 列和分区分桶列。|
+| VARIANT        | 不定长     | 动态可变数据类型，专为半结构化数据如 JSON 设计，可以存入任意 JSON，自动将 JSON 中的字段拆分成子列存储，提升存储效率和查询分析性能。长度限制和配置方式与 String 相同。Variant 类型只能用在 Value 列，不能用在 Key 列和分区分桶列。|
 
 ### [聚合类型](../sql-manual/sql-data-types/data-type-overview#聚合类型)
 

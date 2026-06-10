@@ -20,7 +20,7 @@
   - enable_fallback_to_original_planner: true
   - enable_pipeline_x_engine: true
 - 审计日志增加了新的列 [#42262](https://github.com/apache/doris/pull/42262)
-  - 更多信息，请参考[管理指南](../../admin-manual/audit-plugin)
+  - 更多信息，请参考[管理指南](../../../docusaurus-plugin-content-docs/version-2.1/admin-manual/audit-plugin.md)
 
 ## 新功能
 
@@ -43,8 +43,8 @@
 
 - 增加了 `information_schema.table_options` 和 `information_schema.``table_properties` 系统表，支持查询建表时设置的一些属性。[#34384](https://github.com/apache/doris/pull/34384)
   - 更多信息，请参考系统表：
-    - [table_options](../../admin-manual/system-tables/information_schema/table_options)
-    - [table_properties](../../admin-manual/system-tables/information_schema/table_properties)
+    - [table_options](../../../docusaurus-plugin-content-docs/version-2.1/admin-manual/system-tables/information_schema/table_options.md)
+    - [table_properties](../../../docusaurus-plugin-content-docs/version-2.1/admin-manual/system-tables/information_schema/table_properties.md)
 - 支持 `bitmap_empty` 作为默认值。[#40364](https://github.com/apache/doris/pull/40364)
 - 增加了一个新的 Session 变量`require_sequence_in_insert` 来控制向 Unique Key 表进行`insert into select` 写入时，是否必须提供 Sequence 列。[#41655](https://github.com/apache/doris/pull/41655)
 
@@ -57,13 +57,13 @@
 ### 湖仓一体
 
 - 支持写入数据到 Hive Text 格式表。[#40537](https://github.com/apache/doris/pull/40537)
-  - 更多信息，请参考[使用 Hive 构建数据湖](../../lakehouse/catalogs/hive-catalog)文档
+  - 更多信息，请参考[使用 Hive 构建数据湖](../../../docusaurus-plugin-content-docs/version-2.1/lakehouse/catalogs/hive-catalog.mdx)文档
 - 使用 MaxCompute Open Storage API 访问 MaxCompute 数据。[#41610](https://github.com/apache/doris/pull/41610)
-  - 更多信息，请参考 [MaxCompute](../../lakehouse/catalogs/maxcompute-catalog) 文档
+  - 更多信息，请参考 [MaxCompute](../../../docusaurus-plugin-content-docs/version-2.1/lakehouse/catalogs/maxcompute-catalog.md) 文档
 - 支持 Paimon DLF Catalog。[#41694](https://github.com/apache/doris/pull/41694)
-  - 更多信息，请参考 [Paimon Catalog](../../lakehouse/catalogs/paimon-catalog) 文档
+  - 更多信息，请参考 [Paimon Catalog](../../../docusaurus-plugin-content-docs/version-2.1/lakehouse/catalogs/paimon-catalog.mdx) 文档
 - 新增语法 `table$partitions` 语法支持直接查询 Hive 分区信息 [#41230](https://github.com/apache/doris/pull/41230)
-  - 更多信息，请参考[通过 Hive 分析数据湖](../../lakehouse/catalogs/hive-catalog)文档
+  - 更多信息，请参考[通过 Hive 分析数据湖](../../../docusaurus-plugin-content-docs/version-2.1/lakehouse/catalogs/hive-catalog.mdx)文档
 - 支持 brotli 压缩格式的 Parquet 文件读取。[#42162](https://github.com/apache/doris/pull/42162)
 - 支持读取 Parquet 文件中的 DECIMAL 256 类型。[#42241](https://github.com/apache/doris/pull/42241)
 - 支持读取 OpenCsvSerde 格式的 Hive 表。[#42939](https://github.com/apache/doris/pull/42939)

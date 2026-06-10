@@ -9,7 +9,7 @@
 In a disaggregated compute-storage cluster, certain configurations apply at the cluster level, such as credentials used by the management system to administer the nodes of various components.
 
 ## Configuring Management Username and Password
-Managing Doris nodes requires connecting to a live Frontend (FE) node using a username and password via the MySQL protocol. Doris implements a [role-based access control (RBAC)-like authorization mechanism](../../../admin-manual/auth/authentication-and-authorization), and node management operations require a user account with the [Node_priv](../../../admin-manual/auth/authentication-and-authorization#Types-of-Permissions) privilege.
+Managing Doris nodes requires connecting to a live Frontend (FE) node using a username and password via the MySQL protocol. Doris implements a [role-based access control (RBAC)-like authorization mechanism](../../../admin-manual/auth/authentication-and-authorization), and node management operations require a user account with the [Node_priv](../../../admin-manual/auth/authentication-and-authorization#types-of-permissions) privilege.
 
 By default, the Doris Operator uses the root user—who has full privileges and no password—for deploying and managing clusters defined in the DorisDisaggregatedCluster resource. Once a password is assigned to the root account, it is necessary to explicitly configure a username and password with Node_priv in the DorisDisaggregatedCluster resource, enabling the Doris Operator to continue performing automated management tasks.
 

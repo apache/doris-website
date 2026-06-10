@@ -5,6 +5,9 @@
   "description": "FoundationDBは、Apache 2.0ライセンスの下でリリースされたオープンソースの分散データベースであり、構造化データストレージに対して強い一貫性を提供します。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="retrieve-the-configmap-containing-foundationdb-access-information"></a>
 FoundationDBは、Apache 2.0ライセンスでリリースされたオープンソース分散データベースで、構造化データストレージに強い一貫性を提供します。Dorisのコンピュート・ストレージ分離モデルでは、FoundationDBがメタデータストアとして使用され、meta-serviceコンポーネントがFoundationDB内のメタデータを管理します。Kubernetes上でコンピュート・ストレージ分離クラスターをデプロイする際は、事前にFoundationDBをデプロイする必要があります。以下の2つのデプロイメント方法を推奨します：
 - 仮想マシン（物理マシンを含む）上に直接FoundationDBをデプロイする
 - [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator)を使用してKubernetes上にFoundationDBをデプロイする

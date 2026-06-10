@@ -149,7 +149,7 @@ You cand delete an External Catalog via the [DROP CATALOG](../sql-manual/sql-ref
 
 The following is the instruction on how to connect to a Hive catalog using the Catalog feature.
 
-For more information about connecting to Hive, please see [Hive Catalog](./datalake/hive).
+For more information about connecting to Hive, please see Hive Catalog.
 
 1. Create Catalog
 
@@ -381,4 +381,4 @@ CREATE CATALOG es PROPERTIES (
 
 #### Auto Refresh
 
-Currently Doris supports auto-refresh for [Hive](../lakehouse/datalake/hive) Catalog.
+Currently Doris supports auto-refresh for Hive Catalog.

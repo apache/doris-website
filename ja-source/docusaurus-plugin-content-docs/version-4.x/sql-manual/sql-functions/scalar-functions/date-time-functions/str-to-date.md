@@ -21,7 +21,7 @@ STR_TO_DATE(<datetime_str>, <format>)
 | Parameter        | デスクリプション                                                                                                                                                                                                                                                                                                      |
 |------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `<datetime_str>` | 必須。変換する日付または時刻を表す入力datetime文字列。サポートされている入力形式については、[datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)と[date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion)を参照してください |
-| `<format>`       | 必須。`%Y-%m-%d %H:%i:%s`などの指定されたdatetime形式文字列。具体的な形式パラメータについては、[DATE_FORMAT](./date-format#parameters)のドキュメントを参照してください                                                                                                                               |
+| `<format>`       | 必須。`%Y-%m-%d %H:%i:%s`などの指定されたdatetime形式文字列。具体的な形式パラメータについては、[DATE_FORMAT](./date-format#説明)のドキュメントを参照してください                                                                                                                               |
 
 さらに、`<format>`は以下の代替形式をサポートし、通常の形式に従って解釈されます：
 

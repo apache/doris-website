@@ -5,6 +5,9 @@
   "description": "この文書では、様々なロード方法を使用してDoris unique keyモデルのデータを更新する方法を紹介します。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="flexible-partial-column-updates"></a>
 この文書では、様々なロード方法を使用してDorisiqueキーモデルのデータを更新する方法を紹介します。
 
 ## 全行更新

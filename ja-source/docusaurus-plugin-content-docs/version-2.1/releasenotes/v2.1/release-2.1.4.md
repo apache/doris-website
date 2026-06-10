@@ -41,7 +41,7 @@
 
 - FE flame graph ツールをサポート
   
-  詳細については、[ドキュメント](/community/developer-guide/fe-profiler.md) を参照してください
+  詳細については、ドキュメント を参照してください
   
 - `SELECT DISTINCT` を集約と組み合わせて使用することをサポート。
 
@@ -73,7 +73,7 @@
 
 - `show storage policy using` 文をサポート。
 
-	詳細については、[ドキュメント](../../sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY-USING) を参照してください。
+	詳細については、ドキュメント を参照してください。
 
 - BE 側で JVM メトリクスをサポート。
 

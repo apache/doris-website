@@ -828,7 +828,7 @@ At the same time, if a task frequently modifies the label and restarts, it may a
 
 7. **How to ensure the order of a batch of data when Flink writes to the Uniq model?**
 
-You can add sequence column configuration to ensure that, for details, please refer to [sequence](../data-operate/update/update-of-unique-model.md)
+You can add sequence column configuration to ensure that, for details, please refer to sequence
 
 8. **The Flink task does not report an error, but the data cannot be synchronized? **
 

@@ -5,6 +5,8 @@
 }
 ---
 
+
+<!-- Compatibility anchors for historical inbound links. -->
 # 变量
 
 本文档主要介绍当前支持的变量（variables）。

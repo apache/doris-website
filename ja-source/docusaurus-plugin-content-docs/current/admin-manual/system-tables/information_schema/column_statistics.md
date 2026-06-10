@@ -10,7 +10,7 @@
 
 ## 概要
 
-このテーブルはMySQLの動作との互換性のためだけに使用され、常に空です。Doris内のデータの統計情報を真に反映するものではありません。Dorisによって収集された統計情報を表示するには、[Statistics](../../../query-acceleration/optimization-technology-principle/statistics#viewing-statistics)セクションを参照してください。
+このテーブルはMySQLの動作との互換性のためだけに使用され、常に空です。Doris内のデータの統計情報を真に反映するものではありません。Dorisによって収集された統計情報を表示するには、[Statistics](../../../query-acceleration/optimization-technology-principle/statistics#統計情報)セクションを参照してください。
 
 ## Database
 

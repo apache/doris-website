@@ -24,7 +24,7 @@ UTC_TIME([<`precision`>])
 ## 戻り値
 現在のUTC時刻を返します。
 
-Time型を返します（形式：HH:mm:ss）。戻り値を数値演算で使用する場合、[整数形式](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#from--time)に変換されます（00:00:00からの経過時間値、単位はマイクロ秒）。
+Time型を返します（形式：HH:mm:ss）。戻り値を数値演算で使用する場合、[整数形式](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#文字列から)に変換されます（00:00:00からの経過時間値、単位はマイクロ秒）。
 
 入力がNULLまたは精度が範囲外の場合、エラーが発生します。
 

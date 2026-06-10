@@ -88,7 +88,7 @@ BACKUP
 
 1. 同一个数据库下只能进行一个备份操作。
 
-2. 备份操作会备份指定表或分区的基础表及同步物化视图[物化视图](../../../../query-acceleration/materialized-view/sync-materialized-view)，并且仅备份一副本，[异步物化视图](../../../../query-acceleration/materialized-view/async-materialized-view/overview) 当前未支持。
+2. 备份操作会备份指定表或分区的基础表及同步物化视图物化视图，并且仅备份一副本，异步物化视图 当前未支持。
 
 3. 备份操作的效率
 

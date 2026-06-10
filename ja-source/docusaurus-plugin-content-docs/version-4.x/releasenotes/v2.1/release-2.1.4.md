@@ -41,7 +41,7 @@
 
 - FE flame graphツールをサポート
   
-  詳細については、[ドキュメント](/community/developer-guide/fe-profiler.md)をご覧ください
+  詳細については、ドキュメントをご覧ください
   
 - `SELECT DISTINCT`を集約と併用できるようになりました。
 
@@ -69,7 +69,7 @@
 
 - 関数`replace_empty`を追加。
 
-	詳細については、[ドキュメント](../sql-manual/sql-functions/string-functions/replace_empty)をご覧ください。
+	詳細については、ドキュメントをご覧ください。
 
 - `show storage policy using`ステートメントをサポート。
 

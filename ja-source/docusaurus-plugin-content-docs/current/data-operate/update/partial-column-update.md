@@ -5,6 +5,11 @@
   "description": "この文書では、Unique Key ModelとAggregate Key Modelテーブルにおいて、Dorisで部分的なカラム更新を実行する方法について説明します。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="flexible-partial-column-update"></a>
+<a id="partial-column-update-for-aggregate-key-model"></a>
+<a id="partial-column-update-for-unique-key-model"></a>
 部分カラム更新では、すべてのフィールドを変更することなく、テーブル内の特定のフィールドを更新できます。このドキュメントでは、Unique Key ModelとAggregate Key Modelの両方のテーブルに対して部分カラム更新を実行する方法を説明します。
 
 ## 概要

@@ -5,6 +5,8 @@
   "language": "ja"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## 説明
 
 現在のデータベースまたは指定されたデータベースに新しいtableを作成します。tableは複数の列を持つことができ、各列の定義には名前、データ型、および必要に応じて以下の属性が含まれます：

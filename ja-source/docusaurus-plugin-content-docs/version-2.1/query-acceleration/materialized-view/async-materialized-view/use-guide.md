@@ -36,7 +36,7 @@
 
 - マテリアライズドビューで使用されるテーブルのうち、パーティションテーブル以外は頻繁に変更されない。
 
-- マテリアライズドビューの定義SQLとパーティションフィールドがパーティション派生の要件を満たしている、つまりパーティション増分更新の要件を満たしている。詳細な要件は[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters)で確認できます。
+- マテリアライズドビューの定義SQLとパーティションフィールドがパーティション派生の要件を満たしている、つまりパーティション増分更新の要件を満たしている。詳細な要件は[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#説明)で確認できます。
 
 - マテリアライズドビューのパーティション数が大きくない。パーティションが多すぎると、パーティションマテリアライズドビューの構築時間が過度に長くなります。
 
@@ -46,7 +46,7 @@
 
 ## パーティションマテリアライズドビューの一般的な使用方法
 
-マテリアライズドビューのベーステーブルのデータ量が大きく、ベーステーブルがパーティションテーブルである場合、マテリアライズドビューの定義SQLとパーティションフィールドがパーティション派生の要件を満たしていれば、このシナリオはパーティションマテリアライズドビューの構築に適しています。パーティション派生の詳細な要件については、[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters)と[Async Materialized View FAQ Building Question 12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12-error-when-building-partitioned-materialized-view)を参照してください。
+マテリアライズドビューのベーステーブルのデータ量が大きく、ベーステーブルがパーティションテーブルである場合、マテリアライズドビューの定義SQLとパーティションフィールドがパーティション派生の要件を満たしていれば、このシナリオはパーティションマテリアライズドビューの構築に適しています。パーティション派生の詳細な要件については、[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#説明)と[Async Materialized View FAQ Building Question 12](../../../query-acceleration/materialized-view/async-materialized-view/faq#build-and-refresh)を参照してください。
 
 マテリアライズドビューのパーティションは、ベーステーブルのパーティションマッピングに従って作成され、通常ベーステーブルのパーティションと1:1または1:nの関係を持ちます。
 

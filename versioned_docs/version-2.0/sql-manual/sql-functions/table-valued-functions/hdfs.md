@@ -23,7 +23,7 @@ hdfs(
   "fs.defaultFS" = "...",
   "hadoop.username" = "...",
   "format" = "csv",
-  "keyn" = "valuen" 
+  "keyn" = "valuen"
   ...
   );
 ```
@@ -56,7 +56,7 @@ File format parameters:
 - `line_delimiter`: (optional) default `\n`.
 - `compress_type`: (optional) Currently support `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`. Default value is `UNKNOWN`, it will automatically infer the type based on the suffix of `uri`.
 
-    The following 6 parameters are used for loading in json format. For specific usage methods, please refer to: [Json Load](../../../data-operate/import/file-format/json)
+    The following 6 parameters are used for loading in json format. For specific usage methods, please refer to: Json Load
 
 - `read_json_by_line`: (optional) default `"true"`
 - `strip_outer_array`: (optional) default `"false"`
@@ -73,7 +73,7 @@ File format parameters:
 other kinds of parameters:
 
 - `path_partition_keys`: (optional) Specifies the column names carried in the file path. For example, if the file path is /path/to/city=beijing/date="2023-07-09", you should fill in `path_partition_keys="city,date"`. It will automatically read the corresponding column names and values from the path during load process.
-- `resource`：（optional）Specify the resource name. Hdfs Tvf can use the existing Hdfs resource to directly access Hdfs. You can refer to the method for creating an Hdfs resource: [CREATE-RESOURCE](../../sql-statements/Data-Definition-Statements/Create/CREATE-RESOURCE.md). This property is supported starting from version 2.1.4. 
+- `resource`：（optional）Specify the resource name. Hdfs Tvf can use the existing Hdfs resource to directly access Hdfs. You can refer to the method for creating an Hdfs resource: CREATE-RESOURCE. This property is supported starting from version 2.1.4.
 
 :::tip Tip
 To directly query a TVF or create a VIEW based on that TVF, you need to have usage permission for that resource. To query a VIEW created based on TVF, you only need select permission for that VIEW.

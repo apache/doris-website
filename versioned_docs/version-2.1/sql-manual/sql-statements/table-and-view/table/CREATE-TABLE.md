@@ -224,7 +224,7 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 
 **<distribute_cols> and <bucket_count>**
 
-> Bucketing columns and bucket counts. Detail model bucket columns can be any columns, aggregation model and primary key model bucket columns must be consistent with key columns. Bucket count is any positive integer. For details on bucketing, see the [Manual Bucketing](../../../../table-design/data-partitioning/data-bucketing#manual-setting-bucket-count) and [Automatic Bucketing](../../../../table-design/data-partitioning/data-bucketing#automatic-setting-bucket-count) sections.
+> Bucketing columns and bucket counts. Detail model bucket columns can be any columns, aggregation model and primary key model bucket columns must be consistent with key columns. Bucket count is any positive integer. For details on bucketing, see the [Manual Bucketing](../../../../table-design/data-partitioning/data-bucketing#manually-setting-the-number-of-buckets) and [Automatic Bucketing](../../../../table-design/data-partitioning/data-bucketing#automatic-bucket-number-setting) sections.
 
 ### Column Default Value Related Parameters
 
