@@ -17,7 +17,7 @@ try {
     process.exit(0);
 }
 
-const brokenLinks = (data.links || []).filter(link => link.state === 'BROKEN');
+const brokenLinks = (data.links || []).filter(link => link.state === 'BROKEN' && link.status === 404);
 
 // Resolve repo name to determine specific doc mappings
 const repoName = process.env.GITHUB_REPOSITORY || 'doris-website';
