@@ -7,3 +7,9 @@
 # Ignore Docker Hub / GitHub internal API URLs which might throttle/block automated requests
 ^https?://hub\.docker\.com
 ^https?://github\.com/apache/doris-website/pull/
+
+# Ignore Japanese routes until the ja site is published on doris.apache.org
+^https?://doris\.apache\.org/ja/
+
+# Ignore generated 404 pages picked up during crawling
+^https?://doris\.apache\.org/(zh-CN/)?404\.html/?$
