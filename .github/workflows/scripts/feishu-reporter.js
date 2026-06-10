@@ -2,10 +2,6 @@ const fs = require('fs');
 const path = require('path');
 
 const WEBHOOK_URL = process.env.FEISHU_WEBHOOK;
-if (!WEBHOOK_URL) {
-    console.error('Error: FEISHU_WEBHOOK environment variable is not set.');
-    process.exit(1);
-}
 
 const resultsPath = path.join(process.cwd(), 'link_results.json');
 if (!fs.existsSync(resultsPath)) {
@@ -45,7 +41,13 @@ function resolveSourceFile(cleanParent) {
     
     // 1. Remove query parameters and hash fragments
     const pathOnly = cleanParent.split(/[?#]/)[0];
-    const decodedPath = decodeURIComponent(pathOnly.replace(/^\/|\/$/g, ''));
+    let decodedPath = decodeURIComponent(pathOnly.replace(/^\/|\/$/g, ''));
+
+    // Normalize Docusaurus static-build URLs emitted by `serve build`.
+    decodedPath = decodedPath
+        .replace(/\.html\/index\.html$/, '')
+        .replace(/\/index\.html$/, '')
+        .replace(/\.html$/, '');
     
     if (decodedPath === '') {
         return {
@@ -55,7 +57,42 @@ function resolveSourceFile(cleanParent) {
         };
     }
 
-    // 2. Candidate files list for local lookup (markdown/docs/pages)
+    // 2. Handle Docusaurus docs version routes.
+    //    /docs/dev/foo        -> docs/foo.md(x)
+    //    /docs/4.x/foo        -> versioned_docs/version-4.x/foo.md(x)
+    //    /zh-CN/docs/4.x/foo  -> i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/foo.md(x)
+    const docsMatch = decodedPath.match(/^(?:(zh-CN)\/)?docs\/([^/]+)\/(.+)$/);
+    if (docsMatch) {
+        const [, locale, version, docPath] = docsMatch;
+        const dirPrefix = locale
+            ? `i18n/${locale}/docusaurus-plugin-content-docs/${version === 'dev' ? 'current' : `version-${version}`}`
+            : version === 'dev'
+                ? 'docs'
+                : `versioned_docs/version-${version}`;
+        const docCandidates = [
+            `${dirPrefix}/${docPath}.md`,
+            `${dirPrefix}/${docPath}.mdx`,
+            `${dirPrefix}/${docPath}/index.md`,
+            `${dirPrefix}/${docPath}/index.mdx`,
+        ];
+        for (const cand of docCandidates) {
+            if (fs.existsSync(path.join(process.cwd(), cand))) {
+                return {
+                    file: cand,
+                    link: `${serverUrl}/${repoName}/blob/${commitSha}/${cand}`,
+                    localPath: cand
+                };
+            }
+        }
+        const fallbackCand = `${dirPrefix}/${docPath}.md`;
+        return {
+            file: fallbackCand,
+            link: `${serverUrl}/${repoName}/blob/${commitSha}/${fallbackCand}`,
+            localPath: fallbackCand
+        };
+    }
+
+    // 3. Candidate files list for local lookup (markdown/docs/pages)
     const candidates = [
         decodedPath + '.md',
         decodedPath + '.mdx',
@@ -81,7 +118,7 @@ function resolveSourceFile(cleanParent) {
         }
     }
     
-    // 3. Special Docusaurus components mapping / fallbacks
+    // 4. Special Docusaurus components mapping / fallbacks
     if (decodedPath.startsWith('blog/detail')) {
         return {
             file: 'src/pages/blog/detail/index.tsx (博客详情页)',
@@ -331,6 +368,11 @@ const payload = {
 };
 
 const payloadStr = JSON.stringify(payload, null, 2);
+
+if (!WEBHOOK_URL) {
+    console.error('Error: FEISHU_WEBHOOK environment variable is not set. Step summary has been written.');
+    process.exit(1);
+}
 
 const urlObj = new URL(WEBHOOK_URL);
 const protocol = urlObj.protocol === 'https:' ? require('https') : require('http');
