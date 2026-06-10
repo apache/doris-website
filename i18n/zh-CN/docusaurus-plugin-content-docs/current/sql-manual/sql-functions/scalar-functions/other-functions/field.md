@@ -29,6 +29,28 @@ FIELD(<expr>, <param> [, ...])
 
 ## 举例
 
+```sql
+-- setup
+CREATE TABLE baseall (k1 INT, k7 VARCHAR(64))
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO baseall VALUES
+    (1, 'wangjing04'),
+    (2, 'wangyu14'),
+    (3, 'yuanyuan06');
+
+CREATE TABLE class_test (class_name VARCHAR(64))
+DISTRIBUTED BY HASH(class_name) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO class_test VALUES
+    ('Suzi'), ('Suzi'),
+    ('Ben'), ('Ben'),
+    ('Henry'), ('Henry'),
+    (NULL);
+```
+
 直接使用 `FIELD` 查找位置（基于 1 的索引）：
 
 ```sql
@@ -65,6 +87,7 @@ SELECT class_name FROM class_test ORDER BY FIELD(class_name, 'Suzi', 'Ben', 'Hen
 +------------+
 | class_name |
 +------------+
+| NULL       |
 | Suzi       |
 | Suzi       |
 | Ben        |
@@ -88,6 +111,7 @@ SELECT class_name FROM class_test ORDER BY FIELD(class_name, 'Suzi', 'Ben', 'Hen
 | Ben        |
 | Suzi       |
 | Suzi       |
+| NULL       |
 +------------+
 ```
 
