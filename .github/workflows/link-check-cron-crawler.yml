@@ -28,7 +28,7 @@ jobs:
             done < .github/workflows/link-check-ignore.txt
           fi
 
-          npx -y linkinator https://doris.apache.org --recurse --check-images --skip "^(?!https?://(www\.)?doris\.apache\.org)" "${skips[@]}" --format json > link_results.json || echo "HAS_BROKEN=true"
+          npx -y linkinator https://doris.apache.org --recurse --check-images --concurrency 5 --timeout 30000 --retry --retry-errors --retry-errors-count 3 --status-code "429:warn" --skip "^(?!https?://(www\.)?doris\.apache\.org)" "${skips[@]}" --format json > link_results.json || echo "HAS_BROKEN=true"
 
       - name: Send Feishu Notification on failure
         if: always()

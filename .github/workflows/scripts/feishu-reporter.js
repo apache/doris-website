@@ -206,6 +206,9 @@ for (const link of brokenLinks) {
     } else if (link.status === 403) {
         errorReason = '403: 服务器拒绝访问，可能是鉴权过期或有防爬虫限制 (Forbidden)';
         cntOther++;
+    } else if (link.status === 429) {
+        errorReason = '429: 触发线上站点限流/防爬策略，浏览器访问可能正常 (Rate Limited)';
+        cntOther++;
     } else if (link.status >= 500) {
         errorReason = `${link.status}: 目标网站服务错误，请确认服务是否正常运行 (Server Error)`;
         cntOther++;
