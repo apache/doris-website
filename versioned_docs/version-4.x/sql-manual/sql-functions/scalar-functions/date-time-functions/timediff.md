@@ -80,11 +80,11 @@ SELECT TIMEDIFF('2024-01-01 00:00:01', '2023-12-31 23:59:59') AS result;
 
 -- When returned time is not an integer number of seconds, returns time with scale
 SELECT TIMEDIFF('2023-07-13 12:34:56.789', '2023-07-13 12:34:50.123') AS result;
-+-----------+
-| result    |
-+-----------+
-| 00:00:06  |
-+-----------+
++--------------+
+| result       |
++--------------+
+| 00:00:06.666 |
++--------------+
 
 -- Calculation result exceeds time size range, returns error
 SELECT TIMEDIFF('2023-07-13 12:34:56.789', '2024-07-13 12:34:50.123') AS result;

@@ -96,11 +96,11 @@ SELECT MONTH_FLOOR('2023-07-13 22:28:18', 5, '2023-01-01 00:00:00') AS result;
 
 -- Datetime with scale, time component and decimal places are all truncated to 0
 SELECT MONTH_FLOOR('2023-07-13 22:28:18.456789', 5) AS result;
-+---------------------+
-| result              |
-+---------------------+
-| 2023-06-01 00:00:00 |
-+---------------------+
++----------------------------+
+| result                     |
++----------------------------+
+| 2023-05-01 00:00:00.000000 |
++----------------------------+
 
 -- Input is of DATE type (default time 00:00:00)
 SELECT MONTH_FLOOR('2023-07-13', 3) AS result;

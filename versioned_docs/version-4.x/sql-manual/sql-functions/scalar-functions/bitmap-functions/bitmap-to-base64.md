@@ -80,7 +80,7 @@ The result will be:
 +--------------------------------+
 | bitmap_to_base64(to_bitmap(1)) |
 +--------------------------------+
-| AQEAAAA=                       |
+| BQEBAAAAAAAAAA==               |
 +--------------------------------+
 ```
 
@@ -96,6 +96,6 @@ The result will be:
 +---------------------------------------------------------+
 | bitmap_to_base64(bitmap_from_string("1,9999999"))       |
 +---------------------------------------------------------+
-| AjowAAACAAAAAAAAAJgAAAAYAAAAGgAAAAEAf5Y=                |
+| BQIBAAAAAAAAAH+WmAAAAAAA                          |
 +---------------------------------------------------------+
 ```

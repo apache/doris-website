@@ -124,13 +124,13 @@ SELECT array_concat(int_array1, int_array2) FROM array_concat_test WHERE id = 5;
 +--------------------------------------+
 ```
 
-类型兼容性示例：int_array1 和 string_array1 拼接，string 元素无法转换为 int，结果为 null。
+类型兼容性示例：int_array1 和 string_array1 拼接，int 元素会转换为 string，所有元素都会保留。
 ```sql
 SELECT array_concat(int_array1, string_array1) FROM array_concat_test WHERE id = 1;
 +-----------------------------------------+
 | array_concat(int_array1, string_array1) |
 +-----------------------------------------+
-| [1, 2, 3, null, null]                   |
+| ["1", "2", "3", "a", "b"]            |
 +-----------------------------------------+
 ```
 

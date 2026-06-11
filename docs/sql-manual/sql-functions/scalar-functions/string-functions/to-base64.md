@@ -107,7 +107,7 @@ SELECT TO_BASE64('ṭṛì'), TO_BASE64('ḍḍumai hello');
 +-------------------+---------------------------+
 | TO_BASE64('ṭṛì')  | TO_BASE64('ḍḍumai hello') |
 +-------------------+---------------------------+
-| 4bmt4bmb4bmA      | 4bmN4bmNdW1haSBoZWxsbw==  |
+| 4bmt4bmbw6w=      | 4bmN4bmNdW1haSBoZWxsbw==  |
 +-------------------+---------------------------+
 ```
 
