@@ -5,6 +5,9 @@
   "description": "Flink Doris ConnectorはFlinkを通じてDorisクラスターからデータを読み取り、データを書き込むために使用されます。また、FlinkCDCも統合しています。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="general-configuration-items"></a>
 [Flink Doris Connector](https://github.com/apache/doris-flink-connector) は、Flinkを通じてDorisクラスターからデータを読み取り、データを書き込むために使用されます。また、[FlinkCDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/)も統合されており、MySQLなどの上流データベースとのより便利な完全データベース同期を可能にします。
 
 Flink Connectorを使用すると、以下の操作を実行できます：
@@ -805,7 +808,7 @@ Flinkクラスターを開始した後、以下のコマンドを直接実行で
 | sink.label-prefix           | --           | Y    | Stream loadインポートに使用されるラベルプレフィックス。2pcシナリオでは、FlinkのEOSセマンティクスを保証するためにグローバルにユニークである必要があります。 |
 | sink.properties.*           | --           | N    | Stream Loadのインポートパラメータ。例：'sink.properties.column_separator' = ', 'はカラム区切り文字を定義し、'sink.properties.escape_delimiters' = 'true'は\x01などの区切り文字としての特殊文字がバイナリ0x01に変換されることを意味します。JSON形式のインポートの場合、'sink.properties.format' = 'json'、'sink.properties.read_json_by_line' = 'true'。詳細なパラメータについては、[こちら](../data-operate/import/import-way/stream-load-manual.md#load-configuration-parameters)を参照してください。Group Commitモードの場合、例：'sink.properties.group_commit' = 'sync_mode'はgroup commitを同期モードに設定します。Flinkコネクタはバージョン1.6.2からインポート設定group commitをサポートしています。詳細な使用方法と制限については、[group commit](../data-operate/import/group-commit-manual.md)を参照してください。 |
 | sink.enable-delete          | TRUE         | N    | 削除を有効にするかどうか。このオプションではDorisテーブルでバッチ削除機能が有効になっている必要があり（Doris 0.15+バージョンではデフォルトで有効）、Uniqueモデルのみをサポートします。 |
-| sink.enable-2pc             | TRUE         | N    | 2フェーズコミット（2pc）を有効にするかどうか。デフォルトはtrueで、Exactly-Onceセマンティクスを保証します。2フェーズコミットの詳細については、[こちら](../data-operate/transaction.md#streamload-2pc)を参照してください。 |
+| sink.enable-2pc             | TRUE         | N    | 2フェーズコミット（2pc）を有効にするかどうか。デフォルトはtrueで、Exactly-Onceセマンティクスを保証します。2フェーズコミットの詳細については、[こちら](../data-operate/transaction.md#stream-load-2pc)を参照してください。 |
 | sink.buffer-size            | 1MB          | N    | 書き込みデータキャッシュバッファのサイズ、バイト単位。変更は推奨されず、デフォルト設定を使用できます。 |
 | sink.buffer-count           | 3            | N    | 書き込みデータキャッシュバッファの数。変更は推奨されず、デフォルト設定を使用できます。 |
 | sink.max-retries            | 3            | N    | Commit失敗後の最大再試行回数。デフォルトは3回です。           |

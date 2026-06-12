@@ -79,9 +79,9 @@ mysql [(none)]>select date_ceil("2023-07-13 22:28:18",interval 5 year);
 ### Best Practice
 
 See also
-- [second_ceil](./second_ceil)
-- [minute_ceil](./minute_ceil)
-- [hour_ceil](./hour_ceil)
-- [day_ceil](./day_ceil)
-- [month_ceil](./month_ceil)
-- [year_ceil](./year_ceil)
+- second_ceil
+- minute_ceil
+- hour_ceil
+- day_ceil
+- month_ceil
+- year_ceil

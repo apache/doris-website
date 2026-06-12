@@ -22,7 +22,7 @@
 
 - https://github.com/apache/doris/pull/33282 
 
-3. Auto Partition 语法变化，详见[文档](../../table-design/data-partitioning/auto-partitioning.md)
+3. Auto Partition 语法变化，详见[文档](../../../docusaurus-plugin-content-docs/version-2.1/table-design/data-partitioning/auto-partitioning.md)
 
 - https://github.com/apache/doris/pull/32737
 

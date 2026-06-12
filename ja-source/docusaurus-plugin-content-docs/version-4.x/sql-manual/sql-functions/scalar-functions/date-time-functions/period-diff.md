@@ -5,13 +5,15 @@
   "language": "ja"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## 説明
 2つのピリオド間の月数の差を計算します。
 
 ここで`<period>`は整数で、末尾2桁が月（01-12）を表し、先頭の桁が年を表します。
 この関数は period_1 - period_2 の絶対結果を返します。
 
-年の部分が100未満の場合、[特定のルール](#parameters)に従って4桁の年形式に変換されます。
+年の部分が100未満の場合、[特定のルール](#説明)に従って4桁の年形式に変換されます。
 
 この関数はMySQLの[PERIOD_DIFF function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_period-diff)と一貫して動作します。
 

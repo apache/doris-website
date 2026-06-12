@@ -46,7 +46,7 @@ Leading Hint 是 Doris 中用于手动指定多表 Join 顺序的查询提示（
 - [常规 Leading Hint](#常规-leading-hint)：基础语法、生效状态、典型用法。
 - [典型场景示例](#典型场景示例)：基础用法 + 左深树 / 右深树 / Bushy 树 / zig-zag 树 / Non-inner Join / View。
 - [Ordered Hint](#ordered-hint)：固定 Join 顺序为文本序的特例。
-- [常见问题（FAQ）](#常见问题-faq)：Hint 不生效、与其他 Hint 优先级等。
+- [常见问题（FAQ）](#常见问题faq)：Hint 不生效、与其他 Hint 优先级等。
 
 ## 常规 Leading Hint
 

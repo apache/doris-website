@@ -305,7 +305,7 @@ SQL Profile 中缓存相关指标位于 `SegmentIterator` 节点下：
 | `RemoteIOUseTimer` | 读取远程存储的耗时 |
 | `WriteCacheIOUseTimer` | 写入 File Cache 的耗时 |
 
-您可以通过[查询性能分析](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile)查看完整的查询性能报告。
+您可以通过[查询性能分析](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile分析执行层瓶颈)查看完整的查询性能报告。
 
 ## TTL 缓存策略
 

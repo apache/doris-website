@@ -78,7 +78,7 @@ MySQL> SELECT * FROM testdb.test_table2 ORDER BY age;
 ```
 6. [JOB](../../../admin-manual/workload-management/job-scheduler)を使用してINSERT操作を非同期で実行することができます。
 
-7. ソースは[tvf](../../../lakehouse/file-analysis.md)または[catalog](../../../lakehouse/catalogs/hive-catalog.mdx)内のTableを使用できます。
+7. ソースは[tvf](../../../lakehouse/file-analysis.md)またはcatalog内のTableを使用できます。
 
 ### INSERT INTOジョブの表示
 

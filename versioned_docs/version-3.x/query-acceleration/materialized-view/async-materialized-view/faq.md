@@ -310,7 +310,7 @@ If there is no hit, the following reasons may apply:
 
 - The materialized view may be in an unusable state, preventing transparent rewriting from hitting it. To view the build status of the materialized view, refer to the section on viewing materialized view status.
 
-- If, after checking the first two steps, the materialized view still does not hit, it may be because SQL defines the materialized view and the query SQL is outside the current rewriting capabilities of the materialized view. Refer to the [Materialized View Transparent Rewriting Capabilities](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands#transparent-rewriting-capability) for details.
+- If, after checking the first two steps, the materialized view still does not hit, it may be because SQL defines the materialized view and the query SQL is outside the current rewriting capabilities of the materialized view. Refer to the [Materialized View Transparent Rewriting Capabilities](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands#transparent-query-rewriting) for details.
 
 - For detailed information and explanations on failed hits, refer to [Appendix 1](#reference).
 

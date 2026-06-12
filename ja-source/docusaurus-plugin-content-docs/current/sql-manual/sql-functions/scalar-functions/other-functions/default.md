@@ -32,7 +32,7 @@ DEFAULT(<column>)
 - 入力として列のみが許可されています。定数（NULLを含む）や式が提供された場合、エラーが発生します
 - 入力が自動増分列または生成された列の場合、エラーが発生します
 
-[Dorisサポートのデフォルト値関連パラメータ](../../../sql-statements/table-and-view/table/CREATE-TABLE.md#Column-Default-Value-Related-Parameters)
+[Dorisサポートのデフォルト値関連パラメータ](../../../sql-statements/table-and-view/table/CREATE-TABLE.md#説明)
 
 ## 例
 

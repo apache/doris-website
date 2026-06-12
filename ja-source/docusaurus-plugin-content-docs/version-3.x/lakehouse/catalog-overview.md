@@ -24,7 +24,7 @@ Dorisには2種類のcatalogがあります：
 | データ統合 | ZeroETLソリューション、異なるデータソースに直接アクセスして結果データを生成、または異なるデータソース間のデータフローを促進。 |
 | データ書き戻し | Doris経由でデータ処理後、外部データソースへの書き戻し。                |
 
-このドキュメントでは[Iceberg カタログ](./catalogs/iceberg-catalog.mdx)を例として、catalogの基本操作に焦点を当てます。異なるcatalogの詳細な説明については、対応するcatalogのドキュメントを参照してください。
+このドキュメントではIceberg カタログを例として、catalogの基本操作に焦点を当てます。異なるcatalogの詳細な説明については、対応するcatalogのドキュメントを参照してください。
 
 ## カタログの作成
 
@@ -198,8 +198,8 @@ SELECT * FROM iceberg_catalog.iceberg_db.table1;
 
 Dorisは`INSERT`文を使用して外部データソースへのデータライトバックをサポートしています。詳細については以下を参照してください：
 
-* [Hive カタログ](./catalogs/hive-catalog.mdx)
-* [Iceberg カタログ](./catalogs/iceberg-catalog.mdx)
+* Hive カタログ
+* Iceberg カタログ
 * [JDBC カタログ](./catalogs/jdbc-catalog-overview.md)
 
 ## Catalogの更新

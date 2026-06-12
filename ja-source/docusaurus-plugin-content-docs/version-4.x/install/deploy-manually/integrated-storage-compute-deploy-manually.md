@@ -58,7 +58,7 @@
    | パラメータ                                                    | 推奨事項                                                 |
    | ------------------------------------------------------------ | --------------------------------------------------------- |
    | JAVA_OPTS                                                    | `-Xmx`パラメータを指定してJava Heapを調整します。本番環境では16G以上に設定することを推奨します。   |
-   | [lower_case_table_names ](../../admin-manual/config/fe-config#lower_case_table_names) | 大文字小文字の区別を設定します。1に調整することを推奨します。これは大文字小文字を区別しないことを意味します。            |
+   | [lower_case_table_names ](../../admin-manual/config/fe-config#fe-設定) | 大文字小文字の区別を設定します。1に調整することを推奨します。これは大文字小文字を区別しないことを意味します。            |
    | [priority_networks ](../../admin-manual/config/fe-config#priority_networks) | ネットワークIPアドレスに基づいてネットワークCIDRを指定します。FQDN環境では無視できます。 |
    | JAVA_HOME                                                    | DorisにはOSから独立したJDK環境を使用することを推奨します。                |
    

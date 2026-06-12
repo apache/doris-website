@@ -85,7 +85,7 @@
 ![Local Shuffle Clickbench and TPCH-100](/images/2.1-doris-clickbench-tpch.png)
 
 :::note 备注
-参考文档：[Pipeline X 执行引擎](../../query-acceleration/optimization-technology-principle/pipeline-execution-engine.md)
+参考文档：[Pipeline X 执行引擎](../../../docusaurus-plugin-content-docs/version-2.1/query-acceleration/optimization-technology-principle/pipeline-execution-engine.md)
 :::
 
 ## ARM 架构深度适配，性能提升 230% 
@@ -269,7 +269,7 @@ CREATE MATERIALIZED VIEW mv1
 
 :::note
 - 演示 Demo: https://www.bilibili.com/video/BV1s2421T71z/?spm_id_from=333.999.0.0
-- 参考文档：[异步物化视图](../../query-acceleration/materialized-view/async-materialized-view/overview)
+- 参考文档：[异步物化视图](../../../docusaurus-plugin-content-docs/version-2.1/query-acceleration/materialized-view/async-materialized-view/overview.md)
 :::
 
 ## 存储能力增强
@@ -375,7 +375,7 @@ PROPERTIES (
 
 :::note
 
-参考文档：[数据划分](../../table-design/data-partitioning/data-distribution)
+参考文档：[数据划分](../../../docusaurus-plugin-content-docs/version-2.1/table-design/data-partitioning/data-distribution.md)
 :::
 
 ### INSERT INTO SELECT 导入性能提升 100%
@@ -437,7 +437,7 @@ MemTable 前移在 2.1 版本中默认开启，用户无需修改原有的导入
 :::note
 - 演示 Demo：https://www.bilibili.com/video/BV1um411o7Ha/?spm_id_from=333.999.0.0
 
-- 参考文档和完整测试报告：[Group Commit](../../data-operate/import/group-commit-manual)
+- 参考文档和完整测试报告：[Group Commit](../../../docusaurus-plugin-content-docs/version-2.1/data-operate/import/group-commit-manual.md)
 
 :::
 
@@ -509,7 +509,7 @@ SELECT v["properties"]["title"] from ${table_name}
 :::note
 - 演示 Demo: https://www.bilibili.com/video/BV13u4m1g7ra/?spm_id_from=333.999.0.0
 
-- 参考文档：[VARIANT](../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT)
+- 参考文档：[VARIANT](../../../docusaurus-plugin-content-docs/version-2.1/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md)
 
 :::
 
@@ -524,7 +524,7 @@ SELECT v["properties"]["title"] from ${table_name}
 - INET_ATON：获取包含 IPv4 地址的字符串，格式为 A.B.C.D（点分隔的十进制数字）
 
 :::note
-参考文档：[IPV6](../../sql-manual/basic-element/sql-data-types/ip/IPV6)
+参考文档：[IPV6](../../../docusaurus-plugin-content-docs/version-2.1/sql-manual/basic-element/sql-data-types/ip/IPV6.md)
 
 :::
 
@@ -641,7 +641,7 @@ mysql> select struct(1,"2") not in (struct(1,3), struct(1,"2"), struct(1,1), nul
 - `MAP_AGG`：接收 expr1 作为键，expr2 作为对应的值，返回一个 MAP 
 
 :::note
-参考文档：[MAP_AGG](../../sql-manual/sql-functions/aggregate-functions/map-agg.md)
+参考文档：[MAP_AGG](../../../docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-functions/aggregate-functions/map-agg.md)
 :::
 
 
@@ -666,14 +666,14 @@ mysql> select struct(1,"2") not in (struct(1,3), struct(1,"2"), struct(1,1), nul
 
 :::note
 - 演示 Demo：https://www.bilibili.com/video/BV1Fz421X7XE/?spm_id_from=333.999.0.0
-- 参考文档：[Workload Group](../../admin-manual/workload-management/workload-group)
+- 参考文档：[Workload Group](../../../docusaurus-plugin-content-docs/version-2.1/admin-manual/workload-management/workload-group.md)
 
 :::
 
 ### TopSQL
 
 :::tip
-自 2.1.1 版本之后，active_queries() 已经废弃，TopSQl 主要通过 Doris 内置的系统表实现，参考文档 [工作负载诊断与分析](../../admin-manual/workload-management/analysis-diagnosis.md)
+自 2.1.1 版本之后，active_queries() 已经废弃，TopSQl 主要通过 Doris 内置的系统表实现，参考文档 [工作负载诊断与分析](../../../docusaurus-plugin-content-docs/version-2.1/admin-manual/workload-management/analysis-diagnosis.md)
 :::
 
 当集群出现预期外的大查询导致集群整体负载上升、查询可用性下降时，用户难以快速找到这些大查询并进行相应的降级操作。因此在 Apache Doris 2.1 版本中我们支持了运行时查看 SQL 资源用量的功能，具体指标如下：
@@ -728,7 +728,7 @@ select QueryId,max(BePeakMemoryBytes) as be_peak_mem from active_queries() group
 目前主要展示的负载类型包括 Select 和`Insert Into……Select`，预计在 2.1 版本之上的三位迭代版本中会支持 Stream Load 和 Broker Load 的资源用量展示。
 
 :::note
-参考文档：[ACTIVE_QUERIES](../../admin-manual/system-tables/information_schema/active_queries)
+参考文档：[ACTIVE_QUERIES](../../../docusaurus-plugin-content-docs/version-2.1/admin-manual/system-tables/information_schema/active_queries.md)
 :::
 
 
@@ -829,7 +829,7 @@ JOB e_daily
 
 :::caution 注意事项
 
-当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](../../sql-manual/sql-statements/job/CREATE-JOB)
+当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](../../../docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-statements/job/CREATE-JOB.md)
 
 :::
 
@@ -849,7 +849,7 @@ JOB e_daily
 
   - 对于之前已经安装过审计日志插件的用户，升级后可以继续使用原有插件，也可以通过 uninstall 命令卸载原有插件后，使用新的插件。但注意，切换插件后，审计日志表也将切换到新的表中。
 
-  - 具体可参阅：[审计日志插件](../../admin-manual/audit-plugin.md)
+  - 具体可参阅：[审计日志插件](../../../docusaurus-plugin-content-docs/version-2.1/admin-manual/audit-plugin.md)
 
 
 

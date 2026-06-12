@@ -55,13 +55,13 @@ Dear community, **Apache Doris version 2.1.7 was officially released on November
 ### Lakehouse
 
 - Support for writing data to Hive text format tables. [#40537](https://github.com/apache/doris/pull/40537)
-  - For more information, please  refer to [docs](../../lakehouse/catalogs/hive-catalog)
+  - For more information, please  refer to [docs](../../versioned_docs/version-2.1/lakehouse/catalogs/hive-catalog.mdx)
 - Access MaxCompute data using MaxCompute Open Storage API. [#41610](https://github.com/apache/doris/pull/41610)
-  - For more information, please  refer to [docs](../../lakehouse/catalogs/maxcompute-catalog)
+  - For more information, please  refer to [docs](../../versioned_docs/version-2.1/lakehouse/catalogs/maxcompute-catalog.md)
 - Support for Paimon DLF Catalog. [#41694](https://github.com/apache/doris/pull/41694)
-  - For more information, please  refer to [docs](../../lakehouse/catalogs/paimon-catalog)
+  - For more information, please  refer to [docs](../../versioned_docs/version-2.1/lakehouse/catalogs/paimon-catalog.mdx)
 - Added `table$partitions` syntax to directly query Hive partition information.[#41230](https://github.com/apache/doris/pull/41230)
-  - For more information, please  refer to [docs](../../lakehouse/catalogs/hive-catalog)
+  - For more information, please  refer to [docs](../../versioned_docs/version-2.1/lakehouse/catalogs/hive-catalog.mdx)
 - Support for reading Parquet files in brotli compression format.[#42162](https://github.com/apache/doris/pull/42162)
 - Support for reading DECIMAL 256 types in Parquet files. [#42241](https://github.com/apache/doris/pull/42241)
 - Support for reading Hive tables in OpenCsvSerde format.[#42939](https://github.com/apache/doris/pull/42939)

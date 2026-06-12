@@ -182,7 +182,7 @@ Spark 用于 ETL 时需要指定 working_dir 和 broker。说明如下：
 
 6. 创建 HMS resource
 
-   HMS resource 用于 [hms catalog](../../../../lakehouse/datalake/hive)
+   HMS resource 用于 hms catalog
    ```sql
    CREATE RESOURCE hms_resource PROPERTIES (
       'type'='hms',

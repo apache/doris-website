@@ -29,7 +29,7 @@ STRING json_type(JSON j, VARCHAR json_path)
 
 ## 举例
 
-参考 [json tutorial](../../sql-reference/Data-Types/JSON.md) 中的示例
+参考 json tutorial 中的示例
 
 ### keywords
 

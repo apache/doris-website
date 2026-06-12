@@ -5,6 +5,8 @@
 }
 ---
 
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## Partition columns
 
 - Partition columns can be specified as one or multiple columns, and the partition columns must be KEY columns. The usage of multi-column partitioning will be introduced later in the summary section of multi-column partitioning.

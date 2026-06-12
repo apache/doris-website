@@ -5,6 +5,8 @@
   "description": "日付タイプをフォーマットタイプに従ってビット文字列に変換します。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## 説明
 
 フォーマットタイプに従って日付タイプをビット文字列に変換します。

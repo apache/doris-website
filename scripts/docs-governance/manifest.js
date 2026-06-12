@@ -15,6 +15,7 @@ const {
   parseArgs,
   stripMarkdownExtension,
   toPosixPath,
+  walkFiles,
   walkMarkdownFiles,
 } = require('./lib');
 
@@ -29,6 +30,9 @@ const CONTENT_ROOTS = [
   'blog',
   'ja-source/docusaurus-plugin-content-docs',
 ];
+
+const PAGE_EXTENSIONS = new Set(['.js', '.jsx', '.ts', '.tsx']);
+const EXCLUDED_PAGE_SEGMENTS = new Set(['components', 'theme']);
 
 function parseFrontMatter(absPath) {
   const raw = fs.readFileSync(absPath, 'utf8');
@@ -47,6 +51,32 @@ function parseFrontMatter(absPath) {
 
 function getContentInfo(relativePath, rules) {
   const currentRoute = rules.currentRouteVersion;
+
+  if (relativePath.startsWith('docs/')) {
+    const docRelative = relativePath.slice('docs/'.length);
+    return {
+      contentRoot: 'docs',
+      plugin: 'main_docs',
+      locale: 'en',
+      version: 'current',
+      docRelative,
+      routeBase: `/docs/${currentRoute}`,
+      sidebarSource: 'sidebars.ts',
+    };
+  }
+
+  if (relativePath.startsWith('i18n/zh-CN/docusaurus-plugin-content-docs/current/')) {
+    const docRelative = relativePath.slice('i18n/zh-CN/docusaurus-plugin-content-docs/current/'.length);
+    return {
+      contentRoot: 'zh_docs',
+      plugin: 'main_docs',
+      locale: 'zh-CN',
+      version: 'current',
+      docRelative,
+      routeBase: `/zh-CN/docs/${currentRoute}`,
+      sidebarSource: 'sidebars.ts',
+    };
+  }
 
   let match = relativePath.match(/^versioned_docs\/version-([^/]+)\/(.+)$/);
   if (match) {
@@ -192,6 +222,23 @@ function resolveCanonicalRoute(entry, rules) {
     return `${localePrefix}/docs/${rules.defaultVersion}/${docPart}`;
   }
   return entry.route_path;
+}
+
+function pageRouteFromSource(relativePath) {
+  if (!relativePath.startsWith('src/pages/')) {
+    return null;
+  }
+  const ext = path.extname(relativePath);
+  if (!PAGE_EXTENSIONS.has(ext)) {
+    return null;
+  }
+  const pagePart = relativePath.slice('src/pages/'.length, -ext.length);
+  const parts = pagePart.split('/');
+  if (parts.some((part) => !part || part.startsWith('_') || EXCLUDED_PAGE_SEGMENTS.has(part))) {
+    return null;
+  }
+  const routeParts = parts[parts.length - 1] === 'index' ? parts.slice(0, -1) : parts;
+  return `/${routeParts.join('/')}`.replace(/\/+$/, '') || '/';
 }
 
 function detectDocType(relativePath, docTypeRules) {
@@ -349,6 +396,53 @@ function buildManifest(options = {}) {
     entries.push(entry);
   }
 
+  const pageFiles = walkFiles(path.join(rootDir, 'src/pages'), (filePath) => PAGE_EXTENSIONS.has(path.extname(filePath)))
+    .map((absPath) => ({
+      absPath,
+      relativePath: toPosixPath(path.relative(rootDir, absPath)),
+    }))
+    .sort((left, right) => left.relativePath.localeCompare(right.relativePath));
+
+  for (const file of pageFiles) {
+    const routePath = pageRouteFromSource(file.relativePath);
+    if (!routePath) {
+      continue;
+    }
+    const docId = `site_pages:${routePath === '/' ? 'index' : routePath.slice(1)}`;
+    entries.push({
+      doc_id: docId,
+      source_path: file.relativePath,
+      content_root: 'src/pages',
+      plugin: 'site_pages',
+      locale: 'en',
+      version: null,
+      route_path: routePath,
+      canonical_route_path: routePath,
+      sidebar_source: null,
+      title: null,
+      description: null,
+      slug: null,
+      keywords: [],
+      tags: [],
+      sidebar_label: null,
+      sidebar_position: null,
+      doc_type: 'site_page',
+      owner: ownersConfig.defaultOwner,
+      is_archived: false,
+      sync_group_id: docId,
+      blocking_level: 'report_only',
+      front_matter_format: 'none',
+      source_counterpart: null,
+      localized_counterparts: [],
+      version_counterparts: [],
+      route_aliases: [],
+      heading_anchors: [],
+      inbound_links: [],
+      outbound_links: [],
+      exceptions: [],
+    });
+  }
+
   addCounterparts(entries);
 
   return {
@@ -385,6 +479,6 @@ module.exports = {
   detectDocType,
   getContentInfo,
   makeDocId,
+  pageRouteFromSource,
   resolveOwner,
 };
-

@@ -5,6 +5,9 @@
   "language": "ja"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="transparent-rewriting-capability"></a>
 この文書では、マテリアライズドビューの作成、マテリアライズドビューへの直接クエリ、クエリリライト、および一般的なメンテナンス操作について詳細な情報を提供します。
 
 ## マテリアライズドビューの作成
@@ -1104,7 +1107,7 @@ SyncWithBaseTables: 1
 - **Normal:** マテリアライズドビューは透過的な書き換えに利用できます。
 - **Unavailable/Abnormal:** マテリアライズドビューは透過的な書き換えに使用できません。ただし、直接クエリすることは可能です。
 
-詳細については、[MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv-infos)を参照してください。
+詳細については、MV_INFOSを参照してください。
 
 ### リフレッシュタスク情報のクエリ
 

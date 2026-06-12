@@ -5,6 +5,9 @@
   "description": "Dorisはカスタムタイムゾーン設定をサポートしています"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="data-source"></a>
 Dorisはカスタムタイムゾーン設定をサポートしています
 
 ## 基本概念

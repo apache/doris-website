@@ -5,6 +5,9 @@
   "description": "Stream LoadはHTTPプロトコルを通じてローカルファイルやデータストリームをDorisにインポートすることをサポートしています。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="load-configuration-parameters"></a>
 Stream Loadは、HTTPプロトコルを通じてローカルファイルまたはデータストリームをDorisにインポートすることをサポートしています。
 
 Stream Loadは同期インポート方式で、インポートの実行後にインポート結果を返すため、リクエストレスポンスを通じてインポートの成功を判断できます。一般的に、ユーザーはStream Loadを使用して10GB以下のファイルをインポートできます。ファイルが大きすぎる場合は、ファイルを分割してからStream Loadを使用してインポートすることを推奨します。Stream Loadは、バッチインポートタスクの原子性を保証でき、つまりすべて成功するかすべて失敗するかのいずれかです。

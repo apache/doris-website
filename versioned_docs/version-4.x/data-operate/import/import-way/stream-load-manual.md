@@ -369,7 +369,7 @@ Import parameters can be passed through the HTTP Header. The parameters are desc
 | enclose                         | Specifies the enclosing character. When the CSV data fields contain line or column separators, you can specify a single-byte character as the enclosing character to prevent unintended truncation. For example, with the column separator `,` and the enclosing character `'`, given the data `"a,'b,c'"`, then `b,c` is parsed as one field. Note: when `enclose` is set to `"`, `trim_double_quotes` must be set to true. |
 | escape                          | Specifies the escape character. Used to escape characters in fields that are the same as the enclosing character. For example, with the data `"a,'b,'c'"` and the enclosing character `'`, to parse `b,'c` as one field, specify a single-byte escape character such as `\\` and modify the data to `"a,'b,\\'c'"`. |
 | memtable_on_sink_node           | Whether to enable MemTable forward when importing data. The default is false. |
-| unique_key_update_mode          | The update mode on a Unique table. Currently effective only for Merge-On-Write Unique tables. Three types are supported: `UPSERT`, `UPDATE_FIXED_COLUMNS`, and `UPDATE_FLEXIBLE_COLUMNS`. `UPSERT`: imports data with upsert semantics. `UPDATE_FIXED_COLUMNS`: imports data using [partial column update](../../../data-operate/update/partial-column-update.md#column-update-on-the-primary-key-model). `UPDATE_FLEXIBLE_COLUMNS`: imports data using [flexible partial column update](../../../data-operate/update/partial-column-update.md#flexible-partial-column-update). |
+| unique_key_update_mode          | The update mode on a Unique table. Currently effective only for Merge-On-Write Unique tables. Three types are supported: `UPSERT`, `UPDATE_FIXED_COLUMNS`, and `UPDATE_FLEXIBLE_COLUMNS`. `UPSERT`: imports data with upsert semantics. `UPDATE_FIXED_COLUMNS`: imports data using [partial column update](../../../data-operate/update/partial-column-update.md#column-update-on-the-unique-key-model). `UPDATE_FLEXIBLE_COLUMNS`: imports data using [flexible partial column update](../../../data-operate/update/partial-column-update.md#flexible-column-update). |
 | partial_update_new_key_behavior | The way newly inserted rows are handled when performing partial column updates or flexible column updates on a Unique table. Two types are available: `APPEND` and `ERROR`.<br/>- `APPEND`: allows new rows to be inserted.<br/>- `ERROR`: import fails and reports an error when inserting a new row. |
 
 ### Import return value
@@ -1058,7 +1058,7 @@ Doris supports rich column transformation and filtering operations in import sta
 
 ### Enable strict mode for import
 
-The `strict_mode` property is used to set whether the import task runs in strict mode. This property affects the results of column mapping, transformation, and filtering. For more about strict mode, see the [Strict mode](../handling-messy-data#strict-mode) documentation.
+The `strict_mode` property is used to set whether the import task runs in strict mode. This property affects the results of column mapping, transformation, and filtering. For more about strict mode, see the [Strict mode](../handling-messy-data#enabling-strict-mode) documentation.
 
 ### Perform partial column update or flexible partial column update during import
 

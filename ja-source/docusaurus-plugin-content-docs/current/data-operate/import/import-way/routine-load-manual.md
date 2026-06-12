@@ -5,6 +5,9 @@
   "description": "Apache Doris Routine Loadリアルタイムデータインポートガイド：KafkaからのCSV/JSONデータの継続的な消費をサポートし、データの損失や重複がないことを保証するExactly-Onceセマンティクスを提供し、ジョブ作成、ステータス監視、エラーハンドリング、SSL/Kerberosセキュリティ認証設定を含みます。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="Example-of-importing-Json-format-data"></a>
 Dorisは、Routine Loadを使用してKafka Topicからデータを継続的に消費することができます。Routine Loadジョブを送信すると、Dorisはインポートジョブを実行し続け、Kafkaクラスタ内の指定されたTopicからメッセージを消費するインポートタスクを継続的に生成します。
 
 Routine Loadは、Exactly-Onceセマンティクスをサポートするストリーミングインポートジョブで、データの損失や重複を防ぎます。

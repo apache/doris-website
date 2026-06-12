@@ -49,7 +49,7 @@ Once again, we sincerely thank all contributors who participated in the construc
 
 **Please contact us via:**
 
-[dev@doris.apache.org.](dev@doris.apache.org.)
+[dev@doris.apache.org](mailto:dev@doris.apache.org)
 
 **See How to subscribe:**
 

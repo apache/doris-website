@@ -39,7 +39,7 @@ SHOW FRONTENDS DISKS;
 
 ## 使用上の注意
 
-クエリ結果のさらなるフィルタリングが必要な場合は、Table値関数[frontends_disks()](../../../sql-functions/table-valued-functions/frontends-disks.md)を使用できます。SHOW BACKENDSは以下の文と等価です：
+クエリ結果のさらなるフィルタリングが必要な場合は、Table値関数frontends_disks()を使用できます。SHOW BACKENDSは以下の文と等価です：
 
 ```sql
 SELECT * FROM FRONTENDS_DISKS();

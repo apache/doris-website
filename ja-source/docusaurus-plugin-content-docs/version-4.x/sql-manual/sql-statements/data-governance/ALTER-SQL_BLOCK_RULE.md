@@ -28,7 +28,7 @@ PROPERTIES (
 
 **2. `<property>`**
 
-詳細については、[CREATE SQL_BLOCK_RULE](../data-governance/CREATE-SQL-BLOCK-RULE.md)の導入部分を参照してください。
+詳細については、CREATE SQL_BLOCK_RULEの導入部分を参照してください。
 
 ## アクセス制御要件
 

@@ -19,7 +19,7 @@ BOOLEAN json_exists_path(JSON j, VARCHAR json_path)
 
 ### example
 
-Refer to [json tutorial](../../sql-reference/Data-Types/JSON.md)
+Refer to json tutorial
 
 ### keywords
 

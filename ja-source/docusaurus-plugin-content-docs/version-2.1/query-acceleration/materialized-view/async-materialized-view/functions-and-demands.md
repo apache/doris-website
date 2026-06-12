@@ -5,6 +5,9 @@
   "description": "この文書は、マテリアライズドビュー作成、マテリアライズドビューの直接クエリ、クエリリライトについての詳細情報を提供します。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="transparent-rewriting-capability"></a>
 この文書では、マテリアライズドビューの作成、マテリアライズドビューの直接クエリ、クエリリライト、および一般的なメンテナンス操作について詳細な情報を提供します。
 
 ## マテリアライズドビューの作成

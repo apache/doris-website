@@ -5,6 +5,9 @@
   "description": "新しいオープンデータ管理アーキテクチャとして、Data Lakehouseはdata warehouseの高性能およびリアルタイム機能を統合し"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="write-iceberg-table-by-pyiceberg"></a>
 新しいオープンデータ管理アーキテクチャとして、Data Lakehouseはデータウェアハウスの高性能とリアルタイム機能を、データレイクの低コストと柔軟性と統合し、ユーザーが様々なデータ処理・分析ニーズにより便利に対応できるよう支援します。企業のビッグデータシステムにおいてますます応用されています。
 
 最近のバージョンにおいて、Apache Dorisはデータレイクとの統合を深め、現在は成熟したData Lakehouseソリューションを提供しています。

@@ -5,6 +5,8 @@
   "language": "ja"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## Build and Refresh
 
 ### Q1: Dorisはマテリアライズドビューでどのパーティションをリフレッシュする必要があるかをどのように判断しますか？
@@ -285,7 +287,7 @@ GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
 ```
 ### Q2: マテリアライズドビューがヒットしない理由とは？
 
-まず、マテリアライズドビューがヒットするかどうかを確認するために、以下のSQLを実行してください（詳細は[Queries and Transparent Rewriting - Q1](#q1-how-does-doris-determine-which-partitions-need-to-be-refreshed-for-a-materialized-view)を参照）：
+まず、マテリアライズドビューがヒットするかどうかを確認するために、以下のSQLを実行してください（詳細は[Queries and Transparent Rewriting - Q1](#build-and-refresh)を参照）：
 
 ```Plain
 explain
@@ -299,7 +301,7 @@ your_query_sql;
 
 - 最初の2つのステップを確認した後もマテリアライズドビューがヒットしない場合、SQLで定義されたマテリアライズドビューとクエリSQLが、マテリアライズドビューの現在のリライト機能の範囲外である可能性があります。詳細については、Materialized View Transparent Rewriting Capabilitiesを参照してください。
 
-- ヒット失敗の詳細情報と説明については、[付録1](#reference)を参照してください。
+- ヒット失敗の詳細情報と説明については、[付録1](#build-and-refresh)を参照してください。
 
 以下は、マテリアライズドビューの透過的リライトが失敗した例です：
 

@@ -525,4 +525,4 @@ When upgrading Doris, please follow the principle of not skipping two minor vers
 
 For example, if you are upgrading from version 0.15.x to 2.0.x, it is recommended to first upgrade to the latest version of 1.1, then upgrade to the latest version of 1.2, and finally upgrade to the latest version of 2.0.
 
-For more upgrade information, see the documentation: [Cluster Upgrade](../../admin-manual/cluster-management/upgrade)
+For more upgrade information, see the documentation: [Cluster Upgrade](../versioned_docs/version-2.1/admin-manual/cluster-management/upgrade.md)

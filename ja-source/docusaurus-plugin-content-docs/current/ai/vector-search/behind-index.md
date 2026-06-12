@@ -123,11 +123,11 @@ Faissは、`ElementOpL2/ElementOpIP`と次元特化された`fvec_op_ny_D{1,2,4,
 Dorisはベクトルインデックスを外部（プラガブル）インデックスとして実装し、管理を簡素化し、非同期ビルドをサポートしますが、冗長な計算とIOを回避するなどのパフォーマンス上の課題が生じます。ANNインデックスは、行IDに加えて距離を返すことができます。Dorisは「仮想列」を介してScanオペレータ内の距離式をショートサーキットすることでこれを活用し、Ann Index Only Scanは距離関連の読み取りIOを完全に排除します。
 ナイーブなフローでは、Scanは述語をインデックスにプッシュし、インデックスは行IDを返し、Scanはデータページを読み取り、式を計算してからN行を上流に返します。
 
-![alt text](/images/vector-search/image-3.png)
+alt text
 
 Index Only Scanが適用されると、フローは次のようになります：
 
-![alt text](/images/vector-search/image-4.png)
+alt text
 
 例えば、`SELECT l2_distance_approximate(embedding, [...]) AS dist FROM tbl ORDER BY dist LIMIT 100;`はデータファイルに触れることなく実行されます。
 

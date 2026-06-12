@@ -58,7 +58,7 @@ Stream Load 导入使用的标签前缀。在 2pc 场景下，需要全局唯一
 
 是否启用删除。该选项需要 Doris 表开启批量删除功能 (默认开启 0.15+ 版本)，且只支持 Unique 表模型。你可以在这个链接获得更多细节：
 
-[批量删除](../data-operate/delete/batch-delete-manual.md)
+批量删除
 
 `doris.config [map]`
 

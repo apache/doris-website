@@ -5,6 +5,10 @@
   "description": "Broker LoadはMySQL APIから開始されます。DorisはLOAD文の情報に基づいて、ソースからアクティブにデータを取得します。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="Related-Configurations"></a>
+<a id="related-configurations"></a>
 Broker LoadはMySQL APIから開始されます。DorisはLOAD文の情報に基づいて、ソースからデータを能動的に取得します。Broker Loadは非同期のインポート方法です。Broker Loadタスクの進行状況と結果は、SHOW LOAD文で確認できます。
 
 Broker Loadは、ソースデータがHDFSなどのリモートストレージシステムに保存されており、データ量が比較的大きいシナリオに適しています。

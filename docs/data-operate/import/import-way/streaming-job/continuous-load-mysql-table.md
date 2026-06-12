@@ -102,7 +102,7 @@ The MySQL data source parameters supported by CDC Stream TVF are as follows:
 | --------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | session.* | None    | All session variables can be configured under `job_properties`. For import variables, see [Insert Into Select](../../../../data-operate/import/import-way/insert-into-manual.md#import-configuration-parameters) |
 
-For more general parameters (such as `max_interval`), see the [Continuous Import Overview](./continuous-load-overview.md#general-parameters).
+For more general parameters (such as `max_interval`), see the [Continuous Import Overview](./continuous-load-overview.md#common-parameters).
 
 ## FAQ
 

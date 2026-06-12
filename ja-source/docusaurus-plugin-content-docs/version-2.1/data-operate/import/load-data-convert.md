@@ -5,6 +5,9 @@
   "description": "Dorisは、データロード中に強力なデータ変換機能を提供します。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="pre-filtering"></a>
 Dorisは、データロード時に強力なデータ変換機能を提供し、データ処理ワークフローを簡素化し、追加のETLツールへの依存を軽減できます。主に4つのタイプの変換をサポートしています：
 
 - **カラムマッピング**: ソースデータのカラムを対象テーブルの異なるカラムにマップします。

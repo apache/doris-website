@@ -162,11 +162,11 @@ BACKUP 的更多用法可参考 [这里](../../sql-manual/sql-reference/Data-Def
 
 3. SHOW BACKUP
 
-   查看最近一次 backup 作业的执行情况。具体参考 [查看备份作业文档](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/SHOW-BACKUP.md)。
+   查看最近一次 backup 作业的执行情况。具体参考 查看备份作业文档。
 
 4. SHOW SNAPSHOT
 
-   查看远端仓库中已存在的备份。具体参考 [查看备份文档](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/SHOW-SNAPSHOT.md)。
+   查看远端仓库中已存在的备份。具体参考 查看备份文档。
 
 5. CANCEL BACKUP
 

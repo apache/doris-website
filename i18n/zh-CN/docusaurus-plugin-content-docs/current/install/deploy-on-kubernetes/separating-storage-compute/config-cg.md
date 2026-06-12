@@ -83,7 +83,7 @@ spec:
       memory: 8Gi
 ```
 
-将上述配置更新到需要部署的 [`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源)中即可生效。
+将上述配置更新到需要部署的 [`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#第-3-步部署存算分离集群)中即可生效。
 
 ## 场景 4：配置计算组的访问方式
 
@@ -228,7 +228,7 @@ kubectl -n ${namespace} -f ${beConfigMapFileName}.yaml
 
 ### 第 3 步：更新 DorisDisaggregatedCluster 资源
 
-更新 [`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源)以挂载 ConfigMap，配置如下：
+更新 [`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#第-3-步部署存算分离集群)以挂载 ConfigMap，配置如下：
 
 ```yaml
 spec:

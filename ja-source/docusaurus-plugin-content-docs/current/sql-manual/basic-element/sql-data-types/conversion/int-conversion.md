@@ -5,6 +5,8 @@
   "description": "ソース型がnullableの場合、nullable型を返す；"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## 文字列から
 
 ### Strictモード

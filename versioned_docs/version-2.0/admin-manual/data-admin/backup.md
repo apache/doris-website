@@ -159,11 +159,11 @@ It is recommended to import the new and old clusters in parallel for a period of
 
    3. SHOW BACKUP
 
-      View the execution of the most recent backup job. Please refer to [Show Backup Reference](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/SHOW-BACKUP.md)。
+      View the execution of the most recent backup job. Please refer to Show Backup Reference。
 
    4. SHOW SNAPSHOT
 
-      View existing backups in the remote repository. Please refer to [Show Snapshot Reference](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/SHOW-SNAPSHOT.md).
+      View existing backups in the remote repository. Please refer to Show Snapshot Reference.
 
    5. CANCEL BACKUP
 

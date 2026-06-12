@@ -207,7 +207,7 @@ Used to cache the file list information under a single partition of a Hive table
 ### Hudi Table Partitions
 
 Legacy summary of Hudi partition metadata caching.
-Current Hudi cache entries in Doris 4.1.x+ also include `fs_view` and `meta_client`; see [Hudi Catalog](./catalogs/hudi-catalog.md#meta-cache-unified).
+Current Hudi cache entries in Doris 4.1.x+ also include `fs_view` and `meta_client`; see [Hudi Catalog](./catalogs/hudi-catalog.md#meta-cache-unified-model).
 
 This cache, each Hudi Catalog has one.
 
@@ -230,7 +230,7 @@ This cache, each Hudi Catalog has one.
 ### Iceberg Table Information
 
 Legacy summary of Iceberg table metadata caching. The table object is loaded and constructed through the Iceberg API.
-For Doris 4.1.x+, the current observable cache entries are documented in [Iceberg Catalog](./catalogs/iceberg-catalog.mdx#meta-cache-unified).
+For Doris 4.1.x+, the current observable cache entries are documented in [Iceberg Catalog](./catalogs/iceberg-catalog.mdx#meta-cache-unified-model).
 
 This cache, each Iceberg Catalog has one.
 

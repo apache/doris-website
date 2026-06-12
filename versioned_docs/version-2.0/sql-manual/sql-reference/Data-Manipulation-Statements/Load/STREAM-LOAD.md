@@ -457,7 +457,7 @@ This feature  is supported since the Apache Doris 1.2.3 version
    In the import, on the other hand, our target timezone is specified by the parameter `timezone`, which will replace the session variable `time_zone` when timezone conversions occur, and when computing timezone-sensitive functions. Therefore, if there are no special circumstances, `timezone` should be set in the import transaction to match the `time_zone` of the current Doris cluster. This means that all time data with a time zone will be converted to that time zone.
    For example, if the Doris system timezone is "+08:00", and the time column in the imported data contains two pieces of data, "2012-01-01 01:00:00Z" and "2015-12-12 12:12:12-08:00", then after we specify the timezone of the imported transaction via `-H "timezone: +08:00"` during import, both pieces of data will be converted to that timezone, resulting in the results "2012-01-01 09:00:00" and "2015-12-13 04:12:12".
 
-   For a more detailed understanding, see [time-zone](../../../../query/query-variables/time-zone) document.
+   For a more detailed understanding, see time-zone document.
 
 11. The Execution Engine Choice
 

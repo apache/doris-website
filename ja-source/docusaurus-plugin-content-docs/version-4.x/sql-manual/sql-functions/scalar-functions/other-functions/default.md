@@ -36,7 +36,7 @@ DEFAULT(<column>)
 - 入力として列のみが許可されます。定数（NULLを含む）または式が提供された場合、エラーがスローされます
 - 入力が自動インクリメント列または生成列の場合、エラーがスローされます
 
-[Dorisでサポートされるデフォルト値関連パラメータ](../../../sql-statements/table-and-view/table/CREATE-TABLE.md#Column-Default-Value-Related-Parameters)
+[Dorisでサポートされるデフォルト値関連パラメータ](../../../sql-statements/table-and-view/table/CREATE-TABLE.md#説明)
 
 ## 例
 

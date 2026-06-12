@@ -5,6 +5,9 @@
   "description": "分離されたストレージとコンピュートクラスターにおいて、Compute Groupはデータのインポートとオブジェクトストレージからのデータキャッシングを担当し、クエリを強化します"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="custom-startup-configuration"></a>
 分離されたストレージおよびコンピュート クラスターでは、Compute Groupがobject storageからのデータのインポートとキャッシュを担当し、クエリパフォーマンスを向上させます。コンピュート グループは相互に分離されています。
 
 ## 最小限のCompute Group設定
@@ -48,7 +51,7 @@ spec:
       cpu: 8
       memory: 8Gi
 ```
-この設定を適切な[DorisDisaggregatedCluster resource](install-doris-cluster.md#step-3-deploy-the-compute-storage-decoupled-cluster)に適用してください。
+この設定を適切な[DorisDisaggregatedCluster resource](install-doris-cluster.md#dorisクラスターのデプロイ)に適用してください。
 
 ## アクセス設定
 デフォルトでは、compute groupは外部にserviceを公開しません。Doris Operatorは`DorisDisaggregatedCluster` resource内のcompute groupに対するproxyとしてServiceを提供します。3つのservice公開モードがサポートされています：`ClusterIP`、`NodePort`、`LoadBalancer`です。
@@ -139,7 +142,7 @@ spec:
         file_cache_path = [{"path":"/opt/apache-doris/be/file_cache","total_size":107374182400,"query_limit":107374182400}]
         deploy_mode = cloud
     ```
-分離クラスターにおけるBEサービスのスタートアップ設定には、file_cache_path設定を含める必要があります。必要な形式については、[Doris decoupled configuration for be.conf](./../../../compute-storage-decoupled/compilation-and-deployment.md#541-configure-beconf)を参照してください。
+分離クラスターにおけるBEサービスのスタートアップ設定には、file_cache_path設定を含める必要があります。必要な形式については、[Doris decoupled configuration for be.conf](./../../../compute-storage-decoupled/compilation-and-deployment.md#1-概要)を参照してください。
 
 2. ConfigMapをデプロイする
     以下のコマンドを使用して、スタートアップ設定を含むカスタムConfigMapをKubernetesクラスターにデプロイします：

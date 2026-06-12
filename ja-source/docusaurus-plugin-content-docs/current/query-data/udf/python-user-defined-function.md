@@ -5,6 +5,8 @@
   "description": "Python UDFは、PythonでUDFを記述するためのインターフェースをユーザーに提供し、Python言語を使用したカスタム関数の実行を容易にします。DorisはPythonを使用したUDF、UDAF、UDTFの記述をサポートしています。特に指定がない限り、以下のテキストではUDFはすべてのユーザー定義関数を指すために使用されます。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## Python UDF
 
 Python UDF（User Defined Function）は、Apache Dorisが提供するカスタムスカラ関数拡張メカニズムで、ユーザーがデータのクエリと処理のためにPythonでカスタム関数を記述することを可能にします。Python UDFを通じて、ユーザーは複雑なビジネスロジックを柔軟に実装し、様々なデータ型を処理し、Pythonの豊富なライブラリエコシステムを最大限に活用できます。
@@ -14,7 +16,7 @@ Python UDFは2つの実行モードをサポートします：
 - **Vectorized Mode**：データをバッチで処理し、高性能コンピューティングのためにPandasを活用します
 
 :::tip Note
-**環境依存関係**：Python UDFを使用する前に、すべてのBEノードのPython環境に**`pandas`**と**`pyarrow`**ライブラリを事前にインストールする必要があります。これらはDoris Python UDF機能の必須依存関係です。[Python UDF Environment 設定](python-user-defined-function#python-udfudafudtf-environment-configuration-and-multi-version-management)を参照してください。
+**環境依存関係**：Python UDFを使用する前に、すべてのBEノードのPython環境に**`pandas`**と**`pyarrow`**ライブラリを事前にインストールする必要があります。これらはDoris Python UDF機能の必須依存関係です。[Python UDF Environment 設定](python-user-defined-function#python-udf)を参照してください。
 
 **ログパス**：Python UDF サーバーのランタイムログは`output/be/log/python_udf_output.log`にあります。ユーザーはこのログでPython サーバーの動作ステータス、関数実行情報、およびデバッグエラーを確認できます。
 :::
@@ -918,7 +920,7 @@ Python UDAFのコア機能：
 - **高い柔軟性**: 組み込み集約関数に制限されることなく、任意に複雑な集約ロジックを実装可能
 
 :::tip Note
-**環境依存関係**: Python UDAFを使用する前に、すべてのBEノードのPython環境に**`pandas`**および**`pyarrow`**ライブラリを事前にインストールする必要があります。これらはDoris Python UDAF機能の必須依存関係です。[Python UDAF環境設定](python-user-defined-function#python-udfudafudtf-environment-configuration-and-multi-version-management)を参照してください。
+**環境依存関係**: Python UDAFを使用する前に、すべてのBEノードのPython環境に**`pandas`**および**`pyarrow`**ライブラリを事前にインストールする必要があります。これらはDoris Python UDAF機能の必須依存関係です。[Python UDAF環境設定](python-user-defined-function#python-udf)を参照してください。
 
 **ログパス**: Python UDAF Serverの実行時ログは`output/be/log/python_udf_output.log`に配置されています。ユーザーはこのログでPython Serverの動作状況、集約関数の実行情報、およびエラーのデバッグを確認できます。
 :::
@@ -1483,7 +1485,7 @@ ORDER BY sales_date;
 
 Python UDAFは、整数、浮動小数点数、文字列、日付/時刻、Decimal、真偽値などのすべての型を含め、Python UDFとまったく同じデータ型マッピング規則を使用します。
 
-**詳細なデータ型マッピング関係については、以下を参照してください**: [Data Type Mapping](python-user-defined-function#data-type-mapping)
+**詳細なデータ型マッピング関係については、以下を参照してください**: [Data Type Mapping](python-user-defined-function#python-udf)
 
 #### NULL値の処理
 
@@ -1829,7 +1831,7 @@ Python UDTF のコア機能：
 - **関数型プログラミング**: Python 関数と `yield` ステートメントを使用し、簡潔で直感的です
 
 :::tip Note
-**環境依存**: Python UDTF を使用する前に、すべての BE ノードの Python 環境に **`pandas`** および **`pyarrow`** ライブラリを事前にインストールする必要があります。これらは Doris Python UDTF 機能の必須依存関係です。[Python UDTF 環境設定](python-user-defined-function#python-udfudafudtf-environment-configuration-and-multi-version-management) を参照してください。
+**環境依存**: Python UDTF を使用する前に、すべての BE ノードの Python 環境に **`pandas`** および **`pyarrow`** ライブラリを事前にインストールする必要があります。これらは Doris Python UDTF 機能の必須依存関係です。[Python UDTF 環境設定](python-user-defined-function#python-udf) を参照してください。
 
 **ログパス**: Python UDTF Server のランタイムログは `output/be/log/python_udf_output.log` にあります。ユーザーはこのログで Python Server の動作状況、集約関数の実行情報、およびエラーのデバッグを確認できます。
 :::
@@ -2379,7 +2381,7 @@ CREATE TABLES FUNCTION py_split(STRING, STRING) ...;
 
 Python UDTFはPython UDFと全く同じデータ型マッピング規則を使用します。整数、浮動小数点、文字列、日付/時刻、Decimal、boolean、配列、STRUCTなどのすべての型を含みます。
 
-**詳細なデータ型マッピング関係については、以下を参照してください**：[データ型マッピング](python-user-defined-function#data-type-mapping)
+**詳細なデータ型マッピング関係については、以下を参照してください**：[データ型マッピング](python-user-defined-function#python-udf)
 
 #### NULL値の処理
 

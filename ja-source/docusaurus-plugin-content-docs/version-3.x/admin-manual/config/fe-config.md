@@ -8,6 +8,10 @@
   "sidebar_label": "FE 設定"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="lower_case_table_names"></a>
+<a id="max_running_txn_num_per_db"></a>
 <!-- Please sort the configuration alphabetically -->
 
 # FE 設定

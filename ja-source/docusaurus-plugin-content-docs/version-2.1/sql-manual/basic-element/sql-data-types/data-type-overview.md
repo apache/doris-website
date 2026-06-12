@@ -6,6 +6,8 @@
   "sidebar_label": "概要"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 # 概要
 
 ## 数値型

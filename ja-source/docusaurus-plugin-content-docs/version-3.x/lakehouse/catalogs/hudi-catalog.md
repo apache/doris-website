@@ -100,7 +100,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## Examples
 
-Hudi Catalogの作成は、Hive Catalogと似ています。より多くの例については、[Hive カタログ](./hive-catalog.mdx)を参照してください。
+Hudi Catalogの作成は、Hive Catalogと似ています。より多くの例については、Hive カタログを参照してください。
 
 ```sql
 CREATE CATALOG hudi_hms PROPERTIES (

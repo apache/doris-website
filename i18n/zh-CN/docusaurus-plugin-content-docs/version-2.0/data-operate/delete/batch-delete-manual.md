@@ -164,4 +164,4 @@ mysql> DESC table1;
 ```
 
 ### Stream Load 使用示例
-请查阅[Stream Load使用手册](../import/import-way/stream-load-manual.md)中“指定 merge_type 进行 Delete 操作”和“指定 merge_type 进行 Merge 操作”章节的内容。
+请查阅Stream Load使用手册中“指定 merge_type 进行 Delete 操作”和“指定 merge_type 进行 Merge 操作”章节的内容。

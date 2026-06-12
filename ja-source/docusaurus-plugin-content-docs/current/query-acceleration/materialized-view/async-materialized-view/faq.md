@@ -5,6 +5,8 @@
   "description": "Dorisは内部的にマテリアライズドビューとベーステーブル間のパーティション対応を計算し、ベーステーブルのバージョンを記録する"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## ビルドとリフレッシュ
 
 ### Q1: Dorisはマテリアライズドビューのどのパーティションをリフレッシュする必要があるかをどのように判断しますか？
@@ -68,7 +70,7 @@ Unable to find a suitable base table for partitioning
 ```
 このエラーは通常、マテリアライズドビューのSQL定義とパーティション分割フィールドの選択が増分パーティション更新を許可しないため、パーティション分割されたマテリアライズドビューの作成中にエラーが発生することを示しています。
 
-- 増分パーティション更新の場合、マテリアライズドビューのSQL定義とパーティション分割フィールドの選択は特定の要件を満たす必要があります。詳細については[Materialized View Refresh Modes](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters)を参照してください。
+- 増分パーティション更新の場合、マテリアライズドビューのSQL定義とパーティション分割フィールドの選択は特定の要件を満たす必要があります。詳細については[Materialized View Refresh Modes](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#説明)を参照してください。
 
 - 最新のコードはパーティション構築失敗の理由を示すことができ、エラーの要約と説明は付録2に記載されています。
 
@@ -285,7 +287,7 @@ GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
 ```
 ### Q2: Materialized Viewがヒットしない理由は何ですか？
 
-まず、materialized viewがヒットするかどうかを確認するには、以下のSQLを実行してください（詳細は[Queries and Transparent Rewriting - Q1](#q1-how-does-doris-determine-which-partitions-need-to-be-refreshed-for-a-materialized-view)を参照）：
+まず、materialized viewがヒットするかどうかを確認するには、以下のSQLを実行してください（詳細は[Queries and Transparent Rewriting - Q1](#ビルドとリフレッシュ)を参照）：
 
 ```Plain
 explain
@@ -299,7 +301,7 @@ your_query_sql;
 
 - 最初の2つのステップを確認した後でも、マテリアライズドビューがヒットしない場合は、SQLで定義されたマテリアライズドビューとクエリSQLが、マテリアライズドビューの現在の書き換え機能の範囲外である可能性があります。詳細については、[Materialized View Transparent Rewriting Capabilities](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands#transparent-rewriting-capability)を参照してください。
 
-- ヒット失敗の詳細情報と説明については、[Appendix 1](#reference)を参照してください。
+- ヒット失敗の詳細情報と説明については、[Appendix 1](#ビルドとリフレッシュ)を参照してください。
 
 以下は、マテリアライズドビューの透過的書き換えが失敗した例です：
 

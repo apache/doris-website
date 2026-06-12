@@ -5,13 +5,15 @@
   "language": "ja"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## 説明
 `<period>`に`<month>`ヶ月を加算した結果を計算します。
 
 `<period>`は整数で、下2桁が月（01-12）を表し、それより上の桁が年を表します。
 この関数は計算された期間を整数形式（年 + 月）で返します。
 
-年の部分が100未満の場合、[特定のルール](#parameters)に従って4桁の年形式に処理されます。
+年の部分が100未満の場合、[特定のルール](#説明)に従って4桁の年形式に処理されます。
 例：PERIOD_ADD(2501, 0)は2501ではなく202501を返します。
 
 この関数はMySQLの[PERIOD_ADD function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_period-add)と一貫した動作をします。

@@ -109,6 +109,7 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 
 3. 使用 user1 登录 Doris。执行 `select * from internal.db1.user`，只能看到满足 `id > 3` 且 `age = 2` 的数据。
 
+
 ### 数据脱敏示例
 
 > 2.1.3 版本支持

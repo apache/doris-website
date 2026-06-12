@@ -10,7 +10,7 @@
 
 例行导入（Routine Load）功能支持用户提交一个常驻的导入任务，通过不断地从指定的数据源读取数据，将数据导入到 Doris 中。
 
-目前仅支持通过无认证或者 SSL 认证方式，从 Kafka 导入 CSV 或 Json 格式的数据。 [导入 Json 格式数据使用示例](../../../../data-operate/import/import-way/routine-load-manual.md#导入Json格式数据使用示例)
+目前仅支持通过无认证或者 SSL 认证方式，从 Kafka 导入 CSV 或 Json 格式的数据。 [导入 Json 格式数据使用示例](../../../../data-operate/import/import-way/routine-load-manual.md#导入-json-数据)
 
 ## 语法
 

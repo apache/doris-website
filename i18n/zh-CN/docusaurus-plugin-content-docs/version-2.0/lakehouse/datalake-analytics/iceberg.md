@@ -15,7 +15,7 @@
 
 ### 基于 Hive Metastore 创建 Catalog
 
-和 Hive Catalog 基本一致，这里仅给出简单示例。其他示例可参阅 [Hive Catalog](../../lakehouse/datalake/hive)。
+和 Hive Catalog 基本一致，这里仅给出简单示例。其他示例可参阅 Hive Catalog。
 
 ```sql
 CREATE CATALOG iceberg PROPERTIES (
@@ -89,7 +89,7 @@ Iceberg 属性详情参见 [Iceberg Glue Catalog](https://iceberg.apache.org/doc
 
 **阿里云 DLF**
 
-参见[阿里云 DLF Catalog 配置](../lakehouse/datalake-analytics/dlf.md)
+参见阿里云 DLF Catalog 配置
 
 **REST Catalog**
 
@@ -209,5 +209,5 @@ CREATE CATALOG iceberg PROPERTIES (
 
 `SELECT * FROM iceberg_tbl FOR VERSION AS OF 868895038966572;`
 
-另外，可以使用 [iceberg_meta](../../sql-manual/sql-functions/table-functions/iceberg-meta) 表函数查询指定表的 snapshot 信息。
+另外，可以使用 iceberg_meta 表函数查询指定表的 snapshot 信息。
 

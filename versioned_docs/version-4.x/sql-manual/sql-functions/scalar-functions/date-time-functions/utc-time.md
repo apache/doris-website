@@ -26,7 +26,7 @@ UTC_TIME([<`precision`>])
 ## Return Value
 Returns the current UTC time.
 
-Return Time type (format: HH:mm:ss). When using the returned result for numerical operations, it will be converted to [integer format](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#from--time) (the time value elapsed since 00:00:00, unit in microseconds).
+Return Time type (format: HH:mm:ss). When using the returned result for numerical operations, it will be converted to [integer format](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-time) (the time value elapsed since 00:00:00, unit in microseconds).
 
 When the input is NULL or the precision is out of range, an error will be thrown.
 

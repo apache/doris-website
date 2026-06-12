@@ -244,7 +244,7 @@ If the following problems occur when using MySQL client to connect to Doris, thi
 
 Sometimes when FE is restarted, the above error will occur (usually only in the case of multiple Followers). And the two values in the error differ by 2. Causes FE to fail to start.
 
-This is a bug in bdbje that has not yet been resolved. In this case, you can only restore the metadata by performing the operation of failure recovery in [Metadata Operation and Maintenance Documentation](../admin-manual/trouble-shooting/metadata-operation.md).
+This is a bug in bdbje that has not yet been resolved. In this case, you can only restore the metadata by performing the operation of failure recovery in Metadata Operation and Maintenance Documentation.
 
 ### Q12. Doris compile and install JDK version incompatibility problem
 

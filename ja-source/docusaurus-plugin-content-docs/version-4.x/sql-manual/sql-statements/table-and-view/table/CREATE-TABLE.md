@@ -5,6 +5,8 @@
   "language": "ja"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## 説明
 
 現在または指定されたデータベースに新しいtableを作成します。tableは複数の列を持つことができ、各列定義には名前、データ型、およびオプションで以下の属性を含みます：
@@ -259,7 +261,7 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 
 **<index_property>**
 
-> インデックスのプロパティ。詳細な説明については、[Inverted Index](../../../../table-design/index/inverted-index.md)セクションを参照してください。
+> インデックスのプロパティ。詳細な説明については、Inverted Indexセクションを参照してください。
 
 ### 自動パーティション関連パラメータ
 

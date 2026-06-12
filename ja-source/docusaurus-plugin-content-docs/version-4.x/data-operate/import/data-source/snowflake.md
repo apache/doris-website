@@ -102,9 +102,9 @@ PROPERTIES (
 
    エクスポートされたファイルは、S3上で**パーティション別のサブディレクトリ**に整理されています：
 
-    ![snowflake_s3_out_en](/images/data-operate/snowflake-s3-out-en.png)
+    snowflake_s3_out_en
 
-    ![snowflake_s3_out2_en](/images/data-operate/snowflake-s3-out2-en.png)
+    snowflake_s3_out2_en
 
 ## 3. Dorisへのデータロード
 

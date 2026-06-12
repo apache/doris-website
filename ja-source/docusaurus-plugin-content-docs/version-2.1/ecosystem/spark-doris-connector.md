@@ -5,6 +5,8 @@
   "description": "Spark Doris ConnectorはSparkを通じてDorisに格納されたデータの読み取りとDorisへのデータの書き込みをサポートできます。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 # Spark Doris Connector
 
 Spark Doris Connectorは、Sparkを通してDorisに格納されたデータの読み取りとDorisへのデータの書き込みをサポートできます。

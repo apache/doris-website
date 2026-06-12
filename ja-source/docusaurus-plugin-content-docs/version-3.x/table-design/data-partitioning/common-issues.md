@@ -20,7 +20,7 @@
    - fe.logで、対応するタイムスタンプの`Failed to create partition`ログエントリを検索します。このログエントリで、`{10001-10010}`のような一連の数値ペアを見つけることがあります。ペアの最初の数値はBackend IDを表し、2番目の数値はTablet IDを表します。たとえば、この数値ペアはBackend ID 10001でTablet ID 10010の作成が失敗したことを示しています。
    - 対応するBackendのbe.INFOログに移動し、対応する時間帯内でTablet ID関連のログを検索してエラーメッセージを見つけます。
    - 以下は一般的なタブレット作成失敗エラーの例ですが、これに限定されません：
-     - BEが関連タスクを受信しませんでした。この場合、be.INFOでTablet ID関連のログを見つけることができないか、BEが成功を報告したが実際には失敗しています。これらの問題については、[Installation and Deployment](../../../../docs/install/deploy-manually/integrated-storage-compute-deploy-manually)セクションを参照してFEとBE間の接続性を確認してください。
+     - BEが関連タスクを受信しませんでした。この場合、be.INFOでTablet ID関連のログを見つけることができないか、BEが成功を報告したが実際には失敗しています。これらの問題については、Installation and Deploymentセクションを参照してFEとBE間の接続性を確認してください。
      - 事前割り当てメモリ失敗。これはテーブル内の行のバイト長が100KBを超えることが原因である可能性があります。
      - `Too many open files`。開いているファイルハンドルの数がLinuxシステムの制限を超えています。Linuxシステムのハンドル制限を変更する必要があります。
 

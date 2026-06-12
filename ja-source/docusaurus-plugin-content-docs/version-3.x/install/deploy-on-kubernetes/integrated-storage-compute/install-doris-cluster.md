@@ -6,6 +6,8 @@
   "sidebar_label": "Deploy Doris クラスター"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 # Dorisクラスターのデプロイ
 
 KubernetesにDorisクラスターをデプロイするには、[Doris Operatorがデプロイされている](install-doris-operator.md)ことを確認してください。  

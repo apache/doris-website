@@ -5,13 +5,15 @@
   "description": "2つの期間の間の月数の差を計算します。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## 説明
 2つの期間の間の月数の差を計算します。
 
 ここで`<period>`は整数で、最後の2桁が月（01-12）を表し、前の桁が年を表します。
 この関数はperiod_1 - period_2の絶対結果を返します。
 
-年の部分が100未満の場合、[特定のルール](#parameters)に従って4桁の年形式に変換されます。
+年の部分が100未満の場合、[特定のルール](#説明)に従って4桁の年形式に変換されます。
 
 この関数はMySQLの[PERIOD_DIFF function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_period-diff)と一貫した動作をします。
 

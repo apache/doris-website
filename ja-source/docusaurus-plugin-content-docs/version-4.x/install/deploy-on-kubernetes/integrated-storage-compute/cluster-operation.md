@@ -5,6 +5,8 @@
   "description": "k8s環境において、予期しない事象によりサービスがCrashLoopBackOff状態になることがあります。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## podがクラッシュした際にコンテナに入る方法
 
 k8s環境では、予期しない問題により、サービスが`CrashLoopBackOff`状態に入ることがあります。指定されたnamespace下でのpodステータスとpod_nameは、`kubectl get pod --namespace ${namespace}`コマンドで確認できます。

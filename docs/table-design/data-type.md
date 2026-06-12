@@ -47,7 +47,7 @@ The list of data types supported by Apache Doris is as follows:
 | [JSON](../sql-manual/basic-element/sql-data-types/semi-structured/JSON)           | Variable     | Binary JSON type. It is stored in binary JSON format, and JSON internal fields are accessed via JSON functions. The length limit and configuration method are the same as for String. |
 | [VARIANT](../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT)        | Variable     | Dynamically variable data type, designed for semi-structured data such as JSON. It can store any JSON, automatically splitting fields in the JSON into sub-columns for storage to improve storage efficiency and query analysis performance. The length limit and configuration method are the same as for String. The Variant type can only be used in Value columns, not in Key columns or partition/bucketing columns.|
 
-### [Aggregate Types](../sql-manual/basic-element/sql-data-types/data-type-overview#aggregate-types)
+### [Aggregate Types](../sql-manual/basic-element/sql-data-types/data-type-overview#aggregation-types)
 
 | Type Name      | Storage Size (Bytes) | Description                                                  |
 | -------------- | --------- | ------------------------------------------------------------ |

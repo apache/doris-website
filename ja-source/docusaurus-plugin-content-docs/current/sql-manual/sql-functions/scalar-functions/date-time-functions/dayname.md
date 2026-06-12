@@ -5,11 +5,13 @@
   "description": "DAYNAME関数は、日付や時刻式に対応する曜日名（「Tuesday」など）を計算するために使用されます。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## 説明
 
 DAYNAME関数は、日付または時刻の式に対応する曜日の名前（「Tuesday」など）を計算するために使用され、文字列型の値を返します。
 
-セッション変数[lc_time_names](#appendix-lc_time_names-may-be-set-to-any-of-the-following-locale-valuescase-insensitive)を通じて出力結果の言語を設定することができます。これはデフォルトで`en_US`に設定されており、出力が英語であることを意味します。
+セッション変数[lc_time_names](#説明)を通じて出力結果の言語を設定することができます。これはデフォルトで`en_US`に設定されており、出力が英語であることを意味します。
 
 この関数は、MySQLの[dayname function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_dayname)と一貫した動作をします。
 

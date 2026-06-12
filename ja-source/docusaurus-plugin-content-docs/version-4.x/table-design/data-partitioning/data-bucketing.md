@@ -5,6 +5,11 @@
   "description": "パーティションは、ビジネスロジックに基づいて異なるデータbucketにさらに分割できます。各bucketは物理的なデータタブレットとして保存されます。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="auto-setting-bucket-number"></a>
+<a id="automatic-setting-bucket-count"></a>
+<a id="manual-setting-bucket-count"></a>
 パーティションは、ビジネスロジックに基づいてさらに異なるデータバケットに分割できます。各バケットは物理的なデータタブレットとして保存されます。適切なバケット戦略により、クエリ時にスキャンするデータ量を効果的に削減し、クエリパフォーマンスの向上とクエリ並行性の増加を実現できます。
 
 ## バケット方式

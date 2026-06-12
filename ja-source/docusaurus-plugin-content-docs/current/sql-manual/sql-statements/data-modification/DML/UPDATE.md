@@ -9,7 +9,7 @@
 
 この文はデータを更新するために使用されます。UPDATE文は現在UNIQUE KEYモデルのみをサポートしています。
 
-UPDATE操作は現在Valueカラムの更新のみをサポートしています。Keyカラムの更新については[Using FlinkCDC to update Key column](../../../../ecosystem/flink-doris-connector.md#use-flink-cdc-to-update-key-column)を参照してください。
+UPDATE操作は現在Valueカラムの更新のみをサポートしています。Keyカラムの更新については[Using FlinkCDC to update Key column](../../../../ecosystem/flink-doris-connector.md#flinkcdc-キーカラムの更新)を参照してください。
 #### 構文
 
 ```sql

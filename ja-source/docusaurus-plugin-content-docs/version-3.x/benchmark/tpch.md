@@ -87,7 +87,7 @@ TPC-H 22テストクエリステートメント : [TPCH-Query-SQL](https://githu
 
 ## 6. 環境準備
 
-[公式ドキュメント](../../../docs/install/deploy-manually/integrated-storage-compute-deploy-manually)を参照してDorisをインストール・デプロイし、正常に動作するDorisクラスター（最低1 FE 1 BE、推奨は1 FE 3 BE）を取得してください。
+公式ドキュメントを参照してDorisをインストール・デプロイし、正常に動作するDorisクラスター（最低1 FE 1 BE、推奨は1 FE 3 BE）を取得してください。
 
 ## 7. データ準備
 

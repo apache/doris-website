@@ -5,6 +5,9 @@
   "description": "コンピュート・ストレージ分離アーキテクチャでは、1つまたは複数のコンピュートノード（BE）をCompute Groupにグループ化できます。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="setting-default-compute-group"></a>
 コンピュート・ストレージ分離アーキテクチャでは、1つまたは複数のコンピュートノード（BE）をCompute Groupにグループ化できます。このドキュメントでは、以下のような操作を含むcompute groupの使用方法について説明します：
 
 - 全compute groupの表示
@@ -202,7 +205,7 @@ ALTER COMPUTE GROUP cg1 PROPERTIES("balance_type"="async_warmup");
    ```
 ## Compute Groupの名前変更
 
-`ALTER SYSTEM RENAME COMPUTE GROUP <old_name> <new_name>`コマンドを使用して、既存のcompute groupの名前を変更することができます。詳細については、[Compute Groupの名前変更](../sql-manual/sql-statements/cluster-management/instance-management/ALTER-SYSTEM-RENAME-COMPUTE-GROUP)のSQLマニュアルを参照してください。
+`ALTER SYSTEM RENAME COMPUTE GROUP <old_name> <new_name>`コマンドを使用して、既存のcompute groupの名前を変更することができます。詳細については、Compute Groupの名前変更のSQLマニュアルを参照してください。
 
 注意
 compute groupの名前変更後、旧名（old_name）に対する権限を持っていたユーザー、または旧名をdefault compute group（default_compute_group）として設定していたユーザーの権限は、新名（new_name）に自動的に更新されません。権限は管理者権限を持つアカウントによって再設定する必要があります。これはMySQLデータベースの権限システムと一致しています。

@@ -20,7 +20,7 @@ The form of printing is 'yyyy-MM-dd HH:mm:ss.SSSSSS'
 
 ### note
 
-DATETIME supports temporal precision up to microseconds. When parsing imported DATETIME type data using the BE side (e.g. using Stream load, Spark load, etc.), or using the FE side with the [Nereids](/docs/query/nereids/nereids-new) on, decimals exceeding the current precision will be **rounded**.
+DATETIME supports temporal precision up to microseconds. When parsing imported DATETIME type data using the BE side (e.g. using Stream load, Spark load, etc.), or using the FE side with the [Nereids](../../../../query-acceleration/optimization-technology-principle/query-optimizer) on, decimals exceeding the current precision will be **rounded**.
 Inserting a DATETIME value with a fractional seconds part into a column of the same type but having fewer fractional digits results in **rounded**.
 DATETIME reads support resolving the time zone in the format of the original DATETIME literal followed by the time zone:
 ```sql

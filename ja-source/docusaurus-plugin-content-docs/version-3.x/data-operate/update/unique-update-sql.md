@@ -114,4 +114,4 @@ WHERE transaction_date = '2024-11-24';
 ```
 ## More Help
 
-データ更新のより詳細な構文については、[UPDATE](../../../sql-manual/sql-statements/data-modification/DML/UPDATE)コマンドマニュアルを参照してください。また、MySQLクライアントのコマンドラインで`HELP UPDATE`を入力すると、より多くのヘルプを得ることができます。
+データ更新のより詳細な構文については、UPDATEコマンドマニュアルを参照してください。また、MySQLクライアントのコマンドラインで`HELP UPDATE`を入力すると、より多くのヘルプを得ることができます。

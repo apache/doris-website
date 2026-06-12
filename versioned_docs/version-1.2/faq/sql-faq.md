@@ -46,7 +46,7 @@ For example, the table is defined as k1, v1. A batch of imported data is as foll
 
 Then maybe the result of copy 1 is `1, "abc"`, and the result of copy 2 is `1, "def"`. As a result, the query results are inconsistent.
 
-To ensure that the data sequence between different replicas is unique, you can refer to the [Sequence Column](../data-operate/update/update-of-unique-model.md) function.
+To ensure that the data sequence between different replicas is unique, you can refer to the Sequence Column function.
 
 ### Q5. The problem of querying bitmap/hll type data returns NULL
 

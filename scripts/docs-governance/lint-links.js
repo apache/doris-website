@@ -39,13 +39,16 @@ function makeFinding(severity, rule, pathName, line, message, owner, relatedPath
   };
 }
 
+function blockingLinkSeverity(entry) {
+  return entry.blocking_level === 'report_only' ? 'info' : 'error';
+}
+
 function lineForOffset(raw, offset) {
   return raw.slice(0, offset).split(/\r?\n/).length;
 }
 
 function maskCode(raw) {
-  let masked = raw.replace(/```[\s\S]*?```/g, (match) => ' '.repeat(match.length));
-  masked = masked.replace(/~~~[\s\S]*?~~~/g, (match) => ' '.repeat(match.length));
+  let masked = maskFencedBlocks(raw);
   masked = masked.replace(/`[^`\n]*`/g, (match) => ' '.repeat(match.length));
   return masked;
 }
@@ -61,6 +64,9 @@ function extractMarkdownLinks(raw) {
     links.push({ target: match[1], line: lineForOffset(raw, match.index), type: 'image' });
   }
   while ((match = linkRe.exec(masked))) {
+    if (masked[match.index - 1] === '[' || match[0].startsWith('[[') || /[\[\]]/.test(match[1])) {
+      continue;
+    }
     links.push({ target: match[1], line: lineForOffset(raw, match.index), type: 'link' });
   }
 
@@ -80,18 +86,24 @@ function maskFencedBlocks(raw) {
   let openChar = '';
   for (const line of lines) {
     if (openLen === 0) {
-      const m = line.match(/^ {0,3}(`{3,}|~{3,})/);
+      const m = line.match(/^\s*(`{3,}|~{3,})(.*)$/);
       if (m) {
-        openLen = m[1].length;
-        openChar = m[1][0];
+        const marker = m[1];
+        const rest = m[2] || '';
+        if (rest.includes(marker)) {
+          out.push(line);
+          continue;
+        }
+        openLen = marker.length;
+        openChar = marker[0];
         out.push('');
         continue;
       }
       out.push(line);
     } else {
       const closeRe = openChar === '`'
-        ? new RegExp(`^ {0,3}\`{${openLen},}\\s*$`)
-        : new RegExp(`^ {0,3}~{${openLen},}\\s*$`);
+        ? new RegExp(`^\\s*\`{${openLen},}\\s*$`)
+        : new RegExp(`^\\s*~{${openLen},}\\s*$`);
       if (closeRe.test(line)) {
         openLen = 0;
       }
@@ -121,6 +133,10 @@ function extractHeadingAnchors(raw) {
       const headingText = match[2].replace(/\s*\{#[^}]+}\s*$/, '');
       anchors.add(slugger.slug(headingText));
     }
+  }
+  const htmlAnchorRe = /<(?:a|span)\b[^>]*(?:id|name)=["']([^"']+)["'][^>]*>/gi;
+  while ((match = htmlAnchorRe.exec(content))) {
+    anchors.add(match[1]);
   }
   return anchors;
 }
@@ -168,9 +184,10 @@ function createProgressLogger(enabled) {
 }
 
 function relativePathCandidates(pathname) {
-  const candidates = [pathname];
-  if (!path.extname(pathname)) {
-    candidates.push(`${pathname}.md`, `${pathname}.mdx`, `${pathname}/index.md`, `${pathname}/index.mdx`);
+  const normalized = pathname.replace(/\/+$/, '');
+  const candidates = [normalized];
+  if (!isMarkdownFile(normalized)) {
+    candidates.push(`${normalized}.md`, `${normalized}.mdx`, `${normalized}/index.md`, `${normalized}/index.mdx`);
   }
   return candidates;
 }
@@ -180,6 +197,9 @@ function relativePathCandidates(pathname) {
 function collectFileCache(rootDir, manifest) {
   const cache = [];
   for (const entry of manifest.entries) {
+    if (!isMarkdownFile(entry.source_path)) {
+      continue;
+    }
     const absPath = path.join(rootDir, entry.source_path);
     if (!fs.existsSync(absPath)) {
       continue;
@@ -210,7 +230,7 @@ function buildIndexes(rootDir, manifest, fileCache) {
       }
     }
     let raw = rawBySource.get(entry.source_path);
-    if (raw === undefined) {
+    if (raw === undefined && isMarkdownFile(entry.source_path)) {
       const absPath = path.join(rootDir, entry.source_path);
       if (fs.existsSync(absPath)) {
         raw = fs.readFileSync(absPath, 'utf8');
@@ -330,7 +350,7 @@ function lintCurrentLinks(rootDir, manifest, fileCache) {
       if (resolved.kind === 'missing-file' || resolved.kind === 'missing-route') {
         findings.push(
           makeFinding(
-            'error',
+            blockingLinkSeverity(entry),
             'link-missing-target',
             entry.source_path,
             link.line,
@@ -345,7 +365,7 @@ function lintCurrentLinks(rootDir, manifest, fileCache) {
         if (!anchors.has(resolved.hash)) {
           findings.push(
             makeFinding(
-              'error',
+              blockingLinkSeverity(entry),
               'link-missing-anchor',
               entry.source_path,
               link.line,

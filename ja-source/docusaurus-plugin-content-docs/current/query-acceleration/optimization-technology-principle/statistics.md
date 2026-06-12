@@ -6,6 +6,8 @@
   "sidebar_label": "Statistics"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 # 統計情報
 
 バージョン2.0から、DorisはオプティマイザにCost-Based Optimization（CBO）機能を統合しました。統計情報はCBOの基盤であり、その精度はコスト推定の精度を直接決定し、最適な実行プランの選択に重要です。本ドキュメントは、未リリース開発バージョンの統計情報使用ガイドとして、収集および管理方法、関連する設定オプション、よくある質問について説明します。

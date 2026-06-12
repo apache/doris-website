@@ -5,6 +5,8 @@
   "description": "DATEFORMAT関数は、指定されたフォーマット文字列（format）に従って、日付または時刻の値を文字列に変換するために使用されます。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## 説明
 
 DATE_FORMAT関数は、指定されたフォーマット文字列（`format`）に従って、日付または時刻の値を文字列に変換するために使用されます。この関数はDATE（日付のみ）およびDATETIME（日付と時刻）型のフォーマットをサポートし、出力結果は指定されたフォーマットに準拠した文字列になります。

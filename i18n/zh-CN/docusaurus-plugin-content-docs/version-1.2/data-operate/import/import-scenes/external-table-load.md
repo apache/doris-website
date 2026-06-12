@@ -24,7 +24,7 @@ Doris 外部表目前支持的数据源包括：
 
 ## 创建外部表
 
-创建 ODBC 外部表的详细介绍请参阅 [CREATE EXTERNAL TABLE](../../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-EXTERNAL-TABLE.md) 语法帮助手册。
+创建 ODBC 外部表的详细介绍请参阅 CREATE EXTERNAL TABLE 语法帮助手册。
 
 这里仅通过示例说明使用方式。
 
@@ -108,4 +108,4 @@ PROPERTIES (
 
 ## 更多帮助
 
-关于 CREATE EXTERNAL TABLE 的更多详细语法和最佳实践，请参阅 [CREATE EXTERNAL TABLE](../../../sql-manual/sql-reference/Data-Definition-Statements/Create/CREATE-EXTERNAL-TABLE.md) 命令手册。
+关于 CREATE EXTERNAL TABLE 的更多详细语法和最佳实践，请参阅 CREATE EXTERNAL TABLE 命令手册。

@@ -184,7 +184,7 @@ HDFS関連パラメータは以下の通りです：
 
 **6. HMSリソースの作成**
 
-   HMSリソースは[hms catalog](../../../../lakehouse/catalogs/hive-catalog.md)の作成に使用されます
+   HMSリソースはhms catalogの作成に使用されます
 
    ```sql
    CREATE RESOURCE hms_resource PROPERTIES (

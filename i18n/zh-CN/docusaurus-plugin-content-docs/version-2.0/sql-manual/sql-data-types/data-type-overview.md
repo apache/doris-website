@@ -40,7 +40,7 @@
 
 日期类型包括 DATE、TIME 和 DATETIME，DATE 类型只存储日期精确到天，DATETIME 类型存储日期和时间，可以精确到微秒。TIME 类型只存储时间，且**暂时不支持建表存储，只能在查询过程中使用**。
 
-对日期类型进行计算，或将其转换为数字，请使用类似 [TIME_TO_SEC](../../sql-functions/date-time-functions/time-to-sec), [DATE_DIFF](../../sql-functions/date-time-functions/datediff), [UNIX_TIMESTAMP](../../sql-functions/date-time-functions/unix-timestamp) 等函数，直接将其 CAST 为数字类型的结果不受保证。在未来的版本中，此类 CAST 行为将会被禁止。
+对日期类型进行计算，或将其转换为数字，请使用类似 TIME_TO_SEC, DATE_DIFF, UNIX_TIMESTAMP 等函数，直接将其 CAST 为数字类型的结果不受保证。在未来的版本中，此类 CAST 行为将会被禁止。
 
 更多信息参考 [DATE](../../sql-manual/sql-data-types/date-time/DATE)、[TIME](../../sql-manual/sql-data-types/date-time/TIME) 和 [DATETIME](../../sql-manual/sql-data-types/date-time/DATETIME) 文档。
 
@@ -49,9 +49,9 @@
 
 字符串类型支持定长和不定长，总共有以下 3 种：
 
-1. [CHAR(M)](../../sql-manual/sql-data-types/string/CHAR.md)：定长字符串，固定长度 M 字节，M 的范围是 [1, 255]。
+1. CHAR(M)：定长字符串，固定长度 M 字节，M 的范围是 [1, 255]。
 
-2. [STRING](../../sql-manual/sql-data-types/string/STRING.md)：不定长字符串，默认最长 1048576 字节（1MB），可调大到 2147483643 字节（2GB），BE 配置 string_type_length_soft_limit_bytes。
+2. STRING：不定长字符串，默认最长 1048576 字节（1MB），可调大到 2147483643 字节（2GB），BE 配置 string_type_length_soft_limit_bytes。
 
 ## 半结构化类型
 
@@ -59,7 +59,7 @@
 
 1. 支持嵌套的固定 schema，适合分析的数据类型 **[ARRAY](../../sql-manual/sql-data-types/semi-structured/ARRAY.md)、 [MAP](../../sql-manual/sql-data-types/semi-structured/MAP.md) [STRUCT](../../sql-manual/sql-data-types/semi-structured/STRUCT.md)**：常用于用户行为和画像分析，湖仓一体查询数据湖中 Parquet 等格式的数据等场景。由于 schema 相对固定，没有动态 schema 推断的开销，写入和分析性能很高。
 
-2. 支持嵌套的不固定 schema，适合分析的数据类型 **[VARIANT](../../sql-manual/sql-data-types/semi-structured/VARIANT.md)**：常用于 Log, Trace, IoT 等分析场景，schema 灵活可以写入任何合法的 JSON 数据，并自动展开成子列采用列式存储，存储压缩率高，聚合 过滤 排序等分析性能很好。
+2. 支持嵌套的不固定 schema，适合分析的数据类型 **VARIANT**：常用于 Log, Trace, IoT 等分析场景，schema 灵活可以写入任何合法的 JSON 数据，并自动展开成子列采用列式存储，存储压缩率高，聚合 过滤 排序等分析性能很好。
 
 3. 支持嵌套的不固定 schema，适合点查的数据类型 **[JSON](../../sql-manual/sql-data-types/semi-structured/JSON.md)**：常用于高并发点查场景，schema 灵活可以写入任何合法的 JSON 数据，采用二进制格式存储，提取字段的性能比普通 JSON String 快 2 倍以上。
 

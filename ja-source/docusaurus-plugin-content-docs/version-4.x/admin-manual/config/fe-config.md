@@ -8,6 +8,8 @@
   "sidebar_label": "FE 設定"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 # FE 設定
 
 このドキュメントは主にFEの関連する設定項目を紹介します。

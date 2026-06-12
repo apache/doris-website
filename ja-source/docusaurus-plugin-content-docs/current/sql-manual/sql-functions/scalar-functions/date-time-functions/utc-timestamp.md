@@ -24,7 +24,7 @@ UTC_TIMESTAMP([`<precision>`])
 ## 戻り値
 現在のUTC日時を返します。
 
-DATETIME型を返します（形式: YYYY-MM-DD HH:mm:ss[.ssssss]）。返された結果を数値演算に使用する場合、[integer format](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-datetime)（形式 YYYYMMDDHHmmss）に変換されます。
+DATETIME型を返します（形式: YYYY-MM-DD HH:mm:ss[.ssssss]）。返された結果を数値演算に使用する場合、[integer format](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#文字列から)（形式 YYYYMMDDHHmmss）に変換されます。
 
 入力がNULLまたは精度が範囲外の場合、エラーがスローされます。
 

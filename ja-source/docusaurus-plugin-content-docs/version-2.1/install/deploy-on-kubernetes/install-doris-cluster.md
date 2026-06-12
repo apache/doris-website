@@ -5,6 +5,9 @@
   "description": "KubernetesでDorisクラスターをデプロイするには、Doris Operatorがデプロイされていることを確認してください。"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="step-2-custom-the-template-and-deploy-cluster"></a>
 Kubernetes上にDorisクラスターをデプロイするには、[Doris Operatorがデプロイされている](install-doris-operator.md)ことを確認してください。
 Dorisクラスターのデプロイメントプロセスは3つのステップで構成されています：デプロイメントテンプレートのダウンロード、テンプレートのカスタマイズとクラスターのデプロイ、そしてクラスターステータスの確認です。
 ## ステップ1：Dorisデプロイメントテンプレートをダウンロードする

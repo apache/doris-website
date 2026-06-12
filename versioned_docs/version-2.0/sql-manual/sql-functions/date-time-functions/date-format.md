@@ -5,6 +5,8 @@
 }
 ---
 
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## date_format
 ### Description
 #### Syntax

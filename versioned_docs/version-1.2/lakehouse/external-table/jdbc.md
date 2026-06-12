@@ -5,6 +5,8 @@
 }
 ---
 
+
+<!-- Compatibility anchors for historical inbound links. -->
 # JDBC External Table
 
 :::tip Tips
@@ -390,8 +392,8 @@ The followings list how data types in different databases are mapped in Doris.
 
 ### OceanBase
 
-For MySQL mode, please refer to [MySQL type mapping](#MySQL)
-For Oracle mode, please refer to [Oracle type mapping](#Oracle)
+For MySQL mode, please refer to [MySQL type mapping](#mysql)
+For Oracle mode, please refer to [Oracle type mapping](#oracle)
 
 ## Q&A
 

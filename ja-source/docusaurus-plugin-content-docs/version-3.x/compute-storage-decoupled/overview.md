@@ -10,7 +10,7 @@
 
 この記事では、Dorisのcompute-storage coupledモードとcompute-storage decoupledモードの違い、利点、適用シナリオを紹介し、ユーザーの選択の参考を提供します。
 
-以下のセクションでは、compute-storage decoupledモードでApache Dorisをデプロイして使用する方法を詳しく説明します。compute-storage coupledモードでのデプロイメントについては、[クラスター Deployment](../../../docs/install/deploy-manually/integrated-storage-compute-deploy-manually)セクションをご参照ください。
+以下のセクションでは、compute-storage decoupledモードでApache Dorisをデプロイして使用する方法を詳しく説明します。compute-storage coupledモードでのデプロイメントについては、クラスター Deploymentセクションをご参照ください。
 
 ## Compute-storage coupled VS decoupled
 

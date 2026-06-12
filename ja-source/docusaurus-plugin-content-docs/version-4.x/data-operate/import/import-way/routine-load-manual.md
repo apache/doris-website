@@ -5,6 +5,10 @@
   "language": "ja"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
+<a id="Example-of-importing-Json-format-data"></a>
+<a id="kafka-security-authentication"></a>
 Dorisは、Routine Loadメソッドを通じてKafka Topicからデータを継続的に消費することができます。Routine Loadジョブを提出した後、Dorisは継続的にロードジョブを実行し、Kafkaクラスタ内の指定されたTopicからメッセージを常に消費するリアルタイムローディングタスクを生成します。
 
 Routine Loadは、Exactly-Onceセマンティクスをサポートするストリーミングロードジョブであり、データの欠損や重複がないことを保証します。

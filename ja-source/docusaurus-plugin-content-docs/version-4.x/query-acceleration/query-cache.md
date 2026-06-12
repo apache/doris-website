@@ -3,6 +3,8 @@
   "language": "ja"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 # Query Cache
 
 ## はじめに
@@ -41,7 +43,7 @@ Query Cacheは集約クエリ用に設計されています。具体的には、
 
 2. **Tablet ID** — 現在のパイプラインインスタンスに割り当てられたタブレットIDのソート済みリスト。
 
-3. **Tablet Range** — パーティション述語から導出される各タブレットの有効スキャン範囲（[パーティションとフィルタの動作](#partition-and-filter-behavior)を参照）。
+3. **Tablet Range** — パーティション述語から導出される各タブレットの有効スキャン範囲（[パーティションとフィルタの動作](#query-cache)を参照）。
 
 ### キャッシュ無効化
 

@@ -33,7 +33,7 @@ Pay-as-you-go quota has limited concurrency and usage. For additional resources,
 
 ## Column type mapping
 
-Consistent with Hive Catalog, please refer to the **column type mapping** section in [Hive Catalog](../datalake/hive).
+Consistent with Hive Catalog, please refer to the **column type mapping** section in Hive Catalog.
 
 ## User-defined service address
 

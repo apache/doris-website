@@ -10,4 +10,4 @@
 
 Dorisは、Hive、Iceberg、Paimonなどの外部データソースからのテーブルに対して、自動または手動での統計情報収集をサポートしています。統計情報の精度は、コスト推定の精度を直接決定し、最適なクエリプランの選択にとって重要です。これにより、特に複雑なクエリシナリオにおいて、クエリ実行効率を大幅に向上させることができます。
 
-詳細については、「外部テーブル収集」セクションの[Statistics](../query-acceleration/optimization-technology-principle/statistics#外表収集)ドキュメントを参照してください。
+詳細については、「外部テーブル収集」セクションの[Statistics](../query-acceleration/optimization-technology-principle/statistics#統計情報)ドキュメントを参照してください。

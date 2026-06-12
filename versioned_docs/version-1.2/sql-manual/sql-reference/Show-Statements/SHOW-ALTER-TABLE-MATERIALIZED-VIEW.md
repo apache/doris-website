@@ -7,7 +7,7 @@
 
 ## Description
 
-This command is used to check the execution status of the materialized view creation job submitted via statement [CREATE-MATERIALIZED-VIEW](../../../sql-statements/table-and-view/materialized-view/CREATE-MATERIALIZED-VIEW.md)
+This command is used to check the execution status of the materialized view creation job submitted via statement CREATE-MATERIALIZED-VIEW
 
 > This statement is equivalent to `SHOW ALTER TABLE ROLLUP`;
 

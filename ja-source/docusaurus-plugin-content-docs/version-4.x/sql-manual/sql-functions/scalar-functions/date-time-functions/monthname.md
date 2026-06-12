@@ -5,11 +5,13 @@
   "language": "ja"
 }
 ---
+
+<!-- Compatibility anchors for historical inbound links. -->
 ## 説明
 
 MONTHNAME関数は、datetime値に対応する英語の月名を返します。この関数はDATEとDATETIME型の処理をサポートし、完全な英語の月名（JanuaryからDecember）を返します。
 
-出力結果の言語は、セッション変数[lc_time_names](#付録-lc_time_names-may-be-set-to-any-of-the-following-locale-valuescase-insensitive)で設定できます。デフォルトでは`en_US`に設定されており、出力は英語になります。
+出力結果の言語は、セッション変数[lc_time_names](#説明)で設定できます。デフォルトでは`en_US`に設定されており、出力は英語になります。
 
 この関数は、MySQLの[monthname function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_monthname)と同じ動作をします。
 

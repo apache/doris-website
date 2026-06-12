@@ -5,6 +5,8 @@
 }
 ---
 
+
+<!-- Compatibility anchors for historical inbound links. -->
 # JDBC 外表
 
 <version deprecated="1.2.2">
@@ -378,8 +380,8 @@ PROPERTIES (
 
 ### OceanBase
 
-MySQL 模式请参考 [MySQL 类型映射](#MySQL)
-Oracle 模式请参考 [Oracle 类型映射](#Oracle)
+MySQL 模式请参考 [MySQL 类型映射](#mysql)
+Oracle 模式请参考 [Oracle 类型映射](#oracle)
 
 ## Q&A
 

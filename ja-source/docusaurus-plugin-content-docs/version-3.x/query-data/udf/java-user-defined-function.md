@@ -96,7 +96,7 @@ JavaでUDFを作成する際、メインエントリポイントは`evaluate`関
         }
     }
     ```
-2. DorisでJava-UDF関数を登録・作成します。構文の詳細については、[CREATE FUNCTION](../../../sql-manual/sql-statements/function/CREATE-FUNCTION)を参照してください。
+2. DorisでJava-UDF関数を登録・作成します。構文の詳細については、CREATE FUNCTIONを参照してください。
 
     ```sql
     CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
@@ -106,7 +106,7 @@ JavaでUDFを作成する際、メインエントリポイントは`evaluate`関
         "type"="JAVA_UDF"
     );
     ```
-3. UDFを利用するには、ユーザーは対応するデータベースに対する`SELECT`権限を持っている必要があります。また、UDFの登録が成功したことを確認するには、[SHOW FUNCTIONS](../../../sql-manual/sql-statements/function/SHOW-FUNCTIONS)コマンドを使用できます。
+3. UDFを利用するには、ユーザーは対応するデータベースに対する`SELECT`権限を持っている必要があります。また、UDFの登録が成功したことを確認するには、SHOW FUNCTIONSコマンドを使用できます。
 
     ``` sql
     select id,java_udf_add_one(id) from test_table;
@@ -117,7 +117,7 @@ JavaでUDFを作成する際、メインエントリポイントは`evaluate`関
     |    6 |                    7 |
     +------+----------------------+
     ```
-4. UDFが不要になった場合は、[DROP FUNCTION](../../../sql-manual/sql-statements/function/DROP-FUNCTION)で詳述されているように、以下のコマンドを使用して削除することができます。
+4. UDFが不要になった場合は、DROP FUNCTIONで詳述されているように、以下のコマンドを使用して削除することができます。
 
 さらに、UDFで大きなリソースファイルの読み込みやグローバル静的変数の定義が必要な場合は、このドキュメントの後半で説明されている静的変数の読み込み方法を参照してください。
 
@@ -305,7 +305,7 @@ public class MedianUDAF {
 </details>
 
 
-2. DorisでJava-UDAF関数を登録・作成します。構文の詳細については、[CREATE FUNCTION](../../../sql-manual/sql-statements/function/CREATE-FUNCTION)を参照してください。
+2. DorisでJava-UDAF関数を登録・作成します。構文の詳細については、CREATE FUNCTIONを参照してください。
 
     ```sql
     CREATE AGGREGATE FUNCTION simple_demo(INT) RETURNS INT PROPERTIES (
@@ -353,8 +353,8 @@ UDTFはDorisバージョン3.0から サポートされています。
         }
     }
     ```
-2. DorisでJava-UDTF関数を登録・作成します。2つのUDTF関数が登録されます。DorisのTable関数は`_outer`接尾辞により異なる動作を示す場合があります。詳細については、[OUTER combinator](../../../sql-manual/sql-functions/table-functions/explode-numbers)を参照してください。
-構文の詳細については、[CREATE FUNCTION](../../../sql-manual/sql-statements/function/CREATE-FUNCTION)を参照してください。
+2. DorisでJava-UDTF関数を登録・作成します。2つのUDTF関数が登録されます。DorisのTable関数は`_outer`接尾辞により異なる動作を示す場合があります。詳細については、OUTER combinatorを参照してください。
+構文の詳細については、CREATE FUNCTIONを参照してください。
 
     ```sql
     CREATE TABLES FUNCTION java_utdf(string, string) RETURNS array<string> PROPERTIES (

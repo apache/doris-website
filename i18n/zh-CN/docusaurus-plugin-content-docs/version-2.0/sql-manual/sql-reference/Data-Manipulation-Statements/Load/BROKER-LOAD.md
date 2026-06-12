@@ -175,7 +175,7 @@ WITH BROKER broker_name
 
     - `timezone`
 
-      指定某些受时区影响的函数的时区，如 `strftime/alignment_timestamp/from_unixtime` 等等，具体请查阅 [时区](../../../../query/query-variables/time-zone) 文档。如果不指定，则使用 "Asia/Shanghai" 时区
+      指定某些受时区影响的函数的时区，如 `strftime/alignment_timestamp/from_unixtime` 等等，具体请查阅 时区 文档。如果不指定，则使用 "Asia/Shanghai" 时区
 
     - `load_parallelism`
 
