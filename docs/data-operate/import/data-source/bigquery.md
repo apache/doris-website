@@ -228,7 +228,7 @@ Reason: column_name[country], the length of input is too long than schema. first
 Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1; actual length: 9; . src line [];
 ```
 
-For data quality errors, if skipping some erroneous rows is acceptable, set the error tolerance ratio in the S3 Load `PROPERTIES`. For details on the parameters, see [Load configuration parameters](../../import/import-way/broker-load-manual.md#related-configurations).
+For data quality errors, if skipping some erroneous rows is acceptable, set the error tolerance ratio in the S3 Load `PROPERTIES`. For details on the parameters, see [Load configuration parameters](../../import/import-way/broker-load-manual.md#import-configuration-parameters).
 
 #### 3.4 Import data from multiple files
 

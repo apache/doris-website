@@ -30,7 +30,7 @@ The following table lists common AI scenarios and the corresponding capabilities
 | Let AI Agents query business data in real time | [Agent Facing Analytics](#agent-facing-analytics) | MPP architecture, millisecond-level queries, MCP Server |
 | Run keyword search, vector search, and aggregation on the same data | [Hybrid search and analytics](#hybrid-search-and-analytics-processing) | Inverted index + vector index + SQL |
 | Accelerate AI training data preparation and feature engineering | [Lakehouse for AI](#lakehouse-for-ai) | Lakehouse architecture, open table formats, fast SQL |
-| Build enterprise knowledge bases and intelligent customer service | [RAG applications](#ragretrieval-augmented-generation) | High-concurrency vector retrieval, hybrid search |
+| Build enterprise knowledge bases and intelligent customer service | [RAG applications](#rag-retrieval-augmented-generation) | High-concurrency vector retrieval, hybrid search |
 | Monitor model training and inference services | [AI Observability](#ai-observability) | High-throughput ingestion, inverted index, low storage cost |
 | Make search understand user intent | [Semantic search](#semantic-search) | HNSW/IVF, quantization, multimodal extensions |
 

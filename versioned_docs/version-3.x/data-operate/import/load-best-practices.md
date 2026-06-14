@@ -37,7 +37,7 @@ Compressed files/Parquet/ORC files: It is recommended to split files into multip
 
 Uncompressed CSV and JSON files: Doris will automatically split files and load them concurrently.
 
-For concurrency strategies, please refer to: [Broker Load Configuration Parameters](./import-way/broker-load-manual#Related-Configurations)
+For concurrency strategies, please refer to: [Broker Load Configuration Parameters](./import-way/broker-load-manual#related-configurations)
 
 ## Stream Load Concurrency
 

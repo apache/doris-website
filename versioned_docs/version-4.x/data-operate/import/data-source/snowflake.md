@@ -250,7 +250,7 @@ Reason: column_name[country], the length of input is too long than schema. first
 Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1;   actual length: 9; . src line [];
 ```
 
-For data quality errors, if some erroneous data is allowed to be skipped, you can set the error tolerance ratio in the `PROPERTIES` of the S3 Load job. For details, see [Import Configuration Parameters](../../import/import-way/broker-load-manual.md#related-configurations).
+For data quality errors, if some erroneous data is allowed to be skipped, you can set the error tolerance ratio in the `PROPERTIES` of the S3 Load job. For details, see [Import Configuration Parameters](../../import/import-way/broker-load-manual.md#import-configuration-parameters).
 
 #### 3.4 Batch Import Multiple Partitions
 
@@ -303,4 +303,4 @@ Doris does not have a type that fully corresponds to Snowflake's `TIME`. Therefo
 - [Azure Load](./azure-storage.md)
 - [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous)
 - [Load Best Practices](../load-best-practices/load-best-practices.md)
-- [Import Configuration Parameters](../../import/import-way/broker-load-manual.md#related-configurations)
+- [Import Configuration Parameters](../../import/import-way/broker-load-manual.md#import-configuration-parameters)

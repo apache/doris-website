@@ -2071,7 +2071,7 @@ EXECUTE rewrite_data_files (
 1. The `rewrite_data_files` operation reads and rewrites data files, which will generate additional I/O and computational overhead. Please allocate cluster resources reasonably.
 2. Before execution, you can use the SQL in the [View Data File Distribution](#view-data-file-distribution) section to evaluate whether a rewrite operation is needed
 3. The WHERE condition can be used to limit the partition or data range for rewriting. This condition will filter out files that do not contain data matching the WHERE condition, thereby reducing the number of files and amount of data to rewrite
-4. Before execution, you can use the SQL in the [Rewrite File Selection Logic](#rewrite-file-selection-logic) section to calculate which files will be rewritten
+4. Before execution, you can use the SQL in the [Rewrite File Selection Logic](#rewrite_data_files-file-selection-strategy) section to calculate which files will be rewritten
 
 ### cherrypick_snapshot
 
