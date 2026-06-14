@@ -156,4 +156,4 @@ Key parameters:
 | `s3.external_id` | No | The externalId value configured in the Trust Relationships Policies |
 | `timeout` | No | Operation timeout, in seconds |
 
-For detailed usage of SQL statements for more features, see [AWS Authentication and Authorization](../../../admin-manual/auth/integrations/aws-authentication-and-authorization#assumed-role-authentication).
+For detailed usage of SQL statements for more features, see [AWS Authentication and Authorization](../../../admin-manual/auth/integrations/aws-authentication-and-authorization#assumed-role-authentication-and-authorization).

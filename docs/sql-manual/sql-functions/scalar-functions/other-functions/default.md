@@ -34,7 +34,7 @@ Special cases:
 - Only columns are allowed as input; if a constant (including NULL) or an expression is provided, an error is thrown
 - When the input is an auto-increment column or a generated column, an error is thrown
 
-[Doris-supported default value related parameters](../../../sql-statements/table-and-view/table/CREATE-TABLE.md#Column-Default-Value-Related-Parameters)
+[Doris-supported default value related parameters](../../../sql-statements/table-and-view/table/CREATE-TABLE.md#column-default-value-related-parameters)
 
 ## Examples
 

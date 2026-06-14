@@ -52,7 +52,7 @@ A Label is typically set in the format `business logic + time`, such as `my_busi
 
 #### StreamLoad 2PC
 
-[StreamLoad 2PC](#stream-load) is mainly used to support EOS semantics when Flink writes to Doris.
+[StreamLoad 2PC](#stream-load-2pc) is mainly used to support EOS semantics when Flink writes to Doris.
 
 ## Explicit Transaction Operations
 

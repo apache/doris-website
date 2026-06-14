@@ -258,7 +258,7 @@ Because both writes and queries on log data have distinct characteristics, follo
 
 **Partitioning**:
 
-- Use [Range partitioning](../table-design/data-partitioning/manual-partitioning.md#range-分区) on the time field (`PARTITION BY RANGE(ts)`) and enable [Dynamic partitioning](../table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`) to manage daily partitions automatically.
+- Use [Range partitioning](../table-design/data-partitioning/manual-partitioning.md#range-partitioning) on the time field (`PARTITION BY RANGE(ts)`) and enable [Dynamic partitioning](../table-design/data-partitioning/dynamic-partitioning) (`"dynamic_partition.enable" = "true"`) to manage daily partitions automatically.
 - Use a `Datetime` time field as the key (`DUPLICATE KEY(ts)`); this provides a multi-fold speedup when querying the latest N logs.
 
 **Bucketing**:

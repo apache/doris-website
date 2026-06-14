@@ -56,7 +56,7 @@ Labels are usually set in the format of `business_logic+timestamp`, such as `my_
 
 #### StreamLoad 2PC
 
-[StreamLoad 2PC](#stream-load) is mainly used to support exactly-once semantics (EOS) when writing to Doris with Flink.
+[StreamLoad 2PC](#stream-load-2pc) is mainly used to support exactly-once semantics (EOS) when writing to Doris with Flink.
 
 ## Transaction Operations
 
