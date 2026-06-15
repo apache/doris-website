@@ -144,7 +144,7 @@ The MySQL source side (`FROM MYSQL`) supports the following parameters:
 | password             | -       | Database password                                                                                                    |
 | database             | -       | Database name                                                                                                        |
 | include_tables       | -       | Names of tables to sync, separated by commas. If left empty, all tables are synced by default                        |
-| offset               | initial | `initial`: full + incremental sync; `latest`: incremental sync only                                                  |
+| offset               | latest  | `latest`: incremental sync only; `initial`: full + incremental sync                                                  |
 | snapshot_split_size  | 8096    | Size of a split (in rows). During full sync, a table is divided into multiple splits for sync                        |
 | snapshot_parallelism | 1       | Parallelism during the full-sync phase, that is, the maximum number of splits a single Task can schedule at a time   |
 
@@ -158,8 +158,8 @@ The syntax for creating an Auto Table Creation Sync job is as follows:
 
 ```sql
 CREATE JOB <job_name>
-ON STREAMING
 [job_properties]
+ON STREAMING
 [ COMMENT <comment> ]
 FROM MYSQL (
     [source_properties]

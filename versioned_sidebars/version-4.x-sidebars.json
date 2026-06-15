@@ -408,7 +408,8 @@
                         "data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql"
                       ]
                     },
-                    "data-operate/import/import-way/streaming-job/continuous-load-s3"
+                    "data-operate/import/import-way/streaming-job/continuous-load-s3",
+                    "data-operate/import/import-way/streaming-job/data-type-mapping"
                   ]
                 }
               ]

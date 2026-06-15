@@ -358,6 +358,7 @@ const sidebars: SidebarsConfig = {
                                     ],
                                 },
                                 'data-operate/import/import-way/streaming-job/continuous-load-s3',
+                                'data-operate/import/import-way/streaming-job/data-type-mapping',
                             ],
                         },
                     ],
