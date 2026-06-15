@@ -3257,6 +3257,25 @@ export const TOOL_VERSIONS = [
         value: ToolsEnum.StreamLoader,
         children: [
             {
+                label: '1.0.3',
+                value: '1.0.3',
+                children: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: 'https://download.selectdb.com/apache-doris-streamloader-1.0.3-bin-x64.tar.gz',
+                        Binary: 'https://download.selectdb.com/apache-doris-streamloader-1.0.3-bin-x64.tar.gz',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: 'https://download.selectdb.com/apache-doris-streamloader-1.0.3-bin-arm64.tar.gz',
+                        Binary: 'https://download.selectdb.com/apache-doris-streamloader-1.0.3-bin-arm64.tar.gz',
+                    },
+                ],
+                source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.3/apache-doris-streamloader-1.0.3-src.tar.gz',
+            },
+            {
                 label: '1.0.2',
                 value: '1.0.2',
                 children: [
