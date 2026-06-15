@@ -155,8 +155,8 @@ select * from S3(
 
 ```SQL
 CREATE JOB <job_name>
-ON STREAMING
 [job_properties]
+ON STREAMING
 [ COMMENT <comment> ]
 DO <Insert_Command> 
 ```
@@ -178,8 +178,8 @@ DO <Insert_Command>
 | ------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | session.\*         | 无     | 支持在 `job_properties` 上配置所有的 session 变量，导入变量可参考 [Insert Into Select](../../../../data-operate/import/import-way/insert-into-manual.md#导入配置参数) |
 | s3.max_batch_files | 256    | 当累计文件数达到该值时触发一次导入写入                                                                                                                        |
-| s3.max_batch_bytes | 10G    | 当累计数据量达到该值时触发一次导入写入                                                                                                                        |
-| max_interval       | 10s    | 当上游没有新增文件或数据时，空闲的调度间隔                                                                                                                    |
+| s3.max_batch_bytes | 10737418240 | 当累计数据量（字节）达到该值时触发一次导入写入。只接受纯整数字节数，如 `10737418240`；不支持带单位后缀（如 `10G`）。取值范围 100MB–10GB，即 104857600–10737418240                                                                                                                        |
+| max_interval       | 10     | 当上游没有新增文件或数据时，空闲的调度间隔，单位为秒。只接受整数（秒数），如 `10`；不支持带单位后缀（如 `10s`）。取值需 >= 1                                                                                                                    |
 
 :::tip 批次触发规则
 `s3.max_batch_files` 与 `s3.max_batch_bytes` 满足任一条件即触发写入；当上游无新文件时，按 `max_interval` 进入空闲轮询。

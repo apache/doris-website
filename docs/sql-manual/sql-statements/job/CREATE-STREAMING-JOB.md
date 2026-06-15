@@ -23,12 +23,12 @@ For detailed usage, see [Continuous Load](../../../data-operate/import/import-wa
 
 ```SQL
 CREATE JOB <job_name>
-ON STREAMING
 [ PROPERTIES (
     <job_property>
     [ , ... ]
     )
 ]
+ON STREAMING
 [ COMMENT <comment> ]
 DO <Insert_Command> 
 ```
@@ -37,12 +37,12 @@ DO <Insert_Command>
 
 ```SQL
 CREATE JOB <job_name>
-ON STREAMING
 [ PROPERTIES (
     <job_property>
     [ , ... ]
     )
 ]
+ON STREAMING
 [ COMMENT <comment> ]
 FROM <sourceType> (
     <source_property>
@@ -77,7 +77,7 @@ TO DATABASE <target_db> (
 | database       | -       | Database name                                                |
 | schema         | -       | Schema name (PostgreSQL)                                     |
 | include_tables | -       | Tables to synchronize, comma separated. If not specified, all tables will be synchronized by default. |
-| offset         | initial | initial: full + incremental sync, latest: incremental only   |
+| offset         | latest  | `latest`: incremental only (default); `initial`: full + incremental sync   |
 | snapshot_split_size | 8096 | Split size (in rows). During full sync, the table is divided into multiple splits. |
 | snapshot_parallelism | 1   | Parallelism during full sync phase, i.e., max splits per task. |
 
@@ -100,8 +100,8 @@ TO DATABASE <target_db> (
 | ------------------ | ------- | ------------------------------------------------------------ |
 | session.*          | -       | Supports configuring all session variables in job_properties (TVF Mode only) |
 | s3.max_batch_files | 256     | Triggers an import write when the accumulated file count reaches this value (S3 TVF only) |
-| s3.max_batch_bytes | 10G     | Triggers an import write when the accumulated data size reaches this value (S3 TVF only) |
-| max_interval       | 10s     | Idle scheduling interval when there are no new files or data upstream |
+| s3.max_batch_bytes | 10737418240 | Triggers an import write when the accumulated data size (in bytes) reaches this value. Only a plain integer byte count is accepted, e.g. `10737418240`; a unit suffix such as `10G` is not supported. Valid range is 100MB–10GB, i.e. 104857600–10737418240. (S3 TVF only) |
+| max_interval       | 10      | Idle scheduling interval in seconds when there are no new files or data upstream. Only an integer (number of seconds) is accepted, e.g. `10`; a unit suffix such as `10s` is not supported. Must be >= 1 |
 
 ## Privilege Control
 
@@ -153,7 +153,8 @@ The user executing this SQL command must have at least the following privileges:
         "user" = "root",
         "password" = "123456",
         "database" = "source_db",
-        "table" = "source_table"
+        "table" = "source_table",
+        "offset" = "initial"
     );
     ```
 
@@ -173,7 +174,8 @@ The user executing this SQL command must have at least the following privileges:
         "password" = "postgres",
         "database" = "postgres",
         "schema" = "public",
-        "table" = "source_table"
+        "table" = "source_table",
+        "offset" = "initial"
     );
     ```
 

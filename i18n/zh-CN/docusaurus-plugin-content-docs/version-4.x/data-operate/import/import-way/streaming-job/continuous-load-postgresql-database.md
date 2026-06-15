@@ -95,7 +95,7 @@ PostgreSQL 源端参数用于配置 JDBC 连接、同步范围以及全量切片
 | database             | -       | 数据库名                                                                                                                                          |
 | schema               | -       | Schema 名称                                                                                                                                       |
 | include_tables       | -       | 需要同步的表名，多个表用逗号分隔，不填默认所有的表                                                                                                |
-| offset               | initial | initial: 全量 + 增量同步，latest: 仅增量同步                                                                                                      |
+| offset               | latest  | latest: 仅增量同步，initial: 全量 + 增量同步                                                                                                      |
 | snapshot_split_size  | 8096    | split 的大小（行数），全量同步时，表会被切分成多个 split 进行同步                                                                                 |
 | snapshot_parallelism | 1       | 全量阶段同步的并行度，即单次 Task 最多调度的 split 数量                                                                                           |
 
@@ -119,8 +119,8 @@ PostgreSQL 源端参数用于配置 JDBC 连接、同步范围以及全量切片
 
 ```sql
 CREATE JOB <job_name>
-ON STREAMING
 [job_properties]
+ON STREAMING
 [ COMMENT <comment> ]
 FROM POSTGRES (
     [source_properties]
