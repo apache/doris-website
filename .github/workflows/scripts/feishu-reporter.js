@@ -19,7 +19,126 @@ try {
 
 const totalChecks = (data.links || []).length;
 const uniqueUrls = new Set((data.links || []).map(link => link.url)).size;
-const brokenLinks = (data.links || []).filter(link => link.state === 'BROKEN' && link.status === 404);
+
+function doesTargetDocExist(targetUrl, parentUrl) {
+    try {
+        const urlObj = new URL(targetUrl, 'http://localhost:3000');
+        let pathname = decodeURIComponent(urlObj.pathname).replace(/^\/|\/$/g, '');
+        pathname = pathname.replace(/\.html?$/, '');
+        
+        if (!pathname) return false;
+        
+        const segments = pathname.split('/').filter(Boolean);
+        if (segments.length === 0) return false;
+        
+        // Check if first segment is a locale (e.g., 'zh-CN', 'ja')
+        let locale = '';
+        if (segments[0] === 'zh-CN' || segments[0] === 'ja') {
+            locale = segments.shift();
+        }
+        
+        // Now segments should start with 'docs' if it's a documentation route
+        if (segments[0] !== 'docs') {
+            return false;
+        }
+        
+        segments.shift(); // remove 'docs'
+        if (segments.length === 0) return false;
+        
+        // Check if the next segment is a version number
+        let version = '';
+        if (segments[0] && (segments[0].match(/^\d/) || segments[0] === 'next')) {
+            version = segments.shift();
+        }
+        
+        const docSubPath = segments.join('/');
+        if (!docSubPath) return false;
+        
+        // Build candidate search tails
+        const searchTails = [];
+        const subSegs = docSubPath.split('/').filter(Boolean);
+        for (let len = Math.min(subSegs.length, 4); len >= 2; len--) {
+            const tail = subSegs.slice(-len).join('/');
+            searchTails.push(tail + '.md');
+            searchTails.push(tail + '.mdx');
+        }
+        searchTails.push(docSubPath + '.md');
+        searchTails.push(docSubPath + '.mdx');
+        
+        // Determine base directories
+        const baseDirs = [];
+        if (locale) {
+            const versionFolder = version ? `version-${version}` : 'current';
+            baseDirs.push(path.join('i18n', locale, 'docusaurus-plugin-content-docs', versionFolder));
+        } else {
+            if (version) {
+                baseDirs.push(path.join('versioned_docs', `version-${version}`));
+            } else {
+                baseDirs.push('docs');
+            }
+        }
+        
+        // Read all markdown files in these base directories (cache it globally)
+        if (!global.allDocsFiles) {
+            global.allDocsFiles = [];
+            const walk = (dir) => {
+                const fullDir = path.join(process.cwd(), dir);
+                if (!fs.existsSync(fullDir)) return;
+                const list = fs.readdirSync(fullDir);
+                for (const file of list) {
+                    const fullPath = path.join(fullDir, file);
+                    const relPath = path.relative(process.cwd(), fullPath);
+                    const stat = fs.statSync(fullPath);
+                    if (stat.isDirectory()) {
+                        if (file !== 'node_modules' && file !== '.git' && file !== 'build' && file !== '.docusaurus') {
+                            walk(relPath);
+                        }
+                    } else if (file.endsWith('.md') || file.endsWith('.mdx')) {
+                        global.allDocsFiles.push(relPath.replace(/\\/g, '/'));
+                    }
+                }
+            };
+            walk('docs');
+            walk('versioned_docs');
+            walk('i18n');
+        }
+        
+        for (const file of global.allDocsFiles) {
+            const matchesDir = baseDirs.length === 0 || baseDirs.some(dir => {
+                const normalizedDir = dir.replace(/\\/g, '/');
+                return file.startsWith(normalizedDir + '/');
+            });
+            if (matchesDir) {
+                for (const tail of searchTails) {
+                    if (file.endsWith('/' + tail) || file === tail) {
+                        return true;
+                    }
+                }
+            }
+        }
+    } catch (e) {
+        console.error('Error in doesTargetDocExist:', e);
+    }
+    return false;
+}
+
+const brokenLinks = (data.links || []).filter(link => {
+    if (link.state !== 'BROKEN' || link.status !== 404) {
+        return false;
+    }
+
+    const isImage = link.url.match(/\.(png|jpe?g|gif|webp|svg|ico)(\?.*)?$/i);
+    if (isImage) {
+        return true;
+    }
+
+    if (doesTargetDocExist(link.url, link.parent)) {
+        console.log(`Ignoring browser-navigable 404 link (target document exists): ${link.url}`);
+        return false;
+    }
+
+    return true;
+});
 
 // Resolve repo name to determine specific doc mappings
 const repoName = process.env.GITHUB_REPOSITORY || 'doris-website';
@@ -168,13 +287,15 @@ function findLineNumber(localPath, targetUrl) {
                     return i + 1;
                 }
             }
-            // Try searching for the last segment of the path
-            const segments = searchDecoded.split('/');
-            const lastSegment = segments[segments.length - 1];
-            if (lastSegment && lastSegment.length > 3) {
-                for (let i = 0; i < lines.length; i++) {
-                    if (lines[i].includes(lastSegment)) {
-                        return i + 1;
+            // Try searching for progressive sub-paths from the end (e.g. 3 segments, then 2, then 1) to avoid false positives on common words
+            const segments = searchDecoded.split('/').filter(Boolean);
+            for (let len = Math.min(segments.length, 3); len >= 1; len--) {
+                const subPath = segments.slice(-len).join('/');
+                if (subPath && subPath.length > 3) {
+                    for (let i = 0; i < lines.length; i++) {
+                        if (lines[i].includes(subPath)) {
+                            return i + 1;
+                        }
                     }
                 }
             }
@@ -183,6 +304,30 @@ function findLineNumber(localPath, targetUrl) {
         // Silent catch
     }
     return 0;
+}
+
+// Helper to get line content from a file
+function getLineContent(localPath, lineNum) {
+    if (!localPath || lineNum <= 0 || !fs.existsSync(localPath)) return '';
+    try {
+        const content = fs.readFileSync(localPath, 'utf8');
+        const lines = content.split('\n');
+        if (lineNum <= lines.length) {
+            return lines[lineNum - 1].trim();
+        }
+    } catch (err) {
+        // ignore
+    }
+    return '';
+}
+
+// Helper to escape special characters in markdown table cell
+function escapeMarkdownTable(text) {
+    return text
+        .replace(/\|/g, '\\|')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\r?\n/g, ' ');
 }
 
 // Process and group broken links by URL
@@ -228,17 +373,34 @@ for (const link of brokenLinks) {
     const finalLink = line ? `${fileLink}#L${line}` : fileLink;
     const displayFile = line ? `${resolvedFile}:${line}` : resolvedFile;
 
+    const fileExists = localPath && fs.existsSync(path.join(process.cwd(), localPath));
+
     if (!urlMap.has(cleanUrl)) {
         urlMap.set(cleanUrl, {
             url: cleanUrl,
             errorReason,
-            references: []
+            references: [],
+            seenRefs: new Set()
         });
     }
-    urlMap.get(cleanUrl).references.push({
-        file: displayFile,
-        link: finalLink
-    });
+
+    const entry = urlMap.get(cleanUrl);
+    const refKey = `${resolvedFile}:${line}`;
+    if (!entry.seenRefs.has(refKey)) {
+        entry.seenRefs.add(refKey);
+
+        let codeSnippet = '';
+        if (fileExists && line > 0) {
+            codeSnippet = getLineContent(localPath, line);
+        }
+
+        entry.references.push({
+            file: displayFile,
+            link: finalLink,
+            fileExists: !!fileExists,
+            codeSnippet
+        });
+    }
 }
 
 const uniqueBrokenLinks = [...urlMap.values()];
@@ -266,14 +428,18 @@ function writeStepSummary() {
         const limit = 100;
         const displayed = uniqueBrokenLinks.slice(0, limit);
         for (const item of displayed) {
-             const refLinks = item.references.map(ref => {
-                if (ref.link) {
-                    return `[\`${ref.file}\`](${encodeURI(ref.link)})`;
-                }
-                return `\`${ref.file}\``;
-            }).join('<br>');
+             const validRefs = item.references.filter(r => r.fileExists);
+             const refLinks = validRefs.map(ref => {
+                 let lineInfo = `[\`${ref.file}\`](${encodeURI(ref.link)})`;
+                 if (ref.codeSnippet) {
+                     lineInfo += `<br><code>${escapeMarkdownTable(ref.codeSnippet)}</code>`;
+                 }
+                 return lineInfo;
+             }).join('<br>');
 
-            markdown += `| \`${item.url}\` | \`${item.errorReason}\` | ${refLinks} |\n`;
+             const finalRefCell = refLinks || '*无有效引用源 (可能为 404 页面产生的级联链接)*';
+
+             markdown += `| \`${item.url}\` | \`${item.errorReason}\` | ${finalRefCell} |\n`;
         }
         if (uniqueBrokenLinks.length > limit) {
             markdown += `\n> [!NOTE]\n`;
@@ -346,7 +512,10 @@ if (!hasIssues) {
     const limit = 10;
     const displayedBroken = uniqueBrokenLinks.slice(0, limit);
     const brokenListMd = displayedBroken.map((item, idx) => {
-        const refsText = item.references.slice(0, 3).map(r => r.file).join(', ') + (item.references.length > 3 ? '等' : '');
+        const validRefs = item.references.filter(r => r.fileExists);
+        const refsText = validRefs.length > 0
+            ? (validRefs.slice(0, 3).map(r => r.file).join(', ') + (validRefs.length > 3 ? '等' : ''))
+            : '未知 (可能为404页面产生级联链接)';
         return `${idx + 1}. ❌ **[${item.errorReason}]** ${item.url}\n    🔍 引用源: \`${refsText}\``;
     }).join('\n');
 
