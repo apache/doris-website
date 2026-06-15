@@ -17,6 +17,8 @@ try {
     process.exit(0);
 }
 
+const totalChecks = (data.links || []).length;
+const uniqueUrls = new Set((data.links || []).map(link => link.url)).size;
 const brokenLinks = (data.links || []).filter(link => link.state === 'BROKEN' && link.status === 404);
 
 // Resolve repo name to determine specific doc mappings
@@ -249,10 +251,10 @@ function writeStepSummary() {
 
     if (brokenLinks.length > 0) {
         markdown += `> [!WARNING]\n`;
-        markdown += `> **本次定时巡检共发现 ${brokenLinks.length} 处失效链接！** 请开发人员点击下表【引用源文件】中的链接，直接跳转到对应的 GitHub 源码行进行修复。\n\n`;
+        markdown += `> **本次定时巡检共发现 ${brokenLinks.length} 处失效链接！** 共检查了 ${totalChecks} 次链接，包含 ${uniqueUrls} 个独立 URL。请开发人员点击下表【引用源文件】中的链接，直接跳转到对应的 GitHub 源码行进行修复。\n\n`;
     } else {
         markdown += `> [!NOTE]\n`;
-        markdown += `> **本次定时巡检未发现失效链接。** 链路状态良好！\n\n`;
+        markdown += `> **本次定时巡检未发现失效链接。** 共检查了 ${totalChecks} 次链接，包含 ${uniqueUrls} 个独立 URL。链路状态良好！\n\n`;
     }
 
     markdown += `| 🔗 失效链接 (Broken Link) | ❌ 错误原因 (Error Reason) | 📌 引用源文件 (Where Referenced) |\n`;
@@ -283,6 +285,7 @@ function writeStepSummary() {
     markdown += `**📊 运行元信息：**\n`;
     markdown += `* **扫描模式**: \`${linkCheckMode}\`\n`;
     markdown += `* **扫描目标**: \`${linkCheckTarget}\`\n`;
+    markdown += `* **检测总量**: \`${totalChecks}\` (独立 URL: \`${uniqueUrls}\`)\n`;
     markdown += `* **检测分支**: \`${branchName}\`\n`;
     markdown += `* **触发类型**: \`${eventName}\`\n`;
     markdown += `* **检测时间**: \`${new Date().toISOString().replace('T', ' ').substring(0, 19)} (UTC)\`\n`;
@@ -297,87 +300,123 @@ function writeStepSummary() {
 // Write Step Summary
 writeStepSummary();
 
-if (brokenLinks.length === 0) {
-    console.log('No broken links found. Exiting with success.');
-    process.exit(0);
-}
+const hasIssues = brokenLinks.length > 0;
+const exitCode = hasIssues ? 1 : 0;
 
-console.log(`Found ${brokenLinks.length} broken links. Sending Feishu notification...`);
-
-// Format broken links summary for Feishu
-const limit = 10;
-const displayedBroken = uniqueBrokenLinks.slice(0, limit);
-const brokenListMd = displayedBroken.map((item, idx) => {
-    const refsText = item.references.slice(0, 3).map(r => r.file).join(', ') + (item.references.length > 3 ? '等' : '');
-    return `${idx + 1}. ❌ **[${item.errorReason}]** ${item.url}\n    🔍 引用源: \`${refsText}\``;
-}).join('\n');
-
-const totalText = uniqueBrokenLinks.length > limit ? `\n\n...以及其他 ${uniqueBrokenLinks.length - limit} 个失效链接，请点击下方按钮查看完整排错报告。` : '';
-
-const payload = {
-    msg_type: 'interactive',
-    card: {
-        header: {
-            template: 'red',
-            title: {
-                tag: 'plain_text',
-                content: `⚠️ 链接扫描失败警告 | ${repoName.split('/')[1] || repoName}`
-            }
-        },
-        elements: [
-            {
-                tag: 'div',
-                text: {
-                    tag: 'lark_md',
-                    content: `**触发场景**: ${eventName}\n**扫描模式**: ${linkCheckMode}\n**扫描目标**: ${linkCheckTarget}\n**提交人**: @${actor}${prNumber ? `\n**PR号**: #${prNumber}` : ''}\n**总失效链接数**: **${brokenLinks.length}** 个`
+let payload;
+if (!hasIssues) {
+    console.log('No broken links found. Sending success notification to Feishu.');
+    payload = {
+        msg_type: 'interactive',
+        card: {
+            header: {
+                template: 'green',
+                title: {
+                    tag: 'plain_text',
+                    content: `✅ 链接扫描成功 | ${repoName.split('/')[1] || repoName}`
                 }
             },
-            {
-                tag: 'hr'
-            },
-            {
-                tag: 'div',
-                text: {
-                    tag: 'lark_md',
-                    content: `**📊 死链分类统计 (Classification):**\n` +
-                             `• 🔴 **页面未找到 (404)**: **${cnt404}** 个\n` +
-                             `• 🟡 **锚点失效 (Anchor)**: **${cntAnchor}** 个\n` +
-                             `• 🔵 **网络超时/其他**: **${cntTimeout + cntOther}** 个`
-                }
-            },
-            {
-                tag: 'hr'
-            },
-            {
-                tag: 'div',
-                text: {
-                    tag: 'lark_md',
-                    content: `**检测到失效链接列表 (最多展示 ${limit} 个):**\n${brokenListMd}${totalText}`
-                }
-            },
-            runUrl ? {
-                tag: 'action',
-                actions: [
-                    {
-                        tag: 'button',
-                        text: {
-                            tag: 'plain_text',
-                            content: '查看详细排错报告'
-                        },
-                        type: 'primary',
-                        url: runUrl
+            elements: [
+                {
+                    tag: 'div',
+                    text: {
+                        tag: 'lark_md',
+                        content: `**触发场景**: ${eventName}\n**扫描模式**: ${linkCheckMode}\n**扫描目标**: ${linkCheckTarget}\n**检测状态**: 全部通过！\n**总检查量**: 共检查了 **${totalChecks}** 次链接，包含 **${uniqueUrls}** 个独立 URL。`
                     }
-                ]
-            } : null
-        ].filter(Boolean)
-    }
-};
+                },
+                runUrl ? {
+                    tag: 'action',
+                    actions: [
+                        {
+                            tag: 'button',
+                            text: {
+                                tag: 'plain_text',
+                                content: '查看详细排错报告'
+                            },
+                            type: 'primary',
+                            url: runUrl
+                        }
+                    ]
+                } : null
+            ].filter(Boolean)
+        }
+    };
+} else {
+    console.log(`Found ${brokenLinks.length} broken links. Sending Feishu notification...`);
+    const limit = 10;
+    const displayedBroken = uniqueBrokenLinks.slice(0, limit);
+    const brokenListMd = displayedBroken.map((item, idx) => {
+        const refsText = item.references.slice(0, 3).map(r => r.file).join(', ') + (item.references.length > 3 ? '等' : '');
+        return `${idx + 1}. ❌ **[${item.errorReason}]** ${item.url}\n    🔍 引用源: \`${refsText}\``;
+    }).join('\n');
+
+    const totalText = uniqueBrokenLinks.length > limit ? `\n\n...以及其他 ${uniqueBrokenLinks.length - limit} 个失效链接，请点击下方按钮查看完整排错报告。` : '';
+
+    payload = {
+        msg_type: 'interactive',
+        card: {
+            header: {
+                template: 'red',
+                title: {
+                    tag: 'plain_text',
+                    content: `⚠️ 链接扫描失败警告 | ${repoName.split('/')[1] || repoName}`
+                }
+            },
+            elements: [
+                {
+                    tag: 'div',
+                    text: {
+                        tag: 'lark_md',
+                        content: `**触发场景**: ${eventName}\n**扫描模式**: ${linkCheckMode}\n**扫描目标**: ${linkCheckTarget}\n**提交人**: @${actor}${prNumber ? `\n**PR号**: #${prNumber}` : ''}\n**总失效链接数**: **${brokenLinks.length}** 个 (总共检查了 **${totalChecks}** 次链接，包含 **${uniqueUrls}** 个独立 URL)`
+                    }
+                },
+                {
+                    tag: 'hr'
+                },
+                {
+                    tag: 'div',
+                    text: {
+                        tag: 'lark_md',
+                        content: `**📊 死链分类统计 (Classification):**\n` +
+                                 `• 🔴 **页面未找到 (404)**: **${cnt404}** 个\n` +
+                                 `• 🟡 **锚点失效 (Anchor)**: **${cntAnchor}** 个\n` +
+                                 `• 🔵 **网络超时/其他**: **${cntTimeout + cntOther}** 个`
+                    }
+                },
+                {
+                    tag: 'hr'
+                },
+                {
+                    tag: 'div',
+                    text: {
+                        tag: 'lark_md',
+                        content: `**检测到失效链接列表 (最多展示 ${limit} 个):**\n${brokenListMd}${totalText}`
+                    }
+                },
+                runUrl ? {
+                    tag: 'action',
+                    actions: [
+                        {
+                            tag: 'button',
+                            text: {
+                                tag: 'plain_text',
+                                content: '查看详细排错报告'
+                            },
+                            type: 'primary',
+                            url: runUrl
+                        }
+                    ]
+                } : null
+            ].filter(Boolean)
+        }
+    };
+}
 
 const payloadStr = JSON.stringify(payload, null, 2);
 
 if (!WEBHOOK_URL) {
     console.error('Error: FEISHU_WEBHOOK environment variable is not set. Step summary has been written.');
-    process.exit(1);
+    process.exit(exitCode);
 }
 
 const urlObj = new URL(WEBHOOK_URL);
@@ -401,13 +440,13 @@ const req = protocol.request(options, (res) => {
     res.on('data', (chunk) => { body += chunk; });
     res.on('end', () => {
         console.log(`Feishu response status: ${res.statusCode}`);
-        process.exit(1);
+        process.exit(exitCode);
     });
 });
 
 req.on('error', (e) => {
     console.error(`Problem sending request to Feishu: ${e.message}`);
-    process.exit(1);
+    process.exit(exitCode);
 });
 
 req.write(payloadStr);
