@@ -46,7 +46,7 @@ Continuous load supports the following data sources and sync modes:
 | PostgreSQL  | 14, 15, 16, 17     | [PostgreSQL CDC with SQL Mapping](./continuous-load-postgresql-table.md) | [PostgreSQL CDC with Auto Table Creation](./continuous-load-postgresql-database.md) | [Amazon RDS PostgreSQL](./prerequisites/amazon-rds-postgresql.md) · [Amazon Aurora PostgreSQL](./prerequisites/amazon-aurora-postgresql.md) |
 | S3          | -                  | [S3 Continuous Load](./continuous-load-s3.md)                     | -                                                                       | -                                                                                                                                         |
 
-For how upstream column types map to Doris types, see [Data Type Mapping](./data-type-mapping.md).
+For how upstream column types map to Doris types, see Data Type Mapping for [MySQL](./data-type-mapping-mysql.md) and [PostgreSQL](./data-type-mapping-postgresql.md).
 
 ## How to Choose a Sync Method
 

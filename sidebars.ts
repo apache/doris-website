@@ -343,8 +343,15 @@ const sidebars: SidebarsConfig = {
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-table',
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-database',
-                                        'data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql',
-                                        'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql',
+                                        'data-operate/import/import-way/streaming-job/data-type-mapping-mysql',
+                                        {
+                                            type: 'category',
+                                            label: 'Prerequisites',
+                                            items: [
+                                                'data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql',
+                                                'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql',
+                                            ],
+                                        },
                                     ],
                                 },
                                 {
@@ -353,12 +360,18 @@ const sidebars: SidebarsConfig = {
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-postgresql-table',
                                         'data-operate/import/import-way/streaming-job/continuous-load-postgresql-database',
-                                        'data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql',
-                                        'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql',
+                                        'data-operate/import/import-way/streaming-job/data-type-mapping-postgresql',
+                                        {
+                                            type: 'category',
+                                            label: 'Prerequisites',
+                                            items: [
+                                                'data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql',
+                                                'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql',
+                                            ],
+                                        },
                                     ],
                                 },
                                 'data-operate/import/import-way/streaming-job/continuous-load-s3',
-                                'data-operate/import/import-way/streaming-job/data-type-mapping',
                             ],
                         },
                     ],
