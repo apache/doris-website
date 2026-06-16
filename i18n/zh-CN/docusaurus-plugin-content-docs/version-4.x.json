@@ -131,6 +131,10 @@
     "message": "持续导入",
     "description": "The label for category Continuous Load in sidebar docs"
   },
+  "sidebar.docs.category.Prerequisites": {
+    "message": "准备工作",
+    "description": "The label for category Prerequisites in sidebar docs"
+  },
   "sidebar.docs.category.Setup Guide": {
     "message": "配置指南",
     "description": "The label for category Setup Guide in sidebar docs"
