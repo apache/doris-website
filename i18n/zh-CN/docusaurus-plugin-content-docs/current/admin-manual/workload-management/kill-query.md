@@ -85,7 +85,7 @@ SET session_context = "trace_id:your_trace_id";
 也可在单条查询语句中通过 Hint 设置，无需修改会话变量：
 
 ```sql
-SELECT /*+SET_VAR(session_context=trace_id:your_trace_id)*/ * FROM table ...;
+SELECT /*+SET_VAR(session_context="trace_id:your_trace_id")*/ * FROM table ...;
 ```
 
 ## 执行 KILL 操作
@@ -153,7 +153,7 @@ KILL 55;
 - 在查询语句中内嵌 Hint（适合连接池复用场景）：
 
     ```sql
-    SELECT /*+SET_VAR(session_context=trace_id:your_trace_id)*/ * FROM table ...;
+    SELECT /*+SET_VAR(session_context="trace_id:your_trace_id")*/ * FROM table ...;
     ```
 
 绑定后，可在任意时刻通过以下命令取消该查询：

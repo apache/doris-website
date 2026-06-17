@@ -85,7 +85,7 @@ SET session_context = "trace_id:your_trace_id";
 You can also set it through a Hint on a single query statement, without modifying the session variable:
 
 ```sql
-SELECT /*+SET_VAR(session_context=trace_id:your_trace_id)*/ * FROM table ...;
+SELECT /*+SET_VAR(session_context="trace_id:your_trace_id")*/ * FROM table ...;
 ```
 
 ## Execute the KILL Operation
@@ -153,7 +153,7 @@ There are two ways to bind the Trace ID:
 - Embed a Hint in the query statement (suitable for connection-pool reuse scenarios):
 
     ```sql
-    SELECT /*+SET_VAR(session_context=trace_id:your_trace_id)*/ * FROM table ...;
+    SELECT /*+SET_VAR(session_context="trace_id:your_trace_id")*/ * FROM table ...;
     ```
 
 Once bound, cancel the query at any time with the following command:
