@@ -141,6 +141,6 @@ KILL [CONNECTION] connection_id;
 - クエリ文にTrace IDを追加する
 
 		```sql
-		SELECT /*+SET_VAR(session_context=trace_id:your_trace_id)*/ * FROM table ...;
+		SELECT /*+SET_VAR(session_context="trace_id:your_trace_id")*/ * FROM table ...;
 		```
 その後、管理システムはTrace IDを使用していつでも実行中のオペレーションをキャンセルできます。
