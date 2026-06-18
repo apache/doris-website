@@ -71,7 +71,7 @@ Good partition design gives you:
 
 Bucketing further divides the data within a partition into smaller, mutually disjoint data units according to certain rules. Each row of data belongs to exactly one specific bucket.
 
-Unlike partitions, which split by column value, bucketing spreads data **evenly** across buckets. This reduces skew and improves query performance through better data locality.
+Partitions divide data by ranges or lists of column values. Bucketing instead spreads data **evenly** across the buckets in a partition, which reduces skew and improves query performance through better data locality.
 
 Doris supports two **bucketing methods**:
 
