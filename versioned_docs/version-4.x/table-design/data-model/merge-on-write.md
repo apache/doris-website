@@ -20,7 +20,7 @@
 
 ## How Merge-on-Write Works
 
-With merge-on-write, Doris resolves duplicate Keys as data is written. For each incoming row, it checks whether the Key already exists and marks any previous version as deleted. Only the latest row for each Key remains in storage.
+With merge-on-write, Doris resolves duplicate Keys as data is written. For each incoming row, it checks whether the Key already exists and marks any previous version as deleted in a delete bitmap. Queries use the bitmap to skip the marked rows, so they read only the latest version. Compaction later removes those rows from disk.
 
 Because duplicates are resolved at write time:
 
