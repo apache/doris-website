@@ -6,21 +6,29 @@
 }
 ---
 
-Apache Doris provides multiple index types to accelerate different query scenarios. This document starts from query scenarios to help you quickly understand the principles, applicable scope, and selection strategy of each type of index.
+Apache Doris accelerates queries with several index types. This page helps you decide which index, if any, to add, and links to the details of each.
 
-## Quick Selection Guide
+## Start Here
 
-Before diving into the details of each index, you can refer to the following principles to make a quick choice:
+Every table already has two indexes that Doris builds and maintains for you:
 
-1. **Most frequently used filter conditions**: Designate them as Key columns to automatically build a prefix index. Prefix indexes deliver the best filtering effect, but each table can only have one, so use it on the highest-frequency filter condition.
-2. **Filter acceleration on non-Key fields**: Prefer the [inverted index](./inverted-index/overview.md). It is widely applicable and supports combining multiple conditions. If you have special needs, choose one of the following two options:
-    - String LIKE matching needs: add an NGram BloomFilter index
-    - Sensitive to index storage space: use a BloomFilter index instead of an inverted index
-3. **Full-text search on text**: Use the [inverted index](./inverted-index/overview.md), combined with tokenizers to enable keyword matching, phrase queries, multi-field combined search, and other capabilities.
-4. **Vector similarity search**: Use the [vector index (ANN index)](./vector-index/overview.md) to accelerate approximate nearest neighbor queries for RAG, semantic search, recommendation, and image/audio/video retrieval.
-5. **Performance below expectations**: Use QueryProfile to analyze how much data the index filtered out and how much time it consumed. See the dedicated documentation for each index for details.
+- A **[prefix index](./prefix-index.md)** on the sort key, which speeds up filters on the leading Key columns. Make your most frequent filter a leading Key column to use it.
+- A **ZoneMap index** on every column, which skips data blocks that fall outside a range or equality filter.
 
-## Choosing an Index by Query Scenario
+Add a manual index only when these don't cover your query pattern:
+
+| Your query pattern | Recommended index | When needed |
+| --- | --- | --- |
+| Filter on your highest-frequency column | Make it a leading Key column (prefix index) | Always design this first |
+| Equality or range filter on a non-Key column | [Inverted index](./inverted-index/overview.md) | Often |
+| `LIKE` substring match on text | [NGram BloomFilter index](./ngram-bloomfilter-index.md) | Sometimes |
+| Equality filter where index size matters more than flexibility | [BloomFilter index](./bloomfilter.md) | Rarely; the inverted index is usually preferred |
+| Full-text search: keyword, phrase, or multi-field | [Inverted index](./inverted-index/overview.md) | When you search text |
+| Vector similarity (Top-K nearest neighbor) | [Vector index (ANN)](./vector-index/overview.md) | For RAG, semantic search, recommendation, and media retrieval |
+
+If a query is slower than expected, use QueryProfile to see how much each index filtered out and how long it took. See each index's page for details.
+
+## How Each Index Works
 
 Apache Doris provides four categories of indexes for different query scenarios: **point-query indexes**, **skip indexes**, **full-text search indexes**, and **vector indexes**.
 
@@ -130,4 +138,4 @@ The following table lists the acceleration support of each index type for common
 
 ## Index Design Principles
 
-Index design and tuning for a database table are closely tied to data characteristics and query patterns, and require testing and tuning based on the actual scenario. Although there is no silver bullet, Apache Doris keeps lowering the difficulty of using indexes. In actual design, you can refer to the three principles in the [Quick Selection Guide](#quick-selection-guide) above for index selection and testing.
+Index design and tuning for a database table are closely tied to data characteristics and query patterns, and require testing and tuning based on the actual scenario. Although there is no silver bullet, Apache Doris keeps lowering the difficulty of using indexes. When designing indexes, use the decision table in [Start Here](#start-here) to choose and test them.
