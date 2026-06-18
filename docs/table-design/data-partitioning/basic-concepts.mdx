@@ -1,8 +1,9 @@
 ---
 {
-    "title": "Basic Concepts",
+    "title": "How Partitioning and Bucketing Work",
+    "sidebar_label": "How It Works",
     "language": "en",
-    "description": "A progressive introduction to Doris partitioning and bucketing: from core concepts and the first CREATE TABLE example to auto/dynamic partitioning, auto-bucketing, Colocate, and other advanced capabilities, along with design recommendations and operational guidance for partitions and buckets."
+    "description": "The data-distribution model behind Doris partitioning and bucketing: partitions, buckets, tablets, and nodes, plus advanced partition and bucket modes, design recommendations, and operational guidance."
 }
 ---
 
@@ -12,7 +13,7 @@ import TabItem from '@theme/TabItem';
 {/* Knowledge type: Concept introduction / Procedure */}
 {/* Applicable scenarios: Table design / Data organization and management */}
 
-This document introduces the partitioning (Partition) and bucketing (Bucket) mechanisms of Doris, helping you design table structures reasonably to improve query performance and data management efficiency. New users are recommended to read the sections in order: Sections 1-3 cover core concepts and the first CREATE TABLE example, Sections 4-6 cover advanced features and design recommendations, and Section 7 covers the methods for viewing and modifying partitions needed for daily operations.
+This page explains how Doris distributes data across partitions, buckets, and tablets, and covers the advanced partition and bucket modes, design recommendations, and operational commands. For the recommended starting configuration and a decision guide, start with [Partitioning and Bucketing](./overview); read this page when you want to understand the underlying model.
 
 ## 1. Overview
 
