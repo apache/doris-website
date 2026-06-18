@@ -45,12 +45,14 @@ DISTRIBUTED BY HASH(order_id) BUCKETS 10
 
 ## 让旧分区过期
 
-如需自动删除旧数据，可设置保留策略。具体机制取决于分区模式：
+如需自动删除旧数据，可设置保留策略。两种模式都保留最近的分区、删除更早的分区，区别在于保留上限的表达方式：
 
-| 分区模式 | 属性 | 保留内容 |
+| 分区模式 | 属性 | 保留上限 |
 | --- | --- | --- |
-| [动态分区](./dynamic-partitioning) | `dynamic_partition.start`（例如 `-7`） | 保留相对当前时间某个时间窗口内的分区，更早的分区按调度自动删除（按时间） |
-| [自动分区](./auto-partitioning)（RANGE） | `partition.retention_count`（例如 `3`） | 保留最新的 N 个历史分区，更早的分区被删除（按数量） |
+| [动态分区](./dynamic-partitioning) | `dynamic_partition.start`（例如 `-7`） | 时间窗口：保留相对当前时间最近 N 个时间单位内的分区 |
+| [自动分区](./auto-partitioning)（RANGE） | `partition.retention_count`（例如 `3`） | 分区数量：保留最新的 N 个历史分区 |
+
+对于规则的时间分区（如每天一个），两者基本等价：“最近 7 天”等于“最新的 7 个按天分区”。当分区不规则或数据陈旧时二者会出现差异：一旦数据比时间窗口更旧，按时间窗口可能删除全部分区，而按数量始终保留最新的 N 个。
 
 不再推荐将自动分区与动态分区组合用于数据保留；自动 RANGE 分区表请使用 `partition.retention_count`。
 

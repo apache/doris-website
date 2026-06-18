@@ -45,12 +45,14 @@ Customize only when the default does not fit:
 
 ## Expire Old Partitions
 
-To drop old data automatically, set a retention policy. The mechanism depends on the partition mode:
+To drop old data automatically, set a retention policy. Both modes keep the most recent partitions and drop older ones; they differ in how you express the limit:
 
-| Partition mode | Property | What it keeps |
+| Partition mode | Property | Retention limit |
 | --- | --- | --- |
-| [Dynamic partitioning](./dynamic-partitioning) | `dynamic_partition.start` (for example, `-7`) | Partitions within a time window relative to now; older ones are dropped on a schedule (time-based) |
-| [Auto partitioning](./auto-partitioning) (RANGE) | `partition.retention_count` (for example, `3`) | The N newest historical partitions; older ones are dropped (count-based) |
+| [Dynamic partitioning](./dynamic-partitioning) | `dynamic_partition.start` (for example, `-7`) | A time window: keep partitions within the last N time units of now |
+| [Auto partitioning](./auto-partitioning) (RANGE) | `partition.retention_count` (for example, `3`) | A partition count: keep the newest N historical partitions |
+
+With regular time partitions (such as one per day), the two are effectively equivalent: "last 7 days" matches "newest 7 daily partitions." They diverge when partitions are irregular or data is stale: a time window can drop every partition once the data is older than the window, whereas a count always keeps the newest N.
 
 Combining auto and dynamic partitioning for retention is no longer recommended; use `partition.retention_count` for auto-range tables.
 
