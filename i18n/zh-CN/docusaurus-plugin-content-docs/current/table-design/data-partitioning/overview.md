@@ -39,7 +39,7 @@ DISTRIBUTED BY HASH(order_id) BUCKETS 10
 
 | 决策项 | 推荐默认 | 何时调整 |
 | --- | --- | --- |
-| 如何分区 | 按时间列[自动分区](./auto-partitioning) | 需要固定或不规则范围时，用[手动分区](./manual-partitioning)；需要按时间滚动并保留窗口时，用[动态分区](./dynamic-partitioning) |
+| 如何分区 | [自动分区](./auto-partitioning) | 对于自动分区无法表达的方案，使用[手动分区](./manual-partitioning)：自定义或不规则范围、数值列范围，或将多个值归入同一分区的 LIST。[动态分区](./dynamic-partitioning)已被自动分区取代。 |
 | 分桶方式 | 按高基数列做 Hash 分桶 | 数据倾斜或需按任意维度过滤时，用 Random 分桶（[数据分桶](./data-bucketing)） |
 | 分桶数量 | `BUCKETS AUTO` | 已知数据量并希望固定控制时，手动设置分桶数（[数据分桶](./data-bucketing)） |
 

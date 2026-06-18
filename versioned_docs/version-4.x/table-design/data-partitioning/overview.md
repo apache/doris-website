@@ -39,7 +39,7 @@ Customize only when the default does not fit:
 
 | Decision | Recommended default | Change it when |
 | --- | --- | --- |
-| How to partition | [Auto partitioning](./auto-partitioning) by a time column | If you need fixed or irregular ranges, use [manual partitioning](./manual-partitioning); for a rolling time window with retention, use [dynamic partitioning](./dynamic-partitioning) |
+| How to partition | [Auto partitioning](./auto-partitioning) | Use [manual partitioning](./manual-partitioning) for schemes auto cannot express: custom or irregular ranges, ranges on a numeric column, or grouped LIST values. [Dynamic partitioning](./dynamic-partitioning) is superseded by auto. |
 | Bucketing method | Hash on a high-cardinality column | If data skews, or you filter on arbitrary dimensions, use random bucketing ([Data Bucketing](./data-bucketing)) |
 | Number of buckets | `BUCKETS AUTO` | If you know your data size and want fixed control, set a count ([Data Bucketing](./data-bucketing)) |
 
