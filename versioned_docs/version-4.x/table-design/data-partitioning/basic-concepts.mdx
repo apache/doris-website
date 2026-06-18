@@ -62,7 +62,7 @@ Doris supports two **partition types**:
 
 If no partition is specified at table creation time, Doris generates a default partition that is transparent to the user, containing all the data in the table.
 
-Good partition design gives you:
+Good partition design provides:
 
 - **Faster queries**: partition pruning skips partitions that can't match the query, so Doris scans less data and does less I/O. This matters most on large datasets.
 - **Easier management**: splitting by time or region makes archiving, cleanup, and backup simpler. For example, partitioning by time lets you manage historical and incoming data separately.
@@ -78,7 +78,7 @@ Doris supports two **bucketing methods**:
 - **Hash bucketing**: computes the `crc32` hash of the bucketing column values and takes the modulo with the number of buckets to evenly distribute the data.
 - **Random bucketing**: randomly assigns data to buckets. When using Random bucketing, you can combine the `load_to_single_tablet` parameter to optimize fast writes for small-scale data.
 
-Good bucketing gives you:
+Good bucketing provides:
 
 - **Even data distribution**: less risk of skew, and no single node or disk gets overloaded.
 - **Fewer hotspots**: no node or partition gets overloaded, which keeps the system stable.
