@@ -6,7 +6,7 @@
 }
 ---
 
-**Merge-on-write** and **merge-on-read** are the two storage implementations the [Unique Key Model](./unique) uses to guarantee the uniqueness of Key columns. Both return the same query results. They differ in when they resolve duplicate Keys, and that affects read and write performance. Merge-on-write is the default and works best for most workloads.
+**Merge-on-write** and **merge-on-read** are the two storage implementations of the [Unique Key Model](./unique). Both keep Key columns unique and return the same query results, but they resolve duplicate Keys at different times, and that affects read and write performance. Merge-on-write is the default and works best for most workloads.
 
 <!-- Knowledge type: Concept -->
 <!-- Applicable scenarios: Choosing a Unique Key implementation -->
@@ -51,7 +51,7 @@ The implementation is fixed at table creation and **cannot be changed later thro
 
 ## Enabling Each Implementation
 
-The implementation is controlled by the `enable_unique_key_merge_on_write` table property.
+The `enable_unique_key_merge_on_write` table property controls the implementation.
 
 Merge-on-write (default):
 

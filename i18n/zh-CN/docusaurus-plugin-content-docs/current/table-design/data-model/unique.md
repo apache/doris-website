@@ -40,7 +40,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 
 ## 写入数据（Upsert）
 
-使用标准 `INSERT` 语句写入数据。Key 已存在的记录会被更新，Key 不存在的记录会被插入。Key 列同时用于排序和去重。
+无论使用哪种导入方式，Doris 都会按 Key 进行 upsert：Key 已存在的记录会被更新，Key 不存在的记录会被插入。Key 列同时用于排序和去重。下面的示例使用 `INSERT`，Stream Load、Broker Load、Routine Load 等方式的行为相同。
 
 ![unique-key-model-insert](/images/table-desigin/unique-key-model-insert.png)
 
@@ -89,5 +89,5 @@ SELECT * FROM example_tbl_unique;
 
 1. **实现方式不可更改**：写时合并或读时合并只能在建表时指定，无法通过 schema change 修改。
 2. **整行 UPSERT 填充默认值**：即使 `INSERT INTO` 只指定部分列，Doris 也会用 NULL 或默认值填充未指定的列。
-3. **部分列更新需要写时合并**：如需只更新部分列，必须使用写时合并实现，并通过特定参数开启部分列更新支持。详见[部分列更新](../../data-operate/update/update-of-unique-model)。
-4. **分区列必须是 Key 列的子集**：为保证数据唯一性，分区列必须是 Key 列的子集。
+3. **部分列更新需要写时合并**：如需只更新部分列，使用写时合并并通过参数开启部分列更新。详见[部分列更新](../../data-operate/update/update-of-unique-model)。
+4. **分区列必须是 Key 列的子集**：Doris 以此保证数据唯一性。

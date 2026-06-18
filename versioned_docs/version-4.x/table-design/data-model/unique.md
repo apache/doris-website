@@ -40,7 +40,7 @@ Each row is identified by `(user_id, user_name)`. Writing a row whose Key alread
 
 ## Upsert Data
 
-Insert data with a standard `INSERT` statement. Rows with an existing Key are updated; rows with a new Key are inserted. Doris uses the Key columns for both sorting and deduplication.
+Doris upserts by Key no matter which load method you use: rows with an existing Key are updated, and rows with a new Key are inserted. Doris uses the Key columns for both sorting and deduplication. The example below uses `INSERT`; Stream Load, Broker Load, and Routine Load work the same way.
 
 ![unique-key-model-insert](/images/table-desigin/unique-key-model-insert.png)
 
@@ -89,5 +89,5 @@ When using the Unique Key Model, note the following limitations:
 
 1. **The implementation cannot be changed**: merge-on-write or merge-on-read can only be set at table creation and cannot be modified through schema change.
 2. **Whole-row UPSERT fills in default values**: even if `INSERT INTO` specifies only some columns, Doris fills the unspecified columns with NULL or default values.
-3. **Partial column updates require merge-on-write**: to update only some columns, you must use the merge-on-write implementation and enable partial column update support through a specific parameter. For details, see [Partial Column Update](../../data-operate/update/update-of-unique-model).
-4. **Partition keys must be a subset of Key columns**: to guarantee data uniqueness, partition keys must be a subset of the Key columns.
+3. **Partial column updates require merge-on-write**: to update only some columns, use merge-on-write and turn on partial column update with a parameter. See [Partial Column Update](../../data-operate/update/update-of-unique-model).
+4. **Partition keys must be a subset of Key columns**: Doris requires this to guarantee data uniqueness.
