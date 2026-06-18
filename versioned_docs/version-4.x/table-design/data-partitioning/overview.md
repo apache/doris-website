@@ -43,6 +43,19 @@ Customize only when the default does not fit:
 | Bucketing method | Hash on a high-cardinality column | If data skews, or you filter on arbitrary dimensions, use random bucketing ([Data Bucketing](./data-bucketing)) |
 | Number of buckets | `BUCKETS AUTO` | If you know your data size and want fixed control, set a count ([Data Bucketing](./data-bucketing)) |
 
+## Expire Old Partitions
+
+To drop old data automatically, set a retention policy. The mechanism depends on the partition mode:
+
+| Partition mode | Property | What it keeps |
+| --- | --- | --- |
+| [Dynamic partitioning](./dynamic-partitioning) | `dynamic_partition.start` (for example, `-7`) | Partitions within a time window relative to now; older ones are dropped on a schedule (time-based) |
+| [Auto partitioning](./auto-partitioning) (RANGE) | `partition.retention_count` (for example, `3`) | The N newest historical partitions; older ones are dropped (count-based) |
+
+Combining auto and dynamic partitioning for retention is no longer recommended; use `partition.retention_count` for auto-range tables.
+
+Retention **drops** data. To move cold data to cheaper storage instead of dropping it, use [tiered storage](../tiered-storage/overview) instead.
+
 ## How It Works
 
 Doris maps data in two tiers:

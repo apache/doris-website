@@ -43,6 +43,19 @@ DISTRIBUTED BY HASH(order_id) BUCKETS 10
 | 分桶方式 | 按高基数列做 Hash 分桶 | 数据倾斜或需按任意维度过滤时，用 Random 分桶（[数据分桶](./data-bucketing)） |
 | 分桶数量 | `BUCKETS AUTO` | 已知数据量并希望固定控制时，手动设置分桶数（[数据分桶](./data-bucketing)） |
 
+## 让旧分区过期
+
+如需自动删除旧数据，可设置保留策略。具体机制取决于分区模式：
+
+| 分区模式 | 属性 | 保留内容 |
+| --- | --- | --- |
+| [动态分区](./dynamic-partitioning) | `dynamic_partition.start`（例如 `-7`） | 保留相对当前时间某个时间窗口内的分区，更早的分区按调度自动删除（按时间） |
+| [自动分区](./auto-partitioning)（RANGE） | `partition.retention_count`（例如 `3`） | 保留最新的 N 个历史分区，更早的分区被删除（按数量） |
+
+不再推荐将自动分区与动态分区组合用于数据保留；自动 RANGE 分区表请使用 `partition.retention_count`。
+
+数据保留是**删除**数据。如果希望将冷数据迁移到更廉价的存储而非删除，请改用[分层存储](../tiered-storage/overview)。
+
 ## 工作原理
 
 Doris 将数据按两层映射：
