@@ -6,7 +6,7 @@
 }
 ---
 
-The Unique Key Model guarantees the uniqueness of Key columns: when a row is inserted or updated, new data overwrites any existing row with the same Key, so records always reflect the latest version. Use it when your data requires frequent updates by primary key.
+The Unique Key Model keeps Key columns unique: when you insert or update a row, the new data overwrites any existing row with the same Key, so the table always holds the latest version. Use it when your data is updated frequently by primary key.
 
 <!-- Knowledge type: Data model -->
 <!-- Applicable scenarios: Data update / High-frequency writes / Primary key deduplication -->
@@ -21,7 +21,7 @@ The Unique Key Model fits three main scenarios:
 
 ## Create a Unique Key Table
 
-Declare the primary key with the `UNIQUE KEY` keyword. Merge-on-write is enabled by default and is the right choice for almost all workloads, so no extra property is required:
+Declare the primary key with the `UNIQUE KEY` keyword. Merge-on-write is on by default and is right for almost all workloads, so you don't need any extra property:
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_unique
@@ -71,11 +71,11 @@ SELECT * FROM example_tbl_unique;
 +---------+-----------+------+------+------+
 ```
 
-Under whole-row `UPSERT` semantics, if `INSERT INTO` specifies only some columns, Doris fills the unspecified columns with NULL or default values.
+With a whole-row upsert, if your `INSERT INTO` lists only some columns, Doris fills the rest with NULL or default values.
 
 ## Update Only Some Columns
 
-To change a few fields without rewriting the whole row, use partial column update. It requires the merge-on-write implementation (the default) and is enabled through a parameter. See [Partial Column Update](../../data-operate/update/update-of-unique-model).
+To change a few fields without rewriting the whole row, use partial column update. It needs merge-on-write (the default) and is turned on with a parameter. See [Partial Column Update](../../data-operate/update/update-of-unique-model).
 
 ## Choose an Implementation
 

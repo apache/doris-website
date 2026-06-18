@@ -6,7 +6,7 @@
 }
 ---
 
-**Merge-on-write** and **merge-on-read** are the two storage implementations the [Unique Key Model](./unique) uses to guarantee the uniqueness of Key columns. Both return the same query results, but they resolve duplicate Keys at different times, which determines their read and write performance. Merge-on-write is the default and is recommended for most workloads.
+**Merge-on-write** and **merge-on-read** are the two storage implementations the [Unique Key Model](./unique) uses to guarantee the uniqueness of Key columns. Both return the same query results. They differ in when they resolve duplicate Keys, and that affects read and write performance. Merge-on-write is the default and works best for most workloads.
 
 <!-- Knowledge type: Concept -->
 <!-- Applicable scenarios: Choosing a Unique Key implementation -->
@@ -25,10 +25,10 @@ With merge-on-write, Doris resolves duplicate Keys as data is written. For each 
 Because duplicates are resolved at write time:
 
 - Queries read a single version per Key, with no read-time merge.
-- Filter predicates can be pushed down to the storage layer, so scans skip irrelevant data.
+- Doris can push filters down to the storage layer, so scans skip data that can't match.
 - Read performance does not degrade as past updates accumulate.
 
-The cost is paid on write: each upsert performs a primary-key lookup to locate and mark the previous version, which adds some write overhead compared with merge-on-read. For the large majority of workloads this trade-off is worthwhile, which is why merge-on-write is the default.
+The cost is on the write side. Each upsert looks up the primary key to find and mark the previous version, which adds some write overhead compared with merge-on-read. For most workloads this trade-off is worth it, so merge-on-write is the default.
 
 ## How Merge-on-Read Works
 
@@ -36,18 +36,18 @@ With merge-on-read, writes only append data. Doris keeps every version of a Key 
 
 Because duplicates are resolved at read time:
 
-- Writes are lightweight, since no primary-key lookup is required on write.
-- Every query must merge versions of the same Key, and predicates cannot be pushed down, so queries are slower.
+- Writes are lightweight, because they skip the primary-key lookup.
+- Every query has to merge the versions of each Key, and Doris can't push filters down, so queries are slower.
 - Query latency grows as versions accumulate between compactions.
 
-This implementation suits write-heavy, read-light pipelines where write throughput matters more than query latency.
+It fits write-heavy, read-light pipelines, where write throughput matters more than query speed.
 
 ## Choosing Between Them
 
-- **Use merge-on-write (default)** for the large majority of workloads, including real-time updates, dimension synchronization, and any case where query performance matters. It also unlocks capabilities such as partial column updates.
-- **Use merge-on-read** only when writes vastly outweigh reads and minimizing write overhead is the priority.
+- **Use merge-on-write (default)** for most workloads, including real-time updates, dimension synchronization, and any case where query performance matters. It also enables features such as partial column updates.
+- **Use merge-on-read** only when writes far outnumber reads and you need to minimize write overhead.
 
-The implementation is fixed at table creation and **cannot be changed later through schema change**, so choose before creating the table.
+The implementation is fixed at table creation and **cannot be changed later through schema change**, so decide before you create the table.
 
 ## Enabling Each Implementation
 
