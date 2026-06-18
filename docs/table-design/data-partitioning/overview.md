@@ -6,7 +6,7 @@
 }
 ---
 
-Doris organizes a table in two tiers: partitions split rows by column value, and buckets shard each partition for parallelism. This page gives the recommended starting point and shows when to customize.
+Doris organizes a table in two tiers: partitions split rows by column value, and buckets split each partition into shards for parallel processing. This page gives the recommended starting point and shows when to customize.
 
 ## Recommended Starting Point
 
@@ -51,7 +51,7 @@ Doris maps data in two tiers:
 Table ──► Partition (by column value) ──► Bucket (hash or random) ──► Tablet (shard on a BE node)
 ```
 
-Partitions prune data and enable lifecycle management, such as archiving or dropping by time. Buckets spread each partition across tablets for parallel reads and writes. For the full data-distribution model, including tablets, replicas, and how they map to nodes, see [How Partitioning and Bucketing Work](./basic-concepts).
+Partitions let Doris skip data that can't match a query, and make it easy to archive or drop data by time. Buckets spread each partition across tablets for parallel reads and writes. For the full data-distribution model, including tablets, replicas, and how they map to nodes, see [How Partitioning and Bucketing Work](./basic-concepts).
 
 ## Next Steps
 
