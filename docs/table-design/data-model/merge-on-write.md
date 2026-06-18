@@ -45,7 +45,7 @@ It fits write-heavy, read-light pipelines, where write throughput matters more t
 ## Choosing Between Them
 
 - **Use merge-on-write (default)** for most workloads, including real-time updates, dimension synchronization, and any case where query performance matters. It also enables features such as partial column updates.
-- **Use merge-on-read** only when writes far outnumber reads and you need to minimize write overhead.
+- **Use merge-on-read** only when you have far more writes than reads and you need to minimize write overhead.
 
 The implementation is fixed at table creation and **cannot be changed later through schema change**, so decide before you create the table.
 
