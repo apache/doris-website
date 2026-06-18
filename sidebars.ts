@@ -211,8 +211,14 @@ const sidebars: SidebarsConfig = {
                     link: {type: 'doc', id: 'table-design/data-partitioning/overview'},
                     items: [
                         'table-design/data-partitioning/auto-partitioning',
-                        'table-design/data-partitioning/dynamic-partitioning',
-                        'table-design/data-partitioning/manual-partitioning',
+                        {
+                            type: 'category',
+                            label: 'Other Partition Modes',
+                            items: [
+                                'table-design/data-partitioning/manual-partitioning',
+                                'table-design/data-partitioning/dynamic-partitioning',
+                            ],
+                        },
                         'table-design/data-partitioning/data-bucketing',
                         'table-design/data-partitioning/basic-concepts',
                         'table-design/data-partitioning/common-issues',
