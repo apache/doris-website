@@ -199,7 +199,14 @@ const sidebars: SidebarsConfig = {
                     link: {type: 'doc', id: 'table-design/data-model/intro'},
                     items: [
                         'table-design/data-model/duplicate',
-                        'table-design/data-model/unique',
+                        {
+                            type: 'category',
+                            label: 'Unique Key Model',
+                            link: {type: 'doc', id: 'table-design/data-model/unique'},
+                            items: [
+                                'table-design/data-model/merge-on-write',
+                            ],
+                        },
                         'table-design/data-model/aggregate',
                         'table-design/data-model/tips',
                     ],
