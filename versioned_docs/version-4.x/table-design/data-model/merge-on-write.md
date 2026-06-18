@@ -13,10 +13,10 @@
 
 ## Comparison
 
-| Implementation | Merge timing | Query performance | Predicate pushdown | Applicable scenarios |
-| --- | --- | --- | --- | --- |
-| Merge-on-write (default) | At write time | High | Supported | Most scenarios, balancing query and write performance |
-| Merge-on-read | At query or compaction time | Lower | Not supported | Write-heavy, read-light scenarios |
+| Implementation | Merge timing | Query performance | Applicable scenarios |
+| --- | --- | --- | --- |
+| Merge-on-write (default) | At write time | High | Most scenarios, balancing query and write performance |
+| Merge-on-read | At query or compaction time | Lower | Write-heavy, read-light scenarios |
 
 ## How Merge-on-Write Works
 
