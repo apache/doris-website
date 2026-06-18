@@ -6,7 +6,7 @@
 }
 ---
 
-The Unique Key Model keeps Key columns unique: when you insert or update a row, the new data overwrites any existing row with the same Key, so the table always holds the latest version. Use it when your data is updated frequently by primary key.
+The Unique Key Model keeps Key columns unique: when you insert or update a row, the new data overwrites any existing row with the same Key, so the table always holds the latest version. Use it when your data is updated by primary key.
 
 <!-- Knowledge type: Data model -->
 <!-- Applicable scenarios: Data update / High-frequency writes / Primary key deduplication -->

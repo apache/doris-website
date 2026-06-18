@@ -91,10 +91,7 @@ PROPERTIES (
 
 ## 依赖写时合并的能力
 
-部分主键模型特性依赖写时合并实现：
-
-- [部分列更新](../../data-operate/update/update-of-unique-model)：仅更新部分列而无需重写整行。
-- 谓词下推到存储层，加速带过滤条件的查询。
+[部分列更新](../../data-operate/update/update-of-unique-model) 依赖写时合并实现：仅更新部分列而无需重写整行。
 
 ## 相关文档
 

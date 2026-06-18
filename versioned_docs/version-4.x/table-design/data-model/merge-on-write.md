@@ -91,10 +91,7 @@ PROPERTIES (
 
 ## Capabilities That Require Merge-on-Write
 
-Some Unique Key features depend on the merge-on-write implementation:
-
-- [Partial column update](../../data-operate/update/update-of-unique-model): update a subset of columns without rewriting the whole row.
-- Predicate pushdown to the storage layer for faster filtered queries.
+[Partial column update](../../data-operate/update/update-of-unique-model) requires merge-on-write: it updates a subset of columns without rewriting the whole row.
 
 ## Related
 
