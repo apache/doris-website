@@ -12,10 +12,10 @@ Apache Doris accelerates queries with several index types. This page helps you d
 
 Every table already has two indexes that Doris builds and maintains for you:
 
-- A **[prefix index](./prefix-index.md)** on the sort key, which accelerates filters on the leading Key columns. Design your most frequent filter as a leading Key column to take advantage of it.
+- A **[prefix index](./prefix-index.md)** on the sort key, which speeds up filters on the leading Key columns. Make your most frequent filter a leading Key column to use it.
 - A **ZoneMap index** on every column, which skips data blocks that fall outside a range or equality filter.
 
-Add a manual index only when a query pattern is not covered by these:
+Add a manual index only when these don't cover your query pattern:
 
 | Your query pattern | Recommended index | When needed |
 | --- | --- | --- |
@@ -138,4 +138,4 @@ The following table lists the acceleration support of each index type for common
 
 ## Index Design Principles
 
-Index design and tuning for a database table are closely tied to data characteristics and query patterns, and require testing and tuning based on the actual scenario. Although there is no silver bullet, Apache Doris keeps lowering the difficulty of using indexes. In actual design, you can refer to the decision table in [Start Here](#start-here) above for index selection and testing.
+Index design and tuning for a database table are closely tied to data characteristics and query patterns, and require testing and tuning based on the actual scenario. Although there is no silver bullet, Apache Doris keeps lowering the difficulty of using indexes. When designing indexes, use the decision table in [Start Here](#start-here) to choose and test them.
