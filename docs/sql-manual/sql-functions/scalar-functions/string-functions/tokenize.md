@@ -27,9 +27,9 @@ The `properties` parameter supports the following key-value pairs (format: `"key
 
 | Property | Description | Example Values |
 |----------|-------------|----------------|
-| `built_in_analyzer` | Built-in analyzer type | `"english"`, `"chinese"`, `"unicode"`, `"icu"`, `"basic"`, `"ik"`, `"standard"`, `"none"` |
+| `built_in_analyzer` | Built-in analyzer type | `"english"`, `"chinese"`, `"kuromoji"`, `"unicode"`, `"icu"`, `"basic"`, `"ik"`, `"standard"`, `"none"` |
 | `analyzer` | Custom analyzer name (created via `CREATE INVERTED INDEX ANALYZER`) | `"my_custom_analyzer"` |
-| `parser_mode` | Parser mode (for chinese analyzers) | `"fine_grained"`, `"coarse_grained"` |
+| `parser_mode` | Parser mode. For `chinese`, controls segmentation granularity; for `kuromoji`, controls the Japanese segmentation mode | chinese: `"fine_grained"`, `"coarse_grained"`; kuromoji: `"search"` (default), `"normal"`, `"extended"` |
 | `support_phrase` | Enable phrase support (stores position information) | `"true"`, `"false"` |
 | `lower_case` | Convert tokens to lowercase | `"true"`, `"false"` |
 | `char_filter_type` | Character filter type | Varies by filter |
@@ -102,6 +102,15 @@ SELECT TOKENIZE("中华人民共和国国歌", '"built_in_analyzer"="ik"');
 [{ "token": "中华人民共和国" }, { "token": "国歌" }]
 ```
 
+```sql
+-- Using the kuromoji analyzer for Japanese text
+-- In the default search mode, the compound noun is also broken into its parts
+SELECT TOKENIZE("関西国際空港", '"built_in_analyzer"="kuromoji"');
+```
+```
+[{ "token": "関西" }, { "token": "国際" }, { "token": "空港" }]
+```
+
 ### Example 2: Using custom analyzers
 
 First, create a custom analyzer:
@@ -140,6 +149,7 @@ SELECT TOKENIZE("Hello World", '"built_in_analyzer"="standard", "support_phrase"
    - `standard`: Standard analyzer for general text
    - `english`: English language analyzer with stemming
    - `chinese`: Chinese text analyzer
+   - `kuromoji`: Japanese morphological analyzer (`parser_mode`: `search`, `normal`, `extended`)
    - `unicode`: Unicode-based analyzer for multilingual text
    - `icu`: ICU-based analyzer for advanced Unicode processing
    - `basic`: Basic tokenization
