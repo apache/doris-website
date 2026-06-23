@@ -1,121 +1,107 @@
 ---
 {
     "title": "Doris Operator Overview",
+    "sidebar_label": "Overview",
     "language": "en",
-    "description": "Doris Operator is the official Kubernetes Operator provided by Apache Doris, supporting automated deployment, scaling, and rolling upgrades of Doris clusters on K8s. This article introduces the architecture, core capabilities, and deployment guidance.",
-    "keywords": [
-        "Doris Operator",
-        "Doris Kubernetes",
-        "Deploy Doris on K8s",
-        "Kubernetes Operator",
-        "Doris containerization",
-        "K8s Doris deployment"
-    ]
+    "description": "Introduces the concepts, scope, use cases, and capability boundaries of Doris Operator.",
+    "keywords": ["Doris Operator", "Kubernetes", "DorisCluster", "DorisDisaggregatedCluster", "Deploy Doris on Kubernetes"]
 }
 ---
 
-To meet user demands for efficient deployment and operations of Doris on the Kubernetes platform, the [Kubernetes Operator](https://github.com/apache/doris-operator) (hereafter referred to as Doris Operator) was created.
-It integrates the complex management capabilities of native Kubernetes resources and incorporates experience in distributed coordination among Doris components and on-demand customization of user cluster forms, providing users with a more concise, efficient, and easy-to-use containerized deployment solution.
-It aims to achieve efficient management and control of Doris on Kubernetes, helping users reduce operational management and learning costs while providing powerful functionality and flexible configuration capabilities.
+Doris Operator is the official Kubernetes Operator for Apache Doris. It combines Doris operational experience with Kubernetes-native resource management to provide a simpler, more efficient, and easier-to-use way to deploy and operate Doris on Kubernetes.
 
-Doris Operator implements the configuration, management, and scheduling of Doris on the Kubernetes platform based on Kubernetes CustomResourceDefinitions (CRD). Doris Operator can automatically create Pods and other resources to start services according to the desired state defined by the user. Through the automatic registration mechanism, all started services can be integrated into a complete Doris cluster. This implementation significantly reduces the complexity and learning costs of essential production operations such as configuration management, node discovery and registration, access communication, and health checks in a Doris cluster.
+Doris Operator extends the Kubernetes API through CustomResourceDefinitions (CRDs). After you submit a Doris custom resource, the Operator creates and maintains the corresponding Kubernetes resources such as `StatefulSet`, `Service`, and `PersistentVolumeClaim`, and in some scenarios performs Doris metadata-level actions such as node registration, decommissioning, or cleanup.
 
-## Doris Operator Architecture
+This document explains where Doris Operator fits, what it manages, and when to use it. It is intended to help you build the right mental model first. For installation and deployment procedures, see the deployment documents for compute-storage integrated and compute-storage decoupled modes.
 
-![Doris Operator architecture diagram](/images/next/install/doris-operator.jpg)
+## Why use Doris Operator
 
-The design of Doris Operator is based on the principle of a two-tier scheduler:
+Deploying Doris on Kubernetes requires coordinating multiple components, service discovery, configuration mounts, storage binding, node registration, scaling, and health checks. As the cluster grows or the environment becomes more complex, managing these resources manually can lead to scattered configuration, many operational steps, and hard-to-track state.
 
-- **First-tier scheduling**: Uses native StatefulSet and Service to manage Pods, fully compatible with standard Kubernetes clusters.
-- **Second-tier scheduling**: Doris Operator watches the DorisCluster CRD resource and converts the cluster specification defined by the user into a StatefulSet and its associated resources.
+With Doris Operator, you describe the desired cluster state declaratively through a Doris custom resource. The Operator then provides:
 
-After the cluster configuration is delivered through kubectl, Doris Operator automatically completes operations such as StatefulSet creation, Pod scheduling, and service registration.
+- A single resource that describes cluster topology.
+- Automatic creation and maintenance of `StatefulSet`, `Service`, PVC, and related resources.
+- Ordered component bring-up and changes based on dependencies.
+- Component state aggregation into CR `status`.
+- Support for common operations such as configuration changes, scaling, and rolling updates.
+- Doris metadata-level node registration, decommissioning, or cleanup in some scenarios.
 
-The core components of a Doris cluster include:
+## How it works
 
-| Component | Role |
-|------|------|
-| FE (Frontend) | Responsible for metadata management and query coordination |
-| BE (Backend) | Responsible for data storage and query execution |
-| CN (Compute Node) | Responsible for compute acceleration (in storage-compute separation mode) |
-| Broker | Responsible for accessing external data sources |
+Doris Operator extends the Kubernetes API through CRDs. After you submit a Doris cluster resource through `kubectl`, Helm, or another release tool, the Operator watches that resource and translates it into native Kubernetes resources such as `StatefulSet`, `Service`, and `PersistentVolumeClaim`.
 
-## Key Capabilities
+![How Doris Operator works](/images/doris-operator/mermaid/01-overview-how-doris-operator-works.jpg)
 
-- **End-state deployment**:
+In this model, the user maintains the desired state, and the Operator continuously reconciles actual state toward that target.
 
-  Kubernetes adopts the end-state operations model to manage services, and Doris Operator defines a resource type that can describe a Doris cluster: DorisCluster. Users can refer to the relevant documentation and usage examples to easily configure the desired cluster.
-  Through the Kubernetes command-line tool kubectl, users can deliver the configuration to the Kubernetes cluster. Doris Operator automatically builds the required cluster and updates the cluster status to the corresponding resources in real time. This process ensures efficient management and monitoring of the cluster, greatly simplifying operational work.
+## Architecture
 
-- **Easy scaling**:
+Doris Operator can be viewed as two layers: the control plane and the data plane. The control plane includes Doris Operator, the Reconciler, optional Webhook logic, and status aggregation. It watches Doris custom resources and reconciles the actual state toward the desired state. The data plane includes Kubernetes-native resources such as `StatefulSet`, `Service`, PVC, HPA, and Doris Pods, which run the actual Doris components.
 
-  Doris Operator supports concurrent real-time horizontal scaling in cloud-disk-based environments. All Doris component services are deployed and managed through Kubernetes StatefulSet. During deployment or scaling, the Parallel mode of StatefulSet is used to create Pods, so in theory all replicas can be started within the time it takes to start a single node. The startup of each replica does not interfere with the others, and when one service fails to start, the startup of other services is not affected.
-  Doris Operator starts services in concurrent mode and has a built-in distributed architecture, greatly simplifying the process of service scaling. Users only need to set the number of replicas to easily scale out, completely freeing them from complex operational work.
+![Doris Operator architecture layers](/images/doris-operator/mermaid/02-architecture-layers.jpg)
 
-- **Seamless changes**:
+After a user submits a Doris custom resource through `kubectl`, Helm, or another release tool, the Kubernetes API Server stores the desired state. Doris Operator watches resource changes and runs Reconcile logic, then creates or updates the underlying Kubernetes resources. This layered model reduces the complexity of managing many low-level resources directly and keeps Doris deployments aligned with standard Kubernetes platforms.
 
-  In a distributed environment, service restarts can cause temporary instability. Especially for databases, which have extremely high stability requirements, ensuring service stability during restarts is a very important topic. Doris on Kubernetes ensures stability during service restarts through the following three mechanisms, achieving a seamless experience for the business during restarts and upgrades.
+## Supported cluster resources
 
-  1. Graceful exit
-  2. Rolling restart
-  3. Active stop of query allocation
+Doris Operator primarily supports two cluster resource types:
 
-- **Host system configuration**:
+| Resource | Deployment mode | Main components | Typical use case |
+| --- | --- | --- | --- |
+| `DorisCluster` | Compute-storage integrated | FE, BE, CN, Broker | Standard Doris cluster deployment with a simpler operations model |
+| `DorisDisaggregatedCluster` | Compute-storage decoupled | MetaService, FE, ComputeGroup | Workloads that need elastic compute groups or compute isolation |
 
-  In some scenarios, host system parameters need to be configured to achieve the ideal performance of Apache Doris. In containerized scenarios, the uncertainty of host deployment and the difficulty of modifying parameters bring challenges to users. To solve this problem, Doris Operator uses Kubernetes init containers to make host parameters configurable.
-  Doris Operator allows users to configure commands to be executed on the host and apply them through init containers. To improve usability, Doris Operator abstracts the configuration of Kubernetes init containers, making the setting of host commands more simple and intuitive.
+- `DorisCluster` is used for compute-storage integrated deployments. A single resource can describe FE, BE, CN, and Broker images, replica counts, resources, storage, configuration, and access methods.
+- `DorisDisaggregatedCluster` is used for compute-storage decoupled deployments. It splits the cluster into MetaService, FE, and one or more ComputeGroups, each of which can be configured and operated independently.
 
-- **Persistent configuration**:
+## Managed objects
 
-  Doris Operator uses the Kubernetes StorageClass model to provide storage configuration for each service. It allows users to customize the mount directory. When customizing the startup configuration, if the storage directory is modified, the directory can be set as a persistent location in the custom resource, so that the service uses the specified directory inside the container to store data.
+From the user perspective, Doris Operator mainly manages:
 
-- **Runtime debugging**:
+| Object | Description |
+| --- | --- |
+| Doris custom resources | Desired cluster state such as `DorisCluster` or `DorisDisaggregatedCluster` |
+| `StatefulSet` | Replica count, stable network identity, and rolling updates for Doris component Pods |
+| `Service` | Internal communication and external access |
+| PVC | Persistent storage for stateful components |
+| `ConfigMap` / `Secret` | Configuration, credentials, and external dependency information |
+| HPA | Automatic scaling for supported components |
+| `status` | Component state, availability, and cluster health |
 
-  One of the biggest challenges of containerized services for troubleshooting is how to debug at runtime. While pursuing availability and ease of use, Doris Operator also provides more convenient conditions for problem diagnosis. The base image of Doris comes with various tools preinstalled for problem diagnosis. When you need to view the status in real time, you can enter the container through the exec command provided by kubectl and use the built-in tools for troubleshooting.
-  When a service fails to start for unknown reasons, Doris Operator provides a Debug run mode. When a Pod is set to Debug startup mode, the container automatically enters the running state. At this time, you can enter the container through the `exec` command, manually start the service, and diagnose the problem. For details, refer to [this document](../integrated-storage-compute/cluster-operation).
+## Choosing a deployment mode
 
-## Compatibility
+If you are deploying Doris on Kubernetes for the first time, start with compute-storage integrated mode in most cases. Choose compute-storage decoupled mode when you clearly need elastic compute groups, compute isolation, or object-storage-based architecture.
 
-Doris Operator is developed according to standard K8s specifications and is compatible with all standard K8s platforms, including those provided by mainstream cloud vendors, self-built K8s platforms based on the standard, and user self-built platforms.
+| Requirement | Recommended choice |
+| --- | --- |
+| Quickly deploy a standard Doris cluster | `DorisCluster` |
+| Validate with fewer concepts | `DorisCluster` |
+| Use different compute resources for different workloads | `DorisDisaggregatedCluster` |
+| Scale compute more flexibly | `DorisDisaggregatedCluster` |
+| Already plan to use object storage and FoundationDB | `DorisDisaggregatedCluster` |
 
-### Cloud Vendor Compatibility
+## Capability boundaries
 
-Doris Operator is fully compatible with the containerization service platforms of mainstream cloud vendors. For environment preparation and usage recommendations of Doris Operator, refer to the following documents:
+Doris Operator focuses on Doris cluster resources and lifecycle management. It does not replace Doris database-level management capabilities.
 
-- [Alibaba Cloud](./on-alibaba)
+It does not directly manage:
 
-- [AWS](./on-aws)
+- SQL objects such as databases, tables, partitions, and indexes.
+- Data import, export, or workload orchestration policies.
+- User privilege model design.
+- Automatic recovery for every failure.
+- Full abstraction of all Kubernetes, storage, or network problems.
 
-## Applicable Scenarios
+When the cluster is unhealthy, you still need to combine Operator status, Kubernetes resource state, and Doris component logs to locate the issue.
 
-Doris Operator is applicable to the following scenarios:
+## Next steps
 
-- Need to quickly deploy and manage Doris clusters on Kubernetes
-- Have elastic scaling requirements and need to dynamically adjust the number of nodes based on business load
-- Development and operations teams that need to uniformly manage multiple Doris environments
-- Users who want to reduce the operational complexity of Doris clusters
+If you are new to Doris Operator, read this group of documents in order. If you are troubleshooting a specific problem, jump directly to the relevant page.
 
-## Installation and Usage
-
-### Prerequisites
-
-Before deployment, the host system needs to be checked. Refer to [Operating System Check](../../preparation/os-checking.md).
-
-### Deploying Doris Operator
-
-For detailed installation documentation, refer to the [integrated storage-compute version](../integrated-storage-compute/install-doris-operator.md) or the [storage-compute separation version](../separating-storage-compute/install-doris-cluster.md) of the Doris Operator installation guide.
-
-## FAQ
-
-### Q: What is the difference between Doris Operator and manually deploying Doris on Kubernetes?
-
-Doris Operator automatically manages the cluster lifecycle through CRDs, including creation, scaling, upgrades, and failure recovery, without manually executing kubectl commands on each Pod.
-
-### Q: How do I choose between the integrated storage-compute version and the storage-compute separation version?
-
-The integrated storage-compute version is suitable for small to medium-scale clusters and is simple to deploy. The storage-compute separation version is suitable for large-scale scenarios with elastic scaling requirements. For details, refer to the [integrated storage-compute deployment documentation](../integrated-storage-compute/install-doris-operator.md) and the [storage-compute separation deployment documentation](../separating-storage-compute/install-doris-cluster.md).
-
-### Q: Which Kubernetes versions does Doris Operator support?
-
-It is compatible with Kubernetes 1.19 and above, including Alibaba Cloud ACK, AWS EKS, public cloud private deployments, and other standard K8s platforms.
-
+| Goal | Recommended document |
+| --- | --- |
+| Understand the control plane, data plane, and Reconcile model | [Doris Operator Architecture](./architecture) |
+| Understand how Doris custom resources map to `StatefulSet`, `Service`, PVC, and other resources | [Doris Operator Resource Model](./resource-model) |
+| Understand behavior during creation, scaling, configuration changes, and deletion | [Doris Operator Lifecycle Management](./lifecycle) |
+| Understand status fields and the troubleshooting path | [Doris Operator Status and Troubleshooting](./status-and-troubleshooting) |
