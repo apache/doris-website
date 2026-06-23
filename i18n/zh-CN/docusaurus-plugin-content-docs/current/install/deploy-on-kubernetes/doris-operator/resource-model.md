@@ -35,13 +35,13 @@ spec:
 
 无论使用哪种部署形态，用户直接维护的都是 Doris 自定义资源。Operator 根据自定义资源创建 Kubernetes 原生资源，再由这些资源运行 Doris 组件。
 
-![Doris Operator resource model overview](/images/doris-operator/mermaid/06-resource-model-overview.png)
+![Doris Operator resource model overview](/images/doris-operator/mermaid/06-resource-model-overview.jpg)
 
 ## DorisCluster
 
 `DorisCluster` 用于存算一体部署，通常包含 FE、BE、CN、Broker 四类组件。
 
-![DorisCluster resource model](/images/doris-operator/mermaid/07-resource-model-doriscluster.png)
+![DorisCluster resource model](/images/doris-operator/mermaid/07-resource-model-doriscluster.jpg)
 
 | 组件 | 说明 | 主要 Kubernetes 资源 |
 | --- | --- | --- |
@@ -54,7 +54,7 @@ spec:
 
 `DorisDisaggregatedCluster` 用于存算分离部署，通常包含 MetaService、FE 和一个或多个 ComputeGroup。
 
-![DorisDisaggregatedCluster resource model](/images/doris-operator/mermaid/08-resource-model-disaggregatedcluster.png)
+![DorisDisaggregatedCluster resource model](/images/doris-operator/mermaid/08-resource-model-disaggregatedcluster.jpg)
 
 | 组件 | 说明 | 主要 Kubernetes 资源 |
 | --- | --- | --- |
@@ -139,10 +139,10 @@ demo-adhoc-query-external
 
 在存算一体集群中，FE 是其他组件注册和访问 Doris 元数据的入口：
 
-![Dependencies between components in DorisCluster](/images/doris-operator/mermaid/09-resource-model-integrated-dependencies.png)
+![Dependencies between components in DorisCluster](/images/doris-operator/mermaid/09-resource-model-integrated-dependencies.jpg)
 
 在存算分离集群中，MetaService 先就绪，FE 依赖 MetaService，ComputeGroup 再依赖 FE：
 
-![Dependencies between components in DorisDisaggregatedCluster](/images/doris-operator/mermaid/10-resource-model-decoupled-dependencies.png)
+![Dependencies between components in DorisDisaggregatedCluster](/images/doris-operator/mermaid/10-resource-model-decoupled-dependencies.jpg)
 
 当上游组件未就绪时，下游组件可能持续等待或反复 Reconcile，这属于正常行为。更详细的创建和变更顺序见 [Doris Operator 生命周期管理](./lifecycle)。

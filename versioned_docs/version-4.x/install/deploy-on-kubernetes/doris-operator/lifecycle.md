@@ -18,11 +18,11 @@ When you create a `DorisCluster` or `DorisDisaggregatedCluster`, the Operator cr
 
 For compute-storage integrated clusters, FE is usually created first:
 
-![Cluster creation flow for DorisCluster](/images/doris-operator/mermaid/11-lifecycle-doriscluster-creation.png)
+![Cluster creation flow for DorisCluster](/images/doris-operator/mermaid/11-lifecycle-doriscluster-creation.jpg)
 
 For compute-storage decoupled clusters, MetaService is created first:
 
-![Cluster creation flow for DorisDisaggregatedCluster](/images/doris-operator/mermaid/12-lifecycle-decoupled-cluster-creation.png)
+![Cluster creation flow for DorisDisaggregatedCluster](/images/doris-operator/mermaid/12-lifecycle-decoupled-cluster-creation.jpg)
 
 If dependencies are not ready, the Operator keeps waiting and retries in later Reconcile loops.
 
@@ -84,7 +84,7 @@ When scaling in a ComputeGroup, Doris metadata-level actions may be required. Th
 | `enableDecommission: true` | Run decommission before scale-in and wait for safe removal |
 | `enableDecommission: false` | Directly drop the corresponding node |
 
-![ComputeGroup scale-in flow](/images/doris-operator/mermaid/13-lifecycle-computegroup-scale-in.png)
+![ComputeGroup scale-in flow](/images/doris-operator/mermaid/13-lifecycle-computegroup-scale-in.jpg)
 
 Before scaling in, confirm current data distribution and business traffic.
 

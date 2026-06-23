@@ -16,7 +16,7 @@ This document focuses on the overall architecture. For field definitions and dep
 
 Doris Operator can be viewed as two layers: the control plane and the data plane.
 
-![Doris Operator architecture layers](/images/doris-operator/mermaid/02-architecture-layers.png)
+![Doris Operator architecture layers](/images/doris-operator/mermaid/02-architecture-layers.jpg)
 
 The control plane reads Doris custom resources and executes the Reconcile flow. The data plane is made of native Kubernetes resources that actually run Doris components.
 
@@ -33,13 +33,13 @@ A typical flow is:
 5. Aggregate component state and write it into CR `status`.
 6. If the cluster is not ready, wait for the next Reconcile loop.
 
-![Doris Operator reconcile model](/images/doris-operator/mermaid/03-architecture-reconcile-model.png)
+![Doris Operator reconcile model](/images/doris-operator/mermaid/03-architecture-reconcile-model.jpg)
 
 ## Control path for compute-storage integrated clusters
 
 `DorisCluster` is used for compute-storage integrated deployments. A single resource can include FE, BE, CN, and Broker configuration.
 
-![Control path for compute-storage integrated clusters](/images/doris-operator/mermaid/04-architecture-integrated-control-path.png)
+![Control path for compute-storage integrated clusters](/images/doris-operator/mermaid/04-architecture-integrated-control-path.jpg)
 
 In this path, the main Reconciler is responsible for reading the CR, ordering component actions, cleaning up invalid resources, and aggregating status. Component controllers create and inspect resources for their own components.
 
@@ -47,7 +47,7 @@ In this path, the main Reconciler is responsible for reading the CR, ordering co
 
 `DorisDisaggregatedCluster` is used for compute-storage decoupled deployments. A single resource contains MetaService, FE, and one or more ComputeGroups.
 
-![Control path for compute-storage decoupled clusters](/images/doris-operator/mermaid/05-architecture-decoupled-control-path.png)
+![Control path for compute-storage decoupled clusters](/images/doris-operator/mermaid/05-architecture-decoupled-control-path.jpg)
 
 Compared with compute-storage integrated mode, this path involves more Doris metadata-level actions. For example, when scaling down a ComputeGroup, the Operator may need to perform decommission or drop actions first, and then update Kubernetes resources.
 

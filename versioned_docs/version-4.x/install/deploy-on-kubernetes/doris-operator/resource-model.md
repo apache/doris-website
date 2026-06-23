@@ -35,13 +35,13 @@ spec:
 
 Regardless of deployment mode, the user directly manages a Doris custom resource. The Operator uses that resource to create native Kubernetes resources, and those resources run Doris components.
 
-![Doris Operator resource model overview](/images/doris-operator/mermaid/06-resource-model-overview.png)
+![Doris Operator resource model overview](/images/doris-operator/mermaid/06-resource-model-overview.jpg)
 
 ## DorisCluster
 
 `DorisCluster` is used for compute-storage integrated deployments. It usually contains FE, BE, CN, and Broker components.
 
-![DorisCluster resource model](/images/doris-operator/mermaid/07-resource-model-doriscluster.png)
+![DorisCluster resource model](/images/doris-operator/mermaid/07-resource-model-doriscluster.jpg)
 
 | Component | Description | Main Kubernetes resources |
 | --- | --- | --- |
@@ -54,7 +54,7 @@ Regardless of deployment mode, the user directly manages a Doris custom resource
 
 `DorisDisaggregatedCluster` is used for compute-storage decoupled deployments. It usually contains MetaService, FE, and one or more ComputeGroups.
 
-![DorisDisaggregatedCluster resource model](/images/doris-operator/mermaid/08-resource-model-disaggregatedcluster.png)
+![DorisDisaggregatedCluster resource model](/images/doris-operator/mermaid/08-resource-model-disaggregatedcluster.jpg)
 
 | Component | Description | Main Kubernetes resources |
 | --- | --- | --- |
@@ -139,10 +139,10 @@ The resource model also implies component dependencies.
 
 In a compute-storage integrated cluster, FE is the entry point for other components to register and access Doris metadata:
 
-![Dependencies between components in DorisCluster](/images/doris-operator/mermaid/09-resource-model-integrated-dependencies.png)
+![Dependencies between components in DorisCluster](/images/doris-operator/mermaid/09-resource-model-integrated-dependencies.jpg)
 
 In a compute-storage decoupled cluster, MetaService is ready first, FE depends on it, and ComputeGroups depend on FE:
 
-![Dependencies between components in DorisDisaggregatedCluster](/images/doris-operator/mermaid/10-resource-model-decoupled-dependencies.png)
+![Dependencies between components in DorisDisaggregatedCluster](/images/doris-operator/mermaid/10-resource-model-decoupled-dependencies.jpg)
 
 When an upstream component is not ready, downstream components may keep waiting or reconciling. That is expected behavior. For the execution order of creation and changes, see [Doris Operator Lifecycle Management](./lifecycle).

@@ -31,7 +31,7 @@ With Doris Operator, you describe the desired cluster state declaratively throug
 
 Doris Operator extends the Kubernetes API through CRDs. After you submit a Doris cluster resource through `kubectl`, Helm, or another release tool, the Operator watches that resource and translates it into native Kubernetes resources such as `StatefulSet`, `Service`, and `PersistentVolumeClaim`.
 
-![How Doris Operator works](/images/doris-operator/mermaid/01-overview-how-doris-operator-works.png)
+![How Doris Operator works](/images/doris-operator/mermaid/01-overview-how-doris-operator-works.jpg)
 
 In this model, the user maintains the desired state, and the Operator continuously reconciles actual state toward that target.
 
@@ -39,7 +39,7 @@ In this model, the user maintains the desired state, and the Operator continuous
 
 Doris Operator can be viewed as two layers: the control plane and the data plane. The control plane includes Doris Operator, the Reconciler, optional Webhook logic, and status aggregation. It watches Doris custom resources and reconciles the actual state toward the desired state. The data plane includes Kubernetes-native resources such as `StatefulSet`, `Service`, PVC, HPA, and Doris Pods, which run the actual Doris components.
 
-![Doris Operator architecture layers](/images/doris-operator/mermaid/02-architecture-layers.png)
+![Doris Operator architecture layers](/images/doris-operator/mermaid/02-architecture-layers.jpg)
 
 After a user submits a Doris custom resource through `kubectl`, Helm, or another release tool, the Kubernetes API Server stores the desired state. Doris Operator watches resource changes and runs Reconcile logic, then creates or updates the underlying Kubernetes resources. This layered model reduces the complexity of managing many low-level resources directly and keeps Doris deployments aligned with standard Kubernetes platforms.
 

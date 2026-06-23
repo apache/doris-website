@@ -16,7 +16,7 @@ Doris Operator 遵循标准的 Kubernetes Operator 设计模式。用户通过 C
 
 Doris Operator 可以分为控制面和数据面两层。
 
-![Doris Operator architecture layers](/images/doris-operator/mermaid/02-architecture-layers.png)
+![Doris Operator architecture layers](/images/doris-operator/mermaid/02-architecture-layers.jpg)
 
 控制面负责读取 Doris 自定义资源并执行 Reconcile 流程；数据面由实际运行 Doris 组件的 Kubernetes 原生资源组成。
 
@@ -33,13 +33,13 @@ Reconcile 循环是 Doris Operator 的核心。每当用户创建或修改 Doris
 5. 汇总组件状态并写回 CR `status`。
 6. 如果集群尚未就绪，则等待下一轮 Reconcile。
 
-![Doris Operator reconcile model](/images/doris-operator/mermaid/03-architecture-reconcile-model.png)
+![Doris Operator reconcile model](/images/doris-operator/mermaid/03-architecture-reconcile-model.jpg)
 
 ## 存算一体控制链路
 
 `DorisCluster` 用于存算一体部署。一个资源通常包含 FE、BE、CN、Broker 等组件配置。
 
-![Control path for compute-storage integrated clusters](/images/doris-operator/mermaid/04-architecture-integrated-control-path.png)
+![Control path for compute-storage integrated clusters](/images/doris-operator/mermaid/04-architecture-integrated-control-path.jpg)
 
 在这条链路里，主 Reconciler 负责读取 CR、组织组件执行顺序、清理无效资源并汇总状态；组件控制器负责各自组件的资源创建和状态检查。
 
@@ -47,7 +47,7 @@ Reconcile 循环是 Doris Operator 的核心。每当用户创建或修改 Doris
 
 `DorisDisaggregatedCluster` 用于存算分离部署。一个资源中包含 MetaService、FE 和一个或多个 ComputeGroup。
 
-![Control path for compute-storage decoupled clusters](/images/doris-operator/mermaid/05-architecture-decoupled-control-path.png)
+![Control path for compute-storage decoupled clusters](/images/doris-operator/mermaid/05-architecture-decoupled-control-path.jpg)
 
 与存算一体相比，这条链路会涉及更多 Doris 元数据层动作。例如缩容 ComputeGroup 时，Operator 可能需要先执行 decommission 或 drop，再更新 Kubernetes 资源。
 

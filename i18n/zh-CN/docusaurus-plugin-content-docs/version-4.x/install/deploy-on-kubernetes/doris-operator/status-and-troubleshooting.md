@@ -103,7 +103,7 @@ ComputeGroup 的 phase 可能包括 `Ready`、`Reconciling`、`Scaling`、`Decom
 
 建议按下面的顺序推进：
 
-![Recommended troubleshooting path](/images/doris-operator/mermaid/14-troubleshooting-path.png)
+![Recommended troubleshooting path](/images/doris-operator/mermaid/14-troubleshooting-path.jpg)
 
 ## 常见入口
 

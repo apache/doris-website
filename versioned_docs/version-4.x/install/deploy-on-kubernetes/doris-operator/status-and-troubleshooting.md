@@ -103,7 +103,7 @@ ComputeGroup phases can include `Ready`, `Reconciling`, `Scaling`, `Decommission
 
 Use the following order:
 
-![Recommended troubleshooting path](/images/doris-operator/mermaid/14-troubleshooting-path.png)
+![Recommended troubleshooting path](/images/doris-operator/mermaid/14-troubleshooting-path.jpg)
 
 ## Common entry points
 
