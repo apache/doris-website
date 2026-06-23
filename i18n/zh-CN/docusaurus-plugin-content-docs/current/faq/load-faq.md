@@ -72,6 +72,9 @@ curl --location-trusted -u root:"" \
     http://127.0.0.1:8030/api/db/loadtest/_stream_load
 ```
 
+### confluent导入配置优化
+在使用confluent导入数据到Doris时，需要调整下buffer.count.records，默认值为10000，可以调整到50000或者更大；buffer.size.bytes可以调整到100000000或者更大。
+
 ## Routine Load 
 
 ### 较严重的 Bug 修复
