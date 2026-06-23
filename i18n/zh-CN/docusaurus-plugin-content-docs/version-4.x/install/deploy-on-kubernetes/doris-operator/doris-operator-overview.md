@@ -1,121 +1,107 @@
 ---
 {
     "title": "Doris Operator 简介",
+    "sidebar_label": "简介",
     "language": "zh-CN",
-    "description": "Doris Operator 是 Apache Doris 官方提供的 Kubernetes Operator，支持在 K8s 上自动化部署、扩缩容、滚动升级 Doris 集群。本文介绍架构原理、核心能力及部署指引。",
-    "keywords": [
-        "Doris Operator",
-        "Doris Kubernetes",
-        "K8s 部署 Doris",
-        "Kubernetes Operator",
-        "Doris 容器化",
-        "K8s Doris 部署"
-    ]
+    "description": "介绍 Doris Operator 的定位、适用场景、能力边界，以及 DorisCluster 和 DorisDisaggregatedCluster 两类资源。",
+    "keywords": ["Doris Operator", "Kubernetes", "DorisCluster", "DorisDisaggregatedCluster", "K8s 部署 Doris"]
 }
 ---
 
-为满足用户在 Kubernetes 平台上对 Doris 的高效部署和运维需求诞生的 [Kubernetes Operator](https://github.com/apache/doris-operator)（简称：Doris Operator），
-集成了原生 Kubernetes 资源的复杂管理能力，并融合了 Doris 组件间的分布式协同、用户集群形态的按需定制等经验，为用户提供了一个更简洁、高效、易用的容器化部署方案。
-旨在实现 Doris 在 Kubernetes 上的高效管控，帮助用户减少运维管理和学习成本的同时，提供强大的功能和灵活的配置能力。  
+Doris Operator 是为满足用户在 Kubernetes 平台上高效部署和运维 Apache Doris 而提供的官方 Kubernetes Operator。它把 Doris 组件间的分布式协同经验与 Kubernetes 原生资源管理能力结合起来，为用户提供更简洁、高效、易用的容器化部署方案。
 
-Doris Operator 基于 Kubernetes CustomResourceDefinitions（CRD）实现了 Doris 在 Kubernetes 平台的配置、管理和调度。Doris Operator 能够根据用户自定义的期望状态，自动创建 Pods 及其他资源以启动服务。通过自动注册机制，可将所有启动的服务整合成一个完整的 Doris 集群。这一实现显著降低了在 Doris 集群中处理配置信息、节点发现与注册、访问通信及健康检查等生产环境必备操作的复杂性和学习成本。
+Doris Operator 基于 Kubernetes CustomResourceDefinitions（CRD）扩展 Kubernetes API。用户提交 Doris 自定义资源后，Operator 会根据资源中描述的期望状态，自动创建并维护对应的 `StatefulSet`、`Service`、`PersistentVolumeClaim` 等 Kubernetes 资源，并在部分场景下完成节点注册、下线和清理等 Doris 元数据层动作。
 
-## Doris Operator 架构形态
+本文介绍 Doris Operator 的定位、职责和适用场景，帮助你快速建立整体认知。具体安装与部署步骤请参考存算一体和存算分离的部署文档。
 
-![Doris Operator 架构图](/images/next/install/doris-operator.jpg)
+## 为什么使用 Doris Operator
 
-Doris Operator 的设计基于二层调度器的原理：
+在 Kubernetes 上部署 Doris 时，通常需要同时处理多组件编排、服务发现、配置挂载、存储绑定、节点注册、扩缩容和健康检查。随着集群规模和环境复杂度增加，手工维护这些资源会带来配置分散、操作步骤多、状态难追踪等问题。
 
-- **第一层调度**：使用原生 StatefulSet 和 Service 管理 Pod，完全兼容标准 Kubernetes 集群
-- **第二层调度**：Doris Operator 监听 DorisCluster CRD 资源，将用户定义的集群规格转换为 StatefulSet 及其附属资源
+Doris Operator 将这些操作收敛到统一的 Doris 自定义资源中，让用户以声明式方式描述集群目标状态，主要带来：
 
-通过 kubectl 下发集群配置后，Doris Operator 自动完成 StatefulSet 创建、Pod 调度、服务注册等操作。
+- 用一个资源描述集群拓扑。
+- 自动创建和维护 `StatefulSet`、`Service`、PVC 等资源。
+- 按组件依赖顺序推进创建和变更。
+- 将组件状态汇总到 CR `status`。
+- 支持配置变更、扩缩容和滚动更新等常见操作。
+- 在部分场景下执行 Doris 元数据层的节点注册、下线和清理动作。
 
-Doris 集群的核心组件包括：
+## 工作方式
 
-| 组件 | 作用 |
-|------|------|
-| FE（Frontend） | 负责元数据管理、查询协调 |
-| BE（Backend） | 负责数据存储和查询执行 |
-| CN（Compute Node） | 负责计算加速（存算分离模式） |
-| Broker | 负责访问外部数据源 |
+Doris Operator 通过 CRD 扩展 Kubernetes API。用户通过 `kubectl`、Helm 或其他发布工具提交 Doris 集群资源后，Operator 会监听资源变化，并把它转换为 `StatefulSet`、`Service`、`PersistentVolumeClaim` 等 Kubernetes 原生资源。
 
-## 关键能力
+![How Doris Operator works](/images/doris-operator/mermaid/01-overview-how-doris-operator-works.png)
 
-- **终态部署**：  
+在这个模型中，用户维护的是期望状态，Operator 持续把实际状态收敛到目标状态。
 
-  Kubernetes 采用终态运维模式来管理服务，而 Doris Operator 则定义了一种能够描述 Doris 集群的资源类型——DorisCluster。用户可以参考相关文档和使用示例，轻松配置所需的集群。
-  用户通过 Kubernetes 的命令行工具 kubectl，可以将配置下发到 Kubernetes 集群中。Doris Operator 会自动构建所需集群，并实时更新集群状态至相应的资源中。这一过程确保了集群的高效管理与监控，极大地简化了运维操作。
+## 架构形态
 
-- **易扩展**：
+Doris Operator 的架构可以分为控制面和数据面。控制面包含 Doris Operator、Reconciler、Webhook 和状态聚合逻辑，负责监听 Doris 自定义资源并推进实际状态向期望状态收敛；数据面包含 `StatefulSet`、`Service`、PVC、HPA 和 Doris Pods 等 Kubernetes 原生资源，负责承载实际运行的 Doris 组件。
 
-  Doris Operator 在基于云盘的环境中支持并发实时横向扩容。Doris 的所有组件服务均通过 Kubernetes 的 StatefulSet 进行部署和管理。在部署或扩容时，采用 StatefulSet 的 Parallel 模式创建 Pods，这样理论上可以在启动一个节点的时间内启动所有副本。每个副本的启动互不干扰，当某个服务启动失败时，其他服务的启动不会受到影响。
-  Doris Operator 采用并发模式启动服务，并内置分布式架构，极大简化了服务扩展的过程。用户只需设置副本数量，即可轻松完成扩容，彻底解放了运维操作的复杂性。
+![Doris Operator 架构分层](/images/doris-operator/mermaid/02-architecture-layers.png)
 
-- **无感变更**：  
+用户通过 `kubectl`、Helm 或其他发布工具提交 Doris 自定义资源后，Kubernetes API Server 保存期望状态，Doris Operator 负责监听资源变化并执行 Reconcile，最终创建或更新底层 Kubernetes 资源。这种分层方式降低了用户直接操作大量底层资源的复杂度，也让 Doris 部署更容易与标准 Kubernetes 平台兼容。
 
-  在分布式环境中，服务重启可能会引发服务的暂时不稳定。尤其对于数据库这类对稳定性要求极高的服务而言，如何在重启过程中保证服务的稳定性是一个非常重要的课题。Doris 在 Kubernetes 上通过以下三种机制确保服务重启过程中的稳定性，从而实现业务在重启和升级过程中无感知的体验。  
+## 支持的集群资源
 
-  1. 优雅退出
-  2. 滚动重启
-  3. 主动停止查询分配
+Doris Operator 当前主要支持两类资源：
 
-- **宿主机系统配置**：  
+| 资源 | 部署形态 | 主要组件 | 典型场景 |
+| --- | --- | --- | --- |
+| `DorisCluster` | 存算一体 | FE、BE、CN、Broker | 标准 Doris 集群部署，运维模型相对简单 |
+| `DorisDisaggregatedCluster` | 存算分离 | MetaService、FE、ComputeGroup | 需要弹性计算组、计算资源隔离的场景 |
 
-  在某些场景中，需要配置宿主机系统参数来达到 Apache Doris 的理想性能。而在容器化场景下，宿主机的部署不确定和参数修改难度高给用户带来挑战。为解决该问题，Doris Operator 通过利用 Kubernetes 的初始化容器，实现了宿主机参数的可配置化。
-  Doris Operator 允许用户配置在宿主机上执行的命令，并通过初始化容器使其生效。为了提升可用性，Doris Operator 抽象了 Kubernetes 初始化容器的配置方式，使宿主机命令的设置更加简单直观。
+- `DorisCluster` 用于存算一体部署。一个资源中可以统一描述 FE、BE、CN、Broker 的镜像、副本数、资源、存储、配置和访问方式。
+- `DorisDisaggregatedCluster` 用于存算分离部署。它把集群拆分为 MetaService、FE 和一个或多个 ComputeGroup，每个 ComputeGroup 都可以独立配置和运维。
 
-- **持久化配置**：  
+## 管理对象
 
-  Doris Operator 采用 Kubernetes StorageClass 模式为各个服务提供存储配置。它允许用户自定义挂载目录，在自定义启动配置时，如果修改了存储目录，可以在自定义资源中将该目录设置为持久化位置，从而使服务使用容器内指定的目录来存储数据。
+从用户视角看，Doris Operator 主要管理以下对象：
 
-- **运行时调试**：  
+| 对象 | 说明 |
+| --- | --- |
+| Doris 自定义资源 | 期望中的集群状态，例如 `DorisCluster`、`DorisDisaggregatedCluster` |
+| `StatefulSet` | Doris 组件 Pod 的副本数、稳定网络标识和滚动更新 |
+| `Service` | 组件内部通信和外部访问入口 |
+| PVC | 有状态组件的持久化存储 |
+| `ConfigMap` / `Secret` | 配置、认证信息和外部依赖信息 |
+| HPA | 支持组件的自动扩缩容 |
+| `status` | 组件状态、可用性和集群健康度 |
 
-  容器化服务对于 Trouble Shooting 来说最大挑战之一是如何在运行时进行调试。Doris Operator 在追求可用性和易用性的同时，也为问题定位提供了更便利的条件。在 Doris 的基础镜像中，预置了多种用于问题定位的工具。当需要实时查看状态时，可以通过 kubectl 提供的 exec 命令进入容器，使用内置工具进行故障排查。
-  当服务因未知原因无法启动时，Doris Operator 提供了 Debug 运行模式。当一个 Pod 被设置为 Debug 启动模式时，容器将自动进入运行状态。这时可通过 `exec` 命令进入容器，手动启动服务并进行问题定位。详细请参考 [此文档](../integrated-storage-compute/cluster-operation#服务-crash-情况下如何进入容器)
+## 如何选择部署形态
 
-## 兼容性  
+如果是第一次在 Kubernetes 上部署 Doris，多数场景可以先从存算一体形态开始。只有在明确需要计算资源隔离、弹性 ComputeGroup 或对象存储架构时，再选择存算分离形态。
 
-Doris Operator 开发按照标准的 K8s 规范进行，兼容所有标准 K8s 平台，包含主流云厂商提供的和基于标准自建的 K8s 平台和用户自建平台。
+| 需求 | 推荐选择 |
+| --- | --- |
+| 快速部署一套标准 Doris 集群 | `DorisCluster` |
+| 用更少概念完成初始验证 | `DorisCluster` |
+| 不同业务负载使用不同计算资源 | `DorisDisaggregatedCluster` |
+| 更灵活地扩缩计算资源 | `DorisDisaggregatedCluster` |
+| 已规划使用对象存储和 FoundationDB | `DorisDisaggregatedCluster` |
 
-### 云厂商兼容性
+## 能力边界
 
-在主流云厂商的容器化服务平台上，完全兼容。使用 Doris Operator 环境准备及使用建议，可参考以下文档：
+Doris Operator 面向 Doris 集群资源和生命周期管理，不替代 Doris 数据库自身的管理能力。
 
-- [阿里云](./on-alibaba)
+它不直接负责：
 
-- [AWS](./on-aws)
+- 数据库、表、分区、索引等 SQL 层对象管理。
+- 数据导入、导出和工作负载调度策略。
+- 用户权限模型设计。
+- 所有故障的自动修复。
+- 对所有 Kubernetes、存储和网络问题的完全屏蔽。
 
-## 适用场景
+当集群异常时，仍需要结合 Operator 状态、Kubernetes 资源状态和 Doris 组件日志一起定位。
 
-Doris Operator 适用于以下场景：
+## 下一步阅读
 
-- 需要在 Kubernetes 上快速部署和管理 Doris 集群
-- 有弹性扩缩容需求，需要根据业务负载动态调整节点数量
-- 需要统一管理多套 Doris 环境的开发和运维团队
-- 希望降低 Doris 集群运维复杂度的用户
+如果你是第一次接触 Doris Operator，建议按顺序阅读这一组文档；如果你正在排查具体问题，也可以直接跳转到对应页面。
 
-## 安装及使用
-
-### 前提条件
-
-部署前需要对宿主机系统进行检查参考 [操作系统检查](../../preparation/os-checking.md)
-
-### 部署 Doris Operator
-
-详细安装文档可参考 Doris Operator 安装的 [存算一体版本](../integrated-storage-compute/install-doris-operator.md) 或 [存算分离版本](../separating-storage-compute/install-doris-cluster.md)
-
-## 常见问题
-
-### Q: Doris Operator 和手动在 Kubernetes 上部署 Doris 有什么区别？
-
-Doris Operator 通过 CRD 自动化管理集群生命周期，包括创建、扩缩容、升级、故障恢复等，无需手动执行 kubectl 命令操作每个 Pod。
-
-### Q: 存算一体和存算分离版本如何选择？
-
-存算一体版本适用于中小规模集群，部署简单；存算分离版本适用于大规模、弹性扩展需求场景。具体可参考 [存算一体部署文档](../integrated-storage-compute/install-doris-operator.md) 和 [存算分离部署文档](../separating-storage-compute/install-doris-cluster.md)。
-
-### Q: Doris Operator 支持哪些 Kubernetes 版本？
-
-兼容 Kubernetes 1.19 及以上版本，包括阿里云 ACK、AWS EKS、公有云私有化部署等标准 K8s 平台。
-
+| 目标 | 建议阅读 |
+| --- | --- |
+| 理解控制面、数据面和 Reconcile 模型 | [Doris Operator 总体架构](./architecture) |
+| 理解 Doris 自定义资源与 `StatefulSet`、`Service`、PVC 等资源的映射关系 | [Doris Operator 资源模型](./resource-model) |
+| 理解创建、扩缩容、配置变更和删除时的行为 | [Doris Operator 生命周期管理](./lifecycle) |
+| 查看状态字段和排障路径 | [Doris Operator 状态与排障](./status-and-troubleshooting) |

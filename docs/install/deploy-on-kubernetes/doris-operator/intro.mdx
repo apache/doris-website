@@ -1,31 +1,43 @@
 ---
 {
-    "title": "Pre-deployment Preparation",
+    "title": "Doris Operator Concepts and Capabilities",
     "language": "en",
-    "description": "Manage Apache Doris clusters on Kubernetes with Doris Operator."
+    "description": "Concepts, architecture, resource model, lifecycle, and troubleshooting guidance for Doris Operator."
 }
 ---
 
 import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
 
-Doris Operator is a tool for natively deploying and managing Apache Doris clusters on Kubernetes. Read the overview first, then choose the installation guide that matches your cloud provider.
+Doris Operator is the control plane for deploying and managing Apache Doris on Kubernetes. Read these documents first to understand what the Operator manages, how it works, and how to locate problems through resource status.
 
 <div className="cards-grid">
 <GettingStartedCard
     title="Doris Operator Overview"
-    description="Learn what Doris Operator can do and how it manages Doris on Kubernetes"
+    description="Learn what Doris Operator manages, when to use it, and its capability boundaries"
     link="doris-operator-overview"
 />
 
 <GettingStartedCard
-    title="Deploy on Alibaba Cloud"
-    description="Install Doris Operator on Alibaba Cloud Container Service for Kubernetes (ACK)"
-    link="on-alibaba"
+    title="Architecture"
+    description="Understand the control plane, data plane, and Reconcile model"
+    link="architecture"
 />
 
 <GettingStartedCard
-    title="Deploy on AWS"
-    description="Install Doris Operator on Amazon Elastic Kubernetes Service (EKS)"
-    link="on-aws"
+    title="Resource Model"
+    description="See how Doris custom resources map to StatefulSet, Service, PVC, and other resources"
+    link="resource-model"
+/>
+
+<GettingStartedCard
+    title="Lifecycle Management"
+    description="Understand creation, scaling, configuration changes, and deletion behavior"
+    link="lifecycle"
+/>
+
+<GettingStartedCard
+    title="Status and Troubleshooting"
+    description="Check status fields and follow the recommended troubleshooting path"
+    link="status-and-troubleshooting"
 />
 </div>

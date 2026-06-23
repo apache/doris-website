@@ -61,10 +61,21 @@ const sidebars: SidebarsConfig = {
                     items: [
                         {
                             type: 'category',
-                            label: 'Preparation',
+                            label: 'Doris Operator Concepts and Capabilities',
                             link: {type: 'doc', id: 'install/deploy-on-kubernetes/doris-operator/intro'},
                             items: [
                                 'install/deploy-on-kubernetes/doris-operator/doris-operator-overview',
+                                'install/deploy-on-kubernetes/doris-operator/architecture',
+                                'install/deploy-on-kubernetes/doris-operator/resource-model',
+                                'install/deploy-on-kubernetes/doris-operator/lifecycle',
+                                'install/deploy-on-kubernetes/doris-operator/status-and-troubleshooting',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Preparation',
+                            link: {type: 'doc', id: 'install/deploy-on-kubernetes/doris-operator/preparation'},
+                            items: [
                                 'install/deploy-on-kubernetes/doris-operator/on-alibaba',
                                 'install/deploy-on-kubernetes/doris-operator/on-aws',
                             ],
