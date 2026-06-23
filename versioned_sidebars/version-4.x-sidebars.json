@@ -893,7 +893,7 @@
           "label": "Observability with Doris",
           "link": {
             "type": "doc",
-            "id": "observability/dogstack/overview"
+            "id": "observability/intro"
           },
           "collapsed": true,
           "items": [
@@ -906,7 +906,6 @@
                 "id": "observability/dogstack/overview"
               },
               "items": [
-                "observability/dogstack/overview",
                 "observability/dogstack/quickstart",
                 "observability/dogstack/deployment",
                 "observability/dogstack/search",
@@ -917,14 +916,13 @@
             },
             {
               "type": "category",
-              "label": "Legacy",
+              "label": "Custom Build",
               "collapsed": true,
               "link": {
                 "type": "doc",
                 "id": "observability/overview"
               },
               "items": [
-                "observability/overview",
                 "observability/log",
                 "observability/trace"
               ]

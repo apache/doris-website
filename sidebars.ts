@@ -764,7 +764,7 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Observability with Doris',
-                    link: {type: 'doc', id: 'observability/dogstack/overview'},
+                    link: {type: 'doc', id: 'observability/intro'},
                     collapsed: true,
                     items: [
                         {
@@ -773,7 +773,6 @@ const sidebars: SidebarsConfig = {
                             collapsed: true,
                             link: {type: 'doc', id: 'observability/dogstack/overview'},
                             items: [
-                                'observability/dogstack/overview',
                                 'observability/dogstack/quickstart',
                                 'observability/dogstack/deployment',
                                 'observability/dogstack/search',
@@ -784,11 +783,10 @@ const sidebars: SidebarsConfig = {
                         },
                         {
                             type: 'category',
-                            label: 'Legacy',
+                            label: 'Custom Build',
                             collapsed: true,
                             link: {type: 'doc', id: 'observability/overview'},
                             items: [
-                                'observability/overview',
                                 'observability/log',
                                 'observability/trace',
                             ]
