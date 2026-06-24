@@ -1360,6 +1360,7 @@ const sidebars: SidebarsConfig = {
                                     label: 'Vector Distance Functions',
                                     items: [
                                         'sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance',
+                                        'sql-manual/sql-functions/ai-functions/distance-functions/cosine-similarity',
                                         'sql-manual/sql-functions/ai-functions/distance-functions/inner-product',
                                         'sql-manual/sql-functions/ai-functions/distance-functions/l1-distance',
                                         'sql-manual/sql-functions/ai-functions/distance-functions/l2-distance',
