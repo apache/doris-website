@@ -229,6 +229,8 @@ CREATE TABLE mc_tbl AS SELECT * FROM other_table;
 - クラスター化されたテーブル、トランザクショナルテーブル、Delta Tables、外部テーブルの作成はサポートしていません。
 :::
 
+データベースやテーブルを作成または削除する際、Dorisは対応するMaxCompute APIを呼び出して操作を実行します。操作が返された後、MaxCompute側のメタデータ変更が後続の操作から完全に見えるようになるまで、短い時間が必要です。
+
 > この機能は`mc.enable.namespace.schema`プロパティが`true`に設定されている場合のみ利用可能です。
 
 ### データベースの作成と削除
