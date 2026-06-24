@@ -149,7 +149,7 @@ SELECT TOKENIZE("Hello World", '"built_in_analyzer"="standard", "support_phrase"
    - `standard`: Standard analyzer for general text
    - `english`: English language analyzer with stemming
    - `chinese`: Chinese text analyzer
-   - `kuromoji`: Japanese morphological analyzer (`parser_mode`: `search`, `normal`, `extended`)
+   - `kuromoji`: Japanese morphological analyzer (`parser_mode`: `search`, `normal`, `extended`). Disabled by default — set `enable_kuromoji_analyzer = true` in `be.conf` to use it.
    - `unicode`: Unicode-based analyzer for multilingual text
    - `icu`: ICU-based analyzer for advanced Unicode processing
    - `basic`: Basic tokenization
