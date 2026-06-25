@@ -1537,6 +1537,7 @@
                       "label": "Vector Distance Functions",
                       "items": [
                         "sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance",
+                        "sql-manual/sql-functions/ai-functions/distance-functions/cosine-similarity",
                         "sql-manual/sql-functions/ai-functions/distance-functions/inner-product",
                         "sql-manual/sql-functions/ai-functions/distance-functions/l1-distance",
                         "sql-manual/sql-functions/ai-functions/distance-functions/l2-distance",
@@ -1739,6 +1740,9 @@
                         "sql-manual/sql-functions/scalar-functions/date-time-functions/date-add",
                         "sql-manual/sql-functions/scalar-functions/date-time-functions/date-ceil",
                         "sql-manual/sql-functions/scalar-functions/date-time-functions/date-floor",
+                        "sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-ceil",
+                        "sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-floor",
+                        "sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-diff",
                         "sql-manual/sql-functions/scalar-functions/date-time-functions/date-format",
                         "sql-manual/sql-functions/scalar-functions/date-time-functions/date-sub",
                         "sql-manual/sql-functions/scalar-functions/date-time-functions/date-trunc",
