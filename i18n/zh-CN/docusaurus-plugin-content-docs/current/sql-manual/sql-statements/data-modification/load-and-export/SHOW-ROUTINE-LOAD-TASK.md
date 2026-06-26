@@ -14,6 +14,8 @@
 
 ```sql
 SHOW ROUTINE LOAD TASK WHERE JobName = <job_name>;
+
+SHOW ROUTINE LOAD TASK FOR [<db>.]<job_name>;
 ```
 
 ## 必选参数
@@ -21,6 +23,12 @@ SHOW ROUTINE LOAD TASK WHERE JobName = <job_name>;
 **1. `<job_name>`**
 
 > 要查看的例行导入作业名称。
+
+## 可选参数
+
+**1. `<db>`**
+
+> 例行导入作业所在的数据库。若省略，则在当前数据库下搜索该例行导入作业。
 
 ## 返回结果
 
@@ -58,4 +66,16 @@ SHOW ROUTINE LOAD TASK WHERE JobName = <job_name>;
 
     ```sql
     SHOW ROUTINE LOAD TASK WHERE JobName = "test1";
+    ```
+
+- 展示当前数据库下名为 test1 的例行导入作业的子任务信息。
+
+    ```sql
+    SHOW ROUTINE LOAD TASK FOR test1;
+    ```
+
+- 展示数据库 example_db 下名为 test1 的例行导入作业的子任务信息。
+
+    ```sql
+    SHOW ROUTINE LOAD TASK FOR example_db.test1;
     ```

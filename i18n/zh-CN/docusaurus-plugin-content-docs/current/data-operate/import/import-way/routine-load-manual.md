@@ -267,7 +267,7 @@ ReasonOfStateChanged:
 
 #### 查看导入子任务
 
-通过 [SHOW ROUTINE LOAD TASK](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK) 命令查看导入子任务情况。该命令描述了当前作业下的子任务信息，如子任务状态、下发的 BE id 等。
+通过 [SHOW ROUTINE LOAD TASK](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK) 命令查看导入子任务情况。可以通过 `WHERE JobName = <job_name>` 或 `FOR [<db>.]<job_name>` 指定例行导入作业（`<db>` 省略时使用当前数据库）。该命令描述了当前作业下的子任务信息，如子任务状态、下发的 BE id 等。
 
 通过以下命令可以查看 `testdb.example_routine_load_csv` 的子任务情况：
 
@@ -282,6 +282,12 @@ mysql> SHOW ROUTINE LOAD TASK WHERE jobname = 'example_routine_load_csv';
 | 68771fd8a1824637-90a9dac2a7a0075e | -1    | NULL      | 12177 | 2024-01-15 12:20:52 | NULL                | 20      | -1    | {"3":1769,"8":2982}  |
 | 77112dfea5e54b0a-a10eab3d5b19e565 | 197   | PREPARE   | 12177 | 2024-01-15 12:21:02 | 2024-01-15 12:21:02 | 20      | 12098 | {"0":3000,"5":2622}  |
 +-----------------------------------+-------+-----------+-------+---------------------+---------------------+---------+-------+----------------------+
+```
+
+也可以使用以下语法：
+
+```sql
+mysql> SHOW ROUTINE LOAD TASK FOR testdb.example_routine_load_csv;
 ```
 
 ### 暂停导入作业
