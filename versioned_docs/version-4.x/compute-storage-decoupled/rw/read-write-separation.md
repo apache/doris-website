@@ -3,90 +3,80 @@
     "title": "Read/Write Separation and Primary/Standby Cluster File Cache Warm-Up Configuration Guide",
     "sidebar_label": "Read/Write Separation: File Cache Warm-Up",
     "language": "en",
-    "description": "Describes the Doris File Cache active incremental warm-up mechanism, supporting read/write separation and primary/standby cluster architectures, covering warm-up job creation, management, monitoring, and troubleshooting.",
-    "keywords": ["read/write separation", "primary/standby cluster", "File Cache warm-up", "compute group sync", "high availability", "cross availability zone"]
+    "description": "Describes the Doris File Cache active incremental warm-up mechanism for read/write separation and primary/standby architectures, including compute-group-level and table-level event-driven warm-up, job creation, status observation, metrics, and troubleshooting.",
+    "keywords": ["read/write separation", "primary/standby cluster", "File Cache warm-up", "active incremental warm-up", "table-level warm-up", "ON TABLES", "compute group sync", "high availability"]
 }
 ---
 
 <!-- Knowledge type: Architecture decision -->
-<!-- Applicable scenarios: Read/write separation deployment / Primary/standby cluster high availability -->
+<!-- Applicable scenarios: Read/write separation deployment / Primary/standby cluster high availability / File Cache warm-up -->
 
 ## Background and Applicable Scenarios
 
-To address cache cold-start problems in cross-availability-zone (AZ) high-availability failover and read/write separation scenarios, Doris introduces the **File Cache active incremental warm-up mechanism**. This mechanism ensures that the cache data of a target cluster stays highly consistent with the source cluster, thereby improving query performance, reducing jitter, and accelerating failover response.
+In the Apache Doris compute-storage decoupled architecture, multiple compute groups can share the same remote storage data. A write compute group handles ingestion, Compaction, or Schema Change, while query compute groups handle online queries. After a new Rowset is generated, if a query compute group has not loaded the corresponding files into its local File Cache, the first query must access object storage or HDFS, which can cause query latency jitter.
 
-This feature applies to the following two typical scenarios:
+File Cache active incremental warm-up preloads the related Segment and index files into the target compute group's local cache after new data is generated on the write side. It is mainly applicable to the following scenarios:
 
-| Scenario | Description | Core Requirement |
+| Scenario | Description | Benefit |
 |------|------|----------|
-| **Primary/standby cluster high availability** | The standby cluster continuously syncs hot data from the primary cluster and takes over the load quickly when the primary cluster fails. | Minimize failover latency |
-| **Read/write separation** | Newly written data in the write cluster is promptly warmed up to the read cluster to avoid queries hitting cold cache. | Reduce read cluster query jitter |
+| Read/write separation | The write compute group continuously ingests data, and the query compute group only serves queries | Reduces Cache Miss when the query compute group reads new data |
+| Primary/standby cluster high availability | The standby compute group continuously syncs hot data from the primary compute group | Shortens cold-cache recovery after failover |
+| Multi-tenant or layered data warehouse | Different query compute groups access only part of the business tables | Uses table-level filtering to reduce unnecessary warm-up and cache usage |
+| Cost optimization | The source compute group has many tables, but hot queries focus on a small subset | Reduces remote storage reads and network transfer |
 
 :::tip Version Information
-The File Cache active incremental warm-up feature was introduced in Apache Doris **3.1.0**.
+This document describes File Cache active incremental warm-up and its table-level `ON TABLES` filtering capability. For exact version support, refer to the release notes and SQL syntax documentation of the corresponding version.
 :::
-
----
 
 ## Feature Overview
 
-<!-- Knowledge type: Step-by-step operations -->
+File Cache active warm-up supports three sync modes:
 
-File Cache active warm-up supports the following two types of cache synchronization:
-
-1. **Event-triggered warm-up**: Automatically warms up data generated during Load, Compaction, and Schema Change, reducing query jitter.
-2. **Periodic hot-data sync**: Continuously syncs hot-query data to the target cluster through periodic scanning, ensuring stable performance of the standby cluster during primary/standby switchover.
-
----
-
-## Sync Mode Description
-
-<!-- Knowledge type: Configuration parameters -->
-<!-- Applicable scenarios: Warm-up job creation -->
-
-The applicable scenarios for the three sync modes are as follows:
-
-| Mode | Parameter Value | Applicable Scenario |
+| Sync Mode | Property Value | Applicable Scenario |
 |------|--------|----------|
-| One-time sync | `ONCE` | Manually triggered; suitable for initial warm-up when a new cluster comes online |
-| Periodic sync | `PERIODIC` | Scheduled sync of hot data; suitable for continuous warm-keeping scenarios |
-| Event-driven sync | `EVENT_DRIVEN` | Automatically warms up data generated during Load, Compaction, and Schema Change |
+| One-time sync | `once` | Manually triggers initial warm-up when a new compute group comes online |
+| Periodic sync | `periodic` | Syncs hot data at a fixed interval for continuous warm-keeping |
+| Event-driven sync | `event_driven` | Automatically warms up data generated during Load, Compaction, and Schema Change |
 
----
+Event-driven sync can be applied at two scopes:
+
+| Scope | Syntax Form | Description |
+|------|----------|------|
+| Compute-group-level event-driven warm-up | Without `ON TABLES` | New data generated by matching events on the source compute group triggers warm-up |
+| Table-level event-driven warm-up | With `ON TABLES (...)` | Only new data from tables that match the rules triggers warm-up |
+
+Table-level event-driven warm-up is suitable when a query compute group cares only about a subset of core tables. Compared with compute-group-level warm-up, it reduces unnecessary remote reads, network transfer, and cache usage on the target compute group.
 
 ## Creating Warm-Up Jobs
 
-<!-- Knowledge type: Step-by-step operations -->
-<!-- Applicable scenarios: Warm-up job creation -->
-
 ### One-Time Sync
 
-Suitable for manually triggering initial warm-up when a new cluster comes online:
+One-time sync is suitable for initial warm-up when a new compute group comes online:
 
 ```sql
-WARM UP COMPUTE GROUP <target_cluster> WITH COMPUTE GROUP <source_cluster>;
+WARM UP COMPUTE GROUP <target_compute_group> WITH COMPUTE GROUP <source_compute_group>;
 ```
 
 ### Periodic Sync
 
-Suitable for continuously maintaining hot-data synchronization:
+Periodic sync is suitable for continuously maintaining hot-data synchronization:
 
 ```sql
-WARM UP COMPUTE GROUP <target_cluster> WITH COMPUTE GROUP <source_cluster>
+WARM UP COMPUTE GROUP <target_compute_group> WITH COMPUTE GROUP <source_compute_group>
 PROPERTIES (
     "sync_mode" = "periodic",
     "sync_interval_sec" = "600"
 );
 ```
 
-- `sync_interval_sec`: The sync interval in seconds, calculated from the last start time. The default value is 600 seconds.
+`sync_interval_sec` specifies the sync interval in seconds. The default value is `600`.
 
-### Event-Driven Sync
+### Compute-Group-Level Event-Driven Warm-Up
 
-Suitable for read/write separation scenarios, where data generated during Load, Compaction, and Schema Change is automatically warmed up to the read cluster:
+Compute-group-level event-driven warm-up is suitable for read/write separation scenarios. It listens for write events on the source compute group and preloads data generated during Load, Compaction, and Schema Change into the target compute group:
 
 ```sql
-WARM UP COMPUTE GROUP <target_cluster> WITH COMPUTE GROUP <source_cluster>
+WARM UP COMPUTE GROUP <target_compute_group> WITH COMPUTE GROUP <source_compute_group>
 PROPERTIES (
     "sync_mode" = "event_driven",
     "sync_event" = "load"
@@ -95,94 +85,366 @@ PROPERTIES (
 
 - `sync_event`: Set this parameter to `load` when creating an event-driven warm-up job.
 
----
+### Table-Level Event-Driven Warm-Up
+
+Table-level event-driven warm-up adds the `ON TABLES` clause to compute-group-level event-driven warm-up to specify the table range to warm up:
+
+```sql
+WARM UP COMPUTE GROUP <target_compute_group> WITH COMPUTE GROUP <source_compute_group>
+ON TABLES (
+    INCLUDE '<database_pattern>.<table_pattern>'
+    [, INCLUDE '<database_pattern>.<table_pattern>' ...]
+    [, EXCLUDE '<database_pattern>.<table_pattern>' ...]
+)
+PROPERTIES (
+    "sync_mode" = "event_driven",
+    "sync_event" = "load"
+);
+```
+
+Parameter descriptions:
+
+| Parameter | Required | Description |
+|------|----------|------|
+| `<target_compute_group>` | Yes | Name of the target compute group. New data from matched tables is warmed up into this compute group's local File Cache |
+| `<source_compute_group>` | Yes | Name of the source compute group. Doris listens for write events on this compute group |
+| `ON TABLES` | No | Table-level filter rules. If omitted, the job is a compute-group-level event-driven warm-up job |
+| `INCLUDE` | Required when `ON TABLES` is used | Declares table patterns to include in the warm-up scope. At least one `INCLUDE` rule is required |
+| `EXCLUDE` | No | Excludes table patterns from the `INCLUDE` result |
+| `sync_mode` | Yes | Table-level event-driven warm-up uses `event_driven` |
+| `sync_event` | Yes | Table-level event-driven warm-up currently uses the `load` event |
+
+:::caution Note
+Do not configure compute-group-level `load` event-driven warm-up and table-level `ON TABLES` event-driven warm-up for the same source and target compute groups at the same time. Their semantics overlap, and Doris rejects conflicting configurations during job creation. To switch from compute-group-level warm-up to table-level warm-up, cancel the old job first, then create a new `ON TABLES` job.
+:::
+
+## ON TABLES Matching Rules
+
+### Pattern Format
+
+Patterns in `ON TABLES` must use the `'database.table'` format and be enclosed in single quotes. The following wildcards are supported:
+
+| Wildcard | Meaning | Example |
+|--------|------|------|
+| `*` | Matches any number of arbitrary characters, including zero characters | `'ods.*'` matches all tables in the `ods` database |
+| `?` | Matches exactly one arbitrary character | `'logs.access_202?'` matches `logs.access_2020` through `logs.access_2029` |
+
+Without wildcards, the pattern is an exact match. For example, `'sales.orders'` matches only the `orders` table in the `sales` database.
+
+Common pattern examples:
+
+| Pattern | Meaning |
+|------|------|
+| `'mydb.*'` | Matches all tables in the `mydb` database |
+| `'*.orders'` | Matches tables named `orders` in all databases |
+| `'dw.fact_*'` | Matches tables whose names start with `fact_` in the `dw` database |
+| `'*.*_bak'` | Matches tables whose names end with `_bak` in all databases |
+| `'sales.orders'` | Exactly matches `sales.orders` |
+
+### INCLUDE and EXCLUDE
+
+Doris computes the final warm-up scope as follows:
+
+```text
+Final warm-up scope = tables matched by all INCLUDE rules - tables matched by all EXCLUDE rules
+```
+
+Rules:
+
+- The order of `INCLUDE` and `EXCLUDE` rules does not affect the final result.
+- At least one `INCLUDE` rule is required. You cannot specify only `EXCLUDE`.
+- Multiple `INCLUDE` rules are combined by union.
+- Multiple `EXCLUDE` rules remove matching tables from the candidate set.
+- Matching follows Doris database and table naming rules. Use the same letter case as the actual database and table names.
+
+Example:
+
+```sql
+WARM UP COMPUTE GROUP analytics_cg WITH COMPUTE GROUP write_cg
+ON TABLES (
+    INCLUDE 'ods.*',
+    INCLUDE 'dw.fact_*',
+    INCLUDE 'dw.dim_*',
+    EXCLUDE 'ods.tmp_*',
+    EXCLUDE '*.*_bak'
+)
+PROPERTIES (
+    "sync_mode" = "event_driven",
+    "sync_event" = "load"
+);
+```
+
+This example warms up:
+
+- Tables in the `ods` database except those whose names start with `tmp_`.
+- Tables in the `dw` database whose names start with `fact_` or `dim_`.
+- No backup tables whose names end with `_bak` in any database.
+
+### Materialized Views
+
+`ON TABLES` rules match both ordinary tables and asynchronous materialized views. An asynchronous materialized view exists as an independent table in the database namespace and is matched by name through `INCLUDE` and `EXCLUDE` rules.
+
+A synchronous materialized view (Rollup) is an internal index of the base table and is not an independent table. When the base table is warmed up, the data related to its synchronous materialized views is processed together with the base table and does not need a separate rule.
+
+## Examples
+
+### Warm Up Specific Tables
+
+```sql
+WARM UP COMPUTE GROUP report_cg WITH COMPUTE GROUP business_cg
+ON TABLES (
+    INCLUDE 'sales.orders',
+    INCLUDE 'sales.customers',
+    INCLUDE 'inventory.stock_level'
+)
+PROPERTIES (
+    "sync_mode" = "event_driven",
+    "sync_event" = "load"
+);
+```
+
+### Warm Up an Entire Database
+
+```sql
+WARM UP COMPUTE GROUP analytics_cg WITH COMPUTE GROUP load_cg
+ON TABLES (
+    INCLUDE 'analytics_db.*'
+)
+PROPERTIES (
+    "sync_mode" = "event_driven",
+    "sync_event" = "load"
+);
+```
+
+### Warm Up Multiple Databases and Exclude Temporary Tables
+
+```sql
+WARM UP COMPUTE GROUP query_cg WITH COMPUTE GROUP etl_cg
+ON TABLES (
+    INCLUDE 'ods.*',
+    INCLUDE 'dwd.*',
+    INCLUDE 'dws.*',
+    EXCLUDE '*.tmp_*',
+    EXCLUDE '*.*_backup'
+)
+PROPERTIES (
+    "sync_mode" = "event_driven",
+    "sync_event" = "load"
+);
+```
+
+### Warm Up the Same Table to Multiple Target Compute Groups
+
+If the same table must serve multiple query compute groups, create one job for each target compute group:
+
+```sql
+WARM UP COMPUTE GROUP realtime_cg WITH COMPUTE GROUP write_cg
+ON TABLES (INCLUDE 'sales.orders')
+PROPERTIES ("sync_mode" = "event_driven", "sync_event" = "load");
+
+WARM UP COMPUTE GROUP batch_cg WITH COMPUTE GROUP write_cg
+ON TABLES (INCLUDE 'sales.orders')
+PROPERTIES ("sync_mode" = "event_driven", "sync_event" = "load");
+```
 
 ## Managing Warm-Up Jobs
 
-<!-- Knowledge type: Step-by-step operations -->
-<!-- Applicable scenarios: Job operations and maintenance -->
+### Viewing Jobs
 
-### Viewing Job List
+View all warm-up jobs:
 
 ```sql
--- View all warm-up jobs
 SHOW WARM UP JOB;
-
--- View a specific job
-SHOW WARM UP JOB WHERE ID = 12345;
 ```
 
-Field descriptions for query results:
+View a specific job:
+
+```sql
+SHOW WARM UP JOB WHERE id = <job_id>;
+```
+
+Field descriptions:
 
 | Field | Description |
 |--------|------|
-| `JobId` | Unique ID of the sync job |
-| `ComputeGroup` | Name of the target Compute Group |
-| `SrcComputeGroup` | Name of the source Compute Group |
-| `Type` | Sync type: `CLUSTER` (cluster-level) / `TABLE` (table-level) |
-| `SyncMode` | Sync mode: `ONCE` / `PERIODIC(interval_sec)` / `EVENT_DRIVEN(event)` |
-| `Status` | Job status: `PENDING` / `RUNNING` / `FINISHED` / `CANCELLED` / `DELETED` |
-| `CreateTime` | Time when the job was created |
-| `StartTime` | Time of the last start |
-| `FinishTime` | Time of the last completion |
-| `FinishBatch` | Number of batches completed |
-| `AllBatch` | Total number of batches to sync |
-| `ErrMsg` | Error message (empty if no error) |
+| `JobId` | Unique ID of the warm-up job |
+| `SrcComputeGroup` | Name of the source compute group |
+| `DstComputeGroup` | Name of the target compute group |
+| `Status` | Job status, such as `PENDING`, `RUNNING`, `FINISHED`, or `CANCELLED` |
+| `Type` | Warm-up scope. `CLUSTER` means compute-group-level, `TABLE` means explicitly specified tables, and `TABLES` means matched by `ON TABLES` rules |
+| `SyncMode` | Sync mode, such as `ONCE`, `PERIODIC(interval_sec)`, or `EVENT_DRIVEN(event)` |
+| `CreateTime` | Job creation time |
+| `StartTime` | Most recent start time |
+| `FinishBatch` | Number of completed batches |
+| `AllBatch` | Total number of batches |
+| `FinishTime` | Most recent finish time. Event-driven jobs usually keep running |
+| `ErrMsg` | Most recent error message. Empty if there is no error |
+| `Tables` | Explicit table list, mainly used by one-time or periodic table-level warm-up |
+| `TableFilter` | Canonical representation of `ON TABLES` rules. Empty for compute-group-level jobs |
+| `MatchedTables` | Current list of matched table names. Periodic refresh reflects table creation, deletion, and rename |
+| `SyncStats` | Sync progress of event-driven jobs. List query shows a summary; ID query shows detailed JSON |
+
+`SHOW WARM UP JOB` is suitable for daily inspection. To avoid an overly wide list, `SyncStats` shows a summary for the most recent 30 minutes:
+
+```json
+{
+  "window": "30m",
+  "src_size": "58.2mb",
+  "dst_size": "57.5mb",
+  "gap_size": "716kb",
+  "trigger_gap_ms": 1200
+}
+```
+
+When querying by Job ID, `SyncStats` shows detailed 5-minute, 30-minute, and 1-hour window metrics:
+
+```sql
+SHOW WARM UP JOB WHERE id = <job_id>;
+```
+
+`SyncStats` example:
+
+```json
+{
+  "seg_num": {
+    "requested_5m": 42,
+    "finish_5m": 40,
+    "gap_5m": 2,
+    "fail_5m": 0,
+    "requested_30m": 180,
+    "finish_30m": 178,
+    "gap_30m": 2,
+    "fail_30m": 0,
+    "requested_1h": 320,
+    "finish_1h": 318,
+    "gap_1h": 2,
+    "fail_1h": 0
+  },
+  "seg_size": {
+    "requested_5m": "12.5mb",
+    "finish_5m": "11.8mb",
+    "gap_5m": "716kb",
+    "fail_5m": "0b",
+    "requested_30m": "58.2mb",
+    "finish_30m": "57.5mb",
+    "gap_30m": "716kb",
+    "fail_30m": "0b",
+    "requested_1h": "102.3mb",
+    "finish_1h": "101.6mb",
+    "gap_1h": "716kb",
+    "fail_1h": "0b"
+  },
+  "idx_num": {
+    "requested_5m": 10,
+    "finish_5m": 10,
+    "gap_5m": 0,
+    "fail_5m": 0
+  },
+  "idx_size": {
+    "requested_5m": "2.1mb",
+    "finish_5m": "2.1mb",
+    "gap_5m": "0b",
+    "fail_5m": "0b"
+  },
+  "last_trigger_ts": "14:32:15",
+  "last_finish_ts": "14:32:18",
+  "progress_trigger_ts": "14:32:14",
+  "trigger_gap_ms": 1000
+}
+```
+
+Pay attention to the following fields:
+
+| Field | Description |
+|------|------|
+| `requested_*` | Amount of warm-up requests submitted by the source compute group |
+| `finish_*` | Amount of warm-up work completed by the target compute group |
+| `gap_*` | Gap, indicating the amount that has not completed |
+| `fail_*` | Amount of failed warm-up work on the target compute group |
+| `last_trigger_ts` | Most recent warm-up trigger time |
+| `progress_trigger_ts` | Upstream trigger time corresponding to the current progress on the target compute group |
+| `last_finish_ts` | Most recent warm-up finish time |
+| `trigger_gap_ms` | Time gap between the latest source trigger time and the target progress watermark, in milliseconds |
 
 ### Canceling a Job
 
 ```sql
-CANCEL WARM UP JOB WHERE id = 12345;
+CANCEL WARM UP JOB WHERE id = <job_id>;
 ```
 
-:::caution Note
-The current version does not support using `ALTER` to modify an existing job configuration. To change parameters, cancel the job first and then create a new one.
-:::
+After cancellation, Doris stops listening for events and stops triggering warm-up for this job. Data already written into the target compute group's File Cache is not actively removed and is released by the normal cache eviction policy.
 
----
+The current version does not support directly modifying the `ON TABLES` rules of an existing job. To adjust the warm-up scope, cancel the old job first, then create a new one.
+
+## Matching Refresh and Behavior Notes
+
+### Creating, Dropping, and Renaming Tables
+
+`ON TABLES` rules are evaluated when the job is created and are periodically re-evaluated while the job is running. The default refresh interval is 60 seconds.
+
+This means:
+
+- After the job is created, a newly created table is automatically included in the warm-up scope in a later refresh cycle if its name matches the rules.
+- After a matched table is dropped, it is removed from `MatchedTables` in a later refresh cycle.
+- After a matched table is renamed, whether it continues to be warmed up depends on whether the new name still matches the rules.
+
+There can be a delay window of up to 60 seconds between creating a new table and the next rule refresh. Writes to the new table during this delay window do not trigger this table-level job. Writes after the refresh trigger warm-up normally.
+
+### No Matched Table at Creation
+
+When creating a table-level event-driven warm-up job, the `ON TABLES` rules must match at least one existing table. If no table is matched, job creation fails. Check the database name, table name, and wildcard patterns.
+
+If you want to configure the warm-up relationship in advance, create at least one table that matches the rules before creating the warm-up job.
+
+### Schema Change
+
+`ON TABLES` only determines the table set and does not change the trigger semantics of the event type itself. For event types that are configured in the current job and supported by the current version, newly generated data is processed according to the table matching result. If the job is configured with `sync_event = "load"`, it listens only for the corresponding load event.
 
 ## How It Works
 
-<!-- Knowledge type: Architecture decision -->
-
 ### Periodic Sync Execution Flow
 
-1. FE registers the job and records the `sync_interval` configuration.
-2. FE periodically checks whether the trigger time has been reached, calculated from the last start time.
-3. The sync job is triggered, avoiding overlapping executions.
-4. After sync completes, the status is recorded and the system waits for the next cycle.
+1. FE registers the job and records the sync interval.
+2. FE periodically checks whether the trigger time has been reached.
+3. When the trigger time is reached, FE converts the target tables or partitions into corresponding Tablets and dispatches tasks.
+4. BE reads files from remote storage and writes them into the target compute group's File Cache.
 
 ### Event-Driven Sync Execution Flow
 
-1. The user creates an event-driven job, FE registers the job and pushes the configuration to the source cluster BE.
-2. The source BE automatically triggers the warm-up logic after events such as Load and Compaction complete.
-3. The source BE initiates a sync request to the target BE at the Rowset granularity.
-4. After sync completes, the target BE reports the execution status to FE.
-
-### Scheduling and Storage Mechanism
-
-- Sync relationships are persistently stored by FE as `CloudWarmUpJob` objects, supporting concurrent management of multiple jobs.
-- Multiple jobs in `PENDING` status are allowed for the same target cluster, but only one job is allowed to be in `RUNNING` status at a time; the remaining jobs queue and wait.
-- Sync relationships can be managed by Compute Group name, compatible with cluster renaming and migration operations.
-
----
+1. The user creates an event-driven job, and FE persists the sync relationship.
+2. FE pushes the event-driven configuration to the source compute group BE.
+3. The source compute group BE triggers warm-up after a write event is committed.
+4. For table-level event-driven jobs, the source BE processes only Rowsets that belong to the current matched table set.
+5. The target compute group BE downloads the corresponding Segment and index files and writes them into the local File Cache.
+6. FE exposes job status and sync progress through `SHOW WARM UP JOB` and FE metrics.
 
 ## Metrics Monitoring
 
-<!-- Knowledge type: Configuration parameters -->
-<!-- Applicable scenarios: Troubleshooting / Performance tuning -->
+### SQL Observation
 
-### Periodic Jobs - FE-Side Metrics
+The most direct way to observe warm-up progress is to use `SHOW WARM UP JOB`:
 
-| Metric Name | Meaning |
-|----------|------|
-| `file_cache_warm_up_job_exec_count` | Number of scheduled executions |
-| `file_cache_warm_up_job_requested_tablets` | Total number of tablets submitted |
-| `file_cache_warm_up_job_finished_tablets` | Number of tablets that completed sync |
-| `file_cache_warm_up_job_latest_start_time` | Time of the most recent job start |
-| `file_cache_warm_up_job_last_finish_time` | Time of the most recent job completion |
+```sql
+SHOW WARM UP JOB;
+SHOW WARM UP JOB WHERE id = <job_id>;
+```
 
-### Periodic Jobs - BE-Side Metrics
+Usage suggestions:
+
+- `gap_size` or detailed `gap_*` continuously approaching 0 means the target compute group is generally keeping up with the source compute group's write speed.
+- `trigger_gap_ms` approaching 0 means the target compute group has caught up with the latest trigger event from the source compute group.
+- If `fail_*` is greater than 0, check BE logs for disk space issues, remote storage access failures, or network errors.
+- The 5-minute window is useful for real-time fluctuations, while the 30-minute and 1-hour windows are useful for sustained trends.
+
+### BE Bvar Metrics
+
+In addition to `SHOW WARM UP JOB` and FE `/metrics`, you can use the BE Bvar page to inspect warm-up execution metrics on a single BE:
+
+```bash
+curl http://<be_host>:<brpc_port>/vars
+```
+
+BE-side metrics for periodic jobs:
 
 | Metric Name | Meaning |
 |----------|------|
@@ -191,7 +453,7 @@ The current version does not support using `ALTER` to modify an existing job con
 | `file_cache_once_or_periodic_warm_up_submitted_index_num` | Number of submitted indexes |
 | `file_cache_once_or_periodic_warm_up_finished_index_num` | Number of completed indexes |
 
-### Event-Driven Jobs - Source BE Metrics
+Source BE metrics for event-driven jobs:
 
 | Metric Name | Meaning |
 |----------|------|
@@ -199,7 +461,7 @@ The current version does not support using `ALTER` to modify an existing job con
 | `file_cache_event_driven_warm_up_requested_index_num` | Number of indexes requested for sync |
 | `file_cache_warm_up_rowset_last_call_unix_ts` | Timestamp of the last sync request initiated |
 
-### Event-Driven Jobs - Target BE Metrics
+Target BE metrics for event-driven jobs:
 
 | Metric Name | Meaning |
 |----------|------|
@@ -207,33 +469,145 @@ The current version does not support using `ALTER` to modify an existing job con
 | `file_cache_event_driven_warm_up_finished_segment_num` | Number of segments that completed warm-up |
 | `file_cache_warm_up_rowset_last_handle_unix_ts` | Timestamp of the last sync request handled |
 
----
+These metrics reflect execution on a single BE and are useful for checking whether a BE has received warm-up requests, completed downloads, and recently initiated or handled requests. For cross-BE job-level aggregation, prefer `SHOW WARM UP JOB WHERE id = <job_id>` or FE Prometheus metrics.
+
+### FE Prometheus Metrics
+
+In cloud mode, FE periodically pulls and aggregates event-driven warm-up progress from BEs. The default refresh interval is 15 seconds. The interval is controlled by the FE configuration item `cloud_warm_up_sync_stats_refresh_interval_ms`, whose default value is `15000` milliseconds.
+
+You can collect the following metrics from FE `/metrics`:
+
+| Metric Name | Description |
+|--------|------|
+| `doris_fe_file_cache_warm_up_sync_job_info` | Job metadata. The value is always 1. Labels include `job_id`, `job_type`, `sync_mode`, `sync_event`, `job_state`, and source/target compute groups |
+| `doris_fe_file_cache_warm_up_sync_job_size_bytes` | Total warm-up size submitted by the source side and completed by the target side, in bytes. Includes the `side` and `window` labels |
+| `doris_fe_file_cache_warm_up_sync_job_trigger_gap_ms` | Time gap between the latest source trigger time and the target progress watermark, in milliseconds |
+
+Common PromQL examples:
+
+```promql
+# Total warm-up size submitted by the source side in the last 5 minutes for each job
+doris_fe_file_cache_warm_up_sync_job_size_bytes{side="src",window="5m"}
+
+# Total warm-up size completed by the target side in the last 5 minutes for each job
+doris_fe_file_cache_warm_up_sync_job_size_bytes{side="dst",window="5m"}
+
+# Sync size gap in the last 5 minutes for each job
+doris_fe_file_cache_warm_up_sync_job_size_bytes{side="src",window="5m"}
+  - ignoring(side)
+doris_fe_file_cache_warm_up_sync_job_size_bytes{side="dst",window="5m"}
+
+# Trigger progress time gap for each job
+doris_fe_file_cache_warm_up_sync_job_trigger_gap_ms
+```
+
+`ignoring(side)` tells Prometheus to ignore the `side` label when subtracting source and target size series, so that `src` and `dst` series with the same job and window can be matched.
+
+## End-to-End Procedure
+
+1. View current compute groups and confirm the source and target compute group names:
+
+    ```sql
+    SHOW COMPUTE GROUPS;
+    ```
+
+2. Confirm the table range that needs warm-up:
+
+    ```sql
+    SHOW TABLES FROM ods;
+    SHOW TABLES FROM dw;
+    ```
+
+3. Create a table-level event-driven warm-up job:
+
+    ```sql
+    WARM UP COMPUTE GROUP read_cg WITH COMPUTE GROUP write_cg
+    ON TABLES (
+        INCLUDE 'ods.*',
+        INCLUDE 'dw.fact_*',
+        EXCLUDE 'ods.tmp_*'
+    )
+    PROPERTIES (
+        "sync_mode" = "event_driven",
+        "sync_event" = "load"
+    );
+    ```
+
+4. Check job status and matched tables:
+
+    ```sql
+    SHOW WARM UP JOB;
+    ```
+
+5. After writing data, observe sync progress:
+
+    ```sql
+    SHOW WARM UP JOB WHERE id = <job_id>;
+    ```
+
+6. To adjust rules, cancel the old job and create a new one:
+
+    ```sql
+    CANCEL WARM UP JOB WHERE id = <job_id>;
+    ```
+
+## Best Practices
+
+- If a query compute group accesses only a small set of core tables, prefer table-level event-driven warm-up to avoid excessive cache usage from compute-group-level warm-up.
+- For data warehouses with clear table naming conventions, rules such as `INCLUDE 'dws.*'`, `INCLUDE 'ads.*'`, and `EXCLUDE '*.tmp_*'` are easier to maintain.
+- Avoid having multiple jobs cover the same hot tables. Although the target side can avoid repeated downloads where possible, job management and metric interpretation become more complex.
+- To change the warm-up scope, cancel and recreate the job. Do not rely on the old job to change its rules automatically.
+- Use `SHOW WARM UP JOB` for single-job details, and use FE Prometheus metrics in Grafana for long-term trend monitoring.
 
 ## FAQ
 
-<!-- Knowledge type: Step-by-step operations -->
-<!-- Applicable scenarios: Troubleshooting -->
-
 **Q: Does a sync failure in one round cancel the entire job?**
 
-No. A sync failure in the current round only skips the current execution; the job status remains unchanged and subsequent cycles continue to attempt execution.
+No. A sync failure in the current round only skips that execution. The job status remains unchanged, and later cycles continue to retry. You can run `SHOW WARM UP JOB WHERE id = <job_id>` to inspect `ErrMsg` and failure counts in `SyncStats`, then check BE logs for the root cause.
 
 **Q: What happens when a periodic job execution times out?**
 
-The system skips the current round after a timeout. The job itself is not deleted, and the next cycle triggers normally.
+The system skips the current round after a timeout. The job itself is not deleted, and the next cycle triggers normally. You can inspect `StartTime`, `FinishTime`, `FinishBatch`, and `AllBatch` in `SHOW WARM UP JOB` to understand the most recent execution.
 
-**Q: Is it supported to sync from multiple source clusters to the same target cluster?**
+**Q: Is it supported to sync from multiple source compute groups to the same target compute group?**
 
-Yes. For example, cluster A and cluster C can both be configured to sync to cluster B simultaneously (A -> B and C -> B coexist).
+Yes. For example, compute group A and compute group C can both sync to compute group B (A -> B and C -> B coexist). If multiple jobs cover the same tables, job management and metric interpretation become more complex.
 
-**Q: How do you verify that a warm-up job has taken effect?**
+**Q: When should I use table-level event-driven warm-up?**
 
-You can verify using the following methods:
+Use table-level event-driven warm-up when the target compute group queries only part of the tables, or when the source compute group has many tables but only a small subset is hot. This reduces unnecessary warm-up and cache pollution.
 
-1. Run `SHOW WARM UP JOB WHERE ID = <job_id>` to check whether `Status` is `RUNNING` or `FINISHED`.
-2. Compare `FinishBatch` with `AllBatch` to confirm sync progress.
-3. Observe the BE-side metrics of the target cluster and confirm that `finished_segment_num` continues to grow.
+**Q: What happens if `ON TABLES` is not used?**
 
-**Q: How do you modify the configuration of a sync job (such as adjusting the sync interval)?**
+Without `ON TABLES`, the job is a compute-group-level event-driven warm-up job. New data generated by matching events on the source compute group triggers warm-up.
+
+**Q: Does the order of `INCLUDE` and `EXCLUDE` matter?**
+
+No. Doris first computes the union of all `INCLUDE` rules and then removes all tables matched by `EXCLUDE` rules.
+
+**Q: If a table matching the rules is created after the job is created, will it be warmed up automatically?**
+
+Yes. Doris periodically re-evaluates the rules. A new table is included in the warm-up scope in a later refresh cycle if it matches the rules. The default refresh interval is 60 seconds.
+
+**Q: After a table is renamed, will it continue to be warmed up?**
+
+It depends on whether the new table name still matches the `ON TABLES` rules. If it matches, warm-up continues. If it does not match, warm-up stops in a later refresh cycle.
+
+**Q: Can I warm up only one partition of a table?**
+
+Table-level event-driven warm-up filters at table granularity and does not support specifying partitions in `ON TABLES`. New data from a matched table is processed according to the table-level rules.
+
+**Q: How do I verify that warm-up has taken effect?**
+
+You can verify it as follows:
+
+1. Run `SHOW WARM UP JOB WHERE id = <job_id>` and check whether `Status` is `RUNNING` or `FINISHED`.
+2. For table-level event-driven warm-up, check whether `MatchedTables` matches your expectation.
+3. Compare `FinishBatch` with `AllBatch` to confirm the progress of one-time or periodic jobs.
+4. Check `SyncStats` and confirm that `gap_size` or detailed `gap_*` approaches 0 and `trigger_gap_ms` does not keep increasing.
+5. Observe the target compute group's BE Bvar metrics and confirm that completion counters such as `file_cache_event_driven_warm_up_finished_segment_num` continue to increase.
+6. Query the related tables on the target compute group, and use File Cache hit rate, FE metrics, and BE logs to confirm whether there are still many remote reads.
+
+**Q: How do I modify a sync job configuration, such as changing the sync interval or `ON TABLES` rules?**
 
 Direct modification is not supported in the current version. You must first run `CANCEL WARM UP JOB WHERE id = <job_id>` to cancel the old job, then create a new job.
