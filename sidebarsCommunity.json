@@ -73,6 +73,7 @@
                     "label": "Debugging & Profiling",
                     "items": [
                         "developer-guide/debug-tool",
+                        "developer-guide/be-stack-trace",
                         "developer-guide/arthas",
                         "developer-guide/fe-profiler",
                         "developer-guide/pipeline-tracing",

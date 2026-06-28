@@ -53,6 +53,9 @@ cdc_stream(
 | 参数                 | 默认值  | 描述                                                         |
 |----------------------|---------|--------------------------------------------------------------|
 | `schema`             | -       | Schema 名称，PostgreSQL 必填                                  |
+| `offset`             | latest  | `latest`：仅增量；`initial`：全量 + 增量；另支持 `snapshot`、`earliest`（仅 MySQL）、或一个 JSON 形式的 binlog/LSN 位点 |
+| `snapshot_split_size`  | 8096    | split 的大小（行数），全量同步时表会被切分成多个 split |
+| `snapshot_parallelism` | 1       | 全量阶段的并行度，即单次 Task 最多调度的 split 数量 |
 
 ## 注意事项
 
@@ -80,6 +83,7 @@ cdc_stream(
       "password" = "123456",
       "database" = "source_db",
       "table" = "source_table",
+      "offset" = "initial"
   )
   ```
 
@@ -100,6 +104,7 @@ cdc_stream(
       "database" = "postgres",
       "schema" = "public",
       "table" = "source_table",
+      "offset" = "initial"
   )
   ```
 
@@ -120,5 +125,6 @@ cdc_stream(
       "password" = "123456",
       "database" = "source_db",
       "table" = "source_table",
+      "offset" = "initial"
   )
   ```

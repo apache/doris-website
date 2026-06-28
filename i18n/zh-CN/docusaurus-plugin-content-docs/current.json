@@ -51,6 +51,10 @@
     "message": "部署前准备",
     "description": "The label for category Installation Preparation in sidebar docs"
   },
+  "sidebar.docs.category.Doris Operator Concepts and Capabilities": {
+    "message": "Doris Operator 原理与能力",
+    "description": "The label for category Doris Operator Concepts and Capabilities in sidebar docs"
+  },
   "sidebar.docs.category.Cluster Deployment Manually": {
     "message": "手动部署集群",
     "description": "The label for category Cluster Deployment Manually in sidebar docs"
@@ -130,6 +134,10 @@
   "sidebar.docs.category.Continuous Load": {
     "message": "持续导入",
     "description": "The label for category Continuous Load in sidebar docs"
+  },
+  "sidebar.docs.category.Prerequisites": {
+    "message": "准备工作",
+    "description": "The label for category Prerequisites in sidebar docs"
   },
   "sidebar.docs.category.Setup Guide": {
     "message": "配置指南",
@@ -212,7 +220,7 @@
     "description": "The label for category Ecosystem in sidebar docs"
   },
   "sidebar.docs.category.Doris Operator": {
-    "message": "部署前准备",
+    "message": "Doris Operator",
     "description": "The label for category Doris Operator in sidebar docs"
   },
   "sidebar.docs.category.Managing Cluster": {

@@ -155,8 +155,8 @@ The syntax for creating an S3 TVF continuous load job is as follows:
 
 ```SQL
 CREATE JOB <job_name>
-ON STREAMING
 [job_properties]
+ON STREAMING
 [ COMMENT <comment> ]
 DO <Insert_Command> 
 ```
@@ -178,8 +178,8 @@ The following parameters can be configured in `job_properties`:
 | ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | session.\*         | None    | All session variables can be configured under `job_properties`. For load variables, see [Insert Into Select](../../../../data-operate/import/import-way/insert-into-manual.md#import-configuration-parameters) |
 | s3.max_batch_files | 256     | Triggers a load write when the cumulative number of files reaches this value                                                                                                         |
-| s3.max_batch_bytes | 10G     | Triggers a load write when the cumulative data volume reaches this value                                                                                                             |
-| max_interval       | 10s     | The idle scheduling interval when there are no new files or data from upstream                                                                                                       |
+| s3.max_batch_bytes | 10737418240 | Triggers a load write when the cumulative data volume (in bytes) reaches this value. Only a plain integer byte count is accepted, e.g. `10737418240`; a unit suffix such as `10G` is not supported. Valid range is 100MB–10GB, i.e. 104857600–10737418240                                                                                                             |
+| max_interval       | 10      | The idle scheduling interval in seconds when there are no new files or data from upstream. Only an integer (number of seconds) is accepted, e.g. `10`; a unit suffix such as `10s` is not supported. Must be >= 1                                       |
 
 :::tip Batch trigger rule
 A write is triggered when either `s3.max_batch_files` or `s3.max_batch_bytes` is satisfied. When there are no new files from upstream, idle polling proceeds according to `max_interval`.

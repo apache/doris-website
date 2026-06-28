@@ -399,6 +399,8 @@ CREATE TABLE mc_tbl AS SELECT * FROM other_table;
 - 不支持创建聚簇表、事务表、Delta Table 和外部表。
 :::
 
+创建或删除库表时，Doris 会调用 MaxCompute API 执行对应操作。操作返回后，MaxCompute 侧元数据变更需要短暂时间才能对后续操作完全可见。
+
 该功能仅在 `mc.enable.namespace.schema` 属性为 `true` 时可用。
 
 ### 创建和删除库

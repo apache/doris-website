@@ -150,7 +150,7 @@ KILL [CONNECTION] connection_id;
 	- 在查询语句中添加 Trace ID
 
 		```sql
-		SELECT /*+SET_VAR(session_context=trace_id:your_trace_id)*/ * FROM table ...;
+		SELECT /*+SET_VAR(session_context="trace_id:your_trace_id")*/ * FROM table ...;
 		```
 	
 	之后，管控工具可以通过 Trace ID 随时取消正在执行的操作。

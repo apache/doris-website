@@ -235,6 +235,12 @@ mysql> SHOW ROUTINE LOAD TASK WHERE jobname = 'example_routine_load_csv';
 | 77112dfea5e54b0a-a10eab3d5b19e565 | 197   | PREPARE   | 12177 | 2024-01-15 12:21:02 | 2024-01-15 12:21:02 | 20      | 12098 | {"0":3000,"5":2622}  |
 +-----------------------------------+-------+-----------+-------+---------------------+---------------------+---------+-------+----------------------+
 ```
+
+以下の構文も使用できます：
+
+```sql
+mysql> SHOW ROUTINE LOAD TASK FOR testdb.example_routine_load_csv;
+```
 ### Import Jobの一時停止
 
 [PAUSE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/PAUSE-ROUTINE-LOAD)コマンドを使用してimport jobを一時停止できます。import jobを一時停止すると、PAUSED状態になりますが、import jobは終了せず、RESUME ROUTINE LOADコマンドを使用して再開できます。

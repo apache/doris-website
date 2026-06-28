@@ -49,7 +49,7 @@ cdc_stream(
 | Parameter              | Default | Description                                                  |
 |------------------------|---------|--------------------------------------------------------------|
 | `schema`               | -       | Schema name, required for PostgreSQL                         |
-| `offset`               | initial | `initial`: full + incremental sync; `latest`: incremental only |
+| `offset`               | latest  | `latest`: incremental only; `initial`: full + incremental; also supports `snapshot`, `earliest` (MySQL only), or a JSON binlog/LSN position |
 | `snapshot_split_size`  | 8096    | Split size (in rows). During full sync, the table is divided into multiple splits |
 | `snapshot_parallelism` | 1       | Parallelism during full sync phase, i.e., max splits per task |
 

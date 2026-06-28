@@ -61,10 +61,21 @@ const sidebars: SidebarsConfig = {
                     items: [
                         {
                             type: 'category',
-                            label: 'Preparation',
+                            label: 'Doris Operator Concepts and Capabilities',
                             link: {type: 'doc', id: 'install/deploy-on-kubernetes/doris-operator/intro'},
                             items: [
                                 'install/deploy-on-kubernetes/doris-operator/doris-operator-overview',
+                                'install/deploy-on-kubernetes/doris-operator/architecture',
+                                'install/deploy-on-kubernetes/doris-operator/resource-model',
+                                'install/deploy-on-kubernetes/doris-operator/lifecycle',
+                                'install/deploy-on-kubernetes/doris-operator/status-and-troubleshooting',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Preparation',
+                            link: {type: 'doc', id: 'install/deploy-on-kubernetes/doris-operator/preparation'},
+                            items: [
                                 'install/deploy-on-kubernetes/doris-operator/on-alibaba',
                                 'install/deploy-on-kubernetes/doris-operator/on-aws',
                             ],
@@ -199,7 +210,14 @@ const sidebars: SidebarsConfig = {
                     link: {type: 'doc', id: 'table-design/data-model/intro'},
                     items: [
                         'table-design/data-model/duplicate',
-                        'table-design/data-model/unique',
+                        {
+                            type: 'category',
+                            label: 'Unique Key Model',
+                            link: {type: 'doc', id: 'table-design/data-model/unique'},
+                            items: [
+                                'table-design/data-model/merge-on-write',
+                            ],
+                        },
                         'table-design/data-model/aggregate',
                         'table-design/data-model/tips',
                     ],
@@ -343,8 +361,15 @@ const sidebars: SidebarsConfig = {
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-table',
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-database',
-                                        'data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql',
-                                        'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql',
+                                        'data-operate/import/import-way/streaming-job/data-type-mapping-mysql',
+                                        {
+                                            type: 'category',
+                                            label: 'Prerequisites',
+                                            items: [
+                                                'data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql',
+                                                'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql',
+                                            ],
+                                        },
                                     ],
                                 },
                                 {
@@ -353,8 +378,15 @@ const sidebars: SidebarsConfig = {
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-postgresql-table',
                                         'data-operate/import/import-way/streaming-job/continuous-load-postgresql-database',
-                                        'data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql',
-                                        'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql',
+                                        'data-operate/import/import-way/streaming-job/data-type-mapping-postgresql',
+                                        {
+                                            type: 'category',
+                                            label: 'Prerequisites',
+                                            items: [
+                                                'data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql',
+                                                'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql',
+                                            ],
+                                        },
                                     ],
                                 },
                                 'data-operate/import/import-way/streaming-job/continuous-load-s3',
@@ -743,7 +775,7 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Observability with Doris',
-                    link: {type: 'doc', id: 'observability/dogstack/overview'},
+                    link: {type: 'doc', id: 'observability/intro'},
                     collapsed: true,
                     items: [
                         {
@@ -752,7 +784,6 @@ const sidebars: SidebarsConfig = {
                             collapsed: true,
                             link: {type: 'doc', id: 'observability/dogstack/overview'},
                             items: [
-                                'observability/dogstack/overview',
                                 'observability/dogstack/quickstart',
                                 'observability/dogstack/deployment',
                                 'observability/dogstack/search',
@@ -763,11 +794,10 @@ const sidebars: SidebarsConfig = {
                         },
                         {
                             type: 'category',
-                            label: 'Legacy',
+                            label: 'Custom Build',
                             collapsed: true,
                             link: {type: 'doc', id: 'observability/overview'},
                             items: [
-                                'observability/overview',
                                 'observability/log',
                                 'observability/trace',
                             ]
@@ -1330,6 +1360,7 @@ const sidebars: SidebarsConfig = {
                                     label: 'Vector Distance Functions',
                                     items: [
                                         'sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance',
+                                        'sql-manual/sql-functions/ai-functions/distance-functions/cosine-similarity',
                                         'sql-manual/sql-functions/ai-functions/distance-functions/inner-product',
                                         'sql-manual/sql-functions/ai-functions/distance-functions/l1-distance',
                                         'sql-manual/sql-functions/ai-functions/distance-functions/l2-distance',
@@ -1455,6 +1486,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/string-functions/instr',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/is-uuid',
+                                        'sql-manual/sql-functions/scalar-functions/string-functions/is-valid-utf8',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/lcase',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/length',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/locate',
@@ -1981,6 +2013,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/aggregate-functions/approx-count-distinct',
                                 'sql-manual/sql-functions/aggregate-functions/array-agg',
                                 'sql-manual/sql-functions/aggregate-functions/avg',
+                                'sql-manual/sql-functions/aggregate-functions/avg-map',
                                 'sql-manual/sql-functions/aggregate-functions/avg-weighted',
                                 'sql-manual/sql-functions/aggregate-functions/bitmap-agg',
                                 'sql-manual/sql-functions/aggregate-functions/bitmap-intersect',
@@ -1996,6 +2029,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/aggregate-functions/corr',
                                 'sql-manual/sql-functions/aggregate-functions/count',
                                 'sql-manual/sql-functions/aggregate-functions/count-by-enum',
+                                'sql-manual/sql-functions/aggregate-functions/count-map',
                                 'sql-manual/sql-functions/aggregate-functions/covar',
                                 'sql-manual/sql-functions/aggregate-functions/covar-samp',
                                 'sql-manual/sql-functions/aggregate-functions/datasketches_hll_union_agg',
@@ -2016,9 +2050,11 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/aggregate-functions/map-agg',
                                 'sql-manual/sql-functions/aggregate-functions/max',
                                 'sql-manual/sql-functions/aggregate-functions/max-by',
+                                'sql-manual/sql-functions/aggregate-functions/max-map',
                                 'sql-manual/sql-functions/aggregate-functions/median',
                                 'sql-manual/sql-functions/aggregate-functions/min',
                                 'sql-manual/sql-functions/aggregate-functions/min-by',
+                                'sql-manual/sql-functions/aggregate-functions/min-map',
                                 'sql-manual/sql-functions/aggregate-functions/percentile',
                                 'sql-manual/sql-functions/aggregate-functions/percentile-approx',
                                 'sql-manual/sql-functions/aggregate-functions/percentile-array',
@@ -2043,6 +2079,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/aggregate-functions/stddev-samp',
                                 'sql-manual/sql-functions/aggregate-functions/sum',
                                 'sql-manual/sql-functions/aggregate-functions/sum0',
+                                'sql-manual/sql-functions/aggregate-functions/sum-map',
                                 'sql-manual/sql-functions/aggregate-functions/topn',
                                 'sql-manual/sql-functions/aggregate-functions/topn-array',
                                 'sql-manual/sql-functions/aggregate-functions/topn-weighted',

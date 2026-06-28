@@ -103,8 +103,7 @@ SELECT array_cum_sum(['a', 1, 'b', 2, 'c', 3]);
 | [null, 1, null, 3, null, 6]             |
 +-----------------------------------------+
 ```
-Hello Hello.,Hello123hello
-Hello Hello.,Hello123hello
+
 Empty array returns empty array:
 ```sql
 SELECT array_cum_sum(int_array) FROM array_cum_sum_test WHERE id = 3;

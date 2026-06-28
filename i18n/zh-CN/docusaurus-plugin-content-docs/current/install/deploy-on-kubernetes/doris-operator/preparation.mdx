@@ -1,0 +1,25 @@
+---
+{
+    "title": "部署前准备",
+    "language": "zh-CN",
+    "description": "在云厂商 Kubernetes 服务上使用 Doris Operator 部署 Doris 前的环境准备和部署建议。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+使用 Doris Operator 部署 Apache Doris 前，需要根据云厂商环境确认 Kubernetes 服务形态、节点系统参数、镜像仓库、存储和特权模式等前置条件。
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="阿里云容器服务部署建议"
+    description="在 ACK 或 ACS 上部署 Doris 前的环境准备建议"
+    link="on-alibaba"
+/>
+
+<GettingStartedCard
+    title="AWS EKS 部署建议"
+    description="在 Amazon EKS 上部署 Doris 前的环境准备建议"
+    link="on-aws"
+/>
+</div>
