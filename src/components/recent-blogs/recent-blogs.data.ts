@@ -1,19 +1,19 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: 'NetEase Games: From Elasticsearch, HBase, and ClickHouse to a Unified Apache Doris Lakehouse',
-        link: 'https://www.velodb.io/blog/netease-games-from-elasticsearch-and-clickhouse-to-a-unified-apache-doris-lakehouse',
+        label: 'ASOF JOIN Benchmark: Apache Doris vs ClickHouse and DuckDB',
+        link: 'https://www.velodb.io/blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb',
     },
     {
-        label: 'From Data Silos to Context Silos: What Database History Teaches Us About the AI Infrastructure Problem',
-        link: 'https://www.velodb.io/blog/from-data-silos-to-context-silos',
+        label: 'Why AI Agents Need Real-Time Analytics and Hybrid Search: The Data Infra for Production Agents',
+        link: 'https://www.velodb.io/blog/why-ai-agents-need-real-time-analytics-and-hybrid-search',
     },
     {
-        label: 'Apache Doris 4.1 on Iceberg V3: Running the Full Lakehouse Lifecycle from One SQL Engine',
-        link: 'https://www.velodb.io/blog/apache-doris-4-1-on-iceberg-v3-full-lakehouse-lifecycle',
+        label: 'How We Built Production Vector Search in Apache Doris',
+        link: 'https://www.velodb.io/blog/how-we-built-production-vector-search-in-apache-doris',
     },
     {
-        label: 'The Chunking and Embedding Cookbook for Production Context Engineering',
-        link: 'https://www.velodb.io/blog/the-chunking-and-embedding-cookbook-for-production-context-engineering',
+        label: 'Hybrid Modeling for JSON in Agent Observability: VARIANT and Inverted Indexes in Apache Doris',
+        link: 'https://www.velodb.io/blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris',
     },
 
 ];
