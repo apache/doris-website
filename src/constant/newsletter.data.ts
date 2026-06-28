@@ -4,14 +4,14 @@ export const NEWSLETTER_DATA = [
         title: "ASOF JOIN Benchmark: Apache Doris vs ClickHouse and DuckDB",
         content: `Apache Doris 4.1 outperforms ClickHouse and DuckDB on ASOF JOIN across all 11 benchmark scenarios.`,
         to: 'https://www.velodb.io/blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb',
-        image: 'blogs/202606_ASOF_JOIN Benchmark_horizontal.png',
+        image: 'blogs/202606_ASOF_JOIN_Benchmark_horizontal.png',
     },
     {
         tags: ['Tech Sharing'],
         title: "Why AI Agents Need Real-Time Analytics and Hybrid Search: The Data Infra for Production Agents",
         content: `AI agents need real-time analytics, not just vector search. Apache Doris unifies both capabilities, offering native hybrid search in one real-time engine built for agent workloads.`,
         to: 'https://www.velodb.io/blog/why-ai-agents-need-real-time-analytics-and-hybrid-search',
-        image: 'blogs/202606_AI Agent Analytics_horizontal_2.jpeg',
+        image: 'blogs/202606_AI_Agent_Analytics_horizontal_2.jpeg',
     },
     {
         tags: ['Tech Sharing'],

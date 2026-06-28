@@ -3,12 +3,12 @@
     'summary': 'AI agents need real-time analytics, not just vector search. Apache Doris unifies both capabilities, offering native hybrid search in one real-time engine built for agent workloads.'
     'description': 'AI agents need real-time analytics, not just vector search. Apache Doris unifies both capabilities, offering native hybrid search in one real-time engine built for agent workloads.'
     'picked': "true"
-    'order': "2"    
+    'order': "2"
     'date': '2026-6-24'
     'author': 'velodb.io · Matt Yi'
     'externalLink': 'https://www.velodb.io/blog/why-ai-agents-need-real-time-analytics-and-hybrid-search'
     'tags': ['Tech Sharing']
-    "image": '/images/blogs/202606_AI Agent Analytics_horizontal_2.jpeg'
+    "image": '/images/blogs/202606_AI_Agent_Analytics_horizontal_2.jpeg'
 ---
 import { BlogLink } from '../src/components/blogs/components/blog-link';
 import { SeeMore } from '../src/components/blogs/components/see-more';
