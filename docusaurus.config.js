@@ -89,6 +89,13 @@ const SKIP_BLOG = LANDING_ONLY || process.env.SKIP_BLOG === 'true';
 const SKIP_COMMUNITY = LANDING_ONLY || process.env.SKIP_COMMUNITY === 'true';
 const SKIP_RELEASES = LANDING_ONLY || process.env.SKIP_RELEASES === 'true';
 const SKIP_SEARCH = LANDING_ONLY || process.env.SKIP_SEARCH === 'true';
+// Opt-in Algolia DocSearch, gated by env so we can A/B against the existing
+// local search before cutting over. When true, the Algolia theme is loaded
+// ALONGSIDE the local-search theme (the local theme stays so its @generated
+// index module keeps compiling), and the SearchBar swizzle renders Algolia's
+// bar instead of the local one. Requires ALGOLIA_APP_ID / ALGOLIA_SEARCH_API_KEY
+// / ALGOLIA_INDEX_NAME to be set, or the Algolia theme validation will fail.
+const USE_ALGOLIA = !SKIP_SEARCH && process.env.USE_ALGOLIA === 'true';
 
 const LINK_BEHAVIOR_VALUES = new Set(['ignore', 'log', 'warn', 'throw']);
 function getBrokenLinkBehavior(envName, fallback) {
@@ -188,7 +195,10 @@ const config = {
         },
     ],
     projectName: 'apache/doris-website', // Usually your repo name.
-    customFields: {},
+    customFields: {
+        // Read by the SearchBar swizzle to choose Algolia vs local search.
+        useAlgolia: USE_ALGOLIA,
+    },
     future: {
         experimental_faster: true,
     },
@@ -386,10 +396,30 @@ const config = {
                 ignoreFiles: [/^docs\/(?:[^/]+\/)?key-features\//],
             },
         ],
+        // Algolia DocSearch (modal-only; see `searchPagePath: false` below).
+        // Loaded additively so the local-search @generated module still exists
+        // for the SearchBar swizzle; which bar actually renders is decided at
+        // runtime via customFields.useAlgolia.
+        ...(USE_ALGOLIA ? ['@docusaurus/theme-search-algolia'] : []),
     ],
     themeConfig:
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
+            // Present only when USE_ALGOLIA is set. The Algolia theme validates
+            // these, so appId / apiKey (search-only key) / indexName must come
+            // from the environment. searchPagePath:false keeps DocSearch as a
+            // modal so it doesn't fight the local-search /search route.
+            ...(USE_ALGOLIA
+                ? {
+                      algolia: {
+                          appId: process.env.ALGOLIA_APP_ID,
+                          apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
+                          indexName: process.env.ALGOLIA_INDEX_NAME,
+                          contextualSearch: true,
+                          searchPagePath: false,
+                      },
+                  }
+                : {}),
             matomo: {
                 matomoUrl: 'https://analytics.apache.org/',
                 siteId: '43',
