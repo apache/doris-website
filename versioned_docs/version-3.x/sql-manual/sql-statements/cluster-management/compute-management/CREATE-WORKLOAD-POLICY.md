@@ -1,54 +1,64 @@
 ---
 {
-    "title": "CREATE WORKLOAD GROUP | Compute Management",
-    "language": "en",
-    "description": "This statement is used to create a workload group. Workload groups enable the isolation of cpu resources and memory resources on a single be.",
-    "sidebar_label": "CREATE WORKLOAD GROUP"
+   "title": "CREATE WORKLOAD POLICY",
+   "language": "en",
+   "description": "Create a Workload Policy to execute corresponding actions on a query when it meets certain conditions."
 }
 ---
 
-# CREATE WORKLOAD GROUP
-
 ## Description
 
-This statement is used to create a workload group. Workload groups enable the isolation of cpu resources and memory resources on a single be.
+Create a Workload Policy to execute corresponding actions on a query when it meets certain conditions.
 
-grammar:
+
+## Syntax
+
 
 ```sql
-CREATE WORKLOAD GROUP [IF NOT EXISTS] "rg_name"
-PROPERTIES (
-    property_list
-);
+CREATE WORKLOAD POLICY [ IF NOT EXISTS ] <workload_policy_name>
+CONDITIONS(<conditions>) ACTIONS(<actions>)
+[ PROPERTIES (<properties>) ]
 ```
+### Required Parameters
 
-illustrate:
+`<workload_policy_name>`
 
-Properties supported by property_list:
-
-* cpu_share: Required, used to set how much cpu time the workload group can acquire, which can achieve soft isolation of cpu resources. cpu_share is a relative value indicating the weight of cpu resources available to the running workload group. For example, if a user creates 3 workload groups rg-a, rg-b and rg-c with cpu_share of 10, 30 and 40 respectively, and at a certain moment rg-a and rg-b are running tasks while rg-c has no tasks, then rg-a can get (10 / (10 + 30)) = 25% of the cpu resources while workload group rg-b can get 75% of the cpu resources. If the system has only one workload group running, it gets all the cpu resources regardless of the value of its cpu_share.
-
-* memory_limit: Required, set the percentage of be memory that can be used by the workload group. The absolute value of the workload group memory limit is: `physical_memory * mem_limit * memory_limit`, where mem_limit is a be configuration item. The total memory_limit of all workload groups in the system must not exceed 100%. Workload groups are guaranteed to use the memory_limit for the tasks in the group in most cases. When the workload group memory usage exceeds this limit, tasks in the group with larger memory usage may be canceled to release the excess memory, refer to enable_memory_overcommit.
-
-* enable_memory_overcommit: Optional, enable soft memory isolation for the workload group, default is false. if set to false, the workload group is hard memory isolated and the tasks with the largest memory usage will be canceled immediately after the workload group memory usage exceeds the limit to release the excess memory. if set to true, the workload group is hard memory isolated and the tasks with the largest memory usage will be canceled immediately after the workload group memory usage exceeds the limit to release the excess memory. if set to true, the workload group is softly isolated, if the system has free memory resources, the workload group can continue to use system memory after exceeding the memory_limit limit, and when the total system memory is tight, it will cancel several tasks in the group with the largest memory occupation, releasing part of the excess memory to relieve the system memory pressure. It is recommended that when this configuration is enabled for a workload group, the total memory_limit of all workload groups should be less than 100%, and the remaining portion should be used for workload group memory overcommit.
-
-## Example
-
-1. Create a workload group named g1:
-
-   ```sql
-    create workload group if not exists g1
-    properties (
-        "cpu_share"="10",
-        "memory_limit"="30%",
-        "enable_memory_overcommit"="true"
-    );
-   ```
-
-## Keywords
-
-CREATE, WORKLOAD, GROUP
+The name of the Workload Policy.
 
 
 
+1. **be_scan_rows**: The number of rows scanned by an SQL query within a single BE process. If the SQL query is executed concurrently on multiple BEs, it is the cumulative value of these concurrent executions.
+2. **be_scan_bytes**: The number of bytes scanned by an SQL query within a single BE process. If the SQL query is executed concurrently on multiple BEs, it is the cumulative value of these concurrent executions (in bytes).
+3. **query_time**: The execution time of an SQL query on a single BE process, in milliseconds.
+4. **query_be_memory_bytes** (supported from version 2.1.5): The amount of memory used by an SQL query within a single BE process. If the SQL query is executed concurrently on multiple BEs, it is the cumulative value of these concurrent executions (in bytes).
 
+
+`<actions>`
+
+1. **cancel_query**: Cancels the query.
+
+### Optional Parameters
+
+
+
+1. **enabled**: Takes a value of true or false, with a default value of true. When set to true, the policy is enabled; when set to false, the policy is disabled.
+2. **priority**: An integer value ranging from 0 to 100, with a default value of 0. This represents the priority of the policy. The higher the value, the higher the priority. When multiple policies match, the policy with the highest priority is selected.
+3. **workload_group**: Currently, a policy can be bound to one workload group, indicating that this policy only applies to a specific workload group. The default is empty, meaning it applies to all queries.
+
+### Access Control Requirements
+
+Requires at least `ADMIN_PRIV` permissions.
+
+## Examples
+
+1. Create a new Workload Policy to kill all queries that exceed 3 seconds in query time.
+
+  ```Java
+  create workload policy kill_big_query conditions(query_time > 3000) actions(cancel_query)
+  ```
+
+1. Create a new Workload Policy that is not enabled by default.
+
+  ```Java
+  create workload policy kill_big_query conditions(query_time > 3000) actions(cancel_query) properties('enabled'='false')
+  ```

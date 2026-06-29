@@ -235,18 +235,16 @@ properties('enabled'='true');
 
 | Conditions            | 说明                                                                  |
 |-----------------------|---------------------------------------------------------------------|
-| username              | 查询携带的用户名，只会在 FE 触发 set_session_variable Action                        |
 | be_scan_rows          | 一个 SQL 在单个 BE 进程内 scan 的行数，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值。      |
 | be_scan_bytes         | 一个 SQL 在单个 BE 进程内 scan 的字节数，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值，单位是字节。 |
 | query_time            | 一个 SQL 在单个 BE 进程上的运行时间，时间单位是毫秒。                                     |
 | query_be_memory_bytes | 一个 SQL 在单个 BE 进程内使用的内存用量，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值，单位是字节。  |
 
-- Action 表示条件触发时采取的动作，目前一个 Policy 只能定义一个 Action（除 set_session_variable）。在上例中，cancel_query 表示取消查询；目前支持的 Actions 有：
+- Action 表示条件触发时采取的动作，目前一个 Policy 只能定义一个 Action。在上例中，cancel_query 表示取消查询；目前支持的 Actions 有：
 
 | Actions               | 说明                                                                                                   |
 |-----------------------|------------------------------------------------------------------------------------------------------|
 | cancel_query              | 取消查询。                                                                                                |
-| set_session_variable          | 触发 set session variable 语句。同一个 policy 可以有多个 set_session_variable 选项，目前只会在 FE 由 username Condition 触发 |
 
 
 - Properties，定义了当前 Policy 的属性，包括是否启用和优先级。
@@ -268,7 +266,6 @@ properties('workload_group'='normal')
 ```
 
 ### 注意事项
-- 同一个 Policy 的 Condition 和 Action 要么都是 FE 的，要么都是 BE 的，比如 set_session_variable 和 cancel_query 无法配置到同一个 Policy 中。Condition be_scan_rows 和 Condition username 无法配置到同一个 Policy 中。
 - 由于目前的 Policy 是异步线程以固定时间间隔执行的，因此策略的生效存在一定的滞后性。比如用户配置了 scan 行数大于 100 万就取消查询的策略，如果此时集群资源比较空闲，那么有可能在取消策略生效之前查询就已经结束了。目前这个时间间隔为 500ms，这意味着运行时间过短的查询可能会绕过策略的检查。
 - 当前支持的负载类型包括 select/insert select/stream load/broker load/routine load。
 - 一个查询可能匹配到多个 Policy，但是只有优先级最高的 Policy 会生效。
@@ -276,35 +273,7 @@ properties('workload_group'='normal')
 
 ### Workload Policy 效果演示
 
-#### 1 session 变量修改测试
-尝试修改 Admin 账户的 session 变量中的并发相关的参数
-
-```sql
-// 登录 admin账户查看并发参数
-mySQL [(none)]>show variables like '%parallel_fragment_exec_instance_num%';
-+-------------------------------------+-------+---------------+---------+
-| Variable_name                       | Value | Default_Value | Changed |
-+-------------------------------------+-------+---------------+---------+
-| parallel_fragment_exec_instance_num | 8     | 8             | 0       |
-+-------------------------------------+-------+---------------+---------+
-1 row in set (0.00 sec)
-
-// 创建修改admin账户并发参数的Policy
-create workload Policy test_set_var_Policy
-Conditions(username='admin')
-Actions(set_session_variable 'parallel_fragment_exec_instance_num=1') 
-
-// 过段时间后再次查看admin账户的参数
-mySQL [(none)]>show variables like '%parallel_fragment_exec_instance_num%';
-+-------------------------------------+-------+---------------+---------+
-| Variable_name                       | Value | Default_Value | Changed |
-+-------------------------------------+-------+---------------+---------+
-| parallel_fragment_exec_instance_num | 1     | 8             | 1       |
-+-------------------------------------+-------+---------------+---------+
-1 row in set (0.01 sec)
-```
-
-#### 2 大查询熔断测试
+#### 大查询熔断测试
 测试对运行时间超过 3s 的查询进行熔断，以下是一个 ckbench 的 q29 运行成功时的审计日志，可以看到这个 SQL 跑完需要 4.5s 的时间
 
 ```sql
@@ -339,4 +308,3 @@ Actions(cancel_query)
 mySQL [hits]>SELECT REGEXP_REPLACE(Referer, '^https?://(?:www\.)?([^/]+)/.*$', '\1') AS k, AVG(length(Referer)) AS l, COUNT(*) AS c, MIN(Referer) FROM hits WHERE Referer <> '' GROUP BY k HAVING COUNT(*) > 100000 ORDER BY l DESC LIMIT 25;
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[CANCELLED]query cancelled by workload Policy,id:12345
 ```
-

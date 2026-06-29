@@ -189,7 +189,6 @@ Conditions represent the policy trigger conditions. Multiple Conditions are sepa
 
 | Condition             | Description                                                                                          |
 |-----------------------|------------------------------------------------------------------------------------------------------|
-| username              | The username carried by the query; only triggers the set_session_variable Action in FE               |
 | be_scan_rows          | Number of rows scanned by a SQL in a single BE process; cumulative value when executed concurrently   |
 | be_scan_bytes         | Number of bytes scanned by a SQL in a single BE process; cumulative value when executed concurrently, in bytes |
 | query_time            | Runtime of a SQL in a single BE process, in milliseconds                                             |
@@ -197,12 +196,11 @@ Conditions represent the policy trigger conditions. Multiple Conditions are sepa
 
 #### Actions
 
-Actions represent the action taken when the condition is triggered. Currently, a Policy can only define one Action (except for set_session_variable).
+Actions represent the action taken when the condition is triggered. Currently, a Policy can only define one Action.
 
 | Action               | Description                                                                                                     |
 |----------------------|-----------------------------------------------------------------------------------------------------------------|
 | cancel_query         | Cancel the query                                                                                                 |
-| set_session_variable | Triggers a set session variable statement. A single Policy can have multiple set_session_variable options; currently only triggered in FE by the username Condition |
 
 #### Properties
 
@@ -264,38 +262,8 @@ MySQL [hits]> SELECT REGEXP_REPLACE(Referer, '^https?://(?:www\\.)?([^/]+)/.*$',
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[CANCELLED]query cancelled by workload policy,id:12345
 ```
 
-#### Example 2: Modifying User Session Variables
-
-Workload Policy can automatically modify session variables for specific users, for example, adjusting concurrency parameters:
-
-```sql
--- Log in to admin account and check concurrency parameters
-MySQL [(none)]> show variables like '%parallel_fragment_exec_instance_num%';
-+-------------------------------------+-------+---------------+---------+
-| Variable_name                       | Value | Default_Value | Changed |
-+-------------------------------------+-------+---------------+---------+
-| parallel_fragment_exec_instance_num | 8     | 8             | 0       |
-+-------------------------------------+-------+---------------+---------+
-1 row in set (0.00 sec)
-
--- Create a Policy to modify the concurrency parameters of the admin account
-CREATE WORKLOAD POLICY test_set_var_policy
-CONDITIONS(username='admin')
-ACTIONS(set_session_variable 'parallel_fragment_exec_instance_num=1') 
-
--- After some time, check the admin account's parameters again
-MySQL [(none)]> show variables like '%parallel_fragment_exec_instance_num%';
-+-------------------------------------+-------+---------------+---------+
-| Variable_name                       | Value | Default_Value | Changed |
-+-------------------------------------+-------+---------------+---------+
-| parallel_fragment_exec_instance_num | 1     | 8             | 1       |
-+-------------------------------------+-------+---------------+---------+
-1 row in set (0.01 sec)
-```
-
 ### Important Notes
 
-- The Conditions and Actions of the same Policy must belong to the same side (FE or BE). For example, set_session_variable and cancel_query cannot be configured within the same Policy; Condition be_scan_rows and Condition username also cannot be configured within the same Policy.
 - Policies are executed by asynchronous threads at fixed time intervals (currently 500 ms), so there is a certain latency in policy enforcement. Queries with very short run times may bypass the policy check.
 - A single query may match multiple Policies, but only the Policy with the highest priority will take effect.
 - Modifications to Actions and Conditions are currently not supported; they can only be modified by deleting and recreating them.

@@ -35,8 +35,7 @@ The name of the Workload Policy.
 
 `<actions>`
 
-1. **set_session_variable**: This action executes a set session variable statement. Multiple **set_session_variable** actions can be specified in the same policy, allowing multiple session variable modification statements to be executed within one policy.
-2. **cancel_query**: Cancels the query.
+1. **cancel_query**: Cancels the query.
 
 ### Optional Parameters
 
