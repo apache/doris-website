@@ -6,21 +6,29 @@
 }
 ---
 
-Apache Doris provides multiple index types to accelerate different query scenarios. This document starts from query scenarios to help you quickly understand the principles, applicable scope, and selection strategy of each type of index.
+Apache Doris accelerates queries with several index types. This page helps you decide which index, if any, to add, and links to the details of each.
 
-## Quick Selection Guide
+## Start Here
 
-Before diving into the details of each index, you can refer to the following principles to make a quick choice:
+Every table already has two indexes that Doris builds and maintains for you:
 
-1. **Most frequently used filter conditions**: Designate them as Key columns to automatically build a prefix index. Prefix indexes deliver the best filtering effect, but each table can only have one, so use it on the highest-frequency filter condition.
-2. **Filter acceleration on non-Key fields**: Prefer the [inverted index](./inverted-index/overview.md). It is widely applicable and supports combining multiple conditions. If you have special needs, choose one of the following two options:
-    - String LIKE matching needs: add an NGram BloomFilter index
-    - Sensitive to index storage space: use a BloomFilter index instead of an inverted index
-3. **Full-text search on text**: Use the [inverted index](./inverted-index/overview.md), combined with tokenizers to enable keyword matching, phrase queries, multi-field combined search, and other capabilities.
-4. **Vector similarity search**: Use the [vector index (ANN index)](./vector-index/overview.md) to accelerate approximate nearest neighbor queries for RAG, semantic search, recommendation, and image/audio/video retrieval.
-5. **Performance below expectations**: Use QueryProfile to analyze how much data the index filtered out and how much time it consumed. See the dedicated documentation for each index for details.
+- A **[prefix index](./prefix-index.md)** on the sort key, which speeds up filters on the leading Key columns. Make your most frequent filter a leading Key column to use it.
+- A **ZoneMap index** on every column, which skips data blocks that fall outside a range or equality filter.
 
-## Choosing an Index by Query Scenario
+Add a manual index only when these don't cover your query pattern:
+
+| Your query pattern | Recommended index | When needed |
+| --- | --- | --- |
+| Filter on your highest-frequency column | Make it a leading Key column (prefix index) | Always design this first |
+| Equality or range filter on a non-Key column | [Inverted index](./inverted-index/overview.md) | Often |
+| `LIKE` substring match on text | [NGram BloomFilter index](./ngram-bloomfilter-index.md) | Sometimes |
+| Equality filter where index size matters more than flexibility | [BloomFilter index](./bloomfilter.md) | Rarely; the inverted index is usually preferred |
+| Full-text search: keyword, phrase, or multi-field | [Inverted index](./inverted-index/overview.md) | When you search text |
+| Vector similarity (Top-K nearest neighbor) | [Vector index (ANN)](./vector-index/overview.md) | For RAG, semantic search, recommendation, and media retrieval |
+
+If a query is slower than expected, use QueryProfile to see how much each index filtered out and how long it took. See each index's page for details.
+
+## How Each Index Works
 
 Apache Doris provides four categories of indexes for different query scenarios: **point-query indexes**, **skip indexes**, **full-text search indexes**, and **vector indexes**.
 
@@ -34,11 +42,11 @@ Apache Doris provides four categories of indexes for different query scenarios: 
 
 Apache Doris provides two point-query indexes:
 
-- **[Prefix index](./prefix-index.md)**: Apache Doris stores data in order according to the sort key and creates a sparse prefix index every 1024 rows. The Key in the index is the value of the sort columns of the first row in the current 1024-row group. When a query involves the sorted columns, the system finds the first row of the relevant 1024-row group and starts scanning from there.
-- **[Inverted index](./inverted-index/overview.md)**: For columns with an inverted index, Apache Doris builds an inverted table that maps each value to the corresponding set of row numbers. For equality queries, it first looks up the row number set from the inverted table and then directly reads the data of those rows, avoiding a row-by-row scan and reducing I/O to accelerate the query. Inverted indexes can also accelerate range filtering and text keyword matching. The algorithms are more complex but the basic principle is similar.
+- **[Prefix index](./prefix-index.md)**: Doris stores data sorted by the sort key and builds a sparse prefix index every 1024 rows. Each index entry holds the sort-column values of the first row in its group. When a query filters on the sort columns, Doris jumps to the right group and scans from there.
+- **[Inverted index](./inverted-index/overview.md)**: Doris builds an inverted table that maps each value to the rows that contain it. For an equality query, it looks up the matching rows and reads only those, which avoids a full scan and cuts I/O. Inverted indexes also speed up range filters and text keyword search; the algorithm is more involved, but the idea is the same.
 
 :::note
-The previous BITMAP index has been replaced by the more powerful inverted index.
+The BITMAP index has been replaced by the inverted index.
 :::
 
 ### Scenario 2: Many Rows Match the Condition (Skip Indexes)
@@ -51,9 +59,9 @@ The previous BITMAP index has been replaced by the more powerful inverted index.
 
 Apache Doris provides three skip indexes:
 
-- **ZoneMap index**: Automatically maintains statistics for each column, recording the maximum value, minimum value, and whether NULL exists for each data file (Segment) and data block (Page). For equality queries, range queries, and IS NULL, the maximum value, minimum value, and the presence of NULL can be used to determine whether a data file or data block may contain rows that satisfy the condition. If not, the corresponding file or block is skipped, reducing I/O and accelerating the query.
-- **[BloomFilter index](./bloomfilter.md)**: Stores the possible values of the indexed column in a BloomFilter data structure. A BloomFilter can quickly determine whether a value exists, with very low storage overhead. For equality queries, if the value is determined to be absent from the BloomFilter, the corresponding data file or data block can be skipped, reducing I/O and accelerating the query.
-- **[NGram BloomFilter index](./ngram-bloomfilter-index.md)**: Used to accelerate text LIKE queries. The basic principle is similar to the BloomFilter index. The difference is that what is stored in the BloomFilter is not the original text value but each token produced by NGram tokenization of the text. For LIKE queries, the LIKE pattern is also tokenized with NGram, and each token is checked against the BloomFilter. If any token is absent, the corresponding data file or data block does not satisfy the LIKE condition and can be skipped, reducing I/O and accelerating the query.
+- **ZoneMap index**: Doris automatically keeps per-column statistics (min, max, and whether NULLs exist) for each data file (Segment) and data block (Page). For equality, range, and IS NULL filters, it uses these stats to decide whether a file or block can contain matching rows. If it can't, Doris skips that file or block and cuts I/O.
+- **[BloomFilter index](./bloomfilter.md)**: Doris stores the column's values in a BloomFilter, a structure that tells you whether a value is present with very little storage. For an equality query, if the value isn't in the filter, Doris skips that file or block and cuts I/O.
+- **[NGram BloomFilter index](./ngram-bloomfilter-index.md)**: Speeds up text `LIKE` queries. It works like the BloomFilter index, but stores NGram tokens of the text instead of whole values. For a `LIKE` query, Doris tokenizes the pattern the same way and checks each token against the filter. If any token is missing, the file or block can't match, so Doris skips it.
 
 ### Scenario 3: Full-Text Search on Text (Inverted Index)
 
@@ -130,4 +138,4 @@ The following table lists the acceleration support of each index type for common
 
 ## Index Design Principles
 
-Index design and tuning for a database table are closely tied to data characteristics and query patterns, and require testing and tuning based on the actual scenario. Although there is no silver bullet, Apache Doris keeps lowering the difficulty of using indexes. In actual design, you can refer to the three principles in the [Quick Selection Guide](#quick-selection-guide) above for index selection and testing.
+Index design and tuning for a database table are closely tied to data characteristics and query patterns, and require testing and tuning based on the actual scenario. Although there is no silver bullet, Apache Doris keeps lowering the difficulty of using indexes. When designing indexes, use the decision table in [Start Here](#start-here) to choose and test them.

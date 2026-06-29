@@ -1,31 +1,43 @@
 ---
 {
-    "title": "部署前准备",
+    "title": "Doris Operator 原理与能力",
     "language": "zh-CN",
-    "description": "通过 Doris Operator 在 Kubernetes 上管理 Apache Doris 集群。"
+    "description": "介绍 Doris Operator 的概念、总体架构、资源模型、生命周期、状态字段和排障方法。"
 }
 ---
 
 import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
 
-Doris Operator 是在 Kubernetes 上以原生方式部署和管理 Apache Doris 集群的工具。建议先阅读概览, 再根据云厂商选择对应的安装指南。
+Doris Operator 是在 Kubernetes 上部署和管理 Apache Doris 的控制面。建议先阅读这些文档，了解 Doris Operator 管什么、如何工作，以及如何通过资源状态定位问题。
 
 <div className="cards-grid">
 <GettingStartedCard
     title="Doris Operator 概览"
-    description="了解 Doris Operator 的能力以及在 Kubernetes 上管理 Doris 的方式"
+    description="了解 Doris Operator 管什么、适合什么场景，以及能力边界"
     link="doris-operator-overview"
 />
 
 <GettingStartedCard
-    title="在阿里云上部署"
-    description="在阿里云容器服务 Kubernetes 版（ACK）上安装 Doris Operator"
-    link="on-alibaba"
+    title="总体架构"
+    description="理解控制面、数据面和 Reconcile 模型"
+    link="architecture"
 />
 
 <GettingStartedCard
-    title="在 AWS 上部署"
-    description="在 Amazon Elastic Kubernetes Service（EKS）上安装 Doris Operator"
-    link="on-aws"
+    title="资源模型"
+    description="查看 Doris 自定义资源与 StatefulSet、Service、PVC 等资源的映射关系"
+    link="resource-model"
+/>
+
+<GettingStartedCard
+    title="生命周期管理"
+    description="理解创建、扩缩容、配置变更和删除时的主要行为"
+    link="lifecycle"
+/>
+
+<GettingStartedCard
+    title="状态与排障"
+    description="查看状态字段，并按推荐路径排查问题"
+    link="status-and-troubleshooting"
 />
 </div>

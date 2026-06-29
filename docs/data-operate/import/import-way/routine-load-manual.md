@@ -267,7 +267,7 @@ ReasonOfStateChanged:
 
 #### View the Load Subtasks
 
-Use the [SHOW ROUTINE LOAD TASK](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK) command to view the import subtasks. This command describes the subtask information under the current job, such as the subtask status and the BE id to which the task is dispatched.
+Use the [SHOW ROUTINE LOAD TASK](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK) command to view the import subtasks. You can specify the routine load job by `WHERE JobName = <job_name>` or `FOR [<db>.]<job_name>` (if `<db>` is omitted, the current database is used). This command describes the subtask information under the current job, such as the subtask status and the BE id to which the task is dispatched.
 
 The following command shows the subtask information of `testdb.example_routine_load_csv`:
 
@@ -282,6 +282,12 @@ mysql> SHOW ROUTINE LOAD TASK WHERE jobname = 'example_routine_load_csv';
 | 68771fd8a1824637-90a9dac2a7a0075e | -1    | NULL      | 12177 | 2024-01-15 12:20:52 | NULL                | 20      | -1    | {"3":1769,"8":2982}  |
 | 77112dfea5e54b0a-a10eab3d5b19e565 | 197   | PREPARE   | 12177 | 2024-01-15 12:21:02 | 2024-01-15 12:21:02 | 20      | 12098 | {"0":3000,"5":2622}  |
 +-----------------------------------+-------+-----------+-------+---------------------+---------------------+---------+-------+----------------------+
+```
+
+You can also use the following syntax:
+
+```sql
+mysql> SHOW ROUTINE LOAD TASK FOR testdb.example_routine_load_csv;
 ```
 
 ### Pause an Import Job

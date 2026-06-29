@@ -2,8 +2,6 @@
     'title': 'From Data Silos to Context Silos: What Database History Teaches Us About the AI Infrastructure Problem'
     'summary': 'The database industry is repeating a historical cycle where specialized systems create fragmentation that demands convergence. As AI agents become primary data consumers, organizations face a new challenge: context silos, where information exists but cannot be retrieved fast enough for autonomous systems to act effectively.'
     'description': 'The database industry is repeating a historical cycle where specialized systems create fragmentation that demands convergence. As AI agents become primary data consumers, organizations face a new challenge: context silos, where information exists but cannot be retrieved fast enough for autonomous systems to act effectively.'
-    'picked': "true"
-    'order': "2"    
     'date': '2026-5-9'
     'author': 'velodb.io · Kevin Shen'
     'externalLink': 'https://www.velodb.io/blog/from-data-silos-to-context-silos'

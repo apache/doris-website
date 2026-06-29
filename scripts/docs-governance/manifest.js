@@ -76,6 +76,32 @@ function getContentInfo(relativePath, rules) {
     };
   }
 
+  if (relativePath.startsWith('docs/')) {
+    const docRelative = relativePath.slice('docs/'.length);
+    return {
+      contentRoot: 'docs',
+      plugin: 'main_docs',
+      locale: 'en',
+      version: 'current',
+      docRelative,
+      routeBase: `/docs/${currentRoute}`,
+      sidebarSource: 'sidebars.ts',
+    };
+  }
+
+  if (relativePath.startsWith('i18n/zh-CN/docusaurus-plugin-content-docs/current/')) {
+    const docRelative = relativePath.slice('i18n/zh-CN/docusaurus-plugin-content-docs/current/'.length);
+    return {
+      contentRoot: 'zh_docs',
+      plugin: 'main_docs',
+      locale: 'zh-CN',
+      version: 'current',
+      docRelative,
+      routeBase: `/zh-CN/docs/${currentRoute}`,
+      sidebarSource: 'sidebars.ts',
+    };
+  }
+
   if (relativePath.startsWith('community/')) {
     const docRelative = relativePath.slice('community/'.length);
     return {
@@ -387,4 +413,3 @@ module.exports = {
   makeDocId,
   resolveOwner,
 };
-
