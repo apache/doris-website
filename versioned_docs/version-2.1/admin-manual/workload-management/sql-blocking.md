@@ -236,18 +236,16 @@ When creating a Workload Policy, the following must be specified:
 
 | Conditions            | Description                                                                                                 |
 |-----------------------|-------------------------------------------------------------------------------------------------------------|
-| username              | The username carried by the query, only triggers the `set_session_variable` Action in FE.                   |
 | be_scan_rows          | The number of rows scanned by a SQL in a single BE process. If the SQL is executed concurrently on BE, it is the cumulative value of multiple concurrent executions. |
 | be_scan_bytes         | The number of bytes scanned by a SQL in a single BE process. If the SQL is executed concurrently on BE, it is the cumulative value of multiple concurrent executions, in bytes. |
 | query_time            | The runtime of a SQL in a single BE process, in milliseconds.                                             |
 | query_be_memory_bytes | The memory usage of a SQL in a single BE process. If the SQL is executed concurrently on BE, it is the cumulative value of multiple concurrent executions, in bytes. |
 
-- **Action** represents the action taken when the condition is triggered. Currently, a Policy can only define one Action (except for `set_session_variable`). In the example above, `cancel_query` indicates cancelling the query. Currently supported Actions are:
+- **Action** represents the action taken when the condition is triggered. Currently, a Policy can only define one Action. In the example above, `cancel_query` indicates cancelling the query. Currently supported Actions are:
 
 | Actions                | Description                                                                                                      |
 |------------------------|------------------------------------------------------------------------------------------------------------------|
 | cancel_query           | Cancel the query.                                                                                                 |
-| set_session_variable   | Triggers the `set session variable` statement. A single policy can have multiple `set_session_variable` options, currently only triggered in FE by the `username` Condition. |
 
 - **Properties** define the attributes of the current Policy, including whether it is enabled and its priority.
 
@@ -269,7 +267,6 @@ properties('workload_group'='normal')
 ```
 
 ### Important Notes
-- The Conditions and Actions of the same Policy must either both be FE or both be BE. For example, `set_session_variable` and `cancel_query` cannot be configured within the same Policy. Conditions `be_scan_rows` and `username` cannot be configured within the same Policy.
 - Currently, Policies are executed by asynchronous threads at fixed time intervals, which introduces a certain latency in policy enforcement. For example, if a user configures a policy to cancel a query when the number of scanned rows exceeds 1,000,000, and the cluster resources are relatively idle at that time, the query may finish before the cancellation policy takes effect. The current interval is 500ms, meaning that queries with run times shorter than this interval may bypass the policy check.
 - Currently supported load types include select/insert, select/stream load, broker load, and routine load.
 - A single query may match multiple Policies, but only the Policy with the highest priority will take effect.
@@ -277,35 +274,7 @@ properties('workload_group'='normal')
 
 ### Workload Policy Demonstration
 
-#### 1. Session Variable Modification Test
-Attempt to modify concurrency-related parameters in the session variables of the Admin account.
-
-```sql
--- log on admin to check variables
-show variables like '%parallel_fragment_exec_instance_num%';
-+-------------------------------------+-------+---------------+---------+
-| Variable_name                       | Value | Default_Value | Changed |
-+-------------------------------------+-------+---------------+---------+
-| parallel_fragment_exec_instance_num | 8     | 8             | 0       |
-+-------------------------------------+-------+---------------+---------+
-1 row in set (0.00 sec)
-
--- Create a Policy to modify the concurrency parameters of the admin account.
-create workload Policy test_set_var_Policy
-Conditions(username='admin')
-Actions(set_session_variable 'parallel_fragment_exec_instance_num=1') 
-
--- After some time, check the admin account's parameters again.
-show variables like '%parallel_fragment_exec_instance_num%';
-+-------------------------------------+-------+---------------+---------+
-| Variable_name                       | Value | Default_Value | Changed |
-+-------------------------------------+-------+---------------+---------+
-| parallel_fragment_exec_instance_num | 1     | 8             | 1       |
-+-------------------------------------+-------+---------------+---------+
-1 row in set (0.01 sec)
-```
-
-#### 2. Big Query Circuit Breaker Test
+#### Big Query Circuit Breaker Test
 Test to circuit break queries that run longer than 3s. Below is an audit log of a successful run of ckbench's q29, showing that this SQL took 4.5s to complete.
 
 
@@ -342,4 +311,3 @@ Upon re-executing the SQL, you can see that the SQL execution will directly repo
 mySQL [hits]>SELECT REGEXP_REPLACE(Referer, '^https?://(?:www\.)?([^/]+)/.*$', '\1') AS k, AVG(length(Referer)) AS l, COUNT(*) AS c, MIN(Referer) FROM hits WHERE Referer <> '' GROUP BY k HAVING COUNT(*) > 100000 ORDER BY l DESC LIMIT 25;
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[CANCELLED]query cancelled by workload Policy,id:12345
 ```
-

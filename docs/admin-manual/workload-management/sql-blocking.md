@@ -221,7 +221,6 @@ Conditions specify when the policy is triggered. Multiple conditions are separat
 
 | Condition | Description |
 |-----------|------|
-| `username` | The username carried by the query. Only triggers the `set_session_variable` Action on the FE |
 | `be_scan_rows` | The number of rows scanned by a SQL within a single BE process. Cumulative value under concurrent execution |
 | `be_scan_bytes` | The number of bytes scanned by a SQL within a single BE process. Cumulative value under concurrent execution (unit: bytes) |
 | `query_time` | The execution time of a SQL on a single BE process (unit: milliseconds) |
@@ -229,12 +228,11 @@ Conditions specify when the policy is triggered. Multiple conditions are separat
 
 #### Actions
 
-Actions specify what to do when the conditions are triggered. Currently, a Policy can define only one Action (except for `set_session_variable`).
+Actions specify what to do when the conditions are triggered. Currently, a Policy can define only one Action.
 
 | Action | Description |
 |--------|------|
 | `cancel_query` | Cancel the query |
-| `set_session_variable` | Execute a set session variable statement. The same Policy can include multiple of these options. Currently, this is only triggered on the FE by the `username` Condition |
 
 #### Policy Properties
 
@@ -302,38 +300,8 @@ MySQL [hits]> SELECT REGEXP_REPLACE(Referer, '^https?://(?:www\\.)?([^/]+)/.*$',
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[CANCELLED]query cancelled by workload policy,id:12345
 ```
 
-#### Example 2: Automatically Adjust User Session Variables
-
-Workload Policy can automatically modify session variables for a specific user, for example, lowering concurrency to reduce resource consumption:
-
-```sql
--- Check the current concurrency parameter for the admin user
-MySQL [(none)]> show variables like '%parallel_fragment_exec_instance_num%';
-+-------------------------------------+-------+---------------+---------+
-| Variable_name                       | Value | Default_Value | Changed |
-+-------------------------------------+-------+---------------+---------+
-| parallel_fragment_exec_instance_num | 8     | 8             | 0       |
-+-------------------------------------+-------+---------------+---------+
-1 row in set (0.00 sec)
-
--- Create a policy: set the concurrency parameter for the admin user to 1
-CREATE WORKLOAD POLICY test_set_var_policy
-CONDITIONS(username='admin')
-ACTIONS(set_session_variable 'parallel_fragment_exec_instance_num=1');
-
--- Check again later, the parameter has taken effect
-MySQL [(none)]> show variables like '%parallel_fragment_exec_instance_num%';
-+-------------------------------------+-------+---------------+---------+
-| Variable_name                       | Value | Default_Value | Changed |
-+-------------------------------------+-------+---------------+---------+
-| parallel_fragment_exec_instance_num | 1     | 8             | 1       |
-+-------------------------------------+-------+---------------+---------+
-1 row in set (0.01 sec)
-```
-
 ### Notes
 
-- **FE/BE side isolation**: The Condition and Action of the same Policy must belong to the same side (FE or BE). For example, `set_session_variable` (FE side) and `cancel_query` (BE side) cannot be configured in the same Policy. The same applies to `username` (FE side) and `be_scan_rows` (BE side).
 - **Asynchronous execution latency**: Policies are checked by an asynchronous thread every 500 ms, so policy enforcement has some lag. Queries that run for a very short time may complete before the check is triggered and bypass the policy.
 - **Priority mechanism**: A query may match multiple Policies, but only the one with the highest priority (largest `priority` value) takes effect.
 - **Modification limit**: Currently, directly modifying the Action and Condition of an existing Policy is not supported. Delete the Policy and recreate it.

@@ -1,47 +1,61 @@
 ---
 {
-  "title": "CREATE WORKLOAD GROUP | コンピュート管理",
-  "sidebar_label": "CREATE WORKLOAD GROUP",
-  "description": "このステートメントはワークロードグループを作成するために使用されます。ワークロードグループは、単一のbe上でcpuリソースとメモリリソースの分離を可能にします。",
-  "language": "ja"
+   "title": "CREATE WORKLOAD POLICY を作成",
+   "language": "ja",
+   "description": "特定の条件を満たすクエリに対して対応するアクションを実行するためのWorkload Policyを作成します。"
 }
 ---
-# CREATE WORKLOAD GROUP
+## 説明
 
-## デスクリプション
+特定の条件を満たすクエリに対して対応するアクションを実行するWorkload Policyを作成します。
 
-このステートメントはワークロードグループを作成するために使用されます。ワークロードグループは、単一のbe上でcpuリソースとmemoryリソースの分離を可能にします。
 
-grammar:
+## 構文
 
 ```sql
-CREATE WORKLOAD GROUP [IF NOT EXISTS] "rg_name"
-PROPERTIES (
-    property_list
-);
+CREATE WORKLOAD POLICY [ IF NOT EXISTS ] <workload_policy_name>
+CONDITIONS(<conditions>) ACTIONS(<actions>)
+[ PROPERTIES (<properties>) ]
 ```
-図解:
+### 必須パラメータ
 
-property_listでサポートされるプロパティ:
+`<workload_policy_name>`
 
-* cpu_share: 必須、ワークロードグループが取得できるCPU時間の設定に使用され、CPUリソースのソフト分離を実現できます。cpu_shareは実行中のワークロードグループで利用可能なCPUリソースの重みを示す相対値です。例えば、ユーザーがcpu_shareをそれぞれ10、30、40に設定した3つのワークロードグループrg-a、rg-b、rg-cを作成し、ある時点でrg-aとrg-bがタスクを実行している一方、rg-cにタスクがない場合、rg-aは(10 / (10 + 30)) = 25%のCPUリソースを取得でき、ワークロードグループrg-bは75%のCPUリソースを取得できます。システムで実行されているワークロードグループが1つだけの場合、そのcpu_shareの値に関係なく、すべてのCPUリソースを取得します。
+Workload Policyの名前。
 
-* memory_limit: 必須、ワークロードグループが使用できるbeメモリの割合を設定します。ワークロードグループのメモリ制限の絶対値は: `physical_memory * mem_limit * memory_limit`です。ここでmem_limitはbeの設定項目です。システム内のすべてのワークロードグループのmemory_limitの合計は100%を超えてはいけません。ワークロードグループは、ほとんどの場合、グループ内のタスクに対してmemory_limitの使用が保証されます。ワークロードグループのメモリ使用量がこの制限を超えた場合、グループ内でより多くのメモリを使用しているタスクがキャンセルされ、超過分のメモリが解放される場合があります。enable_memory_overcommitを参照してください。
 
-* enable_memory_overcommit: オプション、ワークロードグループのソフトメモリ分離を有効にします。デフォルトはfalseです。falseに設定した場合、ワークロードグループはハードメモリ分離され、ワークロードグループのメモリ使用量が制限を超えた直後に最大のメモリ使用量を持つタスクが即座にキャンセルされ、超過分のメモリが解放されます。trueに設定した場合、ワークロードグループはハードメモリ分離され、ワークロードグループのメモリ使用量が制限を超えた直後に最大のメモリ使用量を持つタスクが即座にキャンセルされ、超過分のメモリが解放されます。trueに設定した場合、ワークロードグループはソフト分離され、システムに空きメモリリソースがある場合、ワークロードグループはmemory_limit制限を超えてシステムメモリを継続して使用でき、システム全体のメモリが逼迫した時に、グループ内で最大のメモリ使用量を持ついくつかのタスクをキャンセルし、超過分のメモリの一部を解放してシステムメモリ圧迫を緩和します。ワークロードグループでこの設定を有効にする場合、すべてのワークロードグループのmemory_limitの合計を100%未満にし、残りの部分をワークロードグループのメモリオーバーコミット用に使用することを推奨します。
+
+1. **be_scan_rows**: 単一のBEプロセス内でSQLクエリによってスキャンされた行数。SQLクエリが複数のBE上で並行して実行される場合、これらの並行実行の累積値となります。
+2. **be_scan_bytes**: 単一のBEプロセス内でSQLクエリによってスキャンされたバイト数。SQLクエリが複数のBE上で並行して実行される場合、これらの並行実行の累積値となります（バイト単位）。
+3. **query_time**: 単一のBEプロセス上でのSQLクエリの実行時間（ミリ秒単位）。
+4. **query_be_memory_bytes**（バージョン2.1.5からサポート）: 単一のBEプロセス内でSQLクエリによって使用されるメモリ量。SQLクエリが複数のBE上で並行して実行される場合、これらの並行実行の累積値となります（バイト単位）。
+
+
+`<actions>`
+
+1. **cancel_query**: クエリをキャンセルします。
+
+### オプションパラメータ
+
+
+
+1. **enabled**: trueまたはfalseの値を取り、デフォルト値はtrueです。trueに設定するとポリシーが有効になり、falseに設定するとポリシーが無効になります。
+2. **priority**: 0から100の範囲の整数値で、デフォルト値は0です。これはポリシーの優先度を表します。値が高いほど優先度が高くなります。複数のポリシーがマッチした場合、最も優先度の高いポリシーが選択されます。
+3. **workload_group**: 現在、ポリシーは1つのworkload groupにバインドでき、このポリシーが特定のworkload groupにのみ適用されることを示します。デフォルトは空で、すべてのクエリに適用されることを意味します。
+
+### アクセス制御要件
+
+最低でも`ADMIN_PRIV`権限が必要です。
 
 ## 例
 
-1. g1という名前のワークロードグループを作成:
+1. クエリ時間が3秒を超えるすべてのクエリをkillする新しいWorkload Policyを作成します。
 
-   ```sql
-    create workload group if not exists g1
-    properties (
-        "cpu_share"="10",
-        "memory_limit"="30%",
-        "enable_memory_overcommit"="true"
-    );
-   ```
-## Keywords
+  ```Java
+  create workload policy kill_big_query conditions(query_time > 3000) actions(cancel_query)
+  ```
+1. デフォルトで有効にならない新しいWorkload Policyを作成します。
 
-CREATE、WORKLOAD、GROUP
+  ```Java
+  create workload policy kill_big_query conditions(query_time > 3000) actions(cancel_query) properties('enabled'='false')
+  ```

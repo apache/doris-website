@@ -33,8 +33,7 @@ Workload Policyの名前。
 
 `<actions>`
 
-1. **set_session_variable**: このアクションはset session variable文を実行します。同一ポリシー内で複数の**set_session_variable**アクションを指定でき、1つのポリシー内で複数のセッション変数変更文を実行することができます。
-2. **cancel_query**: クエリをキャンセルします。
+1. **cancel_query**: クエリをキャンセルします。
 
 ### オプションパラメータ
 
