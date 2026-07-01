@@ -298,7 +298,7 @@ Storage Vault is an important component in Doris' separation of storage and comp
    To create a Storage Vault using SQL, connect to your Doris cluster using the MySQL client:
 
    ```sql
-   CREATE STORAGE VAULT IF_NOT_EXISTS hdfs_vault
+   CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault
        PROPERTIES (
        "type"="hdfs",
        "fs.defaultFS"="hdfs://127.0.0.1:8020"
@@ -313,7 +313,7 @@ Storage Vault is an important component in Doris' separation of storage and comp
    - Execute the following SQL command to create the S3 Storage Vault:
 
    ```sql
-   CREATE STORAGE VAULT IF_NOT_EXISTS s3_vault
+   CREATE STORAGE VAULT IF NOT EXISTS s3_vault
        PROPERTIES (
        "type"="S3",
        "s3.endpoint"="https://s3.us-east-1.amazonaws.com",
