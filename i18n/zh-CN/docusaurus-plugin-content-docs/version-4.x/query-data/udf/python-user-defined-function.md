@@ -20,6 +20,10 @@
 <!-- 知识类型: Feature 概览 + 操作指南 + 配置参数 -->
 <!-- 适用场景: 在 Doris 中扩展 SQL 能力 / 使用 Python 实现自定义计算、聚合与表函数 -->
 
+:::caution 实验功能
+Python UDF/UDAF/UDTF 是实验功能，从 Apache Doris 4.1.3 版本开始发布。
+:::
+
 Python UDF/UDAF/UDTF 是 Apache Doris 提供的自定义函数扩展机制，允许用户使用 Python 语言编写标量函数、聚合函数和表函数，用于在 SQL 中完成内置函数难以表达的复杂计算逻辑，并复用 Python 丰富的生态库。
 
 本文从典型用户场景出发，分别介绍三类函数的用法、参数、数据类型映射、性能建议、限制以及多版本 Python 环境的部署方式。

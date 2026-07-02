@@ -20,6 +20,10 @@
 <!-- Knowledge type: Feature overview + Operations guide + Configuration parameters -->
 <!-- Applicable scenario: Extending SQL capability in Doris / Implementing custom scalar, aggregate, and table functions in Python -->
 
+:::caution Experimental feature
+Python UDF/UDAF/UDTF is an experimental feature released in Apache Doris 4.1.3.
+:::
+
 Python UDF/UDAF/UDTF is the custom function extension mechanism provided by Apache Doris. It allows you to write scalar, aggregate, and table functions in Python so that SQL can express complex computation logic that is hard to implement with built-in functions, and so that you can reuse the rich Python ecosystem.
 
 This document starts from typical user scenarios and describes the usage, parameters, data type mapping, performance recommendations, limitations, and the deployment of multi-version Python environments for each of the three function types.
