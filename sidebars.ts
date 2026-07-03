@@ -507,6 +507,27 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
+            label: 'Materialized View',
+            link: {type: 'doc', id: 'query-acceleration/materialized-view/intro'},
+            items: [
+                'query-acceleration/materialized-view/overview',
+                'query-acceleration/materialized-view/sync-materialized-view',
+                'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv',
+                {
+                    type: 'category',
+                    label: 'Async Materialized View',
+                    link: {type: 'doc', id: 'query-acceleration/materialized-view/async-materialized-view/overview'},
+                    items: [
+                        'query-acceleration/materialized-view/async-materialized-view/functions-and-demands',
+                        'query-acceleration/materialized-view/async-materialized-view/use-guide',
+                        'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv',
+                        'query-acceleration/materialized-view/async-materialized-view/faq',
+                    ],
+                },
+            ],
+        },
+        {
+            type: 'category',
             label: 'Performance & Tuning',
             collapsed: true,
             link: {type: 'doc', id: 'query-acceleration/performance-tuning-intro'},
@@ -535,27 +556,7 @@ const sidebars: SidebarsConfig = {
                                 'query-acceleration/tuning/tuning-plan/optimizing-table-scanning',
                             ],
                         },
-                        {
-                            type: 'category',
-                            label: 'Materialized View',
-                            link: {type: 'doc', id: 'query-acceleration/materialized-view/intro'},
-                            items: [
-                                'query-acceleration/materialized-view/overview',
-                                'query-acceleration/materialized-view/sync-materialized-view',
-                                'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv',
-                                {
-                                    type: 'category',
-                                    label: 'Async Materialized View',
-                                    link: {type: 'doc', id: 'query-acceleration/materialized-view/async-materialized-view/overview'},
-                                    items: [
-                                        'query-acceleration/materialized-view/async-materialized-view/functions-and-demands',
-                                        'query-acceleration/materialized-view/async-materialized-view/use-guide',
-                                        'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv',
-                                        'query-acceleration/materialized-view/async-materialized-view/faq',
-                                    ],
-                                },
-                            ],
-                        },
+                        'query-acceleration/materialized-view/intro',
                         {
                             type: 'category',
                             label: 'Join Optimization',
