@@ -1,0 +1,27 @@
+export const label = 'Jun 22 – Jun 28, 2026';
+export const week = 'Week 26, 2026';
+export const stats = [
+    { num: '111', label: 'PRs merged' },
+    { num: '9', label: 'New contributors' },
+    { num: '58', label: 'Issues closed' },
+];
+
+Highlights from the previous week in the Apache Doris community.
+_(Placeholder content.)_
+
+## Highlights
+
+- Inverted index now supports incremental rebuild without full compaction.
+- New `EXPLAIN ANALYZE` profile view groups operators by pipeline.
+- JDBC catalog adds connection-pool health checks.
+
+## Development
+
+- **feature** — Add `GROUP_CONCAT` with per-group ordering.
+- **fix** — Fix a rare deadlock in tablet clone under high load.
+- **perf** — Speed up bitmap serialization for large sets.
+
+## Notable Discussions
+
+- Thread on the default compaction policy for write-heavy workloads.
+- Feedback wanted on the new cluster snapshot format.

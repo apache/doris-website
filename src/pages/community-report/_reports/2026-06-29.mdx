@@ -1,0 +1,28 @@
+export const label = 'Jun 29 – Jul 5, 2026';
+export const week = 'Week 27, 2026';
+export const stats = [
+    { num: '128', label: 'PRs merged' },
+    { num: '14', label: 'New contributors' },
+    { num: '63', label: 'Issues closed' },
+];
+
+A quick look at what happened in the Apache Doris community this week — merged
+features, notable fixes, fresh contributors, and discussions worth your
+attention. _(Placeholder content.)_
+
+## Highlights
+
+- Adaptive parallel scan for external Hive tables landed on `master`.
+- Vectorized `ARRAY_MAP` is now 2.3× faster on wide arrays.
+- Storage-compute separation gains a warm-up cache for cold reads.
+
+## Development
+
+- **feature** — Support `SELECT ... FOR UPDATE` on unique-key tables.
+- **fix** — Correct NULL handling in `PERCENTILE_ARRAY`.
+- **perf** — Reduce planner memory on 1000+ partition scans.
+
+## Notable Discussions
+
+- RFC — pluggable authentication providers.
+- Proposal to stabilize the Python UDF API.

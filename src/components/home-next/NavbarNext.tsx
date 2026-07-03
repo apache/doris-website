@@ -27,6 +27,7 @@ function buildNavItems(
     v21DocsHref: string,
     releasesHref: string,
     joinCommunityHref: string,
+    communityReportHref: string,
 ): NavItem[] {
     return [
         {
@@ -67,6 +68,7 @@ function buildNavItems(
         {
             label: 'Community',
             items: [
+                { label: 'Community Report', href: communityReportHref },
                 { label: 'Roadmap', href: 'https://github.com/apache/doris/issues/60036', external: true },
                 { label: 'Build with Us', href: joinCommunityHref },
                 { label: 'Join GitHub Discussions', href: 'https://github.com/apache/doris/discussions', external: true },
@@ -124,7 +126,16 @@ export function NavbarNext(): JSX.Element {
     const v21DocsHref = `${localePrefix}/docs/2.1/gettingStarted/what-is-apache-doris`;
     const releasesHref = `${localePrefix}/releases/all-release`;
     const joinCommunityHref = `${localePrefix}/community/join-community`;
-    const navItems = buildNavItems(devDocsHref, stableDocsHref, v3xDocsHref, v21DocsHref, releasesHref, joinCommunityHref);
+    const communityReportHref = `${localePrefix}/community-report`;
+    const navItems = buildNavItems(
+        devDocsHref,
+        stableDocsHref,
+        v3xDocsHref,
+        v21DocsHref,
+        releasesHref,
+        joinCommunityHref,
+        communityReportHref,
+    );
     const [expandedMobileItem, setExpandedMobileItem] = useState(navItems[0]?.label ?? '');
     const homeHref = `${getLocalePrefix(currentLocale, defaultLocale)}/`;
 

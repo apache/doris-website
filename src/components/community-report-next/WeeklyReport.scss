@@ -1,0 +1,234 @@
+// Unified styles for every weekly report.
+//
+// The header and stat cards are rendered by CommunityReportNext.tsx from each
+// report's frontmatter (label / week / stats). The `__body` block wraps the
+// Markdown compiled by Docusaurus's MDX loader, so its rules target the plain
+// semantic tags (h2, ul, p, code, table…) that Markdown produces.
+
+.weekly-report {
+    --wr-green: #06805F;
+    --wr-green-dark: #054C39;
+    --wr-ink: #0F1A14;
+    --wr-muted: #5A6472;
+    --wr-paper: #FFFCF5;
+    --wr-cream: #FAF6EE;
+    --wr-line: rgba(15, 26, 20, 0.10);
+    --wr-yellow: #FFD23F;
+
+    color: var(--wr-ink);
+    font-family: var(--font-family-base);
+    max-width: 820px;
+
+    * {
+        box-sizing: border-box;
+    }
+}
+
+/* ---------------- Header (from frontmatter) ---------------- */
+
+.weekly-report__header {
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--wr-line);
+    margin-bottom: 32px;
+}
+
+.weekly-report__eyebrow {
+    margin: 0 0 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--wr-green);
+}
+
+.weekly-report__title {
+    margin: 0;
+    font-size: clamp(28px, 2rem + 1vw, 40px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--wr-ink);
+}
+
+.weekly-report__meta {
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: var(--wr-muted);
+}
+
+/* ---------------- Stats (from frontmatter) ---------------- */
+
+.weekly-report__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.weekly-report__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 18px 20px;
+    background: var(--wr-cream);
+    border: 1px solid var(--wr-line);
+    border-radius: 12px;
+}
+
+.weekly-report__stat-num {
+    font-family: var(--font-mono);
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--wr-green);
+}
+
+.weekly-report__stat-label {
+    font-size: 13px;
+    color: var(--wr-muted);
+}
+
+/* ---------------- Markdown body ---------------- */
+
+.weekly-report__body {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #2A3441;
+}
+
+.weekly-report__body > :first-child {
+    margin-top: 0;
+}
+
+.weekly-report__body h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 34px 0 16px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--wr-ink);
+    scroll-margin-top: 88px;
+}
+
+.weekly-report__body h2::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 8px;
+    height: 20px;
+    border-radius: 3px;
+    background: var(--wr-yellow);
+}
+
+.weekly-report__body h3 {
+    margin: 26px 0 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--wr-ink);
+    scroll-margin-top: 88px;
+}
+
+.weekly-report__body p {
+    margin: 0 0 16px;
+}
+
+.weekly-report__body ul,
+.weekly-report__body ol {
+    margin: 0 0 16px;
+    padding-left: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.weekly-report__body li {
+    line-height: 1.6;
+}
+
+.weekly-report__body li::marker {
+    color: var(--wr-green);
+}
+
+.weekly-report__body a {
+    color: var(--wr-green);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(6, 128, 95, 0.3);
+    transition: border-color 0.15s ease;
+}
+
+.weekly-report__body a:hover {
+    border-bottom-color: var(--wr-green);
+}
+
+.weekly-report__body strong {
+    font-weight: 700;
+    color: var(--wr-ink);
+}
+
+.weekly-report__body em {
+    font-style: italic;
+    color: #B08800;
+}
+
+// Inline code. Fenced code blocks are rendered by Docusaurus's own CodeBlock
+// theme component, so they keep the site-wide code styling untouched here.
+.weekly-report__body :not(pre) > code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgba(15, 26, 20, 0.06);
+    color: var(--wr-green-dark);
+}
+
+.weekly-report__body blockquote {
+    margin: 0 0 18px;
+    padding: 4px 16px;
+    border-left: 3px solid var(--wr-green);
+    background: var(--wr-cream);
+    border-radius: 0 8px 8px 0;
+    color: var(--wr-muted);
+}
+
+.weekly-report__body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 18px;
+    font-size: 14px;
+    display: block;
+    overflow-x: auto;
+}
+
+.weekly-report__body th,
+.weekly-report__body td {
+    text-align: left;
+    padding: 8px 12px;
+    border: 1px solid var(--wr-line);
+}
+
+.weekly-report__body th {
+    background: var(--wr-cream);
+    font-weight: 700;
+}
+
+.weekly-report__body img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.weekly-report__body hr {
+    border: 0;
+    border-top: 1px solid var(--wr-line);
+    margin: 28px 0;
+}
+
+/* ---------------- Responsive ---------------- */
+
+@media (max-width: 640px) {
+    .weekly-report__stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}

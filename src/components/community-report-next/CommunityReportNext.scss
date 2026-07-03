@@ -1,0 +1,176 @@
+// Doc-style layout for the Community Report page: a sticky left sidebar
+// (Weekly Report section) plus a content area that renders the selected report.
+
+.community-report {
+    --cr-green: #06805F;
+    --cr-green-dark: #054C39;
+    --cr-ink: #0F1A14;
+    --cr-muted: #5A6472;
+    --cr-paper: #FFFCF5;
+    --cr-cream: #FAF6EE;
+    --cr-line: rgba(15, 26, 20, 0.10);
+    --cr-yellow: #FFD23F;
+    --cr-sidebar-w: 280px;
+    --cr-navbar-h: 64px;
+
+    min-height: 100vh;
+    background: var(--cr-paper);
+    color: var(--cr-ink);
+    font-family: var(--font-family-base);
+
+    * {
+        box-sizing: border-box;
+    }
+}
+
+.community-report__layout {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(28px, 4vw, 56px);
+    padding: clamp(96px, 8vw, 120px) clamp(20px, 4vw, 56px) 96px;
+}
+
+/* ---------------- Sidebar ---------------- */
+
+.community-report__sidebar {
+    width: var(--cr-sidebar-w);
+    flex: 0 0 var(--cr-sidebar-w);
+    position: sticky;
+    top: calc(var(--cr-navbar-h) + 24px);
+    align-self: flex-start;
+}
+
+.community-report__section {
+    padding: 20px;
+    background: #fff;
+    border: 1px solid var(--cr-line);
+    border-radius: 14px;
+    box-shadow: 0 1px 4px rgba(0, 89, 68, 0.06);
+}
+
+.community-report__section-title {
+    margin: 0 0 14px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cr-green);
+}
+
+.community-report__entry {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    padding: 12px 14px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: var(--cr-cream);
+    color: var(--cr-ink);
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.community-report__entry:hover {
+    background: #F3ECDD;
+}
+
+.community-report__entry--active {
+    background: rgba(6, 128, 95, 0.08);
+    border-color: rgba(6, 128, 95, 0.35);
+    box-shadow: inset 3px 0 0 var(--cr-green);
+}
+
+.community-report__entry-badge {
+    align-self: flex-start;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cr-green-dark);
+    background: var(--cr-yellow);
+}
+
+.community-report__entry-label {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+/* ---------------- Past-reports dropdown ---------------- */
+
+.community-report__select-wrap {
+    position: relative;
+    margin-top: 12px;
+}
+
+.community-report__select-wrap::after {
+    // Custom chevron (native arrow is hidden via appearance:none).
+    content: '';
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    transform: translateY(-60%) rotate(45deg);
+    border-right: 2px solid var(--cr-muted);
+    border-bottom: 2px solid var(--cr-muted);
+    pointer-events: none;
+}
+
+.community-report__select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    cursor: pointer;
+    padding: 11px 36px 11px 14px;
+    font-family: var(--font-family-base);
+    font-size: 14px;
+    color: var(--cr-ink);
+    background: #fff;
+    border: 1px solid var(--cr-line);
+    border-radius: 10px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.community-report__select:hover {
+    border-color: rgba(6, 128, 95, 0.4);
+}
+
+.community-report__select:focus-visible {
+    outline: none;
+    border-color: var(--cr-green);
+    box-shadow: 0 0 0 3px rgba(6, 128, 95, 0.15);
+}
+
+/* ---------------- Content ---------------- */
+
+.community-report__content {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-top: 4px;
+}
+
+/* ---------------- Responsive ---------------- */
+
+@media (max-width: 900px) {
+    .community-report__layout {
+        flex-direction: column;
+        gap: 28px;
+        padding-top: clamp(84px, 16vw, 100px);
+    }
+
+    .community-report__sidebar {
+        position: static;
+        width: 100%;
+        flex-basis: auto;
+    }
+}
