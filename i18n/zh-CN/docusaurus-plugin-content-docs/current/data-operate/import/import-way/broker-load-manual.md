@@ -23,6 +23,10 @@
 
 Broker Load 通过 MySQL API 发起，由 Doris 根据 `LOAD` 语句中的信息主动从远程数据源拉取数据。它是一种**异步导入**方式，提交后需要通过 `SHOW LOAD` 语句查看导入进度与结果。
 
+:::caution Note
+该方法已废弃，将在 5.0 版本中移除。请改用语法： "insert into table select xxx from tvf or catalog table".
+:::
+
 Broker Load 适用于以下典型场景：
 
 - 源数据存储在远程系统（如对象存储、HDFS）
