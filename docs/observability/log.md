@@ -400,7 +400,7 @@ Follow these steps:
             "load_to_single_tablet" => "true"
             }
 
-            # field mapping: doris fileld name => logstash field name
+            # field mapping: doris field name => logstash field name
             # %{} to get a logstash field, [] for nested field such as [host][name] for host.name
             mapping => {
             "ts" => "%{@timestamp}"
