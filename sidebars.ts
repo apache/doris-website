@@ -556,7 +556,7 @@ const sidebars: SidebarsConfig = {
                                 'query-acceleration/tuning/tuning-plan/optimizing-table-scanning',
                             ],
                         },
-                        'query-acceleration/materialized-view/intro',
+                        'query-acceleration/materialized-view/intro-link',
                         {
                             type: 'category',
                             label: 'Join Optimization',
