@@ -17,6 +17,7 @@ function loadReports(): WeeklyReportEntry[] {
             label: mod.label ?? id,
             week: mod.week,
             stats: Array.isArray(mod.stats) ? mod.stats : undefined,
+            report: mod.report,
             Component: mod.default,
         };
     });
