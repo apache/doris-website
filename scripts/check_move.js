@@ -95,13 +95,110 @@ function removeCodeBlocks(content) {
   return result;
 }
 
+function findEsmStatementEnd(content, start) {
+  let depth = 0;
+  let quote = null;
+  let escaping = false;
+  let inLineComment = false;
+  let inBlockComment = false;
+
+  for (let i = start; i < content.length; i++) {
+    const ch = content[i];
+    const next = content[i + 1];
+
+    if (quote) {
+      if (escaping) {
+        escaping = false;
+      } else if (ch === "\\") {
+        escaping = true;
+      } else if (ch === quote) {
+        quote = null;
+      }
+      continue;
+    }
+
+    if (inLineComment) {
+      if (ch === "\n") {
+        inLineComment = false;
+      }
+      continue;
+    }
+
+    if (inBlockComment) {
+      if (ch === "*" && next === "/") {
+        inBlockComment = false;
+        i++;
+      }
+      continue;
+    }
+
+    if (ch === "/" && next === "/") {
+      inLineComment = true;
+      i++;
+      continue;
+    }
+
+    if (ch === "/" && next === "*") {
+      inBlockComment = true;
+      i++;
+      continue;
+    }
+
+    if (ch === "\"" || ch === "'" || ch === "`") {
+      quote = ch;
+      continue;
+    }
+
+    if (ch === "{" || ch === "[" || ch === "(") {
+      depth++;
+      continue;
+    }
+
+    if (ch === "}" || ch === "]" || ch === ")") {
+      depth = Math.max(0, depth - 1);
+      continue;
+    }
+
+    if (ch === ";" && depth === 0) {
+      return i + 1;
+    }
+  }
+
+  return content.length;
+}
+
+function removeMdxEsmBlocks(content) {
+  const esmStartRegex = /^[ \t]*(?:import(?:\s|["'{*])|export\s+(?:const|let|var|function|class|default|\{|\*))/;
+  let result = "";
+  let cursor = 0;
+  let index = 0;
+
+  while (index < content.length) {
+    const lineEnd = content.indexOf("\n", index);
+    const end = lineEnd === -1 ? content.length : lineEnd;
+    const line = content.slice(index, end);
+
+    if (esmStartRegex.test(line)) {
+      const statementEnd = findEsmStatementEnd(content, index);
+      result += content.slice(cursor, index);
+      result += content.slice(index, statementEnd).replace(/[^\n]/g, "");
+      cursor = statementEnd;
+      index = statementEnd;
+      continue;
+    }
+
+    index = lineEnd === -1 ? content.length : lineEnd + 1;
+  }
+
+  return result + content.slice(cursor);
+}
 
 // Check links in files
 function checkFileLinks(filePath) {
   const content = fs.readFileSync(filePath, "utf-8");
   const dir = path.dirname(filePath);
 
-  const cleanedContent = removeCodeBlocks(content); 
+  const cleanedContent = removeMdxEsmBlocks(removeCodeBlocks(content));
   const matches = [...cleanedContent.matchAll(linkRegex)];
   for (const match of matches) {
     const rawLink = match[1].split("#")[0]; // Remove anchor point
