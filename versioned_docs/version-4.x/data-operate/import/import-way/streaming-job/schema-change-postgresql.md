@@ -37,6 +37,7 @@ PostgreSQL Schema Change Sync is supported from Doris 4.1.0.
 ## Considerations
 
 - A PostgreSQL schema change does not propagate immediately when only the DDL is executed. Doris detects and applies the new schema after the changed table receives a subsequent INSERT, UPDATE, or DELETE.
+- Automatic schema change synchronization is not supported during the full snapshot phase. Perform upstream schema changes after the full snapshot completes and the job enters the incremental phase.
 - If an added column already exists or a dropped column does not exist, Doris skips the operation so that a retry does not fail the job.
 - If one schema change adds and drops columns at the same time, Doris treats it as a possible column rename and does not automatically change the target table. This prevents accidental data loss.
 - Column renames, column type changes, DEFAULT changes, and `NULL` / `NOT NULL` constraint changes are not synchronized automatically. Pause the continuous load job, change the Doris target table manually, verify that both schemas are compatible, and then resume the job.
