@@ -7,7 +7,6 @@ import { EcosystemSection } from './sections/EcosystemSection';
 import { DeploymentSection } from './sections/DeploymentSection';
 import { CommunitySection } from './sections/CommunitySection';
 import { StatsSection } from './sections/StatsSection';
-import { SlackCommunityNudge } from './SlackCommunityNudge';
 import './HomeNext.scss';
 
 export default function HomeNext(): JSX.Element {
@@ -23,7 +22,6 @@ export default function HomeNext(): JSX.Element {
             <EcosystemSection />
             <DeploymentSection />
             <CommunitySection />
-            <SlackCommunityNudge />
         </LayoutNext>
     );
 }

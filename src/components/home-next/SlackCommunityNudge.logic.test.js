@@ -31,6 +31,18 @@ test('opens when the ecosystem section becomes visible before five seconds', () 
     );
 });
 
+test('stays closed before five seconds on pages without the ecosystem section', () => {
+    assert.equal(
+        shouldOpenSlackNudge({
+            dismissed: false,
+            opened: false,
+            elapsedMs: 1200,
+            ecosystemVisible: false,
+        }),
+        false,
+    );
+});
+
 test('stays closed after the visitor dismisses or has already seen it', () => {
     assert.equal(
         shouldOpenSlackNudge({

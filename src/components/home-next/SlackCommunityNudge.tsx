@@ -10,6 +10,7 @@ const SLACK_URL = 'https://doris.apache.org/slack';
 const STORAGE_KEY = 'doris-home-slack-nudge-dismissed';
 const ECOSYSTEM_TARGET_ID = 'home-next-ecosystem';
 const OPEN_DELAY_MS = 5000;
+const SMALL_SCREEN_QUERY = '(max-width: 640px)';
 const MASCOT_EYE_RADIUS_PCT = 1.7;
 const MASCOT_PUPIL_RADIUS_RATIO = 0.5;
 const MASCOT_SOFT_DISTANCE_PX = 80;
@@ -48,6 +49,7 @@ function storeDismissal(): void {
 
 export function SlackCommunityNudge(): JSX.Element {
     const [isOpen, setIsOpen] = useState(false);
+    const [eyeTrackingEnabled, setEyeTrackingEnabled] = useState(false);
     const autoDismissedRef = useRef(false);
     const autoOpenedRef = useRef(false);
     const mountedAtRef = useRef<number | null>(null);
@@ -120,6 +122,28 @@ export function SlackCommunityNudge(): JSX.Element {
     useEffect(() => {
         if (typeof window === 'undefined') return undefined;
 
+        const mediaQuery = window.matchMedia(SMALL_SCREEN_QUERY);
+        const updateEyeTracking = () => setEyeTrackingEnabled(!mediaQuery.matches);
+
+        updateEyeTracking();
+        if (typeof mediaQuery.addEventListener === 'function') {
+            mediaQuery.addEventListener('change', updateEyeTracking);
+        } else {
+            mediaQuery.addListener(updateEyeTracking);
+        }
+
+        return () => {
+            if (typeof mediaQuery.removeEventListener === 'function') {
+                mediaQuery.removeEventListener('change', updateEyeTracking);
+            } else {
+                mediaQuery.removeListener(updateEyeTracking);
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        if (typeof window === 'undefined' || !eyeTrackingEnabled) return undefined;
+
         const updateEyes = (mouseX: number, mouseY: number) => {
             const mascot = mascotRef.current;
             if (!mascot) return;
@@ -175,7 +199,7 @@ export function SlackCommunityNudge(): JSX.Element {
             window.removeEventListener('touchmove', onTouchMove);
             window.removeEventListener('scroll', onScroll);
         };
-    }, []);
+    }, [eyeTrackingEnabled]);
 
     const handleJoin = () => {
         dismissAutoPrompt();

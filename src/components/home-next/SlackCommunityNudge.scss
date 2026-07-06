@@ -255,20 +255,26 @@
 
 @media (max-width: 640px) {
     .slack-community-nudge {
+        left: 12px;
         right: 12px;
-        width: calc(100vw - 24px);
-        height: 300px;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        width: auto;
+        height: auto;
 
         &__bubble {
+            position: relative;
             right: 0;
-            bottom: 82px;
+            bottom: auto;
             width: 100%;
+            max-height: calc(100vh - 96px);
+            overflow-y: auto;
             padding: 16px;
-            transform-origin: 92% 100%;
+            transform: translate3d(0, 12px, 0) scale(0.98);
+            transform-origin: 50% 100%;
         }
 
         &__bubble::after {
-            right: 45px;
+            display: none;
         }
 
         &__title {
@@ -290,8 +296,11 @@
         }
 
         &__mascot {
-            width: 132px;
-            bottom: -18px;
+            display: none;
+        }
+
+        &__mascot-pupil {
+            display: none;
         }
     }
 }
