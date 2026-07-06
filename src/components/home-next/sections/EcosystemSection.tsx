@@ -504,6 +504,7 @@ function CompactConnector(): JSX.Element {
 function CompactEcosystem(): JSX.Element {
     return (
         <section
+            id="home-next-ecosystem"
             className="ecosystem-next ecosystem-next--compact"
             aria-labelledby="ecosystem-next-title"
         >
@@ -544,7 +545,7 @@ export function EcosystemSection(): JSX.Element {
     }
 
     return (
-        <section className="ecosystem-next" aria-labelledby="ecosystem-next-title">
+        <section id="home-next-ecosystem" className="ecosystem-next" aria-labelledby="ecosystem-next-title">
             <div className="home-next-container">
                 <EcosystemHeader showCoverage />
 
