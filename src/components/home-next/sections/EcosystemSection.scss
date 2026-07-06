@@ -114,6 +114,12 @@
         perspective-origin: 50% 50%;
     }
 
+    &__card-shell {
+        transform-style: preserve-3d;
+        transition: transform 0.5s cubic-bezier(0.18, 0.9, 0.25, 1.15);
+        will-change: transform;
+    }
+
     &__card {
         position: relative;
         padding: 56px;
@@ -126,9 +132,6 @@
             0 38px 90px -44px rgba(6, 70, 50, 0.45),
             0 18px 48px -30px rgba(6, 70, 50, 0.28),
             inset 0 1px 0 rgba(255, 255, 255, 0.75);
-        transform-style: preserve-3d;
-        transition: transform 0.5s cubic-bezier(0.18, 0.9, 0.25, 1.15);
-        will-change: transform;
     }
 
     &__panel {
@@ -371,6 +374,24 @@
             0 0 34px -16px rgba(45, 223, 168, 0.8);
     }
 
+    &__graphic-link {
+        display: block;
+        color: inherit;
+        border-radius: 8px;
+        text-decoration: none;
+        cursor: pointer;
+
+        &:hover {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        &:focus-visible {
+            outline: 3px solid var(--en-yellow);
+            outline-offset: 4px;
+        }
+    }
+
     &__doris-logo {
         width: auto;
         height: 36px;
@@ -595,9 +616,12 @@
             perspective: none;
         }
 
+        &__card-shell {
+            transform: none !important;
+        }
+
         &__card {
             padding: 22px;
-            transform: none !important;
         }
 
         &__panel {
@@ -721,7 +745,7 @@
 
 @media (prefers-reduced-motion: reduce) {
     .ecosystem-next {
-        &__card,
+        &__card-shell,
         &__block,
         &__doris {
             transition: none;
@@ -731,7 +755,6 @@
             transform: translateY(var(--ecosystem-doris-offset-y)) !important;
         }
 
-        &__card,
         &__block:hover {
             transform: none !important;
         }

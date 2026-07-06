@@ -6,6 +6,7 @@ import React, {
     useRef,
     useState,
 } from 'react';
+import Link from '@docusaurus/Link';
 import './EcosystemSection.scss';
 
 type EcosystemSide = 'left' | 'right';
@@ -32,6 +33,8 @@ interface TiltState {
     rx: number;
     ry: number;
 }
+
+const DATA_INTEGRATION_DOC_LINK = '/docs/dev/connection-integration/data-integration/intro';
 
 interface EcosystemBlockProps {
     data: EcosystemGroup;
@@ -509,7 +512,11 @@ function CompactEcosystem(): JSX.Element {
             aria-labelledby="ecosystem-next-title"
         >
             <EcosystemHeader />
-            <div className="ecosystem-next__compact-card">
+            <Link
+                className="ecosystem-next__graphic-link ecosystem-next__compact-card"
+                to={DATA_INTEGRATION_DOC_LINK}
+                aria-label="View Apache Doris data integration documentation"
+            >
                 <CompactTier label="Upstream — Sources" num="01" groups={SOURCES} />
                 <CompactConnector />
                 <div className="ecosystem-next__compact-engine">
@@ -526,7 +533,7 @@ function CompactEcosystem(): JSX.Element {
                 </div>
                 <CompactConnector />
                 <CompactTier label="Downstream — Consumers" num="03" groups={CONSUMERS} />
-            </div>
+            </Link>
         </section>
     );
 }
@@ -550,49 +557,55 @@ export function EcosystemSection(): JSX.Element {
                 <EcosystemHeader showCoverage />
 
                 <div className="ecosystem-next__stage">
-                    <div className="ecosystem-next__card" ref={cardRef}>
-                        <div className="ecosystem-next__panel" ref={panelRef}>
-                            <FlowLines paths={paths} />
+                    <div className="ecosystem-next__card-shell" ref={cardRef}>
+                        <Link
+                            className="ecosystem-next__graphic-link ecosystem-next__card"
+                            to={DATA_INTEGRATION_DOC_LINK}
+                            aria-label="View Apache Doris data integration documentation"
+                        >
+                            <div className="ecosystem-next__panel" ref={panelRef}>
+                                <FlowLines paths={paths} />
 
-                            <div className="ecosystem-next__grid">
-                                <div className="ecosystem-next__col ecosystem-next__col--sources">
-                                    <div className="ecosystem-next__col-head">
-                                        <span className="ecosystem-next__col-num">01</span>
-                                        Upstream - Sources
+                                <div className="ecosystem-next__grid">
+                                    <div className="ecosystem-next__col ecosystem-next__col--sources">
+                                        <div className="ecosystem-next__col-head">
+                                            <span className="ecosystem-next__col-num">01</span>
+                                            Upstream - Sources
+                                        </div>
+                                        {SOURCES.map(source => (
+                                            <EcosystemBlock key={source.id} data={source} side="left" refMap={blockRefs} />
+                                        ))}
                                     </div>
-                                    {SOURCES.map(source => (
-                                        <EcosystemBlock key={source.id} data={source} side="left" refMap={blockRefs} />
-                                    ))}
-                                </div>
 
-                                <div className="ecosystem-next__col ecosystem-next__col--center">
-                                    <div className="ecosystem-next__col-head ecosystem-next__col-head--center">
-                                        <span className="ecosystem-next__col-num">02</span>
-                                        The Engine
-                                    </div>
-                                    <div className="ecosystem-next__doris" ref={dorisRef}>
-                                        <div className="ecosystem-next__doris-core">
-                                            <img
-                                                className="ecosystem-next__doris-logo"
-                                                src="/images/logo-doris.svg"
-                                                alt="Apache Doris"
-                                                draggable={false}
-                                            />
+                                    <div className="ecosystem-next__col ecosystem-next__col--center">
+                                        <div className="ecosystem-next__col-head ecosystem-next__col-head--center">
+                                            <span className="ecosystem-next__col-num">02</span>
+                                            The Engine
+                                        </div>
+                                        <div className="ecosystem-next__doris" ref={dorisRef}>
+                                            <div className="ecosystem-next__doris-core">
+                                                <img
+                                                    className="ecosystem-next__doris-logo"
+                                                    src="/images/logo-doris.svg"
+                                                    alt="Apache Doris"
+                                                    draggable={false}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="ecosystem-next__col ecosystem-next__col--consumers">
-                                    <div className="ecosystem-next__col-head ecosystem-next__col-head--right">
-                                        <span className="ecosystem-next__col-num">03</span>
-                                        Downstream - Consumers
+                                    <div className="ecosystem-next__col ecosystem-next__col--consumers">
+                                        <div className="ecosystem-next__col-head ecosystem-next__col-head--right">
+                                            <span className="ecosystem-next__col-num">03</span>
+                                            Downstream - Consumers
+                                        </div>
+                                        {CONSUMERS.map(consumer => (
+                                            <EcosystemBlock key={consumer.id} data={consumer} side="right" refMap={blockRefs} />
+                                        ))}
                                     </div>
-                                    {CONSUMERS.map(consumer => (
-                                        <EcosystemBlock key={consumer.id} data={consumer} side="right" refMap={blockRefs} />
-                                    ))}
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     </div>
                 </div>
             </div>

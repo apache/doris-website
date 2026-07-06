@@ -167,3 +167,11 @@ body {
 
 // Centering the Kapa modal itself is done by injecting CSS into its shadow
 // root from static/js/custom-script.js, since light-DOM rules can't pierce it.
+
+@media (min-width: 997px) {
+    .docs-wrapper .theme-back-to-top-button {
+        right: calc(386px + 2rem);
+        bottom: 1.5rem;
+        z-index: 259;
+    }
+}

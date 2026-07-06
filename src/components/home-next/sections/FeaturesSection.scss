@@ -54,6 +54,14 @@
         width: 100%;
     }
 
+    &__card-anchor {
+        position: absolute;
+        left: 0;
+        width: 1px;
+        height: 1px;
+        pointer-events: none;
+    }
+
     &__stage {
         position: sticky;
         top: 0;
@@ -551,6 +559,14 @@
         &__stack-container {
             height: auto !important;
             padding: 0 0 72px;
+        }
+
+        &__card-anchor {
+            position: static;
+            display: block;
+            width: 0;
+            height: 0;
+            overflow: hidden;
         }
 
         &__stage {

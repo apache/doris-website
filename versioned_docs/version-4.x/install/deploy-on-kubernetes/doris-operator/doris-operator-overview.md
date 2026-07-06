@@ -8,7 +8,7 @@
 }
 ---
 
-Doris Operator is the official Kubernetes Operator for Apache Doris. It combines Doris operational experience with Kubernetes-native resource management to provide a simpler, more efficient, and easier-to-use way to deploy and operate Doris on Kubernetes.
+[Doris Operator](https://github.com/apache/doris-operator) is the official Kubernetes Operator for Apache Doris. It combines Doris operational experience with Kubernetes-native resource management to provide a simpler, more efficient, and easier-to-use way to deploy and operate Doris on Kubernetes.
 
 Doris Operator extends the Kubernetes API through CustomResourceDefinitions (CRDs). After you submit a Doris custom resource, the Operator creates and maintains the corresponding Kubernetes resources such as `StatefulSet`, `Service`, and `PersistentVolumeClaim`, and in some scenarios performs Doris metadata-level actions such as node registration, decommissioning, or cleanup.
 

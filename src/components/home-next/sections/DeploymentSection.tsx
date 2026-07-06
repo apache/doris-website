@@ -83,11 +83,11 @@ function DeploymentCard({ card }: { card: DeploymentCardItem }): JSX.Element {
 
 export function DeploymentSection(): JSX.Element {
     return (
-        <section className="deployment-next">
+        <section id="deployment" className="deployment-next" aria-labelledby="deployment-next-title">
             <div className="home-next-container">
                 <div className="deployment-next__header">
                     <div className="deployment-next__eyebrow">Deployment</div>
-                    <h2 className="deployment-next__headline">
+                    <h2 className="deployment-next__headline" id="deployment-next-title">
                         <span className="deployment-next__headline-line">Choose Your Architecture</span>
                         <span className="deployment-next__headline-line deployment-next__headline-line--accent">
                             One Engine, Two Modes

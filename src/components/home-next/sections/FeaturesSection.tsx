@@ -11,6 +11,7 @@ interface CapabilityItem {
 
 interface Capability {
     num: string;
+    hashId: string;
     title: string;
     subtitle: string;
     tone: CapabilityTone;
@@ -27,6 +28,7 @@ interface Capability {
 const CAPABILITIES: Capability[] = [
     {
         num: '01',
+        hashId: 'real-time-analytics',
         title: 'Real-Time Analytics',
         subtitle: 'The fastest end-to-end engine from ingestion to insight.',
         tone: 'green',
@@ -45,6 +47,7 @@ const CAPABILITIES: Capability[] = [
     },
     {
         num: '02',
+        hashId: 'lakehouse-analytics',
         title: 'Lakehouse Analytics',
         subtitle: 'Real-time analytics, applied directly to your open lakehouse.',
         tone: 'cream',
@@ -63,6 +66,7 @@ const CAPABILITIES: Capability[] = [
     },
     {
         num: '03',
+        hashId: 'hybrid-search',
         title: 'Hybrid Search',
         subtitle: 'First-class search across structured, text, and vector data.',
         tone: 'ink',
@@ -385,6 +389,37 @@ export function FeaturesSection(): JSX.Element {
         };
     }, [isNarrowViewport]);
 
+    useEffect(() => {
+        function scrollToCapabilityHash() {
+            const hash = window.location.hash.slice(1);
+            if (!hash) return;
+
+            const idx = CAPABILITIES.findIndex(capability => capability.hashId === hash);
+            if (idx === -1) return;
+
+            if (isNarrowViewport) {
+                cardRefs.current[idx]?.scrollIntoView({ block: 'start' });
+                return;
+            }
+
+            const containerEl = containerRef.current;
+            if (!containerEl) return;
+
+            const transitions = Math.max(1, CAPABILITIES.length - 1);
+            const rect = containerEl.getBoundingClientRect();
+            const containerTop = rect.top + window.scrollY;
+            const scrollable = Math.max(0, containerEl.offsetHeight - window.innerHeight);
+            const targetTop = containerTop + (idx / transitions) * scrollable;
+
+            window.scrollTo({ top: targetTop, behavior: 'auto' });
+        }
+
+        scrollToCapabilityHash();
+        window.addEventListener('hashchange', scrollToCapabilityHash);
+
+        return () => window.removeEventListener('hashchange', scrollToCapabilityHash);
+    }, [isNarrowViewport]);
+
     return (
         <section className="features-next">
             <div className="home-next-container">
@@ -399,6 +434,15 @@ export function FeaturesSection(): JSX.Element {
                     ref={containerRef}
                     style={isNarrowViewport ? undefined : { height: `${CAPABILITIES.length * 100}vh` }}
                 >
+                    {CAPABILITIES.map((capability, i) => (
+                        <span
+                            key={`${capability.hashId}-anchor`}
+                            id={capability.hashId}
+                            className="features-next__card-anchor"
+                            style={isNarrowViewport ? undefined : { top: `${i * 100}vh` }}
+                            aria-hidden="true"
+                        />
+                    ))}
                     <div className="features-next__stage">
                         {CAPABILITIES.map((capability, i) => (
                             <CapabilityCard
