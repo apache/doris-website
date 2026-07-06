@@ -359,41 +359,51 @@
 }
 
 .wr-highlight__panel {
+    display: grid;
+    gap: 14px;
     padding: 0 20px 20px 47px;
 }
 
 .wr-highlight__text {
     margin: 0;
+    padding: 16px 18px;
+    background: rgba(5, 76, 57, 0.38);
+    border: 1px solid rgba(255, 252, 245, 0.16);
+    border-radius: 8px;
     font-size: 15px;
     line-height: 1.68;
-    color: rgba(255, 252, 245, 0.88);
+    color: rgba(255, 252, 245, 0.9);
 }
 
 .wr-highlight__panel .wr-scn__prs {
-    margin-top: 14px;
-    border-top-color: rgba(255, 252, 245, 0.18);
+    margin: 0;
+    padding: 8px 16px;
+    background: rgba(255, 252, 245, 0.96);
+    border: 1px solid rgba(5, 76, 57, 0.18);
+    border-radius: 8px;
+    box-shadow: inset 3px 0 0 var(--wr-yellow);
 }
 
 .wr-highlight__panel .wr-scn__pr {
-    border-top-color: rgba(255, 252, 245, 0.18);
+    border-top-color: rgba(5, 76, 57, 0.18);
 }
 
 .wr-highlight__panel .wr-scn__pr-title {
-    color: rgba(255, 252, 245, 0.92);
+    color: var(--wr-ink);
 }
 
 .wr-highlight__panel .wr-scn__pr-num {
-    color: var(--wr-yellow);
-    border-bottom-color: rgba(255, 210, 63, 0.5);
+    color: var(--wr-green);
+    border-bottom-color: rgba(6, 128, 95, 0.32);
 }
 
 .wr-highlight__panel .wr-scn__pr-num:hover {
-    border-bottom-color: var(--wr-yellow);
+    border-bottom-color: var(--wr-green);
 }
 
 .wr-highlight__panel .wr-scn__new {
-    color: var(--wr-paper);
-    background: rgba(255, 252, 245, 0.16);
+    color: var(--wr-green-dark);
+    background: rgba(6, 128, 95, 0.12);
 }
 
 /* Repo tabs (only shown when a report covers more than one repository) */
@@ -703,7 +713,15 @@
     }
 
     .wr-highlight__panel {
-        padding: 0 16px 17px 42px;
+        padding: 0 16px 17px 16px;
+    }
+
+    .wr-highlight__text {
+        padding: 14px 15px;
+    }
+
+    .wr-highlight__panel .wr-scn__prs {
+        padding: 8px 14px;
     }
 
     .wr-scenario-tabs {

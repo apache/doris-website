@@ -20,58 +20,32 @@ export const stats = [
 
 export const report = {
   "summary": {
-    "lead": "This week Apache Doris merged 113 PRs with 42 contributors active, with the community concentrating on real-time data warehousing and kernel engineering while advancing the multi-modal lakehouse and cloud-native compute-storage separation tracks. Core capabilities deepened around Catalog SPI decoupling, scan execution optimization, inverted index evolution, and peer routing with cache tiering, alongside reinforced security/governance and observability—signaling a clear direction toward a high-performance, extensible lakehouse.",
+    "lead": "This week the Doris community merged 113 PRs with 42 contributors, showing intense iteration around the twin tracks of real-time data warehousing and kernel engineering. The capability footprint is steadily expanding toward multi-modal lakehouse, cloud-native multi-tenancy, and next-generation inverted indexing, with security, governance, and observability hardening in parallel — signaling clear acceleration on real-time analytics and lakehouse convergence.",
     "highlights": [
       {
-        "title": "Catalog SPI decoupling and external data source expansion",
-        "narrative": "FE connectors move to a loadable Catalog SPI, easing new data-source onboarding and upgrades, while BE gains a unified File Scanner v2 for Parquet, CSV, JSON and similar external files. Paimon write support and OIDC session credentials for Iceberg REST close the lakehouse read-write and secure-access loop, making Doris easier",
+        "title": "Lakehouse catalog plugin-ization and write support",
+        "narrative": "Doris kicks off a Catalog SPI migration to decouple built-in connectors from FE core into loadable plugins, adds native write support for Apache Paimon tables, and lands the file scanner v2 reader stack with native Parquet/CSV/JSON readers, projection, and predicate pushdown—tightening the read-write loop for multi-modal lakehouse workloads.",
         "prs": [
-          {
-            "num": 65185,
-            "title": "[Tracking][Catalog] Catalog SPI migration — decouple built-in connectors from FE core into loadable plugins",
-            "url": "https://github.com/apache/doris/issues/65185"
-          },
           {
             "num": 65086,
             "title": "Support writing to Apache Paimon tables",
             "url": "https://github.com/apache/doris/issues/65086"
           },
           {
+            "num": 65185,
+            "title": "[Tracking][Catalog] Catalog SPI migration — decouple built-in connectors from FE core into loadable plugins",
+            "url": "https://github.com/apache/doris/issues/65185"
+          },
+          {
             "num": 65046,
             "title": "[feature](be) Add file scanner v2 readers ",
             "url": "https://github.com/apache/doris/pull/65046"
-          },
-          {
-            "num": 63068,
-            "title": "[feature](fe) Support OIDC session credentials for Iceberg REST catalog",
-            "url": "https://github.com/apache/doris/pull/63068"
           }
         ]
       },
       {
-        "title": "Cloud-native compute-storage separation: peer routing and cache tiering",
-        "narrative": "Cross-compute-group peer read routing enables data sharing across groups, while a new write-index-only cache config curbs IO amplification under hot writes. Tenant-level colocation trims replica redundancy in multi-tenant deployments, together pushing the separation-of-storage-and-compute architecture toward higher elasticity and finer resource control.",
-        "prs": [
-          {
-            "num": 63818,
-            "title": "[feat](cloud) cross compute group peer read routing with peer cache I/O optimization",
-            "url": "https://github.com/apache/doris/pull/63818"
-          },
-          {
-            "num": 64995,
-            "title": "[feature](cloud) Support file cache write index only",
-            "url": "https://github.com/apache/doris/pull/64995"
-          },
-          {
-            "num": 64167,
-            "title": "[feat](colocate) support tenant-level colocation",
-            "url": "https://github.com/apache/doris/pull/64167"
-          }
-        ]
-      },
-      {
-        "title": "Scan and query execution: pruning, lazy read, and runtime filters",
-        "narrative": "Lazy reads for pruned complex-type subcolumns and expression-based ZoneMap pruning cut IO across internal and Parquet scans. Global runtime filters now publish through an adaptive tree, removing duplicate broadcasts of large filters in big clusters, while dynamic table snapshot reads keep extending real-time warehouse capabilities.",
+        "title": "Real-time DWH: query pushdown and IO pruning",
+        "narrative": "This week brings lazy reading on pruned complex columns, expression-based ZoneMap pruning (comparisons, IN, IS NULL, starts_with) across internal and Parquet scans, adaptive global runtime filter publishing to ease coordinator fan-out, and ongoing work on multi-stage predicate lazy materialization—sharper pruning and leaner IO for real-time queries.",
         "prs": [
           {
             "num": 59263,
@@ -92,33 +66,33 @@ export const report = {
             "num": 64891,
             "title": "[enhancement](Multi-stage lm) Multi-Stage Predicate Lazy Materialization",
             "url": "https://github.com/apache/doris/pull/64891"
-          },
-          {
-            "num": 64776,
-            "title": " [feat](dynamic table) support table stream part 4: support snapshot read",
-            "url": "https://github.com/apache/doris/pull/64776"
           }
         ]
       },
       {
-        "title": "Inverted index evolution: Japanese tokenizer and SNII format",
-        "narrative": "A new Kuromoji morphological analyzer closes Doris's gap on space-less Japanese text, while the SNII inverted-index storage format lands as an alternative path for better compression and extensibility. Together they strengthen full-text search and observability for multi-language corpora and AI-agent workloads.",
+        "title": "Cloud-native multi-tenant compute and cache",
+        "narrative": "Cloud gains cross-compute-group peer read routing with optimized peer cache IO, a new option to cache only index files during rowset writes and compaction to protect hot data, and tenant-level colocation entering review to cut replica redundancy for multi-tenant JOINs—together improving isolation and cache efficiency in the cloud.",
         "prs": [
           {
-            "num": 64667,
-            "title": "[feature](inverted-index) Add Japanese (Kuromoji) morphological analyzer",
-            "url": "https://github.com/apache/doris/pull/64667"
+            "num": 63818,
+            "title": "[feat](cloud) cross compute group peer read routing with peer cache I/O optimization",
+            "url": "https://github.com/apache/doris/pull/63818"
           },
           {
-            "num": 64909,
-            "title": "[feature](be) Add SNII inverted index storage format",
-            "url": "https://github.com/apache/doris/pull/64909"
+            "num": 64995,
+            "title": "[feature](cloud) Support file cache write index only",
+            "url": "https://github.com/apache/doris/pull/64995"
+          },
+          {
+            "num": 64167,
+            "title": "[feat](colocate) support tenant-level colocation",
+            "url": "https://github.com/apache/doris/pull/64167"
           }
         ]
       },
       {
-        "title": "Security and governance hardening across FE and TDE",
-        "narrative": "Intra-FE RPC now switches to HTTPS when TLS is enabled, removing the plaintext fallback in hardened deployments. TDE gains Aliyun KMS and Ranger KMS provider metadata, letting transparent encryption plug into enterprise key management. The combined effect raises Doris's default security posture for compliance-sensitive workloads.",
+        "title": "Security and governance hardening",
+        "narrative": "Intra-FE communication now upgrades to HTTPS when enable_https is set, closing the plaintext gap in hardened deployments; TDE adds Aliyun KMS and Ranger KMS as recognized root-key providers, with refreshed KMS configuration documentation for cloud and Hadoop/Ranger endpoints—hardening key management and transport encryption.",
         "prs": [
           {
             "num": 60921,
@@ -129,6 +103,22 @@ export const report = {
             "num": 64561,
             "title": "[feat](tde) Add Aliyun and Ranger KMS provider metadata",
             "url": "https://github.com/apache/doris/pull/64561"
+          }
+        ]
+      },
+      {
+        "title": "Next-gen inverted index and Japanese tokenization",
+        "narrative": "Doris adds a Japanese Kuromoji morphological analyzer to the inverted index, fixing tokenization for space-less Japanese text so MATCH queries work end-to-end, and integrates the SNII inverted index storage format as a separate write/read path—advancing both multilingual search and index storage efficiency.",
+        "prs": [
+          {
+            "num": 64667,
+            "title": "[feature](inverted-index) Add Japanese (Kuromoji) morphological analyzer",
+            "url": "https://github.com/apache/doris/pull/64667"
+          },
+          {
+            "num": 64909,
+            "title": "[feature](be) Add SNII inverted index storage format",
+            "url": "https://github.com/apache/doris/pull/64909"
           }
         ]
       }
@@ -145,51 +135,217 @@ export const report = {
       "scenarios": [
         {
           "name": "Multi-modal Lakehouse",
-          "mergedNarrative": "The multi-modal lakehouse scenario stabilized Iceberg/Hive/external-write paths. Iceberg v3 row-lineage columns are rejected to avoid hidden conflicts; COUNT(*) pushdown tolerates missing snapshot summary counters; LZ4 compression now ships to Iceberg/Hive Parquet/ORC writers; binary columns are emitted with correct Arrow types; nested decimal precision promotion is supported; external writers clean up",
-          "merged": [],
-          "inProgressNarrative": "Multi-modal Lakehouse work strengthens external read/write paths: Paimon write P0, Iceberg position-deletes system table, ORC format v2 reader, Parquet dict bounds checks, Arrow Flight coordinator lifecycle, OSS/HTTP FS SPI normalization, MaxCompute partition-by-name parsing, Iceberg REST OAuth re-auth on 401, S3 load complex types for Parquet/ORC, and Hive-ORC column-name default —",
-          "inProgress": []
+          "mergedNarrative": "Lakehouse gaps were closed: Iceberg v3 row-lineage hidden column collisions are rejected up front, COUNT(*) pushdown tolerates missing snapshot counters, Parquet/ORC writers gain LZ4 support, binary columns now emit proper Arrow types instead of utf8, and nested decimal precision promotion is validated. External writes clean up the real target file",
+          "merged": [
+            {
+              "num": 63825,
+              "title": "[fix](fe) Reject Iceberg v3 row lineage columns",
+              "url": "https://github.com/apache/doris/pull/63825"
+            },
+            {
+              "num": 64648,
+              "title": "[fix](iceberg) Fix NPE in COUNT(*) pushdown when snapshot summary omits total-* counters",
+              "url": "https://github.com/apache/doris/pull/64648"
+            },
+            {
+              "num": 64678,
+              "title": "[fix](external-write) Delete the actual data file on write failure to avoid orphan files",
+              "url": "https://github.com/apache/doris/pull/64678"
+            },
+            {
+              "num": 64723,
+              "title": "[fix](iceberg)Support LZ4 compression for iceberg/hive Parquet/ORC writers.",
+              "url": "https://github.com/apache/doris/pull/64723"
+            }
+          ],
+          "inProgressNarrative": "Lakehouse work keeps broadening Iceberg/Hive/Paimon/MaxCompute read-write and governance. The key addition of OIDC user-session credential forwarding for Iceberg REST lets queries access data under the real user identity, paired with OAuth 401 re-auth, Arrow Flight coordinator lifetime fixes, the new ORC format v2 reader, and Paimon write P0 to steadily",
+          "inProgress": [
+            {
+              "num": 63068,
+              "title": "[feature](fe) Support OIDC session credentials for Iceberg REST catalog",
+              "url": "https://github.com/apache/doris/pull/63068"
+            }
+          ]
         },
         {
           "name": "Real-time Data Warehouse",
-          "mergedNarrative": "Real-time data warehouse work targeted P0 stability and correctness. Group commit recovers from missing block queues and load_id reuse that dropped rows; SimplifyAggGroupBy now verifies injectivity; local shuffle eliminates the bucket-shuffle serial bottleneck and upgrades parallelism; local runtime filter merge deadlocks, pipeline-task wake-after-finalize crashes, and variable-length column overflows across sorted-run",
-          "merged": [],
-          "inProgressNarrative": "Real-time DWH advances the optimizer, load pipeline, and ops visibility: Nereids adds expression defaults, named BloomFilter, regexp rewrite, FD-redundant group-by elimination, stats-driven distinct/eager-agg pushdown, anti/outer-join conversion, bucket shuffle for set ops; loads gain routine-load target swap, stream-load progress observability, UTF-8 validation toggle, Arrow case-sensitive columns, label-aware abort, binlog hidden keys,",
-          "inProgress": []
+          "mergedNarrative": "Real-time DWH query and ingest paths were both hardened: SimplifyAggGroupBy now checks injectivity to avoid wrong grouping, group commit tracks pending requests and isolates reused prepared plans' load_ids, and recursive CTE target blocks are dispatched per scan instance instead of per backend. The BE fixed BIGINT_MIN div SIGFPE, null child",
+          "merged": [
+            {
+              "num": 63379,
+              "title": "[improvement](fe) Prune partition keys from partition topn sort",
+              "url": "https://github.com/apache/doris/pull/63379"
+            },
+            {
+              "num": 63722,
+              "title": "[fix](group commit) fix can not get a block queue",
+              "url": "https://github.com/apache/doris/pull/63722"
+            },
+            {
+              "num": 64335,
+              "title": "[fix](simplify agg) SimplifyAggGroupBy should verify injectivity",
+              "url": "https://github.com/apache/doris/pull/64335"
+            },
+            {
+              "num": 64362,
+              "title": "[fix](group commit) fix lost row when prepared stmt reused plan shares one load_id",
+              "url": "https://github.com/apache/doris/pull/64362"
+            }
+          ],
+          "inProgressNarrative": "A highlight of real-time DWH work is the snapshot-read slice of the dynamic table streaming series, a key milestone for continuously refreshing tables; alongside it, MTMV refresh serialization, routine-load target-table switching, last-schedule-time visibility, and INSERT-INTO-SELECT progress through SHOW LOAD make ingestion and refresh far more observable and reliable. Many newly",
+          "inProgress": [
+            {
+              "num": 64776,
+              "title": " [feat](dynamic table) support table stream part 4: support snapshot read",
+              "url": "https://github.com/apache/doris/pull/64776"
+            }
+          ]
         },
         {
           "name": "Compute-Storage Separation & Cloud-Native",
-          "mergedNarrative": "Compute-storage separation and cloud-native reliability advanced this week. Queries hitting E-230 now force a fresh version cache; start.sh accepts multiple config files; version reads use snapshot transactions to avoid write conflicts with update_table_version; S3FileWriter now recovers from async submit failures; file-cache evict metrics are aligned with the FileCacheType enum; Azure",
-          "merged": [],
-          "inProgressNarrative": "Compute-storage separation and cloud-native work keeps hardening meta service, filesystem, and cache reliability and observability: capability-gated MS_TOO_BUSY, warm-up job count bvar, recycler S3 timeout fix, LRU restore speedup, file-cache skip-after-threshold, post-alter tablet meta sync, label-aware transaction abort, Azure glob pushdown, HDFS property migration, HTTP FS SPI scaffolding, segment id list,",
+          "mergedNarrative": "Compute-storage separation and cloud-native work emphasized control and stability: retries on E-230 now drop the version-cache TTL to fetch the freshest version, table_version reads inside transactions switch to snapshot reads to remove self-conflicts, and bugs in S3 async submission, file-cache queue metrics, Azure resource persistence (missing clazz), and partition storage-policy",
+          "merged": [
+            {
+              "num": 63721,
+              "title": "[fix](fe) set cloud version_cache_ttl to 0 temporarily if retry a query with -230",
+              "url": "https://github.com/apache/doris/pull/63721"
+            },
+            {
+              "num": 63924,
+              "title": "[opt](cloud) Support multiple config files in start.sh",
+              "url": "https://github.com/apache/doris/pull/63924"
+            },
+            {
+              "num": 64647,
+              "title": "[fix](cloud) use snapshot read for table version to avoid txn conflict",
+              "url": "https://github.com/apache/doris/pull/64647"
+            },
+            {
+              "num": 64779,
+              "title": "[fix](s3) handle S3 file writer async task submission failures",
+              "url": "https://github.com/apache/doris/pull/64779"
+            },
+            {
+              "num": 64897,
+              "title": "[fix](be) Fix file cache queue evict size metrics",
+              "url": "https://github.com/apache/doris/pull/64897"
+            }
+          ],
+          "inProgressNarrative": "Compute-storage separation work this week sharpens Meta Service, file cache, and tiered storage. Fixes for cloud recycler S3 timeouts, proactive tablet meta sync after alter, and capability-gated MS_TOO_BUSY errors improve cross-version stability and operability, while new warm-up job metrics, threshold-based remote cache write cutoff, parallel LRU restore, and TopN lazy-materialization",
           "inProgress": []
         },
         {
           "name": "Agent Observability",
-          "mergedNarrative": "This scenario hardens observability across Variant, inverted-index, and Delete paths. Variant compaction now distinguishes empty keys from the root to prevent misrouting into sparse columns; tokenization rejects invalid char_filter replacements; DELETE supports generated-column partial updates; inverted-index predicates no longer crash on null literals; and regression-side pinning plus bool-output normalization reduce",
-          "merged": [],
-          "inProgressNarrative": "Agent Observability work is hardening legacy index paths by blocking creation of inverted index V1 in FE, preventing the small-file merge and packed-file path bypass that could amplify issues during agent monitoring and export.",
+          "mergedNarrative": "Half-structured and indexing paths were hardened this week: variant compaction now correctly distinguishes the root path from empty keys instead of forcing them into sparse columns, FE tightens inverted-index char_filter replacement validation, and the BE fixes a crash from NULL literals in index predicates while properly handling generated columns in",
+          "merged": [
+            {
+              "num": 64641,
+              "title": "[fix](variant) Preserve empty key during variant compaction",
+              "url": "https://github.com/apache/doris/pull/64641"
+            },
+            {
+              "num": 64794,
+              "title": "[fix](fe) Reject invalid char filter replacement in tokenize",
+              "url": "https://github.com/apache/doris/pull/64794"
+            },
+            {
+              "num": 64884,
+              "title": "[fix](fe) Handle generated columns in delete partial update",
+              "url": "https://github.com/apache/doris/pull/64884"
+            },
+            {
+              "num": 65093,
+              "title": "[fix](test) pin variant defaults in check_before_quit",
+              "url": "https://github.com/apache/doris/pull/65093"
+            },
+            {
+              "num": 65138,
+              "title": "[fix](be) Fix null query crash in inverted index predicates",
+              "url": "https://github.com/apache/doris/pull/65138"
+            }
+          ],
+          "inProgressNarrative": "To prevent tables from silently being created with inverted index V1 when users replay historical DDL, the community is gating V1 creation at the FE so index format stays intentional and storage amplification from bypassing small-file merging and packed paths is avoided.",
           "inProgress": []
         },
         {
           "name": "Ecosystem Integration",
-          "mergedNarrative": "Ecosystem-integration work reconciled client-side protocol differences. The regression suite now skips Arrow-incompatible map cast cases with null keys and asserts bitmaps via bitmap_to_string so Arrow Flight SQL and JDBC return semantically consistent results without spurious failures.",
-          "merged": [],
-          "inProgressNarrative": "Ecosystem Integration is restoring the dbt-doris adapter dev loop by fixing long-broken test dependencies so contributors can run adapter tests from a clean checkout (new this month).",
-          "inProgress": []
+          "mergedNarrative": "External ecosystem paths are more robust: Arrow Flight SQL now skips cases that intentionally yield null map keys, and bitmap assertions compare via bitmap_to_string instead of raw bytes, working around Arrow Map's lack of null-key support so JDBC and Arrow regression outputs stay aligned.",
+          "merged": [
+            {
+              "num": 65182,
+              "title": "[test](regression) skip Arrow-incompatible complex outputs",
+              "url": "https://github.com/apache/doris/pull/65182"
+            }
+          ],
+          "inProgressNarrative": "The dbt-doris adapter's broken test dependencies that have blocked fresh-checkout development are being repaired by re-aligning the dbt-tests-adapter source and filling missing packages, enabling community contributors to iterate on the adapter again.",
+          "inProgress": [
+            {
+              "num": 64929,
+              "title": "[fix](dbt-doris) Fix broken test dependencies preventing adapter development",
+              "url": "https://github.com/apache/doris/pull/64929",
+              "isNew": true
+            }
+          ]
         },
         {
           "name": "Security & Governance",
-          "mergedNarrative": "Security governance closed loopholes across credentials, gateway, and REST APIs. Kafka routine load properties are now masked in SHOW/metadata; the _stream_load_forward endpoint is gated by a new BE config and requires auth to block SSRF; brpc disables an SSL BIO buffer to avoid mTLS write issues on large responses; and",
-          "merged": [],
-          "inProgressNarrative": "Security & Governance tightens TLS and supply-chain hygiene: enabling cert verification by default in the Go SDK, pinning Python deps with known CVEs across doris-compose/dbt-doris/cost_model, and normalizing FE-internal HTTP calls to https when enable_https is on (all new this month).",
+          "mergedNarrative": "Security work narrowed the credential-exposure surface: Kafka routine-load custom properties are now masked in SHOW and information_schema to prevent SASL/SSL/AWS credential leaks, _stream_load_forward is gated by a new BE config to block unauthenticated SSRF, brpc TLS drops the extra BIO buffer to fix TLS write issues on large meta-service responses,",
+          "merged": [
+            {
+              "num": 64786,
+              "title": "[fix](fe) Mask Kafka routine load sensitive properties",
+              "url": "https://github.com/apache/doris/pull/64786"
+            },
+            {
+              "num": 64935,
+              "title": "[fix](security) Add auth and config gate for _stream_load_forward endpoint",
+              "url": "https://github.com/apache/doris/pull/64935"
+            },
+            {
+              "num": 64962,
+              "title": "[fix](brpc) disable SSL BIO buffer ",
+              "url": "https://github.com/apache/doris/pull/64962"
+            },
+            {
+              "num": 65042,
+              "title": "[fix](auth) add auth check for manager node and query qerror REST APIs",
+              "url": "https://github.com/apache/doris/pull/65042"
+            },
+            {
+              "num": 65149,
+              "title": "[regression-test](auth) Scope export cancel by label",
+              "url": "https://github.com/apache/doris/pull/65149"
+            }
+          ],
+          "inProgressNarrative": "Security and governance work this week tightens transport encryption and dependency hygiene: enabling TLS verification by default in the Go SDK, capping Python packages with known CVEs in doris-compose, dbt-doris, and cost_model, and normalizing internal FE HTTP URLs to https when enable_https is on, closing plaintext and insecure-component gaps across",
           "inProgress": []
         },
         {
           "name": "Kernel & Engineering",
-          "mergedNarrative": "Kernel and engineering foundations received broad hardening. Key fixes address bvar SIGSEGV under high EPS, NaN propagation in PERCENTILE, SIGFPE on BIGINT_MIN/-1, sliced FixedSizeBinary reads, redundant partition keys in PartitionTopN sort, AuditLoader concurrent assembly, and AsyncIO workers without ThreadContext. Refactors moved array functions to ColumnArrayView and split const vs. mutable",
-          "merged": [],
-          "inProgressNarrative": "Kernel & Engineering spans core correctness and infra: the key change is adaptive random-bucket load routing for cloud mode, alongside bitmap/Prometheus/TabletStatMgr/Broker-Load fixes, stable `now()` folding, DECIMAL-returning round functions, rollback handling, Arrow buffer validation, ORC SerDe decoding, UDF rollback, SetPreAggStatus stack refactor, bucketed hash aggregate plan refactor, and many regression/Docker/CI stabilizations",
+          "mergedNarrative": "Kernel work swept up crashes and correctness traps: SIGSEGV in bvar take_sample under high EPS, missing ThreadContext on AsyncIO workers, missing storage-policy pre-checks, SIGFPE on BIGINT_MIN DIV -1, escaping block-serialization exceptions, std::exception leaks in the pipeline scheduler, workload-group smart-pointer cycles, and unchecked task executor scan handles. FE now rejects complex",
+          "merged": [
+            {
+              "num": 62842,
+              "title": "[enhancement](limitreach) FE receives many limit reach error messages and make very confused",
+              "url": "https://github.com/apache/doris/pull/62842"
+            },
+            {
+              "num": 63472,
+              "title": "[fix](be) Skip NaN values in PERCENTILE/PERCENTILE_ARRAY aggregations",
+              "url": "https://github.com/apache/doris/pull/63472"
+            },
+            {
+              "num": 63621,
+              "title": "[fix](fe) Reject complex types (ARRAY/MAP/STRUCT) as MAP key types",
+              "url": "https://github.com/apache/doris/pull/63621"
+            },
+            {
+              "num": 64040,
+              "title": "[fix](be) Fix SIGSEGV in bvar::take_sample caused by AgentCombiner/TLS Agent lifetime race under high EPS",
+              "url": "https://github.com/apache/doris/pull/64040"
+            }
+          ],
+          "inProgressNarrative": "Kernel work this week balances stability, performance, and developer experience. The highlighted cloud-mode adaptive routing for random bucket load assigns candidate buckets on the FE and routes locally on the BE, removing sender-side reshuffle cost; alongside it, schema change, txn rollback, Arrow/Parquet/ORC decoding, and expression evaluation keep getting hardened, while",
           "inProgress": [
             {
               "num": 62661,

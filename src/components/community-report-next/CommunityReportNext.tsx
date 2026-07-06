@@ -90,6 +90,23 @@ interface CommunityReportNextProps {
     reports: WeeklyReportEntry[];
 }
 
+const COMMUNITY_SURVEY_URL =
+    'https://docs.google.com/forms/d/e/1FAIpQLSeSppR5JJyXIxNoPlG_hS8RTW8k2tsCkpC0h68WSN6CEUsWcA/viewform';
+const DORIS_ROADMAP_ISSUE_URL = 'https://github.com/apache/doris/issues/60036';
+
+const sidebarLinks = [
+    {
+        title: 'Help Shape the Future of Apache Doris',
+        description: 'Complete the survey to help us build a better Doris community.',
+        href: COMMUNITY_SURVEY_URL,
+    },
+    {
+        title: 'Which Doris Feature Do You Want to Discuss or Build?',
+        description: 'Leave your reply on the GitHub issue.',
+        href: DORIS_ROADMAP_ISSUE_URL,
+    },
+];
+
 export default function CommunityReportNext({ reports }: CommunityReportNextProps): JSX.Element {
     const latest = reports[0];
     const historical = reports.slice(1);
@@ -123,7 +140,7 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
         >
             <div className="community-report">
                 <div className="community-report__layout">
-                    <aside className="community-report__sidebar" aria-label="Reports">
+                    <aside className="community-report__sidebar" aria-label="Reports and community feedback">
                         <div className="community-report__section">
                             <h2 className="community-report__section-title">Weekly Report</h2>
 
@@ -160,6 +177,21 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
                                     </select>
                                 </div>
                             )}
+                        </div>
+
+                        <div className="community-report__links" aria-label="Community feedback links">
+                            {sidebarLinks.map(link => (
+                                <a
+                                    key={link.href}
+                                    className="community-report__link-card"
+                                    href={link.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <span className="community-report__link-title">{link.title}</span>
+                                    <span className="community-report__link-description">{link.description}</span>
+                                </a>
+                            ))}
                         </div>
                     </aside>
 

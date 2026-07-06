@@ -41,7 +41,7 @@ const USE_CASES: UseCase[] = [
 
 export function UseCasesSection(): JSX.Element {
     return (
-        <section className="use-cases-next" aria-labelledby="use-cases-next-title">
+        <section id="use-cases" className="use-cases-next" aria-labelledby="use-cases-next-title">
             <div className="home-next-container">
                 <div className="use-cases-next__header">
                     <div className="use-cases-next__eyebrow">Use Cases</div>
