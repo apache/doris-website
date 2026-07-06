@@ -435,6 +435,7 @@
                       "items": [
                         "data-operate/import/import-way/streaming-job/continuous-load-postgresql-table",
                         "data-operate/import/import-way/streaming-job/continuous-load-postgresql-database",
+                        "data-operate/import/import-way/streaming-job/schema-change-postgresql",
                         "data-operate/import/import-way/streaming-job/data-type-mapping-postgresql",
                         {
                           "type": "category",
