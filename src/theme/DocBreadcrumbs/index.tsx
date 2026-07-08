@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { ThemeClassNames } from '@docusaurus/theme-common';
 import {
     useSidebarBreadcrumbs,
-    useActivePluginAndVersion,
+    useDocsVersion,
+    useVersions,
 } from '@docusaurus/plugin-content-docs/client';
 import { useHomePageRoute } from '@docusaurus/theme-common/internal';
 import Link from '@docusaurus/Link';
@@ -69,14 +70,15 @@ function BreadcrumbsItem({
 export default function DocBreadcrumbs(): JSX.Element | null {
     const breadcrumbs = useSidebarBreadcrumbs();
     const homePageRoute = useHomePageRoute();
-    const activePluginAndVersion = useActivePluginAndVersion();
+    const versionMetadata = useDocsVersion();
+    const versions = useVersions(versionMetadata.pluginId);
     if (!breadcrumbs) {
         return null;
     }
     // Drop the top-level sidebar section group (e.g. "Get Started"),
     // since it's a visual grouping and has no destination page.
     const visibleBreadcrumbs = breadcrumbs.length > 1 ? breadcrumbs.slice(1) : breadcrumbs;
-    const activeVersion = activePluginAndVersion?.activeVersion;
+    const activeVersion = versions.find(version => version.name === versionMetadata.version);
     const versionMainDocPath = activeVersion?.docs.find(doc => doc.id === activeVersion.mainDocId)?.path;
     return (
         <nav
@@ -89,14 +91,14 @@ export default function DocBreadcrumbs(): JSX.Element | null {
         >
             <ul className="breadcrumbs" itemScope itemType="https://schema.org/BreadcrumbList">
                 {homePageRoute && <HomeBreadcrumbItem />}
-                {activeVersion && (
+                {versionMetadata && (
                     <li className="breadcrumbs__item">
                         {versionMainDocPath ? (
                             <Link className="breadcrumbs__link" href={versionMainDocPath}>
-                                {activeVersion.label}
+                                {versionMetadata.label}
                             </Link>
                         ) : (
-                            <span className="breadcrumbs__link">{activeVersion.label}</span>
+                            <span className="breadcrumbs__link">{versionMetadata.label}</span>
                         )}
                     </li>
                 )}
