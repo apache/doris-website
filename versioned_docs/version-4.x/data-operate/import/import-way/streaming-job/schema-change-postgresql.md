@@ -31,8 +31,8 @@ PostgreSQL Schema Change Sync is supported from Doris 4.1.0.
 
 | PostgreSQL operation | Doris behavior |
 | --- | --- |
-| `ADD COLUMN` | Adds a nullable column with the same name and a type defined by the [PostgreSQL Data Type Mapping](./data-type-mapping-postgresql.md). DEFAULT and `NOT NULL` constraints are not copied, and historical rows are not backfilled. Subsequent rows use the actual values written by PostgreSQL to WAL. |
-| `DROP COLUMN` | Drops the column with the same name and its historical data. |
+| `ADD COLUMN` | Adds a column with the same name and a type defined by the [PostgreSQL Data Type Mapping](./data-type-mapping-postgresql.md). DEFAULT and `NOT NULL` constraints are not copied, and historical rows are not backfilled. Subsequent rows use the actual values written by PostgreSQL to WAL. |
+| `DROP COLUMN` | Drops the column with the same name. |
 
 ## Considerations
 

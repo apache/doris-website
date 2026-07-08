@@ -31,8 +31,8 @@ PostgreSQL Schema Change 同步自 Doris 4.1.0 起支持。
 
 | PostgreSQL 操作 | Doris 行为 |
 | --- | --- |
-| `ADD COLUMN` | 新增同名的 Nullable 列，类型遵循 [PostgreSQL 数据类型映射](./data-type-mapping-postgresql.md)。不复制 DEFAULT 和 `NOT NULL` 约束，也不回填历史数据；后续数据使用 PostgreSQL 写入 WAL 的实际值。 |
-| `DROP COLUMN` | 删除同名列及其历史数据。 |
+| `ADD COLUMN` | 新增同名的列，类型遵循 [PostgreSQL 数据类型映射](./data-type-mapping-postgresql.md)。不复制 DEFAULT 和 `NOT NULL` 约束，也不回填历史数据；后续数据使用 PostgreSQL 写入 WAL 的实际值。 |
+| `DROP COLUMN` | 删除同名列。 |
 
 ## 注意事项
 
