@@ -1,0 +1,463 @@
+---
+title: Community Contribution Guide
+language: en
+description: Learn how to contribute to Apache Doris through code development, content creation, and community outreach.
+keywords:
+    - Apache Doris
+    - community contribution
+    - code development
+    - content creation
+    - community outreach
+    - Contributor
+    - Committer
+    - PMC
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<style>{`
+.contribution-path-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto auto 1fr auto auto;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.contribution-path-card {
+  display: grid;
+  grid-row: span 5;
+  grid-template-rows: subgrid;
+  gap: 12px;
+  min-height: 100%;
+  padding: 20px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+}
+
+.contribution-benefits-card {
+  grid-column: 1 / -1;
+  padding: 20px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+}
+
+.contribution-path-card:hover {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+}
+
+.contribution-path-card h3,
+.contribution-benefits-card h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.contribution-path-card p,
+.contribution-benefits-card p {
+  margin: 0;
+}
+
+.contribution-path-card ul,
+.contribution-benefits-card ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.contribution-path-card strong,
+.contribution-benefits-card strong {
+  color: var(--ifm-color-primary);
+}
+
+.contribution-benefits-list {
+  columns: 2;
+  column-gap: 32px;
+  margin-top: 12px;
+}
+
+.contribution-card-benefit {
+  align-self: start;
+}
+
+.contribution-next-step {
+  align-self: end;
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+@media (max-width: 996px) {
+  .contribution-path-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contribution-benefits-list {
+    columns: 1;
+  }
+}
+`}</style>
+
+Apache Doris welcomes developers, users, technical writers, speakers, and community organizers from around the world. You can contribute through code development, content creation, or community outreach. Each path helps the project grow and gives contributors a public record of open source collaboration.
+
+<div className="contribution-path-grid">
+  <a className="contribution-path-card" href="?path=developer#community-participation-guide">
+    <h3>Code development</h3>
+    <p><strong>Best for:</strong> contributors who want to work directly on Doris engineering.</p>
+    <ul>
+      <li>Fix bugs and build new features.</li>
+      <li>Improve performance, stability, or observability.</li>
+      <li>Add unit tests, regression tests, and integration tests.</li>
+      <li>Improve build, CI, release, development tooling, and engineering workflows.</li>
+      <li>Review PRs, and add technical docs, user docs, or examples.</li>
+    </ul>
+    <p className="contribution-card-benefit"><strong>Once your contribution is merged, you become an Apache Doris Contributor.</strong></p>
+    <span className="contribution-next-step">Read the Guide -&gt;</span>
+  </a>
+  <a className="contribution-path-card" href="?path=content#community-participation-guide">
+    <h3>Content creation</h3>
+    <p><strong>Best for:</strong> contributors who know Doris use cases and want to share practical experience.</p>
+    <ul>
+      <li>Write technical blogs and production case studies.</li>
+      <li>Create getting started tutorials and best practices.</li>
+      <li>Record videos about features, deployment, tuning, or troubleshooting.</li>
+      <li>Speak at meetups, webinars, and conferences.</li>
+      <li>Translate docs, blogs, event materials, or video subtitles.</li>
+    </ul>
+    <p className="contribution-card-benefit"><strong>High quality content contributions receive community swag as a thank you.</strong></p>
+    <span className="contribution-next-step">Read the Guide -&gt;</span>
+  </a>
+  <a className="contribution-path-card" href="?path=community#community-participation-guide">
+    <h3>Community outreach</h3>
+    <p><strong>Best for:</strong> contributors who understand user needs and enjoy working with people.</p>
+    <ul>
+      <li>Answer questions on Slack, GitHub, and mailing lists.</li>
+      <li>Help new users find the right docs, examples, and community channels.</li>
+      <li>Organize online or offline meetups, workshops, office hours, or user talks.</li>
+      <li>Invite users to share production practices and migration stories.</li>
+      <li>Collect user feedback and move it into public community channels.</li>
+    </ul>
+    <p className="contribution-card-benefit"><strong>Active community participants receive community swag as a thank you.</strong></p>
+    <span className="contribution-next-step">Read the Guide -&gt;</span>
+  </a>
+  <div className="contribution-benefits-card">
+    <h3>Benefits</h3>
+    <p>Depending on the type, quality, and consistency of your contributions, you may receive:</p>
+    <ul className="contribution-benefits-list">
+      <li>Public recognition in Apache Doris community channels.</li>
+      <li>Acknowledgment in contributor lists, community thanks, or event recaps.</li>
+      <li>Opportunities to publish content on the Apache Doris website, blog, social channels, or video channels.</li>
+      <li>Opportunities to speak at community events.</li>
+      <li>More chances to talk with Maintainers, Committers, PMC members, and experienced users.</li>
+      <li>Priority access to selected meetups, webinars, conference topics, or other community programs.</li>
+      <li>A public record of technical contribution and personal impact.</li>
+      <li>Community swag, keepsakes, or special gifts.</li>
+    </ul>
+    <p>For members who contribute technical work consistently and at a high level, the community may invite them to become <strong>Apache Doris Committers or PMC members</strong> through the Apache governance process. Doris Summit also selects <strong>Outstanding Community Heroes</strong> each year to thank users, developers, and community advocates who made notable contributions.</p>
+  </div>
+</div>
+
+## Community Participation Guide
+
+The sections below explain how to get started on each path.
+
+:::tip Tip
+This guide may change as community processes evolve. Join the [Apache Doris Slack community](https://doris.apache.org/slack) for the latest updates.
+:::
+
+<Tabs groupId="contribution-path" queryString="path">
+<TabItem value="developer" label="Code development guide" default>
+
+### Where to find tasks
+
+You can find contribution opportunities in these places:
+
+- Slack: ask questions, start a discussion, confirm context, or find the right person to talk to.
+- [Apache Doris GitHub Issues](https://github.com/apache/doris/issues): good for bugs, feature requests, improvement ideas, and open tasks.
+- [Apache Doris GitHub Discussions](https://github.com/apache/doris/discussions): good for technical discussions, usage questions, and design proposals.
+- Roadmap: good for longer term technical work. You can usually find it in a pinned Issue on the GitHub Issues page.
+- Existing PRs: good for review, testing, validation, or helping move a change forward.
+
+New contributors can start with small, focused tasks: fix docs, add tests, fix a simple bug, reproduce an Issue, improve an error message, or clean up an example. For larger features or behavior changes, start a discussion in the Apache Doris Slack `#dev` channel and ask Core Maintainers for context.
+
+### Code contribution expectations
+
+Before you submit code, try to do the following:
+
+- Fork the `apache/doris` repository and create a separate branch from the latest main branch.
+- Keep each PR focused on one clear problem. Avoid mixing unrelated changes in one PR.
+- Use a PR title and description that explain the goal, scope, and validation.
+- Link the related Issue, Discussion, or mailing list thread.
+- Add the necessary unit tests, regression tests, or manual validation steps.
+- Update the docs if the change affects user behavior, configuration, SQL semantics, error messages, or compatibility.
+- Call out compatibility, performance, stability, or behavior risks in the PR description.
+
+A good PR usually includes:
+
+- Background: why the change is needed.
+- Approach: what changed and why.
+- Tests: which tests or validation steps were run, and what happened.
+- Risks: whether the change affects compatibility, performance, stability, or user behavior.
+- Docs: whether docs are needed, and where they were updated.
+
+The community supports using AI to help with coding, debugging, and review, but contributors must follow these rules:
+
+- Use capable models for development, debugging, and review. Do not rely on low quality generated code for important changes.
+- You are responsible for the code you submit. The community does not accept AI-generated code without a human owner.
+
+### Standard merge flow
+
+Code changes usually go through this process:
+
+1. The contributor opens a Pull Request.
+2. A Committer or someone with higher permissions triggers CI and AI Review. You can ask for help in the Slack `#dev` channel.
+3. The contributor fixes build, test, or format issues reported by CI and review. AI feedback is also part of the review process. Apply useful suggestions, and explain in the PR when a suggestion does not apply.
+4. The contributor rebases on the latest main branch and resolves conflicts when needed.
+5. All required CI checks pass.
+6. A Reviewer approves the PR.
+7. A Committer completes the merge.
+
+Required CI checks must pass before a PR can be merged. Non-required checks do not block the merge.
+
+### How to move review forward
+
+Contributors should actively move their own PRs forward instead of waiting for Reviewers. The Apache Doris contribution guide also encourages contributors to act as the Moderator for their own PRs and help carry the PR from submission to merge.
+
+Recommended practices:
+
+- Give Reviewers enough context in the PR description.
+- Share the PR link in the Slack `#dev` channel and ask for Reviewers.
+- Reply to Review comments promptly.
+- Mark resolved items as resolved after you address them.
+- Give technical reasons when you disagree with a comment.
+- Rebase regularly to avoid long running conflicts.
+- If a PR has stalled, politely ping the relevant Reviewers in the PR.
+- If you are not sure who should review the PR, ask in Slack for help finding the right module owner.
+
+Ways to find suitable Reviewers:
+
+- Look at recently merged PRs in the same module.
+- Check the commit history of the related files.
+- Check GitHub suggested Reviewers or CODEOWNERS, if available.
+- Ask in Slack for help finding a suitable Reviewer, but bring important technical conclusions back to GitHub or the mailing list.
+
+</TabItem>
+<TabItem value="content" label="Content creation guide">
+
+### What to submit and where
+
+#### Blog posts
+
+Good topics include:
+
+- Deep dives into Doris features.
+- Query optimization, load optimization, operations tuning, and troubleshooting.
+- Lakehouse, real-time data warehouse, log analytics, user behavior analytics, and other practical scenarios.
+- Migration experience from Elasticsearch, ClickHouse, Hive, Trino, or other systems to Doris.
+- Production troubleshooting and performance tuning write-ups.
+- New release capability overviews and usage advice.
+
+How to submit:
+
+- Start a discussion in the Slack `#dev` channel.
+- Submit a Markdown file to the `/blog` directory in the `apache/doris-website` repository. Doris Maintainers can help if needed.
+
+#### Case studies
+
+Good case studies include:
+
+- The business background of the company or team.
+- Why the team chose Apache Doris.
+- System architecture and data flow.
+- Data scale, query patterns, and performance goals.
+- Problems found during migration or rollout.
+- Results, benefits, and lessons learned after going live.
+
+How to submit:
+
+- If the content includes company names, business data, or architecture diagrams, get internal approval first or remove sensitive information.
+- Start a discussion in the Slack `#dev` channel. The community can help edit, translate, or publish the case study.
+
+#### Tutorials
+
+Good tutorial topics include:
+
+- Getting started.
+- Deployment and upgrade.
+- Data loading.
+- Query tuning.
+- Materialized views.
+- Inverted indexes.
+- Compute-storage separation.
+- Lakehouse queries.
+- Log analytics and observability scenarios.
+
+How to submit:
+
+- Start a discussion in the Slack `#dev` channel.
+- General content that will stay accurate over time usually belongs in the official docs.
+- Practical, scenario-based, or version-specific content usually works better as a blog post.
+- Example code, scripts, and configuration should be reproducible when possible.
+
+#### Videos
+
+Good video topics include:
+
+- One-to-five-minute feature demos.
+- Installation and deployment walkthroughs.
+- Best practice explainers.
+- Scenario based demos.
+- Meetup or webinar recordings.
+- User interviews or case study talks.
+
+How to submit:
+
+- Start a discussion in the Slack `#dev` channel.
+- Confirm the topic, script, or outline with the community first.
+- After the video is ready, the community can help publish it to YouTube, Bilibili, or other official video channels.
+- If the video includes company names, customer names, performance data, or internal system screenshots, get approval first or remove sensitive information.
+
+#### Talks
+
+Good formats include:
+
+- Meetup talks.
+- Webinar talks.
+- Conference talks.
+- Release feature introductions.
+- Contributor onboarding sessions.
+- User story sessions.
+
+How to submit:
+
+- Start a discussion in the Slack `#dev` channel.
+- Share the topic, abstract, target audience, language, expected length, and speaker information with the community.
+- The community can help refine the topic, review the technical content, promote the session, and support the registration page. Funding or venue support may also be possible when needed.
+
+#### Translations
+
+Good translation work includes:
+
+- Official docs.
+- Blog posts.
+- Event recaps.
+- Video subtitles.
+- Tutorials and best practices.
+
+How to submit:
+
+- Submit documentation translations through a PR to `apache/doris-website`.
+- For blog or event translations, confirm the target page and publishing channel with the community first.
+- Keep the technical meaning accurate. Do not change the meaning for marketing language.
+
+### Publishing channels
+
+Depending on the content type and review result, content may be published through:
+
+- Apache Doris official website.
+- Apache Doris official blog.
+- Apache Doris Medium.
+- Apache Doris YouTube.
+- Apache Doris LinkedIn.
+- Apache Doris X/Twitter.
+- Apache Doris Slack.
+- Community newsletters, event recaps, or release topic pages.
+
+Content usually needs a technical accuracy review before publication. Content that includes performance data, commercial case studies, customer names, or company information also needs authorization.
+
+</TabItem>
+<TabItem value="community" label="Community outreach guide">
+
+### Ways to participate
+
+Community contributors can join or organize activities such as:
+
+- Online meetup: topic-based online sharing for global users.
+- Offline meetup: in-person discussions for a city or region.
+- Webinar: online sessions about a feature, scenario, or release.
+- Workshop: hands-on sessions for deployment, loading, tuning, or case practice.
+- Office hour: recurring Q&A sessions for user questions.
+- User story session: production practice talks from real users.
+- Release introduction: sessions about new features and upgrade advice.
+- Contributor onboarding: sessions that help new contributors understand the codebase, process, and community workflow.
+- Local community event: localized events for a specific language or region.
+- Hackathon or contribution sprint: focused contribution work on Issues, docs, tests, or tools.
+
+### How to propose an event
+
+Event organizers should prepare:
+
+- Event topic.
+- Target audience.
+- Event format.
+- Event language.
+- Time and time zone.
+- Speaker or host.
+- Expected length.
+- Support needed from the community.
+- Promotion plan.
+- Whether the event will produce slides, a recording, a blog post, or a recap.
+
+Start the discussion in the Slack `#dev` channel first. This lets more community members participate and keeps the process open, which is how Apache communities are expected to work.
+
+### Support from the community
+
+Depending on the event type, event quality, and available resources, the community may help with:
+
+- Promotion through official media channels.
+- Topic planning.
+- Speaker recommendations.
+- Technical review for slides or demos.
+- Registration page or event page support.
+- Recording and replay distribution.
+- Social media promotion.
+- Community swag.
+- Limited event budget, such as venue, materials, refreshments, or basic operations costs.
+- Event recap publication.
+
+Funding, gifts, travel, venues, and sponsorship support can be discussed with the community. Event organizers should explain the budget use, expected impact, and deliverables in advance.
+
+</TabItem>
+</Tabs>
+
+## Community Code of Conduct
+
+All contributors should follow these principles:
+
+- Respect others and keep communication professional, friendly, and constructive.
+- Keep important technical discussions and community decisions in public channels whenever possible.
+- Stay open to code review, documentation review, and content review.
+- If you disagree with review feedback, explain your technical reasoning clearly.
+- Avoid making community decisions privately when they should be discussed in public.
+- Submit original content, or clearly cite sources for quoted or referenced material.
+- Avoid exaggerated, unverifiable, or misleading performance and business claims.
+- Add tests for code changes whenever possible.
+- Update docs when a change affects user-visible behavior.
+- Do not disclose user privacy, sensitive customer information, or company confidential information.
+- Follow responsible disclosure for security issues. Do not publish details in public channels before the issue is handled.
+- Respect Apache community values and the ASF Code of Conduct.
+
+Contributors participate as members of an open source community. If you represent a company in some activities, say so when it matters. The contribution itself should still follow Apache's open and transparent way of working, where contribution matters.

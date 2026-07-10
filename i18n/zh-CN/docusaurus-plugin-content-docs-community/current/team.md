@@ -1,5 +1,5 @@
 ---
-title: Apache Doris 团队与社区角色
+title: 团队与社区角色
 language: zh-CN
 description: Apache Doris 社区角色（PMC / Committer / Contributor）介绍，以及 Apache 官方成员名单与贡献者列表入口。
 keywords:
@@ -46,7 +46,7 @@ Apache Doris 由分布在全球各地的贡献者共同开发与维护，遵循 
 | **Committer** | 拥有代码仓库提交权限的活跃贡献者，负责代码、文档、Issue 与 PR 的审阅与合入 |
 | **Contributor** | 通过 PR、Issue、文档、布道、答疑等方式参与社区的所有贡献者 |
 
-如果你希望了解从 Contributor 成长为 Committer / PMC 的路径，请参阅 [贡献者成长路径](how-to-contribute/contributor-guide)。
+如果你希望了解从 Contributor 成长为 Committer / PMC 的路径，请参阅 [社区参与指南](how-to-contribute/contribute-to-doris.mdx)。
 
 ## 最新成员名单
 

@@ -1,5 +1,5 @@
 ---
-title: 代码提交指南（Pull Request）
+title: 代码提交指南
 language: zh-CN
 description: Apache Doris Pull Request 提交完整流程：Fork、分支、解决冲突、提交 PR。
 keywords:

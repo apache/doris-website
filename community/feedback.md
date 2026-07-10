@@ -1,5 +1,5 @@
 ---
-title: Report Issues to Apache Doris
+title: Report Issues
 language: en
 description: "Official channels for reporting bugs or sending suggestions to Apache Doris: mailing list and GitHub Issue, with writing tips for high-quality issue reports."
 keywords:
