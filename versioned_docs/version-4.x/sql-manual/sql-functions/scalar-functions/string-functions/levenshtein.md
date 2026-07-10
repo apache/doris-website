@@ -19,7 +19,7 @@ The Levenshtein edit distance is the minimum number of single-character edits re
 This function calculates distance by UTF-8 characters, not by bytes. Therefore, multibyte characters such as Chinese characters are treated as one character.
 
 :::note
-Since 4.1.3
+Since 4.2.0
 :::
 
 ## Alias

@@ -22,7 +22,7 @@ Compared with `LEVENSHTEIN`, `DAMERAU_LEVENSHTEIN_DISTANCE` treats adjacent char
 This function calculates distance by UTF-8 characters, not by bytes. Therefore, multibyte characters such as Chinese characters are treated as one character.
 
 :::note
-Since 4.1.3
+Since 4.2.0
 :::
 
 ## Syntax
