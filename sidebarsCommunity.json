@@ -17,8 +17,6 @@
             "label": "How to Contribute",
             "items": [
                 "how-to-contribute/contribute-to-doris",
-                "how-to-contribute/contributor-guide",
-                "doris-future",
                 "how-to-contribute/pull-request",
                 {
                     "type": "category",

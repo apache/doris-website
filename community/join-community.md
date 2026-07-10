@@ -1,5 +1,5 @@
 ---
-title: Join the Apache Doris Community
+title: Join the Community
 language: en
 description: "How to join the Apache Doris community: official entry points and links for Slack, GitHub, mailing lists, Twitter, LinkedIn, YouTube, and Bilibili."
 keywords:
@@ -38,6 +38,12 @@ under the License.
 
 [Apache Doris](https://github.com/apache/doris) is an open source real-time data warehouse project maintained by users and developers worldwide. In June 2022, it graduated from the Apache Incubator and became an Apache Top-Level Project (TLP). This page lists the official communication channels of the community so that you can pick the one that best fits your habits to join discussions and follow updates.
 
+:::tip Want to contribute to the community?
+
+If you want to contribute to Apache Doris through code development, content creation, or community outreach, start with the [Community Contribution Guide](how-to-contribute/contribute-to-doris.mdx).
+
+:::
+
 ## Overview of Official Community Channels
 
 The purpose and use case of each channel is as follows:
@@ -57,7 +63,7 @@ The purpose and use case of each channel is as follows:
 <!-- Knowledge type: Scenario routing -->
 
 - **To ask quick questions or join daily discussions**: join [Slack](https://doris.apache.org/slack).
-- **To report bugs or submit code**: visit [GitHub](https://github.com/apache/doris), and refer to [Feedback](feedback) and the [Contributor Guide](how-to-contribute/contributor-guide).
+- **To report bugs or submit code**: visit [GitHub](https://github.com/apache/doris), and refer to [Feedback](feedback) and the [Community Contribution Guide](how-to-contribute/contribute-to-doris.mdx).
 - **To follow community decisions and release announcements**: [subscribe to the mailing list](subscribe-mail-list).
 - **To see user cases and technical insights**: follow [Twitter](https://twitter.com/doris_apache) and [LinkedIn](https://www.linkedin.com/company/doris-apache/).
 - **To watch Meetup and technical sharing recordings**: visit [YouTube](https://www.youtube.com/hashtag/apachedoris) or [Bilibili](https://space.bilibili.com/362350065).

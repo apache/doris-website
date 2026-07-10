@@ -1,5 +1,5 @@
 ---
-title: 加入 Apache Doris 社区
+title: 加入社区
 language: zh-CN
 description: 如何加入 Apache Doris 社区：Slack、GitHub、邮件列表、Twitter、LinkedIn、YouTube、Bilibili 的官方入口与链接。
 keywords:
@@ -38,6 +38,12 @@ under the License.
 
 [Apache Doris](https://github.com/apache/doris) 是一个由全球用户与开发者共同维护的开源实时数据仓库项目，2022 年 6 月从 Apache 孵化器毕业，正式成为 Apache 顶级项目（Top-Level Project, TLP）。本页汇总社区的官方沟通渠道，方便你按使用习惯选择最合适的方式参与讨论、获取动态。
 
+:::tip 想参与社区贡献？
+
+如果你希望通过代码开发、内容创作或社区布道参与 Apache Doris，请先阅读 [Community Contribution Guide](how-to-contribute/contribute-to-doris.mdx)。
+
+:::
+
 ## 官方社区渠道一览
 
 不同渠道的定位与使用场景如下：
@@ -57,7 +63,7 @@ under the License.
 <!-- 知识类型: 场景分流 -->
 
 - **想快速提问或参与日常讨论**：加入 [Slack](https://doris.apache.org/slack)。
-- **想报告 Bug 或提交代码**：访问 [GitHub](https://github.com/apache/doris)，参考 [问题反馈](feedback) 与 [贡献者指南](how-to-contribute/contributor-guide)。
+- **想报告 Bug 或提交代码**：访问 [GitHub](https://github.com/apache/doris)，参考 [问题反馈](feedback) 与 [社区参与指南](how-to-contribute/contribute-to-doris.mdx)。
 - **想跟进社区决策与版本发布**：[订阅邮件列表](subscribe-mail-list)。
 - **想看用户案例与技术见解**：关注 [Twitter](https://twitter.com/doris_apache) 与 [LinkedIn](https://www.linkedin.com/company/doris-apache/)。
 - **想回看 Meetup 与技术分享**：访问 [YouTube](https://www.youtube.com/hashtag/apachedoris) 或 [Bilibili](https://space.bilibili.com/362350065)。

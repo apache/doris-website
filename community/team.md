@@ -1,5 +1,5 @@
 ---
-title: Apache Doris Team and Community Roles
+title: Team and Community Roles
 language: en
 description: Introduction to Apache Doris community roles (PMC / Committer / Contributor), with entry points to the official Apache members list and the contributor list.
 keywords:
@@ -46,7 +46,7 @@ Apache Doris is developed and maintained by contributors distributed around the 
 | **Committer** | Active contributors with commit access to the code repository, responsible for reviewing and merging code, documentation, issues, and PRs |
 | **Contributor** | All contributors who participate in the community through PRs, issues, documentation, evangelism, Q&A, and other forms of contribution |
 
-If you want to learn about the path from Contributor to Committer or PMC, see the [Contributor Growth Path](how-to-contribute/contributor-guide).
+If you want to learn about the path from Contributor to Committer or PMC, see the [Community Contribution Guide](how-to-contribute/contribute-to-doris.mdx).
 
 ## Latest Members List
 

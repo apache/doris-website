@@ -40,7 +40,7 @@ Whether you are working on historical versions or the latest version of the docu
 
 For the PR submission workflow, you can also refer to:
 
-- [Contribute to Doris](./contribute-to-doris)
+- [Community Contribution Guide](./contribute-to-doris.mdx)
 - [Pull Request Guide](./pull-request)
 
 :::
