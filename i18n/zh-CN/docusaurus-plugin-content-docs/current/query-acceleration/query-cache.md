@@ -84,7 +84,7 @@ SELECT region, SUM(revenue) FROM orders WHERE dt = '2024-01-01' GROUP BY region;
 
 | 触发条件     | 说明                                                                                                  |
 | ------------ | ----------------------------------------------------------------------------------------------------- |
-| 数据变更     | INSERT、DELETE、UPDATE 或 Compaction 使 Tablet 版本号递增；后续查询比对版本，不一致即未命中           |
+| 数据变更     | INSERT、DELETE、UPDATE 或 Compaction 使 Tablet 版本号递增；后续查询比对版本，不一致即未命中。开启[增量合并](#增量合并实验性)后，版本落后的条目可改为只扫增量而被复用 |
 | Schema 变更  | ALTER TABLE 改变表结构，从而改变执行计划与摘要                                                        |
 | LRU 淘汰     | 缓存内存超限时，按 LRU-K（K=2）淘汰；新条目须至少被访问两次才能被准入                                 |
 | 过期清理     | 超过 24 小时的条目由周期性清理任务自动移除                                                            |
@@ -179,6 +179,54 @@ Query Cache 依赖内部 OLAP 表的三个特有属性：
 
 外部表的缓存需求请改用 [SQL Cache](./sql-cache-manual.md)。
 
+## 增量合并（实验性）
+
+<!-- 知识类型：原理 + 操作 -->
+<!-- 适用场景：小时级批量导入不断写入热分区，导致其缓存条目反复失效 -->
+
+默认情况下，版本落后的缓存条目（例如按小时导入的表的当前分区）会被直接作废，对应的 Pipeline 实例回到全量扫描重算。开启**增量合并**后，BE 会复用这条过期条目：只扫描 `(缓存版本, 当前版本]` 区间的增量 rowset，把增量的聚合中间状态与缓存的中间状态**并排**交给上游合并聚合（两者本就是同构的可合并输入），并以新版本回写合并后的条目。对小时级导入场景，热分区的扫描成本从“每小时扫整个分区”降为“只扫最近一小时的新数据”。
+
+![全量重算与增量合并对比](/images/next/query-cache/incremental-merge-architecture.svg)
+
+```sql
+SET enable_query_cache = true;
+SET enable_query_cache_incremental = true;  -- SHOW VARIABLES 中显示为 experimental_enable_query_cache_incremental
+```
+
+### 生效前提
+
+增量合并仅在**同时**满足以下条件时生效；任一不满足都会静默回退为全量重算，查询结果始终正确：
+
+1. 被扫描的索引（基表或选中的 rollup）为**追加写**模型：**DUP_KEYS** 表，或增量窗口内未改写既有主键的**写时合并（merge-on-write）UNIQUE_KEYS** 表。对写时合并表，BE 会按 tablet 检查 `(cached_version, current_version]` 窗口内的 delete bitmap：窗口内只新增了全新主键（主键表上常见的“每小时追加导入”模式）即可增量合并；一旦有 upsert、部分列更新或 delete sign 命中了更早的主键，则回退一次全量重算，重算会以新版本重建条目，下一次纯追加导入即恢复增量。读时合并（merge-on-read）UNIQUE 表在读取时跨 rowset 归并去重、AGG 表在存储层合并行，“缓存快照 + 增量 = 新快照”不成立；聚合物化视图同理被拒绝。
+2. 缓存点是**直接位于扫描之上、且不做 finalize 的聚合**（常见的两阶段聚合形态，例如按非分桶列 `GROUP BY`）。单阶段聚合与嵌套聚合缓存点会被拒绝。
+3. 集群为**存算一体（本地存储）**部署。
+4. 增量版本路径仍可捕获（未被 compaction 合并跨界），且增量中**不含 DELETE 谓词**（增量中的删除会逻辑上移除已折入缓存块的行，无法通过合并撤销）。
+
+写时合并表的 delete bitmap 窗口检查方式如下：
+
+![写时合并表的 delete bitmap 窗口检查](/images/next/query-cache/incremental-merge-mow-bitmap.svg)
+
+### 合并条目的压实
+
+每次增量合并都会把增量块追加进条目，条目随之逐渐碎片化。当条目累计 `query_cache_max_incremental_merge_count` 次合并（BE 配置，默认 `8`，运行时可调）后，下一次查询会强制全量重算，条目自然压实。
+
+单个实例内的增量执行数据流（含回写与两道熵控制）：
+
+![单实例内的增量执行数据流](/images/next/query-cache/incremental-merge-dataflow.svg)
+
+### 可观测性
+
+- CACHE_SOURCE 算子的查询 profile：`HitCacheStale = 1` 表示走了增量合并；`IncrementalDeltaVersions` 展示增量区间（如 `(100, 114514]`）；过期条目未能复用时，`IncrementalFallbackReason` 给出原因（`delta versions not capturable`、`delta contains delete predicates`、`delta rewrites history rows`、`keys type not append-only` 等）。
+- BE 指标：`doris_be_query_cache_stale_hit_total`、`doris_be_query_cache_incremental_fallback_total`、`doris_be_query_cache_write_back_total`。
+
+BE 如何在 HIT、INCREMENTAL、MISS 三态间决策，以及每种回退原因的来源：
+
+![决策流程与八种回退原因](/images/next/query-cache/incremental-merge-decision-flow.svg)
+
+从 FE 授权到存储层防线的全景视图：
+
+![增量合并全景：FE、BE 与存储层](/images/next/query-cache/incremental-merge-overview.svg)
+
 ## 配置参数
 
 <!-- 知识类型：参数参考 -->
@@ -192,12 +240,14 @@ Query Cache 依赖内部 OLAP 表的三个特有属性：
 | `query_cache_force_refresh`   | 设为 `true` 时忽略缓存结果并重新执行查询；新结果仍会写入缓存                               | `false`             |
 | `query_cache_entry_max_bytes` | 单个缓存条目的最大字节数；超过该限制的 Fragment 结果不会被缓存                             | `5242880`（5 MB）   |
 | `query_cache_entry_max_rows`  | 单个缓存条目的最大行数；超过该限制的 Fragment 结果不会被缓存                               | `500000`            |
+| `enable_query_cache_incremental` | （实验性）允许 BE 以增量合并方式复用过期缓存条目：只扫描缓存版本之后的增量 rowset，并与缓存的聚合中间结果一起交给上游合并。详见[增量合并](#增量合并实验性) | `false` |
 
 ### BE 配置（be.conf）
 
 | 参数               | 说明                                       | 默认值 |
 | ------------------ | ------------------------------------------ | ------ |
 | `query_cache_size` | 每个 BE 上 Query Cache 的总内存容量（MB）  | `512`  |
+| `query_cache_max_incremental_merge_count` | 单个缓存条目上累计增量合并的最大次数，达到后强制一次全量重算以压实条目；设为 `0` 可在运行时禁用增量合并 | `8` |
 
 :::note
 `be.conf` 中的 `query_cache_max_size_mb` 和 `query_cache_elasticity_size_mb` 控制的是旧版 SQL Result Cache，**不是** 本文描述的流水线级别 Query Cache，请勿混淆。
