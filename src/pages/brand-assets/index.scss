@@ -1,0 +1,205 @@
+.brand-assets {
+    background: #ffffff;
+    color: #1d1d1d;
+
+    &__hero {
+        background: #f7fafc;
+        padding: 6rem 0 5rem;
+        text-align: center;
+
+        h1 {
+            margin: 0;
+            color: #1d1d1d;
+            font-size: 2.75rem;
+            font-weight: 600;
+            line-height: 1.1;
+        }
+    }
+
+    &__eyebrow {
+        margin: 0 0 0.75rem;
+        color: var(--ifm-color-primary);
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    &__intro {
+        max-width: 48rem;
+        margin: 1.25rem auto 0;
+        color: #4b5563;
+        font-size: 1.125rem;
+        line-height: 1.8;
+    }
+
+    &__content {
+        padding: 4.5rem 0 6rem;
+    }
+
+    &__notice {
+        margin-bottom: 2rem;
+        padding: 1rem 1.25rem;
+        border: 1px solid #d9eee8;
+        border-radius: 6px;
+        background: #f4fbf8;
+        color: #344054;
+        font-size: 0.9375rem;
+        line-height: 1.7;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.5rem;
+    }
+
+    &__card {
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 10px 28px rgba(33, 39, 116, 0.06);
+    }
+
+    &__preview {
+        display: flex;
+        min-height: 13.5rem;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        border-bottom: 1px solid #e5e7eb;
+
+        img {
+            display: block;
+            width: 100%;
+            max-width: 15rem;
+            max-height: 8rem;
+            object-fit: contain;
+        }
+
+        &--light {
+            background:
+                linear-gradient(45deg, #f2f5f8 25%, transparent 25%),
+                linear-gradient(-45deg, #f2f5f8 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #f2f5f8 75%),
+                linear-gradient(-45deg, transparent 75%, #f2f5f8 75%),
+                #ffffff;
+            background-position:
+                0 0,
+                0 0.75rem,
+                0.75rem -0.75rem,
+                -0.75rem 0;
+            background-size: 1.5rem 1.5rem;
+        }
+
+        &--dark {
+            border-bottom-color: #24352f;
+            background: #0c1613;
+        }
+    }
+
+    &__card-body {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1.25rem;
+
+        h2 {
+            margin: 0;
+            color: #1d1d1d;
+            font-size: 1.125rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        p {
+            margin: 0.5rem 0 0;
+            color: #667085;
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+    }
+
+    &__card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 1.25rem;
+
+        span {
+            color: #667085;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        a {
+            display: inline-flex;
+            min-height: 2.25rem;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 0.875rem;
+            border-radius: 4px;
+            background: var(--ifm-color-primary);
+            color: #ffffff;
+            font-size: 0.875rem;
+            font-weight: 500;
+            line-height: 1.2;
+            transition:
+                opacity 0.2s,
+                box-shadow 0.2s;
+
+            &:hover {
+                color: #ffffff;
+                opacity: 0.9;
+                text-decoration: none;
+                box-shadow: 0 6px 12px rgba(161, 167, 210, 0.35);
+            }
+        }
+    }
+
+    @media screen and (max-width: 996px) {
+        &__hero {
+            padding: 4.5rem 0 3.75rem;
+
+            h1 {
+                font-size: 2.25rem;
+            }
+        }
+
+        &__content {
+            padding: 3rem 0 4rem;
+        }
+
+        &__grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media screen and (max-width: 640px) {
+        &__hero {
+            padding: 3.5rem 0 3rem;
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        &__intro {
+            font-size: 1rem;
+        }
+
+        &__grid {
+            grid-template-columns: 1fr;
+        }
+
+        &__preview {
+            min-height: 11rem;
+            padding: 1.5rem;
+        }
+    }
+}
