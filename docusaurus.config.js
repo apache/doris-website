@@ -444,6 +444,10 @@ const config = {
                                 label: 'Download',
                                 href: '/download',
                             },
+                            {
+                                label: 'Brand Assets',
+                                href: '/brand-assets',
+                            },
                             // {
                             //     label: 'Docs',
                             //     href: '/docs/get-starting/quick-start',
