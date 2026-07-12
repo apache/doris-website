@@ -108,6 +108,7 @@
             "items": [
                 "release-and-verify/release-versioning",
                 "release-and-verify/release-prepare",
+                "release-and-verify/release-doris-core-with-ai-agent",
                 "release-and-verify/release-doris-core",
                 "release-and-verify/release-doris-connectors",
                 "release-and-verify/release-doris-shade",
