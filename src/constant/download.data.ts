@@ -188,7 +188,7 @@ export const DORIS_VERSIONS: Option[] = [
                 asc: `${ORIGIN}apache-doris-4.0.6-bin-x64.tar.gz.asc`,
                 sha512: `${ORIGIN}apache-doris-4.0.6-bin-x64.tar.gz.sha512`,
                 source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.6/',
-                version: '4.0.6-rc02',
+                version: '4.0.6',
             },
             {
                 label: CPUEnum.X64NoAvx2,
@@ -197,7 +197,7 @@ export const DORIS_VERSIONS: Option[] = [
                 asc: `${ORIGIN}apache-doris-4.0.6-bin-x64-noavx2.tar.gz.asc`,
                 sha512: `${ORIGIN}apache-doris-4.0.6-bin-x64-noavx2.tar.gz.sha512`,
                 source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.6/',
-                version: '4.0.6-rc02',
+                version: '4.0.6',
             },
             {
                 label: CPUEnum.ARM64,
@@ -206,7 +206,7 @@ export const DORIS_VERSIONS: Option[] = [
                 asc: `${ORIGIN}apache-doris-4.0.6-bin-arm64.tar.gz.asc`,
                 sha512: `${ORIGIN}apache-doris-4.0.6-bin-arm64.tar.gz.sha512`,
                 source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.6/',
-                version: '4.0.6-rc02',
+                version: '4.0.6',
             },
         ],
     },
@@ -620,7 +620,7 @@ export const ALL_VERSIONS: AllVersionOption[] = [
                         asc: `${ORIGIN}apache-doris-4.0.6-bin-x64.tar.gz.asc`,
                         sha512: `${ORIGIN}apache-doris-4.0.6-bin-x64.tar.gz.sha512`,
                         source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.6/',
-                        version: '4.0.6-rc02',
+                        version: '4.0.6',
                     },
                     {
                         label: CPUEnum.X64NoAvx2,
@@ -629,7 +629,7 @@ export const ALL_VERSIONS: AllVersionOption[] = [
                         asc: `${ORIGIN}apache-doris-4.0.6-bin-x64-noavx2.tar.gz.asc`,
                         sha512: `${ORIGIN}apache-doris-4.0.6-bin-x64-noavx2.tar.gz.sha512`,
                         source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.6/',
-                        version: '4.0.6-rc02',
+                        version: '4.0.6',
                     },
                     {
                         label: CPUEnum.ARM64,
@@ -638,7 +638,7 @@ export const ALL_VERSIONS: AllVersionOption[] = [
                         asc: `${ORIGIN}apache-doris-4.0.6-bin-arm64.tar.gz.asc`,
                         sha512: `${ORIGIN}apache-doris-4.0.6-bin-arm64.tar.gz.sha512`,
                         source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.6/',
-                        version: '4.0.6-rc02',
+                        version: '4.0.6',
                     },
                 ],
             },
