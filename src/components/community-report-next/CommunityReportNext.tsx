@@ -1,4 +1,4 @@
-import React, { JSX, useEffect, useState } from 'react';
+import React, { JSX, useEffect, useRef, useState } from 'react';
 import { LayoutNext } from '../home-next/LayoutNext';
 import './CommunityReportNext.scss';
 import './WeeklyReport.scss';
@@ -111,6 +111,8 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
     const latest = reports[0];
     const historical = reports.slice(1);
     const [selectedId, setSelectedId] = useState<string>(latest?.id ?? '');
+    const [isPastMenuOpen, setIsPastMenuOpen] = useState(false);
+    const pastMenuRef = useRef<HTMLDivElement>(null);
 
     // Allow deep-linking to a specific report via URL hash, e.g.
     // /community-report#2026-06-22. Read on mount (client-only; window is
@@ -122,8 +124,35 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
         }
     }, [reports]);
 
+    useEffect(() => {
+        if (!isPastMenuOpen) {
+            return;
+        }
+
+        const closeOnOutsideClick = (event: MouseEvent) => {
+            if (!pastMenuRef.current?.contains(event.target as Node)) {
+                setIsPastMenuOpen(false);
+            }
+        };
+
+        const closeOnEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setIsPastMenuOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', closeOnOutsideClick);
+        document.addEventListener('keydown', closeOnEscape);
+
+        return () => {
+            document.removeEventListener('mousedown', closeOnOutsideClick);
+            document.removeEventListener('keydown', closeOnEscape);
+        };
+    }, [isPastMenuOpen]);
+
     const select = (id: string) => {
         setSelectedId(id);
+        setIsPastMenuOpen(false);
         if (typeof window !== 'undefined') {
             window.history.replaceState(null, '', `#${id}`);
         }
@@ -131,6 +160,7 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
 
     const selected = reports.find(r => r.id === selectedId) ?? latest;
     const isHistoricalSelected = historical.some(r => r.id === selectedId);
+    const selectedHistoricalLabel = isHistoricalSelected ? selected?.label : 'Past reports...';
     const SelectedReport = selected?.Component;
 
     return (
@@ -159,22 +189,53 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
                             )}
 
                             {historical.length > 0 && (
-                                <div className="community-report__select-wrap">
-                                    <select
-                                        className="community-report__select"
-                                        aria-label="Browse past weekly reports"
-                                        value={isHistoricalSelected ? selectedId : ''}
-                                        onChange={e => select(e.target.value)}
+                                <div className="community-report__select-wrap" ref={pastMenuRef}>
+                                    <button
+                                        type="button"
+                                        className={
+                                            'community-report__select-button' +
+                                            (isPastMenuOpen ? ' community-report__select-button--open' : '') +
+                                            (!isHistoricalSelected ? ' community-report__select-button--placeholder' : '')
+                                        }
+                                        aria-haspopup="listbox"
+                                        aria-expanded={isPastMenuOpen}
+                                        aria-controls="community-report-past-menu"
+                                        onClick={() => setIsPastMenuOpen(open => !open)}
+                                        onKeyDown={event => {
+                                            if (event.key === 'ArrowDown') {
+                                                event.preventDefault();
+                                                setIsPastMenuOpen(true);
+                                            }
+                                        }}
                                     >
-                                        <option value="" disabled>
-                                            Past reports…
-                                        </option>
-                                        {historical.map(r => (
-                                            <option key={r.id} value={r.id}>
-                                                {r.label}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        <span>{selectedHistoricalLabel}</span>
+                                    </button>
+                                    {isPastMenuOpen && (
+                                        <div
+                                            id="community-report-past-menu"
+                                            className="community-report__select-menu"
+                                            role="listbox"
+                                            aria-label="Browse past weekly reports"
+                                        >
+                                            {historical.map(r => (
+                                                <button
+                                                    key={r.id}
+                                                    type="button"
+                                                    role="option"
+                                                    aria-selected={selectedId === r.id}
+                                                    className={
+                                                        'community-report__select-option' +
+                                                        (selectedId === r.id
+                                                            ? ' community-report__select-option--selected'
+                                                            : '')
+                                                    }
+                                                    onClick={() => select(r.id)}
+                                                >
+                                                    {r.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
