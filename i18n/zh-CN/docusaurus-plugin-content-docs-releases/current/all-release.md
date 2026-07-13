@@ -1,30 +1,44 @@
 ---
 {
-    "title": "最新发布",
+    "title": "所有项目版本发布",
     "language": "zh-CN",
-    "description": "本文列出了近一年内所有已发布的 Apache Doris 版本，按发布时间倒序呈现。"
+    "description": "本文列出了 Apache Doris Core 与 Doris 生态项目的版本发布说明。"
 }
 ---
 
-本文列出了近一年内所有已发布的 Apache Doris 版本，按发布时间倒序呈现。
+本文列出了 Apache Doris Core 与 Doris 生态项目的版本发布说明。Doris Core 保留当前站内正式 Release Notes；生态项目页面已预留用于后续维护版本发布说明。
 
+## 项目 Release Notes
 
+| 项目 | 最新版本发布说明 | 仓库 |
+| --- | --- | --- |
+| Doris Core | [Apache Doris 4.1.2](./v4.1/release-4.1.2.md) | [apache/doris](https://github.com/apache/doris) |
+| Doris Flink Connector | [Release Notes](./ecosystem/doris-flink-connector/release-1.0.0.md) | [apache/doris-flink-connector](https://github.com/apache/doris-flink-connector) |
+| Doris Spark Connector | [Release Notes](./ecosystem/doris-spark-connector/release-1.0.0.md) | [apache/doris-spark-connector](https://github.com/apache/doris-spark-connector) |
+| Doris Kafka Connector | [Release Notes](./ecosystem/doris-kafka-connector/release-1.0.0.md) | [apache/doris-kafka-connector](https://github.com/apache/doris-kafka-connector) |
+| Doris Operator | [Release Notes](./ecosystem/doris-operator/release-1.0.0.md) | [apache/doris-operator](https://github.com/apache/doris-operator) |
+| Doris MCP Server | [Release Notes](./ecosystem/doris-mcp-server/release-1.0.0.md) | [apache/doris-mcp-server](https://github.com/apache/doris-mcp-server) |
+| Doris Skills | [Release Notes](./ecosystem/doris-skills/release-1.0.0.md) | [apache/doris-skills](https://github.com/apache/doris-skills) |
+| Doris CLI | [Release Notes](./ecosystem/doris-cli/release-1.0.0.md) | [apache/doris-cli](https://github.com/apache/doris-cli) |
+| Doris Streamloader | [Release Notes](./ecosystem/doris-streamloader/release-1.0.0.md) | [apache/doris-streamloader](https://github.com/apache/doris-streamloader) |
+
+## Doris Core 版本发布说明
 
 :::tip 最新发布
-🎉 4.1.2 版本已于 2026 年 06 月 17 日正式发布，详情可查看[版本发布](./v4.1/release-4.1.2)。4.1 系列通过 AI 与搜索能力的深度融合、离线计算的稳定性提升、性能与易用性的双重优化，进一步拓宽了数据库的应用边界，可更好地支撑企业从传统 BI 分析到 AI 智能检索、从实时查询到大规模离线批处理的全场景数据分析需求。无论是互联网、金融、零售等行业的实时报表、用户行为分析，还是政务、医疗领域的文档检索、大规模数据批处理，新版本 Doris 都将为用户提供更高效、更可靠的数据分析体验。
+🎉 4.1.2 版本已于 2026 年 06 月 17 日正式发布，详情可查看[版本发布](./v4.1/release-4.1.2.md)。4.1 系列通过 AI 与搜索能力的深度融合、离线计算的稳定性提升、性能与易用性的双重优化，进一步拓宽了数据库的应用边界，可更好地支撑企业从传统 BI 分析到 AI 智能检索、从实时查询到大规模离线批处理的全场景数据分析需求。无论是互联网、金融、零售等行业的实时报表、用户行为分析，还是政务、医疗领域的文档检索、大规模数据批处理，新版本 Doris 都将为用户提供更高效、更可靠的数据分析体验。
 <br />
 
-🎉 4.0.7 版本已于 2026 年 07 月 12 日正式发布，详情可查看[版本发布](./v4.0/release-4.0.7)。Apache Doris 4.0.7 是 4.0 系列维护版本，聚焦查询正确性、导入稳定性、存算分离部署、File Cache 可靠性、对象存储访问、可观测性以及外部数据源兼容性。建议所有 4.0.x 用户升级。
+🎉 4.0.7 版本已于 2026 年 07 月 12 日正式发布，详情可查看[版本发布](./v4.0/release-4.0.7.md)。Apache Doris 4.0.7 是 4.0 系列维护版本，聚焦查询正确性、导入稳定性、存算分离部署、File Cache 可靠性、对象存储访问、可观测性以及外部数据源兼容性。建议所有 4.0.x 用户升级。
 <br />
 
-🎉 3.1.4 版本已于 2025 年 12 月 19 日正式发布，详情可查看[版本发布](./v3.1/release-3.1.4)。Apache Doris 3.1 是半结构化分析领域的里程碑，引入了稀疏列和模板化 schema，显著提升了查询和索引性能。它还显著增强了湖仓一体能力，通过异步物化视图和优化连接属性，实现了数据湖和数据仓的无缝集成。新版本在存储引擎上提供了灵活列更新，并通过分区裁剪和基于数据特征的优化器，实现了查询性能的巨大飞跃。
+🎉 3.1.4 版本已于 2025 年 12 月 19 日正式发布，详情可查看[版本发布](./v3.1/release-3.1.4.md)。Apache Doris 3.1 是半结构化分析领域的里程碑，引入了稀疏列和模板化 schema，显著提升了查询和索引性能。它还显著增强了湖仓一体能力，通过异步物化视图和优化连接属性，实现了数据湖和数据仓的无缝集成。新版本在存储引擎上提供了灵活列更新，并通过分区裁剪和基于数据特征的优化器，实现了查询性能的巨大飞跃。
 <br />
 
-🎉 3.0.8 版本已于 2025 年 09 月 19 日正式发布，详情可查看[版本发布](./v3.0/release-3.0.8)。从 3.0 版本开始，Apache Doris 除了支持计算存储一体模式外，还支持计算存储分离模式进行集群部署。借助将计算和存储层解耦的云原生架构，用户可以在多个计算集群之间实现查询负载的物理隔离，以及读写负载的隔离。
+🎉 3.0.8 版本已于 2025 年 09 月 19 日正式发布，详情可查看[版本发布](./v3.0/release-3.0.8.md)。从 3.0 版本开始，Apache Doris 除了支持计算存储一体模式外，还支持计算存储分离模式进行集群部署。借助将计算和存储层解耦的云原生架构，用户可以在多个计算集群之间实现查询负载的物理隔离，以及读写负载的隔离。
 
 <br />
 
-🎉 2.1.11 版本现已于 2025 年 08 月 15 日正式发布，详情可查看[版本发布](./v2.1/release-2.1.11)。子查询性能方面 2.1 版本开箱即用查询的性能提高了 100%；在数据湖分析场景方面，相对于 Trino 和 Spark 分别有 4-6 倍性能提升；在半结构化数据分析场景中提供了强有力的支持，包括新的 Variant 类型和一系列分析函数。此外，2.1 版本起支持异步物化视图以加速查询，优化了大规模实时写入，并通过稳定性和运行时 SQL 资源跟踪改进了工作负载管理。
+🎉 2.1.11 版本现已于 2025 年 08 月 15 日正式发布，详情可查看[版本发布](./v2.1/release-2.1.11.md)。子查询性能方面 2.1 版本开箱即用查询的性能提高了 100%；在数据湖分析场景方面，相对于 Trino 和 Spark 分别有 4-6 倍性能提升；在半结构化数据分析场景中提供了强有力的支持，包括新的 Variant 类型和一系列分析函数。此外，2.1 版本起支持异步物化视图以加速查询，优化了大规模实时写入，并通过稳定性和运行时 SQL 资源跟踪改进了工作负载管理。
 
 :::
 
@@ -123,4 +137,3 @@
 - [2024-02-28, Apache Doris 2.0.5 版本发布](./v2.0/release-2.0.5.md)
 
 - [2024-01-26, Apache Doris 2.0.4 版本发布](./v2.0/release-2.0.4.md)
-

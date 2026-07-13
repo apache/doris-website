@@ -1,31 +1,47 @@
 ---
 {
-    "title": "All Releases",
+    "title": "All Project Releases",
     "language": "en",
-    "description": "This document presents a summary of Apache Doris versions released within one year, listed in reverse chronological order."
+    "description": "This document presents release notes for Apache Doris Core and Doris ecosystem projects."
 }
 ---
 
-This document presents a summary of Apache Doris versions released within one year, listed in reverse chronological order.
+This document presents release notes for Apache Doris Core and Doris ecosystem projects. Doris Core keeps the current official release notes on this site. Ecosystem project pages are prepared for future release notes.
+
+## Project Release Notes
+
+| Project | Latest release notes | Repository |
+| --- | --- | --- |
+| Doris Core | [Apache Doris 4.1.2](./v4.1/release-4.1.2.md) | [apache/doris](https://github.com/apache/doris) |
+| Doris Flink Connector | [Release Notes](./ecosystem/doris-flink-connector/release-1.0.0.md) | [apache/doris-flink-connector](https://github.com/apache/doris-flink-connector) |
+| Doris Spark Connector | [Release Notes](./ecosystem/doris-spark-connector/release-1.0.0.md) | [apache/doris-spark-connector](https://github.com/apache/doris-spark-connector) |
+| Doris Kafka Connector | [Release Notes](./ecosystem/doris-kafka-connector/release-1.0.0.md) | [apache/doris-kafka-connector](https://github.com/apache/doris-kafka-connector) |
+| Doris Operator | [Release Notes](./ecosystem/doris-operator/release-1.0.0.md) | [apache/doris-operator](https://github.com/apache/doris-operator) |
+| Doris MCP Server | [Release Notes](./ecosystem/doris-mcp-server/release-1.0.0.md) | [apache/doris-mcp-server](https://github.com/apache/doris-mcp-server) |
+| Doris Skills | [Release Notes](./ecosystem/doris-skills/release-1.0.0.md) | [apache/doris-skills](https://github.com/apache/doris-skills) |
+| Doris CLI | [Release Notes](./ecosystem/doris-cli/release-1.0.0.md) | [apache/doris-cli](https://github.com/apache/doris-cli) |
+| Doris Streamloader | [Release Notes](./ecosystem/doris-streamloader/release-1.0.0.md) | [apache/doris-streamloader](https://github.com/apache/doris-streamloader) |
+
+## Doris Core Release Notes
 
 :::tip Latest Release
-🎉 Version 4.1.2 is released. Check out the 🔗[Release Notes](./v4.1/release-4.1.2) here. Apache Doris 4.1 takes a major step forward with new AI support (vector search, AI Functions) and better full-text search capabilities. These upgrades help users stay ahead in the AI and agent era, enabling companies to handle everything from traditional BI analysis to AI-driven workloads.
+🎉 Version 4.1.2 is released. Check out the 🔗[Release Notes](./v4.1/release-4.1.2.md) here. Apache Doris 4.1 takes a major step forward with new AI support (vector search, AI Functions) and better full-text search capabilities. These upgrades help users stay ahead in the AI and agent era, enabling companies to handle everything from traditional BI analysis to AI-driven workloads.
 
 <br />
 
-🎉 Version 4.0.7 is released. Check out the 🔗[Release Notes](./v4.0/release-4.0.7) here. Apache Doris 4.0.7 is a maintenance release focused on query correctness, load stability, compute-storage decoupled deployments, File Cache reliability, object storage access, observability, and external data source compatibility. All 4.0.x users are advised to upgrade.
+🎉 Version 4.0.7 is released. Check out the 🔗[Release Notes](./v4.0/release-4.0.7.md) here. Apache Doris 4.0.7 is a maintenance release focused on query correctness, load stability, compute-storage decoupled deployments, File Cache reliability, object storage access, observability, and external data source compatibility. All 4.0.x users are advised to upgrade.
 
 <br />
 
-🎉 Version 3.1.4 is released. Check out the 🔗[Release Notes](./v3.1/release-3.1.4) here. Doris 3.1 introduces a sparse column and schema template for the VARIANT data type, making it more efficient to store and query large datasets with dynamic fields, such as logs and JSON data. For lakehouse capabilities, it enhances asynchronous materialized views and expands support for Iceberg and Paimon to build a stronger bridge between data lakes and data warehouses.
+🎉 Version 3.1.4 is released. Check out the 🔗[Release Notes](./v3.1/release-3.1.4.md) here. Doris 3.1 introduces a sparse column and schema template for the VARIANT data type, making it more efficient to store and query large datasets with dynamic fields, such as logs and JSON data. For lakehouse capabilities, it enhances asynchronous materialized views and expands support for Iceberg and Paimon to build a stronger bridge between data lakes and data warehouses.
 
 <br />
 
-🎉 Version 3.0.8 released now. Check out the 🔗[Release Notes](./v3.0/release-3.0.8) here. Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode in addition to the compute-storage coupled mode for cluster deployment. With the cloud-native architecture that decouples the computation and storage layers, users can achieve physical isolation between query loads across multiple compute clusters, as well as isolation between read and write loads. 
+🎉 Version 3.0.8 released now. Check out the 🔗[Release Notes](./v3.0/release-3.0.8.md) here. Starting from version 3.X, Apache Doris supports a compute-storage decoupled mode in addition to the compute-storage coupled mode for cluster deployment. With the cloud-native architecture that decouples the computation and storage layers, users can achieve physical isolation between query loads across multiple compute clusters, as well as isolation between read and write loads.
 
 <br />
 
-🎉 Version 2.1.11 released now. Check out the 🔗[Release Notes](./v2.1/release-2.1.11) here. The 2.1 version delivers exceptional performance with 100% higher out-of-the-box queries proven by TPC-DS 1TB tests, enhanced data lake analytics that are 4-6 times speedier than Trino and Spark, solid support for semi-structured data analysis with new Variant types and suite of analytical functions, asynchronous materialized views for query acceleration, optimized real-time writing at scale, and better workload management with stability and runtime SQL resource tracking.
+🎉 Version 2.1.11 released now. Check out the 🔗[Release Notes](./v2.1/release-2.1.11.md) here. The 2.1 version delivers exceptional performance with 100% higher out-of-the-box queries proven by TPC-DS 1TB tests, enhanced data lake analytics that are 4-6 times speedier than Trino and Spark, solid support for semi-structured data analysis with new Variant types and suite of analytical functions, asynchronous materialized views for query acceleration, optimized real-time writing at scale, and better workload management with stability and runtime SQL resource tracking.
 
 :::
 
@@ -125,4 +141,3 @@ This document presents a summary of Apache Doris versions released within one ye
 - [2024-02-28, Apache Doris 2.0.5 is released](./v2.0/release-2.0.5.md)
 
 - [2024-01-26, Apache Doris 2.0.4 is released](./v2.0/release-2.0.4.md)
-
