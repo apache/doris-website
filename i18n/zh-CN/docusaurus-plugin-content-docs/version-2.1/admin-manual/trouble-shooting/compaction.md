@@ -68,6 +68,10 @@ Segment compaction 有以下特点：
 
 ## 单副本 compaction
 
+:::caution 已废弃
+单副本 compaction 功能已废弃，并自 Doris 4.1.2 版本起移除。原因是其对端副本的选择存在数据正确性风险：拉取 compaction 结果的副本需要基于周期性刷新的副本信息来选择拉取的对象和版本，而各副本的版本推进又相互独立，这一选择可能基于过期的集群状态做出，从而引发难以察觉的数据不一致。不建议开启该功能。`enable_single_replica_compaction` 属性在 Doris 4.x 中已被删除。
+:::
+
 默认情况下，多个副本的 compaction 是独立进行的，每个副本在都需要消耗 CPU 和 IO 资源。开启单副本 compaction 后，在一个副本进行 compaction 后，其他几个副本拉取 compaction 后的文件，因此 CPU 资源只需要消耗 1 次，节省了 N - 1 倍 CPU 消耗（N 是副本数）。
 
 单副本 compaction 在表的 PROPERTIES 中通过参数 `enable_single_replica_compaction` 指定，默认为 false 不开启，设置为 true 开启。
