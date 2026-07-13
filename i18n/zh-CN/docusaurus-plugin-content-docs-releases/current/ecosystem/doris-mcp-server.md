@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris MCP Server Release Notes",
+    "title": "Doris MCP Server",
     "language": "zh-CN",
     "description": "Doris MCP Server 版本发布说明。"
 }

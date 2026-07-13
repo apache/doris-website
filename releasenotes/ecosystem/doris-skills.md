@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris Skills Release Notes",
+    "title": "Doris Skills",
     "language": "en",
     "description": "Doris Skills release notes."
 }

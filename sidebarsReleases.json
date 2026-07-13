@@ -4,6 +4,10 @@
         {
             "type": "category",
             "label": "Doris Core",
+            "link": {
+                "type": "doc",
+                "id": "core"
+            },
             "items": [
                 {
                     "type": "category",
@@ -127,62 +131,14 @@
             "type": "category",
             "label": "Doris Ecosystem",
             "items": [
-                {
-                    "type": "category",
-                    "label": "Doris Flink Connector",
-                    "items": [
-                        "ecosystem/doris-flink-connector/release-1.0.0"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Doris Spark Connector",
-                    "items": [
-                        "ecosystem/doris-spark-connector/release-1.0.0"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Doris Kafka Connector",
-                    "items": [
-                        "ecosystem/doris-kafka-connector/release-1.0.0"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Doris Operator",
-                    "items": [
-                        "ecosystem/doris-operator/release-1.0.0"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Doris MCP Server",
-                    "items": [
-                        "ecosystem/doris-mcp-server/release-1.0.0"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Doris Skills",
-                    "items": [
-                        "ecosystem/doris-skills/release-1.0.0"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Doris CLI",
-                    "items": [
-                        "ecosystem/doris-cli/release-1.0.0"
-                    ]
-                },
-                {
-                    "type": "category",
-                    "label": "Doris Streamloader",
-                    "items": [
-                        "ecosystem/doris-streamloader/release-1.0.0"
-                    ]
-                }
+                "ecosystem/doris-flink-connector",
+                "ecosystem/doris-spark-connector",
+                "ecosystem/doris-kafka-connector",
+                "ecosystem/doris-operator",
+                "ecosystem/doris-mcp-server",
+                "ecosystem/doris-skills",
+                "ecosystem/doris-cli",
+                "ecosystem/doris-streamloader"
             ]
         }
     ]
