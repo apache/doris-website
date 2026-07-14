@@ -143,7 +143,7 @@ When Apache Doris exports to the Parquet file format, it first converts the in-m
 | hll                     | binary      | BYTE_ARRAY            |                                  |
 
 :::note
-In versions 2.1.11 and 3.0.7, the `parquet.enable_int96_timestamps` property is supported to specify whether the Doris `datetimev2` type is stored as `INT96` or `INT64` in Parquet. The default is `INT96`. `INT96` has been deprecated in the Parquet standard and is used only for compatibility with legacy systems (such as Hive versions before 4.0).
+For Parquet Export and Outfile, use the `enable_int96_timestamps` property to choose the physical encoding of Doris `DATETIMEV2` values. The default is `false`, which writes `INT64` with a Parquet timestamp logical type. Set it to `true` to write the deprecated `INT96` encoding only when a legacy downstream reader, such as Hive 2 or Hive 3, requires it. Asynchronous Export stores this property with the export job and applies it when the job executes. If Doris later reads an explicitly exported `INT96` file, set `hive.parquet.time-zone` to the export session time zone in the Hive Catalog or file table-valued function so FileScannerV2 restores the original wall-clock value.
 :::
 
 ## Related Documents

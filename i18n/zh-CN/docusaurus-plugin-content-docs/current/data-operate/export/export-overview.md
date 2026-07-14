@@ -143,7 +143,7 @@ Apache Doris 导出到 Parquet 文件格式时，会先将 Doris 内存数据转
 | hll                     | binary      | BYTE_ARRAY            |                                  |
 
 :::note
-在 2.1.11 和 3.0.7 版本中，支持通过 `parquet.enable_int96_timestamps` 属性指定 Doris 的 `datetimev2` 类型在 Parquet 中是使用 `INT96` 还是 `INT64` 存储，默认为 `INT96`。`INT96` 在 Parquet 标准中已被废弃，仅用于兼容旧系统（如 Hive 4.0 之前的版本）。
+Parquet Export 和 Outfile 使用 `enable_int96_timestamps` 属性选择 Doris `DATETIMEV2` 值的物理编码。默认值为 `false`，写入带 Parquet 时间戳逻辑类型的 `INT64`。仅当 Hive 2、Hive 3 等下游旧版读取端要求时，才设置为 `true` 写入已废弃的 `INT96` 编码。异步 Export 会将该属性保存在导出作业中，并在作业执行时应用。如果 Doris 后续读取显式导出的 `INT96` 文件，请在 Hive Catalog 或文件表值函数中将 `hive.parquet.time-zone` 设置为导出会话时区，使 FileScannerV2 还原原始墙上时间。
 :::
 
 ## 相关文档

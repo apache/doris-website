@@ -72,6 +72,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `hive.staging_dir`: Used to set the temporary staging root directory for Hive write operations. During the write process, data is first written to this directory and then moved to the final Hive table directory after completion. This path can be either a relative path relative to the Hive table root directory or an absolute path. The default value is `/tmp/.doris_staging`. In some cases, when writing to Hive tables, you may encounter issues where the `/tmp` directory and the table directory belong to different namespaces, causing write failures. In such cases, you can modify this parameter to use a relative path to resolve the issue. This parameter is supported since version 4.0.3.
 
+  * `hive.parquet.time-zone`: The compatibility time zone used to restore legacy Parquet `INT96` timestamps when FileScannerV2 reads Hive or Hudi tables. The default is empty, which preserves the wall-clock fields stored in `INT96` without applying a time zone conversion. Set this property only when the `INT96` files in the Catalog were normalized by the writer with a known time zone. For details, see [Parquet INT96 Timestamp Compatibility](#timestamp-compatibility).
+
 * `{CommonProperties}`
 
   The CommonProperties section is for entering common attributes. Please see the "Common Properties" section in the [Catalog Overview](../catalog-overview.md).
@@ -207,6 +209,50 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
   * [Parquet](../file-formats/parquet.md)
 
   * [ORC](../file-formats/orc.md)
+
+## Parquet INT96 Timestamp Compatibility {#timestamp-compatibility}
+
+Hive tables can contain timestamp files produced by different engines. The physical encoding and writer behavior determine whether a time zone conversion is required. Doris does not infer a writer time zone from a Parquet `INT96` value because `INT96` has no time zone annotation.
+
+### Parquet INT96 timestamps
+
+FileScannerV2 handles Parquet timestamps as follows:
+
+| Physical encoding | Default behavior | Effect of `hive.parquet.time-zone` |
+|---|---|---|
+| `INT96` mapped to `DATETIMEV2` | Preserve the date and time fields stored in the file. The SQL session time zone does not shift the value. | Treat the raw `INT96` value as a UTC instant and convert it to the configured compatibility time zone, restoring timestamps that a legacy writer normalized. |
+| `INT64` with a timestamp logical type | Follow the Parquet logical-type semantics. | Not affected. |
+
+For example, suppose the intended local timestamp is `2021-01-01 10:11:00` in `Asia/Shanghai`:
+
+* If the file stores the wall-clock fields directly as `10:11:00`, leave `hive.parquet.time-zone` unset. Doris returns `10:11:00` even when the SQL session uses `Asia/Shanghai`.
+* If a legacy writer normalizes the value to UTC before storing `INT96`, the file may contain `02:11:00`. Set `hive.parquet.time-zone` to `Asia/Shanghai` so that Doris restores `10:11:00`.
+
+Configure the compatibility time zone when creating the Catalog:
+
+```sql
+CREATE CATALOG hive_legacy_int96 PROPERTIES (
+    'type' = 'hms',
+    'hive.metastore.uris' = 'thrift://127.0.0.1:9083',
+    'hive.parquet.time-zone' = 'Asia/Shanghai'
+);
+```
+
+The value can be an IANA time zone name, such as `Asia/Shanghai`, or a UTC offset from `-12:00` through `+14:00`. An invalid value causes Catalog creation to fail.
+
+:::caution
+`hive.parquet.time-zone` applies to every `INT96` timestamp column mapped to `DATETIMEV2` in Hive and Hudi tables in the Catalog. It does not affect Iceberg tables in the same Hive Metastore because Iceberg defines its own timestamp semantics. Parquet metadata cannot reliably tell Doris which convention an `INT96` writer used. Do not set the property merely to match the SQL session time zone. If one Hive Metastore contains Hive or Hudi tables with `INT96` files written using different conventions, expose them through separate Catalogs when possible.
+:::
+
+The same property is accepted by file table-valued functions that read Parquet files. The compatibility conversion applies only to Parquet `INT96` decoding in FileScannerV2. FileScannerV1 is intentionally unchanged and can return different results; switching to FileScannerV1 is not a compatibility mechanism for this change. Parquet `INT64` logical timestamps are not affected. When an `INT96` column maps to `TIMESTAMPTZ`, Doris ignores this property and preserves the UTC instant; displaying that value still follows `TIMESTAMPTZ` and session-time-zone semantics.
+
+### Migration recommendations
+
+* Doris writes Parquet `INT64` logical timestamps by default. Set `enable_int96_timestamps = true` only when a legacy reader such as Hive 2 or Hive 3 requires `INT96`.
+* When upgrading to a version with this FileScannerV2 behavior, check existing Hive and Hudi Catalogs before rollout. A Catalog containing `INT96` files that were normalized by a legacy writer can return a different wall-clock value after the upgrade. Compare representative values and set `hive.parquet.time-zone` to the writer time zone when conversion is required.
+* Before setting `hive.parquet.time-zone`, inspect representative files and compare known timestamp values. An unnecessary setting introduces the same kind of offset that it is intended to correct.
+* Keep files with different `INT96` writer conventions in separate Catalogs, or rewrite them to a consistent `INT64` encoding.
+* When Doris explicitly exports `INT96` with `enable_int96_timestamps = true`, it normalizes timestamps using the export session time zone. To read the file back through FileScannerV2, set `hive.parquet.time-zone` to that export session time zone. See [Export Overview](../../data-operate/export/export-overview.md).
 
 ## Column Type Mapping
 
