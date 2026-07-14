@@ -979,6 +979,12 @@ BaseCompaction:546859:
 
 ### Storage
 
+#### `enable_kuromoji_analyzer`
+
+* Type: bool
+* Description: Whether to enable the kuromoji (Japanese) inverted-index analyzer.
+* Default value: false
+
 #### `default_num_rows_per_column_file_block`
 
 * Type: int32
