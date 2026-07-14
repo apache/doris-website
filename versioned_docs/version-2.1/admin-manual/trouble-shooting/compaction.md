@@ -53,6 +53,10 @@ Refer to this [link](https://github.com/apache/doris/pull/12866) for more inform
 
 ## Single replica compaction
 
+:::caution Deprecated
+Single replica compaction has been deprecated and is removed since Doris 4.1.2, because its peer selection carries a data correctness risk: the replicas that pull the compacted files choose which peer and version to fetch from based on replica information that is only refreshed periodically, while each replica advances through versions independently. This selection can therefore act on a stale view of the cluster and lead to subtle data inconsistencies. Enabling this feature is not recommended. The `enable_single_replica_compaction` property no longer exists in Doris 4.x.
+:::
+
 By default, compaction for multiple replicas is performed independently, with each replica consuming CPU and IO resources. When single replica compaction is enabled, only one replica performs the compaction. Afterward, the other replicas pull the compacted files from this replica, resulting in CPU resources being consumed only once, saving N - 1 times CPU usage (where N is the number of replicas).
 
 Single replica compaction is specified in the table's PROPERTIES via the parameter `enable_single_replica_compaction`, which is false by default (disabled). To enable it, set the parameter to true.
