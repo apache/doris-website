@@ -873,7 +873,11 @@ const sidebars: SidebarsConfig = {
                                 {
                                     type: 'category',
                                     label: 'Encryption in Transit',
-                                    items: ['admin-manual/auth/certificate', 'admin-manual/auth/fe-certificate'],
+                                    items: [
+                                        'admin-manual/auth/certificate',
+                                        'admin-manual/auth/fe-certificate',
+                                        'admin-manual/auth/tls-framework',
+                                    ],
                                 },
                                 'admin-manual/auth/encryption-function',
                             ],
