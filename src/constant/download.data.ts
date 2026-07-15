@@ -30,7 +30,7 @@ export enum ToolsEnum {
 
 export const ORIGIN = 'https://download.selectdb.com/';
 export enum VersionEnum {
-    Latest = '4.1.2',
+    Latest = '4.1.3',
     Prev = '4.0.7',
     Earlier = '3.1.4',
 }
@@ -40,6 +40,40 @@ export enum DownloadTypeEnum {
     Source = 'Source',
 }
 export const DORIS_VERSIONS: Option[] = [
+    {
+        label: '4.1.3',
+        value: '4.1.3',
+        majorVersion: '4.1',
+        children: [
+            {
+                label: CPUEnum.X64,
+                value: CPUEnum.X64,
+                gz: `${ORIGIN}apache-doris-4.1.3-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.3-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.3-bin-x64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.3/',
+                version: '4.1.3-rc02',
+            },
+            {
+                label: CPUEnum.X64NoAvx2,
+                value: CPUEnum.X64NoAvx2,
+                gz: `${ORIGIN}apache-doris-4.1.3-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.3-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.3-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.3/',
+                version: '4.1.3-rc02',
+            },
+            {
+                label: CPUEnum.ARM64,
+                value: CPUEnum.ARM64,
+                gz: `${ORIGIN}apache-doris-4.1.3-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.3-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.3-bin-arm64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.3/',
+                version: '4.1.3-rc02',
+            },
+        ],
+    },
     {
         label: '4.1.2',
         value: '4.1.2',
@@ -500,6 +534,74 @@ export const ALL_VERSIONS: AllVersionOption[] = [
         label: '4.1',
         value: '4.1',
         children: [
+            {
+                label: '4.1.3',
+                value: '4.1.3',
+                majorVersion: '4.1',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-4.1.3-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.3-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.3-bin-x64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.3/',
+                        version: '4.1.3-rc02',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-4.1.3-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.3-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.3-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.3/',
+                        version: '4.1.3-rc02',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-4.1.3-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.3-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.3-bin-arm64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.3/',
+                        version: '4.1.3-rc02',
+                    },
+                ],
+            },
+            {
+                label: '4.1.2',
+                value: '4.1.2',
+                majorVersion: '4.1',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-4.1.2-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.2-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.2-bin-x64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.2/',
+                        version: '4.1.2',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-4.1.2-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.2-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.2-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.2/',
+                        version: '4.1.2',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-4.1.2-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.2-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.2-bin-arm64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.2/',
+                        version: '4.1.2',
+                    },
+                ],
+            },
             {
                 label: '4.1.1',
                 value: '4.1.1',

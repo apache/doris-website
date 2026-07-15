@@ -11,7 +11,7 @@ This document presents Apache Doris Core release notes in reverse chronological 
 ## Doris Core Release Notes
 
 :::tip Latest Release
-🎉 Version 4.1.2 is released. Check out the 🔗[Release Notes](./v4.1/release-4.1.2.md) here. Apache Doris 4.1 takes a major step forward with new AI support (vector search, AI Functions) and better full-text search capabilities. These upgrades help users stay ahead in the AI and agent era, enabling companies to handle everything from traditional BI analysis to AI-driven workloads.
+🎉 Version 4.1.3 is released. Check out the 🔗[Release Notes](./v4.1/release-4.1.3.md) here. Apache Doris 4.1.3 adds Python UDF/UDAF/UDTF support, workload policy enhancements, table-level event-driven warm up, and zstd Stream Load compression. It also includes fixes across query execution, storage, load, lakehouse, and authentication.
 
 <br />
 
@@ -33,6 +33,8 @@ This document presents Apache Doris Core release notes in reverse chronological 
 
 
 <br />
+
+- [2026-07-13, Apache Doris 4.1.3 is released](./v4.1/release-4.1.3.md)
 
 - [2026-07-12, Apache Doris 4.0.7 is released](./v4.0/release-4.0.7.md)
 
