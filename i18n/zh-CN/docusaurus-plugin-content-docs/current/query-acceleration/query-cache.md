@@ -206,7 +206,7 @@ SET enable_query_cache_incremental = true;  -- SHOW VARIABLES 中显示为 exper
 
 ![写时合并表的 delete bitmap 窗口检查](/images/next/query-cache/incremental-merge-mow-bitmap.svg)
 
-### 合并条目的压实
+### 增量部分的合并
 
 每次增量合并都会把增量块追加进条目，条目随之逐渐碎片化。当条目累计 `query_cache_max_incremental_merge_count` 次合并（BE 配置，默认 `8`，运行时可调）后，下一次查询会强制全量重算，条目自然压实。
 
