@@ -1,329 +1,318 @@
 ---
 name: add-release
-description: Update the Apache Doris website for a new release of Doris core or a Doris ecosystem component. Use when a release manager asks to add or update website release information, download links, release notes, all-release indexes, release sidebar entries, or ecosystem release pages for versions such as Doris 4.0.7, Flink Connector 26.1.1, Spark Connector 26.0.0, Kafka Connector 26.0.0, Doris Operator 25.8.0, Doris CLI, Doris MCP Server, Doris Skills, or Streamloader. Always confirm which component is being published before editing because core releases and ecosystem component releases touch different files.
+description: Publish a new Apache Doris Core or Doris ecosystem release on the Doris website. Use when updating download data, bilingual release notes, the Doris Core release index, release navigation, or ecosystem release pages. Confirm the component and release metadata first because Core and ecosystem releases use different files and validation paths.
 ---
 
 # Add Doris Release
 
-Use this skill to update the Apache Doris website after a Doris core or ecosystem component release is ready. The goal is to publish the right release content in `/download/` and `/releases/` without accidentally applying the Doris core workflow to an ecosystem component, or the reverse.
+Publish release information to /download/ and /releases/ from the doris-website repository root. Keep the change focused, preserve user work already in the tree, and do not commit unless the release manager asks.
 
-Work from the `doris-website` repository root.
+## Operating Rules
 
-## Component Confirmation Gate
+- Treat the current repository structure, AGENTS.md, sidebarsReleases.json, and src/constant/download.data.ts as authoritative. If an example in this skill conflicts with the repository, follow the repository and report the drift.
+- Inspect nearby releases for the same component before editing. Match their paths, frontmatter, ordering, terminology, and data shape.
+- Confirm public artifacts rather than deriving filenames only from the public version.
+- Update English and zh-CN together whenever both website mirrors exist, unless the release manager explicitly narrows the locale scope.
+- Keep release-note issue references and section structure aligned between languages.
+- Do not run yarn typecheck or yarn build when the release manager says no compile, no compilation, or equivalent. Still run the non-compilation checks.
 
-Before editing any file, identify the release component and ask the release manager to confirm it interactively.
+## Preflight
 
-If the user already names a component, restate it and ask for confirmation before proceeding. If the component is ambiguous, ask one concise question with the likely choices.
+Read these sources before choosing a workflow:
 
-Use these canonical component IDs:
+- AGENTS.md
+- src/constant/download.data.ts
+- sidebarsReleases.json
+- releasenotes/all-release.md
+- releasenotes/core.md
+- i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/all-release.md
+- i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/core.md
+- One recent release for the same component in both locales
+- Recent git history for the same files when repository intent remains unclear
 
-| Component ID | Website area | Typical release artifact area |
+Also run git status --short before editing. Existing unrelated modifications and untracked files belong to the user and must remain untouched.
+
+## Confirmation Gate
+
+Collect all missing release decisions in one concise confirmation instead of asking one field at a time. Do not ask again for values the user has already supplied.
+
+Use this template:
+
+    Please confirm:
+    - Component: <canonical component ID>
+    - Public release version: <version shown on the website>
+    - Release date: <YYYY-MM-DD>
+    - Release-note source: <GitHub issue, PR, Markdown, or upstream page>
+    - Website scope: </download/, /releases/, or both>
+    - Locales: <English, zh-CN, or both>
+    - Position: <Latest, Prev, Earlier, or historical>
+    - Source filename version: <plain version or RC-suffixed version>
+    - Source directory and binary origin: <URLs, if nonstandard>
+
+Canonical component IDs:
+
+| Component ID | Website surface | Typical artifact directory |
 | --- | --- | --- |
-| `doris-core` | Core release notes, `/download/` core packages, all-release indexes | `https://downloads.apache.org/doris/<series>/<version>/` |
-| `doris-flink-connector` | Ecosystem release page and `TOOL_VERSIONS` Flink entry | `https://downloads.apache.org/doris/flink-connector/<version>/` |
-| `doris-spark-connector` | Ecosystem release page and `TOOL_VERSIONS` Spark entry | `https://downloads.apache.org/doris/spark-connector/<version>/` |
-| `doris-kafka-connector` | Ecosystem release page and `TOOL_VERSIONS` Kafka entry | `https://downloads.apache.org/doris/kafka-connector/<version>/` |
-| `doris-streamloader` | Ecosystem release page and `TOOL_VERSIONS` Streamloader entry when applicable | Confirm artifact location from nearby entries or the release manager |
-| `doris-operator` | Ecosystem release page; image/chart links when applicable | Confirm image/chart/source locations from the release manager |
-| `doris-mcp-server` | Ecosystem release page | Confirm artifact or package locations from the release manager |
-| `doris-skills` | Ecosystem release page | Confirm artifact or package locations from the release manager |
-| `doris-cli` | Ecosystem release page | Confirm artifact or package locations from the release manager |
-| `other-ecosystem` | New or less common ecosystem release page | Confirm page path, sidebar entry, and artifact locations |
+| doris-core | Core downloads, per-version notes, Core index, release sidebar | https://dist.apache.org/repos/dist/release/doris/<series>/<version>/ |
+| doris-flink-connector | Flink ecosystem page and TOOL_VERSIONS when present | https://downloads.apache.org/doris/flink-connector/<version>/ |
+| doris-spark-connector | Spark ecosystem page and TOOL_VERSIONS when present | https://downloads.apache.org/doris/spark-connector/<version>/ |
+| doris-kafka-connector | Kafka ecosystem page and TOOL_VERSIONS when present | https://downloads.apache.org/doris/kafka-connector/<version>/ |
+| doris-streamloader | Streamloader ecosystem page and download data when present | Verify from the release directory |
+| doris-operator | Operator ecosystem page, images, and charts when applicable | Verify from the release announcement |
+| doris-mcp-server | MCP Server ecosystem page | Verify package locations |
+| doris-skills | Doris Skills ecosystem page | Verify package locations |
+| doris-cli | Doris CLI ecosystem page | Verify package locations |
+| other-ecosystem | A new or less common ecosystem page | Confirm page, sidebar, and artifact locations |
 
-Do not infer `doris-core` only because the version looks numeric. Connector and operator versions also look numeric.
-
-## Required Inputs from the Release Manager
-
-Ask for any missing item before editing if it cannot be discovered safely from public release artifacts.
-
-Required for every component:
-
-- **Component**: one of the component IDs above, confirmed by the release manager.
-- **Version**: full component version, for example `4.0.7`, `26.1.1`, or `25.8.0`.
-- **Release note source**: usually a GitHub issue, PR, Markdown body, or upstream release page.
-- **Release date**: prefer the official Apache download directory timestamp, package publication date, or announcement date. Do not use issue creation time unless the release manager confirms it.
-- **Localization expectation**: by default, update both English and zh-CN release pages when both mirrors already exist.
-- **Scope of download updates**: confirm whether this release should update `/download/`, only `/releases/`, or both.
-
-Additional for `doris-core`:
-
-- **Release series**: major/minor line used in Apache dist paths, for example `4.0` for `4.0.7`.
-- **Source package location**: usually `https://downloads.apache.org/doris/<series>/<version>/apache-doris-<version>-src.tar.gz` and matching `.asc` / `.sha512`.
-- **Binary package locations**: confirm all supported binary tarballs exist on the configured binary CDN:
-    - `https://download.selectdb.com/apache-doris-<version>-bin-x64.tar.gz`
-    - `https://download.selectdb.com/apache-doris-<version>-bin-x64-noavx2.tar.gz`
-    - `https://download.selectdb.com/apache-doris-<version>-bin-arm64.tar.gz`
-    - matching `.asc` and `.sha512` files
-- **Source filename version suffix**: determine whether the source tarball uses plain `<version>` or an RC-style suffix such as `<version>-rc02`. In `download.data.ts`, the `version` field controls the source tarball filename rendered by the download UI.
-- **Release positioning**: whether the release becomes `VersionEnum.Latest`, `VersionEnum.Prev`, or only an entry in historical/all-release data.
-
-Additional for ecosystem components:
-
-- **Ecosystem page path**: usually `releasenotes/ecosystem/<component>.md` and the matching zh-CN mirror.
-- **Download data target**: whether `src/constant/download.data.ts` has an existing `TOOL_VERSIONS` entry for this component.
-- **Source artifact URL**: usually under `https://downloads.apache.org/doris/<component-artifact-dir>/<version>/`.
-- **Binary/package URLs**: Maven coordinates, Docker images, Helm charts, npm/PyPI packages, or other official distribution links as applicable.
-- **Compatibility matrix**: required for components with per-runtime variants, such as Flink or Spark connector versions.
+Never infer doris-core only because a version has three numeric segments.
 
 ## Choose the Workflow
 
-After confirming the component, use only the matching workflow.
-
-- Use **Doris Core Workflow** for `doris-core`.
-- Use **Ecosystem Component Workflow** for all other component IDs.
-
-If the confirmed component does not fit either workflow, stop and ask the release manager for the intended website surface before editing.
+- Use the Doris Core workflow only for doris-core.
+- Use the ecosystem workflow for every other component.
+- If the component has no established website surface, stop after discovery and ask the release manager to confirm the intended page, navigation, and download behavior.
 
 ## Doris Core Workflow
 
+### Distinguish the Two Version Values
+
+Keep these values separate throughout the change:
+
+- Public release version: the version shown in titles, links, VersionEnum, labels, sidebar IDs, binary filenames, and release-note paths, such as 4.1.3.
+- Source filename version: the segment used by the published source tarball, which may include an RC suffix such as 4.1.3-rc02.
+
+The version field inside each architecture row in download.data.ts controls the source filename rendered by the download UI. Never replace an RC-suffixed source filename with the public version unless that exact plain source tarball exists.
+
+### Discover and Verify Artifacts
+
+Inspect the official release directory before editing. Prefer the stable dist.apache.org release repository when downloads.apache.org has not synchronized yet:
+
+    https://dist.apache.org/repos/dist/release/doris/<series>/<public-version>/
+
+Record the exact source tarball filename and derive the source filename version from it. Verify this complete matrix:
+
+| Artifact | Required files |
+| --- | --- |
+| Source | apache-doris-<source-version>-src.tar.gz, .asc, .sha512 |
+| x64 binary | apache-doris-<public-version>-bin-x64.tar.gz, .asc, .sha512 |
+| x64 no-AVX2 binary | apache-doris-<public-version>-bin-x64-noavx2.tar.gz, .asc, .sha512 |
+| ARM64 binary | apache-doris-<public-version>-bin-arm64.tar.gz, .asc, .sha512 |
+
+This is twelve URLs: three source artifacts and nine binary artifacts. A directory listing alone is insufficient. Check every URL and follow redirects. A small ranged GET may be used when a server rejects HEAD.
+
+If the canonical downloads mirror is delayed but dist.apache.org already serves the official release, use the working dist.apache.org directory in download.data.ts and record that choice in the handoff.
+
 ### Files to Update
 
-Update these files for a core release:
+A normal bilingual Core release that updates both website surfaces touches:
 
-```text
-src/constant/download.data.ts
-releasenotes/v<series>/release-<version>.md
-i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/v<series>/release-<version>.md
-releasenotes/all-release.md
-i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/all-release.md
-sidebarsReleases.json
-```
+    src/constant/download.data.ts
+    releasenotes/v<series>/release-<public-version>.md
+    i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/v<series>/release-<public-version>.md
+    releasenotes/core.md
+    i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/core.md
+    sidebarsReleases.json
 
-### Download Page Data
+releasenotes/all-release.md and its zh-CN mirror are project indexes. They route readers to Doris Core and ecosystem pages. Do not add individual Core versions to them and do not modify them for a routine Core patch release.
 
-Edit `src/constant/download.data.ts`.
+### Update Download Data
 
-Update `VersionEnum`:
+Edit src/constant/download.data.ts.
 
-- If the new release is the newest headline version, update `Latest`.
-- If it is the stable previous series shown beside Latest, update `Prev`.
-- Leave `Earlier` alone unless the stable older line changes.
+Update VersionEnum only as confirmed:
 
-Add the new version in both data structures:
+- Latest: the headline current release.
+- Prev: the stable previous release line shown beside Latest.
+- Earlier: the older supported line.
+- Historical: no VersionEnum change.
 
-- `DORIS_VERSIONS`: drives the quick-download version selector.
-- `ALL_VERSIONS`: drives the all-releases download form.
+Add the public version to both structures:
 
-For each supported architecture, add:
+- DORIS_VERSIONS drives the quick-download selector.
+- ALL_VERSIONS drives the all-releases form.
 
-- `gz`: binary tarball URL using `ORIGIN`.
-- `asc`: binary signature URL using `ORIGIN`.
-- `sha512`: binary checksum URL using `ORIGIN`.
-- `source`: official Apache source directory, typically `https://dist.apache.org/repos/dist/release/doris/<series>/<version>/` or `https://downloads.apache.org/doris/<series>/<version>/`, matching nearby conventions.
-- `version`: the source tarball filename version segment. Use plain `4.0.7` only if `apache-doris-4.0.7-src.tar.gz` exists; use an RC suffix only if the source tarball filename includes it.
+In both structures, add x64, x64-noavx2, and arm64 rows. Each row must contain the binary gz, asc, sha512, source directory, and exact source filename version.
 
-Keep entries sorted newest-first inside their series.
+Keep patch releases newest-first within their series. Audit the entire target series in both arrays, not only the new entry. Every target-series version in DORIS_VERSIONS must exist in ALL_VERSIONS and vice versa. Fix a discovered omission when it is clearly a data drift in the requested release scope; mention it explicitly in the handoff.
 
-### Core Release Notes
+Do not broadly reformat download.data.ts.
 
-Add English:
+### Add Bilingual Release Notes
 
-```text
-releasenotes/v<series>/release-<version>.md
-```
+Create:
 
-Add zh-CN:
+    releasenotes/v<series>/release-<public-version>.md
+    i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/v<series>/release-<public-version>.md
 
-```text
-i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/v<series>/release-<version>.md
-```
+Use the repository JSON-inside-dashes frontmatter shape. At minimum:
 
-Use the existing JSON-inside-`---` frontmatter style. Preserve the release-note source structure where possible:
+- title contains the public version
+- language is en or zh-CN as appropriate
+- description contains the public version
 
-- `# Overview`
-- `# Behavior Changes`
-- `# New Features & Improvements`
-- `# Important Bug Fixes`
-- `# Acknowledgments` when provided
+Use the approved release-note source as the content authority. Preserve its section order, heading levels, bullet order, issue numbers, code spans, and acknowledgments. Remove only source-page navigation that is not part of the release itself, such as a backlink telling GitHub readers to visit a previous release. Make only small, obvious whitespace or Markdown corrections; do not invent features or rewrite technical claims.
 
-If the source issue already contains polished Markdown, copy it carefully, adapt only the frontmatter/title/overview wording needed for website consistency, and avoid inventing release content.
+For the translation:
 
-### Core Index and Sidebar
+- Translate prose and headings, not product names, code, SQL, configuration keys, paths, or issue numbers.
+- Preserve the issue-reference sequence exactly.
+- Preserve the heading-level sequence and bullet count.
+- Check that every English item has one corresponding zh-CN item.
+- Keep frontmatter valid JSON and remove trailing whitespace.
 
-Update both all-release indexes:
+### Update the Core Index
 
-```text
-releasenotes/all-release.md
-i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/all-release.md
-```
+Edit both Core history pages:
+
+    releasenotes/core.md
+    i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/core.md
 
 In each file:
 
-- Update the relevant tip block entry for that release line.
-- Add a bullet link near the top of the chronological list.
-- Keep the list in reverse chronological order by release date.
-- Use the official release date.
+- Update the relevant tip entry when the release is Latest, Prev, or Earlier.
+- Add the dated per-version link to the chronological list.
+- Use the confirmed YYYY-MM-DD release date.
+- Keep the chronological list reverse-sorted by date.
+- Keep English and zh-CN links, dates, and positioning aligned.
 
-Update `sidebarsReleases.json`:
+### Update Release Navigation
 
-- Add the new release note ID under the matching core version category, for example `v4.0/release-4.0.7`.
-- Place it newest-first, before the previous patch release.
-- Validate that the JSON remains parseable.
+Edit sidebarsReleases.json:
+
+- Find Doris Core and the matching v<series> category.
+- Add v<series>/release-<public-version>.
+- Place the new patch version first in its series.
+- Add a new series category only when it does not already exist.
+- Preserve valid JSON and unrelated ordering.
 
 ## Ecosystem Component Workflow
 
-Use this workflow for connector, operator, CLI, MCP, skills, streamloader, and other ecosystem releases.
+The bundled validator currently targets Doris Core. Use this workflow and the manual checklist for ecosystem components.
 
-### Files to Update
+Most established ecosystem releases update:
 
-Most ecosystem releases update:
+    releasenotes/ecosystem/<component-page>.md
+    i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/ecosystem/<component-page>.md
 
-```text
-releasenotes/ecosystem/<component-page>.md
-i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/ecosystem/<component-page>.md
-```
+Some also update src/constant/download.data.ts. Update sidebarsReleases.json only when adding a new ecosystem page; individual ecosystem versions normally remain sections within one component page.
 
-Some ecosystem releases also update:
+Do not update Core per-version notes, releasenotes/core.md, its zh-CN mirror, or Core VersionEnum values for an ecosystem release unless the release manager explicitly requests a cross-surface change.
 
-```text
-src/constant/download.data.ts
-sidebarsReleases.json
-```
+Component profiles:
 
-Update `sidebarsReleases.json` only when adding a new ecosystem page. Existing ecosystem pages are listed once under `Doris Ecosystem`; individual component versions are usually sections inside the component page, not separate sidebar items.
+| Component | Release page | Download data | Extra checks |
+| --- | --- | --- | --- |
+| Flink Connector | ecosystem/doris-flink-connector.md | ToolsEnum.Flink | Runtime compatibility matrix; exact .tgz or .tar.gz suffix |
+| Spark Connector | ecosystem/doris-spark-connector.md | ToolsEnum.Spark | Spark and Scala compatibility; Maven coordinates |
+| Kafka Connector | ecosystem/doris-kafka-connector.md | ToolsEnum.Kafka | Kafka Connect compatibility; plugin package layout |
+| Streamloader | ecosystem/doris-streamloader.md | ToolsEnum.StreamLoader when present | Platform binaries, checksums, usage examples |
+| Doris Operator | ecosystem/doris-operator.md | Usually none | Controller image, Helm chart, CRD compatibility |
+| MCP Server | ecosystem/doris-mcp-server.md | Usually none | Package installation and supported Doris versions |
+| Doris Skills | ecosystem/doris-skills.md | Usually none | Installation source and supported environments |
+| Doris CLI | ecosystem/doris-cli.md | Usually none | Platform packages and install commands |
 
-Do not update core `releasenotes/v<series>/...` files or core all-release indexes for ecosystem component releases unless the release manager explicitly asks for that cross-link.
+For an existing page:
 
-### Component Profiles
+- Add the newest version section near the top.
+- Preserve the page frontmatter and anchors.
+- Update English and zh-CN with matching facts, links, compatibility data, and issue references.
+- Verify every official artifact or package link directly.
 
-#### Flink Connector
+For a new page:
 
-- Page: `releasenotes/ecosystem/doris-flink-connector.md`
-- zh-CN page: `i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-flink-connector.md`
-- Download data: `ToolsEnum.Flink` inside `TOOL_VERSIONS`
-- Source URL pattern: `https://downloads.apache.org/doris/flink-connector/<version>/apache-doris-flink-connector-<version>-src.tgz` for newer releases, but verify exact suffix from Apache downloads.
-- Binary URLs usually vary by Flink runtime, for example `flink-doris-connector-<flink-version>/<connector-version>/flink-doris-connector-<flink-version>-<connector-version>.jar`.
-- Confirm supported Flink versions before editing.
+- Copy the nearest ecosystem page structure.
+- Add both locales when expected.
+- Add one sidebar entry under Doris Ecosystem.
+- Check inbound links, route IDs, frontmatter, and stable URLs.
 
-#### Spark Connector
+When updating TOOL_VERSIONS:
 
-- Page: `releasenotes/ecosystem/doris-spark-connector.md`
-- zh-CN page: `i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-spark-connector.md`
-- Download data: `ToolsEnum.Spark` inside `TOOL_VERSIONS`
-- Source URL pattern: `https://downloads.apache.org/doris/spark-connector/<version>/apache-doris-spark-connector-<version>-src.tgz` for newer releases, but verify exact suffix.
-- Binary URLs usually vary by Spark/Scala runtime. Confirm supported variants before editing.
+- Verify the exact source filename and directory.
+- Preserve the existing Option shape.
+- Keep versions newest-first.
+- Do not add a Core VersionEnum entry.
 
-#### Kafka Connector
+## Validation
 
-- Page: `releasenotes/ecosystem/doris-kafka-connector.md`
-- zh-CN page: `i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-kafka-connector.md`
-- Download data: `ToolsEnum.Kafka` inside `TOOL_VERSIONS`
-- Source URL pattern: `https://downloads.apache.org/doris/kafka-connector/<version>/apache-doris-kafka-connector-<version>-src.tgz` for newer releases, but verify exact suffix.
-- Binary URL is usually Maven Central or Apache repository coordinates for `doris-kafka-connector`.
+### Tier 0: Always Run
 
-#### Streamloader
+Run the validator tests:
 
-- Page: `releasenotes/ecosystem/doris-streamloader.md`
-- zh-CN page: `i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-streamloader.md`
-- Download data: `ToolsEnum.StreamLoader` inside `TOOL_VERSIONS` when the component has downloadable website artifacts.
-- Confirm source and binary URL patterns from nearby entries or the release manager before editing.
+    node --test doc-tools/skills/add-release/scripts/validate-release.test.mjs
 
-#### Operator
+For Doris Core, run the bundled validator with the confirmed values:
 
-- Page: `releasenotes/ecosystem/doris-operator.md`
-- zh-CN page: `i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-operator.md`
-- Download data: usually not `TOOL_VERSIONS` unless the website has a concrete download entry for this component.
-- Include image, Helm, or chart information only when the release manager provides official links or nearby page conventions already show them.
+    node doc-tools/skills/add-release/scripts/validate-release.mjs --component doris-core --version <public-version> --series <series> --source-version <source-version> --release-date <YYYY-MM-DD> --position <latest|prev|earlier|historical> --source-dir <official-source-directory>
 
-#### MCP Server, Skills, CLI, and Other Ecosystem Components
+The validator checks:
 
-- Use the existing ecosystem page if present.
-- If adding a new ecosystem page, create both English and zh-CN pages and add one sidebar item under `Doris Ecosystem`.
-- Confirm whether `/download/` should expose the component. If not, update release notes only.
-- Use official artifact URLs only. Do not invent package registry links.
+- Both release-note files, JSON frontmatter, and trailing whitespace
+- English and zh-CN heading levels, bullet counts, and issue-reference sequences
+- Both core.md indexes, release date, link, and reverse chronology
+- That both all-release.md project indexes still route to core.md and remain untouched
+- sidebarsReleases.json parseability and newest-first placement
+- VersionEnum positioning
+- Target-series ordering and drift between DORIS_VERSIONS and ALL_VERSIONS
+- All six architecture rows, source filename version, source directory, and binary filenames
+- The full twelve-artifact URL matrix
 
-### Ecosystem Release Note Format
+Use --skip-links only when external link verification is explicitly out of scope, and disclose the skipped check. --skip-git-routing is intended for isolated test fixtures, not routine release work.
 
-Add the new version section near the top of the component page, directly below the intro and above the previous version.
+Also run:
 
-Use this structure when the source supports it:
+    node -e "JSON.parse(require('fs').readFileSync('sidebarsReleases.json', 'utf8'))"
+    git diff --check
+    git status --short
 
-```markdown
-## <version>
+git diff and git diff --check do not cover untracked release-note files. Inspect every path shown by git status, and ensure the new files are included in the validator run. Review the final tracked diff plus the full contents of every new untracked file.
 
-Source: [Release Notes <version>](<source-url>)
+For ecosystem releases, manually verify:
 
-<one short summary paragraph when the source provides enough context>
+- Exact changed-file scope for the confirmed component
+- English and zh-CN structure and facts
+- Frontmatter and route IDs
+- Download data ordering and field completeness when touched
+- Every source, signature, checksum, package, image, or chart link
+- Sidebar JSON when touched
+- Untracked new files
 
-### Features and Improvements
+### Tier 1: Type Check
 
-- ...
+When compilation checks are allowed and download data or TypeScript changed, run:
 
-### Bug Fixes
+    yarn typecheck
 
-- ...
+### Tier 2: Full Site Build
 
-### Downloads
+When the release manager requests full validation, or routing and rendering risk warrants it, run:
 
-- ...
+    yarn build
 
-### Thanks
+If the release manager says not to compile, skip both Tier 1 and Tier 2. Tier 0 still applies. State exactly which tiers ran and which were skipped.
 
-- ...
-```
+Do not claim validation passed unless the corresponding command completed successfully in the current worktree.
 
-Keep zh-CN structurally aligned with English. Translate faithfully and do not add technical claims that are not in the source.
+## Final Review and Handoff
 
-### Ecosystem Download Data
+Before reporting completion:
 
-When updating `src/constant/download.data.ts`:
+- Re-read the request and compare it with the exact changed-file set.
+- Confirm the public version, source filename version, release date, scope, locales, and positioning.
+- Confirm all artifact checks and note any mirror choice.
+- Confirm DORIS_VERSIONS and ALL_VERSIONS are aligned for the target series.
+- Confirm Core history is in core.md, not all-release.md.
+- Confirm no unrelated files were modified.
 
-- Update only the matching `ToolsEnum.*` component section.
-- Add the new version newest-first.
-- Preserve existing object shape. Some tools use flat entries; Flink and Spark use nested runtime compatibility entries.
-- For repeated source URLs across runtime variants, follow nearby constants such as `FLINK_SAME_SOURCE_*` or `SPARK_SAME_SOURCE_*`.
-- Verify whether source files use `.tar.gz` or `.tgz`. Do not normalize suffixes.
+Report:
 
-## Validation Checklist
+- Component and version
+- Files changed, including newly created untracked files
+- Release-note source
+- Public version versus source filename version
+- Release date, position, website scope, and locales
+- Artifact validation result
+- Tier 0, Tier 1, and Tier 2 results or explicit skips
+- Any repaired pre-existing data drift, such as a missing ALL_VERSIONS entry
+- Any remaining limitation or manual follow-up
 
-Do not rely on visual inspection only. Run lightweight checks unless the user explicitly asks not to run commands. If the user says not to compile, do not run Docusaurus build.
-
-For core release package links:
-
-```shell
-curl -sI https://downloads.apache.org/doris/<series>/<version>/apache-doris-<version>-src.tar.gz
-curl -sI https://download.selectdb.com/apache-doris-<version>-bin-x64.tar.gz
-curl -sI https://download.selectdb.com/apache-doris-<version>-bin-x64-noavx2.tar.gz
-curl -sI https://download.selectdb.com/apache-doris-<version>-bin-arm64.tar.gz
-```
-
-For ecosystem links:
-
-```shell
-curl -sI <source-artifact-url>
-curl -sI <representative-binary-or-package-url>
-```
-
-Also spot-check representative `.asc` and `.sha512` URLs for Apache source artifacts when they exist. Treat `200` as good. If HEAD behaves unexpectedly, retry with `curl -sIL` or GET before declaring a link broken.
-
-Validate changed files:
-
-```shell
-git diff --check
-node -e "JSON.parse(require('fs').readFileSync('sidebarsReleases.json','utf8')); console.log('sidebarsReleases.json ok')"
-rg -n "<version>|release-<version>|apache-doris-<version>|<component>" src/constant/download.data.ts releasenotes i18n/zh-CN/docusaurus-plugin-content-docs-releases/current sidebarsReleases.json
-```
-
-When build validation is allowed and appropriate, run the repository's normal Docusaurus validation/build command. If the release manager explicitly says not to compile, report that build was intentionally skipped.
-
-## Common Pitfalls
-
-- **Skipping component confirmation**: core and ecosystem releases use different files and URL patterns. Confirm the component first.
-- **Wrong release date**: GitHub issue creation/update time is not always the official release date. Check Apache downloads, package publication, or the announcement.
-- **Updating core indexes for an ecosystem release**: ecosystem releases usually live under `releasenotes/ecosystem/*.md`, not `releasenotes/all-release.md`.
-- **Missing `sidebarsReleases.json` update for a new ecosystem page**: existing ecosystem pages do not need a new sidebar item per version, but new component pages do.
-- **Only updating English**: mirror zh-CN release notes when a zh-CN mirror already exists unless the release manager explicitly scopes the task to English only.
-- **Wrong source tarball suffix**: source artifacts may use `.tar.gz` or `.tgz`. Verify the actual Apache download URL.
-- **Updating only `DORIS_VERSIONS` for core**: quick download and all-releases use separate structures. Update both `DORIS_VERSIONS` and `ALL_VERSIONS`.
-- **Changing unrelated components**: keep the diff focused on the confirmed component and version.
-- **Inventing links**: use official Apache downloads, Apache repository, Maven Central, image registry, or release-manager-provided links only.
-
-## Final Response
-
-Summarize:
-
-- Confirmed component and version.
-- Release pages created or updated, including English and zh-CN status.
-- Download data updated, including whether core quick-download enums or ecosystem `TOOL_VERSIONS` changed.
-- `all-release.md` and `sidebarsReleases.json` updates, or why they were not needed.
-- Validation performed, including package-link checks and whether build was skipped.
+Do not commit, push, publish externally, or open a pull request unless the release manager asks.
