@@ -23,7 +23,7 @@
 <!-- 适用场景: 高速读取 Doris 数据 / Python/Java 接入 / BI 工具集成 / 故障排查 -->
 
 :::caution 实验特性
-本文所述的 Arrow Flight SQL 高速数据传输能力目前为**实验特性**，使用过程中如遇到问题，欢迎通过邮件组或 [GitHub Issue](https://github.com/apache/doris/issues) 反馈。
+本文所述的 Arrow Flight SQL 高速数据传输能力目前为**实验特性**。不建议在生产环境中使用。使用过程中如遇到问题，欢迎通过邮件组或 [GitHub Issue](https://github.com/apache/doris/issues/65615) 反馈。
 :::
 
 自 Doris 2.1 版本起，基于 Arrow Flight SQL 协议实现了高速数据传输链路，支持多种语言使用 SQL 从 Doris 高速读取大批量数据。相比 MySQL Client 或 JDBC/ODBC 驱动方案，部分场景性能提升数十倍至百倍。Arrow Flight SQL 还提供通用 JDBC 驱动，可与同样遵循该协议的数据库无缝交互。
