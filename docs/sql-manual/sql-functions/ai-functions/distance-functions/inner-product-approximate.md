@@ -25,7 +25,9 @@ INNER_PRODUCT_APPROXIMATE(<array1>, <array2>)
 
 ## Return Value
 
-Returns the scalar product of two vectors of the same size. If the input array is NULL, or any element in array is NULL, then NULL is returned.
+Returns the scalar product of two vectors of the same size. The return type is `FLOAT`.
+
+If either input array is `NULL`, or contains a `NULL` element, the function returns an error.
 
 ## Examples
 
@@ -84,4 +86,24 @@ Result
 | 153488 |   231871 |
 +--------+----------+
 10 rows in set (0.04 sec)
+```
+
+If an input array is `NULL`, the function returns an error:
+
+```sql
+SELECT INNER_PRODUCT_APPROXIMATE(NULL, [1, 2]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function inner_product_approximate cannot be null
+```
+
+If an input array contains a `NULL` element, the function returns an error:
+
+```sql
+SELECT INNER_PRODUCT_APPROXIMATE([1, NULL], [1, 2]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function inner_product_approximate cannot have null
 ```

@@ -25,7 +25,9 @@ COSINE_DISTANCE(<array1>, <array2>)
 
 ## Return Value
 
-Returns the cosine distance between two vectors (where the vector values are coordinates). If the input array is NULL, or any element in the array is NULL, then NULL is returned.
+Returns the cosine distance between two vectors (where the vector values are coordinates). The return type is `FLOAT`.
+
+If either input array is `NULL`, or contains a `NULL` element, the function returns an error.
 
 ## Example
 
@@ -39,4 +41,24 @@ SELECT COSINE_DISTANCE([1, 2], [2, 3]),COSINE_DISTANCE([3, 6], [4, 7]);
 +---------------------------------+---------------------------------+
 |                     0.007722139 |                     0.001539648 |
 +---------------------------------+---------------------------------+
+```
+
+If an input array is `NULL`, the function returns an error:
+
+```sql
+SELECT COSINE_DISTANCE(NULL, [1, 2]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function cosine_distance cannot be null
+```
+
+If an input array contains a `NULL` element, the function returns an error:
+
+```sql
+SELECT COSINE_DISTANCE([1, NULL], [1, 2]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function cosine_distance cannot have null
 ```

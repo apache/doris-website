@@ -25,7 +25,9 @@ INNER_PRODUCT(<array1>, <array2>)
 
 ## 返回值
 
-返回两个大小相同的向量的标量积。如果输入 array 为 NULL，或者 array 中任何元素为 NULL，则返回 NULL。
+返回两个大小相同的向量的标量积，返回类型为 `FLOAT`。
+
+如果任一输入数组为 `NULL`，或包含 `NULL` 元素，函数会报错。
 
 ## 举例
 
@@ -39,4 +41,24 @@ SELECT INNER_PRODUCT([1, 2], [2, 3]),INNER_PRODUCT([3, 6], [4, 7]);
 +-------------------------------+-------------------------------+
 |                             8 |                            54 |
 +-------------------------------+-------------------------------+
+```
+
+如果输入数组为 `NULL`，函数会报错：
+
+```sql
+SELECT INNER_PRODUCT(NULL, [1, 2]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function inner_product cannot be null
+```
+
+如果输入数组包含 `NULL` 元素，函数会报错：
+
+```sql
+SELECT INNER_PRODUCT([1, NULL], [1, 2]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function inner_product cannot have null
 ```
