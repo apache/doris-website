@@ -209,32 +209,63 @@ DBeaver 弹出确认对话框后，单击 `OK` 确认配置无误。
 
 ![通过 MySQL 驱动管理数据库](/images/next/connection-integration/data-integration/dbeaver-new/dbeaver-mysql-navigator.jpg)
 
-## 功能支持
+## 驱动选择与功能支持
 
-DBeaver 对 Apache Doris 的功能支持情况如下。
+### 如何选择驱动
 
-### 完全支持
+Apache Doris 驱动和 MySQL 驱动均通过 Doris FE 的 MySQL 协议端口连接 Doris。两个驱动的主要区别在于 DBeaver 的元数据模型、对象导航结构和管理功能入口。
 
-| 类别 | 功能项 |
-|------|--------|
-| 可视化查看 | Databases（Tables、Views）、Users |
-| Administer | Session Manager |
-| System Info | Session Variables、Global Variables、Engines、Charsets、User Privileges、Plugin |
-| 操作类 | SQL 编辑器、SQL 控制台 |
+推荐按以下原则选择驱动：
 
-### 基本支持
+| 使用需求 | 推荐选择 |
+|----------|----------|
+| 日常连接 Doris、执行 SQL、浏览库表 | Apache Doris 驱动 |
+| 在同一连接中浏览 internal catalog 和多个 external catalog | Apache Doris 驱动 |
+| 当前 DBeaver 中没有 Apache Doris 数据源入口 | MySQL 驱动 |
+| 查看 Users、Session Manager 和 System Info | MySQL 驱动 |
 
-可点击查看且不会报错，但由于协议兼容问题，可能存在显示不全的情况：
+如果只操作 internal catalog，两个驱动均可用于连接和执行 SQL，但推荐优先使用 Apache Doris 驱动。
 
-- 仪表盘。
-- Users / user / properties。
-- Session Status。
-- Global Status。
+### 功能对比
 
-### 不支持
+| 功能 | Apache Doris 驱动 | MySQL 驱动 |
+|------|-------------------|------------|
+| 连接 Doris、执行 SQL | 支持 | 支持 |
+| 浏览 internal catalog | 支持 | 支持 |
+| 在同一连接中浏览多个 catalog | 支持 | 不支持 |
+| 在 Database Navigator 中浏览 external catalog | 支持 | 不支持 |
+| 使用 `catalog.db` 作为 SQL 默认上下文 | 支持 | 支持 |
+| 查看表、视图、字段和 DDL | 支持 | 支持 |
+| SQL 编辑器、SQL 控制台 | 支持 | 支持 |
+| 可视化查看数据 | 支持 | 支持 |
+| 可视化新增数据 | 支持 | 支持 |
+| 查看 Users、Session Manager 和 System Info | 不支持 | 支持 |
+| Tools > Analyse | 不支持 | 支持 |
+| Tools > Truncate | 不支持 | 支持 |
 
-使用 DBeaver 管理 Apache Doris 进行某些可视化操作时可能会报错，或某些可视化操作未经验证，例如：
+:::note 说明
 
-- 可视化创建库表。
-- Schema Change。
-- 可视化增、删、改数据。
+本表采用支持能力白名单：
+
+- 只有表格中明确标记为“支持”的功能属于本文支持范围。
+- 表格未列出的 DBeaver 可视化操作和管理功能均不支持。
+- 使用 MySQL 驱动时，DBeaver 界面中出现某个 MySQL 功能入口，不代表 Doris 支持该功能。
+- Users、Session Manager 和 System Info 仅支持查看，不支持通过 DBeaver 修改用户、权限或会话。
+- `Analyse` 和 `Truncate` 的支持状态仅指 MySQL 驱动中的 DBeaver Tools 菜单。使用 Apache Doris 驱动时，可以在 SQL 编辑器中执行相应的 Doris SQL。
+
+:::
+
+### 重要限制
+
+两个驱动均不支持以下操作：
+
+- 可视化修改或删除已有数据。
+- 可视化创建表。
+- 可视化新增或修改字段。
+- 可视化创建或修改 Index。
+- 可视化创建 Foreign Key 和 Trigger。
+- 可视化配置 Key Model、分区、分桶、副本数和表属性。
+- Session Status、Global Status 和 Dashboard。
+- Check、Optimize、Repair 和 Dump database。
+
+建议通过 SQL 编辑器执行 Doris 表结构变更以及已有数据的更新和删除。

@@ -209,30 +209,63 @@ The new data source appears in the Database Navigator. Use it to connect to and 
 
 ![Manage the database with the MySQL driver](/images/next/connection-integration/data-integration/dbeaver-new/dbeaver-mysql-navigator.jpg)
 
-## Feature support
+## Driver selection and feature support
 
-### Fully supported
+### Choose a driver
 
-| Category | Feature |
-|----------|---------|
-| Visual browsing | Databases (Tables, Views), Users |
-| Administer | Session Manager |
-| System Info | Session Variables, Global Variables, Engines, Charsets, User Privileges, Plugin |
-| Operations | SQL editor, SQL console |
+Both the Apache Doris driver and the MySQL driver connect to Doris through the FE MySQL protocol port. They differ mainly in how DBeaver models metadata, organizes objects in the navigator, and exposes administration features.
 
-### Limited support
+Use the following guidelines to select a driver:
 
-You can open the following views without errors, but DBeaver might not display all information because of protocol compatibility differences:
+| Use case | Recommended driver |
+|----------|--------------------|
+| Connect to Doris, run SQL, and browse databases and tables | Apache Doris driver |
+| Browse the internal catalog and multiple external catalogs in one connection | Apache Doris driver |
+| The current DBeaver version does not provide an Apache Doris data source | MySQL driver |
+| View Users, Session Manager, and System Info | MySQL driver |
 
-- Dashboard
-- Users / user / properties
-- Session Status
-- Global Status
+If you only work with the internal catalog, either driver can connect to Doris and execute SQL. However, the Apache Doris driver is recommended.
 
-### Not supported
+### Feature comparison
 
-Some visual operations may fail or have not been verified:
+| Feature | Apache Doris driver | MySQL driver |
+|---------|---------------------|--------------|
+| Connect to Doris and execute SQL | Supported | Supported |
+| Browse the internal catalog | Supported | Supported |
+| Browse multiple catalogs in one connection | Supported | Not supported |
+| Browse external catalogs in Database Navigator | Supported | Not supported |
+| Use `catalog.db` as the default SQL context | Supported | Supported |
+| View tables, views, columns, and DDL | Supported | Supported |
+| SQL editor and SQL console | Supported | Supported |
+| View data through the UI | Supported | Supported |
+| Insert data through the UI | Supported | Supported |
+| View Users, Session Manager, and System Info | Not supported | Supported |
+| Tools > Analyse | Not supported | Supported |
+| Tools > Truncate | Not supported | Supported |
 
-- Create databases or tables through the UI
-- Change table schemas through the UI
-- Insert, delete, or update data through the UI
+:::note Support scope
+
+This table defines supported capabilities using an allowlist:
+
+- Only features explicitly marked as "Supported" in the table are within the scope of this document.
+- DBeaver UI operations and administration features not listed in the table are not supported.
+- When you use the MySQL driver, the presence of a MySQL feature in the DBeaver interface does not mean that Doris supports it.
+- Users, Session Manager, and System Info are read-only. You cannot use DBeaver to modify users, privileges, or sessions.
+- Support for `Analyse` and `Truncate` applies only to the DBeaver Tools menu when you use the MySQL driver. With the Apache Doris driver, run the corresponding Doris SQL statements in the SQL editor.
+
+:::
+
+### Important limitations
+
+Neither driver supports the following operations:
+
+- Update or delete existing data through the UI.
+- Create tables through the UI.
+- Add or modify columns through the UI.
+- Create or modify indexes through the UI.
+- Create foreign keys or triggers through the UI.
+- Configure key models, partitions, buckets, replica counts, or table properties through the UI.
+- Session Status, Global Status, or Dashboard.
+- Check, Optimize, Repair, or Dump database.
+
+Use the SQL editor to change Doris table schemas and to update or delete existing data.
