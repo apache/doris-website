@@ -23,7 +23,7 @@
 <!-- Applicable scenarios: High-speed read of Doris data / Python/Java integration / BI tool integration / Troubleshooting -->
 
 :::caution Experimental feature
-The Arrow Flight SQL high-speed data transmission capability described in this document is currently an **experimental feature**. If you encounter any issues during use, please report them through the mailing list or [GitHub Issue](https://github.com/apache/doris/issues).
+The Arrow Flight SQL high-speed data transmission capability described in this document is currently an **experimental feature**. It is not recommended for production use. If you encounter any issues during use, please report them through the mailing list or [GitHub Issue](https://github.com/apache/doris/issues/65615).
 :::
 
 Starting from Doris 2.1, a high-speed data transmission link based on the Arrow Flight SQL protocol has been implemented, allowing multiple languages to read large batches of data from Doris at high speed using SQL. Compared with the MySQL Client or JDBC/ODBC driver solutions, performance improves by tens to hundreds of times in some scenarios. Arrow Flight SQL also provides a generic JDBC driver that can interact seamlessly with databases that follow the same protocol.
