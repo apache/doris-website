@@ -24,7 +24,7 @@ If the `Select your database` window does not list `Apache Doris`, use the MySQL
 
 ## Prerequisites
 
-- Install DBeaver 26.1.1 or later from [https://dbeaver.io](https://dbeaver.io).
+- Install DBeaver 26.1.1 or later from [https://dbeaver.com](https://dbeaver.com).
 - You can reach the Apache Doris cluster and have the FE host address, MySQL protocol port, username, and password.
 - Use Doris 2.1.0 or later to connect to an external catalog with the `catalog.db` format.
 
