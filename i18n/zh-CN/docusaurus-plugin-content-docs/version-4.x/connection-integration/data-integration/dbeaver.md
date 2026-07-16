@@ -24,7 +24,7 @@ Apache Doris 可通过 MySQL 协议对外提供查询服务。在包含 Apache D
 
 ## 前置条件
 
-- 已安装 DBeaver 26.1.1 或更高版本，下载地址：[https://dbeaver.io](https://dbeaver.io)。
+- 已安装 DBeaver 26.1.1 或更高版本，下载地址：[https://dbeaver.com](https://dbeaver.com)。
 - 可访问 Apache Doris 集群，并已知 FE 主机地址、MySQL 协议端口、账号与密码。
 - 若需通过 `catalog.db` 形式连接 external catalog，Doris 版本需为 2.1.0 及以上。
 
