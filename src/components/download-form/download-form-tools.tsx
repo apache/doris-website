@@ -9,9 +9,10 @@ import { DownloadIcon } from '../Icons/download-icon';
 
 interface DownloadFormToolsProps {
     data: Option[];
+    onToolChange?: (tool: ToolsEnum) => void;
 }
 export default function DownloadFormTools(props: DownloadFormToolsProps) {
-    const { data } = props;
+    const { data, onToolChange } = props;
     const [form] = useForm();
     const tool = useWatch('tool', form);
     const architecture = useWatch('architecture', form);
@@ -75,6 +76,10 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
             return `${currentVersion[params.type] || `${downloadLink}.${params.type}`}`;
         }
     };
+
+    useEffect(() => {
+        if (tool) onToolChange?.(tool as ToolsEnum);
+    }, [tool, onToolChange]);
 
     useEffect(() => {
         if (tool) {

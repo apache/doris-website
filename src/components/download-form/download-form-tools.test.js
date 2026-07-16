@@ -17,7 +17,7 @@ dataModule.filename = dataPath;
 dataModule.paths = Module._nodeModulePaths(path.dirname(dataPath));
 dataModule._compile(compiledData, dataPath);
 
-const { TOOL_VERSIONS, ToolsEnum } = dataModule.exports;
+const { TOOL_RELEASE_NOTES, TOOL_VERSIONS, ToolsEnum } = dataModule.exports;
 
 const OPERATOR_SOURCE_VERSIONS = [
     '25.8.0',
@@ -52,6 +52,34 @@ const OPERATOR_BINARY_VERSIONS = [
     '25.1.0',
     '24.2.0',
 ];
+
+test('every ecosystem download tool maps to its release notes page', () => {
+    assert.deepEqual(TOOL_RELEASE_NOTES, {
+        [ToolsEnum.Kafka]: '/releases/ecosystem/doris-kafka-connector',
+        [ToolsEnum.Flink]: '/releases/ecosystem/doris-flink-connector',
+        [ToolsEnum.Spark]: '/releases/ecosystem/doris-spark-connector',
+        [ToolsEnum.StreamLoader]: '/releases/ecosystem/doris-streamloader',
+        [ToolsEnum.Operator]: '/releases/ecosystem/doris-operator',
+    });
+});
+
+test('the ecosystem release notes link follows the selected download tool', () => {
+    const formSource = fs.readFileSync(path.join(__dirname, 'download-form-tools.tsx'), 'utf8');
+    const pageSource = fs.readFileSync(path.join(__dirname, '../download-form-next/DownloadFormNext.tsx'), 'utf8');
+
+    assert.match(formSource, /onToolChange\?: \(tool: ToolsEnum\) => void/);
+    assert.match(formSource, /onToolChange\?\.\(tool as ToolsEnum\)/);
+    assert.match(
+        pageSource,
+        /const \[ecosystemTool, setEcosystemTool\] = useState<ToolsEnum>\(ToolsEnum\.Kafka\)/,
+    );
+    assert.match(pageSource, /to=\{TOOL_RELEASE_NOTES\[ecosystemTool\]\}[\s\S]*?text="Release Notes"/);
+    assert.match(pageSource, /<DownloadFormTools data=\{TOOL_VERSIONS\} onToolChange=\{setEcosystemTool\} \/>/);
+    assert.ok(
+        pageSource.indexOf('text="Release Notes"') < pageSource.indexOf('text="More Tools"'),
+        'Release Notes should appear above More Tools',
+    );
+});
 
 test('Doris Operator exposes every source release and its verification files', () => {
     assert.equal(ToolsEnum.Operator, 'Doris Operator');

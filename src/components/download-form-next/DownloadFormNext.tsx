@@ -13,7 +13,7 @@ import Link from '@docusaurus/Link';
 import './download-page.scss';
 import LinkWithArrow from '@site/src/components/link-arrow';
 import clsx from 'clsx';
-import { ALL_VERSIONS, TOOL_VERSIONS } from '@site/src/constant/download.data';
+import { ALL_VERSIONS, TOOL_RELEASE_NOTES, TOOL_VERSIONS, ToolsEnum } from '@site/src/constant/download.data';
 import * as semver from 'semver';
 import { CheckedIcon } from '@site/src/components/Icons/checked-icon';
 import { LayoutNext } from '@site/src/components/home-next/LayoutNext';
@@ -31,6 +31,7 @@ export default function DownloadFormNext(): JSX.Element {
     const [releaseFlag, setReleaseFlag] = useState<boolean>(true);
     const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
     const [releaseNote, setReleaseNote] = useState('/docs/dev/releasenotes/v4.0/release-4.0.0');
+    const [ecosystemTool, setEcosystemTool] = useState<ToolsEnum>(ToolsEnum.Kafka);
 
     const changeVersion = (val: string) => {
         setVersion(val);
@@ -351,7 +352,11 @@ export default function DownloadFormNext(): JSX.Element {
                                         <span>Doris Operator</span>
                                     </li>
                                 </ul>
-                                <div>
+                                <div className="download-next__ecosystem-links">
+                                    <LinkWithArrow
+                                        to={TOOL_RELEASE_NOTES[ecosystemTool]}
+                                        text="Release Notes"
+                                    />
                                     <LinkWithArrow
                                         to="/docs/4.x/connection-integration/data-integration/intro"
                                         text="More Tools"
@@ -359,7 +364,7 @@ export default function DownloadFormNext(): JSX.Element {
                                 </div>
                             </div>
                             <div className="download-next__split-card">
-                                <DownloadFormTools data={TOOL_VERSIONS} />
+                                <DownloadFormTools data={TOOL_VERSIONS} onToolChange={setEcosystemTool} />
                             </div>
                         </div>
                     </div>

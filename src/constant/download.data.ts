@@ -31,6 +31,14 @@ export enum ToolsEnum {
     Operator = 'Doris Operator',
 }
 
+export const TOOL_RELEASE_NOTES: Record<ToolsEnum, string> = {
+    [ToolsEnum.Kafka]: '/releases/ecosystem/doris-kafka-connector',
+    [ToolsEnum.Flink]: '/releases/ecosystem/doris-flink-connector',
+    [ToolsEnum.Spark]: '/releases/ecosystem/doris-spark-connector',
+    [ToolsEnum.StreamLoader]: '/releases/ecosystem/doris-streamloader',
+    [ToolsEnum.Operator]: '/releases/ecosystem/doris-operator',
+};
+
 export const ORIGIN = 'https://download.selectdb.com/';
 export enum VersionEnum {
     Latest = '4.1.3',
