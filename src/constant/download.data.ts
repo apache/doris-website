@@ -5,6 +5,8 @@ export type Option = {
     asc?: string;
     sha512?: string;
     source?: string;
+    Binary?: string;
+    Source?: string;
     children?: (Option & { version?: string })[];
     majorVersion?: string;
 };
@@ -26,7 +28,16 @@ export enum ToolsEnum {
     Flink = 'Flink Doris Connector',
     Spark = 'Spark Doris Connector',
     StreamLoader = 'Doris Streamloader',
+    Operator = 'Doris Operator',
 }
+
+export const TOOL_RELEASE_NOTES: Record<ToolsEnum, string> = {
+    [ToolsEnum.Kafka]: '/releases/ecosystem/doris-kafka-connector',
+    [ToolsEnum.Flink]: '/releases/ecosystem/doris-flink-connector',
+    [ToolsEnum.Spark]: '/releases/ecosystem/doris-spark-connector',
+    [ToolsEnum.StreamLoader]: '/releases/ecosystem/doris-streamloader',
+    [ToolsEnum.Operator]: '/releases/ecosystem/doris-operator',
+};
 
 export const ORIGIN = 'https://download.selectdb.com/';
 export enum VersionEnum {
@@ -2754,6 +2765,56 @@ const SPARK_SAME_SOURCE_2520 =
 const SPARK_SAME_SOURCE_2600 =
     'https://downloads.apache.org/doris/spark-connector/26.0.0/apache-doris-spark-connector-26.0.0-src.tgz';
 
+const DORIS_OPERATOR_SOURCE_VERSIONS = [
+    '25.8.0',
+    '25.7.0',
+    '25.6.0',
+    '25.5.3',
+    '25.5.2',
+    '25.5.1',
+    '25.5.0',
+    '25.4.0',
+    '25.3.0',
+    '25.2.1',
+    '25.2.0',
+    '25.1.0',
+    '24.2.0',
+    '24.1.0',
+    '24.0.0',
+];
+
+const DORIS_OPERATOR_BINARY_VERSIONS = [
+    '25.8.0',
+    '25.7.0',
+    '25.6.0',
+    '25.5.3',
+    '25.5.2',
+    '25.5.1',
+    '25.5.0',
+    '25.4.0',
+    '25.3.0',
+    '25.2.1',
+    '25.2.0',
+    '25.1.0',
+    '24.2.0',
+];
+
+const DORIS_OPERATOR_VERSIONS = DORIS_OPERATOR_SOURCE_VERSIONS.map(version => {
+    const source = `https://downloads.apache.org/doris/doris-operator/${version}/apache-doris-operator-${version}-src.tar.gz`;
+
+    return {
+        label: version,
+        value: version,
+        gz: source,
+        Source: source,
+        asc: `${source}.asc`,
+        sha512: `${source}.sha512`,
+        ...(DORIS_OPERATOR_BINARY_VERSIONS.includes(version)
+            ? { Binary: `docker pull apache/doris:operator-${version}` }
+            : {}),
+    };
+});
+
 export const TOOL_VERSIONS = [
     {
         label: ToolsEnum.Kafka,
@@ -3518,6 +3579,11 @@ export const TOOL_VERSIONS = [
                 source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.1/apache-doris-streamloader-1.0.1-src.tar.gz',
             },
         ],
+    },
+    {
+        label: ToolsEnum.Operator,
+        value: ToolsEnum.Operator,
+        children: DORIS_OPERATOR_VERSIONS,
     },
 ];
 

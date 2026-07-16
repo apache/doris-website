@@ -54,6 +54,126 @@ Refer to the image repository description for image formats.
 - [gohalo](https://github.com/gohalo)
 - [catpineapple](https://github.com/catpineapple)
 
+## 25.7.0
+
+Source: [Release Notes 25.7.0](https://github.com/apache/doris-operator/issues/423)
+
+This version improves drop-node compatibility and debug image builds. It also fixes DDC pod information mounts, PVC tests, and event handling.
+
+### Features and Improvements
+
+- Made drop-node operations compatible with renamed compute groups. [#417](https://github.com/apache/doris-operator/pull/417)
+- Upgraded the Go version used to build the debug image. [#424](https://github.com/apache/doris-operator/pull/424)
+
+### Bug Fixes
+
+- Corrected spelling errors. [#413](https://github.com/apache/doris-operator/pull/413)
+- Fixed missing pod information mounts for DDC containers. [#415](https://github.com/apache/doris-operator/pull/415)
+- Fixed failing PVC construction unit tests. [#420](https://github.com/apache/doris-operator/pull/420)
+- Prevented a nil pointer error when `EventString` is nil. [#422](https://github.com/apache/doris-operator/pull/422)
+
+### Thanks
+
+- [intelligentfu8](https://github.com/intelligentfu8)
+- [ztonny](https://github.com/ztonny)
+
+## 25.6.0
+
+Source: [Release Notes 25.6.0](https://github.com/apache/doris-operator/issues/414)
+
+This version extends `dorisctl` to storage-compute decoupled clusters and fixes PVC creation during initial deployment.
+
+### Features and Improvements
+
+- Supported using `dorisctl` to manage storage-compute decoupled Doris clusters. [#412](https://github.com/apache/doris-operator/pull/412)
+
+### Bug Fixes
+
+- Fixed PVCs not being created during initial deployment. [#410](https://github.com/apache/doris-operator/pull/410)
+
+### Thanks
+
+- [intelligentfu8](https://github.com/intelligentfu8)
+
+## 25.5.3
+
+Source: [Release Notes 25.5.3](https://github.com/apache/doris-operator/issues/408)
+
+This version improves default images and documentation for DDC deployments, and prevents an internal reconciliation annotation from appearing in custom resources.
+
+### Features and Improvements
+
+- Used the BE image as the default init container image. [#405](https://github.com/apache/doris-operator/pull/405)
+- Added two feature descriptions to the README. [#406](https://github.com/apache/doris-operator/pull/406)
+- Added FoundationDB usage examples for different scenarios. [#407](https://github.com/apache/doris-operator/pull/407)
+
+### Bug Fixes
+
+- Prevented an annotation used only for reconciliation status checks from appearing in custom resources. [#404](https://github.com/apache/doris-operator/pull/404)
+
+### Thanks
+
+- [intelligentfu8](https://github.com/intelligentfu8)
+
+## 25.5.2
+
+Source: [Release Notes 25.5.2](https://github.com/apache/doris-operator/issues/403)
+
+This version improves DDC reconciliation and debugging behavior.
+
+### Features and Improvements
+
+- Avoided redundant reconciliation when the `DorisDisaggregatedCluster` status is already consistent. [#399](https://github.com/apache/doris-operator/pull/399)
+- Added the `apache.com.doris/runmode` annotation for entering debug mode. [#400](https://github.com/apache/doris-operator/pull/400)
+- Made `DorisDisaggregatedCluster` reconciliation the default mode. [#402](https://github.com/apache/doris-operator/pull/402)
+
+### Thanks
+
+- [intelligentfu8](https://github.com/intelligentfu8)
+
+## 25.5.1
+
+Source: [Release Notes 25.5.1](https://github.com/apache/doris-operator/issues/398)
+
+This version adds Kerberos support for DDC and aligns disaggregated release versions with the Operator version.
+
+### Features and Improvements
+
+- Added Kerberos support for DDC. [#396](https://github.com/apache/doris-operator/pull/396)
+
+### Bug Fixes
+
+- Aligned the disaggregated release version with the Operator version. [#395](https://github.com/apache/doris-operator/pull/395)
+
+### Thanks
+
+- [intelligentfu8](https://github.com/intelligentfu8)
+
+## 25.5.0
+
+Source: [Release Notes 25.5.0](https://github.com/apache/doris-operator/issues/394)
+
+This version adds workload group and Helm chart support for storage-compute decoupled clusters. It also improves DDC initialization and fixes image, permission, and MetaService configuration issues.
+
+### Features and Improvements
+
+- Added workload group support for storage-compute decoupled Doris clusters. [#378](https://github.com/apache/doris-operator/pull/378)
+- Added `DorisDisaggregatedCluster` resource reconciliation. [#379](https://github.com/apache/doris-operator/pull/379)
+- Added Helm chart support for storage-compute decoupled Doris clusters. [#379](https://github.com/apache/doris-operator/pull/379) [#386](https://github.com/apache/doris-operator/pull/386) [#388](https://github.com/apache/doris-operator/pull/388) [#393](https://github.com/apache/doris-operator/pull/393)
+- Allowed DDC to skip the default system initialization check. [#389](https://github.com/apache/doris-operator/pull/389)
+
+### Bug Fixes
+
+- Adjusted the default Operator image. [#377](https://github.com/apache/doris-operator/pull/377)
+- Added an aggregated `ClusterRole`. [#380](https://github.com/apache/doris-operator/pull/380)
+- Fixed the MetaService replica count for disaggregated clusters. [#382](https://github.com/apache/doris-operator/pull/382)
+
+### Thanks
+
+- [wdxxl](https://github.com/wdxxl)
+- [catpineapple](https://github.com/catpineapple)
+- [intelligentfu8](https://github.com/intelligentfu8)
+
 ## 25.4.0
 
 Source: [Release Notes 25.4.0](https://github.com/apache/doris-operator/issues/376)
@@ -97,6 +217,28 @@ This version improves PersistentVolume capabilities for `DorisCluster` and `Dori
 - [catpineapple](https://github.com/catpineapple)
 - [intelligentfu8](https://github.com/intelligentfu8)
 
+## 25.2.1
+
+Source: [Release Notes 25.2.1](https://github.com/apache/doris-operator/issues/360)
+
+This version adds disaggregated cluster resources to the Helm chart, improves release-time version replacement and image repositories, and fixes Helm chart issues.
+
+### Features and Improvements
+
+- Added disaggregated custom resources to the Helm chart for deploying disaggregated clusters. [#355](https://github.com/apache/doris-operator/pull/355)
+- Made version fields replaceable variables in the release process. [#354](https://github.com/apache/doris-operator/pull/354)
+- Migrated images from the SelectDB repository to the Apache repository. [#357](https://github.com/apache/doris-operator/pull/357)
+
+### Bug Fixes
+
+- Reverted selected changes from PR 354. [#358](https://github.com/apache/doris-operator/pull/358)
+- Fixed the Helm chart `apiVersion`. [#359](https://github.com/apache/doris-operator/pull/359)
+
+### Thanks
+
+- [xiacongling](https://github.com/xiacongling)
+- [intelligentfu8](https://github.com/intelligentfu8)
+
 ## 25.2.0
 
 Source: [Release Notes 25.2.0](https://github.com/apache/doris-operator/issues/351)
@@ -128,3 +270,175 @@ This version adds support for accessing Kerberos-protected data systems, upgrade
 
 - [catpineapple](https://github.com/catpineapple)
 - [intelligentfu8](https://github.com/intelligentfu8)
+
+## 25.1.0
+
+Source: [Release Notes 25.1.0](https://github.com/apache/doris-operator/issues/333)
+
+This version improves BE scheduling and configuration updates, adds controller tests, fixes StatefulSet preparation, and migrates image tags to the Apache repository.
+
+### Features and Improvements
+
+- Added BE-to-FE affinity so the Operator prefers to schedule BEs on nodes that run FEs. [#328](https://github.com/apache/doris-operator/pull/328)
+- Watched ConfigMap changes and restarted Doris when startup configuration changed. [#331](https://github.com/apache/doris-operator/pull/331)
+- Allowed BEs to skip default system initialization. [#321](https://github.com/apache/doris-operator/pull/321)
+- Added controller unit tests. [#322](https://github.com/apache/doris-operator/pull/322)
+
+### Bug Fixes
+
+- Fixed parameters passed to `prepareStatefulsetApply`. [#326](https://github.com/apache/doris-operator/pull/326)
+
+### Other Changes
+
+- Migrated all image tags from the SelectDB repository to the Apache repository. [#329](https://github.com/apache/doris-operator/pull/329)
+
+### Thanks
+
+- [catpineapple](https://github.com/catpineapple)
+- [intelligentfu8](https://github.com/intelligentfu8)
+
+## 24.2.0
+
+Source: [Release Note 24.2.0](https://github.com/apache/doris-operator/issues/319)
+
+This version adds multi-secret support for `DorisDisaggregatedCluster` and decommission-based BE scale-down for compute groups. It also improves Arrow Flight SQL exposure, resource cleanup, tests, documentation, and examples.
+
+### Features and Improvements
+
+- Supported scaling down BEs in DDC compute groups through decommissioning. [#306](https://github.com/apache/doris-operator/pull/306)
+- Supported username and password configuration and multiple secrets for DDC. [#312](https://github.com/apache/doris-operator/pull/312)
+- Exposed Arrow Flight SQL ports as container ports. [#295](https://github.com/apache/doris-operator/pull/295)
+- Exposed Arrow Flight SQL ports in disaggregated services. [#307](https://github.com/apache/doris-operator/pull/307)
+- Expanded unit test coverage. [#315](https://github.com/apache/doris-operator/pull/315)
+- Refactored compute group resource cleanup. [#318](https://github.com/apache/doris-operator/pull/318)
+
+### Bug Fixes
+
+- Fixed SQL client behavior when dropping compute groups. [#314](https://github.com/apache/doris-operator/pull/314)
+- Fixed service labels. [#318](https://github.com/apache/doris-operator/pull/318)
+- Fixed compute group removal when `UniqueId` contains a hyphen. [#318](https://github.com/apache/doris-operator/pull/318)
+- Added safety checks for FE scale-down during cluster updates. [#320](https://github.com/apache/doris-operator/pull/320)
+
+### Other Changes
+
+- Improved the README. [#303](https://github.com/apache/doris-operator/pull/303)
+- Removed unused files, including obsolete Dockerfile and DDM code. [#309](https://github.com/apache/doris-operator/pull/309) [#314](https://github.com/apache/doris-operator/pull/314)
+- Improved `DorisDisaggregatedCluster` CRD examples. [#313](https://github.com/apache/doris-operator/pull/313)
+
+### Thanks
+
+- [jonasbrami](https://github.com/jonasbrami)
+- [hechao-ustc](https://github.com/hechao-ustc)
+- [intelligentfu8](https://github.com/intelligentfu8)
+- [catpineapple](https://github.com/catpineapple)
+
+## 24.1.0
+
+Source: [Release Note 24.1.0](https://github.com/apache/doris-operator/issues/293)
+
+This version adds workload group support to `DorisCluster`, introduces rolling restarts, and fixes FE deployment and access issues.
+
+Workload groups require the official Apache Doris 2.1.7 image or later. For earlier Doris versions, build a compatible image manually.
+
+### Features and Improvements
+
+- Added workload group support for Doris BEs. [#289](https://github.com/apache/doris-operator/pull/289)
+- Added rolling restarts for Doris clusters. [#292](https://github.com/apache/doris-operator/pull/292)
+- Updated the controller-gen version in the Makefile. [#275](https://github.com/apache/doris-operator/pull/275)
+- Added license checks to GitHub Actions. [#278](https://github.com/apache/doris-operator/pull/278) [#279](https://github.com/apache/doris-operator/pull/279) [#280](https://github.com/apache/doris-operator/pull/280)
+- Added a default issue template. [#288](https://github.com/apache/doris-operator/pull/288)
+
+### Bug Fixes
+
+- Fixed a nil pointer error when FE `electionNumber` is not set in a `DorisCluster` resource. [#285](https://github.com/apache/doris-operator/pull/285)
+- Fixed the FE access address to use the service name and namespace. [#291](https://github.com/apache/doris-operator/pull/291)
+
+### Thanks
+
+- [intelligentfu8](https://github.com/intelligentfu8)
+- [catpineapple](https://github.com/catpineapple)
+
+## 24.0.0
+
+Source: [Release Note 24.0.0](https://github.com/apache/doris-operator/issues/272)
+
+This version introduces the `DorisDisaggregatedCluster` (DDC) custom resource for deploying storage-compute decoupled Apache Doris clusters. It also expands support for storage-compute coupled deployments through `DorisCluster` (DCR).
+
+DDC requires Apache Doris 3.0.2 or later.
+
+### New Features
+
+#### DorisDisaggregatedCluster
+
+- Added FoundationDB module access. [#186](https://github.com/apache/doris-operator/pull/186)
+- Added MetaService module deployment. [#194](https://github.com/apache/doris-operator/pull/194)
+- Added FE module deployment. [#199](https://github.com/apache/doris-operator/pull/199)
+- Added compute group module deployment. [#185](https://github.com/apache/doris-operator/pull/185) [#189](https://github.com/apache/doris-operator/pull/189) [#192](https://github.com/apache/doris-operator/pull/192) [#197](https://github.com/apache/doris-operator/pull/197)
+- Added image entrypoint support for disaggregated Doris components. [#195](https://github.com/apache/doris-operator/pull/195) [#196](https://github.com/apache/doris-operator/pull/196)
+- Added FE scale-down. [#225](https://github.com/apache/doris-operator/pull/225)
+- Added compute group scale-down and resource cleanup. [#238](https://github.com/apache/doris-operator/pull/238)
+- Added FE scale-down through the SQL interface. [#255](https://github.com/apache/doris-operator/pull/255)
+- Added compute group scale-down through the SQL interface. [#256](https://github.com/apache/doris-operator/pull/256)
+
+#### DorisCluster
+
+- Exposed the Arrow Flight SQL port through external services. [#251](https://github.com/apache/doris-operator/pull/251)
+
+### Improvements
+
+#### DorisDisaggregatedCluster
+
+- Supported creating compute groups through `be.conf` and PVC configuration. [#198](https://github.com/apache/doris-operator/pull/198)
+- Improved the README and DDC example YAML files. [#203](https://github.com/apache/doris-operator/pull/203) [#210](https://github.com/apache/doris-operator/pull/210) [#211](https://github.com/apache/doris-operator/pull/211) [#214](https://github.com/apache/doris-operator/pull/214)
+- Updated README examples to use the latest version. [#220](https://github.com/apache/doris-operator/pull/220)
+- Added an Operator switch for enabling DDC deployments. [#204](https://github.com/apache/doris-operator/pull/204)
+- Added `SystemInitialization` to prepare system environments. [#212](https://github.com/apache/doris-operator/pull/212)
+- Kept compute group terminology aligned with Doris naming changes. [#215](https://github.com/apache/doris-operator/pull/215) [#245](https://github.com/apache/doris-operator/pull/245)
+- Removed the MetaService replicas CRD. [#227](https://github.com/apache/doris-operator/pull/227)
+- Reworked the MetaService CRD into the `DorisDisaggregatedCluster` CRD. [#234](https://github.com/apache/doris-operator/pull/234)
+- Changed the compute group identifier to `UniqueId` for the new SQL interface. [#239](https://github.com/apache/doris-operator/pull/239)
+- Added an FE SQL image entrypoint and cluster ID hash code. [#249](https://github.com/apache/doris-operator/pull/249)
+- Migrated DDC operations from the HTTP interface to the SQL interface. [#254](https://github.com/apache/doris-operator/pull/254)
+- Added `timeoutSeconds` for pod liveness probes. [#257](https://github.com/apache/doris-operator/pull/257)
+- Added `logNotStore` so FEs can skip log PVC creation. [#266](https://github.com/apache/doris-operator/pull/266)
+- Updated DDC examples and documentation. [#268](https://github.com/apache/doris-operator/pull/268)
+
+#### DorisCluster
+
+- Added `timeoutSeconds` for pod liveness probes. [#257](https://github.com/apache/doris-operator/pull/257)
+
+#### Other Changes
+
+- Added unit tests for common utilities. [#226](https://github.com/apache/doris-operator/pull/226)
+- Added unit tests for resource and controller models. [#232](https://github.com/apache/doris-operator/pull/232)
+- Updated Helm chart configuration for Artifact Hub. [#244](https://github.com/apache/doris-operator/pull/244)
+- Changed the organization name from SelectDB to Apache. [#247](https://github.com/apache/doris-operator/pull/247)
+
+### Bug Fixes
+
+#### DorisDisaggregatedCluster
+
+- Fixed pod affinity and StatefulSet PVC pointer handling. [#209](https://github.com/apache/doris-operator/pull/209)
+- Corrected the default BE storage path. [#243](https://github.com/apache/doris-operator/pull/243)
+- Fixed pod restarts during initial deployment caused by a duplicate `ms_token` environment variable. [#259](https://github.com/apache/doris-operator/pull/259)
+- Fixed the BE ConfigMap path used by the image entrypoint. [#261](https://github.com/apache/doris-operator/pull/261)
+- Fixed deployments with a nil `electionNumber` and stopped services from updating continuously. [#262](https://github.com/apache/doris-operator/pull/262) [#266](https://github.com/apache/doris-operator/pull/266)
+- Fixed repeated reconciliation. [#263](https://github.com/apache/doris-operator/pull/263) [#265](https://github.com/apache/doris-operator/pull/265)
+- Corrected the default BE cache path. [#266](https://github.com/apache/doris-operator/pull/266)
+
+#### DorisCluster
+
+- Prevented Operator upgrades from restarting Doris pods. [#226](https://github.com/apache/doris-operator/pull/226)
+- Used deep copies when merging shared pod environment variable arrays. [#236](https://github.com/apache/doris-operator/pull/236)
+- Fixed MySQL client failures when scaling down FEs across namespaces. [#240](https://github.com/apache/doris-operator/pull/240)
+- Fixed deployment failures when `electionNumber` is nil. [#260](https://github.com/apache/doris-operator/pull/260)
+
+#### Other Changes
+
+- Fixed resource model unit tests for StatefulSets. [#252](https://github.com/apache/doris-operator/pull/252)
+
+### Thanks
+
+- [intelligentfu8](https://github.com/intelligentfu8)
+- [catpineapple](https://github.com/catpineapple)
+- [hechao-ustc](https://github.com/hechao-ustc)

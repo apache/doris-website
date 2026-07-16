@@ -331,6 +331,13 @@
     }
 }
 
+.download-next__ecosystem-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
 // ─── Run anywhere (single CTA card) ────────────────────────────────────────
 
 .download-next__run {
