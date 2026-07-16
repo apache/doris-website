@@ -346,6 +346,10 @@ export default function DownloadFormNext(): JSX.Element {
                                         <CheckedIcon />
                                         <span>Doris Streamloader</span>
                                     </li>
+                                    <li>
+                                        <CheckedIcon />
+                                        <span>Doris Operator</span>
+                                    </li>
                                 </ul>
                                 <div>
                                     <LinkWithArrow
