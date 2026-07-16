@@ -863,6 +863,7 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/auth/authorization/internal',
                                 'admin-manual/auth/authorization/ranger',
                                 'admin-manual/auth/authorization/data',
+                                'admin-manual/auth/authorization/custom',
                             ],
                         },
                         'admin-manual/audit-plugin',
