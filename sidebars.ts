@@ -361,6 +361,7 @@ const sidebars: SidebarsConfig = {
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-table',
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-database',
+                                        'data-operate/import/import-way/streaming-job/schema-change-mysql',
                                         'data-operate/import/import-way/streaming-job/data-type-mapping-mysql',
                                         {
                                             type: 'category',
