@@ -184,6 +184,39 @@
             outline: 2px solid var(--sn-green-deep);
             outline-offset: 3px;
         }
+
+        &--feedback {
+            min-height: 36px;
+            border-color: rgba(6, 128, 95, 0.32);
+            background: rgba(255, 255, 255, 0.56);
+            color: var(--sn-green-deep) !important;
+            box-shadow: none;
+
+            &:hover {
+                border-color: var(--sn-green);
+                background: var(--sn-green);
+                color: #fff !important;
+                box-shadow: 0 16px 30px -22px rgba(5, 76, 57, 0.66);
+            }
+        }
+    }
+
+    &__docs-feedback {
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(6, 128, 95, 0.16);
+    }
+
+    &__docs-feedback-title {
+        margin: 0 0 5px;
+        color: var(--sn-ink);
+        @include type.mono-text(14px, 800, 1.25, 0);
+    }
+
+    &__docs-feedback-copy {
+        margin: 0 0 11px;
+        color: rgba(15, 26, 20, 0.68);
+        @include type.sans-text(13px, 400, 1.42);
     }
 
     &__mascot {
@@ -284,6 +317,10 @@
         &__copy {
             max-width: none;
             font-size: 13px;
+        }
+
+        &__docs-feedback-copy {
+            font-size: 12.5px;
         }
 
         &__benefits {

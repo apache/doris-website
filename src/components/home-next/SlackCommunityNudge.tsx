@@ -1,12 +1,17 @@
 import React, { JSX, useCallback, useEffect, useRef, useState } from 'react';
+import { useLocation } from '@docusaurus/router';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import { normalizePathname } from '@site/src/utils/locale';
 import {
     computeMascotPupilOffset,
     getSlackNudgeBenefits,
+    isDocumentationFeedbackPath,
     shouldOpenSlackNudge,
 } from './SlackCommunityNudge.logic';
 import './SlackCommunityNudge.scss';
 
 const SLACK_URL = 'https://doris.apache.org/slack';
+const DOCS_FEEDBACK_URL = 'https://github.com/apache/doris-website/issues/364';
 const STORAGE_KEY = 'doris-home-slack-nudge-dismissed';
 const ECOSYSTEM_TARGET_ID = 'home-next-ecosystem';
 const OPEN_DELAY_MS = 5000;
@@ -48,6 +53,10 @@ function storeDismissal(): void {
 }
 
 export function SlackCommunityNudge(): JSX.Element {
+    const { pathname } = useLocation();
+    const {
+        i18n: { locales },
+    } = useDocusaurusContext();
     const [isOpen, setIsOpen] = useState(false);
     const [eyeTrackingEnabled, setEyeTrackingEnabled] = useState(false);
     const autoDismissedRef = useRef(false);
@@ -56,6 +65,8 @@ export function SlackCommunityNudge(): JSX.Element {
     const mascotRef = useRef<HTMLButtonElement>(null);
     const pupilRefs = useRef<Array<HTMLSpanElement | null>>([]);
     const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
+    const normalizedPathname = normalizePathname(pathname, locales);
+    const showDocsFeedback = isDocumentationFeedbackPath(normalizedPathname);
 
     const openAutomatically = useCallback((ecosystemVisible: boolean) => {
         const mountedAt = mountedAtRef.current ?? Date.now();
@@ -208,13 +219,17 @@ export function SlackCommunityNudge(): JSX.Element {
     return (
         <aside
             className={`slack-community-nudge${isOpen ? ' slack-community-nudge--open' : ''}`}
-            aria-label="Apache Doris Slack community invitation"
+            aria-label={showDocsFeedback
+                ? 'Apache Doris community and documentation resources'
+                : 'Apache Doris Slack community invitation'}
         >
             <div className="slack-community-nudge__bubble" aria-hidden={!isOpen}>
                 <button
                     type="button"
                     className="slack-community-nudge__close"
-                    aria-label="Dismiss Slack invitation"
+                    aria-label={showDocsFeedback
+                        ? 'Dismiss community and documentation prompt'
+                        : 'Dismiss Slack invitation'}
                     onClick={dismissAutoPrompt}
                     tabIndex={isOpen ? undefined : -1}
                 >
@@ -247,6 +262,33 @@ export function SlackCommunityNudge(): JSX.Element {
                     <SlackGlyph />
                     Join Slack
                 </a>
+                {showDocsFeedback && (
+                    <section
+                        className="slack-community-nudge__docs-feedback"
+                        aria-labelledby="slack-community-nudge-docs-feedback-title"
+                    >
+                        <p
+                            id="slack-community-nudge-docs-feedback-title"
+                            className="slack-community-nudge__docs-feedback-title"
+                        >
+                            Found a documentation issue?
+                        </p>
+                        <p className="slack-community-nudge__docs-feedback-copy">
+                            Share your feedback and help us improve the quality of the Apache Doris documentation.
+                        </p>
+                        <a
+                            className="slack-community-nudge__cta slack-community-nudge__cta--feedback"
+                            href={DOCS_FEEDBACK_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={dismissAutoPrompt}
+                            tabIndex={isOpen ? undefined : -1}
+                        >
+                            Report a docs issue
+                            <span aria-hidden="true">↗</span>
+                        </a>
+                    </section>
+                )}
             </div>
 
             <button
@@ -254,7 +296,9 @@ export function SlackCommunityNudge(): JSX.Element {
                 className="slack-community-nudge__mascot"
                 ref={mascotRef}
                 aria-expanded={isOpen}
-                aria-label={isOpen ? 'Hide Slack invitation' : 'Open Slack invitation'}
+                aria-label={showDocsFeedback
+                    ? `${isOpen ? 'Hide' : 'Open'} community and documentation resources`
+                    : `${isOpen ? 'Hide' : 'Open'} Slack invitation`}
                 onClick={() => setIsOpen(open => !open)}
             >
                 <img

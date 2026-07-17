@@ -24,4 +24,6 @@ export function computeMascotPupilOffset(input: MascotPupilOffsetInput): MascotP
 
 export function getSlackNudgeBenefits(): string[];
 
+export function isDocumentationFeedbackPath(pathname: string): boolean;
+
 export function shouldOpenSlackNudge(state: SlackNudgeTriggerState): boolean;
