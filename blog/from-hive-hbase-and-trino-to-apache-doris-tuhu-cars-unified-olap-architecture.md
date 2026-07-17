@@ -5,7 +5,7 @@
     'picked': "true"
     'order': "2"
     'date': '2026-7-3'
-    'author': 'velodb.io · Wenbo Wang'
+    'author': 'Tuhu Car · Wenbo Wang'
     'externalLink': 'https://www.velodb.io/blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture'
     'tags': ['Best Practice']
     "image": '/images/blogs/202607_Tuhu_horizontal.jpeg'

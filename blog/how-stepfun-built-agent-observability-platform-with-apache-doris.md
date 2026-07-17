@@ -5,7 +5,7 @@
     'picked': "true"
     'order': "1"
     'date': '2026-7-8'
-    'author': 'velodb.io · Ric Li'
+    'author': 'StepFun · Ric Li'
     'externalLink': 'https://www.velodb.io/blog/how-stepfun-built-agent-observability-platform-with-apache-doris'
     'tags': ['Best Practice']
     "image": '/images/blogs/202607_StepFun_horizontal.jpeg'
