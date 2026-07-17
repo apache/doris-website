@@ -707,9 +707,9 @@
     "message": "更多",
     "description": "The label for category More in sidebar docs"
   },
-  "sidebar.docs.category.MySQL": {
-    "message": "MySQL",
-    "description": "The label for category MySQL in sidebar docs"
+  "sidebar.docs.category.MySQL (Experimental)": {
+    "message": "MySQL（实验性）",
+    "description": "The label for category MySQL (Experimental) in sidebar docs"
   },
   "sidebar.docs.category.Optimization Technology Principles": {
     "message": "优化技术原理",
@@ -723,9 +723,9 @@
     "message": "性能优化",
     "description": "The label for category Performance in sidebar docs"
   },
-  "sidebar.docs.category.PostgreSQL": {
-    "message": "PostgreSQL",
-    "description": "The label for category PostgreSQL in sidebar docs"
+  "sidebar.docs.category.PostgreSQL (Experimental)": {
+    "message": "PostgreSQL（实验性）",
+    "description": "The label for category PostgreSQL (Experimental) in sidebar docs"
   },
   "sidebar.docs.category.Query Performance": {
     "message": "查询性能",
