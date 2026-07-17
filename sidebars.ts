@@ -357,7 +357,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 {
                                     type: 'category',
-                                    label: 'MySQL',
+                                    label: 'MySQL (Experimental)',
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-table',
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-database',
@@ -374,7 +374,7 @@ const sidebars: SidebarsConfig = {
                                 },
                                 {
                                     type: 'category',
-                                    label: 'PostgreSQL',
+                                    label: 'PostgreSQL (Experimental)',
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-postgresql-table',
                                         'data-operate/import/import-way/streaming-job/continuous-load-postgresql-database',
