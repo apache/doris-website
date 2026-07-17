@@ -3,7 +3,7 @@
     'summary': 'Apache Doris 4.1 adds more native ANN vector indexes, IVF and IVF_ON_DISK, directly inside its OLAP engine, reaching 900 QPS at 97% recall on VectorDBBench.'
     'description': 'Apache Doris 4.1 adds more native ANN vector indexes, IVF and IVF_ON_DISK, directly inside its OLAP engine, reaching 900 QPS at 97% recall on VectorDBBench.'
     'picked': "true"
-    'order': "3"
+    'order': "4"
     'date': '2026-5-28'
     'author': 'velodb.io · Rayner Chen'
     'externalLink': 'https://www.velodb.io/blog/how-we-built-production-vector-search-in-apache-doris'

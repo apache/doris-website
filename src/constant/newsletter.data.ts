@@ -1,5 +1,19 @@
 export const NEWSLETTER_DATA = [
     {
+        tags: ['Best Practice'],
+        title: "How StepFun Built a PB-Scale Agent Observability Platform with Apache Doris",
+        content: `StepFun built StepTrace, a PB-scale agent observability platform on Apache Doris, to analyze agent traces, costs, search, evaluation loops, and infrastructure behavior in real time.`,
+        to: 'https://www.velodb.io/blog/how-stepfun-built-agent-observability-platform-with-apache-doris',
+        image: 'blogs/202607_StepFun_horizontal.jpeg',
+    },
+    {
+        tags: ['Best Practice'],
+        title: "From Hive, HBase, MySQL, and Trino to Apache Doris: Tuhu Car's Unified OLAP Architecture",
+        content: `Tuhu Car rebuilt its fragmented Hive, HBase, MySQL, and Trino OLAP stack with Apache Doris, improving audience segmentation, user profiling, BI analysis, and real-time analytics.`,
+        to: 'https://www.velodb.io/blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture',
+        image: 'blogs/202607_Tuhu_horizontal.jpeg',
+    },
+    {
         tags: ['Tech Sharing'],
         title: "ASOF JOIN Benchmark: Apache Doris vs ClickHouse and DuckDB",
         content: `Apache Doris 4.1 outperforms ClickHouse and DuckDB on ASOF JOIN across all 11 benchmark scenarios.`,
@@ -8,23 +22,9 @@ export const NEWSLETTER_DATA = [
     },
     {
         tags: ['Tech Sharing'],
-        title: "Why AI Agents Need Real-Time Analytics and Hybrid Search: The Data Infra for Production Agents",
-        content: `AI agents need real-time analytics, not just vector search. Apache Doris unifies both capabilities, offering native hybrid search in one real-time engine built for agent workloads.`,
-        to: 'https://www.velodb.io/blog/why-ai-agents-need-real-time-analytics-and-hybrid-search',
-        image: 'blogs/202606_AI_Agent_Analytics_horizontal_2.jpeg',
-    },
-    {
-        tags: ['Tech Sharing'],
         title: "How We Built Production Vector Search in Apache Doris",
         content: `Apache Doris 4.1 adds more native ANN vector indexes, IVF and IVF_ON_DISK, directly inside its OLAP engine, reaching 900 QPS at 97% recall on VectorDBBench.`,
         to: 'https://www.velodb.io/blog/how-we-built-production-vector-search-in-apache-doris',
         image: 'blogs/202605_vector_search_header_horizontal.jpeg',
-    },
-    {
-        tags: ['Tech Sharing'],
-        title: "Hybrid Modeling for JSON in Agent Observability: VARIANT and Inverted Indexes in Apache Doris",
-        content: `VARIANT data type and native inverted indexes in Apache Doris offer a hybrid modeling approach that handles dynamic, schema-evolving agent observability logs with high performance.`,
-        to: 'https://www.velodb.io/blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris',
-        image: 'blogs/202605_JSON_agent_observability_horizontal.jpeg',
     },
 ];
