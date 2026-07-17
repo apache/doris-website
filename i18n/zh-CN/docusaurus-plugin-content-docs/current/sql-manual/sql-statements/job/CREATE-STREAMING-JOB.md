@@ -67,41 +67,58 @@ TO DATABASE <target_db> (
 
 **4. `<source_property>`**（多表 CDC 模式）
 
-| 参数           | 默认值  | 说明                                                         |
-| -------------- | ------- | ------------------------------------------------------------ |
-| jdbc_url       | -       | JDBC 连接串（MySQL/PostgreSQL）                               |
-| driver_url     | -       | JDBC 驱动 jar 包路径                                          |
-| driver_class   | -       | JDBC 驱动类名                                                |
-| user           | -       | 数据库用户名                                                  |
-| password       | -       | 数据库密码                                                    |
-| database       | -       | 数据库名                                                      |
-| schema         | -       | Schema 名称（PostgreSQL）                                     |
-| include_tables | -       | 需要同步的表名，多个表用逗号分隔，不填默认所有的表            |
-| offset         | latest  | `latest`: 仅增量同步（默认）；`initial`: 全量 + 增量同步                    |
-| snapshot_split_size | 8096 | split 的大小（行数），全量同步时，表会被切分成多个 split 进行同步 |
-| snapshot_parallelism | 1   | 全量阶段同步的并行度，即单次 Task 最多调度的 split 数量         |
+| 参数 | 适用数据源 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `jdbc_url` | MySQL、PostgreSQL | - | 必填。JDBC 连接串。 |
+| `driver_url` | MySQL、PostgreSQL | - | 必填。JDBC 驱动 jar 包路径。 |
+| `driver_class` | MySQL、PostgreSQL | - | 必填。JDBC 驱动类名。 |
+| `user` | MySQL、PostgreSQL | - | 必填。数据库用户名。 |
+| `password` | MySQL、PostgreSQL | - | 必填。数据库密码。 |
+| `database` | MySQL、PostgreSQL | - | 必填。上游数据库名；PostgreSQL 中应与 JDBC URL 的数据库名一致。 |
+| `schema` | PostgreSQL | - | 必填。PostgreSQL Schema 名称。 |
+| `include_tables` | MySQL、PostgreSQL | - | 需要同步的表名，多个表用逗号分隔；不设置时同步数据库或 Schema 中的所有表。 |
+| `exclude_tables` | MySQL、PostgreSQL | - | 不同步的表名，多个表用逗号分隔。仅当未设置 `include_tables` 时生效。 |
+| `table.<table_name>.target_table` | MySQL、PostgreSQL | 源表名 | 为指定源表设置 Doris 目标表名。 |
+| `table.<table_name>.exclude_columns` | MySQL、PostgreSQL | - | 排除指定源表中的非主键列，多个列用逗号分隔。 |
+| `offset` | MySQL、PostgreSQL | `latest` | 启动位点。支持 `initial`、`snapshot`、`latest` 和 JSON 精确位点；MySQL 还支持 `earliest`。 |
+| `snapshot_split_size` | MySQL、PostgreSQL | `8096` | 全量切片的大小（行数），必须为正整数。 |
+| `snapshot_parallelism` | MySQL、PostgreSQL | `1` | 全量阶段单次 Task 最多调度的 split 数量，必须为正整数。 |
+| `skip_snapshot_backfill` | MySQL、PostgreSQL | `true` | 是否跳过全量快照期间的增量回填。自动建表同步默认跳过，提供 at-least-once 语义。 |
+| `ssl_mode` | MySQL、PostgreSQL | `disable` | SSL 模式，可选值为 `disable`、`require`、`verify-ca`。 |
+| `ssl_rootcert` | MySQL、PostgreSQL | - | CA 证书文件，格式为 `FILE:<file_name>`；`ssl_mode=verify-ca` 时必填。 |
+| `server_id` | MySQL | 自动生成 | MySQL CDC reader 的 server ID，支持单值（如 `5400`）或闭区间（如 `5400-5408`）；区间宽度必须大于等于 `snapshot_parallelism`。 |
+| `slot_name` | PostgreSQL | `doris_cdc_<job_id>` | 逻辑复制槽名称。自定义复制槽必须预先创建，由用户管理。 |
+| `publication_name` | PostgreSQL | `doris_pub_<job_id>` | 发布名称。自定义发布必须预先创建、覆盖所有同步表，并由用户管理。 |
+
+> 版本说明：`table.<table_name>.target_table`、`table.<table_name>.exclude_columns`、`offset=snapshot`、`skip_snapshot_backfill`、`ssl_mode`、`ssl_rootcert`、`server_id`、`slot_name` 和 `publication_name` 自 4.1.0 版本起支持。
+
+同时设置 `include_tables` 和 `exclude_tables` 时，以 `include_tables` 为准。`slot_name` 和 `publication_name` 只能包含小写字母、数字和下划线，不能以数字开头，最长 63 个字符。完整的数据源差异、JSON 位点格式和 SSL 证书配置见 [MySQL 自动建表同步](../../../data-operate/import/import-way/streaming-job/continuous-load-mysql-database.md)和 [PostgreSQL 自动建表同步](../../../data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md)。
 
 **5. `<target_db>`**（多表 CDC 模式）
 > 需要导入的 Doris 目标库名称。
 
 **6. `<target_property>`**（多表 CDC 模式）
 
-| 参数           | 默认值  | 说明                                                         |
-| -------------- | ------- | ------------------------------------------------------------ |
-| table.create.properties.* | - | 支持创建表的时候指定 table 的 properties，比如 replication_num |
-| load.strict_mode | - | 是否开启严格模式，默认为关闭 |
-| load.max_filter_ratio | - | 采样窗口内，允许的最大过滤率。必须在大于等于 0 到小于等于 1 之间。默认值是 0，表示零容忍。采样窗口为 max_interval * 10。即如果在采样窗口内，错误行数/总行数大于 max_filter_ratio，则会导致例行作业被暂停，需要人工介入检查数据质量问题。 |
+| 参数 | 默认值 | 说明 |
+| --- | --- | --- |
+| `table.create.properties.*` | - | 创建 Doris 表时附加的表属性，例如 `table.create.properties.replication_num`。 |
+| `load.strict_mode` | `false` | 是否为 Stream Load 写入开启严格模式，取值为 `true` 或 `false`。 |
+| `load.max_filter_ratio` | `0` | 采样窗口内允许的最大过滤率，取值范围为 `[0, 1]`。采样窗口为 `max_interval * 10` 秒，窗口内错误行比例超过该值时作业暂停。 |
 
 ## 可选参数
 
 **1. `<job_property>`**
 
-| 参数               | 默认值 | 说明                                                         |
-| ------------------ | ------ | ------------------------------------------------------------ |
-| session.*          | 无     | 支持在 job_properties 上配置所有的 session 变量（仅 TVF 模式） |
-| s3.max_batch_files | 256    | 当累计文件数达到该值时触发一次导入写入（仅 S3 TVF）            |
-| s3.max_batch_bytes | 10737418240 | 当累计数据量（字节）达到该值时触发一次导入写入。只接受纯整数字节数，如 `10737418240`；不支持带单位后缀（如 `10G`）。取值范围 100MB–10GB，即 104857600–10737418240。（仅 S3 TVF）            |
-| max_interval       | 10     | 当上游没有新增文件或数据时，空闲的调度间隔，单位为秒。只接受整数（秒数），如 `10`；不支持带单位后缀（如 `10s`）。取值需 >= 1 |
+| 参数 | 默认值 | 说明 |
+| --- | --- | --- |
+| `max_interval` | `10` | 上游没有新增文件或数据时的空闲调度间隔，单位为秒；必须为不小于 1 的整数。 |
+| `compute_group` | 当前会话或用户默认计算组 | 仅存算分离模式支持。指定作业运行的计算组，用户必须具有该计算组的 USAGE 权限。 |
+| `session.<variable_name>` | 对应会话变量的默认值 | 仅 TVF 模式支持。为 INSERT 任务设置有效的 Doris 会话变量。 |
+| `s3.max_batch_files` | `256` | 当累计文件数达到该值时触发一次导入写入，仅 S3 TVF 使用。 |
+| `s3.max_batch_bytes` | `10737418240` | 当累计数据量达到该值时触发一次导入写入，仅 S3 TVF 使用。单位为字节，取值范围为 104857600 到 10737418240。 |
+| `offset` | - | 创建 S3 Streaming Job 时设置源端起始位置。MySQL/PostgreSQL 的初始位点应在数据源参数中设置；仅在 `ALTER JOB` 时可用 JSON 精确位点重置 CDC 进度。 |
+
+CDC Stream TVF 的 `type`、`table`、`include_delete_sign` 等全部参数见 [CDC Stream](../../sql-functions/table-valued-functions/cdc-stream.md)。
 
 ## 权限控制
 
