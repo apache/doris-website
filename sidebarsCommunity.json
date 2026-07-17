@@ -95,6 +95,13 @@
                 },
                 {
                     "type": "category",
+                    "label": "Plugin Development",
+                    "items": [
+                        "developer-guide/data-lineage-plugin-development"
+                    ]
+                },
+                {
+                    "type": "category",
                     "label": "Data Format Reference",
                     "items": [
                         "developer-guide/bitmap-hll-file-format"

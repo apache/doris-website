@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="680" viewBox="0 0 1440 680" role="img" aria-labelledby="title desc">
+  <title id="title">LineageInfo 事件模型</title>
+  <desc id="desc">LineageInfo 由表信息、列级直接血缘、数据集级间接血缘、输出列级间接血缘和查询上下文组成。插件将这些 Doris 内存对象转换为稳定的下游事件格式。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#4b6472"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #173b4d; }
+      .label { font: 700 18px Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #173b4d; }
+      .body { font: 16px Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #3b5360; }
+      .small { font: 14px Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #526b77; }
+      .edge { fill: none; stroke: #4b6472; stroke-width: 3; marker-end: url(#arrow); }
+      .edge-label { font: 14px Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #526b77; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="680" fill="#f7faf9"/>
+  <text x="56" y="62" class="title">LineageInfo 事件模型</text>
+  <text x="56" y="96" class="body">事件聚合五类血缘和查询信息，再由插件转换为外部治理系统使用的稳定格式。</text>
+
+  <rect x="56" y="138" width="1030" height="486" rx="10" fill="#ffffff" stroke="#647d89" stroke-width="2.5"/>
+  <text x="84" y="178" class="label">LineageInfo</text>
+  <text x="206" y="178" class="small">Doris FE 内存事件</text>
+
+  <rect x="86" y="208" width="280" height="150" rx="8" fill="#e7f4f1" stroke="#2f8f83" stroke-width="2"/>
+  <text x="108" y="246" class="label">表信息</text>
+  <text x="108" y="282" class="body">目标表和目标输出列</text>
+  <text x="108" y="312" class="body">查询引用的源表</text>
+  <text x="108" y="338" class="small">已解析 CTE 和 UNION</text>
+
+  <rect x="396" y="208" width="310" height="150" rx="8" fill="#fff4df" stroke="#bf8329" stroke-width="2"/>
+  <text x="418" y="246" class="label">列级直接血缘</text>
+  <text x="418" y="282" class="body">IDENTITY：直接源列</text>
+  <text x="418" y="312" class="body">TRANSFORMATION：表达式</text>
+  <text x="418" y="340" class="body">AGGREGATION：聚合</text>
+
+  <rect x="736" y="208" width="320" height="150" rx="8" fill="#f3edf8" stroke="#8263a4" stroke-width="2"/>
+  <text x="758" y="246" class="label">数据集级间接血缘</text>
+  <text x="758" y="282" class="body">JOIN、FILTER</text>
+  <text x="758" y="312" class="body">GROUP_BY、SORT</text>
+  <text x="758" y="340" class="small">影响整个结果集</text>
+
+  <rect x="86" y="398" width="380" height="162" rx="8" fill="#f3edf8" stroke="#8263a4" stroke-width="2"/>
+  <text x="108" y="438" class="label">输出列级间接血缘</text>
+  <text x="108" y="474" class="body">WINDOW：窗口分区和排序表达式</text>
+  <text x="108" y="506" class="body">CONDITIONAL：条件表达式</text>
+  <text x="108" y="536" class="small">只影响对应目标输出列</text>
+
+  <rect x="496" y="398" width="560" height="162" rx="8" fill="#edf5fb" stroke="#4d86b7" stroke-width="2"/>
+  <text x="518" y="438" class="label">查询上下文</text>
+  <text x="518" y="474" class="body">Query ID、原始 SQL、用户、客户端 IP</text>
+  <text x="518" y="506" class="body">会话数据库和 Catalog、执行状态、时间和耗时</text>
+  <text x="518" y="536" class="small">外部 Catalog 属性在进入事件前脱敏</text>
+
+  <rect x="1168" y="246" width="218" height="238" rx="8" fill="#e7f4f1" stroke="#2f8f83" stroke-width="2"/>
+  <text x="1192" y="286" class="label">插件输出</text>
+  <text x="1192" y="326" class="body">稳定数据集 ID</text>
+  <text x="1192" y="358" class="body">表级依赖关系</text>
+  <text x="1192" y="390" class="body">列级依赖关系</text>
+  <text x="1192" y="422" class="body">查询上下文</text>
+  <text x="1192" y="454" class="small">下游事件格式</text>
+
+  <path d="M1086 365 H1168" class="edge"/>
+  <text x="1097" y="344" class="edge-label">插件转换</text>
+</svg>

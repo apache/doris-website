@@ -43,6 +43,10 @@
     "message": "数据源扩展开发",
     "description": "The label for category Data Source Extension in sidebar community"
   },
+  "sidebar.community.category.Plugin Development": {
+    "message": "插件开发",
+    "description": "The label for category Plugin Development in sidebar community"
+  },
   "sidebar.community.category.Data Format Reference": {
     "message": "数据格式参考",
     "description": "The label for category Data Format Reference in sidebar community"

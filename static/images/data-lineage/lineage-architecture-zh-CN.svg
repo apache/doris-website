@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="620" viewBox="0 0 1600 620" role="img" aria-labelledby="title desc">
+  <title id="title">Apache Doris 数据血缘采集架构</title>
+  <desc id="desc">受支持的 DML 依次经过 Nereids 分析和执行。仅执行成功后提取 LineageInfo，事件进入 FE 本地有界队列，由单个工作线程交给血缘插件，再发送到外部治理系统。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#4b6472"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #173b4d; }
+      .label { font: 700 18px Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #173b4d; }
+      .body { font: 16px Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #3b5360; }
+      .small { font: 14px Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #526b77; }
+      .command { font: 13px Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #526b77; }
+      .edge { fill: none; stroke: #4b6472; stroke-width: 3; marker-end: url(#arrow); }
+      .edge-muted { fill: none; stroke: #8a9aa3; stroke-width: 2.5; stroke-dasharray: 8 6; marker-end: url(#arrow); }
+      .edge-label { font: 14px Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #526b77; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="620" fill="#f7faf9"/>
+  <text x="48" y="62" class="title">数据血缘采集与投递</text>
+  <text x="48" y="96" class="body">每个 FE 独立采集和排队；只有 DML 执行成功才生成血缘事件。</text>
+
+  <rect x="40" y="174" width="200" height="176" rx="8" fill="#e7f4f1" stroke="#2f8f83" stroke-width="2"/>
+  <text x="58" y="214" class="label">受支持的 DML</text>
+  <text x="58" y="250" class="command">INSERT INTO SELECT</text>
+  <text x="58" y="278" class="command">INSERT OVERWRITE SELECT</text>
+  <text x="58" y="306" class="command">CREATE TABLE AS SELECT</text>
+
+  <rect x="260" y="174" width="190" height="176" rx="8" fill="#edf5fb" stroke="#4d86b7" stroke-width="2"/>
+  <text x="280" y="214" class="label">Nereids 分析</text>
+  <text x="280" y="250" class="body">分析逻辑计划</text>
+  <text x="280" y="280" class="small">规划 Hook 保存计划</text>
+
+  <rect x="480" y="174" width="190" height="176" rx="8" fill="#fff4df" stroke="#bf8329" stroke-width="2"/>
+  <text x="500" y="214" class="label">DML 执行</text>
+  <text x="500" y="250" class="body">执行数据写入</text>
+  <text x="500" y="280" class="small">失败时不生成事件</text>
+
+  <rect x="700" y="174" width="190" height="176" rx="8" fill="#eef3f5" stroke="#647d89" stroke-width="2"/>
+  <text x="720" y="214" class="label">提取器</text>
+  <text x="720" y="250" class="body">生成 LineageInfo</text>
+  <text x="720" y="280" class="small">表、列和查询上下文</text>
+
+  <rect x="920" y="174" width="190" height="176" rx="8" fill="#f3edf8" stroke="#8263a4" stroke-width="2"/>
+  <text x="940" y="214" class="label">FE 本地队列</text>
+  <text x="940" y="250" class="body">有界事件缓冲区</text>
+  <text x="940" y="280" class="small">满时丢弃新事件</text>
+
+  <rect x="1140" y="174" width="190" height="176" rx="8" fill="#eef3f5" stroke="#647d89" stroke-width="2"/>
+  <text x="1160" y="214" class="label">工作线程</text>
+  <text x="1160" y="250" class="body">串行分发事件</text>
+  <text x="1160" y="280" class="small">单个 daemon 线程</text>
+
+  <rect x="1360" y="174" width="190" height="176" rx="8" fill="#e7f4f1" stroke="#2f8f83" stroke-width="2"/>
+  <text x="1380" y="214" class="label">血缘插件</text>
+  <text x="1380" y="250" class="body">LineagePlugin</text>
+  <text x="1380" y="280" class="small">eventFilter() / exec()</text>
+
+  <path d="M240 262 H260" class="edge"/>
+  <path d="M450 262 H480" class="edge"/>
+  <path d="M670 262 H700" class="edge"/>
+  <text x="674" y="158" class="edge-label">仅成功后继续</text>
+  <path d="M890 262 H920" class="edge"/>
+  <path d="M1110 262 H1140" class="edge"/>
+  <path d="M1330 262 H1360" class="edge"/>
+
+  <rect x="470" y="446" width="210" height="70" rx="8" fill="#f3f5f6" stroke="#8a9aa3" stroke-width="2"/>
+  <text x="500" y="488" class="body">结束，不生成血缘事件</text>
+  <path d="M575 350 V446" class="edge-muted"/>
+  <text x="590" y="405" class="edge-label">执行失败</text>
+
+  <rect x="1328" y="446" width="254" height="70" rx="8" fill="#173b4d"/>
+  <text x="1378" y="488" style="font:700 17px Arial,'PingFang SC','Microsoft YaHei',sans-serif;fill:#fff">外部数据治理系统</text>
+  <path d="M1455 350 V446" class="edge"/>
+</svg>
