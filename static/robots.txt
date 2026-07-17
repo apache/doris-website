@@ -1,3 +1,5 @@
+# Algolia-Crawler-Verif: AD8797796C86C8D5
+
 User-agent: Googlebot
 Allow: /
 
