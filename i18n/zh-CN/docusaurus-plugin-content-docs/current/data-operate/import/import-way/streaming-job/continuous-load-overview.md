@@ -213,10 +213,9 @@ DROP JOB WHERE jobName = <job_name>;
 
 ### Schema Change（DDL）
 
-DDL 同步**仅适用于自动建表同步**；SQL 映射（TVF）不同步任何 DDL。
+DDL 同步**仅适用于[自动建表方式同步](#能力对比)**；[SQL 映射方式同步](#能力对比)不同步任何 DDL。
 
-- **PostgreSQL**（4.1 起支持）：仅 `ADD COLUMN` 和 `DROP COLUMN` 会同步。**列类型变更、`RENAME COLUMN`、约束 / 索引 / 分区变更不会同步**——需在 Doris 端手工处理。
-- **MySQL**：上游 DDL **暂不同步**——需手工调整 Doris 表结构。
+- **MySQL 和 PostgreSQL**：仅 `ADD COLUMN` 和 `DROP COLUMN` 会同步。**列类型变更、`RENAME COLUMN`、主键 / 约束 / 索引 / 分区变更不会同步**——需在 Doris 端手工处理。不同数据源的具体行为和限制详见 [MySQL Schema Change 同步](./schema-change-mysql.md)与 [PostgreSQL Schema Change 同步](./schema-change-postgresql.md)。
 
 ## FAQ
 

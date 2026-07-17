@@ -213,10 +213,9 @@ Only upstream tables **with a primary key** can be synchronized (both sync metho
 
 ### Schema Change (DDL)
 
-DDL sync applies **only to Auto Table Creation Sync**; SQL Mapping (TVF) does not sync any DDL.
+DDL sync applies **only to the [Auto Table Creation Sync method](#capability-comparison)**; the [SQL Mapping Sync method](#capability-comparison) does not sync any DDL.
 
-- **PostgreSQL** (supported since 4.1): only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and constraint / index / partition changes are NOT synced** — apply them manually in Doris.
-- **MySQL**: upstream DDL is **not synced yet** — adjust the Doris table schema manually.
+- **MySQL and PostgreSQL**: only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and primary key / constraint / index / partition changes are NOT synced** — apply them manually in Doris. For source-specific behavior and limitations, see [MySQL Schema Change Sync](./schema-change-mysql.md) and [PostgreSQL Schema Change Sync](./schema-change-postgresql.md).
 
 ## FAQ
 
