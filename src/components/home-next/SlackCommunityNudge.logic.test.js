@@ -4,6 +4,7 @@ const test = require('node:test');
 const {
     computeMascotPupilOffset,
     getSlackNudgeBenefits,
+    isDocumentationFeedbackPath,
     shouldOpenSlackNudge,
 } = require('./SlackCommunityNudge.logic');
 
@@ -116,4 +117,21 @@ test('returns the Slack community benefits shown in the nudge', () => {
         'Get the latest Doris community updates, learning resources, and event information.',
         'Join community building, feature discussions, and PR reviews.',
     ]);
+});
+
+test('shows documentation feedback on docs and community pages', () => {
+    [
+        '/docs',
+        '/docs/4.x/gettingStarted/what-is-apache-doris',
+        '/community',
+        '/community/how-to-contribute/contribute-to-doris',
+    ].forEach(pathname => {
+        assert.equal(isDocumentationFeedbackPath(pathname), true, pathname);
+    });
+});
+
+test('does not show documentation feedback outside docs and community pages', () => {
+    ['/', '/blog', '/docs-old', '/community-events'].forEach(pathname => {
+        assert.equal(isDocumentationFeedbackPath(pathname), false, pathname);
+    });
 });

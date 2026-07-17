@@ -41,8 +41,18 @@ function getSlackNudgeBenefits() {
     ];
 }
 
+function isDocumentationFeedbackPath(pathname) {
+    return (
+        pathname === '/docs' ||
+        pathname.startsWith('/docs/') ||
+        pathname === '/community' ||
+        pathname.startsWith('/community/')
+    );
+}
+
 module.exports = {
     computeMascotPupilOffset,
     getSlackNudgeBenefits,
+    isDocumentationFeedbackPath,
     shouldOpenSlackNudge,
 };
