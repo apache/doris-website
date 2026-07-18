@@ -178,6 +178,38 @@ Next, configure debugging in your IDE:
 
 ## FAQ
 
+### CMake Cannot Find OpenMP
+
+When compiling BE, CMake may fail to find OpenMP and report the following errors:
+
+```text
+Could NOT find OpenMP_C (missing: OpenMP_C_FLAGS OpenMP_C_LIB_NAMES)
+fatal error: 'omp.h' file not found
+```
+
+Install `libomp`, then check that its Homebrew installation contains `omp.h`:
+
+```Shell
+brew install libomp
+LIBOMP_PREFIX="$(brew --prefix libomp)"
+test -f "${LIBOMP_PREFIX}/include/omp.h"
+```
+
+Add the following environment variables to `custom_env.sh` in the Doris source root:
+
+```Shell
+LIBOMP_PREFIX="$(brew --prefix libomp)"
+export CPPFLAGS="-I${LIBOMP_PREFIX}/include ${CPPFLAGS:-}"
+export CFLAGS="-I${LIBOMP_PREFIX}/include ${CFLAGS:-}"
+export CXXFLAGS="-I${LIBOMP_PREFIX}/include ${CXXFLAGS:-}"
+export LDFLAGS="-L${LIBOMP_PREFIX}/lib ${LDFLAGS:-}"
+export EXTRA_CXX_FLAGS="-I${LIBOMP_PREFIX}/include ${EXTRA_CXX_FLAGS:-}"
+```
+
+The `be/CMakeLists.txt` file resets `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`, so CMake's OpenMP checks may not receive `CPPFLAGS`, `CFLAGS`, or `CXXFLAGS`. `EXTRA_CXX_FLAGS` passes the `libomp` include path to the BE build and is required for this workaround.
+
+`custom_env.sh` is a local build configuration file. Do not commit it to the repository.
+
 ### Compilation Fails Due to Node.js Version Too High
 
 Error message:

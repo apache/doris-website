@@ -178,6 +178,38 @@ cp -r output ../doris-run
 
 ## 常见问题
 
+### CMake 找不到 OpenMP
+
+编译 BE 时，CMake 可能无法找到 OpenMP，并显示以下错误：
+
+```text
+Could NOT find OpenMP_C (missing: OpenMP_C_FLAGS OpenMP_C_LIB_NAMES)
+fatal error: 'omp.h' file not found
+```
+
+先安装 `libomp`，并确认 Homebrew 安装目录中存在 `omp.h`：
+
+```Shell
+brew install libomp
+LIBOMP_PREFIX="$(brew --prefix libomp)"
+test -f "${LIBOMP_PREFIX}/include/omp.h"
+```
+
+然后在 Doris 源码根目录的 `custom_env.sh` 中添加以下环境变量：
+
+```Shell
+LIBOMP_PREFIX="$(brew --prefix libomp)"
+export CPPFLAGS="-I${LIBOMP_PREFIX}/include ${CPPFLAGS:-}"
+export CFLAGS="-I${LIBOMP_PREFIX}/include ${CFLAGS:-}"
+export CXXFLAGS="-I${LIBOMP_PREFIX}/include ${CXXFLAGS:-}"
+export LDFLAGS="-L${LIBOMP_PREFIX}/lib ${LDFLAGS:-}"
+export EXTRA_CXX_FLAGS="-I${LIBOMP_PREFIX}/include ${EXTRA_CXX_FLAGS:-}"
+```
+
+Doris 的 `be/CMakeLists.txt` 会重新设置 `CMAKE_C_FLAGS` 和 `CMAKE_CXX_FLAGS`，因此普通的 `CPPFLAGS`、`CFLAGS` 和 `CXXFLAGS` 可能不会进入 CMake 的 OpenMP 探测命令。上述配置中的关键项是 `EXTRA_CXX_FLAGS`，它会把 `libomp` 的头文件路径传给 BE 构建过程。
+
+`custom_env.sh` 只用于配置本地编译环境，请勿将其提交到代码仓库。
+
 ### Node.js 版本过高导致编译失败
 
 错误信息：
