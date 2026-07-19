@@ -167,6 +167,9 @@ FROM (
 ) AS array_values;
 -- distinct_count: 2
 ```
+
+For the physical encoding, normalization pipeline, and additional boundaries behind these rules, see [VARIANT V2 Compute Semantics and Memory Encoding](./variant-v2-compute-semantics).
+
 ## Primitive types
 
 VARIANT infers subcolumn types automatically. Supported types include:
@@ -508,7 +511,7 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 - On the default path, a whole VARIANT value should not be used directly in `ORDER BY`, `GROUP BY`, as a `JOIN KEY`, or as an aggregate argument; CAST the required subpath instead.
 - Strings can be implicitly converted to VARIANT.
 
-The experimental compute path described below adds canonical hashing and serialization for grouping and set-operation use cases. It does not make root VARIANT comparison predicates or VARIANT join keys available.
+The [experimental V2 compute path](./variant-v2-compute-semantics) adds canonical hashing and serialization for grouping and set-operation use cases. It does not make root VARIANT comparison predicates or Variant join keys available.
 
 | VARIANT         | Castable | Coercible |
 | --------------- | -------- | --------- |
@@ -525,130 +528,19 @@ The experimental compute path described below adds canonical hashing and seriali
 
 ## Experimental compute path: ColumnVariantV2
 
-`ColumnVariantV2` is an experimental, compute-only execution path. It is disabled by default and selected for the current FE session with the session variable `enable_variant_v2`:
+:::caution Experimental feature
+`ColumnVariantV2` is disabled by default and changes only the compute path selected for the current FE session. It does not change the persisted Variant format or add V2 storage, loading, statistics, or compaction support.
+:::
+
+Select it for the current FE session with the session variable `enable_variant_v2`:
 
 ```sql
 SET enable_variant_v2 = true;
 ```
 
-The session variable changes the FE/BE execution type marker only. It does not add V2 table creation, loading, segment storage, readers or writers, statistics, or compaction support. It also does not provide V1/V2 mixed-version rolling-upgrade compatibility.
+When enabled, V2 adds canonical hashing and serialization for supported grouping and set operations, makes JSON parsing explicit, and uses whole-column typed (`T`) or encoded (`E`) in-memory states. Root Variant comparison predicates, Variant join keys, Sort/TopN keys, and `MIN`/`MAX` arguments remain unsupported.
 
-### Memory encoding and organization
-
-`ColumnVariantV2` uses a compact, self-describing representation during execution:
-
-- Nested or heterogeneous values use encoded bytes in an arena. Type and length information in the encoding lets expressions locate child values without requiring a fixed SQL type for every row.
-- Simple scalar values can use typed scalar columns. A separate Variant-null map records JSON/Variant `null`, while SQL `NULL` remains represented by the SQL null bitmap.
-- `E` and `T` are whole-column physical states: `E` means encoded and `T` means typed scalar. A column does not mix `E` and `T` at row level.
-
-#### Typed scalar materialization to encoded values
-
-When an operator needs to materialize a typed scalar column (`T`) as encoded values (`E`), `with_typed_scalar()` selects the physical Variant primitive and payload width for each row. The following tables describe this physical mapping; canonical equality is applied separately.
-
-**Decimal types**
-
-| Doris type | Unscaled value read from the column | Encoding call | Variant primitive |
-| --- | --- | --- | --- |
-| `DECIMALV2` | `__int128` from `DecimalV2Value::value()` | `decimal(value, scale, 16)` | `DECIMAL16` |
-| `DECIMAL32` | `int32_t` from `Decimal32::value` | `decimal(value, scale, 4)` | `DECIMAL4` |
-| `DECIMAL64` | `int64_t` from `Decimal64::value` | `decimal(value, scale, 8)` | `DECIMAL8` |
-| `DECIMAL128I` | `__int128` from `Decimal128V3::value` | `decimal(value, scale, 16)` | `DECIMAL16` |
-
-The encoded decimal layout is `[primitive header][scale][little-endian signed unscaled value]`. Its total size is therefore 6 bytes for `DECIMAL4`, 10 bytes for `DECIMAL8`, and 18 bytes for `DECIMAL16`.
-
-Decimal limits and invariants:
-
-- The Variant decimal scale must be in `[0, 38]`. The absolute unscaled value is limited to `10^9 - 1` for `DECIMAL4`, `10^18 - 1` for `DECIMAL8`, and `10^38 - 1` for `DECIMAL16`.
-- Doris source-type limits still apply: `DECIMALV2` supports precision up to 27 and scale up to 9; `DECIMAL32`, `DECIMAL64`, and `DECIMAL128I` support precision up to 9, 18, and 38 respectively.
-- The typed column's physical scale must exactly match its data-type metadata. A mismatch is treated as an invariant violation rather than being rescaled during materialization.
-- The source type determines the encoded width. This path does not shrink a small `DECIMALV2` or `DECIMAL128I` value to `DECIMAL4` or `DECIMAL8`.
-- `DECIMAL256` is not a supported `ColumnVariantV2` typed identity. Its precision can reach 76, beyond the Variant decimal precision limit of 38, so it cannot use this typed-to-encoded path.
-- Physical width and scale do not define canonical equality. For example, `1.20` and `1.2` can have different physical encodings but normalize to the same canonical numeric value for hashing and grouping.
-
-**Date and time types**
-
-The conversion first calculates:
-
-```text
-days = daynr(value) - daynr(1970-01-01)
-micros = (days * 86400 + hour * 3600 + minute * 60 + second) * 1000000
-         + microsecond
-```
-
-| Doris type | Normalized payload | Encoding call | Variant primitive |
-| --- | --- | --- | --- |
-| `DATE` | `int32_t days` | `date(days)` | `DATE` |
-| `DATEV2` | `int32_t days` | `date(days)` | `DATE` |
-| `DATETIME` | `int64_t micros` | `timestamp_micros(micros, false)` | `TIMESTAMP_NTZ_MICROS` |
-| `DATETIMEV2` | `int64_t micros` | `timestamp_micros(micros, false)` | `TIMESTAMP_NTZ_MICROS` |
-| `TIMESTAMPTZ` | `int64_t micros` | `timestamp_micros(micros, true)` | `TIMESTAMP_MICROS` |
-
-`DATE` uses a 4-byte payload plus a 1-byte header. Each timestamp uses an 8-byte payload plus a 1-byte header. The `utc_adjusted` argument is represented by the primitive ID: `false` selects the no-time-zone (`NTZ`) primitive, while `true` selects the UTC-adjusted primitive.
-
-Date and time limits and invariants:
-
-- Every source value must pass Doris date validation. An invalid `DATE`, `DATEV2`, `DATETIME`, `DATETIMEV2`, or `TIMESTAMPTZ` value raises `INVALID_ARGUMENT`; this path does not silently repair it or convert it to `NULL`.
-- `DATE` and `DATEV2` preserve only a signed day count relative to `1970-01-01`; they carry neither a time of day nor a time-zone adjustment.
-- `DATETIME` and `DATETIMEV2` are encoded as wall-clock, no-time-zone timestamps. This materialization path does not apply the session time zone. `TIMESTAMPTZ` is the only mapped Doris type that selects the UTC-adjusted timestamp primitive.
-- Typed materialization emits microsecond primitives only. `DATETIMEV2` and `TIMESTAMPTZ` preserve at most their supported six fractional digits; `TIMESTAMP_NANOS` and `TIMESTAMP_NTZ_NANOS` exist in the Variant encoding but are not emitted by this mapping.
-- `TIMEV2` is not a supported typed identity. Although the Variant encoding defines `TIME_NTZ_MICROS`, this typed-to-encoded path does not produce it.
-
-This is an in-memory, compute-time organization only; it is not a new persisted Variant file format. For an external organization reference, see the official [Apache Parquet File Format](https://parquet.apache.org/docs/file-format/), [Parquet Variant Shredding](https://parquet.apache.org/docs/file-format/types/variantshredding/), and [Parquet Nested Encoding](https://parquet.apache.org/docs/file-format/nestedencoding/). Parquet organizes a Variant around `metadata` and `value`, with optional `typed_value` fields for homogeneous paths so readers can project columns and skip data. This is a design reference for organization, not a claim that `ColumnVariantV2` uses Parquet on disk.
-
-### What changes when V2 is enabled
-
-- **Canonical value semantics**: equivalent integral numbers normalize together; decimal trailing zeros are normalized; `+0`, `-0`, and integral zero share the same canonical value; object key order is ignored; array order is preserved. Invalid encodings and violated invariants fail instead of being silently accepted.
-- **Hashing and serialization**: canonical hashes and arena serialization enable `GROUP BY`, `DISTINCT`, `COUNT(DISTINCT ...)`, `INTERSECT`, `EXCEPT`, `UNION DISTINCT`, and aggregation grouping keys for supported Variant values.
-- **Parsing is explicit**: `parse_to_variant(json_string)` parses a JSON string into a Variant value; `parse_to_variant_error_to_null(json_string)` returns SQL `NULL` when validation fails; `CAST(string AS VARIANT)` creates a typed Variant string and does not parse the string as JSON. See [PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant) and [PARSE_TO_VARIANT_ERROR_TO_NULL](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant-error-to-null) for function syntax and examples.
-- **Expressions and nested values**: conditional expressions, nested containers, and Variant-aware `explode` can operate on the canonical representation.
-- **Null and physical states**: SQL `NULL` remains distinct from Variant/JSON `null`. A `ColumnVariantV2` column uses a whole-column physical state: encoded (`E`) or typed scalar (`T`, with a Variant-null map); it does not mix E and T at row level.
-
-### Examples
-
-The following examples run in the current FE session after V2 is enabled:
-
-```sql
-SET enable_variant_v2 = true;
-
--- JSON text is parsed; CAST(string AS VARIANT) keeps the string as a typed Variant value.
-SELECT PARSE_TO_VARIANT('{\"id\": 1, \"items\": [10, 20]}') AS parsed_value,
-       CAST('{\"id\": 1, \"items\": [10, 20]}' AS VARIANT) AS typed_string;
-
--- Canonical hashing treats 1 and 1.0 as one distinct value.
-SELECT COUNT(DISTINCT value) AS distinct_count
-FROM (
-    SELECT PARSE_TO_VARIANT('1') AS value
-    UNION ALL
-    SELECT PARSE_TO_VARIANT('1.0') AS value
-) AS numeric_values;
--- distinct_count: 1
-
--- Invalid JSON becomes SQL NULL with the tolerant parser.
-SELECT PARSE_TO_VARIANT_ERROR_TO_NULL('{\"id\":') AS invalid_value;
--- invalid_value: NULL
-
--- Nested access can feed a conditional expression after an explicit CAST.
-SELECT CASE
-           WHEN CAST(PARSE_TO_VARIANT('{\"enabled\": true}')['enabled'] AS BOOLEAN)
-           THEN 'on'
-           ELSE 'off'
-       END AS status;
--- status: on
-```
-
-### Boundaries
-
-- Root Variant comparison predicates (`=`, `!=`, `<=>`, and ordering comparisons) are not supported. Extract and CAST a comparable path on both sides:
-
-```sql
-SELECT *
-FROM tbl
-WHERE CAST(v['id'] AS BIGINT) = CAST(other_v['id'] AS BIGINT);
-```
-
-- Variant expressions are not supported as join keys. Root Variant values are also not supported as sort or TopN keys, window partition or order keys, or arguments to `MIN`/`MAX`.
-- Regression suites covering V2 remain tagged `nonConcurrent`; the feature selection itself is session-scoped and does not change native Variant storage or compaction.
-- Enable V2 only after validating the target workload; it is an experimental execution path and does not change the storage compatibility contract.
+For the component architecture, materialization flow, memory encoding, Decimal and date/time mappings, canonical equality, CAST behavior, examples, and complete limits, see [VARIANT V2 Compute Semantics and Memory Encoding](./variant-v2-compute-semantics).
 
 ## Wide columns
 

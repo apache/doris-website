@@ -167,6 +167,9 @@ FROM (
 ) AS array_values;
 -- distinct_count: 2
 ```
+
+这些规则背后的物理编码、归一化流程和其他使用边界，请参见 [VARIANT V2 计算语义与内存编码](./variant-v2-compute-semantics)。
+
 ## 基本类型
 
 VARIANT 自动推断的子列基础类型包括：
@@ -508,7 +511,7 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 - 在默认路径上，不应将整个 VARIANT 直接用于 `ORDER BY`、`GROUP BY`、`JOIN KEY` 或聚合参数；请先对子路径 CAST。
 - 字符串类型可隐式转换为 VARIANT。
 
-下面的实验性计算路径新增了面向分组和集合运算的规范化哈希与序列化，但不会因此开放根 VARIANT 比较谓词或 VARIANT JOIN KEY。
+[实验性 V2 计算路径](./variant-v2-compute-semantics)新增了面向分组和集合运算的规范化哈希与序列化，但不会因此开放根 VARIANT 比较谓词或 Variant Join Key。
 
 | VARIANT         | Castable | Coercible |
 | --------------- | -------- | --------- |
@@ -525,130 +528,19 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 ## 实验性计算路径：ColumnVariantV2
 
-`ColumnVariantV2` 是实验性的、仅用于计算的执行路径。默认关闭，通过当前 FE session 的 session variable `enable_variant_v2` 选择：
+:::caution 实验特性
+`ColumnVariantV2` 默认关闭，只改变当前 FE session 选择的计算路径。它不会改变 Variant 持久化格式，也不会增加 V2 存储、导入、统计信息或 Compaction 支持。
+:::
+
+通过当前 FE session 的 session variable `enable_variant_v2` 选择该路径：
 
 ```sql
 SET enable_variant_v2 = true;
 ```
 
-该 session variable 只改变 FE/BE 执行类型标记，不增加 V2 表创建、导入、Segment 存储、读写器、统计信息或 Compaction 支持；同时也没有提供 V1/V2 混部滚动升级兼容能力。
+开启后，V2 会为支持的分组和集合运算增加 canonical hashing 与序列化，明确区分 JSON 解析和字符串 CAST，并使用整列级 typed（`T`）或 encoded（`E`）内存状态。根 Variant 比较谓词、Variant Join Key、Sort/TopN Key 以及 `MIN`/`MAX` 参数仍然不受支持。
 
-### 内存编码与组织方式
-
-`ColumnVariantV2` 在执行期间使用紧凑的自描述表示：
-
-- 嵌套值或异构值使用 arena 中的编码字节保存；编码中携带类型、长度等信息，使表达式可以定位子值，而不要求每一行都使用固定的 SQL 类型。
-- 简单标量可以使用带类型的标量列；独立的 Variant-null map 用来记录 JSON/Variant `null`，而 SQL `NULL` 仍由 SQL null bitmap 表示。
-- `E` 和 `T` 是整列级别的物理状态：`E` 表示 encoded，`T` 表示 typed scalar；同一列不会在行级别混用 `E` 和 `T`。
-
-#### Typed scalar 物化为 encoded
-
-当算子需要把 typed scalar 列（`T`）物化为 encoded 值（`E`）时，`with_typed_scalar()` 会逐行选择物理 Variant primitive 和 payload 宽度。下表描述的是物理编码映射；canonical equality 在另一层单独处理。
-
-**Decimal 类型**
-
-| Doris 类型 | 从列中读取的 unscaled 值 | 编码调用 | Variant primitive |
-| --- | --- | --- | --- |
-| `DECIMALV2` | `DecimalV2Value::value()` 返回的 `__int128` | `decimal(value, scale, 16)` | `DECIMAL16` |
-| `DECIMAL32` | `Decimal32::value` 中的 `int32_t` | `decimal(value, scale, 4)` | `DECIMAL4` |
-| `DECIMAL64` | `Decimal64::value` 中的 `int64_t` | `decimal(value, scale, 8)` | `DECIMAL8` |
-| `DECIMAL128I` | `Decimal128V3::value` 中的 `__int128` | `decimal(value, scale, 16)` | `DECIMAL16` |
-
-Decimal 的 encoded 布局是 `[primitive header][scale][小端有符号 unscaled value]`，所以 `DECIMAL4`、`DECIMAL8`、`DECIMAL16` 的总长度分别是 6、10、18 字节。
-
-Decimal 限制与不变量：
-
-- Variant Decimal 的 scale 必须在 `[0, 38]` 内。`DECIMAL4`、`DECIMAL8`、`DECIMAL16` 的 unscaled 绝对值上限分别是 `10^9 - 1`、`10^18 - 1`、`10^38 - 1`。
-- Doris 源类型自身的限制仍然生效：`DECIMALV2` 最大 precision 为 27、最大 scale 为 9；`DECIMAL32`、`DECIMAL64`、`DECIMAL128I` 的最大 precision 分别为 9、18、38。
-- typed column 的物理 scale 必须与 data type 元数据中的 scale 完全一致；不一致会被视为不变量破坏，物化时不会自动 rescale。
-- encoded 宽度由源类型决定。该路径不会因为数值较小，就把 `DECIMALV2` 或 `DECIMAL128I` 缩窄为 `DECIMAL4` 或 `DECIMAL8`。
-- `DECIMAL256` 不是 `ColumnVariantV2` 支持的 typed identity。它的 precision 最高可达 76，超过 Variant Decimal 的 38 位上限，因此不能走这条 typed-to-encoded 路径。
-- 物理宽度和 scale 不决定 canonical equality。例如 `1.20` 与 `1.2` 可以拥有不同物理编码，但在哈希和分组时会归一为同一个 canonical 数值。
-
-**日期和时间类型**
-
-转换会先计算：
-
-```text
-days = daynr(value) - daynr(1970-01-01)
-micros = (days * 86400 + hour * 3600 + minute * 60 + second) * 1000000
-         + microsecond
-```
-
-| Doris 类型 | 归一化 payload | 编码调用 | Variant primitive |
-| --- | --- | --- | --- |
-| `DATE` | `int32_t days` | `date(days)` | `DATE` |
-| `DATEV2` | `int32_t days` | `date(days)` | `DATE` |
-| `DATETIME` | `int64_t micros` | `timestamp_micros(micros, false)` | `TIMESTAMP_NTZ_MICROS` |
-| `DATETIMEV2` | `int64_t micros` | `timestamp_micros(micros, false)` | `TIMESTAMP_NTZ_MICROS` |
-| `TIMESTAMPTZ` | `int64_t micros` | `timestamp_micros(micros, true)` | `TIMESTAMP_MICROS` |
-
-`DATE` 使用 4 字节 payload 加 1 字节 header；每个 timestamp 使用 8 字节 payload 加 1 字节 header。`utc_adjusted` 参数由 primitive ID 表达：`false` 选择无时区（NTZ）primitive，`true` 选择 UTC-adjusted primitive。
-
-日期和时间限制与不变量：
-
-- 所有源值都必须通过 Doris 的日期合法性检查。非法的 `DATE`、`DATEV2`、`DATETIME`、`DATETIMEV2` 或 `TIMESTAMPTZ` 会抛出 `INVALID_ARGUMENT`；该路径不会静默修复，也不会转为 `NULL`。
-- `DATE` 和 `DATEV2` 只保留相对 `1970-01-01` 的有符号天数，不携带日内时间或时区调整信息。
-- `DATETIME` 和 `DATETIMEV2` 编码为 wall-clock、无时区的 timestamp；这条物化路径不会应用 session time zone。只有 `TIMESTAMPTZ` 会选择 UTC-adjusted timestamp primitive。
-- typed materialization 只生成微秒 primitive。`DATETIMEV2` 和 `TIMESTAMPTZ` 最多保留其支持的 6 位小数；Variant 编码虽然定义了 `TIMESTAMP_NANOS` 和 `TIMESTAMP_NTZ_NANOS`，但该映射不会生成它们。
-- `TIMEV2` 不是支持的 typed identity。Variant 编码虽然定义了 `TIME_NTZ_MICROS`，但这条 typed-to-encoded 路径不会生成它。
-
-这只是内存中的执行组织方式，不是新的 Variant 持久化文件格式。组织方式可参考官方 [Apache Parquet File Format](https://parquet.apache.org/docs/file-format/)、[Parquet Variant Shredding](https://parquet.apache.org/docs/file-format/types/variantshredding/) 和 [Parquet Nested Encoding](https://parquet.apache.org/docs/file-format/nestedencoding/)。Parquet 以 `metadata` 和 `value` 组织 Variant，并可为同质路径增加 `typed_value`，从而支持列投影和数据跳过。这里是组织方式参考，并不表示 `ColumnVariantV2` 在磁盘上使用 Parquet 格式。
-
-### 开启 V2 后的行为变化
-
-- **规范化值语义**：等价的整数类型会归一为同一值；Decimal 尾随零会被归一；`+0`、`-0` 与整数零使用同一规范值；对象 key 顺序不影响值；数组顺序仍然保留。非法编码或违反内部不变量时会报错，而不是静默接受。
-- **哈希与序列化**：规范化哈希和 arena 序列化为支持的 Variant 值提供 `GROUP BY`、`DISTINCT`、`COUNT(DISTINCT ...)`、`INTERSECT`、`EXCEPT`、`UNION DISTINCT` 以及聚合分组键能力。
-- **显式解析语义**：`parse_to_variant(json_string)` 将 JSON 字符串解析为 Variant；`parse_to_variant_error_to_null(json_string)` 在校验失败时返回 SQL `NULL`；`CAST(string AS VARIANT)` 创建的是带类型的 Variant 字符串，不会把字符串按 JSON 解析。函数语法和示例请参见 [PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant) 与 [PARSE_TO_VARIANT_ERROR_TO_NULL](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant-error-to-null)。
-- **表达式与嵌套值**：条件表达式、嵌套容器以及支持 Variant 的 `explode` 可以基于规范化表示执行。
-- **NULL 与物理状态**：SQL `NULL` 仍与 Variant/JSON `null` 不同。`ColumnVariantV2` 列使用整列级物理状态：编码状态（`E`）或带 Variant-null map 的类型化标量状态（`T`），不会在行级混用 E/T。
-
-### 示例
-
-以下示例均在开启 V2 的当前 FE session 中执行：
-
-```sql
-SET enable_variant_v2 = true;
-
--- 解析 JSON 文本；CAST(string AS VARIANT) 则保留为带类型的 Variant 字符串。
-SELECT PARSE_TO_VARIANT('{\"id\": 1, \"items\": [10, 20]}') AS parsed_value,
-       CAST('{\"id\": 1, \"items\": [10, 20]}' AS VARIANT) AS typed_string;
-
--- 规范化哈希将 1 和 1.0 视为一个 distinct 值。
-SELECT COUNT(DISTINCT value) AS distinct_count
-FROM (
-    SELECT PARSE_TO_VARIANT('1') AS value
-    UNION ALL
-    SELECT PARSE_TO_VARIANT('1.0') AS value
-) AS numeric_values;
--- distinct_count: 1
-
--- 使用容错解析函数时，非法 JSON 转换为 SQL NULL。
-SELECT PARSE_TO_VARIANT_ERROR_TO_NULL('{\"id\":') AS invalid_value;
--- invalid_value: NULL
-
--- 嵌套访问显式 CAST 后可以作为条件表达式输入。
-SELECT CASE
-           WHEN CAST(PARSE_TO_VARIANT('{\"enabled\": true}')['enabled'] AS BOOLEAN)
-           THEN 'on'
-           ELSE 'off'
-       END AS status;
--- status: on
-```
-
-### 使用边界
-
-- 根 Variant 比较谓词（`=`、`!=`、`<=>` 以及排序比较）仍不支持。请在两侧提取相同语义的子路径并 CAST 到可比较类型：
-
-```sql
-SELECT *
-FROM tbl
-WHERE CAST(v['id'] AS BIGINT) = CAST(other_v['id'] AS BIGINT);
-```
-
-- 不支持将 Variant 表达式作为 JOIN KEY；根 Variant 也不能作为 Sort/TopN 键、窗口分区键或窗口排序键，也不能作为 `MIN`/`MAX` 参数。
-- V2 相关回归测试仍标记为 `nonConcurrent`；功能选择本身是 session-scoped，不会改变原生 Variant 的存储或 Compaction。
-- 开启 V2 前请先验证目标 workload；它是实验性计算路径，不改变存储兼容性契约。
+组件架构、物化流程、内存编码、Decimal 与日期时间映射、canonical equality、CAST 行为、示例和完整限制，请参见 [VARIANT V2 计算语义与内存编码](./variant-v2-compute-semantics)。
 
 ## 宽列
 

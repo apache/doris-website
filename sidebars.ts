@@ -1264,6 +1264,11 @@ const sidebars: SidebarsConfig = {
                                                     id: 'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
                                                     label: 'VARIANT Reference',
                                                 },
+                                                {
+                                                    type: 'doc',
+                                                    id: 'sql-manual/basic-element/sql-data-types/semi-structured/variant-v2-compute-semantics',
+                                                    label: 'V2 Compute Semantics',
+                                                },
                                             ],
                                         },
                                     ],
