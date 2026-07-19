@@ -85,7 +85,7 @@ SELECT PARSE_TO_VARIANT('[10, 20, 30]');
 
 ### 访问对象和数组
 
-对象字段可以使用字符串 key 访问。对于 `ColumnVariantV2`，VARIANT 数组的非负索引从 0 开始，并支持从数组末尾倒数的负数索引。提取出的值仍是 `VARIANT`，如需按确定类型比较或聚合，请先 CAST。
+对象字段可以使用字符串 key 访问。开启 VARIANT V2 后，VARIANT 数组的非负索引从 0 开始，并支持从数组末尾倒数的负数索引。提取出的值仍是 `VARIANT`，如需按确定类型比较或聚合，请先 CAST。
 
 ```sql
 SET enable_variant_v2 = true;
@@ -128,20 +128,20 @@ SELECT CAST('{invalid json' AS VARIANT) AS still_a_string;
 
 ## Equality 语义
 
-对于 `ColumnVariantV2`，规范化哈希和序列化使用逻辑值而不是物理编码字节判断相等性：
+开启 VARIANT V2 后，支持的分组、去重和集合运算会按 logical value 判断相等性，而不是按来源 SQL 类型或表示形式：
 
-- 等价的整数数值表示会归一为同一个值。
+- 等价的整数数值表示相等。
 - Decimal 尾随零不影响值。
-- `+0`、`-0` 与整数零会归一为同一个值。
+- `+0`、`-0` 与整数零相等。
 - 对象 key 的顺序不影响相等性，但数组元素顺序会影响相等性。
 - Variant/JSON `null` 与 SQL `NULL` 不同。
 
-这些规则用于支持的基于哈希的操作，例如 `GROUP BY`、`DISTINCT`、`COUNT(DISTINCT ...)`、`INTERSECT`、`EXCEPT` 和 `UNION DISTINCT`。这并不意味着根 Variant 比较谓词已经可用：直接执行 `VARIANT = VARIANT` 或排序比较仍不支持。
+这些规则适用于 `GROUP BY`、`DISTINCT`、`COUNT(DISTINCT ...)`、`INTERSECT`、`EXCEPT` 和 `UNION DISTINCT` 等已支持的操作。这并不意味着根 Variant 比较谓词已经可用：直接执行 `VARIANT = VARIANT` 或排序比较仍不支持。
 
 ```sql
 SET enable_variant_v2 = true;
 
--- 1 和 1.0 归一后只有一个 distinct 值。
+-- 1 和 1.0 只有一个 distinct logical value。
 SELECT COUNT(DISTINCT value) AS distinct_count
 FROM (
     SELECT PARSE_TO_VARIANT('1') AS value
@@ -168,7 +168,7 @@ FROM (
 -- distinct_count: 2
 ```
 
-这些规则背后的物理编码、归一化流程和其他使用边界，请参见 [VARIANT V2 计算语义与内存编码](./variant-v2-compute-semantics)。
+更多示例、支持的运算、数据类型行为和当前限制，请参见 [VARIANT V2 行为与语义](./variant-v2-compute-semantics)。
 
 ## 基本类型
 
@@ -511,7 +511,7 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 - 在默认路径上，不应将整个 VARIANT 直接用于 `ORDER BY`、`GROUP BY`、`JOIN KEY` 或聚合参数；请先对子路径 CAST。
 - 字符串类型可隐式转换为 VARIANT。
 
-[实验性 V2 计算路径](./variant-v2-compute-semantics)新增了面向分组和集合运算的规范化哈希与序列化，但不会因此开放根 VARIANT 比较谓词或 Variant Join Key。
+[实验性 V2 行为](./variant-v2-compute-semantics)为分组和集合运算增加 logical-value 语义，但不会因此开放根 VARIANT 比较谓词或 Variant Join Key。
 
 | VARIANT         | Castable | Coercible |
 | --------------- | -------- | --------- |
@@ -526,21 +526,21 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 | `VARCHAR`       | ✔        | ✔         |
 | `JSON`          | ✔        | ✔         |
 
-## 实验性计算路径：ColumnVariantV2
+## 实验性 VARIANT V2 行为
 
 :::caution 实验特性
-`ColumnVariantV2` 默认关闭，只改变当前 FE session 选择的计算路径。它不会改变 Variant 持久化格式，也不会增加 V2 存储、导入、统计信息或 Compaction 支持。
+VARIANT V2 默认关闭，只影响当前 session 的执行行为。现有数据和 Variant 持久化格式不会改变。
 :::
 
-通过当前 FE session 的 session variable `enable_variant_v2` 选择该路径：
+通过 session variable `enable_variant_v2` 为当前 session 开启该功能：
 
 ```sql
 SET enable_variant_v2 = true;
 ```
 
-开启后，V2 会为支持的分组和集合运算增加 canonical hashing 与序列化，明确区分 JSON 解析和字符串 CAST，并使用整列级 typed（`T`）或 encoded（`E`）内存状态。根 Variant 比较谓词、Variant Join Key、Sort/TopN Key 以及 `MIN`/`MAX` 参数仍然不受支持。
+开启后，V2 会为支持的 Variant 值提供 logical-value 分组、去重和集合运算，并明确区分 JSON 解析和字符串 CAST。根 Variant 比较谓词、Variant Join Key、Sort/TopN Key 以及 `MIN`/`MAX` 参数仍然不受支持。
 
-组件架构、物化流程、内存编码、Decimal 与日期时间映射、canonical equality、CAST 行为、示例和完整限制，请参见 [VARIANT V2 计算语义与内存编码](./variant-v2-compute-semantics)。
+行为变化、Equality、CAST 与解析、Decimal 和日期时间语义、示例及完整限制，请参见 [VARIANT V2 行为与语义](./variant-v2-compute-semantics)。
 
 ## 宽列
 

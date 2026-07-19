@@ -85,7 +85,7 @@ Use [PARSE_TO_VARIANT_ERROR_TO_NULL](../../../sql-functions/scalar-functions/var
 
 ### Access objects and arrays
 
-Object fields can be accessed with a string key. For `ColumnVariantV2`, VARIANT array indexes are zero-based for non-negative indexes and support negative indexes from the end. The extracted value remains `VARIANT`; CAST it before typed comparison or aggregation.
+Object fields can be accessed with a string key. With VARIANT V2 enabled, VARIANT array indexes are zero-based for non-negative indexes and support negative indexes from the end. The extracted value remains `VARIANT`; CAST it before typed comparison or aggregation.
 
 ```sql
 SET enable_variant_v2 = true;
@@ -128,20 +128,20 @@ Do not use `CAST(string AS VARIANT)` as a JSON validation step. Use `PARSE_TO_VA
 
 ## Equality semantics
 
-For `ColumnVariantV2`, equality used by canonical hashing and serialization is based on the logical value rather than the physical encoded bytes:
+With VARIANT V2 enabled, supported grouping, deduplication, and set operations compare logical values rather than source SQL types or representations:
 
-- Equivalent integral numeric representations normalize to the same value.
+- Equivalent integral numeric representations compare as equal.
 - Decimal trailing zeros do not change the value.
-- `+0`, `-0`, and integral zero normalize together.
+- `+0`, `-0`, and integral zero compare as equal.
 - Object key order does not affect equality, while array element order does.
 - Variant/JSON `null` is distinct from SQL `NULL`.
 
-These rules are used by supported hash-based operations such as `GROUP BY`, `DISTINCT`, `COUNT(DISTINCT ...)`, `INTERSECT`, `EXCEPT`, and `UNION DISTINCT`. They do not enable root Variant comparison predicates: direct `VARIANT = VARIANT` and ordering comparisons remain unsupported.
+These rules apply to supported operations such as `GROUP BY`, `DISTINCT`, `COUNT(DISTINCT ...)`, `INTERSECT`, `EXCEPT`, and `UNION DISTINCT`. They do not enable root Variant comparison predicates: direct `VARIANT = VARIANT` and ordering comparisons remain unsupported.
 
 ```sql
 SET enable_variant_v2 = true;
 
--- 1 and 1.0 have one canonical distinct value.
+-- 1 and 1.0 have one distinct logical value.
 SELECT COUNT(DISTINCT value) AS distinct_count
 FROM (
     SELECT PARSE_TO_VARIANT('1') AS value
@@ -168,7 +168,7 @@ FROM (
 -- distinct_count: 2
 ```
 
-For the physical encoding, normalization pipeline, and additional boundaries behind these rules, see [VARIANT V2 Compute Semantics and Memory Encoding](./variant-v2-compute-semantics).
+For more examples, supported operations, data type behavior, and current limits, see [VARIANT V2 Behavior and Semantics](./variant-v2-compute-semantics).
 
 ## Primitive types
 
@@ -511,7 +511,7 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 - On the default path, a whole VARIANT value should not be used directly in `ORDER BY`, `GROUP BY`, as a `JOIN KEY`, or as an aggregate argument; CAST the required subpath instead.
 - Strings can be implicitly converted to VARIANT.
 
-The [experimental V2 compute path](./variant-v2-compute-semantics) adds canonical hashing and serialization for grouping and set-operation use cases. It does not make root VARIANT comparison predicates or Variant join keys available.
+The [experimental V2 behavior](./variant-v2-compute-semantics) adds logical-value semantics for grouping and set-operation use cases. It does not make root VARIANT comparison predicates or Variant join keys available.
 
 | VARIANT         | Castable | Coercible |
 | --------------- | -------- | --------- |
@@ -526,21 +526,21 @@ The [experimental V2 compute path](./variant-v2-compute-semantics) adds canonica
 | `VARCHAR`       | ✔        | ✔         |
 | `JSON`          | ✔        | ✔         |
 
-## Experimental compute path: ColumnVariantV2
+## Experimental VARIANT V2 behavior
 
 :::caution Experimental feature
-`ColumnVariantV2` is disabled by default and changes only the compute path selected for the current FE session. It does not change the persisted Variant format or add V2 storage, loading, statistics, or compaction support.
+VARIANT V2 is disabled by default and affects only execution behavior in the current session. Existing data and the persisted Variant format remain unchanged.
 :::
 
-Select it for the current FE session with the session variable `enable_variant_v2`:
+Enable it for the current session with the session variable `enable_variant_v2`:
 
 ```sql
 SET enable_variant_v2 = true;
 ```
 
-When enabled, V2 adds canonical hashing and serialization for supported grouping and set operations, makes JSON parsing explicit, and uses whole-column typed (`T`) or encoded (`E`) in-memory states. Root Variant comparison predicates, Variant join keys, Sort/TopN keys, and `MIN`/`MAX` arguments remain unsupported.
+When enabled, V2 supports logical-value grouping, deduplication, and set operations for supported Variant values, and makes JSON parsing explicit. Root Variant comparison predicates, Variant join keys, Sort/TopN keys, and `MIN`/`MAX` arguments remain unsupported.
 
-For the component architecture, materialization flow, memory encoding, Decimal and date/time mappings, canonical equality, CAST behavior, examples, and complete limits, see [VARIANT V2 Compute Semantics and Memory Encoding](./variant-v2-compute-semantics).
+For behavior changes, equality, CAST and parsing, Decimal and date/time semantics, examples, and complete limits, see [VARIANT V2 Behavior and Semantics](./variant-v2-compute-semantics).
 
 ## Wide columns
 
