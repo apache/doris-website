@@ -199,12 +199,16 @@ SET enable_query_cache_incremental = true;  -- SHOW VARIABLES 中显示为 exper
 
 1. 被扫描的索引（基表或选中的 rollup）为**追加写**模型：**DUP_KEYS** 表，或增量窗口内未改写既有主键的**写时合并（merge-on-write）UNIQUE_KEYS** 表。对写时合并表，BE 会按 tablet 检查 `(cached_version, current_version]` 窗口内的 delete bitmap：窗口内只新增了全新主键（主键表上常见的“每小时追加导入”模式）即可增量合并；一旦有 upsert、部分列更新或 delete sign 命中了更早的主键，则回退一次全量重算，重算会以新版本重建条目，下一次纯追加导入即恢复增量。读时合并（merge-on-read）UNIQUE 表在读取时跨 rowset 归并去重、AGG 表在存储层合并行，“缓存快照 + 增量 = 新快照”不成立；聚合物化视图同理被拒绝。
 2. 缓存点是**直接位于扫描之上、且不做 finalize 的聚合**（常见的两阶段聚合形态，例如按非分桶列 `GROUP BY`）。单阶段聚合与嵌套聚合缓存点会被拒绝。
-3. 集群为**存算一体（本地存储）**部署。
+3. tablet 视图可同步到查询版本。存算一体形态下天然满足；**存算分离（cloud）**形态下，逐 tablet 的判定会先把本地视图（rowset 列表，merge-on-write 表还包括 delete bitmap）同步到查询版本，这通常没有额外代价（视图已新鲜时是空操作，否则只是把扫描阶段本来就要做的同步提前执行）；同步失败，或同步耗时超过一个短的快速失败预算（`query_cache_decision_sync_timeout_ms`，BE 配置，防止慢的 meta service 长时间占住决策所在的准入线程），则回退为一次全量重算。
 4. 增量版本路径仍可捕获（未被 compaction 合并跨界），且增量中**不含 DELETE 谓词**（增量中的删除会逻辑上移除已折入缓存块的行，无法通过合并撤销）。
 
 写时合并表的 delete bitmap 窗口检查方式如下：
 
 ![写时合并表的 delete bitmap 窗口检查](/images/next/query-cache/incremental-merge-mow-bitmap.svg)
+
+:::note
+存算分离（cloud）形态下，有两个以版本精确性换取速度的会话变量：`query_freshness_tolerance_ms` 允许扫描停在低于查询版本的已预热版本上，`enable_prefer_cached_rowset` 允许扫描沿已预热的 rowset 布局读取；两者的版本走线都可能越过查询版本（一个跨越查询版本的已预热 compaction rowset 会把路径带到其后）。开启任一变量的查询因此可能读取版本不精确的视图，所以不走增量合并：增量捕获必须精确对准查询版本，这与两个开关的目的相悖。此外（这一点与增量合并无关），BE 在存算分离形态下也不会把这类查询的结果写回 Query Cache，保证缓存中不会出现内容与版本戳不符的条目；这类查询仍可消费由普通查询灌入的精确命中（HIT）条目。增量合并的排除本身在所有部署形态下都生效（有意做成与形态无关的门禁）；存算一体形态下这两个变量本身不生效，因此这只是让一个开启了 cloud 专属开关的查询放弃增量优化，两种形态下结果都正确。
+:::
 
 ### 增量部分的合并
 
@@ -216,12 +220,12 @@ SET enable_query_cache_incremental = true;  -- SHOW VARIABLES 中显示为 exper
 
 ### 可观测性
 
-- CACHE_SOURCE 算子的查询 profile：`HitCacheStale = 1` 表示走了增量合并；`IncrementalDeltaVersions` 展示增量区间（如 `(100, 114514]`）；过期条目未能复用时，`IncrementalFallbackReason` 给出原因（`delta versions not capturable`、`delta contains delete predicates`、`delta rewrites history rows`、`keys type not append-only` 等）。
-- BE 指标：`doris_be_query_cache_stale_hit_total`、`doris_be_query_cache_incremental_fallback_total`、`doris_be_query_cache_write_back_total`。
+- CACHE_SOURCE 算子的查询 profile：`HitCacheStale = 1` 表示走了增量合并；`IncrementalDeltaVersions` 展示增量区间（如 `(100, 114514]`）；过期条目未能复用时，`IncrementalFallbackReason` 给出原因（`delta versions not capturable`、`delta contains delete predicates`、`delta rewrites history rows`、`keys type not append-only`、`cloud rowset sync failed`、`cloud rowset sync timed out` 等）。
+- BE 指标：`doris_be_query_cache_stale_hit_total`、`doris_be_query_cache_incremental_fallback_total`、`doris_be_query_cache_write_back_total`、`doris_be_query_cache_decision_sync_time_ms`（仅在存算分离形态下增长：增量判定在捕获增量前把 tablet 视图同步到查询版本所花费的累计耗时）。
 
 BE 如何在 HIT、INCREMENTAL、MISS 三态间决策，以及每种回退原因的来源：
 
-![决策流程与八种回退原因](/images/next/query-cache/incremental-merge-decision-flow.svg)
+![决策流程与主要回退原因](/images/next/query-cache/incremental-merge-decision-flow.svg)
 
 从 FE 授权到存储层防线的全景视图：
 
@@ -248,6 +252,7 @@ BE 如何在 HIT、INCREMENTAL、MISS 三态间决策，以及每种回退原因
 | ------------------ | ------------------------------------------ | ------ |
 | `query_cache_size` | 每个 BE 上 Query Cache 的总内存容量（MB）  | `512`  |
 | `query_cache_max_incremental_merge_count` | 单个缓存条目上累计增量合并的最大次数，达到后强制一次全量重算以压实条目；设为 `0` 可在运行时禁用增量合并 | `8` |
+| `query_cache_decision_sync_timeout_ms` | （仅 cloud 存算分离模式）增量合并判定在捕获增量前，把每个 tablet 视图同步到查询版本的快速失败预算（毫秒）；同步未在此预算内完成则该查询回退为一次全量重算。设为 `<= 0` 时任何未完成的同步都会回退，即禁用 cloud 增量合并。运行时可调。 | `2000` |
 
 :::note
 `be.conf` 中的 `query_cache_max_size_mb` 和 `query_cache_elasticity_size_mb` 控制的是旧版 SQL Result Cache，**不是** 本文描述的流水线级别 Query Cache，请勿混淆。
@@ -375,7 +380,7 @@ SET query_cache_force_refresh = false;
 
 **Q3：可以缓存涉及 JOIN 的聚合吗？**
 
-不可以。缓存子树中包含 `JoinNode` 会使 Query Cache 在该 Fragment 上被禁用。可以考虑改写为先聚合再 JOIN，或使用物化视图。
+要看聚合相对 JOIN 的位置。若聚合直接位于 JOIN 之上（缓存子树里含 `JoinNode`），该 Fragment 不缓存，且与 runtime filter 无关。但若改写为**先聚合再 JOIN**（把聚合下推到各表扫描之上），每张表按 Tablet 的聚合就能各自作为缓存点。这里还有一层独立的限制：JOIN 会向探测侧扫描下发 runtime filter，使该侧 Fragment 无法缓存，因此 runtime filter 开启时只有 Build 侧命中；要让参与 JOIN 的各表都命中缓存，需同时设置 `runtime_filter_mode=OFF`。也可改用物化视图。
 
 **Q4：BE 重启后需要预热吗？**
 
