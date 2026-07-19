@@ -42,9 +42,9 @@ ELEMENT_AT(container, key_or_index)
 
 ## Notes
 
-1. **ARRAY indexes start from 1**, not 0.  
-2. When `enable_variant_v2` is enabled, non-negative indexes into a VARIANT array start from `0`; `0` is the first element and `-1` is the last.  
-3. Negative indexes are supported for ARRAY and VARIANT array access: `-1` represents the last element, `-2` the second-to-last, and so on.  
+1. **ARRAY indexes start from 1**, not 0.
+2. When `enable_variant_v2` is enabled, non-negative indexes into a VARIANT array start from `0`; `0` is the first element and `-1` is the last.
+3. Negative indexes are supported for ARRAY and VARIANT array access: `-1` represents the last element, `-2` the second-to-last, and so on.
 4. The `ELEMENT_AT(container, key_or_index)` function behaves the same as `container[key_or_index]` (see examples for details).
 
 ```sql
