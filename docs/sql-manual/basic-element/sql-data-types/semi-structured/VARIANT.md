@@ -96,6 +96,47 @@ SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), -1); -- 30
 ```
 
 See [ELEMENT_AT](../../../sql-functions/scalar-functions/variant-functions/element-at) for object and array access details.
+## Equality semantics
+
+For `ColumnVariantV2`, equality used by canonical hashing and serialization is based on the logical value rather than the physical encoded bytes:
+
+- Equivalent integral numeric representations normalize to the same value.
+- Decimal trailing zeros do not change the value.
+- `+0`, `-0`, and integral zero normalize together.
+- Object key order does not affect equality, while array element order does.
+- Variant/JSON `null` is distinct from SQL `NULL`.
+
+These rules are used by supported hash-based operations such as `GROUP BY`, `DISTINCT`, `COUNT(DISTINCT ...)`, `INTERSECT`, `EXCEPT`, and `UNION DISTINCT`. They do not enable root Variant comparison predicates: direct `VARIANT = VARIANT` and ordering comparisons remain unsupported.
+
+```sql
+SET enable_variant_v2 = true;
+
+-- 1 and 1.0 have one canonical distinct value.
+SELECT COUNT(DISTINCT value) AS distinct_count
+FROM (
+    SELECT PARSE_TO_VARIANT('1') AS value
+    UNION ALL
+    SELECT PARSE_TO_VARIANT('1.0') AS value
+) AS numeric_values;
+-- distinct_count: 1
+
+-- Object key order is ignored; array order is preserved.
+SELECT COUNT(DISTINCT value) AS distinct_count
+FROM (
+    SELECT PARSE_TO_VARIANT('{\"a\": 1, \"b\": 2}') AS value
+    UNION ALL
+    SELECT PARSE_TO_VARIANT('{\"b\": 2, \"a\": 1}') AS value
+) AS object_values;
+-- distinct_count: 1
+
+SELECT COUNT(DISTINCT value) AS distinct_count
+FROM (
+    SELECT PARSE_TO_VARIANT('[1, 2]') AS value
+    UNION ALL
+    SELECT PARSE_TO_VARIANT('[2, 1]') AS value
+) AS array_values;
+-- distinct_count: 2
+```
 ## Primitive types
 
 VARIANT infers subcolumn types automatically. Supported types include:
@@ -469,6 +510,39 @@ The session variable changes the FE/BE execution type marker only. It does not a
 - **Parsing is explicit**: `parse_to_variant(json_string)` parses a JSON string into a Variant value; `parse_to_variant_error_to_null(json_string)` returns SQL `NULL` when validation fails; `CAST(string AS VARIANT)` creates a typed Variant string and does not parse the string as JSON. See [PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant) and [PARSE_TO_VARIANT_ERROR_TO_NULL](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant-error-to-null) for function syntax and examples.
 - **Expressions and nested values**: conditional expressions, nested containers, and Variant-aware `explode` can operate on the canonical representation.
 - **Null and physical states**: SQL `NULL` remains distinct from Variant/JSON `null`. A `ColumnVariantV2` column uses a whole-column physical state: encoded (`E`) or typed scalar (`T`, with a Variant-null map); it does not mix E and T at row level.
+
+### Examples
+
+The following examples run in the current FE session after V2 is enabled:
+
+```sql
+SET enable_variant_v2 = true;
+
+-- JSON text is parsed; CAST(string AS VARIANT) keeps the string as a typed Variant value.
+SELECT PARSE_TO_VARIANT('{\"id\": 1, \"items\": [10, 20]}') AS parsed_value,
+       CAST('{\"id\": 1, \"items\": [10, 20]}' AS VARIANT) AS typed_string;
+
+-- Canonical hashing treats 1 and 1.0 as one distinct value.
+SELECT COUNT(DISTINCT value) AS distinct_count
+FROM (
+    SELECT PARSE_TO_VARIANT('1') AS value
+    UNION ALL
+    SELECT PARSE_TO_VARIANT('1.0') AS value
+) AS numeric_values;
+-- distinct_count: 1
+
+-- Invalid JSON becomes SQL NULL with the tolerant parser.
+SELECT PARSE_TO_VARIANT_ERROR_TO_NULL('{\"id\":') AS invalid_value;
+-- invalid_value: NULL
+
+-- Nested access can feed a conditional expression after an explicit CAST.
+SELECT CASE
+           WHEN CAST(PARSE_TO_VARIANT('{\"enabled\": true}')['enabled'] AS BOOLEAN)
+           THEN 'on'
+           ELSE 'off'
+       END AS status;
+-- status: on
+```
 
 ### Boundaries
 

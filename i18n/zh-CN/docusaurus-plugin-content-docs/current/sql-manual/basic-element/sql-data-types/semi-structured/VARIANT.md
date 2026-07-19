@@ -96,6 +96,47 @@ SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), -1); -- 30
 ```
 
 对象和数组访问的详细说明请参见 [ELEMENT_AT](../../../sql-functions/scalar-functions/variant-functions/element-at)。
+## Equality 语义
+
+对于 `ColumnVariantV2`，规范化哈希和序列化使用逻辑值而不是物理编码字节判断相等性：
+
+- 等价的整数数值表示会归一为同一个值。
+- Decimal 尾随零不影响值。
+- `+0`、`-0` 与整数零会归一为同一个值。
+- 对象 key 的顺序不影响相等性，但数组元素顺序会影响相等性。
+- Variant/JSON `null` 与 SQL `NULL` 不同。
+
+这些规则用于支持的基于哈希的操作，例如 `GROUP BY`、`DISTINCT`、`COUNT(DISTINCT ...)`、`INTERSECT`、`EXCEPT` 和 `UNION DISTINCT`。这并不意味着根 Variant 比较谓词已经可用：直接执行 `VARIANT = VARIANT` 或排序比较仍不支持。
+
+```sql
+SET enable_variant_v2 = true;
+
+-- 1 和 1.0 归一后只有一个 distinct 值。
+SELECT COUNT(DISTINCT value) AS distinct_count
+FROM (
+    SELECT PARSE_TO_VARIANT('1') AS value
+    UNION ALL
+    SELECT PARSE_TO_VARIANT('1.0') AS value
+) AS numeric_values;
+-- distinct_count: 1
+
+-- 对象 key 顺序被忽略；数组顺序会保留。
+SELECT COUNT(DISTINCT value) AS distinct_count
+FROM (
+    SELECT PARSE_TO_VARIANT('{\"a\": 1, \"b\": 2}') AS value
+    UNION ALL
+    SELECT PARSE_TO_VARIANT('{\"b\": 2, \"a\": 1}') AS value
+) AS object_values;
+-- distinct_count: 1
+
+SELECT COUNT(DISTINCT value) AS distinct_count
+FROM (
+    SELECT PARSE_TO_VARIANT('[1, 2]') AS value
+    UNION ALL
+    SELECT PARSE_TO_VARIANT('[2, 1]') AS value
+) AS array_values;
+-- distinct_count: 2
+```
 ## 基本类型
 
 VARIANT 自动推断的子列基础类型包括：
@@ -469,6 +510,39 @@ SET enable_variant_v2 = true;
 - **显式解析语义**：`parse_to_variant(json_string)` 将 JSON 字符串解析为 Variant；`parse_to_variant_error_to_null(json_string)` 在校验失败时返回 SQL `NULL`；`CAST(string AS VARIANT)` 创建的是带类型的 Variant 字符串，不会把字符串按 JSON 解析。函数语法和示例请参见 [PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant) 与 [PARSE_TO_VARIANT_ERROR_TO_NULL](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant-error-to-null)。
 - **表达式与嵌套值**：条件表达式、嵌套容器以及支持 Variant 的 `explode` 可以基于规范化表示执行。
 - **NULL 与物理状态**：SQL `NULL` 仍与 Variant/JSON `null` 不同。`ColumnVariantV2` 列使用整列级物理状态：编码状态（`E`）或带 Variant-null map 的类型化标量状态（`T`），不会在行级混用 E/T。
+
+### 示例
+
+以下示例均在开启 V2 的当前 FE session 中执行：
+
+```sql
+SET enable_variant_v2 = true;
+
+-- 解析 JSON 文本；CAST(string AS VARIANT) 则保留为带类型的 Variant 字符串。
+SELECT PARSE_TO_VARIANT('{\"id\": 1, \"items\": [10, 20]}') AS parsed_value,
+       CAST('{\"id\": 1, \"items\": [10, 20]}' AS VARIANT) AS typed_string;
+
+-- 规范化哈希将 1 和 1.0 视为一个 distinct 值。
+SELECT COUNT(DISTINCT value) AS distinct_count
+FROM (
+    SELECT PARSE_TO_VARIANT('1') AS value
+    UNION ALL
+    SELECT PARSE_TO_VARIANT('1.0') AS value
+) AS numeric_values;
+-- distinct_count: 1
+
+-- 使用容错解析函数时，非法 JSON 转换为 SQL NULL。
+SELECT PARSE_TO_VARIANT_ERROR_TO_NULL('{\"id\":') AS invalid_value;
+-- invalid_value: NULL
+
+-- 嵌套访问显式 CAST 后可以作为条件表达式输入。
+SELECT CASE
+           WHEN CAST(PARSE_TO_VARIANT('{\"enabled\": true}')['enabled'] AS BOOLEAN)
+           THEN 'on'
+           ELSE 'off'
+       END AS status;
+-- status: on
+```
 
 ### 使用边界
 
