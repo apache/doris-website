@@ -541,6 +541,58 @@ SET enable_variant_v2 = true;
 - 简单标量可以使用带类型的标量列；独立的 Variant-null map 用来记录 JSON/Variant `null`，而 SQL `NULL` 仍由 SQL null bitmap 表示。
 - `E` 和 `T` 是整列级别的物理状态：`E` 表示 encoded，`T` 表示 typed scalar；同一列不会在行级别混用 `E` 和 `T`。
 
+#### Typed scalar 物化为 encoded
+
+当算子需要把 typed scalar 列（`T`）物化为 encoded 值（`E`）时，`with_typed_scalar()` 会逐行选择物理 Variant primitive 和 payload 宽度。下表描述的是物理编码映射；canonical equality 在另一层单独处理。
+
+**Decimal 类型**
+
+| Doris 类型 | 从列中读取的 unscaled 值 | 编码调用 | Variant primitive |
+| --- | --- | --- | --- |
+| `DECIMALV2` | `DecimalV2Value::value()` 返回的 `__int128` | `decimal(value, scale, 16)` | `DECIMAL16` |
+| `DECIMAL32` | `Decimal32::value` 中的 `int32_t` | `decimal(value, scale, 4)` | `DECIMAL4` |
+| `DECIMAL64` | `Decimal64::value` 中的 `int64_t` | `decimal(value, scale, 8)` | `DECIMAL8` |
+| `DECIMAL128I` | `Decimal128V3::value` 中的 `__int128` | `decimal(value, scale, 16)` | `DECIMAL16` |
+
+Decimal 的 encoded 布局是 `[primitive header][scale][小端有符号 unscaled value]`，所以 `DECIMAL4`、`DECIMAL8`、`DECIMAL16` 的总长度分别是 6、10、18 字节。
+
+Decimal 限制与不变量：
+
+- Variant Decimal 的 scale 必须在 `[0, 38]` 内。`DECIMAL4`、`DECIMAL8`、`DECIMAL16` 的 unscaled 绝对值上限分别是 `10^9 - 1`、`10^18 - 1`、`10^38 - 1`。
+- Doris 源类型自身的限制仍然生效：`DECIMALV2` 最大 precision 为 27、最大 scale 为 9；`DECIMAL32`、`DECIMAL64`、`DECIMAL128I` 的最大 precision 分别为 9、18、38。
+- typed column 的物理 scale 必须与 data type 元数据中的 scale 完全一致；不一致会被视为不变量破坏，物化时不会自动 rescale。
+- encoded 宽度由源类型决定。该路径不会因为数值较小，就把 `DECIMALV2` 或 `DECIMAL128I` 缩窄为 `DECIMAL4` 或 `DECIMAL8`。
+- `DECIMAL256` 不是 `ColumnVariantV2` 支持的 typed identity。它的 precision 最高可达 76，超过 Variant Decimal 的 38 位上限，因此不能走这条 typed-to-encoded 路径。
+- 物理宽度和 scale 不决定 canonical equality。例如 `1.20` 与 `1.2` 可以拥有不同物理编码，但在哈希和分组时会归一为同一个 canonical 数值。
+
+**日期和时间类型**
+
+转换会先计算：
+
+```text
+days = daynr(value) - daynr(1970-01-01)
+micros = (days * 86400 + hour * 3600 + minute * 60 + second) * 1000000
+         + microsecond
+```
+
+| Doris 类型 | 归一化 payload | 编码调用 | Variant primitive |
+| --- | --- | --- | --- |
+| `DATE` | `int32_t days` | `date(days)` | `DATE` |
+| `DATEV2` | `int32_t days` | `date(days)` | `DATE` |
+| `DATETIME` | `int64_t micros` | `timestamp_micros(micros, false)` | `TIMESTAMP_NTZ_MICROS` |
+| `DATETIMEV2` | `int64_t micros` | `timestamp_micros(micros, false)` | `TIMESTAMP_NTZ_MICROS` |
+| `TIMESTAMPTZ` | `int64_t micros` | `timestamp_micros(micros, true)` | `TIMESTAMP_MICROS` |
+
+`DATE` 使用 4 字节 payload 加 1 字节 header；每个 timestamp 使用 8 字节 payload 加 1 字节 header。`utc_adjusted` 参数由 primitive ID 表达：`false` 选择无时区（NTZ）primitive，`true` 选择 UTC-adjusted primitive。
+
+日期和时间限制与不变量：
+
+- 所有源值都必须通过 Doris 的日期合法性检查。非法的 `DATE`、`DATEV2`、`DATETIME`、`DATETIMEV2` 或 `TIMESTAMPTZ` 会抛出 `INVALID_ARGUMENT`；该路径不会静默修复，也不会转为 `NULL`。
+- `DATE` 和 `DATEV2` 只保留相对 `1970-01-01` 的有符号天数，不携带日内时间或时区调整信息。
+- `DATETIME` 和 `DATETIMEV2` 编码为 wall-clock、无时区的 timestamp；这条物化路径不会应用 session time zone。只有 `TIMESTAMPTZ` 会选择 UTC-adjusted timestamp primitive。
+- typed materialization 只生成微秒 primitive。`DATETIMEV2` 和 `TIMESTAMPTZ` 最多保留其支持的 6 位小数；Variant 编码虽然定义了 `TIMESTAMP_NANOS` 和 `TIMESTAMP_NTZ_NANOS`，但该映射不会生成它们。
+- `TIMEV2` 不是支持的 typed identity。Variant 编码虽然定义了 `TIME_NTZ_MICROS`，但这条 typed-to-encoded 路径不会生成它。
+
 这只是内存中的执行组织方式，不是新的 Variant 持久化文件格式。组织方式可参考官方 [Apache Parquet File Format](https://parquet.apache.org/docs/file-format/)、[Parquet Variant Shredding](https://parquet.apache.org/docs/file-format/types/variantshredding/) 和 [Parquet Nested Encoding](https://parquet.apache.org/docs/file-format/nestedencoding/)。Parquet 以 `metadata` 和 `value` 组织 Variant，并可为同质路径增加 `typed_value`，从而支持列投影和数据跳过。这里是组织方式参考，并不表示 `ColumnVariantV2` 在磁盘上使用 Parquet 格式。
 
 ### 开启 V2 后的行为变化

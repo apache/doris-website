@@ -541,6 +541,58 @@ The session variable changes the FE/BE execution type marker only. It does not a
 - Simple scalar values can use typed scalar columns. A separate Variant-null map records JSON/Variant `null`, while SQL `NULL` remains represented by the SQL null bitmap.
 - `E` and `T` are whole-column physical states: `E` means encoded and `T` means typed scalar. A column does not mix `E` and `T` at row level.
 
+#### Typed scalar materialization to encoded values
+
+When an operator needs to materialize a typed scalar column (`T`) as encoded values (`E`), `with_typed_scalar()` selects the physical Variant primitive and payload width for each row. The following tables describe this physical mapping; canonical equality is applied separately.
+
+**Decimal types**
+
+| Doris type | Unscaled value read from the column | Encoding call | Variant primitive |
+| --- | --- | --- | --- |
+| `DECIMALV2` | `__int128` from `DecimalV2Value::value()` | `decimal(value, scale, 16)` | `DECIMAL16` |
+| `DECIMAL32` | `int32_t` from `Decimal32::value` | `decimal(value, scale, 4)` | `DECIMAL4` |
+| `DECIMAL64` | `int64_t` from `Decimal64::value` | `decimal(value, scale, 8)` | `DECIMAL8` |
+| `DECIMAL128I` | `__int128` from `Decimal128V3::value` | `decimal(value, scale, 16)` | `DECIMAL16` |
+
+The encoded decimal layout is `[primitive header][scale][little-endian signed unscaled value]`. Its total size is therefore 6 bytes for `DECIMAL4`, 10 bytes for `DECIMAL8`, and 18 bytes for `DECIMAL16`.
+
+Decimal limits and invariants:
+
+- The Variant decimal scale must be in `[0, 38]`. The absolute unscaled value is limited to `10^9 - 1` for `DECIMAL4`, `10^18 - 1` for `DECIMAL8`, and `10^38 - 1` for `DECIMAL16`.
+- Doris source-type limits still apply: `DECIMALV2` supports precision up to 27 and scale up to 9; `DECIMAL32`, `DECIMAL64`, and `DECIMAL128I` support precision up to 9, 18, and 38 respectively.
+- The typed column's physical scale must exactly match its data-type metadata. A mismatch is treated as an invariant violation rather than being rescaled during materialization.
+- The source type determines the encoded width. This path does not shrink a small `DECIMALV2` or `DECIMAL128I` value to `DECIMAL4` or `DECIMAL8`.
+- `DECIMAL256` is not a supported `ColumnVariantV2` typed identity. Its precision can reach 76, beyond the Variant decimal precision limit of 38, so it cannot use this typed-to-encoded path.
+- Physical width and scale do not define canonical equality. For example, `1.20` and `1.2` can have different physical encodings but normalize to the same canonical numeric value for hashing and grouping.
+
+**Date and time types**
+
+The conversion first calculates:
+
+```text
+days = daynr(value) - daynr(1970-01-01)
+micros = (days * 86400 + hour * 3600 + minute * 60 + second) * 1000000
+         + microsecond
+```
+
+| Doris type | Normalized payload | Encoding call | Variant primitive |
+| --- | --- | --- | --- |
+| `DATE` | `int32_t days` | `date(days)` | `DATE` |
+| `DATEV2` | `int32_t days` | `date(days)` | `DATE` |
+| `DATETIME` | `int64_t micros` | `timestamp_micros(micros, false)` | `TIMESTAMP_NTZ_MICROS` |
+| `DATETIMEV2` | `int64_t micros` | `timestamp_micros(micros, false)` | `TIMESTAMP_NTZ_MICROS` |
+| `TIMESTAMPTZ` | `int64_t micros` | `timestamp_micros(micros, true)` | `TIMESTAMP_MICROS` |
+
+`DATE` uses a 4-byte payload plus a 1-byte header. Each timestamp uses an 8-byte payload plus a 1-byte header. The `utc_adjusted` argument is represented by the primitive ID: `false` selects the no-time-zone (`NTZ`) primitive, while `true` selects the UTC-adjusted primitive.
+
+Date and time limits and invariants:
+
+- Every source value must pass Doris date validation. An invalid `DATE`, `DATEV2`, `DATETIME`, `DATETIMEV2`, or `TIMESTAMPTZ` value raises `INVALID_ARGUMENT`; this path does not silently repair it or convert it to `NULL`.
+- `DATE` and `DATEV2` preserve only a signed day count relative to `1970-01-01`; they carry neither a time of day nor a time-zone adjustment.
+- `DATETIME` and `DATETIMEV2` are encoded as wall-clock, no-time-zone timestamps. This materialization path does not apply the session time zone. `TIMESTAMPTZ` is the only mapped Doris type that selects the UTC-adjusted timestamp primitive.
+- Typed materialization emits microsecond primitives only. `DATETIMEV2` and `TIMESTAMPTZ` preserve at most their supported six fractional digits; `TIMESTAMP_NANOS` and `TIMESTAMP_NTZ_NANOS` exist in the Variant encoding but are not emitted by this mapping.
+- `TIMEV2` is not a supported typed identity. Although the Variant encoding defines `TIME_NTZ_MICROS`, this typed-to-encoded path does not produce it.
+
 This is an in-memory, compute-time organization only; it is not a new persisted Variant file format. For an external organization reference, see the official [Apache Parquet File Format](https://parquet.apache.org/docs/file-format/), [Parquet Variant Shredding](https://parquet.apache.org/docs/file-format/types/variantshredding/), and [Parquet Nested Encoding](https://parquet.apache.org/docs/file-format/nestedencoding/). Parquet organizes a Variant around `metadata` and `value`, with optional `typed_value` fields for homogeneous paths so readers can project columns and skip data. This is a design reference for organization, not a claim that `ColumnVariantV2` uses Parquet on disk.
 
 ### What changes when V2 is enabled
