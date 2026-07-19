@@ -22,10 +22,10 @@
 | 支持的语句 | 事件行为 |
 | --- | --- |
 | `INSERT INTO ... SELECT` | Insert 成功后生成一个事件。 |
-| `INSERT OVERWRITE ... SELECT` | Overwrite 成功后生成一个事件。 |
+| `INSERT OVERWRITE TABLE ... SELECT` | Overwrite 成功后生成一个事件。 |
 | `CREATE TABLE AS SELECT` | 内部 Insert 成功后生成一个事件。 |
 
-以下操作不会生成事件：`SELECT`、`UPDATE`、`DELETE`、导入任务、仅包含 `VALUES` 的 Insert，以及目标表为 `__internal_schema` 的写入。
+当前实现不会为 `SELECT`、`UPDATE`、`DELETE`、导入任务、仅包含 `VALUES` 的 Insert，以及目标表为 `__internal_schema` 的写入生成事件。部分 `UPDATE` 和 `DELETE` 执行路径会在内部复用 Insert 命令，但原始命令类型校验会阻止这些命令提交血缘事件。
 
 :::caution 投递保证
 
@@ -37,7 +37,7 @@
 
 ### 采集流程
 
-对于受支持的语句，Doris 会在 `afterAnalyze` 规划 Hook 中记录 Nereids 已分析的逻辑计划。DML 成功后，系统从该逻辑计划提取血缘并将事件提交到 FE 本地队列。单个 daemon 工作线程将事件分发给每个激活的插件。
+对于受支持的语句，Doris 会在 `afterAnalyze` 规划 Hook 中记录 Nereids 已分析的逻辑计划。DML 成功后，系统从该逻辑计划提取血缘并将事件提交到 FE 本地队列。单个 daemon 工作线程会检查每个已加载插件，并将事件分发给 `eventFilter()` 返回 `true` 的插件。
 
 ![数据血缘采集架构：受支持的 DML 成功后，由 Nereids 分析并提取为 LineageInfo，经 FE 队列和插件投递到外部治理系统。](/images/data-lineage/lineage-architecture-zh-CN.svg)
 
@@ -257,7 +257,7 @@ ORDER BY customer_id;
 $FE_HOME/plugins/
 └── lineage/
     └── example-lineage/
-        ├── example-lineage-plugin.jar
+        ├── example-lineage.jar
         └── lib/
             └── downstream-client.jar
 ```
@@ -280,7 +280,7 @@ lineage_event_queue_size = 50000
 
 #### 激活插件
 
-在每个 FE 节点的 `$FE_HOME/conf/fe.conf` 中配置 `activate_lineage_plugin`。它控制哪些已发现的 Factory 会被实例化，不负责发现 JAR，也不控制队列容量。名称必须与 `LineagePluginFactory.name()` 完全一致并区分大小写；插件实现的 `LineagePlugin.name()` 应返回相同名称。插件目录名不参与匹配。配置多个插件时使用英文逗号分隔，FE 会去除名称两侧的空格：
+在每个 FE 节点的 `$FE_HOME/conf/fe.conf` 中配置 `activate_lineage_plugin`。它控制哪些已发现的 Factory 会被实例化，不负责发现 JAR，也不控制队列容量。名称必须与 `LineagePluginFactory.name()` 完全一致并区分大小写；插件实现的 `LineagePlugin.name()` 应返回相同名称。插件目录名不参与匹配。配置多个插件时使用英文逗号分隔；FE 配置解析器会去除各项两侧的空格，但名称匹配仍区分大小写：
 
 ```text
 activate_lineage_plugin = example-lineage,governance-lineage
@@ -310,7 +310,7 @@ FE 启动时会发现内置和外部 Factory，然后只为配置中列出的名
 
 按以下顺序检查：
 
-1. 确认语句是成功执行的 `INSERT INTO ... SELECT`、`INSERT OVERWRITE ... SELECT` 或 `CREATE TABLE AS SELECT`。仅包含 `VALUES` 的 Insert 不会生成事件。
+1. 确认语句是成功执行的 `INSERT INTO ... SELECT`、`INSERT OVERWRITE TABLE ... SELECT` 或 `CREATE TABLE AS SELECT`。仅包含 `VALUES` 的 Insert 不会生成事件。
 2. 确认执行该 DML 的 FE 已配置并加载插件，在 `fe.log` 中搜索 `Loaded lineage plugin`。
 3. 确认插件的 `eventFilter()` 在查询线程和工作线程中都返回 `true`。
 4. 检查插件日志和下游服务，确认事件不是在 FE 之外处理失败。

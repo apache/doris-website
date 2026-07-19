@@ -762,7 +762,7 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             label: 'Data Governance',
             items: [
-                'sql-manual/sql-statements/data-governance/data-lineage',
+                'data-governance/data-lineage',
             ],
         },
             ],

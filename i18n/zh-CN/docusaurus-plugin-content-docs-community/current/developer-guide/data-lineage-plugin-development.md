@@ -43,13 +43,13 @@ under the License.
 
 血缘框架是 FE 侧的 SPI。它不保存血缘数据、不提供查询 API，也不渲染血缘图。插件负责将 `LineageInfo` 中的内存 Java 对象转换为下游系统要求的格式和传输协议。
 
-该框架仅为成功执行的 `INSERT INTO ... SELECT`、`INSERT OVERWRITE ... SELECT` 和 `CREATE TABLE AS SELECT` 生成事件。仅包含 `VALUES` 的写入和写入目标为 `__internal_schema` 的操作会被跳过。`SELECT`、`UPDATE`、`DELETE` 以及各类导入任务不在该框架的覆盖范围内。
+当前实现仅为成功执行的 `INSERT INTO ... SELECT`、`INSERT OVERWRITE TABLE ... SELECT` 和 `CREATE TABLE AS SELECT` 生成事件。仅包含 `VALUES` 的写入和写入目标为 `__internal_schema` 的操作会被跳过。`SELECT`、`UPDATE`、`DELETE` 以及各类导入任务不在该框架的覆盖范围内。部分 `UPDATE` 和 `DELETE` 执行路径会在内部复用 Insert 命令，但原始命令类型校验会阻止这些命令提交血缘事件。
 
 ![数据血缘采集架构：受支持的 DML 成功后，由 Nereids 分析并提取为 LineageInfo，经 FE 队列和插件投递到外部治理系统。](/images/data-lineage/lineage-architecture-zh-CN.svg)
 
 `eventFilter()` 会在 DML 查询路径上、血缘提取前调用一次，也会在工作线程分发前再次调用。插件不需要接收事件时应返回 `false`。该方法会被查询线程和工作线程并发调用，因此必须线程安全。`exec()` 只由一个工作线程调用，但可能与 `eventFilter()` 并发执行。
 
-FE 启动时先通过 ServiceLoader 发现 `LineagePluginFactory`，再调用 Factory 的 `create(context)` 创建插件，随后调用插件的 `initialize(context)`。`LineagePluginFactory` 默认会把 `create(context)` 委托给无参数的 `create()`，因此本文的最小示例只需实现 `create()`。`PluginContext` 包含 `plugin.name` 和 `plugin.path`；生产插件如需读取插件目录内的配置文件，可以覆盖 `initialize(context)`，根据 `plugin.path` 定位文件并完成资源初始化。
+FE 启动时先通过 ServiceLoader 发现 `LineagePluginFactory`，再调用 Factory 的 `create(context)` 创建插件，随后调用插件的 `initialize(context)`。`LineagePluginFactory` 默认会把 `create(context)` 委托给无参数的 `create()`，因此本文的最小示例只需实现 `create()`。`PluginContext` 通过 `getProperties()` 暴露不可变属性 Map，FE 将插件名称和目录分别存入 `plugin.name` 和 `plugin.path`。插件需要通过 `context.getProperties().get("plugin.name")` 和 `context.getProperties().get("plugin.path")` 读取这两个属性。生产插件如需读取插件目录内的配置文件，可以覆盖 `initialize(context)`，根据 `plugin.path` 属性定位文件并完成资源初始化。
 
 ## 血缘事件模型
 

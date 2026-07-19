@@ -19,7 +19,7 @@
   <rect x="72" y="186" width="230" height="174" rx="8" fill="#e7f4f1" stroke="#2f8f83" stroke-width="2"/>
   <text x="96" y="226" class="label">Supported DML</text>
   <text x="96" y="262" class="body">INSERT INTO SELECT</text>
-  <text x="96" y="290" class="body">INSERT OVERWRITE SELECT</text>
+  <text x="96" y="290" class="body">INSERT OVERWRITE TABLE</text>
   <text x="96" y="318" class="body">CREATE TABLE AS SELECT</text>
 
   <rect x="378" y="148" width="258" height="126" rx="8" fill="#edf5fb" stroke="#4d86b7" stroke-width="2"/>

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Data Lineage Technical Guide",
+    "title": "Data Lineage Technical Guide (4.x)",
     "sidebar_label": "Data Lineage",
     "language": "en",
     "description": "Collect table-level and column-level lineage from supported Doris DML statements through an external LineagePlugin.",
@@ -13,7 +13,7 @@
 
 Data Lineage extracts table-level and column-level dependencies from supported Doris DML statements and sends them to external governance systems through a `LineagePlugin`. Doris is the lineage producer. It does not retain events, expose a lineage query API, or provide lineage visualization.
 
-> This capability is available in the Dev version. It was first released in Apache Doris 4.0.6.
+> This capability is available in the 4.x release line starting with Apache Doris 4.0.6.
 
 ## Capabilities and limitations
 
@@ -22,10 +22,10 @@ The framework generates an event only after one of the following statements succ
 | Supported statement | Event behavior |
 | --- | --- |
 | `INSERT INTO ... SELECT` | Generates one event after the Insert succeeds. |
-| `INSERT OVERWRITE ... SELECT` | Generates one event after the Overwrite succeeds. |
+| `INSERT OVERWRITE TABLE ... SELECT` | Generates one event after the Overwrite succeeds. |
 | `CREATE TABLE AS SELECT` | Generates one event after the internal Insert succeeds. |
 
-The following operations do not generate an event: `SELECT`, `UPDATE`, `DELETE`, load jobs, `VALUES`-only inserts, and writes whose target is `__internal_schema`.
+The current implementation does not generate events for `SELECT`, `UPDATE`, `DELETE`, load jobs, `VALUES`-only inserts, or writes whose target is `__internal_schema`. Some `UPDATE` and `DELETE` execution paths internally reuse an Insert command, but the original command-type check excludes them from lineage event submission.
 
 :::caution Delivery guarantee
 
@@ -37,7 +37,7 @@ Lineage delivery is asynchronous and best effort. A successful DML statement is 
 
 ### Collection flow
 
-For a supported statement, Doris records the analyzed Nereids logical plan in an `afterAnalyze` planner hook. After the DML succeeds, Doris extracts lineage from that plan and submits the event to an FE-local queue. A single daemon worker dispatches the event to every active plugin.
+For a supported statement, Doris records the analyzed Nereids logical plan in an `afterAnalyze` planner hook. After the DML succeeds, Doris extracts lineage from that plan and submits the event to an FE-local queue. A single daemon worker evaluates every loaded plugin and dispatches the event to each plugin whose `eventFilter()` returns `true`.
 
 ![Data lineage collection architecture: successful supported DML statements are analyzed by Nereids, extracted into LineageInfo, queued in FE, and delivered by a plugin to an external governance system.](/images/data-lineage/lineage-architecture.svg)
 
@@ -257,7 +257,7 @@ Plugin discovery and initialization occur only when FE starts. Dynamic reload an
 $FE_HOME/plugins/
 └── lineage/
     └── example-lineage/
-        ├── example-lineage-plugin.jar
+        ├── example-lineage.jar
         └── lib/
             └── downstream-client.jar
 ```
@@ -280,7 +280,7 @@ All three settings are configured in `$FE_HOME/conf/fe.conf` on each FE and appl
 
 #### Activate plugins
 
-Configure `activate_lineage_plugin` in `$FE_HOME/conf/fe.conf` on every FE. It controls which discovered factories are instantiated. It does not discover JARs or control queue capacity. Each name is case-sensitive and must exactly match `LineagePluginFactory.name()`. The `LineagePlugin.name()` implementation should return the same name. The plugin directory name is not used for matching. Separate multiple plugin names with commas; FE trims surrounding spaces:
+Configure `activate_lineage_plugin` in `$FE_HOME/conf/fe.conf` on every FE. It controls which discovered factories are instantiated. It does not discover JARs or control queue capacity. Each name is case-sensitive and must exactly match `LineagePluginFactory.name()`. The `LineagePlugin.name()` implementation should return the same name. The plugin directory name is not used for matching. Separate multiple plugin names with commas. The FE configuration parser trims the spaces around each comma-separated item, but name matching remains case-sensitive:
 
 ```text
 activate_lineage_plugin = example-lineage,governance-lineage
@@ -310,7 +310,7 @@ Common causes include an unsupported statement, a failed DML statement, no plugi
 
 Check in this order:
 
-1. Confirm that the statement is a successful `INSERT INTO ... SELECT`, `INSERT OVERWRITE ... SELECT`, or `CREATE TABLE AS SELECT`. A `VALUES`-only Insert does not generate an event.
+1. Confirm that the statement is a successful `INSERT INTO ... SELECT`, `INSERT OVERWRITE TABLE ... SELECT`, or `CREATE TABLE AS SELECT`. A `VALUES`-only Insert does not generate an event.
 2. Confirm that the FE that executed the DML has configured and loaded the plugin. Search `fe.log` for `Loaded lineage plugin`.
 3. Confirm that the plugin's `eventFilter()` returns `true` in both the query thread and the worker thread.
 4. Check plugin logs and the downstream service to confirm that processing did not fail outside FE.
