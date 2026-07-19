@@ -96,6 +96,36 @@ SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), -1); -- 30
 ```
 
 对象和数组访问的详细说明请参见 [ELEMENT_AT](../../../sql-functions/scalar-functions/variant-functions/element-at)。
+## CAST 语义
+
+`CAST` 会保留 SQL 字符串和 JSON 文本之间的区别：
+
+- `CAST(string AS VARIANT)` 创建根值为“带类型的 Variant 字符串”的 Variant，**不会**解析 JSON。因此，`'{"id": 1}'` 会保持为一个字符串值，非法 JSON 文本对这个 CAST 仍然是合法输入。
+- `PARSE_TO_VARIANT(string)` 才会把字符串按 JSON 解析；解析为对象或数组后，才能继续使用路径访问或 `ELEMENT_AT`。如果非法 JSON 需要返回 SQL `NULL`，请使用 `PARSE_TO_VARIANT_ERROR_TO_NULL`。
+- `CAST(PARSE_TO_VARIANT(...) AS scalar)` 会在值形状和范围兼容时，把已经解析的 Variant 转换为确定的 SQL 标量类型。这个 CAST 不是 JSON 解析器，形状或范围不兼容时可能失败。
+- `CAST(typed_expression AS VARIANT)` 会把受支持的带类型 SQL 值转换为 Variant。开启 `enable_variant_v2` 只会改变当前 session 的执行表示，不会改变磁盘上的 Variant 存储、reader、writer 或 compaction。
+
+```sql
+SET enable_variant_v2 = true;
+
+SELECT CAST('{"id": 1}' AS VARIANT) AS typed_string,
+       PARSE_TO_VARIANT('{"id": 1}') AS parsed_object;
+-- typed_string：字面量字符串 {"id": 1}
+-- parsed_object：{"id": 1}
+
+SELECT ELEMENT_AT(CAST('{"id": 1}' AS VARIANT), 'id') AS from_string,
+       ELEMENT_AT(PARSE_TO_VARIANT('{"id": 1}'), 'id') AS from_json;
+-- from_string：NULL；from_json：1
+
+SELECT CAST(PARSE_TO_VARIANT('42') AS BIGINT) AS id;
+-- id：42
+
+SELECT CAST('{invalid json' AS VARIANT) AS still_a_string;
+-- 成功，因为 CAST 不会把输入按 JSON 解析
+```
+
+不要使用 `CAST(string AS VARIANT)` 做 JSON 校验。需要严格解析时使用 `PARSE_TO_VARIANT`；需要把格式错误转换为 SQL `NULL` 时使用 `PARSE_TO_VARIANT_ERROR_TO_NULL`。
+
 ## Equality 语义
 
 对于 `ColumnVariantV2`，规范化哈希和序列化使用逻辑值而不是物理编码字节判断相等性：
@@ -502,6 +532,16 @@ SET enable_variant_v2 = true;
 ```
 
 该 session variable 只改变 FE/BE 执行类型标记，不增加 V2 表创建、导入、Segment 存储、读写器、统计信息或 Compaction 支持；同时也没有提供 V1/V2 混部滚动升级兼容能力。
+
+### 内存编码与组织方式
+
+`ColumnVariantV2` 在执行期间使用紧凑的自描述表示：
+
+- 嵌套值或异构值使用 arena 中的编码字节保存；编码中携带类型、长度等信息，使表达式可以定位子值，而不要求每一行都使用固定的 SQL 类型。
+- 简单标量可以使用带类型的标量列；独立的 Variant-null map 用来记录 JSON/Variant `null`，而 SQL `NULL` 仍由 SQL null bitmap 表示。
+- `E` 和 `T` 是整列级别的物理状态：`E` 表示 encoded，`T` 表示 typed scalar；同一列不会在行级别混用 `E` 和 `T`。
+
+这只是内存中的执行组织方式，不是新的 Variant 持久化文件格式。组织方式可参考官方 [Apache Parquet File Format](https://parquet.apache.org/docs/file-format/)、[Parquet Variant Shredding](https://parquet.apache.org/docs/file-format/types/variantshredding/) 和 [Parquet Nested Encoding](https://parquet.apache.org/docs/file-format/nestedencoding/)。Parquet 以 `metadata` 和 `value` 组织 Variant，并可为同质路径增加 `typed_value`，从而支持列投影和数据跳过。这里是组织方式参考，并不表示 `ColumnVariantV2` 在磁盘上使用 Parquet 格式。
 
 ### 开启 V2 后的行为变化
 

@@ -96,6 +96,36 @@ SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), -1); -- 30
 ```
 
 See [ELEMENT_AT](../../../sql-functions/scalar-functions/variant-functions/element-at) for object and array access details.
+## CAST semantics
+
+`CAST` preserves the distinction between a SQL string and JSON text:
+
+- `CAST(string AS VARIANT)` creates a Variant whose root value is a typed Variant string. It does **not** parse JSON. Therefore, a string such as `'{"id": 1}'` remains one string value, and invalid JSON text is still a valid input to this cast.
+- `PARSE_TO_VARIANT(string)` parses the string as JSON. A JSON object or array can then be accessed by path or `ELEMENT_AT`; use `PARSE_TO_VARIANT_ERROR_TO_NULL` if invalid JSON should become SQL `NULL`.
+- `CAST(PARSE_TO_VARIANT(...) AS scalar)` converts a parsed Variant value to a concrete SQL type when the value is compatible. The cast is not a JSON parser and can fail for incompatible shapes or ranges.
+- `CAST(typed_expression AS VARIANT)` converts a supported typed SQL value to Variant. With `enable_variant_v2`, this only changes the execution representation for the current session; it does not change on-disk Variant storage, readers, writers, or compaction.
+
+```sql
+SET enable_variant_v2 = true;
+
+SELECT CAST('{"id": 1}' AS VARIANT) AS typed_string,
+       PARSE_TO_VARIANT('{"id": 1}') AS parsed_object;
+-- typed_string: the literal string {"id": 1}
+-- parsed_object: {"id": 1}
+
+SELECT ELEMENT_AT(CAST('{"id": 1}' AS VARIANT), 'id') AS from_string,
+       ELEMENT_AT(PARSE_TO_VARIANT('{"id": 1}'), 'id') AS from_json;
+-- from_string: NULL; from_json: 1
+
+SELECT CAST(PARSE_TO_VARIANT('42') AS BIGINT) AS id;
+-- id: 42
+
+SELECT CAST('{invalid json' AS VARIANT) AS still_a_string;
+-- succeeds because CAST does not parse the input as JSON
+```
+
+Do not use `CAST(string AS VARIANT)` as a JSON validation step. Use `PARSE_TO_VARIANT` for strict parsing, or `PARSE_TO_VARIANT_ERROR_TO_NULL` when malformed JSON should be converted to SQL `NULL`.
+
 ## Equality semantics
 
 For `ColumnVariantV2`, equality used by canonical hashing and serialization is based on the logical value rather than the physical encoded bytes:
@@ -502,6 +532,16 @@ SET enable_variant_v2 = true;
 ```
 
 The session variable changes the FE/BE execution type marker only. It does not add V2 table creation, loading, segment storage, readers or writers, statistics, or compaction support. It also does not provide V1/V2 mixed-version rolling-upgrade compatibility.
+
+### Memory encoding and organization
+
+`ColumnVariantV2` uses a compact, self-describing representation during execution:
+
+- Nested or heterogeneous values use encoded bytes in an arena. Type and length information in the encoding lets expressions locate child values without requiring a fixed SQL type for every row.
+- Simple scalar values can use typed scalar columns. A separate Variant-null map records JSON/Variant `null`, while SQL `NULL` remains represented by the SQL null bitmap.
+- `E` and `T` are whole-column physical states: `E` means encoded and `T` means typed scalar. A column does not mix `E` and `T` at row level.
+
+This is an in-memory, compute-time organization only; it is not a new persisted Variant file format. For an external organization reference, see the official [Apache Parquet File Format](https://parquet.apache.org/docs/file-format/), [Parquet Variant Shredding](https://parquet.apache.org/docs/file-format/types/variantshredding/), and [Parquet Nested Encoding](https://parquet.apache.org/docs/file-format/nestedencoding/). Parquet organizes a Variant around `metadata` and `value`, with optional `typed_value` fields for homogeneous paths so readers can project columns and skip data. This is a design reference for organization, not a claim that `ColumnVariantV2` uses Parquet on disk.
 
 ### What changes when V2 is enabled
 
