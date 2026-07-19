@@ -27,7 +27,7 @@ ELEMENT_AT(container, key_or_index)
   - 对于 `ARRAY`：为整数类型，索引从 **1** 开始；
   - 对于 `MAP`：为 `MAP` 中的键类型（`K`），可为任意支持的基础类型。
   - 对于 `VARIANT` 对象访问：为字符串类型的 key；
-  - 对于 `ColumnVariantV2` 中的 VARIANT 数组：为整数索引，正数索引从 1 开始，负数索引从数组末尾倒数。
+  - 对于 `ColumnVariantV2` 中的 VARIANT 数组：为整数索引，非负索引从 0 开始，负数索引从数组末尾倒数。
 
 ## 返回值
 
@@ -43,10 +43,12 @@ ELEMENT_AT(container, key_or_index)
 2. 支持负数索引，`-1` 表示最后一个元素，`-2` 表示倒数第二个，以此类推；
 3. `ELEMENT_AT(container, key_or_index)` 函数的功能与 `container[key_or_index]` 作用一致（详细见示例）。
 
-当 `enable_variant_v2 = true` 时，VARIANT 数组的整数访问遵循正数从 1 开始的规则：`1` 表示第一个元素，`-1` 表示最后一个元素；索引 `0` 和越界索引返回 `NULL`。返回值仍是 VARIANT，如需按确定类型比较或聚合，请先 CAST。
+执行 `SET enable_variant_v2 = true` 后，VARIANT 数组的整数访问使用非负索引从 0 开始的规则：`0` 表示第一个元素，`1` 表示第二个元素，`-1` 表示最后一个元素；越界索引返回 `NULL`。返回值仍是 VARIANT，如需按确定类型比较或聚合，请先 CAST。
 
 ```sql
-SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 1);  -- 10
+SET enable_variant_v2 = true;
+SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 0);  -- 10
+SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 1);  -- 20
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
 ```
 

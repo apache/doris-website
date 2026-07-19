@@ -67,6 +67,35 @@ FROM ${table_name}
 WHERE ARRAY_CONTAINS(CAST(v['tags'] AS ARRAY<TEXT>), 'Doris');
 ```
 
+## Create and access values
+
+VARIANT values can be created from JSON text or from typed SQL expressions:
+
+- Use [PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant) when a string contains JSON text that should be parsed.
+- Use `CAST(expression AS VARIANT)` when the SQL value should become a typed Variant value. A string cast does not parse the string as JSON.
+
+### Parse JSON text
+
+```sql
+SELECT PARSE_TO_VARIANT('{\"user\": {\"id\": 42}, \"active\": true}');
+SELECT PARSE_TO_VARIANT('[10, 20, 30]');
+```
+
+Use [PARSE_TO_VARIANT_ERROR_TO_NULL](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant-error-to-null) when invalid JSON should return SQL `NULL` instead of failing the query.
+
+### Access objects and arrays
+
+Object fields can be accessed with a string key. For `ColumnVariantV2`, VARIANT array indexes are zero-based for non-negative indexes and support negative indexes from the end. The extracted value remains `VARIANT`; CAST it before typed comparison or aggregation.
+
+```sql
+SET enable_variant_v2 = true;
+
+SELECT CAST(PARSE_TO_VARIANT('{\"user\": {\"id\": 42}}')['user']['id'] AS BIGINT);
+SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), 0);  -- 10
+SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), -1); -- 30
+```
+
+See [ELEMENT_AT](../../../sql-functions/scalar-functions/variant-functions/element-at) for object and array access details.
 ## Primitive types
 
 VARIANT infers subcolumn types automatically. Supported types include:
@@ -407,20 +436,19 @@ The experimental compute path described below adds canonical hashing and seriali
 
 ## Experimental compute path: ColumnVariantV2
 
-[PR #65561](https://github.com/apache/doris/pull/65561) adds native `ColumnVariantV2` execution for experimental, compute-only use. It is disabled by default and is controlled by the mutable BE configuration `enable_variant_v2`:
+`ColumnVariantV2` is an experimental, compute-only execution path. It is disabled by default and selected for the current FE session with the session variable `enable_variant_v2`:
 
-```text
-# BE mutable configuration
-enable_variant_v2 = true
+```sql
+SET enable_variant_v2 = true;
 ```
 
-This PR changes the BE execution path only. It does not add V2 table creation, loading, segment storage, readers or writers, statistics, or compaction support. The PR also does not provide V1/V2 mixed-version rolling-upgrade compatibility.
+The session variable changes the FE/BE execution type marker only. It does not add V2 table creation, loading, segment storage, readers or writers, statistics, or compaction support. It also does not provide V1/V2 mixed-version rolling-upgrade compatibility.
 
 ### What changes when V2 is enabled
 
 - **Canonical value semantics**: equivalent integral numbers normalize together; decimal trailing zeros are normalized; `+0`, `-0`, and integral zero share the same canonical value; object key order is ignored; array order is preserved. Invalid encodings and violated invariants fail instead of being silently accepted.
 - **Hashing and serialization**: canonical hashes and arena serialization enable `GROUP BY`, `DISTINCT`, `COUNT(DISTINCT ...)`, `INTERSECT`, `EXCEPT`, `UNION DISTINCT`, and aggregation grouping keys for supported Variant values.
-- **Parsing is explicit**: `parse_to_variant(json_string)` parses a JSON string into a Variant value; `parse_to_variant_error_to_null(json_string)` returns SQL `NULL` when validation fails; `CAST(string AS VARIANT)` creates a typed Variant string and does not parse the string as JSON.
+- **Parsing is explicit**: `parse_to_variant(json_string)` parses a JSON string into a Variant value; `parse_to_variant_error_to_null(json_string)` returns SQL `NULL` when validation fails; `CAST(string AS VARIANT)` creates a typed Variant string and does not parse the string as JSON. See [PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant) and [PARSE_TO_VARIANT_ERROR_TO_NULL](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant-error-to-null) for function syntax and examples.
 - **Expressions and nested values**: conditional expressions, nested containers, and Variant-aware `explode` can operate on the canonical representation.
 - **Null and physical states**: SQL `NULL` remains distinct from Variant/JSON `null`. A `ColumnVariantV2` column uses a whole-column physical state: encoded (`E`) or typed scalar (`T`, with a Variant-null map); it does not mix E and T at row level.
 
@@ -435,7 +463,7 @@ WHERE CAST(v['id'] AS BIGINT) = CAST(other_v['id'] AS BIGINT);
 ```
 
 - Variant expressions are not supported as join keys. Root Variant values are also not supported as sort or TopN keys, window partition or order keys, or arguments to `MIN`/`MAX`.
-- Regression suites that change this process-wide BE configuration should run in a `nonConcurrent` suite.
+- Regression suites covering V2 remain tagged `nonConcurrent`; the feature selection itself is session-scoped and does not change native Variant storage or compaction.
 - Enable V2 only after validating the target workload; it is an experimental execution path and does not change the storage compatibility contract.
 
 ## Wide columns

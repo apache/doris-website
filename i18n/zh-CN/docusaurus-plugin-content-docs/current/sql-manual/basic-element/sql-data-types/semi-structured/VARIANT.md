@@ -67,6 +67,35 @@ FROM ${table_name}
 WHERE ARRAY_CONTAINS(CAST(v['tags'] AS ARRAY<TEXT>), 'Doris');
 ```
 
+## 创建和访问值
+
+VARIANT 值可以从 JSON 文本或带确定类型的 SQL 表达式创建：
+
+- 如果字符串中包含需要解析的 JSON 文本，请使用 [PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant)。
+- 如果要将 SQL 值转换为带类型的 Variant 值，请使用 `CAST(expression AS VARIANT)`。字符串 CAST 不会把字符串按 JSON 解析。
+
+### 解析 JSON 文本
+
+```sql
+SELECT PARSE_TO_VARIANT('{\"user\": {\"id\": 42}, \"active\": true}');
+SELECT PARSE_TO_VARIANT('[10, 20, 30]');
+```
+
+如果非法 JSON 应该返回 SQL `NULL` 而不是使查询失败，请使用 [PARSE_TO_VARIANT_ERROR_TO_NULL](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant-error-to-null)。
+
+### 访问对象和数组
+
+对象字段可以使用字符串 key 访问。对于 `ColumnVariantV2`，VARIANT 数组的非负索引从 0 开始，并支持从数组末尾倒数的负数索引。提取出的值仍是 `VARIANT`，如需按确定类型比较或聚合，请先 CAST。
+
+```sql
+SET enable_variant_v2 = true;
+
+SELECT CAST(PARSE_TO_VARIANT('{\"user\": {\"id\": 42}}')['user']['id'] AS BIGINT);
+SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), 0);  -- 10
+SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), -1); -- 30
+```
+
+对象和数组访问的详细说明请参见 [ELEMENT_AT](../../../sql-functions/scalar-functions/variant-functions/element-at)。
 ## 基本类型
 
 VARIANT 自动推断的子列基础类型包括：
@@ -407,20 +436,19 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 ## 实验性计算路径：ColumnVariantV2
 
-[PR #65561](https://github.com/apache/doris/pull/65561) 新增了原生 `ColumnVariantV2` 执行能力，当前定位为实验性的仅计算路径。默认关闭，通过可动态修改的 BE 配置 `enable_variant_v2` 控制：
+`ColumnVariantV2` 是实验性的、仅用于计算的执行路径。默认关闭，通过当前 FE session 的 session variable `enable_variant_v2` 选择：
 
-```text
-# BE 动态配置
-enable_variant_v2 = true
+```sql
+SET enable_variant_v2 = true;
 ```
 
-该 PR 只改变 BE 计算路径，不增加 V2 表创建、导入、Segment 存储、读写器、统计信息或 Compaction 支持；同时也没有提供 V1/V2 混部滚动升级兼容能力。
+该 session variable 只改变 FE/BE 执行类型标记，不增加 V2 表创建、导入、Segment 存储、读写器、统计信息或 Compaction 支持；同时也没有提供 V1/V2 混部滚动升级兼容能力。
 
 ### 开启 V2 后的行为变化
 
 - **规范化值语义**：等价的整数类型会归一为同一值；Decimal 尾随零会被归一；`+0`、`-0` 与整数零使用同一规范值；对象 key 顺序不影响值；数组顺序仍然保留。非法编码或违反内部不变量时会报错，而不是静默接受。
 - **哈希与序列化**：规范化哈希和 arena 序列化为支持的 Variant 值提供 `GROUP BY`、`DISTINCT`、`COUNT(DISTINCT ...)`、`INTERSECT`、`EXCEPT`、`UNION DISTINCT` 以及聚合分组键能力。
-- **显式解析语义**：`parse_to_variant(json_string)` 将 JSON 字符串解析为 Variant；`parse_to_variant_error_to_null(json_string)` 在校验失败时返回 SQL `NULL`；`CAST(string AS VARIANT)` 创建的是带类型的 Variant 字符串，不会把字符串按 JSON 解析。
+- **显式解析语义**：`parse_to_variant(json_string)` 将 JSON 字符串解析为 Variant；`parse_to_variant_error_to_null(json_string)` 在校验失败时返回 SQL `NULL`；`CAST(string AS VARIANT)` 创建的是带类型的 Variant 字符串，不会把字符串按 JSON 解析。函数语法和示例请参见 [PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant) 与 [PARSE_TO_VARIANT_ERROR_TO_NULL](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant-error-to-null)。
 - **表达式与嵌套值**：条件表达式、嵌套容器以及支持 Variant 的 `explode` 可以基于规范化表示执行。
 - **NULL 与物理状态**：SQL `NULL` 仍与 Variant/JSON `null` 不同。`ColumnVariantV2` 列使用整列级物理状态：编码状态（`E`）或带 Variant-null map 的类型化标量状态（`T`），不会在行级混用 E/T。
 
@@ -435,7 +463,7 @@ WHERE CAST(v['id'] AS BIGINT) = CAST(other_v['id'] AS BIGINT);
 ```
 
 - 不支持将 Variant 表达式作为 JOIN KEY；根 Variant 也不能作为 Sort/TopN 键、窗口分区键或窗口排序键，也不能作为 `MIN`/`MAX` 参数。
-- 会修改进程级 BE 配置的回归测试应放入 `nonConcurrent` suite。
+- V2 相关回归测试仍标记为 `nonConcurrent`；功能选择本身是 session-scoped，不会改变原生 Variant 的存储或 Compaction。
 - 开启 V2 前请先验证目标 workload；它是实验性计算路径，不改变存储兼容性契约。
 
 ## 宽列

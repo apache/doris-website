@@ -27,7 +27,7 @@ ELEMENT_AT(container, key_or_index)
   - For `ARRAY`: An integer, with indexing starting from **1**.  
   - For `MAP`: The key type (`K`) of the `MAP`, which can be any supported primitive type.  
   - For `VARIANT` object access: A string key.
-  - For a VARIANT array on `ColumnVariantV2`: An integer index; positive indexes are 1-based and negative indexes count backward from the end.
+  - For a VARIANT array on `ColumnVariantV2`: An integer index; non-negative indexes are 0-based and negative indexes count backward from the end.
 
 ## Return Value
 
@@ -43,10 +43,12 @@ ELEMENT_AT(container, key_or_index)
 2. Negative indexes are supported: `-1` represents the last element, `-2` the second-to-last, and so on.  
 3. The `ELEMENT_AT(container, key_or_index)` function behaves the same as `container[key_or_index]` (see examples for details).
 
-When `enable_variant_v2 = true`, integer access into a VARIANT array uses positive 1-based indexes: `1` is the first element and `-1` is the last. Index `0` and out-of-range indexes return `NULL`. The result is still VARIANT; CAST it before typed comparison or aggregation.
+After `SET enable_variant_v2 = true`, integer access into a VARIANT array uses zero-based non-negative indexes: `0` is the first element and `1` is the second; `-1` is the last. Out-of-range indexes return `NULL`. The result is still VARIANT; CAST it before typed comparison or aggregation.
 
 ```sql
-SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 1);  -- 10
+SET enable_variant_v2 = true;
+SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 0);  -- 10
+SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 1);  -- 20
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
 ```
 
