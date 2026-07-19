@@ -371,8 +371,10 @@ curl --location-trusted -u root: -T gh_2022-11-07-3.json \
 
 ## 支持的运算与 CAST 规则
 
-- VARIANT 本身不支持与其他类型直接比较/运算，两个 VARIANT 之间也不支持直接比较。
-- 如需比较、过滤、聚合、排序，请对子列显式或隐式 CAST 到确定类型。
+默认执行路径保持现有 VARIANT 使用约束：
+
+- VARIANT 本身不支持与其他类型直接比较/运算；在默认路径上，两个 VARIANT 之间也不支持直接比较。
+- 如需比较、过滤、聚合、排序，请对子路径显式或隐式 CAST 到确定类型。
 
 ```sql
 -- 显式 CAST
@@ -385,21 +387,56 @@ SELECT * FROM tbl WHERE v['bool'];
 SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 ```
 
-- VARIANT 本身不可直接用于 ORDER BY、GROUP BY、JOIN KEY 或聚合参数；对子列 CAST 后可正常使用。
+- 在默认路径上，不应将整个 VARIANT 直接用于 `ORDER BY`、`GROUP BY`、`JOIN KEY` 或聚合参数；请先对子路径 CAST。
 - 字符串类型可隐式转换为 VARIANT。
+
+下面的实验性计算路径新增了面向分组和集合运算的规范化哈希与序列化，但不会因此开放根 VARIANT 比较谓词或 VARIANT JOIN KEY。
 
 | VARIANT         | Castable | Coercible |
 | --------------- | -------- | --------- |
-| `ARRAY`         | ✔        | ❌        |
+| `ARRAY`         | ✔        | ❌         |
 | `BOOLEAN`       | ✔        | ✔         |
 | `DATE/DATETIME` | ✔        | ✔         |
 | `FLOAT`         | ✔        | ✔         |
 | `IPV4/IPV6`     | ✔        | ✔         |
 | `DECIMAL`       | ✔        | ✔         |
-| `MAP`           | ❌        | ❌        |
+| `MAP`           | ❌        | ❌         |
 | `TIMESTAMP`     | ✔        | ✔         |
 | `VARCHAR`       | ✔        | ✔         |
 | `JSON`          | ✔        | ✔         |
+
+## 实验性计算路径：ColumnVariantV2
+
+[PR #65561](https://github.com/apache/doris/pull/65561) 新增了原生 `ColumnVariantV2` 执行能力，当前定位为实验性的仅计算路径。默认关闭，通过可动态修改的 BE 配置 `enable_variant_v2` 控制：
+
+```text
+# BE 动态配置
+enable_variant_v2 = true
+```
+
+该 PR 只改变 BE 计算路径，不增加 V2 表创建、导入、Segment 存储、读写器、统计信息或 Compaction 支持；同时也没有提供 V1/V2 混部滚动升级兼容能力。
+
+### 开启 V2 后的行为变化
+
+- **规范化值语义**：等价的整数类型会归一为同一值；Decimal 尾随零会被归一；`+0`、`-0` 与整数零使用同一规范值；对象 key 顺序不影响值；数组顺序仍然保留。非法编码或违反内部不变量时会报错，而不是静默接受。
+- **哈希与序列化**：规范化哈希和 arena 序列化为支持的 Variant 值提供 `GROUP BY`、`DISTINCT`、`COUNT(DISTINCT ...)`、`INTERSECT`、`EXCEPT`、`UNION DISTINCT` 以及聚合分组键能力。
+- **显式解析语义**：`parse_to_variant(json_string)` 将 JSON 字符串解析为 Variant；`parse_to_variant_error_to_null(json_string)` 在校验失败时返回 SQL `NULL`；`CAST(string AS VARIANT)` 创建的是带类型的 Variant 字符串，不会把字符串按 JSON 解析。
+- **表达式与嵌套值**：条件表达式、嵌套容器以及支持 Variant 的 `explode` 可以基于规范化表示执行。
+- **NULL 与物理状态**：SQL `NULL` 仍与 Variant/JSON `null` 不同。`ColumnVariantV2` 列使用整列级物理状态：编码状态（`E`）或带 Variant-null map 的类型化标量状态（`T`），不会在行级混用 E/T。
+
+### 使用边界
+
+- 根 Variant 比较谓词（`=`、`!=`、`<=>` 以及排序比较）仍不支持。请在两侧提取相同语义的子路径并 CAST 到可比较类型：
+
+```sql
+SELECT *
+FROM tbl
+WHERE CAST(v['id'] AS BIGINT) = CAST(other_v['id'] AS BIGINT);
+```
+
+- 不支持将 Variant 表达式作为 JOIN KEY；根 Variant 也不能作为 Sort/TopN 键、窗口分区键或窗口排序键，也不能作为 `MIN`/`MAX` 参数。
+- 会修改进程级 BE 配置的回归测试应放入 `nonConcurrent` suite。
+- 开启 V2 前请先验证目标 workload；它是实验性计算路径，不改变存储兼容性契约。
 
 ## 宽列
 

@@ -371,7 +371,9 @@ After loading, verify with `SELECT count(*)` or sample with `SELECT * ... LIMIT 
 
 ## Supported operations and CAST rules
 
-- VARIANT cannot be compared/operated directly with other types; comparisons between two VARIANTs are not supported either.
+The default execution path preserves the existing VARIANT guidance:
+
+- VARIANT cannot be compared or operated on directly with other types; comparisons between two VARIANT values are not supported on the default path.
 - For comparison, filtering, aggregation, and ordering, CAST subpaths to concrete types (explicitly or implicitly).
 
 ```sql
@@ -385,21 +387,56 @@ SELECT * FROM tbl WHERE v['bool'];
 SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 ```
 
-- VARIANT itself cannot be used directly in ORDER BY, GROUP BY, as a JOIN KEY, or as an aggregate argument; CAST subpaths instead.
+- On the default path, a whole VARIANT value should not be used directly in `ORDER BY`, `GROUP BY`, as a `JOIN KEY`, or as an aggregate argument; CAST the required subpath instead.
 - Strings can be implicitly converted to VARIANT.
+
+The experimental compute path described below adds canonical hashing and serialization for grouping and set-operation use cases. It does not make root VARIANT comparison predicates or VARIANT join keys available.
 
 | VARIANT         | Castable | Coercible |
 | --------------- | -------- | --------- |
-| `ARRAY`         | ✔        | ❌        |
+| `ARRAY`         | ✔        | ❌         |
 | `BOOLEAN`       | ✔        | ✔         |
 | `DATE/DATETIME` | ✔        | ✔         |
 | `FLOAT`         | ✔        | ✔         |
 | `IPV4/IPV6`     | ✔        | ✔         |
 | `DECIMAL`       | ✔        | ✔         |
-| `MAP`           | ❌        | ❌        |
+| `MAP`           | ❌        | ❌         |
 | `TIMESTAMP`     | ✔        | ✔         |
 | `VARCHAR`       | ✔        | ✔         |
 | `JSON`          | ✔        | ✔         |
+
+## Experimental compute path: ColumnVariantV2
+
+[PR #65561](https://github.com/apache/doris/pull/65561) adds native `ColumnVariantV2` execution for experimental, compute-only use. It is disabled by default and is controlled by the mutable BE configuration `enable_variant_v2`:
+
+```text
+# BE mutable configuration
+enable_variant_v2 = true
+```
+
+This PR changes the BE execution path only. It does not add V2 table creation, loading, segment storage, readers or writers, statistics, or compaction support. The PR also does not provide V1/V2 mixed-version rolling-upgrade compatibility.
+
+### What changes when V2 is enabled
+
+- **Canonical value semantics**: equivalent integral numbers normalize together; decimal trailing zeros are normalized; `+0`, `-0`, and integral zero share the same canonical value; object key order is ignored; array order is preserved. Invalid encodings and violated invariants fail instead of being silently accepted.
+- **Hashing and serialization**: canonical hashes and arena serialization enable `GROUP BY`, `DISTINCT`, `COUNT(DISTINCT ...)`, `INTERSECT`, `EXCEPT`, `UNION DISTINCT`, and aggregation grouping keys for supported Variant values.
+- **Parsing is explicit**: `parse_to_variant(json_string)` parses a JSON string into a Variant value; `parse_to_variant_error_to_null(json_string)` returns SQL `NULL` when validation fails; `CAST(string AS VARIANT)` creates a typed Variant string and does not parse the string as JSON.
+- **Expressions and nested values**: conditional expressions, nested containers, and Variant-aware `explode` can operate on the canonical representation.
+- **Null and physical states**: SQL `NULL` remains distinct from Variant/JSON `null`. A `ColumnVariantV2` column uses a whole-column physical state: encoded (`E`) or typed scalar (`T`, with a Variant-null map); it does not mix E and T at row level.
+
+### Boundaries
+
+- Root Variant comparison predicates (`=`, `!=`, `<=>`, and ordering comparisons) are not supported. Extract and CAST a comparable path on both sides:
+
+```sql
+SELECT *
+FROM tbl
+WHERE CAST(v['id'] AS BIGINT) = CAST(other_v['id'] AS BIGINT);
+```
+
+- Variant expressions are not supported as join keys. Root Variant values are also not supported as sort or TopN keys, window partition or order keys, or arguments to `MIN`/`MAX`.
+- Regression suites that change this process-wide BE configuration should run in a `nonConcurrent` suite.
+- Enable V2 only after validating the target workload; it is an experimental execution path and does not change the storage compatibility contract.
 
 ## Wide columns
 
