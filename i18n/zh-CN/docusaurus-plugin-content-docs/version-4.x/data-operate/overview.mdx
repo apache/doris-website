@@ -1,0 +1,40 @@
+---
+{
+    "title": "数据操作",
+    "language": "zh-CN",
+    "description": "在 Apache Doris 中导入、更新、删除与导出数据，覆盖数据接入方式、写入语义以及结果集导出。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris 提供完整的数据操作能力，覆盖从数据接入到导出的完整链路。您可以从多种数据源导入数据，借助事务保障对数据进行更新与删除，并将查询结果或表数据导出到外部存储系统。
+
+此外，Apache Doris 还支持直接管理 Apache Iceberg 表数据。包括对 Iceberg 表进行直接查询加速、写入、更新、删除等。详见 Iceberg Catalog 的数据管理相关部分。
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="数据导入"
+    description="通过 Stream Load、Broker Load、Routine Load、INSERT 以及流式数据同步作业，从文件、消息队列、事务型数据库及其他 OLAP 系统导入数据。"
+    link="./import/load-manual"
+/>
+
+<GettingStartedCard
+    title="数据更新与删除"
+    description="更新已有数据，使用 DELETE、TRUNCATE、原子覆盖等方式删除数据，并通过事务将多个写入操作组合为原子单元。"
+    link="./update-and-delete"
+/>
+
+<GettingStartedCard
+    title="数据导出"
+    description="使用 EXPORT、SELECT INTO OUTFILE 或 mysqldump，将查询结果或表数据导出到 HDFS、对象存储或本地文件系统。"
+    link="./export/export-overview"
+/>
+
+<GettingStartedCard
+    title="Iceberg 数据管理"
+    description="通过创建 Iceberg Catalog 连接到 Iceberg 表数据，并进行数据操作。"
+    link="../lakehouse/catalogs/iceberg-catalog"
+/>
+</div>
+

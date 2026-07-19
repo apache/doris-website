@@ -7,7 +7,7 @@
 ---
 
 ## Description
-The `explode_json_array_json` table function accepts a JSON array. Its implementation logic is to convert the JSON array to an array type and then call the `explode` function for processing. The behavior is equivalent to: `explode(cast(<json_array> as Array<JSON>))`.
+The `explode_json_array_json` table function accepts a JSON array. Its implementation logic is to convert the JSON array to an array type and then call the `explode_outer` function for processing. The behavior is equivalent to: `explode(cast(<json_array> as Array<JSON>))`.
 It should be used together with [`LATERAL VIEW`](../../../query-data/lateral-view.md).
 
 ## Syntax

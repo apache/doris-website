@@ -1,11 +1,18 @@
 ---
-{
-"title": "发版准备",
-"language": "zh-CN"
-}
+title: Apache Doris 发版准备
+language: zh-CN
+description: Apache Doris 发版准备：GPG 签名、Maven 配置、DISCUSS 讨论流程与发版整体流程。
+keywords:
+    - Apache Doris 发版准备
+    - Release Manager
+    - GPG 签名 PGP key
+    - Apache 投票流程
+    - Maven settings.xml
+    - Apache SVN dist
+    - DISCUSS
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,109 +31,114 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 发版准备
+# Apache Doris 发版准备
 
-Apache 项目的版本发布必须严格遵循 Apache 基金会的版本发布流程。相关指导和政策可参阅：
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 版本发布 / Apache 投票流程 / Release Manager 准备 -->
 
-* [Release Creation Process](https://infra.apache.org/release-publishing)
-* [Release Policy](https://www.apache.org/legal/release-policy.html)
-* [Publishing Maven Releases to Maven Central Repository](https://infra.apache.org/publishing-maven-artifacts.html)
+Apache 项目的版本发布必须严格遵循 Apache 基金会的版本发布流程。本文介绍 Apache Doris 发版的整体流程、签名环境准备和 Maven 发版配置，适用于首次担任 Release Manager 的 PMC 成员或 Committer。
 
-本文档主要说明版本发布的主要流程和前期准备工作。具体 Doris 各组件的发版步骤，可以参阅各自的文档：
+相关 Apache 官方政策与指南：
 
-* [Doris Core Release](./release-doris-core.md)
-* [Doris Connectors Release](./release-doris-connectors.md)
-* [Doris Shade Release](./release-doris-shade.md)
-* [Doris Sdk Release](./release-doris-sdk.md)
+- [Release Creation Process](https://infra.apache.org/release-publishing)
+- [Release Policy](https://www.apache.org/legal/release-policy.html)
+- [Publishing Maven Releases to Maven Central Repository](https://infra.apache.org/publishing-maven-artifacts.html)
+
+各组件的具体发版步骤分别见：
+
+- [发布 Doris Core](./release-doris-core)
+- [发布 Doris Connectors](./release-doris-connectors)
+- [发布 Doris Shade](./release-doris-shade)
+- [发布 Doris SDK](./release-doris-sdk)
+
+## 发布形式
 
 Apache 项目的版本发布主要有以下三种形式：
 
-* **Source Release：即源码发布，这个是必选项。**
-* Binary Release：即二进制发布，比如发布编译好的可执行程序。这个是可选项。
-* Convenience Binaries：为方便用户使用而发布到第三方平台的 Release。如Maven、Docker等。这个也是可选项。
+| 形式 | 说明 | 是否必选 |
+| --- | --- | --- |
+| Source Release | 源码发布 | 必选 |
+| Binary Release | 二进制发布（编译好的可执行程序） | 可选 |
+| Convenience Binaries | 发布到 Maven、Docker 等第三方平台的便利二进制包 | 可选 |
 
-## 发版流程
+## 发版总流程
 
-每个项目的发版都需要一位 PMC 成员或 Committer 作为 **Release Manager**。
+<!-- 知识类型: 操作步骤 -->
 
-总体的发版流程如下：
+每个项目的发版都需要一位 PMC 成员或 Committer 作为 **Release Manager**。总体流程如下：
 
-1. 环境准备
-2. 发布准备
-	1. 社区发起 DISCUSS 并与社区交流具体发布计划
-	2. 创建分支用于发布
-	3. 清理 issue
-	4. 将必要的 Patch 合并到发布的分支
-3. 验证分支
-	1. QA 稳定性测试
-	2. 验证分支代码的编译流程
-	3. 准备 Release Notes
-4. 准备发布材料
-    1. 打 Tag
-    2. 将需要发布的内容上传至 [Apache Dev SVN 仓库](https://dist.apache.org/repos/dist/dev/doris)
-    3. 其他 Convenience Binaries 的准备（如上传到 [Maven Staging 仓库](https://repository.apache.org/#stagingRepositories)）
-4. 社区发布投票流程
-	2. 在 Doris 社区 Dev 邮件组(**dev@doris.apache.org**)发起投票。
-	3. 投票通过后，在 Doris 社区发 Result 邮件。
-5. 完成工作
-	1. 上传签名的软件包到 [Apache Release 仓库](https://dist.apache.org/repos/dist/release/doris/)，并生成相关链接。
-	2. 在 Doris 官网和 github 发布下载链接，并且清理 svn 上的旧版本包。
-	3. 发送 Announce 邮件到 dev@doris.apache.org
+1. **环境准备**：安装 GPG、SVN，并生成签名公钥（见下文）。
+2. **发布准备**：
+    1. 在社区发起 DISCUSS 并讨论具体发布计划；
+    2. 创建用于发布的分支；
+    3. 清理对应版本的 Issue；
+    4. 将必要的 Patch 合并到发布分支。
+3. **验证分支**：
+    1. QA 稳定性测试；
+    2. 验证分支代码的编译流程；
+    3. 准备 Release Notes。
+4. **准备发布材料**：
+    1. 打 Tag；
+    2. 将待发布内容上传至 [Apache Dev SVN 仓库](https://dist.apache.org/repos/dist/dev/doris)；
+    3. 准备其他 Convenience Binaries（如上传到 [Maven Staging 仓库](https://repository.apache.org/#stagingRepositories)）。
+5. **社区投票流程**：
+    1. 在 Doris 社区 Dev 邮件组（`dev@doris.apache.org`）发起投票；
+    2. 投票通过后，发送 Result 邮件。
+6. **完成工作**：
+    1. 将签名后的软件包上传到 [Apache Release 仓库](https://dist.apache.org/repos/dist/release/doris/) 并生成下载链接；
+    2. 在 Doris 官网和 GitHub 发布下载链接，清理 SVN 上的旧版本包；
+    3. 发送 Announce 邮件到 `dev@doris.apache.org`。
 
-## 准备签名
+## 准备签名环境
 
-如果这是你第一次发布，那么你需要在你的环境中准备如下工具
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 首次担任 Release Manager -->
 
-1. [Release Signing](https://www.apache.org/dev/release-signing.html)
-2. [gpg](https://www.apache.org/dev/openpgp.html)
-3. [svn](https://www.apache.org/dev/openpgp.html)
+如果这是你第一次发布，需要在本地环境中准备以下工具：
 
-### 准备gpg key
+| 工具 | 用途 | 参考链接 |
+| --- | --- | --- |
+| Release Signing | 了解 Apache 签名要求 | [Release Signing](https://www.apache.org/dev/release-signing.html) |
+| gpg | 生成签名密钥并对发布包签名 | [openpgp](https://www.apache.org/dev/openpgp.html) |
+| svn | 上传发布物到 Apache SVN | [openpgp](https://www.apache.org/dev/openpgp.html) |
 
-Release manager 在发布前需要先生成自己的签名公钥，并上传到公钥服务器，之后就可以用这个公钥对准备发布的软件包进行签名。
-如果在[KEY](https://downloads.apache.org/doris/KEYS)里已经存在了你的KEY，那么你可以跳过这个步骤了。
+### 准备 GPG Key
 
-#### 签名软件 GnuPG 的安装配置
+Release Manager 在发布前需先生成自己的签名公钥，并上传到公钥服务器，之后用该公钥对发布包签名。
 
-##### GnuPG
+> 如果 [Apache Doris KEYS 文件](https://downloads.apache.org/doris/KEYS) 中已包含你的 KEY，可跳过本节。
 
-1991年，程序员 Phil Zimmermann 为了避开政府监视，开发了加密软件PGP。这个软件非常好用，迅速流传开来，成了许多程序员的必备工具。但是，它是商业软件，不能自由使用。所以，自由软件基金会决定，开发一个PGP的替代品，取名为GnuPG。这就是GPG的由来。
+#### 安装 GnuPG
 
-##### 安装配置
+GnuPG（简称 GPG）是 PGP 的自由软件实现，用于生成密钥和对文件签名。
 
 CentOS 安装命令：
 
-```
+```bash
 yum install gnupg
 ```
-安装完成后，默认配置文件 gpg.conf 会放在 home 目录下。
 
-```
+安装完成后，默认配置文件位于：
+
+```text
 ~/.gnupg/gpg.conf
 ```
 
-如果不存在这个目录或文件，可以直接创建一个空文件。
+如果该文件不存在，可直接创建一个空文件。
 
-Apache 签名推荐 SHA512， 可以通过配置 gpg 完成。
-编辑gpg.conf, 增加下面的三行：
+Apache 签名推荐使用 SHA512，编辑 `gpg.conf`，追加以下三行：
 
-```
+```text
 personal-digest-preferences SHA512
 cert-digest-algo SHA512
 default-preference-list SHA512 SHA384 SHA256 SHA224 AES256 AES192 AES CAST5 ZLIB BZIP2 ZIP Uncompressed
 ```
 
-#### 生成新的签名
+#### 检查 GPG 版本
 
-##### 准备签名
+确认 GPG 支持 SHA512：
 
-推荐的生成新签名的设置：
-
-这里必须通过 SecureCRT 等终端直接登录用户账户，不能通过 su - user 或者 ssh 转，否则密码输入 box 会显示不出来而报错。
-
-先看下 gpg 的 version 以及是否支持 SHA512.
-
-```
+```bash
 $ gpg --version
 gpg (GnuPG) 2.0.22
 libgcrypt 1.5.3
@@ -144,9 +156,25 @@ Hash: MD5, SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
 Compression: Uncompressed, ZIP, ZLIB, BZIP2
 ```
 
-##### 生成新的签名
+:::caution 注意
+必须通过 SecureCRT 等终端直接登录用户账户，不能通过 `su - user` 或 `ssh` 转跳，否则密码输入框会显示不出来导致报错。
+:::
 
-```
+#### 生成签名密钥
+
+执行 `gpg --gen-key` 并按提示选择以下推荐配置：
+
+| 选项 | 推荐值 | 说明 |
+| --- | --- | --- |
+| 密钥类型 | `1`（RSA and RSA） | 默认 |
+| 密钥长度 | `4096` | Apache 推荐至少 4096 位 |
+| 有效期 | `0` | 永不过期 |
+| Real name | 与 [id.apache.org](https://id.apache.org) 中显示的 ID 一致 | 必填 |
+| Email address | Apache 邮箱（`xxx@apache.org`） | 必填 |
+
+完整交互示例：
+
+```text
 $ gpg --gen-key
 gpg (GnuPG) 2.0.22; Copyright (C) 2013 Free Software Foundation, Inc.
 This is free software: you are free to change and redistribute it.
@@ -184,27 +212,20 @@ You selected this USER-ID:
 Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? o
 ```
 
-其中 Real name 需保持和 id.apache.org 中显示的 id 一致。
-Email address 为 apache 的邮箱。
+随后需要输入 passphrase（两次，至少 8 个字符）。
 
-输入 passphrase, 一共要输入两遍，超过8个字符即可。
+:::danger 重要
+这里设置的 passphrase 一定要记住，后续签名以及发布其他组件时都会用到。
+:::
 
-**这里的秘钥一定要记住，后面签名的时候会用到。同时也会用于其他组件的发布**
+如果 `gpg --gen-key` 命令长时间卡住，可使用以下任一方法补充熵：
 
-**如果 `gpg --gen-key` 命令卡住很久，可以尝试打开另一终端后，执行 `find / | xargs file` 命令来产生足够多的随机字符，通常在几分钟后，gpg命令就会完成。**
+- 打开另一终端执行 `find / | xargs file` 产生随机字符；
+- 安装 `rng-tools`（`yum install rng-tools`）并执行 `rngd -r /dev/urandom`，密钥生成可瞬间完成。
 
->**注意：**
->
->如果在生成可以的时候出现卡住，长时间不能完成的时候，可以通过下面的方案解决：
->
->安装 rng-tools 这个工具，通过 `yum install rng-tools` 完成安装。
->之后再打开一个新的窗口执行命令：rngd -r /dev/urandom，生成密钥就能瞬间完成了。
+#### 查看与导出公钥
 
-##### 查看和输出
-
-第一行显示公钥文件名（pubring.gpg），第二行显示公钥特征（4096位，Hash字符串和生成时间），第三行显示"用户ID"，注释，邮件，第四行显示私钥特征。
-
-```
+```bash
 $ gpg --list-keys
 /home/lide/.gnupg/pubring.gpg
 -----------------------------
@@ -213,15 +234,19 @@ uid                  xxx-yyy  (xxx's key) <xxx@apache.org>
 sub   4096R/0E8182E6 2018-12-06
 ```
 
-其中 xxx-yyy 就是用户ID。
+其中 `xxx-yyy` 是用户 ID，`33DBF2E0` 是短指纹。
 
-```
+导出公钥到文件：
+
+```bash
 gpg --armor --output public-key.txt --export [用户ID]
 ```
 
-```
+示例：
+
+```bash
 $ gpg --armor --output public-key.txt --export xxx-yyy
-文件‘public-key.txt’已存在。 是否覆盖？(y/N)y
+文件'public-key.txt'已存在。 是否覆盖？(y/N)y
 $ cat public-key.txt
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2.0.22 (GNU/Linux)
@@ -230,33 +255,33 @@ mQINBFwJEQ0BEACwqLluHfjBqD/RWZ4uoYxNYHlIzZvbvxAlwS2mn53BirLIU/G3
 9opMWNplvmK+3+gNlRlFpiZ7EvHsF/YJOAP59HmI2Z...
 ```
 
-#### 上传签名公钥
+#### 上传公钥到公钥服务器
 
-公钥服务器是网络上专门储存用户公钥的服务器。send-keys 参数可以将公钥上传到服务器。
+使用 `--send-keys` 将公钥上传到 Ubuntu 公钥服务器：
 
-```
+```bash
 gpg --send-keys xxxx --keyserver https://keyserver.ubuntu.com/
-
 ```
-其中 xxxx 为上一步 `--list-keys` 结果中 pub 后面的字符串，如上为：33DBF2E0
 
-也可以通过[https://keyserver.ubuntu.com/](https://keyserver.ubuntu.com/)上传上述 public-key.txt 的内容：
+其中 `xxxx` 为上一步 `--list-keys` 结果中 `pub` 后面的字符串（例如 `33DBF2E0`）。
 
-上传成功之后，可以通过查询这个[https://keyserver.ubuntu.com/](https://keyserver.ubuntu.com/)，输入 0x33DBF2E0 查询。（注意需要以 0x 开头）
+也可以通过 [https://keyserver.ubuntu.com/](https://keyserver.ubuntu.com/) 网页粘贴 `public-key.txt` 内容上传。
 
-该网站查询有延迟，可能需要等1个小时。
+上传成功后，在该网页输入 `0x33DBF2E0`（注意以 `0x` 开头）即可查询。该网站查询有延迟，可能需要等待约 1 小时。
 
-#### 生成 fingerprint 并上传到 apache 用户信息中
+#### 生成 Fingerprint 并绑定到 Apache 账号
 
-由于公钥服务器没有检查机制，任何人都可以用你的名义上传公钥，所以没有办法保证服务器上的公钥的可靠性。通常，你可以在网站上公布一个公钥指纹，让其他人核对下载到的公钥是否为真。
+公钥服务器没有真实性检查，任何人都可以以你的名义上传公钥，因此需要在 [id.apache.org](https://id.apache.org) 中绑定指纹以供其他人核对。
 
-fingerprint参数生成公钥指纹：
+生成指纹：
 
-```
+```bash
 gpg --fingerprint [用户ID]
 ```
 
-```
+示例：
+
+```text
 $ gpg --fingerprint xxx-yyy
 pub   4096R/33DBF2E0 2018-12-06
       Key fingerprint = 07AA E690 B01D 1A4B 469B  0BEF 5E29 CE39 33DB F2E0
@@ -264,19 +289,19 @@ uid                  xxx-yyy (xxx's key) <xxx@apache.org>
 sub   4096R/0E8182E6 2018-12-06
 ```
 
-将上面的 fingerprint （即 07AA E690 B01D 1A4B 469B  0BEF 5E29 CE39 33DB F2E0）粘贴到自己的用户信息中：
+将完整指纹（`07AA E690 B01D 1A4B 469B  0BEF 5E29 CE39 33DB F2E0`）粘贴到 [https://id.apache.org](https://id.apache.org) 的 `OpenPGP Public Key Primary Fingerprint` 字段。
 
-https://id.apache.org
+> 注：每个 Apache 账号可以绑定多个 Public Key。
 
-`OpenPGP Public Key Primary Fingerprint:`
+#### 将公钥追加到 KEYS 文件
 
-> 注：每个人可以有多个 Public Key。
+:::danger 重要
+**绝对不要删除 KEYS 文件中已有的内容**，只能追加新增。
+:::
 
-#### 生成 keys
+依次在 Dev 与 Release 两个 SVN 仓库追加 KEY：
 
-**注意不要删除 KEYS 文件中已有的内容，这能追加新增**
-
-```
+```bash
 svn co https://dist.apache.org/repos/dist/dev/doris/
 # edit doris/KEYS file
 gpg --list-sigs [用户 ID] >> doris/KEYS
@@ -284,65 +309,102 @@ gpg --armor --export [用户 ID] >> doris/KEYS
 svn ci --username $ASF_USERNAME --password "$ASF_PASSWORD" -m"Update KEYS"
 ```
 
-注意，KEYS 文件要同时发布到如下 svn 库。
-
-```
+```bash
 svn co https://dist.apache.org/repos/dist/release/doris
 # edit doris/KEYS file
 svn ci --username $ASF_USERNAME --password "$ASF_PASSWORD" -m"Update KEYS"
 ```
 
 之后会自动同步到：
-```
+
+```text
 https://downloads.apache.org/doris/KEYS
 ```
 
-在后续的发版投票邮件中，要使用 `https://downloads.apache.org/doris/KEYS` 这里的 KEYS 文件。
-
+在后续的发版投票邮件中，请使用 `https://downloads.apache.org/doris/KEYS` 这一地址。
 
 ## Maven 发版准备
 
-对于 Doris Connector 等组件，需要使用 maven 进行版本发布。
+<!-- 知识类型: 配置参数 -->
+<!-- 适用场景: 发布 Doris Connector / Shade / SDK -->
 
-1. 生成主密码
+对于 Doris Connector、Shade、SDK 等组件，需要使用 Maven 进行版本发布，必须配置 `~/.m2/settings.xml` 与 `~/.m2/settings-security.xml`。
 
-    `mvn --encrypt-master-password <password>`
-    
-    这个密码仅用作加密后续的其他密码使用, 输出类似 `{VSb+6+76djkH/43...}`
-    
-    之后创建 `~/.m2/settings-security.xml` 文件，内容是
+### 1. 生成主密码
 
-    ```
-    <settingsSecurity>
-      <master>{VSb+6+76djkH/43...}</master>
-    </settingsSecurity>
-    ```
+主密码用于加密后续的其他密码：
 
-2. 加密 apache 密码
+```bash
+mvn --encrypt-master-password <password>
+```
 
-    `mvn --encrypt-password <password>`
-    
-    这个密码是apache 账号的密码 输出和上面类似`{GRKbCylpwysHfV...}`
-    
-    在 `~/.m2/settings.xml` 中加入
+输出形如 `{VSb+6+76djkH/43...}`。将其写入 `~/.m2/settings-security.xml`：
 
-	```
-    <servers>
-      <!-- To publish a snapshot of your project -->
-      <server>
-        <id>apache.snapshots.https</id>
-        <username>yangzhg</username>
-        <password>{GRKbCylpwysHfV...}</password>
-      </server>
-      <!-- To stage a release of your project -->
-      <server>
-        <id>apache.releases.https</id>
-        <username>yangzhg</username>
-        <password>{GRKbCylpwysHfV...}</password>
-      </server>
-    </servers>
-	```
-	
+```xml
+<settingsSecurity>
+  <master>{VSb+6+76djkH/43...}</master>
+</settingsSecurity>
+```
+
+### 2. 加密 Apache 账号密码
+
+```bash
+mvn --encrypt-password <password>
+```
+
+`<password>` 是你的 Apache 账号密码，输出形如 `{GRKbCylpwysHfV...}`。
+
+在 `~/.m2/settings.xml` 中加入以下 `<servers>` 配置：
+
+```xml
+<servers>
+  <!-- To publish a snapshot of your project -->
+  <server>
+    <id>apache.snapshots.https</id>
+    <username>yangzhg</username>
+    <password>{GRKbCylpwysHfV...}</password>
+  </server>
+  <!-- To stage a release of your project -->
+  <server>
+    <id>apache.releases.https</id>
+    <username>yangzhg</username>
+    <password>{GRKbCylpwysHfV...}</password>
+  </server>
+</servers>
+```
+
+两个 `server id` 的用途：
+
+| Server ID | 用途 |
+| --- | --- |
+| `apache.snapshots.https` | 发布 SNAPSHOT 版本 |
+| `apache.releases.https` | 发布 Release 版本到 Staging 仓库 |
+
 ## 在社区发起 DISCUSS
 
-DISCUSS 并不是发版前的必须流程，但强烈建议在重要版本发布前，在 dev@doris 邮件组发起讨论。内容包括但不限于重要功能的说明、Bug修复说明等。
+<!-- 知识类型: 操作步骤 -->
+
+DISCUSS 并非发版前的强制流程，但在重要版本发布前**强烈建议**在 `dev@doris.apache.org` 邮件组发起讨论。讨论内容包括但不限于：
+
+- 重要功能的说明与设计要点；
+- Bug 修复说明；
+- 兼容性变更与升级注意事项；
+- 预计的发版时间表。
+
+## FAQ / Troubleshooting
+
+**Q：`gpg --gen-key` 一直卡住怎么办？**
+
+熵不足导致，可执行 `find / | xargs file` 或安装 `rng-tools` 后运行 `rngd -r /dev/urandom` 补充随机源。
+
+**Q：签名时报 `gpg: signing failed: Inappropriate ioctl for device`？**
+
+终端无法接收 passphrase 输入，执行 `export GPG_TTY=$(tty)` 后重试。
+
+**Q：`mvn deploy` 报 401 Unauthorized？**
+
+检查 `~/.m2/settings.xml` 中 `apache.releases.https` 的用户名与加密后密码，确认 `~/.m2/settings-security.xml` 中主密码与之匹配。
+
+**Q：上传到公钥服务器后查询不到？**
+
+`keyserver.ubuntu.com` 同步有延迟，通常需等待约 1 小时。

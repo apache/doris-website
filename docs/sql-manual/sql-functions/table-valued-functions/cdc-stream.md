@@ -13,7 +13,7 @@
 
 The CDC Stream table-valued-function (TVF) enables users to read change data from relational databases (such as MySQL, PostgreSQL) via CDC. By integrating [Flink CDC](https://github.com/apache/flink-cdc) reading capabilities, it supports full and incremental data synchronization.
 
-It is typically used with `CREATE JOB ON STREAMING` to achieve continuous single-table data synchronization. For detailed usage, see [MySQL Single-table Import](../../../data-operate/import/streaming-job/continuous-load-mysql-single.md) and [PostgreSQL Single-table Import](../../../data-operate/import/streaming-job/continuous-load-postgresql-single.md).
+It is typically used with `CREATE JOB ON STREAMING` to achieve continuous single-table data synchronization with SQL mapping. For detailed usage, see [MySQL CDC with SQL Mapping](../../../data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md) and [PostgreSQL CDC with SQL Mapping](../../../data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md).
 
 ## Syntax
 
@@ -49,7 +49,7 @@ cdc_stream(
 | Parameter              | Default | Description                                                  |
 |------------------------|---------|--------------------------------------------------------------|
 | `schema`               | -       | Schema name, required for PostgreSQL                         |
-| `offset`               | initial | `initial`: full + incremental sync; `latest`: incremental only |
+| `offset`               | latest  | `latest`: incremental only; `initial`: full + incremental; also supports `snapshot`, `earliest` (MySQL only), or a JSON binlog/LSN position |
 | `snapshot_split_size`  | 8096    | Split size (in rows). During full sync, the table is divided into multiple splits |
 | `snapshot_parallelism` | 1       | Parallelism during full sync phase, i.e., max splits per task |
 

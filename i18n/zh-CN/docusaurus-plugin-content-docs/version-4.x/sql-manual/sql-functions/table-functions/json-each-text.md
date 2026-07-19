@@ -13,7 +13,7 @@
 该函数需配合 [`LATERAL VIEW`](../../../query-data/lateral-view.md) 使用。
 
 :::note
-该函数自4.1.0开始支持
+该函数自4.1.0起支持
 :::
 
 ## 语法

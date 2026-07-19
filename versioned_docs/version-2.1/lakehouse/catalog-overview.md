@@ -36,7 +36,7 @@ CREATE CATALOG iceberg_catalog PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = 'hadoop',
     'warehouse' = 's3://bucket/dir/key',
-    's3.endpoint' = 's3.us-east-1.amazonaws.com',
+    's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.access_key' = 'ak',
     's3.secret_key' = 'sk'
 );
@@ -98,7 +98,7 @@ mysql> SHOW CATALOGS;
 +-----------+-----------------+----------+-----------+-------------------------+---------------------+------------------------+
 | CatalogId | CatalogName     | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |
 +-----------+-----------------+----------+-----------+-------------------------+---------------------+------------------------+
-|     10024 | iceberg_catalog | hms      | yes       | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
+|     10024 | iceberg_catalog | iceberg  | yes       | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
 |         0 | internal        | internal |           | NULL                    | NULL                | Doris internal catalog |
 +-----------+-----------------+----------+-----------+-------------------------+---------------------+------------------------+
 ```

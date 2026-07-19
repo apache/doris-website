@@ -112,6 +112,10 @@ When writing a UDF in Java, the main entry point must be the `evaluate` function
     );
     ```
 
+:::caution Note
+When using `file://`, Doris reads the JAR file on the FE node during `CREATE FUNCTION` to compute the checksum, and reads the JAR file on BE nodes during execution. Therefore, the same JAR file must exist at the same absolute path on all FE and BE nodes, and the file content must be identical. If the file exists only on BE nodes, `CREATE FUNCTION` fails. If the file content differs between FE and BE nodes, execution fails with a checksum mismatch.
+:::
+
 3. To utilize UDFs, users must possess the `SELECT` privilege for the corresponding database. And to verify the successful registration of the UDF, you can use the [SHOW FUNCTIONS](../../sql-manual/sql-statements/function/SHOW-FUNCTIONS) command.
 
     ``` sql
@@ -401,7 +405,7 @@ UDTF is supported starting from Doris version 3.0.
 For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
-    CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
+    CREATE TABLES FUNCTION java_utdf(string, string) RETURNS array<string> PROPERTIES (
         "file"="file:///pathTo/java-udtf.jar",
         "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
         "always_nullable"="true",

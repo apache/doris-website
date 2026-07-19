@@ -105,9 +105,7 @@ ALTER TABLE example_db.my_table
 DROP ROLLUP example_rollup_index2,example_rollup_index3;
 ```
 
-### 
-
-4. Keywords
+## Keywords
 
 ```text
 ALTER, TABLE, ROLLUP, ALTER TABLE

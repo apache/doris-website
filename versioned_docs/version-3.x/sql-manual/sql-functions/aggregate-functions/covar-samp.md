@@ -31,6 +31,23 @@ Returns the sample covariance of expr1 and expr2, special case:
 
 ## Example
 
+```sql
+-- setup
+create table baseall(
+    id int,
+    x double,
+    y double
+) distributed by hash(id) buckets 1
+properties ("replication_num"="1");
+
+insert into baseall values
+    (1, 1.0, 2.0),
+    (2, 2.0, 3.0),
+    (3, 3.0, 4.0),
+    (4, 4.0, NULL),
+    (5, NULL, 5.0);
+```
+
 ```
 select covar_samp(x,y) from baseall;
 ```

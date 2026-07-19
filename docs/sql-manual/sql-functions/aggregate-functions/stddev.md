@@ -29,7 +29,7 @@ STDDEV(<expr>)
 
 ## Return Value
 
-Return the sample standard deviation of the expr expression as Double type.
+Return the population standard deviation of the expr expression as Double type.
 If there is no valid data in the group, returns NULL.
 
 ## Examples

@@ -17,7 +17,11 @@ Support since Apache Doris 3.0.2
 
 If the 'pattern' is not allowed regexp regular,throw error
 
-Support character match classes : https://github.com/google/re2/wiki/Syntax
+Default supported character match classes : https://github.com/google/re2/wiki/Syntax
+
+Doris supports enabling more advanced regular expression features, such as look-around zero-width assertions, through the session variable `enable_extended_regex` (default is `false`).
+
+Supported character matching types when the session variable `enable_extended_regex` is set to `true`: https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
 ## Syntax
 
@@ -56,6 +60,8 @@ Return a string type, with the result being the part that matches `<pattern>`.
 **Pattern Modifiers**:
 
 You can override the default behavior by prefixing the `pattern` with `(?flags)`. Multiple modifiers can be combined, e.g., `(?im)`; a `-` prefix disables the corresponding option, e.g., `(?-s)`.
+
+Pattern modifiers only take effect when using the default regex engine. If `enable_extended_regex=true` is enabled while using zero-width assertions (e.g., `(?<=...)`, `(?=...)`), the query will be handled by the Boost.Regex engine, and modifier behavior may not work as expected. It is recommended not to mix them.
 
 | Flag    | Meaning                                                                      |
 | ------- | ---------------------------------------------------------------------------- |
@@ -254,9 +260,27 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INVALID_ARGUMENT]C
 Error: missing ]: [[:lower:]+)
 ```
 
+Advanced regexp
+```sql
+SELECT regexp_extract_or_null('foo123bar', '(?<=foo)(\\d+)(?=bar)', 1);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]Invalid regex pattern: (?<=foo)(\d+)(?=bar). Error: invalid perl operator: (?<
+```
+
+```sql
+SET enable_extended_regex = true;
+SELECT regexp_extract_or_null('foo123bar', '(?<=foo)(\\d+)(?=bar)', 1);
+```
+```text
++-----------------------------------------------------------------+
+| regexp_extract_or_null('foo123bar', '(?<=foo)(\\d+)(?=bar)', 1) |
++-----------------------------------------------------------------+
+| 123                                                             |
++-----------------------------------------------------------------+
+```
+
 Pattern Modifiers
 
-Case-insensitive: `(?i)` makes the match ignore case
+Case-insensitive matching: `(?i)` makes the match ignore case
 
 ```sql
 SELECT REGEXP_EXTRACT_OR_NULL('Hello World', '(hello)', 1) AS case_sensitive,
@@ -271,7 +295,7 @@ SELECT REGEXP_EXTRACT_OR_NULL('Hello World', '(hello)', 1) AS case_sensitive,
 +----------------+------------------+
 ```
 
-`.` matches newline by default; with `(?-s)`, `.` does not match newline
+`.` matches newline by default; use `(?-s)` to prevent `.` from matching newline
 
 ```sql
 SELECT REGEXP_EXTRACT_OR_NULL('foo\nbar', '^(.+)$', 1) AS dot_match_nl,

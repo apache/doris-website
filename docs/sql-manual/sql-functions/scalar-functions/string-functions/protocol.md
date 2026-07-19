@@ -54,6 +54,6 @@ SELECT protocol(null);
 +----------------+
 ```
 
-## 相关命令
+## See Also
 
-If you want to extract other parts of the URL, you can use [parse_url](./parse-url.md)。
+If you want to extract other parts of the URL, you can use [parse_url](./parse-url.md).

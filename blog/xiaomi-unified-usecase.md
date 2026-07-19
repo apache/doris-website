@@ -3,7 +3,7 @@
     'summary': 'Xiaomi, the third-largest smartphone maker in the world, built a unified data platform on Apache Doris, running 40+ clusters that serve 50 million queries per day across petabytes of data.'
     'description': 'Xiaomi, the third-largest smartphone maker in the world, built a unified data platform on Apache Doris, running 40+ clusters that serve 50 million queries per day across petabytes of data.'
     'date': '2026-2-27'
-    'author': 'velodb.io · Congling Xia'
+    'author': 'Xiaomi · Congling Xia'
     'externalLink': 'https://www.velodb.io/blog/how-xiaomi-built-a-unified-data-platform-with-apache-doris'
     'tags': ['Best Practice']
     "image": '/images/blogs/20260317_Xiaomi_unified_horizontal.png'  

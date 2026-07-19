@@ -1,33 +1,40 @@
 ---
 {
-    "title": "OS Checking",
+    "title": "Operating System Checks",
     "language": "en",
-    "description": "When deploying Doris, ensure the following operating system configurations:"
+    "description": "Before deploying Doris, check and configure the operating system environment according to the checklist."
 }
 ---
 
-When deploying Doris, ensure the following operating system configurations:
+<!-- Knowledge type: Guide -->
+<!-- Applicable scenarios: Pre-deployment checks / System configuration / Environment validation -->
 
-- Disable the swap partition
-- Disable transparent huge pages
-- Ensure the system has enough virtual memory space
-- Disable CPU power-saving mode
-- Ensure new network connections are reset on overflow
-- Ensure Doris-related ports are open or the firewall is disabled
-- Ensure the system allows a sufficient number of open file descriptors
-- Install and configure NTP service for clock synchronization
+Before deploying Doris, complete the following operating system checks and configurations:
+
+| Check item | Purpose |
+|--------|------|
+| Disable swap partition | Avoid kernel policies that affect performance |
+| Disable Transparent Huge Pages (THP) | Prevent memory fragmentation and performance fluctuations |
+| Increase virtual memory areas | Avoid running out of file handles |
+| Disable CPU power-saving mode | Ensure stable performance under high load |
+| Reset on network connection overflow | Avoid hanging connections under high concurrency |
+| Open ports / disable firewall | Ensure communication between components |
+| Increase the number of file handles | Support a large number of table data files |
+| Install NTP service | Ensure metadata time accuracy < 5000ms |
 
 ## Disable Swap Partition
 
-It is recommended to disable the swap partition when deploying Doris. The kernel may move memory data to the swap area when it detects memory pressure, but this can negatively impact Doris performance due to the kernel’s limited understanding of application behavior.
+<!-- Knowledge type: Operation steps -->
 
-To disable swap temporarily (swap will be re-enabled after a restart):
+Disabling swap prevents the kernel from moving data to the swap partition, which would affect Doris performance.
+
+**Temporary disable** (reverts after reboot):
 
 ```bash
 swapoff -a
 ```
 
-To permanently disable swap, edit `/etc/fstab` and comment out the swap partition entry, then restart the machine:
+**Permanent disable**: comment out the swap line in `/etc/fstab` and reboot to take effect.
 
 ```bash
 # /etc/fstab
@@ -40,16 +47,18 @@ tmpfs                  /tmp          tmpfs     nodev,nosuid          0      0
 
 ## Disable Transparent Huge Pages
 
-In high-load, low-latency scenarios, disabling Transparent Huge Pages (THP) is recommended to avoid performance degradation and memory fragmentation, ensuring stable memory usage for Doris.
+<!-- Knowledge type: Operation steps -->
 
-Use the following commands to disable THP temporarily:
+Disabling THP (Transparent Huge Pages) reduces memory fragmentation and ensures that Doris uses memory stably.
+
+**Temporary disable**:
 
 ```bash
 echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
 echo madvise > /sys/kernel/mm/transparent_hugepage/defrag
 ```
 
-To permanently disable THP, add the following commands to `/etc/rc.d/rc.local` to ensure it takes effect after a restart:
+**Permanent disable**:
 
 ```bash
 cat >> /etc/rc.d/rc.local << EOF
@@ -59,71 +68,76 @@ EOF
 chmod +x /etc/rc.d/rc.local
 ```
 
-## Ensure Sufficient Virtual Memory Area
+## Increase Virtual Memory Areas
 
-To allow Doris to handle large datasets, the system must have enough virtual memory space. Without adequate memory mapping, Doris may encounter errors like Too many open files during startup or runtime.
+<!-- Knowledge type: Operation steps -->
 
-You can permanently modify the virtual memory area to at least 2000000 with the following command, and it will take effect immediately:
+Increasing the VMA (virtual memory areas) prevents Doris from failing with `mmap` / `Cannot allocate memory` errors when the per-process VMA limit is exceeded.
 
 ```bash
 cat >> /etc/sysctl.conf << EOF
 vm.max_map_count = 2000000
 EOF
 
-# Take effect immediately
 sysctl -p
 ```
 
 ## Disable CPU Power-Saving Mode
 
-Disabling CPU power-saving mode ensures stable high performance during high load, preventing fluctuations and delays caused by reduced CPU frequency.
+<!-- Knowledge type: Operation steps -->
 
-Use the following command to set the CPU governor to "performance," disabling power-saving modes:
+Disabling power-saving mode ensures stable CPU frequency under high load. If the CPU does not support Scaling Governor, you can skip this step.
 
 ```bash
 echo 'performance' | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 ```
 
-## Reset New Connections on Network Overflow
+## Reset on Network Connection Overflow
 
-Ensure that when TCP connection buffers overflow, new connections are reset immediately. This prevents buffer blocking during high load and improves responsiveness and stability.
+<!-- Knowledge type: Operation steps -->
 
-You can permanently configure the system to automatically reset new connections with the following commands, and it will take effect immediately:
+Enabling `tcp_abort_on_overflow` immediately aborts connections when overflow occurs, avoiding long-hanging connections under high load.
 
 ```bash
 cat >> /etc/sysctl.conf << EOF
 net.ipv4.tcp_abort_on_overflow=1
 EOF
 
-# Take effect immediately
 sysctl -p
 ```
 
-## Open Doris-related Ports
-If Doris-related ports are blocked, you can try disabling the firewall to verify whether it is the cause. If the firewall is the issue, open the relevant ports for Doris components.
+## Open Ports
+
+<!-- Knowledge type: Operation steps -->
+
+If a port is unreachable, troubleshoot the firewall:
 
 ```bash
 sudo systemctl stop firewalld.service
 sudo systemctl disable firewalld.service
 ```
 
-## Increase System's Open File Descriptors Limit
+Or open the corresponding ports based on the Doris port configuration.
 
-Since Doris manages a large number of files, you need to increase the system's file descriptor limit.
+## Increase File Handle Limits
 
-To change the maximum number of open files, add the following to `/etc/security/limits.conf`:
+<!-- Knowledge type: Operation steps -->
+
+Doris relies on a large number of files to manage table data, so the file handle limit needs to be raised.
 
 ```bash
-vi /etc/security/limits.conf 
+vi /etc/security/limits.conf
 * soft nofile 1000000
 * hard nofile 1000000
 ```
 
-## Ensure NTP Service is Installed on Cluster Deployment Machines
+The session must be restarted after the change takes effect.
 
-Doris requires the metadata's timestamp accuracy to be within 5000ms. To ensure consistent time across all nodes in the cluster and avoid metadata inconsistencies, you need to synchronize clocks across all machines using the NTP service.
+## Install NTP Service
 
-Use the following commands to start and enable the NTP service:
+<!-- Knowledge type: Operation steps -->
+
+Ensure that the clocks of all machines in the cluster are synchronized. The metadata time accuracy must be < 5000ms.
 
 ```bash
 sudo systemctl start ntpd.service

@@ -1,7 +1,7 @@
 ---
 {
     "title": "IBM Db2 JDBC Catalog",
-    "language": "zh-CN",
+    "language": "en",
     "description": "The Doris JDBC Catalog supports connecting to IBM Db2 databases through the standard JDBC interface."
 }
 ---

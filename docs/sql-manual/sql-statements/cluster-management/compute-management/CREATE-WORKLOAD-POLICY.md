@@ -1,54 +1,73 @@
 ---
 {
-    "title": "CREATE WORKLOAD GROUP | Compute Management",
+    "title": "CREATE WORKLOAD POLICY",
     "language": "en",
-    "description": "This statement is used to create a workload group. Workload groups enable the isolation of cpu resources and memory resources on a single be.",
-    "sidebar_label": "CREATE WORKLOAD GROUP"
+    "description": "Create a Workload Policy, which is used to execute the corresponding action on a query when it satisfies certain conditions."
 }
 ---
 
-# CREATE WORKLOAD GROUP
-
 ## Description
 
-This statement is used to create a workload group. Workload groups enable the isolation of cpu resources and memory resources on a single be.
+Create a Workload Policy, which is used to execute the corresponding action on a query when it satisfies certain conditions.
 
-grammar:
+## Syntax
 
 ```sql
-CREATE WORKLOAD GROUP [IF NOT EXISTS] "rg_name"
-PROPERTIES (
-    property_list
-);
+CREATE WORKLOAD POLICY [ IF NOT EXISTS ] <workload_policy_name>
+CONDITIONS(<conditions>) ACTIONS(<actions>)
+[ PROPERTIES (<properties>) ]
 ```
 
-illustrate:
+## Required Parameters
 
-Properties supported by property_list:
+1. `<workload_policy_name>`: The name of the Workload Policy.
 
-* cpu_share: Required, used to set how much cpu time the workload group can acquire, which can achieve soft isolation of cpu resources. cpu_share is a relative value indicating the weight of cpu resources available to the running workload group. For example, if a user creates 3 workload groups rg-a, rg-b and rg-c with cpu_share of 10, 30 and 40 respectively, and at a certain moment rg-a and rg-b are running tasks while rg-c has no tasks, then rg-a can get (10 / (10 + 30)) = 25% of the cpu resources while workload group rg-b can get 75% of the cpu resources. If the system has only one workload group running, it gets all the cpu resources regardless of the value of its cpu_share.
+2. `<conditions>`
+    - be_scan_rows: The number of rows scanned by a SQL within a single BE process. If the SQL is executed with multiple concurrencies on the BE, this is the cumulative value of the concurrent executions.
+    - be_scan_bytes: The number of bytes scanned by a SQL within a single BE process. If the SQL is executed with multiple concurrencies on the BE, this is the cumulative value of the concurrent executions, in bytes.
+    - query_time: The execution time of a SQL on a single BE process, in milliseconds.
+    - query_be_memory_bytes: Supported since version 2.1.5. The memory usage of a SQL within a single BE process. If the SQL is executed with multiple concurrencies on the BE, this is the cumulative value of the concurrent executions, in bytes.
 
-* memory_limit: Required, set the percentage of be memory that can be used by the workload group. The absolute value of the workload group memory limit is: `physical_memory * mem_limit * memory_limit`, where mem_limit is a be configuration item. The total memory_limit of all workload groups in the system must not exceed 100%. Workload groups are guaranteed to use the memory_limit for the tasks in the group in most cases. When the workload group memory usage exceeds this limit, tasks in the group with larger memory usage may be canceled to release the excess memory, refer to enable_memory_overcommit.
+3. `<actions>`
+    - set_session_variable: This action executes a `set_session_variable` statement. A single Policy may contain multiple `set_session_variable` actions, allowing one Policy to execute multiple session-variable updates.
+    - cancel_query: Cancel the query.
 
-* enable_memory_overcommit: Optional, enable soft memory isolation for the workload group, default is false. if set to false, the workload group is hard memory isolated and the tasks with the largest memory usage will be canceled immediately after the workload group memory usage exceeds the limit to release the excess memory. if set to true, the workload group is hard memory isolated and the tasks with the largest memory usage will be canceled immediately after the workload group memory usage exceeds the limit to release the excess memory. if set to true, the workload group is softly isolated, if the system has free memory resources, the workload group can continue to use system memory after exceeding the memory_limit limit, and when the total system memory is tight, it will cancel several tasks in the group with the largest memory occupation, releasing part of the excess memory to relieve the system memory pressure. It is recommended that when this configuration is enabled for a workload group, the total memory_limit of all workload groups should be less than 100%, and the remaining portion should be used for workload group memory overcommit.
+## Optional Parameters
 
-## Example
+1. `<properties>`
+    - enabled: Can be true or false; default is true. true means the policy is enabled; false means it is disabled.
+    - priority: A positive integer in the range 0 to 100; default is 0. Higher values mean higher priority. When multiple policies match a query, the one with the highest priority is selected.
+    - workload_group: A policy can be bound to one workload group, meaning that the policy only takes effect for that workload group. Defaults to empty, which means it applies to all queries.
 
-1. Create a workload group named g1:
+        Because a workload group itself belongs to a compute group, the value of this property must follow these rules:
 
-   ```sql
-    create workload group if not exists g1
-    properties (
-        "cpu_share"="10",
-        "memory_limit"="30%",
-        "enable_memory_overcommit"="true"
-    );
-   ```
+        - **Cloud (storage-compute decoupled) mode**: The fully qualified form `<compute_group>.<workload_group>` is required, e.g. `'workload_group'='compute_group_a.wg1'`. The bare `<workload_group>` form, more than one `.`, or empty segments (such as `.wg1` or `wg1.`) are rejected with: `workload_group must be '<compute_group>.<workload_group>' in cloud mode`.
+        - **Non-cloud (storage-compute coupled) mode**: Two forms are accepted:
+            - `<workload_group>`: defaults the binding to the workload group with the same name under the default resource group (`default`).
+            - `<resource_group>.<workload_group>`: explicitly specifies the resource group. The prefix here actually refers to a resource group (Tag); the grammar is shared with cloud mode purely for consistency.
+            
+            More than one `.` or empty segments are likewise rejected with: `workload_group must be '<workload_group>' or '<resource_group>.<workload_group>' in non-cloud mode`.
 
-## Keywords
+## Access Control Requirements
 
-CREATE, WORKLOAD, GROUP
+You must have at least ADMIN_PRIV permissions.
 
+## Examples
 
+1. Create a Workload Policy that cancels any query running longer than 3 seconds:
 
+    ```sql
+    create workload policy kill_big_query conditions(query_time > 3000) actions(cancel_query)
+    ```
 
+2. Create a Workload Policy that is disabled by default:
+
+    ```sql
+    create workload policy kill_big_query conditions(query_time > 3000) actions(cancel_query) properties('enabled'='false')
+    ```
+
+3. Create a policy that only takes effect on workload group `wg1` under compute group `compute_group_a` in cloud mode (note the fully qualified form):
+
+    ```sql
+    create workload policy kill_big_query conditions(query_time > 3000) actions(cancel_query) properties('workload_group'='compute_group_a.wg1')
+    ```

@@ -36,7 +36,7 @@ CREATE CATALOG iceberg_catalog PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = 'hadoop',
     'warehouse' = 's3://bucket/dir/key',
-    's3.endpoint' = 's3.us-east-1.amazonaws.com',
+    's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.access_key' = 'ak',
     's3.secret_key' = 'sk'
 );
@@ -53,8 +53,8 @@ In addition to the property set specific to each data catalog, this section intr
 | `include_database_list` | Specifies multiple databases to synchronize, separated by `,`. By default, all databases are synchronized. Database names are case-sensitive. When the external data source has a large number of databases but only a few need to be accessed, this parameter can be used to avoid synchronizing a large amount of metadata. | `'include_database_list' = 'db1,db2'` |
 | `exclude_database_list` | Specifies multiple databases to exclude from synchronization, separated by `,`. By default, no filtering is applied and all databases are synchronized. Database names are case-sensitive. Applicable to the same scenario as above, but for inversely excluding databases that do not need to be accessed. In case of conflict, `exclude` takes precedence over `include`. | `'exclude_database_list' = 'db1,db2'` |
 | `include_table_list` | Specifies multiple tables to synchronize, in `db.tbl` format, separated by `,`. When set, listing tables under a database will only return the specified tables, rather than fetching the full table list from the remote metadata service. Applicable when the external data source has a large number of tables and fetching the full table list may time out. | `'include_table_list' = 'db1.tbl1,db1.tbl2,db2.tbl3'` |
-| `lower_case_table_names` | Catalog-level table name case control. See the [Table Name Case Sensitivity](#table-name-case-sensitivity-lower_case_table_names) section below for values and their meanings. The default value inherits from the global variable `lower_case_table_names`. | `'lower_case_table_names' = '1'` |
-| `lower_case_database_names` | Catalog-level database name case control. See the [Database Name Case Sensitivity](#database-name-case-sensitivity-lower_case_database_names) section below for values and their meanings. The default value is `0` (case-sensitive). | `'lower_case_database_names' = '2'` |
+| `lower_case_table_names` | Catalog-level table name case control. See the [Table Name Case Sensitivity](#table-name-case-sensitivity) section below for values and their meanings. The default value inherits from the global variable `lower_case_table_names`. | `'lower_case_table_names' = '1'` |
+| `lower_case_database_names` | Catalog-level database name case control. See the [Database Name Case Sensitivity](#database-name-case-sensitivity) section below for values and their meanings. The default value is `0` (case-sensitive). | `'lower_case_database_names' = '2'` |
 
 ### Specifying Table List
 
@@ -184,7 +184,7 @@ mysql> SHOW CATALOGS;
 +-----------+-----------------+----------+-----------+-------------------------+---------------------+------------------------+
 | CatalogId | CatalogName     | Type     | IsCurrent | CreateTime              | LastUpdateTime      | Comment                |
 +-----------+-----------------+----------+-----------+-------------------------+---------------------+------------------------+
-|     10024 | iceberg_catalog | hms      | yes       | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
+|     10024 | iceberg_catalog | iceberg  | yes       | 2023-12-25 16:11:41.687 | 2023-12-25 20:43:18 | NULL                   |
 |         0 | internal        | internal |           | NULL                    | NULL                | Doris internal catalog |
 +-----------+-----------------+----------+-----------+-------------------------+---------------------+------------------------+
 ```

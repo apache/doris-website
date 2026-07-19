@@ -106,7 +106,7 @@ Doris provides a cache warming feature that allows users to actively pull data f
 - **Table Data Warming**: Specify to warm the data of Table A to the new compute group.
 - **Partition Data Warming**: Specify to warm the data of partition `p1` of Table A to the new compute group.
 
-For specific usage, please refer to the[WARM-UP SQL documentation](#).
+For specific usage, please refer to the [WARM-UP SQL documentation](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md).
 
 
 ## Cache Cleanup

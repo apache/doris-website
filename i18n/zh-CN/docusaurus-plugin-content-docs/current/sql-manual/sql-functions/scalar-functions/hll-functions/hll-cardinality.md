@@ -28,6 +28,11 @@ HLL_CARDINALITY(<hll>)
 
 ## 举例
 
+<!-- setup-sql
+CREATE TABLE test_uv (id INT, uv_set HLL HLL_UNION) AGGREGATE KEY(id) DISTRIBUTED BY HASH(id) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO test_uv VALUES (1, hll_hash('a')), (1, hll_hash('b')), (1, hll_hash('c'));
+-->
+
 ```sql
 select HLL_CARDINALITY(uv_set) from test_uv;
 ```

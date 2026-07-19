@@ -16,11 +16,11 @@ Doris determines the type used to store integer literals based on the input valu
 
 | Value Range         | Type     |
 | :------------------ | :------- |
-| -2^8 to 2^8 - 1     | TINYINT  |
-| -2^16 to 2^16 - 1   | SMALLINT |
-| -2^32 to 2^32 - 1   | INT      |
-| -2^64 to 2^64 - 1   | BIGINT   |
-| -2^128 to 2^128 - 1 | LARGEINT |
+| -2^7 to 2^7 - 1     | TINYINT  |
+| -2^15 to 2^15 - 1   | SMALLINT |
+| -2^31 to 2^31 - 1   | INT      |
+| -2^63 to 2^63 - 1   | BIGINT   |
+| -2^127 to 2^127 - 1 | LARGEINT |
 
 ## Fixed and Floating Point Numeric Literals
 

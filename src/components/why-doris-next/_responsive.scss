@@ -1,0 +1,149 @@
+// ─── Responsive tokens & mixins ──────────────────────────────────────────────
+//
+// Shared by the Why-Doris page (CompareNext + sections).
+//
+// Usage from a section file:
+//   @use '../responsive' as r;
+//
+//   .cmp-why {
+//       padding: r.fluid(24px, 40px);                   // fluid spacing
+//
+//       @include r.down('lg')  { padding: 24px; }       // ≤ 996px
+//       @include r.down('sm')  { padding: 16px; }       // ≤ 640px
+//       @include r.up('xl')    { padding: 56px; }       // ≥ 1280px
+//       @include r.between('md','xl') { ... }           // 768–1279px
+//   }
+//
+// Breakpoints are deliberately aligned with the codebase's existing
+// 996px / 1280px usage so retrofitting doesn't change visual behavior.
+
+@use 'sass:map';
+@use 'sass:math';
+
+// ── Breakpoints ──────────────────────────────────────────────────────────────
+// Names follow the Bootstrap/Tailwind convention so they read naturally,
+// but the values are tuned to this project (note: lg is 996, not 1024).
+
+$breakpoints: (
+    'xs': 480px,   // small phones
+    'sm': 640px,   // large phones / small tablets
+    'md': 768px,   // tablets
+    'lg': 996px,   // small laptops  ← existing project breakpoint
+    'xl': 1280px,  // laptops        ← existing project breakpoint
+    'xxl': 1440px, // desktop (container cap)
+);
+
+@function bp($name) {
+    @if not map.has-key($breakpoints, $name) {
+        @error "Unknown breakpoint `#{$name}`. Available: #{map.keys($breakpoints)}.";
+    }
+    @return map.get($breakpoints, $name);
+}
+
+// ── Breakpoint mixins ────────────────────────────────────────────────────────
+// `down('lg')`  → @media (max-width: 995.98px)        — desktop-first
+// `up('lg')`    → @media (min-width: 996px)           — mobile-first
+// `between('md','lg')` → @media (min: 768px) and (max: 995.98px)
+//
+// We subtract 0.02px on max-width to avoid the well-known overlap bug where
+// `max-width: 996px` and `min-width: 996px` both match at exactly 996px.
+
+@mixin down($name) {
+    @media (max-width: #{bp($name) - 0.02px}) {
+        @content;
+    }
+}
+
+@mixin up($name) {
+    @media (min-width: #{bp($name)}) {
+        @content;
+    }
+}
+
+@mixin between($lower, $upper) {
+    @media (min-width: #{bp($lower)}) and (max-width: #{bp($upper) - 0.02px}) {
+        @content;
+    }
+}
+
+// ── Fluid sizing helper ──────────────────────────────────────────────────────
+// `fluid(min, max)` returns a `clamp()` that scales linearly between two
+// viewport widths. Defaults to 640px → 1440px (sm → xxl), matching where
+// most of our layout shifts happen.
+//
+// Example:
+//   font-size: r.fluid(28px, 48px);             // 28 at ≤640, 48 at ≥1440
+//   gap:       r.fluid(16px, 32px, 768px, 1280px);
+
+@function strip-unit($v) {
+    @return math.div($v, ($v * 0 + 1));
+}
+
+@function fluid($min, $max, $min-vw: 640px, $max-vw: 1440px) {
+    $min-n:    strip-unit($min);
+    $max-n:    strip-unit($max);
+    $min-vw-n: strip-unit($min-vw);
+    $max-vw-n: strip-unit($max-vw);
+
+    $slope: math.div($max-n - $min-n, $max-vw-n - $min-vw-n);
+    $intercept: $min-n - $slope * $min-vw-n;
+
+    // Express the linear part in `vw` so it scales with the viewport.
+    $vw: $slope * 100;
+
+    @return clamp(#{$min}, #{$intercept}px + #{$vw}vw, #{$max});
+}
+
+// ── Container helper ─────────────────────────────────────────────────────────
+// Centered max-width with responsive horizontal padding. Use on any block
+// that should align with the page's content column.
+
+@mixin container($max: 1440px) {
+    width: 100%;
+    max-width: $max;
+    margin-inline: auto;
+    padding-inline: clamp(20px, 4vw, 56px);
+}
+
+// ── Touch-target helper ──────────────────────────────────────────────────────
+// Ensures interactive elements meet the 44×44px minimum on touch devices
+// without inflating their visual size on desktop.
+
+@mixin tap-target($min: 44px) {
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 50% 50% 50% 50%;
+        min-width: $min;
+        min-height: $min;
+        transform: translate(-50%, -50%);
+        // Only extend the hit area on coarse pointers (touch).
+        @media (hover: none) and (pointer: coarse) {
+            inset: auto;
+            width: 100%;
+            height: 100%;
+            min-width: $min;
+            min-height: $min;
+        }
+    }
+}
+
+// ── Reduced-motion guard ─────────────────────────────────────────────────────
+// Wrap any animation/transition that should be silenced when the user has
+// `prefers-reduced-motion: reduce`.
+//
+// @include r.motion-safe { transition: transform 400ms ease; }
+
+@mixin motion-safe {
+    @media (prefers-reduced-motion: no-preference) {
+        @content;
+    }
+}
+
+@mixin motion-reduce {
+    @media (prefers-reduced-motion: reduce) {
+        @content;
+    }
+}

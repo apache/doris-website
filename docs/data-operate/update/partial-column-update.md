@@ -1,169 +1,195 @@
 ---
 {
-    "title": "Partial Column Update",
+    "title": "Column Update",
     "language": "en",
-    "description": "This document explains how to perform partial column updates in Doris for Unique Key Model and Aggregate Key Model tables."
+    "description": "Apache Doris partial column update guide: efficiently update specified columns in the Unique Key Model and Aggregate Key Model, covering Stream Load, INSERT INTO, Flink Connector, and flexible column update scenarios."
 }
 ---
 
-Partial column update allows you to update specific fields in a table without modifying all fields. This document explains how to perform partial column updates for both Unique Key Model and Aggregate Key Model tables.
+<!-- Knowledge type: Operations guide + Feature description -->
+<!-- Use cases: Real-time field updates / Multi-source wide-table joining / Data correction -->
 
-## Overview
+In data update workflows, business requirements often call for modifying only a subset of fields in a row, for example:
 
-Partial column update is a feature that enables you to update only specific columns in a table row, rather than updating the entire row. This is particularly useful for:
+- **Real-time, high-frequency field updates**: a user-tag table needs to keep the latest behavior fields up to date in real time so that ads and recommendation systems can perform real-time analysis and decision making.
+- **Multi-source wide-table joining**: data from several source tables is joined by primary key into one wide table, where each source table contributes only some of the columns.
+- **Data correction**: a batch operation corrects the values of certain fields in some records while leaving the other fields unchanged.
 
-- Real-time dynamic column updates, requiring frequent updates of specific fields in the table. For example, updating fields related to the latest user behavior in a user tag table for real-time analysis and decision-making in advertising/recommendation systems.
-- Merging multiple source tables into one large wide table.
-- Data correction.
+A traditional `UPDATE` statement usually has to read the full row first and then write the full row back. This "read-modify-write" transaction performs poorly under high-volume writes and cannot meet high-throughput requirements.
 
-## Partial Column Update for Unique Key Model
+**The partial column update capability provided by Doris** allows you to write only the columns that need to change at load time, without first reading the full row, which significantly improves update efficiency. This document describes how to perform partial column updates on the **Unique Key Model** and the **Aggregate Key Model**.
 
-Doris provides a feature to directly insert or update partial column data in the unique key model load update, bypassing the need to read the entire row first, thus significantly improving update efficiency.
+## Capability Overview
+
+<!-- Knowledge type: Capability definition -->
+
+| Data model | Implementation | Write performance | Query performance | Use cases |
+| --- | --- | --- | --- | --- |
+| Unique Key (Merge-on-Write) | Fill in the full row at write time | Medium (affected by IO) | High | Real-time updates, scenarios sensitive to query performance |
+| Aggregate Key (`REPLACE_IF_NOT_NULL`) | Aggregate at query time | High (comparable to a normal load) | Lower (aggregate queries are 5 to 10 times slower than MoW) | Scenarios sensitive to write throughput where lower query performance is acceptable |
+
+## Column Update on the Unique Key Model
+
+<!-- Knowledge type: Operating procedure -->
+
+During a load on the Unique Key Model, Doris can directly insert or update partial column data without first reading the full row, which significantly improves update efficiency.
 
 :::caution Note
 
-1. Version 2.0 only supports partial column updates in the Merge-on-Write implementation of the Unique Key.
-2. Starting from version 2.0.2, partial column updates are supported using INSERT INTO.
-3. Partial column updates are not supported on tables with synchronized materialized views.
-4. Partial column updates are not allowed on tables doing schema change.
+1. In version 2.0, partial column updates are supported only in the Merge-on-Write implementation of Unique Key.
+2. Starting from version 2.0.2, you can use `INSERT INTO` for partial column updates.
+3. Partial column updates are not supported on tables that have synchronous materialized views.
+4. Partial column updates are not supported on tables that are undergoing a Schema Change.
+
 :::
 
-### Usage Example
+### Example
 
-Assume there is an order table `order_tbl` in Doris, where the order id is the Key column, and the order status and order amount are the Value columns. The data status is as follows:
+Assume Doris contains an order table `order_tbl`, where the order ID is the Key column and the order status and order amount are Value columns. The current data is as follows:
 
-| Order id | Order Amount | Order Status |
-| -------- | -------------| -------------|
-| 1        | 100          | Pending Payment |
+| Order ID | Order amount | Order status |
+| --- | --- | --- |
+| 1 | 100 | Pending payment |
 
 ```sql
-+----------+--------------+--------------+
-| order_id | order_amount | order_status |
-+----------+--------------+--------------+
-| 1        |          100 | Pending Payment |
-+----------+--------------+--------------+
++----------+--------------+------------------+
+| order_id | order_amount | order_status     |
++----------+--------------+------------------+
+| 1        |          100 | Pending payment  |
++----------+--------------+------------------+
 1 row in set (0.01 sec)
 ```
 
-After the user clicks to pay, the Doris system needs to change the order status of the order with order id '1' to 'Pending Shipment'.
+When the user clicks pay, the order status of order ID `1` needs to change to `Pending shipment` without affecting the order amount field.
 
-### Partial Column Update Using Load Methods
+### Partial Column Updates Through Loading
 
-#### StreamLoad/BrokerLoad/RoutineLoad
+#### Stream Load / Broker Load / Routine Load
 
 Prepare the following CSV file:
 
-```
-1,Pending Shipment
+```text
+1,Pending shipment
 ```
 
-Add the following header during load:
+Add the following header during the load:
 
-```sql
+```text
 partial_columns:true
 ```
 
-Specify the columns to be loaded in `columns` (must include all key columns). Below is an example of Stream Load:
+In the `columns` parameter, specify the columns to load (**all Key columns must be included**, otherwise the update cannot be performed). The following is a Stream Load example:
 
-```sql
-curl --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:order_id,order_status" -T /tmp/update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
+```shell
+curl --location-trusted -u root: \
+    -H "partial_columns:true" \
+    -H "column_separator:," \
+    -H "columns:order_id,order_status" \
+    -T /tmp/update.csv \
+    http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
 ```
 
 #### INSERT INTO
 
-In all data models, the default behavior of `INSERT INTO` when given partial columns is to write the entire row. To prevent misuse, in the Merge-on-Write implementation, `INSERT INTO` maintains the semantics of whole row UPSERT by default. To enable partial column updates, set the following session variable:
+Across all data models, the default behavior of `INSERT INTO` with a subset of columns is a full-row write. To prevent misuse, in the Merge-on-Write implementation `INSERT INTO` still defaults to full-row UPSERT semantics. To enable partial column update semantics, first set the following session variable:
 
 ```sql
 SET enable_unique_key_partial_update=true;
-INSERT INTO order_tbl (order_id, order_status) VALUES (1, 'Pending Shipment');
+INSERT INTO order_tbl (order_id, order_status) VALUES (1, 'Pending shipment');
 ```
 
 #### Flink Connector
 
-If using Flink Connector, add the following configuration:
+When using the Flink Connector, add the following configuration:
 
-```sql
-'sink.properties.partial_columns' = 'true',
+```text
+'sink.properties.partial_columns' = 'true'
 ```
 
-Specify the columns to be loaded in `sink.properties.column` (must include all key columns).
+Specify the columns to load in `sink.properties.column` (**all Key columns must be included**, otherwise the update cannot be performed).
 
 ### Update Result
 
 The result after the update is as follows:
 
 ```sql
-+----------+--------------+--------------+
-| order_id | order_amount | order_status |
-+----------+--------------+--------------+
-| 1        |          100 | Pending Shipment |
-+----------+--------------+--------------+
++----------+--------------+-------------------+
+| order_id | order_amount | order_status      |
++----------+--------------+-------------------+
+| 1        |          100 | Pending shipment  |
++----------+--------------+-------------------+
 1 row in set (0.01 sec)
 ```
 
-### Usage Notes
+### Notes
 
-Since the Merge-on-Write implementation needs to complete the entire row of data during writing to ensure optimal query performance, using it for partial column updates may decrease partial load performance.
+<!-- Knowledge type: Performance tuning -->
 
-Performance optimization suggestions:
+The Merge-on-Write implementation has to fill in the full row at write time to guarantee optimal query performance. As a result, partial column updates with Merge-on-Write reduce load performance to some extent.
 
-- Use SSDs equipped with NVMe or high-speed SSD cloud disks, as completing data will read a large amount of historical data, generating high read IOPS and throughput.
-- Enabling row storage can reduce the IOPS generated when completing data, significantly improving load performance. Enable row storage by setting the following property when creating a table:
+**Recommendations for write performance optimization:**
 
-```Plain
-"store_row_column" = "true"
-```
+- **Use high-performance SSDs**: NVMe SSDs or high-speed cloud SSDs are recommended. Filling in the row reads a large amount of historical data, which produces high read IOPS and read throughput.
+- **Enable row store**: this can significantly reduce the IOPS produced when filling in rows, and noticeably improves load performance. Enable it at table creation with the following property:
 
-Currently, all rows in the same batch data writing task (whether a load task or `INSERT INTO`) can only update the same columns. To update data with different columns, write in different batches.
+    ```text
+    "store_row_column" = "true"
+    ```
 
-### Flexible Partial Column Updates
+**Batch constraint:** all rows in the same batch write task (whether a load task or `INSERT INTO`) can update only the same set of columns. To update different columns, split the data into multiple batches. This constraint can be removed with the flexible column update feature described below.
 
-Previously, Doris's partial update feature required that every row in an import update the same columns. Now, Doris supports a more flexible partial update method that allows each row in a single import to update different columns (supported since 3.1.0).
+### Flexible Column Update
 
-:::caution Note:
+<!-- Knowledge type: Feature description -->
+<!-- Use cases: Real-time CDC sync / Scenarios where the updated columns differ row by row -->
 
-1. Flexible column updates are supported by Stream Load, Routine Load, and tools using Stream Load (e.g. Doris-Flink-Connector).
-2. The import file must be in JSON format when using flexible column updates.
+Previously, the partial column update feature in Doris required all rows in a single load to update the same set of columns. **Starting from version 3.1.0**, Doris supports a more flexible update method: **each row in a single load can update a different set of columns**.
+
+:::caution Note
+
+1. Flexible column update supports Stream Load, Routine Load, and any tool that uses Stream Load as the underlying load method (such as the Doris Flink Connector).
+2. The load file must be in JSON format when using flexible column update.
+
 :::
 
-#### Applicable Scenarios
+#### Use Cases
 
-When using CDC to synchronize data from a database system to Doris in real-time, the records output by the source system may not contain complete row data, but only the values of the primary keys and the updated columns. In such cases, the columns updated in a batch of data within a time window may differ. Flexible column updates can be used to import data into Doris.
+When CDC is used to synchronize data from another system to Doris in real time, the records emitted by the source system may not be full rows but only the primary key plus the updated columns. In this case, within a time window the rows in a batch may each update different columns, and flexible column update can be used to load such data into Doris.
 
 #### Usage
 
-**Enabling Flexible Column Updates for Existing Tables**
+##### 1. Enable Flexible Column Update
 
-For existing Merge-On-Write tables created in old versions of Doris, after upgrading, you can enable flexible partial updates using the command: `ALTER TABLE db1.tbl1 ENABLE FEATURE "UPDATE_FLEXIBLE_COLUMNS";`. After executing this command, if the result of `show create table db1.tbl1` includes `"enable_unique_key_skip_bitmap_column" = "true"`, the feature has been successfully enabled. Ensure that the target table has the light-schema-change feature enabled beforehand.
+**New tables:** specify the following properties at table creation to enable Merge-on-Write and add the `bitmap` hidden column required by flexible column update:
 
-**Using Flexible Column Updates for New Tables**
-
-For new tables, to use the flexible column update feature, specify the following table properties when creating the table to enable Merge-on-Write and include the required hidden bitmap column for flexible column updates:
-
-```Plain
+```text
 "enable_unique_key_merge_on_write" = "true"
 "enable_unique_key_skip_bitmap_column" = "true"
 ```
 
-**StreamLoad**
+**Existing tables:** for an existing Merge-on-Write table created in an older Doris version, you can enable flexible column update after upgrading Doris with the following statement:
 
-When using Stream Load, add the following header:
-
-```Plain
-unique_key_update_mode:UPDATE_FLEXIBLE_COLUMNS
+```sql
+ALTER TABLE db1.tbl1 ENABLE FEATURE "UPDATE_FLEXIBLE_COLUMNS";
 ```
 
-**Flink Doris Connector**
+After execution, run `SHOW CREATE TABLE db1.tbl1`. If the result contains `"enable_unique_key_skip_bitmap_column" = "true"`, the feature has been enabled successfully.
 
-If using the Flink Doris Connector, add the following configuration:
+:::tip
+Before using this approach on an existing table, make sure light-schema-change is enabled on the target table.
+:::
 
-```Plain
-'sink.properties.unique_key_update_mode' = 'UPDATE_FLEXIBLE_COLUMNS'
-```
+##### 2. Enable in Load Tasks
 
-**Routine Load**
+The configuration for each load method is as follows:
 
-When using Routine Load, add the following property in the `PROPERTIES` clause:
+| Load method | Configuration item | Value |
+| --- | --- | --- |
+| Stream Load | header | `unique_key_update_mode:UPDATE_FLEXIBLE_COLUMNS` |
+| Flink Doris Connector | sink property | `'sink.properties.unique_key_update_mode' = 'UPDATE_FLEXIBLE_COLUMNS'` |
+| Routine Load | `PROPERTIES` | `"unique_key_update_mode" = "UPDATE_FLEXIBLE_COLUMNS"` |
+
+**Full Routine Load example:**
 
 ```sql
 CREATE ROUTINE LOAD db1.job1 ON tbl1
@@ -178,51 +204,56 @@ FROM KAFKA (
 );
 ```
 
-You can also modify the update mode of an existing Routine Load job using `ALTER ROUTINE LOAD`:
+You can also use `ALTER ROUTINE LOAD` to change the update mode of an existing Routine Load job:
 
 ```sql
--- Pause the job first
+-- 1. Pause the job
 PAUSE ROUTINE LOAD FOR db1.job1;
 
--- Alter the update mode
+-- 2. Change the update mode
 ALTER ROUTINE LOAD FOR db1.job1
 PROPERTIES (
     "unique_key_update_mode" = "UPDATE_FLEXIBLE_COLUMNS"
 );
 
--- Resume the job
+-- 3. Resume the job
 RESUME ROUTINE LOAD FOR db1.job1;
 ```
 
-:::caution Routine Load Limitations
-When using `UPDATE_FLEXIBLE_COLUMNS` mode with Routine Load, the following restrictions apply:
-- The data format must be JSON (`"format" = "json"`)
-- The `jsonpaths` property cannot be specified
-- The `fuzzy_parse` option cannot be enabled
-- The `COLUMNS` clause cannot be used
-- The `WHERE` clause cannot be used
+:::caution Routine Load restrictions
+
+When using `UPDATE_FLEXIBLE_COLUMNS` mode in Routine Load, the following restrictions apply:
+
+- The data format must be JSON (`"format" = "json"`).
+- The `jsonpaths` property cannot be specified.
+- The `fuzzy_parse` option cannot be enabled.
+- The `COLUMNS` clause cannot be used.
+- The `WHERE` clause cannot be used.
+
 :::
 
-#### Example
+#### Full Example
 
-Assuming the following table:
+**Step 1: Create a test table**
 
 ```sql
 CREATE TABLE t1 (
-  `k` int(11) NULL, 
-  `v1` BIGINT NULL,
-  `v2` BIGINT NULL DEFAULT "9876",
-  `v3` BIGINT NOT NULL,
-  `v4` BIGINT NOT NULL DEFAULT "1234",
-  `v5` BIGINT NULL
-) UNIQUE KEY(`k`) DISTRIBUTED BY HASH(`k`) BUCKETS 1
-PROPERTIES(
-"replication_num" = "3",
-"enable_unique_key_merge_on_write" = "true",
-"enable_unique_key_skip_bitmap_column" = "true");
+    `k`  INT NULL,
+    `v1` BIGINT NULL,
+    `v2` BIGINT NULL DEFAULT "9876",
+    `v3` BIGINT NOT NULL,
+    `v4` BIGINT NOT NULL DEFAULT "1234",
+    `v5` BIGINT NULL
+) UNIQUE KEY(`k`)
+DISTRIBUTED BY HASH(`k`) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "3",
+    "enable_unique_key_merge_on_write" = "true",
+    "enable_unique_key_skip_bitmap_column" = "true"
+);
 ```
 
-The original data in the table is:
+**Step 2: Existing data in the table**
 
 ```sql
 MySQL root@127.1:d1> select * from t1;
@@ -238,11 +269,10 @@ MySQL root@127.1:d1> select * from t1;
 +---+----+----+----+----+----+
 ```
 
-Now, updating some fields using flexible column updates:
+**Step 3: Prepare flexible column update data**
 
-```shell
-$ cat test1.json
-```
+Each row can update a different set of columns:
+
 ```json
 {"k": 0, "__DORIS_DELETE_SIGN__": 1}
 {"k": 1, "v1": 10}
@@ -254,17 +284,21 @@ $ cat test1.json
 {"k": 2, "v4": 222}
 {"k": 1, "v2": 111, "v3": 111}
 ```
+
+**Step 4: Load through Stream Load**
+
 ```shell
 curl --location-trusted -u root: \
--H "strict_mode:false" \
--H "format:json" \
--H "read_json_by_line:true" \
--H "unique_key_update_mode:UPDATE_FLEXIBLE_COLUMNS" \
--T test1.json \
--XPUT http://<host>:<http_port>/api/d1/t1/_stream_load
+    -H "Expect:100-continue" \
+    -H "strict_mode:false" \
+    -H "format:json" \
+    -H "read_json_by_line:true" \
+    -H "unique_key_update_mode:UPDATE_FLEXIBLE_COLUMNS" \
+    -T test1.json \
+    -XPUT http://<host>:<http_port>/api/d1/t1/_stream_load
 ```
 
-After the update, the data in the table is:
+**Step 5: Check the update result**
 
 ```sql
 MySQL root@127.1:d1> select * from t1;
@@ -280,145 +314,167 @@ MySQL root@127.1:d1> select * from t1;
 +---+-----+------+-----+------+--------+
 ```
 
-#### Limitations and Considerations
+#### Restrictions and Notes
 
-1. Similar to previous partial updates, flexible column updates require that each row of imported data include all key columns. Rows not meeting this requirement will be filtered out and counted in filter rows. If the number of filtered rows exceeds the `max_filter_ratio` threshold for this import, the entire import will fail, and filtered data will generate an error log.
+1. As with normal partial column updates, flexible column update requires every row to contain **all Key columns**. Rows that do not satisfy this requirement are filtered and counted in `filter rows`. When `filtered rows` exceeds the upper bound allowed by the load's `max_filter_ratio`, the entire load fails. Each filtered row is recorded in the error log.
+2. Among the key-value pairs in a JSON object, only those whose Key matches a column name in the target table take effect. The rest are ignored. In addition, key-value pairs whose Key is `__DORIS_VERSION_COL__`, `__DORIS_ROW_STORE_COL__`, or `__DORIS_SKIP_BITMAP_COL__` are also ignored.
+3. Flexible column update is not supported on tables containing Variant columns.
+4. Flexible column update is not supported on tables that have synchronous materialized views.
+5. When using flexible column update, the following load parameters **cannot** be specified or enabled:
+    - `merge_type`
+    - `delete`
+    - `fuzzy_parse`
+    - `columns`
+    - `jsonpaths`
+    - `hidden_columns`
+    - `function_column.sequence_col`
+    - `sql`
+    - `memtable_on_sink_node` move-forward
+    - `group_commit`
+    - `where`
 
-2. In flexible partial update loads, key-value pairs in each JSON object are only valid if the key matches a column name in the target table. Key-value pairs that do not meet this requirement will be ignored. Pairs with keys `__DORIS_VERSION_COL__`, `__DORIS_ROW_STORE_COL__`, or `__DORIS_SKIP_BITMAP_COL__` will also be ignored.
+### Behavior Control for Newly Inserted Rows
 
-3. Flexible partial updates are not supported on tables with Variant columns.
+<!-- Knowledge type: Configuration parameter -->
 
-4. Flexible partial updates are not supported on tables with synchronous materialized views.
+The session variable or load property `partial_update_new_key_behavior` controls the behavior of **newly inserted rows** in partial column updates and flexible column updates.
 
-5. When using flexible partial updates, the following import parameters cannot be specified or enabled:
-    - The `merge_type` parameter cannot be specified.
-    - The `delete` parameter cannot be specified.
-    - The `fuzzy_parse` parameter cannot be enabled.
-    - The `columns` parameter cannot be specified.
-    - The `jsonpaths` parameter cannot be specified.
-    - The `hidden_columns` parameter cannot be specified.
-    - The `function_column.sequence_col` parameter cannot be specified.
-    - The `sql` parameter cannot be specified.
-    - The `memtable_on_sink_node` option cannot be enabled.
-    - The `group_commit` parameter cannot be specified.
-    - The `where` parameter cannot be specified.
+| Value | Behavior |
+| --- | --- |
+| `ERROR` | The Key of every row must already exist in the table, otherwise the load fails. |
+| `APPEND` | Both updating existing rows and inserting new rows whose Key does not exist are allowed. |
 
-### Handling New Rows in Partial Column Updates
+#### Example Table Schema
 
-The session variable or import property `partial_update_new_key_behavior` controls the behavior when inserting new rows during partial column updates.
-
-When `partial_update_new_key_behavior=ERROR`, each inserted row must have a key that already exists in the table. When `partial_update_new_key_behavior=APPEND`, partial column updates can update existing rows with matching keys or insert new rows with keys that do not exist in the table.
-
-For example, consider the following table structure:
 ```sql
-CREATE TABLE user_profile
-(
-  id               INT,
-  name             VARCHAR(10),
-  age              INT,
-  city             VARCHAR(10),
-  balance          DECIMAL(9, 0),
-  last_access_time DATETIME
+CREATE TABLE user_profile (
+    id               INT,
+    name             VARCHAR(10),
+    age              INT,
+    city             VARCHAR(10),
+    balance          DECIMAL(9, 0),
+    last_access_time DATETIME
 ) ENGINE=OLAP
 UNIQUE KEY(id)
 DISTRIBUTED BY HASH(id) BUCKETS 1
 PROPERTIES (
-  "enable_unique_key_merge_on_write" = "true"
+    "enable_unique_key_merge_on_write" = "true"
 );
 ```
 
-Suppose the table contains the following data:
+Existing data in the table:
+
 ```sql
 mysql> select * from user_profile;
-+------+-------+------+----------+---------+---------------------+
-| id   | name  | age  | city     | balance | last_access_time    |
-+------+-------+------+----------+---------+---------------------+
-|    1 | kevin |   18 | shenzhen |     400 | 2023-07-01 12:00:00|
-+------+-------+------+----------+---------+---------------------+
++----+-------+-----+----------+---------+---------------------+
+| id | name  | age | city     | balance | last_access_time    |
++----+-------+-----+----------+---------+---------------------+
+|  1 | kevin |  18 | shenzhen |     400 | 2023-07-01 12:00:00 |
++----+-------+-----+----------+---------+---------------------+
 ```
 
-If you use `Insert Into` for partial column updates with `partial_update_new_key_behavior=ERROR`, and try to insert the following data, the operation will fail because the keys `(3)` and `(18)` do not exist in the original table:
+#### Scenario 1: `ERROR` Mode (Reject New Rows)
+
+Because the Keys of the second and third rows (`3` and `18`) do not exist in the original table, this insert fails:
+
 ```sql
 SET enable_unique_key_partial_update=true;
 SET partial_update_new_key_behavior=ERROR;
+
 INSERT INTO user_profile (id, balance, last_access_time) VALUES
-(1, 500, '2023-07-03 12:00:01'),
-(3, 23, '2023-07-03 12:00:02'),
-(18, 9999999, '2023-07-03 12:00:03');
-(1105, "errCode = 2, detailMessage = (127.0.0.1)[INTERNAL_ERROR]tablet error: [E-7003]Can't append new rows in partial update when partial_update_new_key_behavior is ERROR. Row with key=[3] is not in table., host: 127.0.0.1")
+    (1, 500, '2023-07-03 12:00:01'),
+    (3, 23, '2023-07-03 12:00:02'),
+    (18, 9999999, '2023-07-03 12:00:03');
+
+-- Error:
+-- (1105, "errCode = 2, detailMessage = (127.0.0.1)[INTERNAL_ERROR]tablet error:
+-- [E-7003]Can't append new rows in partial update when partial_update_new_key_behavior is ERROR.
+-- Row with key=[3] is not in table., host: 127.0.0.1")
 ```
 
-If you use `partial_update_new_key_behavior=APPEND` and perform the same partial column update:
+#### Scenario 2: `APPEND` Mode (Allow New Rows)
+
 ```sql
 SET enable_unique_key_partial_update=true;
 SET partial_update_new_key_behavior=APPEND;
-INSERT INTO user_profile (id, balance, last_access_time) VALUES 
-(1, 500, '2023-07-03 12:00:01'),
-(3, 23, '2023-07-03 12:00:02'),
-(18, 9999999, '2023-07-03 12:00:03');
+
+INSERT INTO user_profile (id, balance, last_access_time) VALUES
+    (1, 500, '2023-07-03 12:00:01'),
+    (3, 23, '2023-07-03 12:00:02'),
+    (18, 9999999, '2023-07-03 12:00:03');
 ```
 
-The existing row will be updated, and two new rows will be inserted. For columns not specified in the inserted data, if a default value is defined, the default will be used; if the column is nullable, NULL will be used; otherwise, the insert will fail.
+After execution, the original row is updated and two new rows are added. For columns that the user did not specify:
 
-The query result will be:
+1. If the column **has a default value**, the default value is used.
+2. Otherwise, if the column **allows NULL**, NULL is used.
+3. Otherwise, the insert fails.
+
+Query result:
+
 ```sql
 mysql> select * from user_profile;
-+------+-------+------+----------+---------+---------------------+
-| id   | name  | age  | city     | balance | last_access_time    |
-+------+-------+------+----------+---------+---------------------+
-|    1 | kevin |   18 | shenzhen |     500 | 2023-07-03 12:00:01 |
-|    3 | NULL  | NULL | NULL     |      23 | 2023-07-03 12:00:02 |
-|   18 | NULL  | NULL | NULL     | 9999999 | 2023-07-03 12:00:03 |
-+------+-------+------+----------+---------+---------------------+
++----+-------+------+----------+---------+---------------------+
+| id | name  | age  | city     | balance | last_access_time    |
++----+-------+------+----------+---------+---------------------+
+|  1 | kevin |   18 | shenzhen |     500 | 2023-07-03 12:00:01 |
+|  3 | NULL  | NULL | NULL     |      23 | 2023-07-03 12:00:02 |
+| 18 | NULL  | NULL | NULL     | 9999999 | 2023-07-03 12:00:03 |
++----+-------+------+----------+---------+---------------------+
 ```
 
-## Partial Column Update for Aggregate Key Model
+## Column Update on the Aggregate Key Model
 
-The Aggregate table is mainly used in pre-aggregation scenarios rather than data update scenarios, but partial column updates can be achieved by setting the aggregation function to REPLACE_IF_NOT_NULL.
+<!-- Knowledge type: Operating procedure -->
+<!-- Use cases: Sensitive to write throughput, lower query performance is acceptable -->
 
-### Create Table
+The Aggregate table is mainly used for pre-aggregation scenarios, but it can also achieve a partial column update effect by setting the aggregate function to `REPLACE_IF_NOT_NULL`.
 
-Set the aggregation function of the fields that need to be updated to `REPLACE_IF_NOT_NULL`.
+### Create the Table
+
+Set the aggregate function of each field that needs column update to `REPLACE_IF_NOT_NULL`:
 
 ```sql
 CREATE TABLE order_tbl (
-  order_id int(11) NULL,
-  order_amount int(11) REPLACE_IF_NOT_NULL NULL,
-  order_status varchar(100) REPLACE_IF_NOT_NULL NULL
+    order_id     INT(11) NULL,
+    order_amount INT(11) REPLACE_IF_NOT_NULL NULL,
+    order_status VARCHAR(100) REPLACE_IF_NOT_NULL NULL
 ) ENGINE=OLAP
 AGGREGATE KEY(order_id)
 COMMENT 'OLAP'
 DISTRIBUTED BY HASH(order_id) BUCKETS 1
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 1"
+    "replication_allocation" = "tag.location.default: 1"
 );
 ```
 
-### Data Insertion
+### Write Data
 
-Whether it is Stream Load, Broker Load, Routine Load, or `INSERT INTO`, directly write the data of the fields to be updated.
+Whether you use Stream Load, Broker Load, Routine Load, or `INSERT INTO`, simply write the data of the fields to be updated. **No additional parameters are required.**
 
 ### Example
 
-Similar to the previous examples, the corresponding Stream Load command is (no additional header required):
+The example is the same as before. The corresponding Stream Load command is (no extra header is needed):
 
 ```shell
 $ cat update.csv
+1,Pending shipment
 
-1,To be shipped
-
-curl  --location-trusted -u root: -H "column_separator:," -H "columns:order_id,order_status" -T ./update.csv http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
+curl --location-trusted -u root: \
+    -H "column_separator:," \
+    -H "columns:order_id,order_status" \
+    -T ./update.csv \
+    http://127.0.0.1:8030/api/db1/order_tbl/_stream_load
 ```
 
-The corresponding `INSERT INTO` statement is (no additional session variable settings required):
+The corresponding `INSERT INTO` statement is (no extra session variable is needed):
 
 ```sql
-INSERT INTO order_tbl (order_id, order_status) values (1,'Shipped');
+INSERT INTO order_tbl (order_id, order_status) VALUES (1, 'Pending shipment');
 ```
 
-### Notes on Partial Column Updates
+### Notes
 
-The Aggregate Key model does not perform any additional processing during the write process, so the write performance is not affected and is the same as normal data load. However, the cost of aggregation during query is relatively high, and the typical aggregation query performance is 5-10 times lower than the Merge-on-Write implementation of the Unique Key model.
-
-Since the `REPLACE_IF_NOT_NULL` aggregation function only takes effect when the value is not NULL, users cannot change a field value to NULL.
-
+- **Write performance**: the Aggregate Key Model does no extra processing during writes, so write performance is the same as a normal data load.
+- **Query performance**: aggregation at query time is expensive. Compared with the Merge-on-Write implementation of the Unique Key Model, typical aggregate queries are **5 to 10 times** slower.
+- **NULL value restriction**: because the `REPLACE_IF_NOT_NULL` aggregate function takes effect only on non-NULL values, **a field value cannot be changed to NULL**.

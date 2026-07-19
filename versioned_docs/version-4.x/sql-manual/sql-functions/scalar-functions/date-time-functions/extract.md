@@ -12,10 +12,6 @@ The `EXTRACT` function is used to extract specific time components from date or 
 
 This function behaves consistently with the [extract function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_extract) in MySQL. 
 
-:::note
-Extraction of compound units, such as `YEAR_MONTH`, is supported since version 4.0.4.
-:::
-
 ## Syntax
 
 `EXTRACT(<unit> FROM <date_or_time_expr>)`
@@ -124,11 +120,11 @@ select extract(year_month from '2026-01-01 11:45:14.123456') as year_month,
        extract(minute_microsecond from '2026-01-01 11:45:14.123456') as minute_microsecond,
        extract(second_microsecond from '2026-01-01 11:45:14.123456') as second_microsecond;
 
-+------------+----------+------------+-------------+-----------------------+-------------+-------------+-----------------------+--------------+----------------------+-------------------+
-| year_month | day_hour | day_minute | day_second  | day_microsecond       | hour_minute | hour_second | hour_microsecond      | minute_second| minute_microsecond   | second_microsecond |
-+------------+----------+------------+-------------+-----------------------+-------------+-------------+-----------------------+--------------+----------------------+-------------------+
-| 2026-01    | 1 11     | 1 11:45    | 1 11:45:14  | 1 11:45:14.123456     | 11:45       | 11:45:14    | 11:45:14.123456       | 45:14        | 45:14.123456         | 14.123456         |
-+------------+----------+------------+-------------+-----------------------+-------------+-------------+-----------------------+--------------+----------------------+-------------------+
++------------+----------+------------+-------------+--------------------+-------------+-------------+------------------+---------------+--------------------+--------------------+
+| year_month | day_hour | day_minute | day_second  | day_microsecond    | hour_minute | hour_second | hour_microsecond | minute_second | minute_microsecond | second_microsecond |
++------------+----------+------------+-------------+--------------------+-------------+-------------+------------------+---------------+--------------------+--------------------+
+| 2026-01    | 01 11    | 01 11:45   | 01 11:45:14 | 01 11:45:14.123456 | 11:45       | 11:45:14    | 11:45:14.123456  | 45:14         | 45:14.123456       | 14.123456          |
++------------+----------+------------+-------------+--------------------+-------------+-------------+------------------+---------------+--------------------+--------------------+
 
 -- Input unit does not exist, reports error
 select extract(uint from '2024-01-07') as week;

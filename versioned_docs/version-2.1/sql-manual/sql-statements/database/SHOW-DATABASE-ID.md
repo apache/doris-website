@@ -6,7 +6,7 @@
 }
 ---
 
-### Description
+## Description
 
 This statement is used to find the corresponding database name based on the database id (only used by administrators)
 

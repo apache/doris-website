@@ -2,7 +2,7 @@
 {
     "title": "TO_BASE64",
     "language": "en",
-    "description": "The TOBASE64 function converts an input string to Base64 encoded format. Base64 is an encoding method based on 64 printable characters,"
+    "description": "The TO_BASE64 function converts an input string to Base64 encoded format. Base64 is an encoding method based on 64 printable characters,"
 }
 ---
 
@@ -107,7 +107,7 @@ SELECT TO_BASE64('ṭṛì'), TO_BASE64('ḍḍumai hello');
 +-------------------+---------------------------+
 | TO_BASE64('ṭṛì')  | TO_BASE64('ḍḍumai hello') |
 +-------------------+---------------------------+
-| 4bmt4bmb4bmA      | 4bmN4bmNdW1haSBoZWxsbw==  |
+| 4bmt4bmbw6w=      | 4bmN4bmNdW1haSBoZWxsbw==  |
 +-------------------+---------------------------+
 ```
 

@@ -39,6 +39,11 @@ EXPORT_SET(bits, on, off[, separator[, number_of_bits]])
 
 ## 举例
 
+<!-- setup-sql
+CREATE TABLE test_export_set (`bits` BIGINT, `on` VARCHAR(20), `off` VARCHAR(20), `sep` VARCHAR(20), `num_of_b` INT) DISTRIBUTED BY HASH(`bits`) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO test_export_set VALUES (-1,'1','0',',',50),(-2,'1','0','',64),(5,'Y','N',',',5),(5,'1','0','',64),(5,'','0','',65),(6,'1','','',63),(19284249819,'1','0',',',64),(9,'apache','doris','|123|',64),(NULL,'1','0',',',5),(5,NULL,'0','',5),(5,'1',NULL,',',10),(5,'1','0',NULL,10),(5,'1','0',',',NULL);
+-->
+
 ```sql
 SELECT EXPORT_SET(-2, '1', '0');
 ```

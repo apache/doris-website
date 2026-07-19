@@ -1,0 +1,31 @@
+---
+{
+    "title": "高效去重",
+    "language": "zh-CN",
+    "description": "Apache Doris 高效去重章节导航：基于 BITMAP 的精准去重与基于 HLL 的近似去重方案。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+去重是分析场景中最消耗资源的操作之一。Apache Doris 提供两种专门的数据类型来替代 `COUNT DISTINCT`，以更低的内存与延迟代价完成去重：需要精确结果时选择 **BITMAP**，可以接受 1%–2% 误差以换取更小存储时选择 **HLL**。
+
+## 精准去重
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="BITMAP 精准去重"
+    description="使用 BITMAP 类型替代 COUNT DISTINCT，实现精确去重，同时提升查询速度并降低内存与磁盘占用。"
+    link="bitmap-precise-deduplication"
+/>
+</div>
+
+## 近似去重
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="HLL 近似去重"
+    description="基于 HyperLogLog 的近似去重，误差控制在 1%–2%，存储占用小，适合大规模 UV 与基数统计场景。"
+    link="hll-approximate-deduplication"
+/>
+</div>

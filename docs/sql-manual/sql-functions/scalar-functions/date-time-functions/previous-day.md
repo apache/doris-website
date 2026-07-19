@@ -1,13 +1,14 @@
 ---
 {
     "title": "PREVIOUS_DAY",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the first date matching the target day of the week before the specified date."
 }
 ---
 
 ## Description
 
-The PREVIOUS_DAY function returns the first date that matches the target day of the week before the specified date. For example, `PREVIOUS_DAY('2020-01-31', 'MONDAY')` represents the first Monday before 2020-01-31. This function supports DATE, DATETIME, and TIMESTAMPTZ types, and ignores the time part of the input (calculating based on the date part only).
+The PREVIOUS_DAY function returns the first date that matches the target day of the week before the specified date. For example, `PREVIOUS_DAY('2020-01-31', 'MONDAY')` represents the first Monday before 2020-01-31. This function accepts DATE and DATETIME inputs, ignoring any time portion (calculation is based on the date part only).
 
 ## Syntax
 
@@ -19,7 +20,7 @@ PREVIOUS_DAY(`<date_or_time_expr>`, `<day_of_week>`)
 
 | Parameter             | Description                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `<date_or_time_expr>` | Supports DATE/DATETIME types. For specific formats, please refer to [TIMESTAMPTZ Conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [DATETIME Conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [DATE Conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | Supports DATE/DATETIME types. For specific formats, please refer to [TIMESTAMPTZ Conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [DATETIME Conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [DATE Conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<day_of_week>`       | A string expression identifying the day of the week.                                                                                                                                                                                                                                                                                                                                                                        |
 
 `<day_of_week>` must be one of the following values (case-insensitive):

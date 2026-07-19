@@ -262,7 +262,7 @@ input {
 
 output {  
   doris {  
-    http_hosts => [ "<http://fehost1:http_port>", "<http://fehost2:http_port>", "<http://fehost3:http_port">]  
+    http_hosts => [ "<http://fehost1:http_port>", "<http://fehost2:http_port>", "<http://fehost3:http_port>" ]  
     user => "your_username"  
     password => "your_password"  
     db => "your_db"  
@@ -373,7 +373,7 @@ You can refer to the example below, where `property.*` represents Librdkafka cli
 
 ```SQL  
 CREATE ROUTINE LOAD load_log_kafka ON log_db.log_table  
-COLUMNS(ts, clientip, request, status, size)  
+COLUMNS(ts, host, path, message)  
 PROPERTIES (
 "max_batch_interval" = "60",
 "max_batch_rows" = "20000000",

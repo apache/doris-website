@@ -184,7 +184,7 @@ The currently dependent Paimon version is 1.0.0.
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 'warehouse' = 's3://bucket/paimon_warehouse',
                 's3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
@@ -298,7 +298,7 @@ The currently dependent Paimon version is 1.0.0.
                 'warehouse' = 'hdfs://127.0.0.1:8520/paimon-hms-hdfs-warehouse',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
                 'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -319,7 +319,7 @@ The currently dependent Paimon version is 1.0.0.
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 's3.region' = 'ap-east-1',
                 'paimon.s3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 'paimon.s3.endpoint' = 'ap-east-1',
                 's3.access_key' = '<ak>',
                 'paimon.s3.access-key' = '<ak>',
@@ -473,7 +473,7 @@ The currently dependent Paimon version is 1.0.0.
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 's3://bucket/paimon_warehouse',
                 's3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
@@ -594,7 +594,7 @@ The currently dependent Paimon version is 1.0.0.
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 's3://bucket/paimon_warehouse',
                 's3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
@@ -1158,12 +1158,12 @@ Result:
         "s3.access_key" = "<ak>",
         "s3.secret_key" = "<sk>",
         "s3.region" = "ap-east-1",
-        "s3.endpoint" = "s3.ap-east-1.amazonaws.com",
+        "s3.endpoint" = "https://s3.ap-east-1.amazonaws.com",
         -- explicitly add s3a parameters
         "fs.s3a.access.key"="<ak>",
         "fs.s3a.secret.key"="<sk>",
         "fs.s3a.endpoint.region"="ap-east-1",
-        "fs.s3a.endpoint"="s3.ap-east-1.amazonaws.com",
+        "fs.s3a.endpoint"="https://s3.ap-east-1.amazonaws.com",
         "fs.s3a.impl"= "org.apache.hadoop.fs.s3a.S3AFileSystem",
     ); 
     ``` 
@@ -1177,7 +1177,7 @@ Result:
         'warehouse' = 's3://bucket-hk/paimon_warehouse',
         'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
         's3.region' = 'ap-east-1',
-        's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+        's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
         's3.access_key' = '<ak>',
         's3.secret_key' = '<sk>',
         -- explicitly add s3a parameters

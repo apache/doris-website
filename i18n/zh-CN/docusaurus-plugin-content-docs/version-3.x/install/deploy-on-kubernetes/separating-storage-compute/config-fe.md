@@ -116,7 +116,7 @@ kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=
 在容器内部，可以通过访问不带有 `internal` 后缀的 Service 名称连接 Doris 集群：
 
 ```shell
-mysql -uroot -P9030 -hdoriscluster-sample-fe-service
+mysql -uroot -P9030 -hdoriscluster-sample-fe
 ```
 
 ### NodePort

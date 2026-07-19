@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_LAST_INDEX",
     "language": "en",
-    
+    "description": "Finds the position index (starting from 1) of the last element in the array that satisfies the lambda expression."
 }
 ---
 

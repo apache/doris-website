@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_COMPACT",
     "language": "en",
-    
+    "description": "Removes consecutive duplicate elements from an array, keeping only the first occurrence of each different value."
 }
 ---
 

@@ -25,7 +25,7 @@ Returns false if the string is an empty string or NULL; otherwise, returns true.
 ## Examples
 1. Example 1
     ```sql
-    select not_null_or_empty(null), not_null_or_empty("");, not_null_or_empty(" ");
+    select not_null_or_empty(null), not_null_or_empty(""), not_null_or_empty(" ");
     ```
     ```text
     +-------------------------+-----------------------+------------------------+

@@ -1,148 +1,192 @@
 ---
-{
-"title": "Release Doris SDK",
-"language": "zh-CN"
-}
+title: Release Doris SDK
+language: en
+description: "Apache Doris SDK release process: Maven Release prepare/perform, SVN upload, and community vote."
+keywords:
+    - Apache Doris
+    - Doris SDK
+    - Release process
+    - Maven Release
+    - SVN upload
+    - Community vote
+    - GPG signature
 ---
 
-<!--
+<!-- 
 Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements. See the NOTICE file
+or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
-regarding copyright ownership. The ASF licenses this file
+regarding copyright ownership.  The ASF licenses this file
 to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
-with the License. You may obtain a copy of the License at
+with the License.  You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+  http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied. See the License for the
+KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
 
 # Release Doris SDK
 
-Its code base is independent of the main Doris code base, located at:
+<!-- Knowledge type: Operating procedure -->
+<!-- Applies to: Apache release process / SDK release -->
 
-- https://github.com/apache/doris-sdk
+The Doris SDK code repository is separate from the main Doris repository and lives at [apache/doris-sdk](https://github.com/apache/doris-sdk). This document uses the release of `Doris SDK v1.0.0` as an example to walk through the full flow from publishing to Maven Staging to the community vote.
 
-## Ready to Release
+## Release Process Overview
 
-First, please refer to the [release preparation](./release-prepare.md) document to prepare for the release.
+| Step | Purpose | Key Artifacts |
+|------|---------|---------------|
+| 1. Prepare for release | Complete the prerequisites for release (KEYS, accounts, environment, and so on) | GPG Key, Apache account |
+| 2. Prepare branch | Create a release branch in the repository | `1.0.0-release` branch |
+| 3. Publish to Maven Staging | Generate the release tag and publish to Apache Maven Staging | Tag, Staging Repository |
+| 4. Prepare SVN | Upload the source package, signature, and checksum files to SVN | tar.gz / .asc / .sha512 |
+| 5. Start the vote | Start the vote on the dev@doris mailing list | Vote email |
+| 6. Complete the release | Archive and announce after the vote passes | Release package |
 
-## Releasing to Maven
+## 1. Prepare for Release
 
-Let's take the release of Doris Sdk v1.0.0 as an example.
+See the [Release Preparation](./release-prepare) document to complete the prerequisites for the release.
 
-### 1. Prepare branch
+## 2. Publish to Maven
 
-Create a branch in the code base: 1.0.0-release, and checkout to this branch.
+### 2.1 Prepare the Branch
 
-### 2. Release to Maven staging
+Create a `1.0.0-release` branch in the repository and switch to it:
 
-Execute the following command to start generating release tags:
+```shell
+git checkout -b 1.0.0-release
+```
+
+### 2.2 Publish to Maven Staging
+
+Run the following commands to generate the release tag:
 
 ```shell
 mvn release:clean
 mvn release:prepare -DpushChanges=false
 ```
 
-Among them, `-DpushChanges=false` means that during the execution process, the newly generated branches and tags will not be pushed to the code base.
+Here, `-DpushChanges=false` means the newly generated branch and tag are not pushed to the repository during execution.
 
-After executing the `release:prepare` command, the following three pieces of information will be requested:
+After running `mvn release:prepare`, you need to provide the following three pieces of information in order:
 
-1. Doris Sdk version information: we can use the default, you can directly press Enter or enter the version you want. The version format is `{sdk.version}`, such as `1.0.0`.
-2. Release tag of Doris SDK: The release process will generate a tag locally. We can use the default tag name, such as `1.0.0`.
-3. The version number of the next version of Doris SDK: this version number is only used when generating local branches, and has no practical significance. We can fill in one according to the rules. For example, the current version to be released is: `1.0.0`, then fill in `1.0.1-SNAPSHOT` for the next version number.
+| Input | Description | Example |
+|-------|-------------|---------|
+| Doris SDK version | The version to release, in the form `{sdk.version}` | `1.0.0` |
+| Release tag name | The name of the tag generated locally | `1.0.0` |
+| Next version | Used only to generate the local branch; has no actual significance | `1.0.1-SNAPSHOT` |
 
-`mvn release:prepare` may ask for a GPG passphrase. If there is `gpg: no valid OpenPGP data found` error, you can execute `export GPG_TTY=$(tty)` and try again.
+**Common issues:**
 
-After `mvn release:prepare` is executed successfully, a tag and a branch will be generated locally. And the current branch will add two commits. The first commit corresponds to the newly generated tag, and the second is the next version of the branch. It can be viewed through `git log`.
+- `mvn release:prepare` may ask for the GPG passphrase.
+- If you see the error `gpg: no valid OpenPGP data found`, run the following command and retry:
 
-After the local tag is confirmed to be correct, the tag needs to be pushed to the code base:
+    ```shell
+    export GPG_TTY=$(tty)
+    ```
 
-`git push upstream --tags`
+After `mvn release:prepare` runs successfully, it generates a tag and a branch locally and adds two commits to the current branch:
 
-Where upstream points to the `apache/doris-sdk` codebase.
+1. The first commit corresponds to the newly generated tag.
+2. The second commit corresponds to the next-version branch.
 
-Finally, execute perform:
+You can verify this with `git log`.
 
+After confirming the local tag is correct, push the tag to the repository:
+
+```shell
+git push upstream --tags
 ```
+
+Here, `upstream` points to the `apache/doris-sdk` repository.
+
+Finally, run the perform command to publish the build artifacts to Maven Staging:
+
+```shell
 mvn release:perform
 ```
 
-After successful execution, you can find the newly released version in [https://repository.apache.org/#stagingRepositories](https://repository.apache.org/#stagingRepositories):
+After the command succeeds, you can find the version you just published in [Apache Maven Staging Repositories](https://repository.apache.org/#stagingRepositories):
 
 ![](/images/staging-repositories.png)
 
-**Note that the `.asc` signature file needs to be included. **
+**Note: the published artifacts must include the `.asc` signature file.**
 
-If the operation is wrong. It is necessary to delete the local tag, the tag in the code base, and the two newly generated commits locally. And drop staging. Then perform the above steps again.
+If something goes wrong, roll back in the following order:
 
-After checking, click the `close` button in the figure to complete the staging release.
+1. Delete the local tag.
+2. Delete the tag in the repository.
+3. Delete the two newly generated local commits.
+4. `drop` the staging on the Staging Repository page.
+5. Run the steps above again.
 
-### 3. Prepare svn
+After verification, click the `close` button on the page to finish the Staging release.
 
-Check out the svn repository:
+### 2.3 Prepare SVN
 
-```
+#### 2.3.1 Check Out the SVN Repository
+
+```shell
 svn co https://dist.apache.org/repos/dist/dev/doris/
 ```
 
-Package tag source code, and generate signature file and sha256 verification file. Here we take `1.0.0` as an example. Other tag operations are the same
+#### 2.3.2 Package the Tag Source and Generate the Signature
 
-```
+Using `1.0.0` as an example; the operations for other tags are similar:
+
+```shell
 git archive --format=tar 1.14_2.12-1.0.0 --prefix=apache-doris-sdk-1.0.0-src/ | gzip > apache-doris-sdk-1.0.0-src.tar.gz
-gpg -u xxx@apache.org --armor --output apache-doris-sdk-1.0.0-src.tar.gz.asc --detach-sign apache-doris-sdk-1.0.0-src.tar. gz
+gpg -u xxx@apache.org --armor --output apache-doris-sdk-1.0.0-src.tar.gz.asc  --detach-sign apache-doris-sdk-1.0.0-src.tar.gz
 sha512sum apache-doris-sdk-1.14_2.12-1.0.0-src.tar.gz > apache-doris-sdk-1.0.0-src.tar.gz.sha512
+```
 
-Mac:
+On macOS, use `shasum` instead of `sha512sum`:
+
+```shell
 shasum -a 512 apache-doris-sdk-1.0.0-src.tar.gz > apache-doris-sdk-1.0.0-src.tar.gz.sha512
 ```
 
 You end up with three files:
 
-```
+```text
 apache-doris-sdk-1.0.0-src.tar.gz
 apache-doris-sdk-1.0.0-src.tar.gz.asc
 apache-doris-sdk-1.0.0-src.tar.gz.sha512
 ```
 
-Move these three files to the svn directory:
+#### 2.3.3 Upload to SVN
 
-```
-doris/doris-sdk/1.0.0/
-```
+Move these three files to the SVN directory `doris/doris-sdk/1.0.0/`. The final SVN directory structure looks like:
 
-The final svn directory structure is similar to:
-
-```
+```text
 ├── 1.2.3-rc01
-│ ├── apache-doris-1.2.3-src.tar.gz
-│ ├── apache-doris-1.2.3-src.tar.gz.asc
-│ ├── apache-doris-1.2.3-src.tar.gz.sha512
+│   ├── apache-doris-1.2.3-src.tar.gz
+│   ├── apache-doris-1.2.3-src.tar.gz.asc
+│   ├── apache-doris-1.2.3-src.tar.gz.sha512
 ...
 ├── KEYS
 ├── doris-sdk
-│ └── 1.0.0
-│ ├── apache-doris-sdk-1.0.0-src.tar.gz
-│ ├── apache-doris-sdk-1.0.0-src.tar.gz.asc
-│ └── apache-doris-sdk-1.0.0-src.tar.gz.sha512
+│   └── 1.0.0
+│       ├── apache-doris-sdk-1.0.0-src.tar.gz
+│       ├── apache-doris-sdk-1.0.0-src.tar.gz.asc
+│       └── apache-doris-sdk-1.0.0-src.tar.gz.sha512
 ```
 
-Among them, 1.2.3-rc01 is the directory of Doris main code, and `doris-sdk/1.0.0` is the content of this release.
+Here, `1.2.3-rc01` is the directory for the Doris main repository, and `doris-sdk/1.0.0` contains the contents of this release.
 
-Note, for the preparation of the KEYS file, please refer to the introduction in [Release Preparation](./release-prepare.md).
+For the steps to prepare the KEYS file, see the [Release Preparation](./release-prepare) document.
 
-### 4. Voting
+### 2.4 Vote
 
-Initiate a vote in the dev@doris mail group, the template is as follows:
+Start the vote on the `dev@doris.apache.org` mailing list. Use the following email template:
 
-```
+```text
 Hi All,
 
 This is a call for the vote to release Apache Doris-SDK 1.0.0
@@ -161,32 +205,58 @@ https://dist.apache.org/repos/dist/dev/doris/doris-sdk/1.0.0/
 KEYS file is available here:
 https://downloads.apache.org/doris/KEYS
 
-To verify and build, you can refer to the following link:
+To verify and build, you can refer to following link:
 https://doris.apache.org/community/release-and-verify/release-verify
 
 The vote will be open for at least 72 hours.
 
 [ ] +1 Approve the release
 [ ] +0 No opinion
-[ ] -1 Do not release this package because ...
+[ ] -1 Do not release this package because …
 ```
 
-## Completing the release
+## 3. Complete the Release
 
-Please refer to the [Complete Release](./release-complete.md) document to complete the entire release process.
+After the vote passes, see the [Complete the Release](./release-complete) document to finish all remaining release steps.
 
-## APPENDIX: Releasing TO SNAPSHOT
+## Appendix: Publishing to SNAPSHOT
 
-Snapshot is not an Apache Release version, it is only used for preview before release. After being discussed and approved by the PMC, the Snapshot version can be released
+A Snapshot is not an Apache Release version; it is only used as a preview before a release. After the PMC has discussed and approved it, you can publish a Snapshot version.
 
-Switch to the doris sdk directory
+Switch to the Doris SDK directory and run:
 
-```
+```shell
 mvn deploy
 ```
 
-Afterwards you can see the snapshot version here:
+After that, you can find the Snapshot version at:
 
-```
+```text
 https://repository.apache.org/content/repositories/snapshots/org/apache/doris/doris-sdk/
 ```
+
+## FAQ
+
+### Q1: `mvn release:prepare` fails with `gpg: no valid OpenPGP data found`
+
+GPG is not attached to the current terminal. Run `export GPG_TTY=$(tty)` and retry.
+
+### Q2: The `close` step in the Staging phase fails with `No public key`
+
+The GPG public key has not been uploaded to a keyserver. Run the following command to sync the public key to a public keyserver:
+
+```shell
+gpg --keyserver hkp://keyserver.ubuntu.com --send-keys <KEY_ID>
+```
+
+You can find `<KEY_ID>` with `gpg -k`.
+
+### Q3: I made a mistake. How do I roll back?
+
+Follow these steps in order:
+
+1. Delete the local tag: `git tag -d <tag>`.
+2. Delete the remote tag: `git push upstream --delete <tag>`.
+3. Revert the two local release commits.
+4. `drop` the staging on the Staging Repositories page.
+5. Run `mvn release:prepare` and `mvn release:perform` again.

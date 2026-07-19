@@ -220,7 +220,7 @@ JobName: inner_mtmv_1752809156450
 State: NORMAL
 SchemaChangeDetail:
 RefreshState: SUCCESS
-RefreshInfo: BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 DAY STARTS "2025-12-01 20:30:00"
+RefreshInfo: BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 DAY STARTS "2024-12-01 20:30:00"
 QuerySql: SELECT
 `internal`.`doc_db`.`orders`.`o_orderdate`,
 `internal`.`doc_db`.`lineitem`.`l_orderkey`,
@@ -297,7 +297,7 @@ Here's an example output:
 
 ### Q2: What Are the Reasons for a Materialized View Not Hitting?
 
-First, to confirm if a materialized view hits, execute the following SQL (refer to [Queries and Transparent Rewriting - Q1](#q1-how-does-doris-determine-which-partitions-need-to-be-refreshed-for-a-materialized-view) for details):
+First, to confirm if a materialized view hits, execute the following SQL (refer to [Queries and Transparent Rewriting - Q1](#q1-how-to-confirm-if-a-materialized-view-hits-and-how-to-find-the-reasons-for-non-hits) for details):
 
 ```Plain
 explain
@@ -310,7 +310,7 @@ If there is no hit, the following reasons may apply:
 
 - The materialized view may be in an unusable state, preventing transparent rewriting from hitting it. To view the build status of the materialized view, refer to the section on viewing materialized view status.
 
-- If, after checking the first two steps, the materialized view still does not hit, it may be because SQL defines the materialized view and the query SQL is outside the current rewriting capabilities of the materialized view. Refer to the [Materialized View Transparent Rewriting Capabilities](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands#transparent-rewriting-capability) for details.
+- If, after checking the first two steps, the materialized view still does not hit, it may be because SQL defines the materialized view and the query SQL is outside the current rewriting capabilities of the materialized view. Refer to the [Materialized View Transparent Rewriting Capabilities](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands#transparent-query-rewriting) for details.
 
 - For detailed information and explanations on failed hits, refer to [Appendix 1](#reference).
 

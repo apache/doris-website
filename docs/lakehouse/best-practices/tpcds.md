@@ -6,7 +6,7 @@
 }
 ---
 
-Doris supports using the [TPCDS Connector](https://trino.io/docs/current/connector/tpcds.html) to quickly build TPCDS test sets through the [Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide) compatible framework.
+Doris supports using the [TPCDS Connector](https://trino.io/docs/current/connector/tpcds.html) to quickly build TPCDS test sets through the [Trino Connector](https://doris.apache.org/community/developer-guide/data-source-extension/trino-connector-developer-guide) compatible framework.
 
 Combined with the data write-back function of Hive/Iceberg tables, you can quickly build TPCDS test data sets for Doris, Hive, and Iceberg tables through Doris.
 

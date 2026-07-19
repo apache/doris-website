@@ -1,16 +1,12 @@
 ---
 {
     "title": "UNNEST",
-    "language": "en-US",
+    "language": "en-US"
 }
 ---
 
 ## Description
 `unnest` expands array/collection/map type expressions into multiple rows (a table-generating function). It can be used in the SELECT list and FROM clause, and supports WITH ORDINALITY to append a sequence number to each expanded row. Similar to the `explode` series of functions, `unnest` supports multiple parameters, types such as Map and Bitmap, and also supports LEFT (outer) semantics in FROM/LATERAL and JOIN scenarios.
-
-:::note
-Since 4.1.0
-:::
 
 ## Syntax
 ```sql

@@ -48,6 +48,7 @@ PROPERTIES (
 > - partition_num: The maximum number of partitions that a table will scan.
 > - tablet_num: The maximum number of tablets that a table will scan.
 > - cardinality: The number of rows of data that a table will scan.
+> - require_partition_filter: Whether a query on a partitioned internal table or Hive table must contain an effective partition filter. When set to `true`, queries that scan a supported partitioned table without filtering on a partition column will be blocked. The default is `false`. This property is supported in Doris 4.0.7 and later in the 4.0 series, and in Doris 4.1.2 and later in the 4.1 series. Currently, it only takes effect on internal tables and Hive tables.
 >
 > **Switch Category**
 >
@@ -81,7 +82,7 @@ The user executing this SQL command must have at least the following permissions
 
    ```sql
    mysql> select * from order_analysis;
-   ERROR 1064 (HY000): errCode = 2, detailMessage = sql match regex sql block rule: order_analysis_rule
+   ERROR 1064 (HY000): errCode = 2, detailMessage = sql match regex sql block rule: test_rule
    ```
 
 2. Create a rule that prevents scanning more than 30 partitions of the same table and restricts the query data volume to no more than 10 billion rows
@@ -127,6 +128,30 @@ The user executing this SQL command must have at least the following permissions
 
    ```sql
    SET PROPERTY FOR 'jack' 'sql_block_rules' = 'test_rule4';
+   ```
+
+5. Create a rule that requires partitioned internal table and Hive table queries to include a partition filter
+
+   ```sql
+   CREATE SQL_BLOCK_RULE test_rule5
+   PROPERTIES(
+       "require_partition_filter"="true",
+       "global"="true",
+       "enable"="true"
+   );
+   ```
+
+   After the rule is enabled, a query on a supported partitioned table without a partition-column filter will be blocked:
+
+   ```sql
+   SELECT * FROM partitioned_table;
+   ERROR 1105 (HY000): errCode = 2, detailMessage = sql hits sql block rule: test_rule5, missing partition filter
+   ```
+
+   Queries that include an effective partition filter can continue to run:
+
+   ```sql
+   SELECT * FROM partitioned_table WHERE dt = '2024-01-01';
    ```
 
 ## Others

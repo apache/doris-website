@@ -10,7 +10,7 @@
 
 This statement is used to uninstall a plugin.
 
-## Syntax：
+## Syntax
 
 ```sql
 UNINSTALL PLUGIN <plugin_name>;

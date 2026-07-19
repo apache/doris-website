@@ -6,7 +6,7 @@
 }
 ---
 
-Doris uses Jemalloc as the general memory allocator by default. The memory occupied by Jemalloc itself includes Cache and Metadata. Cache includes Thread Cache and Dirty Page. You can view the original profile of the memory allocator in real time at http://{be_host}:{be_web_server_port}/memz.
+Doris uses Jemalloc as the general memory allocator by default. The memory occupied by Jemalloc itself includes Cache and Metadata. Cache includes Thread Cache and Dirty Page. You can view the original profile of the memory allocator in real time in the **Jemalloc Profiles** section under **Memory Info** on Doris BE's Process Profile Web page http://{be_host}:{be_web_server_port}/profile.
 
 ## Jemalloc Cache Memory Analysis
 
@@ -26,7 +26,7 @@ During the running of the BE process, Jemalloc Cache consists of two parts.
 
 ### Jemalloc Cache View Method
 
-View Doris BE's Web page `http://{be_host}:{be_web_server_port}/memz` (webserver_port defaults to 8040) to obtain Jemalloc Profile, and interpret the use of Jemalloc Cache based on several sets of key information.
+View the **Jemalloc Profiles** section under **Memory Info** on Doris BE's Process Profile Web page `http://{be_host}:{be_web_server_port}/profile` (webserver_port defaults to 8040) to obtain the Jemalloc Profile, and interpret the use of Jemalloc Cache based on several sets of key information.
 
 - `tcache_bytes` in Jemalloc Profile is the total number of bytes of Jemalloc Thread Cache. If the `tcache_bytes` value is large, it means that the memory used by Jemalloc Thread Cache is too large.
 
@@ -61,7 +61,7 @@ extents:        size ind       ndirty        dirty       nmuzzy        muzzy    
                65536  11            3       184320            0            0            6       385024            9       569344
                81920  12            2       147456            3       241664           38      2809856           43      3198976
                98304  13            0            0            1        86016            6       557056            7       643072
-              114688  14            1       102400            1       106496           15      1642496           17      185139
+              114688  14            1       102400            1       106496           15      1642496           17      1851392
 ```
 
 Reduce `dirty_decay_ms` of `JEMALLOC_CONF` in `be.conf` to 2000 ms or less. The default `dirty_decay_ms` in `be.conf` is 5000 ms. Jemalloc will release dirty pages according to a smooth gradient curve within the time specified by `dirty_decay_ms`. For reference, [Jemalloc opt.dirty_decay_ms](https://jemalloc.net/jemalloc.3.html#opt.dirty_decay_ms). When the BE process has insufficient available memory and triggers Minor GC or Full GC, it will actively release all dirty pages according to a certain strategy.
@@ -82,7 +82,7 @@ MemTrackerLimiter Label=tc/jemalloc_metadata, Type=overview, Limit=-1.00 B(-1 B)
 
 ### How to view Jemalloc Metadata
 
-You can get the Jemalloc Profile by viewing the Doris BE web page `http://{be_host}:{be_web_server_port}/memz` (webserver_port defaults to 8040). Find the overall memory statistics of Jemalloc in the Jemalloc Profile as follows, where `metadata` is the memory size of Jemalloc Metadata.
+You can get the Jemalloc Profile from the **Jemalloc Profiles** section under **Memory Info** on the Doris BE Process Profile web page `http://{be_host}:{be_web_server_port}/profile` (webserver_port defaults to 8040). Find the overall memory statistics of Jemalloc in the Jemalloc Profile as follows, where `metadata` is the memory size of Jemalloc Metadata.
 
 `Allocated: 2401232080, active: 2526302208, metadata: 535979296 (n_thp 221), resident: 2995621888, mapped: 3221979136, retained: 131542581248`
 

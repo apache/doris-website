@@ -62,7 +62,7 @@ mysql> select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATETIME), '+08:00', 'Ame
 -- For date type input,return datetime type value, the time part is automatically converted to 00:00:00
 mysql> select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATE), 'Asia/Shanghai', 'America/Los_Angeles');
 +-------------------------------------------------------------------------------------------+
-| CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATEV2), 'Asia/Shanghai', 'America/Los_Angeles') |
+| CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATE), 'Asia/Shanghai', 'America/Los_Angeles')   |
 +-------------------------------------------------------------------------------------------+
 | 2019-07-31 09:00:00                                                                       |
 +-------------------------------------------------------------------------------------------+

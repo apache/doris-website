@@ -1,9 +1,9 @@
 ---
 {
-    "title": "Meta Info Action | Fe Http",
+    "title": "Meta Info Action V2 | Fe Http",
     "language": "en",
     "description": "Used to obtain metadata information about the cluster, including the database list, table list, and table schema.",
-    "sidebar_label": "Meta Info Action"
+    "sidebar_label": "Meta Info Action V2"
 }
 ---
 

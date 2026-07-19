@@ -66,6 +66,8 @@ COUNT_BY_ENUM(<expr1>, <expr2>, ... , <exprN>)
 
 ## 举例
 
+由于结果中的 JSON 对象顺序可能不固定，下面结果可能为：
+
 ```sql
 CREATE TABLE count_by_enum_test(
                 `id` varchar(1024) NULL,

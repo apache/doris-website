@@ -6,8 +6,6 @@
 }
 ---
 
-## to_ipv4
-
 ## Description
 Takes the string form of an IPv4 address and returns a value of IPv4 type.
 

@@ -45,7 +45,7 @@ Doris supports built-in authentication schemes as well as LDAP authentication.
 
 Authentication is based on usernames, passwords, and other information stored within Doris itself.
 
-Administrators create users with the `CREATE USER` command and view all created users with the `SHOW ALL GRANTS` command.
+Administrators create users with the `CREATE USER` command and view all users' permissions and roles with the `SHOW ALL GRANTS` command.
 
 When a user logs in, the system verifies whether the username, password, and client IP address are correct.
 
@@ -102,7 +102,7 @@ For more help, please refer to [ALTER USER](../../sql-manual/sql-statements/acco
 
 ### LDAP-based Authentication Scheme
 
-Please refer to [LDAP-based Authentication Scheme](./ldap.md).
+Please refer to [LDAP-based Authentication Scheme](./authentication/ldap.md).
 
 ## Authorization
 
@@ -230,7 +230,7 @@ Data masking is a method to protect sensitive data by modifying, replacing, or h
 
 For example, administrators may choose to replace part or all of the digits of sensitive fields like credit card numbers or ID numbers with asterisks `*` or other characters, or replace real names with pseudonyms.
 
-From version 2.1.2, support for setting data masking policies for certain columns through Apache Ranger's Data Masking is available, currently only configurable via [Apache Ranger](./ranger.md).
+From version 2.1.2, support for setting data masking policies for certain columns through Apache Ranger's Data Masking is available, currently only configurable via [Apache Ranger](./authorization/ranger.md).
 
 ### Doris Built-in Authorization Scheme
 
@@ -275,7 +275,7 @@ The default role cannot be deleted, nor can it be assigned to someone else. When
 
 ### Authorization Scheme Based on Apache Ranger
 
-Please refer to [Authorization Scheme Based on Apache Ranger](./ranger.md).
+Please refer to [Authorization Scheme Based on Apache Ranger](./authorization/ranger.md).
 
 ## Common Questions
 
@@ -338,7 +338,7 @@ Please refer to [Authorization Scheme Based on Apache Ranger](./ranger.md).
 
         Suppose later, we grant a separate permission to `user1@'ip1'`:
 
-        `GRANT ALTER_PRIV ON . TO user1@'ip1';`
+        `GRANT ALTER_PRIV ON *.* TO user1@'ip1';`
 
         Then `user1@'ip1'` will have permissions for both Select_priv and Alter_priv. And when we change the permissions for `user1@['domain']` again, `user1@'ip1'` will not follow the change.
 

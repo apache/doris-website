@@ -14,7 +14,7 @@ This statement is used to collect column statistics. Statistics of columns can b
 
 ```sql
 ANALYZE {TABLE <table_name> [ (<column_name> [, ...]) ] | DATABASE <database_name>}
-    [ [ WITH SYNC ] [ WITH SAMPLE {PERCENT | ROWS} <sample_rate> ] ];
+    [ [ WITH SYNC ] [ WITH SAMPLE {PERCENT | ROWS} <sample_rate> ] [ WITH HOT VALUE ] ];
 ```
 
 ## Required Parameters
@@ -40,6 +40,10 @@ ANALYZE {TABLE <table_name> [ (<column_name> [, ...]) ] | DATABASE <database_nam
 **3. `WITH SAMPLE {PERCENT | ROWS} <sample_rate>`**
 
 > Specify to use the sampling method for collection. When not specified, full collection is the default. <sample_rate> is the sampling parameter. When using PERCENT sampling, it specifies the sampling percentage; when using ROWS sampling, it specifies the number of sampled rows.
+
+**4. `WITH HOT VALUE`**
+
+> Specify to collect hot values during manual full collection. Hot values help the optimizer estimate predicates on skewed data more accurately, but collecting them can consume more memory on high-cardinality columns. When this option is not specified, Doris keeps the existing behavior: full collection does not collect hot values, while sample collection always collects hot values. `WITH HOT VALUE` is rejected when used together with `WITH SAMPLE`.
 
 ## Return Value
 
@@ -70,4 +74,10 @@ ANALYZE TABLE lineitem WITH SAMPLE PERCENT 10;
 
 ```sql
 ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;
+```
 
+3. Collect full statistics and collect hot values.
+
+```sql
+ANALYZE TABLE lineitem WITH SYNC WITH HOT VALUE;
+```

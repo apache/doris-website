@@ -43,6 +43,11 @@ Returns a format string. The results for different arguments are shown in the ta
 If the second argument is not one of `'USA', 'JIS', 'ISO', 'EUR', 'INTERNAL'` or is NULL, the function returns NULL.
 
 ## Examples
+<!-- setup-sql
+CREATE TABLE get_format_test (id INT, lc VARCHAR(20)) DISTRIBUTED BY HASH(id) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO get_format_test VALUES (1,'USA'),(2,'JIS'),(3,'ISO'),(4,'EUR'),(5,'INTERNAL'),(6,'Doris');
+-->
+
 ```sql
 SELECT * FROM get_format_test
 ```

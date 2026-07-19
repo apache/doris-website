@@ -150,6 +150,20 @@ PROPERTIES (
 );
 ```
 
+A second table `test2` is referenced by the query-based overwrites further below. It has the same `(c1, c2)` shape so `INSERT OVERWRITE test SELECT * FROM test2` succeeds:
+
+```sql
+CREATE TABLE IF NOT EXISTS test2 (
+  `c1` int NOT NULL,
+  `c2` int NOT NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`c1`)
+DISTRIBUTED BY HASH(`c1`) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO test2 VALUES (1, 10), (2, 20);
+```
+
 ### Overwrite Table
 
 1. Overwrite the `test` table using the form of `VALUES`.

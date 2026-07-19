@@ -1,9 +1,18 @@
 ---
-{
-"title": "Compiling with Arm",
-"language": "en"
-}
+title: Compile Apache Doris on ARM Platforms
+language: en
+description: Compile Apache Doris on ARM64 platforms, including operating system support matrix, dependency version reference, and build steps.
+keywords:
+    - ARM compilation
+    - ARM64
+    - aarch64
+    - Apache Doris
+    - source compilation
+    - LDB Toolchain
+    - KylinOS
+    - Kunpeng
 ---
+
 
 {/* Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -26,24 +35,37 @@ under the License. */}
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Compile with ARM
 
-This topic is about how to compile Doris on the ARM64 platform.
+{/* Knowledge type: Procedure */}
+{/* Scenario: First-time compilation / ARM server environment */}
 
-Note that this document is intended as a guide only. Other errors may occur when compiling in different environments. Feel free to [issue](https://github.com/apache/doris/issues) Doris with problems or solutions.
+This document describes how to compile Apache Doris on ARM64 platforms, including hardware and operating system compatibility, dependency installation, and the build process.
 
-:::tip
-
-Starting from version 3.0.3, support for compiling and deploying in compute-storage decoupled mode is provided.
-
+:::info
+This document is for guidance only. Other errors may occur in different ARM environments. You are welcome to report them or submit solutions in [doris-website Issues](https://github.com/apache/doris-website/issues).
 :::
 
-## Hardware/OS environment
+:::tip
+Starting from version 3.0.3, the ARM platform supports compilation and deployment in compute-storage decoupled mode.
+:::
 
-1. KylinOS：
+## 1. Hardware and Operating System Compatibility
+
+{/* Knowledge type: Hardware requirements */}
+
+The following environments have been verified by the community:
+
+| Operating System | Version | Example CPU |
+| -------- | ---- | -------- |
+| KylinOS | Kylin-Server-10-SP1-Release-Build04-20200711 | Phytium FT-2000+/64 |
+| CentOS | 7.9 and above (AltArch) | aarch64 |
+| Ubuntu | 20.04 | aarch64 |
+
+Reference output:
 
 ```shell
-$> cat /etc/.kyinfo
+# KylinOS
+$ cat /etc/.kyinfo
 name=Kylin-Server
 milestone=10-SP1-Release-Build04-20200711
 arch=arm64
@@ -51,14 +73,11 @@ beta=False
 time=2020-07-11 17:16:54
 dist_id=Kylin-Server-10-SP1-Release-Build04-20200711-arm64-2020-07-11 17:16:54
 
-$> cat /proc/cpuinfo
+$ cat /proc/cpuinfo
 model name  : Phytium,FT-2000+/64
-```
 
-2. CentOS 7.9 or higher
-
-```shell
-$> lsb_release -a
+# CentOS 7.9
+$ lsb_release -a
 LSB Version:	:core-4.1-aarch64:core-4.1-noarch
 Distributor ID:	CentOS
 Description:	CentOS Linux release 7.9.2009 (AltArch)
@@ -66,65 +85,67 @@ Release:	7.9.2009
 Codename:	AltArch
 ```
 
-## Software Environment
+## 2. Software Environment Configuration
 
-### Software Environment List (Taking JDK8 as an example)
+### 2.1 Dependency Version Reference Table (Using JDK 8 as an Example)
 
-| Component Name                                               | Component Version              |
-| ------------------------------------------------------------ | ------------------------------ |
-| Git                                                          | 2.0+                           |
-| JDK                                                          | 1.8.0                          |
-| Maven                                                        | 3.6.3                          |
-| NodeJS                                                       | 16.3.0                         |
-| LDB-Toolchain                                                | 0.9.1                          |
-| Commonly Used Components<br />byacc<br />patch<br />automake<br />libtool<br />make<br />which<br />file<br />ncurses-devel<br />gettext-devel<br />unzip<br />bzip2<br />zip<br />util-linux<br />wget<br />git<br />python2 | yum install or apt-get install |
-| autoconf                                                     | 2.69                           |
-| bison                                                        | 3.0.4                          |
+{/* Knowledge type: Configuration parameters */}
 
-### Software Environment Installation Command
+| Component | Version | Notes |
+| ---- | ---- | ---- |
+| Git | 2.0+ | |
+| JDK | 1.8.0 | JDK 17 is required to compile 3.0+ or master |
+| Maven | 3.6.3 | 3.9.9 is recommended |
+| NodeJS | 16.3.0 | |
+| LDB Toolchain | 0.9.1 | 0.21+ is recommended for ARM |
+| autoconf | 2.69 | Install from source |
+| bison | 3.0.4 | |
+| Common system packages | Installed automatically by yum/apt | byacc, patch, automake, libtool, make, which, file, ncurses-devel, gettext-devel, unzip, bzip2, zip, util-linux, wget, git, python2 |
+
+### 2.2 Commands to Install the Software Environment
 
 <Tabs>
   <TabItem value="CentOS 7.9" label="CentOS 7.9" default>
     <div>
 
-1. Create root directories for pacakges
+1. Create the root directories for downloaded packages and installed software
 
 ```shell
-# Create root directory for software download and installation packages
+# Create the root directory for downloaded packages
 mkdir /opt/tools
-# Create root directory for software installation
+# Create the root directory for installed software
 mkdir /opt/software
 ```
   </div>
     <div>
 
-2. Installing dependencies
+2. Install dependencies
 
   - Git
 
 ```shell
-  # yum install (save the trouble of compilation)
+  # To skip the compilation hassle, install directly with yum
   yum install -y git
 ```
 
-- JDK8 (2 methods)
+  - JDK 8
 
 ```shell
-  # Oracle JDK 8 or OpenJDK 8 for Doris 2.1 and earlier versions
-  # 1. yum install, which can avoid additional download and configuration. Installing the devel package is to get tools such as the jps command.
+  # When compiling Doris 2.1 or earlier versions, you can install JDK 8
+  # Option 1: Install directly with yum. The devel package provides tools such as jps
   yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
-  
-  # 2. Download the installation package of the arm64 architecture, decompress it, and configure the environment variables.
+
+  # Option 2: Download the arm64 package, extract it, and configure environment variables
   cd /opt/tools
   wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/jdk-8u291-linux-aarch64.tar.gz && \
-  tar -zxvf jdk-8u291-linux-aarch64.tar.gz && \
-  mv jdk1.8.0_291 /opt/software/jdk8
+    tar -zxvf jdk-8u291-linux-aarch64.tar.gz && \
+    mv jdk1.8.0_291 /opt/software/jdk8
 ```
 
-- JDK17
+  - JDK 17
 
 ```shell
-  # For versions later than 3.0 (inclusive), or the master branch, please use JDK 17
+  # To compile Doris 3.0 (inclusive) or later versions, or the master branch, replace JDK 8 with JDK 17
   yum install -y java-17-openjdk java-17-openjdk-devel
 ```
 
@@ -132,7 +153,7 @@ mkdir /opt/software
 
 ```shell
   cd /opt/tools
-  # Download the wget tool, decompress it, and configure the environment variables.
+  # Download, extract, and configure environment variables
   wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
     tar -zxvf apache-maven-3.9.9-bin.tar.gz && \
     mv apache-maven-3.9.9 /opt/software/maven
@@ -142,27 +163,27 @@ mkdir /opt/software
 
 ```shell
   cd /opt/tools
-  # Download the installation package of the arm64 architecture
+  # Download the arm64 package
   wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v16.3.0-linux-arm64.tar.xz && \
     tar -xvf node-v16.3.0-linux-arm64.tar.xz && \
     mv node-v16.3.0-linux-arm64 /opt/software/nodejs
 ```
 
-  - LDB-Toolchain
+  - LDB Toolchain
 
 ```shell
   cd /opt/tools
-  # Download LDB-Toolchain ARM version
+  # Download the ARM version of LDB Toolchain
   wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.21/ldb_toolchain_gen.aarch64.sh && \
-    sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
+    bash ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
 ```
   </div>
     <div>
 
-3. Configure environment variables (Taking JDK8 as an example)
+3. Configure environment variables
 
 ```shell
-# Configure environment variables
+# Configure environment variables (using JDK 8 as an example)
 vim /etc/profile.d/doris.sh
 export JAVA_HOME=/opt/software/jdk8
 export MAVEN_HOME=/opt/software/maven
@@ -173,7 +194,7 @@ export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_JS_HOME/bin:$LDB_HOME/bin:$PATH
 # Save, exit, and refresh environment variables
 source /etc/profile.d/doris.sh
 
-# Test (Taking JDK8 as an example)
+# Verify the installation (using JDK 8 as an example)
 java -version
 > java version "1.8.0_291"
 mvn -version
@@ -186,10 +207,10 @@ gcc --version
   </div>
     <div>
 
-4. Install other environments and components
+4. Install additional environments and components
 
 ```shell
-# Install required system packages
+# Install common system packages
 sudo yum install -y byacc patch automake libtool make which file ncurses-devel gettext-devel unzip bzip2 bison zip util-linux wget git python2
 
 # Install autoconf-2.69
@@ -207,7 +228,7 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
   <TabItem value="Ubuntu 20.04" label="Ubuntu 20.04">
     <div>
 
-1. Update apt-get repository
+1. Update the apt software source
 
 ```shell
 apt-get update
@@ -217,55 +238,56 @@ apt-get update
 
 2. Check the shell command set
 
-  The Ubuntu shell installs dash instead of bash by default. It needs to be switched to bash for proper execution. Run the following command to view the details of sh and confirm which program corresponds to the shell:
+  On Ubuntu, `/bin/sh` points to dash rather than bash by default. You need to switch it to bash so that some scripts can run. First, check what `sh` currently points to:
 
 ```shell
 ls -al /bin/sh
 ```
 
-  The shell can be switched back to dash by:
+  Switch it with the following command:
 
 ```shell
 sudo dpkg-reconfigure dash
 ```
 
-  Then select no to confirm. After these steps, dash will no longer be the default shell tool.
+  In the interactive interface, select `no` (do not set dash as the default shell), and `/bin/sh` will point to bash.
   </div>
     <div>
 
-3. Create root directories for packages
+3. Create the root directories for downloaded packages and installed software
 
 ```shell
-  # Create root directory for software download and installation packages
+  # Create the root directory for downloaded packages
   mkdir /opt/tools
-  # Create root directory for software installation
+  # Create the root directory for installed software
   mkdir /opt/software
 ```
   </div>
     <div>
 
-4. Installing dependencies
+4. Install dependencies
+
   - Git
 
 ```shell
-  # apt-get install, which can save the trouble of compilation
+  # Install directly with apt-get
   apt-get -y install git
 ```
 
-  - JDK8
+  - JDK 8
 
 ```shell
-  # Download the installation package of the ARM64 architecture, decompress it, and configure environment variables.
+  # Download the arm64 package, extract it, and configure environment variables
   cd /opt/tools
   wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/jdk-8u291-linux-aarch64.tar.gz && \
     tar -zxvf jdk-8u291-linux-aarch64.tar.gz && \
     mv jdk1.8.0_291 /opt/software/jdk8
 ```
 
-- JDK17
+  - JDK 17
 
 ```shell
-  # For versions later than 3.0 (inclusive), or the master branch, please use JDK 17
+  # To compile Doris 3.0 (inclusive) or later versions, or the master branch, replace JDK 8 with JDK 17
   apt-get -y install openjdk-17-jdk
 ```
 
@@ -273,7 +295,7 @@ sudo dpkg-reconfigure dash
 
 ```shell
   cd /opt/tools
-  # Download the wget tool, decompress it, and configure the environment variables.
+  # Download, extract, and configure environment variables
   wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
     tar -zxvf apache-maven-3.9.9-bin.tar.gz && \
     mv apache-maven-3.9.9 /opt/software/maven
@@ -283,19 +305,19 @@ sudo dpkg-reconfigure dash
 
 ```shell
   cd /opt/tools
-  # Download the installation package of ARM64 architecture.
+  # Download the arm64 package
   wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v16.3.0-linux-arm64.tar.xz && \
     tar -xvf node-v16.3.0-linux-arm64.tar.xz && \
     mv node-v16.3.0-linux-arm64 /opt/software/nodejs
 ```
 
-  - ldb-toolchain
+  - LDB Toolchain
 
 ```shell
   cd /opt/tools
-  # Download ldb-toolchain ARM version
+  # Download the ARM version of LDB Toolchain
   wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.21/ldb_toolchain_gen.aarch64.sh && \
-    sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
+    bash ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
 ```
   </div>
     <div>
@@ -303,7 +325,7 @@ sudo dpkg-reconfigure dash
 5. Configure environment variables
 
 ```shell
-# Configure environment variables (Taking JDK8 as an example)
+# Configure environment variables (using JDK 8 as an example)
 vim /etc/profile.d/doris.sh
 export JAVA_HOME=/opt/software/jdk8
 export MAVEN_HOME=/opt/software/maven
@@ -314,7 +336,7 @@ export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_JS_HOME/bin:$LDB_HOME/bin:$PATH
 # Save, exit, and refresh environment variables
 source /etc/profile.d/doris.sh
 
-# Test (Taking JDK8 as an example)
+# Verify the installation (using JDK 8 as an example)
 java -version
 > java version "1.8.0_291"
 mvn -version
@@ -327,10 +349,10 @@ gcc --version
   </div>
     <div>
 
-6. Install other environments and components
+6. Install additional environments and components
 
 ```shell
-# Install required system packages
+# Install common system packages
 sudo apt install -y build-essential cmake flex automake bison binutils-dev libiberty-dev zip libncurses5-dev curl ninja-build
 sudo apt-get install -y make
 sudo apt-get install -y unzip
@@ -359,193 +381,196 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
   </TabItem>
 </Tabs>
 
-## Compile
+## 3. Compilation
+
+{/* Knowledge type: Procedure */}
 
 :::tip
-Currently the only recommended method for ARM environments is to compile with ldb-toolchain, which works for [commit 7f3564](https://github.com/apache/doris/commit/7f3564cca62de49c9f2ea67fcf735921dbebb4d1) for Doris releases after that.
+On the ARM platform, only LDB Toolchain is recommended for compilation. This method applies to Doris versions after [commit 7f3564](https://github.com/apache/doris/commit/7f3564cca62de49c9f2ea67fcf735921dbebb4d1).
 :::
 
-For more detailed instructions about LDB toolchain download and install, please refer to the earlier section of this document.
+For how to download and install LDB Toolchain, see the section above. For the subsequent build steps, see [Compile with LDB Toolchain](./compilation-with-ldb-toolchain). JDK and NodeJS must be replaced with the aarch64 versions (see the section above).
 
-See [Compilation with LDB toolchain](./compilation-with-ldb-toolchain) for the steps then.
+If you have trouble downloading the prebuilt third-party libraries, use `tools/build_thirdparty.sh` to build them yourself. Use gcc when building third-party libraries:
 
-The jdk and nodejs should be replaced with the corresponding aarch64 versions, which has introduced the earlier section of this document.
-
-If you have problems compiling with the downloaded precompiled third-party libraries, please use `tools/build_thirdparty.sh` to compile them by yourself. When compiling the thirdparty library, use gcc:
 ```shell
 export DORIS_TOOLCHAIN=gcc
 ```
 
-When compiling Doris on ARM platforms, **please disable AVX2, LIBUNWIND and AZURE tripartite libraries**:
+When compiling Doris on the ARM platform, **you must disable the AVX2, LIBUNWIND, and AZURE third-party libraries**:
+
 ```shell
 export USE_AVX2=OFF
 export USE_UNWIND=OFF
 export DISABLE_BUILD_AZURE=ON
 ```
 
-If you still encounter problems when compiling or starting, please consult the [FAQ](#faq). If there is no relevant solution, feel free to [raise an issue](https://github.com/apache/doris/issues).
+If you still encounter issues during compilation or startup, see [FAQ](#4-faq). If no relevant solution is available, you are welcome to [open an issue](https://github.com/apache/doris/issues).
 
-## FAQ
+## 4. FAQ
 
-### Problems about Compiling
+{/* Knowledge type: Troubleshooting */}
+{/* Scenario: Troubleshooting / Compilation failure */}
 
-1. File not found when compiling the third-party library libhdfs3.a.
+### 4.1 Compilation Issues
 
-    - Problem Description
+#### 1. Cannot find the directory when compiling the third-party library libhdfs3.a
 
-      During the compilation and installation process, the following error occurrs:
+- Symptom:
 
-      > not found lib/libhdfs3.a file or directory
+    The following error appears during compilation and installation:
 
-    - Cause
+    > not found lib/libhdfs3.a file or directory
 
-      The third-party library dependency is improperly downloaded.
+- Cause:
 
-    - Solution
+    The third-party library dependency failed to download.
 
-      - Use a third-party download repository
+- Solution:
+
+    Recompile third-party libraries using a third-party download repository.
 
 ```shell
   export REPOSITORY_URL=https://doris-thirdparty-repo.bj.bcebos.com/thirdparty
   sh /opt/doris/thirdparty/build-thirdparty.sh
 ```
 
-  REPOSITORY_URL contains all third-party library source packages and their historical versions.
+`REPOSITORY_URL` contains the source packages of all third-party libraries and their historical versions.
 
-2. python command not found
+#### 2. python command not found
 
-   - Problem Description
+- Symptom:
 
-     - An exception is thrown when executing build.sh
+    Running `build.sh` throws the following exception:
 
-       > /opt/doris/env.sh: line 46: python: command not found
-       >
-       > Python 2.7.18
+    > /opt/doris/env.sh: line 46: python: command not found
+    >
+    > Python 2.7.18
 
-   - Cause
+- Cause:
 
-     The system uses `python2.7`, `python3.6`, `python2`, `python3` by default to execute python commands. Doris only requires python 2.7+ to install dependencies, so you just need to add a command  `python` to connect. 
+    The system invokes Python with commands such as `python2.7`, `python3.6`, `python2`, or `python3` by default, but Doris dependencies require a command named `python` (2.7+ is fine).
 
-   - Solution
+- Solution:
 
-     Establish a soft link to the `python` command in `\usr\bin`
+    Create a symbolic link at `/usr/bin/python`.
 
 ```shell
-      # View python installation directory
+      # Check the python installation directory
       whereis python
-      # Establish soft connection
+      # Create the symbolic link
       sudo ln -s /usr/bin/python2.7 /usr/bin/python
 ```
 
-3. There is no output directory after compilation
+#### 3. No output directory after compilation
 
-   - Problem Description
+- Symptom:
 
-     - Cannot find the output folder in the directory after the execution of build.sh.
+    After `build.sh` finishes, the `output` directory is not found in the directory.
 
-   - Cause
+- Cause:
 
-     Compilation fails. Try again.
+    The compilation did not succeed. Recompile.
 
-   - Solution
+- Solution:
 
 ```shell
       sh build.sh --clean
 ```
 
-4. spark-dpp compilation fails
+#### 4. spark-dpp compilation failure
 
-   - Problem Description
+- Symptom:
 
-     - After compiling build.sh, compiling to Spark-DPP fails with an error
+    During `build.sh`, an error is reported when compiling spark-dpp:
 
-       > Failed to execute goal on project spark-dpp
+    > Failed to execute goal on project spark-dpp
 
-   - Cause
+- Cause:
 
-     This error message is caused by download failure (connection to the `repo.maven.apache.org` central repository fails).
+    The Maven Central repository `repo.maven.apache.org` is unreachable and dependencies cannot be downloaded:
 
-     > Could not transfer artifact org.apache.spark:spark-sql_2.12:jar:2.4.6 from/to central (https://repo.maven.apache.org/maven2): Transfer failed for https://repo .maven.apache.org/maven2/org/apache/spark/spark-sql_2.12/2.4.6/spark-sql_2.12-2.4.6.jar: Unknown host repo.maven.apache.org
+    > Could not transfer artifact org.apache.spark:spark-sql_2.12:jar:2.4.6 from/to central (https://repo.maven.apache.org/maven2): Transfer failed for https://repo.maven.apache.org/maven2/org/apache/spark/spark-sql_2.12/2.4.6/spark-sql_2.12-2.4.6.jar: Unknown host repo.maven.apache.org
 
-   - Solution
+- Solution:
 
-     - Rebuild
+    Check the network and rebuild.
 
-5. No space left, compilation fails
+#### 5. Compilation fails due to insufficient free space
 
-   - Problem Description
+- Symptom:
 
-     - Failed to build CXX object during compilation, error message showing no space left
+    During compilation, building a CXX object fails with a message that there is no free space:
 
-       > fatal error: error writing to /tmp/ccKn4nPK.s: No space left on device
-       >
-       > 1112 | } // namespace doris::vectorized
-       >
-       > compilation terminated.
+    > fatal error: error writing to /tmp/ccKn4nPK.s: No space left on device
+    >
+    > 1112 | } // namespace doris::vectorized
+    >
+    > compilation terminated.
 
-   - Cause
+- Cause:
 
-     Insufficient free space on the device
+    The device has insufficient free space.
 
-   - Solution
+- Solution:
 
-     Expand the free space on the device by deleting files you don't need, etc.
+    Free up space on the device, for example by deleting unneeded files.
 
-6. Could not find pkg.m4 file in pkg.config
+#### 6. pkg.m4 not found in pkg.config
 
-   - Problem Description
+- Symptom:
 
-     - A "file not found" error occurs during compilation:
+    A "file not found" error appears during compilation:
 
-       > Couldn't find pkg.m4 from pkg-config. Install the appropriate package for your distribution or set ACLOCAL_PATH to the directory containing pkg.m4.
+    > Couldn't find pkg.m4 from pkg-config. Install the appropriate package for your distribution or set ACLOCAL_PATH to the directory containing pkg.m4.
 
-   - Cause
+    The logs show that this happens while compiling the `libxml2` third-party library.
 
-     There is something wrong with the compilation of the third-party library `libxml2` .
+- Cause:
 
-     ***Possible Reasons:***
+    During the compilation of the `libxml2` third-party library, `pkg.m4` cannot be located. Possible reasons:
 
-     1. An exception occurs when the Ubuntu system loads the environment variables so the index under the ldb directory is not successfully loaded.
-     2. The retrieval of environment variables during libxml2 compilation fails, so the ldb/aclocal directory is not retrieved.
-   
-   - Solution
+    1. The Ubuntu system has an issue while loading environment variables, so the index under the ldb directory is not loaded successfully.
+    2. The environment variable lookup fails during the libxml2 build, so the build does not search the `ldb/aclocal` directory.
 
-      Copy the `pkg.m4` file in the ldb/aclocal directory into the libxml2/m4 directory, and recompile the third-party library.
+- Solution:
+
+    Copy the `pkg.m4` file under `ldb/aclocal` to the `libxml2/m4` directory and rebuild the third-party libraries:
 
 ```shell
-      cp /opt/software/ldb_toolchain/share/aclocal/pkg.m4 /opt/incubator-doris/thirdparty/src/libxml2-v2.9.10/m4
-      sh /opt/incubator-doris/thirdparty/build-thirdparty.sh
+      cp /opt/software/ldb_toolchain/share/aclocal/pkg.m4 /opt/doris/thirdparty/src/libxml2-v2.9.10/m4
+      sh /opt/doris/thirdparty/build-thirdparty.sh
 ```
 
-7. Failed to execute test CURL_HAS_TLS_PROXY
+#### 7. Test CURL_HAS_TLS_PROXY fails
 
-   - Problem Description
+- Symptom:
 
-     - An error is reported during the compilation process of the third-party package:
+    An error is reported during third-party package compilation:
 
-       > -- Performing Test CURL_HAS_TLS_PROXY - Failed
-       >
-       > CMake Error at cmake/dependencies.cmake:15 (get_property):
-       >
-       > INTERFACE_LIBRARY targets may only have whitelisted properties. The property "LINK_LIBRARIES_ALL" is not allowed.
+    > -- Performing Test CURL_HAS_TLS_PROXY - Failed
+    >
+    > CMake Error at cmake/dependencies.cmake:15 (get_property):
+    >
+    > INTERFACE_LIBRARY targets may only have whitelisted properties. The property "LINK_LIBRARIES_ALL" is not allowed.
 
-     - The log shows: curl `No such file or directory`
+    Inspecting the logs reveals that the curl header file cannot be found:
 
-       > fatal error: curl/curl.h: No such file or directory
-       >
-       >  2 |     #include &lt;curl/curl.h>
-       >
-       > compilation terminated.
-       >
-       > ninja: build stopped: subcommand failed.
+    > fatal error: curl/curl.h: No such file or directory
+    >
+    >  2 |     #include &lt;curl/curl.h>
+    >
+    > compilation terminated.
+    >
+    > ninja: build stopped: subcommand failed.
 
-   - Cause
+- Cause:
 
-     There is an error in the compilation environment. The gcc is of version 9.3.0 that comes with the system, so it is not compiled with ldb, so you need to configure the ldb environment variable.
+    The build used the system's built-in gcc 9.3.0 instead of LDB Toolchain. The LDB Toolchain environment variables need to be configured correctly.
 
-   - Solution
+- Solution:
 
-     Configure ldb environment variables
+    Configure the LDB environment variables:
 
 ```shell
       # Configure environment variables
@@ -559,102 +584,101 @@ If you still encounter problems when compiling or starting, please consult the [
       > gcc-11
 ```
 
-8. The compilation process aborts with the words "ninja failed with: signal: killed".
+#### 8. Compilation aborts with `ninja failed with: signal: killed`
 
-   - Problem Description
+- Symptom:
 
-     BE or thirdparty failed in the middle of compilation with a message containing
+    BE or third-party library compilation fails midway with a message containing:
 
-     > ninja failed with: signal: killed
+    > ninja failed with: signal: killed
 
-   - Cause
+- Cause:
 
-     Insufficient memory on the machine
+    The machine is out of memory.
 
-   - Solution
+- Solution:
 
-     Switch to a machine with more memory(at least 16GB) for compilation
+    Use a machine with more memory (at least 16 GB) for compilation, or reduce the build concurrency (`-j`).
 
-### Problems about Starting
+### 4.2 Startup Issues
 
-1. Failed to start FE, transaction error -20
+#### 1. FE fails to start, transaction -20 issue
 
-   - Problem Description
+- Symptom:
 
-     When starting FE, a transaction error 20 is reported with UNKNOWN status.
+    When starting FE, a transaction error 20 is reported, with status UNKNOWN:
 
-     > [BDBEnvironment.setup():198] error to open replicated environment. will exit.
-     >
-     > com.sleepycat.je.rep.ReplicaWriteException: (JE 18.3.12) Problem closing transaction 20. The current state is:UNKNOWN. The node transitioned to this state at:Fri Apr 22 12:48:08 CST 2022
+    > [BDBEnvironment.setup():198] error to open replicated environment. will exit.
+    >
+    > com.sleepycat.je.rep.ReplicaWriteException: (JE 18.3.12) Problem closing transaction 20. The current state is:UNKNOWN. The node transitioned to this state at:Fri Apr 22 12:48:08 CST 2022
 
-   - Cause
+- Cause:
 
-     Insufficient hard disk space
+    Insufficient disk space.
 
-   - Solution
+- Solution:
 
-     Free up hard disk space or mount a new hard disk
+    Free up disk space or mount a new disk.
 
-2. Abnormal BDB environment setting, disk search error
+#### 2. BDB environment setup exception, disk lookup error
 
-   - Problem Description
+- Symptom:
 
-     An exception is reported when starting FE after migrating the drive letter where FE is located
+    After migrating the disk where FE resides, starting FE throws an exception:
 
-     > 2022-04-22 16:21:44,092 ERROR (MASTER 172.28.7.231_9010_1650606822109(-1)|1) [BDBJEJournal.open():306] catch an exception when setup bdb environment. will exit.
-     >
-     > com.sleepycat.je.DiskLimitException: (JE 18.3.12) Disk usage is not within je.maxDisk or je.freeDisk limits and write operations are prohibited: maxDiskLimit=0 freeDiskLimit=5,368,709,120 adjustedMaxDiskLimit=0 maxDiskOverage=0 freeDiskShortage=1,536,552,960 diskFreeSpace=3,832,156,160 availableLogSize=-1,536,552,960 totalLogSize=4,665 activeLogSize=4,665 reservedLogSize=0 protectedLogSize=0 protectedLogSizeMap={}
+    > 2022-04-22 16:21:44,092 ERROR (MASTER 172.28.7.231_9010_1650606822109(-1)|1) [BDBJEJournal.open():306] catch an exception when setup bdb environment. will exit.
+    >
+    > com.sleepycat.je.DiskLimitException: (JE 18.3.12) Disk usage is not within je.maxDisk or je.freeDisk limits and write operations are prohibited: maxDiskLimit=0 freeDiskLimit=5,368,709,120 adjustedMaxDiskLimit=0 maxDiskOverage=0 freeDiskShortage=1,536,552,960 diskFreeSpace=3,832,156,160 availableLogSize=-1,536,552,960 totalLogSize=4,665 activeLogSize=4,665 reservedLogSize=0 protectedLogSize=0 protectedLogSizeMap={}
 
-   - Cause
+- Cause:
 
-     FE has been migrated to another location, which doesn't match the hard disk information stored in the metadata; or the hard disk is damaged or not mounted
+    The location of FE has been migrated, and the disk information recorded in the metadata does not match. Alternatively, the disk is damaged or not mounted.
 
-   - Solution
+- Solution:
 
-     - Check if the hard disk is normal, initialized and mounted correctly
-     - Fix FE metadata
-     - If it is a test machine, you can delete the metadata directory and restart
+    - Check that the disk is healthy, initialized, and mounted correctly.
+    - Repair FE metadata.
+    - In test environments, you can delete the metadata directory and restart.
 
-3. BE coredumps at startup and the word `libc.so` or `glibc-compatibility/` is visible in the core stack.
+#### 3. BE coredumps on startup, with `libc.so` or `glibc-compatibility/` in the core stack
 
-    - Problem cause
-      The current machine glibc version is too low. You can be confirmed with `ldd --version`. This may occur if the version is less than 2.27.
+- Cause:
 
-    - Solution
-      Recompile the BE, with environment variables added:
+    The glibc version on the current machine is too low. Confirm with `ldd --version`. This issue may occur if the version is below 2.27.
+
+- Solution:
+
+    Recompile BE with the following environment variable added:
+
 ```shell
       export GLIBC_COMPATIBILITY=OFF
 ```
 
-### Other Component Issues 
+### 4.3 Issues With Other Components
 
-- Problem Description
+- Symptom
 
-  The follow error prompts are all due to one root cause.
+  If you see error messages for any of the following components, handle them with the same solution below:
 
-  - bison related
-    1. fseterr.c error when installing bison-3.0.4
-  - flex related
-    1. flex command not found
-  - cmake related
-    1. cmake command not found
-    2. cmake cannot find the dependent library
-    3. cmake cannot find CMAKE_ROOT
-    4. Compiler set not found in cmake environment variable CXX
-  - boost related
-    1. Boost.Build build engine failed
-  - mysql related
-    1. Could not find mysql client dependency a file
-  - gcc related
-    1. GCC version requires 11+
+    - bison: error fseterr.c when installing bison-3.0.4
+    - flex: flex command not found
+    - cmake: cmake command not found / cmake cannot find dependent libraries / cmake cannot find CMAKE_ROOT / cmake cannot find the compiler set in the CXX environment variable
+    - boost: Boost.Build engine build failure
+    - mysql: cannot find the .a file of the mysql client dependency
+    - gcc: GCC 11+ is required
 
 - Cause
 
-  Not compiled with ldb-toolchain
+    The correct LDB Toolchain was not used for compilation.
 
 - Solution
 
-  - Check if the ldb-toolchain environment variable is configured
-  - Check that the gcc version matches the one recommended in the [compile-with-ldb-toolchain](./compilation-with-ldb-toolchain) documentation.
-  - Delete the ldb directory after the `ldb_toolchain_gen.aarch64.sh` script is executed, re-execute and configure the environment variables, and verify the gcc version
+    - Check whether the LDB Toolchain environment variables are configured.
+    - Check whether the gcc version matches what is recommended in [Compile with LDB Toolchain](./compilation-with-ldb-toolchain).
+    - Delete the ldb directory created by running `ldb_toolchain_gen.aarch64.sh`, run the script again, configure the environment variables, and verify the gcc version.
 
+## Related Documents
+
+- [Compile with LDB Toolchain](./compilation-with-ldb-toolchain)
+- [Compile with Docker Image](./compilation-with-docker)
+- [Compile Directly on Linux](./compilation-linux)

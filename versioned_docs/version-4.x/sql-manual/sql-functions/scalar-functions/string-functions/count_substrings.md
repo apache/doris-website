@@ -2,7 +2,7 @@
 {
     "title": "COUNT_SUBSTRINGS",
     "language": "en",
-    "description": "The COUNTSUBSTRINGS function counts the number of occurrences of a specified substring within a string."
+    "description": "The COUNT_SUBSTRINGS function counts the number of occurrences of a specified substring within a string."
 }
 ---
 
@@ -121,7 +121,7 @@ SELECT count_substrings('éèêëìíîïðñòó éèêëìíîïðñòó', 'é
 +------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
 ```
 
-7. Start position out of range
+8. Multi-byte Chinese substring with start position
 ```sql
 SELECT count_substrings('你好，世界！你好，世界！', '世界', 0), 
        count_substrings('你好，世界！你好，世界！', '世界', 30);

@@ -1,76 +1,98 @@
 ---
 {
-    "title": "Managing Storage Vault",
+    "title": "Managing Storage Vault: Creation, Configuration, and Access Control",
+    "sidebar_label": "Managing Storage Vault",
     "language": "en",
-    "description": "The Storage Vault is a remote shared storage used by Doris in a decoupled storage-compute model."
+    "description": "Describes how to create, view, and modify Storage Vaults in compute-storage decoupled mode, specify storage locations for tables or databases, and manage user access permissions.",
+    "keywords": ["Storage Vault", "compute-storage decoupled", "object storage", "HDFS", "S3", "storage management", "Doris"]
 }
 ---
 
-The Storage Vault is a remote shared storage used by Doris in a decoupled storage-compute model. You can configure one or more Storage Vaults to store different tables in different Storage Vaults.
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Storage configuration and management for compute-storage decoupled clusters -->
+
+A Storage Vault is the remote shared storage abstraction that Doris uses in compute-storage decoupled mode. You can configure one or more Storage Vaults and store different tables in different Storage Vaults for flexible storage management.
 
 ## Create a Storage Vault
+
+<!-- Knowledge type: Operational steps -->
 
 **Syntax**
 
 ```sql
 CREATE STORAGE VAULT [IF NOT EXISTS] <vault_name>
 PROPERTIES
-("key" = "value",...)
+("key" = "value", ...)
 ```
 
-<vault_name> is the user-defined name of the Storage Vault, which serves as the identifier for accessing the Storage Vault.
-
+`<vault_name>` is a user-defined name for the Storage Vault and serves as the unique identifier for subsequent operations.
 
 ### Create an HDFS Storage Vault
 
-To create an HDFS-based decoupled storage-compute Doris cluster, ensure that all nodes (including FE/BE nodes, Meta Service) have privilege to access the specified HDFS, including completing Kerberos authorization configuration and connectivity checks in advance (which can be tested using Hadoop Client on each corresponding node).
+<!-- Applicable scenarios: Using HDFS as shared storage -->
+
+Before creating an HDFS-based Storage Vault, ensure that all nodes (including FE, BE nodes, and Meta Service) can access the target HDFS, including completing Kerberos authorization configuration and connectivity checks (you can test this on each node using the Hadoop Client).
 
 ```sql
 CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault_demo
-    PROPERTIES (
-        "type"="hdfs",                                     -- required
-        "fs.defaultFS"="hdfs://127.0.0.1:8020",            -- required
-        "path_prefix"="big/data",                          -- optional, generally filled in according to business name
-        "hadoop.username"="user"                           -- optional
-        "hadoop.security.authentication"="kerberos"        -- optional
-        "hadoop.kerberos.principal"="hadoop/127.0.0.1@XXX" -- optional
-        "hadoop.kerberos.keytab"="/etc/emr.keytab"         -- optional
-    );
+PROPERTIES (
+    "type"                          = "hdfs",                      -- required
+    "fs.defaultFS"                  = "hdfs://127.0.0.1:8020",     -- required
+    "path_prefix"                   = "big/data",                  -- optional, typically filled with the business name
+    "hadoop.username"               = "user",                      -- optional
+    "hadoop.security.authentication" = "kerberos",                 -- optional
+    "hadoop.kerberos.principal"     = "hadoop/127.0.0.1@XXX",     -- optional
+    "hadoop.kerberos.keytab"        = "/etc/emr.keytab"            -- optional
+);
 ```
 
 ### Create an S3 Storage Vault
 
+<!-- Applicable scenarios: Using object storage (OSS/S3/COS, etc.) as shared storage -->
+
 ```sql
 CREATE STORAGE VAULT IF NOT EXISTS s3_vault_demo
 PROPERTIES (
-    "type" = "S3",                                 -- required
-    "s3.endpoint" = "oss-cn-beijing.aliyuncs.com", -- required
-    "s3.region" = "cn-beijing",                    -- required
-    "s3.bucket" = "bucket",                        -- required
-    "s3.root.path" = "big/data/prefix",            -- required
-    "s3.access_key" = "ak",                        -- required
-    "s3.secret_key" = "sk",                        -- required
-    "provider" = "OSS",                            -- required
-    "use_path_style" = "false"                     -- optional
+    "type"           = "S3",                                -- required
+    "s3.endpoint"    = "oss-cn-beijing.aliyuncs.com",       -- required
+    "s3.region"      = "cn-beijing",                        -- required
+    "s3.bucket"      = "bucket",                            -- required
+    "s3.root.path"   = "big/data/prefix",                   -- required
+    "s3.access_key"  = "ak",                                -- required
+    "s3.secret_key"  = "sk",                                -- required
+    "provider"       = "OSS",                               -- required
+    "use_path_style" = "false"                              -- optional
 );
 ```
 
-More parameter explanations and examples can be found in [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
+:::caution Permission Requirements
+The object storage path must have the following access permissions: `head`, `get`, `list`, `put`, `multipartUpload`, `delete`.
+:::
 
-**Note**
-The provided object storage path must have head/get/list/put/multipartUpload/delete access permissions.
+For more cloud provider examples and parameter descriptions, see [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
 
 ## View Storage Vaults
 
+<!-- Knowledge type: Operational steps -->
+
 **Syntax**
 
-```
+```sql
 SHOW STORAGE VAULTS
 ```
 
-The returned result includes 4 columns: the Storage Vault name, Storage Vault ID, properties, and whether it is the default Storage Vault.
+The result contains 4 columns:
+
+| Column | Description |
+|--------|-------------|
+| Storage Vault Name | The user-defined Vault identifier |
+| Storage Vault ID | The system-assigned unique ID |
+| Properties | The configuration properties of the Vault |
+| IsDefault | Whether this is the default Storage Vault |
 
 ## Set the Default Storage Vault
+
+<!-- Knowledge type: Operational steps -->
 
 **Syntax**
 
@@ -78,100 +100,136 @@ The returned result includes 4 columns: the Storage Vault name, Storage Vault ID
 SET <vault_name> AS DEFAULT STORAGE VAULT
 ```
 
-## Specify Storage Vault When Creating a Table
+After this is set, if no Storage Vault is explicitly specified when creating a table, this default Vault is used automatically.
 
-When creating a table, specify `storage_vault_name` in `PROPERTIES`, and the data will be stored in the Storage Vault corresponding to the specified `vault name`. Once the table is successfully created, the `storage_vault` cannot be modified, meaning changing the Storage Vault is not supported.
+## Specify a Storage Vault When Creating a Table
+
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Binding a storage location to a specific table -->
+
+Specify `storage_vault_name` in the `PROPERTIES` clause of `CREATE TABLE`. The table data is then stored in the corresponding Storage Vault.
+
+:::warning Note
+After a table is created successfully, the `storage_vault` of that table **cannot be modified**. Changing the Storage Vault after creation is not supported.
+:::
 
 **Example**
 
 ```sql
 CREATE TABLE IF NOT EXISTS supplier (
-  s_suppkey int(11) NOT NULL COMMENT "",
-  s_name varchar(26) NOT NULL COMMENT "",
-  s_address varchar(26) NOT NULL COMMENT "",
-  s_city varchar(11) NOT NULL COMMENT "",
-  s_nation varchar(16) NOT NULL COMMENT "",
-  s_region varchar(13) NOT NULL COMMENT "",
-  s_phone varchar(16) NOT NULL COMMENT ""
+    s_suppkey int(11)      NOT NULL COMMENT "",
+    s_name    varchar(26)  NOT NULL COMMENT "",
+    s_address varchar(26)  NOT NULL COMMENT "",
+    s_city    varchar(11)  NOT NULL COMMENT "",
+    s_nation  varchar(16)  NOT NULL COMMENT "",
+    s_region  varchar(13)  NOT NULL COMMENT "",
+    s_phone   varchar(16)  NOT NULL COMMENT ""
 )
 UNIQUE KEY (s_suppkey)
 DISTRIBUTED BY HASH(s_suppkey) BUCKETS 1
 PROPERTIES (
-"replication_num" = "1",
-"storage_vault_name" = "hdfs_demo_vault"
+    "replication_num"    = "1",
+    "storage_vault_name" = "hdfs_demo_vault"
 );
 ```
 
-## Specify Storage Vault When Creating a Database
+## Specify a Storage Vault When Creating a Database
 
-When creating a database, specify `storage_vault_name` in `PROPERTIES`. If `storage_vault_name` is not specified when creating a table under the database, the table will use the Storage Vault corresponding to the database's `vault name` for data storage. Users can change the `storage_vault_name` of the database via [ALTER-DATABASE](../sql-manual/sql-statements/database/ALTER-DATABASE.md). However, this action will not affect the `storage_vault` of tables that have already been created under the database, and only newly created tables will use the updated `storage_vault`.
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Setting a default storage location for a database -->
+
+Specify `storage_vault_name` in the `PROPERTIES` clause of `CREATE DATABASE`. New tables created under the database inherit the database's Storage Vault configuration if no Storage Vault is specified individually for those tables.
 
 **Example**
 
 ```sql
-CREATE DATABASE IF NOT EXIST `db_test`
+CREATE DATABASE IF NOT EXISTS `db_test`
 PROPERTIES (
     "storage_vault_name" = "hdfs_demo_vault"
 );
 ```
 
-:::info Note
+You can change the `storage_vault_name` of a database via [ALTER-DATABASE](../sql-manual/sql-statements/database/ALTER-DATABASE.md). **The change only takes effect for newly created tables and does not affect existing tables.**
 
-This feature is supported since version 3.0.5.
+:::info Version Notes and Priority Rules
 
-The priority order for using Storage Vault when creating a table is: Table -> Database -> Default Storage Vault. If Storage Vault is not specified in the table's PROPERTY, it will check if Storage Vault is specified in the database; if the database also does not specify it, it will further check if there is a default Storage Vault.
-
-If the `VAULT_NAME` attribute of Storage Vault is modified, it may cause the Storage Vault set in the database to become invalid, resulting in an error. Users will need to configure a valid `storage_vault_name` for the database based on the actual situation.
+- Specifying a Storage Vault at database creation time is supported starting from **version 3.0.5**.
+- The priority of Storage Vault selection when creating a table (from highest to lowest): **Table** > **Database** > **Default Storage Vault**.
+- If the `VAULT_NAME` of a Storage Vault is modified, the Vault configured at the database level may become invalid and cause errors. In that case, you must reconfigure a valid `storage_vault_name` for the database.
 
 :::
 
+## Modify a Storage Vault
 
-## Alter Storage Vault
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenarios: Updating storage credentials or renaming a Vault -->
 
-Used to alter modifiable properties of the Storage Vault configuration.
+`ALTER STORAGE VAULT` updates the modifiable properties of a Storage Vault.
 
-S3 Storage Vault allowed properties:
-- `VAULT_NAME`
-- `s3.access_key`
-- `s3.secret_key`
-- `use_path_style`
+### Modifiable Properties
 
-HDFS Storage Vault forbidden properties:
-- `path_prefix`
-- `fs.defaultFS`
+Properties that can be modified for an **S3 Storage Vault**:
 
-Properties explanations can be found in [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
+| Property | Description |
+|----------|-------------|
+| `VAULT_NAME` | Vault name (rename) |
+| `s3.access_key` | Access key ID |
+| `s3.secret_key` | Access key secret |
+| `use_path_style` | Whether to use path-style access |
 
-**Example**
+Properties that **cannot** be modified for an **HDFS Storage Vault**:
+
+| Property | Reason |
+|----------|--------|
+| `path_prefix` | Modifying it causes inconsistency in historical data paths |
+| `fs.defaultFS` | Modifying it makes already-written data inaccessible |
+
+For more property descriptions, see [CREATE-STORAGE-VAULT](../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT).
+
+### Examples
+
+Modify an S3 Storage Vault:
 
 ```sql
 ALTER STORAGE VAULT old_s3_vault
 PROPERTIES (
-    "type" = "S3",
-    "VAULT_NAME" = "new_s3_vault",
-    "s3.access_key" = "new_ak"
-    "s3.secret_key" = "new_sk"
+    "type"           = "S3",
+    "VAULT_NAME"     = "new_s3_vault",
+    "s3.access_key"  = "new_ak",
+    "s3.secret_key"  = "new_sk"
 );
 ```
+
+Modify an HDFS Storage Vault:
 
 ```sql
 ALTER STORAGE VAULT old_hdfs_vault
 PROPERTIES (
-    "type" = "hdfs",
-    "VAULT_NAME" = "new_hdfs_vault",
-    "hadoop.username" = "hdfs"
+    "type"             = "hdfs",
+    "VAULT_NAME"       = "new_hdfs_vault",
+    "hadoop.username"  = "hdfs"
 );
 ```
 
-## Delete an Storage Vault
+## Delete a Storage Vault
 
-Not supported
+Deleting a Storage Vault is not currently supported.
 
-## Storage Vault Privilege
+## Storage Vault Access Control
 
-Grant a specified MySQL user the usage privilege for a certain Storage Vault, allowing the user to specify that Storage Vault when creating tables or viewing Storage Vaults.
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Storage access control in multi-user environments -->
 
-### Grant
+Admin users can grant Storage Vault usage permissions to specified MySQL users or roles, controlling which users can reference a Vault when creating tables or view its information.
+
+A user or role that holds `USAGE_PRIV` on a Storage Vault can perform the following operations:
+
+- View the Storage Vault's information via `SHOW STORAGE VAULTS`
+- Specify the Storage Vault in `PROPERTIES` when creating a table
+
+### Grant Permissions
+
+**Syntax**
 
 ```sql
 GRANT
@@ -180,48 +238,50 @@ GRANT
     TO { ROLE | USER } {<role> | <user>}
 ```
 
-Only Admin users have the authority to execute the `GRANT` statement, which is used to grant specified Storage Vault privileges to User/Role. Users/Roles with `USAGE_PRIV` privilege for a certain Storage Vault can perform the following operations:
-
-- View the information of that Storage Vault through `SHOW STORAGE VAULTS`;
-- Specify the use of that Storage Vault in `PROPERTIES` when creating tables.
-
 **Example**
 
 ```sql
-grant usage_priv on storage vault my_storage_vault to user1
+GRANT USAGE_PRIV ON STORAGE VAULT my_storage_vault TO USER user1;
 ```
 
-### Revoke
-
-Revoke the Storage Vault privileges of a specified MySQL user.
+### Revoke Permissions
 
 **Syntax**
 
 ```sql
-REVOKE 
+REVOKE
     USAGE_PRIV
     ON STORAGE VAULT <vault_name>
     FROM { ROLE | USER } {<role> | <user>}
 ```
 
-Only Admin users have the authority to execute the `REVOKE` statement, which is used to revoke the privileges of User/Role for the specified Storage Vault.
-
 **Example**
 
 ```sql
-revoke usage_priv on storage vault my_storage_vault from user1
+REVOKE USAGE_PRIV ON STORAGE VAULT my_storage_vault FROM USER user1;
 ```
 
 ## FAQ
 
-#### Q1. 如何查询特定storage vault被那些表引用？
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenarios: Routine operations and troubleshooting -->
 
-1. Use `show storage vault` to find the ​​storage vault id​​ corresponding to the storage vault name.
+### Q1: How do I find out which tables reference a specific Storage Vault?
 
-2. Execute the following SQL statement:
+**Step 1**: Run `SHOW STORAGE VAULTS` to find the `storage_vault_id` of the target Storage Vault.
+
+**Step 2**: Run the following SQL to query tables that reference that Vault. Replace `PROPERTY_VALUE=3` with the actual `storage_vault_id` value:
 
 ```sql
-mysql> select * from information_schema.table_properties where PROPERTY_NAME = "storage_vault_id" and PROPERTY_VALUE=3;
+SELECT *
+FROM information_schema.table_properties
+WHERE PROPERTY_NAME = "storage_vault_id"
+  AND PROPERTY_VALUE = 3;
+```
+
+Example query result:
+
+```
 +---------------+---------------------------------+-------------------------------------+------------------+----------------+
 | TABLE_CATALOG | TABLE_SCHEMA                    | TABLE_NAME                          | PROPERTY_NAME    | PROPERTY_VALUE |
 +---------------+---------------------------------+-------------------------------------+------------------+----------------+
@@ -230,4 +290,10 @@ mysql> select * from information_schema.table_properties where PROPERTY_NAME = "
 1 row in set (0.04 sec)
 ```
 
-Replace `PROPERTY_VALUE=3` with the corresponding ​​storage vault id​​ value.
+### Q2: Can I change the Storage Vault after a table is created?
+
+No. After a table is created successfully, the `storage_vault` property of that table cannot be modified. If you need to use a different Storage Vault, you must recreate the table and reload the data.
+
+### Q3: After renaming a Storage Vault, are databases that previously referenced that Vault affected?
+
+Yes. If the `VAULT_NAME` of a Storage Vault is modified, the `storage_vault_name` configuration at the database level may become invalid, causing errors when creating new tables under that database. You must use [ALTER-DATABASE](../sql-manual/sql-statements/database/ALTER-DATABASE.md) to reassign a valid `storage_vault_name` to the database.

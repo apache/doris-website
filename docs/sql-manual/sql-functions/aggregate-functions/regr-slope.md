@@ -8,8 +8,7 @@
 
 ## Description
 
-Returns the slope of the linear regression line for non-null pairs in a group.
-
+Returns the slope of the linear regression line computed over non-null `(y, x)` pairs in a group, where `x` is the independent variable and `y` is the dependent variable. It is equivalent to `COVAR_POP(y, x) / VAR_POP(x)`.
 
 ## Syntax
 
@@ -29,54 +28,37 @@ REGR_SLOPE(<y>, <x>)
 Returns a Double value representing the slope of the linear regression line.
 If there are no rows in the group, or all rows contain NULLs for the expressions, the function returns `NULL`.
 
-## Examples
+## Example
 
 ```sql
--- setup
-CREATE TABLE test_regr_slope (
+CREATE TABLE test_regr (
   `id` int,
-  `x` int,
-  `y` int
+  `x` double,
+  `y` double
 ) DUPLICATE KEY (`id`)
 DISTRIBUTED BY HASH(`id`) BUCKETS AUTO
 PROPERTIES (
   "replication_allocation" = "tag.location.default: 1"
 );
 
--- Insert example data
-INSERT INTO test_regr_slope VALUES
-(1, 18, 13),
-(2, 14, 27),
-(3, 12, 2),
-(4, 5, 6),
-(5, 10, 20);
+INSERT INTO test_regr VALUES
+(1, 0, NULL),
+(2, 1, 3),
+(2, 2, 5),
+(2, 3, 7),
+(2, 4, 9),
+(2, 5, NULL);
 ```
 
 ```sql
-SELECT REGR_SLOPE(y, x) FROM test_regr_slope;
+SELECT id, REGR_SLOPE(y, x) FROM test_regr GROUP BY id ORDER BY id;
 ```
-
-Calculate the linear regression slope of x and y.
-
 
 ```text
-+--------------------+
-| REGR_SLOPE(y, x)   |
-+--------------------+
-| 0.6853448275862069 |
-+--------------------+
-```
-
-```sql
-SELECT REGR_SLOPE(y, x) FROM test_regr_slope where x>100;
-```
-
-When there are no rows in the group, the function returns `NULL`.
-
-```text
-+------------------+
-| REGR_SLOPE(y, x) |
-+------------------+
-|             NULL |
-+------------------+
++------+--------------------+
+| id   | REGR_SLOPE(y, x)   |
++------+--------------------+
+|    1 |               NULL |
+|    2 |                2.0 |
++------+--------------------+
 ```

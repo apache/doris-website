@@ -189,6 +189,6 @@ For example, with 200TB of historical data, the resource utilization under both 
 
 Powered by compute-storage decoupling, Apache Doris excels in real-time analytics, lakehouse analytics, observability and log storage & analysis. Looking ahead, Apache Doris will continue to enhance its capabilities in this mode. We will introduce new features such as snapshots, time travel, and Cross-Cluster Replication (CCR) support, and achieve stateless FE to further improve system stability and usability.
 
-If you're interested in Apache Doris' compute-storage decoupled mode and its future development, we invite you to join the [#compute-storage-decoupled](https://apachedoriscommunity.slack.com/archives/C08HZUZ37KJ) channel in the Apache Doris Discord community, where you can connect with core developers and users. We look forward to your thoughts and contributions!
+If you're interested in Apache Doris' compute-storage decoupled mode and its future development, we invite you to join the [#compute-storage-decoupled](https://apachedoriscommunity.slack.com/archives/C08HZUZ37KJ) channel in the Apache Doris Slack community, where you can connect with core developers and users. We look forward to your thoughts and contributions!
 
 [Join us live on March 27](https://www.linkedin.com/events/exploringapachedoriscompute-sto7308127084457902080/comments/) for more insights into the Apache Doris compute-storage decoupled mode!

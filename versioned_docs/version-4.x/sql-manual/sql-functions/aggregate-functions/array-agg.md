@@ -20,7 +20,7 @@ ARRAY_AGG(<col>)
 
 | Parameter | Description |
 | -- | -- |
-| `<col>` | An expression that determines the values to be placed into the array. Supported types: Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, IPV4, IPV6, String, Array, Map, Struct. |
+| `<col>` | An expression that determines the values to be placed into the array. Supported types: Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, Timestamptz, IPV4, IPV6, String, Array, Map, Struct. |
 
 ## Return Value
 
@@ -67,6 +67,3 @@ select array_agg(c2) from test_doris_array_agg where c1 is null;
 | []            |
 +---------------+
 ```
-|    1 | ["a","b"]       |
-
-

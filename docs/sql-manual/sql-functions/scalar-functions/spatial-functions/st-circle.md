@@ -10,7 +10,7 @@
 
 Converts a WKT (Well-Known Text) into a circle on the Earth's spherical surface.
 
-## Sytax
+## Syntax
 
 ```sql
 ST_CIRCLE( <center_lng>, <center_lat>, <radius>)
@@ -20,11 +20,11 @@ ST_CIRCLE( <center_lng>, <center_lat>, <radius>)
 | Parameter | Description |
 | -- | -- |
 | `<center_lng>` | 	Longitude of the circle's center, of type DOUBLE, with a valid range of [-180, 180] |
-| `<center_lat>` |	Latitude of the circle's center, of type DOUBLE, with a valid range of [-180, 180] |
+| `<center_lat>` |	Latitude of the circle's center, of type DOUBLE, with a valid range of [-90, 90] |
 | `<radius>` | 		Radius of the circle, of type DOUBLE, in meters |
 
 
-## Retuen value
+## Return Value
 
 Returns a circle on the Earth's spherical surface, of type GeoCircle. Its WKT representation is CIRCLE ((<center_lng> <center_lat>), <radius>), which contains the center coordinates and radius information.
 

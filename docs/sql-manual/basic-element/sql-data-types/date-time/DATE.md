@@ -21,7 +21,7 @@ How to convert other types to DATE, and the input accepted during conversion, se
 
 Date and time types do not support direct use of mathematical operators for arithmetic operations. The essence of performing mathematical operations is to first implicitly convert the date and time types to numeric types, and then perform the operation. If you need to perform addition, subtraction, or rounding on time types, consider using functions like [DATE_ADD](../../../sql-functions/scalar-functions/date-time-functions/date-add.md), [DATE_SUB](../../../sql-functions/scalar-functions/date-time-functions/date-sub.md), [TIMESTAMPDIFF](../../../sql-functions/scalar-functions/date-time-functions/timestampdiff.md), [DATE_TRUNC](../../../sql-functions/scalar-functions/date-time-functions/date-trunc.md).
 
-TIME type does not store time zone, that is, changes in the session variable `time_zone` do not affect the stored values of TIME type.
+DATE type does not store time zone, that is, changes in the session variable `time_zone` do not affect the stored values of DATE type.
 
 ## Examples
 

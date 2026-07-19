@@ -18,7 +18,7 @@ INSTALL PLUGIN FROM <source> [PROPERTIES ("<key>"="<value>", ...)]
 
 ## 必选参数
 
-** 1. `<source>`**
+**1. `<source>`**
 > 待安装插件路径，支持三种类型：
 >  1. 指向一个 zip 文件的绝对路径。
 >  2. 指向一个插件目录的绝对路径。
@@ -26,7 +26,7 @@ INSTALL PLUGIN FROM <source> [PROPERTIES ("<key>"="<value>", ...)]
 
 ## 可选参数
 
-** 1. `[PROPERTIES ("<key>"="<value>", ...)]`**
+**1. `[PROPERTIES ("<key>"="<value>", ...)]`**
 > 用于指定安装插件时的属性或参数
 
 ## 权限控制

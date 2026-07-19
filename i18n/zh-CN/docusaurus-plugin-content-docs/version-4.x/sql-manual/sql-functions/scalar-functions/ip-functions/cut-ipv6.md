@@ -42,7 +42,7 @@ CUT_IPV6(<ipv6_address>, <bytes_to_cut_for_ipv6>, <bytes_to_cut_for_ipv4>)
 
 截取纯 IPv6 地址的末尾字节。
 ```sql
-SELECT cut_ipv6(INET6_ATON('2001:db8::1'), 4, 4) as cut_result;
+SELECT cut_ipv6(to_ipv6('2001:db8::1'), 4, 4) as cut_result;
 +------------------+
 | cut_result       |
 +------------------+
@@ -52,29 +52,29 @@ SELECT cut_ipv6(INET6_ATON('2001:db8::1'), 4, 4) as cut_result;
 
 截取 IPv4 映射地址的末尾字节。
 ```sql
-SELECT cut_ipv6(INET6_ATON('::ffff:192.168.1.1'), 4, 4) as cut_result;
-+------------------+
-| cut_result       |
-+------------------+
-| ::ffff:192.168.0.0 |
-+------------------+
+SELECT cut_ipv6(to_ipv6('::ffff:192.168.1.1'), 4, 4) as cut_result;
++----------------+
+| cut_result     |
++----------------+
+| ::ffff:0.0.0.0 |
++----------------+
 ```
 
 使用不同的截取参数。
 ```sql
 SELECT 
-  cut_ipv6(INET6_ATON('2001:db8::1'), 8, 4) as ipv6_cut_8,
-  cut_ipv6(INET6_ATON('::ffff:192.168.1.1'), 4, 8) as ipv4_cut_8;
-+-------------+------------------+
-| ipv6_cut_8  | ipv4_cut_8      |
-+-------------+------------------+
-| 2001::      | ::ffff:192.0.0.0 |
-+-------------+------------------+
+  cut_ipv6(to_ipv6('2001:db8::1'), 8, 4) as ipv6_cut_8,
+  cut_ipv6(to_ipv6('::ffff:192.168.1.1'), 4, 8) as ipv4_cut_8;
++------------+------------+
+| ipv6_cut_8 | ipv4_cut_8 |
++------------+------------+
+| 2001:db8:: | ::         |
++------------+------------+
 ```
 
 参数值超出范围会抛出异常。
 ```sql
-SELECT cut_ipv6(INET6_ATON('2001:db8::1'), 17, 4);
+SELECT cut_ipv6(to_ipv6('2001:db8::1'), 17, 4);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (...)[INVALID_ARGUMENT]Illegal value for argument 2 TINYINT of function cut_ipv6
 ```
 

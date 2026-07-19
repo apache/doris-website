@@ -33,7 +33,7 @@ Users can access Iceberg tables using Hive Metastore as metadata through the Hiv
 CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = '<iceberg_catalog_type>',
-    'warehouse' = '<warehouse>' --optional
+    'warehouse' = '<warehouse>', --optional
     {MetaStoreProperties},
     {StorageProperties},
     {IcebergProperties},
@@ -306,7 +306,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -369,7 +369,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'hive.metastore.client.keytab' = '/keytabs/presto-server.keytab',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
@@ -405,7 +405,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
                 'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-                'hive.metastore.client.keytab' = '/keytabs/keytabs/hive-presto-master.keytab',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hadoop.security.auth_to_local' = 'RULE:[2:$1@$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:$1@$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
                 RULE:[2:$1@$0](.*@OTHERREALM.COM)s/@.*//
@@ -538,7 +538,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-hms-hdfs-warehouse',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
                 'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -651,7 +651,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'glue.endpoint' = 'https://glue.ap-northeast-1.amazonaws.com',
                 'glue.access_key' = '<ak>',
                 'glue.secret_key' = '<sk>',
-                's3.endpoint' = 's3.ap-northeast-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-northeast-1.amazonaws.com',
                 's3.region' = 'ap-northeast-1',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
@@ -1272,7 +1272,7 @@ This is an experimental feature, supported since version 4.1.0.
                 'iceberg.catalog.type' = 'hadoop',
                 'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-fs-s3-warehouse',
                 's3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
@@ -2744,7 +2744,7 @@ EXECUTE rewrite_data_files (
 1. The `rewrite_data_files` operation reads and rewrites data files, which incurs additional I/O and computing overhead. Please allocate cluster resources appropriately.
 2. Before execution, you can use SQL from the [View Data File Distribution](#view-data-file-distribution) section to evaluate whether rewriting is necessary
 3. WHERE conditions can be used to limit the partitions or data range for rewriting. This condition filters out files that don't contain data matching the WHERE condition, reducing the number of files and amount of data to rewrite
-4. Before execution, you can use SQL from the [Rewrite File Selection Logic](#rewrite-file-selection-logic) section to calculate which files will be rewritten
+4. Before execution, you can use SQL from the [Rewrite File Selection Logic](#rewrite_data_files-file-selection-strategy) section to calculate which files will be rewritten
 
 ### rewrite_manifests
 

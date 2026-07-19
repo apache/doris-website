@@ -32,6 +32,20 @@ GROUP_CONCAT([DISTINCT] <str>[, <sep>] [ORDER BY { <col_name> | <expr>} [ASC | D
 ## 举例
 
 ```sql
+-- setup
+create table test(
+    value varchar(10)
+) distributed by hash(value) buckets 1
+properties ("replication_num"="1");
+
+insert into test values
+    ("a"),
+    ("b"),
+    ("c"),
+    ("c");
+```
+
+```sql
 select value from test;
 ```
 
@@ -67,6 +81,34 @@ select GROUP_CONCAT(DISTINCT value) from test;
 | GROUP_CONCAT(`value`) |
 +-----------------------+
 | a, b, c               |
++-----------------------+
+```
+
+```sql
+select GROUP_CONCAT(value ORDER BY value DESC) from test;
+```
+
+```text
++-----------------------+
+| GROUP_CONCAT(`value`) |
++-----------------------+
+| c, c, b, a            |
++-----------------------+
+```
+
+:::note
+`GROUP_CONCAT` 中 `DISTINCT` 与 `ORDER BY` 组合自 3.0.2 起支持。
+:::
+
+```sql
+select GROUP_CONCAT(DISTINCT value ORDER BY value DESC) from test;
+```
+
+```text
++-----------------------+
+| GROUP_CONCAT(`value`) |
++-----------------------+
+| c, b, a               |
 +-----------------------+
 ```
 

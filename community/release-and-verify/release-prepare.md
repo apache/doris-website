@@ -1,11 +1,18 @@
 ---
-{
-"title": "Release Preparation",
-"language": "en"
-}
+title: Apache Doris Release Preparation
+language: en
+description: "Apache Doris release preparation: GPG signing, Maven configuration, the DISCUSS thread, and the overall release process."
+keywords:
+    - Apache Doris release preparation
+    - Release Manager
+    - GPG signing PGP key
+    - Apache voting process
+    - Maven settings.xml
+    - Apache SVN dist
+    - DISCUSS
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,110 +31,114 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Release Preparation
+# Apache Doris Release Preparation
 
-Releases of Apache projects must strictly follow the Apache Foundation release process. Related guidance and policies can be found at.
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenarios: Version release / Apache voting process / Release Manager preparation -->
 
-* [Release Creation Process](https://infra.apache.org/release-publishing)
-* [Release Policy](https://www.apache.org/legal/release-policy.html)
-* [Publishing Maven Releases to Maven Central Repository](https://infra.apache.org/publishing-maven-artifacts.html)
+Releases of an Apache project must strictly follow the Apache Software Foundation's release process. This page covers the overall Apache Doris release process, signing environment setup, and Maven release configuration. It is intended for PMC members or Committers acting as Release Manager for the first time.
 
-This document describes the main process and prep work for release. For specific Doris component release steps, you can refer to the respective documentation:
+Related Apache official policies and guides:
 
-* [Doris Core Release](./release-doris-core.md)
-* [Doris Connectors Release](./release-doris-connectors.md)
-* [Doris Shade Release](./release-doris-shade.md)
-* [Doris Sdk Release](./release-doris-sdk.md)
+- [Release Creation Process](https://infra.apache.org/release-publishing)
+- [Release Policy](https://www.apache.org/legal/release-policy.html)
+- [Publishing Maven Releases to Maven Central Repository](https://infra.apache.org/publishing-maven-artifacts.html)
 
-There are three main forms of releases for Apache projects.
+For the detailed release steps of each component, see:
 
-* Source Release: i.e. source release, this is mandatory.
-* Binary Release: e.g., release of a compiled executable. This is optional.
-* Convenience Binaries: Release to third-party platforms for user convenience, such as Maven, Docker, etc. This is also optional.
+- [Release Doris Core](./release-doris-core)
+- [Release Doris Connectors](./release-doris-connectors)
+- [Release Doris Shade](./release-doris-shade)
+- [Release Doris SDK](./release-doris-sdk)
 
-## Release Process
+## Release Forms
 
-Each project release requires a PMC member or Committer as the **Release Manager**.
+Releases of an Apache project come in three main forms:
 
-The overall release process is as follows.
+| Form | Description | Required |
+| --- | --- | --- |
+| Source Release | Source code release | Required |
+| Binary Release | Binary release (compiled executables) | Optional |
+| Convenience Binaries | Convenience binary packages published to third-party platforms such as Maven and Docker | Optional |
 
-1. Environment preparation
-2. Release preparation
-	1. the community initiates DISCUSS and communicates with the community about the specific release plan
-	2. create a branch for the release
-	3. clean up the issue
-	4. merge the necessary patches into the released branch
-3. verify the branch
-	1. stability testing
-	2. verify the compilation flow of the branch code
-	3. Prepare Release Notes
-4. prepare release materials
-    1. Tagging
-    2. upload the content to be released to the [Apache Dev SVN repository](https://dist.apache.org/repos/dist/dev/doris)
-    3. preparation of other Convenience Binaries (e.g. upload to [Maven Staging repository](https://repository.apache.org/#stagingRepositories))
-4. Community Release Polling Process
-	2. Initiate a VOTE in the Doris Community Dev Mail Group: dev@doris.apache.org.
-	3. After the vote is approved, send a Result email in the Doris community.
-5. Complete the work
-	1. Upload the signed packages to the [Apache Release repository](https://dist.apache.org/repos/dist/release/doris) and generate the relevant links.
-	2. Post the download links on the Doris website and github, and clean up the old packages on svn.
-	3. Send an Announce email to dev@doris.apache.org
+## Overall Release Process
 
-## Prepare signatures
+<!-- Knowledge type: Procedure -->
 
-If this is your first time as Release Manager, then you need to prepare the following tools in your environment
+Each project release requires a PMC member or Committer to serve as the **Release Manager**. The overall process is as follows:
 
-1. [Release Signing](https://www.apache.org/dev/release-signing.html)
-2. [gpg](https://www.apache.org/dev/openpgp.html)
-3. [svn](https://www.apache.org/dev/openpgp.html)
+1. **Environment setup**: install GPG and SVN, and generate the signing public key (see below).
+2. **Release preparation**:
+    1. Start a DISCUSS thread in the community and discuss the specific release plan.
+    2. Create the branch used for the release.
+    3. Clean up issues for the corresponding version.
+    4. Merge necessary patches into the release branch.
+3. **Verify the branch**:
+    1. QA stability testing.
+    2. Verify the build process of the branch code.
+    3. Prepare the Release Notes.
+4. **Prepare release artifacts**:
+    1. Tag the release.
+    2. Upload the artifacts to be released to the [Apache Dev SVN repository](https://dist.apache.org/repos/dist/dev/doris).
+    3. Prepare other Convenience Binaries (for example, upload to the [Maven Staging repository](https://repository.apache.org/#stagingRepositories)).
+5. **Community voting process**:
+    1. Start a vote on the Doris community Dev mailing list (`dev@doris.apache.org`).
+    2. After the vote passes, send the Result email.
+6. **Wrap-up**:
+    1. Upload the signed packages to the [Apache Release repository](https://dist.apache.org/repos/dist/release/doris/) and generate download links.
+    2. Publish the download links on the Doris website and GitHub, and clean up old version packages on SVN.
+    3. Send the Announce email to `dev@doris.apache.org`.
 
-### Prepare gpg key
+## Prepare the Signing Environment
 
-Release manager needs to create its own signature public key before release, and upload it to the public key server, then you can use this public key to sign the package to be released.
-If your KEY already exists in [KEYS](https://downloads.apache.org/doris/KEYS), then you can skip this step.
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenarios: First time acting as Release Manager -->
 
-#### Installation and configuration of the signature software GnuPG
+If this is your first release, prepare the following tools in your local environment:
 
-##### GnuPG
+| Tool | Purpose | Reference |
+| --- | --- | --- |
+| Release Signing | Understand Apache signing requirements | [Release Signing](https://www.apache.org/dev/release-signing.html) |
+| gpg | Generate the signing key and sign release packages | [openpgp](https://www.apache.org/dev/openpgp.html) |
+| svn | Upload release artifacts to Apache SVN | [openpgp](https://www.apache.org/dev/openpgp.html) |
 
-In 1991, programmer Phil Zimmermann developed the encryption software PGP in order to avoid government surveillance; it worked so well that it quickly spread and became an essential tool for many programmers. However, it was commercial software and could not be used freely. So, the Free Software Foundation decided to develop a replacement for PGP, named GnuPG, and that's how GPG came to be.
+### Prepare the GPG Key
 
-##### installation configuration
+Before the release, the Release Manager needs to generate a signing public key, upload it to a public key server, and then use that key to sign the release packages.
 
-CentOS installation command.
+> If your key is already included in the [Apache Doris KEYS file](https://downloads.apache.org/doris/KEYS), you can skip this section.
 
-```
+#### Install GnuPG
+
+GnuPG (GPG for short) is the free software implementation of PGP, used to generate keys and sign files.
+
+Installation command on CentOS:
+
+```bash
 yum install gnupg
 ```
 
-After installation, the default configuration file gpg.conf will be placed in the home directory.
+After installation, the default configuration file is located at:
 
-```
+```text
 ~/.gnupg/gpg.conf
 ```
 
-If this directory or file does not exist, you can just create an empty file.
+If the file does not exist, you can create an empty one.
 
-Apache recommends SHA512 for signatures, which can be done by configuring gpg.
-Edit gpg.conf, adding the following three lines.
+Apache signing recommends SHA512. Edit `gpg.conf` and append the following three lines:
 
-```
+```text
 personal-digest-preferences SHA512
 cert-digest-algo SHA512
 default-preference-list SHA512 SHA384 SHA256 SHA224 AES256 AES192 AES CAST5 ZLIB BZIP2 ZIP Uncompressed
 ```
 
-#### Generate a new signature
+#### Check the GPG Version
 
-##### Preparing a signature
+Confirm that GPG supports SHA512:
 
-Recommended settings for generating new signatures.
-
-Here you must log in to the user account directly through a terminal such as SecureCRT, not through su - user or ssh, otherwise the password input box will not show up and an error will be reported.
-
-First look at the version of gpg and whether it supports SHA512.
-
-```
+```bash
 $ gpg --version
 gpg (GnuPG) 2.0.22
 libgcrypt 1.5.3
@@ -145,9 +156,25 @@ Hash: MD5, SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
 Compression: Uncompressed, ZIP, ZLIB, BZIP2
 ```
 
-##### Generate a new signature
+:::caution Note
+You must log in to the user account directly through a terminal such as SecureCRT. Do not jump through `su - user` or `ssh`, or the passphrase prompt will not display and the operation will fail.
+:::
 
-```
+#### Generate the Signing Key
+
+Run `gpg --gen-key` and follow the prompts using the recommended configuration below:
+
+| Option | Recommended value | Notes |
+| --- | --- | --- |
+| Key type | `1` (RSA and RSA) | Default |
+| Key length | `4096` | Apache recommends at least 4096 bits |
+| Validity period | `0` | Never expires |
+| Real name | Same as the ID shown on [id.apache.org](https://id.apache.org) | Required |
+| Email address | Apache email (`xxx@apache.org`) | Required |
+
+Full interactive example:
+
+```text
 $ gpg --gen-key
 gpg (GnuPG) 2.0.22; Copyright (C) 2013 Free Software Foundation, Inc.
 This is free software: you are free to change and redistribute it.
@@ -185,44 +212,41 @@ You selected this USER-ID:
 Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? o
 ```
 
-Real name should be the same as the id shown in id.apache.org.
-Email address is the apache email address.
+You then need to enter a passphrase (twice, at least 8 characters).
 
-Enter passphrase, twice, more than 8 characters.
+:::danger Important
+Be sure to remember the passphrase set here. It is used for later signing and for releasing other components.
+:::
 
-**The secret key here must be remembered, it will be used later when signing. It will also be used for publishing other components**
+If `gpg --gen-key` hangs for a long time, use either of the following methods to supplement entropy:
 
-**If the `gpg --gen-key` command gets stuck for a long time, try opening another terminal and execute the `find / | xargs file` command to generate enough random characters, usually after a few minutes, the gpg command will complete. **
+- Open another terminal and run `find / | xargs file` to generate random characters.
+- Install `rng-tools` (`yum install rng-tools`) and run `rngd -r /dev/urandom`. Key generation then completes almost instantly.
 
->**Notice:**
->
->If the generation is stuck when it can be generated and cannot be completed for a long time, the following solutions can be used to solve it:
->
->Install the rng-tools tool by `yum install rng-tools` to complete the installation.
->Then open a new window and execute the command: rngd -r /dev/urandom, and the key generation can be completed instantly.
+#### View and Export the Public Key
 
-##### View and output
-
-The first line shows the public key file name (pubring.gpg), the second line shows the public key characteristics (4096 bits, hash string and generation time), the third line shows the "user ID", comments, emails, and the fourth line shows the private key characteristics.
-
-```
+```bash
 $ gpg --list-keys
 /home/lide/.gnupg/pubring.gpg
 -----------------------------
-pub 4096R/33DBF2E0 2018-12-06
-uid xxx-yyyy (xxx's key) <xxx@apache.org>
-sub 4096R/0E8182E6 2018-12-06
+pub   4096R/33DBF2E0 2018-12-06
+uid                  xxx-yyy  (xxx's key) <xxx@apache.org>
+sub   4096R/0E8182E6 2018-12-06
 ```
 
-where xxx-yyyy is the user ID.
+Here, `xxx-yyy` is the user ID and `33DBF2E0` is the short fingerprint.
 
-```
-gpg --armor --output public-key.txt --export [user-id]
+Export the public key to a file:
+
+```bash
+gpg --armor --output public-key.txt --export [user ID]
 ```
 
-```
-$ gpg --armor --output public-key.txt --export xxx-yyyy
-The file 'public-key.txt' already exists. Is it overwritten? (y/N)y
+Example:
+
+```bash
+$ gpg --armor --output public-key.txt --export xxx-yyy
+File 'public-key.txt' already exists. Overwrite? (y/N) y
 $ cat public-key.txt
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2.0.22 (GNU/Linux)
@@ -231,117 +255,156 @@ mQINBFwJEQ0BEACwqLluHfjBqD/RWZ4uoYxNYHlIzZvbvxAlwS2mn53BirLIU/G3
 9opMWNplvmK+3+gNlRlFpiZ7EvHsF/YJOAP59HmI2Z...
 ```
 
-#### Uploading Signed Public Keys
+#### Upload the Public Key to a Key Server
 
-A public key server is a server on the network dedicated to storing the user's public key. send-keys parameter can upload the public key to the server.
+Use `--send-keys` to upload the public key to the Ubuntu key server:
 
-```
+```bash
 gpg --send-keys xxxx --keyserver https://keyserver.ubuntu.com/
-
-```
-where xxxx is the string after pub in the `-list-keys` result of the previous step, e.g., 33DBF2E0
-
-You can also upload the contents of the above public-key.txt via [https://keyserver.ubuntu.com/](https://keyserver.ubuntu.com/).
-
-After successful upload, you can query this [https://keyserver.ubuntu.com/](https://keyserver.ubuntu.com/) by entering 0x33DBF2E0. (Note that it needs to start with 0x)
-
-There is a delay in querying this website, you may need to wait for 1 hour.
-
-#### generates fingerprint and uploads it to apache user information
-
-Since the public key server has no checking mechanism, anyone can upload a public key in your name, so there is no way to guarantee the reliability of the public key on the server. Usually, you can publish a public key fingerprint on your website and let other people check whether the downloaded public key is genuine or not.
-
-The fingerprint parameter generates a public key fingerprint.
-
-```
-gpg --fingerprint [user-id]
 ```
 
+Here, `xxxx` is the string after `pub` in the `--list-keys` output from the previous step (for example, `33DBF2E0`).
+
+You can also paste the contents of `public-key.txt` and upload it through the [https://keyserver.ubuntu.com/](https://keyserver.ubuntu.com/) web page.
+
+After a successful upload, you can query the key on that page by entering `0x33DBF2E0` (note the `0x` prefix). The site has query latency, so you may need to wait about one hour.
+
+#### Generate the Fingerprint and Bind It to Your Apache Account
+
+A key server does not verify authenticity, so anyone can upload a public key under your name. You therefore need to bind the fingerprint on [id.apache.org](https://id.apache.org) so that others can cross-check it.
+
+Generate the fingerprint:
+
+```bash
+gpg --fingerprint [user ID]
 ```
-$ gpg --fingerprint xxx-yyyy
-pub 4096R/33DBF2E0 2018-12-06
-      Key fingerprint = 07AA E690 B01D 1A4B 469B 0BEF 5E29 CE39 33DB F2E0
-uid xxx-yyyy (xxx's key) <xxx@apache.org>
-sub 4096R/0E8182E6 2018-12-06
+
+Example:
+
+```text
+$ gpg --fingerprint xxx-yyy
+pub   4096R/33DBF2E0 2018-12-06
+      Key fingerprint = 07AA E690 B01D 1A4B 469B  0BEF 5E29 CE39 33DB F2E0
+uid                  xxx-yyy (xxx's key) <xxx@apache.org>
+sub   4096R/0E8182E6 2018-12-06
 ```
 
-Paste the fingerprint above (i.e. 07AA E690 B01D 1A4B 469B 0BEF 5E29 CE39 33DB F2E0) into your own user information at
+Paste the full fingerprint (`07AA E690 B01D 1A4B 469B  0BEF 5E29 CE39 33DB F2E0`) into the `OpenPGP Public Key Primary Fingerprint` field on [https://id.apache.org](https://id.apache.org).
 
-https://id.apache.org
+> Note: Each Apache account can bind multiple public keys.
 
-`OpenPGP Public Key Primary Fingerprint:`
+#### Append the Public Key to the KEYS File
 
-> Note: Each person can have more than one Public Key.
+:::danger Important
+**Never delete existing content in the KEYS file.** Only append new entries.
+:::
 
-#### generates keys
+Append your KEY to both the Dev and Release SVN repositories in turn:
 
-**Be careful not to delete existing content in the KEYS file, it can only be added.**
-
-```
+```bash
 svn co https://dist.apache.org/repos/dist/dev/doris/
 # edit doris/KEYS file
-gpg --list-sigs [user-id] >> doris/KEYS
+gpg --list-sigs [user ID] >> doris/KEYS
 gpg --armor --export [user ID] >> doris/KEYS
-svn ci --username $ASF_USERNAME --password "$ASF_PASSWORD" -m "UPDATE KEYS"
+svn ci --username $ASF_USERNAME --password "$ASF_PASSWORD" -m"Update KEYS"
 ```
 
-Note that the KEYS file should also be published to the following svn library.
-
-```
+```bash
 svn co https://dist.apache.org/repos/dist/release/doris
 # edit doris/KEYS file
-svn ci --username $ASF_USERNAME --password "$ASF_PASSWORD" -m "UPDATE KEYS"
+svn ci --username $ASF_USERNAME --password "$ASF_PASSWORD" -m"Update KEYS"
 ```
 
-After that it will automatically sync to.
-```
+The changes are then synced automatically to:
+
+```text
 https://downloads.apache.org/doris/KEYS
 ```
 
-In subsequent release poll emails, use the KEYS file here in ``https://downloads.apache.org/doris/KEYS``.
+In subsequent release vote emails, use the address `https://downloads.apache.org/doris/KEYS`.
 
 ## Maven Release Preparation
 
-For components such as the Doris Connector, you need to use maven for the release.
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenarios: Release Doris Connector / Shade / SDK -->
 
-1. Generate a master password
+For components such as Doris Connector, Shade, and SDK, you need to use Maven for the release, which requires configuring `~/.m2/settings.xml` and `~/.m2/settings-security.xml`.
 
-    `mvn --encrypt-master-password <password>`
-    
-    This password is only used to encrypt other passwords that follow, and the output is something like `{VSb+6+76djkH/43...} ` Then create the `~/.m2/settings-security.xml` file with the following content
+### 1. Generate the Master Password
 
-    ```
-    <settingsSecurity>
-      <master>{VSb+6+76djkH/43...}</master>
-    </settingsSecurity>
-    ```
+The master password is used to encrypt other passwords later:
 
-2. Encrypt apache passwords
+```bash
+mvn --encrypt-master-password <password>
+```
 
+The output looks like `{VSb+6+76djkH/43...}`. Write it into `~/.m2/settings-security.xml`:
 
-    `mvn --encrypt-password <password>`
-    
-    The password is the password for the apache account. The output is similar to `{GRKbCylpwysHfV...}`
-    
-    Add in `~/.m2/settings.xml`
-    
-    ```
-    <servers>
-      <!-- To publish a snapshot of your project -->
-      <server>
-        <id>apache.snapshots.https</id>
-        <username>yangzhg</username>
-        <password>{GRKbCylpwysHfV...}</password>
-      </server>
-      <!-- To stage a release of your project -->
-      <server>
-        <id>apache.releases.https</id>
-        <username>yangzhg</username>
-        <password>{GRKbCylpwysHfV...}</password>
-      </server>
-    </servers>
-    ```
+```xml
+<settingsSecurity>
+  <master>{VSb+6+76djkH/43...}</master>
+</settingsSecurity>
+```
 
-## Initiating DISCUSS in the community
+### 2. Encrypt the Apache Account Password
 
-DISCUSS is not a required process before a release, but it is highly recommended to start a discussion in the dev@doris mail group before a major release. Content includes, but is not limited to, descriptions of important features, bug fixes, etc.
+```bash
+mvn --encrypt-password <password>
+```
+
+`<password>` is your Apache account password. The output looks like `{GRKbCylpwysHfV...}`.
+
+Add the following `<servers>` configuration to `~/.m2/settings.xml`:
+
+```xml
+<servers>
+  <!-- To publish a snapshot of your project -->
+  <server>
+    <id>apache.snapshots.https</id>
+    <username>yangzhg</username>
+    <password>{GRKbCylpwysHfV...}</password>
+  </server>
+  <!-- To stage a release of your project -->
+  <server>
+    <id>apache.releases.https</id>
+    <username>yangzhg</username>
+    <password>{GRKbCylpwysHfV...}</password>
+  </server>
+</servers>
+```
+
+The purposes of the two `server id` entries:
+
+| Server ID | Purpose |
+| --- | --- |
+| `apache.snapshots.https` | Publish SNAPSHOT versions |
+| `apache.releases.https` | Publish Release versions to the Staging repository |
+
+## Start a DISCUSS Thread in the Community
+
+<!-- Knowledge type: Procedure -->
+
+A DISCUSS thread is not a mandatory step before a release, but for important releases it is **strongly recommended** to start one on the `dev@doris.apache.org` mailing list. Topics include, but are not limited to:
+
+- Descriptions and design points of important features.
+- Bug fix descriptions.
+- Compatibility changes and upgrade notes.
+- The expected release schedule.
+
+## FAQ / Troubleshooting
+
+**Q: `gpg --gen-key` hangs. What should I do?**
+
+This is caused by insufficient entropy. Run `find / | xargs file`, or install `rng-tools` and run `rngd -r /dev/urandom` to supplement the random source.
+
+**Q: Signing fails with `gpg: signing failed: Inappropriate ioctl for device`?**
+
+The terminal cannot receive the passphrase input. Run `export GPG_TTY=$(tty)` and try again.
+
+**Q: `mvn deploy` returns 401 Unauthorized?**
+
+Check the username and encrypted password for `apache.releases.https` in `~/.m2/settings.xml`, and confirm that the master password in `~/.m2/settings-security.xml` matches.
+
+**Q: The key cannot be found after uploading it to the key server?**
+
+`keyserver.ubuntu.com` has sync latency, which typically takes about one hour.

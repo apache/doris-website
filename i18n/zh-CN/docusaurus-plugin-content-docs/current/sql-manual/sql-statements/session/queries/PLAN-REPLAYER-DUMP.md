@@ -24,7 +24,7 @@ PLAN REPLAYER DUMP <query>
 
 - 指的是对应的 DML 里面的 query 语句
 - 如果不是 query 语句则会报 parse 错误
-- 有关更多详细信息，请参阅[SELECT](https://doris.apache.org/zh-CN/docs/sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/SELECT/)语法
+- 有关更多详细信息，请参阅[SELECT](../../data-query/SELECT)
 
 ## 权限控制
 

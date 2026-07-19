@@ -369,6 +369,24 @@ See also: `https://doris.apache.org/docs/dev/data-operate/import/complex-types/v
 
 After loading, verify with `SELECT count(*)` or sample with `SELECT * ... LIMIT 1`. For high-throughput ingestion, prefer RANDOM bucketing and enable Group Commit.
 
+## Output
+
+The JSON text returned when reading a VARIANT column is not byte-for-byte identical to the JSON text that was written in: inside a JSON object, keys are emitted in sorted (lexicographic) order regardless of the order they appeared in the input JSON.
+
+```sql
+INSERT INTO variant_tbl VALUES
+  (2, '{ "b": 2, "a": 1, "c": { "y": 20, "x": 10 } }');
+
+SELECT v FROM variant_tbl WHERE k = 2;
++-----------------------------------+
+| v                                 |
++-----------------------------------+
+| {"a":1,"b":2,"c":{"x":10,"y":20}} |
++-----------------------------------+
+```
+
+Sorting applies at every level — top-level keys become `a`, `b`, `c`, and the nested object's keys become `x`, `y`.
+
 ## Supported operations and CAST rules
 
 - VARIANT cannot be compared/operated directly with other types; comparisons between two VARIANTs are not supported either.
@@ -578,3 +596,5 @@ ClickBench (43 queries):
    - No. They are equivalent.
 2. Why doesn’t my query/index work?
    - Check whether you CAST paths to the correct types; whether the type was promoted to JSONB due to conflicts; or whether you mistakenly expect an index on the whole VARIANT instead of on subpaths.
+3. Why does DECIMAL lose precision when written into a VARIANT column?
+   - When writing to a VARIANT column, the subcolumn type is not inferred as DECIMAL — numeric values are stored as DOUBLE, which can drop trailing decimals. Even declaring the subpath as DECIMAL via the Schema Template (e.g. `pm25 VARIANT<'xxx': DECIMAL(6, 2)>`) does not fully guarantee precision, because the value is first parsed as DOUBLE and then converted to DECIMAL on the write path. If the JSON value is written as a string (e.g. `'{"num": "12.345"}'`) together with a matching Schema Template DECIMAL declaration (e.g. `DECIMAL(9, 3)`), the string is parsed directly into DECIMAL on write, preserving precision.

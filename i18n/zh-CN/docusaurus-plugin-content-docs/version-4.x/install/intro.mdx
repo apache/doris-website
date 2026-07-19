@@ -1,0 +1,52 @@
+---
+{
+    "title": "安装与部署",
+    "language": "zh-CN",
+    "description": "选择合适的方式安装并部署 Apache Doris。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# 安装与部署
+
+本章节将指导您完成 Apache Doris 的安装与部署。请先选择适合您需求的部署模式，然后参考对应的部署指南。
+
+## 部署前准备
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="选择部署模式"
+    description="对比存算一体与存算分离、手动部署与 Kubernetes 部署、云上部署的差异"
+    link="choosing-deployment-mode"
+/>
+
+<GettingStartedCard
+    title="安装准备"
+    description="检查环境、规划集群规模、验证操作系统要求"
+    link="preparation/env-checking"
+/>
+</div>
+
+## 部署方式
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="手动部署"
+    description="在物理机或虚拟机上直接安装 Apache Doris"
+    link="deploy-manually/intro"
+/>
+
+<GettingStartedCard
+    title="Kubernetes 部署"
+    description="使用 Doris Operator 在 Kubernetes 上部署 Apache Doris"
+    link="deploy-on-kubernetes/intro"
+/>
+
+<GettingStartedCard
+    title="云上部署"
+    description="在 AWS 等公有云平台上部署 Apache Doris"
+    link="deploy-on-cloud/doris-on-aws"
+/>
+</div>
+

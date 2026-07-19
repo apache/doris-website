@@ -10,7 +10,7 @@
 Calculates the difference in months between two periods.
 
 where `<period>` is an integer, the last two digits represent the month (01-12), and the preceding digits represent the year.
-The function returns the absolute result of period_1 - period_2.
+The function returns the signed result of period_1 - period_2.
 
 If the year part is less than 100, it will be converted to a four-digit year format according to [certain rules](#parameters).
 
@@ -38,6 +38,11 @@ If any parameter is NULL, or if the values cannot be converted to BIGINT, the fu
 If the parameters are negative or their month parts are invalid, the function will throw an error.
 
 ## Examples
+
+<!-- setup-sql
+CREATE TABLE test_period_diff (period_1 LARGEINT, period_2 LARGEINT) DISTRIBUTED BY HASH(period_1) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO test_period_diff VALUES (200802,200703),(200703,200802),(7001,6912),(NULL,2510),(2510,NULL),(9223372036854775807,101),(9223372036854775808,101);
+-->
 
 ```sql
 SELECT `period_1`, `period_2`, PERIOD_DIFF(`period_1`, `period_2`) AS DIFF FROM `test_period_diff`;

@@ -2,125 +2,192 @@
 {
     "title": "Elastic Scaling",
     "language": "en",
-    "description": "Doris supports online elastic scaling, allowing users to dynamically add or remove nodes without interrupting services."
+    "description": "Apache Doris elastic scaling guide: add or remove FE/BE nodes online, with DROP and DECOMMISSION as the two scale-in options, without interrupting business.",
+    "keywords": [
+        "Doris elastic scaling",
+        "Doris online scale-out",
+        "Doris scale-in",
+        "FE scale-out",
+        "BE scale-out",
+        "FE scale-in",
+        "BE scale-in",
+        "ALTER SYSTEM ADD FOLLOWER",
+        "ALTER SYSTEM ADD OBSERVER",
+        "ALTER SYSTEM ADD BACKEND",
+        "ALTER SYSTEM DROP BACKEND",
+        "ALTER SYSTEM DECOMMISSION BACKEND",
+        "DECOMMISSION",
+        "data migration",
+        "node bring-up and decommission",
+        "cluster scale-out"
+    ]
 }
 ---
 
-Doris supports online elastic scaling, allowing users to dynamically add or remove nodes without interrupting services. This capability ensures businesses can meet growing demands or reduce idle resource waste. Scaling up or down BE nodes does not affect cluster availability but involves data migration, so it is recommended to perform scaling operations during periods of low business activity.
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Cluster scale-out / Cluster scale-in / Node bring-up and decommission -->
 
-## Scale In/Out the FE Clusters
+Apache Doris supports online elastic scaling: dynamically add or remove nodes to handle business growth or reclaim idle resources without interrupting service. Scaling BE nodes does not affect cluster availability, but it triggers data migration, so run it during off-peak hours.
 
-Doris FE nodes are divided into the following three roles, with each FE node containing a full set of metadata:
+## Applicable Scenarios
 
-* Master Node: Responsible for reading and writing metadata. When metadata changes occur on the Master node, they are synchronized to non-Master nodes via the BDB JE protocol. There can be only one Master FE node in the cluster.
+| Scenario | Recommended operation | Description |
+| --- | --- | --- |
+| Insufficient FE read capacity | Scale out Observer FE | Observer does not participate in master election; it is used to improve metadata read throughput |
+| Insufficient FE high availability | Scale out Follower FE | Keep the total of Master and Follower odd; 3 or 5 is recommended |
+| Insufficient BE storage or compute | Scale out BE | After adding a BE, the system rebalances automatically and data is gradually distributed evenly |
+| Decommission a specific BE node | Scale in BE (DECOMMISSION) | Migrates data first and then takes the node offline; recommended for production |
+| Node has failed and must be removed immediately | Scale in BE (DROP) | Takes the node offline immediately and may cause data loss; use only in abnormal situations |
 
-* Follower Node: Responsible for reading metadata. In the event of a Master node failure, Follower nodes initiate a leader election to select a new Master node. Within the cluster, the total number of Master and Follower nodes is recommended to be an odd number.
+## Prerequisites
 
-* Observer Node: Responsible for reading metadata but does not participate in leader election. It is used to extend the read service capacity of FE nodes.
+- You have cluster administrator privileges and can run `ALTER SYSTEM` operations.
+- The IP, port, and role (Follower / Observer / BE) of each node are planned.
+- The `http_port` of a newly added FE node matches the `http_port` of every existing FE node in the cluster.
+- BE scale-in is performed during off-peak hours, and enough disk space is reserved to receive migrated data.
 
-Typically, each FE node can handle the load operations of 10-20 BE nodes. A configuration of 3 FE nodes is sufficient to meet the requirements of most business scenarios.
+## Scaling the FE Cluster
 
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: FE scale-out / FE scale-in -->
 
-### Scale the FE out
+### FE Role Description
 
-:::info Note:
+Doris FE nodes have the following three roles. Every FE node holds the complete metadata:
 
-When adding a new FE node, please pay attention to the following:
+| Role | Participates in master election | Metadata read/write | Purpose |
+| --- | --- | --- | --- |
+| Master | Yes (unique) | Read + write | Handles metadata reads and writes. Master metadata changes are synced to other nodes through the BDB JE protocol. Only one Master is allowed per cluster |
+| Follower | Yes | Read | Handles metadata reads. When the Master fails, Followers initiate election and elect a new Master. The total of Master and Follower is recommended to be odd |
+| Observer | No | Read | Handles metadata reads. Does not participate in master election. Used to scale out FE read capacity |
 
-* The `http_port` of the new FE node must match the `http_port` of all existing FE nodes in the cluster.
+In general, each FE node can support 10 to 20 BE nodes, and 3 FE nodes are enough for most workloads.
 
-* If adding a Follower node, it is recommended that the total number of Master and Follower nodes in the cluster be an odd number.
+### Scaling Out the FE Cluster
 
-* You can view the ports and roles of the current cluster nodes using the `show frontends` command.
+:::info Note
+When adding a new FE node, keep the following in mind:
+
+- The `http_port` of the new FE must match the `http_port` of every existing FE node in the cluster.
+- When adding a Follower node, the total number of Master and Follower nodes in the cluster is recommended to be odd.
+- The `show frontends` command shows the port and role of every node in the current cluster.
 :::
 
-1. Start FE Node:
+1. Start the FE node:
 
-```bash
-fe/bin/start_fe.sh --helper <leader_fe_host>:<edit_log_port> --daemon
-```
+    ```shell
+    fe/bin/start_fe.sh --helper <leader_fe_host>:<edit_log_port> --daemon
+    ```
 
-* Register FE Node:
+2. Register the FE node.
 
-  * Register the node as a Follower FE:
+    Register the node as a Follower FE:
 
     ```sql
     ALTER SYSTEM ADD FOLLOWER "<follower_host>:<edit_log_port>";
     ```
 
-  * Register the node as an Observer FE:
+    Or register the node as an Observer FE:
 
     ```sql
     ALTER SYSTEM ADD OBSERVER "<observer_host>:<edit_log_port>";
     ```
 
-* Check the status of the newly added FE node
+3. Check the status of the newly added FE node:
 
-  ```sql
-  show frontends;
-  ```
+    ```sql
+    show frontends;
+    ```
 
+### Scaling In the FE Cluster
 
-### Scale In the FE Cluster
-
-When scaling in FE nodes, ensure that the total number of Master and Follower nodes in the cluster remains an odd number. Use the following commands to remove nodes:
-
+During scale-in, make sure the total of Master and Follower nodes remaining in the cluster is still odd. Use the following command to remove a node:
 
 ```sql
 ALTER SYSTEM DROP FOLLOWER[OBSERVER] "<fe_host>:<edit_log_port>";
 ```
 
-After scaling in, you need to manually delete the FE directory.
+After scale-in, manually delete the files under the deployment directory of the removed FE node.
 
-## Scale In/Out the BE Cluster
+## Scaling the BE Cluster
 
-### Scale Out the BE Cluster
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: BE scale-out / BE scale-in / Data migration -->
 
-1. Start the BE process:  
+### Scaling Out the BE Cluster
 
-   ```sql
-   be/bin/start_be.sh
-   ```
+1. Start the BE process:
 
-2. Register the BE node:  
+    ```shell
+    be/bin/start_be.sh
+    ```
 
-   ```sql
-   ALTER SYSTEM ADD backend '<be_host>:<be_heartbeat_service_port>';
-   ```
+2. Register the BE node:
 
-### Scale In the BE Cluster
+    ```sql
+    ALTER SYSTEM ADD backend '<be_host>:<be_heartbeat_service_port>';
+    ```
 
-When scaling in BE nodes, you can choose between the DROP or DECOMMISSION methods:
+After registration, the new BE joins the cluster automatically, and Doris gradually rebalances existing data onto the new node.
 
-|          | DROP              | DECOMMISSION                                |
-| -------- | ----------------- | ------------------------------------------- |
-| Principle | Directly remove the node, deleting the BE node. | Initiates a command to migrate data on the BE node to other nodes. Once migration is complete, the BE node is automatically removed. |
-| Effective Time | Takes effect immediately after execution. | Takes effect after data migration is completed. Depending on the cluster's existing data volume, this can take hours to up to a day. |
-| Single Replica Table Handling | May result in data loss. | Does not result in data loss. |
-| Removing Multiple Nodes Simultaneously | May result in data loss. | Does not result in data loss. |
-| Production Recommendation | Not recommended for production environments. | Recommended for production environments. |
+### Scaling In the BE Cluster
 
-* Use the following command to remove a BE node using the DROP method: 
+When scaling in a BE node, you can choose either DROP or DECOMMISSION. The differences are as follows:
 
-  ```sql
-  ALTER SYSTEM DROP backend "<be_host>:<be_heartbeat_service_port>";
-  ```
+| Item | DROP | DECOMMISSION |
+| --- | --- | --- |
+| Decommission mechanism | Takes the node offline directly and removes the BE node | After the command is issued, tries to migrate the data on the BE to other nodes; the BE node is taken offline automatically after migration completes |
+| Effective time | Takes effect immediately after execution | Takes effect after data migration completes. Depending on the current data volume in the cluster, this may take from hours up to one day |
+| Single-replica table handling | May cause data loss | Does not cause data loss |
+| Decommissioning multiple nodes at the same time | May cause data loss | Does not cause data loss |
+| Production recommendation | Not recommended for production | Recommended for production |
 
-* Use the following command to remove a BE node using the DECOMMISSION method:  
+#### Removing a BE Node with DROP
 
-  ```sql
-  ALTER SYSTEM DECOMMISSION backend "<be_host>:<be_heartbeat_service_port>";
-  ```
+Use this when a node has failed or in a test environment where the node must be removed immediately:
 
-### DECOMMISSION Command Description:
+```sql
+ALTER SYSTEM DROP backend "<be_host>:<be_heartbeat_service_port>";
+```
 
-- DECOMMISSION is an asynchronous operation. After execution, you can see the BE node's `SystemDecommissioned` status set to `true` via `SHOW backends;`. This indicates the node is being removed.
+#### Removing a BE Node with DECOMMISSION
 
-- The DECOMMISSION command may fail. For instance, if there is insufficient storage space on the remaining BE nodes to accommodate the data from the BE being removed, or if the remaining nodes do not meet the minimum replication requirements, the command will not complete, and the BE will remain in a `SystemDecommissioned` state set to `true`.
+DECOMMISSION is recommended in production: it migrates data first and then takes the node offline:
 
-- The progress of DECOMMISSION can be monitored using `SHOW PROC '/backends';`. If the operation is in progress, the `TabletNum` value will decrease continuously.
+```sql
+ALTER SYSTEM DECOMMISSION backend "<be_host>:<be_heartbeat_service_port>";
+```
 
-- You can cancel the operation using the command `CANCEL DECOMMISSION BACKEND "be_host:be_heartbeat_service_port";`. After cancellation, the BE node will retain its current remaining data, and Doris will re-balance the load.
+DECOMMISSION command notes:
 
-- The data migration rate can be adjusted by modifying the `balance_slot_num_per_path` parameter.
+- DECOMMISSION is an asynchronous operation. After execution, `SHOW backends;` shows that the `SystemDecommissioned` status of the BE node is `true`, which means the node is being decommissioned.
+- The DECOMMISSION command may fail. For example, when the remaining BE storage is not enough to hold the data on the BE being decommissioned, or when the remaining number of machines does not meet the minimum replica count, the command cannot complete, and the BE stays with `SystemDecommissioned` equal to `true`.
+- You can check DECOMMISSION progress through `TabletNum` in `SHOW PROC '/backends';`. If decommission is in progress, `TabletNum` keeps decreasing.
+- You can cancel decommission with `CANCEL DECOMMISSION BACKEND "<be_host>:<be_heartbeat_service_port>";`. After cancellation, the data on the BE stays at the current remaining volume, and Doris rebalances later.
+- You can adjust the `balance_slot_num_per_path` parameter to change the data migration rate.
 
+## FAQ
+
+### Q: A newly added FE node fails to start?
+
+The `http_port` differs from existing FEs, or `--helper` was not used to specify the Leader FE. Check the `http_port` setting in `fe.conf`. For the first start, use `--helper <leader_fe_host>:<edit_log_port>`.
+
+### Q: After `ALTER SYSTEM ADD FOLLOWER`, the cluster still does not recognize the new node?
+
+The node is not started, the network is unreachable, or the port is blocked by a firewall. Check the node status with `show frontends` and confirm that the `edit_log_port` is reachable.
+
+### Q: DECOMMISSION does not finish for a long time?
+
+The remaining BE storage is not enough, or the remaining number of nodes is less than the minimum replica count. Scale out more BE nodes or scale out before decommissioning. Use `SHOW PROC '/backends';` to check whether `TabletNum` is still decreasing.
+
+### Q: How do I cancel DECOMMISSION partway through?
+
+Run `CANCEL DECOMMISSION BACKEND "<be_host>:<be_heartbeat_service_port>";`. Doris rebalances afterward.
+
+### Q: Data migration is too slow?
+
+The default migration concurrency is low. Adjust the `balance_slot_num_per_path` parameter to increase the migration rate.
+
+### Q: Disk space is not released after FE scale-in?
+
+After the scale-in command succeeds, clean up manually by deleting the deployment directory of the removed FE node.

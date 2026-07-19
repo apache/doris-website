@@ -37,7 +37,7 @@
 
 - 物化视图使用的表除了分区表外，其他表不经常变化。
 
-- 物化视图的定义 SQL 和分区字段满足分区推导的要求，即符合分区增量更新的要求。详细要求可参考：[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数)
+- 物化视图的定义 SQL 和分区字段满足分区推导的要求，即符合分区增量更新的要求。详细要求可参考：[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters)
 
 - 物化视图分区数不多，分区过多会导致分区多物化视图构建时间会过长。
 
@@ -47,7 +47,7 @@
 
 ## 分区物化视图常见使用方式
 
-当物化视图的基表数据量很大，且基表是分区表时，如果物化视图的定义 SQL 和分区字段满足分区推导的要求，此种场景比较适合构建分区物化视图。分区推导的详细要求可参考 [CREATE-ASYNC-MATERIALIZED-VIEW ](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数)和[异步物化视图 FAQ 构建问题 12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12构建分区物化视图报错)。
+当物化视图的基表数据量很大，且基表是分区表时，如果物化视图的定义 SQL 和分区字段满足分区推导的要求，此种场景比较适合构建分区物化视图。分区推导的详细要求可参考 [CREATE-ASYNC-MATERIALIZED-VIEW ](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters)和[异步物化视图 FAQ 构建问题 12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12-error-when-building-a-partition-materialized-view)。
 
 物化视图的分区是跟随基表的分区映射创建的，一般和基表的分区是 1:1 或者 1:n 的关系。
 
@@ -330,7 +330,7 @@ GROUP BY
 
    比如表 t1，原表的数据量是 1000000，查询语句 SQL 中有 `group by a, b, c`。如果 a，b，c 的基数分别是 100，50，15，那么聚合后的数据大概在 75000 左右，说明此物化视图是有效的。如果 a，b，c 具有相关性，那么聚合后的数据量会进一步减少。
 
-   如果 a, b, c 的基数很高，会导致聚合后的数据急速膨胀。如果聚合后的数据比原表的数据还多，可能这样的场景不太适合构建物化视图。比如 c 的基数是 3500，那么聚合后的数据量在 17000000 左右，比原表数据量大的多，构建这样的物化视图性能加速收益低。
+   如果 a, b, c 的基数很高，分组组合数（基数乘积）会接近甚至超过原表行数，此时聚合几乎不能减少行数（聚合后的行数最多等于原表行数）。比如 c 的基数是 3500，a、b、c 的基数乘积约为 17500000，已远超原表的 1000000 行，聚合后几乎无法减少行数，构建这样的物化视图性能加速收益低。
 
    物化视图的聚合粒度要比查询细，即物化视图的聚合维度包含查询的聚合维度，这样才能提供查询所需的数据。查询可以不写 Group By，同理，物化视图的聚合函数应该包含查询的聚合函数。
 
@@ -439,7 +439,7 @@ GROUP BY
 ```sql
 SELECT 
   l_linestatus, 
-  l_extendedprice * (1 - l_discount)
+  l_extendedprice * (1 - l_discount),
   o_shippriority 
 FROM 
   orders 

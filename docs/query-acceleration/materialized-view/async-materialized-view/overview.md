@@ -1,71 +1,105 @@
 ---
 {
-    "title": "Overview of Asynchronous Materialized Views",
+    "title": "Async Materialized View Overview",
     "language": "en",
-    "description": "Materialized views, as an efficient solution, combine the flexibility of views with the high performance advantages of physical tables."
+    "description": "What is a Doris async materialized view? This article introduces the use cases, refresh mechanism, transparent rewriting principles, and lakehouse query acceleration capabilities of async materialized views.",
+    "keywords": ["Doris async materialized view", "materialized view", "query acceleration", "transparent rewriting", "lakehouse acceleration", "MTMV"]
 }
 ---
 
-Materialized views, as an efficient solution, combine the flexibility of views with the high 
-performance advantages of physical tables. 
-They can pre-compute and store the result sets of queries, 
-allowing for quick retrieval of results directly from the stored materialized view 
-when query requests arrive, thus avoiding the overhead of re-executing complex query statements.
+<!-- Knowledge type: concept introduction + capability overview -->
+<!-- Use cases: query acceleration, ETL simplification, lakehouse external table query acceleration, write performance optimization -->
+
+An async materialized view is a query acceleration solution that combines the flexibility of a view with the high performance of a physical table. By precomputing and storing query results, subsequent queries can hit the materialized result set directly, avoiding the overhead of repeatedly executing complex SQL.
+
+## Quick Tour
+
+Before using async materialized views, confirm the following points:
+
+- Does the business need query acceleration, ETL simplification, lakehouse external table acceleration, or write optimization?
+- Does the query follow the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern?
+- Can the data tolerate eventual consistency (non-real-time synchronization)?
+- Is the Catalog of the base table within the supported scope (Internal/Hive/Iceberg/Paimon/Hudi/JDBC/ES)?
+- Is partitioned incremental refresh needed to lower refresh costs?
 
 ## Use Cases
 
-- **Query Acceleration and Concurrency Improvement**: Materialized views can significantly enhance query speed while boosting the system's concurrent processing capabilities, effectively reducing resource consumption.
-- **Simplifying ETL Processes**: During the Extract, Transform, Load (ETL) process, materialized views can streamline workflows, improve development efficiency, and make data processing smoother.
-- **Accelerating External Table Queries in Lakehouse Architecture**: In a lakehouse architecture, materialized views can significantly enhance the query speed for external data sources, improving data access efficiency.
-- **Improving Write Efficiency**: By reducing resource contention, materialized views can optimize the data writing process, enhance write efficiency, and ensure data consistency and integrity.
+<!-- Knowledge type: scenario description -->
+
+Async materialized views mainly target the following four scenarios:
+
+| Scenario | Value |
+| :--- | :--- |
+| Query acceleration and concurrency improvement | Significantly improves query speed, enhances concurrency, and reduces resource consumption |
+| Simplified ETL workflow | Simplifies the extract, transform, and load (ETL) process and improves development efficiency |
+| Accelerated lakehouse external table queries | Significantly improves query speed against external data sources in a lakehouse architecture |
+| Improved write efficiency | Reduces resource contention, optimizes the data write process, and ensures consistency and integrity |
 
 ## Limitations
-- **Consistency of Asynchronous Materialized Views with Base Table Data**: Asynchronous materialized views will eventually be consistent with the base table data, but they cannot be synchronized in real-time, meaning real-time consistency cannot be maintained.
-- **Support for Window Function Queries**: Currently, if a query contains window functions, it is not supported to transparently rewrite that query to utilize materialized views.
-- **Materialized Views Joining More Tables than Query Tables**: If the number of tables joined in the materialized view exceeds the number of tables involved in the query (for example, if the query only involves t1 and t2, while the materialized view includes t1, t2, and an additional t3), the system currently does not support transparently rewriting that query to utilize the materialized view.
-- If the materialized view contains set operations such as UNION ALL, LIMIT, ORDER BY, or CROSS JOIN, the materialized view can be built normally, but it cannot be used for transparent rewriting.
-- When creating a materialized view, the VARBINARY type is not currently supported.
 
-## Principle Introduction
+<!-- Knowledge type: limitation description -->
 
-Materialized views, as an advanced feature in databases, essentially function as MTMV-type internal tables. When creating a materialized view, the system simultaneously registers a refresh task. This task will run when needed, executing an INSERT OVERWRITE statement to write the latest data into the materialized view.
+Before using async materialized views, be aware of the following limitations:
 
-**Refresh Mechanism**  
-Unlike the real-time incremental refresh used by synchronous materialized views, asynchronous materialized views offer more flexible refresh options.
+- **Data consistency**: An async materialized view is eventually consistent with the base table, but it cannot synchronize in real time and does not guarantee real-time consistency.
+- **Window functions**: Currently, queries that contain window functions are not supported for transparent rewriting into a form based on materialized views.
+- **Multi-table scenarios**: If the materialized view joins more tables than the query involves (for example, the query only involves t1 and t2, while the materialized view contains t1, t2, and t3), transparent rewriting is currently not supported.
+- **Operators not supported by transparent rewriting**: If the materialized view contains `UNION ALL`, `LIMIT`, `ORDER BY`, or `CROSS JOIN`, the materialized view can still be built normally, but it cannot be used for transparent rewriting.
+- **Data type restrictions**: Creating a materialized view does not currently support the `VARBINARY` type.
 
-- **Full Refresh**:  
-  In this mode, the system recalculates all data involved in the SQL definition of the materialized view and writes the complete results into the materialized view. This process ensures that the data in the materialized view remains consistent with the base table data, but it may consume more computational resources and time.
+## Principles
 
-- **Partition Incremental Refresh**:  
-  When the partition data of the base table for the materialized view changes, the system can intelligently identify these changes and refresh only the affected partitions. This mechanism significantly reduces the computational resources and time required to refresh the materialized view while ensuring eventual data consistency.
+<!-- Knowledge type: principle description -->
 
-**Transparent Rewriting**:  
-Transparent rewriting is an important means for databases to optimize query performance. When processing user queries, the system can automatically optimize and rewrite the SQL to improve execution efficiency and reduce computational costs. This rewriting process is transparent to the user, requiring no intervention.
+An async materialized view is essentially an internal table of type MTMV. When the materialized view is created, the system also registers a refresh task. When the task runs, it writes the latest data into the materialized view through an `INSERT OVERWRITE` statement.
 
-Doris asynchronous materialized views utilize a transparent rewriting algorithm based on the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) model. This algorithm can deeply analyze the structural information of SQL, automatically searching for and selecting suitable materialized views for transparent rewriting. When multiple materialized views are available, the algorithm will also choose the optimal materialized view to respond to the query SQL based on certain strategies (such as cost models), further enhancing query performance.
+### Refresh Mechanism
 
-## Creating Asynchronous Materialized Views Based on Data Lakes
-The syntax for creating asynchronous materialized views based on data lakes is exactly the same as that for creating asynchronous materialized views based on internal tables, but there are some considerations:
-- Refreshing materialized views requires metadata from the data lake, such as partition version information. This information is obtained from the metadata cache in the data lake rather than directly from the external environment. Therefore, after the materialized view is refreshed, the data remains consistent with the results queried from the data lake through Doris. However, it may not match the results queried from the data lake through other engines, depending on the refresh status of the cache.
-- If the underlying Hive data is modified by an external process not controlled by Doris (such as Spark, Hive, or Flink jobs) without changing the metadata (e.g., executing insert overwrite), the materialized view may assume consistency with the base table data, but the queried data may not match the results queried from the data lake through Doris. This issue can be resolved by manually forcing a refresh of the materialized view.
-- When creating partitioned materialized views based on Iceberg, only Iceberg tables with a single partition column are supported. Limited support is provided for partition evolution. For example, changes to the time range of a time-based partition are supported, but changes to the partition field are not. If the partition field is modified, the materialized view refresh will fail.
-- When creating materialized views based on Hudi, there is no awareness of whether the base table data has changed. Therefore, once the materialized view (or a partition of the materialized view) has been refreshed, it is considered synchronized with the base table. As a result, creating materialized views based on Hudi is only suitable for scenarios requiring manual on-demand refresh.
+Unlike the real-time incremental refresh of synchronous materialized views, async materialized views provide more flexible refresh options:
 
+| Refresh Mode | Description | Applicable Scenarios |
+| :--- | :--- | :--- |
+| **Full refresh** | Recomputes all data referenced by the materialized view definition SQL and writes it into the materialized view in full | Small data volume or when overall consistency must be guaranteed |
+| **Partitioned incremental refresh** | Intelligently identifies changes in base table partition data and refreshes only the affected partitions | Large data volume with changes concentrated in specific partitions |
 
-### Support for Materialized Refresh Data Lake
+- **Full refresh**: Ensures that the materialized view data is fully consistent with the base table, but may consume more compute resources and time.
+- **Partitioned incremental refresh**: Significantly reduces the resources and time required for refresh, while ensuring eventual consistency.
 
-The support for materialized refresh data lakes varies by table type and catalog.
+### Transparent Rewriting
+
+Transparent rewriting is an important means by which a database optimizes query performance. When processing a user query, the system automatically rewrites the SQL to hit a suitable materialized view, thereby improving execution efficiency and reducing computation costs. The entire process is transparent to the user and requires no intervention.
+
+Doris async materialized views use a transparent rewriting algorithm based on the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern:
+
+1. Performs in-depth analysis of the structural information of the SQL.
+2. Automatically finds and selects a suitable materialized view for transparent rewriting.
+3. When multiple candidate materialized views exist, selects the optimal materialized view to respond to the query based on strategies such as a cost model, further improving performance.
+
+## Creating an Async Materialized View on a Data Lake
+
+<!-- Use cases: external table acceleration in a lakehouse architecture -->
+
+The syntax for creating an async materialized view on a data lake is identical to creating one on an internal table, but note the following:
+
+- **Metadata source**: The partition version and other information required for materialized view refresh come from the metadata cache of the data lake, not directly from the external environment. Therefore, after the refresh completes, the data is consistent with the result of querying the data lake through Doris, but it may be inconsistent with the results from other engines, depending on how the cache has been refreshed.
+- **External change awareness**: If the underlying Hive data is changed by an external process not controlled by Doris (such as a Spark, Hive, or Flink job) but the metadata does not change (for example, when `insert overwrite` is executed), the materialized view will incorrectly consider itself consistent with the base table, but the query results will be inconsistent with the results of querying the data lake through Doris. This issue can be resolved by manually forcing a refresh of the materialized view.
+- **Iceberg limitations**: When creating a partitioned materialized view on Iceberg, only Iceberg tables with a single partition column are supported, and partition evolution is supported to a limited extent. For example, changes to the time range of a time-type partition are supported; if the partition field itself changes, the materialized view refresh will fail.
+- **Hudi limitations**: When creating a materialized view on Hudi, the system cannot detect whether the base table data has changed. As long as the materialized view (or some of its partitions) has been refreshed, it is considered synchronized with the base table. Therefore, creating a materialized view on Hudi is only suitable for manual on-demand refresh scenarios.
+
+### Materialized View Refresh Support on Data Lakes
+
+The following table shows the level of refresh support for different table types and Catalogs:
 
 <table>
     <tr>
         <th rowspan="2">Table Type</th>
         <th rowspan="2">Catalog Type</th>
         <th colspan="2">Refresh Method</th>
-        <th>Triggered Refresh</th>
+        <th>Refresh Trigger</th>
     </tr>
     <tr>
         <th>Full Refresh</th>
-        <th>Partition Refresh</th>
+        <th>Partitioned Refresh</th>
         <th>Auto Trigger</th>
     </tr>
     <tr>
@@ -119,17 +153,18 @@ The support for materialized refresh data lakes varies by table type and catalog
     </tr>
 </table>
 
-### Transparent Rewriting Support for Data Lake
-Currently, the transparent rewriting feature of asynchronous materialized views supports the following types of tables and catalogs.
+### Transparent Rewriting Support on Data Lakes
 
-Real-time Base Table Data Awareness: Refers to the materialized view's ability to detect changes in the underlying table data it uses and utilize the latest data during queries.
+The transparent rewriting feature of async materialized views currently supports the following table types and Catalogs.
+
+> **Real-time awareness of base table data**: This means that when the base table data used by the materialized view changes, the materialized view can detect the change in real time and use the latest data in queries.
 
 <table>
     <tr>
         <th>Table Type</th>
         <th>Catalog Type</th>
         <th>Transparent Rewriting Support</th>
-        <th>Real-time Base Table Data Awareness</th>
+        <th>Real-time Awareness of Base Table Data</th>
     </tr>
     <tr>
         <td>Internal Table</td>
@@ -141,19 +176,19 @@ Real-time Base Table Data Awareness: Refers to the materialized view's ability t
         <td>Hive</td>
         <td>Hive</td>
         <td>Supported</td>
-        <td>3.1 Supported</td>
+        <td>Supported in 3.1</td>
     </tr>
     <tr>
         <td>Iceberg</td>
         <td>Iceberg</td>
         <td>Supported</td>
-        <td>3.1 Supported</td>
+        <td>Supported in 3.1</td>
     </tr>
     <tr>
         <td>Paimon</td>
         <td>Paimon</td>
         <td>Supported</td>
-        <td>3.1 Supported</td>
+        <td>Supported in 3.1</td>
     </tr>
     <tr>
         <td>Hudi</td>
@@ -165,45 +200,77 @@ Real-time Base Table Data Awareness: Refers to the materialized view's ability t
         <td>JDBC</td>
         <td>JDBC</td>
         <td>Supported</td>
-        <td>Not Supported</td>
+        <td>Not supported</td>
     </tr>
     <tr>
         <td>ES</td>
         <td>ES</td>
         <td>Supported</td>
-        <td>Not Supported</td>
+        <td>Not supported</td>
     </tr>
 </table>
 
-Materialized views using external tables do not participate in transparent rewriting by default.
-If you want to enable transparent rewriting for materialized views containing external tables, you can set `SET materialized_view_rewrite_enable_contain_external_table = true`.
+#### Enabling Transparent Rewriting for External Table Materialized Views
 
-Since version 2.1.11, Doris has optimized the transparent rewriting performance for external tables, mainly improving the performance of obtaining available materialized views containing external tables.
+When a materialized view uses external tables, it does not participate in transparent rewriting by default. To enable it, run:
 
-For partitioned materialized views containing external tables, if transparent rewriting is slow, you need to configure in fe.conf:
-`max_hive_partition_cache_num = 20000`, the maximum number of Hive Metastore table-level partition caches, with a default value of 10000.
-If the external Hive table has many partitions, you can set this value higher.
+```sql
+SET materialized_view_rewrite_enable_contain_external_table = true;
+```
 
-`external_cache_expire_time_minutes_after_access`, the duration after last access when cache expires. Default is 10 minutes, can be appropriately increased.
-(Applies to external table schema cache and Hive metadata cache)
+#### Performance Optimization for External Table Transparent Rewriting
 
-`external_cache_refresh_time_minutes = 60`, the automatic refresh interval for external table metadata cache. Default is 10 minutes, can be appropriately increased. This configuration is supported starting from version 3.1.
-For details about external table metadata cache configuration, see [Metadata Cache](../../../lakehouse/meta-cache.md)
+Starting from 2.1.11, Doris has optimized the transparent rewriting performance for external tables, mainly by improving the performance of obtaining available materialized views that contain external tables.
+
+If transparent rewriting on a partitioned materialized view that contains external tables is slow, you can adjust the following parameters in `fe.conf`:
+
+| Parameter | Default | Description | Version |
+| :--- | :--- | :--- | :--- |
+| `max_hive_partition_cache_num` | 10000 | The maximum number of table-level partition caches in Hive Metastore. When a Hive external table has many partitions, set it to `20000` or higher | - |
+| `external_cache_expire_time_minutes_after_access` | 10 minutes | The expiration time of a cached object after its last access. It can be increased appropriately (applies to both external table schema cache and Hive metadata cache) | - |
+| `external_cache_refresh_time_minutes` | 10 minutes | The auto-refresh interval of external table metadata cache objects. It can be increased appropriately | 3.1+ |
+
+For more configuration details on external table metadata cache, see [Metadata Cache](../../../lakehouse/meta-cache.md).
 
 ## Relationship Between Materialized Views and OLAP Internal Tables
 
-Asynchronous materialized views define SQL using the base table's table model without restrictions, which can be detail models, primary key models (merge-on-write and merge-on-read), aggregate models, etc.
+<!-- Knowledge type: implementation mechanism description -->
 
-The underlying implementation of materialized views relies on OLAP tables of the Duplicate model, which theoretically allows them to support all core functionalities of the Duplicate model. However, to ensure that materialized views can execute data refresh tasks stably and efficiently, we have imposed a series of necessary restrictions on their functionality. The specific restrictions are as follows:
+There is no restriction on the base table model used in the SQL definition of an async materialized view. It can be a Duplicate model, a Unique model (merge-on-write or merge-on-read), an Aggregate model, and so on.
 
-- The partitions of materialized views are automatically created and maintained based on their base tables, so users cannot perform partition operations on materialized views.
-- Since there are related jobs (JOB) that need to be processed behind materialized views, commands like DELETE TABLE or RENAME TABLE cannot be used to operate on materialized views. Instead, the commands specific to the materialized view must be used for these operations.
-- The column data types of materialized views are automatically inferred based on the query statement specified at creation, so these data types cannot be modified. Otherwise, it may lead to failures in the refresh tasks of the materialized view.
-- Materialized views have some properties that Duplicate tables do not possess, and these properties need to be modified through the commands of the materialized view. Other common properties should be modified using the ALTER TABLE command.
+The underlying implementation of the materialized view itself relies on an OLAP table of the Duplicate model and can in theory support all core features of the Duplicate model. However, to ensure that the materialized view can stably and efficiently execute data refresh tasks, a series of necessary restrictions are placed on its functionality:
 
-## More References
-For creating, querying, and maintaining asynchronous materialized views, you can refer to [Creating, Querying, and Maintaining Asynchronous Materialized Views](../async-materialized-view/functions-and-demands.md).
+- **Partition operations**: The partitions of a materialized view are automatically created and maintained based on its base tables. Users cannot perform partition operations on a materialized view.
+- **Drop and rename**: Because there are associated jobs (JOB) behind a materialized view, the `DROP TABLE` or `RENAME TABLE` commands cannot be used to operate on a materialized view. Use the materialized view's own commands to perform the corresponding operations.
+- **Column data types**: The column data types of a materialized view are automatically derived from the query statement specified at creation time and cannot be modified, otherwise the refresh task may fail.
+- **Property modification**: A materialized view has some properties that a Duplicate table does not have. These must be modified through the materialized view's commands. Other common properties are modified using the `ALTER TABLE` command.
 
-For best practices, you can refer to [Best Practices](../async-materialized-view/use-guide.md).
+## FAQ
 
-For frequently asked questions, you can refer to [Frequently Asked Questions](../async-materialized-view/faq.md).
+<!-- Knowledge type: Q&A -->
+
+**Q1: Can an async materialized view guarantee real-time data consistency with the base table?**
+
+No. An async materialized view is eventually consistent with the base table, but it cannot synchronize in real time. If real-time consistency is required, consider a synchronous materialized view.
+
+**Q2: Why can a query that contains window functions not be rewritten?**
+
+The current transparent rewriting algorithm does not yet support window functions. Queries that contain window functions are not rewritten into a form based on materialized views.
+
+**Q3: Why is a materialized view based on an external table not hit by rewriting?**
+
+External-table-based materialized views do not participate in transparent rewriting by default. Set `materialized_view_rewrite_enable_contain_external_table = true` to make them participate in rewriting.
+
+**Q4: Why are the materialized view query results inconsistent after Hive external table data is modified by an external process?**
+
+If Hive data is modified by an external process such as Spark, Hive, or Flink but the metadata does not change (for example, `insert overwrite`), the materialized view cannot detect the change. This can be resolved by manually forcing a refresh of the materialized view.
+
+**Q5: Can a materialized view based on Hudi refresh automatically?**
+
+It cannot detect changes in the base table and is only suitable for manual on-demand refresh scenarios.
+
+## See Also
+
+- Create, query, and maintain async materialized views: [Create, Query, and Maintain Async Materialized Views](../async-materialized-view/functions-and-demands.md)
+- User guide: [User Guide](../async-materialized-view/use-guide.md)
+- FAQ: [FAQ](../async-materialized-view/faq.md)

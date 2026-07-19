@@ -396,6 +396,8 @@ Starting from version 4.1.0, Doris supports creating and dropping MaxCompute dat
 - Does not support creating clustered tables, transactional tables, Delta Tables, or external tables.
 :::
 
+When creating or dropping databases or tables, Doris invokes the corresponding MaxCompute API to perform the operation. After the operation returns, metadata changes on the MaxCompute side need a short time before they are fully visible to subsequent operations.
+
 This feature is only available when the `mc.enable.namespace.schema` property is set to `true`.
 
 ### Creating and Dropping Databases

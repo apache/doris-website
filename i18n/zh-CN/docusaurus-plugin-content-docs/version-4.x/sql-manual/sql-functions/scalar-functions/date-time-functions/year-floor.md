@@ -30,7 +30,7 @@ YEAR_FLOOR(<date_or_time_expr>, <period>, <origin>)
 ## 参数
 | 参数                  | 说明                                                       |
 |---------------------|----------------------------------------------------------|
-| `<date_or_time_expr>`       | 要向下舍入的日期时间值，支持输入 date/datetime/timestamptz 类型,具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                              |
+| `<date_or_time_expr>`       | 要向下舍入的日期时间值，支持输入 date/datetime/timestamptz 类型,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                              |
 | `<period>`          | 可选，表示每个周期由多少秒组成，支持正整数类型（INT）。默认为 1 秒。                    |
 | `<origin_datetime>` | 间隔的起始点，支持输入 date/datetime 类型；默认为 0000-01-01 00:00:00。 |
 

@@ -23,7 +23,7 @@ IS_IPV6_STRING(<ipv6_str>)
 - `<ipv6_str>`：要检查的字符串
 
 ### 返回值
-返回类型：TINYINT
+返回类型：BOOLEAN
 
 返回值含义：
 - 返回 1：表示输入是有效的 IPv6 地址格式

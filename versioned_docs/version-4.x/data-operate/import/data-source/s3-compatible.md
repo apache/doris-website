@@ -1,28 +1,50 @@
 ---
 {
-    "title": "S3 Compatible Storage",
+    "title": "S3-Compatible Storage",
     "language": "en",
-    "description": "Doris provides two ways to load files from S3 Compatible Storage:"
+    "description": "How to load data from S3-compatible storage such as MinIO and Ceph into Apache Doris: asynchronous loading via S3 Load or synchronous loading via TVF.",
+    "keywords": [
+        "S3-compatible storage",
+        "Load MinIO into Doris",
+        "Load Ceph into Doris",
+        "S3 Load",
+        "S3 TVF",
+        "Broker Load",
+        "Object storage import",
+        "use_path_style",
+        "virtual-hosted style",
+        "path style"
+    ]
 }
 ---
 
-Doris provides two ways to load files from S3 Compatible Storage:
-- Use S3 Load to load S3 Compatible Storage files into Doris, which is an asynchronous load method.
-- Use TVF to load S3 Compatible Storage files into Doris, which is a synchronous load method.
+<!-- Knowledge type: Procedure / Data loading -->
+<!-- Applicable scenario: Loading data from S3-compatible storage (MinIO, Ceph, etc.) into Doris -->
 
-:::caution Caution
-The S3 SDK uses the virtual-hosted style by default. However, some object storage systems may not enable or support virtual-hosted style access. In this case, we can add the `use_path_style` parameter to force the use of the path style.
+Apache Doris supports loading data from various object storage systems that are compatible with the S3 protocol, such as MinIO, Ceph, Huawei Cloud OBS, and Tencent Cloud COS. This document describes the applicable scenarios and complete steps for two loading methods.
+
+## Choosing a Method
+
+Choose the appropriate loading method based on data size and processing mode:
+
+| Loading Method | Mode | Applicable Scenario | Reference |
+| --- | --- | --- | --- |
+| **S3 Load** | Asynchronous | Large-batch data loading, requires job management and retry mechanisms | [Broker Load Manual](../import-way/broker-load-manual.md) |
+| **TVF (Table Value Function)** | Synchronous | Ad-hoc queries, small-batch data loading, consuming data directly in SQL | - |
+
+:::caution Note
+The S3 SDK accesses object storage in **virtual-hosted style** by default. If the target storage system does not enable or support this style, add the parameter `"use_path_style" = "true"` to force the use of **path style**.
 :::
 
-## Load with S3 Load
+## Loading with S3 Load (Asynchronous)
 
-Use S3 Load to import files on object storage. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual)
+S3 Load is suitable for large-scale batch loading. Loading jobs are submitted asynchronously and scheduled by Doris in the background. For the detailed mechanism, refer to the [Broker Load Manual](../import-way/broker-load-manual.md).
 
-### Step 1: Prepare the data
+### Step 1: Prepare the Data
 
-Create a CSV file s3load_example.csv The file is stored on S3 Compatible Storage and its content is as follows:
+Create a CSV file `s3load_example.csv` on S3-compatible storage with the following content:
 
-```
+```text
 1,Emily,25
 2,Benjamin,35
 3,Olivia,28
@@ -35,7 +57,7 @@ Create a CSV file s3load_example.csv The file is stored on S3 Compatible Storage
 10,Liam,64
 ```
 
-### Step 2: Create a table in Doris
+### Step 2: Create the Target Table in Doris
 
 ```sql
 CREATE TABLE test_s3load(
@@ -47,7 +69,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-### Step 3: Load data using S3 Load
+### Step 3: Submit the S3 Load Job
 
 ```sql
 LOAD LABEL s3_load_2022_04_01
@@ -61,7 +83,7 @@ LOAD LABEL s3_load_2022_04_01
 WITH S3
 (
     "provider" = "S3",
-    "s3.endpoint" = "play.min.io:9000",  
+    "s3.endpoint" = "play.min.io:9000",
     "s3.region" = "us-east-1",
     "s3.access_key" = "<your-ak>",
     "s3.secret_key" = "<your-sk>",
@@ -73,15 +95,27 @@ PROPERTIES
 );
 ```
 
-### Step 4: Check the imported data
+Key parameters:
+
+| Parameter | Description |
+| --- | --- |
+| `provider` | Object storage provider type. For S3-compatible storage, always use `S3`. |
+| `s3.endpoint` | The access endpoint of the S3-compatible storage (without protocol prefix). |
+| `s3.region` | The region where the bucket is located. |
+| `s3.access_key` | The access key (AK). |
+| `s3.secret_key` | The secret key (SK). |
+| `use_path_style` | Whether to use path style access. Storage systems such as MinIO usually require this to be set to `true`. |
+| `timeout` | The timeout of the loading job, in seconds. |
+
+### Step 4: Verify the Loading Result
 
 ```sql
 SELECT * FROM test_s3load;
 ```
 
-Results:
+Expected output:
 
-```
+```text
 mysql> select * from test_s3load;
 +---------+-----------+------+
 | user_id | name      | age  |
@@ -100,13 +134,15 @@ mysql> select * from test_s3load;
 10 rows in set (0.04 sec)
 ```
 
-## Load with TVF
+## Loading with TVF (Synchronous)
 
-### Step 1: Prepare the data
+TVF treats files in S3-compatible storage as a table for querying. Combined with `INSERT INTO ... SELECT`, it enables synchronous loading and is suitable for ad-hoc analysis and small-batch data loading.
 
-Create a CSV file s3load_example.csv The file is stored on S3 Compatible Storage and its content is as follows:
+### Step 1: Prepare the Data
 
-```
+Create a CSV file `s3load_example.csv` on S3-compatible storage with the following content:
+
+```text
 1,Emily,25
 2,Benjamin,35
 3,Olivia,28
@@ -119,7 +155,7 @@ Create a CSV file s3load_example.csv The file is stored on S3 Compatible Storage
 10,Liam,64
 ```
 
-### Step 2: Create a table in Doris
+### Step 2: Create the Target Table in Doris
 
 ```sql
 CREATE TABLE test_s3load(
@@ -131,7 +167,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-### Step 3: Load data using TVF
+### Step 3: Load Synchronously via TVF
 
 ```sql
 INSERT INTO test_s3load
@@ -150,15 +186,30 @@ SELECT * FROM S3
 );
 ```
 
-### Step 4: Check the imported data
+Key parameters:
+
+| Parameter | Description |
+| --- | --- |
+| `uri` | The full path of the file in S3-compatible storage. |
+| `format` | The file format, such as `csv`, `parquet`, or `orc`. |
+| `provider` | Object storage provider type. For S3-compatible storage, always use `S3`. |
+| `s3.endpoint` | The access endpoint of the S3-compatible storage. |
+| `s3.region` | The region where the bucket is located. |
+| `s3.access_key` | The access key (AK). |
+| `s3.secret_key` | The secret key (SK). |
+| `column_separator` | The column separator. |
+| `csv_schema` | The column definition of the CSV file, in the format `field_name:type`. |
+| `use_path_style` | Whether to use path style access. |
+
+### Step 4: Verify the Loading Result
 
 ```sql
 SELECT * FROM test_s3load;
 ```
 
-Results:
+Expected output:
 
-```
+```text
 mysql> select * from test_s3load;
 +---------+-----------+------+
 | user_id | name      | age  |
@@ -176,3 +227,24 @@ mysql> select * from test_s3load;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+
+## FAQ
+
+<!-- Knowledge type: Troubleshooting -->
+
+### 1. Why does accessing storage such as MinIO report that the bucket does not exist or cannot be resolved?
+
+The S3 SDK builds the domain name in virtual-hosted style by default (such as `bucket.endpoint`), while MinIO, Ceph, and similar systems usually use path style (such as `endpoint/bucket`). Add `"use_path_style" = "true"` to the loading parameters to resolve this.
+
+### 2. Does `s3.endpoint` need to include the `http://` or `https://` prefix?
+
+No. `s3.endpoint` only takes the host name and port (such as `play.min.io:9000`).
+
+### 3. How do I choose between S3 Load and TVF?
+
+- For large data volumes where you want asynchronous execution and a preserved job history, use **S3 Load**.
+- When you need to read S3 files in a single SQL statement and write the result synchronously with `INSERT INTO ... SELECT`, use **TVF**.
+
+### 4. What should I do if the loading job times out?
+
+Increase the `timeout` property of S3 Load (in seconds), or split a large file into multiple smaller files to improve concurrency.

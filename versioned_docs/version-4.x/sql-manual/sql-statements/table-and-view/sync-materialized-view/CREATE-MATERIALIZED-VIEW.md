@@ -77,6 +77,32 @@ query
 
 ## Example
 
+Setup — the example below uses the standard TPC-H `lineitem` base table:
+
+```sql
+CREATE TABLE IF NOT EXISTS lineitem (
+  l_orderkey      INT NOT NULL,
+  l_partkey       INT NOT NULL,
+  l_suppkey       INT NOT NULL,
+  l_linenumber    INT NOT NULL,
+  l_quantity      DECIMAL(15,2) NOT NULL,
+  l_extendedprice DECIMAL(15,2) NOT NULL,
+  l_discount      DECIMAL(15,2) NOT NULL,
+  l_tax           DECIMAL(15,2) NOT NULL,
+  l_returnflag    CHAR(1) NOT NULL,
+  l_linestatus    CHAR(1) NOT NULL,
+  l_shipdate      DATE NOT NULL,
+  l_commitdate    DATE NOT NULL,
+  l_receiptdate   DATE NOT NULL,
+  l_shipinstruct  CHAR(25) NOT NULL,
+  l_shipmode      CHAR(10) NOT NULL,
+  l_comment       VARCHAR(44) NOT NULL
+)
+DUPLICATE KEY (l_orderkey, l_partkey, l_suppkey, l_linenumber)
+DISTRIBUTED BY HASH (l_orderkey) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+```
+
 ```sql
 desc lineitem;
 ```

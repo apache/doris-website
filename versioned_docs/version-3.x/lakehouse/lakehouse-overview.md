@@ -32,7 +32,7 @@ Doris provides a good extensibility framework to help developers quickly connect
 
 Doris defines three levels of standard Catalog, Database, and Table, allowing developers to easily map to the required data source levels. Doris also provides standard interfaces for metadata service and storage service accessing, and developers only need to implement the corresponding interface to complete the data source connection.
 
-Doris is compatible with the Trino Connector plugin, allowing the Trino plugin package to be directly deployed to the Doris cluster, and with minimal configuration, the corresponding data source can be accessed. Doris has already completed connections to data sources such as [Kudu](./catalogs/kudu-catalog.md), [BigQuery](./catalogs/bigquery-catalog.md), and [Delta Lake](./catalogs/delta-lake-catalog.md). You can also [adapt new plugins yourself](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide).
+Doris is compatible with the Trino Connector plugin, allowing the Trino plugin package to be directly deployed to the Doris cluster, and with minimal configuration, the corresponding data source can be accessed. Doris has already completed connections to data sources such as [Kudu](./catalogs/kudu-catalog.md), [BigQuery](./catalogs/bigquery-catalog.md), and [Delta Lake](./catalogs/delta-lake-catalog.md). You can also [adapt new plugins yourself](https://doris.apache.org/community/developer-guide/data-source-extension/trino-connector-developer-guide).
 
 #### Convenient Cross-Source Data Processing
 

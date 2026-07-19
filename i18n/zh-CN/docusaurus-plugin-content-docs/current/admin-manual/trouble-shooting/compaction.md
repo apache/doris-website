@@ -66,14 +66,6 @@ Segment compaction 有以下特点：
 关于 segment compaction 的实现和测试结果可以查阅[此链接](https://github.com/apache/doris/pull/12866)。
 
 
-## 单副本 compaction
-
-默认情况下，多个副本的 compaction 是独立进行的，每个副本在都需要消耗 CPU 和 IO 资源。开启单副本 compaction 后，在一个副本进行 compaction 后，其他几个副本拉取 compaction 后的文件，因此 CPU 资源只需要消耗 1 次，节省了 N - 1 倍 CPU 消耗（N 是副本数）。
-
-单副本 compaction 在表的 PROPERTIES 中通过参数 `enable_single_replica_compaction` 指定，默认为 false 不开启，设置为 true 开启。
-
-该参数可以在建表时指定，或者通过 `ALTER TABLE table_name SET("enable_single_replica_compaction" = "true")` 来修改。
-
 ## Compaction 策略
 
 Compaction 策略决定什么时候将哪些小文件合并成大文件。Doris 当前提供了 2 种 compaction 策略，通过表属性的 `compaction_policy` 参数指定。
@@ -96,7 +88,7 @@ time_series compaction 策略是为日志、时序等场景优化的策略。它
 
 time_series compaction 策略在下面 3 个条件任意一个满足的时候触发小文件合并：
 - 未合并的文件大小超过 `time_series_compaction_goal_size_mbytes` (默认 1GB)
-- 未合并的文件个数超过 `time_series_compaction_file_count_threshold` (默认 2000)
+- 未合并的文件个数超过 `time_series_compaction_file_count_threshold` (默认 1000，自 4.0.6 版本起由 2000 调整为 1000)
 - 距离上次合并的时间超过 `time_series_compaction_time_threshold_seconds` (默认 1 小时)
 
 上述参数在表的 PROPERTIES 中设置，可以在建表时指定，或者通过 `ALTER TABLE table_name SET("name" = "value")` 修改。
@@ -109,5 +101,4 @@ Compaction 在后台执行需要消耗 CPU 和 IO 资源，可以通过控制 co
 compaction 并发线程数在 BE 的配置文件中配置，包括下面几个：
 - `max_base_compaction_threads`：base compaction 的线程数，默认是 4
 - `max_cumu_compaction_threads`：cumulative compaction 的线程数，默认是 -1，表示每块盘 1 个线程
-- `max_single_replica_compaction_threads`：单副本 compaction 拉取数据文件的线程数，默认是 10
 

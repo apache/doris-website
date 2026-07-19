@@ -33,6 +33,27 @@ CORR_WELFORD(<expr1>, <expr2>)
 ## 举例
 
 ```sql
+-- setup
+create table test_corr(
+    id int,
+    k1 double,
+    k2 double
+) distributed by hash (id) buckets 1
+properties ("replication_num"="1");
+
+insert into test_corr values 
+    (1, 20, 22),
+    (1, 10, 20),
+    (2, 36, 21),
+    (2, 30, 22),
+    (2, 25, 20),
+    (3, 25, NULL),
+    (4, 25, 21),
+    (4, 25, 22),
+    (4, 25, 20);
+```
+
+```sql
 select * from test_corr;
 ```
 

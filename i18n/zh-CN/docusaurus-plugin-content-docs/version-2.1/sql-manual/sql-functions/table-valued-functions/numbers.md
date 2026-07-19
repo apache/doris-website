@@ -14,7 +14,7 @@
 ```sql
 NUMBERS(
     "number" = "<number>"
-    [, "<const_value>" = "<const_value>" ]
+    [, "const_value" = "<const_value>" ]
   );
 ```
 

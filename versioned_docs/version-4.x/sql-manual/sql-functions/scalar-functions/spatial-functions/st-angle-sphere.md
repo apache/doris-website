@@ -12,22 +12,22 @@ Calculates the central angle (in degrees) between two points on the Earth's surf
 
 The central angle refers to the angle at the center of the Earth subtended by the arc connecting the two points.
 
-## Sytax
+## Syntax
 
 ```sql
 ST_ANGLE_SPHERE( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
 ```
 
-## 参数
+## Parameters
 
 | parameters | description |
 | -- | -- |
 | `<x_lng>` | Longitude of point X, of type `DOUBLE`, with a valid range of [-180, 180] |
-| `<y_lng>` | Longitude of point Y, of type `DOUBLE`, with a valid range of [-180, 180] |
 | `<x_lat>` | Latitude of point X, of type `DOUBLE`, with a valid range of [-90, 90] |
+| `<y_lng>` | Longitude of point Y, of type `DOUBLE`, with a valid range of [-180, 180] |
 | `<y_lat>` | Latitude of point Y, of type `DOUBLE`, with a valid range of [-90, 90] |
 
-## Retuen Value
+## Return Value
 
 Returns the central angle between the two points in degrees, of type DOUBLE, with a range of [0, 180].
 

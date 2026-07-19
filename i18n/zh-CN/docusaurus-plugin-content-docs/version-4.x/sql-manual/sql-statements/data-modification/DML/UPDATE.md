@@ -10,7 +10,7 @@
 
 该语句是为进行对数据进行更新的操作，UPDATE 语句目前仅支持 UNIQUE KEY 模型。
 
-UPDATE 操作目前只支持更新 Value 列，Key 列的更新可参考[使用 FlinkCDC 更新 Key 列](../../../../ecosystem/flink-doris-connector.md#使用flinkcdc更新key列)。
+UPDATE 操作目前只支持更新 Value 列，Key 列的更新可参考[使用 FlinkCDC 更新 Key 列](../../../../connection-integration/data-integration/flink-doris-connector.md#flink-cdc-更新-key-列)。
 
 ## 语法
 
@@ -37,10 +37,6 @@ UPDATE target_table [table_alias]
 + WHERE condition: 期望更新的条件，一个返回 true 或者 false 的表达式即可。
 + ORDER BY column: 指定更新行的排序方式。通常与 LIMIT 一起使用，以控制哪些行会被更新。
 + LIMIT [offset,] count: 限制更新的行数。与 ORDER BY 一起使用时，排序后更新前 `count` 行。如果指定了 `offset`，则跳过排序后的前 `offset` 行再进行更新。如果不配合 ORDER BY 使用，受影响的行是不确定的。
-
-:::tip
-UPDATE 语句中的 ORDER BY 和 LIMIT 自 4.1.0 版本起支持。
-:::
 
 #### Note
 

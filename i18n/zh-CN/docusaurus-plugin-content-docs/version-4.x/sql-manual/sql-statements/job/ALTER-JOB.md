@@ -31,7 +31,6 @@ DO <Insert_Command>
 **1. `<Insert_Command>`**
 > 修改任务执行的 SQL。
 
-
 ## 权限控制
 
 执行此 SQL 命令的用户必须至少具有以下权限：

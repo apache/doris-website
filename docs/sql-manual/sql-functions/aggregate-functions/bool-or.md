@@ -28,7 +28,7 @@ BOOL_OR(<expr>)
 
 ## Return Value
 
-The return value is BOOLEAN. It returns TRUE when all non-NULL values exist, otherwise it returns FALSE.
+The return value is BOOLEAN. It returns TRUE when at least one non-NULL value is TRUE, otherwise it returns FALSE.
 
 If all values of the expression are NULL or the expression is empty, the function returns NULL.
 

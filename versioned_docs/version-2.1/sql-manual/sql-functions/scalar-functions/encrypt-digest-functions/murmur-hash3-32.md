@@ -10,7 +10,7 @@
 
 Calculate 32-bit murmur3 hash value
 
--Note: When calculating hash values, it is recommended to use `xxhash_32` instead of `murmur_hash3_32`。
+- Note: When calculating hash values, it is recommended to use `xxhash_32` instead of `murmur_hash3_32`.
 
 ## Syntax
 

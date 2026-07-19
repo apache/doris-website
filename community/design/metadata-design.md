@@ -1,11 +1,19 @@
 ---
-{
-    "title": "Metadata Design Document",
-    "language": "en"
-}
+title: Doris Metadata Design
+language: en
+description: Apache Doris FE metadata architecture, covering bdbje replication, in-memory metadata image, image checkpoint, crash recovery, and the follower / observer role mechanism.
+keywords:
+    - Apache Doris
+    - Doris metadata
+    - FE
+    - bdbje
+    - BerkeleyDB Java Edition
+    - leader follower observer
+    - image checkpoint
+    - metadata high availability
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,104 +32,121 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Metadata Design
 
-# Metadata Design Document
+<!-- Knowledge type: Architecture design -->
+<!-- Applicable scenario: Kernel understanding / FE module development -->
 
-## Noun Interpretation
+This document describes the overall architecture, storage structure, and data flow of Apache Doris FE metadata, along with implementation details, the startup procedure, and the crash recovery mechanism.
 
-* FE: Frontend, the front-end node of Doris. Mainly responsible for receiving and returning client requests, metadata, cluster management, query plan generation and so on.
-* BE: Backend, the back-end node of Doris. Mainly responsible for data storage and management, query plan execution and other work.
-* bdbje: [Oracle Berkeley DB Java Edition](http://www.oracle.com/technetwork/database/berkeleydb/overview/index-093405.html). In Doris, we use bdbje to persist metadata operation logs and high availability of FE.
+## Terminology
 
-## Overall architecture
-![](/images/apache-doris-architecture.png)
+| Term | Description |
+|------|-------------|
+| FE | Frontend, the frontend node of Doris. It receives and returns client requests, manages metadata and the cluster, and generates query plans. |
+| BE | Backend, the backend node of Doris. It stores and manages data and executes query plans. |
+| bdbje | [Oracle Berkeley DB Java Edition](http://www.oracle.com/technetwork/database/berkeleydb/overview/index-093405.html). In Doris, bdbje persists metadata operation logs and provides FE high availability. |
 
-As shown above, Doris's overall architecture is divided into two layers. Multiple FEs form the first tier, providing lateral expansion and high availability of FE. Multiple BEs form the second layer, which is responsible for data storage and management. This paper mainly introduces the design and implementation of metadata in FE layer.
+## Overall Architecture
 
-1. There are two different kinds of FE nodes: follower and observer. Leader election and data synchronization are taken among FE nodes by bdbje ([BerkeleyDB Java Edition](http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/overview/index-093405.html)).
+![Apache Doris architecture](/images/apache-doris-architecture.png)
 
-2. The follower node is elected, and one of the followers becomes the leader node, which is responsible for the writing of metadata. When the leader node goes down, other follower nodes re-elect a leader to ensure high availability of services.
+As shown above, Doris has a two-layer architecture. Multiple FEs form the first layer, providing horizontal scaling and high availability for the FE. Multiple BEs form the second layer, responsible for data storage and management. This document focuses on the design and implementation of metadata in the FE layer.
 
-3. The observer node only synchronizes metadata from the leader node and does not participate in the election. It can be scaled horizontally to provide the extensibility of metadata reading services.
+1. FE nodes are divided into two types: follower and observer. FEs perform leader election, data synchronization, and related work through bdbje ([BerkeleyDB Java Edition](http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/overview/index-093405.html)).
 
-> Note: The concepts of follower and observer corresponding to bdbje are replica and observer. You may use both names below.
+2. Follower nodes elect a leader, which handles metadata write operations. When the leader node crashes, the remaining follower nodes elect a new leader to keep the service highly available.
 
-## Metadata structure
+3. Observer nodes only synchronize metadata from the leader and do not participate in elections. They can scale horizontally to extend the metadata read service.
 
-Doris's metadata is in full memory. A complete metadata image is maintained in each FE memory. Within Baidu, a cluster of 2,500 tables and 1 million fragments (3 million copies) occupies only about 2GB of metadata in memory. (Of course, the memory overhead for querying intermediate objects and various job information needs to be estimated according to the actual situation. However, it still maintains a low memory overhead.
+> Note: The concepts of follower and observer in Doris correspond to replica and observer in bdbje. Both names may appear in the text below.
 
-At the same time, metadata is stored in the memory as a whole in a tree-like hierarchical structure. By adding auxiliary structure, metadata information at all levels can be accessed quickly.
+## Metadata Structure
 
-The following figure shows the contents stored in Doris meta-information.
+Doris metadata is fully held in memory. Each FE maintains a complete metadata image in memory. In Baidu's internal deployment, a cluster with 2,500 tables and 1 million tablets (3 million replicas) uses only about 2 GB of memory for metadata. (Memory overhead for intermediate query objects, various job information, and so on must be estimated separately, but the overall memory footprint remains low.)
 
-![](/images/metadata_contents.png)
+Metadata is stored in a tree-shaped hierarchy in memory, with auxiliary structures that enable fast access to metadata at each level.
 
-As shown above, Doris's metadata mainly stores four types of data:
+The figure below shows what Doris metadata contains.
 
-1. User data information. Including database, table Schema, fragmentation information, etc.
-2. All kinds of job information. For example, import jobs, Clone jobs, SchemaChange jobs, etc.
-3. User and permission information.
+![Doris metadata contents](/images/metadata_contents.png)
+
+As shown above, Doris metadata stores four categories of data:
+
+1. User data information, including databases, table schemas, and tablet information.
+2. Various job information, such as load jobs, clone jobs, and schema change jobs.
+3. User and privilege information.
 4. Cluster and node information.
 
-## Data stream
+## Data Flow
 
-![](/images/metadata_stream.png)
+![Doris metadata data flow](/images/metadata_stream.png)
 
-The data flow of metadata is as follows:
+The metadata data flow works as follows:
 
-1. Only leader FE can write metadata. After modifying leader's memory, the write operation serializes into a log and writes to bdbje in the form of key-value. The key is a continuous integer, and as log id, value is the serialized operation log.
+1. Only the leader FE can write metadata. After a write operation modifies the leader's memory, it is serialized into a log entry and written to bdbje as a key-value pair. The key is a continuous integer that serves as the log id, and the value is the serialized operation log.
 
-2. After the log is written to bdbje, bdbje copies the log to other non-leader FE nodes according to the policy (write most/write all). The non-leader FE node modifies its metadata memory image by playback of the log, and completes the synchronization with the metadata of the leader node.
+2. After the log is written to bdbje, bdbje replicates it to the other non-leader FE nodes according to its policy (write-majority or write-all). Non-leader FE nodes replay the log to update their own in-memory metadata image, completing metadata synchronization with the leader.
 
-3. The number of log entries of the leader node reaches the threshold (default 10w) and meets the checkpoint thread execution cycle (default 60 seconds). Checkpoint reads existing image files and subsequent logs and replays a new mirror copy of metadata in memory. The copy is then written to disk to form a new image. The reason for this is to regenerate a mirror copy instead of writing an existing image to an image, mainly considering that the write operation will be blocked during writing the image plus read lock. So every checkpoint takes up twice as much memory space.
+3. When the number of log entries on the leader reaches a threshold (10w entries by default) and the checkpoint thread schedule is met (60 seconds by default), the checkpoint reads the existing image file and the logs after it, replays a new metadata image copy in memory, and writes that copy to disk to form a new image. The reason for replaying a new image copy instead of writing the existing image directly is that writing the image requires a read lock, which would block write operations. As a result, each checkpoint uses twice the memory.
 
-4. After the image file is generated, the leader node notifies other non-leader nodes that a new image has been generated. Non-leader actively pulls the latest image files through HTTP to replace the old local files.
+4. After the image file is generated, the leader notifies the other non-leader nodes that a new image is available. Non-leader nodes actively pull the latest image file over HTTP and replace the local old file.
 
-5. The logs in bdbje will be deleted regularly after the image is completed.
+5. Old logs in bdbje are deleted periodically after the image is generated.
 
-## Implementation details
+## Implementation Details
 
-### Metadata catalogue
+### Metadata Directory
 
-1. The metadata directory is specified by the FE configuration item `meta_dir'.
+<!-- Knowledge type: Directory structure -->
 
-2. Data storage directory for bdbje under `bdb/` directory.
+1. The metadata directory is specified by the FE configuration item `meta_dir`.
+2. The `bdb/` directory holds bdbje data.
+3. The `image/` directory holds image files.
 
-3. The storage directory for image files under the `image/` directory.
+The key files under the `image/` directory are as follows:
 
-* `Image.[logid]`is the latest image file. The suffix `logid` indicates the ID of the last log contained in the image.
-* `Image.ckpt` is the image file being written. If it is successfully written, it will be renamed `image.[logid]` and replaced with the original image file.
-* The`cluster_id` is recorded in the `VERSION` file. `Cluster_id` uniquely identifies a Doris cluster. It is a 32-bit integer randomly generated at the first startup of leader. You can also specify a cluster ID through the Fe configuration item `cluster_id'.
-* The role of FE itself recorded in the `ROLE` file. There are only `FOLLOWER` and `OBSERVER`. Where `FOLLOWER` denotes FE as an optional node. (Note: Even the leader node has a role of `FOLLOWER`)
+| File | Description |
+|------|-------------|
+| `image.[logid]` | The latest image file. The `logid` suffix indicates the id of the last log entry included in the image. |
+| `image.ckpt` | The image file currently being written. Once written successfully, it is renamed to `image.[logid]` and replaces the old image file. |
+| `VERSION` | Records the `cluster_id`, which uniquely identifies a Doris cluster. The `cluster_id` is a random 32-bit integer generated when the leader starts for the first time, and can also be specified through the FE configuration item `cluster_id`. |
+| `ROLE` | Records the FE's own role, which can only be `FOLLOWER` or `OBSERVER`. `FOLLOWER` indicates that the FE is an electable node. (Note: even the leader node has the role `FOLLOWER`.) |
 
-### Start-up process
+### Startup Procedure
 
-1. FE starts for the first time. If the startup script does not add any parameters, it will try to start as leader. You will eventually see `transfer from UNKNOWN to MASTER` in the FE startup log.
+<!-- Knowledge type: Operational procedure -->
 
-2. FE starts for the first time. If the `--helper` parameter is specified in the startup script and points to the correct leader FE node, the FE first asks the leader node about its role (ROLE) and cluster_id through http. Then pull up the latest image file. After reading image file and generating metadata image, start bdbje and start bdbje log synchronization. After synchronization is completed, the log after image file in bdbje is replayed, and the final metadata image generation is completed.
+1. On the first startup of an FE, if the start script is run without any parameters, the FE tries to start as the leader. The FE startup log eventually shows `transfer from UNKNOWN to MASTER`.
 
-	> Note 1: When starting with the `--helper` parameter, you need to first add the FE through the leader through the MySQL command, otherwise, the start will report an error.
+2. On the first startup of an FE, if the start script specifies the `--helper` parameter pointing to a correct leader FE node, the FE first asks the leader over HTTP for its own role (the ROLE) and the `cluster_id`, then pulls the latest image file. After reading the image file and generating the metadata image, the FE starts bdbje to synchronize logs. Once synchronization is complete, it replays the logs after the image file in bdbje to produce the final metadata image.
 
-	> Note 2: `--helper` can point to any follower node, even if it is not leader.
+    > Note 1: When starting with the `--helper` parameter, you must first add the FE on the leader using a mysql command, otherwise the startup fails with an error.
 
-	> Note 3: In the process of synchronization log, the Fe log will show `xxx detached`. At this time, the log pull is in progress, which is a normal phenomenon.
+    > Note 2: `--helper` can point to any follower node, not necessarily the leader.
 
-3. FE is not the first startup. If the startup script does not add any parameters, it will determine its identity according to the ROLE information stored locally. At the same time, according to the cluster information stored in the local bdbje, the leader information is obtained. Then read the local image file and the log in bdbje to complete the metadata image generation. (If the roles recorded in the local ROLE are inconsistent with those recorded in bdbje, an error will be reported.)
+    > Note 3: While bdbje is synchronizing logs, the FE log shows `xxx detached`. This indicates that log pulling is in progress and is expected.
 
-4. FE is not the first boot, and the `--helper` parameter is specified in the boot script. Just like the first process started, the leader role is asked first. But it will be compared with the ROLE stored by itself. If they are inconsistent, they will report errors.
+3. On a non-first startup of an FE, if the start script is run without any parameters, the FE determines its identity from the locally stored ROLE information. It also reads the leader information from the cluster information stored in the local bdbje, then reads the local image file and the logs in bdbje to generate the metadata image. (If the role recorded in the local ROLE does not match the one recorded in bdbje, an error is reported.)
 
-#### Metadata Read-Write and Synchronization
+4. On a non-first startup of an FE, if the start script specifies the `--helper` parameter, the procedure is the same as the first startup: the FE first asks the leader for the role, but it then compares the result against the locally stored ROLE, and reports an error if they do not match.
 
-1. Users can use Mysql to connect any FE node to read and write metadata. If the connection is a non-leader node, the node forwards the write operation to the leader node. When the leader is successfully written, it returns a current and up-to-date log ID of the leader. Later, the non-leader node waits for the log ID it replays to be larger than the log ID it returns to the client before returning the message that the command succeeds. This approach guarantees Read-Your-Write semantics for any FE node.
+#### Metadata Read, Write, and Synchronization
 
-	> Note: Some non-write operations are also forwarded to leader for execution. For example, `SHOW LOAD` operation. Because these commands usually need to read the intermediate states of some jobs, which are not written to bdbje, there are no such intermediate states in the memory of the non-leader node. (FE's direct metadata synchronization depends entirely on bdbje's log playback. If a metadata modification operation does not write bdbje's log, the result of the modification of the operation will not be seen in other non-leader nodes.)
+1. You can use mysql to connect to any FE node for metadata read and write access. If the connected node is a non-leader, it forwards the write operation to the leader. After the leader writes successfully, it returns the latest log id. The non-leader node then waits until its own replayed log id is greater than the returned log id before returning the success message to the client. This mechanism provides Read-Your-Write semantics on any FE node.
 
-2. The leader node starts a TimePrinter thread. This thread periodically writes a key-value entry for the current time to bdbje. The remaining non-leader nodes read the recorded time in the log by playback and compare it with the local time. If the lag between the local time and the local time is found to be greater than the specified threshold (configuration item: `meta_delay_toleration_second`). If the write interval is half of the configuration item, the node will be in the **unreadable** state. This mechanism solves the problem that non-leader nodes still provide outdated metadata services after a long time of leader disconnection.
+    > Note: Some non-write operations are also forwarded to the leader, such as `SHOW LOAD`. These commands usually need to read the intermediate state of some jobs, and the intermediate state is not written to bdbje, so it does not exist in the memory of non-leader nodes. (Metadata synchronization between FEs relies entirely on bdbje log replay. If a metadata modification operation is not written to the bdbje log, the result of the modification cannot be observed on other non-leader nodes.)
 
-3. The metadata of each FE only guarantees the final consistency. Normally, inconsistent window periods are only milliseconds. We guarantee the monotonous consistency of metadata access in the same session. But if the same client connects different FEs, metadata regression may occur. (But for batch update systems, this problem has little impact.)
+2. The leader node starts a `TimePrinter` thread that periodically writes a key-value entry containing the current time to bdbje. The remaining non-leader nodes replay this log, read the time recorded in it, and compare it with their local time. If the local time lag exceeds the specified threshold (the configuration item `meta_delay_toleration_second`, with a write interval set to half of this value), the node enters an **unreadable** state. This mechanism prevents a non-leader node from continuing to serve stale metadata after losing contact with the leader for a long time.
 
-### Downtime recovery
+3. Metadata across FEs is only eventually consistent. Under normal conditions, the inconsistency window is on the order of milliseconds. Monotonic consistency of metadata access is guaranteed within the same session, but if the same client connects to different FEs, a metadata rollback can occur. (For batch-update systems, the impact of this issue is minor.)
 
-1. When the leader node goes down, the rest of the followers will immediately elect a new leader node to provide services.
-2. Metadata cannot be written when most follower nodes are down. When metadata is not writable, if a write operation request occurs, the current process is that the **FE process exits**. This logic will be optimized in the future, and read services will still be provided in the non-writable state.
-3. The downtime of observer node will not affect the state of any other node. It also does not affect metadata reading and writing at other nodes.
+### Crash Recovery
+
+<!-- Knowledge type: Failure handling -->
+
+| Scenario | Behavior |
+|----------|----------|
+| Leader node crashes | The remaining followers immediately elect a new leader to provide service. |
+| Majority of follower nodes crash | Metadata cannot be written. If a write request arrives at this point, the current behavior is that **the FE process exits directly**. A future optimization will continue to provide read service in the unwritable state. |
+| Observer node crashes | Has no impact on the state of any other node, nor on metadata reads or writes on other nodes. |

@@ -1,0 +1,51 @@
+---
+{
+    "title": "Installation and Deployment",
+    "language": "en",
+    "description": "Choose the right way to install and deploy Apache Doris."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Installation and Deployment
+
+This chapter guides you through installing and deploying Apache Doris. First select the deployment mode that fits your needs, then refer to the corresponding deployment guide.
+
+## Pre-deployment Preparation
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Choosing a Deployment Mode"
+    description="Compare integrated storage-compute versus storage-compute separation, manual deployment versus Kubernetes deployment, and cloud deployment"
+    link="choosing-deployment-mode"
+/>
+
+<GettingStartedCard
+    title="Installation Preparation"
+    description="Check the environment, plan the cluster size, and verify operating system requirements"
+    link="preparation/env-checking"
+/>
+</div>
+
+## Deployment Methods
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Manual Deployment"
+    description="Install Apache Doris directly on physical or virtual machines"
+    link="deploy-manually/intro"
+/>
+
+<GettingStartedCard
+    title="Kubernetes Deployment"
+    description="Deploy Apache Doris on Kubernetes using Doris Operator"
+    link="deploy-on-kubernetes/intro"
+/>
+
+<GettingStartedCard
+    title="Cloud Deployment"
+    description="Deploy Apache Doris on public cloud platforms such as AWS"
+    link="deploy-on-cloud/doris-on-aws"
+/>
+</div>

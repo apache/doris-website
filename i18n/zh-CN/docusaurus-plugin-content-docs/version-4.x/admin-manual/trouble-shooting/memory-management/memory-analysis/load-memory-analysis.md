@@ -26,7 +26,7 @@ MemTracker Label=AllMemTableMemory, Parent Label=DetailsTrackerSet, Used=25.08 M
 
 ## 导入内存分析
 
-如果 ``Label=AllMemTableMemory` 的值很小，则导入任务主要使用内存的位置是执行 Fragment，分析方式和 [查询内存分析](./query-memory-analysis.md) 相同，此处不再赘述。
+如果 `Label=AllMemTableMemory` 的值很小，则导入任务主要使用内存的位置是执行 Fragment，分析方式和 [查询内存分析](./query-memory-analysis.md) 相同，此处不再赘述。
 
 如果 `Label=AllMemTableMemory` 的值很大，则可能 MemTable 下刷不及时，可以考虑减小 `be.conf` 中 `load_process_max_memory_limit_percent` 和 `load_process_soft_mem_limit_percent` 的值，这可以让 MemTable 更频繁的下刷，从而在内存中缓存的 MemTable 更少，但写入的文件数量会变多，如果写入了太多的小文件会增加 Compaction 的压力，如果 Compaction 不及时将导致元数据内存变大，查询变慢，甚至文件数量超出限制后导入将报错。
 

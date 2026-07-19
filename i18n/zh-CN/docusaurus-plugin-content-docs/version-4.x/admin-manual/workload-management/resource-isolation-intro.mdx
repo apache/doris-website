@@ -1,0 +1,43 @@
+---
+{
+    "title": "资源隔离",
+    "language": "zh-CN",
+    "description": "Apache Doris 资源隔离章节导航：覆盖用于物理隔离的 Resource Group、Compute Group，以及用于进程内逻辑隔离的 Workload Group。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Doris 提供两种互补的资源隔离层次：节点级别的物理隔离，以及单进程内的逻辑隔离。根据部署架构和隔离需求选择合适的机制。
+
+## 物理隔离
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Resource Group"
+    description="在存算一体架构下，通过为 BE 节点打标签来划分隔离的节点组，支持读写分离与多租户场景。"
+    link="resource-group"
+/>
+
+<GettingStartedCard
+    title="Compute Group"
+    description="在存算分离架构下，创建并管理命名计算组，在计算层实现不同工作负载之间的硬隔离。"
+    link="compute-group"
+/>
+</div>
+
+## 逻辑隔离
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Workload Group"
+    description="在单个 BE 进程内对查询或用户会话的 CPU、内存、I/O 资源进行限制，无需额外节点。"
+    link="workload-group"
+/>
+
+<GettingStartedCard
+    title="Workload Group 绑定 Compute Group"
+    description="将 Workload Group 绑定到指定 Compute Group，结合物理与逻辑资源管控，实现细粒度的多租户隔离。"
+    link="workload-group-bind-compute-group"
+/>
+</div>

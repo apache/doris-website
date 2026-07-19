@@ -30,7 +30,7 @@ under the License.
 Converts a geometric object into a standard WKB (Well-Known Binary) binary representation. WKB is a binary format for representing geospatial data, widely used in Geographic Information Systems (GIS).
 
 Currently supported geometric types include: Point, LineString, and Polygon.
-## Sytax
+## Syntax
 
 ```sql
 ST_ASBINARY( <geo>)
@@ -40,9 +40,9 @@ ST_ASBINARY( <geo>)
 
 | Parameter | Description       |
 | -- |----------|
-| `<geo>` | 	The geometric object to be converted to WKB format, including: Point, LineString, Polygon.） |
+| `<geo>` | 	The geometric object to be converted to WKB format, including: Point, LineString, Polygon. |
 
-## Retuen value
+## Return Value
 
 Returns the WKB binary representation of the geometric object, displayed as a hexadecimal string (e.g., \x01010000...).
 

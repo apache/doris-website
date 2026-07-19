@@ -1,29 +1,45 @@
 ---
 {
-    "title": "ASOF JOIN",
+    "title": "ASOF JOIN 时序近邻匹配",
     "language": "zh-CN",
-    "description": "ASOF JOIN 基于日期时间条件，将左表的每一行与右表中满足条件的最近一行进行匹配，常用于时序数据分析场景。"
+    "description": "ASOF JOIN 用于时序数据的近邻匹配，为左表每一行在右表中按指定方向查找时间最近的一行，无需窗口函数即可完成。",
+    "keywords": [
+        "ASOF JOIN",
+        "时序 JOIN",
+        "近邻匹配",
+        "MATCH_CONDITION",
+        "时间点查询",
+        "Doris 时序查询",
+        "as of join"
+    ]
 }
 ---
 
-## 概述
+<!-- 知识类型: 能力定义 + 操作示例 -->
+<!-- 适用场景: 时序数据分析 / 行情交易匹配 / 事件快照对齐 -->
 
-:::info
-此功能自 Apache Doris 4.0.5 和 4.1.0 版本起支持。
-:::
+在分析时序数据时，经常需要为某一时刻的事件，在另一张表中找到「时间上最接近」的记录。例如：
 
-ASOF JOIN 是一种专为基于日期时间列的时序查询设计的特殊 JOIN 类型。与常规的等值 JOIN 不同，ASOF JOIN 不要求精确匹配，而是根据 `MATCH_CONDITION` 指定的方向，为左表中的每一行选择右表中满足条件的最近一行。
+- 为每一笔股票交易找到交易发生时刻的最新报价；
+- 为每一笔订单匹配下单时点生效的价格或库存快照；
+- 为每一条事件日志关联其前一条或后一条状态变更。
 
-ASOF JOIN 的“最近”并不是指按时间差绝对值查找最近一行，而是指在 `MATCH_CONDITION` 指定方向上满足条件的最近一行。
+如果使用普通 JOIN 实现这类查询，往往需要借助子查询和窗口函数（如 `ROW_NUMBER()`），SQL 复杂且执行代价高。**ASOF JOIN** 是 Doris 针对此类「时序近邻匹配」场景提供的专用 JOIN 类型，可用一条简洁语句完成。
 
-一个典型的应用场景：给定一张股票交易表和一张行情报价表，需要为每笔交易找到交易发生时刻最近的报价。如果使用普通 JOIN，需要借助复杂的子查询和窗口函数来实现，而 ASOF JOIN 可以用一条简洁的语句完成。
+ASOF JOIN 基于日期时间列进行匹配：与常规等值 JOIN 不同，它不要求精确相等，而是根据 `MATCH_CONDITION` 指定的方向，为左表中的每一行选择右表中满足条件的最近一行。
 
-ASOF JOIN 支持两种子类型：
+> 这里的「最近」并非按时间差绝对值查找，而是指在 `MATCH_CONDITION` 指定方向上满足条件的最近一行。
 
-- **ASOF JOIN**（ASOF LEFT JOIN）：对左表的每一行，根据 `MATCH_CONDITION` 的方向，在右表中查找满足条件的最近匹配行。如果未找到匹配，右侧列填充 NULL。
-- **ASOF INNER JOIN**：匹配逻辑相同，但左表中没有匹配的行会从结果中被排除。
+ASOF JOIN 提供两种子类型：
+
+| 类型 | 说明 | 未匹配行的处理 |
+| --- | --- | --- |
+| `ASOF JOIN` / `ASOF LEFT JOIN` | 左外 ASOF JOIN | 右侧列填充 NULL |
+| `ASOF INNER JOIN` | 内 ASOF JOIN | 该行从结果中排除 |
 
 ## 语法
+
+<!-- 知识类型: 语法参考 -->
 
 ```sql
 SELECT <select_list>
@@ -34,45 +50,52 @@ ASOF [LEFT | INNER] JOIN <right_table>
     | USING (<column_name> [, ...]) }
 ```
 
-**说明：**
+关键说明：
 
-- `ASOF JOIN` 或 `ASOF LEFT JOIN`：左外 ASOF JOIN。左表中没有匹配的行，右侧列填充 NULL。
-- `ASOF INNER JOIN`：内 ASOF JOIN。左表中没有匹配的行会被丢弃。
-- `<comparison_operator>`：`>=`、`>`、`<=`、`<` 四种比较运算符之一。
+- `ASOF JOIN` 等价于 `ASOF LEFT JOIN`，左表中没有匹配的行会保留，右侧列填充 NULL。
+- `ASOF INNER JOIN` 会丢弃左表中无匹配的行。
+- `<comparison_operator>` 必须是 `>=`、`>`、`<=`、`<` 之一。
 
 ## 参数说明
 
+<!-- 知识类型: 参数参考 -->
+
 | 参数 | 是否必须 | 说明 |
-|------|----------|------|
+| --- | --- | --- |
 | `left_table` | 是 | 左表（探测表）。该表的所有行都会被评估。 |
 | `right_table` | 是 | 右表（构建表）。用于查找最接近的匹配。 |
-| `MATCH_CONDITION` | 是 | 定义最近匹配规则。两侧必须引用左右表的列，且两侧列的类型必须为 `DATEV2`、`DATETIMEV2` 或 `TIMESTAMPTZ`；允许使用表达式。支持的运算符：`>=`、`>`、`<=`、`<`。 |
-| `ON` / `USING` 子句 | 是 | 定义一个或多个等值键。作为分组键——匹配仅在同一组内进行。`ON` 支持一个或多个等值（`=`）条件以及表达式（例如 `SUBSTRING(l.code, 1, 3) = r.prefix`）；`USING` 支持一个或多个同名列。 |
+| `MATCH_CONDITION` | 是 | 定义近邻匹配规则。两侧必须引用左右表的列，且两侧列的类型必须为 `DATEV2`、`DATETIMEV2` 或 `TIMESTAMPTZ`；允许使用表达式。支持的运算符：`>=`、`>`、`<=`、`<`。 |
+| `ON` / `USING` 子句 | 是 | 定义一个或多个等值键，作为分组键，匹配仅在同一组内进行。`ON` 支持一个或多个等值（`=`）条件以及表达式（例如 `SUBSTRING(l.code, 1, 3) = r.prefix`）；`USING` 支持一个或多个同名列。 |
 
-## ASOF JOIN 匹配规则
+## 匹配规则
 
-匹配规则取决于 `MATCH_CONDITION` 中的比较运算符：
+<!-- 知识类型: 行为规则 -->
+
+匹配方向取决于 `MATCH_CONDITION` 中的比较运算符：
 
 | 运算符 | 匹配行为 | 典型使用场景 |
-|--------|---------|-------------|
-| `>=` | 对左表的每一行，查找右表中**最大的**且**小于等于**左侧值的行。 | 查找事件发生时刻或之前的最新快照/报价。 |
-| `>` | 对左表的每一行，查找右表中**最大的**且**严格小于**左侧值的行。 | 查找严格早于事件时刻的最新快照/报价。 |
-| `<=` | 对左表的每一行，查找右表中**最小的**且**大于等于**左侧值的行。 | 查找当前时刻或之后的下一个事件/快照。 |
-| `<` | 对左表的每一行，查找右表中**最小的**且**严格大于**左侧值的行。 | 查找严格晚于当前时刻的下一个事件/快照。 |
+| --- | --- | --- |
+| `>=` | 对左表的每一行，查找右表中**最大的**且**小于等于**左侧值的行 | 查找事件发生时刻或之前的最新快照/报价 |
+| `>` | 对左表的每一行，查找右表中**最大的**且**严格小于**左侧值的行 | 查找严格早于事件时刻的最新快照/报价 |
+| `<=` | 对左表的每一行，查找右表中**最小的**且**大于等于**左侧值的行 | 查找当前时刻或之后的下一个事件/快照 |
+| `<` | 对左表的每一行，查找右表中**最小的**且**严格大于**左侧值的行 | 查找严格晚于当前时刻的下一个事件/快照 |
 
-**关键规则：**
+需要特别注意以下规则：
 
 1. `MATCH_CONDITION` 中的列必须为 `DATEV2`、`DATETIMEV2` 或 `TIMESTAMPTZ` 类型。
-2. `MATCH_CONDITION` 中允许使用表达式，例如：`MATCH_CONDITION(l.ts >= r.ts + INTERVAL 1 HOUR)` 或 `MATCH_CONDITION(l.ts >= DATE_ADD(r.ts, INTERVAL 3 HOUR))`。
+2. `MATCH_CONDITION` 中允许使用表达式，例如 `MATCH_CONDITION(l.ts >= r.ts + INTERVAL 1 HOUR)` 或 `MATCH_CONDITION(l.ts >= DATE_ADD(r.ts, INTERVAL 3 HOUR))`。
 3. 等值键子句可以写成 `ON` 或 `USING`。使用 `ON` 时，只允许使用等值（`=`）条件并用 `AND` 连接；`ON` 子句中不允许使用不等式条件（如 `>`、`OR`）或字面量比较（如 `l.grp = 1`）。
 4. 匹配列或等值列中的 NULL 值不会产生匹配。如果左表行的匹配列为 NULL，或者在同组内没有符合条件的右表行，则右侧列填充 NULL（LEFT JOIN）或该行被丢弃（INNER JOIN）。
-5. 当右表中多行具有相同的分组键且在匹配列上具有相同的值，并且都满足匹配条件时，返回其中一行（不确定性）。
+5. 当右表中多行具有相同的分组键且在匹配列上具有相同的值，并且都满足匹配条件时，返回其中一行（结果具有不确定性）。
 
-## 示例
+## 使用示例
+
+<!-- 知识类型: 操作示例 -->
+<!-- 适用场景: 行情交易匹配 / 订单价格匹配 / 多表时序对齐 -->
 
 ### 数据准备
 
-创建交易表和报价表：
+下文示例围绕一个常见场景：交易表 `trades` 与报价表 `quotes`，按 `symbol` 分组，按时间近邻匹配。
 
 ```sql
 CREATE TABLE trades (
@@ -111,9 +134,9 @@ INSERT INTO quotes VALUES
 (7, 'MSFT', '2024-01-01 10:00:10', 379.50, 381.00);
 ```
 
-### 示例 1：为每笔交易找到最近的报价 (>=)
+### 示例 1：为每笔交易找到最近的报价（>=）
 
-对每笔交易，在相同 `symbol` 中查找 `quote_time` 小于等于 `trade_time` 的最新报价。
+场景：对每笔交易，在相同 `symbol` 中查找 `quote_time` 小于等于 `trade_time` 的最新报价。
 
 ```sql
 SELECT t.trade_id, t.symbol, t.trade_time, t.price,
@@ -138,9 +161,11 @@ ORDER BY t.trade_id;
 +----------+--------+---------------------+--------+----------+---------------------+-----------+-----------+
 ```
 
-交易 #1（AAPL，10:00:05）匹配到报价 #1（AAPL，10:00:00），因为这是同一 symbol 中在交易时间或之前的最近报价。
+例如，交易 #1（AAPL，10:00:05）匹配到报价 #1（AAPL，10:00:00），因为这是同一 `symbol` 中在交易时间或之前的最近报价。
 
-### 示例 2：查找每笔交易之后的下一个报价 (<=)
+### 示例 2：查找每笔交易之后的下一个报价（<=）
+
+场景：将匹配方向反过来，找出每笔交易之后的下一条报价。
 
 ```sql
 SELECT t.trade_id, t.symbol, t.trade_time, t.price,
@@ -167,7 +192,9 @@ ORDER BY t.trade_id;
 
 交易 #3（AAPL，10:00:25）之后没有报价数据，因此右侧返回 NULL。
 
-### 示例 3：ASOF INNER JOIN — 排除无匹配的行
+### 示例 3：使用 INNER JOIN 排除无匹配的行
+
+场景：只关心存在匹配的交易，避免 NULL 行进入下游处理。
 
 ```sql
 SELECT t.trade_id, t.symbol, t.trade_time, t.price,
@@ -194,9 +221,9 @@ ORDER BY t.trade_id;
 
 在本数据集中，所有交易都有匹配的报价，因此结果与示例 1 相同。如果有交易没有匹配的报价，该行会被排除。
 
-### 示例 4：多个等值条件
+### 示例 4：多个等值条件分组
 
-同时按 `product_id` 和 `region` 进行分组匹配：
+场景：同时按 `product_id` 和 `region` 进行分组匹配，对每个订单查找相同产品、相同区域中最近生效的价格。
 
 ```sql
 SELECT o.order_id, o.product_id, o.region, o.order_time,
@@ -208,11 +235,9 @@ ASOF LEFT JOIN prices p
 ORDER BY o.order_id;
 ```
 
-对每个订单，查找相同产品、相同区域中最近生效的价格。
+### 示例 5：在 MATCH_CONDITION 中使用表达式
 
-### 示例 5：MATCH_CONDITION 中使用表达式
-
-查找右侧时间戳至少比左侧早 1 小时的匹配行：
+场景：右侧时间戳至少比左侧早 1 小时才允许匹配。
 
 ```sql
 SELECT l.id, l.ts, r.id AS rid, r.ts AS rts, r.data
@@ -232,7 +257,9 @@ MATCH_CONDITION(DATE_SUB(l.ts, INTERVAL 1 HOUR) >= r.ts)
 
 ### 示例 6：多级 ASOF JOIN
 
-ASOF JOIN 可以与其他 ASOF JOIN 或普通 JOIN 链式组合使用：
+ASOF JOIN 可以与其他 ASOF JOIN 或普通 JOIN 链式组合使用。
+
+为每个订单同时关联生效价格和库存快照：
 
 ```sql
 SELECT o.order_id, o.order_time,
@@ -248,7 +275,7 @@ ASOF LEFT JOIN inventory i
 ORDER BY o.order_id;
 ```
 
-也支持 ASOF JOIN 与普通 JOIN 混合使用：
+ASOF JOIN 也可以与普通 JOIN 混合使用：
 
 ```sql
 SELECT o.order_id, prod.product_name,
@@ -263,6 +290,8 @@ ORDER BY o.order_id;
 
 ### 示例 7：ASOF JOIN 配合聚合
 
+场景：按 `symbol` 统计交易数量及其匹配报价的平均买价。
+
 ```sql
 SELECT t.symbol,
        COUNT(*) AS trade_count,
@@ -275,9 +304,9 @@ GROUP BY t.symbol
 ORDER BY t.symbol;
 ```
 
-### 示例 8：双向 ASOF JOIN — 查找前后记录
+### 示例 8：双向匹配查找前后记录
 
-为每个订单同时查找前一个和后一个价格：
+场景：为每个订单同时查找前一个和后一个生效价格。
 
 ```sql
 SELECT o.order_id, o.order_time,
@@ -295,9 +324,11 @@ ASOF LEFT JOIN prices p_after
 ORDER BY o.order_id;
 ```
 
-### 示例 9：方向性匹配，而不是绝对最近
+### 示例 9：方向性匹配，而非绝对最近
 
-ASOF JOIN 只会沿 `MATCH_CONDITION` 指定的方向查找，不会比较左右两侧记录的绝对时间差。
+ASOF JOIN 只会沿 `MATCH_CONDITION` 指定的方向查找，**不会比较左右两侧记录的绝对时间差**。
+
+向「之前」查找：
 
 ```sql
 WITH left_events AS (
@@ -325,6 +356,8 @@ ASOF LEFT JOIN right_events r
 
 虽然 `10:00:08` 与左侧时间只差 2 秒，而 `10:00:00` 差 6 秒，但 `MATCH_CONDITION(l.event_time >= r.ref_time)` 只允许匹配左侧时间点及之前的右表记录，因此结果是 `10:00:00`。
 
+向「之后」查找则相反：
+
 ```sql
 WITH left_events AS (
     SELECT 1 AS event_id, 'AAPL' AS symbol, CAST('2024-01-01 10:00:06' AS DATETIME) AS event_time
@@ -349,7 +382,7 @@ ASOF LEFT JOIN right_events r
 +----------+---------------------+----------+---------------------+
 ```
 
-### 示例 10：重复匹配值可能导致非确定性结果
+### 示例 10：重复匹配值导致非确定性结果
 
 当右表中多行具有相同的分组键和相同的匹配值时，ASOF JOIN 可能返回其中任意一行。`TIMESTAMPTZ` 类型同样如此。
 
@@ -380,11 +413,13 @@ ASOF LEFT JOIN right_events r
 +----------+----------+---------------------------+------------+
 ```
 
-该查询也可能返回 `right_id = 2` 且 `tag = snapshot_b`。如果业务要求结果确定，应该在执行 ASOF JOIN 之前先对右表做去重或预聚合。
+该查询也可能返回 `right_id = 2` 且 `tag = snapshot_b`。如果业务要求结果确定，应在执行 ASOF JOIN 之前先对右表做去重或预聚合。
 
-## 等价改写
+## 与窗口函数的等价改写
 
-ASOF JOIN 在语义上等价于以下 `LEFT JOIN` + `ROW_NUMBER()` 模式，但性能显著更优：
+<!-- 知识类型: 对比说明 -->
+
+ASOF JOIN 在语义上等价于以下 `LEFT JOIN` + `ROW_NUMBER()` 模式，但执行性能显著更优：
 
 ```sql
 -- 等价于：ASOF LEFT JOIN ... MATCH_CONDITION(l.ts >= r.ts)
@@ -400,9 +435,11 @@ WHERE rn = 1;
 
 ## 最佳实践
 
-- **将 ASOF JOIN 用于时序数据的时间点查询。** 如果需要为事实表中的每一行在参考表中查找最新（或最近）的记录，ASOF JOIN 是最自然和高效的方式。
-- **在 `ON` 子句或 `USING` 子句中添加适当的等值键。** 等值键作为分组键，分组越精确，搜索空间越小，性能越好。
-- **选择合适的比较运算符。** 如果需要包含时间完全相同的匹配，使用 `>=`；如果需要严格排除相同时间戳的行，使用 `>`。
-- **不需要无匹配行时，优先使用 ASOF INNER JOIN。** 这可以避免产生 NULL 行，简化下游处理。
-- **当结果需要确定性时，先对右表候选行去重。** 如果右表中存在相同分组键且匹配列值相同的多行，ASOF JOIN 可能返回其中任意一行。
-- **使用 MATCH_CONDITION 中的表达式进行时间偏移匹配。** 例如 `MATCH_CONDITION(l.ts >= r.ts + INTERVAL 1 HOUR)` 来要求至少 1 小时的间隔。
+<!-- 知识类型: 使用建议 -->
+
+- **优先用于时序数据的时间点查询**：当需要为事实表中的每一行在参考表中查找最新（或最近）记录时，ASOF JOIN 是最自然、高效的方式。
+- **添加合适的等值键作为分组**：在 `ON` 或 `USING` 子句中加入分组键，分组越精确，搜索空间越小，性能越好。
+- **选择正确的比较运算符**：需要包含时间完全相同的匹配时使用 `>=`；需要严格排除相同时间戳的行时使用 `>`，反向查找同理。
+- **不需要无匹配行时优先使用 `ASOF INNER JOIN`**：这可以避免产生 NULL 行，简化下游处理。
+- **结果需要确定性时先对右表去重**：若右表存在相同分组键且匹配列值相同的多行，ASOF JOIN 可能返回其中任意一行。
+- **利用表达式实现时间偏移匹配**：例如 `MATCH_CONDITION(l.ts >= r.ts + INTERVAL 1 HOUR)` 可以要求至少 1 小时的间隔。

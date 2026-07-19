@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default version
-DORIS_QUICK_START_VERSION="4.0.1"
+DORIS_QUICK_START_VERSION="latest"
 
 # Parse parameters
 while getopts "v:" opt; do

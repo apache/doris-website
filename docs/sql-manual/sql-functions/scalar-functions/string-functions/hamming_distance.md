@@ -1,5 +1,9 @@
 ---
-title: HAMMING_DISTANCE
+{
+    "title": "HAMMING_DISTANCE",
+    "language": "en",
+    "description": "The HAMMING_DISTANCE function returns the number of positions at which two strings of equal length differ."
+}
 ---
 
 ## Description

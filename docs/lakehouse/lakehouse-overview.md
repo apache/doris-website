@@ -32,7 +32,7 @@ Doris provides a good extensibility framework to help developers quickly connect
 
 Doris defines three levels of standard Catalog, Database, and Table, allowing developers to easily map to the required data source levels. Doris also provides standard interfaces for metadata service and storage service accessing, and developers only need to implement the corresponding interface to complete the data source connection.
 
-Doris is compatible with the Trino Connector plugin, allowing the Trino plugin package to be directly deployed to the Doris cluster, and with minimal configuration, the corresponding data source can be accessed. Doris has already completed connections to data sources such as [Kudu](./catalogs/kudu-catalog.md), [BigQuery](./catalogs/bigquery-catalog.md), and [Delta Lake](./catalogs/delta-lake-catalog.md). You can also [adapt new plugins yourself](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide).
+Doris is compatible with the Trino Connector plugin, allowing the Trino plugin package to be directly deployed to the Doris cluster, and with minimal configuration, the corresponding data source can be accessed. Doris has already completed connections to data sources such as [Kudu](./catalogs/kudu-catalog.md), [BigQuery](./catalogs/bigquery-catalog.md), and [Delta Lake](./catalogs/delta-lake-catalog.md). You can also [adapt new plugins yourself](https://doris.apache.org/community/developer-guide/data-source-extension/trino-connector-developer-guide).
 
 #### Convenient Cross-Source Data Processing
 
@@ -90,7 +90,7 @@ In the process of integrating multiple data sources and achieving lakehouse tran
 
 ### Modern Deployment Architecture
 
-Since version 3.0, Doris supports a cloud-native [compute-storage separation architecture](../compute-storage-decoupled/overview.md). This architecture, with its low cost and high elasticity, effectively improves resource utilization and enables independent scaling of compute and storage.
+Since version 3.0, Doris supports a cloud-native [compute-storage separation architecture](../install/choosing-deployment-mode). This architecture, with its low cost and high elasticity, effectively improves resource utilization and enables independent scaling of compute and storage.
 
 ![compute-storage-decouple](/images/Lakehouse/compute-storage-decouple.png)
 
@@ -106,7 +106,7 @@ In addition, under the storage-computing coupled architecture, [elastic computin
 
 ### Openness
 
-Doris not only supports access to open lake table formats but also has good openness for its own stored data. Doris provides an open storage API and [implements a high-speed data link based on the Arrow Flight SQL protocol](../db-connect/arrow-flight-sql-connect.md), offering the speed advantages of Arrow Flight and the ease of use of JDBC/ODBC. Based on this interface, users can access data stored in Doris using Python/Java/Spark/Flink's ABDC clients.
+Doris not only supports access to open lake table formats but also has good openness for its own stored data. Doris provides an open storage API and [implements a high-speed data link based on the Arrow Flight SQL protocol](../connection-integration/arrow-flight-sql.md), offering the speed advantages of Arrow Flight and the ease of use of JDBC/ODBC. Based on this interface, users can access data stored in Doris using Python/Java/Spark/Flink's ABDC clients.
 
 Compared to open file formats, the open storage API abstracts the specific implementation of the underlying file format, allowing Doris to accelerate data access through advanced features in its storage format, such as rich indexing mechanisms. Additionally, upper-layer compute engines do not need to adapt to changes or new features in the underlying storage format, allowing all supported compute engines to simultaneously benefit from new features.
 

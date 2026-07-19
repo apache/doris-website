@@ -344,7 +344,7 @@ mysql> INSERT INTO dt3 SELECT * FROM dt2;
 ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=http://172.21.16.12:9082/api/_load_error_log?file=__shard_3/error_log_insert_stmt_3d1fed266ce443f2-b54d2609c2ea6b11_3d1fed266ce443f2_b54d2609c2ea6b11
 
 mysql> INSERT INTO dt3 SELECT * FROM dt2 WHERE id = 7;
-Query OK, 0 rows affected (0.07 sec)
+Query OK, 1 row affected (0.07 sec)
 
 mysql> COMMIT;
 Query OK, 0 rows affected (0.02 sec)
@@ -362,7 +362,7 @@ mysql> SELECT * FROM dt3;
 |    1 | Emily    |    25 |
 |    2 | Benjamin |    35 |
 |    3 | Olivia   |    28 |
-|    4 | Alexande |    60 |
+|    4 | Alexander |    60 |
 |    5 | Ava      |    17 |
 |    7 | Sophia   |    32 |
 +------+----------+-------+

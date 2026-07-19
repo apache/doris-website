@@ -386,7 +386,7 @@ UDTFはDorisバージョン3.0から対応しています。
 構文の詳細については、[CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION)を参照してください。
 
     ```sql
-    CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
+    CREATE TABLES FUNCTION java_utdf(string, string) RETURNS array<string> PROPERTIES (
         "file"="file:///pathTo/java-udtf.jar",
         "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
         "always_nullable"="true",

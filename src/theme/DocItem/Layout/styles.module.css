@@ -22,3 +22,31 @@
 .footerBtn:hover {
   border: 1px solid var(--ifm-color-primary);
 }
+
+/* Freeze the search/locale/menu toolbar + breadcrumb at the top on mobile
+   so they remain reachable while scrolling. Sits just below the sticky
+   green NavbarNext (64px tall; ~112px when Ask AI wraps to a second row
+   at ≤480px). z-index stays under the navbar (300) but above content. */
+@media (max-width: 996px) {
+  .mobileStickyHeader {
+    position: sticky;
+    top: 64px;
+    z-index: 200;
+    background-color: #fff;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 0 0.25rem;
+    box-shadow: 0 4px 8px -4px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Breadcrumb has its own margin-bottom that we want inside the sticky
+     strip's padding rather than escaping it. */
+  .mobileStickyHeader :global(.theme-doc-breadcrumbs) {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobileStickyHeader {
+    top: 112px;
+  }
+}

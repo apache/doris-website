@@ -2,7 +2,7 @@
 {
     "title": "REGEXP_EXTRACT_ALL",
     "language": "en",
-    "description": "The REGEXPEXTRACTALL function is used to perform a regular expression match on a given string str and extract all the parts that match the first sub "
+    "description": "The REGEXP_EXTRACT_ALL function is used to perform a regular expression match on a given string str and extract all the parts that match the first sub-pattern of the specified pattern."
 }
 ---
 

@@ -10,8 +10,6 @@
 
 Calculate the 32-bit xxhash value of the input string
 
--Note: When calculating hash values, it is recommended to use `xxhash_32` instead of `murmur_hash3_32`.
-
 ## Syntax
 
 ```sql

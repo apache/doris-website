@@ -29,15 +29,14 @@ UTF-8 编码完成所提供文本的 URL 编码
 ## 示例
 
 ```sql
-select  URL_ENCODE('Doris Q&A');
+select URL_ENCODE('Doris Q&A');
 ```
 
-```sql
+```text
 +-------------------------+
 | url_encode('Doris Q&A') |
 +-------------------------+
 | Doris+Q%26A             |
 +-------------------------+
-
 ```
 

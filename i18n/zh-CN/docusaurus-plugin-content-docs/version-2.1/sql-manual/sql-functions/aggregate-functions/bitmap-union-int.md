@@ -1,6 +1,6 @@
 ---
 {
-    "title": "BITMAP-UNION-INT",
+    "title": "BITMAP_UNION_INT",
     "language": "zh-CN",
     "description": "计算 TINYINT,SMALLINT 和 INT 类型的列中不同值的个数，返回值和 COUNT(DISTINCT expr) 相同"
 }
@@ -27,6 +27,12 @@ BITMAP_UNION_INT(<expr>)
 返回列中不同值的个数
 
 ## 举例
+
+```sql
+-- setup
+create table pv_bitmap(dt int, page int, user_id bitmap bitmap_union) aggregate key(dt,page) distributed by hash(dt) buckets 1 properties ("replication_num"="1");
+insert into pv_bitmap values (1,100,bitmap_from_string('100,200,300')),(1,300,bitmap_from_string('300')),(2,200,bitmap_from_string('300'));
+```
 
 ```sql
 select dt,page,bitmap_to_string(user_id) from pv_bitmap;

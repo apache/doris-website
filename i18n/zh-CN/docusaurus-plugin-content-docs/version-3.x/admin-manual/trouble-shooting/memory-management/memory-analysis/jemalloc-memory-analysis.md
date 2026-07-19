@@ -6,7 +6,7 @@
 }
 ---
 
-Doris 默认使用 Jemalloc 作为通用内存分配器，Jemalloc 自身占用的内存包括 Cache 和 Metadata 两部分，其中 Cache 包括 Thread Cache 和 Dirty Page 两部分，在 http://{be_host}:{be_web_server_port}/memz 可以实时查看到内存分配器原始的 profile。
+Doris 默认使用 Jemalloc 作为通用内存分配器，Jemalloc 自身占用的内存包括 Cache 和 Metadata 两部分，其中 Cache 包括 Thread Cache 和 Dirty Page 两部分，在 Doris BE 的 Process Profile Web 页面 http://{be_host}:{be_web_server_port}/profile 中 **Memory Info** 的 **Jemalloc Profiles** 部分可以实时查看到内存分配器原始的 profile。
 
 ## Jemalloc Cache 内存分析
 
@@ -26,7 +26,7 @@ BE 进程运行过程中，Jemalloc Cache 包括两部分。
 
 ### Jemalloc Cache 查看方法
 
-查看 Doris BE 的 Web 页面 `http://{be_host}:{be_web_server_port}/memz`（webserver_port 默认 8040）可以获得 Jemalloc Profile，根据几组关键信息解读 Jemalloc Cache 的使用。
+查看 Doris BE 的 Process Profile Web 页面 `http://{be_host}:{be_web_server_port}/profile`（webserver_port 默认 8040）中 **Memory Info** 的 **Jemalloc Profiles** 部分可以获得 Jemalloc Profile，根据几组关键信息解读 Jemalloc Cache 的使用。
 
 - Jemalloc Profile 中的 `tcache_bytes`是 Jemalloc Thread Cache 的总字节数。如果 `tcache_bytes` 值较大，说明 Jemalloc Thread Cache 使用的内存过大。
 
@@ -62,7 +62,7 @@ extents:        size ind       ndirty        dirty       nmuzzy        muzzy    
                65536  11            3       184320            0            0            6       385024            9       569344
                81920  12            2       147456            3       241664           38      2809856           43      3198976
                98304  13            0            0            1        86016            6       557056            7       643072
-              114688  14            1       102400            1       106496           15      1642496           17      185139
+              114688  14            1       102400            1       106496           15      1642496           17      1851392
 ```
 
 减小 `be.conf` 中 `JEMALLOC_CONF` 的 `dirty_decay_ms` 到 2000 ms 或更小，`be.conf` 中默认 `dirty_decay_ms` 为 5000 ms。Jemalloc 会在 `dirty_decay_ms` 指定的时间内依照平滑梯度曲线释放 Dirty Page，参考 [Jemalloc opt.dirty_decay_ms](https://jemalloc.net/jemalloc.3.html#opt.dirty_decay_ms)，当 BE 进程可用内存不足触发 Minor GC 或 Full GC 时会按照一定策略主动释放所有 Dirty Page。
@@ -83,7 +83,7 @@ MemTrackerLimiter Label=tc/jemalloc_metadata, Type=overview, Limit=-1.00 B(-1 B)
 
 ### Jemalloc Metadata 查看方法
 
-查看 Doris BE 的 Web 页面 `http://{be_host}:{be_web_server_port}/memz`（webserver_port 默认 8040）可以获得 Jemalloc Profile，查找 Jemalloc Profile 中关于 Jemalloc 整体的内存统计如下，其中 `metadata` 就是 Jemalloc Metadata 的内存大小。
+查看 Doris BE 的 Process Profile Web 页面 `http://{be_host}:{be_web_server_port}/profile`（webserver_port 默认 8040）中 **Memory Info** 的 **Jemalloc Profiles** 部分可以获得 Jemalloc Profile，查找 Jemalloc Profile 中关于 Jemalloc 整体的内存统计如下，其中 `metadata` 就是 Jemalloc Metadata 的内存大小。
 
 `Allocated: 2401232080, active: 2526302208, metadata: 535979296 (n_thp 221), resident: 2995621888, mapped: 3221979136, retained: 131542581248`
 

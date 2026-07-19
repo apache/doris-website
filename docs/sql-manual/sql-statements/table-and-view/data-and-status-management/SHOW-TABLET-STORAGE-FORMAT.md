@@ -25,11 +25,19 @@ SHOW TABLET STORAGE FORMAT [VERBOSE]
 
 ## Return Value
 
+**Default output** (without `VERBOSE`):
+
+| Column    | DataType | Note                                                                 |
+|-----------|----------|----------------------------------------------------------------------|
+| BackendId | Int      | The ID of the BE (Backend) node where the tablet replica is located. |
+| V1Count   | Int      | Number of V1 version tablets.                                        |
+| V2Count   | Int      | Number of V2 version tablets.                                        |
+
+**With `VERBOSE`**:
+
 | Column        | DataType | Note                                                                 |
 |---------------|----------|----------------------------------------------------------------------|
 | BackendId     | Int      | The ID of the BE (Backend) node where the tablet replica is located. |
-| V1Count       | Int      | Number of V1 version tablets.                                        |
-| V2Count       | Int      | Number of V2 version tablets.                                        |
 | TabletId      | Int      | The unique identifier of the tablet.                                 |
 | StorageFormat | String   | The version of the tablet, either V1 or V2.                          |
 

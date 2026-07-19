@@ -9,6 +9,7 @@ import {
 } from '@docusaurus/theme-common/internal';
 import {DocsPreferredVersionContextProvider} from '@docusaurus/plugin-content-docs/client';
 import type {Props} from '@theme/Layout/Provider';
+import {SlackCommunityNudge} from '@site/src/components/home-next/SlackCommunityNudge';
 
 const Provider = composeProviders([
   ColorModeProvider,
@@ -20,5 +21,10 @@ const Provider = composeProviders([
 ]);
 
 export default function LayoutProvider({children}: Props): JSX.Element {
-  return <Provider>{children}</Provider>;
+  return (
+    <Provider>
+      {children}
+      <SlackCommunityNudge />
+    </Provider>
+  );
 }

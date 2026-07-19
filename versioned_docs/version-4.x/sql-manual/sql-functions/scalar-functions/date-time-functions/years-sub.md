@@ -22,7 +22,7 @@ YEARS_SUB(`<date_or_time_expr>`, `<years>`)
 
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_time_expr>` | Input datetime value, supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
+| `<date_or_time_expr>` | Input datetime value, supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
 | `<years>` | Number of years to subtract, type INT, positive numbers indicate subtraction, negative numbers indicate addition |
 
 ## Return Value
@@ -90,9 +90,9 @@ SELECT YEARS_SUB('2025-10-10 11:22:33.123+07:00', 1);
 
 -- Calculation result exceeds datetime range (upper limit)
 SELECT YEARS_SUB('9999-12-31', -1);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation year_add of 9999-12-31, 1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation years_sub of 9999-12-31, 1 out of range
 
 -- Calculation result exceeds datetime range (lower limit)
 SELECT YEARS_SUB('0000-01-01', 1);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation year_add of 0000-01-01, -1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation years_sub of 0000-01-01, -1 out of range
 ```

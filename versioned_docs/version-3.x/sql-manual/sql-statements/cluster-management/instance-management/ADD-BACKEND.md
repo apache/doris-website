@@ -49,9 +49,9 @@ The user executing this SQL must have at least the following permissions:
 1. Before adding a new BE node, make sure the node is correctly configured and running.
 2. Using [Resource Group](../../../../admin-manual/workload-management/resource-group.md) can help you better manage and organize the BE nodes in the cluster.
 3. When adding multiple BE nodes, you can specify them in one command to improve efficiency.
-3. After adding the BE nodes, use the [`SHOW BACKENDS`](./SHOW-BACKENDS.md) to verify whether they have been successfully added and are in a normal state.
-4. Consider adding BE nodes in different physical locations or racks to improve the availability and fault tolerance of the cluster.
-5. Regularly check and balance the load in the cluster to ensure that the newly added BE nodes are properly utilized.
+4. After adding the BE nodes, use the [`SHOW BACKENDS`](./SHOW-BACKENDS.md) to verify whether they have been successfully added and are in a normal state.
+5. Consider adding BE nodes in different physical locations or racks to improve the availability and fault tolerance of the cluster.
+6. Regularly check and balance the load in the cluster to ensure that the newly added BE nodes are properly utilized.
 
 ## Examples
 

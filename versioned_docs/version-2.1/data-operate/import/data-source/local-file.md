@@ -164,6 +164,6 @@ LINES TERMINATED BY '\n';
 If the load is successful, the result will be displayed as follows:
 
 ```SQL
-Query OK, 6 row affected (0.17 sec)
+Query OK, 6 rows affected (0.17 sec)
 Records: 6  Deleted: 0  Skipped: 0  Warnings: 0
 ```

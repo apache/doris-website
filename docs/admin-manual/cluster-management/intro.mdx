@@ -1,0 +1,61 @@
+---
+{
+    "title": "Cluster Management",
+    "language": "en",
+    "description": "Guides for managing an Apache Doris cluster: upgrades, elastic scaling, FQDN, load balancing, automatic service startup, and replica management."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Cluster Management
+
+This chapter covers the routine operations needed to keep an Apache Doris cluster healthy in production, including version upgrades, capacity changes, network topology, and replica maintenance.
+
+## Cluster Lifecycle
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Cluster Upgrade"
+    description="Rolling upgrade guide covering version compatibility rules, metadata compatibility testing, and FE/BE upgrade steps"
+    link="upgrade"
+/>
+
+<GettingStartedCard
+    title="Elastic Scaling"
+    description="Add or remove FE/BE nodes online without interrupting business, using DROP or DECOMMISSION for scale-in"
+    link="elastic-expansion"
+/>
+</div>
+
+## Topology and Access
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="FQDN"
+    description="Enable FQDN (Fully Qualified Domain Name) mode for new clusters, existing cluster migration, and Kubernetes deployments"
+    link="fqdn"
+/>
+
+<GettingStartedCard
+    title="FE Load Balancing"
+    description="Load balancing options for multi-FE deployments — JDBC, Nginx, HAProxy, ProxySQL — plus client IP forwarding via Proxy Protocol"
+    link="load-balancing"
+/>
+</div>
+
+## Service Availability and Replicas
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Automatic Service Startup"
+    description="Configure boot-time startup and automatic restart of FE/BE/Broker using Systemd or Supervisor"
+    link="../maint-monitor/automatic-service-start"
+/>
+
+<GettingStartedCard
+    title="Data Replica Management"
+    description="Scheduling strategies for tablet replica balancing and repair, with commands to inspect and operate on replicas"
+    link="../maint-monitor/tablet-repair-and-balance"
+/>
+</div>

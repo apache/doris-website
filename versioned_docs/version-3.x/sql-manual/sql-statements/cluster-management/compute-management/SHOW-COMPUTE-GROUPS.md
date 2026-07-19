@@ -37,7 +37,7 @@ The result is:
 
 ```sql
 +-----------------+-----------+-------+------------+
-| Name           | IsCurrent  | Users | BackendNum |
+| Name            | IsCurrent | Users | BackendNum |
 +-----------------+-----------+-------+------------+
 | compute_cluster | TRUE      |       | 3          |
 +-----------------+-----------+-------+------------+

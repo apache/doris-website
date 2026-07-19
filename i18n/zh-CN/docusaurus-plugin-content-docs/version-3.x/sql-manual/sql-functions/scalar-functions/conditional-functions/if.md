@@ -28,6 +28,13 @@ IF(<condition>, <value_true>, <value_false_or_null>)
 ## 举例
 
 ```sql
+create table test(
+    user_id int
+) properties('replication_num' = '1');
+insert into test values(1),(2);
+```
+
+```sql
 SELECT user_id, IF(user_id = 1, "true", "false") AS test_if FROM test;
 ```
 

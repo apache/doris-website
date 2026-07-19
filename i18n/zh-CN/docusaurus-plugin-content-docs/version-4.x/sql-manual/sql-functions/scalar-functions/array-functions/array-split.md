@@ -44,7 +44,7 @@
   - `ARRAY_SPLIT(['a','b','c'], [false,false,false])` -> `[['a','b','c']]`
 
 - `flags` 中包含 `NULL`， `NULL` 被认为和 `false` 一样，不切分。
-  - `ARRAY_SPLIT([1,NULL,3], [false,null,false])` -> `[[1,[NULL,3]]`
+  - `ARRAY_SPLIT([1,NULL,3], [false,null,false])` -> `[[1, NULL, 3]]`
 
 - `lambda= x -> x-1` 作用于 `arr0=[1, 2, 3]` 产生 `flags=[0,1,2]`，相当于 `flags=[false,true,true]`
   - `ARRAY_SPLIT(x->x-1, [1, 2, 3])` 相当于 `ARRAY_SPLIT([1, 2, 3], [false,true,true])` -> `[[1], [2], [3]]`

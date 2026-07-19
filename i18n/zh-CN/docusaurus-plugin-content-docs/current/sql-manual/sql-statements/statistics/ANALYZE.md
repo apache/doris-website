@@ -14,7 +14,7 @@
 
 ```sql
 ANALYZE {TABLE <table_name> [ (<column_name> [, ...]) ] | DATABASE <database_name>}
-    [ [ WITH SYNC ] [ WITH SAMPLE {PERCENT | ROWS} <sample_rate> ] ];
+    [ [ WITH SYNC ] [ WITH SAMPLE {PERCENT | ROWS} <sample_rate> ] [ WITH HOT VALUE ] ];
 ```
 
 ## 必选参数
@@ -40,6 +40,10 @@ ANALYZE {TABLE <table_name> [ (<column_name> [, ...]) ] | DATABASE <database_nam
 **3. `WITH SAMPLE {PERCENT | ROWS} <sample_rate>`**
 
 > 指定使用抽样方式收集。当不指定时，默认为全量收集。<sample_rate> 为抽样参数，在 PERCENT 采样时指定抽样百分比，ROWS 采样时指定抽样行数。
+
+**4. `WITH HOT VALUE`**
+
+> 指定在手工全量收集时收集高频值。高频值可帮助优化器更准确地估算倾斜数据上的谓词选择率，但在高基数列上收集高频值可能消耗更多内存。不指定该选项时，Doris 保持原有行为：全量收集不收集高频值，抽样收集始终收集高频值。`WITH HOT VALUE` 与 `WITH SAMPLE` 同时使用时会被拒绝。
 
 ## 返回值
 
@@ -72,3 +76,8 @@ ANALYZE TABLE lineitem WITH SAMPLE PERCENT 10;
 ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;
 ```
 
+3. 对 lineitem 表进行全量收集，并收集高频值。
+
+```sql
+ANALYZE TABLE lineitem WITH SYNC WITH HOT VALUE;
+```

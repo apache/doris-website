@@ -23,7 +23,7 @@ IS_IPV4_STRING(<ipv4_str>)
 - `<ipv4_str>`：要检查的字符串
 
 ### 返回值
-返回类型：TINYINT
+返回类型：BOOLEAN
 
 返回值含义：
 - 返回 1：表示输入是有效的 IPv4 地址格式

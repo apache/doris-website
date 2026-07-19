@@ -9,7 +9,7 @@
 ## Description
 
 
-The FROM_UNIXTIME function is used to convert a Unix timestamp (in seconds) to a date-time string or VARCHAR type value in a specified format. The reference time for Unix timestamps is 1970-01-01 00:00:00 UTC, and the function generates the corresponding date-time representation based on the input timestamp and format string.
+The FROM_UNIXTIME function is used to convert a Unix timestamp (in seconds) to a date-time string or VARCHAR type value in a specified format. The reference time for Unix timestamps is 1970-01-01 00:00:00 UTC, and the function generates the corresponding date-time representation based on the input timestamp and format string. When the input timestamp contains a fractional part, the result includes sub-second precision up to microseconds (6 decimal places).
 
 This function is consistent with the [from_unixtime function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_from-unixtime) in MySQL.
 
@@ -23,13 +23,13 @@ FROM_UNIXTIME(<unix_timestamp> [, <string_format>])
 
 | Parameter | Description |
 | -- | -- |
-| `<unix_timestamp>` | Input Unix timestamp, of integer type BIGINT, representing the number of seconds from 1970-01-01 00:00:00 UTC |
+| `<unix_timestamp>` | Input Unix timestamp, of type BIGINT or DECIMAL, representing the number of seconds (with optional fractional seconds) from 1970-01-01 00:00:00 UTC |
 | `<string_format>` | Format string, supports varchar and string types, default is %Y-%m-%d %H:%i:%s. For specific formats, please refer to [date-format](./date-format) |
 
 ## Return Value
 
-Returns date in specified format, of type VARCHAR, returning the result of converting the UTC timezone unix timestamp to the current timezone time.
-- Currently supported unix_timestamp range is [0, 253402271999] corresponding to dates from 1970-01-01 00:00:00 to 9999-12-31 23:59:59, unix_timestamp outside this range will return an error
+Returns date in specified format, of type VARCHAR, returning the result of converting the UTC timezone unix timestamp to the current timezone time. When the input contains a fractional part, the result includes sub-second precision (e.g., `2007-12-01 00:30:19.500000`).
+- Currently supported unix_timestamp range is [0, 253402271999.999999] corresponding to dates from 1970-01-01 00:00:00 to 9999-12-31 23:59:59.999999, unix_timestamp outside this range will return an error
 - If string_format is invalid, returns a string that does not meet expectations.
 - If any parameter is NULL, returns NULL
 - If the format length is over 128 characters, returns error
@@ -94,6 +94,30 @@ mysql> select from_unixtime(32536799,"gdaskpdp");
 +------------------------------------+
 | gdaskpdp                           |
 +------------------------------------+
+
+---Fractional timestamp input, result includes sub-second precision
+mysql> select from_unixtime(1196440219.5);
++-----------------------------+
+| from_unixtime(1196440219.5) |
++-----------------------------+
+| 2007-12-01 00:30:19.500000  |
++-----------------------------+
+
+---Fractional timestamp with microsecond precision
+mysql> select from_unixtime(1196440219.123456);
++----------------------------------+
+| from_unixtime(1196440219.123456) |
++----------------------------------+
+| 2007-12-01 00:30:19.123456       |
++----------------------------------+
+
+---Use %f format specifier to display microseconds explicitly
+mysql> select from_unixtime(1196440219.123456, '%Y-%m-%d %H:%i:%s.%f');
++----------------------------------------------------------+
+| from_unixtime(1196440219.123456, '%Y-%m-%d %H:%i:%s.%f') |
++----------------------------------------------------------+
+| 2007-12-01 00:30:19.123456                               |
++----------------------------------------------------------+
 
 ---Input is NULL, returns NULL
 mysql> select from_unixtime(NULL);

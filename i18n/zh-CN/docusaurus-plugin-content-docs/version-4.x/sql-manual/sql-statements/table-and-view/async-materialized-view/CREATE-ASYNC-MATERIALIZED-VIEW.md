@@ -184,6 +184,59 @@ refresh_trigger
 
 ## 示例
 
+准备工作——下面的示例在标准 TPC-H 风格的 `orders`、`lineitem`、`partsupp` 基表上构建物化视图。先创建这三张表（`orders` 的分区版本会被示例 2 复用，示例 2 中的 `CREATE TABLE IF NOT EXISTS orders` 会自动成为 no-op）：
+
+```sql
+CREATE TABLE IF NOT EXISTS orders (
+  o_orderkey      INT NOT NULL,
+  o_custkey       INT NOT NULL,
+  o_orderstatus   CHAR(1) NOT NULL,
+  o_totalprice    DECIMALV3(15,2) NOT NULL,
+  o_orderdate     DATE NOT NULL,
+  o_orderpriority CHAR(15) NOT NULL,
+  o_clerk         CHAR(15) NOT NULL,
+  o_shippriority  INT NOT NULL,
+  o_comment       VARCHAR(79) NOT NULL
+)
+DUPLICATE KEY (o_orderkey, o_custkey)
+PARTITION BY RANGE (o_orderdate) (FROM ('2023-10-16') TO ('2023-11-30') INTERVAL 1 DAY)
+DISTRIBUTED BY HASH (o_orderkey) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+CREATE TABLE IF NOT EXISTS lineitem (
+  l_orderkey      INT NOT NULL,
+  l_partkey       INT NOT NULL,
+  l_suppkey       INT NOT NULL,
+  l_linenumber    INT NOT NULL,
+  l_quantity      DECIMAL(15,2) NOT NULL,
+  l_extendedprice DECIMAL(15,2) NOT NULL,
+  l_discount      DECIMAL(15,2) NOT NULL,
+  l_tax           DECIMAL(15,2) NOT NULL,
+  l_returnflag    CHAR(1) NOT NULL,
+  l_linestatus    CHAR(1) NOT NULL,
+  l_shipdate      DATE NOT NULL,
+  l_commitdate    DATE NOT NULL,
+  l_receiptdate   DATE NOT NULL,
+  l_shipinstruct  CHAR(25) NOT NULL,
+  l_shipmode      CHAR(10) NOT NULL,
+  l_comment       VARCHAR(44) NOT NULL
+)
+DUPLICATE KEY (l_orderkey, l_partkey, l_suppkey, l_linenumber)
+DISTRIBUTED BY HASH (l_orderkey) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+CREATE TABLE IF NOT EXISTS partsupp (
+  ps_partkey    INT NOT NULL,
+  ps_suppkey    INT NOT NULL,
+  ps_availqty   INT NOT NULL,
+  ps_supplycost DECIMAL(15,2) NOT NULL,
+  ps_comment    VARCHAR(199) NOT NULL
+)
+DUPLICATE KEY (ps_partkey, ps_suppkey)
+DISTRIBUTED BY HASH (ps_partkey) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+```
+
 1. 全量物化视图
 
     ```sql
@@ -194,7 +247,7 @@ refresh_trigger
     ) 
     BUILD IMMEDIATE 
     REFRESH AUTO 
-    ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00' 
+    ON SCHEDULE EVERY 1 DAY STARTS '2099-01-01 20:30:00' 
     DISTRIBUTED BY HASH (orderkey) BUCKETS 2 
     PROPERTIES 
     ("replication_num" = "1") 
@@ -240,7 +293,7 @@ refresh_trigger
     CREATE MATERIALIZED VIEW partition_mv
     BUILD IMMEDIATE 
     REFRESH AUTO 
-    ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00' 
+    ON SCHEDULE EVERY 1 DAY STARTS '2099-01-01 20:30:00' 
     PARTITION BY (DATE_TRUNC(o_orderdate, 'MONTH'))
     DISTRIBUTED BY HASH (l_orderkey) BUCKETS 2 
     PROPERTIES 
@@ -266,7 +319,7 @@ refresh_trigger
     CREATE MATERIALIZED VIEW partition_mv_2
     BUILD IMMEDIATE 
     REFRESH AUTO 
-    ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00' 
+    ON SCHEDULE EVERY 1 DAY STARTS '2099-01-01 20:30:00' 
     PARTITION BY (DATE_TRUNC(min_orderdate, 'MONTH'))
     DISTRIBUTED BY HASH (l_orderkey) BUCKETS 2 
     PROPERTIES 

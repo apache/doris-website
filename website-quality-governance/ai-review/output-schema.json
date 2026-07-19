@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://doris.apache.org/schemas/docs-ai-review-output.schema.json",
+  "title": "Apache Doris Docs AI Review Output",
+  "description": "Output schema for advisory AI review findings. AI blocking recommendations are not deterministic CI gates.",
+  "oneOf": [
+    {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    },
+    {
+      "type": "object",
+      "required": ["findings"],
+      "additionalProperties": false,
+      "properties": {
+        "findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/finding"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "required": [
+        "severity",
+        "path",
+        "line",
+        "issue",
+        "evidence",
+        "suggested_fix",
+        "blocking_recommendation",
+        "needs_human_verification"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "severity": {
+          "type": "string",
+          "enum": ["info", "warning", "error"]
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "line": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "issue": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "suggested_fix": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blocking_recommendation": {
+          "type": "boolean",
+          "description": "Advisory only. Deterministic CI decides whether a PR is blocked."
+        },
+        "needs_human_verification": {
+          "type": "boolean",
+          "description": "Must be true when a Doris behavior fact cannot be verified from the packet or related docs."
+        }
+      }
+    }
+  }
+}

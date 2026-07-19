@@ -74,7 +74,3 @@ select id, covar_samp(x, y) from baseall group by id;
 |    5 |             NULL |
 +------+------------------+
 ```
-|    4 |             NULL |
-|    5 |             NULL |
-+------+------------------+
-```

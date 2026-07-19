@@ -2,7 +2,7 @@ name: Cron Deploy
 
 on:
     schedule:
-        - cron: '0 * * * *' # Runs every hour.
+        - cron: '0 */2 * * *' # Runs every 2 hours.
 permissions: write-all
 jobs:
     build-and-deploy:
@@ -33,12 +33,15 @@ jobs:
                   node-version: 20
 
             - name: Build
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
               run: |
                   npm install -g yarn
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
                   yarn
                   node ./scripts/update_github_info.js
+                  yarn key-features:generate
                   PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build --locale en --locale zh-CN
                   if [ ! -d "./ja-build" ]; then
                       echo "ja-build directory not found, aborting to avoid publishing incorrect ja content."

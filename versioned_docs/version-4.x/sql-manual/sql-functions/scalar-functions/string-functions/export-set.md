@@ -37,6 +37,11 @@ Returns a string. For each bit in `bits`, from the least significant bit to the 
 If `number_of_bits` is out of range [-2^31, 2^31 - 1] or any parameter in the function is NULL, return NULL.
 ## Example
 
+<!-- setup-sql
+CREATE TABLE test_export_set (`bits` BIGINT, `on` VARCHAR(20), `off` VARCHAR(20), `sep` VARCHAR(20), `num_of_b` INT) DISTRIBUTED BY HASH(`bits`) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO test_export_set VALUES (-1,'1','0',',',50),(-2,'1','0','',64),(5,'Y','N',',',5),(5,'1','0','',64),(5,'','0','',65),(6,'1','','',63),(19284249819,'1','0',',',64),(9,'apache','doris','|123|',64),(NULL,'1','0',',',5),(5,NULL,'0','',5),(5,'1',NULL,',',10),(5,'1','0',NULL,10),(5,'1','0',',',NULL);
+-->
+
 ```sql
 SELECT EXPORT_SET(-2, '1', '0');
 ```

@@ -78,7 +78,7 @@ Returns the same data type as the input expression.
 
 When the `ORDER BY` clause of a window function fails to produce a unique ordering of the data, such as when the `ORDER BY` expression results in duplicate values, the order of the rows becomes indeterminate. This means that the return order of these rows may vary across multiple query executions, leading to inconsistent results from the window function.
 
-The following example illustrates how the query returns different results on successive runs. The inconsistency arises primarily because `ORDER BY dateid` does not provide a unique ordering for the `SUM` window function.
+The following example illustrates how the query returns different results on successive runs. The inconsistency arises primarily because `ORDER BY date_time` does not provide a unique ordering for the `SUM` window function.
 
 ```sql
 CREATE TABLE test_window_order 
@@ -112,6 +112,14 @@ Due to duplicate values in the sorting column `date_time`, the following two que
 |       2 | 2024-07-01 |   100 |  340 |
 +---------+------------+-------+------+
 3 rows in set (0.03 sec)
++---------+------------+-------+------+
+| item_id | date_time  | sales | sum  |
++---------+------------+-------+------+
+|       2 | 2024-07-01 |   100 |  100 |
+|       1 | 2024-07-01 |   100 |  200 |
+|       3 | 2024-07-01 |   140 |  340 |
++---------+------------+-------+------+
+3 rows in set (0.02 sec)
 ```
 
 **2. Solution**

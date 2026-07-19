@@ -29,6 +29,12 @@ GROUP_BITMAP_XOR(<expr>)
 ## 举例
 
 ```sql
+-- setup
+create table pv_bitmap(id int, page varchar(10), user_id bitmap bitmap_union) aggregate key(id,page) distributed by hash(id) buckets 1 properties ("replication_num"="1");
+insert into pv_bitmap values (1,'m',bitmap_from_string('4,7,8')),(2,'m',bitmap_from_string('1,3,6,15')),(3,'m',bitmap_from_string('4,7'));
+```
+
+```sql
  select page, bitmap_to_string(user_id) from pv_bitmap;
 ```
 

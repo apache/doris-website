@@ -9,6 +9,7 @@ import './index.scss';
 
 const PREVIEW_LINK_ZH = 'https://cdn.selectdb.com/static/doris_1_2_2_18e810982b.pdf';
 const PREVIEW_LINK_EN = 'https://cdn.selectdb.com/static/doris_1_2_en_0d0a9b6a03.pdf';
+const PREVIEW_LINK_V20 = 'https://doris.apache.org/pdf/Apache_Doris_v2_0_0b89998444.pdf';
 
 const DATE_LINK = '2025-01-17';
 
@@ -126,15 +127,32 @@ export default function Archive() {
                         }
                     </Translate>
                 </p>
+                {isZH && (
+                    <div className="preview-item-content">
+                        <div className="preview-item-version">Apache Doris v2.0</div>
+                        <a href={PREVIEW_LINK_V20} target="_blank" rel="noreferrer">
+                            <div
+                                className="preview-link"
+                                style={{ color: '#7F7F83' }}
+                                id="toc-icon-pdf-v20"
+                                onMouseEnter={() => handleMouseEnter('toc-icon-pdf-v20')}
+                                onMouseLeave={() => handleMouseLeave('toc-icon-pdf-v20')}
+                            >
+                                <PdfIcon />
+                                <Translate id="archive-download-text">Download PDF</Translate>
+                            </div>
+                        </a>
+                    </div>
+                )}
                 <div className="preview-item-content">
                     <div className="preview-item-version">Apache Doris v1.2</div>
                     <Link to={isZH ? PREVIEW_LINK_ZH : PREVIEW_LINK_EN}>
                         <div
                             className="preview-link"
                             style={{ color: '#7F7F83' }}
-                            id="toc-icon-pdf"
-                            onMouseEnter={() => handleMouseEnter('toc-icon-pdf')}
-                            onMouseLeave={() => handleMouseLeave('toc-icon-pdf')}
+                            id="toc-icon-pdf-v12"
+                            onMouseEnter={() => handleMouseEnter('toc-icon-pdf-v12')}
+                            onMouseLeave={() => handleMouseLeave('toc-icon-pdf-v12')}
                         >
                             <PdfIcon />
                             <Translate id="archive-download-text">Download PDF</Translate>

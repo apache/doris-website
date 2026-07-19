@@ -13,7 +13,7 @@ This statement is used to add one or more BROKER nodes.
 ## Syntax
 
 ```sql
-ALTER SYSTEM ADD BROKER <broker_name> "<host>:<ipc_port>" [, "host>:<ipc_port>" [, ... ] ];
+ALTER SYSTEM ADD BROKER <broker_name> "<host>:<ipc_port>" [, "<host>:<ipc_port>" [, ... ] ];
 ```
 
 ## Required Parameters
@@ -39,10 +39,10 @@ The user who executes this operation needs to have the NODE_PRIV permission.
 1. Add two Brokers
 
     ```sql
-    ALTER SYSTEM ADD BROKER "host1:port", "host2:port";
+    ALTER SYSTEM ADD BROKER broker1 "host1:port", "host2:port";
     ```
 2. Add a Broker using FQDN
 
     ```sql
-    ALTER SYSTEM ADD BROKER "broker_fqdn1:port";
+    ALTER SYSTEM ADD BROKER broker1 "broker_fqdn1:port";
     ```

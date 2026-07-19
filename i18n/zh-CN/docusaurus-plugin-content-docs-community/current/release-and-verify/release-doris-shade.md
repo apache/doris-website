@@ -1,11 +1,18 @@
 ---
-{
-"title": "发布 Doris Shade",
-"language": "zh-CN"
-}
+title: 发布 Apache Doris Shade
+language: zh-CN
+description: Apache Doris Shade 发版流程：Maven release prepare/perform、SVN 上传与社区投票。
+keywords:
+    - Apache Doris Shade 发版
+    - Maven release prepare
+    - Maven release perform
+    - Apache 投票
+    - Maven Staging
+    - SVN dist
+    - Release Manager
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,103 +31,126 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 发布 Doris Shade
+# 发布 Apache Doris Shade
 
-其代码库独立于 Doris 主代码库，位于：
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 版本发布 / Apache 投票流程 -->
 
-- https://github.com/apache/doris-Shade
+Doris Shade 代码库独立于 Doris 主代码库，位于：
+
+- [https://github.com/apache/doris-Shade](https://github.com/apache/doris-Shade)
+
+本文以发布 Doris Shade v1.0.0 为例，介绍 Shade 类组件从 Maven release plugin、SVN 准备到社区投票的完整流程。
 
 ## 准备发布
 
-首先，请参阅 [发版准备](./release-prepare.md) 文档进行发版准备。
+首先，请参阅 [发版准备](./release-prepare) 文档完成签名、SVN、Maven 等环境的准备。
 
 ## 发布到 Maven
 
-我们以发布 Doris Shade v1.0.0 为例。
-
 ### 1. 准备分支
 
-在代码库中创建分支：1.0.0-release，并 checkout 到该分支。
+在代码库中创建 `1.0.0-release` 分支，并 checkout 到该分支。
 
-### 2. 发布到 Maven staging
+### 2. 发布到 Maven Staging
 
-执行以下命令开始生成 release tag：
+执行 Maven release plugin 生成 release tag：
 
 ```shell
 mvn release:clean
 mvn release:prepare -DpushChanges=false
 ```
 
-其中 `-DpushChanges=false` 表示执行过程中，不会向代码库推送新生成的分支和 tag。
+`-DpushChanges=false` 表示执行过程中**不会**自动向代码库推送新生成的分支和 tag。
 
-在执行 `release:prepare` 命令后，会要求提供以下三个信息：
+`release:prepare` 执行过程中会要求填写三项信息：
 
-1. Doris Shade 的版本信息：我们默认就可以，可以直接回车或者输入自己想要的版本。版本格式为 `{shade.version}`，如 `1.0.0`。
-2. Doris Shade 的 release tag：release 过程会在本地生成一个 tag。我们使用默认的 tag 名称即可，如 `1.0.0`。
-3. Doris Shade 下一个版本的版本号：这个版本号只是用于生成本地分支时使用，无实际意义。我们按规则填写一个即可，比如当前要发布的版本是：`1.0.0`，那么下一个版本号填写 `1.0.1-SNAPSHOT` 即可。
+| 提示项 | 推荐填写 | 示例 |
+| --- | --- | --- |
+| Doris Shade 版本号 | 默认即可，格式 `{shade.version}` | `1.0.0` |
+| Release Tag 名称 | 使用默认 tag 名称 | `1.0.0` |
+| 下一个版本号 | 用于本地分支，无实际意义 | `1.0.1-SNAPSHOT` |
 
-`mvn release:prepare` 可能会要求输入 GPG passphrase。如果出现 `gpg: no valid OpenPGP data found` 错误，则可以执行 `export GPG_TTY=$(tty)` 后在尝试。
+执行过程中可能要求输入 GPG passphrase。如果出现 `gpg: no valid OpenPGP data found`，先执行 `export GPG_TTY=$(tty)` 再重试。
 
-`mvn release:prepare` 执行成功后，会在本地生成一个 tag 和一个 branch。并且当前分支会新增两个 commit。第一个 commit 对应的是新生成的 tag，第二个则是下一个版本的 branch。可以通过 `git log` 查看。
+`mvn release:prepare` 执行成功后，本地会生成一个 tag 和一个 branch，当前分支会新增两个 commit：
 
-本地 tag 确认无误后，需要将 tag 推送到代码库：
+1. 第一个 commit 对应新生成的 tag；
+2. 第二个 commit 对应下一个版本的 branch。
 
-`git push upstream --tags`
+可通过 `git log` 查看确认。
 
-其中 upstream 指向 `apache/doris-shade` 代码库。
+本地 tag 确认无误后，将 tag 推送到代码库：
 
-最后，执行 perform:
-
+```bash
+git push upstream --tags
 ```
+
+其中 `upstream` 指向 `apache/doris-shade` 代码库。
+
+最后执行 release:perform：
+
+```bash
 mvn release:perform
 ```
 
-执行成功后，在 [https://repository.apache.org/#stagingRepositories](https://repository.apache.org/#stagingRepositories) 里面可以找到刚刚发布的版本：
+执行成功后，在 [https://repository.apache.org/#stagingRepositories](https://repository.apache.org/#stagingRepositories) 可以看到刚发布的版本：
 
 ![](/images/staging-repositories.png)
 
-**注意需要包含 `.asc` 签名文件。**
+:::caution 注意
+确认产物中包含 `.asc` 签名文件。
+:::
 
-如果操作有误。需要将本地 tag，代码库中的 tag 以及本地新生成的两个 commit 删除。并将 staging drop 掉。然后重新执行上述步骤。
+如果操作有误，需要：
 
-检查完毕后，点击图中的 `close` 按钮完成 staging 发布。
+1. 删除本地 tag；
+2. 删除代码库中的 tag；
+3. 删除本地新生成的两个 commit；
+4. 将 staging drop 掉；
+5. 重新执行上述步骤。
 
-### 3. 准备 svn
+检查无误后，点击 `close` 按钮完成 Staging 发布。
 
-检出 svn 仓库：
+### 3. 准备 SVN
 
-```
+检出 Dev SVN 仓库：
+
+```bash
 svn co https://dist.apache.org/repos/dist/dev/doris/
 ```
 
-打包 tag 源码，并生成签名文件和sha256校验文件。这里我们以 `1.0.0` 为例。其他 tag 操作相同
+打包 tag 源码并生成签名文件和 SHA512 校验文件（以下以 `1.0.0` 为例）：
 
-```
+```bash
 git archive --format=tar 1.14_2.12-1.0.0 --prefix=apache-doris-shade-1.0.0-src/ | gzip > apache-doris-shade-1.0.0-src.tar.gz
 gpg -u xxx@apache.org --armor --output apache-doris-shade-1.0.0-src.tar.gz.asc  --detach-sign apache-doris-shade-1.0.0-src.tar.gz
 sha512sum apache-doris-shade-1.14_2.12-1.0.0-src.tar.gz > apache-doris-shade-1.0.0-src.tar.gz.sha512
+```
 
-Mac:
+在 macOS 上请使用：
+
+```bash
 shasum -a 512 apache-doris-shade-1.0.0-src.tar.gz > apache-doris-shade-1.0.0-src.tar.gz.sha512
 ```
 
 最终得到三个文件：
 
-```
-apache-doris-shade-1.0.0-src.tar.gz
-apache-doris-shade-1.0.0-src.tar.gz.asc
-apache-doris-shade-1.0.0-src.tar.gz.sha512
-```
+| 文件 | 用途 |
+| --- | --- |
+| `apache-doris-shade-1.0.0-src.tar.gz` | 源码包 |
+| `apache-doris-shade-1.0.0-src.tar.gz.asc` | GPG 签名文件 |
+| `apache-doris-shade-1.0.0-src.tar.gz.sha512` | SHA512 校验文件 |
 
-将这三个文件移动到 svn 目录下：
+将三个文件移动到 SVN 目录：
 
-```
+```text
 doris/doris-shade/1.0.0/
 ```
 
-最终 svn 目录结构类似：
+完整 SVN 目录结构示例：
 
-```
+```text
 ├── 1.2.3-rc01
 │   ├── apache-doris-1.2.3-src.tar.gz
 │   ├── apache-doris-1.2.3-src.tar.gz.asc
@@ -134,15 +164,15 @@ doris/doris-shade/1.0.0/
 │       └── apache-doris-shade-1.0.0-src.tar.gz.sha512
 ```
 
-其中 1.2.3-rc01 是 Doris 主代码的目录，而 `doris-shade/1.0.0` 下就是本次发布的内容了。
+其中 `1.2.3-rc01` 是 Doris 主代码目录，`doris-shade/1.0.0` 下是本次发布的内容。
 
-注意，KEYS 文件的准备，可参阅 [发版准备](./release-prepare.md) 中的介绍。
+> KEYS 文件的准备方式见 [发版准备](./release-prepare) 中的相关章节。
 
 ### 4. 投票
 
-在 dev@doris 邮件组发起投票，模板如下：
+在 `dev@doris.apache.org` 邮件组发起投票，模板如下：
 
-```
+```text
 Hi all,
 
 This is a call for the vote to release Apache Doris-Shade 1.0.0
@@ -168,25 +198,42 @@ The vote will be open for at least 72 hours.
 
 [ ] +1 Approve the release
 [ ] +0 No opinion
-[ ] -1 Do not release this package because …
+[ ] -1 Do not release this package because ...
 ```
 
 ## 完成发布
 
-请参阅 [完成发布](./release-complete.md) 文档完成所有发布流程。
+请参阅 [完成发布](./release-complete) 文档完成所有发布流程。
 
 ## 附录：发布到 SNAPSHOT
 
-Snapshot 并非 Apache Release 版本，仅用于发版前的预览。在经过 PMC 讨论通过后，可以发布 Snapshot 版本
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 发版前预览 -->
 
-切换到 doris shade 目录
+Snapshot 并非 Apache Release 版本，仅用于发版前的预览。需要经过 PMC 讨论通过后才能发布 Snapshot 版本。
 
-```
+切换到 doris-shade 目录：
+
+```bash
 mvn deploy
 ```
 
-之后你可以在这里看到 snapshot 版本：
+之后可在以下地址查看 snapshot 版本：
 
-```
+```text
 https://repository.apache.org/content/repositories/snapshots/org/apache/doris/doris-shade/
 ```
+
+## FAQ / Troubleshooting
+
+**Q：`mvn release:prepare` 报 `gpg: no valid OpenPGP data found`？**
+
+终端无法接收 GPG passphrase，执行 `export GPG_TTY=$(tty)` 后重试。
+
+**Q：`mvn release:perform` 失败后如何完全回滚？**
+
+按顺序执行：删除本地 tag（`git tag -d <tag>`）、删除远端 tag（`git push upstream :refs/tags/<tag>`）、回退本地两个 commit（`git reset --hard HEAD~2`）、在 Apache Staging 上 drop 掉对应仓库，然后重新执行 `mvn release:clean` 与 `mvn release:prepare`。
+
+**Q：Maven release plugin 与手工打 tag + `mvn deploy` 有什么区别？**
+
+`release:prepare/perform` 会自动管理版本号变更、tag 创建与产物上传，更适合 Shade 这种 pom 简洁的项目；手工方式则在多产物（如 Spark Connector 跨 Spark 版本）场景下更灵活。

@@ -283,7 +283,7 @@ To create a Storage Vault using S3-compatible object storage, follow these steps
 CREATE STORAGE VAULT IF NOT EXISTS s3_vault
     PROPERTIES (
     "type"="S3",
-    "s3.endpoint"="s3.us-east-1.amazonaws.com",
+    "s3.endpoint"="https://s3.us-east-1.amazonaws.com",
     "s3.access_key" = "ak",
     "s3.secret_key" = "sk",
     "s3.region" = "us-east-1",

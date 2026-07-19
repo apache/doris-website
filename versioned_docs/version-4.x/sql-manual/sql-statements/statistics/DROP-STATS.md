@@ -24,7 +24,7 @@ column_names
   (<column_name>, [ <column_name>... ])
 ```
 
-## ## Required Parameters
+## Required Parameters
 
 **<table_name>**
 

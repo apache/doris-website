@@ -10,7 +10,7 @@
 
 Calculate the spherical distance between two points on the Earth, in meters. The input parameters are the longitude of point X, latitude of point X, longitude of point Y, and latitude of point Y respectively.
 
-## Sytax
+## Syntax
 
 ```sql
 ST_DISTANCE_SPHERE( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
@@ -20,12 +20,12 @@ ST_DISTANCE_SPHERE( <x_lng>, <x_lat>, <y_lng>, <y_lat>)
 
 | Parameter | Description |
 | -- | -- |
-| `<x_lng>` | Longitude of point X, of type DOUBLE, with a valid range of [-180, 180] (returns NULL if out of range).|
-| `<y_lng>` | Latitude of point X, of type DOUBLE, with a valid range of [-90, 90] (returns NULL if out of range). |
-| `<x_lat>` | Longitude of point Y, of type DOUBLE, with a valid range of [-180, 180] (returns NULL if out of range). |
+| `<x_lng>` | Longitude of point X, of type DOUBLE, with a valid range of [-180, 180] (returns NULL if out of range). |
+| `<x_lat>` | Latitude of point X, of type DOUBLE, with a valid range of [-90, 90] (returns NULL if out of range). |
+| `<y_lng>` | Longitude of point Y, of type DOUBLE, with a valid range of [-180, 180] (returns NULL if out of range). |
 | `<y_lat>` | Latitude of point Y, of type DOUBLE, with a valid range of [-90, 90] (returns NULL if out of range). |
 
-## Retuen value
+## Return Value
 
 Returns the shortest spherical distance between the two points, in meters (of type DOUBLE).
 
@@ -36,7 +36,7 @@ ST_DISTANCE_SPHERE has the following edge cases:
 - If the two points are completely identical (with the same longitude and latitude values), returns 0 (distance is 0).
 ## Example
 
-Two identical points (returns 0)
+Two nearby points on Earth
 
 ```sql
 select st_distance_sphere(116.35620117, 39.939093, 116.4274406433, 39.9020987219);

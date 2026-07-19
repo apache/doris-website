@@ -44,7 +44,7 @@ Split the input array into multiple subarrays according to given boolean flags.
   - `ARRAY_SPLIT(['a','b','c'], [false,false,false])` -> `[['a','b','c']]`
 
 - With `NULL` in `flags`: `NULL` is treated the same as `false` (no split).
-  - `ARRAY_SPLIT([1,NULL,3], [false,null,false])` -> `[[1,[NULL,3]]`
+  - `ARRAY_SPLIT([1,NULL,3], [false,null,false])` -> `[[1, NULL, 3]]`
 
 - `lambda= x -> x-1` applied to `arr0=[1, 2, 3]` produces `flags=[0,1,2]`, equivalent to `flags=[false,true,true]`
   - `ARRAY_SPLIT(x->x-1, [1, 2, 3])` is equivalent to `ARRAY_SPLIT([1, 2, 3], [false,true,true])` -> `[[1], [2], [3]]`

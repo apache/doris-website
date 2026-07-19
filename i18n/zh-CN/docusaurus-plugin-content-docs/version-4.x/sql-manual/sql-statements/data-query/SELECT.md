@@ -63,7 +63,7 @@ SELECT
 
 12. `[TABLET tids] TABLESAMPLE n [ROWS | PERCENT] [REPEATABLE seek]`: 在 FROM 子句中限制表的读取行数，根据指定的行数或百分比从表中伪随机的选择数个 Tablet，REPEATABLE 指定种子数可使选择的样本再次返回，此外也可手动指定 TableID，注意这只能用于 OLAP 表。
 
-13. `hint_statement`: 在 selectlist 前面使用 hint 表示可以通过 hint 去影响优化器的行为以期得到想要的执行计划，详情可参考[joinHint 使用文档](https://doris.apache.org/zh-CN/docs/2.0/query/join-optimization/join-hint)。
+13. `hint_statement`: 在 selectlist 前面使用 hint 表示可以通过 hint 去影响优化器的行为以期得到想要的执行计划，详情可参考[joinHint 使用文档](../../../query-acceleration/hints/distribute-hint.md)
     
 **语法约束：**
 
@@ -134,6 +134,28 @@ CTE 名称可以在其他 CTE 中引用，从而可以基于其他 CTE 定义 CT
 目前不支持递归的 CTE。
 
 ## 示例
+
+下面示例 1-9 基于这两张表运行。其余示例（UNION、WITH、JOIN、TABLESAMPLE）引用的 `t1`、`t2`、`employee`、`left_tbl`、`tournament` 等表本页并未创建——这些片段仅用于展示语法形态，请在自己的表上执行。
+
+```sql
+CREATE TABLE student (Name VARCHAR(32), age INT)
+DISTRIBUTED BY HASH(Name) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO student VALUES
+  ('Alice', 18), ('Bob', 20), ('Carol', 22), ('Dave', 25), ('Eve', 30);
+
+CREATE TABLE tb_book (id INT, name VARCHAR(64), price DECIMAL(10,2), type VARCHAR(32))
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO tb_book VALUES
+  (1, 'SQL Cookbook',                          39.99, 'database'),
+  (2, 'Doris Internals',                       49.99, 'database'),
+  (3, 'The Rust Programming Language',         45.00, 'programming'),
+  (4, 'Designing Data-Intensive Applications', 55.00, 'database'),
+  (5, 'Clean Code',                            35.00, 'programming');
+```
 
 1. 查询年龄分别是 18,20,25 的学生姓名
 

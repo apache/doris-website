@@ -22,13 +22,13 @@ INT WEEKOFYEAR(`<date_or_time_expr>`)
 ## Parameters
 | Parameter | Description |
 |-----------|-------------|
-| `<datetime_or_date>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## Return Value
 
 Returns INT type week number, range 1-53, representing which week of the year the date belongs to.
 
-- If the week containing January 1st has fewer than 4 days in the current year (e.g., if January 1st is a Wednesday, that week only has January 1-3 in the current year, totaling 3 days), then that week belongs to the previous year, and the 1st week of the current year starts from the next Sunday.
+- If the week containing January 1st has fewer than 4 days in the current year (e.g., if January 1st is a Wednesday, that week only has January 1-3 in the current year, totaling 3 days), then that week belongs to the previous year, and the 1st week of the current year starts from the next Monday.
 - When the week at the end of December has fewer than 4 days total, that week belongs to the first week of the next year
 - Input NULL returns NULL
 

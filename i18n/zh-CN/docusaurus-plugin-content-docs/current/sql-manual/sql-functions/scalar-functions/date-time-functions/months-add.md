@@ -95,8 +95,8 @@ SELECT MONTHS_ADD('2025-10-10 11:22:33.123+07:00', 1);
 
 --- 计算结果超出日期范围
 mysql> SELECT MONTHS_ADD('9999-12-31', 1) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation months_add of 9999-12-31, 1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation month_add of 9999-12-31, 1 out of range
 
 mysql> SELECT MONTHS_ADD('0000-01-01',- 1) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation months_add of 0000-01-01, -1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation month_add of 0000-01-01, -1 out of range
 ```

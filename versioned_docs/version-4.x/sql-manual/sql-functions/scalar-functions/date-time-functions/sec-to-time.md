@@ -27,7 +27,7 @@ SEC_TO_TIME(<seconds>)
 ## Return Value
 
 Returns a TIME type value converted from seconds.
-- If the input seconds exceed the valid range of TIME type (-838:59:59 to 838:59:59, corresponding to seconds range -3023999 to 3023999), returns TIME max or min value
+- If the input seconds exceed the valid range of TIME type (-838:59:59 to 838:59:59, corresponding to seconds range -3020399 to 3020399), returns TIME max or min value
 - If the input is NULL, returns NULL
 - if the input is an integer, the return format is HH:MM:SS; if the input is a floating-point number, the return format is HH:MM:SS.ssssss.
 
@@ -82,7 +82,7 @@ SELECT SEC_TO_TIME(NULL) AS result;
 | NULL   |
 +--------+
 
---- If the input seconds exceed the valid range of TIME type (-838:59:59 to 838:59:59, corresponding to seconds range -3023999 to 3023999), returns TIME max or min value
+--- If the input seconds exceed the valid range of TIME type (-838:59:59 to 838:59:59, corresponding to seconds range -3020399 to 3020399), returns TIME max or min value
  SELECT SEC_TO_TIME(30245000) AS result;
 +-----------+
 | result    |

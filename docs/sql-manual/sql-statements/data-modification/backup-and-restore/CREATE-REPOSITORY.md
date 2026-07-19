@@ -47,7 +47,7 @@ CREATE [READ ONLY] REPOSITORY <repo_name>
 
 **Note:&#x20;**
 
-Doris also supported `AWS Assume Role` for creating AWS S3 Repository, please refer to [AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+Doris also supported `AWS Assume Role` for creating AWS S3 Repository, please refer to [AWS integration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 ## Access Control Requirements
 
@@ -82,7 +82,7 @@ PROPERTIES
 ```
 **Note:&#x20;**
 
-Doris also supported `AWS Assume Role` for creating AWS S3 Repository, please refer to [AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+Doris also supported `AWS Assume Role` for creating AWS S3 Repository, please refer to [AWS integration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 Create a repository named hdfs_repo.
 

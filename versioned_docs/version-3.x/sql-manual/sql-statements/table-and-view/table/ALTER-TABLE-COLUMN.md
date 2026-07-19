@@ -180,7 +180,7 @@ ALTER TABLE [database.]table table_name MODIFY COLUMN column_name column_type [K
 :::tip
   - If you modify the value column in the aggregation model, you need to specify agg_type
   - If you modify the key column for non-aggregate types, you need to specify the KEY keyword
-  - Only the type of the column can be modified, and other attributes of the column remain as they are (that is, other attributes need to be explicitly written in the statement according to the   original attributes, see example 8)
+  - Only the type of the column can be modified, and other attributes of the column remain as they are (that is, other attributes need to be explicitly written in the statement according to the   original attributes, see example 2 above)
   - Partitioning and bucketing columns cannot be modified in any way
   - The following types of conversions are currently supported (loss of precision is guaranteed by the user)
     - Conversion of TINYINT/SMALLINT/INT/BIGINT/LARGEINT/FLOAT/DOUBLE types to larger numeric types

@@ -85,14 +85,14 @@ Doris> CREATE CATALOG onelake_doris PROPERTIES (
             'uri'='https://onelake.table.fabric.microsoft.com/iceberg',
             'warehouse'='<workerspace_id>/<data_item_id>',
             'iceberg.rest.security.type'='oauth2',
-            'iceberg.rest.oauth2.server-uri'='https://login.microsoftonline.com/<talent_id>/oauth2/v2.0/token',
-            'iceberg.rest.oauth2.credential'='<oauth2.client_id>:'<oauth2.client_secret>,
+            'iceberg.rest.oauth2.server-uri'='https://login.microsoftonline.com/<tenant_id>/oauth2/v2.0/token',
+            'iceberg.rest.oauth2.credential'='<oauth2.client_id>:<oauth2.client_secret>',
             'iceberg.rest.oauth2.scope'='https://storage.azure.com/.default', 
             'fs.azure.support'='true',
             'azure.endpoint'='https://onelake.dfs.fabric.microsoft.com',
             'azure.auth_type'='OAuth2',
             'azure.oauth2_account_host'='onelake.dfs.fabric.microsoft.com',
-            'azure.oauth2_server_uri'='https://login.microsoftonline.com/<talent_id>/oauth2/v2.0/token',
+            'azure.oauth2_server_uri'='https://login.microsoftonline.com/<tenant_id>/oauth2/v2.0/token',
             'azure.oauth2_client_id'='<oauth2.client_id>',
             'azure.oauth2_client_secret'='<oauth2.client_secret>'
         );

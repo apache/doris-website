@@ -70,7 +70,7 @@ Users executing this SQL command must have at least the following privileges:
 
 | Privilege | Object | Notes |
 | :-------- | :----- | :---- |
-| LOAD_PRIV | Table | SHOW ROUTINE LOAD requires LOAD privilege on the table |
+| LOAD_PRIV | Table | ALTER ROUTINE LOAD requires LOAD privilege on the table |
 
 ## Notes
 

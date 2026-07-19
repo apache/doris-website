@@ -1,7 +1,7 @@
 ---
 {
     "title": "Google Cloud Storage | Storages",
-    "language": "zh-CN",
+    "language": "en",
     "description": "The document is under development.",
     "sidebar_label": "Google Cloud Storage"
 }

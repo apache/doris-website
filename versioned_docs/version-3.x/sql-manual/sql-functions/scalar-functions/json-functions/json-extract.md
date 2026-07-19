@@ -76,9 +76,11 @@ json path syntax:
 - '[i]' for element of json array at index i
   - Use '$[last]' to get the last element of json_array, and '$[last-1]' to get the penultimate element, and so on.
 
+`<path>` does not auto-broadcast over arrays: if the JSON value is an array and `<path>` is `$.k`, the result is NULL because `$.k` only traverses object members. To target an element by index use `$[i].k`. Array-wildcard broadcasting via `$[*].k` was introduced in Doris 4.0; on 2.1 and 3.x, extract per-element values via `LATERAL VIEW EXPLODE` patterns instead.
+
 ## Return Values
 According to the type of the field to be extracted, return the data type of the specified JSON_PATH in the target JSON. Special case handling is as follows:
-* If the field specified by json_path does not exist in the JSON, return NULL.
+* If none of the fields specified by json_path exist in the JSON, return NULL. Otherwise, skip the non-existent fields.
 * If the actual type of the field specified by json_path in the JSON is inconsistent with the type specified by json_extract_t.
 * if it can be losslessly converted to the specified type, return the specified type t; if not, return NULL.
 
@@ -123,7 +125,7 @@ SELECT json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name');
 +-----------------------------------------------------------------+
 | json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name') |
 +-----------------------------------------------------------------+
-| [null,"doris"]                                                  |
+| ["doris"]                                                       |
 +-----------------------------------------------------------------+
 ```
 ```sql

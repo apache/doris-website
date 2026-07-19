@@ -200,7 +200,7 @@ SELECT * from hudi_table@incr('beginTime'='xxx', ['endTime'='xxx'], ['hoodie.rea
 ```
 ## FAQ
 
-1. JNIを通じてJava SKDを使用して増分データを読み取る際にクエリがブロックされる
+1. JNIを通じてJava SDKを使用して増分データを読み取る際にクエリがブロックされる
 
     `be.conf`の`JAVA_OPTS_FOR_JDK_17`または`JAVA_OPTS`に`-Djol.skipHotspotSAAttach=true`を追加してください。
 

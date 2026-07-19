@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_POPFRONT",
     "language": "en-US",
-    
+    "description": "Removes the first element from an array. The function returns a new array containing all elements from the original array except the first one."
 }
 ---
 
@@ -122,11 +122,11 @@ SELECT array_popfront([[1, 2], [3, 4], [5, 6]]);
 Remove the first element from a MAP array:
 ```sql
 SELECT array_popfront([{'name':'Alice','age':20}, {'name':'Bob','age':30}, {'name':'Charlie','age':40}]);
-+------------------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------------+
 | array_popfront([{'name':'Alice','age':20}, {'name':'Bob','age':30}, {'name':'Charlie','age':40}]) |
-+------------------------------------------------------------------------------------------+
-| [{"name":"Bob","age":30}, {"name":"Charlie","age":40}]                                   |
-+------------------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------------+
+| [{"name":"Bob", "age":"30"}, {"name":"Charlie", "age":"40"}]                                      |
++---------------------------------------------------------------------------------------------------+
 ```
 
 Remove the first element from a STRUCT array:

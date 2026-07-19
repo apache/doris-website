@@ -37,11 +37,15 @@ jobs:
                   node-version: 20
 
             - name: Build
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
               run: |
                   npm install -g yarn
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
                   yarn
+                  node ./scripts/update_github_info.js
+                  yarn key-features:generate
                   PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build --locale en --locale zh-CN
                   if [ ! -d "./ja-build" ]; then
                       echo "ja-build directory not found, aborting to avoid publishing incorrect ja content."
@@ -53,7 +57,6 @@ jobs:
                   touch build/.dummy
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/
-                  cp .htaccess ./build/
                   ls build
                   export DORIS_COMMIT=`git rev-parse HEAD`
 

@@ -16,13 +16,13 @@ Currently supported geometric types include: Point, LineString, Polygon, MultiPo
 
 - ST_ASWKT
 
-## Sytax
+## Syntax
 
 ```sql
 ST_ASTEXT( <geo>)
 ```
 
-# Parameters
+## Parameters
 
 | Parameter | Description     |
 | -- |----------|

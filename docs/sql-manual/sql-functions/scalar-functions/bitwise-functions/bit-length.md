@@ -2,27 +2,27 @@
 {
     "title": "BIT_LENGTH",
     "language": "en",
-    "description": "返回字符串或二进制值的位长度（实际长度就是字节数 8。）。"
+    "description": "Returns the bit length of a string or binary value (i.e., the byte length × 8)."
 }
 ---
 
-## 描述
+## Description
 
-返回字符串或二进制值的位长度（实际长度就是字节数 * 8。）。
+Returns the bit length of a string or binary value (i.e., the byte length × 8).
 
-## 语法
+## Syntax
 ```sql
 BIT_LENGTH(<str>)
 ```
 
-## 参数
-- `<str>` 要返回长度的字符串值。
+## Parameters
+- `<str>` The string value whose bit length is to be returned.
 
-## 返回值
+## Return Value
 
-返回 `<str>` 在二进制表示中所占的位数，包括所有 0 和 1。
+Returns the number of bits occupied by `<str>` in its binary representation, counting all `0` and `1` bits.
 
-## 示例
+## Examples
 1. Example 1
     ```sql
     select BIT_LENGTH("abc"), BIT_LENGTH("中国"), BIT_LENGTH(123);

@@ -12,7 +12,7 @@ This statement is used to modify an existing hot-cold tiered migration policy. O
 
 ## Syntax
 ```sql
-ALTER STORAGE POLICY  '<policy_name>' PROPERTIE ("<key>"="<value>"[, ... ]);
+ALTER STORAGE POLICY  '<policy_name>' PROPERTIES ("<key>"="<value>"[, ... ]);
 ```
 
 ## Required Parameters
@@ -22,7 +22,7 @@ ALTER STORAGE POLICY  '<policy_name>' PROPERTIE ("<key>"="<value>"[, ... ]);
 > The name of the storage policy. This is the unique identifier of the storage policy you want to modify, and an existing policy name must be specified. 
 
 ## Optional Parameters
-`PROPERTIE ("<key>"="<value>"[, ... ])` 
+`PROPERTIES ("<key>"="<value>"[, ... ])` 
 
 1.`retention_days`  
 > Data retention period. Defines the duration for which the data is kept in storage. Data exceeding this period will be automatically deleted. 

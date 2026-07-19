@@ -10,7 +10,7 @@
 
 This syntax is used to view the result of the latest insert operation in the current session connection
 
-grammar:
+## Syntax
 
 ```sql
 SHOW LAST INSERT
@@ -28,7 +28,7 @@ TransactionStatus: VISIBLE
       FilteredRows: 0
 ```
 
-illustrate:
+## Return Value
 
 * TransactionId: transaction id
 * Label: the label corresponding to the insert task
@@ -47,7 +47,7 @@ illustrate:
 
 ## Keywords
 
-    SHOW, LASR ,INSERT
+    SHOW, LAST, INSERT
 
 ## Best Practice
 

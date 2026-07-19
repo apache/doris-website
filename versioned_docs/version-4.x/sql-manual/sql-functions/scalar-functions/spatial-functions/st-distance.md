@@ -12,10 +12,6 @@ Calculates the shortest distance on the sphere between two geometry objects, in 
 
 Unlike `ST_DISTANCE_SPHERE`, which accepts longitude and latitude coordinates, `ST_DISTANCE` accepts geometry objects (points, lines, polygons, circles, etc.) as parameters and calculates the shortest distance between their boundaries. If the two shapes intersect (including touching or containing each other), it returns 0.
 
-:::info Note
-Supported since Apache Doris 4.0.4
-:::
-
 ## Syntax
 
 ```sql
@@ -47,11 +43,11 @@ Returns the shortest spherical distance between the boundaries of the two geomet
 SELECT ST_DISTANCE(ST_GeometryFromText('POINT(0 0)'), ST_GeometryFromText('POINT(1 0)'));
 ```
 ```text
-+---------------------------------------------+
-| ST_Distance(ST_Point(0, 0), ST_Point(1, 0)) |
-+---------------------------------------------+
-|                           111195.1011774839 |
-+---------------------------------------------+
++------------------------------------------------------------------------------------+
+| ST_DISTANCE(ST_GeometryFromText('POINT(0 0)'), ST_GeometryFromText('POINT(1 0)')) |
++------------------------------------------------------------------------------------+
+|                                                                  111195.1011774839 |
++------------------------------------------------------------------------------------+
 ```
 
 **Distance Between a Point and a Line**

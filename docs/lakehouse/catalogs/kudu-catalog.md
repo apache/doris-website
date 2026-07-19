@@ -8,7 +8,7 @@
 
 ## Overview
 
-Kudu Catalog accesses Kudu tables through the [Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/) compatibility framework using Trino Kudu Connector.
+Kudu Catalog accesses Kudu tables through the [Trino Connector](https://doris.apache.org/community/developer-guide/data-source-extension/trino-connector-developer-guide/) compatibility framework using Trino Kudu Connector.
 
 :::note
 - This is an experimental feature, supported since version 3.0.1.

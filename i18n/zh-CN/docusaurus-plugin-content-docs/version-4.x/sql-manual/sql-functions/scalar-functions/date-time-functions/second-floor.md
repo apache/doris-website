@@ -30,7 +30,7 @@ SECOND_FLOOR(<datetime>[, <period>][, <origin_datetime>])
 
 | 参数                  | 说明                                                       |
 |---------------------|----------------------------------------------------------|
-| `<datetime>`        | 必填，输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                            |
+| `<datetime>`        | 必填，输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                            |
 | `<period>`          | 可选，表示每个周期由多少秒组成，支持正整数类型（INT）。默认为 1 秒。                    |
 | `<origin_datetime>` | 可选，对齐的时间起点，支持输入 datetime 类型。如果未指定，默认为 0001-01-01T00:00:00。 |
 

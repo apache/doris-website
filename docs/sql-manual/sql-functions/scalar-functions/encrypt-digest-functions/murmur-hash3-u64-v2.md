@@ -8,7 +8,7 @@
 
 ## Description
 
-Computes an unsigned 64-bit MurmurHash3 hash value, returned as LARGEINT type. The unsigned version refer to [murmur_hash3_64_v2](./murmur-hash3-64-v2.md)
+Computes an unsigned 64-bit MurmurHash3 hash value, returned as LARGEINT type. The signed version refer to [murmur_hash3_64_v2](./murmur-hash3-64-v2.md)
 
 This function reuses the implementation of `MURMUR_HASH3_64_V2` and masks the result to unsigned 64-bit range (0 to 2^64-1), which is consistent with the [standard library](https://mmh3.readthedocs.io/en/latest/api.html#mmh3.hash64) implementation when interpreted as unsigned.
 

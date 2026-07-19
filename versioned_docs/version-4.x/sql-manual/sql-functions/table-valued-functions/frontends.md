@@ -19,7 +19,7 @@ FRONTENDS()
 
 | Privilege  | Object | Notes |
 | :--------- |:-------|:------|
-| ADMIN_PRIV | global |       |
+| SELECT_PRIV | internal.information_schema | All users have permissions to this database by default |
 
 ## Return Value
 | Field                    | Description                                                                                             |
@@ -42,6 +42,7 @@ FRONTENDS()
 | **IsHelper**             | Indicates whether the frontend node is a helper node (true/false).                                      |
 | **ErrMsg**               | Any error messages reported by the frontend node.                                                       |
 | **Version**              | The version of the frontend node.                                                                       |
+| **CurrentConnected**     | Indicates whether the frontend node is currently connected to the cluster (Yes/No).                     |
 
 
 ## Examples

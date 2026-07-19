@@ -28,6 +28,24 @@ BITMAP_INTERSECT(BITMAP <value>)
 
 ## 举例
 
+```sql
+-- setup
+CREATE TABLE user_tags (
+	tag VARCHAR(20),
+	date DATETIME,
+	user_id BITMAP bitmap_union
+) AGGREGATE KEY(tag, date) DISTRIBUTED BY HASH(tag) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO user_tags VALUES
+	('A', '2020-05-18', to_bitmap(1)),
+	('A', '2020-05-18', to_bitmap(2)),
+	('A', '2020-05-19', to_bitmap(2)),
+	('A', '2020-05-19', to_bitmap(3)),
+	('B', '2020-05-18', to_bitmap(4)),
+	('B', '2020-05-19', to_bitmap(4)),
+	('B', '2020-05-19', to_bitmap(5));
+```
+
 表结构
 
 ```

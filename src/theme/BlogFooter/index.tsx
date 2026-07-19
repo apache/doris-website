@@ -22,9 +22,9 @@ export default function BlogListFooter({
                 responsive
                 onChange={page => {
                     history.push(
-                        `${location.pathname}?currentPage=${page ? page : ''}&currentCategory=${
-                            currentCategory ? currentCategory : ''
-                        }#blog`,
+                        `${location.pathname}?currentPage=${page ? page : ''}&currentCategory=${encodeURIComponent(
+                            currentCategory ? currentCategory : '',
+                        )}#blog`,
                         location.state,
                     );
                 }}

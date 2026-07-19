@@ -150,7 +150,7 @@ The `CONNECTION` keyword can be omitted.
 	- Add Trace ID in the query statement
 
 		```sql
-		SELECT /*+SET_VAR(session_context=trace_id:your_trace_id)*/ * FROM table ...;
+		SELECT /*+SET_VAR(session_context="trace_id:your_trace_id")*/ * FROM table ...;
 		```
 	
 	Afterward, management system can cancel running operations at any time using the Trace ID.

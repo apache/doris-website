@@ -1,25 +1,45 @@
 ---
 {
-    "title": "ASOF JOIN",
+    "title": "ASOF JOIN for Time-Series Nearest-Neighbor Matching",
     "language": "en",
-    "description": "ASOF JOIN matches each row of the left table to the nearest qualifying row in the right table based on a date/time condition, commonly used in time-series analysis."
+    "description": "ASOF JOIN performs nearest-neighbor matching on time-series data. For each row in the left table, it finds the row in the right table that is closest in time along a specified direction, without requiring window functions.",
+    "keywords": [
+        "ASOF JOIN",
+        "time-series JOIN",
+        "nearest-neighbor matching",
+        "MATCH_CONDITION",
+        "point-in-time query",
+        "Doris time-series query",
+        "as of join"
+    ]
 }
 ---
 
-## Overview
+<!-- Knowledge type: Capability definition + Operational example -->
+<!-- Applicable scenarios: Time-series data analysis / Quote-trade matching / Event snapshot alignment -->
 
-ASOF JOIN is a special type of JOIN designed for time-series lookups on date/time columns. Unlike regular equality JOIN, ASOF JOIN does not require an exact match. Instead, for each left-table row, it finds the nearest right-table row that satisfies the directional comparison in `MATCH_CONDITION`.
+When analyzing time-series data, you often need to find the record in another table that is "closest in time" to a given event. For example:
 
-ASOF JOIN does **not** mean "the absolutely closest row by time difference". The returned row is the nearest row in the direction specified by `MATCH_CONDITION`.
+- Find the latest quote at the time each stock trade occurred.
+- Match each order with the price or inventory snapshot in effect at the moment the order was placed.
+- Associate each event log entry with the previous or next state change.
 
-A typical use case: given a table of stock trades and a table of stock quotes, for each trade, find the most recent quote that was available at the time of the trade. With regular JOIN, this requires complex subqueries and window functions, while ASOF JOIN accomplishes it in a single, clear statement.
+Implementing such queries with a regular JOIN typically requires subqueries and window functions (such as `ROW_NUMBER()`), which makes the SQL complex and the execution costly. **ASOF JOIN** is a dedicated JOIN type that Doris provides for this kind of "time-series nearest-neighbor matching" scenario, allowing you to express the query in a single concise statement.
 
-ASOF JOIN supports two sub-types:
+ASOF JOIN matches based on a datetime column. Unlike a regular equi-JOIN, it does not require exact equality. Instead, for each row in the left table, it picks the closest qualifying row from the right table according to the direction specified by `MATCH_CONDITION`.
 
-- **ASOF JOIN** (ASOF LEFT JOIN): For each row in the left table, find the nearest qualifying match in the right table according to `MATCH_CONDITION`. If no match is found, the right-side columns are filled with NULL.
-- **ASOF INNER JOIN**: Same matching logic, but rows from the left table that have no match are excluded from the result.
+> "Closest" here does not mean the smallest absolute time difference. It means the closest row that satisfies the condition in the direction specified by `MATCH_CONDITION`.
+
+ASOF JOIN provides two subtypes:
+
+| Type | Description | Handling of unmatched rows |
+| --- | --- | --- |
+| `ASOF JOIN` / `ASOF LEFT JOIN` | Left outer ASOF JOIN | Right-side columns are filled with NULL |
+| `ASOF INNER JOIN` | Inner ASOF JOIN | The row is excluded from the result |
 
 ## Syntax
+
+<!-- Knowledge type: Syntax reference -->
 
 ```sql
 SELECT <select_list>
@@ -30,45 +50,52 @@ ASOF [LEFT | INNER] JOIN <right_table>
     | USING (<column_name> [, ...]) }
 ```
 
-**Where:**
+Key points:
 
-- `ASOF JOIN` or `ASOF LEFT JOIN`: Left outer ASOF JOIN. Left table rows without a match produce NULL on the right side.
-- `ASOF INNER JOIN`: Inner ASOF JOIN. Left table rows without a match are discarded.
-- `<comparison_operator>`: One of `>=`, `>`, `<=`, `<`.
+- `ASOF JOIN` is equivalent to `ASOF LEFT JOIN`. Rows in the left table without a match are kept, and the right-side columns are filled with NULL.
+- `ASOF INNER JOIN` discards rows in the left table that have no match.
+- `<comparison_operator>` must be one of `>=`, `>`, `<=`, or `<`.
 
 ## Parameters
 
+<!-- Knowledge type: Parameter reference -->
+
 | Parameter | Required | Description |
-|-----------|----------|-------------|
-| `left_table` | Yes | The left (probe) table. All rows from this table are evaluated. |
-| `right_table` | Yes | The right (build) table. Used to find the closest match. |
-| `MATCH_CONDITION` | Yes | Defines the nearest-match rule. Both sides must reference columns from both tables, and the columns on both sides must be of type `DATEV2`, `DATETIMEV2`, or `TIMESTAMPTZ`. Expressions are allowed. Supported operators: `>=`, `>`, `<=`, `<`. |
-| `ON` / `USING` clause | Yes | Defines one or more equality keys. Acts as the grouping key — matching is only performed within the same group. `ON` supports one or more equality (`=`) conditions and expressions (e.g., `SUBSTRING(l.code, 1, 3) = r.prefix`). `USING` supports one or more shared column names. |
+| --- | --- | --- |
+| `left_table` | Yes | The left table (probe table). Every row in this table is evaluated. |
+| `right_table` | Yes | The right table (build table). Used to look up the closest match. |
+| `MATCH_CONDITION` | Yes | Defines the nearest-neighbor matching rule. Each side must reference a column from the corresponding table, and both columns must be of type `DATEV2`, `DATETIMEV2`, or `TIMESTAMPTZ`. Expressions are allowed. Supported operators: `>=`, `>`, `<=`, `<`. |
+| `ON` / `USING` clause | Yes | Defines one or more equi-keys used as grouping keys. Matching is performed only within the same group. `ON` supports one or more equality (`=`) conditions and expressions (such as `SUBSTRING(l.code, 1, 3) = r.prefix`). `USING` supports one or more columns with the same name. |
 
-## How ASOF JOIN Matching Works
+## Matching Rules
 
-The matching rule depends on the comparison operator in `MATCH_CONDITION`:
+<!-- Knowledge type: Behavior rules -->
 
-| Operator | Matching Behavior | Typical Use Case |
-|----------|------------------|-----------------|
-| `>=` | For each left row, find the right row with the **largest** value that is **less than or equal to** the left value. | Find the most recent snapshot/quote before or at the event time. |
-| `>` | For each left row, find the right row with the **largest** value that is **strictly less than** the left value. | Find the most recent snapshot/quote strictly before the event time. |
-| `<=` | For each left row, find the right row with the **smallest** value that is **greater than or equal to** the left value. | Find the next event/snapshot at or after the current time. |
-| `<` | For each left row, find the right row with the **smallest** value that is **strictly greater than** the left value. | Find the next event/snapshot strictly after the current time. |
+The matching direction is determined by the comparison operator in `MATCH_CONDITION`:
 
-**Key rules:**
+| Operator | Matching behavior | Typical use case |
+| --- | --- | --- |
+| `>=` | For each row in the left table, find the **largest** row in the right table that is **less than or equal to** the left value | Find the latest snapshot or quote at or before the event time |
+| `>` | For each row in the left table, find the **largest** row in the right table that is **strictly less than** the left value | Find the latest snapshot or quote strictly before the event time |
+| `<=` | For each row in the left table, find the **smallest** row in the right table that is **greater than or equal to** the left value | Find the next event or snapshot at or after the current time |
+| `<` | For each row in the left table, find the **smallest** row in the right table that is **strictly greater than** the left value | Find the next event or snapshot strictly after the current time |
 
-1. `MATCH_CONDITION` columns must be of type `DATEV2`, `DATETIMEV2`, or `TIMESTAMPTZ`.
-2. Expressions are allowed in `MATCH_CONDITION`, for example: `MATCH_CONDITION(l.ts >= r.ts + INTERVAL 1 HOUR)` or `MATCH_CONDITION(l.ts >= DATE_ADD(r.ts, INTERVAL 3 HOUR))`.
-3. The equality key clause can be written with either `ON` or `USING`. In `ON`, only equality (`=`) conjuncts are allowed. Non-equality conditions (such as `>`, `OR`) or literal comparisons (such as `l.grp = 1`) are not allowed in the `ON` clause.
-4. NULL values in the match column or the equality column never produce a match. If the left row's match column is NULL, or if no matching right row exists within the group, the right side is filled with NULL (for LEFT JOIN) or the row is discarded (for INNER JOIN).
-5. When multiple right-side rows in the same group have the same match value and satisfy the match condition, one of them is returned (non-deterministic).
+Pay special attention to the following rules:
+
+1. The columns in `MATCH_CONDITION` must be of type `DATEV2`, `DATETIMEV2`, or `TIMESTAMPTZ`.
+2. Expressions are allowed inside `MATCH_CONDITION`, for example `MATCH_CONDITION(l.ts >= r.ts + INTERVAL 1 HOUR)` or `MATCH_CONDITION(l.ts >= DATE_ADD(r.ts, INTERVAL 3 HOUR))`.
+3. The equi-key clause can be written as `ON` or `USING`. When using `ON`, only equality (`=`) conditions joined by `AND` are allowed. Inequality conditions (such as `>`, `OR`) and literal comparisons (such as `l.grp = 1`) are not allowed in the `ON` clause.
+4. NULL values in the matching column or in the equi-key columns do not produce a match. If a left-table row has NULL in the matching column, or if no qualifying right-table row exists in the same group, the right-side columns are filled with NULL (LEFT JOIN) or the row is discarded (INNER JOIN).
+5. When multiple rows in the right table share the same grouping key and the same value in the matching column, and they all satisfy the matching condition, one of them is returned (the result is non-deterministic).
 
 ## Examples
 
-### Preparation
+<!-- Knowledge type: Operational example -->
+<!-- Applicable scenarios: Quote-trade matching / Order-price matching / Multi-table time-series alignment -->
 
-Create a trades table and a quotes table:
+### Data Preparation
+
+The examples below revolve around a common scenario: a `trades` table and a `quotes` table, grouped by `symbol` and matched by time proximity.
 
 ```sql
 CREATE TABLE trades (
@@ -109,7 +136,7 @@ INSERT INTO quotes VALUES
 
 ### Example 1: Find the Most Recent Quote for Each Trade (>=)
 
-For each trade, find the latest quote whose `quote_time` is less than or equal to the trade's `trade_time`, within the same `symbol`.
+Scenario: For each trade, find the latest quote within the same `symbol` whose `quote_time` is less than or equal to the `trade_time`.
 
 ```sql
 SELECT t.trade_id, t.symbol, t.trade_time, t.price,
@@ -134,9 +161,11 @@ ORDER BY t.trade_id;
 +----------+--------+---------------------+--------+----------+---------------------+-----------+-----------+
 ```
 
-Trade #1 (AAPL, 10:00:05) is matched with quote #1 (AAPL, 10:00:00) because that is the closest quote at or before the trade time for the same symbol.
+For example, trade #1 (AAPL, 10:00:05) is matched with quote #1 (AAPL, 10:00:00) because that is the most recent quote within the same `symbol` at or before the trade time.
 
 ### Example 2: Find the Next Quote After Each Trade (<=)
+
+Scenario: Reverse the matching direction and find the next quote that occurs after each trade.
 
 ```sql
 SELECT t.trade_id, t.symbol, t.trade_time, t.price,
@@ -161,9 +190,11 @@ ORDER BY t.trade_id;
 +----------+--------+---------------------+--------+----------+---------------------+-----------+
 ```
 
-Trade #3 (AAPL, 10:00:25) has no subsequent quote, so the right side returns NULL.
+There is no quote data after trade #3 (AAPL, 10:00:25), so the right side returns NULL.
 
-### Example 3: ASOF INNER JOIN — Exclude Unmatched Rows
+### Example 3: Use INNER JOIN to Exclude Unmatched Rows
+
+Scenario: Only the trades that have a match are of interest, and NULL rows should not propagate to downstream processing.
 
 ```sql
 SELECT t.trade_id, t.symbol, t.trade_time, t.price,
@@ -188,11 +219,11 @@ ORDER BY t.trade_id;
 +----------+--------+---------------------+--------+----------+---------------------+-----------+
 ```
 
-All trades have a matching quote in this dataset, so the result is the same as Example 1. If any trade had no matching quote, it would be excluded from the result.
+In this dataset, every trade has a matching quote, so the result is the same as Example 1. If a trade had no matching quote, that row would be excluded.
 
-### Example 4: Multiple Equality Conditions
+### Example 4: Group by Multiple Equality Conditions
 
-Match on multiple grouping keys (`product_id` and `region`) simultaneously:
+Scenario: Group matching by both `product_id` and `region`, and for each order find the most recent effective price for the same product and region.
 
 ```sql
 SELECT o.order_id, o.product_id, o.region, o.order_time,
@@ -204,11 +235,9 @@ ASOF LEFT JOIN prices p
 ORDER BY o.order_id;
 ```
 
-This finds, for each order, the most recent price that was effective for the same product in the same region.
+### Example 5: Use Expressions in MATCH_CONDITION
 
-### Example 5: Expression in MATCH_CONDITION
-
-Find the matching right-side row whose timestamp is at least 1 hour before the left row's timestamp:
+Scenario: A match is allowed only when the right-side timestamp is at least 1 hour earlier than the left-side timestamp.
 
 ```sql
 SELECT l.id, l.ts, r.id AS rid, r.ts AS rts, r.data
@@ -219,16 +248,18 @@ ASOF LEFT JOIN right_table r
 ORDER BY l.id;
 ```
 
-Date/time functions are also supported:
+Datetime functions are also supported:
 
 ```sql
 MATCH_CONDITION(l.ts >= DATE_ADD(r.ts, INTERVAL 3 HOUR))
 MATCH_CONDITION(DATE_SUB(l.ts, INTERVAL 1 HOUR) >= r.ts)
 ```
 
-### Example 6: Multi-level ASOF JOIN
+### Example 6: Multi-Level ASOF JOIN
 
-ASOF JOIN can be chained with other ASOF JOINs or regular JOINs:
+ASOF JOIN can be chained with other ASOF JOINs or with regular JOINs.
+
+Associate each order with both the effective price and the inventory snapshot:
 
 ```sql
 SELECT o.order_id, o.order_time,
@@ -244,7 +275,7 @@ ASOF LEFT JOIN inventory i
 ORDER BY o.order_id;
 ```
 
-Mixing ASOF JOIN with regular JOIN is also supported:
+ASOF JOIN can also be mixed with regular JOIN:
 
 ```sql
 SELECT o.order_id, prod.product_name,
@@ -259,6 +290,8 @@ ORDER BY o.order_id;
 
 ### Example 7: ASOF JOIN with Aggregation
 
+Scenario: Count trades per `symbol` and compute the average bid price of their matched quotes.
+
 ```sql
 SELECT t.symbol,
        COUNT(*) AS trade_count,
@@ -271,9 +304,9 @@ GROUP BY t.symbol
 ORDER BY t.symbol;
 ```
 
-### Example 8: Bidirectional ASOF JOIN — Finding Surrounding Records
+### Example 8: Bidirectional Matching to Find Records Before and After
 
-Find both the preceding and the following price for each order:
+Scenario: For each order, find both the previous and the next effective price.
 
 ```sql
 SELECT o.order_id, o.order_time,
@@ -293,7 +326,9 @@ ORDER BY o.order_id;
 
 ### Example 9: Directional Matching, Not Absolute Nearest
 
-ASOF JOIN only searches in the direction specified by `MATCH_CONDITION`. It does not compare absolute time distance across both sides.
+ASOF JOIN searches only in the direction specified by `MATCH_CONDITION`. **It does not compare the absolute time differences between left- and right-side records.**
+
+Search "before":
 
 ```sql
 WITH left_events AS (
@@ -319,7 +354,9 @@ ASOF LEFT JOIN right_events r
 +----------+---------------------+----------+---------------------+
 ```
 
-Even though `10:00:08` is only 2 seconds away and `10:00:00` is 6 seconds away, `MATCH_CONDITION(l.event_time >= r.ref_time)` only allows rows at or before the left-side timestamp, so the result is `10:00:00`.
+Although `10:00:08` is only 2 seconds away from the left-side time and `10:00:00` is 6 seconds away, `MATCH_CONDITION(l.event_time >= r.ref_time)` only allows matching right-table records at or before the left-side timestamp, so the result is `10:00:00`.
+
+Searching "after" works the opposite way:
 
 ```sql
 WITH left_events AS (
@@ -345,9 +382,9 @@ ASOF LEFT JOIN right_events r
 +----------+---------------------+----------+---------------------+
 ```
 
-### Example 10: Duplicate Match Values Can Be Non-deterministic
+### Example 10: Duplicate Matching Values Lead to Non-Deterministic Results
 
-When multiple right-side rows share the same grouping key and the same match value, ASOF JOIN may return any one of them. This also applies to `TIMESTAMPTZ`.
+When multiple rows in the right table share the same grouping key and the same matching value, ASOF JOIN may return any one of them. This applies to the `TIMESTAMPTZ` type as well.
 
 ```sql
 WITH left_events AS (
@@ -376,11 +413,13 @@ ASOF LEFT JOIN right_events r
 +----------+----------+---------------------------+------------+
 ```
 
-The query may also return `right_id = 2` and `tag = snapshot_b`. If deterministic output is required, deduplicate or pre-aggregate the right-side rows before the ASOF JOIN.
+The query may also return `right_id = 2` with `tag = snapshot_b`. If your business logic requires deterministic results, deduplicate or pre-aggregate the right table before performing the ASOF JOIN.
 
-## Equivalent Rewrite
+## Equivalent Rewrite Using Window Functions
 
-ASOF JOIN is semantically equivalent to the following `LEFT JOIN` + `ROW_NUMBER()` pattern, but with significantly better performance:
+<!-- Knowledge type: Comparison -->
+
+ASOF JOIN is semantically equivalent to the following `LEFT JOIN` + `ROW_NUMBER()` pattern, but its execution performance is significantly better:
 
 ```sql
 -- Equivalent to: ASOF LEFT JOIN ... MATCH_CONDITION(l.ts >= r.ts)
@@ -396,9 +435,11 @@ WHERE rn = 1;
 
 ## Best Practices
 
-- **Use ASOF JOIN for time-series point-in-time lookups.** If you need to find the latest (or nearest) record in a reference table for each row in a fact table, ASOF JOIN is the most natural and efficient approach.
-- **Add appropriate equality keys in the `ON` clause or `USING` clause.** The equality keys act as a partitioning key. The more specific the grouping, the smaller the search space, and the better the performance.
-- **Choose the right comparison operator.** Use `>=` when you want to include exact-time matches; use `>` when you need to strictly exclude same-timestamp rows.
-- **Prefer ASOF INNER JOIN when unmatched rows are not needed.** This avoids producing NULL rows and simplifies downstream processing.
-- **Deduplicate right-side candidates when deterministic results matter.** If multiple right-side rows share the same grouping key and match value, ASOF JOIN may return any one of them.
-- **Use expressions in MATCH_CONDITION for time-offset matching.** For example, `MATCH_CONDITION(l.ts >= r.ts + INTERVAL 1 HOUR)` to require at least a 1-hour gap.
+<!-- Knowledge type: Usage recommendations -->
+
+- **Prefer it for point-in-time queries on time-series data.** When you need to find the most recent (or nearest) record in a reference table for each row in a fact table, ASOF JOIN is the most natural and efficient approach.
+- **Add appropriate equi-keys for grouping.** Include grouping keys in the `ON` or `USING` clause. The more precise the grouping, the smaller the search space and the better the performance.
+- **Choose the right comparison operator.** Use `>=` when matches with identical timestamps should be included, and `>` when rows with identical timestamps should be strictly excluded. The same applies in the reverse direction.
+- **Prefer `ASOF INNER JOIN` when unmatched rows are not needed.** This avoids producing NULL rows and simplifies downstream processing.
+- **Deduplicate the right table when deterministic results are required.** If the right table contains multiple rows with the same grouping key and matching column value, ASOF JOIN may return any one of them.
+- **Use expressions for time-offset matching.** For example, `MATCH_CONDITION(l.ts >= r.ts + INTERVAL 1 HOUR)` requires a gap of at least 1 hour.

@@ -21,8 +21,6 @@ CREATE FILE <file_name>
 
 ## Required Parameters
 
-**<file_name>**
-
 **1. `<file_name>`**
 
 > Custom file name.

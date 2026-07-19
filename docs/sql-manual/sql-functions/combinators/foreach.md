@@ -15,6 +15,29 @@ Converts an aggregate function for tables into an aggregate function for arrays 
 `AGGREGATE_FUNCTION_FOREACH(arg...)`
 
 ## Example
+
+Prepare the sample data:
+
+```sql
+CREATE TABLE db (
+    id INT,
+    a  ARRAY<INT>,
+    s  ARRAY<STRING>
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO db VALUES
+    (1, [1, 2, 3], ["ab", "123"]),
+    (2, [20],      ["cd"]),
+    (3, [100],     ["efg"]),
+    (4, NULL,      NULL),
+    (5, [null, 2], [null, "c"]);
+```
+
+Then run the FOREACH combinators:
+
 ```
 mysql [test]>select a , s from db;
 +-----------+---------------+
@@ -55,5 +78,11 @@ mysql [test]>select map_agg_foreach(a,a) from db;
 | [{1:1, 20:20, 100:100}, {2:2}, {3:3}] |
 +---------------------------------------+
 ```
+## Notes
+
+- Each argument must be an ARRAY whose element type matches the corresponding argument of the nested aggregate function. The result is an ARRAY of the nested function's return type, computed position by position.
+- When a single call passes multiple array arguments, all arrays in the same row must have the same length; otherwise the query fails with `Arrays passed to <function> aggregate function have different sizes`. (Array lengths may differ across rows.)
+- The `percentile`, `percentile_array`, `percentile_approx`, and `percentile_approx_weighted` functions are not supported with the `foreach` combinator.
+
 ### Keywords
 FOREACH

@@ -58,7 +58,7 @@ CREATE CATALOG hive_catalog PROPERTIES (
 CREATE CATALOG hive_catalog_s3 PROPERTIES (
     'type' = 'hms',
     'hive.metastore.uris' = 'thrift://<EMR_MASTER_IP>:9083',
-    's3.endpoint' = 's3.us-east-1.amazonaws.com',
+    's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.region' = 'us-east-1',
     's3.access_key' = '<YOUR_ACCESS_KEY>',
     's3.secret_key' = '<YOUR_SECRET_KEY>'
@@ -95,7 +95,7 @@ CREATE CATALOG iceberg_s3 PROPERTIES (
     'iceberg.catalog.type' = 's3tables',
     'warehouse' = 'arn:aws:s3tables:us-east-1:169698000000:bucket/doris-s3-table-bucket',
     's3.region' = 'us-east-1',
-    's3.endpoint' = 's3.us-east-1.amazonaws.com',
+    's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.access_key' = 'AKIASPAWQE3ITEXAMPLE',
     's3.secret_key' = 'l4rVnn3hCmwEXAMPLE/lht4rMIfbhVfEXAMPLE'
 );
@@ -104,7 +104,7 @@ CREATE CATALOG iceberg_s3 PROPERTIES (
 ### 03 访问 S3Tables
 
 ```sql
-Doris > SWITCH iceberg_s3;
+Doris > SWITCH aws_s3_tables;
 
 Doris > SHOW DATABASES;
 +--------------------+

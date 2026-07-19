@@ -130,7 +130,7 @@ interval:
 - [恢复-JOB](../job/RESUME-JOB.md)
 - [删除-JOB](../job/DROP-JOB.md)
 - [查询-JOB](../../../sql-manual/sql-functions/table-valued-functions/jobs.md)
-- [查询-TASKS](../../sql-functions/table-valued-functions/jobs.md)
+- [查询-TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks.md)
 
 ## CONFIG
 

@@ -204,7 +204,7 @@ mysql> select * from github_events limit 1;
 desc 查看 schema 信息，子列会在存储层自动扩展、并进行类型推导
 
 ``` sql
-mysql> desc github_events;
+mysql> desc test_variant;
 +------------------------------------------------------------+------------+------+-------+---------+-------+
 | Field                                                      | Type       | Null | Key   | Default | Extra |
 +------------------------------------------------------------+------------+------+-------+---------+-------+
@@ -220,7 +220,7 @@ mysql> desc github_events;
 mysql> set describe_extend_variant_column = true;
 Query OK, 0 rows affected (0.01 sec)
 
-mysql> desc github_events;
+mysql> desc test_variant;
 +------------------------------------------------------------+------------+------+-------+---------+-------+
 | Field                                                      | Type       | Null | Key   | Default | Extra |
 +------------------------------------------------------------+------------+------+-------+---------+-------+

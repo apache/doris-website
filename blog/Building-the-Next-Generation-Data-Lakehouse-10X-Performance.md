@@ -249,5 +249,5 @@ http://doris.apache.org
 
 https://github.com/apache/doris
 
-Find Apache Doris developers on [Discord](/discord).
+Find Apache Doris developers on [Slack](https://doris.apache.org/slack).
 

@@ -115,14 +115,14 @@ SELECT FROM_BASE64('SGVsbG8gV29ybGQ='), FROM_BASE64('VGhlIHF1aWNrIGJyb3duIGZveA=
 
 7. UTF-8 多字节字符解码
 ```sql
-SELECT FROM_BASE64('4bmt4bmb4bmA'), FROM_BASE64('4bmN4bmNdW1haSBoZWxsbw==');
+SELECT FROM_BASE64('4bmt4bmbw6w='), FROM_BASE64('4biN4biNdW1haSBoZWxsbw==');
 ```
 ```text
-+---------------------------+---------------------------------------+
-| FROM_BASE64('4bmt4bmb4bmA') | FROM_BASE64('4bmN4bmNdW1haSBoZWxsbw==') |
-+---------------------------+---------------------------------------+
-| ṭṛì                       | ḍḍumai hello                          |
-+---------------------------+---------------------------------------+
++-----------------------------+-----------------------------------------+
+| FROM_BASE64('4bmt4bmbw6w=') | FROM_BASE64('4biN4biNdW1haSBoZWxsbw==') |
++-----------------------------+-----------------------------------------+
+| ṭṛì                         | ḍḍumai hello                            |
++-----------------------------+-----------------------------------------+
 ```
 
 8. 电子邮件地址解码

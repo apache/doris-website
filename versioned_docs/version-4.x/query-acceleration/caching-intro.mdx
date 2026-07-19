@@ -1,0 +1,37 @@
+---
+{
+    "title": "Caching",
+    "language": "en",
+    "description": "Apache Doris caching acceleration chapter navigation: covers SQL Cache for query results, Condition Cache for filter results, and file data cache for external table queries."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris provides multi-layer caching to accelerate queries: result-level caching reuses query results for identical SQL, segment-level caching reuses computation results of filter conditions, and file-level caching offloads remote lakehouse data to local disks. Choose the appropriate caching strategy based on your workload characteristics.
+
+## Result and Filter Caches
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="SQL Cache"
+    description="Caches complete query results based on SQL text and table/partition versions. Suitable for T+1 or low-frequency update scenarios. When a cache hit occurs, the entire computation process can be skipped."
+    link="sql-cache-manual"
+/>
+
+<GettingStartedCard
+    title="Condition Cache"
+    description="Caches the results of filter conditions on segments. Repeated queries with the same conditions can directly reuse the cached results, avoiding redundant scans and filter computations."
+    link="condition-cache"
+/>
+</div>
+
+## External Table File Cache
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Data Cache"
+    description="Caches files from HDFS and object storage to local disks, accelerating queries on Hive, Iceberg, Hudi, Paimon, and other external tables. Supports cache warmup, quotas, and admission control."
+    link="../lakehouse/data-cache"
+/>
+</div>

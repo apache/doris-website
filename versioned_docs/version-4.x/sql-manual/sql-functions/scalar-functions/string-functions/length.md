@@ -2,7 +2,7 @@
 {
     "title": "LENGTH",
     "language": "en",
-    "description": "The LENGTH function returns the byte length of a string (in bytes). This function calculates the number of bytes a string occupies in UTF-8 encoding,"
+    "description": "The LENGTH function returns the byte length of a string (in bytes). This function calculates the number of bytes a string occupies in UTF-8 encoding, not the number of characters."
 }
 ---
 
@@ -76,4 +76,76 @@ SELECT LENGTH(NULL);
 +--------------+
 |         NULL |
 +--------------+
+```
+
+4. Empty string
+```sql
+SELECT LENGTH('');
+```
+```text
++------------+
+| LENGTH('') |
++------------+
+|          0 |
++------------+
+```
+
+5. Mixed character types
+```sql
+SELECT LENGTH('Hello世界'), CHAR_LENGTH('Hello世界');
+```
+```text
++-----------------------+----------------------------+
+| LENGTH('Hello世界')   | CHAR_LENGTH('Hello世界')   |
++-----------------------+----------------------------+
+|                    11 |                          7 |
++-----------------------+----------------------------+
+```
+
+6. Escape characters and ASCII spaces
+```sql
+SELECT LENGTH('\t\n\r'), LENGTH('  ');
+```
+```text
++------------------+--------------+
+| LENGTH('\t\n\r') | LENGTH('  ') |
++------------------+--------------+
+|                3 |            2 |
++------------------+--------------+
+```
+
+7. UTF-8 multi-byte characters versus character count
+```sql
+SELECT LENGTH('ṭṛì'), CHAR_LENGTH('ṭṛì');
+```
+```text
++--------------------+-------------------------+
+| LENGTH('ṭṛì')      | CHAR_LENGTH('ṭṛì')      |
++--------------------+-------------------------+
+|                  8 |                       3 |
++--------------------+-------------------------+
+```
+
+8. Emoji (typically 4 bytes per glyph)
+```sql
+SELECT LENGTH('😀😁'), CHAR_LENGTH('😀😁');
+```
+```text
++--------------------+-------------------------+
+| LENGTH('😀😁')         | CHAR_LENGTH('😀😁')         |
++--------------------+-------------------------+
+|                  8 |                       2 |
++--------------------+-------------------------+
+```
+
+9. Numeric strings
+```sql
+SELECT LENGTH('12345'), CHAR_LENGTH('12345');
+```
+```text
++-----------------+----------------------+
+| LENGTH('12345') | CHAR_LENGTH('12345') |
++-----------------+----------------------+
+|               5 |                    5 |
++-----------------+----------------------+
 ```

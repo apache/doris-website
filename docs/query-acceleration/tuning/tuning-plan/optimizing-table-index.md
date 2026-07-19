@@ -1,27 +1,55 @@
 ---
 {
-    "title": "Optimizing Table Index Design",
+    "title": "Index Optimization: Tips for Prefix Indexes and Inverted Indexes",
+    "sidebar_label": "Index Optimization",
     "language": "en",
-    "description": "Doris currently supports two types of indexes:"
+    "description": "How can you accelerate queries with Doris prefix indexes and inverted indexes? This article starts from typical scenarios and gives recommendations on Key column ordering, secondary index selection, and optimization.",
+    "keywords": ["Doris index optimization", "prefix index", "inverted index", "ZoneMap", "Bloomfilter", "query acceleration", "Key column order"]
 }
 ---
 
+<!-- Knowledge type: concept + operation + case -->
+<!-- Applicable scenarios: Doris query performance tuning, index design and selection -->
+
 ## Overview
 
-Doris currently supports two types of indexes:
+<!-- Knowledge type: concept -->
+<!-- Applicable scenarios: understand the full picture of the Doris index system -->
 
-1. Built-in Indexes: These include prefix indexes, ZoneMap indexes, etc.
-2. Secondary Indexes: These include inverted indexes, Bloom filter indexes, N-Gram Bloom filter indexes, and Bitmap indexes, etc.
+Doris indexes are data structures used to accelerate query filtering. Using indexes appropriately can significantly improve query performance.
 
-In the process of business optimization, fully analyzing business characteristics and make effective use of indexes can greatly enhance the effectiveness of queries and analyses, thereby achieving the purpose of performance tuning.
+Doris currently supports two categories of indexes:
 
-For a detailed introduction to various indexes, please refer to the [Table Index](../../../table-design/index/index-overview.md) section. This chapter will demonstrate index usage techniques in several typical scenarios from the perspective of actual cases and summarize optimization suggestions for reference in business tuning.
+| Index category    | Included types                                                          | Characteristics                                            |
+| ----------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Built-in indexes  | Prefix index, ZoneMap index                                             | Automatically generated at table creation, no extra maintenance |
+| Secondary indexes | Inverted index, Bloomfilter index, N-Gram Bloomfilter index, Bitmap index | Created by users on demand, can be managed independently   |
 
-## Case 1: Optimizing the Order of Key Columns to Leverage Prefix Indexes for Accelerated Queries
+During business optimization, effectively leveraging indexes based on business characteristics can greatly improve query and analysis performance, and is one of the key techniques for performance tuning.
 
-In [optimizing table schema design](optimizing-table-schema.md), we have introduced how to select appropriate fields as key fields and utilize Doris's key column sorting feature to accelerate queries. This case will further expand on this scenario.
+For detailed introductions to each index type, refer to the [Table Index](../../../table-design/index/index-overview.md) chapter. This article starts from real cases and introduces index usage tips and optimization recommendations for several typical scenarios.
 
-Due to Doris's built-in prefix index function, it automatically takes the first 36 bytes of the table's Key as a prefix index when creating the table. When query conditions match the prefix of the prefix index, it can significantly speed up the query. Below is an example of a table definition:
+### Pre-reading Self-check Checklist
+
+- You understand the current table's Key column definitions and order
+- You have identified high-frequency filter fields in the business
+- You have evaluated whether you can rebuild the table or only append secondary indexes
+- You have grasped the applicable scenarios of different index types
+
+## Case 1: Adjust Key Column Order to Accelerate Queries with Prefix Indexes
+
+<!-- Knowledge type: case + operation -->
+<!-- Applicable scenarios: high-frequency filter fields miss the prefix index, leading to slow queries -->
+
+In [Optimizing Table Schema Design](optimizing-table-schema.md), the article introduced how to choose appropriate fields as Key fields and use the Key column sorting feature of Doris to accelerate queries. This case further extends that scenario.
+
+### Background
+
+Doris has a built-in prefix index: at table creation time, the first 36 bytes of the table Key are automatically taken as the prefix index. When the query condition matches the prefix of the prefix index, query speed can be significantly improved.
+
+### Problem: Key Column Order Does Not Match the Query Pattern
+
+The original CREATE TABLE statement is as follows:
 
 ```sql
 CREATE TABLE `t1` (
@@ -35,16 +63,18 @@ PROPERTIES (
 );
 ```
 
-The corresponding business SQL pattern is as follows:
+The corresponding business SQL patterns are as follows:
 
 ```sql
 select * from t1 where t1.c2 = '1';
 select * from t1 where t1.c2 in ('1', '2', '3');
 ```
 
-In the above schema definition, `c1` comes before `c2`. However, the queries use the `c2` field for filtering. In this case, the acceleration function of the prefix index cannot be utilized. To optimize, we can adjust the definition order of `c1` and `c2`, placing the `c2` column in the first field position to leverage the acceleration function of the prefix index.
+In the schema above, `c1` comes first and `c2` comes after, but the queries filter on the `c2` field. In this case, the prefix index cannot be leveraged for acceleration.
 
-The adjusted schema is as follows:
+### Optimization: Adjust Column Order
+
+Place the `c2` column in the first field position so that the prefix index covers the business filter condition:
 
 ```sql
 CREATE TABLE `t1` (
@@ -58,24 +88,86 @@ PROPERTIES (
 );
 ```
 
-:::tip
+:::tip Optimization tip
 
-When defining the schema column order, reference the high-frequency and high-priority columns in business query filtering to fully leverage Doris's prefix index acceleration function.
+When defining the schema column order, refer to the high-frequency, high-priority columns used in business query filters to fully leverage the acceleration capability of the Doris prefix index.
+
+:::
+
+## Case 2: Use Inverted Indexes to Accelerate Queries
+
+<!-- Knowledge type: case + operation -->
+<!-- Applicable scenarios: table structure is inconvenient to adjust, text retrieval, equality / range queries -->
+
+### Applicable Scenarios
+
+Doris supports inverted indexes as secondary indexes, used to accelerate the following business scenarios:
+
+- Full-text retrieval on text-type fields;
+- Equality queries on string, numeric, or datetime fields;
+- Range queries on string, numeric, or datetime fields.
+
+### Advantages
+
+The creation and management of inverted indexes are independent: business performance can be conveniently optimized without affecting the original table schema and without re-importing table data.
+
+For typical use cases, syntax, and examples, refer to [Inverted Index](../../../table-design/index/inverted-index/overview). This section does not repeat them.
+
+:::tip Optimization recommendation
+
+When the original table structure and Key definitions are inconvenient to optimize, or when the cost of re-importing data is high, inverted indexes provide a flexible acceleration option for optimizing business execution performance.
 
 :::
 
-## Case 2: Using Inverted Indexes to Accelerate Queries
+## Index Selection Comparison
 
-Doris supports inverted indexes as secondary indexes to accelerate business scenarios such as equal value, range, and full-text search of text types. The creation and management of inverted indexes are independent, allowing for convenient business performance optimization without affecting the original table schema and without the need to re-import table data.
+<!-- Knowledge type: comparison -->
+<!-- Applicable scenarios: quickly select among multiple indexes -->
 
-For typical usage scenarios, syntax, and cases, please refer to the [Table Index - Inverted Index](../../../table-design/index/inverted-index) section for a detailed introduction, so this chapter will not repeat the explanation.
+| Index type            | Applicable queries                | Requires table rebuild | Requires data re-import      | Typical field types          |
+| --------------------- | --------------------------------- | ---------------------- | ---------------------------- | ---------------------------- |
+| Prefix index          | Equality, range, prefix matching  | Yes (adjust Key)       | Yes                          | Key columns sorted in front  |
+| ZoneMap index         | Range filtering                   | No (automatic)         | No                           | All columns                  |
+| Inverted index        | Full-text retrieval, equality, range | No                  | No                           | String, numeric, datetime    |
+| Bloomfilter index     | High-cardinality equality filter  | No                     | No (takes effect incrementally) | String, numeric            |
+| N-Gram Bloomfilter    | LIKE fuzzy matching               | No                     | No (takes effect incrementally) | String                     |
+| Bitmap index          | Low-cardinality equality filter   | No                     | No (takes effect incrementally) | Enumeration fields         |
 
-:::tip
+## FAQ and Common Issues
 
-For full-text searches of text types and equal value or range queries on string, numeric, and datetime type fields, inverted indexes can be utilized to accelerate queries. Especially in certain situations, such as when the original table structure and key definition are not convenient to optimize, or the cost of re-importing table data is high, inverted indexes provide a flexible acceleration solution to optimize business execution performance.
+<!-- Knowledge type: FAQ -->
+<!-- Applicable scenarios: common questions and troubleshooting during index usage -->
 
-:::
+### Q1: Why are my queries still slow after creating an index?
+
+Possible reasons:
+
+- The query condition does not hit any indexed column;
+- The Key column order does not match the filter condition, so the prefix index does not take effect;
+- The data volume is small, and the index does not bring noticeable benefit;
+- The index has not yet taken effect on historical data (some secondary indexes only take effect immediately on newly written data).
+
+### Q2: Does the prefix index need to be created manually?
+
+No. At table creation, Doris automatically takes the first 36 bytes of the Key columns as the prefix index. To make the prefix index effective, place high-frequency business filter fields at the front of the Key columns.
+
+### Q3: How to choose between an inverted index and a Bloomfilter index?
+
+- Full-text retrieval, fuzzy matching, range queries: prefer inverted indexes;
+- Exact equality queries on high-cardinality fields: choose Bloomfilter indexes for lower overhead.
+
+### Q4: Does adjusting the Key column order require rebuilding the table?
+
+Yes. Key column order is part of the table schema definition; after adjustment, you must rebuild the table and re-import the data.
 
 ## Summary
 
-In schema tuning, apart from table-level schema optimization, index optimization also occupies an important position. Doris provides multiple index types, including built-in indexes such as prefix index, as well as secondary indexes such as inverted indexes, which provide strong support for performance acceleration. By reasonably utilizing these indexes, we can significantly improve the speed of business queries and analyses in multiple scenarios, which is of great significance for multi-scenario business queries and analyses.
+<!-- Knowledge type: summary -->
+<!-- Applicable scenarios: review key points of index tuning -->
+
+In schema tuning, index optimization is as important as table-level schema optimization. Doris provides multiple index types:
+
+- Built-in indexes: prefix index, ZoneMap index;
+- Secondary indexes: inverted index, Bloomfilter, N-Gram Bloomfilter, Bitmap.
+
+Using these indexes appropriately can significantly improve business query and analysis speed across multiple scenarios. It is recommended to first evaluate the high-frequency business filter fields, then choose the appropriate index type based on factors such as whether the table can be rebuilt and the data volume.

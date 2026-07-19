@@ -1,0 +1,71 @@
+---
+{
+    "title": "Compute-Storage Decoupled Operations Guide",
+    "language": "en",
+    "description": "Apache Doris compute-storage decoupled architecture operations guide: covers compute group management, Storage Vault configuration, file cache, read-write separation, and cluster upgrades."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+The compute-storage decoupled architecture separates compute nodes from remote shared storage, enabling independent elastic scaling of compute and storage. This guide helps you configure and operate a compute-storage decoupled cluster.
+
+## Cluster Operations
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Compute Group Operations"
+    description="Group one or more BE nodes into a compute group. Learn how to create, scale, and manage compute groups in compute-storage decoupled mode."
+    link="managing-compute-cluster"
+/>
+
+<GettingStartedCard
+    title="Managing Storage Vault"
+    description="Configure the remote shared storage (Storage Vault) used in compute-storage decoupled mode. Supports multiple vault configurations and per-table storage location assignment."
+    link="managing-storage-vault"
+/>
+
+<GettingStartedCard
+    title="Data Recycling"
+    description="Learn how Doris safely and efficiently reclaims storage space occupied by deleted data in the compute-storage decoupled architecture, and how to manage the data lifecycle."
+    link="recycler"
+/>
+
+<GettingStartedCard
+    title="Upgrade"
+    description="A step-by-step guide for upgrading a Doris cluster in compute-storage decoupled mode using rolling upgrades, minimizing impact on upstream workloads."
+    link="upgrade"
+/>
+</div>
+
+## File Cache
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="File Cache Overview"
+    description="Accelerate remote storage access with local disk caching. Covers the multi-queue LRU strategy, cache warm-up for new compute groups, and configuration details."
+    link="file-cache/file-cache"
+/>
+
+<GettingStartedCard
+    title="File Cache Internals"
+    description="A deep dive into the file cache implementation: 1 MB-aligned slicing, prefetch mechanisms, and local filesystem block file management."
+    link="file-cache/file-cache-internals"
+/>
+</div>
+
+## Read-Write Separation
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Read-Write Separation"
+    description="Support cross-availability-zone high availability and read-write separation architectures through the File Cache active incremental warm-up mechanism, reducing query latency and accelerating failover response."
+    link="rw/read-write-separation"
+/>
+
+<GettingStartedCard
+    title="Cache Optimization Best Practices for Read-Write Separation"
+    description="In a multi-compute-group read-write separation deployment, optimize cache hit rates to prevent read-only compute groups from frequently pulling data from remote object storage, improving query performance."
+    link="rw/file-cache-rw-compute-group-best-practice"
+/>
+</div>

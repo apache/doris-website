@@ -24,10 +24,10 @@ Doris JDBC カタログは以下のデータベースへの接続をサポート
 | サポートされているデータソース |
 | ---------------------------------- |
 | [ MySQL](./jdbc-mysql-catalog.md)      |
-| [ PostgreSQL](./jdbc-mysql-catalog.md) |
-| [ Oracle](./jdbc-mysql-catalog.md)     |
+| [ PostgreSQL](./jdbc-pg-catalog.md) |
+| [ Oracle](./jdbc-oracle-catalog.md)     |
 | [ SQL サーバー](./jdbc-mysql-catalog.md) |
-| [ IBM DB2](./jdbc-mysql-catalog.md)    |
+| [ IBM DB2](./jdbc-ibmdb2-catalog.md)    |
 | [ ClickHouse](./jdbc-clickhouse-catalog.md) |
 | [ SAP HANA](./jdbc-saphana-catalog.md)   |
 | [ Oceanbase](./jdbc-oceanbase-catalog.md) |
@@ -40,7 +40,7 @@ Doris JDBC カタログは以下のデータベースへの接続をサポート
 
 ```sql
 CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
-    'type' =='jdbc', -- required
+    'type' = 'jdbc', -- required
     {JdbcProperties},
     {CommonProperties}
 );

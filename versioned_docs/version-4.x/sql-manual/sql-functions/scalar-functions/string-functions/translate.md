@@ -44,53 +44,41 @@ Special cases:
 
 1. Basic character replacement
 ```sql
-SELECT translate('abcd', 'a', 'z');
+SELECT TRANSLATE('abcd', 'a', 'z');
 ```
 ```text
-+---------------------------+
-| translate('abcd', 'a', 'z') |
-+---------------------------+
-| zbcd                      |
-+---------------------------+
++-----------------------------+
+| TRANSLATE('abcd', 'a', 'z') |
++-----------------------------+
+| zbcd                        |
++-----------------------------+
 ```
 
-2. Multiple replacements of the same character
+2. Every occurrence of a source character is replaced
 ```sql
-SELECT translate('abcda', 'a', 'z');
+SELECT TRANSLATE('abcda', 'a', 'z');
 ```
 ```text
-+----------------------------+
-| translate('abcda', 'a', 'z') |
-+----------------------------+
-| zbcdz                      |
-+----------------------------+
++------------------------------+
+| TRANSLATE('abcda', 'a', 'z') |
++------------------------------+
+| zbcdz                        |
++------------------------------+
 ```
 
-3. Special character replacement
+3. Multi-character mapping (positional)
 ```sql
-SELECT translate('Palhoça', 'ç', 'c');
+SELECT TRANSLATE('abcd', 'ac', 'zx');
 ```
 ```text
-+--------------------------------+
-| translate('Palhoça', 'ç', 'c') |
-+--------------------------------+
-| Palhoca                        |
-+--------------------------------+
++-------------------------------+
+| TRANSLATE('abcd', 'ac', 'zx') |
++-------------------------------+
+| zbxd                          |
++-------------------------------+
 ```
 
-4. Character deletion (empty 'to' string)
-```sql
-SELECT translate('abcd', 'a', '');
-```
-```text
-+----------------------------+
-| translate('abcd', 'a', '') |
-+----------------------------+
-| bcd                        |
-+----------------------------+
-```
-
-5. Duplicate characters in 'from' string (uses first mapping only)
+4. Duplicate characters in `<from>` (only the first mapping is used)
 ```sql
 SELECT TRANSLATE('abacad', 'aac', 'zxy');
 ```
@@ -102,52 +90,88 @@ SELECT TRANSLATE('abacad', 'aac', 'zxy');
 +-----------------------------------+
 ```
 
-6. 'to' string shorter than 'from' (deletes excess characters)
+5. `<to>` shorter than `<from>` (excess characters are deleted)
 ```sql
 SELECT TRANSLATE('abcde', 'ace', 'xy');
 ```
 ```text
-+-------------------------------+
++---------------------------------+
 | TRANSLATE('abcde', 'ace', 'xy') |
-+-------------------------------+
-| xbyd                          |
-+-------------------------------+
++---------------------------------+
+| xbyd                            |
++---------------------------------+
 ```
 
-7. UTF-8 character replacement
+6. NULL handling — any NULL argument returns NULL
+```sql
+SELECT TRANSLATE(NULL, 'a', 'z'), TRANSLATE('abc', NULL, 'z'), TRANSLATE('abc', 'a', NULL);
+```
+```text
++---------------------------+-----------------------------+-----------------------------+
+| TRANSLATE(NULL, 'a', 'z') | TRANSLATE('abc', NULL, 'z') | TRANSLATE('abc', 'a', NULL) |
++---------------------------+-----------------------------+-----------------------------+
+| NULL                      | NULL                        | NULL                        |
++---------------------------+-----------------------------+-----------------------------+
+```
+
+7. Empty-string edge cases — empty source returns empty, empty `<from>` returns source unchanged, empty `<to>` deletes the matching characters
+```sql
+SELECT TRANSLATE('', 'a', 'z'), TRANSLATE('abc', '', 'z'), TRANSLATE('abc', 'a', '');
+```
+```text
++-------------------------+---------------------------+---------------------------+
+| TRANSLATE('', 'a', 'z') | TRANSLATE('abc', '', 'z') | TRANSLATE('abc', 'a', '') |
++-------------------------+---------------------------+---------------------------+
+|                         | abc                       | bc                        |
++-------------------------+---------------------------+---------------------------+
+```
+
+8. UTF-8 multi-byte characters
 ```sql
 SELECT TRANSLATE('ṭṛì ḍḍumai', 'ṭṛ', 'ab');
 ```
 ```text
-+-----------------------------------+
-| TRANSLATE('ṭṛì ḍḍumai', 'ṭṛ', 'ab') |
-+-----------------------------------+
-| abì ḍḍumai                        |
-+-----------------------------------+
++--------------------------------------------------+
+| TRANSLATE('ṭṛì ḍḍumai', 'ṭṛ', 'ab')              |
++--------------------------------------------------+
+| abì ḍḍumai                                       |
++--------------------------------------------------+
 ```
 
-8. Numeric character replacement
+9. Numeric character replacement
 ```sql
 SELECT TRANSLATE('a1b2c3', '123', 'xyz');
 ```
 ```text
-+----------------------------------+
++-----------------------------------+
 | TRANSLATE('a1b2c3', '123', 'xyz') |
-+----------------------------------+
-| axbycz                           |
-+----------------------------------+
++-----------------------------------+
+| axbycz                            |
++-----------------------------------+
 ```
 
-9. Special symbol replacement
+10. Repeated mapping with duplicates on both sides
+```sql
+SELECT TRANSLATE('aabbccaa', 'abab', 'xyuv');
+```
+```text
++---------------------------------------+
+| TRANSLATE('aabbccaa', 'abab', 'xyuv') |
++---------------------------------------+
+| xxyyccxx                              |
++---------------------------------------+
+```
+
+11. Special-symbol replacement
 ```sql
 SELECT TRANSLATE('hello@world.com', '@.', '-_');
 ```
 ```text
-+--------------------------------------------+
-| TRANSLATE('hello@world.com', '@.', '-_')   |
-+--------------------------------------------+
-| hello-world_com                            |
-+--------------------------------------------+
++------------------------------------------+
+| TRANSLATE('hello@world.com', '@.', '-_') |
++------------------------------------------+
+| hello-world_com                          |
++------------------------------------------+
 ```
 
 ### Keywords

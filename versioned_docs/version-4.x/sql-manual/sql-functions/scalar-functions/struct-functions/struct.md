@@ -1,7 +1,7 @@
 ---
 {
     "title": "STRUCT | Struct Functions",
-    "language": "en-US",
+    "language": "en",
     "description": "Constructs and returns a struct based on given values. The function accepts one or more parameters and returns a struct containing all input elements.",
     "sidebar_label": "STRUCT"
 }

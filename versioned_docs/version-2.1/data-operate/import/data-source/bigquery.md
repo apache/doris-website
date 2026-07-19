@@ -46,7 +46,7 @@ CREATE OR REPLACE TABLE test.sales_data (
     amount        NUMERIC(10,2),
     country       STRING
 )
-PARTITION BY  order_date
+PARTITION BY  order_date;
 
 
 INSERT INTO test.sales_data (order_id, customer_name, order_date, amount, country) VALUES
@@ -138,7 +138,7 @@ This method is suitable for scenarios involving large volumes of data that requi
    Since S3 Load import is submitted asynchronously, you can check the status of a specific label using SHOW LOAD:
 
    ```yaml
-   mysql> show load where label = "label_sales_data_2025_04_08"\G
+   mysql> show load where label = "sales_data_2025_04_08"\G
    *************************** 1. row ***************************
            JobId: 17956078
            Label: label_sales_data_2025_04_08

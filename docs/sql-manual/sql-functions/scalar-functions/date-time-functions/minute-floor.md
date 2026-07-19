@@ -33,7 +33,7 @@ MINUTE_FLOOR(`<datetime>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<datetime>` | The datetime value to be rounded down. Supports input of date/datetime/timestamptz types. For specific formats please see [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<datetime>` | The datetime value to be rounded down. Supports input of date/datetime/timestamptz types. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | The minute interval value, of type INT, representing the number of minutes contained in each interval. |
 | `<origin>` | The starting time point of the interval, of type DATETIME. Default value is 0001-01-01 00:00:00. |
 
@@ -67,7 +67,7 @@ SELECT MINUTE_FLOOR('2023-07-13 22:28:18.123', 5) AS result;
 +----------------------------+
 | result                     |
 +----------------------------+
-| 2023-07-13 22:25:00.000    |
+| 2023-07-13 22:25:00.000000 |
 +----------------------------+
 
 -- If input datetime is exactly at a period starting point, return the input datetime
@@ -128,7 +128,7 @@ SELECT MINUTE_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
 +----------------------------------------------------------------------+
 
 --- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative
-SELECT MINUTE_floor('0001-01-01 12:32:18', 5, '2028-07-03 22:20:00') AS result;
+SELECT MINUTE_FLOOR('0001-01-01 12:32:18', 5, '2028-07-03 22:20:00') AS result;
 +---------------------+
 | result              |
 +---------------------+

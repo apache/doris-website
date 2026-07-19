@@ -16,7 +16,7 @@
 
 ## 语法
 
-```text
+```sql
 COLLECT_LIST(<expr> [,<max_size>])
 ```
 

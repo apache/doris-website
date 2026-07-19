@@ -1,0 +1,105 @@
+---
+{
+    "title": "Data Querying",
+    "language": "en",
+    "description": "Navigate Apache Doris query capabilities by use case: SQL compatibility, multi-table joins, aggregation analytics, semi-structured data querying, and user-defined functions."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Data Querying
+
+Apache Doris supports standard SQL with strong MySQL compatibility, and on top of that provides high-performance join queries, a rich set of analytic functions, semi-structured data access, and user-defined functions. Choose the documentation that matches your scenario below.
+
+## SQL Compatibility
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="MySQL Compatibility"
+    description="A quick reference to the differences between Doris and MySQL: covers data types, DDL/DML syntax, SQL functions, and key SQL Mode differences."
+    link="mysql-compatibility"
+/>
+</div>
+
+## Multi-Table Joins
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Joins (JOIN)"
+    description="JOIN types such as INNER / LEFT / RIGHT / FULL / SEMI / ANTI, along with four distributed JOIN implementations: Broadcast, Shuffle, Bucket Shuffle, and Colocate."
+    link="join"
+/>
+
+<GettingStartedCard
+    title="ASOF JOIN for Time-Series Nearest Match"
+    description="For each row in the left table, find the nearest row in the right table along a time direction, enabling time-series alignment without window functions."
+    link="asof-join"
+/>
+
+<GettingStartedCard
+    title="Subqueries"
+    description="Syntax, restrictions, and Mark Join handling for scalar, non-scalar, correlated, and uncorrelated subqueries."
+    link="subquery"
+/>
+
+<GettingStartedCard
+    title="Common Table Expressions (CTE)"
+    description="Define temporary result sets with the WITH clause, with support for nested and recursive CTEs, suitable for hierarchy traversal, graph traversal, and similar scenarios."
+    link="cte"
+/>
+</div>
+
+## Aggregation and Analytics
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Multi-Dimensional Aggregation Analytics"
+    description="Use ROLLUP, CUBE, and GROUPING SETS to perform multi-dimensional aggregation analytics in a single SQL statement."
+    link="multi-dimensional-analytics"
+/>
+
+<GettingStartedCard
+    title="Analytic Functions (Window Functions)"
+    description="Use the OVER clause to partition and window result sets, supporting ranking, cumulative sums, moving averages, year-over-year and quarter-over-quarter comparisons, and more."
+    link="window-function"
+/>
+</div>
+
+## Semi-Structured and Complex Data
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Querying Complex Types"
+    description="Query complex types such as Array, Map, Struct, and JSON, and process semi-structured data with dedicated SQL functions."
+    link="complex-type"
+/>
+
+<GettingStartedCard
+    title="Column-to-Row (Lateral View)"
+    description="Use LATERAL VIEW with generator functions such as EXPLODE to expand a single row into multiple rows, enabling column-to-row SQL queries."
+    link="lateral-view"
+/>
+</div>
+
+## User-Defined Functions (UDF)
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Java UDF / UDAF / UDWF / UDTF"
+    description="Write UDF/UDAF/UDWF/UDTF user-defined functions in Java, including type mapping, registration syntax, best practices, and examples."
+    link="udf/java-user-defined-function"
+/>
+
+<GettingStartedCard
+    title="Python UDF / UDAF / UDWF / UDTF"
+    description="Write UDF/UDAF/UDTF in Python: covers creation, vectorization, environment configuration, and common troubleshooting."
+    link="udf/python-user-defined-function"
+/>
+
+<GettingStartedCard
+    title="Alias Functions"
+    description="Register a new signature for a function or expression fragment with CREATE ALIAS FUNCTION to improve migration compatibility and simplify writing complex queries."
+    link="udf/alias-function"
+/>
+</div>

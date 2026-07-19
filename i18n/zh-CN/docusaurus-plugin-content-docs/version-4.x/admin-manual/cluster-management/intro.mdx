@@ -1,0 +1,61 @@
+---
+{
+    "title": "集群管理",
+    "language": "zh-CN",
+    "description": "Apache Doris 集群管理指南：升级、弹性扩缩容、FQDN、负载均衡、自动服务启动与副本管理。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# 集群管理
+
+本章介绍 Apache Doris 集群在生产环境中常见的运维操作，包括版本升级、容量变更、网络拓扑以及副本维护。
+
+## 集群生命周期
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="集群升级"
+    description="滚动升级指南，涵盖版本兼容性规则、元数据兼容性测试以及 FE/BE 升级步骤"
+    link="upgrade"
+/>
+
+<GettingStartedCard
+    title="弹性扩缩容"
+    description="在线增删 FE/BE 节点而不中断业务，缩容可选择 DROP 或 DECOMMISSION 两种方式"
+    link="elastic-expansion"
+/>
+</div>
+
+## 拓扑与访问
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="FQDN"
+    description="在新集群、存量集群迁移以及 Kubernetes 部署场景下启用 FQDN（完全限定域名）模式"
+    link="fqdn"
+/>
+
+<GettingStartedCard
+    title="FE 负载均衡"
+    description="多 FE 部署下的负载均衡方案 —— JDBC、Nginx、HAProxy、ProxySQL，并通过 Proxy Protocol 透传客户端 IP"
+    link="load-balancing"
+/>
+</div>
+
+## 服务可用性与副本
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="自动服务启动"
+    description="使用 Systemd 或 Supervisor 配置 FE/BE/Broker 的开机自启与异常自动拉起"
+    link="../maint-monitor/automatic-service-start"
+/>
+
+<GettingStartedCard
+    title="数据副本管理"
+    description="Tablet 副本均衡与修复的调度策略，以及查看和操作副本的常用命令"
+    link="../maint-monitor/tablet-repair-and-balance"
+/>
+</div>

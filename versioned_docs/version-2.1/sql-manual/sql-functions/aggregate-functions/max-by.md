@@ -30,6 +30,12 @@ Returns the same data type as the input expression <expr1>.
 ## Example
 
 ```sql
+-- setup
+create table tbl(k1 int, k2 int, k3 int, k4 int) distributed by hash(k1) buckets 1 properties ("replication_num"="1");
+insert into tbl values (0,3,2,100),(1,2,3,4),(4,3,2,1),(3,4,2,1);
+```
+
+```sql
 select * from tbl;
 ```
 

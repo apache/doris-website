@@ -112,7 +112,7 @@ The [user](../../../../admin-manual/auth/authentication-and-authorization.md) ex
 - A single MERGE statement can include multiple matching and not-matching clauses (that is, WHEN MATCHED ... and WHEN NOT MATCHED ...).
 - Any matching or not-matching clause that omits the AND subclause (default behavior) must be the last of its clause type in the statement (for example, a WHEN MATCHED ... clause can’t be followed by a WHEN MATCHED AND ... clause). Doing so results in an unreachable case, which returns an error.
 
-### Duplicate join behavior¶
+### Duplicate join behavior
 
 Currently, Doris does not detect whether duplicate join rows occur. If they do, the behavior is undefined.
 

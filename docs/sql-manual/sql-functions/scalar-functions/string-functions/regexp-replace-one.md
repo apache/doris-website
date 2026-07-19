@@ -2,7 +2,7 @@
 {
     "title": "REGEXP_REPLACE_ONE",
     "language": "en",
-    "description": "The REGEXPREPLACEONE function is a powerful tool designed to perform regular expression matching on a given string."
+    "description": "The REGEXP_REPLACE_ONE function is a powerful tool designed to perform regular expression matching on a given string."
 }
 ---
 

@@ -105,3 +105,51 @@ SELECT REPLACE('ṭṛì ḍḍumai test ṭṛì ḍḍumannàri', 'ṭṛì', 
 | replaced ḍḍumai test replaced ḍḍumannàri                  |
 +-----------------------------------------------------------+
 ```
+
+6. Empty-string edge cases — empty `str` returns empty; empty `old` returns `str` unchanged; empty `new` deletes every match
+```sql
+SELECT REPLACE('', 'old', 'new'), REPLACE('test', '', 'new'), REPLACE('test', 'old', '');
+```
+```text
++---------------------------+----------------------------+----------------------------+
+| REPLACE('', 'old', 'new') | REPLACE('test', '', 'new') | REPLACE('test', 'old', '') |
++---------------------------+----------------------------+----------------------------+
+|                           | test                       | test                       |
++---------------------------+----------------------------+----------------------------+
+```
+
+7. Replacement is case-sensitive (only lowercase `hello` matches)
+```sql
+SELECT REPLACE('Hello HELLO hello', 'hello', 'hi');
+```
+```text
++---------------------------------------------+
+| REPLACE('Hello HELLO hello', 'hello', 'hi') |
++---------------------------------------------+
+| Hello HELLO hi                              |
++---------------------------------------------+
+```
+
+8. `old` not present — returns `str` unchanged
+```sql
+SELECT REPLACE('hello world', 'xyz', 'abc');
+```
+```text
++--------------------------------------+
+| REPLACE('hello world', 'xyz', 'abc') |
++--------------------------------------+
+| hello world                          |
++--------------------------------------+
+```
+
+9. Overlap-free repeated match
+```sql
+SELECT REPLACE('123123123', '123', 'ABC');
+```
+```text
++------------------------------------+
+| REPLACE('123123123', '123', 'ABC') |
++------------------------------------+
+| ABCABCABC                          |
++------------------------------------+
+```

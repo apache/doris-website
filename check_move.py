@@ -32,6 +32,18 @@ deletes = []
 # Flag indicating whether any link changes were detected
 change_detected = False
 
+def is_docs_next_path(file_path: str) -> bool:
+    """
+    docs-next is the graceful-rollout sibling tree; moved/deleted-link checks
+    are skipped here while the new IA is still in flux. See
+    website-quality-governance/docs-next-implementation-plan.md.
+    """
+    normalized = file_path.replace("\\", "/").lstrip("./")
+    return (
+        normalized.startswith("docs-next/")
+        or "/docusaurus-plugin-content-docs-next/" in normalized
+    )
+
 def is_same_file(path1, path2):
     """
     Compare two paths after normalizing, return True if they are the same file.
@@ -50,6 +62,9 @@ def process_md_file(file_path):
     If a link points to a file that has been renamed or deleted, mark change_detected as True.
     Also update the links in the file to the new paths if necessary.
     """
+    if is_docs_next_path(file_path):
+        return
+
     link_pattern = re.compile(r"\[.*?\]\((.*?)\)")
     global change_detected
 
@@ -123,6 +138,10 @@ def travel(root_path: str):
     Recursively traverse a directory and process all markdown files.
     """
     for root, dirs, files in os.walk(root_path):
+        # Prune docs-next subtrees in-place so os.walk does not descend into them.
+        dirs[:] = [d for d in dirs if not is_docs_next_path(os.path.join(root, d))]
+        if is_docs_next_path(root):
+            continue
         for file in files:
             if file.endswith(".md") or file.endswith(".mdx"):
                 process_md_file(os.path.join(root, file))

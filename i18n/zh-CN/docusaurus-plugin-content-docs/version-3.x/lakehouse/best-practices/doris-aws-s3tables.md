@@ -68,7 +68,7 @@ S3 Table Bucket 是 S3 推出的第三种 Bucket 类型，和之前的 General p
 ### 03 访问 S3Tables
 
 ```sql
-Doris > SWITCH iceberg_s3;
+Doris > SWITCH aws_s3_tables;
 
 Doris > SHOW DATABASES;
 +--------------------+

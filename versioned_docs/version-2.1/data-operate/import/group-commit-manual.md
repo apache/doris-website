@@ -84,7 +84,7 @@ try (Statement statement = conn.createStatement()) {
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 private static final String URL_PATTERN = "jdbc:mysql://%s:%d/%s?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50$sessionVariables=group_commit=async_mode";
 private static final String HOST = "127.0.0.1";
-private static final int PORT = 9087;
+private static final int PORT = 9030;
 private static final String DB = "db";
 private static final String TBL = "dt";
 private static final String USER = "root";
@@ -147,7 +147,7 @@ import (
 
 const (
 	host     = "127.0.0.1"
-	port     = 9038
+	port     = 9030
 	db       = "test"
 	user     = "root"
 	password = ""

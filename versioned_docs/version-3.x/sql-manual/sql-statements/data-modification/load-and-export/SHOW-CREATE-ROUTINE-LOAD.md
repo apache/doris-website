@@ -36,7 +36,7 @@ Users executing this SQL command must have at least the following permission:
 
 | Privilege  | Object | Notes                                                    |
 | :--------- | :----- | :------------------------------------------------------- |
-| LOAD_PRIV  | Table  | SHOW ROUTINE LOAD requires LOAD permission on the table |
+| LOAD_PRIV  | Table  | SHOW CREATE ROUTINE LOAD requires LOAD permission on the table |
 
 ## Examples
 

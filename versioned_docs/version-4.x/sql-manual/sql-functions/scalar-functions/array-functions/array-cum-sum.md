@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_CUM_SUM",
     "language": "en",
-    
+    "description": "Calculates the cumulative sum of an array. The function traverses the array from left to right,"
 }
 ---
 
@@ -100,7 +100,7 @@ SELECT array_cum_sum(['a', 1, 'b', 2, 'c', 3]);
 +-----------------------------------------+
 | array_cum_sum(['a', 1, 'b', 2, 'c', 3]) |
 +-----------------------------------------+
-| [0, 1, 1, 3, 3, 6]                      |
+| [null, 1, null, 3, null, 6]             |
 +-----------------------------------------+
 ```
 

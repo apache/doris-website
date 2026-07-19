@@ -32,7 +32,7 @@ Return a float-point number. Special cases:
 
 - If x IS NULL, return NULL
 - If x IS NaN, return NaN
-- If x is positive infinity or negative infinity, return NULL
+- If x is positive infinity, return Infinity
 
 ## Example
 

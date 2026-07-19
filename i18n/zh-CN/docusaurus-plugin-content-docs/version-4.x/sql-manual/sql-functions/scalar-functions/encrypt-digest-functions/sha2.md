@@ -49,6 +49,16 @@ select sha2('abc', 225);
 ERROR 1105 (HY000): errCode = 2, detailMessage = sha2 functions only support digest length of [224, 256, 384, 512]
 ```
 
+第二个参数 `<digest_length>` 必须是字面量；即使值合法，传入列引用也会报错：
+
+```sql
+-- setup
+CREATE TABLE str (k0 VARCHAR(64), k1 INT)
+DISTRIBUTED BY HASH(k0) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO str VALUES ('hello', 224), ('world', 256);
+```
+
 ```SQL
 select sha2('str', k1) from str;
 ```
@@ -64,6 +74,8 @@ select sha2(k0, k1) from str;
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = the second parameter of sha2 must be a literal but got: k1
 ```
+
+下面两个示例是说明性的——它们需要一个名为 `mysql_catalog` 的外部 MySQL Catalog 中有 `binary_test.binary_test` 表，大多数集群未配置此环境。展示的是 `SHA2` 对内容相同的 `VARBINARY` 与 `VARCHAR` 列会输出相同摘要。
 
 ```sql
 -- vb (VarBinary) 和 vc (VarChar) 插入时使用了相同的字符串.

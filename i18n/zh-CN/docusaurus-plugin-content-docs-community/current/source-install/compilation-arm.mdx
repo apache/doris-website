@@ -1,8 +1,16 @@
 ---
-{
-    "title": "Arm 平台上编译",
-    "language": "zh-CN"
-}
+title: ARM 平台编译 Apache Doris
+language: zh-CN
+description: 在 ARM64 平台编译 Apache Doris：操作系统支持矩阵、依赖版本对照与编译步骤。
+keywords:
+    - ARM 编译
+    - ARM64
+    - aarch64
+    - Apache Doris
+    - 源码编译
+    - LDB Toolchain
+    - KylinOS
+    - 鲲鹏
 ---
 
 
@@ -28,23 +36,36 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 
+{/* 知识类型: 操作步骤 */}
+{/* 适用场景: 首次编译 / ARM 服务器环境 */}
 
-本文档介绍如何在 ARM64 平台上编译 Doris。
+本文介绍如何在 ARM64 平台上编译 Apache Doris，包括硬件/操作系统兼容性、依赖安装与编译流程。
 
-注意，该文档仅作为指导性文档。在不同环境中编译可能出现其他错误。如遇问题，欢迎向 Doris [提出 Issue](https://github.com/apache/doris-website/issues) 或解决方案。
-
-:::tip
-从 3.0.3 版本开始支持存算分离模式编译部署
+:::info
+该文档仅作为指导性文档。不同 ARM 环境下编译可能出现其他错误，欢迎在 [doris-website Issues](https://github.com/apache/doris-website/issues) 中反馈或提交解决方案。
 :::
 
-## 硬件/操作系统环境
+:::tip
+从 3.0.3 版本开始，ARM 平台支持存算分离模式的编译部署。
+:::
 
-本章内容在以下环境中已经验证可行：
+## 1. 硬件与操作系统兼容性
 
-1. KylinOS：
+{/* 知识类型: 硬件要求 */}
+
+以下环境已经过社区验证：
+
+| 操作系统 | 版本 | CPU 示例 |
+| -------- | ---- | -------- |
+| KylinOS | Kylin-Server-10-SP1-Release-Build04-20200711 | Phytium FT-2000+/64 |
+| CentOS | 7.9 及以上（AltArch） | aarch64 |
+| Ubuntu | 20.04 | aarch64 |
+
+参考输出：
 
 ```shell
-$> cat /etc/.kyinfo
+# KylinOS
+$ cat /etc/.kyinfo
 name=Kylin-Server
 milestone=10-SP1-Release-Build04-20200711
 arch=arm64
@@ -52,14 +73,11 @@ beta=False
 time=2020-07-11 17:16:54
 dist_id=Kylin-Server-10-SP1-Release-Build04-20200711-arm64-2020-07-11 17:16:54
 
-$> cat /proc/cpuinfo
+$ cat /proc/cpuinfo
 model name  : Phytium,FT-2000+/64
-```
 
-2. CentOS 7.9 及以上
-
-```shell
-$> lsb_release -a
+# CentOS 7.9
+$ lsb_release -a
 LSB Version:	:core-4.1-aarch64:core-4.1-noarch
 Distributor ID:	CentOS
 Description:	CentOS Linux release 7.9.2009 (AltArch)
@@ -67,24 +85,24 @@ Release:	7.9.2009
 Codename:	AltArch
 ```
 
-3. Ubuntu 20.04
+## 2. 软件环境配置
 
-## 软件环境配置
+### 2.1 依赖版本对照表（以 JDK 8 为例）
 
-### 软件环境对照表（以JDK8为例）
+{/* 知识类型: 配置参数 */}
 
-| 组件名称                                                     | 组件版本             |
-| ------------------------------------------------------------ | -------------------- |
-| Git                                                          | 2.0+                 |
-| JDK                                                          | 1.8.0                |
-| Maven                                                        | 3.6.3                |
-| NodeJS                                                       | 16.3.0               |
-| LDB-Toolchain                                                | 0.9.1                |
-| 常备环境：<br />byacc<br />patch<br />automake<br />libtool<br />make<br />which<br />file<br />ncurses-devel<br />gettext-devel<br />unzip<br />bzip2<br />zip<br />util-linux<br />wget<br />git<br />python2 | yum或apt自动安装即可 |
-| autoconf                                                     | 2.69                 |
-| bison                                                        | 3.0.4                |
+| 组件 | 版本 | 备注 |
+| ---- | ---- | ---- |
+| Git | 2.0+ | |
+| JDK | 1.8.0 | 编译 3.0+ 或 master 需 JDK 17 |
+| Maven | 3.6.3 | 推荐 3.9.9 |
+| NodeJS | 16.3.0 | |
+| LDB Toolchain | 0.9.1 | ARM 推荐 0.21+ |
+| autoconf | 2.69 | 源码编译安装 |
+| bison | 3.0.4 | |
+| 常备系统包 | yum/apt 自动安装 | byacc、patch、automake、libtool、make、which、file、ncurses-devel、gettext-devel、unzip、bzip2、zip、util-linux、wget、git、python2 |
 
-### 软件环境安装命令
+### 2.2 软件环境安装命令
 
 <Tabs>
   <TabItem value="CentOS 7.9" label="CentOS 7.9" default>
@@ -110,24 +128,24 @@ mkdir /opt/software
   yum install -y git
 ```
 
-  - JDK8
+  - JDK 8
 
 ```shell
-  # 编译Doris 2.1及更早版本时，可以安装JDK8
-  # 两种安装方式，第一种是省去额外下载和配置，直接使用 yum 安装，安装 devel 包是为了获取一些工具，如 jps 命令
+  # 编译 Doris 2.1 及更早版本时，可以安装 JDK 8
+  # 方式一：直接使用 yum 安装，devel 包用于提供 jps 等工具
   yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
 
-  # 第二种是下载 arm64 架构的安装包，解压配置环境变量后使用
+  # 方式二：下载 arm64 架构安装包，解压后配置环境变量
   cd /opt/tools
   wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/jdk-8u291-linux-aarch64.tar.gz && \
     tar -zxvf jdk-8u291-linux-aarch64.tar.gz && \
     mv jdk1.8.0_291 /opt/software/jdk8
 ```
 
-  - JDK17
+  - JDK 17
 
 ```shell
-  # 若要编译Doris 3.0（含）之后的版本，或 master 分支，需要将JDK8换成JDK17
+  # 编译 Doris 3.0（含）之后的版本或 master 分支，需要将 JDK 8 换成 JDK 17
   yum install -y java-17-openjdk java-17-openjdk-devel
 ```
 
@@ -135,7 +153,7 @@ mkdir /opt/software
 
 ```shell
   cd /opt/tools
-  # wget 工具下载后，直接解压缩配置环境变量使用
+  # 下载后直接解压配置环境变量
   wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
     tar -zxvf apache-maven-3.9.9-bin.tar.gz && \
     mv apache-maven-3.9.9 /opt/software/maven
@@ -145,19 +163,19 @@ mkdir /opt/software
 
 ```shell
   cd /opt/tools
-  # 下载 arm64 架构的安装包
+  # 下载 arm64 架构安装包
   wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v16.3.0-linux-arm64.tar.xz && \
     tar -xvf node-v16.3.0-linux-arm64.tar.xz && \
     mv node-v16.3.0-linux-arm64 /opt/software/nodejs
 ```
 
-  - LDB-Toolchain
+  - LDB Toolchain
 
 ```shell
   cd /opt/tools
-  # 下载 LDB-Toolchain ARM 版本
+  # 下载 LDB Toolchain ARM 版本
   wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.21/ldb_toolchain_gen.aarch64.sh && \
-    sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
+    bash ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
 ```
   </div>
     <div>
@@ -165,7 +183,7 @@ mkdir /opt/software
 3. 配置环境变量
 
 ```shell
-# 配置环境变量（java以jdk8为例）
+# 配置环境变量（以 JDK 8 为例）
 vim /etc/profile.d/doris.sh
 export JAVA_HOME=/opt/software/jdk8
 export MAVEN_HOME=/opt/software/maven
@@ -176,7 +194,7 @@ export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_JS_HOME/bin:$LDB_HOME/bin:$PATH
 # 保存退出并刷新环境变量
 source /etc/profile.d/doris.sh
 
-# 测试是否成功（java以jdk8为例）
+# 验证安装结果（以 JDK 8 为例）
 java -version
 > java version "1.8.0_291"
 mvn -version
@@ -192,10 +210,10 @@ gcc --version
 4. 安装其他额外环境和组件
 
 ```shell
-# Install required system packages
+# 安装常备系统包
 sudo yum install -y byacc patch automake libtool make which file ncurses-devel gettext-devel unzip bzip2 bison zip util-linux wget git python2
 
-# Install autoconf-2.69
+# 安装 autoconf-2.69
 cd /opt/tools
 wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
     tar zxf autoconf-2.69.tar.gz && \
@@ -210,7 +228,7 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
   <TabItem value="Ubuntu 20.04" label="Ubuntu 20.04">
     <div>
 
-1. 更新 apt-get 软件库
+1. 更新 apt 软件源
 
 ```shell
 apt-get update
@@ -220,19 +238,19 @@ apt-get update
 
 2. 检查 shell 命令集
 
-  ubuntu 的 shell 默认安装的是 dash，而不是 bash，要切换成 bash 才能执行，运行以下命令查看 sh 的详细信息，确认 shell 对应的程序是哪个：
+  Ubuntu 默认 `/bin/sh` 指向 dash 而非 bash，需要切换成 bash 才能执行部分脚本。先查看当前 `sh` 指向：
 
 ```shell
 ls -al /bin/sh
 ```
 
-  通过以下方式可以使 shell 切换回 dash：
+  可通过下面命令切换：
 
 ```shell
 sudo dpkg-reconfigure dash
 ```
 
-  然后选择 no 或者 否 并确认。这样做将重新配置 dash，并使其不作为默认的 shell 工具
+  在交互界面选择 `no`（不将 dash 设为默认 shell），即可让 `/bin/sh` 指向 bash。
   </div>
     <div>
 
@@ -252,24 +270,24 @@ sudo dpkg-reconfigure dash
   - Git
 
 ```shell
-  # 省去编译麻烦，直接使用 apt-get 安装
+  # 直接使用 apt-get 安装
   apt-get -y install git
 ```
 
-  - JDK8
+  - JDK 8
 
 ```shell
-  # 下载 arm64 架构的安装包，解压配置环境变量后使用
+  # 下载 arm64 架构安装包，解压后配置环境变量
   cd /opt/tools
   wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/jdk-8u291-linux-aarch64.tar.gz && \
     tar -zxvf jdk-8u291-linux-aarch64.tar.gz && \
     mv jdk1.8.0_291 /opt/software/jdk8
 ```
 
-  - JDK17
+  - JDK 17
 
 ```shell
-  # 若要编译Doris 3.0（含）之后的版本，或 master 分支，需要将JDK8换成JDK17
+  # 编译 Doris 3.0（含）之后的版本或 master 分支，需要将 JDK 8 换成 JDK 17
   apt-get -y install openjdk-17-jdk
 ```
 
@@ -277,7 +295,7 @@ sudo dpkg-reconfigure dash
 
 ```shell
   cd /opt/tools
-  # wget 工具下载后，直接解压缩配置环境变量使用
+  # 下载后直接解压配置环境变量
   wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
     tar -zxvf apache-maven-3.9.9-bin.tar.gz && \
     mv apache-maven-3.9.9 /opt/software/maven
@@ -287,19 +305,19 @@ sudo dpkg-reconfigure dash
 
 ```shell
   cd /opt/tools
-  # 下载 arm64 架构的安装包
+  # 下载 arm64 架构安装包
   wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v16.3.0-linux-arm64.tar.xz && \
     tar -xvf node-v16.3.0-linux-arm64.tar.xz && \
     mv node-v16.3.0-linux-arm64 /opt/software/nodejs
 ```
 
-  - LDB-Toolchain
+  - LDB Toolchain
 
 ```shell
   cd /opt/tools
-  # 下载 LDB-Toolchain ARM 版本
+  # 下载 LDB Toolchain ARM 版本
   wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.21/ldb_toolchain_gen.aarch64.sh && \
-    sh ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
+    bash ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
 ```
   </div>
     <div>
@@ -307,7 +325,7 @@ sudo dpkg-reconfigure dash
 5. 配置环境变量
 
 ```shell
-# 配置环境变量（java以jdk8为例）
+# 配置环境变量（以 JDK 8 为例）
 vim /etc/profile.d/doris.sh
 export JAVA_HOME=/opt/software/jdk8
 export MAVEN_HOME=/opt/software/maven
@@ -318,7 +336,7 @@ export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_JS_HOME/bin:$LDB_HOME/bin:$PATH
 # 保存退出并刷新环境变量
 source /etc/profile.d/doris.sh
 
-# 测试是否成功（java以jdk8为例）
+# 验证安装结果（以 JDK 8 为例）
 java -version
 > java version "1.8.0_291"
 mvn -version
@@ -334,7 +352,7 @@ gcc --version
 6. 安装其他额外环境和组件
 
 ```shell
-# Install required system packages
+# 安装常备系统包
 sudo apt install -y build-essential cmake flex automake bison binutils-dev libiberty-dev zip libncurses5-dev curl ninja-build
 sudo apt-get install -y make
 sudo apt-get install -y unzip
@@ -349,7 +367,7 @@ sudo apt update
 sudo apt install gcc-11 g++-11
 sudo apt-get -y install autoconf autopoint
 
-# Install autoconf-2.69
+# 安装 autoconf-2.69
 cd /opt/tools
 wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
     tar zxf autoconf-2.69.tar.gz && \
@@ -363,193 +381,196 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
   </TabItem>
 </Tabs>
 
-## 编译
+## 3. 编译
+
+{/* 知识类型: 操作步骤 */}
 
 :::tip
-目前 ARM 环境仅推荐使用 ldb-toolchain 进行编译，该方法适用于 [commit 7f3564](https://github.com/apache/doris/commit/7f3564cca62de49c9f2ea67fcf735921dbebb4d1) 之后的 Doris 版本。
+ARM 平台目前仅推荐使用 LDB Toolchain 进行编译。该方法适用于 [commit 7f3564](https://github.com/apache/doris/commit/7f3564cca62de49c9f2ea67fcf735921dbebb4d1) 之后的 Doris 版本。
 :::
 
-ldb-toolchain下载和安装详见本文前面的介绍，之后的编译方式参阅 [使用 LDB toolchain 编译](./compilation-with-ldb-toolchain)
+LDB Toolchain 的下载和安装详见上文，之后的编译方式请参阅 [使用 LDB Toolchain 编译](./compilation-with-ldb-toolchain)。其中 JDK 与 NodeJS 需替换为 aarch64 版本（详见上文）。
 
-其中，jdk 和 nodejs 替换为对应的 aarch64 版本，具体处理方式详见本文前面的介绍
+如果下载预编译三方库遇到问题，请使用 `tools/build_thirdparty.sh` 自行编译。编译三方库时请使用 gcc：
 
-如下载预编译的三方库遇到问题，请使用`tools/build_thirdparty.sh`自行编译。在编译三方库时，请使用 gcc：
 ```shell
 export DORIS_TOOLCHAIN=gcc
 ```
 
-在 ARM 平台编译 Doris 时，**请关闭 AVX2、LIBUNWIND和AZURE 三方库**：
+在 ARM 平台编译 Doris 时，**必须关闭 AVX2、LIBUNWIND、AZURE 三方库**：
+
 ```shell
 export USE_AVX2=OFF
 export USE_UNWIND=OFF
 export DISABLE_BUILD_AZURE=ON
 ```
 
-如在编译、启动时仍遇到问题，请查阅[常见问题](#常见问题)。如果没有相关解决方案，欢迎[提出issue](https://github.com/apache/doris/issues)。
+如在编译、启动时仍遇到问题，请查阅 [常见问题](#4-常见问题)。如果没有相关解决方案，欢迎 [提出 issue](https://github.com/apache/doris/issues)。
 
-## 常见问题
+## 4. 常见问题
 
-### 编译问题
+{/* 知识类型: 故障排查 */}
+{/* 适用场景: 故障排查 / 编译失败 */}
 
-1. 编译第三方库 libhdfs3.a ，找不到文件夹
+### 4.1 编译问题
 
-   - 问题描述
+#### 1. 编译第三方库 libhdfs3.a，找不到文件夹
 
-     在执行编译安装过程中，出现了如下报错
+- 问题描述：
 
-     > not found lib/libhdfs3.a file or directory
+    在执行编译安装过程中出现报错：
 
-   - 问题原因
+    > not found lib/libhdfs3.a file or directory
 
-     第三方库的依赖下载有问题
+- 问题原因：
 
-   - 解决方案
+    第三方库依赖下载失败。
 
-     - 使用第三方下载仓库
+- 解决方案：
+
+    使用第三方下载仓库重新编译三方库。
 
 ```shell
   export REPOSITORY_URL=https://doris-thirdparty-repo.bj.bcebos.com/thirdparty
   sh /opt/doris/thirdparty/build-thirdparty.sh
 ```
 
-  REPOSITORY_URL 中包含所有第三方库源码包和他们的历史版本。
+`REPOSITORY_URL` 中包含所有第三方库源码包和它们的历史版本。
 
-2. python 命令未找到
+#### 2. python 命令未找到
 
-   - 问题描述
+- 问题描述：
 
-     - 执行 build.sh 时抛出异常
+    执行 `build.sh` 时抛出异常：
 
-       > /opt/doris/env.sh: line 46: python: command not found
-       >
-       > Python 2.7.18
+    > /opt/doris/env.sh: line 46: python: command not found
+    >
+    > Python 2.7.18
 
-   - 问题原因
+- 问题原因：
 
-     经查找，发现该系统默认使用 `python2.7`、 `python3.6`、`python2`、`python3` 这几个命令来执行 python 命令，Doris安装依赖需要 python 2.7+ 版本即可，故只需要添加名为 `python` 的命令连接即可，使用版本2和版本3的都可以
+    系统默认使用 `python2.7`、`python3.6`、`python2`、`python3` 这几个命令调用 Python，但 Doris 依赖要求存在名为 `python` 的命令（2.7+ 即可）。
 
-   - 解决方案
+- 解决方案：
 
-     建立 `\usr\bin` 中 `python` 命令的软连接
+    建立 `/usr/bin/python` 的软链接。
 
 ```shell
-      # 查看python安装目录
+      # 查看 python 安装目录
       whereis python
-      # 建立软连接
+      # 建立软链接
       sudo ln -s /usr/bin/python2.7 /usr/bin/python
 ```
 
-3. 编译结束后没有 output 目录
+#### 3. 编译结束后没有 output 目录
 
-   - 问题描述
+- 问题描述：
 
-     - build.sh 执行结束后，目录中未发现 output 文件夹.
+    `build.sh` 执行结束后，目录中未发现 `output` 文件夹。
 
-   - 问题原因
+- 问题原因：
 
-     未成功编译，需重新编译
+    未成功编译，需重新编译。
 
-   - 解决方案
+- 解决方案：
 
 ```shell
       sh build.sh --clean
 ```
 
-4. spark-dpp 编译失败
+#### 4. spark-dpp 编译失败
 
-   - 问题描述
+- 问题描述：
 
-     - 执行 build.sh 编译以后，编译至 Spark-DPP 报错失败
+    执行 `build.sh` 编译到 spark-dpp 时报错：
 
-       > Failed to execute goal on project spark-dpp
+    > Failed to execute goal on project spark-dpp
 
-   - 问题原因
+- 问题原因：
 
-     最后的错误提示，是由于下载失败（且由于是未能连接到 repo.maven.apache.org 中央仓库）的问题
+    Maven 中央仓库 `repo.maven.apache.org` 不可达，无法下载依赖：
 
-     > Could not transfer artifact org.apache.spark:spark-sql_2.12:jar:2.4.6 from/to central (https://repo.maven.apache.org/maven2): Transfer failed for https://repo.maven.apache.org/maven2/org/apache/spark/spark-sql_2.12/2.4.6/spark-sql_2.12-2.4.6.jar: Unknown host repo.maven.apache.org
+    > Could not transfer artifact org.apache.spark:spark-sql_2.12:jar:2.4.6 from/to central (https://repo.maven.apache.org/maven2): Transfer failed for https://repo.maven.apache.org/maven2/org/apache/spark/spark-sql_2.12/2.4.6/spark-sql_2.12-2.4.6.jar: Unknown host repo.maven.apache.org
 
-   - 解决方案
+- 解决方案：
 
-     - 重新 build
+    检查网络后重新 build。
 
-5. 剩余空间不足，编译失败
+#### 5. 剩余空间不足，编译失败
 
-   - 问题描述
+- 问题描述：
 
-     - 编译过程中报 构建 CXX 对象失败，提示剩余空间不足
+    编译过程中报构建 CXX 对象失败，提示剩余空间不足：
 
-       >  fatal error: error writing to /tmp/ccKn4nPK.s: No space left on device
-       >
-       >  1112 | } // namespace doris::vectorized
-       >
-       >  compilation terminated.
+    > fatal error: error writing to /tmp/ccKn4nPK.s: No space left on device
+    >
+    > 1112 | } // namespace doris::vectorized
+    >
+    > compilation terminated.
 
-   - 问题原因
+- 问题原因：
 
-     设备剩余空间不足
+    设备剩余空间不足。
 
-   - 解决方案
+- 解决方案：
 
-     扩大设备剩余空间，如删除不需要的文件等
+    扩大设备剩余空间，如删除不需要的文件等。
 
-6. 在 pkg.config 中找不到 pkg.m4 文件
+#### 6. 在 pkg.config 中找不到 pkg.m4 文件
 
-   - 问题描述
+- 问题描述：
 
-     - 编译过程中出现了找不到文件错误，报错如下
+    编译过程中出现找不到文件错误：
 
-       > Couldn't find pkg.m4 from pkg-config. Install the appropriate package for your distribution or set ACLOCAL_PATH to the directory containing pkg.m4.
+    > Couldn't find pkg.m4 from pkg-config. Install the appropriate package for your distribution or set ACLOCAL_PATH to the directory containing pkg.m4.
 
-     - 通过查找上面的日志，发现是 `libxml2` 这个三方库在编译的时候出现了问题
+    通过日志可见是 `libxml2` 三方库编译时出错。
 
-   - 问题原因
+- 问题原因：
 
-     `libxml2` 三方库编译错误，找不到 pkg.m4 文件
+    `libxml2` 三方库编译过程中检索不到 `pkg.m4` 文件。可能由于：
 
-     ***可能的错误：***
+    1. Ubuntu 系统加载环境变量时有异常，导致 ldb 目录下的索引未被成功加载
+    2. 在 libxml2 编译时检索环境变量失效，导致编译过程没有检索到 `ldb/aclocal` 目录
 
-     1. Ubuntu 系统加载环境变量时有异常，导致 ldb 目录下的索引未被成功加载
-     2. 在 libxml2 编译时检索环境变量失效，导致编译过程没有检索到 ldb/aclocal 目录
+- 解决方案：
 
-   - 解决方案
-
-     将 ldb/aclocal 目录下的 `pkg.m4` 文件拷贝至 libxml2/m4 目录下，重新编译第三方库
+    将 `ldb/aclocal` 目录下的 `pkg.m4` 文件拷贝至 `libxml2/m4` 目录下，重新编译三方库：
 
 ```shell
       cp /opt/software/ldb_toolchain/share/aclocal/pkg.m4 /opt/doris/thirdparty/src/libxml2-v2.9.10/m4
       sh /opt/doris/thirdparty/build-thirdparty.sh
 ```
 
-7. 执行测试 CURL_HAS_TLS_PROXY 失败
+#### 7. 执行测试 CURL_HAS_TLS_PROXY 失败
 
-   - 问题描述
+- 问题描述：
 
-     - 三方包编译过程报错，错误如下
+    三方包编译过程报错：
 
-       > -- Performing Test CURL_HAS_TLS_PROXY - Failed
-       >
-       > CMake Error at cmake/dependencies.cmake:15 (get_property):
-       >
-       > INTERFACE_LIBRARY targets may only have whitelisted properties. The property "LINK_LIBRARIES_ALL" is not allowed.
+    > -- Performing Test CURL_HAS_TLS_PROXY - Failed
+    >
+    > CMake Error at cmake/dependencies.cmake:15 (get_property):
+    >
+    > INTERFACE_LIBRARY targets may only have whitelisted properties. The property "LINK_LIBRARIES_ALL" is not allowed.
 
-     - 查看日志以后，发现内部是由于 curl `No such file or directory`
+    查看日志后发现是 curl 头文件找不到：
 
-       > fatal error: curl/curl.h: No such file or directory
-       >
-       >  2 |     #include &lt;curl/curl.h>
-       >
-       > compilation terminated.
-       >
-       > ninja: build stopped: subcommand failed.
+    > fatal error: curl/curl.h: No such file or directory
+    >
+    >  2 |     #include &lt;curl/curl.h>
+    >
+    > compilation terminated.
+    >
+    > ninja: build stopped: subcommand failed.
 
-   - 问题原因
+- 问题原因：
 
-     编译环境有错误，查看 gcc 版本后发现是系统自带的 9.3.0 版本，故而没有走 ldb 编译，需设置 ldb 环境变量
+    编译走了系统自带的 gcc 9.3.0，而非 LDB Toolchain。需正确配置 LDB Toolchain 环境变量。
 
-   - 解决方案
+- 解决方案：
 
-     配置 ldb 环境变量
+    配置 LDB 环境变量：
 
 ```shell
       # 配置环境变量
@@ -563,96 +584,101 @@ export DISABLE_BUILD_AZURE=ON
       > gcc-11
 ```
 
-8. 编译过程中止，提示 "ninja failed with: signal: killed" 相关字样
+#### 8. 编译过程中止，提示 `ninja failed with: signal: killed`
 
-   - 问题描述
+- 问题描述：
 
-     BE 或三方库在编译中途失败，提示字样包含
+    BE 或三方库在编译中途失败，提示字样包含：
 
-     > ninja failed with: signal: killed
+    > ninja failed with: signal: killed
 
-   - 问题原因
+- 问题原因：
 
-     所在机器内存不足
+    所在机器内存不足。
 
-   - 解决方案
+- 解决方案：
 
-     换用更大内存（至少16GB）的机器进行编译，或者减小编译并发（`-j`）
+    换用更大内存（至少 16 GB）的机器进行编译，或者减小编译并发度（`-j`）。
 
-### 启动问题
+### 4.2 启动问题
 
-1. 启动FE失败，事务-20 问题
+#### 1. 启动 FE 失败，事务 -20 问题
 
-   - 问题描述
+- 问题描述：
 
-     在启动 FE 时，报事务错误 20 问题，状态为 UNKNOWN
+    在启动 FE 时，报事务错误 20 问题，状态为 UNKNOWN：
 
-     > [BDBEnvironment.setup():198] error to open replicated environment. will exit.
-     >
-     > com.sleepycat.je.rep.ReplicaWriteException: (JE 18.3.12) Problem closing transaction 20. The current state is:UNKNOWN. The node transitioned to this state at:Fri Apr 22 12:48:08 CST 2022
+    > [BDBEnvironment.setup():198] error to open replicated environment. will exit.
+    >
+    > com.sleepycat.je.rep.ReplicaWriteException: (JE 18.3.12) Problem closing transaction 20. The current state is:UNKNOWN. The node transitioned to this state at:Fri Apr 22 12:48:08 CST 2022
 
-   - 问题原因
+- 问题原因：
 
-     硬盘空间不足，需更多空间
+    硬盘空间不足。
 
-   - 解决方案
+- 解决方案：
 
-     释放硬盘空间或者挂载新硬盘
+    释放硬盘空间或者挂载新硬盘。
 
-2. BDB 环境设置异常，磁盘寻找错误
+#### 2. BDB 环境设置异常，磁盘寻找错误
 
-   - 问题描述
-     在迁移 FE 所在的盘符后启动 FE 报异常
-     > 2022-04-22 16:21:44,092 ERROR (MASTER 172.28.7.231_9010_1650606822109(-1)|1) [BDBJEJournal.open():306] catch an exception when setup bdb environment. will exit.
-     >
-     > com.sleepycat.je.DiskLimitException: (JE 18.3.12) Disk usage is not within je.maxDisk or je.freeDisk limits and write operations are prohibited: maxDiskLimit=0 freeDiskLimit=5,368,709,120 adjustedMaxDiskLimit=0 maxDiskOverage=0 freeDiskShortage=1,536,552,960 diskFreeSpace=3,832,156,160 availableLogSize=-1,536,552,960 totalLogSize=4,665 activeLogSize=4,665 reservedLogSize=0 protectedLogSize=0 protectedLogSizeMap={}
+- 问题描述：
 
-   - 问题原因
+    在迁移 FE 所在的盘符后启动 FE 报异常：
 
-     迁移了 FE 所在的位置，元数据存储的硬盘信息无法匹配到，或者该硬盘损坏或未挂载
+    > 2022-04-22 16:21:44,092 ERROR (MASTER 172.28.7.231_9010_1650606822109(-1)|1) [BDBJEJournal.open():306] catch an exception when setup bdb environment. will exit.
+    >
+    > com.sleepycat.je.DiskLimitException: (JE 18.3.12) Disk usage is not within je.maxDisk or je.freeDisk limits and write operations are prohibited: maxDiskLimit=0 freeDiskLimit=5,368,709,120 adjustedMaxDiskLimit=0 maxDiskOverage=0 freeDiskShortage=1,536,552,960 diskFreeSpace=3,832,156,160 availableLogSize=-1,536,552,960 totalLogSize=4,665 activeLogSize=4,665 reservedLogSize=0 protectedLogSize=0 protectedLogSizeMap={}
 
-   - 解决方案
+- 问题原因：
 
-     - 检查硬盘是否正常，是否初始化并正确挂载
-     - 修复 FE 元数据
-     - 若为测试机器，则可以删除元数据目录重新启动
+    迁移了 FE 所在的位置，元数据存储的硬盘信息无法匹配，或者硬盘损坏或未挂载。
 
-3. BE启动时 coredump，core 栈中可见 `libc.so` 或 `glibc-compatibility/` 字样
+- 解决方案：
 
-    - 问题原因
-      当前机器 glibc 版本过低。可以通过 `ldd --version` 确认，如果版本小于 2.27 则可能发生这一问题。
+    - 检查硬盘是否正常、是否初始化并正确挂载
+    - 修复 FE 元数据
+    - 测试环境可以删除元数据目录重新启动
 
-    - 解决方案
-      重新编译 BE，编译时增加环境变量：
+#### 3. BE 启动时 coredump，core 栈中可见 `libc.so` 或 `glibc-compatibility/` 字样
+
+- 问题原因：
+
+    当前机器 glibc 版本过低。可通过 `ldd --version` 确认，如果版本低于 2.27 则可能发生这一问题。
+
+- 解决方案：
+
+    重新编译 BE，编译时增加环境变量：
+
 ```shell
       export GLIBC_COMPATIBILITY=OFF
 ```
 
-### 其他组件问题
+### 4.3 其他组件问题
 
 - 问题描述
 
-  如有以下组件的错误提示，则统一以该方案解决：
-  - bison 相关
-    1. 安装 bison-3.0.4 时报 fseterr.c 错误
-  - flex 相关
-    1. flex 命令未找到
-  - cmake 相关
-    1. cmake 命令未找到
-    2. cmake 找不到依赖库
-    3. cmake 找不到 CMAKE_ROOT
-    4. cmake 环境变量 CXX 中找不到编译器集
-  - boost 相关：Boost.Build 构建引擎失败
-  - mysql 相关：找不到 mysql 的客户端依赖 a 文件
-  - gcc 相关：GCC 版本需要11+
+  如有以下组件的错误提示，统一以下述方案处理：
+
+    - bison 相关：安装 bison-3.0.4 时报 fseterr.c 错误
+    - flex 相关：flex 命令未找到
+    - cmake 相关：cmake 命令未找到 / cmake 找不到依赖库 / cmake 找不到 CMAKE_ROOT / cmake 环境变量 CXX 中找不到编译器集
+    - boost 相关：Boost.Build 构建引擎失败
+    - mysql 相关：找不到 mysql 客户端依赖 a 文件
+    - gcc 相关：GCC 版本需 11+
 
 - 问题原因
 
-  未使用正确的 ldb-toolchain 进行编译
+    未使用正确的 LDB Toolchain 进行编译。
 
 - 解决方案
 
-  - 检查 ldb-toolchain 环境变量是否配置
-  - 查看 gcc 版本是否与[使用 LDB-Toolchain 编译](./compilation-with-ldb-toolchain)文档中推荐一致
-  - 删除 `ldb_toolchain_gen.aarch64.sh` 脚本执行后的 ldb 目录，重新执行并配置环境变量，验证 gcc 版本
+    - 检查 LDB Toolchain 环境变量是否配置
+    - 查看 gcc 版本是否与 [使用 LDB Toolchain 编译](./compilation-with-ldb-toolchain) 文档中推荐一致
+    - 删除 `ldb_toolchain_gen.aarch64.sh` 脚本执行后的 ldb 目录，重新执行并配置环境变量，验证 gcc 版本
 
+## 相关文档
+
+- [使用 LDB Toolchain 编译](./compilation-with-ldb-toolchain)
+- [使用 Docker 镜像编译](./compilation-with-docker)
+- [Linux 平台直接编译](./compilation-linux)

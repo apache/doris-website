@@ -150,6 +150,20 @@ PROPERTIES (
 );
 ```
 
+下文中基于查询的重写示例会用到 `test2` 表。它与 `test` 的 `(c1, c2)` 列结构一致，便于 `INSERT OVERWRITE test SELECT * FROM test2` 成功执行：
+
+```sql
+CREATE TABLE IF NOT EXISTS test2 (
+  `c1` int NOT NULL,
+  `c2` int NOT NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`c1`)
+DISTRIBUTED BY HASH(`c1`) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO test2 VALUES (1, 10), (2, 20);
+```
+
 ### Overwrite Table
 
 1. VALUES 的形式重写`test`表

@@ -1,0 +1,21 @@
+---
+title: Link Fixture
+description: Fixture page for documentation link governance tests.
+---
+
+# Link Fixture
+
+Valid relative page: [What is Doris](./what-is-apache-doris.md#overview)
+
+Valid source link: [Component](../../src/components/Example.tsx)
+
+Valid route: [Route](/docs/dev/gettingStarted/what-is-apache-doris#overview)
+
+Valid image: ![Architecture](../../static/images/architecture.png)
+
+Inline code should be ignored: `[Ignored](./ignored-code-link.md)`
+
+```md
+[Ignored fenced link](./ignored-code-link.md)
+![Ignored image](../../static/images/missing-image.png)
+```

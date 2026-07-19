@@ -37,7 +37,7 @@ If d is a column, and the first argument is of type Decimal, then the resulting 
 
 ## Example
 
- d is a litera
+ d is a literal
 
 ```sql
 select truncate(124.3867, 2),truncate(124.3867, 0),truncate(124.3867, -2);

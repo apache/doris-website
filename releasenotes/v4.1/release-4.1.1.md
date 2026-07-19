@@ -1,0 +1,213 @@
+---
+{
+    "title": "Release 4.1.1",
+    "language": "en",
+    "description": "Here's the Apache Doris 4.1.1 release notes:"
+}
+---
+
+# New Features
+
+## Storage & Compaction
+- Add adaptive batch size for scan path (#62835)
+- Add CompactionTaskTracker with system table and HTTP API (#61696)
+- Add value predicate pushdown control for MOR tables (#60513)
+
+## Other
+- Add json_object_flatten scalar function (#62825)
+
+# Improvement
+
+## Storage & Compaction
+- Skip zero-length files in FileSplitter to avoid sending empty splits to BE (#62482)
+- Avoid single-point read/write during sequentially reading key (#62476)
+- Add stampede protection for AnnIndexIVFListCache (#62442)
+- Limit packed file writes to rowset first segment (#62342)
+- Unify current query runtime statistics and expose task progress (#60567)
+
+## Load
+- Make thirdparty jar download mirror configurable (#62376)
+
+## Cloud Native
+- Add HashCRC32Return32 and make join_hash_table use 32-bit hash value (#62512)
+
+## Other
+- Add current_database builtin alias (#62591)
+
+# Bugfix
+
+## Index & Search
+- Fix deep nested complex type subtype validation bypass (#63208)
+- Fix potential NPE in getDeleteBitmapUpdateLock (#62809)
+- Fix ANN query vector extraction to handle all constant expression types (#62637)
+- Split monolithic function_string.h into domain-specific files (#62262)
+- Fix OOB crash in partition column generation for Iceberg/Paimon tables (#62177)
+- Fix null pointer exception in sessionVariables after upgrade (#61959)
+- Optimize the compilation time of aggregate_function_orthogonal_bitmap.cpp (#61606)
+- Drop index should set db_id (#58401)
+
+## Query & Execution
+- Fix remote Flight SQL result receiver initialization (#63136)
+- Keep LogicalOlapScan for short-circuit point query on empty table (#62948)
+- Fix DST spring-forward gap handling in timestamptz literal (#62945)
+- Fix UB and param order in assert_num_rows_operator (#62800)
+- Preserve TIMESTAMPTZ in LEAD/LAG by adding TimeStampTzType signature matching (#62779)
+- Fix exchange receiver dependency race (#62777)
+- Add fast path for canonical format datetime parse (#62757)
+- Fix isCountStar incorrectly treating count(null) as count(*) (#62548)
+- Fix view columns losing colUniqueId in lazy materialization (#62533)
+- Align extra-join elimination safety check (#62527)
+- Fix Doris query service fails after the file handles on the BE node are used up (#62393)
+- Scale num_nulls in col stats when partition pruned (#62265)
+- Fix prepared statement QPS metrics not counted when audit log disabled (#61621)
+- Update license-maven-plugin to 2.1.0 (#58951)
+
+## Storage & Compaction
+- Avoid nested task attach in cloud snapshot manager (#63189)
+- Materialize NG compaction regular paths (#63104)
+- Rebuild broker load storage properties after Gson replay (#63094)
+- Skip statistics cache for system dbs (#63089)
+- Fix variant flat-leaf root read plan (#63086)
+- Resolve variant sub-column indexes for score() (#62992)
+- Avoid deleting nonexistent delete bitmap files (#62967)
+- Skip skewed warmup rowset latency samples (#62941)
+- Return unknown stats for system tables (#62913)
+- Mark internal query failures as ERR in audit log (#62908)
+- Fix warm up don't retry due to error message change (#62886)
+- Reject oversized block size in add_cell (#62878)
+- Move #include directives outside namespace blocks to avoid ODR violations (#62871)
+- Bound cdc_client RPCs with per-category timeouts (#62870)
+- Add NestedGroup path metadata support (#62848)
+- Reduce point-query network overhead by resending query context on cache miss (#62836)
+- Skip full footer scan when constructing VariantStatsCaculator (#62819)
+- Avoid NPE and clear stale cache on warmup job cancel/expire (#62805)
+- Hold table write lock across first-time dynamic partition setup to prevent CREATE MV race (#62755)
+- Support specifying compute_group for StreamingJob (#62747)
+- Attach MemTracker to cache background threads to fix orphan crash (#62739)
+- Treat empty cancel alter job list as all rollup jobs (#62712)
+- Remove enable_nereids_load switch (#62703)
+- Add some Sanity-check for avoid npe (#62691)
+- RestoreJob cannot deserialize Tablet when upgrade (#62673)
+- The profile hitcache not correct in force refresh and sink id not correct (#62645)
+- Aggregate non-MOW segment key bounds to reduce rowset meta size (#62604)
+- Support ADMIN COMPACT TABLE type='FULL' and enable it in cloud mode (#62596)
+- Refine revocable memory accounting for spill (#62581)
+- Fix compaction failure on no-key table with variant column uid=0 (#62571)
+- Propagate ALTER source/target properties to runtime and persistence (#62553)
+- Avoid per-row Field temporaries in TypedZoneMapIndexWriter (#62544)
+- Fix incorrect for-loop (#62517)
+- Normalize legacy single-part dot-key subcolumn paths on read (#62409)
+- Avoid BE crash when finalize misses local cache writer (#62389)
+- Fix InsertLoadJob memory leak caused by jobs permanently stuck in PENDING state (#62282)
+- Add SC_COMPACTION_CONFLICT error code to retry cross-V1 compaction failures (#62272)
+- Add per-job metrics for streaming insert jobs (#62224)
+- Reduce compile time of aggregate_function_reader_replace.cpp (#62047)
+- Reduce HybridSet/InListPredicate template bloat and fix create_string_value_set bug (#61999)
+- Deprecate TYPE_LAMBDA_FUNCTION in PrimitiveType enum (#61941)
+- Add get_version and get_tablet_stats case (#61915)
+- Migrate old VExpr execute interface to new execute_column (Part 1) (#61912)
+- Reject upload snapshots on broken storage path (#61251)
+- Submit manual full compaction task to thread pool instead of detached thread (#61222)
+- Add fe-foundation module with zero-dependency JDK-only utilities (#61175)
+- Add show_segment_data operation to meta_tool (#60608)
+- Avoid SIGSEGV in background LRU update when clear cache (#60533)
+- Fix IOContext Use-After-Free (#59947)
+- Prioritize scheduling the most recently active tablets in cloud (#59539)
+- Support config hot reload of file cache microbench in running state (#58922)
+- Skip agg delete bitmap v1 to ms when v2 (#57990)
+- Check delete bitmap version (#57989)
+- Exposes cloud balance metrics (#57200)
+
+## Load
+- Start counting task max interval after the first record is received (#63141)
+- Load JNI log4j2 properties config (#63063)
+- Fix broker load silently loaded only the first file when parsing multiple files path (#62969)
+- Poll packed file async close without blocking (#62938)
+- Avoid copying ANN search results (#62924)
+- Fix filteredRows always 0 on single-table S3 streaming (#62816)
+- Report physical file count in LoadStatistic.FileNumber (#62804)
+- Use CPU metrics delta for CPU pressure detection in adaptive flush controller (#62744)
+- Reject silent-no-op ALTER keys and unsupported load.* properties (#62680)
+- Roll sample window before accumulating in checkDataQuality (#62636)
+- Use per-table publication instead of ALL TABLES for PostgreSQL CDC (#62526)
+- Support specifying offset for StreamingInsertJob create and alter (#62490)
+- Fix S3 offset and job statistics lost after FE checkpoint restart (#62449)
+- Fix NPE in StreamingInsertJob.replayOnCommitted during EditLog replay (#62416)
+- Cap auto-resume attempts and expose structured FailureReason (#62345)
+- Fix INSERT job statistics lost in show load after FE restart (#62331)
+- Fix invalid String.format pattern in NereidsStreamLoadTask (#62225)
+- Update flink cdc version for streaming job (#62212)
+- Return early for non-master stream load precommit (#62109)
+- Validate stream load content length before group commit (#62110)
+- Mask sensitive headers in stream load logs (#62108)
+- Reject invalid stream load tokens on commit and rollback (#62111)
+- Using memtable memory instead of load memory to calculate adaptive write buffer size (#62104)
+- Fix GenericPool reopen blocking 18min on stale TLS connections (#61951)
+- Fix IllegalMonitorStateException in routine load afterAborted when coordinate BE restarts (#61881)
+- Reduce template instantiation in scan_operator to improve compile time (#61227)
+- Support adaptive memtable write buffer size (#56948)
+- Remove NDEBUG for groupcommit's memory tracker (#56577)
+
+## Cloud Native
+- Preserve correct DST fold branch to go cross the transition point (#63034)
+- Clear warmup jobs on available backends (#62931)
+- Extract snapshot integration hooks (#62859)
+- Refresh event warmup backends (#62839)
+- Avoid missing result packet for query during master switch (#62721)
+- Fix redundant copy in collect_set merge (#62640)
+- Support IAM role auth in S3 filesystem (#62584)
+- Fix typo in different_serialize test data directory introduced by #59489 (#62480)
+- Fix race condition in Set operator runtime filter processing (#62434)
+- Enforce `final` on CRTP aggregate function derived classes to enable compiler devirtualization (#62433)
+- Support IAM Role for s3 client ut test (#62303)
+- Allocate fresh ExprId for constants when pushing project into Union (#62296)
+- Hide KV_TXN_MAYBE_COMMITTED from clients (#62244)
+- Treat JuiceFS (jfs://) as HDFS-compatible in FE/BE (#61706)
+- Merge ms and recycler http skeleton (#61502)
+
+## Lakehouse
+- Decouple JDBC catalog metadata name (#62806)
+- Fix iceberg & maxcompute p2 case. (#62483)
+- Educe template instantiations in datetime floor/ceil functions (#61515)
+
+## Security & Authentication
+- Restore _applied_rf_num update in late arrival path (#62872)
+- Support SSL and align MySQL CDC source with PG (#62700)
+- Fix empty workload_group value __internal_schema.audit_log (#62651)
+- Fix Ranger column-level privilege bypass when CTE combined (#61741)
+- Fix HTTP API authentication framework for admin operations (#60761)
+
+## Other
+- Fix TIMESTAMPTZ elapsed-time semantics to use UTC (#63161)
+- Correct Arrow UTF8/String size limit (#63137)
+- Remove useless if in `is_acting_on_a_slot` (#63095)
+- No longer throws exceptions when parse datetime failed in `from_olap_string` (#63035)
+- Remove datetime transfomers check in release mode (#63003)
+- Avoid formatting generated insert errors (#62982)
+- Doris compose supports docker compose v2 (#62851)
+- Preserve sign for negative sub-hour TIMESTAMPTZ offsets (#62823)
+- Fix -Wtype-limits error in VariantStatsCaculator (#62632)
+- Fix FE startup argument forwarding (#62587)
+- Fix wrong error message of insert overwrite (#62555)
+- License check (#62534)
+- Move report logic to pipeline fragment context to remove callback parameter from ctor (#62500)
+- Extract isDynamicScheduleTable method to reduce code duplication (#62477)
+- Set parallel_pipeline_task_num explicitly in test_hive_compress_type_large_data. (#62423)
+- Remove classhisto*=trace in JAVA_OPTS_FOR_JDK_17 to prevent printing class histogram in full gc (#62422)
+- Fix RuntimeFilter selectivity sampling_frequency lost during VExprContext recreation (#62355)
+- Close snapshot readers on re-prepare and harden REST error handling (#62337)
+- Remove FixedContainer optimization for StringValueSet (#62243)
+- Require exact match in DateTimeV2Type.acceptsType (#62201)
+- Remove io_helper helper indirection from BE cast paths (#62179)
+- Reduce hash join build template instantiations (#61349)
+- Optimize the compilation time of cast. (#61276)
+- Reduce window function template instantiations (#61232)
+- Reduce the compilation time of aggregate functions. (#61179)
+- FE startup fail due to websocket startup (#60369)
+- Support max/min agg functions for type_array (#58490)
+- Fix AdminCreateClusterSnapshotCommand (#58119)
+- Add a lambda functor version for array_sort (#57828)
+- Clone snapshot support absolute path file (#57685)
+- Show the snapshot count (#56491)
+- Move watcher.stop() into locked code block (#56462)
+- Process auto partition name when its length exceeds 50 (#56304)

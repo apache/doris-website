@@ -70,7 +70,7 @@ SELECT MILLISECOND_TIMESTAMP('1960-01-01 00:00:00 UTC');
 +---------------------------------------------------+
 | MILLISECOND_TIMESTAMP('1960-01-01 00:00:00 UTC') |
 +---------------------------------------------------+
-|                                  -315619200000000 |
+|                                     -315619200000 |
 +---------------------------------------------------+
 
 -- Input type is DATE, time part is automatically set to 00:00:00.000 (results are negative in East 8 time zone)

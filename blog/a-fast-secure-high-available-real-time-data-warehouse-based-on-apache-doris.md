@@ -147,4 +147,4 @@ Disaster recovery is crucial for the financial industry. The user leverages the 
 
 ## Conclusion
 
-We appreciate the user for their active [communication](/discord) with us along the way and are glad to see so many Apache Doris features fit in their needs. They are also planning on exploring federated query, compute-storage separation, and auto maintenance with Apache Doris. We look forward to more best practice and feedback from them.
+We appreciate the user for their active [communication](https://doris.apache.org/slack) with us along the way and are glad to see so many Apache Doris features fit in their needs. They are also planning on exploring federated query, compute-storage separation, and auto maintenance with Apache Doris. We look forward to more best practice and feedback from them.

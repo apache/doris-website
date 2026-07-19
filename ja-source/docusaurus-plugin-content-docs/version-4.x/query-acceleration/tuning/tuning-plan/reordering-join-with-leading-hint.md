@@ -18,7 +18,7 @@ Leading Hint機能により、ユーザーはクエリ内のtableの結合順序
 以下のクエリの場合：
 
 ```sql
-mysql> explain shape plan select from t1 join t2 on t1.c1 = t2.c2;
+mysql> explain shape plan select * from t1 join t2 on t1.c1 = t2.c2;
 +------------------------------------------------------------------------------+
 | _Explain_ String(Nereids Planner)                                              |
 +------------------------------------------------------------------------------+

@@ -2,13 +2,13 @@
 {
     "title": "ALTER WORKLOAD POLICY",
     "language": "en",
-    "description": "Modify the properties of a Workload Group. Currently, only property modifications are supported;"
+    "description": "Modify the properties of a Workload Policy. Currently, only property modifications are supported;"
 }
 ---
 
 ## Description
 
-Modify the properties of a Workload Group. Currently, only property modifications are supported; modifications to actions and conditions are not supported.
+Modify the properties of a Workload Policy. Currently, only property modifications are supported; modifications to actions and conditions are not supported.
 
 
 ## Syntax

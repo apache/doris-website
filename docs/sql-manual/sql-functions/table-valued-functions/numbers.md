@@ -14,7 +14,7 @@ Table function that generates a temporary table containing only one column with 
 ```sql
 NUMBERS(
     "number" = "<number>"
-    [, "<const_value>" = "<const_value>" ]
+    [, "const_value" = "<const_value>" ]
   );
 ```
 

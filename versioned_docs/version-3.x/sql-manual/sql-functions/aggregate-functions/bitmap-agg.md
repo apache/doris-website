@@ -31,6 +31,26 @@ Returns a BITMAP type value. Special cases:
 ## Example
 
 ```sql
+create table test_bitmap_agg(
+    id int,
+    k0 int,
+    k1 varchar(32),
+    k2 int,
+    k3 int,
+    k4 bigint,
+    k5 varchar(32)
+) properties('replication_num' = '1');
+insert into test_bitmap_agg values
+  (1, 10, '110', 11, 300, 10000000000, '0'),
+  (2, 20, '120', 21, 400, 20000000000, '200000000000000'),
+  (3, 30, '130', 31, 350, 30000000000, '300000000000000'),
+  (4, 40, '140', 41, 500, 40000000000, '18446744073709551616'),
+  (5, 50, '150', 51, 250, 50000000000, '18446744073709551615'),
+  (6, 60, '160', 61, 600, 60000000000, '-1'),
+  (7, 60, '160', 120, 600, 60000000000, NULL);
+```
+
+```sql
 select * from test_bitmap_agg;
 ```
 

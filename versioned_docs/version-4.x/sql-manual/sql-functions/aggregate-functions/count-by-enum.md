@@ -67,6 +67,8 @@ Description: The return value is a JSON array string, and the order of internal 
 
 ## Example
 
+Because the order of JSON objects in the result is not stable, the result may be:
+
 ```sql
 CREATE TABLE count_by_enum_test(
                                    `id` varchar(1024) NULL,

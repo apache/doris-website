@@ -1,224 +1,312 @@
 ---
 {
-    "title": "Managing Compute Groups",
+    "title": "Compute Group Management: Create, Authorize, Switch, and Scale Operations Guide",
+    "sidebar_label": "Manage Compute Groups",
     "language": "en",
-    "description": "In a compute-storage decoupled architecture, one or more compute nodes (BE) can be grouped into a Compute Group."
+    "description": "Describes all management operations for compute groups in a compute-storage decoupled architecture, including creation, permission granting, default group configuration, switching, and scaling.",
+    "keywords": ["compute group", "Compute Group", "compute-storage decoupled", "compute group authorization", "compute group scaling", "read-write separation", "load balancing"]
 }
 ---
 
-In a compute-storage decoupled architecture, one or more compute nodes (BE) can be grouped into a Compute Group. This document describes how to use compute groups, including operations such as:
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Cluster management / Resource isolation / Load distribution -->
 
-- Viewing all compute groups
-- Granting compute group access
-- Binding compute groups at the user level (`default_compute_group`) for user-level isolation
+In a compute-storage decoupled architecture, one or more compute nodes (BE) can be grouped into a **compute group**. This document describes the complete set of management operations for compute groups, including viewing, adding, authorizing, setting the default group, switching, and scaling.
 
-*Note*
-In versions prior to 3.0.2, this was referred to as a Compute Cluster.
+:::note Version Note
+In versions before 3.0.2, compute groups were called **compute clusters**.
+:::
 
-## Compute Group Usage Scenarios
+## Compute Group Use Cases
 
-In a multi-compute group architecture, you can group one or more stateless BE nodes into compute clusters. By using compute cluster specification statements (use @<compute_group_name>), you can allocate specific workloads to specific compute clusters, achieving physical isolation of multiple import and query workloads.
+<!-- Knowledge type: Architecture selection decision -->
+<!-- Applicable scenarios: Multi-tenant isolation / Read-write separation / Load isolation -->
 
-Assume there are two compute clusters: C1 and C2.
+In a multi-compute-group architecture, you can use the `USE @<compute_group_name>` statement to route specific workloads to a designated compute group, achieving physical isolation across different workload types.
 
-- **Read-Read Isolation**: Before initiating two large queries, use `use @c1` and `use @c2` respectively to ensure that the queries run on different compute nodes. This prevents resource contention (CPU, memory, etc.) when accessing the same dataset.
+The following scenarios assume two compute groups, C1 and C2:
 
-- **Read-Write Isolation**: Doris data imports consume substantial resources, especially in scenarios with large data volumes and high-frequency imports. To avoid resource contention between queries and imports, you can use `use @c1` and `use @c2` to specify that queries execute on C1 and imports on C2. Additionally, the C1 compute cluster can access newly imported data in the C2 compute cluster.
-
-- **Write-Write Isolation**: Similar to read-write isolation, imports can also be isolated from each other. For example, when the system has both high-frequency small imports and large batch imports, batch imports typically take longer and have higher retry costs, while high-frequency small imports are quick with lower retry costs. To prevent small imports from interfering with batch imports, you can use `use @c1` and `use @c2` to specify small imports to execute on C1 and batch imports on C2.
+| Scenario | Description | How to Operate |
+| :--- | :--- | :--- |
+| **Read-read isolation** | Two large queries run on separate compute nodes, avoiding CPU/memory resource contention | Query 1 uses `USE @c1`; Query 2 uses `USE @c2` |
+| **Read-write isolation** | Avoids resource contention between ingestion and queries; C1 can access data newly ingested in C2 | Queries use `USE @c1`; ingestion uses `USE @c2` |
+| **Write-write isolation** | High-frequency small ingestion and large-batch ingestion run separately to avoid mutual interference | Small ingestion uses `USE @c1`; batch ingestion uses `USE @c2` |
 
 ## Default Compute Group Selection Mechanism
 
-When a user has not explicitly [set a default compute group](#setting-default-compute-group), the system will automatically select a compute group with Active BE that the user has usage permissions for. Once the default compute group is determined in a specific session, it will remain unchanged during that session unless the user explicitly changes the default setting.
+<!-- Knowledge type: System behavior description -->
 
-In different sessions, if the following situations occur, the system may automatically change the user's default compute group:
+When the user has not explicitly [set a default compute group](#set-the-default-compute-group), the system automatically selects a compute group that meets the following conditions:
 
-- The user has lost usage permissions for the default compute group selected in the last session
-- A compute group has been added or removed
-- The previously selected default compute group no longer has Alive BE
+- The compute group has at least one live compute node.
+- The current user has the USAGE_PRIV permission on that compute group.
 
-Situations one and two will definitely lead to a change in the automatically selected default compute group, while situation three may lead to a change.
+Within the same session, the default compute group remains unchanged unless the user explicitly changes it. Across sessions, the system may automatically switch the default compute group if any of the following conditions occur:
 
-## Viewing All Compute Groups
+| Trigger Condition | Always Switches |
+| :--- | :---: |
+| The user loses USAGE_PRIV on the previously selected compute group | Yes |
+| A compute group is added or removed | Yes |
+| The previously selected compute group no longer has live compute nodes | Possibly |
 
-Use the `SHOW COMPUTE GROUPS` command to view all compute groups in the current repository. The returned results will display different content based on the user's permission level:
+## View All Compute Groups
 
-- Users with `ADMIN` privileges can view all compute groups
-- Regular users can only view compute groups for which they have usage permissions (USAGE_PRIV)
-- If a user doesn't have usage permissions for any compute groups, an empty result will be returned
+<!-- Knowledge type: Operational steps -->
 
+**Purpose**: View all compute groups in the current repository.
+
+**Command**:
 
 ```sql
 SHOW COMPUTE GROUPS;
 ```
 
-## Adding Compute Groups
+**Description**: The returned results vary based on the user's permission level:
 
-Managing compute groups requires `OPERATOR` privilege, which controls node management permissions. For more details, please refer to [Privilege Management](../sql-manual/sql-statements/account-management/GRANT-TO). By default, only the root account has the `OPERATOR` privilege, but it can be granted to other accounts using the `GRANT` command.
-To add a BE and assign it to a compute group, use the [Add BE](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) command. For example:
+- Users with `ADMIN` permission can view all compute groups.
+- Regular users can only view the compute groups for which they have `USAGE_PRIV` permission.
+- If the user has no USAGE_PRIV on any compute group, the result is empty.
+
+## Add a Compute Group
+
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Cluster initialization / Adding compute resources -->
+
+**Prerequisites**: The `OPERATOR` permission (node management permission) is required. By default, only the root account has this permission. You can grant it to other accounts using the `GRANT` command. See [Permission Management](../sql-manual/sql-statements/account-management/GRANT-TO) for details.
+
+**Purpose**: Add a BE node and assign it to a compute group.
+
+**Command (specify a compute group)**:
 
 ```sql
 ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");
 ```
 
-The above sql will add `host:9050` to compute group `new_group`. The BE will be added to compute group `default_compute_group` if you omit PROPERTIES statement, for example:
+**Command (use the default compute group)**: If no compute group is specified, the node joins `default_compute_group` by default:
 
 ```sql
 ALTER SYSTEM ADD BACKEND 'host:9050';
 ```
 
-## Granting Compute Group Access
-Prerequisite: The current operating user has' ADMIN 'permission, or the current user belongs to the admin role.
+See the [ADD BACKEND SQL Reference](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) for details.
+
+## Grant Compute Group Access
+
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Multi-user permission management -->
+
+**Prerequisites**: The current user has `ADMIN` permission, or belongs to the admin role.
+
+**Purpose**: Grant a specified user the USAGE_PRIV permission on a compute group.
+
+**Command**:
 
 ```sql
-GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user}
+GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user};
 ```
 
-## Revoking Compute Group Access
-Prerequisite: The current operating user has' ADMIN 'permission, or the current user belongs to the admin role.
+## Revoke Compute Group Access
+
+<!-- Knowledge type: Operational steps -->
+
+**Prerequisites**: The current user has `ADMIN` permission, or belongs to the admin role.
+
+**Purpose**: Revoke a specified user's USAGE_PRIV permission on a compute group.
+
+**Command**:
 
 ```sql
-REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user}
+REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user};
 ```
 
-## Setting Default Compute Group 
+## Set the Default Compute Group
 
-To set the default compute group for the current user(This operation requires the current user to already have permission to use the computing group):
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: User-level resource isolation -->
+
+### Set for the Current User
+
+**Prerequisites**: The current user already has USAGE_PRIV on the target compute group.
 
 ```sql
 SET PROPERTY 'default_compute_group' = '{clusterName}';
 ```
 
-To set the default compute group for other users (this operation requires Admin privileges):
+### Set for Another User
+
+**Prerequisites**: The current user has Admin permission.
 
 ```sql
 SET PROPERTY FOR {user} 'default_compute_group' = '{clusterName}';
 ```
 
-To view the current user's default compute group, the value of `default_compute_group` in the returned result is the default compute group:
+### View the Default Compute Group
+
+View the default compute group for the current user. The value of `default_compute_group` in the result is the default compute group:
 
 ```sql
 SHOW PROPERTY;
 ```
 
-To view the default compute group of other users, This operation requires the current user to have admin privileges, and the value of `default_compute_group` in the returned result is the default compute group:
+View the default compute group for another user (requires admin permission):
 
 ```sql
 SHOW PROPERTY FOR {user};
 ```
 
-To view all available compute groups in the current repository:
+### Permission Description
 
-```sql
-SHOW COMPUTE GROUPS;
-```
+| User Role | Operable Scope |
+| :--- | :--- |
+| Admin user (e.g., `CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin"`) | Can set the default compute group for themselves and other users; can view the `PROPERTY` of themselves and other users |
+| Regular user (e.g., `CREATE USER jack1 IDENTIFIED BY '123456'`) | Can only set the default compute group for themselves; can only view their own `PROPERTY`; cannot view all compute groups (requires `GRANT ADMIN` permission) |
 
-:::info Note
+:::caution Note
 
-- If the current user has an Admin role, for example: `CREATE USER jack IDENTIFIED BY '123456' DEFAULT ROLE "admin"`, then:
-  - They can set the default compute group for themselves and other users;
-  - They can view their own and other users' `PROPERTY`.
-- If the current user does not have an Admin role, for example: `CREATE USER jack1 IDENTIFIED BY '123456'`, then:
-  - They can set the default compute group for themselves;
-  - They can view their own `PROPERTY`;
-  - They cannot view all compute groups, as this operation requires `GRANT ADMIN` privileges.
-- If the current user has not configured a default compute group, the existing system will trigger an error when performing data read/write operations. To resolve this issue, the user can execute the `use @cluster` command to specify the compute group used by the current context, or use the `SET PROPERTY` statement to set the default compute group.
-- If the current user has configured a default compute group, but that cluster is subsequently deleted, an error will also be triggered during data read/write operations. The user can execute the `use @cluster` command to re-specify the compute group used by the current context, or use the `SET PROPERTY` statement to update the default cluster settings.
+- If the current user has not configured a default compute group, an error is triggered when performing data read or write operations. Use the `USE @cluster` command to specify the compute group for the current session, or use the `SET PROPERTY` statement to set a default compute group.
+- If the current user has configured a default compute group but that compute group is subsequently deleted, an error is also triggered when performing data read or write operations. Use the `USE @cluster` command to reassign a compute group, or use `SET PROPERTY` to update the default compute group setting.
 
 :::
 
+## Switch Compute Groups
 
-## Switching Compute Groups
+<!-- Knowledge type: Operational steps -->
 
-Users can specify the database and compute group to use in a compute-storage decoupled architecture.
+**Purpose**: Specify the database and compute group to use in the current session under a compute-storage decoupled architecture.
 
-**Syntax**
+**Syntax**:
 
 ```sql
 USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 ```
 
-If the database or compute group name contains reserved keywords, the corresponding name must be enclosed in backticks ```.
- 
-## Scaling Compute Groups
+**Description**: If a database name or compute group name contains a reserved keyword, enclose the relevant name in backticks (`` ` ``).
 
-You can scale compute groups by adding or removing BE using `ALTER SYSTEM ADD BACKEND` and `ALTER SYSTEM DECOMMISION BACKEND`.
+## Scale Compute Groups
+
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Elastic scaling / Capacity planning -->
+
+Use the following commands to add or remove BE nodes and scale a compute group:
+
+- **Scale out**: `ALTER SYSTEM ADD BACKEND`
+- **Scale in**: `ALTER SYSTEM DECOMMISSION BACKEND`
 
 ### Load Rebalancing After Scaling
 
-Cloud rebalance is a load balancing operation in Doris's compute-storage decoupled architecture. It is used to rebalance read and write traffic across the compute group after scaling (adding or removing) backend nodes in different Compute Groups. A node that has been offline for an extended period is considered as removed.
+Cloud Rebalance is the load balancing mechanism in Doris's compute-storage decoupled architecture. When BE nodes in a compute group are scaled (a node that has been offline for a long time is treated as a scale-in event), the system automatically rebalances the read and write traffic distribution across the cluster.
 
 #### Balance Strategy Types
 
-:::caution
+<!-- Knowledge type: Configuration parameters -->
 
-The `balance_type` feature is supported starting from Doris 3.1.3 and Doris 4.0.2.  
-Prior to these versions, only the FE global configuration `enable_cloud_warm_up_for_rebalance` was available to control whether warm up tasks are executed during rebalance.
+:::caution Version Support
+
+The `balance_type` feature is supported starting from **Doris 3.1.3** and **Doris 4.0.2**. Before these versions, only the FE global configuration `enable_cloud_warm_up_for_rebalance` was available to control whether warm-up tasks are executed during rebalance.
 
 :::
 
-The following table describes three strategy types, using the example of adding nodes to a Compute Group:
+The following example describes the three strategy types using a scale-out scenario:
 
-| Type | Time to Service | Performance Fluctuation | Technical Principle | Use Cases |
-| :--- | :---: | :---: | :-- | :-- |
-  | `without_warmup` | Fastest | Highest fluctuation | FE directly modifies shard mapping; first read/write has no file cache and needs to fetch from S3 | Scenarios requiring quick node deployment with low sensitivity to performance jitter |
-| `async_warmup` | Faster | Possible cache miss | Issues warm up tasks, modifies mapping after success or timeout; attempts to pull file cache to new BE during mapping switch, some scenarios may still miss on first read | General scenarios with acceptable performance |
-| `sync_warmup` | Slower | Minimal cache miss | Issues warm up tasks, FE modifies mapping only after task completion, ensuring cache migration | Scenarios with extremely high performance requirements after scaling, requiring file cache to exist on new nodes |
+| Strategy Type | Time Until New Node Is Ready | Performance Impact | Technical Principle | Applicable Scenarios |
+| :--- | :---: | :---: | :--- | :--- |
+| `without_warmup` | Fastest | Largest | FE directly updates the shard mapping; the first read/write has no file cache and must fetch data from S3 | Suitable when the new node must come online quickly and performance fluctuation is acceptable |
+| `async_warmup` | Faster | Possible cache misses | A warm-up task is issued; the mapping is updated after the task succeeds or times out; the system tries to populate the file cache during the mapping switch, but some first reads may still miss | General purpose; acceptable performance |
+| `sync_warmup` | Slower | Virtually no cache misses | A warm-up task is issued; FE modifies the mapping only after confirming the task is complete, ensuring cache migration is finished | Suitable when high performance is required after scaling and new nodes must have a populated file cache |
 
-#### User Interface
+#### Configuration
 
 ##### Global Default Balance Type
 
-Set the global default value through FE configuration (fe.conf):
+Set the global default value in the FE configuration file (`fe.conf`):
 
 ```
-cloud_default_rebalance_type = "async_warmup"
+cloud_warm_up_for_rebalance_type = "async_warmup"
 ```
 
 ##### Compute Group-Level Configuration
 
-You can configure balance type for each Compute Group separately:
+You can configure the balance type for each compute group individually:
 
 ```sql
 ALTER COMPUTE GROUP cg1 PROPERTIES("balance_type"="async_warmup");
 ```
 
-##### Configuration Rules
+##### Configuration Priority Rules
 
-1. If a Compute Group does not have `balance_type` configured, it uses the global default value `async_warmup`.
-2. If a Compute Group has `balance_type` configured, that configuration takes priority during rebalance.
+1. If a compute group has no `balance_type` configured, the global default value `async_warmup` is used.
+2. If a compute group has a `balance_type` configured, that group's configuration takes priority when rebalance is executed.
 
-#### FAQ
+## Rename a Compute Group
 
-##### How to View and Modify Global Rebalance Type?
+<!-- Knowledge type: Operational steps -->
 
-- **View**: Execute `ADMIN SHOW FRONTEND CONFIG LIKE "cloud_default_rebalance_type";`
-- **Modify**: Execute `ADMIN SET FRONTEND CONFIG ("cloud_warm_up_for_rebalance_type" = "without_warmup");` (takes effect without restarting FE)
+**Purpose**: Rename an existing compute group to a new name.
 
-##### How to Query Compute Group Balance Type?
+**Command**:
 
-Execute `SHOW COMPUTE GROUPS;`. The `properties` column in the result contains Compute Group attribute information, including the `balance_type` configuration.
+```sql
+ALTER SYSTEM RENAME COMPUTE GROUP <old_name> <new_name>;
+```
 
-##### How to Determine if the Cluster is in a Stable Tablet State?
+:::caution Note
 
-1. **Check via `SHOW BACKENDS`**: Check if the tablet counts across BEs are close. Reference calculation range:  
-   ```
-   (Total tablets in cluster / Compute Group BE count) * 0.95 
-   ~ 
-   (Total tablets in cluster / Compute Group BE count) * 1.05
-   ```  
-   The value 0.05 is the default value of the FE configuration `cloud_rebalance_percent_threshold`. To make tablet distribution more uniform across BEs in the Compute Group, you can reduce this configuration value.
+After renaming, user permissions and default compute group settings associated with the original compute group name (`old_name`) are **not** automatically updated to the new name (`new_name`). An account with administrator privileges must manually re-grant permissions. This behavior is consistent with the MySQL permission system.
 
-2. **Observe via FE Metrics**: Check the `doris_fe_cloud_.*_balance_num` series of metrics in FE metrics. If there is no change for an extended period, it indicates the Compute Group has reached a balanced state. It is recommended to configure these metrics on a monitoring dashboard for continuous observation and judgment.  
-   ```bash
-   curl "http://feip:fe_http_port/metrics" | grep '_balance_num'
-   ```
+:::
 
+## FAQ
 
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenarios: Troubleshooting / Permission issues / Performance tuning -->
 
-## Renaming Compute Group
+### How Do I View and Modify the Global Rebalance Type?
 
-You can use the `ALTER SYSTEM RENAME COMPUTE GROUP <old_name> <new_name>` command to rename an existing compute group. Please refer to the SQL Manual on [Renaming Compute Groups](../sql-manual/sql-statements/cluster-management/instance-management/ALTER-SYSTEM-RENAME-COMPUTE-GROUP).
+- **View**:
+    ```sql
+    ADMIN SHOW FRONTEND CONFIG LIKE "cloud_warm_up_for_rebalance_type";
+    ```
+- **Modify** (takes effect without restarting FE):
+    ```sql
+    ADMIN SET FRONTEND CONFIG ("cloud_warm_up_for_rebalance_type" = "without_warmup");
+    ```
 
-Note
-After renaming a compute group, users who had permissions for the old name (old_name) or had set the old name as the default compute group (default_compute_group) will not have their permissions automatically updated to the new name (new_name). Permissions need to be reset by an account with administrative privileges. This is consistent with the permission system of MySQL databases.
+### How Do I Query the Balance Type of a Compute Group?
+
+Run `SHOW COMPUTE GROUPS;`. The `properties` column in the result contains the attributes of each compute group, where you can view the `balance_type` configuration.
+
+### How Do I Determine Whether the Cluster Is in a Stable Tablet State?
+
+**Method 1: Check via `SHOW BACKENDS`**
+
+Check whether the tablet count across BE nodes is approximately balanced. Reference range:
+
+```
+(total tablets in cluster / number of BEs in Compute Group) × 0.95
+~
+(total tablets in cluster / number of BEs in Compute Group) × 1.05
+```
+
+Here 0.05 is the default value of the FE configuration item `cloud_rebalance_percent_threshold`. To make the tablet distribution across BE nodes more uniform, reduce this configuration value.
+
+**Method 2: Observe via FE Metrics**
+
+Check the `doris_fe_cloud_.*_balance_num` metrics series in the FE metrics. If the values remain unchanged for an extended period, the compute group has reached a balanced state. It is recommended to configure these metrics in your monitoring dashboard for continuous observation:
+
+```bash
+curl "http://feip:fe_http_port/metrics" | grep '_balance_num'
+```
+
+### What Should I Do If a "No Default Compute Group Configured" Error Occurs During Data Read/Write?
+
+Resolve the issue using one of the following methods:
+
+1. Use the `USE @cluster` command to temporarily specify the compute group for the current session.
+2. Use `SET PROPERTY 'default_compute_group' = '{clusterName}'` to permanently set the default compute group.
+
+### What Should I Do If an Error Occurs After the Default Compute Group Is Deleted?
+
+After a compute group is deleted, users that depend on that compute group encounter errors during read/write operations. Resolution options:
+
+1. Use the `USE @cluster` command to reassign a compute group for the current session.
+2. Use `SET PROPERTY` to update the default compute group to another valid compute group.

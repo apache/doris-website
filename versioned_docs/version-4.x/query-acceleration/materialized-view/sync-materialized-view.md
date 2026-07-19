@@ -1,140 +1,208 @@
 ---
 {
-    "title": "Sync-Materialized View",
+    "title": "Sync Materialized View",
     "language": "en",
-    "description": "A synchronous materialized view is a special type of table in Doris that stores pre-computed data sets based on defined SELECT statements."
+    "description": "How do you use Doris sync materialized views to accelerate aggregation, prefix index matching, and expression computation? This article covers the scenarios, syntax, hit verification, and common questions.",
+    "keywords": ["Doris sync materialized view", "materialized view", "query acceleration", "bitmap_union", "prefix index", "aggregation precomputation"]
 }
 ---
 
-## What is a Synchronous Materialized View
+<!-- Knowledge type: concept + how-to guide -->
+<!-- Applicable scenarios: aggregation precomputation, prefix index matching, prefiltering, expression precomputation -->
 
-A synchronous materialized view is a special type of table in Doris that stores pre-computed data sets based on defined SELECT statements. Doris automatically maintains the data in synchronous materialized views, ensuring that any new imports or deletions in the base table are reflected in the materialized view in real-time, maintaining data consistency without requiring any additional manual maintenance. When querying, Doris automatically selects the optimal materialized view and retrieves data directly from it.
+A sync materialized view (Sync Materialized View) is a special table in Doris that precomputes and stores the result of a SELECT statement on a base table. Doris maintains it automatically, keeps it strongly consistent with the base table on write, and automatically matches the optimal view to accelerate reads at query time.
+
+## Usage Notes
+
+Before using a sync materialized view, confirm the following points:
+
+- Targets only **single-table** SELECT statements; does not involve JOIN, HAVING, LIMIT, or LATERAL VIEW
+- The SELECT list must not contain auto-increment columns, constants, duplicate expressions, window functions, or VARBINARY type columns
+- Aggregate functions in the SELECT list must be the root expression (`sum(a + 1)` is supported, `sum(a) + 1` is not)
+- Materialized view column names must not conflict with base table columns or columns of other views (you can use a `col as xxx` alias to avoid this)
+- The impact of the number of views on a single table on load performance has been evaluated
+- On the Unique Key model, the view can only change column order; it cannot perform aggregation
+
+## What Is a Sync Materialized View
+
+<!-- Knowledge type: concept -->
+
+A sync materialized view is a special table in Doris that stores a precomputed dataset (based on a defined SELECT statement). Doris automatically maintains the data of the sync materialized view. Whether data is added or deleted, Doris ensures that the base table and the materialized view table are updated synchronously and remain consistent. Only after the synchronization completes does the related command finish, and no additional manual maintenance is required. At query time, Doris automatically matches the optimal materialized view and reads data directly from it.
 
 ## Applicable Scenarios
 
-- Accelerating time-consuming aggregation operations
+<!-- Applicable scenarios: when to choose a sync materialized view -->
 
-- Queries requiring prefix index matching
-
-- Reducing the amount of data scanned by pre-filtering
-
-- Speeding up queries by pre-computing complex expressions
+| Scenario | Description |
+| --- | --- |
+| Accelerate aggregation | Precompute time-consuming aggregations such as SUM/COUNT/BITMAP_UNION |
+| Match different prefix indexes | When the query filter columns do not match the base table's prefix index, build a view prefixed by the filter columns |
+| Prefilter to reduce scans | Use a WHERE condition to filter early and shrink the data volume |
+| Precompute complex expressions | Precompute complex expressions such as `abs(k1)+k2+1` and reuse them directly at query time |
 
 ## Limitations
 
-- Synchronous materialized views only support SELECT statements for a single table, including WHERE, GROUP BY, and ORDER BY clauses, but not JOIN, HAVING, LIMIT clauses, LATERAL VIEW.
+<!-- Knowledge type: constraints -->
 
-- Unlike asynchronous materialized views, synchronous materialized views cannot be queried directly.
+| Category | Limitation |
+| --- | --- |
+| Syntax scope | Only single-table SELECT is supported, with WHERE/GROUP BY/ORDER BY; JOIN, HAVING, LIMIT, and LATERAL VIEW are not supported |
+| Query method | You cannot directly query a sync materialized view (different from async materialized views) |
+| SELECT list | Cannot contain auto-increment columns, constants, duplicate expressions, or window functions; cannot contain VARBINARY type columns |
+| Column name requirements | Must not duplicate names in the base table or other materialized views on the base table; use an alias (`col as xxx`) to avoid conflicts |
+| Aggregate functions | Must be the root expression (`sum(a) + 1` is not supported, `sum(a + 1)` is supported); no other non-aggregate expression is allowed after an aggregate function (`SELECT x, sum(a)` is allowed, `SELECT sum(a), x` is not) |
+| Delete restriction | If the column referenced by a DELETE condition exists in the materialized view, drop the view first before deleting the data |
+| Load performance | Too many materialized views on a single table slow down loads, because the views are updated together with the base table |
+| Data model | A materialized view on the Unique Key model can only change column order; it cannot perform aggregation |
 
-- The SELECT list cannot include auto-increment columns, constants, duplicate expressions, or window functions.
+## Using a Sync Materialized View
 
-- The SELECT list cannot include VARBINARY type column.
+Doris provides a complete set of DDL statements for materialized views, including create, view, and drop. The following example shows how to use a materialized view to accelerate aggregation.
 
-- The column names in the select list of a sync materialized view must not be the same as any existing columns in the base table, nor duplicate the column names of other sync materialized views on the same base table. You can avoid name conflicts by specifying aliases (e.g., col as xxx).
+### Prepare Base Table Data
 
-- If the SELECT list contains aggregation functions, these must be root expressions (e.g., `sum(a + 1)` is supported, but `sum(a) + 1` is not), and no non-aggregation function expressions can follow the aggregation function (e.g., `SELECT x, sum(a)` is allowed, but `SELECT sum(a), x` is not).
-
-- If the condition column for a DELETE statement exists in the materialized view, the DELETE operation cannot proceed. If data deletion is necessary, the materialized view must be dropped first.
-
-- Excessive materialized views on a single table can impact import efficiency. When importing data, both the materialized views and the base table are updated synchronously. Excessive materialized views on a table can slow down imports, similar to importing data into multiple tables simultaneously.
-
-- Materialized views on Unique Key data models can only reorder columns and do not support aggregation. Therefore, coarse-grained aggregation operations cannot be performed through materialized views on Unique Key models.
-
-## Using Materialized Views
-
-Doris provides a comprehensive set of DDL syntax for materialized views, including creation, viewing, and deletion. Below is an example demonstrating how to use materialized views to accelerate aggregation calculations. Suppose a user has a sales record detail table that stores transaction IDs, salespersons, stores, sale dates, and amounts. The table creation and data insertion statements are as follows:
+Suppose a user has a sales detail table that records the transaction ID, salesperson, store, sale time, and amount of each transaction.
 
 ```sql
--- Create a test_db  
-create database test_db;  
-use test_db;  
-  
--- Create table  
-create table sales_records  
-(  
-    record_id int,   
-    seller_id int,   
-    store_id int,   
-    sale_date date,   
-    sale_amt bigint  
-)   
-distributed by hash(record_id)   
-properties("replication_num" = "1");  
-  
--- Insert data  
+-- Create a test_db
+create database test_db;
+use test_db;
+
+-- Create the table
+create table sales_records
+(
+    record_id int, 
+    seller_id int, 
+    store_id int, 
+    sale_date date, 
+    sale_amt bigint
+) 
+distributed by hash(record_id) 
+properties("replication_num" = "1");
+
+-- Insert data
 insert into sales_records values(1,1,1,"2020-02-02",1), (1,1,1,"2020-02-02",2);
 ```
 
-### Creating a Materialized View
+### Create a Materialized View
 
-If users frequently need to analyze sales volumes by different stores, they can create a materialized view for the `sales_records` table, grouped by store ID and summing sales amounts for each store. The creation statement is as follows:
+**Goal**: Create a pre-aggregated view for queries that frequently analyze sales by store.
+
+**Command**:
 
 ```sql
-create materialized view store_amt as   
+create materialized view store_amt as 
 select store_id as store_id_, sum(sale_amt) from sales_records group by store_id;
 ```
 
-### Checking if the Materialized View is Created
+**Description**: This view groups by `store_id` and sums `sale_amt` for each store, accelerating aggregation queries on the store dimension.
 
-Since creating a materialized view is an asynchronous operation, users need to check the status of the materialized view creation task asynchronously after submitting it. The command is as follows:
+### Check Whether the Materialized View Is Created
+
+**Goal**: Creating a materialized view is asynchronous, so you need to confirm the task status.
+
+**Command**:
 
 ```sql
 show alter table materialized view from test_db;
 ```
 
-The output will show all materialized view creation tasks for that database. A sample output is:
+**Description**: The result shows all materialized view creation tasks for this database. Example output:
 
 ```sql
-+--------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+----------+------+----------+---------+  
-| JobId  | TableName     | CreateTime          | FinishTime          | BaseIndexName | RollupIndexName | RollupId | TransactionId | State    | Msg  | Progress | Timeout |  
-+--------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+----------+------+----------+---------+  
-| 494349 | sales_records | 2020-07-30 20:04:56 | 2020-07-30 20:04:57 | sales_records | store_amt       | 494350   | 133107        | FINISHED |      | NULL     | 2592000 |  
++--------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+----------+------+----------+---------+
+| JobId  | TableName     | CreateTime          | FinishTime          | BaseIndexName | RollupIndexName | RollupId | TransactionId | State    | Msg  | Progress | Timeout |
++--------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+----------+------+----------+---------+
+| 494349 | sales_records | 2020-07-30 20:04:56 | 2020-07-30 20:04:57 | sales_records | store_amt       | 494350   | 133107        | FINISHED |      | NULL     | 2592000 |
 +--------+---------------+---------------------+---------------------+---------------+-----------------+----------+---------------+----------+------+----------+---------+
 ```
 
-The `State` column indicates the status. When the state changes to `FINISHED`, the materialized view is successfully created.
+Key field descriptions:
 
-### Canceling Materialized View Creation
+| Field | Meaning |
+| --- | --- |
+| TableName | The source table of the materialized view |
+| RollupIndexName | The name of the materialized view |
+| State | Task state. `FINISHED` means the view was created successfully and can be matched automatically by queries |
 
-If the background asynchronous task for creating the materialized view has not yet completed, it can be canceled with the following command:
+### Cancel Creation of a Materialized View
+
+**Goal**: Cancel the creation task while the background asynchronous task is still running.
+
+**Command**:
 
 ```sql
 cancel alter table materialized view from test_db.sales_records;
 ```
 
-If the materialized view has already been created, it cannot be canceled, but it can be deleted using the DROP command.
+**Description**: If the materialized view has already been created, this command cannot cancel the creation, but you can drop the materialized view with the drop command.
 
-### Viewing the Materialized View Structure
+### View the Schema of a Materialized View
 
-The structure of all materialized views created on a target table can be viewed using the following command:
+**Goal**: View all materialized views on the target table and their schemas.
+
+**Command**:
 
 ```sql
 desc sales_records all;
 ```
 
-### Viewing the Creation Statement of a Materialized View
+**Description**: The output is as follows:
 
-The creation statement for a materialized view can be viewed with the following command:
+```sql
++---------------+---------------+---------------------+--------+--------------+------+-------+---------+-------+---------+------------+-------------+
+| IndexName     | IndexKeysType | Field               | Type   | InternalType | Null | Key   | Default | Extra | Visible | DefineExpr | WhereClause |
++---------------+---------------+---------------------+--------+--------------+------+-------+---------+-------+---------+------------+-------------+
+| sales_records | DUP_KEYS      | record_id           | INT    | INT          | Yes  | true  | NULL    |       | true    |            |             |
+|               |               | seller_id           | INT    | INT          | Yes  | true  | NULL    |       | true    |            |             |
+|               |               | store_id            | INT    | INT          | Yes  | true  | NULL    |       | true    |            |             |
+|               |               | sale_date           | DATE   | DATEV2       | Yes  | false | NULL    | NONE  | true    |            |             |
+|               |               | sale_amt            | BIGINT | BIGINT       | Yes  | false | NULL    | NONE  | true    |            |             |
+|               |               |                     |        |              |      |       |         |       |         |            |             |
+| store_amt     | AGG_KEYS      | mv_store_id         | INT    | INT          | Yes  | true  | NULL    |       | true    | `store_id` |             |
+|               |               | mva_SUM__`sale_amt` | BIGINT | BIGINT       | Yes  | false | NULL    | SUM   | true    | `sale_amt` |             |
++---------------+---------------+---------------------+--------+--------------+------+-------+---------+-------+---------+------------+-------------+
+```
+
+You can see that `sales_records` has a materialized view named `store_amt`, which is the view created in the previous step.
+
+### View the CREATE Statement of a Materialized View
+
+**Goal**: Query the original DDL of a materialized view.
+
+**Command**:
 
 ```sql
 show create materialized view store_amt on sales_records;
 ```
 
-### Querying Materialized Views
-
-Once a materialized view is created, when users query sales volumes for different stores, Doris will directly read the aggregated data from the newly created materialized view `store_amt`, thereby enhancing query efficiency. Users still specify the `sales_records` table in their queries, for example:
+**Description**: The output is as follows:
 
 ```sql
-SELECT store_id, SUM(sale_amt) FROM sales_records GROUP BY store_id;
++---------------+-----------+------------------------------------------------------------------------------------------------------------+
+| TableName     | ViewName  | CreateStmt                                                                                                 |
++---------------+-----------+------------------------------------------------------------------------------------------------------------+
+| sales_records | store_amt | create materialized view store_amt as select store_id, sum(sale_amt) from sales_records group by store_id |
++---------------+-----------+------------------------------------------------------------------------------------------------------------+
 ```
 
-The above query will automatically match the `store_amt` materialized view. Users can use the following command to verify whether the current query has matched an appropriate materialized view.
+### Query the Materialized View
+
+**Goal**: Queries still target the base table, and Doris automatically rewrites them to use the materialized view.
+
+**Command**:
 
 ```sql
-EXPLAIN SELECT store_id, SUM(sale_amt) FROM sales_records GROUP BY store_id;
+select store_id, sum(sale_amt) from sales_records group by store_id;
 ```
 
-The result is as follows:
+The query above is automatically matched to `store_amt`. You can use the `EXPLAIN` command to verify whether the current query hits the materialized view:
+
+```sql
+explain select store_id, sum(sale_amt) from sales_records group by store_id;
+```
+
+**Description**: The result is as follows:
 
 ```sql
 +------------------------------------------------------------------------+
@@ -207,54 +275,59 @@ The result is as follows:
 +------------------------------------------------------------------------+
 ```
 
-`MaterializedViewRewriteSuccessAndChose` displays the materialized view that was successfully matched, as shown in the following example:
+`MaterializedViewRewriteSuccessAndChose` shows the materialized views that were successfully hit. A specific example:
 
 ```sql
-+------------------------------------------------------------------------+  
++------------------------------------------------------------------------+
 | MaterializedViewRewriteSuccessAndChose:                                |  
-|   internal.test_db.sales_records.store_amt chose,                      |  
+|   internal.test_db.sales_records.store_amt chose,                      |
 +------------------------------------------------------------------------+
 ```
 
-The above content indicates that the query successfully matched the materialized view named `store_amt`. It's worth noting that if there is no data in the target table, the materialized view may not be hit.
+The output above indicates that the query successfully hit the materialized view named `store_amt`. Note that if the target table contains no data, the materialized view may not be hit.
 
-Detailed explanations on MATERIALIZATIONS:
+#### MATERIALIZATIONS Field Descriptions
 
-- **MaterializedViewRewriteSuccessAndChose**: Displays the materialized view that was successfully selected and used for query optimization.
+| Field | Meaning |
+| --- | --- |
+| MaterializedViewRewriteSuccessAndChose | The materialized view that was successfully selected and used for query optimization |
+| MaterializedViewRewriteSuccessButNotChose | The materialized view that matched successfully but was not selected (not optimal based on cost evaluation) |
+| MaterializedViewRewriteFail | A materialized view that did not match. The original SQL could not be matched against the existing view |
 
-- **MaterializedViewRewriteSuccessButNotChose**: Displays materialized views that matched the query but were not selected (the optimizer chooses the optimal materialized view based on its cost, and these matched but unselected views indicate they were not the optimal choice).
+### Drop a Materialized View
 
-- **MaterializedViewRewriteFail**: Displays materialized views that failed to match the query, meaning the original SQL query could not match any existing materialized views and therefore could not be optimized using them.
+**Goal**: Remove a materialized view that is no longer needed.
 
-
-### Dropping a Materialized View
+**Command**:
 
 ```sql
 drop materialized view store_amt on sales_records;
 ```
 
-## Usage Examples
+## Examples
 
-Below are additional examples demonstrating the use of materialized views.
+### Example 1: Accelerate Aggregation Queries
 
-### Example 1: Accelerating Aggregation Queries
+<!-- Applicable scenarios: exact deduplication aggregation such as UV/PV -->
 
-Business Scenario: Calculating ad UV (Unique Visitors) and PV (Page Views).
+**Business scenario**: Compute the UV (unique visitors) and PV (page views) of an advertisement.
 
-1. Assuming the raw ad click data is stored in Doris, creating a materialized view with `bitmap_union` can speed up queries for ad PV and UV. First, create a table to store ad click details:
+**Steps**:
+
+1. Create the source table that stores ad click details:
 
     ```sql
-    create table advertiser_view_record  
-    (  
-        click_time datetime,   
-        advertiser varchar(10),   
-        channel varchar(10),   
-        user_id int  
-    ) distributed by hash(user_id) properties("replication_num" = "1");  
+    create table advertiser_view_record
+    (
+        click_time datetime, 
+        advertiser varchar(10), 
+        channel varchar(10), 
+        user_id int
+    ) distributed by hash(user_id) properties("replication_num" = "1");
     insert into advertiser_view_record values("2020-02-02 02:02:02",'a','a',1), ("2020-02-02 02:02:02",'a','a',2);
     ```
 
-2. Since users want to query the UV value of advertisements, which requires an exact deduplication of users for the same advertisement, the typical query would be:
+2. The user wants to query the UV of an advertisement (an exact deduplication on users for the same ad). The typical query is:
 
     ```sql
     select 
@@ -267,13 +340,13 @@ Business Scenario: Calculating ad UV (Unique Visitors) and PV (Page Views).
         advertiser, channel;
     ```
 
-3. For this UV calculation scenario, we can create a materialized view with `bitmap_union` to achieve pre-exact deduplication. In Doris, the result of the `count(distinct)` aggregation is identical to the result of the `bitmap_union_count` aggregation. And `bitmap_union_count` is equivalent to counting the results of `bitmap_union`. Therefore, if the query involves `count(distinct)`, creating a materialized view with `bitmap_union` aggregation can speed up the query. Based on current usage scenarios, a materialized view can be created to group by advertisement and channel, with exact deduplication for `user_id`.
+3. For the UV scenario, create a materialized view with `bitmap_union` to perform exact deduplication in advance. In Doris, the result of `count(distinct)` is identical to `bitmap_union_count`, so a materialized view aggregated with `bitmap_union` can accelerate the query:
 
     ```sql
     create materialized view advertiser_uv as 
     select 
-        advertiser as advertiser_,
-        channel as channel_,
+        advertiser as advertiser_, 
+        channel as channel_, 
         bitmap_union(to_bitmap(user_id)) 
     from 
         advertiser_view_record 
@@ -281,7 +354,7 @@ Business Scenario: Calculating ad UV (Unique Visitors) and PV (Page Views).
         advertiser, channel;
     ```
 
-4. Once the materialized view table is created, when querying the UV for advertisements, Doris will automatically retrieve data from the newly created materialized view `advertiser_uv`. If the previous SQL is executed:
+4. After the materialized view is created, run the original UV query again. Doris automatically reads from `advertiser_uv`:
 
     ```sql
     select 
@@ -294,7 +367,7 @@ Business Scenario: Calculating ad UV (Unique Visitors) and PV (Page Views).
         advertiser, channel;
     ```
 
-5. After selecting the materialized view, the actual query will be transformed into:
+5. Once the materialized view is selected, the actual query is rewritten to:
 
     ```sql
     select 
@@ -307,7 +380,7 @@ Business Scenario: Calculating ad UV (Unique Visitors) and PV (Page Views).
         advertiser, channel;
     ```
 
-6. Use the `explain` command to check if the query matches the materialized view:
+6. Use the `explain` command to check whether the query matched the materialized view:
 
     ```sql
     explain select 
@@ -320,7 +393,7 @@ Business Scenario: Calculating ad UV (Unique Visitors) and PV (Page Views).
         advertiser, channel;
     ```
 
-7. The output will be:
+7. The output is as follows:
 
     ```sql
     +---------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -394,187 +467,213 @@ Business Scenario: Calculating ad UV (Unique Visitors) and PV (Page Views).
     +---------------------------------------------------------------------------------------------------------------------------------------------------------+
     ```
 
-8. In the result of the explain command, you can see that `internal.test_db.advertiser_view_record.advertiser_uv` was chosen. This indicates that the query will directly scan the data from the materialized view. This confirms that the match was successful. Secondly, the count(distinct) operation on the `user_id` field is rewritten as `bitmap_union_count(to_bitmap)`. This means that the exact deduplication effect is achieved through the use of Bitmap.
+8. In the `explain` output, you can see `internal.test_db.advertiser_view_record.advertiser_uv chose`, which means the query directly scans the data of the materialized view and the match succeeded. At the same time, `count(distinct)` on the `user_id` column is rewritten as `bitmap_union_count(to_bitmap)`, which performs exact deduplication via Bitmap.
 
-### Example 2: Matching Different Prefix Indexes
+### Example 2: Match a Different Prefix Index
 
-Business Scenario: Matching prefix indexes.
+<!-- Applicable scenarios: filter conditions not covered by the base table prefix index -->
 
-1. If a table has prefix indexes on k1 and k2, but queries sometimes involve k3, a materialized view can be created with k3 as the first column to leverage indexing:
+**Business scenario**: Match a prefix index.
 
-   ```sql
-   create table test_table  
-   (  
-       k1 int,   
-       k2 int,   
-       k3 int,   
-       kx int  
-   )   
-   distributed by hash(k1)   
-   properties("replication_num" = "1");  
-     
-   insert into test_table values(1,1,1,1),(3,3,3,3);
-   ```
+The user's source table contains three columns (k1, k2, k3), where k1 and k2 are configured as prefix index columns. When the query condition contains `where k1=1 and k2=2`, the index can accelerate it. However, conditions such as `where k3=3` cannot hit the prefix index. To address this, you can create a materialized view whose first column is `k3`.
 
-2. Create a materialized view with k3 as the prefix index:
+**Steps**:
 
-   ```sql
-   create materialized view mv_1 as SELECT k3 as k3_, k2 as k2_, k1 as k1_ FROM test_table;
-   ```
+1. Create the table and insert data:
 
-3. Queries with `WHERE k3 = 3` will match the materialized view, as verified by `explain`.
+    ```sql
+    create table test_table
+    (
+        k1 int, 
+        k2 int, 
+        k3 int, 
+        kx int
+    ) 
+    distributed by hash(k1) 
+    properties("replication_num" = "1");
+    
+    insert into test_table values(1,1,1,1),(3,3,3,3);
+    ```
 
-   ```sql
-   explain select k1, k2, k3 from test_table where k3=3;
-   ```
+2. Create a materialized view that uses k3 as the prefix index:
 
-4. The output will be:
+    ```sql
+    create materialized view mv_1 as SELECT k3 as k3_, k2 as k2_, k1 as k1_ FROM test_table;
+    ```
 
-   ```sql
-   +----------------------------------------------------------+
-   | Explain String(Nereids Planner)                          |
-   +----------------------------------------------------------+
-   | PLAN FRAGMENT 0                                          |
-   |   OUTPUT EXPRS:                                          |
-   |     k1[#7]                                               |
-   |     k2[#8]                                               |
-   |     k3[#9]                                               |
-   |   PARTITION: HASH_PARTITIONED: k1_[#2]                   |
-   |                                                          |
-   |   HAS_COLO_PLAN_NODE: false                              |
-   |                                                          |
-   |   VRESULT SINK                                           |
-   |      MYSQL_PROTOCAL                                      |
-   |                                                          |
-   |   0:VOlapScanNode(256)                                   |
-   |      TABLE: test_db.test_table(mv_1), PREAGGREGATION: ON |
-   |      PREDICATES: (mv_k3[#0] = 3)                         |
-   |      partitions=1/1 (test_table)                         |
-   |      tablets=10/10, tabletList=271177,271179,271181 ...  |
-   |      cardinality=1, avgRowSize=0.0, numNodes=1           |
-   |      pushAggOp=NONE                                      |
-   |      final projections: k1_[#2], mv_k2[#1], mv_k3[#0]    |
-   |      final project output tuple id: 2                    |
-   |                                                          |
-   |                                                          |
-   | ========== MATERIALIZATIONS ==========                   |
-   |                                                          |
-   | MaterializedView                                         |
-   | MaterializedViewRewriteSuccessAndChose:                  |
-   |   internal.test_db.test_table.mv_1 chose,                |
-   |                                                          |
-   | MaterializedViewRewriteSuccessButNotChose:               |
-   |   not chose: none,                                       |
-   |                                                          |
-   | MaterializedViewRewriteFail:                             |
-   |                                                          |
-   |                                                          |
-   | ========== STATISTICS ==========                         |
-   | planed with unknown column statistics                    |
-   +----------------------------------------------------------+
-   ```
-5. In the result of the explain command, you can see that `internal.test_db.test_table.mv_1` was chosen, indicating that the query hit the materialized view.
+3. Use `EXPLAIN` to check whether the query matches the materialized view:
 
+    ```sql
+    explain select k1, k2, k3 from test_table where k3=3;
+    ```
 
-### Example 3: Pre-filtering and Expression Computation to Accelerate Queries
+4. The output is as follows:
 
-Business Scenario: Pre-filtering data or accelerating expression computation.
+    ```sql
+    +----------------------------------------------------------+
+    | Explain String(Nereids Planner)                          |
+    +----------------------------------------------------------+
+    | PLAN FRAGMENT 0                                          |
+    |   OUTPUT EXPRS:                                          |
+    |     k1[#7]                                               |
+    |     k2[#8]                                               |
+    |     k3[#9]                                               |
+    |   PARTITION: HASH_PARTITIONED: k1_[#2]                   |
+    |                                                          |
+    |   HAS_COLO_PLAN_NODE: false                              |
+    |                                                          |
+    |   VRESULT SINK                                           |
+    |      MYSQL_PROTOCAL                                      |
+    |                                                          |
+    |   0:VOlapScanNode(256)                                   |
+    |      TABLE: test_db.test_table(mv_1), PREAGGREGATION: ON |
+    |      PREDICATES: (mv_k3[#0] = 3)                         |
+    |      partitions=1/1 (test_table)                         |
+    |      tablets=10/10, tabletList=271177,271179,271181 ...  |
+    |      cardinality=1, avgRowSize=0.0, numNodes=1           |
+    |      pushAggOp=NONE                                      |
+    |      final projections: k1_[#2], mv_k2[#1], mv_k3[#0]    |
+    |      final project output tuple id: 2                    |
+    |                                                          |
+    |                                                          |
+    | ========== MATERIALIZATIONS ==========                   |
+    |                                                          |
+    | MaterializedView                                         |
+    | MaterializedViewRewriteSuccessAndChose:                  |
+    |   internal.test_db.test_table.mv_1 chose,                |
+    |                                                          |
+    | MaterializedViewRewriteSuccessButNotChose:               |
+    |   not chose: none,                                       |
+    |                                                          |
+    | MaterializedViewRewriteFail:                             |
+    |                                                          |
+    |                                                          |
+    | ========== STATISTICS ==========                         |
+    | planed with unknown column statistics                    |
+    +----------------------------------------------------------+
+    ```
 
-1. Create a table and materialized views for pre-filtering and expression computation:
+5. In the `EXPLAIN` output, you can see `internal.test_db.test_table.mv_1 chose`, which means the query successfully hit the materialized view.
 
-   ```sql
-   create table d_table (
-      k1 int null,
-      k2 int not null,
-      k3 bigint null,
-      k4 date null
-   )
-   duplicate key (k1,k2,k3)
-   distributed BY hash(k1) buckets 3
-   properties("replication_num" = "1");
-   
-   insert into d_table select 1,1,1,'2020-02-20';
-   insert into d_table select 2,2,2,'2021-02-20';
-   insert into d_table select 3,-3,null,'2022-02-20';
-   ```
+### Example 3: Accelerate Queries with Prefiltering and Expression Computation
 
-2. Creating Some Materialized Views:
+<!-- Applicable scenarios: repeated computation of complex expressions or subset queries under fixed WHERE conditions -->
 
-   ```sql
-   -- mv1 Perform expression calculations ahead of time
-   create materialized view mv1 as 
-   select 
-       abs(k1)+k2+1,        
-       sum(abs(k2+2)+k3+3) 
-   from 
-       d_table 
-   group by 
-       abs(k1)+k2+1;
-   
-   -- mv2 Use where expressions to filter in advance to reduce the amount of data in materialized views
-   create materialized view mv2 as 
-   select 
-       year(k4),
-       month(k4) 
-   from 
-       d_table 
-   where 
-       year(k4) = 2020;
-   ```
+**Business scenario**: Filter data in advance or accelerate expression computation.
 
-3. Testing Whether the Materialized Views Are Successfully Hit with Some Queries:
+**Steps**:
 
-   ```sql
-   -- Hit mv1
-   select 
-       abs(k1)+k2+1,
-       sum(abs(k2+2)+k3+3) 
-   from 
-       d_table 
-   group by 
-       abs(k1)+k2+1;
-       
-   -- Hit mv1
-   select 
-       bin(abs(k1)+k2+1),
-       sum(abs(k2+2)+k3+3) 
-   from 
-       d_table 
-   group by 
-       bin(abs(k1)+k2+1);
-   
-   -- Hit mv2
-   select 
-       year(k4) + month(k4) 
-   from 
-       d_table 
-   where 
-       year(k4) = 2020;
-   
-   -- Hit table d_table but not hit mv2, because where condition does not match
-   select 
-       year(k4),
-       month(k4) 
-   from 
-       d_table;
-   
-   ```
+1. Create the table and insert data:
+
+    ```sql
+    create table d_table (
+       k1 int null,
+       k2 int not null,
+       k3 bigint null,
+       k4 date null
+    )
+    duplicate key (k1,k2,k3)
+    distributed BY hash(k1) buckets 3
+    properties("replication_num" = "1");
+    
+    insert into d_table select 1,1,1,'2020-02-20';
+    insert into d_table select 2,2,2,'2021-02-20';
+    insert into d_table select 3,-3,null,'2022-02-20';
+    ```
+
+2. Create two materialized views, one for expression precomputation and one for data prefiltering:
+
+    ```sql
+    -- mv1 performs expression computation in advance
+    create materialized view mv1 as 
+    select 
+        abs(k1)+k2+1,        
+        sum(abs(k2+2)+k3+3) 
+    from 
+        d_table 
+    group by 
+        abs(k1)+k2+1;
+    
+    -- mv2 filters with a where expression in advance to reduce the data volume in the materialized view
+    create materialized view mv2 as 
+    select 
+        year(k4),
+        month(k4) 
+    from 
+        d_table 
+    where 
+        year(k4) = 2020;
+    ```
+
+3. Verify materialized view hits:
+
+    ```sql
+    -- Hits mv1
+    select 
+        abs(k1)+k2+1,
+        sum(abs(k2+2)+k3+3) 
+    from 
+        d_table 
+    group by 
+        abs(k1)+k2+1;
+        
+    -- Hits mv1
+    select 
+        bin(abs(k1)+k2+1),
+        sum(abs(k2+2)+k3+3) 
+    from 
+        d_table 
+    group by 
+        bin(abs(k1)+k2+1);
+    
+    -- Hits mv2
+    select 
+        year(k4) + month(k4) 
+    from 
+        d_table 
+    where 
+        year(k4) = 2020;
+    
+    -- Hits the original table d_table; does not hit mv2 because the where condition does not match
+    select 
+        year(k4),
+        month(k4) 
+    from 
+        d_table;
+    ```
 
 ## FAQ
 
+<!-- Knowledge type: FAQ -->
 
-1. Why isn't the rewrite successful after creating a materialized view?
+### Q1: After the materialized view is created, why is it not rewritten successfully?
 
-   If no matching data is found, it might be because the materialized view is still in the building process. In this case, you can use the following command to check the build status of the materialized view:
-   ```sql
-   show alter table materialized view from test_db;
-   ```
+**Cause**: The materialized view may still be under construction.
 
-   If the query result shows that the `status` field is not `FINISHED`, you need to wait until the status becomes `FINISHED` before the materialized view becomes available.
+**Diagnostic command**:
 
-2. When upgrading from 2.x to 3.0.0, why aren't the previous synchronous materialized views being hit?
+```sql
+show alter table materialized view from test_db;
+```
 
-   Starting from version 3.0.0, transparent rewriting of synchronous materialized views uses plan structure information by default. If you find that materialized views that previously worked in 2.x are not being hit in 3.0.0, you can disable the following switch (which is enabled by default):
+**Description**: If the `State` field is not `FINISHED`, wait for the build to complete. Only after the state becomes `FINISHED` can a query hit the materialized view. In addition, if the base table contains no data, the hit may not be triggered either.
 
-   ```sql
-   `SET enable_sync_mv_cost_based_rewrite = true;`
+### Q2: After upgrading from 2.x to 3.0.0, why are previous sync materialized views no longer hit?
+
+**Cause**: Starting from version 3.0.0, sync materialized views are transparently rewritten by default based on plan-structure information.
+
+**Solution**: If a query hits in 2.x but does not hit in 3.0.0, turn off the following switch (enabled by default):
+
+```sql
+SET enable_sync_mv_cost_based_rewrite = false;
+```
+
+### Q3: What is the difference between sync and async materialized views?
+
+| Comparison | Sync materialized view | Async materialized view |
+| --- | --- | --- |
+| Data consistency | Strongly consistent with the base table; updated synchronously on write | Refreshed asynchronously with latency |
+| Supported syntax | Single-table SELECT only | Supports complex queries such as multi-table JOIN |
+| Direct query | Not supported; must be triggered through automatic rewriting of base table queries | Supports querying the view directly |
+| Maintenance cost | Maintained automatically without manual intervention | Requires a refresh policy |
+| Applicable scenarios | Single-table aggregation, prefix index, prefiltering, expression precomputation | Multi-table JOIN and cross-table precomputation |

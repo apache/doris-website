@@ -1,0 +1,139 @@
+---
+{
+    "title": "Performance and Tuning",
+    "language": "en",
+    "description": "Apache Doris performance and tuning navigation: covers tuning methodology, query and ingestion performance, optimization technology principles, and benchmarks."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+The adaptive optimizer and Pipeline execution engine in Apache Doris let most workloads work out of the box, but production environments usually still require systematic performance tuning. Start by following the tuning methodology to locate bottlenecks, then optimize for specific scenarios on the query or ingestion side. When you encounter an execution plan that is hard to explain, consult the optimization technology principles to understand the mechanisms behind it.
+
+## Tuning Methodology
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Performance Tuning Overview"
+    description="Learn the end-to-end tuning workflow, the diagnostic and analysis tools that Doris provides, and how to systematically locate performance issues."
+    link="performance-tuning-overview/tuning-overview"
+/>
+</div>
+
+## Query Performance
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Schema and Index Optimization"
+    description="Set the upper bound of query performance through table model, partitioning and bucketing, key column design, and index choices (prefix index, BloomFilter, NGram, inverted)."
+    link="tuning/tuning-plan/schema-and-index-optimization"
+/>
+
+<GettingStartedCard
+    title="Materialized View"
+    description="Pre-compute results with synchronous or asynchronous materialized views, and let transparent rewriting accelerate existing SQL without modifications."
+    link="materialized-view/intro"
+/>
+
+<GettingStartedCard
+    title="Join Optimization"
+    description="Eliminate Shuffle with Colocation Join, and use Distribute and Leading Hint to manually adjust the Join plan when the optimizer's decision is suboptimal."
+    link="join-optimization-intro"
+/>
+
+<GettingStartedCard
+    title="Caching Acceleration"
+    description="Combine SQL Cache, Condition Cache, and external table file cache to reuse results, filter computations, and remote data across repeated queries."
+    link="caching-intro"
+/>
+
+<GettingStartedCard
+    title="Execution Tuning"
+    description="Based on runtime bottlenecks in the Profile, adjust parallelism, RuntimeFilter wait time, data skew, and CBO rules."
+    link="tuning/tuning-execution/intro"
+/>
+
+<GettingStartedCard
+    title="High Concurrency and Point Queries"
+    description="Use row store and short-circuit execution to support high-QPS primary key queries on Unique Key tables, and use dictionary tables instead of dimension table joins to accelerate KV queries."
+    link="high-concurrency-intro"
+/>
+
+<GettingStartedCard
+    title="Distinct Counts"
+    description="Use BITMAP for exact deduplication, or use HLL for approximate UV computation when 1%-2% error is acceptable, significantly reducing memory and storage overhead."
+    link="distinct-counts/intro"
+/>
+
+<GettingStartedCard
+    title="Query Profile"
+    description="Analyze the time distribution of operators such as Scan, Exchange, Join, and aggregation through the Profile to quickly locate the slowest stage of a query."
+    link="query-profile"
+/>
+</div>
+
+## Ingestion Performance
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="DML Tuning"
+    description="For the execution plans of INSERT, UPDATE, and DELETE, adjust write parallelism, batch size, and execution path to achieve stable ingestion performance."
+    link="tuning/tuning-plan/dml-tuning-plan"
+/>
+</div>
+
+## Optimization Technology Principles
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Query Optimizer"
+    description="Introduces rule rewriting and the cost model of the Nereids optimizer, including rule-based equivalent transformations and cost-based Join Enumeration."
+    link="optimization-technology-principle/query-optimizer"
+/>
+
+<GettingStartedCard
+    title="Pipeline Execution Engine"
+    description="Introduces the Pipeline model, scheduling mechanism, and Morsel-Driven parallel execution, which form the foundation of the Doris execution layer."
+    link="optimization-technology-principle/pipeline-execution-engine"
+/>
+
+<GettingStartedCard
+    title="Runtime Filter"
+    description="Introduces the execution mechanism by which RuntimeFilter is generated on the Join build side and pushed down to the probe side to skip irrelevant data."
+    link="optimization-technology-principle/runtime-filter"
+/>
+
+<GettingStartedCard
+    title="TopN Optimization"
+    description="Introduces short-circuit execution and partial sorting optimization in ORDER BY ... LIMIT scenarios, which skip most data to quickly return the TopN."
+    link="optimization-technology-principle/topn-optimization"
+/>
+
+<GettingStartedCard
+    title="Statistics"
+    description="Introduces the collection and use of statistics such as tables, columns, and histograms, which are the foundation for the cost-based query optimizer to choose plans."
+    link="optimization-technology-principle/statistics"
+/>
+</div>
+
+## Benchmarks
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Star Schema Benchmark (SSB)"
+    description="SSB test results of Doris on standard hardware, including reproducible environment configuration and tuning highlights."
+    link="../benchmark/ssb"
+/>
+
+<GettingStartedCard
+    title="TPC-H"
+    description="TPC-H test results of Doris, covering data ingestion, query latency, and comparison guidelines."
+    link="../benchmark/tpch"
+/>
+
+<GettingStartedCard
+    title="TPC-DS"
+    description="TPC-DS test results of Doris in more complex multi-table analytical scenarios."
+    link="../benchmark/tpcds"
+/>
+</div>

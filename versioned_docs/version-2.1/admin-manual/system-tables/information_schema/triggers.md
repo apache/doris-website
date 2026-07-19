@@ -2,7 +2,7 @@
 {
     "title": "triggers",
     "language": "en",
-    "description": "Stores all table information."
+    "description": "Provides information about triggers. Doris supports this table for MySQL compatibility; it is always empty."
 }
 ---
 

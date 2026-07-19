@@ -3,32 +3,56 @@
     "message": "current",
     "description": "The label for version current"
   },
+  "sidebar.community.category.About the Community": {
+    "message": "关于社区",
+    "description": "The label for category About the Community in sidebar community"
+  },
   "sidebar.community.category.How to Contribute": {
-    "message": "贡献指南",
+    "message": "参与贡献",
     "description": "The label for category How to Contribute in sidebar community"
   },
-  "sidebar.community.category.Release Process & Verification": {
-    "message": "版本发布与校验",
-    "description": "The label for category Doris Introduction in sidebar community"
+  "sidebar.community.category.Documentation Contribution": {
+    "message": "贡献文档",
+    "description": "The label for category Documentation Contribution in sidebar community"
+  },
+  "sidebar.community.category.Development & Debugging": {
+    "message": "开发与调试",
+    "description": "The label for category Development & Debugging in sidebar community"
   },
   "sidebar.community.category.Source Code Compilation": {
     "message": "源码编译",
     "description": "The label for category Source Code Compilation in sidebar community"
   },
+  "sidebar.community.category.IDE Setup": {
+    "message": "开发环境搭建",
+    "description": "The label for category IDE Setup in sidebar community"
+  },
+  "sidebar.community.category.Code Style": {
+    "message": "代码规范",
+    "description": "The label for category Code Style in sidebar community"
+  },
+  "sidebar.community.category.Debugging & Profiling": {
+    "message": "调试与性能分析",
+    "description": "The label for category Debugging & Profiling in sidebar community"
+  },
+  "sidebar.community.category.Testing": {
+    "message": "测试",
+    "description": "The label for category Testing in sidebar community"
+  },
+  "sidebar.community.category.Data Source Extension": {
+    "message": "数据源扩展开发",
+    "description": "The label for category Data Source Extension in sidebar community"
+  },
+  "sidebar.community.category.Data Format Reference": {
+    "message": "数据格式参考",
+    "description": "The label for category Data Format Reference in sidebar community"
+  },
+  "sidebar.community.category.Release": {
+    "message": "版本与发布",
+    "description": "The label for category Release in sidebar community"
+  },
   "sidebar.community.category.Design Documents": {
     "message": "设计文档",
-    "description": "The label for category Developer Guide in sidebar community"
-  },
-  "sidebar.community.category.Developer Guide": {
-    "message": "开发者手册",
-    "description": "The label for category Developer Guide in sidebar community"
-  },
-  "sidebar.community.category.Mac Local Dev": {
-    "message": "Mac Local 开发",
-    "description": "The label for category Mac Local Dev in sidebar community"
-  },
-  "sidebar.community.category.Announcements": {
-    "message": "Doris 社区声明",
-    "description": "The label for category Mac Local Dev in sidebar community"
+    "description": "The label for category Design Documents in sidebar community"
   }
 }

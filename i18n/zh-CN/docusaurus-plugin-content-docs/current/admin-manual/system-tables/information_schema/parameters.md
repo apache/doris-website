@@ -35,4 +35,3 @@
 | COLLATION_NAME         | varchar(64)  |      |
 | DTD_IDENTIFIER         | varchar(64)  |      |
 | ROUTINE_TYPE           | varchar(64)  |      |
-| DATA_TYPEDTD_IDENDS    | varchar(64)  |      |

@@ -36,6 +36,12 @@ DROP ROLE 语句用于用户删除角色
 
 ## 示例
 
+准备：先创建 `role1`，作为下面 DROP 示例的目标：
+
+```sql
+CREATE ROLE role1;
+```
+
 - 删除一个角色
 
 ```sql

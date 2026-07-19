@@ -11,7 +11,7 @@
 Same functionality as the [date-diff function](./datediff)
 The TIMESTAMPDIFF function calculates the difference between two datetime values and returns the result in a specified time unit. This function supports multiple time units (such as seconds, minutes, hours, days, weeks, months, years).
 
-This function behaves consistently with the [date_diff function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-diff) in MySQL.
+This function behaves consistently with the [timestampdiff function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_timestampdiff) in MySQL.
 
 ## Syntax
 

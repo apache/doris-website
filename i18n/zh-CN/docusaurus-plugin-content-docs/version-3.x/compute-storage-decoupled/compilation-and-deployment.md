@@ -235,7 +235,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
    使用 MySQL 客户端连接到任意 Frontend，并执行：
 
    ```sql
-   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propertires];
+   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROPERTIES properties];
    ```
 
    将 `<ip>` 替换为新 Backend 的 IP 地址，将 `<heartbeat_service_port>` 替换为其配置的心跳服务端口（默认为 9050）。
@@ -284,7 +284,7 @@ CREATE STORAGE VAULT IF NOT EXISTS hdfs_vault
 CREATE STORAGE VAULT IF NOT EXISTS s3_vault
     PROPERTIES (
     "type"="S3",
-    "s3.endpoint"="s3.us-east-1.amazonaws.com",
+    "s3.endpoint"="https://s3.us-east-1.amazonaws.com",
     "s3.access_key" = "ak",
     "s3.secret_key" = "sk",
     "s3.region" = "us-east-1",

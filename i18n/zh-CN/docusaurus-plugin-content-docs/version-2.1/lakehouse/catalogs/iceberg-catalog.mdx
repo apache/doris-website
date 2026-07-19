@@ -33,7 +33,7 @@ Doris 支持通过多种元数据服务访问 Iceberg 表数据。除支持数�
 CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = '<iceberg_catalog_type>',
-    'warehouse' = '<warehouse>' --optional
+    'warehouse' = '<warehouse>', --optional
     {MetaStoreProperties},
     {StorageProperties},
     {IcebergProperties},
@@ -247,7 +247,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -310,7 +310,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'hive.metastore.client.keytab' = '/keytabs/presto-server.keytab',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
@@ -346,7 +346,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
                 'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-                'hive.metastore.client.keytab' = '/keytabs/keytabs/hive-presto-master.keytab',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hadoop.security.auth_to_local' = 'RULE:[2:$1@$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:$1@$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
                 RULE:[2:$1@$0](.*@OTHERREALM.COM)s/@.*//
@@ -449,7 +449,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-hms-hdfs-warehouse',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
                 'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -562,7 +562,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'glue.endpoint' = 'https://glue.ap-northeast-1.amazonaws.com',
                 'glue.access_key' = '<ak>',
                 'glue.secret_key' = '<sk>',
-                's3.endpoint' = 's3.ap-northeast-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-northeast-1.amazonaws.com',
                 's3.region' = 'ap-northeast-1',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
@@ -1104,7 +1104,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'iceberg.catalog.type' = 'hadoop',
                 'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-fs-s3-warehouse',
                 's3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );

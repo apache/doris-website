@@ -117,7 +117,7 @@ SELECT WEEK_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
 
 -- Invalid period, returns error
 SELECT WEEK_FLOOR('2023-07-13', 0) AS result;
-RROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation week_floor of 2023-07-13 00:00:00, 0 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation week_floor of 2023-07-13 00:00:00, 0 out of range
 
 -- Parameter is NULL
 SELECT WEEK_FLOOR(NULL, 1) AS result;

@@ -21,7 +21,7 @@ IS_IP_ADDRESS_IN_RANGE(<ip_address>, <cidr_range>)
 - `<cidr_range>`：CIDR 网段范围（字符串格式，如 "192.168.1.0/24"）
 
 ### 返回值
-返回类型：TINYINT
+返回类型：BOOLEAN
 
 返回值含义：
 - 返回 1：表示 IP 地址在指定的 CIDR 范围内

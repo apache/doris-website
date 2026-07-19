@@ -31,6 +31,39 @@ The return value is of numeric type. If expr is NULL, there will be no parameter
 ## Example
 
 ```sql
+-- setup
+create table test_count(
+    id int,
+    name varchar(20),
+    sex int
+) distributed by hash(id) buckets 1
+properties ("replication_num"="1");
+
+insert into test_count values
+    (1, '1', 1),
+    (2, '2', 1),
+    (3, '3', 1),
+    (4, '0', 1),
+    (4, '4', 1),
+    (5, NULL, 1);
+
+create table test_insert(
+    id int,
+    name varchar(20),
+    sex int
+) distributed by hash(id) buckets 1
+properties ("replication_num"="1");
+
+insert into test_insert values
+    (1, '1', 1),
+    (2, '2', 1),
+    (3, '3', 1),
+    (4, '0', 1),
+    (4, '4', 1),
+    (5, NULL, 1);
+```
+
+```sql
 select * from test_count;
 ```
 

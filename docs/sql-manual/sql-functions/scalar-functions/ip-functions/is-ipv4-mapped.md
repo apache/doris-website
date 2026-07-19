@@ -6,8 +6,6 @@
 }
 ---
 
-## is_ipv4_mapped
-
 ## Description
 Checks if an IPv6 address is an IPv4-mapped address. IPv4-mapped addresses are a special IPv6 address format used to represent IPv4 addresses in IPv6 networks.
 
@@ -20,7 +18,7 @@ IS_IPV4_MAPPED(<ipv6_address>)
 - `<ipv6_address>`: Binary representation of IPv6 address (VARCHAR type, 16 bytes)
 
 ### Return Value
-Return Type: TINYINT
+Return Type: BOOLEAN
 
 Return Value Meaning: 1 indicates it is an IPv4-mapped address, 0 indicates it is not an IPv4-mapped address
 

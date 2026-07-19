@@ -223,5 +223,5 @@ mysql> select * from test_table;
 
 ## Conclusion
 
-Congratulations. Now you've gained an overview of how data updates are implemented in Apache Doris. With this knowledge, you can basically guarantee efficiency and accuracy of data updating. But wait, there is so much more about that. As Apache Doris 2.0 is going to provide more powerful Partial Column Update capabilities, with improved execution of the Update statement and the support for more complicated multi-table Join queries, I will show you how to take advantage of them in details in my follow-up writings. [We](/discord) are constantly updating our data updates!
+Congratulations. Now you've gained an overview of how data updates are implemented in Apache Doris. With this knowledge, you can basically guarantee efficiency and accuracy of data updating. But wait, there is so much more about that. As Apache Doris 2.0 is going to provide more powerful Partial Column Update capabilities, with improved execution of the Update statement and the support for more complicated multi-table Join queries, I will show you how to take advantage of them in details in my follow-up writings. [We](https://doris.apache.org/slack) are constantly updating our data updates!
 

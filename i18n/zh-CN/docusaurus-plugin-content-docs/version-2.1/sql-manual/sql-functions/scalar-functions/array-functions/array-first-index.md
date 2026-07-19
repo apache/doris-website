@@ -32,6 +32,12 @@ ARRAY_FIRST_INDEX(<lambda>, <arr> [, ...])
 ## 举例
 
 ```sql
+-- setup
+create table array_test(id int, col2 array<int>, col3 array<int>) distributed by hash(id) buckets 1 properties ("replication_num"="1");
+insert into array_test values (1,[1,2,3],[3,4,5]),(2,[1,null,2],[null,3,1]),(3,[1,2,3],[9,8,7]),(4,null,null);
+```
+
+```sql
 select array_first_index(x->x+1>3, [2, 3, 4]);
 ```
 

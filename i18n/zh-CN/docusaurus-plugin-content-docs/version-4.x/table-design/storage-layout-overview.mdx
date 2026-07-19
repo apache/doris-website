@@ -1,0 +1,31 @@
+---
+{
+    "title": "存储布局优化",
+    "language": "zh-CN",
+    "description": "Apache Doris 存储布局概述：通过列式压缩、行列混存与冷热数据分层等存储能力，优化存储成本、点查延迟与历史数据成本。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris 将磁盘上的存储布局以可调参数的形式开放给用户。通过合理配置存储布局，可以在不改动表模型与查询的前提下，降低存储成本、加速宽表点查、压低历史 / 冷数据的存储开销。
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="数据压缩"
+    description="按列选择压缩算法（LZ4、ZSTD、Snappy、Zlib 等），在存储成本与查询 CPU、解压速度之间灵活权衡。"
+    link="column-compression"
+/>
+
+<GettingStartedCard
+    title="行列混存"
+    description="在列存基础上叠加一份行存，将多列点查合并为一次 IO，显著优化高并发主键点查与宽表 SELECT * 场景。"
+    link="row-store"
+/>
+
+<GettingStartedCard
+    title="冷热数据分层"
+    description="将冷数据下沉到低成本介质（HDD、对象存储、HDFS），热数据继续保留在高性能存储中。覆盖存算分离、本地分层与远程分层三种模式。"
+    link="tiered-storage/overview"
+/>
+</div>

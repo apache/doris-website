@@ -66,7 +66,7 @@ Here we create a Table Bucket named doris-s3-table-bucket. After creation, we wi
 ### 03 Access S3Tables
 
 ```sql
-Doris > SWITCH iceberg_s3;
+Doris > SWITCH aws_s3_tables;
 
 Doris > SHOW DATABASES;
 +--------------------+

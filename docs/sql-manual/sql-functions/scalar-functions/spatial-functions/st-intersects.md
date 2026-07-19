@@ -14,7 +14,7 @@ Determine whether two geometric shapes intersect, i.e., there is at least one co
 Supported since Apache Doris 3.0.6.
 :::
 
-## Sytax
+## Syntax
 
 ```sql
 ST_INTERSECTS( <shape1>, <shape2>)
@@ -24,8 +24,8 @@ ST_INTERSECTS( <shape1>, <shape2>)
 
 | Parameter       | Description                     |
 |----------|------------------------|
-| `<shape1>` | The first geometric shape used to determine if it intersects with another, supporting types such as Point, Line, Polygon, Circle。 |
-| `<shape2>` | 	The second geometric shape used to determine if it intersects with another, supporting types such as Point, Line, Polygon, Circle。 |
+| `<shape1>` | The first geometric shape used to determine if it intersects with another, supporting types such as Point, Line, Polygon, Circle. |
+| `<shape2>` | 	The second geometric shape used to determine if it intersects with another, supporting types such as Point, Line, Polygon, Circle. |
 
 ## Return value
 

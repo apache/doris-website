@@ -15,10 +15,17 @@ import DocItemContent from '@theme/DocItem/Content';
 import DocBreadcrumbs from '@theme/DocBreadcrumbs';
 import ContentVisibility from '@theme/ContentVisibility';
 import type { Props } from '@theme/DocItem/Layout';
-import { generateUrl } from './pathTransfer';
 import { DocsEdit } from '../../../components/Icons/docs-edit';
+import MobileSidebarDrawer from './MobileSidebarDrawer';
 
 import styles from './styles.module.css';
+
+const GITHUB_TREE_BASE = 'https://github.com/apache/doris-website/tree/master/';
+
+function sourceToEditUrl(source: string | undefined): string {
+    if (!source) return GITHUB_TREE_BASE;
+    return `${GITHUB_TREE_BASE}${source.replace(/^@site\//, '')}`;
+}
 
 /**
  * Decide if the toc should be rendered, on mobile or desktop viewports
@@ -62,7 +69,10 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
                 <DocVersionBanner />
                 <div className={styles.docItemContainer}>
                     <article>
-                        <DocBreadcrumbs />
+                        <div className={styles.mobileStickyHeader}>
+                            <MobileSidebarDrawer />
+                            <DocBreadcrumbs />
+                        </div>
                         {/* <DocVersionBadge /> */}
                         {docTOC.mobile}
                         <DocItemContent>{children}</DocItemContent>
@@ -72,7 +82,7 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
                         {isNew ? (
                             <></>
                         ) : (
-                            <Link to={generateUrl(location.pathname)} className={`mr-6 ${styles.footerBtn}`}>
+                            <Link to={sourceToEditUrl(metadata.source)} className={`mr-6 ${styles.footerBtn}`}>
                                 <DocsEdit /> <span className="ml-2">{isZH ? '编辑本页' : 'Edit this page'}</span>
                             </Link>
                         )}

@@ -17,344 +17,129 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Doris document website
+# Apache Doris Website
 
-This repo is for [Apache Doris Website](https://doris.apache.org)
+Source code for [doris.apache.org](https://doris.apache.org), built with [Docusaurus 3](https://docusaurus.io/).
 
-And it use Github Action to automatically sync content from [Apache Doris Code Repo](https://github.com/apache/doris)
+## Quick Start
 
-There are 2 Github Actions:
+### Prerequisites
 
-1. cron-deploy-website.yml
-
-   It will sync at 01:00 AM everyday from Doris's master branch.
-
-2. manual-deploy-website.yml
-
-   It can only be triggered manually, and you can specify the branch name you want to sync.
-
-## View the website
-
-To view the website, navigate to 
-[https://doris.apache.org](https://doris.apache.org)
-
-## Run & Build Website
-
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
-
-### Installation
-
-```
-$ yarn
-```
+- Node.js >= 18
+- Yarn
 
 ### Local Development
 
-```
-$ yarn start
-```
+Use `local_dev.sh` to run the site locally. It handles dependency installation, version filtering, and memory settings automatically.
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+```bash
+# Start English dev server (default: only 'current' version, 2 GB memory)
+./local_dev.sh
 
-### Build
+# Start Chinese dev server
+./local_dev.sh start-zh
 
-```
-$ yarn build
-```
+# Start on a custom port
+./local_dev.sh start --port 8080
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+# Build a specific doc version
+./local_dev.sh start --versions "4.x"
 
-### Deployment
+# Build English docs (production build)
+./local_dev.sh build
 
-Using SSH:
+# Build all locales (en + zh-CN)
+./local_dev.sh build-all
 
-```
-$ USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
+# Clean build artifacts and caches
+./local_dev.sh clean
 ```
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+Run `./local_dev.sh help` for all available commands and options.
 
-# Modify the documentation
+### Production Build
 
-For how to submit pull requests, please refer to
+```bash
+export NODE_OPTIONS=--max-old-space-size=8192
+yarn install
+yarn docusaurus build --locale en --locale zh-CN
+```
 
-- [How to Contribute](https://doris.apache.org/zh-CN/community/how-to-contribute/contribute-to-doris)
+The output is generated in the `build/` directory.
 
-- [How to contribute docs](https://doris.apache.org/community/how-to-contribute/contribute-doc)
+## Directory Structure
 
+```
+.
+├── docs/                         # Current (dev) version docs (English)
+├── versioned_docs/
+│   ├── version-4.x/              # 4.x version docs (English)
+│   ├── version-3.x/              # 3.x version docs (English)
+│   └── version-2.1/              # 2.1 version docs (English)
+├── i18n/zh-CN/
+│   └── docusaurus-plugin-content-docs/
+│       ├── current/              # Current (dev) version docs (Chinese)
+│       ├── version-4.x/          # 4.x version docs (Chinese)
+│       ├── version-3.x/          # 3.x version docs (Chinese)
+│       └── version-2.1/          # 2.1 version docs (Chinese)
+├── blog/                         # Blog posts
+├── community/                    # Community docs
+├── src/                          # React components and pages
+├── static/                       # Static assets (images, JS, CSS)
+├── sidebars.ts                   # Sidebar for current (dev) docs
+├── versioned_sidebars/           # Sidebar files per version
+│   ├── version-4.x-sidebars.json
+│   ├── version-3.x-sidebars.json
+│   └── version-2.1-sidebars.json
+├── sidebarsCommunity.json        # Sidebar for community docs
+├── versions.json                 # Active doc versions
+├── docusaurus.config.js          # Docusaurus configuration
+└── local_dev.sh                  # Local development helper script
+```
+
+## Contributing Documentation
+
+For general contribution guidelines, see:
+
+- [How to Contribute](https://doris.apache.org/community/how-to-contribute/contribute-to-doris)
+- [How to Contribute Docs](https://doris.apache.org/community/how-to-contribute/contribute-doc)
 - [Docs Format Specification](https://doris.apache.org/community/how-to-contribute/docs-format-specification)
 
-## Doris Website Directory Structure
+### Editing Docs
 
-```Plain
-.
-├── blog
-│   ├── 1.1 Release.md
-│   ├── Annoucing.md
-│   ├── jd.md
-│   ├── meituan.md
-│   ├── release-note-0.15.0.md
-│   ├── release-note-1.0.0.md
-│   └── xiaomi.md
-├── community
-│   ├── design
-│   │   ├── spark_load.md
-│   │   ├── doris_storage_optimization.md
-│   │   ├── grouping_sets_design.md
-│   │   └── metadata-design.md
-│   ├── ......
-├── docs
-│   ├── admin-manual
-│   │   ├── cluster-management
-│   │   ├── config
-│   │   ├── data-admin
-│   │   ├── http-actions
-│   │   ├── maint-monitor
-│   │   ├── privilege-ldap
-│   │   ├── multi-tenant.md
-│   │   ├── optimization.md
-│   │   ├── query-profile.md
-│   │   └── sql-interception.md
-│   │   └── workload-group.md
-│   ├── ......
-├── i18n
-│   └── zh-CN
-│       ├── docusaurus-plugin-content-docs
-│       │   ├── current
-│       │   ├── version-1.2
-│       │   ├── version-2.0
-│       │   ├── version-2.1
-│       │   ├── current.json
-│       │   ├── version-1.2.json
-│       │   ├── version-2.0.json
-│       │   ├── version-2.1.json
-│       ├── docusaurus-plugin-content-docs-community
-│       └── local_build_docs.sh
-├── src
-│   ├── components
-│   │   ├── Icons
-│   │   ├── More
-│   │   ├── PageBanner
-│   │   └── PageColumn
-│   ├── ......
-├── static
-│   ├── images
-│   │   ├── Bloom_filter.svg.png
-│   │   ├── .....
-│   └── js
-│       └── redirect.js
-├── versioned_docs
-│   ├── version-1.2
-│   │   ├── admin-manual
-│   │   ├── advanced
-│   │   ├── benchmark
-│   │   ├── data-operate
-│   │   ├── data-table
-│   │   ├── ecosystem
-│   │   ├── faq
-│   │   ├── get-starting
-│   │   ├── install
-│   │   ├── lakehouse
-│   │   ├── query-acceleration
-│   │   ├── releasenotes
-│   │   └── sql-manual
-│   └── version-2.0
-│       ├── admin-manual
-│       ├── benchmark
-│       ├── data-operate
-│       ├── db-connect
-│       ├── ecosystem
-│       ├── faq
-│       ├── get-starting
-│       ├── install
-│       ├── lakehouse
-│       ├── query
-│       ├── releasenotes
-│       ├── sql-manual
-│       └── table-design
-└── version-2.1
-│       ├── admin-manual
-│       ├── advanced
-│       ├── benchmark
-│       ├── data-operate
-│       ├── data-table
-│       ├── ecosystem
-│       ├── faq
-│       ├── get-starting
-│       ├── install
-│       ├── lakehouse
-│       ├── query-acceleration
-│       ├── releasenotes
-│       └── sql-manual
-├── versioned_sidebars
-│   ├── version-1.2-sidebars.json
-│   └── version-2.0-sidebars.json
-│   └── version-2.1-sidebars.json
-├── babel.config.js
-├── build.sh
-├── buildVersions.sh
-├── docusaurus.config.js
-├── package.json
-├── README.md
-├── sidebars.json
-├── sidebarsCommunity.json
-├── tree.out
-├── tsconfig.json
-├── versions.json
+When modifying docs, you typically need to update **both the English and Chinese versions** in the corresponding directories:
+
+| Version | English | Chinese | Sidebar |
+|---------|---------|---------|---------|
+| Current (dev) | `docs/` | `i18n/zh-CN/.../current/` | `sidebars.ts` |
+| 4.x | `versioned_docs/version-4.x/` | `i18n/zh-CN/.../version-4.x/` | `versioned_sidebars/version-4.x-sidebars.json` |
+| 3.x | `versioned_docs/version-3.x/` | `i18n/zh-CN/.../version-3.x/` | `versioned_sidebars/version-3.x-sidebars.json` |
+| 2.1 | `versioned_docs/version-2.1/` | `i18n/zh-CN/.../version-2.1/` | `versioned_sidebars/version-2.1-sidebars.json` |
+
+> **Note:** When adding a new page, you must also add its path to the corresponding sidebar file, otherwise it will not appear in the navigation.
+
+### Editing Blog Posts
+
+Blog posts are located in the `blog/` directory. Submit a PR to add or modify blog content.
+
+### Editing Community Docs
+
+Community docs are in `community/`, with navigation controlled by `sidebarsCommunity.json`. Chinese community content lives under `i18n/zh-CN/docusaurus-plugin-content-docs-community/`.
+
+### Images
+
+All images are stored in `static/images/`. Use hyphens to separate words in filenames (e.g., `query-profile-example.png`).
+
+```markdown
+![Description of the image](/images/my-screenshot.png)
 ```
 
-The following describes the directory structure of the Doris Website site so that users can easily find the corresponding directory and submit changes.
+## CI / Deployment
 
-### 01 Blog Directory
+The site is deployed via GitHub Actions:
 
-The blog directory is located at `/blog`. All Blog Markdown should be placed in that directory. 
-
-If you would like to share your technical insights, welcome to directly submitting a Blog PR or contacting dev@doris.apache.org.
-
-### 02 Docs Directory
-
-Here is the list of files if you need to submit docs changes:
-
-1. **Markdown Files:** When you want to modify existing content or add new documents, you need to place them to the respective folders and both update Master branch and Version docs (2.1/2.0/1.2) .
-2. **Sidebar Files:** These files control the directory structures. When adding new files or new directory, you should also update relative path in sidebar files that ensure the new document is displayed correctly in directory.  Currently, Master branch and other versions have separate sidebar files, including `sidebar.json, version-2.0-sidebars.json, and version-2.1-sidebars.json`.
-
-Please make sure to update all the necessary files accordingly when modifying existing document content, adding new documents, or adding new directory sections.
-
-The following are the detailed steps for explaining how and where modify the docs: 
-
-**Updating Latest Version (Master Branch)**
-
-**1. Update content**
-
-This version is modified in the `/docs` directory
-
-```Plain
-.
-├── docs
-│   ├── admin-manual
-│   ├── ......
-```
-
-**2. Update sidebar**
-
-The docs directory structure of the latest version is edited by `sidebar.json`.
-
-```Plain
-.
-├── docs
-│   ├── admin-manua
-│   ├── ......
-├── i18n
-├── src
-├── static
-├── versioned_docs
-├── versioned_sidebars
-├── sidebars.json
-```
-
-Whether add new docs to existing directory or new directory, you need to update the relative path of the added docs in `sidebar.json`.
-
-```JSON
-{
-    "docs": [
-            {
-                "type": "category",
-                "label": "Getting Started",
-                "items": [
-                    "get-starting/quick-start",
-                    "get-starting/what-is-apache-doris"
-                ]
-            },
-            {
-                "type": "category",
-                "label": "Install and Deploy",
-                "items": [
-                    "install/standard-deployment",
-                    {
-                        "type": "category",
-                        "label": "Docker Deployment",
-                        "items": [
-                            "install/construct-docker/build-docker-image",
-                            "install/construct-docker/run-docker-cluster"
-                        ]
-             }
-             ......
-         }
-     ]
- }
-```
-
-**Updating Version 2.1/2.0/1.2**
-
-**1. Update content**
-
-- 2.1 version is modified in the `/versioned_docs/version-2.1` directory
-
-- 2.0 version is modified in the `/versioned_docs / version-2.0`directory
-
-- 1.2 version is modified in the `/versioned_docs / version-1.2` directory
-
-```Plain
-.
-├── blog
-├── community
-├── docs
-├── i18n
-├── versioned_docs
-│   ├── version-1.2
-│   ├── version-2.0
-│   ├── version-2.1
-```
-
-**2. Update sidbar**
-
-The docs directory structure of the version docs is edited by `version-X.X-sidebar.json`.
-
-```Plain
-.
-├── blog
-├── community
-├── docs
-├── i18n
-├── versioned_docs
-├── versioned_sidebars
-│   ├── version-1.2-sidebars.json
-│   └── version-2.0-sidebars.json
-│   └── version-2.1-sidebars.json
-```
-
-### 03 Community Docs Directory
-
-If you want to modify the community docs, please go to `community/` directory. 
-
-- For modifying the existing docs, please go to `community/` directory. 
-
-- For updating community docs directory, please modify the `sidebarsCommunity.json` to include appropriate relative path for the new document. 
-
-```Markdown
-.
-├── blog
-├── community
-│   ├── design
-│   │   ├── spark_load.md
-│   │   ├── doris_storage_optimization.md
-│   │   ├── grouping_sets_design.md
-│   │   └── metadata-design.md
-│   ├── ......
-│   ......
-├── sidebarsCommunity.json
-```
-
-### 04 Images Directory
-
-All images are located at `/static/images`.
-
-You can display images in simple syntax: ` ![Alt text for images description](co-locate file structure or link) `
-
-If the image file name consists of multiple English words, they should be separated by hyphens "-".
+| Workflow | Trigger | Description |
+|----------|---------|-------------|
+| `cron-deploy-website.yml` | Daily at 01:00 AM | Syncs from Doris master branch and deploys |
+| `manual-deploy-website.yml` | Manual | Deploy from a specified branch |
+| `build-check.yml` | On PR | Validates the build passes (incrementally by detected version) |

@@ -1,22 +1,39 @@
 ---
 {
-    "title": "Optimizing Table Scanning",
+    "title": "Partition Pruning Optimization: Doris Query Performance Tuning",
+    "sidebar_label": "Partition Pruning Optimization",
     "language": "en",
-    "description": "Doris, as a high-performance real-time analytic data warehouse,"
+    "description": "How to use Doris partition pruning to reduce the amount of data scanned and accelerate queries? This article explains the principle, SQL patterns, and EXPLAIN verification methods through examples.",
+    "keywords": ["Doris partition pruning", "Partition Pruning", "table scan optimization", "query performance tuning", "EXPLAIN partition"]
 }
 ---
 
-## Overview
+<!-- Knowledge type: Tuning guide -->
+<!-- Applicable scenario: Slow large-table queries, high I/O overhead, need to filter data by partition columns -->
 
-Doris, as a high-performance real-time analytic data warehouse, offers a powerful partition pruning feature that can significantly enhance query performance. 
+**Partition Pruning** is a query optimization technique: it intelligently identifies the relevant partitions based on the query conditions, scans only those partitions, and skips the irrelevant ones.
 
-Partition pruning is a query optimization technique that intelligently identifies partitions relevant to a query by analyzing its conditions, and scans only the data within these partitions, thereby avoiding unnecessary scans of irrelevant partitions. This approach can greatly reduce I/O operations and computational load, thus accelerating query execution.
+Through partition pruning, Doris can significantly reduce I/O and computation, accelerating queries on large tables.
 
-## Case
+**Applicability checklist**:
 
-Here is a usage case to demonstrate Doris's partition pruning feature.
+- The table is partitioned by a business column (such as date).
+- The query conditions include filters on the partition column (for example, `WHERE date BETWEEN ...`).
+- You want to reduce the number of partitions scanned and lower I/O.
+- You need to verify with `EXPLAIN` whether pruning takes effect.
 
-Suppose we have a sales data table named `sales`, which is partitioned by date, with each day's data stored in a separate partition. The table structure is defined as follows:
+## Case: a sales table partitioned by date
+
+<!-- Knowledge type: Operational example -->
+<!-- Applicable scenario: Date-range queries, time-series data analysis -->
+
+The following case demonstrates the partition pruning capability of Doris.
+
+### 1. Create a table: range partitioning by date
+
+**Goal**: Create a sales data table `sales` partitioned by date, with one partition per month.
+
+**Command**:
 
 ```sql
 CREATE TABLE sales (
@@ -37,7 +54,13 @@ PROPERTIES
 );
 ```
 
-Now, we need to query the total sales amount between January 15, 2023 and February 15, 2023. The query statement is as follows:
+**Description**: The partition column is `date`. There are 4 partitions in total, each covering one month of data.
+
+### 2. Query: with a filter on the partition column
+
+**Goal**: Query the total sales amount between January 15, 2023 and February 15, 2023.
+
+**Command**:
 
 ```sql
 SELECT SUM(amount) AS total_amount
@@ -45,22 +68,84 @@ FROM sales
 WHERE date BETWEEN '2023-01-15' AND '2023-02-15';
 ```
 
-For the above query, Doris's partition pruning optimization process is as follows:
+**Description**: The `WHERE` clause contains a range filter on the partition column `date`, which is the key to triggering partition pruning.
 
-1. Doris intelligently analyzes the partition column `date` in the query conditions and identifies the date range of the query as being between '2023-01-15' and '2023-02-15'.
-2. By comparing the query conditions with the partition definitions, Doris precisely locates the range of partitions that need to be scanned. In this example, only partitions `p2` and `p3` need to be scanned, as their date ranges fully cover the query conditions.
-3. Doris automatically skips partitions unrelated to the query conditions, such as `p1` and `p4`, avoiding unnecessary data scans and thereby reducing I/O overhead.
-4. Finally, Doris performs data scanning and aggregation computations only within partitions `p2` and `p3`, quickly obtaining the query results.
+### 3. Partition pruning execution process
 
-By using the `EXPLAIN` command, we can view the query execution plan and confirm that Doris's partition pruning optimization has taken effect. In the execution plan, the `partition` attribute of the `OlapScanNode` node will display the actually scanned partitions as `p2` and `p3`.
+| Step | Doris behavior | Result |
+| :--- | :--- | :--- |
+| 1 | Analyze the partition column `date` in the query conditions | Identify the date range `2023-01-15` to `2023-02-15` |
+| 2 | Compare the query conditions with the partition definitions | Hit partitions `p2` and `p3` |
+| 3 | Automatically skip irrelevant partitions | Skip `p1` and `p4` |
+| 4 | Run the scan and aggregation only on the hit partitions | Return the result quickly |
+
+### 4. Verify pruning with EXPLAIN
+
+<!-- Knowledge type: Verification method -->
+<!-- Applicable scenario: Confirm whether the optimization takes effect -->
+
+**Goal**: Use the `EXPLAIN` command to view the execution plan and confirm the actual number of partitions scanned.
+
+**Command**:
 
 ```sql
+EXPLAIN SELECT SUM(amount) AS total_amount
+FROM sales
+WHERE date BETWEEN '2023-01-15' AND '2023-02-15';
+```
+
+**Key output**:
+
+```text
 |   0:VOlapScanNode(212)                                                     |
 |      TABLE: cir.sales(sales), PREAGGREGATION: ON                           |
 |      PREDICATES: (date[#0] >= '2023-01-15') AND (date[#0] <= '2023-02-15') |
 |      partitions=2/4 (p2,p3)                                                |
 ```
 
+**Description**: The `partitions=2/4 (p2,p3)` field on the `OlapScanNode` indicates that only 2 out of 4 partitions (`p2` and `p3`) are scanned, which means partition pruning has taken effect.
+
+## Comparison: pruning effective vs not effective
+
+<!-- Knowledge type: Comparison table -->
+<!-- Applicable scenario: Quickly determine whether a query can benefit from pruning optimization -->
+
+| Dimension | Partition pruning effective | Partition pruning not effective |
+| :--- | :--- | :--- |
+| Query conditions | Include a filter on the partition column | Missing partition column conditions, or a function is applied to the partition column |
+| Number of partitions scanned | Only the hit partitions are scanned | All partitions are scanned |
+| I/O overhead | Low | High |
+| EXPLAIN output | `partitions=N/M` (N < M) | `partitions=M/M` |
+
+## FAQ
+
+<!-- Knowledge type: FAQ -->
+<!-- Applicable scenario: Troubleshooting when pruning is not effective -->
+
+### Q1: The query is slow and I suspect partition pruning is not effective. How do I confirm this?
+
+Run `EXPLAIN <query>` and check the `partitions=N/M` field on the `OlapScanNode`. If `N == M`, all partitions are scanned and pruning is not effective.
+
+### Q2: Why does the query still scan all partitions even though `WHERE` includes the partition column?
+
+Common reasons:
+
+- A function is applied to the partition column (for example, `DATE_FORMAT(date, ...)`), so the optimizer cannot derive the range.
+- Type mismatch (for example, the partition column is `DATE` while the filter value is a string that cannot be implicitly converted).
+- An `OR` connects a non-partition-column condition, so the condition cannot be pushed down.
+
+### Q3: What is the difference between partition pruning and bucket pruning?
+
+- **Partition Pruning**: prunes partitions based on the `PARTITION BY` column.
+- **Bucket Pruning / Tablet Pruning**: prunes tablets based on equality conditions on the `DISTRIBUTED BY HASH` column.
+The two can be combined to further reduce the amount of data scanned.
+
 ## Summary
 
-In summary, Doris's partition pruning feature can intelligently identify the relevance between query conditions and partitions, automatically prune irrelevant partitions, and scan only necessary data, thereby significantly enhancing query performance. Reasonable utilization of the partition pruning feature can help users build efficient real-time analytics systems and easily handle massive data query demands.
+<!-- Knowledge type: Key takeaways -->
+<!-- Applicable scenario: Implementation recommendations -->
+
+- Partition pruning automatically identifies the mapping between query conditions and partitions, and scans only the necessary partitions.
+- Key prerequisites: the table is partitioned by a business column, and the query includes pushdown-capable filter conditions on the partition column.
+- The `partitions=N/M` field in `EXPLAIN` lets you quickly verify whether pruning takes effect.
+- Properly leveraging partition pruning can significantly reduce I/O and computation overhead, accelerating queries on massive datasets.

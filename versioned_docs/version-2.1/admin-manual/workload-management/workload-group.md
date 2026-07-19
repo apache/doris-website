@@ -586,15 +586,15 @@ To mitigate the impact on other workloads, the Workload Group's remote IO limit 
 
 After the upload is successful, you can use the command to view the schema information.
 
-    ```sql
-    DESC FUNCTION s3 (
-        "URI" = "https://bucketname/1kw.tsv",
-        "s3.access_key"= "ak",
-        "s3.secret_key" = "sk",
-        "format" = "csv",
-        "use_path_style"="true"
-    );
-    ```
+```sql
+DESC FUNCTION s3 (
+    "URI" = "https://bucketname/1kw.tsv",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "format" = "csv",
+    "use_path_style" = "true"
+);
+```
 
 **Test without restricting remote read IO**
 1. Initiate a single-threaded test to perform a full table scan on the clickbench table.

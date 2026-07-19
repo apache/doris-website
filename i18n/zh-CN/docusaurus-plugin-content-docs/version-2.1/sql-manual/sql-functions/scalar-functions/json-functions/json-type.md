@@ -23,7 +23,7 @@
 ## 语法
 
 ```sql
-STRING JSON_TYPE( <json> )
+STRING JSON_TYPE( <json>, <path> )
 ```
 
 ## 别名
@@ -35,6 +35,7 @@ STRING JSON_TYPE( <json> )
 | 参数 | 描述 |
 |------|------|
 | `<json>` | 需要检查类型的 JSON 字符串。 |
+| `<path>` | 要检查类型的字段的 JSON 路径。 |
 
 
 ## 返回值

@@ -62,7 +62,7 @@ extents:        size ind       ndirty        dirty       nmuzzy        muzzy    
                65536  11            3       184320            0            0            6       385024            9       569344
                81920  12            2       147456            3       241664           38      2809856           43      3198976
                98304  13            0            0            1        86016            6       557056            7       643072
-              114688  14            1       102400            1       106496           15      1642496           17      185139
+              114688  14            1       102400            1       106496           15      1642496           17      1851392
 ```
 
 减小 `be.conf` 中 `JEMALLOC_CONF` 的 `dirty_decay_ms` 到 2000 ms 或更小，`be.conf` 中默认 `dirty_decay_ms` 为 5000 ms。Jemalloc 会在 `dirty_decay_ms` 指定的时间内依照平滑梯度曲线释放 Dirty Page，参考 [Jemalloc opt.dirty_decay_ms](https://jemalloc.net/jemalloc.3.html#opt.dirty_decay_ms)，当 BE 进程可用内存不足触发 Minor GC 或 Full GC 时会按照一定策略主动释放所有 Dirty Page。

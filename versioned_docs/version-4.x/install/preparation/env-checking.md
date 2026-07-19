@@ -1,122 +1,115 @@
 ---
 {
-    "title": "Environment Checking",
+    "title": "Hardware and Software Environment Check",
     "language": "en",
-    "description": "When deploying Doris, the following checks need to be performed for the hardware and software environment:"
+    "description": "Before deploying Doris, check the hardware configuration, server specifications, disk space, and Java environment."
 }
 ---
 
-When deploying Doris, the following checks need to be performed for the hardware and software environment:
+<!-- Knowledge type: Reference -->
+<!-- Applicable scenarios: Pre-deployment check / Hardware planning / Environment acceptance -->
 
-- Hardware Environment Check
-  
-- Recommended Server Configuration
-  
-- Disk Space Calculation
-  
-- Java Environment Check
+This document provides a hardware and software environment reference for deploying Doris.
 
-## Hardware Environment Check
+## Hardware environment check
 
-During the hardware environment check, the following hardware conditions should be examined:
+<!-- Knowledge type: Hardware requirements -->
 
-| Check Item | Expected Result         |
-| ---------- | ----------------------- |
-| CPU        | Should support AVX2 instruction set. |
-| Memory     | Recommended at least 4 times the CPU size. |
-| Storage    | SSD recommended.         |
-| File System| ext4 or xfs file system.|
-| Network Card| 10 Gigabit network card. |
+| Check item   | Minimum configuration | Recommended configuration |
+| -------- | -------- | -------- |
+| CPU      | Supports the AVX2 instruction set | Supports the AVX2 instruction set |
+| Memory     | CPU cores x 4 GB | CPU cores x 8 GB |
+| Storage     | SSD or HDD | SSD |
+| File system | ext4 or xfs | ext4 or xfs |
+| Network card     | 1GbE | 10GbE + link aggregation |
 
-### CPU Check
+### CPU check
 
-When installing Doris, it is recommended to choose a machine that supports the AVX2 instruction set to leverage the vectorization capabilities of AVX2 for query acceleration.
-
-Run the following command to check if the machine supports the AVX2 instruction set:
+Doris uses AVX2 vectorization to accelerate queries. A machine that supports the AVX2 instruction set is recommended.
 
 ```bash
 cat /proc/cpuinfo | grep avx2
 ```
 
-If the machine does not support the AVX2 instruction set, you can use the no AVX2 Doris installation package for deployment.
+If there is output, AVX2 is supported. If it is not supported, you can use the no-AVX2 Doris installation package.
 
-### Memory Check
+### Memory check
 
-Doris does not have strict memory limits. Generally, for production environments, you can choose the memory size based on the following recommendations:
+<!-- Knowledge type: Memory configuration reference -->
 
-| Component | Recommended Memory Configuration |
-| --------- | --------------------------------- |
-| FE        | At least 16GB recommended.        |
-| BE        | Memory should be at least 4 times the number of CPU cores (for example, for a 16-core machine, at least 64GB memory is recommended). Better performance can be achieved with memory 8 times the number of CPU cores. |
+Doris does not enforce a memory limit. The following is recommended for production environments:
 
+| Component | Minimum memory | Recommended memory |
+| ---- | -------- | -------- |
+| FE   | 16 GB    | 64 GB+   |
+| BE   | CPU cores x 4 GB | CPU cores x 8 GB |
 
-### Storage Check
+### Storage check
 
-Doris allows data to be stored on SSD, HDD, or object storage during deployment.
+<!-- Knowledge type: Storage selection reference -->
 
-SSD is recommended for data storage in the following scenarios:
+| Scenario | Recommended storage type |
+| ---- | ------------ |
+| High-concurrency point queries on large-scale data | SSD |
+| High-frequency updates on large-scale data | SSD |
+| Cold data archiving | HDD / object storage |
 
-- High-concurrency point query scenarios with large-scale data
-  
-- High-frequency data update scenarios with large-scale data
+### File system check
 
-### File System Check
+| File system | Applicable scenario |
+| -------- | -------- |
+| ext4     | General-purpose, good stability |
+| xfs      | Large-scale data, high-concurrency writes |
 
-Doris recommends using EXT4 or XFS file systems:
+### Network card check
 
-- **EXT4**: The EXT4 file system offers good stability, performance, and lower fragmentation issues. 
+A 10GbE or faster network is recommended. For machines with multiple network cards, use link aggregation to improve bandwidth and redundancy.
 
-- **XFS**: The XFS file system performs excellently in handling large-scale data and high-concurrency write operations, making it suitable for high-throughput applications.
+## Recommended server configuration
 
-### Network Card Check
+<!-- Knowledge type: Server specification reference -->
 
-Doris involves distributing data partitions across different instances for parallel processing, which results in some network resource overhead. To optimize Doris performance and reduce network resource overhead, it is strongly recommended to use a 10 Gigabit Ethernet (10GbE) or faster network during deployment. If multiple network cards are available, it is recommended to use link aggregation to combine multiple network cards into one virtual interface, which improves network bandwidth, redundancy, and complex balancing capabilities.
+Both x86-64 and ARM64 architectures are supported.
 
-## Server Configuration Recommendations
+### Development and test environments
 
-Doris can be deployed on x86-64 or ARM64 architecture server platforms.
+FE and BE can be deployed together:
 
-- **Development and Testing Environments**
+- Deploy 1 FE + 1 BE on a single server (multiple instances are not recommended)
+- For 3 replicas of data: deploy 1 BE on each of at least 3 servers
 
-  In development and testing environments, FE and BE instances can be deployed in a mixed manner, following these guidelines:
+| Module       | Minimum CPU | Minimum memory | Minimum disk          | Network           | Instances |
+| -------- | -------- | -------- | ----------------- | -------------- | ------ |
+| Frontend | 8 cores     | 8 GB     | SSD/SATA, 10 GB+  | 1GbE/10GbE    | 1      |
+| Backend  | 8 cores     | 16 GB    | SSD/SATA, 50 GB+  | 1GbE/10GbE    | 1      |
 
-  * In a validation testing environment, one FE and one BE can be deployed on a single server, but it is not recommended to deploy multiple FE and BE instances on the same machine.
+### Production environment
 
-  * If 3 replicas of data are required, at least 3 servers are needed, with each server deploying one BE instance.
+It is recommended to deploy FE and BE separately. When resources are tight and they must be co-located, place their data on different disks.
 
-  | Module    | CPU        | Memory  | Disk                         | Network              | Minimum Instance Count |
-  | --------- | ---------- | ------- | ---------------------------- | -------------------- | ---------------------- |
-  | Frontend  | 8 cores +  | 8 GB+   | SSD or SATA, 10 GB+          | Gigabit/Ten-Gigabit  | 1                      |
-  | Backend   | 8 cores +  | 16 GB+  | SSD or SATA, 50 GB+          | Gigabit/Ten-Gigabit  | 1                      |
+| Module       | Recommended CPU | Recommended memory | Recommended disk          | Network    | Instances |
+| -------- | -------- | -------- | ----------------- | ------- | ------ |
+| Frontend | 16 cores+   | 64 GB+   | SSD, 100 GB+      | 10GbE   | 1      |
+| Backend  | 16 cores+   | 64 GB+   | SSD/SATA, 100 GB+ | 10GbE   | 3      |
 
-- **Production Environments**
+## Disk space calculation
 
-  In a production environment, it is recommended to deploy FE and BE instances independently, following these guidelines:
+<!-- Knowledge type: Storage capacity calculation -->
 
-  * If resources are limited and FE and BE need to be co-located on the same server, it is advised to store FE and BE data on separate hard drives.
+| Component | Recommended space | Description |
+| ---- | -------- | ---- |
+| FE   | 100 GB+  | SSD, used for metadata storage |
+| BE   | Total data volume x 3 x 1.4 | LZ4 compression ratio 0.3-0.5, 3 replicas + 40% reserved space for background compaction |
 
-  * BE nodes can be configured with multiple hard drives, allowing a single BE instance to utilize multiple HDD or SSD disks.
+> The BE storage calculation above is mainly for the **integrated storage and compute** deployment mode. In the **separated storage and compute** deployment mode, all data is stored in shared storage, and the local disk is used only for caching, so the disk size depends on the size of the hot data.
 
-  Recommended server specifications are as follows:
+## Java environment check
 
-  | Module    | CPU        | Memory   | Disk                         | Network   | Minimum Instance Count |
-  | --------- | ---------- | -------- | ---------------------------- | --------- | ---------------------- |
-  | Frontend  | 16 cores + | 64 GB+   | SSD or RAID card, 100 GB+     | 10-Gigabit | 1                      |
-  | Backend   | 16 cores + | 64 GB+   | SSD or SATA, 100 GB+          | 10-Gigabit | 3                      |
+<!-- Knowledge type: Java version requirements -->
 
-## Disk Space Calculation
+All Doris processes depend on Java.
 
-In the Doris cluster, FE (Frontend) is mainly used for metadata storage, including metadata edit logs and images. BE (Backend) disk space is primarily used for storing data, and it needs to be calculated based on business requirements. 
-| Component | Disk Space Description                                                                                             |
-| --------- | ------------------------------------------------------------------------------------------------------------------ |
-| FE        | It is recommended to reserve more than 100 GB of storage space, using SSD disks.                                      |
-| BE        | Doris uses LZ4 compression by default. The compression ratio is around 0.3 - 0.5. Disk space should be calculated as total data volume * 3 (for 3 replicas), and 40% of the space should be reserved for backend compaction and temporary data storage. |
-
-
-## Java Environment Check
-
-All Doris processes depend on Java:
-
-- **For versions before 2.1 (inclusive)**: please use Java 8, recommended version: `jdk-8u352` or later.
-
-- **For versions from 3.0 (inclusive) onwards**: please use Java 17, recommended version: `jdk-17.0.10` or later.
+| Doris version | Java version | Recommended version |
+| ---------- | --------- | -------- |
+| 2.1 (inclusive) and earlier | Java 8    | jdk-8u352+ |
+| 3.0 (inclusive) and later | Java 17   | jdk-17.0.10+ |

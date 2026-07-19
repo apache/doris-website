@@ -1,11 +1,18 @@
 ---
-{
-    "title": "Release Doris Core",
-    "language": "en"
-}
+title: Release Apache Doris Core
+language: en
+description: "Complete release process for Apache Doris Core: branch preparation, tag, signing, SVN upload, and Dev and IPMC voting."
+keywords:
+    - Apache Doris Core release
+    - Doris release process
+    - Apache voting
+    - SVN dist
+    - GPG signing
+    - Release Candidate rc01
+    - Release Manager
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,74 +31,84 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Release Doris Core
+# Release Apache Doris Core
 
-Doris Core refers to the content published in https://github.com/apache/doris.
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Version release / Apache voting process -->
 
-## Preparing for release
+Doris Core refers to the code in [https://github.com/apache/doris](https://github.com/apache/doris). This document describes the complete release process that a Release Manager follows, from branch preparation and verification through packaging, signing, and community voting.
 
-First, see the [release preparation](./release-prepare.md) documentation for release preparation.
+## Prepare for Release
 
-### Preparing a branch
+First, see the [Release Preparation](./release-prepare) document to complete the setup for signing, SVN, Maven, and other environments.
 
-You need to create a new branch before releasing. For example.
+### 1. Prepare the Branch
 
+Before releasing, create a new release branch, for example:
+
+```bash
+git checkout -b branch-0.9
 ```
-$ git checkout -b branch-0.9
-```
 
-This branch should be more fully tested to make features available, bugs converged, and important bugs fixed.
-This process requires waiting for the community to see if there are any necessary patches that need to be merged in for this release, and if so, cherry-picking it to the release branch.
+After the branch is created, run thorough tests so that features are usable, bugs converge, and important bugs are fixed. During this process, keep an eye on the community to see whether any necessary patches need to be cherry-picked into the release branch.
 
-### Clean up issues
+### 2. Clean Up Issues
 
-Go through all the issues that belong to this release, close the ones that are done, and if they can't be done, defer them to a later release.
+Go through all issues that belong to this release:
 
-### Merge necessary patches
+- Close those that are completed.
+- Defer those that cannot be completed in this release to a later version.
 
-If someone in the community says there are important bugs that need to be merged in, then the Release Manager needs to evaluate and merge the important patches into the release branch.
+### 3. Merge Necessary Patches
 
-## Validation branch
+While waiting to release, important patches may be merged. If the community reports an important bug that needs to be merged in, the Release Manager evaluates it and merges the corresponding patch into the release branch.
 
-### Stability testing
+## Verify the Branch
 
-Pass the batched branch to the QA students for stability testing. If during the testing process, there are issues that need to be fixed, then if during the testing process, there are issues that need to be fixed, then after they are fixed, the PRs that fix the issues need to be merged into the branch of the pending release.
+### 1. Stability Testing
 
-Only after the whole branch is stable, can you prepare to release the version.
+Hand the tagged branch over to the QA team for stability testing. If issues that need to be fixed appear during testing, merge the fix PRs into the release branch after they are completed.
 
-### Compile verification
+Only after the entire branch is stable can you prepare for the formal release.
 
-Please refer to the compilation documentation for compilation to ensure that the source code is compiled correctly.
+### 2. Compilation Verification
 
-### Prepare Release Notes
+See the compilation document and compile to make sure the source code compiles correctly.
 
-## Community Posting Voting Process
+### 3. Prepare Release Notes
 
-### Tagging
+Compile the main features, bug fixes, and compatibility changes of this release, and prepare release notes (usually published as a GitHub issue).
 
-Once the above branch is more stable, you can tag this branch.
-Remember to modify the `build_version` variable in `gensrc/script/gen_build_version.sh` when creating the tag. For example `build_version="0.10.0-release"`
+## Community Voting Process
 
-Example:
+### 1. Tag the Release
 
-```
+Once the branch is reasonably stable, you can create a tag on that branch.
+
+Before tagging, modify the `build_version` variable in `gensrc/script/gen_build_version.sh`, for example `build_version="0.10.0-release"`.
+
+```bash
 $ git checkout branch-0.9
 $ git tag -a 0.9.0-rc01 -m "0.9.0 release candidate 01"
 $ git push origin 0.9.0-rc01
 Counting objects: 1, done.
 Writing objects: 100% (1/1), 165 bytes | 0 bytes/s, done.
 Total 1 (delta 0), reused 0 (delta 0)
-To git@github.com:apache/incubator-doris.git
+To git@github.com:apache/doris.git
  * [new tag]         0.9.0-rc01 -> 0.9.0-rc01
 
 $ git tag
 ```
 
-### Package, sign and upload
+### 2. Package, Sign, and Upload
 
-For the following steps, you also need to log in to the user account directly through a terminal such as SecureCRT, not through `su - user` or `ssh`, otherwise the password input box will not be displayed and an error will be reported.
+:::caution Note
+The following steps require logging in to the user account directly through a terminal such as SecureCRT. Do not jump in via `su - user` or `ssh`, otherwise the password input box will not appear and an error will be reported.
+:::
 
-```
+Package the source code, and generate the GPG signature and SHA512 checksum file:
+
+```bash
 $ git checkout 0.9.0-rc01
 
 $ git archive --format=tar 0.9.0-rc01 --prefix=apache-doris-0.9.0-incubating-src/ | gzip > apache-doris-0.9.0-incubating-src.tar.gz
@@ -105,35 +122,45 @@ $ sha512sum apache-doris-0.9.0-incubating-src.tar.gz > apache-doris-0.9.0-incuba
 $ sha512sum --check apache-doris-0.9.0-incubating-src.tar.gz.sha512
 ```
 
-Then upload the packaged content to the svn repository by first downloading the svn library at:
+| File | Purpose |
+| --- | --- |
+| `*-src.tar.gz` | Source package |
+| `*-src.tar.gz.asc` | GPG signature file |
+| `*-src.tar.gz.sha512` | SHA512 checksum file |
 
-```
-svn co https://dist.apache.org/repos/dist/dev/incubator/doris/
+Download the Dev SVN repository:
+
+```bash
+svn co https://dist.apache.org/repos/dist/dev/doris/
 ```
 
-Organize all the previously obtained files into the following svn path:
+Organize the three files into the following SVN directory structure:
 
-```
+```text
 ./doris/
-|-- 0.9.0-rc1
+|-- 0.9.0-rc01
 |   |-- apache-doris-0.9.0-incubating-src.tar.gz
 |   |-- apache-doris-0.9.0-incubating-src.tar.gz.asc
 |   `-- apache-doris-0.9.0-incubating-src.tar.gz.sha512
 `-- KEYS
 ```
 
-Upload these file:
+Commit to SVN:
 
-```
-svn add 0.9.0-rc1
+```bash
+svn add 0.9.0-rc01
 svn commit -m "Add 0.9.0-rc1"
 ```
 
-### Email the community at dev@doris.apache.org to vote
+### 3. Start the Dev Mailing List Vote
 
-[VOTE] Release Apache Doris 0.9.0-incubating-rc01
+Start a vote on `dev@doris.apache.org` with the subject:
 
-```
+> [VOTE] Release Apache Doris 0.9.0-incubating-rc01
+
+Body template:
+
+```text
 Hi all,
 
 Please review and vote on Apache Doris 0.9.0-incubating-rc01 release.
@@ -158,9 +185,8 @@ https://downloads.apache.org/incubator/doris/KEYS
 It is also listed here:
 https://people.apache.org/keys/committer/lide.asc
 
-To verify and build, you can refer to following wiki:
-https://github.com/apache/incubator-doris/wiki/How-to-verify-Apache-Release
-https://wiki.apache.org/incubator/IncubatorReleaseChecklist
+To verify and build, you can refer to following link:
+http://doris.incubator.apache.org/community/release-and-verify/release-verify.html
 
 The vote will be open for at least 72 hours.
 [ ] +1 Approve the release
@@ -171,7 +197,7 @@ Best Regards,
 xxx
 
 ----
-DISCLAIMER: 
+DISCLAIMER:
 Apache Doris (incubating) is an effort undergoing incubation at The
 Apache Software Foundation (ASF), sponsored by the Apache Incubator PMC.
 
@@ -186,11 +212,15 @@ of the completeness or stability of the code, it does indicate
 that the project has yet to be fully endorsed by the ASF.
 ```
 
-### After the vote is approved, send the Result email
+### 4. Send the Dev Vote Result Email
 
-[Result][VOTE] Release Apache Doris 0.9.0-incubating-rc01
+After the vote passes, send the result email with the subject:
 
-```
+> [Result][VOTE] Release Apache Doris 0.9.0-incubating-rc01
+
+Body template:
+
+```text
 Thanks to everyone, and this vote is now closed.
 
 It has passed with 4 +1 (binding) votes and no 0 or -1 votes.
@@ -203,16 +233,21 @@ Binding:
 
 Best Regards,
 xxx
-
 ```
 
-### Email general@incubator.apache.org to vote
+### 5. Start the IPMC Vote
 
-**If not an incubator program, please skip**
+:::tip Tip
+If the project is not an incubator project, skip this section and the next one.
+:::
 
-[VOTE] Release Apache Doris 0.9.0-incubating-rc01
+Start the IPMC vote on `general@incubator.apache.org` with the subject:
 
-```
+> [VOTE] Release Apache Doris 0.9.0-incubating-rc01
+
+Body template:
+
+```text
 Hi all,
 
 Please review and vote on Apache Doris 0.9.0-incubating-rc01 release.
@@ -226,18 +261,18 @@ The vote result email thread:
 https://lists.apache.org/thread.html/64d229f0ba15d66adc83306bc8d7b7ccd5910ecb7e842718ce6a61da@%3Cdev.doris.apache.org%3E
 
 The release candidate has been tagged in GitHub as 0.9.0-rc01, available here:
-https://github.com/apache/incubator-doris/releases/tag/0.9.0-rc01
+https://github.com/apache/doris/releases/tag/0.9.0-rc01
 
 There is no CHANGE LOG file because this is the first release of Apache Doris.
 Thanks to everyone who has contributed to this release, and there is a simple release notes can be found here:
-https://github.com/apache/incubator-doris/issues/406
+https://github.com/apache/doris/issues/406
 
 The artifacts (source, signature and checksum) corresponding to this release candidate can be found here:
 https://dist.apache.org/repos/dist/dev/incubator/doris/0.9/0.9.0-rc01/
 
 This has been signed with PGP key 33DBF2E0, corresponding to lide@apache.org.
 KEYS file is available here:
-https://downloads.apache.org/incubator/doris/KEYS
+https://downloads.apache.org/doris/KEYS
 It is also listed here:
 https://people.apache.org/keys/committer/lide.asc
 
@@ -251,17 +286,17 @@ To verify and build, you can refer to following instruction:
 Firstly, you must be install and start docker service, and then you could build Doris as following steps:
 
 Step1: Pull the docker image with Doris building environment
-$ docker pull apache/incubator-doris:build-env-1.3.1
+$ docker pull apache/doris:build-env-1.3.1
 You can check it by listing images, its size is about 3.28GB.
 
 Step2: Run the Docker image
 You can run image directly:
-$ docker run -it apache/incubator-doris:build-env-1.3.1
+$ docker run -it apache/doris:build-env-1.3.1
 
 Step3: Download Doris source
 Now you should in docker environment, and you can download Doris source package.
 (If you have downloaded source and it is not in image, you can map its path to image in Step2.)
-$ wget https://dist.apache.org/repos/dist/dev/incubator/doris/0.9/0.9.0-rc01/apache-doris-0.9.0.rc01-incubating-src.tar.gz
+$ wget https://dist.apache.org/repos/dist/dev/doris/0.9/0.9.0-rc01/apache-doris-0.9.0.rc01-incubating-src.tar.gz
 
 Step4: Build Doris
 Now you can decompress and enter Doris source path and build Doris.
@@ -273,7 +308,7 @@ Best Regards,
 xxx
 
 ----
-DISCLAIMER: 
+DISCLAIMER:
 Apache Doris (incubating) is an effort undergoing incubation at The
 Apache Software Foundation (ASF), sponsored by the Apache Incubator PMC.
 
@@ -288,18 +323,25 @@ of the completeness or stability of the code, it does indicate
 that the project has yet to be fully endorsed by the ASF.
 ```
 
-The thread link for the email can be found here.
+You can look up the email thread link here:
 
-`https://lists.apache.org/list.html?dev@doris.apache.org`
-
-### Send Result email to general@incubator.apache.org
-
-**If not an incubator project, please skip**
-
-[RESULT][VOTE] Release Apache Doris 0.9.0-incubating-rc01
-
-
+```text
+https://lists.apache.org/list.html?dev@doris.apache.org
 ```
+
+### 6. Send the IPMC Vote Result Email
+
+:::tip Tip
+If the project is not an incubator project, skip this section.
+:::
+
+Send the result email to `general@incubator.apache.org` with the subject:
+
+> [RESULT][VOTE] Release Apache Doris 0.9.0-incubating-rc01
+
+Body template:
+
+```text
 Hi,
 
 Thanks to everyone, and the vote for releasing Apache Doris 0.9.0-incubating-rc01 is now closed.
@@ -319,6 +361,20 @@ Best Regards,
 xxx
 ```
 
-## Completing the release
+## Complete the Release
 
-Please refer to the [Release Completion](./release-complete.md) document to complete the release process.
+See the [Complete the Release](./release-complete) document to finish all release steps.
+
+## FAQ / Troubleshooting
+
+**Q: `gpg --verify` reports `gpg: Can't check signature: No public key`?**
+
+The corresponding public key is missing locally. Run `gpg --keyserver https://keyserver.ubuntu.com/ --recv-keys <KEY_ID>` to fetch the public key, then retry.
+
+**Q: `svn commit` reports `Authentication failed`?**
+
+Check whether the environment variables `$ASF_USERNAME` and `$ASF_PASSWORD` are set correctly. The password is the Apache LDAP password.
+
+**Q: Can a vote be closed early if it has been open for less than 72 hours?**
+
+No. Apache policy requires release votes to stay open for at least 72 hours, so you must wait until the time is up.

@@ -50,7 +50,6 @@ LOCAL(
 | `enable_mapping_varbinary` | Defaults to false. When reading PARQUET/ORC, it maps the BYTE_ARRAY type to STRING. When enabled, it maps to VARBINARY type. | Supported since 4.0.3 |
 | `enable_mapping_timestamp_tz` | Defaults to `false`. When reading PARQUET (`TIMESTAMP` with `isAdjustedToUTC`) or ORC (`TIMESTAMP_INSTANT`), the type is mapped to `DATETIME`. When enabled, it is mapped to the `TIMESTAMPTZ` type. | Supported since version 4.0.3 |
 
-
 ## Access Control Requirements
 | Privilege  | Object | Notes |
 | :--------- |:-------|:------|

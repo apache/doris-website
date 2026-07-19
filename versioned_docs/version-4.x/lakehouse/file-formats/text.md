@@ -1,7 +1,7 @@
 ---
 {
     "title": "Text/CSV/JSON",
-    "language": "zh-CN",
+    "language": "en",
     "description": "This document introduces the support for reading and writing text file formats in Doris."
 }
 ---

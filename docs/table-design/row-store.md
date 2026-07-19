@@ -1,87 +1,47 @@
 ---
 {
-    "title": "Hybrid Row-Columnar Storage",
+    "title": "Row Store",
     "language": "en",
-    "description": "Doris hybrid row-columnar storage enables row-oriented storage alongside columnar storage, reducing IOPS for point queries on wide tables."
+    "description": "Doris Row Store layers a row-based format on top of columnar storage, merging the multiple IOs of wide-table point queries into one and significantly reducing IOPS and query latency."
 }
 ---
 
-## Overview
+<!-- Knowledge type: Feature introduction / Configuration parameters -->
+<!-- Applicable scenarios: Wide-table point query / TOPN query performance tuning -->
 
-Doris uses columnar storage by default, where each column is stored contiguously. Columnar storage performs well in analytical scenarios (aggregation, filtering, sorting, etc.) because it reads only the required columns. However, when a query needs all columns — such as `SELECT *` in point query scenarios — each column requires a separate IO operation, making IOPS a bottleneck. This is especially noticeable on wide tables with hundreds of columns.
+**Row Store** is a Doris capability that stores an additional compact binary row-format copy of each row on top of columnar storage. It turns point-query scenarios from "one IO per column" into "one IO to read the whole row." This capability has been supported since Doris 2.0.0.
 
-To solve this, Doris supports **Hybrid Row-Columnar Storage** since version 2.0.0. When row storage is enabled at table creation, all columns of a row are concatenated into a single additional column using a compact binary format. A point query then reads a complete row in one IO operation instead of one IO per column, significantly reducing IOPS and improving latency.
+By default, Doris uses columnar storage, where each column is stored contiguously. Columnar storage performs well in analytical scenarios (aggregation, filtering, sorting, and so on) because only the required columns need to be read. However, in point-query scenarios (such as `SELECT *`), all columns need to be read, with one IO per column. On wide tables with many columns (for example, hundreds of columns), IOPS becomes a bottleneck.
 
-## Use Cases
+When row store is enabled, the system stores an additional column at write time, concatenating all columns of a row into a compact binary format. A point query then needs only one IO to read the complete row data, which substantially reduces IOPS and improves query latency.
 
-Row storage is recommended in the following scenarios:
+## Applicable Scenarios
 
-- **High-concurrency primary key point queries** on Unique Key merge-on-write (MOW) tables, where each query looks up a specific row by the full primary key.
-- **Wide-table `SELECT *` queries** on Duplicate or MOW tables where only a small number of rows are returned (TOPN pattern).
+Row store mainly targets the following two query categories. Use the table below to quickly judge whether to enable it:
 
-If your workload is primarily analytical (aggregation, complex filtering on a few columns), columnar storage alone is usually sufficient.
+| Scenario | Typical Query Pattern | Table Model Requirement | Recommended |
+|------|-------------|-----------|---------|
+| High-concurrency primary key point query | `SELECT ... FROM t WHERE pk1 = ? AND pk2 = ?` | Unique Key MOW table | Recommended |
+| Wide-table TOPN query | `SELECT * FROM t [WHERE ...] ORDER BY ... LIMIT N` | Duplicate table / Unique Key MOW table | Recommended |
+| Analytical query | Aggregation, complex filtering on a few columns, and so on | — | Not recommended (columnar storage is sufficient) |
 
-## Table Properties
+The following sections describe the trigger conditions, table-creation methods, and query examples for each scenario.
 
-Enable and configure row storage through the following `PROPERTIES` when creating a table.
+## Scenario 1: High-Concurrency Primary Key Point Query
 
-| Property | Default | Since | Description |
-|----------|---------|-------|-------------|
-| `"store_row_column" = "true"` | `false` | 2.0 | Enable row storage for **all** columns. |
-| `"row_store_columns" = "col1,col2,..."` | All columns | 3.0 | Enable row storage for **specified columns only**. When this property is set, `store_row_column` is implicitly enabled. Using selective columns reduces storage overhead compared to storing all columns. |
-| `"row_store_page_size" = "16384"` | `16384` (16 KB) | 2.0 | Size of the row-store page in bytes. A page is the minimum IO unit — reading even a single row requires one page IO. |
+This applies to high-concurrency scenarios on Unique Key MOW tables that look up specific rows by the full primary key. When the conditions are met, the query takes the Short-Circuit path and bypasses the regular execution pipeline.
 
-**Tuning `row_store_page_size`:**
+### Trigger Conditions
 
-| Goal | Recommended page_size | Trade-off |
-|------|----------------------|-----------|
-| Best point query performance | 4096 (4 KB) or smaller | Higher storage overhead |
-| Balanced (default) | 16384 (16 KB) | — |
-| Minimum storage overhead | 65536 (64 KB) or larger | Higher point query latency |
+All of the following conditions must be met **at the same time**:
 
-## When Row Storage Is Used
-
-Row storage is triggered in two scenarios. Each has different prerequisites.
-
-### Scenario 1: High-Concurrency Primary Key Point Query (Short-Circuit)
-
-This optimization applies when **all** of the following conditions are met:
-
-1. The table is a **Unique Key MOW table** (`"enable_unique_key_merge_on_write" = "true"`).
-2. Row storage is enabled via `"store_row_column" = "true"` or `"row_store_columns" = "..."`.
+1. The table is a Unique Key MOW table (`"enable_unique_key_merge_on_write" = "true"`).
+2. Row store is enabled via `"store_row_column" = "true"` or `"row_store_columns" = "..."`.
 3. The `WHERE` clause contains **equality conditions on all primary key columns**, joined by `AND`.
 
-Example queries:
+### Table Creation Example
 
-```sql
--- Full row retrieval
-SELECT * FROM tbl WHERE k1 = 1 AND k2 = 2;
-
--- Partial column retrieval
-SELECT v1, v2 FROM tbl WHERE k1 = 1 AND k2 = 2;
-```
-
-**Partial column coverage:** If the row store contains only some columns (e.g., `v1`) but the query also requests columns not in the row store (e.g., `v2`), Doris fetches the missing columns from the column store. The columns in the row store are still read efficiently, while the remaining columns incur normal columnar IO.
-
-**Verification:** Run `EXPLAIN` on the query and check for the `SHORT-CIRCUIT` marker. For details, see [High-Concurrency Point Query](../query-acceleration/high-concurrent-point-query).
-
-### Scenario 2: TOPN Deferred Materialization Query (Fetch Row Store)
-
-This optimization applies when **all** of the following conditions are met:
-
-1. The table is a **Duplicate** table, or a **Unique Key MOW table** (`"enable_unique_key_merge_on_write" = "true"`).
-2. **All columns** must be in the row store (`"store_row_column" = "true"`).
-3. The query follows the pattern `SELECT * FROM tbl [WHERE ...] ORDER BY ... LIMIT N`.
-4. The query must be `SELECT *` — selecting specific columns is not supported for this optimization.
-5. The TOPN deferred materialization optimization must be triggered. For details, see [TOPN Query Optimization](../query-acceleration/optimization-technology-principle/topn-optimization).
-
-**Verification:** Run `EXPLAIN` on the query and check for both the `FETCH ROW STORE` and `OPT TWO PHASE` markers.
-
-## Examples
-
-### Example 1: Unique Key MOW Table with Selective Row Store Columns
-
-Create a table with 8 columns, enable row storage for 5 selected columns, and set `page_size` to 4 KB for optimal point query performance:
+The following example creates a table with 8 columns, enables row store on only 5 of them, and sets `page_size` to 4 KB to achieve the best point-query performance:
 
 ```sql
 CREATE TABLE `tbl_point_query` (
@@ -105,17 +65,37 @@ PROPERTIES (
 );
 ```
 
-Point query on the row-stored columns:
+### Query Example
 
 ```sql
+-- Query all columns
+SELECT * FROM tbl_point_query WHERE k = 100;
+
+-- Query a subset of columns
 SELECT k, v1, v3, v5, v7 FROM tbl_point_query WHERE k = 100;
 ```
 
-Run `EXPLAIN` on this query — the output should include the `SHORT-CIRCUIT` marker. For more details, see [High-Concurrency Point Query](../query-acceleration/high-concurrent-point-query).
+**Handling partial-column row store:** If the row store contains only a subset of columns (for example, `v1`) but the query requests a column that is not in the row store (for example, `v2`), Doris reads the missing column from columnar storage. Columns in the row store are still read efficiently, while the remaining columns go through normal columnar IO.
 
-### Example 2: Duplicate Table with Full Row Store
+### Verification Method
 
-Create a Duplicate table with row storage enabled for all columns:
+Run `EXPLAIN` on the query. The output should contain the `SHORT-CIRCUIT` marker. For details, see [High-Concurrency Point Query](../query-acceleration/high-concurrent-point-query).
+
+## Scenario 2: TOPN Lazy Materialization Query
+
+This applies to wide-table `SELECT *` queries on Duplicate tables or Unique Key MOW tables that "sort and then take a small number of rows." When the conditions are met, the query takes the Fetch Row Store path and, combined with the TOPN two-phase optimization, fetches only the rows actually hit.
+
+### Trigger Conditions
+
+All of the following conditions must be met **at the same time**:
+
+1. The table is a Duplicate table, or a Unique Key MOW table (`"enable_unique_key_merge_on_write" = "true"`).
+2. Row store must be enabled on **all columns** (`"store_row_column" = "true"`).
+3. The query matches the pattern `SELECT * FROM tbl [WHERE ...] ORDER BY ... LIMIT N`.
+4. It must be `SELECT *`; selecting specific columns is not supported.
+5. The TOPN lazy materialization optimization must be triggered. For details, see [TOPN Query Optimization](../query-acceleration/optimization-technology-principle/topn-optimization).
+
+### Table Creation Example
 
 ```sql
 CREATE TABLE `tbl_duplicate` (
@@ -133,19 +113,41 @@ PROPERTIES (
 ```
 
 :::note
-`"store_row_column" = "true"` is required for Duplicate tables. The `row_store_columns` property is not supported with Duplicate tables — all columns are stored in the row store.
+Duplicate tables must set `"store_row_column" = "true"` and do not support specifying a subset of columns via `row_store_columns`. All columns are stored in the row store.
 :::
 
-TOPN query using row storage:
+### Query Example
 
 ```sql
 SELECT * FROM tbl_duplicate WHERE k < 10 ORDER BY k LIMIT 10;
 ```
 
-Run `EXPLAIN` on this query — the output should include both the `FETCH ROW STORE` marker and the `OPT TWO PHASE` marker.
+### Verification Method
 
-## Limitations
+Run `EXPLAIN` on the query. The output should contain both the `FETCH ROW STORE` marker and the `OPT TWO PHASE` marker.
 
-1. **Storage overhead:** Enabling row storage increases disk usage. Depending on data characteristics, the additional storage is typically 2–10× the original table size. Test with actual data to measure the impact.
-2. **page_size affects storage:** A smaller `row_store_page_size` improves point query performance but increases storage overhead. See the [Table Properties](#table-properties) section for tuning guidance.
-3. **ALTER not supported:** Modifying the `store_row_column` and `row_store_columns` properties via `ALTER TABLE` is not supported.
+## Configuration Parameters
+
+Set the following parameters in the `PROPERTIES` of `CREATE TABLE`:
+
+| Parameter | Default | Supported Versions | Description |
+|------|--------|---------|------|
+| `store_row_column` | `false` | 2.0+ | When set to `true`, enables row store on **all columns**. |
+| `row_store_columns` | All columns | 3.0+ | Enables row store on **specified columns** only, in the format `"col1,col2,..."`. When this parameter is set, `store_row_column` is implicitly enabled. Compared with full row store, this can significantly reduce storage overhead. |
+| `row_store_page_size` | `16384` (16 KB) | 2.0+ | Row store page size in bytes. The page is the minimum IO unit: even reading a single row produces one page of IO. |
+
+### `row_store_page_size` Tuning Recommendations
+
+`row_store_page_size` directly affects the trade-off between point-query performance and storage overhead:
+
+| Optimization Goal | Recommended Value | Trade-off |
+|---------|--------|------|
+| Best point-query performance | 4096 (4 KB) or smaller | Higher storage overhead |
+| Balanced (default) | 16384 (16 KB) | — |
+| Minimum storage overhead | 65536 (64 KB) or larger | Higher point-query latency |
+
+## Notes
+
+1. **Storage overhead:** Enabling row store increases disk usage. Depending on data characteristics, the additional storage is typically 2 to 10 times the original table size. Test with real data to evaluate the impact.
+2. **`page_size` affects storage:** A smaller `row_store_page_size` improves point-query performance but increases storage overhead. For tuning recommendations, see the [Configuration Parameters](#configuration-parameters) section.
+3. **ALTER not supported:** Modifying the `store_row_column` and `row_store_columns` properties through `ALTER TABLE` is not supported.

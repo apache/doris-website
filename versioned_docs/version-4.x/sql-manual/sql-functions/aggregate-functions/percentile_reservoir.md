@@ -76,14 +76,14 @@ FROM sales_data;
 ```
 
 ```sql
-select percentile(sale_price, NULL) from sales_data;
+select percentile_reservoir(sale_price, NULL) from sales_data;
 ```
 
 If all input values are NULL, returns NULL.
 
 ```text
 +------------------------------+
-| percentile(sale_price, NULL) |
+| percentile_reservoir(sale_price, NULL) |
 +------------------------------+
 |                         NULL |
 +------------------------------+

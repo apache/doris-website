@@ -58,7 +58,19 @@ SELECT rtrim('ababccaab', 'ab') str;
 +---------+
 ```
 
-3. UTF-8 character support
+3. Default trim only removes ASCII space — `RTRIM` does **not** strip tabs (`\t`) or newlines (`\n`) without a second argument. Compare `LENGTH` before and after: only the single trailing ASCII space is stripped; `\t\n` stay.
+```sql
+SELECT LENGTH('hello world  \t\n '), LENGTH(RTRIM('hello world  \t\n '));
+```
+```text
++------------------------------+-------------------------------------+
+| LENGTH('hello world  \t\n ') | LENGTH(RTRIM('hello world  \t\n ')) |
++------------------------------+-------------------------------------+
+|                           16 |                                  15 |
++------------------------------+-------------------------------------+
+```
+
+4. UTF-8 character support
 ```sql
 SELECT rtrim('ṭṛì ḍḍumai   ');
 ```
@@ -70,7 +82,7 @@ SELECT rtrim('ṭṛì ḍḍumai   ');
 +---------------------------+
 ```
 
-4. No matching suffix, return original string
+5. No matching suffix, return original string
 ```sql
 SELECT rtrim('Hello World', 'xyz');
 ```
@@ -82,7 +94,7 @@ SELECT rtrim('Hello World', 'xyz');
 +---------------------------------+
 ```
 
-5. NULL value handling
+6. NULL value handling
 ```sql
 SELECT rtrim(NULL), rtrim('Hello', NULL);
 ```
@@ -94,7 +106,7 @@ SELECT rtrim(NULL), rtrim('Hello', NULL);
 +-------------+------------------------+
 ```
 
-6. Empty string handling
+7. Empty string handling
 ```sql
 SELECT rtrim(''), rtrim('abc', '');
 ```
@@ -106,7 +118,7 @@ SELECT rtrim(''), rtrim('abc', '');
 +-----------+-------------------+
 ```
 
-7. Repeated trailing pattern removal
+8. Repeated trailing pattern removal
 ```sql
 SELECT rtrim('abcabcabc', 'abc');
 ```
@@ -118,7 +130,7 @@ SELECT rtrim('abcabcabc', 'abc');
 +-------------------------------+
 ```
 
-8. Multiple occurrences, remove only trailing match
+9. Multiple occurrences, remove only trailing match
 ```sql
 SELECT rtrim('HelloHelloWorld', 'Hello');
 ```

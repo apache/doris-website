@@ -36,7 +36,7 @@ export function SummitModal() {
             footer={null}
             width={410}
         >
-            <div style={{fontFamily:'Inter'}}>
+            <div style={{ fontFamily: 'var(--font-family-base)' }}>
                 <div
                     style={{ background: 'linear-gradient(263deg, #410DE7 0.83%, #8F4AFB 99.17%)' }}
                     className="h-[160px] w-full rounded-t-lg pl-[44px] pt-[44px]"

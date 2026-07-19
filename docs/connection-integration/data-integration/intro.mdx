@@ -1,0 +1,254 @@
+---
+{
+    "title": "Data Integration",
+    "language": "en",
+    "description": "Integrate Apache Doris with BI, data synchronization, stream processing, log observability, development management, and data modeling tools."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Data Integration
+
+Apache Doris supports integration with a wide range of data ecosystem tools. You can choose the right tool for your use case to apply Doris to data visualization, data migration and synchronization, real-time ingestion, log and observability analysis, database development and management, as well as data modeling and transformation.
+
+## BI and Visual Analytics
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Apache Superset"
+    icon="/images/next/connection-integration/data-integration/logos/apache-superset.png"
+    description="Configure a Doris data source in Superset to perform self-service analysis, build charts, and create dashboards"
+    link="./apache-superset"
+/>
+
+<GettingStartedCard
+    title="Metabase"
+    icon="/images/next/connection-integration/data-integration/logos/metabase.svg"
+    description="Query Doris through the Metabase Doris Driver and build interactive analytics dashboards"
+    link="./metabase"
+/>
+
+<GettingStartedCard
+    title="FineBI"
+    icon="/images/next/connection-integration/data-integration/logos/finebi.svg"
+    description="Connect FineBI to Doris for data modeling, multidimensional analysis, and dashboard building"
+    link="./finebi"
+/>
+
+<GettingStartedCard
+    title="Power BI"
+    icon="/images/next/connection-integration/data-integration/logos/powerbi.svg"
+    description="Query or import Doris data in Power BI Desktop through the Doris connector"
+    link="./powerbi"
+/>
+
+<GettingStartedCard
+    title="Tableau"
+    icon="/images/next/connection-integration/data-integration/logos/tableau.svg"
+    description="Access Doris through the official Tableau MySQL connector and build visualizations on Doris data"
+    link="./tableau"
+/>
+
+<GettingStartedCard
+    title="QuickSight"
+    icon="/images/next/connection-integration/data-integration/logos/quicksight.svg"
+    description="Use the AWS QuickSight MySQL data source to connect to Doris in either direct query or import mode"
+    link="./quicksight"
+/>
+
+<GettingStartedCard
+    title="Quick BI"
+    icon="/images/next/connection-integration/data-integration/logos/quickbi.png"
+    description="Create Doris data sources and datasets in Alibaba Cloud Quick BI to build visual analytics reports"
+    link="./quickbi"
+/>
+
+<GettingStartedCard
+    title="Smartbi"
+    icon="/images/next/connection-integration/data-integration/logos/smartbi.jpeg"
+    description="Integrate Smartbi with Doris for data connection, modeling, and visual analytics"
+    link="./smartbi"
+/>
+</div>
+
+## Database Development and Management
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="DataGrip"
+    icon="/images/next/connection-integration/data-integration/logos/datagrip.svg"
+    description="Use the DataGrip MySQL data source to connect to Doris and query and manage internal catalog and external catalog"
+    link="./datagrip"
+/>
+
+<GettingStartedCard
+    title="DBeaver"
+    icon="/images/next/connection-integration/data-integration/logos/dbeaver.svg"
+    description="Connect to Doris through the DBeaver MySQL driver for SQL queries and visual database management"
+    link="./dbeaver"
+/>
+
+<GettingStartedCard
+    title="CloudDM"
+    icon="/images/next/connection-integration/data-integration/logos/clouddm.svg"
+    description="Manage Doris data sources with CloudDM, with support for queries, visual editing, access control, and database CI/CD"
+    link="./clouddm"
+/>
+</div>
+
+## Data Migration, Synchronization, and Bulk Loading
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="CloudCanal"
+    icon="/images/next/connection-integration/data-integration/logos/cloudcanal.svg"
+    description="Use CloudCanal to migrate or synchronize data from sources such as MySQL, Oracle, PostgreSQL, and SQL Server to Doris"
+    link="./cloudcanal"
+/>
+
+<GettingStartedCard
+    title="DataX Doriswriter"
+    icon="/images/next/connection-integration/data-integration/logos/datax.jpg"
+    description="Use DataX Doriswriter to synchronize data from various sources to Doris through Stream Load"
+    link="./datax"
+/>
+
+<GettingStartedCard
+    title="Kettle Doris Plugin"
+    icon="/images/next/connection-integration/data-integration/logos/kettle.png"
+    description="Use the Doris plugin in Kettle jobs to write processed data into Doris through Stream Load"
+    link="./kettle"
+/>
+
+<GettingStartedCard
+    title="SeaTunnel Doris Sink"
+    icon="/images/next/connection-integration/data-integration/logos/seatunnel.png"
+    description="Use SeaTunnel Doris Sink for distributed data synchronization, with support for real-time synchronization and exactly-once writes"
+    link="./seatunnel"
+/>
+
+<GettingStartedCard
+    title="Doris Streamloader"
+    icon="/images/next/connection-integration/data-integration/logos/doris.png"
+    description="Use Doris Streamloader to perform multi-file, multi-concurrency Stream Load imports with resumable transfer support"
+    link="./doris-streamloader"
+/>
+
+<GettingStartedCard
+    title="Spark Load"
+    icon="/images/next/connection-integration/data-integration/logos/spark.png"
+    description="Use external Spark resources to preprocess and load large-scale historical data, reducing import pressure on the Doris cluster"
+    link="./spark-load"
+/>
+
+<GettingStartedCard
+    title="Hive UDF"
+    icon="/images/next/connection-integration/data-integration/logos/hive.svg"
+    description="Generate and compute Bitmap and HLL directly in Hive tables, and load them into Doris through Hive Catalog or Spark Load."
+    link="./hive-udf"
+/>
+</div>
+
+## Streaming Ingestion and Big Data Computing
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Flink Doris Connector"
+    icon="/images/next/connection-integration/data-integration/logos/flink.png"
+    description="Read from and write to Doris in Flink, with support for stream and batch writes, Lookup Join, and full-database synchronization based on Flink CDC"
+    link="./flink-doris-connector"
+/>
+
+<GettingStartedCard
+    title="Spark Doris Connector"
+    icon="/images/next/connection-integration/data-integration/logos/spark.png"
+    description="Read from and write to Doris in Spark through RDD, DataFrame, or Spark SQL, with support for batch and streaming writes"
+    link="./spark-doris-connector"
+/>
+
+<GettingStartedCard
+    title="Doris Kafka Connector"
+    icon="/images/next/connection-integration/data-integration/logos/kafka.png"
+    description="Use Kafka Connect to continuously write data from Kafka topics into Doris"
+    link="./doris-kafka-connector"
+/>
+
+<GettingStartedCard
+    title="AutoMQ Load"
+    icon="/images/next/connection-integration/data-integration/logos/automq.png"
+    description="Use Doris Routine Load to consume Kafka-compatible topics from AutoMQ for real-time data ingestion"
+    link="./automq"
+/>
+</div>
+
+## Logging and Observability
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Filebeat"
+    icon="/images/next/connection-integration/data-integration/logos/filebeat.svg"
+    description="Use the Beats Doris output plugin to collect logs, metrics, or audit data and write them into Doris in real time"
+    link="./beats"
+/>
+
+<GettingStartedCard
+    title="Fluent Bit"
+    icon="/images/next/connection-integration/data-integration/logos/fluentbit.svg"
+    description="Use the Fluent Bit Doris Output Plugin to collect logs and write them into Doris through Stream Load"
+    link="./fluentbit"
+/>
+
+<GettingStartedCard
+    title="Logstash"
+    icon="/images/next/connection-integration/data-integration/logos/logstash.svg"
+    description="Use the Logstash Doris output plugin to collect and preprocess logs and write them into Doris in real time"
+    link="./logstash"
+/>
+
+<GettingStartedCard
+    title="LoongCollector"
+    icon="/images/next/connection-integration/data-integration/logos/loongcollector.png"
+    description="Use the LoongCollector Doris Flusher to collect and process logs and write the data into Doris"
+    link="./loongcollector"
+/>
+
+<GettingStartedCard
+    title="OpenTelemetry"
+    icon="/images/next/connection-integration/data-integration/logos/opentelemetry.svg"
+    description="Export OpenTelemetry logs, traces, and metrics to Doris for unified analysis"
+    link="./opentelemetry"
+/>
+
+<GettingStartedCard
+    title="Vector"
+    icon="/images/next/connection-integration/data-integration/logos/vector.svg"
+    description="Use Vector Doris Sink to collect, transform, and route logs, metrics, and trace data to Doris"
+    link="./vector"
+/>
+
+<GettingStartedCard
+    title="Langfuse on Doris"
+    icon="/images/next/connection-integration/data-integration/logos/langfuse.svg"
+    description="Deploy Langfuse with Doris as the analytics backend for LLM application observability analysis"
+    link="./langfuse"
+/>
+</div>
+
+## Data Modeling and SQL Access
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="DBT Doris Adapter"
+    icon="/images/next/connection-integration/data-integration/logos/dbt.svg"
+    description="Use the dbt-doris adapter to run dbt models in Doris for ELT transformations and data modeling"
+    link="./dbt-doris-adapter"
+/>
+
+<GettingStartedCard
+    title="Kyuubi"
+    icon="/images/next/connection-integration/data-integration/logos/kyuubi.png"
+    description="Use the JDBC Engine of Apache Kyuubi to integrate Doris as a SQL query data source"
+    link="./kyuubi"
+/>
+</div>

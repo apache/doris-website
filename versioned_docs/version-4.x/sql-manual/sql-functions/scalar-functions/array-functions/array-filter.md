@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_FILTER",
     "language": "en",
-    
+    "description": "Filters array elements based on conditions and returns a new array composed of elements that satisfy the conditions."
 }
 ---
 
@@ -57,7 +57,9 @@ Usage notes:
 
 ### Examples
 
-```sql
+**Setup** — create a fixture table and load 4 rows covering normal, edge-case, empty, and NULL scenarios. All later examples reference this fixture.
+
+```sql {setup}
 CREATE TABLE array_filter_test (
     id INT,
     int_array ARRAY<INT>,
@@ -77,11 +79,13 @@ INSERT INTO array_filter_test VALUES
 (4, NULL, NULL, NULL);
 ```
 
-**Query examples:**
+**Example 1** — Lambda over a DOUBLE array column: keep elements `>= 3`.
 
-Using lambda expression to filter elements in double_array greater than or equal to 3:
-```sql
+```sql {example="1"}
 SELECT array_filter(x -> x >= 3, double_array) FROM array_filter_test WHERE id = 1;
+```
+
+```result {example="1"}
 +------------------------------------------+
 | array_filter(x -> x >= 3, double_array)  |
 +------------------------------------------+
@@ -89,19 +93,27 @@ SELECT array_filter(x -> x >= 3, double_array) FROM array_filter_test WHERE id =
 +------------------------------------------+
 ```
 
-Using lambda expression to filter elements in string_array with length greater than 2:
-```sql
+**Example 2** — Lambda over a STRING array column: keep elements with `length > 2`.
+
+```sql {example="2"}
 SELECT array_filter(x -> length(x) > 2, string_array) FROM array_filter_test WHERE id = 1;
+```
+
+```result {example="2"}
 +--------------------------------------------------+
 | array_filter(x -> length(x) > 2, string_array)   |
 +--------------------------------------------------+
 | ["ccc", "dddd", "eeeee"]                         |
-+------------------------------------------+
++--------------------------------------------------+
 ```
 
-Using boolean array to filter elements:
-```sql
+**Example 3** — Boolean-mask form: keep positions where the mask is `true`.
+
+```sql {example="3"}
 SELECT array_filter(int_array, [false, true, false, true, true]) FROM array_filter_test WHERE id = 1;
+```
+
+```result {example="3"}
 +-----------------------------------------------------------+
 | array_filter(int_array, [false, true, false, true, true]) |
 +-----------------------------------------------------------+
@@ -109,10 +121,13 @@ SELECT array_filter(int_array, [false, true, false, true, true]) FROM array_filt
 +-----------------------------------------------------------+
 ```
 
-Boolean array filtering example, deciding whether to keep elements at corresponding positions based on boolean values:
+**Example 4** — Boolean-mask form with literal arrays.
 
-```sql
+```sql {example="4"}
 SELECT array_filter([1,2,3], [true, false, true]);
+```
+
+```result {example="4"}
 +--------------------------------------------+
 | array_filter([1,2,3], [true, false, true]) |
 +--------------------------------------------+
@@ -120,9 +135,13 @@ SELECT array_filter([1,2,3], [true, false, true]);
 +--------------------------------------------+
 ```
 
-When the boolean array length is greater than the original array, excess boolean values will be ignored:
-```sql
+**Example 5** — Boolean array longer than the value array: extra mask entries are ignored.
+
+```sql {example="5"}
 SELECT array_filter([1,2,3], [true, false, true, false]);
+```
+
+```result {example="5"}
 +---------------------------------------------------+
 | array_filter([1,2,3], [true, false, true, false]) |
 +---------------------------------------------------+
@@ -130,9 +149,13 @@ SELECT array_filter([1,2,3], [true, false, true, false]);
 +---------------------------------------------------+
 ```
 
-When the boolean array length is less than the original array, only elements at corresponding positions in the boolean array will be processed:
-```sql
+**Example 6** — Boolean array shorter than the value array: only positions covered by the mask are processed.
+
+```sql {example="6"}
 SELECT array_filter([1,2,3], [true, false]);
+```
+
+```result {example="6"}
 +--------------------------------------+
 | array_filter([1,2,3], [true, false]) |
 +--------------------------------------+
@@ -140,9 +163,13 @@ SELECT array_filter([1,2,3], [true, false]);
 +--------------------------------------+
 ```
 
-Empty array returns empty array:
-```sql
+**Example 7** — Empty input array returns an empty array (row `id = 3`).
+
+```sql {example="7"}
 SELECT array_filter(x -> x > 0, int_array) FROM array_filter_test WHERE id = 3;
+```
+
+```result {example="7"}
 +-------------------------------------+
 | array_filter(x -> x > 0, int_array) |
 +-------------------------------------+
@@ -150,9 +177,13 @@ SELECT array_filter(x -> x > 0, int_array) FROM array_filter_test WHERE id = 3;
 +-------------------------------------+
 ```
 
-NULL array returns NULL: returning NULL when the input array is NULL without throwing an error.
-```sql
+**Example 8** — NULL input array returns NULL (row `id = 4`).
+
+```sql {example="8"}
 SELECT array_filter(x -> x > 0, int_array) FROM array_filter_test WHERE id = 4;
+```
+
+```result {example="8"}
 +-------------------------------------+
 | array_filter(x -> x > 0, int_array) |
 +-------------------------------------+
@@ -160,8 +191,13 @@ SELECT array_filter(x -> x > 0, int_array) FROM array_filter_test WHERE id = 4;
 +-------------------------------------+
 ```
 
-Array containing null values, lambda can evaluate null:
-```sql
+**Example 9** — Array containing NULL elements: lambda can test for `IS NOT NULL` to drop them.
+
+```sql {example="9"}
+SELECT array_filter(x -> x is not null, [null, 1, null, 2, null]);
+```
+
+```result {example="9"}
 +------------------------------------------------------------+
 | array_filter(x -> x is not null, [null, 1, null, 2, null]) |
 +------------------------------------------------------------+
@@ -169,9 +205,13 @@ Array containing null values, lambda can evaluate null:
 +------------------------------------------------------------+
 ```
 
-Multiple array filtering, filtering elements where int_array > double_array:
-```sql
+**Example 10** — Multi-argument lambda over two arrays from the fixture.
+
+```sql {example="10"}
 SELECT array_filter((x, y) -> x > y, int_array, double_array) FROM array_filter_test WHERE id = 1;
+```
+
+```result {example="10"}
 +--------------------------------------------------------+
 | array_filter((x, y) -> x > y, int_array, double_array) |
 +--------------------------------------------------------+
@@ -179,11 +219,13 @@ SELECT array_filter((x, y) -> x > y, int_array, double_array) FROM array_filter_
 +--------------------------------------------------------+
 ```
 
-Complex type examples:
+**Example 11** — Filter over a nested array literal: keep sub-arrays with `size > 2`.
 
-Nested array filtering, filtering elements where each sub-array length is greater than 2:
-```sql
+```sql {example="11"}
 SELECT array_filter(x -> size(x) > 2, [[1,2], [3,4,5], [6], [7,8,9,10]]);
+```
+
+```result {example="11"}
 +-------------------------------------------------------------------+
 | array_filter(x -> size(x) > 2, [[1,2], [3,4,5], [6], [7,8,9,10]]) |
 +-------------------------------------------------------------------+
@@ -191,9 +233,13 @@ SELECT array_filter(x -> size(x) > 2, [[1,2], [3,4,5], [6], [7,8,9,10]]);
 +-------------------------------------------------------------------+
 ```
 
-Map type filtering, filtering elements where the value of key 'a' is greater than 10:
-```sql
+**Example 12** — Filter over an array of MAPs: keep elements where `x['a'] > 10`.
+
+```sql {example="12"}
 SELECT array_filter(x -> x['a'] > 10, [{'a':5}, {'a':15}, {'a':20}]);
+```
+
+```result {example="12"}
 +---------------------------------------------------------------+
 | array_filter(x -> x['a'] > 10, [{'a':5}, {'a':15}, {'a':20}]) |
 +---------------------------------------------------------------+
@@ -201,9 +247,13 @@ SELECT array_filter(x -> x['a'] > 10, [{'a':5}, {'a':15}, {'a':20}]);
 +---------------------------------------------------------------+
 ```
 
-Struct type filtering, filtering elements where age is greater than 18:
-```sql
+**Example 13** — Filter over an array of STRUCTs by a field value.
+
+```sql {example="13"}
 SELECT array_filter(x -> struct_element(x, 'age') > 18, array(named_struct('name','Alice','age',20),named_struct('name','Bob','age',16),named_struct('name','Eve','age',30)));
+```
+
+```result {example="13"}
 +------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | array_filter(x -> struct_element(x, 'age') > 18, array(named_struct('name','Alice','age',20),named_struct('name','Bob','age',16),named_struct('name','Eve','age',30))) |
 +------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -211,32 +261,43 @@ SELECT array_filter(x -> struct_element(x, 'age') > 18, array(named_struct('name
 +------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-Incorrect number of parameters:
-```sql
+**Example 14** — Lambda parameter count must match the number of arrays passed in.
+
+```sql {example="14"}
 SELECT array_filter(x -> x > 0, [1,2,3], [4,5,6], [7,8,9]);
+```
+
+```error {example="14"}
 ERROR 1105 (HY000): errCode = 2, detailMessage = lambda x -> (x > 0) arguments' size is not equal parameters' size
 ```
 
-Inconsistent array lengths will cause an error:
-```sql
+**Example 15** — Multi-array form requires equal length across all input arrays.
+
+```sql {example="15"}
 SELECT array_filter((x, y) -> x > y, [1,2,3], [4,5]);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INVALID_ARGUMENT]in array map function, the input column size are not equal completely, nested column data rows 1st size is 3, 2th size is 2.
 ```
 
-Passing non-array type will cause an error:
-```sql
+```error {example="15"}
+ERROR 1105 (HY000): errCode = 2, detailMessage = [INVALID_ARGUMENT]in array map function, the input column size are not equal completely, nested column data rows 1st size is 3, 2th size is 2.
+```
+
+**Example 16** — The first argument must be an array.
+
+```sql {example="16"}
 SELECT array_filter(x -> x > 0, 'not_an_array');
+```
+
+```error {example="16"}
 ERROR 1105 (HY000): errCode = 2, detailMessage = lambda argument must be array but is 'not_an_array'
 ```
 
+**Example 17** — Nested higher-order function: inner `array_count` returns a scalar that the outer `array_filter` lambda can use.
 
-**Nested higher-order function examples:**
-
-**Correct example: calling higher-order functions that return scalars in lambda**
-
-The current example can be nested because the inner array_count returns a scalar value (INT64), which array_filter can handle.
-```sql
+```sql {example="17"}
 SELECT array_filter(x -> array_count(y -> y > 5, x) > 0, [[1,2,3],[4,5,6],[7,8,9]]);
+```
+
+```result {example="17"}
 +------------------------------------------------------------------------------+
 | array_filter(x -> array_count(y -> y > 5, x) > 0, [[1,2,3],[4,5,6],[7,8,9]]) |
 +------------------------------------------------------------------------------+
@@ -244,11 +305,13 @@ SELECT array_filter(x -> array_count(y -> y > 5, x) > 0, [[1,2,3],[4,5,6],[7,8,9
 +------------------------------------------------------------------------------+
 ```
 
-**Error example: lambda returns array type**
+**Example 18** — Counter-example: the outer `array_filter` lambda cannot return an array (`array_exists` returns ARRAY<BOOLEAN> here, not a scalar).
 
-The current example cannot be nested because the inner array_exists returns ARRAY<BOOLEAN>, while the outer array_filter expects lambda to return a scalar value
-```sql
+```sql {example="18"}
 SELECT array_filter(x -> array_exists(y -> y > 5, x), [[1,2,3],[4,5,6]]);
+```
+
+```error {example="18"}
 ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: array_filter(ARRAY<ARRAY<TINYINT>>, ARRAY<ARRAY<BOOLEAN>>)
 ```
 

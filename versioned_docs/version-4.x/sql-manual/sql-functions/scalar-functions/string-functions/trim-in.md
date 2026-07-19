@@ -60,16 +60,16 @@ SELECT trim_in('ababccaab', 'ab') str;
 +------+
 ```
 
-3. Comparison with TRIM function
+3. Comparison with TRIM function — `trim_in` treats the second argument as a *character set* and peels any of those characters from both ends, while `trim` treats it as a literal *substring* and peels exact matches from both ends. Both strip repeatedly until neither end has more to strip.
 ```sql
 SELECT trim_in('ababccaab', 'ab'), trim('ababccaab', 'ab');
 ```
 ```text
-+-----------------------------+--------------------------+
-| trim_in('ababccaab', 'ab')  | trim('ababccaab', 'ab')  |
-+-----------------------------+--------------------------+
-| cc                          | ababccaab                |
-+-----------------------------+--------------------------+
++----------------------------+-------------------------+
+| trim_in('ababccaab', 'ab') | trim('ababccaab', 'ab') |
++----------------------------+-------------------------+
+| cc                         | cca                     |
++----------------------------+-------------------------+
 ```
 
 4. Character set order does not matter

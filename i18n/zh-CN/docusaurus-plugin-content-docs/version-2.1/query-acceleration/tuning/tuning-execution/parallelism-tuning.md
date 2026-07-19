@@ -118,7 +118,7 @@ HASH_JOIN_OPERATOR (id=3 , nereids_id=448):
     - PeakMemoryUsage: sum 1.16 MB, avg 148.00 KB, max 148.00 KB, min 148.00 KB
     - ProbeKeyArena: sum 1.16 MB, avg 148.00 KB, max 148.00 KB, min 148.00 KB
   - OpenTime: avg 2.967us, max 4.120us, min 1.562us
-  - ProbeRows: sum 1.4662330332B (1462330332), avg 182.791291M (182791291), max 182.811875M (182811875), min 182.782658M (182782658)
+  - ProbeRows: sum 1.462330332B (1462330332), avg 182.791291M (182791291), max 182.811875M (182811875), min 182.782658M (182782658)
   - ProjectionTime: avg 165.392ms, max 169.762ms, min 161.727ms
   - RowsProduced: sum 1.462330332B (1462330332), avg 182.791291M (182791291), max 182.811875M (182811875), min 182.782658M (182782658)
 ```

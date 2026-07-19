@@ -39,6 +39,6 @@ DROP INDEX [ IF EXISTS ] <index_name> ON [ <db_name> . ] <table_name>;
 - 删除索引
 
    ```sql
-   DROP INDEX IF NOT EXISTS index_name ON table1 ;
+   DROP INDEX IF EXISTS index_name ON table1 ;
    ```
 

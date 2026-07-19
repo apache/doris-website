@@ -5,6 +5,8 @@ export type Option = {
     asc?: string;
     sha512?: string;
     source?: string;
+    Binary?: string;
+    Source?: string;
     children?: (Option & { version?: string })[];
     majorVersion?: string;
 };
@@ -26,13 +28,22 @@ export enum ToolsEnum {
     Flink = 'Flink Doris Connector',
     Spark = 'Spark Doris Connector',
     StreamLoader = 'Doris Streamloader',
+    Operator = 'Doris Operator',
 }
+
+export const TOOL_RELEASE_NOTES: Record<ToolsEnum, string> = {
+    [ToolsEnum.Kafka]: '/releases/ecosystem/doris-kafka-connector',
+    [ToolsEnum.Flink]: '/releases/ecosystem/doris-flink-connector',
+    [ToolsEnum.Spark]: '/releases/ecosystem/doris-spark-connector',
+    [ToolsEnum.StreamLoader]: '/releases/ecosystem/doris-streamloader',
+    [ToolsEnum.Operator]: '/releases/ecosystem/doris-operator',
+};
 
 export const ORIGIN = 'https://download.selectdb.com/';
 export enum VersionEnum {
-    Latest = '4.0.5',
-    Prev = '3.1.4',
-    Earlier = '3.0.8',
+    Latest = '4.1.3',
+    Prev = '4.0.7',
+    Earlier = '3.1.4',
 }
 
 export enum DownloadTypeEnum {
@@ -40,6 +51,210 @@ export enum DownloadTypeEnum {
     Source = 'Source',
 }
 export const DORIS_VERSIONS: Option[] = [
+    {
+        label: '4.1.3',
+        value: '4.1.3',
+        majorVersion: '4.1',
+        children: [
+            {
+                label: CPUEnum.X64,
+                value: CPUEnum.X64,
+                gz: `${ORIGIN}apache-doris-4.1.3-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.3-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.3-bin-x64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.3/',
+                version: '4.1.3-rc02',
+            },
+            {
+                label: CPUEnum.X64NoAvx2,
+                value: CPUEnum.X64NoAvx2,
+                gz: `${ORIGIN}apache-doris-4.1.3-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.3-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.3-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.3/',
+                version: '4.1.3-rc02',
+            },
+            {
+                label: CPUEnum.ARM64,
+                value: CPUEnum.ARM64,
+                gz: `${ORIGIN}apache-doris-4.1.3-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.3-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.3-bin-arm64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.3/',
+                version: '4.1.3-rc02',
+            },
+        ],
+    },
+    {
+        label: '4.1.2',
+        value: '4.1.2',
+        majorVersion: '4.1',
+        children: [
+            {
+                label: CPUEnum.X64,
+                value: CPUEnum.X64,
+                gz: `${ORIGIN}apache-doris-4.1.2-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.2-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.2-bin-x64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.2/',
+                version: '4.1.2',
+            },
+            {
+                label: CPUEnum.X64NoAvx2,
+                value: CPUEnum.X64NoAvx2,
+                gz: `${ORIGIN}apache-doris-4.1.2-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.2-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.2-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.2/',
+                version: '4.1.2',
+            },
+            {
+                label: CPUEnum.ARM64,
+                value: CPUEnum.ARM64,
+                gz: `${ORIGIN}apache-doris-4.1.2-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.2-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.2-bin-arm64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.2/',
+                version: '4.1.2',
+            },
+        ],
+    },
+    {
+        label: '4.1.1',
+        value: '4.1.1',
+        majorVersion: '4.1',
+        children: [
+            {
+                label: CPUEnum.X64,
+                value: CPUEnum.X64,
+                gz: `${ORIGIN}apache-doris-4.1.1-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.1-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.1-bin-x64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.1/',
+                version: '4.1.1',
+            },
+            {
+                label: CPUEnum.X64NoAvx2,
+                value: CPUEnum.X64NoAvx2,
+                gz: `${ORIGIN}apache-doris-4.1.1-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.1-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.1-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.1/',
+                version: '4.1.1',
+            },
+            {
+                label: CPUEnum.ARM64,
+                value: CPUEnum.ARM64,
+                gz: `${ORIGIN}apache-doris-4.1.1-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.1-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.1-bin-arm64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.1/',
+                version: '4.1.1',
+            },
+        ],
+    },
+    {
+        label: '4.1.0',
+        value: '4.1.0',
+        majorVersion: '4.1',
+        children: [
+            {
+                label: CPUEnum.X64,
+                value: CPUEnum.X64,
+                gz: `${ORIGIN}apache-doris-4.1.0-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.0-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.0-bin-x64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.0/',
+                version: '4.1.0',
+            },
+            {
+                label: CPUEnum.X64NoAvx2,
+                value: CPUEnum.X64NoAvx2,
+                gz: `${ORIGIN}apache-doris-4.1.0-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.0-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.0-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.0/',
+                version: '4.1.0',
+            },
+            {
+                label: CPUEnum.ARM64,
+                value: CPUEnum.ARM64,
+                gz: `${ORIGIN}apache-doris-4.1.0-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.1.0-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.1.0-bin-arm64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.0/',
+                version: '4.1.0',
+            },
+        ],
+    },
+    {
+        label: '4.0.7',
+        value: '4.0.7',
+        majorVersion: '4.0',
+        children: [
+            {
+                label: CPUEnum.X64,
+                value: CPUEnum.X64,
+                gz: `${ORIGIN}apache-doris-4.0.7-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.0.7-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.0.7-bin-x64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.7/',
+                version: '4.0.7',
+            },
+            {
+                label: CPUEnum.X64NoAvx2,
+                value: CPUEnum.X64NoAvx2,
+                gz: `${ORIGIN}apache-doris-4.0.7-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.0.7-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.0.7-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.7/',
+                version: '4.0.7',
+            },
+            {
+                label: CPUEnum.ARM64,
+                value: CPUEnum.ARM64,
+                gz: `${ORIGIN}apache-doris-4.0.7-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.0.7-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.0.7-bin-arm64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.7/',
+                version: '4.0.7',
+            },
+        ],
+    },
+    {
+        label: '4.0.6',
+        value: '4.0.6',
+        majorVersion: '4.0',
+        children: [
+            {
+                label: CPUEnum.X64,
+                value: CPUEnum.X64,
+                gz: `${ORIGIN}apache-doris-4.0.6-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.0.6-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.0.6-bin-x64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.6/',
+                version: '4.0.6',
+            },
+            {
+                label: CPUEnum.X64NoAvx2,
+                value: CPUEnum.X64NoAvx2,
+                gz: `${ORIGIN}apache-doris-4.0.6-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.0.6-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.0.6-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.6/',
+                version: '4.0.6',
+            },
+            {
+                label: CPUEnum.ARM64,
+                value: CPUEnum.ARM64,
+                gz: `${ORIGIN}apache-doris-4.0.6-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.0.6-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.0.6-bin-arm64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.6/',
+                version: '4.0.6',
+            },
+        ],
+    },
     {
         label: '4.0.5',
         value: '4.0.5',
@@ -327,9 +542,219 @@ export type AllVersionOption = {
 
 export const ALL_VERSIONS: AllVersionOption[] = [
     {
+        label: '4.1',
+        value: '4.1',
+        children: [
+            {
+                label: '4.1.3',
+                value: '4.1.3',
+                majorVersion: '4.1',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-4.1.3-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.3-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.3-bin-x64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.3/',
+                        version: '4.1.3-rc02',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-4.1.3-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.3-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.3-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.3/',
+                        version: '4.1.3-rc02',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-4.1.3-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.3-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.3-bin-arm64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.3/',
+                        version: '4.1.3-rc02',
+                    },
+                ],
+            },
+            {
+                label: '4.1.2',
+                value: '4.1.2',
+                majorVersion: '4.1',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-4.1.2-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.2-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.2-bin-x64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.2/',
+                        version: '4.1.2',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-4.1.2-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.2-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.2-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.2/',
+                        version: '4.1.2',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-4.1.2-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.2-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.2-bin-arm64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.2/',
+                        version: '4.1.2',
+                    },
+                ],
+            },
+            {
+                label: '4.1.1',
+                value: '4.1.1',
+                majorVersion: '4.1',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-4.1.1-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.1-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.1-bin-x64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.1/',
+                        version: '4.1.1',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-4.1.1-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.1-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.1-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.1/',
+                        version: '4.1.1',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-4.1.1-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.1-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.1-bin-arm64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.1/',
+                        version: '4.1.1',
+                    },
+                ],
+            },
+            {
+                label: '4.1.0',
+                value: '4.1.0',
+                majorVersion: '4.1',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-4.1.0-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.0-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.0-bin-x64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.0/',
+                        version: '4.1.0',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-4.1.0-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.0-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.0-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.0/',
+                        version: '4.1.0',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-4.1.0-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.0-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.0-bin-arm64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.0/',
+                        version: '4.1.0',
+                    },
+                ],
+            },
+        ],
+    },
+    {
         label: '4.0',
         value: '4.0',
         children: [
+            {
+                label: '4.0.7',
+                value: '4.0.7',
+                majorVersion: '4.0',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-4.0.7-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.0.7-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.0.7-bin-x64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.7/',
+                        version: '4.0.7',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-4.0.7-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.0.7-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.0.7-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.7/',
+                        version: '4.0.7',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-4.0.7-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.0.7-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.0.7-bin-arm64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.7/',
+                        version: '4.0.7',
+                    },
+                ],
+            },
+            {
+                label: '4.0.6',
+                value: '4.0.6',
+                majorVersion: '4.0',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-4.0.6-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.0.6-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.0.6-bin-x64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.6/',
+                        version: '4.0.6',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-4.0.6-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.0.6-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.0.6-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.6/',
+                        version: '4.0.6',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-4.0.6-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.0.6-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.0.6-bin-arm64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.6/',
+                        version: '4.0.6',
+                    },
+                ],
+            },
             {
                 label: '4.0.5',
                 value: '4.0.5',
@@ -2326,6 +2751,9 @@ const FLINK_SAME_SOURCE_2510 =
 const FLINK_SAME_SOURCE_2600 =
     'https://downloads.apache.org/doris/flink-connector/26.0.0/apache-doris-flink-connector-26.0.0-src.tgz';
 
+const FLINK_SAME_SOURCE_2611 =
+    'https://downloads.apache.org/doris/flink-connector/26.1.1/apache-doris-flink-connector-26.1.1-src.tgz';
+
 const SPARK_SAME_SOURCE_132 =
     'https://downloads.apache.org/doris/spark-connector/1.3.2/apache-doris-spark-connector-1.3.2-src.tar.gz';
 const SPARK_SAME_SOURCE_120 =
@@ -2334,11 +2762,71 @@ const SPARK_SAME_SOURCE_120 =
 const SPARK_SAME_SOURCE_2520 =
     'https://downloads.apache.org/doris/spark-connector/25.2.0/apache-doris-spark-connector-25.2.0-src.tgz';
 
+const SPARK_SAME_SOURCE_2600 =
+    'https://downloads.apache.org/doris/spark-connector/26.0.0/apache-doris-spark-connector-26.0.0-src.tgz';
+
+const DORIS_OPERATOR_SOURCE_VERSIONS = [
+    '25.8.0',
+    '25.7.0',
+    '25.6.0',
+    '25.5.3',
+    '25.5.2',
+    '25.5.1',
+    '25.5.0',
+    '25.4.0',
+    '25.3.0',
+    '25.2.1',
+    '25.2.0',
+    '25.1.0',
+    '24.2.0',
+    '24.1.0',
+    '24.0.0',
+];
+
+const DORIS_OPERATOR_BINARY_VERSIONS = [
+    '25.8.0',
+    '25.7.0',
+    '25.6.0',
+    '25.5.3',
+    '25.5.2',
+    '25.5.1',
+    '25.5.0',
+    '25.4.0',
+    '25.3.0',
+    '25.2.1',
+    '25.2.0',
+    '25.1.0',
+    '24.2.0',
+];
+
+const DORIS_OPERATOR_VERSIONS = DORIS_OPERATOR_SOURCE_VERSIONS.map(version => {
+    const source = `https://downloads.apache.org/doris/doris-operator/${version}/apache-doris-operator-${version}-src.tar.gz`;
+
+    return {
+        label: version,
+        value: version,
+        gz: source,
+        Source: source,
+        asc: `${source}.asc`,
+        sha512: `${source}.sha512`,
+        ...(DORIS_OPERATOR_BINARY_VERSIONS.includes(version)
+            ? { Binary: `docker pull apache/doris:operator-${version}` }
+            : {}),
+    };
+});
+
 export const TOOL_VERSIONS = [
     {
         label: ToolsEnum.Kafka,
         value: ToolsEnum.Kafka,
         children: [
+            {
+                label: '26.0.0',
+                value: '26.0.0',
+                gz: 'https://downloads.apache.org/doris/kafka-connector/26.0.0/apache-doris-kafka-connector-26.0.0-src.tgz',
+                Source: 'https://downloads.apache.org/doris/kafka-connector/26.0.0/apache-doris-kafka-connector-26.0.0-src.tgz',
+                Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/doris-kafka-connector/26.0.0/doris-kafka-connector-26.0.0.jar',
+            },
             {
                 label: '25.0.0',
                 value: '25.0.0',
@@ -2366,6 +2854,75 @@ export const TOOL_VERSIONS = [
         label: ToolsEnum.Flink,
         value: ToolsEnum.Flink,
         children: [
+            {
+                label: '26.1.1',
+                value: '26.1.1',
+                children: [
+                    {
+                        value: '2.2',
+                        label: 'For Flink 2.2',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-2.2/26.1.1/flink-doris-connector-2.2-26.1.1.jar',
+                    },
+                    {
+                        value: '2.1',
+                        label: 'For Flink 2.1',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-2.1/26.1.1/flink-doris-connector-2.1-26.1.1.jar',
+                    },
+                    {
+                        value: '2.0',
+                        label: 'For Flink 2.0',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-2.0/26.1.1/flink-doris-connector-2.0-26.1.1.jar',
+                    },
+                    {
+                        value: '1.20',
+                        label: 'For Flink 1.20',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.20/26.1.1/flink-doris-connector-1.20-26.1.1.jar',
+                    },
+                    {
+                        value: '1.19',
+                        label: 'For Flink 1.19',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.19/26.1.1/flink-doris-connector-1.19-26.1.1.jar',
+                    },
+                    {
+                        value: '1.18',
+                        label: 'For Flink 1.18',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.18/26.1.1/flink-doris-connector-1.18-26.1.1.jar',
+                    },
+                    {
+                        value: '1.17',
+                        label: 'For Flink 1.17',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.17/26.1.1/flink-doris-connector-1.17-26.1.1.jar',
+                    },
+                    {
+                        value: '1.16',
+                        label: 'For Flink 1.16',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.16/26.1.1/flink-doris-connector-1.16-26.1.1.jar',
+                    },
+                    {
+                        value: '1.15',
+                        label: 'For Flink 1.15',
+                        gz: FLINK_SAME_SOURCE_2611,
+                        Source: FLINK_SAME_SOURCE_2611,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/flink-doris-connector-1.15/26.1.1/flink-doris-connector-1.15-26.1.1.jar',
+                    },
+                ],
+            },
             {
                 label: '26.0.0',
                 value: '26.0.0',
@@ -2734,6 +3291,54 @@ export const TOOL_VERSIONS = [
         value: ToolsEnum.Spark,
         children: [
             {
+                label: '26.0.0',
+                value: '26.0.0',
+                children: [
+                    {
+                        value: '3.5_2.12',
+                        label: 'For Spark 3.5_2.12',
+                        gz: SPARK_SAME_SOURCE_2600,
+                        Source: SPARK_SAME_SOURCE_2600,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-spark-3.5/26.0.0/spark-doris-connector-spark-3.5-26.0.0.jar',
+                    },
+                    {
+                        value: '3.4_2.12',
+                        label: 'For Spark 3.4_2.12',
+                        gz: SPARK_SAME_SOURCE_2600,
+                        Source: SPARK_SAME_SOURCE_2600,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-spark-3.4/26.0.0/spark-doris-connector-spark-3.4-26.0.0.jar',
+                    },
+                    {
+                        value: '3.3_2.12',
+                        label: 'For Spark 3.3_2.12',
+                        gz: SPARK_SAME_SOURCE_2600,
+                        Source: SPARK_SAME_SOURCE_2600,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-spark-3.3/26.0.0/spark-doris-connector-spark-3.3-26.0.0.jar',
+                    },
+                    {
+                        value: '3.2_2.12',
+                        label: 'For Spark 3.2_2.12',
+                        gz: SPARK_SAME_SOURCE_2600,
+                        Source: SPARK_SAME_SOURCE_2600,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-spark-3.2/26.0.0/spark-doris-connector-spark-3.2-26.0.0.jar',
+                    },
+                    {
+                        value: '3.1_2.12',
+                        label: 'For Spark 3.1_2.12',
+                        gz: SPARK_SAME_SOURCE_2600,
+                        Source: SPARK_SAME_SOURCE_2600,
+                        Binary: 'https://repository.apache.org/content/repositories/releases/org/apache/doris/spark-doris-connector-spark-3.1/26.0.0/spark-doris-connector-spark-3.1-26.0.0.jar',
+                    },
+                    {
+                        value: '2_2.11',
+                        label: 'For Spark 2_2.11',
+                        gz: SPARK_SAME_SOURCE_2600,
+                        Source: SPARK_SAME_SOURCE_2600,
+                        Binary: 'https://repo1.maven.org/maven2/org/apache/doris/spark-doris-connector-spark-2/26.0.0/spark-doris-connector-spark-2-26.0.0.jar',
+                    },
+                ],
+            },
+            {
                 label: '25.2.0',
                 value: '25.2.0',
                 children: [
@@ -2917,6 +3522,25 @@ export const TOOL_VERSIONS = [
         value: ToolsEnum.StreamLoader,
         children: [
             {
+                label: '1.0.3',
+                value: '1.0.3',
+                children: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: 'https://download.selectdb.com/apache-doris-streamloader-1.0.3-bin-x64.tar.gz',
+                        Binary: 'https://download.selectdb.com/apache-doris-streamloader-1.0.3-bin-x64.tar.gz',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: 'https://download.selectdb.com/apache-doris-streamloader-1.0.3-bin-arm64.tar.gz',
+                        Binary: 'https://download.selectdb.com/apache-doris-streamloader-1.0.3-bin-arm64.tar.gz',
+                    },
+                ],
+                source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.3/apache-doris-streamloader-1.0.3-src.tar.gz',
+            },
+            {
                 label: '1.0.2',
                 value: '1.0.2',
                 children: [
@@ -2955,6 +3579,11 @@ export const TOOL_VERSIONS = [
                 source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.1/apache-doris-streamloader-1.0.1-src.tar.gz',
             },
         ],
+    },
+    {
+        label: ToolsEnum.Operator,
+        value: ToolsEnum.Operator,
+        children: DORIS_OPERATOR_VERSIONS,
     },
 ];
 

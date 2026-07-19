@@ -51,7 +51,7 @@ When mapping SAP HANA, the Database in Doris corresponds to a Schema under the s
 | ------------------ | --------------------------------- | ------------------------------------------------------------ |
 | boolean            | boolean                           |                                                              |
 | tinyint            | tinyint                           |                                                              |
-| smalling           | smalling                          |                                                              |
+| smallint           | smallint                          |                                                              |
 | integer            | int                               |                                                              |
 | bigint             | bigint                            |                                                              |
 | smalldecimal(P, S) | decimal(P, S) or double or string | If precision is not specified, the double type is used. If the precision exceeds the maximum precision supported by Doris, the string type is used. |

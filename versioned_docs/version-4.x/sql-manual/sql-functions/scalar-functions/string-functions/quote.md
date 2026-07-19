@@ -30,7 +30,6 @@ Special cases:
 - If input is NULL, returns the string 'NULL' (without quotes)
 - Single quotes `'` are escaped to `\'`
 - Backslashes `\` are escaped to `\\`
-- `\\` is escaped to `\`
 - Empty string returns `''`
 
 ## Examples

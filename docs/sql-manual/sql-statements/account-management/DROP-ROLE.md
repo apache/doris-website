@@ -36,6 +36,12 @@ The user executing this SQL command must have at least the following privileges:
 
 ## Example
 
+Setup — create `role1` so the DROP example has a target:
+
+```sql
+CREATE ROLE role1;
+```
+
 - Drop a role1
 
 ```sql

@@ -2,42 +2,82 @@
 {
     "title": "HLL 近似去重",
     "language": "zh-CN",
-    "description": "在实际的业务场景中，随着业务数据量越来越大，数据去重的压力也随之增大，当数据达到一定规模之后，使用精准去重的成本也越来越高。HLL 的特点是具有非常优异的空间复杂度 O(mloglogn)，时间复杂度为 O(n)，并且计算结果的误差可控制在 1%—2% 左右，"
+    "description": "如何用 HLL（HyperLogLog）在 Doris 中实现近似去重？误差 1%-2%，空间复杂度 O(mloglogn)，适合大规模 UV/基数统计。",
+    "keywords": [
+        "HLL",
+        "HyperLogLog",
+        "近似去重",
+        "基数统计",
+        "UV 统计",
+        "HLL_UNION_AGG",
+        "HLL_HASH"
+    ]
 }
 ---
 
-# HLL 近似去重
+<!-- 知识类型: 能力定义 / 操作步骤 -->
+<!-- 适用场景: 大规模数据去重 / UV 统计 / 基数估算 -->
+
+HLL（HyperLogLog）是一种基于概率算法的近似去重方案，在 1%-2% 误差范围内，以极低的空间和时间开销完成海量数据的基数（Distinct Count）统计。
 
 ## 使用场景
 
-在实际的业务场景中，随着业务数据量越来越大，数据去重的压力也随之增大，当数据达到一定规模之后，使用精准去重的成本也越来越高。HLL 的特点是具有非常优异的空间复杂度 O(mloglogn)，时间复杂度为 O(n)，并且计算结果的误差可控制在 1%—2% 左右，误差与数据集大小以及所采用的哈希函数有关。
+<!-- 知识类型: 架构选型决策 -->
 
-在业务可以接受的情况下，通过近似算法来实现快速去重降低计算压力是一个非常好的方式。
+随着业务数据量不断增大，精准去重的计算和存储成本随之飙升。当数据规模达到一定量级后，使用精准去重已不经济。
+
+HLL 算法具备以下特性：
+
+| 维度       | 表现                          |
+| :--------- | :---------------------------- |
+| 空间复杂度 | O(mloglogn)                   |
+| 时间复杂度 | O(n)                          |
+| 误差范围   | 约 1%-2%（与数据集与哈希函数有关） |
+
+在业务可接受误差的前提下，使用 HLL 进行近似去重是降低计算压力、加速查询的有效方式。
+
+- 适合谁用：数据量巨大、可接受 1%-2% 误差、追求查询性能与存储成本平衡的场景。
+- 怎么用：建表时将列类型设为 `HLL`、聚合函数设为 `HLL_UNION`，导入时通过 `HLL_HASH()` 生成 HLL 值，查询时使用 `HLL_UNION_AGG()` 聚合。
+- 常见用途：UV 统计、用户去重、独立设备数估算。
 
 ## 什么是 HyperLogLog
 
-它是 LogLog 算法的升级版，作用是能够提供不精确的去重计数。其数学基础为**伯努利试验**。
+<!-- 知识类型: 原理说明 -->
 
-假设硬币拥有正反两面，一次的上抛至落下，最终出现正反面的概率都是 50%。一直抛硬币，直到它出现正面为止，我们记录为一次完整的实验。
+HyperLogLog 是 LogLog 算法的升级版，用于提供不精确的基数（去重计数）估算，其数学基础为**伯努利试验**。
 
-那么对于多次的伯努利试验，假设这个多次为 n 次。就意味着出现了 n 次的正面。假设每次伯努利试验所经历了的抛掷次数为 k。第一次伯努利试验，次数设为 k1，以此类推，第 n 次对应的是 kn。
+### 伯努利试验直观解释
 
-其中，对于这 n 次伯努利试验中，必然会有一个最大的抛掷次数 k，例如抛了 12 次才出现正面，那么称这个为 k_max，代表抛了最多的次数。
+- 假设硬币有正反两面，单次抛硬币得到正反面的概率各为 50%。
+- 一直抛硬币直到出现正面，记录为一次完整试验。
+- 重复进行 n 次试验，意味着出现了 n 次正面；记每次试验所抛掷的次数为 k，第 i 次试验记为 k_i。
+- 在 n 次试验中，必然存在一个最大抛掷次数，记为 k_max（例如某次试验抛了 12 次才出现正面）。
 
-伯努利试验容易得出有以下结论：
+### 由此得出的结论
 
-- n 次伯努利过程的投掷次数都不大于 k_max。
-- n 次伯努利过程，至少有一次投掷次数等于 k_max
+- n 次伯努利试验的投掷次数都不大于 k_max。
+- n 次伯努利试验中至少有一次投掷次数等于 k_max。
 
-最终结合极大似然估算的方法，发现在 n 和 k_max 中存在估算关联：n = 2 ^ k_max。**当我们只记录了 k_max 时，即可估算总共有多少条数据，也就是基数。**
+结合极大似然估算，可得到 n 与 k_max 的估算关系：**n = 2 ^ k_max**。
+
+也就是说，**只要记录 k_max，即可估算总共有多少条数据，即基数**。这正是 HLL 算法的核心思想。
 
 ## 使用 HLL 进行近似去重
 
-### 创建表
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 建表 -> 导入 -> 查询 -->
 
-1. 使用 HLL 去重的时候，需要在建表语句中将目标列类型设置成 HLL，聚合函数设置成 HLL_UNION
-2. HLL 类型的列不能作为 Key 列使用
-3. 用户不需要指定长度及默认值，长度根据数据聚合程度系统内控制
+### 步骤 1：创建表
+
+**目的**：创建一张支持 HLL 去重的聚合表。
+
+**约束**：
+
+1. 目标列类型需设为 `HLL`，聚合函数需设为 `HLL_UNION`。
+2. HLL 类型的列不能作为 Key 列使用。
+3. 用户不需要指定长度及默认值，HLL 列长度由系统根据数据聚合程度内部控制。
+
+**示例**：
 
 ```SQL
 create table test_hll(
@@ -56,9 +96,11 @@ PROPERTIES(
 );
 ```
 
-### 导入数据
+### 步骤 2：导入数据
 
-示例数据如下（test_hll.csv)，这里通过 Stream Load 导入
+**目的**：将原始明细数据通过 `HLL_HASH()` 转换为 HLL 列后写入表中。
+
+**示例数据**（`test_hll.csv`）：
 
 ```SQL
 2022-05-05,10001,测试 01,北京,windows 
@@ -71,7 +113,7 @@ PROPERTIES(
 2022-05-06,10004,测试 01,陕西,windows
 ```
 
-#### Stream load 导入
+#### Stream Load 导入命令
 
 ```SQL
 curl --location-trusted -u root: -H "label:label_test_hll_load" \
@@ -79,7 +121,7 @@ curl --location-trusted -u root: -H "label:label_test_hll_load" \
     -H "columns:dt,id,name,province,os,uv=hll_hash(id)" -T test_hll.csv http://fe_IP:8030/api/demo/test_hll/_stream_load
 ```
 
- 导入结果如下
+#### 导入结果示例
 
 ```SQL
 # curl --location-trusted -u root: -H "label:label_test_hll_load"     -H "column_separator:,"     -H "columns:dt,id,name,province,os, pv=hll_hash(id)" -T test_hll.csv http://127.0.0.1:8030/api/demo/test_hll/_stream_load
@@ -104,11 +146,13 @@ curl --location-trusted -u root: -H "label:label_test_hll_load" \
 }
 ```
 
-#### 查询数据
+### 步骤 3：查询数据
 
-HLL 列不允许直接查询原始值，只能通过 HLL 的聚合函数进行查询。
+**目的**：通过 HLL 聚合函数获得近似去重结果。
 
-**求总的 UV**
+> 注意：HLL 列不允许直接查询原始值，只能通过 HLL 的聚合函数进行查询。
+
+#### 求总的 UV
 
 ```SQL
 mysql> select HLL_UNION_AGG(uv) from test_hll;
@@ -120,7 +164,7 @@ mysql> select HLL_UNION_AGG(uv) from test_hll;
 1 row in set (0.00 sec)
 ```
 
-   等价于：
+等价写法：
 
 ```SQL
 mysql> SELECT COUNT(DISTINCT uv) FROM test_hll;
@@ -132,7 +176,7 @@ mysql> SELECT COUNT(DISTINCT uv) FROM test_hll;
 1 row in set (0.01 sec)
 ```
 
-**求每一天的 UV**
+#### 求每一天的 UV
 
 ```SQL
 mysql> select HLL_UNION_AGG(uv) from test_hll group by dt;
@@ -147,10 +191,11 @@ mysql> select HLL_UNION_AGG(uv) from test_hll group by dt;
 
 ## 相关函数
 
-**HLL_UNION_AGG(hll)**：此函数为聚合函数，用于计算满足条件的所有数据的基数估算
+<!-- 知识类型: 配置参数 / 函数清单 -->
 
-**HLL_CARDINALITY(hll)**：此函数用于计算单条 HLL 列的基数估算
-
-**HLL_HASH(column_name)**：生成 HLL 列类型，用于 Insert 或导入的时候，导入的使用见上文
-
-**HLL_EMPTY()**：生成空 HLL 列，用于 `insert` 或导入数据时补充默认值
+| 函数                       | 用途                                                                 |
+| :------------------------- | :------------------------------------------------------------------- |
+| `HLL_UNION_AGG(hll)`       | 聚合函数，用于计算满足条件的所有数据的基数估算                        |
+| `HLL_CARDINALITY(hll)`     | 计算单条 HLL 列的基数估算                                            |
+| `HLL_HASH(column_name)`    | 生成 HLL 列类型，用于 Insert 或导入时（导入用法见上文）              |
+| `HLL_EMPTY()`              | 生成空 HLL 列，用于 `insert` 或导入数据时补充默认值                  |

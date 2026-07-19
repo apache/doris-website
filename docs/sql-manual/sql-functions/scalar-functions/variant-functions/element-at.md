@@ -8,10 +8,11 @@
 
 ## Function
 
-The `ELEMENT_AT` function is used to extract the element value from an array or map based on the specified index or key.
+The `ELEMENT_AT` function is used to extract the element value from an array, map, struct, or variant based on the specified index or key.
 
 - When applied to an **ARRAY**, it returns the element at the specified position.  
 - When applied to a **MAP**, it returns the value corresponding to the specified key.  
+- When applied to a **STRUCT**, it returns the subfield at the specified position (starting from 1) or with the specified field name, equivalent to `STRUCT_ELEMENT`.  
 - When applied to a **VARIANT**, it returns the value of the specified subfield.
 
 ## Syntax
@@ -22,10 +23,11 @@ ELEMENT_AT(container, key_or_index)
 
 ## Parameters
 
-- `container`: Can be `ARRAY`, `MAP`, or `VARIANT`.
+- `container`: Can be `ARRAY`, `MAP`, `STRUCT`, or `VARIANT`.
 - `key_or_index`:
   - For `ARRAY`: An integer, with indexing starting from **1**.  
   - For `MAP`: The key type (`K`) of the `MAP`, which can be any supported primitive type.  
+  - For `STRUCT`: A constant integer field position (starting from **1**) or a constant string field name (matched **case-insensitively**).  
   - For `VARIANT` object access: A string key.
   - For a VARIANT array on `ColumnVariantV2`: An integer index; non-negative indexes are 0-based and negative indexes count backward from the end.
 
@@ -33,17 +35,17 @@ ELEMENT_AT(container, key_or_index)
 
 - For `ARRAY`: Returns the element at the specified index (`T` type).  
 - For `MAP`: Returns the value corresponding to the specified key (`V` type).  
+- For `STRUCT`: Returns the specified subfield value.  
 - For `VARIANT`: Returns a `VARIANT` type value.  
-- If the index or key does not exist, returns `NULL`.  
+- If the index or key does not exist, returns `NULL` (for `STRUCT`, an out-of-bound position or a non-existent field name reports an error).  
 - If the parameter is `NULL`, returns `NULL`.
 
 ## Notes
 
-1. **Array indexes start from 1**, not 0.  
-2. Negative indexes are supported: `-1` represents the last element, `-2` the second-to-last, and so on.  
-3. The `ELEMENT_AT(container, key_or_index)` function behaves the same as `container[key_or_index]` (see examples for details).
-
-After `SET enable_variant_v2 = true`, integer access into a VARIANT array uses zero-based non-negative indexes: `0` is the first element and `1` is the second; `-1` is the last. Out-of-range indexes return `NULL`. The result is still VARIANT; CAST it before typed comparison or aggregation.
+1. **ARRAY indexes start from 1**, not 0.  
+2. When `enable_variant_v2` is enabled, non-negative indexes into a VARIANT array start from `0`; `0` is the first element and `-1` is the last.  
+3. Negative indexes are supported for ARRAY and VARIANT array access: `-1` represents the last element, `-2` the second-to-last, and so on.  
+4. The `ELEMENT_AT(container, key_or_index)` function behaves the same as `container[key_or_index]` (see examples for details).
 
 ```sql
 SET enable_variant_v2 = true;
@@ -101,7 +103,25 @@ SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
     +-----------------------------------+
     ```
 
-4. When accessing a subfield of a `VARIANT`, if the `VARIANT` value is not an OBJECT, an empty value is returned.
+4. Accessing a `STRUCT` subfield by position or by field name (equivalent to `STRUCT_ELEMENT`).
+
+    ```SQL
+    SELECT ELEMENT_AT(NAMED_STRUCT('name', 'Jack', 'id', 1728923), 1);
+    +------------------------------------------------------------+
+    | ELEMENT_AT(NAMED_STRUCT('name', 'Jack', 'id', 1728923), 1) |
+    +------------------------------------------------------------+
+    | Jack                                                       |
+    +------------------------------------------------------------+
+
+    SELECT NAMED_STRUCT('name', 'Jack', 'id', 1728923)['id'];
+    +--------------------------------------------------+
+    | NAMED_STRUCT('name', 'Jack', 'id', 1728923)['id'] |
+    +--------------------------------------------------+
+    |                                          1728923 |
+    +--------------------------------------------------+
+    ```
+
+5. When accessing a subfield of a `VARIANT`, if the `VARIANT` value is not an OBJECT, an empty value is returned.
 
     ```SQL
     SELECT ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a");

@@ -6,8 +6,6 @@
 }
 ---
 
-## ipv6_cidr_to_range
-
 ## Description
 Calculates the minimum and maximum IPv6 addresses for a network segment based on an IPv6 address and CIDR prefix length, returning a struct containing two IPv6 addresses.
 
@@ -38,39 +36,39 @@ Return Value Meaning:
 
 Calculate address range for /64 network segment.
 ```sql
-SELECT ipv6_cidr_to_range(INET6_ATON('2001:db8::1'), 64) as range;
-+----------------------------------------+
-| range                                  |
-+----------------------------------------+
+SELECT ipv6_cidr_to_range(to_ipv6('2001:db8::1'), 64) as `range`;
++---------------------------------------------------------------+
+| range                                                         |
++---------------------------------------------------------------+
 | {"min": "2001:db8::", "max": "2001:db8::ffff:ffff:ffff:ffff"} |
-+----------------------------------------+
++---------------------------------------------------------------+
 ```
 
 Calculate address range for /48 network segment.
 ```sql
-SELECT ipv6_cidr_to_range(INET6_ATON('2001:db8:1::1'), 48) as range;
-+----------------------------------------+
-| range                                  |
-+----------------------------------------+
-| {"min": "2001:db8:1::", "max": "2001:db8:1:ffff:ffff:ffff:ffff"} |
-+----------------------------------------+
+SELECT ipv6_cidr_to_range(to_ipv6('2001:db8:1::1'), 48) as `range`;
++---------------------------------------------------------------------+
+| range                                                               |
++---------------------------------------------------------------------+
+| {"min": "2001:db8:1::", "max": "2001:db8:1:ffff:ffff:ffff:ffff:ffff"} |
++---------------------------------------------------------------------+
 ```
 
 Access specific fields in the struct.
 ```sql
 SELECT 
-  ipv6_cidr_to_range(INET6_ATON('2001:db8::1'), 64).min as min_ip,
-  ipv6_cidr_to_range(INET6_ATON('2001:db8::1'), 64).max as max_ip;
-+-------------+----------------------------------+
-| min_ip      | max_ip                           |
-+-------------+----------------------------------+
-| 2001:db8::  | 2001:db8::ffff:ffff:ffff:ffff   |
-+-------------+----------------------------------+
+  ipv6_cidr_to_range(to_ipv6('2001:db8::1'), 64).min as min_ip,
+  ipv6_cidr_to_range(to_ipv6('2001:db8::1'), 64).max as max_ip;
++------------+-------------------------------+
+| min_ip     | max_ip                        |
++------------+-------------------------------+
+| 2001:db8:: | 2001:db8::ffff:ffff:ffff:ffff |
++------------+-------------------------------+
 ```
 
 CIDR prefix out of range throws an exception.
 ```sql
-SELECT ipv6_cidr_to_range(INET6_ATON('2001:db8::1'), 129);
+SELECT ipv6_cidr_to_range(to_ipv6('2001:db8::1'), 129);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (...)[INVALID_ARGUMENT]Illegal cidr value '129'
 ```
 

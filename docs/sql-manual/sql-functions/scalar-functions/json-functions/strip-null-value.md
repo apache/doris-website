@@ -27,7 +27,7 @@ STRIP_NULL_VALUE( <json_doc> )
 ## Examples
 0. Prepare data
 ```sql
-create table my_test(id, v json) properties('replication_num' = '1');
+create table my_test(id INT, v json) properties('replication_num' = '1');
 insert into my_test values(0, 'null'), (1, null), (2, 123), (3, '{"key": 445}'), (4, '{"key": null}');
 
 select * from my_test;
@@ -46,7 +46,7 @@ select * from my_test;
     |    3 | {"key":445}  | {"key":445}         |
     |    4 | {"key":null} | {"key":null}        |
     +------+--------------+---------------------+
-    1 row in set (0.02 sec)
+    5 rows in set (0.02 sec)
     ```
 
 2. Example 2

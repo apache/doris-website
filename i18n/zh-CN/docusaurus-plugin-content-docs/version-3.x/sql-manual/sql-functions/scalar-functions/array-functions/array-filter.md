@@ -32,6 +32,14 @@ ARRAY_FILTER(<arr>, <filter_column>)
 ## 举例
 
 ```sql
+-- setup
+create table array_test(id int, c_array array<int>) distributed by hash(id) buckets 1 properties ("replication_num"="1");
+insert into array_test values (1,[1,2,3,4,5]),(2,[6,7,8]),(3,[]),(4,null);
+create table array_test2(id int, c_array1 array<int>, c_array2 array<int>) distributed by hash(id) buckets 1 properties ("replication_num"="1");
+insert into array_test2 values (1,[1,2,3,4,5],[10,20,-40,80,-100]),(2,[6,7,8],[10,12,13]),(3,[1],[-100]),(4,null,null);
+```
+
+```sql
 select c_array,array_filter(c_array,[0,1,0]) from array_test;
 ```
 

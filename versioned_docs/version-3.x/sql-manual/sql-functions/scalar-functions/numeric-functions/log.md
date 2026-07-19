@@ -13,15 +13,15 @@ Returns the logarithm of `x` based on base `b`.
 ## Syntax
 
 ```sql
-LOG(<b>[, <x>])
+LOG([<b>, ]<x>)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 |-----------|------------|
-| `<b>`     | Base should be greater than 0 and not be exactly 1.0 |
-| `<x>`     | optional, Antilogarithm should be greater than 0, default value is e |
+| `<b>`     | Optional. Base should be greater than 0 and not be exactly 1.0. If omitted, the natural logarithm (base e) is computed. |
+| `<x>`     | Antilogarithm should be greater than 0 |
 
 ## Return value
 

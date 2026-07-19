@@ -33,7 +33,7 @@ YEAR_CEIL(<date_or_time_expr>, <period>, <origin>)
 | Parameter | Description |
 |-----------|-------------|
 | `<date_or_time_expr>` | The datetime value to round up, supports date/datetime/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| `<period>` | Optional, represents how many seconds each period consists of, supports positive integer type (INT). Default is 1 second. |
+| `<period>` | Optional, represents how many years each period consists of, supports positive integer type (INT). Default is 1 year. |
 | `<origin_datetime>` | Starting point for the interval, supports date/datetime types; defaults to 0000-01-01 00:00:00. |
 
 ## Return Value
@@ -128,11 +128,11 @@ SELECT YEAR_CEIL('2023-07-13 22:22:56', 1, '2028-01-01 08:30:00') AS result;
 -- TimeStampTz sample, SET time_zone = '+08:00'
 -- Convert to local_time (2026-01-01 02:59:59) and then perform YEAR_CEIL
 SELECT YEAR_CEIL('2025-12-31 23:59:59+05:00');
-+---------------------------------------+
-| YEAR_CEIL('2025-12-31 23:59:59+05:00')|
-+---------------------------------------+
-| 2027-01-01 00:00:00+08:00             |
-+---------------------------------------+
++----------------------------------------+
+| YEAR_CEIL('2025-12-31 23:59:59+05:00') |
++----------------------------------------+
+| 2027-01-01 00:00:00+08:00              |
++----------------------------------------+
 
 -- If parameters contain both TimeStampTz and Datetime types, output DateTime type
 SELECT YEAR_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');

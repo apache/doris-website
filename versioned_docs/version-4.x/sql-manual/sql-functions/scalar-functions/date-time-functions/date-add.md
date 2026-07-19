@@ -30,7 +30,7 @@ DATE_ADD(<date_or_time_expr>, INTERVAL <expr> <time_unit>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_expr>` | The date/time value to be processed. Supported types: datetime or date type, with a maximum precision of six decimal places for seconds (e.g., 2022-12-28 23:59:59.999999). For specific formats, please refer to [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/time-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The date/time value to be processed. Supported types: datetime or date type, with a maximum precision of six decimal places for seconds (e.g., 2022-12-28 23:59:59.999999). For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<expr>` | The time interval to be added, for independent units (such as `YEAR`) are of `INT` type; for compound units (such as `YEAR_MONTH`) are of `STRING` type, and accept all non-numeric characters as separators. Therefore, for example, `INTERVAL 6/4 HOUR_MINUTE` will be recognized as 6 hours 4 minutes by Doris, rather than 1 hour 30 minutes (6/4 == 1.5). For compound units, if the input interval value is too short, the value of the larger unit will be set to 0. The sign of this value is determined solely by whether the first non-numeric character is `-`. |
 | `<time_unit>` | Enumeration values: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, YEAR_MONTH, DAY_HOUR, DAY_MINUTE, DAY_SECOND, DAY_MICROSECOND, HOUR_MINUTE, HOUR_SECOND, HOUR_MICROSECOND, MINUTE_SECOND, MINUTE_MICROSECOND, SECOND_MICROSECOND | 
 
@@ -56,10 +56,6 @@ DATE_ADD(<date_or_time_expr>, INTERVAL <expr> <time_unit>)
 | MINUTE_SECOND      | 'MINUTES:SECONDS'                         |
 | MINUTE_MICROSECOND | 'MINUTES:SECONDS.MICROSECONDS'            |
 | SECOND_MICROSECOND | 'SECONDS.MICROSECONDS'                    |
-
-:::note
-Composite units except `MINUTE`, `SECOND`, `DAY_SECOND`, `DAY_HOUR`, `MINUTE_SECOND`, and `SECOND_MICROSECOND` are supported from version 4.0.4.
-:::
 
 ## Return Value
 
@@ -145,7 +141,7 @@ mysql>  select DATE_ADD('2025-10-23 10:10:10', INTERVAL '1 2' DAY_HOUR);
 +----------------------------------------------------------+
 
 -- For compound units, accept all non-numeric characters as separators.
-mysql> select DATE_ADD('2025-10-23 10:10:10', INTERVAL '   *1@#$2' DAY_HOUR);
+select DATE_ADD('2025-10-23 10:10:10', INTERVAL '   *1@#$2' DAY_HOUR);
 +----------------------------------------------------------------+
 | DATE_ADD('2025-10-23 10:10:10', INTERVAL '   *1@#$2' DAY_HOUR) |
 +----------------------------------------------------------------+
@@ -170,7 +166,7 @@ mysql>  select date_add("2025-10-10 10:10:10.123456", INTERVAL "1.1" SECOND_MICR
 
 -- For composite units, the sign of the time interval is determined only by whether the first non-digit character is `-`
 -- All subsequent `-` are considered part of the delimiter
-mysql> select 
+select 
         DATE_ADD('2025-10-23 10:10:10', INTERVAL '#-1:-1' MINUTE_SECOND) AS first_not_sub,
         DATE_ADD('2025-10-23 10:10:10', INTERVAL '  -1:1' MINUTE_SECOND) AS first_sub;
 +---------------------+---------------------+
@@ -180,7 +176,7 @@ mysql> select
 +---------------------+---------------------+
 
 -- For composite units, if the input time interval is too short, the value of the larger unit will be set to 0.
-mysql> select DATE_ADD('2025-10-23 10:10:10', INTERVAL '1' MINUTE_SECOND) AS minute_interval_is_zero
+select DATE_ADD('2025-10-23 10:10:10', INTERVAL '1' MINUTE_SECOND) AS minute_interval_is_zero
 +-------------------------+
 | minute_interval_is_zero |
 +-------------------------+

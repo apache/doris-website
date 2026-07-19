@@ -70,10 +70,10 @@ Apache Doris 同样对 Apache Hudi 数据表的读取能力进行了增强：
 3. 启动后，可以使用如下脚本，登陆 Spark 命令行或 Doris 命令行：
 
 	```sql
-	-- Doris
+	-- Spark
 	sudo ./login-spark.sh
 	
-	-- Spark
+	-- Doris
 	sudo ./login-doris.sh
 	```
 

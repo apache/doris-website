@@ -8,10 +8,11 @@
 
 ## 功能
 
-`ELEMENT_AT` 函数用于从数组或 map 中按指定的索引或键提取对应的元素值。
+`ELEMENT_AT` 函数用于从数组、map、struct 或 variant 中按指定的索引或键提取对应的元素值。
 
 - 当作用于 **数组（ARRAY）** 时，返回指定位置的元素；
 - 当作用于 **MAP** 时，返回指定键对应的值。
+- 当作用于 **STRUCT** 时，返回指定位置（从 1 开始）或指定字段名对应的子列，等价于 `STRUCT_ELEMENT`。
 - 当作用于 **VARIANT** 时，返回指定子列对应的值。
 
 ## 语法
@@ -22,10 +23,11 @@ ELEMENT_AT(container, key_or_index)
 
 ## 参数
 
-- `container`：可以是`ARRAY`, `MAP`, `VARIANT`。
+- `container`：可以是`ARRAY`, `MAP`, `STRUCT`, `VARIANT`。
 - `key_or_index`：
   - 对于 `ARRAY`：为整数类型，索引从 **1** 开始；
   - 对于 `MAP`：为 `MAP` 中的键类型（`K`），可为任意支持的基础类型。
+  - 对于 `STRUCT`：为常量整数（字段位置，从 **1** 开始）或常量字符串（字段名，按**大小写不敏感**匹配）。
   - 对于 `VARIANT` 对象访问：为字符串类型的 key；
   - 对于 `ColumnVariantV2` 中的 VARIANT 数组：为整数索引，非负索引从 0 开始，负数索引从数组末尾倒数。
 
@@ -33,17 +35,17 @@ ELEMENT_AT(container, key_or_index)
 
 - 若为 `ARRAY`，返回数组中对应索引的元素（`T` 类型）；
 - 若为 `MAP`，返回对应键的值（`V` 类型）；
+- 若为 `STRUCT`，返回指定的子列值；
 - 若为 `VARIANT`， 返回 `VARIANT` 类型；
-- 如果索引或键不存在，返回 `NULL`；
+- 如果索引或键不存在，返回 `NULL`（对于 `STRUCT`，位置越界或字段名不存在会报错）；
 - 如果参数为 `NULL`，返回 `NULL`。
 
 ## 使用说明
 
-1. **数组索引从 1 开始**，不是从 0 开始；
-2. 支持负数索引，`-1` 表示最后一个元素，`-2` 表示倒数第二个，以此类推；
-3. `ELEMENT_AT(container, key_or_index)` 函数的功能与 `container[key_or_index]` 作用一致（详细见示例）。
-
-执行 `SET enable_variant_v2 = true` 后，VARIANT 数组的整数访问使用非负索引从 0 开始的规则：`0` 表示第一个元素，`1` 表示第二个元素，`-1` 表示最后一个元素；越界索引返回 `NULL`。返回值仍是 VARIANT，如需按确定类型比较或聚合，请先 CAST。
+1. **ARRAY 数组索引从 1 开始**，不是从 0 开始；
+2. 开启 `enable_variant_v2` 后，VARIANT 数组的非负索引从 `0` 开始，`0` 表示第一个元素，`-1` 表示最后一个元素；
+3. ARRAY 和 VARIANT 数组都支持负数索引，`-1` 表示最后一个元素，`-2` 表示倒数第二个，以此类推；
+4. `ELEMENT_AT(container, key_or_index)` 函数的功能与 `container[key_or_index]` 作用一致（详细见示例）。
 
 ```sql
 SET enable_variant_v2 = true;
@@ -101,7 +103,25 @@ SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
     +-----------------------------------+
     ```
 
-4. 访问 `VARIANT` 的某个子列，如果 `VARIANT` 的值不是 OBJECT，返回空
+4. 按位置或字段名访问 `STRUCT` 的子列（等价于 `STRUCT_ELEMENT`）。
+
+    ```SQL
+    SELECT ELEMENT_AT(NAMED_STRUCT('name', 'Jack', 'id', 1728923), 1);
+    +------------------------------------------------------------+
+    | ELEMENT_AT(NAMED_STRUCT('name', 'Jack', 'id', 1728923), 1) |
+    +------------------------------------------------------------+
+    | Jack                                                       |
+    +------------------------------------------------------------+
+
+    SELECT NAMED_STRUCT('name', 'Jack', 'id', 1728923)['id'];
+    +--------------------------------------------------+
+    | NAMED_STRUCT('name', 'Jack', 'id', 1728923)['id'] |
+    +--------------------------------------------------+
+    |                                          1728923 |
+    +--------------------------------------------------+
+    ```
+
+5. 访问 `VARIANT` 的某个子列，如果 `VARIANT` 的值不是 OBJECT，返回空
 
     ```SQL
      SELECT ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a");

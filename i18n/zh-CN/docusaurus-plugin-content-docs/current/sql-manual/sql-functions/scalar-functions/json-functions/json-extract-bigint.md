@@ -33,7 +33,7 @@ JSON_EXTRACT_BIGINT(<json_object>, <json_path>)
 ## 示例
 1. 正常参数
     ```sql
-    SELECT json_extract_int('{"id": 122222222222223, "name": "doris"}', '$.id');
+    SELECT json_extract_bigint('{"id": 122222222222223, "name": "doris"}', '$.id');
     ```
     ```text
     +-------------------------------------------------------------------------+

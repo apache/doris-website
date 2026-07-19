@@ -2,7 +2,7 @@
 {
     "title": "SPLIT_BY_REGEXP/REGEXP_SPLIT_TO_ARRAY",
     "language": "en",
-    "description": "The SPLITBYREGEXP function splits a string into an array of strings based on a specified regular expression pattern. Unlike SPLITBYSTRING,"
+    "description": "The SPLIT_BY_REGEXP function splits a string into an array of strings based on a specified regular expression pattern. Unlike SPLITBYSTRING,"
 }
 ---
 

@@ -1,0 +1,71 @@
+---
+{
+    "title": "Materialized View",
+    "language": "en",
+    "description": "Apache Doris materialized view chapter navigation: covers concepts, synchronous materialized views, asynchronous materialized views, transparent rewriting, and FAQs."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+A materialized view is an entity that contains both computation logic and data. You can use it for query acceleration, lightweight ETL modeling, and lakehouse federated query acceleration. Start by understanding the concepts, then choose between synchronous and asynchronous materialized views based on your freshness requirements.
+
+## Concept Introduction
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Materialized View Overview"
+    description="Understand the applicable scenarios of materialized views and make selection decisions based on freshness, SQL pattern, and refresh method."
+    link="overview"
+/>
+</div>
+
+## Synchronous Materialized View
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Synchronous Materialized View"
+    description="Use synchronous materialized views to keep data strongly consistent with the base table, accelerating real-time aggregation and sorting scenarios."
+    link="sync-materialized-view"
+/>
+
+<GettingStartedCard
+    title="Transparent Rewriting with Synchronous Materialized View"
+    description="Learn how the optimizer transparently rewrites queries to synchronous materialized views, including supported patterns and limitations."
+    link="../tuning/tuning-plan/transparent-rewriting-with-sync-mv"
+/>
+</div>
+
+## Asynchronous Materialized View
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Asynchronous Materialized View Overview"
+    description="Master the refresh modes, multi-table support, partition incremental refresh, and typical use cases of asynchronous materialized views."
+    link="async-materialized-view/overview"
+/>
+
+<GettingStartedCard
+    title="Creation and Maintenance"
+    description="Operations manual for creating asynchronous materialized views, querying them directly, managing refreshes, and maintaining partitions."
+    link="async-materialized-view/functions-and-demands"
+/>
+
+<GettingStartedCard
+    title="Usage Guide"
+    description="Best practices for scenario judgment, usage principles, refresh strategy selection, and build implementation."
+    link="async-materialized-view/use-guide"
+/>
+
+<GettingStartedCard
+    title="Transparent Rewriting with Asynchronous Materialized View"
+    description="How the SPJG-pattern-based rewriting algorithm transparently rewrites existing queries to asynchronous materialized views without modifying SQL."
+    link="../tuning/tuning-plan/transparent-rewriting-with-async-mv"
+/>
+
+<GettingStartedCard
+    title="FAQ"
+    description="Answers to frequently asked questions about partition refresh, base table versions, and operational troubleshooting."
+    link="async-materialized-view/faq"
+/>
+</div>

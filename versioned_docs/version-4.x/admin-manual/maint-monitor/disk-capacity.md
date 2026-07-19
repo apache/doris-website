@@ -1,151 +1,260 @@
 ---
 {
-    "title": "Disk Capacity Management | Maint Monitor",
+    "title": "Disk Capacity Management",
     "language": "en",
-    "description": "This document mainly introduces system parameters and processing strategies related to disk storage capacity.",
-    "sidebar_label": "Disk Capacity Management"
+    "description": "Covers the Doris BE disk watermark mechanism (high watermark, flood stage), the related FE/BE parameters, and the emergency procedures for releasing space and recovering after a disk fills up.",
+    "keywords": [
+        "disk capacity management",
+        "disk watermark",
+        "high watermark",
+        "flood stage",
+        "Flood Stage",
+        "High Watermark",
+        "storage_root_path",
+        "BE disk full",
+        "disk usage",
+        "ADMIN CLEAN TRASH",
+        "recycle bin cleanup",
+        "disk space reclamation",
+        "Doris operations",
+        "tablet deletion",
+        "replica modification"
+    ]
 }
 ---
 
-# Disk Capacity Management
+<!-- Knowledge type: Operations / Configuration parameters / Troubleshooting -->
+<!-- Applicable scenarios: BE disk usage too high, BE process failure caused by a full disk, need to proactively control disk watermarks -->
 
-This document mainly introduces system parameters and processing strategies related to disk storage capacity. 
+This document covers the system parameters and handling strategies related to disk storage space in Doris. It helps operations engineers understand the disk watermark mechanism, configure reasonable thresholds, and quickly recover the cluster when disks are under pressure or even full.
 
-If Doris' data disk capacity is not controlled, the process will hang because the disk is full. Therefore, we monitor the disk usage and remaining capacity, and control various operations in the Doris system by setting different warning levels, and try to avoid the situation where the disk is full. 
+If the data disks in Doris are not controlled, the BE process exits abnormally once a disk fills up. Doris monitors the usage and remaining space of each disk and sets different warning watermarks to restrict operations in the system, which avoids filling up the disks as much as possible.
 
-## Glossary
+## Applicable Scenarios
 
-* Data Dir: Data directory, each data directory specified in the `storage_root_path` of the BE configuration file `be.conf`. Usually a data directory corresponds to a disk, so the following **disk** also refers to a data directory. 
+<!-- Knowledge type: Scenario description -->
+
+| Scenario | Focus |
+| --- | --- |
+| Day-to-day capacity planning | Understand the FE/BE watermark mechanism and warn early |
+| Disk usage approaches the high watermark | Adjust FE thresholds and avoid letting balancing or recovery consume more space |
+| Disk usage reaches the flood stage | Investigate why writes are blocked and proactively release space |
+| BE cannot start because the disk is full | Delete temporary files and recover the process urgently |
+| Rapid cost reduction with multi-replica tables | Temporarily lower the replica count and raise it back after recovery |
+
+## Terminology
+
+- **Data Dir**: each data directory specified in `storage_root_path` in the BE configuration file `be.conf`. Typically each data directory corresponds to one disk, so **disk** below also refers to a data directory.
+- **High Watermark**: the lower threshold on the FE side. When usage exceeds this threshold, certain operations (such as balancing) are restricted.
+- **Flood Stage**: the higher threshold present on both the FE and BE sides. When usage exceeds this threshold, critical operations such as writes are forbidden as a self-protection measure.
 
 ## Basic Principles
 
-BE will report disk usage to FE on a regular basis (every minute). FE records these statistical values and restricts various operation requests based on these statistical values. 
+<!-- Knowledge type: How it works -->
 
-Two thresholds, **High Watermark** and **Flood Stage**, are set in FE. Flood Stage is higher than High Watermark. When the disk usage is higher than High Watermark, Doris will restrict the execution of certain operations (such as replica balancing, etc.). If it is higher than Flood Stage, certain operations (such as load data) will be prohibited. 
+1. BE reports the disk usage to FE about once every minute.
+2. Based on the reported statistics, FE restricts different operations:
+    - When usage exceeds the **high watermark**, balancing, decommission, and similar operations are restricted.
+    - When usage exceeds the **flood stage**, write operations such as load and restore are forbidden.
+3. Because FE cannot sense BE disk state fully in real time and cannot control BE internal tasks such as compaction, the **flood stage** is also set on BE, where BE actively rejects and stops certain operations as a self-protection measure.
 
-At the same time, a **Flood Stage** is also set on the BE. Taking into account that FE cannot fully detect the disk usage on BE in a timely manner, and cannot control certain BE operations (such as Compaction). Therefore, Flood Stage on the BE is used for the BE to actively refuse and stop certain operations to achieve the purpose of self-protection. 
+## FE Parameters
 
-## FE Parameter
+<!-- Knowledge type: Configuration parameters -->
 
-**High Watermark:**
+The FE side configures two threshold levels: **high watermark** and **flood stage**. Each level includes two conditions: "usage percentage" and "remaining capacity."
 
-```
-storage_high_watermark_usage_percent: default value is 85 (85%).
-storage_min_left_capacity_bytes: default value is 2GB.
-```
+### High Watermark
 
-When disk capacity **more than** `storage_high_watermark_usage_percent`, **or** disk free capacity **less than** `storage_min_left_capacity_bytes`, the disk will no longer be used as the destination path for the following operations:
-
-* Tablet Balance
-* Colocation Relocation
-* Decommission
-
-**Flood Stage:**
-
-```
-storage_flood_stage_usage_percent: default value is 95 (95%).
-storage_flood_stage_left_capacity_bytes: default value is 1GB.
+```text
+storage_high_watermark_usage_percent defaults to 85 (85%).
+storage_min_left_capacity_bytes defaults to 2GB.
 ```
 
-When disk capacity **more than** `storage_flood_stage_usage_percent`, **or** disk free capacity **less than** `storage_flood_stage_left_capacity_bytes`, the disk will no longer be used as the destination path for the following operations:
-    
-* Tablet Balance
-* Colocation Relocation
-* Replica make up
-* Restore
-* Load/Insert
+Trigger condition: disk usage is **greater than** `storage_high_watermark_usage_percent`, **or** remaining disk capacity is **less than** `storage_min_left_capacity_bytes`.
 
-## BE Parameter
+Once triggered, the disk is no longer used as the destination path for the following operations:
 
-**Flood Stage:**
+- Tablet balancing (Balance)
+- Redistribution of data shards for Colocation tables (Relocation)
+- Decommission
 
-```
-storage_flood_stage_usage_percent: default value is 90 (90%).
-storage_flood_stage_left_capacity_bytes: default value is 1GB.
+### Flood Stage
+
+```text
+storage_flood_stage_usage_percent defaults to 95 (95%).
+storage_flood_stage_left_capacity_bytes defaults to 1GB.
 ```
 
-When disk capacity **more than** `storage_flood_stage_usage_percent`, **and** disk free capacity **less than** `storage_flood_stage_left_capacity_bytes`, the following operations on this disk will be prohibited:
+Trigger condition: disk usage is **greater than** `storage_flood_stage_usage_percent`, **and** remaining disk capacity is **less than** `storage_flood_stage_left_capacity_bytes`.
 
-* Base/Cumulative Compaction
-* Data load
-* Clone Task (Usually occurs when the replica is repaired or balanced.)
-* Push Task (Occurs during the Loading phase of Hadoop import, and the file is downloaded. )
-* Alter Task (Schema Change or Rollup Task.)
-* Download Task (The Downloading phase of the recovery operation.)
-    
-## Disk Capacity Release
+Once triggered, the disk is no longer used as a destination path, and the following operations are forbidden:
 
-When the disk capacity is higher than High Watermark or even Flood Stage, many operations will be prohibited. At this time, you can try to reduce the disk usage and restore the system in the following ways. 
+- Tablet balancing (Balance)
+- Redistribution of data shards for Colocation tables (Relocation)
+- Replica supplementation
+- Restore operations
+- Data load (Load/Insert)
 
-* Delete table or partition 
+### FE Parameter Summary
 
-    By deleting tables or partitions, you can quickly reduce the disk space usage and restore the cluster. 
-    **Note: Only the `DROP` operation can achieve the purpose of quickly reducing the disk space usage, the `DELETE` operation cannot.**
+| Parameter | Default | Description |
+| --- | --- | --- |
+| `storage_high_watermark_usage_percent` | 85 (85%) | FE high-watermark usage threshold |
+| `storage_min_left_capacity_bytes` | 2 GB | FE high-watermark remaining-capacity threshold |
+| `storage_flood_stage_usage_percent` | 95 (95%) | FE flood-stage usage threshold |
+| `storage_flood_stage_left_capacity_bytes` | 1 GB | FE flood-stage remaining-capacity threshold |
 
+## BE Parameters
+
+<!-- Knowledge type: Configuration parameters -->
+
+The BE side configures only the **flood stage**, used for self-protection when FE detection lags or cannot control BE internal tasks.
+
+```text
+storage_flood_stage_usage_percent defaults to 90 (90%).
+storage_flood_stage_left_capacity_bytes defaults to 1GB.
+```
+
+Trigger condition: disk usage is **greater than** `storage_flood_stage_usage_percent`, **and** remaining disk capacity is **less than** `storage_flood_stage_left_capacity_bytes`.
+
+Once triggered, the following operations on the disk are forbidden:
+
+- Base/Cumulative Compaction
+- Data writes (including all load operations)
+- Clone Task: typically happens during replica repair or balancing
+- Push Task: happens during the Loading phase of Hadoop load, when files are downloaded
+- Alter Task: Schema Change or Rollup tasks
+- Download Task: the Downloading phase of restore operations
+
+### BE Parameter Summary
+
+| Parameter | Default | Description |
+| --- | --- | --- |
+| `storage_flood_stage_usage_percent` | 90 (90%) | BE flood-stage usage threshold |
+| `storage_flood_stage_left_capacity_bytes` | 1 GB | BE flood-stage remaining-capacity threshold |
+
+## Releasing Disk Space
+
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: disk above the high watermark or flood stage, need to recover the cluster quickly -->
+
+When disk usage rises above the high watermark or even the flood stage, many operations are forbidden. You can try the following approaches to reduce disk usage and recover the system. Prefer lower-risk methods first, and only consider deleting data files directly as a last resort.
+
+| Priority | Operation | Applicable scenario | Risk |
+| --- | --- | --- | --- |
+| 1 | Drop a table or partition | Historical data is available for cleanup | Not recoverable, but the scope is controlled |
+| 2 | Scale out BE | Resources permit and you can wait hours to days | Low |
+| 3 | Modify the replica count of a table or partition | Temporary cost reduction in emergencies | Data reliability decreases |
+| 4 | Delete extra files (log/snapshot/trash) | BE cannot start because the disk is full | Affects recycle-bin recovery |
+| 5 | Delete data files | All of the above failed; last resort | **May cause data loss** |
+
+### Drop a Table or Partition
+
+Dropping a table or partition quickly reduces disk usage and restores the cluster.
+
+> **Note**: Only `DROP` reduces disk usage quickly; `DELETE` does not.
+
+```text
+DROP TABLE tbl;
+ALTER TABLE tbl DROP PARTITION p1;
+```
+
+### Scale Out BE
+
+After scale-out, data shards are automatically balanced to BE nodes with lower disk usage. Depending on the data volume and the number of nodes, the cluster reaches a balanced state in hours or days.
+
+### Modify the Replica Count of a Table or Partition
+
+You can lower the replica count of a table or partition. For example, the default 3 replicas can be reduced to 2. This method lowers data reliability, but it quickly reduces disk usage and restores the cluster to normal, and is typically used for emergency recovery. After recovery, reduce disk usage by scaling out or deleting data, and then restore the replica count to 3.
+
+The replica modification takes effect immediately, and extra replicas are deleted asynchronously in the background.
+
+```text
+ALTER TABLE tbl MODIFY PARTITION p1 SET("replication_num" = "2");
+```
+
+### Delete Extra Files
+
+When the BE process has already crashed because of a full disk and cannot start (this may happen when FE or BE detection lags), you can delete temporary files under the data directory to ensure the BE process can start. Files in the following directories can be deleted directly:
+
+- `log/`: log files in the log directory.
+- `snapshot/`: snapshot files in the snapshot directory.
+- `trash/`: files in the recycle bin.
+
+> **Note**: This operation affects [restoring data from the BE recycle bin](../data-admin/recyclebin).
+
+If BE can still start, use the following command to actively clean up temporary files. The command cleans up **all** trash files and expired snapshot files, **which affects restoring data from the recycle bin**:
+
+```text
+ADMIN CLEAN TRASH ON(BackendHost:BackendHeartBeatPort);
+```
+
+If you do not run `ADMIN CLEAN TRASH` manually, the system still runs the cleanup automatically within a few minutes to tens of minutes. There are two cases:
+
+- If disk usage **has not reached** 90% of the flood stage: only expired trash files and expired snapshot files are cleaned, recent files are kept, and data recovery is not affected.
+- If disk usage **has reached** 90% of the flood stage: **all** trash files and expired snapshot files are cleaned, and **at this point recovery from the recycle bin is affected**.
+
+The interval for the automatic cleanup can be changed through the configuration items `max_garbage_sweep_interval` and `min_garbage_sweep_interval`.
+
+When recovery fails because trash files are missing, the result may look like:
+
+```text
+{"status": "Fail","msg": "can find tablet path in trash"}
+```
+
+### Delete Data Files (Dangerous!!!)
+
+When none of the operations above can release space, you have to release space by deleting data files directly. Data files are located under the `data/` directory of the specified data directory.
+
+> **Warning**: Before deleting a data shard (Tablet), make sure at least one replica of the Tablet is healthy. Otherwise, **deleting the only replica causes data loss**.
+
+Suppose you want to delete the Tablet with id `12345`. The steps are as follows:
+
+1. Find the directory of the Tablet, usually located under `data/shard_id/tablet_id/`. For example:
+
+    ```text
+    data/0/12345/
     ```
-    DROP TABLE tbl;
-    ALTER TABLE tbl DROP PARTITION p1;
-    ```
-    
-* BE expansion
 
-    After backend expansion, data tablets will be automatically balanced to BE nodes with lower disk usage. The expansion operation will make the cluster reach a balanced state in a few hours or days depending on the amount of data and the number of nodes. 
-    
-* Modify replica of a table or partition 
+2. Record the tablet id and the schema hash. The schema hash is the next-level directory name under the previous step's directory. For example, `352781111`:
 
-    You can reduce the number of replica of a table or partition. For example, the default 3 replica can be reduced to 2 replica. Although this method reduces the reliability of the data, it can quickly reduce the disk usage rate and restore the cluster to normal.
-    This method is usually used in emergency recovery systems. Please restore the number of copies to 3 after reducing the disk usage rate by expanding or deleting data after recovery.  
-    Modifying the replica operation takes effect instantly, and the backends will automatically and asynchronously delete the redundant replica. 
-    
-    ```
-    ALTER TABLE tbl MODIFY PARTITION p1 SET("replication_num" = "2");
-    ```
-    
-* Delete unnecessary files 
-
-    When the BE has crashed because the disk is full and cannot be started (this phenomenon may occur due to untimely detection of FE or BE), you need to delete some temporary files in the data directory to ensure that the BE process can start.
-    Files in the following directories can be deleted directly: 
-
-    * log/: Log files in the log directory. 
-    * snapshot/: Snapshot files in the snapshot directory. 
-    * trash/ Trash files in the trash directory. 
-
-    **This operation will affect [Restore data from BE Recycle Bin](../../admin-manual/data-admin/recyclebin.md).**
-
-    If the BE can still be started, you can use `ADMIN CLEAN TRASH ON(BackendHost:BackendHeartBeatPort);` to actively clean up temporary files. **all trash files** and expired snapshot files will be cleaned up, **This will affect the operation of restoring data from the trash bin**.
-
-
-    If you do not manually execute `ADMIN CLEAN TRASH`, the system will still automatically execute the cleanup within a few minutes to tens of minutes.There are two situations as follows: 
-    * If the disk usage does not reach 90% of the **Flood Stage**, expired trash files and expired snapshot files will be cleaned up. At this time, some recent files will be retained without affecting the recovery of data. 
-    * If the disk usage has reached 90% of the **Flood Stage**, **all trash files** and expired snapshot files will be cleaned up, **This will affect the operation of restoring data from the trash bin**.
-
-    The time interval for automatic execution can be changed by `max_garbage_sweep_interval` and `min_garbage_sweep_interval` in the configuration items. 
-
-    When the recovery fails due to lack of trash files, the following results may be returned: 
-
-    ```
-    {"status": "Fail","msg": "can find tablet path in trash"}
+    ```text
+    data/0/12345/352781111
     ```
 
-* Delete data file (dangerous!!!)
+3. Delete the data directory:
 
-    When none of the above operations can free up capacity, you need to delete data files to free up space. The data file is in the `data/` directory of the specified data directory. To delete a tablet, you must first ensure that at least one replica of the tablet is normal, otherwise **deleting the only replica will result in data loss**. 
-    
-    Suppose we want to delete the tablet with id 12345: 
-    
-    * Find the directory corresponding to Tablet, usually under `data/shard_id/tablet_id/`. like: 
+    ```shell
+    rm -rf data/0/12345/
+    ```
 
-        ```data/0/12345/```
-        
-    * Record the tablet id and schema hash. The schema hash is the name of the next-level directory of the previous step. The following is 352781111: 
+4. Delete the Tablet metadata (see [Tablet Metadata Management Tool](../trouble-shooting/tablet-meta-tool) for details):
 
-        ```data/0/12345/352781111```
+    ```shell
+    ./lib/meta_tool --operation=delete_header --root_path=/path/to/root_path --tablet_id=12345 --schema_hash=352781111
+    ```
 
-    * Delete the data directory: 
+## FAQ
 
-        ```rm -rf data/0/12345/```
+<!-- Knowledge type: Troubleshooting -->
 
-    * Delete tablet metadata refer to [Tablet metadata management tool](../trouble-shooting/tablet-meta-tool.md)
+### Q: A load task is rejected with an error. What should I do?
 
-        ```./lib/meta_tool --operation=delete_header --root_path=/path/to/root_path --tablet_id=12345 --schema_hash= 352781111```
+Disk usage has exceeded the FE or BE flood stage. See the "Releasing Disk Space" section, and prefer `DROP` on historical partitions or scaling out.
 
+### Q: Replica balancing does not converge for a long time. What should I do?
+
+Some disks are above the high watermark and cannot be used as balancing destinations. Release space on the disks above the high watermark or scale out BE, and then wait for automatic balancing.
+
+### Q: The BE process fails to start and the disk is full. What should I do?
+
+The disk holding `data/` is full. First delete `log/`, `snapshot/`, and `trash/` to release space, and then start BE.
+
+### Q: After running `ADMIN CLEAN TRASH`, data cannot be restored. What should I do?
+
+The trash files have been cleaned. This operation is irreversible. Assess the impact before recovery.
+
+### Q: Automatic cleanup returns `can find tablet path in trash`. What should I do?
+
+The disk has reached 90% of the flood stage and trash has been fully cleaned. Check the watermark status and try again after disk space is recovered.

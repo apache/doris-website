@@ -65,8 +65,8 @@ ARRAYS_OVERLAP(arr1, arr2)
 2. 错误参数，当输入的参数是不支持的类型时，返回 `INVALID_ARGUMENT`
 
     ```SQL
-    -- [INVALID_ARGUMENT]execute failed, unsupported types for function arrays_overlap
     SELECT ARRAYS_OVERLAP(ARRAY(ARRAY('hello', 'aloha'), ARRAY('hi', 'hey')), ARRAY(ARRAY('hello', 'hi', 'hey'), ARRAY('aloha', 'hi')));
+    ERROR 1105 (HY000): errCode = 2, detailMessage = arrays_overlap does not support types: ARRAY<ARRAY<TEXT>>
     ```
 
 3. 输入的`ARRAY` 是 `NULL`，返回值是 `NULL`
@@ -85,7 +85,7 @@ ARRAYS_OVERLAP(arr1, arr2)
     +----------------------------+
     |                       NULL |
     +----------------------------+
-    ```'
+    ```
 
 4. 输入的`ARRAY` 包含 `NULL` 时，`NULL` 和 `NULL`被视作相等
    
@@ -110,7 +110,7 @@ ARRAYS_OVERLAP(arr1, arr2)
     +---------------------------------------------------+
     |                                                 1 |
     +---------------------------------------------------+
-    ```'
+    ```
 
 5. 使用倒排索引加速查询
    

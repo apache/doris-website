@@ -1,0 +1,1173 @@
+{
+  "syncedAt": "2026-05-15T00:00:00.000Z",
+  "source": "https://github.com/velodb/agentlogsbench",
+  "tabs": [
+    {
+      "id": "s100m",
+      "label": "100M rows",
+      "benchmarks": [
+        {
+          "id": "retrieval",
+          "name": "Search & Retrieval",
+          "scale": "8 queries",
+          "queries": [
+            "Q01",
+            "Q03",
+            "Q04",
+            "Q05",
+            "Q11",
+            "Q13",
+            "Q14",
+            "Q15"
+          ],
+          "products": [
+            {
+              "id": "doris",
+              "name": "Apache Doris",
+              "version": "5.7.99",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 2.31,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.093,
+                "Q03": 0.02,
+                "Q04": 0.036,
+                "Q05": 1.428,
+                "Q11": 0.134,
+                "Q13": 0.088,
+                "Q14": 0.43,
+                "Q15": 0.081
+              }
+            },
+            {
+              "id": "clickhouse",
+              "name": "ClickHouse",
+              "version": "26.2.13.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 42.115,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 2.351,
+                "Q03": 2.289,
+                "Q04": 2.411,
+                "Q05": 3.517,
+                "Q11": 6.463,
+                "Q13": 9.324,
+                "Q14": 6.224,
+                "Q15": 9.536
+              }
+            },
+            {
+              "id": "elastic",
+              "name": "Elasticsearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 7.097,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 1.505,
+                "Q03": 0.034,
+                "Q04": 0.033,
+                "Q05": 0.283,
+                "Q11": 2.04,
+                "Q13": 1.094,
+                "Q14": 0.716,
+                "Q15": 1.392
+              }
+            },
+            {
+              "id": "opensearch",
+              "name": "OpenSearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 6.081,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 1.013,
+                "Q03": 0.034,
+                "Q04": 0.034,
+                "Q05": 0.262,
+                "Q11": 1.297,
+                "Q13": 1.435,
+                "Q14": 0.682,
+                "Q15": 1.324
+              }
+            },
+            {
+              "id": "postgres",
+              "name": "PostgreSQL",
+              "version": "16.13",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 5607.067,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 9.171,
+                "Q03": 3.593,
+                "Q04": 3.629,
+                "Q05": 3.836,
+                "Q11": 121.77,
+                "Q13": 2761.598,
+                "Q14": 12.07,
+                "Q15": 2691.4
+              }
+            },
+            {
+              "id": "duckdb",
+              "name": "DuckDB",
+              "version": "1.5.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 134.414,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.109,
+                "Q03": 0.003,
+                "Q04": 0.742,
+                "Q05": 8.793,
+                "Q11": 18.845,
+                "Q13": 44.623,
+                "Q14": 17.841,
+                "Q15": 43.458
+              }
+            }
+          ]
+        },
+        {
+          "id": "analytics",
+          "name": "Analytics Rollups",
+          "scale": "6 queries",
+          "queries": [
+            "Q02",
+            "Q06",
+            "Q09",
+            "Q18",
+            "Q19",
+            "Q20"
+          ],
+          "products": [
+            {
+              "id": "doris",
+              "name": "Apache Doris",
+              "version": "5.7.99",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 4.278,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 0.84,
+                "Q06": 0.415,
+                "Q09": 0.27,
+                "Q18": 1.166,
+                "Q19": 0.986,
+                "Q20": 0.601
+              }
+            },
+            {
+              "id": "clickhouse",
+              "name": "ClickHouse",
+              "version": "26.2.13.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 42.3,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 2.557,
+                "Q06": 2.479,
+                "Q09": 2.421,
+                "Q18": 2.719,
+                "Q19": 29.569,
+                "Q20": 2.555
+              }
+            },
+            {
+              "id": "elastic",
+              "name": "Elasticsearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 20.979,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 15.613,
+                "Q06": 1.549,
+                "Q09": 0.359,
+                "Q18": 1.114,
+                "Q19": 0.989,
+                "Q20": 1.355
+              }
+            },
+            {
+              "id": "opensearch",
+              "name": "OpenSearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 22.655,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 16.781,
+                "Q06": 1.553,
+                "Q09": 0.414,
+                "Q18": 1.143,
+                "Q19": 1.333,
+                "Q20": 1.431
+              }
+            },
+            {
+              "id": "postgres",
+              "name": "PostgreSQL",
+              "version": "16.13",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 7796.036,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 343.59,
+                "Q06": 284.959,
+                "Q09": 287.064,
+                "Q18": 1037.045,
+                "Q19": 4752.691,
+                "Q20": 1090.687
+              }
+            },
+            {
+              "id": "duckdb",
+              "name": "DuckDB",
+              "version": "1.5.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 13485.67,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 1.082,
+                "Q06": 0.64,
+                "Q09": 0.374,
+                "Q18": 2534.466,
+                "Q19": 5374.306,
+                "Q20": 5574.802
+              }
+            }
+          ]
+        },
+        {
+          "id": "semi",
+          "name": "Semi-Structured Payload",
+          "scale": "6 queries",
+          "queries": [
+            "Q07",
+            "Q08",
+            "Q10",
+            "Q12",
+            "Q16",
+            "Q17"
+          ],
+          "products": [
+            {
+              "id": "doris",
+              "name": "Apache Doris",
+              "version": "5.7.99",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 2.495,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 1.483,
+                "Q08": 0.133,
+                "Q10": 0.312,
+                "Q12": 0.459,
+                "Q16": 0.078,
+                "Q17": 0.03
+              }
+            },
+            {
+              "id": "clickhouse",
+              "name": "ClickHouse",
+              "version": "26.2.13.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 24.253,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 2.866,
+                "Q08": 11.396,
+                "Q10": 2.362,
+                "Q12": 2.656,
+                "Q16": 2.667,
+                "Q17": 2.306
+              }
+            },
+            {
+              "id": "elastic",
+              "name": "Elasticsearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 6.252,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 1.784,
+                "Q08": 0.452,
+                "Q10": 1.948,
+                "Q12": 1.213,
+                "Q16": 0.802,
+                "Q17": 0.053
+              }
+            },
+            {
+              "id": "opensearch",
+              "name": "OpenSearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 6.204,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 1.73,
+                "Q08": 0.4,
+                "Q10": 2.069,
+                "Q12": 1.197,
+                "Q16": 0.762,
+                "Q17": 0.046
+              }
+            },
+            {
+              "id": "postgres",
+              "name": "PostgreSQL",
+              "version": "16.13",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 7795.514,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 981.569,
+                "Q08": 1496.702,
+                "Q10": 863.092,
+                "Q12": 1057.234,
+                "Q16": 1627.072,
+                "Q17": 1769.845
+              }
+            },
+            {
+              "id": "duckdb",
+              "name": "DuckDB",
+              "version": "1.5.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 17795.182,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 271.855,
+                "Q08": 26.942,
+                "Q10": 5056.695,
+                "Q12": 7389.796,
+                "Q16": 2546.002,
+                "Q17": 2503.892
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s10m",
+      "label": "10M rows",
+      "benchmarks": [
+        {
+          "id": "retrieval",
+          "name": "Search & Retrieval",
+          "scale": "8 queries",
+          "queries": [
+            "Q01",
+            "Q03",
+            "Q04",
+            "Q05",
+            "Q11",
+            "Q13",
+            "Q14",
+            "Q15"
+          ],
+          "products": [
+            {
+              "id": "doris",
+              "name": "Apache Doris",
+              "version": "5.7.99",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 1.65,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.043,
+                "Q03": 0.021,
+                "Q04": 0.037,
+                "Q05": 1.168,
+                "Q11": 0.13,
+                "Q13": 0.039,
+                "Q14": 0.172,
+                "Q15": 0.04
+              }
+            },
+            {
+              "id": "clickhouse",
+              "name": "ClickHouse",
+              "version": "26.2.13.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 7.863,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.574,
+                "Q03": 0.559,
+                "Q04": 0.861,
+                "Q05": 1.121,
+                "Q11": 0.964,
+                "Q13": 1.419,
+                "Q14": 0.969,
+                "Q15": 1.396
+              }
+            },
+            {
+              "id": "elastic",
+              "name": "Elasticsearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 1.809,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.211,
+                "Q03": 0.031,
+                "Q04": 0.03,
+                "Q05": 0.083,
+                "Q11": 0.504,
+                "Q13": 0.624,
+                "Q14": 0.111,
+                "Q15": 0.215
+              }
+            },
+            {
+              "id": "opensearch",
+              "name": "OpenSearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 1.107,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.251,
+                "Q03": 0.03,
+                "Q04": 0.03,
+                "Q05": 0.048,
+                "Q11": 0.432,
+                "Q13": 0.067,
+                "Q14": 0.107,
+                "Q15": 0.142
+              }
+            },
+            {
+              "id": "postgres",
+              "name": "PostgreSQL",
+              "version": "16.13",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 305.432,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.857,
+                "Q03": 0.267,
+                "Q04": 0.267,
+                "Q05": 1.001,
+                "Q11": 10.937,
+                "Q13": 149.13,
+                "Q14": 1.107,
+                "Q15": 141.866
+              }
+            },
+            {
+              "id": "duckdb",
+              "name": "DuckDB",
+              "version": "1.5.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 13.675,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.04,
+                "Q03": 0.003,
+                "Q04": 0.086,
+                "Q05": 3.036,
+                "Q11": 1.46,
+                "Q13": 3.855,
+                "Q14": 1.433,
+                "Q15": 3.762
+              }
+            }
+          ]
+        },
+        {
+          "id": "analytics",
+          "name": "Analytics Rollups",
+          "scale": "6 queries",
+          "queries": [
+            "Q02",
+            "Q06",
+            "Q09",
+            "Q18",
+            "Q19",
+            "Q20"
+          ],
+          "products": [
+            {
+              "id": "doris",
+              "name": "Apache Doris",
+              "version": "5.7.99",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 0.602,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 0.111,
+                "Q06": 0.074,
+                "Q09": 0.071,
+                "Q18": 0.123,
+                "Q19": 0.131,
+                "Q20": 0.092
+              }
+            },
+            {
+              "id": "clickhouse",
+              "name": "ClickHouse",
+              "version": "26.2.13.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 6.852,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 0.638,
+                "Q06": 0.618,
+                "Q09": 0.614,
+                "Q18": 0.689,
+                "Q19": 3.671,
+                "Q20": 0.622
+              }
+            },
+            {
+              "id": "elastic",
+              "name": "Elasticsearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 287.952,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 1.38,
+                "Q06": 0.31,
+                "Q09": 0.099,
+                "Q18": 128.927,
+                "Q19": 156.962,
+                "Q20": 0.274
+              }
+            },
+            {
+              "id": "opensearch",
+              "name": "OpenSearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 2.435,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 1.528,
+                "Q06": 0.181,
+                "Q09": 0.069,
+                "Q18": 0.237,
+                "Q19": 0.238,
+                "Q20": 0.182
+              }
+            },
+            {
+              "id": "postgres",
+              "name": "PostgreSQL",
+              "version": "16.13",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 541.76,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 7.281,
+                "Q06": 2.277,
+                "Q09": 1.855,
+                "Q18": 26.757,
+                "Q19": 454.881,
+                "Q20": 48.709
+              }
+            },
+            {
+              "id": "duckdb",
+              "name": "DuckDB",
+              "version": "1.5.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 1116.084,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 0.119,
+                "Q06": 0.081,
+                "Q09": 0.051,
+                "Q18": 221.609,
+                "Q19": 460.585,
+                "Q20": 433.639
+              }
+            }
+          ]
+        },
+        {
+          "id": "semi",
+          "name": "Semi-Structured Payload",
+          "scale": "6 queries",
+          "queries": [
+            "Q07",
+            "Q08",
+            "Q10",
+            "Q12",
+            "Q16",
+            "Q17"
+          ],
+          "products": [
+            {
+              "id": "doris",
+              "name": "Apache Doris",
+              "version": "5.7.99",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 1.907,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 1.547,
+                "Q08": 0.102,
+                "Q10": 0.1,
+                "Q12": 0.09,
+                "Q16": 0.044,
+                "Q17": 0.024
+              }
+            },
+            {
+              "id": "clickhouse",
+              "name": "ClickHouse",
+              "version": "26.2.13.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 4.753,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 0.787,
+                "Q08": 1.496,
+                "Q10": 0.612,
+                "Q12": 0.646,
+                "Q16": 0.639,
+                "Q17": 0.573
+              }
+            },
+            {
+              "id": "elastic",
+              "name": "Elasticsearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 1.081,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 0.255,
+                "Q08": 0.165,
+                "Q10": 0.243,
+                "Q12": 0.255,
+                "Q16": 0.131,
+                "Q17": 0.032
+              }
+            },
+            {
+              "id": "opensearch",
+              "name": "OpenSearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 0.839,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 0.22,
+                "Q08": 0.069,
+                "Q10": 0.249,
+                "Q12": 0.153,
+                "Q16": 0.117,
+                "Q17": 0.031
+              }
+            },
+            {
+              "id": "postgres",
+              "name": "PostgreSQL",
+              "version": "16.13",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 237.482,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 33.924,
+                "Q08": 95.963,
+                "Q10": 35.072,
+                "Q12": 51.543,
+                "Q16": 12.068,
+                "Q17": 8.912
+              }
+            },
+            {
+              "id": "duckdb",
+              "name": "DuckDB",
+              "version": "1.5.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 1679.682,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 151.526,
+                "Q08": 2.844,
+                "Q10": 441.027,
+                "Q12": 652.14,
+                "Q16": 221.617,
+                "Q17": 210.528
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1m",
+      "label": "1M rows",
+      "benchmarks": [
+        {
+          "id": "retrieval",
+          "name": "Search & Retrieval",
+          "scale": "8 queries",
+          "queries": [
+            "Q01",
+            "Q03",
+            "Q04",
+            "Q05",
+            "Q11",
+            "Q13",
+            "Q14",
+            "Q15"
+          ],
+          "products": [
+            {
+              "id": "doris",
+              "name": "Apache Doris",
+              "version": "5.7.99",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 1.797,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.032,
+                "Q03": 0.017,
+                "Q04": 0.032,
+                "Q05": 1.17,
+                "Q11": 0.14,
+                "Q13": 0.032,
+                "Q14": 0.342,
+                "Q15": 0.032
+              }
+            },
+            {
+              "id": "clickhouse",
+              "name": "ClickHouse",
+              "version": "26.2.13.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 2.765,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.214,
+                "Q03": 0.236,
+                "Q04": 0.253,
+                "Q05": 0.637,
+                "Q11": 0.308,
+                "Q13": 0.422,
+                "Q14": 0.313,
+                "Q15": 0.382
+              }
+            },
+            {
+              "id": "elastic",
+              "name": "Elasticsearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 0.382,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.055,
+                "Q03": 0.029,
+                "Q04": 0.028,
+                "Q05": 0.035,
+                "Q11": 0.075,
+                "Q13": 0.065,
+                "Q14": 0.038,
+                "Q15": 0.057
+              }
+            },
+            {
+              "id": "opensearch",
+              "name": "OpenSearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 0.623,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.064,
+                "Q03": 0.032,
+                "Q04": 0.032,
+                "Q05": 0.05,
+                "Q11": 0.161,
+                "Q13": 0.119,
+                "Q14": 0.051,
+                "Q15": 0.114
+              }
+            },
+            {
+              "id": "postgres",
+              "name": "PostgreSQL",
+              "version": "16.13",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 31.171,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.085,
+                "Q03": 0.029,
+                "Q04": 0.029,
+                "Q05": 0.157,
+                "Q11": 1.688,
+                "Q13": 14.678,
+                "Q14": 0.496,
+                "Q15": 14.009
+              }
+            },
+            {
+              "id": "duckdb",
+              "name": "DuckDB",
+              "version": "1.5.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 3.777,
+              "queriesCompleted": 8,
+              "queriesTotal": 8,
+              "perQuery": {
+                "Q01": 0.007,
+                "Q03": 0.002,
+                "Q04": 0.01,
+                "Q05": 2.666,
+                "Q11": 0.176,
+                "Q13": 0.382,
+                "Q14": 0.167,
+                "Q15": 0.367
+              }
+            }
+          ]
+        },
+        {
+          "id": "analytics",
+          "name": "Analytics Rollups",
+          "scale": "6 queries",
+          "queries": [
+            "Q02",
+            "Q06",
+            "Q09",
+            "Q18",
+            "Q19",
+            "Q20"
+          ],
+          "products": [
+            {
+              "id": "doris",
+              "name": "Apache Doris",
+              "version": "5.7.99",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 0.387,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 0.056,
+                "Q06": 0.053,
+                "Q09": 0.055,
+                "Q18": 0.072,
+                "Q19": 0.073,
+                "Q20": 0.078
+              }
+            },
+            {
+              "id": "clickhouse",
+              "name": "ClickHouse",
+              "version": "26.2.13.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 1.929,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 0.233,
+                "Q06": 0.236,
+                "Q09": 0.248,
+                "Q18": 0.256,
+                "Q19": 0.718,
+                "Q20": 0.238
+              }
+            },
+            {
+              "id": "elastic",
+              "name": "Elasticsearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 5.288,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 0.164,
+                "Q06": 0.064,
+                "Q09": 0.037,
+                "Q18": 2.196,
+                "Q19": 2.769,
+                "Q20": 0.058
+              }
+            },
+            {
+              "id": "opensearch",
+              "name": "OpenSearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 6.447,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 2.696,
+                "Q06": 0.065,
+                "Q09": 0.048,
+                "Q18": 1.266,
+                "Q19": 2.26,
+                "Q20": 0.112
+              }
+            },
+            {
+              "id": "postgres",
+              "name": "PostgreSQL",
+              "version": "16.13",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 53.224,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 0.548,
+                "Q06": 0.228,
+                "Q09": 0.169,
+                "Q18": 2.393,
+                "Q19": 45.263,
+                "Q20": 4.623
+              }
+            },
+            {
+              "id": "duckdb",
+              "name": "DuckDB",
+              "version": "1.5.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 107.25,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q02": 0.014,
+                "Q06": 0.011,
+                "Q09": 0.006,
+                "Q18": 20.775,
+                "Q19": 44.467,
+                "Q20": 41.977
+              }
+            }
+          ]
+        },
+        {
+          "id": "semi",
+          "name": "Semi-Structured Payload",
+          "scale": "6 queries",
+          "queries": [
+            "Q07",
+            "Q08",
+            "Q10",
+            "Q12",
+            "Q16",
+            "Q17"
+          ],
+          "products": [
+            {
+              "id": "doris",
+              "name": "Apache Doris",
+              "version": "5.7.99",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 1.585,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 1.27,
+                "Q08": 0.124,
+                "Q10": 0.066,
+                "Q12": 0.071,
+                "Q16": 0.035,
+                "Q17": 0.019
+              }
+            },
+            {
+              "id": "clickhouse",
+              "name": "ClickHouse",
+              "version": "26.2.13.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 1.839,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 0.51,
+                "Q08": 0.369,
+                "Q10": 0.231,
+                "Q12": 0.25,
+                "Q16": 0.246,
+                "Q17": 0.233
+              }
+            },
+            {
+              "id": "elastic",
+              "name": "Elasticsearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 0.281,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 0.052,
+                "Q08": 0.059,
+                "Q10": 0.049,
+                "Q12": 0.054,
+                "Q16": 0.039,
+                "Q17": 0.028
+              }
+            },
+            {
+              "id": "opensearch",
+              "name": "OpenSearch",
+              "version": "9.3.0",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 0.338,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 0.075,
+                "Q08": 0.072,
+                "Q10": 0.038,
+                "Q12": 0.072,
+                "Q16": 0.049,
+                "Q17": 0.032
+              }
+            },
+            {
+              "id": "postgres",
+              "name": "PostgreSQL",
+              "version": "16.13",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 19.231,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 3.155,
+                "Q08": 9.465,
+                "Q10": 1.031,
+                "Q12": 4.793,
+                "Q16": 0.403,
+                "Q17": 0.384
+              }
+            },
+            {
+              "id": "duckdb",
+              "name": "DuckDB",
+              "version": "1.5.2",
+              "machine": "32C (AWS.m6i.8xlarge)",
+              "clusterSize": 1,
+              "totalRuntime": 173.655,
+              "queriesCompleted": 6,
+              "queriesTotal": 6,
+              "perQuery": {
+                "Q07": 23.307,
+                "Q08": 0.27,
+                "Q10": 42.608,
+                "Q12": 63.286,
+                "Q16": 23.583,
+                "Q17": 20.601
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

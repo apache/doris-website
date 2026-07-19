@@ -12,7 +12,7 @@ Calculates the azimuth (in radians) between two points on the Earth's surface. T
 
 Azimuth is widely used in navigation and geographic information systems (GIS) to represent the direction from one point to another.
 
-## Sytax
+## Syntax
 
 ```sql
 ST_AZIMUTH( <point1>, <point2>)
@@ -24,7 +24,7 @@ ST_AZIMUTH( <point1>, <point2>)
 | `<point1>` | The starting point, of type GeoPoint, serving as the reference point for azimuth calculation. |
 | `<point2>` | The ending point, of type GeoPoint, for which the direction relative to the starting point is calculated. |
 
-## Retuen value
+## Return Value
 
 Returns the azimuth between the two points in radians, with a range of [0, 2π). The azimuth is measured clockwise from true north, with specific direction correspondences:
 

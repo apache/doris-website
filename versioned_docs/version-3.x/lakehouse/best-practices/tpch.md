@@ -6,7 +6,7 @@
 }
 ---
 
-Doris supports using the [Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide) compatible framework to quickly build TPCH test sets with the [TPCH Connector](https://trino.io/docs/current/connector/tpch.html).
+Doris supports using the [Trino Connector](https://doris.apache.org/community/developer-guide/data-source-extension/trino-connector-developer-guide) compatible framework to quickly build TPCH test sets with the [TPCH Connector](https://trino.io/docs/current/connector/tpch.html).
 
 By combining the data write-back function of Hive/Iceberg tables, you can quickly build TPCH test datasets for Doris, Hive, and Iceberg tables through Doris.
 

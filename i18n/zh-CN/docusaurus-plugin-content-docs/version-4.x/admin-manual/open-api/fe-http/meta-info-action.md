@@ -170,7 +170,7 @@ GET /api/meta/namespaces/default/databases/db1/tables/tbl1/schema
 ```
 
 ```
-GET /api/meta/namespaces/default/databases/db1/tables/tbl1/schema?with_mv?=1
+GET /api/meta/namespaces/default/databases/db1/tables/tbl1/schema?with_mv=1
 
 {
 	"msg": "success",

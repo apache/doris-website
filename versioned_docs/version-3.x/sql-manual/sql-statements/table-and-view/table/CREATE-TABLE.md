@@ -225,7 +225,7 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 
 **<distribute_cols> and <bucket_count>**
 
-> Bucketing columns and bucket counts. Detail model bucket columns can be any columns, aggregation model and primary key model bucket columns must be consistent with key columns. Bucket count is any positive integer. For details on bucketing, see the [Manual Bucketing](../../../../table-design/data-partitioning/data-bucketing#manual-setting-bucket-count) and [Automatic Bucketing](../../../../table-design/data-partitioning/data-bucketing#automatic-setting-bucket-count) sections.
+> Bucketing columns and bucket counts. Detail model bucket columns can be any columns, aggregation model and primary key model bucket columns must be consistent with key columns. Bucket count is any positive integer. For details on bucketing, see the [Manual Bucketing](../../../../table-design/data-partitioning/data-bucketing#manually-setting-the-number-of-buckets) and [Automatic Bucketing](../../../../table-design/data-partitioning/data-bucketing#automatic-bucket-number-setting) sections.
 
 ### Column Default Value Related Parameters
 
@@ -357,7 +357,7 @@ The functionality of creating synchronized materialized views with rollup is lim
 | enable_unique_key_merge_on_write | Whether the Unique table uses the Merge-on-Write implementation. This property was default disabled before version 2.1 and default enabled from version 2.1 onwards. |
 | light_schema_change | Whether to use the Light Schema Change optimization. If set to `true`, addition and subtraction operations on value columns can be completed faster and synchronously. This feature is enabled by default in versions 2.0.0 and later. |
 | disable_auto_compaction | Whether to disable automatic compaction for this table. If this property is set to `true`, the background automatic compaction process will skip all tablets of this table. |
-| enable_single_replica_compaction | Whether to enable single-replica compaction for this table. If this property is set to `true`, only one replica of all replicas of the table's tablets will perform the actual compaction action, and other replicas will pull the compacted rowset from that replica. |
+| enable_single_replica_compaction | **Deprecated.** This feature has been removed since Doris 4.1.2 due to a data correctness risk in its peer selection, and enabling it is not recommended. Whether to enable single-replica compaction for this table. If this property is set to `true`, only one replica of all replicas of the table's tablets will perform the actual compaction action, and other replicas will pull the compacted rowset from that replica. |
 | enable_duplicate_without_keys_by_default | When set to `true`, if no Unique, Aggregate, or Duplicate is specified when creating a table, a Duplicate model table without sort columns and prefix indexes will be created by default. |
 | skip_write_index_on_load | Whether to enable not writing indexes during data import for this table. If this property is set to `true`, indexes will not be written during data import (currently only effective for inverted indexes), but will be delayed until compaction. This can avoid the CPU and IO resource consumption of writing indexes repeatedly during the first write and compaction, improving the performance of high-throughput imports. |
 | compaction_policy | Configures the compaction merge policy for this table, supporting only time_series or size_basedtime_series: When the disk volume of rowsets accumulates to a certain size, version merging is performed. The merged rowset is directly promoted to the base compaction phase. This effectively reduces the write amplification of compact in scenarios with continuous imports. This policy will use parameters prefixed with time_series_compaction to adjust the execution of compaction. |
@@ -369,7 +369,7 @@ The functionality of creating synchronized materialized views with rollup is lim
 | group_commit_data_bytes | Configures the Group Commit batch data size for this table. The unit is bytes, with a default value of 134217728, i.e., 128MB. The timing of Group Commit depends on which of `group_commit_interval_ms` and `group_commit_data_bytes` reaches the set value first. |
 | enable_mow_light_delete | Whether to enable writing Delete predicate with Delete statements on Unique tables with Mow. If enabled, it will improve the performance of Delete statements, but partial column updates after Delete may result in some data errors. If disabled, it will reduce the performance of Delete statements to ensure correctness. The default value of this property is `false`. This property can only be enabled on Unique Merge-on-Write tables. |
 | Dynamic Partitioning Related Properties | For dynamic partitioning, refer to [Data Partitioning - Dynamic Partitioning](../../../../table-design/data-partitioning/dynamic-partitioning) |
-| enable_unique_key_skip_bitmap_column | Whether to enable the [Flexible Column Update feature](../../../../data-operate/update/update-of-unique-model.md#flexible-partial-column-updates) on Unique Merge-on-Write tables. This property can only be enabled on Unique Merge-on-Write tables. (Supported since version 3.1.0) |
+| enable_unique_key_skip_bitmap_column | Whether to enable the [Flexible Column Update feature](../../../../data-operate/update/partial-column-update.md#flexible-partial-column-updates) on Unique Merge-on-Write tables. This property can only be enabled on Unique Merge-on-Write tables. (Supported since version 3.1.0) |
 
 
 ## Access Control Requirements
@@ -679,6 +679,9 @@ This table creates partitions 3 days in advance and deletes partitions from 3 da
 [types: [DATE]; keys: [2020-01-09]; ‥types: [DATE]; keys: [2020-01-10]; )
 [types: [DATE]; keys: [2020-01-10]; ‥types: [DATE]; keys: [2020-01-11]; )
 [types: [DATE]; keys: [2020-01-11]; ‥types: [DATE]; keys: [2020-01-12]; )
+```
+
+```sql
 CREATE TABLE example_db.dynamic_partition
 (
     k1 DATE,

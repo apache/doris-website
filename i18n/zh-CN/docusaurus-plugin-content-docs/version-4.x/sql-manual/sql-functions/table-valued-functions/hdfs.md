@@ -64,7 +64,6 @@ HDFS(
 |`enable_mapping_varbinary`|默认为 false，在读取 PARQUET / ORC 时将 BYTE_ARRAY 类型映射为 STRING，开启后则会映射到 VARBINAY 类型。| 在 4.0.3 之后开始支持 |
 |`enable_mapping_timestamp_tz`|默认为 false，在读取 PARQUET(TIMESTAMP WITH isAdjustedToUTC) \ ORC(TIMESTAMP_INSTANT) 类型映射为 DATATIME，开启后则会映射到 TIMESTAMPTZ 类型。| 在 4.0.3 之后开始支持 |
 
-
 ## 权限控制
 
 | 权限（Privilege）      | 对象（Object） | 说明（Notes） |

@@ -38,7 +38,7 @@ The user executing this SQL command must have at least the following privileges:
 
 | Privilege    | Object      | Notes                                                                                 |
 |:-------------|:------------|:--------------------------------------------------------------------------------------|
-| `ADMIN_PRIV` | User / Role | Must hold the `ADMIN_PRIV` privilege on the target user or role to create custom keys |
+| `ADMIN_PRIV` | Global  | The user must have the `ADMIN_PRIV` privilege to create encryption keys |
 
 ## Example
 
@@ -77,9 +77,9 @@ The user executing this SQL command must have at least the following privileges:
    SELECT AES_DECRYPT(UNHEX('D26DB38579D6A343350EDDC6F2AD47C6'), KEY my_key);
    ```
    ```text
-   +------------------------------------------------- -------------------+
+   +---------------------------------------------------------------------+
    | aes_decrypt(unhex('D26DB38579D6A343350EDDC6F2AD47C6'), key my_key)  |
-   +------------------------------------------------- -------------------+
+   +---------------------------------------------------------------------+
    | Doris is Great                                                      |
-   +------------------------------------------------- -------------------+
+   +---------------------------------------------------------------------+
    ```

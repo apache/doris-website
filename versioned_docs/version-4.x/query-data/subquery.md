@@ -2,28 +2,51 @@
 {
     "title": "Subquery",
     "language": "en",
-    "description": "A Subquery is an SQL query nested within another query (usually a SELECT statement). It can be used in the SELECT, FROM, WHERE,"
+    "description": "Doris Subquery guide: syntax, limitations, and Mark Join handling for scalar, non-scalar, correlated, and uncorrelated subqueries.",
+    "keywords": [
+        "Doris Subquery",
+        "Subquery",
+        "Scalar Subquery",
+        "Correlated Subquery",
+        "IN EXISTS Subquery",
+        "Mark Join"
+    ]
 }
 ---
 
-A Subquery is an SQL query nested within another query (usually a SELECT statement). It can be used in the SELECT, FROM, WHERE, or HAVING clauses to provide data or conditions for the outer query. The use of subqueries makes SQL queries more flexible and powerful, as they allow us to solve more complex problems within a single query.
+<!-- Knowledge type: Capability definition + Usage limitations -->
+<!-- Applicable scenarios: Writing nested SQL queries / Troubleshooting subquery errors -->
 
-Some important features of subqueries are as follows:
+A subquery is a SQL query nested inside another query (typically a SELECT statement). It can appear in the SELECT, FROM, WHERE, or HAVING clause to provide data or conditions for the outer query. With subqueries, you can implement more complex filtering, aggregation, and join logic in a single SQL statement.
 
-1. Position of Subqueries: Subqueries can be placed in multiple SQL clauses, such as the WHERE clause, HAVING clause, and FROM clause. They can be used with SELECT, UPDATE, INSERT, DELETE statements, and expression operators (such as comparison operators =, >, <, <=, as well as IN, EXISTS, etc.).
+This document describes the categories of subqueries in Doris, the supported scope, the limitations, and the Mark Join mechanism used in special scenarios.
 
-2. Relationship between Main Query and Subquery: A subquery is a query nested inside another query. The outer query is referred to as the main query, while the inner query is referred to as the subquery.
+## Applicable Scenarios
 
-3. Execution Order: When there is no correlation between the subquery and the main query, the subquery is usually executed first. When there is a correlation, the parser decides which query to execute first in real-time as needed and uses the output of the subquery accordingly.
+Subqueries are commonly used in the following scenarios:
 
-4. Use of Parentheses: Subqueries must be enclosed in parentheses to distinguish them as nested within another query.
+- **Complex filtering**: Use a subquery in the `WHERE` or `HAVING` clause to dynamically compute filter conditions.
+- **Derived column computation**: Use a scalar subquery in the `SELECT` list to add an extra field.
+- **Derived table**: Use a subquery in the `FROM` clause as a temporary table that participates in a join.
+- **Existence checks**: Use `EXISTS`/`NOT EXISTS` or `IN`/`NOT IN` to evaluate relationships between sets.
 
-Below, we will use tables t1 and t2 and related SQL to introduce the basic features and usage of subqueries. The table creation statements are as follows:
+## Basic Characteristics of Subqueries
+
+When using subqueries, keep the following basic characteristics in mind:
+
+| Characteristic | Description |
+| --- | --- |
+| Position | Can appear in the `SELECT`, `FROM`, `WHERE`, or `HAVING` clause, and can be combined with `SELECT`, `UPDATE`, `INSERT`, `DELETE`, as well as expression operators such as `=`, `>`, `<`, `<=`, `IN`, and `EXISTS`. |
+| Outer/Inner relationship | The outer query is called the main query, and the query nested inside it is called the subquery. |
+| Execution order | An independent subquery is usually executed first; when correlation is involved, the parser determines the execution order as needed and feeds the subquery result back to the main query. |
+| Syntax constraint | A subquery must be wrapped in parentheses to distinguish it from the main query. |
+
+The examples below all use two tables, `t1` and `t2`. The DDL is as follows:
 
 ```sql
 create table t1
 (
-    c1 bigint, 
+    c1 bigint,
     c2 bigint
 )
 DISTRIBUTED BY HASH(c1) BUCKETS 3
@@ -31,250 +54,252 @@ PROPERTIES ("replication_num" = "1");
 
 create table t2
 (
-    c1 bigint, 
+    c1 bigint,
     c2 bigint
 )
 DISTRIBUTED BY HASH(c1) BUCKETS 3
 PROPERTIES ("replication_num" = "1");
 ```
 
-## Classification of Subqueries
+## Categories of Subqueries
 
-### Classification Based on the Characteristics of Data Returned by Subqueries
+Subqueries can be classified along two dimensions: **the characteristics of the returned data** and **whether they reference columns from the outer query**.
 
-Subqueries can be classified into scalar and non-scalar subqueries based on the characteristics of the data they return:
+### Classification by Returned Data Characteristics
 
-**1. Scalar Subquery**
+By the characteristics of the data returned, subqueries can be divided into scalar subqueries and non-scalar subqueries.
 
-A subquery that always returns a single value (essentially equivalent to a one-row, one-column Relation). If the subquery does not return any data, it returns a NULL value. Scalar subqueries can theoretically appear anywhere a single-value expression is allowed.
+| Type | Returned result | Return value when the table is empty | Allowed positions |
+| --- | --- | --- | --- |
+| Scalar subquery | A single value (a relation with one row and one column) | `NULL` | Anywhere a single-value expression is allowed |
+| Non-scalar subquery | A relation (which can contain multiple rows and columns) | Empty set (0 rows) | Anywhere a relation (set) is allowed |
 
-**2. Non-scalar Subquery**
-
-A subquery that returns a Relation (different from the return value of a scalar subquery, this Relation can contain multiple rows and columns). If the subquery does not return any data, it returns an empty set (0 rows). Non-scalar subqueries can theoretically appear anywhere a relation (set) is allowed.
-
-The following examples illustrate scalar and non-scalar subqueries (for the two subqueries in parentheses, when t2 is an empty table, the results returned by the two subqueries are different):
+Example (when `t2` is empty, the two subqueries return different results):
 
 ```sql
--- Scalar subquery, when t2 is an empty table, the subquery returns the scalar value null    
-select * from t1 where t1.c1 > (select sum(t2.c1) from t2);    
-    
--- Non-scalar subquery, when t2 is an empty table, the subquery returns an empty set (0 rows)    
+-- Scalar subquery. When t2 is empty, the subquery returns the scalar value null.
+select * from t1 where t1.c1 > (select sum(t2.c1) from t2);
+
+-- Non-scalar subquery. When t2 is empty, the subquery returns an empty set (0 rows).
 select * from t1 where t1.c1 in (select t2.c1 from t2);
 ```
 
-### Classification Based on Whether the Subquery References Columns from the Outer Query
+### Classification by Whether Outer Columns Are Referenced
 
-Subqueries can be classified into correlated subqueries and non-correlated subqueries based on whether they reference columns from the outer query:
+By whether the subquery references columns from the outer query, subqueries can be divided into correlated subqueries and uncorrelated subqueries.
 
-**1. Non-correlated Subquery**
+| Type | References outer columns | Execution method |
+| --- | --- | --- |
+| Uncorrelated subquery | No | Can usually be evaluated independently and returns its result once for use by the outer query. |
+| Correlated subquery | Yes (commonly in the subquery's `WHERE` clause) | The subquery must be executed once for every row of the outer table, which is equivalent to a filter operation on the outer table. |
 
-A subquery that does not reference any columns from the outer query. Non-correlated subqueries can often be computed independently and return the corresponding results once for the outer query to use.
-
-**2. Correlated Subquery**
-
-A subquery that references one or more columns from the main query (also known as the outer query) (the referenced outer columns are often in the WHERE condition of the subquery). Correlated subqueries can often be seen as a filtering operation on the externally associated table, as for each row of data in the outer table, the subquery is computed and returns the corresponding result.
-
-The following examples illustrate correlated and non-correlated subqueries:
+Examples:
 
 ```sql
--- Correlated subquery, the subquery internally uses the column t1.c2 from the outer table    
-select * from t1 where t1.c1 in (select t2.c1 from t2 where t2.c2 = t1.c2);    
-    
--- Non-correlated subquery, the subquery internally does not use any columns from the outer table t1    
-select * from t1 where t1.c1 in (select t2.c1 from tt2);
+-- Correlated subquery. The subquery uses the outer table column t1.c2.
+select * from t1 where t1.c1 in (select t2.c1 from t2 where t2.c2 = t1.c2);
+
+-- Uncorrelated subquery. The subquery does not reference any column of the outer table t1.
+select * from t1 where t1.c1 in (select t2.c1 from t2);
 ```
 
 ## Subqueries Supported by Doris
 
-Doris supports all non-correlated subqueries and provides partial support for correlated subqueries as follows:
+<!-- Knowledge type: Capability support matrix -->
 
-- Supports correlated scalar subqueries in the `WHERE` and `HAVING` clauses.
+Doris supports all uncorrelated subqueries. The supported scope of correlated subqueries is as follows:
 
-- Supports correlated `IN`, `NOT IN`, `EXISTS`,`NOT EXISTS` non-scalar subqueries in the `WHERE` and `HAVING` clauses.
-
-- Supports correlated scalar subqueries in the `SELECT` list.
-
-- For nested subqueries, Doris only supports subqueries correlated to their immediate parent query and does not support cross-level correlation to outer queries beyond the parent.
+- Correlated scalar subqueries in the `WHERE` and `HAVING` clauses are supported.
+- Correlated non-scalar subqueries with `IN`, `NOT IN`, `EXISTS`, or `NOT EXISTS` in the `WHERE` and `HAVING` clauses are supported.
+- Correlated scalar subqueries in the `SELECT` list are supported.
+- For nested subqueries, only correlation to the immediate parent query is supported. Cross-level correlation to a more outer query is not supported.
 
 ## Limitations of Correlated Subqueries
 
+<!-- Knowledge type: Usage limitations -->
+<!-- Applicable scenarios: SQL error troubleshooting / Rewriting correlated subqueries -->
+
+Different forms of correlated subqueries have different limitations in Doris, described below.
+
 ### Limitations of Correlated Scalar Subqueries
 
-- The correlation condition must be an equality condition.
+The following two conditions must be met at the same time:
 
-- The output of the subquery must be the result of a single aggregate function without a GROUP BY clause.
+- The correlation condition must be an equality condition.
+- The subquery output must be the result of a single aggregate function and must not contain a `group by` clause.
 
 ```sql
--- Single aggregate function without GROUP BY, supported    
-select * from t1 where t1.c1 < (select max(t2.c1) from t2 where t1.c2 = t2.c2);    
-    
--- Equivalent rewritten SQL as follows:    
-select t1.* from t1 inner join (select t2.c2 as c2, max(t2.c1) as c1 from t2 group by t2.c2) tx on t1.c1 < tx.c1 and t1.c2 = tx.c2;    
-    
--- Non-equality condition, not supported    
-select * from t1 where t1.c1 = (select max(t2.c1) from t2 where t1.c2 > t2.c2);    
-    
--- No aggregate function, not supported    
-select * from t1 where t1.c1 = (select t2.c1 from t2 where t1.c2 = t2.c2);    
-    
--- With aggregate function but includes GROUP BY, not supported    
+-- Single aggregate function and no group by: supported.
+select * from t1 where t1.c1 < (select max(t2.c1) from t2 where t1.c2 = t2.c2);
+
+-- The equivalent rewritten SQL:
+select t1.* from t1 inner join (select t2.c2 as c2, max(t2.c1) as c1 from t2 group by t2.c2) tx on t1.c1 < tx.c1 and t1.c2 = tx.c2;
+
+-- Non-equality correlation condition: not supported.
+select * from t1 where t1.c1 = (select max(t2.c1) from t2 where t1.c2 > t2.c2);
+
+-- No aggregate function: not supported.
+select * from t1 where t1.c1 = (select t2.c1 from t2 where t1.c2 = t2.c2);
+
+-- Aggregate function present but with group by: not supported.
 select * from t1 where t1.c1 = (select max(t2.c1) from t2 where t1.c2 = t2.c2 group by t2.c2);
 ```
 
 ### Limitations of Correlated (NOT) EXISTS Subqueries
 
-- The subquery cannot have both OFFSET and LIMIT.
+- The subquery cannot use both `offset` and `limit`.
 
 ```sql
--- With LIMIT but no OFFSET, supported    
-select * from t1 where exists (select t2.c1 from t2 where t1.c2 = t2.c2 limit 2);    
-    
--- Equivalent rewritten SQL as follows:    
-select * from t1 left semi join t2 on t1.c2 = t2.c2;    
-    
--- With OFFSET and LIMIT, not supported    
+-- With limit but without offset: supported.
+select * from t1 where exists (select t2.c1 from t2 where t1.c2 = t2.c2 limit 2);
+
+-- The equivalent rewritten SQL:
+select * from t1 left semi join t2 on t1.c2 = t2.c2;
+
+-- With both offset and limit: not supported.
 select * from t1 where exists (select t2.c1 from t2 where t1.c2 = t2.c2 limit 2, 3);
 ```
 
 ### Limitations of Correlated (NOT) IN Subqueries
 
-- The output of the subquery must be a single column.
+The following three conditions must be met at the same time:
 
-- The subquery cannot have LIMIT.
-
-- The subquery cannot have aggregate functions or GROUP BY clauses.
+- The subquery output must be a single column.
+- The subquery cannot use `limit`.
+- The subquery cannot use aggregate functions or a `group by` clause.
 
 ```sql
--- Supported subquery    
-select * from t1 where t1.c1 in (select t2.c1 from t2 where t1.c2 = t2.c2);    
-    
--- Equivalent rewritten SQL as follows:    
-select * from t1 left semi join t2 on t1.c1 = t2.c1 and t1.c2 = t2.c2;    
-    
--- Subquery output is multiple columns, not supported    
-select * from t1 where (t1.a, t1.c) in (select t2.c1, t2.c from t2 where t1.c2 = t2.c2);    
-    
--- Subquery with LIMIT, not supported    
-select * from t1 where t1.c1 in (select t2.c1 from t2 where t1.c2 = t2.c2 limit 3);    
-    
--- With GROUP BY clause, not supported    
-select * from t1 where t1.c1 in (select t2.c1 from t2 where t1.c2 = t2.c2 group by t2.c1);    
-    
--- With aggregate function, not supported    
+-- Supported subquery.
+select * from t1 where t1.c1 in (select t2.c1 from t2 where t1.c2 = t2.c2);
+
+-- The equivalent rewritten SQL:
+select * from t1 left semi join t2 on t1.c1 = t2.c1 and t1.c2 = t2.c2;
+
+-- Multi-column output in the subquery: not supported.
+select * from t1 where (t1.a, t1.c) in (select t2.c1, t2.c from t2 where t1.c2 = t2.c2);
+
+-- Subquery with limit: not supported.
+select * from t1 where t1.c1 in (select t2.c1 from t2 where t1.c2 = t2.c2 limit 3);
+
+-- With a group by clause: not supported.
+select * from t1 where t1.c1 in (select t2.c1 from t2 where t1.c2 = t2.c2 group by t2.c1);
+
+-- With an aggregate function: not supported.
 select * from t1 where t1.c1 in (select sum(t2.c1) from t2 where t1.c2 = t2.c2);
 ```
 
 ### Limitations of Nested Subqueries
 
-Currently, only subqueries that correlate directly with their immediate parent queries are supported. Correlation with outer layers of the parent query is not supported.
+Currently, only correlation between a subquery and its immediate parent query is supported. Correlation to a more outer query is not supported.
 
-Assume there is another table `t3` with the following creation statement:
+Assume there is also a `t3` table, defined as follows:
 
 ```sql
-create table t3  
-(  
-    c1 bigint,   
-    c2 bigint  
-)  
-DISTRIBUTED BY HASH(c1) BUCKETS 3  
+create table t3
+(
+    c1 bigint,
+    c2 bigint
+)
+DISTRIBUTED BY HASH(c1) BUCKETS 3
 PROPERTIES ("replication_num" = "1");
 ```
 
-- Supported when the subquery only uses columns from its immediate parent query:
+- Supported: the subquery references only columns from its immediate parent query.
 
-  ```sql
-  select   
-      t1.c1   
-  from   
-      t1   
-  where not exists (  
-      select   
-          t2.c1   
-      from   
-          t2   
-      where not exists (  
-          select   
-              t3.c1   
-          from   
-              t3   
-          where   
-              t3.c2 = t2.c2  
-      ) and t2.c2 = t1.c2  
-  );
-  ```
+    ```sql
+    select
+        t1.c1
+    from
+        t1
+    where not exists (
+        select
+            t2.c1
+        from
+            t2
+        where not exists (
+            select
+                t3.c1
+            from
+                t3
+            where
+                t3.c2 = t2.c2
+        ) and t2.c2 = t1.c2
+    );
+    ```
 
-- Not supported when the innermost subquery uses columns from its immediate parent query `t2.c2` and also columns from the outermost query `t1.c1`:
+- Not supported: the innermost subquery references both `t2.c2` from its immediate parent query and `t1.c1` from the outermost query.
 
-  ```sql
-    select   
-        t1.c1   
-    from   
-        t1   
-    where not exists (  
-        select   
-            t2.c1   
-        from   
-            t2   
-        where not exists (  
-            select   
-                t3.c1   
-            from   
-                t3   
-            where   
-                t3.c2 = t2.c2 and t3.c1 = t1.c1  
-        )  
+    ```sql
+    select
+        t1.c1
+    from
+        t1
+    where not exists (
+        select
+            t2.c1
+        from
+            t2
+        where not exists (
+            select
+                t3.c1
+            from
+                t3
+            where
+                t3.c2 = t2.c2 and t3.c1 = t1.c1
+        )
     );
     ```
 
 ## Mark Join
 
-In `where` conditions, clauses with `or` relationships composed of subqueries using `(not) in` or `(not) exists` and other filtering conditions require special handling to produce correct results. An example is given below:
+<!-- Knowledge type: Execution mechanism -->
+<!-- Applicable scenarios: When a subquery has an OR relationship with other filter conditions -->
+
+In a `WHERE` clause, when a `(NOT) IN` or `(NOT) EXISTS` subquery is combined with another filter condition through an `OR` relationship, special handling is required to produce a correct result. For example:
 
 ```sql
-select 
-    t1.c1, 
-    t1.c2 
-from t1 
+select
+    t1.c1,
+    t1.c2
+from t1
 where exists (
-    select 
-        t2.c1 
-    from t2 
-    where 
+    select
+        t2.c1
+    from t2
+    where
         t1.c2 = t2.c2
     ) or t1.c1 > 0;
 ```
 
-If the `exists` clause in this SQL is directly implemented using `left semi join`, according to the semantics of `left semi join`, only rows from `t1` that satisfy `t1.c2 = t2.c2` will be output. However, rows that actually satisfy the condition `t1.c1 > 0` should also be output. To achieve this, the mechanism of `Mark Join` is introduced.
+If the `EXISTS` clause above is rewritten directly as a `LEFT SEMI JOIN`, by its semantics only the rows in `t1` satisfying `t1.c2 = t2.c2` would be returned, but rows satisfying `t1.c1 > 0` should also be returned. To handle this, Doris introduces the **Mark Join** mechanism.
 
 :::info Note
-
-`right semi join` is similar but differs in the left and right tables. Here, we use `left semi join` as an example.
-
+`RIGHT SEMI JOIN` is similar; only the left and right tables are swapped. The example here uses `LEFT SEMI JOIN`.
 :::
 
-Example SQL is as follows:
+The example SQL is as follows:
 
 ```sql
--- This SQL cannot be executed and is only for demonstration purposes    
-select     
-    tx.c1,     
-    tx.c2     
-from     
-    (    
-        select     
-            t1.c1,     
-            t1.c2,     
-            mark_join_flag     
-        from     
-            t1 left (mark) semi join t2 on t1.c2 = t2.c2    
-    ) tx    
-where     
+-- This SQL cannot actually be executed. It is shown for illustration only.
+select
+    tx.c1,
+    tx.c2
+from
+    (
+        select
+            t1.c1,
+            t1.c2,
+            mark_join_flag
+        from
+            t1 left (mark) semi join t2 on t1.c2 = t2.c2
+    ) tx
+where
     tx.mark_join_flag or tx.c1 > 0;
 ```
 
-The difference between `Mark Join` and a regular `left semi join` is that a regular `left semi join` directly outputs rows from the left table that meet the condition, while `Mark Join` outputs the original left table with an additional flag column (the `mark_join_flag` in the example) that can be `true`, `false`, or `null`. The value of the flag is determined by the `join` condition expression `t1.c2 = t2.c2`, with each row corresponding to a flag value. The calculation of flag values is shown in the table below:
+The difference between Mark Join and a regular `LEFT SEMI JOIN` is: a regular `LEFT SEMI JOIN` directly outputs the rows of the left table that satisfy the condition; Mark Join outputs the original left table together with an additional flag column whose value is `TRUE`, `FALSE`, or `NULL` (in the example, `mark_join_flag`). The value of this flag is determined by the `JOIN` condition expression `t1.c2 = t2.c2`. Each row produces a corresponding flag value, as shown below:
 
-| t1.c1 | t2.c1 | mark_join_flag |
+| t1.c2 | t2.c2 | mark_join_flag |
 | ----- | ----- | -------------- |
 | 1     | 1     | TRUE           |
 | 1     | 2     | FALSE          |
@@ -282,36 +307,35 @@ The difference between `Mark Join` and a regular `left semi join` is that a regu
 | NULL  | 1     | NULL           |
 | NULL  | NULL  | NULL           |
 
-With this flag, the `where` filtering condition can be rewritten as `where mark_join_flag or t1.c1 > 0` to obtain the correct results.
+With this flag column, the original `WHERE` filter condition can be rewritten as `where mark_join_flag or t1.c1 > 0`, which produces the correct result.
 
-## Usage notes
+## FAQ
 
-Since the output of a scalar subquery must be a single value, a runtime error will be reported when the subquery returns more than one row of data.
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenarios: Troubleshooting runtime errors of scalar subqueries -->
 
-### For Correlated Scalar Subqueries
+Because the output of a scalar subquery must be a single value, a runtime error is reported if the subquery returns more than one record.
 
-When using a correlated quantifier subquery, if the subquery that satisfies the correlation condition returns more than one row of data, a runtime error will be reported.
+### Correlated Scalar Subquery Returns Multiple Rows
 
-Please refer to the following SQL example:
+When using a correlated scalar subquery, if for some outer row the subquery returns more than one row that matches the correlation condition, a runtime error is triggered.
 
 ```sql
--- If there are more than 1 row in the t2 table that satisfies t1.c2 = t2.c2 in the associated scalar subquery, a runtime error will be reported
+-- Correlated scalar subquery. If more than one row in t2 satisfies t1.c2 = t2.c2, a runtime error is reported.
 select t1.*, (select t2.c1 from t2 where t1.c2 = t2.c2) from t1;
 
--- Example error message
+-- Example error message:
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT][E33] correlate scalar subquery must return only 1 row
 ```
 
-### For Non-Correlated Scalar Subqueries
+### Uncorrelated Scalar Subquery Returns Multiple Rows
 
-Doris will add an `assert num rows` operator at runtime. If the subquery returns more than one row of data, a runtime error will be reported.
-
-Please refer to the following SQL example:
+Doris adds an `assert num rows` operator at runtime. If the subquery returns more than one record, a runtime error is triggered.
 
 ```sql
--- Non-correlated scalar subquery, will report an error if table t2 has more than 1 row of data    
-select t1.*, (select t2.c1 from t2) from t1;    
-  
--- Example error message    
+-- Uncorrelated scalar subquery. If t2 contains more than one row, a runtime error may be reported.
+select t1.*, (select t2.c1 from t2) from t1;
+
+-- Example error message:
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[CANCELLED]Expected EQ 1 to be returned by expression
 ```

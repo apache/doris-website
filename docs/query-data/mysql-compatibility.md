@@ -1,110 +1,139 @@
 ---
 {
-    "title": "MySQL Compatibility",
+    "title": "MySQL Compatibility Notes",
     "language": "en",
-    "description": "Doris is highly compatible with MySQL syntax and supports standard SQL. However, there are several differences between Doris and MySQL,"
+    "description": "Quick reference for compatibility differences between Doris and MySQL: covers data types, DDL/DML syntax, SQL functions, and SQL Mode.",
+    "keywords": [
+        "Doris MySQL compatibility",
+        "Doris vs MySQL",
+        "Doris data types",
+        "Doris DDL syntax",
+        "Doris DML syntax",
+        "Doris SQL Mode",
+        "MySQL protocol",
+        "standard SQL"
+    ]
 }
 ---
 
-Doris is highly compatible with MySQL syntax and supports standard SQL. However, there are several differences between Doris and MySQL, as outlined below.
+<!-- Knowledge type: Compatibility comparison / Syntax reference -->
+<!-- Applicable scenario: Migrating from MySQL to Doris / SQL syntax selection and troubleshooting -->
 
-## Data Types
+Doris is highly compatible with the MySQL protocol and standard SQL syntax. Business systems, BI tools, and operations scripts can usually connect without major changes. However, as an analytics-oriented MPP database, Doris still differs from MySQL in areas such as data types, table creation syntax, data models, and DML behavior.
+
+This document organizes the main differences between Doris and MySQL from two perspectives, migration and daily use, to help you quickly locate syntax or behavior incompatibilities.
+
+## Intended Readers and Scenarios
+
+- You plan to migrate a MySQL application or data warehouse to Doris and need to quickly assess SQL compatibility.
+- You run into syntax or behavior differences when writing SQL on Doris with MySQL habits.
+- You need to check whether a specific data type or DDL/DML statement is supported in Doris.
+
+## Data Type Differences
+
+The differences from MySQL are listed below, grouped by numeric, date, string, JSON, and Doris-specific types.
 
 ### Numeric Types
 
-| Type         | MySQL                                                        | Doris                                                        |
-| ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Boolean      | <p>- Supported</p>  <p>- Range: 0 represents false, 1 represents true</p>  | <p>- Supported</p>  <p>- Keyword: Boolean</p>  <p>- Range: 0 represents false, 1 represents true</p> |
-| Bit          | <p>- Supported</p>  <p>- Range: 1 to 64</p>                                | Not supported                                                |
-| Tinyint      | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -128 to 127, unsigned range from 0 to 255 </p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -128 to 127</p>    |
-| Smallint     | <p>- Supported</p> <p>- Supports signed and unsigned</p> <p> - Range: signed range from -2^15 to 2^15-1, unsigned range from 0 to 2^16-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -32768 to 32767</p> |
-| Mediumint    | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -2^23 to 2^23-1, unsigned range from 0 to 2^24-1</p> | - Not supported                                              |
-| Int          | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -2^31 to 2^31-1, unsigned range from 0 to 2^32-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2147483648 to 2147483647</p> |
-| Bigint       | <p>- Supported</p> <p>- Supports signed and unsigned</p> <p>- Range: signed range from -2^63 to 2^63-1, unsigned range from 0 to 2^64-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2^63 to 2^63-1</p> |
-| Largeint     | - Not supported                                              | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2^127 to 2^127-1</p> |
-| Decimal      | <p>- Supported</p>  <p>- Supports signed and unsigned (deprecated after 8.0.17)</p>  <p>- Default: Decimal(10, 0)</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Default: Decimal(9, 0)</p> |
-| Float/Double | <p>-Supported</p>  <p>- Supports signed and unsigned (deprecated after 8.0.17)</p> | <p>- Supported</p>  <p>- Only supports signed</p>                          |
+| Type | MySQL | Doris |
+| --- | --- | --- |
+| Boolean | - Supported<br />- Range: 0 stands for false, 1 stands for true | - Supported<br />- Keyword: Boolean<br />- Range: 0 stands for false, 1 stands for true |
+| Bit | - Supported<br />- Range: 1 to 64 | Not supported |
+| Tinyint | - Supported<br />- Supports signed and unsigned<br />- Range: signed is -128 to 127, unsigned is 0 to 255 | - Supported<br />- Only signed is supported<br />- Range: -128 to 127 |
+| Smallint | - Supported<br />- Supports signed and unsigned<br />- Range: signed is -2^15 to 2^15-1, unsigned is 0 to 2^16-1 | - Supported<br />- Only signed is supported<br />- Range: -32768 to 32767 |
+| Mediumint | - Supported<br />- Supports signed and unsigned<br />- Range: signed is -2^23 to 2^23-1, unsigned is 0 to 2^24-1 | Not supported |
+| Int | - Supported<br />- Supports signed and unsigned<br />- Range: signed is -2^31 to 2^31-1, unsigned is 0 to 2^32-1 | - Supported<br />- Only signed is supported<br />- Range: -2147483648 to 2147483647 |
+| Bigint | - Supported<br />- Supports signed and unsigned<br />- Range: signed is -2^63 to 2^63-1, unsigned is 0 to 2^64-1 | - Supported<br />- Only signed is supported<br />- Range: -2^63 to 2^63-1 |
+| Largeint | Not supported | - Supported<br />- Only signed is supported<br />- Range: -2^127 to 2^127-1 |
+| Decimal | - Supported<br />- Supports signed and unsigned (supported before 8.0.17, marked as deprecated in later versions)<br />- Default: Decimal(10, 0) | - Supported<br />- Only signed is supported<br />- Default: Decimal(9, 0) |
+| Float/Double | - Supported<br />- Supports signed and unsigned (supported before 8.0.17, marked as deprecated in later versions) | - Supported<br />- Only signed is supported |
 
 ### Date Types
 
-| Type      | MySQL                                                        | Doris                                                        |
-| --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Date      | <p>- Supported</p> <p>- Range: ['1000-01-01', '9999-12-31']</p>   - Format: YYYY-MM-DD | <p>- Supported</p> <p>- Range: ['0000-01-01', '9999-12-31']</p>   - Format: YYYY-MM-DD |
-| DateTime  | <p>- Supported</p> <p>- DATETIME([P]), where P is an optional parameter defined precision</p>  - Range: '1000-01-01 00:00:00.000000' to '9999-12-31 23:59:59.999999'  <p>- Format: YYYY-MM-DD hh:mm:ss[.fraction]</p> | <p>- Supported</p> <p>- DATETIME([P]), where P is an optional parameter defined precision</p>  <p>- Range: ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']</p>   - Format: YYYY-MM-DD hh:mm:ss[.fraction] |
-| Timestamp | <p>- Supported</p> <p>- Timestamp[(p)], where P is an optional parameter defined precision</p> <p>- Range: ['1970-01-01 00:00:01.000000' UTC, '2038-01-19 03:14:07.999999' UTC]</p>   <p>- Format: YYYY-MM-DD hh:mm:ss[.fraction]</p> | - Supported<br />- TIMESTAMPTZ([P]), where optional parameter P represents precision <br />- Range: ['0000-01-01 00:00:00[.000000]' UTC, '9999-12-31 23:59:59[.999999]' UTC] <br />- Format: YYYY-MM-DD hh:mm:ss[.fraction]+XX:XX                                              |
-| Time      | <p>- Supported</p> <p>- Time[(p)]</p>  <p>- Range: ['-838:59:59.000000' to '838:59:59.000000']</p>   <p>- Format: hh:mm:ss[.fraction]</p> | - Supports computation, but not supported as column storage in OLAP tables <br />- Time[(p)] <br /> - Range: ['-838:59:59.999999' to '838:59:59.999999'] <br />- Format: hh:mm:ss[.fraction]  |
-| Year      | <p>- Supported</p> <p>- Range: 1901 to 2155, or 0000</p>   - Format: yyyy  | - Not supported                                              |
+| Type | MySQL | Doris |
+| --- | --- | --- |
+| Date | - Supported<br />- Range: ['1000-01-01', '9999-12-31']<br />- Format: YYYY-MM-DD | - Supported<br />- Range: ['0000-01-01', '9999-12-31']<br />- Format: YYYY-MM-DD |
+| DateTime | - Supported<br />- DATETIME([P]), where the optional parameter P is the precision<br />- Range: '1000-01-01 00:00:00.000000' to '9999-12-31 23:59:59.999999'<br />- Format: YYYY-MM-DD hh:mm:ss[.fraction] | - Supported<br />- DATETIME([P]), where the optional parameter P is the precision<br />- Range: ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']<br />- Format: YYYY-MM-DD hh:mm:ss[.fraction] |
+| Timestamp | - Supported<br />- Timestamp[(p)], where the optional parameter P is the precision<br />- Range: ['1970-01-01 00:00:01.000000' UTC, '2038-01-19 03:14:07.999999' UTC]<br />- Format: YYYY-MM-DD hh:mm:ss[.fraction] | - Supported<br />- TIMESTAMPTZ([P]), where the optional parameter P is the precision<br />- Range: ['0000-01-01 00:00:00[.000000]' UTC, '9999-12-31 23:59:59[.999999]' UTC]<br />- Format: YYYY-MM-DD hh:mm:ss[.fraction]+XX.XX |
+| Time | - Supported<br />- Time[(p)]<br />- Range: ['-838:59:59.000000', '838:59:59.000000']<br />- Format: hh:mm:ss[.fraction] | - Supported for computation, cannot be stored as a column in OLAP tables<br />- Time[(p)]<br />- Range: ['-838:59:59.999999', '838:59:59.999999']<br />- Format: hh:mm:ss[.fraction] |
+| Year | - Supported<br />- Range: 1901 to 2155, or 0000<br />- Format: yyyy | Not supported |
 
 ### String Types
 
-| Type      | MySQL                                                        | Doris                                                        |
-| --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Char      | <p>-Supported - CHAR[(M)], where M is the character length. If omitted, default length is 1</p>  <p>- Fixed-length</p>  - Range: [0, 255] bytes | <p>- Supported</p> <p>- CHAR[(M)], where M is the byte length</p>  <p>- Variable-length</p>  - Range: [1, 255] |
-| Varchar   | <p>- Supported</p> <p>- VARCHAR(M), where M is the character length</p> <p>- Range: [0, 65535] bytes</p> | <p>- Supported</p> <p>- VARCHAR(M), where M is the byte length</p>  <p>- Range: [1, 65533]</p> |
-| String    | - Not supported                                              | <p>- Supported</p> <p>- 1,048,576 bytes (1MB), can be increased to 2,147,483,643 bytes (2GB)</p> |
-| Binary    | <p>- Supported</p> <p>- Similar to Char</p>                                | - Not supported                                              |
-| Varbinary | <p>- Supported</p> <p>- Similar to Varchar</p>                             | <p>- Not supported</p>                                              |
-| Blob      | <p>- Supported</p> <p>- TinyBlob, Blob, MediumBlob, LongBlob</p>           | - Not supported                                              |
-| Text      | <p>- Supported</p> <p>- TinyText, Text, MediumText, LongText</p>           | - Not supported                                              |
-| Enum      | <p>- Supported</p> <p>- Supports up to 65,535 elements</p>                 | - Not supported                                              |
-| Set       | <p>- Supported</p> <p>- Supports up to 64 elements</p>                     | - Not supported                                              |
+| Type | MySQL | Doris |
+| --- | --- | --- |
+| Char | - Supported<br />- CHAR(M), where M is the character length, defaults to 1<br />- Fixed length<br />- Range: [0, 255], in bytes | - Supported<br />- CHAR(M), where M is the byte length<br />- Variable<br />- Range: [1, 255] |
+| Varchar | - Supported<br />- VARCHAR(M), where M is the character length<br />- Range: [0, 65535], in bytes | - Supported<br />- VARCHAR(M), where M is the byte length<br />- Range: [1, 65533] |
+| String | Not supported | - Supported<br />- 1048576 bytes (1 MB), can be increased up to 2147483643 bytes (2 GB) |
+| Binary | - Supported<br />- Similar to Char | Not supported |
+| Varbinary | - Supported<br />- Similar to Varchar | Not supported |
+| Blob | - Supported<br />- TinyBlob, Blob, MediumBlob, LongBlob | Not supported |
+| Text | - Supported<br />- TinyText, Text, MediumText, LongText | Not supported |
+| Enum | - Supported<br />- Up to 65535 elements | Not supported |
+| Set | - Supported<br />- Up to 64 elements | Not supported |
 
-### JSON Type
+### JSON Data Type
 
-| Type | MySQL       | Doris     |
-| ---- | ----------- | --------- |
-| JSON |  Supported | Supported |
+| Type | MySQL | Doris |
+| --- | --- | --- |
+| JSON | Supported | Supported |
 
-### Doris unique data type
+### Doris-Specific Data Types
 
-Doris has several unique data types. Here are the details:
+The following types are analytics-oriented data types that Doris extends beyond MySQL. They are commonly used for distinct counting, quantile computation, and semi-structured scenarios.
 
 - **HyperLogLog**
 
-  HLL (HyperLogLog) is a data type that cannot be used as a key column. In an aggregate model table, the corresponding aggregation type for HLL is HLL_UNION. The length and default value do not need to be specified. The length is controlled internally based on the data aggregation level. HLL columns can only be queried or used with `HLL_UNION_AGG`, `HLL_RAW_AGG`, `HLL_CARDINALITY`, `HLL_HASH`, and other related functions. 
+    The HLL type cannot be used as a Key column. When used in an Aggregate model table, the matching aggregation type at table creation is HLL_UNION. You do not need to specify length or default value; the length is controlled internally by the system based on the aggregation level of the data. HLL columns can only be queried or used through the matching HLL_UNION_AGG, HLL_RAW_AGG, HLL_CARDINALITY, and HLL_HASH functions.
 
-  HLL is used for approximate fuzzy deduplication and performs better than count distinct when dealing with large amounts of data. The typical error rate of HLL is around 1%, sometimes reaching up to 2%.
+    HLL is approximate distinct counting and outperforms Count Distinct on large data volumes. The error rate of HLL is typically around 1%, and may sometimes reach 2%.
 
-- **Bitmap**
+- **BITMAP**
 
-  Bitmap is a data type that cannot be used as a key column. In aggregate model table, the corresponding aggregation type for BITMAP is BITMAP_UNION. Similar to HLL, the length and default values do not need to be specified, and the length is controlled internally based on the data aggregation level. Bitmap columns can only be queried or used with functions like `BITMAP_UNION_COUNT`, `BITMAP_UNION`, `BITMAP_HASH`, `BITMAP_HASH64` and others. 
+    The BITMAP type cannot be used as a Key column. When used in an Aggregate table, it must be paired with the BITMAP_UNION aggregation definition. You do not need to specify length or default value; the length is controlled internally by the system based on the aggregation level of the data. BITMAP columns can only be queried or used through the matching BITMAP_UNION_COUNT, BITMAP_UNION, BITMAP_HASH, BITMAP_HASH64, and other functions.
 
-  Using BITMAP in traditional scenarios may impact loading speed, but it generally performs better than Count Distinct when dealing with large amounts of data. Please note that in real-time scenarios, using BITMAP without a global dictionary and with bitmap_hash() function may introduce an error of around 0.1%. If this error is not acceptable, you can use bitmap_hash64 instead.
+    Using BITMAP in offline scenarios may affect import speed. With large data volumes, its query speed is slower than HLL but faster than Count Distinct. Note: in real-time scenarios, if BITMAP is used without a global dictionary and BITMAP_HASH() is used instead, an error of about one in a thousand may occur. If this error is unacceptable, you can use BITMAP_HASH64.
 
-- **QUANTILE_PERCENT**
+- **QUANTILE_PERCENT (QUANTILE_STATE)**
 
-  QUANTILE_STATE is a data type that cannot be used as a key column. In an aggregate model table, the corresponding aggregation type for QUANTILE_STATE is QUANTILE_UNION. The length and default value do not need to be specified, and the length is controlled internally based on the data aggregation level. QUANTILE_STATE columns can only be queried or used with functions like `QUANTILE_PERCENT`, `QUANTILE_UNION`, `TO_QUANTILE_STATE` and others. 
+    The QUANTILE_STATE type cannot be used as a Key column. When used in an Aggregate model table, the matching aggregation type at table creation is QUANTILE_UNION. You do not need to specify length or default value; the length is controlled internally by the system based on the aggregation level of the data. QUANTILE_STATE columns can only be queried or used through the matching QUANTILE_PERCENT, QUANTILE_UNION, TO_QUANTILE_STATE, and other functions.
 
-  QUANTILE_STATE is used for calculating approximate quantile values. During import, it performs pre-aggregation on the same key with different values. When the number of values does not exceed 2048, it stores all the data in detail. When the number of values exceeds 2048, it uses the TDigest algorithm to aggregate (cluster) the data and save the centroids of the clusters.
+    QUANTILE_STATE is a type for computing approximate quantiles. During import, it pre-aggregates different Values for the same Key: when the number of Values does not exceed 2048, all data is recorded in detail; when the number of Values exceeds 2048, the [TDigest](https://github.com/tdunning/t-digest/blob/main/docs/t-digest-paper/histo.pdf) algorithm is used to aggregate (cluster) the data and store the centroids of the clusters.
 
-- **Array<T\>**
+- **Array\<T\>**
 
-  Array is a data type in Doris that represents an array composed of elements of type T. It cannot be used as a key column.
+    Array\<T\> is an array of elements of type T and cannot be used as a Key column.
 
-- **MAP<K, V\>**
+- **MAP\<K, V\>**
 
-  MAP is a data type in Doris that represents a map composed of elements of types K and V.
+    Map is a mapping table of elements of type K and V and cannot be used as a Key column.
 
-- **STRUCT<field_name:field_type,...>**
+- **STRUCT\<field_name:field_type, ...\>**
 
-  A structure (STRUCT) is composed of multiple fields. It can also be identified as a collection of multiple columns.
+    Struct is a structure composed of multiple Fields, which can also be understood as a collection of multiple columns. It cannot be used as a Key.
 
-  - field_name: The identifier of the field, which must be unique.
-  - field_type: The type of field.
+    The Field names and number in a Struct are fixed and always Nullable. A Field typically consists of:
+
+    - field_name: the identifier of the Field, which must be unique
+    - field_type: the type of the Field
 
 - **Agg_State**
 
-  AGG_STATE is a data type in Doris that cannot be used as a key column. During table creation, the signature of the aggregation function needs to be declared. 
+    AGG_STATE cannot be used as a Key column. When creating a table, you must also declare the signature of the aggregate function.
 
-  The length and default value do not need to be specified, and the actual storage size depends on the implementation of the function.
+    You do not need to specify length or default value; the actual storage size depends on the function implementation.
 
-  AGG_STATE can only be used in combination with [STATE](../sql-manual/sql-functions/combinators/state) / [MERGE](../sql-manual/sql-functions/combinators/merge)/ [UNION](../sql-manual/sql-functions/combinators/union) functions from the SQL manual for aggregators.
+    AGG_STATE can only be used together with the [STATE](../sql-manual/sql-functions/combinators/state) / [MERGE](../sql-manual/sql-functions/combinators/merge) / [UNION](../sql-manual/sql-functions/combinators/union) function combinators.
 
-## Syntax
+## Syntax Differences
 
-### DDL
+Doris SQL syntax is overall close to MySQL, but it has some unique extensions or restrictions in scenarios such as table creation, indexes, and views. Pay particular attention to these during migration.
 
-#### 01 Create Table Syntax in Doris
+### DDL Differences
+
+#### CREATE TABLE
+
+The Doris table creation syntax is as follows:
 
 ```sql
 CREATE TABLE [IF NOT EXISTS] [database.]table
@@ -122,33 +151,30 @@ distribution_desc
 [extra_properties]
 ```
 
-#### 02 Differences with MySQL
+The differences between each clause and MySQL are as follows:
 
+| Parameter | Differences from MySQL |
+| --- | --- |
+| column_definition_list | - Defines the column list. The basic syntax is similar to MySQL.<br />- Doris additionally supports an aggregation type operation, primarily for the Aggregate Key data model.<br />- MySQL allows constraints such as Index, Primary Key, and Unique Key to be added after the column list definition; Doris implements support for these constraints and computations through data models. |
+| index_definition_list | - Defines the index list. The basic syntax is similar to MySQL.<br />- Doris supports bitmap indexes, inverted indexes, and N-Gram indexes, and can also enable Bloom filter indexes through properties.<br />- MySQL supports B+Tree indexes and Hash indexes. |
+| engine_type | - Specifies the table engine type. Optional.<br />- The currently supported table engine is mainly the OLAP native engine.<br />- MySQL supports storage engines such as InnoDB and MyISAM. |
+| keys_type | - Specifies the data model. Optional.<br />- Supported types include:<br />&nbsp;&nbsp;1) DUPLICATE KEY (default): the columns specified after it are sort columns;<br />&nbsp;&nbsp;2) AGGREGATE KEY: the columns specified after it are dimension columns;<br />&nbsp;&nbsp;3) UNIQUE KEY: the columns specified after it are primary key columns.<br />- MySQL has no concept of a data model. |
+| table_comment | Table comment. |
+| partition_info | Partitioning algorithm. Optional.<br />Doris supports the following partitioning algorithms:<br />- LESS THAN: defines only the upper bound of the partition; the lower bound is determined by the upper bound of the previous partition.<br />- FIXED RANGE: defines a left-closed, right-open interval for the partition.<br />- MULTI RANGE: creates RANGE partitions in batch, defining left-closed, right-open intervals with a time unit and step size. Supported time units are year, month, day, week, and hour.<br /><br />MySQL supported algorithms: Hash, Range, and List Key, with subpartitions supported. Subpartitions support Hash and Key. |
+| distribution_desc | - Bucketing algorithm. Required. Includes:<br />&nbsp;&nbsp;1) Hash bucketing: `DISTRIBUTED BY HASH (k1[, k2 ...]) [BUCKETS num\|auto]`, uses the specified key columns for hash bucketing;<br />&nbsp;&nbsp;2) Random bucketing: `DISTRIBUTED BY RANDOM [BUCKETS num\|auto]`, uses random numbers for bucketing.<br />- MySQL has no bucketing algorithm. |
+| rollup_list | - Multiple synchronous materialized views can be created at the same time as table creation.<br />- Syntax: `rollup_name (col1[, col2, ...]) [DUPLICATE KEY(col1[, col2, ...])][PROPERTIES("key" = "value")]`.<br />- Not supported by MySQL. |
+| properties | Table properties. The properties differ from those of MySQL, and the syntax for defining them also differs from MySQL. |
 
-| Parameter              | Differences from MySQL                                       |
-| ---------------------- | ------------------------------------------------------------ |
-| Column_definition_list | - Field list definition: The basic syntax is similar to MySQL but includes an additional operation for aggregate types. <br />- The aggregate type operation primarily supports Aggregate. <br />- When creating a table, MySQL allows adding constraints like Index (e.g., Primary Key, Unique Key) after the field list definition, while Doris supports these constraints and computations by defining data models. |
-| Index_definition_list  | - Index list definition: The basic syntax is similar to MySQL, supporting bitmap indexes, inverted indexes, and N-Gram indexes, but Bloom filter indexes are set through properties. <br />- MySQL supports B+Tree and Hash indexes. |
-| Engine_type            | - Table engine type: Optional. <br />- The currently supported table engine is mainly the OLAP native engine. <br />- MySQL supports storage engines such as Innodb, MyISAM, etc. |
-| Keys_type              | - Data model: Optional. <br />- Supported types include: 1) DUPLICATE KEY (default): The specified columns are sort columns. 2) AGGREGATE KEY: The specified columns are dimension columns. 3) UNIQUE KEY: The specified columns are primary key columns. <br />- MySQL does not have the concept of a data model. |
-| Table_comment          | Table comment                                                |
-| Partition_info         | - Partitioning algorithm: Optional. Doris supported partitioning algorithms include: <br />- LESS THAN: Only defines the upper bound of partitions. The lower bound is determined by the upper bound of the previous partition.<br />- FIXED RANGE: Defines left-closed and right-open intervals for partitions. <br />- MULTI RANGE: Creates multiple RANGE partitions in bulk, defining left-closed and right-open intervals, setting time units and steps. Time units support years, months, days, weeks, and hours. <br />MySQL supports algorithms such as Hash, Range, List, Key. MySQL also supports subpartitions, with only Hash and Key supported for subpartitions. |
-| Distribution_desc      | - Bucketing algorithm: Required. Includes: 1) Hash bucketing syntax: DISTRIBUTED BY HASH (k1[,k2 ...]) [BUCKETS num\|auto]. Description: Uses specified key columns for hash bucketing. 2) Random bucketing syntax: DISTRIBUTED BY RANDOM [BUCKETS num\|auto]. Description: Uses random numbers for bucketing. <br />- MySQL does not have a bucketing algorithm. |
-| Rollup_list            | - Multiple sync materialized views can be created while creating the table. <br />- Syntax: `rollup_name (col1[, col2, ...]) [DUPLICATE KEY(col1[, col2, ...])][PROPERTIES("key" = "value")]` <br />- MySQL does not support this. |
-| Properties             | Table properties: They differ from MySQL's table properties, and the syntax for defining table properties also differs from MySQL. |
-
-
-#### 03 CREATE INDEX
+#### CREATE INDEX
 
 ```sql
 CREATE INDEX [IF NOT EXISTS] index_name ON table_name (column [, ...],) [USING BITMAP];
 ```
 
-- Doris currently supports Bitmap index, Inverted index, and N-Gram index. BloomFilter index are supported as well, but they have a separate syntax for setting them.
+- Doris currently supports bitmap indexes, inverted indexes, N-Gram indexes, and Bloom filter indexes (configured through separate syntax).
+- MySQL supports B+Tree and Hash index algorithms.
 
-- MySQL supports index algorithms such as B+Tree and Hash.
-
-#### 04 CREATE VIEW
+#### CREATE VIEW
 
 ```sql
 CREATE VIEW [IF NOT EXISTS]
@@ -156,7 +182,7 @@ CREATE VIEW [IF NOT EXISTS]
  (column1[ COMMENT "col comment"][, column2, ...])
 AS query_stmt
 
-CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
+CREATE MATERIALIZED VIEW [IF NOT EXISTS] mvName=multipartIdentifier
         (LEFT_PAREN cols=simpleColumnDefs RIGHT_PAREN)? buildMode?
         (REFRESH refreshMethod? refreshTrigger?)?
         (KEY keys=identifierList)?
@@ -167,19 +193,19 @@ CREATE MATERIALIZED VIEW (IF NOT EXISTS)? mvName=multipartIdentifier
         AS query
 ```
 
-- The basic syntax is consistent with MySQL.
-- Doris supports logical view and supports two types of materialized views: synchronous materialized views and asynchronous materialized views
-- MySQL do not supports asynchronous materialized views.
+- The basic syntax is the same as MySQL.
+- In addition to logical views, Doris also supports two types of materialized views: synchronous materialized views and asynchronous materialized views.
+- MySQL does not support materialized views.
 
-#### 05 ALTER TABLE / ALTER INDEX
+#### ALTER TABLE / ALTER INDEX
 
-The syntax of Doris ALTER is basically the same as that of MySQL.
+The Doris ALTER syntax is essentially the same as MySQL.
 
-### DROP TABLE / DROP INDEX
+#### DROP TABLE / DROP INDEX
 
-The syntax of Doris DROP is basically the same as MySQL.
+The Doris DROP syntax is essentially the same as MySQL.
 
-### DML
+### DML Differences
 
 #### INSERT
 
@@ -192,7 +218,7 @@ INSERT INTO table_name
     { VALUES ( { expression | DEFAULT } [, ...] ) [, ...] | query }
 ```
 
-The Doris INSERT syntax is basically the same as MySQL.
+The Doris INSERT syntax is essentially the same as MySQL.
 
 #### UPDATE
 
@@ -211,17 +237,17 @@ value:
     {expr | DEFAULT}
 ```
 
-The Doris UPDATE syntax is basically the same as MySQL, but it should be noted that the **`WHERE` condition must be added.**
+The Doris UPDATE syntax is essentially the same as MySQL, but note that **a WHERE condition is required**.
 
-#### Delete
+#### DELETE
 
 ```sql
-DELETE FROM table_name [table_alias] 
+DELETE FROM table_name [table_alias]
     [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
     WHERE column_name op { value | value_list } [ AND column_name op { value | value_list } ...];
 ```
 
-The syntax can only specify filter predicates
+In Doris, the syntax above only allows specifying filter predicates.
 
 ```sql
 DELETE FROM table_name [table_alias]
@@ -230,9 +256,9 @@ DELETE FROM table_name [table_alias]
     WHERE condition
 ```
 
-This syntax can only be used on the UNIQUE KEY model table.
+In Doris, the syntax above can only be used on Unique Key model tables.
 
-The DELETE syntax in Doris is basically the same as in MySQL. However, since Doris is an analytical database, deletions cannot be too frequent.
+The Doris DELETE syntax is essentially the same as MySQL. However, since Doris is an analytics-oriented database, delete operations should not be performed too frequently.
 
 #### SELECT
 
@@ -255,16 +281,18 @@ SELECT
     [INTO OUTFILE 'file_name']
 ```
 
-The Doris SELECT syntax is basically the same as MySQL.
+The Doris SELECT syntax is essentially the same as MySQL.
 
-## SQL Function
+## SQL Functions
 
-Doris Function covers most MySQL functions.
+Doris functions cover the vast majority of MySQL functions. Common string, date, aggregate, and window functions can be used directly.
 
 ## SQL Mode
 
-| Name | Behavior when enabled | Behavior when disabled | Notes |
+Doris supports setting some SQL Modes to control SQL parsing and execution behavior, making it easier to stay aligned with MySQL conventions.
+
+| Name | Behavior when set | Behavior when not set | Notes |
 | :-- | :-- | :-- | :-- |
-| PIPES_AS_CONCAT | Parses `\|\|` as the `concat` function | Parses `\|\|` as the logical OR operator | - |
-| NO_BACKSLASH_ESCAPES | Treats backslashes in strings as literal characters | Treats backslashes in strings as escape characters | - |
-| ONLY_FULL_GROUP_BY | Allows only standard aggregations | Allows scalar values not in the GROUP BY key to appear in the aggregation result | Supported since version 3.1.0 |
+| PIPES_AS_CONCAT | Parses the `\|\|` symbol as the concat function | Parses the `\|\|` symbol as the logical OR operator | - |
+| NO_BACKSLASH_ESCAPES | Treats backslashes in strings as normal characters | Treats backslashes in strings as the start of an escape sequence | - |
+| ONLY_FULL_GROUP_BY | Allows only standard aggregation | Allows aggregation result output to include scalar values that are not in the aggregation KEY | Supported since version 3.1.0 |

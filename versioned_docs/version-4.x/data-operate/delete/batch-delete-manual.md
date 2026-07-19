@@ -1,34 +1,64 @@
 ---
 {
-    "title": "Batch Deletion Based on Load",
+    "title": "Load-Based Batch Delete",
     "language": "en",
-    "description": "The delete operation is a special form of data update. In the primary key model (Unique Key) table,"
+    "description": "The Doris Unique Key model supports batch deletion by carrying delete markers during data loading. It is suitable for CDC synchronization and large-scale primary key deletion scenarios, and offers better performance than the DELETE statement.",
+    "keywords": [
+        "Doris batch delete",
+        "Unique Key delete",
+        "delete marker",
+        "__DORIS_DELETE_SIGN__",
+        "CDC sync",
+        "merge_type DELETE",
+        "Stream Load delete",
+        "Broker Load delete",
+        "Routine Load delete"
+    ]
 }
 ---
 
-## Batch Deletion Based on Load
+<!-- Knowledge type: Procedure + Feature description -->
+<!-- Applicable scenarios: CDC synchronization / Large-scale primary key deletion / Merged data writes -->
 
-The delete operation is a special form of data update. In the primary key model (Unique Key) table, Doris supports deletion by adding a delete sign when loading data.
+**Load-based batch delete** is a deletion method provided by the Doris Unique Key model. By carrying a **delete marker column** during data loading, rows to be deleted are marked as deleted, and background Compaction asynchronously cleans them up.
 
-Compared to the `DELETE` statement, using delete signs offers better usability and performance in the following scenarios:
+Compared with the `DELETE` statement, delete markers offer higher performance and better usability in batch deletion and CDC scenarios.
 
-1. **CDC Scenario**: When synchronizing data from an OLTP database to Doris, Insert and Delete operations in the binlog usually appear alternately. The `DELETE` statement cannot efficiently handle these operations. Using delete signs allows Insert and Delete operations to be processed uniformly, simplifying the CDC code for writing to Doris and improving data load and query performance.
-2. **Batch Deletion of Specified Primary Keys**: If a large number of primary keys need to be deleted, using the `DELETE` statement is inefficient. Each execution of `DELETE` generates an empty rowset to record the delete condition and produces a new data version. Frequent deletions or too many delete conditions can severely affect query performance.
+### Applicable Scenarios
 
-## Working Principle of Delete Signs
+| Scenario | Description |
+|------|------|
+| **CDC synchronization** | When synchronizing from an OLTP database (such as MySQL) to Doris through binlog, Insert and Delete operations appear alternately in the binlog. Using delete markers allows both types of operations to be handled uniformly, simplifying the code and improving load and query performance. |
+| **Batch deletion by primary key** | When a large amount of data needs to be deleted by primary key, each `DELETE` statement generates an empty Rowset and produces a new data version. Frequent deletions significantly degrade query performance. Delete markers can be written in batches, avoiding this issue. |
 
-### Principle Explanation
+### Comparison with the DELETE Statement
 
-- **Table Structure**: The delete sign is stored as a hidden column `__DORIS_DELETE_SIGN__` in the primary key table. When the value of this column is 1, it indicates that the delete sign is effective.
-- **Data Load**: Users can specify the mapping condition of the delete sign column in the load task. The usage varies for different load tasks, as detailed in the syntax explanation below.
-- **Query**: During the query, Doris FE automatically adds the filter condition `__DORIS_DELETE_SIGN__ != true` in the query plan to filter out data with a delete sign value of 1.
-- **Data Compaction**: Doris's background data compaction periodically cleans up data with a delete sign value of 1.
+| Item | Load-based batch delete | DELETE statement |
+|------|------|------|
+| Applicable model | Unique Key | Unique Key / Aggregate Key / Duplicate Key |
+| Trigger method | Carry delete markers during loading | Execute SQL |
+| Data version | Shares the version of the load | Generates a new version each time |
+| Large-batch deletion performance | High | Low |
+| CDC scenario fit | Native support | Requires extra handling |
+
+---
+
+## How It Works
+
+<!-- Knowledge type: Concept description -->
+
+### Core Mechanism
+
+- **Hidden column**: Every Unique Key table contains a hidden column `__DORIS_DELETE_SIGN__`. A value of `1` indicates that the row is marked as deleted.
+- **Load-time write**: A load task can specify which rows to mark as deleted through mapping conditions. The syntax differs slightly across load methods.
+- **Query filtering**: During query planning, the FE automatically appends the filter condition `__DORIS_DELETE_SIGN__ != true`, so marked rows are invisible to users.
+- **Background cleanup**: The BE Compaction process periodically performs physical cleanup of rows marked as deleted.
 
 ### Data Example
 
-#### Table Structure
+#### Step 1: Create the Table
 
-Create an example table:
+Create a Unique Key table:
 
 ```sql
 CREATE TABLE example_table (
@@ -42,7 +72,9 @@ PROPERTIES (
 );
 ```
 
-Use the session variable `show_hidden_columns` to view hidden columns:
+#### Step 2: View Hidden Columns
+
+Use the session variable `show_hidden_columns` to display hidden columns:
 
 ```sql
 mysql> set show_hidden_columns=true;
@@ -58,9 +90,9 @@ mysql> desc example_table;
 +-----------------------+---------+------+-------+---------+-------+
 ```
 
-#### Data Load
+#### Step 3: Write a Delete Marker
 
-The table has the following existing data:
+Suppose the table contains the following data:
 
 ```sql
 +------+-------+
@@ -71,15 +103,15 @@ The table has the following existing data:
 +------+-------+
 ```
 
-Insert a delete sign for id 1 (this is only for principle demonstration, not introducing various methods of using delete signs in load):
+Use `INSERT INTO` to write a delete marker for the row where `id = 1` (this is for illustration only; in production, use the corresponding load method):
 
 ```sql
 mysql> insert into example_table (id, __DORIS_DELETE_SIGN__) values (1, 1);
 ```
 
-#### Query
+#### Step 4: Verify Query Results
 
-Directly view the data, and you can find that the record with id 1 has been deleted:
+By default, queries automatically filter out marked rows:
 
 ```sql
 mysql> select * from example_table;
@@ -90,7 +122,7 @@ mysql> select * from example_table;
 +------+-------+
 ```
 
-Use the session variable `show_hidden_columns` to view hidden columns, and you can see that the row with id 1 has not been actually deleted. Its hidden column `__DORIS_DELETE_SIGN__` value is 1 and is filtered out during the query:
+After enabling `show_hidden_columns`, the row with `id = 1` is still present and only marked:
 
 ```sql
 mysql> set show_hidden_columns=true;
@@ -103,27 +135,55 @@ mysql> select * from example_table;
 +------+-------+-----------------------+-----------------------+
 ```
 
-## Syntax Explanation
+---
 
-Different load types have different syntax for setting delete signs. Below are the usage syntax for delete signs in various load types.
+## Load Merge Methods
 
-### Load Merge Type Selection
+<!-- Knowledge type: Configuration parameter -->
 
-There are several merge types when loading data:
+A load task controls data merging behavior through `merge_type`. Three methods are supported:
 
-1. **APPEND**: All data is appended to the existing data.
-2. **DELETE**: Delete all rows with the same key column values as the loaded data.
-3. **MERGE**: Decide whether to APPEND or DELETE based on the DELETE ON condition.
+| merge_type | Behavior | Typical use |
+|------|------|------|
+| **APPEND** (default) | All data is appended to the existing data | Regular writes |
+| **DELETE** | Deletes all rows whose Key columns match the loaded data | Batch deletion by primary key |
+| **MERGE** | Performs APPEND or DELETE for each row based on the `DELETE ON` condition | CDC scenarios with mixed Insert/Delete |
+
+> Note: `MERGE` must be used together with `DELETE ON <condition>`.
+
+---
+
+## Syntax for Each Load Method
+
+<!-- Knowledge type: Procedure -->
+
+The syntax for setting delete markers differs slightly across load methods. Each is described below.
 
 ### Stream Load
 
-The `Stream Load` syntax is to add a field for setting the delete sign column in the header's columns field, for example: `-H "columns: k1, k2, label_c3" -H "merge_type: [MERGE|APPEND|DELETE]" -H "delete: label_c3=1"`.
+**Usage**: Configure the `columns`, `merge_type`, and `delete` fields in the HTTP Header.
 
-For usage examples of Stream Load, please refer to the "Specify merge_type for Delete Operation" and "Specify merge_type for Merge Operation" sections in the [Stream Load Manual](../import/import-way/stream-load-manual.md).
+**Example**:
+
+```bash
+-H "columns: k1, k2, label_c3"
+-H "merge_type: [MERGE|APPEND|DELETE]"
+-H "delete: label_c3=1"
+```
+
+**Parameter description**:
+
+- `columns`: The load field mapping. It must include the marker column used to determine deletion.
+- `merge_type`: The merge method. Valid values are `APPEND`, `DELETE`, and `MERGE`.
+- `delete`: Takes effect when `merge_type=MERGE`. Specifies the delete condition.
+
+For more examples, see the "Specify merge_type for Delete operation" and "Specify merge_type for Merge operation" sections in the [Stream Load Manual](../import/import-way/stream-load-manual.md).
 
 ### Broker Load
 
-The `Broker Load` syntax is to set the delete sign column field in `PROPERTIES`, as follows:
+**Usage**: Specify delete markers in the `LOAD` clause using the `[MERGE|APPEND|DELETE]` keyword and the `DELETE ON` clause.
+
+**Syntax example**:
 
 ```sql
 LOAD LABEL db1.label1
@@ -131,18 +191,18 @@ LOAD LABEL db1.label1
     [MERGE|APPEND|DELETE] DATA INFILE("hdfs://abc.com:8888/user/palo/test/ml/file1")
     INTO TABLE tbl1
     COLUMNS TERMINATED BY ","
-    (tmp_c1,tmp_c2, label_c3)
+    (tmp_c1, tmp_c2, label_c3)
     SET
     (
-        id=tmp_c2,
-        name=tmp_c1,
+        id = tmp_c2,
+        name = tmp_c1
     )
     [DELETE ON label_c3=true]
 )
 WITH BROKER 'broker'
 (
-    "username"="user",
-    "password"="pass"
+    "username" = "user",
+    "password" = "pass"
 )
 PROPERTIES
 (
@@ -152,27 +212,63 @@ PROPERTIES
 
 ### Routine Load
 
-The `Routine Load` syntax is to add a mapping in the `columns` field, with the same mapping method as above, as follows:
+**Usage**: When creating a routine load job, specify delete markers using the `WITH [MERGE|APPEND|DELETE]` and `DELETE ON` clauses.
+
+**Syntax example**:
 
 ```sql
-CREATE ROUTINE LOAD example_db.test1 ON example_tbl 
- [WITH MERGE|APPEND|DELETE]
- COLUMNS(k1, k2, k3, v1, v2, label),
- WHERE k1  100 and k2 like "%doris%"
- [DELETE ON label=true]
- PROPERTIES
- (
-     "desired_concurrent_number"="3",
-     "max_batch_interval" = "20",
-     "max_batch_rows" = "300000",
-     "max_batch_size" = "209715200",
-     "strict_mode" = "false"
- )
- FROM KAFKA
- (
-     "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
-     "kafka_topic" = "my_topic",
-     "kafka_partitions" = "0,1,2,3",
-     "kafka_offsets" = "101,0,0,200"
- );
+CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+[WITH MERGE|APPEND|DELETE]
+COLUMNS(k1, k2, k3, v1, v2, label),
+WHERE k1 > 100 and k2 like "%doris%"
+[DELETE ON label=true]
+PROPERTIES
+(
+    "desired_concurrent_number" = "3",
+    "max_batch_interval" = "20",
+    "max_batch_rows" = "300000",
+    "max_batch_size" = "209715200",
+    "strict_mode" = "false"
+)
+FROM KAFKA
+(
+    "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
+    "kafka_topic" = "my_topic",
+    "kafka_partitions" = "0,1,2,3",
+    "kafka_offsets" = "101,0,0,200"
+);
 ```
+
+---
+
+## FAQ
+
+<!-- Knowledge type: FAQ -->
+
+**Q1: Which table models does load-based batch delete support?**
+
+Only the Unique Key model is supported. For Aggregate Key and Duplicate Key tables, use the `DELETE` statement.
+
+**Q2: When is the disk space of marked-deleted data actually released?**
+
+It is asynchronously cleaned up by the BE background Compaction. The timing depends on Compaction scheduling and the number of data versions, and usually requires no user intervention.
+
+**Q3: How can you check whether a row has been marked as deleted?**
+
+Run `SET show_hidden_columns=true;` and then query the table. The hidden column `__DORIS_DELETE_SIGN__` becomes visible. A value of `1` indicates that the row is marked as deleted.
+
+**Q4: Which merge_type should be used in CDC scenarios?**
+
+`MERGE` is recommended, used together with `DELETE ON` to specify the delete condition. This allows Insert and Delete operations to be processed together in the same load.
+
+**Q5: Do delete markers affect query performance?**
+
+Normal queries automatically filter out marked rows, so the performance impact is negligible. After background Compaction completes, marked data is physically cleaned up.
+
+---
+
+## Related Links
+
+- [Stream Load Manual](../import/import-way/stream-load-manual.md)
+- [Broker Load Manual](../import/import-way/broker-load-manual.md)
+- [Routine Load Manual](../import/import-way/routine-load-manual.md)

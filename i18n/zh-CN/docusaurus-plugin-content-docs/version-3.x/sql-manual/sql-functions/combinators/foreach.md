@@ -14,6 +14,29 @@
 `AGGREGATE_FUNCTION_FOREACH(arg...)`
 
 ## 举例
+
+准备示例数据：
+
+```sql
+CREATE TABLE db (
+    id INT,
+    a  ARRAY<INT>,
+    s  ARRAY<STRING>
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO db VALUES
+    (1, [1, 2, 3], ["ab", "123"]),
+    (2, [20],      ["cd"]),
+    (3, [100],     ["efg"]),
+    (4, NULL,      NULL),
+    (5, [null, 2], [null, "c"]);
+```
+
+然后执行 FOREACH 组合器：
+
 ```
 mysql [test]>select a , s from db;
 +-----------+---------------+
@@ -54,5 +77,11 @@ mysql [test]>select map_agg_foreach(a,a) from db;
 | [{1:1, 20:20, 100:100}, {2:2}, {3:3}] |
 +---------------------------------------+
 ```
+## 注意事项
+
+- 每个参数都必须是 ARRAY，其元素类型需与被包裹聚合函数对应参数的类型一致；返回值是被包裹函数返回类型的 ARRAY，按下标逐位计算。
+- 当一次调用传入多个数组参数时，同一行内的各数组长度必须相同，否则查询会报错 `Arrays passed to <function> aggregate function have different sizes`。（不同行之间的数组长度可以不同。）
+- `percentile`、`percentile_array`、`percentile_approx`、`percentile_approx_weighted` 函数不支持与 `foreach` 组合器一起使用。
+
 ### keywords
 FOREACH

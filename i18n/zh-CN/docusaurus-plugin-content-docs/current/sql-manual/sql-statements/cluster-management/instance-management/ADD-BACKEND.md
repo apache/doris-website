@@ -88,4 +88,4 @@ ALTER SYSTEM ADD BACKEND "<host>:<heartbeat_port>"[,"<host>:<heartbeat_port>"...
    * `11.10.20.12:8010`：公网端点，用于外部用户通过负载均衡器访问
    * `10.10.10.9:8020`：私网端点，用于 VPC 内部或 Kubernetes 跨集群访问
 
-   此配置在云环境或 Kubernetes 集群中非常有用，BE 节点需要从不同的网络环境进行访问。详情请参阅[复杂网络环境下的 Stream Load 实践](../../../../data-operate/import/load-internals/stream-load-in-complex-network.md)。
+   此配置在云环境或 Kubernetes 集群中非常有用，BE 节点需要从不同的网络环境进行访问。详情请参阅[复杂网络环境下的 Stream Load 实践](../../../../data-operate/import/load-best-practices/stream-load-in-complex-network.md)。

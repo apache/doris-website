@@ -10,7 +10,7 @@
 
 In the compute-storage coupled mode, this statement is used to diagnose a specified tablet. The result will display information about the tablet and some potential issues.
 
-This command is not supported in the compute-storage coupled mode.
+This command is not supported in the storage-computing separation mode.
 
 ## Syntax
 

@@ -1,0 +1,139 @@
+---
+{
+    "title": "性能与调优",
+    "language": "zh-CN",
+    "description": "Apache Doris 性能与调优章节导航：覆盖调优方法论、查询与导入性能、优化技术原理以及基准测试。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris 的自适应优化器和 Pipeline 执行引擎可以让大多数业务开箱即用，但生产环境通常还需要系统化的性能调优。建议先按照调优方法论定位瓶颈，再针对查询或导入侧的具体场景进行优化；遇到难以解释的执行计划时，可以查阅优化技术原理来理解其背后的机制。
+
+## 调优方法论
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="性能调优概览"
+    description="了解端到端的调优流程，掌握 Doris 提供的诊断与分析工具，以及如何系统化地定位性能问题。"
+    link="performance-tuning-overview/tuning-overview"
+/>
+</div>
+
+## 查询性能
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="表结构与索引优化"
+    description="通过表模型、分区分桶、Key 列设计与索引选择（前缀索引、BloomFilter、NGram、倒排）确定查询性能上限。"
+    link="tuning/tuning-plan/schema-and-index-optimization"
+/>
+
+<GettingStartedCard
+    title="物化视图"
+    description="使用同步或异步物化视图预计算结果，结合透明改写让已有 SQL 无需修改即可享受加速。"
+    link="materialized-view/intro"
+/>
+
+<GettingStartedCard
+    title="Join 优化"
+    description="使用 Colocation Join 消除 Shuffle，借助 Distribute 与 Leading Hint 在优化器决策不理想时手动调整 Join 计划。"
+    link="join-optimization-intro"
+/>
+
+<GettingStartedCard
+    title="缓存加速"
+    description="组合使用 SQL Cache、Condition Cache 与外表文件缓存，在重复查询中复用结果、过滤计算与远端数据。"
+    link="caching-intro"
+/>
+
+<GettingStartedCard
+    title="执行调优"
+    description="基于 Profile 中的运行时瓶颈，调整并行度、RuntimeFilter 等待时间、数据倾斜以及 CBO 规则。"
+    link="tuning/tuning-execution/intro"
+/>
+
+<GettingStartedCard
+    title="高并发与点查询"
+    description="通过行存、短路执行让 Unique Key 表支持高 QPS 主键查询，并使用字典表替代维表 Join 加速 KV 查询。"
+    link="high-concurrency-intro"
+/>
+
+<GettingStartedCard
+    title="去重计数"
+    description="使用 BITMAP 实现精确去重，或在可接受 1%–2% 误差时使用 HLL 进行近似 UV 计算，显著降低内存与存储开销。"
+    link="distinct-counts/intro"
+/>
+
+<GettingStartedCard
+    title="查询 Profile"
+    description="通过 Profile 分析 Scan、Exchange、Join、聚合等算子的耗时分布，快速定位查询的最慢阶段。"
+    link="query-profile"
+/>
+</div>
+
+## 导入性能
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="DML 调优"
+    description="针对 INSERT、UPDATE、DELETE 的执行计划，调整写入并行度、批量大小与执行路径，获得稳定的导入性能。"
+    link="tuning/tuning-plan/dml-tuning-plan"
+/>
+</div>
+
+## 优化技术原理
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="查询优化器"
+    description="介绍 Nereids 优化器的规则改写与代价模型，包括基于规则的等价变换以及基于代价的 Join Enumeration。"
+    link="optimization-technology-principle/query-optimizer"
+/>
+
+<GettingStartedCard
+    title="Pipeline 执行引擎"
+    description="介绍 Pipeline 模型、调度机制以及 Morsel-Driven 并行执行，构成 Doris 的执行层基础。"
+    link="optimization-technology-principle/pipeline-execution-engine"
+/>
+
+<GettingStartedCard
+    title="Runtime Filter"
+    description="介绍 RuntimeFilter 在 Join 构建侧生成、并下推到探测侧来跳过无关数据的执行机制。"
+    link="optimization-technology-principle/runtime-filter"
+/>
+
+<GettingStartedCard
+    title="TopN 优化"
+    description="介绍 ORDER BY ... LIMIT 场景下的短路执行与部分排序优化，跳过大部分数据快速返回 TopN。"
+    link="optimization-technology-principle/topn-optimization"
+/>
+
+<GettingStartedCard
+    title="统计信息"
+    description="介绍表、列与直方图等统计信息的采集与使用，是基于代价的查询优化器选择计划的基础。"
+    link="optimization-technology-principle/statistics"
+/>
+</div>
+
+## 基准测试
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Star Schema Benchmark (SSB)"
+    description="Doris 在标准硬件上的 SSB 测试结果，包含可复现的环境配置与调优要点。"
+    link="../benchmark/ssb"
+/>
+
+<GettingStartedCard
+    title="TPC-H"
+    description="Doris 的 TPC-H 测试结果，涵盖数据导入、查询延迟与对比指引。"
+    link="../benchmark/tpch"
+/>
+
+<GettingStartedCard
+    title="TPC-DS"
+    description="Doris 在更复杂多表分析场景下的 TPC-DS 测试结果。"
+    link="../benchmark/tpcds"
+/>
+</div>

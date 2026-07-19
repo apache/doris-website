@@ -37,6 +37,6 @@
 
 ## 参考
 
- - [管理文件缓存](../../../../compute-storage-decoupled/file-cache)
+ - [管理文件缓存](../../../../compute-storage-decoupled/file-cache/file-cache)
  - [WARMUP COMPUTE GROUP](./WARM-UP.md)
 

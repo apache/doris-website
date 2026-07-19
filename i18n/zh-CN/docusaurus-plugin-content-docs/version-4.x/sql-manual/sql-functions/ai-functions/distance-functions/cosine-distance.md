@@ -25,7 +25,9 @@ COSINE_DISTANCE(<array1>, <array2>)
 
 ## 返回值
 
-返回两个向量（向量值为坐标）之间的余弦距离。如果输入 array 为 NULL，或者 array 中任何元素为 NULL，则返回 NULL。
+返回两个向量（向量值为坐标）之间的余弦距离，返回类型为 `FLOAT`。
+
+如果任一输入数组为 `NULL`，或包含 `NULL` 元素，函数会报错。
 
 ## 举例
 
@@ -37,6 +39,26 @@ SELECT COSINE_DISTANCE([1, 2], [2, 3]),COSINE_DISTANCE([3, 6], [4, 7]);
 +---------------------------------+---------------------------------+
 | cosine_distance([1, 2], [2, 3]) | cosine_distance([3, 6], [4, 7]) |
 +---------------------------------+---------------------------------+
-|            0.007722123286332261 |           0.0015396467945875125 |
+|                     0.007722139 |                     0.001539648 |
 +---------------------------------+---------------------------------+
+```
+
+如果输入数组为 `NULL`，函数会报错：
+
+```sql
+SELECT COSINE_DISTANCE(NULL, [1, 2]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function cosine_distance cannot be null
+```
+
+如果输入数组包含 `NULL` 元素，函数会报错：
+
+```sql
+SELECT COSINE_DISTANCE([1, NULL], [1, 2]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function cosine_distance cannot have null
 ```

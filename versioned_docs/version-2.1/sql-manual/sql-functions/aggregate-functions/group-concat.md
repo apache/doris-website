@@ -32,6 +32,20 @@ Returns a value of type VARCHAR.
 ## Example
 
 ```sql
+-- setup
+create table test(
+    value varchar(10)
+) distributed by hash(value) buckets 1
+properties ("replication_num"="1");
+
+insert into test values
+    ("a"),
+    ("b"),
+    ("c"),
+    ("c");
+```
+
+```sql
 select value from test;
 ```
 
@@ -67,6 +81,34 @@ select GROUP_CONCAT(DISTINCT value) from test;
 | GROUP_CONCAT(`value`) |
 +-----------------------+
 | a, b, c               |
++-----------------------+
+```
+
+```sql
+select GROUP_CONCAT(value ORDER BY value DESC) from test;
+```
+
+```text
++-----------------------+
+| GROUP_CONCAT(`value`) |
++-----------------------+
+| c, c, b, a            |
++-----------------------+
+```
+
+:::note
+Combining `DISTINCT` with `ORDER BY` inside `GROUP_CONCAT` is supported since 2.1.6.
+:::
+
+```sql
+select GROUP_CONCAT(DISTINCT value ORDER BY value DESC) from test;
+```
+
+```text
++-----------------------+
+| GROUP_CONCAT(`value`) |
++-----------------------+
+| c, b, a               |
 +-----------------------+
 ```
 

@@ -1,219 +1,265 @@
 ---
 {
-    "title": "Upgrade",
+    "title": "Compute-Storage Decoupled Cluster Upgrade Guide (Rolling Upgrade)",
+    "sidebar_label": "Rolling Upgrade Guide",
     "language": "en",
-    "description": "This guide provides step-by-step instructions for upgrading Doris using a storage-compute decoupling architecture (a.k.a. Cloud Mode)."
+    "description": "How to perform a rolling upgrade on a Doris compute-storage decoupled cluster, covering the upgrade order and steps for MetaService, Recycler, BE, and FE.",
+    "keywords": ["Doris upgrade", "compute-storage decoupled upgrade", "rolling upgrade", "MetaService upgrade", "BE upgrade", "FE upgrade"]
 }
 ---
 
-## Overview
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenario: Cluster upgrade / Version migration -->
 
-This guide provides step-by-step instructions for upgrading Doris using a storage-compute decoupling architecture (a.k.a. Cloud Mode). Upgrades should be performed using the recommended steps in this section for cluster upgrades. Doris cluster upgrades can be carried out using a **rolling upgrade** method, which does not require all cluster nodes to be shut down for the upgrade, greatly minimizing the impact on applications.
+Doris compute-storage decoupled clusters support **rolling upgrades**, which require no full downtime and minimize impact on upstream applications. This document describes the complete upgrade procedure for compute-storage decoupled mode, including pre-upgrade checks, per-component upgrade steps, and answers to frequently asked questions.
 
-## Doris Version Description
+To upgrade a compute-storage integrated cluster, refer to [Cluster Upgrade](../admin-manual/cluster-management/upgrade).
 
-Doris uses a three numbers separated by dots version format, which can be viewed using the following SQL:
+## Version Numbering
+
+<!-- Knowledge type: Configuration parameters -->
+
+Doris uses a three-part version number (for example, `3.0.3`). Run the following SQL to check the current version:
 
 ```sql
 MySQL [(none)]> select @@version_comment;
-+--------------------------------------------------------+
-| @@version_comment                                      |
-+--------------------------------------------------------+
-| Doris version doris-3.0.3-rc03-43f06a5e26 (Cloud Mode) |
-+--------------------------------------------------------+
++----------------------------------------------------------+
+| @@version_comment                                        |
++----------------------------------------------------------+
+| Doris version doris-3.0.3-rc03-43f06a5e26 (Cloud Mode)  |
++----------------------------------------------------------+
 ```
 
-> The 1st number in `3.0.3` represents the major version number, the 2nd number represents the minor version number, and the 3rd number represents the patch version number. In some cases, the version number may become a 4-numbers format, such as `2.0.2.1`, where the last number indicates an emergency bug fix version, which usually means that this patch version has some significant bugs.
->
-> Doris has supported cloud mode deployment since version `3.0.0`. When deployed in this mode, the version number will have a Cloud Mode suffix. If started in the integrated storage and compute (a.k.a. Local) mode, there will be no such suffix.
+The version number fields are as follows:
 
-Once Doris is deployed in cloud mode, it does not support switching back to local mode. Similarly, Doris in local mode does not support switching to cloud mode.
+| Position | Meaning | Example |
+|------|------|------|
+| First | Major version | `3` |
+| Second | Minor version | `0` |
+| Third | Patch version | `3` |
+| Fourth (optional) | Emergency bug-fix release, indicating a critical defect in the patch version | `2.0.2.1` |
 
-In principle, Doris supports upgrading from a lower version to a higher version and downgrading between patch versions. Downgrading between minor or major versions is not allowed.
+The `Cloud Mode` suffix in the version string indicates that the cluster is running in compute-storage decoupled mode. Clusters running in compute-storage integrated mode do not have this suffix.
+
+**Mode switching restriction:** Switching between compute-storage decoupled mode and compute-storage integrated mode is **not supported**.
+
+**Downgrade restriction:** Upgrading from a lower version to a higher version is supported, and patch-version downgrades are supported. **Minor-version and major-version downgrades are not supported.**
+
+## Prerequisites
+
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenario: Pre-deployment check / Environment validation -->
+
+Before upgrading, confirm that all of the following conditions are met:
+
+1. **Confirm the deployment mode:** Verify that the cluster is running in compute-storage decoupled mode (the version string contains the `Cloud Mode` suffix).
+2. **Configure import retry:** Ensure that import jobs have a retry mechanism to prevent job failures caused by node restarts during the upgrade.
+3. **Check component status:** Verify that MetaService, Recycler, FE, and BE are all running normally with no error logs.
+4. **Back up FE metadata:** Back up the metadata directory of the Master FE (default: the `doris-meta` directory under the FE directory). If that directory is empty, check the `meta_dir` configuration item in `conf/fe.conf` for the actual path.
+5. **Download the installation package:** Download the target-version installation package from the [Doris official website](https://doris.apache.org/download) and verify the SHA-512 checksum to ensure package integrity.
+
+## Upgrade Process Overview
+
+<!-- Knowledge type: Operational steps -->
+
+Upgrade each component in the following order:
+
+1. Upgrade MetaService
+2. Upgrade Recycler (only if deployed separately)
+3. Upgrade BE
+4. Upgrade FE
+    1. Upgrade Observer FE nodes first
+    2. Then upgrade other non-Master FE nodes
+    3. Finally upgrade the Master FE node
 
 ## Upgrade Steps
 
-### Upgrade Instructions
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenario: Cluster upgrade / Version migration -->
 
-1. Make sure that your Doris is started in cloud mode. If you are not sure about the current deployment mode of Doris, refer to the instructions in the [previous section](#doris-version-description).
-   For Doris in local mode, refer to [Cluster Upgrade](../admin-manual/cluster-management/upgrade) for upgrade steps.
-2. Make sure that your Doris data import tasks have a retry mechanism to avoid task failures due to node restarts during the upgrade process.
-3. Before upgrading, we recommend checking the status of all Doris components (MetaService, Recycler, Frontend and Backend) to ensure they are operating normally and without exception logs to avoid affecting the upgrade process.
+### Step 1: Upgrade MetaService
 
-### Overview of the Upgrade Process
+Perform the following operations on each MetaService instance. Environment variables used in this step:
 
-1. Metadata backup
-2. Upgrade MetaService
-3. Upgrade Recycler (if have)
-4. Upgrade BE
-5. Upgrade FE
-   1. Upgrade Observer FE first
-   2. Then upgrade other non-Master FE
-   3. Finally, upgrade Master FE
+| Variable | Meaning |
+|------|------|
+| `${MS_HOME}` | Working directory of MetaService |
+| `${MS_PACKAGE_DIR}` | Directory containing the new MetaService installation package |
 
-### Upgrade Pre-work
+**1. Stop the current MetaService**
 
-1. Backup the metadata directory of the Master FE. Usually, the metadata directory is the `doris-meta` directory under the FE home directory. If this directory is empty, it means that you had set another directory to save metadata. You can search for the `meta_dir` in the FE configuration file (conf/fe.conf).
-2. [Download](/download) the package from the Doris official website. It is recommended to verify the SHA-512 hash to ensure that the package matches the one provided by Doris.
-
-### Upgrade Process
-
-#### 1. Upgrade MetaService
-
-Assuming the following environment variables:
-- `${MS_HOME}`: Working directory of MetaService.
-- `${MS_PACKAGE_DIR}`: Directory containing the new MetaService package.
-
-Follow these steps to upgrade each MetaService instance.
-
-1.1. Stop the current MetaService:
 ```shell
 cd ${MS_HOME}
 sh bin/stop.sh
 ```
 
-1.2. Backup the existing MetaService binaries:
+**2. Back up the existing binaries**
+
 ```shell
 mv ${MS_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${MS_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-1.3. Deploy the new package:
+**3. Deploy the new installation package**
+
 ```shell
 cp ${MS_PACKAGE_DIR}/bin ${MS_HOME}/bin
 cp ${MS_PACKAGE_DIR}/lib ${MS_HOME}/lib
 ```
 
-1.4. Start the new MetaService:
+**4. Start the new MetaService**
+
 ```shell
 sh ${MS_HOME}/bin/start.sh --daemon
 ```
 
-1.5. Check status of the new MetaService:
+**5. Verify the upgrade**
 
-Verify that the new MetaService is running and that a new version number is present in `${MS_HOME}/log/doris_cloud.out`.
+Confirm that the MetaService process is running normally and that the new version number appears in `${MS_HOME}/log/doris_cloud.out`.
 
-#### 2. Upgrade Recycler (if have)
+---
+
+### Step 2: Upgrade Recycler (If Applicable)
 
 :::caution
-If you have not deployed the Recycler component separately, you can skip this step.
+If the Recycler component is not deployed separately, skip this step.
 :::
 
-Assuming the following environment variables:
-- `${RECYCLER_HOME}`: Working directory of Recycler
-- `${MS_PACKAGE_DIR}`: Directory containing the new MetaService package, MetaService and Recycler use same package.
+Perform the following operations on each Recycler instance. MetaService and Recycler share the same installation package. Environment variables used in this step:
 
-Upgrade each Recycler instance by following these steps.
+| Variable | Meaning |
+|------|------|
+| `${RECYCLER_HOME}` | Working directory of Recycler |
+| `${MS_PACKAGE_DIR}` | Directory containing the new installation package (shared with MetaService) |
 
-2.1. Stop the current Recycler:
+**1. Stop the current Recycler**
+
 ```shell
 cd ${RECYCLER_HOME}
 sh bin/stop.sh
 ```
 
-2.2. Backup existing Recycler binary files:
+**2. Back up the existing binaries**
+
 ```shell
 mv ${RECYCLER_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${RECYCLER_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-2.3. Deploy the new package:
+**3. Deploy the new installation package**
+
 ```shell
-cp ${RECYCLER_PACKAGE_DIR}/bin ${RECYCLER_HOME}/bin
-cp ${RECYCLER_PACKAGE_DIR}/lib ${RECYCLER_HOME}/lib
+cp ${MS_PACKAGE_DIR}/bin ${RECYCLER_HOME}/bin
+cp ${MS_PACKAGE_DIR}/lib ${RECYCLER_HOME}/lib
 ```
 
-2.4. Start the new Recycler:
+**4. Start the new Recycler**
+
 ```shell
 sh ${RECYCLER_HOME}/bin/start.sh --recycler --daemon
 ```
 
-2.5. Check status of the new Recycler:
+**5. Verify the upgrade**
 
-Verify that the new MetaService is running and that a new version number is present in `${RECYCLER_HOME}/log/doris_cloud.out`.
+Confirm that the Recycler process is running normally and that the new version number appears in `${RECYCLER_HOME}/log/doris_cloud.out`.
 
-#### 3. Upgrade BE
+---
 
-Verify that all instances of MetaService and Recycler (if installed separately) have been upgraded.
+### Step 3: Upgrade BE
 
-Assuming the following environment variables:
-- `${BE_HOME}`: Working directory of BE.
-- `${BE_PACKAGE_DIR}`: Directory containing the new BE package.
+:::tip
+Before upgrading BE, confirm that all MetaService and Recycler (if applicable) instances have been upgraded.
+:::
 
-Upgrade each BE instance by following these steps.
+Perform the following operations on each BE instance. Environment variables used in this step:
 
-3.1. Stop the current BE:
+| Variable | Meaning |
+|------|------|
+| `${BE_HOME}` | Working directory of BE |
+| `${BE_PACKAGE_DIR}` | Directory containing the new BE installation package |
+
+**1. Stop the current BE**
+
 ```shell
 cd ${BE_HOME}
 sh bin/stop_be.sh
 ```
 
-3.2. Backup the existing BE binaries:
+**2. Back up the existing binaries**
+
 ```shell
 mv ${BE_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${BE_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-3.3. Deploy the new package:
+**3. Deploy the new installation package**
+
 ```shell
 cp ${BE_PACKAGE_DIR}/bin ${BE_HOME}/bin
 cp ${BE_PACKAGE_DIR}/lib ${BE_HOME}/lib
 ```
 
-3.4. Start the new BE:
+**4. Start the new BE**
+
 ```shell
 sh ${BE_HOME}/bin/start_be.sh --daemon
 ```
 
-3.5. Check status of the new BE:
+**5. Verify the upgrade**
 
-Confirm that the new BE is running and operational with the new version. The status and version can be obtained using the following SQL.
+Run the following SQL to confirm the BE version and status:
 
 ```sql
 show backends;
 ```
 
-#### 4. Upgrade FE
+---
 
-Verify that all instances of BE have been upgraded.
+### Step 4: Upgrade FE
 
-Assuming the following environment variables:
-- `${FE_HOME}`: Working directory of FE.
-- `${FE_PACKAGE_DIR}`: Directory containing the new FE package.
+:::tip
+Before upgrading FE, confirm that all BE instances have been upgraded.
+:::
 
-Upgrade the Frontend (FE) instances in the following order:
-1. Observer FE nodes
-2. Non-master FE nodes
-3. Master FE node
+FE nodes must be upgraded one at a time in the following order: **Observer -> non-Master -> Master**.
 
-Upgrade each Frontend (FE) node by following these steps.
+Perform the following operations on each FE instance. Environment variables used in this step:
 
-4.1. Stop the current FE:
+| Variable | Meaning |
+|------|------|
+| `${FE_HOME}` | Working directory of FE |
+| `${FE_PACKAGE_DIR}` | Directory containing the new FE installation package |
+
+**1. Stop the current FE**
+
 ```shell
 cd ${FE_HOME}
 sh bin/stop_fe.sh
 ```
 
-4.2. Backup the existing FE binaries:
+**2. Back up the existing binaries**
+
 ```shell
 mv ${FE_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${FE_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-4.3. Deploy the new package:
+**3. Deploy the new installation package**
+
 ```shell
 cp ${FE_PACKAGE_DIR}/bin ${FE_HOME}/bin
 cp ${FE_PACKAGE_DIR}/lib ${FE_HOME}/lib
 ```
 
-4.4. Start the new FE:
+**4. Start the new FE**
+
 ```shell
 sh ${FE_HOME}/bin/start_fe.sh --daemon
 ```
 
-4.5. Check status of the new FE:
+**5. Verify the upgrade**
 
-Confirm that the new FE is running and operational with the new version. The status and version can be obtained using the following SQL.
+Run the following SQL to confirm the FE version and status:
 
 ```sql
 show frontends;
@@ -221,10 +267,13 @@ show frontends;
 
 ## FAQ
 
-1. Does Doris in local mode need to turn off the replica balance function before upgrading, and is it necessary for clusters in cloud mode?
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenario: Troubleshooting -->
 
-No. Because in cloud mode, the data is stored on HDFS or S3 services, so there is no need for replica balancing.
+**Q1: When upgrading a compute-storage integrated cluster, replica rebalancing must be disabled before the upgrade. Is this also required for compute-storage decoupled mode?**
 
-2. With a separate MetaService providing metadata services, why is it still necessary to backup metadata for FE?
+No. In compute-storage decoupled mode, Doris stores data on HDFS or object storage (S3), so there is no replica rebalancing requirement. This operation is not needed.
 
-Because currently, MetaService saves some metadata, and FE also saves some metadata. For safety reasons, we recommend backing up the metadata for FE.
+**Q2: Given that MetaService provides a dedicated metadata service, why does FE metadata still need to be backed up?**
+
+Currently, metadata is maintained jointly by MetaService and FE, with each responsible for different parts. To ensure upgrade safety, back up the FE metadata directory before upgrading.

@@ -1,0 +1,29 @@
+---
+{
+    "title": "日志管理",
+    "language": "zh-CN",
+    "description": "介绍 Apache Doris FE 和 BE 进程生成的日志文件及其管理方式。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# 日志管理
+
+Apache Doris 的 FE 和 BE 节点会生成多种日志文件。本章介绍各类日志文件的内容，以及如何配置日志级别、滚动策略和保留策略。
+
+## FE 与 BE 日志
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="FE 日志管理"
+    description="介绍 Frontend (FE) 进程产生的日志，包括 fe.log、fe.warn.log、fe.audit.log 和 fe.out 的分类、格式与配置"
+    link="fe-log"
+/>
+
+<GettingStartedCard
+    title="BE 日志管理"
+    description="介绍 Backend (BE) 进程产生的日志，包括 be.INFO、be.WARNING 和 be.out 的分类、格式与配置"
+    link="be-log"
+/>
+</div>

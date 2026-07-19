@@ -107,7 +107,7 @@ INSERT INTO product_reviews VALUES
 
 Using AI_AGG to summarize and evaluate:
 ```sql
-SET default_ai_resoure = 'ai_resource_name';
+SET default_ai_resource = 'ai_resource_name';
 SELECT
     product_id,
     AI_AGG(

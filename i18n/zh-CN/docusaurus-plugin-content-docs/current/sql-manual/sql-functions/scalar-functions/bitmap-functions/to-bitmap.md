@@ -14,7 +14,9 @@
 
 ## 语法
 
-`to_bitmap(<expr>)`
+```sql
+TO_BITMAP(<expr>)
+```
 
 ## 参数
 
@@ -96,7 +98,7 @@ select bitmap_to_string(to_bitmap("123ABC")),bitmap_count(to_bitmap("123ABC"));
 select bitmap_to_string(to_bitmap(NULL)),bitmap_count(to_bitmap(NULL));
 ```
 
-The result will be:
+结果如下：
 
 ```text
 +-----------------------------------+-------------------------------+

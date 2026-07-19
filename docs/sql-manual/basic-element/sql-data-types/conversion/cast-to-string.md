@@ -83,7 +83,7 @@ Example:
 | -------------- | --------------- | ---------------------------------------------- |
 | 123.456        | "123.456"       |                                                |
 | 1234567        | "1234567"       |                                                |
-| 123456.12345   | "123456.1"      | e < 7, uses scientific notation, 7 significant digits  |
+| 123456.12345   | "123456.1"      | e < 7, does not use scientific notation, 7 significant digits  |
 | 12345678.12345 | "1.234568e+07"  | e >= 7, uses scientific notation, 7 significant digits |
 | 0.0001234567   | "0.0001234567"  | e >= -4, does not use scientific notation      |
 | -0.0001234567  | "-0.0001234567" | e >= -4, does not use scientific notation      |

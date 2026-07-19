@@ -255,7 +255,7 @@ To add Backend nodes to the cluster, perform the following steps for each Backen
      - Format: [{"path":"/path/to/file_cache", "total_size":21474836480}, {"path":"/path/to/file_cache2", "total_size":21474836480}]
      - Example: [{"path":"/path/to/file_cache", "total_size":21474836480}, {"path":"/path/to/file_cache2", "total_size":21474836480}] - Default: [{"path":"${DORIS_HOME}/file_cache"}]
 
-3. Start the BE process
+2. Start the BE process
 
    Use the following command to start the Backend:
 
@@ -263,7 +263,7 @@ To add Backend nodes to the cluster, perform the following steps for each Backen
    bin/start_be.sh --daemon
    ```
 
-4. Add BE to the cluster:
+3. Add BE to the cluster:
 
    Connect to any Frontend using MySQL client and execute:
 
@@ -277,7 +277,7 @@ To add Backend nodes to the cluster, perform the following steps for each Backen
 
    For more detailed usage, refer to [ADD BACKEND](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) and [REMOVE BACKEND](../../sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND).
 
-5. Verify BE status
+4. Verify BE status
 
    Check the Backend log files (`be.log`) to ensure it has successfully started and joined the cluster.
 
@@ -316,7 +316,7 @@ Storage Vault is an important component in Doris' separation of storage and comp
    CREATE STORAGE VAULT IF_NOT_EXISTS s3_vault
        PROPERTIES (
        "type"="S3",
-       "s3.endpoint"="s3.us-east-1.amazonaws.com",
+       "s3.endpoint"="https://s3.us-east-1.amazonaws.com",
        "s3.access_key" = "ak",
        "s3.secret_key" = "sk",
        "s3.region" = "us-east-1",

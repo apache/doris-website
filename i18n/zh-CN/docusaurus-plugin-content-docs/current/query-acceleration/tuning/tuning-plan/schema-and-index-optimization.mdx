@@ -1,0 +1,31 @@
+---
+{
+    "title": "表结构与索引优化",
+    "language": "zh-CN",
+    "description": "通过表结构、索引设计与扫描优化释放 Apache Doris 查询性能。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+合理的表结构设计、合适的索引选择以及高效的扫描方式，决定了查询性能的上限。建议按层级依次优化。
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="表结构设计优化"
+    description="选择表模型、分区分桶列、Key 列与字段类型，避免数据倾斜、充分利用并行能力。"
+    link="optimizing-table-schema"
+/>
+
+<GettingStartedCard
+    title="表索引设计优化"
+    description="根据查询模式挑选前缀索引、BloomFilter、NGram BloomFilter 或倒排索引，并落地到合适的列上。"
+    link="optimizing-table-index"
+/>
+
+<GettingStartedCard
+    title="表扫描优化"
+    description="利用分区裁剪、前缀索引下推与 Runtime Filter，让每次查询扫描更少的数据。"
+    link="optimizing-table-scanning"
+/>
+</div>

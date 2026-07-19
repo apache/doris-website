@@ -2,7 +2,7 @@
 {
     "title": "AUTO_PARTITION_NAME",
     "language": "en",
-    "description": "The AUTOPARTITIONNAME function is used to generate partition names for auto partitions."
+    "description": "The AUTO_PARTITION_NAME function is used to generate partition names for auto partitions. It supports two modes: RANGE mode generates partition names based on time units, and LIST mode generates partition names based on string values."
 }
 ---
 
@@ -93,11 +93,11 @@ SELECT auto_partition_name('list', 'hello', 'world');
 SELECT auto_partition_name('list', 'ṭṛì', 'ḍḍumai');
 ```
 ```text
-+------------------------------------------------+
-| auto_partition_name('list', 'ṭṛì', 'ḍḍumai')  |
-+------------------------------------------------+
-| pṭṛì9ḍḍumai12                                  |
-+------------------------------------------------+
++-------------------------------------------------------+
+| auto_partition_name('list', 'ṭṛì', 'ḍḍumai')          |
++-------------------------------------------------------+
+| p1e6d1e5bec31e0d1e0dumai6                             |
++-------------------------------------------------------+
 ```
 
 6. Invalid unit parameter

@@ -29,7 +29,7 @@ STDDEV(<expr>)
 
 ## 返回值
 
-返回 Double 类型的参数 expr 的样本标准差。
+返回 Double 类型的参数 expr 的总体标准差。
 当组内没有合法数据时，返回 NULL。
 
 ## 举例

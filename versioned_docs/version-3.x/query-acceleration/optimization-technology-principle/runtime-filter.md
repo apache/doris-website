@@ -291,7 +291,7 @@ The integers in parentheses represent the enumeration values for Runtime Filter 
 
 **3. Set Wait Time**
 
-As mentioned earlier, JRF uses a Try-best mechanism, where Scan nodes wait for JRFs before starting. Doris calculates the wait time based on runtime conditions. However, in some cases, the calculated wait time may not be sufficient, resulting in JRFs not being fully effective, and the Scan nodes may output more rows than expected. As discussed in the Profile section, if `RuntimeFilterState = false` in the Scan node's Profile, users can manually set a longer wait time.
+As mentioned earlier, JRF uses a Try-best mechanism, where Scan nodes wait for JRFs before starting. Doris calculates the wait time based on runtime conditions. However, in some cases, the calculated wait time may not be sufficient, resulting in JRFs not being fully effective, and the Scan nodes may output more rows than expected. As discussed in the Profile section, if `RuntimeFilterState = NOT_READY` in the Scan node's Profile, users can manually set a longer wait time.
 
 The session variable `runtime_filter_wait_time_ms` controls the wait time for Scan nodes to wait for JRFs. The default value is 1000 milliseconds.
 

@@ -1,11 +1,20 @@
 ---
-{
-    "title": "GROUPING SETS Design",
-    "language": "en"
-}
+title: Doris GROUPING SETS Design Document
+language: en
+description: Syntax and implementation plan for the Apache Doris GROUPING SETS, ROLLUP, and CUBE multidimensional aggregation clauses and the GROUPING / GROUPING_ID functions, including FE planning and BE execution design.
+keywords:
+    - Apache Doris
+    - GROUPING SETS
+    - ROLLUP
+    - CUBE
+    - GROUPING
+    - GROUPING_ID
+    - multidimensional aggregation
+    - RepeatNode
+    - OLAP
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -23,39 +32,44 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-# GROUPING SETS DESIGN
 
-## 1. GROUPING SETS Background
+# GROUPING SETS Design Document
 
-The `CUBE`, `ROLLUP`, and `GROUPING` `SETS` extensions to SQL make querying and reporting easier and faster. `CUBE`, `ROLLUP`, and grouping sets produce a single result set that is equivalent to a `UNION` `ALL` of differently grouped rows. `ROLLUP` calculates aggregations such as `SUM`, `COUNT`, `MAX`, `MIN`, and `AVG` at increasing levels of aggregation, from the most detailed up to a grand total. `CUBE` is an extension similar to `ROLLUP`, enabling a single statement to calculate all possible combinations of aggregations. The `CUBE`, `ROLLUP`, and the `GROUPING` `SETS` extension lets you specify just the groupings needed in the `GROUP` `BY` clause. This allows efficient analysis across multiple dimensions without performing a `CUBE` operation. Computing a `CUBE` creates a heavy processing load, so replacing cubes with grouping sets can significantly increase performance.
-To enhance performance, `CUBE`, `ROLLUP`, and `GROUPING SETS` can be parallelized: multiple processes can simultaneously execute all of these statements. These capabilities make aggregate calculations more efficient, thereby enhancing database performance, and scalability.
+<!-- Knowledge type: Architecture design -->
+<!-- Knowledge type: SQL syntax specification -->
+<!-- Applicable scenario: Kernel understanding / Query planning development -->
 
-The three `GROUPING` functions help you identify the group each row belongs to and enable sorting subtotal rows and filtering results.
+This document describes the syntax, semantics, and implementation plan for the `GROUPING SETS`, `ROLLUP`, and `CUBE` multidimensional aggregation clauses and the `GROUPING` / `GROUPING_ID` functions in Apache Doris.
 
-### 1.1 GROUPING SETS Syntax
+## 1. Background on GROUPING SETS
 
-`GROUPING SETS` syntax lets you define multiple groupings in the same query. `GROUP BY` computes all the groupings specified and combines them with `UNION ALL`. For example, consider the following statement:
+### 1.1 The GROUPING SETS Clause
 
+`GROUP BY GROUPING SETS` is an extension of the `GROUP BY` clause. It produces multiple grouping sets within a single `GROUP BY` clause, and the result is equivalent to `UNION ALL` of multiple corresponding `GROUP BY` clauses.
+
+In particular, an empty subset means aggregating all rows into a single group. A `GROUP BY` clause is a special case of `GROUP BY GROUPING SETS` with only one element.
+
+For example, the following `GROUPING SETS` statement:
+
+```sql
+SELECT k1, k2, SUM(k3) FROM t GROUP BY GROUPING SETS ((k1, k2), (k1), (k2), ());
 ```
-SELECT k1, k2, SUM( k3 ) FROM t GROUP BY GROUPING SETS ( (k1, k2), (k1), (k2), ( ) );
-```
 
+Its query result is equivalent to:
 
-This statement is equivalent to:
-
-```
-SELECT k1, k2, SUM( k3 ) FROM t GROUP BY k1, k2
+```sql
+SELECT k1, k2, SUM(k3) FROM t GROUP BY k1, k2
 UNION ALL
-SELECT k1, null, SUM( k3 ) FROM t GROUP BY k1
+SELECT k1, NULL, SUM(k3) FROM t GROUP BY k1
 UNION ALL
-SELECT null, k2, SUM( k3 ) FROM t GROUP BY k2
+SELECT NULL, k2, SUM(k3) FROM t GROUP BY k2
 UNION ALL
-SELECT null, null, SUM( k3 ) FROM t
+SELECT NULL, NULL, SUM(k3) FROM t;
 ```
 
-This is an example of real query:
+Here is an example with real data:
 
-```
+```sql
 mysql> SELECT * FROM t;
 +------+------+------+
 | k1   | k2   | k3   |
@@ -71,7 +85,7 @@ mysql> SELECT * FROM t;
 +------+------+------+
 8 rows in set (0.01 sec)
 
-mysql> SELECT k1, k2, SUM(k3) FROM t GROUP BY GROUPING SETS ( (k1, k2), (k2), (k1), ( ) );
+mysql> SELECT k1, k2, SUM(k3) FROM t GROUP BY GROUPING SETS ((k1, k2), (k2), (k1), ());
 +------+------+-----------+
 | k1   | k2   | sum(`k3`) |
 +------+------+-----------+
@@ -88,62 +102,65 @@ mysql> SELECT k1, k2, SUM(k3) FROM t GROUP BY GROUPING SETS ( (k1, k2), (k2), (k
 9 rows in set (0.06 sec)
 ```
 
-### 1.2 ROLLUP Syntax
+### 1.2 The ROLLUP Clause
 
-`ROLLUP` enables a `SELECT` statement to calculate multiple levels of subtotals across a specified group of dimensions. It also calculates a grand total. `ROLLUP` is a simple extension to the `GROUP` `BY` clause, so its syntax is extremely easy to use. The `ROLLUP` extension is highly efficient, adding minimal overhead to a query.
+`ROLLUP` is an extension of `GROUPING SETS`.
 
-`ROLLUP` appears in the `GROUP` `BY` clause in a `SELECT` statement. Its form is:
-
-```
-SELECT a, b,c, SUM( d ) FROM tab1 GROUP BY ROLLUP(a,b,c)
+```sql
+SELECT a, b, c, SUM(d) FROM tab1 GROUP BY ROLLUP(a, b, c);
 ```
 
-This statement is equivalent to GROUPING SETS as followed:
+This `ROLLUP` is equivalent to the following `GROUPING SETS`:
 
-```
+```sql
 GROUPING SETS (
-(a,b,c),
-( a, b ),
-( a),
-( )
+    (a, b, c),
+    (a, b),
+    (a),
+    ()
 )
 ```
 
-### 1.3 CUBE Syntax
+### 1.3 The CUBE Clause
 
-Like `ROLLUP`   `CUBE` generates all the subtotals that could be calculated for a data cube with the specified dimensions.
+`CUBE` is also an extension of `GROUPING SETS`.
 
+```sql
+CUBE (e1, e2, e3, ...)
 ```
-SELECT a, b,c, SUM( d ) FROM tab1 GROUP BY CUBE(a,b,c)
-```
 
-e.g.  CUBE ( a, b, c )  is equivalent to GROUPING SETS as followed:
+It means all subsets of the list following `GROUPING SETS`.
 
-```
+For example, `CUBE (a, b, c)` is equivalent to the following `GROUPING SETS`:
+
+```sql
 GROUPING SETS (
-( a, b, c ),
-( a, b ),
-( a,    c ),
-( a       ),
-(    b, c ),
-(    b    ),
-(       c ),
-(         )
+    (a, b, c),
+    (a, b),
+    (a,    c),
+    (a),
+    (   b, c),
+    (   b),
+    (      c),
+    ()
 )
 ```
 
-### 1.4 GROUPING and GROUPING_ID Function
+### 1.4 The GROUPING and GROUPING_ID Functions
 
-Indicates whether a specified column expression in a `GROUP BY` list is aggregated or not. `GROUPING `returns 1 for aggregated or 0 for not aggregated in the result set. `GROUPING` can be used only in the `SELECT` list, `HAVING`, and `ORDER BY` clauses when `GROUP BY` is specified.
+<!-- Knowledge type: Function description -->
 
-`GROUPING_ID` describes which of a list of expressions are grouped in a row produced by a `GROUP BY` query. The `GROUPING_ID` function simply returns the decimal equivalent of the binary value formed as a result of the concatenation of the values returned by the `GROUPING` functions.
+When a column is not aggregated, its value is shown as `NULL`. However, the column itself may also contain `NULL` values, so a way is needed to distinguish "not aggregated" from "the value itself is NULL". The `GROUPING` and `GROUPING_ID` functions are introduced for this purpose.
 
-Each `GROUPING_ID` argument must be an element of the `GROUP BY` list. `GROUPING_ID ()` returns an **integer** bitmap whose lowest N bits may be lit. A lit **bit** indicates the corresponding argument is not a grouping column for the given output row. The lowest-order **bit** corresponds to argument N, and the N-1th lowest-order **bit** corresponds to argument 1. If the column is a grouping column the bit is 0 else is 1.
+| Function | Description |
+|------|------|
+| `GROUPING(column)` | Distinguishes whether a column after grouping is a regular column or an aggregated column. Returns `1` if it is an aggregated column, otherwise `0`. Accepts only one column argument. |
+| `GROUPING_ID(column1, column2, ...)` | Computes the bitmap value of the given columns according to the specified column order (or the order of set elements at aggregation time): aggregated columns are `0`, otherwise `1`, and finally returns the decimal value of this bit vector. For example, `[0 1 0] -> 2`. The third query below illustrates this correspondence. |
 
-For example:
+For example, given the following table:
 
-```
-mysql> select * from t;
+```sql
+mysql> SELECT * FROM t;
 +------+------+------+
 | k1   | k2   | k3   |
 +------+------+------+
@@ -158,10 +175,10 @@ mysql> select * from t;
 +------+------+------+
 ```
 
-grouping sets result:
+The result of `GROUPING SETS` is as follows:
 
-```
-mysql> SELECT k1, k2, GROUPING(k1), GROUPING(k2), SUM(k3) FROM t GROUP BY GROUPING SETS ( (k1, k2), (k2), (k1), ( ) );
+```sql
+mysql> SELECT k1, k2, GROUPING(k1), GROUPING(k2), SUM(k3) FROM t GROUP BY GROUPING SETS ((k1, k2), (k2), (k1), ());
 +------+------+----------------+----------------+-----------+
 | k1   | k2   | grouping(`k1`) | grouping(`k2`) | sum(`k3`) |
 +------+------+----------------+----------------+-----------+
@@ -177,7 +194,7 @@ mysql> SELECT k1, k2, GROUPING(k1), GROUPING(k2), SUM(k3) FROM t GROUP BY GROUPI
 +------+------+----------------+----------------+-----------+
 9 rows in set (0.02 sec)
 
-mysql> SELECT k1, k2, GROUPING_ID(k1,k2), SUM(k3) FROM t GROUP BY GROUPING SETS ( (k1, k2), (k2), (k1), ( ) );
+mysql> SELECT k1, k2, GROUPING_ID(k1, k2), SUM(k3) FROM t GROUP BY GROUPING SETS ((k1, k2), (k2), (k1), ());
 +------+------+-------------------------+-----------+
 | k1   | k2   | grouping_id(`k1`, `k2`) | sum(`k3`) |
 +------+------+-------------------------+-----------+
@@ -193,7 +210,7 @@ mysql> SELECT k1, k2, GROUPING_ID(k1,k2), SUM(k3) FROM t GROUP BY GROUPING SETS 
 +------+------+-------------------------+-----------+
 9 rows in set (0.02 sec)
 
-mysql> SELECT k1, k2, grouping(k1), grouping(k2), GROUPING_ID(k1,k2), SUM(k4) FROM t GROUP BY GROUPING SETS ( (k1, k2), (k2), (k1), ( ) ) order by k1, k2;
+mysql> SELECT k1, k2, grouping(k1), grouping(k2), GROUPING_ID(k1, k2), SUM(k4) FROM t GROUP BY GROUPING SETS ((k1, k2), (k2), (k1), ()) ORDER BY k1, k2;
 +------+------+----------------+----------------+-------------------------+-----------+
 | k1   | k2   | grouping(`k1`) | grouping(`k2`) | grouping_id(`k1`, `k2`) | sum(`k4`) |
 +------+------+----------------+----------------+-------------------------+-----------+
@@ -208,79 +225,79 @@ mysql> SELECT k1, k2, grouping(k1), grouping(k2), GROUPING_ID(k1,k2), SUM(k4) FR
 | NULL | NULL |              1 |              1 |                       3 |        18 |
 +------+------+----------------+----------------+-------------------------+-----------+
 9 rows in set (0.02 sec)
-
-```
-### 1.5 Composition and nesting of GROUPING SETS
-
-First of all, a GROUP BY clause is essentially a special case of GROUPING SETS, for example:
-
-```
-   GROUP BY a
-is equivalent to:
-   GROUP BY GROUPING SETS((a))
-also,
-   GROUP BY a,b,c
-is equivalent to:
-   GROUP BY GROUPING SETS((a,b,c))
 ```
 
-Similarly, CUBE and ROLLUP can be expanded into GROUPING SETS, so the various combinations and nesting of GROUP BY, CUBE, ROLLUP, GROUPING SETS are essentially the combination and nesting of GROUPING SETS.
+### 1.5 Composition and Nesting of GROUPING SETS
 
-For GROUPING SETS nesting, it is semantically equivalent to writing the statements inside the nest directly outside. (ref:<https://www.brytlyt.com/documentation/data-manipulation-dml/grouping-sets-rollup-cube/>) mentions: 
+First, a `GROUP BY` clause is essentially a special case of `GROUPING SETS`. For example:
 
+```text
+GROUP BY a
+is equivalent to
+GROUP BY GROUPING SETS ((a))
+
+GROUP BY a, b, c
+is equivalent to
+GROUP BY GROUPING SETS ((a, b, c))
 ```
-The CUBE and ROLLUP constructs can be used either directly in the GROUP BY clause, or nested inside a GROUPING SETS clause. If one GROUPING SETS clause is nested inside another, the effect is the same as if all the elements of the inner clause had been written directly in the outer clause.
-```
 
-For a combined list of multiple GROUPING SETS, many databases consider it a cross product relationship.
+Likewise, `CUBE` and `ROLLUP` can also be expanded into `GROUPING SETS`. Therefore, any composition or nesting of `GROUP BY`, `CUBE`, `ROLLUP`, and `GROUPING SETS` is essentially a composition or nesting of `GROUPING SETS`.
 
-for example:
+For the nesting of `GROUPING SETS`, the semantics are equivalent to writing the nested clause directly at the outer level (reference: <https://www.brytlyt.com/documentation/data-manipulation-dml/grouping-sets-rollup-cube/>), which states:
 
-```
+> The CUBE and ROLLUP constructs can be used either directly in the GROUP BY clause, or nested inside a GROUPING SETS clause. If one GROUPING SETS clause is nested inside another, the effect is the same as if all the elements of the inner clause had been written directly in the outer clause.
+
+For the composition of multiple `GROUPING SETS` lists, many databases treat the semantics as a cross product.
+
+For example:
+
+```sql
 GROUP BY a, CUBE (b, c), GROUPING SETS ((d), (e))
 
 is equivalent to:
 
 GROUP BY GROUPING SETS (
-(a, b, c, d), (a, b, c, e),
-(a, b, d),    (a, b, e),
-(a, c, d),    (a, c, e),
-(a, d),       (a, e)
+    (a, b, c, d), (a, b, c, e),
+    (a, b, d),    (a, b, e),
+    (a, c, d),    (a, c, e),
+    (a, d),       (a, e)
 )
 ```
 
-For the combination and nesting of GROUPING SETS, each database support is not the same. For example snowflake does not support any combination and nesting.
-（<https://docs.snowflake.net/manuals/sql-reference/constructs/group-by.html>）
+Support for the composition and nesting of `GROUPING SETS` varies among databases:
 
-Oracle supports both composition and nesting.
-（<https://docs.oracle.com/cd/B19306_01/server.102/b14223/aggreg.htm#i1006842>）
+| Database | Composition | Nesting | Reference |
+|--------|------|------|----------|
+| Snowflake | Not supported | Not supported | <https://docs.snowflake.net/manuals/sql-reference/constructs/group-by.html> |
+| Oracle | Supported | Supported | <https://docs.oracle.com/cd/B19306_01/server.102/b14223/aggreg.htm#i1006842> |
+| Presto | Supported | Not supported | <https://prestodb.github.io/docs/current/sql/select.html> |
 
-Presto supports composition, but not nesting.
-（<https://prestodb.github.io/docs/current/sql/select.html>）
+## 2. Design Goals
 
-## 2. Object
+Support `GROUPING SETS`, `ROLLUP`, and `CUBE` syntactically, and implement the features described in Sections 1.1, 1.2, 1.3, and 1.4 above.
 
-Support `GROUPING SETS`,  `ROLLUP` and `CUBE ` syntax, implements 1.1, 1.2, 1.3 1.4, 1.5, not support the combination
- and nesting of GROUPING SETS in current version.
+The composition and nesting of `GROUPING SETS` (Section 1.5) is not implemented for now.
+
+The specific syntax is as follows.
 
 ### 2.1 GROUPING SETS Syntax
 
-```
+```text
 SELECT ...
 FROM ...
 [ ... ]
 GROUP BY GROUPING SETS ( groupSet [ , groupSet [ , ... ] ] )
 [ ... ]
 
-groupSet ::= { ( expr  [ , expr [ , ... ] ] )}
+groupSet ::= { ( expr  [ , expr [ , ... ] ] ) }
 
 <expr>
-Expression, column name.
+Various expressions, including column names.
 ```
 
 ### 2.2 ROLLUP Syntax
 
-```
+```text
 SELECT ...
 FROM ...
 [ ... ]
@@ -288,12 +305,12 @@ GROUP BY ROLLUP ( expr  [ , expr [ , ... ] ] )
 [ ... ]
 
 <expr>
-Expression, column name.
+Various expressions, including column names.
 ```
 
 ### 2.3 CUBE Syntax
 
-```
+```text
 SELECT ...
 FROM ...
 [ ... ]
@@ -301,50 +318,52 @@ GROUP BY CUBE ( expr  [ , expr [ , ... ] ] )
 [ ... ]
 
 <expr>
-Expression, column name.
+Various expressions, including column names.
 ```
 
-## 3. Implementation
+## 3. Implementation Plan
 
-### 3.1 Overall Design Approaches
+### 3.1 Overall Approach
 
-For `GROUPING SET`  is equivalent to the `UNION ALL` of  `GROUP BY` . So we can expand input rows, and run an GROUP BY on these rows.
+Since a `GROUPING SETS` clause is logically equivalent to the `UNION ALL` of multiple corresponding `GROUP BY` clauses, it can be implemented by expanding input rows (these input rows have already been filtered by pushed-down predicates and projected) and performing a single `GROUP BY` operation on the expanded rows.
 
-For example:
+The key question is how to expand the input rows. The following example illustrates this.
 
-```
+For example, given the following statement:
+
+```sql
 SELECT a, b FROM src GROUP BY a, b GROUPING SETS ((a, b), (a), (b), ());
 ```
 
-Data in table src:
+Assume the data in the `src` table is as follows:
 
-```
+```text
 1, 2
 3, 4
 ```
 
-Base on  GROUPING SETS , we can expend the input to:
+According to the list given by the `GROUPING SETS` clause, the input rows can be expanded into the following 8 rows (number of GROUPING SETS x number of rows), and the corresponding `GROUPING_ID` and other grouping function values for all columns are generated for each row:
 
-```
-1, 2       (GROUPING_ID: a, b -> 00 -> 0)
-1, null    (GROUPING_ID: a, null -> 01 -> 1)
-null, 2    (GROUPING_ID: null, b -> 10 -> 2)
+```text
+1, 2       (GROUPING_ID: a, b       -> 00 -> 0)
+1, null    (GROUPING_ID: a, null    -> 01 -> 1)
+null, 2    (GROUPING_ID: null, b    -> 10 -> 2)
 null, null (GROUPING_ID: null, null -> 11 -> 3)
 
-3, 4       (GROUPING_ID: a, b -> 00 -> 0)
-3, null    (GROUPING_ID: a, null -> 01 -> 1)
-null, 4    (GROUPING_ID: null, b -> 10 -> 2)
+3, 4       (GROUPING_ID: a, b       -> 00 -> 0)
+3, null    (GROUPING_ID: a, null    -> 01 -> 1)
+null, 4    (GROUPING_ID: null, b    -> 10 -> 2)
 null, null (GROUPING_ID: null, null -> 11 -> 3)
 ```
 
-And then use those row as input, then GROUP BY  a, b, GROUPING_ID
+Then, take the 8 rows above as input and perform a `GROUP BY` operation on `a, b, GROUPING_ID`.
 
-### 3.2 Example
+### 3.2 Worked Example
 
-Table t:
+Assume there is a table `t` with the following columns and data:
 
-```
-mysql> select * from t;
+```sql
+mysql> SELECT * FROM t;
 +------+------+------+
 | k1   | k2   | k3   |
 +------+------+------+
@@ -360,17 +379,17 @@ mysql> select * from t;
 8 rows in set (0.01 sec)
 ```
 
-for the query:
+For the following query:
 
+```sql
+SELECT k1, k2, GROUPING_ID(k1, k2), SUM(k3) FROM t GROUP BY GROUPING SETS ((k1, k2), (k1), (k2), ());
 ```
-SELECT k1, k2, GROUPING_ID(k1,k2), SUM(k3) FROM t GROUP BY GROUPING SETS ((k1, k2), (k1), (k2), ());
-```
 
-First, expand the input, every row expand into 4 rows ( the size of GROUPING SETS), and insert GROUPING_ID column
+First, expand the input rows. Each row of data is expanded into 4 rows (the number of sets in the `GROUPING SETS` clause), and a `GROUPING_ID()` column is added:
 
-e.g.  a, A, 1 expanded to:
+For example, `a, A, 1` is expanded into the following 4 rows:
 
-```
+```text
 +------+------+------+-------------------------+
 | k1   | k2   | k3   | GROUPING_ID(`k1`, `k2`) |
 +------+------+------+-------------------------+
@@ -381,9 +400,9 @@ e.g.  a, A, 1 expanded to:
 +------+------+------+-------------------------+
 ```
 
-Finally, all rows expended as follows (32 rows):
+After all rows are expanded, the input rows are as follows (32 rows in total):
 
-```
+```text
 +------+------+------+-------------------------+
 | k1   | k2   | k3   | GROUPING_ID(`k1`, `k2`) |
 +------+------+------+-------------------------+
@@ -423,9 +442,9 @@ Finally, all rows expended as follows (32 rows):
 32 rows in set.
 ```
 
-now GROUP BY k1, k2, GROUPING_ID(k1,k2):
+Now perform `GROUP BY` on `k1, k2, GROUPING_ID(`k1`, `k2`)`:
 
-```
+```text
 +------+------+-------------------------+-----------+
 | k1   | k2   | grouping_id(`k1`, `k2`) | sum(`k3`) |
 +------+------+-------------------------+-----------+
@@ -442,16 +461,16 @@ now GROUP BY k1, k2, GROUPING_ID(k1,k2):
 9 rows in set (0.02 sec)
 ```
 
-The result is equivalent to the UNION ALL
+This result matches the result of executing `GROUP BY` for each subset following the `GROUPING SETS` clause and then performing `UNION ALL`:
 
-```
-select k1, k2, sum(k3) from t group by k1, k2
+```sql
+SELECT k1, k2, SUM(k3) FROM t GROUP BY k1, k2
 UNION ALL
-select NULL, k2, sum(k3) from t group by k2
+SELECT NULL, k2, SUM(k3) FROM t GROUP BY k2
 UNION ALL
-select k1, NULL, sum(k3) from t group by k1
+SELECT k1, NULL, SUM(k3) FROM t GROUP BY k1
 UNION ALL
-select NULL, NULL, sum(k3) from t;
+SELECT NULL, NULL, SUM(k3) FROM t;
 
 +------+------+-----------+
 | k1   | k2   | sum(`k3`) |
@@ -469,33 +488,27 @@ select NULL, NULL, sum(k3) from t;
 9 rows in set (0.06 sec)
 ```
 
-### 3.3 FE 
+### 3.3 FE Planning Phase
 
-#### 3.3.1 Tasks
+#### 3.3.1 Main Tasks
 
-1. Add GroupByClause, replace groupingExprs.
-2. Add Grouping Sets, Cube and RollUp syntax.
-3. Add GroupByClause in SelectStmt.
-4. Add GroupingFunctionCallExpr, implements grouping grouping_id function call
-5. Add VirtualSlot, generate the map of virtual slots and real slots
-6. add virtual column GROUPING_ID and other virtual columns generated by grouping and grouping_id, insert into groupingExprs,
-7. Add a PlanNode, name as RepeatNode. For GroupingSets aggregation insert RepeatNode to the plan.
+1. Introduce the `GroupByClause` class to encapsulate `GROUP BY` related information, replacing the original `groupingExprs`.
+2. Add syntax support, syntax checking, error handling, and error messages for `GROUPING SETS`, `CUBE`, and `ROLLUP`.
+3. Add a `GroupByClause` member to the `SelectStmt` class.
+4. Introduce the `GroupingFunctionCallExpr` class to encapsulate calls to the `grouping` and `grouping_id` functions.
+5. Introduce the `VirtualSlot` class to encapsulate the mapping between the virtual columns generated by `grouping` and `grouping_id` and the actual columns.
+6. Add the virtual column `GROUPING_ID` and the virtual columns corresponding to other `grouping` and `grouping_id` functions, and add these columns to the original `groupingExprs` expression list.
+7. Add a `PlanNode` (named `RepeatNode` for more general functionality). Insert a `RepeatNode` into the execution plan for `GROUPING SETS` aggregation.
 
 #### 3.3.2 Tuple
 
-In order to add GROUPING_ID to groupingExprs in GroupByClause, need to create virtual SlotRef, also, need tot create a tuple for this slot, named GROUPING\_\_ID Tuple.
+In the `GroupByClause` class, to add `GROUPING_ID` to the `groupingExprs` expression list, a virtual SlotRef must be created. Accordingly, a tuple must be created for this slot, called the `GROUPING_ID` Tuple.
 
-For the plannode RepeatNode, its input are all the tuples of its children and its output tuple are the repeat data and GROUPING_ID.
+For the `RepeatNode` execution plan, its input is all the tuples from its child nodes. The output tuple contains not only the data from the repeat child node but also the values for `GROUPING_ID` and the virtual columns corresponding to other `grouping` and `grouping_id` functions.
 
+### 3.4 BE Query Execution Phase
 
-#### 3.3.3 Expression and Function Substitution
+Main tasks:
 
-expr -> if(bitand(pos, grouping_id)=0, expr, null) for expr in extension grouping clause
-grouping_id() -> grouping_id(grouping_id) for grouping_id function
-
-### 3.4 BE
-
-#### 3.4.1 Tasks
-
-1. Add RepeatNode executor, expend the input data and append GROUPING_ID to every row
-2. Implements grouping_id() and grouping() function.
+1. Add the row-expansion logic through the execution class of `RepeatNode`: repeat the original data before aggregation. Specifically, add a `GROUPING_ID` column to each row, repeat each row according to the number of sets in `GROUPING SETS`, and set the corresponding columns to `null`. Set the values of the newly added virtual columns according to the grouping list.
+2. Implement the `grouping_id()` and `grouping()` functions.

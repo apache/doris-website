@@ -2152,9 +2152,9 @@ When create a table(or partition), you can specify its storage medium(HDD or SSD
 
 #### `default_compression_type`
 
-Default: lz4 (before 4.0.3), zstd (since 4.0.3)
+Default: LZ4F (before 4.0.3), ZSTD (since 4.0.3)
 
-When creating a table, you can specify its compression algorithm. If not set, this specifies the default compression type when creating a table. Valid values include: lz4, zstd.
+When creating a table, you can specify its compression algorithm. If not set, this specifies the default compression type when creating a table. Valid values: LZ4, LZ4F, LZ4HC, ZLIB, ZSTD, SNAPPY, NONE (case-insensitive).
 
 #### `enable_storage_policy`
 

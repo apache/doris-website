@@ -6,8 +6,6 @@
 }
 ---
 
-## to_ipv6
-
 ## Description
 Takes the string form of an IPv6 address and returns a value of IPv6 type. The binary form of this value equals the binary form of the return value of the `ipv6_string_to_num` function.
 

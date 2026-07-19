@@ -6,8 +6,6 @@
 }
 ---
 
-## is_ipv4_string
-
 ## Description
 Checks if the input string is a valid IPv4 address format. Returns 1 if it is a valid IPv4 address, returns 0 if it is not.
 
@@ -23,7 +21,7 @@ IS_IPV4_STRING(<ipv4_str>)
 - `<ipv4_str>`: String to check
 
 ### Return Value
-Return Type: TINYINT
+Return Type: BOOLEAN
 
 Return Value Meaning:
 - Returns 1: indicates the input is a valid IPv4 address format

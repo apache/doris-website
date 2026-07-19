@@ -2,13 +2,13 @@
 {
     "title": "CREATE ROW POLICY",
     "language": "en",
-    "description": "Explain can view the rewritten execution plan."
+    "description": "Creates a row-level security policy on a table to restrict the rows returned to specified users or roles."
 }
 ---
 
 ## Description
 
-Explain can view the rewritten execution plan. 
+Creates a row-level security policy on a table. The policy restricts the rows that specified users or roles can see by attaching a filter predicate that is applied to queries against the table. 
 
 ## Syntax
 

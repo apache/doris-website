@@ -9,7 +9,6 @@
 ## Description
 The `explode_bitmap` table function accepts a bitmap type data and maps each bit in the bitmap to a separate row.
 It is commonly used to process bitmap data, expanding each element in the bitmap into a separate record. It should be used together with [`LATERAL VIEW`](../../../query-data/lateral-view.md).
-`explode_bitmap_outer` is similar to `explode_bitmap`, but behaves differently when handling empty or NULL values. It allows records with empty or NULL bitmaps to exist and expands them into NULL rows in the result.
 
 ## Syntax
 ```sql

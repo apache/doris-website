@@ -10,7 +10,7 @@ This document provides the configurations that need to be adjusted or paid atten
 
 ## FE Configuration
 
-Configured in `fe.conf`, for example, `restore_reset_index_id = true`.
+Configured in `fe.conf`, for example, `restore_reset_index_id = false`.
 
 | **Name**|**Description**|**Default Value**| **Version** |
 |---|---|---|---|

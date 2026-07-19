@@ -629,12 +629,6 @@ BaseCompaction:546859:
 * Description: select the time interval in seconds for rowset to be compacted.
 * Default value: 86400
 
-#### `max_single_replica_compaction_threads`
-
-* Type: int32
-* Description: The maximum of thread number in single replica compaction thread pool. -1 means one thread per disk.
-* Default value: -1
-
 #### `update_replica_infos_interval_seconds`
 
 * Description: Minimal interval (s) to update peer replica infos
@@ -943,8 +937,8 @@ BaseCompaction:546859:
 #### `write_buffer_size`
 
 * Description: The size of the buffer before flashing
-  - Imported data is first written to a memory block on the BE, and only written back to disk when this memory block reaches the threshold. The default size is 100MB. too small a threshold may result in a large number of small files on the BE. This threshold can be increased to reduce the number of files. However, too large a threshold may cause RPC timeouts
-* Default value: 104,857,600
+  - Imported data is first written to a memory block on the BE, and only written back to disk when this memory block reaches the threshold. The default size is 200MB. too small a threshold may result in a large number of small files on the BE. This threshold can be increased to reduce the number of files. However, too large a threshold may cause RPC timeouts
+* Default value: 209,715,200
 
 #### `remote_storage_read_buffer_mb`
 

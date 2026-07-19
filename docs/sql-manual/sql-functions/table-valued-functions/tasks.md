@@ -41,52 +41,111 @@ TASKS(
    | **LoadStatistic**| Load statistics                |
    | **User**     | User                               |
 
--  **`tasks("type"="mv")`** Tasks return value of type MV
+-  **`tasks("type"="mv")`** tasks return value of type MV
 
-   | Field Name            | Description                                                                 |
-   |-----------------------|-----------------------------------------------------------------------------|
-   | **TaskId**            | Task id                                                                     |
-   | **JobId**             | Job id                                                                      |
-   | **JobName**           | Job Name                                                                    |
-   | **MvId**              | Materialized View ID                                                        |
-   | **MvName**            | Materialized View Name                                                      |
-   | **MvDatabaseId**      | DB ID of the materialized view                                              |
-   | **MvDatabaseName**    | Name of the database to which the materialized view belongs                 |
-   | **Status**            | Task status                                                                 |
-   | **ErrorMsg**          | Task failure information                                                   |
-   | **CreateTime**        | Task creation time                                                          |
-   | **StartTime**         | Task start running time                                                     |
-   | **FinishTime**        | Task End Run Time                                                           |
-   | **DurationMs**        | Task runtime                                                                |
-   | **TaskContext**       | Task running parameters                                                     |
-   | **RefreshMode**       | Refresh mode                                                                |
-   | **NeedRefreshPartitions** | The partition information that needs to be refreshed for this task       |
-   | **CompletedPartitions** | The partition information that has been refreshed for this task          |
-   | **Progress**          | Task running progress                                                       |
+   | Field Name | Description |
+   |------------|-------------|
+   | **TaskId** | Unique ID of the refresh task. Each materialized view refresh creates a new task record. |
+   | **JobId** | ID of the job that generated this task. It corresponds to `jobs("type"="mv").Id`. |
+   | **JobName** | Name of the job that generated this task. It corresponds to `mv_infos("database"="...").JobName` and `jobs("type"="mv").Name`. |
+   | **MvId** | ID of the materialized view refreshed by this task. |
+   | **MvName** | Name of the materialized view refreshed by this task. |
+   | **MvDatabaseId** | ID of the database that contains the materialized view. |
+   | **MvDatabaseName** | Name of the database that contains the materialized view. |
+   | **Status** | Task status. Possible values: `PENDING` means the task is waiting to run; `RUNNING` means the task is running; `SUCCESS` means the task finished successfully; `FAILED` means the task failed; `CANCELED` means the task was canceled. |
+   | **ErrorMsg** | Error message when `Status` is `FAILED` or `CANCELED`. Empty when the task succeeds. |
+   | **CreateTime** | Time when the task record was created. |
+   | **StartTime** | Time when the task started running. It can be `\N` if the task has not started. |
+   | **FinishTime** | Time when the task finished. It can be `\N` if the task is still pending or running. |
+   | **DurationMs** | Runtime in milliseconds, calculated as `FinishTime - StartTime`. It can be `\N` if the task has not finished. |
+   | **TaskContext** | JSON string describing how the task was triggered and what the user requested. Common fields include `triggerMode`, `partitions`, and `isComplete`. `triggerMode` values are `MANUAL`, `COMMIT`, and `SYSTEM`. |
+   | **RefreshMode** | Actual refresh scope decided by this task. Possible values: `COMPLETE` means all materialized view partitions were refreshed; `PARTIAL` means only some partitions were refreshed; `NOT_REFRESH` means no partition needed refreshing. |
+   | **NeedRefreshPartitions** | JSON array of materialized view partitions that needed refreshing in this task. Empty array means no partition needed refreshing. |
+   | **CompletedPartitions** | JSON array of partitions that were refreshed successfully. Compare it with `NeedRefreshPartitions` to see whether all required partitions completed. |
+   | **Progress** | Refresh progress in the format `percentage (completed/total)`, for example `100.00% (1/1)`. It can be `\N` when there is no partition to refresh. |
+   | **LastQueryId** | Query ID of the SQL statement executed by the refresh task. Use this ID to search FE or BE logs when troubleshooting task failures. It can be empty when no refresh SQL was executed. This field is supported since Doris 3.0.0. |
+
+### MV task enum fields
+
+The following enum fields are commonly used when checking materialized view refresh tasks:
+
+- `Status`: lifecycle state of the task.
+  - `PENDING`: the task has been created but has not started running. It is waiting for scheduling or resources.
+  - `RUNNING`: the task is currently running.
+  - `SUCCESS`: the task finished successfully.
+  - `FAILED`: the task failed. Check `ErrorMsg` first, and use `LastQueryId` to search logs if it is not empty.
+  - `CANCELED`: the task was canceled before it finished.
+- `TaskContext.triggerMode`: why this task was created.
+  - `MANUAL`: created by a manual refresh command, such as `REFRESH MATERIALIZED VIEW`.
+  - `COMMIT`: created because data changes on related base tables triggered refresh.
+  - `SYSTEM`: created by an internal system action, for example the initial build of a materialized view created with immediate build.
+- `TaskContext.isComplete`: whether the refresh request asks for a complete refresh.
+  - `true`: the request asks Doris to refresh all materialized view partitions.
+  - `false`: the request does not force complete refresh. Doris can decide the actual refresh scope based on partition freshness.
+- `RefreshMode`: actual refresh scope selected by the task after checking partitions.
+  - `COMPLETE`: all materialized view partitions that belong to the MV were selected for refresh.
+  - `PARTIAL`: only some materialized view partitions were selected for refresh.
+  - `NOT_REFRESH`: no partition needed refresh. In this case, `NeedRefreshPartitions` is usually empty and `Progress` can be `\N`.
+
+:::info Version
+
+`LastQueryId` is supported since Doris 3.0.0. It is not available in Doris 2.1.x.
+
+:::
 
 
 ## Examples
 
-View tasks for all materialized views
+View the latest refresh task of a materialized view.
 
 ```sql
-select * from tasks("type"="mv");
+select *
+from tasks("type"="mv")
+where MvDatabaseName = "test" and MvName = "mv1"
+order by CreateTime desc
+limit 1\G
 ```
 ```text
-+-----------------+-------+------------------+-------+--------------------------+--------------+--------------------------------------------------------+---------+----------+---------------------+---------------------+---------------------+------------+-------------------------------------------------------------+-------------+-----------------------------------------------+-----------------------------------------------+---------------+-----------------------------------+
-| TaskId          | JobId | JobName          | MvId  | MvName                   | MvDatabaseId | MvDatabaseName                                         | Status  | ErrorMsg | CreateTime          | StartTime           | FinishTime          | DurationMs | TaskContext                                                 | RefreshMode | NeedRefreshPartitions                         | CompletedPartitions                           | Progress      | LastQueryId                       |
-+-----------------+-------+------------------+-------+--------------------------+--------------+--------------------------------------------------------+---------+----------+---------------------+---------------------+---------------------+------------+-------------------------------------------------------------+-------------+-----------------------------------------------+-----------------------------------------------+---------------+-----------------------------------+
-| 509478985247053 | 23369 | inner_mtmv_23363 | 23363 | range_date_up_union_mv1  | 21805        | regression_test_nereids_rules_p0_mv_create_part_and_up | SUCCESS |          | 2025-01-08 18:19:10 | 2025-01-08 18:19:10 | 2025-01-08 18:19:10 | 233        | {"triggerMode":"SYSTEM","isComplete":false}                 | COMPLETE    | ["p_20231001_20231101"]                       | ["p_20231001_20231101"]                       | 100.00% (1/1) | 71897c47d0d94fd2-9ca52a0e6eb3bff5 |
-| 509486915704885 | 23369 | inner_mtmv_23363 | 23363 | range_date_up_union_mv1  | 21805        | regression_test_nereids_rules_p0_mv_create_part_and_up | SUCCESS |          | 2025-01-08 18:19:17 | 2025-01-08 18:19:17 | 2025-01-08 18:19:17 | 227        | {"triggerMode":"MANUAL","partitions":[],"isComplete":false} | PARTIAL     | ["p_20231101_20231201"]                       | ["p_20231101_20231201"]                       | 100.00% (1/1) | 9bf5ff69d4cc4c78-b50505436c8410c4 |
-| 509487197275880 | 23369 | inner_mtmv_23363 | 23363 | range_date_up_union_mv1  | 21805        | regression_test_nereids_rules_p0_mv_create_part_and_up | SUCCESS |          | 2025-01-08 18:19:18 | 2025-01-08 18:19:18 | 2025-01-08 18:19:18 | 191        | {"triggerMode":"MANUAL","partitions":[],"isComplete":false} | PARTIAL     | ["p_20231101_20231201"]                       | ["p_20231101_20231201"]                       | 100.00% (1/1) | 5b3b4525b6774b5b-89b070042cdcbcd5 |
-| 509478131194211 | 23377 | inner_mtmv_23371 | 23371 | range_date_up_union_mv2  | 21805        | regression_test_nereids_rules_p0_mv_create_part_and_up | SUCCESS |          | 2025-01-08 18:19:10 | 2025-01-08 18:19:10 | 2025-01-08 18:19:10 | 156        | {"triggerMode":"SYSTEM","isComplete":false}                 | COMPLETE    | ["p_20231001_20231101"]                       | ["p_20231001_20231101"]                       | 100.00% (1/1) | 6d0a0782819b446e-b9da5d5de513ce00 |
-| 509486057129101 | 23377 | inner_mtmv_23371 | 23371 | range_date_up_union_mv2  | 21805        | regression_test_nereids_rules_p0_mv_create_part_and_up | SUCCESS |          | 2025-01-08 18:19:17 | 2025-01-08 18:19:17 | 2025-01-08 18:19:18 | 213        | {"triggerMode":"MANUAL","partitions":[],"isComplete":false} | PARTIAL     | ["p_20231101_20231201"]                       | ["p_20231101_20231201"]                       | 100.00% (1/1) | f1303483e3db43e7-aa424acc32dc39ca |
-| 509486143784554 | 23377 | inner_mtmv_23371 | 23371 | range_date_up_union_mv2  | 21805        | regression_test_nereids_rules_p0_mv_create_part_and_up | SUCCESS |          | 2025-01-08 18:19:18 | 2025-01-08 18:19:18 | 2025-01-08 18:19:18 | 151        | {"triggerMode":"MANUAL","partitions":[],"isComplete":false} | PARTIAL     | ["p_20231101_20231201"]                       | ["p_20231101_20231201"]                       | 100.00% (1/1) | 8d29b11ac41f4fe0-9d7c86372707310b |
-| 488317385772600 | 21794 | inner_mtmv_21788 | 21788 | test_tablet_type_mtmv_mv | 16016        | zd                                                     | SUCCESS |          | 2025-01-08 12:26:29 | 2025-01-08 12:26:29 | 2025-01-08 12:26:29 | 1          | {"triggerMode":"MANUAL","partitions":[],"isComplete":true}  | NOT_REFRESH | []                                            | \N                                            | \N            |                                   |
-| 437156301250803 | 19508 | inner_mtmv_19494 | 19494 | mv1                      | 16016        | zd                                                     | SUCCESS |          | 2025-01-07 22:13:48 | 2025-01-07 22:13:48 | 2025-01-07 22:17:45 | 236985     | {"triggerMode":"MANUAL","partitions":[],"isComplete":false} | COMPLETE    | ["p_20210101_MAXVALUE","p_20200101_20210101"] | ["p_20210101_MAXVALUE","p_20200101_20210101"] | 100.00% (2/2) | 7965b4ddce8a4480-8884e9701679c1c4 |
-| 439689059641969 | 19508 | inner_mtmv_19494 | 19494 | mv1                      | 16016        | zd                                                     | SUCCESS |          | 2025-01-07 22:55:59 | 2025-01-07 22:55:59 | 2025-01-07 22:55:59 | 35         | {"triggerMode":"MANUAL","partitions":[],"isComplete":false} | NOT_REFRESH | []                                            | \N                                            | \N            |                                   |
-+-----------------+-------+------------------+-------+--------------------------+--------------+--------------------------------------------------------+---------+----------+---------------------+---------------------+---------------------+------------+-------------------------------------------------------------+-------------+-----------------------------------------------+-----------------------------------------------+---------------+-----------------------------------+
+*************************** 1. row ***************************
+               TaskId: 437156301250803
+                JobId: 19508
+              JobName: inner_mtmv_19494
+                 MvId: 19494
+               MvName: mv1
+         MvDatabaseId: 16016
+       MvDatabaseName: test
+               Status: SUCCESS
+             ErrorMsg:
+           CreateTime: 2025-01-07 22:13:48
+            StartTime: 2025-01-07 22:13:48
+           FinishTime: 2025-01-07 22:17:45
+           DurationMs: 236985
+          TaskContext: {"triggerMode":"MANUAL","partitions":[],"isComplete":false}
+          RefreshMode: COMPLETE
+NeedRefreshPartitions: ["p_20210101_MAXVALUE","p_20200101_20210101"]
+  CompletedPartitions: ["p_20210101_MAXVALUE","p_20200101_20210101"]
+             Progress: 100.00% (2/2)
+          LastQueryId: 7965b4ddce8a4480-8884e9701679c1c4
 ```
+
+In this result:
+
+- `TaskId` identifies this refresh execution. It is different for every refresh.
+- `JobId` and `JobName` identify the MV refresh job. The job can be queried with `select * from jobs("type"="mv") where Name = "inner_mtmv_19494";`.
+- `MvId`, `MvName`, `MvDatabaseId`, and `MvDatabaseName` identify the materialized view refreshed by the task.
+- `Status` is `SUCCESS`, so the task finished successfully. If it is `FAILED`, check `ErrorMsg` first.
+- `CreateTime`, `StartTime`, `FinishTime`, and `DurationMs` show when the task was created, when it started, when it finished, and how long it ran.
+- `TaskContext` shows this task was manually triggered. `partitions: []` means the user did not specify a partition list in the refresh command.
+- `RefreshMode` is `COMPLETE`, so this task refreshed all partitions that the materialized view had to refresh.
+- `NeedRefreshPartitions` lists two partitions that needed refreshing, and `CompletedPartitions` lists the same two partitions, so all required partitions completed.
+- `Progress` is `100.00% (2/2)`, which also means two of two required partitions completed.
+- `LastQueryId` is the query ID of the refresh SQL. Use it to search Doris logs when the task fails or runs slowly.
+
+:::info Note
+
+The number of stored and displayed task records is controlled by the FE configuration item `max_persistence_task_count`. The default value is 100. When the number of task records exceeds this limit, older task records are discarded. If the value is less than 1, task records are not persisted. Restart FE after changing this configuration.
+
+:::
 
 View tasks for all insert tasks
 
@@ -100,4 +159,3 @@ select * from tasks("type"="insert");
 | 79133848479750 | 78533940810334 | insert_tab_job | 78533940810334_79133848479750 | SUCCESS |          | 2025-01-17 14:42:54 | 2025-01-17 14:42:54 | 2025-01-17 14:42:54 |             |               | root |
 +----------------+----------------+----------------+-------------------------------+---------+----------+---------------------+---------------------+---------------------+-------------+---------------+------+
 ```
-

@@ -2,13 +2,13 @@
 {
     "title": "HOUR_FLOOR",
     "language": "en",
-    "description": "The hourfloor function rounds down the input datetime value to the nearest moment of the specified hour period. For example, if the period is 5 hours,"
+    "description": "HOUR_FLOOR function rounds down the input datetime value to the nearest moment of the specified hour period. For example, if the period is 5 hours, the function adjusts the input time to the starting hour mark within that period."
 }
 ---
 
 ## Description
 
-The hour_floor function rounds down the input datetime value to the nearest moment of the specified hour period. For example, if the period is 5 hours, the function adjusts the input time to the starting hour mark within that period.
+HOUR_FLOOR function rounds down the input datetime value to the nearest moment of the specified hour period. For example, if the period is 5 hours, the function adjusts the input time to the starting hour mark within that period.
 
 Date calculation formula:
 $$
@@ -33,14 +33,16 @@ HOUR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_expr>` | A valid date expression that supports datetime/date types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific datetime/date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | A valid date expression that supports datetime/date/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), and for datetime/date formats refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | Optional parameter that specifies the period length (unit: hours), must be a positive integer (such as 2, 6, 12). Default value is 1, representing one period every 1 hour |
 | `<origin>` | The starting time origin, supports datetime/date types. If not provided, the default is 0001-01-01T00:00:00 |
 
 ## Return Value
 
-Returns a DATETIME type value representing the nearest period moment after rounding down.
+Returns a TIMESTAMPTZ, DATETIME or DATE type value representing the nearest period moment after rounding down.
 
+- If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform FLOOR calculation.
+- If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
 - If the input period is a non-positive integer, returns error.
 - If any parameter is NULL, the result returns NULL.
 - If origin or datetime has scale, the returned result has scale.
@@ -89,6 +91,23 @@ mysql> select hour_floor('2023-07-13 20:30:00', 4, '2023-07-13');
 +----------------------------------------------------+
 | 2023-07-13 20:00:00                                |
 +----------------------------------------------------+
+
+-- TimeStampTz sample, SET time_zone = '+08:00'
+-- Convert to local_time (2026-01-01 02:59:59) and then perform HOUR_FLOOR
+SELECT HOUR_FLOOR('2025-12-31 23:59:59+05:00');
++-----------------------------------------+
+| HOUR_FLOOR('2025-12-31 23:59:59+05:00') |
++-----------------------------------------+
+| 2026-01-01 02:00:00                     |
++-----------------------------------------+
+
+-- If parameters contain both TimeStampTz and Datetime types, output DateTime type
+SELECT HOUR_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++--------------------------------------------------------------------+
+| HOUR_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++--------------------------------------------------------------------+
+| 2026-01-01 02:00:00.123                                            |
++--------------------------------------------------------------------+
 
 -- If origin or datetime has scale, the returned result has scale
 mysql> select hour_floor('2023-07-13 19:30:00.123', 4, '2023-07-03 08:00:00') as custom_origin;

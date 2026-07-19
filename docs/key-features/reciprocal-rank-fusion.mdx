@@ -1,0 +1,128 @@
+---
+title: Reciprocal Rank Fusion
+description: A SQL pattern for combining BM25 and vector ranking in Doris using ROW_NUMBER and the standard 1/(k+rank) formula, with no built-in RRF function required.
+keywords:
+  - reciprocal rank fusion
+  - RRF
+  - hybrid ranking
+  - BM25 plus vector
+  - ROW_NUMBER
+  - Apache Doris hybrid search
+slug: /key-features/reciprocal-rank-fusion
+image: /images/next/key-features/reciprocal-rank-fusion.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - search
+    - ai
+---
+
+> **TL;DR** Apache Doris does not ship a built-in `rrf()` function, but you can implement Reciprocal Rank Fusion in plain SQL. The pattern uses [`ROW_NUMBER()`](./analytic-functions) over a [BM25](./bm25) ranking and a [vector ranking](./vector-index), then sums `1.0 / (60 + rank)` across both lists with `k = 60` as the standard smoothing constant. The result is a single fused top-K list whose ordering does not depend on calibrating BM25 scores against cosine distance.
+
+![Apache Doris Reciprocal Rank Fusion: A SQL pattern for combining BM25 and vector ranking in Doris using ROW_NUMBER and the standard 1/(k+rank) formula, with no built-in RRF function required.](/images/next/key-features/reciprocal-rank-fusion.jpg)
+## Why use Reciprocal Rank Fusion in Apache Doris? {#why}
+
+Reciprocal Rank Fusion gives Apache Doris hybrid search a defensible default for merging BM25 and vector results without calibrating two incompatible score scales. Hybrid search returns two ranked lists for the same query: one from full-text matching (BM25 scores via `score()`) and one from vector similarity (`l2_distance_approximate` or `inner_product_approximate`). The two scores live on incompatible scales. BM25 is an unbounded positive number whose value depends on corpus statistics; cosine distance sits between 0 and 2; L2 distance has no upper bound at all. Adding or averaging these scores gives a number with no defensible meaning, and per-query min-max normalization is brittle: one outlier in either list and the fusion collapses.
+
+Reciprocal Rank Fusion sidesteps the problem by throwing the scores away and keeping only the ranks. It has one parameter to tune and has held up well on retrieval benchmarks since Cormack, Clarke, and Buettcher published it in 2009.
+
+- BM25 and vector distances live on different scales; arithmetic on them is unsafe.
+- Min-max normalization breaks when one query produces a long-tailed score distribution.
+- An application-side fusion service is one more thing to deploy and keep in sync with the database.
+
+## What is Reciprocal Rank Fusion in Apache Doris? {#what}
+
+Reciprocal Rank Fusion in Apache Doris is a SQL pattern, not a built-in function: a rank-based fusion algorithm expressed with `ROW_NUMBER`, `FULL OUTER JOIN`, and the standard `1/(k+rank)` formula. Given a document `d` that appears in ranked lists `R_1, R_2, ..., R_n`, its fused score is the sum of reciprocal ranks across the lists it appears in:
+
+```
+score(d) = Σ 1 / (k + rank_i(d))
+```
+
+`rank_i(d)` is `d`'s 1-based position in list `i`. `k` is a smoothing constant; the value Cormack et al. recommend, and that most production systems use, is `60`. Documents missing from a list contribute zero from that list. The fused score is then sorted descending to produce the final ranking.
+
+In Apache Doris the implementation is a SQL pattern, not a function. You write two ranked subqueries, one for BM25 and one for ANN, give each row a `ROW_NUMBER()`, then `FULL OUTER JOIN` and sum the reciprocals.
+
+**Key terms**
+
+- **`score()`**: Doris's BM25 scoring function for inverted indexes. Requires a `MATCH_*` predicate and an `ORDER BY score()` clause to activate.
+- **`l2_distance_approximate` / `inner_product_approximate`**: ANN distance functions backed by Doris's vector index (HNSW or IVF).
+- **`ROW_NUMBER() OVER (ORDER BY ...)`**: assigns a 1-based rank to each row within a result set.
+- **`k`**: the RRF smoothing constant. Lower values (20–40) sharpen the influence of top-ranked rows; higher values (80+) flatten it.
+
+## How does Reciprocal Rank Fusion work in Apache Doris? {#how}
+
+Apache Doris implements Reciprocal Rank Fusion by running two ranked retrievals as CTEs, assigning a `ROW_NUMBER()` to each, `FULL OUTER JOIN`-ing the two lists on document id, and summing `1/(k+rank)` to produce the final ordering. The five-step flow below covers retrieval, ranking, join, fusion, and trim.
+
+1. **Run two ranked retrievals.** A BM25 subquery filters with `MATCH_ANY` and orders by `score()` descending. An ANN subquery orders by vector distance ascending. Each is capped with `LIMIT N`, where `N` is the candidate pool size (typically 50–200).
+2. **Assign per-list ranks.** `ROW_NUMBER() OVER (ORDER BY ...)` numbers the rows 1, 2, 3 within each subquery. The numbers are integers, so they are safe to mix across runs.
+3. **Outer-join the two lists by document id.** A `FULL OUTER JOIN` keeps documents that appear in either list. Rows missing on one side get `NULL` for that rank.
+4. **Sum the reciprocals.** `COALESCE(1.0/(60+bm25_rank), 0) + COALESCE(1.0/(60+ann_rank), 0)` gives each document its fused score. Missing ranks contribute zero, which matches the original RRF definition.
+5. **Sort and trim.** `ORDER BY rrf_score DESC LIMIT K` returns the final top-K.
+
+The pool size `N` matters. If you only fetch the top 10 from each retriever, a document that ranks 11th in BM25 and 1st in ANN looks like a vector-only hit. Pulling 100 candidates per side is a reasonable default; raise it for recall-sensitive workloads.
+
+## Quick start {#quick-start}
+
+```sql
+WITH bm25 AS (
+  SELECT id, ROW_NUMBER() OVER (ORDER BY score() DESC) AS r
+  FROM docs WHERE body MATCH_ANY 'music' ORDER BY score() DESC LIMIT 100
+),
+ann AS (
+  SELECT id, ROW_NUMBER() OVER (ORDER BY l2_distance_approximate(
+           embedding, [0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]) ASC) AS r
+  FROM docs ORDER BY l2_distance_approximate(
+           embedding, [0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]) ASC LIMIT 100
+)
+SELECT COALESCE(b.id, a.id) AS id,
+       COALESCE(1.0/(60+b.r), 0) + COALESCE(1.0/(60+a.r), 0) AS rrf
+FROM bm25 b FULL OUTER JOIN ann a ON b.id = a.id
+ORDER BY rrf DESC LIMIT 5;
+```
+
+**Expected result**
+
+```
++----+----------------------+
+| id | rrf                  |
++----+----------------------+
+|  1 | 0.032786885245901641 |
+|  3 | 0.016393442622950820 |
+|  7 | 0.016129032258064516 |
++----+----------------------+
+```
+
+Document `1` ranks first in both lists, so its fused score is `1/61 + 1/61 ≈ 0.0328`. Documents `3` and `7` appear in only one list each, so they contribute a single reciprocal term and fall in behind the row that placed in both.
+
+## When should you use Reciprocal Rank Fusion in Apache Doris? {#when}
+
+Use Apache Doris Reciprocal Rank Fusion for RAG pipelines, catalog/document search, and any workload that combines BM25 and vector retrieval where calibrating absolute scores is impractical. Skip it for single-retriever workloads, very small candidate pools, calibrated-probability use cases, and hot-path queries where the extra join hurts latency.
+
+**Good fit**
+
+- RAG pipelines that retrieve with both keyword and embedding similarity and need one merged top-K to feed the LLM.
+- Catalog or document search where keyword recall and semantic recall complement each other and you want a defensible default ranking.
+- Workloads where calibrating absolute scores between retrievers is impractical because the corpus or query distribution shifts.
+- Cases where you would otherwise build a fusion service in the application layer; pushing the fusion into SQL keeps the data path short.
+
+**Not a good fit**
+
+- Single-retriever workloads. If you are only running BM25 or only running ANN, sort by the native score and skip the join. RRF on one list is just a monotonic transform of the rank.
+- Very small candidate pools (top 5 or top 10 per side). RRF rewards documents that show up in both lists, which only happens if both lists are deep enough. Pull at least 50 per retriever.
+- Workloads that need calibrated probabilities (for thresholding, abstention, or downstream cost models). RRF scores are not probabilities and have no absolute meaning across queries. Use a learned ranker if you need calibration.
+- Hot-path queries where the extra subqueries and join hurt latency. A pre-filter pattern (`MATCH_ANY` + `ORDER BY l2_distance_approximate`) returns a single ranked list in one pass and is what [Hybrid Search](./hybrid-search) uses by default.
+
+## Tuning `k` {#tuning}
+
+Lowering `k` (toward 20) widens the gap between rank 1 and rank 5, which helps when one retriever is clearly more reliable. Raising `k` (toward 100) flattens the curve and gives more credit to documents that appear deep in both lists. Change `k` once, measure recall on a labeled set, and stop. Per-query tuning is a signal that you want a learned ranker.
+
+## Further reading {#further-reading}
+
+- [Hybrid Search](./hybrid-search): Doris's default single-pass pattern for combining inverted-index filtering with ANN ranking, and the alternative this card compares against.
+- [Relevance Scoring (BM25)](../table-design/index/inverted-index/scoring): how `score()` is computed and when it activates, which is the input to one half of the fusion.
+- [Inverted Index Overview](../table-design/index/inverted-index/overview): index types, tokenizers, and the `MATCH_*` operators that drive the BM25 subquery.
+- [Vector Index Overview](../table-design/index/vector-index/overview): HNSW and IVF backends, distance functions, and constraints on the ANN subquery.
+- [ROW_NUMBER](../sql-manual/sql-functions/window-functions/row-number): the window function that turns each ranked subquery into integer ranks.
+- [Cormack, Clarke, Buettcher (2009): Reciprocal Rank Fusion outperforms Condorcet and individual rank learning methods](https://plg.uwaterloo.ca/~gvcormac/cormacksigir09-rrf.pdf): the original paper and the source of the `k = 60` recommendation.

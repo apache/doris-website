@@ -67,6 +67,3 @@ select array_agg(c2) from test_doris_array_agg where c1 is null;
 | []            |
 +---------------+
 ```
-|    1 | ["a","b"]       |
-
-

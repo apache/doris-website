@@ -1,11 +1,18 @@
 ---
-{
-    "title": "Using Arthas to Profile FE",
-    "language": "en"
-}
+title: Analyzing FE Performance with Arthas
+language: en
+description: "Analyze Apache Doris FE performance online with Arthas: flame graphs, function tracing, and runtime observation."
+keywords:
+    - Apache Doris
+    - Arthas
+    - FE performance analysis
+    - flame graph
+    - function tracing
+    - JVM
+    - DorisFE
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,26 +31,37 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Analyzing FE Performance with Arthas
+
+<!-- Knowledge type: Tool usage -->
+<!-- Applicable scenarios: Performance tuning / Troubleshooting -->
+
 ## Introduction
 
-In Doris 3.1.0 and later versions, the Arthas tool (version 4.0.5) is included in the FE deployment directory `${DORIS_FE_HOME}/arthas`. You can use Arthas to print flame graphs, trace function call paths, output function execution times, observe function parameters and return values, and more, making it convenient to locate various runtime issues in FE.
+In Apache Doris 3.1.0 and later, the FE deployment directory `${DORIS_FE_HOME}/arthas` ships with the Arthas tool (version 4.0.5). With Arthas, you can print flame graphs online, trace function call paths, measure function latency, and observe function inputs and return values, which makes it easier to locate runtime issues in the FE.
 
-For specific Arthas usage methods, please refer to: [Arthas Official Documentation](https://arthas.aliyun.com/en/doc/).
+For more detailed command descriptions, refer to the [Arthas official documentation](https://arthas.aliyun.com/en/doc/).
 
-For versions prior to 3.1, you need to manually download Arthas:
+### System Support
 
-```shell
+| System | Supported |
+|------|---------|
+| Linux | Yes |
+| macOS | Yes |
+| Windows | Not yet supported |
+
+### Manual Installation for Older FE Versions
+
+For Doris versions earlier than 3.1.0, download Arthas manually:
+
+```bash
 wget https://github.com/alibaba/arthas/releases/download/arthas-all-4.0.5/arthas-bin.zip
 unzip arthas-bin.zip -o ${DORIS_FE_HOME}/arthas
 ```
 
-:::note
-Note: Currently only Linux and MacOS systems are supported, Windows system is not yet supported
-:::
+## Generating a Flame Graph
 
-## Generating FlameGraph
-
-1. Run the `${DORIS_FE_HOME}/arthas/as.sh` script and select the `DorisFE` process
+1. Run the `${DORIS_FE_HOME}/arthas/as.sh` script and select the serial number of the `DorisFE` process from the process list:
 
     ```shell
     bash ./as.sh
@@ -58,17 +76,39 @@ Note: Currently only Linux and MacOS systems are supported, Windows system is no
     2
     ```
 
-2. Start Profiling
+2. Start profiling on the Arthas command line:
 
     ```shell
     [arthas@77285]$ profiler start
     Profiling started
     ```
 
-3. Stop Profiling and generate flame graph file as `20250627-115104.html`
+3. Stop profiling and generate a flame graph in HTML format:
 
     ```shell
     [arthas@77285]$ profiler stop --format html
     OK
     profiler output file: <DORIS_FE_HOME>/arthas-output/20250627-115104.html
     ```
+
+    The output file is placed under `${DORIS_FE_HOME}/arthas-output/`. Open it in a browser to analyze hot functions.
+
+## Common Arthas Command Cheatsheet
+
+| Command | Purpose |
+|------|------|
+| `profiler start` / `profiler stop --format html` | Collect a CPU flame graph |
+| `trace <class> <method>` | Trace function call paths and latency |
+| `watch <class> <method>` | Observe function inputs and return values |
+| `thread` | View JVM thread state |
+| `dashboard` | View overall JVM runtime metrics in real time |
+
+## FAQ
+
+**Q: The `DorisFE` process is not found when running `as.sh`.**
+
+Make sure the FE process has started and that `as.sh` runs on the same machine as the FE. The process list comes from JVMs visible to the current user.
+
+**Q: The generated flame graph is empty or has too few samples.**
+
+Make sure the FE has a continuous query or request load during profiling. You can extend the interval between `profiler start` and `profiler stop`.

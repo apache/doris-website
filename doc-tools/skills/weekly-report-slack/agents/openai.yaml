@@ -1,0 +1,4 @@
+interface:
+  display_name: "Weekly Report Slack"
+  short_description: "Create Doris weekly Slack posts."
+  default_prompt: "$weekly-report-slack src/pages/community-report/_reports/2026-06-29.mdx"

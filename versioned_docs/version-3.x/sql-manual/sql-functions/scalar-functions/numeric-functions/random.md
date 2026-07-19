@@ -32,7 +32,7 @@ RANDOM(<a> , <b>) -- Generates a random number between a and b
 |-----------|------------|
 | `<seed>` | random number generator seed. Returns a fixed sequence of random numbers between 0 and 1. |
 | `<a>` | The lower bound of a random number. |
-| `<b>` | The upper bound of a random number. It must be less than the lower bound. |
+| `<b>` | The upper bound of a random number. It must be greater than the lower bound. |
 
 ## Return value
 

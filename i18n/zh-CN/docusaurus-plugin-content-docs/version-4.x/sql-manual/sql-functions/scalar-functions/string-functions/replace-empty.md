@@ -37,6 +37,22 @@ REPLACE_EMPTY(<str>, <old>, <new>)
 
 ## 示例
 
+作为参照，`REPLACE` 会将 `<old>` 的每次出现替换为 `<new>`，字符串的其余部分保持不变：
+
+```sql
+SELECT replace('hello world', 'world', 'universe');
+```
+
+```text
++---------------------------------------------+
+| replace('hello world', 'world', 'universe') |
++---------------------------------------------+
+| hello universe                              |
++---------------------------------------------+
+```
+
+`REPLACE_EMPTY` 在常规情况下行为与 `REPLACE` 相同（见下面的例 2），但当 `<old>` 为空字符串时不同——此时会把 `<new>` 插入到 `<str>` 的每个字符前以及末尾（见例 1）。其余例子覆盖各种边界情况。
+
 1. 基本用法：old 为空字符串时插入
 ```sql
 SELECT replace_empty('abc', '', 'x');

@@ -479,4 +479,4 @@ Plans for Auto Partition by LIST:
 
 - Allow merging multiple values into the same partition based on specific rules.
 
-Join [Apache Doris open-source community](/discord) for more information and further guidance.
+Join [Apache Doris open-source community](https://doris.apache.org/slack) for more information and further guidance.

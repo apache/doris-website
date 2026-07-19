@@ -2,121 +2,123 @@
 {
     "title": "Data Update Overview",
     "language": "en",
-    "description": "In today's data-driven decision-making landscape, data \"freshness\" has become a core competitive advantage for enterprises to stand out in fierce "
+    "description": "Apache Doris data update selection guide: table model comparison, UPSERT vs UPDATE path selection, Unique Key model mechanism, CDC synchronization, and wide-table assembly practices."
 }
 ---
 
-In today's data-driven decision-making landscape, data "freshness" has become a core competitive advantage for enterprises to stand out in fierce market competition. Traditional T+1 data processing models, due to their inherent latency, can no longer meet the stringent real-time requirements of modern business. Whether it's achieving millisecond-level synchronization between business databases and data warehouses, dynamically adjusting operational strategies, or correcting erroneous data within seconds to ensure decision accuracy, robust real-time data update capabilities are crucial.
+<!-- Knowledge type: Architecture selection decision / Concept explanation -->
+<!-- Applicable scenarios: Data update solution selection / Understanding Unique Key model principles / Performance tuning -->
 
-Apache Doris, as a modern real-time analytical database, has one of its core design goals to provide ultimate data freshness. Through its powerful data models and flexible update mechanisms, it successfully compresses data analysis latency from day-level and hour-level to second-level, providing a solid foundation for users to build real-time, agile business decision-making loops.
+This article introduces the data update and deletion capabilities of Apache Doris, helping you answer the following questions:
 
-This document serves as an official guide that systematically explains Apache Doris's data update capabilities, covering its core principles, diverse update and deletion methods, typical application scenarios, and performance best practices under different deployment modes, aiming to help you comprehensively master and efficiently utilize Doris's data update functionality.
+- Which table model should you choose for your business scenario?
+- When should you use ingest-based updates (UPSERT, partial column updates), and when should you use DML updates (`UPDATE`, `INSERT INTO SELECT`)?
+- What is the implementation mechanism behind the Unique Key model? (Merge-on-Write, Sequence column, delete marker, partial column update)
+- How are typical scenarios such as CDC synchronization and real-time wide tables implemented?
 
-## 1. Core Concepts: Table Models and Update Mechanisms
+Reading suggestions:
 
-In Doris, the **Data Model** of a data table determines its data organization and update behavior. To support different business scenarios, Doris provides three table models: Unique Key Model, Aggregate Key Model, and Duplicate Key Model. Among these, **the Unique Key Model is the core for implementing complex, high-frequency data updates**.
+- For a quick selection, go directly to [1. Choosing the Right Update Method](#1-choosing-the-right-update-method).
+- To understand the principles or troubleshoot performance issues, see [2. Unique Key Model Implementation Mechanism](#2-unique-key-model-implementation-mechanism).
+- To reference typical business practices, see [3. Typical Business Scenarios](#3-typical-business-scenarios).
+- To learn about best practices and limitations, see [4. Usage Recommendations](#4-usage-recommendations).
 
-### 1.1. Table Model Overview
+## 1. Choosing the Right Update Method
 
-| **Table Model**                | **Key Features**                                             | **Update Capability**                        | **Use Cases**                                                |
-| ------------------------------ | ------------------------------------------------------------ | -------------------------------------------- | ------------------------------------------------------------ |
-| **Unique Key Model**           | Built for real-time updates. Each data row is identified by a unique Primary Key, supporting row-level UPSERT (Update/Insert) and partial column updates. | Strongest, supports all update and deletion methods. | Order status updates, real-time user tag computation, CDC data synchronization, and other scenarios requiring frequent, real-time changes. |
-| **Aggregate Key Model**        | Pre-aggregates data based on specified Key columns. For rows with the same Key, Value columns are merged according to defined aggregation functions (such as SUM, MAX, MIN, REPLACE). | Limited, supports REPLACE-style updates and deletions based on Key columns. | Scenarios requiring real-time summary statistics, such as real-time reports, advertisement click statistics, etc. |
-| **Duplicate Key Model**        | Data only supports append-only writes, without any deduplication or aggregation operations. Even identical data rows are retained. | Limited, only supports conditional deletion through DELETE statements. | Log collection, user behavior tracking, and other scenarios that only need appending without updates. |
+### 1.1 Comparison of Table Models and Update Capabilities
 
-### 1.2. Data Update Methods
+Doris provides three table models, with significant differences in support for updates and deletions. When making a selection, first confirm whether your business requires row-level updates or partial column updates.
 
-Doris provides two major categories of data update methods: **updating through data load** and **updating through DML statements**.
+| Table Model | Data Organization | Supported Update/Delete Methods | Typical Use Cases |
+| --- | --- | --- | --- |
+| Unique Key Model | Each row is identified by a unique primary key, deduplicated on write | UPSERT, partial column update, `UPDATE`, marked deletion, `DELETE` | Order status changes, user tag updates, CDC synchronization |
+| Aggregate Key Model | Value columns with the same Key are merged by aggregation function (SUM/MAX/MIN/REPLACE) | Updated through ingestion based on aggregation semantics; `DELETE` only supports Key column conditions | Real-time reports, click counts, and other aggregation scenarios |
+| Duplicate Key Model | Append-only writes, no deduplication or aggregation | Only supports `DELETE` | Logs, behavior tracking, and other append-only scenarios |
 
-#### 1.2.1. Updating Through Load (UPSERT)
+**Selection conclusion**: Choose the Unique Key model when row-level updates or partial column updates are required.
 
-This is Doris's **recommended high-performance, high-concurrency** update method, primarily targeting the **Unique Key Model**. All load methods (Stream Load, Broker Load, Routine Load, `INSERT INTO`) naturally support `UPSERT` semantics. When new data is loaded, if its primary key already exists, Doris will overwrite the old row data with the new row data; if the primary key doesn't exist, it will insert a new row.
+### 1.2 Update Path Selection
 
-![img](/images/update-overview/update-by-loading.png)
+The Unique Key model supports two update paths, which can be chosen based on data scale and business frequency:
 
-#### 1.2.2. Updating Through `UPDATE` DML Statements
+| Path | Applicable Scenarios | Recommended Write Method |
+| --- | --- | --- |
+| Ingest-based update (UPSERT) | High-frequency, large-batch updates; CDC synchronization; multi-source wide table assembly | Stream Load, Routine Load, Broker Load, `INSERT INTO` |
+| DML update (`UPDATE`) | Low-frequency, batch updates; conditional data refresh; cross-table associated updates | `UPDATE`, `INSERT INTO ... SELECT ...` |
 
-Doris supports standard SQL `UPDATE` statements, allowing users to update data based on conditions specified in the `WHERE` clause. This method is very flexible and supports complex update logic, such as cross-table join updates.
+#### 1.2.1 Update via Ingestion (UPSERT)
 
-![img](/images/update-overview/update-self.png)
+All ingestion methods (Stream Load, Broker Load, Routine Load, `INSERT INTO`) process data in the Unique Key model with UPSERT semantics by default:
+
+- If the primary key already exists: the old row is overwritten by the new row.
+- If the primary key does not exist: a new row is inserted.
+
+![Upsert](/images/next/data-operate/upsert.jpg)
+
+The behavior of ingest-based updates differs across table models. For details, see:
+
+- [Update via Ingestion in the Unique Key Model](./update-of-unique-model.md): Implement full-row Upsert and partial column updates through Stream Load, Routine Load, and other methods.
+- [Update via Ingestion in the Aggregate Model](./update-of-aggregate-model.md): The write semantics and available update methods for the Aggregate model.
+
+#### 1.2.2 Update via the UPDATE Statement
+
+Doris supports the standard SQL `UPDATE`, which can update data in Unique Key model tables based on `WHERE` conditions and supports cross-table associated updates.
 
 ```sql
 -- Simple update
 UPDATE user_profiles SET age = age + 1 WHERE user_id = 1;
 
--- Cross-table join update
+-- Cross-table associated update
 UPDATE sales_records t1
 SET t1.user_name = t2.name
 FROM user_profiles t2
 WHERE t1.user_id = t2.user_id;
 ```
 
-**Note**: The execution process of `UPDATE` statements involves first scanning data that meets the conditions, then rewriting the updated data back to the table. It's suitable for low-frequency, batch update tasks. **High-concurrency operations on** **`UPDATE`** **statements are not recommended** because concurrent `UPDATE` operations involving the same primary keys cannot guarantee data isolation.
+The execution process of `UPDATE` is: first scan the data that meets the conditions, then write the updated rows back. This is suitable for low-frequency, batch update scenarios.
 
-#### 1.2.3. Updating Through `INSERT INTO SELECT` DML Statements
+:::caution Note
+High-concurrency `UPDATE` operations on data with the same primary key are not recommended. Concurrent `UPDATE` operations cannot guarantee data isolation when they involve the same primary key.
+:::
 
-Since Doris provides UPSERT semantics by default, using `INSERT INTO SELECT` can also achieve similar update effects as `UPDATE`.
+For the syntax, typical usage, and limitations of the `UPDATE` statement, see: [Updating Data Using the UPDATE Command](./unique-update-sql.md).
 
-### 1.3. Data Deletion Methods
+#### 1.2.3 Update via INSERT INTO SELECT
 
-Similar to updates, Doris also supports deleting data through both load and DML statements.
+Since the Unique Key model uses UPSERT semantics by default, using `INSERT INTO ... SELECT ...` can also achieve the effect of `UPDATE`, which is suitable for batch write-back from other tables.
 
-#### 1.3.1. Mark Deletion Through Load
+### 1.3 Data Deletion Paths
 
-This is an efficient batch deletion method, primarily used for the **Unique Key Model**. Users can add a special hidden column `DORIS_DELETE_SIGN` when loading data. When the value of this column for a row is `1` or `true`, Doris will mark the corresponding data row with that primary key as deleted (the principle of delete sign will be explained in detail later).
+Doris provides two data deletion paths, with different implementation mechanisms across table models:
 
-```Plain
-// Stream Load load data, delete row with user_id = 2
-// curl --location-trusted -u user:passwd -H "columns:user_id, __DORIS_DELETE_SIGN__" -T delete.json http://fe_host:8030/api/db_name/table_name/_stream_load
+| Deletion Path | Supported Table Models | Description |
+| --- | --- | --- |
+| Marked deletion via ingestion | Unique Key Model | Writes a `__DORIS_DELETE_SIGN__ = 1` marker, with background Compaction performing physical cleanup |
+| DML deletion (`DELETE` / `TRUNCATE`) | All models | Delete data by condition or empty a table/partition |
 
-// delete.json content
-[
-    {"user_id": 2, "__DORIS_DELETE_SIGN__": "1"}
-]
-```
+For complete information, see [Data Deletion](../delete/delete-overview.md).
 
-#### 1.3.2. Deletion Through `DELETE` DML Statements
+## 2. Unique Key Model Implementation Mechanism
 
-Doris supports standard SQL `DELETE` statements that can delete data based on `WHERE` conditions.
+### 2.1 Merge-on-Write and Merge-on-Read
 
-- **Unique Key Model**: `DELETE` statements will rewrite the primary keys of rows meeting the conditions with deletion marks. Therefore, its performance is proportional to the amount of data to be deleted. The execution principle of `DELETE` statements on Unique Key Models is very similar to `UPDATE` statements, first reading the data to be deleted through queries, then writing it once more with deletion marks. Compared to `UPDATE` statements, DELETE statements only need to write Key columns and deletion mark columns, making them relatively lighter.
-- **Duplicate/Aggregate Models**: `DELETE` statements are implemented by recording a delete predicate. During queries, this predicate serves as a runtime filter to filter out deleted data. Therefore, `DELETE` operations themselves are very fast, almost independent of the amount of deleted data. However, note that **high-frequency** **`DELETE`** **operations on Duplicate/Aggregate Models will accumulate many runtime filters, severely affecting subsequent query performance**.
+The Unique Key model has two data merging strategies. Since Doris 2.1, Merge-on-Write is the default implementation.
 
-```sql
-DELETE FROM user_profiles WHERE last_login < '2022-01-01';
-```
+| Dimension | Merge-on-Write (MoW) | Merge-on-Read (MoR, legacy) |
+| --- | --- | --- |
+| Behavior on write | Deduplicates and merges on write, keeping only one latest record per primary key in storage | Retains multiple versions on write |
+| Query performance | Close to that of a Duplicate Key table without updates | Real-time merge during queries, taking approximately 3-10 times longer than MoW |
+| Write performance | Has merging overhead, slightly lower than MoR (about 10-20% for small batches, about 30-50% for large batches) | Close to a Duplicate Key table |
+| Resource consumption | Writes and background Compaction consume more CPU/memory | Queries consume more CPU/memory |
+| Applicable scenarios | Read-heavy with infrequent writes (recommended) | Write-heavy with infrequent reads (no longer recommended) |
 
-The following table provides a brief summary of using DML statements for deletion:
+Newly created tables use MoW by default, with no additional configuration required.
 
-|                    | **Unique Key Model** | **Aggregate Model**             | **Duplicate Model**  |
-| ------------------ | -------------------- | ------------------------------- | -------------------- |
-| Implementation     | Delete Sign          | Delete Predicate                | Delete Predicate     |
-| Limitations        | None                 | Delete conditions only for Key columns | None                 |
-| Deletion Performance | Moderate             | Fast                            | Fast                 |
+### 2.2 Sequence Column and Out-of-Order Data
 
-## 2. Deep Dive into Unique Key Model: Principles and Implementation
+In a distributed system, data may arrive out of order. For example, an order status changes successively to "Paid" and "Shipped", but due to network latency, the "Shipped" message may arrive at Doris before the "Paid" message.
 
-The Unique Key Model is the cornerstone of Doris's high-performance real-time updates. Understanding its internal working principles is crucial for fully leveraging its performance.
-
-### 2.1. Merge-on-Write (MoW) vs. Merge-on-Read (MoR)
-
-The Unique Key Model has two data merging strategies: Merge-on-Write (MoW) and Merge-on-Read (MoR). **Since Doris 2.1, MoW has become the default and recommended implementation**.
-
-| **Feature**        | **Merge-on-Write (MoW)**                                     | **Merge-on-Read (MoR) - (Legacy)**                           |
-| ------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| **Core Concept**   | Completes data deduplication and merging during data writing, ensuring only one latest record per primary key in storage. | Retains multiple versions during data writing, performs real-time merging during queries to return the latest version. |
-| **Query Performance** | Extremely high. No additional merge operations needed during queries, performance approaches that of non-updated detail tables. | Poor. Requires data merging during queries, taking about 3-10 times longer than MoW and consuming more CPU and memory. |
-| **Write Performance** | Has merge overhead during writing, with some performance loss compared to MoR (about 10-20% for small batches, 30-50% for large batches). | Fast writing speed, approaching detail tables.               |
-| **Resource Consumption** | Consumes more CPU and memory during writing and background Compaction. | Consumes more CPU and memory during queries.                |
-| **Use Cases**      | Most real-time update scenarios. Especially suitable for read-heavy, write-light businesses, providing ultimate query analysis performance. | Suitable for write-heavy, read-light scenarios, but no longer mainstream recommended. |
-
-The MoW mechanism trades a small cost during the writing phase for tremendous improvement in query performance, perfectly aligning with the OLAP system's "read-heavy, write-light" characteristics.
-
-### 2.2. Conditional Updates (Sequence Column)
-
-In distributed systems, out-of-order data arrival is a common problem. For example, an order status changes sequentially to "Paid" and "Shipped", but due to network delays, data representing "Shipped" might arrive at Doris before data representing "Paid".
-
-To solve this problem, Doris introduces the **Sequence Column** mechanism. Users can specify a column (usually a timestamp or version number) as the Sequence column when creating tables. When processing data with the same primary key, Doris will compare their Sequence column values and **always retain the row with the largest Sequence value**, thus ensuring eventual consistency even when data arrives out of order.
+The Sequence column mechanism solves this problem: when creating the table, specify a column (typically a timestamp or version number) as the Sequence column. When writing data with the same primary key, Doris always retains the row with the largest Sequence value.
 
 ```sql
 CREATE TABLE order_status (
@@ -127,38 +129,46 @@ CREATE TABLE order_status (
 UNIQUE KEY(order_id)
 DISTRIBUTED BY HASH(order_id)
 PROPERTIES (
-    "function_column.sequence_col" = "update_time" -- Specify update_time as Sequence column
+    "function_column.sequence_col" = "update_time" -- Specify update_time as the Sequence column
 );
 
--- 1. Write "Shipped" record (larger update_time)
+-- 1. Write the "Shipped" record (larger update_time)
 -- {"order_id": 1001, "status_name": "Shipped", "update_time": "2023-10-26 12:00:00"}
 
--- 2. Write "Paid" record (smaller update_time, arrives later)
+-- 2. Write the "Paid" record (smaller update_time, arrives later)
 -- {"order_id": 1001, "status_name": "Paid", "update_time": "2023-10-26 11:00:00"}
 
--- Final query result, retains record with largest update_time
+-- Final result: the record with the largest update_time is retained
 -- order_id: 1001, status_name: "Shipped", update_time: "2023-10-26 12:00:00"
 ```
 
-### 2.3. Deletion Mechanism (`DORIS_DELETE_SIGN`) Workflow
+For more information:
 
-The working principle of `DORIS_DELETE_SIGN` can be summarized as "logical marking, background cleanup".
+- For concurrency control capabilities such as the Sequence column, MVCC version management, and `UPDATE` concurrency parameters, see: [Concurrency Control of Updates in the Unique Key Model](./unique-update-concurrent-control.md).
+- When multiple data streams update different columns of the same wide table simultaneously, you can use Sequence Mapping to control the version order of each column independently. For details, see: [Multi-Stream Updates in the Unique Key Model](./multi-stream-update-for-unique-model.md).
 
-1. **Execute Deletion**: When users delete data through load or `DELETE` statements, Doris doesn't immediately remove data from physical files. Instead, it writes a new record for the primary key to be deleted, with the `DORIS_DELETE_SIGN` column marked as `1`.
-2. **Query Filtering**: When users query data, Doris automatically adds a filter condition `WHERE DORIS_DELETE_SIGN = 0` to the query plan, thus hiding all data marked for deletion from query results.
-3. **Background Compaction**: Doris's background Compaction process periodically scans data. When it finds a primary key with both normal records and deletion mark records, it will physically remove both records during the merge process, eventually freeing storage space.
+### 2.3 Workflow of the Delete Marker
 
-This mechanism ensures quick response to deletion operations while asynchronously completing physical cleanup through background tasks, avoiding performance impact on online business.
+`__DORIS_DELETE_SIGN__` uses a "logical marker, background cleanup" approach, divided into three stages:
 
-The following diagram shows how `DORIS_DELETE_SIGN` works:
+1. **Execute deletion**: When data is deleted via ingestion or the `DELETE` statement, Doris does not immediately remove the data from physical files. Instead, it writes a new record with `__DORIS_DELETE_SIGN__` marked as `1`.
+2. **Query filtering**: During queries, Doris automatically appends the filter condition `WHERE __DORIS_DELETE_SIGN__ = 0` to hide rows marked for deletion from the results.
+3. **Background Compaction**: When the Compaction process detects that a primary key has both a normal record and a delete marker record, it physically removes both records during the merge process, freeing storage space.
 
-![img](/images/update-overview/delete_sign_en.png)
+![Delete Sign](/images/next/data-operate/delete-sign.jpg)
 
 ### 2.4 Partial Column Update
 
-Starting from version 2.0, Doris supports powerful partial column update capabilities on Unique Key Models (MoW). When loading data, users only need to provide the primary key and columns to be updated; unprovided columns will maintain their original values unchanged. This greatly simplifies ETL processes for scenarios like wide table joining and real-time tag updates.
+Starting from version 2.0, the Unique Key model (MoW) supports partial column updates: during ingestion, you only need to provide the primary key and the columns to be updated. Columns that are not provided retain their original values.
 
-To enable this feature, you need to enable Merge-on-Write (MoW) mode when creating the Unique Key Model table. For INSERT INTO, set the session variable `enable_unique_key_partial_update` to `true` to enable partial column updates; for Stream Load and other import methods, configure the `partial_columns` parameter to enable partial column updates.
+How to enable:
+
+| Ingestion Method | Configuration to Enable |
+| --- | --- |
+| `INSERT INTO` | Set the session variable `enable_unique_key_partial_update = true` |
+| Stream Load and other ingestion methods | Set the `partial_columns` parameter to `true` |
+
+Merge-on-Write must be enabled when creating the table:
 
 ```sql
 CREATE TABLE user_profiles (
@@ -176,79 +186,75 @@ PROPERTIES (
 -- Initial data
 -- user_id: 1, name: 'Alice', age: 30, last_login: '2023-10-01 10:00:00'
 
--- load partial update data through Stream Load, only updating age and last_login
+-- Partial update via Stream Load, writing only age and last_login
 -- {"user_id": 1, "age": 31, "last_login": "2023-10-26 18:00:00"}
 
--- Updated data
+-- Data after update
 -- user_id: 1, name: 'Alice', age: 31, last_login: '2023-10-26 18:00:00'
 ```
 
-**Partial Column Update Principle Overview**
+In terms of implementation, partial column updates in the Unique Key model are not in-place updates. Instead, during ingestion, existing columns are read, missing fields are filled in, and the entire row is rewritten. This results in read amplification and write amplification: for example, when updating 10 fields of a 100-column wide table with similar field sizes, a 1 MB effective update triggers approximately 9 MB of data reads and 10 MB of data writes.
 
-Unlike traditional OLTP databases, Doris's partial column update is not in-place data update. To achieve better write throughput and query performance in Doris, partial column updates in Unique Key Models adopt an **"load-time missing field completion followed by full-row writing"** implementation approach.
+Performance recommendations:
 
-Therefore, using Doris's partial column update has **"read amplification"** and **"write amplification"** effects. For example, updating 10 fields in a 100-column wide table requires Doris to complete the missing 90 fields during the write process. Assuming each field has similar size, a 1MB 10-field update will generate approximately 9MB of data reading (completing missing fields) and 10MB of data writing (writing the complete row to new files) in the Doris system, resulting in about 9x read amplification and 10x write amplification.
+| Recommendation | Description |
+| --- | --- |
+| Use SSD | Partial column updates generate a large amount of random IO. The bottleneck on mechanical disks is significant, so SSDs (NVMe preferred) are recommended |
+| Enable row store for wide tables | For very wide tables, enabling row store is recommended, so a single IO can read the entire row. In column store mode, each missing field requires a separate IO |
 
-**Partial Column Update Performance Recommendations**
+For complete usage instructions (Stream Load, `INSERT INTO`, Flink Connector, etc.), see: [Column Update](./partial-column-update.md).
 
-Due to read and write amplification in partial column updates, and since Doris is a columnar storage system, the data reading process may generate significant random I/O, requiring high random read IOPS from storage. Since traditional mechanical disks have significant bottlenecks in random I/O, **if you want to use partial column update functionality for high-frequency writes, SSD drives are recommended, preferably NVMe interface**, which can provide the best random I/O support.
+## 3. Typical Business Scenarios
 
-Additionally, **if the table is very wide, enabling row storage is also recommended to reduce random I/O**. After enabling row storage, Doris will store an additional copy of row-based data alongside columnar storage. Since row-based data stores each row continuously, it can read entire rows with a single I/O operation (columnar storage requires N I/O operations to read all missing fields, such as the previous example of a 100-column wide table updating 10 columns, requiring 90 I/O operations per row to read all fields).
+### 3.1 Real-Time CDC Synchronization
 
-## 3. Typical Application Scenarios
+Tools such as Flink CDC capture the Binlog of upstream databases (MySQL, PostgreSQL, Oracle, etc.) and write it to Doris Unique Key model tables.
 
-Doris's powerful data update capabilities enable it to handle various demanding real-time analysis scenarios.
+![Flink CDC](/images/next/data-operate/cdc.jpg)
 
-### 3.1. CDC Real-time Data Synchronization
+Key capabilities:
 
-Capturing change data (Binlog) from upstream business databases (such as MySQL, PostgreSQL, Oracle) through tools like Flink CDC and writing it in real-time to Doris Unique Key Model tables is the most classic scenario for building real-time data warehouses.
+- **Whole-database synchronization**: Flink Doris Connector internally integrates Flink CDC, enabling end-to-end whole-database synchronization without manual table creation or field mapping.
+- **Consistency guarantee**: The following capabilities are used in combination to align with the upstream database state:
+    - The Unique Key model UPSERT handles `INSERT` / `UPDATE`.
+    - `__DORIS_DELETE_SIGN__` handles `DELETE`.
+    - The Sequence column (such as the Binlog timestamp) handles out-of-order data.
 
-- **Whole Database Synchronization**: Flink Doris Connector internally integrates Flink CDC, enabling automated, end-to-end whole database synchronization from upstream databases to Doris without manual table creation and field mapping configuration.
-- **Ensuring Consistency**: Utilizes the Unique Key Model's `UPSERT` capability to handle upstream `INSERT` and `UPDATE` operations, uses `DORIS_DELETE_SIGN` to handle `DELETE` operations, and combines with Sequence columns (such as timestamps in Binlog) to handle out-of-order data, perfectly replicating upstream database states and achieving millisecond-level data synchronization latency.
+### 3.2 Real-Time Wide Table Assembly
 
-![img](/images/update-overview/flink.png)
+Using partial column updates, you can complete multi-source wide table assembly directly within Doris without performing real-time joins in Flink:
 
-### 3.2. Real-time Wide Table Joining
+1. Create a Unique Key model wide table.
+2. Different data sources (basic information, behavior logs, transaction data, etc.) write to it in real time via Stream Load / Routine Load.
+3. Each data stream writes only the columns it is responsible for, for example:
+    - The user behavior stream updates `page_view_count` and `last_login_time`.
+    - The transaction stream updates `total_orders` and `total_amount`.
 
-In many analytical scenarios, data from different business systems needs to be joined into user-wide tables or product-wide tables. Traditional approaches use offline ETL tasks (such as Spark or Hive) for periodic (T+1) joining, which has poor real-time performance and high maintenance costs. Alternatively, using Flink for real-time wide table join calculations and writing joined data to databases typically requires significant computational resources.
+Each stream writes only the changed columns, which reduces IO overhead and avoids the resource consumption of real-time joins. For version control in multi-stream concurrent scenarios, see: [Multi-Stream Updates in the Unique Key Model](./multi-stream-update-for-unique-model.md).
 
-Using Doris's **partial column update** capability can greatly simplify this process:
+## 4. Usage Recommendations
 
-1. Create a Unique Key Model wide table in Doris.
-2. Write data streams from different sources (such as user basic information, user behavior data, transaction data, etc.) to this wide table in real-time through Stream Load or Routine Load.
-3. Each data stream only updates its relevant fields. For example, user behavior data streams only update `page_view_count`, `last_login_time`, and other fields; transaction data streams only update `total_orders`, `total_amount`, and other fields.
+### 4.1 General Recommendations
 
-This approach not only transforms wide table construction from offline ETL to real-time stream processing, greatly improving data freshness, but also reduces I/O overhead by only writing changed columns, improving write performance.
+| No. | Recommendation | Description |
+| --- | --- | --- |
+| 1 | Prefer ingest-based updates | For high-frequency, large-volume updates, prefer Stream Load and Routine Load over `UPDATE` DML |
+| 2 | Batch writes | Avoid high-frequency single-row `INSERT` (> 100 TPS), as each INSERT has transaction overhead. You can enable Group Commit to merge small batch commits |
+| 3 | Use high-frequency DELETE on Duplicate/Aggregate models with caution | Predicate accumulation affects subsequent query performance |
+| 4 | Use TRUNCATE PARTITION to delete an entire partition | When deleting an entire partition, `TRUNCATE PARTITION` is much more efficient than `DELETE` |
+| 5 | Execute UPDATE serially | Avoid concurrent execution of `UPDATE` tasks that may operate on the same primary key |
 
-## 4. Best Practices
+### 4.2 Unique Key Model in the Compute-Storage Decoupled Architecture
 
-Following these best practices can help you use Doris's data update functionality more stably and efficiently.
+Doris 3.0 introduces the compute-storage decoupled architecture. In this architecture, BE is stateless, and Merge-on-Write must maintain global state through the Meta Service to resolve write-write conflicts among ingestion, Compaction, and Schema Change. The Unique Key model MoW relies on a **distributed table lock** based on the Meta Service to ensure write consistency.
 
-### 4.1. General Performance Practices
+![Distribute Lock](/images/next/data-operate/distribute-lock.jpg)
 
-1. **Prioritize load Updates**: For high-frequency, large-volume update operations, prioritize load methods like Stream Load and Routine Load over `UPDATE` DML statements.
-2. **Batch Writes**: Avoid using `INSERT INTO` statements for individual high-frequency writes (such as > 100 TPS), as each `INSERT` incurs transaction overhead. If necessary, consider enabling Group Commit functionality to merge multiple small batch commits into one large transaction.
-3. **Use High-frequency** **`DELETE`** **Carefully**: On Duplicate and Aggregate models, avoid high-frequency `DELETE` operations to prevent query performance degradation.
-4. **Use** **`TRUNCATE PARTITION`** **for Partition Data Deletion**: If you need to delete entire partition data, use `TRUNCATE PARTITION`, which is much more efficient than `DELETE`.
-5. **Execute** **`UPDATE`** **Serially**: Avoid concurrent execution of `UPDATE` tasks that might affect the same data rows.
+High-frequency ingestion and Compaction can cause table lock contention. When using this architecture, the following are recommended:
 
-### 4.2. Unique Key Model Practices in Compute-Storage Separation Architecture
-
-Doris 3.0 introduces an advanced compute-storage separation architecture, bringing ultimate elasticity and lower costs. In this architecture, since BE nodes are stateless, a global state needs to be maintained through MetaService during the Merge-on-Write process to resolve write-write conflicts between load/compaction/schema change operations. The MoW implementation of Unique Key Models relies on a distributed table lock based on Meta Service to ensure write operation consistency, as shown in the following diagram:
-
-![img](/images/update-overview/cloud-mow.png)
-
-High-frequency loads and Compaction lead to frequent competition for table locks, so special attention should be paid to the following points:
-
-1. **Control Single Table load Frequency**: It's recommended to control the load frequency of a single Unique Key table to within **60 times/second**. This can be achieved by batching and adjusting load concurrency.
-2. **Reasonable Partition and Bucket Design**:
-   1. **Partitions**: Using time partitioning (such as by day or hour) ensures that single loads only update a few partitions, reducing the scope of lock competition.
-   2. **Buckets**: The number of buckets (Tablet count) should be reasonably set based on data volume, typically between 8-64. Too many Tablets will intensify lock competition.
-3. **Adjust Compaction Strategy**: In scenarios with very high write pressure, Compaction strategies can be appropriately adjusted to reduce Compaction frequency, thereby reducing lock conflicts between Compaction and load tasks.
-4. **Upgrade to Latest Version**: The Doris community is continuously optimizing Unique Key Model performance under compute-storage separation architecture. For example, the upcoming 3.1 release significantly optimizes the distributed table lock implementation. **Always recommend using the latest stable version** for optimal performance.
-
-## Conclusion
-
-Apache Doris, with its powerful, flexible, and efficient data update capabilities centered on the Unique Key Model, truly breaks through the bottleneck of traditional OLAP systems in terms of data freshness. Whether through high-performance loads implementing `UPSERT` and partial column updates, or using Sequence columns to ensure consistency of out-of-order data, Doris provides complete solutions for building end-to-end real-time analytical applications.
-
-By deeply understanding its core principles, mastering the applicable scenarios for different update methods, and following the best practices provided in this document, you will be able to fully unleash Doris's potential, making real-time data truly become a powerful engine driving business growth.
+1. **Control single-table ingestion frequency**: It is recommended that the ingestion frequency of a single Unique Key table does not exceed 60 times per second. This can be reduced by batching or adjusting concurrency.
+2. **Design partitions and buckets reasonably**:
+    - Partitions: Use time partitions (by day or by hour) so that each ingestion only updates a small number of partitions.
+    - Buckets: The number of buckets (number of Tablets) should match the data volume, typically between 8 and 64. Too many Tablets aggravate lock contention.
+3. **Adjust Compaction strategy**: When the write pressure is high, reduce the Compaction frequency to lessen lock conflicts with ingestion tasks.
+4. **Use a recent version**: Version 3.1 has made significant optimizations to the distributed table lock implementation. Using the latest stable version is recommended.

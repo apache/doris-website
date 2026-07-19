@@ -36,7 +36,7 @@ JSON_PARSE_ERROR_TO_VALUE (<json_str>, <default_json_value>)
 
 ## Usage Notes
 1. If `<json_str>` is NULL, the result is also NULL.
-2. `JSONB_PARSE`/`JSONB_PARSE_ERROR_TO_NULL`/`JSONB_PARSE_ERROR_TO_VALUE` have basically the same behavior, except that the results obtained when parsing fails are different.
+2. `JSON_PARSE`/`JSON_PARSE_ERROR_TO_NULL`/`JSON_PARSE_ERROR_TO_VALUE` have basically the same behavior, except that the results obtained when parsing fails are different.
 
 ## Examples
 1. Normal JSON string parsing
@@ -51,7 +51,7 @@ JSON_PARSE_ERROR_TO_VALUE (<json_str>, <default_json_value>)
     +-------------------------------------+
     ```
     ```sql
-    SELECT json_parse_error_to_null('{"k1":"v31","k2":300}','{}');
+    SELECT json_parse_error_to_null('{"k1":"v31","k2":300}');
     ```
     ```text
     +---------------------------------------------------+

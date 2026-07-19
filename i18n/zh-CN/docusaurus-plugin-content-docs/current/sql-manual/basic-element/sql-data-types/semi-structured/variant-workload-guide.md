@@ -312,4 +312,4 @@ SELECT variant_type(payload) FROM event_log;
 - [VARIANT](./VARIANT)
 - [导入 Variant 数据](../../../../data-operate/import/complex-types/variant)
 - [Storage Format V3](../../../../table-design/storage-format)
-- [SEARCH Function](../../../../ai/text-search/search-function)
+- [SEARCH Function](../../../../table-design/index/inverted-index/search-function)

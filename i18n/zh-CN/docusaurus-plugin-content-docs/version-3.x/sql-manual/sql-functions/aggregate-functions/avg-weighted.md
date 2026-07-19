@@ -30,6 +30,12 @@ AVG_WEIGHTED(<x>, <weight>)
 ## 举例
 
 ```sql
+-- setup
+create table test_doris_avg_weighted(k1 int, k2 int) distributed by hash(k1) buckets 1 properties ("replication_num"="1");
+insert into test_doris_avg_weighted values (10,100),(20,200),(30,300),(40,400);
+```
+
+```sql
 select k1,k2 from test_doris_avg_weighted;
 ```
 

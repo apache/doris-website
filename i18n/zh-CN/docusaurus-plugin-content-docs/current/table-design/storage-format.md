@@ -1,75 +1,87 @@
 ---
 {
-    "title": "存储格式 V3",
-    "language": "zh-CN"
+    "title": "宽表存储格式 V3",
+    "language": "zh-CN",
+    "description": "Doris 4.1.0 起推出 V3 宽表存储格式，列元数据按需加载，宽表 Segment 打开提速 16 倍、内存占用降低 60 倍。",
+    "keywords": [
+        "宽表存储格式",
+        "Storage Format V3",
+        "VARIANT 宽表查询",
+        "Segment 打开慢",
+        "宽表查询慢",
+        "宽表内存占用高",
+        "列元数据按需加载",
+        "对象存储查询延迟"
+    ]
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+<!-- 知识类型: 特性介绍 / 性能优化 / 配置参数 -->
+<!-- 适用场景: 宽表查询调优 / VARIANT 列性能优化 / 对象存储冷查询 -->
 
-  http://www.apache.org/licenses/LICENSE-2.0
+:::tip
+本功能自 Apache Doris 4.1.0 版本开始支持。在建表 `PROPERTIES` 中设置 `"storage_format" = "V3"` 即可启用。
+:::
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+**宽表存储格式 V3** 针对列数极多的表对 Segment 元数据布局做了重构。通过将列元数据从 Footer 中拆出、按需加载，显著降低 Segment 打开延迟与内存占用。
 
-存储格式 V3 是 Segment V2 的继任者。核心变化：列元数据不再打包在 Segment Footer 中，而是存储到文件内的独立区域。这去掉了 V2 在列数达到几百甚至几千时遇到的元数据加载瓶颈。
+## 适用场景
 
-## 核心优化点
+如果你的查询观察到 **"Segment 打开"阶段非常慢、内存占用异常高**，且符合下表中任一场景，建议启用 V3 存储格式：
 
-### 外部列元数据（External Column Meta）
+| 用户场景                                | 典型表现                                              | 是否推荐 V3 |
+| --------------------------------------- | ----------------------------------------------------- | ----------- |
+| 宽表查询（几百至几千列）                | 即使只查少数列，Segment 打开仍占用大量时间和内存      | 推荐        |
+| 含 `VARIANT` 列的表                     | 子列动态展开后，实际参与存储的列数远超表面定义        | 推荐        |
+| 部署在对象存储 / 分层存储               | 数据放在 S3、OSS 等远端存储上，冷查询延迟敏感         | 推荐        |
+| 普通表（几十列以内）                    | Segment 打开开销可忽略                                | 无需切换    |
 
-V2 中，所有列的 `ColumnMetaPB` 都放在 Segment Footer 里。当表有几百甚至几千列时，Footer 可以膨胀到几 MB。打开一个 Segment 就要加载和反序列化全部元数据，即使查询只需读两列。
+> **典型痛点示例**：在一张 7,000 列、共 10,000 个 Segment 的宽表上，打开 Segment 需要约 **65 秒**，过程中峰值内存占用达 **60 GB**。这部分开销与查询是否真的用到这些列无关，属于纯粹的"上车成本"。
 
-V3 将 `ColumnMetaPB` 从 Footer 移到文件内的独立区域，Footer 只保留轻量指针。
+## 问题根因
 
-<img src="/images/variant/storage-format-v3-layout.png" alt="存储格式 V2 vs V3 — Segment 文件布局" width="720" />
+旧格式把所有列的元数据（`ColumnMetaPB`）集中打包在 Segment 文件末尾的 Footer 里，导致：
 
-结果：系统先加载一个很小的 Footer，再按需拉取查询所需列的元数据。在对象存储（S3、OSS）上，冷启动延迟大幅降低。
+1. **元数据全量加载**：打开 Segment 必须先把整个 Footer 反序列化，哪怕查询只用到两列也要付全部代价。
+2. **Footer 体积膨胀**：当列数到达几千时，Footer 本身就能膨胀到几 MB。
+3. **远端存储放大效应**：对象存储上的网络延迟与高读取成本使上述开销进一步被放大。
 
-### 数值类型 Plain 编码
+换言之，即使一条 SQL 只查询 2 个列，Doris 也要先把这个 Segment 内**所有列的元数据**全部读到内存里、反序列化后才能开始扫描。列越多、Segment 越多，这部分开销越夸张。
 
-V3 将数值类型（`INT`、`BIGINT` 等）的默认编码从 BitShuffle 换成 `PLAIN_ENCODING`（原始二进制存储）。配合 LZ4 或 ZSTD 压缩，读取速度更快、CPU 开销更低，在大批量扫描时优势明显。
+## V3 关键优化
 
-### 二进制 Plain 编码 V2
+V3 从三个维度对存储格式进行重构：
 
-V3 为字符串和 JSONB 引入 `BINARY_PLAIN_ENCODING_V2`。新布局采用 `[长度(varuint)][原始数据]` 流式结构，去掉了 V2 需要的末尾偏移表，存储更紧凑。
+### 优化一：列元数据按需加载
 
-## 性能数据
+V3 把列元数据从 Footer 中拆出，放到文件中独立的区域，Footer 只保留指向各列元数据的轻量指针。
 
-以下测试在一张含 7,000 列的宽表上进行，共 10,000 个 Segment。
+![宽表存储格式 — Segment 文件布局对比](/images/variant/storage-format-v3-layout.png)
 
-<img src="/images/variant/storage-format-v3-benchmark.png" alt="存储格式 V3 — 元数据打开效率" width="600" />
+打开 Segment 时，系统只读一个精简的 Footer；真正用到哪些列，再去拉取对应列的元数据。**这是宽表场景下性能提升的主要来源**，在对象存储上尤为明显。
 
-| 指标 | V2 | V3 | 提升 |
-|---|---:|---:|---|
-| Segment 打开时间 | 65 s | 4 s | 快 16 倍 |
-| 打开时内存占用 | 60 GB | < 1 GB | 降低 60 倍 |
+### 优化二：数值类型默认使用 Plain 编码
 
-V2 必须反序列化整个 Footer（包含全部列元数据），即使查询只读几列，也会产生大量无效 I/O 和内存浪费。V3 只读一个精简 Footer，再按需加载列元数据。
+V3 将 `INT`、`BIGINT` 等数值类型的默认编码从 BitShuffle 切换为 `PLAIN_ENCODING`（原始二进制）。配合 LZ4 / ZSTD 压缩后，在大批量扫描时读取更快、CPU 开销更低。
 
-## 什么时候用 V3
+### 优化三：字符串使用更紧凑的 Plain 编码
 
-- 宽表——列数达到几百或几千。
-- 使用 `VARIANT` 的表——子列展开会让实际列数进一步增长。
-- 使用对象存储或分层存储，元数据加载延迟敏感。
+针对字符串和 JSONB，V3 引入 `BINARY_PLAIN_ENCODING_V2`，采用 `[长度(varuint)][原始数据]` 的流式布局，去掉了旧编码尾部需要的偏移表，存储更紧凑。
 
-列数少的普通表，V2 也够用。V3 在列数量大的场景收益最明显。
+## 实测效果
 
-## 使用方式
+测试条件：一张 7,000 列的宽表，共 10,000 个 Segment。
 
-建表时在 `PROPERTIES` 中指定 `storage_format` 为 `V3`：
+![宽表存储格式 — 元数据打开效率](/images/variant/storage-format-v3-benchmark.png)
+
+| 指标             |  旧格式 |  V3 格式 | 提升幅度       |
+| ---------------- | -----: | ------: | -------------- |
+| Segment 打开时间 |   65 s |     4 s | **快 16 倍**   |
+| 打开时内存占用   |  60 GB |  < 1 GB | **降低 60 倍** |
+
+## 如何启用
+
+在建表语句的 `PROPERTIES` 中显式指定 `storage_format` 为 `V3`：
 
 ```sql
 CREATE TABLE table_v3 (
@@ -82,3 +94,12 @@ PROPERTIES (
     "storage_format" = "V3"
 );
 ```
+
+## 适用建议
+
+- **建议启用**：列数较多（几百及以上）的宽表、含 `VARIANT` 列的表、部署在对象存储或分层存储上的表。
+- **无需切换**：列数较少（几十列以内）的普通表，旧格式已经足够。
+
+## 相关文档
+
+- [数据压缩](./column-compression)：了解 V3 在数值与字符串类型上的编码与压缩协同优化。

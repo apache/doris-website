@@ -6,7 +6,7 @@
 }
 ---
 
-Doris 支持通过 [Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide) 兼容框架，使用 [TPCH Connector](https://trino.io/docs/current/connector/tpch.html) 来快速构建 TPCH 测试集。
+Doris 支持通过 [Trino Connector](https://doris.apache.org/community/developer-guide/data-source-extension/trino-connector-developer-guide) 兼容框架，使用 [TPCH Connector](https://trino.io/docs/current/connector/tpch.html) 来快速构建 TPCH 测试集。
 
 结合 Hive/Iceberg 表的数据写回功能，您可以快速通过 Doris 构建 Doris、Hive、Iceberg 表的 TPCH 测试数据集。
 

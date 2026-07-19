@@ -86,9 +86,9 @@ SELECT WEEKS_SUB('2025-10-10 11:22:33.123+07:00', 1);
 
 -- The calculation result exceeds the lower bound of the datetime range.
 SELECT WEEKS_SUB('0000-01-01', 1);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation weeks_add of 0000-01-01, -1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation weeks_sub of 0000-01-01, -1 out of range
 
 -- The calculation result exceeds the upper bound of the datetime range.
 SELECT WEEKS_SUB('9999-12-31', -1);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation weeks_add of 9999-12-31, 1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation weeks_sub of 9999-12-31, 1 out of range
 ```

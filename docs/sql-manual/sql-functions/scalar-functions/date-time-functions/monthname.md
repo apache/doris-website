@@ -60,7 +60,8 @@ SELECT MONTHNAME(NULL) AS result;
 | NULL   |
 +--------+
 
----Control the output language by setting `lc_time_names`SET lc_time_names='zh_CN';
+-- Control the output language by setting `lc_time_names`
+SET lc_time_names='zh_CN';
 SELECT MONTHNAME('2023-07-13 22:28:18') AS result;
 +--------+
 | result |

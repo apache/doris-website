@@ -1,56 +1,102 @@
 ---
 {
-    "title": "Concurrency Control for Updates in the Primary Key Model",
+    "title": "Concurrent Update Control for the Unique Key Model",
     "language": "en",
-    "description": "Doris employs Multi-Version Concurrency Control (MVCC) to handle concurrent updates. Each data write operation is assigned a write transaction,"
+    "description": "Apache Doris concurrent update control guide for the Unique Key model: version management based on MVCC, replacement order control for out-of-order data through the Sequence column, and configurable UPDATE concurrency."
 }
 ---
 
-## Overview
+<!-- Knowledge type: Feature description + Procedure -->
+<!-- Applicable scenarios: High-concurrency data ingestion / Out-of-order updates on the Unique Key model / UPDATE transaction control -->
 
-Doris employs Multi-Version Concurrency Control (MVCC) to handle concurrent updates. Each data write operation is assigned a write transaction, ensuring atomicity (i.e., the write operation either fully succeeds or fully fails). Upon committing the write transaction, the system assigns it a version number. In the Unique Key model, when loading data multiple times, if there are duplicate primary keys, Doris determines the overwrite order based on the version number: data with a higher version number will overwrite data with a lower version number.
+Under the Unique Key model, Doris provides comprehensive concurrent update control. It mainly addresses the following three typical scenarios:
 
-In some scenarios, users may need to adjust the effective order of data by specifying a sequence column in the table creation statement. For example, when synchronizing data to Doris concurrently through multiple threads, data from different threads may arrive out of order. In this case, old data arriving later may incorrectly overwrite new data. To solve this problem, users can assign a lower sequence value to old data and a higher sequence value to new data, allowing Doris to correctly determine the update order based on the user-provided sequence values.
+| User scenario | Pain point | Doris solution |
+| --- | --- | --- |
+| Multiple imports of the same primary key | Determining which record finally takes effect under concurrent imports | MVCC (Multi-Version Concurrency Control), where the version number determines the overwrite order |
+| Out-of-order arrival from multi-threaded synchronization | Older data arrives later and incorrectly overwrites newer data | Sequence column: the user specifies the replacement order, and the row with the larger sequence value wins |
+| Concurrent UPDATEs on the same table | Row-level updates may produce dirty data, so they run serially by default | A table-level lock guarantees the Serializable isolation level, with an option to lift the concurrency limit |
 
-Additionally, the `UPDATE` statement differs significantly from updates implemented through data loads at the underlying mechanism level. The `UPDATE` operation involves two steps: reading the data to be updated from the database and writing the updated data. By default, the `UPDATE` statement provides transaction capabilities with Serializable isolation level through table-level locks, meaning multiple `UPDATE` operations can only be executed serially. Users can also bypass this restriction by adjusting the configuration, as detailed in the following sections.
+The following sections describe the working principles and usage of these mechanisms.
+
+## MVCC Multi-Version Concurrency Control
+
+<!-- Knowledge type: Concept description -->
+
+Doris uses Multi-Version Concurrency Control (MVCC) to manage concurrent updates:
+
+- Each data write operation is assigned a write transaction, which guarantees the atomicity of the write (either fully succeeds or fully fails).
+- When the write transaction commits, the system assigns it a version number.
+- When you import data multiple times into a Unique Key table, if duplicate primary keys exist, Doris determines the overwrite order by the version number: **data with a higher version number overwrites data with a lower version number**.
 
 ## UPDATE Concurrency Control
 
-By default, concurrent `UPDATE` operations on the same table are not allowed.
+<!-- Knowledge type: Configuration parameter -->
+<!-- Applicable scenarios: Concurrent execution of multiple UPDATE statements -->
 
-The main reason is that Doris currently supports row updates, which means that even if the user declares `SET v2 = 1`, all other value columns will also be overwritten (even if the values have not changed).
+### Default Behavior
 
-This can lead to a problem where if two `UPDATE` operations update the same row simultaneously, the behavior may be indeterminate, potentially resulting in dirty data.
+By default, Doris **does not allow** multiple `UPDATE` operations to run concurrently on the same table.
 
-However, in practical applications, if users can ensure that concurrent updates do not operate on the same row simultaneously, they can manually enable concurrent updates. By modifying the FE configuration `enable_concurrent_update`, setting this configuration value to `true` will disable transaction guarantees for update commands.
+The reason is that Doris currently supports row-level updates: even if you only declare `SET v2 = 1`, all other Value columns are also overwritten (although their values do not change). If two `UPDATE` operations update the same row at the same time, the behavior is undefined and there is a risk of dirty data.
+
+For this reason, the `UPDATE` statement provides Serializable isolation by default through a table-level lock, so multiple `UPDATE` operations can only run serially.
+
+### Lifting the Concurrency Limit
+
+In real-world use, if you can guarantee that concurrent updates will not operate on the same row at the same time, you can lift the concurrency limit by changing an FE configuration:
+
+| Configuration item | Default value | Description |
+| --- | --- | --- |
+| `enable_concurrent_update` | `false` | When set to `true`, allows `UPDATE` to run concurrently, but no longer provides transaction guarantees |
 
 ## Sequence Column
 
-The Unique model is mainly for scenarios requiring unique primary keys, ensuring the uniqueness constraint of the primary key. The replacement order of data loaded in the same batch or different batches is not guaranteed. Without a guaranteed replacement order, the specific data ultimately loaded into the table is uncertain.
+<!-- Knowledge type: Feature description -->
+<!-- Applicable scenarios: Multi-threaded concurrent synchronization / Out-of-order data ingestion -->
 
-To solve this problem, Doris supports sequence columns. By specifying a sequence column during loading, data with the same key column is replaced based on the sequence column value, with larger values replacing smaller ones, and vice versa. This method allows users to control the replacement order.
+### Why You Need a Sequence Column
 
-In implementation, Doris adds a hidden column **__DORIS_SEQUENCE_COL__**, whose type is specified by the user during table creation. The specific value of this column is determined during data loading, and the effective row for the same key column is decided based on this value.
+The Unique model is mainly designed for scenarios that require unique primary keys, and it can guarantee primary key uniqueness. However, in the following situations, relying on the import version number alone is not enough:
+
+- When you synchronize data into Doris with multiple concurrent threads, data from different threads may arrive out of order.
+- Older data may arrive later and incorrectly overwrite newer data.
+- When data with the same primary key is imported in the same batch or across different batches, the replacement order is not guaranteed, so the final result is non-deterministic.
+
+To solve this, Doris supports specifying a **Sequence column** at import time. For rows with the same Key columns, replacement is performed based on the Sequence column value: **a larger value replaces a smaller value**, and the reverse does not trigger replacement. This puts the decision about ordering in your hands.
+
+In implementation, Doris adds a hidden column `__DORIS_SEQUENCE_COL__`. The column type is specified by the user when creating the table, and the value is determined at import time. Doris then uses this value to decide which row wins among rows that share the same Key columns.
 
 :::caution Note
-The sequence column currently only supports the Unique model.
+The Sequence column is currently only supported by the Unique model.
 :::
 
-### Enabling Sequence Column Support
+### Enabling the Sequence Column
 
-When creating a new table, if `function_column.sequence_col` or `function_column.sequence_type` is set, the new table will support sequence columns.
+You can enable it in the following ways:
 
-For a table that does not support sequence columns, you can enable this feature using the following statement: `ALTER TABLE example_db.my_table ENABLE FEATURE "SEQUENCE_LOAD" WITH PROPERTIES ("function_column.sequence_type" = "Date")`.
+| Scenario | Operation |
+| --- | --- |
+| Enable on a new table | Set `function_column.sequence_col` or `function_column.sequence_type` in the `PROPERTIES` of the `CREATE TABLE` statement |
+| Enable on an existing table | Run `ALTER TABLE example_db.my_table ENABLE FEATURE "SEQUENCE_LOAD" WITH PROPERTIES ("function_column.sequence_type" = "Date")` |
+| Check whether it is enabled | Run `SET show_hidden_columns=true`, then run `desc tablename`. If the output contains `__DORIS_SEQUENCE_COL__`, it is enabled |
 
-To check if a table supports sequence columns, you can set a session variable to display hidden columns `SET show_hidden_columns=true`, then use `desc tablename`. If the output includes the `__DORIS_SEQUENCE_COL__` column, it is supported; otherwise, it is not.
+The two properties differ as follows:
+
+| Property | Meaning | Whether the schema must contain a corresponding column |
+| --- | --- | --- |
+| `function_column.sequence_col` | Maps the Sequence column to an existing column in the table | Yes |
+| `function_column.sequence_type` | Specifies only the type of the Sequence column, stored in a hidden column | No |
+
+Supported column types: integer types, `DATE`, and `DATETIME`. **The column type cannot be changed once the table is created.**
 
 ### Usage Example
 
-Below is an example of using Stream Load:
+The following example uses Stream Load to demonstrate the full workflow.
 
-**1. Create a table supporting sequence columns**
+#### 1. Create a Table That Supports the Sequence Column
 
-Create a unique model `test_table` and map the sequence column to the `modify_date` column.
+Create the Unique model table `test_table` and map the Sequence column to the `modify_date` column in the table:
 
 ```sql
 CREATE TABLE test.test_table
@@ -70,9 +116,7 @@ PROPERTIES(
 );
 ```
 
-The `sequence_col` specifies the mapping of the sequence column to a column in the table. This column can be of integer or date/time type (DATE, DATETIME) and cannot be changed after creation.
-
-The table structure is as follows:
+The resulting table schema looks like this:
 
 ```sql
 MySQL>  desc test_table;
@@ -87,19 +131,17 @@ MySQL>  desc test_table;
 +-------------+--------------+------+-------+---------+---------+
 ```
 
-In addition to specifying the sequence column through column mapping, Doris also supports creating a sequence column based on a specified type. This method does not require a column in the schema for mapping. The syntax is as follows:
+If you do not want this column to appear in the table schema, use `function_column.sequence_type` to specify the type instead:
 
-```Plain
+```sql
 PROPERTIES (
-    "function_column.sequence_type" = 'Date',
+    "function_column.sequence_type" = 'Date'
 );
 ```
 
-The `sequence_type` specifies the type of the sequence column, which can be integer or date/time type (DATE, DATETIME).
+#### 2. Import Data and Verify the Sequence Behavior
 
-**2. Load Data:**
-
-Using column mapping (`function_column.sequence_col`) to specify the sequence column does not require modifying any parameters. Below is an example of loading data using Stream Load:
+When using the column-mapping approach (`function_column.sequence_col`), the import command does not need any extra parameters. Use Stream Load to import the following data:
 
 ```Plain
 1	2020-02-22	1	2020-02-21	a
@@ -110,13 +152,13 @@ Using column mapping (`function_column.sequence_col`) to specify the sequence co
 1	2020-02-22	1	2020-02-24	b
 ```
 
-Stream load command:
+Stream Load command:
 
 ```shell
 curl --location-trusted -u root: -T testData http://host:port/api/test/test_table/_stream_load
 ```
 
-Result:
+Query result:
 
 ```sql
 MySQL> select * from test_table;
@@ -127,21 +169,26 @@ MySQL> select * from test_table;
 +---------+------------+----------+-------------+---------+
 ```
 
-In this load job, the value '2020-03-05' in the sequence column (modify_date) is the largest, so the keyword column retains 'c'.
+Because `2020-03-05` is the largest value in the Sequence column (`modify_date`), the `keyword` column finally keeps `c`.
 
-If the sequence column is specified using `function_column.sequence_col` during table creation, the sequence column mapping must be specified during load.
+#### 3. Specifying the Sequence Column in Different Import Methods
 
-**1. Stream Load**
+When you use `function_column.sequence_type` at table creation (that is, when the Sequence column is not directly mapped to a column in the table), you must explicitly specify the mapping from the Sequence column to a data column at import time.
 
-In Stream Load, specify the sequence column mapping in the header:
+**Stream Load**
+
+In the header, use `function_column.sequence_col` to specify the `source_sequence` mapping for the hidden column:
 
 ```shell
-curl --location-trusted -u root -H "columns: k1,k2,source_sequence,v1,v2" -H "function_column.sequence_col: source_sequence" -T testData http://host:port/api/testDb/testTbl/_stream_load
+curl --location-trusted -u root \
+    -H "columns: k1,k2,source_sequence,v1,v2" \
+    -H "function_column.sequence_col: source_sequence" \
+    -T testData http://host:port/api/testDb/testTbl/_stream_load
 ```
 
-**2. Broker Load**
+**Broker Load**
 
-Set the hidden column mapping in the `ORDER BY` clause:
+Specify the `source_sequence` field for the hidden column mapping in the `ORDER BY` clause:
 
 ```sql
 LOAD LABEL db1.label1
@@ -163,15 +210,15 @@ PROPERTIES
 );
 ```
 
-**3. Routine Load**
+**Routine Load**
 
-The mapping method is the same as above. Example:
+The mapping is the same as above. Example:
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl 
     [WITH MERGE|APPEND|DELETE]
     COLUMNS(k1, k2, source_sequence, v1, v2),
-    WHERE k1 > 100 and k2 like "%doris%"
+    WHERE k1  100 and k2 like "%doris%"
     [ORDER BY source_sequence]
     PROPERTIES
     (
@@ -190,16 +237,16 @@ CREATE ROUTINE LOAD example_db.test1 ON example_tbl
     );
 ```
 
-**3. Ensuring Replacement Order**
+#### 4. Verify the Replacement Order Guarantee
 
-After completing the above steps, load the following data:
+Continuing from the previous example, import the following data (where all Sequence values are smaller than the existing maximum `2020-03-05`):
 
 ```Plain
 1	2020-02-22	1	2020-02-22	a
 1	2020-02-22	1	2020-02-23	b
 ```
 
-Query data:
+Query result:
 
 ```sql
 MySQL [test]> select * from test_table;
@@ -210,16 +257,16 @@ MySQL [test]> select * from test_table;
 +---------+------------+----------+-------------+---------+
 ```
 
-In this load, the sequence column value '2020-03-05' is the largest, so the keyword column retains 'c'.
+Because all Sequence values in this import are smaller than the existing maximum `2020-03-05`, the result remains unchanged.
 
-**4. Try Loading the Following Data**
+Now import data with a larger Sequence value:
 
 ```Plain
 1	2020-02-22	1	2020-02-22	a
 1	2020-02-22	1	2020-03-23	w
 ```
 
-Query data:
+Query result:
 
 ```sql
 MySQL [test]> select * from test_table;
@@ -230,22 +277,30 @@ MySQL [test]> select * from test_table;
 +---------+------------+----------+-------------+---------+
 ```
 
-This time, the data in the table is replaced. In summary, during the load process, the sequence column values of all batches are compared, and the record with the largest value is loaded into the Doris table.
+Because the Sequence value `2020-03-23` of the newly imported data is greater than the existing maximum `2020-03-05`, the original data is replaced.
 
-### Note
+**Conclusion**: During imports, Doris compares the Sequence column values across all batches and **writes the record with the largest value into the table**.
 
-1. To prevent misuse, in Stream Load/Broker Load load tasks and row update insert statements, users must explicitly specify the sequence column (unless the default value of the sequence column is CURRENT_TIMESTAMP), otherwise, the following error message will be received:
+### Usage Notes
 
-```Plain
-Table test_tbl has sequence column, need to specify the sequence column
-```
+<!-- Knowledge type: Caveats -->
 
-2. When you use the Insert statement to insert data, you must display the specified sequence column; otherwise, the preceding exception is reported. In order to facilitate the use of Doris in some scenarios (table replication, internal data migration, etc.), Doris can be controlled by the session parameter to close the check constraint on the sequence column:
+1. **The Sequence column must be specified explicitly**: in import jobs such as Stream Load and Broker Load, as well as in row-update `INSERT` statements, you must explicitly specify the Sequence column (unless its default value is `CURRENT_TIMESTAMP`). Otherwise, you will receive the following error:
 
-```sql
-set require_sequence_in_insert = false;
-```
+    ```Plain
+    Table test_tbl has sequence column, need to specify the sequence column
+    ```
 
-3. Since version 2.0, Doris supports partial column update capability for Unique Key tables with Merge-on-Write implementation. In partial column update loads, users can update only a portion of the columns each time, so it is not necessary to include the sequence column. If the load task submitted by the user includes the sequence column, the behavior is unaffected; if the load task does not include the sequence column, Doris will use the sequence column from the matching historical data as the value of the sequence column for the updated row. If there is no matching key column in the historical data, null or the default value will be used.
+2. **Disabling the Sequence column constraint check**: in scenarios such as table replication or internal data migration, you can disable the mandatory Sequence column check on `INSERT` statements through a session variable:
 
-4. During concurrent loads, Doris uses the MVCC mechanism to ensure data correctness. If two batches of data loads update different columns of the same key, the load task with the higher system version will use the data row written by the lower version load task to fill in the same key after the lower version load task succeeds.
+    ```sql
+    set require_sequence_in_insert = false;
+    ```
+
+3. **Compatibility with partial column updates**: starting from version 2.0, the Merge-on-Write implementation of Doris Unique Key tables supports partial column updates. In a partial-column-update import, only some columns can be updated each time, so **the Sequence column is not required**:
+
+    - If the import job includes the Sequence column, the behavior is unchanged.
+    - If the import job does not include the Sequence column, Doris uses the Sequence column value from the matched historical data as the Sequence column value of the updated row.
+    - If no record with the same Key exists in the historical data, Doris automatically fills in `null` or the default value.
+
+4. **Correctness guarantee under concurrent imports**: when concurrent imports occur, Doris uses MVCC to guarantee data correctness. If two batches of imports both update different columns of the same Key, after the import job with the lower version number succeeds, the import job with the higher version number uses the rows written by the lower-version job for the same Key to fill in the missing values.

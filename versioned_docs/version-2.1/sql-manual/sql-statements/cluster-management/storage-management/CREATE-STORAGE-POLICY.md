@@ -18,8 +18,8 @@ To create a storage policy, you must first create a storage resource, and then a
 CREATE STORAGE POLICY <policy_name>
 PROPERTIES(
     "storage_resource" = "<storage_resource_name>"
-    [{， "cooldown_datetime" = "<cooldown_datetime>"
-    ｜ ， "cooldown_ttl" = "<cooldown_ttl>"}]
+    [{, "cooldown_datetime" = "<cooldown_datetime>"
+    | , "cooldown_ttl" = "<cooldown_ttl>"}]
 );
 ```
 ## Required Parameters

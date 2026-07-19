@@ -30,6 +30,7 @@ The user who executes this SQL command must have at least the following permissi
 | ADMIN_PRIV | Database | NO Streaming | Currently only supports **ADMIN** permissions to perform this operation |
 | LOAD_PRIV | Database | Streaming |Supports **LOAD** permissions to perform this operation |
 
+
 ## Examples
 
 - Delete the job named example.

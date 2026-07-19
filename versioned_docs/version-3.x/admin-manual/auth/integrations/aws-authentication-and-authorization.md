@@ -120,7 +120,7 @@ After completing all configurations in Step 1, you will obtain `access_key` and 
   WITH S3
   (
       "provider" = "S3",
-      "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+      "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
       "s3.access_key" = "<your-access-key>",
       "s3.secret_key" = "<your-secrety-key>"
@@ -136,7 +136,7 @@ After completing all configurations in Step 1, you will obtain `access_key` and 
   SELECT * FROM S3 (
       'uri' = 's3://your_bucket/path/to/tvf_test/test.parquet',
       'format' = 'parquet',
-      's3.endpoint' = 's3.us-east-1.amazonaws.com',
+      's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
       's3.region' = 'us-east-1',
       "s3.access_key" = "<your-access-key>",
       "s3.secret_key"="<your-secret-key>"
@@ -149,7 +149,7 @@ After completing all configurations in Step 1, you will obtain `access_key` and 
       'type' = 'iceberg',
       'iceberg.catalog.type' = 'hadoop',
       'warehouse' = 's3://your_bucket/dir/key',
-      's3.endpoint' = 's3.us-east-1.amazonaws.com',
+      's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
       's3.region' = 'us-east-1',
       "s3.access_key" = "<your-access-key>",
       "s3.secret_key"="<your-secret-key>"
@@ -161,7 +161,7 @@ After completing all configurations in Step 1, you will obtain `access_key` and 
 CREATE STORAGE VAULT IF NOT EXISTS s3_demo_vault
 PROPERTIES (
     "type" = "S3",
-    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.bucket" = "<your-bucket>",
     "s3.access_key" = "<your-access-key>",
@@ -179,7 +179,7 @@ PROPERTIES (
     "column_separator"="\\x07", 
     "line_delimiter" = "\\x07"
 ) WITH S3 (
-    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.access_key" = "<your-access-key>",
     "s3.secret_key"="<your-secret-key>",
@@ -193,7 +193,7 @@ WITH S3
 ON LOCATION "s3://your_bucket/s3_repo"
 PROPERTIES
 (
-    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.access_key" = "<your-access-key>",
     "s3.secret_key"="<your-secret-key>"
@@ -205,7 +205,7 @@ PROPERTIES
 CREATE RESOURCE "remote_s3"
 PROPERTIES
 (
-    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.bucket" = "<your-bucket>",
     "s3.access_key" = "<your-access-key>",
@@ -397,7 +397,7 @@ Common important key parameters:​​
   WITH S3
   (
       "provider" = "S3",
-      "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+      "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
       "s3.role_arn" = "<your-bucket-role-arn>",
       "s3.external_id" = "<your-external-id>"      -- option parameter
@@ -413,7 +413,7 @@ Common important key parameters:​​
   SELECT * FROM S3 (
       "uri" = "s3://your_bucket/path/to/tvf_test/test.parquet",
       "format" = "parquet",
-      "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+      "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
       "s3.role_arn" = "<your-bucket-role-arn>",
       "s3.external_id" = "<your-external-id>"      -- option parameter
@@ -426,7 +426,7 @@ Common important key parameters:​​
       "type" = "iceberg",
       "iceberg.catalog.type" = "hadoop",
       "warehouse" = "s3://your_bucket/dir/key",
-      "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+      "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1",
       "s3.role_arn" = "<your-bucket-role-arn>",
       "s3.external_id" = "<your-external-id>"      -- option parameter
@@ -438,7 +438,7 @@ Common important key parameters:​​
 CREATE STORAGE VAULT IF NOT EXISTS s3_demo_vault
 PROPERTIES (
     "type" = "S3",
-    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.bucket" = "<your-bucket>",
     "s3.role_arn" = "<your-bucket-role-arn>",
@@ -456,7 +456,7 @@ PROPERTIES (
     "column_separator"="\\x07", 
     "line_delimiter" = "\\x07"
 ) WITH S3 (
-    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.role_arn" = "<your-bucket-role-arn>",
     "s3.external_id" = "<your-external-id>"
@@ -470,7 +470,7 @@ WITH S3
 ON LOCATION "s3://your_bucket/s3_repo"
 PROPERTIES
 (
-    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.role_arn" = "<your-bucket-role-arn>",
     "s3.external_id" = "<your-external-id>"
@@ -482,7 +482,7 @@ PROPERTIES
 CREATE RESOURCE "remote_s3"
 PROPERTIES
 (
-    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.bucket" = "<your-bucket>",
     "s3.role_arn" = "<your-bucket-role-arn>",
@@ -557,7 +557,7 @@ Please replace `arn:aws:iam::111122223333:root` with the ARN of the account or R
   SELECT * FROM S3 (
       "uri" = "s3://your_bucket/path/to/tvf_test/test.parquet",
       "format" = "parquet",
-      "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+      "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
       "s3.region" = "us-east-1"
   )
 ```

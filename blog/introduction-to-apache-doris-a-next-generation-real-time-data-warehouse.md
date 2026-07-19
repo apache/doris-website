@@ -171,4 +171,4 @@ Roughly speaking, for a data asset consisting of 80% cold data, tiered storage w
 
 ## The Apache Doris Community
 
-This is an overview of Apache Doris, an open-source real-time data warehouse. It is actively evolving with an agile release schedule, and the [community](/discord) embraces any questions, ideas, and feedback.
+This is an overview of Apache Doris, an open-source real-time data warehouse. It is actively evolving with an agile release schedule, and the [community](https://doris.apache.org/slack) embraces any questions, ideas, and feedback.

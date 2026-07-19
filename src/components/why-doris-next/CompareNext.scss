@@ -1,0 +1,361 @@
+// ─── Design tokens (scoped to compare page) ──────────────────────────────────
+
+@use 'responsive' as r;
+@use '../shared/typography' as type;
+
+.cmp-next {
+    --cn-green-dark: #06805F;
+    --cn-green-darker: #054C39;
+    --cn-green-darkest: #033A2C;
+    --cn-green-glow: #2DDFA8;
+    --cn-cream-light: #FAF6EE;
+    --cn-yellow: #FFD23F;
+    --cn-yellow-bright: #FFE066;
+    --cn-coral: #FF5C39;
+    --cn-ink: #0F1A14;
+
+    // ── Responsive tokens ──────────────────────────────────────────────────
+    // Fluid values use clamp(min, preferred, max). Preferred term scales
+    // linearly between 640px and 1440px viewport widths.
+
+    // Container
+    --cn-container-max: 1440px;
+    --cn-container-pad: clamp(20px, 4vw, 56px);
+
+    // Spacing scale (4px base) — use these for paddings, gaps, margins.
+    --cn-space-1: 4px;
+    --cn-space-2: 8px;
+    --cn-space-3: 12px;
+    --cn-space-4: 16px;
+    --cn-space-5: 24px;
+    --cn-space-6: 32px;
+    --cn-space-7: 48px;
+    --cn-space-8: 64px;
+    --cn-space-9: 96px;
+
+    // Fluid section rhythm
+    --cn-section-gap: clamp(20px, 2.5vw, 32px);     // gap between cards
+    --cn-card-pad-y:  clamp(24px, 3vw, 40px);
+    --cn-card-pad-x:  clamp(20px, 3vw, 40px);
+
+    // Fluid type scale
+    --cn-fs-hero:  clamp(28px, 1.5rem + 3vw, 48px); // page hero title
+    --cn-fs-h1:    clamp(22px, 1.25rem + 2vw, 36px); // card title
+    --cn-fs-h2:    clamp(18px, 1rem + 1vw, 24px);
+    --cn-fs-body:  clamp(14px, 0.875rem + 0.2vw, 16px);
+    --cn-fs-small: clamp(12px, 0.75rem + 0.1vw, 13px);
+
+    // Radii
+    --cn-radius-sm: 6px;
+    --cn-radius-md: 10px;
+    --cn-radius-lg: 14px;
+
+    position: relative;
+    min-height: 100vh;
+    background: var(--cn-cream-light);
+    color: var(--cn-ink);
+    font-family: var(--font-family-base);
+    overflow-x: hidden;
+
+    // ── Background ─────────────────────────────────────────────────────────
+
+    &__bg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background:
+            radial-gradient(ellipse 60% 40% at 80% 0%, rgba(6, 128, 95, 0.08), transparent 70%),
+            radial-gradient(ellipse 50% 40% at 0% 30%, rgba(255, 210, 63, 0.06), transparent 65%);
+    }
+
+    &__bg-grid {
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgba(15, 26, 20, 0.07) 1.2px, transparent 1.2px);
+        background-size: 28px 28px;
+        mask-image: linear-gradient(180deg, black, black 60%, transparent 95%);
+        -webkit-mask-image: linear-gradient(180deg, black, black 60%, transparent 95%);
+    }
+
+    // ── Hero strip ─────────────────────────────────────────────────────────
+
+    &__hero {
+        position: relative;
+        z-index: 5;
+        padding: clamp(48px, 6vw, 80px) var(--cn-container-pad) 0;
+        max-width: var(--cn-container-max);
+        margin: 0 auto;
+    }
+
+    &__hero-title {
+        @include type.hero-title;
+        color: var(--cn-ink);
+        margin: 0 0 22px;
+        white-space: nowrap;
+
+        // The 48px desktop layout fits "Doris vs. the Others" on one line;
+        // below xl the clamp() shrinks the type but the text still risks
+        // overflowing very narrow viewports.
+        @include r.down('xl') {
+            white-space: normal;
+        }
+    }
+
+    &__hero-vs {
+        display: inline-block;
+        color: var(--cn-green-dark);
+        margin: 0 6px 0 4px;
+        font-style: italic;
+        font-weight: 500;
+        text-transform: lowercase;
+    }
+
+    &__hero-others {
+        color: var(--cn-green-dark);
+    }
+
+    // ── Tab switcher ───────────────────────────────────────────────────────
+
+    &__tabs {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        gap: 4px;
+        border: 1px solid rgba(6, 128, 95, 0.18);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.6);
+        padding: 6px;
+        width: fit-content;
+        max-width: 100%;
+        position: relative;
+        box-shadow: 0 16px 40px -22px rgba(5, 76, 57, 0.25);
+    }
+
+    &__tab {
+        position: relative;
+        padding: 14px 24px 14px 22px;
+        min-height: 44px;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+        font-family: type.$font-mono;
+        color: rgba(15, 26, 20, 0.6);
+        @include type.mono-text(13px, 400, 1.2, 0.04em);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-radius: 6px;
+        transition: color 0.2s, background 0.2s;
+        white-space: nowrap;
+
+        @media (hover: hover) {
+            &:hover {
+                color: var(--cn-ink);
+            }
+        }
+
+        @include r.down('sm') {
+            padding: 10px 14px;
+            font-size: 12px;
+            gap: 8px;
+        }
+
+        &--active {
+            background: var(--cn-green-dark);
+            color: var(--cn-cream-light);
+            box-shadow: 0 6px 18px -6px rgba(6, 128, 95, 0.45);
+
+            .cmp-next__tab-vs {
+                color: rgba(245, 239, 228, 0.65);
+            }
+
+            .cmp-next__tab-mark {
+                background: rgba(245, 239, 228, 0.16);
+                border-color: rgba(245, 239, 228, 0.24);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            }
+        }
+
+        &--disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+
+            @media (hover: hover) {
+                &:hover {
+                    color: rgba(15, 26, 20, 0.45);
+                }
+            }
+        }
+    }
+
+    &__tab-vs {
+        font-style: italic;
+        font-weight: 400;
+        color: rgba(15, 26, 20, 0.4);
+        text-transform: lowercase;
+        letter-spacing: 0;
+    }
+
+    &__tab-name {
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    &__tab-mark {
+        width: 22px;
+        height: 22px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(15, 26, 20, 0.08);
+        overflow: hidden;
+        flex: 0 0 auto;
+        transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    &__tab-logo {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
+    &__tab-soon {
+        @include type.micro-label;
+        padding: 2px 6px;
+        border: 1px solid rgba(15, 26, 20, 0.2);
+        border-radius: 3px;
+        margin-left: 4px;
+        color: rgba(15, 26, 20, 0.5);
+    }
+
+    // ── Body container ─────────────────────────────────────────────────────
+
+    &__body {
+        position: relative;
+        z-index: 5;
+        max-width: var(--cn-container-max);
+        margin: 0 auto;
+        padding: var(--cn-space-4) var(--cn-container-pad) clamp(48px, 6vw, 96px);
+        display: flex;
+        flex-direction: column;
+        gap: var(--cn-section-gap);
+    }
+
+    // ── Shared card shell (used by all three sections) ─────────────────────
+
+    &__card {
+        background: var(--cn-green-darker);
+        border: 1px solid rgba(245, 239, 228, 0.1);
+        border-radius: var(--cn-radius-lg);
+        padding: var(--cn-card-pad-y) var(--cn-card-pad-x);
+        box-shadow:
+            0 30px 60px -20px rgba(0, 0, 0, 0.45),
+            inset 0 1px 0 rgba(245, 239, 228, 0.04);
+        position: relative;
+        overflow: hidden;
+    }
+
+    &__card-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: var(--cn-space-5);
+        margin-bottom: clamp(20px, 2.5vw, 32px);
+        flex-wrap: wrap;
+    }
+
+    &__card-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        @include type.mono-text(11px, 600, 1.2, 0.06em, uppercase);
+        color: rgba(255, 210, 63, 0.85);
+        margin-bottom: 14px;
+    }
+
+    &__card-eyebrow-num {
+        width: 22px;
+        height: 22px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 210, 63, 0.5);
+        border-radius: 50%;
+        @include type.micro-label;
+        color: var(--cn-yellow);
+    }
+
+    &__card-title {
+        @include type.section-title;
+        color: var(--cn-cream-light);
+        margin: 0;
+        max-width: 700px;
+
+        &--single {
+            max-width: none;
+            white-space: nowrap;
+
+            @include r.down('lg') {
+                white-space: normal;
+            }
+        }
+    }
+
+    &__card-sub {
+        @include type.body-copy-strong;
+        color: rgba(245, 239, 228, 0.7);
+        margin: 14px 0 0;
+        max-width: 640px;
+    }
+
+    // ── Between-card section titles ────────────────────────────────────────
+    // Sits between the dark cards on the cream page background. Number +
+    // uppercase mono label, with a thin rule trailing off to the right.
+
+    &__section-title {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 0 4px;
+        // Body uses `gap: var(--cn-section-gap)` between flex children. The
+        // negative margin still keeps the title tied to the section above,
+        // but leaves more breathing room before the card directly beneath.
+        margin-bottom: calc(var(--cn-section-gap) * -1 + 20px);
+    }
+
+    &__section-title-num {
+        @include type.mono-text(12px, 700, 1.2, 0.16em, uppercase);
+        color: var(--cn-green-dark);
+        padding: 4px 8px;
+        border: 1px solid rgba(6, 128, 95, 0.32);
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
+
+    &__section-title-text {
+        @include type.mono-text(clamp(14px, 0.85rem + 0.4vw, 18px), 700, 1.2, 0.04em, uppercase);
+        color: var(--cn-ink);
+        flex-shrink: 0;
+    }
+
+    &__section-title-rule {
+        flex: 1 1 auto;
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            rgba(6, 128, 95, 0.28),
+            rgba(6, 128, 95, 0)
+        );
+        min-width: 24px;
+    }
+
+}
+
+// All responsive behavior for the page chrome is now driven by the fluid
+// CSS tokens (--cn-fs-*, --cn-container-pad, --cn-card-pad-*, etc.) and the
+// breakpoint mixins applied inline above. No standalone media queries needed.

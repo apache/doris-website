@@ -19,7 +19,7 @@ TO_ISO8601(<date_or_time_expr>)
 ## 参数
 | 参数                         | 描述                          |
 |----------------------------|-----------------------------|
-| `<date_or_time_expr>` | 输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## 返回值
 
@@ -42,7 +42,7 @@ SELECT TO_ISO8601(CAST('2023-10-05' AS DATE)) AS date_result;
 +--------------+
 
 --  转换 DATETIME 类型（带时分秒）
-SELECT TO_ISO8601(CAST('2020-01-01 12:30:45' AS DATETIME)) AS datetime_result;
+SELECT TO_ISO8601('2020-01-01 12:30:45') AS datetime_result;
 +----------------------------+
 | datetime_result            |
 +----------------------------+
@@ -50,11 +50,11 @@ SELECT TO_ISO8601(CAST('2020-01-01 12:30:45' AS DATETIME)) AS datetime_result;
 +----------------------------+
 
 ---输入带有 scale ,四舍五入为秒
-SELECT TO_ISO8601(CAST('2020-01-01 12:30:45.956' AS DATETIME)) AS datetime_result;
+SELECT TO_ISO8601('2020-01-01 12:30:45.956') AS datetime_result;
 +----------------------------+
 | datetime_result            |
 +----------------------------+
-| 2020-01-01T12:30:46.000000 |
+| 2020-01-01T12:30:45.956000 |
 +----------------------------+
 
 -- 输入类型为 TimeStampTz

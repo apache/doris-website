@@ -33,6 +33,11 @@ If a statement contains both an ORDER BY clause in the NTILE function and an ORD
 
 ## Examples
 
+<!-- setup-sql
+CREATE TABLE student_scores (name VARCHAR(20), score INT) DISTRIBUTED BY HASH(name) BUCKETS 1 PROPERTIES("replication_num"="1");
+INSERT INTO student_scores VALUES ('Alice',98),('Bob',95),('Charlie',90),('David',85),('Eve',82),('Frank',78),('Grace',75),('Henry',70);
+-->
+
 ```sql
 SELECT 
     name,

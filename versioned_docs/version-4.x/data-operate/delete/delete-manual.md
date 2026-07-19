@@ -1,146 +1,221 @@
 ---
 {
-    "title": "Deleting Data with DELETE Command",
+    "title": "Delete Operation",
     "language": "en",
-    "description": "The DELETE statement removes data from a specified table or partition based on conditions through the MySQL protocol."
+    "description": "Apache Doris DELETE statement guide: delete table or partition data by condition, supports USING multi-table joined deletes, covering syntax, parameters, limitations, and performance tuning.",
+    "keywords": [
+        "Doris DELETE",
+        "delete data",
+        "conditional delete",
+        "USING multi-table delete",
+        "Unique Key delete",
+        "partition delete",
+        "delete_without_partition",
+        "SHOW DELETE"
+    ]
 }
 ---
 
-The `DELETE` statement removes data from a specified table or partition based on conditions through the MySQL protocol. It supports specifying the data to be deleted using simple predicate combinations and also supports using the `USING` clause to join multiple tables for deletion on primary key tables.
+<!-- Knowledge type: Operation steps + Configuration parameters -->
+<!-- Applicable scenarios: Data cleanup / Conditional delete / Multi-table joined delete -->
+
+Apache Doris executes the `DELETE` statement through the MySQL protocol to remove data from a specified table or partition based on conditions. Two usage forms are supported:
+
+- **Predicate-based delete**: Delete data matching simple `WHERE` predicate combinations.
+- **Multi-table joined delete (USING)**: On a primary-key table (Unique Key), use the `USING` clause to join other tables for deletion.
+
+## Quick Navigation
+
+| Scenario | Recommended approach | Applicable table model |
+|----------|----------------------|------------------------|
+| Delete by column value condition | [Predicate-based delete](#delete-by-specifying-filter-predicates) | Duplicate / Aggregate / Unique |
+| Bulk delete by partition | [Predicate-based delete + PARTITION](#delete-by-specifying-filter-predicates) | All models |
+| Precise delete via multi-table join | [Delete with USING clause](#delete-with-the-using-clause) | Unique Key only |
+| View delete history | [SHOW DELETE](#viewing-delete-history) | All models |
 
 ## Delete by Specifying Filter Predicates
 
+<!-- Knowledge type: Operation steps -->
+
+### Syntax
+
 ```sql
 DELETE FROM table_name [table_alias]
-  [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
-  WHERE column_name op { value | value_list } [ AND column_name op { value | value_list } ...];
+    [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
+    WHERE column_name op { value | value_list } [ AND column_name op { value | value_list } ...];
 ```
 
-### Required Parameters
+### Parameter Description
 
-- `table_name`: The table from which data needs to be deleted.
+**Required parameters**
 
-- `column_name`: A column belonging to `table_name`.
+| Parameter | Description |
+|-----------|-------------|
+| `table_name` | The target table from which to delete data |
+| `column_name` | A column belonging to `table_name` |
+| `op` | Logical comparison operator. Supported: `=`, `>`, `<`, `>=`, `<=`, `!=`, `in`, `not in` |
+| `value \| value_list` | A single value or value list used for the logical comparison |
 
-- `op`: Logical comparison operators, including: =, >, <, >=, <=, !=, in, not in.
+**Optional parameters**
 
-- `value | value_list`: The value or list of values for logical comparison.
+| Parameter | Description |
+|-----------|-------------|
+| `PARTITION` / `PARTITIONS` | Specifies the partition name on which to perform the delete. If the table does not have the specified partition, an error is reported |
+| `table_alias` | Alias of the table |
 
-### Optional Parameters
+### Limitations
 
-- `PARTITION partition_name | PARTITIONS (partition_name [, partition_name])`: Specifies the partition name where the data deletion is to be executed. If the table does not have this partition, an error will be reported.
-
-- `table_alias`: Alias for the table.
-
-### Usage Restrictions
-
-- When using the Aggregate table model, conditions can only be specified on Key columns. If the selected Key column does not exist in a Rollup, deletion cannot be performed.
-
-- For partitioned tables, partitions need to be specified. If not specified, Doris will infer the partition from the conditions.
-
-  - Doris cannot infer the partition from the conditions in two cases:
-    1. The conditions do not include partition columns.
-    2. The `op` of the partition column is `not in`.
-
-  - When the partitioned table is not a Unique table, and it does not specify a partition or cannot infer the partition from the conditions, the session variable `delete_without_partition` needs to be set to `true`, and the delete operation will apply to all partitions.
+- **Aggregate Key tables**: Conditions can only be specified on Key columns. If a selected Key column does not exist in a Rollup, the delete cannot be executed.
+- **Partitioned tables**: A partition must be specified, or Doris must be able to infer the partition from the conditions. The partition cannot be inferred in the following two cases:
+    1. The conditions do not include the partition column.
+    2. The `op` for the partition column is `not in`.
+- **Non-Unique partitioned tables**: When no partition is specified and the partition cannot be inferred, the session variable `delete_without_partition = true` must be set. In this case, the delete operation applies to all partitions.
 
 ### Examples
 
-**1. Delete rows in partition `p1` of `my_table` where the value of column `k1` is 3**
+The examples below use `my_table`, a Unique-Key list-partitioned table on `k1` with partitions `p1` and `p2`:
+
+```sql
+CREATE TABLE my_table (
+  k1 INT,
+  status VARCHAR(32),
+  dt DATE
+)
+UNIQUE KEY (k1)
+PARTITION BY LIST (k1) (
+  PARTITION p1 VALUES IN (1, 2, 3, 4, 5),
+  PARTITION p2 VALUES IN (6, 7, 8, 9, 10)
+)
+DISTRIBUTED BY HASH (k1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO my_table VALUES
+  (1, 'active',   '2024-09-01'),
+  (3, 'outdated', '2024-10-15'),
+  (5, 'active',   '2024-10-20'),
+  (6, 'outdated', '2024-10-05'),
+  (8, 'outdated', '2024-10-25'),
+  (10, 'active',  '2024-11-10');
+```
+
+**Example 1: Delete data in a specified partition where a column equals a fixed value**
 
 ```sql
 DELETE FROM my_table PARTITION p1
-  WHERE k1 = 3;
+WHERE k1 = 3;
 ```
 
-**2. Delete rows in partition `p1` of `my_table` where the value of column `k1` is greater than or equal to 3 and the value of column `status` is "outdated"**
+**Example 2: Delete data in a specified partition that satisfies a compound condition**
 
 ```sql
 DELETE FROM my_table PARTITION p1
 WHERE k1 >= 3 AND status = "outdated";
 ```
 
-**3. Delete rows in partitions `p1` and `p2` of `my_table` where the value of column `k1` is greater than or equal to 3 and the value of column `dt` is between "2024-10-01" and "2024-10-31"**
+**Example 3: Delete data in multiple partitions filtered by a time range**
 
 ```sql
 DELETE FROM my_table PARTITIONS (p1, p2)
 WHERE k1 >= 3 AND dt >= "2024-10-01" AND dt <= "2024-10-31";
 ```
 
-## Delete Using the `USING` Clause
+## Delete with the USING Clause
 
-In some scenarios, users need to join multiple tables to accurately determine the data to be deleted. In such cases, the `USING` clause is very useful. The syntax is as follows:
+<!-- Knowledge type: Operation steps -->
+<!-- Applicable scenarios: Multi-table joined delete -->
+
+When multiple tables must be joined to precisely identify the data to be deleted, use the `USING` clause.
+
+### Syntax
 
 ```sql
 DELETE FROM table_name [table_alias]
-  [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
-  [USING additional_tables]
-  WHERE condition
+    [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
+    [USING additional_tables]
+    WHERE condition;
 ```
 
-### Required Parameters
+### Parameter Description
 
-- `table_name`: The table from which data needs to be deleted.
-- `WHERE condition`: Specifies the condition for selecting the rows to be deleted.
+**Required parameters**
 
-### Optional Parameters
+| Parameter | Description |
+|-----------|-------------|
+| `table_name` | The target table from which to delete data |
+| `WHERE condition` | The condition used to select rows for deletion |
 
-- `PARTITION partition_name | PARTITIONS (partition_name [, partition_name])`: Specifies the partition name where the data deletion is to be executed. If the table does not have this partition, an error will be reported.
-- `table_alias`: Alias for the table.
+**Optional parameters**
 
-### Notes
+| Parameter | Description |
+|-----------|-------------|
+| `PARTITION` / `PARTITIONS` | Specifies the partition name on which to perform the delete. If the table does not have the specified partition, an error is reported |
+| `table_alias` | Alias of the table |
+| `USING additional_tables` | Other tables used for joining |
 
-- This form can only be used on UNIQUE KEY model tables.
+### Limitations
+
+- Only supported on **Unique Key** model tables.
 
 ### Example
 
-Using the join result of tables `t2` and `t3`, delete data from `t1`. The table to be deleted only supports the unique model.
+The following example shows how to delete data from `t1` based on the join result of `t2` and `t3`.
+
+**Step 1: Create tables**
 
 ```sql
--- Create tables t1, t2, t3
 CREATE TABLE t1
-  (id INT, c1 BIGINT, c2 STRING, c3 DOUBLE, c4 DATE)
+    (id INT, c1 BIGINT, c2 STRING, c3 DOUBLE, c4 DATE)
 UNIQUE KEY (id)
 DISTRIBUTED BY HASH (id)
 PROPERTIES('replication_num'='1', "function_column.sequence_col" = "c4");
 
 CREATE TABLE t2
-  (id INT, c1 BIGINT, c2 STRING, c3 DOUBLE, c4 DATE)
+    (id INT, c1 BIGINT, c2 STRING, c3 DOUBLE, c4 DATE)
 DISTRIBUTED BY HASH (id)
 PROPERTIES('replication_num'='1');
 
 CREATE TABLE t3
-  (id INT)
+    (id INT)
 DISTRIBUTED BY HASH (id)
 PROPERTIES('replication_num'='1');
-
--- Insert data
-INSERT INTO t1 VALUES
-  (1, 1, '1', 1.0, '2000-01-01'),
-  (2, 2, '2', 2.0, '2000-01-02'),
-  (3, 3, '3', 3.0, '2000-01-03');
-
-INSERT INTO t2 VALUES
-  (1, 10, '10', 10.0, '2000-01-10'),
-  (2, 20, '20', 20.0, '2000-01-20'),
-  (3, 30, '30', 30.0, '2000-01-30'),
-  (4, 4, '4', 4.0, '2000-01-04'),
-  (5, 5, '5', 5.0, '2000-01-05');
-
-INSERT INTO t3 VALUES
-  (1),
-  (4),
-  (5);
-
--- Delete data from t1
-DELETE FROM t1
-  USING t2 INNER JOIN t3 ON t2.id = t3.id
-  WHERE t1.id = t2.id;
 ```
 
-The expected result is to delete the row in table `t1` where `id` is `1`.
+**Step 2: Insert test data**
 
-```Plain
+```sql
+INSERT INTO t1 VALUES
+    (1, 1, '1', 1.0, '2000-01-01'),
+    (2, 2, '2', 2.0, '2000-01-02'),
+    (3, 3, '3', 3.0, '2000-01-03');
+
+INSERT INTO t2 VALUES
+    (1, 10, '10', 10.0, '2000-01-10'),
+    (2, 20, '20', 20.0, '2000-01-20'),
+    (3, 30, '30', 30.0, '2000-01-30'),
+    (4, 4, '4', 4.0, '2000-01-04'),
+    (5, 5, '5', 5.0, '2000-01-05');
+
+INSERT INTO t3 VALUES
+    (1),
+    (4),
+    (5);
+```
+
+**Step 3: Execute the joined delete**
+
+```sql
+DELETE FROM t1
+    USING t2 INNER JOIN t3 ON t2.id = t3.id
+    WHERE t1.id = t2.id;
+```
+
+**Expected result**: The row with `id = 1` in `t1` is deleted.
+
+```sql
+SELECT * FROM t1 ORDER BY id;
+```
+
+```text
 +----+----+----+--------+------------+
 | id | c1 | c2 | c3     | c4         |
 +----+----+----+--------+------------+
@@ -151,28 +226,29 @@ The expected result is to delete the row in table `t1` where `id` is `1`.
 
 ## Related Configuration
 
-**Timeout Configuration**
+<!-- Knowledge type: Configuration parameters -->
 
-- `insert_timeout`: Since the delete operation is an SQL command and is considered a special load, the delete statement is affected by the `insert_timeout` value in the Session. You can increase the timeout by `SET insert_timeout = xxx`, where the unit is seconds.
+| Configuration | Scope | Description | Default |
+|---------------|-------|-------------|---------|
+| `insert_timeout` | Session | A delete is treated as a special load and is bounded by this value. Adjust it with `SET insert_timeout = xxx`, in seconds | - |
+| `max_allowed_in_element_num_of_delete` | Global | Maximum number of elements allowed in an `IN` predicate | 1024 |
 
-**IN Predicate Configuration**
+## Viewing Delete History
 
-- `max_allowed_in_element_num_of_delete`: If the user needs to use a large number of elements in the `in` predicate, this item can be adjusted to increase the allowed element limit. The default value is 1024.
+<!-- Knowledge type: Operation steps -->
 
-## View History
+Use the `SHOW DELETE` statement to view records of completed delete operations.
 
-Users can view the history of completed delete records using the `SHOW DELETE` statement.
-
-The syntax is as follows:
+**Syntax**
 
 ```sql
-SHOW DELETE [FROM db_name]
+SHOW DELETE [FROM db_name];
 ```
 
-Example:
+**Example**
 
 ```sql
-mysql> show delete from test_db;
+mysql> SHOW DELETE FROM test_db;
 +-----------+---------------+---------------------+-----------------+----------+
 | TableName | PartitionName | CreateTime          | DeleteCondition | State    |
 +-----------+---------------+---------------------+-----------------+----------+
@@ -184,10 +260,41 @@ mysql> show delete from test_db;
 
 ## Performance Recommendations
 
-1. On detail tables (Duplicate Key) and aggregate tables (Aggregate Key), the delete operation executes quickly, but a large number of delete operations in a short period will affect query performance.
+<!-- Knowledge type: Architecture decision -->
 
-2. On primary key tables (Unique Key), the delete operation is converted into an `INSERT INTO` statement. When deleting a large range, the execution speed is slow, but a large number of delete operations in a short period will not significantly affect query performance.
+The performance characteristics of `DELETE` on different table models are as follows:
 
-## Syntax
+| Table model | Execution speed | Impact on queries | Recommended scenarios |
+|-------------|-----------------|-------------------|------------------------|
+| Detail table (Duplicate Key) | Fast | A large number of deletes in a short time affects query performance | Control delete frequency |
+| Aggregate table (Aggregate Key) | Fast | A large number of deletes in a short time affects query performance | Control delete frequency |
+| Primary-key table (Unique Key) | Slow for large-range deletes (converted to `INSERT INTO`) | A large number of deletes in a short time has limited impact on query performance | Suitable for frequent delete scenarios |
 
-For detailed delete syntax, refer to the [DELETE](../../sql-manual/sql-statements/data-modification/DML/DELETE) syntax manual.
+## FAQ
+
+**Q1: When I run DELETE, an error reports that a partition must be specified. What should I do?**
+
+For non-Unique partitioned tables, when the conditions do not include the partition column or use `not in`, Doris cannot infer the partition. You can:
+
+- Explicitly specify `PARTITION` in the `DELETE` statement.
+- Or set the session variable `SET delete_without_partition = true` so that the delete applies to all partitions.
+
+**Q2: Can I delete on non-Key columns of an aggregate table?**
+
+No. Aggregate tables only allow delete conditions on Key columns.
+
+**Q3: Which table models does the USING clause support?**
+
+Only **Unique Key** model tables are supported as the delete target.
+
+**Q4: What if there are too many elements in an IN predicate and an error is reported?**
+
+Adjust the `max_allowed_in_element_num_of_delete` configuration to raise the maximum allowed number of elements (default 1024).
+
+**Q5: What if a delete times out?**
+
+Use `SET insert_timeout = xxx` (in seconds) to increase the timeout.
+
+## Related Documents
+
+- [DELETE Syntax Manual](../../sql-manual/sql-statements/data-modification/DML/DELETE)

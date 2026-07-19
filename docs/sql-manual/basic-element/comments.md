@@ -8,7 +8,7 @@
 
 ## Description
 
-Comments can make your application easier to read and maintain. For example, you can include a comment within a statement to describe the purpose of that statement in your application. Comments in SQL statements (except for HINT) do not affect the execution of the statement. For information on using this specific form of comments with HINT, please refer to the [HINT](../../query-acceleration/hints/hints-overview.md) section.
+Comments can make your application easier to read and maintain. For example, you can include a comment within a statement to describe the purpose of that statement in your application. Comments in SQL statements (except for HINT) do not affect the execution of the statement. For information on using this specific form of comments with HINT, please refer to the [HINT](../../query-acceleration/tuning/tuning-plan/adjusting-join-shuffle) section.
 
 In SQL statements, comments can appear between any keywords, parameters, or punctuation marks. You can include comments in statements in two ways:
 

@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_FIRST",
     "language": "en",
-    
+    "description": "Returns the first element in the array that satisfies the lambda expression condition."
 }
 ---
 
@@ -136,13 +136,13 @@ SELECT array_first(x -> x['a'] > 10, [{'a':5}, {'a':15}, {'a':20}]);
 +---------------------------------------------------------------+
 ```
 
-Error when parameter count is wrong:
+Error when the number of parameters in lambda expression doesn't match the number of array parameters:
 ```sql
 SELECT array_first(x -> x > 0, [1,2,3], [4,5,6], [7,8,9]);
 ERROR 1105 (HY000): errCode = 2, detailMessage = lambda x -> (x > 0) arguments' size is not equal parameters' size
 ```
 
-Error when the number of parameters in lambda expression doesn't match the number of array parameters:
+Error when parameter count is wrong:
 ```sql
 SELECT array_first((x, y) -> x > y, [1,2,3], [4,5]);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INVALID_ARGUMENT]in array map function, the input column size are not equal completely, nested column data rows 1st size is 3, 2th size is 2.

@@ -254,7 +254,7 @@ Supported since version 4.0.3, `timestamp_with_local_time_zone` can be mapped to
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 'warehouse' = 's3://bucket/paimon_warehouse',
                 's3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
@@ -406,7 +406,7 @@ Supported since version 4.0.3, `timestamp_with_local_time_zone` can be mapped to
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
                 's3.region' = 'ap-east-1',
                 'paimon.s3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 'paimon.s3.endpoint' = 'ap-east-1',
                 's3.access_key' = '<ak>',
                 'paimon.s3.access-key' = '<ak>',
@@ -558,7 +558,7 @@ Supported since version 4.0.3, `timestamp_with_local_time_zone` can be mapped to
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 's3://bucket/paimon_warehouse',
                 's3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
@@ -681,7 +681,7 @@ Supported since version 4.0.3, `timestamp_with_local_time_zone` can be mapped to
                 'paimon.catalog.type' = 'filesystem',
                 'warehouse' = 's3://bucket/paimon_warehouse',
                 's3.region' = 'ap-east-1',
-                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
@@ -1301,12 +1301,12 @@ CREATE CATALOG `paimon_hms_on_s3a` PROPERTIES (
     "s3.access_key" = "<ak>",
     "s3.secret_key" = "<sk>",
     "s3.region" = "ap-east-1",
-    "s3.endpoint" = "s3.ap-east-1.amazonaws.com",
+    "s3.endpoint" = "https://s3.ap-east-1.amazonaws.com",
     -- Explicitly add s3a parameters
     "fs.s3a.access.key" = "<ak>",
     "fs.s3a.secret.key" = "<sk>",
     "fs.s3a.endpoint.region" = "ap-east-1",
-    "fs.s3a.endpoint" = "s3.ap-east-1.amazonaws.com",
+    "fs.s3a.endpoint" = "https://s3.ap-east-1.amazonaws.com",
     "fs.s3a.impl" = "org.apache.hadoop.fs.s3a.S3AFileSystem"
 );
 ```
@@ -1320,7 +1320,7 @@ CREATE CATALOG test_paimon_on_hms_aws_catalog PROPERTIES (
     'warehouse' = 's3://bucket-hk/paimon_warehouse',
     'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
     's3.region' = 'ap-east-1',
-    's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+    's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
     's3.access_key' = '<ak>',
     's3.secret_key' = '<sk>',
     -- Explicitly add Paimon S3 parameters

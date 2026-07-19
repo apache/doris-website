@@ -13,7 +13,7 @@ Delete a custom function.
 ## Syntax
 
 ```sql
-DROP [ GLOBAL ] <function_name> ( <arg_type> )
+DROP [ GLOBAL ] FUNCTION <function_name> ( <arg_type> )
 ```
 
 ## Required Parameters

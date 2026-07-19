@@ -22,7 +22,7 @@ The user who executes this SQL command must have at least the following permissi
 
 | Privilege    | Object    | Notes                                                |
 |:--------------|:-----------|:-----------------------------------------------------|
-| GRANT_PRIV         | DATABASE   | GRANT permission is required for the CLEAN statement |
+| ADMIN_PRIV   | Global    | ADMIN privilege is required to clear all profiles      |
 
 ## Examples
 

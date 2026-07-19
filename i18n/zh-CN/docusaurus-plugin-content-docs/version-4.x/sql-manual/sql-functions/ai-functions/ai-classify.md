@@ -56,7 +56,7 @@ AI_CLASSIFY([<resource_name>], <text>, <labels>)
 
 ```sql
 SET default_ai_resource = 'resource_name';
-SELECT AI_CLASSIFY('Apache Doris is a databases system.', ['useage', 'introduce']) AS Result;
+SELECT AI_CLASSIFY('Apache Doris is a databases system.', ['usage', 'introduce']) AS Result;
 ```
 ```text
 +-----------+

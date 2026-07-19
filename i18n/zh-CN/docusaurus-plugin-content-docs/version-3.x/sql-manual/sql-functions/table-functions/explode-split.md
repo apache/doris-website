@@ -32,6 +32,12 @@ EXPLODE_SPLIT_OUTER(<str>, <delimiter>)
 ## 举例
 
 ```sql
+-- setup
+create table example1(k1 int, k2 varchar(50)) distributed by hash(k1) buckets 1 properties ("replication_num"="1");
+insert into example1 values (1,''),(2,null),(3,','),(4,'1'),(5,'1,2,3'),(6,'a, b, c');
+```
+
+```sql
 select * from example1 order by k1;
 ```
 

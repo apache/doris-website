@@ -1,0 +1,463 @@
+---
+title: 社区参与指南
+language: zh-CN
+description: Apache Doris 社区参与指南，帮助贡献者通过代码开发、内容创作和社区布道参与社区共建。
+keywords:
+    - Apache Doris
+    - 社区参与
+    - 代码开发
+    - 内容创作
+    - 社区布道
+    - Contributor
+    - Committer
+    - PMC
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<style>{`
+.contribution-path-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto auto 1fr auto auto;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.contribution-path-card {
+  display: grid;
+  grid-row: span 5;
+  grid-template-rows: subgrid;
+  gap: 12px;
+  min-height: 100%;
+  padding: 20px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+}
+
+.contribution-benefits-card {
+  grid-column: 1 / -1;
+  padding: 20px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+}
+
+.contribution-path-card:hover {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+}
+
+.contribution-path-card h3,
+.contribution-benefits-card h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.contribution-path-card p,
+.contribution-benefits-card p {
+  margin: 0;
+}
+
+.contribution-path-card ul,
+.contribution-benefits-card ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.contribution-path-card strong,
+.contribution-benefits-card strong {
+  color: var(--ifm-color-primary);
+}
+
+.contribution-benefits-list {
+  columns: 2;
+  column-gap: 32px;
+  margin-top: 12px;
+}
+
+.contribution-card-benefit {
+  align-self: start;
+}
+
+.contribution-next-step {
+  align-self: end;
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+@media (max-width: 996px) {
+  .contribution-path-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contribution-benefits-list {
+    columns: 1;
+  }
+}
+`}</style>
+
+Apache Doris 欢迎全球开发者、用户、技术作者、讲师和社区组织者参与共建。你可以通过代码开发、内容创作或社区布道参与 Apache Doris。每一种参与方式都能帮助项目成长，也能帮助贡献者积累技术影响力、社区声誉和开源协作经验。
+
+<div className="contribution-path-grid">
+  <a className="contribution-path-card" href="?path=developer#社区参与指南">
+    <h3>代码开发</h3>
+    <p><strong>适合：</strong>希望直接参与 Doris 技术建设的贡献者。</p>
+    <ul>
+      <li>修复 Bug，开发新功能。</li>
+      <li>优化性能、稳定性或可观测性。</li>
+      <li>补充单元测试、回归测试和集成测试。</li>
+      <li>改进构建、CI、发布、开发工具和工程效率。</li>
+      <li>Review PR，补充技术文档、用户文档或示例。</li>
+    </ul>
+    <p className="contribution-card-benefit"><strong>贡献一经合入，你会自动成为 Apache Doris 的 Contributor。</strong></p>
+    <span className="contribution-next-step">阅读指南 -&gt;</span>
+  </a>
+  <a className="contribution-path-card" href="?path=content#社区参与指南">
+    <h3>内容创作</h3>
+    <p><strong>适合：</strong>熟悉 Doris 使用场景，愿意分享实践经验的贡献者。</p>
+    <ul>
+      <li>撰写技术博客和生产环境案例。</li>
+      <li>编写入门教程和最佳实践。</li>
+      <li>录制功能演示、安装部署、调优排障等视频。</li>
+      <li>参与 meetup、webinar、conference 演讲。</li>
+      <li>翻译文档、博客、活动材料或视频字幕。</li>
+    </ul>
+    <p className="contribution-card-benefit"><strong>优秀创作内容将会获得社区周边纪念品。</strong></p>
+    <span className="contribution-next-step">阅读指南 -&gt;</span>
+  </a>
+  <a className="contribution-path-card" href="?path=community#社区参与指南">
+    <h3>社区布道</h3>
+    <p><strong>适合：</strong>熟悉用户场景，擅长沟通协作的贡献者。</p>
+    <ul>
+      <li>在 Slack、GitHub、mailing list 中回答问题。</li>
+      <li>帮助新用户找到正确的文档、示例和社区入口。</li>
+      <li>组织线上或线下 meetup、workshop、office hour 或用户分享。</li>
+      <li>邀请用户分享生产实践和迁移经验。</li>
+      <li>收集用户反馈，并引导到公开渠道沉淀。</li>
+    </ul>
+    <p className="contribution-card-benefit"><strong>活跃参与者将会获得社区周边纪念品。</strong></p>
+    <span className="contribution-next-step">阅读指南 -&gt;</span>
+  </a>
+  <div className="contribution-benefits-card">
+    <h3>权利与收益</h3>
+    <p>根据贡献类型、贡献质量和持续性，贡献者可能获得以下权益：</p>
+    <ul className="contribution-benefits-list">
+      <li>在 Apache Doris 社区渠道获得公开认可。</li>
+      <li>被纳入贡献者列表、社区鸣谢或活动 recap。</li>
+      <li>在 Apache Doris 官方网站、博客、社交媒体或视频渠道发布内容。</li>
+      <li>获得社区活动演讲机会。</li>
+      <li>与 Maintainer、Committer、PMC member 和其他资深用户进行更深入的技术交流。</li>
+      <li>优先参与部分社区活动、meetup、webinar 或 conference 议题。</li>
+      <li>通过开源贡献积累公开技术声誉和个人影响力。</li>
+      <li>获得社区周边、纪念品或特别礼品。</li>
+    </ul>
+    <p>对于长期、稳定、高质量参与技术贡献的成员，社区会根据 Apache 治理流程，邀请其成为 <strong>Apache Doris Committer 或 PMC member</strong>。Doris Summit 每年也会评选 <strong>Outstanding Community Hero</strong>，感谢为社区做出突出贡献的用户、开发者和布道师。</p>
+  </div>
+</div>
+
+## 社区参与指南
+
+根据不同的参与路径，社区提供了对应的参与指南。
+
+:::tip 提示
+指南内容可能会随社区流程调整而变化。欢迎加入 [Apache Doris Slack 社群](https://doris.apache.org/slack) 获取实时动态。
+:::
+
+<Tabs groupId="contribution-path" queryString="path">
+<TabItem value="developer" label="代码开发参与指南" default>
+
+### 在哪里领取任务
+
+贡献者可以从以下渠道寻找任务：
+
+- Slack：直接询问或发起讨论、确认上下文和找到合适的沟通对象。
+- [Apache Doris GitHub Issues](https://github.com/apache/doris/issues)：适合查找 Bug、Feature Request、优化建议和待处理问题。
+- [Apache Doris GitHub Discussions](https://github.com/apache/doris/discussions)：适合参与技术讨论、使用讨论和方案讨论。
+- Roadmap：适合寻找中长期技术方向，通常可以在 GitHub Issue 页面的置顶 Issue 中查看。
+- 现有 PR：适合参与 Review、补充测试、验证问题或帮助推进合入。
+
+新贡献者可以优先从小范围任务开始，例如修正文档、补充测试、修复简单 Bug、复现 Issue、完善错误信息或优化示例。对于较大的功能或行为变更，建议先在 Apache Doris Slack 的 `#dev` 频道中发起讨论，寻求 Core Maintainers 的帮助。
+
+### 提交代码的规范
+
+提交代码前，贡献者应尽量做到：
+
+- Fork `apache/doris` 仓库，并基于最新主分支创建独立开发分支。
+- 每个 PR 聚焦一个明确问题，避免把多个无关修改放在同一个 PR 中。
+- PR 标题和描述清楚说明修改目的、影响范围和验证方式。
+- 关联对应的 Issue、Discussion 或 mailing list 讨论。
+- 补充必要的单元测试、回归测试或手工验证步骤。
+- 如果变更影响用户行为、配置、SQL 语义、错误信息或兼容性，需要同步更新文档。
+- 如果存在兼容性风险、性能风险或行为变化，需要在 PR 描述中明确说明。
+
+一个高质量 PR 通常应该包含：
+
+- 背景：为什么需要这个修改。
+- 方案：具体改了什么，为什么这样改。
+- 测试：执行了哪些测试，结果是什么。
+- 风险：是否影响兼容性、性能、稳定性或用户行为。
+- 文档：是否需要更新文档，已经在哪里更新。
+
+社区鼓励使用 AI 辅助编码、调试和 Review，但请遵循以下准则：
+
+- 使用能力较强的模型进行开发、调试和 Review，避免使用低质量模型生成关键代码。
+- 开发者要对代码负最终责任。社区不接受完全由 AI 提交且无人负责的代码。
+
+### 代码合入的标准流程
+
+代码合入通常会经过以下步骤：
+
+1. 贡献者提交 Pull Request。
+2. 具有 Committer 身份或更高权限的社区成员触发 CI 和 AI Review。你可以在 Slack `#dev` 频道寻求帮助。
+3. 贡献者根据 CI 和 Review 结果修复编译、测试或格式问题。AI 反馈也需要作为 Review 流程的一部分处理。对于合理建议，应修改代码；对于不适用的建议，应在 PR 中说明原因。
+4. 必要时，贡献者需要 rebase 最新主分支并解决冲突。
+5. Required CI checks 全部通过。
+6. Reviewer 给出 approval。
+7. Committer 完成最终合入。
+
+CI 中 required checks 必须通过后，PR 才能进入合入阶段。非 required checks 不阻塞合入。
+
+### 如何推进 Review
+
+贡献者应主动推动自己的 PR，而不是只等待 Reviewer 处理。Apache Doris 官方贡献者指南也鼓励贡献者担任自己 PR 的 Moderator，负责推动 PR 从提交到合入。
+
+推荐做法包括：
+
+- 在 PR 描述中提供足够上下文，降低 Reviewer 理解成本。
+- 在 Slack `#dev` 频道发布 PR 链接寻求 Reviewer。
+- 及时回复 Review 评论。
+- 对已经修改的问题标记为 resolved。
+- 对有争议的问题给出技术理由，而不是只表达结论。
+- 定期同步最新主分支，避免长期冲突。
+- 如果 PR 长时间没有进展，可以礼貌地在 PR 中 ping 相关 Reviewer。
+- 如果不确定谁适合 Review，可以在 Slack 中请求帮助定位模块负责人。
+
+寻找合适 Reviewer 的方式包括：
+
+- 查看同一模块最近合入的 PR。
+- 查看相关文件的历史提交记录。
+- 查看 GitHub 推荐 Reviewer 或 CODEOWNERS（如适用）。
+- 在 Slack 中请求帮助定位合适的 Reviewer，但重要技术结论应回到 GitHub 或 mailing list 中沉淀。
+
+</TabItem>
+<TabItem value="content" label="内容创作参与指南">
+
+### 可以提交哪些内容，在哪里提交
+
+#### 博客
+
+适合内容包括：
+
+- Doris 功能深度解析。
+- 查询优化、导入优化、运维调优实践。
+- Lakehouse、实时数仓、日志分析、用户行为分析等场景实践。
+- 从 Elasticsearch、ClickHouse、Hive、Trino 等系统迁移到 Doris 的经验。
+- 生产环境问题排查和性能优化复盘。
+- 新版本能力解读和使用建议。
+
+提交方式：
+
+- 在 Slack `#dev` 频道发起讨论沟通。
+- 将 Markdown 文件提交到 `apache/doris-website` 仓库的 `/blog` 目录。必要时，可以寻求 Doris Maintainer 的帮助。
+
+#### 案例
+
+适合内容包括：
+
+- 公司或团队的业务背景。
+- 为什么选择 Apache Doris。
+- 系统架构和数据链路。
+- 数据规模、查询模式和性能目标。
+- 迁移或落地过程中遇到的问题。
+- 上线后的效果、收益和经验。
+
+提交方式：
+
+- 如果涉及公司名称、业务数据或架构图，需要先完成公司内部审批，或自行隐去敏感信息。
+- 在 Slack `#dev` 频道发起讨论沟通。社区可协助润色、翻译或发布。
+
+#### 教程
+
+适合内容包括：
+
+- 快速上手。
+- 部署和升级。
+- 数据导入。
+- 查询调优。
+- 物化视图使用。
+- 倒排索引使用。
+- 存算分离实践。
+- 湖仓查询实践。
+- 日志分析和可观测性场景。
+
+提交方式：
+
+- 在 Slack `#dev` 频道发起讨论沟通。
+- 通用、长期有效的内容适合提交到官方文档。
+- 偏实践、场景化、版本相关的内容适合提交为 blog。
+- 示例代码、脚本和配置应尽量保证可复现。
+
+#### 视频
+
+适合内容包括：
+
+- 1 到 5 分钟功能演示。
+- 安装部署 walkthrough。
+- 最佳实践讲解。
+- 场景化 demo。
+- Meetup 或 webinar 录像。
+- 用户访谈或案例分享。
+
+提交方式：
+
+- 在 Slack `#dev` 频道发起讨论沟通。
+- 先通过社区渠道确认选题、讲稿或大纲。
+- 完成后可由社区协助发布到 YouTube、Bilibili 或其他官方视频渠道。
+- 如果视频包含公司名称、客户名称、性能数据或内部系统截图，需要提前确认授权或自行隐去敏感信息。
+
+#### 演讲
+
+适合形式包括：
+
+- Meetup 分享。
+- Webinar 分享。
+- Conference talk。
+- Release feature introduction。
+- Contributor onboarding session。
+- User story session。
+
+提交方式：
+
+- 在 Slack `#dev` 频道发起讨论沟通。
+- 向社区提交议题、摘要、目标受众、语言、预计时长和讲师信息。
+- 社区可协助做议题打磨、技术校对、宣传和报名页面支持。必要时，也可以提供资金、场地等支持。
+
+#### 翻译
+
+适合内容包括：
+
+- 官方文档翻译。
+- 博客翻译。
+- 活动 recap 翻译。
+- 视频字幕翻译。
+- 教程和最佳实践翻译。
+
+提交方式：
+
+- 文档类翻译可以通过 `apache/doris-website` 提交 PR。
+- 博客或活动内容翻译可以先与社区确认目标页面和发布渠道。
+- 翻译应保留技术准确性，不应为了营销表达改变原意。
+
+### 内容完成后的发布渠道
+
+根据内容类型和审核结果，内容可以发布到：
+
+- Apache Doris 官方网站。
+- Apache Doris 官方博客。
+- Apache Doris Medium。
+- Apache Doris YouTube。
+- Apache Doris LinkedIn。
+- Apache Doris X/Twitter。
+- Apache Doris Slack。
+- 社区 newsletter、活动 recap 或版本专题页面。
+
+内容发布前通常需要完成技术准确性 Review。涉及性能数据、商业案例、客户名称或公司信息的内容，还需要完成授权确认。
+
+</TabItem>
+<TabItem value="community" label="社区布道参与指南">
+
+### 可以参与哪些形式的活动
+
+社区贡献者可以参与或组织以下活动：
+
+- Online meetup：面向全球用户的线上主题分享。
+- Offline meetup：面向特定城市或区域的线下交流。
+- Webinar：围绕具体功能、场景或版本能力做线上讲解。
+- Workshop：带用户完成部署、导入、调优或案例实践。
+- Office hour：定期开放答疑，帮助用户解决使用问题。
+- User story session：邀请真实用户分享生产环境实践。
+- Release introduction：围绕新版本介绍重点功能和升级建议。
+- Contributor onboarding：帮助新贡献者理解代码、流程和社区协作方式。
+- Local community event：面向特定语言或区域用户的本地化活动。
+- Hackathon 或 contribution sprint：围绕 Issue、文档、测试或工具集中贡献。
+
+### 如何发起活动
+
+活动发起人应准备以下信息：
+
+- 活动主题。
+- 目标受众。
+- 活动形式。
+- 活动语言。
+- 时间和时区。
+- 讲师或主持人。
+- 预计时长。
+- 需要社区提供的支持。
+- 宣传计划。
+- 活动后是否产出 slides、录像、博客或 recap。
+
+建议先在 Slack `#dev` 频道发起讨论。这样可以让更多成员参与，也符合 Apache 社区公开透明的协作方式。
+
+### 社区可以提供哪些支持
+
+根据活动类型、活动质量和社区资源情况，社区可以提供以下支持：
+
+- 官方媒体渠道宣传。
+- 活动议题策划。
+- 讲师推荐。
+- Slides 或 demo 技术 Review。
+- 报名页或活动页支持。
+- 活动录像和回放分发。
+- 社交媒体传播。
+- 社区周边支持。
+- 有限的活动预算支持，例如场地、物料、茶歇或基础运营费用。
+- 活动后 recap 发布支持。
+
+关于资金、礼品、差旅、场地和赞助支持，可与社区共同协商。活动发起人需要提前说明预算用途、预期效果和交付内容。
+
+</TabItem>
+</Tabs>
+
+## 社区行为准则
+
+所有贡献者都应遵守以下原则：
+
+- 尊重他人，保持专业、友善、建设性的沟通方式。
+- 重要技术讨论和社区决策应尽量在公开渠道进行。
+- 对代码 Review、文档 Review 和内容 Review 保持开放态度。
+- 如果不同意 Review 意见，应给出清晰的技术理由。
+- 避免在私下完成本应公开讨论的社区决策。
+- 提交原创内容，或为引用内容明确标注来源。
+- 避免夸大、无法验证或带有误导性的性能和商业表述。
+- 代码变更应尽量补充测试。
+- 用户可见行为变化应同步更新文档。
+- 不公开用户隐私、客户敏感信息和公司机密。
+- 安全问题应遵循负责任披露流程，不应在公开渠道提前披露细节。
+- 尊重 Apache 社区价值观和 ASF Code of Conduct。
+
+贡献者以开源社区成员身份参与协作。如果贡献者代表公司参与某些活动，建议在必要时说明公司背景，但具体贡献仍应遵循 Apache 社区公开、透明、基于贡献的协作方式。

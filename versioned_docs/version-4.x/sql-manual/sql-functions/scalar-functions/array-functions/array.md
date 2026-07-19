@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY | Array Functions",
-    "language": "en-US",
+    "language": "en",
+    "description": "Creates an array. The function accepts zero or more parameters and returns an array containing all input elements.",
     "sidebar_label": "ARRAY"
 }
 ---
@@ -26,7 +27,7 @@ array([element1, element2, ...])
 
 ### Parameters
 
-- `element1, element2, ...`：Any type, elements to be included in the array. Supports zero or more parameters.
+- `element1, element2, ...`: Any type, elements to be included in the array. Supports zero or more parameters.
 
 **Supported element types:**
 - Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
@@ -64,11 +65,11 @@ SELECT array(1, 2, 3, 4, 5);
 Create an array with elements of different types:
 ```sql
 SELECT array(1, 'hello', 3.14, true);
-+----------------------------------+
-| array(1, 'hello', 3.14, true)    |
-+----------------------------------+
-| ["1", "hello", "3.14", "true"]   |
-+----------------------------------+
++-------------------------------+
+| array(1, 'hello', 3.14, true) |
++-------------------------------+
+| ["1", "hello", "3.14", "1"]   |
++-------------------------------+
 ```
 
 Create an empty array:

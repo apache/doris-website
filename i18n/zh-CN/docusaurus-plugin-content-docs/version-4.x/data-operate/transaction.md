@@ -26,7 +26,7 @@ COMMIT; / ROLLBACK;
 
 隐式事务是指用户在所执行的一条或多条 SQL 语句的前后，没有显式添加开启事务和提交事务的语句。
 
-在 Doris 中，除[Group Commit](../data-operate/import/group-commit-manual)外，每个导入语句在开始执行时都会开启一个事务，并且在该语句执行完成之后，自动提交该事务；或执行失败后，自动回滚该事务。每个查询或者 DDL 也是一个隐藏事务。
+在 Doris 中，除[Group Commit](./import/load-best-practices/group-commit-manual.md)外，每个导入语句在开始执行时都会开启一个事务，并且在该语句执行完成之后，自动提交该事务；或执行失败后，自动回滚该事务。每个查询或者 DDL 也是一个隐藏事务。
 
 ### 隔离级别
 Doris 当前支持的唯一隔离级别是 READ COMMITTED。在 READ COMMITTED 隔离级别下，语句只能看到在该语句开始执行之前已经提交的数据，它不会看到未提交的数据。
@@ -257,7 +257,7 @@ mysql> SELECT * FROM dt3;
 
 * 事务中的多个语句，每个语句不能读到本事务内其它语句做出的修改，如：
 
-    假如事务开启前，表 `dt1` 有 5 行，表 `dt2` 有 5 行，表 `dt3` 为空，执行以下语句： 
+    假如事务开启前，表 `dt1` 有 5 行，表 `dt2` 有 5 行，表 `dt3` 为空，下面的草图展示事务流程（完整可运行脚本见下面"具体的例子"，那里会先建表并写入种子数据）：
 
     ```sql
     BEGIN;
@@ -268,7 +268,7 @@ mysql> SELECT * FROM dt3;
     COMMIT;
     ```
 
-    具体的例子为：
+    具体的端到端可运行例子为：
 
     ```sql
     # 建表并写入数据
@@ -344,7 +344,7 @@ mysql> INSERT INTO dt3 SELECT * FROM dt2;
 ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=http://172.21.16.12:9082/api/_load_error_log?file=__shard_3/error_log_insert_stmt_3d1fed266ce443f2-b54d2609c2ea6b11_3d1fed266ce443f2_b54d2609c2ea6b11
 
 mysql> INSERT INTO dt3 SELECT * FROM dt2 WHERE id = 7;
-Query OK, 0 rows affected (0.07 sec)
+Query OK, 1 row affected (0.07 sec)
 
 mysql> COMMIT;
 Query OK, 0 rows affected (0.02 sec)
@@ -362,7 +362,7 @@ mysql> SELECT * FROM dt3;
 |    1 | Emily    |    25 |
 |    2 | Benjamin |    35 |
 |    3 | Olivia   |    28 |
-|    4 | Alexande |    60 |
+|    4 | Alexander |    60 |
 |    5 | Ava      |    17 |
 |    7 | Sophia   |    32 |
 +------+----------+-------+

@@ -19,7 +19,7 @@ WEEKS_SUB(`<date_or_time_expr>`, `<week_period>`)
 ## 参数
 | 参数          | 描述                                                                |
 |---------------|-------------------------------------------------------------------|
-| `<date_or_time_expr>`  | 输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)，[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                                       |
+| `<date_or_time_expr>`  | 输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)，[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                                       |
 | `week_period` | INT 类型整数，表示要减少的周数（正数表示减少，负数表示增加）。                                     |
 
 ## 返回值
@@ -86,9 +86,9 @@ SELECT WEEKS_SUB('2025-10-10 11:22:33.123+07:00', 1);
 
 -- 计算结果超出日期时间范围（下限）
 SELECT WEEKS_SUB('0000-01-01', 1);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation weeks_add of 0000-01-01, -1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation weeks_sub of 0000-01-01, -1 out of range
 
 -- 计算结果超出日期时间范围（上限）
 SELECT WEEKS_SUB('9999-12-31', -1);
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation weeks_add of 9999-12-31, 1 out of range
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation weeks_sub of 9999-12-31, 1 out of range
 ```

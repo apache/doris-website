@@ -1,0 +1,39 @@
+---
+{
+    "title": "Data Operations",
+    "language": "en",
+    "description": "Load, update, delete, and export data in Apache Doris, covering data ingestion methods, write semantics, and result-set export."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris provides a complete set of data operation capabilities, covering the full pipeline from data ingestion to data export. You can load data from a variety of data sources, update and delete data with transactional guarantees, and export query results or table data to external storage systems.
+
+In addition, Apache Doris also supports managing Apache Iceberg table data directly, including direct query acceleration, write, update, and delete operations on Iceberg tables. For details, see the data management section of Iceberg Catalog.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Data Loading"
+    description="Load data from files, message queues, transactional databases, and other OLAP systems through Stream Load, Broker Load, Routine Load, INSERT, and streaming data synchronization jobs."
+    link="./import/load-manual"
+/>
+
+<GettingStartedCard
+    title="Data Update and Deletion"
+    description="Update existing data, delete data using DELETE, TRUNCATE, atomic overwrite, and other methods, and combine multiple write operations into an atomic unit through transactions."
+    link="./update-and-delete"
+/>
+
+<GettingStartedCard
+    title="Data Export"
+    description="Export query results or table data to HDFS, object storage, or the local file system using EXPORT, SELECT INTO OUTFILE, or mysqldump."
+    link="./export/export-overview"
+/>
+
+<GettingStartedCard
+    title="Iceberg Data Management"
+    description="Connect to Iceberg table data by creating an Iceberg Catalog and perform data operations."
+    link="../lakehouse/catalogs/iceberg-catalog"
+/>
+</div>

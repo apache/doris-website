@@ -14,6 +14,8 @@ This syntax is used to view the currently running subtasks of a specified Routin
 
 ```sql
 SHOW ROUTINE LOAD TASK WHERE JobName = <job_name>;
+
+SHOW ROUTINE LOAD TASK FOR [<db>.]<job_name>;
 ```
 
 ## Required Parameters
@@ -21,6 +23,12 @@ SHOW ROUTINE LOAD TASK WHERE JobName = <job_name>;
 **1. `<job_name>`**
 
 > The name of the routine load job to view.
+
+## Optional Parameters
+
+**1. `<db>`**
+
+> The database where the routine load job resides. If omitted, the routine load job is searched in the current database.
 
 ## Return Results
 
@@ -58,4 +66,16 @@ Users executing this SQL command must have at least the following privileges:
 
     ```sql
     SHOW ROUTINE LOAD TASK WHERE JobName = "test1";
+    ```
+
+- Show subtask information for the routine load job `test1` in the current database.
+
+    ```sql
+    SHOW ROUTINE LOAD TASK FOR test1;
+    ```
+
+- Show subtask information for the routine load job `test1` in the database `example_db`.
+
+    ```sql
+    SHOW ROUTINE LOAD TASK FOR example_db.test1;
     ```

@@ -1,117 +1,231 @@
 ---
 {
-    "title": "File Cache Internals",
+    "title": "File Cache Internals: Cache Slicing, Multi-Queue Management, Eviction, and Warm-Up",
+    "sidebar_label": "File Cache Internals",
     "language": "en",
-    "description": "Doris employs cache slicing and prefetch mechanisms to optimize data cache management and read efficiency. Specifically,"
+    "description": "A detailed explanation of Doris file cache slicing, multi-queue management, LRU eviction policy, and warm-up mechanisms to help you understand cache hit rate optimization and scaling best practices.",
+    "keywords": ["Doris file cache", "cache slicing", "multi-queue LRU", "cache warm-up", "compute-storage decoupled", "cache eviction", "cache hit rate"]
 }
 ---
 
-## Fundamentals
+<!-- Knowledge type: Architecture principle -->
+<!-- When to use: Performance tuning / Troubleshooting / Scaling planning -->
 
-### (1) Cache Slicing and Prefetch Mechanism
+## Basic Principles
 
-Doris employs cache slicing and prefetch mechanisms to optimize data cache management and read efficiency. Specifically, target files are sliced with 1MB alignment, and each slice is stored as a separate Block file in the local filesystem after complete download. This slicing approach effectively reduces cache granularity, improving cache flexibility and space utilization. Doris can cache only required portions of data, avoiding the space waste of caching entire large files. Smaller cache blocks also facilitate management and eviction, enabling more precise hotspot data access.
+<!-- Knowledge type: Operations -->
 
-### (2) Local File Directory Organization
+### Cache Slicing and Prefetch Mechanism
 
-To better manage cached data, Doris adopts a specific local file directory structure. Caches may be distributed across multiple directories on multiple disks. To achieve uniform distribution across directories, Doris calculates a hash value from the target file path and uses this hash as the last-level directory for Block file storage. Each Block file is named based on its offset position in the target file.
+Doris splits target files into slices aligned to **1 MB** boundaries. After each slice is fully downloaded, it is stored as an independent block file on the local file system. This fine-grained slicing avoids wasting space by caching entire large files and enables more precise hit tracking and eviction of hot-spot data.
 
-For example, if the target file path is `/remote/data/datafile1` with a hash value of `12345`, the cached Block file might be stored at `/cache/123/12345/offset1`, where `offset1` represents the block's offset position in the original file.
+### Local File Directory Organization
 
-### (3) Multi-Queue Mechanism
+<!-- Knowledge type: Configuration reference -->
 
-Doris' file cache uses a multi-queue mechanism to separate different data types, preventing cache pollution and improving hit rates. Cache data is categorized into the following types, each stored in separate queues prioritized by importance:
+Cache data can be distributed across multiple directories on multiple disks. Doris computes a hash of the target file path and uses that hash as the last-level directory component of the block file path. Within the directory, each block file is named by its **offset** in the target file, distributing data evenly across multiple directories.
 
-- TTL Queue: Stores data with TTL (Time-To-Live) attributes. This data remains in cache for the specified TTL duration and has the highest priority during that period. When cache space is insufficient, the system preferentially evicts data from other queues to preserve TTL data. TTL is a table attribute - for example, setting it to 3600 means data imported into this table should remain in file cache for 1 hour after import. Use case: Suitable for small-scale tables that need local persistence, such as resident tables with long TTL values.
-- Index Queue: Stores index data primarily used to accelerate query filtering operations, typically with high access frequency. Note: Inverted index files, despite being "indexes", are treated as normal cache data due to their typically large size.
-- Normal Queue: Stores regular data without TTL attributes. Most data falls into this category.
-- Disposable Queue: Stores temporary data like compaction reads. This data is typically evicted after use and has the lowest priority.
+**Example:** Given a target file path of `/remote/data/datafile1` with a computed hash of `12345`, the corresponding block file path is:
 
-This multi-queue mechanism enables Doris to allocate cache space rationally based on different data characteristics and usage scenarios, maximizing cache resource utilization.
+```
+/cache/123/12345/<offset>
+```
 
-### (4) Eviction Mechanism
+Here `<offset>` is the offset of that block's data within the original file.
 
-The cache eviction mechanism is crucial for file cache management, determining how to select data for eviction when space is limited. Doris' eviction mechanism includes the following triggers and selection strategies:
+### Multi-Queue Mechanism
 
-Eviction Triggers:
+<!-- Knowledge type: Configuration reference -->
 
-- Passive eviction due to space constraints:
-  - When local disk space or inode count is insufficient, Doris triggers passive eviction to free space.
-  - When reaching cache capacity limits: Even if disk space remains, eviction starts when cache usage reaches predefined thresholds.
-- Proactive early eviction: Unlike synchronous eviction where new data must wait for old data to be evicted (impacting query performance), Doris asynchronously cleans old caches when usage reaches high-water marks.
-- Proactive garbage collection: While LRU can evict unused data, Doris actively cleans garbage data like compaction/Schema Change original data, failed import rollback data, and dropped table/partition data.
-- TTL expiration: Unique to TTL data. When TTL expires, data is demoted to the normal cache and participates in regular eviction.
+Doris routes cached data into different queues by type to prevent cache pollution and improve hit rates. Queues are listed below from highest to lowest priority:
 
-Eviction Target Selection:
+| Queue | Content | Priority | Notes |
+|-------|---------|----------|-------|
+| TTL queue | Data with a TTL attribute set | Highest | Data is not evicted while the TTL has not expired. TTL is a table-level attribute; for example, setting it to 3600 means data is retained in cache for up to 1 hour after ingestion. Suitable for small, frequently accessed resident tables that need local persistence. |
+| Index queue | Index data (excluding inverted indexes) | High | Used to accelerate query filtering. Inverted indexes are placed in the Normal queue due to their large size. |
+| Normal queue | Regular data (no TTL attribute) | Medium | The queue where most data resides. |
+| Disposable queue | Temporary data (such as data read during Compaction) | Lowest | Evicted first after use. |
 
-- Eviction ratio: Queues share disk space with individual ratio limits. When space is abundant (other queues haven't reached their ratios), a queue can use all remaining space. For example, the normal cache might be limited to 40% of total space but can use all available space if no other data exists. As other queue data enters, ratios gradually approach preset values.
-- Eviction order: When write cache space is insufficient, Doris evicts data in this sequence: Disposable → Normal → Index → TTL. If evicting other queue data still doesn't free enough space, LRU eviction occurs within the same queue type.
+### Eviction Mechanism
 
-Eviction Avoidance Recommendations:
+<!-- Knowledge type: Operations -->
+<!-- When to use: Troubleshooting / Performance tuning -->
 
-- Sufficient disk space: Ensure adequate space to accommodate cache data, avoiding frequent evictions due to space constraints. Since cache cleanup has latency, maintain some buffer. Experience shows file cache space should be about 1.5× query hot data size for optimal hit rates.
-- Isolate large queries: Route large queries to separate clusters to prevent them from occupying cache space and affecting other queries' hit rates.
+#### When Eviction Is Triggered
 
-### (5) Warm-up Mechanism
+| Trigger | Description |
+|---------|-------------|
+| Passive eviction due to insufficient space | Triggered when local disk space or inodes are exhausted, or when cache usage reaches the configured capacity limit. |
+| Active eviction at high watermark | When cache usage reaches the high watermark, Doris asynchronously cleans up old cache entries in advance to avoid blocking writes with synchronous eviction. |
+| Garbage collection eviction | Proactively cleans up the following stale data: source data from Compaction and Schema Change, data rolled back after a failed import commit, and residual data from `DROP TABLE` or `DROP PARTITION` operations. |
+| TTL expiry demotion | When a TTL entry expires, it is demoted into the Normal queue and participates in the normal LRU eviction flow. |
 
-Cache warm-up preloads data into cache to accelerate subsequent queries. Doris provides multiple warm-up approaches:
+#### Eviction Target Selection Strategy
 
-- Manual warm-up: Users can warm up current cluster caches for specific tables/partitions, or reference another cluster to warm up its cached tables/partitions. Warm-up always downloads from remote storage (not other clusters/BEs). After execution, targets (tables/partitions or reference clusters) are converted to tablet sets for BE download. BE download logic essentially performs sequential reads of all tablet data files to cache them locally. Since warm-up data volume can be large, Doris splits tasks into 20GB-max batches with checkpoints for recovery after interruptions. If BEs encounter severe issues (e.g., crashes) or users cancel warm-up, all BEs stop downloads. Users can check job status (`FINISHED`, `CANCELLED`, `RUNNING`) via `SHOW WARM UP JOB`, including progress for running jobs. Repeated warm-ups for same tables/partitions won't redownload existing data, only performing incremental updates.
-- Load balancing-triggered warm-up: When tablet distribution becomes unbalanced (especially during node failures or scaling), tablets migrate to new BEs. Target BEs then download cache data using metadata from source BEs (if available), ensuring query cache hits on new nodes. Source BE cache data is actively evicted during cleanup. Note: There's a time window between migration and complete download where cache misses may occur.
-- Cross-cluster auto warm-up (v3.1+): In compute-storage separation scenarios, users may want automatic cache synchronization between compute clusters (e.g., when imports occur in Cluster A but queries in Cluster B). Doris offers two auto-sync methods:
-  - Periodic warm-up: For non-real-time requirements, add sync intervals in `WARM UP` SQL. Instead of one-time execution, tasks periodically sync specified tables/partitions from one cluster to another incrementally.
-  - Import/compaction-triggered warm-up: For real-time requirements, use import completion events to trigger warm-up. Since tablets may distribute differently across clusters, FE informs source clusters about target cluster tablet distribution. During source cluster import commit phase, it notifies target cluster BEs to download newly imported remote storage data. Compaction follows similar notification paths for warm-up.
+**Space allocation ratio:** Multiple queues share disk space, and each queue has an independent upper limit on its share (for example, the Normal queue is capped at 40% of total space). When other queues have not yet consumed their allocated share, a queue can use all remaining space. As data of each type grows, the shares gradually approach their configured values.
+
+**Eviction order:** When a queue does not have enough space for a write, Doris evicts data that exceeds the allocation ratio in the following order (within each queue, LRU determines which entries are evicted first):
+
+```
+Disposable → Normal → Index → TTL
+```
+
+If evicting from the other queues still leaves insufficient space, Doris evicts entries from the target queue itself using LRU.
+
+#### Recommendations to Avoid Hot Data Eviction
+
+- **Reserve sufficient disk space:** Because cache cleanup has some lag, always keep a margin. Based on experience, setting the file cache capacity to approximately **1.5 times** the volume of hot query data achieves a high hit rate.
+- **Isolate large queries:** Route large queries to a dedicated cluster to prevent them from occupying cache and degrading the hit rate for other queries.
+
+### Warm-Up Mechanism
+
+<!-- Knowledge type: Operations -->
+<!-- When to use: Pre-deployment check / Performance tuning -->
+
+Cache warm-up loads data into the cache in advance so that subsequent queries can hit the local cache directly and achieve better query performance. Doris provides three warm-up methods:
+
+#### Manual Warm-Up
+
+You can initiate a warm-up for a specified table or partition, or by referencing the cache contents of another cluster. The data source is always remote storage (not other BE nodes). The warm-up flow is as follows:
+
+1. You issue a warm-up command. The system converts the target into a set of tablets and dispatches them to the corresponding BEs.
+2. Each BE performs a sequential read of all data files for its tablets and writes the data into the local file cache.
+3. Tasks are executed in batches of at most **20 GB** each. After each batch completes, a checkpoint is saved, enabling resume on interruption.
+4. If a BE goes down or you manually cancel the job, all BEs stop downloading and the warm-up ends.
+
+You can check task status (`FINISHED` / `CANCELLED` / `RUNNING`) and overall progress with `SHOW WARM UP JOB`. When you warm up the same table and partition again, Doris automatically detects existing data and performs an **incremental update** without re-downloading data that is already cached.
+
+#### Warm-Up Triggered by Data Rebalancing
+
+When a tablet is migrated to a new BE due to load rebalancing (from scaling or a node failure), the new BE sends an RPC to the old BE to fetch the cache metadata, then re-downloads the data into its local file cache based on that metadata. The cache data on the old node is proactively evicted when the tablet information is cleaned up, freeing the space.
+
+> **Note:** There is a time window between migration completion and cache download readiness, during which file cache misses may occur.
+
+#### Automatic Warm-Up Across Compute Clusters (Version 3.1+)
+
+<!-- Knowledge type: Architecture principle -->
+
+In a compute-storage decoupled deployment, file caches across multiple compute clusters can be synchronized automatically. Doris provides two synchronization methods:
+
+| Method | When to Use | Description |
+|--------|-------------|-------------|
+| Periodic warm-up | When real-time data freshness is not critical | Specify a sync interval in the `WARM UP` SQL statement. The job periodically synchronizes incremental data for specified tables and partitions to the target cluster. |
+| Ingestion/Compaction-triggered warm-up | When real-time freshness is required | When an ingestion job enters the commit phase, the source cluster BE notifies the corresponding BE in the target cluster to download the newly uploaded data. Compaction completion triggers a similar notification path. FE is responsible for maintaining tablet distribution information for the target cluster. |
+
+---
 
 ## Scenario Analysis
 
-### (1) File Cache in Query Processing
+<!-- Knowledge type: Operations -->
 
-During queries, file cache reduces remote storage access and accelerates data retrieval:
+### Query Scenario
 
-- Scanner reads data files: When queries arrive, Scanner attempts to read required data files.
-- Local cache check: Before accessing remote storage, Scanner first checks local file cache.
-- Cache hit: If cache metadata contains the requested file path and offset, it returns BlockFile handles for Scanner to read directly, avoiding remote downloads and reducing latency.
-- Cache miss: For partially or completely uncached ranges, Scanner downloads missing data from remote storage. Downloaded data enters file cache for future queries while following eviction policies.
+<!-- When to use: Performance tuning / Troubleshooting -->
 
-### (2) File Cache in Data Loading
+The file cache processing flow during a query is as follows:
 
-During imports, file cache prepares data for subsequent queries:
+1. **Scanner read request:** After a query arrives, the Scanner component prepares to read the required data files.
+2. **Check local cache:** The Scanner first checks the local file cache, matching cache metadata by file path and offset.
+3. **Cache hit:** When matching cached data is found, the system returns a set of BlockFile handles, and the Scanner reads data locally without accessing remote storage.
+4. **Cache miss:** For ranges that are not in the cache, the Scanner downloads data from remote storage, writes it to the file cache, and then returns it. Space is freed in accordance with the eviction policy.
 
-- Data upload to remote storage: Imported data first goes to remote storage.
-- Async local cache write: Doris asynchronously writes this data to local disk cache, enabling immediate cache hits for post-import queries.
-- Cache type: Based on data type and attributes (e.g., TTL), imported data enters corresponding queues (TTL, Index, or Normal).
+### Ingestion Scenario
 
-### (3) File Cache in Compaction
+<!-- When to use: Performance tuning -->
 
-Compaction optimizes storage and query performance by merging small files. Doris has two types:
-- Cumulative Compaction: Merges incremental data versions
-- Base Compaction: Merges baseline data (version 0) with incremental versions
+The file cache processing flow during data ingestion is as follows:
 
-Cache handling during compaction:
+1. **Upload to remote storage:** Ingested data is first written to remote storage.
+2. **Asynchronous write to local cache:** Doris simultaneously writes the data to the local file cache asynchronously, so that queries immediately after ingestion can hit the cache directly.
+3. **Cache queue assignment:** Based on data type and TTL attribute, data is written to the corresponding queue (TTL queue, Index queue, or Normal queue).
 
-- Cumulative Compaction: Newly merged data enters file cache after remote storage upload, similar to imports, accelerating subsequent queries.
-- Base Compaction: Since Base Compaction typically involves large cold data, new data only enters cache when space permits. Users can force cache insertion via BE config `enable_file_cache_keep_base_compaction_output = true`, but this may evict other hot data. Future versions plan adaptive strategies using historical query stats to determine cache insertion.
+### Compaction Scenario
 
-### (4) Cache Loading After Restart
+<!-- When to use: Performance tuning -->
 
-Post-restart cache loading is critical for cache state recovery and quick query response. Pre-v3.1, unpreserved LRU information caused inconsistent queue ordering, affecting hit rates.
+Doris has two types of Compaction:
 
-v3.1 introduces LRU persistence:
+- **Cumulative Compaction:** Merges incremental data segments.
+- **Base Compaction:** Merges the baseline data version (starting from version 0) with incremental data versions.
 
-- Periodic dump: Doris periodically dumps LRU queue order info to disk.
-- Post-restart load: Nodes reload dumped LRU info to restore queue states.
-- Full-disk scan: To address potential metadata-file inconsistencies from periodic dumps, Doris performs a full-disk scan after LRU loading for completeness.
-- Query-triggered async load: Since scanning takes time, BEs can serve queries during the process. If queries access unscanned data, early loading occurs to minimize latency.
+The two types of Compaction use different cache write strategies:
 
-### (5) Cache Handling During Scaling
+| Compaction Type | Cache Write Strategy |
+|-----------------|---------------------|
+| Cumulative Compaction | Output data is written to the file cache while being uploaded to remote storage, consistent with the ingestion flow, to accelerate subsequent queries. |
+| Base Compaction | By default, data is written to the cache only when there is sufficient cache space, to avoid cache pollution from large volumes of cold data. You can force writes by setting the BE parameter `enable_file_cache_keep_base_compaction_output = true`, but this may cause other hot data to be evicted. |
 
-Scaling operations are common in cluster management. Doris handles file cache during scaling as follows:
+> **Planned:** A future version of Doris will provide an adaptive write strategy based on historical query statistics.
 
-- Horizontal scale-out: During tablet migration to new BEs, target BEs download cache data using metadata from source BEs, ensuring cache hits on new nodes.
-- Horizontal scale-in: Similar to scale-out, but when reduced cluster cache capacity falls below actual cache size, eviction occurs following standard mechanisms.
-- Vertical scale-out:
-  - Adding disks: Not recommended since Doris doesn't rehash or balance across disks. Cache directory changes may cause lookup failures. If necessary, clear cache and warm up as needed.
-  - Increasing disk capacity: For same-disk-count capacity expansion, use `curl http://BE_IP:WEB_PORT/api/file_cache?op=reset&capacity=123456` to notify BEs.
-- Vertical scale-in:
-  - Reducing disk space: Also requires the `reset` operation. When new capacity is below cache size, eviction occurs per standard mechanisms.
-- Post-scaling warm-up notes: Since horizontal scaling involves tablet rebalancing, wait for stabilization before warm-up for effectiveness. Monitor `doris_fe_tablet_num` metrics - when the curve stabilizes, warm-up completes.
+### Cache Loading After Restart
+
+<!-- When to use: Troubleshooting -->
+
+Before version 3.1, the LRU queue order could not be restored after a restart, causing hot data to be evicted and degrading the hit rate.
+
+**Version 3.1 introduces LRU information persistence.** The loading flow is as follows:
+
+1. **Periodic dump:** The order information of each LRU queue is periodically persisted to disk.
+2. **Load on restart:** When a node restarts, it reads the dump data from disk to restore the cache queue state.
+3. **Full disk scan for completeness:** To fix metadata-disk inconsistencies caused by the dump time window, a full disk scan is performed after restart to ensure data integrity.
+4. **Query-triggered concurrent async loading:** During the full disk scan, the BE can still serve queries. If a query targets data that has not been scanned yet, the system loads that data ahead of schedule to reduce query latency.
+
+### Scaling Scenario
+
+<!-- Knowledge type: Configuration reference -->
+<!-- When to use: Scaling planning -->
+
+#### Horizontal Scale-Out
+
+Doris migrates tablets to new BE nodes through rebalancing. The target BE re-downloads data to local storage based on the source BE's cache metadata, ensuring that queries on the new node can also hit the file cache.
+
+#### Horizontal Scale-In
+
+After tablet rebalancing, if the cluster's overall file cache capacity falls below the actual volume of cached data, the eviction mechanism automatically removes the excess data.
+
+#### Vertical Scale-Out
+
+| Scale-Out Method | Instructions |
+|------------------|-------------|
+| Increase single-disk capacity | Run the following command to notify the BE of the space change: `curl http://<BE_IP>:<WEB_PORT>/api/file_cache?op=reset&capacity=<new capacity in bytes>` |
+| Add more disks | **Not recommended.** Doris does not currently implement rehashing and does not support rebalancing across disks. Changing the number of cache directories may cause cache lookup failures. If you must add disks, clear the cache and re-warm as needed. |
+
+#### Vertical Scale-In
+
+Reducing disk space also requires running the `reset` command above. When the cache capacity falls below the actual volume of cached data, the eviction mechanism is triggered to clean up data automatically.
+
+#### Warm-Up Considerations After Scaling
+
+Horizontal scale-out and scale-in involve tablet rebalancing operations. **Wait for the migration to stabilize before executing a warm-up** to ensure the warm-up is effective. You can determine whether the migration is complete by monitoring the FE metric `doris_fe_tablet_num`. A flat, stable curve with no fluctuation indicates the migration is finished and it is safe to run a warm-up.
+
+---
+
+## Frequently Asked Questions
+
+<!-- Knowledge type: Troubleshooting -->
+<!-- When to use: Troubleshooting / Performance tuning -->
+
+**Q: The cache hit rate is low and query performance has not improved. How do I troubleshoot?**
+
+- Check whether the file cache disk has sufficient remaining space. The recommended cache capacity is at least 1.5 times the volume of hot data.
+- Check whether large queries are frequently evicting hot data. Consider isolating large queries.
+- A low hit rate for a short period after a restart is normal (LRU recovery takes time). You can run a manual warm-up in advance.
+
+**Q: After scaling out, queries are missing the cache. What should I do?**
+
+- Confirm that tablet rebalancing is complete (the `doris_fe_tablet_num` curve is flat and stable).
+- Run a manual warm-up command for the target tables and partitions.
+- After horizontal scale-out, data download on new BEs takes time. Cache misses during this period are expected.
+
+**Q: Does Base Compaction cause hot data to be evicted?**
+
+- By default, Base Compaction writes to the cache only when there is sufficient space and does not actively evict hot data.
+- If `enable_file_cache_keep_base_compaction_output = true` is enabled, Base Compaction data is force-written to the cache, which may cause hot data to be evicted. Evaluate this trade-off based on your actual workload.
+
+**Q: Is data deleted immediately when its TTL expires?**
+
+- No, it is not deleted immediately. When the TTL expires, the data is demoted to the Normal type and enters the Normal queue to participate in normal LRU eviction. The eviction mechanism ultimately determines when the data is removed.
+
+**Q: Can manual warm-up avoid re-downloading data that is already cached?**
+
+- Yes. When executing a warm-up, Doris automatically identifies already-cached data and performs an incremental download only for new or changed data.

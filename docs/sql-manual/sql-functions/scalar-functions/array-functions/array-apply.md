@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_APPLY",
     "language": "en",
-    "description": "Filters array elements using a specified binary operator and returns a new array containing elements that satisfy the condition."
+    "description": "Filters array elements using a specified comparison operator and returns a new array containing elements that satisfy the condition."
 }
 ---
 
@@ -15,7 +15,7 @@
 
 ## Description
 
-Filters array elements using a specified binary operator and returns a new array containing elements that satisfy the condition. This is a simplified array filtering function that uses predefined operators instead of lambda expressions.
+Filters array elements using a specified comparison operator and returns a new array containing elements that satisfy the condition. This is a simplified array filtering function that uses predefined operators instead of lambda expressions.
 
 ## Syntax
 

@@ -1,28 +1,64 @@
 ---
-{
-    "title": "Distribute Hint",
-    "language": "en",
-    "description": "The Distribute hint is used to control the shuffle method for joins."
-}
+title: Distribute Hint for Controlling Join Shuffle Methods
+language: en
+description: How to use Distribute Hint to force the shuffle or broadcast distribution method of a Join, and tune query performance.
+keywords:
+    - Distribute Hint
+    - Join Shuffle
+    - Broadcast Join
+    - Doris Hint
+    - Join tuning
+    - distribution method
 ---
+
+<!-- Knowledge type: Feature description / Operation steps -->
+<!-- Applicable scenarios: Join performance tuning / Forcing the distribution method -->
 
 ## Overview
 
-The Distribute hint is used to control the shuffle method for joins.
+Distribute Hint controls how the right-table data is distributed (shuffled) in a Join operation, and is a common way to manually tune the Join execution plan. By explicitly specifying the distribution method, you can flexibly intervene in the query execution plan when the optimizer's automatic choice is not ideal.
 
-## Syntax
+**Core capabilities:**
 
-- Supports specifying the Distribute Type for the right table, which can be either `[shuffle]` or `[broadcast]`, and should be written before the right table in the Join.
-- Supports an arbitrary number of Distribute Hints.
-- When encountering a Distribute Hint that cannot correctly generate a plan, the system will not display an error. It will make the best effort to apply the hint, and the final Distribute method will be shown in the EXPLAIN output.
+- Force the distribution method of the Join right table to be `shuffle` or `broadcast`.
+- Combine with Ordered Hint and Leading Hint for more fine-grained Join tuning.
+- When a Hint cannot take effect, the system handles it on a best-effort basis and does not raise an error.
 
-## Examples
+## Quick Navigation
 
-**Used in Combination with Ordered Hint**
+- [Syntax Rules](#syntax-rules)
+- [Distribution Method Description](#distribution-method-description)
+- [Use Cases](#use-cases)
+    - [Combined with Ordered Hint](#combined-with-ordered-hint)
+    - [Combined with Leading Hint](#combined-with-leading-hint)
+- [FAQ](#faq)
 
-Fix the Join order to the textual sequence, and then specify the expected Distribute method for the Join. For example:  
+## Syntax Rules
 
-Before using:  
+| Rule | Description |
+| --- | --- |
+| Position | Distribute Hint is written before the Join right table |
+| Optional types | `[shuffle]` or `[broadcast]` |
+| Quantity limit | Any number of Distribute Hints is supported |
+| Failure handling | When the corresponding plan cannot be generated, no error is raised. The Hint takes effect on a best-effort basis, and the final distribution method is whatever is shown by EXPLAIN |
+
+## Distribution Method Description
+
+The EXPLAIN Shape Plan displays the distribution type of the Distribute operator. The meanings are as follows:
+
+| Distribution Type | Meaning |
+| --- | --- |
+| `DistributionSpecReplicated` | Replicates the corresponding data to all BE nodes (Broadcast distribution) |
+| `DistributionSpecGather` | Gathers the data to the FE node |
+| `DistributionSpecHash` | Distributes the data to different BE nodes by a specific hashKey and algorithm (Shuffle distribution) |
+
+## Use Cases
+
+### Combined with Ordered Hint
+
+**Scenario**: First use Ordered Hint to fix the Join order to the textual order, and then use Distribute Hint to specify the desired distribution method for each Join.
+
+**Before** (default plan):
 
 ```sql
 mysql> explain shape plan select count(*) from t1 join t2 on t1.c1 = t2.c2;
@@ -43,7 +79,7 @@ mysql> explain shape plan select count(*) from t1 join t2 on t1.c1 = t2.c2;
   +----------------------------------------------------------------------------------+
 ```
 
-After using:
+**After** (specifying Broadcast distribution):
 
 ```sql
 mysql> explain shape plan select /*+ ordered */ count(*) from t2 join[broadcast] t1 on t1.c1 = t2.c2;
@@ -69,14 +105,11 @@ mysql> explain shape plan select /*+ ordered */ count(*) from t2 join[broadcast]
 +----------------------------------------------------------------------------------+
 ```
 
-The Explain Shape Plan will display information related to the Distribute operator. Specifically:
+The distribution method of `t1` changes from `DistributionSpecHash` to `DistributionSpecReplicated`, which means Broadcast distribution has taken effect.
 
-- `DistributionSpecReplicated` indicates that the corresponding data will be replicated to all BE nodes.
-- `DistributionSpecGather` indicates that the data will be gathered to the FE node.
-- `DistributionSpecHash` indicates that the data will be distributed to different BE nodes based on a specific hashKey and algorithm.
-**Used in Combination with Leading Hint**
+### Combined with Leading Hint
 
-When writing SQL queries, you can specify the corresponding `DISTRIBUTE` method for each `JOIN` operation while using the `LEADING` hint. Below is a specific example demonstrating how to mix `Distribute Hint` and `Leading Hint` in an SQL query.
+**Scenario**: Use the `LEADING` hint to fix the Join order while specifying the corresponding `DISTRIBUTE` method for each `JOIN` operation, achieving full control over the execution plan.
 
 ```sql
 explain shape plan
@@ -115,6 +148,21 @@ explain shape plan
         o_year desc;
 ```
 
+## FAQ
+
+**Q1: What happens if a Distribute Hint is written incorrectly or the corresponding plan cannot be generated?**
+
+The system does not raise an error and tries to apply the Hint on a best-effort basis. Whether the Hint ultimately takes effect depends on the type of the Distribute operator shown in the `EXPLAIN` output.
+
+**Q2: When should you use `shuffle`, and when should you use `broadcast`?**
+
+- `broadcast`: Use this when the right-table data volume is small and the cost of replicating it to all BE nodes is lower than the cost of Shuffle.
+- `shuffle`: Use this when both tables have a large data volume and redistributing by hashKey is more efficient.
+
+**Q3: Can you specify the distribution method for multiple Joins at once?**
+
+Yes. There is no limit on the number of Distribute Hints, and they can be combined with Ordered Hint and Leading Hint to specify the distribution method for each Join individually.
+
 ## Summary
 
-The Distribute hint is a commonly used hint for controlling the join shuffle method, allowing manual specification of shuffle or broadcast distribution methods. Proper use of the Distribute hint can meet on-site tuning needs for join shuffle methods, increasing the flexibility of system control.
+Distribute Hint is a common Hint for controlling the Join Shuffle method, and is used to manually specify the `shuffle` or `broadcast` distribution method. Reasonable use of Distribute Hint can meet on-site tuning requirements for the Join Shuffle method and improve the flexibility of system control.

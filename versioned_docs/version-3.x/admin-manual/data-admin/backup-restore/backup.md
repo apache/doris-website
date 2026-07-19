@@ -26,7 +26,7 @@ WITH S3
 ON LOCATION "s3://bucket_name/s3_repo"
 PROPERTIES
 (
-    "s3.endpoint" = "s3.us-east-1.amazonaws.com",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
     "s3.region" = "us-east-1",
     "s3.access_key" = "ak",
     "s3.secret_key" = "sk"
@@ -49,8 +49,8 @@ ON LOCATION "s3://<container_name>/azure_repo"
 PROPERTIES
 (
     "azure.endpoint" = "https://<account_name>.blob.core.windows.net",
-    "azure.account_name" = "ak",
-    "azure.account_key" = "sk",
+    "azure.account_name" = "<account_name>",
+    "azure.account_key" = "<account_key>",
     "provider" = "AZURE"
 );
 ```

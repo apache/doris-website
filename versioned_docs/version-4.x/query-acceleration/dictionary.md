@@ -1,58 +1,76 @@
 ---
-{
-    "title": "Dictionary Table(Experimental)",
-    "language": "en",
-    "description": "Dictionary is a special data structure provided by Doris to speed up JOIN operations. It is built on the basis of ordinary tables,"
-}
+title: Accelerate JOIN Queries with Dictionaries
+sidebar_label: Dictionary Acceleration
+language: en
+description: Use Doris Dictionaries to convert dimension-table JOINs into in-memory key-value lookups and speed up query performance.
+keywords:
+    - Doris Dictionary
+    - Dictionary
+    - JOIN acceleration
+    - dimension table query
+    - dict_get
+    - HASH_MAP
+    - IP_TRIE
+    - KV lookup
 ---
 
-## Overview
+<!-- Knowledge type: Feature definition / Operation steps / Configuration parameters -->
+<!-- Applicable scenarios: Query performance tuning / Dimension table join acceleration -->
 
-Dictionary is a special data structure provided by Doris to speed up JOIN operations. It is built on the basis of ordinary tables, treating the corresponding columns of the original table as key-value relationships, and pre-loading all the data of these columns into memory to achieve fast lookup operations, thus improving query performance. It is especially suitable for scenarios that require frequent key-value lookups.
+A Dictionary is a special data structure provided by Doris to accelerate JOIN operations. It is built on top of a regular table, treats the corresponding columns of the source table as a key-value relationship, and preloads the full data of these columns into memory to enable fast lookup operations, thereby improving query performance.
 
-Naturally, as a key-value lookup solution, dictionary tables do not allow duplicate keys.
+Dictionaries are especially suitable for scenarios that require frequent key-value lookups. As a key-value lookup solution, dictionaries do not allow duplicate keys.
 
-## Usage Scenario
+:::tip
+This feature is experimental and is supported starting from version 4.1.0.
+:::
 
-The dictionary table is mainly suitable for the following scenarios:
+## Use Cases
 
-1. Scenarios where frequent key-value lookups are required
-2. Dimension tables are small and can be fully loaded into memory
-3. Scenarios with relatively low frequency of data updates
+<!-- Knowledge type: Architecture selection decision -->
 
-The key-value lookup that originally needed to be implemented using LEFT OUTER JOIN can be completely eliminated with the help of the dictionary table, transforming into a normal function call. Here is a complete scenario example:
+Dictionaries are mainly suitable for the following scenarios:
+
+1. Scenarios that require frequent key-value lookups
+2. Scenarios where the dimension table is small enough to fit entirely in memory
+3. Scenarios with a relatively low data update frequency
+
+Key-value lookups that originally had to be implemented with a LEFT OUTER JOIN can completely eliminate the JOIN overhead with the help of a dictionary, turning into a regular function call.
 
 ### Scenario Example
 
-In e-commerce systems, the order table (`orders`, fact table) records a large amount of transaction data, and it needs to frequently associate with the product table (`products`, dimension table) to obtain detailed product information.
+In an e-commerce system, the order table (`orders`, the fact table) records a large amount of transaction data and frequently needs to be joined with the product table (`products`, the dimension table) to obtain detailed product information.
+
+**Step 1: Create the base fact table and dimension table, and insert sample data**
 
 ```sql
--- Product Dimension Table
+-- Product dimension table
 CREATE TABLE products (
-    product_id BIGINT NOT NULL COMMENT "商品ID",
-    product_name VARCHAR(128) NOT NULL COMMENT "商品名称",
-    brand_name VARCHAR(64) NOT NULL COMMENT "品牌名称",
-    category_name VARCHAR(64) NOT NULL COMMENT "品类名称",
-    retail_price DECIMAL(10,2) NOT NULL COMMENT "零售价",
-    update_time DATETIME NOT NULL COMMENT "更新时间"
+    product_id BIGINT NOT NULL COMMENT "Product ID",
+    product_name VARCHAR(128) NOT NULL COMMENT "Product name",
+    brand_name VARCHAR(64) NOT NULL COMMENT "Brand name",
+    category_name VARCHAR(64) NOT NULL COMMENT "Category name",
+    retail_price DECIMAL(10,2) NOT NULL COMMENT "Retail price",
+    update_time DATETIME NOT NULL COMMENT "Update time"
 )
 DISTRIBUTED BY HASH(`product_id`) BUCKETS 10;
 
--- Order Fact Table
+-- Order fact table
 CREATE TABLE orders (
-    order_id BIGINT NOT NULL COMMENT "订单ID",
-    product_id BIGINT NOT NULL COMMENT "商品ID",
-    user_id BIGINT NOT NULL COMMENT "用户ID",
-    quantity INT NOT NULL COMMENT "购买数量",
-    actual_price DECIMAL(10,2) NOT NULL COMMENT "实际成交价",
-    order_time DATETIME NOT NULL COMMENT "下单时间"
+    order_id BIGINT NOT NULL COMMENT "Order ID",
+    product_id BIGINT NOT NULL COMMENT "Product ID",
+    user_id BIGINT NOT NULL COMMENT "User ID",
+    quantity INT NOT NULL COMMENT "Purchase quantity",
+    actual_price DECIMAL(10,2) NOT NULL COMMENT "Actual transaction price",
+    order_time DATETIME NOT NULL COMMENT "Order time"
 )
 DISTRIBUTED BY HASH(`order_id`) BUCKETS 32;
 
+-- Insert sample data
 INSERT INTO products VALUES
-(1001, 'iPhone 15 Pro 256G 黑色', 'Apple', '手机数码', 8999.00, '2024-01-01 00:00:00'),
-(1002, 'MacBook Pro M3 Max', 'Apple', '电脑办公', 19999.00, '2024-01-01 00:00:00'),
-(1003, 'AirPods Pro 2', 'Apple', '手机配件', 1999.00, '2024-01-01 00:00:00');
+(1001, 'iPhone 15 Pro 256G Black', 'Apple', 'Mobile & Digital', 8999.00, '2024-01-01 00:00:00'),
+(1002, 'MacBook Pro M3 Max', 'Apple', 'Computers & Office', 19999.00, '2024-01-01 00:00:00'),
+(1003, 'AirPods Pro 2', 'Apple', 'Phone Accessories', 1999.00, '2024-01-01 00:00:00');
 
 INSERT INTO orders VALUES
 (10001, 1001, 88001, 1, 8899.00, '2024-02-22 10:15:00'),
@@ -60,10 +78,12 @@ INSERT INTO orders VALUES
 (10003, 1003, 88001, 2, 1899.00, '2024-02-22 14:20:00');
 ```
 
-The following is a set of typical queries. In order to count the order volume and sales of each category, in the past, we needed to use LEFT OUTER JOIN to achieve the function of extracting product information from the product table.
+**Step 2: Traditional JOIN approach**
+
+To count the number of orders and total sales for each category, you previously had to use a LEFT OUTER JOIN to retrieve product information from the product table:
 
 ```sql
--- Analyze the order volume and sales revenue of each category
+-- Count the number of orders and total sales for each category
 SELECT 
     p.category_name,
     p.brand_name,
@@ -78,21 +98,23 @@ ORDER BY total_amount DESC;
 ```
 
 ```text
-+---------------+------------+-------------+----------------+--------------+
-| category_name | brand_name | order_count | total_quantity | total_amount |
-+---------------+------------+-------------+----------------+--------------+
-| 电脑办公      | Apple      |           1 |              1 |     19599.00 |
-| 手机数码      | Apple      |           1 |              1 |      8899.00 |
-| 手机配件      | Apple      |           1 |              2 |      3798.00 |
-+---------------+------------+-------------+----------------+--------------+
++---------------------+------------+-------------+----------------+--------------+
+| category_name       | brand_name | order_count | total_quantity | total_amount |
++---------------------+------------+-------------+----------------+--------------+
+| Computers & Office  | Apple      |           1 |              1 |     19599.00 |
+| Mobile & Digital    | Apple      |           1 |              1 |      8899.00 |
+| Phone Accessories   | Apple      |           1 |              2 |      3798.00 |
++---------------------+------------+-------------+----------------+--------------+
 ```
 
-In such queries, we need to frequently retrieve other information about products using the `product_id`, which essentially involves a KV lookup operation.
+In this kind of query, you frequently need to look up other product information by `product_id`, which is essentially a KV lookup operation.
 
-By setting up the key-value pair relationships and pre-building the corresponding dictionary tables, we can completely convert previous JOIN operations into lighter key-value lookups, thereby improving SQL execution efficiency:
+**Step 3: Use a dictionary instead of JOIN**
+
+Once the key-value relationship is defined, you can build the corresponding dictionary in advance to fully convert the previous JOIN operation into a more lightweight key-value lookup, which improves SQL execution efficiency:
 
 ```sql
--- Create product information dictionary
+-- Create the product information dictionary
 CREATE DICTIONARY product_info_dict USING products
 (
     product_id KEY,
@@ -103,11 +125,11 @@ CREATE DICTIONARY product_info_dict USING products
 )
 LAYOUT(HASH_MAP)
 PROPERTIES(
-    'data_lifetime'='300'  -- Considering the frequency of changes in product information, set the update interval to 5 minutes.
+    'data_lifetime'='300'  -- Considering how often product information changes, refresh every 5 minutes
 );
 ```
 
-The original query converts the JOIN operation into a `dict_get` function lookup using a dictionary table, which is a lighter KV lookup operation:
+With the dictionary, the JOIN operation in the original query is converted into a `dict_get` function lookup, which is a lightweight KV lookup:
 
 ```sql
 SELECT
@@ -125,18 +147,20 @@ ORDER BY total_amount DESC;
 ```
 
 ```text
-+---------------+------------+-------------+----------------+--------------+
-| category_name | brand_name | order_count | total_quantity | total_amount |
-+---------------+------------+-------------+----------------+--------------+
-| 电脑办公      | Apple      |           1 |              1 |     19599.00 |
-| 手机数码      | Apple      |           1 |              1 |      8899.00 |
-| 手机配件      | Apple      |           1 |              2 |      3798.00 |
-+---------------+------------+-------------+----------------+--------------+
++---------------------+------------+-------------+----------------+--------------+
+| category_name       | brand_name | order_count | total_quantity | total_amount |
++---------------------+------------+-------------+----------------+--------------+
+| Computers & Office  | Apple      |           1 |              1 |     19599.00 |
+| Mobile & Digital    | Apple      |           1 |              1 |      8899.00 |
+| Phone Accessories   | Apple      |           1 |              2 |      3798.00 |
++---------------------+------------+-------------+----------------+--------------+
 ```
 
-## Dictionary Table Definition
+## Dictionary Definition
 
-### Basic Grammar
+<!-- Knowledge type: Configuration parameters / Operation steps -->
+
+### Basic Syntax
 
 ```sql
 CREATE DICTIONARY <dict_name> USING <source_table>
@@ -156,38 +180,41 @@ PROPERTIES(
 );
 ```
 
-Among:
+Parameter descriptions:
 
-- `<dict_name>`: The name of the dictionary table
-- `<source_table>`: Source data table
-- `<key_column>`: The column name in the source table that serves as a key
-- `<value_column>`: The column name in the source table that serves as a value
-- `<layout_type>`: The storage layout type of the dictionary table, see later for details.
-- `<priority_item_key>`: The name of a certain property of a table
-- `<priority_item_value>`: The value of a certain property of a table
+| Parameter | Meaning |
+| --- | --- |
+| `<dict_name>` | The name of the dictionary |
+| `<source_table>` | The source data table |
+| `<key_column>` | The column name in the source table that serves as a key |
+| `<value_column>` | The column name in the source table that serves as a value |
+| `<layout_type>` | The storage layout type of the dictionary, see below for details |
+| `<priority_item_key>` | The name of a property of the dictionary |
+| `<priority_item_value>` | The value of a property of the dictionary |
 
-`<key_column>` and `<value_column>` each must have at least one. `<key_column>` does not have to appear before `<value_column>`.
+There must be at least one `<key_column>` and one `<value_column>`. The `<key_column>` does not have to appear before the `<value_column>`.
 
-### Layout Type
+### Layout Types
 
-Currently, two layout types are supported:
+Two layout types are currently supported:
 
-- `HASH_MAP`: An implementation based on a hash table, suitable for general key-value lookup scenarios.
+| Layout Type | Use Case | Description |
+| --- | --- | --- |
+| `HASH_MAP` | General key-value lookup scenarios | Hash-table-based implementation |
+| `IP_TRIE` | IP address lookups | Trie-based implementation, optimized specifically for IP address lookups. The key column must be IP addresses in CIDR notation, and queries are matched against the CIDR notation |
 
-- `IP_TRIE`: An implementation based on a Trie tree, specifically optimized for IP address type lookups. The Key column needs to be represented in CIDR notation for IP addresses, and queries are matched according to CIDR notation.
+### Properties
 
-### Property
+| Property | Value Type | Meaning | Required |
+| --- | --- | --- | --- |
+| `data_lifetime` | Integer, in seconds | Data validity period. When the time since the last update of the dictionary exceeds this value and the base table has data changes, a re-import is automatically triggered. See [Auto Import](#auto-import) for the import logic | Yes |
+| `skip_null_key` | Boolean | When loading data into the dictionary, if a null value appears in the key column, skip that row when this property is `true`; otherwise, an error is reported. The default value is `false` | No |
+| `memory_limit` | Integer, in bytes | The upper limit of memory used by the dictionary on a single BE. The default value is `2147483648`, that is, 2GB | No |
 
-|Property Name|Value Type|Meaning|Required|
-|-|-|-|-|
-|`date_lifetime`|Integer, unit in seconds|Data validity period. When the time since the last update of this dictionary exceeds this value and the source table has data changes, it will automatically initiate a import. The import logic is detailed in [Automatic Import](#automatic-import)|Yes|
-|`skip_null_key`|Boolean|If the Key column contains null values when load to a dictionary, skip the row if the value is `true`, otherwise raise an error. The default value is `false`|No|
-|`memory_limit`|Integer, unit in bytes|The upper limit of memory occupied by this dictionary on a single BE. The deafult value is `2147483648`, which equals to 2GB.|No|
-
-### Example
+### Creation Example
 
 ```sql
--- Create source data table
+-- Create the source data table
 CREATE TABLE source_table (
     id INT NOT NULL,
     city VARCHAR(32) NOT NULL,
@@ -195,7 +222,7 @@ CREATE TABLE source_table (
 ) ENGINE=OLAP
 DISTRIBUTED BY HASH(id) BUCKETS 1;
 
--- Create dictionary table
+-- Create the dictionary
 CREATE DICTIONARY city_dict USING source_table
 (
     city KEY,
@@ -205,102 +232,117 @@ LAYOUT(HASH_MAP)
 PROPERTIES('data_lifetime' = '600');
 ```
 
-Based on the table, we can use the dictionary `city_dict` through the `dict_get` function to query the corresponding `id` based on the `city` value in `source_table`.
+Based on this table, you can use the `city_dict` dictionary together with the `dict_get` function to look up the corresponding `id` by the `city` value of `source_table`.
 
 ### Usage Restrictions
 
-1. Key Columns
+**1. Key column restrictions**
 
-   - The Key column of the IP_TRIE type dictionary must be of Varchar or String type, **the values in the Key column must be in CIDR format**.
-   - The dictionary of the IP_TRIE type allows only one Key column.
-   - The Key column of the HASH_MAP type dictionary supports all simple types (i.e., excluding all nested types such as Map, Array, etc.).
-   - As a Key column, **there must not be duplicate values in the source table**, otherwise an error will be reported when importing dictionary data.
+- The key column of an IP_TRIE dictionary must be of type Varchar or String, and **values in the key column must be in CIDR format**.
+- An IP_TRIE dictionary allows only one key column.
+- The key column of a HASH_MAP dictionary supports all simple types (that is, all nested types such as Map and Array are excluded).
+- The column used as a key column **must not contain duplicate values in the source table**; otherwise, an error is reported when the dictionary loads data.
 
-2. Null Value Handling
+**2. Null value handling**
 
-   - All columns in the dictionary can be nullable columns, but the Key column should not actually appear with null values. If it does, the behavior depends on the `skip_null_key` in the [Property](#property).
+- All columns of a dictionary can be Nullable columns, but null values should not actually appear in the key column. If they do, the behavior depends on `skip_null_key` in the [Properties](#properties).
 
-## Use and Management
+## Usage and Management
 
-### Import (Refresh) Data
+### Loading (Refreshing) Data
 
-The dictionary supports automatic and manual import. "import" is also called "refresh" here.
+<!-- Knowledge type: Operation steps -->
 
-#### Automatic Import
+Dictionaries support both automatic and manual loading. Loading a dictionary is also referred to as a "refresh" operation.
 
-Automatic import occurs at the following times:
+#### Auto Import
 
-1. After the dictionary is established
-2. When the dictionary data expires (see [Property](#property))
-3. When the BE state shows the lack of the dictionary data (new BE going online, or old BE restarting, etc.)
+Automatic loading happens at the following times:
 
-Doris will check all dictionary data for expiration every `dictionary_auto_refresh_interval_seconds` seconds. When a dictionary has not been updated for more than `data_lifetime` seconds, and the source table data has changed compared to the last import, Doris will automatically submit the import for that dictionary.
+1. After the dictionary is created
+2. When the dictionary data has expired (see [Properties](#properties))
+3. When the BE state shows that this dictionary's data is missing (this can happen when a new BE comes online, or an old BE restarts, etc.)
 
-If some BEs are missing data and the source table data has not changed compared to the last import, Doris will only fill in the current version of the data on the corresponding BEs, will not submit the refresh task for all BEs, and the dictionary's version will not change.
+Doris checks whether all dictionary data has expired every `dictionary_auto_refresh_interval_seconds` seconds. When a dictionary has not been updated for more than `data_lifetime` seconds and **the base table data has changed since the last load**, Doris automatically submits a load for that dictionary.
+
+If some BEs are missing data and the base table data has not changed since the last load, Doris only fills in the current version of the data on the affected BEs. It does not submit a refresh task for all BEs, and the dictionary version does not change.
 
 #### Manual Import
 
-Doris supports manually refreshing dictionary data through the following commands:
+- **Purpose**: Manually trigger a refresh of dictionary data.
+- **Command**:
 
-```sql
-REFRESH DICTIONARY <dict_name>;
-```
+    ```sql
+    REFRESH DICTIONARY <dict_name>;
+    ```
 
-Among them, `<dict_name>` is the name of the dictionary to be imported.
+- **Description**: `<dict_name>` is the name of the dictionary whose data is to be loaded.
 
-#### Attention Points of Import
+#### Notes for Loading
 
-1. Only dictionaries that have imported data can be queried.
-2. If the Key column has duplicate values during import, the import transaction will fail.
-3. If there is already an ongoing import transaction at the moment (dictionary Status is `LOADING`), the manual import will fail. Please wait until the ongoing import is completed before proceeding.
-4. If the size of the imported dictionary exceeds the set `memory_limit`, the import transaction will fail.
+1. A dictionary can only be queried after data has been loaded.
+2. If the key column contains duplicate values during loading, the load transaction fails.
+3. If a load transaction is already in progress (the dictionary Status is `LOADING`), a manual load fails. Wait for the in-progress load to finish before trying again.
+4. If the size of the loaded dictionary exceeds the configured `memory_limit`, the load transaction fails.
 
-### Query Dictionary
+### Querying a Dictionary
 
-You can use the `dict_get` and `dict_get_many` functions for dictionary table queries of single Key, Value list and multi Key, Value list respectively.
+<!-- Knowledge type: Operation steps -->
 
-Please wait until the dictionary is imported before performing the first query to a dictionary.
+You can use the `dict_get` and `dict_get_many` functions to query a dictionary with a single key/value column or with multiple key/value columns, respectively.
 
-#### Grammar
+For the first query, wait until the dictionary load completes.
+
+#### Syntax
 
 ```sql
 dict_get("<db_name>.<dict_name>", "<query_column>", <query_key_value>);
 dict_get_many("<db_name>.<dict_name>", <query_columns>, <query_key_values>);
 ```
 
-Among:
+Parameter descriptions:
 
-- `<db_name>` is the name of the database where the dictionary is located.
-- `<dict_name>` is the name of the dictionary
-- `<query_column>` is the column name for the value column to be queried, with a type of `VARCHAR`, **must be a constant**
-- `<query_columns>` are the column names for all value columns to be queried, with a type of `ARRAY<VARCHAR>`, **must be constants**.
-- `<query_key_value>` is data for key columns used in queries
-- `<query_key_values>` is a STRUCT that contains all Key columns of the data to be queried in a dictionary.
+| Parameter | Description |
+| --- | --- |
+| `<db_name>` | The name of the database that the dictionary belongs to |
+| `<dict_name>` | The name of the dictionary |
+| `<query_column>` | The name of the value column to query, of type `VARCHAR`, **must be a constant** |
+| `<query_columns>` | The names of all value columns to query, of type `ARRAY<VARCHAR>`, **must be a constant** |
+| `<query_key_value>` | The key column data used for the query |
+| `<query_key_values>` | A STRUCT containing the data to query for **all key columns** of the dictionary |
 
-The return type of `dict_get` is the dictionary column type corresponding to `<query_column>`.
-The return type of `dict_get_many` is a [STRUCT](../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT) corresponding to the types of various dictionary columns in `<query_columns>`。
+Return types:
 
-#### Query Example
+- The return type of `dict_get` is the type of the dictionary column corresponding to `<query_column>`.
+- The return type of `dict_get_many` is a [STRUCT](../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT) composed of the types of the dictionary columns corresponding to `<query_columns>`.
 
-The statement queries the dictionary `city_dict` within the `test_db` database, for the corresponding `id` value when the `key` column value is "Beijing":
+#### Query Examples
+
+**Example 1: Single key, single value query**
+
+Query the `city_dict` dictionary in the `test_db` database to retrieve the `id` value when the key column value is "Beijing":
 
 ```sql
 SELECT dict_get("test_db.city_dict", "id", "Beijing");
 ```
 
-The statement queries the dictionary `single_key_dict` within the `test_db` database, for the corresponding values of `k1` and `k3` when the value of the `key` column is 1:
+**Example 2: Single key, multiple value query**
+
+Query the `single_key_dict` dictionary in the `test_db` database to retrieve the `k1` and `k3` column values when the key column value is 1:
 
 ```sql
 SELECT dict_get_many("test_db.single_key_dict", ["k1", "k3"], struct(1));
 ```
 
-The statement queries the dictionary `multi_key_dict` within the `test_db` database, for the corresponding `k2` and `k3` column values when the 2 key column values are 2 and 'ABC' in sequence:
+**Example 3: Multiple key, multiple value query**
+
+Query the `multi_key_dict` dictionary in the `test_db` database to retrieve the `k2` and `k3` column values when the two key column values are 2 and 'ABC' respectively:
 
 ```sql
 SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 ```
 
-For example, the table creation statement is as follows:
+For example, if the table creation statement is:
 
 ```sql
 create table if not exists multi_key_table(
@@ -322,57 +364,61 @@ LAYOUT(HASH_MAP)
 PROPERTIES('data_lifetime' = '600');
 ```
 
-Then the above statement
+Then the return type of the previous statement
 
 ```sql
 SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 ```
 
-returns type of `STRUCT<float, varchar>`。
+is `STRUCT<float, varchar>`.
 
-#### Attention Points of Query
+#### Notes for Queries
 
-1. When the query Key data does not exist in the dictionary table, **or the Key data is null**, return null.
-2. For IP_TRIE type queries, **`<query_key_value>` type must be `IPV4` or `IPV6`**.
-3. When using an IP_TRIE type dictionary, the data in the Key column `<key_column>` and the `<query_key_value>` used for querying both support `IPV4` and `IPV6` format data.
-4. When a specific BE lacks dictionary data due to reasons such as new launch or restart, executing a query using corresponding dictionary on that BE will fail. Whether the query is scheduled to that BE depends on various factors. Reducing the value of the configuration item `dictionary_auto_refresh_interval_seconds` when the FE Master is not under heavy pressure can shorten the time when the dictionary is unavailable.
+1. When the queried key data does not exist in the dictionary, **or when the key data is null**, null is returned.
+2. When querying an IP_TRIE dictionary, **the type of `<query_key_value>` must be `IPV4` or `IPV6`**.
+3. When using an IP_TRIE dictionary, both the data in the key column `<key_column>` and the `<query_key_value>` used for the query support both `IPV4` and `IPV6` formats.
+4. When a specific BE has no dictionary data because of a recent online event or a downtime restart, queries against that dictionary fail if scheduled to that BE. Whether a query is scheduled to that BE depends on multiple factors. When the FE Master is not under heavy load, decreasing the [configuration item](#configuration-items) `dictionary_auto_refresh_interval_seconds` can shorten the period during which the dictionary is unavailable.
 
 ### Dictionary Management
 
-The dictionary table supports the following management and viewing statements:
+<!-- Knowledge type: Operation steps -->
 
-1. Check the status of all dictionary tables in the current database.
+Dictionaries support the following management and inspection statements:
 
-    ```sql
-    SHOW DICTIONARIES [LIKE <LIKE_NAME>];
-    ```
+**1. View the status of all dictionaries in the current database**
 
-2. Check the definition of a specific dictionary
+```sql
+SHOW DICTIONARIES [LIKE <LIKE_NAME>];
+```
 
-    ```sql
-    DESC DICTIONARY <dict_name>;
-    ```
+**2. View the definition of a specific dictionary**
 
-3. Delete dictionary table
+```sql
+DESC DICTIONARY <dict_name>;
+```
 
-    ```sql
-    DROP DICTIONARY <dict_name>;
-    ```
+**3. Drop a dictionary**
 
-    After deleting the dictionary table, the deleted dictionary may not be removed from BE immediately.
+```sql
+DROP DICTIONARY <dict_name>;
+```
 
-#### Config Item
+After a dictionary is dropped, it may not be removed from the BEs immediately.
 
-The dictionary table supports the following configuration items, all of which are FE CONFIG:
+#### Configuration Items
 
-1. `dictionary_task_queue_size` —— The queue length of the thread pool for all tasks in the dictionary is not dynamically adjustable. The default value is 1024, and it is generally not necessary to adjust it.
-2. `job_dictionary_task_consumer_thread_num` —— The number of threads in the thread pool for all tasks in the dictionary is not dynamically adjustable. Default value is 3.
-3. `dictionary_rpc_timeout_ms` —— The timeout duration for all related RPCs in the dictionary can be dynamically adjusted. The default is 5000 (i.e., 5 seconds), and it generally does not need to be adjusted.
-4. `dictionary_auto_refresh_interval_seconds` —— The interval for automatically checking if all dictionary data is up to date is default 5 (seconds), and it can be dynamically adjusted.
+Dictionaries support the following configuration items, all of which are FE CONFIG:
+
+| Configuration Item | Default Value | Dynamically Adjustable | Description |
+| --- | --- | --- | --- |
+| `dictionary_task_queue_size` | 1024 | No | The queue length of the thread pool for all dictionary tasks. Usually does not need to be adjusted |
+| `job_dictionary_task_consumer_thread_num` | 3 | No | The number of threads in the thread pool for all dictionary tasks |
+| `dictionary_rpc_timeout_ms` | 5000 (5s) | Yes | The timeout for all dictionary-related RPCs. Usually does not need to be adjusted |
+| `dictionary_auto_refresh_interval_seconds` | 5 (seconds) | Yes | The interval for automatically checking whether all dictionary data has expired |
 
 ### Status Display
 
-By using the `SHOW DICTIONARIES` statement, you can view the base table corresponding to the dictionary, the current data version number, and the corresponding status in FE and BE:
+The `SHOW DICTIONARIES` statement shows the base table corresponding to each dictionary, the current data version number, and the corresponding status on the FE and BE.
 
 ```sql
 > SHOW DICTIONARIES;
@@ -390,25 +436,23 @@ By using the `SHOW DICTIONARIES` statement, you can view the base table correspo
 +--------------+----------------+----------------------------------------------+---------+--------+------------------------------------+------------------------------+
 ```
 
-Among:
+Field meanings:
 
-1. `Version` represents the data version number, which will increment by 1 each time data is imported.
+1. `Version`: The data version number, which is incremented by 1 each time data is loaded.
+2. `Status`: The dictionary status, with the following meanings:
 
-2. `Status` represents the dictionary status, meaning as follows:
+    | Status Name | Meaning |
+    | --- | --- |
+    | NORMAL | The dictionary is currently normal |
+    | LOADING | The dictionary is currently loading data |
+    | OUT_OF_DATE | The dictionary data has expired |
 
-    |Status Name|Meaning|
-    |-|-|
-    |NORMAL|The dictionary is currently normal|
-    |LOADING|The dictionary is currently importing|
-    |OUT_OF_DATE|The current dictionary data has expired|
+    A dictionary cannot be loaded again while a load is already in progress.
 
-    The dictionary cannot be imported again while it is being imported.
+3. `DataDistribution`: The current state on each BE, including the version number and memory usage (KB).
+4. `LastUpdateResult`: The result of the previous load (either automatic or manual). If there is an error, detailed information is shown here.
 
-3. `DataDistribution` represents the current status of each BE, including the version number and memory usage size (KB).
-
-4. `LastUpdateResult` indicates the result of the last import (including automatic and manual), and detailed error message will be displayed here if there are any exceptions.
-
-To view the column definitions of the dictionary table, you can use `DESC DICTIONARY`. For example:
+To view the column definitions of a dictionary, use `DESC DICTIONARY`. For example:
 
 ```sql
 > DESC DICTIONARY city_code_dict;
@@ -420,242 +464,259 @@ To view the column definitions of the dictionary table, you can use `DESC DICTIO
 +-------------+-------------+------+-------+
 ```
 
-## Cautionary Notes
+## Notes
 
-1. Data consistency
+<!-- Knowledge type: Best practices -->
 
-   - Each refresh of the dictionary will generate a new version. If the version of the BE record doesn't match the FE version during the query, the query will fail.
-   - Doris does not maintain strong data consistency between dictionary tables and base tables. Users need to properly set the `data_lifetime` of the dictionary to achieve automatic updates, and manually update when necessary based on business logic.
-   - When the source table is deleted by any way, the corresponding dictionary table will also be automatically deleted.
+### Data Consistency
 
-2. Performance Considerations
+- Each refresh of a dictionary produces a new version. If the version recorded by the BE differs from the version on the FE during a query, the query fails.
+- Doris does not maintain strong data consistency between the dictionary and the base table. You need to set `data_lifetime` of the dictionary appropriately to allow for automatic updates, and supplement with manual updates based on business logic when necessary.
+- When the source table is dropped in any way, the corresponding dictionary is automatically dropped as well.
 
-   - Dictionary tables are suitable for relatively static data, such as dimension table data.
+### Performance Considerations
 
-   - Dictionary tables are pure in-memory tables, with full data stored in the memory of all BEs, may occupying a large amount, and it is necessary to weigh memory usage and query performance to choose an appropriate table to derive dictionary.
+- Dictionaries are suitable for relatively static data, such as dimension table data.
+- A dictionary is a pure in-memory table, and its full data is stored in the memory of all BEs, which takes up a significant amount of memory. You need to balance memory usage and query performance, and choose appropriate tables to derive dictionaries from.
 
-3. Best Practices
+### Best Practices
 
-   1. Reasonable Selection of Key Value Columns:
+1. **Choose key and value columns reasonably**:
 
-      - Choose columns with a moderate cardinality as keys
+    - Choose columns with moderate cardinality as keys.
 
-   2. Layout Selection:
+2. **Layout selection**:
 
-      - Use HASH_MAP layout for general scenarios
-      - Use IP_TRIE layout for IP address range matching scenarios
+    - Use the HASH_MAP layout for general scenarios.
+    - Use the IP_TRIE layout for IP address range matching scenarios.
 
-   3. State Management:
+3. **State management**:
 
-      - Regularly monitor the memory usage of dictionary tables
-      - Select an appropriate data update interval and manually refresh the dictionary when data expires on the business side
-      - When using dictionary tables, pay attention to the BE memory monitoring to prevent the dictionary tables from being too numerous or too large, occupying excessive memory and causing abnormal BE status.
+    - Regularly monitor the memory usage of dictionaries.
+    - Choose an appropriate data update interval, and manually refresh the dictionary on the business side when data is known to be stale.
+    - When using dictionaries, pay attention to BE memory monitoring to prevent too many or too large dictionaries from consuming too much memory and causing abnormal BE states.
 
-## Complete Example
+## Complete Examples
 
-1. HASH_MAP
+<!-- Knowledge type: Operation steps -->
 
-    ```sql
-    -- Create source data table
-    CREATE TABLE cities (
-        city_id INT NOT NULL,
-        city_name VARCHAR(32) NOT NULL,
-        region_code VARCHAR(32) NOT NULL
-    ) ENGINE=OLAP
-    DISTRIBUTED BY HASH(city_id) BUCKETS 1;
+### Example 1: HASH_MAP, single key and single value
 
-    INSERT INTO cities VALUES
-    (1, 'Beijing', 'BJ'),
-    (2, 'Shanghai', 'SH'),
-    (3, 'Guangzhou', 'GZ');
+```sql
+-- Create the source data table
+CREATE TABLE cities (
+    city_id INT NOT NULL,
+    city_name VARCHAR(32) NOT NULL,
+    region_code VARCHAR(32) NOT NULL
+) ENGINE=OLAP
+DISTRIBUTED BY HASH(city_id) BUCKETS 1;
 
-    -- Create dictionary table
-    CREATE DICTIONARY city_code_dict USING cities
-    (
-        city_name KEY,
-        region_code VALUE
-    )
-    LAYOUT(HASH_MAP)
-    PROPERTIES('data_lifetime' = '600');
+-- Insert data
+INSERT INTO cities VALUES
+(1, 'Beijing', 'BJ'),
+(2, 'Shanghai', 'SH'),
+(3, 'Guangzhou', 'GZ');
 
-    -- Query using a dictionary table
-    SELECT dict_get("test_refresh_dict.city_code_dict", "region_code", "Beijing");
-    ```
+-- Create the dictionary
+CREATE DICTIONARY city_code_dict USING cities
+(
+    city_name KEY,
+    region_code VALUE
+)
+LAYOUT(HASH_MAP)
+PROPERTIES('data_lifetime' = '600');
 
-    ```text
-    +------------------------------------------------------------------------+
-    | dict_get('test_refresh_dict.city_code_dict', 'region_code', 'Beijing') |
-    +------------------------------------------------------------------------+
-    | BJ                                                                     |
-    +------------------------------------------------------------------------+
-    ```
+-- Query using the dictionary
+SELECT dict_get("test_refresh_dict.city_code_dict", "region_code", "Beijing");
+```
 
-2. IP_TRIE
+```text
++------------------------------------------------------------------------+
+| dict_get('test_refresh_dict.city_code_dict', 'region_code', 'Beijing') |
++------------------------------------------------------------------------+
+| BJ                                                                     |
++------------------------------------------------------------------------+
+```
 
-    ```sql
-    CREATE TABLE ip_locations (
-        ip_range VARCHAR(30) NOT NULL,
-        country VARCHAR(64) NOT NULL,
-        region VARCHAR(64) NOT NULL,
-        city VARCHAR(64) NOT NULL
-    ) ENGINE=OLAP
-    DISTRIBUTED BY HASH(ip_range) BUCKETS 1;
+### Example 2: IP_TRIE, CIDR-based IP lookup
 
-    INSERT INTO ip_locations VALUES
-    ('1.0.0.0/24', 'United States', 'California', 'Los Angeles'),
-    ('1.0.1.0/24', 'China', 'Beijing', 'Beijing'),
-    ('1.0.4.0/24', 'Japan', 'Tokyo', 'Tokyo');
+```sql
+-- Create the source data table
+CREATE TABLE ip_locations (
+    ip_range VARCHAR(30) NOT NULL,
+    country VARCHAR(64) NOT NULL,
+    region VARCHAR(64) NOT NULL,
+    city VARCHAR(64) NOT NULL
+) ENGINE=OLAP
+DISTRIBUTED BY HASH(ip_range) BUCKETS 1;
 
-    -- Create an IP address dictionary table
-    CREATE DICTIONARY ip_location_dict USING ip_locations
-    (
-        ip_range KEY,
-        country VALUE,
-        region VALUE,
-        city VALUE
-    )
-    LAYOUT(IP_TRIE)
-    PROPERTIES('data_lifetime' = '600');
+-- Insert some sample data
+INSERT INTO ip_locations VALUES
+('1.0.0.0/24', 'United States', 'California', 'Los Angeles'),
+('1.0.1.0/24', 'China', 'Beijing', 'Beijing'),
+('1.0.4.0/24', 'Japan', 'Tokyo', 'Tokyo');
 
-    -- Query the location information corresponding to the IP address, based on CIDR matching.
-    SELECT
-        dict_get("test_refresh_dict.ip_location_dict", "country", cast('1.0.0.1' as ipv4)) AS country,
-        dict_get("test_refresh_dict.ip_location_dict", "region", cast('1.0.0.2' as ipv4)) AS region,
-        dict_get("test_refresh_dict.ip_location_dict", "city", cast('1.0.0.3' as ipv4)) AS city;
-    ```
+-- Create the IP address dictionary
+CREATE DICTIONARY ip_location_dict USING ip_locations
+(
+    ip_range KEY,
+    country VALUE,
+    region VALUE,
+    city VALUE
+)
+LAYOUT(IP_TRIE)
+PROPERTIES('data_lifetime' = '600');
 
-    ```text
-    +---------------+------------+-------------+
-    | country       | region     | city        |
-    +---------------+------------+-------------+
-    | United States | California | Los Angeles |
-    +---------------+------------+-------------+
-    ```
+-- Query the location information for an IP address, matched by CIDR.
+SELECT
+    dict_get("test_refresh_dict.ip_location_dict", "country", cast('1.0.0.1' as ipv4)) AS country,
+    dict_get("test_refresh_dict.ip_location_dict", "region", cast('1.0.0.2' as ipv4)) AS region,
+    dict_get("test_refresh_dict.ip_location_dict", "city", cast('1.0.0.3' as ipv4)) AS city;
+```
 
-3. HASH_MAP with multi-key / multi-value
+```text
++---------------+------------+-------------+
+| country       | region     | city        |
++---------------+------------+-------------+
+| United States | California | Los Angeles |
++---------------+------------+-------------+
+```
 
-    ```sql
-    -- Product SKU Dimension Table: Includes basic product attributes
-    CREATE TABLE product_sku_info (
-        product_id INT NOT NULL COMMENT "商品ID",
-        color_code VARCHAR(32) NOT NULL COMMENT "颜色编码",
-        size_code VARCHAR(32) NOT NULL COMMENT "尺码编码",
-        product_name VARCHAR(128) NOT NULL COMMENT "商品名称",
-        color_name VARCHAR(32) NOT NULL COMMENT "颜色名称",
-        size_name VARCHAR(32) NOT NULL COMMENT "尺码名称",
-        stock INT NOT NULL COMMENT "库存",
-        price DECIMAL(10,2) NOT NULL COMMENT "价格",
-        update_time DATETIME NOT NULL COMMENT "更新时间"
-    )
-    DISTRIBUTED BY HASH(`product_id`) BUCKETS 10;
+### Example 3: HASH_MAP, multiple keys and multiple values
 
-    -- Order Details Table: Records actual sales data
-    CREATE TABLE order_details (
-        order_id BIGINT NOT NULL COMMENT "订单ID",
-        product_id INT NOT NULL COMMENT "商品ID",
-        color_code VARCHAR(32) NOT NULL COMMENT "颜色编码",
-        size_code VARCHAR(32) NOT NULL COMMENT "尺码编码",
-        quantity INT NOT NULL COMMENT "购买数量",
-        order_time DATETIME NOT NULL COMMENT "下单时间"
-    )
-    DISTRIBUTED BY HASH(`order_id`) BUCKETS 10;
+```sql
+-- Product SKU dimension table: contains the basic attributes of products
+CREATE TABLE product_sku_info (
+    product_id INT NOT NULL COMMENT "Product ID",
+    color_code VARCHAR(32) NOT NULL COMMENT "Color code",
+    size_code VARCHAR(32) NOT NULL COMMENT "Size code",
+    product_name VARCHAR(128) NOT NULL COMMENT "Product name",
+    color_name VARCHAR(32) NOT NULL COMMENT "Color name",
+    size_name VARCHAR(32) NOT NULL COMMENT "Size name",
+    stock INT NOT NULL COMMENT "Stock",
+    price DECIMAL(10,2) NOT NULL COMMENT "Price",
+    update_time DATETIME NOT NULL COMMENT "Update time"
+)
+DISTRIBUTED BY HASH(`product_id`) BUCKETS 10;
 
-    -- Insert product SKU data
-    INSERT INTO product_sku_info VALUES
-    (1001, 'BLK', 'M', 'Nike运动T恤', '黑色', 'M码', 100, 199.00, '2024-02-23 10:00:00'),
-    (1001, 'BLK', 'L', 'Nike运动T恤', '黑色', 'L码', 80, 199.00, '2024-02-23 10:00:00'),
-    (1001, 'WHT', 'M', 'Nike运动T恤', '白色', 'M码', 90, 199.00, '2024-02-23 10:00:00'),
-    (1001, 'WHT', 'L', 'Nike运动T恤', '白色', 'L码', 70, 199.00, '2024-02-23 10:00:00'),
-    (1002, 'RED', 'S', 'Adidas运动裤', '红色', 'S码', 50, 299.00, '2024-02-23 10:00:00'),
-    (1002, 'RED', 'M', 'Adidas运动裤', '红色', 'M码', 60, 299.00, '2024-02-23 10:00:00'),
-    (1002, 'BLU', 'S', 'Adidas运动裤', '蓝色', 'S码', 55, 299.00, '2024-02-23 10:00:00'),
-    (1002, 'BLU', 'M', 'Adidas运动裤', '蓝色', 'M码', 65, 299.00, '2024-02-23 10:00:00');
+-- Order detail table: records actual sales data
+CREATE TABLE order_details (
+    order_id BIGINT NOT NULL COMMENT "Order ID",
+    product_id INT NOT NULL COMMENT "Product ID",
+    color_code VARCHAR(32) NOT NULL COMMENT "Color code",
+    size_code VARCHAR(32) NOT NULL COMMENT "Size code",
+    quantity INT NOT NULL COMMENT "Purchase quantity",
+    order_time DATETIME NOT NULL COMMENT "Order time"
+)
+DISTRIBUTED BY HASH(`order_id`) BUCKETS 10;
 
-    -- Insert order data
-    INSERT INTO order_details VALUES
-    (10001, 1001, 'BLK', 'M', 2, '2024-02-23 12:01:00'),
-    (10002, 1001, 'WHT', 'L', 1, '2024-02-23 12:05:00'),
-    (10003, 1002, 'RED', 'S', 1, '2024-02-23 12:10:00'),
-    (10004, 1001, 'BLK', 'L', 3, '2024-02-23 12:15:00'),
-    (10005, 1002, 'BLU', 'M', 2, '2024-02-23 12:20:00');
+-- Insert product SKU data
+INSERT INTO product_sku_info VALUES
+(1001, 'BLK', 'M', 'Nike Sports T-Shirt', 'Black', 'Size M', 100, 199.00, '2024-02-23 10:00:00'),
+(1001, 'BLK', 'L', 'Nike Sports T-Shirt', 'Black', 'Size L', 80, 199.00, '2024-02-23 10:00:00'),
+(1001, 'WHT', 'M', 'Nike Sports T-Shirt', 'White', 'Size M', 90, 199.00, '2024-02-23 10:00:00'),
+(1001, 'WHT', 'L', 'Nike Sports T-Shirt', 'White', 'Size L', 70, 199.00, '2024-02-23 10:00:00'),
+(1002, 'RED', 'S', 'Adidas Sports Pants', 'Red', 'Size S', 50, 299.00, '2024-02-23 10:00:00'),
+(1002, 'RED', 'M', 'Adidas Sports Pants', 'Red', 'Size M', 60, 299.00, '2024-02-23 10:00:00'),
+(1002, 'BLU', 'S', 'Adidas Sports Pants', 'Blue', 'Size S', 55, 299.00, '2024-02-23 10:00:00'),
+(1002, 'BLU', 'M', 'Adidas Sports Pants', 'Blue', 'Size M', 65, 299.00, '2024-02-23 10:00:00');
 
-    -- Create a multi-key multi-value dictionary
-    CREATE DICTIONARY sku_dict USING product_sku_info
-    (
-        product_id KEY,
-        color_code KEY,
-        size_code KEY,
-        product_name VALUE,
-        color_name VALUE,
-        size_name VALUE,
-        price VALUE,
-        stock VALUE
-    )
-    LAYOUT(HASH_MAP)
-    PROPERTIES('data_lifetime'='300');
+-- Insert order data
+INSERT INTO order_details VALUES
+(10001, 1001, 'BLK', 'M', 2, '2024-02-23 12:01:00'),
+(10002, 1001, 'WHT', 'L', 1, '2024-02-23 12:05:00'),
+(10003, 1002, 'RED', 'S', 1, '2024-02-23 12:10:00'),
+(10004, 1001, 'BLK', 'L', 3, '2024-02-23 12:15:00'),
+(10005, 1002, 'BLU', 'M', 2, '2024-02-23 12:20:00');
 
-    -- Query example using dict_get_many: Retrieve order details and SKU information
-    WITH order_sku_info AS (
-        SELECT 
-            o.order_id,
-            o.quantity,
-            o.order_time,
-            dict_get_many("test.sku_dict", 
-                ["product_name", "color_name", "size_name", "price", "stock"],
-                struct(o.product_id, o.color_code, o.size_code)
-            ) as sku_info
-        FROM order_details o
-        WHERE o.order_time >= '2024-02-23 12:00:00'
-            AND o.order_time < '2024-02-23 13:00:00'
-    )
+-- Create a multi-key, multi-value dictionary
+CREATE DICTIONARY sku_dict USING product_sku_info
+(
+    product_id KEY,
+    color_code KEY,
+    size_code KEY,
+    product_name VALUE,
+    color_name VALUE,
+    size_name VALUE,
+    price VALUE,
+    stock VALUE
+)
+LAYOUT(HASH_MAP)
+PROPERTIES('data_lifetime'='300');
+
+-- Example of a query using dict_get_many: get order details and SKU information
+WITH order_sku_info AS (
     SELECT 
-        order_id,
-        order_time,
-        struct_element(sku_info, 'product_name') as product_name,
-        struct_element(sku_info, 'color_name') as color_name,
-        struct_element(sku_info, 'size_name') as size_name,
-        quantity,
-        struct_element(sku_info, 'price') as unit_price,
-        quantity * struct_element(sku_info, 'price') as total_amount,
-        struct_element(sku_info, 'stock') as current_stock
-    FROM order_sku_info
-    ORDER BY order_time;
-    ```
+        o.order_id,
+        o.quantity,
+        o.order_time,
+        dict_get_many("test.sku_dict", 
+            ["product_name", "color_name", "size_name", "price", "stock"],
+            struct(o.product_id, o.color_code, o.size_code)
+        ) as sku_info
+    FROM order_details o
+    WHERE o.order_time >= '2024-02-23 12:00:00'
+        AND o.order_time < '2024-02-23 13:00:00'
+)
+SELECT 
+    order_id,
+    order_time,
+    struct_element(sku_info, 'product_name') as product_name,
+    struct_element(sku_info, 'color_name') as color_name,
+    struct_element(sku_info, 'size_name') as size_name,
+    quantity,
+    struct_element(sku_info, 'price') as unit_price,
+    quantity * struct_element(sku_info, 'price') as total_amount,
+    struct_element(sku_info, 'stock') as current_stock
+FROM order_sku_info
+ORDER BY order_time;
+```
 
-    ```text
-    +----------+---------------------+-----------------+------------+-----------+----------+------------+--------------+---------------+
-    | order_id | order_time          | product_name    | color_name | size_name | quantity | unit_price | total_amount | current_stock |
-    +----------+---------------------+-----------------+------------+-----------+----------+------------+--------------+---------------+
-    |    10001 | 2024-02-23 12:01:00 | Nike运动T恤     | 黑色       | M码       |        2 |     199.00 |       398.00 |           100 |
-    |    10002 | 2024-02-23 12:05:00 | Nike运动T恤     | 白色       | L码       |        1 |     199.00 |       199.00 |            70 |
-    |    10003 | 2024-02-23 12:10:00 | Adidas运动裤    | 红色       | S码       |        1 |     299.00 |       299.00 |            50 |
-    |    10004 | 2024-02-23 12:15:00 | Nike运动T恤     | 黑色       | L码       |        3 |     199.00 |       597.00 |            80 |
-    |    10005 | 2024-02-23 12:20:00 | Adidas运动裤    | 蓝色       | M码       |        2 |     299.00 |       598.00 |            65 |
-    +----------+---------------------+-----------------+------------+-----------+----------+------------+--------------+---------------+
-    ```
+```text
++----------+---------------------+---------------------+------------+-----------+----------+------------+--------------+---------------+
+| order_id | order_time          | product_name        | color_name | size_name | quantity | unit_price | total_amount | current_stock |
++----------+---------------------+---------------------+------------+-----------+----------+------------+--------------+---------------+
+|    10001 | 2024-02-23 12:01:00 | Nike Sports T-Shirt | Black      | Size M    |        2 |     199.00 |       398.00 |           100 |
+|    10002 | 2024-02-23 12:05:00 | Nike Sports T-Shirt | White      | Size L    |        1 |     199.00 |       199.00 |            70 |
+|    10003 | 2024-02-23 12:10:00 | Adidas Sports Pants | Red        | Size S    |        1 |     299.00 |       299.00 |            50 |
+|    10004 | 2024-02-23 12:15:00 | Nike Sports T-Shirt | Black      | Size L    |        3 |     199.00 |       597.00 |            80 |
+|    10005 | 2024-02-23 12:20:00 | Adidas Sports Pants | Blue       | Size M    |        2 |     299.00 |       598.00 |            65 |
++----------+---------------------+---------------------+------------+-----------+----------+------------+--------------+---------------+
+```
 
 ## Troubleshooting
 
-1. The query reports an error of "can not find dict name"
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenarios: Troubleshooting -->
 
-    Firstly, confirm the existence of the dictionary by using `SHOW DICTIONARIES`. If it exists, refresh the corresponding dictionary data.
+| Error Symptom | Solution |
+| --- | --- |
+| Query reports `can not find dict name` | First, run `SHOW DICTIONARIES` to confirm whether the dictionary exists. If it does, refresh the corresponding dictionary data again |
+| Query reports `dict_get() only support IP type for IP_TRIE` | Check whether the key column of the IP_TRIE dictionary strictly follows the CIDR format |
+| Load reports `Version ID is not greater than the existing version ID for the dictionary.` | Use the `DROP DICTIONARY` command to drop the corresponding dictionary, then re-create it and reload the data |
+| `SHOW DICTIONARIES` shows that the Version of the dictionary on a certain BE is greater than the FE Version | Use the `DROP DICTIONARY` command to drop the corresponding dictionary, then re-create it and reload the data |
+| Load reports `Dictionary X commit version Y failed` | Reload the dictionary |
 
-2. The query reports an error of "dict_get() only support IP type for IP_TRIE"
+**Fallback strategy**: For the vast majority of errors, if normal operations fail, dropping the dictionary and re-creating it can resolve the issue.
 
-    Confirm whether the Key column of the IP_TRIE type dictionary strictly meets to the CIDR format.
+## FAQ
 
-3. The importing reports an error of "Version ID is not greater than the existing version ID for the dictionary."
+**Q1: What is the difference between a dictionary and a regular materialized view?**
 
-    Delete the corresponding dictionary using the `DROP DICTIONARY` command, recreate it, and then import the data.
+A dictionary is a pure in-memory KV structure, designed specifically to accelerate key-value lookup operations and to convert the original JOIN operation into a `dict_get` function call. A materialized view, on the other hand, is aimed at more general precomputation scenarios.
 
-4. `SHOW DICTIONARIES` result shows that the dictionary is in a BE version greater than the FE version.
+**Q2: Is the data of a dictionary kept strongly consistent with the base table?**
 
-    Delete the corresponding dictionary using the `DROP DICTIONARY` command, recreate it, and then import the data.
+No. Doris does not maintain strong data consistency between a dictionary and its base table. Data needs to be synchronized through automatic updates via `data_lifetime` or manual `REFRESH DICTIONARY`.
 
-5. The importing reports an error of "Dictionary `X` commit version `Y` failed"
+**Q3: When should you choose IP_TRIE over HASH_MAP?**
 
-    Re-refresh the dictionary.
+Use IP_TRIE when you need to perform IP range matching queries based on CIDR. For all other key-value matching scenarios, use HASH_MAP.
 
-6. Contingency Strategy
+**Q4: What should you do if a dictionary uses too much memory?**
 
-    For the vast majority of error messages, if normal operation fails, rebuilding the dictionary after `DROP` can resolve the issue.
+You can use the `memory_limit` property to limit the memory upper bound on a single BE. It is also recommended to choose columns with moderate cardinality as the source for the dictionary, to avoid the dictionary becoming too large.
+
+**Q5: What are the possible reasons a dictionary query returns null?**
+
+When the queried key does not exist in the dictionary, or when the queried key data is null, null is returned.

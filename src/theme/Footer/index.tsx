@@ -10,13 +10,13 @@ import './styles.scss';
 import { MailIcon } from '@site/src/components/Icons/mail';
 import { GithubIcon } from '@site/src/components/Icons/github';
 import { TwitterIcon } from '@site/src/components/Icons/twitter';
-import { SlackIcon } from '@site/src/components/Icons/discord';
+import { SlackIcon } from '@site/src/components/Icons/slack';
+import { DiscordIcon } from '@site/src/components/Icons/discord-icon';
 import { BilibiliIcon } from '@site/src/components/Icons/bilibili';
 import { WechatIcon } from '@site/src/components/Icons/wechat';
 import { YoutubeIcon } from '@site/src/components/Icons/youtube';
 import { LinkedinIcon } from '@site/src/components/Icons/linkedin';
 import { MediumIcon } from '@site/src/components/Icons/medium';
-import { DiscordIcon } from '@site/src/components/Icons/discord-icon';
 import Translate from '@docusaurus/Translate';
 import Link from '@docusaurus/Link';
 import { normalizePathname } from '@site/src/utils/locale';
@@ -93,12 +93,12 @@ function Footer(): React.ReactElement | null {
                                     <TwitterIcon />
                                 </a>
                                 <a
-                                    href="/discord"
-                                    title="discord"
+                                    href="https://doris.apache.org/slack"
+                                    title="slack"
                                     target="_blank"
                                     className="item"
                                 >
-                                    <DiscordIcon />
+                                    <SlackIcon />
                                 </a>
                             </div>
                             <div className="social">
@@ -125,6 +125,14 @@ function Footer(): React.ReactElement | null {
                                     className="item"
                                 >
                                     <MediumIcon />
+                                </a>
+                                 <a
+                                    href="https://discord.gg/ATXQqX8g8F"
+                                    title="discord"
+                                    target="_blank"
+                                    className="item"
+                                >
+                                    <DiscordIcon />
                                 </a>
                             </div>
                         </div>

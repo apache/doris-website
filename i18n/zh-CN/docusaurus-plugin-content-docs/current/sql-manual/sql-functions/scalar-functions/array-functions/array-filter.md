@@ -96,7 +96,7 @@ SELECT array_filter(x -> length(x) > 2, string_array) FROM array_filter_test WHE
 | array_filter(x -> length(x) > 2, string_array)   |
 +--------------------------------------------------+
 | ["ccc", "dddd", "eeeee"]                         |
-+------------------------------------------+
++--------------------------------------------------+
 ```
 
 使用布尔数组过滤元素：

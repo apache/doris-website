@@ -2,7 +2,7 @@
 {
     "title": "CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN",
     "language": "en",
-    "description": "The CUTTOFIRSTSIGNIFICANTSUBDOMAIN function extracts the effective part of a domain from a URL,"
+    "description": "The CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN function extracts the effective part of a domain from a URL, including the top-level domain up to the first significant subdomain."
 }
 ---
 

@@ -1,11 +1,18 @@
 ---
-{
-    "title": "Java Format Code",
-    "language": "en"
-}
+title: Java Code Formatting Specification
+language: en
+description: "Apache Doris Java code formatting specification: import order, Checkstyle, and IDE configuration."
+keywords:
+    - Apache Doris
+    - Java code formatting
+    - Checkstyle
+    - IDEA
+    - VS Code
+    - Import Order
+    - formatter-check
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,13 +31,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Java Format Code
+# Java Code Formatting Specification
 
-The formatting of the Java part of the code in Doris is usually done automatically by the IDE. Only the general format rules are listed here. For developer, you need to set the corresponding code styles in different IDEs according to the format rules.
+<!-- Knowledge type: Code specification -->
+<!-- Applicable scenarios: FE development / Pull Request submission -->
 
-## Import Order
+The Java portion of Apache Doris code (mainly the FE module) is typically formatted automatically by the IDE. This document lists the general formatting rules and the corresponding configuration methods for different IDEs. The CI pipeline validates code formatting through `formatter-check`.
 
-```
+## Import Order Rules
+
+<!-- Knowledge type: Code specification -->
+
+Import statements must be arranged in the following group order, with one blank line separating each group:
+
+```text
 org.apache.doris
 <blank line>
 third party package
@@ -39,61 +53,74 @@ standard java package
 <blank line>
 ```
 
-* Do not use `import *`
-* Do not use `import static`
+Additional rules:
 
-## Check when compile
+| Rule | Description |
+|------|-------------|
+| No `import *` | Every class must be imported explicitly |
+| No `import static` | Static imports are not allowed |
 
-Now, when compiling with `caven`, `CheckStyle` checks are done by default. This will slightly slow down compilation. If you want to skip checkstyle, please use the following command to compile
-```
+## Checkstyle Check at Compile Time
+
+When compiling with `maven`, the `Checkstyle` check runs by default, which slightly slows down compilation. To skip the check, use the following command:
+
+```bash
 mvn clean install -DskipTests -Dcheckstyle.skip
 ```
 
-## Checkstyle Plugin
+The `formatter-check` in CI enforces code format validation. Skipping the check locally is only for development and debugging. Make sure the format complies before submitting a PR.
 
-Now we have `formatter-check` in `CI` to check the code format.
+## Checkstyle Plugin Configuration
 
-### IDEA
+### Configure Checkstyle in IDEA
 
-If you use `IDEA` to develop Java code, please install `Checkstyle-IDEA` plugin.
-
-Setting the `checkstyle.xml` file in `Tools->Checkstyle`.
-
-Click the plus sign under Configuration File, select `Use a local Checkstyle file`, and select the `fe/check/checkstyle/checkstyle.xml` file.
-
-**NOTE:** Make sure that the version of `Checkstyle` is 9.3 or newer (the latest version is recommended).
+1. Install the `Checkstyle-IDEA` plugin in the settings.
+2. Go to `Tools -> Checkstyle`, find `Configuration File`, and click `Use a local Checkstyle file`.
+3. Select the `fe/check/checkstyle/checkstyle.xml` file in the project root directory.
+4. Confirm that the `Checkstyle` version is 9.3 or above (the latest version is recommended).
 
 ![](/images/idea-checkstyle-version.png)
 
-**You can use `Checkstyle-IDEA` plugin to check `Checkstyle` of your code real-time.**
+Once configured, you can use the `Checkstyle-IDEA` plugin to run Checkstyle checks on the code:
 
-![](/images/idea-checkstyle-plugin-en.png)
+![](/images/idea-checkstyle-plugin-cn.png)
 
-### VS Code
+### Configure Checkstyle in VS Code
 
-If you use VS Code to develop Java code, please install `Checkstyle for Java` plugin, and config according to the [document](https://code.visualstudio.com/docs/java/java-linting) and the picture
+1. Install the `Checkstyle for Java` plugin.
+2. Complete the configuration by following the instructions and animations in the [Java Linting official documentation](https://code.visualstudio.com/docs/java/java-linting).
 
-## IDEA
+## IDEA Code Formatting
 
-### Auto format code
+### Auto-Formatting Configuration
 
-The automatic formatting function of `IDEA` is also recommended.
+The auto-formatting feature of IDEA is recommended:
 
-Go to `Preferences->Editor->Code Style->Java` click the config sign and select `Import Scheme`，select `IntelliJ IDEA code style XML`，and select the `build-support/IntelliJ-code-format.xml` file.
+1. Go to `Preferences -> Editor -> Code Style -> Java`.
+2. Click the configuration icon's `Import Scheme` and select `IntelliJ IDEA code style XML`.
+3. Select the `build-support/IntelliJ-code-format.xml` file in the project root directory.
 
-### Auto rearrange code
+### Rearrange Code
 
-Checkstyle will check declarations order according to [Class and Interface Declarations](https://www.oracle.com/java/technologies/javase/codeconventions-fileorganization.html#1852) .
+Checkstyle checks the order of code declarations according to [Class and Interface Declarations](https://www.oracle.com/java/technologies/javase/codeconventions-fileorganization.html#1852).
 
-After add the `build-support/IntelliJ-code-format.xml` file. Click `Code/Rearrange Code` to auto rearrange code.
+After importing the `build-support/IntelliJ-code-format.xml` above, use `Code/Rearrange Code` to perform the sorting automatically:
 
 ![](/images/idea-rearrange-code.png)
 
-## Remove unused header
+## Automatically Remove Unused Imports
 
-**CTRL + ALT + O --->** to remove the unused imports in windows.
+| Purpose | Action |
+|---------|--------|
+| Remove unused imports only | Default shortcut `CTRL + ALT + O` |
+| Automatically remove and reorder on save | Check `Preferences -> Editor -> General -> Auto Import -> Optimize Imports on the Fly` |
 
-Auto remove unused header and reorder according to configure xml:
+## FAQ
 
-Click `Preferences->Editor->Auto Import->Optimize Imports on the Fly`
+**Q: How do I troubleshoot a `formatter-check` failure in CI?**
 
+Run the check locally with IDEA or the Checkstyle plugin. Make sure the import order, naming conventions, and declaration order all comply with the requirements in `fe/check/checkstyle/checkstyle.xml`, then resubmit.
+
+**Q: Does skipping Checkstyle locally affect PR merging?**
+
+Yes. CI still runs `formatter-check`. The local `-Dcheckstyle.skip` option is only for speeding up development builds. The final code must pass Checkstyle.

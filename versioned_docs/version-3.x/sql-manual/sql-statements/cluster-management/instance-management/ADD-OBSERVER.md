@@ -37,7 +37,7 @@ The user executing this SQL command must have at least the following permissions
 ## Usage Notes
 
 1. Before adding a new OBSERVER node, make sure the node is properly configured.
-2. After adding the OBSERVER node, use[`SHOW FRONTENDS`](./SHOW-FRONTENDS.md)command to verify that they have been added successfully and are in a normal state.
+2. After adding the OBSERVER node, use the [`SHOW FRONTENDS`](./SHOW-FRONTENDS.md) command to verify that they have been added successfully and are in a normal state.
 
 ## Examples
 

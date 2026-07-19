@@ -1,0 +1,43 @@
+---
+{
+    "title": "Resource Isolation",
+    "language": "en",
+    "description": "Navigation for the Apache Doris resource isolation chapter: covers Resource Group and Compute Group for physical isolation, and Workload Group for in-process logical isolation."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Doris provides two complementary layers of resource isolation: node-level physical isolation, and logical isolation within a single process. Choose the right mechanism based on your deployment architecture and isolation requirements.
+
+## Physical Isolation
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Resource Group"
+    description="In the integrated storage-compute architecture, divide BE nodes into isolated node groups by tagging them, supporting read-write separation and multi-tenant scenarios."
+    link="resource-group"
+/>
+
+<GettingStartedCard
+    title="Compute Group"
+    description="In the storage-compute separation architecture, create and manage named compute groups to achieve hard isolation between different workloads at the compute layer."
+    link="compute-group"
+/>
+</div>
+
+## Logical Isolation
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Workload Group"
+    description="Limit CPU, memory, and I/O resources for queries or user sessions within a single BE process, with no additional nodes required."
+    link="workload-group"
+/>
+
+<GettingStartedCard
+    title="Bind Workload Group to Compute Group"
+    description="Bind a Workload Group to a specified Compute Group, combining physical and logical resource control for fine-grained multi-tenant isolation."
+    link="workload-group-bind-compute-group"
+/>
+</div>

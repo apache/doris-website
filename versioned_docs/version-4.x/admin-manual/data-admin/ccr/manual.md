@@ -1,98 +1,159 @@
 ---
 {
-    "title": "Operation Manual",
+    "title": "CCR Syncer Operations Manual",
     "language": "en",
-    "description": "When Syncer synchronizes, the user needs to provide accounts for both upstream and downstream, which must have the following permissions:"
+    "description": "Apache Doris CCR Syncer operations manual: covers deployment requirements, start and stop, task management APIs, upgrades, high availability, and performance tuning.",
+    "keywords": [
+        "Doris CCR",
+        "CCR Syncer",
+        "cross-cluster replication",
+        "Cross Cluster Replication",
+        "binlog replication",
+        "Doris disaster recovery",
+        "Doris primary-secondary replication",
+        "ccr_syncer",
+        "create_ccr",
+        "enable_db_binlog",
+        "Syncer high availability",
+        "Syncer upgrade",
+        "Doris data replication",
+        "Doris backup restore"
+    ]
 }
 ---
 
-## Usage Requirements
+<!-- Knowledge type: Operations manual / Configuration parameters / API reference -->
+<!-- Applicable scenarios: Deploying and operating CCR Syncer / Managing cross-cluster replication tasks / Upgrade and tuning -->
+
+This manual is intended for users who need to deploy and operate Apache Doris CCR Syncer in production environments. It covers pre-deployment environment checks, starting and stopping Syncer, HTTP API management of replication tasks, version upgrade procedures, and key points for high availability and performance tuning.
+
+## Applicable Scenarios
+
+| Scenario | Description |
+|------|------|
+| First-time Syncer deployment | Start Syncer after completing network, permission, version, and table property checks |
+| Managing CCR tasks | Create, pause, resume, and delete replication tasks through HTTP APIs |
+| Upgrading Syncer and Doris | Roll out upgrades in the order "Syncer first, then downstream, then upstream" |
+| High availability deployment | Use MySQL as the metadata backend to enable automatic failover between Syncer instances |
+| Tuning for large-scale database replication | Adjust FE/BE and MySQL parameters to support replication tasks with large numbers of tablets |
+
+## Prerequisites
+
+<!-- Knowledge type: Pre-deployment checks -->
+<!-- Applicable scenarios: Environment acceptance / Pre-deployment confirmation -->
+
+Before deploying Syncer, confirm that all of the following requirements are met. Otherwise, replication tasks may encounter connection failures, data errors, or task interruptions.
 
 ### Network Requirements
 
-- Syncer needs to be able to communicate with both upstream and downstream FE and BE.
-- The downstream BE must have direct access to the IP used by the Doris BE process (as seen in `show frontends/backends`).
+- The network between Syncer and the FE and BE nodes of both upstream and downstream clusters must be interconnected.
+- The downstream BE and upstream BE must communicate directly through the IP used by the Doris BE process (the IP shown in `show frontends` / `show backends`).
 
 ### Permission Requirements
 
-When Syncer synchronizes, the user needs to provide accounts for both upstream and downstream, which must have the following permissions:
+When Syncer performs replication, it requires the user to provide accounts for both upstream and downstream clusters. The account must have the following privileges:
 
-- Select_priv: Read-only permission for databases and tables.
-- Load_priv: Write permission for databases and tables, including Load, Insert, Delete, etc.
-- Alter_priv: Permission to modify databases and tables, including renaming databases/tables, adding/deleting/changing columns, adding/deleting partitions, etc.
-- Create_priv: Permission to create databases, tables, and views.
-- Drop_priv: Permission to delete databases, tables, and views.
-- Admin permission (considered for removal later), used to check the enable binlog config.
+- `Select_priv`: read-only privilege on databases and tables.
+- `Load_priv`: write privilege on databases and tables, including Load, Insert, Delete, and so on.
+- `Alter_priv`: privilege to modify databases and tables, including renaming databases/tables, adding/dropping/changing columns, and adding/dropping partitions.
+- `Create_priv`: privilege to create databases, tables, and views.
+- `Drop_priv`: privilege to drop databases, tables, and views.
+- `Admin` privilege (to be removed later), used to detect the `enable binlog` configuration.
 
 ### Version Requirements
 
-- Syncer Version >= Downstream Doris Version >= Upstream Doris Version. Therefore, upgrade Syncer first, then upgrade downstream Doris, and finally upgrade upstream Doris.
-- The minimum version for Doris 2.0 is 2.0.15, and the minimum version for Doris 2.1 is 2.1.6.
-- Starting from Syncer version 2.1.8 and 3.0.4, Syncer no longer supports Doris 2.0.
+- Syncer version >= downstream Doris version >= upstream Doris version. Therefore, the upgrade order is: upgrade Syncer first, then downstream Doris, and finally upstream Doris.
+- The minimum supported version for Doris 2.0 is 2.0.15, and the minimum supported version for Doris 2.1 is 2.1.6.
+- Starting from Syncer 2.1.8 and 3.0.4, Syncer no longer supports Doris 2.0.
 
-### Configuration and Property Requirements
+### Table Property and Cluster Configuration Requirements
 
-**Property Requirements**
-- `light_schema_change`: Syncer requires both upstream and downstream tables to set the `light_schema_table` property; otherwise, data synchronization errors may occur. Note: The latest version of Doris sets the `light_schema_change` property by default when creating tables. If using Doris version 1.1 or earlier or upgraded from it, the `light_schema_change` property must be set for existing OLAP tables before enabling Syncer synchronization.
+**Table property requirements**
 
-**Configuration Requirements**
-- `restore_reset_index_id`: If the table to be synchronized has an inverted index, it must be configured as `false` on the target cluster.
-- `ignore_backup_tmp_partitions`: If the upstream creates temporary partitions, Doris will prohibit backup, causing Syncer synchronization to be interrupted; setting `ignore_backup_tmp_partitions=true` in FE can avoid this issue.
+- `light_schema_change`: Syncer requires both upstream and downstream tables to have the `light_schema_change` property set. Otherwise, data replication will fail. The latest versions of Doris enable this property by default when creating tables. If you are using Doris 1.1 or earlier, or have upgraded from an older version, you must set the `light_schema_change` property on all existing OLAP tables before enabling Syncer replication.
 
-## Enable binlog for all tables in the database
+**FE configuration requirements**
+
+- `restore_reset_index_id`: If the tables to be replicated contain inverted indexes, this configuration must be set to `false` on the target cluster.
+- `ignore_backup_tmp_partitions`: If the upstream creates tmp partitions, Doris will prohibit backups, causing Syncer replication to be interrupted. You can set `ignore_backup_tmp_partitions=true` on the FE to work around this issue.
+
+## Enable Binlog for All Tables in a Database
+
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenarios: Preparation for database-level replication -->
+
+Database-level replication requires binlog to be enabled for all tables in the source cluster. You can use the following script to enable it in bulk:
 
 ```shell
 bash bin/enable_db_binlog.sh -h host -p port -u user -P password -d db
 ```
 
+Parameter descriptions:
+
+| Parameter | Description |
+|------|------|
+| `-h` | Host of the source cluster FE |
+| `-p` | MySQL protocol port of the source cluster FE |
+| `-u` | Username |
+| `-P` | Password |
+| `-d` | Name of the database for which binlog is to be enabled |
+
 ## Start Syncer
 
-Assuming the environment variable ${SYNCER_HOME} is set to the working directory of Syncer. You can start Syncer using `bin/start_syncer.sh`.
+<!-- Knowledge type: Procedure / Configuration parameters -->
+<!-- Applicable scenarios: Starting the Syncer process -->
 
-| **Option** | **Description** | **Command Example** | **Default Value** |
-|------------|-----------------|---------------------|--------------------|
+Assuming the environment variable `${SYNCER_HOME}` is set to the Syncer working directory, you can use `bin/start_syncer.sh` to start Syncer. Common startup options are as follows:
+
+| Option | Description | Command example | Default value |
+|------|------|----------|--------|
 | `--daemon` | Run Syncer in the background | `bin/start_syncer.sh --daemon` | `false` |
-| `--db_type` | Syncer can use two types of databases to store metadata: `sqlite3` (local storage) and `mysql` (local or remote storage). When using `mysql` to store metadata, Syncer will create a database named `ccr` using `CREATE IF NOT EXISTS`, and the metadata table will be stored there. | `bin/start_syncer.sh --db_type mysql` | `sqlite3` |
-| `--db_dir` | **Effective only when using `sqlite3`**; specifies the filename and path of the SQLite3 generated database file. | `bin/start_syncer.sh --db_dir /path/to/ccr.db` | `SYNCER_HOME/db/ccr.db` |
-| `--db_host`<br>`--db_port`<br>`--db_user`<br>`--db_password` | **Effective only when using `mysql`**; used to set the host, port, user, and password for MySQL. | `bin/start_syncer.sh --db_host 127.0.0.1 --db_port 3306 --db_user root --db_password "qwe123456"` | `db_host` and `db_port` default to example values; `db_user` and `db_password` default to empty. |
-| `--log_dir` | Specify the log output path | `bin/start_syncer.sh --log_dir /path/to/ccr_syncer.log` | `SYNCER_HOME/log/ccr_syncer.log` |
-| `--log_level` | Specify the log output level; the log format is as follows: `time level msg hooks`. The default value is `info` when running in the background; when running in the foreground, the default value is `trace`, and logs are saved to `log_dir` using `tee`. | `bin/start_syncer.sh --log_level info` | `info` (background)<br>`trace` (foreground) |
-| `--host`<br>`--port` | Specify the `host` and `port` for Syncer. The `host` is used to distinguish instances of Syncer in the cluster and can be understood as the name of Syncer; the naming format for Syncer in the cluster is `host:port`. | `bin/start_syncer.sh --host 127.0.0.1 --port 9190` | `host` defaults to `127.0.0.1`<br>`port` defaults to `9190` |
-| `--pid_dir` | Specify the path to save the PID file. The PID file is the credential for the `stop_syncer.sh` script to stop Syncer, saving the corresponding Syncer's process number. For ease of cluster management, you can customize the path. | `bin/start_syncer.sh --pid_dir /path/to/pids` | `SYNCER_HOME/bin` |
+| `--db_type` | Syncer can use two types of databases to store metadata: `sqlite3` (local storage) and `mysql` (local or remote storage). When using `mysql` to store metadata, Syncer uses `CREATE IF NOT EXISTS` to create a database named `ccr`, in which the metadata tables are stored. | `bin/start_syncer.sh --db_type mysql` | `sqlite3` |
+| `--db_dir` | **Effective only when the database uses `sqlite3`.** Specifies the file name and path of the SQLite3 database. | `bin/start_syncer.sh --db_dir /path/to/ccr.db` | `SYNCER_HOME/db/ccr.db` |
+| `--db_host`<br/>`--db_port`<br/>`--db_user`<br/>`--db_password` | **Effective only when the database uses `mysql`.** Used to set the MySQL host, port, user, and password. | `bin/start_syncer.sh --db_host 127.0.0.1 --db_port 3306 --db_user root --db_password "qwe123456"` | `db_host` and `db_port` default to the example values; `db_user` and `db_password` default to empty. |
+| `--log_dir` | Specifies the log output path | `bin/start_syncer.sh --log_dir /path/to/ccr_syncer.log` | `SYNCER_HOME/log/ccr_syncer.log` |
+| `--log_level` | Specifies the log output level. The log format is: `time level msg hooks`. Under `--daemon`, the default value is `info`; when running in the foreground, the default value is `trace`, and logs are saved to `log_dir` through `tee`. | `bin/start_syncer.sh --log_level info` | `info` (background)<br/>`trace` (foreground) |
+| `--host`<br/>`--port` | Specifies the `host` and `port` of Syncer. `host` is used to distinguish Syncer instances in a cluster and can be understood as the name of Syncer. The name format of Syncer in a cluster is `host:port`. | `bin/start_syncer.sh --host 127.0.0.1 --port 9190` | `host` defaults to `127.0.0.1`<br/>`port` defaults to `9190` |
+| `--pid_dir` | Specifies the path where the PID file is saved. The PID file is the credential used by the `stop_syncer.sh` script to stop Syncer, and it stores the process ID of the corresponding Syncer. To facilitate cluster management, you can customize the path. | `bin/start_syncer.sh --pid_dir /path/to/pids` | `SYNCER_HOME/bin` |
 
 ## Stop Syncer
 
-You can stop Syncer using `bin/stop_syncer.sh` in three ways:
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenarios: Stopping a single or multiple Syncers -->
 
-| **Method/Option** | **Description** | **Command Example** | **Default Value** |
-|-------------------|-----------------|---------------------|--------------------|
-| **Method 1** Stop a single Syncer | Specify the `host` and `port` of the Syncer to stop; note that it must match the `host` used when starting. | `bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190` | None |
-| **Method 2** Batch stop Syncers | Specify the PID file names to stop, separated by spaces and enclosed in `"` quotes. | `bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"` | None |
-| **Method 3** Stop all Syncers | By default, stops all Syncers corresponding to PID files in the `pid_dir` path. | `bash bin/stop_syncer.sh --pid_dir /path/to/pids` | None |
+You can use `bin/stop_syncer.sh` to stop Syncer. Choose one of the following three methods based on the scenario:
 
-Options for Method 3:
+| Method | Applicable scenario | Command example |
+|------|----------|----------|
+| **Method 1** Stop a single Syncer | The `host` and `port` of the Syncer to stop are known (must match those used at startup) | `bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190` |
+| **Method 2** Stop multiple Syncers in bulk | The PID file names of the Syncers to stop are known | `bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"` |
+| **Method 3** Stop all Syncers | Stop all Syncers corresponding to the PID files under the `pid_dir` path | `bash bin/stop_syncer.sh --pid_dir /path/to/pids` |
 
-| **Option** | **Description** | **Command Example** | **Default Value** |
-|------------|-----------------|---------------------|--------------------|
-| `--pid_dir` | Specify the directory where the PID files are located; all three stopping methods depend on this option to execute. | `bash bin/stop_syncer.sh --pid_dir /path/to/pids` | `SYNCER_HOME/bin` |
-| `--host`<br>`--port` | Stop the Syncer corresponding to `host:port` in the `pid_dir` path. If only `host` is specified, it degrades to **Method 3**; if both `host` and `port` are not empty, it will be effective as **Method 1**. | `bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190` | `host`: 127.0.0.1<br>`port`: empty |
-| `--files` | Stop the Syncers corresponding to the specified PID file names in the `pid_dir` path, separated by spaces and enclosed in `"` quotes. | `bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"` | None |
+The options of `bin/stop_syncer.sh` are as follows:
 
-## Syncer Operation List
+| Option | Description | Command example | Default value |
+|------|------|----------|--------|
+| `--pid_dir` | Specifies the directory where the PID files are located. All three stop methods above depend on this option. | `bash bin/stop_syncer.sh --pid_dir /path/to/pids` | `SYNCER_HOME/bin` |
+| `--host`<br/>`--port` | Stops the Syncer corresponding to `host:port` under the `pid_dir` path. When only `host` is specified, it falls back to **Method 3**; when both `host` and `port` are non-empty, it takes effect as **Method 1**. | `bash bin/stop_syncer.sh --host 127.0.0.1 --port 9190` | `host`: `127.0.0.1`<br/>`port`: empty |
+| `--files` | Stops the Syncers corresponding to the specified PID file names under the `pid_dir` path. File names are separated by spaces and wrapped as a whole in `"`. | `bash bin/stop_syncer.sh --files "127.0.0.1_9190.pid 127.0.0.1_9191.pid"` | None |
 
-**General Template for Requests**
+## Syncer Operation APIs
+
+<!-- Knowledge type: API reference -->
+<!-- Applicable scenarios: Managing CCR replication tasks through HTTP APIs -->
+
+Syncer exposes replication task management capabilities through HTTP interfaces. The general template for all operation requests is as follows:
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d {json_body} http://ccr_syncer_host:ccr_syncer_port/operator
 ```
 
-json_body: Send the required information for the operation in JSON format.
+- `json_body`: Sends the information required for the operation in JSON format.
+- `operator`: Corresponds to different Syncer operations (such as `create_ccr`, `pause`, `resume`, and so on).
 
-operator: Corresponds to different operations of Syncer.
+All interfaces return JSON. On success, the `success` field is `true`; on failure, the `success` field is `false`, and the `ErrMsgs` field is present:
 
-Thus, the interface returns are all in JSON; if successful, the `success` field will be true, and if there is an error, it will be false, with the error message in the `ErrMsgs` field.
-
-```JSON
+```json
 {"success":true}
 
 or
@@ -100,7 +161,7 @@ or
 {"success":false,"error_msg":"job ccr_test not exist"}
 ```
 
-### Create Job
+### Create a Task
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -126,21 +187,17 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' http://127.0.0.1:9190/create_ccr
 ```
 
-- name: The name of the CCR synchronization job, must be unique.
+Field descriptions:
 
-- host, port: Correspond to the host of the cluster master and the port of MySQL (jdbc).
+| Field | Description |
+|------|------|
+| `name` | Name of the CCR replication task. Must be unique. |
+| `host`, `port` | Host and MySQL (JDBC) port of the corresponding cluster master |
+| `thrift_port` | The `rpc_port` of the corresponding FE |
+| `user`, `password` | The identity under which Syncer opens transactions, pulls data, and so on |
+| `database`, `table` | For database-level replication, fill in `database` and leave `table` empty. For table-level replication, fill in both `database` and `table`. |
 
-- thrift_port: Corresponds to the rpc_port of FE.
-
-- user, password: The identity under which Syncer opens transactions, pulls data, etc.
-
-- database, table:
-
-  - If it is a database-level synchronization, fill in dbName, leave tableName empty.
-
-  - If it is table-level synchronization, fill in both dbName and tableName.
-
-### View Synchronization Progress
+### View Replication Progress
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -148,9 +205,9 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' http://ccr_syncer_host:ccr_syncer_port/get_lag
 ```
 
-job_name is the name created during create_ccr.
+`job_name` is the `name` created with `create_ccr`.
 
-### Pause Job
+### Pause a Task
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -158,7 +215,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' http://ccr_syncer_host:ccr_syncer_port/pause
 ```
 
-### Resume Job
+### Resume a Task
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -166,7 +223,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' http://ccr_syncer_host:ccr_syncer_port/resume
 ```
 
-### Delete Job
+### Delete a Task
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -183,7 +240,7 @@ curl http://ccr_syncer_host:ccr_syncer_port/version
 {"version": "2.0.1"}
 ```
 
-### View Job Status
+### View Task Status
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -200,7 +257,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }
 ```
 
-### End Synchronization
+### End Replication
 
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -208,7 +265,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' http://ccr_syncer_host:ccr_syncer_port/desync
 ```
 
-### Get Job List
+### Get Task List
 
 ```shell
 curl http://ccr_syncer_host:ccr_syncer_port/list_jobs
@@ -218,119 +275,180 @@ curl http://ccr_syncer_host:ccr_syncer_port/list_jobs
 
 ## Syncer High Availability
 
-Syncer high availability relies on MySQL. If MySQL is used as backend storage, Syncer can discover other Syncers; if one crashes, others will take over its jobs.
+<!-- Knowledge type: Architecture decision -->
+<!-- Applicable scenarios: Multi-instance disaster recovery deployment -->
 
-## Upgrade
+Syncer high availability depends on MySQL. When MySQL is used as the backend storage, Syncer instances can discover one another. When a Syncer instance crashes, the other instances take over its tasks.
+
+## Upgrade Procedure
+
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenarios: Rolling upgrade of Syncer and Doris clusters -->
+
+The upgrade order must follow the principle of "Syncer first, then downstream Doris, then upstream Doris" to ensure version compatibility.
 
 ### 1. Upgrade Syncer
-Assuming the following environment variables are set:
-- ${SYNCER_HOME}: Syncer's working directory.
-- ${SYNCER_PACKAGE_DIR}: Directory containing the new Syncer.
 
-Upgrade every Syncer by following these steps.
+Assume the following environment variables are set:
 
-1.1. Save start commands
+- `${SYNCER_HOME}`: Working directory of Syncer.
+- `${SYNCER_PACKAGE_DIR}`: Directory containing the new Syncer.
 
-Save the output of the following command to a file.
-```
+Upgrade each Syncer through the following steps.
+
+#### 1.1 Save the Startup Command
+
+Save the output of the following command to a file so that you can start the upgraded Syncer with the same parameters:
+
+```shell
 ps -elf | grep ccr_syncer
 ```
 
-1.2. Stop the current Syncer
+#### 1.2 Stop the Current Syncer
 
 ```shell
 sh bin/stop_syncer.sh --pid_dir ${SYNCER_HOME}/bin
 ```
 
-1.3. Backup the existing MetaService binaries
+#### 1.3 Back Up the Existing MetaService Binary
 
 ```shell
 mv ${SYNCER_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-1.4. Deploy the new package
+#### 1.4 Deploy the New Package
 
 ```shell
 cp ${SYNCER_PACKAGE_DIR}/bin ${SYNCER_HOME}/bin
 ```
 
-1.5. Start the new Syncer
+#### 1.5 Start the New Syncer
 
-Start the new Syncer using the command saved in 1.1.
+Use the command saved in 1.1 to start the new Syncer.
 
-### 2. Upgrade downstream Doris (If Necessary)
+### 2. Upgrade Downstream Doris (If Necessary)
 
-Upgrade the upstream system by following the instructions in the [Upgrade Doris](../../../admin-manual/cluster-management/upgrade.md) guide.
+Follow the instructions in the [Upgrade Doris](../../cluster-management/upgrade) guide to upgrade the downstream cluster.
 
-### 3. Upgrade upstream Doris (If Necessary)
+### 3. Upgrade Upstream Doris (If Necessary)
 
-Upgrade the upstream system by following the instructions in the [Upgrade Doris](../../../admin-manual/cluster-management/upgrade.md) guide.
+Follow the instructions in the [Upgrade Doris](../../cluster-management/upgrade) guide to upgrade the upstream cluster.
 
 ## Usage Notes
 
+<!-- Knowledge type: Notes / Performance tuning -->
+<!-- Applicable scenarios: Production operations / Tuning for large-scale replication -->
+
 :::caution
 
-The `is_being_synced` attribute should be fully controlled by Syncer to turn on or off under normal circumstances; users should not modify this attribute themselves.
+When there are no anomalies, the `is_being_synced` property should be controlled entirely by Syncer for enabling or disabling. Users must not modify this property themselves.
 
 :::
 
-### Important Notes
+### Notes
 
-- During CCR synchronization, backup/restore jobs and binlogs are all in FE memory, so it is recommended to allocate at least 4GB or more heap memory for each CCR job in FE (both source and target clusters), and also modify the following configurations to reduce the memory consumption of unrelated jobs:
-    - Modify the FE configuration `max_backup_restore_job_num_per_db`:
-        Records the number of backup/restore jobs for each DB in memory. The default value is 10; setting it to 2 is sufficient.
-    - Modify the source cluster db/table property to set the binlog retention limit:
-        - `binlog.max_bytes`: Maximum memory occupied by binlog; it is recommended to retain at least 4GB (default is unlimited).
-        - `binlog.ttl_seconds`: Binlog retention time; before version 2.0.5, the default was unlimited; after that, the default value is one day (86400).
-        For example, to modify the binlog ttl seconds to retain for one hour: `ALTER TABLE table SET ("binlog.ttl_seconds"="3600")`.
-- The correctness of CCR also relies on the transaction state of the target cluster, so it is necessary to ensure that transactions are not reclaimed too quickly during synchronization; the following configurations need to be increased:
-    - `label_num_threshold`: Used to control the number of TXN Labels.
-    - `stream_load_default_timeout_second`: Used to control the TXN timeout duration.
-    - `label_keep_max_second`: Used to control the retention time after TXN ends.
-    - `streaming_label_keep_max_second`: Same as above.
-- If it is a database synchronization and the source cluster has a large number of tablets, the resulting CCR job may be very large, requiring modifications to several FE configurations:
-    - `max_backup_tablets_per_job`:
-        The upper limit of tablets involved in a single backup job; it needs to be adjusted based on the number of tablets (default value is 300,000; too many tablets may risk FE OOM, prioritize reducing the number of tablets).
-    - `thrift_max_message_size`:
-        The maximum single RPC packet size allowed by the FE thrift server; the default is 100MB. If the number of tablets is too large, causing the snapshot info size to exceed 100MB, this limit needs to be adjusted, with a maximum of 2GB.
-        - The snapshot info size can be found in the ccr syncer logs, with the keywords: `snapshot response meta size: %d, job info size: %d`; the snapshot info size is approximately meta size + job info size.
-    - `fe_thrift_max_pkg_bytes`:
-        Same as above, an additional parameter that needs to be adjusted in version 2.0, with a default value of 20MB.
-    - `restore_download_job_num_per_be`:
-        The upper limit of download jobs sent to each BE; the default is 3, which is too small for restore jobs and needs to be adjusted to 0 (i.e., disable this limit); this configuration is no longer needed starting from versions 2.1.8 and 3.0.4.
-    - `backup_upload_job_num_per_be`:
-        The upper limit of upload jobs sent to each BE; the default is 3, which is too small for backup jobs and needs to be adjusted to 0 (i.e., disable this limit); this configuration is no longer needed starting from versions 2.1.8 and 3.0.4.
-    - In addition to the above FE configurations, if the CCR job's db type is MySQL, some MySQL configurations also need to be adjusted:
-        - The MySQL server will limit the size of the data packets returned/inserted in a single select/insert. Increase the following configurations to relax this limit, for example, adjust to the upper limit of 1GB:
-        ```
-        [mysqld]
-        max_allowed_packet = 1024MB
-        ```
-        - The MySQL client will also have this limit; in ccr syncer versions 2.1.6/2.0.15 and earlier, the upper limit is 128MB; later versions can adjust this through the parameter `--mysql_max_allowed_packet` (in bytes), with a default value of 1024MB.
-        > Note: In versions 2.1.8 and 3.0.4 and later, ccr syncer no longer stores snapshot info in the database, so the default data packet size is sufficient.
-- Similarly, the BE side also needs to modify several configurations:
-    - `thrift_max_message_size`: The maximum single RPC packet size allowed by the BE thrift server; the default is 100MB. If the number of tablets is too large, causing the agent job size to exceed 100MB, this limit needs to be adjusted, with a maximum of 2GB.
-    - `be_thrift_max_pkg_bytes`: Same as above, only needs to be adjusted in version 2.0, with a default value of 20MB.
-- Even if the above configurations are modified, if the number of tablets continues to rise, the resulting snapshot size may exceed 2GB, which is the threshold for Doris FE edit log and RPC message size, causing synchronization to fail. Starting from versions 2.1.8 and 3.0.4, Doris can further increase the number of tablets supported for backup and recovery by compressing snapshots. This can be enabled through the following parameters:
-    - `restore_job_compressed_serialization`: Enable compression for restore jobs (affects metadata compatibility, default is off).
-    - `backup_job_compressed_serialization`: Enable compression for backup jobs (affects metadata compatibility, default is off).
-    - `enable_restore_snapshot_rpc_compression`: Enable compression for snapshot info, mainly affecting RPC (default is on).
-    > Note: Since identifying whether backup/restore jobs are compressed requires additional code, and the code before versions 2.1.8 and 3.0.4 does not contain related code, once a backup/restore job is generated, it cannot revert to an earlier Doris version. There are two exceptions: backup/restore jobs that have already been canceled or finished will not be compressed, so waiting for the backup/restore job to complete or actively canceling the job before reverting can ensure safe rollback.
-- CCR internally uses db/table names as labels for some internal jobs, so if the CCR job encounters labels exceeding the limit, the FE parameter `label_regex_length` can be adjusted to relax this limit (default value is 128).
-- Since backup does not currently support backing up tables with cooldown tablets, encountering this will cause synchronization to terminate, so it is necessary to check whether any tables have the `storage_policy` property set before creating the CCR job.
+- During CCR replication, backup/restore jobs and binlogs are kept in FE memory. Therefore, it is recommended to reserve at least 4 GB of heap memory in the FE for each CCR job (on both source and target clusters). At the same time, modify the following configurations to reduce memory consumption by unrelated jobs:
+    - Modify the FE configuration `max_backup_restore_job_num_per_db`: the number of backup/restore jobs recorded in memory for each DB. The default value is 10. Setting it to 2 is sufficient.
+    - Modify the source cluster db/table property to set binlog retention limits:
+        - `binlog.max_bytes`: the maximum memory occupied by binlog. It is recommended to reserve at least 4 GB (no limit by default).
+        - `binlog.ttl_seconds`: binlog retention time. In versions before 2.0.5, there is no limit by default; in later versions, the default value is one day (86400).
+        - For example, to change the binlog ttl seconds to retain for one hour: `ALTER TABLE table SET ("binlog.ttl_seconds"="3600")`.
+- CCR correctness also depends on the transaction state of the target cluster. To ensure that transactions are not recycled too quickly during replication, increase the following configurations:
+    - `label_num_threshold`: used to control the number of TXN Labels.
+    - `stream_load_default_timeout_second`: used to control the TXN timeout.
+    - `label_keep_max_second`: used to control how long TXNs are retained after they end.
+    - `streaming_label_keep_max_second`: same as above.
+- If you are doing database replication and the source cluster has a large number of tablets, the resulting CCR job may be very large. You need to modify the following FE configurations:
+    - `max_backup_tablets_per_job`: the upper limit on the number of tablets involved in a single backup task. Adjust it based on the tablet count (the default value is 300,000; an excessive tablet count risks FE OOM, so consider whether the tablet count can be reduced first).
+    - `thrift_max_message_size`: the upper limit for a single RPC packet allowed by the FE thrift server. The default value is 100 MB. If the snapshot info size exceeds 100 MB due to too many tablets, you need to adjust this limit, up to a maximum of 2 GB.
+        - The snapshot info size can be found in the CCR Syncer logs, with the keyword: `snapshot response meta size: %d, job info size: %d`. The snapshot info size is approximately equal to `meta size + job info size`.
+    - `fe_thrift_max_pkg_bytes`: same as above, an additional parameter that needs to be adjusted in 2.0. The default value is 20 MB.
+    - `restore_download_task_num_per_be`: the upper limit on the number of download tasks sent to each BE. The default value is 3, which is too small for restore jobs. It needs to be adjusted to 0 (which disables this limit). This configuration is no longer required starting from 2.1.8 and 3.0.4.
+    - `backup_upload_task_num_per_be`: the upper limit on the number of upload tasks sent to each BE. The default value is 3, which is too small for backup jobs. It needs to be adjusted to 0 (which disables this limit). This configuration is no longer required starting from 2.1.8 and 3.0.4.
+    - In addition to the FE configurations above, if the db type of the CCR job is mysql, you also need to adjust some MySQL configurations:
+        - The MySQL server limits the packet size returned or inserted in a single select/insert. Add the following configuration to relax this limit, for example, raising it to the upper limit of 1 GB:
+
+            ```text
+            [mysqld]
+            max_allowed_packet = 1024MB
+            ```
+
+        - The MySQL client also has this limit. In CCR Syncer versions 2.1.6 / 2.0.15 and earlier, the upper limit is 128 MB; in later versions, it can be adjusted through the parameter `--mysql_max_allowed_packet` (unit: bytes), with a default value of 1024 MB.
+
+        > Note: After 2.1.8 and 3.0.4, CCR Syncer no longer stores snapshot info in the db, so the default packet size is sufficient.
+- Similarly, several configurations need to be modified on the BE side:
+    - `thrift_max_message_size`: the upper limit for a single RPC packet allowed by the BE thrift server. The default value is 100 MB. If the agent task size exceeds 100 MB due to too many tablets, you need to adjust this limit, up to a maximum of 2 GB.
+    - `be_thrift_max_pkg_bytes`: same as above, a parameter that needs to be adjusted only in 2.0. The default value is 20 MB.
+- Even with the configurations above modified, as the tablet count continues to grow, the generated snapshot size may exceed 2 GB, which is the threshold for Doris FE edit log and RPC message size, causing replication to fail. Starting from 2.1.8 and 3.0.4, Doris can further increase the number of tablets supported by backup and restore by compressing snapshots. You can enable compression through the following parameters:
+    - `restore_job_compressed_serialization`: enables compression for restore jobs (affects metadata compatibility, disabled by default).
+    - `backup_job_compressed_serialization`: enables compression for backup jobs (affects metadata compatibility, disabled by default).
+    - `enable_restore_snapshot_rpc_compression`: enables compression for snapshot info, mainly affecting RPC (enabled by default).
+
+    > Note: Because identifying whether a backup/restore job is compressed requires additional code, and the code before 2.1.8 and 3.0.4 does not include the relevant code, once a backup/restore job is generated, you cannot roll back to an earlier Doris version. There are two exceptions: backup/restore jobs that have already been canceled or finished are not compressed, so you can safely roll back after waiting for backup/restore jobs to complete or actively canceling them.
+- CCR uses db/table names as labels for some internal jobs. Therefore, if a CCR job runs into the label length limit, you can adjust the FE parameter `label_regex_length` to relax this limit (the default value is 128).
+- Because backup does not currently support backing up tables with cooldown tablets, encountering such tables causes replication to be interrupted. Therefore, before creating a CCR job, check whether any table has the `storage_policy` property set.
+
 ### Performance-Related Parameters
-- If the user's data volume is very large, the time required to complete backup and recovery may exceed one day (default value), so the following parameters need to be adjusted as needed:
-    - `backup_job_default_timeout_ms`: Timeout duration for backup/restore jobs; both source and target clusters' FE need to configure this.
-    - The upstream modifies the binlog retention time: `ALTER DATABASE $db SET PROPERTIES ("binlog.ttl_seconds" = "xxxx")`.
-- Downstream BE download speed is slow:
-    - `max_download_speed_kbps`: The download speed limit for a single download thread in a single downstream BE, default is 50MB/s.
-    - `download_worker_count`: The number of threads executing download jobs in the downstream; it should be adjusted based on the customer's machine type, maximizing without affecting normal read/write operations; if this parameter is adjusted, there is no need to adjust `max_download_speed_kbps`.
-        - For example, if the customer's machine network card provides a maximum bandwidth of 1GB, and the maximum allowed download thread utilizes 200MB of bandwidth, then without changing `max_download_speed_kbps`, `download_worker_count` should be configured to 4.
-- Limit the download speed of binlogs from the downstream BE:
-    BE-side configuration parameter:
-    ```shell
-    download_binlog_rate_limit_kbs=1024 # Limit the speed of a single BE node pulling Binlog (including Local Snapshot) from the source cluster to 1 MB/s.
-    ```
-    Detailed parameters and explanations:
-    1. The `download_binlog_rate_limit_kbs` parameter is configured on the source cluster BE node, and by setting this parameter, the data pulling speed can be effectively limited.
-    2. The `download_binlog_rate_limit_kbs` parameter is mainly used to set the speed of a single BE node; to calculate the overall speed of the cluster, the parameter value needs to be multiplied by the number of nodes in the cluster.
+
+If your data volume is very large and the time required for backup and restore execution may exceed one day (the default value), you need to adjust the following parameters as needed:
+
+- `backup_job_default_timeout_ms`: the timeout for backup/restore tasks. The FEs of both the source and target clusters need to configure this.
+- Modify the binlog retention time on the upstream: `ALTER DATABASE $db SET PROPERTIES ("binlog.ttl_seconds" = "xxxx")`.
+
+When the download speed of the downstream BE is slow, you can adjust the following parameters:
+
+- `max_download_speed_kbps`: the download speed limit of a single download thread on a single downstream BE. The default value is 50 MB/s.
+- `download_worker_count`: the number of threads on the downstream that execute download tasks. The default value is 1. Adjust it according to the client machine type, and raise it to the maximum value without affecting the client's normal reads and writes. If you adjust this parameter, you do not need to adjust `max_download_speed_kbps`.
+    - For example, if the client machine's NIC provides a maximum bandwidth of 1 GB and currently allows the download threads to use up to 200 MB of bandwidth, then without changing `max_download_speed_kbps`, `download_worker_count` should be configured as 4.
+
+To limit the speed at which the downstream BE downloads binlog, configure the following parameter on the BE side:
+
+```shell
+download_binlog_rate_limit_kbs=1024 # Limit the speed at which a single BE node pulls Binlog (including Local Snapshot) from the source cluster to 1 MB/s
+```
+
+Detailed description:
+
+1. The `download_binlog_rate_limit_kbs` parameter is configured on the source cluster BE nodes. Setting this parameter can effectively limit the data pull speed.
+2. The `download_binlog_rate_limit_kbs` parameter is mainly used to set the speed of a single BE node. To calculate the overall cluster rate, you generally need to multiply the parameter value by the number of cluster nodes.
+
+## FAQ
+
+<!-- Knowledge type: Troubleshooting / FAQ -->
+<!-- Applicable scenarios: Replication exception troubleshooting -->
+
+### Q: How do I troubleshoot replication errors or data errors?
+
+This is usually because the `light_schema_change` property is not set on the upstream and downstream tables. Explicitly set the `light_schema_change` property on existing tables and retry.
+
+### Q: What should I do if a table with inverted indexes fails to replicate?
+
+The target cluster has not disabled `restore_reset_index_id`. Set `restore_reset_index_id=false` on the target cluster FE.
+
+### Q: What should I do if backup is prohibited because the upstream has tmp partitions?
+
+By default, the FE prohibits backups on databases that contain tmp partitions. Set `ignore_backup_tmp_partitions=true` on the source cluster FE.
+
+### Q: How do I handle Syncer version mismatch with Doris version?
+
+The upgrade order is incorrect, or Syncer 2.1.8 / 3.0.4 no longer supports Doris 2.0. Strictly follow the upgrade order "Syncer first, then downstream, then upstream".
+
+### Q: What should I do if FE encounters OOM?
+
+There are too many backup/restore jobs for a single DB, or the number of tablets is too large. Decrease `max_backup_restore_job_num_per_db`, and adjust parameters such as `max_backup_tablets_per_job` and `thrift_max_message_size` as needed.
+
+### Q: What should I do if replication fails because the snapshot size exceeds 2 GB?
+
+In large-scale tablet scenarios, the RPC / edit log exceeds the threshold. Upgrade to 2.1.8 / 3.0.4 or later, and enable compression parameters such as `restore_job_compressed_serialization` and `backup_job_compressed_serialization`.
+
+### Q: What should I do if the replication task fails because the label is too long?
+
+The internal job label length exceeds the limit. Increase the FE parameter `label_regex_length` (default 128).
+
+### Q: How do I handle replication interruption for tables with `storage_policy`?
+
+Backup does not currently support tables containing cooldown tablets. Before creating a CCR job, check and avoid replicating tables that have the `storage_policy` property set.
+
+### Q: How do I optimize the slow download speed of the downstream BE?
+
+Single-threaded download with a low default speed limit. Increase `download_worker_count`, or adjust `max_download_speed_kbps`.

@@ -1,160 +1,255 @@
 ---
 {
-    "title": "Cluster Operation",
+    "title": "Cluster Operations",
     "language": "en",
-    "description": "In the k8s environment, the service will enter the CrashLoopBackOff state due to some unexpected things."
+    "description": "Doris cluster operations guide: service scaling, rolling upgrades, CrashLoopBackOff handling, Debug mode startup, metadata recovery, and other cluster management operations in Kubernetes environments.",
+    "keywords": ["Doris cluster operations", "scaling", "rolling upgrade", "CrashLoopBackOff", "Debug mode", "metadata recovery", "K8s", "Kubernetes"]
 }
 ---
 
-## How to enter the container when the pod crashes
+## How to Enter the Container When the Service Crashes
 
-In the k8s environment, the service will enter the `CrashLoopBackOff` state due to some unexpected things. You can view the pod status and pod_name under the specified namespace through the `kubectl get pod --namespace ${namespace}` command.
+In a K8s environment, services may enter the `CrashLoopBackOff` state due to unexpected events. You can use the `kubectl get pod --namespace ${namespace}` command to view the pod status and pod_name under the specified namespace.
 
-In this state, the cause of the service problem cannot be determined simply by using the describe and logs commands. When the service enters the `CrashLoopBackOff` state, there needs to be a mechanism that allows the pod deploying the service to enter the `running` state so that users can enter the container for debugging through exec.
+In this state, the describe and logs commands alone cannot determine the cause of the service failure. When the service enters the `CrashLoopBackOff` state, a mechanism is needed to allow the deployed pod to enter the `running` state so that you can use exec to enter the container for debugging.
 
-Doris Operator provides a `Debug` running mode. The following describes how to enter Debug mode for manual debugging when the service enters `CrashLoopBackOff`, and how to return to normal startup state after solving the problem.
+Doris Operator provides a `Debug` running mode. The following describes how to enter Debug mode for manual debugging when a service enters `CrashLoopBackOff`, and how to restore normal startup after the issue is resolved.
 
+### Start Debug Mode
 
-### Start Debug mode
+When a service pod enters CrashLoopBackOff or fails to start normally during normal operation, follow these steps to put the service into `Debug` mode for manual startup and troubleshooting.
 
-When a pod of the service enters CrashLoopBackOff or cannot be started normally during normal operation, take the following steps to put the service into `Debug` mode and manually start the service to find the problem.
-
-1. **Use the following command to add annotation to the pod with problems.**
-  ```shell
-  $ kubectl annotate pod ${pod_name} --namespace ${namespace} apache.org.doris/runmode=debug
-  ```
-  When the service is restarted next time, the service will detect the annotation that identifies the `Debug` mode startup, and will enter the `Debug` mode to start, and the pod status will be `running`.
-
-2. **When the service enters `Debug` mode, the pod of the service is displayed in a normal state. Users can enter the inside of the pod through the following command**
+1. **Add an annotation to the problematic pod using the following command**
 
   ```shell
-  $ kubectl --namespace ${namespace} exec -ti ${pod_name} bash
+  kubectl annotate pod ${pod_name} --namespace ${namespace} apache.org.doris/runmode=debug
   ```
 
-3. **Manually start the service under `Debug`. When the user enters the pod, manually execute the `start_xx.sh` script by modifying the port of the corresponding configuration file. The script directory is under `/opt/apache-doris/xx/bin`.**
+  When the service restarts next time, it detects the annotation that identifies `Debug` mode startup and enters `Debug` mode startup, with the pod status as `running`.
 
-  FE needs to modify `query_port`, BE needs to modify `heartbeat_service_port`
-  The main purpose is to avoid misleading the flow by accessing the crashed node through service in `Debug` mode.
+2. **When the service enters `Debug` mode, the service pod displays as normal status. You can enter the pod using the following command**
 
-### Exit Debug mode
+  ```shell
+  kubectl --namespace ${namespace} exec -ti ${pod_name} bash
+  ```
+  
+3. **Manually start the service in `Debug` mode. After entering the pod, modify the relevant ports in the configuration file and manually execute the `start_xx.sh` script. The script directory is `/opt/apache-doris/xx/bin`.**
 
-When the service locates the problem, it needs to exit the `Debug` operation. At this time, you only need to delete the corresponding pod according to the following command, and the service will start in the normal mode.
+  FE needs to modify `query_port`, and BE needs to modify `heartbeat_service_port`, to avoid the crashed node still being accessible through the service in `Debug` mode and causing traffic misdirection.
+
+### Exit Debug Mode
+
+After locating the issue, exit `Debug` mode by deleting the corresponding pod with the following command. The service then starts in normal mode.
+
 ```shell
-$ kubectl delete pod ${pod_name} --namespace ${namespace}
+kubectl delete pod ${pod_name} --namespace ${namespace}
 ```
 
-:::tip Tip  
-**After entering the pod, you need to modify the port information of the configuration file before you can manually start the corresponding Doris component.**
-
-- FE needs to modify the `query_port=9030` configuration with the default path: `/opt/apache-doris/fe/conf/fe.conf`.
-- BE needs to modify the `heartbeat_service_port=9050` configuration with the default path: `/opt/apache-doris/be/conf/be.conf`.  
+:::tip Tip
+**After entering the pod, you must modify the port information in the configuration file before manually starting the corresponding Doris components.**
+- For FE, modify the `query_port=9030` configuration. The default path is `/opt/apache-doris/fe/conf/fe.conf`.
+- For BE, modify the `heartbeat_service_port=9050` configuration. The default path is `/opt/apache-doris/be/conf/be.conf`.
 :::
 
-## Upgrading doris cluster
+## Service Scaling
 
-This document describes how to use updates to upgrade an Apache Doris cluster based on a Doris Operator deployment.
+Scaling Doris on K8s is achieved by modifying the replicas field of the corresponding component in the DorisCluster resource. You can either edit the resource directly or use commands.
 
-Similar to conventionally deployed cluster upgrades, Doris clusters deployed by Doris Operator still require rolling upgrades from BE to FE nodes. Doris Operator is based on Kubernetes'  [Performing a Rolling Update](https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/) provides rolling upgrade capabilities.
+### Get DorisCluster Resources
 
-### Things to note before upgrading
+Use the command `kubectl --namespace {namespace} get doriscluster` to get the name of deployed DorisCluster (dcr for short) resources. In this document, we use `doris` as the namespace.
 
-- It is recommended that the upgrade operation be performed during off-peak periods.
-- During the rolling upgrade process, the connection to the closed node will fail, causing the request to fail. For this type of business, it is recommended to add retry capabilities to the client.
-- Before upgrading, you can read the [General Upgrade Manual](https://doris.apache.org/docs/dev/admin-manual/cluster-management/upgrade) to help you understand some principles and precautions during the upgrade. .
-- The compatibility of data and metadata cannot be verified before upgrading. Therefore, cluster upgrade must avoid single copy of data and single FE FOLLOWER node in the cluster.
-- Nodes will be restarted during the upgrade process, so unnecessary cluster balancing and replica repair logic may be triggered. Please shut it down first with the following command.
-```mysql
+```shell
+kubectl --namespace doris get doriscluster
+NAME                  FESTATUS    BESTATUS    CNSTATUS   BROKERSTATUS
+doriscluster-sample   available   available
+```
+
+### Scale Resources
+
+All K8s operations are performed by modifying resources to a final state, with the Operator service automatically handling the operation. Scaling can be done by entering edit mode directly with `kubectl --namespace {namespace}  edit doriscluster {dcr_name}` to modify the replicas value of the corresponding spec. After saving and exiting, Doris Operator completes the operation. You can also scale different components using the following commands.
+
+#### Scale FE
+
+1. **View the current number of FE services**
+
+  ```shell
+  kubectl --namespace doris get pods -l "app.kubernetes.io/component=fe"
+  NAME                       READY   STATUS    RESTARTS       AGE
+  doriscluster-sample-fe-0   1/1     Running   0              10d
+  ```
+
+2. **Scale FE**
+
+  ```shell
+  kubectl --namespace doris patch doriscluster doriscluster-sample --type merge --patch '{"spec":{"feSpec":{"replicas":3}}}'
+  ```
+
+3. **Verify the scaling result**
+  ```shell
+  kubectl --namespace doris get pods -l "app.kubernetes.io/component=fe"
+  NAME                       READY   STATUS    RESTARTS   AGE
+  doriscluster-sample-fe-2   1/1     Running   0          9m37s
+  doriscluster-sample-fe-1   1/1     Running   0          9m37s
+  doriscluster-sample-fe-0   1/1     Running   0          8m49s
+  ```
+
+#### Scale BE
+
+1. **View the current number of BE services**
+
+  ```shell
+  kubectl --namespace doris get pods -l "app.kubernetes.io/component=be"
+  NAME                       READY   STATUS    RESTARTS      AGE
+  doriscluster-sample-be-0   1/1     Running   0             3d2h
+  ```
+
+2. **Scale BE**
+
+  ```shell
+  kubectl --namespace doris patch doriscluster doriscluster-sample --type merge --patch '{"spec":{"beSpec":{"replicas":3}}}'
+  ```
+
+3. **Verify the scaling result**
+  ```shell
+  kubectl --namespace doris get pods -l "app.kubernetes.io/component=be"
+  NAME                       READY   STATUS    RESTARTS      AGE
+  doriscluster-sample-be-0   1/1     Running   0             3d2h
+  doriscluster-sample-be-2   1/1     Running   0             12m
+  doriscluster-sample-be-1   1/1     Running   0             12m
+  ```
+
+### Node Scale-In
+
+For node scale-in, Doris-Operator currently does not provide good support for safe node decommissioning. You can still reduce the replicas attribute of cluster components to reduce the number of FE or BE nodes. This directly stops the node to take it offline. The current version of Doris-Operator does not implement [decommission](../../../sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND) for safe replica migration before going offline. This may cause some issues. Note the following:
+
+- Taking a BE node offline rashly when a table has only a single replica will definitely result in data loss. Avoid this operation as much as possible.
+
+- Avoid arbitrarily taking FE Follower nodes offline, as it may cause metadata corruption and affect the service.
+
+- FE Observer type nodes can be taken offline arbitrarily without risk.
+
+- CN nodes do not hold data replicas and can be taken offline arbitrarily. However, this will lose the remote data cache on that CN node, causing some performance regression for data queries in the short term.
+
+## Upgrade Doris Cluster
+
+Upgrading the Doris cluster as a whole requires upgrading BE first, then FE. Doris Operator implements rolling smooth upgrades for each component based on Kubernetes' [rolling update feature](https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/).
+
+### Notes Before Upgrade
+
+- It is recommended to perform upgrade operations during off-peak business hours.
+
+- During the rolling upgrade process, connections to closed nodes will become invalid, causing request failures. For such businesses, it is recommended to add retry capability on the client side.
+
+- Before upgrading, you can read the [General Upgrade Manual](../../../admin-manual/cluster-management/upgrade.md) to understand some principles and considerations during the upgrade.
+
+- Before the upgrade, the compatibility of data and metadata cannot be verified. Therefore, the cluster upgrade must avoid scenarios with single-replica data and a single FE FOLLOWER node in the cluster.
+
+- During the upgrade, nodes will be restarted, which may trigger unnecessary cluster balancing and replica repair logic. Disable them first using the following commands:
+
+```
 admin set frontend config("disable_balance" = "true");
 admin set frontend config("disable_colocate_balance" = "true");
 admin set frontend config("disable_tablet_scheduler" = "true");
 ```
-- When upgrading Doris, please follow the principle of not upgrading across two or more key node versions. If you want to upgrade across multiple key node versions, upgrade to the latest key node version first, and then upgrade in sequence. If it is a non-key node version, You can ignore skipping. For details, please refer to [Upgrade Version Instructions](https://doris.apache.org/docs/dev/admin-manual/cluster-management/upgrade/#doris-release-notes)
 
-### Upgrade operation
+- When upgrading Doris, follow the principle of not skipping two or more key node versions. To upgrade across multiple key node versions, first upgrade to the nearest key node version, then upgrade in sequence. Non-key node versions can be skipped. For details, refer to [Upgrade Version Notes](../../../admin-manual/cluster-management/upgrade.md).
 
-The order of node types in the upgrade process is as follows. If a certain type of node does not exist, it will be skipped:
-```shell
-   cn/be -> fe -> broker
+### Upgrade Operations
+
+The order of node types during the upgrade process is as follows. Skip a type if no node of that type exists:
+
 ```
-It is recommended to modify the `image` of the corresponding cluster components in sequence and then apply the configuration. After the current type of component is fully upgraded and the status returns to normal, the rolling upgrade of the next type of node can be performed.
+  cn/be -> fe -> broker
+```
+
+It is recommended to modify the `image` of the corresponding cluster component in sequence, then apply the configuration. Wait until the components of the current type are fully upgraded and the status is restored to normal before performing the rolling upgrade of the next type of nodes.
 
 #### Upgrade BE
 
-If you retain the cluster's crd (Doris Operator defines the abbreviation of `DorisCluster` type resource name) file, you can upgrade by modifying the configuration file and running the `kubectl apply` command.
+If the cluster's CRD (Doris Operator defines `DorisCluster` as the abbreviation of the resource type name) file is preserved, you can upgrade by modifying the configuration file and running `kubectl apply`.
 
 1. Modify `spec.beSpec.image`
 
-  Change `apache/doris:be-2.1.8` to `apache/doris:be-2.1.9`
-  ```shell
-  $ vim doriscluster-sample.yaml
-  ```
-
-2. Save the changes and apply the changes to be upgraded:
-  ```shell
-  $ kubectl apply -f doriscluster-sample.yaml -n doris
-  ```
-
-It can also be modified directly through `kubectl edit dcr`.
-
-1. Check the dcr list under namespace `doris` to obtain the `cluster_name` that needs to be updated.
-  ```shell
-  $ kubectl get dcr -n doris
-  NAME                  FESTATUS    BESTATUS    CNSTATUS
-  doriscluster-sample   available   available
-  ```
-
-2. Modify, save and take effect
-  ```shell
-  $ kubectl edit dcr doriscluster-sample -n doris
-  ```
-  After entering the text editor, you will find `spec.beSpec.image` and change `apache/doris:be-2.1.8` to `apache/doris:be-2.1.9`
-
-3. View the upgrade process and results:
-  ```shell
-  $ kubectl get pod -n doris
-  ```
+   Change `apache/doris:be-2.1.8` to `apache/doris:be-2.1.9`.
   
-When all Pods are rebuilt and enter the Running state, the upgrade is complete.
+2. Save the changes and apply this modification to upgrade FE:
+
+   ```shell
+   kubectl apply -f doriscluster-sample.yaml -n doris
+   ```
+
+You can also modify it directly using `kubectl edit dcr`.
+
+1. View the dcr list under namespace 'doris' and get the `cluster_name` to be updated:
+
+   ```shell
+   $ kubectl get dcr -n doris
+   NAME                  FESTATUS    BESTATUS    CNSTATUS
+   Doriscluster-sample   available   available
+   ```
+
+2. Modify, save, and apply:
+
+   ```shell
+   kubectl edit dcr doriscluster-sample -n doris
+   ```
+  
+   After entering the text editor, find `spec.beSpec.image` and change `apache/doris:be-2.1.8` to `apache/doris:be-2.1.9`.
+
+3. View the upgrade process and result:
+
+   ```shell
+   kubectl get pod -n doris
+   ```
+  
+The upgrade is complete when all Pods are recreated and enter the Running state.
 
 #### Upgrade FE
 
-If you retain the cluster's crd (Doris Operator defines the abbreviation of the `DorisCluster` type resource name) file, you can upgrade by modifying the configuration file and running the `kubectl apply` command.
+If the cluster's crd (Doris-Operator defines `DorisCluster` as the abbreviation of the resource type name) file is preserved, you can upgrade by modifying the configuration file and running `kubectl apply`.
 
 1. Modify `spec.feSpec.image`
 
-  Change `apache/doris:fe-2.1.8` to `apache/doris:fe-2.1.9`
-  ```shell
-  $ vim doriscluster-sample.yaml
-  ```
+   Change `apache/doris:fe-2.1.8` to `apache/doris:fe-2.1.9`.
 
-2. Save the changes and apply the changes to be upgraded:
-  ```shell
-  $ kubectl apply -f doriscluster-sample.yaml -n doris
-  ```
+   ```shell
+   vim doriscluster-sample.yaml
+   ```
+
+2. Save the changes and apply this modification to upgrade FE:
+
+   ```shell
+   kubectl apply -f doriscluster-sample.yaml -n doris
+   ```
+
+You can also modify it directly using `kubectl edit dcr`.
+
+1. Modify, save, and apply:
+
+   ```shell
+   kubectl edit dcr doriscluster-sample -n doris
+   ```
+
+   After entering the text editor, find `spec.feSpec.image` and change `apache/doris:fe-2.1.8` to `apache/doris:fe-2.1.9`.
+
+2. View the upgrade process and result:
+   ```shell
+   kubectl get pod -n doris
+   ```
   
-  It can also be modified directly through `kubectl edit dcr`.
+The upgrade is complete when all Pods are recreated and enter the Running state.
 
-1. Modify, save and take effect
-  ```shell
-  $ kubectl edit dcr doriscluster-sample -n doris
-  ```
-  After entering the text editor, you will find `spec.feSpec.image` and change `apache/doris:fe-2.1.8` to `apache/doris:fe-2.1.9`
+### Post-Upgrade Handling
 
-2. View the upgrade process and results:
-  ```shell
-  $ kubectl get pod -n doris
-  ```
+#### Verify Cluster Node Status
 
-When all Pods are rebuilt and enter the Running state, the upgrade is complete.
-
-### After the upgrade is completed
-#### Verify cluster node status
-
-Access Doris through `mysql-client` through the method provided in the [Access Doris Cluster](./access-cluster) document.
+Use the method provided in the [Access Doris Cluster](install-config-cluster.md#access-configuration) document to access Doris through `mysql-client`.
 
 Use SQL such as `show frontends` and `show backends` to view the version and status of each component.
-```mysql
-mysql> show frontends\G;
+
+```sql
+show frontends\G;
 *************************** 1. row ***************************
               Name: fe_13c132aa_3281_4f4f_97e8_655d01287425
               Host: doriscluster-sample-fe-0.doriscluster-sample-fe-internal.doris.svc.cluster.local
@@ -217,10 +312,11 @@ ArrowFlightSqlPort: -1
   CurrentConnected: No
 3 rows in set (0.02 sec)
 ```
-If the `Alive` status of the FE node is true and the `Version` value is the new version, the FE node is upgraded successfully.
 
-```mysql
-mysql> show backends\G;
+If the FE node's `alive` status is true and the `Version` value is the new version, the FE node has been upgraded successfully.
+
+```sql
+show backends\G;
 *************************** 1. row ***************************
               BackendId: 10002
                    Host: doriscluster-sample-be-0.doriscluster-sample-be-internal.doris.svc.cluster.local
@@ -302,22 +398,26 @@ HeartbeatFailureCounter: 0
 3 rows in set (0.01 sec)
 ```
 
-If the `Alive` status of the BE node is true and the `Version` value is the new version, the BE node is upgraded successfully.
+If the BE node's `alive` status is true and the `Version` value is the new version, the BE node has been upgraded successfully.
 
-#### Restore cluster replica synchronization and balancing
-After confirming that the status of each node is correct, execute the following SQL to restore cluster balancing and replica repair:
-```
+#### Restore Cluster Replica Synchronization and Balancing
+
+After confirming that each node is in the correct state, execute the following SQL to restore cluster balancing and replica repair:
+
+```sql
 admin set frontend config("disable_balance" = "false");
 admin set frontend config("disable_colocate_balance" = "false");
 admin set frontend config("disable_tablet_scheduler" = "false");
 ```
 
-## Starting FE with `metadata_failure_recovery` Mode
-When the Frontend (FE) service is unable to elect a leader and becomes unavailable, you can recover the cluster by selecting the node with the highest `VLSN` and force-starting it as the master using the recovery mechanism.
+## Start FE in metadata_failure_recovery Mode
 
-### Starting in Recovery Mode in a Containerized Environment
-1. Identify the node with the highest `VLSN`  
-   In Kubernetes, each time an FE Pod starts, it outputs the last 10 `VLSN` records of the node. An example is shown below:
+When FE cannot elect a master and the service is unavailable, you can select a node with the largest `VLSN` value and force-start it as the master node using the `metadata_failure_recovery` mechanism to recover the cluster.
+
+### Start in Recovery Mode in a Container Environment
+
+1. Find the node with the largest `VLSN` value.
+   In K8s, each time the FE Pod starts, it outputs the most recent 10 `VLSN` records on this node, as shown below:
     ```
     the annotations value:
     the value not equal!  debug
@@ -325,17 +425,16 @@ When the Frontend (FE) service is unable to elect a leader and becomes unavailab
     /opt/apache-doris/fe/doris-meta/bdb/je.info.0:21:2025-08-05 03:42:47.659 UTC INFO [fe_f35530c4_3ff1_48fe_80d1_cc8e32dbc942] Replica initialization completed. Replica VLSN: -1  Heartbeat master commit VLSN: 49  DTVLSN:0 Replica VLSN delta: 50
     [Tue Aug  5 06:14:05 UTC 2025] start with meta run start_fe.sh with additional options: '--console'
     ```
-   In this example, the highest `VLSN` on the current node is 30, as indicated by the log prefix `start stream at VLSN:`.
-2. Designate the Pod with the highest `VLSN` for recovery  
-   After identifying the Pod corresponding to the node with the highest `VLSN`, annotate it to enable the recovery mechanism:
+   The above shows the `VLSN` records output when an instance cluster's FE starts. The current node's largest `VLSN` is 30 (the log output prefix is `start stream at VLSN:`).
+2. Select the pod of the node with the largest value as the node using the recovery mechanism.
+   After finding the pod of the node with the largest `VLSN` value, add the annotation that requires the recovery mechanism to start to the pod using the following command.
     ```
     kubectl annotate pod {podName} "selectdb.com.doris/recovery=true"
     ```
-   Upon restarting, the Pod will automatically append the `--metadata_failure_recovery` flag to its startup command and start in recovery mode.
-3. Remove the annotation after recovery  
-   Once the FE service is running normally, make sure to remove the annotation added in Step 2 to avoid unexpected behavior during future restarts.
+   When the Pod restarts again, the current node automatically adds ` --metadata_failure_recovery` to the startup command, and the service starts in recovery mode.
+3. After the service is normal, you must remove the annotation added in step 2. Otherwise, unexpected behavior may occur after subsequent node restarts.
 
-:::tip Note
-1. After adding the annotation, do not restart the Pod using kubectl delete pod, as this will remove the annotation. Instead, allow kubelet to restart it automatically or manually kill the process inside the container.
-2. Starting FE in `metadata_failure_recovery` mode can take a long time due to extensive log replay. Before proceeding, increase the FE service's [startup probe timeout](./install-config-cluster.md#startup-probe-timeout), and delete all FE Pods before initiating the recovery startup.
+:::tip Tip
+1. After adding the annotation, do not restart by deleting the pod, as this will cause the annotation to be lost. Wait for kubelet to automatically restart and pull up the pod, or enter the container and manually kill the process.
+2. When starting in `metadata_failure_recovery` mode, FE log replay takes a long time. Before using this mode to start, modify the [startup probe timeout](install-config-cluster.md#startup-probe-timeout-configuration) of the FE service first, then delete all FE Pods to start `metadata_failure_recovery`.
 :::

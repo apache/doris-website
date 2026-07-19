@@ -30,7 +30,6 @@ Special cases:
 - If input is NULL, returns the string 'NULL' (without quotes)
 - Single quotes `'` are escaped to `\'`
 - Backslashes `\` are escaped to `\\`
-- `\\` is escaped to `\`
 - Empty string returns `''`
 
 ## Examples
@@ -55,7 +54,7 @@ SELECT quote("It's a test");
 +----------------------+
 | quote("It's a test") |
 +----------------------+
-| 'It's a test'        |
+| 'It\'s a test'       |
 +----------------------+
 ```
 

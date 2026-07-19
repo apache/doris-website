@@ -52,18 +52,36 @@ The result will be:
 +-------------------------------------------------------------+
 ```
 
-To count the distinct values in a column using bitmaps, which can be more efficient than `count distinct` in some scenarios:
+To count the distinct values in a column using bitmaps, which can be more efficient than `count distinct` in some scenarios. The example below populates a `words` table with 6 rows containing 4 distinct values; at the doc-corpus scale a real query of this shape can return numbers in the millions:
 
 ```sql
+CREATE TABLE `words` (`word` VARCHAR(64))
+DISTRIBUTED BY HASH(`word`) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO `words` VALUES ('apple'), ('banana'), ('cherry'), ('apple'), ('date'), ('banana');
+
 select bitmap_count(bitmap_union(bitmap_hash(`word`))) from `words`;
 ```
-
-The result will be:
 
 ```text
 +-------------------------------------------------+
 | bitmap_count(bitmap_union(bitmap_hash(`word`))) |
 +-------------------------------------------------+
-|                                        33263478 |
+|                                               4 |
 +-------------------------------------------------+
+```
+
+```sql
+select bitmap_to_string(bitmap_hash(NULL)) AS res;
+```
+
+The result will be:
+
+```text
++------+
+| res  |
++------+
+|      |
++------+
 ```

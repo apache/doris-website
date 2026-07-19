@@ -60,7 +60,7 @@ Doris 存算分离版本使用 FDB 存储元数据，在 `DorisDisaggregatedClus
 
 - 配置包含访问信息的 ConfigMap  
     使用 [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator) 部署 FoundationDB，`fdb-kubernetes-operator` 会在部署的命名空间下生成一个特定的，包含 FoundationDB 访问信息的 ConfigMap。
-    生成的 ConfigMap 名称为部署 FoundationDB 的资源名称加上 "-config"。如何获取 `ConfigMap`，请参考文档 FoundationDB 在 Kubernetes 上部署中的[访问信息获取](./install-fdb.md#获取包含-foundationdb-访问信息的-configmap)章节。获取 `ConfigMap` 的命名空间和名称后，请按照如下格式配置 `DorisDisaggregatedCluster` 资源：
+    生成的 ConfigMap 名称为部署 FoundationDB 的资源名称加上 "-config"。如何获取 `ConfigMap`，请参考文档 FoundationDB 在 Kubernetes 上部署中的[访问信息获取](./install-fdb.md#get-the-configmap-that-contains-foundationdb-access-information)章节。获取 `ConfigMap` 的命名空间和名称后，请按照如下格式配置 `DorisDisaggregatedCluster` 资源：
     ```yaml
     spec:
       metaService:

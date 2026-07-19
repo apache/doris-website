@@ -62,7 +62,7 @@ CREATE TABLE `tbl_point_query` (
 ) ENGINE=OLAP
 UNIQUE KEY(`k1`)
 COMMENT 'OLAP'
-DISTRIBUTED BY HASH(`k1)` BUCKETS 1
+DISTRIBUTED BY HASH(`k1`) BUCKETS 1
 PROPERTIES (
     "replication_allocation" = "tag.location.default: 1",
     "enable_unique_key_merge_on_write" = "true",

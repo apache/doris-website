@@ -10,7 +10,7 @@
 
 计算 32 位 murmur3 hash 值
 
--注：在计算 hash 值时，更推荐使用`xxhash_32`，而不是`murmur_hash3_32`。
+- 注：在计算 hash 值时，更推荐使用`xxhash_32`，而不是`murmur_hash3_32`。
 
 ## 语法
 
@@ -28,7 +28,7 @@ MURMUR_HASH3_32( <str> [ , <str> ... ] )
 
 返回输入字符串的 32 位 murmur3 hash 值。
 
--当参数为 NULL 时，返回 NULL
+- 当参数为 NULL 时，返回 NULL
 
 ## 示例
 

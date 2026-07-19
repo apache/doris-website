@@ -1,22 +1,65 @@
 ---
 {
-    "title": "Transparent Rewriting by Async-Materialized View",
+    "title": "Transparent Rewriting with Async Materialized Views: Accelerating Complex Queries",
+    "sidebar_label": "Transparent Rewriting with Async MV",
     "language": "en",
-    "description": "The Async-materialized view adopts a transparent rewriting algorithm based on the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern."
+    "description": "How to use Doris async materialized views for transparent rewriting? This article introduces the SPJG-based rewriting algorithm, hands-on examples, and hit-verification methods to help accelerate complex join and aggregation queries.",
+    "keywords": ["Doris async materialized view", "transparent rewriting", "SPJG", "query acceleration", "explain shape plan", "materialized view hit"]
 }
 ---
 
+<!-- Knowledge type: Concept + How-to guide -->
+<!-- Applicable scenario: Performance optimization for complex JOIN/aggregation queries -->
+
+Transparent rewriting with async materialized views means that Doris automatically analyzes the structure of a query SQL and rewrites it into an equivalent query based on existing materialized views, so that precomputed results are reused to accelerate the query.
+
+## Before You Read
+
+- You are familiar with the basic concepts of [async materialized views](../../materialized-view/async-materialized-view/overview.md).
+- You have experience with SQL and `EXPLAIN`.
+- The query follows the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern.
+- You have permissions to create materialized views and query the tables.
+
 ## Overview
 
-The [Async-materialized view](../../materialized-view/async-materialized-view/overview.md) adopts a transparent rewriting algorithm based on the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern. This algorithm can analyze the structural information of the query SQL, automatically find the appropriate materialized views, and attempt to perform transparent rewriting to express the query SQL using the optimal materialized views. By using the pre-computed results of materialized views, the query performance can be significantly improved and the computing cost can be reduced.
+<!-- Knowledge type: Concept -->
+<!-- Applicable scenario: Understanding the principles of transparent rewriting -->
 
-## Case
+[Async materialized views](../../materialized-view/async-materialized-view/overview.md) use a transparent rewriting algorithm based on the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern.
 
-Next, an example will be used to demonstrate in detail how to utilize async-materialized views to accelerate queries.
+The core capabilities of this algorithm include:
 
-### Create Base Tables
+- **Structure analysis**: Automatically parses the logical structure of the query SQL.
+- **View matching**: Searches for usable candidates among existing materialized views.
+- **Transparent rewriting**: Rewrites the query into an equivalent query based on a materialized view without modifying the original SQL.
+- **Performance improvement**: Significantly improves query speed and reduces compute cost by reusing precomputed results.
 
-Firstly, create the tpch database and then create two tables, namely `orders` and `lineitem`, within it, and insert corresponding data.
+## Applicable Scenarios
+
+<!-- Knowledge type: Decision reference -->
+<!-- Applicable scenario: Deciding whether to use transparent rewriting -->
+
+| Scenario characteristic | Recommended to use transparent rewriting? | Description |
+| --- | --- | --- |
+| Complex JOIN + GROUP BY queries | Recommended | Naturally fits the SPJG pattern |
+| High-frequency repeated aggregation queries | Recommended | High benefit from precomputation |
+| Base tables with low-frequency data changes | Recommended | Low maintenance cost |
+| Base tables with high-frequency data changes | Not recommended | High refresh overhead for materialized views |
+| Simple point queries only | Not recommended | Limited benefit from precomputation |
+| Tight storage resources | Use with caution | Materialized views require additional storage |
+
+## Hands-On Example: Accelerating Queries with a Materialized View
+
+<!-- Knowledge type: How-to guide -->
+<!-- Applicable scenario: End-to-end implementation of transparent rewriting -->
+
+The following end-to-end example uses the TPC-H dataset to demonstrate the full flow of transparent rewriting.
+
+### Step 1: Create the Base Tables
+
+**Goal**: Create the `orders` and `lineitem` tables for the demo and load data into them.
+
+**Commands**:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS tpch;
@@ -75,28 +118,45 @@ INSERT INTO lineitem VALUES
     (3, 2, 3, 6, 7.5, 8.5, 9.5, 10.5, 'k', 'o', '2023-10-19', '2023-10-19', '2023-10-19', 'c', 'd', 'xxxxxxxxx');
 ```
 
-### Create an Asynchronous Materialized View
+**Notes**: Both tables are partitioned by date, which makes it easier for the materialized view to refresh by partition.
 
-Based on several original tables in the tpch benchmark, create an asynchronous materialized view named `mv1`.
+### Step 2: Create an Async Materialized View
+
+**Goal**: Create a pre-aggregated async materialized view `mv1` based on `lineitem` and `orders`.
+
+**Commands**:
 
 ```sql
-CREATE MATERIALIZED VIEW mv1   
+CREATE MATERIALIZED VIEW mv1
 BUILD IMMEDIATE REFRESH COMPLETE ON MANUAL
-PARTITION BY(l_shipdate)  
-DISTRIBUTED BY RANDOM BUCKETS 2  
-PROPERTIES ('replication_num' = '1')   
-AS   
-SELECT l_shipdate, o_orderdate, l_partkey, l_suppkey, SUM(o_totalprice) AS sum_total  
-FROM lineitem  
-LEFT JOIN orders ON lineitem.l_orderkey = orders.o_orderkey AND l_shipdate = o_orderdate  
-GROUP BY  
-l_shipdate,  
-o_orderdate,  
-l_partkey,  
+PARTITION BY(l_shipdate)
+DISTRIBUTED BY RANDOM BUCKETS 2
+PROPERTIES ('replication_num' = '1')
+AS
+SELECT l_shipdate, o_orderdate, l_partkey, l_suppkey, SUM(o_totalprice) AS sum_total
+FROM lineitem
+LEFT JOIN orders ON lineitem.l_orderkey = orders.o_orderkey AND l_shipdate = o_orderdate
+GROUP BY
+l_shipdate,
+o_orderdate,
+l_partkey,
 l_suppkey;
 ```
 
-### Use the Materialized View for Transparent Rewriting
+**Key parameters**:
+
+| Parameter | Value | Description |
+| --- | --- | --- |
+| `BUILD IMMEDIATE` | Build immediately | Materialize data right after creation |
+| `REFRESH COMPLETE ON MANUAL` | Manual full refresh | Refresh is triggered by the user |
+| `PARTITION BY(l_shipdate)` | Partition by partition key | Aligned with the base table partitions for incremental maintenance |
+| `DISTRIBUTED BY RANDOM BUCKETS 2` | Random bucketing | Simplifies the distribution configuration |
+
+### Step 3: Run the Query and Verify Transparent Rewriting
+
+**Goal**: Verify that the query is rewritten into an execution plan based on `mv1`.
+
+**Commands**:
 
 ```sql
 mysql> explain shape plan SELECT l_shipdate, SUM(o_totalprice) AS total_price
@@ -119,7 +179,13 @@ mysql> explain shape plan SELECT l_shipdate, SUM(o_totalprice) AS total_price
 +-------------------------------------------------------------------+
 ```
 
-It can be seen from the `explain shape plan` that the plan after being transparently rewritten by `mv1` has already hit `mv1`. You can also use `explain` to view the current state of the plan after being rewritten by the materialized view, including whether it has hit and which materialized view has been hit, etc., as shown below:
+**Notes**: The end of the execution plan shows `PhysicalOlapScan[mv1]`, indicating that the query has been transparently rewritten and hits `mv1`.
+
+### Step 4: Inspect Rewriting Status Details
+
+**Goal**: Use `explain` to view more fine-grained rewriting status information.
+
+**Commands**:
 
 ```sql
 | ========== MATERIALIZATIONS ==========                                            |
@@ -134,17 +200,70 @@ It can be seen from the `explain shape plan` that the plan after being transpare
 | MaterializedViewRewriteFail:                                                      |
 ```
 
+**Key fields**:
+
+| Field | Meaning |
+| --- | --- |
+| `MaterializedViewRewriteSuccessAndChose` | Rewriting succeeded and was chosen by the optimizer |
+| `MaterializedViewRewriteSuccessButNotChose` | Rewriting succeeded but was not chosen (cost is not optimal) |
+| `MaterializedViewRewriteFail` | Rewriting failed |
+
+## Usage Recommendations
+
+<!-- Knowledge type: Best practice -->
+<!-- Applicable scenario: Materialized view design and operations -->
+
+:::tip Usage recommendations
+
+- **Precomputed results**: A materialized view precomputes and stores query results, avoiding repeated computation on each query. It is a good fit for frequently executed complex queries.
+- **Reduced join operations**: A materialized view can merge data from multiple tables into a single view, reducing join operations at query time and improving query efficiency.
+- **Automatic updates**: When base table data changes, the materialized view can be updated automatically so that query results reflect the latest data state.
+- **Storage overhead**: A materialized view requires additional storage. When creating one, balance query performance against storage cost.
+- **Maintenance cost**: Maintaining a materialized view consumes system resources. When the base table is updated frequently, the refresh overhead is high, so choose an appropriate refresh strategy.
+- **Applicable scenarios**: Materialized views are suitable for scenarios where data changes infrequently and queries run frequently. For frequently changing data, real-time computation may be more appropriate.
+
+:::
+
+## FAQ
+
+<!-- Knowledge type: FAQ -->
+<!-- Applicable scenario: Troubleshooting rewriting misses and lower-than-expected performance -->
+
+### Q1: What should I do if my query does not hit a materialized view?
+
+Troubleshoot in the following order:
+
+1. Use `explain` to check whether the `MATERIALIZATIONS` section contains `RewriteFail` information.
+2. Confirm that the query follows the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern.
+3. Check whether the materialized view fields cover the columns required by the query.
+4. Check whether the materialized view status is available (built and not invalidated).
+
+### Q2: Why does rewriting succeed but does not get chosen?
+
+`MaterializedViewRewriteSuccessButNotChose` means the optimizer considers the cost of the rewritten plan higher than the original plan. You can try:
+
+- Adjusting the partitioning and bucketing strategy of the materialized view.
+- Collecting statistics with `ANALYZE` so the optimizer has accurate cost estimates.
+
+### Q3: What should I do if materialized view refresh is too slow?
+
+- Prefer incremental refresh over full refresh.
+- Align the partition key of the materialized view with that of the base table, and refresh by partition.
+- Evaluate the write frequency of the base table and avoid triggering refresh during peak periods.
+
+### Q4: How do I confirm whether a rewrite is hit?
+
+Run `EXPLAIN` or `EXPLAIN SHAPE PLAN` and check:
+
+- Whether `PhysicalOlapScan[mv name]` appears in the plan.
+- Whether `RewriteSuccessAndChose` in the `MATERIALIZATIONS` section contains the target materialized view.
+
+### Common Error Keywords
+
+- `MaterializedViewRewriteFail`: Rewriting failed. This is commonly caused by SQL that does not match the SPJG pattern or by missing fields.
+- `not chose`: Rewriting succeeded but was not chosen. This is usually a cost-estimation issue.
+- `MV is not in NORMAL state`: The materialized view is in an abnormal state. Check its refresh history.
+
 ## Summary
 
-By using async-materialized views, the query performance can be significantly improved, especially for complex join and aggregation queries. When using them, the following points need to be noted:
-
-:::tip Usage Suggestions
-- Pre-computed Results: Materialized views pre-compute and store the query results, avoiding the overhead of repeated computations for each query. This is especially effective for complex queries that need to be executed frequently.
-- Reducing Join Operations: Materialized views can combine the data of multiple tables into one view, reducing the join operations during queries and thus improving query efficiency.
-- Automatic Updates: When the data in the base tables changes, materialized views can be updated automatically to maintain data consistency. This ensures that the query results always reflect the latest data status.
-- Space Overhead: Materialized views require additional storage space to save the pre-computed results. When creating materialized views, it is necessary to balance the improvement in query performance and the consumption of storage space.
-- Maintenance Cost: The maintenance of materialized views requires certain system resources and time. Base tables that are updated frequently may lead to relatively high update overheads for materialized views. Therefore, it is necessary to choose an appropriate refresh strategy according to the actual situation.
-- Applicable Scenarios: Materialized views are suitable for scenarios where the data change frequency is low and the query frequency is high. For frequently changing data, real-time computation may be more appropriate.
-  :::
-
-Reasonable utilization of async-materialized views can significantly improve the query performance of the database, especially in the case of complex queries and large data volumes. Meanwhile, factors such as storage and maintenance also need to be considered comprehensively to achieve a balance between performance and cost. 
+Using async materialized views appropriately can significantly improve the performance of complex joins and aggregation queries over large datasets. When applying them, weigh storage cost, refresh overhead, and data freshness together to balance performance and cost.

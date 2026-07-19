@@ -27,7 +27,7 @@ Returns VARCHAR type, representing the Base64 encoded string.
 
 Special cases:
 - If input is NULL, returns NULL
-- If input is an empty string, returns an empty string
+- If input is an empty VARBINARY (zero bytes), returns an empty string
 
 ## Examples
 

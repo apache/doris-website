@@ -85,7 +85,7 @@ SELECT array_exists(x -> x > 0, []);
 ```
 
 NULL 数组和lambda 表达式组合，参数中有lambda 表达式结合NULL 会报错，无lambda 表达式则返回 NULL：
-```
+```sql
  SELECT array_exists(NULL);
 +--------------------+
 | array_exists(NULL) |

@@ -1,20 +1,48 @@
 ---
 {
-    "title": "Bitmap",
+    "title": "BITMAP",
     "language": "en",
-    "description": "The BITMAP type can be used in Duplicate tables, Unique tables, and Aggregate tables, and can only be used as a Value type, not as a Key type."
+    "description": "Learn how to load BITMAP data in Apache Doris, including table design rules, a Stream Load example, and two ways to load multi-element bitmaps.",
+    "keywords": [
+        "Doris BITMAP",
+        "BITMAP load",
+        "BITMAP_UNION",
+        "to_bitmap",
+        "bitmap_from_string",
+        "bitmap_from_array",
+        "Stream Load Bitmap",
+        "Aggregate table Bitmap"
+    ]
 }
 ---
 
-The BITMAP type can be used in Duplicate tables, Unique tables, and Aggregate tables, and can only be used as a Value type, not as a Key type. When using the BITMAP type in an Aggregate table, the table must be created with the aggregate type BITMAP_UNION. Users do not need to specify length and default values. The length is controlled by the system based on the degree of data aggregation. For more documentation, refer to [Bitmap](../../../sql-manual/basic-element/sql-data-types/aggregate/BITMAP).
+<!-- Knowledge type: Procedure + Configuration parameters -->
+<!-- Applicable scenarios: BITMAP data loading / exact deduplication / user profile tags -->
 
-## Usage Example
+The BITMAP type is commonly used for exact deduplication, user profile tags, and similar scenarios. This document describes the table design rules for BITMAP columns in Apache Doris and demonstrates two loading approaches, single-value and multi-element, through Stream Load.
 
-### Step 1: Prepare Data
+## BITMAP Type Constraints
 
-Create the following CSV file: test_bitmap.csv
+Before loading BITMAP data, review the following constraints:
 
-```sql
+| Constraint | Description |
+| --- | --- |
+| Supported table models | Duplicate table, Unique table, Aggregate table |
+| Column position | Can only be used as a Value column, not as a Key column |
+| Aggregate table requirement | In an Aggregate table, the BITMAP column must use the aggregate type `BITMAP_UNION` |
+| Length and default value | No need to specify length or default value; the length is automatically controlled by the system based on the aggregation level |
+
+For more details about the type, see [BITMAP Data Type](../../../sql-manual/basic-element/sql-data-types/aggregate/BITMAP).
+
+## Scenario 1: Loading Single-Value BITMAP Data
+
+This applies when each row of source data contains only a single integer value. Use the `to_bitmap` function to convert the integer into a BITMAP.
+
+### Step 1: Prepare the Data
+
+Create a CSV file `test_bitmap.csv` where each row contains a single integer value:
+
+```text
 1|koga|17723
 2|nijg|146285
 3|lojn|347890
@@ -27,7 +55,9 @@ Create the following CSV file: test_bitmap.csv
 10|buag|97997
 ```
 
-### Step 2: Create Table in Database
+### Step 2: Create the Target Table
+
+Create an Aggregate table with a BITMAP column in the `testdb` database:
 
 ```sql
 CREATE TABLE testdb.test_bitmap(
@@ -39,9 +69,11 @@ AGGREGATE KEY(typ_id,hou)
 DISTRIBUTED BY HASH(typ_id,hou) BUCKETS 10;
 ```
 
-### Step 3: Load Data
+### Step 3: Run Stream Load
 
-```sql
+Use the `to_bitmap` function to convert the integer column into a BITMAP:
+
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "column_separator:|" \
     -H "columns:typ_id,hou,arr,arr=to_bitmap(arr)" \
@@ -49,7 +81,9 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_bitmap/_stream_load
 ```
 
-### Step 4: Check Loaded Data
+### Step 4: Verify the Load Result
+
+Use `bitmap_to_string` to convert the BITMAP back into a string and view the loaded data:
 
 ```sql
 mysql> select typ_id,hou,bitmap_to_string(arr) from testdb.test_bitmap;
@@ -70,15 +104,22 @@ mysql> select typ_id,hou,bitmap_to_string(arr) from testdb.test_bitmap;
 10 rows in set (0.07 sec)
 ```
 
-## Importing a Bitmap Containing Multiple Elements
+## Scenario 2: Loading Multi-Element BITMAP Data
 
-The following demonstrates two methods for importing a bitmap column containing multiple elements using stream load. Users can choose the appropriate method based on their source file format.
+When each row in the source data contains multiple integers (for example, multiple user IDs), choose one of the following two methods based on the format of the source file. The differences between the two methods are as follows:
 
-### bitmap_from_string
+| Method | Source file format | Requires cast conversion | Notes |
+| --- | --- | --- | --- |
+| `bitmap_from_string` | Comma-separated, square brackets **not allowed** | No | Square brackets are treated as a data quality error |
+| `bitmap_from_array` | Comma-separated, square brackets **allowed** | Must `cast` to `array<int>` | Without the cast, loading fails because the function signature does not match |
 
-When using `bitmap_from_string`, square brackets are not allowed in the arr column of the source file. Otherwise, it will be considered a data quality error.
+### Method A: Using bitmap_from_string
 
-```sql
+#### Data Format Requirements
+
+The `arr` column in the source file uses comma separators and must not contain square brackets:
+
+```text
 1|koga|17,723
 2|nijg|146,285
 3|lojn|347,890
@@ -91,9 +132,9 @@ When using `bitmap_from_string`, square brackets are not allowed in the arr colu
 10|buag|97,997
 ```
 
-Command for stream load
+#### Stream Load Command
 
-```sql
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "column_separator:|" \
     -H "columns:typ_id,hou,arr,arr=bitmap_from_string(arr)" \
@@ -101,12 +142,13 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_bitmap/_stream_load
 ```
 
-### bitmap_from_array
+### Method B: Using bitmap_from_array
 
-When using `bitmap_from_array`, the source file can contain square brackets in the arr column. However, in stream load, the string type must first be cast to an array type before use.
-If the cast conversion is not applied, an error will occur due to the function signature not being found:  `[ANALYSIS_ERROR]TStatus: errCode = 2, detailMessage = Does not support non-builtin functions, or function does not exist: bitmap_from_array(<slot 8>)`
+#### Data Format Requirements
 
-```sql
+The `arr` column in the source file is allowed to contain square brackets:
+
+```text
 1|koga|[17,723]
 2|nijg|[146,285]
 3|lojn|[347,890]
@@ -119,12 +161,38 @@ If the cast conversion is not applied, an error will occur due to the function s
 10|buag|[97,997]
 ```
 
-Command for stream load
+#### Stream Load Command
 
-```sql
+In Stream Load, you must first `cast` the string to `array<int>` and then convert it with `bitmap_from_array`:
+
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "column_separator:|" \
     -H "columns:typ_id,hou,arr_str,arr=bitmap_from_array(cast(arr_str as array<int>))" \
     -T test_bitmap.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_bitmap/_stream_load
 ```
+
+## Troubleshooting
+
+### Function Does Not Exist Error When Using bitmap_from_array
+
+Example error:
+
+```text
+[ANALYSIS_ERROR]TStatus: errCode = 2, detailMessage = Does not support non-builtin functions, or function does not exist: bitmap_from_array(<slot 8>)
+```
+
+- **Cause**: The string was not explicitly cast to `array<int>`, so the function signature for `bitmap_from_array` cannot be matched.
+- **Solution**: In the `columns` parameter of Stream Load, use `cast(arr_str as array<int>)` to perform an explicit conversion.
+
+### How to View BITMAP Column Contents in Queries
+
+BITMAP is a binary aggregate type and cannot be viewed directly with `SELECT`. You need to convert it through functions:
+
+- `bitmap_to_string(col)`: Converts the BITMAP into a comma-separated string.
+- `bitmap_count(col)`: Returns the number of distinct elements in the BITMAP.
+
+### Why BITMAP Cannot Be Used as a Key Column
+
+BITMAP is an aggregate binary type. It does not support being used as a Key column for sorting or deduplication, and can only be stored as a Value column to hold aggregate results.

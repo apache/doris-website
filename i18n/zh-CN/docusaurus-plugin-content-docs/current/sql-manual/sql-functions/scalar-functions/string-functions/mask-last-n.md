@@ -157,7 +157,7 @@ SELECT mask_last_n('ABC-123-xyz', 7);
 10. UTF-8 字符处理（按字节脱敏）
 
 ```sql
-SELECT mask_last_n('Helloṭṛ123', 9);
+SELECT mask_last_n('Hello你好123', 9);
 ```
 
 ```text

@@ -126,8 +126,8 @@ Query result description:
 Field description:
 - num_buckets: The number of buckets
 - buckets: All buckets
-    - lower: Upper bound of the bucket
-    - upper: Lower bound of the bucket
+    - lower: Lower bound of the bucket
+    - upper: Upper bound of the bucket
     - count: The number of elements contained in the bucket
     - pre_sum: The total number of elements in the front bucket
     - ndv: The number of different values in the bucket

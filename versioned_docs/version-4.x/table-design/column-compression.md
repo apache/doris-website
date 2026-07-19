@@ -1,86 +1,113 @@
 ---
 {
-    "title": "Column Compression",
-    "language": "en_US",
-    "description": "Doris adopts a columnar storage model to organize and store data,"
+    "title": "Data Compression",
+    "language": "en",
+    "description": "Doris supports columnar storage compression algorithms such as LZ4, ZSTD, Snappy, and Zlib, allowing flexible trade-offs between storage cost and query performance based on workload.",
+    "keywords": [
+        "Doris data compression",
+        "columnar storage compression",
+        "LZ4",
+        "ZSTD",
+        "Snappy",
+        "Zlib",
+        "compression algorithm selection",
+        "storage efficiency optimization"
+    ]
 }
 ---
 
-Doris adopts a **columnar storage** model to organize and store data, which is particularly suitable for analytical workloads and can significantly improve query efficiency. In columnar storage, each column of the table is stored independently, facilitating the application of compression techniques and thus improving storage efficiency. Doris provides various compression algorithms, allowing users to choose the appropriate compression method based on workload requirements to optimize storage and query performance.
+<!-- Knowledge type: Capability definition + Configuration parameters + Selection decision -->
+<!-- Applicable scenarios: Compression selection during table creation / Storage cost optimization / Query performance tuning -->
 
-## Why Compression is Needed
+Doris organizes and stores data using a **columnar storage** model, which is especially well-suited for analytical workloads. Because data within the same column typically shares similar distribution characteristics, columnar storage offers a natural advantage for compression. Doris ships with several built-in compression algorithms, and you can choose the most appropriate one when creating a table to balance storage cost against query performance based on your workload.
 
-In Doris, data compression mainly has the following two core objectives:
+## Quick Selection Guide
 
-1. **Improve Storage Efficiency**
-   Compression can significantly reduce the disk space required for data storage, allowing more data to be stored on the same physical resources.
+Different workloads have different compression requirements. The following table lists recommended choices for common scenarios:
 
-2. **Optimize Performance**
-   The volume of compressed data is smaller, requiring fewer I/O operations during queries, thereby accelerating query response times. Modern compression algorithms typically have very fast decompression speeds, which can enhance read efficiency while reducing storage space.
+| User scenario                                            | Recommended algorithm | Reason                                                              |
+| -------------------------------------------------------- | --------------------- | ------------------------------------------------------------------- |
+| High-performance real-time analytics, high-concurrency queries | **LZ4**, Snappy       | Extremely fast decompression with low CPU overhead                  |
+| Balance of storage cost and query performance            | **ZSTD**, LZ4F        | High compression ratio while still providing fast decompression     |
+| Storage efficiency first, query latency not sensitive    | **ZSTD**, Zlib        | Highest compression ratio, saves disk space                         |
+| Archival and cold data storage                           | **Zlib**, LZ4HC       | Maximum compression ratio, suitable for rarely accessed data        |
+
+> The default recommendation is **ZSTD**: in most scenarios it delivers both a good compression ratio and fast decompression speed.
+
+## Why Compression Is Needed
+
+In Doris, data compression serves two main goals:
+
+1. **Reduce storage cost**: Lowering the disk space required to store data, so the same physical resources can hold more data.
+2. **Improve query performance**: Compressed data takes less space, which means fewer I/O operations during queries. Modern compression algorithms decompress extremely quickly, so they save storage while also speeding up query response.
 
 ## Supported Compression Algorithms
 
-Doris supports various compression algorithms, each with different trade-offs between compression ratio and decompression speed, allowing users to choose the appropriate algorithm based on their needs:
+Doris supports the following compression algorithms. Each algorithm offers a different trade-off between compression ratio and decompression speed:
 
-| **Compression Type**           | **Characteristics**          | **Applicable Scenarios**                                       |
-|---------------------------------|--------------------------------------------|----------------------------------------------|
-| **No Compression**             | - No compression applied to data.                                                                                     | Suitable for scenarios where compression is not needed, such as when the data is already compressed or storage space is not an issue. |
-| **LZ4**                        | - Very fast compression and decompression speeds. <br /> - Moderate compression ratio.                                 | Suitable for scenarios with high decompression speed requirements, such as real-time queries or high-concurrency loads. |
-| **LZ4F (LZ4 Frame)**           | - Extended version of LZ4 supporting more flexible compression configurations. <br /> - Fast speed with moderate compression ratio. | Needed when fast compression is required with fine control over configurations. |
-| **LZ4HC (LZ4 High Compression)** | - Higher compression ratio compared to LZ4, but slower compression speed. <br /> - Decompression speed is comparable to LZ4. | Needed when a higher compression ratio is required, while still focusing on decompression speed. |
-| **ZSTD (Zstandard)**           | - High compression ratio with flexible compression level adjustments. <br /> - Decompression speed remains fast even at high compression ratios. | Required for high storage efficiency demands, while balancing query performance. |
-| **Snappy**                     | - Designed for fast decompression. <br /> - Moderate compression ratio.                                                 | Required for scenarios with high decompression speed and low CPU overhead demands. |
-| **Zlib**                       | - Good balance between compression ratio and speed. <br /> - Slower compression and decompression speeds compared to other algorithms, but higher compression ratio. | Required for scenarios with high storage efficiency demands and insensitivity to decompression speed, such as archiving and cold data storage. |
+| Compression type     | Characteristics                                                                                                | Applicable scenarios                                                            |
+| -------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| **No compression**   | Data is not compressed.                                                                                        | Data has already been compressed, or scenarios where storage space is not a bottleneck. |
+| **LZ4**              | Extremely fast compression and decompression speed, with a moderate compression ratio.                         | Real-time queries, high-concurrency workloads, and other scenarios that require fast decompression. |
+| **LZ4F**             | An extended version of LZ4 that supports more flexible compression configuration; fast with a moderate compression ratio. | Scenarios that need fast compression with fine-grained control over configuration. |
+| **LZ4HC**            | Higher compression ratio than LZ4 but slower compression speed; decompression speed is comparable to LZ4.      | Scenarios that care about decompression speed but require a higher compression ratio. |
+| **ZSTD** (Zstandard) | High compression ratio with flexible compression-level tuning; decompression remains fast even at high compression ratios. | Scenarios that demand high storage efficiency while also needing good query performance. |
+| **Snappy**           | Designed primarily for fast decompression, with a moderate compression ratio.                                  | Scenarios that require fast decompression and have limited CPU resources.       |
+| **Zlib**             | Provides a good balance between compression ratio and speed; compression and decompression are slower, but the compression ratio is higher. | Archival, cold data storage, and other scenarios that are not sensitive to decompression speed. |
 
+## How Compression Works
 
-## Compression Principles
+Compression in Doris is implemented by the coordinated effort of several layers:
 
-**Column Compression**
-   Due to the adoption of columnar storage, Doris can independently compress each column in the table. This method enhances compression efficiency because the data in the same column often has similar distribution characteristics.
+### Per-Column Compression
 
-**Encoding Before Compression**
-   Before compressing data, Doris encodes the column data (e.g., **dictionary encoding**, **run-length encoding**, etc.) to transform the data into a form more suitable for compression, further enhancing compression efficiency.
+Because Doris uses columnar storage, it compresses each column in a table independently. Data within the same column typically shares similar distribution characteristics, so per-column compression achieves higher compression efficiency than per-row compression.
 
-**Storage Format V3 Optimizations**
-   Starting from Doris Storage Format V3, the encoding strategy for numerical types has been further optimized. It defaults to `PLAIN_ENCODING` for integer types, which, when combined with LZ4/ZSTD, provides higher read throughput and lower CPU overhead. For more details, see [Storage Format V3](./storage-format).
+### Encoding Before Compression
 
-**Page Compression**
-   Doris adopts a **page**-level compression strategy. The data in each column is divided into multiple pages, and the data within each page is compressed independently. By compressing by page, Doris can efficiently handle large-scale datasets while ensuring high compression ratios and decompression performance.
+Before performing compression, Doris first encodes the column data, transforming it into a form that is better suited for compression and further improving the compression ratio. Common encoding methods include:
 
-**Configurable Compression Strategies**
-   Users can specify the compression algorithm to be used when creating a table. This flexibility allows users to make the best choice between compression efficiency and performance based on specific workloads.
+- **Dictionary encoding**: Replaces repeated strings with shorter dictionary IDs.
+- **Run-length encoding (RLE)**: Represents consecutive repeated values as "value + repeat count".
 
-## Factors Affecting Compression Effectiveness
+### Per-Page Compression
 
-Although different compression algorithms have their own advantages and disadvantages, the effectiveness of compression depends not only on the chosen algorithm but also on the following factors:
+Doris uses a **page-level** compression strategy:
 
-### Order of Data
-   The order of data has a significant impact on compression effectiveness. For columns with high sequentiality (e.g., timestamps or continuous numeric columns), compression algorithms can typically achieve better results. The more regular the order of the data, the more repetitive patterns the compression algorithm can identify during compression, thus improving the compression ratio.
+1. The data of each column is divided into multiple pages.
+2. Data within each page is compressed independently.
+3. At query time, only the target pages are decompressed on demand, avoiding full-column scans.
 
-### Data Redundancy
-   The more duplicate values in a data column, the more pronounced the compression effect. For example, using dictionary encoding on duplicate values can significantly reduce storage space. However, for data columns without obvious duplicates, the compression effect may not meet expectations.
+Per-page compression can efficiently handle large-scale datasets while maintaining a good balance between compression ratio and decompression performance.
 
-### Data Type
-   The type of data can also affect compression effectiveness. Generally, numeric data types (such as integers and floating-point numbers) are easier to compress than string data types. For data types with a wide range of values, the effectiveness of the compression algorithm may be impacted.
+### Storage Format V3 Optimization
 
-### Column Length
-   The length of data in a column can also affect compression effectiveness. Shorter columns are usually easier to compress than longer columns because compression algorithms can more efficiently find repetitive patterns in shorter data blocks.
+Starting from Doris storage format V3, the encoding strategy for numeric types has been further optimized:
 
-### Nulls
-   When the proportion of null values in a column is high, the compression algorithm may be more effective because it can encode these null values as a special pattern, reducing storage space.
+- Integer types use `PLAIN_ENCODING` by default.
+- When combined with LZ4 or ZSTD compression, this provides higher read throughput and lower CPU overhead.
 
-## How to Choose the Right Compression Algorithm
+For details, see [Storage Format V3](./storage-format).
 
-Choosing the right compression algorithm should be based on workload characteristics:
+### Configurable Compression Strategy
 
-- For **high-performance real-time analysis** scenarios, it is recommended to use **LZ4** or **Snappy**.
-- For scenarios prioritizing **storage efficiency**, it is recommended to use **ZSTD** or **Zlib**.
-- For scenarios that need to balance speed and compression ratio, **LZ4F** can be chosen.
-- For **archiving or cold data storage** scenarios, it is advisable to use **Zlib** or **LZ4HC**.
+You can specify the compression algorithm when creating a table, choosing the best trade-off between compression efficiency and query performance based on your specific workload.
 
-## Setting Compression in Doris
+## Factors That Affect Compression
 
-When creating a table, you can specify the compression algorithm to determine how the data is stored:
+Compression effectiveness depends not only on the chosen algorithm but also on the characteristics of the data itself:
+
+| Factor                  | Description                                                                                                          |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Data sequentiality**  | The more regular the order of the data (such as timestamps or consecutive numeric values), the easier it is for the compression algorithm to identify repeating patterns, and the higher the compression ratio. |
+| **Data redundancy**     | The more repeated values in a column, the better the compression effect; dictionary encoding is especially effective for highly redundant data. |
+| **Data type**           | Numeric types (integers, floating-point numbers) are usually easier to compress than string types; the wider the value range, the more compression is affected. |
+| **Column length**       | Shorter columns are usually easier to compress than longer ones, because compression algorithms can find repeating patterns more efficiently in shorter data blocks. |
+| **NULL value ratio**    | When the proportion of NULL values is high, the compression algorithm can encode them as a special pattern, further reducing storage space. |
+
+## Configuring Compression in Doris
+
+When creating a table, specify the compression algorithm via the `compression` parameter in `PROPERTIES`:
 
 ```sql
 CREATE TABLE example_table (
@@ -93,3 +120,6 @@ DISTRIBUTED BY HASH(id) BUCKETS 10
 PROPERTIES (
     "compression" = "zstd"
 );
+```
+
+Supported values for `compression` are: `none`, `lz4`, `lz4f`, `lz4hc`, `zstd`, `snappy`, and `zlib`. If not specified explicitly, Doris uses the default compression algorithm `ZSTD` (controlled by the FE configuration `default_compression_type`).

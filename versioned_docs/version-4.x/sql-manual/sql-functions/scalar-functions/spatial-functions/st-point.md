@@ -11,7 +11,7 @@
 Creates a Point geometry object from the given X and Y coordinates.
 In geospatial contexts, X/Y typically represent longitude and latitude respectively,
 
-## Sytax
+## Syntax
 
 ```sql
 ST_POINT( <x>, <y>)
@@ -21,7 +21,7 @@ ST_POINT( <x>, <y>)
 | Parameter  | Description  |
 |-----|-----|
 | `<x>` | X-coordinate (longitude) of the point, range: -180.0 to 180.0 (degrees) |
-| `<y>` | Y-coordinate (latitude) of the point, range: -90.0 to 90.0 (degrees)） |
+| `<y>` | Y-coordinate (latitude) of the point, range: -90.0 to 90.0 (degrees) |
 
 ## Return value
 

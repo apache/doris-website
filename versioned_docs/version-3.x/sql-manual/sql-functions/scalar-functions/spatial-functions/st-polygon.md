@@ -35,7 +35,7 @@ Converts a string in WKT (Well-Known Text) format into an in-memory Polygon geom
 - st_polygonfromtext
 - st_polyfromtext
 
-## Sytax
+## Syntax
 
 ```sql
 ST_POLYGON( <wkt>)

@@ -55,7 +55,7 @@ AI_TRANSLATE([<resource_name>], <text>, <target_language>)
 ## 示例
 
 ```sql
-SET default_ai_resource = 'resourse_name';
+SET default_ai_resource = 'resource_name';
 SELECT AI_TRANSLATE('In my mind, doris is the best databases management system.', 'zh-CN') AS Result;
 ```
 ```text

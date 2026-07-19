@@ -30,7 +30,7 @@ The decoded value
 ```sql
 select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions');
 ```
-```sql
+```text
 +------------------------------------------------+
 | url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions') |
 +------------------------------------------------+

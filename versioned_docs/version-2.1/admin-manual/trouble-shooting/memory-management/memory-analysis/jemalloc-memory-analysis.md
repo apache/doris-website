@@ -61,7 +61,7 @@ extents:        size ind       ndirty        dirty       nmuzzy        muzzy    
                65536  11            3       184320            0            0            6       385024            9       569344
                81920  12            2       147456            3       241664           38      2809856           43      3198976
                98304  13            0            0            1        86016            6       557056            7       643072
-              114688  14            1       102400            1       106496           15      1642496           17      185139
+              114688  14            1       102400            1       106496           15      1642496           17      1851392
 ```
 
 Reduce `dirty_decay_ms` of `JEMALLOC_CONF` in `be.conf` to 2000 ms or less. The default `dirty_decay_ms` in `be.conf` is 5000 ms. Jemalloc will release dirty pages according to a smooth gradient curve within the time specified by `dirty_decay_ms`. For reference, [Jemalloc opt.dirty_decay_ms](https://jemalloc.net/jemalloc.3.html#opt.dirty_decay_ms). When the BE process has insufficient available memory and triggers Minor GC or Full GC, it will actively release all dirty pages according to a certain strategy.

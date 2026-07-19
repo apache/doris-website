@@ -18,11 +18,11 @@ The following SQL statement can be used to view existing backups in the Reposito
 
    ```sql
    mysql> SHOW SNAPSHOT ON example_repo;
-   +-----------------+---------------------+--------+
-   | Snapshot            | Timestamp              | Status   |
-   +-----------------+---------------------+--------+
+   +--------------------+---------------------+--------+
+   | Snapshot           | Timestamp           | Status |
+   +--------------------+---------------------+--------+
    | exampledb_20241225 | 2022-04-08-15-52-29 | OK     |
-   +-----------------+---------------------+--------+
+   +--------------------+---------------------+--------+
    1 row in set (0.15 sec)
    ```
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "EXPLODE-OUTER",
+    "title": "EXPLODE_OUTER",
     "language": "en",
     "description": "The explode function accepts an array and maps each element of the array to a separate row."
 }
@@ -11,7 +11,7 @@ The `explode` function accepts an array and maps each element of the array to a 
 
 ## Syntax
 ```sql
-EXPLODE(<array>[, ...])
+EXPLODE_OUTER(<array>[, ...])
 ```
 
 ## Variadic Parameters
@@ -38,7 +38,7 @@ EXPLODE(<array>[, ...])
     ```
 1. Regular parameters
     ```sql
-    select  * from example lateral view explode([1, 2, null, 4, 5]) t2 as c;
+    select  * from example lateral view explode_outer([1, 2, null, 4, 5]) t2 as c;
     ```
     ```text
     +------+------+
@@ -53,7 +53,7 @@ EXPLODE(<array>[, ...])
     ```
 2. Multiple parameters
     ```sql
-    select  * from example lateral view explode([], [1, 2, null, 4, 5], ["ab", "cd", "ef"], [null, null, 1, 2, 3, 4, 5]) t2 as c0, c1, c2, c3;
+    select  * from example lateral view explode_outer([], [1, 2, null, 4, 5], ["ab", "cd", "ef"], [null, null, 1, 2, 3, 4, 5]) t2 as c0, c1, c2, c3;
     ```
     ```text
     +------+------+------+------+------+

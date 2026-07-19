@@ -1,18 +1,19 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: 'When to Scale PostgreSQL Analytics? Advancing Analytics without unnecessary tool sprawl',
-        link: 'https://www.velodb.io/blog/when-to-scale-postgresql-analytics',
+        label: 'How StepFun Built a PB-Scale Agent Observability Platform with Apache Doris',
+        link: 'https://www.velodb.io/blog/how-stepfun-built-agent-observability-platform-with-apache-doris',
     },
     {
-        label: 'From ClickHouse + Elasticsearch to Apache Doris: How Kwai Unified Trillion-Scale Ad Analytics',
-        link: 'https://www.velodb.io/blog/from-clickhouse-elasticsearch-to-apache-doris-how-kwai-unified-trillion-scale-ad-analytics',
+        label: "From Hive, HBase, MySQL, and Trino to Apache Doris: Tuhu Car's Unified OLAP Architecture",
+        link: 'https://www.velodb.io/blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture',
     },
     {
-        label: 'Why a Mexican Mining Giant Migrated from Azure Synapse to Apache Doris',
-        link: 'https://www.velodb.io/blog/mexican-mining-giant-migrated-from-azure-synapse-to-apache-doris',
+        label: 'ASOF JOIN Benchmark: Apache Doris vs ClickHouse and DuckDB',
+        link: 'https://www.velodb.io/blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb',
     },
     {
-        label: 'How Xanh SM, Leading EV ride hailer in Vietnam, Built Real-Time Recommendations with Apache Doris',
-        link: 'https://www.velodb.io/blog/how-xanhsm-built-real-time-recommendations-with-apache-doris',
+        label: 'How We Built Production Vector Search in Apache Doris',
+        link: 'https://www.velodb.io/blog/how-we-built-production-vector-search-in-apache-doris',
     },
+
 ];

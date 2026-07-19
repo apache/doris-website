@@ -13,7 +13,7 @@ Calculates the area of a closed region on the Earth's surface in square meters. 
 For non-closed geometric objects (such as points, line segments), their area is 0; for invalid geometric objects (such as self-intersecting polygons), returns NULL.
 
 
-## Sytax
+## Syntax
 
 ```sql
 ST_AREA_SQUARE_METERS( <geo>)

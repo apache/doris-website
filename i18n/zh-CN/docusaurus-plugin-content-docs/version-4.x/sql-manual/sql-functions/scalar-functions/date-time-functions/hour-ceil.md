@@ -32,7 +32,7 @@ HOUR_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 datetime/date/timestamptz 类型，date 类型会转换为一天的 00:00:00 开始,具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 datetime/date/timestamptz 类型，date 类型会转换为一天的 00:00:00 开始,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 可选参数，指定周期长度（单位：小时），为正整数（如 1、3、5）。默认值为 1，表示每 1 小时一个周期|
 | `<origin>` | 开始的时间起点，支持输入 datetime 和 date 类型，如果不填，默认是 0001-01-01T00:00:00 |
 

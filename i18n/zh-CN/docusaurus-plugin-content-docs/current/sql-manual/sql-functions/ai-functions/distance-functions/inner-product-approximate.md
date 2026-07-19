@@ -25,7 +25,9 @@ INNER_PRODUCT_APPROXIMATE(<array1>, <array2>)
 
 ## 返回值
 
-返回两个相同大小向量的标量积。如果输入数组为 NULL，或数组中的任一元素为 NULL，则返回 NULL。
+返回两个相同大小向量的标量积，返回类型为 `FLOAT`。
+
+如果任一输入数组为 `NULL`，或包含 `NULL` 元素，函数会报错。
 
 ## 示例
 
@@ -59,7 +61,7 @@ FROM S3(
 
 ```sql
 SELECT id,
-       L2_distance_approximate(embedding,
+       inner_product_approximate(embedding,
 [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]
 ) AS distance
 FROM   sift_1M
@@ -84,4 +86,24 @@ LIMIT  10
 | 153488 |   231871 |
 +--------+----------+
 10 rows in set (0.04 sec)
+```
+
+如果输入数组为 `NULL`，函数会报错：
+
+```sql
+SELECT INNER_PRODUCT_APPROXIMATE(NULL, [1, 2]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function inner_product_approximate cannot be null
+```
+
+如果输入数组包含 `NULL` 元素，函数会报错：
+
+```sql
+SELECT INNER_PRODUCT_APPROXIMATE([1, NULL], [1, 2]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function inner_product_approximate cannot have null
 ```

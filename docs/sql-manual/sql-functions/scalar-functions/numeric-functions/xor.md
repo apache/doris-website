@@ -1,6 +1,6 @@
 ---
 {
-    "title": "XOR | Numeric Functions",
+    "title": "XOR",
     "language": "en",
     "description": "Return the XOR value of two numbers.",
     "sidebar_label": "XOR"
@@ -19,13 +19,15 @@ Return the XOR value of two numbers.
 ## Example
 
 ```sql
-mysql >select true xor false,true xor true;
+mysql> select true xor false, true xor true;
+```
+
+```text
 +------------------+-----------------+
 | (TRUE XOR FALSE) | (TRUE XOR TRUE) |
 +------------------+-----------------+
 |                1 |               0 |
 +------------------+-----------------+
-
 ```
 
 ## Keywords

@@ -14,10 +14,6 @@ Returns the spherical length of a line geometry object or the boundary perimeter
 - For `CIRCLE`, returns its circumference, calculated by the formula `2 * π * radius`.
 - For `POINT`, returns `0.0`.
 
-:::info Note
-Supported since Apache Doris 4.0.4
-:::
-
 ## Syntax
 
 ```sql

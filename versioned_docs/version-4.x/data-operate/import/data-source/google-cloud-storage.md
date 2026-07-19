@@ -1,27 +1,57 @@
 ---
 {
-    "title": "Google Cloud Storage | Data Source",
+    "title": "Importing Data from Google Cloud Storage (GCS)",
     "language": "en",
-    "description": "Doris provides two ways to load files from Google Cloud Storage:",
+    "description": "How to import data from Google Cloud Storage into Apache Doris: asynchronous import via S3 Load, or synchronous import via S3 TVF.",
+    "keywords": [
+        "Google Cloud Storage import",
+        "GCS import to Doris",
+        "S3 Load GCP",
+        "S3 TVF GCS",
+        "Doris object storage import",
+        "GCP provider"
+    ],
     "sidebar_label": "Google Cloud Storage"
 }
 ---
 
-# Google Cloud Storage
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Importing data from Google Cloud Storage into Apache Doris -->
 
-Doris provides two ways to load files from Google Cloud Storage:
-- Use S3 Load to load Google Cloud Storage files into Doris, which is an asynchronous load method.
-- Use TVF to load Google Cloud Storage files into Doris, which is a synchronous load method.
+Apache Doris supports importing files from Google Cloud Storage (GCS) by accessing GCS buckets through the S3-compatible protocol. This document describes two import methods and their complete operating procedures.
 
-## load with S3 Load
+## Choosing an Approach
 
-Use S3 Load to import files on object storage. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual)
+Doris provides two methods for importing files from Google Cloud Storage. Choose one based on data volume and timeliness requirements:
 
-### Step 1: Prepare the data
+| Import Method | Execution Mode | Applicable Scenario | Reference |
+|---------|---------|---------|---------|
+| S3 Load | Asynchronous | Large-batch data imports, long-running jobs | [Broker Load Manual](../import-way/broker-load-manual.md) |
+| S3 TVF (table function) | Synchronous | Small-batch data imports, ad-hoc queries, quick validation | This document |
 
-Create a CSV file s3load_example.csv The file is stored on Google Cloud Storage and its content is as follows:
+Recommendations:
 
-```
+- For larger data volumes or jobs that need to run in the background, use **S3 Load**.
+- For immediate results or use with `INSERT INTO ... SELECT`, use **S3 TVF**.
+
+## Prerequisites
+
+Prepare the following information before importing:
+
+- Google Cloud Storage bucket name (`your_bucket_name`).
+- Access credentials: Access Key and Secret Key.
+- GCS Endpoint and Region (for example, `storage.us-west2.rep.googleapis.com` and `US-WEST2`).
+- A deployed and accessible Apache Doris cluster.
+
+## Method 1: Import with S3 Load (Asynchronous)
+
+S3 Load is suitable for asynchronous imports of large data volumes. For detailed parameters and advanced usage, see the [Broker Load Manual](../import-way/broker-load-manual.md).
+
+### Step 1: Prepare the Data
+
+Create a CSV file `s3load_example.csv` and upload it to Google Cloud Storage. The file contents are:
+
+```text
 1,Emily,25
 2,Benjamin,35
 3,Olivia,28
@@ -34,7 +64,7 @@ Create a CSV file s3load_example.csv The file is stored on Google Cloud Storage 
 10,Liam,64
 ```
 
-### Step 2: Create a table in Doris
+### Step 2: Create a Table in Doris
 
 ```sql
 CREATE TABLE test_s3load(
@@ -46,7 +76,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-### Step 3: Load data using S3 Load
+### Step 3: Import the Data with S3 Load
 
 ```sql
 LOAD LABEL s3_load_2022_04_01
@@ -60,7 +90,7 @@ LOAD LABEL s3_load_2022_04_01
 WITH S3
 (
     "provider" = "GCP",
-    "s3.endpoint" = "storage.us-west2.rep.googleapis.com",  
+    "s3.endpoint" = "storage.us-west2.rep.googleapis.com",
     "s3.region" = "US-WEST2",
     "s3.access_key" = "<your-ak>",
     "s3.secret_key" = "<your-sk>"
@@ -71,15 +101,26 @@ PROPERTIES
 );
 ```
 
-### Step 4: Check the imported data
+Key parameters:
+
+| Parameter | Description |
+|------|------|
+| `provider` | Object storage provider. For GCS, this is fixed at `GCP` |
+| `s3.endpoint` | GCS S3-compatible access endpoint |
+| `s3.region` | Region where the GCS bucket is located |
+| `s3.access_key` | GCS access key ID |
+| `s3.secret_key` | GCS secret access key |
+| `timeout` | Import timeout, in seconds |
+
+### Step 4: Verify the Imported Data
 
 ```sql
 SELECT * FROM test_s3load;
 ```
 
-Results:
+Expected result:
 
-```
+```text
 mysql> select * from test_s3load;
 +---------+-----------+------+
 | user_id | name      | age  |
@@ -98,13 +139,15 @@ mysql> select * from test_s3load;
 10 rows in set (0.04 sec)
 ```
 
-## Load with TVF
+## Method 2: Import with TVF (Synchronous)
 
-### Step 1: Prepare the data
+The S3 table function (TVF) is suitable for synchronous imports and ad-hoc queries, and works directly with `INSERT INTO ... SELECT`.
 
-Create a CSV file s3load_example.csv The file is stored on Google Cloud Storage and its content is as follows:
+### Step 1: Prepare the Data
 
-```
+Create a CSV file `s3load_example.csv` and upload it to Google Cloud Storage. The file contents are:
+
+```text
 1,Emily,25
 2,Benjamin,35
 3,Olivia,28
@@ -117,7 +160,7 @@ Create a CSV file s3load_example.csv The file is stored on Google Cloud Storage 
 10,Liam,64
 ```
 
-### Step 2: Create a table in Doris
+### Step 2: Create a Table in Doris
 
 ```sql
 CREATE TABLE test_s3load(
@@ -129,7 +172,7 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-### Step 3: Load data using TVF
+### Step 3: Import the Data with TVF
 
 ```sql
 INSERT INTO test_s3load
@@ -138,7 +181,7 @@ SELECT * FROM S3
     "uri" = "s3://your_bucket_name/s3load_example.csv",
     "format" = "csv",
     "provider" = "GCP",
-    "s3.endpoint" = "storage.us-west2.rep.googleapis.com",  
+    "s3.endpoint" = "storage.us-west2.rep.googleapis.com",
     "s3.region" = "US-WEST2",
     "s3.access_key" = "<your-ak>",
     "s3.secret_key" = "<your-sk>",
@@ -147,15 +190,29 @@ SELECT * FROM S3
 );
 ```
 
-### Step 4: Check the imported data
+Key parameters:
+
+| Parameter | Description |
+|------|------|
+| `uri` | S3 URI of the file in object storage |
+| `format` | File format, such as `csv`, `parquet`, or `orc` |
+| `provider` | Object storage provider. For GCS, this is fixed at `GCP` |
+| `s3.endpoint` | GCS S3-compatible access endpoint |
+| `s3.region` | Region where the GCS bucket is located |
+| `s3.access_key` | GCS access key ID |
+| `s3.secret_key` | GCS secret access key |
+| `column_separator` | Column separator |
+| `csv_schema` | CSV column definitions, in the format `column_name:type;column_name:type` |
+
+### Step 4: Verify the Imported Data
 
 ```sql
 SELECT * FROM test_s3load;
 ```
 
-Results:
+Expected result:
 
-```
+```text
 mysql> select * from test_s3load;
 +---------+-----------+------+
 | user_id | name      | age  |
@@ -174,3 +231,27 @@ mysql> select * from test_s3load;
 10 rows in set (0.04 sec)
 ```
 
+## FAQ
+
+<!-- Knowledge type: Troubleshooting -->
+
+**Q1: What value should the `provider` parameter use?**
+
+When importing from Google Cloud Storage, `provider` must be set to `GCP` so that Doris accesses GCS through its S3-compatible protocol.
+
+**Q2: How do I choose between S3 Load and S3 TVF?**
+
+- For large data volumes that need to run asynchronously in the background, choose **S3 Load**.
+- For small data volumes that need immediate results or that work alongside SQL queries, choose **S3 TVF**.
+
+**Q3: How do I obtain the Access Key and Secret Key for GCS?**
+
+You can create and manage HMAC keys (Access Key / Secret Key) for S3-compatible access on the **Cloud Storage > Settings > Interoperability** page in the Google Cloud Console.
+
+**Q4: How do I determine the Endpoint and Region?**
+
+The Endpoint and Region depend on the region where the bucket is located. For example, the `US-WEST2` region corresponds to the endpoint `storage.us-west2.rep.googleapis.com`. Replace these values according to the actual location of your bucket.
+
+**Q5: What should I do if the import fails with a timeout?**
+
+Increase the `timeout` parameter in `PROPERTIES` (in seconds). The default is `3600`. For very large files or slow networks, extend it as needed.

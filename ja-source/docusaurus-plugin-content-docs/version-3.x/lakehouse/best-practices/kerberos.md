@@ -217,8 +217,8 @@ docker inspect <container-name> | grep IPAddress
     "hadoop.kerberos.min.seconds.before.relogin" = "5",
     "hadoop.security.authentication" = "kerberos",
     "hadoop.kerberos.principal" = "hive/presto-master.docker.cluster@LABS.TERADATA.COM",
-    "hadoop.kerberos.keytab" = "/mnt/disk1/gq/keytabs/keytabs/hive-presto-master.keytab",
-    "hive.metastore.sasl.enabled " = "true",
+    "hadoop.kerberos.keytab" = "/mnt/disk1/gq/keytabs/hive-presto-master.keytab",
+    "hive.metastore.sasl.enabled" = "true",
     "hadoop.security.auth_to_local" = "RULE:[2:$1@$0](.*@LABS.TERADATA.COM)s/@.*//
                                         RULE:[2:$1@$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
                                         RULE:[2:$1@$0](.*@OTHERREALM.COM)s/@.*//
@@ -237,8 +237,8 @@ docker inspect <container-name> | grep IPAddress
     "hadoop.kerberos.min.seconds.before.relogin" = "5",
     "hadoop.security.authentication" = "kerberos",
     "hadoop.kerberos.principal" = "hive/presto-master.docker.cluster@OTHERREALM.COM",
-    "hadoop.kerberos.keytab" = "/mnt/disk1/gq/keytabs/keytabs/other-hive-presto-master.keytab",
-    "hive.metastore.sasl.enabled " = "true",
+    "hadoop.kerberos.keytab" = "/mnt/disk1/gq/keytabs/other-hive-presto-master.keytab",
+    "hive.metastore.sasl.enabled" = "true",
     "hadoop.security.auth_to_local" = "RULE:[2:$1@$0](.*@OTHERREALM.COM)s/@.*//
                                         RULE:[2:$1@$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
                                         DEFAULT",

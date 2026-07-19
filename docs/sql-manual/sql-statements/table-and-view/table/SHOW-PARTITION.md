@@ -36,7 +36,7 @@ SHOW PARTITION 13004;
 
 Results:
 
-```sql
+```text
 +--------+-----------+---------------+-------+---------+
 | DbName | TableName | PartitionName | DbId  | TableId |
 +--------+-----------+---------------+-------+---------+

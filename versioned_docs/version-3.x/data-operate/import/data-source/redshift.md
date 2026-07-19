@@ -47,7 +47,7 @@ CREATE TABLE sales_data (
     amount        DECIMAL(10,2),
     country       VARCHAR(48)
 )
-DISTSTYLE AUTO
+DISTSTYLE AUTO;
 
 INSERT INTO sales_data VALUES
 (1, 'Alice', '2025-04-08', 99.99, 'USA'),
@@ -126,7 +126,7 @@ LOAD LABEL sales_data_2025_04_08
 WITH S3
 (
     "provider" = "S3",
-    "s3.endpoint" = "s3.ap-southeast-1.amazonaws.com",
+    "s3.endpoint" = "https://s3.ap-southeast-1.amazonaws.com",
     "s3.access_key" = "<ak>",
     "s3.secret_key"="<sk>",
     "s3.region" = "ap-southeast-1"
@@ -138,10 +138,10 @@ WITH S3
  Since S3 Load import is submitted asynchronously, you can check the status of a specific label using SHOW LOAD:
 
 ```yaml
-mysql> show load where label = "label_sales_data_2025_04_08"\G
+mysql> show load where label = "sales_data_2025_04_08"\G
 *************************** 1. row ***************************
          JobId: 17956078
-         Label: label_sales_data_2025_04_08
+         Label: sales_data_2025_04_08
          State: FINISHED
       Progress: 100.00% (1/1)
           Type: BROKER

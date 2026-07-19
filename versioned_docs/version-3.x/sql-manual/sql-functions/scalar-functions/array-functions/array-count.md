@@ -34,6 +34,12 @@ After applying the lambda expression, returns the number of non-zero elements in
 ## Example
 
 ```sql
+-- setup
+create table array_test(id int, c_array1 array<int>, c_array2 array<int>) distributed by hash(id) buckets 1 properties ("replication_num"="1");
+insert into array_test values (1,[1,2,3,4,5],[10,20,-40,80,-100]),(2,[6,7,8],[10,12,13]),(3,[1],[-100]),(4,[1,null,2],[null,3,1]),(5,[],[]),(6,null,null);
+```
+
+```sql
 select array_count(x -> x, [0, 1, 2, 3]);
 ```
 

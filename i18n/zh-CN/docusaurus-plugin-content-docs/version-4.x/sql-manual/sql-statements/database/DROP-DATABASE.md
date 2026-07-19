@@ -41,6 +41,12 @@ DROP DATABASE [IF EXISTS] <db_name> [FORCE];
 
 ## 示例
 
+准备：先创建 `db_test`，作为下面 DROP 示例的目标：
+
+```sql
+CREATE DATABASE db_test;
+```
+
 - 删除数据库 db_test
     
     ```sql

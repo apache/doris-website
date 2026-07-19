@@ -2,7 +2,7 @@
 {
     "title": "Statistic Action",
     "language": "en",
-    "description": "获取集群统计信息、库表数量等。"
+    "description": "Obtain cluster statistics such as the number of databases and tables."
 }
 ---
 
@@ -14,19 +14,19 @@
 
 ## Description
 
-获取集群统计信息、库表数量等。
+Obtain cluster statistics such as the number of databases and tables.
     
 ## Path parameters
 
-无
+None
 
 ## Query parameters
 
-无
+None
 
 ## Request body
 
-无
+None
 
 ## Response
 

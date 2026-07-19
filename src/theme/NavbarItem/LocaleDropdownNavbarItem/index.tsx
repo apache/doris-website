@@ -22,6 +22,8 @@ export default function LocaleDropdownNavbarItem({
     const alternatePageUtils = useAlternatePageUtils();
     const { search, hash } = useLocation();
 
+    const COMING_SOON_LOCALES = new Set(['ja']);
+
     const localeItems = locales.map((locale): LinkLikeNavbarItemProps => {
         const baseTo = `pathname://${alternatePageUtils.createUrl({
             locale,
@@ -29,23 +31,41 @@ export default function LocaleDropdownNavbarItem({
         })}`;
         // preserve ?search#hash suffix on locale switches
         const to = `${baseTo}${search}${hash}${queryString}`;
+        const isComingSoon = COMING_SOON_LOCALES.has(locale);
+        const baseLabel = localeConfigs[locale]!.label;
+        const label = isComingSoon ? (
+            <span className="locale-dropdown__label locale-dropdown__label--coming-soon">
+                <span className="locale-dropdown__label-text">{baseLabel}</span>
+                <span className="locale-dropdown__coming-soon-badge">Coming Soon</span>
+            </span>
+        ) : (
+            baseLabel
+        );
+        const activeClassName =
+            // eslint-disable-next-line no-nested-ternary
+            locale === currentLocale
+                ? // Similar idea as DefaultNavbarItem: select the right Infima active
+                  // class name. This cannot be substituted with isActive, because the
+                  // target URLs contain `pathname://` and therefore are not NavLinks!
+                  mobile
+                    ? 'menu__link--active'
+                    : 'dropdown__link--active'
+                : '';
+        const className = [activeClassName, isComingSoon ? 'locale-dropdown__link--disabled' : '']
+            .filter(Boolean)
+            .join(' ');
         return {
-            label: localeConfigs[locale]!.label,
+            label,
             lang: localeConfigs[locale]!.htmlLang,
-            to,
+            to: isComingSoon ? '#' : to,
             target: '_self',
             autoAddBaseUrl: false,
-            className:
-                // eslint-disable-next-line no-nested-ternary
-                locale === currentLocale
-                    ? // Similar idea as DefaultNavbarItem: select the right Infima active
-                      // class name. This cannot be substituted with isActive, because the
-                      // target URLs contain `pathname://` and therefore are not NavLinks!
-                      mobile
-                        ? 'menu__link--active'
-                        : 'dropdown__link--active'
-                    : '',
-        };
+            className,
+            ...(isComingSoon && {
+                'aria-disabled': true,
+                onClick: (e: React.MouseEvent) => e.preventDefault(),
+            }),
+        } as LinkLikeNavbarItemProps;
     });
     const items = [...dropdownItemsBefore, ...localeItems, ...dropdownItemsAfter];
 

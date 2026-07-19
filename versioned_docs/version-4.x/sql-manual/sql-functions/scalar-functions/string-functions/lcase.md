@@ -74,3 +74,51 @@ SELECT LOWER(NULL), LCASE(NULL);
 | NULL        | NULL        |
 +-------------+-------------+
 ```
+
+4. Empty string
+```sql
+SELECT LOWER(''), LCASE('');
+```
+```text
++-----------+-----------+
+| LOWER('') | LCASE('') |
++-----------+-----------+
+|           |           |
++-----------+-----------+
+```
+
+5. String already lowercase or numeric-only
+```sql
+SELECT LOWER('already lowercase'), LCASE('abc123');
+```
+```text
++----------------------------+-----------------+
+| LOWER('already lowercase') | LCASE('abc123') |
++----------------------------+-----------------+
+| already lowercase          | abc123          |
++----------------------------+-----------------+
+```
+
+6. Non-alphabetic characters are passed through unchanged
+```sql
+SELECT LOWER('123!@#$%'), LCASE('PRICE: $99.99');
+```
+```text
++-------------------+------------------------+
+| LOWER('123!@#$%') | LCASE('PRICE: $99.99') |
++-------------------+------------------------+
+| 123!@#$%          | price: $99.99          |
++-------------------+------------------------+
+```
+
+7. UTF-8 multi-byte case folding
+```sql
+SELECT LOWER('ṬṚÌ TEST'), LCASE('ḌḌUMAI HELLO');
+```
+```text
++------------------------+---------------------------+
+| LOWER('ṬṚÌ TEST')      | LCASE('ḌḌUMAI HELLO')     |
++------------------------+---------------------------+
+| ṭṛì test               | ḍḍumai hello              |
++------------------------+---------------------------+
+```

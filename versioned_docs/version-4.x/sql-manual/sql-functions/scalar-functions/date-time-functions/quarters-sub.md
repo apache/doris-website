@@ -22,18 +22,16 @@ QUARTERS_SUB(`<date_or_time_expr>`, `<quarters>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The input date or datetime value. Supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | The input date or datetime value. Supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<quarters>` | The number of quarters to add or subtract. Positive integers indicate subtraction, negative integers indicate addition. |
 
 ## Return Value
 
 Returns a date value consistent with the input date type, the return value type is determined by the type of the first parameter:
 
-- If the input is of DATE type (only includes year, month, and day), the result is of DATE type; if the input is of DATETIME type, the result preserves the original time component (e.g., '2023-04-01 12:34:56' becomes '2023-01-01 12:34:56' after subtracting 1 quarter).
-- If input is TIMESTAMPTZ type, return value is TIMESTAMPTZ type (includes date, time and timezone offset).
-
-Special cases:
 - If `<quarters>` is negative, the function behaves the same as adding the corresponding number of quarters to the base time (i.e., QUARTERS_SUB(date, -n) is equivalent to QUARTERS_ADD(date, n)).
+- If the input is of DATE type (only includes year, month, and day), the result is of DATE type; if the input is of DATETIME type, the result is of DATETIME type and preserves the original time component (e.g., '2023-04-01 12:34:56' becomes '2023-01-01 12:34:56' after subtracting 1 quarter).
+- If input is TIMESTAMPTZ type, return value is TIMESTAMPTZ type (includes date, time and timezone offset).
 - If the input date is the last day of the month and the target month has fewer days than that date, it automatically adjusts to the last day of the target month (e.g., April 30th minus 1 quarter (3 months) becomes January 31st).
 - If the calculation result exceeds the valid range of the date type (DATE type: 0000-01-01 to 9999-12-31; DATETIME type: 0000-01-01 00:00:00 to 9999-12-31 23:59:59), throws an exception.
 - If any parameter is NULL, returns NULL.

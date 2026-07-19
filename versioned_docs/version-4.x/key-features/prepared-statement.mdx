@@ -1,0 +1,132 @@
+---
+title: Prepared Statement
+description: Server-side prepared statement support over the MySQL protocol that caches parsed plans per session, cutting FE CPU on repeated queries.
+keywords:
+  - prepared statement
+  - MySQL protocol
+  - plan cache
+  - server-side prepare
+  - Apache Doris BI
+  - parameterized query
+slug: /key-features/prepared-statement
+image: /images/next/key-features/prepared-statement.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - query-acceleration
+    - performance
+---
+
+> **TL;DR** Apache Doris supports server-side prepared statements over the MySQL wire protocol. Setting `useServerPrepStmts=true` on the JDBC URL makes the FE parse and plan a statement once per session and reuse that plan on every `EXECUTE`. On high-QPS [point-query](./high-concurrency-point-query) traffic the short-circuit path delivers roughly 4x more throughput; batch INSERTs and any repeated query shape stop paying parse and plan cost per row.
+
+![Apache Doris Prepared Statement: Server-side prepared statement support over the MySQL protocol that caches parsed plans per session, cutting FE CPU on repeated queries.](/images/next/key-features/prepared-statement.jpg)
+## Why use prepared statements in Apache Doris? {#why}
+
+Apache Doris prepared statements cache the parsed plan per session and reuse it on every `EXECUTE`, removing the FE-side parse, analyze, and optimize cost that dominates high-QPS workloads. Most analytical engines pay parse and plan cost on every query. That cost is invisible in a daily report job. It is the whole story once a service starts asking the same query thousands of times per second. A user-facing dashboard reads a row by primary key on every click. A feature store reads a [vector](./vector-index) by entity ID on every prediction. A bulk loader fires the same `INSERT INTO t VALUES (?, ?, ?)` over and over.
+
+In all three cases the SQL text is identical; only the parameters change. Re-parsing and re-planning that statement on every call burns FE CPU for no reason. At a few hundred QPS the FE saturates before the BE is doing any real work, and adding BE nodes does nothing for you. PreparedStatement is what you reach for there.
+
+- The Frontend planner is the bottleneck at high QPS, not the storage engine.
+- Repeating queries pay parse, analyze, optimize, and serialization cost on every call.
+- A separate KV store is a heavy answer to "make my point queries cheap."
+
+## What is the Apache Doris prepared statement? {#what}
+
+The Apache Doris prepared statement is a server-side implementation of the MySQL wire-protocol pair `COM_STMT_PREPARE` / `COM_STMT_EXECUTE` (with `COM_STMT_CLOSE` to evict), served by the FE and backed by a per-session plan cache. When the client opens a connection with `useServerPrepStmts=true`, the JDBC driver issues `COM_STMT_PREPARE` once per distinct SQL text. The FE parses, analyzes, and stores the plan in a per-session cache keyed by statement ID. Every subsequent `EXECUTE` ships only the binary parameter bytes. The FE binds the values to the cached plan and runs it.
+
+**Key terms**
+
+- **`useServerPrepStmts=true`**: JDBC URL flag that switches the MySQL Connector/J driver from client-side string interpolation to the binary `COM_STMT_PREPARE` / `COM_STMT_EXECUTE` round trips.
+- **`cachePrepStmts=true`**: a separate JDBC flag that caches the prepared-statement handle on the *client*. Without it, every call re-issues `COM_STMT_PREPARE` and throws away the speedup.
+- **Per-session statement cache**: an in-memory map on the FE (`ConnectContext.preparedStatementContextMap`) holding the parsed `PrepareCommand`, the `StatementContext`, and an optional `ShortCircuitQueryContext`. Capped by `max_prepared_stmt_count` (default 100,000).
+- **Placeholder (`?`)**: a positional parameter bound at execute time. A single statement can carry up to 65,536 of them.
+- **`ShortCircuitQueryContext`**: an extra cache that lives alongside the prepared plan when the query qualifies for the short-circuit point-query path. It holds the serialized descriptor table, output expressions, and a UUID the BE uses to look up its own pre-built structures.
+
+## How does the Apache Doris prepared statement work? {#how}
+
+The Apache Doris prepared statement runs in five steps: prepare the SQL on the FE, cache the short-circuit plan when eligible, execute with binary parameter bytes, optionally audit, and close to evict.
+
+1. **Prepare.** The client sends `COM_STMT_PREPARE "SELECT ... WHERE k1 = ?"`. The FE parses the SQL, runs Nereids analysis, stores a `PreparedStatementContext` in the connection's map, and returns the statement ID and parameter count.
+2. **Cache the short-circuit path (if eligible).** When the query is a single Unique Key table with equality predicates on the full key, the rewrite rule `LogicalResultSinkToShortCircuitPointQuery` flips a flag, and the FE serializes the descriptor table and output expressions into a `ShortCircuitQueryContext` keyed by a UUID.
+3. **Execute.** Each `COM_STMT_EXECUTE` carries the statement ID, a null bitmap, type codes (the first time), and the parameter bytes. The FE decodes them into `Literal` values, drops them into the placeholder slots, and runs the cached plan. No re-parse, no re-analyze, no re-optimize.
+4. **Audit (optional).** With `enable_prepared_stmt_audit_log=true`, `fe.audit.log` reconstructs the statement with parameter values for debugging. The default is off because high-QPS traffic floods the log.
+5. **Close.** `COM_STMT_CLOSE` evicts the entry from the session cache. Closed connections drop the whole map.
+
+## Quick start {#quick-start}
+
+```sql
+CREATE TABLE tbl_point_query (
+  k1 INT,
+  v1 VARCHAR(64)
+)
+UNIQUE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES (
+  "enable_unique_key_merge_on_write" = "true",
+  "light_schema_change" = "true",
+  "store_row_column" = "true"
+);
+```
+
+```java
+String url = "jdbc:mysql://fe-host:9030/db"
+    + "?useServerPrepStmts=true&cachePrepStmts=true"
+    + "&prepStmtCacheSize=500&prepStmtCacheSqlLimit=1024";
+
+try (Connection c = DriverManager.getConnection(url, "root", "");
+     PreparedStatement ps = c.prepareStatement(
+         "SELECT * FROM tbl_point_query WHERE k1 = ?")) {
+    ps.setInt(1, 42);
+    try (ResultSet rs = ps.executeQuery()) { /* ... */ }
+}
+```
+
+**Expected result**
+
+In `fe.audit.log`, the second and later calls show:
+
+```
+Stmt=EXECUTE(-2147481418)
+```
+
+instead of the raw SQL. That is the signal the cached plan is being reused. Pair it with `EXPLAIN`, which should show `SHORT-CIRCUIT` on the scan node, to confirm both layers are active.
+
+## When should you use Apache Doris prepared statements? {#when}
+
+Apache Doris prepared statements fit high-QPS point queries on Unique Key tables, repeated batch INSERTs, and any client-side workload that fires the same statement thousands of times per second. They are not a fit for one-off ad-hoc queries, drivers without clean server-side support, or statements with non-deterministic functions on the short-circuit path.
+
+**Good fit**
+
+- High-QPS point queries on Unique Key tables, where parse cost dominates.
+- Batch INSERTs over [Group Commit](./group-commit), where a loader fires the same `INSERT INTO t VALUES (?, ?, ?)` thousands of times per second.
+- Any query the same client repeats at meaningful rates: feature lookups, status checks, allow-listing, online-service reads.
+- Workloads where you would rather not stand up a separate KV store next to Apache Doris.
+
+**Not a good fit**
+
+- One-off ad-hoc queries. The `PREPARE` round trip costs more than the parse it saves.
+- Drivers without clean server-side prepared-statement support. The Rust `sqlx` driver, for example, has [reported](https://github.com/launchbadge/sqlx/issues/3335) issues with Apache Doris's implementation. Use a MySQL Connector that talks the binary protocol cleanly.
+- Connections that set `useServerPrepStmts=true` without `cachePrepStmts=true`. Every call re-issues `COM_STMT_PREPARE`, which is slower than the default client-side mode.
+- Statements with non-deterministic functions (`NOW()`, `RAND()`). The BE refuses to reuse the cached short-circuit context, so you only save parse cost.
+- Range and aggregate queries, if you are hoping for the short-circuit speedup. PreparedStatement still saves parse cost, but the BE runs a normal distributed plan. For those workloads, lean on [data pruning](./data-pruning) instead.
+
+## Performance and verification {#performance}
+
+Doris reports a [4x or better throughput improvement](https://doris.apache.org/docs/2.1/query-acceleration/high-concurrent-point-query/) from PreparedStatement on point-query workloads where FE CPU is the bottleneck. This is the same 4x cited from the short-circuit angle in the [High-Concurrency Point Query card](./high-concurrency-point-query) — one combined gain, not two stackable ones. The full high-concurrency stack (Unique Key + Merge-on-Write + row store + row cache + short-circuit + PreparedStatement) reaches [30,000+ QPS per node](https://doris.apache.org/blog/How-We-Increased-Database-Query-Concurrency-by-20-Times/) on YCSB on a 16-core / 64GB machine, with average latency cut by 96% versus the un-optimized baseline. The PreparedStatement contribution is hard to isolate from the rest of the stack; treat 4x as the planning floor when the FE is your ceiling.
+
+Two checks tell you the path is live:
+
+- `fe.audit.log` shows `Stmt=EXECUTE(stmtId)` for repeat calls instead of the raw SQL.
+- For point queries, `EXPLAIN` shows `SHORT-CIRCUIT` on the scan node.
+
+If FE CPU is still the ceiling, scale Observers and use JDBC load balancing: `jdbc:mysql:loadbalance://h1,h2,h3/db?useServerPrepStmts=true&cachePrepStmts=true`.
+
+## Further reading {#further-reading}
+
+- [High-concurrency point query (full guide)](../query-acceleration/high-concurrent-point-query)
+- [High-Concurrency Point Query feature card](./high-concurrency-point-query)
+- [Group Commit for high-throughput INSERTs](./group-commit)
+- [Data pruning for non-point queries](./data-pruning)
+- [Unique Key](./unique-key): the partner table model for KV-style point lookups when combined with `store_row_column`.

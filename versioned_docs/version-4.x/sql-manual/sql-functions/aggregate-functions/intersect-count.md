@@ -62,3 +62,17 @@ select intersect_count(user_id,dt,20250801) from pv_bitmap;
 |                                    3 |
 +--------------------------------------+
 ```
+
+Intersect two days — counts users present on both `20250801` and `20250802` (only `user_id` 3 appears on both):
+
+```sql
+select intersect_count(user_id,dt,20250801,20250802) from pv_bitmap;
+```
+
+```text
++-----------------------------------------------+
+| intersect_count(user_id,dt,20250801,20250802) |
++-----------------------------------------------+
+|                                             1 |
++-----------------------------------------------+
+```

@@ -1,8 +1,15 @@
 ---
-{
-    "title": "Complete Release",
-    "language": "en"
-}
+title: Complete the Release
+language: en
+description: "Apache Doris release wrap-up: Release SVN, download links, release notes, and old version cleanup."
+keywords:
+    - Apache Doris
+    - Complete the release
+    - Release SVN
+    - Download links
+    - Release Note
+    - Maven Release
+    - Announce email
 ---
 
 <!-- 
@@ -24,153 +31,167 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Complete release
+# Complete the Release
 
-The steps in this document follow after the release has been voted on and approved in the dev@doris.
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Apache release process / Release wrap-up -->
 
-## Upload package to release
+This document describes the follow-up wrap-up steps to perform after the release vote in the `dev@doris` mailing list has been completed and passed.
 
-When the official release poll is successful, send the [Result] email first, then prepare the release package.
-Copy the source package, signature file and hash file from the corresponding folder of the previous release under dev to another directory 1.xx, note that the file name should not be rcxx (you can rename, but do not recalculate the signature, the hash can be recalculated, the result will not change)
+## Release Completion Checklist
 
-> Only PMC members have permission to operate this step.
+| Step | Action | Performed by |
+|------|--------|--------------|
+| 1. Upload the package to Release | Move the source package, signature, and checksum files from `dev` to `release` | PMC member |
+| 2. Publish the Maven Staging repository | Click `Release` in Apache Nexus | Release Manager |
+| 3. Prepare the release notes | Update the GitHub Release and the official website download page | Release Manager |
+| 4. Clean up old versions in SVN | Keep only the latest version, and replace old version links with archive URLs | Release Manager |
+| 5. Send the announce email | Announce the new release on `dev@doris` | Release Manager |
 
-```
-From:
+## 1. Upload the Package to Release
+
+After the formal release vote passes, send the `[Result]` email first, then prepare the Release Package. Copy the source package, signature files, and hash files from the corresponding folder previously published under `dev` into a new directory (for example, `1.1.0`). Notes:
+
+- The file name **must not include the `rcxx` suffix** (you may rename the file, but do not recompute the signature).
+- Hashes may be recomputed; the result is the same.
+
+> Only PMC members have permission to perform this step.
+
+Source SVN path:
+
+```text
 https://dist.apache.org/repos/dist/dev/doris/
+```
 
-To:
+Target SVN path:
+
+```text
 https://dist.apache.org/repos/dist/release/doris/
-
-Eg:
-svn mv -m "move doris 1.1.0-rc05 to release" https://dist.apache.org/repos/dist/dev/doris/1.1 https://dist.apache.org/repos/dist/release/doris/1.1
 ```
 
-For the first release, you need to copy the KEYS file as well. Then add it to the svn release.
+Example command:
 
+```shell
+svn mv -m "move doris 1.1.0-rc05 to release" \
+    https://dist.apache.org/repos/dist/dev/doris/1.1 \
+    https://dist.apache.org/repos/dist/release/doris/1.1
 ```
-add 成功后就可以在下面网址上看到你发布的文件
+
+For a first-time release, the KEYS file also needs to be copied over and added under the SVN release directory. After it is added successfully, the published files are visible at:
+
+```text
 https://dist.apache.org/repos/dist/release/doris/1.xx/
+```
 
-稍等一段时间后，能在 apache 官网看到：
+After a short wait, they are also visible on the Apache official site:
+
+```text
 http://www.apache.org/dist/doris/1.xx/
 ```
 
-## Post links on Doris official website and github
+## 2. Publish Links on the Doris Website and GitHub
 
-We will use Doris Core as an example. For other components, replace the name with the corresponding one.
+This section uses Doris Core as an example. For other components, replace the corresponding names accordingly.
 
-### Create a download link
+### 2.1 Create Download Links
 
-Download Link:
+| Link type | URL |
+|-----------|-----|
+| Download link | `http://www.apache.org/dyn/closer.cgi?filename=doris/1.xx/apache-doris-1.xx-src.tar.gz&action=download` |
+| wget download | `https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.xx/apache-doris-1.xx-src.tar.gz` |
+| Original location | `https://www.apache.org/dist/doris/1.xx/` |
+| Closer entry | `http://www.apache.org/dyn/closer.cgi/doris/1.xx/apache-doris-1.xx-src.tar.gz` |
+| Source package | `http://www.apache.org/dyn/closer.cgi/doris/1.xx/apache-doris-1.xx-src.tar.gz` |
+| ASC signature | `http://archive.apache.org/dist/doris/1.xx/apache-doris-1.xx-src.tar.gz.asc` |
+| sha512 checksum | `http://archive.apache.org/dist/doris/1.xx/apache-doris-1.xx-src.tar.gz.sha512` |
+| KEYS | `http://archive.apache.org/dist/doris/KEYS` |
 
-```
-http://www.apache.org/dyn/closer.cgi?filename=doris/1.xx/apache-doris-1.xx-src.tar.gz&action=download
+Example wget command:
 
+```shell
 wget --trust-server-names "https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=doris/1.xx/apache-doris-1.xx-src.tar.gz"
 ```
 
-Original Location:
+For detailed rules, see the [Apache download page guidelines](http://www.apache.org/dev/release-download-pages#closer).
 
-```
-https://www.apache.org/dist/doris/1.xx/
+### 2.2 Maven
 
-http://www.apache.org/dyn/closer.cgi/doris/1.xx/apache-doris-1.xx-src.tar.gz
-```
+In the [Apache Maven Staging Repositories](https://repository.apache.org/#stagingRepositories), find the corresponding Staging Repo:
 
-Source package:
+1. If it has not been closed yet, click `close` first.
+2. Click `Release` to perform the formal release.
 
-```
-http://www.apache.org/dyn/closer.cgi/doris/1.xx/apache-doris-1.xx-src.tar.gz
+> If the `close` step reports `No public key: Key with id: (xxx) was not able to be located on`, run the following command to sync the public key to a public keyserver, then close again:
+>
+> ```shell
+> gpg --keyserver hkp://keyserver.ubuntu.com --send-keys xxx
+> ```
+>
+> The value `xxx` can be obtained from `gpg -k`.
 
-ASC:
-http://archive.apache.org/dist/doris/1.xx/apache-doris-1.xx-src.tar.gz.asc
+### 2.3 Prepare the Release Notes
 
-sha512:
-http://archive.apache.org/dist/doris/1.xx/apache-doris-1.xx-src.tar.gz.sha512
-```
+Two places need to be updated:
 
-KEYS:
+#### 2.3.1 GitHub Release Page
 
-```
-http://archive.apache.org/dist/doris/KEYS
-```
-
-refer to: <http://www.apache.org/dev/release-download-pages#closer>
-
-### Maven
-
-Find staging repo on [https://repository.apache.org/#stagingRepositories](https://repository.apache.org/#stagingRepositories).
-
-- If not closed, click `close` first to close.
-- Click `release` for official release.
-
-> If an error is reported in the `close` stage: `No public key: Key with id: (xxx) was not able to be located on`.
-
-> You can execute `gpg --keyserver hkp://keyserver.ubuntu.com --send-keys xxx` and then close again. xxx can be viewed through `gpg -k`.
-
-### Prepare the release note
-
-The following two places need to be modified.
-
-1. Github's release page
-
-```
+```text
 https://github.com/apache/doris/releases/tag/0.9.0-rc01
 ```
 
-2、Doris official website download page
+#### 2.3.2 Doris Website Download Page
 
-The download page is a markdown file with the following address.
+The download page is a Markdown file at the following paths:
 
-```
-docs/zh-cn/downloads/downloads.md
+```text
+docs/zh-CN/downloads/downloads.md
 docs/en/downloads/downloads.md
 ```
 
-1. you need to change the download package address of the last release to the archive address of apache (see later).
-2. Add the download information for the new version.
+Two changes are needed:
 
-### Clean up old versions of packages on svn
+1. Change the download URLs of the previous version to the Apache archive URLs (see the next section).
+2. Add download information for the new version.
 
-1. Deleting old packages on svn
+### 2.4 Clean Up Old Versions in SVN
 
-Since svn only needs to keep the latest version of packages, old versions of packages should be cleaned from svn when a new version is released.
+#### 2.4.1 Delete Old Versions from SVN
 
-```
+SVN only needs to keep the packages of the latest version. After a new release, clean up the old versions so that only the latest version's packages remain at the following two paths:
+
+```text
 https://dist.apache.org/repos/dist/release/doris/
 https://dist.apache.org/repos/dist/dev/doris/
 ```
 
-Keep these two addresses with only the latest package versions. 2.
+#### 2.4.2 Replace with the Archive URL
 
-2. Change the download address of the older packages on the official Doris website to the address of the archive page 
+Change the download URLs of old versions on the Doris website download page to the archive page URL:
 
-```
-Download page: http://doris.apache.org/downloads.html
-Archive page: http://archive.apache.org/dist/doris
-```
+| Type | URL |
+|------|-----|
+| Download page | `http://doris.apache.org/downloads.html` |
+| Archive page | `http://archive.apache.org/dist/doris` |
 
-Apache has a synchronization mechanism to archive the history of releases, see [how to archive](https://www.apache.org/legal/release-policy.html#how-to-archive)
-So even if an old package is removed from svn, it can still be found on the archive page.
+Apache has a sync mechanism that archives historical released versions. For the procedure, see [How to Archive](https://www.apache.org/legal/release-policy.html#how-to-archive). Even after the old packages are removed from SVN, they remain available on the archive page.
 
-## Announce
+## 3. Announce Email
 
-Title:
+Email subject:
 
-```
+```text
 [ANNOUNCE] Apache Doris 1.xx release
 ```
 
-To mail：
+Send to the mailing list:
 
-```
+```text
 dev@doris.apache.org
 ```
 
 Email body:
 
-```
+```text
 Hi All,
 
 We are pleased to announce the release of Apache Doris 1.xx.
@@ -187,4 +208,31 @@ Best Regards,
 
 On behalf of the Doris team,
 xxx
+```
 
+## FAQ
+
+### Q1: `svn mv` reports a permission error?
+
+Only PMC members have write permission on the `release` SVN directory. Regular Committers need to contact a PMC member to perform the operation on their behalf.
+
+### Q2: Maven reports `No public key` after clicking `Release`?
+
+The GPG public key has not been uploaded to a public keyserver. Run the following command to sync the public key to a public keyserver, then retry:
+
+```shell
+gpg --keyserver hkp://keyserver.ubuntu.com --send-keys <KEY_ID>
+```
+
+`<KEY_ID>` can be obtained from `gpg -k`.
+
+### Q3: The download link on the website returns 404?
+
+Possible causes:
+
+- The files were just committed to the SVN release directory; CDN propagation takes 10 to 30 minutes.
+- Old versions have been cleaned up, but the download page has not been updated to use the archive URLs.
+
+### Q4: Users cannot find an old version when downloading?
+
+Old versions are automatically archived by Apache. The download page needs to update the old version links to the path `http://archive.apache.org/dist/doris/<version>/`.

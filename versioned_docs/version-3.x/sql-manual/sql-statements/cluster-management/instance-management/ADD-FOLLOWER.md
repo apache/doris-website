@@ -38,7 +38,7 @@ The user executing this SQL command must have at least the following permissions
 
 1. Before adding a new FOLLOWER node, make sure the node is properly configured.
 2. Before adding a FOLLOWER node, ensure that the number of FOLLOWER nodes in the cluster is an odd number after the addition.
-3. After adding the FOLLOWER node, use[`SHOW FRONTENDS`](./SHOW-FRONTENDS.md)command to verify that they have been added successfully and are in a normal state.
+3. After adding the FOLLOWER node, use the [`SHOW FRONTENDS`](./SHOW-FRONTENDS.md) command to verify that they have been added successfully and are in a normal state.
 
 ## Examples
 

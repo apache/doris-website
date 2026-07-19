@@ -37,7 +37,7 @@ WINDOW_FUNNEL(<window>, <mode>, <timestamp>, <event_1>[, event_2, ... , event_n]
 
     - `deduplication`: Based on `default`, but an event that has already been matched in the current chain cannot appear again. For example, if the condition list is [event1='A', event2='B', event3='C', event4='D'] and the original event chain is `A-B-C-B-D`, the second `B` breaks the chain, so the matched event chain is `A-B-C` and the max level is `3`.
 
-    - `fixed`: The chain must advance in the specified order and cannot skip intermediate steps. If an event that matches a later condition appears before its immediate predecessor is matched, the chain stops. Starting from Doris 4.1, events that do not match any condition are ignored and do not break the chain. For example, with [event1='A', event2='B', event3='C', event4='D'], `A-B-D-C` returns `A-B` and level `2`; with `A-B-X-C-D` (`X` matches none of the conditions), Doris 4.1 and later returns `A-B-C-D`, while earlier versions stop at `A-B`.
+    - `fixed`: The chain must advance in the specified order and cannot skip intermediate steps. If an event that matches a later condition appears before its immediate predecessor is matched, the chain stops. Events that do not match any condition are ignored and do not break the chain. For example, with [event1='A', event2='B', event3='C', event4='D'], `A-B-D-C` returns `A-B` and level `2`; with `A-B-X-C-D` (`X` matches none of the conditions), Doris returns `A-B-C-D`.
 
     - `increase`: Based on `default`, but matched events must have strictly increasing timestamps. If two matched events have the same timestamp, the later event cannot advance the chain.
 
@@ -224,7 +224,7 @@ order BY
 |  100127 |     2 |
 +---------+-------+
 ```
-For `user_id=100123`, `login2` does not match any condition in the funnel. Starting from Doris 4.1, such unrelated events do not break the `fixed` chain, so the matched event chain is `login-visit-order-payment`. In Doris versions earlier than 4.1, the same data would stop at `login-visit` and return level `2`.
+For `user_id=100123`, `login2` does not match any condition in the funnel, so it does not break the `fixed` chain. The matched event chain is `login-visit-order-payment`.
 
 ### example4: increase mode
 

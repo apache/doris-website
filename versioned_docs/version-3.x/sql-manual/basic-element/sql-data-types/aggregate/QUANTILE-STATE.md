@@ -13,7 +13,7 @@ QUANTILE_STATE
 
 **In 2.0, we support the [agg_state](AGG-STATE.md) function, and it is recommended to use agg_state quantile_union(quantile_state not null) instead of this type.**
 
-QUANTILE_STATE cannot be used as a key column. The columns of the HLL type can be used in Aggregate tables, Duplicate tables and Unique tables. When used in an Aggregate table, the aggregation type is HLL_UNION when building table.
+QUANTILE_STATE cannot be used as a key column. The columns of the QUANTILE_STATE type can be used in Aggregate tables, Duplicate tables and Unique tables. When used in an Aggregate table, the aggregation type is QUANTILE_UNION when building table.
 
 The user does not need to specify the length and default value. The length is controlled within the system according to the degree of data aggregation.
 And the QUANTILE_STATE column can only be queried or used through the supporting QUANTILE_PERCENT, QUANTILE_UNION and TO_QUANTILE_STATE functions.    

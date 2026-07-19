@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_PRODUCT",
     "language": "en-US",
-    
+    "description": "Calculates the product of all elements in an array. The function iterates through all elements in the array, multiplies them together,"
 }
 ---
 
@@ -63,7 +63,7 @@ SELECT array_product([1.1, 2.2, 3.3, 4.4, 5.5]);
 +------------------------------------------+
 | array_product([1.1, 2.2, 3.3, 4.4, 5.5]) |
 +------------------------------------------+
-|                                    190.8 |
+|                                 193.2612 |
 +------------------------------------------+
 ```
 
