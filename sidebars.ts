@@ -1694,6 +1694,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-point',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-touches',
+                                        'sql-manual/sql-functions/scalar-functions/spatial-functions/st-within',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-x',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-y',
                                     ],
