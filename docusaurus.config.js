@@ -217,7 +217,9 @@ const config = {
         },
     ],
     projectName: 'apache/doris-website', // Usually your repo name.
-    customFields: {},
+    customFields: {
+        profileAnalysisApiBaseUrl: process.env.PROFILE_ANALYSIS_API_BASE_URL ?? 'http://localhost:8080',
+    },
     future: {
         experimental_faster: true,
     },
