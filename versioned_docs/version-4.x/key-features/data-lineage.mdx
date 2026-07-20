@@ -61,34 +61,96 @@ For ad-hoc `SELECT` traffic that never lands in a write, the picture is simpler.
 
 ## Quick start {#quick-start}
 
+Run the example as an administrator who can change global variables and create databases and tables. It creates a dedicated database with one replica, runs a Join query, and then reads the recorded table-level lineage from the audit log.
+
 ```sql
 -- 1. Enable the audit plugin so query-level lineage is recorded.
 SET GLOBAL enable_audit_plugin = true;
 
--- 2. Run a query that joins two base tables.
-SELECT n.n_name, SUM(o.o_totalprice)
-FROM orders o JOIN nation n ON o.o_custkey = n.n_nationkey
-GROUP BY n.n_name;
+-- 2. Create the source tables.
+DROP DATABASE IF EXISTS lineage_audit_demo;
+CREATE DATABASE lineage_audit_demo;
+USE lineage_audit_demo;
 
--- 3. Read the lineage out of the audit log.
+CREATE TABLE lineage_orders (
+    order_id BIGINT,
+    region_id BIGINT,
+    amount DECIMAL(18, 2)
+)
+DUPLICATE KEY(order_id)
+DISTRIBUTED BY HASH(order_id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+CREATE TABLE lineage_regions (
+    region_id BIGINT,
+    region_name VARCHAR(32)
+)
+DUPLICATE KEY(region_id)
+DISTRIBUTED BY HASH(region_id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO lineage_orders VALUES
+    (1, 10, 100.00),
+    (2, 10, 50.00),
+    (3, 20, 80.00);
+
+INSERT INTO lineage_regions VALUES
+    (10, 'east'),
+    (20, 'west');
+
+-- 3. Run a query that joins the two source tables.
+SELECT r.region_name, SUM(o.amount) AS total_amount
+FROM lineage_orders o
+JOIN lineage_regions r ON o.region_id = r.region_id
+GROUP BY r.region_name
+ORDER BY r.region_name;
+```
+
+The Join query returns:
+
+```text
++-------------+--------------+
+| region_name | total_amount |
++-------------+--------------+
+| east        |       150.00 |
+| west        |        80.00 |
++-------------+--------------+
+```
+
+Audit records are written in batches and become visible asynchronously. After the Join query finishes, wait for the current `audit_plugin_max_batch_interval_sec` and then run the following query. The default maximum interval is 60 seconds.
+
+```sql
 SELECT time, queried_tables_and_views, chosen_m_views, stmt_id
-FROM   internal.__internal_schema.audit_log
-WHERE  user = CURRENT_USER() AND is_query = 1
-ORDER  BY time DESC LIMIT 5;
+FROM internal.__internal_schema.audit_log
+WHERE user = TRIM(BOTH "'" FROM SUBSTRING_INDEX(CURRENT_USER(), '@', 1))
+  AND is_query = 1
+  AND array_contains(
+          queried_tables_and_views,
+          'internal.lineage_audit_demo.lineage_orders')
+  AND array_contains(
+          queried_tables_and_views,
+          'internal.lineage_audit_demo.lineage_regions')
+ORDER BY time DESC
+LIMIT 1;
 ```
 
-**Expected result**
+The audit query returns a row similar to the following. The timestamp and statement ID depend on the execution:
 
-```
-+---------------------+--------------------------------------------+----------------+
-| time                | queried_tables_and_views                   | chosen_m_views |
-+---------------------+--------------------------------------------+----------------+
-| 2026-05-09 10:14:22 | ["internal.tpch.orders","internal.tpch.    | []             |
-|                     |  nation"]                                  |                |
-+---------------------+--------------------------------------------+----------------+
+```text
++-------------------------+-----------------------------------------------------------------------------------------------+----------------+---------+
+| time                    | queried_tables_and_views                                                                      | chosen_m_views | stmt_id |
++-------------------------+-----------------------------------------------------------------------------------------------+----------------+---------+
+| <event time>            | ["internal.lineage_audit_demo.lineage_orders", "internal.lineage_audit_demo.lineage_regions"] | []             | <ID>    |
++-------------------------+-----------------------------------------------------------------------------------------------+----------------+---------+
 ```
 
 The row holds catalog-qualified table names and any MV the optimizer rewrote into. That is enough to draw a table-level graph for ad-hoc queries. For column-level lineage on writes, implement `LineagePlugin`, place its plugin directory under `$plugin_dir/lineage/`, and add the plugin name to `activate_lineage_plugin`. From then on, each supported `INSERT` or CTAS produces a `LineageInfo` event.
+
+After verification, remove the example database:
+
+```sql
+DROP DATABASE lineage_audit_demo;
+```
 
 ## When should you use Apache Doris data lineage? {#when}
 
