@@ -180,6 +180,10 @@ Doris provides both synchronous and asynchronous cache clearing methods:
 <!-- Knowledge type: Operational steps -->
 <!-- Applicable scenarios: Cache hit rate analysis / Troubleshooting / Performance tuning -->
 
+### Cache Block Details
+
+Starting from Doris 4.1, you can query [`information_schema.file_cache_info`](../../admin-manual/system-tables/information_schema/file_cache_info.md) to inspect block-level cache entries and summarize cache space by tablet, BE, cache path, or cache type. Doris 4.0.x does not support this system table.
+
 ### Hotspot Information
 
 Doris collects cache hotspot information for each compute group every 10 minutes and writes it to the internal system table `__internal_schema.cloud_cache_hotspot`. You can analyze hot data with the following queries to guide cache planning.

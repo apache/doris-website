@@ -979,6 +979,7 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/system-tables/information_schema/columns',
                                 'admin-manual/system-tables/information_schema/engines',
                                 'admin-manual/system-tables/information_schema/events',
+                                'admin-manual/system-tables/information_schema/file_cache_info',
                                 'admin-manual/system-tables/information_schema/file_cache_statistics',
                                 'admin-manual/system-tables/information_schema/files',
                                 'admin-manual/system-tables/information_schema/global_variables',

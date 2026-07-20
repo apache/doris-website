@@ -180,6 +180,10 @@ Doris 提供同步与异步两种缓存清理方式：
 <!-- 知识类型: 操作步骤 -->
 <!-- 适用场景: 缓存命中率分析 / 故障排查 / 性能调优 -->
 
+### 缓存块明细
+
+从 Doris 4.1 开始，可以查询 [`information_schema.file_cache_info`](../../admin-manual/system-tables/information_schema/file_cache_info.md)，查看缓存块明细，并按照 Tablet、BE、缓存路径或缓存类型汇总缓存空间。Doris 4.0.x 不支持该系统表。
+
 ### 热点信息
 
 Doris 每 10 分钟收集各计算组的缓存热点信息，并写入内部系统表 `__internal_schema.cloud_cache_hotspot`。可通过以下查询语句分析热点数据，指导缓存规划。
