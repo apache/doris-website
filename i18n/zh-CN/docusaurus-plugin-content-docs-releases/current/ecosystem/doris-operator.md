@@ -10,6 +10,43 @@
 
 本文按版本倒序列出 Doris Operator 的版本发布说明。
 
+## 26.0.0
+
+来源：[Release Notes 26.0.0](https://github.com/apache/doris-operator/issues/506)
+
+该版本改进了 DDC 生命周期管理与可靠性，包括计算组优雅停机滚动、可配置的就绪探针策略、DCR mTLS 支持以及更清晰的 DDC 健康状态上报。同时，该版本增强了 Helm chart 配置，并增加了多项校验和稳定性修复。
+
+### 功能与改进
+
+- DDC 计算组在滚动更新、缩容和删除操作中支持优雅停机滚动，提供 sentinel 兼容性开关，并在镜像不支持时回退到常规 StatefulSet 流程。[#502](https://github.com/apache/doris-operator/pull/502)
+- `DorisCluster` 和 `DorisDisaggregatedCluster` Pod 支持可配置的就绪探针策略。[#486](https://github.com/apache/doris-operator/pull/486)
+- DCR 支持 mTLS。[#483](https://github.com/apache/doris-operator/pull/483)
+- 将 DDC 计算组 Service 拆分为内部 headless Service 和外部 Service，使升级和流量切换更平滑。[#484](https://github.com/apache/doris-operator/pull/484)
+- Helm chart 增加组件级 Secret 支持。[#465](https://github.com/apache/doris-operator/pull/465)
+- Helm chart 暴露已部署 Pod 的 `serviceAccount` 配置。[#470](https://github.com/apache/doris-operator/pull/470)
+
+### Bug 修复
+
+- 修复 DDC MetaService 健康状态聚合，使 MetaService 降级能够反映到集群健康状态中。[#500](https://github.com/apache/doris-operator/pull/500)
+- 修复 `dcr.Annotations` 为 nil 时 `CompareConfigmapAndTriggerRestart` 中的 nil map panic。[#493](https://github.com/apache/doris-operator/pull/493)
+- 修复 FE endpoint 地址的 JSON tag，并重新生成 `DorisCluster` CRD。[#497](https://github.com/apache/doris-operator/pull/497)
+- 拒绝 `feSpec.replicas < feSpec.electionNumber` 的非法 `DorisDisaggregatedCluster` FE 配置。[#498](https://github.com/apache/doris-operator/pull/498)
+- 在应用不可变的 StatefulSet volume claim template 之前，拒绝 DDC 计算组存储模板变更。[#496](https://github.com/apache/doris-operator/pull/496)
+- 修复 `DorisDisaggregatedCluster` BE Helm 配置中的默认 `storage_root_path`。[#477](https://github.com/apache/doris-operator/pull/477)
+
+### 可靠性
+
+- 拒绝在 `DorisCluster` 和 `DorisDisaggregatedCluster` webhook 中使用内置 `admin` 账户作为 Operator 管理用户。[#499](https://github.com/apache/doris-operator/pull/499)
+- 增加针对 Go 格式化、vet/lint 检查、Operator 构建以及生成的 manifest 和 artifact 的 Pull Request 检查。[#501](https://github.com/apache/doris-operator/pull/501)
+
+### 致谢
+
+- [ecniiv](https://github.com/ecniiv)
+- [jonasbrami](https://github.com/jonasbrami)
+- [catpineapple](https://github.com/catpineapple)
+- [JinVei](https://github.com/JinVei)
+- [Al-assad](https://github.com/Al-assad)
+
 ## 25.8.0
 
 来源：[Release Notes 25.8.0](https://github.com/apache/doris-operator/issues/472)
