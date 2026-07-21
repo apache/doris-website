@@ -178,17 +178,46 @@
         }
     }
 
-    &__result pre {
-        max-width: 100%;
-        margin: 0;
-        padding: 0;
-        overflow-x: auto;
+    &__markdown {
         color: var(--ifm-font-color-base);
-        background: transparent;
-        font: inherit;
-        line-height: 1.7;
+        padding-left: 0;
         overflow-wrap: anywhere;
-        white-space: pre-wrap;
+
+        > :first-child {
+            margin-top: 0 !important;
+        }
+
+        > :last-child {
+            margin-bottom: 0 !important;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        strong {
+            color: var(--ifm-font-color-base);
+        }
+
+        pre,
+        table {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        pre {
+            white-space: pre;
+        }
+
+        table {
+            display: block;
+        }
+
+        a {
+            overflow-wrap: anywhere;
+        }
     }
 
     @media (max-width: 768px) {

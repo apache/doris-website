@@ -82,18 +82,40 @@ test('exposes the waiting state to assistive technology', () => {
     assert.match(markup, /may take several minutes/);
 });
 
-test('renders the model result as escaped text instead of executable HTML', () => {
+test('renders runtime Markdown while discarding raw HTML and unsafe links', () => {
     const markup = renderToStaticMarkup(
         React.createElement(AnalysisResult, {
             result: {
                 id: 'item_26',
                 type: 'agent_message',
-                text: '<script>alert("profile")</script>',
+                text: [
+                    '## Conclusion',
+                    '',
+                    'Latency is dominated by **FE planning**.',
+                    '',
+                    '- Plan Time: `452 ms`',
+                    '',
+                    '| Metric | Value |',
+                    '| --- | ---: |',
+                    '| Plan Time | 452 ms |',
+                    '',
+                    '~~unverified~~',
+                    '',
+                    '<script>alert("profile")</script>',
+                    '[unsafe](javascript:alert("profile"))',
+                ].join('\n'),
             },
         }),
     );
-    assert.match(markup, /&lt;script&gt;/);
+    assert.match(markup, /<h3>Conclusion<\/h3>/);
+    assert.match(markup, /<strong>FE planning<\/strong>/);
+    assert.match(markup, /<li>Plan Time: <code>452 ms<\/code><\/li>/);
+    assert.match(markup, /<table>/);
+    assert.match(markup, /<th>Metric<\/th>/);
+    assert.match(markup, /<del>unverified<\/del>/);
     assert.doesNotMatch(markup, /<script>/);
+    assert.doesNotMatch(markup, /alert\(&quot;profile&quot;\)/);
+    assert.doesNotMatch(markup, /href="javascript:/);
     assert.match(markup, /aria-labelledby="profile-analysis-result-title"/);
 });
 
