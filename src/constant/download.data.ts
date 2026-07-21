@@ -2766,6 +2766,7 @@ const SPARK_SAME_SOURCE_2600 =
     'https://downloads.apache.org/doris/spark-connector/26.0.0/apache-doris-spark-connector-26.0.0-src.tgz';
 
 const DORIS_OPERATOR_SOURCE_VERSIONS = [
+    '26.0.0',
     '25.8.0',
     '25.7.0',
     '25.6.0',
@@ -2784,6 +2785,7 @@ const DORIS_OPERATOR_SOURCE_VERSIONS = [
 ];
 
 const DORIS_OPERATOR_BINARY_VERSIONS = [
+    '26.0.0',
     '25.8.0',
     '25.7.0',
     '25.6.0',

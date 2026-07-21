@@ -10,6 +10,43 @@
 
 This document lists Doris Operator release notes in reverse chronological order.
 
+## 26.0.0
+
+Source: [Release Notes 26.0.0](https://github.com/apache/doris-operator/issues/506)
+
+This version improves DDC lifecycle management and reliability, including graceful shutdown rollout for compute groups, configurable readiness probe policies, DCR mTLS support, and clearer DDC health reporting. It also enhances Helm chart configuration and adds several validation and stability fixes.
+
+### Features and Improvements
+
+- Added graceful shutdown rollout for DDC compute groups during rolling updates, scale-down, and delete operations, with a sentinel compatibility gate that falls back to the normal StatefulSet flow for unsupported images. [#502](https://github.com/apache/doris-operator/pull/502)
+- Supported a configurable readiness probe policy for `DorisCluster` and `DorisDisaggregatedCluster` pods. [#486](https://github.com/apache/doris-operator/pull/486)
+- Supported mTLS for DCR. [#483](https://github.com/apache/doris-operator/pull/483)
+- Split the DDC compute group service into an internal headless service and an external service for smoother upgrades and traffic switching. [#484](https://github.com/apache/doris-operator/pull/484)
+- Added component-level secret support to the Helm chart. [#465](https://github.com/apache/doris-operator/pull/465)
+- Exposed `serviceAccount` configuration for deployed pods in the Helm chart. [#470](https://github.com/apache/doris-operator/pull/470)
+
+### Bug Fixes
+
+- Fixed DDC MetaService health aggregation so MetaService degradation is reflected in the cluster health status. [#500](https://github.com/apache/doris-operator/pull/500)
+- Fixed a nil map panic in `CompareConfigmapAndTriggerRestart` when `dcr.Annotations` is nil. [#493](https://github.com/apache/doris-operator/pull/493)
+- Fixed the FE endpoint address JSON tag and regenerated `DorisCluster` CRDs. [#497](https://github.com/apache/doris-operator/pull/497)
+- Rejected invalid `DorisDisaggregatedCluster` FE specs where `feSpec.replicas < feSpec.electionNumber`. [#498](https://github.com/apache/doris-operator/pull/498)
+- Rejected DDC compute group storage template changes before applying immutable StatefulSet volume claim templates. [#496](https://github.com/apache/doris-operator/pull/496)
+- Fixed the default `storage_root_path` in the `DorisDisaggregatedCluster` BE Helm config. [#477](https://github.com/apache/doris-operator/pull/477)
+
+### Reliability
+
+- Rejected using the built-in `admin` account as the operator management user in the `DorisCluster` and `DorisDisaggregatedCluster` webhooks. [#499](https://github.com/apache/doris-operator/pull/499)
+- Added pull request checks for Go formatting, vet/lint checks, operator build, and generated manifests and artifacts. [#501](https://github.com/apache/doris-operator/pull/501)
+
+### Thanks
+
+- [ecniiv](https://github.com/ecniiv)
+- [jonasbrami](https://github.com/jonasbrami)
+- [catpineapple](https://github.com/catpineapple)
+- [JinVei](https://github.com/JinVei)
+- [Al-assad](https://github.com/Al-assad)
+
 ## 25.8.0
 
 Source: [Release Notes 25.8.0](https://github.com/apache/doris-operator/issues/472)
