@@ -17,6 +17,18 @@ This document introduces the support for reading and writing ORC file formats in
 * Writing data during Export.
 * Writing data with Outfile.
 
+## Timestamp Fractional-Second Precision
+
+ORC timestamps can store nanoseconds, while Doris `DATETIMEV2` and `TIMESTAMPTZ` support up to microseconds. FileScannerV2 rounds ORC fractional seconds to the nearest microsecond using round half up in Catalog scans, table-valued functions, and Broker Load:
+
+| ORC value | Doris value |
+|---|---|
+| `2024-01-01 00:00:00.123456499` | `2024-01-01 00:00:00.123456` |
+| `2024-01-01 00:00:00.123456500` | `2024-01-01 00:00:00.123457` |
+| `2024-01-01 00:00:00.999999500` | `2024-01-01 00:00:01.000000` |
+
+Both `DATETIMEV2` and `TIMESTAMPTZ` mappings use this rule, including a carry into the next second. Row decoding, statistics conversion, and predicate pushdown use matching boundaries. When ORC statistics do not have enough precision to represent a rounded boundary exactly, Doris widens the pruning boundary conservatively. If a timestamp predicate such as `!=` cannot be represented safely, Doris skips that search argument and evaluates the predicate on decoded rows. This can reduce pruning for that predicate, but prevents valid rows from being incorrectly skipped.
+
 ## Supported Compression Formats
 
 * uncompressed
