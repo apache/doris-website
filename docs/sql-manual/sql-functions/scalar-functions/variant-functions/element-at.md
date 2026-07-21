@@ -29,7 +29,7 @@ ELEMENT_AT(container, key_or_index)
   - For `MAP`: The key type (`K`) of the `MAP`, which can be any supported primitive type.  
   - For `STRUCT`: A constant integer field position (starting from **1**) or a constant string field name (matched **case-insensitively**).  
   - For `VARIANT` object access: A string key.
-  - For a VARIANT array on `ColumnVariantV2`: An integer index; non-negative indexes are 0-based and negative indexes count backward from the end.
+  - For a VARIANT array in Doris 4.2 and later: An integer index; non-negative indexes are 0-based and negative indexes count backward from the end.
 
 ## Return Value
 
@@ -43,12 +43,11 @@ ELEMENT_AT(container, key_or_index)
 ## Notes
 
 1. **ARRAY indexes start from 1**, not 0.
-2. When `enable_variant_v2` is enabled, non-negative indexes into a VARIANT array start from `0`; `0` is the first element and `-1` is the last.
+2. In Doris 4.2 and later, non-negative indexes into a VARIANT array start from `0`; `0` is the first element and `-1` is the last.
 3. Negative indexes are supported for ARRAY and VARIANT array access: `-1` represents the last element, `-2` the second-to-last, and so on.
 4. The `ELEMENT_AT(container, key_or_index)` function behaves the same as `container[key_or_index]` (see examples for details).
 
 ```sql
-SET enable_variant_v2 = true;
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 0);  -- 10
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 1);  -- 20
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30

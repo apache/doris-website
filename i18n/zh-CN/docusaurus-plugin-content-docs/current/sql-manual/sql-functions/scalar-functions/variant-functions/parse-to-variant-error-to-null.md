@@ -1,71 +1,90 @@
 ---
 {
-    "title": "PARSE_TO_VARIANT_ERROR_TO_NULL",
+    "title": "PARSE_TO_VARIANT_ERROR_TO_NULL（解析失败返回 NULL）",
     "language": "zh-CN",
-    "description": "将 JSON 文本解析为 VARIANT 值，非法输入返回 SQL NULL。"
+    "description": "PARSE_TO_VARIANT_ERROR_TO_NULL 将完整 JSON 值解析为 VARIANT，并在解析或校验失败时返回 SQL NULL，而不是使当前查询失败。"
 }
 ---
 
 ## 功能
 
-`PARSE_TO_VARIANT_ERROR_TO_NULL` 将 JSON 文本解析为 `VARIANT`。输入不是合法 JSON 时返回 SQL `NULL`，不会使查询失败。
+`PARSE_TO_VARIANT_ERROR_TO_NULL` 将一个完整 JSON 值解析为 `VARIANT`。函数名中的 `ERROR_TO_NULL` 表示：发生解析或校验错误时返回 SQL `NULL`，而不是使查询失败。该函数自 Doris 4.2 起支持。
 
 ## 语法
 
 ```sql
-PARSE_TO_VARIANT_ERROR_TO_NULL(json_text)
+PARSE_TO_VARIANT_ERROR_TO_NULL(<json_value>)
 ```
 
 ## 参数
 
-- `json_text`：包含一个完整 JSON 值的 `VARCHAR` 表达式。
+| 参数 | 说明 |
+| --- | --- |
+| `<json_value>` | 包含一个完整 JSON 值的 `CHAR`、`VARCHAR` 或 `STRING` 表达式，也可以是 `JSON`/`JSONB` 表达式。JSON/JSONB 输入会先转换为 JSON 文本，再解析为 VARIANT。 |
 
 ## 返回值
 
-- 返回可为 NULL 的 `VARIANT` 值。
+返回可为 NULL 的 `VARIANT` 值。
+
+- 合法输入返回解析后的 VARIANT 值。
+- 非法 JSON 或其他解析、校验错误返回 SQL `NULL`。
 - 输入为 SQL `NULL` 时返回 SQL `NULL`。
-- 输入为非法 JSON 时返回 SQL `NULL`。
-- 合法 JSON `null` 仍然是 Variant/JSON `null`，与 SQL `NULL` 不同。
-
-## 实验性行为
-
-`ColumnVariantV2` 是实验性的、仅用于计算的执行路径，默认关闭。可以在当前 FE session 中执行以下语句开启：
-
-```sql
-SET enable_variant_v2 = true;
-```
-
-该 session variable 只改变表达式结果的执行类型，不改变表存储、读写器或 Compaction 使用的物理 `VARIANT` 类型。
+- 合法的 JSON 字面量 `null` 返回 Variant/JSON `null`，不是 SQL `NULL`。
 
 ## 示例
 
-### 保留合法值，将非法 JSON 转为 NULL
+保留合法值，并把非法 JSON 转换为 SQL `NULL`：
 
 ```sql
-SELECT PARSE_TO_VARIANT_ERROR_TO_NULL('{\"id\": 1}') AS valid_value,
-       PARSE_TO_VARIANT_ERROR_TO_NULL('{\"id\":') AS invalid_value,
-       PARSE_TO_VARIANT_ERROR_TO_NULL(NULL) AS sql_null_value;
+SELECT CAST(
+           PARSE_TO_VARIANT_ERROR_TO_NULL('{"id": 1}')
+           AS STRING
+       ) AS valid_value,
+       PARSE_TO_VARIANT_ERROR_TO_NULL('{"id":') IS NULL AS invalid_is_null,
+       PARSE_TO_VARIANT_ERROR_TO_NULL(NULL) IS NULL AS input_is_null;
 ```
 
-第一个表达式返回 VARIANT 对象，第二个和第三个表达式返回 SQL `NULL`。
+```text
++-------------+-----------------+---------------+
+| valid_value | invalid_is_null | input_is_null |
++-------------+-----------------+---------------+
+| {"id":1}    |               1 |             1 |
++-------------+-----------------+---------------+
+```
 
-### 解析数组并访问元素
+解析 JSON/JSONB 输入：
 
 ```sql
-SET enable_variant_v2 = true;
-
-SELECT CAST(ELEMENT_AT(
-           PARSE_TO_VARIANT_ERROR_TO_NULL('[10, 20, 30]'),
-           0
-       ) AS INT) AS first_item,
-       CAST(ELEMENT_AT(
-           PARSE_TO_VARIANT_ERROR_TO_NULL('[10, 20, 30]'),
-           -1
-       ) AS INT) AS last_item;
+SELECT CAST(
+           PARSE_TO_VARIANT_ERROR_TO_NULL(CAST('[10, 20, 30]' AS JSON))
+           AS STRING
+       ) AS value;
 ```
 
-对于 `ColumnVariantV2`，数组非负索引从 0 开始，负数索引从数组末尾倒数。
+```text
++------------+
+| value      |
++------------+
+| [10,20,30] |
++------------+
+```
 
-### 选择严格解析或容错解析
+JSON `null` 与 SQL `NULL` 仍然不同：
 
-如果非法 JSON 应该让查询失败并暴露错误，请使用 [PARSE_TO_VARIANT](./parse-to-variant)；如果非法 JSON 应该转换为 SQL `NULL` 并继续处理其他行，请使用本函数。
+```sql
+SELECT PARSE_TO_VARIANT_ERROR_TO_NULL('null') IS NULL AS json_null_is_sql_null,
+       PARSE_TO_VARIANT_ERROR_TO_NULL('{') IS NULL AS error_is_sql_null;
+```
+
+```text
++-----------------------+-------------------+
+| json_null_is_sql_null | error_is_sql_null |
++-----------------------+-------------------+
+|                     0 |                 1 |
++-----------------------+-------------------+
+```
+
+## 使用说明
+
+- 如果非法输入应该使查询失败并暴露数据质量问题，请使用 [PARSE_TO_VARIANT](./parse-to-variant)。
+- 本函数只会把解析和校验错误转换为 SQL `NULL`，不会改变合法 JSON `null` 的含义。

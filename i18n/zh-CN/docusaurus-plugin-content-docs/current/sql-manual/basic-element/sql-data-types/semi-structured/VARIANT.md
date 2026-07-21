@@ -69,78 +69,125 @@ WHERE ARRAY_CONTAINS(CAST(v['tags'] AS ARRAY<TEXT>), 'Doris');
 
 ## 创建和访问值
 
-VARIANT 值可以从 JSON 文本或带确定类型的 SQL 表达式创建：
+:::info 版本说明
+本节所述行为适用于 Doris 4.2 及后续版本。
+:::
 
-- 如果字符串中包含需要解析的 JSON 文本，请使用 [PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant)。
-- 如果要将 SQL 值转换为带类型的 Variant 值，请使用 `CAST(expression AS VARIANT)`。字符串 CAST 不会把字符串按 JSON 解析。
+VARIANT 值可以从 JSON 文本、JSON/JSONB 值或带确定类型的 SQL 表达式创建：
+
+- 如果要将字符串或 JSON/JSONB 表达式解析为结构化 VARIANT 值，请使用 [PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant)。
+- 如果要将受支持的 SQL 值转换为 VARIANT，请使用 `CAST(expression AS VARIANT)`。字符串 CAST 是否解析 JSON 由 `enable_variant_string_cast_parse` 控制，详见 [CAST 规则](#cast-规则)。
 
 ### 解析 JSON 文本
 
 ```sql
-SELECT PARSE_TO_VARIANT('{\"user\": {\"id\": 42}, \"active\": true}');
+SELECT PARSE_TO_VARIANT('{"user": {"id": 42}, "active": true}');
 SELECT PARSE_TO_VARIANT('[10, 20, 30]');
+SELECT PARSE_TO_VARIANT(CAST('{"user": {"id": 42}}' AS JSON));
 ```
 
 如果非法 JSON 应该返回 SQL `NULL` 而不是使查询失败，请使用 [PARSE_TO_VARIANT_ERROR_TO_NULL](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant-error-to-null)。
 
 ### 访问对象和数组
 
-对象字段可以使用字符串 key 访问。开启 VARIANT V2 后，VARIANT 数组的非负索引从 0 开始，并支持从数组末尾倒数的负数索引。提取出的值仍是 `VARIANT`，如需按确定类型比较或聚合，请先 CAST。
+对象字段可以使用字符串 key 访问。在 Doris 4.2 及后续版本中，VARIANT 数组的非负索引从 0 开始，并支持从数组末尾倒数的负数索引。提取出的值仍是 `VARIANT`，如需按确定类型比较、计算或聚合，请先 CAST。
 
 ```sql
-SET enable_variant_v2 = true;
-
-SELECT CAST(PARSE_TO_VARIANT('{\"user\": {\"id\": 42}}')['user']['id'] AS BIGINT);
+SELECT CAST(PARSE_TO_VARIANT('{"user": {"id": 42}}')['user']['id'] AS BIGINT);
 SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), 0);  -- 10
 SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), -1); -- 30
 ```
 
 对象和数组访问的详细说明请参见 [ELEMENT_AT](../../../sql-functions/scalar-functions/variant-functions/element-at)。
-## CAST 语义
 
-`CAST` 会保留 SQL 字符串和 JSON 文本之间的区别：
+## CAST 规则
 
-- `CAST(string AS VARIANT)` 创建根值为“带类型的 Variant 字符串”的 Variant，**不会**解析 JSON。因此，`'{"id": 1}'` 会保持为一个字符串值，非法 JSON 文本对这个 CAST 仍然是合法输入。
-- `PARSE_TO_VARIANT(string)` 才会把字符串按 JSON 解析；解析为对象或数组后，才能继续使用路径访问或 `ELEMENT_AT`。如果非法 JSON 需要返回 SQL `NULL`，请使用 `PARSE_TO_VARIANT_ERROR_TO_NULL`。
-- `CAST(PARSE_TO_VARIANT(...) AS scalar)` 会在值形状和范围兼容时，把已经解析的 Variant 转换为确定的 SQL 标量类型。这个 CAST 不是 JSON 解析器，形状或范围不兼容时可能失败。
-- `CAST(typed_expression AS VARIANT)` 会把受支持的带类型 SQL 值转换为 Variant。开启 `enable_variant_v2` 只会改变当前 session 的执行表示，不会改变磁盘上的 Variant 存储、reader、writer 或 compaction。
+VARIANT 的 CAST 包括两个方向：把受支持的 SQL 值转换为 VARIANT，以及把 VARIANT 中兼容的值转换为具体 SQL 类型。
+
+### 其他类型 CAST 为 VARIANT
+
+| 源类型 | 行为 |
+| --- | --- |
+| `CHAR`、`VARCHAR`、`STRING` | 查询 session 默认按 JSON 解析输入。将 `enable_variant_string_cast_parse` 设为 `false` 后，输入会保留为 VARIANT 字符串。 |
+| `JSON` / `JSONB` | 将结构化 JSON 值直接转换为 VARIANT。 |
+| Boolean、整数、浮点数和 Decimal | 保留带类型的标量值，但需满足下文的 Decimal 限制。 |
+| `DATE`、`DATETIME`、`TIMESTAMPTZ`、`IPV4`、`IPV6` | 保留对应的逻辑类型和值。 |
+| `ARRAY<T>` | 递归转换每个受支持的元素，并保留 SQL NULL 元素。 |
+| `MAP` | 不支持。 |
+
+查询 session 中，`enable_variant_string_cast_parse` 默认为 `true`。如果 SQL 文本需要明确表达“始终解析 JSON”的意图，建议直接使用 `PARSE_TO_VARIANT`，避免依赖 session 设置。
 
 ```sql
-SET enable_variant_v2 = true;
+-- 默认行为：把字符串按 JSON 解析。
+SELECT CAST('{"id": 1}' AS VARIANT) AS parsed_object;
+-- {"id":1}
 
-SELECT CAST('{"id": 1}' AS VARIANT) AS typed_string,
-       PARSE_TO_VARIANT('{"id": 1}') AS parsed_object;
--- typed_string：字面量字符串 {"id": 1}
--- parsed_object：{"id": 1}
+-- 将相同输入保留为 VARIANT 字符串根值。
+SET enable_variant_string_cast_parse = false;
+SELECT CAST(CAST('{"id": 1}' AS VARIANT) AS STRING) AS string_value,
+       VARIANT_TYPE(CAST('{"id": 1}' AS VARIANT)) AS root_type;
+-- string_value：{"id": 1}；root_type：string
 
-SELECT ELEMENT_AT(CAST('{"id": 1}' AS VARIANT), 'id') AS from_string,
-       ELEMENT_AT(PARSE_TO_VARIANT('{"id": 1}'), 'id') AS from_json;
--- from_string：NULL；from_json：1
-
-SELECT CAST(PARSE_TO_VARIANT('42') AS BIGINT) AS id;
--- id：42
-
-SELECT CAST('{invalid json' AS VARIANT) AS still_a_string;
--- 成功，因为 CAST 不会把输入按 JSON 解析
+-- JSON/JSONB 输入仍保留结构。
+SET enable_variant_string_cast_parse = true;
+SELECT CAST(CAST('{"id": 1}' AS JSON) AS VARIANT) AS parsed_object;
+-- {"id":1}
 ```
 
-不要使用 `CAST(string AS VARIANT)` 做 JSON 校验。需要严格解析时使用 `PARSE_TO_VARIANT`；需要把格式错误转换为 SQL `NULL` 时使用 `PARSE_TO_VARIANT_ERROR_TO_NULL`。
+开启字符串解析时，非法 JSON 会使 CAST 失败。如果希望将非法输入转换为 SQL `NULL`，请使用 `PARSE_TO_VARIANT_ERROR_TO_NULL`。
 
-## Equality 语义
+### VARIANT CAST 为其他类型
 
-开启 VARIANT V2 后，支持的分组、去重和集合运算会按 logical value 判断相等性，而不是按来源 SQL 类型或表示形式：
+VARIANT 可以 CAST 为兼容的标量、JSON/JSONB 或数组类型：
+
+| 目标类型 | 行为 |
+| --- | --- |
+| Boolean、整数、浮点数、Decimal、日期时间和 IP 类型 | 转换兼容的标量根值；对象形状不兼容、文本非法或数值越界时，按照相应 CAST 模式报错或返回 SQL `NULL`。 |
+| `STRING` | 标量根值返回对应文本，对象和数组返回 JSON 文本。Variant/JSON `null` 返回字符串 `null`，外层 SQL `NULL` 仍是 SQL `NULL`。 |
+| `JSON` / `JSONB` | 将可表示的 VARIANT 值转换为结构化 JSON/JSONB。 |
+| `ARRAY<T>` | 将 VARIANT 数组逐元素转换为 `T`；不兼容元素遵循目标类型的 CAST 规则。 |
+| `MAP` | 不支持。 |
+
+```sql
+SELECT CAST(PARSE_TO_VARIANT('42') AS BIGINT) AS id;
+-- 42
+
+SELECT CAST(PARSE_TO_VARIANT('[1, null, 3]') AS ARRAY<INT>) AS values;
+-- [1, NULL, 3]
+
+SELECT CAST(PARSE_TO_VARIANT('{"id": 1}') AS JSON) AS json_value;
+-- {"id":1}
+```
+
+### Decimal 与日期时间转换限制
+
+| Doris 输入类型 | VARIANT 支持情况 |
+| --- | --- |
+| 旧版 `DECIMALV2` | 精确保留 precision 不超过 27、scale 不超过 9 的值。 |
+| `DECIMAL(p, s)` | 精确保留 `1 <= p <= 38` 且 `0 <= s <= p` 的值；不支持需要超过 38 位 precision 的值。 |
+| `DATE` | 保留为不含时间和时区的日历日期。 |
+| 旧版 `DATETIME` | 保留到秒，不进行时区调整。 |
+| `DATETIME(p)` | 支持 `0 <= p <= 6`，不进行时区调整。 |
+| `TIMESTAMPTZ(p)` | 支持 `0 <= p <= 6`，保留带时区调整的 timestamp 语义。 |
+| `TIME` | 不支持作为 VARIANT 输入。 |
+
+源值还必须满足对应 Doris 类型本身的合法性要求。precision 超限、日期非法或值不兼容时会报错，不会自动修复。
+
+## 相等性与 Hash 语义
+
+在 Doris 4.2 及后续版本中，分组、去重和集合运算会按逻辑值判断相等性，而不是按来源 SQL 类型或物理表示：
 
 - 等价的整数数值表示相等。
-- Decimal 尾随零不影响值。
+- Decimal 尾随零不影响值，因此 `1.20` 与 `1.2` 相等。
 - `+0`、`-0` 与整数零相等。
 - 对象 key 的顺序不影响相等性，但数组元素顺序会影响相等性。
 - Variant/JSON `null` 与 SQL `NULL` 不同。
 
-这些规则适用于 `GROUP BY`、`DISTINCT`、`COUNT(DISTINCT ...)`、`INTERSECT`、`EXCEPT` 和 `UNION DISTINCT` 等已支持的操作。这并不意味着根 Variant 比较谓词已经可用：直接执行 `VARIANT = VARIANT` 或排序比较仍不支持。
+Hash 类算子使用同一套 canonical 逻辑表示计算 key。因此，只要两个值按上述规则相等，无论来源是解析后的 JSON 还是带类型的 CAST，都会得到相同的内部 Hash Key。该 Hash 只用于 Doris 内部执行，不是稳定的用户侧校验值。
+
+这些规则适用于 `GROUP BY`、`DISTINCT`、`COUNT(DISTINCT ...)`、`INTERSECT`、`EXCEPT` 和 `UNION DISTINCT` 等已支持的操作，但不会开放根 VARIANT 比较谓词：直接执行 `VARIANT = VARIANT` 或排序比较仍不支持。
 
 ```sql
-SET enable_variant_v2 = true;
-
 -- 1 和 1.0 只有一个 distinct logical value。
 SELECT COUNT(DISTINCT value) AS distinct_count
 FROM (
@@ -153,9 +200,9 @@ FROM (
 -- 对象 key 顺序被忽略；数组顺序会保留。
 SELECT COUNT(DISTINCT value) AS distinct_count
 FROM (
-    SELECT PARSE_TO_VARIANT('{\"a\": 1, \"b\": 2}') AS value
+    SELECT PARSE_TO_VARIANT('{"a": 1, "b": 2}') AS value
     UNION ALL
-    SELECT PARSE_TO_VARIANT('{\"b\": 2, \"a\": 1}') AS value
+    SELECT PARSE_TO_VARIANT('{"b": 2, "a": 1}') AS value
 ) AS object_values;
 -- distinct_count: 1
 
@@ -168,7 +215,13 @@ FROM (
 -- distinct_count: 2
 ```
 
-更多示例、支持的运算、数据类型行为和当前限制，请参见 [VARIANT V2 行为与语义](./variant-v2-compute-semantics)。
+## NULL 语义
+
+SQL `NULL` 与 Variant/JSON `null` 是不同的值：
+
+- SQL `NULL` 表示 SQL 值缺失，并遵循普通 SQL NULL 传播规则。
+- Variant/JSON `null` 是一个 VARIANT 值，例如 `PARSE_TO_VARIANT('null')` 的返回值。
+- `PARSE_TO_VARIANT_ERROR_TO_NULL` 遇到非法输入时返回 SQL `NULL`，这与成功解析 JSON 字面量 `null` 不同。
 
 ## 基本类型
 
@@ -490,12 +543,26 @@ SELECT v FROM variant_tbl WHERE k = 2;
 
 排序在每一层都会生效——顶层 key 输出为 `a`、`b`、`c`，嵌套 object 内 key 输出为 `x`、`y`。
 
-## 支持的运算与 CAST 规则
+## 支持的运算
 
-默认执行路径保持现有 VARIANT 使用约束：
+在 Doris 4.2 及后续版本中，整个 VARIANT 值支持基于 Hash 的分组和去重，但不支持比较、Join Key 或排序语义。
 
-- VARIANT 本身不支持与其他类型直接比较/运算；在默认路径上，两个 VARIANT 之间也不支持直接比较。
-- 如需比较、过滤、聚合、排序，请对子路径显式或隐式 CAST 到确定类型。
+| 对整个 VARIANT 值执行的操作 | 支持情况 | 说明 |
+| --- | --- | --- |
+| `GROUP BY` | 支持 | 使用上文所述的逻辑相等与 canonical Hash 规则。 |
+| `DISTINCT`、`COUNT(DISTINCT ...)` | 支持 | 逻辑等价的值会被去重。 |
+| `INTERSECT`、`EXCEPT`、`UNION DISTINCT` | 支持 | 使用相同的逻辑相等与 Hash 语义。 |
+| `COUNT(*)`、`COUNT(variant)` | 支持 | `COUNT(variant)` 按普通 SQL 规则排除外层 SQL `NULL`。 |
+| `IF`、`CASE`、`IFNULL`、`COALESCE` | 支持 | 条件表达式可以返回和消费 VARIANT 值。 |
+| 临时 `ARRAY`、`MAP` 或 `STRUCT` 表达式中包含 VARIANT | 支持 | 这不表示持久化表结构可以使用这些嵌套类型。 |
+| `EXPLODE_VARIANT_ARRAY`、对 `ARRAY<VARIANT>` 使用 `EXPLODE`/`EXPLODE_OUTER` | 支持 | 输出 VARIANT 元素，并保留 SQL `NULL` 与 Variant/JSON `null` 的区别。 |
+| `=`、`!=`、`<=>`、`<`、`<=`、`>`、`>=` | 不支持 | 请在两侧提取可比较的子路径，并 CAST 为具体类型。 |
+| Join Key | 不支持 | 请把两侧所需子路径 CAST 为相同的具体类型。 |
+| `ORDER BY`、Sort/TopN Key | 不支持 | 排序前请先 CAST 所需子路径。 |
+| 窗口分区键或排序键 | 不支持 | 整个 VARIANT 值不能作为窗口 Key。 |
+| `MIN(variant)`、`MAX(variant)` | 不支持 | 聚合前请先 CAST 标量子路径。 |
+
+如需比较、过滤、计算或排序，请提取所需子路径，再显式或隐式 CAST 为具体类型：
 
 ```sql
 -- 显式 CAST
@@ -507,40 +574,6 @@ SELECT * FROM tbl WHERE CAST(v['date'] AS DATE) = '2021-01-02';
 SELECT * FROM tbl WHERE v['bool'];
 SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 ```
-
-- 在默认路径上，不应将整个 VARIANT 直接用于 `ORDER BY`、`GROUP BY`、`JOIN KEY` 或聚合参数；请先对子路径 CAST。
-- 字符串类型可隐式转换为 VARIANT。
-
-[实验性 V2 行为](./variant-v2-compute-semantics)为分组和集合运算增加 logical-value 语义，但不会因此开放根 VARIANT 比较谓词或 Variant Join Key。
-
-| VARIANT         | Castable | Coercible |
-| --------------- | -------- | --------- |
-| `ARRAY`         | ✔        | ❌         |
-| `BOOLEAN`       | ✔        | ✔         |
-| `DATE/DATETIME` | ✔        | ✔         |
-| `FLOAT`         | ✔        | ✔         |
-| `IPV4/IPV6`     | ✔        | ✔         |
-| `DECIMAL`       | ✔        | ✔         |
-| `MAP`           | ❌        | ❌         |
-| `TIMESTAMP`     | ✔        | ✔         |
-| `VARCHAR`       | ✔        | ✔         |
-| `JSON`          | ✔        | ✔         |
-
-## 实验性 VARIANT V2 行为
-
-:::caution 实验特性
-VARIANT V2 默认关闭，只影响当前 session 的执行行为。现有数据和 Variant 持久化格式不会改变。
-:::
-
-通过 session variable `enable_variant_v2` 为当前 session 开启该功能：
-
-```sql
-SET enable_variant_v2 = true;
-```
-
-开启后，V2 会为支持的 Variant 值提供 logical-value 分组、去重和集合运算，并明确区分 JSON 解析和字符串 CAST。根 Variant 比较谓词、Variant Join Key、Sort/TopN Key 以及 `MIN`/`MAX` 参数仍然不受支持。
-
-行为变化、Equality、CAST 与解析、Decimal 和日期时间语义、示例及完整限制，请参见 [VARIANT V2 行为与语义](./variant-v2-compute-semantics)。
 
 ## 宽列
 
@@ -587,7 +620,7 @@ SET enable_variant_v2 = true;
 - **大宽表优化**：对于会通过子列列式提取（Subcolumnization）生成大量独立子列的宽表场景（例如超过 2000 列），强烈建议开启 **V3 存储格式**。通过在建表 `PROPERTIES` 中指定 `"storage_format" = "V3"`，可以将列元数据与 Segment Footer 解耦，加快文件打开速度并降低内存占用。
 - JSON key 长度 ≤ 255。
 - 不支持作为主键或排序键。
-- 不支持与其他类型嵌套（如 `Array<Variant>`、`Struct<Variant>`）。
+- 持久化表结构不能把 VARIANT 嵌套在其他类型中（如 `ARRAY<VARIANT>`、`STRUCT<VARIANT>`）；临时表达式结果可以使用上表列出的嵌套容器能力。
 - 在未启用 DOC mode 时，读取整个 VARIANT 列会扫描所有子字段。对于超宽列，一般不建议直接 `SELECT variant_col`；如果整列读取是主要查询模式，建议优先使用 DOC mode。若列包含大量子字段，也可额外存储原始 JSON 的 STRING/JSONB 列，以优化如 `LIKE` 等整体匹配：
 
 ```sql

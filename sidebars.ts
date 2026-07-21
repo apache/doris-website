@@ -1264,11 +1264,6 @@ const sidebars: SidebarsConfig = {
                                                     id: 'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
                                                     label: 'VARIANT Reference',
                                                 },
-                                                {
-                                                    type: 'doc',
-                                                    id: 'sql-manual/basic-element/sql-data-types/semi-structured/variant-v2-compute-semantics',
-                                                    label: 'V2 Behavior and Semantics',
-                                                },
                                             ],
                                         },
                                     ],
@@ -1872,6 +1867,8 @@ const sidebars: SidebarsConfig = {
                                     label: 'Variant Functions',
                                     items: [
                                         'sql-manual/sql-functions/scalar-functions/variant-functions/element-at',
+                                        'sql-manual/sql-functions/scalar-functions/variant-functions/parse-to-variant',
+                                        'sql-manual/sql-functions/scalar-functions/variant-functions/parse-to-variant-error-to-null',
                                         'sql-manual/sql-functions/scalar-functions/variant-functions/variant-type',
                                     ],
                                 },

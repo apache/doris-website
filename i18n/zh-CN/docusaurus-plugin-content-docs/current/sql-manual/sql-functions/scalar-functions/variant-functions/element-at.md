@@ -2,7 +2,7 @@
 {
     "title": "ELEMENT_AT",
     "language": "zh-CN",
-    "description": "ELEMENTAT 函数用于从数组或 map 中按指定的索引或键提取对应的元素值。"
+    "description": "ELEMENT_AT 函数按索引、键或字段名从 ARRAY、MAP、STRUCT 或 VARIANT 中提取元素，并说明各类型的索引起点、负索引语义与越界行为。"
 }
 ---
 
@@ -29,7 +29,7 @@ ELEMENT_AT(container, key_or_index)
   - 对于 `MAP`：为 `MAP` 中的键类型（`K`），可为任意支持的基础类型。
   - 对于 `STRUCT`：为常量整数（字段位置，从 **1** 开始）或常量字符串（字段名，按**大小写不敏感**匹配）。
   - 对于 `VARIANT` 对象访问：为字符串类型的 key；
-  - 对于 `ColumnVariantV2` 中的 VARIANT 数组：为整数索引，非负索引从 0 开始，负数索引从数组末尾倒数。
+  - 对于 Doris 4.2 及后续版本中的 VARIANT 数组：为整数索引，非负索引从 0 开始，负数索引从数组末尾倒数。
 
 ## 返回值
 
@@ -43,12 +43,11 @@ ELEMENT_AT(container, key_or_index)
 ## 使用说明
 
 1. **ARRAY 数组索引从 1 开始**，不是从 0 开始；
-2. 开启 `enable_variant_v2` 后，VARIANT 数组的非负索引从 `0` 开始，`0` 表示第一个元素，`-1` 表示最后一个元素；
+2. 在 Doris 4.2 及后续版本中，VARIANT 数组的非负索引从 `0` 开始，`0` 表示第一个元素，`-1` 表示最后一个元素；
 3. ARRAY 和 VARIANT 数组都支持负数索引，`-1` 表示最后一个元素，`-2` 表示倒数第二个，以此类推；
 4. `ELEMENT_AT(container, key_or_index)` 函数的功能与 `container[key_or_index]` 作用一致（详细见示例）。
 
 ```sql
-SET enable_variant_v2 = true;
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 0);  -- 10
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 1);  -- 20
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
@@ -138,5 +137,3 @@ SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
     |                                        |
     +----------------------------------------+
     ```
-
-

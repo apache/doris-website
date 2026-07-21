@@ -1,71 +1,90 @@
 ---
 {
-    "title": "PARSE_TO_VARIANT_ERROR_TO_NULL",
+    "title": "PARSE_TO_VARIANT_ERROR_TO_NULL (Return NULL on Error)",
     "language": "en",
-    "description": "Parses JSON text into a VARIANT value and returns SQL NULL for invalid input."
+    "description": "Parses one complete JSON value into VARIANT and returns SQL NULL when parsing or validation fails."
 }
 ---
 
-## Function
+## Description
 
-`PARSE_TO_VARIANT_ERROR_TO_NULL` parses JSON text into `VARIANT`. Invalid JSON returns SQL `NULL` instead of failing the query.
+`PARSE_TO_VARIANT_ERROR_TO_NULL` parses one complete JSON value into `VARIANT`. The `ERROR_TO_NULL` suffix means that a parsing or validation error returns SQL `NULL` instead of failing the query. This function is available in Doris 4.2 and later.
 
 ## Syntax
 
 ```sql
-PARSE_TO_VARIANT_ERROR_TO_NULL(json_text)
+PARSE_TO_VARIANT_ERROR_TO_NULL(<json_value>)
 ```
 
 ## Parameters
 
-- `json_text`: A `VARCHAR` expression containing one complete JSON value.
+| Parameter | Description |
+| --- | --- |
+| `<json_value>` | A `CHAR`, `VARCHAR`, or `STRING` expression containing one complete JSON value, or a `JSON`/`JSONB` expression. JSON/JSONB input is converted to JSON text and then parsed as VARIANT. |
 
 ## Return Value
 
-- Returns a nullable `VARIANT` value.
+Returns a nullable `VARIANT` value.
+
+- Valid input returns the parsed VARIANT value.
+- Invalid JSON or another parsing or validation error returns SQL `NULL`.
 - SQL `NULL` input returns SQL `NULL`.
-- Invalid JSON returns SQL `NULL`.
-- Valid JSON `null` remains Variant/JSON `null`, distinct from SQL `NULL`.
+- The valid JSON literal `null` returns Variant/JSON `null`, not SQL `NULL`.
 
-## Experimental behavior
+## Example
 
-`ColumnVariantV2` is an experimental, compute-only execution path. It is disabled by default and selected for the current FE session with:
-
-```sql
-SET enable_variant_v2 = true;
-```
-
-The session variable changes the execution type of the expression result only. It does not change the physical `VARIANT` type used by table storage, readers, writers, or compaction.
-
-## Examples
-
-### Keep valid values and null invalid JSON
+Keep valid values and convert invalid JSON to SQL `NULL`:
 
 ```sql
-SELECT PARSE_TO_VARIANT_ERROR_TO_NULL('{\"id\": 1}') AS valid_value,
-       PARSE_TO_VARIANT_ERROR_TO_NULL('{\"id\":') AS invalid_value,
-       PARSE_TO_VARIANT_ERROR_TO_NULL(NULL) AS sql_null_value;
+SELECT CAST(
+           PARSE_TO_VARIANT_ERROR_TO_NULL('{"id": 1}')
+           AS STRING
+       ) AS valid_value,
+       PARSE_TO_VARIANT_ERROR_TO_NULL('{"id":') IS NULL AS invalid_is_null,
+       PARSE_TO_VARIANT_ERROR_TO_NULL(NULL) IS NULL AS input_is_null;
 ```
 
-The first expression returns a VARIANT object. The second and third expressions return SQL `NULL`.
+```text
++-------------+-----------------+---------------+
+| valid_value | invalid_is_null | input_is_null |
++-------------+-----------------+---------------+
+| {"id":1}    |               1 |             1 |
++-------------+-----------------+---------------+
+```
 
-### Parse arrays and access elements
+Parse JSON/JSONB input:
 
 ```sql
-SET enable_variant_v2 = true;
-
-SELECT CAST(ELEMENT_AT(
-           PARSE_TO_VARIANT_ERROR_TO_NULL('[10, 20, 30]'),
-           0
-       ) AS INT) AS first_item,
-       CAST(ELEMENT_AT(
-           PARSE_TO_VARIANT_ERROR_TO_NULL('[10, 20, 30]'),
-           -1
-       ) AS INT) AS last_item;
+SELECT CAST(
+           PARSE_TO_VARIANT_ERROR_TO_NULL(CAST('[10, 20, 30]' AS JSON))
+           AS STRING
+       ) AS value;
 ```
 
-For `ColumnVariantV2`, non-negative array indexes are zero-based and negative indexes count from the end.
+```text
++------------+
+| value      |
++------------+
+| [10,20,30] |
++------------+
+```
 
-### Choose strict or tolerant parsing
+JSON `null` and SQL `NULL` remain distinct:
 
-Use [PARSE_TO_VARIANT](./parse-to-variant) when invalid JSON should stop the query and surface an error. Use this function when invalid JSON should become SQL `NULL` and the remaining rows should continue.
+```sql
+SELECT PARSE_TO_VARIANT_ERROR_TO_NULL('null') IS NULL AS json_null_is_sql_null,
+       PARSE_TO_VARIANT_ERROR_TO_NULL('{') IS NULL AS error_is_sql_null;
+```
+
+```text
++-----------------------+-------------------+
+| json_null_is_sql_null | error_is_sql_null |
++-----------------------+-------------------+
+|                     0 |                 1 |
++-----------------------+-------------------+
+```
+
+## Usage Notes
+
+- Use [PARSE_TO_VARIANT](./parse-to-variant) when invalid input should fail the query and expose the data-quality error.
+- This function converts only parsing and validation failures to SQL `NULL`; it does not change the meaning of a valid JSON `null` value.
