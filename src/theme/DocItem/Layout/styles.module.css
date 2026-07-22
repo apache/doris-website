@@ -3,6 +3,12 @@
   margin-top: 0;
 }
 
+.lastUpdated {
+  margin-bottom: 1rem;
+  font-size: smaller;
+  font-style: italic;
+}
+
 @media (min-width: 997px) {
   .docItemCol {
     max-width: 75% !important;
