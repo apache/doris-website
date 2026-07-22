@@ -234,8 +234,8 @@ const config = {
                 path: 'community',
                 routeBasePath: '/community',
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
-                // Community docs are unversioned; the footer always shows their
-                // last-updated date (see src/theme/DocItem/Footer).
+                // Community docs are unversioned; the document header always shows their
+                // last-updated date (see src/theme/DocItem/Layout).
                 showLastUpdateTime: true,
             }),
         ],
@@ -348,7 +348,7 @@ const config = {
                     // },
                     showLastUpdateAuthor: false,
                     // Date comes from the injected `last_update` front matter
-                    // (markdown.parseFrontMatter). The DocItem footer limits
+                    // (markdown.parseFrontMatter). The DocItem layout limits
                     // which versions actually display it (Dev + latest stable).
                     showLastUpdateTime: true,
                     remarkPlugins: [markdownBoldPlugin, require('remark-math')],

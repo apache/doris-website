@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { useWindowSize } from '@docusaurus/theme-common';
-import { useDoc } from '@docusaurus/plugin-content-docs/client';
+import { useDoc, useDocsVersion } from '@docusaurus/plugin-content-docs/client';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import DocItemPaginator from '@theme/DocItem/Paginator';
 import Link from '@docusaurus/Link';
@@ -14,6 +14,7 @@ import DocItemTOCDesktop from '@theme/DocItem/TOC/Desktop';
 import DocItemContent from '@theme/DocItem/Content';
 import DocBreadcrumbs from '@theme/DocBreadcrumbs';
 import ContentVisibility from '@theme/ContentVisibility';
+import LastUpdated from '@theme/LastUpdated';
 import type { Props } from '@theme/DocItem/Layout';
 import { DocsEdit } from '../../../components/Icons/docs-edit';
 import MobileSidebarDrawer from './MobileSidebarDrawer';
@@ -51,11 +52,20 @@ function useDocTOC() {
 export default function DocItemLayout({ children }: Props): JSX.Element {
     const docTOC = useDocTOC();
     const { metadata } = useDoc();
+    const { pluginId, version, isLast } = useDocsVersion();
     const {
         i18n: { currentLocale },
     } = useDocusaurusContext();
     const [isNew, setIsNew] = useState(true);
     const isZH = currentLocale === 'zh-CN';
+
+    // Older versioned docs keep their timestamp metadata for indexing, but only
+    // Dev, the latest stable version, and community docs display it.
+    const showLastUpdate =
+        pluginId === 'community' ||
+        (pluginId === 'default' && (version === 'current' || isLast));
+    const canDisplayLastUpdate =
+        showLastUpdate && (metadata.lastUpdatedAt || metadata.lastUpdatedBy);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -75,6 +85,14 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
                         </div>
                         {/* <DocVersionBadge /> */}
                         {docTOC.mobile}
+                        {canDisplayLastUpdate && (
+                            <div className={styles.lastUpdated}>
+                                <LastUpdated
+                                    lastUpdatedAt={metadata.lastUpdatedAt}
+                                    lastUpdatedBy={metadata.lastUpdatedBy}
+                                />
+                            </div>
+                        )}
                         <DocItemContent>{children}</DocItemContent>
                         <DocItemFooter />
                     </article>
