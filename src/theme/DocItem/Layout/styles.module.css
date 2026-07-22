@@ -31,8 +31,8 @@
 
 /* Freeze the search/locale/menu toolbar + breadcrumb at the top on mobile
    so they remain reachable while scrolling. Sits just below the sticky
-   green NavbarNext (64px tall; ~112px when Ask AI wraps to a second row
-   at ≤480px). z-index stays under the navbar (300) but above content. */
+   green NavbarNext (64px tall; 160px when Summit and Ask Me wrap to their
+   own rows at ≤768px). z-index stays under the navbar (300) but above content. */
 @media (max-width: 996px) {
   .mobileStickyHeader {
     position: sticky;
@@ -51,8 +51,8 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .mobileStickyHeader {
-    top: 112px;
+    top: 160px;
   }
 }

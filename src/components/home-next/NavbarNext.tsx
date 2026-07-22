@@ -8,6 +8,7 @@ import './NavbarNext.scss';
 
 const GITHUB_REPO = 'apache/doris';
 const STAR_DISPLAY = `${STAR_COUNT}k`;
+const DORIS_SUMMIT_URL = 'https://apache-doris-summit.org/';
 
 interface DropdownItem {
     label: string;
@@ -181,6 +182,15 @@ export function NavbarNext(): JSX.Element {
                 </div>
 
                 <div className="navbar-next__actions">
+                    <a
+                        href={DORIS_SUMMIT_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="navbar-next__summit"
+                        aria-label="Visit Doris Summit 2026 (opens in a new tab)"
+                    >
+                        <span>Doris Summit 26</span>
+                    </a>
                     <button
                         type="button"
                         id="navbar-ask-ai-btn"

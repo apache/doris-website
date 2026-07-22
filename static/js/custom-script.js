@@ -11,7 +11,7 @@
     y.parentNode.insertBefore(t, y);
 })(window, document, 'clarity', 'script', 'kfyqejiz0g');
 
-// Position the Kapa Ask Me modal below the sticky NavbarNext (64px tall).
+// Position the Kapa Ask Me modal below the sticky NavbarNext.
 // Kapa renders inside a Shadow DOM on `#kapa-widget-container`, so light-DOM
 // CSS can't reach it. We inject a <style> into the shadow root and re-inject
 // if Kapa rebuilds it.
@@ -22,8 +22,8 @@
 // `align-items: center` once content exceeds the viewport.
 (function centerKapaModal() {
     var STYLE_ID = 'doris-kapa-center-modal';
-    // Top padding clears the 64px sticky NavbarNext + 16px gap so the modal
-    // header is never tucked under the navbar when content fills the screen.
+    // Top padding clears the sticky NavbarNext + 16px gap so the modal header
+    // is never tucked under the navbar when content fills the screen.
     var CSS_TEXT =
         '.mantine-Modal-inner{' +
         'align-items:flex-start !important;' +
@@ -46,6 +46,10 @@
         'flex:1 1 auto !important;' +
         'min-height:0 !important;' +
         'overflow-y:auto !important;' +
+        '}' +
+        '@media(max-width:768px){' +
+        '.mantine-Modal-inner{padding-top:176px !important;}' +
+        '.mantine-Modal-content{max-height:calc(100vh - 176px - 2rem) !important;}' +
         '}';
 
     function inject() {
