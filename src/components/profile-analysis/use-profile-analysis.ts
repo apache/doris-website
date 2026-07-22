@@ -1,16 +1,18 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react';
 import { analyzeProfile } from './profile-analysis.api';
-import type { AgentMessage, AnalysisState } from './profile-analysis.types';
+import type { AgentMessage, AnalysisState, ResponseLanguage } from './profile-analysis.types';
 
 interface ProfileAnalysisSnapshot {
     state: AnalysisState;
     file: File | null;
+    language: ResponseLanguage;
     result: AgentMessage | null;
     error: string | null;
 }
 
 type ProfileAnalysisAction =
     | { type: 'select'; file: File | null }
+    | { type: 'set_language'; language: ResponseLanguage }
     | { type: 'start' }
     | { type: 'complete'; result: AgentMessage }
     | { type: 'fail'; error: string };
@@ -18,6 +20,7 @@ type ProfileAnalysisAction =
 export const initialProfileAnalysisSnapshot: ProfileAnalysisSnapshot = {
     state: 'idle',
     file: null,
+    language: 'en',
     result: null,
     error: null,
 };
@@ -34,6 +37,18 @@ export function profileAnalysisReducer(
             return {
                 state: action.file ? 'ready' : 'idle',
                 file: action.file,
+                language: snapshot.language,
+                result: null,
+                error: null,
+            };
+        case 'set_language':
+            if (snapshot.state === 'analyzing') {
+                return snapshot;
+            }
+            return {
+                ...snapshot,
+                language: action.language,
+                state: snapshot.file ? 'ready' : 'idle',
                 result: null,
                 error: null,
             };
@@ -83,6 +98,13 @@ export function useProfileAnalysis(apiBaseUrl: string) {
         dispatch({ type: 'select', file });
     }, []);
 
+    const setLanguage = useCallback((language: ResponseLanguage) => {
+        if (abortControllerRef.current) {
+            return;
+        }
+        dispatch({ type: 'set_language', language });
+    }, []);
+
     const analyze = useCallback(async () => {
         if (!snapshot.file || abortControllerRef.current) {
             return;
@@ -93,7 +115,7 @@ export function useProfileAnalysis(apiBaseUrl: string) {
         dispatch({ type: 'start' });
 
         try {
-            const result = await analyzeProfile(apiBaseUrl, snapshot.file, controller.signal);
+            const result = await analyzeProfile(apiBaseUrl, snapshot.file, snapshot.language, controller.signal);
             if (mountedRef.current && abortControllerRef.current === controller) {
                 dispatch({ type: 'complete', result });
             }
@@ -106,7 +128,7 @@ export function useProfileAnalysis(apiBaseUrl: string) {
                 abortControllerRef.current = null;
             }
         }
-    }, [apiBaseUrl, snapshot.file]);
+    }, [apiBaseUrl, snapshot.file, snapshot.language]);
 
     useEffect(() => {
         mountedRef.current = true;
@@ -119,6 +141,7 @@ export function useProfileAnalysis(apiBaseUrl: string) {
     return {
         ...snapshot,
         selectFile,
+        setLanguage,
         analyze,
     };
 }

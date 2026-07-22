@@ -27,7 +27,7 @@ function jsonResponse(body, init = {}) {
     });
 }
 
-test('posts the selected file as multipart field "file" and parses the agent message', async t => {
+test('posts the selected file and response language as multipart fields and parses the agent message', async t => {
     const originalFetch = global.fetch;
     t.after(() => {
         global.fetch = originalFetch;
@@ -50,10 +50,11 @@ test('posts the selected file as multipart field "file" and parses the agent mes
         assert.ok(uploadedFile);
         assert.equal(uploadedFile.name, 'query-profile.txt');
         assert.equal(await uploadedFile.text(), 'Query Profile text');
+        assert.equal(options.body.get('language'), 'zh-CN');
         return jsonResponse(expected);
     };
 
-    assert.deepEqual(await analyzeProfile('http://localhost:8080/', file), expected);
+    assert.deepEqual(await analyzeProfile('http://localhost:8080/', file, 'zh-CN'), expected);
 });
 
 test('preserves a structured backend error on non-2xx responses', async t => {
@@ -64,7 +65,7 @@ test('preserves a structured backend error on non-2xx responses', async t => {
     global.fetch = async () =>
         jsonResponse({ code: 'INVALID_PROFILE', message: 'The file is not a Doris profile.' }, { status: 422 });
 
-    await assert.rejects(analyzeProfile('http://localhost:8080', new File(['bad'], 'bad.txt')), error => {
+    await assert.rejects(analyzeProfile('http://localhost:8080', new File(['bad'], 'bad.txt'), 'en'), error => {
         assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.status, 422);
         assert.equal(error.code, 'INVALID_PROFILE');
@@ -80,7 +81,7 @@ test('uses a safe fallback when an error response is not JSON', async t => {
     });
     global.fetch = async () => new Response('<html>Bad gateway</html>', { status: 502 });
 
-    await assert.rejects(analyzeProfile('', new File(['profile'], 'profile.txt')), error => {
+    await assert.rejects(analyzeProfile('', new File(['profile'], 'profile.txt'), 'en'), error => {
         assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.status, 502);
         assert.equal(error.code, 'HTTP_ERROR');
@@ -96,7 +97,7 @@ test('rejects a successful response that is not an agent message', async t => {
     });
     global.fetch = async () => jsonResponse({ id: 'item_26', type: 'unexpected', text: 'result' });
 
-    await assert.rejects(analyzeProfile('', new File(['profile'], 'profile.txt')), error => {
+    await assert.rejects(analyzeProfile('', new File(['profile'], 'profile.txt'), 'en'), error => {
         assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.status, 502);
         assert.equal(error.code, 'INVALID_SERVER_RESPONSE');
@@ -113,7 +114,7 @@ test('normalizes network failures into a stable API error', async t => {
         throw new TypeError('fetch failed');
     };
 
-    await assert.rejects(analyzeProfile('', new File(['profile'], 'profile.txt')), error => {
+    await assert.rejects(analyzeProfile('', new File(['profile'], 'profile.txt'), 'en'), error => {
         assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.status, 0);
         assert.equal(error.code, 'NETWORK_ERROR');

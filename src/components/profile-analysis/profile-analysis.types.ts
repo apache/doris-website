@@ -9,4 +9,6 @@ export interface ApiErrorBody {
     message: string;
 }
 
+export type ResponseLanguage = 'en' | 'zh-CN';
+
 export type AnalysisState = 'idle' | 'ready' | 'analyzing' | 'completed' | 'failed';

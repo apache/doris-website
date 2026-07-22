@@ -1,4 +1,4 @@
-import type { AgentMessage, ApiErrorBody } from './profile-analysis.types';
+import type { AgentMessage, ApiErrorBody, ResponseLanguage } from './profile-analysis.types';
 
 const ANALYZE_PATH = '/api/profile/analyze';
 
@@ -45,10 +45,12 @@ function isAbortError(error: unknown): boolean {
 export async function analyzeProfile(
     apiBaseUrl: string,
     file: File,
+    language: ResponseLanguage,
     signal?: AbortSignal,
 ): Promise<AgentMessage> {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('language', language);
 
     let response: Response;
     try {

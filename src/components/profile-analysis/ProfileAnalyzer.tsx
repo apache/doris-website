@@ -26,8 +26,10 @@ export function ProfileAnalyzer(): JSX.Element {
 
             <ProfileUploader
                 file={analysis.file}
+                language={analysis.language}
                 disabled={isAnalyzing}
                 onFileChange={analysis.selectFile}
+                onLanguageChange={analysis.setLanguage}
                 onAnalyze={analysis.analyze}
             />
 

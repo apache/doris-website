@@ -56,8 +56,10 @@ test('disables Analyze until a file exists and while analysis is running', () =>
     const withoutFile = renderToStaticMarkup(
         React.createElement(ProfileUploader, {
             file: null,
+            language: 'en',
             disabled: false,
             onFileChange() {},
+            onLanguageChange() {},
             onAnalyze() {},
         }),
     );
@@ -66,13 +68,51 @@ test('disables Analyze until a file exists and while analysis is running', () =>
     const analyzing = renderToStaticMarkup(
         React.createElement(ProfileUploader, {
             file: new File(['profile'], 'query.txt'),
+            language: 'zh-CN',
             disabled: true,
             onFileChange() {},
+            onLanguageChange() {},
             onAnalyze() {},
         }),
     );
     assert.match(analyzing, /<input[^>]*disabled=""/);
     assert.match(analyzing, /<button[^>]*disabled=""[^>]*>Analyzing…<\/button>/);
+});
+
+test('uses an English accessible label instead of exposing localized native file-input text', () => {
+    const markup = renderToStaticMarkup(
+        React.createElement(ProfileUploader, {
+            file: null,
+            language: 'en',
+            disabled: false,
+            onFileChange() {},
+            onLanguageChange() {},
+            onAnalyze() {},
+        }),
+    );
+
+    assert.match(markup, /aria-label="Choose an Apache Doris Query Profile file"/);
+
+    const styles = fs.readFileSync(path.join(__dirname, 'ProfileAnalysis.scss'), 'utf8');
+    assert.match(styles, /&__file-input\s*{[^}]*clip-path:\s*inset\(50%\)/s);
+});
+
+test('renders an English response-language selector with English selected by default', () => {
+    const markup = renderToStaticMarkup(
+        React.createElement(ProfileUploader, {
+            file: null,
+            language: 'en',
+            disabled: false,
+            onFileChange() {},
+            onLanguageChange() {},
+            onAnalyze() {},
+        }),
+    );
+
+    assert.match(markup, /<legend>Response language<\/legend>/);
+    assert.match(markup, /<input[^>]*checked=""[^>]*value="en"/);
+    assert.match(markup, />English<\/label>/);
+    assert.match(markup, />Simplified Chinese<\/label>/);
 });
 
 test('exposes the waiting state to assistive technology', () => {

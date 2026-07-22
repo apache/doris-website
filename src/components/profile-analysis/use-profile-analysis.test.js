@@ -32,6 +32,7 @@ test('moves from idle through ready, analyzing, and completed', () => {
     assert.deepEqual(ready, {
         state: 'ready',
         file: firstFile,
+        language: 'en',
         result: null,
         error: null,
     });
@@ -62,6 +63,7 @@ test('stores failures and clears the old result and error when a new file is sel
     const completed = {
         state: 'completed',
         file: firstFile,
+        language: 'en',
         result,
         error: null,
     };
@@ -69,6 +71,7 @@ test('stores failures and clears the old result and error when a new file is sel
     assert.deepEqual(failed, {
         state: 'failed',
         file: firstFile,
+        language: 'en',
         result: null,
         error: 'Analyzer unavailable',
     });
@@ -77,9 +80,34 @@ test('stores failures and clears the old result and error when a new file is sel
     assert.deepEqual(next, {
         state: 'ready',
         file: secondFile,
+        language: 'en',
         result: null,
         error: null,
     });
+});
+
+test('stores response language per request, clears stale output, and freezes it while analyzing', () => {
+    const completed = {
+        state: 'completed',
+        file: firstFile,
+        language: 'en',
+        result,
+        error: null,
+    };
+    const chinese = profileAnalysisReducer(completed, { type: 'set_language', language: 'zh-CN' });
+    assert.deepEqual(chinese, {
+        state: 'ready',
+        file: firstFile,
+        language: 'zh-CN',
+        result: null,
+        error: null,
+    });
+
+    const analyzing = profileAnalysisReducer(chinese, { type: 'start' });
+    assert.equal(
+        profileAnalysisReducer(analyzing, { type: 'set_language', language: 'en' }),
+        analyzing,
+    );
 });
 
 test('normalizes unknown failures without exposing non-error values', () => {

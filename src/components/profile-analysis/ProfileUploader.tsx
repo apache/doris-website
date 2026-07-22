@@ -1,11 +1,14 @@
 import React, { ChangeEvent, DragEvent, JSX, useState } from 'react';
+import type { ResponseLanguage } from './profile-analysis.types';
 
 export const MAX_PROFILE_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 
 interface ProfileUploaderProps {
     file: File | null;
+    language: ResponseLanguage;
     disabled: boolean;
     onFileChange: (file: File | null) => void;
+    onLanguageChange: (language: ResponseLanguage) => void;
     onAnalyze: () => void;
 }
 
@@ -31,8 +34,10 @@ export function formatProfileFileSize(sizeInBytes: number): string {
 
 export function ProfileUploader({
     file,
+    language,
     disabled,
     onFileChange,
+    onLanguageChange,
     onAnalyze,
 }: ProfileUploaderProps): JSX.Element {
     const [validationError, setValidationError] = useState<string | null>(null);
@@ -74,6 +79,30 @@ export function ProfileUploader({
                 Choose one UTF-8 .txt file up to 10 MiB. The server deletes the uploaded file after this analysis.
             </p>
 
+            <fieldset className="profile-analysis__language" disabled={disabled}>
+                <legend>Response language</legend>
+                <label>
+                    <input
+                        type="radio"
+                        name="profile-analysis-language"
+                        value="en"
+                        checked={language === 'en'}
+                        onChange={() => onLanguageChange('en')}
+                    />
+                    English
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        name="profile-analysis-language"
+                        value="zh-CN"
+                        checked={language === 'zh-CN'}
+                        onChange={() => onLanguageChange('zh-CN')}
+                    />
+                    Simplified Chinese
+                </label>
+            </fieldset>
+
             <label
                 className={`profile-analysis__drop-zone${disabled ? ' profile-analysis__drop-zone--disabled' : ''}`}
                 onDragOver={event => event.preventDefault()}
@@ -85,6 +114,7 @@ export function ProfileUploader({
                     className="profile-analysis__file-input"
                     type="file"
                     accept=".txt,text/plain"
+                    aria-label="Choose an Apache Doris Query Profile file"
                     aria-describedby="profile-analysis-file-help"
                     disabled={disabled}
                     onChange={handleInputChange}
