@@ -245,7 +245,7 @@ ORDER BY customer_id;
 
 ### 前提条件
 
-1. 准备外部血缘插件。Doris 不提供内置 sink。SPI 契约、JAR 打包方式和完整最小插件示例请参阅[数据血缘插件开发](/community/developer-guide/data-lineage-plugin-development)。
+1. 准备外部血缘插件。Doris 不提供内置 sink。SPI 契约、JAR 打包方式和完整最小插件示例请参阅[数据血缘插件开发](/zh-CN/community/developer-guide/data-lineage-plugin-development)。
 2. 将插件 JAR 及所需第三方依赖 JAR 复制到每个 FE。
 3. 如果插件需要向外部治理服务发送事件，确保每个可能执行 DML 的 FE 都可以访问该服务端点。
 
@@ -333,4 +333,4 @@ FE 启动时会发现内置和外部 Factory，然后只为配置中列出的名
 
 ## 相关文档
 
-- [数据血缘插件开发](/community/developer-guide/data-lineage-plugin-development)
+- [数据血缘插件开发](/zh-CN/community/developer-guide/data-lineage-plugin-development)

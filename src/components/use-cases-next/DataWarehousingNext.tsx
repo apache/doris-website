@@ -502,7 +502,7 @@ const capabilities: Capability[] = [
                 href: '/docs/dev/key-features/pluggable-auth',
             },
             { label: 'Catalog integrations: Glue, Iceberg REST, and more', href: '/docs/dev/key-features/catalog-integrations' },
-            { label: 'Data Lineage', href: '/docs/dev/key-features/data-lineage' },
+            { label: 'Data Lineage', href: '/docs/dev/data-governance/data-lineage' },
         ],
     },
 ];

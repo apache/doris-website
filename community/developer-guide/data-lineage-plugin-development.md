@@ -55,14 +55,14 @@ At FE startup, ServiceLoader first discovers each `LineagePluginFactory`. FE the
 
 `LineageInfo` contains a target table, target output columns, source tables, direct lineage, indirect lineage, and a `LineageContext`.
 
-| Part | API | Meaning |
-| --- | --- | --- |
-| Target | `getTargetTable()`, `getTargetColumns()` | The target table and output columns of the write. |
-| Source tables | `getTableLineageSet()` | Tables referenced by the analyzed logical plan. |
-| Direct lineage | `getDirectLineageMap()` | A map from each output Slot to source expressions, classified as `IDENTITY`, `TRANSFORMATION`, or `AGGREGATION`. |
-| Dataset indirect lineage | `getDatasetIndirectLineageMap()` | Expressions that affect the complete result set: `JOIN`, `FILTER`, `GROUP_BY`, and `SORT`. |
-| Output indirect lineage | `getOutputIndirectLineageMap()` | Dependencies that affect a specific output column: `WINDOW` and `CONDITIONAL`. |
-| Query context | `getContext()` | Query ID, SQL text, user, client IP, session database and catalog, execution state, timestamp, duration, and sanitized external catalog properties. |
+| Part | Meaning |
+| --- | --- |
+| Target | The target table and output columns of the write. |
+| Source tables | Tables referenced by the analyzed logical plan. |
+| Direct lineage | A map from each output Slot to source expressions, classified as `IDENTITY`, `TRANSFORMATION`, or `AGGREGATION`. |
+| Dataset indirect lineage | Expressions that affect the complete result set: `JOIN`, `FILTER`, `GROUP_BY`, and `SORT`. |
+| Output indirect lineage | Dependencies that affect a specific output column: `WINDOW` and `CONDITIONAL`. |
+| Query context | Query ID, SQL text, user, client IP, session database and catalog, execution state, timestamp, duration, and sanitized external catalog properties. |
 
 Direct lineage describes how an output value is produced. A plain source-column reference is `IDENTITY`, for example `target.customer_id <- source.customer_id`. A calculation, function, window expression, or conditional expression without an aggregate function is `TRANSFORMATION`, for example `UPPER(source.region)`. An expression that contains an aggregate function is `AGGREGATION`, for example `SUM(source.amount)`. Indirect lineage records expressions that affect the output without directly becoming an output value, including Join keys, `WHERE` and `HAVING` predicates, grouping keys, and sorting keys. `WINDOW` records window partitioning and ordering inputs. `CONDITIONAL` records the effect of `CASE`, `IF`, or `COALESCE` on a specific output column.
 
@@ -141,6 +141,148 @@ The first, `VALUES`-only Insert does not generate an event. After `INSERT INTO l
 This example has no Join and therefore no dataset-level `JOIN` dependency. A query with a Join records the Join condition as a dataset-level `JOIN` dependency.
 
 Before the event reaches the plugin, the extractor resolves CTE producer expressions and expands `UNION` branches. A plugin should still treat `Expression`, `SlotReference`, and `TableIf` as Doris internal Java objects and convert them to stable names or a downstream schema before sending them outside FE.
+
+## Plugin API reference
+
+The lineage SPI consists of a Factory discovered at FE startup, a plugin instance created by that Factory, an immutable runtime context, and the `LineageInfo` event passed to the plugin. The following summary lists the extension methods that plugin implementations use directly.
+
+### API summary
+
+| Method | Input | Return type | Purpose |
+| --- | --- | --- | --- |
+| `LineagePluginFactory.name()` | None | `String` | Return the unique Factory name used by `activate_lineage_plugin`. |
+| `LineagePluginFactory.create()` | None | `LineagePlugin` | Create a plugin instance without reading the runtime context in the Factory. |
+| `LineagePluginFactory.create(PluginContext)` | `PluginContext` | `LineagePlugin` | Create a plugin instance with access to the runtime context. The default implementation delegates to `create()`. |
+| `LineagePlugin.name()` | None | `String` | Return the plugin name. It should match the Factory name. |
+| `LineagePlugin.eventFilter()` | None | `boolean` | Indicate whether the plugin currently wants lineage events. |
+| `LineagePlugin.exec(LineageInfo)` | `LineageInfo` | `boolean` | Process one lineage event. |
+| `Plugin.initialize(PluginContext)` | `PluginContext` | `void` | Initialize resources after the Factory creates the plugin. The default implementation does nothing. |
+| `Plugin.close()` | None | `void` | Lifecycle hook intended to release plugin resources. The default implementation does nothing. |
+| `PluginContext.getProperties()` | None | `Map<String, String>` | Return the immutable runtime property map. |
+
+### `LineagePluginFactory`
+
+`LineagePluginFactory` is the ServiceLoader entry point. FE discovers the Factory, filters it by the value returned from `name()`, and then creates one plugin instance.
+
+```java
+String name();
+LineagePlugin create();
+default LineagePlugin create(PluginContext context);
+```
+
+#### `name()`
+
+- **Input:** none.
+- **Returns:** `String`, the unique, case-sensitive Factory identifier.
+- **Behavior:** the value is matched against each item in `activate_lineage_plugin`. The example returns `example-lineage`.
+
+#### `create()`
+
+- **Input:** none.
+- **Returns:** a new `LineagePlugin` instance.
+- **Behavior:** implement this method when plugin construction does not require the runtime context. The default `create(PluginContext)` method delegates to it.
+
+#### `create(PluginContext context)`
+
+- **Input:** `PluginContext context`, the immutable runtime context prepared for this plugin directory.
+- **Returns:** a new `LineagePlugin` instance.
+- **Behavior:** override this method only when the Factory itself needs runtime properties during construction. FE calls `initialize(context)` on the returned plugin after creation.
+
+Returning `null` or throwing during creation prevents that plugin from loading. Do not perform long-running downstream calls in a Factory method because plugin discovery happens during FE startup.
+
+### `LineagePlugin`
+
+`LineagePlugin` receives lineage events and inherits the `initialize()` and `close()` lifecycle methods from `Plugin`.
+
+```java
+String name();
+boolean eventFilter();
+boolean exec(LineageInfo lineageInfo);
+default void initialize(PluginContext context);
+default void close();
+```
+
+#### `name()`
+
+- **Input:** none.
+- **Returns:** `String`, the plugin identifier.
+- **Behavior:** return the same stable identifier as `LineagePluginFactory.name()` so activation, logs, and operational configuration use one name.
+
+#### `eventFilter()`
+
+- **Input:** none.
+- **Returns:** `boolean`; `true` means the plugin wants lineage events, and `false` means FE skips it.
+- **Behavior:** FE calls this method before lineage extraction on query threads and again before dispatch on the lineage worker thread. It must be thread-safe and should return quickly. If every loaded plugin returns `false` before extraction, FE skips extraction for that statement.
+
+#### `exec(LineageInfo lineageInfo)`
+
+- **Input:** `LineageInfo lineageInfo`, one extracted lineage event from a successful supported DML statement.
+- **Returns:** `boolean`; `true` reports success and `false` reports failure to the caller.
+- **Behavior:** one lineage worker thread invokes `exec()`, but it can run concurrently with `eventFilter()` calls on query threads. The current framework does not retry, requeue, or change the DML state when `exec()` returns `false`. An exception is logged and processing continues with later plugins or events.
+
+#### `initialize(PluginContext context)`
+
+- **Input:** `PluginContext context`, the same runtime context supplied to the Factory.
+- **Returns:** `void`.
+- **Behavior:** FE calls this method after creating the plugin. Override it to read configuration from `plugin.path`, create clients, or allocate other resources. Throwing prevents the plugin from loading.
+
+#### `close()`
+
+- **Input:** none.
+- **Returns:** `void`.
+- **Behavior:** this inherited lifecycle hook is intended for resource cleanup. The current lineage processor has no dynamic unload or reload path, so a plugin must not rely on `close()` being called when a JAR is replaced. Replacing a JAR still requires an FE restart.
+
+### `PluginContext`
+
+```java
+Map<String, String> getProperties();
+```
+
+`getProperties()` takes no input and returns an immutable `Map<String, String>`. The lineage loader provides these entries:
+
+| Property | Type | Meaning |
+| --- | --- | --- |
+| `plugin.name` | `String` | The name returned by the discovered Factory. |
+| `plugin.path` | `String` | The absolute path of the external plugin directory. |
+
+Read them with `context.getProperties().get("plugin.name")` and `context.getProperties().get("plugin.path")`. The map cannot be modified. A plugin can use `plugin.path` to locate its own configuration files, but must not assume that the directory name equals the Factory name.
+
+### `LineageInfo`
+
+`LineageInfo` is the input type of `exec()`. Plugins should read it through the following methods and convert Doris objects to their downstream event schema.
+
+| Method | Return type | Meaning |
+| --- | --- | --- |
+| `getTargetTable()` | `TableIf` | Target table of the write. |
+| `getTargetColumns()` | `List<Slot>` | Target output columns in write order. |
+| `getTableLineageSet()` | `Set<TableIf>` | Source tables referenced by the analyzed plan. |
+| `getDirectLineageMap()` | `Map<SlotReference, SetMultimap<DirectLineageType, Expression>>` | Direct source expressions for each output Slot. |
+| `getDatasetIndirectLineageMap()` | `Multimap<IndirectLineageType, Expression>` | Dataset-level `JOIN`, `FILTER`, `GROUP_BY`, and `SORT` dependencies. |
+| `getInDirectLineageMapByDataset()` | `Map<SlotReference, SetMultimap<IndirectLineageType, Expression>>` | A derived view that applies the dataset-level dependencies to every output Slot. It excludes `WINDOW` and `CONDITIONAL`. |
+| `getOutputIndirectLineageMap()` | `Map<SlotReference, SetMultimap<IndirectLineageType, Expression>>` | Per-output `WINDOW` and `CONDITIONAL` dependencies. |
+| `getContext()` | `LineageContext` | Query and execution metadata for this event. |
+
+`LineageInfo` also exposes setters and `add*` methods used by the FE extractor. A sink plugin normally consumes the object through the getters above and should not mutate the event. The returned `TableIf`, `Slot`, `SlotReference`, and `Expression` values are Doris runtime objects, not stable wire-format identifiers.
+
+### `LineageContext`
+
+`LineageContext` is returned by `LineageInfo.getContext()`. Its getters take no input.
+
+| Method | Return type | Meaning |
+| --- | --- | --- |
+| `getSourceCommand()` | `Class<? extends Command>` | Command class that produced the event, such as `InsertIntoTableCommand`. |
+| `getQueryId()` | `String` | Query ID. |
+| `getQueryText()` | `String` | Original DML text. |
+| `getUser()` | `String` | Executing user. |
+| `getClientIp()` | `String` | Client IP address. |
+| `getState()` | `String` | Query execution state. |
+| `getDatabase()` | `String` | Session database; it is not necessarily the target-table database. |
+| `getCatalog()` | `String` | Session Catalog; it is not necessarily the target-table Catalog. |
+| `getTimestampMs()` | `long` | Event timestamp in milliseconds, or `-1` when unavailable. |
+| `getDurationMs()` | `long` | Query duration in milliseconds, or `-1` when unavailable. |
+| `getExternalCatalogProperties()` | `Map<String, Map<String, String>>` | Sanitized properties for external Catalogs referenced by the query. |
+
+The original SQL, user, client IP, expressions, and external Catalog properties can contain sensitive data. A production plugin should apply its own access control, redaction, size limits, and retention policy before exporting them.
 
 ## Develop a plugin
 

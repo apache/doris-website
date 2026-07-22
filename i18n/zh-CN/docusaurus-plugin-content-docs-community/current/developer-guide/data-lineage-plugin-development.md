@@ -55,14 +55,14 @@ FE 启动时先通过 ServiceLoader 发现 `LineagePluginFactory`，再调用 Fa
 
 `LineageInfo` 包含目标表、目标输出列、源表、直接血缘、间接血缘和 `LineageContext`。
 
-| 部分 | API | 含义 |
-| --- | --- | --- |
-| 目标 | `getTargetTable()`、`getTargetColumns()` | 写入的目标表和目标输出列。 |
-| 源表 | `getTableLineageSet()` | 已分析逻辑计划中引用的表。 |
-| 直接血缘 | `getDirectLineageMap()` | 每个输出 Slot 到源表达式的映射，类型为 `IDENTITY`、`TRANSFORMATION` 或 `AGGREGATION`。 |
-| 数据集级间接血缘 | `getDatasetIndirectLineageMap()` | 影响整个结果集的表达式：`JOIN`、`FILTER`、`GROUP_BY` 和 `SORT`。 |
-| 输出列级间接血缘 | `getOutputIndirectLineageMap()` | 仅影响特定输出列的依赖：`WINDOW` 和 `CONDITIONAL`。 |
-| 查询上下文 | `getContext()` | Query ID、SQL 文本、用户、客户端 IP、会话库和 Catalog、执行状态、时间戳、耗时及已脱敏的外部 Catalog 属性。 |
+| 部分 | 含义 |
+| --- | --- |
+| 目标 | 写入的目标表和目标输出列。 |
+| 源表 | 已分析逻辑计划中引用的表。 |
+| 直接血缘 | 每个输出 Slot 到源表达式的映射，类型为 `IDENTITY`、`TRANSFORMATION` 或 `AGGREGATION`。 |
+| 数据集级间接血缘 | 影响整个结果集的表达式：`JOIN`、`FILTER`、`GROUP_BY` 和 `SORT`。 |
+| 输出列级间接血缘 | 仅影响特定输出列的依赖：`WINDOW` 和 `CONDITIONAL`。 |
+| 查询上下文 | Query ID、SQL 文本、用户、客户端 IP、会话库和 Catalog、执行状态、时间戳、耗时及已脱敏的外部 Catalog 属性。 |
 
 直接血缘描述输出值的产生方式：纯源列引用为 `IDENTITY`，例如 `target.customer_id <- source.customer_id`；不包含聚合函数的计算、函数、窗口或条件表达式为 `TRANSFORMATION`，例如 `UPPER(source.region)`；包含聚合函数的表达式为 `AGGREGATION`，例如 `SUM(source.amount)`。间接血缘记录影响输出、但不直接成为输出值的表达式，例如 Join Key、`WHERE`/`HAVING` 条件、分组键和排序键。`WINDOW` 记录窗口的分区和排序输入，`CONDITIONAL` 记录 `CASE`、`IF` 或 `COALESCE` 对特定输出列的影响。
 
@@ -141,6 +141,148 @@ ORDER BY region;
 该示例没有 Join，因此不会产生 `JOIN` 间接血缘。带 Join 的查询会把 Join 条件记录为数据集级 `JOIN` 依赖。
 
 事件到达插件前，提取器会解析 CTE 生产者表达式，并展开 `UNION` 的各分支。插件仍应将 `Expression`、`SlotReference` 和 `TableIf` 视为 Doris 内部 Java 对象，在发送到 FE 外部前转换为稳定的名称或下游系统格式。
+
+## 插件 API 参考
+
+数据血缘 SPI 由 FE 启动时发现的 Factory、Factory 创建的插件实例、不可变运行时上下文，以及传给插件的 `LineageInfo` 事件组成。下表汇总插件实现直接使用的扩展方法。
+
+### API 总览
+
+| 方法 | 输入 | 返回类型 | 作用 |
+| --- | --- | --- | --- |
+| `LineagePluginFactory.name()` | 无 | `String` | 返回 `activate_lineage_plugin` 使用的唯一 Factory 名称。 |
+| `LineagePluginFactory.create()` | 无 | `LineagePlugin` | 创建插件实例，Factory 不读取运行时上下文。 |
+| `LineagePluginFactory.create(PluginContext)` | `PluginContext` | `LineagePlugin` | 使用运行时上下文创建插件实例；默认实现委托给 `create()`。 |
+| `LineagePlugin.name()` | 无 | `String` | 返回插件名称，应与 Factory 名称一致。 |
+| `LineagePlugin.eventFilter()` | 无 | `boolean` | 表示插件当前是否接收血缘事件。 |
+| `LineagePlugin.exec(LineageInfo)` | `LineageInfo` | `boolean` | 处理一条血缘事件。 |
+| `Plugin.initialize(PluginContext)` | `PluginContext` | `void` | Factory 创建插件后初始化资源；默认实现不执行操作。 |
+| `Plugin.close()` | 无 | `void` | 用于释放插件资源的生命周期 Hook；默认实现不执行操作。 |
+| `PluginContext.getProperties()` | 无 | `Map<String, String>` | 返回不可变的运行时属性 Map。 |
+
+### `LineagePluginFactory`
+
+`LineagePluginFactory` 是 ServiceLoader 的入口。FE 发现 Factory 后，根据 `name()` 的返回值进行筛选，然后创建一个插件实例。
+
+```java
+String name();
+LineagePlugin create();
+default LineagePlugin create(PluginContext context);
+```
+
+#### `name()`
+
+- **输入：** 无。
+- **返回：** `String`，区分大小写的唯一 Factory 标识。
+- **行为：** 该值与 `activate_lineage_plugin` 中的每一项进行匹配。本文示例返回 `example-lineage`。
+
+#### `create()`
+
+- **输入：** 无。
+- **返回：** 新的 `LineagePlugin` 实例。
+- **行为：** 插件构造不需要运行时上下文时实现该方法。默认的 `create(PluginContext)` 会委托给它。
+
+#### `create(PluginContext context)`
+
+- **输入：** `PluginContext context`，FE 为当前插件目录准备的不可变运行时上下文。
+- **返回：** 新的 `LineagePlugin` 实例。
+- **行为：** 只有 Factory 构造插件时需要读取运行时属性才覆盖该方法。创建完成后，FE 会对返回的插件调用 `initialize(context)`。
+
+创建插件时返回 `null` 或抛出异常会导致该插件无法加载。插件发现发生在 FE 启动阶段，因此不要在 Factory 方法中执行耗时的下游调用。
+
+### `LineagePlugin`
+
+`LineagePlugin` 接收血缘事件，并从 `Plugin` 继承 `initialize()` 和 `close()` 生命周期方法。
+
+```java
+String name();
+boolean eventFilter();
+boolean exec(LineageInfo lineageInfo);
+default void initialize(PluginContext context);
+default void close();
+```
+
+#### `name()`
+
+- **输入：** 无。
+- **返回：** `String`，插件标识。
+- **行为：** 应返回与 `LineagePluginFactory.name()` 相同的稳定标识，使激活配置、日志和运维配置使用同一个名称。
+
+#### `eventFilter()`
+
+- **输入：** 无。
+- **返回：** `boolean`；`true` 表示插件接收血缘事件，`false` 表示 FE 跳过该插件。
+- **行为：** FE 会在查询线程提取血缘前调用该方法，并在血缘工作线程分发事件前再次调用。该方法必须线程安全且快速返回。如果提取前所有已加载插件都返回 `false`，FE 会跳过该语句的血缘提取。
+
+#### `exec(LineageInfo lineageInfo)`
+
+- **输入：** `LineageInfo lineageInfo`，受支持 DML 成功后提取的一条血缘事件。
+- **返回：** `boolean`；`true` 表示插件报告处理成功，`false` 表示插件报告处理失败。
+- **行为：** 单个血缘工作线程调用 `exec()`，但它可能与查询线程中的 `eventFilter()` 并发执行。当前框架不会在 `exec()` 返回 `false` 后重试、重新入队或修改 DML 状态。插件抛出的异常会被记录，后续插件或事件仍会继续处理。
+
+#### `initialize(PluginContext context)`
+
+- **输入：** `PluginContext context`，与传给 Factory 的运行时上下文相同。
+- **返回：** `void`。
+- **行为：** FE 创建插件后调用该方法。插件可以覆盖它，根据 `plugin.path` 读取配置、创建客户端或分配其他资源；抛出异常会导致插件无法加载。
+
+#### `close()`
+
+- **输入：** 无。
+- **返回：** `void`。
+- **行为：** 这个继承的生命周期 Hook 用于释放资源。当前血缘处理器没有动态卸载或重新加载流程，因此插件不能依赖替换 JAR 时一定会调用 `close()`；替换 JAR 后仍需重启 FE。
+
+### `PluginContext`
+
+```java
+Map<String, String> getProperties();
+```
+
+`getProperties()` 没有输入，返回不可变的 `Map<String, String>`。血缘加载器提供以下属性：
+
+| 属性 | 类型 | 含义 |
+| --- | --- | --- |
+| `plugin.name` | `String` | 已发现 Factory 返回的名称。 |
+| `plugin.path` | `String` | 外部插件目录的绝对路径。 |
+
+通过 `context.getProperties().get("plugin.name")` 和 `context.getProperties().get("plugin.path")` 读取这两个属性。该 Map 不可修改。插件可以使用 `plugin.path` 定位自己的配置文件，但不能假设插件目录名等于 Factory 名称。
+
+### `LineageInfo`
+
+`LineageInfo` 是 `exec()` 的输入类型。插件应通过以下方法读取事件，并将 Doris 对象转换为下游事件格式。
+
+| 方法 | 返回类型 | 含义 |
+| --- | --- | --- |
+| `getTargetTable()` | `TableIf` | 写入的目标表。 |
+| `getTargetColumns()` | `List<Slot>` | 按写入顺序排列的目标输出列。 |
+| `getTableLineageSet()` | `Set<TableIf>` | 已分析计划中引用的源表。 |
+| `getDirectLineageMap()` | `Map<SlotReference, SetMultimap<DirectLineageType, Expression>>` | 每个输出 Slot 的直接源表达式。 |
+| `getDatasetIndirectLineageMap()` | `Multimap<IndirectLineageType, Expression>` | 数据集级 `JOIN`、`FILTER`、`GROUP_BY` 和 `SORT` 依赖。 |
+| `getInDirectLineageMapByDataset()` | `Map<SlotReference, SetMultimap<IndirectLineageType, Expression>>` | 将数据集级依赖应用到每个输出 Slot 后得到的视图，不包含 `WINDOW` 和 `CONDITIONAL`。 |
+| `getOutputIndirectLineageMap()` | `Map<SlotReference, SetMultimap<IndirectLineageType, Expression>>` | 每个输出列的 `WINDOW` 和 `CONDITIONAL` 依赖。 |
+| `getContext()` | `LineageContext` | 当前事件的查询和执行元数据。 |
+
+`LineageInfo` 还提供 FE 提取器使用的 setter 和 `add*` 方法。sink 插件通常只通过上述 getter 消费对象，不应修改事件。返回的 `TableIf`、`Slot`、`SlotReference` 和 `Expression` 是 Doris 运行时对象，不是稳定的传输协议标识。
+
+### `LineageContext`
+
+`LineageContext` 由 `LineageInfo.getContext()` 返回，以下 getter 都没有输入。
+
+| 方法 | 返回类型 | 含义 |
+| --- | --- | --- |
+| `getSourceCommand()` | `Class<? extends Command>` | 产生事件的命令类型，例如 `InsertIntoTableCommand`。 |
+| `getQueryId()` | `String` | Query ID。 |
+| `getQueryText()` | `String` | 原始 DML 文本。 |
+| `getUser()` | `String` | 执行用户。 |
+| `getClientIp()` | `String` | 客户端 IP。 |
+| `getState()` | `String` | 查询执行状态。 |
+| `getDatabase()` | `String` | 会话数据库，不一定是目标表所在数据库。 |
+| `getCatalog()` | `String` | 会话 Catalog，不一定是目标表所在 Catalog。 |
+| `getTimestampMs()` | `long` | 事件时间戳，单位为毫秒；不可用时为 `-1`。 |
+| `getDurationMs()` | `long` | 查询耗时，单位为毫秒；不可用时为 `-1`。 |
+| `getExternalCatalogProperties()` | `Map<String, Map<String, String>>` | 查询引用的外部 Catalog 的已脱敏属性。 |
+
+原始 SQL、用户、客户端 IP、表达式和外部 Catalog 属性可能包含敏感数据。生产插件在导出前应按自身安全策略实施访问控制、脱敏、长度限制和保留策略。
 
 ## 开发插件
 
@@ -455,7 +597,7 @@ org.apache.doris.plugin.lineage.example.ExampleLineagePluginFactory
 
 ### 第 6 步：构建插件
 
-首次在该源码目录中构建插件前，需要先准备 Doris 的源码编译环境。根据操作系统完成 [Linux 编译环境准备](/community/source-install/compilation-linux)或 [macOS 编译环境准备](/community/source-install/compilation-mac)，再执行一次 FE 构建。以下环境变量只关闭血缘插件编译不需要的 UI、Hive UDF 和 BE Java 扩展，不会跳过 FE：
+首次在该源码目录中构建插件前，需要先准备 Doris 的源码编译环境。根据操作系统完成 [Linux 编译环境准备](/zh-CN/community/source-install/compilation-linux)或 [macOS 编译环境准备](/zh-CN/community/source-install/compilation-mac)，再执行一次 FE 构建。以下环境变量只关闭血缘插件编译不需要的 UI、Hive UDF 和 BE Java 扩展，不会跳过 FE：
 
 ```shell
 cd "${DORIS_SOURCE}"

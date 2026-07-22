@@ -368,7 +368,6 @@ key-features/compute-group
 key-features/condition-cache
 key-features/data-cache-page-cache
 key-features/data-compaction
-key-features/data-lineage
 key-features/data-model
 key-features/data-pruning
 key-features/data-update-delete
