@@ -1,0 +1,56 @@
+name: Refresh Docs Last-Update Map
+
+# Manually triggered. Recomputes each document's last-update time from the full
+# git history and opens a PR updating scripts/last-update/data.json. The regular
+# Cron Deploy then serves those timestamps (docs/dev + 4.x + community footers)
+# without needing full history itself.
+#
+# Requires the repo/org setting "Allow GitHub Actions to create and approve pull
+# requests" to be enabled so the default token can open the PR.
+
+on:
+    workflow_dispatch:
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    refresh:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout (full history, blobless)
+              # fetch-depth: 0 gives every file its own last-commit date;
+              # filter: blob:none skips historical file contents (the bulk of
+              # the ~1.8GB .git), fetching only the commit/tree metadata the
+              # date computation actually needs.
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  filter: blob:none
+
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 20
+
+            - name: Generate last-update map
+              # Pure Node built-ins + git — no dependency install required.
+              run: node scripts/last-update/generate.js
+
+            - name: Create Pull Request
+              uses: peter-evans/create-pull-request@v6
+              with:
+                  token: ${{ github.token }}
+                  add-paths: scripts/last-update/data.json
+                  branch: chore/refresh-docs-last-update
+                  delete-branch: true
+                  commit-message: 'chore(docs): refresh last-update map'
+                  title: 'chore(docs): refresh docs last-update map'
+                  body: |
+                      Automated refresh of per-document last-update timestamps
+                      (`scripts/last-update/data.json`), regenerated from git
+                      history by `scripts/last-update/generate.js`.
+
+                      Triggered manually via the **Refresh Docs Last-Update Map**
+                      workflow. No PR is opened when nothing changed.

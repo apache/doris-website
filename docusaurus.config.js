@@ -6,6 +6,20 @@ const { DEFAULT_VERSION } = require('./src/constant/version');
 const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const REDIRECTS_4X = require('./config/redirects-4.x.json');
+const path = require('path');
+
+// Per-document last-update timestamps, generated from git history by
+// scripts/last-update/generate.js and refreshed on demand via the
+// "Refresh Docs Last-Update Map" workflow. markdown.parseFrontMatter (below)
+// injects these as `last_update` front matter so the 2-hourly deploy renders
+// "last updated" without a full-history clone. Missing file / not-yet-generated
+// map → Docusaurus falls back to its own git lookup.
+let DOCS_LAST_UPDATE = {};
+try {
+    DOCS_LAST_UPDATE = require('./scripts/last-update/data.json');
+} catch (e) {
+    // Map not generated yet (e.g. first build before the workflow runs).
+}
 
 // Group every static in-site redirect by its target path so we can drive it
 // through @docusaurus/plugin-client-redirects' `createRedirects` callback.
@@ -142,6 +156,21 @@ const config = {
     trailingSlash: false,
     markdown: {
         format: 'detect',
+        // Inject each document's last-update date (from the git-history map in
+        // scripts/last-update/data.json) as `last_update` front matter, so
+        // showLastUpdateTime can render it without the deploy build touching
+        // git. An explicit `last_update` in a file always wins.
+        parseFrontMatter: async ({ defaultParseFrontMatter, filePath, fileContent }) => {
+            const result = await defaultParseFrontMatter({ filePath, fileContent });
+            if (!result.frontMatter.last_update) {
+                const rel = path.relative(__dirname, filePath).split(path.sep).join('/');
+                const date = DOCS_LAST_UPDATE[rel];
+                if (date) {
+                    result.frontMatter.last_update = { date };
+                }
+            }
+            return result;
+        },
     },
     trailingSlash: true,
     i18n: {
@@ -205,6 +234,9 @@ const config = {
                 path: 'community',
                 routeBasePath: '/community',
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
+                // Community docs are unversioned; the footer always shows their
+                // last-updated date (see src/theme/DocItem/Footer).
+                showLastUpdateTime: true,
             }),
         ],
         SKIP_RELEASES ? null : [
@@ -315,7 +347,10 @@ const config = {
                     //     // }
                     // },
                     showLastUpdateAuthor: false,
-                    showLastUpdateTime: false,
+                    // Date comes from the injected `last_update` front matter
+                    // (markdown.parseFrontMatter). The DocItem footer limits
+                    // which versions actually display it (Dev + latest stable).
+                    showLastUpdateTime: true,
                     remarkPlugins: [markdownBoldPlugin, require('remark-math')],
                     rehypePlugins: [
                         [
