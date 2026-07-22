@@ -11,6 +11,7 @@ import {
 import './SlackCommunityNudge.scss';
 
 const SLACK_URL = 'https://doris.apache.org/slack';
+const DORIS_SUMMIT_URL = 'https://apache-doris-summit.org/';
 const DOCS_FEEDBACK_URL = 'https://github.com/apache/doris-website/issues/364';
 const STORAGE_KEY = 'doris-home-slack-nudge-dismissed';
 const ECOSYSTEM_TARGET_ID = 'home-next-ecosystem';
@@ -220,16 +221,16 @@ export function SlackCommunityNudge(): JSX.Element {
         <aside
             className={`slack-community-nudge${isOpen ? ' slack-community-nudge--open' : ''}`}
             aria-label={showDocsFeedback
-                ? 'Apache Doris community and documentation resources'
-                : 'Apache Doris Slack community invitation'}
+                ? 'Apache Doris community, Summit, and documentation resources'
+                : 'Apache Doris community and Summit resources'}
         >
             <div className="slack-community-nudge__bubble" aria-hidden={!isOpen}>
                 <button
                     type="button"
                     className="slack-community-nudge__close"
                     aria-label={showDocsFeedback
-                        ? 'Dismiss community and documentation prompt'
-                        : 'Dismiss Slack invitation'}
+                        ? 'Dismiss community, Summit, and documentation prompt'
+                        : 'Dismiss community and Summit prompt'}
                     onClick={dismissAutoPrompt}
                     tabIndex={isOpen ? undefined : -1}
                 >
@@ -262,6 +263,30 @@ export function SlackCommunityNudge(): JSX.Element {
                     <SlackGlyph />
                     Join Slack
                 </a>
+                <section
+                    className="slack-community-nudge__summit"
+                    aria-labelledby="slack-community-nudge-summit-title"
+                >
+                    <div>
+                        <p id="slack-community-nudge-summit-title" className="slack-community-nudge__summit-title">
+                            Doris Summit 26
+                        </p>
+                        <p className="slack-community-nudge__summit-meta">
+                            October 21–22 · Virtual event
+                        </p>
+                    </div>
+                    <a
+                        className="slack-community-nudge__cta slack-community-nudge__cta--summit"
+                        href={DORIS_SUMMIT_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={dismissAutoPrompt}
+                        tabIndex={isOpen ? undefined : -1}
+                    >
+                        Explore Summit
+                        <span aria-hidden="true">↗</span>
+                    </a>
+                </section>
                 {showDocsFeedback && (
                     <section
                         className="slack-community-nudge__docs-feedback"
@@ -297,8 +322,8 @@ export function SlackCommunityNudge(): JSX.Element {
                 ref={mascotRef}
                 aria-expanded={isOpen}
                 aria-label={showDocsFeedback
-                    ? `${isOpen ? 'Hide' : 'Open'} community and documentation resources`
-                    : `${isOpen ? 'Hide' : 'Open'} Slack invitation`}
+                    ? `${isOpen ? 'Hide' : 'Open'} community, Summit, and documentation resources`
+                    : `${isOpen ? 'Hide' : 'Open'} community and Summit resources`}
                 onClick={() => setIsOpen(open => !open)}
             >
                 <img

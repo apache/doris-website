@@ -185,7 +185,8 @@
             outline-offset: 3px;
         }
 
-        &--feedback {
+        &--feedback,
+        &--summit {
             min-height: 36px;
             border-color: rgba(6, 128, 95, 0.32);
             background: rgba(255, 255, 255, 0.56);
@@ -199,6 +200,28 @@
                 box-shadow: 0 16px 30px -22px rgba(5, 76, 57, 0.66);
             }
         }
+    }
+
+    &__summit {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(6, 128, 95, 0.16);
+    }
+
+    &__summit-title {
+        margin: 0 0 4px;
+        color: var(--sn-ink);
+        @include type.mono-text(14px, 800, 1.25, 0);
+    }
+
+    &__summit-meta {
+        margin: 0;
+        color: rgba(15, 26, 20, 0.68);
+        @include type.sans-text(12.5px, 400, 1.35);
     }
 
     &__docs-feedback {
@@ -321,6 +344,10 @@
 
         &__docs-feedback-copy {
             font-size: 12.5px;
+        }
+
+        &__summit {
+            align-items: flex-start;
         }
 
         &__benefits {
