@@ -9,6 +9,7 @@
     --nb-cream-light: #FAF6EE;
     --nb-yellow: #FFD23F;
     --nb-ink: #0F1A14;
+    --nb-summit-cyan: #00F0FF;
 
     position: sticky;
     top: var(--home-next-banner-height, 0px);
@@ -261,6 +262,60 @@
         }
     }
 
+    &__summit {
+        position: relative;
+        isolation: isolate;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        height: 32px;
+        overflow: hidden;
+        padding: 0 14px;
+        border: 1px solid rgba(17, 166, 121, 0.55);
+        border-radius: 4px;
+        background: rgba(17, 166, 121, 0.18);
+        color: var(--nb-cream-light) !important;
+        text-decoration: none !important;
+        white-space: nowrap;
+        @include type.mono-text(12px, 700, 1.2, 0.02em);
+        animation: navbar-next-summit-breathe 2.8s ease-in-out infinite;
+        transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s, color 0.2s, transform 0.2s;
+
+        span {
+            position: relative;
+            z-index: 1;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            z-index: 0;
+            top: -2px;
+            bottom: -2px;
+            left: -45%;
+            width: 32%;
+            transform: skewX(-18deg);
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.62), transparent);
+            animation: navbar-next-summit-sweep 3.6s ease-in-out infinite;
+            will-change: transform;
+            pointer-events: none;
+        }
+
+        &:hover {
+            border-color: rgba(17, 166, 121, 0.85);
+            background: rgba(17, 166, 121, 0.28);
+            color: var(--nb-cream-light) !important;
+            text-decoration: none !important;
+            transform: translateY(-1px);
+        }
+
+        &:focus-visible {
+            outline: 2px solid rgba(17, 166, 121, 0.85);
+            outline-offset: 2px;
+        }
+    }
+
     &__star-link {
         display: inline-flex;
         align-items: center;
@@ -440,16 +495,9 @@
             padding: 0.5rem 0.55rem;
             font-size: 12px;
         }
-    }
-}
 
-@media (max-width: 1020px) {
-    .navbar-next {
-        &__inner {
-            padding: 0 24px;
-            gap: 14px;
-        }
-
+        // The extra Summit action needs more horizontal room than the old
+        // action group, so switch to the menu before controls can collide.
         &__nav {
             display: none;
         }
@@ -460,6 +508,77 @@
 
         &--mobile-open &__mobile-panel {
             display: block;
+        }
+    }
+}
+
+@media (max-width: 1020px) {
+    .navbar-next {
+        &__inner {
+            padding: 0 24px;
+            gap: 14px;
+        }
+
+    }
+}
+
+// Tablet and phone layouts keep the utility controls on row 1, then give
+// Summit and Ask Me a dedicated full-width row each.
+@media (max-width: 768px) {
+    .navbar-next {
+        &.navbar {
+            height: auto;
+            min-height: 64px;
+        }
+
+        &__inner {
+            flex-wrap: wrap;
+            height: auto;
+            column-gap: 5px;
+            row-gap: 0;
+            align-items: center;
+        }
+
+        &__logo {
+            height: 64px;
+        }
+
+        // Expose the action children to the wrapping navbar layout.
+        &__actions {
+            display: contents;
+        }
+
+        &__star-link {
+            margin-left: auto;
+        }
+
+        &__menu-button {
+            margin-left: 0;
+        }
+
+        &__summit,
+        &__ask-ai {
+            flex: 0 0 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 38px;
+            margin-left: 0;
+            margin-bottom: 10px;
+            padding: 0 12px;
+        }
+
+        &__summit {
+            order: 9;
+        }
+
+        &__ask-ai {
+            order: 10;
+        }
+
+        &__mobile-panel {
+            max-height: calc(100vh - 160px);
         }
     }
 }
@@ -501,28 +620,12 @@
     }
 }
 
-// On narrow phones (≤480px): row 1 = Logo (left) + Star + Download + ☰ (right, as a group),
-// row 2 = Ask AI full-width centered.
-// Only minimal padding trimming — no font-size or height overrides.
+// On narrow phones, trim row-1 spacing while preserving the two full-width
+// campaign rows established at the 768px breakpoint.
 @media (max-width: 480px) {
     .navbar-next {
-        &.navbar {
-            height: auto;
-            min-height: 64px;
-        }
-
         &__inner {
-            flex-wrap: wrap;
-            height: auto;
             padding: 0 10px;
-            column-gap: 5px;
-            row-gap: 0;
-            align-items: center;
-        }
-
-        // Logo link spans the full row-1 height; image slightly smaller to reclaim space.
-        &__logo {
-            height: 64px;
         }
 
         &__logo img {
@@ -532,37 +635,6 @@
         // Trim star-link horizontal padding (only change needed to make everything fit).
         &__star-link {
             padding: 0 8px 0 6px;
-            // Right-anchor the Star+Download+☰ group. Since `__actions` collapses
-            // to `display: contents` below, Star is the first member of the
-            // right-side group and inherits the auto-margin job from __actions.
-            margin-left: auto;
-        }
-
-        // Collapse `__actions` so its children (Ask Me, Star, Download) become
-        // flex children of `__inner` directly. This lets Ask Me wrap to its own
-        // full-width second row via `flex: 0 0 100%; order: 10` below — which
-        // is impossible while it's nested inside a non-wrapping flex container.
-        &__actions {
-            display: contents;
-        }
-
-        // Hamburger follows actions naturally — no extra margin needed.
-        &__menu-button {
-            margin-left: 0;
-        }
-
-        // Ask Me: full-width second row, icon + text centered both axes.
-        &__ask-ai {
-            order: 10;
-            flex: 0 0 100%;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 38px;
-            margin-left: 0;
-            margin-bottom: 10px;
-            padding: 0 12px;
         }
     }
 }
@@ -573,5 +645,39 @@
             display: grid;
             gap: 10px;
         }
+    }
+}
+
+@keyframes navbar-next-summit-breathe {
+    0%,
+    100% {
+        scale: 1;
+    }
+
+    50% {
+        scale: 1.018;
+    }
+}
+
+@keyframes navbar-next-summit-sweep {
+    0%,
+    45% {
+        transform: translateX(0) skewX(-18deg);
+    }
+
+    75%,
+    100% {
+        transform: translateX(520%) skewX(-18deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar-next__summit,
+    .navbar-next__summit::after {
+        animation: none;
+    }
+
+    .navbar-next__summit:hover {
+        transform: none;
     }
 }
