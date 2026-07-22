@@ -1112,7 +1112,7 @@ from KAFKA_SOURCE;
 ### Flink CDC 同步 DDL 语句
 一般同步 MySQL 等上游数据源的时候，上游增加或删除字段的时候需要同步在 Doris 中进行 Schema Change 操作。
 
-对于这种场景，通常需要编写 DataStream API 的程序，同时使用 DorisSink 提供的 JsonDebeziumSchemaSerializer 序列化，便可以自动做到 SchemaChange，具体可参考[CDCSchemaChangeExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/CDCSchemaChangeExample.java)
+对于这种场景，通常需要编写 DataStream API 的程序，同时使用 DorisSink 提供的 JsonDebeziumSchemaSerializer 序列化，便可以自动做到 SchemaChange，具体可参考[CDCSchemaChangeExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/flink-doris-connector-flink1/src/test/java/org/apache/doris/flink/example/CDCSchemaChangeExample.java)
 
 在 Connector 提供的整库同步工具中，无需额外配置，自动会同步上游 DDL，并在 Doris 进行 SchemaChange 操作。
 
