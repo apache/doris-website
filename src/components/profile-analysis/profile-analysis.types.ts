@@ -11,14 +11,28 @@ export interface ApiErrorBody {
 
 export type ResponseLanguage = 'en' | 'zh-CN';
 
-export type AnalysisState = 'idle' | 'ready' | 'submitting' | 'queued' | 'analyzing' | 'completed' | 'failed';
+export type AnalysisState =
+    | 'restoring'
+    | 'recovering'
+    | 'idle'
+    | 'ready'
+    | 'submitting'
+    | 'queued'
+    | 'analyzing'
+    | 'completed'
+    | 'failed';
 
 export type AnalysisJobStatus = 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED';
 
 export interface CreateAnalysisJobResponse {
     jobId: string;
-    status: 'QUEUED' | 'RUNNING';
+    status: AnalysisJobStatus;
     retryAfterMs: number;
+}
+
+export interface RecoveredAnalysisJobResponse {
+    jobId: string;
+    status: AnalysisJobStatus;
 }
 
 export type AnalysisJobSnapshot =

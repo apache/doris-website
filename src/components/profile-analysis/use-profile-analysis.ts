@@ -1,8 +1,32 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react';
-import { createAnalysisJob, getAnalysisJob, ProfileAnalysisApiError } from './profile-analysis.api';
-import type { AgentMessage, AnalysisJobSnapshot, AnalysisState, ResponseLanguage } from './profile-analysis.types';
+import {
+    createAnalysisJob,
+    getAnalysisJob,
+    getAnalysisJobByClientRequestId,
+    ProfileAnalysisApiError,
+} from './profile-analysis.api';
+import {
+    clearStoredAnalysisJob,
+    createClientRequestId,
+    readStoredAnalysisJob,
+    type StoredAnalysisJob,
+    writeStoredAnalysisJob,
+} from './profile-analysis.storage';
+import {
+    createOrRecoverAnalysisJob,
+    DEFAULT_ANALYSIS_POLL_INTERVAL_MS,
+    pollAnalysisJobWithRecovery,
+    recoverAnalysisJobWithinGrace,
+} from './profile-analysis.recovery';
+import type {
+    AgentMessage,
+    AnalysisJobSnapshot,
+    AnalysisJobStatus,
+    AnalysisState,
+    ResponseLanguage,
+} from './profile-analysis.types';
 
-const MAX_CONSECUTIVE_POLL_FAILURES = 3;
+const STORAGE_UNAVAILABLE_WARNING = 'This analysis cannot be restored after a page refresh in this browser.';
 
 interface ProfileAnalysisSnapshot {
     state: AnalysisState;
@@ -12,25 +36,31 @@ interface ProfileAnalysisSnapshot {
     jobsAhead: number | null;
     result: AgentMessage | null;
     error: string | null;
+    recoveryWarning: string | null;
 }
 
 type ProfileAnalysisAction =
+    | { type: 'restore_empty' }
+    | { type: 'restore_record'; jobId: string | null; language: ResponseLanguage }
+    | { type: 'recovering' }
+    | { type: 'storage_unavailable' }
     | { type: 'select'; file: File | null }
     | { type: 'set_language'; language: ResponseLanguage }
     | { type: 'start' }
-    | { type: 'job_created'; jobId: string; status: 'QUEUED' | 'RUNNING' }
+    | { type: 'job_created'; jobId: string; status: AnalysisJobStatus }
     | { type: 'job_status'; job: AnalysisJobSnapshot }
     | { type: 'complete'; result: AgentMessage }
     | { type: 'fail'; error: string };
 
 export const initialProfileAnalysisSnapshot: ProfileAnalysisSnapshot = {
-    state: 'idle',
+    state: 'restoring',
     file: null,
     language: 'en',
     jobId: null,
     jobsAhead: null,
     result: null,
     error: null,
+    recoveryWarning: null,
 };
 
 export function profileAnalysisReducer(
@@ -38,6 +68,28 @@ export function profileAnalysisReducer(
     action: ProfileAnalysisAction,
 ): ProfileAnalysisSnapshot {
     switch (action.type) {
+        case 'restore_empty':
+            return snapshot.state === 'restoring' ? { ...snapshot, state: 'idle' } : snapshot;
+        case 'restore_record':
+            return {
+                ...snapshot,
+                state: 'restoring',
+                file: null,
+                language: action.language,
+                jobId: action.jobId,
+                jobsAhead: null,
+                result: null,
+                error: null,
+            };
+        case 'recovering':
+            return {
+                ...snapshot,
+                state: 'recovering',
+                jobsAhead: null,
+                error: null,
+            };
+        case 'storage_unavailable':
+            return { ...snapshot, recoveryWarning: STORAGE_UNAVAILABLE_WARNING };
         case 'select':
             if (isBusy(snapshot.state)) {
                 return snapshot;
@@ -50,6 +102,7 @@ export function profileAnalysisReducer(
                 error: null,
                 jobId: null,
                 jobsAhead: null,
+                recoveryWarning: snapshot.recoveryWarning,
             };
         case 'set_language':
             if (isBusy(snapshot.state)) {
@@ -79,16 +132,23 @@ export function profileAnalysisReducer(
         case 'job_created':
             return {
                 ...snapshot,
+                // A replayed idempotent POST may report a terminal status without
+                // carrying the result body. The authoritative GET below resolves it.
                 state: action.status === 'QUEUED' ? 'queued' : 'analyzing',
                 jobId: action.jobId,
                 jobsAhead: null,
             };
         case 'job_status':
             if (action.job.status === 'QUEUED') {
-                return { ...snapshot, state: 'queued', jobsAhead: action.job.jobsAhead };
+                return {
+                    ...snapshot,
+                    state: 'queued',
+                    jobId: action.job.jobId,
+                    jobsAhead: action.job.jobsAhead,
+                };
             }
             if (action.job.status === 'RUNNING') {
-                return { ...snapshot, state: 'analyzing', jobsAhead: null };
+                return { ...snapshot, state: 'analyzing', jobId: action.job.jobId, jobsAhead: null };
             }
             return snapshot;
         case 'complete':
@@ -111,7 +171,13 @@ export function profileAnalysisReducer(
 }
 
 function isBusy(state: AnalysisState): boolean {
-    return state === 'submitting' || state === 'queued' || state === 'analyzing';
+    return (
+        state === 'restoring' ||
+        state === 'recovering' ||
+        state === 'submitting' ||
+        state === 'queued' ||
+        state === 'analyzing'
+    );
 }
 
 function wait(milliseconds: number, signal: AbortSignal): Promise<void> {
@@ -128,6 +194,10 @@ function wait(milliseconds: number, signal: AbortSignal): Promise<void> {
     });
 }
 
+function isAbortError(reason: unknown): boolean {
+    return reason instanceof Error && reason.name === 'AbortError';
+}
+
 export function getProfileAnalysisErrorMessage(reason: unknown): string {
     if (reason instanceof Error) {
         return reason.message;
@@ -140,10 +210,44 @@ export function useProfileAnalysis(apiBaseUrl: string) {
     const abortControllerRef = useRef<AbortController | null>(null);
     const mountedRef = useRef(true);
 
+    const releaseController = useCallback((controller: AbortController) => {
+        if (abortControllerRef.current === controller) {
+            abortControllerRef.current = null;
+        }
+    }, []);
+
+    const pollJob = useCallback(
+        async (jobId: string, pollIntervalMs: number, controller: AbortController): Promise<void> => {
+            const terminal = await pollAnalysisJobWithRecovery({
+                get: () => getAnalysisJob(apiBaseUrl, jobId, controller.signal),
+                wait: milliseconds => wait(milliseconds, controller.signal),
+                onRecovering: () => {
+                    if (mountedRef.current && abortControllerRef.current === controller) {
+                        dispatch({ type: 'recovering' });
+                    }
+                },
+                onProgress: job => {
+                    if (mountedRef.current && abortControllerRef.current === controller) {
+                        dispatch({ type: 'job_status', job });
+                    }
+                },
+                pollIntervalMs,
+            });
+            if (!mountedRef.current || abortControllerRef.current !== controller) return;
+            if (terminal.status === 'COMPLETED') {
+                dispatch({ type: 'complete', result: terminal.result });
+            } else {
+                dispatch({ type: 'fail', error: terminal.error.message });
+            }
+        },
+        [apiBaseUrl],
+    );
+
     const selectFile = useCallback((file: File | null) => {
         if (abortControllerRef.current) {
             return;
         }
+        clearStoredAnalysisJob();
         dispatch({ type: 'select', file });
     }, []);
 
@@ -151,6 +255,7 @@ export function useProfileAnalysis(apiBaseUrl: string) {
         if (abortControllerRef.current) {
             return;
         }
+        clearStoredAnalysisJob();
         dispatch({ type: 'set_language', language });
     }, []);
 
@@ -164,56 +269,142 @@ export function useProfileAnalysis(apiBaseUrl: string) {
         dispatch({ type: 'start' });
 
         try {
-            const created = await createAnalysisJob(apiBaseUrl, snapshot.file, snapshot.language, controller.signal);
-            if (!mountedRef.current || abortControllerRef.current !== controller) return;
-            dispatch({ type: 'job_created', jobId: created.jobId, status: created.status });
-
-            let consecutiveFailures = 0;
-            while (!controller.signal.aborted) {
-                try {
-                    const job = await getAnalysisJob(apiBaseUrl, created.jobId, controller.signal);
-                    consecutiveFailures = 0;
-                    if (!mountedRef.current || abortControllerRef.current !== controller) return;
-                    if (job.status === 'COMPLETED') {
-                        dispatch({ type: 'complete', result: job.result });
-                        return;
-                    }
-                    if (job.status === 'FAILED') {
-                        dispatch({ type: 'fail', error: job.error.message });
-                        return;
-                    }
-                    dispatch({ type: 'job_status', job });
-                } catch (reason) {
-                    if (
-                        reason instanceof ProfileAnalysisApiError &&
-                        (reason.code === 'NETWORK_ERROR' || reason.status >= 500)
-                    ) {
-                        consecutiveFailures += 1;
-                        if (consecutiveFailures >= MAX_CONSECUTIVE_POLL_FAILURES) throw reason;
-                    } else {
-                        throw reason;
-                    }
-                }
-                await wait(created.retryAfterMs, controller.signal);
+            const clientRequestId = createClientRequestId();
+            const recoveryRecord: StoredAnalysisJob = {
+                version: 1,
+                clientRequestId,
+                createdAt: Date.now(),
+                fileName: snapshot.file.name,
+                language: snapshot.language,
+            };
+            if (!writeStoredAnalysisJob(recoveryRecord)) {
+                dispatch({ type: 'storage_unavailable' });
             }
+
+            const created = await createOrRecoverAnalysisJob({
+                create: () =>
+                    createAnalysisJob(
+                        apiBaseUrl,
+                        snapshot.file as File,
+                        snapshot.language,
+                        clientRequestId,
+                        controller.signal,
+                    ),
+                recover: () =>
+                    getAnalysisJobByClientRequestId(
+                        apiBaseUrl,
+                        clientRequestId,
+                        controller.signal,
+                    ),
+                wait: milliseconds => wait(milliseconds, controller.signal),
+                onRecovering: () => {
+                    if (mountedRef.current && abortControllerRef.current === controller) {
+                        dispatch({ type: 'recovering' });
+                    }
+                },
+            });
+            if (!mountedRef.current || abortControllerRef.current !== controller) return;
+
+            const storedWithJobId: StoredAnalysisJob = { ...recoveryRecord, jobId: created.jobId };
+            if (!writeStoredAnalysisJob(storedWithJobId)) {
+                dispatch({ type: 'storage_unavailable' });
+            }
+            dispatch({ type: 'job_created', jobId: created.jobId, status: created.status });
+            await pollJob(created.jobId, created.retryAfterMs, controller);
         } catch (reason) {
-            if (mountedRef.current && abortControllerRef.current === controller) {
+            if (reason instanceof ProfileAnalysisApiError && reason.status >= 400 && reason.status < 500) {
+                clearStoredAnalysisJob();
+            }
+            if (
+                !isAbortError(reason) &&
+                mountedRef.current &&
+                abortControllerRef.current === controller
+            ) {
                 dispatch({ type: 'fail', error: getProfileAnalysisErrorMessage(reason) });
             }
         } finally {
-            if (abortControllerRef.current === controller) {
-                abortControllerRef.current = null;
-            }
+            releaseController(controller);
         }
-    }, [apiBaseUrl, snapshot.file, snapshot.language]);
+    }, [apiBaseUrl, pollJob, releaseController, snapshot.file, snapshot.language]);
 
     useEffect(() => {
         mountedRef.current = true;
+        const stored = readStoredAnalysisJob();
+        if (!stored.available) {
+            dispatch({ type: 'storage_unavailable' });
+        }
+        if (!stored.record) {
+            dispatch({ type: 'restore_empty' });
+            return () => {
+                mountedRef.current = false;
+            };
+        }
+
+        const controller = new AbortController();
+        abortControllerRef.current = controller;
+        dispatch({
+            type: 'restore_record',
+            jobId: stored.record.jobId ?? null,
+            language: stored.record.language,
+        });
+
+        const restore = async () => {
+            try {
+                let jobId = stored.record?.jobId;
+                if (!jobId && stored.record) {
+                    const recovered = await recoverAnalysisJobWithinGrace({
+                        recover: () =>
+                            getAnalysisJobByClientRequestId(
+                                apiBaseUrl,
+                                stored.record!.clientRequestId,
+                                controller.signal,
+                            ),
+                        wait: milliseconds => wait(milliseconds, controller.signal),
+                        onRecovering: () => {
+                            if (mountedRef.current && abortControllerRef.current === controller) {
+                                dispatch({ type: 'recovering' });
+                            }
+                        },
+                        createdAt: stored.record.createdAt,
+                    });
+                    jobId = recovered.jobId;
+                    if (!writeStoredAnalysisJob({ ...stored.record, jobId })) {
+                        dispatch({ type: 'storage_unavailable' });
+                    }
+                    if (!mountedRef.current || abortControllerRef.current !== controller) return;
+                    dispatch({ type: 'restore_record', jobId, language: stored.record.language });
+                }
+                if (!jobId) {
+                    throw new ProfileAnalysisApiError(
+                        404,
+                        'ANALYSIS_JOB_NOT_FOUND',
+                        'The previous analysis could not be recovered. Please select the file and try again.',
+                    );
+                }
+                await pollJob(jobId, DEFAULT_ANALYSIS_POLL_INTERVAL_MS, controller);
+            } catch (reason) {
+                if (reason instanceof ProfileAnalysisApiError && reason.status === 404) {
+                    clearStoredAnalysisJob();
+                }
+                if (
+                    !isAbortError(reason) &&
+                    mountedRef.current &&
+                    abortControllerRef.current === controller
+                ) {
+                    dispatch({ type: 'fail', error: getProfileAnalysisErrorMessage(reason) });
+                }
+            } finally {
+                releaseController(controller);
+            }
+        };
+
+        void restore();
         return () => {
             mountedRef.current = false;
-            abortControllerRef.current?.abort();
+            controller.abort();
+            releaseController(controller);
         };
-    }, []);
+    }, [apiBaseUrl, pollJob, releaseController]);
 
     return {
         ...snapshot,

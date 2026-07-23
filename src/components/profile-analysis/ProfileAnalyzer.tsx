@@ -13,7 +13,11 @@ export function ProfileAnalyzer(): JSX.Element {
     const analysis = useProfileAnalysis(apiBaseUrl);
     const isBusy = analysis.isBusy;
     const busyState =
-        analysis.state === 'submitting' || analysis.state === 'queued' || analysis.state === 'analyzing'
+        analysis.state === 'restoring' ||
+        analysis.state === 'recovering' ||
+        analysis.state === 'submitting' ||
+        analysis.state === 'queued' ||
+        analysis.state === 'analyzing'
             ? analysis.state
             : null;
 
@@ -39,6 +43,11 @@ export function ProfileAnalyzer(): JSX.Element {
 
             {busyState && <AnalysisStatus state={busyState} jobsAhead={analysis.jobsAhead} />}
             {analysis.state === 'completed' && <AnalysisStatus state="completed" jobsAhead={null} />}
+            {analysis.recoveryWarning && (
+                <div className="profile-analysis__warning" role="status">
+                    {analysis.recoveryWarning}
+                </div>
+            )}
             {analysis.error && (
                 <div className="profile-analysis__error" role="alert">
                     <strong>Analysis failed.</strong>

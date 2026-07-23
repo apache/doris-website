@@ -1,12 +1,16 @@
 import type {
     AgentMessage,
     AnalysisJobSnapshot,
+    AnalysisJobStatus,
     ApiErrorBody,
     CreateAnalysisJobResponse,
+    RecoveredAnalysisJobResponse,
     ResponseLanguage,
 } from './profile-analysis.types';
+import { isUuid } from './profile-analysis.storage';
 
 const ANALYSIS_JOBS_PATH = '/api/profile/analysis-jobs';
+const ANALYSIS_JOB_REQUESTS_PATH = '/api/profile/analysis-job-requests';
 const DEFAULT_POLL_INTERVAL_MS = 2_000;
 
 export class ProfileAnalysisApiError extends Error {
@@ -14,6 +18,7 @@ export class ProfileAnalysisApiError extends Error {
         public readonly status: number,
         public readonly code: string,
         message: string,
+        public readonly retryAfterMs?: number,
     ) {
         super(message);
         this.name = 'ProfileAnalysisApiError';
@@ -38,7 +43,11 @@ function isApiErrorBody(value: unknown): value is ApiErrorBody {
 }
 
 function isJobId(value: unknown): value is string {
-    return typeof value === 'string' && value.length > 0;
+    return isUuid(value);
+}
+
+function isAnalysisJobStatus(value: unknown): value is AnalysisJobStatus {
+    return value === 'QUEUED' || value === 'RUNNING' || value === 'COMPLETED' || value === 'FAILED';
 }
 
 function invalidResponse(): ProfileAnalysisApiError {
@@ -47,6 +56,11 @@ function invalidResponse(): ProfileAnalysisApiError {
         'INVALID_SERVER_RESPONSE',
         'The profile analysis service returned an invalid response.',
     );
+}
+
+function retryAfterMs(response: Response): number | undefined {
+    const seconds = Number(response.headers.get('Retry-After'));
+    return Number.isFinite(seconds) && seconds > 0 ? seconds * 1_000 : undefined;
 }
 
 function apiUrl(apiBaseUrl: string, path: string): string {
@@ -71,12 +85,18 @@ async function fetchJson(url: string, init: RequestInit): Promise<{ response: Re
     const body = await readJson(response);
     if (!response.ok) {
         if (isApiErrorBody(body)) {
-            throw new ProfileAnalysisApiError(response.status, body.code, body.message);
+            throw new ProfileAnalysisApiError(
+                response.status,
+                body.code,
+                body.message,
+                retryAfterMs(response),
+            );
         }
         throw new ProfileAnalysisApiError(
             response.status,
             'HTTP_ERROR',
             `Profile analysis failed (HTTP ${response.status}). Please try again.`,
+            retryAfterMs(response),
         );
     }
     return { response, body };
@@ -98,23 +118,27 @@ export async function createAnalysisJob(
     apiBaseUrl: string,
     file: File,
     language: ResponseLanguage,
+    clientRequestId: string,
     signal?: AbortSignal,
 ): Promise<CreateAnalysisJobResponse> {
+    if (!isUuid(clientRequestId)) throw invalidResponse();
+
     const formData = new FormData();
     formData.append('file', file);
     formData.append('language', language);
 
     const { response, body } = await fetchJson(apiUrl(apiBaseUrl, ANALYSIS_JOBS_PATH), {
-            method: 'POST',
-            body: formData,
-            signal,
-        });
+        method: 'POST',
+        headers: { 'Idempotency-Key': clientRequestId },
+        body: formData,
+        signal,
+    });
 
     if (
         response.status !== 202 ||
         !isRecord(body) ||
         !isJobId(body.jobId) ||
-        (body.status !== 'QUEUED' && body.status !== 'RUNNING')
+        !isAnalysisJobStatus(body.status)
     ) {
         throw invalidResponse();
     }
@@ -128,6 +152,23 @@ export async function createAnalysisJob(
                 ? retryAfterSeconds * 1_000
                 : DEFAULT_POLL_INTERVAL_MS,
     };
+}
+
+export async function getAnalysisJobByClientRequestId(
+    apiBaseUrl: string,
+    clientRequestId: string,
+    signal?: AbortSignal,
+): Promise<RecoveredAnalysisJobResponse> {
+    if (!isUuid(clientRequestId)) throw invalidResponse();
+
+    const { body } = await fetchJson(
+        apiUrl(apiBaseUrl, `${ANALYSIS_JOB_REQUESTS_PATH}/${encodeURIComponent(clientRequestId)}`),
+        { method: 'GET', signal },
+    );
+    if (!isRecord(body) || !isJobId(body.jobId) || !isAnalysisJobStatus(body.status)) {
+        throw invalidResponse();
+    }
+    return { jobId: body.jobId, status: body.status };
 }
 
 export async function getAnalysisJob(

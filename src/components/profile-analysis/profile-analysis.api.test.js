@@ -6,6 +6,18 @@ const test = require('node:test');
 const { File } = require('node:buffer');
 const typescript = require('typescript');
 
+const previousTypeScriptLoader = require.extensions['.ts'];
+require.extensions['.ts'] = (module, filename) => {
+    const source = fs.readFileSync(filename, 'utf8');
+    const output = typescript.transpileModule(source, {
+        compilerOptions: {
+            module: typescript.ModuleKind.CommonJS,
+            target: typescript.ScriptTarget.ES2020,
+        },
+    }).outputText;
+    module._compile(output, filename);
+};
+
 const apiPath = path.join(__dirname, 'profile-analysis.api.ts');
 const compiledApi = typescript.transpileModule(fs.readFileSync(apiPath, 'utf8'), {
     compilerOptions: {
@@ -17,8 +29,17 @@ const apiModule = new Module(apiPath, module);
 apiModule.filename = apiPath;
 apiModule.paths = Module._nodeModulePaths(path.dirname(apiPath));
 apiModule._compile(compiledApi, apiPath);
+require.extensions['.ts'] = previousTypeScriptLoader;
 
-const { createAnalysisJob, getAnalysisJob, ProfileAnalysisApiError } = apiModule.exports;
+const {
+    createAnalysisJob,
+    getAnalysisJob,
+    getAnalysisJobByClientRequestId,
+    ProfileAnalysisApiError,
+} = apiModule.exports;
+
+const clientRequestId = 'ca9ee8aa-3f47-4aab-a151-f3a39c5a6193';
+const jobId = '550e8400-e29b-41d4-a716-446655440000';
 
 function jsonResponse(body, init = {}) {
     return new Response(JSON.stringify(body), {
@@ -38,7 +59,8 @@ test('creates an analysis job with the selected file and response language', asy
     global.fetch = async (url, options) => {
         assert.equal(url, 'http://localhost:8080/api/profile/analysis-jobs');
         assert.equal(options.method, 'POST');
-        assert.equal(options.headers, undefined, 'the browser must set the multipart boundary');
+        assert.deepEqual(options.headers, { 'Idempotency-Key': clientRequestId });
+        assert.equal(options.headers['Content-Type'], undefined, 'the browser must set the multipart boundary');
         assert.ok(options.body instanceof FormData);
 
         const uploadedFile = options.body.get('file');
@@ -46,14 +68,14 @@ test('creates an analysis job with the selected file and response language', asy
         assert.equal(uploadedFile.name, 'query-profile.txt');
         assert.equal(await uploadedFile.text(), 'Query Profile text');
         assert.equal(options.body.get('language'), 'zh-CN');
-        return new Response(JSON.stringify({ jobId: 'job-1', status: 'QUEUED' }), {
+        return new Response(JSON.stringify({ jobId, status: 'QUEUED' }), {
             status: 202,
             headers: { 'Content-Type': 'application/json', 'Retry-After': '3' },
         });
     };
 
-    assert.deepEqual(await createAnalysisJob('http://localhost:8080/', file, 'zh-CN'), {
-        jobId: 'job-1',
+    assert.deepEqual(await createAnalysisJob('http://localhost:8080/', file, 'zh-CN', clientRequestId), {
+        jobId,
         status: 'QUEUED',
         retryAfterMs: 3000,
     });
@@ -63,20 +85,73 @@ test('parses queued, running, completed, and failed job snapshots', async t => {
     const originalFetch = global.fetch;
     t.after(() => { global.fetch = originalFetch; });
     const responses = [
-        { jobId: 'job-1', status: 'QUEUED', jobsAhead: 3 },
-        { jobId: 'job-1', status: 'RUNNING' },
-        { jobId: 'job-1', status: 'COMPLETED', result: { id: 'item_26', type: 'agent_message', text: 'Done' } },
-        { jobId: 'job-1', status: 'FAILED', error: { code: 'CODEX_EXECUTION_FAILED', message: 'Failed safely.' } },
+        { jobId, status: 'QUEUED', jobsAhead: 3 },
+        { jobId, status: 'RUNNING' },
+        { jobId, status: 'COMPLETED', result: { id: 'item_26', type: 'agent_message', text: 'Done' } },
+        { jobId, status: 'FAILED', error: { code: 'CODEX_EXECUTION_FAILED', message: 'Failed safely.' } },
     ];
     global.fetch = async (url, options) => {
-        assert.equal(url, '/api/profile/analysis-jobs/job-1');
+        assert.equal(url, `/api/profile/analysis-jobs/${jobId}`);
         assert.equal(options.method, 'GET');
         return jsonResponse(responses.shift());
     };
-    assert.deepEqual(await getAnalysisJob('', 'job-1'), { jobId: 'job-1', status: 'QUEUED', jobsAhead: 3 });
-    assert.deepEqual(await getAnalysisJob('', 'job-1'), { jobId: 'job-1', status: 'RUNNING' });
-    assert.equal((await getAnalysisJob('', 'job-1')).status, 'COMPLETED');
-    assert.equal((await getAnalysisJob('', 'job-1')).status, 'FAILED');
+    assert.deepEqual(await getAnalysisJob('', jobId), { jobId, status: 'QUEUED', jobsAhead: 3 });
+    assert.deepEqual(await getAnalysisJob('', jobId), { jobId, status: 'RUNNING' });
+    assert.equal((await getAnalysisJob('', jobId)).status, 'COMPLETED');
+    assert.equal((await getAnalysisJob('', jobId)).status, 'FAILED');
+});
+
+test('recovers a job id from a client request id without re-uploading the profile', async t => {
+    const originalFetch = global.fetch;
+    t.after(() => { global.fetch = originalFetch; });
+    global.fetch = async (url, options) => {
+        assert.equal(url, `/api/profile/analysis-job-requests/${clientRequestId}`);
+        assert.equal(options.method, 'GET');
+        return jsonResponse({ jobId, status: 'RUNNING' });
+    };
+
+    assert.deepEqual(await getAnalysisJobByClientRequestId('', clientRequestId), {
+        jobId,
+        status: 'RUNNING',
+    });
+});
+
+test('preserves Retry-After on a temporary client-request recovery 404', async t => {
+    const originalFetch = global.fetch;
+    t.after(() => { global.fetch = originalFetch; });
+    global.fetch = async () =>
+        new Response(JSON.stringify({
+            code: 'ANALYSIS_JOB_NOT_FOUND',
+            message: 'The analysis job was not found or has expired.',
+        }), {
+            status: 404,
+            headers: { 'Content-Type': 'application/json', 'Retry-After': '1' },
+        });
+
+    await assert.rejects(
+        getAnalysisJobByClientRequestId('', clientRequestId),
+        error => {
+            assert.ok(error instanceof ProfileAnalysisApiError);
+            assert.equal(error.status, 404);
+            assert.equal(error.retryAfterMs, 1000);
+            return true;
+        },
+    );
+});
+
+test('accepts a terminal status when an idempotent create response is replayed', async t => {
+    const originalFetch = global.fetch;
+    t.after(() => { global.fetch = originalFetch; });
+    global.fetch = async () =>
+        new Response(JSON.stringify({ jobId, status: 'COMPLETED' }), {
+            status: 202,
+            headers: { 'Content-Type': 'application/json', 'Retry-After': '2' },
+        });
+
+    assert.equal(
+        (await createAnalysisJob('', new File(['profile'], 'profile.txt'), 'en', clientRequestId)).status,
+        'COMPLETED',
+    );
 });
 
 test('preserves a structured backend error on non-2xx responses', async t => {
@@ -87,13 +162,16 @@ test('preserves a structured backend error on non-2xx responses', async t => {
     global.fetch = async () =>
         jsonResponse({ code: 'INVALID_PROFILE', message: 'The file is not a Doris profile.' }, { status: 422 });
 
-    await assert.rejects(createAnalysisJob('http://localhost:8080', new File(['bad'], 'bad.txt'), 'en'), error => {
+    await assert.rejects(
+        createAnalysisJob('http://localhost:8080', new File(['bad'], 'bad.txt'), 'en', clientRequestId),
+        error => {
         assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.status, 422);
         assert.equal(error.code, 'INVALID_PROFILE');
         assert.equal(error.message, 'The file is not a Doris profile.');
         return true;
-    });
+        },
+    );
 });
 
 test('uses a safe fallback when an error response is not JSON', async t => {
@@ -103,7 +181,7 @@ test('uses a safe fallback when an error response is not JSON', async t => {
     });
     global.fetch = async () => new Response('<html>Bad gateway</html>', { status: 502 });
 
-    await assert.rejects(createAnalysisJob('', new File(['profile'], 'profile.txt'), 'en'), error => {
+    await assert.rejects(createAnalysisJob('', new File(['profile'], 'profile.txt'), 'en', clientRequestId), error => {
         assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.status, 502);
         assert.equal(error.code, 'HTTP_ERROR');
@@ -117,9 +195,9 @@ test('rejects a successful response that is not an agent message', async t => {
     t.after(() => {
         global.fetch = originalFetch;
     });
-    global.fetch = async () => jsonResponse({ jobId: 'job-1', status: 'unexpected' }, { status: 202 });
+    global.fetch = async () => jsonResponse({ jobId, status: 'unexpected' }, { status: 202 });
 
-    await assert.rejects(createAnalysisJob('', new File(['profile'], 'profile.txt'), 'en'), error => {
+    await assert.rejects(createAnalysisJob('', new File(['profile'], 'profile.txt'), 'en', clientRequestId), error => {
         assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.status, 502);
         assert.equal(error.code, 'INVALID_SERVER_RESPONSE');
@@ -136,7 +214,7 @@ test('normalizes network failures into a stable API error', async t => {
         throw new TypeError('fetch failed');
     };
 
-    await assert.rejects(createAnalysisJob('', new File(['profile'], 'profile.txt'), 'en'), error => {
+    await assert.rejects(createAnalysisJob('', new File(['profile'], 'profile.txt'), 'en', clientRequestId), error => {
         assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.status, 0);
         assert.equal(error.code, 'NETWORK_ERROR');

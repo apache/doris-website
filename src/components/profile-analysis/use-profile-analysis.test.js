@@ -26,9 +26,10 @@ require.extensions['.ts'] = previousTypeScriptLoader;
 const firstFile = { name: 'first.txt' };
 const secondFile = { name: 'second.txt' };
 const result = { id: 'item_26', type: 'agent_message', text: 'Final diagnosis' };
+const idleSnapshot = profileAnalysisReducer(initialProfileAnalysisSnapshot, { type: 'restore_empty' });
 
 test('moves from idle through ready, analyzing, and completed', () => {
-    const ready = profileAnalysisReducer(initialProfileAnalysisSnapshot, { type: 'select', file: firstFile });
+    const ready = profileAnalysisReducer(idleSnapshot, { type: 'select', file: firstFile });
     assert.deepEqual(ready, {
         state: 'ready',
         file: firstFile,
@@ -37,6 +38,7 @@ test('moves from idle through ready, analyzing, and completed', () => {
         jobsAhead: null,
         result: null,
         error: null,
+        recoveryWarning: null,
     });
 
     const submitting = profileAnalysisReducer(ready, { type: 'start' });
@@ -53,12 +55,9 @@ test('moves from idle through ready, analyzing, and completed', () => {
 });
 
 test('does not start without a file or replace a file while analyzing', () => {
-    assert.equal(
-        profileAnalysisReducer(initialProfileAnalysisSnapshot, { type: 'start' }),
-        initialProfileAnalysisSnapshot,
-    );
+    assert.equal(profileAnalysisReducer(idleSnapshot, { type: 'start' }), idleSnapshot);
 
-    const ready = profileAnalysisReducer(initialProfileAnalysisSnapshot, { type: 'select', file: firstFile });
+    const ready = profileAnalysisReducer(idleSnapshot, { type: 'select', file: firstFile });
     const analyzing = profileAnalysisReducer(ready, { type: 'start' });
     assert.equal(profileAnalysisReducer(analyzing, { type: 'select', file: secondFile }), analyzing);
 });
@@ -72,6 +71,7 @@ test('stores failures and clears the old result and error when a new file is sel
         jobsAhead: null,
         result,
         error: null,
+        recoveryWarning: null,
     };
     const failed = profileAnalysisReducer(completed, { type: 'fail', error: 'Analyzer unavailable' });
     assert.deepEqual(failed, {
@@ -82,6 +82,7 @@ test('stores failures and clears the old result and error when a new file is sel
         jobsAhead: null,
         result: null,
         error: 'Analyzer unavailable',
+        recoveryWarning: null,
     });
 
     const next = profileAnalysisReducer(failed, { type: 'select', file: secondFile });
@@ -93,6 +94,7 @@ test('stores failures and clears the old result and error when a new file is sel
         jobsAhead: null,
         result: null,
         error: null,
+        recoveryWarning: null,
     });
 });
 
@@ -105,6 +107,7 @@ test('stores response language per request, clears stale output, and freezes it 
         jobsAhead: null,
         result,
         error: null,
+        recoveryWarning: null,
     };
     const chinese = profileAnalysisReducer(completed, { type: 'set_language', language: 'zh-CN' });
     assert.deepEqual(chinese, {
@@ -115,6 +118,7 @@ test('stores response language per request, clears stale output, and freezes it 
         jobsAhead: null,
         result: null,
         error: null,
+        recoveryWarning: null,
     });
 
     const analyzing = profileAnalysisReducer(chinese, { type: 'start' });
@@ -122,6 +126,52 @@ test('stores response language per request, clears stale output, and freezes it 
         profileAnalysisReducer(analyzing, { type: 'set_language', language: 'en' }),
         analyzing,
     );
+});
+
+test('restores persisted job metadata before polling resumes', () => {
+    const restoring = profileAnalysisReducer(initialProfileAnalysisSnapshot, {
+        type: 'restore_record',
+        jobId: '550e8400-e29b-41d4-a716-446655440000',
+        language: 'zh-CN',
+    });
+    assert.equal(restoring.state, 'restoring');
+    assert.equal(restoring.file, null);
+    assert.equal(restoring.language, 'zh-CN');
+    assert.equal(restoring.jobId, '550e8400-e29b-41d4-a716-446655440000');
+
+    const running = profileAnalysisReducer(restoring, {
+        type: 'job_status',
+        job: {
+            jobId: '550e8400-e29b-41d4-a716-446655440000',
+            status: 'RUNNING',
+        },
+    });
+    assert.equal(running.state, 'analyzing');
+});
+
+test('warns when session storage is unavailable without failing the analysis state', () => {
+    const warned = profileAnalysisReducer(idleSnapshot, { type: 'storage_unavailable' });
+    assert.equal(warned.state, 'idle');
+    assert.match(warned.recoveryWarning, /cannot be restored after a page refresh/);
+});
+
+test('keeps an uncertain analysis busy while its original identifiers are recovered', () => {
+    const running = {
+        state: 'analyzing',
+        file: firstFile,
+        language: 'en',
+        jobId: '550e8400-e29b-41d4-a716-446655440000',
+        jobsAhead: null,
+        result: null,
+        error: null,
+        recoveryWarning: null,
+    };
+    const recovering = profileAnalysisReducer(running, { type: 'recovering' });
+    assert.equal(recovering.state, 'recovering');
+    assert.equal(recovering.jobId, running.jobId);
+    assert.equal(recovering.file, firstFile);
+    assert.equal(profileAnalysisReducer(recovering, { type: 'start' }), recovering);
+    assert.equal(profileAnalysisReducer(recovering, { type: 'select', file: secondFile }), recovering);
 });
 
 test('normalizes unknown failures without exposing non-error values', () => {

@@ -122,6 +122,18 @@ test('exposes the waiting state to assistive technology', () => {
     assert.match(markup, /Queued · 3 jobs ahead/);
 });
 
+test('renders the page-refresh recovery state', () => {
+    const markup = renderToStaticMarkup(React.createElement(AnalysisStatus, { state: 'restoring', jobsAhead: null }));
+    assert.match(markup, /role="status"/);
+    assert.match(markup, /Restoring analysis…/);
+});
+
+test('renders the connection recovery state without presenting a terminal failure', () => {
+    const markup = renderToStaticMarkup(React.createElement(AnalysisStatus, { state: 'recovering', jobsAhead: null }));
+    assert.match(markup, /role="status"/);
+    assert.match(markup, /Connection interrupted · recovering analysis…/);
+});
+
 test('renders runtime Markdown while discarding raw HTML and unsafe links', () => {
     const markup = renderToStaticMarkup(
         React.createElement(AnalysisResult, {
