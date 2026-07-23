@@ -109,5 +109,5 @@ ERROR: Parse json document failed
 
 ## 使用说明
 
-- 如果希望把非法输入转换为 SQL `NULL`，请使用 [PARSE_TO_VARIANT_ERROR_TO_NULL](./parse-to-variant-error-to-null)。
-- `PARSE_TO_VARIANT` 始终明确表示“解析 JSON”。相比之下，`CAST(string AS VARIANT)` 的行为取决于 `enable_variant_string_cast_parse`，详见 [VARIANT CAST 规则](../../../basic-element/sql-data-types/semi-structured/VARIANT#cast-规则)。
+- 如果希望把非法输入转换为 SQL `NULL`，请使用 [TRY_PARSE_TO_VARIANT](./try-parse-to-variant)。
+- `PARSE_TO_VARIANT` 会显式解析 JSON。相比之下，`CAST(string AS VARIANT)` 会把输入保留为 VARIANT 字符串，不解析 JSON，详见 [VARIANT CAST 规则](../../../basic-element/sql-data-types/semi-structured/VARIANT#cast-规则)。

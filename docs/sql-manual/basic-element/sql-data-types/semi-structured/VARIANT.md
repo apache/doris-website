@@ -76,7 +76,7 @@ The behavior in this section applies to Doris 4.2 and later.
 VARIANT values can be created from JSON text, JSON/JSONB values, or typed SQL expressions:
 
 - Use [PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant) when a string or JSON/JSONB expression should be parsed as a structured VARIANT value.
-- Use `CAST(expression AS VARIANT)` to convert a supported SQL value to VARIANT. String parsing for this CAST is controlled by `enable_variant_string_cast_parse`, as described in [CAST rules](#cast-rules).
+- Use `CAST(expression AS VARIANT)` to convert a supported SQL value to VARIANT. A string remains a VARIANT string value; this CAST does not parse JSON.
 
 ### Parse JSON text
 
@@ -86,7 +86,7 @@ SELECT PARSE_TO_VARIANT('[10, 20, 30]');
 SELECT PARSE_TO_VARIANT(CAST('{"user": {"id": 42}}' AS JSON));
 ```
 
-Use [PARSE_TO_VARIANT_ERROR_TO_NULL](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant-error-to-null) when invalid JSON should return SQL `NULL` instead of failing the query.
+Use [TRY_PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/try-parse-to-variant) when invalid JSON should return SQL `NULL` instead of failing the query.
 
 ### Access objects and arrays
 
@@ -108,33 +108,33 @@ CAST involving VARIANT has two directions: converting a supported SQL value to V
 
 | Source type | Behavior |
 | --- | --- |
-| `CHAR`, `VARCHAR`, `STRING` | In query sessions, parses the input as JSON by default. Set `enable_variant_string_cast_parse` to `false` to preserve the input as a VARIANT string instead. |
-| `JSON` / `JSONB` | Converts the structured JSON value directly to VARIANT. |
-| Boolean, integer, floating-point, and Decimal types | Preserves the typed scalar value, subject to the Decimal limits below. |
-| `DATE`, `DATETIME`, `TIMESTAMPTZ`, `IPV4`, `IPV6` | Preserves the typed logical value. |
-| `ARRAY<T>` | Converts each supported element recursively and preserves SQL NULL elements. |
-| `MAP` | Not supported. |
+| `CHAR`, `VARCHAR`, `STRING` | Preserves the input as a VARIANT string. JSON-looking text is not parsed. |
+| `BOOLEAN` | Preserves the Boolean value. |
+| `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT` | Preserves the integer value. |
+| `FLOAT`, `DOUBLE` | Preserves the floating-point value. |
+| `DECIMALV2`, `DECIMAL(p, s)` with `p <= 38` | Preserves the Decimal value, subject to the limits below. |
+| `DATE`, `DATETIME`, `TIMESTAMPTZ` | Preserves the typed logical value. |
+| `JSON` / `JSONB` | Converts the structured value directly to VARIANT. If the input contains a JSONB value type that VARIANT cannot represent, the BE returns an error. |
+| `ARRAY<T>` | Converts each element recursively when `T` is `VARIANT` or is also in this whitelist, and preserves SQL NULL elements. |
 
-`enable_variant_string_cast_parse` is `true` by default in query sessions. Use `PARSE_TO_VARIANT` when the SQL text should always make the JSON-parsing intent explicit, independent of the session setting.
+Only the source types listed above are supported. Other source types, including `MAP`, `STRUCT`, `TIME`, `IPV4`, `IPV6`, Decimal values with precision greater than 38, and arrays containing an unsupported element type, cause the BE to return an error.
 
 ```sql
--- Default behavior: parse the string as JSON.
-SELECT CAST('{"id": 1}' AS VARIANT) AS parsed_object;
--- {"id":1}
-
--- Preserve the same input as a VARIANT string root.
-SET enable_variant_string_cast_parse = false;
+-- A string remains a VARIANT string root, even if it looks like JSON.
 SELECT CAST(CAST('{"id": 1}' AS VARIANT) AS STRING) AS string_value,
        VARIANT_TYPE(CAST('{"id": 1}' AS VARIANT)) AS root_type;
 -- string_value: {"id": 1}; root_type: string
 
--- JSON/JSONB input remains structured.
-SET enable_variant_string_cast_parse = true;
+-- Parse JSON text explicitly when a structured VARIANT value is required.
+SELECT PARSE_TO_VARIANT('{"id": 1}') AS parsed_object;
+-- {"id":1}
+
+-- JSON/JSONB input is converted structurally.
 SELECT CAST(CAST('{"id": 1}' AS JSON) AS VARIANT) AS parsed_object;
 -- {"id":1}
 ```
 
-When string parsing is enabled, invalid JSON causes the CAST to fail. Use `PARSE_TO_VARIANT_ERROR_TO_NULL` if malformed input should become SQL `NULL`.
+Because string CAST does not parse JSON, malformed JSON text is still a valid VARIANT string. Use `PARSE_TO_VARIANT` for strict JSON parsing or `TRY_PARSE_TO_VARIANT` when malformed input should become SQL `NULL`.
 
 ### CAST VARIANT to other types
 
@@ -142,11 +142,16 @@ VARIANT can be cast to a compatible scalar, JSON/JSONB, or array target:
 
 | Target type | Behavior |
 | --- | --- |
-| Boolean, integer, floating-point, Decimal, date/time, and IP types | Converts compatible scalar roots; incompatible shapes, invalid text, or out-of-range values return an error or SQL `NULL` according to the applicable CAST mode. |
-| `STRING` | Returns scalar text for scalar roots and JSON text for objects and arrays. Variant/JSON `null` becomes the string `null`; outer SQL `NULL` remains SQL `NULL`. |
-| `JSON` / `JSONB` | Converts a representable VARIANT value to structured JSON/JSONB. |
-| `ARRAY<T>` | Converts a VARIANT array element by element to `T`; incompatible elements follow the target CAST rules. |
-| `MAP` | Not supported. |
+| `BOOLEAN` | Converts a compatible Boolean or scalar root. |
+| `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT` | Converts a compatible scalar root to the requested integer type. |
+| `FLOAT`, `DOUBLE` | Converts a compatible numeric root. |
+| `DECIMALV2`, `DECIMAL(p, s)` | Converts a compatible numeric root to the requested Decimal type. |
+| `DATE`, `DATETIME`, `TIMESTAMPTZ` | Converts a compatible date/time root. |
+| `CHAR`, `VARCHAR`, `STRING` | Returns scalar text for scalar roots and JSON text for objects and arrays. Variant/JSON `null` becomes the string `null`; outer SQL `NULL` remains SQL `NULL`. |
+| `JSON` / `JSONB` | Converts the value structurally. If the VARIANT value contains a type that JSON/JSONB cannot represent, the BE returns an error. |
+| `ARRAY<T>` | Converts a VARIANT array element by element when `T` is `VARIANT` or is also in this whitelist; incompatible elements follow the target CAST rules. |
+
+Only the target types listed above are supported. Other target types, including `MAP`, `STRUCT`, `TIME`, `IPV4`, and `IPV6`, cause the BE to return an error. For a supported target, an incompatible value shape, invalid text, or numeric overflow follows the applicable CAST error-or-NULL behavior.
 
 ```sql
 SELECT CAST(PARSE_TO_VARIANT('42') AS BIGINT) AS id;
@@ -169,6 +174,7 @@ SELECT CAST(PARSE_TO_VARIANT('{"id": 1}') AS JSON) AS json_value;
 | Legacy `DATETIME` | Preserved with whole-second precision and no time-zone adjustment. |
 | `DATETIME(p)` | Supports `0 <= p <= 6` with no time-zone adjustment. |
 | `TIMESTAMPTZ(p)` | Supports `0 <= p <= 6` with time-zone-adjusted timestamp semantics. |
+| Decimal precision greater than 38 | Not supported as input to VARIANT. |
 | `TIME` | Not supported as input to VARIANT. |
 
 Every source value must also be valid for its Doris source type. Unsupported precision, invalid dates, or incompatible values return an error instead of being repaired.
@@ -221,7 +227,7 @@ SQL `NULL` and Variant/JSON `null` are different values:
 
 - SQL `NULL` represents the absence of a SQL value and follows normal SQL NULL propagation.
 - Variant/JSON `null` is a VARIANT value, for example the result of `PARSE_TO_VARIANT('null')`.
-- `PARSE_TO_VARIANT_ERROR_TO_NULL` returns SQL `NULL` for malformed input. This differs from successfully parsing the JSON literal `null`.
+- `TRY_PARSE_TO_VARIANT` returns SQL `NULL` for malformed input. This differs from successfully parsing the JSON literal `null`.
 
 ## Primitive types
 

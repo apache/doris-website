@@ -1,19 +1,19 @@
 ---
 {
-    "title": "PARSE_TO_VARIANT_ERROR_TO_NULL（解析失败返回 NULL）",
+    "title": "TRY_PARSE_TO_VARIANT",
     "language": "zh-CN",
-    "description": "PARSE_TO_VARIANT_ERROR_TO_NULL 将完整 JSON 值解析为 VARIANT，并在解析或校验失败时返回 SQL NULL，而不是使当前查询失败。"
+    "description": "TRY_PARSE_TO_VARIANT 尝试把完整 JSON 值解析为 VARIANT，并在解析或校验失败时返回 SQL NULL，而不是使当前查询直接失败。"
 }
 ---
 
 ## 功能
 
-`PARSE_TO_VARIANT_ERROR_TO_NULL` 将一个完整 JSON 值解析为 `VARIANT`。函数名中的 `ERROR_TO_NULL` 表示：发生解析或校验错误时返回 SQL `NULL`，而不是使查询失败。该函数自 Doris 4.2 起支持。
+`TRY_PARSE_TO_VARIANT` 尝试把一个完整 JSON 值解析为 `VARIANT`。函数名中的 `TRY_` 表示：发生解析或校验错误时返回 SQL `NULL`，而不是使查询失败。该函数自 Doris 4.2 起支持。
 
 ## 语法
 
 ```sql
-PARSE_TO_VARIANT_ERROR_TO_NULL(<json_value>)
+TRY_PARSE_TO_VARIANT(<json_value>)
 ```
 
 ## 参数
@@ -37,11 +37,11 @@ PARSE_TO_VARIANT_ERROR_TO_NULL(<json_value>)
 
 ```sql
 SELECT CAST(
-           PARSE_TO_VARIANT_ERROR_TO_NULL('{"id": 1}')
+           TRY_PARSE_TO_VARIANT('{"id": 1}')
            AS STRING
        ) AS valid_value,
-       PARSE_TO_VARIANT_ERROR_TO_NULL('{"id":') IS NULL AS invalid_is_null,
-       PARSE_TO_VARIANT_ERROR_TO_NULL(NULL) IS NULL AS input_is_null;
+       TRY_PARSE_TO_VARIANT('{"id":') IS NULL AS invalid_is_null,
+       TRY_PARSE_TO_VARIANT(NULL) IS NULL AS input_is_null;
 ```
 
 ```text
@@ -56,7 +56,7 @@ SELECT CAST(
 
 ```sql
 SELECT CAST(
-           PARSE_TO_VARIANT_ERROR_TO_NULL(CAST('[10, 20, 30]' AS JSON))
+           TRY_PARSE_TO_VARIANT(CAST('[10, 20, 30]' AS JSON))
            AS STRING
        ) AS value;
 ```
@@ -72,8 +72,8 @@ SELECT CAST(
 JSON `null` 与 SQL `NULL` 仍然不同：
 
 ```sql
-SELECT PARSE_TO_VARIANT_ERROR_TO_NULL('null') IS NULL AS json_null_is_sql_null,
-       PARSE_TO_VARIANT_ERROR_TO_NULL('{') IS NULL AS error_is_sql_null;
+SELECT TRY_PARSE_TO_VARIANT('null') IS NULL AS json_null_is_sql_null,
+       TRY_PARSE_TO_VARIANT('{') IS NULL AS error_is_sql_null;
 ```
 
 ```text

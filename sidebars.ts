@@ -1868,7 +1868,7 @@ const sidebars: SidebarsConfig = {
                                     items: [
                                         'sql-manual/sql-functions/scalar-functions/variant-functions/element-at',
                                         'sql-manual/sql-functions/scalar-functions/variant-functions/parse-to-variant',
-                                        'sql-manual/sql-functions/scalar-functions/variant-functions/parse-to-variant-error-to-null',
+                                        'sql-manual/sql-functions/scalar-functions/variant-functions/try-parse-to-variant',
                                         'sql-manual/sql-functions/scalar-functions/variant-functions/variant-type',
                                     ],
                                 },

@@ -1,19 +1,19 @@
 ---
 {
-    "title": "PARSE_TO_VARIANT_ERROR_TO_NULL (Return NULL on Error)",
+    "title": "TRY_PARSE_TO_VARIANT",
     "language": "en",
-    "description": "Parses one complete JSON value into VARIANT and returns SQL NULL when parsing or validation fails."
+    "description": "Tries to parse one complete JSON value into VARIANT and returns SQL NULL when parsing or validation fails."
 }
 ---
 
 ## Description
 
-`PARSE_TO_VARIANT_ERROR_TO_NULL` parses one complete JSON value into `VARIANT`. The `ERROR_TO_NULL` suffix means that a parsing or validation error returns SQL `NULL` instead of failing the query. This function is available in Doris 4.2 and later.
+`TRY_PARSE_TO_VARIANT` tries to parse one complete JSON value into `VARIANT`. The `TRY_` prefix means that a parsing or validation error returns SQL `NULL` instead of failing the query. This function is available in Doris 4.2 and later.
 
 ## Syntax
 
 ```sql
-PARSE_TO_VARIANT_ERROR_TO_NULL(<json_value>)
+TRY_PARSE_TO_VARIANT(<json_value>)
 ```
 
 ## Parameters
@@ -37,11 +37,11 @@ Keep valid values and convert invalid JSON to SQL `NULL`:
 
 ```sql
 SELECT CAST(
-           PARSE_TO_VARIANT_ERROR_TO_NULL('{"id": 1}')
+           TRY_PARSE_TO_VARIANT('{"id": 1}')
            AS STRING
        ) AS valid_value,
-       PARSE_TO_VARIANT_ERROR_TO_NULL('{"id":') IS NULL AS invalid_is_null,
-       PARSE_TO_VARIANT_ERROR_TO_NULL(NULL) IS NULL AS input_is_null;
+       TRY_PARSE_TO_VARIANT('{"id":') IS NULL AS invalid_is_null,
+       TRY_PARSE_TO_VARIANT(NULL) IS NULL AS input_is_null;
 ```
 
 ```text
@@ -56,7 +56,7 @@ Parse JSON/JSONB input:
 
 ```sql
 SELECT CAST(
-           PARSE_TO_VARIANT_ERROR_TO_NULL(CAST('[10, 20, 30]' AS JSON))
+           TRY_PARSE_TO_VARIANT(CAST('[10, 20, 30]' AS JSON))
            AS STRING
        ) AS value;
 ```
@@ -72,8 +72,8 @@ SELECT CAST(
 JSON `null` and SQL `NULL` remain distinct:
 
 ```sql
-SELECT PARSE_TO_VARIANT_ERROR_TO_NULL('null') IS NULL AS json_null_is_sql_null,
-       PARSE_TO_VARIANT_ERROR_TO_NULL('{') IS NULL AS error_is_sql_null;
+SELECT TRY_PARSE_TO_VARIANT('null') IS NULL AS json_null_is_sql_null,
+       TRY_PARSE_TO_VARIANT('{') IS NULL AS error_is_sql_null;
 ```
 
 ```text
