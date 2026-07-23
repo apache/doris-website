@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react';
-import { analyzeProfile } from './profile-analysis.api';
-import type { AgentMessage, AnalysisState, ResponseLanguage } from './profile-analysis.types';
+import { createAnalysisJob, getAnalysisJob, ProfileAnalysisApiError } from './profile-analysis.api';
+import type { AgentMessage, AnalysisJobSnapshot, AnalysisState, ResponseLanguage } from './profile-analysis.types';
+
+const MAX_CONSECUTIVE_POLL_FAILURES = 3;
 
 interface ProfileAnalysisSnapshot {
     state: AnalysisState;
     file: File | null;
     language: ResponseLanguage;
+    jobId: string | null;
+    jobsAhead: number | null;
     result: AgentMessage | null;
     error: string | null;
 }
@@ -14,6 +18,8 @@ type ProfileAnalysisAction =
     | { type: 'select'; file: File | null }
     | { type: 'set_language'; language: ResponseLanguage }
     | { type: 'start' }
+    | { type: 'job_created'; jobId: string; status: 'QUEUED' | 'RUNNING' }
+    | { type: 'job_status'; job: AnalysisJobSnapshot }
     | { type: 'complete'; result: AgentMessage }
     | { type: 'fail'; error: string };
 
@@ -21,6 +27,8 @@ export const initialProfileAnalysisSnapshot: ProfileAnalysisSnapshot = {
     state: 'idle',
     file: null,
     language: 'en',
+    jobId: null,
+    jobsAhead: null,
     result: null,
     error: null,
 };
@@ -31,7 +39,7 @@ export function profileAnalysisReducer(
 ): ProfileAnalysisSnapshot {
     switch (action.type) {
         case 'select':
-            if (snapshot.state === 'analyzing') {
+            if (isBusy(snapshot.state)) {
                 return snapshot;
             }
             return {
@@ -40,34 +48,56 @@ export function profileAnalysisReducer(
                 language: snapshot.language,
                 result: null,
                 error: null,
+                jobId: null,
+                jobsAhead: null,
             };
         case 'set_language':
-            if (snapshot.state === 'analyzing') {
+            if (isBusy(snapshot.state)) {
                 return snapshot;
             }
             return {
                 ...snapshot,
                 language: action.language,
                 state: snapshot.file ? 'ready' : 'idle',
+                jobId: null,
+                jobsAhead: null,
                 result: null,
                 error: null,
             };
         case 'start':
-            if (!snapshot.file || snapshot.state === 'analyzing') {
+            if (!snapshot.file || isBusy(snapshot.state)) {
                 return snapshot;
             }
             return {
                 ...snapshot,
-                state: 'analyzing',
+                state: 'submitting',
+                jobId: null,
+                jobsAhead: null,
                 result: null,
                 error: null,
             };
+        case 'job_created':
+            return {
+                ...snapshot,
+                state: action.status === 'QUEUED' ? 'queued' : 'analyzing',
+                jobId: action.jobId,
+                jobsAhead: null,
+            };
+        case 'job_status':
+            if (action.job.status === 'QUEUED') {
+                return { ...snapshot, state: 'queued', jobsAhead: action.job.jobsAhead };
+            }
+            if (action.job.status === 'RUNNING') {
+                return { ...snapshot, state: 'analyzing', jobsAhead: null };
+            }
+            return snapshot;
         case 'complete':
             return {
                 ...snapshot,
                 state: 'completed',
                 result: action.result,
                 error: null,
+                jobsAhead: null,
             };
         case 'fail':
             return {
@@ -75,8 +105,27 @@ export function profileAnalysisReducer(
                 state: 'failed',
                 result: null,
                 error: action.error,
+                jobsAhead: null,
             };
     }
+}
+
+function isBusy(state: AnalysisState): boolean {
+    return state === 'submitting' || state === 'queued' || state === 'analyzing';
+}
+
+function wait(milliseconds: number, signal: AbortSignal): Promise<void> {
+    return new Promise((resolve, reject) => {
+        const handleAbort = () => {
+            window.clearTimeout(timeout);
+            reject(new DOMException('The operation was aborted.', 'AbortError'));
+        };
+        const timeout = window.setTimeout(() => {
+            signal.removeEventListener('abort', handleAbort);
+            resolve();
+        }, milliseconds);
+        signal.addEventListener('abort', handleAbort, { once: true });
+    });
 }
 
 export function getProfileAnalysisErrorMessage(reason: unknown): string {
@@ -115,9 +164,37 @@ export function useProfileAnalysis(apiBaseUrl: string) {
         dispatch({ type: 'start' });
 
         try {
-            const result = await analyzeProfile(apiBaseUrl, snapshot.file, snapshot.language, controller.signal);
-            if (mountedRef.current && abortControllerRef.current === controller) {
-                dispatch({ type: 'complete', result });
+            const created = await createAnalysisJob(apiBaseUrl, snapshot.file, snapshot.language, controller.signal);
+            if (!mountedRef.current || abortControllerRef.current !== controller) return;
+            dispatch({ type: 'job_created', jobId: created.jobId, status: created.status });
+
+            let consecutiveFailures = 0;
+            while (!controller.signal.aborted) {
+                try {
+                    const job = await getAnalysisJob(apiBaseUrl, created.jobId, controller.signal);
+                    consecutiveFailures = 0;
+                    if (!mountedRef.current || abortControllerRef.current !== controller) return;
+                    if (job.status === 'COMPLETED') {
+                        dispatch({ type: 'complete', result: job.result });
+                        return;
+                    }
+                    if (job.status === 'FAILED') {
+                        dispatch({ type: 'fail', error: job.error.message });
+                        return;
+                    }
+                    dispatch({ type: 'job_status', job });
+                } catch (reason) {
+                    if (
+                        reason instanceof ProfileAnalysisApiError &&
+                        (reason.code === 'NETWORK_ERROR' || reason.status >= 500)
+                    ) {
+                        consecutiveFailures += 1;
+                        if (consecutiveFailures >= MAX_CONSECUTIVE_POLL_FAILURES) throw reason;
+                    } else {
+                        throw reason;
+                    }
+                }
+                await wait(created.retryAfterMs, controller.signal);
             }
         } catch (reason) {
             if (mountedRef.current && abortControllerRef.current === controller) {
@@ -140,6 +217,7 @@ export function useProfileAnalysis(apiBaseUrl: string) {
 
     return {
         ...snapshot,
+        isBusy: isBusy(snapshot.state),
         selectFile,
         setLanguage,
         analyze,

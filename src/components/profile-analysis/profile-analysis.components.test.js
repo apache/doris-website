@@ -76,7 +76,7 @@ test('disables Analyze until a file exists and while analysis is running', () =>
         }),
     );
     assert.match(analyzing, /<input[^>]*disabled=""/);
-    assert.match(analyzing, /<button[^>]*disabled=""[^>]*>Analyzing…<\/button>/);
+    assert.match(analyzing, /<button[^>]*disabled=""[^>]*>Processing…<\/button>/);
 });
 
 test('uses an English accessible label instead of exposing localized native file-input text', () => {
@@ -116,10 +116,10 @@ test('renders an English response-language selector with English selected by def
 });
 
 test('exposes the waiting state to assistive technology', () => {
-    const markup = renderToStaticMarkup(React.createElement(AnalysisStatus));
+    const markup = renderToStaticMarkup(React.createElement(AnalysisStatus, { state: 'queued', jobsAhead: 3 }));
     assert.match(markup, /role="status"/);
     assert.match(markup, /aria-live="polite"/);
-    assert.match(markup, /may take several minutes/);
+    assert.match(markup, /Queued · 3 jobs ahead/);
 });
 
 test('renders runtime Markdown while discarding raw HTML and unsafe links', () => {

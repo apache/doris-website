@@ -33,14 +33,18 @@ test('moves from idle through ready, analyzing, and completed', () => {
         state: 'ready',
         file: firstFile,
         language: 'en',
+        jobId: null,
+        jobsAhead: null,
         result: null,
         error: null,
     });
 
-    const analyzing = profileAnalysisReducer(ready, { type: 'start' });
-    assert.equal(analyzing.state, 'analyzing');
-    assert.equal(analyzing.result, null);
-    assert.equal(analyzing.error, null);
+    const submitting = profileAnalysisReducer(ready, { type: 'start' });
+    assert.equal(submitting.state, 'submitting');
+    const queued = profileAnalysisReducer(submitting, { type: 'job_created', jobId: 'job-1', status: 'QUEUED' });
+    const analyzing = profileAnalysisReducer(queued, {
+        type: 'job_status', job: { jobId: 'job-1', status: 'RUNNING' },
+    });
 
     const completed = profileAnalysisReducer(analyzing, { type: 'complete', result });
     assert.equal(completed.state, 'completed');
@@ -64,6 +68,8 @@ test('stores failures and clears the old result and error when a new file is sel
         state: 'completed',
         file: firstFile,
         language: 'en',
+        jobId: 'old-job',
+        jobsAhead: null,
         result,
         error: null,
     };
@@ -72,6 +78,8 @@ test('stores failures and clears the old result and error when a new file is sel
         state: 'failed',
         file: firstFile,
         language: 'en',
+        jobId: 'old-job',
+        jobsAhead: null,
         result: null,
         error: 'Analyzer unavailable',
     });
@@ -81,6 +89,8 @@ test('stores failures and clears the old result and error when a new file is sel
         state: 'ready',
         file: secondFile,
         language: 'en',
+        jobId: null,
+        jobsAhead: null,
         result: null,
         error: null,
     });
@@ -91,6 +101,8 @@ test('stores response language per request, clears stale output, and freezes it 
         state: 'completed',
         file: firstFile,
         language: 'en',
+        jobId: 'old-job',
+        jobsAhead: null,
         result,
         error: null,
     };
@@ -99,6 +111,8 @@ test('stores response language per request, clears stale output, and freezes it 
         state: 'ready',
         file: firstFile,
         language: 'zh-CN',
+        jobId: null,
+        jobsAhead: null,
         result: null,
         error: null,
     });

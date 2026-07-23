@@ -142,7 +142,7 @@ export function ProfileUploader({
                 disabled={!file || disabled}
                 onClick={onAnalyze}
             >
-                {disabled ? 'Analyzing…' : 'Analyze Profile'}
+                {disabled ? 'Processing…' : 'Analyze Profile'}
             </button>
         </section>
     );

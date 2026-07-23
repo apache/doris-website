@@ -11,7 +11,11 @@ export function ProfileAnalyzer(): JSX.Element {
     const configuredApiBaseUrl = siteConfig.customFields?.profileAnalysisApiBaseUrl;
     const apiBaseUrl = typeof configuredApiBaseUrl === 'string' ? configuredApiBaseUrl : '';
     const analysis = useProfileAnalysis(apiBaseUrl);
-    const isAnalyzing = analysis.state === 'analyzing';
+    const isBusy = analysis.isBusy;
+    const busyState =
+        analysis.state === 'submitting' || analysis.state === 'queued' || analysis.state === 'analyzing'
+            ? analysis.state
+            : null;
 
     return (
         <div className="profile-analysis">
@@ -27,13 +31,14 @@ export function ProfileAnalyzer(): JSX.Element {
             <ProfileUploader
                 file={analysis.file}
                 language={analysis.language}
-                disabled={isAnalyzing}
+                disabled={isBusy}
                 onFileChange={analysis.selectFile}
                 onLanguageChange={analysis.setLanguage}
                 onAnalyze={analysis.analyze}
             />
 
-            {isAnalyzing && <AnalysisStatus />}
+            {busyState && <AnalysisStatus state={busyState} jobsAhead={analysis.jobsAhead} />}
+            {analysis.state === 'completed' && <AnalysisStatus state="completed" jobsAhead={null} />}
             {analysis.error && (
                 <div className="profile-analysis__error" role="alert">
                     <strong>Analysis failed.</strong>
