@@ -33,8 +33,6 @@ under the License.
 <!-- Knowledge type: Extension development -->
 <!-- Applicable scenario: Data governance integration / Kernel extension development -->
 
-# Data Lineage Plugin Development
-
 This document describes how to develop an external data lineage plugin for Apache Doris. The plugin receives a `LineageInfo` event after a supported DML statement succeeds, then converts the event and writes it to logs, a messaging system, or an external metadata governance platform.
 
 > Applicable version: Apache Doris community edition 4.0.6 and later. Compile the plugin against the exact Doris community release or source revision deployed on the FE.

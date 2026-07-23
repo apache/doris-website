@@ -33,8 +33,6 @@ under the License.
 <!-- 知识类型: 扩展开发 -->
 <!-- 适用场景: 数据治理系统集成 / 内核扩展开发 -->
 
-# 数据血缘插件开发
-
 本文介绍如何为 Apache Doris 开发外部数据血缘插件。插件会在受支持的 DML 成功执行后接收 `LineageInfo` 事件，再将其转换并写入日志、消息系统或外部元数据治理平台。
 
 > 适用版本：Apache Doris 社区开源版 4.0.6 及以后版本。插件必须针对 FE 实际部署的 Doris 社区版本或源码修订版本编译。
@@ -597,7 +595,7 @@ org.apache.doris.plugin.lineage.example.ExampleLineagePluginFactory
 
 ### 第 6 步：构建插件
 
-首次在该源码目录中构建插件前，需要先准备 Doris 的源码编译环境。根据操作系统完成 [Linux 编译环境准备](/zh-CN/community/source-install/compilation-linux)或 [macOS 编译环境准备](/zh-CN/community/source-install/compilation-mac)，再执行一次 FE 构建。以下环境变量只关闭血缘插件编译不需要的 UI、Hive UDF 和 BE Java 扩展，不会跳过 FE：
+首次在该源码目录中构建插件前，需要先准备 Doris 的源码编译环境。根据操作系统完成 [Linux 编译环境准备](/community/source-install/compilation-linux)或 [macOS 编译环境准备](/community/source-install/compilation-mac)，再执行一次 FE 构建。以下环境变量只关闭血缘插件编译不需要的 UI、Hive UDF 和 BE Java 扩展，不会跳过 FE：
 
 ```shell
 cd "${DORIS_SOURCE}"
