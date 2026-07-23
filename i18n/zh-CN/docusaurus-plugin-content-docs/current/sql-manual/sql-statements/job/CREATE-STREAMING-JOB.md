@@ -83,14 +83,13 @@ TO DATABASE <target_db> (
 | `offset` | MySQL、PostgreSQL | `latest` | 启动位点。支持 `initial`、`snapshot`、`latest` 和 JSON 精确位点；MySQL 还支持 `earliest`。 |
 | `snapshot_split_size` | MySQL、PostgreSQL | `8096` | 全量切片的大小（行数），必须为正整数。 |
 | `snapshot_parallelism` | MySQL、PostgreSQL | `1` | 全量阶段单次 Task 最多调度的 split 数量，必须为正整数。 |
-| `skip_snapshot_backfill` | MySQL、PostgreSQL | `true` | 是否跳过全量快照期间的增量回填。自动建表同步默认跳过，提供 at-least-once 语义。 |
 | `ssl_mode` | MySQL、PostgreSQL | `disable` | SSL 模式，可选值为 `disable`、`require`、`verify-ca`。 |
 | `ssl_rootcert` | MySQL、PostgreSQL | - | CA 证书文件，格式为 `FILE:<file_name>`；`ssl_mode=verify-ca` 时必填。 |
 | `server_id` | MySQL | 自动生成 | MySQL CDC reader 的 server ID，支持单值（如 `5400`）或闭区间（如 `5400-5408`）；区间宽度必须大于等于 `snapshot_parallelism`。 |
 | `slot_name` | PostgreSQL | `doris_cdc_<job_id>` | 逻辑复制槽名称。自定义复制槽必须预先创建，由用户管理。 |
 | `publication_name` | PostgreSQL | `doris_pub_<job_id>` | 发布名称。自定义发布必须预先创建、覆盖所有同步表，并由用户管理。 |
 
-> 版本说明：`table.<table_name>.target_table`、`table.<table_name>.exclude_columns`、`offset=snapshot`、`skip_snapshot_backfill`、`ssl_mode`、`ssl_rootcert`、`server_id`、`slot_name` 和 `publication_name` 自 4.1.0 版本起支持。
+> 版本说明：`table.<table_name>.target_table`、`table.<table_name>.exclude_columns`、`offset=snapshot`、`ssl_mode`、`ssl_rootcert`、`server_id`、`slot_name` 和 `publication_name` 自 4.1.0 版本起支持。
 
 同时设置 `include_tables` 和 `exclude_tables` 时，以 `include_tables` 为准。`slot_name` 和 `publication_name` 只能包含小写字母、数字和下划线，不能以数字开头，最长 63 个字符。完整的数据源差异、JSON 位点格式和 SSL 证书配置见 [MySQL 自动建表同步](../../../data-operate/import/import-way/streaming-job/continuous-load-mysql-database.md)和 [PostgreSQL 自动建表同步](../../../data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md)。
 

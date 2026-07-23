@@ -63,7 +63,7 @@ SQL 映射同步和自动建表同步是两种**实现机制完全不同**的持
 | 同步范围       | 单张表                                                         | 一张到多张到整库（由 `include_tables` 控制）    |
 | 自动建表       | 需预建                                                         | 首次同步自动创建主键表                         |
 | SQL 灵活表达   | 支持列映射、过滤、转换（SELECT 子句）                          | 支持目标表重命名和排除非主键列；不支持 SQL 表达式、行过滤或数据转换 |
-| 语义保证       | exactly-once（`skip_snapshot_backfill=false`）                  | at-least-once                                  |
+| 语义保证       | exactly-once                                                    | at-least-once                                  |
 | 所需权限       | Load                                                           | Load + Create（自动建表时）                    |
 | 典型适用场景   | 需要 SQL 表达式、类型转换或条件过滤的实时同步                   | 整库或一组表的镜像复制，允许简单的表重命名或列裁剪 |
 

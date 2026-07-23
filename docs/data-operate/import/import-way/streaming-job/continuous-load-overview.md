@@ -3,7 +3,7 @@
     "title": "Continuous Load Overview",
     "language": "en",
     "sidebar_label": "Overview",
-    "description": "Learn about Doris Streaming Job continuous load: supported data sources, SQL Mapping vs Auto Table Creation selection, job state machine, and common operations.",
+    "description": "Explore Doris Streaming Job data sources, sync modes, consistency semantics, job states, common parameters, and operational commands.",
     "keywords": [
         "Doris continuous load",
         "Streaming Job",
@@ -62,10 +62,10 @@ SQL Mapping Sync and Auto Table Creation Sync are two continuous load methods wi
 | Target level       | An existing Doris table                                         | A Doris database container                         |
 | Sync scope         | A single table                                                  | One to multiple tables to the entire database (controlled by `include_tables`) |
 | Automatic table creation | Tables must be pre-created                                | Primary key tables are created automatically on first sync |
-| SQL flexibility    | Supports column mapping, filtering, and transformation (SELECT clause) | Copies as-is, does not support ETL              |
+| SQL flexibility    | Supports column mapping, filtering, and transformation (SELECT clause) | Supports target table renaming and exclusion of non-key columns; does not support SQL expressions, row filtering, or data transformation |
 | Semantic guarantee | exactly-once                                                    | at-least-once                                      |
 | Required privileges | Load                                                           | Load + Create (when creating tables automatically) |
-| Typical scenarios  | Real-time sync that requires column pruning, field renaming, type conversion, or conditional filtering | Mirror replication of an entire database or a group of tables, where downstream table schemas should automatically follow the upstream |
+| Typical scenarios  | Real-time sync that requires SQL expressions, type conversion, or conditional filtering | Mirror replication of an entire database or a group of tables, allowing simple target table renaming or column pruning |
 
 ### Selection Recommendations
 
@@ -197,9 +197,15 @@ DROP JOB WHERE jobName = <job_name>;
 
 ### Job Common Load Configuration Parameters
 
-| Parameter    | Default | Description                                            |
-| ------------ | ------- | ------------------------------------------------------ |
-| max_interval | 10      | Idle scheduling interval in seconds when the upstream has no new data. Only an integer (number of seconds) is accepted, e.g. `10`; a unit suffix such as `10s` is not supported. Must be >= 1. |
+Configure the following parameters through `CREATE JOB ... PROPERTIES (...)`. Unless otherwise specified, they can be used by both SQL Mapping Sync and Auto Table Creation Sync for MySQL and PostgreSQL.
+
+| Parameter | Default | Description |
+| --- | --- | --- |
+| `max_interval` | `10` | Idle scheduling interval in seconds when no new upstream data is available. Only integers greater than or equal to 1 are accepted; unit suffixes such as `10s` are not supported. |
+| `compute_group` | Current session or user default compute group | Supported only in compute-storage decoupled mode. Specifies the compute group in which the job runs. An explicitly configured value cannot be empty, and the user must have the USAGE privilege on the compute group. Job creation fails if this parameter is not set and neither the current session nor the user has an available default compute group. |
+| `session.<variable_name>` | Default value of the corresponding session variable | Supported only in TVF mode. Sets a session variable for the Job's INSERT task, for example, `session.insert_max_filter_ratio`. The variable name and value must be valid Doris session variables. |
+
+When used as a Job Property, `offset` does not set the initial position of a MySQL or PostgreSQL job. When creating a job, set the initial position in the source parameters of `FROM MYSQL`, `FROM POSTGRES`, or `cdc_stream(...)`. After pausing a CDC job, you can reset its position through `ALTER JOB ... PROPERTIES ("offset" = '<json_offset>')`. MySQL uses `{"file":"binlog.000001","pos":"154"}`, and PostgreSQL uses `{"lsn":"12345678"}`. `ALTER JOB` accepts only exact JSON offsets.
 
 ## Limitations
 
@@ -227,7 +233,7 @@ DDL sync applies **only to the [Auto Table Creation Sync method](#capability-com
 
 **Solution 1:** Add the `allowPublicKeyRetrieval=true` parameter to the JDBC URL:
 
-```
+```text
 jdbc:mysql://127.0.0.1:3306?allowPublicKeyRetrieval=true
 ```
 
