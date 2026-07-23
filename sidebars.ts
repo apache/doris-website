@@ -758,6 +758,13 @@ const sidebars: SidebarsConfig = {
                 },
             ],
         },
+        {
+            type: 'category',
+            label: 'Data Governance',
+            items: [
+                'data-governance/data-lineage',
+            ],
+        },
             ],
         },
         {
