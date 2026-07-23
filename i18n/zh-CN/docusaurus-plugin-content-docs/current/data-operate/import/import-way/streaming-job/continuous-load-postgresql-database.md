@@ -101,7 +101,6 @@ PostgreSQL 源端参数用于配置 JDBC 连接、同步范围以及全量切片
 | `offset` | 否 | `latest` | 启动位点。`initial`：全量 + 增量同步；`latest`：仅同步作业启动后的增量；也可设置 JSON 精确位点，例如 `{"lsn":"12345678"}`。自 4.1.0 版本起支持 `snapshot`，表示仅全量同步。PostgreSQL 不支持 `earliest`。 |
 | `snapshot_split_size` | 否 | `8096` | split 的大小（行数）。全量同步时，表会被切分成多个 split。必须为正整数。 |
 | `snapshot_parallelism` | 否 | `1` | 全量阶段的并行度，即单次 Task 最多调度的 split 数量。必须为正整数。 |
-| `skip_snapshot_backfill` | 否 | `true` | 自 4.1.0 版本起支持。是否跳过全量快照阶段的 WAL 回填。自动建表同步为 at-least-once，默认跳过，快照期间的变更会在后续增量阶段重放。 |
 | `slot_name` | 否 | `doris_cdc_<job_id>` | 自 4.1.0 版本起支持。逻辑复制槽名称。名称只能包含小写字母、数字和下划线，不能以数字开头，最长 63 个字符。自定义复制槽必须预先创建，且不会由 Doris 删除。 |
 | `publication_name` | 否 | `doris_pub_<job_id>` | 自 4.1.0 版本起支持。发布名称，命名规则与 `slot_name` 相同。自定义发布必须预先创建并包含所有同步表，且不会由 Doris 删除。 |
 | `ssl_mode` | 否 | `disable` | 自 4.1.0 版本起支持。SSL 模式，可选值为 `disable`、`require`、`verify-ca`。 |
