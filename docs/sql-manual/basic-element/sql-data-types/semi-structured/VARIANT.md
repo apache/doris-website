@@ -2,7 +2,7 @@
 {
     "title": "VARIANT",
     "language": "en-US",
-    "description": "VARIANT stores semi-structured JSON data and supports typed access, casts, canonical equality, grouping, hashing, and selected SQL operations."
+    "description": "VARIANT stores semi-structured JSON data and supports typed access, casts, hash-based grouping, deduplication, and selected SQL operations."
 }
 ---
 
@@ -90,11 +90,11 @@ Use [TRY_PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-funct
 
 ### Access objects and arrays
 
-Object fields can be accessed with a string key. In Doris 4.2 and later, VARIANT array indexes are zero-based for non-negative indexes and support negative indexes from the end. The extracted value remains `VARIANT`; CAST it before typed comparison, arithmetic, or aggregation.
+Object fields can be accessed with a string key. In Doris 4.2 and later, positive VARIANT array indexes start from 1, and negative indexes count backward from the end. The extracted value remains `VARIANT`; CAST it before typed comparison, arithmetic, or aggregation.
 
 ```sql
 SELECT CAST(PARSE_TO_VARIANT('{"user": {"id": 42}}')['user']['id'] AS BIGINT);
-SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), 0);  -- 10
+SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), 1);  -- 10
 SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), -1); -- 30
 ```
 
@@ -114,10 +114,11 @@ CAST involving VARIANT has two directions: converting a supported SQL value to V
 | `FLOAT`, `DOUBLE` | Preserves the floating-point value. |
 | `DECIMALV2`, `DECIMAL(p, s)` with `p <= 38` | Preserves the Decimal value, subject to the limits below. |
 | `DATE`, `DATETIME`, `TIMESTAMPTZ` | Preserves the typed logical value. |
+| `IPV4`, `IPV6` | Preserves the IP address value. |
 | `JSON` / `JSONB` | Converts the structured value directly to VARIANT. If the input contains a JSONB value type that VARIANT cannot represent, the BE returns an error. |
 | `ARRAY<T>` | Converts each element recursively when `T` is `VARIANT` or is also in this whitelist, and preserves SQL NULL elements. |
 
-Only the source types listed above are supported. Other source types, including `MAP`, `STRUCT`, `TIME`, `IPV4`, `IPV6`, Decimal values with precision greater than 38, and arrays containing an unsupported element type, cause the BE to return an error.
+Only the source types listed above are supported. Other source types, including `MAP`, `STRUCT`, `TIME`, Decimal values with precision greater than 38, and arrays containing an unsupported element type, cause the BE to return an error.
 
 ```sql
 -- A string remains a VARIANT string root, even if it looks like JSON.
@@ -148,10 +149,11 @@ VARIANT can be cast to a compatible scalar, JSON/JSONB, or array target:
 | `DECIMALV2`, `DECIMAL(p, s)` | Converts a compatible numeric root to the requested Decimal type. |
 | `DATE`, `DATETIME`, `TIMESTAMPTZ` | Converts a compatible date/time root. |
 | `CHAR`, `VARCHAR`, `STRING` | Returns scalar text for scalar roots and JSON text for objects and arrays. Variant/JSON `null` becomes the string `null`; outer SQL `NULL` remains SQL `NULL`. |
+| `IPV4`, `IPV6` | Converts a compatible IP address root to the requested IP address type. |
 | `JSON` / `JSONB` | Converts the value structurally. If the VARIANT value contains a type that JSON/JSONB cannot represent, the BE returns an error. |
 | `ARRAY<T>` | Converts a VARIANT array element by element when `T` is `VARIANT` or is also in this whitelist; incompatible elements follow the target CAST rules. |
 
-Only the target types listed above are supported. Other target types, including `MAP`, `STRUCT`, `TIME`, `IPV4`, and `IPV6`, cause the BE to return an error. For a supported target, an incompatible value shape, invalid text, or numeric overflow follows the applicable CAST error-or-NULL behavior.
+Only the target types listed above are supported. Other target types, including `MAP`, `STRUCT`, and `TIME`, cause the BE to return an error. For a supported target, an incompatible value shape, invalid text, or numeric overflow follows the applicable CAST error-or-NULL behavior.
 
 ```sql
 SELECT CAST(PARSE_TO_VARIANT('42') AS BIGINT) AS id;
@@ -179,17 +181,17 @@ SELECT CAST(PARSE_TO_VARIANT('{"id": 1}') AS JSON) AS json_value;
 
 Every source value must also be valid for its Doris source type. Unsupported precision, invalid dates, or incompatible values return an error instead of being repaired.
 
-## Equality and hash semantics
+## Grouping, deduplication, and hash semantics
 
-In Doris 4.2 and later, grouping, deduplication, and set operations compare logical values rather than source SQL types or physical representations:
+In Doris 4.2 and later, grouping, deduplication, and set operations treat logically equivalent VARIANT values as the same value, regardless of source SQL type or physical representation:
 
-- Equivalent integral numeric representations compare as equal.
-- Decimal trailing zeros do not change the value, so `1.20` and `1.2` compare as equal.
-- `+0`, `-0`, and integral zero compare as equal.
-- Object key order does not affect equality, while array element order does.
+- Equivalent integral numeric representations are treated as the same value.
+- Decimal trailing zeros do not change the value, so `1.20` and `1.2` are treated as the same value.
+- `+0`, `-0`, and integral zero are treated as the same value.
+- Object key order does not affect whether values are treated as the same, while array element order does.
 - Variant/JSON `null` is distinct from SQL `NULL`.
 
-Hash-based operators calculate their keys from the same canonical logical representation. Values that compare as equal under the rules above therefore produce the same internal hash key, regardless of whether they came from parsed JSON or a typed CAST. This hash is an implementation detail, not a stable user-facing checksum.
+Hash-based operators use the same logical-value rules when calculating their keys. Values treated as the same under the rules above therefore produce the same internal hash key, regardless of whether they came from parsed JSON or a typed CAST. This hash is an implementation detail, not a stable user-facing checksum.
 
 These rules apply to supported operations such as `GROUP BY`, `DISTINCT`, `COUNT(DISTINCT ...)`, `INTERSECT`, `EXCEPT`, and `UNION DISTINCT`. They do not enable root VARIANT comparison predicates: direct `VARIANT = VARIANT` and ordering comparisons remain unsupported.
 
@@ -333,11 +335,12 @@ SELECT * FROM test_var_schema;
 +------+-----------------------------+
 ```
 
-Schema only guides the persisted storage type. During query execution, the effective type depends on actual data at runtime:
+Schema only guides the persisted storage type. Query expressions that are not written to a table still keep their actual runtime types:
 
 ```sql
--- At runtime v['a'] may still be STRING
-SELECT variant_type(CAST('{"a" : "12345"}' AS VARIANT<'a' : INT>)['a']);
+-- The quoted JSON member is a STRING. PARSE_TO_VARIANT is used because
+-- CAST(string AS VARIANT) always preserves the whole input as a string.
+SELECT variant_type(PARSE_TO_VARIANT('{"a" : "12345"}')['a']);
 ```
 
 Wildcard matching and order:
@@ -555,9 +558,9 @@ In Doris 4.2 and later, whole VARIANT values support hash-based grouping and ded
 
 | Operation on a whole VARIANT value | Support | Notes |
 | --- | --- | --- |
-| `GROUP BY` | Supported | Uses the logical equality and canonical hash rules described above. |
+| `GROUP BY` | Supported | Uses the grouping and hash rules described above. |
 | `DISTINCT`, `COUNT(DISTINCT ...)` | Supported | Logically equivalent values are deduplicated. |
-| `INTERSECT`, `EXCEPT`, `UNION DISTINCT` | Supported | Uses the same logical equality and hash semantics. |
+| `INTERSECT`, `EXCEPT`, `UNION DISTINCT` | Supported | Uses the same rules described above. |
 | `COUNT(*)`, `COUNT(variant)` | Supported | `COUNT(variant)` excludes outer SQL `NULL` in the normal SQL manner. |
 | `IF`, `CASE`, `IFNULL`, `COALESCE` | Supported | Conditional expressions can return and consume VARIANT values. |
 | VARIANT in transient `ARRAY`, `MAP`, or `STRUCT` expressions | Supported | This does not allow these nested types in persisted table schemas. |

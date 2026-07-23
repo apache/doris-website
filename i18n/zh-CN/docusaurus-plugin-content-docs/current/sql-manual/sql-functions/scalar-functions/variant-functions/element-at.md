@@ -29,7 +29,7 @@ ELEMENT_AT(container, key_or_index)
   - 对于 `MAP`：为 `MAP` 中的键类型（`K`），可为任意支持的基础类型。
   - 对于 `STRUCT`：为常量整数（字段位置，从 **1** 开始）或常量字符串（字段名，按**大小写不敏感**匹配）。
   - 对于 `VARIANT` 对象访问：为字符串类型的 key；
-  - 对于 Doris 4.2 及后续版本中的 VARIANT 数组：为整数索引，非负索引从 0 开始，负数索引从数组末尾倒数。
+  - 对于 Doris 4.2 及后续版本中的 VARIANT 数组：为整数索引，正数索引从 1 开始，负数索引从数组末尾倒数。
 
 ## 返回值
 
@@ -42,14 +42,13 @@ ELEMENT_AT(container, key_or_index)
 
 ## 使用说明
 
-1. **ARRAY 数组索引从 1 开始**，不是从 0 开始；
-2. 在 Doris 4.2 及后续版本中，VARIANT 数组的非负索引从 `0` 开始，`0` 表示第一个元素，`-1` 表示最后一个元素；
-3. ARRAY 和 VARIANT 数组都支持负数索引，`-1` 表示最后一个元素，`-2` 表示倒数第二个，以此类推；
-4. `ELEMENT_AT(container, key_or_index)` 函数的功能与 `container[key_or_index]` 作用一致（详细见示例）。
+1. **ARRAY 数组以及 Doris 4.2 及后续版本中的 VARIANT 数组，索引都从 1 开始**，不是从 0 开始；
+2. ARRAY 和 VARIANT 数组都支持负数索引，`-1` 表示最后一个元素，`-2` 表示倒数第二个，以此类推；
+3. `ELEMENT_AT(container, key_or_index)` 函数的功能与 `container[key_or_index]` 作用一致（详细见示例）。
 
 ```sql
-SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 0);  -- 10
-SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 1);  -- 20
+SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 1);  -- 10
+SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 2);  -- 20
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
 ```
 
@@ -123,17 +122,17 @@ SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
 5. 访问 `VARIANT` 的某个子列，如果 `VARIANT` 的值不是 OBJECT，返回空
 
     ```SQL
-     SELECT ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a");
-    +------------------------------------------------------+
-    | ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a") |
-    +------------------------------------------------------+
-    | 1                                                    |
-    +------------------------------------------------------+
+     SELECT ELEMENT_AT(PARSE_TO_VARIANT('{"a": 1, "b": 2}'), "a");
+    +-------------------------------------------------------+
+    | ELEMENT_AT(PARSE_TO_VARIANT('{"a": 1, "b": 2}'), "a") |
+    +-------------------------------------------------------+
+    | 1                                                     |
+    +-------------------------------------------------------+
 
-    SELECT ELEMENT_AT(CAST('123' AS VARIANT), "");
-    +----------------------------------------+
-    | ELEMENT_AT(CAST('123' AS VARIANT), "") |
-    +----------------------------------------+
-    |                                        |
-    +----------------------------------------+
+    SELECT ELEMENT_AT(PARSE_TO_VARIANT('123'), "");
+    +-------------------------------------------+
+    | ELEMENT_AT(PARSE_TO_VARIANT('123'), "")   |
+    +-------------------------------------------+
+    |                                           |
+    +-------------------------------------------+
     ```
