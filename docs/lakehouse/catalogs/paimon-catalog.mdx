@@ -141,9 +141,9 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   | Property | Required | Default | Description |
   | --- | --- | --- | --- |
-  | `paimon.doris.enable_jni_io_manager` | No | `false` | Whether to enable Paimon IOManager for JNI reads. The other IOManager properties take effect only when this property is `true`. |
-  | `paimon.doris.jni_io_manager.tmp_dir` | No | `<storage_root_path>/paimon_jni_scanner_io_tmp` | Local directories used by Paimon IOManager for temporary spill files. Multiple directories can be separated by commas or colons. If this property is omitted, Doris creates one directory under each BE storage path. |
-  | `paimon.doris.jni_io_manager.impl_class` | No | Paimon default implementation | Fully qualified class name of a custom `org.apache.paimon.disk.IOManager` implementation. The class must be available on the Paimon JNI Scanner classpath of every BE. |
+  | `paimon.jni.enable_jni_io_manager` | No | `false` | Whether to enable Paimon IOManager for JNI reads. The other IOManager properties take effect only when this property is `true`. |
+  | `paimon.jni.io_manager.tmp_dir` | No | `<storage_root_path>/paimon_jni_scanner_io_tmp` | Local directories used by Paimon IOManager for temporary spill files. Multiple directories can be separated by commas or colons. If this property is omitted, Doris creates one directory under each BE storage path. |
+  | `paimon.jni.io_manager.impl_class` | No | Paimon default implementation | Fully qualified class name of a custom `org.apache.paimon.disk.IOManager` implementation. The class must be available on the Paimon JNI Scanner classpath of every BE. |
 
   The following example enables IOManager and lets Doris select the temporary directories from the BE storage paths:
 
@@ -153,14 +153,18 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
       "paimon.catalog.type" = "hms",
       "hive.metastore.uris" = "thrift://127.0.0.1:9083",
       "warehouse" = "s3://bucket/paimon-warehouse",
-      "paimon.doris.enable_jni_io_manager" = "true"
+      "paimon.jni.enable_jni_io_manager" = "true"
   );
   ```
+
+  Enabling IOManager does not force every merge read to spill. Paimon spills only when the number of merge readers
+  exceeds its `sort-spill-threshold`. To provide a Catalog-level default for tables that do not define this option,
+  configure `paimon.table-option.sort-spill-threshold` as described in the preceding section.
 
   To use dedicated spill disks, configure local paths that exist or can be created on every BE:
 
   ```sql
-  "paimon.doris.jni_io_manager.tmp_dir" = "/mnt/ssd1/paimon_io:/mnt/ssd2/paimon_io"
+  "paimon.jni.io_manager.tmp_dir" = "/mnt/ssd1/paimon_io:/mnt/ssd2/paimon_io"
   ```
 
   Doris creates an IOManager for each JNI scanner and closes it together with the scanner. Make sure the configured

@@ -140,9 +140,9 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     | 参数 | 是否必填 | 默认值 | 说明 |
     | --- | --- | --- | --- |
-    | `paimon.doris.enable_jni_io_manager` | 否 | `false` | 是否为 JNI 读取启用 Paimon IOManager。只有设置为 `true` 时，其他 IOManager 参数才会生效。 |
-    | `paimon.doris.jni_io_manager.tmp_dir` | 否 | `<storage_root_path>/paimon_jni_scanner_io_tmp` | Paimon IOManager 存放临时 spill 文件的本地目录。多个目录可以使用逗号或冒号分隔。未配置时，Doris 会在 BE 的每个存储路径下创建一个目录。 |
-    | `paimon.doris.jni_io_manager.impl_class` | 否 | Paimon 默认实现 | 自定义 `org.apache.paimon.disk.IOManager` 实现的完整类名。该类必须存在于每个 BE 的 Paimon JNI Scanner classpath 中。 |
+    | `paimon.jni.enable_jni_io_manager` | 否 | `false` | 是否为 JNI 读取启用 Paimon IOManager。只有设置为 `true` 时，其他 IOManager 参数才会生效。 |
+    | `paimon.jni.io_manager.tmp_dir` | 否 | `<storage_root_path>/paimon_jni_scanner_io_tmp` | Paimon IOManager 存放临时 spill 文件的本地目录。多个目录可以使用逗号或冒号分隔。未配置时，Doris 会在 BE 的每个存储路径下创建一个目录。 |
+    | `paimon.jni.io_manager.impl_class` | 否 | Paimon 默认实现 | 自定义 `org.apache.paimon.disk.IOManager` 实现的完整类名。该类必须存在于每个 BE 的 Paimon JNI Scanner classpath 中。 |
 
     以下示例启用 IOManager，并由 Doris 根据 BE 存储路径自动选择临时目录：
 
@@ -152,14 +152,18 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         "paimon.catalog.type" = "hms",
         "hive.metastore.uris" = "thrift://127.0.0.1:9083",
         "warehouse" = "s3://bucket/paimon-warehouse",
-        "paimon.doris.enable_jni_io_manager" = "true"
+        "paimon.jni.enable_jni_io_manager" = "true"
     );
     ```
+
+    启用 IOManager 不会强制所有 merge read 都进行 spill。只有 merge reader 数量超过 Paimon 的
+    `sort-spill-threshold` 时才会触发 spill。如果需要为未设置该参数的表提供 Catalog 级默认值，
+    可以按照上一节的方式配置 `paimon.table-option.sort-spill-threshold`。
 
     如果需要使用专用 spill 磁盘，可以配置每个 BE 上均存在或可以创建的本地路径：
 
     ```sql
-    "paimon.doris.jni_io_manager.tmp_dir" = "/mnt/ssd1/paimon_io:/mnt/ssd2/paimon_io"
+    "paimon.jni.io_manager.tmp_dir" = "/mnt/ssd1/paimon_io:/mnt/ssd2/paimon_io"
     ```
 
     Doris 会为每个 JNI Scanner 创建一个 IOManager，并在 Scanner 关闭时一同关闭。需要确保配置的目录
