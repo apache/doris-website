@@ -2,7 +2,7 @@
 {
     "title": "Metabase",
     "language": "en",
-    "description": "Connect to Doris in Metabase using the Apache Doris Driver, configure data sources, build visualization dashboards with SQL, and explore Catalogs, parameterized queries, and performance tuning recommendations.",
+    "description": "Connect Metabase to Apache Doris using the Doris Driver, configure data sources, build dashboards, and use Catalog and parameterized SQL.",
     "keywords": [
         "Metabase connect Doris",
         "Apache Doris Metabase Driver",
@@ -16,6 +16,8 @@
 {/* Applicable scenario: Connect to Apache Doris in Metabase and build visualization dashboards */}
 
 Metabase is an open source business intelligence tool that provides data analysis, data visualization, interactive dashboards, data drill-down, SQL query editing, and data export. With the Metabase Apache Doris Driver, Metabase can integrate Apache Doris databases and tables as data sources to query Doris internal data and external data, and to build visualization dashboards.
+
+The driver is a standalone Metabase community driver and is not built into Metabase.
 
 This article starts from user scenarios and describes how to complete the following operations:
 
@@ -34,40 +36,63 @@ Before you start configuration, make sure the following environment is ready:
 
 | Item | Requirement |
 |------|------|
-| Metabase | Download and install Metabase 0.48.0 or later. For details, see the [Metabase installation documentation](https://www.metabase.com/docs/latest/installation-and-operation/installing-metabase) |
+| Metabase | Download and install Metabase `0.59.6.3` or later. For installation instructions, see the [Metabase installation documentation](https://www.metabase.com/docs/latest/installation-and-operation/installing-metabase) |
+| Java | Java 21 is required to run Metabase |
 | Apache Doris | Prepare an accessible Apache Doris cluster |
-| Doris driver | Download the latest [metabase-doris-driver](https://velodb-bi-connector-1316291683.cos.ap-hongkong.myqcloud.com/Metabase/latest/doris.metabase-driver.jar) |
+| Doris driver | Download the [Metabase Doris Driver](https://github.com/xylaaaaa/metabase-doris-driver/releases/tag/v1.0.0) |
+
+### Download and verify the driver
+
+Download the Release JAR and its checksum file:
+
+```bash
+curl -LO https://github.com/xylaaaaa/metabase-doris-driver/releases/download/v1.0.0/doris.metabase-driver-v1.0.0.jar
+curl -LO https://github.com/xylaaaaa/metabase-doris-driver/releases/download/v1.0.0/doris.metabase-driver-v1.0.0.jar.sha256
+sha256sum -c doris.metabase-driver-v1.0.0.jar.sha256
+```
+
+The expected SHA-256 digest is as follows:
+
+```text
+b23e82f19a7f9226343e42566e1e192b6df7a0dfc48a73d2101fc74bfec243f3
+```
 
 ### Install the driver for a regular deployment
 
 If Metabase is deployed in the regular way, install the Doris driver as follows:
 
-1. Download the Doris Driver.
+1. Download and verify the driver Release files as described above.
 
-2. Create the Metabase plugins directory (if it does not exist):
+2. If the Metabase plugins directory does not exist, create it:
 
     ```bash
-    mkdir -p $path_metabase/plugins
+    mkdir -p /path/to/metabase/plugins
     ```
 
-3. Copy the JAR file to the plugins directory:
+3. Copy the Release JAR to the plugins directory:
 
     ```bash
-    cp doris.metabase-driver.jar $path_metabase/plugins
+    cp doris.metabase-driver-v1.0.0.jar /path/to/metabase/plugins/doris.metabase-driver.jar
     ```
 
 4. Restart the Metabase service.
 
+5. Check the Metabase startup log to confirm that the `doris` driver is registered. In **Admin Settings** > **Databases** > **Add database**, you should be able to see the **Apache Doris** database type.
+
 ### Install the driver for a Docker deployment
 
-If Metabase is started with Docker, you are recommended to start it by mounting `doris.metabase-driver.jar`. The plugin path inside the Docker container is `/plugins/`.
+If you start Metabase with Docker, you are recommended to start it by mounting `doris.metabase-driver.jar`. The plugin path inside the Docker container is `/plugins/`.
 
-1. Download the Doris Driver.
+1. Download and verify the driver Release files.
 
-2. Start Metabase with a command similar to the following:
+2. Start the container with a Metabase image that meets the prerequisites:
 
     ```bash
-    docker run -d -p 3000:3000 --name metabase -v $host_path/doris.metabase-driver.jar:/plugins/doris.metabase-driver.jar metabase/metabase
+    docker run -d \
+      -p 3000:3000 \
+      --name metabase \
+      -v "$(pwd)/doris.metabase-driver-v1.0.0.jar:/plugins/doris.metabase-driver.jar:ro" \
+      metabase/metabase
     ```
 
 ## Configure the Doris data source
@@ -79,22 +104,29 @@ After installing Metabase and `metabase-doris-driver`, you can add a data source
 
 ### Connection parameters
 
-The following parameters are required when connecting to Apache Doris:
+The following fields are required when connecting to Apache Doris:
 
 | Parameter | Meaning | Example |
 |------|------|------|
 | **Display Name** | Display name of the data source | Doris-TPCH |
 | **Host** | Doris FE node address | 127.0.0.1 |
-| **Port** | Doris Query Port (MySQL protocol port) | 9030 |
-| **Catalog name** | Catalog name. Optional, defaults to `internal` | internal |
-| **Database name** | Database name. Required | tpch |
+| **Port** | Doris Query Port (MySQL protocol port), defaults to `9030` | 9030 |
+| **Catalog** | Catalog name. Optional, defaults to `internal` | internal |
+| **Database (optional)** | The database in the selected Catalog. Optional; when left empty, all visible databases in the Catalog are discovered | tpch |
 | **Username** | Username | root |
 | **Password** | Password | your_password |
+| **SSL** | Enable JDBC TLS. The driver uses MariaDB `sslMode=trust` and does not verify the server certificate or hostname | false |
+| **Sync Schemas Include** | Optional. Used when **Database (optional)** is empty. A comma-separated allowlist of databases | tpch |
+| **Sync Schemas Exclude** | Optional. Used when **Database (optional)** is empty. A comma-separated denylist of databases. The exclude rule takes precedence over the include rule | information_schema |
+| **Additional JDBC connection string options** | Other MariaDB JDBC URL parameters | connectTimeout=10000 |
 
-Fill in the database name as follows:
+Select the Catalog and database scope as follows:
 
-- **Querying internal tables**: Enter the database name directly, for example `tpch`. The system automatically uses the `internal` Catalog.
-- **Querying external tables or data lakes**: Fill in the Catalog configuration. If you only connect to internal tables, you do not need to consider this option.
+- **Internal tables**: Keep **Catalog** as `internal` and fill in a database such as `tpch`.
+- **External tables**: Fill in the external Catalog and a database visible in that Catalog.
+- **Multiple databases**: Leave **Database (optional)** empty. The driver discovers the databases visible to the configured account, and applies the include and exclude lists before listing the tables in them.
+
+When **Database (optional)** is empty, the driver excludes `information_schema`, `__internal_schema`, and `mysql` by default. The include and exclude rules are matched case-insensitively; if the same database appears in both lists, the exclude rule takes precedence. If **Database (optional)** is set explicitly, the sync scope is limited to that database, and the include and exclude settings do not change the sync scope.
 
 ### Configuration steps
 
@@ -119,7 +151,8 @@ Fill in the database name as follows:
     | **Display name** | Doris-TPCH |
     | **Host** | 127.0.0.1 |
     | **Port** | 9030 |
-    | **Database name** | tpch |
+    | **Catalog** | internal |
+    | **Database (optional)** | tpch |
     | **Username** | admin |
     | **Password** | ****** |
 
@@ -127,7 +160,7 @@ Fill in the database name as follows:
 
 6. Click **Save** to save the configuration.
 
-7. Metabase automatically tests the connection and synchronizes database metadata. If the connection succeeds, a success message is displayed.
+7. Metabase tests the connection and starts synchronizing database metadata. If the connection succeeds, a success message is displayed.
 
 ![Connection succeeded](/images/next/connection-integration/data-integration/metabase/metabase-05.png)
 
@@ -161,7 +194,7 @@ Suppose you need to analyze how the order amounts of different shipping methods 
 
 To compute the revenue, you need to use a custom SQL expression.
 
-1. Click **view sql** in the upper right corner to switch, then click **convert this question to SQL** to edit the SQL.
+1. Click **view sql** in the upper right corner, then click **convert this question to SQL** to edit the SQL.
 
 ![Switch to SQL mode](/images/next/connection-integration/data-integration/metabase/metabase-08.png)
 
@@ -226,6 +259,21 @@ To compute the revenue, you need to use a custom SQL expression.
 
 You have now successfully connected Metabase to Apache Doris and completed data analysis and visualization dashboard creation.
 
+## Driver capabilities and limitations
+
+The following table summarizes the driver capabilities and current support boundaries.
+
+| Capability | Support status and boundaries |
+|------|------|
+| Internal Catalog | Supports synchronizing and querying Doris internal tables |
+| Native SQL | Supported. SQL is executed with the permissions of the configured Doris account; the driver does not force statements to be read-only |
+| Query Builder | Supports group aggregation and bucketing by day |
+| External Catalog | Supports synchronizing and querying data in Doris External Catalogs; the available scope and metadata completeness depend on the specific connector |
+| Native template parameters | Supports numeric, text, and optional blocks |
+| Complex types | Top-level `ARRAY`, `MAP`, `JSON`, and opaque complex fields remain visible; nested subfields are not expanded |
+| Key and index metadata | Primary keys, foreign keys, indexes, and table permissions are not synchronized |
+| Metabase write features | Data upload, write-back, Actions, data editing, and persisted models are not supported |
+
 ## Advanced scenarios
 
 {/* Knowledge type: Feature description */}
@@ -233,38 +281,69 @@ You have now successfully connected Metabase to Apache Doris and completed data 
 
 ### Use Catalog to access external data
 
-Doris supports the multi-Catalog feature, which can query external data sources and perform cross-data-source queries. When using Catalog in Metabase, you can choose either of the following options.
+Set **Catalog** and **Database (optional)** on the connection page to synchronize tables in a Doris external Catalog:
 
-1. Configure `Catalog` on the connection configuration page, and configure an external table database under that Catalog in `Database`. For example:
-
-    | Configuration | Example value | Description |
-    |--------|--------|------|
-    | `catalog` | `hive_catalog` | Access the Catalog named `hive_catalog` |
-    | `database` | `warehouse` | Access the `warehouse` database under the Catalog |
+| Configuration | Example value | Description |
+|--------|--------|------|
+| `Catalog` | `hive_catalog` | Select the Doris Catalog named `hive_catalog` |
+| `Database (optional)` | `warehouse` | Select the `warehouse` database in the Catalog |
 
 ![Configure Catalog](/images/next/connection-integration/data-integration/metabase/metabase-15.png)
 
-2. Specify the Catalog explicitly in the SQL query:
+Specify the Catalog explicitly in the SQL query:
 
-    ```sql
-    SELECT * FROM hive.warehouse.orders LIMIT 100;
-    ```
+```sql
+SELECT * FROM hive.warehouse.orders LIMIT 100;
+```
 
 ### Use parameterized queries
 
-Metabase supports using variables in SQL queries, which makes it easy to create interactive dashboards:
+The driver supports basic Native SQL template parameters. The following example uses a numeric parameter, a text parameter, and an optional block:
 
 ```sql
 SELECT
-  l_shipmode,
-  SUM(l_extendedprice * (1 - l_discount)) AS revenue
-FROM lineitem
-WHERE l_shipdate BETWEEN {{start_date}} AND {{end_date}}
-  AND l_shipmode = {{ship_mode}}
-GROUP BY l_shipmode
+  category,
+  COUNT(*) AS row_count,
+  SUM(amount) AS total_amount
+FROM orders
+WHERE amount > {{min_amount}}
+[[AND category = {{category}}]]
+GROUP BY category
 ```
 
-After saving, you can dynamically filter data on the dashboard with dropdowns or date pickers.
+When `category` has no value, Metabase removes the entire optional block.
+
+| Template capability | Support status |
+|----------|----------|
+| Numeric variables | Supported |
+| Text variables | Supported |
+| Optional blocks `[[ ... ]]` | Supported |
+| Field filters | Not supported |
+| Card references such as `{{#card-id}}` | Not supported |
+| Dynamic table references | Not supported |
+
+### Data types
+
+During metadata synchronization, the driver maps Doris types to Metabase base types as shown in the following table:
+
+| Doris type | Metabase base type |
+|------------|-------------------|
+| `BOOLEAN` | `type/Boolean` |
+| `TINYINT`, `SMALLINT`, `INT`, `INTEGER`, including display widths such as `INT(11)` | `type/Integer` |
+| `BIGINT`, `LARGEINT`, including display widths such as `BIGINT(20)` | `type/BigInteger` |
+| `FLOAT`, `DOUBLE` | `type/Float` |
+| `DECIMAL` | `type/Decimal` |
+| `DATE`, `DATEV2` | `type/Date` |
+| `TIME`, including fractional-second precision | `type/Time` |
+| `DATETIME`, `DATETIMEV2`, `TIMESTAMP` | `type/DateTime` |
+| `TIMESTAMPTZ` | `type/DateTimeWithTZ` |
+| `CHAR`, `VARCHAR`, `STRING`, `TEXT` | `type/Text` |
+| `JSON`, `JSONB` | `type/JSON` |
+| `ARRAY` | `type/Array` |
+| `MAP` | `type/Dictionary` |
+| `STRUCT`, `VARIANT`, `HLL`, `BITMAP` | `type/*` |
+
+Nested fields inside `ARRAY`, `MAP`, `JSON`, `STRUCT`, or `VARIANT` values are not expanded into Metabase subfields. `LARGEINT` maps to `type/BigInteger` and does not require conversion to a string.
 
 ### Performance tuning recommendations
 
