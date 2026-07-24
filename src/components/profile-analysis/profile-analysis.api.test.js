@@ -35,6 +35,8 @@ const {
     createAnalysisJob,
     getAnalysisJob,
     getAnalysisJobByClientRequestId,
+    MAX_FINAL_ANSWER_BYTES,
+    PRIVACY_NOTICE_VERSION,
     ProfileAnalysisApiError,
 } = apiModule.exports;
 
@@ -68,6 +70,8 @@ test('creates an analysis job with the selected file and response language', asy
         assert.equal(uploadedFile.name, 'query-profile.txt');
         assert.equal(await uploadedFile.text(), 'Query Profile text');
         assert.equal(options.body.get('language'), 'zh-CN');
+        assert.equal(options.body.get('consent'), 'true');
+        assert.equal(options.body.get('privacyNoticeVersion'), PRIVACY_NOTICE_VERSION);
         return new Response(JSON.stringify({ jobId, status: 'QUEUED' }), {
             status: 202,
             headers: { 'Content-Type': 'application/json', 'Retry-After': '3' },
@@ -200,6 +204,44 @@ test('rejects a successful response that is not an agent message', async t => {
     await assert.rejects(createAnalysisJob('', new File(['profile'], 'profile.txt'), 'en', clientRequestId), error => {
         assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.status, 502);
+        assert.equal(error.code, 'INVALID_SERVER_RESPONSE');
+        return true;
+    });
+});
+
+test('rejects a completed answer over the frontend UTF-8 byte limit', async t => {
+    const originalFetch = global.fetch;
+    t.after(() => {
+        global.fetch = originalFetch;
+    });
+    const oversized = 'a'.repeat(MAX_FINAL_ANSWER_BYTES + 1);
+    global.fetch = async () =>
+        jsonResponse({
+            jobId,
+            status: 'COMPLETED',
+            result: { id: 'item_26', type: 'agent_message', text: oversized },
+        });
+
+    await assert.rejects(getAnalysisJob('', jobId), error => {
+        assert.ok(error instanceof ProfileAnalysisApiError);
+        assert.equal(error.code, 'INVALID_SERVER_RESPONSE');
+        return true;
+    });
+});
+
+test('rejects an API response body over the client hard limit', async t => {
+    const originalFetch = global.fetch;
+    t.after(() => {
+        global.fetch = originalFetch;
+    });
+    global.fetch = async () =>
+        new Response(JSON.stringify({ padding: 'x'.repeat(140 * 1024) }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+    await assert.rejects(getAnalysisJob('', jobId), error => {
+        assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.code, 'INVALID_SERVER_RESPONSE');
         return true;
     });

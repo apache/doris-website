@@ -79,6 +79,27 @@ test('disables Analyze until a file exists and while analysis is running', () =>
     assert.match(analyzing, /<button[^>]*disabled=""[^>]*>Processing…<\/button>/);
 });
 
+test('requires an unchecked privacy consent and displays third-party, prohibited-content, and deletion notices', () => {
+    const markup = renderToStaticMarkup(
+        React.createElement(ProfileUploader, {
+            file: null,
+            language: 'en',
+            disabled: false,
+            onFileChange() {},
+            onLanguageChange() {},
+            onAnalyze() {},
+        }),
+    );
+
+    assert.match(markup, /type="checkbox"/);
+    assert.doesNotMatch(markup, /type="checkbox"[^>]*checked/);
+    assert.match(markup, /OpenAI.*third-party provider/);
+    assert.match(markup, /Do not upload passwords, API keys, access tokens, personal data/);
+    assert.match(markup, /deleted immediately/);
+    assert.match(markup, /deleted within 1 hour/);
+    assert.match(markup, /type="file"[^>]*disabled=""/);
+});
+
 test('uses an English accessible label instead of exposing localized native file-input text', () => {
     const markup = renderToStaticMarkup(
         React.createElement(ProfileUploader, {
@@ -155,6 +176,10 @@ test('renders runtime Markdown while discarding raw HTML and unsafe links', () =
                     '',
                     '<script>alert("profile")</script>',
                     '[unsafe](javascript:alert("profile"))',
+                    '![remote](https://evil.example/pixel.png)',
+                    '[insecure](http://evil.example/path)',
+                    '[unapproved](https://evil.example/path)',
+                    '[safe](https://doris.apache.org/docs/)',
                 ].join('\n'),
             },
         }),
@@ -168,6 +193,13 @@ test('renders runtime Markdown while discarding raw HTML and unsafe links', () =
     assert.doesNotMatch(markup, /<script>/);
     assert.doesNotMatch(markup, /alert\(&quot;profile&quot;\)/);
     assert.doesNotMatch(markup, /href="javascript:/);
+    assert.doesNotMatch(markup, /<img/);
+    assert.doesNotMatch(markup, /href="http:\/\/evil/);
+    assert.doesNotMatch(markup, /href="https:\/\/evil/);
+    assert.match(markup, /href="https:\/\/doris.apache.org\/docs\/"/);
+    assert.match(markup, /rel="noopener noreferrer"/);
+    assert.match(markup, /AI-generated result:/);
+    assert.match(markup, /qualified engineer review/);
     assert.match(markup, /aria-labelledby="profile-analysis-result-title"/);
 });
 

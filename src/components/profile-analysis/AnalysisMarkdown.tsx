@@ -6,6 +6,49 @@ interface AnalysisMarkdownProps {
     children: string;
 }
 
+const ALLOWED_ELEMENTS = [
+    'p',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'strong',
+    'em',
+    'ul',
+    'ol',
+    'li',
+    'code',
+    'pre',
+    'blockquote',
+    'table',
+    'thead',
+    'tbody',
+    'tr',
+    'th',
+    'td',
+    'hr',
+    'br',
+    'del',
+    'a',
+];
+
+function isSafeLink(href: string | undefined): boolean {
+    if (!href) return false;
+    if (href.startsWith('#') || href.startsWith('/')) return !href.startsWith('//');
+    try {
+        const url = new URL(href);
+        return (
+            url.protocol === 'https:' &&
+            (url.hostname === 'doris.apache.org' ||
+                (url.hostname === 'github.com' && url.pathname.startsWith('/apache/doris')))
+        );
+    } catch {
+        return false;
+    }
+}
+
 /**
  * Render the model response as untrusted, runtime Markdown.
  *
@@ -19,9 +62,19 @@ export function AnalysisMarkdown({ children }: AnalysisMarkdownProps): JSX.Eleme
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 skipHtml
+                allowedElements={ALLOWED_ELEMENTS}
                 components={{
                     h1: 'h3',
                     h2: 'h3',
+                    img: () => null,
+                    a: ({ href, children }) =>
+                        isSafeLink(href) ? (
+                            <a href={href} rel="noopener noreferrer">
+                                {children}
+                            </a>
+                        ) : (
+                            <span>{children}</span>
+                        ),
                 }}
             >
                 {children}

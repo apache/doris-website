@@ -41,6 +41,7 @@ export function ProfileUploader({
     onAnalyze,
 }: ProfileUploaderProps): JSX.Element {
     const [validationError, setValidationError] = useState<string | null>(null);
+    const [consentAccepted, setConsentAccepted] = useState(false);
 
     const acceptFile = (nextFile: File | null) => {
         if (!nextFile) {
@@ -61,7 +62,7 @@ export function ProfileUploader({
 
     const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
         event.preventDefault();
-        if (disabled) {
+        if (disabled || !consentAccepted) {
             return;
         }
         if (event.dataTransfer.files.length > 1) {
@@ -76,8 +77,45 @@ export function ProfileUploader({
         <section className="profile-analysis__uploader" aria-labelledby="profile-analysis-upload-title">
             <h2 id="profile-analysis-upload-title">Upload a Query Profile</h2>
             <p id="profile-analysis-file-help" className="profile-analysis__help">
-                Choose one UTF-8 .txt file up to 10 MiB. The server deletes the uploaded file after this analysis.
+                Choose one UTF-8 .txt file up to 10 MiB after reviewing and accepting the notice below.
             </p>
+
+            <div className="profile-analysis__privacy-notice" id="profile-analysis-privacy-notice">
+                <h3>Privacy and AI processing notice</h3>
+                <ul>
+                    <li>
+                        Your Query Profile and the fixed analysis instructions are sent to this service and
+                        OpenAI&apos;s model service as a third-party provider to generate an AI-assisted diagnosis.
+                        OpenAI&apos;s approved production-account data-region, use, and retention terms apply
+                        separately from this application&apos;s deletion policy.
+                    </li>
+                    <li>
+                        Do not upload passwords, API keys, access tokens, personal data, customer-confidential
+                        data, regulated data, or any content you are not authorized to disclose.
+                        Profiles can contain SQL literals, usernames, Query IDs, IP addresses, hostnames, schema
+                        names, and cluster topology; redact these values before uploading.
+                    </li>
+                    <li>
+                        On the application server, the normal-path workspace is deleted immediately after the
+                        analysis succeeds or fails. Abnormal residual workspaces are deleted within 1 hour.
+                    </li>
+                </ul>
+                <label className="profile-analysis__consent">
+                    <input
+                        type="checkbox"
+                        checked={consentAccepted}
+                        disabled={disabled}
+                        aria-describedby="profile-analysis-privacy-notice"
+                        onChange={event => {
+                            const accepted = event.currentTarget.checked;
+                            setConsentAccepted(accepted);
+                            if (!accepted) onFileChange(null);
+                        }}
+                    />
+                    I have read this notice, am authorized to upload the Profile, and consent to the described
+                    third-party AI processing.
+                </label>
+            </div>
 
             <fieldset className="profile-analysis__language" disabled={disabled}>
                 <legend>Response language</legend>
@@ -104,7 +142,9 @@ export function ProfileUploader({
             </fieldset>
 
             <label
-                className={`profile-analysis__drop-zone${disabled ? ' profile-analysis__drop-zone--disabled' : ''}`}
+                className={`profile-analysis__drop-zone${
+                    disabled || !consentAccepted ? ' profile-analysis__drop-zone--disabled' : ''
+                }`}
                 onDragOver={event => event.preventDefault()}
                 onDrop={handleDrop}
             >
@@ -116,7 +156,7 @@ export function ProfileUploader({
                     accept=".txt,text/plain"
                     aria-label="Choose an Apache Doris Query Profile file"
                     aria-describedby="profile-analysis-file-help"
-                    disabled={disabled}
+                    disabled={disabled || !consentAccepted}
                     onChange={handleInputChange}
                 />
             </label>
@@ -139,7 +179,7 @@ export function ProfileUploader({
             <button
                 className="button button--primary profile-analysis__analyze-button"
                 type="button"
-                disabled={!file || disabled}
+                disabled={!file || disabled || !consentAccepted}
                 onClick={onAnalyze}
             >
                 {disabled ? 'Processing…' : 'Analyze Profile'}

@@ -12,6 +12,9 @@ import { isUuid } from './profile-analysis.storage';
 const ANALYSIS_JOBS_PATH = '/api/profile/analysis-jobs';
 const ANALYSIS_JOB_REQUESTS_PATH = '/api/profile/analysis-job-requests';
 const DEFAULT_POLL_INTERVAL_MS = 2_000;
+export const PRIVACY_NOTICE_VERSION = '2026-07-22';
+export const MAX_FINAL_ANSWER_BYTES = 64 * 1024;
+const MAX_API_RESPONSE_BYTES = 128 * 1024;
 
 export class ProfileAnalysisApiError extends Error {
     constructor(
@@ -33,8 +36,12 @@ function isAgentMessage(value: unknown): value is AgentMessage {
     return (
         isRecord(value) &&
         typeof value.id === 'string' &&
+        value.id.length > 0 &&
+        new TextEncoder().encode(value.id).byteLength <= 128 &&
         value.type === 'agent_message' &&
-        typeof value.text === 'string'
+        typeof value.text === 'string' &&
+        value.text.trim().length > 0 &&
+        new TextEncoder().encode(value.text).byteLength <= MAX_FINAL_ANSWER_BYTES
     );
 }
 
@@ -103,9 +110,35 @@ async function fetchJson(url: string, init: RequestInit): Promise<{ response: Re
 }
 
 async function readJson(response: Response): Promise<unknown> {
+    if (!response.body) return undefined;
+
     try {
-        return await response.json();
+        const reader = response.body.getReader();
+        const chunks: Uint8Array[] = [];
+        let totalBytes = 0;
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            totalBytes += value.byteLength;
+            if (totalBytes > MAX_API_RESPONSE_BYTES) {
+                await reader.cancel();
+                throw invalidResponse();
+            }
+            chunks.push(value);
+        }
+
+        const bytes = new Uint8Array(totalBytes);
+        let offset = 0;
+        for (const chunk of chunks) {
+            bytes.set(chunk, offset);
+            offset += chunk.byteLength;
+        }
+        if (bytes.byteLength === 0) return undefined;
+        return JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
     } catch {
+        if (response.bodyUsed) {
+            // Do not expose parser, proxy, or upstream response details.
+        }
         return undefined;
     }
 }
@@ -126,6 +159,8 @@ export async function createAnalysisJob(
     const formData = new FormData();
     formData.append('file', file);
     formData.append('language', language);
+    formData.append('consent', 'true');
+    formData.append('privacyNoticeVersion', PRIVACY_NOTICE_VERSION);
 
     const { response, body } = await fetchJson(apiUrl(apiBaseUrl, ANALYSIS_JOBS_PATH), {
         method: 'POST',
