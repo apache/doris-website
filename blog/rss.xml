@@ -1,0 +1,776 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>Apache Doris Blog</title>
+        <link>https://doris.apache.org/blog/</link>
+        <description>Apache Doris Blog</description>
+        <lastBuildDate>Wed, 08 Jul 2026 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>en</language>
+        <item>
+            <title><![CDATA[How StepFun Built a PB-Scale Agent Observability Platform with Apache Doris]]></title>
+            <link>https://doris.apache.org/blog/how-stepfun-built-agent-observability-platform-with-apache-doris/</link>
+            <guid>https://doris.apache.org/blog/how-stepfun-built-agent-observability-platform-with-apache-doris/</guid>
+            <pubDate>Wed, 08 Jul 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[StepFun built StepTrace, a PB-scale agent observability platform on Apache Doris, to analyze agent traces, costs, search, evaluation loops, and infrastructure behavior in real time.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">How StepFun Built a PB-Scale Agent Observability Platform with Apache Doris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">StepFun &#xB7; Ric Li</span></span><time datetime="2026-07-08T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 8, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/how-stepfun-built-agent-observability-platform-with-apache-doris">StepFun built StepTrace, a PB-scale agent observability platform on Apache Doris, to analyze agent traces, costs, search, evaluation loops, and infrastructure behavior in real time. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[From Hive, HBase, MySQL, and Trino to Apache Doris: Tuhu Car's Unified OLAP Architecture]]></title>
+            <link>https://doris.apache.org/blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture/</link>
+            <guid>https://doris.apache.org/blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture/</guid>
+            <pubDate>Fri, 03 Jul 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Tuhu Car rebuilt its fragmented Hive, HBase, MySQL, and Trino OLAP stack with Apache Doris, improving audience segmentation, user profiling, BI analysis, and real-time analytics.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">From Hive, HBase, MySQL, and Trino to Apache Doris: Tuhu Car&apos;s Unified OLAP Architecture</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">Tuhu Car &#xB7; Wenbo Wang</span></span><time datetime="2026-07-03T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 3, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture">Tuhu Car rebuilt its fragmented Hive, HBase, MySQL, and Trino OLAP stack with Apache Doris, improving audience segmentation, user profiling, BI analysis, and real-time analytics. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[Why AI Agents Need Real-Time Analytics and Hybrid Search: The Data Infra for Production Agents]]></title>
+            <link>https://doris.apache.org/blog/why-ai-agents-need-real-time-analytics-and-hybrid-search/</link>
+            <guid>https://doris.apache.org/blog/why-ai-agents-need-real-time-analytics-and-hybrid-search/</guid>
+            <pubDate>Wed, 24 Jun 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[AI agents need real-time analytics, not just vector search. Apache Doris unifies both capabilities, offering native hybrid search in one real-time engine built for agent workloads.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Why AI Agents Need Real-Time Analytics and Hybrid Search: The Data Infra for Production Agents</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Matt Yi</span></span><time datetime="2026-06-24T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">June 24, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/why-ai-agents-need-real-time-analytics-and-hybrid-search">AI agents need real-time analytics, not just vector search. Apache Doris unifies both capabilities, offering native hybrid search in one real-time engine built for agent workloads. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[ASOF JOIN Benchmark: Apache Doris vs ClickHouse and DuckDB]]></title>
+            <link>https://doris.apache.org/blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb/</link>
+            <guid>https://doris.apache.org/blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb/</guid>
+            <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris 4.1 outperforms ClickHouse and DuckDB on ASOF JOIN across all 11 benchmark scenarios.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">ASOF JOIN Benchmark: Apache Doris vs ClickHouse and DuckDB</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Changle Zhao</span></span><time datetime="2026-06-11T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">June 11, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb">Apache Doris 4.1 outperforms ClickHouse and DuckDB on ASOF JOIN across all 11 benchmark scenarios. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Per-User Identity Mode: New Security Features with Apache Doris and Polaris]]></title>
+            <link>https://doris.apache.org/blog/apache-doris-and-polaris-per-user-identity-mode/</link>
+            <guid>https://doris.apache.org/blog/apache-doris-and-polaris-per-user-identity-mode/</guid>
+            <pubDate>Fri, 05 Jun 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris 4.1 introduces per-user identity mode, forwarding each real user identity to Apache Polaris (Iceberg REST Catalog) instead of routing all queries through a shared service account.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Per-User Identity Mode: New Security Features with Apache Doris and Polaris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Rayner Chen</span></span><time datetime="2026-06-05T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">June 5, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/apache-doris-and-polaris-per-user-identity-mode">Apache Doris 4.1 introduces per-user identity mode, forwarding each real user identity to Apache Polaris (Iceberg REST Catalog) instead of routing all queries through a shared service account. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Hybrid Modeling for JSON in Agent Observability: VARIANT and Inverted Indexes in Apache Doris]]></title>
+            <link>https://doris.apache.org/blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris/</link>
+            <guid>https://doris.apache.org/blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris/</guid>
+            <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[VARIANT data type and native inverted indexes in Apache Doris offer a hybrid modeling approach that handles dynamic, schema-evolving agent observability logs with high performance.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Hybrid Modeling for JSON in Agent Observability: VARIANT and Inverted Indexes in Apache Doris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Max Li</span></span><time datetime="2026-06-03T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">June 3, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris">VARIANT data type and native inverted indexes in Apache Doris offer a hybrid modeling approach that handles dynamic, schema-evolving agent observability logs with high performance. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[How We Built Production Vector Search in Apache Doris]]></title>
+            <link>https://doris.apache.org/blog/how-we-built-production-vector-search-in-apache-doris/</link>
+            <guid>https://doris.apache.org/blog/how-we-built-production-vector-search-in-apache-doris/</guid>
+            <pubDate>Thu, 28 May 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris 4.1 adds more native ANN vector indexes, IVF and IVF_ON_DISK, directly inside its OLAP engine, reaching 900 QPS at 97% recall on VectorDBBench.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">How We Built Production Vector Search in Apache Doris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Rayner Chen</span></span><time datetime="2026-05-28T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">May 28, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/how-we-built-production-vector-search-in-apache-doris">Apache Doris 4.1 adds more native ANN vector indexes, IVF and IVF_ON_DISK, directly inside its OLAP engine, reaching 900 QPS at 97% recall on VectorDBBench. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Apache Doris 4.1 on Iceberg V3: Running the Full Lakehouse Lifecycle from One SQL Engine]]></title>
+            <link>https://doris.apache.org/blog/apache-doris-4-1-iceberg-v3/</link>
+            <guid>https://doris.apache.org/blog/apache-doris-4-1-iceberg-v3/</guid>
+            <pubDate>Fri, 22 May 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris 4.1 introduces comprehensive Iceberg V3 support, enabling reads, writes (UPDATE, DELETE, MERGE INTO), DDL operations, table maintenance, and diagnostics entirely through SQL without switching to other tools.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Apache Doris 4.1 on Iceberg V3: Running the Full Lakehouse Lifecycle from One SQL Engine</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Rayner Chen</span></span><time datetime="2026-05-22T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">May 22, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/apache-doris-4-1-on-iceberg-v3-full-lakehouse-lifecycle">Apache Doris 4.1 introduces comprehensive Iceberg V3 support, enabling reads, writes (UPDATE, DELETE, MERGE INTO), DDL operations, table maintenance, and diagnostics entirely through SQL without switching to other tools. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[NetEase Games: From Elasticsearch, HBase, and ClickHouse to a Unified Apache Doris Lakehouse]]></title>
+            <link>https://doris.apache.org/blog/netease-games-unified-doris-lakehouse/</link>
+            <guid>https://doris.apache.org/blog/netease-games-unified-doris-lakehouse/</guid>
+            <pubDate>Fri, 22 May 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[NetEase Games consolidated six specialized data systems into Apache Doris across two phases, first unifying real-time analytics, then adding batch processing capabilities to create a lakehouse architecture serving 15 million daily queries.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">NetEase Games: From Elasticsearch, HBase, and ClickHouse to a Unified Apache Doris Lakehouse</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">NetEase Games &#xB7; Biao Hu</span></span><time datetime="2026-05-22T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">May 22, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/netease-games-from-elasticsearch-and-clickhouse-to-a-unified-apache-doris-lakehouse">NetEase Games consolidated six specialized data systems into Apache Doris across two phases, first unifying real-time analytics, then adding batch processing capabilities to create a lakehouse architecture serving 15 million daily queries. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[The Chunking and Embedding Cookbook for Production Context Engineering]]></title>
+            <link>https://doris.apache.org/blog/chunking-embedding-cookbook/</link>
+            <guid>https://doris.apache.org/blog/chunking-embedding-cookbook/</guid>
+            <pubDate>Fri, 15 May 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[This guide covers three critical decisions for production RAG systems: chunk shaping, embedding selection, and ANN index scaling, bridging the gap between demo retrieval and real-scale deployments.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">The Chunking and Embedding Cookbook for Production Context Engineering</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Tom Zhang</span></span><time datetime="2026-05-15T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">May 15, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/the-chunking-and-embedding-cookbook-for-production-context-engineering">This guide covers three critical decisions for production RAG systems: chunk shaping, embedding selection, and ANN index scaling, bridging the gap between demo retrieval and real-scale deployments. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[From Data Silos to Context Silos: What Database History Teaches Us About the AI Infrastructure Problem]]></title>
+            <link>https://doris.apache.org/blog/from-data-silos-to-context-silos/</link>
+            <guid>https://doris.apache.org/blog/from-data-silos-to-context-silos/</guid>
+            <pubDate>Sat, 09 May 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[The database industry is repeating a historical cycle where specialized systems create fragmentation that demands convergence. As AI agents become primary data consumers, organizations face a new challenge: context silos, where information exists but cannot be retrieved fast enough for autonomous systems to act effectively.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">From Data Silos to Context Silos: What Database History Teaches Us About the AI Infrastructure Problem</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Kevin Shen</span></span><time datetime="2026-05-09T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">May 9, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/from-data-silos-to-context-silos">The database industry is repeating a historical cycle where specialized systems create fragmentation that demands convergence. As AI agents become primary data consumers, organizations face a new challenge: context silos, where information exists but cannot be retrieved fast enough for autonomous systems to act effectively. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Apache Doris 4.1 Spill to Disk: Running Memory-Intensive Queries Without OOM]]></title>
+            <link>https://doris.apache.org/blog/apache-doris-4-1-spill-to-disk/</link>
+            <guid>https://doris.apache.org/blog/apache-doris-4-1-spill-to-disk/</guid>
+            <pubDate>Fri, 08 May 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris 4.1 introduces mature spill-to-disk capabilities, enabling Hash Join, Aggregation, and Sort operators to write intermediate state to disk when memory pressure rises so that memory-intensive analytical queries complete without OOM errors.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Apache Doris 4.1 Spill to Disk: Running Memory-Intensive Queries Without OOM</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Matt Yi</span></span><time datetime="2026-05-08T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">May 8, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/apache-doris-4-1-spill-to-disk-running-memory-intensive-queries-without-oom">Apache Doris 4.1 introduces mature spill-to-disk capabilities, enabling Hash Join, Aggregation, and Sort operators to write intermediate state to disk when memory pressure rises so that memory-intensive analytical queries complete without OOM errors. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Set Up a Lakehouse with PostgreSQL, Apache Iceberg, and Apache Doris in 15 Minutes]]></title>
+            <link>https://doris.apache.org/blog/olake-iceberg-and-doris/</link>
+            <guid>https://doris.apache.org/blog/olake-iceberg-and-doris/</guid>
+            <pubDate>Thu, 23 Apr 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[A step-by-step guide to building a lakehouse with PostgreSQL, Apache Iceberg, and Apache Doris in 15 minutes, covering CDC setup, data ingestion, and analytical queries on a fully open-source stack.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Set Up a Lakehouse with PostgreSQL, Apache Iceberg, and Apache Doris in 15 Minutes</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">Olake &#xB7; Rohan Khameshra</span></span><time datetime="2026-04-23T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">April 23, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/set-up-a-lakehouse-with-postgresql-apache-iceberg-and-apache-doris">A step-by-step guide to building a lakehouse with PostgreSQL, Apache Iceberg, and Apache Doris in 15 minutes, covering CDC setup, data ingestion, and analytical queries on a fully open-source stack. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[How an Autonomous Driving Company Unified Multimodal Search on a Single Analytics Engine]]></title>
+            <link>https://doris.apache.org/blog/autonomous-driving-multimodal-search/</link>
+            <guid>https://doris.apache.org/blog/autonomous-driving-multimodal-search/</guid>
+            <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[An autonomous driving company consolidated fragmented data platforms by adopting Apache Doris as a unified analytics engine, enabling seamless search across text, vectors, labels, and metadata while reducing query times from minutes to seconds.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">How an Autonomous Driving Company Unified Multimodal Search on a Single Analytics Engine</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Wesley Zhu</span></span><time datetime="2026-04-18T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">April 18, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/autonomous-driving-company-unified-multimodal-search-on-apache-doris">An autonomous driving company consolidated fragmented data platforms by adopting Apache Doris as a unified analytics engine, enabling seamless search across text, vectors, labels, and metadata while reducing query times from minutes to seconds. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[What Is LLM Observability? Metrics, Tools, and How It Works in AI Systems]]></title>
+            <link>https://doris.apache.org/blog/llm-observability/</link>
+            <guid>https://doris.apache.org/blog/llm-observability/</guid>
+            <pubDate>Fri, 10 Apr 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Learn what LLM observability is, how it works, key metrics to track, and how it fits into modern AI systems like RAG. Includes tools, architecture, and best practices.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Glossary</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">What Is LLM Observability? Metrics, Tools, and How It Works in AI Systems</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">Apache Doris</span></span><time datetime="2026-04-10T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">April 10, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><h2 class="anchor anchorWithStickyNavbar_LWe7" id="what-is-llm-observability">What Is LLM Observability?<a href="https://doris.apache.org/blog/llm-observability/#what-is-llm-observability" class="hash-link" aria-label="Direct link to What Is LLM Observability?" title="Direct link to What Is LLM Observability?">&#x200B;</a></h2>
+<p><strong>LLM observability</strong> is the ability to understand, monitor, and debug how a large language model behaves in a real-world application.</p>
+<p>In practice, it focuses on making LLM systems more transparent by capturing what the model sees, what it produces, and how it arrives at those outputs across a full interaction.</p>
+<p>It typically includes:</p>
+<ul>
+<li>tracing LLM calls and multi-step workflows</li>
+<li>monitoring inputs (prompts, context) and outputs</li>
+<li>evaluating response quality and correctness</li>
+<li>tracking latency, token usage, and cost</li>
+<li>analyzing how system components (e.g., retrieval, tools) influence results</li>
+</ul>
+<p>Unlike traditional monitoring, which focuses on system health (such as uptime or error rates), LLM observability focuses on <strong>model behavior and decision outcomes</strong>.</p>
+<p>This distinction is important because LLM systems are not purely deterministic. Observability is not just about detecting failures&#x2014;it is about understanding why a response was generated, whether it was appropriate, and how it could be improved.</p>
+<p>In modern AI applications, LLM observability often spans the entire pipeline, including prompt construction, retrieval (in RAG systems), model inference, and post-processing. This broader scope helps teams debug issues such as hallucinations, irrelevant answers, or inconsistent behavior.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="why-llm-observability-matters-beyond-traditional-monitoring">Why LLM Observability Matters (Beyond Traditional Monitoring)<a href="https://doris.apache.org/blog/llm-observability/#why-llm-observability-matters-beyond-traditional-monitoring" class="hash-link" aria-label="Direct link to Why LLM Observability Matters (Beyond Traditional Monitoring)" title="Direct link to Why LLM Observability Matters (Beyond Traditional Monitoring)">&#x200B;</a></h2>
+<p>LLM systems are fundamentally harder to monitor than traditional software systems.</p>
+<p>The main reasons include:</p>
+<ul>
+<li><strong>Non-deterministic outputs:</strong> The same input can produce different responses, making issues difficult to reproduce and debug.</li>
+<li><strong>Prompt-driven behavior:</strong> Small changes in prompts or context can lead to large differences in output, even when the underlying model remains the same.</li>
+<li><strong>Hidden reasoning (black-box models):</strong> Most LLMs do not expose internal reasoning processes, so developers must rely on indirect signals to understand behavior.</li>
+<li><strong>Multi-step pipelines (RAG and agents):</strong> Many systems involve retrieval, tool usage, or chained model calls, where failures can originate from multiple points.</li>
+</ul>
+<p>As a result, traditional monitoring signals&#x2014;such as latency, uptime, or error rates&#x2014;provide only a partial view of system performance.</p>
+<p>LLM observability is designed to address this gap by providing visibility into how inputs are transformed into outputs across the entire system.</p>
+<p>It helps answer questions such as:</p>
+<ul>
+<li>Why did the model generate this response?</li>
+<li>Was the retrieved context relevant?</li>
+<li>Is the issue caused by the prompt, the model, or the data?</li>
+<li>How does output quality change over time?</li>
+</ul>
+<p>In practice, this deeper visibility is essential for:</p>
+<ul>
+<li>debugging hallucinations and incorrect answers</li>
+<li>improving prompt and system design</li>
+<li>maintaining consistent user experience</li>
+<li>controlling cost and performance at scale</li>
+</ul>
+<p>Without observability, LLM systems can appear to work while silently degrading in quality or reliability. With observability, teams can move from reactive debugging to systematic improvement.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="what-to-monitor-in-llm-systems-key-signals">What to Monitor in LLM Systems (Key Signals)<a href="https://doris.apache.org/blog/llm-observability/#what-to-monitor-in-llm-systems-key-signals" class="hash-link" aria-label="Direct link to What to Monitor in LLM Systems (Key Signals)" title="Direct link to What to Monitor in LLM Systems (Key Signals)">&#x200B;</a></h2>
+<p>The most important signals in LLM observability include both <strong>system-level metrics</strong> and <strong>model-specific signals</strong> that reflect how the LLM behaves in real-world usage.</p>
+<p>In practice, effective observability focuses not just on whether the system is running, but whether it is producing useful, reliable, and cost-efficient outputs.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="input-and-prompt-monitoring">Input and Prompt Monitoring<a href="https://doris.apache.org/blog/llm-observability/#input-and-prompt-monitoring" class="hash-link" aria-label="Direct link to Input and Prompt Monitoring" title="Direct link to Input and Prompt Monitoring">&#x200B;</a></h3>
+<p>Tracking prompts and user inputs helps identify issues at the very beginning of the pipeline.</p>
+<p>This includes:</p>
+<ul>
+<li>prompt injection or unsafe inputs</li>
+<li>unclear or poorly structured prompts</li>
+<li>unexpected user behavior patterns</li>
+</ul>
+<p>Because LLM outputs are highly sensitive to input phrasing, even small changes in prompts can lead to significantly different results. Monitoring inputs is often the fastest way to diagnose inconsistent behavior.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="output-quality-and-evaluation">Output Quality and Evaluation<a href="https://doris.apache.org/blog/llm-observability/#output-quality-and-evaluation" class="hash-link" aria-label="Direct link to Output Quality and Evaluation" title="Direct link to Output Quality and Evaluation">&#x200B;</a></h3>
+<p>Evaluating outputs is one of the most important&#x2014;and most challenging&#x2014;parts of LLM observability.</p>
+<p>Common evaluation dimensions include:</p>
+<ul>
+<li>relevance (does the answer match the question?)</li>
+<li>correctness (is the information accurate?)</li>
+<li>consistency (does the model behave predictably?)</li>
+<li>safety (does the output avoid harmful or biased content?)</li>
+</ul>
+<p>In practice, most systems combine:</p>
+<ul>
+<li>automated evaluation (e.g., scoring, heuristics)</li>
+<li>human review or feedback loops</li>
+</ul>
+<p>Since many LLM tasks are open-ended, output quality cannot be captured by a single metric and often requires context-aware evaluation.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="latency-and-cost">Latency and Cost<a href="https://doris.apache.org/blog/llm-observability/#latency-and-cost" class="hash-link" aria-label="Direct link to Latency and Cost" title="Direct link to Latency and Cost">&#x200B;</a></h3>
+<p>LLM systems often introduce a new category of operational constraints: <strong>cost per request</strong>.</p>
+<p>Key signals include:</p>
+<ul>
+<li>response time (end-to-end latency)</li>
+<li>token usage (input and output tokens)</li>
+<li>cost per query or per user</li>
+</ul>
+<p>Monitoring these signals is essential not only for performance optimization but also for maintaining sustainable system design at scale.</p>
+<p>In many cases, improving latency or reducing token usage can have a direct impact on both user experience and infrastructure cost.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="retrieval-quality-rag-systems">Retrieval Quality (RAG Systems)<a href="https://doris.apache.org/blog/llm-observability/#retrieval-quality-rag-systems" class="hash-link" aria-label="Direct link to Retrieval Quality (RAG Systems)" title="Direct link to Retrieval Quality (RAG Systems)">&#x200B;</a></h3>
+<p>In systems that use Retrieval-Augmented Generation (RAG), many failures originate from the retrieval step rather than the model itself.</p>
+<p>Important signals include:</p>
+<ul>
+<li>whether relevant documents are retrieved</li>
+<li>how well retrieved context matches the user query</li>
+<li>whether the model actually uses the retrieved information</li>
+</ul>
+<p>Poor retrieval can lead to hallucinations or irrelevant answers, even when the underlying model performs well. This is why retrieval monitoring is a critical part of LLM observability. In systems that rely heavily on retrieval, analyzing retrieval logs and query patterns becomes critical. This often requires systems capable of handling large volumes of structured and semi-structured data, where analytical databases such as <a href="https://doris.apache.org/" target="_blank" rel="noopener noreferrer">Apache Doris</a> may be used to support query analysis and debugging workflows.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="errors-failures-and-edge-cases">Errors, Failures, and Edge Cases<a href="https://doris.apache.org/blog/llm-observability/#errors-failures-and-edge-cases" class="hash-link" aria-label="Direct link to Errors, Failures, and Edge Cases" title="Direct link to Errors, Failures, and Edge Cases">&#x200B;</a></h3>
+<p>LLM failures often look different from traditional system errors.</p>
+<p>Instead of explicit crashes, issues may appear as:</p>
+<ul>
+<li>incomplete or vague responses</li>
+<li>hallucinated or fabricated information</li>
+<li>incorrect tool usage in agent systems</li>
+<li>unexpected or off-topic outputs</li>
+</ul>
+<p>These edge cases are often harder to detect because they may not trigger standard error signals. Observability systems therefore need to capture both explicit failures and subtle quality degradations.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="a-practical-insight">A Practical Insight<a href="https://doris.apache.org/blog/llm-observability/#a-practical-insight" class="hash-link" aria-label="Direct link to A Practical Insight" title="Direct link to A Practical Insight">&#x200B;</a></h3>
+<p>No single metric can fully capture LLM performance.</p>
+<p>Most production systems rely on a combination of:</p>
+<ul>
+<li>quantitative metrics (latency, token usage, error rates)</li>
+<li>qualitative evaluation (human feedback, relevance scoring)</li>
+<li>system-level signals (retrieval quality, workflow traces)</li>
+</ul>
+<p>Effective LLM observability is not about tracking more metrics&#x2014;it is about tracking the right signals and understanding how they interact.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="how-llm-observability-works-system-level-view">How LLM Observability Works (System-Level View)<a href="https://doris.apache.org/blog/llm-observability/#how-llm-observability-works-system-level-view" class="hash-link" aria-label="Direct link to How LLM Observability Works (System-Level View)" title="Direct link to How LLM Observability Works (System-Level View)">&#x200B;</a></h2>
+<p>In a modern AI system, observability is not a single component&#x2014;it spans the entire pipeline.</p>
+<p>A typical LLM-powered workflow looks like this:</p>
+<p><img decoding="async" loading="lazy" alt="llm-observability-architecture-diagram" src="https://cdnd.selectdb.com/assets/images/llm-powered-workflow-f10f9d5371e0ce7791d3a5be002a56f4.png" width="1536" height="1024" class="img_ev3q"></p>
+<p>Observability works by capturing signals at each step of this pipeline.</p>
+<p>For example:</p>
+<ul>
+<li>tracing how a request flows through multiple components</li>
+<li>capturing prompts and generated outputs</li>
+<li>logging retrieval results and context</li>
+<li>measuring latency and token usage</li>
+<li>evaluating output quality</li>
+</ul>
+<p>This allows teams to reconstruct what happened during a specific interaction and identify where issues originate&#x2014;whether in the prompt, retrieval step, or model response.</p>
+<p>In practice, observability data is often analyzed across many interactions, helping identify recurring failure patterns, performance bottlenecks, or cost inefficiencies.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="llm-observability-vs-monitoring-vs-ai-observability">LLM Observability vs Monitoring vs AI Observability<a href="https://doris.apache.org/blog/llm-observability/#llm-observability-vs-monitoring-vs-ai-observability" class="hash-link" aria-label="Direct link to LLM Observability vs Monitoring vs AI Observability" title="Direct link to LLM Observability vs Monitoring vs AI Observability">&#x200B;</a></h2>
+<p>These terms are often used interchangeably, but they represent different levels of system visibility and serve different purposes in practice.</p>
+<p>At a high level:</p>
+<ul>
+<li><strong>Monitoring</strong> focuses on detecting issues through metrics and alerts</li>
+<li><strong>Observability</strong> focuses on understanding system behavior</li>
+<li><strong>LLM observability</strong> focuses specifically on how language models behave in real-world applications</li>
+<li><strong>AI observability</strong> covers broader machine learning systems beyond just LLMs</li>
+</ul>
+<p>The main differences include:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Concept</th><th>Focus</th></tr></thead><tbody><tr><td>Monitoring</td><td>Tracks system metrics such as latency, uptime, and errors</td></tr><tr><td>Observability</td><td>Provides deeper insight into system behavior using logs, traces, and metrics</td></tr><tr><td>LLM Observability</td><td>Focuses on prompts, outputs, and model behavior in LLM systems</td></tr><tr><td>AI Observability</td><td>Covers broader machine learning systems, including training and inference</td></tr></tbody></table>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="a-practical-way-to-think-about-the-differences">A Practical Way to Think About the Differences<a href="https://doris.apache.org/blog/llm-observability/#a-practical-way-to-think-about-the-differences" class="hash-link" aria-label="Direct link to A Practical Way to Think About the Differences" title="Direct link to A Practical Way to Think About the Differences">&#x200B;</a></h3>
+<p>A useful way to understand the relationship between these concepts is:</p>
+<ul>
+<li>Monitoring tells you <strong>when something is wrong</strong></li>
+<li>Observability helps you understand <strong>why it is wrong</strong></li>
+<li>LLM observability explains <strong>how the model contributed to the problem</strong></li>
+<li>AI observability provides <strong>a broader view across all ML systems</strong></li>
+</ul>
+<p>These layers are not mutually exclusive&#x2014;they are often used together in production systems.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="common-challenges-in-llm-observability">Common Challenges in LLM Observability<a href="https://doris.apache.org/blog/llm-observability/#common-challenges-in-llm-observability" class="hash-link" aria-label="Direct link to Common Challenges in LLM Observability" title="Direct link to Common Challenges in LLM Observability">&#x200B;</a></h2>
+<p>In practice, implementing LLM observability is far from trivial.</p>
+<p>Unlike traditional systems, many issues in LLM applications are not clearly defined as &#x201C;failures,&#x201D; which makes them harder to detect and diagnose.</p>
+<p>Key challenges include:</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="evaluating-subjective-outputs">Evaluating subjective outputs<a href="https://doris.apache.org/blog/llm-observability/#evaluating-subjective-outputs" class="hash-link" aria-label="Direct link to Evaluating subjective outputs" title="Direct link to Evaluating subjective outputs">&#x200B;</a></h3>
+<p>Many LLM responses do not have a single correct answer. A response can be technically correct but still irrelevant, incomplete, or poorly phrased. This makes evaluation highly context-dependent and difficult to standardize.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="lack-of-ground-truth">Lack of ground truth<a href="https://doris.apache.org/blog/llm-observability/#lack-of-ground-truth" class="hash-link" aria-label="Direct link to Lack of ground truth" title="Direct link to Lack of ground truth">&#x200B;</a></h3>
+<p>In many use cases&#x2014;such as open-ended Q&amp;A or conversational systems&#x2014;there is no definitive reference answer. As a result, it can be difficult to measure accuracy or track improvements over time.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="high-cost-of-logging-and-storage">High cost of logging and storage<a href="https://doris.apache.org/blog/llm-observability/#high-cost-of-logging-and-storage" class="hash-link" aria-label="Direct link to High cost of logging and storage" title="Direct link to High cost of logging and storage">&#x200B;</a></h3>
+<p>Capturing prompts, outputs, traces, and intermediate steps at scale can quickly become expensive. Teams often need to balance observability depth with storage and processing costs.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="debugging-multi-step-pipelines">Debugging multi-step pipelines<a href="https://doris.apache.org/blog/llm-observability/#debugging-multi-step-pipelines" class="hash-link" aria-label="Direct link to Debugging multi-step pipelines" title="Direct link to Debugging multi-step pipelines">&#x200B;</a></h3>
+<p>Modern LLM systems often include retrieval (RAG), tools, or chained model calls. When something goes wrong, the root cause may lie in any part of the pipeline, making debugging more complex.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="noisy-signals-false-positives">Noisy signals (false positives)<a href="https://doris.apache.org/blog/llm-observability/#noisy-signals-false-positives" class="hash-link" aria-label="Direct link to Noisy signals (false positives)" title="Direct link to Noisy signals (false positives)">&#x200B;</a></h3>
+<p>Metrics do not always reflect real user experience. For example, a response may pass automated evaluation but still be unhelpful to users, or vice versa.</p>
+<p>A common pattern is that collecting observability data is relatively easy, but interpreting it correctly&#x2014;and turning it into actionable improvements&#x2014;is significantly harder.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="llm-observability-tools-and-how-to-choose">LLM Observability Tools (And How to Choose)<a href="https://doris.apache.org/blog/llm-observability/#llm-observability-tools-and-how-to-choose" class="hash-link" aria-label="Direct link to LLM Observability Tools (And How to Choose)" title="Direct link to LLM Observability Tools (And How to Choose)">&#x200B;</a></h2>
+<p>LLM observability tools generally fall into a few categories, each addressing a different part of the problem.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="tracing-focused-tools">Tracing-focused tools<a href="https://doris.apache.org/blog/llm-observability/#tracing-focused-tools" class="hash-link" aria-label="Direct link to Tracing-focused tools" title="Direct link to Tracing-focused tools">&#x200B;</a></h3>
+<p>These tools capture how requests flow through the system, including prompts, model calls, and intermediate steps. They are useful for debugging workflows and understanding execution paths.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="evaluation-focused-tools">Evaluation-focused tools<a href="https://doris.apache.org/blog/llm-observability/#evaluation-focused-tools" class="hash-link" aria-label="Direct link to Evaluation-focused tools" title="Direct link to Evaluation-focused tools">&#x200B;</a></h3>
+<p>These tools focus on measuring output quality using automated scoring, benchmarks, or human feedback. They help assess whether the system is producing useful and accurate results.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="full-stack-observability-platforms">Full-stack observability platforms<a href="https://doris.apache.org/blog/llm-observability/#full-stack-observability-platforms" class="hash-link" aria-label="Direct link to Full-stack observability platforms" title="Direct link to Full-stack observability platforms">&#x200B;</a></h3>
+<p>These platforms combine tracing, evaluation, and monitoring, providing a more complete view of system behavior across the entire pipeline.</p>
+<p>Choosing the right approach depends on several factors:</p>
+<ul>
+<li>the complexity of the application (simple chat vs multi-step AI systems)</li>
+<li>whether the system includes RAG or agents</li>
+<li>the need for real-time monitoring versus offline analysis</li>
+<li>scalability, data volume, and cost constraints</li>
+</ul>
+<p>In practice, many production systems use a combination of tools rather than relying on a single solution.</p>
+<p>A useful way to think about this is that tracing helps you understand <strong>what happened</strong>, evaluation helps you understand <strong>how good the result was</strong>, and monitoring helps you track <strong>system performance over time</strong>.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="best-practices-for-llm-monitoring-and-observability">Best Practices for LLM Monitoring and Observability<a href="https://doris.apache.org/blog/llm-observability/#best-practices-for-llm-monitoring-and-observability" class="hash-link" aria-label="Direct link to Best Practices for LLM Monitoring and Observability" title="Direct link to Best Practices for LLM Monitoring and Observability">&#x200B;</a></h2>
+<p>Common best practices include:</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="start-with-tracing-before-optimization">Start with tracing before optimization<a href="https://doris.apache.org/blog/llm-observability/#start-with-tracing-before-optimization" class="hash-link" aria-label="Direct link to Start with tracing before optimization" title="Direct link to Start with tracing before optimization">&#x200B;</a></h3>
+<p>Before improving performance or quality, it is important to understand how the system behaves end-to-end. Tracing provides the foundation for identifying bottlenecks and failure points.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="evaluate-outputs-not-just-system-metrics">Evaluate outputs, not just system metrics<a href="https://doris.apache.org/blog/llm-observability/#evaluate-outputs-not-just-system-metrics" class="hash-link" aria-label="Direct link to Evaluate outputs, not just system metrics" title="Direct link to Evaluate outputs, not just system metrics">&#x200B;</a></h3>
+<p>Latency and cost are important, but they do not reflect whether the system is actually useful. Output quality&#x2014;relevance, correctness, and clarity&#x2014;should be treated as a first-class signal.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="combine-automated-and-human-evaluation">Combine automated and human evaluation<a href="https://doris.apache.org/blog/llm-observability/#combine-automated-and-human-evaluation" class="hash-link" aria-label="Direct link to Combine automated and human evaluation" title="Direct link to Combine automated and human evaluation">&#x200B;</a></h3>
+<p>Automated metrics can scale, but they may miss subtle issues in language quality. Human feedback helps capture real-world usefulness and edge cases.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="monitor-retrieval-in-rag-systems">Monitor retrieval in RAG systems<a href="https://doris.apache.org/blog/llm-observability/#monitor-retrieval-in-rag-systems" class="hash-link" aria-label="Direct link to Monitor retrieval in RAG systems" title="Direct link to Monitor retrieval in RAG systems">&#x200B;</a></h3>
+<p>In many cases, issues attributed to the model are actually caused by poor retrieval. Monitoring retrieval quality is essential for diagnosing these problems.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="design-for-cost-visibility-early">Design for cost visibility early<a href="https://doris.apache.org/blog/llm-observability/#design-for-cost-visibility-early" class="hash-link" aria-label="Direct link to Design for cost visibility early" title="Direct link to Design for cost visibility early">&#x200B;</a></h3>
+<p>Token usage and infrastructure costs can increase rapidly as usage grows. Tracking cost-related metrics early helps prevent unexpected scaling issues.</p>
+<p>In practice, effective observability is not about collecting more data, but about focusing on the signals that directly impact system behavior and user experience.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="the-future-of-llm-observability">The Future of LLM Observability<a href="https://doris.apache.org/blog/llm-observability/#the-future-of-llm-observability" class="hash-link" aria-label="Direct link to The Future of LLM Observability" title="Direct link to The Future of LLM Observability">&#x200B;</a></h2>
+<p>LLM observability is evolving as AI systems become more complex and move into production environments.</p>
+<p>Several trends are emerging:</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="agent-observability">Agent observability<a href="https://doris.apache.org/blog/llm-observability/#agent-observability" class="hash-link" aria-label="Direct link to Agent observability" title="Direct link to Agent observability">&#x200B;</a></h3>
+<p>As AI agents become more common, observability is expanding to cover multi-step reasoning, tool usage, and decision chains rather than single model calls.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="real-time-evaluation">Real-time evaluation<a href="https://doris.apache.org/blog/llm-observability/#real-time-evaluation" class="hash-link" aria-label="Direct link to Real-time evaluation" title="Direct link to Real-time evaluation">&#x200B;</a></h3>
+<p>Systems are shifting from offline analysis to continuous, real-time feedback, allowing faster iteration and adaptation.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="ai-native-monitoring-approaches">AI-native monitoring approaches<a href="https://doris.apache.org/blog/llm-observability/#ai-native-monitoring-approaches" class="hash-link" aria-label="Direct link to AI-native monitoring approaches" title="Direct link to AI-native monitoring approaches">&#x200B;</a></h3>
+<p>New approaches are being developed specifically for generative AI workloads, where traditional monitoring methods are not sufficient.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="feedback-driven-improvement-loops">Feedback-driven improvement loops<a href="https://doris.apache.org/blog/llm-observability/#feedback-driven-improvement-loops" class="hash-link" aria-label="Direct link to Feedback-driven improvement loops" title="Direct link to Feedback-driven improvement loops">&#x200B;</a></h3>
+<p>User interactions, feedback signals, and evaluation results are increasingly used to continuously improve prompts, retrieval strategies, and system behavior.</p>
+<p>Overall, LLM observability is increasingly becoming an important part of how AI systems are designed, operated, and improved over time.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="faq">FAQ<a href="https://doris.apache.org/blog/llm-observability/#faq" class="hash-link" aria-label="Direct link to FAQ" title="Direct link to FAQ">&#x200B;</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="why-is-observability-critical-for-llms">Why is observability critical for LLMs?<a href="https://doris.apache.org/blog/llm-observability/#why-is-observability-critical-for-llms" class="hash-link" aria-label="Direct link to Why is observability critical for LLMs?" title="Direct link to Why is observability critical for LLMs?">&#x200B;</a></h3>
+<p>LLM observability helps control costs, reduce the risk of hallucinations or harmful outputs, and continuously improve prompt quality and system performance.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="what-are-traces-in-llm-observability">What are traces in LLM observability?<a href="https://doris.apache.org/blog/llm-observability/#what-are-traces-in-llm-observability" class="hash-link" aria-label="Direct link to What are traces in LLM observability?" title="Direct link to What are traces in LLM observability?">&#x200B;</a></h3>
+<p>Traces record the full sequence of events in an LLM system&#x2014;from user input to final output&#x2014;including prompt construction, retrieval steps, API calls, and model responses. They are essential for debugging and understanding system behavior.</p></div>]]></content:encoded>
+            <category>Glossary</category>
+        </item>
+        <item>
+            <title><![CDATA[Vector Search: What It Is, Examples, and How It Powers AI Applications]]></title>
+            <link>https://doris.apache.org/blog/vector-search/</link>
+            <guid>https://doris.apache.org/blog/vector-search/</guid>
+            <pubDate>Fri, 10 Apr 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Learn what vector search is, how it works, and how it compares to keyword and semantic search. Includes real-world examples, vector search databases, and AI use cases like RAG.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Glossary</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Vector Search: What It Is, Examples, and How It Powers AI Applications</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">Apache Doris</span></span><time datetime="2026-04-10T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">April 10, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><h2 class="anchor anchorWithStickyNavbar_LWe7" id="quick-answer-what-is-vector-search">Quick Answer: What Is Vector Search?<a href="https://doris.apache.org/blog/vector-search/#quick-answer-what-is-vector-search" class="hash-link" aria-label="Direct link to Quick Answer: What Is Vector Search?" title="Direct link to Quick Answer: What Is Vector Search?">&#x200B;</a></h2>
+<p>Vector search is a search method that retrieves results based on semantic similarity rather than exact keyword matches.</p>
+<p>Instead of matching words directly, vector search converts data&#x2014;such as text, images, or logs&#x2014;into numerical representations called embeddings (vectors). It then compares these vectors in a high-dimensional space to find the most similar results.</p>
+<p>The key idea behind vector search is that similar meanings are represented by vectors that are close to each other.</p>
+<p>The main characteristics of vector search include:</p>
+<ul>
+<li>Understanding user intent rather than exact wording</li>
+<li>Supporting unstructured data such as text and images</li>
+<li>Enabling AI applications like semantic search and RAG</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="how-vector-search-works-step-by-step">How Vector Search Works (Step-by-Step)<a href="https://doris.apache.org/blog/vector-search/#how-vector-search-works-step-by-step" class="hash-link" aria-label="Direct link to How Vector Search Works (Step-by-Step)" title="Direct link to How Vector Search Works (Step-by-Step)">&#x200B;</a></h2>
+<p>Vector search follows a simple but powerful pipeline. Instead of matching exact words, it converts both the data and the query into numerical representations and then compares them based on similarity.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="1-convert-data-into-embeddings">1. Convert Data into Embeddings<a href="https://doris.apache.org/blog/vector-search/#1-convert-data-into-embeddings" class="hash-link" aria-label="Direct link to 1. Convert Data into Embeddings" title="Direct link to 1. Convert Data into Embeddings">&#x200B;</a></h3>
+<p>The first step is to convert raw data into <strong>embeddings</strong>.</p>
+<p>Embeddings are numerical vectors generated by machine learning models that capture the semantic meaning of the input. These inputs can include:</p>
+<ul>
+<li>text documents</li>
+<li>product descriptions</li>
+<li>images</li>
+<li>logs or events</li>
+</ul>
+<p>For example, two sentences with similar meanings may produce vectors that are located close to each other in vector space, even if they do not share the same keywords.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="2-store-vectors-in-a-vector-database">2. Store Vectors in a Vector Database<a href="https://doris.apache.org/blog/vector-search/#2-store-vectors-in-a-vector-database" class="hash-link" aria-label="Direct link to 2. Store Vectors in a Vector Database" title="Direct link to 2. Store Vectors in a Vector Database">&#x200B;</a></h3>
+<p>Once generated, these embeddings are stored in a <strong>vector database</strong> or another system that supports vector indexing.</p>
+<p>Unlike traditional databases that are optimized for exact filtering, vector search systems are designed to store high-dimensional vectors and retrieve the nearest matches efficiently. This is especially important when dealing with millions or billions of embeddings.</p>
+<p>In production systems, vector data is often stored alongside metadata such as:</p>
+<ul>
+<li>document ID</li>
+<li>timestamp</li>
+<li>category</li>
+<li>status</li>
+</ul>
+<p>This allows vector search to be combined with structured filtering.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="3-convert-the-query-into-a-vector">3. Convert the Query into a Vector<a href="https://doris.apache.org/blog/vector-search/#3-convert-the-query-into-a-vector" class="hash-link" aria-label="Direct link to 3. Convert the Query into a Vector" title="Direct link to 3. Convert the Query into a Vector">&#x200B;</a></h3>
+<p>When a user submits a search query, the system applies the same embedding model to the query itself.</p>
+<p>This produces a query vector that can be compared directly against the stored vectors. Because both the query and the data are represented in the same vector space, the system can search for semantic similarity rather than exact wording.</p>
+<p>For example, a query like:</p>
+<div class="language-Plain language-plain codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-plain codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">How to reduce database latency</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg></span></button></div></div></div>
+<p>may still retrieve content containing phrases such as:</p>
+<div class="language-Plain language-plain codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-plain codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">improve query performance</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">speed up data access</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg></span></button></div></div></div>
+<p>even if the exact words do not match.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="4-perform-similarity-search">4. Perform Similarity Search<a href="https://doris.apache.org/blog/vector-search/#4-perform-similarity-search" class="hash-link" aria-label="Direct link to 4. Perform Similarity Search" title="Direct link to 4. Perform Similarity Search">&#x200B;</a></h3>
+<p>After the query vector is created, the system searches for the <strong>nearest vectors</strong> in the database.</p>
+<p>This is typically done using similarity metrics such as:</p>
+<ul>
+<li><strong>Cosine similarity:</strong> Measures how close two vectors are in direction.</li>
+<li><strong>Euclidean distance:</strong> Measures the geometric straight-line distance between vectors.</li>
+<li><strong>Dot product:</strong> Often used in embedding-based retrieval systems to measure magnitude and direction.</li>
+</ul>
+<p>Because exact nearest-neighbor search can be expensive at large scale, most production systems use <strong>Approximate Nearest Neighbor (ANN)</strong> algorithms to speed up retrieval while keeping results highly relevant.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="5-re-rank-and-return-the-best-results">5. Re-rank and Return the Best Results<a href="https://doris.apache.org/blog/vector-search/#5-re-rank-and-return-the-best-results" class="hash-link" aria-label="Direct link to 5. Re-rank and Return the Best Results" title="Direct link to 5. Re-rank and Return the Best Results">&#x200B;</a></h3>
+<p>In many real-world AI systems, vector search is only the first retrieval step.</p>
+<p>The initial results may then be:</p>
+<ul>
+<li>filtered using metadata</li>
+<li>combined with keyword search</li>
+<li>re-ranked by another model</li>
+</ul>
+<p>This improves precision and ensures that the final results are both semantically relevant and contextually useful.</p>
+<p>This is why modern AI search systems often use <strong>hybrid search</strong>, combining vector similarity with structured filters or keyword relevance.</p>
+<p>In essence, vector search retrieves <strong>similar meaning</strong>, not just exact matches.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="vector-search-vs-keyword-search-vs-semantic-search">Vector Search vs. Keyword Search vs. Semantic Search<a href="https://doris.apache.org/blog/vector-search/#vector-search-vs-keyword-search-vs-semantic-search" class="hash-link" aria-label="Direct link to Vector Search vs. Keyword Search vs. Semantic Search" title="Direct link to Vector Search vs. Keyword Search vs. Semantic Search">&#x200B;</a></h2>
+<p>To understand where vector search fits in, it helps to compare it with two other commonly used approaches: keyword search and semantic search. While these terms are often used interchangeably, they actually represent different ways of thinking about search.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Feature</th><th>Keyword Search</th><th>Semantic Search</th><th>Vector Search</th></tr></thead><tbody><tr><td>Matching method</td><td>Exact keywords</td><td>Meaning (conceptual)</td><td>Meaning (vector similarity)</td></tr><tr><td>Technology</td><td>Inverted index (BM25)</td><td>NLP models</td><td>Embeddings + ANN</td></tr><tr><td>Accuracy</td><td>High precision</td><td>Moderate</td><td>High (context-aware)</td></tr><tr><td>Flexibility</td><td>Low</td><td>Medium</td><td>High</td></tr><tr><td>Typical tools</td><td>Elasticsearch</td><td>Search engines</td><td>Vector databases</td></tr></tbody></table>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="vector-search-vs-keyword-search">Vector Search vs. Keyword Search<a href="https://doris.apache.org/blog/vector-search/#vector-search-vs-keyword-search" class="hash-link" aria-label="Direct link to Vector Search vs. Keyword Search" title="Direct link to Vector Search vs. Keyword Search">&#x200B;</a></h3>
+<p>Traditional keyword search is based on matching exact words. Systems like Elasticsearch use techniques such as inverted indexes and BM25 to find documents that contain the same terms as the query.</p>
+<p>This approach works well when users know exactly what they are looking for. For example, if someone searches for a specific error code or product name, keyword search can return highly precise results very quickly.</p>
+<p>However, keyword search struggles when the wording changes. If a user searches for &#x201C;how to fix database performance,&#x201D; a keyword-based system may miss relevant content that uses different phrasing like &#x201C;optimize query latency&#x201D; or &#x201C;improve database speed.&#x201D;</p>
+<p>This is where vector search becomes useful.</p>
+<p>Instead of matching words, vector search matches <strong>meaning</strong>. It converts both the query and the data into embeddings, and then retrieves results that are semantically similar&#x2014;even if they don&#x2019;t share the same keywords.</p>
+<p>In practice, this means vector search can handle:</p>
+<ul>
+<li>synonyms</li>
+<li>paraphrased queries</li>
+<li>natural language input</li>
+</ul>
+<p>But it also comes with trade-offs. While vector search is more flexible, it can sometimes return results that are less precise, especially without additional filtering or re-ranking.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="vector-search-vs-semantic-search">Vector Search vs. Semantic Search<a href="https://doris.apache.org/blog/vector-search/#vector-search-vs-semantic-search" class="hash-link" aria-label="Direct link to Vector Search vs. Semantic Search" title="Direct link to Vector Search vs. Semantic Search">&#x200B;</a></h3>
+<p>The difference between vector search and semantic search is more subtle, and often misunderstood.</p>
+<p>Semantic search is not a specific technology&#x2014;it&#x2019;s a goal. It refers to the idea of understanding the intent behind a query, rather than just matching words. For example, recognizing that &#x201C;cheap laptop&#x201D; and &#x201C;affordable notebook&#x201D; mean the same thing.</p>
+<p>Vector search is one of the most common ways to implement semantic search in modern systems.</p>
+<p>By representing text as embeddings, vector search turns meaning into something that can be computed mathematically. This allows systems to compare concepts at scale and retrieve relevant results efficiently.</p>
+<p>In modern AI systems, the two are closely connected:</p>
+<ul>
+<li>semantic search defines <strong>what the system is trying to do</strong> (understand meaning)</li>
+<li>vector search defines <strong>how the system actually does it</strong> (compute similarity using vectors)</li>
+</ul>
+<p>You can see this clearly in applications like RAG (Retrieval-Augmented Generation). The system first interprets the user&#x2019;s intent (semantic understanding), and then uses vector search to retrieve the most relevant pieces of information.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="vector-search-example">Vector Search Example<a href="https://doris.apache.org/blog/vector-search/#vector-search-example" class="hash-link" aria-label="Direct link to Vector Search Example" title="Direct link to Vector Search Example">&#x200B;</a></h2>
+<p>Vector search is already used in many real-world applications, often without users realizing it. Here are a few common examples that show how it works in practice.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="retrieval-augmented-generation-rag">Retrieval-Augmented Generation (RAG)<a href="https://doris.apache.org/blog/vector-search/#retrieval-augmented-generation-rag" class="hash-link" aria-label="Direct link to Retrieval-Augmented Generation (RAG)" title="Direct link to Retrieval-Augmented Generation (RAG)">&#x200B;</a></h3>
+<p>In AI systems such as ChatGPT-style assistants, vector search plays a critical role in retrieving relevant information.</p>
+<p>When a user asks a question, the system:</p>
+<ul>
+<li>converts the query into an embedding</li>
+<li>searches for similar documents using vector search</li>
+<li>passes the retrieved context into the LLM</li>
+</ul>
+<p>For example, if a user asks:</p>
+<div class="language-Plain language-plain codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-plain codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">How do I fix high database latency?</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg></span></button></div></div></div>
+<p>The system may retrieve documents about:</p>
+<ul>
+<li>query optimization</li>
+<li>indexing strategies</li>
+<li>caching techniques</li>
+</ul>
+<p>&#x2014;even if those exact words do not appear in the query.</p>
+<p>This can help reduce hallucinations and improve answer grounding, especially when the retrieval pipeline is well-designed.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="reverse-image-search">Reverse Image Search<a href="https://doris.apache.org/blog/vector-search/#reverse-image-search" class="hash-link" aria-label="Direct link to Reverse Image Search" title="Direct link to Reverse Image Search">&#x200B;</a></h3>
+<p>Vector search is also widely used in image-based applications.</p>
+<p>When you upload an image, it is converted into a vector representation that captures visual features such as shapes, colors, and patterns. The system then finds images with similar vectors.</p>
+<p>This is commonly used in:</p>
+<ul>
+<li>e-commerce (&#x201C;find similar products&#x201D;)</li>
+<li>visual search engines</li>
+<li>design and inspiration tools</li>
+</ul>
+<p>Instead of matching metadata, the system understands visual similarity directly.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="recommendation-systems">Recommendation Systems<a href="https://doris.apache.org/blog/vector-search/#recommendation-systems" class="hash-link" aria-label="Direct link to Recommendation Systems" title="Direct link to Recommendation Systems">&#x200B;</a></h3>
+<p>Streaming platforms like Netflix or Spotify rely heavily on vector search to power recommendations.</p>
+<p>Users and content are represented as vectors based on behavior, preferences, and attributes. The system then recommends items that are &#x201C;close&#x201D; in vector space.</p>
+<p>For example:</p>
+<ul>
+<li>users who watch similar content &#x2192; similar vectors</li>
+<li>movies with similar themes &#x2192; similar vectors</li>
+</ul>
+<p>This allows platforms to recommend content that feels relevant, even if users cannot explicitly describe what they want.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="vector-search-architecture-for-ai-systems">Vector Search Architecture (for AI Systems)<a href="https://doris.apache.org/blog/vector-search/#vector-search-architecture-for-ai-systems" class="hash-link" aria-label="Direct link to Vector Search Architecture (for AI Systems)" title="Direct link to Vector Search Architecture (for AI Systems)">&#x200B;</a></h2>
+<p>To understand why vector search is so important, it helps to look at how it fits into a modern AI system.</p>
+<p>A typical architecture looks like this:</p>
+<p><img decoding="async" loading="lazy" alt="architecture image" src="https://cdnd.selectdb.com/assets/images/vector-search-archtecture-for-ai-systems-21e43fe22e441d989082b6dad772b71e.png" width="1536" height="1024" class="img_ev3q"></p>
+<p>When a user submits a query, the system does not search it directly as text.</p>
+<p>Instead:</p>
+<ol>
+<li>The query is converted into an embedding using a model (e.g., OpenAI, BERT, or other embedding models)</li>
+<li>The vector database retrieves the most similar items based on vector similarity.</li>
+<li>The system may apply additional filtering (e.g., time range, metadata)</li>
+<li>A re-ranking step improves precision by selecting the most relevant results</li>
+<li>The final results are passed into an LLM to generate a response</li>
+</ol>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="why-this-architecture-matters">Why This Architecture Matters<a href="https://doris.apache.org/blog/vector-search/#why-this-architecture-matters" class="hash-link" aria-label="Direct link to Why This Architecture Matters" title="Direct link to Why This Architecture Matters">&#x200B;</a></h3>
+<p>Traditional keyword-based systems were originally optimized for lexical matching rather than semantic retrieval, so they may require additional components to support this kind of pipeline effectively.</p>
+<p>They struggle with:</p>
+<ul>
+<li>natural language queries</li>
+<li>unstructured data</li>
+<li>semantic understanding</li>
+</ul>
+<p>Vector search, on the other hand, enables:</p>
+<ul>
+<li><strong>semantic retrieval at scale</strong></li>
+<li><strong>real-time AI applications</strong></li>
+<li><strong>integration with LLM workflows (RAG)</strong></li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="a-practical-insight">A Practical Insight<a href="https://doris.apache.org/blog/vector-search/#a-practical-insight" class="hash-link" aria-label="Direct link to A Practical Insight" title="Direct link to A Practical Insight">&#x200B;</a></h3>
+<p>In real-world systems, vector search is rarely used alone.</p>
+<p>Most production systems combine:</p>
+<div class="language-Plain language-plain codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-plain codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">vector search + keyword search + structured filtering</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg></span></button></div></div></div>
+<p><code>This</code> is known as <strong>hybrid search</strong>, and it balances:</p>
+<ul>
+<li>precision (keyword search)</li>
+<li>flexibility (vector search)</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="the-role-of-a-vector-search-database-and-how-to-choose">The Role of a Vector Search Database (And How to Choose)<a href="https://doris.apache.org/blog/vector-search/#the-role-of-a-vector-search-database-and-how-to-choose" class="hash-link" aria-label="Direct link to The Role of a Vector Search Database (And How to Choose)" title="Direct link to The Role of a Vector Search Database (And How to Choose)">&#x200B;</a></h2>
+<p>Vector search is not just an algorithm&#x2014;it requires a system that can store and retrieve high-dimensional vectors efficiently at scale. This is where vector search databases come in.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="what-is-a-vector-search-database">What Is a Vector Search Database?<a href="https://doris.apache.org/blog/vector-search/#what-is-a-vector-search-database" class="hash-link" aria-label="Direct link to What Is a Vector Search Database?" title="Direct link to What Is a Vector Search Database?">&#x200B;</a></h3>
+<p>A vector search database is a system specifically designed to handle embeddings and perform fast similarity search.</p>
+<p>Unlike traditional databases that focus on exact matching and filtering, vector databases are optimized for:</p>
+<ul>
+<li>storing high-dimensional vectors (embeddings)</li>
+<li>performing nearest-neighbor search efficiently</li>
+<li>scaling to millions or billions of data points</li>
+</ul>
+<p>In practical terms, a vector search database allows you to take a query, convert it into an embedding, and quickly find the most similar items&#x2014;even in very large datasets.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="vector-search-vs-elasticsearch-and-traditional-search-systems">Vector Search vs. Elasticsearch (and Traditional Search Systems)<a href="https://doris.apache.org/blog/vector-search/#vector-search-vs-elasticsearch-and-traditional-search-systems" class="hash-link" aria-label="Direct link to Vector Search vs. Elasticsearch (and Traditional Search Systems)" title="Direct link to Vector Search vs. Elasticsearch (and Traditional Search Systems)">&#x200B;</a></h3>
+<p>Elasticsearch and similar systems were originally built for keyword-based search using inverted indexes.</p>
+<p>This makes them extremely effective for:</p>
+<ul>
+<li>exact matches</li>
+<li>filtering and aggregation</li>
+<li>structured queries</li>
+</ul>
+<p>However, their original strength lies in lexical retrieval, filtering, and aggregation rather than vector-native similarity search.</p>
+<p>Modern versions of Elasticsearch now support vector search, but there is still a conceptual difference:</p>
+<ul>
+<li><strong>Keyword search (Elasticsearch classic)</strong> &#x2192; matches exact terms</li>
+<li><strong>Vector search</strong> &#x2192; matches semantic similarity</li>
+</ul>
+<p>In real-world systems, these approaches are often combined.</p>
+<p>For example, a system might use keyword search for precision and vector search for semantic relevance.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="dedicated-vector-databases-vs-integrated-databases">Dedicated Vector Databases vs. Integrated Databases<a href="https://doris.apache.org/blog/vector-search/#dedicated-vector-databases-vs-integrated-databases" class="hash-link" aria-label="Direct link to Dedicated Vector Databases vs. Integrated Databases" title="Direct link to Dedicated Vector Databases vs. Integrated Databases">&#x200B;</a></h3>
+<p>As vector search has grown, two main approaches have emerged.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="dedicated-vector-databases">Dedicated Vector Databases<a href="https://doris.apache.org/blog/vector-search/#dedicated-vector-databases" class="hash-link" aria-label="Direct link to Dedicated Vector Databases" title="Direct link to Dedicated Vector Databases">&#x200B;</a></h4>
+<p>Examples include Pinecone, Milvus, and Qdrant.</p>
+<p>These systems are built specifically for vector similarity search and are typically easy to adopt for AI use cases.</p>
+<p>They work well when:</p>
+<ul>
+<li>the primary requirement is vector retrieval</li>
+<li>the system is relatively simple</li>
+<li>structured filtering is minimal</li>
+</ul>
+<p>However, they may require additional systems to handle analytics, filtering, or complex queries.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="integrated-analytical-databases">Integrated Analytical Databases<a href="https://doris.apache.org/blog/vector-search/#integrated-analytical-databases" class="hash-link" aria-label="Direct link to Integrated Analytical Databases" title="Direct link to Integrated Analytical Databases">&#x200B;</a></h4>
+<p>In real-world applications, vector search rarely exists in isolation.</p>
+<p>Most production systems need to combine:</p>
+<ul>
+<li>vector search (for semantic similarity)</li>
+<li>metadata filtering (time, status, user, etc.)</li>
+<li>aggregation and analytics</li>
+<li>real-time data ingestion</li>
+</ul>
+<p>For example, a real query might look like:</p>
+<p>&#x201C;Find logs similar to this error, from yesterday, where status = failed&#x201D;</p>
+<p>This is not just a vector search problem&#x2014;it is a <strong>hybrid query</strong> that requires both semantic understanding and structured filtering. Some analytical databases, such as <a href="https://doris.apache.org/" target="_blank" rel="noopener noreferrer">Apache Doris</a>, follow this integrated approach by supporting vector similarity search together with real-time analytics, filtering, and aggregation in a single system. This allows teams to simplify architecture when building AI applications that require both semantic retrieval and structured queries.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="how-to-choose-the-right-approach">How to Choose the Right Approach<a href="https://doris.apache.org/blog/vector-search/#how-to-choose-the-right-approach" class="hash-link" aria-label="Direct link to How to Choose the Right Approach" title="Direct link to How to Choose the Right Approach">&#x200B;</a></h3>
+<p>Choosing between different types of vector search systems depends on your use case.</p>
+<p>Choose a <strong>dedicated vector database</strong> if:</p>
+<ul>
+<li>your workload is primarily similarity search</li>
+<li>you are building a prototype or early-stage AI feature</li>
+</ul>
+<p>An <strong>integrated analytical database</strong> may be a good fit if:</p>
+<ul>
+<li>you need vector retrieval together with filtering, analytics, and real-time data ingestion</li>
+<li>your workload involves logs, events, or operational analytics</li>
+<li>you want to reduce the number of systems used in a production pipeline</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="limitations-of-vector-search">Limitations of Vector Search<a href="https://doris.apache.org/blog/vector-search/#limitations-of-vector-search" class="hash-link" aria-label="Direct link to Limitations of Vector Search" title="Direct link to Limitations of Vector Search">&#x200B;</a></h2>
+<p>Despite its advantages, vector search is not a perfect solution and comes with several practical limitations.</p>
+<p>One of the main trade-offs is between <strong>accuracy and performance</strong>. Most production systems rely on Approximate Nearest Neighbor (ANN) algorithms to achieve fast retrieval at scale, but this means the results may not always be the exact closest matches.</p>
+<p>Another challenge is <strong>computational cost</strong>. Generating embeddings and performing similarity search&#x2014;especially across large datasets&#x2014;can be resource-intensive, requiring optimized infrastructure and indexing strategies.</p>
+<p>As data volume grows, <strong>latency can also become an issue</strong>. Maintaining low response times while searching millions or billions of vectors requires careful system design.</p>
+<p>In addition, vector search alone may lack precision in certain scenarios. Because it focuses on semantic similarity, it can sometimes return results that are related but not strictly relevant. This is why many systems introduce a <strong>re-ranking step</strong> or combine vector search with structured filters.</p>
+<p>In practice, most production systems use <strong>hybrid search</strong>, combining vector search with keyword search and filtering to balance relevance and precision.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="future-of-vector-search">Future of Vector Search<a href="https://doris.apache.org/blog/vector-search/#future-of-vector-search" class="hash-link" aria-label="Direct link to Future of Vector Search" title="Direct link to Future of Vector Search">&#x200B;</a></h2>
+<p>Vector search is evolving rapidly as AI systems become more complex and data-driven.</p>
+<p>One clear trend is the rise of <strong>hybrid search</strong>, where vector similarity is combined with keyword matching and structured filtering. This approach allows systems to balance semantic understanding with precision, and is quickly becoming the default in production environments.</p>
+<p>Another major shift is the adoption of <strong>Retrieval-Augmented Generation (RAG)</strong>. As LLM-based applications become more common, vector search is increasingly used to retrieve external knowledge and improve model accuracy.</p>
+<p>We are also seeing the emergence of <strong>AI agents and memory systems</strong>, where vector search is used to store and retrieve past interactions or contextual information. In this setting, vector databases effectively act as a form of long-term memory for AI systems.</p>
+<p>At the infrastructure level, <strong>real-time vector analytics</strong> is becoming more important. Instead of working only on static datasets, modern systems need to handle streaming data, logs, and events while still supporting fast similarity search.</p>
+<p>Overall, vector search is moving from a niche technique to a <strong>core component of modern AI and data infrastructure</strong>.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="faq">FAQ<a href="https://doris.apache.org/blog/vector-search/#faq" class="hash-link" aria-label="Direct link to FAQ" title="Direct link to FAQ">&#x200B;</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="can-sql-databases-do-vector-search">Can SQL databases do vector search?<a href="https://doris.apache.org/blog/vector-search/#can-sql-databases-do-vector-search" class="hash-link" aria-label="Direct link to Can SQL databases do vector search?" title="Direct link to Can SQL databases do vector search?">&#x200B;</a></h3>
+<p>Yes, many modern databases support vector search either through extensions (such as pgvector) or built-in vector data types. However, performance and scalability depend on how well the system is optimized for high-dimensional similarity search.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="what-is-hybrid-search">What is hybrid search?<a href="https://doris.apache.org/blog/vector-search/#what-is-hybrid-search" class="hash-link" aria-label="Direct link to What is hybrid search?" title="Direct link to What is hybrid search?">&#x200B;</a></h3>
+<p>Hybrid search combines keyword search (for precision) with vector search (for semantic understanding). This approach is widely used in modern AI systems because it provides both accuracy and flexibility.</p></div>]]></content:encoded>
+            <category>Glossary</category>
+        </item>
+        <item>
+            <title><![CDATA[Querying Apache Doris Data as a Graph with PuppyGraph]]></title>
+            <link>https://doris.apache.org/blog/puppygraph-apache-doris/</link>
+            <guid>https://doris.apache.org/blog/puppygraph-apache-doris/</guid>
+            <pubDate>Thu, 09 Apr 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[PuppyGraph enables graph analytics on Apache Doris data without requiring separate graph databases or ETL pipelines, supporting relationship traversal queries through Cypher and Gremlin.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Querying Apache Doris Data as a Graph with PuppyGraph</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Rayner Chen</span></span><time datetime="2026-04-09T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">April 9, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/querying-apache-doris-data-as-a-graph-with-puppygraph">PuppyGraph enables graph analytics on Apache Doris data without requiring separate graph databases or ETL pipelines, supporting relationship traversal queries through Cypher and Gremlin. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Why a Mexican Mining Giant Migrated from Azure Synapse to Apache Doris]]></title>
+            <link>https://doris.apache.org/blog/mexican-mining-giant-azure-to-apache-doris/</link>
+            <guid>https://doris.apache.org/blog/mexican-mining-giant-azure-to-apache-doris/</guid>
+            <pubDate>Mon, 30 Mar 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[One of largest mining companies in Mexico migrated from Azure Synapse to Apache Doris to solve unpredictable cloud costs and slow query performance across its 20,000-employee operation.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Why a Mexican Mining Giant Migrated from Azure Synapse to Apache Doris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">Fintecheando &#xB7; Victor Romero</span></span><time datetime="2026-03-30T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">March 30, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/mexican-mining-giant-migrated-from-azure-synapse-to-apache-doris">One of largest mining companies in Mexico migrated from Azure Synapse to Apache Doris to solve unpredictable cloud costs and slow query performance across its 20,000-employee operation. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[How Xanh SM, Leading EV ride hailer in Vietnam, Built Real-Time Recommendations with Apache Doris]]></title>
+            <link>https://doris.apache.org/blog/xanhsm-with-apache-doris/</link>
+            <guid>https://doris.apache.org/blog/xanhsm-with-apache-doris/</guid>
+            <pubDate>Tue, 24 Mar 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Xanh SM, Leading EV ride hailer in Vietnam, built a real-time personalized location recommendation system with Apache Doris to power smarter driver-rider matching.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">How Xanh SM, Leading EV ride hailer in Vietnam, Built Real-Time Recommendations with Apache Doris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Thang Duc Bui</span></span><time datetime="2026-03-24T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">March 24, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/how-xanhsm-built-real-time-recommendations-with-apache-doris">Xanh SM, Leading EV ride hailer in Vietnam, built a real-time personalized location recommendation system with Apache Doris to power smarter driver-rider matching. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[From ClickHouse + Elasticsearch to Apache Doris: How Kwai Unified Trillion-Scale Ad Analytics]]></title>
+            <link>https://doris.apache.org/blog/from-clickhouse-elasticsearch-to-apache-doris-kwai/</link>
+            <guid>https://doris.apache.org/blog/from-clickhouse-elasticsearch-to-apache-doris-kwai/</guid>
+            <pubDate>Fri, 20 Mar 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Kwai, a short-video platform with over 400 million daily active users, migrated its advertising analytics from ClickHouse and Elasticsearch to Apache Doris, achieving up to 90% latency reduction and 3x write throughput.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">From ClickHouse + Elasticsearch to Apache Doris: How Kwai Unified Trillion-Scale Ad Analytics</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">Kwai &#xB7; Simin Zhou</span></span><time datetime="2026-03-20T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">March 20, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>import { BlogLink } from &apos;../src/components/blogs/components/blog-link&apos;;
+import { SeeMore } from &apos;../src/components/blogs/components/see-more&apos;;</p>
+<blockquote>
+<p><bloglink rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/from-clickhouse-elasticsearch-to-apache-doris-how-kwai-unified-trillion-scale-ad-analytics">Kwai, a short-video platform with over 400 million daily active users, migrated its advertising analytics from ClickHouse and Elasticsearch to Apache Doris, achieving up to 90% latency reduction and 3x write throughput. <seemore></seemore></bloglink></p>
+</blockquote></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+    </channel>
+</rss>

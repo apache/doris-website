@@ -1,0 +1,516 @@
+<!doctype html><html lang=en-US dir=ltr class="blog-wrapper blog-tags-post-list-page plugin-blog plugin-id-default" data-has-hydrated=false><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"><meta name=generator content="Docusaurus v3.6.3"><link rel=alternate type=application/rss+xml href=/blog/rss.xml title="Apache Doris RSS Feed"><link rel=alternate type=application/atom+xml href=/blog/atom.xml title="Apache Doris Atom Feed"><link rel=preconnect href=https://analytics.apache.org/><script>var _paq=window._paq=window._paq||[];_paq.push(["setRequestMethod","POST"]),_paq.push(["trackPageView"]),_paq.push(["enableLinkTracking"]),_paq.push(["enableHeartBeatTimer"]),function(){var e="https://analytics.apache.org/";_paq.push(["setRequestMethod","POST"]),_paq.push(["setTrackerUrl",e+"matomo.php"]),_paq.push(["setSiteId","43"]);var a=document,t=a.createElement("script"),p=a.getElementsByTagName("script")[0];t.type="text/javascript",t.async=!0,t.src=e+"matomo.js",p.parentNode.insertBefore(t,p)}()</script><link rel=stylesheet href=/css/katex.min.css><script src=/js/custom-script.js></script><script async src=https://widget.kapa.ai/kapa-widget.bundle.js data-website-id=a5fb90df-217a-4097-95c0-80490220314b data-modal-title="Apache Doris AI" data-project-name="Apache Doris Website" data-button-hide=true data-modal-override-open-selector=#navbar-ask-ai-btn data-project-logo=https://cdn.selectdb.com/static/doris_1_3c42247c63.png data-modal-image=https://cdn.selectdb.com/static/doris_logo_cc5a30d886.png data-project-color=#11A679 data-modal-disclaimer="This is a custom LLM with access to all [Doris documentation](https://doris.apache.org/docs/4.x/gettingStarted/what-is-apache-doris)." data-consent-required data-consent-screen-disclaimer="By clicking &amp;quot;I agree, let's chat&amp;quot;, you consent to the use of the AI assistant in accordance with kapa.ai's [Privacy Policy](https://www.kapa.ai/content/privacy-policy). This service uses reCAPTCHA, which requires your consent to Google's [Privacy Policy](https://policies.google.com/privacy) and [Terms of Service](https://policies.google.com/terms). By proceeding, you explicitly agree to both kapa.ai's and Google's privacy policies." data-bot-protection-mechanism=hcaptcha></script><title data-rh=true>2 posts tagged with "Glossary" - Apache Doris</title><meta data-rh=true name=viewport content="width=device-width,initial-scale=1.0"><meta data-rh=true name=twitter:card content=summary_large_image><meta data-rh=true property=og:url content=https://doris.apache.org/blog/tags/glossary/><meta data-rh=true property=og:locale content=en_US><meta data-rh=true property=og:locale:alternate content=zh_Hans-CN><meta data-rh=true property=og:locale:alternate content=ja_JP><meta data-rh=true name=docusaurus_locale content=en><meta data-rh=true name=docsearch:language content=en><meta data-rh=true property=og:title content='2 posts tagged with "Glossary" - Apache Doris'><meta data-rh=true name=docusaurus_tag content=blog_tags_posts><meta data-rh=true name=docsearch:docusaurus_tag content=blog_tags_posts><link data-rh=true rel=icon href=/images/favicon.ico><link data-rh=true rel=canonical href=https://doris.apache.org/blog/tags/glossary/><link data-rh=true rel=alternate href=https://doris.apache.org/blog/tags/glossary/ hreflang=en-US><link data-rh=true rel=alternate href=https://doris.apache.org/zh-CN/blog/tags/glossary/ hreflang=zh-Hans-CN><link data-rh=true rel=alternate href=https://doris.apache.org/ja/blog/tags/glossary/ hreflang=ja-JP><link data-rh=true rel=alternate href=https://doris.apache.org/blog/tags/glossary/ hreflang=x-default><link rel=stylesheet href=https://cdnd.selectdb.com/assets/css/styles.99fa0c3a.css><link rel=preload href=https://cdnd.selectdb.com/assets/js/runtime~main.7418c8a4.js as=script><link rel=preload href=https://cdnd.selectdb.com/assets/js/main.c39c053a.js as=script><body class=navigation-with-keyboard><script>!function(){var t,e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();t=null!==e?e:"light",document.documentElement.setAttribute("data-theme",t)}(),function(){try{for(var[t,e]of new URLSearchParams(window.location.search).entries())if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id=__docusaurus>
+<div role=region aria-label="Skip to main content"><a class=skipToContent_fXgn href=#__docusaurus_skipToContent_fallback>Skip to main content</a></div><nav class="navbar navbar--fixed-top navbar-next"><div class=navbar-next__inner><a class=navbar-next__logo aria-label="Apache Doris" href=/><img src=/images/logo-doris.svg alt="Apache Doris"></a><div class=navbar-next__nav><div class=navbar-next__item><button class=navbar-next__trigger type=button aria-haspopup=true>Why Doris<svg class=navbar-next__chevron viewBox="0 0 16 16" fill=none aria-hidden=true><path d="M4 6l4 4 4-4" stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round /></svg></button><div class=navbar-next__dropdown><a class=navbar-next__dropdown-link href=/why-doris/compare/>Doris vs. Others</a><a class=navbar-next__dropdown-link href=/why-doris/benchmarks/>Benchmarks</a><a class=navbar-next__dropdown-link href=/why-doris/key-features/>Key Features</a><a class=navbar-next__dropdown-link href=/why-doris/users/>User Stories</a></div></div><div class=navbar-next__item><button class=navbar-next__trigger type=button aria-haspopup=true>Use Cases<svg class=navbar-next__chevron viewBox="0 0 16 16" fill=none aria-hidden=true><path d="M4 6l4 4 4-4" stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round /></svg></button><div class=navbar-next__dropdown><a class=navbar-next__dropdown-link href=/use-cases/customer-facing-analytics/>Customer-Facing Analytics</a><a class=navbar-next__dropdown-link href=/use-cases/data-warehousing/>Data Warehousing</a><a class=navbar-next__dropdown-link href=/use-cases/observability/>Observability</a><a class=navbar-next__dropdown-link href=/use-cases/ai/>Doris for AI</a></div></div><div class=navbar-next__item><button class=navbar-next__trigger type=button aria-haspopup=true>Docs<svg class=navbar-next__chevron viewBox="0 0 16 16" fill=none aria-hidden=true><path d="M4 6l4 4 4-4" stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round /></svg></button><div class=navbar-next__dropdown><a class=navbar-next__dropdown-link href=/docs/dev/getting-started/what-is-apache-doris/>Dev</a><a class=navbar-next__dropdown-link href=/docs/4.x/getting-started/what-is-apache-doris/>4.x</a><a class=navbar-next__dropdown-link href=/docs/3.x/gettingStarted/what-is-apache-doris/>3.x</a><a class=navbar-next__dropdown-link href=/docs/2.1/gettingStarted/what-is-apache-doris/>2.1</a></div></div><div class=navbar-next__item><button class=navbar-next__trigger type=button aria-haspopup=true>Resources<svg class=navbar-next__chevron viewBox="0 0 16 16" fill=none aria-hidden=true><path d="M4 6l4 4 4-4" stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round /></svg></button><div class=navbar-next__dropdown><a class=navbar-next__dropdown-link href=/releases/all-release/>Release Notes</a><a class=navbar-next__dropdown-link href=/blog/>Blogs</a><a class=navbar-next__dropdown-link href=/events/>News and Events</a></div></div><div class=navbar-next__item><button class=navbar-next__trigger type=button aria-haspopup=true>Community<svg class=navbar-next__chevron viewBox="0 0 16 16" fill=none aria-hidden=true><path d="M4 6l4 4 4-4" stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round /></svg></button><div class=navbar-next__dropdown><a class=navbar-next__dropdown-link href=/community-report/>Community Report</a><a href=https://github.com/apache/doris/issues/60036 target=_blank rel="noopener noreferrer" class=navbar-next__dropdown-link>Roadmap</a><a class=navbar-next__dropdown-link href=/community/join-community/>Build with Us</a><a href=https://github.com/apache/doris/discussions target=_blank rel="noopener noreferrer" class=navbar-next__dropdown-link>Join GitHub Discussions</a></div></div></div><div class=navbar-next__actions><a href=https://apache-doris-summit.org/ target=_blank rel="noopener noreferrer" class=navbar-next__summit aria-label="Visit Doris Summit 2026 (opens in a new tab)"><span>Doris Summit 26</span></a><button type=button id=navbar-ask-ai-btn class=navbar-next__ask-ai aria-label="Ask Me"><svg width=18 height=18 viewBox="0 0 18 18" fill=none><path d="M7.35457 0.574461C7.42306 0.423027 7.5322 0.292956 7.67018 0.198317C7.80816 0.103677 7.96974 0.04807 8.13742 0.037509C8.30511 0.026948 8.47253 0.0618351 8.62158 0.138397C8.77063 0.21496 8.89564 0.330283 8.98308 0.471896L9.03778 0.574461L9.98672 2.68378C10.8161 4.52515 12.1952 6.07276 13.9397 7.11968L14.2337 7.28972L15.9197 8.2263C16.0536 8.30049 16.1666 8.40653 16.2484 8.53479C16.3302 8.66304 16.3783 8.80945 16.3882 8.96069C16.3981 9.11194 16.3696 9.26323 16.3052 9.40083C16.2408 9.53842 16.1426 9.65796 16.0195 9.74857L15.921 9.81064L14.2337 10.7472C12.454 11.7355 11.0224 13.2365 10.1303 15.0495L9.98672 15.3532L9.03641 17.4625C8.96778 17.6136 8.85866 17.7433 8.72081 17.8377C8.58296 17.9321 8.42162 17.9876 8.25418 17.9982C8.08674 18.0087 7.91956 17.9739 7.77066 17.8976C7.62177 17.8213 7.49681 17.7063 7.40926 17.565L7.35457 17.4625L6.40426 15.3532C5.57484 13.5118 4.19572 11.9643 2.45124 10.9173L2.15726 10.7472L0.471311 9.81064C0.337321 9.73674 0.224189 9.63093 0.142217 9.50285C0.0602439 9.37477 0.0120344 9.22849 0.00197753 9.07732C-0.00807937 8.92615 0.0203358 8.7749 0.0846359 8.63734C0.148936 8.49978 0.247078 8.38028 0.370127 8.28972L0.468577 8.22765L2.15589 7.29107C3.93569 6.30285 5.36732 4.80183 6.25932 2.98877L6.40289 2.68513L7.3532 0.57581L7.35457 0.574461ZM15.6899 0.130465C16.1425 1.14532 16.9145 1.98914 17.8914 2.53668C17.9244 2.55517 17.9518 2.58196 17.9709 2.61432C17.9899 2.64668 18 2.68345 18 2.72089C18 2.75833 17.9899 2.7951 17.9709 2.82745C17.9518 2.85981 17.9244 2.8866 17.8914 2.9051C16.9145 3.45264 16.1425 4.29645 15.6899 5.31131C15.6731 5.3501 15.645 5.38315 15.6093 5.40638C15.5736 5.4296 15.5317 5.44198 15.4889 5.44198C15.4462 5.44198 15.4043 5.4296 15.3686 5.40638C15.3329 5.38315 15.3048 5.3501 15.2879 5.31131C14.8352 4.29695 14.0632 3.45364 13.0865 2.90645C13.0532 2.88805 13.0255 2.86122 13.0062 2.82872C12.9869 2.79622 12.9767 2.75923 12.9767 2.72156C12.9767 2.68389 12.9869 2.6469 13.0062 2.6144C13.0255 2.58191 13.0532 2.55508 13.0865 2.53668C14.0636 1.98879 14.8357 1.14448 15.2879 0.129116C15.305 0.0907214 15.3331 0.0580664 15.3686 0.035138C15.4042 0.0122096 15.4458 0 15.4883 0C15.5308 0 15.5723 0.0122096 15.6079 0.035138C15.6435 0.0580664 15.6715 0.0907214 15.6886 0.129116V0.130465H15.6899Z" fill=#11A679 /></svg><span>Ask Me</span></button><a href=https://github.com/apache/doris target=_blank rel="noopener noreferrer" class=navbar-next__star-link aria-label="Star Apache Doris on GitHub (15.7k stars)"><svg width=13 height=13 viewBox="0 0 16 16" fill=currentColor aria-hidden=true><path d="M8 0l2.4 5.5L16 6.2l-4 3.9 1 5.9L8 13.2l-5 2.8 1-5.9-4-3.9 5.6-.7L8 0z"/></svg><span>Star</span><span class=navbar-next__star-divider></span><span class=navbar-next__star-count>15.7k</span><span class=navbar-next__star-divider></span><svg width=14 height=14 viewBox="0 0 16 16" fill=currentColor aria-hidden=true><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a class=navbar-next__cta href=/download/>DOWNLOAD</a></div><button type=button class=navbar-next__menu-button aria-label="Open navigation menu" aria-expanded=false aria-controls=navbar-next-mobile-panel><svg width=20 height=20 viewBox="0 0 20 20" fill=none aria-hidden=true><path d="M4 6h12M4 10h12M4 14h12" stroke=currentColor stroke-width=2 stroke-linecap=round /></svg></button></div><div id=navbar-next-mobile-panel class=navbar-next__mobile-panel hidden><div class=navbar-next__mobile-sections><div class=navbar-next__mobile-section><button type=button class=navbar-next__mobile-trigger aria-expanded=true aria-controls=navbar-next-mobile-why-doris>Why Doris<svg class=navbar-next__chevron viewBox="0 0 16 16" fill=none aria-hidden=true><path d="M4 6l4 4 4-4" stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round /></svg></button><div id=navbar-next-mobile-why-doris class=navbar-next__mobile-links><a class=navbar-next__mobile-link href=/why-doris/compare/>Doris vs. Others</a><a class=navbar-next__mobile-link href=/why-doris/benchmarks/>Benchmarks</a><a class=navbar-next__mobile-link href=/why-doris/key-features/>Key Features</a><a class=navbar-next__mobile-link href=/why-doris/users/>User Stories</a></div></div><div class=navbar-next__mobile-section><button type=button class=navbar-next__mobile-trigger aria-expanded=false aria-controls=navbar-next-mobile-use-cases>Use Cases<svg class=navbar-next__chevron viewBox="0 0 16 16" fill=none aria-hidden=true><path d="M4 6l4 4 4-4" stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round /></svg></button><div id=navbar-next-mobile-use-cases class=navbar-next__mobile-links hidden><a class=navbar-next__mobile-link href=/use-cases/customer-facing-analytics/>Customer-Facing Analytics</a><a class=navbar-next__mobile-link href=/use-cases/data-warehousing/>Data Warehousing</a><a class=navbar-next__mobile-link href=/use-cases/observability/>Observability</a><a class=navbar-next__mobile-link href=/use-cases/ai/>Doris for AI</a></div></div><div class=navbar-next__mobile-section><button type=button class=navbar-next__mobile-trigger aria-expanded=false aria-controls=navbar-next-mobile-docs>Docs<svg class=navbar-next__chevron viewBox="0 0 16 16" fill=none aria-hidden=true><path d="M4 6l4 4 4-4" stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round /></svg></button><div id=navbar-next-mobile-docs class=navbar-next__mobile-links hidden><a class=navbar-next__mobile-link href=/docs/dev/getting-started/what-is-apache-doris/>Dev</a><a class=navbar-next__mobile-link href=/docs/4.x/getting-started/what-is-apache-doris/>4.x</a><a class=navbar-next__mobile-link href=/docs/3.x/gettingStarted/what-is-apache-doris/>3.x</a><a class=navbar-next__mobile-link href=/docs/2.1/gettingStarted/what-is-apache-doris/>2.1</a></div></div><div class=navbar-next__mobile-section><button type=button class=navbar-next__mobile-trigger aria-expanded=false aria-controls=navbar-next-mobile-resources>Resources<svg class=navbar-next__chevron viewBox="0 0 16 16" fill=none aria-hidden=true><path d="M4 6l4 4 4-4" stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round /></svg></button><div id=navbar-next-mobile-resources class=navbar-next__mobile-links hidden><a class=navbar-next__mobile-link href=/releases/all-release/>Release Notes</a><a class=navbar-next__mobile-link href=/blog/>Blogs</a><a class=navbar-next__mobile-link href=/events/>News and Events</a></div></div><div class=navbar-next__mobile-section><button type=button class=navbar-next__mobile-trigger aria-expanded=false aria-controls=navbar-next-mobile-community>Community<svg class=navbar-next__chevron viewBox="0 0 16 16" fill=none aria-hidden=true><path d="M4 6l4 4 4-4" stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round /></svg></button><div id=navbar-next-mobile-community class=navbar-next__mobile-links hidden><a class=navbar-next__mobile-link href=/community-report/>Community Report</a><a href=https://github.com/apache/doris/issues/60036 target=_blank rel="noopener noreferrer" class=navbar-next__mobile-link>Roadmap</a><a class=navbar-next__mobile-link href=/community/join-community/>Build with Us</a><a href=https://github.com/apache/doris/discussions target=_blank rel="noopener noreferrer" class=navbar-next__mobile-link>Join GitHub Discussions</a></div></div></div><div class=navbar-next__mobile-actions><a href=https://github.com/apache/doris target=_blank rel="noopener noreferrer" class=navbar-next__star-link aria-label="Star Apache Doris on GitHub (15.7k stars)"><svg width=13 height=13 viewBox="0 0 16 16" fill=currentColor aria-hidden=true><path d="M8 0l2.4 5.5L16 6.2l-4 3.9 1 5.9L8 13.2l-5 2.8 1-5.9-4-3.9 5.6-.7L8 0z"/></svg><span>Star</span><span class=navbar-next__star-divider></span><span class=navbar-next__star-count>15.7k</span><span class=navbar-next__star-divider></span><svg width=14 height=14 viewBox="0 0 16 16" fill=currentColor aria-hidden=true><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a class=navbar-next__cta href=/download/>DOWNLOAD</a></div></div></nav><div id=__docusaurus_skipToContent_fallback class="main-wrapper mainWrapper_eExm"><div class="mb-[4.875rem] container"><div class="lg:row lg:flex"><main class="col col--9 col--offset-1" itemscope itemtype=http://schema.org/Blog><header class=margin-bottom--xl><h1>2 posts tagged with "Glossary"</h1><a href=/blog/tags/>View All Tags</a></header><article class=margin-bottom--xl itemprop=blogPost itemscope itemtype=http://schema.org/BlogPosting><div class=markdown itemprop=articleBody><header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href=/blog/>Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class=s-tags><span class=s-tag>Glossary</span></span></span></div><h2 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop=headline><a itemprop=url href=/blog/llm-observability/>What Is LLM Observability? Metrics, Tools, and How It Works in AI Systems</a></h2><div class="blog-info text-center flex justify-center text-sm text-black"><span class=authors><span class="s-author text-black">Apache Doris</span></span><time datetime=2026-04-10T00:00:00.000Z itemprop=datePublished class="text-black ml-4">April 10, 2026</time></div></header><div class=markdown itemprop=articleBody><h2 class="anchor anchorWithStickyNavbar_LWe7" id=what-is-llm-observability>What Is LLM Observability?<a href=#what-is-llm-observability class=hash-link aria-label="Direct link to What Is LLM Observability?" title="Direct link to What Is LLM Observability?">​</a></h2>
+<p><strong>LLM observability</strong> is the ability to understand, monitor, and debug how a large language model behaves in a real-world application.</p>
+<p>In practice, it focuses on making LLM systems more transparent by capturing what the model sees, what it produces, and how it arrives at those outputs across a full interaction.</p>
+<p>It typically includes:</p>
+<ul>
+<li>tracing LLM calls and multi-step workflows</li>
+<li>monitoring inputs (prompts, context) and outputs</li>
+<li>evaluating response quality and correctness</li>
+<li>tracking latency, token usage, and cost</li>
+<li>analyzing how system components (e.g., retrieval, tools) influence results</li>
+</ul>
+<p>Unlike traditional monitoring, which focuses on system health (such as uptime or error rates), LLM observability focuses on <strong>model behavior and decision outcomes</strong>.</p>
+<p>This distinction is important because LLM systems are not purely deterministic. Observability is not just about detecting failures—it is about understanding why a response was generated, whether it was appropriate, and how it could be improved.</p>
+<p>In modern AI applications, LLM observability often spans the entire pipeline, including prompt construction, retrieval (in RAG systems), model inference, and post-processing. This broader scope helps teams debug issues such as hallucinations, irrelevant answers, or inconsistent behavior.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=why-llm-observability-matters-beyond-traditional-monitoring>Why LLM Observability Matters (Beyond Traditional Monitoring)<a href=#why-llm-observability-matters-beyond-traditional-monitoring class=hash-link aria-label="Direct link to Why LLM Observability Matters (Beyond Traditional Monitoring)" title="Direct link to Why LLM Observability Matters (Beyond Traditional Monitoring)">​</a></h2>
+<p>LLM systems are fundamentally harder to monitor than traditional software systems.</p>
+<p>The main reasons include:</p>
+<ul>
+<li><strong>Non-deterministic outputs:</strong> The same input can produce different responses, making issues difficult to reproduce and debug.</li>
+<li><strong>Prompt-driven behavior:</strong> Small changes in prompts or context can lead to large differences in output, even when the underlying model remains the same.</li>
+<li><strong>Hidden reasoning (black-box models):</strong> Most LLMs do not expose internal reasoning processes, so developers must rely on indirect signals to understand behavior.</li>
+<li><strong>Multi-step pipelines (RAG and agents):</strong> Many systems involve retrieval, tool usage, or chained model calls, where failures can originate from multiple points.</li>
+</ul>
+<p>As a result, traditional monitoring signals—such as latency, uptime, or error rates—provide only a partial view of system performance.</p>
+<p>LLM observability is designed to address this gap by providing visibility into how inputs are transformed into outputs across the entire system.</p>
+<p>It helps answer questions such as:</p>
+<ul>
+<li>Why did the model generate this response?</li>
+<li>Was the retrieved context relevant?</li>
+<li>Is the issue caused by the prompt, the model, or the data?</li>
+<li>How does output quality change over time?</li>
+</ul>
+<p>In practice, this deeper visibility is essential for:</p>
+<ul>
+<li>debugging hallucinations and incorrect answers</li>
+<li>improving prompt and system design</li>
+<li>maintaining consistent user experience</li>
+<li>controlling cost and performance at scale</li>
+</ul>
+<p>Without observability, LLM systems can appear to work while silently degrading in quality or reliability. With observability, teams can move from reactive debugging to systematic improvement.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=what-to-monitor-in-llm-systems-key-signals>What to Monitor in LLM Systems (Key Signals)<a href=#what-to-monitor-in-llm-systems-key-signals class=hash-link aria-label="Direct link to What to Monitor in LLM Systems (Key Signals)" title="Direct link to What to Monitor in LLM Systems (Key Signals)">​</a></h2>
+<p>The most important signals in LLM observability include both <strong>system-level metrics</strong> and <strong>model-specific signals</strong> that reflect how the LLM behaves in real-world usage.</p>
+<p>In practice, effective observability focuses not just on whether the system is running, but whether it is producing useful, reliable, and cost-efficient outputs.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=input-and-prompt-monitoring>Input and Prompt Monitoring<a href=#input-and-prompt-monitoring class=hash-link aria-label="Direct link to Input and Prompt Monitoring" title="Direct link to Input and Prompt Monitoring">​</a></h3>
+<p>Tracking prompts and user inputs helps identify issues at the very beginning of the pipeline.</p>
+<p>This includes:</p>
+<ul>
+<li>prompt injection or unsafe inputs</li>
+<li>unclear or poorly structured prompts</li>
+<li>unexpected user behavior patterns</li>
+</ul>
+<p>Because LLM outputs are highly sensitive to input phrasing, even small changes in prompts can lead to significantly different results. Monitoring inputs is often the fastest way to diagnose inconsistent behavior.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=output-quality-and-evaluation>Output Quality and Evaluation<a href=#output-quality-and-evaluation class=hash-link aria-label="Direct link to Output Quality and Evaluation" title="Direct link to Output Quality and Evaluation">​</a></h3>
+<p>Evaluating outputs is one of the most important—and most challenging—parts of LLM observability.</p>
+<p>Common evaluation dimensions include:</p>
+<ul>
+<li>relevance (does the answer match the question?)</li>
+<li>correctness (is the information accurate?)</li>
+<li>consistency (does the model behave predictably?)</li>
+<li>safety (does the output avoid harmful or biased content?)</li>
+</ul>
+<p>In practice, most systems combine:</p>
+<ul>
+<li>automated evaluation (e.g., scoring, heuristics)</li>
+<li>human review or feedback loops</li>
+</ul>
+<p>Since many LLM tasks are open-ended, output quality cannot be captured by a single metric and often requires context-aware evaluation.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=latency-and-cost>Latency and Cost<a href=#latency-and-cost class=hash-link aria-label="Direct link to Latency and Cost" title="Direct link to Latency and Cost">​</a></h3>
+<p>LLM systems often introduce a new category of operational constraints: <strong>cost per request</strong>.</p>
+<p>Key signals include:</p>
+<ul>
+<li>response time (end-to-end latency)</li>
+<li>token usage (input and output tokens)</li>
+<li>cost per query or per user</li>
+</ul>
+<p>Monitoring these signals is essential not only for performance optimization but also for maintaining sustainable system design at scale.</p>
+<p>In many cases, improving latency or reducing token usage can have a direct impact on both user experience and infrastructure cost.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=retrieval-quality-rag-systems>Retrieval Quality (RAG Systems)<a href=#retrieval-quality-rag-systems class=hash-link aria-label="Direct link to Retrieval Quality (RAG Systems)" title="Direct link to Retrieval Quality (RAG Systems)">​</a></h3>
+<p>In systems that use Retrieval-Augmented Generation (RAG), many failures originate from the retrieval step rather than the model itself.</p>
+<p>Important signals include:</p>
+<ul>
+<li>whether relevant documents are retrieved</li>
+<li>how well retrieved context matches the user query</li>
+<li>whether the model actually uses the retrieved information</li>
+</ul>
+<p>Poor retrieval can lead to hallucinations or irrelevant answers, even when the underlying model performs well. This is why retrieval monitoring is a critical part of LLM observability. In systems that rely heavily on retrieval, analyzing retrieval logs and query patterns becomes critical. This often requires systems capable of handling large volumes of structured and semi-structured data, where analytical databases such as <a href=https://doris.apache.org target=_blank rel="noopener noreferrer">Apache Doris</a> may be used to support query analysis and debugging workflows.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=errors-failures-and-edge-cases>Errors, Failures, and Edge Cases<a href=#errors-failures-and-edge-cases class=hash-link aria-label="Direct link to Errors, Failures, and Edge Cases" title="Direct link to Errors, Failures, and Edge Cases">​</a></h3>
+<p>LLM failures often look different from traditional system errors.</p>
+<p>Instead of explicit crashes, issues may appear as:</p>
+<ul>
+<li>incomplete or vague responses</li>
+<li>hallucinated or fabricated information</li>
+<li>incorrect tool usage in agent systems</li>
+<li>unexpected or off-topic outputs</li>
+</ul>
+<p>These edge cases are often harder to detect because they may not trigger standard error signals. Observability systems therefore need to capture both explicit failures and subtle quality degradations.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=a-practical-insight>A Practical Insight<a href=#a-practical-insight class=hash-link aria-label="Direct link to A Practical Insight" title="Direct link to A Practical Insight">​</a></h3>
+<p>No single metric can fully capture LLM performance.</p>
+<p>Most production systems rely on a combination of:</p>
+<ul>
+<li>quantitative metrics (latency, token usage, error rates)</li>
+<li>qualitative evaluation (human feedback, relevance scoring)</li>
+<li>system-level signals (retrieval quality, workflow traces)</li>
+</ul>
+<p>Effective LLM observability is not about tracking more metrics—it is about tracking the right signals and understanding how they interact.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=how-llm-observability-works-system-level-view>How LLM Observability Works (System-Level View)<a href=#how-llm-observability-works-system-level-view class=hash-link aria-label="Direct link to How LLM Observability Works (System-Level View)" title="Direct link to How LLM Observability Works (System-Level View)">​</a></h2>
+<p>In a modern AI system, observability is not a single component—it spans the entire pipeline.</p>
+<p>A typical LLM-powered workflow looks like this:</p>
+<p><img decoding=async loading=lazy alt=llm-observability-architecture-diagram src=https://cdnd.selectdb.com/assets/images/llm-powered-workflow-f10f9d5371e0ce7791d3a5be002a56f4.png width=1536 height=1024 class=img_ev3q></p>
+<p>Observability works by capturing signals at each step of this pipeline.</p>
+<p>For example:</p>
+<ul>
+<li>tracing how a request flows through multiple components</li>
+<li>capturing prompts and generated outputs</li>
+<li>logging retrieval results and context</li>
+<li>measuring latency and token usage</li>
+<li>evaluating output quality</li>
+</ul>
+<p>This allows teams to reconstruct what happened during a specific interaction and identify where issues originate—whether in the prompt, retrieval step, or model response.</p>
+<p>In practice, observability data is often analyzed across many interactions, helping identify recurring failure patterns, performance bottlenecks, or cost inefficiencies.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=llm-observability-vs-monitoring-vs-ai-observability>LLM Observability vs Monitoring vs AI Observability<a href=#llm-observability-vs-monitoring-vs-ai-observability class=hash-link aria-label="Direct link to LLM Observability vs Monitoring vs AI Observability" title="Direct link to LLM Observability vs Monitoring vs AI Observability">​</a></h2>
+<p>These terms are often used interchangeably, but they represent different levels of system visibility and serve different purposes in practice.</p>
+<p>At a high level:</p>
+<ul>
+<li><strong>Monitoring</strong> focuses on detecting issues through metrics and alerts</li>
+<li><strong>Observability</strong> focuses on understanding system behavior</li>
+<li><strong>LLM observability</strong> focuses specifically on how language models behave in real-world applications</li>
+<li><strong>AI observability</strong> covers broader machine learning systems beyond just LLMs</li>
+</ul>
+<p>The main differences include:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Concept<th>Focus<tbody><tr><td>Monitoring<td>Tracks system metrics such as latency, uptime, and errors<tr><td>Observability<td>Provides deeper insight into system behavior using logs, traces, and metrics<tr><td>LLM Observability<td>Focuses on prompts, outputs, and model behavior in LLM systems<tr><td>AI Observability<td>Covers broader machine learning systems, including training and inference</table>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=a-practical-way-to-think-about-the-differences>A Practical Way to Think About the Differences<a href=#a-practical-way-to-think-about-the-differences class=hash-link aria-label="Direct link to A Practical Way to Think About the Differences" title="Direct link to A Practical Way to Think About the Differences">​</a></h3>
+<p>A useful way to understand the relationship between these concepts is:</p>
+<ul>
+<li>Monitoring tells you <strong>when something is wrong</strong></li>
+<li>Observability helps you understand <strong>why it is wrong</strong></li>
+<li>LLM observability explains <strong>how the model contributed to the problem</strong></li>
+<li>AI observability provides <strong>a broader view across all ML systems</strong></li>
+</ul>
+<p>These layers are not mutually exclusive—they are often used together in production systems.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=common-challenges-in-llm-observability>Common Challenges in LLM Observability<a href=#common-challenges-in-llm-observability class=hash-link aria-label="Direct link to Common Challenges in LLM Observability" title="Direct link to Common Challenges in LLM Observability">​</a></h2>
+<p>In practice, implementing LLM observability is far from trivial.</p>
+<p>Unlike traditional systems, many issues in LLM applications are not clearly defined as “failures,” which makes them harder to detect and diagnose.</p>
+<p>Key challenges include:</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=evaluating-subjective-outputs>Evaluating subjective outputs<a href=#evaluating-subjective-outputs class=hash-link aria-label="Direct link to Evaluating subjective outputs" title="Direct link to Evaluating subjective outputs">​</a></h3>
+<p>Many LLM responses do not have a single correct answer. A response can be technically correct but still irrelevant, incomplete, or poorly phrased. This makes evaluation highly context-dependent and difficult to standardize.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=lack-of-ground-truth>Lack of ground truth<a href=#lack-of-ground-truth class=hash-link aria-label="Direct link to Lack of ground truth" title="Direct link to Lack of ground truth">​</a></h3>
+<p>In many use cases—such as open-ended Q&A or conversational systems—there is no definitive reference answer. As a result, it can be difficult to measure accuracy or track improvements over time.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=high-cost-of-logging-and-storage>High cost of logging and storage<a href=#high-cost-of-logging-and-storage class=hash-link aria-label="Direct link to High cost of logging and storage" title="Direct link to High cost of logging and storage">​</a></h3>
+<p>Capturing prompts, outputs, traces, and intermediate steps at scale can quickly become expensive. Teams often need to balance observability depth with storage and processing costs.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=debugging-multi-step-pipelines>Debugging multi-step pipelines<a href=#debugging-multi-step-pipelines class=hash-link aria-label="Direct link to Debugging multi-step pipelines" title="Direct link to Debugging multi-step pipelines">​</a></h3>
+<p>Modern LLM systems often include retrieval (RAG), tools, or chained model calls. When something goes wrong, the root cause may lie in any part of the pipeline, making debugging more complex.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=noisy-signals-false-positives>Noisy signals (false positives)<a href=#noisy-signals-false-positives class=hash-link aria-label="Direct link to Noisy signals (false positives)" title="Direct link to Noisy signals (false positives)">​</a></h3>
+<p>Metrics do not always reflect real user experience. For example, a response may pass automated evaluation but still be unhelpful to users, or vice versa.</p>
+<p>A common pattern is that collecting observability data is relatively easy, but interpreting it correctly—and turning it into actionable improvements—is significantly harder.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=llm-observability-tools-and-how-to-choose>LLM Observability Tools (And How to Choose)<a href=#llm-observability-tools-and-how-to-choose class=hash-link aria-label="Direct link to LLM Observability Tools (And How to Choose)" title="Direct link to LLM Observability Tools (And How to Choose)">​</a></h2>
+<p>LLM observability tools generally fall into a few categories, each addressing a different part of the problem.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=tracing-focused-tools>Tracing-focused tools<a href=#tracing-focused-tools class=hash-link aria-label="Direct link to Tracing-focused tools" title="Direct link to Tracing-focused tools">​</a></h3>
+<p>These tools capture how requests flow through the system, including prompts, model calls, and intermediate steps. They are useful for debugging workflows and understanding execution paths.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=evaluation-focused-tools>Evaluation-focused tools<a href=#evaluation-focused-tools class=hash-link aria-label="Direct link to Evaluation-focused tools" title="Direct link to Evaluation-focused tools">​</a></h3>
+<p>These tools focus on measuring output quality using automated scoring, benchmarks, or human feedback. They help assess whether the system is producing useful and accurate results.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=full-stack-observability-platforms>Full-stack observability platforms<a href=#full-stack-observability-platforms class=hash-link aria-label="Direct link to Full-stack observability platforms" title="Direct link to Full-stack observability platforms">​</a></h3>
+<p>These platforms combine tracing, evaluation, and monitoring, providing a more complete view of system behavior across the entire pipeline.</p>
+<p>Choosing the right approach depends on several factors:</p>
+<ul>
+<li>the complexity of the application (simple chat vs multi-step AI systems)</li>
+<li>whether the system includes RAG or agents</li>
+<li>the need for real-time monitoring versus offline analysis</li>
+<li>scalability, data volume, and cost constraints</li>
+</ul>
+<p>In practice, many production systems use a combination of tools rather than relying on a single solution.</p>
+<p>A useful way to think about this is that tracing helps you understand <strong>what happened</strong>, evaluation helps you understand <strong>how good the result was</strong>, and monitoring helps you track <strong>system performance over time</strong>.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=best-practices-for-llm-monitoring-and-observability>Best Practices for LLM Monitoring and Observability<a href=#best-practices-for-llm-monitoring-and-observability class=hash-link aria-label="Direct link to Best Practices for LLM Monitoring and Observability" title="Direct link to Best Practices for LLM Monitoring and Observability">​</a></h2>
+<p>Common best practices include:</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=start-with-tracing-before-optimization>Start with tracing before optimization<a href=#start-with-tracing-before-optimization class=hash-link aria-label="Direct link to Start with tracing before optimization" title="Direct link to Start with tracing before optimization">​</a></h3>
+<p>Before improving performance or quality, it is important to understand how the system behaves end-to-end. Tracing provides the foundation for identifying bottlenecks and failure points.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=evaluate-outputs-not-just-system-metrics>Evaluate outputs, not just system metrics<a href=#evaluate-outputs-not-just-system-metrics class=hash-link aria-label="Direct link to Evaluate outputs, not just system metrics" title="Direct link to Evaluate outputs, not just system metrics">​</a></h3>
+<p>Latency and cost are important, but they do not reflect whether the system is actually useful. Output quality—relevance, correctness, and clarity—should be treated as a first-class signal.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=combine-automated-and-human-evaluation>Combine automated and human evaluation<a href=#combine-automated-and-human-evaluation class=hash-link aria-label="Direct link to Combine automated and human evaluation" title="Direct link to Combine automated and human evaluation">​</a></h3>
+<p>Automated metrics can scale, but they may miss subtle issues in language quality. Human feedback helps capture real-world usefulness and edge cases.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=monitor-retrieval-in-rag-systems>Monitor retrieval in RAG systems<a href=#monitor-retrieval-in-rag-systems class=hash-link aria-label="Direct link to Monitor retrieval in RAG systems" title="Direct link to Monitor retrieval in RAG systems">​</a></h3>
+<p>In many cases, issues attributed to the model are actually caused by poor retrieval. Monitoring retrieval quality is essential for diagnosing these problems.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=design-for-cost-visibility-early>Design for cost visibility early<a href=#design-for-cost-visibility-early class=hash-link aria-label="Direct link to Design for cost visibility early" title="Direct link to Design for cost visibility early">​</a></h3>
+<p>Token usage and infrastructure costs can increase rapidly as usage grows. Tracking cost-related metrics early helps prevent unexpected scaling issues.</p>
+<p>In practice, effective observability is not about collecting more data, but about focusing on the signals that directly impact system behavior and user experience.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=the-future-of-llm-observability>The Future of LLM Observability<a href=#the-future-of-llm-observability class=hash-link aria-label="Direct link to The Future of LLM Observability" title="Direct link to The Future of LLM Observability">​</a></h2>
+<p>LLM observability is evolving as AI systems become more complex and move into production environments.</p>
+<p>Several trends are emerging:</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=agent-observability>Agent observability<a href=#agent-observability class=hash-link aria-label="Direct link to Agent observability" title="Direct link to Agent observability">​</a></h3>
+<p>As AI agents become more common, observability is expanding to cover multi-step reasoning, tool usage, and decision chains rather than single model calls.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=real-time-evaluation>Real-time evaluation<a href=#real-time-evaluation class=hash-link aria-label="Direct link to Real-time evaluation" title="Direct link to Real-time evaluation">​</a></h3>
+<p>Systems are shifting from offline analysis to continuous, real-time feedback, allowing faster iteration and adaptation.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=ai-native-monitoring-approaches>AI-native monitoring approaches<a href=#ai-native-monitoring-approaches class=hash-link aria-label="Direct link to AI-native monitoring approaches" title="Direct link to AI-native monitoring approaches">​</a></h3>
+<p>New approaches are being developed specifically for generative AI workloads, where traditional monitoring methods are not sufficient.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=feedback-driven-improvement-loops>Feedback-driven improvement loops<a href=#feedback-driven-improvement-loops class=hash-link aria-label="Direct link to Feedback-driven improvement loops" title="Direct link to Feedback-driven improvement loops">​</a></h3>
+<p>User interactions, feedback signals, and evaluation results are increasingly used to continuously improve prompts, retrieval strategies, and system behavior.</p>
+<p>Overall, LLM observability is increasingly becoming an important part of how AI systems are designed, operated, and improved over time.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=faq>FAQ<a href=#faq class=hash-link aria-label="Direct link to FAQ" title="Direct link to FAQ">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=why-is-observability-critical-for-llms>Why is observability critical for LLMs?<a href=#why-is-observability-critical-for-llms class=hash-link aria-label="Direct link to Why is observability critical for LLMs?" title="Direct link to Why is observability critical for LLMs?">​</a></h3>
+<p>LLM observability helps control costs, reduce the risk of hallucinations or harmful outputs, and continuously improve prompt quality and system performance.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=what-are-traces-in-llm-observability>What are traces in LLM observability?<a href=#what-are-traces-in-llm-observability class=hash-link aria-label="Direct link to What are traces in LLM observability?" title="Direct link to What are traces in LLM observability?">​</a></h3>
+<p>Traces record the full sequence of events in an LLM system—from user input to final output—including prompt construction, retrieval steps, API calls, and model responses. They are essential for debugging and understanding system behavior.</div></div></article><article class=margin-bottom--xl itemprop=blogPost itemscope itemtype=http://schema.org/BlogPosting><div class=markdown itemprop=articleBody><header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href=/blog/>Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class=s-tags><span class=s-tag>Glossary</span></span></span></div><h2 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop=headline><a itemprop=url href=/blog/vector-search/>Vector Search: What It Is, Examples, and How It Powers AI Applications</a></h2><div class="blog-info text-center flex justify-center text-sm text-black"><span class=authors><span class="s-author text-black">Apache Doris</span></span><time datetime=2026-04-10T00:00:00.000Z itemprop=datePublished class="text-black ml-4">April 10, 2026</time></div></header><div class=markdown itemprop=articleBody><h2 class="anchor anchorWithStickyNavbar_LWe7" id=quick-answer-what-is-vector-search>Quick Answer: What Is Vector Search?<a href=#quick-answer-what-is-vector-search class=hash-link aria-label="Direct link to Quick Answer: What Is Vector Search?" title="Direct link to Quick Answer: What Is Vector Search?">​</a></h2>
+<p>Vector search is a search method that retrieves results based on semantic similarity rather than exact keyword matches.</p>
+<p>Instead of matching words directly, vector search converts data—such as text, images, or logs—into numerical representations called embeddings (vectors). It then compares these vectors in a high-dimensional space to find the most similar results.</p>
+<p>The key idea behind vector search is that similar meanings are represented by vectors that are close to each other.</p>
+<p>The main characteristics of vector search include:</p>
+<ul>
+<li>Understanding user intent rather than exact wording</li>
+<li>Supporting unstructured data such as text and images</li>
+<li>Enabling AI applications like semantic search and RAG</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=how-vector-search-works-step-by-step>How Vector Search Works (Step-by-Step)<a href=#how-vector-search-works-step-by-step class=hash-link aria-label="Direct link to How Vector Search Works (Step-by-Step)" title="Direct link to How Vector Search Works (Step-by-Step)">​</a></h2>
+<p>Vector search follows a simple but powerful pipeline. Instead of matching exact words, it converts both the data and the query into numerical representations and then compares them based on similarity.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=1-convert-data-into-embeddings>1. Convert Data into Embeddings<a href=#1-convert-data-into-embeddings class=hash-link aria-label="Direct link to 1. Convert Data into Embeddings" title="Direct link to 1. Convert Data into Embeddings">​</a></h3>
+<p>The first step is to convert raw data into <strong>embeddings</strong>.</p>
+<p>Embeddings are numerical vectors generated by machine learning models that capture the semantic meaning of the input. These inputs can include:</p>
+<ul>
+<li>text documents</li>
+<li>product descriptions</li>
+<li>images</li>
+<li>logs or events</li>
+</ul>
+<p>For example, two sentences with similar meanings may produce vectors that are located close to each other in vector space, even if they do not share the same keywords.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=2-store-vectors-in-a-vector-database>2. Store Vectors in a Vector Database<a href=#2-store-vectors-in-a-vector-database class=hash-link aria-label="Direct link to 2. Store Vectors in a Vector Database" title="Direct link to 2. Store Vectors in a Vector Database">​</a></h3>
+<p>Once generated, these embeddings are stored in a <strong>vector database</strong> or another system that supports vector indexing.</p>
+<p>Unlike traditional databases that are optimized for exact filtering, vector search systems are designed to store high-dimensional vectors and retrieve the nearest matches efficiently. This is especially important when dealing with millions or billions of embeddings.</p>
+<p>In production systems, vector data is often stored alongside metadata such as:</p>
+<ul>
+<li>document ID</li>
+<li>timestamp</li>
+<li>category</li>
+<li>status</li>
+</ul>
+<p>This allows vector search to be combined with structured filtering.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=3-convert-the-query-into-a-vector>3. Convert the Query into a Vector<a href=#3-convert-the-query-into-a-vector class=hash-link aria-label="Direct link to 3. Convert the Query into a Vector" title="Direct link to 3. Convert the Query into a Vector">​</a></h3>
+<p>When a user submits a search query, the system applies the same embedding model to the query itself.</p>
+<p>This produces a query vector that can be compared directly against the stored vectors. Because both the query and the data are represented in the same vector space, the system can search for semantic similarity rather than exact wording.</p>
+<p>For example, a query like:</p>
+<div class="language-Plain language-plain codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_biex><pre tabindex=0 class="prism-code language-plain codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><span class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">How to reduce database latency</span><br></span></code></pre><div class=buttonGroup__atx><button type=button aria-label="Copy code to clipboard" title=Copy class=clean-btn><span class=copyButtonIcons_eSgA aria-hidden=true><svg viewBox="0 0 24 24" class=copyButtonIcon_y97N><path fill=currentColor d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class=copyButtonSuccessIcon_LjdS><path fill=currentColor d=M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z /></svg></span></button></div></div></div>
+<p>may still retrieve content containing phrases such as:</p>
+<div class="language-Plain language-plain codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_biex><pre tabindex=0 class="prism-code language-plain codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><span class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">improve query performance</span><br></span><span class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">speed up data access</span><br></span></code></pre><div class=buttonGroup__atx><button type=button aria-label="Copy code to clipboard" title=Copy class=clean-btn><span class=copyButtonIcons_eSgA aria-hidden=true><svg viewBox="0 0 24 24" class=copyButtonIcon_y97N><path fill=currentColor d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class=copyButtonSuccessIcon_LjdS><path fill=currentColor d=M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z /></svg></span></button></div></div></div>
+<p>even if the exact words do not match.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=4-perform-similarity-search>4. Perform Similarity Search<a href=#4-perform-similarity-search class=hash-link aria-label="Direct link to 4. Perform Similarity Search" title="Direct link to 4. Perform Similarity Search">​</a></h3>
+<p>After the query vector is created, the system searches for the <strong>nearest vectors</strong> in the database.</p>
+<p>This is typically done using similarity metrics such as:</p>
+<ul>
+<li><strong>Cosine similarity:</strong> Measures how close two vectors are in direction.</li>
+<li><strong>Euclidean distance:</strong> Measures the geometric straight-line distance between vectors.</li>
+<li><strong>Dot product:</strong> Often used in embedding-based retrieval systems to measure magnitude and direction.</li>
+</ul>
+<p>Because exact nearest-neighbor search can be expensive at large scale, most production systems use <strong>Approximate Nearest Neighbor (ANN)</strong> algorithms to speed up retrieval while keeping results highly relevant.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=5-re-rank-and-return-the-best-results>5. Re-rank and Return the Best Results<a href=#5-re-rank-and-return-the-best-results class=hash-link aria-label="Direct link to 5. Re-rank and Return the Best Results" title="Direct link to 5. Re-rank and Return the Best Results">​</a></h3>
+<p>In many real-world AI systems, vector search is only the first retrieval step.</p>
+<p>The initial results may then be:</p>
+<ul>
+<li>filtered using metadata</li>
+<li>combined with keyword search</li>
+<li>re-ranked by another model</li>
+</ul>
+<p>This improves precision and ensures that the final results are both semantically relevant and contextually useful.</p>
+<p>This is why modern AI search systems often use <strong>hybrid search</strong>, combining vector similarity with structured filters or keyword relevance.</p>
+<p>In essence, vector search retrieves <strong>similar meaning</strong>, not just exact matches.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=vector-search-vs-keyword-search-vs-semantic-search>Vector Search vs. Keyword Search vs. Semantic Search<a href=#vector-search-vs-keyword-search-vs-semantic-search class=hash-link aria-label="Direct link to Vector Search vs. Keyword Search vs. Semantic Search" title="Direct link to Vector Search vs. Keyword Search vs. Semantic Search">​</a></h2>
+<p>To understand where vector search fits in, it helps to compare it with two other commonly used approaches: keyword search and semantic search. While these terms are often used interchangeably, they actually represent different ways of thinking about search.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Feature<th>Keyword Search<th>Semantic Search<th>Vector Search<tbody><tr><td>Matching method<td>Exact keywords<td>Meaning (conceptual)<td>Meaning (vector similarity)<tr><td>Technology<td>Inverted index (BM25)<td>NLP models<td>Embeddings + ANN<tr><td>Accuracy<td>High precision<td>Moderate<td>High (context-aware)<tr><td>Flexibility<td>Low<td>Medium<td>High<tr><td>Typical tools<td>Elasticsearch<td>Search engines<td>Vector databases</table>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=vector-search-vs-keyword-search>Vector Search vs. Keyword Search<a href=#vector-search-vs-keyword-search class=hash-link aria-label="Direct link to Vector Search vs. Keyword Search" title="Direct link to Vector Search vs. Keyword Search">​</a></h3>
+<p>Traditional keyword search is based on matching exact words. Systems like Elasticsearch use techniques such as inverted indexes and BM25 to find documents that contain the same terms as the query.</p>
+<p>This approach works well when users know exactly what they are looking for. For example, if someone searches for a specific error code or product name, keyword search can return highly precise results very quickly.</p>
+<p>However, keyword search struggles when the wording changes. If a user searches for “how to fix database performance,” a keyword-based system may miss relevant content that uses different phrasing like “optimize query latency” or “improve database speed.”</p>
+<p>This is where vector search becomes useful.</p>
+<p>Instead of matching words, vector search matches <strong>meaning</strong>. It converts both the query and the data into embeddings, and then retrieves results that are semantically similar—even if they don’t share the same keywords.</p>
+<p>In practice, this means vector search can handle:</p>
+<ul>
+<li>synonyms</li>
+<li>paraphrased queries</li>
+<li>natural language input</li>
+</ul>
+<p>But it also comes with trade-offs. While vector search is more flexible, it can sometimes return results that are less precise, especially without additional filtering or re-ranking.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=vector-search-vs-semantic-search>Vector Search vs. Semantic Search<a href=#vector-search-vs-semantic-search class=hash-link aria-label="Direct link to Vector Search vs. Semantic Search" title="Direct link to Vector Search vs. Semantic Search">​</a></h3>
+<p>The difference between vector search and semantic search is more subtle, and often misunderstood.</p>
+<p>Semantic search is not a specific technology—it’s a goal. It refers to the idea of understanding the intent behind a query, rather than just matching words. For example, recognizing that “cheap laptop” and “affordable notebook” mean the same thing.</p>
+<p>Vector search is one of the most common ways to implement semantic search in modern systems.</p>
+<p>By representing text as embeddings, vector search turns meaning into something that can be computed mathematically. This allows systems to compare concepts at scale and retrieve relevant results efficiently.</p>
+<p>In modern AI systems, the two are closely connected:</p>
+<ul>
+<li>semantic search defines <strong>what the system is trying to do</strong> (understand meaning)</li>
+<li>vector search defines <strong>how the system actually does it</strong> (compute similarity using vectors)</li>
+</ul>
+<p>You can see this clearly in applications like RAG (Retrieval-Augmented Generation). The system first interprets the user’s intent (semantic understanding), and then uses vector search to retrieve the most relevant pieces of information.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=vector-search-example>Vector Search Example<a href=#vector-search-example class=hash-link aria-label="Direct link to Vector Search Example" title="Direct link to Vector Search Example">​</a></h2>
+<p>Vector search is already used in many real-world applications, often without users realizing it. Here are a few common examples that show how it works in practice.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=retrieval-augmented-generation-rag>Retrieval-Augmented Generation (RAG)<a href=#retrieval-augmented-generation-rag class=hash-link aria-label="Direct link to Retrieval-Augmented Generation (RAG)" title="Direct link to Retrieval-Augmented Generation (RAG)">​</a></h3>
+<p>In AI systems such as ChatGPT-style assistants, vector search plays a critical role in retrieving relevant information.</p>
+<p>When a user asks a question, the system:</p>
+<ul>
+<li>converts the query into an embedding</li>
+<li>searches for similar documents using vector search</li>
+<li>passes the retrieved context into the LLM</li>
+</ul>
+<p>For example, if a user asks:</p>
+<div class="language-Plain language-plain codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_biex><pre tabindex=0 class="prism-code language-plain codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><span class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">How do I fix high database latency?</span><br></span></code></pre><div class=buttonGroup__atx><button type=button aria-label="Copy code to clipboard" title=Copy class=clean-btn><span class=copyButtonIcons_eSgA aria-hidden=true><svg viewBox="0 0 24 24" class=copyButtonIcon_y97N><path fill=currentColor d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class=copyButtonSuccessIcon_LjdS><path fill=currentColor d=M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z /></svg></span></button></div></div></div>
+<p>The system may retrieve documents about:</p>
+<ul>
+<li>query optimization</li>
+<li>indexing strategies</li>
+<li>caching techniques</li>
+</ul>
+<p>—even if those exact words do not appear in the query.</p>
+<p>This can help reduce hallucinations and improve answer grounding, especially when the retrieval pipeline is well-designed.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=reverse-image-search>Reverse Image Search<a href=#reverse-image-search class=hash-link aria-label="Direct link to Reverse Image Search" title="Direct link to Reverse Image Search">​</a></h3>
+<p>Vector search is also widely used in image-based applications.</p>
+<p>When you upload an image, it is converted into a vector representation that captures visual features such as shapes, colors, and patterns. The system then finds images with similar vectors.</p>
+<p>This is commonly used in:</p>
+<ul>
+<li>e-commerce (“find similar products”)</li>
+<li>visual search engines</li>
+<li>design and inspiration tools</li>
+</ul>
+<p>Instead of matching metadata, the system understands visual similarity directly.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=recommendation-systems>Recommendation Systems<a href=#recommendation-systems class=hash-link aria-label="Direct link to Recommendation Systems" title="Direct link to Recommendation Systems">​</a></h3>
+<p>Streaming platforms like Netflix or Spotify rely heavily on vector search to power recommendations.</p>
+<p>Users and content are represented as vectors based on behavior, preferences, and attributes. The system then recommends items that are “close” in vector space.</p>
+<p>For example:</p>
+<ul>
+<li>users who watch similar content → similar vectors</li>
+<li>movies with similar themes → similar vectors</li>
+</ul>
+<p>This allows platforms to recommend content that feels relevant, even if users cannot explicitly describe what they want.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=vector-search-architecture-for-ai-systems>Vector Search Architecture (for AI Systems)<a href=#vector-search-architecture-for-ai-systems class=hash-link aria-label="Direct link to Vector Search Architecture (for AI Systems)" title="Direct link to Vector Search Architecture (for AI Systems)">​</a></h2>
+<p>To understand why vector search is so important, it helps to look at how it fits into a modern AI system.</p>
+<p>A typical architecture looks like this:</p>
+<p><img decoding=async loading=lazy alt="architecture image" src=https://cdnd.selectdb.com/assets/images/vector-search-archtecture-for-ai-systems-21e43fe22e441d989082b6dad772b71e.png width=1536 height=1024 class=img_ev3q></p>
+<p>When a user submits a query, the system does not search it directly as text.</p>
+<p>Instead:</p>
+<ol>
+<li>The query is converted into an embedding using a model (e.g., OpenAI, BERT, or other embedding models)</li>
+<li>The vector database retrieves the most similar items based on vector similarity.</li>
+<li>The system may apply additional filtering (e.g., time range, metadata)</li>
+<li>A re-ranking step improves precision by selecting the most relevant results</li>
+<li>The final results are passed into an LLM to generate a response</li>
+</ol>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=why-this-architecture-matters>Why This Architecture Matters<a href=#why-this-architecture-matters class=hash-link aria-label="Direct link to Why This Architecture Matters" title="Direct link to Why This Architecture Matters">​</a></h3>
+<p>Traditional keyword-based systems were originally optimized for lexical matching rather than semantic retrieval, so they may require additional components to support this kind of pipeline effectively.</p>
+<p>They struggle with:</p>
+<ul>
+<li>natural language queries</li>
+<li>unstructured data</li>
+<li>semantic understanding</li>
+</ul>
+<p>Vector search, on the other hand, enables:</p>
+<ul>
+<li><strong>semantic retrieval at scale</strong></li>
+<li><strong>real-time AI applications</strong></li>
+<li><strong>integration with LLM workflows (RAG)</strong></li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=a-practical-insight>A Practical Insight<a href=#a-practical-insight class=hash-link aria-label="Direct link to A Practical Insight" title="Direct link to A Practical Insight">​</a></h3>
+<p>In real-world systems, vector search is rarely used alone.</p>
+<p>Most production systems combine:</p>
+<div class="language-Plain language-plain codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_biex><pre tabindex=0 class="prism-code language-plain codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><span class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">vector search + keyword search + structured filtering</span><br></span></code></pre><div class=buttonGroup__atx><button type=button aria-label="Copy code to clipboard" title=Copy class=clean-btn><span class=copyButtonIcons_eSgA aria-hidden=true><svg viewBox="0 0 24 24" class=copyButtonIcon_y97N><path fill=currentColor d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class=copyButtonSuccessIcon_LjdS><path fill=currentColor d=M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z /></svg></span></button></div></div></div>
+<p><code>This</code> is known as <strong>hybrid search</strong>, and it balances:</p>
+<ul>
+<li>precision (keyword search)</li>
+<li>flexibility (vector search)</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=the-role-of-a-vector-search-database-and-how-to-choose>The Role of a Vector Search Database (And How to Choose)<a href=#the-role-of-a-vector-search-database-and-how-to-choose class=hash-link aria-label="Direct link to The Role of a Vector Search Database (And How to Choose)" title="Direct link to The Role of a Vector Search Database (And How to Choose)">​</a></h2>
+<p>Vector search is not just an algorithm—it requires a system that can store and retrieve high-dimensional vectors efficiently at scale. This is where vector search databases come in.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=what-is-a-vector-search-database>What Is a Vector Search Database?<a href=#what-is-a-vector-search-database class=hash-link aria-label="Direct link to What Is a Vector Search Database?" title="Direct link to What Is a Vector Search Database?">​</a></h3>
+<p>A vector search database is a system specifically designed to handle embeddings and perform fast similarity search.</p>
+<p>Unlike traditional databases that focus on exact matching and filtering, vector databases are optimized for:</p>
+<ul>
+<li>storing high-dimensional vectors (embeddings)</li>
+<li>performing nearest-neighbor search efficiently</li>
+<li>scaling to millions or billions of data points</li>
+</ul>
+<p>In practical terms, a vector search database allows you to take a query, convert it into an embedding, and quickly find the most similar items—even in very large datasets.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=vector-search-vs-elasticsearch-and-traditional-search-systems>Vector Search vs. Elasticsearch (and Traditional Search Systems)<a href=#vector-search-vs-elasticsearch-and-traditional-search-systems class=hash-link aria-label="Direct link to Vector Search vs. Elasticsearch (and Traditional Search Systems)" title="Direct link to Vector Search vs. Elasticsearch (and Traditional Search Systems)">​</a></h3>
+<p>Elasticsearch and similar systems were originally built for keyword-based search using inverted indexes.</p>
+<p>This makes them extremely effective for:</p>
+<ul>
+<li>exact matches</li>
+<li>filtering and aggregation</li>
+<li>structured queries</li>
+</ul>
+<p>However, their original strength lies in lexical retrieval, filtering, and aggregation rather than vector-native similarity search.</p>
+<p>Modern versions of Elasticsearch now support vector search, but there is still a conceptual difference:</p>
+<ul>
+<li><strong>Keyword search (Elasticsearch classic)</strong> → matches exact terms</li>
+<li><strong>Vector search</strong> → matches semantic similarity</li>
+</ul>
+<p>In real-world systems, these approaches are often combined.</p>
+<p>For example, a system might use keyword search for precision and vector search for semantic relevance.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=dedicated-vector-databases-vs-integrated-databases>Dedicated Vector Databases vs. Integrated Databases<a href=#dedicated-vector-databases-vs-integrated-databases class=hash-link aria-label="Direct link to Dedicated Vector Databases vs. Integrated Databases" title="Direct link to Dedicated Vector Databases vs. Integrated Databases">​</a></h3>
+<p>As vector search has grown, two main approaches have emerged.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=dedicated-vector-databases>Dedicated Vector Databases<a href=#dedicated-vector-databases class=hash-link aria-label="Direct link to Dedicated Vector Databases" title="Direct link to Dedicated Vector Databases">​</a></h4>
+<p>Examples include Pinecone, Milvus, and Qdrant.</p>
+<p>These systems are built specifically for vector similarity search and are typically easy to adopt for AI use cases.</p>
+<p>They work well when:</p>
+<ul>
+<li>the primary requirement is vector retrieval</li>
+<li>the system is relatively simple</li>
+<li>structured filtering is minimal</li>
+</ul>
+<p>However, they may require additional systems to handle analytics, filtering, or complex queries.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id=integrated-analytical-databases>Integrated Analytical Databases<a href=#integrated-analytical-databases class=hash-link aria-label="Direct link to Integrated Analytical Databases" title="Direct link to Integrated Analytical Databases">​</a></h4>
+<p>In real-world applications, vector search rarely exists in isolation.</p>
+<p>Most production systems need to combine:</p>
+<ul>
+<li>vector search (for semantic similarity)</li>
+<li>metadata filtering (time, status, user, etc.)</li>
+<li>aggregation and analytics</li>
+<li>real-time data ingestion</li>
+</ul>
+<p>For example, a real query might look like:</p>
+<p>“Find logs similar to this error, from yesterday, where status = failed”</p>
+<p>This is not just a vector search problem—it is a <strong>hybrid query</strong> that requires both semantic understanding and structured filtering. Some analytical databases, such as <a href=https://doris.apache.org target=_blank rel="noopener noreferrer">Apache Doris</a>, follow this integrated approach by supporting vector similarity search together with real-time analytics, filtering, and aggregation in a single system. This allows teams to simplify architecture when building AI applications that require both semantic retrieval and structured queries.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=how-to-choose-the-right-approach>How to Choose the Right Approach<a href=#how-to-choose-the-right-approach class=hash-link aria-label="Direct link to How to Choose the Right Approach" title="Direct link to How to Choose the Right Approach">​</a></h3>
+<p>Choosing between different types of vector search systems depends on your use case.</p>
+<p>Choose a <strong>dedicated vector database</strong> if:</p>
+<ul>
+<li>your workload is primarily similarity search</li>
+<li>you are building a prototype or early-stage AI feature</li>
+</ul>
+<p>An <strong>integrated analytical database</strong> may be a good fit if:</p>
+<ul>
+<li>you need vector retrieval together with filtering, analytics, and real-time data ingestion</li>
+<li>your workload involves logs, events, or operational analytics</li>
+<li>you want to reduce the number of systems used in a production pipeline</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=limitations-of-vector-search>Limitations of Vector Search<a href=#limitations-of-vector-search class=hash-link aria-label="Direct link to Limitations of Vector Search" title="Direct link to Limitations of Vector Search">​</a></h2>
+<p>Despite its advantages, vector search is not a perfect solution and comes with several practical limitations.</p>
+<p>One of the main trade-offs is between <strong>accuracy and performance</strong>. Most production systems rely on Approximate Nearest Neighbor (ANN) algorithms to achieve fast retrieval at scale, but this means the results may not always be the exact closest matches.</p>
+<p>Another challenge is <strong>computational cost</strong>. Generating embeddings and performing similarity search—especially across large datasets—can be resource-intensive, requiring optimized infrastructure and indexing strategies.</p>
+<p>As data volume grows, <strong>latency can also become an issue</strong>. Maintaining low response times while searching millions or billions of vectors requires careful system design.</p>
+<p>In addition, vector search alone may lack precision in certain scenarios. Because it focuses on semantic similarity, it can sometimes return results that are related but not strictly relevant. This is why many systems introduce a <strong>re-ranking step</strong> or combine vector search with structured filters.</p>
+<p>In practice, most production systems use <strong>hybrid search</strong>, combining vector search with keyword search and filtering to balance relevance and precision.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=future-of-vector-search>Future of Vector Search<a href=#future-of-vector-search class=hash-link aria-label="Direct link to Future of Vector Search" title="Direct link to Future of Vector Search">​</a></h2>
+<p>Vector search is evolving rapidly as AI systems become more complex and data-driven.</p>
+<p>One clear trend is the rise of <strong>hybrid search</strong>, where vector similarity is combined with keyword matching and structured filtering. This approach allows systems to balance semantic understanding with precision, and is quickly becoming the default in production environments.</p>
+<p>Another major shift is the adoption of <strong>Retrieval-Augmented Generation (RAG)</strong>. As LLM-based applications become more common, vector search is increasingly used to retrieve external knowledge and improve model accuracy.</p>
+<p>We are also seeing the emergence of <strong>AI agents and memory systems</strong>, where vector search is used to store and retrieve past interactions or contextual information. In this setting, vector databases effectively act as a form of long-term memory for AI systems.</p>
+<p>At the infrastructure level, <strong>real-time vector analytics</strong> is becoming more important. Instead of working only on static datasets, modern systems need to handle streaming data, logs, and events while still supporting fast similarity search.</p>
+<p>Overall, vector search is moving from a niche technique to a <strong>core component of modern AI and data infrastructure</strong>.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id=faq>FAQ<a href=#faq class=hash-link aria-label="Direct link to FAQ" title="Direct link to FAQ">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=can-sql-databases-do-vector-search>Can SQL databases do vector search?<a href=#can-sql-databases-do-vector-search class=hash-link aria-label="Direct link to Can SQL databases do vector search?" title="Direct link to Can SQL databases do vector search?">​</a></h3>
+<p>Yes, many modern databases support vector search either through extensions (such as pgvector) or built-in vector data types. However, performance and scalability depend on how well the system is optimized for high-dimensional similarity search.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id=what-is-hybrid-search>What is hybrid search?<a href=#what-is-hybrid-search class=hash-link aria-label="Direct link to What is hybrid search?" title="Direct link to What is hybrid search?">​</a></h3>
+<p>Hybrid search combines keyword search (for precision) with vector search (for semantic understanding). This approach is widely used in modern AI systems because it provides both accuracy and flexibility.</div></div></article><nav class=pagination-nav aria-label="Blog list page navigation"></nav></main></div></div></div><div class="footer pt-16 pb-10"><div class=container><div class=footer-box><div class=left><img src=/images/asf_logo_apache.svg alt="" class="footer__logo themedComponent_mlkZ themedComponent--light_NVdE"><img src=/images/asf_logo_apache.svg alt="" class="footer__logo themedComponent_mlkZ themedComponent--dark_xIcU"><div class="row footer__links"><div class="col footer__col"><div class=footer__title>ASF</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://www.apache.org/ target=_blank rel="noopener noreferrer" class=footer__link-item>Foundation<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://www.apache.org/licenses/ target=_blank rel="noopener noreferrer" class=footer__link-item>License<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://www.apache.org/events/current-event target=_blank rel="noopener noreferrer" class=footer__link-item>Events<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://www.apache.org/foundation/sponsorship.html target=_blank rel="noopener noreferrer" class=footer__link-item>Sponsorship<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://privacy.apache.org/policies/privacy-policy-public.html target=_blank rel="noopener noreferrer" class=footer__link-item>Privacy<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://www.apache.org/security/ target=_blank rel="noopener noreferrer" class=footer__link-item>Security<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://www.apache.org/foundation/thanks.html target=_blank rel="noopener noreferrer" class=footer__link-item>Thanks<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a></ul></div><div class="col footer__col"><div class=footer__title>Resources</div><ul class="footer__items clean-list"><li class=footer__item><a class=footer__link-item href=/download/>Download</a><li class=footer__item><a class=footer__link-item href=/brand-assets/>Brand Assets</a><li class=footer__item><a class=footer__link-item href=/blog/>Blog</a></ul></div><div class="col footer__col"><div class=footer__title>Community</div><ul class="footer__items clean-list"><li class=footer__item><a class=footer__link-item href=/community/how-to-contribute/contribute-to-doris/>How to contribute</a><li class=footer__item><a href=https://github.com/apache/doris/ target=_blank rel="noopener noreferrer" class=footer__link-item>Source code<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a class=footer__link-item href=/community/team/>Doris team</a><li class=footer__item><a href=https://github.com/apache/doris/issues/60036 target=_blank rel="noopener noreferrer" class=footer__link-item>Roadmap<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a><li class=footer__item><a href=https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals target=_blank rel="noopener noreferrer" class=footer__link-item>Improvement proposal<svg width=13.5 height=13.5 aria-hidden=true viewBox="0 0 24 24" class=iconExternalLink_nPIU><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></svg></a></ul></div></div></div><div class=right><div class=footer__title>Join the community</div><div class=social-list><div class=social><a href=mailto:dev@doris.apache.org target=_blank title=mail class=item><svg width=2em height=2em viewBox="0 0 32 32" fill=none><title>Mail</title><path d="M5.6003 6H26.3997C27.8186 6 28.982 7.10964 29 8.46946L16.0045 15.454L3.01202 8.47829C3.02405 7.11258 4.1784 6 5.6003 6ZM3.01202 11.1508L3 23.5011C3 24.8756 4.16938 26 5.6003 26H26.3997C27.8306 26 29 24.8756 29 23.5011V11.145L16.3111 17.8028C16.1157 17.9058 15.8813 17.9058 15.6889 17.8028L3.01202 11.1508Z" fill=currentColor /></svg></a><a href=https://github.com/apache/doris target=_blank title=github class=item><svg width=2em height=2em viewBox="0 0 32 32" fill=none><title>Github</title><path d="M16.0001 2.66675C8.63342 2.66675 2.66675 8.63341 2.66675 16.0001C2.66524 18.7991 3.54517 21.5276 5.1817 23.7983C6.81824 26.0691 9.12828 27.7668 11.7841 28.6508C12.4508 28.7668 12.7001 28.3668 12.7001 28.0161C12.7001 27.7001 12.6828 26.6508 12.6828 25.5334C9.33342 26.1508 8.46675 24.7174 8.20008 23.9668C8.04942 23.5828 7.40008 22.4001 6.83342 22.0828C6.36675 21.8334 5.70008 21.2161 6.81608 21.2001C7.86675 21.1828 8.61608 22.1668 8.86675 22.5668C10.0668 24.5828 11.9841 24.0161 12.7494 23.6668C12.8668 22.8001 13.2161 22.2174 13.6001 21.8841C10.6334 21.5508 7.53342 20.4001 7.53342 15.3001C7.53342 13.8494 8.04942 12.6507 8.90008 11.7161C8.76675 11.3827 8.30008 10.0161 9.03342 8.18275C9.03342 8.18275 10.1494 7.83342 12.7001 9.55075C13.7855 9.2495 14.907 9.09787 16.0334 9.10008C17.1668 9.10008 18.3001 9.24942 19.3668 9.54942C21.9161 7.81608 23.0334 8.18408 23.0334 8.18408C23.7668 10.0174 23.3001 11.3841 23.1668 11.7174C24.0161 12.6507 24.5334 13.8334 24.5334 15.3001C24.5334 20.4174 21.4174 21.5508 18.4508 21.8841C18.9334 22.3001 19.3508 23.1001 19.3508 24.3508C19.3508 26.1334 19.3334 27.5668 19.3334 28.0174C19.3334 28.3668 19.5841 28.7828 20.2508 28.6494C22.8975 27.7558 25.1973 26.0547 26.8266 23.7856C28.4559 21.5165 29.3327 18.7936 29.3334 16.0001C29.3334 8.63341 23.3668 2.66675 16.0001 2.66675V2.66675Z" fill=currentColor /></svg></a><a href=https://twitter.com/doris_apache target=_blank title=twitter class=item><svg width=2em height=2em viewBox="0 0 32 32" fill=none><title>Twitter</title><path d="M4.625 4.625H11.2809L27.375 27.375H20.7191L4.625 4.625ZM7.52549 6.10639L21.5236 25.8936H24.4746L10.4764 6.10639H7.52549Z" fill=currentColor /><path d="M14.4268 18.4803L6.53447 27.375H4.625L13.5581 17.2525L14.4268 18.4803ZM18.1299 14.3066L26.7203 4.625H24.7017L17.2525 13.0662L18.1299 14.3066Z" fill=currentColor /></svg></a><a href=https://doris.apache.org/slack title=slack target=_blank class=item><svg width=2em height=2em viewBox="0 0 32 32" fill=none><title>Slack</title><g clip-path=url(#clip0_125_278)><path d="M12.5875 16.6906C11.0844 16.6906 9.86562 17.9094 9.86562 19.4125V26.2375C9.86562 26.9594 10.1524 27.6517 10.6628 28.1622C11.1733 28.6726 11.8656 28.9594 12.5875 28.9594C13.3094 28.9594 14.0017 28.6726 14.5122 28.1622C15.0226 27.6517 15.3094 26.9594 15.3094 26.2375V19.4531C15.3094 17.9094 14.0906 16.6906 12.5875 16.6906ZM3 19.4531C3 20.175 3.28677 20.8673 3.79722 21.3778C4.30767 21.8882 4.99999 22.175 5.72187 22.175C6.44376 22.175 7.13608 21.8882 7.64653 21.3778C8.15698 20.8673 8.44375 20.175 8.44375 19.4531V16.7312H5.7625C4.25938 16.6906 3 17.9094 3 19.4531ZM12.5875 3C11.8656 3 11.1733 3.28677 10.6628 3.79722C10.1524 4.30767 9.86562 4.99999 9.86562 5.72187C9.86562 6.44376 10.1524 7.13608 10.6628 7.64653C11.1733 8.15698 11.8656 8.44375 12.5875 8.44375H15.3094V5.72187C15.3094 4.21875 14.0906 3 12.5875 3ZM5.72187 15.3094H12.5469C13.2688 15.3094 13.9611 15.0226 14.4715 14.5122C14.982 14.0017 15.2688 13.3094 15.2688 12.5875C15.2688 11.8656 14.982 11.1733 14.4715 10.6628C13.9611 10.1524 13.2688 9.86562 12.5469 9.86562H5.72187C4.99999 9.86562 4.30767 10.1524 3.79722 10.6628C3.28677 11.1733 3 11.8656 3 12.5875C3 13.3094 3.28677 14.0017 3.79722 14.5122C4.30767 15.0226 4.99999 15.3094 5.72187 15.3094ZM26.2375 9.86562C24.7344 9.86562 23.5156 11.0844 23.5156 12.5875V15.3094H26.2375C26.9594 15.3094 27.6517 15.0226 28.1622 14.5122C28.6726 14.0017 28.9594 13.3094 28.9594 12.5875C28.9594 11.8656 28.6726 11.1733 28.1622 10.6628C27.6517 10.1524 26.9594 9.86562 26.2375 9.86562ZM16.6906 5.72187V12.5875C16.6906 13.3094 16.9774 14.0017 17.4878 14.5122C17.9983 15.0226 18.6906 15.3094 19.4125 15.3094C20.1344 15.3094 20.8267 15.0226 21.3372 14.5122C21.8476 14.0017 22.1344 13.3094 22.1344 12.5875V5.72187C22.1344 4.99999 21.8476 4.30767 21.3372 3.79722C20.8267 3.28677 20.1344 3 19.4125 3C18.6906 3 17.9983 3.28677 17.4878 3.79722C16.9774 4.30767 16.6906 4.99999 16.6906 5.72187ZM22.1344 26.2781C22.1344 24.775 20.9156 23.5562 19.4125 23.5562H16.6906V26.2781C16.6906 27 16.9774 27.6923 17.4878 28.2028C17.9983 28.7132 18.6906 29 19.4125 29C20.1344 29 20.8267 28.7132 21.3372 28.2028C21.8476 27.6923 22.1344 27 22.1344 26.2781ZM26.2781 16.6906H19.4125C18.6906 16.6906 17.9983 16.9774 17.4878 17.4878C16.9774 17.9983 16.6906 18.6906 16.6906 19.4125C16.6906 20.1344 16.9774 20.8267 17.4878 21.3372C17.9983 21.8476 18.6906 22.1344 19.4125 22.1344H26.2375C27.7406 22.1344 28.9594 20.9156 28.9594 19.4125C29 17.9094 27.7812 16.6906 26.2781 16.6906Z" fill=currentColor /></g><defs><clipPath id=clip0_125_278><rect width=26 height=26 fill=currentColor transform="translate(3 3)"/></clipPath></defs></svg></a></div><div class=social><a href=https://www.youtube.com/hashtag/apachedoris title=youtube target=_blank class=item><svg width=2em height=2em viewBox="0 0 32 32" fill=none><title>Youtube</title><path d="M28.5167 7.83429C28.9436 8.25423 29.2532 8.77539 29.4154 9.34742C29.8205 11.5462 30.0159 13.7775 29.999 16.0121C30.0144 18.2382 29.819 20.4609 29.4154 22.6515C29.2532 23.2235 28.9436 23.7446 28.5167 24.1645C28.0898 24.5845 27.5601 24.889 26.9785 25.0486C24.7728 25.625 16.0124 25.625 16.0124 25.625C16.0124 25.625 7.22652 25.625 5.04638 25.0486C4.46489 24.889 3.9351 24.5845 3.5082 24.1645C3.08132 23.7446 2.77176 23.2235 2.60948 22.6515C2.19736 20.4617 1.9934 18.239 2.00025 16.0121C1.9918 13.7767 2.19577 11.5455 2.60948 9.34742C2.77176 8.77539 3.08132 8.25423 3.5082 7.83429C3.9351 7.41436 4.46489 7.10985 5.04638 6.95021C7.25103 6.36354 16.0124 6.37502 16.0124 6.37502C16.0124 6.37502 24.796 6.37502 26.9785 6.95021C27.5601 7.10985 28.0898 7.41436 28.5167 7.83429ZM12.5 21.25L21.25 16.008L12.5 10.75V21.25Z" fill=currentColor /></svg></a><a href=https://www.linkedin.com/company/doris-apache/ title=linkedin target=_blank class=item><svg width=2rem height=2rem viewBox="0 0 32 32" fill=none><title>LinkedIn</title><path d="M4.29925 26.9996H9.66738V11.6781H4.29925V26.9996ZM22.1628 11.1949C19.9409 11.1949 18.7157 11.9388 17.3054 13.7407V11.6777H11.9459V26.9996H17.305V18.6738C17.305 16.9168 18.145 15.1982 20.1535 15.1982C22.162 15.1982 22.6559 16.9164 22.6559 18.632V27H28V18.2902C28 12.2386 24.3854 11.1949 22.1628 11.1949ZM6.99325 4C5.3395 4 4 5.21047 4 6.7046C4 8.19759 5.3395 9.40617 6.99325 9.40617C8.6455 9.40617 9.985 8.19722 9.985 6.7046C9.985 5.21047 8.6455 4 6.99325 4Z" fill=white /></svg></a><a href=https://medium.com/@ApacheDoris title=medium target=_blank class=item><svg width=2em height=2em viewBox="0 0 32 32" fill=none><title>Medium</title><g id=Frame><path id=Vector d="M17.7967 16.5385C17.8029 18.53 16.9746 20.4425 15.4937 21.8559C14.0128 23.2693 12.0004 24.0681 9.89836 24.0769C7.79633 24.0681 5.78391 23.2693 4.30302 21.8559C2.82212 20.4425 1.99383 18.53 2.00003 16.5385C1.99383 14.5469 2.82212 12.6344 4.30302 11.221C5.78391 9.80759 7.79633 9.00878 9.89836 9C12.0004 9.00878 14.0128 9.80759 15.4937 11.221C16.9746 12.6344 17.8029 14.5469 17.7967 16.5385ZM26.4533 16.5385C26.4533 20.4514 24.6917 23.6348 22.51 23.6348C20.3283 23.6348 18.555 20.4514 18.555 16.5385C18.555 12.6255 20.3283 9.44214 22.51 9.44214C24.6917 9.44214 26.4533 12.6255 26.4533 16.5385ZM30 16.5385C30 20.0424 29.3817 22.8942 28.6117 22.8942C27.8417 22.8942 27.2233 20.0424 27.2233 16.5385C27.2233 13.0345 27.8417 10.1827 28.6117 10.1827C29.3817 10.1827 30 13.0345 30 16.5385Z" fill=currentColor /></g></svg></a><a href=https://discord.gg/ATXQqX8g8F title=discord target=_blank class=item><svg width=32 height=32 viewBox="0 0 32 32" fill=none><path d="M19.9416 5C19.668 5.50355 19.4223 6.02447 19.199 6.55696C17.077 6.22705 14.916 6.22705 12.7885 6.55696C12.5707 6.02447 12.3194 5.50355 12.0458 5C10.0523 5.35308 8.10909 5.97238 6.26637 6.84635C2.61442 12.4549 1.62605 17.9187 2.11745 23.3073C4.25612 24.9453 6.65167 26.1955 9.20356 26.9942C9.77871 26.1955 10.2869 25.3446 10.7224 24.4591C9.89598 24.1408 9.09746 23.7414 8.33246 23.2784C8.53348 23.1279 8.72892 22.9716 8.91877 22.8211C13.4027 25.009 18.5959 25.009 23.0854 22.8211C23.2753 22.9832 23.4707 23.1394 23.6718 23.2784C22.9067 23.7472 22.1082 24.1408 21.2762 24.4649C21.7118 25.3504 22.2199 26.2013 22.7951 27C25.3469 26.2013 27.7424 24.9568 29.8813 23.3189C30.4619 17.0679 28.8873 11.6503 25.721 6.85215C23.884 5.97818 21.9407 5.35885 19.9472 5.01157L19.9416 5ZM11.3478 19.9908C9.96859 19.9908 8.82386 18.6943 8.82386 17.091C8.82386 15.4878 9.9239 14.1855 11.3423 14.1855C12.7606 14.1855 13.8886 15.4936 13.8662 17.091C13.8439 18.6885 12.755 19.9908 11.3478 19.9908ZM20.6508 19.9908C19.266 19.9908 18.1324 18.6943 18.1324 17.091C18.1324 15.4878 19.2325 14.1855 20.6508 14.1855C22.0692 14.1855 23.1915 15.4936 23.1692 17.091C23.1469 18.6885 22.058 19.9908 20.6508 19.9908Z" fill=white /></svg></a></div></div></div></div><div class=footer__copyright>Copyright © 2026 The Apache Software Foundation,Licensed under the <a href=https://www.apache.org/licenses/LICENSE-2.0 target=_blank>Apache License, Version 2.0</a>. Apache, Doris, Apache Doris, the Apache feather logo and the Apache Doris logo are trademarks of The Apache Software Foundation.</div></div></div><aside class=slack-community-nudge aria-label="Apache Doris community and Summit resources"><div class=slack-community-nudge__bubble aria-hidden=true><button type=button class=slack-community-nudge__close aria-label="Dismiss community and Summit prompt" tabindex=-1><span aria-hidden=true>×</span></button><div class=slack-community-nudge__eyebrow>Community help</div><p class=slack-community-nudge__title>Building with Doris?<p class=slack-community-nudge__copy>Join Slack for setup help, performance tips, and answers from Apache Doris users and maintainers.<ul class=slack-community-nudge__benefits><li class=slack-community-nudge__benefit>Talk with Doris users and developers.<li class=slack-community-nudge__benefit>Get the latest Doris community updates, learning resources, and event information.<li class=slack-community-nudge__benefit>Join community building, feature discussions, and PR reviews.</ul><a class=slack-community-nudge__cta href=https://doris.apache.org/slack target=_blank rel="noopener noreferrer" tabindex=-1><svg width=16 height=16 viewBox="0 0 24 24" fill=currentColor aria-hidden=true><path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/></svg>Join Slack</a><section class=slack-community-nudge__summit aria-labelledby=slack-community-nudge-summit-title><div><p id=slack-community-nudge-summit-title class=slack-community-nudge__summit-title>Doris Summit 26<p class=slack-community-nudge__summit-meta>October 21–22 · Virtual event</div><a class="slack-community-nudge__cta slack-community-nudge__cta--summit" href=https://apache-doris-summit.org/ target=_blank rel="noopener noreferrer" tabindex=-1>Explore Summit<span aria-hidden=true>↗</span></a></section></div><button type=button class=slack-community-nudge__mascot aria-expanded=false aria-label="Open community and Summit resources"><img class=slack-community-nudge__mascot-image src=/images/next/home-page/doris-mascot.png width=1344 height=768 alt="" draggable=false><span class=slack-community-nudge__mascot-pupil style=left:22.96%;top:54.01% aria-hidden=true></span><span class=slack-community-nudge__mascot-pupil style=left:28.59%;top:54.01% aria-hidden=true></span><span class=slack-community-nudge__mascot-pupil style=left:51.01%;top:51.27% aria-hidden=true></span><span class=slack-community-nudge__mascot-pupil style=left:56.39%;top:51.95% aria-hidden=true></span><span class=slack-community-nudge__mascot-pupil style=left:74.99%;top:58.71% aria-hidden=true></span><span class=slack-community-nudge__mascot-pupil style=left:80.3%;top:59.91% aria-hidden=true></span></button></aside></div>
+<script src=https://cdnd.selectdb.com/assets/js/runtime~main.7418c8a4.js></script>
+<script src=https://cdnd.selectdb.com/assets/js/main.c39c053a.js></script>
