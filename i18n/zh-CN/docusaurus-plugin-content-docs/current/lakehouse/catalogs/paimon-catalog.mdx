@@ -86,6 +86,53 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     | "paimon.fs.s3.read.ahead.buffer.size" = "1" | "fs.s3a.read.ahead.buffer.size" = "1"    |
     | "paimon.s3a.replication.factor" = "3"     | "fs.s3a.replication.factor" = "3"        |
 
+    **Paimon JNI Reader 参数透传**
+
+    在使用 Paimon JNI Reader 读取数据时，可以通过
+    `paimon.table-option.<option-key>` 在 Catalog 中设置 Paimon Table option。例如：
+
+    ```sql
+    CREATE CATALOG paimon_hms PROPERTIES (
+        "type" = "paimon",
+        "paimon.catalog.type" = "hms",
+        "hive.metastore.uris" = "thrift://127.0.0.1:9083",
+        "warehouse" = "s3://bucket/paimon-warehouse",
+        "paimon.table-option.read.batch-size" = "4096",
+        "paimon.table-option.file-reader-async-threshold" = "32 mb"
+    );
+    ```
+
+    Doris 按照以下顺序处理这些参数：
+
+    1. FE 加载 Paimon 表及其已有的 Table options。
+    2. FE 移除 `paimon.table-option.` 前缀，并使用 Catalog 中的 option 补充表中未配置的
+       option。
+    3. FE 将包含最终 options 的 Paimon Table 序列化并发送给 BE。
+    4. BE 上的 Paimon JNI Scanner 反序列化 Table，并使用这些 options 创建 Paimon Reader。
+    5. 表和 Catalog 都没有配置的 option 使用 Paimon 默认值。
+
+    option 的优先级为：
+
+    ```text
+    Paimon 表自身 option > Doris Catalog 中的 Table option > Paimon 默认值
+    ```
+
+    例如，如果 Paimon 表自身已经设置 `read.batch-size=1024`，Catalog 中设置的 `4096`
+    不会覆盖它；如果表中没有设置，则 JNI Reader 使用 Catalog 中的 `4096`。
+
+    Catalog 中的配置只在 Doris JNI 读取过程中生效，不会写回或修改 Paimon 表元数据。
+    非 JNI 读取路径不保证使用这些参数。
+
+    Doris 会根据当前版本依赖的 Paimon `CoreOptions` 检查 option 名称和值。Map 类型的
+    option 需要使用完整 key，例如：
+
+    ```text
+    "paimon.table-option.file.compression.per.level" = "0:lz4,1:zstd"
+    ```
+
+    不支持 `paimon.table-option.file.compression.per.level.0` 这类带动态后缀的写法。
+    Bucket、Primary Key、Partition 和 Merge Engine 等表结构相关参数应在 Paimon 表中设置。
+
 * `{CommonProperties}`
 
     CommonProperties 部分用于填写通用属性。请参阅[数据目录概述](../catalog-overview.md)中【通用属性】部分。
