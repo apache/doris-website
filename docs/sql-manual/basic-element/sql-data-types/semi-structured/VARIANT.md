@@ -2,7 +2,7 @@
 {
     "title": "VARIANT",
     "language": "en-US",
-    "description": "The VARIANT type stores semi-structured JSON data. It can contain different primitive types (integers, strings, booleans, etc.), one-dimensional arrays, and nested objects. On write, Doris infers the structure and type of sub-paths based on JSON paths and performs Subcolumnization on frequent paths, exposing them as independent columnar subcolumns for both flexibility and performance."
+    "description": "VARIANT stores semi-structured JSON data and supports typed access, casts, hash-based grouping, deduplication, and selected SQL operations."
 }
 ---
 
@@ -66,6 +66,170 @@ SELECT *
 FROM ${table_name}
 WHERE ARRAY_CONTAINS(CAST(v['tags'] AS ARRAY<TEXT>), 'Doris');
 ```
+
+## Create and access values
+
+:::info Version availability
+The behavior in this section applies to Doris 4.2 and later.
+:::
+
+VARIANT values can be created from JSON text, JSON/JSONB values, or typed SQL expressions:
+
+- Use [PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant) when a string or JSON/JSONB expression should be parsed as a structured VARIANT value.
+- Use `CAST(expression AS VARIANT)` to convert a supported SQL value to VARIANT. A string remains a VARIANT string value; this CAST does not parse JSON.
+
+### Parse JSON text
+
+```sql
+SELECT PARSE_TO_VARIANT('{"user": {"id": 42}, "active": true}');
+SELECT PARSE_TO_VARIANT('[10, 20, 30]');
+SELECT PARSE_TO_VARIANT(CAST('{"user": {"id": 42}}' AS JSON));
+```
+
+Use [TRY_PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/try-parse-to-variant) when invalid JSON should return SQL `NULL` instead of failing the query.
+
+### Access objects and arrays
+
+Object fields can be accessed with a string key. In Doris 4.2 and later, positive VARIANT array indexes start from 1, and negative indexes count backward from the end. The extracted value remains `VARIANT`; CAST it before typed comparison, arithmetic, or aggregation.
+
+```sql
+SELECT CAST(PARSE_TO_VARIANT('{"user": {"id": 42}}')['user']['id'] AS BIGINT);
+SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), 1);  -- 10
+SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), -1); -- 30
+```
+
+See [ELEMENT_AT](../../../sql-functions/scalar-functions/variant-functions/element-at) for object and array access details.
+
+## CAST rules
+
+CAST involving VARIANT has two directions: converting a supported SQL value to VARIANT and extracting a compatible SQL value from VARIANT.
+
+### CAST other types to VARIANT
+
+| Source type | Behavior |
+| --- | --- |
+| `CHAR`, `VARCHAR`, `STRING` | Preserves the input as a VARIANT string. JSON-looking text is not parsed. |
+| `BOOLEAN` | Preserves the Boolean value. |
+| `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT` | Preserves the integer value. |
+| `FLOAT`, `DOUBLE` | Preserves the floating-point value. |
+| `DECIMALV2`, `DECIMAL(p, s)` with `p <= 38` | Preserves the Decimal value, subject to the limits below. |
+| `DATE`, `DATETIME`, `TIMESTAMPTZ` | Preserves the typed logical value. |
+| `IPV4`, `IPV6` | Preserves the IP address value. |
+| `JSON` / `JSONB` | Converts the structured value directly to VARIANT. If the input contains a JSONB value type that VARIANT cannot represent, the BE returns an error. |
+| `ARRAY<T>` | Converts each element recursively when `T` is `VARIANT` or is also in this whitelist, and preserves SQL NULL elements. |
+
+Only the source types listed above are supported. Other source types, including `MAP`, `STRUCT`, `TIME`, Decimal values with precision greater than 38, and arrays containing an unsupported element type, cause the BE to return an error.
+
+```sql
+-- A string remains a VARIANT string root, even if it looks like JSON.
+SELECT CAST(CAST('{"id": 1}' AS VARIANT) AS STRING) AS string_value,
+       VARIANT_TYPE(CAST('{"id": 1}' AS VARIANT)) AS root_type;
+-- string_value: {"id": 1}; root_type: string
+
+-- Parse JSON text explicitly when a structured VARIANT value is required.
+SELECT PARSE_TO_VARIANT('{"id": 1}') AS parsed_object;
+-- {"id":1}
+
+-- JSON/JSONB input is converted structurally.
+SELECT CAST(CAST('{"id": 1}' AS JSON) AS VARIANT) AS parsed_object;
+-- {"id":1}
+```
+
+Because string CAST does not parse JSON, malformed JSON text is still a valid VARIANT string. Use `PARSE_TO_VARIANT` for strict JSON parsing or `TRY_PARSE_TO_VARIANT` when malformed input should become SQL `NULL`.
+
+### CAST VARIANT to other types
+
+VARIANT can be cast to a compatible scalar, JSON/JSONB, or array target:
+
+| Target type | Behavior |
+| --- | --- |
+| `BOOLEAN` | Converts a compatible Boolean or scalar root. |
+| `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT` | Converts a compatible scalar root to the requested integer type. |
+| `FLOAT`, `DOUBLE` | Converts a compatible numeric root. |
+| `DECIMALV2`, `DECIMAL(p, s)` | Converts a compatible numeric root to the requested Decimal type. |
+| `DATE`, `DATETIME`, `TIMESTAMPTZ` | Converts a compatible date/time root. |
+| `CHAR`, `VARCHAR`, `STRING` | Returns scalar text for scalar roots and JSON text for objects and arrays. Variant/JSON `null` becomes the string `null`; outer SQL `NULL` remains SQL `NULL`. |
+| `IPV4`, `IPV6` | Converts a compatible IP address root to the requested IP address type. |
+| `JSON` / `JSONB` | Converts the value structurally. If the VARIANT value contains a type that JSON/JSONB cannot represent, the BE returns an error. |
+| `ARRAY<T>` | Converts a VARIANT array element by element when `T` is `VARIANT` or is also in this whitelist; incompatible elements follow the target CAST rules. |
+
+Only the target types listed above are supported. Other target types, including `MAP`, `STRUCT`, and `TIME`, cause the BE to return an error. For a supported target, an incompatible value shape, invalid text, or numeric overflow follows the applicable CAST error-or-NULL behavior.
+
+```sql
+SELECT CAST(PARSE_TO_VARIANT('42') AS BIGINT) AS id;
+-- 42
+
+SELECT CAST(PARSE_TO_VARIANT('[1, null, 3]') AS ARRAY<INT>) AS values;
+-- [1, NULL, 3]
+
+SELECT CAST(PARSE_TO_VARIANT('{"id": 1}') AS JSON) AS json_value;
+-- {"id":1}
+```
+
+### Decimal and date/time conversion limits
+
+| Doris input type | Supported VARIANT behavior |
+| --- | --- |
+| Legacy `DECIMALV2` | Precision up to 27 and scale up to 9 are preserved exactly. |
+| `DECIMAL(p, s)` | `1 <= p <= 38` and `0 <= s <= p` are preserved exactly. Values that require precision greater than 38 are not supported. |
+| `DATE` | Preserved as a calendar date with no time or time zone. |
+| Legacy `DATETIME` | Preserved with whole-second precision and no time-zone adjustment. |
+| `DATETIME(p)` | Supports `0 <= p <= 6` with no time-zone adjustment. |
+| `TIMESTAMPTZ(p)` | Supports `0 <= p <= 6` with time-zone-adjusted timestamp semantics. |
+| Decimal precision greater than 38 | Not supported as input to VARIANT. |
+| `TIME` | Not supported as input to VARIANT. |
+
+Every source value must also be valid for its Doris source type. Unsupported precision, invalid dates, or incompatible values return an error instead of being repaired.
+
+## Grouping, deduplication, and hash semantics
+
+In Doris 4.2 and later, grouping, deduplication, and set operations treat logically equivalent VARIANT values as the same value, regardless of source SQL type or physical representation:
+
+- Equivalent integral numeric representations are treated as the same value.
+- Decimal trailing zeros do not change the value, so `1.20` and `1.2` are treated as the same value.
+- `+0`, `-0`, and integral zero are treated as the same value.
+- Object key order does not affect whether values are treated as the same, while array element order does.
+- Variant/JSON `null` is distinct from SQL `NULL`.
+
+Hash-based operators use the same logical-value rules when calculating their keys. Values treated as the same under the rules above therefore produce the same internal hash key, regardless of whether they came from parsed JSON or a typed CAST. This hash is an implementation detail, not a stable user-facing checksum.
+
+These rules apply to supported operations such as `GROUP BY`, `DISTINCT`, `COUNT(DISTINCT ...)`, `INTERSECT`, `EXCEPT`, and `UNION DISTINCT`. They do not enable root VARIANT comparison predicates: direct `VARIANT = VARIANT` and ordering comparisons remain unsupported.
+
+```sql
+-- 1 and 1.0 have one distinct logical value.
+SELECT COUNT(DISTINCT value) AS distinct_count
+FROM (
+    SELECT PARSE_TO_VARIANT('1') AS value
+    UNION ALL
+    SELECT PARSE_TO_VARIANT('1.0') AS value
+) AS numeric_values;
+-- distinct_count: 1
+
+-- Object key order is ignored; array order is preserved.
+SELECT COUNT(DISTINCT value) AS distinct_count
+FROM (
+    SELECT PARSE_TO_VARIANT('{"a": 1, "b": 2}') AS value
+    UNION ALL
+    SELECT PARSE_TO_VARIANT('{"b": 2, "a": 1}') AS value
+) AS object_values;
+-- distinct_count: 1
+
+SELECT COUNT(DISTINCT value) AS distinct_count
+FROM (
+    SELECT PARSE_TO_VARIANT('[1, 2]') AS value
+    UNION ALL
+    SELECT PARSE_TO_VARIANT('[2, 1]') AS value
+) AS array_values;
+-- distinct_count: 2
+```
+
+## NULL semantics
+
+SQL `NULL` and Variant/JSON `null` are different values:
+
+- SQL `NULL` represents the absence of a SQL value and follows normal SQL NULL propagation.
+- Variant/JSON `null` is a VARIANT value, for example the result of `PARSE_TO_VARIANT('null')`.
+- `TRY_PARSE_TO_VARIANT` returns SQL `NULL` for malformed input. This differs from successfully parsing the JSON literal `null`.
 
 ## Primitive types
 
@@ -171,11 +335,12 @@ SELECT * FROM test_var_schema;
 +------+-----------------------------+
 ```
 
-Schema only guides the persisted storage type. During query execution, the effective type depends on actual data at runtime:
+Schema only guides the persisted storage type. Query expressions that are not written to a table still keep their actual runtime types:
 
 ```sql
--- At runtime v['a'] may still be STRING
-SELECT variant_type(CAST('{"a" : "12345"}' AS VARIANT<'a' : INT>)['a']);
+-- The quoted JSON member is a STRING. PARSE_TO_VARIANT is used because
+-- CAST(string AS VARIANT) always preserves the whole input as a string.
+SELECT variant_type(PARSE_TO_VARIANT('{"a" : "12345"}')['a']);
 ```
 
 Wildcard matching and order:
@@ -387,10 +552,26 @@ SELECT v FROM variant_tbl WHERE k = 2;
 
 Sorting applies at every level — top-level keys become `a`, `b`, `c`, and the nested object's keys become `x`, `y`.
 
-## Supported operations and CAST rules
+## Supported operations
 
-- VARIANT cannot be compared/operated directly with other types; comparisons between two VARIANTs are not supported either.
-- For comparison, filtering, aggregation, and ordering, CAST subpaths to concrete types (explicitly or implicitly).
+In Doris 4.2 and later, whole VARIANT values support hash-based grouping and deduplication, but they do not support comparison, join-key, or ordering semantics.
+
+| Operation on a whole VARIANT value | Support | Notes |
+| --- | --- | --- |
+| `GROUP BY` | Supported | Uses the grouping and hash rules described above. |
+| `DISTINCT`, `COUNT(DISTINCT ...)` | Supported | Logically equivalent values are deduplicated. |
+| `INTERSECT`, `EXCEPT`, `UNION DISTINCT` | Supported | Uses the same rules described above. |
+| `COUNT(*)`, `COUNT(variant)` | Supported | `COUNT(variant)` excludes outer SQL `NULL` in the normal SQL manner. |
+| `IF`, `CASE`, `IFNULL`, `COALESCE` | Supported | Conditional expressions can return and consume VARIANT values. |
+| VARIANT in transient `ARRAY`, `MAP`, or `STRUCT` expressions | Supported | This does not allow these nested types in persisted table schemas. |
+| `EXPLODE_VARIANT_ARRAY`, `EXPLODE`/`EXPLODE_OUTER` on `ARRAY<VARIANT>` | Supported | Emits VARIANT elements and preserves SQL NULL versus Variant/JSON `null`. |
+| `=`, `!=`, `<=>`, `<`, `<=`, `>`, `>=` | Not supported | Extract and CAST a comparable subpath on both sides. |
+| Join key | Not supported | CAST the required subpath to the same concrete type on both inputs. |
+| `ORDER BY`, Sort/TopN key | Not supported | CAST the required subpath before ordering. |
+| Window partition/order key | Not supported | A whole VARIANT value cannot be a window key. |
+| `MIN(variant)`, `MAX(variant)` | Not supported | CAST a scalar subpath before aggregation. |
+
+For comparison, filtering, arithmetic, and ordering, extract the required subpath and CAST it to a concrete type explicitly or implicitly:
 
 ```sql
 -- Explicit CAST
@@ -402,22 +583,6 @@ SELECT * FROM tbl WHERE CAST(v['date'] AS DATE) = '2021-01-02';
 SELECT * FROM tbl WHERE v['bool'];
 SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 ```
-
-- VARIANT itself cannot be used directly in ORDER BY, GROUP BY, as a JOIN KEY, or as an aggregate argument; CAST subpaths instead.
-- Strings can be implicitly converted to VARIANT.
-
-| VARIANT         | Castable | Coercible |
-| --------------- | -------- | --------- |
-| `ARRAY`         | ✔        | ❌        |
-| `BOOLEAN`       | ✔        | ✔         |
-| `DATE/DATETIME` | ✔        | ✔         |
-| `FLOAT`         | ✔        | ✔         |
-| `IPV4/IPV6`     | ✔        | ✔         |
-| `DECIMAL`       | ✔        | ✔         |
-| `MAP`           | ❌        | ❌        |
-| `TIMESTAMP`     | ✔        | ✔         |
-| `VARCHAR`       | ✔        | ✔         |
-| `JSON`          | ✔        | ✔         |
 
 ## Wide columns
 
@@ -464,7 +629,7 @@ See the “Configuration” section below for the full property list.
 - **Wide tables optimization**: For wide tables with a large number of dynamic sub-columns (e.g., more than 2000 columns) generated by the `VARIANT` type, it is highly recommended to enable **Storage Format V3** by specifying `"storage_format" = "V3"` in the table `PROPERTIES`. This decouples column metadata from the Segment Footer, speeding up file opening and reducing memory overhead.
 - JSON key length ≤ 255.
 - Cannot be a primary key or sort key.
-- Cannot be nested within other types (e.g., `Array<Variant>`, `Struct<Variant>`).
+- Persisted table schemas cannot nest VARIANT within other types (for example, `ARRAY<VARIANT>` or `STRUCT<VARIANT>`). Transient expression results can use the supported nested-container operations listed above.
 - Outside DOC mode, reading the entire VARIANT column scans all subpaths. For very wide columns, direct `SELECT variant_col` is generally not recommended unless DOC mode is enabled. If a column has many subpaths, consider storing the original JSON string in an extra STRING/JSONB column for whole-object searches like `LIKE`:
 
 ```sql
@@ -559,7 +724,7 @@ SET describe_extend_variant_column = true;
 DESC variant_tbl;
 ```
 
-``` sql
+```sql
 DESCRIBE ${table_name} PARTITION ($partition_name);
 ```
 
