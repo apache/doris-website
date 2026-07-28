@@ -155,6 +155,13 @@ Doris 的 Compaction 分为两类：
 | Cumulative Compaction | 输出数据上传远程存储的同时写入文件缓存，与导入流程一致，加速后续查询。 |
 | Base Compaction | 默认仅在缓存空间充足时写入，避免大量冷数据造成缓存污染。可通过 BE 参数 `enable_file_cache_keep_base_compaction_output = true` 强制写入，但可能导致其他热数据被淘汰。 |
 
+当本地缓存容量有限时，可以启用索引优先写入策略，避免 Compaction 输出的 Segment 数据主动占用大量缓存空间：
+
+- `enable_file_cache_write_index_file_only=true`：对包括 Compaction 在内的所有存算分离 Rowset 写入生效。Segment 数据不主动写入缓存，Segment footer/内部索引范围和独立倒排索引文件仍写入缓存。
+- `enable_file_cache_write_base_compaction_index_only=true` 或 `enable_file_cache_write_cumu_compaction_index_only=true`：仅限制匹配类型中原本会写入缓存的 Compaction 输出，跳过 Segment 文件并保留独立倒排索引文件；不会预加载 Segment footer/内部索引范围。
+
+参数优先级、配置示例和使用限制详见[文件缓存配置](./file-cache.md)。
+
 > **计划：** Doris 后续版本将提供基于历史查询统计信息的自适应写入策略。
 
 ### 重启后缓存加载

@@ -155,6 +155,13 @@ The two types of Compaction use different cache write strategies:
 | Cumulative Compaction | Output data is written to the file cache while being uploaded to remote storage, consistent with the ingestion flow, to accelerate subsequent queries. |
 | Base Compaction | By default, data is written to the cache only when there is sufficient cache space, to avoid cache pollution from large volumes of cold data. You can force writes by setting the BE parameter `enable_file_cache_keep_base_compaction_output = true`, but this may cause other hot data to be evicted. |
 
+When local cache capacity is limited, you can enable an index-only write policy to prevent Segment data from Compaction output from actively consuming a large amount of cache space:
+
+- `enable_file_cache_write_index_file_only=true`: Applies to all rowset writes in compute-storage decoupled mode, including Compaction. Segment data is not actively cached, while Segment footer/internal-index ranges and independent inverted-index files are still written to the cache.
+- `enable_file_cache_write_base_compaction_index_only=true` or `enable_file_cache_write_cumu_compaction_index_only=true`: Only restricts matching Compaction output that would otherwise be written to the cache. Segment files are skipped and independent inverted-index files are retained, but Segment footer/internal-index ranges are not preloaded.
+
+For parameter precedence, configuration examples, and limitations, see [File Cache Configuration](./file-cache.md).
+
 > **Planned:** A future version of Doris will provide an adaptive write strategy based on historical query statistics.
 
 ### Cache Loading After Restart
