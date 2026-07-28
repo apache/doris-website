@@ -113,7 +113,6 @@ Cumulative Compaction 默认会写入输出缓存，因此启用对应参数后�
 
 - 三个参数都是 BE 参数。应在同一计算组的所有 BE 节点上保持一致，避免不同节点采用不同的写缓存策略。
 - “仅缓存索引”不表示 File Cache 中永远不会出现 Segment 数据。查询读取未命中的数据页时，仍可能将数据写入缓存。
-- 启用全局索引优先模式后，应根据实际索引大小调整 `file_cache_path` 中的 `index_percent`。默认值为 `5`，对于大规模倒排索引可能不足；调整时必须同时显式配置 `ttl_percent`、`normal_percent`、`disposable_percent` 与 `index_percent`，并保证四者之和为 `100`。
 - 该策略可以降低导入和 Compaction 对缓存的污染，但紧随写入发生的大范围数据扫描可能增加远程存储读取。建议结合业务查询负载进行压测，并持续观察 Index 队列淘汰量与 SQL Profile 中的索引读取指标。
 
 ### 配置缓存路径与大小
