@@ -3,8 +3,8 @@
     "title": "文件缓存配置与使用指南（存算分离）",
     "sidebar_label": "文件缓存配置",
     "language": "zh-CN",
-    "description": "介绍存算分离架构下 Doris 文件缓存的配置、配额管理、缓存预热与清理、命中率监控及 TTL 策略，助力提升查询性能、降低对象存储成本。",
-    "keywords": ["Doris 文件缓存", "存算分离缓存", "file cache", "缓存预热", "缓存配额", "TTL 缓存", "LRU", "缓存命中率", "对象存储加速"]
+    "description": "介绍存算分离架构下 Doris 文件缓存的配置、索引优先写入、配额管理、缓存预热与清理、命中率监控及 TTL 策略，助力提升查询性能、降低对象存储成本。",
+    "keywords": ["Doris 文件缓存", "存算分离缓存", "file cache", "索引优先缓存", "缓存预热", "缓存配额", "TTL 缓存", "LRU", "缓存命中率", "对象存储加速"]
 }
 ---
 
@@ -48,6 +48,72 @@ Doris 通过 BE 配置文件中的以下参数控制文件缓存行为。
 | 参数 | 默认值 | 说明 |
 |---|---|---|
 | `enable_file_cache` | `false` | 是否启用文件缓存功能。存算分离模式下建议设置为 `true`。 |
+
+### 配置写入路径仅缓存索引
+
+当本地缓存空间有限，并且查询性能更依赖索引和 Segment 元数据时，可以启用索引优先（index-only）写入策略。该策略限制的是导入、Schema Change 和 Compaction 等写入路径向 File Cache **主动写入**的内容，不影响查询读取未命中数据后的缓存回填，也不影响缓存预热。
+
+Doris 提供一个全局策略和两个 Compaction 专用策略：
+
+| 参数 | 类型 | 默认值 | 生效范围 | 说明 |
+|---|---|---|---|---|
+| `enable_file_cache_write_index_file_only` | Boolean | `false` | 所有存算分离 Rowset 写入，包括导入、Schema Change、Cumulative Compaction 和 Base Compaction | 设为 `true` 后，不主动缓存 Segment 数据；Segment 关闭后同步预加载其 footer 和内部索引范围，独立倒排索引文件仍写入 File Cache。该参数的优先级高于两个 Compaction 专用参数 |
+| `enable_file_cache_write_base_compaction_index_only` | Boolean | `false` | Base Compaction | 仅当 Base Compaction 按原有策略决定写入 File Cache 时，将其输出限制为不主动缓存 Segment 文件、仍缓存独立倒排索引文件。该参数不会使原本不写缓存的 Base Compaction 输出开始写入缓存 |
+| `enable_file_cache_write_cumu_compaction_index_only` | Boolean | `false` | Cumulative Compaction | 当 Cumulative Compaction 输出写入 File Cache 时，将其限制为不主动缓存 Segment 文件、仍缓存独立倒排索引文件 |
+
+写入路径按以下优先级决定缓存行为：
+
+1. `enable_file_cache=false` 的优先级最高，禁止所有 File Cache 写入，包括 Segment footer/内部索引预加载和独立倒排索引文件写入。
+2. `enable_file_cache=true` 且 `enable_file_cache_write_index_file_only=true` 时，启用全局索引优先写入。此时两个 Compaction 专用参数不再改变最终行为。Segment 数据不会因自适应写入、Compaction 保留策略、缓存命中率阈值或请求级 `write_file_cache` 设置而主动写入缓存；索引相关内容仍按上述全局策略写入。
+3. 全局索引优先写入关闭时，Base/Cumulative Compaction 专用参数只进一步限制匹配类型中**原本已决定写入缓存**的输出，不改变其他写入场景或查询读路径。
+4. 三个索引优先参数均为 `false` 时，保留现有的主动写缓存、自适应写入和 Compaction 输出保留逻辑。
+
+:::caution 注意
+
+两个 Compaction 专用参数只区分独立倒排索引文件与 Segment 文件，不会触发全局索引优先模式中的 Segment footer/内部索引范围预加载。如果需要同时主动保留独立倒排索引和 Segment 内部索引、元数据，请使用 `enable_file_cache_write_index_file_only`。
+
+:::
+
+#### 全局启用索引优先写入
+
+在所有 BE 节点的 `be.conf` 中配置：
+
+```properties
+enable_file_cache=true
+enable_file_cache_write_index_file_only=true
+enable_file_cache_write_base_compaction_index_only=false
+enable_file_cache_write_cumu_compaction_index_only=false
+```
+
+预期行为如下：
+
+| 场景 | 主动写入 File Cache 的内容 |
+|---|---|
+| 导入、Schema Change、Cumulative Compaction、Base Compaction | 不主动写入 Segment 数据；同步预加载 Segment footer/内部索引范围；写入独立倒排索引文件 |
+| 查询读取数据页 | 行为不变；缓存未命中时仍可按现有读路径规则回填 Segment 数据 |
+| 缓存预热 | 行为不变 |
+| Packed File | 不对打包后的 Segment 小文件进行整文件缓存；打包后的独立索引小文件仍可整文件缓存 |
+
+全局索引优先模式下，Segment footer/内部索引范围通过同步读取写入缓存，不受 `enable_flush_file_cache_async` 控制；独立倒排索引文件仍沿用已有的直接写入和异步 flush 行为。
+
+#### 仅限制 Compaction 输出
+
+如果只希望减少 Compaction 输出造成的缓存压力，而不改变导入和 Schema Change 的主动写缓存行为，可以配置：
+
+```properties
+enable_file_cache=true
+enable_file_cache_write_index_file_only=false
+enable_file_cache_write_base_compaction_index_only=true
+enable_file_cache_write_cumu_compaction_index_only=true
+```
+
+Cumulative Compaction 默认会写入输出缓存，因此启用对应参数后会跳过 Segment 文件，仅保留独立倒排索引文件。Base Compaction 仍先根据 `enable_file_cache_keep_base_compaction_output` 和输入 Rowset 缓存命中率决定是否写入输出；只有决定写入时，Base Compaction 的索引优先参数才进一步限制写入内容。
+
+#### 使用建议
+
+- 三个参数都是 BE 参数。应在同一计算组的所有 BE 节点上保持一致，避免不同节点采用不同的写缓存策略。
+- “仅缓存索引”不表示 File Cache 中永远不会出现 Segment 数据。查询读取未命中的数据页时，仍可能将数据写入缓存。
+- 该策略可以降低导入和 Compaction 对缓存的污染，但紧随写入发生的大范围数据扫描可能增加远程存储读取。建议结合业务查询负载进行压测，并持续观察 Index 队列淘汰量与 SQL Profile 中的索引读取指标。
 
 ### 配置缓存路径与大小
 
@@ -308,6 +374,17 @@ SQL Profile 中缓存相关指标位于 `SegmentIterator` 节点下：
 | `NumSkipCacheIOTotal` | 从远程存储读取但未写入 File Cache 的次数 |
 | `RemoteIOUseTimer` | 读取远程存储的耗时 |
 | `WriteCacheIOUseTimer` | 写入 File Cache 的耗时 |
+
+启用索引优先写入后，可以进一步关注以下分类指标，分别判断独立倒排索引和 Segment footer/内部索引是否命中缓存：
+
+| 指标名称 | 含义 |
+|---|---|
+| `InvertedIndexBytesScannedFromCache` / `InvertedIndexBytesScannedFromRemote` | 从 File Cache / 远程存储读取的独立倒排索引数据量 |
+| `InvertedIndexNumLocalIOTotal` / `InvertedIndexNumRemoteIOTotal` | 独立倒排索引的本地 / 远程读取次数 |
+| `InvertedIndexLocalIOUseTimer` / `InvertedIndexRemoteIOUseTimer` | 独立倒排索引的本地 / 远程读取耗时 |
+| `SegmentFooterIndexBytesScannedFromCache` / `SegmentFooterIndexBytesScannedFromRemote` | 从 File Cache / 远程存储读取的 Segment footer 和内部索引数据量 |
+| `SegmentFooterIndexNumLocalIOTotal` / `SegmentFooterIndexNumRemoteIOTotal` | Segment footer 和内部索引的本地 / 远程读取次数 |
+| `SegmentFooterIndexLocalIOUseTimer` / `SegmentFooterIndexRemoteIOUseTimer` | Segment footer 和内部索引的本地 / 远程读取耗时 |
 
 您可以通过[查询性能分析](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile)查看完整的查询性能报告。
 

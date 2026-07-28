@@ -3,8 +3,8 @@
     "title": "File Cache Configuration and Usage Guide (Compute-Storage Decoupled)",
     "sidebar_label": "File Cache Configuration",
     "language": "en",
-    "description": "Covers file cache configuration, quota management, cache warmup and eviction, hit-rate monitoring, and TTL policies for Doris in compute-storage decoupled mode to improve query performance and reduce object storage costs.",
-    "keywords": ["Doris file cache", "compute-storage decoupled cache", "file cache", "cache warmup", "cache quota", "TTL cache", "LRU", "cache hit rate", "object storage acceleration"]
+    "description": "Covers file cache configuration, index-only cache writes, quota management, cache warmup and eviction, hit-rate monitoring, and TTL policies for Doris in compute-storage decoupled mode to improve query performance and reduce object storage costs.",
+    "keywords": ["Doris file cache", "compute-storage decoupled cache", "file cache", "index-only cache writes", "cache warmup", "cache quota", "TTL cache", "LRU", "cache hit rate", "object storage acceleration"]
 }
 ---
 
@@ -48,6 +48,72 @@ Doris controls file cache behavior through the following parameters in the BE co
 | Parameter | Default | Description |
 |---|---|---|
 | `enable_file_cache` | `false` | Whether to enable the file cache feature. Set to `true` in compute-storage decoupled mode. |
+
+### Configuring Index-Only Cache Writes
+
+When local cache space is limited and query performance depends more heavily on indexes and Segment metadata, you can enable the index-only write policy. This policy limits what ingestion, Schema Change, Compaction, and other write paths **actively write** to File Cache. It does not affect query-side cache fill after a cache miss or cache warmup.
+
+Doris provides one global policy and two Compaction-specific policies:
+
+| Parameter | Type | Default | Scope | Description |
+|---|---|---|---|---|
+| `enable_file_cache_write_index_file_only` | Boolean | `false` | All rowset writes in compute-storage decoupled mode, including ingestion, Schema Change, Cumulative Compaction, and Base Compaction | When set to `true`, Segment data is not actively cached. After a Segment is closed, its footer and internal index ranges are synchronously preloaded, while independent inverted index files are still written to File Cache. This parameter takes precedence over the two Compaction-specific parameters |
+| `enable_file_cache_write_base_compaction_index_only` | Boolean | `false` | Base Compaction | Only when the existing Base Compaction policy has already decided to write output to File Cache, prevents the Segment file from being actively cached while still caching independent inverted index files. This parameter does not cause Base Compaction output that would otherwise bypass the cache to be cached |
+| `enable_file_cache_write_cumu_compaction_index_only` | Boolean | `false` | Cumulative Compaction | When Cumulative Compaction output is written to File Cache, prevents the Segment file from being actively cached while still caching independent inverted index files |
+
+The write path determines cache behavior in the following priority order:
+
+1. `enable_file_cache=false` has the highest priority and disables all File Cache writes, including Segment footer/internal-index preload and independent inverted-index writes.
+2. When `enable_file_cache=true` and `enable_file_cache_write_index_file_only=true`, the global index-only policy is enabled. The two Compaction-specific parameters no longer change the final behavior. Adaptive writes, Compaction retention policies, cache-hit-ratio thresholds, and request-level `write_file_cache` settings cannot cause Segment data to be actively cached; index-related content is still written according to the global policy described above.
+3. When the global index-only policy is disabled, the Base/Cumulative Compaction-specific parameters only further restrict output of the matching type that has **already been selected for caching**. They do not affect other write scenarios or the query read path.
+4. When all three index-only parameters are `false`, existing active cache writes, adaptive writes, and Compaction output retention behavior remain unchanged.
+
+:::caution
+
+The two Compaction-specific parameters distinguish only between independent inverted index files and Segment files. They do not trigger the Segment footer/internal-index range preload used by the global index-only policy. To actively preserve both independent inverted indexes and Segment internal indexes and metadata, use `enable_file_cache_write_index_file_only`.
+
+:::
+
+#### Enabling the Global Index-Only Policy
+
+Configure the following settings in `be.conf` on every BE node:
+
+```properties
+enable_file_cache=true
+enable_file_cache_write_index_file_only=true
+enable_file_cache_write_base_compaction_index_only=false
+enable_file_cache_write_cumu_compaction_index_only=false
+```
+
+The expected behavior is as follows:
+
+| Scenario | Content Actively Written to File Cache |
+|---|---|
+| Ingestion, Schema Change, Cumulative Compaction, and Base Compaction | Segment data is not actively written; Segment footer/internal-index ranges are synchronously preloaded; independent inverted-index files are written |
+| Query data-page reads | Behavior is unchanged. After a cache miss, Segment data can still be filled according to the existing read-path rules |
+| Cache warmup | Behavior is unchanged |
+| Packed File | Packed small Segment files are not cached as whole files; packed independent small index files can still be cached as whole files |
+
+Under the global index-only policy, Segment footer/internal-index ranges are written to the cache through synchronous reads and are not controlled by `enable_flush_file_cache_async`. Independent inverted-index files continue to use the existing direct-write and asynchronous-flush behavior.
+
+#### Restricting Only Compaction Output
+
+To reduce cache pressure from Compaction output without changing active cache writes for ingestion and Schema Change, configure:
+
+```properties
+enable_file_cache=true
+enable_file_cache_write_index_file_only=false
+enable_file_cache_write_base_compaction_index_only=true
+enable_file_cache_write_cumu_compaction_index_only=true
+```
+
+Cumulative Compaction writes output to the cache by default, so enabling its corresponding parameter skips Segment files and retains only independent inverted-index files. Base Compaction still first uses `enable_file_cache_keep_base_compaction_output` and the input-rowset cache hit ratio to determine whether to cache its output. The Base Compaction index-only parameter restricts the written content only after that decision is made.
+
+#### Recommendations
+
+- These three parameters are BE parameters. Keep them consistent across all BE nodes in the same compute group to prevent nodes from using different cache-write policies.
+- "Index-only" does not mean that File Cache never contains Segment data. Query-side reads of cache-missed data pages can still fill Segment data into the cache.
+- This policy can reduce cache pollution from ingestion and Compaction, but a large data scan immediately after a write can increase remote-storage reads. Benchmark it with the production query workload, and monitor Index queue eviction and index-read metrics in the SQL Profile.
 
 ### Configuring Cache Paths and Size
 
@@ -308,6 +374,17 @@ Cache-related metrics in the SQL Profile are located under the `SegmentIterator`
 | `NumSkipCacheIOTotal` | Number of reads from remote storage that were not written into the file cache |
 | `RemoteIOUseTimer` | Time spent reading from remote storage |
 | `WriteCacheIOUseTimer` | Time spent writing into the file cache |
+
+After enabling index-only cache writes, monitor the following categorized metrics to determine whether independent inverted indexes and Segment footer/internal-index data are hitting the cache:
+
+| Metric | Description |
+|---|---|
+| `InvertedIndexBytesScannedFromCache` / `InvertedIndexBytesScannedFromRemote` | Amount of independent inverted-index data read from File Cache / remote storage |
+| `InvertedIndexNumLocalIOTotal` / `InvertedIndexNumRemoteIOTotal` | Number of local / remote reads for independent inverted indexes |
+| `InvertedIndexLocalIOUseTimer` / `InvertedIndexRemoteIOUseTimer` | Time spent on local / remote reads for independent inverted indexes |
+| `SegmentFooterIndexBytesScannedFromCache` / `SegmentFooterIndexBytesScannedFromRemote` | Amount of Segment footer and internal-index data read from File Cache / remote storage |
+| `SegmentFooterIndexNumLocalIOTotal` / `SegmentFooterIndexNumRemoteIOTotal` | Number of local / remote reads for Segment footer and internal-index data |
+| `SegmentFooterIndexLocalIOUseTimer` / `SegmentFooterIndexRemoteIOUseTimer` | Time spent on local / remote reads for Segment footer and internal-index data |
 
 You can view the complete query performance report through [Query Performance Analysis](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile).
 

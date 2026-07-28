@@ -2,7 +2,7 @@
 {
   "title": "ファイルキャッシュ",
   "language": "ja",
-  "description": "疎結合アーキテクチャでは、データはリモートストレージに格納されます。"
+  "description": "ストレージ・コンピューティング分離モードにおけるDorisファイルキャッシュの設定、インデックスのみの書き込み、クォータ、ウォームアップ、監視、およびTTL戦略について説明します。"
 }
 ---
 分散アーキテクチャでは、データはリモートストレージに保存されます。Dorisデータベースは、ローカルディスク上のキャッシュを利用してデータアクセスを高速化し、高度なマルチキューLRU（Least Recently Used）戦略を採用してキャッシュ領域を効率的に管理します。この戦略は特にインデックスとメタデータのアクセスパスを最適化し、頻繁にアクセスされるユーザーデータのキャッシュを最大化することを目指しています。マルチCompute Group（Compute Group）シナリオでは、Dorisは新しいcompute groupが確立された際に特定のデータ（テーブルやパーティションなど）をキャッシュに素早くロードするキャッシュウォーミング機能も提供し、クエリパフォーマンスを向上させます。
@@ -31,6 +31,72 @@ Dorisは、ユーザーがファイルキャッシュを柔軟に管理できる
 enable_file_cache Default: "false"
 ```
 パラメータ説明：この設定項目は、ファイルキャッシュ機能が有効かどうかを制御します。`true`に設定した場合、ファイルキャッシュが有効になります。`false`に設定した場合、ファイルキャッシュが無効になります。
+
+### 書き込みパスでインデックスのみをキャッシュする
+
+ローカルキャッシュ領域が限られており、クエリ性能がインデックスとSegmentメタデータにより強く依存する場合は、インデックス優先（index-only）書き込みポリシーを有効にできます。このポリシーは、データインポート、Schema Change、Compactionなどの書き込みパスがFile Cacheへ**能動的に書き込む**内容を制限します。クエリ時のキャッシュミス後のキャッシュ投入やキャッシュウォームアップには影響しません。
+
+Dorisは、1つのグローバルポリシーと2つのCompaction専用ポリシーを提供します。
+
+| パラメータ | 型 | デフォルト | 適用範囲 | 説明 |
+|---|---|---|---|---|
+| `enable_file_cache_write_index_file_only` | Boolean | `false` | データインポート、Schema Change、Cumulative Compaction、Base Compactionを含む、ストレージ・コンピューティング分離モードのすべてのRowset書き込み | `true`に設定すると、Segmentデータは能動的にキャッシュされません。Segmentを閉じた後、そのフッターと内部インデックス範囲が同期的にプリロードされ、独立した転置インデックスファイルは引き続きFile Cacheへ書き込まれます。このパラメータは2つのCompaction専用パラメータより優先されます |
+| `enable_file_cache_write_base_compaction_index_only` | Boolean | `false` | Base Compaction | 既存のBase CompactionポリシーがFile Cacheへの出力書き込みを決定した場合にのみ、Segmentファイルの能動的なキャッシュを停止し、独立した転置インデックスファイルをキャッシュします。このパラメータによって、本来キャッシュに書き込まれないBase Compaction出力が新たにキャッシュされることはありません |
+| `enable_file_cache_write_cumu_compaction_index_only` | Boolean | `false` | Cumulative Compaction | Cumulative Compaction出力がFile Cacheへ書き込まれる場合、Segmentファイルの能動的なキャッシュを停止し、独立した転置インデックスファイルをキャッシュします |
+
+書き込みパスは、次の優先順位でキャッシュ動作を決定します。
+
+1. `enable_file_cache=false`が最優先されます。Segmentフッター/内部インデックスのプリロードや独立した転置インデックスファイルの書き込みを含め、すべてのFile Cache書き込みが無効になります。
+2. `enable_file_cache=true`かつ`enable_file_cache_write_index_file_only=true`の場合、グローバルなインデックス優先書き込みが有効になります。このとき、2つのCompaction専用パラメータは最終的な動作を変更しません。適応型書き込み、Compaction出力保持ポリシー、キャッシュヒット率の閾値、リクエストレベルの`write_file_cache`設定によってSegmentデータが能動的にキャッシュされることはなく、インデックス関連コンテンツは前述のグローバルポリシーに従って書き込まれます。
+3. グローバルなインデックス優先書き込みが無効な場合、Base/Cumulative Compaction専用パラメータは、該当する種類で**すでにキャッシュ書き込み対象と判断された**出力だけをさらに制限します。他の書き込みシナリオやクエリ読み取りパスには影響しません。
+4. 3つのインデックス優先パラメータがすべて`false`の場合、既存の能動的なキャッシュ書き込み、適応型書き込み、およびCompaction出力保持動作が維持されます。
+
+:::caution 注意
+
+2つのCompaction専用パラメータが区別するのは、独立した転置インデックスファイルとSegmentファイルだけです。グローバルなインデックス優先モードで行われるSegmentフッター/内部インデックス範囲のプリロードは実行されません。独立した転置インデックスとSegment内部のインデックスおよびメタデータの両方を能動的に保持するには、`enable_file_cache_write_index_file_only`を使用してください。
+
+:::
+
+#### グローバルなインデックス優先書き込みを有効にする
+
+すべてのBEノードの`be.conf`に次の設定を追加します。
+
+```properties
+enable_file_cache=true
+enable_file_cache_write_index_file_only=true
+enable_file_cache_write_base_compaction_index_only=false
+enable_file_cache_write_cumu_compaction_index_only=false
+```
+
+期待される動作は次のとおりです。
+
+| シナリオ | File Cacheへ能動的に書き込まれる内容 |
+|---|---|
+| データインポート、Schema Change、Cumulative Compaction、Base Compaction | Segmentデータは能動的に書き込まれません。Segmentフッター/内部インデックス範囲が同期的にプリロードされ、独立した転置インデックスファイルが書き込まれます |
+| クエリによるデータページ読み取り | 動作は変わりません。キャッシュミス後も、既存の読み取りパスのルールに従ってSegmentデータがキャッシュへ投入される場合があります |
+| キャッシュウォームアップ | 動作は変わりません |
+| Packed File | パックされた小さなSegmentファイルはファイル全体としてキャッシュされません。パックされた独立した小さなインデックスファイルは、引き続きファイル全体としてキャッシュできます |
+
+グローバルなインデックス優先モードでは、Segmentフッター/内部インデックス範囲は同期読み取りによってキャッシュへ書き込まれるため、`enable_flush_file_cache_async`の制御対象ではありません。独立した転置インデックスファイルは、既存の直接書き込みと非同期flushの動作を引き続き使用します。
+
+#### Compaction出力だけを制限する
+
+データインポートとSchema Changeの能動的なキャッシュ書き込みを変更せず、Compaction出力によるキャッシュ負荷だけを減らす場合は、次のように設定します。
+
+```properties
+enable_file_cache=true
+enable_file_cache_write_index_file_only=false
+enable_file_cache_write_base_compaction_index_only=true
+enable_file_cache_write_cumu_compaction_index_only=true
+```
+
+Cumulative Compactionはデフォルトで出力をキャッシュへ書き込むため、対応するパラメータを有効にするとSegmentファイルをスキップし、独立した転置インデックスファイルだけを保持します。Base Compactionは、最初に`enable_file_cache_keep_base_compaction_output`と入力Rowsetのキャッシュヒット率に基づいて、出力をキャッシュするかどうかを決定します。Base Compaction用のインデックス優先パラメータは、その決定後にのみ書き込み内容を制限します。
+
+#### 推奨事項
+
+- 3つのパラメータはいずれもBEパラメータです。同じCompute Group内のすべてのBEノードで設定を統一し、ノードごとに異なるキャッシュ書き込みポリシーが適用されないようにしてください。
+- 「インデックスのみ」は、File CacheにSegmentデータが一切存在しないことを意味しません。クエリがキャッシュミスしたデータページを読み取ると、Segmentデータがキャッシュへ投入される場合があります。
+- このポリシーはデータインポートとCompactionによるキャッシュ汚染を抑制できますが、書き込み直後に大規模なデータスキャンを行うと、リモートストレージからの読み取りが増える可能性があります。実際のクエリ負荷で性能を検証し、Indexキューの退避量とSQL Profileのインデックス読み取りメトリクスを継続的に監視してください。
 
 2. ファイルキャッシュパスとサイズの設定
 
@@ -296,6 +362,17 @@ SQL profileのキャッシュ関連メトリクスはSegmentIterator下にあり
 | NumSkipCacheIOTotal    | リモートストレージから読み取られたデータがFile Cacheに入らなかった回数 |
 | RemoteIOUseTimer       | リモートストレージからの読み取りにかかった時間                       |
 | WriteCacheIOUseTimer   | File Cacheへの書き込みにかかった時間                        |
+
+インデックス優先書き込みを有効にした後は、次の分類メトリクスを確認し、独立した転置インデックスとSegmentフッター/内部インデックスがキャッシュにヒットしているかを判断できます。
+
+| メトリクス名 | 意味 |
+|---|---|
+| `InvertedIndexBytesScannedFromCache` / `InvertedIndexBytesScannedFromRemote` | File Cache / リモートストレージから読み取った独立した転置インデックスのデータ量 |
+| `InvertedIndexNumLocalIOTotal` / `InvertedIndexNumRemoteIOTotal` | 独立した転置インデックスのローカル / リモート読み取り回数 |
+| `InvertedIndexLocalIOUseTimer` / `InvertedIndexRemoteIOUseTimer` | 独立した転置インデックスのローカル / リモート読み取り時間 |
+| `SegmentFooterIndexBytesScannedFromCache` / `SegmentFooterIndexBytesScannedFromRemote` | File Cache / リモートストレージから読み取ったSegmentフッターおよび内部インデックスのデータ量 |
+| `SegmentFooterIndexNumLocalIOTotal` / `SegmentFooterIndexNumRemoteIOTotal` | Segmentフッターおよび内部インデックスのローカル / リモート読み取り回数 |
+| `SegmentFooterIndexLocalIOUseTimer` / `SegmentFooterIndexRemoteIOUseTimer` | Segmentフッターおよび内部インデックスのローカル / リモート読み取り時間 |
 
 [Query Performance Analysis](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile)を通じてクエリパフォーマンス分析を表示できます。
 
