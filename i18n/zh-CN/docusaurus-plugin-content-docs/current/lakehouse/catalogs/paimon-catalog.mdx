@@ -86,6 +86,95 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     | "paimon.fs.s3.read.ahead.buffer.size" = "1" | "fs.s3a.read.ahead.buffer.size" = "1"    |
     | "paimon.s3a.replication.factor" = "3"     | "fs.s3a.replication.factor" = "3"        |
 
+    **Paimon JNI Reader 参数透传**
+
+    在使用 Paimon JNI Reader 读取数据时，可以通过
+    `paimon.table-option.<option-key>` 在 Catalog 中设置 Paimon Table option。例如：
+
+    ```sql
+    CREATE CATALOG paimon_hms PROPERTIES (
+        "type" = "paimon",
+        "paimon.catalog.type" = "hms",
+        "hive.metastore.uris" = "thrift://127.0.0.1:9083",
+        "warehouse" = "s3://bucket/paimon-warehouse",
+        "paimon.table-option.read.batch-size" = "4096",
+        "paimon.table-option.file-reader-async-threshold" = "32 mb"
+    );
+    ```
+
+    Doris 按照以下顺序处理这些参数：
+
+    1. FE 加载 Paimon 表及其已有的 Table options。
+    2. FE 移除 `paimon.table-option.` 前缀，并使用 Catalog 中的 option 补充表中未配置的
+       option。
+    3. FE 将包含最终 options 的 Paimon Table 序列化并发送给 BE。
+    4. BE 上的 Paimon JNI Scanner 反序列化 Table，并使用这些 options 创建 Paimon Reader。
+    5. 表和 Catalog 都没有配置的 option 使用 Paimon 默认值。
+
+    option 的优先级为：
+
+    ```text
+    Paimon 表自身 option > Doris Catalog 中的 Table option > Paimon 默认值
+    ```
+
+    例如，如果 Paimon 表自身已经设置 `read.batch-size=1024`，Catalog 中设置的 `4096`
+    不会覆盖它；如果表中没有设置，则 JNI Reader 使用 Catalog 中的 `4096`。
+
+    Catalog 中的配置只在 Doris JNI 读取过程中生效，不会写回或修改 Paimon 表元数据。
+    非 JNI 读取路径不保证使用这些参数。
+
+    Doris 会根据当前版本依赖的 Paimon `CoreOptions` 检查 option 名称和值。Map 类型的
+    option 需要使用完整 key，例如：
+
+    ```text
+    "paimon.table-option.file.compression.per.level" = "0:lz4,1:zstd"
+    ```
+
+    不支持 `paimon.table-option.file.compression.per.level.0` 这类带动态后缀的写法。
+    Bucket、Primary Key、Partition 和 Merge Engine 等表结构相关参数应在 Paimon 表中设置。
+
+    **Paimon JNI IOManager**
+
+    对于 Paimon 主键表，JNI merge read 可能需要对多个文件中的数据进行排序和合并。可以启用 Paimon
+    IOManager，将中间数据 spill 到 BE 本地磁盘，以降低大数据量 merge read 的内存压力。
+
+    | 参数 | 是否必填 | 默认值 | 说明 |
+    | --- | --- | --- | --- |
+    | `paimon.jni.enable_jni_io_manager` | 否 | `false` | 是否为 JNI 读取启用 Paimon IOManager。只有设置为 `true` 时，其他 IOManager 参数才会生效。 |
+    | `paimon.jni.io_manager.tmp_dir` | 否 | `<storage_root_path>/paimon_jni_scanner_io_tmp` | Paimon IOManager 存放临时 spill 文件的本地目录。多个目录可以使用逗号或冒号分隔。未配置时，Doris 会在 BE 的每个存储路径下创建一个目录。 |
+    | `paimon.jni.io_manager.impl_class` | 否 | Paimon 默认实现 | 自定义 `org.apache.paimon.disk.IOManager` 实现的完整类名。该类必须存在于每个 BE 的 Paimon JNI Scanner classpath 中。 |
+
+    以下示例启用 IOManager，并由 Doris 根据 BE 存储路径自动选择临时目录：
+
+    ```sql
+    CREATE CATALOG paimon_hms PROPERTIES (
+        "type" = "paimon",
+        "paimon.catalog.type" = "hms",
+        "hive.metastore.uris" = "thrift://127.0.0.1:9083",
+        "warehouse" = "s3://bucket/paimon-warehouse",
+        "paimon.jni.enable_jni_io_manager" = "true"
+    );
+    ```
+
+    启用 IOManager 不会强制所有 merge read 都进行 spill。只有 merge reader 数量超过 Paimon 的
+    `sort-spill-threshold` 时才会触发 spill。如果需要为未设置该参数的表提供 Catalog 级默认值，
+    可以按照上一节的方式配置 `paimon.table-option.sort-spill-threshold`。
+
+    如果需要使用专用 spill 磁盘，可以配置每个 BE 上均存在或可以创建的本地路径：
+
+    ```sql
+    "paimon.jni.io_manager.tmp_dir" = "/mnt/ssd1/paimon_io:/mnt/ssd2/paimon_io"
+    ```
+
+    Doris 会为每个 JNI Scanner 创建一个 IOManager，并在 Scanner 关闭时一同关闭。需要确保配置的目录
+    可写，并为并发查询预留足够空间。配置自定义实现类时，该类必须提供以 `String[]` 为参数的 public
+    构造方法、以 `String` 为参数的 public 构造方法，或 public 无参构造方法。如果类加载或实例化失败，
+    查询会失败。
+
+    这些参数只影响使用 JNI 路径读取 Paimon 数据表的场景，不影响 Native 读取。
+    `paimon.table-option.file-reader-async-threshold` 是独立参数，用于控制 Paimon 文件异步读取的阈值，
+    不会启用 IOManager，也不会配置 spill 目录。
+
 * `{CommonProperties}`
 
     CommonProperties 部分用于填写通用属性。请参阅[数据目录概述](../catalog-overview.md)中【通用属性】部分。

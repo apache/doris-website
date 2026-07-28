@@ -86,6 +86,96 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | "paimon.fs.s3.read.ahead.buffer.size" = "1" | "fs.s3a.read.ahead.buffer.size" = "1" |
   | "paimon.s3a.replication.factor" = "3" | "fs.s3a.replication.factor" = "3" |
 
+  **Passing Through Paimon JNI Reader Options**
+
+  When reading data with the Paimon JNI Reader, you can configure Paimon table options in the Catalog using
+  `paimon.table-option.<option-key>`. For example:
+
+  ```sql
+  CREATE CATALOG paimon_hms PROPERTIES (
+      "type" = "paimon",
+      "paimon.catalog.type" = "hms",
+      "hive.metastore.uris" = "thrift://127.0.0.1:9083",
+      "warehouse" = "s3://bucket/paimon-warehouse",
+      "paimon.table-option.read.batch-size" = "4096",
+      "paimon.table-option.file-reader-async-threshold" = "32 mb"
+  );
+  ```
+
+  Doris processes these options in the following order:
+
+  1. The FE loads the Paimon table and its existing table options.
+  2. The FE removes the `paimon.table-option.` prefix and uses the Catalog options to fill in options that are not
+     configured on the table.
+  3. The FE serializes the Paimon table with the final options and sends it to the BE.
+  4. The Paimon JNI Scanner on the BE deserializes the table and uses these options to create the Paimon reader.
+  5. Options that are not configured on either the table or the Catalog use the Paimon defaults.
+
+  The option precedence is:
+
+  ```text
+  Paimon table option > Doris Catalog table option > Paimon default
+  ```
+
+  For example, if the Paimon table already has `read.batch-size=1024`, the value `4096` configured in the Catalog
+  does not override it. If the table does not define this option, the JNI Reader uses the Catalog value `4096`.
+
+  Catalog-level options take effect only when Doris reads data through JNI. They are not written back to or used to
+  modify the Paimon table metadata. Non-JNI read paths are not guaranteed to use these options.
+
+  Doris validates option names and values against the Paimon `CoreOptions` provided by the Paimon version on which
+  the current Doris version depends. Map options must use the complete key. For example:
+
+  ```text
+  "paimon.table-option.file.compression.per.level" = "0:lz4,1:zstd"
+  ```
+
+  Dynamic suffixes such as `paimon.table-option.file.compression.per.level.0` are not supported. Table structure
+  options such as Bucket, Primary Key, Partition, and Merge Engine should be configured on the Paimon table itself.
+
+  **Paimon JNI IOManager**
+
+  For Paimon primary-key tables, JNI merge reads may need to sort and merge data from multiple files. You can enable
+  Paimon IOManager to allow this process to spill intermediate data to a local disk on the BE, which reduces memory
+  pressure for merge reads with large data volumes.
+
+  | Property | Required | Default | Description |
+  | --- | --- | --- | --- |
+  | `paimon.jni.enable_jni_io_manager` | No | `false` | Whether to enable Paimon IOManager for JNI reads. The other IOManager properties take effect only when this property is `true`. |
+  | `paimon.jni.io_manager.tmp_dir` | No | `<storage_root_path>/paimon_jni_scanner_io_tmp` | Local directories used by Paimon IOManager for temporary spill files. Multiple directories can be separated by commas or colons. If this property is omitted, Doris creates one directory under each BE storage path. |
+  | `paimon.jni.io_manager.impl_class` | No | Paimon default implementation | Fully qualified class name of a custom `org.apache.paimon.disk.IOManager` implementation. The class must be available on the Paimon JNI Scanner classpath of every BE. |
+
+  The following example enables IOManager and lets Doris select the temporary directories from the BE storage paths:
+
+  ```sql
+  CREATE CATALOG paimon_hms PROPERTIES (
+      "type" = "paimon",
+      "paimon.catalog.type" = "hms",
+      "hive.metastore.uris" = "thrift://127.0.0.1:9083",
+      "warehouse" = "s3://bucket/paimon-warehouse",
+      "paimon.jni.enable_jni_io_manager" = "true"
+  );
+  ```
+
+  Enabling IOManager does not force every merge read to spill. Paimon spills only when the number of merge readers
+  exceeds its `sort-spill-threshold`. To provide a Catalog-level default for tables that do not define this option,
+  configure `paimon.table-option.sort-spill-threshold` as described in the preceding section.
+
+  To use dedicated spill disks, configure local paths that exist or can be created on every BE:
+
+  ```sql
+  "paimon.jni.io_manager.tmp_dir" = "/mnt/ssd1/paimon_io:/mnt/ssd2/paimon_io"
+  ```
+
+  Doris creates an IOManager for each JNI scanner and closes it together with the scanner. Make sure the configured
+  directories are writable and have sufficient capacity for concurrent queries. When a custom implementation class
+  is configured, it must provide a public constructor that accepts `String[]`, a public constructor that accepts
+  `String`, or a public no-argument constructor. Failure to load or instantiate the class causes the query to fail.
+
+  These properties affect only Paimon data-table reads that use the JNI path. Native reads are not affected. The
+  `paimon.table-option.file-reader-async-threshold` option is independent: it controls the threshold for asynchronous
+  Paimon file reads and does not enable IOManager or configure spill directories.
+
 * `{CommonProperties}`
 
   The CommonProperties section is used to fill in common properties. Please refer to the [Catalog Overview](../catalog-overview.md) section on [Common Properties].
