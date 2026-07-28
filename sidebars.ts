@@ -1263,14 +1263,14 @@ const sidebars: SidebarsConfig = {
                                             label: 'VARIANT',
                                             link: {
                                                 type: 'doc',
-                                                id: 'sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide',
+                                                id: 'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
                                             },
                                             collapsed: true,
                                             items: [
                                                 {
                                                     type: 'doc',
-                                                    id: 'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
-                                                    label: 'VARIANT Reference',
+                                                    id: 'sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide',
+                                                    label: 'VARIANT Internal',
                                                 },
                                             ],
                                         },
