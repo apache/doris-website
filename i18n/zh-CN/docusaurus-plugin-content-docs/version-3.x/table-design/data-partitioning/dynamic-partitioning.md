@@ -24,7 +24,6 @@
 
 在使用动态分区时，需要遵守以下规则：
 
-* 动态分区与跨集群复制（CCR）同时使用时会失效；
 
 * 动态分区只支持在 DATE/DATETIME 列上进行 Range 类型的分区；
 
@@ -212,4 +211,3 @@ PROPERTIES (
     "dynamic_partition.reserved_history_periods"="[2020-06-01,2020-06-20],[2020-10-31,2020-11-15]"
 );
 ```
-

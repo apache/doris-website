@@ -61,7 +61,6 @@ Other usage of temporary tables is essentially the same as that of regular inter
 - The ENGINE must be OLAP when creating the table.
 - Modifying a temporary table with an Alter statement is not supported.
 - Because of their transient nature, creating views and materialized views based on a temporary table is not supported.
-- Backing up temporary tables is not supported, and synchronizing temporary tables via CCR / Sync Job is not supported.
+- Backing up temporary tables and synchronizing them via Sync Job are not supported.
 - Export, Stream Load, Broker Load, S3 Load, Mysql Load, and Routine Load are not supported.
 - When a temporary table is dropped, it is permanently deleted without going to the recycle bin.
-

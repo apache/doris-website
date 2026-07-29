@@ -38,7 +38,6 @@ Based on these rules, four partitions are always retained as time advances: the 
 
 The following limitations apply when using dynamic partitioning:
 
-- Dynamic partitioning does not work when used together with Cross-Cluster Replication (CCR).
 - Dynamic partitioning supports only Range partitioning on `DATE` / `DATETIME` columns.
 - Dynamic partitioning supports only a single partition key.
 

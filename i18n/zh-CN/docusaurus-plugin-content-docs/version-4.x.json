@@ -619,10 +619,6 @@
     "message": "数据湖构建",
     "description": "The label for category Building lakehouse in sidebar docs"
   },
-  "sidebar.docs.category.Cross Cluster Replication": {
-    "message": "跨集群复制",
-    "description": "The label for category Cross Cluster Replication in sidebar docs"
-  },
   "sidebar.docs.category.Tiered Storage": {
     "message": "冷热数据分层",
     "description": "The label for category Tiered Storage in sidebar docs"

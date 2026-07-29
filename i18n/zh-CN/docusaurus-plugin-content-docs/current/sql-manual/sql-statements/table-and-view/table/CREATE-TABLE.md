@@ -351,7 +351,6 @@ rollup 可以创建的同步物化视图功能有限。已不再推荐使用。�
 | replication_num                               | 副本数。默认副本数为 3。如果 BE 节点数量小于 3，则需指定副本数小于等于 BE 节点数量。在 0.15 版本后，该属性将自动转换成 `replication_allocation` 属性，如：`"replication_num" = "3"` 会自动转换成 `"replication_allocation" = "tag.location.default:3"`。 |
 | replication_allocation                        | 根据 Tag 设置副本分布情况。该属性可以完全覆盖 `replication_num` 属性的功能。 |
 | min_load_replica_num                          | 设定数据导入成功所需的最小副本数，默认值为 -1。当该属性小于等于 0 时，表示导入数据仍需多数派副本成功。 |
-| is_being_synced                               | 用于标识此表是否是被 CCR 复制而来并且正在被 syncer 同步，默认为 `false`。如果设置为 `true`，`colocate_with`和`storage_policy`属性将被擦除。`dynamic partition`和`auto bucket`功能将会失效。即在`show create table`中显示开启状态，但不会实际生效。当`is_being_synced`被设置为 `false` 时，这些功能将会恢复生效。这个属性仅供 CCR 外围模块使用，在 CCR 同步的过程中不要手动设置。 |
 | storage_medium                                | 声明表数据的初始存储介质                                     |
 | storage_cooldown_time                         | 设定表数据的初始存储介质的到期时间。超过此时间后，会自动降级到第一级别的存储介质上。 |
 | colocate_with                                 | 当需要使用 Colocation Join 功能时，使用这个参数设置 Colocation Group。 |

@@ -18,10 +18,6 @@ Colocation Join 是 Doris 提供的一种 Join 优化能力：通过将多张表
 
 本文档主要介绍 Colocation Join 的原理、实现、使用方式和注意事项。
 
-:::caution 注意
-该属性不会被 CCR 同步。如果该表是被 CCR 复制而来的（即 `PROPERTIES` 中包含 `is_being_synced = true`），那么该属性会在该表中被擦除。
-:::
-
 ## 适用前提 Checklist
 
 <!-- 知识类型：前置检查 -->
@@ -549,7 +545,3 @@ Body:
 ### 跨 Database 的两张表能否做 Colocation Join
 
 可以。需要在 2.0 及以后版本，使用以 `__global__` 为前缀的 Global Group 名称建表。
-
-### CCR 复制后 Colocation 属性是否保留
-
-不保留。该属性不会被 CCR 同步，目标集群中表的 Colocation 属性会被擦除（当 `PROPERTIES` 中包含 `is_being_synced = true` 时）。
