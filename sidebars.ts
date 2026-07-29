@@ -2014,6 +2014,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/aggregate-functions/ai-agg',
                                 'sql-manual/sql-functions/aggregate-functions/any-value',
                                 'sql-manual/sql-functions/aggregate-functions/approx-count-distinct',
+                                'sql-manual/sql-functions/aggregate-functions/uniq-theta',
                                 'sql-manual/sql-functions/aggregate-functions/array-agg',
                                 'sql-manual/sql-functions/aggregate-functions/avg',
                                 'sql-manual/sql-functions/aggregate-functions/avg-map',
