@@ -1094,21 +1094,6 @@
                     "admin-manual/data-admin/backup-restore/restore"
                   ]
                 },
-                {
-                  "type": "category",
-                  "label": "Cross Cluster Replication",
-                  "link": {
-                    "type": "doc",
-                    "id": "admin-manual/data-admin/ccr/overview"
-                  },
-                  "items": [
-                    "admin-manual/data-admin/ccr/quickstart",
-                    "admin-manual/data-admin/ccr/manual",
-                    "admin-manual/data-admin/ccr/feature",
-                    "admin-manual/data-admin/ccr/config",
-                    "admin-manual/data-admin/ccr/performance"
-                  ]
-                },
                 "admin-manual/data-admin/recyclebin"
               ]
             },

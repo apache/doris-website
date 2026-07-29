@@ -23,7 +23,6 @@ According to the above rules, as time progresses, a total of 4 partitions will a
 
 When using dynamic partitioning, the following rules must be followed:
 
-* Dynamic partitioning will fail when used simultaneously with Cross-Cluster Replication (CCR).
 * Dynamic partitioning only supports Range type partitions on DATE/DATETIME columns.
 * Dynamic partitioning only supports a single partition key.
 
@@ -209,4 +208,3 @@ PROPERTIES (
     "dynamic_partition.reserved_history_periods"="[2020-06-01,2020-06-20],[2020-10-31,2020-11-15]"
 );
 ```
-

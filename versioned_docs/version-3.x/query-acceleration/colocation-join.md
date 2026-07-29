@@ -10,8 +10,6 @@
 
 Colocation Join provides local optimization for some Join queries to reduce data transmission time between nodes and accelerating query execution.
 
-Note: This property will not be synchronized by CCR. If this table is copied by CCR, that is, PROPERTIES contains `is_being_synced = true`, this property will be erased in this table.
-
 ## Noun Interpretation
 
 * FE: Frontend, the front-end node of Doris. Responsible for metadata management and request access.

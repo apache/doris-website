@@ -61,7 +61,6 @@
 - 建表时 ENGINE 必须为 OLAP。
 - 不支持使用 Alter 语句修改临时表。
 - 由于临时性，不支持基于临时表创建视图和物化视图。
-- 不支持备份临时表，不支持使用 CCR / Sync Job 同步临时表。
+- 不支持备份临时表，也不支持使用 Sync Job 同步临时表。
 - 不支持导出、Stream Load、Broker Load、S3 Load、Mysql Load、Routine Load。
 - 删除临时表时，不进回收站，直接彻底删除。
-
