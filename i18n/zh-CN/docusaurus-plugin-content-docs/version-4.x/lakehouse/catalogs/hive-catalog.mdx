@@ -796,23 +796,55 @@ Hive Transactional 表是 Hive 中支持 ACID 语义的表。详情可见 [Hive 
 
 ### INSERT INTO
 
-INSERT 操作会将数据以追加的方式写入到目标表中。当前不支持指定分区写入。
+INSERT 操作会将数据以追加的方式写入到目标表中。
 
 ```sql
-INSERT INTO hive_tbl values (val1, val2, val3, val4);
+INSERT INTO hive_tbl VALUES (val1, val2, val3, val4);
 INSERT INTO hive_ctl.hive_db.hive_tbl SELECT col1, col2 FROM internal.db1.tbl1;
 
-INSERT INTO hive_tbl(col1, col2) values (val1, val2);
-INSERT INTO hive_tbl(col1, col2, partition_col1, partition_col2) values (1, 2, "beijing", "2023-12-12");
+INSERT INTO hive_tbl(col1, col2) VALUES (val1, val2);
+INSERT INTO hive_tbl(col1, col2, partition_col1, partition_col2) VALUES (1, 2, "beijing", "2023-12-12");
+```
+
+自 4.2.0 版本，支持写入数据到静态分区，或者静态分区和动态分区混合使用：
+
+```sql
+-- Full Static Partition
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+VALUES (val1, val2);
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+SELECT col1, col2 FROM source_table;
+
+-- Hybrid Partition Mode: "partition_col1" is static, "partition_col2" comes from SELECT dynamically
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30')
+VALUES (val1, val2, partition_val2);
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30')
+SELECT col1, col2, partition_col2 FROM source_table;
 ```
 
 ### INSERT OVERWRITE
 
-INSERT OVERWRITE 会使用新的数据完全覆盖原有表中的数据。当前不支持指定分区写入。
+INSERT OVERWRITE 会使用新的数据完全覆盖原有表中的数据。
 
 ```sql
-INSERT OVERWRITE TABLE VALUES(val1, val2, val3, val4)
+INSERT OVERWRITE TABLE VALUES(val1, val2, val3, val4);
 INSERT OVERWRITE TABLE hive_ctl.hive_db.hive_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
+```
+
+自 4.2.0 版本，支持写入数据到静态分区，或者静态分区和动态分区混合使用：
+
+```sql
+-- Full Static Partition
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+VALUES (val1, val2);
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+SELECT col1, col2 FROM source_table;
+
+-- Hybrid Partition Mode: "partition_col1" is static, "partition_col2" comes from SELECT dynamically
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30')
+VALUES (val1, val2, partition_val2);
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30')
+SELECT col1, col2, partition_col2 FROM source_table;
 ```
 
 INSERT OVERWRITE 的语义与 Hive 一致，有如下行为：
@@ -821,7 +853,7 @@ INSERT OVERWRITE 的语义与 Hive 一致，有如下行为：
 
 * 当目的表是非分区表，而源表是空表是，目的表会被清空。
 
-* 当前不支持指定分区写入，因此 INSERT OVERWRITE 为根据源表中的数值，自动处理对应的目的表分区。如果目的表是分区表，则只会覆盖涉及到的分区，不涉及的分区，数据无变化。
+* 自 4.2.0 版本开始，支持指定分区写入，以及指定分区和动态分区混合使用。但是即便指定了静态分区，如果查询内容为空，则指定的分区也不会被清理。
 
 ### CTAS
 

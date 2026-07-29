@@ -785,7 +785,7 @@ For partitioned tables, data will automatically be written to the corresponding 
 
 ### INSERT INTO
 
-The INSERT operation appends data to the target table. Specifying a partition for writing is currently not supported.
+The INSERT operation appends data to the target table.
 
 ```sql
 INSERT INTO hive_tbl VALUES (val1, val2, val3, val4);
@@ -795,13 +795,45 @@ INSERT INTO hive_tbl(col1, col2) VALUES (val1, val2);
 INSERT INTO hive_tbl(col1, col2, partition_col1, partition_col2) VALUES (1, 2, "beijing", "2023-12-12");
 ```
 
+Since version 4.2.0, support for writing data to static partition(or hybrid):
+
+```sql
+-- Full Static Partition
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+VALUES (val1, val2);
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+SELECT col1, col2 FROM source_table;
+
+-- Hybrid Partition Mode: "partition_col1" is static, "partition_col2" comes from SELECT dynamically
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30')
+VALUES (val1, val2, partition_val2);
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30')
+SELECT col1, col2, partition_col2 FROM source_table;
+```
+
 ### INSERT OVERWRITE
 
-INSERT OVERWRITE completely replaces the existing data in the table with new data. Specifying a partition for writing is currently not supported.
+INSERT OVERWRITE completely replaces the existing data in the table with new data.
 
 ```sql
 INSERT OVERWRITE TABLE hive_tbl VALUES (val1, val2, val3, val4);
 INSERT OVERWRITE TABLE hive_ctl.hive_db.hive_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
+```
+
+Since version 4.2.0, support for writing data to static partition(or hybrid):
+
+```sql
+-- Full Static Partition
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+VALUES (val1, val2);
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+SELECT col1, col2 FROM source_table;
+
+-- Hybrid Partition Mode: "partition_col1" is static, "partition_col2" comes from SELECT dynamically
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30')
+VALUES (val1, val2, partition_val2);
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30')
+SELECT col1, col2, partition_col2 FROM source_table;
 ```
 
 The semantics of INSERT OVERWRITE are consistent with Hive, with the following behaviors:
@@ -810,7 +842,7 @@ The semantics of INSERT OVERWRITE are consistent with Hive, with the following b
 
 * If the target table is non-partitioned and the source table is empty, the target table will be cleared.
 
-* Since specifying a partition for writing is not supported, INSERT OVERWRITE automatically handles the relevant partitions in the target table based on the source table values. If the target table is partitioned, only the affected partitions will be overwritten; unaffected partitions remain unchanged.
+* Since version 4.2.0, specifying static partitions for writing is supported, as well as hybrid mode combining static and dynamic partitions. However, even when static partitions are specified, if the source query results are empty, the specified partitions will not be cleared.
 
 ### CTAS
 
