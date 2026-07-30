@@ -23,7 +23,7 @@ Supported character matching types when the session variable `enable_extended_re
 ## Syntax
 
 ```sql
-REGEXP_EXTRACT_ALL(<str>, <pattern>)
+REGEXP_EXTRACT_ALL(<str>, <pattern>[, <idx>])
 ```
 
 ## Parameters
@@ -32,6 +32,7 @@ REGEXP_EXTRACT_ALL(<str>, <pattern>)
 | -- | -- |
 | `<str>` | This parameter is of type String. It represents the input string on which the regular expression matching will be performed. This can be a literal string value or a reference to a column in a table that contains string data.|
 | `<pattern>` | This parameter is also of type String. It specifies the regular expression pattern that will be used to match against the input string <str>. The pattern can include various regular expression constructs such as character classes, quantifiers, and sub - patterns.|
+| `<idx>` | Optional. This parameter is of type BIGINT. It specifies which capturing group to extract. `0` means the whole match, `1` means the first capturing group (the default), and so on. The value must be between `0` and the number of capturing groups in `<pattern>`; otherwise an error is thrown. Groups that do not participate in a match contribute an empty string to the result.|
 
 ## Return value
 
@@ -63,6 +64,52 @@ Pattern modifiers only take effect when using the default regex engine. If `enab
 | `(?-m)` | Single-line mode: `^`/`$` match full string boundaries (default)             |
 | `(?U)`  | Non-greedy quantifiers: `*`, `+`, etc. match as little as possible           |
 | `(?-U)` | Greedy quantifiers (default): `*`, `+`, etc. match as much as possible       |
+
+## Extracting a specific capturing group
+
+By default, `REGEXP_EXTRACT_ALL` extracts the first capturing group. The optional `<idx>` parameter selects a different group, following the same contract as Spark:
+
+- `idx = 0` extracts the whole match. In this form the pattern does not need any capturing group.
+- `idx = N` extracts the N-th capturing group.
+- An `idx` outside the range `[0, number_of_capturing_groups]` raises an error.
+
+```sql
+mysql> SELECT regexp_extract_all('x=a3&x=18abc&x=2&y=3&x=4&x=17bcd', 'x=([0-9]+)([a-z]+)', 0);
++----------------------------------------------------------------------------------+
+| regexp_extract_all('x=a3&x=18abc&x=2&y=3&x=4&x=17bcd', 'x=([0-9]+)([a-z]+)', 0) |
++----------------------------------------------------------------------------------+
+| ['x=18abc','x=17bcd']                                                            |
++----------------------------------------------------------------------------------+
+```
+
+```sql
+mysql> SELECT regexp_extract_all('x=a3&x=18abc&x=2&y=3&x=4&x=17bcd', 'x=([0-9]+)([a-z]+)', 2);
++----------------------------------------------------------------------------------+
+| regexp_extract_all('x=a3&x=18abc&x=2&y=3&x=4&x=17bcd', 'x=([0-9]+)([a-z]+)', 2) |
++----------------------------------------------------------------------------------+
+| ['abc','bcd']                                                                    |
++----------------------------------------------------------------------------------+
+```
+
+Groups that do not participate in a match contribute an empty string:
+
+```sql
+mysql> SELECT regexp_extract_all('a b', '(a)|(b)', 2);
++------------------------------------------+
+| regexp_extract_all('a b', '(a)|(b)', 2)  |
++------------------------------------------+
+| ['','b']                                 |
++------------------------------------------+
+```
+
+An out-of-range group index raises an error:
+
+```sql
+SELECT regexp_extract_all('abc', '(b)', 2);
+```
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]The value of parameter(s) `idx` in `regexp_extract_all` is invalid: Expects group index between 0 and 1, but got 2.
+```
 
 ## Example
 
