@@ -86,10 +86,24 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | "paimon.fs.s3.read.ahead.buffer.size" = "1" | "fs.s3a.read.ahead.buffer.size" = "1" |
   | "paimon.s3a.replication.factor" = "3" | "fs.s3a.replication.factor" = "3" |
 
-  **Passing Through Paimon JNI Reader Options**
+  **Paimon Read Options**
 
-  When reading data with the Paimon JNI Reader, you can configure Paimon table options in the Catalog using
-  `paimon.table-option.<option-key>`. For example:
+  Doris supports a restricted set of Paimon batch-read options. Set a default for every query through the Catalog
+  property `paimon.table-option.<option-key>`, or override it for one table reference with
+  `table@options('<option-key>'='<value>')`.
+
+  | Paimon option | Default | Doris validation | Effect |
+  | --- | --- | --- | --- |
+  | `read.batch-size` | `1024` | Integer from `1` to `65536` | Number of rows returned by each Paimon JNI reader batch. |
+  | `file-reader-async-threshold` | `10 MB` | Memory size from `1 MB` to `1 GB` | File size threshold at which the Paimon JNI reader switches to asynchronous reading. |
+  | `file-index.read.enabled` | `true` | Boolean | Enables Paimon file-index pruning during a read. |
+  | `source.split.target-size` | `128 MB` | Positive memory size | Target size used when Paimon combines data files into Doris scan splits. |
+  | `source.split.open-file-cost` | `4 MB` | Non-negative memory size | Estimated cost of opening a file when Paimon combines files into splits. |
+  | `scan.manifest.parallelism` | Number of available processors | Integer from `1` to the number of processors available to the FE | Parallelism used by Paimon to read manifests while planning a scan. |
+  | `scan.plan-sort-partition` | `false` | Boolean | Sorts partitions during Paimon scan planning. |
+
+  For example, the following Catalog settings override values stored in the physical Paimon table and become the
+  defaults for Doris queries:
 
   ```sql
   CREATE CATALOG paimon_hms PROPERTIES (
@@ -98,40 +112,40 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
       "hive.metastore.uris" = "thrift://127.0.0.1:9083",
       "warehouse" = "s3://bucket/paimon-warehouse",
       "paimon.table-option.read.batch-size" = "4096",
-      "paimon.table-option.file-reader-async-threshold" = "32 mb"
+      "paimon.table-option.file-reader-async-threshold" = "32 MB",
+      "paimon.table-option.source.split.target-size" = "64 MB",
+      "paimon.table-option.scan.manifest.parallelism" = "1"
   );
   ```
 
-  Doris processes these options in the following order:
+  A query can override these defaults without modifying the Catalog or Paimon table metadata:
 
-  1. The FE loads the Paimon table and its existing table options.
-  2. The FE removes the `paimon.table-option.` prefix and uses the Catalog options to fill in options that are not
-     configured on the table.
-  3. The FE serializes the Paimon table with the final options and sends it to the BE.
-  4. The Paimon JNI Scanner on the BE deserializes the table and uses these options to create the Paimon reader.
-  5. Options that are not configured on either the table or the Catalog use the Paimon defaults.
-
-  The option precedence is:
-
-  ```text
-  Paimon table option > Doris Catalog table option > Paimon default
+  ```sql
+  SELECT *
+  FROM paimon_hms.db_name.table_name@options(
+      'read.batch-size' = '8192',
+      'source.split.target-size' = '32 MB'
+  );
   ```
 
-  For example, if the Paimon table already has `read.batch-size=1024`, the value `4096` configured in the Catalog
-  does not override it. If the table does not define this option, the JNI Reader uses the Catalog value `4096`.
-
-  Catalog-level options take effect only when Doris reads data through JNI. They are not written back to or used to
-  modify the Paimon table metadata. Non-JNI read paths are not guaranteed to use these options.
-
-  Doris validates option names and values against the Paimon `CoreOptions` provided by the Paimon version on which
-  the current Doris version depends. Map options must use the complete key. For example:
+  Each table reference has an independent option set. The precedence from highest to lowest is:
 
   ```text
-  "paimon.table-option.file.compression.per.level" = "0:lz4,1:zstd"
+  relation @options > Doris Catalog property > physical Paimon table option > Paimon default
   ```
 
-  Dynamic suffixes such as `paimon.table-option.file.compression.per.level.0` are not supported. Table structure
-  options such as Bucket, Primary Key, Partition, and Merge Engine should be configured on the Paimon table itself.
+  For example, if a physical table has `read.batch-size=1024`, the Catalog value `4096` overrides it for Doris. The
+  query above then overrides the value with `8192` for that table reference only. Doris applies split- and
+  manifest-planning options in the FE; reader options are also serialized to the Paimon JNI Scanner on the BE.
+
+  Doris rejects unknown or invalid `paimon.table-option.*` properties during `CREATE CATALOG` and `ALTER CATALOG`.
+  Catalogs persisted by an older Doris version remain loadable, but previously accepted options outside the current
+  allowlist are ignored. These dynamic settings never modify the physical Paimon table metadata.
+
+  Snapshot and startup-position options use the dedicated `@options` syntax described in the query sections below;
+  do not add them as Catalog reader defaults. Doris also excludes `scan.max-splits-per-task`, which is specific to
+  Paimon's Flink source enumerator, as well as streaming-source, table-layout, write, and compaction options. Configure
+  Bucket, Primary Key, Partition, Merge Engine, and other physical-table behavior in Paimon itself.
 
   **Paimon JNI IOManager**
 
@@ -158,8 +172,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   ```
 
   Enabling IOManager does not force every merge read to spill. Paimon spills only when the number of merge readers
-  exceeds its `sort-spill-threshold`. To provide a Catalog-level default for tables that do not define this option,
-  configure `paimon.table-option.sort-spill-threshold` as described in the preceding section.
+  exceeds its `sort-spill-threshold`. This is not a Doris dynamic reader option; configure it on the physical Paimon
+  table when different spill behavior is required.
 
   To use dedicated spill disks, configure local paths that exist or can be created on every BE:
 

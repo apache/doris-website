@@ -86,10 +86,23 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     | "paimon.fs.s3.read.ahead.buffer.size" = "1" | "fs.s3a.read.ahead.buffer.size" = "1"    |
     | "paimon.s3a.replication.factor" = "3"     | "fs.s3a.replication.factor" = "3"        |
 
-    **Paimon JNI Reader 参数透传**
+    **Paimon 读参数**
 
-    在使用 Paimon JNI Reader 读取数据时，可以通过
-    `paimon.table-option.<option-key>` 在 Catalog 中设置 Paimon Table option。例如：
+    Doris 支持一组经过限制的 Paimon 批读参数。可以通过 Catalog 属性
+    `paimon.table-option.<option-key>` 为所有查询设置默认值，也可以通过
+    `table@options('<option-key>'='<value>')` 仅覆盖单个表引用的参数。
+
+    | Paimon 参数 | 默认值 | Doris 校验范围 | 作用 |
+    | --- | --- | --- | --- |
+    | `read.batch-size` | `1024` | `1` 到 `65536` 的整数 | Paimon JNI Reader 每批返回的行数。 |
+    | `file-reader-async-threshold` | `10 MB` | `1 MB` 到 `1 GB` 的内存大小 | Paimon JNI Reader 切换为异步文件读取的文件大小阈值。 |
+    | `file-index.read.enabled` | `true` | 布尔值 | 是否在读取时启用 Paimon 文件索引裁剪。 |
+    | `source.split.target-size` | `128 MB` | 正数内存大小 | Paimon 将数据文件组合成 Doris 扫描 split 时使用的目标大小。 |
+    | `source.split.open-file-cost` | `4 MB` | 非负内存大小 | Paimon 组合文件生成 split 时估算的文件打开成本。 |
+    | `scan.manifest.parallelism` | 可用处理器数量 | `1` 到 FE 可用处理器数量的整数 | Paimon 规划扫描时读取 manifest 的并行度。 |
+    | `scan.plan-sort-partition` | `false` | 布尔值 | 是否在 Paimon 扫描规划时对分区排序。 |
+
+    例如，以下 Catalog 配置会覆盖物理 Paimon 表中已有的值，并作为 Doris 查询的默认值：
 
     ```sql
     CREATE CATALOG paimon_hms PROPERTIES (
@@ -98,40 +111,40 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         "hive.metastore.uris" = "thrift://127.0.0.1:9083",
         "warehouse" = "s3://bucket/paimon-warehouse",
         "paimon.table-option.read.batch-size" = "4096",
-        "paimon.table-option.file-reader-async-threshold" = "32 mb"
+        "paimon.table-option.file-reader-async-threshold" = "32 MB",
+        "paimon.table-option.source.split.target-size" = "64 MB",
+        "paimon.table-option.scan.manifest.parallelism" = "1"
     );
     ```
 
-    Doris 按照以下顺序处理这些参数：
+    查询可以覆盖这些默认值，而不修改 Catalog 或 Paimon 表元数据：
 
-    1. FE 加载 Paimon 表及其已有的 Table options。
-    2. FE 移除 `paimon.table-option.` 前缀，并使用 Catalog 中的 option 补充表中未配置的
-       option。
-    3. FE 将包含最终 options 的 Paimon Table 序列化并发送给 BE。
-    4. BE 上的 Paimon JNI Scanner 反序列化 Table，并使用这些 options 创建 Paimon Reader。
-    5. 表和 Catalog 都没有配置的 option 使用 Paimon 默认值。
-
-    option 的优先级为：
-
-    ```text
-    Paimon 表自身 option > Doris Catalog 中的 Table option > Paimon 默认值
+    ```sql
+    SELECT *
+    FROM paimon_hms.db_name.table_name@options(
+        'read.batch-size' = '8192',
+        'source.split.target-size' = '32 MB'
+    );
     ```
 
-    例如，如果 Paimon 表自身已经设置 `read.batch-size=1024`，Catalog 中设置的 `4096`
-    不会覆盖它；如果表中没有设置，则 JNI Reader 使用 Catalog 中的 `4096`。
-
-    Catalog 中的配置只在 Doris JNI 读取过程中生效，不会写回或修改 Paimon 表元数据。
-    非 JNI 读取路径不保证使用这些参数。
-
-    Doris 会根据当前版本依赖的 Paimon `CoreOptions` 检查 option 名称和值。Map 类型的
-    option 需要使用完整 key，例如：
+    每个表引用使用独立的参数集合。优先级从高到低为：
 
     ```text
-    "paimon.table-option.file.compression.per.level" = "0:lz4,1:zstd"
+    表引用 @options > Doris Catalog 属性 > 物理 Paimon 表参数 > Paimon 默认值
     ```
 
-    不支持 `paimon.table-option.file.compression.per.level.0` 这类带动态后缀的写法。
-    Bucket、Primary Key、Partition 和 Merge Engine 等表结构相关参数应在 Paimon 表中设置。
+    例如，物理表设置了 `read.batch-size=1024` 时，Catalog 中的 `4096` 会在 Doris 查询中覆盖它；
+    上述查询又会仅针对该表引用把值覆盖为 `8192`。split 和 manifest 规划参数在 FE 中生效，
+    Reader 参数还会被序列化并发送给 BE 上的 Paimon JNI Scanner。
+
+    Doris 会在 `CREATE CATALOG` 和 `ALTER CATALOG` 时拒绝未知或非法的
+    `paimon.table-option.*` 属性。旧 Doris 版本持久化的 Catalog 仍可加载，但当前白名单之外的历史参数
+    会被忽略。这些动态参数不会修改物理 Paimon 表元数据。
+
+    快照和启动位置参数应使用下文查询章节介绍的专用 `@options` 语法，不应配置为 Catalog Reader
+    默认值。Doris 也不支持 Paimon Flink Source Enumerator 专用的 `scan.max-splits-per-task`，并排除
+    流式 Source、表布局、写入和 Compaction 参数。Bucket、Primary Key、Partition、Merge Engine
+    及其他物理表行为应在 Paimon 中配置。
 
     **Paimon JNI IOManager**
 
@@ -157,8 +170,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     ```
 
     启用 IOManager 不会强制所有 merge read 都进行 spill。只有 merge reader 数量超过 Paimon 的
-    `sort-spill-threshold` 时才会触发 spill。如果需要为未设置该参数的表提供 Catalog 级默认值，
-    可以按照上一节的方式配置 `paimon.table-option.sort-spill-threshold`。
+    `sort-spill-threshold` 时才会触发 spill。该参数不是 Doris 动态 Reader 参数；如需改变 spill 行为，
+    应在物理 Paimon 表中配置。
 
     如果需要使用专用 spill 磁盘，可以配置每个 BE 上均存在或可以创建的本地路径：
 
