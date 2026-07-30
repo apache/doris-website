@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apache Doris Query Data Guide</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg-p:#05080f;--bg-s:#0a0e17;--bg-c:#0f1623;--b:#1e2a3d;--bl:#2a3a52;--t-p:#e8edf5;--t-s:#94a3b8;--t-m:#64748b;--blue:#38bdf8;--cyan:#22d3ee;--teal:#2dd4bf;--purple:#a78bfa;--orange:#fb923c;--green:#4ade80;--red:#f87171;--sh-sm:0 1px 3px rgba(0,0,0,.3);--r:12px;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg-p);color:var(--t-p);line-height:1.7;overflow-x:hidden;}
+::selection{background:rgba(56,189,248,.3);}
+.hero{position:relative;min-height:85vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#05080f 0%,#0a0e17 40%,#0f1623 70%,#0a121f 100%);overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(56,189,248,.08) 0%,transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(34,211,238,.06) 0%,transparent 50%);pointer-events:none;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03)1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03)1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
+.hero-orb{position:absolute;width:500px;height:500px;border-radius:50%;filter:blur(100px);opacity:.12;pointer-events:none;}
+.hero-orb-1{top:-15%;left:-10%;background:radial-gradient(circle,var(--cyan),transparent);}
+.hero-orb-2{bottom:-20%;right:-8%;background:radial-gradient(circle,var(--blue),transparent);}
+.hero-content{position:relative;z-index:2;text-align:center;padding:2rem;max-width:950px;}
+.hero-badge{display:inline-block;padding:6px 18px;border-radius:20px;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);color:var(--cyan);font-size:.8rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2rem;}
+.hero h1{font-weight:800;font-size:clamp(2.2rem,5vw,4.2rem);color:var(--t-p);letter-spacing:-1.5px;line-height:1.1;text-shadow:0 2px 30px rgba(0,0,0,.5);}
+.hero h1 span{display:inline-block!important;white-space:nowrap;}
+.hero h1 .dh{background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{margin-top:1.5rem;font-size:clamp(.9rem,2vw,1.2rem);color:var(--t-s);max-width:720px;margin:1.5rem auto 0;font-weight:300;line-height:1.8;}
+.hero-stats{display:flex;justify-content:center;gap:2rem;margin-top:1.5rem;flex-wrap:wrap;}
+.hero-stat-value{font-size:1.4rem;font-weight:700;color:var(--cyan);}
+.hero-stat-label{font-size:.68rem;color:var(--t-m);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.hero-nav{display:flex;justify-content:center;gap:.75rem;margin-top:1.5rem;flex-wrap:wrap;}
+.hero-nav a{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:8px;font-size:.82rem;font-weight:500;text-decoration:none;transition:all .2s;}
+.hero-nav a:first-child{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#05080f;}
+.hero-nav a:first-child:hover{opacity:.9;transform:translateY(-2px);}
+.hero-nav a.sec{background:rgba(255,255,255,.06);color:var(--t-p);border:1px solid var(--bl);}
+.hero-nav a.sec:hover{background:rgba(255,255,255,.1);transform:translateY(-2px);}
+.si{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--t-m);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;animation:bounce 2s infinite;}
+.si svg{width:20px;height:20px;}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+.container{max-width:1120px;margin:0 auto;padding:0 1.5rem;}
+section{padding:4rem 0;}section:nth-child(even){background:var(--bg-s);}section:nth-child(odd){background:var(--bg-p);}
+.sl{display:inline-flex;align-items:center;gap:8px;font-size:clamp(1.5rem,3.8vw,2.2rem);font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:.6rem;}
+.sl::before{content:'';width:24px;height:2px;background:var(--blue);border-radius:1px;}
+.sh{font-size:clamp(1.3rem,3.5vw,2rem);font-weight:800;color:var(--t-p);letter-spacing:-.5px;line-height:1.25;margin-bottom:.75rem;}
+.s-intro{font-family:'Playfair Display','Georgia',serif;font-style:italic;font-size:1rem;color:var(--t-s);line-height:1.7;margin-bottom:1.5rem;padding:1rem 1.5rem;border-left:3px solid var(--blue);background:rgba(56,189,248,.06);border-radius:0 var(--r) var(--r) 0;}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem;margin:1.5rem 0;}
+.card{background:var(--bg-c);border-radius:var(--r);padding:1.5rem;box-shadow:var(--sh-sm);border:1px solid var(--b);transition:all .25s;}
+.card:hover{box-shadow:var(--sh-md);border-color:var(--bl);transform:translateY(-2px);}
+.ci{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:.75rem;}
+.card h4{font-size:.92rem;font-weight:600;margin-bottom:.3rem;color:var(--t-p);}.card p{font-size:.8rem;color:var(--t-s);line-height:1.6;}
+.tw{overflow-x:auto;margin:1.5rem 0;border-radius:var(--r);box-shadow:var(--sh-sm);border:1px solid var(--b);}
+table{width:100%;border-collapse:collapse;font-size:.82rem;}
+thead th{padding:.8rem 1rem;text-align:left;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;background:linear-gradient(135deg,#1a2540,#1e2a3d);color:var(--t-p);white-space:nowrap;border-bottom:1px solid var(--bl);}
+tbody td{padding:.65rem 1rem;border-bottom:1px solid var(--b);vertical-align:top;color:var(--t-s);}
+tbody tr:last-child td{border-bottom:none;}tbody tr:hover{background:rgba(56,189,248,.08);}
+.tc tbody tr:nth-child(1){background:rgba(56,189,248,.08);}.tc tbody tr:nth-child(2){background:rgba(248,113,113,.06);}
+.tc tbody tr:nth-child(3){background:rgba(74,222,128,.06);}.tc tbody tr:nth-child(4){background:rgba(251,191,36,.06);}
+.tc tbody tr:nth-child(5){background:rgba(167,139,250,.06);}.tc tbody tr:nth-child(6){background:rgba(34,211,238,.06);}
+.tc tbody tr:nth-child(7){background:rgba(251,146,60,.06);}.tc tbody tr:nth-child(8){background:rgba(244,114,182,.06);}
+.tc tbody tr:hover{background:rgba(56,189,248,.18);}
+.callout{padding:1rem 1.5rem;border-radius:var(--r);margin:1.5rem 0;display:flex;gap:1rem;align-items:flex-start;font-size:.88rem;line-height:1.7;border:1px solid var(--b);}
+.callout-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px;}.callout-tip{background:rgba(74,222,128,.06);border-left:4px solid var(--green);}.callout-tip .callout-icon{color:var(--green);}
+.callout-caution{background:rgba(248,113,113,.08);border-left:4px solid var(--red);}.callout-caution .callout-icon{color:var(--red);}
+.callout-info{background:rgba(56,189,248,.06);border-left:4px solid var(--blue);}.callout-info .callout-icon{color:var(--blue);}
+.callout strong{color:var(--t-p);}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0;}
+@media(max-width:720px){.cmp,.mg{grid-template-columns:1fr!important;}}
+.c-col{border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-sm);border:1px solid var(--b);}
+.c-h{padding:.85rem 1.1rem;font-weight:700;font-size:.88rem;display:flex;align-items:center;gap:8px;color:white;}
+.c-b{padding:1.1rem;background:var(--bg-c);}
+.c-b ul{list-style:none;padding:0;}
+.c-b li{padding:.4rem 0;font-size:.8rem;color:var(--t-s);display:flex;align-items:flex-start;gap:8px;border-bottom:1px solid var(--b);}
+.c-b li:last-child{border-bottom:none;}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0;}
+@media(max-width:640px){.mg{grid-template-columns:1fr;}}
+.mc{border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-sm);border:1px solid var(--b);transition:all .25s;text-align:center;}
+.mc:hover{transform:translateY(-3px);box-shadow:var(--sh-md);}
+.mch{padding:.7rem .7rem .3rem;font-weight:700;font-size:.88rem;color:white;}
+.mcb{padding:.5rem .7rem .7rem;background:var(--bg-c);}
+.mcb p{font-size:.72rem;color:var(--t-s);line-height:1.5;}
+.tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.65rem;font-weight:500;}
+.tag-b{background:rgba(56,189,248,.15);color:var(--blue);}.tag-g{background:rgba(74,222,128,.15);color:var(--green);}
+.tag-o{background:rgba(251,146,60,.15);color:var(--orange);}.tag-p{background:rgba(167,139,250,.15);color:var(--purple);}
+pre{background:#05080f;border:1px solid var(--b);border-radius:8px;padding:.85rem 1.1rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.6;overflow-x:auto;margin:.8rem 0;color:var(--t-p);}
+pre small{font-size:.72rem;}
+.ic{font-family:'JetBrains Mono',monospace;font-size:.82em;background:rgba(255,255,255,.06);padding:1px 6px;border-radius:4px;color:var(--blue);}
+.tm{color:var(--t-m);font-size:.8rem;}
+.dp{color:var(--green);font-weight:600;}.dn{color:var(--red);font-weight:600;}
+.bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--blue));z-index:1000;width:0;transition:width .1s;}
+@media(max-width:640px){section{padding:3rem 0;}.hero-content{padding:1.5rem;}.cg,.cmp{grid-template-columns:1fr;}.hero-stats{gap:1.5rem;}}
+.kk{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.2);border-radius:var(--r);padding:.75rem 1.1rem;margin:.8rem 0;font-size:.8rem;color:var(--t-s);line-height:1.6;}
+.kk strong{color:var(--cyan);}
+.toc{position:sticky;top:1rem;background:var(--bg-c);border:1px solid var(--b);border-radius:var(--r);padding:1.25rem;margin:0 0 2rem;box-shadow:var(--sh-sm);}
+.toc h3{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--t-m);margin-bottom:.6rem;}
+.toc a{display:block;padding:.2rem 0;font-size:.78rem;color:var(--t-s);text-decoration:none;transition:color .15s;}
+.toc a:hover{color:var(--blue);}.toc a.tl2{font-size:.74rem;color:var(--t-m);}
+footer{background:#05080f;border-top:1px solid var(--b);padding:2rem;text-align:center;font-size:.78rem;color:var(--t-m);}
+footer a{color:var(--blue);text-decoration:none;}
+.st{font-size:.78rem;font-weight:500;color:var(--cyan);display:flex;align-items:center;gap:6px;margin:1.5rem 0 .4rem;padding-top:1.5rem;border-top:1px dashed rgba(255,255,255,.15);}
+
+section h3{font-size:.82rem;font-weight:600;margin:2rem 0 .5rem;padding-top:1.5rem;border-top:1px dashed rgba(255,255,255,.15);color:var(--cyan);}
+</style>
+</head><body>
+<div class="bar" id="bar"></div>
+
+<section class="hero"><div class="hero-grid"></div><div class="hero-orb hero-orb-1"></div><div class="hero-orb hero-orb-2"></div><div class="hero-content">
+<div class="hero-badge">&#9733; Apache Doris &mdash; Query Data Guide</div>
+<h1><span>Apache</span> <span class="dh">Doris</span> <span>Query</span> <span class="dh">Data</span> <span>Guide</span></h1>
+<p class="hero-sub">A comprehensive guide to querying data in Apache Doris: JOINs, subqueries, multi-dimensional analytics, window functions, CTEs, UDFs, complex types, and materialized views.</p>
+<div class="hero-stats"><div class="hero-stat"><div class="hero-stat-value">35&ndash;45 min</div><div class="hero-stat-label">Reading</div></div><div class="hero-stat"><div class="hero-stat-value">8</div><div class="hero-stat-label">Sections</div></div><div class="hero-stat"><div class="hero-stat-value">9</div><div class="hero-stat-label">Join Types</div></div><div class="hero-stat"><div class="hero-stat-value">4</div><div class="hero-stat-label">Join Strategies</div></div></div>
+<div class="hero-nav"><a href="#s1">&#8595; Start Reading</a></div></div>
+<div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>scroll</div></section>
+<div class="container" style="margin-top:2rem;"><div class="toc"><h3>Contents</h3>
+<a href="#s1">1. JOINs &mdash; 9 Types &amp; 4 Shuffle Strategies</a>
+<a href="#s2" class="tl2">2. Subqueries &mdash; Scalar, Correlated, IN/EXISTS</a>
+<a href="#s3" class="tl2">3. Multi-Dimensional Analytics</a>
+<a href="#s4" class="tl2">4. Window Functions</a>
+<a href="#s5" class="tl2">5. CTE &mdash; Common Table Expressions</a>
+<a href="#s6" class="tl2">6. UDF &mdash; Alias, Java, Python</a>
+<a href="#s7" class="tl2">7. Complex Types</a>
+<a href="#s8" class="tl2">8. Materialized Views &mdash; Sync &amp; Async</a>
+</div></div>
+<div class="callout callout-info" style="margin:0 auto 1.5rem;max-width:1120px;padding:.9rem 1.2rem;"><div class="callout-icon">&#9432;</div><div><strong>Reference:</strong> For in-depth documentation on query capabilities, see <a href="https://doris.apache.org/docs/dev/query-data/join" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">JOINs</a>, <a href="https://doris.apache.org/docs/dev/query-data/subquery" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">Subqueries</a>, <a href="https://doris.apache.org/docs/dev/query-data/multi-dimensional-analytics" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">Multi-Dimensional Analytics</a>, <a href="https://doris.apache.org/docs/dev/query-data/window-function" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">Window Functions</a>, <a href="https://doris.apache.org/docs/dev/query-data/cte" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">CTE</a>, <a href="https://doris.apache.org/docs/dev/query-data/udf/alias-function" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">Alias Functions</a>, <a href="https://doris.apache.org/docs/dev/query-data/udf/java-user-defined-function" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">Java UDF</a>, <a href="https://doris.apache.org/docs/dev/query-data/udf/python-user-defined-function" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">Python UDF</a>, <a href="https://doris.apache.org/docs/dev/query-data/complex-type" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">Complex Types</a>, <a href="https://doris.apache.org/docs/dev/query-acceleration/materialized-view/intro" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">Materialized Views</a> on the official Doris website.</div></div>
+<section id="s1"><div class="container">
+<div class="sl">Section 1 &mdash; 7-10 min</div>
+<h2 class="sh">JOINs &mdash; 9 Types &amp; 4 Distributed Shuffle Strategies</h2>
+<div class="s-intro">Apache Doris supports nine JOIN types and two physical implementations (Hash Join and Nest Loop Join). Under the MPP architecture, four Shuffle strategies determine how data moves across nodes during JOIN execution.</div>
+<h3>Supported JOIN Types</h3>
+<div class="tw"><table class="tc"><thead><tr><th>Type</th><th>Description</th></tr></thead></thead><tbody>
+<tr><td><strong>INNER JOIN</strong></td><td>Returns rows from both tables that satisfy the join condition</td></tr>
+<tr><td><strong>LEFT JOIN</strong></td><td>Returns all rows from the left table, with NULLs for unmatched right rows</td></tr>
+<tr><td><strong>RIGHT JOIN</strong></td><td>Returns all rows from the right table, with NULLs for unmatched left rows</td></tr>
+<tr><td><strong>FULL JOIN</strong></td><td>Returns all rows from both tables, filling NULLs where no match exists</td></tr>
+<tr><td><strong>CROSS JOIN</strong></td><td>Returns the Cartesian product of the two tables</td></tr>
+<tr><td><strong>LEFT SEMI JOIN</strong></td><td>Returns left rows that have at least one match in the right table</td></tr>
+<tr><td><strong>RIGHT SEMI JOIN</strong></td><td>Returns right rows that have at least one match in the left table</td></tr>
+<tr><td><strong>LEFT ANTI JOIN</strong></td><td>Returns left rows that have no match in the right table</td></tr>
+<tr><td><strong>RIGHT ANTI JOIN</strong></td><td>Returns right rows that have no match in the left table</td></tr>
+</tbody></table></div>
+<h3>Physical Implementations</h3>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">&#9889; Hash Join</div><div class="c-b"><p style="font-size:.8rem;color:var(--t-s);">Builds a hash table on the right table and streams the left table through it. Only applies to <strong>equi-JOIN</strong> conditions. This is the default and most efficient implementation.</p></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">&#128260; Nest Loop Join</div><div class="c-b"><p style="font-size:.8rem;color:var(--t-s);">Uses two nested loops &mdash; for each left row, scans all right rows. Applies to <strong>all JOIN scenarios</strong> including non-equi conditions (>, &lt;) and Cartesian products. May underperform compared to Hash Join.</p></div></div></div>
+<h3>Four Shuffle Strategies</h3>
+<div class="tw"><table class="tc"><thead><tr><th>Strategy</th><th>Network Overhead</th><th>Physical Operator</th><th>Best For</th></tr></thead><tbody>
+<tr><td><strong>Broadcast</strong></td><td>N &times; T(R)</td><td>Hash Join / Nest Loop</td><td>Small right table broadcast to all nodes</td></tr>
+<tr><td><strong>Shuffle (Partition)</strong></td><td>T(S) + T(R)</td><td>Hash Join</td><td>General purpose, both sides shuffled</td></tr>
+<tr><td><strong>Bucket Shuffle</strong></td><td>T(R)</td><td>Hash Join</td><td>JOIN condition includes left bucket column</td></tr>
+<tr><td><strong>Colocate</strong></td><td>0</td><td>Hash Join</td><td>Both tables in same Colocate Group</td></tr>
+</tbody></table></div>
+<div class="kk"><strong>Key insight:</strong> As data distribution requirements increase (Broadcast &rarr; Shuffle &rarr; Bucket Shuffle &rarr; Colocate), network overhead decreases but flexibility decreases. In most cases, stricter data distribution means better JOIN performance.</div>
+<div class="callout callout-caution"><div class="callout-icon">&#9888;</div><div><strong>Caution:</strong> If the number of buckets in a table is small, Bucket Shuffle Join or Colocate Join may suffer from low parallelism and perform worse than Shuffle Join. This is because the Shuffle operation can balance data distribution more effectively.</div></div>
+</div></section>
+<section id="s2"><div class="container">
+<div class="sl">Section 2 &mdash; 2-3 min</div>
+<h2 class="sh">Subqueries</h2>
+<div class="s-intro">Subqueries in Doris can appear in SELECT, FROM, WHERE, or HAVING clauses. They are classified by returned data (scalar vs. non-scalar) and by outer-column reference (correlated vs. uncorrelated).</div>
+<div class="tw"><table class="tc"><thead><tr><th>Type</th><th>Returned Result</th><th>Return When Empty</th><th>Allowed Positions</th></tr></thead><tbody>
+<tr><td>Scalar subquery</td><td>Single value (one row, one column)</td><td>NULL</td><td>Anywhere a single-value expression is allowed</td></tr>
+<tr><td>Non-scalar subquery</td><td>Relation (multiple rows and columns)</td><td>Empty set (0 rows)</td><td>Anywhere a relation (set) is allowed</td></tr>
+<tr><td>Correlated subquery</td><td>Depends on outer query</td><td>Depends</td><td>WHERE/HAVING/SELECT (with limitations)</td></tr>
+<tr><td>Uncorrelated subquery</td><td>Independent of outer query</td><td>Depends</td><td>All clauses</td></tr>
+</tbody></table></div>
+<div class="kk"><strong>Key limitations:</strong> Correlated scalar subqueries require equality conditions and single aggregate output. Correlated IN subqueries must return a single column without LIMIT or GROUP BY. Nested subqueries only support correlation to the immediate parent.</div>
+<pre>-- Scalar subquery
+SELECT * FROM t1
+WHERE t1.c1 > (SELECT MAX(t2.c1) FROM t2);
+
+-- Non-scalar subquery (IN)
+SELECT * FROM t1
+WHERE t1.c1 IN (SELECT t2.c1 FROM t2);
+
+-- Correlated subquery
+SELECT * FROM t1
+WHERE t1.c1 IN (
+    SELECT t2.c1 FROM t2
+    WHERE t2.c2 = t1.c2
+);
+
+-- EXISTS subquery
+SELECT * FROM t1
+WHERE EXISTS (
+    SELECT t2.c1 FROM t2
+    WHERE t1.c2 = t2.c2
+    LIMIT 2
+);</pre>
+<div class="callout callout-info"><div class="callout-icon">&#9432;</div><div><strong>Supported scope:</strong> All uncorrelated subqueries are fully supported. Correlated scalar subqueries, IN/EXISTS/NOT EXISTS in WHERE/HAVING, and SELECT-list scalar subqueries are supported. Cross-level correlation is not supported.</div></div>
+</div></section>
+<section id="s3"><div class="container">
+<div class="sl">Section 3 &mdash; 2-3 min</div>
+<h2 class="sh">Multi-Dimensional Analytics</h2>
+<div class="s-intro">Doris supports standard SQL multi-dimensional analysis operators including CUBE, ROLLUP, and GROUPING SETS for generating aggregate result sets at multiple grouping levels in a single query.</div>
+<pre>-- GROUP BY with CUBE (all combinations)
+SELECT year, month, region, SUM(revenue)
+FROM sales
+GROUP BY CUBE(year, month, region);
+
+-- GROUP BY with ROLLUP (hierarchical)
+SELECT year, month, region, SUM(revenue)
+FROM sales
+GROUP BY ROLLUP(year, month, region);
+
+-- GROUPING SETS (custom combinations)
+SELECT year, month, region, SUM(revenue)
+FROM sales
+GROUP BY GROUPING SETS (
+    (year, month),
+    (year, region),
+    (month, region),
+    ()
+);
+
+-- GROUPING function to distinguish levels
+SELECT
+    year,
+    month,
+    GROUPING(year) AS is_year_total,
+    GROUPING(month) AS is_month_total,
+    SUM(revenue)
+FROM sales
+GROUP BY ROLLUP(year, month);</pre>
+<div class="kk"><strong>Tip:</strong> Use GROUPING SETS for fine-grained control over which aggregation levels to compute. ROLLUP is best for hierarchical drill-downs. CUBE computes all possible combinations and is the most comprehensive but also the most expensive.</div></div>
+</section>
+<section id="s4"><div class="container">
+<div class="sl">Section 4 &mdash; 2-3 min</div>
+<h2 class="sh">Window Functions</h2>
+<div class="s-intro">Window functions perform calculations across a set of rows related to the current row without collapsing them into a single output. They support ranking, analytic, and aggregate operations within configurable window frames.</div>
+<div class="tw"><table class="tc"><thead><tr><th>Category</th><th>Function</th><th>Description</th></tr></thead><tbody>
+<tr><td>Ranking</td><td>ROW_NUMBER, RANK, DENSE_RANK</td><td>Assign sequential ranks within a partition</td></tr>
+<tr><td>Analytic</td><td>LEAD, LAG, FIRST_VALUE, LAST_VALUE</td><td>Access rows at a physical offset</td></tr>
+<tr><td>Aggregate</td><td>SUM, AVG, COUNT, MIN, MAX</td><td>Running/rolling aggregates over a window</td></tr>
+</tbody></table></div>
+<pre>-- Ranking within department
+SELECT
+    name,
+    department,
+    salary,
+    ROW_NUMBER() OVER (
+        PARTITION BY department
+        ORDER BY salary DESC
+    ) AS rank_in_dept
+FROM employees;
+
+-- Running total with window frame
+SELECT
+    date,
+    amount,
+    SUM(amount) OVER (
+        ORDER BY date
+        ROWS BETWEEN UNBOUNDED PRECEDING
+                 AND CURRENT ROW
+    ) AS running_total
+FROM sales;
+
+-- LAG to compare with previous row
+SELECT
+    date,
+    amount,
+    LAG(amount, 1) OVER (
+        ORDER BY date
+    ) AS prev_day_amount,
+    amount - LAG(amount, 1) OVER (
+        ORDER BY date
+    ) AS day_over_day_change
+FROM daily_sales;</pre>
+<div class="kk"><strong>Tip:</strong> The default window frame is <span class="ic">RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</span>. Use <span class="ic">ROWS</span> instead of <span class="ic">RANGE</span> for physical row offsets. Window functions can only appear in SELECT or ORDER BY clauses.</div>
+</div></section>
+<section id="s5"><div class="container">
+<div class="sl">Section 5 &mdash; 2-3 min</div>
+<h2 class="sh">CTE &mdash; Common Table Expressions</h2>
+<div class="s-intro">CTEs (Common Table Expressions) provide a way to define temporary named result sets within a query. They improve SQL readability and enable recursive queries for hierarchical data.</div>
+<pre>-- Basic CTE
+WITH sales_summary AS (
+    SELECT
+        region,
+        SUM(amount) AS total_sales
+    FROM orders
+    GROUP BY region
+)
+SELECT * FROM sales_summary
+WHERE total_sales > 10000;
+
+-- Multiple CTEs
+WITH
+region_sales AS (
+    SELECT region, SUM(amount) AS total
+    FROM orders GROUP BY region
+),
+top_regions AS (
+    SELECT region FROM region_sales
+    WHERE total > 50000
+)
+SELECT o.*
+FROM orders o
+JOIN top_regions tr
+ON o.region = tr.region;
+
+-- Recursive CTE (for hierarchical data)
+WITH RECURSIVE org_tree AS (
+    SELECT id, name, manager_id, 1 AS level
+    FROM employees
+    WHERE manager_id IS NULL
+    UNION ALL
+    SELECT e.id, e.name, e.manager_id, ot.level + 1
+    FROM employees e
+    JOIN org_tree ot ON e.manager_id = ot.id
+)
+SELECT * FROM org_tree;</pre>
+<div class="callout callout-tip"><div class="callout-icon">&#128161;</div><div><strong>Tip:</strong> CTEs are evaluated once and can be referenced multiple times in the main query. Use CTEs to break down complex queries into manageable steps. Recursive CTEs are useful for traversing tree structures like organizational charts or bill-of-materials.</div></div>
+</div></section>
+<section id="s6"><div class="container">
+<div class="sl">Section 6 &mdash; 6-9 min</div>
+<h2 class="sh">User-Defined Functions &mdash; Alias, Java, Python</h2>
+<div class="s-intro">Doris supports three categories of user-defined functions: alias functions for transparent SQL migration, Java UDF/UDAF/UDWF/UDTF for custom business logic, and Python UDF for data science workflows.</div>
+<h3>6.1 Alias Functions</h3>
+<div class="kk">Register a new signature for an existing function or expression. Supports <span class="ic">LOCAL</span> (current database) and <span class="ic">GLOBAL</span> scopes. Ideal for heterogeneous database migration and complex query simplification.</div>
+<pre>-- Create alias for heterogeneous migration
+CREATE ALIAS FUNCTION my_abs(INT)
+WITH PARAMETER(foo) AS abs(foo);
+
+-- Alias for complex expression
+CREATE ALIAS FUNCTION date_group(DATETIMEV2(3), INT)
+WITH PARAMETER(foo, bar)
+AS date_trunc(days_sub(foo, bar), 'day');
+
+-- Usage: transparent migration
+-- Old system uses MY_ABS(x), now it works in Doris</pre>
+<div class="callout callout-caution"><div class="callout-icon">&#9888;</div><div><strong>Constraint:</strong> The root node of the underlying expression must be a function expression (not an arithmetic operator). Variable-length parameters are not supported. At least one parameter is required.</div></div>
+<h3>6.2 Java UDF / UDAF / UDWF / UDTF</h3>
+<div class="tw"><table class="tc"><thead><tr><th>Type</th><th>Behavior</th><th>Example</th><th>Version</th></tr></thead><tbody>
+<tr><td><strong>UDF</strong></td><td>One output per input row</td><td>ABS, LENGTH</td><td>All</td></tr>
+<tr><td><strong>UDAF</strong></td><td>Multiple rows &rarr; one row</td><td>MIN, MAX, COUNT</td><td>All</td></tr>
+<tr><td><strong>UDWF</strong></td><td>Value per row in a window</td><td>ROW_NUMBER, RANK</td><td>All</td></tr>
+<tr><td><strong>UDTF</strong></td><td>One row &rarr; multiple rows</td><td>EXPLODE</td><td>3.0+</td></tr>
+</tbody></table></div>
+<pre>-- Create Java UDF
+CREATE FUNCTION java_udf_add_one(int)
+RETURNS int PROPERTIES (
+    "file" = "file:///path/to/udf.jar",
+    "symbol" = "org.apache.doris.udf.AddOne",
+    "type" = "JAVA_UDF"
+);
+
+-- Use it
+SELECT id, java_udf_add_one(id)
+FROM test_table;
+-- id=1 returns 2, id=6 returns 7
+
+-- Drop when no longer needed
+DROP FUNCTION java_udf_add_one(int);</pre>
+<div class="kk"><strong>Data type mapping:</strong> TINYINT &rarr; Byte, INT &rarr; Integer, BIGINT &rarr; Long, STRING &rarr; String, DECIMAL &rarr; BigDecimal, DATE &rarr; LocalDate, ARRAY &rarr; ArrayList, MAP &rarr; HashMap.</div>
+<h3>6.3 Python UDF</h3>
+<div class="kk">Write custom functions in Python for data science and ML inference workflows. Supports scalar UDF and UDAF. Uses Python 3.7+ syntax.</div>
+<pre>-- Register Python UDF
+CREATE FUNCTION py_udf_add_one(int)
+RETURNS int PROPERTIES (
+    "file" = "file:///path/udf.py",
+    "symbol" = "add_one",
+    "type" = "PYTHON_UDF"
+);
+
+-- Python code (udf.py):
+# class add_one(UDF):
+#     def evaluate(self, val):
+#         return None if val is None else val + 1
+
+-- Use it
+SELECT id, py_udf_add_one(id) FROM test_table;</pre>
+</div></section>
+<section id="s7"><div class="container">
+<div class="sl">Section 7 &mdash; 2-3 min</div>
+<h2 class="sh">Complex Types — ARRAY, MAP, STRUCT, JSON</h2>
+<div class="s-intro">Apache Doris supports four complex data types that enable nested and semi-structured data processing directly in SQL, reducing the need for ETL flattening.</div>
+<div class="mg"><div class="mc"><div class="mch" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">ARRAY</div><div class="mcb"><p>Ordered collections of elements with the same type.</p><pre style="font-size:.68rem;margin:.4rem 0 0;">SELECT ARRAY(1,2,3);
+SELECT * FROM t
+WHERE ARRAY_CONTAINS(
+  arr, 'val');</pre></div></div>
+<div class="mc"><div class="mch" style="background:linear-gradient(135deg,#0f766e,#115e59);">MAP</div><div class="mcb"><p>Key-value pairs with typed keys and values.</p><pre style="font-size:.68rem;margin:.4rem 0 0;">SELECT MAP(
+  "k1", 1, "k2", 2);
+SELECT m["k1"] FROM t;</pre></div></div>
+<div class="mc"><div class="mch" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">STRUCT</div><div class="mcb"><p>Named fields with potentially different types.</p><pre style="font-size:.68rem;margin:.4rem 0 0;">SELECT NAMED_STRUCT(
+  "name", "Alice",
+  "age", 30);
+SELECT s.name FROM t;</pre></div></div></div>
+<pre>-- Nested complex types
+CREATE TABLE events (
+    event_id INT,
+    properties MAP<STRING,STRING>,
+    tags ARRAY<STRING>,
+    location STRUCT<
+        city:STRING,
+        coordinates:ARRAY<DOUBLE>>
+);
+
+-- Query with lambda functions
+SELECT
+    event_id,
+    ARRAY_FILTER(tags, x -> x LIKE '%important%')
+FROM events;
+
+-- JSON functions
+SELECT
+    json_extract_string(
+        '{"a": "value"}', '$.a'
+    );
+
+SELECT
+    parse_json('{"x": 1, "y": 2}');</pre>
+<div class="kk"><strong>Tip:</strong> Complex types can be nested (e.g., <span class="ic">ARRAY&lt;MAP&lt;STRING,INT&gt;&gt;</span>). Use lambda functions (since 2.1) for array transformations. JSON functions enable semi-structured data processing without schema pre-definition.</div>
+</div></section>
+<section id="s8"><div class="container">
+<div class="sl">Section 8 &mdash; 8-15 min</div>
+<h2 class="sh">Materialized Views — Sync &amp; Async</h2>
+<div class="s-intro">Materialized Views in Doris precompute and store query results for transparent query acceleration. Two types exist: synchronous views (single-table, strong consistency) and asynchronous views (multi-table, flexible refresh).</div>
+<h3>8.1 Synchronous Materialized View</h3>
+<div class="kk">A special table that precomputes and stores a SELECT result on a <strong>single base table</strong>. Doris maintains it automatically with <strong>strong consistency</strong>. At query time, Doris transparently rewrites to the optimal view.</div>
+<div class="tw"><table class="tc"><thead><tr><th>Scenario</th><th>Description</th></tr></thead><tbody>
+<tr><td>Accelerate aggregation</td><td>Precompute SUM/COUNT/BITMAP_UNION for faster queries</td></tr>
+<tr><td>Match prefix indexes</td><td>Create views with different sort key prefixes</td></tr>
+<tr><td>Pre-filter</td><td>Use WHERE conditions to reduce scanned data</td></tr>
+<tr><td>Precompute expressions</td><td>Compute <span class="ic">abs(k1)+k2+1</span> once and reuse</td></tr>
+</tbody></table></div>
+<pre>-- 1. Create base table
+CREATE TABLE sales_records (
+    record_id INT,
+    seller_id INT,
+    store_id INT,
+    sale_date DATE,
+    sale_amt BIGINT
+)
+DISTRIBUTED BY HASH(record_id)
+PROPERTIES("replication_num" = "1");
+
+INSERT INTO sales_records VALUES
+(1,1,1,"2020-02-02",1),
+(2,1,1,"2020-02-02",2);
+
+-- 2. Create sync MV (group by store_id)
+CREATE MATERIALIZED VIEW store_amt AS
+SELECT store_id, SUM(sale_amt)
+FROM sales_records GROUP BY store_id;
+
+-- 3. Check creation status (async)
+SHOW ALTER TABLE MATERIALIZED VIEW
+FROM test_db;
+
+-- State = FINISHED means ready
+
+-- 4. Query (automatic rewrite)
+SELECT store_id, SUM(sale_amt)
+FROM sales_records GROUP BY store_id;
+
+-- Verify with EXPLAIN
+EXPLAIN SELECT store_id, SUM(sale_amt)
+FROM sales_records GROUP BY store_id;
+
+-- 5. View MVs on a table
+DESC sales_records ALL;
+
+-- 6. Cancel creation / Drop
+CANCEL ALTER TABLE MATERIALIZED VIEW
+FROM test_db.sales_records;
+
+DROP MATERIALIZED VIEW store_amt
+ON sales_records;</pre>
+<div class="callout callout-caution"><div class="callout-icon">&#9888;</div><div><strong>Limitations:</strong> Single-table only (no JOIN, HAVING, LIMIT). Materialized view column names must not conflict with base table columns. On Unique Key models, views can only reorder columns &mdash; no aggregation. Too many views slow down load performance.</div></div>
+<h3>8.2 Asynchronous Materialized View</h3>
+<div class="kk">Supports multi-table JOIN, complex expressions, and user-defined refresh strategies. Data can be refreshed on-demand or periodically. Does <strong>not</strong> provide strong consistency with base tables.</div>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">&#9889; Sync MV</div><div class="c-b"><ul><li>&#9989; Single table only</li><li>&#9989; Strong consistency</li><li>&#9989; Automatic maintenance</li><li>&#9888; No user-defined refresh</li><li>&#9888; Limited to simple aggregations</li></ul></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0f766e,#115e59);">&#128260; Async MV</div><div class="c-b"><ul><li>&#9989; Multi-table JOIN support</li><li>&#9888; Eventual consistency</li><li>&#9989; Custom refresh schedule</li><li>&#9989; Partition-level refresh</li><li>&#9989; Can be queried directly</li></ul></div></div></div>
+<pre>-- Create async MV with JOIN
+CREATE MATERIALIZED VIEW mv_async
+BUILD DEFERRED REFRESH AUTO ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 10
+AS
+SELECT o.order_id, o.amount,
+       c.name, c.region
+FROM orders o
+JOIN customers c
+ON o.customer_id = c.id;
+
+-- Refresh on demand
+REFRESH MATERIALIZED VIEW mv_async;
+
+-- Query directly (async MVs can be
+-- queried like regular tables)
+SELECT * FROM mv_async
+WHERE region = 'East';
+
+-- Schedule periodic refresh
+ALTER MATERIALIZED VIEW mv_async
+REFRESH EVERY 1 HOUR;
+
+-- Check MV status
+SHOW MATERIALIZED VIEWS
+WHERE name = 'mv_async';</pre>
+<div class="callout callout-tip"><div class="callout-icon">&#128161;</div><div><strong>Tip:</strong> Use sync MVs for simple single-table aggregation with strong consistency requirements. Use async MVs for complex multi-table JOINs, star schema acceleration, and scenarios where eventual consistency is acceptable.</div></div>
+</div></section>
+<footer><div class="container"><p>Generated from Apache Doris query data documentation &mdash; 8 sections covering JOINs, subqueries, analytics, window functions, CTEs, UDFs, complex types, and materialized views.</p><p style="margin-top:.5rem;font-size:.72rem;">Apache Doris &copy; The Apache Software Foundation.</p></div></footer>
+<script>(function(){var b=document.getElementById('bar');window.addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-window.innerHeight;b.style.width=(window.scrollY/h*100)+'%';});})();</script>
+</body></html>
