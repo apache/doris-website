@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apache Doris Table Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{--bg-p:#05080f;--bg-s:#0a0e17;--bg-c:#0f1623;--bg-ch:#1a2540;--b:#1e2a3d;--bl:#2a3a52;--t-p:#e8edf5;--t-s:#94a3b8;--t-m:#64748b;--blue:#38bdf8;--cyan:#22d3ee;--teal:#2dd4bf;--purple:#a78bfa;--orange:#fb923c;--amber:#fbbf24;--green:#4ade80;--red:#f87171;--sh-sm:0 1px 3px rgba(0,0,0,.3);--sh-md:0 4px 6px rgba(0,0,0,.35);--r:12px;--r-lg:16px;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Inter',sans-serif;background:var(--bg-p);color:var(--t-p);line-height:1.7;overflow-x:hidden;}
+  ::selection{background:rgba(56,189,248,.3);}
+  .hero{position:relative;min-height:90vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#05080f 0%,#0a0e17 40%,#0f1623 70%,#0a121f 100%);overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(56,189,248,.08) 0%,transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(34,211,238,.06) 0%,transparent 50%);pointer-events:none;}
+  .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03)1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03)1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
+  .hero-orb{position:absolute;width:500px;height:500px;border-radius:50%;filter:blur(100px);opacity:.12;pointer-events:none;}
+  .hero-orb-1{top:-15%;left:-10%;background:radial-gradient(circle,var(--cyan),transparent);}
+  .hero-orb-2{bottom:-20%;right:-8%;background:radial-gradient(circle,var(--blue),transparent);}
+  .hero-content{position:relative;z-index:2;text-align:center;padding:2rem;max-width:920px;}
+  .hero-badge{display:inline-block;padding:6px 18px;border-radius:20px;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);color:var(--cyan);font-size:.8rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2rem;}
+  .hero h1{font-weight:800;font-size:clamp(2.5rem,6vw,4.8rem);color:var(--t-p);letter-spacing:-1.5px;line-height:1.1;text-shadow:0 2px 30px rgba(0,0,0,.5);}
+  .hero h1 span{display:inline-block!important;white-space:nowrap;}
+  .hero h1 .dh{background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .hero-sub{margin-top:1.5rem;font-size:clamp(1rem,2vw,1.3rem);color:var(--t-s);max-width:700px;margin:1.5rem auto 0;font-weight:300;line-height:1.8;}
+  .hero-stats{display:flex;justify-content:center;gap:2rem;margin-top:2rem;flex-wrap:wrap;}
+  .hero-stat-value{font-size:1.6rem;font-weight:700;color:var(--cyan);letter-spacing:-1px;}
+  .hero-stat-label{font-size:.7rem;color:var(--t-m);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+  .hero-nav{display:flex;justify-content:center;gap:.75rem;margin-top:2rem;flex-wrap:wrap;}
+  .hero-nav a{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:8px;font-size:.85rem;font-weight:500;text-decoration:none;transition:all .2s;}
+  .hero-nav a:first-child{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#05080f;}
+  .hero-nav a:first-child:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 8px 20px rgba(34,211,238,.25);}
+  .hero-nav a.sec{background:rgba(255,255,255,.06);color:var(--t-p);border:1px solid var(--bl);}
+  .hero-nav a.sec:hover{background:rgba(255,255,255,.1);transform:translateY(-2px);}
+  .si{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--t-m);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;animation:bounce 2s infinite;}
+  .si svg{width:20px;height:20px;}
+  @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+  .container{max-width:1120px;margin:0 auto;padding:0 1.5rem;}
+  section{padding:4rem 0;}
+  section:nth-child(even){background:var(--bg-s);}
+  section:nth-child(odd){background:var(--bg-p);}
+  .sl{display:inline-flex;align-items:center;gap:8px;font-size:clamp(1.7rem,3.8vw,2.4rem);font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:.75rem;}
+  .sl::before{content:'';width:24px;height:2px;background:var(--blue);border-radius:1px;}
+  .sh{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:800;color:var(--t-p);letter-spacing:-.5px;line-height:1.25;margin-bottom:1rem;}
+  .s-intro{font-family:'Playfair Display','Georgia',serif;font-style:italic;font-size:1.1rem;color:var(--t-s);line-height:1.8;margin-bottom:2rem;padding:1.2rem 1.5rem;border-left:3px solid var(--blue);background:rgba(56,189,248,.06);border-radius:0 var(--r) var(--r) 0;}
+  .cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;margin:1.5rem 0;}
+  .card{background:var(--bg-c);border-radius:var(--r);padding:1.5rem;box-shadow:var(--sh-sm);border:1px solid var(--b);transition:all .25s;}
+  .card:hover{box-shadow:var(--sh-md);border-color:var(--bl);transform:translateY(-2px);}
+  .ci{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:.75rem;}
+  .card h4{font-size:.95rem;font-weight:600;margin-bottom:.3rem;color:var(--t-p);}
+  .card p{font-size:.82rem;color:var(--t-s);line-height:1.6;}
+  .tw{overflow-x:auto;margin:1.5rem 0;border-radius:var(--r);box-shadow:var(--sh-sm);border:1px solid var(--b);}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;}
+  thead th{padding:.85rem 1rem;text-align:left;font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;background:linear-gradient(135deg,#1a2540,#1e2a3d);color:var(--t-p);white-space:nowrap;border-bottom:1px solid var(--bl);}
+  tbody td{padding:.7rem 1rem;border-bottom:1px solid var(--b);vertical-align:top;color:var(--t-s);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:rgba(56,189,248,.08);}
+  .tc tbody tr:nth-child(1){background:rgba(56,189,248,.08);}
+  .tc tbody tr:nth-child(2){background:rgba(248,113,113,.06);}
+  .tc tbody tr:nth-child(3){background:rgba(74,222,128,.06);}
+  .tc tbody tr:nth-child(4){background:rgba(251,191,36,.06);}
+  .tc tbody tr:nth-child(5){background:rgba(167,139,250,.06);}
+  .tc tbody tr:nth-child(6){background:rgba(34,211,238,.06);}
+  .tc tbody tr:nth-child(7){background:rgba(251,146,60,.06);}
+  .tc tbody tr:nth-child(8){background:rgba(244,114,182,.06);}
+  .tc tbody tr:hover{background:rgba(56,189,248,.18);}
+  .callout{padding:1.2rem 1.5rem;border-radius:var(--r);margin:1.5rem 0;display:flex;gap:1rem;align-items:flex-start;font-size:.9rem;line-height:1.7;border:1px solid var(--b);}
+  .callout-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px;}
+  .callout-tip{background:rgba(74,222,128,.06);border-left:4px solid var(--green);}
+  .callout-tip .callout-icon{color:var(--green);}
+  .callout-caution{background:rgba(248,113,113,.08);border-left:4px solid var(--red);}
+  .callout-caution .callout-icon{color:var(--red);}
+  .callout-info{background:rgba(56,189,248,.06);border-left:4px solid var(--blue);}
+  .callout-info .callout-icon{color:var(--blue);}
+  .callout strong{color:var(--t-p);}
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0;}
+  @media(max-width:720px){.cmp{grid-template-columns:1fr!important;}}
+  .c-col{border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-sm);border:1px solid var(--b);}
+  .c-h{padding:.9rem 1.1rem;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px;color:white;}
+  .c-b{padding:1.1rem;background:var(--bg-c);}
+  .c-b ul{list-style:none;padding:0;}
+  .c-b li{padding:.45rem 0;font-size:.82rem;color:var(--t-s);display:flex;align-items:flex-start;gap:8px;border-bottom:1px solid var(--b);}
+  .c-b li:last-child{border-bottom:none;}
+  .fs{display:flex;align-items:center;justify-content:center;gap:0;margin:1.5rem 0;flex-wrap:wrap;}
+  .f-step{display:flex;flex-direction:column;align-items:center;padding:.7rem .9rem;background:var(--bg-c);border-radius:var(--r);box-shadow:var(--sh-sm);border:1px solid var(--b);min-width:90px;text-align:center;}
+  .f-step-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:4px;color:white;}
+  .f-step-l{font-size:.72rem;font-weight:600;color:var(--t-p);}
+  .f-step-d{font-size:.62rem;color:var(--t-m);margin-top:2px;}
+  .f-arrow{font-size:1.2rem;color:var(--t-m);padding:0 3px;flex-shrink:0;}
+  .mg{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0;}
+  @media(max-width:640px){.mg{grid-template-columns:1fr;}}
+  .mc{border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-sm);border:1px solid var(--b);transition:all .25s;text-align:center;}
+  .mc:hover{transform:translateY(-3px);box-shadow:var(--sh-md);}
+  .mch{padding:.8rem .8rem .4rem;font-weight:700;font-size:.95rem;color:white;}
+  .mcb{padding:.6rem .8rem .85rem;background:var(--bg-c);}
+  .mcb p{font-size:.78rem;color:var(--t-s);line-height:1.5;}
+  .tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.68rem;font-weight:500;}
+  .tag-b{background:rgba(56,189,248,.15);color:var(--blue);}
+  .tag-g{background:rgba(74,222,128,.15);color:var(--green);}
+  .tag-o{background:rgba(251,146,60,.15);color:var(--orange);}
+  .tag-p{background:rgba(167,139,250,.15);color:var(--purple);}
+  pre{background:#05080f;border:1px solid var(--b);border-radius:8px;padding:.9rem 1.1rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.6;overflow-x:auto;margin:1rem 0;color:var(--t-p);}
+  pre small{font-size:.72rem;}
+  .ic{font-family:'JetBrains Mono',monospace;font-size:.82em;background:rgba(255,255,255,.06);padding:1px 6px;border-radius:4px;color:var(--blue);}
+  .tm{color:var(--t-m);font-size:.82rem;}
+  .dp{color:var(--green);font-weight:600;}
+  .dn{color:var(--red);font-weight:600;}
+  .bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--blue));z-index:1000;width:0;transition:width .1s;}
+  @media(max-width:640px){section{padding:3rem 0;}.hero-content{padding:1.5rem;}.cg,.cmp{grid-template-columns:1fr;}.hero-stats{gap:1.5rem;}}
+  .step-h{display:flex;align-items:center;font-size:1rem;font-weight:600;color:var(--t-p);margin:1.5rem 0 .4rem;}
+  .kk{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.2);border-radius:var(--r);padding:.8rem 1.1rem;margin:.8rem 0;font-size:.82rem;color:var(--t-s);line-height:1.6;}
+  .kk strong{color:var(--cyan);}
+  .toc{position:sticky;top:1rem;background:var(--bg-c);border:1px solid var(--b);border-radius:var(--r);padding:1.25rem;margin:0 0 2rem;box-shadow:var(--sh-sm);}
+  .toc h3{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--t-m);margin-bottom:.6rem;}
+  .toc a{display:block;padding:.25rem 0;font-size:.82rem;color:var(--t-s);text-decoration:none;transition:color .15s;}
+  .toc a:hover{color:var(--blue);}
+  .toc a.tl2{font-size:.78rem;color:var(--t-m);}
+  footer{background:#05080f;border-top:1px solid var(--b);padding:2rem;text-align:center;font-size:.8rem;color:var(--t-m);}
+  footer a{color:var(--blue);text-decoration:none;}
+  .st{font-size:.8rem;font-weight:500;color:var(--cyan);display:flex;align-items:center;gap:6px;margin:2rem 0 .5rem;padding-top:1.5rem;border-top:1px dashed rgba(255,255,255,.15);}
+  .st svg{width:16px;height:16px;flex-shrink:0;}
+
+section h3{font-size:.9rem;font-weight:600;margin:2rem 0 .5rem;padding-top:1.5rem;border-top:1px dashed rgba(255,255,255,.15);color:var(--cyan);}
+</style>
+</head><body>
+<div class="bar" id="bar"></div>
+
+<section class="hero"><div class="hero-grid"></div><div class="hero-orb hero-orb-1"></div><div class="hero-orb hero-orb-2"></div><div class="hero-content">
+<div class="hero-badge">&#9733; Apache Doris &mdash; Table Design Guide</div>
+<h1><span>Apache</span> <span class="dh">Doris</span> <span>Table</span> <span class="dh">Guide</span></h1>
+<p class="hero-sub">A comprehensive guide to Apache Doris table design: data models, partitioning strategies, bucketing methods, and best practices for production workloads.</p>
+<div class="hero-stats"><div class="hero-stat"><div class="hero-stat-value">30&ndash;45 min</div><div class="hero-stat-label">Reading</div></div><div class="hero-stat"><div class="hero-stat-value">4</div><div class="hero-stat-label">Sections</div></div><div class="hero-stat"><div class="hero-stat-value">3</div><div class="hero-stat-label">Data Models</div></div><div class="hero-stat"><div class="hero-stat-value">3</div><div class="hero-stat-label">Partition Types</div></div></div>
+<div class="hero-nav"><a href="#s1">&#8595; Start Reading</a></div></div>
+<div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>scroll</div></section>
+<div class="container" style="margin-top:2rem;"><div class="toc"><h3>Contents</h3>
+<a href="#s1">1. Table Models &mdash; Duplicate, Unique, Aggregate</a>
+<a href="#s2" class="tl2">2. Partitioning &mdash; Manual, Dynamic, Auto</a>
+<a href="#s3" class="tl2">3. Data Bucketing &mdash; Hash, Random, Count</a>
+<a href="#s4" class="tl2">4. Best Practices &mdash; POC Guide</a>
+</div></div>
+<div class="callout callout-info" style="margin:0 auto 1.5rem;max-width:1120px;padding:.9rem 1.2rem;"><div class="callout-icon">&#9432;</div><div><strong>Reference:</strong> For a comprehensive overview of Doris table design, see <a href="https://doris.apache.org/docs/dev/table-design/overview" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">Table Design Overview</a> on the official website for schema design, data models, and best practices.</div></div>
+<section id="s1"><div class="container">
+<div class="sl">Section 1</div>
+<h2 class="sh">Table Models &mdash; Choosing the Right Foundation</h2>
+<div class="s-intro">Every Doris table requires a data model. This decision determines how data is stored, deduplicated, aggregated, and updated. The model cannot be changed after table creation, so getting it right is critical.</div>
+<div class="kk"><strong>Core Decision:</strong> The three models cover three scenarios: retaining all raw data (Duplicate), updating by primary key (Unique), and pre-aggregated analysis (Aggregate).</div>
+<div class="tw"><table class="tc"><thead><tr><th>Business Scenario</th><th>Recommended Model</th><th>Key Characteristic</th></tr></thead><tbody>
+<tr><td>Logs, events, behavior analysis</td><td><strong>Duplicate</strong></td><td>Key columns may repeat; ad-hoc queries on any dimension</td></tr>
+<tr><td>Real-time dim tables, orders, user profiles</td><td><strong>Unique</strong></td><td>Key columns unique; only latest data kept per Key</td></tr>
+<tr><td>Report rollups, traffic stats, pre-aggregation</td><td><strong>Aggregate</strong></td><td>Pre-aggregates by Key columns to reduce scan volume</td></tr>
+</tbody></table></div>
+<div class="mg">
+<div class="mc"><div class="mch" style="background:linear-gradient(135deg,#0f766e,#115e59);">&#128203; Duplicate Model</div><div class="mcb"><p>Default model. Retains every row without deduplication. Key columns used only for sorting.</p><span class="tag tag-g" style="margin-top:.4rem;">Append-only</span></div></div>
+<div class="mc"><div class="mch" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">&#128273; Unique Model</div><div class="mcb"><p>Primary-key uniqueness guaranteed. UPSERT semantics: new data overwrites existing rows with the same Key.</p><span class="tag tag-b" style="margin-top:.4rem;">Update by Key</span></div></div>
+<div class="mc"><div class="mch" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">&#128202; Aggregate Model</div><div class="mcb"><p>Pre-aggregates Value columns by Key. Stores only aggregated results to save space and accelerate queries.</p><span class="tag tag-p" style="margin-top:.4rem;">Pre-aggregation</span></div></div>
+</div>
+<h3>Sort Key &amp; Key Columns</h3>
+<div class="kk">Key columns serve dual purposes: sorting all models, plus uniqueness (Unique/Aggregate). A well-designed sort key accelerates queries, improves compression, and reduces deduplication cost.</div>
+<div class="tw"><table class="tc"><thead><tr><th>Model</th><th>Role of Key Columns</th></tr></thead><tbody>
+<tr><td>Duplicate</td><td>Sorting only; uniqueness not enforced</td></tr>
+<tr><td>Unique</td><td>Sorting + uniqueness constraint; deduplication by primary key</td></tr>
+<tr><td>Aggregate</td><td>Sorting + uniqueness + pre-aggregation by Key</td></tr>
+</tbody></table></div>
+<div class="callout callout-info"><div class="callout-icon">&#9432;</div><div><strong>Sort Key Design Tips:</strong> Key columns must come before all Value columns. Prefer integer types (far more efficient than strings). Use the shortest sufficient integer length. For VARCHAR/STRING, use the minimum length needed.</div></div>
+<div class="st"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 3"/></svg> AGGREGATE MODEL &mdash; Deep Dive</div>
+<p class="tm" style="margin-bottom:.5rem;">Designed for efficient aggregate queries. Pre-aggregation reduces redundant computation and storage.</p>
+<div class="fs"><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">1</div><div class="f-step-l">Ingest</div><div class="f-step-d">Pre-aggregate by Key</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">2</div><div class="f-step-l">Compaction</div><div class="f-step-d">Merge versions</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#0f766e,#115e59);">3</div><div class="f-step-l">Query</div><div class="f-step-d">Final aggregation</div></div></div>
+<pre>CREATE TABLE IF NOT EXISTS example_tbl_agg
+(
+    user_id         LARGEINT    NOT NULL,
+    load_date       DATE        NOT NULL,
+    city            VARCHAR(20),
+    last_visit_dt   DATETIME    REPLACE DEFAULT "1970-01-01 00:00:00",
+    cost            BIGINT      SUM     DEFAULT "0",
+    max_dwell       INT         MAX     DEFAULT "0"
+)
+AGGREGATE KEY(user_id, load_date, city)
+DISTRIBUTED BY HASH(user_id) BUCKETS 10;</pre>
+<div class="tw"><table class="tc"><thead><tr><th>Aggregation Method</th><th>Description</th></tr></thead><tbody>
+<tr><td>SUM</td><td>Sums values across multiple rows</td></tr>
+<tr><td>REPLACE</td><td>Next batch replaces previous</td></tr>
+<tr><td>MAX</td><td>Keeps the maximum value</td></tr>
+<tr><td>MIN</td><td>Keeps the minimum value</td></tr>
+<tr><td>REPLACE_IF_NOT_NULL</td><td>Replaces with non-null values only</td></tr>
+<tr><td>HLL_UNION</td><td>HyperLogLog union for approximate distinct count</td></tr>
+<tr><td>BITMAP_UNION</td><td>Bitmap union for exact distinct count</td></tr>
+</tbody></table></div>
+<div class="st"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 3"/></svg> DUPLICATE MODEL &mdash; Deep Dive</div>
+<p class="tm" style="margin-bottom:.5rem;">The default model. Every written row is retained with no deduplication or aggregation. Ideal for append-only logs and events.</p>
+<div class="cg"><div class="card"><div class="ci" style="background:rgba(74,222,128,.12);color:var(--green);">&#128196;</div><h4>Retain All Data</h4><p>Every row is stored as-is. Even identical rows are fully retained on each insert.</p></div>
+<div class="card"><div class="ci" style="background:rgba(56,189,248,.12);color:var(--blue);">&#128269;</div><h4>Flexible Queries</h4><p>Full original data enables ad-hoc analysis and fine-grained auditing on any dimension.</p></div>
+<div class="card"><div class="ci" style="background:rgba(251,146,60,.12);color:var(--orange);">&#9889;</div><h4>Best Performance</h4><p>Reads only relevant columns. No aggregation constraints. Fully leverages columnar storage.</p></div></div>
+<pre>CREATE TABLE IF NOT EXISTS example_tbl_duplicate
+(
+    log_time        DATETIME       NOT NULL,
+    log_type        INT            NOT NULL,
+    error_code      INT,
+    error_msg       VARCHAR(1024),
+    op_id           BIGINT,
+    op_time         DATETIME
+)
+DUPLICATE KEY(log_time, log_type, error_code)
+DISTRIBUTED BY HASH(log_type) BUCKETS 10;</pre>
+<pre>-- Append 4 rows, then 2 more: all 6 are retained
+INSERT INTO example_tbl_duplicate VALUES
+('2024-11-01 00:00:00', 2, 2, 'timeout', 12, '2024-11-01 01:00:00'),
+('2024-11-02 00:00:00', 1, 2, 'success', 13, '2024-11-02 01:00:00'),
+('2024-11-03 00:00:00', 2, 2, 'unknown', 13, '2024-11-03 01:00:00'),
+('2024-11-04 00:00:00', 2, 2, 'unknown', 12, '2024-11-04 01:00:00');
+
+INSERT INTO example_tbl_duplicate VALUES
+('2024-11-01 00:00:00', 2, 2, 'timeout', 12, '2024-11-01 01:00:00'),
+('2024-11-01 00:00:00', 2, 2, 'unknown', 13, '2024-11-01 01:00:00');
+
+SELECT * FROM example_tbl_duplicate;
+-- Returns 6 rows</pre>
+<div class="st"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 3"/></svg> UNIQUE MODEL &mdash; Deep Dive</div>
+<p class="tm" style="margin-bottom:.5rem;">Primary-key uniqueness with UPSERT semantics. Supports UPDATE/DELETE, whole-row upsert, and partial column updates.</p>
+<pre>CREATE TABLE IF NOT EXISTS example_tbl_unique
+(
+    user_id         LARGEINT        NOT NULL,
+    user_name       VARCHAR(50)     NOT NULL,
+    city            VARCHAR(20),
+    age             SMALLINT,
+    sex             TINYINT
+)
+UNIQUE KEY(user_id, user_name)
+DISTRIBUTED BY HASH(user_id) BUCKETS 10;</pre>
+<pre>-- Insert original data
+INSERT INTO example_tbl_unique VALUES
+(101, 'Tom', 'BJ', 26, 1),
+(102, 'Jason', 'BJ', 27, 1),
+(103, 'Juice', 'SH', 20, 2),
+(104, 'Olivia', 'SZ', 22, 2);
+
+-- Re-insert same Keys with new values
+INSERT INTO example_tbl_unique VALUES
+(101, 'Tom', 'BJ', 27, 1),
+(102, 'Jason', 'SH', 28, 1);
+
+SELECT * FROM example_tbl_unique;
+-- Tom age=27 (updated), Jason city=SH (updated)
+-- 102 and 103 unchanged</pre>
+<div class="callout callout-caution"><div class="callout-icon">&#9888;</div><div><strong>Limitations:</strong> The implementation (merge-on-write / merge-on-read) cannot be changed after creation. Partition keys must be a subset of Key columns. Whole-row UPSERT fills unspecified columns with NULL/default values.</div></div>
+<div class="st"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 3"/></svg> KEY INSIGHTS &amp; LIMITATIONS</div>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">&#128200; Aggregate Model Pitfalls</div><div class="c-b"><ul><li>&#9888; <span class="ic">count(*)</span> is expensive &mdash; must scan all AGGREGATE KEY columns</li><li>&#9888; Inconsistent aggregation: <span class="ic">SELECT MIN(cost)</span> returns 5, not 1 on unmerged batches</li><li>&#128161; Fix: add a SUM column with value=1 for fast <span class="ic">count(*)</span></li><li>&#128161; Or use REPLACE type + value=1 for equivalent semantics</li></ul></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">&#9889; Unique Merge-on-Write</div><div class="c-b"><ul><li>&#9989; <span class="ic">count(*)</span> is 10x faster than Aggregate model</li><li>&#9989; No aggregation needed at query time &mdash; uses delete bitmap</li><li>&#9989; Duplicate model has no aggregation semantics &rarr; scan any single column for correct <span class="ic">count(*)</span></li><li>&#128161; Merge-on-write is the default &mdash; works for most workloads</li></ul></div></div></div>
+<div class="callout callout-tip"><div class="callout-icon">&#128161;</div><div><strong>Partial Column Update:</strong> Both Unique and Aggregate models support partial column updates. See the dedicated documentation for usage recommendations.</div></div>
+</div></section>
+<section id="s2"><div class="container">
+<div class="sl">Section 2</div>
+<h2 class="sh">Partitioning &mdash; Logical Data Organization</h2>
+<div class="s-intro">Partitioning divides table data into smaller, manageable segments. Doris supports three approaches: manual, dynamic, and auto partitioning &mdash; each suited to different data patterns and lifecycle needs.</div>
+<h3>2.1 Manual Partitioning</h3>
+<p class="tm" style="margin-bottom:.5rem;">User explicitly defines partition rules at table creation. Four forms of Range partitioning and List partitioning.</p>
+<div class="tw"><table class="tc"><thead><tr><th>Range Form</th><th>Use Case</th></tr></thead><tbody>
+<tr><td><strong>FIXED RANGE</strong></td><td>Precise control over upper and lower bounds of each partition</td></tr>
+<tr><td><strong>LESS THAN</strong></td><td>Append partitions in chronological order; only upper bound needed</td></tr>
+<tr><td><strong>BATCH RANGE</strong></td><td>Batch create numeric/time partitions with equal step size</td></tr>
+<tr><td><strong>MULTI RANGE</strong></td><td>Different step sizes for different time ranges in one statement</td></tr>
+</tbody></table></div>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">FIXED RANGE</div><div class="c-b"><pre style="margin:0;font-size:.73rem;">PARTITION BY RANGE(`date`)
+(
+ PARTITION `p201701`
+   VALUES [("2017-01-01"), ("2017-02-01")),
+ PARTITION `p201702`
+   VALUES [("2017-02-01"), ("2017-03-01"))
+)</pre></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0f766e,#115e59);">LESS THAN</div><div class="c-b"><pre style="margin:0;font-size:.73rem;">PARTITION BY RANGE(`date`)
+(
+ PARTITION `p201701`
+   VALUES LESS THAN ("2017-02-01"),
+ PARTITION `p201702`
+   VALUES LESS THAN ("2017-03-01"),
+ PARTITION `other`
+   VALUES LESS THAN (MAXVALUE)
+)</pre></div></div></div>
+<h4 style="font-size:.9rem;font-weight:600;margin:1rem 0 .3rem;color:var(--t-p);">List Partitioning</h4>
+<pre>-- Single-column List
+PARTITION BY LIST(city)
+(
+    PARTITION `p_cn` VALUES IN ("Beijing", "Shanghai", "Hong Kong"),
+    PARTITION `p_usa` VALUES IN ("New York", "San Francisco")
+)
+
+-- Multi-column List
+PARTITION BY LIST(id, city)
+(
+    PARTITION p1_city VALUES IN (("1", "Beijing"), ("1", "Shanghai")),
+    PARTITION p2_city VALUES IN (("2", "Beijing"), ("2", "Shanghai"))
+)</pre>
+<h3>2.2 Dynamic Partitioning</h3>
+<div class="kk">Rolls partitions forward automatically by creating and dropping them on a schedule. Provides partition TTL lifecycle management for time-series data.</div>
+<div class="callout callout-tip"><div class="callout-icon">&#128161;</div><div><strong>Tip:</strong> Auto Partitioning is the recommended successor to Dynamic Partitioning. Dynamic works only with Range on DATE/DATETIME columns, single partition key only.</div></div>
+<pre>CREATE TABLE test_dynamic_partition(
+    order_id    BIGINT,
+    create_dt   DATE,
+    username    VARCHAR(20)
+)
+DUPLICATE KEY(order_id)
+PARTITION BY RANGE(create_dt) ()
+DISTRIBUTED BY HASH(order_id) BUCKETS 10
+PROPERTIES(
+    "dynamic_partition.enable" = "true",
+    "dynamic_partition.time_unit" = "DAY",
+    "dynamic_partition.start" = "-1",
+    "dynamic_partition.end" = "2",
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.create_history_partition" = "true"
+);</pre>
+<div class="tw"><table class="tc"><thead><tr><th>Parameter</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="ic">dynamic_partition.time_unit</span></td><td>Yes</td><td>HOUR, DAY, WEEK, MONTH, YEAR</td></tr>
+<tr><td><span class="ic">dynamic_partition.start</span></td><td>No</td><td>Negative offset; partitions before this are dropped</td></tr>
+<tr><td><span class="ic">dynamic_partition.end</span></td><td>Yes</td><td>Positive offset; pre-create partitions into the future</td></tr>
+<tr><td><span class="ic">dynamic_partition.prefix</span></td><td>Yes</td><td>Partition name prefix</td></tr>
+</tbody></table></div>
+<h3>2.3 Auto Partitioning</h3>
+<div class="kk">Creates partitions automatically during data ingestion based on partition column values. Solves the problem of unpredictable value ranges and large partition counts.</div>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">AUTO RANGE</div><div class="c-b"><pre style="margin:0;font-size:.73rem;">CREATE TABLE `DAILY_TRADE_VALUE`
+(
+    `TRADE_DATE` datev2 NOT NULL,
+    `TRADE_ID`   varchar(40) NOT NULL
+)
+UNIQUE KEY(`TRADE_DATE`, `TRADE_ID`)
+AUTO PARTITION BY RANGE
+  (date_trunc(`TRADE_DATE`, 'year'))
+()
+DISTRIBUTED BY HASH(`TRADE_DATE`)
+  BUCKETS 10
+PROPERTIES
+  ("replication_num" = "1");
+
+-- Insert creates partitions automatically
+INSERT INTO `DAILY_TRADE_VALUE`
+VALUES ('2012-12-13', 1),
+       ('2008-02-03', 2),
+       ('2014-11-11', 3);</pre></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0f766e,#115e59);">AUTO LIST</div><div class="c-b"><pre style="margin:0;font-size:.73rem;">CREATE TABLE `str_table` (
+    `str` varchar not null
+)
+DUPLICATE KEY(`str`)
+AUTO PARTITION BY LIST (`str`)
+()
+DISTRIBUTED BY HASH(`str`) BUCKETS 10
+PROPERTIES
+  ("replication_allocation"
+    = "tag.location.default: 1");
+
+-- Each new value creates a partition
+INSERT INTO `str_table`
+VALUES ('beijing'), ('shanghai');</pre></div></div></div>
+<div class="tw"><table class="tc"><thead><tr><th>Feature</th><th>AUTO RANGE</th><th>AUTO LIST</th></tr></thead><tbody>
+<tr><td>Partition function</td><td><span class="ic">date_trunc</span> only</td><td>Not supported</td></tr>
+<tr><td>Column types</td><td>DATE, DATETIME</td><td>BOOLEAN, INT, BIGINT, DATE, VARCHAR, etc.</td></tr>
+<tr><td>Multi-column</td><td>No</td><td>Yes</td></tr>
+<tr><td>NULL support</td><td>Not supported</td><td>Supported</td></tr>
+</tbody></table></div>
+<div class="callout callout-info"><div class="callout-icon">&#9432;</div><div><strong>Lifecycle:</strong> AUTO RANGE supports lifetime management via <span class="ic">partition.retention_count</span> &mdash; retains only the N most recent historical partitions. Can also be used with dynamic partitioning, though this combination is no longer recommended.</div></div>
+</div></section>
+<section id="s3"><div class="container">
+<div class="sl">Section 3</div>
+<h2 class="sh">Data Bucketing &mdash; Physical Data Distribution</h2>
+<div class="s-intro">Each partition is further divided into buckets (Tablets). The bucketing strategy controls data distribution, query parallelism, and I/O efficiency.</div>
+<div class="kk">Follow this decision path: <strong>Choose method &rarr; Select bucket key (Hash only) &rarr; Determine count &rarr; Plan maintenance</strong></div>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">&#128270; Hash Bucketing</div><div class="c-b"><ul><li>&#9989; Supports bucket pruning for filtered queries</li><li>&#9989; Requires bucket key (1+ columns)</li><li>&#9888; Risk of data skew if key poorly chosen</li><li>&#9989; Works with all table models</li><li>&#9989; Perfect for point queries on specific columns</li></ul></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0f766e,#115e59);">&#128256; Random Bucketing</div><div class="c-b"><ul><li>&#9989; No bucket key needed</li><li>&#9989; Even distribution, low skew risk</li><li>&#9888; No bucket pruning support</li><li>&#9888; DUPLICATE model only</li><li>&#128161; Best for arbitrary-dimension analysis</li></ul></div></div></div>
+<pre>-- Hash bucketing
+CREATE TABLE demo.hash_bucket_tbl (
+    oid     BIGINT, dt DATE,
+    region  VARCHAR(10), amount INT
+)
+DUPLICATE KEY(oid)
+PARTITION BY RANGE(dt) (
+    PARTITION p250101 VALUES LESS THAN("2025-01-01"),
+    PARTITION p250102 VALUES LESS THAN("2025-01-02")
+)
+DISTRIBUTED BY HASH(region) BUCKETS 8;
+
+-- Random bucketing
+CREATE TABLE demo.random_bucket_tbl (
+    oid     BIGINT, dt DATE,
+    region  VARCHAR(10), amount INT
+)
+DUPLICATE KEY(oid)
+PARTITION BY RANGE(dt) (
+    PARTITION p250101 VALUES LESS THAN("2025-01-01"),
+    PARTITION p250102 VALUES LESS THAN("2025-01-02")
+)
+DISTRIBUTED BY RANDOM BUCKETS 8;</pre>
+<h4 style="font-size:.9rem;font-weight:600;margin:1.5rem 0 .3rem;color:var(--t-p);">Bucket Count Guidelines</h4>
+<div class="callout callout-caution"><div class="callout-icon">&#9888;</div><div><strong>Caution:</strong> The number of buckets for a partition cannot be changed after creation. Plan ahead for future scaling.</div></div>
+<div class="tw"><table class="tc"><thead><tr><th>Compressed Partition Size</th><th>Recommended Buckets</th></tr></thead><tbody>
+<tr><td>&lt; 1 GB</td><td>1</td></tr>
+<tr><td>1 - 10 GB</td><td>10</td></tr>
+<tr><td>10 - 200 GB</td><td>10 - 20</td></tr>
+<tr><td>&gt; 200 GB</td><td>Partition the table first</td></tr>
+</tbody></table></div>
+<div class="kk"><strong>Key rules:</strong> Each Tablet compressed data should be 1-20 GB (&le;10 GB for Unique). Tablet count should slightly exceed total cluster disks. Buckets must be an integer multiple of BE count. Max 128 buckets per partition.</div>
+<pre>-- Auto bucketing (since 2.0)
+DISTRIBUTED BY HASH(region) BUCKETS AUTO
+PROPERTIES("estimate_partition_size" = "20G")
+
+-- Modify for new partitions
+ALTER TABLE demo.hash_bucket_tbl
+ADD PARTITION p250103 VALUES LESS THAN("2025-01-03")
+DISTRIBUTED BY HASH(region) BUCKETS 16;
+
+-- Dynamic partition bucket override
+ALTER TABLE demo.dynamic_partition_tbl
+SET ("dynamic_partition.buckets"="16");</pre>
+<div class="callout callout-tip"><div class="callout-icon">&#128161;</div><div><strong>Tip:</strong> Only Hash bucketing requires a bucket key. For DUPLICATE tables, any Key or Value column qualifies. For AGGREGATE/UNIQUE, bucket keys must be Key columns.</div></div>
+</div></section>
+<section id="s4"><div class="container">
+<div class="sl">Section 4</div>
+<h2 class="sh">Best Practices &mdash; POC-Ready Table Design</h2>
+<div class="s-intro">Four key decisions determine ingestion and query performance: data model, sort key, partitioning, and bucketing. This section provides concrete templates and verification steps.</div>
+<div class="callout callout-tip"><div class="callout-icon">&#128161;</div><div><strong>Quick Checklist (5 minutes):</strong> Does the table use the right data model? Is the bucket count an integer multiple of BE count? Do time-based queries include the partition column? Is Data Cache enabled for lake queries?</div></div>
+<h3>Data Model Selection</h3>
+<div class="tw"><table class="tc"><thead><tr><th>Data Characteristic</th><th>Recommended Model</th><th>Reason</th></tr></thead><tbody>
+<tr><td>Append-only (logs, events, fact tables)</td><td><strong>Duplicate Key</strong></td><td>Keeps all rows; best query performance</td></tr>
+<tr><td>Updated by primary key (CDC, Upsert)</td><td><strong>Unique Key</strong></td><td>New rows replace old with same key</td></tr>
+<tr><td>Pre-aggregated metrics (PV, UV, summaries)</td><td><strong>Aggregate Key</strong></td><td>Merges rows by SUM/MAX/MIN at write time</td></tr>
+</tbody></table></div>
+<h3>Table Creation Templates</h3>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0f766e,#115e59);">&#128196; Log / Event Analytics</div><div class="c-b"><pre style="margin:0;font-size:.72rem;">CREATE TABLE app_logs (
+    log_time      DATETIME NOT NULL,
+    log_level     VARCHAR(10),
+    service_name  VARCHAR(50),
+    trace_id      VARCHAR(64),
+    message       STRING,
+    INDEX idx_msg (message)
+      USING INVERTED
+      PROPERTIES("parser"="unicode")
+)
+AUTO PARTITION BY RANGE
+  (date_trunc(log_time, 'day')) ()
+DISTRIBUTED BY RANDOM BUCKETS 10;</pre><p style="margin-top:.4rem;font-size:.75rem;color:var(--t-s);">&#9989; Duplicate model for append-only</p><p style="font-size:.75rem;color:var(--t-s);">&#9989; Auto partition by day</p></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">&#128273; Real-Time Upsert (CDC)</div><div class="c-b"><pre style="margin:0;font-size:.72rem;">CREATE TABLE user_profiles (
+    user_id   BIGINT NOT NULL,
+    username  VARCHAR(50),
+    email     VARCHAR(100),
+    status    TINYINT,
+    updated_at DATETIME
+)
+UNIQUE KEY(user_id)
+DISTRIBUTED BY HASH(user_id)
+  BUCKETS 10;</pre><p style="margin-top:.4rem;font-size:.75rem;color:var(--t-s);">&#9989; Unique model for primary key updates</p><p style="font-size:.75rem;color:var(--t-s);">&#9989; Hash by user_id for point queries</p></div></div>
+</div>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">&#128202; Metric Aggregation</div><div class="c-b"><pre style="margin:0;font-size:.72rem;">CREATE TABLE site_metrics (
+    dt      DATE NOT NULL,
+    site_id INT NOT NULL,
+    pv      BIGINT SUM DEFAULT '0',
+    uv      BIGINT MAX DEFAULT '0'
+)
+AGGREGATE KEY(dt, site_id)
+AUTO PARTITION BY RANGE
+  (date_trunc(dt, 'day')) ()
+DISTRIBUTED BY HASH(site_id)
+  BUCKETS 10;</pre><p style="margin-top:.4rem;font-size:.75rem;color:var(--t-s);">&#9989; Aggregate model for pre-aggregation</p><p style="font-size:.75rem;color:var(--t-s);">&#9989; Auto partition + hash bucket</p></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#c2410c,#9a3412);">&#128269; Verification SQL</div><div class="c-b"><pre style="margin:0;font-size:.72rem;">-- Check partitions
+SHOW PARTITIONS FROM app_logs;
+
+-- Check tablet distribution
+SHOW TABLETS FROM app_logs;
+
+-- Verify aggregation works
+SELECT dt, site_id, pv, uv
+FROM site_metrics
+ORDER BY dt DESC LIMIT 10;
+
+-- Verify partition pruning
+EXPLAIN SELECT *
+FROM site_metrics
+WHERE dt = '2024-01-01';</pre></div></div></div>
+<h3>Common Pitfalls &amp; Solutions</h3>
+<div class="cg"><div class="card"><div class="ci" style="background:rgba(248,113,113,.12);color:var(--red);">&#9888;</div><h4>Too Many Small Tablets</h4><p>Excessive buckets create scheduling overhead, reducing query performance by up to 50%. Keep compressed data per Tablet between 1-20 GB.</p></div>
+<div class="card"><div class="ci" style="background:rgba(248,113,113,.12);color:var(--red);">&#9888;</div><h4>Data Skew</h4><p>Uneven tablet sizes hurt parallelism. Use <span class="ic">SHOW TABLETS</span> to diagnose. Switch to Random bucketing or choose a higher-cardinality bucket key.</p></div>
+<div class="card"><div class="ci" style="background:rgba(251,146,60,.12);color:var(--orange);">&#128200;</div><h4>count(*) Performance</h4><p>In the Aggregate model, <span class="ic">count(*)</span> must scan all Key columns. Fix: add a SUM column with value=1. Unique merge-on-write is 10x faster.</p></div>
+<div class="card"><div class="ci" style="background:rgba(56,189,248,.12);color:var(--blue);">&#128295;</div><h4>Sort Key Best Practices</h4><p>Put high-frequency filter columns first. Use fixed-length types (INT, BIGINT, DATE) before VARCHAR. Add inverted indexes for columns the prefix index does not cover.</p></div></div>
+<div class="callout callout-tip"><div class="callout-icon">&#128161;</div><div><strong>Ingestion Best Practices:</strong> Don't use INSERT INTO VALUES for bulk data. Use Stream Load or Broker Load. Merge writes client-side first. Split large ingestions into smaller batches. For Duplicate + Random bucketing, enable <span class="ic">load_to_single_tablet</span> to reduce write amplification.</div></div>
+</div></section>
+<footer><div class="container"><p>Generated from Apache Doris table design documentation. Covers data models, partitioning, bucketing, and best practices.</p><p style="margin-top:.5rem;font-size:.75rem;">Apache Doris &copy; The Apache Software Foundation.</p></div></footer>
+<script>(function(){var b=document.getElementById('bar');window.addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-window.innerHeight;b.style.width=(window.scrollY/h*100)+'%';});})();</script>
+</body></html>

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apache Doris Installation Guide — 4 Deployment Paths</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --bg-p:#05080f;--bg-s:#0a0e17;--bg-c:#0f1623;--bg-ch:#1a2540;
+    --b:#1e2a3d;--bl:#2a3a52;
+    --t-p:#e8edf5;--t-s:#94a3b8;--t-m:#64748b;
+    --blue:#38bdf8;--cyan:#22d3ee;--teal:#2dd4bf;
+    --purple:#a78bfa;--orange:#fb923c;--amber:#fbbf24;--green:#4ade80;
+    --red:#f87171;
+    --sh-sm:0 1px 3px rgba(0,0,0,.3);--sh-md:0 4px 6px rgba(0,0,0,.35);
+    --sh-lg:0 10px 25px rgba(0,0,0,.4);--r:12px;--r-lg:16px;
+  }
+  html{scroll-behavior:smooth;}
+  body{font-family:'Inter',sans-serif;background:var(--bg-p);color:var(--t-p);line-height:1.7;overflow-x:hidden;}
+  ::selection{background:rgba(56,189,248,.3);}
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#05080f 0%,#0a0e17 40%,#0f1623 70%,#0a121f 100%);overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(56,189,248,.08) 0%,transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(34,211,238,.06) 0%,transparent 50%);pointer-events:none;}
+  .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03)1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03)1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
+  .hero-orb{position:absolute;width:500px;height:500px;border-radius:50%;filter:blur(100px);opacity:.12;pointer-events:none;}
+  .hero-orb-1{top:-15%;left:-10%;background:radial-gradient(circle,var(--cyan),transparent);}
+  .hero-orb-2{bottom:-20%;right:-8%;background:radial-gradient(circle,var(--blue),transparent);}
+  .hero-content{position:relative;z-index:2;text-align:center;padding:2rem;max-width:950px;}
+  .hero-badge{display:inline-block;padding:6px 18px;border-radius:20px;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);color:var(--cyan);font-size:.8rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2rem;}
+  .hero h1{font-weight:800;font-size:clamp(2.5rem,6vw,4.8rem);color:var(--t-p);letter-spacing:-1.5px;line-height:1.1;text-shadow:0 2px 30px rgba(0,0,0,.5);}
+  .hero h1 span{display:inline-block!important;white-space:nowrap;}
+  .hero h1 .dh{background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .hero-sub{margin-top:1.5rem;font-size:clamp(1rem,2vw,1.3rem);color:var(--t-s);max-width:720px;margin:1.5rem auto 0;font-weight:300;line-height:1.8;}
+  .hero-stats{display:flex;justify-content:center;gap:2.5rem;margin-top:2.5rem;flex-wrap:wrap;}
+  .hero-stat-value{font-size:1.8rem;font-weight:700;color:var(--cyan);letter-spacing:-1px;}
+  .hero-stat-label{font-size:.75rem;color:var(--t-m);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+  .hero-nav{display:flex;justify-content:center;gap:.75rem;margin-top:2.5rem;flex-wrap:wrap;}
+  .hero-nav a{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:8px;font-size:.85rem;font-weight:500;text-decoration:none;transition:all .2s;}
+  .hero-nav a:first-child{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#05080f;}
+  .hero-nav a:first-child:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 8px 20px rgba(34,211,238,.25);}
+  .hero-nav a.sec{background:rgba(255,255,255,.06);color:var(--t-p);border:1px solid var(--bl);}
+  .hero-nav a.sec:hover{background:rgba(255,255,255,.1);transform:translateY(-2px);}
+  .si{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--t-m);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;animation:bounce 2s infinite;}
+  .si svg{width:20px;height:20px;}
+  @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+  .container{max-width:1120px;margin:0 auto;padding:0 1.5rem;}
+  section{padding:5rem 0;position:relative;}
+  section:nth-child(even){background:var(--bg-s);}
+  section:nth-child(odd){background:var(--bg-p);}
+  .sl{display:inline-flex;align-items:center;gap:8px;font-size:clamp(1.7rem,3.8vw,2.5rem);font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:.75rem;}
+  .sl::before{content:'';width:24px;height:2px;background:var(--blue);border-radius:1px;}
+  .sh{font-size:clamp(1.5rem,3.5vw,2.3rem);font-weight:800;color:var(--t-p);letter-spacing:-.5px;line-height:1.25;margin-bottom:1rem;}
+  .s-intro{font-family:'Playfair Display','Georgia',serif;font-style:italic;font-size:1.1rem;color:var(--t-s);line-height:1.8;margin-bottom:2rem;padding:1.2rem 1.5rem;border-left:3px solid var(--blue);background:rgba(56,189,248,.06);border-radius:0 var(--r) var(--r) 0;}
+  .cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:1.25rem;margin:1.5rem 0;}
+  .card{background:var(--bg-c);border-radius:var(--r);padding:1.5rem;box-shadow:var(--sh-sm);border:1px solid var(--b);transition:all .25s;}
+  .card:hover{box-shadow:var(--sh-md);border-color:var(--bl);transform:translateY(-2px);}
+  .ci{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:.75rem;}
+  .card h4{font-size:.95rem;font-weight:600;margin-bottom:.3rem;color:var(--t-p);}
+  .card p{font-size:.82rem;color:var(--t-s);line-height:1.6;}
+  .tw{overflow-x:auto;margin:1.5rem 0;border-radius:var(--r);box-shadow:var(--sh-sm);border:1px solid var(--b);}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;}
+  thead th{padding:.85rem 1rem;text-align:left;font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;background:linear-gradient(135deg,#1a2540,#1e2a3d);color:var(--t-p);white-space:nowrap;border-bottom:1px solid var(--bl);}
+  tbody td{padding:.7rem 1rem;border-bottom:1px solid var(--b);vertical-align:top;color:var(--t-s);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:rgba(56,189,248,.08);}
+  .tc tbody tr:nth-child(1){background:rgba(56,189,248,.08);}
+  .tc tbody tr:nth-child(2){background:rgba(248,113,113,.06);}
+  .tc tbody tr:nth-child(3){background:rgba(74,222,128,.06);}
+  .tc tbody tr:nth-child(4){background:rgba(251,191,36,.06);}
+  .tc tbody tr:nth-child(5){background:rgba(167,139,250,.06);}
+  .tc tbody tr:nth-child(6){background:rgba(34,211,238,.06);}
+  .tc tbody tr:nth-child(7){background:rgba(251,146,60,.06);}
+  .tc tbody tr:nth-child(8){background:rgba(244,114,182,.06);}
+  .tc tbody tr:hover{background:rgba(56,189,248,.18);}
+  .callout{padding:1.2rem 1.5rem;border-radius:var(--r);margin:1.5rem 0;display:flex;gap:1rem;align-items:flex-start;font-size:.9rem;line-height:1.7;border:1px solid var(--b);}
+  .callout-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px;color:var(--blue);}
+  .callout-tip{background:rgba(74,222,128,.06);border-left:4px solid var(--green);}
+  .callout-tip .callout-icon{color:var(--green);}
+  .callout-caution{background:rgba(248,113,113,.08);border-left:4px solid var(--red);}
+  .callout-caution .callout-icon{color:var(--red);}
+  .callout-info{background:rgba(56,189,248,.06);border-left:4px solid var(--blue);}
+  .callout-info .callout-icon{color:var(--blue);}
+  .callout strong{color:var(--t-p);}
+  .dw{background:var(--bg-c);border:1px solid var(--b);border-radius:var(--r-lg);padding:1.5rem;margin:1.5rem 0;box-shadow:var(--sh-sm);overflow:hidden;}
+  .dw svg{display:block;width:100%;height:auto;}
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0;}
+  @media(max-width:720px){.cmp,.mg{grid-template-columns:1fr!important;}}
+  .c-col{border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-sm);border:1px solid var(--b);}
+  .c-h{padding:1rem 1.25rem;font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:8px;color:white;}
+  .c-b{padding:1.25rem;background:var(--bg-c);}
+  .c-b ul{list-style:none;padding:0;}
+  .c-b li{padding:.5rem 0;font-size:.85rem;color:var(--t-s);display:flex;align-items:flex-start;gap:8px;border-bottom:1px solid var(--b);}
+  .c-b li:last-child{border-bottom:none;}
+  .fs{display:flex;align-items:center;justify-content:center;gap:0;margin:1.5rem 0;flex-wrap:wrap;}
+  .f-step{display:flex;flex-direction:column;align-items:center;padding:.8rem 1rem;background:var(--bg-c);border-radius:var(--r);box-shadow:var(--sh-sm);border:1px solid var(--b);min-width:95px;text-align:center;}
+  .f-step-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:5px;color:white;}
+  .f-step-l{font-size:.73rem;font-weight:600;color:var(--t-p);}
+  .f-step-d{font-size:.63rem;color:var(--t-m);margin-top:2px;}
+  .f-arrow{font-size:1.2rem;color:var(--t-m);padding:0 3px;flex-shrink:0;}
+  .fr{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.65rem;margin:1.5rem 0;}
+  .fi{background:var(--bg-c);border:1px solid var(--b);border-radius:8px;padding:.9rem;text-align:center;transition:all .2s;}
+  .fi:hover{border-color:var(--bl);}
+  .fi .fii{font-size:1.5rem;margin-bottom:3px;}
+  .fi .fil{font-size:.7rem;font-weight:500;color:var(--t-s);}
+  .tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.7rem;font-weight:500;}
+  .tag-b{background:rgba(56,189,248,.15);color:var(--blue);}
+  .tag-g{background:rgba(74,222,128,.15);color:var(--green);}
+  .tag-o{background:rgba(251,146,60,.15);color:var(--orange);}
+  .tag-p{background:rgba(167,139,250,.15);color:var(--purple);}
+  .mg{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0;}
+  @media(max-width:640px){.mg{grid-template-columns:1fr;}}
+  .mc{border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-sm);border:1px solid var(--b);transition:all .25s;text-align:center;}
+  .mc:hover{transform:translateY(-3px);box-shadow:var(--sh-md);}
+  .mch{padding:.85rem .85rem .45rem;font-weight:700;font-size:1rem;color:white;}
+  .mcb{padding:.65rem .85rem .9rem;background:var(--bg-c);}
+  .mcb p{font-size:.78rem;color:var(--t-s);line-height:1.5;}
+  .mcb pre{font-size:.7rem;margin:.4rem 0 0;}
+  pre{background:#05080f;border:1px solid var(--b);border-radius:8px;padding:1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.6;overflow-x:auto;margin:1rem 0;color:var(--t-p);}
+  .ic{font-family:'JetBrains Mono',monospace;font-size:.82em;background:rgba(255,255,255,.06);padding:1px 6px;border-radius:4px;color:var(--blue);}
+  .tm{color:var(--t-m);font-size:.82rem;}
+  .dp{color:var(--green);font-weight:600;}
+  .dn{color:var(--red);font-weight:600;}
+  .dnu{color:var(--orange);font-weight:600;}
+  .bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--blue));z-index:1000;width:0;transition:width .1s;}
+  @media(max-width:640px){section{padding:3rem 0;}.hero-content{padding:1.5rem;}.cg,.cmp{grid-template-columns:1fr;}.hero-stats{gap:1.5rem;}.fs{flex-direction:column;}.f-arrow{transform:rotate(90deg);}}
+  .step-n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,var(--cyan),var(--blue));color:#05080f;font-size:.75rem;font-weight:700;margin-right:8px;flex-shrink:0;}
+  .step-h{display:flex;align-items:center;font-size:1rem;font-weight:600;color:var(--t-p);margin:1.5rem 0 .4rem;}
+  .kk{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.2);border-radius:var(--r);padding:.8rem 1.1rem;margin:.8rem 0;font-size:.82rem;color:var(--t-s);line-height:1.6;}
+  .kk strong{color:var(--cyan);}
+  .toc{position:sticky;top:1rem;background:var(--bg-c);border:1px solid var(--b);border-radius:var(--r);padding:1.25rem;margin:0 0 2rem;box-shadow:var(--sh-sm);}
+  .toc h3{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--t-m);margin-bottom:.6rem;}
+  .toc a{display:block;padding:.25rem 0;font-size:.82rem;color:var(--t-s);text-decoration:none;transition:color .15s;}
+  .toc a:hover{color:var(--blue);}
+  .toc a.tl2{font-size:.78rem;color:var(--t-m);}
+  footer{background:#05080f;border-top:1px solid var(--b);padding:2rem;text-align:center;font-size:.8rem;color:var(--t-m);}
+  footer a{color:var(--blue);text-decoration:none;}
+
+section h3{font-size:.9rem;font-weight:600;margin:2rem 0 .5rem;padding-top:1.5rem;border-top:1px dashed rgba(255,255,255,.15);color:var(--cyan);}
+</style>
+</head><body>
+<div class="bar" id="bar"></div>
+
+<section class="hero"><div class="hero-grid"></div><div class="hero-orb hero-orb-1"></div><div class="hero-orb hero-orb-2"></div><div class="hero-content">
+<div class="hero-badge">&#9733; Apache Doris &mdash; Deployment Guide</div>
+<h1><span>Apache</span> <span class="dh">Doris</span> <span>Installation</span> <span class="dh">Guide</span></h1>
+<p class="hero-sub">Four complete deployment paths for Apache Doris &mdash; manual and Kubernetes-based, covering both integrated and decoupled storage-compute architectures. Designed for system administrators and platform engineers.</p>
+<div class="hero-stats"><div class="hero-stat"><div class="hero-stat-value">30&ndash;45 min</div><div class="hero-stat-label">Reading</div></div>
+<div class="hero-stat"><div class="hero-stat-value">4</div><div class="hero-stat-label">Paths</div></div>
+<div class="hero-stat"><div class="hero-stat-value">2</div><div class="hero-stat-label">Platforms</div></div>
+<div class="hero-stat"><div class="hero-stat-value">2</div><div class="hero-stat-label">Architectures</div></div></div>
+<div class="hero-nav"><a href="#s1">&#8595; Start Reading</a></div></div>
+<div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>scroll</div></section>
+<div class="container" style="margin-top:2rem;"><div class="toc"><h3>Contents</h3>
+<a href="#s1">1. Manual &mdash; Integrated</a>
+<a href="#s2" class="tl2">2. Manual &mdash; Decoupled</a>
+<a href="#s3" class="tl2">3. K8s &mdash; Integrated</a>
+<a href="#s4" class="tl2">4. K8s &mdash; Decoupled</a>
+</div></div>
+<div class="callout callout-info" style="margin:0 auto 1.5rem;max-width:1120px;padding:.9rem 1.2rem;"><div class="callout-icon">&#9432;</div><div><strong>Reference:</strong> For comprehensive installation guidance, see <a href="https://doris.apache.org/docs/dev/install/intro" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">Installation Overview</a> on the official Doris website for deployment options, prerequisites, and configuration details.</div></div>
+<section id="s1"><div class="container">
+<div class="sl">Section 1</div>
+<h2 class="sh">Manual Deployment &mdash; Integrated Storage-Compute</h2>
+<div class="s-intro">Deploy a classic Apache Doris cluster on bare-metal or virtual machines. This four-step workflow covers FE Master, FE Cluster expansion, BE Nodes, and verification.</div>
+<h3>Architecture Overview</h3>
+<p class="tm" style="margin-bottom:1rem;">Two process types form a unified, shared-nothing cluster with MySQL-compatible protocol.</p>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">&#129504; Frontend (FE)</div><div class="c-b"><ul><li>&#9989; Metadata management &amp; query planning</li><li>&#9989; MySQL protocol compatible (port 9030)</li><li>&#9989; Master: reads/writes metadata, coordinates</li><li>&#9989; Follower: HA, participates in leader election</li><li>&#9989; Observer: read-only scaling, no voting rights</li></ul></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0f766e,#115e59);">&#9889; Backend (BE)</div><div class="c-b"><ul><li>&#9989; Data storage &amp; query execution</li><li>&#9989; Columnar storage + vectorized SIMD</li><li>&#9989; Multi-disk: mix HDD and SSD per node</li><li>&#9989; Tablet-based sharding, 3 replicas by default</li><li>&#9989; Horizontal scaling via ADD BACKEND</li></ul></div></div></div>
+<h3>Prerequisites</h3>
+<div class="tw"><table class="tc"><thead><tr><th>Requirement</th><th>Minimum Spec</th><th>Notes</th></tr></thead><tbody>
+<tr><td><strong>OS</strong></td><td>CentOS 7+ / Ubuntu 22.04+</td><td>Check compatibility first</td></tr>
+<tr><td><strong>JDK</strong></td><td>JDK 17+</td><td>Independent of system Java</td></tr>
+<tr><td><strong>Network</strong></td><td>Full connectivity</td><td>Ports 8030, 9030, 9050, 9060 open</td></tr>
+<tr><td><strong>FE Disk</strong></td><td>100GB+ SSD</td><td>Dedicated SSD for metadata</td></tr>
+<tr><td><strong>BE Disk</strong></td><td>500GB+ per node</td><td>Can combine multiple disks</td></tr>
+</tbody></table></div>
+<div class="callout callout-caution"><div class="callout-icon">&#9888;</div><div><strong>Critical:</strong> Use dedicated SSD for FE metadata &mdash; never put it on the same disk as BE data. The <span class="ic">lower_case_table_names</span> parameter cannot be changed after cluster creation &mdash; set it to <span class="ic">1</span> at initialization.</div></div>
+<h3>Deployment Roadmap</h3>
+<div class="fs"><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">1</div><div class="f-step-l">FE Master</div><div class="f-step-d">Initialize first FE</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#0f766e,#115e59);">2</div><div class="f-step-l">FE Cluster</div><div class="f-step-d">Add F/O nodes</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#b45309,#92400e);">3</div><div class="f-step-l">BE Nodes</div><div class="f-step-d">Register &amp; start</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">4</div><div class="f-step-l">Verify</div><div class="f-step-d">Test &amp; secure</div></div></div>
+<div class="step-h"><span class="step-n">1</span> Deploy FE Master Node</div>
+<pre># Create metadata directory and symlink
+mkdir -p /ssd1/doris-meta
+ln -s /ssd1/doris-meta /path/to/doris/fe/doris-meta
+
+# Start FE
+bin/start_fe.sh --daemon
+
+# Verify
+mysql -uroot -P9030 -h192.168.1.10
+show frontends;</pre>
+<div class="step-h"><span class="step-n">2</span> Deploy FE Cluster (High Availability)</div>
+<div class="kk"><strong>Production requires 3 FE nodes</strong> (1 Master + 2 Followers). The number of Followers must be odd for proper leader election.</div>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">&#128279; Register Follower</div><div class="c-b"><pre style="margin:0;font-size:.74rem;">ALTER SYSTEM ADD FOLLOWER "192.168.1.11:9010";
+
+bin/start_fe.sh \
+  --helper 192.168.1.10:9010 --daemon</pre></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">&#128065; Register Observer</div><div class="c-b"><pre style="margin:0;font-size:.74rem;">ALTER SYSTEM ADD OBSERVER "192.168.1.12:9010";</pre><p style="margin-top:.5rem;font-size:.78rem;color:var(--t-s);">Observers handle reads without voting &mdash; ideal for scaling query capacity.</p></div></div></div>
+<div class="step-h"><span class="step-n">3</span> Deploy BE Nodes</div>
+<pre># be.conf multi-disk configuration
+storage_root_path=/data1/doris,medium:HDD;/ssd1/doris,medium:SSD
+
+# Register BE
+ALTER SYSTEM ADD BACKEND "192.168.1.20:9050";
+
+# Start BE
+bin/start_be.sh --daemon
+
+# Verify
+show backends;</pre>
+<div class="step-h"><span class="step-n">4</span> Verification &amp; Security</div>
+<div class="callout callout-caution"><div class="callout-icon">&#128274;</div><div><strong>Security:</strong> Change the root password immediately after deployment. The default empty password is for initial setup only.</div></div>
+<pre>-- Check cluster health
+show frontends;
+show backends;
+
+-- Set password (do this first!)
+SET PASSWORD = PASSWORD('doris_secure_passwd');
+
+-- Functional test
+create database testdb;
+
+CREATE TABLE testdb.table_hash (
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT "10.5",
+    k3 VARCHAR(10),
+    k4 INT NOT NULL DEFAULT "1"
+) DISTRIBUTED BY HASH(k1) BUCKETS 32;
+
+INSERT INTO testdb.table_hash VALUES (1, 10.1, 'AAA', 10);
+SELECT * FROM testdb.table_hash;</pre>
+<h3>Troubleshooting &amp; Best Practices</h3>
+<div class="tw"><table class="tc"><thead><tr><th>Issue</th><th>Likely Cause</th><th>Solution</th></tr></thead><tbody>
+<tr><td>FE won't start</td><td>Port 9030 in use</td><td>Check <span class="ic">netstat</span>, change <span class="ic">query_port</span></td></tr>
+<tr><td>Metadata sync fails</td><td>Priority networks misconfigured</td><td>Verify CIDR matches subnet</td></tr>
+<tr><td>BE registration fails</td><td>FE not alive</td><td>Run <span class="ic">show frontends</span> first</td></tr>
+<tr><td>BE Alive, 0 tablets</td><td>Normal for new node</td><td>Wait for auto-balancing</td></tr>
+</tbody></table></div>
+<div class="cg"><div class="card"><div class="ci" style="background:rgba(56,189,248,.12);color:var(--blue);">&#128295;</div><h4>Dedicated SSD for FE</h4><p>FE metadata must be on dedicated SSD, never under the Doris install directory.</p></div>
+<div class="card"><div class="ci" style="background:rgba(248,113,113,.12);color:var(--red);">&#9888;</div><h4>Case Sensitivity</h4><p><span class="ic">lower_case_table_names</span> is permanent &mdash; set to 1 at initialization.</p></div>
+<div class="card"><div class="ci" style="background:rgba(74,222,128,.12);color:var(--green);">&#8597;</div><h4>Production HA</h4><p>Deploy 3 FE Followers (odd number for quorum), multiple BE nodes.</p></div></div>
+</div></section>
+<section id="s2"><div class="container">
+<div class="sl">Section 2</div>
+<h2 class="sh">Manual Deployment &mdash; Decoupled Storage-Compute</h2>
+<div class="s-intro">An eight-step workflow for deploying Doris with fully separated compute and storage layers. Set up FoundationDB, S3/HDFS, Meta Service, FE/BE in cloud mode, and Storage Vault.</div>
+<h3>Deployment Roadmap</h3>
+<p class="tm" style="margin-bottom:1rem;">Eight sequential steps from infrastructure to storage backend.</p>
+<div class="fs"><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">1</div><div class="f-step-l">FDB</div><div class="f-step-d">FoundationDB</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">2</div><div class="f-step-l">S3/MinIO</div><div class="f-step-d">Shared Storage</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#b45309,#92400e);">3</div><div class="f-step-l">Meta Svc</div><div class="f-step-d">Meta Service</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#0f766e,#115e59);">4</div><div class="f-step-l">Recycler</div><div class="f-step-d">(Optional)</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">5</div><div class="f-step-l">FE Master</div><div class="f-step-d">deploy_mode=cloud</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">6</div><div class="f-step-l">FE Cluster</div><div class="f-step-d">Follower/Ob.</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#b45309,#92400e);">7</div><div class="f-step-l">BE Nodes</div><div class="f-step-d">file_cache</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#0f766e,#115e59);">8</div><div class="f-step-l">Vault</div><div class="f-step-d">Storage Vault</div></div></div>
+<div class="step-h"><span class="step-n">1</span> Prepare FoundationDB</div>
+<div class="kk">Doris depends on FoundationDB <strong>7.1.x</strong> for metadata storage. At least 3 machines with SSDs for production.</div>
+<div class="callout callout-tip"><div class="callout-icon">&#128161;</div><div>If FDB is already installed, confirm its version is in the 7.1.x series; otherwise Meta Service will fail to start.</div></div>
+<pre># Configure fdb_vars.sh
+DATA_DIRS=/mnt/foundationdb/data1,/mnt/foundationdb/data2
+FDB_CLUSTER_IPS=172.200.0.2,172.200.0.3,172.200.0.4
+FDB_HOME=/fdbhome
+FDB_CLUSTER_ID=$(mktemp -u XXXXXXXX)
+FDB_CLUSTER_DESC=dorisfdb
+
+# Deploy on each node
+./fdb_ctl.sh deploy
+
+# Start FDB
+./fdb_ctl.sh start</pre>
+<div class="callout callout-caution"><div class="callout-icon">&#9888;</div><div><strong>Warning:</strong> The <span class="ic">clean</span> command in fdb_ctl.sh removes all FDB metadata. Never use it in production.</div></div>
+<div class="step-h"><span class="step-n">2</span> Install S3 or HDFS Service <span class="tag tag-o" style="margin-left:8px;">Optional</span></div>
+<p class="tm" style="margin-bottom:.5rem;">If you don't have shared storage, MinIO is the quickest way to get started.</p>
+<pre>export MINIO_REGION_NAME=us-east-1
+export MINIO_ROOT_USER=minio
+export MINIO_ROOT_PASSWORD=minioadmin
+nohup ./minio server /mnt/data 2>&1 &
+
+./mc config host add myminio http://127.0.0.1:9000 minio minioadmin
+./mc mb myminio/doris
+./mc mv test_file myminio/doris</pre>
+<div class="step-h"><span class="step-n">3</span> Deploy Meta Service</div>
+<div class="kk">Configure <span class="ic">doris_cloud.conf</span> with the FDB connection string. At least 3 Meta Service nodes in production.</div>
+<pre># doris_cloud.conf
+brpc_listen_port = 5000
+fdb_cluster = xxx:yyy@127.0.0.1:4500
+
+# Start Meta Service
+export JAVA_HOME=${path_to_jdk_17}
+bin/start.sh --daemon
+
+# Verify: return code 0 + "doris_cloud start successfully"</pre>
+<div class="step-h"><span class="step-n">4</span> Standalone Data Recycler <span class="tag tag-o" style="margin-left:8px;">Optional</span></div>
+<pre>cp -r ms recycler
+# Start recycler only
+bin/start.sh --recycler --daemon
+# Start metadata only
+bin/start.sh --meta-service --daemon</pre>
+<div class="step-h"><span class="step-n">5</span> Start FE Master Node (Cloud Mode)</div>
+<pre># fe.conf key parameters
+deploy_mode = cloud
+cluster_id = $(echo $((($RANDOM << 15)) | $RANDOM))
+meta_service_endpoint = 127.0.0.1:5000
+
+# Start FE
+bin/start_fe.sh --daemon
+
+# Verify
+mysql -h <fe_host> -P 9030 -u root -e "SHOW FRONTENDS;"</pre>
+<div class="step-h"><span class="step-n">6</span> Register FE Follower/Observer</div>
+<pre>ALTER SYSTEM ADD FOLLOWER "host:port";
+ALTER SYSTEM ADD OBSERVER "host:port";</pre>
+<div class="step-h"><span class="step-n">7</span> Add BE Nodes (Cloud Mode)</div>
+<pre># be.conf key parameters
+deploy_mode = cloud
+file_cache_path = [{"path":"/path/to/file_cache","total_size":21474836480}]
+
+bin/start_be.sh --daemon
+ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>";
+SHOW BACKENDS;</pre>
+<div class="step-h"><span class="step-n">8</span> Add Storage Vault</div>
+<div class="kk">A Storage Vault represents the shared storage layer. Create using HDFS or S3-compatible object storage.</div>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0f766e,#115e59);">HDFS Vault</div><div class="c-b"><pre style="margin:0;font-size:.74rem;">CREATE STORAGE VAULT IF_NOT_EXISTS hdfs_vault
+    PROPERTIES (
+    "type"="hdfs",
+    "fs.defaultFS"=
+      "hdfs://127.0.0.1:8020"
+);</pre></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#c2410c,#9a3412);">S3 Vault</div><div class="c-b"><pre style="margin:0;font-size:.74rem;">CREATE STORAGE VAULT IF_NOT_EXISTS s3_vault
+    PROPERTIES (
+    "type"="S3",
+    "s3.endpoint"="https://s3.us-east-1.amazonaws.com",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.region" = "us-east-1",
+    "s3.root.path" = "ssb_sf1_p2_s3",
+    "s3.bucket" = "doris-build",
+    "provider" = "S3"
+);</pre></div></div></div>
+<pre>-- Set default
+SET s3_vault AS DEFAULT STORAGE VAULT;
+
+-- Verify
+SHOW STORAGE VAULTS;</pre>
+<h3>Troubleshooting</h3>
+<div class="callout callout-caution"><div class="callout-icon">&#9888;</div><div>If BE stays in "Starting" state: check <span class="ic">be.log</span>, confirm <span class="ic">meta_service_endpoint</span> is reachable, verify <span class="ic">deploy_mode = cloud</span>. If adding BE returns "backend already exists", run <span class="ic">ALTER SYSTEM DROP BACKEND</span> first.</div></div>
+</div></section>
+<section id="s3"><div class="container">
+<div class="sl">Section 3</div>
+<h2 class="sh">Kubernetes &mdash; Integrated Storage-Compute</h2>
+<div class="s-intro">Deploy a classic Doris cluster on Kubernetes using the Doris Operator. CRD-driven deployment, ConfigMap-based configuration, persistent storage, and three access modes (ClusterIP, NodePort, LoadBalancer).</div>
+<div class="fs"><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">1</div><div class="f-step-l">Operator</div><div class="f-step-d">Deploy Doris Operator</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#0f766e,#115e59);">2</div><div class="f-step-l">Configure</div><div class="f-step-d">Customize cluster</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#b45309,#92400e);">3</div><div class="f-step-l">Deploy</div><div class="f-step-d">Apply CR</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">4</div><div class="f-step-l">Access</div><div class="f-step-d">ClusterIP/NodePort/LB</div></div></div>
+<div class="step-h"><span class="step-n">1</span> Deploy Doris Operator</div>
+<pre># Install CRDs
+kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/crds.yaml
+
+# Deploy Operator
+kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/operator.yaml
+
+# Expected output:
+# namespace/doris created
+# deployment.apps/doris-operator created
+
+# Check status
+kubectl get pods -n doris
+# NAME                              READY   STATUS
+# doris-operator-7f578c86cb-nz6jn   1/1     Running</pre>
+<div class="step-h"><span class="step-n">2</span> Configure the Cluster</div>
+<div class="kk">The <span class="ic">DorisCluster</span> resource defines all settings: images, replicas, compute resources, ConfigMaps, persistent storage, and access mode.</div>
+<div class="cg"><div class="card"><div class="ci" style="background:rgba(56,189,248,.12);color:var(--blue);">&#128196;</div><h4>Image Settings</h4><p>Set <span class="ic">spec.feSpec.image</span> and <span class="ic">spec.beSpec.image</span>. Operator supports Doris 2.0+.</p></div>
+<div class="card"><div class="ci" style="background:rgba(74,222,128,.12);color:var(--green);">&#128200;</div><h4>Replicas</h4><p>Default FE=3, BE=3. Change via <span class="ic">replicas</span> field. Minimum startup: 4c 8Gi.</p></div>
+<div class="card"><div class="ci" style="background:rgba(251,146,60,.12);color:var(--orange);">&#128187;</div><h4>Resources</h4><p>Default FE: 6c 12Gi, BE: 8c 16Gi. Recommended for testing: 8c 8Gi.</p></div></div>
+<div class="callout callout-tip"><div class="callout-icon">&#128161;</div><div><strong>Tip:</strong> For K8s deployments, enable FQDN mode: add <span class="ic">enable_fqdn_mode = true</span> to startup ConfigMap. The key for FE must be <span class="ic">fe.conf</span>, for BE it must be <span class="ic">be.conf</span>.</div></div>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">&#128736; FE ConfigMap</div><div class="c-b"><pre style="margin:0;font-size:.73rem;">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fe-conf
+  labels:
+    app.kubernetes.io/component: fe
+data:
+  fe.conf: |
+    query_port = 9030
+    sys_log_level = INFO
+    enable_fqdn_mode = true</pre><pre style="font-size:.73rem;margin:.4rem 0 0;">spec:
+  feSpec:
+    configMapInfo:
+      configMapName: fe-conf
+      resolveKey: fe.conf</pre></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0f766e,#115e59);">&#128736; BE ConfigMap</div><div class="c-b"><pre style="margin:0;font-size:.73rem;">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: be-conf
+  labels:
+    app.kubernetes.io/component: be
+data:
+  be.conf: |
+    be_port = 9060
+    webserver_port = 8040
+    sys_log_level = INFO</pre><pre style="font-size:.73rem;margin:.4rem 0 0;">spec:
+  beSpec:
+    configMapInfo:
+      configMapName: be-conf
+      resolveKey: be.conf</pre></div></div></div>
+<h4 style="font-size:.9rem;font-weight:600;margin:1.5rem 0 .3rem;color:var(--t-p);">Persistent Storage Configuration</h4>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">FE Storage</div><div class="c-b"><pre style="margin:0;font-size:.73rem;">spec:
+  feSpec:
+    persistentVolumes:
+    - mountPath: /opt/apache-doris/fe/doris-meta
+      name: meta
+      persistentVolumeClaimSpec:
+        storageClassName: ${sc}
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Gi
+    - mountPath: /opt/apache-doris/fe/log
+      name: log
+      ...</pre></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0f766e,#115e59);">BE Storage</div><div class="c-b"><pre style="margin:0;font-size:.73rem;">spec:
+  beSpec:
+    persistentVolumes:
+    - mountPath: /opt/apache-doris/be/storage
+      name: be-storage
+      persistentVolumeClaimSpec:
+        storageClassName: ${sc}
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 500Gi</pre></div></div></div>
+<div class="step-h"><span class="step-n">3</span> Deploy the Cluster</div>
+<pre># Download deployment template
+curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/doriscluster-sample.yaml
+
+# Apply customized configuration
+kubectl apply -f doriscluster-sample.yaml
+
+# Check status
+kubectl get pods
+# NAME                       READY   STATUS
+# doriscluster-sample-fe-0   1/1     Running
+# doriscluster-sample-be-0   1/1     Running
+
+kubectl get dcr -n doris
+# NAME                  FESTATUS    BESTATUS
+# doriscluster-sample   available   available</pre>
+<div class="step-h"><span class="step-n">4</span> Access the Cluster</div>
+<div class="mg"><div class="mc"><div class="mch" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">ClusterIP</div><div class="mcb"><p>Internal K8s access only.</p><pre style="font-size:.68rem;">kubectl run mysql-client
+  --image=mysql:5.7 -it --rm
+  --restart=Never -- /bin/bash
+
+mysql -uroot -P9030
+  -h&lt;fe-service&gt;</pre></div></div>
+<div class="mc"><div class="mch" style="background:linear-gradient(135deg,#b45309,#92400e);">NodePort</div><div class="mcb"><p>Access via node IP + port.</p><pre style="font-size:.68rem;"># 9030:31545/TCP
+mysql -h &lt;node-ip&gt;
+  -P 31545 -uroot</pre></div></div>
+<div class="mc"><div class="mch" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">LoadBalancer</div><div class="mcb"><p>Cloud LB provided by platform.</p><pre style="font-size:.68rem;"># EXTERNAL-IP: &lt;elb&gt;
+mysql -h &lt;elb&gt; -P 31545 -uroot</pre></div></div></div>
+<h3>Cluster Operations</h3>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">&#8597; Scale FE</div><div class="c-b"><pre style="margin:0;font-size:.74rem;">kubectl patch doriscluster \
+  doriscluster-sample --type merge \
+  --patch '{"spec":{"feSpec":{"replicas":3}}}'</pre></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0f766e,#115e59);">&#8597; Scale BE</div><div class="c-b"><pre style="margin:0;font-size:.74rem;">kubectl patch doriscluster \
+  doriscluster-sample --type merge \
+  --patch '{"spec":{"beSpec":{"replicas":5}}}'</pre></div></div></div>
+<h4 style="font-size:.9rem;font-weight:600;margin:1.5rem 0 .3rem;color:var(--t-p);">Rolling Upgrade (BE &rarr; FE)</h4>
+<pre>-- Disable balancing before upgrade
+admin set frontend config("disable_balance" = "true");
+admin set frontend config("disable_colocate_balance" = "true");
+admin set frontend config("disable_tablet_scheduler" = "true");
+
+# Edit and change image tags
+kubectl edit dcr doriscluster-sample -n doris
+# Change spec.beSpec.image then spec.feSpec.image
+
+-- Re-enable after upgrade
+admin set frontend config("disable_balance" = "false");
+admin set frontend config("disable_colocate_balance" = "false");
+admin set frontend config("disable_tablet_scheduler" = "false");
+
+-- Verify
+show frontends;  show backends;</pre>
+<h4 style="font-size:.9rem;font-weight:600;margin:1.5rem 0 .3rem;color:var(--t-p);">Debug Mode (CrashLoopBackOff)</h4>
+<pre># Enter Debug mode
+kubectl annotate pod ${pod_name} \
+  --namespace ${namespace} \
+  apache.org.doris/runmode=debug
+
+# Enter the pod
+kubectl exec -ti ${pod_name} bash
+# IMPORTANT: Modify port before manual start
+# FE: change query_port in fe.conf
+# BE: change heartbeat_service_port in be.conf
+
+# Manual start
+/opt/apache-doris/xx/bin/start_xx.sh
+
+# Exit Debug mode (delete the pod)
+kubectl delete pod ${pod_name}</pre>
+<div class="callout callout-caution"><div class="callout-icon">&#9888;</div><div><strong>Caution:</strong> When scaling BE down, avoid taking single-replica tables offline. Don't arbitrarily remove FE Follower nodes. FE Observer nodes can be safely removed.</div></div>
+</div></section>
+<section id="s4"><div class="container">
+<div class="sl">Section 4</div>
+<h2 class="sh">Kubernetes &mdash; Decoupled Storage-Compute</h2>
+<div class="s-intro">End-to-end deployment of a Doris compute-storage decoupled cluster on Kubernetes. Set up FoundationDB, deploy the Operator, provision the cluster via ddc-sample.yaml, create a Storage Vault, and verify end-to-end with SQL.</div>
+<div class="fs"><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">1</div><div class="f-step-l">FDB</div><div class="f-step-d">FoundationDB on K8s</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">2</div><div class="f-step-l">Operator</div><div class="f-step-d">Decoupled CRDs</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#b45309,#92400e);">3</div><div class="f-step-l">Cluster</div><div class="f-step-d">ddc-sample.yaml</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#0f766e,#115e59);">4</div><div class="f-step-l">Vault</div><div class="f-step-d">S3 Storage Vault</div></div>
+<div class="f-arrow">&#8594;</div><div class="f-step"><div class="f-step-icon" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);">5</div><div class="f-step-l">Verify</div><div class="f-step-d">End-to-end SQL</div></div></div>
+<div class="tw"><table class="tc"><thead><tr><th>Component</th><th>Description</th><th>Default Replicas</th></tr></thead><tbody>
+<tr><td>FE</td><td>SQL parsing and coordination</td><td>1</td></tr>
+<tr><td>MS (MetaService)</td><td>Metadata management</td><td>1</td></tr>
+<tr><td>Compute Group (CG)</td><td>Data ingestion and caching</td><td>2</td></tr>
+<tr><td>FoundationDB</td><td>Metadata storage</td><td>1 (dev) / 3 (prod)</td></tr>
+<tr><td>Storage Vault</td><td>S3-compatible object storage</td><td>1+</td></tr>
+</tbody></table></div>
+<div class="step-h"><span class="step-n">1</span> Deploy FoundationDB on K8s</div>
+<div class="kk">Two approaches: deploy on VMs (recommended for production) or use the K8s quick path below.</div>
+<pre># 1. Apply FDB CRDs
+kubectl apply -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbclusters.yaml
+kubectl apply -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbbackups.yaml
+kubectl apply -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbrestores.yaml
+
+# 2. Deploy fdb-kubernetes-operator
+kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/fdb-operator.yaml
+
+# 3. Deploy FDB cluster (single-replica minimal mode)
+kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/refs/heads/master/doc/examples/disaggregated/fdb/cluster-single.yaml
+
+# 4. Verify
+kubectl get fdb
+# Expected: AVAILABLE = true</pre>
+<div class="callout callout-caution"><div class="callout-icon">&#9888;</div><div><strong>Note:</strong> Single-replica is for dev/test only. Two-replica mode is recommended for production, requiring at least 3 host machines.</div></div>
+<div class="step-h"><span class="step-n">2</span> Deploy Doris Operator</div>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">&#128196; First-time</div><div class="c-b"><pre style="margin:0;font-size:.74rem;"># Apply all CRDs
+kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/crds.yaml
+
+# Deploy Operator
+kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/disaggregated-operator.yaml</pre></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#b45309,#92400e);">&#128260; Existing cluster</div><div class="c-b"><pre style="margin:0;font-size:.74rem;"># Append decoupled CRDs only
+kubectl create -f .../disaggregated.cluster.doris.com_dorisdisaggregatedclusters.yaml
+
+# Deploy Operator
+kubectl apply -f .../disaggregated-operator.yaml</pre></div></div></div>
+<pre>kubectl -n doris get pods
+# doris-operator-xxx   1/1     Running</pre>
+<div class="step-h"><span class="step-n">3</span> Deploy the Decoupled Cluster</div>
+<pre>curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/disaggregated/cluster/ddc-sample.yaml</pre>
+<div class="kk">Two methods to configure FDB access:</div>
+<div class="cmp"><div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0369a1,#0c4a6e);">Method A: address</div><div class="c-b"><pre style="margin:0;font-size:.73rem;">spec:
+  metaService:
+    fdb:
+      address: ${fdbEndpoint}
+  feSpec:
+    electionNumber: 1
+    requests:
+      cpu: 8
+      memory: 8Gi
+  computeGroups:
+    - uniqueId: cg1
+      image: ${beImage}
+      replicas: 2</pre></div></div>
+<div class="c-col"><div class="c-h" style="background:linear-gradient(135deg,#0f766e,#115e59);">Method B: ConfigMap</div><div class="c-b"><pre style="margin:0;font-size:.73rem;">spec:
+  metaService:
+    fdb:
+      configMapNamespaceName:
+        name: ${cmName}
+        namespace: ${ns}</pre></div></div></div>
+<pre>kubectl apply -f ddc-sample.yaml
+
+# Check status
+kubectl get ddc
+# NAME                      CLUSTERHEALTH   FEPHASE   CGCOUNT
+# test-disaggregated-cluster green           Ready     2
+
+# Readiness: CLUSTERHEALTH=green, CGAVAILABLECOUNT=CGCOUNT</pre>
+<div class="step-h"><span class="step-n">4</span> Create Storage Vault</div>
+<pre># Get FE service
+kubectl get svc
+# test-disaggregated-cluster-fe  ClusterIP  10.96.147.97
+
+# Create MySQL client
+kubectl run mysql-client --image=mysql:5.7 \
+  -it --rm --restart=Never -- /bin/bash
+
+# Connect
+mysql -uroot -P9030 -h test-disaggregated-cluster-fe</pre>
+<pre>-- Create S3 Storage Vault
+CREATE STORAGE VAULT IF NOT EXISTS s3_vault
+    PROPERTIES (
+        "type"="S3",
+        "s3.endpoint" = "oss-cn-beijing.aliyuncs.com",
+        "s3.region" = "bj",
+        "s3.bucket" = "bucket",
+        "s3.root.path" = "big/data/prefix",
+        "s3.access_key" = "your-ak",
+        "s3.secret_key" = "your-sk",
+        "provider" = "OSS"
+    );
+
+SET s3_vault AS DEFAULT STORAGE VAULT;</pre>
+<div class="step-h"><span class="step-n">5</span> End-to-End Verification</div>
+<pre>-- Confirm BEs are alive
+SHOW BACKENDS;
+
+-- Confirm Storage Vault is in effect
+SHOW STORAGE VAULTS;
+
+-- Write and query test data
+CREATE DATABASE IF NOT EXISTS demo;
+USE demo;
+
+CREATE TABLE IF NOT EXISTS hello (
+    id INT,
+    msg VARCHAR(64)
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1;
+
+INSERT INTO hello VALUES (1, 'hello doris');
+SELECT * FROM hello;
+-- Expected: (1, 'hello doris')</pre>
+<div class="callout callout-tip"><div class="callout-icon">&#128161;</div><div><strong>Tip:</strong> After completing these 5 steps, your cluster is production-ready. For advanced customization (FE resources, Multi Compute Groups, authentication, Kerberos), refer to the Doris Operator advanced configuration docs.</div></div>
+<h3>Advanced Configuration Reference</h3>
+<div class="tw"><table class="tc"><thead><tr><th>Topic</th><th>Main Content</th></tr></thead><tbody>
+<tr><td>FDB production deployment</td><td>Two-replica mode, FQDN, private image repository</td></tr>
+<tr><td>MetaService customization</td><td>Image, resources, startup params, probe timeouts</td></tr>
+<tr><td>FE configuration</td><td>Resources, Follower count, access mode, persistence</td></tr>
+<tr><td>Compute Group</td><td>Single/multi-group, resource limits, cache &amp; log persistence</td></tr>
+<tr><td>Authentication</td><td>Root/non-root passwords, Secret, Kerberos</td></tr>
+</tbody></table></div>
+</div></section>
+<footer><div class="container"><p>Generated from Apache Doris deployment documentation &mdash; 4 deployment paths covering integrated and decoupled architectures on bare-metal and Kubernetes.</p><p style="margin-top:.5rem;font-size:.75rem;">Apache Doris &copy; The Apache Software Foundation.</p></div></footer>
+<script>(function(){var b=document.getElementById('bar');window.addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-window.innerHeight;b.style.width=(window.scrollY/h*100)+'%';});})();</script>
+</body></html>
