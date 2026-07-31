@@ -1,18 +1,18 @@
 @use '../../shared/typography' as type;
 
 .features-next {
-    --fn-green: #11A679;
-    --fn-green-deep: #0B7A58;
-    --fn-green-dark: #06805F;
-    --fn-green-darker: #054C39;
-    --fn-green-darkest: #033A2C;
-    --fn-green-glow: #2DDFA8;
-    --fn-cream: #F5EFE4;
-    --fn-cream-light: #FAF6EE;
-    --fn-cream-warm: #EFE6D2;
-    --fn-yellow: #FFD23F;
+    --fn-green: var(--brand-primary);
+    --fn-green-deep: var(--brand-primary-deep);
+    --fn-green-dark: var(--brand-primary-dark);
+    --fn-green-darker: var(--brand-primary-darker);
+    --fn-green-darkest: var(--brand-primary-darkest);
+    --fn-green-glow: var(--brand-primary-glow);
+    --fn-cream: var(--brand-cream);
+    --fn-cream-light: var(--brand-cream-light);
+    --fn-cream-warm: var(--brand-cream-warm);
+    --fn-yellow: var(--brand-accent);
     --fn-coral: #FF5C39;
-    --fn-ink: #0F1A14;
+    --fn-ink: var(--brand-ink);
     --fn-card-stage-y: 38%;
 
     position: relative;
@@ -86,9 +86,9 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         box-shadow:
-            0 30px 60px -20px rgba(6, 70, 50, 0.3),
-            0 8px 24px -8px rgba(6, 70, 50, 0.18),
-            0 0 0 1px rgba(6, 70, 50, 0.06);
+            0 30px 60px -20px rgb(var(--brand-shadow-rgb) / 0.3),
+            0 8px 24px -8px rgb(var(--brand-shadow-rgb) / 0.18),
+            0 0 0 1px rgb(var(--brand-shadow-rgb) / 0.06);
         transform-origin: center center;
         transition: box-shadow 0.3s ease;
         background: var(--fn-cream-light);
@@ -96,9 +96,9 @@
 
         &:hover {
             box-shadow:
-                0 40px 80px -20px rgba(6, 70, 50, 0.38),
-                0 12px 32px -8px rgba(6, 70, 50, 0.22),
-                0 0 0 1px rgba(6, 70, 50, 0.1);
+                0 40px 80px -20px rgb(var(--brand-shadow-rgb) / 0.38),
+                0 12px 32px -8px rgb(var(--brand-shadow-rgb) / 0.22),
+                0 0 0 1px rgb(var(--brand-shadow-rgb) / 0.1);
         }
 
         &--green {
@@ -109,7 +109,7 @@
         &--cream {
             background: var(--fn-cream-light);
             color: var(--fn-ink);
-            border: 1px solid rgba(6, 70, 50, 0.08);
+            border: 1px solid rgb(var(--brand-shadow-rgb) / 0.08);
         }
 
         &--ink {
@@ -236,10 +236,10 @@
             background:
                 repeating-linear-gradient(
                     135deg,
-                    rgba(45, 223, 168, 0.06) 0,
-                    rgba(45, 223, 168, 0.06) 14px,
-                    rgba(45, 223, 168, 0.1) 14px,
-                    rgba(45, 223, 168, 0.1) 28px
+                    rgb(var(--brand-primary-glow-rgb) / 6%) 0,
+                    rgb(var(--brand-primary-glow-rgb) / 6%) 14px,
+                    rgb(var(--brand-primary-glow-rgb) / 10%) 14px,
+                    rgb(var(--brand-primary-glow-rgb) / 10%) 28px
                 ),
                 var(--fn-green-darker);
         }
@@ -248,10 +248,10 @@
             background:
                 repeating-linear-gradient(
                     135deg,
-                    rgba(6, 70, 50, 0.04) 0,
-                    rgba(6, 70, 50, 0.04) 14px,
-                    rgba(6, 70, 50, 0.07) 14px,
-                    rgba(6, 70, 50, 0.07) 28px
+                    rgb(var(--brand-shadow-rgb) / 0.04) 0,
+                    rgb(var(--brand-shadow-rgb) / 0.04) 14px,
+                    rgb(var(--brand-shadow-rgb) / 0.07) 14px,
+                    rgb(var(--brand-shadow-rgb) / 0.07) 28px
                 ),
                 var(--fn-cream-warm);
         }
@@ -260,10 +260,10 @@
             background:
                 repeating-linear-gradient(
                     135deg,
-                    rgba(255, 210, 63, 0.04) 0,
-                    rgba(255, 210, 63, 0.04) 14px,
-                    rgba(255, 210, 63, 0.08) 14px,
-                    rgba(255, 210, 63, 0.08) 28px
+                    rgb(var(--brand-accent-rgb) / 4%) 0,
+                    rgb(var(--brand-accent-rgb) / 4%) 14px,
+                    rgb(var(--brand-accent-rgb) / 8%) 14px,
+                    rgb(var(--brand-accent-rgb) / 8%) 28px
                 ),
                 var(--fn-ink);
         }
@@ -388,9 +388,9 @@
         font-size: 18px;
         font-weight: 800;
         box-shadow:
-            0 18px 48px rgba(6, 70, 50, 0.25),
-            0 0 0 28px rgba(6, 70, 50, 0.08),
-            0 0 0 68px rgba(6, 70, 50, 0.05);
+            0 18px 48px rgb(var(--brand-shadow-rgb) / 0.25),
+            0 0 0 28px rgb(var(--brand-shadow-rgb) / 0.08),
+            0 0 0 68px rgb(var(--brand-shadow-rgb) / 0.05);
     }
 
     &__lake-node {
@@ -403,8 +403,8 @@
         border-radius: 6px;
         background: var(--fn-cream-light);
         color: var(--fn-green-darker);
-        border: 1px solid rgba(6, 70, 50, 0.08);
-        box-shadow: 0 12px 30px rgba(6, 70, 50, 0.12);
+        border: 1px solid rgb(var(--brand-shadow-rgb) / 0.08);
+        box-shadow: 0 12px 30px rgb(var(--brand-shadow-rgb) / 0.12);
         font-family: var(--font-mono);
         font-size: 11px;
         font-weight: 800;
@@ -506,7 +506,7 @@
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: rgba(6, 70, 50, 0.18);
+        background: rgb(var(--brand-shadow-rgb) / 0.18);
         transition: background 0.3s ease, width 0.3s ease;
 
         &--on {
@@ -686,9 +686,9 @@
             height: 86px;
             font-size: 13px;
             box-shadow:
-                0 14px 34px rgba(6, 70, 50, 0.25),
-                0 0 0 18px rgba(6, 70, 50, 0.08),
-                0 0 0 42px rgba(6, 70, 50, 0.05);
+                0 14px 34px rgb(var(--brand-shadow-rgb) / 0.25),
+                0 0 0 18px rgb(var(--brand-shadow-rgb) / 0.08),
+                0 0 0 42px rgb(var(--brand-shadow-rgb) / 0.05);
         }
 
         &__lake-node {

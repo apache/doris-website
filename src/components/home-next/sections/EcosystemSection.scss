@@ -3,21 +3,21 @@
 .ecosystem-next {
     --ecosystem-doris-offset-y: 0px;
     --ecosystem-engine-label-offset-y: 0px;
-    --en-green: #11A679;
-    --en-green-deep: #0B7A58;
-    --en-green-dark: #06805F;
-    --en-green-darker: #054C39;
-    --en-green-darkest: #033A2C;
-    --en-green-glow: #2DDFA8;
-    --en-cream: #F5EFE4;
-    --en-cream-light: #FAF6EE;
+    --en-green: var(--brand-primary);
+    --en-green-deep: var(--brand-primary-deep);
+    --en-green-dark: var(--brand-primary-dark);
+    --en-green-darker: var(--brand-primary-darker);
+    --en-green-darkest: var(--brand-primary-darkest);
+    --en-green-glow: var(--brand-primary-glow);
+    --en-cream: var(--brand-cream);
+    --en-cream-light: var(--brand-cream-light);
     --en-panel: #FBF7EE;
-    --en-mint-shell: #DCE9DF;
+    --en-mint-shell: var(--brand-shell);
     --en-node: #FFFEFC;
     --en-node-soft: #F8F2E7;
-    --en-yellow: #FFD23F;
-    --en-yellow-bright: #FFE066;
-    --en-ink: #0F1A14;
+    --en-yellow: var(--brand-accent);
+    --en-yellow-bright: var(--brand-accent-bright);
+    --en-ink: var(--brand-ink);
 
     position: relative;
     padding: 120px 56px 148px;
@@ -102,7 +102,7 @@
     }
 
     &__coverage-line--subtle {
-        color: rgba(15, 26, 20, 0.58);
+        color: rgb(var(--brand-ink-rgb) / 0.58);
         @include type.mono-text(15px, 600, 1.28, 0);
     }
 
@@ -123,14 +123,14 @@
     &__card {
         position: relative;
         padding: 56px;
-        border: 1px solid rgba(17, 166, 121, 0.22);
+        border: 1px solid rgb(var(--brand-primary-rgb) / 22%);
         border-radius: 8px;
         background:
             radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.5), transparent 42%),
             linear-gradient(180deg, rgba(232, 242, 232, 0.96) 0%, var(--en-mint-shell) 100%);
         box-shadow:
-            0 38px 90px -44px rgba(6, 70, 50, 0.45),
-            0 18px 48px -30px rgba(6, 70, 50, 0.28),
+            0 38px 90px -44px rgb(var(--brand-shadow-rgb) / 0.45),
+            0 18px 48px -30px rgb(var(--brand-shadow-rgb) / 0.28),
             inset 0 1px 0 rgba(255, 255, 255, 0.75);
     }
 
@@ -138,11 +138,11 @@
         position: relative;
         padding: 36px 36px 32px;
         overflow: hidden;
-        border: 1px solid rgba(6, 70, 50, 0.08);
+        border: 1px solid rgb(var(--brand-shadow-rgb) / 0.08);
         border-radius: 8px;
         background: var(--en-panel);
         box-shadow:
-            0 26px 56px -34px rgba(6, 70, 50, 0.28),
+            0 26px 56px -34px rgb(var(--brand-shadow-rgb) / 0.28),
             inset 0 1px 0 rgba(255, 255, 255, 0.82);
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
@@ -178,7 +178,7 @@
         align-items: center;
         gap: 10px;
         margin-bottom: 0;
-        color: rgba(15, 26, 20, 0.48);
+        color: rgb(var(--brand-ink-rgb) / 0.48);
         @include type.mono-text(11px, 700, 1.25, 0.18em, uppercase);
     }
 
@@ -203,7 +203,7 @@
         height: 22px;
         flex: 0 0 22px;
         border-radius: 4px;
-        background: rgba(17, 166, 121, 0.12);
+        background: rgb(var(--brand-primary-rgb) / 12%);
         color: var(--en-green-deep);
         @include type.micro-label;
     }
@@ -212,10 +212,10 @@
         position: relative;
         z-index: 3;
         padding: 16px 18px 18px;
-        border: 1px solid rgba(15, 26, 20, 0.08);
+        border: 1px solid rgb(var(--brand-ink-rgb) / 0.08);
         border-radius: 8px;
         background: var(--en-node);
-        box-shadow: 0 8px 20px -16px rgba(15, 26, 20, 0.28);
+        box-shadow: 0 8px 20px -16px rgb(var(--brand-ink-rgb) / 0.28);
         transition:
             transform 0.18s ease,
             background 0.18s ease,
@@ -224,11 +224,11 @@
 
         &:hover {
             transform: translateY(-2px) scale(1.02);
-            border-color: rgba(17, 166, 121, 0.28);
+            border-color: rgb(var(--brand-primary-rgb) / 28%);
             background: #FFFFFF;
             box-shadow:
-                0 16px 34px -22px rgba(6, 70, 50, 0.32),
-                0 0 0 1px rgba(17, 166, 121, 0.1);
+                0 16px 34px -22px rgb(var(--brand-shadow-rgb) / 0.32),
+                0 0 0 1px rgb(var(--brand-primary-rgb) / 10%);
         }
     }
 
@@ -246,7 +246,7 @@
     }
 
     &__block-tag {
-        color: rgba(15, 26, 20, 0.42);
+        color: rgb(var(--brand-ink-rgb) / 0.42);
         @include type.mono-text(9px, 600, 1.2, 0.12em, uppercase);
         text-align: right;
         white-space: nowrap;
@@ -265,7 +265,7 @@
         align-items: center;
         gap: 8px;
         padding: 9px 10px;
-        border: 1px solid rgba(15, 26, 20, 0.08);
+        border: 1px solid rgb(var(--brand-ink-rgb) / 0.08);
         border-radius: 8px;
         background: var(--en-node-soft);
         color: var(--en-ink);
@@ -370,8 +370,8 @@
         border-radius: 8px;
         background: var(--en-green-deep);
         box-shadow:
-            0 22px 40px -22px rgba(6, 70, 50, 0.55),
-            0 0 34px -16px rgba(45, 223, 168, 0.8);
+            0 22px 40px -22px rgb(var(--brand-shadow-rgb) / 0.55),
+            0 0 34px -16px rgb(var(--brand-primary-glow-rgb) / 80%);
     }
 
     &__graphic-link {
@@ -413,7 +413,7 @@
 
     &__flow-pipe {
         fill: none;
-        stroke: rgba(17, 166, 121, 0.16);
+        stroke: rgb(var(--brand-primary-rgb) / 16%);
         stroke-linecap: round;
         stroke-linejoin: round;
         stroke-width: 10;
@@ -422,7 +422,7 @@
     &__flow-stream {
         fill: none;
         animation: ecosystem-next-flow-dash 1.6s linear infinite;
-        filter: drop-shadow(0 0 5px rgba(17, 166, 121, 0.45));
+        filter: drop-shadow(0 0 5px rgb(var(--brand-primary-rgb) / 45%));
         stroke: var(--en-green);
         stroke-dasharray: 18 26;
         stroke-linecap: round;
@@ -452,9 +452,9 @@
         gap: 6px;
         border-radius: 8px;
         background: var(--en-panel);
-        border: 1px solid rgba(6, 70, 50, 0.08);
+        border: 1px solid rgb(var(--brand-shadow-rgb) / 0.08);
         box-shadow:
-            0 18px 48px -30px rgba(6, 70, 50, 0.28),
+            0 18px 48px -30px rgb(var(--brand-shadow-rgb) / 0.28),
             inset 0 1px 0 rgba(255, 255, 255, 0.75);
     }
 
@@ -468,7 +468,7 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        color: rgba(15, 26, 20, 0.48);
+        color: rgb(var(--brand-ink-rgb) / 0.48);
         @include type.mono-text(10px, 700, 1.25, 0.16em, uppercase);
     }
 
@@ -486,10 +486,10 @@
         gap: 4px;
         padding: 14px 6px;
         min-height: 64px;
-        border: 1px solid rgba(15, 26, 20, 0.08);
+        border: 1px solid rgb(var(--brand-ink-rgb) / 0.08);
         border-radius: 8px;
         background: var(--en-node);
-        box-shadow: 0 8px 20px -16px rgba(15, 26, 20, 0.28);
+        box-shadow: 0 8px 20px -16px rgb(var(--brand-ink-rgb) / 0.28);
         text-align: center;
     }
 
@@ -499,7 +499,7 @@
     }
 
     .ecosystem-next__compact-block-tag {
-        color: rgba(15, 26, 20, 0.42);
+        color: rgb(var(--brand-ink-rgb) / 0.42);
         @include type.mono-text(8px, 600, 1.2, 0.08em, uppercase);
     }
 
@@ -512,7 +512,7 @@
 
     .ecosystem-next__compact-flow-pipe {
         fill: none;
-        stroke: rgba(17, 166, 121, 0.18);
+        stroke: rgb(var(--brand-primary-rgb) / 18%);
         stroke-linecap: round;
         stroke-width: 4;
         vector-effect: non-scaling-stroke;
@@ -526,7 +526,7 @@
         stroke-dasharray: 6 10;
         vector-effect: non-scaling-stroke;
         animation: ecosystem-next-flow-dash 1.6s linear infinite;
-        filter: drop-shadow(0 0 4px rgba(17, 166, 121, 0.45));
+        filter: drop-shadow(0 0 4px rgb(var(--brand-primary-rgb) / 45%));
     }
 
     .ecosystem-next__compact-engine {

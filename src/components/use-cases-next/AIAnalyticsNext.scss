@@ -44,25 +44,25 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .ai-page {
-    --doris-green: #11a679;
-    --doris-green-deep: #0b7a58;
-    --doris-green-dark: #06805f;
-    --doris-green-darker: #054c39;
-    --doris-green-darkest: #033a2c;
-    --doris-green-tint: #1fbf8e;
-    --doris-green-glow: #2ddfa8;
+    --doris-green: var(--brand-primary);
+    --doris-green-deep: var(--brand-primary-deep);
+    --doris-green-dark: var(--brand-primary-dark);
+    --doris-green-darker: var(--brand-primary-darker);
+    --doris-green-darkest: var(--brand-primary-darkest);
+    --doris-green-tint: var(--brand-primary-tint);
+    --doris-green-glow: var(--brand-primary-glow);
 
-    --cream: #f5efe4;
-    --cream-light: #faf6ee;
-    --cream-warm: #efe6d2;
-    --paper: #fffcf5;
+    --cream: var(--brand-cream);
+    --cream-light: var(--brand-cream-light);
+    --cream-warm: var(--brand-cream-warm);
+    --paper: var(--brand-paper);
 
-    --yellow: #ffd23f;
-    --yellow-bright: #ffe066;
+    --yellow: var(--brand-accent);
+    --yellow-bright: var(--brand-accent-bright);
     --coral: #ff5c39;
 
-    --ink: #0f1a14;
-    --ink-soft: #1b2a22;
+    --ink: var(--brand-ink);
+    --ink-soft: var(--brand-ink-soft);
 
     --container: 1320px;
     --gutter: 56px;
@@ -114,7 +114,7 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
     .ver-pill {
         padding: 3px 8px;
-        border: 1px solid rgba(255, 210, 63, 0.4);
+        border: 1px solid rgb(var(--brand-accent-rgb) / 40%);
         color: var(--yellow);
         border-radius: 3px;
         letter-spacing: 0.08em;
@@ -289,8 +289,8 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             inset: 0;
             z-index: 0;
             background:
-                radial-gradient(ellipse 60% 50% at 78% 22%, rgba(45, 223, 168, 0.18), transparent 70%),
-                radial-gradient(ellipse 50% 70% at 0% 100%, rgba(255, 210, 63, 0.05), transparent 70%);
+                radial-gradient(ellipse 60% 50% at 78% 22%, rgb(var(--brand-primary-glow-rgb) / 18%), transparent 70%),
+                radial-gradient(ellipse 50% 70% at 0% 100%, rgb(var(--brand-accent-rgb) / 5%), transparent 70%);
         }
 
         &-bg-grid {
@@ -488,7 +488,7 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     .cap-powered {
         margin-top: auto;
         padding-top: 22px;
-        border-top: 1px dashed rgba(255, 210, 63, 0.22);
+        border-top: 1px dashed rgb(var(--brand-accent-rgb) / 22%);
 
         &-label {
             @include ai-mono-caps(10.5px, 0.18em);
@@ -529,7 +529,7 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     .cap-related {
         margin-top: auto;
         padding-top: 22px;
-        border-top: 1px dashed rgba(255, 210, 63, 0.22);
+        border-top: 1px dashed rgb(var(--brand-accent-rgb) / 22%);
 
         &-eyebrow {
             @include ai-mono-caps(10.5px, 0.18em);
@@ -544,10 +544,10 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             border-radius: 10px;
             background: linear-gradient(
                 140deg,
-                rgba(255, 210, 63, 0.10),
-                rgba(255, 210, 63, 0.02) 65%
+                rgb(var(--brand-accent-rgb) / 10%),
+                rgb(var(--brand-accent-rgb) / 2%) 65%
             );
-            border: 1px solid rgba(255, 210, 63, 0.28);
+            border: 1px solid rgb(var(--brand-accent-rgb) / 28%);
             text-decoration: none;
             color: inherit;
             transition:
@@ -557,11 +557,11 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
             &:hover {
                 transform: translateY(-2px);
-                border-color: rgba(255, 210, 63, 0.55);
+                border-color: rgb(var(--brand-accent-rgb) / 55%);
                 background: linear-gradient(
                     140deg,
-                    rgba(255, 210, 63, 0.18),
-                    rgba(255, 210, 63, 0.04) 65%
+                    rgb(var(--brand-accent-rgb) / 18%),
+                    rgb(var(--brand-accent-rgb) / 4%) 65%
                 );
                 color: inherit;
                 text-decoration: none;
@@ -692,7 +692,7 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
         .cf-card {
             background: var(--doris-green-darkest);
-            border-color: rgba(255, 210, 63, 0.18);
+            border-color: rgb(var(--brand-accent-rgb) / 18%);
             width: 470px;
             min-height: 0;
         }
@@ -990,27 +990,27 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     .section.section-cream,
     .section-cta.section-cream {
         background: var(--cream);
-        border-top: 1px solid rgba(15, 26, 20, 0.08);
+        border-top: 1px solid rgb(var(--brand-ink-rgb) / 0.08);
     }
 
     .section-cream {
         .hero-bg-grid {
-            background-image: radial-gradient(rgba(15, 26, 20, 0.07) 1.2px, transparent 1.2px);
+            background-image: radial-gradient(rgb(var(--brand-ink-rgb) / 0.07) 1.2px, transparent 1.2px);
         }
 
         .section-title {
             color: var(--ink);
         }
         .section-sub {
-            color: rgba(15, 26, 20, 0.7);
+            color: rgb(var(--brand-ink-rgb) / 0.7);
         }
         .eyebrow {
-            color: rgba(15, 26, 20, 0.65);
+            color: rgb(var(--brand-ink-rgb) / 0.65);
         }
 
         .ver-pill {
             color: var(--doris-green-deep);
-            border-color: rgba(11, 122, 88, 0.4);
+            border-color: rgb(var(--brand-primary-deep-rgb) / 40%);
         }
 
         .tech-layer-heading {
@@ -1018,15 +1018,15 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .req-grid {
-            border-color: rgba(15, 26, 20, 0.14);
+            border-color: rgb(var(--brand-ink-rgb) / 0.14);
         }
 
         .req-card {
-            background: rgba(15, 26, 20, 0.025);
-            border-right-color: rgba(15, 26, 20, 0.12);
+            background: rgb(var(--brand-ink-rgb) / 0.025);
+            border-right-color: rgb(var(--brand-ink-rgb) / 0.12);
 
             &:hover {
-                background: rgba(15, 26, 20, 0.06);
+                background: rgb(var(--brand-ink-rgb) / 0.06);
             }
         }
 
@@ -1034,21 +1034,21 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             color: var(--ink);
         }
         .req-desc {
-            color: rgba(15, 26, 20, 0.7);
+            color: rgb(var(--brand-ink-rgb) / 0.7);
         }
 
         .cf-btn {
-            border-color: rgba(15, 26, 20, 0.3);
+            border-color: rgb(var(--brand-ink-rgb) / 0.3);
             color: var(--ink);
 
             &:hover {
-                background: rgba(15, 26, 20, 0.06);
+                background: rgb(var(--brand-ink-rgb) / 0.06);
                 border-color: var(--ink);
             }
         }
 
         .cf-indicator {
-            color: rgba(15, 26, 20, 0.7);
+            color: rgb(var(--brand-ink-rgb) / 0.7);
 
             strong {
                 color: var(--doris-green-deep);
@@ -1056,7 +1056,7 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .cf-dot {
-            background: rgba(15, 26, 20, 0.15);
+            background: rgb(var(--brand-ink-rgb) / 0.15);
 
             &.active {
                 background: var(--doris-green-deep);
@@ -1064,7 +1064,7 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .cf-card {
-            box-shadow: 0 24px 48px -16px rgba(15, 26, 20, 0.22);
+            box-shadow: 0 24px 48px -16px rgb(var(--brand-ink-rgb) / 0.22);
         }
 
         .shape-cross::before,
@@ -1123,17 +1123,17 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             }
         }
         .section-cream .req-card:not(:nth-last-child(-n + 2)) {
-            border-bottom-color: rgba(15, 26, 20, 0.12);
+            border-bottom-color: rgb(var(--brand-ink-rgb) / 0.12);
         }
         .section-cream .req-grid.req-grid-6 .req-card {
             &:nth-child(2n) {
-                border-right-color: rgba(15, 26, 20, 0.12);
+                border-right-color: rgb(var(--brand-ink-rgb) / 0.12);
             }
             &:nth-child(3n) {
                 border-right: none;
             }
             &:not(:nth-last-child(-n + 3)) {
-                border-bottom-color: rgba(15, 26, 20, 0.12);
+                border-bottom-color: rgb(var(--brand-ink-rgb) / 0.12);
             }
             &:nth-last-child(-n + 2) {
                 border-bottom: none;
@@ -1264,7 +1264,7 @@ $ai-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .section-cream .req-card,
         .section-cream .req-grid.req-grid-6 .req-card {
-            border-bottom-color: rgba(15, 26, 20, 0.12);
+            border-bottom-color: rgb(var(--brand-ink-rgb) / 0.12);
         }
         .req-title {
             min-height: 0;

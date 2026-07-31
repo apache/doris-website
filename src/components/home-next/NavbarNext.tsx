@@ -4,6 +4,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { getLocalePrefix } from '@site/src/utils/locale';
 import { STAR_COUNT } from '@site/src/constant/github.data';
 import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
+import { BrandThemeSwitcher } from '@site/src/components/brand-theme/BrandThemeSwitcher';
 import './NavbarNext.scss';
 
 const GITHUB_REPO = 'apache/doris';
@@ -155,7 +156,10 @@ export function NavbarNext(): JSX.Element {
         <nav className={`navbar navbar--fixed-top navbar-next${mobileOpen ? ' navbar-next--mobile-open' : ''}`}>
             <div className="navbar-next__inner">
                 <Link to={homeHref} className="navbar-next__logo" aria-label="Apache Doris">
-                    <img src="/images/logo-doris.svg" alt="Apache Doris" />
+                    <img
+                        src="/images/brand-assets/doris-logo-horizontal-white.svg"
+                        alt=""
+                    />
                 </Link>
 
                 <div className="navbar-next__nav">
@@ -182,6 +186,7 @@ export function NavbarNext(): JSX.Element {
                 </div>
 
                 <div className="navbar-next__actions">
+                    <BrandThemeSwitcher />
                     <a
                         href={DORIS_SUMMIT_URL}
                         target="_blank"
@@ -266,6 +271,8 @@ export function NavbarNext(): JSX.Element {
                         );
                     })}
                 </div>
+
+                <BrandThemeSwitcher mobile />
 
                 <div className="navbar-next__mobile-actions">
                     <a

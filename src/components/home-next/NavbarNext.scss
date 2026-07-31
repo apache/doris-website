@@ -3,12 +3,12 @@
 @use '../shared/typography' as type;
 
 .navbar-next {
-    --nb-green-dark: #06805F;
-    --nb-green-deep: #054C39;
-    --nb-green-glow: #2DDFA8;
-    --nb-cream-light: #FAF6EE;
-    --nb-yellow: #FFD23F;
-    --nb-ink: #0F1A14;
+    --nb-green-dark: var(--brand-primary-dark);
+    --nb-green-deep: var(--brand-primary-darker);
+    --nb-green-glow: var(--brand-primary-glow);
+    --nb-cream-light: var(--brand-cream-light);
+    --nb-yellow: var(--brand-accent);
+    --nb-ink: var(--brand-ink);
     --nb-summit-cyan: #00F0FF;
 
     position: sticky;
@@ -22,13 +22,15 @@
     border-bottom: 1px solid rgba(245, 239, 228, 0.08);
 
     &__inner {
-        max-width: 1280px;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 1600px;
         margin: 0 auto;
         padding: 0 56px;
         height: 64px;
         display: flex;
         align-items: center;
-        gap: 48px;
+        gap: 32px;
     }
 
     // Override the global Docusaurus navbar styles we inherit on Dev docs.
@@ -53,9 +55,10 @@
         color: var(--nb-cream-light) !important;
 
         img {
-            height: 30px;
-            width: auto;
-            filter: brightness(0) invert(1);
+            width: 100px;
+            height: 36px;
+            object-fit: cover;
+            object-position: center;
         }
 
 	        span {
@@ -101,7 +104,7 @@
         border: none;
         background: none;
         cursor: pointer;
-	        @include type.mono-text(type.$label, 500, 1.2, 0.02em);
+	        @include type.mono-text(15px, 600, 1.2, 0.02em);
 	        color: rgba(245, 239, 228, 0.78);
         border-radius: 4px;
         transition: color 0.15s, background 0.15s;
@@ -133,7 +136,7 @@
         top: calc(100% + 8px);
         left: 0;
         min-width: 200px;
-        background: #054C39;
+        background: var(--nb-green-deep);
         border: 1px solid rgba(245, 239, 228, 0.12);
         border-radius: 8px;
         box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -162,7 +165,7 @@
             left: 18px;
             width: 9px;
             height: 9px;
-            background: #054C39;
+            background: var(--nb-green-deep);
             border-left: 1px solid rgba(245, 239, 228, 0.12);
             border-top: 1px solid rgba(245, 239, 228, 0.12);
             transform: rotate(45deg);
@@ -239,9 +242,9 @@
         box-sizing: border-box;
         height: 32px;
         padding: 0 12px;
-        border: 1px solid rgba(17, 166, 121, 0.55);
+        border: 1px solid rgb(var(--brand-primary-rgb) / 55%);
         border-radius: 4px;
-        background: rgba(17, 166, 121, 0.18);
+        background: rgb(var(--brand-primary-rgb) / 18%);
         color: var(--nb-cream-light);
         cursor: pointer;
         @include type.mono-text(12px, 600, 1.2, 0.02em);
@@ -251,13 +254,13 @@
         svg { flex-shrink: 0; }
 
         &:hover {
-            border-color: rgba(17, 166, 121, 0.85);
-            background: rgba(17, 166, 121, 0.28);
+            border-color: rgb(var(--brand-primary-rgb) / 85%);
+            background: rgb(var(--brand-primary-rgb) / 28%);
             transform: translateY(-1px);
         }
 
         &:focus-visible {
-            outline: 2px solid rgba(17, 166, 121, 0.85);
+            outline: 2px solid rgb(var(--brand-primary-rgb) / 85%);
             outline-offset: 2px;
         }
     }
@@ -272,9 +275,9 @@
         height: 32px;
         overflow: hidden;
         padding: 0 14px;
-        border: 1px solid rgba(17, 166, 121, 0.55);
+        border: 1px solid rgb(var(--brand-primary-rgb) / 55%);
         border-radius: 4px;
-        background: rgba(17, 166, 121, 0.18);
+        background: rgb(var(--brand-primary-rgb) / 18%);
         color: var(--nb-cream-light) !important;
         text-decoration: none !important;
         white-space: nowrap;
@@ -303,15 +306,15 @@
         }
 
         &:hover {
-            border-color: rgba(17, 166, 121, 0.85);
-            background: rgba(17, 166, 121, 0.28);
+            border-color: rgb(var(--brand-primary-rgb) / 85%);
+            background: rgb(var(--brand-primary-rgb) / 28%);
             color: var(--nb-cream-light) !important;
             text-decoration: none !important;
             transform: translateY(-1px);
         }
 
         &:focus-visible {
-            outline: 2px solid rgba(17, 166, 121, 0.85);
+            outline: 2px solid rgb(var(--brand-primary-rgb) / 85%);
             outline-offset: 2px;
         }
     }
@@ -373,7 +376,7 @@
         white-space: nowrap;
 
         &:hover {
-            background: #FFE066;
+            background: var(--brand-accent-bright);
             color: var(--nb-ink) !important;
             text-decoration: none !important;
             transform: translateY(-1px);
@@ -481,6 +484,100 @@
         max-width: 720px;
         margin: 16px auto 0;
         gap: 12px;
+    }
+}
+
+// Keep every primary and utility action visible on one row across common
+// desktop widths. Type and spacing scale down only to a readable minimum.
+@media (min-width: 1281px) and (max-width: 1679px) {
+    .navbar-next {
+        &__inner {
+            max-width: none;
+            gap: clamp(12px, 1.5vw, 24px);
+            padding: 0 clamp(16px, 2vw, 28px);
+        }
+
+        &__logo img {
+            width: clamp(86px, 6.5vw, 100px);
+        }
+
+        &__nav {
+            gap: 2px;
+        }
+
+        &__actions {
+            gap: 4px;
+        }
+
+        &__trigger {
+            padding-inline: clamp(0.35rem, 0.55vw, 0.65rem);
+            font-size: clamp(12px, calc(0.7vw + 3px), 14px);
+        }
+
+        &__summit,
+        &__ask-ai,
+        &__star-link,
+        &__cta {
+            font-size: clamp(11px, calc(0.3vw + 7px), 12px);
+        }
+
+        &__summit,
+        &__ask-ai {
+            padding-inline: clamp(8px, 0.8vw, 12px);
+        }
+
+        &__star-link {
+            gap: clamp(5px, 0.5vw, 8px);
+            padding-inline: clamp(7px, 0.7vw, 10px);
+        }
+
+        &__cta {
+            padding-inline: clamp(0.7rem, 1vw, 1.1rem);
+        }
+    }
+}
+
+// Below the minimum comfortable single-row width, preserve the larger menu
+// type and move the complete utility action group onto a dedicated second row.
+@media (min-width: 1181px) and (max-width: 1280px) {
+    .navbar-next {
+        &.navbar {
+            height: 108px;
+            min-height: 108px;
+        }
+
+        &__inner {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-rows: 64px 44px;
+            column-gap: 28px;
+            row-gap: 0;
+            height: 108px;
+            padding: 0 32px;
+        }
+
+        &__nav {
+            min-width: 0;
+            gap: 8px;
+        }
+
+        &__actions {
+            grid-column: 1 / -1;
+            width: 100%;
+            height: 44px;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-left: 0;
+            border-top: 1px solid rgba(245, 239, 228, 0.08);
+        }
+
+        &__trigger {
+            padding: 0.5rem 0.65rem;
+        }
+
+        &__dropdown {
+            z-index: 2;
+        }
     }
 }
 

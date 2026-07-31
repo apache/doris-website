@@ -4,15 +4,15 @@
 @use '../shared/typography' as type;
 
 .cmp-next {
-    --cn-green-dark: #06805F;
-    --cn-green-darker: #054C39;
-    --cn-green-darkest: #033A2C;
-    --cn-green-glow: #2DDFA8;
-    --cn-cream-light: #FAF6EE;
-    --cn-yellow: #FFD23F;
-    --cn-yellow-bright: #FFE066;
+    --cn-green-dark: var(--brand-primary-dark);
+    --cn-green-darker: var(--brand-primary-darker);
+    --cn-green-darkest: var(--brand-primary-darkest);
+    --cn-green-glow: var(--brand-primary-glow);
+    --cn-cream-light: var(--brand-cream-light);
+    --cn-yellow: var(--brand-accent);
+    --cn-yellow-bright: var(--brand-accent-bright);
     --cn-coral: #FF5C39;
-    --cn-ink: #0F1A14;
+    --cn-ink: var(--brand-ink);
 
     // ── Responsive tokens ──────────────────────────────────────────────────
     // Fluid values use clamp(min, preferred, max). Preferred term scales
@@ -65,14 +65,14 @@
         pointer-events: none;
         z-index: 0;
         background:
-            radial-gradient(ellipse 60% 40% at 80% 0%, rgba(6, 128, 95, 0.08), transparent 70%),
-            radial-gradient(ellipse 50% 40% at 0% 30%, rgba(255, 210, 63, 0.06), transparent 65%);
+            radial-gradient(ellipse 60% 40% at 80% 0%, rgb(var(--brand-primary-dark-rgb) / 8%), transparent 70%),
+            radial-gradient(ellipse 50% 40% at 0% 30%, rgb(var(--brand-accent-rgb) / 6%), transparent 65%);
     }
 
     &__bg-grid {
         position: absolute;
         inset: 0;
-        background-image: radial-gradient(rgba(15, 26, 20, 0.07) 1.2px, transparent 1.2px);
+        background-image: radial-gradient(rgb(var(--brand-ink-rgb) / 0.07) 1.2px, transparent 1.2px);
         background-size: 28px 28px;
         mask-image: linear-gradient(180deg, black, black 60%, transparent 95%);
         -webkit-mask-image: linear-gradient(180deg, black, black 60%, transparent 95%);
@@ -122,14 +122,14 @@
         flex-wrap: wrap;
         align-items: stretch;
         gap: 4px;
-        border: 1px solid rgba(6, 128, 95, 0.18);
+        border: 1px solid rgb(var(--brand-primary-dark-rgb) / 18%);
         border-radius: 8px;
         background: rgba(255, 255, 255, 0.6);
         padding: 6px;
         width: fit-content;
         max-width: 100%;
         position: relative;
-        box-shadow: 0 16px 40px -22px rgba(5, 76, 57, 0.25);
+        box-shadow: 0 16px 40px -22px rgb(var(--brand-primary-darker-rgb) / 25%);
     }
 
     &__tab {
@@ -140,7 +140,7 @@
         background: transparent;
         cursor: pointer;
         font-family: type.$font-mono;
-        color: rgba(15, 26, 20, 0.6);
+        color: rgb(var(--brand-ink-rgb) / 0.6);
         @include type.mono-text(13px, 400, 1.2, 0.04em);
         display: flex;
         align-items: center;
@@ -164,7 +164,7 @@
         &--active {
             background: var(--cn-green-dark);
             color: var(--cn-cream-light);
-            box-shadow: 0 6px 18px -6px rgba(6, 128, 95, 0.45);
+            box-shadow: 0 6px 18px -6px rgb(var(--brand-primary-dark-rgb) / 45%);
 
             .cmp-next__tab-vs {
                 color: rgba(245, 239, 228, 0.65);
@@ -183,7 +183,7 @@
 
             @media (hover: hover) {
                 &:hover {
-                    color: rgba(15, 26, 20, 0.45);
+                    color: rgb(var(--brand-ink-rgb) / 0.45);
                 }
             }
         }
@@ -192,7 +192,7 @@
     &__tab-vs {
         font-style: italic;
         font-weight: 400;
-        color: rgba(15, 26, 20, 0.4);
+        color: rgb(var(--brand-ink-rgb) / 0.4);
         text-transform: lowercase;
         letter-spacing: 0;
     }
@@ -211,7 +211,7 @@
         justify-content: center;
         border-radius: 5px;
         background: rgba(255, 255, 255, 0.88);
-        border: 1px solid rgba(15, 26, 20, 0.08);
+        border: 1px solid rgb(var(--brand-ink-rgb) / 0.08);
         overflow: hidden;
         flex: 0 0 auto;
         transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
@@ -227,10 +227,10 @@
     &__tab-soon {
         @include type.micro-label;
         padding: 2px 6px;
-        border: 1px solid rgba(15, 26, 20, 0.2);
+        border: 1px solid rgb(var(--brand-ink-rgb) / 0.2);
         border-radius: 3px;
         margin-left: 4px;
-        color: rgba(15, 26, 20, 0.5);
+        color: rgb(var(--brand-ink-rgb) / 0.5);
     }
 
     // ── Body container ─────────────────────────────────────────────────────
@@ -274,7 +274,7 @@
         align-items: center;
         gap: 10px;
         @include type.mono-text(11px, 600, 1.2, 0.06em, uppercase);
-        color: rgba(255, 210, 63, 0.85);
+        color: rgb(var(--brand-accent-rgb) / 85%);
         margin-bottom: 14px;
     }
 
@@ -284,7 +284,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid rgba(255, 210, 63, 0.5);
+        border: 1px solid rgb(var(--brand-accent-rgb) / 50%);
         border-radius: 50%;
         @include type.micro-label;
         color: var(--cn-yellow);
@@ -332,7 +332,7 @@
         @include type.mono-text(12px, 700, 1.2, 0.16em, uppercase);
         color: var(--cn-green-dark);
         padding: 4px 8px;
-        border: 1px solid rgba(6, 128, 95, 0.32);
+        border: 1px solid rgb(var(--brand-primary-dark-rgb) / 32%);
         border-radius: 4px;
         flex-shrink: 0;
     }
@@ -348,8 +348,8 @@
         height: 1px;
         background: linear-gradient(
             90deg,
-            rgba(6, 128, 95, 0.28),
-            rgba(6, 128, 95, 0)
+            rgb(var(--brand-primary-dark-rgb) / 28%),
+            rgb(var(--brand-primary-dark-rgb) / 0%)
         );
         min-width: 24px;
     }

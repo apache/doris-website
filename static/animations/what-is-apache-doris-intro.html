@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Apache Doris · 30s Overview</title>
+<script src="/js/embedded-brand-theme.js"></script>
 <style>
   @font-face {
     font-family: 'Inter';
@@ -27,6 +28,17 @@
     --doris-bg: #FAFCFB;
     --doris-bg-card: #FFFFFF;
     --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  html[data-brand-theme]:not([data-brand-theme="doris"]) {
+    --doris-green: var(--brand-primary);
+    --doris-green-dark: var(--brand-primary-dark);
+    --doris-green-bright: var(--brand-primary-glow);
+    --doris-green-soft: var(--brand-primary-soft);
+    --doris-green-mist: var(--brand-surface-callout);
+    --doris-ink: var(--brand-ink);
+    --doris-accent: var(--brand-accent);
+    --doris-accent-soft: var(--brand-primary-soft);
+    --doris-bg: var(--brand-cream-light);
   }
 
   * { box-sizing: border-box; }
@@ -854,7 +866,7 @@
             </div>
             <div class="arch-arrow" data-i="1">
               <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
-                <path d="M10 0V14M10 14L4 8M10 14L16 8" stroke="#11A679" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M10 0V14M10 14L4 8M10 14L16 8" stroke="var(--doris-green)" stroke-width="1.6" stroke-linecap="round"/>
               </svg>
             </div>
             <div class="arch-row be-group" data-i="2">
