@@ -9,6 +9,7 @@
 
         h1 {
             margin-bottom: 0.75rem;
+            color: var(--brand-ink);
             font-size: clamp(2rem, 4vw, 3rem);
             line-height: 1.15;
         }
@@ -24,7 +25,7 @@
 
     &__eyebrow {
         margin-bottom: 0.5rem;
-        color: var(--ifm-color-primary);
+        color: var(--brand-primary);
         font-size: 0.8rem;
         font-weight: 700;
         letter-spacing: 0.08em;
@@ -35,10 +36,10 @@
     &__result {
         margin-bottom: 1.5rem;
         padding: 1.5rem;
-        border: 1px solid var(--ifm-color-emphasis-300);
+        border: 1px solid var(--brand-border-soft);
         border-radius: 12px;
-        background: var(--ifm-background-surface-color);
-        box-shadow: 0 8px 28px rgb(0 0 0 / 5%);
+        background: var(--brand-paper);
+        box-shadow: 0 8px 28px rgb(var(--brand-shadow-rgb) / 8%);
 
         h2 {
             margin-bottom: 0.5rem;
@@ -54,9 +55,9 @@
     &__privacy-notice {
         margin-bottom: 1.25rem;
         padding: 1rem;
-        border: 1px solid var(--ifm-color-emphasis-300);
+        border: 1px solid var(--brand-border-soft);
         border-radius: 8px;
-        background: var(--ifm-color-emphasis-100);
+        background: var(--brand-surface-soft);
 
         h3 {
             margin-bottom: 0.5rem;
@@ -80,6 +81,7 @@
         input {
             flex: 0 0 auto;
             margin-top: 0.25rem;
+            accent-color: var(--brand-primary);
         }
     }
 
@@ -106,6 +108,7 @@
 
         input {
             margin: 0;
+            accent-color: var(--brand-primary);
         }
 
         &:disabled,
@@ -121,17 +124,17 @@
         justify-content: center;
         min-height: 180px;
         padding: 1.5rem;
-        border: 2px dashed var(--ifm-color-emphasis-400);
+        border: 2px dashed var(--brand-border-soft);
         border-radius: 10px;
-        background: var(--ifm-color-emphasis-100);
+        background: var(--brand-surface-soft);
         cursor: pointer;
         text-align: center;
         transition: border-color 160ms ease, background-color 160ms ease;
 
         &:hover,
         &:focus-within {
-            border-color: var(--ifm-color-primary);
-            background: var(--ifm-color-primary-contrast-background);
+            border-color: var(--brand-primary);
+            background: var(--brand-surface-callout);
         }
 
         &--disabled {
@@ -178,7 +181,7 @@
         margin-top: 1rem;
         padding: 0.8rem 1rem;
         border-radius: 8px;
-        background: var(--ifm-color-emphasis-100);
+        background: var(--brand-surface-soft);
     }
 
     &__file-name {
@@ -214,6 +217,21 @@
 
     &__analyze-button {
         margin-top: 1.25rem;
+        border-color: var(--brand-primary);
+        background: var(--brand-primary);
+        color: var(--brand-cream-light);
+
+        &:hover,
+        &:focus {
+            border-color: var(--brand-primary-deep);
+            background: var(--brand-primary-deep);
+            color: var(--brand-cream-light);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--brand-primary-glow);
+            outline-offset: 3px;
+        }
     }
 
     &__status,
@@ -228,8 +246,8 @@
     }
 
     &__status {
-        color: var(--ifm-color-primary-darkest);
-        background: var(--ifm-color-primary-contrast-background);
+        color: var(--brand-primary-darker);
+        background: var(--brand-surface-callout);
     }
 
     &__warning {
@@ -242,7 +260,7 @@
         height: 1.1rem;
         flex: 0 0 auto;
         border: 2px solid var(--ifm-color-emphasis-300);
-        border-top-color: var(--ifm-color-primary);
+        border-top-color: var(--brand-primary);
         border-radius: 50%;
         animation: profile-analysis-spin 800ms linear infinite;
     }
