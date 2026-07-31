@@ -82,7 +82,7 @@ test('disables Analyze until a file exists and while analysis is running', () =>
     assert.match(analyzing, /<button[^>]*disabled=""[^>]*>Processing…<\/button>/);
 });
 
-test('requires an unchecked privacy consent and displays third-party, prohibited-content, and deletion notices', () => {
+test('places an unchecked privacy consent after Analyze and displays provider, prohibited-content, and deletion notices', () => {
     const markup = renderToStaticMarkup(
         React.createElement(ProfileUploader, {
             file: null,
@@ -97,10 +97,13 @@ test('requires an unchecked privacy consent and displays third-party, prohibited
 
     assert.match(markup, /type="checkbox"/);
     assert.doesNotMatch(markup, /type="checkbox"[^>]*checked/);
-    assert.match(markup, /OpenAI.*third-party provider/);
-    assert.match(markup, /Do not upload passwords, API keys, access tokens, personal data/);
-    assert.match(markup, /deleted immediately/);
-    assert.match(markup, /deleted within 1 hour/);
+    assert.match(markup, /provided by VeloDB and third-party large language model service providers/);
+    assert.match(markup, /not an official Apache Doris project feature/);
+    assert.match(markup, /Do not upload passwords, keys, access tokens, personal information/);
+    assert.match(markup, /automatically and permanently deleted within one hour/);
+    assert.ok(markup.indexOf('Analyze Profile') < markup.indexOf('Privacy and AI processing notice'));
+    assert.match(markup, /role="note"/);
+    assert.match(markup, /profile-analysis__privacy-notice-icon" aria-hidden="true">!</);
     assert.match(markup, /type="file"[^>]*disabled=""/);
 });
 

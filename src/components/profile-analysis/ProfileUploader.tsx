@@ -92,46 +92,6 @@ export function ProfileUploader({
                 Choose one UTF-8 .txt file up to 10 MiB after reviewing and accepting the notice below.
             </p>
 
-            <div className="profile-analysis__privacy-notice" id="profile-analysis-privacy-notice">
-                <h3>Privacy and AI processing notice</h3>
-                <ul>
-                    <li>
-                        Your Query Profile and the fixed analysis instructions are sent to this service and
-                        OpenAI&apos;s model service as a third-party provider to generate an AI-assisted diagnosis.
-                        OpenAI&apos;s approved production-account data-region, use, and retention terms apply
-                        separately from this application&apos;s deletion policy.
-                    </li>
-                    <li>
-                        Do not upload passwords, API keys, access tokens, personal data, customer-confidential
-                        data, regulated data, or any content you are not authorized to disclose.
-                        Profiles can contain SQL literals, usernames, Query IDs, IP addresses, hostnames, schema
-                        names, and cluster topology; redact these values before uploading.
-                    </li>
-                    <li>
-                        On the application server, the normal-path workspace is deleted immediately after the
-                        analysis succeeds or fails. Abnormal residual workspaces are deleted within 1 hour.
-                    </li>
-                </ul>
-                <label className="profile-analysis__consent">
-                    <input
-                        type="checkbox"
-                        checked={consentAccepted}
-                        disabled={disabled}
-                        aria-describedby="profile-analysis-privacy-notice"
-                        onChange={event => {
-                            const accepted = event.currentTarget.checked;
-                            setConsentAccepted(accepted);
-                            if (!accepted) {
-                                resetCaptcha();
-                                onFileChange(null);
-                            }
-                        }}
-                    />
-                    I have read this notice, am authorized to upload the Profile, and consent to the described
-                    third-party AI processing.
-                </label>
-            </div>
-
             <fieldset className="profile-analysis__language" disabled={disabled}>
                 <legend>Response language</legend>
                 <label>
@@ -263,6 +223,46 @@ export function ProfileUploader({
             >
                 {disabled ? 'Processing…' : 'Analyze Profile'}
             </button>
+
+            <div
+                className="profile-analysis__privacy-notice"
+                id="profile-analysis-privacy-notice"
+                role="note"
+            >
+                <div className="profile-analysis__privacy-notice-title">
+                    <span className="profile-analysis__privacy-notice-icon" aria-hidden="true">
+                        !
+                    </span>
+                    <h3>Privacy and AI processing notice</h3>
+                </div>
+                <p>
+                    This feature is provided by VeloDB and third-party large language model service providers.
+                    It is not an official Apache Doris project feature, so please use it at your discretion.
+                </p>
+                <p>
+                    Do not upload passwords, keys, access tokens, personal information, customer-confidential
+                    data, or any other sensitive content that you are not authorized to disclose. All uploaded
+                    information will be automatically and permanently deleted within one hour.
+                </p>
+                <label className="profile-analysis__consent">
+                    <input
+                        type="checkbox"
+                        checked={consentAccepted}
+                        disabled={disabled}
+                        aria-describedby="profile-analysis-privacy-notice"
+                        onChange={event => {
+                            const accepted = event.currentTarget.checked;
+                            setConsentAccepted(accepted);
+                            if (!accepted) {
+                                resetCaptcha();
+                                onFileChange(null);
+                            }
+                        }}
+                    />
+                    I have read the notice, am authorized to upload this profile, and consent to third-party AI
+                    processing.
+                </label>
+            </div>
         </section>
     );
 }
