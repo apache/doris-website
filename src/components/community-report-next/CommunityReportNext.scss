@@ -2,14 +2,14 @@
 // (Weekly Report section) plus a content area that renders the selected report.
 
 .community-report {
-    --cr-green: #06805F;
-    --cr-green-dark: #054C39;
-    --cr-ink: #0F1A14;
+    --cr-green: var(--brand-primary-dark);
+    --cr-green-dark: var(--brand-primary-darker);
+    --cr-ink: var(--brand-ink);
     --cr-muted: #5A6472;
-    --cr-paper: #FFFCF5;
-    --cr-cream: #FAF6EE;
-    --cr-line: rgba(15, 26, 20, 0.10);
-    --cr-yellow: #FFD23F;
+    --cr-paper: var(--brand-paper);
+    --cr-cream: var(--brand-cream-light);
+    --cr-line: rgb(var(--brand-ink-rgb) / 0.10);
+    --cr-yellow: var(--brand-accent);
     --cr-sidebar-w: 280px;
     --cr-navbar-h: 64px;
 
@@ -83,8 +83,8 @@
 }
 
 .community-report__entry--active {
-    background: rgba(6, 128, 95, 0.08);
-    border-color: rgba(6, 128, 95, 0.35);
+    background: rgb(var(--brand-primary-dark-rgb) / 8%);
+    border-color: rgb(var(--brand-primary-dark-rgb) / 35%);
     box-shadow: inset 3px 0 0 var(--cr-green);
 }
 
@@ -138,7 +138,7 @@
     width: 22px;
     height: 22px;
     background: var(--cr-cream);
-    border: 1px solid rgba(6, 128, 95, 0.12);
+    border: 1px solid rgb(var(--brand-primary-dark-rgb) / 12%);
     border-radius: 50%;
     transition: background 0.2s ease, color 0.2s ease;
 }
@@ -160,7 +160,7 @@
 .community-report__link-card:hover {
     color: var(--cr-ink);
     text-decoration: none;
-    border-color: rgba(6, 128, 95, 0.35);
+    border-color: rgb(var(--brand-primary-dark-rgb) / 35%);
     box-shadow: 0 10px 24px rgba(0, 89, 68, 0.10);
     transform: translateY(-1px);
 }
@@ -234,7 +234,7 @@
 .community-report__select-button:focus-visible {
     outline: none;
     border-color: var(--cr-green);
-    box-shadow: 0 0 0 3px rgba(6, 128, 95, 0.14);
+    box-shadow: 0 0 0 3px rgb(var(--brand-primary-dark-rgb) / 14%);
 }
 
 .community-report__select-button--open {

@@ -289,7 +289,7 @@
     }
 
     .dropdown__menu {
-        box-shadow: 0px 6px 20px rgba(6, 128, 95, 0.12);
+        box-shadow: 0px 6px 20px rgb(var(--brand-primary-dark-rgb) / 12%);
         border-radius: 0.5rem;
         min-width: 6.5rem;
 

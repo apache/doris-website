@@ -4,7 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Apache Doris Lakehouse Analytics</title>
+<script src="/js/embedded-brand-theme.js"></script>
 <style>
+  :root {
+    --viz-primary: #2e7d5e;
+    --viz-primary-light: #7dbfa2;
+    --viz-primary-pale: #a8ccb8;
+    --viz-primary-paler: #cce8d8;
+    --viz-primary-text: #1c5038;
+    --viz-primary-muted: #4a9070;
+    --viz-primary-soft: #beded0;
+  }
+  html[data-brand-theme]:not([data-brand-theme="doris"]) {
+    --viz-primary: var(--brand-primary);
+    --viz-primary-light: var(--brand-primary-glow);
+    --viz-primary-pale: var(--brand-primary-muted);
+    --viz-primary-paler: var(--brand-primary-soft);
+    --viz-primary-text: var(--brand-primary-darker);
+    --viz-primary-muted: var(--brand-primary-tint);
+    --viz-primary-soft: var(--brand-primary-soft);
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html, body {
@@ -76,7 +95,7 @@
     85%  { opacity:1 }
     100% { offset-distance:100%; opacity:0 }
   }
-  .cdot { r:3.2; fill:#2e7d5e; }
+  .cdot { r:3.2; fill:var(--viz-primary); }
   .cd1 { animation:connFlow 2.8s ease-in-out 0.0s infinite; }
   .cd2 { animation:connFlow 2.8s ease-in-out 0.9s infinite; }
   .cd3 { animation:connFlow 2.8s ease-in-out 1.8s infinite; }
@@ -107,7 +126,7 @@
     92%  { opacity:1 }
     100% { offset-distance:100%; opacity:0 }
   }
-  .pdot { r:3.5; fill:#2e7d5e; animation:pipeDot 2.8s linear infinite; }
+  .pdot { r:3.5; fill:var(--viz-primary); animation:pipeDot 2.8s linear infinite; }
   .pd1 { animation-delay:0s; }
   .pd2 { animation-delay:0.7s; }
   .pd3 { animation-delay:1.4s; }
@@ -129,14 +148,14 @@
 
   /* ── GLOW RING ── */
   @keyframes glowPulse { 0%{r:5; opacity:0.5} 100%{r:16; opacity:0} }
-  .gring  { fill:none; stroke:#2e7d5e; stroke-width:1.5; opacity:0; animation:glowPulse 2.8s ease-out infinite; }
+  .gring  { fill:none; stroke:var(--viz-primary); stroke-width:1.5; opacity:0; animation:glowPulse 2.8s ease-out infinite; }
   .gring2 { animation-delay:1.4s; }
 
   /* ── DASH MARCH connector lines ── */
   @keyframes dashMarch { to { stroke-dashoffset: -20; } }
   .conn-line {
     fill: none;
-    stroke: #2e7d5e;
+    stroke: var(--viz-primary);
     stroke-width: 1.5;
     stroke-dasharray: 5 5;
     stroke-opacity: 0.55;
@@ -160,8 +179,8 @@
 <svg viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
 <defs>
   <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="#2e7d5e"/>
-    <stop offset="100%" stop-color="#7dbfa2"/>
+    <stop offset="0%" stop-color="var(--viz-primary)"/>
+    <stop offset="100%" stop-color="var(--viz-primary-light)"/>
   </linearGradient>
   <linearGradient id="dorisCardGrad" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0%" stop-color="#f4f1e8"/>
@@ -172,9 +191,9 @@
     <stop offset="100%" stop-color="#eae7d8"/>
   </linearGradient>
   <linearGradient id="pipeGrad" x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0%" stop-color="#a8ccb8"/>
-    <stop offset="50%" stop-color="#cce8d8"/>
-    <stop offset="100%" stop-color="#a8ccb8"/>
+    <stop offset="0%" stop-color="var(--viz-primary-pale)"/>
+    <stop offset="50%" stop-color="var(--viz-primary-paler)"/>
+    <stop offset="100%" stop-color="var(--viz-primary-pale)"/>
   </linearGradient>
 
   <linearGradient id="lakeBgGrad" x1="0" y1="0" x2="1" y2="1">
@@ -202,7 +221,7 @@
   <filter id="cardShadow" x="-15%" y="-15%" width="130%" height="140%">
     <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur"/>
     <feOffset dx="0" dy="4" result="offset"/>
-    <feFlood flood-color="#2e7d5e" flood-opacity="0.18" result="color"/>
+    <feFlood flood-color="var(--viz-primary)" flood-opacity="0.18" result="color"/>
     <feComposite in="color" in2="offset" operator="in" result="shadow"/>
     <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
@@ -230,12 +249,12 @@
 
 <!-- ══════════ APACHE DORIS CARD ══════════ -->
 <!-- glow halo -->
-<rect x="95" y="232" width="330" height="112" rx="18" fill="#2e7d5e" opacity="0.12" class="card-glow-doris" filter="url(#cardGlowFilter)"/>
+<rect x="95" y="232" width="330" height="112" rx="18" fill="var(--viz-primary)" opacity="0.12" class="card-glow-doris" filter="url(#cardGlowFilter)"/>
 <!-- card body -->
-<rect x="100" y="236" width="320" height="108" rx="16" fill="url(#dorisCardGrad)" stroke="#2e7d5e" stroke-width="1.5" stroke-opacity="0.35" filter="url(#cardShadow)"/>
+<rect x="100" y="236" width="320" height="108" rx="16" fill="url(#dorisCardGrad)" stroke="var(--viz-primary)" stroke-width="1.5" stroke-opacity="0.35" filter="url(#cardShadow)"/>
 <!-- title -->
-<text x="260" y="284" text-anchor="middle" font-family="Inter,system-ui,-apple-system,sans-serif" font-size="20" font-weight="700" fill="#1c5038" letter-spacing="-0.2">Apache Doris</text>
-<text x="260" y="302" text-anchor="middle" font-family="Inter,system-ui,-apple-system,sans-serif" font-size="10" fill="#4a9070" letter-spacing="1.8" font-weight="600">LAKEHOUSE ANALYTICS ENGINE</text>
+<text x="260" y="284" text-anchor="middle" font-family="Inter,system-ui,-apple-system,sans-serif" font-size="20" font-weight="700" fill="var(--viz-primary-text)" letter-spacing="-0.2">Apache Doris</text>
+<text x="260" y="302" text-anchor="middle" font-family="Inter,system-ui,-apple-system,sans-serif" font-size="10" fill="var(--viz-primary-muted)" letter-spacing="1.8" font-weight="600">LAKEHOUSE ANALYTICS ENGINE</text>
 
 <!-- ══════════ CONNECTOR LINES doris → top cards ══════════ -->
 <path class="conn-line" d="M 195,236 C 174,218 158,200 150,180"/>
@@ -259,12 +278,12 @@
 
 <!-- ── LEFT: Real-Time BI ── -->
 <!-- glow halo -->
-<rect x="13" y="38" width="156" height="132" rx="16" fill="#2e7d5e" opacity="0.1" class="card-glow" filter="url(#cardGlowFilter)"/>
+<rect x="13" y="38" width="156" height="132" rx="16" fill="var(--viz-primary)" opacity="0.1" class="card-glow" filter="url(#cardGlowFilter)"/>
 <!-- card -->
-<rect x="18" y="42" width="146" height="128" rx="14" fill="url(#topCardGrad)" stroke="#2e7d5e" stroke-width="1" stroke-opacity="0.25" filter="url(#cardShadow)"/>
+<rect x="18" y="42" width="146" height="128" rx="14" fill="url(#topCardGrad)" stroke="var(--viz-primary)" stroke-width="1" stroke-opacity="0.25" filter="url(#cardShadow)"/>
 <!-- bar chart — centered in card, well within bounds -->
 <g transform="translate(91, 128)">
-  <line x1="-52" y1="0" x2="52" y2="0" stroke="#2e7d5e" stroke-width="0.8" stroke-opacity="0.2"/>
+  <line x1="-52" y1="0" x2="52" y2="0" stroke="var(--viz-primary)" stroke-width="0.8" stroke-opacity="0.2"/>
   <rect class="bar b1" x="-50" y="-44" width="14" height="44"/>
   <rect class="bar b2" x="-29" y="-34" width="14" height="34"/>
   <rect class="bar b3" x="-8"  y="-48" width="14" height="48"/>
@@ -272,14 +291,14 @@
   <rect class="bar b5" x="34"  y="-28" width="14" height="28"/>
 </g>
 <!-- ── CENTER: Data Interaction ── -->
-<rect x="173" y="38" width="156" height="132" rx="16" fill="#2e7d5e" opacity="0.1" class="card-glow-2" filter="url(#cardGlowFilter)"/>
-<rect x="178" y="42" width="146" height="128" rx="14" fill="url(#topCardGrad)" stroke="#2e7d5e" stroke-width="1" stroke-opacity="0.25" filter="url(#cardShadow)"/>
+<rect x="173" y="38" width="156" height="132" rx="16" fill="var(--viz-primary)" opacity="0.1" class="card-glow-2" filter="url(#cardGlowFilter)"/>
+<rect x="178" y="42" width="146" height="128" rx="14" fill="url(#topCardGrad)" stroke="var(--viz-primary)" stroke-width="1" stroke-opacity="0.25" filter="url(#cardShadow)"/>
 <!-- pipeline — horizontally centered -->
-<rect x="196" y="99" width="110" height="14" rx="7" fill="url(#pipeGrad)" stroke="#4a9070" stroke-width="1.2" stroke-opacity="0.5"/>
-<circle cx="204" cy="106" r="8" fill="#beded0" stroke="#4a9070" stroke-width="1.2" stroke-opacity="0.5"/>
-<circle cx="204" cy="106" r="4.5" fill="#2e7d5e" opacity="0.8"/>
-<circle cx="298" cy="106" r="8" fill="#beded0" stroke="#4a9070" stroke-width="1.2" stroke-opacity="0.5"/>
-<circle cx="298" cy="106" r="4.5" fill="#2e7d5e" opacity="0.8"/>
+<rect x="196" y="99" width="110" height="14" rx="7" fill="url(#pipeGrad)" stroke="var(--viz-primary-muted)" stroke-width="1.2" stroke-opacity="0.5"/>
+<circle cx="204" cy="106" r="8" fill="var(--viz-primary-soft)" stroke="var(--viz-primary-muted)" stroke-width="1.2" stroke-opacity="0.5"/>
+<circle cx="204" cy="106" r="4.5" fill="var(--viz-primary)" opacity="0.8"/>
+<circle cx="298" cy="106" r="8" fill="var(--viz-primary-soft)" stroke="var(--viz-primary-muted)" stroke-width="1.2" stroke-opacity="0.5"/>
+<circle cx="298" cy="106" r="4.5" fill="var(--viz-primary)" opacity="0.8"/>
 <!-- glow ring midpoint -->
 <circle cx="251" cy="106" r="5" class="gring"/>
 <circle cx="251" cy="106" r="5" class="gring gring2"/>
@@ -290,15 +309,15 @@
 <circle class="pdot pd4" style="offset-path:path('M 212,106 L 290,106');"/>
 
 <!-- ── RIGHT: Data Governance ── -->
-<rect x="333" y="38" width="156" height="132" rx="16" fill="#2e7d5e" opacity="0.1" class="card-glow-3" filter="url(#cardGlowFilter)"/>
-<rect x="338" y="42" width="146" height="128" rx="14" fill="url(#topCardGrad)" stroke="#2e7d5e" stroke-width="1" stroke-opacity="0.25" filter="url(#cardShadow)"/>
+<rect x="333" y="38" width="156" height="132" rx="16" fill="var(--viz-primary)" opacity="0.1" class="card-glow-3" filter="url(#cardGlowFilter)"/>
+<rect x="338" y="42" width="146" height="128" rx="14" fill="url(#topCardGrad)" stroke="var(--viz-primary)" stroke-width="1" stroke-opacity="0.25" filter="url(#cardShadow)"/>
 <!-- lock icon — centered -->
 <g transform="translate(411, 106)">
-  <rect class="lock-body" x="-19" y="-2" width="38" height="28" rx="6" fill="#2e7d5e"/>
-  <rect x="-19" y="-2" width="38" height="28" rx="6" fill="none" stroke="#2e7d5e" stroke-width="2"/>
-  <circle cx="0" cy="10" r="5" fill="#2e7d5e" opacity="0.5"/>
-  <rect x="-2.5" y="10" width="5" height="7" rx="2" fill="#2e7d5e" opacity="0.5"/>
-  <path class="lock-shackle" d="M -12,0 L -12,-13 Q -12,-22 0,-22 Q 12,-22 12,-13 L 12,0" fill="none" stroke="#2e7d5e" stroke-width="3.5" stroke-linecap="round"/>
+  <rect class="lock-body" x="-19" y="-2" width="38" height="28" rx="6" fill="var(--viz-primary)"/>
+  <rect x="-19" y="-2" width="38" height="28" rx="6" fill="none" stroke="var(--viz-primary)" stroke-width="2"/>
+  <circle cx="0" cy="10" r="5" fill="var(--viz-primary)" opacity="0.5"/>
+  <rect x="-2.5" y="10" width="5" height="7" rx="2" fill="var(--viz-primary)" opacity="0.5"/>
+  <path class="lock-shackle" d="M -12,0 L -12,-13 Q -12,-22 0,-22 Q 12,-22 12,-13 L 12,0" fill="none" stroke="var(--viz-primary)" stroke-width="3.5" stroke-linecap="round"/>
 </g>
 
 </g>

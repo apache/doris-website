@@ -3,7 +3,7 @@
     .menu__link.menu__link--active:not(.menu__link--sublist) {
         color: var(--ifm-color-primary) !important;
         font-weight: 500;
-        background-color: #F7FFFB;
+        background-color: var(--brand-surface-faint);
     }
     .menu__list-item {
         a.menu__link {

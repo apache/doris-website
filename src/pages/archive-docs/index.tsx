@@ -21,8 +21,8 @@ export default function Archive() {
     const localePrefix = getLocalePrefix(currentLocale, defaultLocale);
     const handleMouseEnter = (id: string) => {
         const dom = document.getElementById(id);
-        dom!.style.color = '#11A679';
-        dom!.firstChild!.style.fill = '#11A679';
+        dom!.style.color = 'var(--brand-primary)';
+        dom!.firstChild!.style.fill = 'var(--brand-primary)';
     };
 
     const handleMouseLeave = (id: string) => {

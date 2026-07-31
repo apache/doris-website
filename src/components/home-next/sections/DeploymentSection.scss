@@ -1,15 +1,15 @@
 @use '../../shared/typography' as type;
 
 .deployment-next {
-    --dn-green: #11A679;
-    --dn-green-deep: #0B7A58;
-    --dn-green-dark: #06805F;
-    --dn-green-darker: #054C39;
-    --dn-cream: #F5EFE4;
-    --dn-cream-light: #FAF6EE;
-    --dn-cream-warm: #EFE6D2;
-    --dn-yellow: #FFD23F;
-    --dn-ink: #0F1A14;
+    --dn-green: var(--brand-primary);
+    --dn-green-deep: var(--brand-primary-deep);
+    --dn-green-dark: var(--brand-primary-dark);
+    --dn-green-darker: var(--brand-primary-darker);
+    --dn-cream: var(--brand-cream);
+    --dn-cream-light: var(--brand-cream-light);
+    --dn-cream-warm: var(--brand-cream-warm);
+    --dn-yellow: var(--brand-accent);
+    --dn-ink: var(--brand-ink);
 
     position: relative;
     padding: 84px 0 140px;
@@ -62,9 +62,9 @@
         background: var(--dn-cream-light);
         color: var(--dn-ink);
         box-shadow:
-            0 30px 60px -20px rgba(6, 70, 50, 0.3),
-            0 8px 24px -8px rgba(6, 70, 50, 0.18),
-            0 0 0 1px rgba(6, 70, 50, 0.06);
+            0 30px 60px -20px rgb(var(--brand-shadow-rgb) / 0.3),
+            0 8px 24px -8px rgb(var(--brand-shadow-rgb) / 0.18),
+            0 0 0 1px rgb(var(--brand-shadow-rgb) / 0.06);
         transform-origin: center center;
         transition:
             box-shadow 0.3s ease,
@@ -74,9 +74,9 @@
         &:hover {
             z-index: 1;
             box-shadow:
-                0 40px 80px -20px rgba(6, 70, 50, 0.38),
-                0 12px 32px -8px rgba(6, 70, 50, 0.22),
-                0 0 0 1px rgba(6, 70, 50, 0.1);
+                0 40px 80px -20px rgb(var(--brand-shadow-rgb) / 0.38),
+                0 12px 32px -8px rgb(var(--brand-shadow-rgb) / 0.22),
+                0 0 0 1px rgb(var(--brand-shadow-rgb) / 0.1);
             transform: translateY(-3px) scale(1.012);
         }
 
@@ -134,7 +134,7 @@
         color: var(--dn-ink) !important;
         @include type.mono-text(16px, 800, 1, 0.04em);
         text-decoration: none !important;
-        box-shadow: 0 14px 30px -18px rgba(15, 26, 20, 0.5);
+        box-shadow: 0 14px 30px -18px rgb(var(--brand-ink-rgb) / 0.5);
         transition:
             background 0.18s ease,
             box-shadow 0.18s ease,
@@ -142,8 +142,8 @@
 
         &:hover {
             transform: translateY(-1px);
-            background: #FFE066;
-            box-shadow: 0 18px 34px -18px rgba(15, 26, 20, 0.58);
+            background: var(--brand-accent-bright);
+            box-shadow: 0 18px 34px -18px rgb(var(--brand-ink-rgb) / 0.58);
             text-decoration: none !important;
         }
 
@@ -164,10 +164,10 @@
         background:
             repeating-linear-gradient(
                 135deg,
-                rgba(45, 223, 168, 0.06) 0,
-                rgba(45, 223, 168, 0.06) 14px,
-                rgba(45, 223, 168, 0.1) 14px,
-                rgba(45, 223, 168, 0.1) 28px
+                rgb(var(--brand-primary-glow-rgb) / 6%) 0,
+                rgb(var(--brand-primary-glow-rgb) / 6%) 14px,
+                rgb(var(--brand-primary-glow-rgb) / 10%) 14px,
+                rgb(var(--brand-primary-glow-rgb) / 10%) 28px
             ),
             var(--dn-green-darker);
     }
@@ -188,10 +188,10 @@
         background:
             repeating-linear-gradient(
                 135deg,
-                rgba(255, 210, 63, 0.04) 0,
-                rgba(255, 210, 63, 0.04) 14px,
-                rgba(255, 210, 63, 0.08) 14px,
-                rgba(255, 210, 63, 0.08) 28px
+                rgb(var(--brand-accent-rgb) / 4%) 0,
+                rgb(var(--brand-accent-rgb) / 4%) 14px,
+                rgb(var(--brand-accent-rgb) / 8%) 14px,
+                rgb(var(--brand-accent-rgb) / 8%) 28px
             ),
             var(--dn-ink);
     }

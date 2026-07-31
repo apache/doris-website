@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Apache Doris — Hybrid Search</title>
+<script src="/js/embedded-brand-theme.js"></script>
 <style>
   /* ── Reset & Base ───────────────────────────────────────────── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -14,12 +15,27 @@
     --card-bg:    rgba(22, 30, 16, 0.92);
     --card-border:rgba(190, 202, 116, 0.22);
     --yellow:     #ffd84a;
-    --yellow-dim: rgba(255, 216, 74, 0.18);
-    --yellow-glow:rgba(255, 216, 74, 0.62);
+    --yellow-rgb: 255 216 74;
+    --yellow-dim: rgb(var(--yellow-rgb) / 18%);
+    --yellow-glow:rgb(var(--yellow-rgb) / 62%);
     --green-node: #7ab648;
-    --green-dim:  rgba(122, 182, 72, 0.25);
+    --green-node-rgb: 122 182 72;
+    --green-dim:  rgb(var(--green-node-rgb) / 25%);
     --text-dim:   rgba(247, 240, 222, 0.8);
     --mono: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  html[data-brand-theme]:not([data-brand-theme="doris"]) {
+    --bg-dark:    var(--brand-primary-darker);
+    --bg-stripe:  var(--brand-primary-dark);
+    --card-bg:    rgb(var(--brand-ink-rgb) / 92%);
+    --card-border:rgb(var(--brand-accent-rgb) / 22%);
+    --yellow:     var(--brand-accent);
+    --yellow-rgb: var(--brand-accent-rgb);
+    --yellow-dim: rgb(var(--brand-accent-rgb) / 18%);
+    --yellow-glow:rgb(var(--brand-accent-rgb) / 62%);
+    --green-node: var(--brand-primary-glow);
+    --green-node-rgb: var(--brand-primary-glow-rgb);
+    --green-dim:  rgb(var(--brand-primary-glow-rgb) / 25%);
   }
 
   html, body {
@@ -44,8 +60,8 @@
     aspect-ratio: 1 / 1;
     border-radius: 26px;
     overflow: hidden;
-    background: linear-gradient(180deg, rgba(18, 24, 14, 0.98) 0%, rgba(15, 20, 12, 0.98) 100%);
-    border: 1px solid rgba(255, 216, 74, 0.08);
+    background: linear-gradient(180deg, var(--bg-stripe) 0%, var(--bg-dark) 100%);
+    border: 1px solid var(--card-border);
     box-shadow: 0 28px 64px rgba(0, 0, 0, 0.24);
   }
 
@@ -116,7 +132,7 @@
     position: absolute;
     inset: 0;
     border-radius: 14px;
-    background: linear-gradient(135deg, rgba(232,194,42,0.04) 0%, transparent 60%);
+    background: linear-gradient(135deg, rgb(var(--yellow-rgb) / 4%) 0%, transparent 60%);
     pointer-events: none;
   }
   .card-label {
@@ -204,8 +220,8 @@
     width: 44px;
     height: 44px;
     border-radius: 8px;
-    border: 1.5px solid rgba(232,194,42,0.45);
-    background: rgba(232,194,42,0.07);
+    border: 1.5px solid rgb(var(--yellow-rgb) / 45%);
+    background: rgb(var(--yellow-rgb) / 7%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -221,13 +237,13 @@
     animation: agentGlow 2s ease-in-out infinite alternate;
   }
   @keyframes agentGlow {
-    from { box-shadow: 0 0 0px rgba(232,194,42,0); }
-    to   { box-shadow: 0 0 12px rgba(232,194,42,0.35); }
+    from { box-shadow: 0 0 0px rgb(var(--yellow-rgb) / 0%); }
+    to   { box-shadow: 0 0 12px rgb(var(--yellow-rgb) / 35%); }
   }
   .agent-connector {
     flex: 1;
     height: 1.5px;
-    background: linear-gradient(90deg, rgba(232,194,42,0.3), rgba(232,194,42,0.15), rgba(232,194,42,0.3));
+    background: linear-gradient(90deg, rgb(var(--yellow-rgb) / 30%), rgb(var(--yellow-rgb) / 15%), rgb(var(--yellow-rgb) / 30%));
     position: relative;
     overflow: visible;
   }
@@ -299,8 +315,8 @@
     width: 38px;
     height: 38px;
     border-radius: 8px;
-    border: 1.5px solid rgba(232,194,42,0.3);
-    background: rgba(232,194,42,0.06);
+    border: 1.5px solid rgb(var(--yellow-rgb) / 30%);
+    background: rgb(var(--yellow-rgb) / 6%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -326,7 +342,7 @@
   .mm-divider {
     width: 1px;
     height: 32px;
-    background: linear-gradient(180deg, transparent, rgba(232,194,42,0.2), transparent);
+    background: linear-gradient(180deg, transparent, rgb(var(--yellow-rgb) / 20%), transparent);
   }
 
   /* ── Footer tag ─────────────────────────────────────────────── */
@@ -338,7 +354,7 @@
   }
   .footer-tag span {
     display: inline-block;
-    border: 1px solid rgba(255,216,74,0.34);
+    border: 1px solid rgb(var(--yellow-rgb) / 34%);
     color: var(--yellow);
     font-size: 12px;
     font-family: var(--mono);
@@ -346,7 +362,7 @@
     text-transform: uppercase;
     padding: 7px 18px;
     border-radius: 6px;
-    background: rgba(255,216,74,0.08);
+    background: rgb(var(--yellow-rgb) / 8%);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
   }
 
@@ -376,37 +392,37 @@
         <div class="rag-canvas">
           <svg viewBox="0 0 150 140" fill="none" xmlns="http://www.w3.org/2000/svg">
             <!-- Outer orbit ring -->
-            <circle cx="75" cy="70" r="52" stroke="rgba(232,194,42,0.08)" stroke-width="1" stroke-dasharray="4 6"/>
+            <circle cx="75" cy="70" r="52" stroke="rgb(var(--yellow-rgb) / 8%)" stroke-width="1" stroke-dasharray="4 6"/>
 
             <!-- Edges from center to satellites -->
-            <line x1="75" y1="70" x2="75"  y2="18"  stroke="rgba(232,194,42,0.35)" stroke-width="1" class="edge-line" style="--dur:3.1s;--delay:0s"/>
-            <line x1="75" y1="70" x2="123" y2="44"  stroke="rgba(122,182,72,0.35)"  stroke-width="1" class="edge-line" style="--dur:2.7s;--delay:0.4s"/>
-            <line x1="75" y1="70" x2="127" y2="96"  stroke="rgba(232,194,42,0.35)" stroke-width="1" class="edge-line" style="--dur:3.5s;--delay:0.8s"/>
-            <line x1="75" y1="70" x2="75"  y2="122" stroke="rgba(122,182,72,0.35)"  stroke-width="1" class="edge-line" style="--dur:2.9s;--delay:0.2s"/>
-            <line x1="75" y1="70" x2="23"  y2="96"  stroke="rgba(232,194,42,0.35)" stroke-width="1" class="edge-line" style="--dur:3.3s;--delay:0.6s"/>
-            <line x1="75" y1="70" x2="27"  y2="44"  stroke="rgba(122,182,72,0.35)"  stroke-width="1" class="edge-line" style="--dur:2.8s;--delay:1.0s"/>
+            <line x1="75" y1="70" x2="75"  y2="18"  stroke="rgb(var(--yellow-rgb) / 35%)" stroke-width="1" class="edge-line" style="--dur:3.1s;--delay:0s"/>
+            <line x1="75" y1="70" x2="123" y2="44"  stroke="rgb(var(--green-node-rgb) / 35%)"  stroke-width="1" class="edge-line" style="--dur:2.7s;--delay:0.4s"/>
+            <line x1="75" y1="70" x2="127" y2="96"  stroke="rgb(var(--yellow-rgb) / 35%)" stroke-width="1" class="edge-line" style="--dur:3.5s;--delay:0.8s"/>
+            <line x1="75" y1="70" x2="75"  y2="122" stroke="rgb(var(--green-node-rgb) / 35%)"  stroke-width="1" class="edge-line" style="--dur:2.9s;--delay:0.2s"/>
+            <line x1="75" y1="70" x2="23"  y2="96"  stroke="rgb(var(--yellow-rgb) / 35%)" stroke-width="1" class="edge-line" style="--dur:3.3s;--delay:0.6s"/>
+            <line x1="75" y1="70" x2="27"  y2="44"  stroke="rgb(var(--green-node-rgb) / 35%)"  stroke-width="1" class="edge-line" style="--dur:2.8s;--delay:1.0s"/>
 
             <!-- Cross-edges (secondary connections) -->
-            <line x1="75"  y1="18"  x2="123" y2="44"  stroke="rgba(232,194,42,0.15)" stroke-width="0.7" class="edge-line" style="--dur:4s;--delay:0.5s"/>
-            <line x1="123" y1="44"  x2="127" y2="96"  stroke="rgba(122,182,72,0.15)"  stroke-width="0.7" class="edge-line" style="--dur:3.8s;--delay:1.2s"/>
-            <line x1="127" y1="96"  x2="75"  y2="122" stroke="rgba(232,194,42,0.15)" stroke-width="0.7" class="edge-line" style="--dur:4.2s;--delay:0.3s"/>
-            <line x1="75"  y1="122" x2="23"  y2="96"  stroke="rgba(122,182,72,0.15)"  stroke-width="0.7" class="edge-line" style="--dur:3.6s;--delay:0.9s"/>
-            <line x1="23"  y1="96"  x2="27"  y2="44"  stroke="rgba(232,194,42,0.15)" stroke-width="0.7" class="edge-line" style="--dur:4.4s;--delay:0.7s"/>
-            <line x1="27"  y1="44"  x2="75"  y2="18"  stroke="rgba(122,182,72,0.15)"  stroke-width="0.7" class="edge-line" style="--dur:3.9s;--delay:1.4s"/>
+            <line x1="75"  y1="18"  x2="123" y2="44"  stroke="rgb(var(--yellow-rgb) / 15%)" stroke-width="0.7" class="edge-line" style="--dur:4s;--delay:0.5s"/>
+            <line x1="123" y1="44"  x2="127" y2="96"  stroke="rgb(var(--green-node-rgb) / 15%)"  stroke-width="0.7" class="edge-line" style="--dur:3.8s;--delay:1.2s"/>
+            <line x1="127" y1="96"  x2="75"  y2="122" stroke="rgb(var(--yellow-rgb) / 15%)" stroke-width="0.7" class="edge-line" style="--dur:4.2s;--delay:0.3s"/>
+            <line x1="75"  y1="122" x2="23"  y2="96"  stroke="rgb(var(--green-node-rgb) / 15%)"  stroke-width="0.7" class="edge-line" style="--dur:3.6s;--delay:0.9s"/>
+            <line x1="23"  y1="96"  x2="27"  y2="44"  stroke="rgb(var(--yellow-rgb) / 15%)" stroke-width="0.7" class="edge-line" style="--dur:4.4s;--delay:0.7s"/>
+            <line x1="27"  y1="44"  x2="75"  y2="18"  stroke="rgb(var(--green-node-rgb) / 15%)"  stroke-width="0.7" class="edge-line" style="--dur:3.9s;--delay:1.4s"/>
 
             <!-- Satellite nodes -->
-            <circle cx="75"  cy="18"  r="5" fill="#e8c22a" opacity="0.85" class="node-sat" style="--dur:2.1s;--delay:0s"/>
-            <circle cx="123" cy="44"  r="4" fill="#7ab648" opacity="0.8"  class="node-sat" style="--dur:2.9s;--delay:0.3s"/>
-            <circle cx="127" cy="96"  r="5" fill="#e8c22a" opacity="0.85" class="node-sat" style="--dur:2.4s;--delay:0.7s"/>
-            <circle cx="75"  cy="122" r="4" fill="#7ab648" opacity="0.8"  class="node-sat" style="--dur:3.1s;--delay:0.5s"/>
-            <circle cx="23"  cy="96"  r="5" fill="#e8c22a" opacity="0.85" class="node-sat" style="--dur:2.6s;--delay:1.0s"/>
-            <circle cx="27"  cy="44"  r="4" fill="#7ab648" opacity="0.8"  class="node-sat" style="--dur:2.3s;--delay:0.2s"/>
+            <circle cx="75"  cy="18"  r="5" fill="var(--yellow)" opacity="0.85" class="node-sat" style="--dur:2.1s;--delay:0s"/>
+            <circle cx="123" cy="44"  r="4" fill="var(--green-node)" opacity="0.8"  class="node-sat" style="--dur:2.9s;--delay:0.3s"/>
+            <circle cx="127" cy="96"  r="5" fill="var(--yellow)" opacity="0.85" class="node-sat" style="--dur:2.4s;--delay:0.7s"/>
+            <circle cx="75"  cy="122" r="4" fill="var(--green-node)" opacity="0.8"  class="node-sat" style="--dur:3.1s;--delay:0.5s"/>
+            <circle cx="23"  cy="96"  r="5" fill="var(--yellow)" opacity="0.85" class="node-sat" style="--dur:2.6s;--delay:1.0s"/>
+            <circle cx="27"  cy="44"  r="4" fill="var(--green-node)" opacity="0.8"  class="node-sat" style="--dur:2.3s;--delay:0.2s"/>
 
             <!-- Center glow -->
-            <circle cx="75" cy="70" r="16" fill="rgba(232,194,42,0.06)"/>
-            <circle cx="75" cy="70" r="12" fill="rgba(232,194,42,0.1)"/>
+            <circle cx="75" cy="70" r="16" fill="rgb(var(--yellow-rgb) / 6%)"/>
+            <circle cx="75" cy="70" r="12" fill="rgb(var(--yellow-rgb) / 10%)"/>
             <!-- Center node -->
-            <circle cx="75" cy="70" r="9" fill="#e8c22a" class="node-center-pulse"/>
+            <circle cx="75" cy="70" r="9" fill="var(--yellow)" class="node-center-pulse"/>
             <circle cx="75" cy="70" r="4" fill="rgba(28,34,20,0.95)"/>
           </svg>
         </div>
@@ -417,8 +433,8 @@
 
     <!-- Pyramid SVG connector -->
     <svg class="pyramid-connector" height="28" viewBox="0 0 680 28" xmlns="http://www.w3.org/2000/svg" style="margin:-6px 0;">
-      <line x1="340" y1="0" x2="230" y2="28" stroke="rgba(232,194,42,0.15)" stroke-width="1" stroke-dasharray="3 5"/>
-      <line x1="340" y1="0" x2="450" y2="28" stroke="rgba(232,194,42,0.15)" stroke-width="1" stroke-dasharray="3 5"/>
+      <line x1="340" y1="0" x2="230" y2="28" stroke="rgb(var(--yellow-rgb) / 15%)" stroke-width="1" stroke-dasharray="3 5"/>
+      <line x1="340" y1="0" x2="450" y2="28" stroke="rgb(var(--yellow-rgb) / 15%)" stroke-width="1" stroke-dasharray="3 5"/>
     </svg>
 
     <!-- BOTTOM ROW -->
@@ -431,9 +447,9 @@
         <div class="agent-scene">
           <div class="agent-box pulse-box">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <rect x="3" y="6" width="14" height="10" rx="2" stroke="#e8c22a" stroke-width="1.2" fill="none"/>
-              <rect x="7" y="3" width="6" height="4" rx="1" stroke="#e8c22a" stroke-width="1.2" fill="none"/>
-              <circle cx="10" cy="11" r="2" fill="#e8c22a" opacity="0.7"/>
+              <rect x="3" y="6" width="14" height="10" rx="2" stroke="var(--yellow)" stroke-width="1.2" fill="none"/>
+              <rect x="7" y="3" width="6" height="4" rx="1" stroke="var(--yellow)" stroke-width="1.2" fill="none"/>
+              <circle cx="10" cy="11" r="2" fill="var(--yellow)" opacity="0.7"/>
             </svg>
           </div>
           <div class="agent-connector">
@@ -441,16 +457,16 @@
           </div>
           <div class="agent-box" style="animation: agentGlow 2s ease-in-out infinite alternate; animation-delay: 1.1s;">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <rect x="3" y="6" width="14" height="10" rx="2" stroke="#7ab648" stroke-width="1.2" fill="none"/>
-              <rect x="7" y="3" width="6" height="4" rx="1" stroke="#7ab648" stroke-width="1.2" fill="none"/>
-              <circle cx="10" cy="11" r="2" fill="#7ab648" opacity="0.7"/>
+              <rect x="3" y="6" width="14" height="10" rx="2" stroke="var(--green-node)" stroke-width="1.2" fill="none"/>
+              <rect x="7" y="3" width="6" height="4" rx="1" stroke="var(--green-node)" stroke-width="1.2" fill="none"/>
+              <circle cx="10" cy="11" r="2" fill="var(--green-node)" opacity="0.7"/>
             </svg>
           </div>
         </div>
 
         <div class="agent-labels">
           <div class="agent-lbl">Agent A</div>
-          <div class="agent-lbl" style="color:rgba(122,182,72,0.55)">Agent B</div>
+          <div class="agent-lbl" style="color:rgb(var(--green-node-rgb) / 55%)">Agent B</div>
         </div>
 
         <div class="obs-tag">trace · span · log</div>
@@ -466,10 +482,10 @@
           <div class="mm-item">
             <div class="mm-icon">
               <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <rect x="3" y="4" width="16" height="2" rx="1" fill="#e8c22a" opacity="0.8"/>
-                <rect x="3" y="8" width="12" height="2" rx="1" fill="#e8c22a" opacity="0.6"/>
-                <rect x="3" y="12" width="14" height="2" rx="1" fill="#e8c22a" opacity="0.5"/>
-                <rect x="3" y="16" width="9"  height="2" rx="1" fill="#e8c22a" opacity="0.4"/>
+                <rect x="3" y="4" width="16" height="2" rx="1" fill="var(--yellow)" opacity="0.8"/>
+                <rect x="3" y="8" width="12" height="2" rx="1" fill="var(--yellow)" opacity="0.6"/>
+                <rect x="3" y="12" width="14" height="2" rx="1" fill="var(--yellow)" opacity="0.5"/>
+                <rect x="3" y="16" width="9"  height="2" rx="1" fill="var(--yellow)" opacity="0.4"/>
               </svg>
             </div>
             <div class="mm-lbl">Text</div>
@@ -481,11 +497,11 @@
           <div class="mm-item">
             <div class="mm-icon">
               <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <rect x="4"  y="8"  width="2" height="6"  rx="1" fill="#7ab648" opacity="0.7"/>
-                <rect x="7"  y="5"  width="2" height="12" rx="1" fill="#7ab648" opacity="0.9"/>
-                <rect x="10" y="7"  width="2" height="8"  rx="1" fill="#7ab648" opacity="0.8"/>
-                <rect x="13" y="4"  width="2" height="14" rx="1" fill="#7ab648" opacity="0.6"/>
-                <rect x="16" y="9"  width="2" height="4"  rx="1" fill="#7ab648" opacity="0.5"/>
+                <rect x="4"  y="8"  width="2" height="6"  rx="1" fill="var(--green-node)" opacity="0.7"/>
+                <rect x="7"  y="5"  width="2" height="12" rx="1" fill="var(--green-node)" opacity="0.9"/>
+                <rect x="10" y="7"  width="2" height="8"  rx="1" fill="var(--green-node)" opacity="0.8"/>
+                <rect x="13" y="4"  width="2" height="14" rx="1" fill="var(--green-node)" opacity="0.6"/>
+                <rect x="16" y="9"  width="2" height="4"  rx="1" fill="var(--green-node)" opacity="0.5"/>
               </svg>
             </div>
             <div class="mm-lbl">Audio</div>
@@ -497,8 +513,8 @@
           <div class="mm-item">
             <div class="mm-icon">
               <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <rect x="2" y="6" width="12" height="10" rx="2" stroke="#e8c22a" stroke-width="1.2" fill="none" opacity="0.8"/>
-                <path d="M14 9.5 L19 7 L19 15 L14 12.5 Z" stroke="#e8c22a" stroke-width="1.2" fill="none" opacity="0.6"/>
+                <rect x="2" y="6" width="12" height="10" rx="2" stroke="var(--yellow)" stroke-width="1.2" fill="none" opacity="0.8"/>
+                <path d="M14 9.5 L19 7 L19 15 L14 12.5 Z" stroke="var(--yellow)" stroke-width="1.2" fill="none" opacity="0.6"/>
               </svg>
             </div>
             <div class="mm-lbl">Video</div>

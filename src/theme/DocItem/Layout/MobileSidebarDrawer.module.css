@@ -68,7 +68,7 @@
     background: #fff;
     border: 1px solid #edf2fa;
     border-radius: 6px;
-    box-shadow: 0 6px 20px rgba(6, 128, 95, 0.12);
+    box-shadow: 0 6px 20px rgb(var(--brand-primary-dark-rgb) / 12%);
     display: none;
     z-index: 100;
 }

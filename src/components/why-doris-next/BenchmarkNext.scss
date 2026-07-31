@@ -3,25 +3,25 @@
 
 .bench-next {
     // ── Tokens (mirrors prototype/v14-benchmark/tsx/src/styles/_tokens.scss)
-    --bn-green:         #11A679;
-    --bn-green-deep:    #0B7A58;
-    --bn-green-dark:    #06805F;
-    --bn-green-darker:  #054C39;
-    --bn-green-darkest: #033A2C;
-    --bn-green-tint:    #1FBF8E;
-    --bn-green-glow:    #2DDFA8;
+    --bn-green:         var(--brand-primary);
+    --bn-green-deep:    var(--brand-primary-deep);
+    --bn-green-dark:    var(--brand-primary-dark);
+    --bn-green-darker:  var(--brand-primary-darker);
+    --bn-green-darkest: var(--brand-primary-darkest);
+    --bn-green-tint:    var(--brand-primary-tint);
+    --bn-green-glow:    var(--brand-primary-glow);
 
-    --bn-cream:       #F5EFE4;
-    --bn-cream-light: #FAF6EE;
-    --bn-cream-warm:  #EFE6D2;
-    --bn-paper:       #FFFCF5;
+    --bn-cream:       var(--brand-cream);
+    --bn-cream-light: var(--brand-cream-light);
+    --bn-cream-warm:  var(--brand-cream-warm);
+    --bn-paper:       var(--brand-paper);
 
-    --bn-yellow:        #FFD23F;
-    --bn-yellow-bright: #FFE066;
+    --bn-yellow:        var(--brand-accent);
+    --bn-yellow-bright: var(--brand-accent-bright);
     --bn-coral:         #FF5C39;
 
-    --bn-ink:      #0F1A14;
-    --bn-ink-soft: #1B2A22;
+    --bn-ink:      var(--brand-ink);
+    --bn-ink-soft: var(--brand-ink-soft);
 
     --bn-container: 1320px;
     --bn-gutter:    56px;
@@ -249,7 +249,7 @@
         .b-hero-link {
             color: var(--bn-cream-light);
             text-decoration: none;
-            border-bottom: 1px solid rgba(255, 210, 63, 0.45);
+            border-bottom: 1px solid rgb(var(--brand-accent-rgb) / 45%);
             padding-bottom: 1px;
             transition: color 0.15s ease, border-color 0.15s ease;
 
@@ -274,7 +274,7 @@
         .b-cmp-bggrid {
             position: absolute;
             inset: 0;
-            background-image: radial-gradient(rgba(15, 26, 20, 0.07) 1.2px, transparent 1.2px);
+            background-image: radial-gradient(rgb(var(--brand-ink-rgb) / 0.07) 1.2px, transparent 1.2px);
             background-size: 32px 32px;
             mask-image: linear-gradient(180deg, transparent, black 18%, black 82%, transparent);
             -webkit-mask-image: linear-gradient(180deg, transparent, black 18%, black 82%, transparent);
@@ -288,7 +288,7 @@
 
             .b-eyebrow {
                 margin-bottom: 22px;
-                color: rgba(15, 26, 20, 0.62);
+                color: rgb(var(--brand-ink-rgb) / 0.62);
             }
 
             .b-eyebrow-line { background: var(--bn-green-deep); }
@@ -311,14 +311,14 @@
         font-size: 15px;
         line-height: 1.6;
         word-spacing: -0.12em;
-        color: rgba(15, 26, 20, 0.70);
+        color: rgb(var(--brand-ink-rgb) / 0.70);
         max-width: 620px;
         margin: 0;
 
         a {
             color: var(--bn-ink);
             text-decoration: none;
-            border-bottom: 1px solid rgba(11, 122, 88, 0.45);
+            border-bottom: 1px solid rgb(var(--brand-primary-deep-rgb) / 45%);
             padding-bottom: 1px;
             transition: color 0.15s ease, border-color 0.15s ease;
 
@@ -334,7 +334,7 @@
     .b-tabs {
         display: flex;
         gap: 0;
-        border-bottom: 1px solid rgba(15, 26, 20, 0.14);
+        border-bottom: 1px solid rgb(var(--brand-ink-rgb) / 0.14);
         margin-bottom: 36px;
         flex-wrap: wrap;
         position: relative;
@@ -346,7 +346,7 @@
         font-size: 12.5px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: rgba(15, 26, 20, 0.55);
+        color: rgb(var(--brand-ink-rgb) / 0.55);
         background: none;
         border: 0;
         padding: 18px 26px;
@@ -401,7 +401,7 @@
         pointer-events: none;
         transition: opacity 0.18s ease, transform 0.18s ease;
         z-index: 10;
-        box-shadow: 0 14px 36px -18px rgba(15, 26, 20, 0.55);
+        box-shadow: 0 14px 36px -18px rgb(var(--brand-ink-rgb) / 0.55);
         white-space: normal;
 
         &::after {
@@ -427,7 +427,7 @@
 
     .b-card {
         background: var(--bn-paper);
-        border: 1px solid rgba(15, 26, 20, 0.10);
+        border: 1px solid rgb(var(--brand-ink-rgb) / 0.10);
         border-radius: 12px;
         padding: 30px 28px 26px;
         display: flex;
@@ -445,8 +445,8 @@
 
         &:hover {
             background: var(--bn-paper);
-            border-color: rgba(15, 26, 20, 0.22);
-            box-shadow: 0 12px 32px -16px rgba(15, 26, 20, 0.20);
+            border-color: rgb(var(--brand-ink-rgb) / 0.22);
+            box-shadow: 0 12px 32px -16px rgb(var(--brand-ink-rgb) / 0.20);
             transform: translateY(-2px);
         }
 
@@ -455,7 +455,7 @@
             border-color: var(--bn-green-deep);
             box-shadow:
                 0 0 0 1px var(--bn-green-deep) inset,
-                0 14px 36px -20px rgba(11, 122, 88, 0.45);
+                0 14px 36px -20px rgb(var(--brand-primary-deep-rgb) / 45%);
 
             &::after {
                 content: '';
@@ -498,7 +498,7 @@
         font-size: 10.5px;
         letter-spacing: 0.16em;
         text-transform: uppercase;
-        color: rgba(15, 26, 20, 0.50);
+        color: rgb(var(--brand-ink-rgb) / 0.50);
         padding-top: 6px;
     }
 
@@ -507,7 +507,7 @@
         font-size: 11px;
         letter-spacing: 0.18em;
         text-transform: uppercase;
-        color: rgba(15, 26, 20, 0.50);
+        color: rgb(var(--brand-ink-rgb) / 0.50);
         margin: 0 0 16px;
     }
 
@@ -539,7 +539,7 @@
     }
 
     .b-bar-label {
-        color: rgba(15, 26, 20, 0.78);
+        color: rgb(var(--brand-ink-rgb) / 0.78);
         letter-spacing: 0.02em;
         display: flex;
         align-items: center;
@@ -555,7 +555,7 @@
 
     .b-bar-track {
         height: 10px;
-        background: rgba(15, 26, 20, 0.08);
+        background: rgb(var(--brand-ink-rgb) / 0.08);
         position: relative;
         border-radius: 1px;
         overflow: hidden;
@@ -564,7 +564,7 @@
     .b-bar-fill {
         position: absolute;
         inset: 0 auto 0 0;
-        background: rgba(15, 26, 20, 0.28);
+        background: rgb(var(--brand-ink-rgb) / 0.28);
         border-radius: 1px;
         width: 0;
         transition: width 0.8s cubic-bezier(.2, .8, .2, 1);
@@ -583,11 +583,11 @@
     .b-card-desc {
         margin-top: auto;
         padding: 14px 0 0;
-        border-top: 1px dashed rgba(15, 26, 20, 0.20);
+        border-top: 1px dashed rgb(var(--brand-ink-rgb) / 0.20);
         font-family: var(--font-family-base);
         font-size: 13.5px;
         line-height: 1.55;
-        color: rgba(15, 26, 20, 0.72);
+        color: rgb(var(--brand-ink-rgb) / 0.72);
     }
 
     .b-card-tip {
@@ -630,7 +630,7 @@
         position: relative;
         z-index: 2;
         overflow: hidden;
-        box-shadow: 0 18px 44px -24px rgba(11, 122, 88, 0.35);
+        box-shadow: 0 18px 44px -24px rgb(var(--brand-primary-deep-rgb) / 35%);
         animation: b-detail-enter 0.5s cubic-bezier(.2, .8, .2, 1);
     }
 
@@ -667,7 +667,7 @@
             font-size: 11px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: rgba(15, 26, 20, 0.52);
+            color: rgb(var(--brand-ink-rgb) / 0.52);
             font-weight: 500;
         }
     }
@@ -679,7 +679,7 @@
         font-size: 11px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: rgba(15, 26, 20, 0.68);
+        color: rgb(var(--brand-ink-rgb) / 0.68);
         flex-wrap: wrap;
     }
 
@@ -699,14 +699,14 @@
     .b-detail-scroll {
         overflow-x: auto;
         overflow-y: hidden;
-        border: 1px solid rgba(15, 26, 20, 0.10);
+        border: 1px solid rgb(var(--brand-ink-rgb) / 0.10);
         border-radius: 8px;
         background: var(--bn-cream-light);
 
         &::-webkit-scrollbar { height: 10px; }
-        &::-webkit-scrollbar-track { background: rgba(15, 26, 20, 0.06); }
+        &::-webkit-scrollbar-track { background: rgb(var(--brand-ink-rgb) / 0.06); }
         &::-webkit-scrollbar-thumb {
-            background: rgba(15, 26, 20, 0.22);
+            background: rgb(var(--brand-ink-rgb) / 0.22);
             border-radius: 5px;
         }
     }
@@ -722,8 +722,8 @@
         right: 24px;
         top: 24px;
         bottom: 40px;
-        border-bottom: 1px solid rgba(15, 26, 20, 0.22);
-        background-image: linear-gradient(rgba(15, 26, 20, 0.08) 1px, transparent 1px);
+        border-bottom: 1px solid rgb(var(--brand-ink-rgb) / 0.22);
+        background-image: linear-gradient(rgb(var(--brand-ink-rgb) / 0.08) 1px, transparent 1px);
         background-size: 100% 25%;
         background-position: 0 0;
     }
@@ -740,7 +740,7 @@
         align-items: flex-end;
         font-family: var(--font-mono);
         font-size: 10px;
-        color: rgba(15, 26, 20, 0.55);
+        color: rgb(var(--brand-ink-rgb) / 0.55);
         letter-spacing: 0.06em;
         padding-right: 6px;
 
@@ -774,7 +774,7 @@
 
     .b-cluster-bar {
         width: 8px;
-        background: rgba(15, 26, 20, 0.35);
+        background: rgb(var(--brand-ink-rgb) / 0.35);
         border-radius: 1px 1px 0 0;
         height: 0;
         transition: height 0.7s cubic-bezier(.2, .8, .2, 1);
@@ -840,8 +840,8 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.12s ease;
-        border: 1px solid rgba(15, 26, 20, 0.40);
-        box-shadow: 0 8px 24px -10px rgba(15, 26, 20, 0.55);
+        border: 1px solid rgb(var(--brand-ink-rgb) / 0.40);
+        box-shadow: 0 8px 24px -10px rgb(var(--brand-ink-rgb) / 0.55);
         z-index: 100;
     }
 
@@ -850,7 +850,7 @@
         font-family: var(--font-mono);
         font-size: 10px;
         letter-spacing: 0.02em;
-        color: rgba(15, 26, 20, 0.58);
+        color: rgb(var(--brand-ink-rgb) / 0.58);
         height: 16px;
         line-height: 1;
         text-align: center;
@@ -866,7 +866,7 @@
         font-size: 12px;
         letter-spacing: 0.02em;
         line-height: 1.6;
-        color: rgba(15, 26, 20, 0.70);
+        color: rgb(var(--brand-ink-rgb) / 0.70);
         padding: 14px 18px;
         background: var(--bn-cream-light);
         border-radius: 6px;
@@ -898,7 +898,7 @@
         margin-top: 14px;
         font-family: var(--font-mono);
         font-size: 11.5px;
-        color: rgba(15, 26, 20, 0.58);
+        color: rgb(var(--brand-ink-rgb) / 0.58);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -950,7 +950,7 @@
         text-transform: uppercase;
         color: var(--bn-yellow);
         text-decoration: none;
-        border-bottom: 1px solid rgba(255, 210, 63, 0.35);
+        border-bottom: 1px solid rgb(var(--brand-accent-rgb) / 35%);
         padding-bottom: 2px;
         transition: color 0.15s ease, border-color 0.15s ease;
 
@@ -1046,9 +1046,9 @@
         }
 
         &.is-active {
-            background: rgba(255, 210, 63, 0.06);
-            border-color: rgba(255, 210, 63, 0.45);
-            box-shadow: 0 0 0 1px rgba(255, 210, 63, 0.25) inset;
+            background: rgb(var(--brand-accent-rgb) / 6%);
+            border-color: rgb(var(--brand-accent-rgb) / 45%);
+            box-shadow: 0 0 0 1px rgb(var(--brand-accent-rgb) / 25%) inset;
 
             .b-step-num { color: var(--bn-yellow); }
         }
@@ -1143,8 +1143,8 @@
         }
 
         span:nth-child(1) { background: rgba(255, 92, 57, 0.65); }
-        span:nth-child(2) { background: rgba(255, 210, 63, 0.65); }
-        span:nth-child(3) { background: rgba(45, 223, 168, 0.65); }
+        span:nth-child(2) { background: rgb(var(--brand-accent-rgb) / 65%); }
+        span:nth-child(3) { background: rgb(var(--brand-primary-glow-rgb) / 65%); }
     }
 
     .b-term-title {
@@ -1269,13 +1269,13 @@
 
             &:hover {
                 transform: none;
-                border-color: rgba(15, 26, 20, 0.12);
-                box-shadow: 0 8px 22px -16px rgba(15, 26, 20, 0.18);
+                border-color: rgb(var(--brand-ink-rgb) / 0.12);
+                box-shadow: 0 8px 22px -16px rgb(var(--brand-ink-rgb) / 0.18);
             }
 
             &.is-active {
                 background: var(--bn-paper);
-                border-color: rgba(15, 26, 20, 0.12);
+                border-color: rgb(var(--brand-ink-rgb) / 0.12);
                 box-shadow: none;
 
                 &::after { display: none; }

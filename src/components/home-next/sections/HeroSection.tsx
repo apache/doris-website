@@ -4,7 +4,7 @@ import './HeroSection.scss';
 
 // ─── SVG atoms ───────────────────────────────────────────────────────────────
 
-function LightningSvg({ size = 24, color = '#FFD23F' }: { size?: number; color?: string }): JSX.Element {
+function LightningSvg({ size = 24, color = 'var(--brand-accent)' }: { size?: number; color?: string }): JSX.Element {
     return (
         <svg
             className="hero-next-lightning"
@@ -441,11 +441,11 @@ interface DragState {
 
 const NODES_3D: GraphNode[] = [
     { id: 'docs',   pos: [ 0.00,  0.00,  0.00], r: 22, color: '#FAF6EE' },
-    { id: 'ai',     pos: [ 0.85,  0.55, -0.30], r: 18, color: '#2DDFA8' },
+    { id: 'ai',     pos: [ 0.85,  0.55, -0.30], r: 18, color: 'var(--brand-primary-glow)' },
     { id: 'rag',    pos: [-0.80,  0.50,  0.40], r: 16, color: '#FF8FA3' },
     { id: 'search', pos: [ 0.55, -0.75,  0.55], r: 18, color: '#7DD3FF' },
     { id: 'vec',    pos: [-0.65, -0.55, -0.55], r: 14, color: '#C7B5FF' },
-    { id: 'embed',  pos: [ 0.10,  0.85,  0.70], r: 14, color: '#FFD23F' },
+    { id: 'embed',  pos: [ 0.10,  0.85,  0.70], r: 14, color: 'var(--brand-accent)' },
 ];
 
 const EDGES_3D: Array<[GraphNodeId, GraphNodeId]> = [
@@ -547,8 +547,8 @@ function NodeGraph(): JSX.Element {
                 <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" className="hn-node-graph__svg" aria-hidden="true">
                     <defs>
                         <radialGradient id="hn-node-graph-floor" cx="50%" cy="50%" r="50%">
-                            <stop offset="0%" stopColor="rgba(255,210,63,0.10)" />
-                            <stop offset="70%" stopColor="rgba(255,210,63,0)" />
+                            <stop offset="0%" stopColor="rgb(var(--brand-accent-rgb) / 0.10)" />
+                            <stop offset="70%" stopColor="rgb(var(--brand-accent-rgb) / 0)" />
                         </radialGradient>
                     </defs>
                     <ellipse cx="50" cy="58" rx="36" ry="6" fill="url(#hn-node-graph-floor)" />
@@ -568,7 +568,7 @@ function NodeGraph(): JSX.Element {
                                 y1={pointA.y}
                                 x2={pointB.x}
                                 y2={pointB.y}
-                                stroke={active ? '#FFD23F' : 'rgba(245,239,228,1)'}
+                                stroke={active ? 'var(--brand-accent)' : 'var(--brand-cream)'}
                                 strokeOpacity={opacity}
                                 strokeWidth={active ? 0.45 : 0.22}
                                 vectorEffect="non-scaling-stroke"
@@ -596,7 +596,7 @@ function NodeGraph(): JSX.Element {
                                 opacity: depthAlpha,
                                 zIndex: Math.round((z + 2) * 100),
                                 boxShadow: isHovered
-                                    ? '0 0 0 3px rgba(255,210,63,0.55), 0 8px 22px rgba(255,210,63,0.45)'
+                                    ? '0 0 0 3px rgb(var(--brand-accent-rgb) / 0.55), 0 8px 22px rgb(var(--brand-accent-rgb) / 0.45)'
                                     : `0 ${4 * scale}px ${10 * scale}px rgba(0,0,0,${0.35 * scale})`,
                             }}
                             onPointerEnter={() => {
@@ -668,8 +668,8 @@ function BarChart(): JSX.Element {
                 ))}
             </div>
             <div className="hn-bar-chart__foot">
-                <span className="hn-bar-chart__foot-chip"><i style={{ background: '#FFD23F' }} />P50 18ms</span>
-                <span className="hn-bar-chart__foot-chip"><i style={{ background: '#2DDFA8' }} />P99 43ms</span>
+                <span className="hn-bar-chart__foot-chip"><i style={{ background: 'var(--brand-accent)' }} />P50 18ms</span>
+                <span className="hn-bar-chart__foot-chip"><i style={{ background: 'var(--brand-primary-glow)' }} />P99 43ms</span>
                 <span className="hn-bar-chart__foot-chip"><i style={{ background: '#C7B5FF' }} />error 0.00%</span>
             </div>
         </div>
@@ -856,8 +856,8 @@ export function HeroSection(): JSX.Element {
                 <svg viewBox="0 0 600 600" width="600" height="600">
                     <path
                         d="M340 60 L160 340 L290 340 L240 540 L440 240 L310 240 L370 60 Z"
-                        fill="rgba(255, 210, 63, 0.08)"
-                        stroke="rgba(255, 210, 63, 0.25)"
+                        fill="rgb(var(--brand-accent-rgb) / 0.08)"
+                        stroke="rgb(var(--brand-accent-rgb) / 0.25)"
                         strokeWidth="2"
                     />
                 </svg>

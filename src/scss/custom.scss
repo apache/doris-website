@@ -102,7 +102,7 @@ body {
     border: 0px solid rgba(0, 180, 42, 0.5);
     border-left-width: 5px;
     border-radius: 4px;
-    background: #eefefa;
+    background: var(--brand-surface-callout);
 }
 
 .alert--caution {
@@ -132,7 +132,7 @@ body {
 }
 
 .ant-pagination-options-quick-jumper input:focus-within {
-    box-shadow: 0 0 0 2px #C9FFE6 !important;
+    box-shadow: 0 0 0 2px var(--brand-primary-soft) !important;
 }
 
 .ant-pagination-item-container .ant-pagination-item-link-icon {

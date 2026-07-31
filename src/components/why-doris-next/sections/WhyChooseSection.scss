@@ -54,16 +54,16 @@
         @media (hover: hover) {
             &:hover {
                 transform: translateY(-6px) scale(1.025);
-                border-color: rgba(255, 210, 63, 0.32);
+                border-color: rgb(var(--brand-accent-rgb) / 32%);
                 box-shadow:
                     0 28px 56px -18px rgba(0, 0, 0, 0.6),
-                    0 0 0 1px rgba(255, 210, 63, 0.2),
-                    0 0 48px -12px rgba(255, 210, 63, 0.3);
+                    0 0 0 1px rgb(var(--brand-accent-rgb) / 20%),
+                    0 0 48px -12px rgb(var(--brand-accent-rgb) / 30%);
             }
 
             &:hover .cmp-why__vp-rail {
                 transform: scaleY(1.04);
-                box-shadow: 0 0 18px rgba(255, 210, 63, 0.55);
+                box-shadow: 0 0 18px rgb(var(--brand-accent-rgb) / 55%);
             }
         }
     }
@@ -93,12 +93,12 @@
 
     &__vp-stat-unit {
         @include type.mono-text(clamp(18px, 0.9rem + 0.6vw, 22px), 700, 1, 0);
-        color: rgba(255, 210, 63, 0.85);
+        color: rgb(var(--brand-accent-rgb) / 85%);
     }
 
     &__vp-stat-arrow {
         @include type.mono-text(clamp(18px, 0.9rem + 0.6vw, 22px), 700, 1, 0);
-        color: rgba(255, 210, 63, 0.7);
+        color: rgb(var(--brand-accent-rgb) / 70%);
         margin-right: 4px;
     }
 
