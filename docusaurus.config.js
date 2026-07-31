@@ -217,7 +217,15 @@ const config = {
         },
     ],
     projectName: 'apache/doris-website', // Usually your repo name.
-    customFields: {},
+    customFields: {
+        // The public HTTPS reverse proxy is the default browser entry point.
+        // Local development can still replace this build-time value when needed.
+        profileAnalysisApiBaseUrl: process.env.PROFILE_ANALYSIS_API_BASE_URL ?? 'https://agent.velodb.io',
+        // hCaptcha site keys are public browser configuration. Never put the
+        // matching secret in this repository or in a Docusaurus environment variable.
+        profileAnalysisHCaptchaSiteKey:
+            process.env.PROFILE_ANALYSIS_HCAPTCHA_SITE_KEY ?? '40f4820a-dc48-466a-b106-960a57ac5bd0',
+    },
     future: {
         experimental_faster: true,
     },
