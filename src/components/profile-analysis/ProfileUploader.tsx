@@ -1,4 +1,5 @@
-import React, { ChangeEvent, DragEvent, JSX, useState } from 'react';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
+import React, { ChangeEvent, DragEvent, JSX, useCallback, useRef, useState } from 'react';
 import type { ResponseLanguage } from './profile-analysis.types';
 
 export const MAX_PROFILE_FILE_SIZE_BYTES = 10 * 1024 * 1024;
@@ -7,9 +8,10 @@ interface ProfileUploaderProps {
     file: File | null;
     language: ResponseLanguage;
     disabled: boolean;
+    hcaptchaSiteKey: string;
     onFileChange: (file: File | null) => void;
     onLanguageChange: (language: ResponseLanguage) => void;
-    onAnalyze: () => void;
+    onAnalyze: (hcaptchaToken: string, resetCaptcha: () => void) => void;
 }
 
 export function validateProfileFile(file: File): string | null {
@@ -36,12 +38,22 @@ export function ProfileUploader({
     file,
     language,
     disabled,
+    hcaptchaSiteKey,
     onFileChange,
     onLanguageChange,
     onAnalyze,
 }: ProfileUploaderProps): JSX.Element {
     const [validationError, setValidationError] = useState<string | null>(null);
     const [consentAccepted, setConsentAccepted] = useState(false);
+    const [hcaptchaToken, setHCaptchaToken] = useState<string | null>(null);
+    const [hcaptchaError, setHCaptchaError] = useState<string | null>(null);
+    const hcaptchaRef = useRef<HCaptcha>(null);
+
+    const resetCaptcha = useCallback(() => {
+        hcaptchaRef.current?.resetCaptcha();
+        setHCaptchaToken(null);
+        setHCaptchaError(null);
+    }, []);
 
     const acceptFile = (nextFile: File | null) => {
         if (!nextFile) {
@@ -109,7 +121,10 @@ export function ProfileUploader({
                         onChange={event => {
                             const accepted = event.currentTarget.checked;
                             setConsentAccepted(accepted);
-                            if (!accepted) onFileChange(null);
+                            if (!accepted) {
+                                resetCaptcha();
+                                onFileChange(null);
+                            }
                         }}
                     />
                     I have read this notice, am authorized to upload the Profile, and consent to the described
@@ -176,11 +191,75 @@ export function ProfileUploader({
                 </div>
             )}
 
+            {consentAccepted && (
+                <div className="profile-analysis__captcha">
+                    <p id="profile-analysis-captcha-help" className="profile-analysis__captcha-label">
+                        Complete the human verification before starting the analysis.
+                    </p>
+                    {hcaptchaSiteKey ? (
+                        <HCaptcha
+                            ref={hcaptchaRef}
+                            sitekey={hcaptchaSiteKey}
+                            reCaptchaCompat={false}
+                            sentry={false}
+                            onVerify={token => {
+                                setHCaptchaToken(token);
+                                setHCaptchaError(null);
+                            }}
+                            onExpire={() => {
+                                setHCaptchaToken(null);
+                                setHCaptchaError('Verification expired. Complete it again.');
+                            }}
+                            onChalExpired={() => {
+                                setHCaptchaToken(null);
+                                setHCaptchaError('Verification expired. Complete it again.');
+                            }}
+                            onError={() => {
+                                setHCaptchaToken(null);
+                                setHCaptchaError(
+                                    'Human verification could not load. Check your connection and try again.',
+                                );
+                            }}
+                        />
+                    ) : (
+                        <div className="profile-analysis__validation-error" role="alert">
+                            Human verification is not configured. Contact the site administrator.
+                        </div>
+                    )}
+                    <small>
+                        This site is protected by hCaptcha and its{' '}
+                        <a
+                            href="https://www.hcaptcha.com/privacy"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Privacy Policy
+                        </a>{' '}
+                        and{' '}
+                        <a
+                            href="https://www.hcaptcha.com/terms"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Terms of Service
+                        </a>{' '}
+                        apply.
+                    </small>
+                    {hcaptchaError && (
+                        <div className="profile-analysis__validation-error" role="alert">
+                            {hcaptchaError}
+                        </div>
+                    )}
+                </div>
+            )}
+
             <button
                 className="button button--primary profile-analysis__analyze-button"
                 type="button"
-                disabled={!file || disabled || !consentAccepted}
-                onClick={onAnalyze}
+                disabled={!file || disabled || !consentAccepted || !hcaptchaToken}
+                onClick={() => {
+                    if (hcaptchaToken) onAnalyze(hcaptchaToken, resetCaptcha);
+                }}
             >
                 {disabled ? 'Processing…' : 'Analyze Profile'}
             </button>

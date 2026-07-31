@@ -195,6 +195,23 @@
         font-size: 0.9rem;
     }
 
+    &__captcha {
+        max-width: 100%;
+        margin-top: 1.25rem;
+        overflow-x: auto;
+
+        small {
+            display: block;
+            margin-top: 0.5rem;
+            color: var(--ifm-color-emphasis-700);
+        }
+    }
+
+    &__captcha-label {
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+
     &__analyze-button {
         margin-top: 1.25rem;
     }

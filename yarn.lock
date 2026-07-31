@@ -2575,6 +2575,11 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
+"@hcaptcha/react-hcaptcha@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@hcaptcha/react-hcaptcha/-/react-hcaptcha-2.0.2.tgz#56a455388a58be20f69c45b71476cf35ac6f45a3"
+  integrity sha512-VbuH6VJ6m3BHmVBHs0fL9t+suZd7PQEqCzqL2BiUbBvbHI3XfvSgdiug2QiEPN8zskbPTIV/FfGPF53JCckrow==
+
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/@isaacs/cliui/-/cliui-8.0.2.tgz#b37667b7bc181c168782259bab42474fbf52b550"

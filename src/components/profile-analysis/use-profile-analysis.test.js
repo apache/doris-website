@@ -20,6 +20,7 @@ const {
     initialProfileAnalysisSnapshot,
     profileAnalysisReducer,
 } = require('./use-profile-analysis.ts');
+const { ProfileAnalysisApiError } = require('./profile-analysis.api.ts');
 
 require.extensions['.ts'] = previousTypeScriptLoader;
 
@@ -177,4 +178,19 @@ test('keeps an uncertain analysis busy while its original identifiers are recove
 test('normalizes unknown failures without exposing non-error values', () => {
     assert.equal(getProfileAnalysisErrorMessage(new Error('Backend timed out')), 'Backend timed out');
     assert.equal(getProfileAnalysisErrorMessage({ secret: 'internal detail' }), 'Profile analysis failed. Please try again.');
+});
+
+test('maps hCaptcha backend errors to actionable messages', () => {
+    assert.match(
+        getProfileAnalysisErrorMessage(
+            new ProfileAnalysisApiError(403, 'CAPTCHA_INVALID', 'backend detail'),
+        ),
+        /failed or expired/,
+    );
+    assert.match(
+        getProfileAnalysisErrorMessage(
+            new ProfileAnalysisApiError(503, 'CAPTCHA_UNAVAILABLE', 'backend detail'),
+        ),
+        /temporarily unavailable/,
+    );
 });

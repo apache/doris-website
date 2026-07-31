@@ -6,6 +6,7 @@ const { File } = require('node:buffer');
 const React = require('react');
 const { renderToStaticMarkup } = require('react-dom/server');
 const typescript = require('typescript');
+const hcaptchaSiteKey = '10000000-ffff-ffff-ffff-000000000001';
 
 const previousTypeScriptLoader = require.extensions['.ts'];
 const previousTsxLoader = require.extensions['.tsx'];
@@ -58,6 +59,7 @@ test('disables Analyze until a file exists and while analysis is running', () =>
             file: null,
             language: 'en',
             disabled: false,
+            hcaptchaSiteKey,
             onFileChange() {},
             onLanguageChange() {},
             onAnalyze() {},
@@ -70,6 +72,7 @@ test('disables Analyze until a file exists and while analysis is running', () =>
             file: new File(['profile'], 'query.txt'),
             language: 'zh-CN',
             disabled: true,
+            hcaptchaSiteKey,
             onFileChange() {},
             onLanguageChange() {},
             onAnalyze() {},
@@ -85,6 +88,7 @@ test('requires an unchecked privacy consent and displays third-party, prohibited
             file: null,
             language: 'en',
             disabled: false,
+            hcaptchaSiteKey,
             onFileChange() {},
             onLanguageChange() {},
             onAnalyze() {},
@@ -106,6 +110,7 @@ test('uses an English accessible label instead of exposing localized native file
             file: null,
             language: 'en',
             disabled: false,
+            hcaptchaSiteKey,
             onFileChange() {},
             onLanguageChange() {},
             onAnalyze() {},
@@ -124,6 +129,7 @@ test('renders an English response-language selector with English selected by def
             file: null,
             language: 'en',
             disabled: false,
+            hcaptchaSiteKey,
             onFileChange() {},
             onLanguageChange() {},
             onAnalyze() {},

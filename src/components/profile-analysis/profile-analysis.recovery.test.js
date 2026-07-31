@@ -59,6 +59,7 @@ test('recovers an accepted job after an ambiguous create without creating a new 
         onRecovering: () => {
             recoveringCalls += 1;
         },
+        createdAt: Date.now(),
         random: () => 0.5,
     });
 
@@ -68,31 +69,65 @@ test('recovers an accepted job after an ambiguous create without creating a new 
     assert.equal(recoveringCalls, 1);
 });
 
-test('retries the same create operation after a temporary recovery 404', async () => {
+test('never replays create with a consumed captcha token and recovers through temporary 404s', async () => {
     let createCalls = 0;
+    let recoverCalls = 0;
+    let now = 10_000;
     const waits = [];
 
     const result = await createOrRecoverAnalysisJob({
         create: async () => {
             createCalls += 1;
-            if (createCalls === 1) {
-                throw new ProfileAnalysisApiError(502, 'HTTP_ERROR', 'gateway');
-            }
-            return { jobId, status: 'QUEUED', retryAfterMs: 2000 };
+            throw new ProfileAnalysisApiError(502, 'HTTP_ERROR', 'gateway');
         },
         recover: async () => {
-            throw new ProfileAnalysisApiError(404, 'ANALYSIS_JOB_NOT_FOUND', 'not found', 1000);
+            recoverCalls += 1;
+            if (recoverCalls === 1) {
+                throw new ProfileAnalysisApiError(404, 'ANALYSIS_JOB_NOT_FOUND', 'not found', 1000);
+            }
+            return { jobId, status: 'QUEUED' };
         },
         wait: async milliseconds => {
             waits.push(milliseconds);
+            now += milliseconds;
         },
         onRecovering: () => {},
+        createdAt: now,
+        now: () => now,
         random: () => 0.5,
     });
 
     assert.equal(result.jobId, jobId);
-    assert.equal(createCalls, 2);
+    assert.equal(createCalls, 1);
+    assert.equal(recoverCalls, 2);
     assert.deepEqual(waits, [2000]);
+});
+
+test('surfaces a captcha verifier outage without attempting job recovery', async () => {
+    let recoverCalls = 0;
+    await assert.rejects(
+        createOrRecoverAnalysisJob({
+            create: async () => {
+                throw new ProfileAnalysisApiError(
+                    503,
+                    'CAPTCHA_UNAVAILABLE',
+                    'Human verification is temporarily unavailable.',
+                    30_000,
+                );
+            },
+            recover: async () => {
+                recoverCalls += 1;
+                throw new Error('must not be called');
+            },
+            wait: async () => {},
+            onRecovering: () => {},
+            createdAt: Date.now(),
+        }),
+        error =>
+            error instanceof ProfileAnalysisApiError &&
+            error.code === 'CAPTCHA_UNAVAILABLE',
+    );
+    assert.equal(recoverCalls, 0);
 });
 
 test('keeps a fresh client request through temporary 404s until the job appears', async () => {

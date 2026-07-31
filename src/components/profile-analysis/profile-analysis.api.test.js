@@ -42,6 +42,7 @@ const {
 
 const clientRequestId = 'ca9ee8aa-3f47-4aab-a151-f3a39c5a6193';
 const jobId = '550e8400-e29b-41d4-a716-446655440000';
+const hcaptchaToken = 'test-hcaptcha-token';
 
 function jsonResponse(body, init = {}) {
     return new Response(JSON.stringify(body), {
@@ -59,7 +60,7 @@ test('creates an analysis job with the selected file and response language', asy
     const file = new File(['Query Profile text'], 'query-profile.txt', { type: 'text/plain' });
 
     global.fetch = async (url, options) => {
-        assert.equal(url, 'http://localhost:8080/api/profile/analysis-jobs');
+        assert.equal(url, 'https://agent.velodb.io/api/profile/analysis-jobs');
         assert.equal(options.method, 'POST');
         assert.deepEqual(options.headers, { 'Idempotency-Key': clientRequestId });
         assert.equal(options.headers['Content-Type'], undefined, 'the browser must set the multipart boundary');
@@ -72,17 +73,27 @@ test('creates an analysis job with the selected file and response language', asy
         assert.equal(options.body.get('language'), 'zh-CN');
         assert.equal(options.body.get('consent'), 'true');
         assert.equal(options.body.get('privacyNoticeVersion'), PRIVACY_NOTICE_VERSION);
+        assert.equal(options.body.get('hcaptchaToken'), hcaptchaToken);
         return new Response(JSON.stringify({ jobId, status: 'QUEUED' }), {
             status: 202,
             headers: { 'Content-Type': 'application/json', 'Retry-After': '3' },
         });
     };
 
-    assert.deepEqual(await createAnalysisJob('http://localhost:8080/', file, 'zh-CN', clientRequestId), {
+    assert.deepEqual(
+        await createAnalysisJob(
+            'https://agent.velodb.io/',
+            file,
+            'zh-CN',
+            clientRequestId,
+            hcaptchaToken,
+        ),
+        {
         jobId,
         status: 'QUEUED',
         retryAfterMs: 3000,
-    });
+        },
+    );
 });
 
 test('parses queued, running, completed, and failed job snapshots', async t => {
@@ -153,7 +164,15 @@ test('accepts a terminal status when an idempotent create response is replayed',
         });
 
     assert.equal(
-        (await createAnalysisJob('', new File(['profile'], 'profile.txt'), 'en', clientRequestId)).status,
+        (
+            await createAnalysisJob(
+                '',
+                new File(['profile'], 'profile.txt'),
+                'en',
+                clientRequestId,
+                hcaptchaToken,
+            )
+        ).status,
         'COMPLETED',
     );
 });
@@ -167,7 +186,13 @@ test('preserves a structured backend error on non-2xx responses', async t => {
         jsonResponse({ code: 'INVALID_PROFILE', message: 'The file is not a Doris profile.' }, { status: 422 });
 
     await assert.rejects(
-        createAnalysisJob('http://localhost:8080', new File(['bad'], 'bad.txt'), 'en', clientRequestId),
+        createAnalysisJob(
+            'https://agent.velodb.io',
+            new File(['bad'], 'bad.txt'),
+            'en',
+            clientRequestId,
+            hcaptchaToken,
+        ),
         error => {
         assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.status, 422);
@@ -185,13 +210,22 @@ test('uses a safe fallback when an error response is not JSON', async t => {
     });
     global.fetch = async () => new Response('<html>Bad gateway</html>', { status: 502 });
 
-    await assert.rejects(createAnalysisJob('', new File(['profile'], 'profile.txt'), 'en', clientRequestId), error => {
+    await assert.rejects(
+        createAnalysisJob(
+            '',
+            new File(['profile'], 'profile.txt'),
+            'en',
+            clientRequestId,
+            hcaptchaToken,
+        ),
+        error => {
         assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.status, 502);
         assert.equal(error.code, 'HTTP_ERROR');
         assert.doesNotMatch(error.message, /<html>/);
         return true;
-    });
+        },
+    );
 });
 
 test('rejects a successful response that is not an agent message', async t => {
@@ -201,12 +235,21 @@ test('rejects a successful response that is not an agent message', async t => {
     });
     global.fetch = async () => jsonResponse({ jobId, status: 'unexpected' }, { status: 202 });
 
-    await assert.rejects(createAnalysisJob('', new File(['profile'], 'profile.txt'), 'en', clientRequestId), error => {
+    await assert.rejects(
+        createAnalysisJob(
+            '',
+            new File(['profile'], 'profile.txt'),
+            'en',
+            clientRequestId,
+            hcaptchaToken,
+        ),
+        error => {
         assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.status, 502);
         assert.equal(error.code, 'INVALID_SERVER_RESPONSE');
         return true;
-    });
+        },
+    );
 });
 
 test('rejects a completed answer over the frontend UTF-8 byte limit', async t => {
@@ -256,11 +299,42 @@ test('normalizes network failures into a stable API error', async t => {
         throw new TypeError('fetch failed');
     };
 
-    await assert.rejects(createAnalysisJob('', new File(['profile'], 'profile.txt'), 'en', clientRequestId), error => {
+    await assert.rejects(
+        createAnalysisJob(
+            '',
+            new File(['profile'], 'profile.txt'),
+            'en',
+            clientRequestId,
+            hcaptchaToken,
+        ),
+        error => {
         assert.ok(error instanceof ProfileAnalysisApiError);
         assert.equal(error.status, 0);
         assert.equal(error.code, 'NETWORK_ERROR');
         assert.doesNotMatch(error.message, /fetch failed/);
         return true;
+        },
+    );
+});
+
+test('rejects a missing hCaptcha token before sending the Profile', async t => {
+    const originalFetch = global.fetch;
+    let fetchCalls = 0;
+    t.after(() => {
+        global.fetch = originalFetch;
     });
+    global.fetch = async () => {
+        fetchCalls += 1;
+        throw new Error('must not be called');
+    };
+
+    await assert.rejects(
+        createAnalysisJob('', new File(['profile'], 'profile.txt'), 'en', clientRequestId, '  '),
+        error => {
+            assert.ok(error instanceof ProfileAnalysisApiError);
+            assert.equal(error.code, 'CAPTCHA_MISSING');
+            return true;
+        },
+    );
+    assert.equal(fetchCalls, 0);
 });

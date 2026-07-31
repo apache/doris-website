@@ -199,6 +199,16 @@ function isAbortError(reason: unknown): boolean {
 }
 
 export function getProfileAnalysisErrorMessage(reason: unknown): string {
+    if (reason instanceof ProfileAnalysisApiError) {
+        switch (reason.code) {
+            case 'CAPTCHA_MISSING':
+                return 'Complete the human verification before analyzing the Profile.';
+            case 'CAPTCHA_INVALID':
+                return 'Human verification failed or expired. Complete it again and retry.';
+            case 'CAPTCHA_UNAVAILABLE':
+                return 'Human verification is temporarily unavailable. Please try again later.';
+        }
+    }
     if (reason instanceof Error) {
         return reason.message;
     }
@@ -259,8 +269,8 @@ export function useProfileAnalysis(apiBaseUrl: string) {
         dispatch({ type: 'set_language', language });
     }, []);
 
-    const analyze = useCallback(async () => {
-        if (!snapshot.file || abortControllerRef.current) {
+    const analyze = useCallback(async (hcaptchaToken: string, resetCaptcha: () => void) => {
+        if (!snapshot.file || abortControllerRef.current || !hcaptchaToken.trim()) {
             return;
         }
 
@@ -281,15 +291,29 @@ export function useProfileAnalysis(apiBaseUrl: string) {
                 dispatch({ type: 'storage_unavailable' });
             }
 
+            let captchaReset = false;
+            const resetCaptchaAfterCreateAttempt = () => {
+                if (captchaReset) return;
+                captchaReset = true;
+                resetCaptcha();
+            };
             const created = await createOrRecoverAnalysisJob({
-                create: () =>
-                    createAnalysisJob(
-                        apiBaseUrl,
-                        snapshot.file as File,
-                        snapshot.language,
-                        clientRequestId,
-                        controller.signal,
-                    ),
+                create: async () => {
+                    try {
+                        return await createAnalysisJob(
+                            apiBaseUrl,
+                            snapshot.file as File,
+                            snapshot.language,
+                            clientRequestId,
+                            hcaptchaToken,
+                            controller.signal,
+                        );
+                    } finally {
+                        // Reset as soon as the single POST settles. Recovery and job
+                        // polling may continue for minutes and do not use this token.
+                        resetCaptchaAfterCreateAttempt();
+                    }
+                },
                 recover: () =>
                     getAnalysisJobByClientRequestId(
                         apiBaseUrl,
@@ -302,6 +326,7 @@ export function useProfileAnalysis(apiBaseUrl: string) {
                         dispatch({ type: 'recovering' });
                     }
                 },
+                createdAt: recoveryRecord.createdAt,
             });
             if (!mountedRef.current || abortControllerRef.current !== controller) return;
 
@@ -312,7 +337,11 @@ export function useProfileAnalysis(apiBaseUrl: string) {
             dispatch({ type: 'job_created', jobId: created.jobId, status: created.status });
             await pollJob(created.jobId, created.retryAfterMs, controller);
         } catch (reason) {
-            if (reason instanceof ProfileAnalysisApiError && reason.status >= 400 && reason.status < 500) {
+            if (
+                reason instanceof ProfileAnalysisApiError &&
+                ((reason.status >= 400 && reason.status < 500) ||
+                    reason.code === 'CAPTCHA_UNAVAILABLE')
+            ) {
                 clearStoredAnalysisJob();
             }
             if (

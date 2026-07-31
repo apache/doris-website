@@ -10,6 +10,9 @@ export function ProfileAnalyzer(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
     const configuredApiBaseUrl = siteConfig.customFields?.profileAnalysisApiBaseUrl;
     const apiBaseUrl = typeof configuredApiBaseUrl === 'string' ? configuredApiBaseUrl : '';
+    const configuredHCaptchaSiteKey = siteConfig.customFields?.profileAnalysisHCaptchaSiteKey;
+    const hcaptchaSiteKey =
+        typeof configuredHCaptchaSiteKey === 'string' ? configuredHCaptchaSiteKey : '';
     const analysis = useProfileAnalysis(apiBaseUrl);
     const isBusy = analysis.isBusy;
     const busyState =
@@ -36,6 +39,7 @@ export function ProfileAnalyzer(): JSX.Element {
                 file={analysis.file}
                 language={analysis.language}
                 disabled={isBusy}
+                hcaptchaSiteKey={hcaptchaSiteKey}
                 onFileChange={analysis.selectFile}
                 onLanguageChange={analysis.setLanguage}
                 onAnalyze={analysis.analyze}

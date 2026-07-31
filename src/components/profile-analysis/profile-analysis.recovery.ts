@@ -34,52 +34,44 @@ interface CreateOrRecoverOperations {
     recover(): Promise<RecoveredAnalysisJobResponse>;
     wait(milliseconds: number): Promise<void>;
     onRecovering(): void;
+    createdAt: number;
+    now?: () => number;
     random?: () => number;
 }
 
 export async function createOrRecoverAnalysisJob(
     operations: CreateOrRecoverOperations,
 ): Promise<CreateAnalysisJobResponse> {
-    let failureCount = 0;
-    while (true) {
-        try {
-            return await operations.create();
-        } catch (createFailure) {
-            if (!isRetryableTransportFailure(createFailure)) throw createFailure;
+    try {
+        return await operations.create();
+    } catch (createFailure) {
+        // hCaptcha tokens are single-use. A verifier outage is authoritative and
+        // retrying/recovering would hide the actionable backend error.
+        if (
+            createFailure instanceof ProfileAnalysisApiError &&
+            createFailure.code === 'CAPTCHA_UNAVAILABLE'
+        ) {
+            throw createFailure;
         }
-
-        failureCount += 1;
-        operations.onRecovering();
-        let retryAfter: number | undefined;
-        try {
-            const recovered = await operations.recover();
-            return {
-                ...recovered,
-                retryAfterMs: DEFAULT_ANALYSIS_POLL_INTERVAL_MS,
-            };
-        } catch (recoveryFailure) {
-            const isTemporaryNotFound =
-                recoveryFailure instanceof ProfileAnalysisApiError &&
-                recoveryFailure.status === 404;
-            if (!isTemporaryNotFound && !isRetryableTransportFailure(recoveryFailure)) {
-                throw recoveryFailure;
-            }
-            if (recoveryFailure instanceof ProfileAnalysisApiError) {
-                retryAfter = recoveryFailure.retryAfterMs;
-            }
-        }
-
-        await operations.wait(
-            Math.max(
-                retryAfter ?? 0,
-                retryDelayMs(
-                    failureCount,
-                    DEFAULT_ANALYSIS_POLL_INTERVAL_MS,
-                    operations.random?.(),
-                ),
-            ),
-        );
+        if (!isRetryableTransportFailure(createFailure)) throw createFailure;
     }
+
+    // The POST may have reached Spring even when the browser did not receive the
+    // response. Never replay it with the consumed hCaptcha token. Resolve the
+    // original Idempotency-Key through the read-only recovery endpoint instead.
+    operations.onRecovering();
+    const recovered = await recoverAnalysisJobWithinGrace({
+        recover: operations.recover,
+        wait: operations.wait,
+        onRecovering: operations.onRecovering,
+        createdAt: operations.createdAt,
+        now: operations.now,
+        random: operations.random,
+    });
+    return {
+        ...recovered,
+        retryAfterMs: DEFAULT_ANALYSIS_POLL_INTERVAL_MS,
+    };
 }
 
 interface RecoverWithinGraceOperations {

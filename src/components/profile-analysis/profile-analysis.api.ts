@@ -152,15 +152,24 @@ export async function createAnalysisJob(
     file: File,
     language: ResponseLanguage,
     clientRequestId: string,
+    hcaptchaToken: string,
     signal?: AbortSignal,
 ): Promise<CreateAnalysisJobResponse> {
     if (!isUuid(clientRequestId)) throw invalidResponse();
+    if (!hcaptchaToken.trim()) {
+        throw new ProfileAnalysisApiError(
+            400,
+            'CAPTCHA_MISSING',
+            'Complete the human verification before analyzing the Profile.',
+        );
+    }
 
     const formData = new FormData();
     formData.append('file', file);
     formData.append('language', language);
     formData.append('consent', 'true');
     formData.append('privacyNoticeVersion', PRIVACY_NOTICE_VERSION);
+    formData.append('hcaptchaToken', hcaptchaToken);
 
     const { response, body } = await fetchJson(apiUrl(apiBaseUrl, ANALYSIS_JOBS_PATH), {
         method: 'POST',
