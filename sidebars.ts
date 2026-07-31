@@ -660,6 +660,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/best-practices/doris-dlf-iceberg',
                             ],
                         },
+                        'lakehouse/catalogs/lance-catalog',
                         {
                             type: 'category',
                             label: 'Paimon Catalog',
