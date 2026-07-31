@@ -1,0 +1,416 @@
+---
+{
+    "title": "Lance Catalog",
+    "language": "zh-CN",
+    "description": "Apache Doris Lance Catalog 使用指南：通过 Filesystem 或 REST Namespace 访问 Lance 数据集，支持并行读取、谓词下推、S3/Local TVF 以及向量检索。"
+}
+---
+
+Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lance Catalog 发现 Lance Namespace 中的数据库和表，并直接查询存储在本地文件系统或 S3 兼容对象存储中的 Lance 数据集。
+
+当前 Doris 对 Lance 提供只读能力，不支持创建、写入、更新或删除 Lance 表。
+
+## 功能概览
+
+| 功能 | 支持情况 |
+|---|---|
+| Filesystem Catalog | 支持本地文件系统、`file://` 和 `s3://` Warehouse |
+| REST Catalog | 支持 Lance REST Namespace，以及无认证、Bearer Token、API Key 和自定义 HTTP Header |
+| 元数据访问 | 支持 `SHOW DATABASES`、`SHOW TABLES` 和 `DESC` |
+| 数据查询 | 支持列裁剪、并行扫描 Lance Fragment 和当前版本的快照一致性读取 |
+| 谓词下推 | 支持将部分标量谓词下推到 Lance 执行 |
+| 文件 TVF | 支持通过 `s3()` 和 `local()` 直接查询 Lance 数据集 |
+| 向量检索 | 支持通过 `vector_search()` 查询 Lance 向量索引或执行 Flat Search |
+| 写入 Lance | 暂不支持 |
+| Time Travel | 暂不支持 |
+| Full-Text Search / Hybrid Search | 暂不支持 |
+
+## 配置 Catalog
+
+### 语法
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "<filesystem|rest>",
+    {CatalogProperties},
+    {StorageProperties},
+    {CommonProperties}
+);
+```
+
+### 通用属性
+
+| 属性 | 是否必需 | 默认值 | 说明 |
+|---|---|---|---|
+| `type` | 是 | - | 固定为 `lance`。 |
+| `lance.catalog.type` | 否 | `filesystem` | Catalog 类型，可选值为 `filesystem` 或 `rest`。 |
+| `lance.namespace.parent` | 否 | 空 | 仅访问指定 Lance Namespace 及其子 Namespace。例如默认分隔符下，`production$analytics` 表示两级 Namespace。 |
+| `lance.namespace.delimiter` | 否 | `$` | 用于解析 `lance.namespace.parent`，同时会传递给 REST Namespace 客户端。该配置不改变 Doris 中多级 Namespace 的展示方式。 |
+| `lance.namespace.root_database` | 否 | `default` | Lance 根 Namespace 在 Doris 中映射的数据库名。 |
+
+### Filesystem Catalog
+
+Filesystem Catalog 直接从 Warehouse 目录发现 Lance Namespace 和表。
+
+| 属性 | 是否必需 | 说明 |
+|---|---|---|
+| `warehouse` | 是 | Lance Warehouse 根路径。支持本地绝对路径、`file://` URI 和 `s3://` URI。 |
+
+#### 使用 S3 兼容对象存储
+
+下面以 MinIO 为例创建 Catalog：
+
+```sql
+CREATE CATALOG lance_catalog PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "filesystem",
+    "warehouse" = "s3://my-bucket/lance",
+    "s3.endpoint" = "http://127.0.0.1:9000",
+    "s3.access_key" = "admin",
+    "s3.secret_key" = "password",
+    "s3.region" = "us-east-1",
+    "use_path_style" = "true"
+);
+```
+
+访问 AWS S3 时，可以省略 `s3.endpoint`，并按实际环境配置访问密钥、Region 和 Path Style。
+
+#### 使用本地文件系统
+
+```sql
+CREATE CATALOG lance_local PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "filesystem",
+    "warehouse" = "/data/lance"
+);
+```
+
+使用本地文件系统时，`warehouse` 必须是绝对路径。FE 需要通过该路径读取 Namespace 和表元数据，执行查询的 BE 也需要能够通过相同路径访问数据。因此在多节点环境中，应将相同的共享目录挂载到所有相关 FE 和 BE 节点。
+
+### REST Catalog
+
+REST Catalog 通过 Lance REST Namespace 获取 Namespace、表地址和存储访问参数。REST Catalog 不需要、也不允许设置 `warehouse`。
+
+| 属性 | 是否必需 | 默认值 | 说明 |
+|---|---|---|---|
+| `lance.rest.uri` | 是 | - | REST 服务地址，必须使用 `http://` 或 `https://`。 |
+| `lance.rest.security.type` | 否 | `none` | 认证方式，可选值为 `none`、`bearer` 或 `api_key`。 |
+| `lance.rest.bearer-token` | 使用 Bearer 认证时是 | - | Bearer Token。 |
+| `lance.rest.api-key` | 使用 API Key 认证时是 | - | API Key，通过 `x-api-key` Header 发送。 |
+| `lance.rest.header.<header-name>` | 否 | - | 发送给 REST 服务的自定义 HTTP Header。认证 Header 应使用上面的专用认证属性配置。 |
+
+使用 Bearer Token 创建 REST Catalog：
+
+```sql
+CREATE CATALOG lance_rest PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "rest",
+    "lance.rest.uri" = "https://lance.example.com",
+    "lance.rest.security.type" = "bearer",
+    "lance.rest.bearer-token" = "your-token"
+);
+```
+
+使用 API Key 时，将认证配置替换为：
+
+```sql
+"lance.rest.security.type" = "api_key",
+"lance.rest.api-key" = "your-api-key"
+```
+
+如果 REST 服务返回临时存储凭证，Doris 会使用这些凭证访问对应的 Lance 表。也可以在 Catalog 中配置 `s3.endpoint`、`s3.access_key`、`s3.secret_key`、`s3.region` 和 `use_path_style`，作为默认的对象存储访问参数。
+
+:::caution
+当前 BE Reader 不支持由 REST Namespace 管理版本的 Lance 表（Managed Versioning）。
+:::
+
+## Namespace 映射
+
+Lance 支持多级 Namespace，而 Doris Catalog 使用数据库名承载 Namespace：
+
+| Lance Namespace | Doris 数据库名 |
+|---|---|
+| 根 Namespace | `default`，可通过 `lance.namespace.root_database` 修改 |
+| `doris` | `doris` |
+| `doris.analytics` | `doris.analytics` |
+
+多级 Namespace 在 Doris 中使用 `.` 连接为一个数据库名。引用包含 `.` 的数据库名时，需要使用反引号：
+
+```sql
+SHOW TABLES FROM lance_catalog.`doris.analytics`;
+
+SELECT *
+FROM lance_catalog.`doris.analytics`.user_features;
+```
+
+`lance.namespace.parent` 可用于限定 Catalog 可见的 Namespace 子树。例如：
+
+```sql
+CREATE CATALOG lance_analytics PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "filesystem",
+    "warehouse" = "s3://my-bucket/lance",
+    "lance.namespace.parent" = "production$analytics",
+    "s3.region" = "us-east-1"
+);
+```
+
+此时 Doris 只展示 `production.analytics` 之下的表和子 Namespace。
+
+## 查询 Lance 表
+
+创建 Catalog 后，可以像查询普通外表一样浏览并查询 Lance 表：
+
+```sql
+SHOW DATABASES FROM lance_catalog;
+
+SHOW TABLES FROM lance_catalog.default;
+
+DESC lance_catalog.default.user_profiles;
+
+SELECT user_id, name, age
+FROM lance_catalog.default.user_profiles
+WHERE age >= 18
+ORDER BY user_id
+LIMIT 100;
+```
+
+也可以将 Lance 数据写入 Doris 内表：
+
+```sql
+INSERT INTO internal.demo.user_profiles
+SELECT user_id, name, age
+FROM lance_catalog.default.user_profiles;
+```
+
+普通 Catalog 查询会在规划阶段固定一个 Lance 数据集版本，并按 Fragment 生成扫描任务。因此，同一条查询读取一致的快照，同时可以由多个 Scanner 并行扫描不同 Fragment，不会让每个 Scanner 重复扫描整个数据集。
+
+## 类型映射
+
+| Lance / Arrow 类型 | Doris 类型 | 说明 |
+|---|---|---|
+| `bool` | `BOOLEAN` | |
+| `int8` | `TINYINT` | |
+| `uint8` | `SMALLINT` | 无符号整数无损提升 |
+| `int16` | `SMALLINT` | |
+| `uint16` | `INT` | 无符号整数无损提升 |
+| `int32` | `INT` | |
+| `uint32` | `BIGINT` | 无符号整数无损提升 |
+| `int64` | `BIGINT` | |
+| `uint64` | `LARGEINT` | 无符号整数无损提升 |
+| `float16` | `FLOAT` | 提升为 32 位浮点数 |
+| `float32` | `FLOAT` | |
+| `float64` | `DOUBLE` | |
+| `decimal128(P,S)` | `DECIMAL(P,S)` | 最大精度为 38 |
+| `decimal256(P,S)` | `DECIMAL(P,S)` | 最大精度为 76 |
+| `utf8`、`large_utf8` | `TEXT` | |
+| `binary`、`large_binary` | `VARBINARY(2147483647)` | |
+| `fixed_size_binary(N)` | `VARBINARY(N)` | 保留固定字节宽度 |
+| `date32(day)`、`date64(ms)` | `DATE` | `date64` 应表示完整自然日 |
+| `time32(s)` | `TIME(0)` | |
+| `time32(ms)` | `TIME(3)` | |
+| `time64(us)`、`time64(ns)` | `TIME(6)` | 纳秒精度截断为微秒 |
+| 无时区 `timestamp(s)` | `DATETIME` | 不随 Session Time Zone 转换 |
+| 无时区 `timestamp(ms)` | `DATETIME(3)` | 不随 Session Time Zone 转换 |
+| 无时区 `timestamp(us)`、`timestamp(ns)` | `DATETIME(6)` | 纳秒精度截断为微秒 |
+| 带时区 `timestamp` | `TIMESTAMPTZ(0-6)` | 保存时间点，按 Doris Session Time Zone 展示 |
+| `struct` | `STRUCT` | 子字段递归映射 |
+| `list`、`large_list`、`fixed_size_list` | `ARRAY` | 元素类型递归映射 |
+| `map` | `MAP` | Key 和 Value 类型递归映射 |
+
+当前不支持以下类型：
+
+- Arrow `null` 和 `duration`。
+- Lance Blob v2。
+- Arrow JSON Extension。
+- Lance BFloat16 Extension。
+- 无法递归映射其子类型的复杂类型。
+- 保留了 Dictionary 标记的 Arrow Dictionary 类型。
+
+对于不支持的列，`DESC` 会显示 `unknown type: UNSUPPORTED_TYPE`。查询只投影支持的列仍可正常执行；当 SQL 投影不支持的列时，Doris 会在分析阶段报错。例如：
+
+```sql
+SELECT * EXCEPT(blob_col, json_col)
+FROM lance_catalog.default.all_types;
+```
+
+:::note
+部分 Lance Java SDK 版本可能在读取 Schema 时丢失 Dictionary 标记，并将 Dictionary 列暴露为物理索引类型。该结果不代表 Doris 已支持 Dictionary 的逻辑值，请勿依赖这一行为。
+:::
+
+## 谓词下推
+
+Doris 会将语义兼容的谓词转换为 Substrait 表达式，并交给 Lance 在读取阶段执行。对于已完整下推的条件，Doris BE 不再重复计算该条件；不能安全下推的条件仍由 Doris 执行。
+
+### 支持下推的数据类型
+
+| Lance / Arrow 类型 | 下推范围 |
+|---|---|
+| `bool` | 等值、空值和逻辑运算，不包含大小比较 |
+| `int8/16/32/64` | 支持 |
+| `uint8/16/32/64` | 支持 |
+| `float32/64` | 支持 |
+| `decimal128` | 精度 1-38，Scale 范围为 0 到 Precision |
+| `utf8`、`large_utf8` | 支持 |
+| `date32(day)` | 支持 |
+| 无时区 `timestamp(s/ms/us)` | 支持 |
+
+其他可读取类型，例如 `float16`、`decimal256`、Binary、`date64`、Time、纳秒 Timestamp、带时区 Timestamp 和复杂类型，当前保留为 Doris 侧谓词。
+
+### 支持下推的操作符
+
+| SQL 谓词 | 下推条件 |
+|---|---|
+| `=`、`!=`、`<>`、`<`、`<=`、`>`、`>=` | 直接的列与常量比较；支持将常量写在左侧 |
+| `<=>` | 直接的列与常量 Null-safe 等值比较 |
+| `IN`、`NOT IN` | 非空常量列表，列表中不能包含 `NULL` |
+| `IS NULL`、`IS NOT NULL` | 直接引用列 |
+| `AND` | 顶层 Conjunct 可以分别下推，不能下推的部分保留在 Doris |
+| `OR` | 两个分支都能完整转换时下推 |
+| `NOT` | 操作数能完整转换时下推 |
+
+以下形式通常不会下推：
+
+- 列上包含函数或算术表达式。
+- `IN` 列表为空或包含 `NULL`。
+- `OR` 或 `NOT` 中只有部分表达式可转换。
+- 数据类型或常量值无法无损转换到 Lance。
+
+可以通过 `EXPLAIN` 中的 `lancePushdownPredicate` 查看实际下推的条件：
+
+```sql
+EXPLAIN
+SELECT user_id
+FROM lance_catalog.default.user_profiles
+WHERE age >= 18 AND country IN ('CN', 'US');
+```
+
+## 使用文件 TVF 查询 Lance
+
+如果只需要读取一个已知路径的 Lance 数据集，可以不创建 Catalog，直接使用 `s3()` 或 `local()` TVF。`uri` 或 `file_path` 必须指向 Lance 数据集的根目录，而不是其内部的数据文件。
+
+### S3 TVF
+
+```sql
+SELECT user_id, name
+FROM s3(
+    "uri" = "s3://my-bucket/lance/user_profiles.lance",
+    "s3.endpoint" = "http://127.0.0.1:9000",
+    "s3.access_key" = "admin",
+    "s3.secret_key" = "password",
+    "s3.region" = "us-east-1",
+    "use_path_style" = "true",
+    "format" = "lance"
+)
+WHERE user_id > 100;
+```
+
+S3 TVF 在 FE 获取 Schema、当前版本和 Fragment 列表，并固定该版本后按 Fragment 并行扫描。
+
+### Local TVF
+
+```sql
+SELECT user_id, name
+FROM local(
+    "file_path" = "lance/user_profiles.lance",
+    "backend_id" = "10001",
+    "format" = "lance"
+);
+```
+
+`file_path` 是相对于目标 BE 的 `user_files_secure_path` 的路径。Local TVF 由 BE 获取 Schema，并在执行时读取当时的最新版本。当前 Local Lance TVF 使用单个 Scanner，不支持通过 Glob 同时读取多个 Lance 数据集。
+
+Lance 文件 TVF 还有以下限制：
+
+- 仅支持 `s3()` 和 `local()`，暂不支持 HDFS、HTTP 等其他文件 TVF。
+- 不支持 `path_partition_keys`。
+- 一个 TVF 路径只能表示一个 Lance 数据集。
+- `DESC FUNCTION` 可以展示包含不支持类型的 Schema，但 SQL 不能投影不支持的列。
+
+## 向量检索
+
+`vector_search()` 是一个关系型 TVF，用于对 Lance 表的向量列执行 Top-K 检索。它既可以使用 Lance 中已建立的向量索引，也可以执行 Flat Search。
+
+### 语法和示例
+
+```sql
+SELECT row_id, label, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "metric" = "l2",
+    "nprobes" = "20",
+    "refine_factor" = "10",
+    "use_index" = "true"
+)
+ORDER BY _distance ASC, row_id;
+```
+
+结果包含 Lance 源表的所有列，以及 Doris 生成的 `FLOAT` 类型 `_distance` 列。源表不能已经包含名为 `_distance` 的列。SQL 关系本身不保证输出顺序，因此需要稳定的最近邻顺序时，应显式使用 `ORDER BY _distance ASC`，并建议增加唯一列作为距离相同情况下的 Tie-breaker。
+
+### 参数
+
+| 参数 | 是否必需 | 默认值 | 说明 |
+|---|---|---|---|
+| `table` | 是 | - | 完整的 `catalog.database.table` 名称。必须是 Lance Catalog 中的表，用户需要拥有该表的 `SELECT` 权限。 |
+| `column` | 是 | - | 向量列名。当前支持 `fixed_size_list<float16\|float32\|float64\|uint8\|int8>`。 |
+| `query_vector` | 是 | - | JSON 数字数组。维度必须与向量列一致，元素值必须能由向量元素类型表示。 |
+| `top_k` | 否 | `10` | 跳过 `offset` 后返回的结果数，必须为正整数。 |
+| `offset` | 否 | `0` | 在向量检索内部跳过的最近邻数量，必须为非负整数。`top_k + offset` 不能超过无符号 32 位整数上限。 |
+| `metric` | 否 | 匹配索引的 Metric；无索引时 `uint8` 为 `hamming`，其他支持类型为 `l2` | 距离类型：`l2`、`cosine`、`dot` 或 `hamming`。`dot_product` 是 `dot` 的别名。`uint8` 向量仅支持 `hamming`；其他当前支持的向量元素类型支持 `l2`、`cosine` 和 `dot`。 |
+| `filter` | 否 | - | Lance SQL 条件，在生成候选向量之前执行，即 Prefilter。 |
+| `nprobes` | 否 | 最少 `1`，不限制最大值 | IVF 索引探测的分区数量，必须为正整数。不设置时从 1 个分区开始；使用 Prefilter 且候选不足时，Lance 可以继续探测更多分区。显式设置为 `N` 时，最少和最多探测数都会固定为 `N`。 |
+| `refine_factor` | 否 | 不启用精排 | 候选集精排倍数，必须为正整数。不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。即使设置为 `1` 也会执行精排，因此与不设置不同。 |
+| `ef` | 否 | `floor(1.5 × (top_k + offset))` | HNSW 图索引搜索时保留的候选宽度，必须为正整数。如果同时设置了 `refine_factor`，默认值为 `floor(1.5 × (top_k + offset) × refine_factor)`。对非 HNSW 索引无效。 |
+| `use_index` | 否 | `true` | `true` 表示存在兼容索引时优先使用索引，否则自动执行 Flat Search；`false` 强制执行 Flat Search。 |
+
+以上默认值对应 Doris 当前集成的 Lance Scanner 行为。`metric` 未指定时，如果向量列存在兼容索引，查询使用该索引创建时配置的 Metric；不存在兼容索引或 `"use_index" = "false"` 时，`uint8` 向量使用 `hamming`，其他当前支持的向量元素类型使用 `l2`。
+
+### Prefilter 和 Post-filter
+
+TVF 的 `filter` 参数由 Lance 在 Top-K 候选选择前执行：
+
+```sql
+SELECT row_id, category, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "filter" = "category = 'book'"
+)
+ORDER BY _distance ASC, row_id;
+```
+
+外层 `WHERE` 由 Doris 在 Lance 返回 Top-K 后执行：
+
+```sql
+SELECT row_id, category, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10"
+)
+WHERE category = 'book'
+ORDER BY _distance ASC, row_id;
+```
+
+因此，外层 `WHERE` 可能使最终结果少于 `top_k`。如果过滤条件应该参与最近邻候选选择，应使用 TVF 的 `filter` 参数。
+
+### 当前执行方式
+
+`vector_search()` 会固定一个 Lance 数据集版本，并由一个 Scanner 搜索该版本中的全部 Fragment，以保证得到全局 Top-K。当前尚未将向量检索拆分为多个 Scanner，也没有在 Doris 中执行多路候选集的全局 Top-K 合并。
+
+## 当前限制和建议
+
+- Lance Catalog 和 Lance TVF 当前仅支持读取，不支持 `CREATE TABLE`、`INSERT`、`UPDATE`、`DELETE`、`TRUNCATE TABLE` 或写回 Lance。
+- 查询总是读取规划时选择的当前版本，不支持通过 SQL 指定 Version 或执行 Time Travel。
+- 使用不支持的列类型时，建议显式列出需要读取的列，避免 `SELECT *` 投影到不支持的列。
+- 对普通扫描使用 `EXPLAIN` 检查 `lancePushdownPredicate`，确认目标条件是否已下推。
+- 向量检索前应在 Lance 中创建与查询方式匹配的索引；小数据集或验证场景可以设置 `"use_index" = "false"` 使用 Flat Search。
+- 向量查询需要稳定顺序时，显式使用 `ORDER BY _distance ASC` 并增加唯一 Tie-breaker。
+- 需要在向量候选选择前过滤时使用 `vector_search()` 的 `filter`；只有明确需要 Top-K 之后过滤时才使用外层 `WHERE`。
