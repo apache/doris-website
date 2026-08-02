@@ -8,7 +8,7 @@ function CoursePath(): JSX.Element {
         <aside className="course-landing__path-card" aria-labelledby="course-path-title">
             <div className="course-landing__path-header">
                 <h2 id="course-path-title">Your Doris path</h2>
-                <span>01 → 06</span>
+                <span>6 available · more to come</span>
             </div>
             <ol className="course-landing__path-list">
                 {COURSE_101_MODULES.map((module, index) => (
@@ -23,6 +23,19 @@ function CoursePath(): JSX.Element {
                         </a>
                     </li>
                 ))}
+                <li>
+                    <div
+                        className="course-landing__path-coming"
+                        aria-label="More Doris 101 courses coming soon"
+                    >
+                        <span className="course-landing__path-number" aria-hidden="true">+</span>
+                        <span className="course-landing__path-name">
+                            More courses
+                            <small>Coming soon</small>
+                        </span>
+                        <span className="course-landing__path-more-mark" aria-hidden="true">···</span>
+                    </div>
+                </li>
             </ol>
         </aside>
     );
@@ -45,14 +58,11 @@ export function CourseLanding(): JSX.Element {
                                 <span>Build for real.</span>
                             </h1>
                             <p className="course-landing__lead">
-                                Go from first principles to a working mental model of Apache Doris—architecture,
-                                deployment, tables, data operations, SQL analytics, and lakehouse connectivity.
+                                Start with the fundamentals of OLAP databases, then move on to advanced topics and
+                                practical use of Apache Doris. The course connects general database concepts with
+                                Doris&apos;s core capabilities, so you can understand and use Doris more effectively.
+                                The database knowledge you gain will also apply to other systems.
                             </p>
-                            <ul className="course-landing__meta" aria-label="Course details">
-                                <li>6 guided modules</li>
-                                <li>Self-paced</li>
-                                <li>Basic SQL + CLI</li>
-                            </ul>
                             <div className="course-landing__actions">
                                 <a className="course-landing__button course-landing__button--primary" href={COURSE_101_MODULES[0].href}>
                                     Start with the overview →

@@ -79,36 +79,11 @@
         line-height: 1.6;
     }
 
-    &__meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px 24px;
-        margin: 24px 0 30px;
-        padding: 0;
-        font: 700 12px/1.5 var(--font-mono);
-        letter-spacing: 0.05em;
-        list-style: none;
-        text-transform: uppercase;
-
-        li {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-
-            &::before {
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-                background: var(--brand-primary);
-                content: '';
-            }
-        }
-    }
-
     &__actions {
         display: flex;
         flex-wrap: wrap;
         gap: 14px;
+        margin-top: 30px;
     }
 
     &__button {
@@ -175,7 +150,9 @@
             border-radius: 999px;
             background: var(--brand-surface-note);
             color: var(--brand-ink);
-            font: 700 11px/1 var(--font-mono);
+            font: 700 10px/1 var(--font-mono);
+            text-transform: uppercase;
+            white-space: nowrap;
         }
     }
 
@@ -247,14 +224,48 @@
         color: var(--brand-ink);
     }
 
+    &__path-coming {
+        position: relative;
+        display: grid;
+        min-height: 58px;
+        grid-template-columns: 48px 1fr auto;
+        align-items: center;
+        gap: 14px;
+        padding: 7px 12px 7px 8px;
+        border: 1px dashed var(--brand-primary);
+        border-radius: 18px;
+        background: var(--brand-surface-faint);
+
+        .course-landing__path-number {
+            border-color: var(--brand-primary);
+            border-style: dashed;
+            background: var(--brand-primary-soft);
+        }
+    }
+
     &__path-name {
         font-size: 14px;
         font-weight: 800;
+
+        small {
+            display: block;
+            margin-top: 4px;
+            color: var(--brand-primary-deep);
+            font: 700 10px/1 var(--font-mono);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
     }
 
     &__path-arrow {
         color: var(--brand-primary-deep);
         font: 800 17px/1 var(--font-mono);
+    }
+
+    &__path-more-mark {
+        color: var(--brand-primary-deep);
+        font: 800 18px/1 var(--font-mono);
+        letter-spacing: 0.08em;
     }
 
 }
@@ -305,11 +316,13 @@
             box-shadow: 8px 8px 0 var(--brand-primary-soft);
         }
 
-        &__path-step {
+        &__path-step,
+        &__path-coming {
             grid-template-columns: 44px 1fr;
         }
 
-        &__path-arrow {
+        &__path-arrow,
+        &__path-more-mark {
             display: none;
         }
 
