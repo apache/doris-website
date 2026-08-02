@@ -266,18 +266,14 @@ export function CourseLessonPlayer({
                                     {isCurrent ? (
                                         <div aria-current="step">{content}</div>
                                     ) : (
-                                        <Link to={module.href}>{content}</Link>
+                                        <Link to={module.href} data-description={module.description}>
+                                            {content}
+                                        </Link>
                                     )}
                                 </li>
                             );
                         })}
                     </ol>
-                    <div className="course-player__rail-note">
-                        <strong>Lesson format</strong>
-                        <span>{units.length} focused units · Learn at your own pace</span>
-                        <span>Baseline: {baseline}</span>
-                        <small>Progress is not stored yet.</small>
-                    </div>
                 </aside>
 
                 <main className="course-player__learning">
@@ -286,6 +282,7 @@ export function CourseLessonPlayer({
                             <span>Module {String(moduleNumber).padStart(2, '0')}</span>
                             <strong>{activeUnitProps?.label}</strong>
                         </div>
+                        <span className="course-player__baseline">Baseline: {baseline}</span>
                         <div
                             className="course-player__progress"
                             role="progressbar"
