@@ -1,0 +1,262 @@
+---
+title: Apache Doris Installation Guide
+description: Learn how to choose and validate an Apache Doris deployment through eight guided units covering manual, Kubernetes, integrated, and decoupled paths.
+slug: /101/02-apache-doris-installation-guide
+sidebar_position: 2
+keywords:
+  - Apache Doris 101
+  - Apache Doris installation
+  - Doris Operator
+  - storage compute separation
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLayerStack,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={2}
+    title="Apache Doris Installation Guide"
+    readingTime="15–20 minutes"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/install/intro"
+>
+    <CourseLessonUnit
+        id="choose-deployment-path"
+        label="Choose a path"
+        title={<>Make two decisions <em>before</em> you deploy.</>}
+        summary="First choose the storage architecture. Then choose who will orchestrate the processes. Those two choices produce four deployment paths."
+        coachTitle="Architecture and orchestration solve different problems."
+        coach={<p>Integrated architecture keeps data on BE disks. Decoupled architecture keeps durable data in shared storage. Manual deployment exposes every process; Kubernetes uses the Doris Operator to manage desired state.</p>}
+        calloutTitle="Start simple"
+        callout={<p>For a first local or VM-based cluster, manual integrated deployment provides the shortest path to a working Doris system.</p>}
+        check={{
+            question: 'Which choice determines where durable data lives?',
+            options: ['Architecture', 'Orchestration platform'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — integrated versus decoupled architecture determines the durable storage model.',
+            incorrectFeedback: 'Kubernetes changes orchestration; the architecture choice changes durable storage.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris deployment paths"
+            columns={2}
+            items={[
+                { tag: 'VM', title: 'Manual · Integrated', description: 'FE and stateful BE processes on hosts with local disks.' },
+                { tag: 'VM', title: 'Manual · Decoupled', description: 'FE, Meta Service, stateless BE, FoundationDB, and shared storage.' },
+                { tag: 'K8S', title: 'Operator · Integrated', description: 'DorisCluster resources manage FE and stateful BE workloads.' },
+                { tag: 'K8S', title: 'Operator · Decoupled', description: 'The Operator manages a cloud-mode cluster and its compute groups.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="deployment-prerequisites"
+        label="Prerequisites"
+        title={<>Remove environmental surprises <em>first</em>.</>}
+        summary="A deployment is only as reliable as its disks, network identity, clocks, ports, and operating-system preparation."
+        coachTitle="Validate the environment on every node."
+        coach={<p>Use supported CPU and operating-system combinations, a compatible JDK for FE, stable hostnames or IPs, synchronized clocks, and full connectivity across Doris service ports.</p>}
+        calloutTitle="Decisions that are hard to reverse"
+        callout={<p>Keep FE metadata on durable dedicated storage and set cluster-wide naming behavior consistently before initialization.</p>}
+        check={{
+            question: 'What should be stable across every cluster node?',
+            options: ['Network identity and clock', 'The number of SQL clients'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — stable identity, connectivity, and time are cluster prerequisites.',
+            incorrectFeedback: 'Client count can change; node identity and time consistency must be dependable.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris deployment prerequisites"
+            columns={4}
+            items={[
+                { tag: 'CPU', title: 'Compatible hosts', description: 'Confirm instruction set, kernel, limits, and Java requirements.' },
+                { tag: 'NET', title: 'Reachable services', description: 'Allow FE, BE, and web service ports between required nodes.' },
+                { tag: 'NTP', title: 'Synchronized time', description: 'Keep clocks aligned for coordination, logs, and diagnosis.' },
+                { tag: 'SSD', title: 'Durable paths', description: 'Plan FE metadata, BE data, logs, and shared storage deliberately.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="manual-integrated"
+        label="Manual integrated"
+        title={<>Bring up control, then <em>add storage</em>.</>}
+        summary="Initialize the first FE, expand the FE quorum, register BE nodes, and verify membership before loading data."
+        coachTitle="Registration and process startup are separate steps."
+        coach={<p>A new FE joins through a helper FE after it is registered. A BE becomes useful only after its heartbeat endpoint is registered and the process reports healthy.</p>}
+        calloutTitle="Production shape"
+        callout={<p>Use an odd voting FE quorum for high availability and enough BE replicas to tolerate the failures your workload requires.</p>}
+        check={{
+            question: 'What should happen before starting a new follower FE?',
+            options: ['Register it with the cluster', 'Load a table onto it'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — register the follower, then start it with the existing FE as helper.',
+            incorrectFeedback: 'FE nodes do not store table replicas; the follower must first be registered.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Manual integrated deployment sequence"
+            focusIndex={0}
+            items={[
+                { title: 'First FE', description: 'Initialize metadata' },
+                { title: 'FE quorum', description: 'Add voting members' },
+                { title: 'BE nodes', description: 'Register storage paths' },
+                { title: 'Verify', description: 'Check health and secure' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="manual-decoupled"
+        label="Manual decoupled"
+        title={<>Build the metadata and storage plane <em>before compute</em>.</>}
+        summary="A decoupled cluster adds FoundationDB, Meta Service, and a Storage Vault around the familiar FE and BE processes."
+        coachTitle="Each layer must know the same cluster identity."
+        coach={<p>FoundationDB persists system metadata, Meta Service coordinates data-layer metadata, FE runs in cloud mode, BE joins a compute group, and the Storage Vault identifies shared object or file storage.</p>}
+        calloutTitle="Operational cost"
+        callout={<p>FoundationDB and shared storage are production dependencies. Back them up, monitor them, and test failure behavior before relying on elasticity.</p>}
+        check={{
+            question: 'What gives a decoupled cluster access to shared data files?',
+            options: ['Storage Vault', 'FE local metadata directory'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — a Storage Vault defines access to the shared storage layer.',
+            incorrectFeedback: 'FE metadata coordinates the cluster; the Storage Vault identifies shared data storage.',
+        }}
+    >
+        <CourseLayerStack
+            ariaLabel="Manual decoupled deployment dependencies"
+            items={[
+                { title: 'FoundationDB + Meta Service', description: 'Persist and coordinate data-layer metadata.' },
+                { title: 'Cloud-mode FE + compute groups', description: 'Plan SQL and run elastic work.' },
+                { title: 'Storage Vault', description: 'Connect durable object storage or a distributed file system.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="kubernetes-integrated"
+        label="Kubernetes integrated"
+        title={<>Describe the cluster; let the Operator <em>reconcile</em> it.</>}
+        summary="The Doris Operator turns a DorisCluster resource into FE and BE workloads, services, configuration, and persistent storage."
+        coachTitle="The custom resource becomes the source of truth."
+        coach={<p>Set images, replicas, resources, ConfigMaps, persistent volume claims, and service exposure in the DorisCluster specification. Use FQDN mode so pod identity remains stable as workloads move.</p>}
+        calloutTitle="Persistent means persistent"
+        callout={<p>Integrated BE pods are stateful. Validate StorageClass behavior, volume retention, capacity, and failure-zone placement before production use.</p>}
+        check={{
+            question: 'Where should desired FE and BE replica counts be declared?',
+            options: ['The DorisCluster resource', 'An ad-hoc SQL comment'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — the Operator reconciles replica counts from the DorisCluster resource.',
+            incorrectFeedback: 'SQL comments do not control Kubernetes workloads.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Kubernetes integrated deployment workflow"
+            focusIndex={2}
+            items={[
+                { title: 'Install', description: 'CRDs + Operator' },
+                { title: 'Configure', description: 'Images + ConfigMaps' },
+                { title: 'Persist', description: 'PVCs + services' },
+                { title: 'Apply', description: 'DorisCluster' },
+                { title: 'Observe', description: 'Pods + SQL health' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="kubernetes-decoupled"
+        label="Kubernetes decoupled"
+        title={<>Treat dependencies as part of the <em>platform</em>.</>}
+        summary="Kubernetes automates Doris processes, but it does not remove responsibility for FoundationDB, shared storage, credentials, or failure planning."
+        coachTitle="A healthy pod is not the same as a healthy data platform."
+        coach={<p>Provision FoundationDB, install the decoupled Operator resources, configure cluster identity and storage access, create the Storage Vault, and then validate FE, Meta Service, compute groups, and end-to-end SQL.</p>}
+        calloutTitle="Environment guidance"
+        callout={<p>A quick single-replica setup is useful for learning. Production requires redundant metadata services and storage designed for the chosen availability target.</p>}
+        check={{
+            question: 'What must an end-to-end readiness check include?',
+            options: ['Create, load, and query data', 'Only confirm that pods are Running'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — exercise the complete metadata, compute, and storage path.',
+            incorrectFeedback: 'Running pods do not prove that metadata and shared storage work end to end.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Kubernetes decoupled readiness layers"
+            columns={4}
+            items={[
+                { tag: 'FDB', title: 'Metadata store', description: 'Redundant FoundationDB with monitored capacity.' },
+                { tag: 'MS', title: 'Meta Service', description: 'Consistent cluster identity and reachable endpoints.' },
+                { tag: 'CG', title: 'Compute groups', description: 'Stateless workers with appropriate resources and cache.' },
+                { tag: 'OBJ', title: 'Shared storage', description: 'Vault credentials, permissions, durability, and throughput.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="operate-the-cluster"
+        label="Operate and verify"
+        title={<>Verify signals at every <em>layer</em>.</>}
+        summary="Good deployment work ends with health checks, security, observability, scaling rules, and a rehearsed upgrade path."
+        coachTitle="Use SQL and platform signals together."
+        coach={<p>Inspect FE and BE membership from SQL, process or pod health from the platform, and logs plus metrics for the reason behind failures. Change default credentials before exposing services.</p>}
+        calloutTitle="Upgrade order"
+        callout={<p>Follow the version-specific upgrade guide and compatibility matrix. For rolling upgrades, preserve quorum and replica availability throughout the sequence.</p>}
+        check={{
+            question: 'Which signal proves that a BE joined the Doris cluster?',
+            options: ['It appears healthy in SHOW BACKENDS', 'Its host responds to ping'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — cluster membership and heartbeat health must be visible to Doris.',
+            incorrectFeedback: 'Network reachability is necessary, but it does not prove Doris membership.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris operational checks"
+            columns={4}
+            items={[
+                { tag: 'SQL', title: 'Membership', description: 'Verify FE roles, BE heartbeats, and compute-group state.' },
+                { tag: 'SEC', title: 'Security', description: 'Set credentials, restrict exposure, and protect storage secrets.' },
+                { tag: 'OBS', title: 'Observability', description: 'Collect metrics and logs before the first incident.' },
+                { tag: 'DR', title: 'Recovery', description: 'Test restart, replacement, backup, and upgrade procedures.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="deployment-recap"
+        label="Deployment recap"
+        title={<>A deployment path is a set of <em>owned tradeoffs</em>.</>}
+        summary="Choose the least complex path that satisfies storage, elasticity, availability, and platform requirements—and validate it with real data."
+        coachTitle="The cluster is ready when the workflow is ready."
+        coach={<p>Document the selected architecture, failure domains, quorum, replica policy, storage ownership, access model, monitoring, and upgrade procedure alongside the deployment manifests.</p>}
+        calloutTitle="Before the next lesson"
+        callout={<p>Keep the deployment stable. The next module turns workload semantics into table models, partitions, buckets, and sort keys.</p>}
+        check={{
+            question: 'What is the best final deployment test?',
+            options: ['Run a representative load and query workflow', 'Confirm the archive extracted successfully'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — a representative workflow validates the complete system path.',
+            incorrectFeedback: 'Extracting binaries is only an early setup step.',
+        }}
+    >
+        <CourseComparison
+            ariaLabel="Deployment path decision recap"
+            leftTitle="Prefer integrated"
+            leftLead="Choose operational simplicity when local storage and coupled scaling fit."
+            leftItems={['Fewer platform dependencies', 'Stateful BE nodes', 'Direct local-disk ownership']}
+            rightTitle="Prefer decoupled"
+            rightLead="Choose independent scaling when shared storage and platform ownership are available."
+            rightItems={['Elastic compute groups', 'Durable shared storage', 'Additional metadata services']}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>
