@@ -1,0 +1,232 @@
+---
+title: Apache Doris Table Guide
+description: Learn a practical Apache Doris table-design workflow through guided units on models, keys, partitions, buckets, and validation.
+slug: /101/03-apache-doris-table-guide
+sidebar_position: 3
+keywords:
+  - Apache Doris 101
+  - Apache Doris table design
+  - table model
+  - partitioning
+  - bucketing
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={3}
+    title="Apache Doris Table Guide"
+    readingTime="12–18 minutes"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/table-design/overview"
+>
+    <CourseLessonUnit
+        id="design-sequence"
+        label="Design sequence"
+        title={<>Turn workload facts into <em>four decisions</em>.</>}
+        summary="A durable table design starts with row semantics, then selects sort keys, partition boundaries, and physical distribution."
+        coachTitle="Make decisions in dependency order."
+        coach={<p>The table model defines what repeated keys mean. Key columns establish sort order. Partitions define logical pruning and lifecycle boundaries. Buckets determine tablet distribution and parallelism.</p>}
+        calloutTitle="Ask before writing DDL"
+        callout={<p>Is data append-only or mutable? Which filters dominate? How much data arrives per period? Which columns distribute rows evenly?</p>}
+        check={{
+            question: 'Which decision should come first?',
+            options: ['Row semantics and table model', 'An arbitrary bucket count'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — model the meaning of repeated keys before physical layout.',
+            incorrectFeedback: 'Bucket count is a later physical decision built on the table semantics.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris table design sequence"
+            focusIndex={0}
+            items={[
+                { title: 'Model', description: 'Repeated-key behavior' },
+                { title: 'Sort key', description: 'Read locality' },
+                { title: 'Partition', description: 'Range + lifecycle' },
+                { title: 'Bucket', description: 'Tablet distribution' },
+                { title: 'Validate', description: 'Size + skew + plans' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-table-model"
+        label="Table models"
+        title={<>What should repeated keys <em>mean</em>?</>}
+        summary="Duplicate keeps every row, Unique keeps one logical row per key, and Aggregate combines value columns with declared functions."
+        coachTitle="The model is a business-semantics choice."
+        coach={<p>Use Duplicate for immutable facts and logs, Unique for CDC and latest-state records, and Aggregate when write-time rollups materially reduce repeated query work.</p>}
+        calloutTitle="Hard to reverse"
+        callout={<p>The table model cannot be changed after creation. Re-modeling requires a new table and data migration.</p>}
+        check={{
+            question: 'Which model fits an append-only clickstream?',
+            options: ['Duplicate Key', 'Unique Key', 'Aggregate Key'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — Duplicate Key preserves every event.',
+            incorrectFeedback: 'An append-only event stream normally needs every original row retained.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris table model decision"
+            columns={3}
+            items={[
+                { tag: 'DUP', title: 'Duplicate Key', description: 'Append facts, logs, and detailed events without key-based merging.' },
+                { tag: 'UNI', title: 'Unique Key', description: 'UPSERT mutable entities and preserve the latest logical row.' },
+                { tag: 'AGG', title: 'Aggregate Key', description: 'Merge measures with SUM, MAX, MIN, REPLACE, or related functions.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="design-sort-key"
+        label="Sort keys"
+        title={<>Put common filters where storage can <em>use them</em>.</>}
+        summary="Doris stores data ordered by key columns, so the leading key prefix has an outsized effect on pruning, compression, and scan cost."
+        coachTitle="Frequency, selectivity, and width all matter."
+        coach={<p>Lead with frequently filtered columns that narrow data effectively. Prefer compact fixed-length types, keep key width controlled, and remember that all key columns precede value columns.</p>}
+        calloutTitle="Index complement"
+        callout={<p>Use inverted or other secondary indexes for important filters that cannot benefit from the leading sort-key prefix.</p>}
+        check={{
+            question: 'Which column is usually the stronger leading sort key?',
+            options: ['A frequently filtered date or tenant key', 'A rarely filtered long description'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — frequent selective filters make the sort order useful.',
+            incorrectFeedback: 'A wide, rarely filtered description adds key cost without useful pruning.',
+        }}
+    >
+        <CourseComparison
+            ariaLabel="Effective and ineffective sort keys"
+            leftTitle="Effective prefix"
+            leftLead="Compact columns aligned with common predicates."
+            leftItems={['Frequently filtered', 'Good pruning value', 'Stable and reasonably narrow']}
+            rightTitle="Weak prefix"
+            rightLead="Wide columns unrelated to normal access paths."
+            rightItems={['Rarely filtered', 'Low pruning value', 'Long strings too early']}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-partitioning"
+        label="Partitioning"
+        title={<>Create logical boundaries the workload can <em>prune</em>.</>}
+        summary="Partitions isolate data ranges or value groups, support lifecycle operations, and let queries avoid unrelated data."
+        coachTitle="Partition for pruning and maintenance—not decoration."
+        coach={<p>Use manual partitions for tightly controlled boundaries, dynamic partitions for scheduled time windows, and auto partitions when incoming values should create ranges or lists automatically.</p>}
+        calloutTitle="Query contract"
+        callout={<p>Partition pruning only helps when queries constrain the partition column. Confirm this with representative SQL and EXPLAIN.</p>}
+        check={{
+            question: 'What makes a date partition useful to a query?',
+            options: ['A predicate on the date partition column', 'A larger VARCHAR length'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — the predicate lets Doris prune unrelated date partitions.',
+            incorrectFeedback: 'Column width does not activate partition pruning.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris partitioning modes"
+            columns={3}
+            items={[
+                { tag: 'MAN', title: 'Manual', description: 'Explicit RANGE or LIST boundaries with direct operator control.' },
+                { tag: 'DYN', title: 'Dynamic', description: 'Scheduled time partitions with rolling creation and expiration.' },
+                { tag: 'AUTO', title: 'Automatic', description: 'Create RANGE or LIST partitions from values during ingestion.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-bucketing"
+        label="Bucketing"
+        title={<>Distribute each partition into useful <em>tablets</em>.</>}
+        summary="Hash bucketing gives deterministic placement by key; random bucketing spreads rows without requiring a distribution key."
+        coachTitle="Balance locality, skew, and parallelism."
+        coach={<p>Choose a high-cardinality, evenly distributed hash key when colocated access matters. Use random distribution when no reliable key exists and even write distribution is the priority.</p>}
+        calloutTitle="Size before count"
+        callout={<p>Estimate compressed data per partition, target healthy tablet sizes, and keep tablet count proportional to cluster resources. More buckets are not automatically faster.</p>}
+        check={{
+            question: 'What is the main risk of a low-cardinality hash bucket key?',
+            options: ['Data skew', 'Automatic schema evolution'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — too few distinct values can concentrate data in a subset of tablets.',
+            incorrectFeedback: 'Bucketing affects distribution, not automatic schema evolution.',
+        }}
+    >
+        <CourseComparison
+            ariaLabel="Hash and random bucketing comparison"
+            leftTitle="Hash bucketing"
+            leftLead="The same key values map deterministically."
+            leftItems={['Choose an even, high-cardinality key', 'Supports distribution-aware joins', 'Can skew with a poor key']}
+            rightTitle="Random bucketing"
+            rightLead="Rows spread without a chosen key."
+            rightItems={['Simple even ingestion', 'Useful without a stable key', 'Less distribution locality']}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="workload-templates"
+        label="Workload patterns"
+        title={<>Combine choices into a coherent <em>table pattern</em>.</>}
+        summary="The strongest DDL is internally consistent: row semantics, pruning, distribution, and ingestion behavior all reinforce the workload."
+        coachTitle="Templates are starting hypotheses."
+        coach={<p>An event table often uses Duplicate Key, a time partition, and an even distribution key. A CDC entity often uses Unique Key with its business key. A rollup table uses Aggregate Key only when the aggregation grain is stable.</p>}
+        calloutTitle="Validate with real shape"
+        callout={<p>Use representative data volume, key cardinality, filter patterns, and update frequency. Tiny synthetic samples hide skew and tablet-sizing problems.</p>}
+        check={{
+            question: 'What should drive a production table template?',
+            options: ['Representative workload evidence', 'The shortest possible CREATE TABLE statement'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — validate design choices against real data and query patterns.',
+            incorrectFeedback: 'Short DDL is not a performance or correctness objective.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Common Apache Doris table patterns"
+            columns={3}
+            items={[
+                { tag: 'LOG', title: 'Event analytics', description: 'Duplicate rows, time pruning, and even parallel scans.' },
+                { tag: 'CDC', title: 'Latest state', description: 'Unique business keys with UPSERT-oriented ingestion.' },
+                { tag: 'KPI', title: 'Metric rollup', description: 'Stable dimensions with declared value aggregation.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="validate-table-design"
+        label="Validate and refine"
+        title={<>Inspect the table Doris <em>actually built</em>.</>}
+        summary="Check partition pruning, tablet size, row distribution, query plans, and load behavior before scaling the workload."
+        coachTitle="DDL is the beginning of table design."
+        coach={<p>Use metadata commands to inspect partitions and tablets, compare tablet row counts and sizes for skew, and use EXPLAIN plus profiles to confirm that intended pruning and joins occur.</p>}
+        calloutTitle="Common failure pattern"
+        callout={<p>Too many small tablets increase scheduling and compaction overhead. Too few large or skewed tablets limit parallelism and create hotspots.</p>}
+        check={{
+            question: 'What should you inspect when one BE does much more work?',
+            options: ['Tablet distribution and bucket-key skew', 'Heading capitalization'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — uneven tablet placement or values often explain imbalanced work.',
+            incorrectFeedback: 'Presentation does not affect physical data distribution.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris table validation loop"
+            focusIndex={3}
+            items={[
+                { title: 'Load', description: 'Representative volume' },
+                { title: 'Inspect', description: 'Partitions + tablets' },
+                { title: 'Explain', description: 'Pruning + plan' },
+                { title: 'Profile', description: 'Runtime evidence' },
+                { title: 'Refine', description: 'Rebuild if needed' },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

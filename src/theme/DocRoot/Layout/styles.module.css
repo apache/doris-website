@@ -1,0 +1,16 @@
+.docRoot {
+    display: flex;
+    width: 100%;
+}
+
+.docsWrapper,
+.courseDocsWrapper {
+    display: flex;
+    flex: 1 0 auto;
+    min-width: 0;
+}
+
+.courseMain {
+    width: 100%;
+    min-width: 0;
+}

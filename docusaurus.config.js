@@ -143,6 +143,7 @@ const SKIP_DOCS = LANDING_ONLY || process.env.SKIP_DOCS === 'true';
 const SKIP_BLOG = LANDING_ONLY || process.env.SKIP_BLOG === 'true';
 const SKIP_COMMUNITY = LANDING_ONLY || process.env.SKIP_COMMUNITY === 'true';
 const SKIP_RELEASES = LANDING_ONLY || process.env.SKIP_RELEASES === 'true';
+const SKIP_COURSE = LANDING_ONLY || process.env.SKIP_COURSE === 'true';
 const SKIP_SEARCH = LANDING_ONLY || process.env.SKIP_SEARCH === 'true';
 
 const LINK_BEHAVIOR_VALUES = new Set(['ignore', 'log', 'warn', 'throw']);
@@ -282,6 +283,17 @@ const config = {
         'docusaurus-plugin-matomo',
         // Use custom blog plugin
         versionsPlugin,
+        SKIP_COURSE ? null : [
+            'content-docs',
+            /** @type {import('@docusaurus/plugin-content-docs').Options} */
+            ({
+                id: 'course',
+                path: 'course',
+                routeBasePath: '/course',
+                sidebarPath: require.resolve('./sidebarsCourse.ts'),
+                showLastUpdateTime: true,
+            }),
+        ],
         SKIP_COMMUNITY ? null : [
             'content-docs',
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
@@ -466,13 +478,13 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: ['docs', 'ja/docs', 'zh-CN/docs'],
+                docsRouteBasePath: ['docs', 'course', 'ja/docs', 'ja/course', 'zh-CN/docs', 'zh-CN/course'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
                 searchBarShortcutHint: true,
                 searchResultLimits: 100,
-                searchContextByPaths: ['docs'],
+                searchContextByPaths: ['docs', 'course'],
                 useAllContextsWithNoSearchContext: false,
                 ignoreFiles: [/^docs\/(?:[^/]+\/)?key-features\//],
             },
