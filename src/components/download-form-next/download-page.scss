@@ -3,15 +3,15 @@
 // ─── Design tokens (mirror home-next) ────────────────────────────────────────
 
 .download-next {
-    --dl-green: #06805F;
-    --dl-green-deep: #054C39;
-    --dl-green-darker: #033A2C;
-    --dl-green-glow: #2DDFA8;
-    --dl-cream: #F5EFE4;
-    --dl-cream-light: #FAF6EE;
-    --dl-yellow: #FFD23F;
-    --dl-yellow-bright: #FFE066;
-    --dl-ink: #0F1A14;
+    --dl-green: var(--brand-primary-dark);
+    --dl-green-deep: var(--brand-primary-darker);
+    --dl-green-darker: var(--brand-primary-darkest);
+    --dl-green-glow: var(--brand-primary-glow);
+    --dl-cream: var(--brand-cream);
+    --dl-cream-light: var(--brand-cream-light);
+    --dl-yellow: var(--brand-accent);
+    --dl-yellow-bright: var(--brand-accent-bright);
+    --dl-ink: var(--brand-ink);
     --dl-text: #1d1d1d;
     --dl-text-muted: #4C576C;
     --dl-text-subtle: #8592A6;
@@ -50,8 +50,8 @@
 .download-next__hero-bg-glow {
     z-index: 1;
     background:
-        radial-gradient(ellipse at 78% 18%, rgba(45, 223, 168, 0.22), transparent 55%),
-        radial-gradient(ellipse at 8% 100%, rgba(255, 210, 63, 0.08), transparent 55%);
+        radial-gradient(ellipse at 78% 18%, rgb(var(--brand-primary-glow-rgb) / 22%), transparent 55%),
+        radial-gradient(ellipse at 8% 100%, rgb(var(--brand-accent-rgb) / 8%), transparent 55%);
 }
 
 .download-next__hero-bg-grid {
@@ -117,8 +117,8 @@
     border-radius: 12px;
     padding: 40px 44px;
     box-shadow:
-        0 30px 60px -32px rgba(6, 70, 50, 0.28),
-        0 8px 24px -12px rgba(15, 26, 20, 0.08);
+        0 30px 60px -32px rgb(var(--brand-shadow-rgb) / 0.28),
+        0 8px 24px -12px rgb(var(--brand-ink-rgb) / 0.08);
 }
 
 .download-next__quick-row {
@@ -182,7 +182,7 @@
     }
 
     &:hover {
-        background: rgba(17, 166, 121, 0.06);
+        background: rgb(var(--brand-primary-rgb) / 6%);
     }
 
     &.is-checked {
@@ -197,7 +197,7 @@
     color: var(--ifm-color-primary);
     padding: 10px 14px;
     background: var(--dl-bg-soft);
-    border: 1px dashed rgba(17, 166, 121, 0.45);
+    border: 1px dashed rgb(var(--brand-primary-rgb) / 45%);
     border-radius: 6px;
     width: 100%;
     word-break: break-word;
@@ -357,16 +357,16 @@
     position: relative;
     overflow: hidden;
     border-radius: 12px;
-    border: 1px solid rgba(45, 223, 168, 0.3);
+    border: 1px solid rgb(var(--brand-primary-glow-rgb) / 30%);
     background:
-        radial-gradient(ellipse at 78% 20%, rgba(45, 223, 168, 0.22), transparent 58%),
-        radial-gradient(ellipse at 6% 100%, rgba(255, 210, 63, 0.08), transparent 58%),
+        radial-gradient(ellipse at 78% 20%, rgb(var(--brand-primary-glow-rgb) / 22%), transparent 58%),
+        radial-gradient(ellipse at 6% 100%, rgb(var(--brand-accent-rgb) / 8%), transparent 58%),
         var(--dl-green);
     color: var(--dl-cream-light);
     text-decoration: none !important;
     box-shadow:
-        0 30px 60px -32px rgba(6, 70, 50, 0.35),
-        0 8px 24px -12px rgba(15, 26, 20, 0.12);
+        0 30px 60px -32px rgb(var(--brand-shadow-rgb) / 0.35),
+        0 8px 24px -12px rgb(var(--brand-ink-rgb) / 0.12);
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 
     &::before {
@@ -380,10 +380,10 @@
 
     &:hover {
         transform: translateY(-3px);
-        border-color: rgba(45, 223, 168, 0.55);
+        border-color: rgb(var(--brand-primary-glow-rgb) / 55%);
         box-shadow:
-            0 40px 80px -32px rgba(6, 70, 50, 0.45),
-            0 12px 32px -12px rgba(15, 26, 20, 0.18);
+            0 40px 80px -32px rgb(var(--brand-shadow-rgb) / 0.45),
+            0 12px 32px -12px rgb(var(--brand-ink-rgb) / 0.18);
         text-decoration: none !important;
         color: var(--dl-cream-light);
     }

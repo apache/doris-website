@@ -8,6 +8,47 @@ const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const REDIRECTS_4X = require('./config/redirects-4.x.json');
 const path = require('path');
 
+const BRAND_THEME_BOOTSTRAP = `(function () {
+    var theme = 'doris';
+    try {
+        var storedTheme = localStorage.getItem('doris-brand-theme');
+        var themes = ['doris', 'golden', 'blue', 'read', 'yellow-blue', 'purple', 'yellow-black', 'sky'];
+        if (themes.indexOf(storedTheme) !== -1) theme = storedTheme;
+    } catch (error) {}
+    document.documentElement.setAttribute('data-brand-theme', theme);
+
+    var kapaSelector = 'script[data-website-id="a5fb90df-217a-4097-95c0-80490220314b"]';
+    var kapaColors = {
+        doris: '#11A679',
+        golden: '#7B2CBF',
+        blue: '#2C2C34',
+        read: '#121212',
+        'yellow-blue': '#0066FF',
+        purple: '#7255A5',
+        'yellow-black': '#000000',
+        sky: '#3778B0'
+    };
+    var kapaColor = kapaColors[theme];
+    var observer;
+    function syncKapaScript(node) {
+        if (node.nodeType !== 1) return false;
+        var script = node.matches && node.matches(kapaSelector)
+            ? node
+            : node.querySelector && node.querySelector(kapaSelector);
+        if (!script) return false;
+        script.setAttribute('data-project-color', kapaColor);
+        if (observer) observer.disconnect();
+        return true;
+    }
+    observer = new MutationObserver(function (mutations) {
+        mutations.some(function (mutation) {
+            return Array.prototype.some.call(mutation.addedNodes, syncKapaScript);
+        });
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    syncKapaScript(document.documentElement);
+}());`;
+
 // Per-document last-update timestamps, generated from git history by
 // scripts/last-update/generate.js and refreshed on demand via the
 // "Refresh Docs Last-Update Map" workflow. markdown.parseFrontMatter (below)
@@ -102,6 +143,7 @@ const SKIP_DOCS = LANDING_ONLY || process.env.SKIP_DOCS === 'true';
 const SKIP_BLOG = LANDING_ONLY || process.env.SKIP_BLOG === 'true';
 const SKIP_COMMUNITY = LANDING_ONLY || process.env.SKIP_COMMUNITY === 'true';
 const SKIP_RELEASES = LANDING_ONLY || process.env.SKIP_RELEASES === 'true';
+const SKIP_COURSE = LANDING_ONLY || process.env.SKIP_COURSE === 'true';
 const SKIP_SEARCH = LANDING_ONLY || process.env.SKIP_SEARCH === 'true';
 
 const LINK_BEHAVIOR_VALUES = new Set(['ignore', 'log', 'warn', 'throw']);
@@ -191,6 +233,13 @@ const config = {
             },
         },
     },
+    headTags: [
+        {
+            tagName: 'script',
+            attributes: {},
+            innerHTML: BRAND_THEME_BOOTSTRAP,
+        },
+    ],
     scripts: ['/js/custom-script.js',
         {
             async: true,
@@ -217,7 +266,15 @@ const config = {
         },
     ],
     projectName: 'apache/doris-website', // Usually your repo name.
-    customFields: {},
+    customFields: {
+        // The public HTTPS reverse proxy is the default browser entry point.
+        // Local development can still replace this build-time value when needed.
+        profileAnalysisApiBaseUrl: process.env.PROFILE_ANALYSIS_API_BASE_URL ?? 'https://agent.velodb.io',
+        // hCaptcha site keys are public browser configuration. Never put the
+        // matching secret in this repository or in a Docusaurus environment variable.
+        profileAnalysisHCaptchaSiteKey:
+            process.env.PROFILE_ANALYSIS_HCAPTCHA_SITE_KEY ?? '40f4820a-dc48-466a-b106-960a57ac5bd0',
+    },
     future: {
         experimental_faster: true,
     },
@@ -226,6 +283,17 @@ const config = {
         'docusaurus-plugin-matomo',
         // Use custom blog plugin
         versionsPlugin,
+        SKIP_COURSE ? null : [
+            'content-docs',
+            /** @type {import('@docusaurus/plugin-content-docs').Options} */
+            ({
+                id: 'course',
+                path: 'course',
+                routeBasePath: '/course',
+                sidebarPath: require.resolve('./sidebarsCourse.ts'),
+                showLastUpdateTime: true,
+            }),
+        ],
         SKIP_COMMUNITY ? null : [
             'content-docs',
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
@@ -410,13 +478,13 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: ['docs', 'ja/docs', 'zh-CN/docs'],
+                docsRouteBasePath: ['docs', 'course', 'ja/docs', 'ja/course', 'zh-CN/docs', 'zh-CN/course'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
                 searchBarShortcutHint: true,
                 searchResultLimits: 100,
-                searchContextByPaths: ['docs'],
+                searchContextByPaths: ['docs', 'course'],
                 useAllContextsWithNoSearchContext: false,
                 ignoreFiles: [/^docs\/(?:[^/]+\/)?key-features\//],
             },

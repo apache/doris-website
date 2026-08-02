@@ -1,5 +1,41 @@
 :root {
-    --ifm-color-primary: #11A679;
+    // Brand theme tokens. Keep Doris as the default so pages rendered without
+    // JavaScript retain the current appearance.
+    --brand-primary: #11A679;
+    --brand-primary-rgb: 17 166 121;
+    --brand-primary-deep: #0B7A58;
+    --brand-primary-deep-rgb: 11 122 88;
+    --brand-primary-dark: #06805F;
+    --brand-primary-dark-rgb: 6 128 95;
+    --brand-primary-darker: #054C39;
+    --brand-primary-darker-rgb: 5 76 57;
+    --brand-primary-darkest: #033A2C;
+    --brand-primary-tint: #1FBF8E;
+    --brand-primary-glow: #2DDFA8;
+    --brand-primary-glow-rgb: 45 223 168;
+    --brand-primary-soft: #C9FFE6;
+    --brand-primary-muted: #99F2CB;
+    --brand-shadow-rgb: 6 70 50;
+    --brand-accent: #FFD23F;
+    --brand-accent-rgb: 255 210 63;
+    --brand-accent-bright: #FFE066;
+    --brand-cream: #F5EFE4;
+    --brand-cream-light: #FAF6EE;
+    --brand-cream-warm: #EFE6D2;
+    --brand-paper: #FFFCF5;
+    --brand-surface-faint: #F7FFFB;
+    --brand-surface-soft: #F4FBF8;
+    --brand-surface-callout: #EEFEFA;
+    --brand-surface-note: #E8FAF5;
+    --brand-border-soft: #D9EEE8;
+    --brand-shell: #DCE9DF;
+    --brand-terminal: #49D7AA;
+    --brand-footer: #0C1613;
+    --brand-ink: #0F1A14;
+    --brand-ink-rgb: 15 26 20;
+    --brand-ink-soft: #1B2A22;
+
+    --ifm-color-primary: var(--brand-primary);
     --ifm-color-primary-dark: #2c39d4;
     --ifm-color-primary-darker: #2935c9;
     --ifm-color-primary-darkest: #06805F;
@@ -47,4 +83,307 @@
     --global-sidebar-width: 20rem;
     --doc-sidebar-width: 20rem !important;
 
+}
+
+html[data-brand-theme='golden'] {
+    --brand-primary: #7B2CBF;
+    --brand-primary-rgb: 123 44 191;
+    --brand-primary-deep: #6D25AA;
+    --brand-primary-deep-rgb: 109 37 170;
+    --brand-primary-dark: #5F1E96;
+    --brand-primary-dark-rgb: 95 30 150;
+    --brand-primary-darker: #4E187B;
+    --brand-primary-darker-rgb: 78 24 123;
+    --brand-primary-darkest: #381057;
+    --brand-primary-tint: #9849D8;
+    --brand-primary-glow: #C184F4;
+    --brand-primary-glow-rgb: 193 132 244;
+    --brand-primary-soft: #F0DCFF;
+    --brand-primary-muted: #D8ADFA;
+    --brand-shadow-rgb: 56 16 87;
+    --brand-accent: #F9D308;
+    --brand-accent-rgb: 249 211 8;
+    --brand-accent-bright: #FFE45C;
+    --brand-cream: #F8F1E8;
+    --brand-cream-light: #FFF9F0;
+    --brand-cream-warm: #F1E3D3;
+    --brand-paper: #FFFCF7;
+    --brand-surface-faint: #FCF8FF;
+    --brand-surface-soft: #F8F1FC;
+    --brand-surface-callout: #F7ECFF;
+    --brand-surface-note: #F3E5FC;
+    --brand-border-soft: #E8D6F2;
+    --brand-shell: #E9DDEA;
+    --brand-terminal: #C184F4;
+    --brand-footer: #1B0C23;
+    --brand-ink: #24102F;
+    --brand-ink-rgb: 36 16 47;
+    --brand-ink-soft: #35203F;
+
+    // Infima consumes this scale for links, buttons, focus states, and docs
+    // navigation. The default scale above intentionally remains unchanged.
+    --ifm-color-primary-dark: #6D25AA;
+    --ifm-color-primary-darker: #5F1E96;
+    --ifm-color-primary-darkest: #4E187B;
+    --ifm-color-primary-light: #8A3DCC;
+    --ifm-color-primary-lighter: #9849D8;
+    --ifm-color-primary-lightest: #B875E8;
+}
+
+html[data-brand-theme='blue'] {
+    --brand-primary: #2C2C34;
+    --brand-primary-rgb: 44 44 52;
+    --brand-primary-deep: #24242B;
+    --brand-primary-deep-rgb: 36 36 43;
+    --brand-primary-dark: #202027;
+    --brand-primary-dark-rgb: 32 32 39;
+    --brand-primary-darker: #19191F;
+    --brand-primary-darker-rgb: 25 25 31;
+    --brand-primary-darkest: #111115;
+    --brand-primary-tint: #42424D;
+    --brand-primary-glow: #00D4FF;
+    --brand-primary-glow-rgb: 0 212 255;
+    --brand-primary-soft: #DDF8FF;
+    --brand-primary-muted: #91EBFC;
+    --brand-shadow-rgb: 8 8 12;
+    --brand-accent: #00D4FF;
+    --brand-accent-rgb: 0 212 255;
+    --brand-accent-bright: #5CE6FF;
+    --brand-cream: #F1F4F5;
+    --brand-cream-light: #F8FAFB;
+    --brand-cream-warm: #E5E9EB;
+    --brand-paper: #FBFCFD;
+    --brand-surface-faint: #F3FCFE;
+    --brand-surface-soft: #EAF9FC;
+    --brand-surface-callout: #E2F8FC;
+    --brand-surface-note: #D8F5FB;
+    --brand-border-soft: #BFEAF2;
+    --brand-shell: #D5E3E6;
+    --brand-terminal: #00D4FF;
+    --brand-footer: #121217;
+    --brand-ink: #2C2C34;
+    --brand-ink-rgb: 44 44 52;
+    --brand-ink-soft: #3C3C46;
+
+    --ifm-color-primary-dark: #27272E;
+    --ifm-color-primary-darker: #222229;
+    --ifm-color-primary-darkest: #18181D;
+    --ifm-color-primary-light: #3B3B45;
+    --ifm-color-primary-lighter: #474752;
+    --ifm-color-primary-lightest: #5A5A68;
+}
+
+html[data-brand-theme='read'] {
+    --brand-primary: #121212;
+    --brand-primary-rgb: 18 18 18;
+    --brand-primary-deep: #0D0D0D;
+    --brand-primary-deep-rgb: 13 13 13;
+    --brand-primary-dark: #171717;
+    --brand-primary-dark-rgb: 23 23 23;
+    --brand-primary-darker: #0A0A0A;
+    --brand-primary-darker-rgb: 10 10 10;
+    --brand-primary-darkest: #000000;
+    --brand-primary-tint: #292929;
+    --brand-primary-glow: #FF7438;
+    --brand-primary-glow-rgb: 255 116 56;
+    --brand-primary-soft: #FFE4D6;
+    --brand-primary-muted: #FFB38F;
+    --brand-shadow-rgb: 0 0 0;
+    --brand-accent: #FF4500;
+    --brand-accent-rgb: 255 69 0;
+    --brand-accent-bright: #FF7438;
+    --brand-cream: #F6F1EC;
+    --brand-cream-light: #FCF8F4;
+    --brand-cream-warm: #EEE3D9;
+    --brand-paper: #FFFCF9;
+    --brand-surface-faint: #FFF8F4;
+    --brand-surface-soft: #FFF0E8;
+    --brand-surface-callout: #FFE9DE;
+    --brand-surface-note: #FFE2D3;
+    --brand-border-soft: #F2C7B2;
+    --brand-shell: #E8D8CF;
+    --brand-terminal: #FF7438;
+    --brand-footer: #080808;
+    --brand-ink: #121212;
+    --brand-ink-rgb: 18 18 18;
+    --brand-ink-soft: #282828;
+
+    --ifm-color-primary-dark: #101010;
+    --ifm-color-primary-darker: #0D0D0D;
+    --ifm-color-primary-darkest: #000000;
+    --ifm-color-primary-light: #252525;
+    --ifm-color-primary-lighter: #333333;
+    --ifm-color-primary-lightest: #4A4A4A;
+}
+
+html[data-brand-theme='yellow-blue'] {
+    --brand-primary: #0066FF;
+    --brand-primary-rgb: 0 102 255;
+    --brand-primary-deep: #0057D9;
+    --brand-primary-deep-rgb: 0 87 217;
+    --brand-primary-dark: #0052CC;
+    --brand-primary-dark-rgb: 0 82 204;
+    --brand-primary-darker: #003F9E;
+    --brand-primary-darker-rgb: 0 63 158;
+    --brand-primary-darkest: #002B70;
+    --brand-primary-tint: #2B82FF;
+    --brand-primary-glow: #66A3FF;
+    --brand-primary-glow-rgb: 102 163 255;
+    --brand-primary-soft: #E0ECFF;
+    --brand-primary-muted: #A8C8FF;
+    --brand-shadow-rgb: 0 47 117;
+    --brand-accent: #FFD300;
+    --brand-accent-rgb: 255 211 0;
+    --brand-accent-bright: #FFE14D;
+    --brand-cream: #F7F3E8;
+    --brand-cream-light: #FFFBF0;
+    --brand-cream-warm: #EDE6D2;
+    --brand-paper: #FFFDF7;
+    --brand-surface-faint: #F5F8FF;
+    --brand-surface-soft: #EDF3FF;
+    --brand-surface-callout: #E7F0FF;
+    --brand-surface-note: #DFEAFF;
+    --brand-border-soft: #C8D9FA;
+    --brand-shell: #DCE4EE;
+    --brand-terminal: #66A3FF;
+    --brand-footer: #071A36;
+    --brand-ink: #0B1F3A;
+    --brand-ink-rgb: 11 31 58;
+    --brand-ink-soft: #193354;
+
+    --ifm-color-primary-dark: #005CE6;
+    --ifm-color-primary-darker: #0057D9;
+    --ifm-color-primary-darkest: #0047B3;
+    --ifm-color-primary-light: #1A75FF;
+    --ifm-color-primary-lighter: #3385FF;
+    --ifm-color-primary-lightest: #66A3FF;
+}
+
+html[data-brand-theme='purple'] {
+    --brand-primary: #7255A5;
+    --brand-primary-rgb: 114 85 165;
+    --brand-primary-deep: #634890;
+    --brand-primary-deep-rgb: 99 72 144;
+    --brand-primary-dark: #5B3F88;
+    --brand-primary-dark-rgb: 91 63 136;
+    --brand-primary-darker: #49316D;
+    --brand-primary-darker-rgb: 73 49 109;
+    --brand-primary-darkest: #34224F;
+    --brand-primary-tint: #8D72BA;
+    --brand-primary-glow: #B19CD9;
+    --brand-primary-glow-rgb: 177 156 217;
+    --brand-primary-soft: #F0EAF8;
+    --brand-primary-muted: #D8CBEA;
+    --brand-shadow-rgb: 52 34 79;
+    --brand-accent: #B19CD9;
+    --brand-accent-rgb: 177 156 217;
+    --brand-accent-bright: #C9BCE5;
+    --brand-cream: #F2F1F4;
+    --brand-cream-light: #FAF9FB;
+    --brand-cream-warm: #E6E3E9;
+    --brand-paper: #FCFBFD;
+    --brand-surface-faint: #FAF8FC;
+    --brand-surface-soft: #F4F0F8;
+    --brand-surface-callout: #EEE8F5;
+    --brand-surface-note: #E8E1F1;
+    --brand-border-soft: #D3D3D3;
+    --brand-shell: #E0DCE5;
+    --brand-terminal: #B19CD9;
+    --brand-footer: #2B2435;
+    --brand-ink: #30283A;
+    --brand-ink-rgb: 48 40 58;
+    --brand-ink-soft: #443A50;
+
+    --ifm-color-primary-dark: #674C95;
+    --ifm-color-primary-darker: #61478D;
+    --ifm-color-primary-darkest: #503A74;
+    --ifm-color-primary-light: #8065B0;
+    --ifm-color-primary-lighter: #8D72BA;
+    --ifm-color-primary-lightest: #B19CD9;
+}
+
+html[data-brand-theme='yellow-black'] {
+    --brand-primary: #000000;
+    --brand-primary-rgb: 0 0 0;
+    --brand-primary-deep: #0A0A0A;
+    --brand-primary-deep-rgb: 10 10 10;
+    --brand-primary-dark: #111111;
+    --brand-primary-dark-rgb: 17 17 17;
+    --brand-primary-darker: #080808;
+    --brand-primary-darker-rgb: 8 8 8;
+    --brand-primary-darkest: #000000;
+    --brand-primary-tint: #242424;
+    --brand-primary-glow: #FFD700;
+    --brand-primary-glow-rgb: 255 215 0;
+    --brand-primary-soft: #FFF4B8;
+    --brand-primary-muted: #FFE66B;
+    --brand-shadow-rgb: 0 0 0;
+    --brand-accent: #FFD700;
+    --brand-accent-rgb: 255 215 0;
+    --brand-accent-bright: #FFE45C;
+    --brand-cream: #F5F1E7;
+    --brand-cream-light: #FCF9F0;
+    --brand-cream-warm: #EDE5D0;
+    --brand-paper: #FFFDF7;
+    --brand-surface-faint: #FFFBE8;
+    --brand-surface-soft: #FFF6CC;
+    --brand-surface-callout: #FFF1B0;
+    --brand-surface-note: #FFEC99;
+    --brand-border-soft: #E8D98D;
+    --brand-shell: #E5DDC3;
+    --brand-terminal: #FFD700;
+    --brand-footer: #000000;
+    --brand-ink: #111111;
+    --brand-ink-rgb: 17 17 17;
+    --brand-ink-soft: #292929;
+
+    --ifm-color-primary-dark: #000000;
+    --ifm-color-primary-darker: #000000;
+    --ifm-color-primary-darkest: #000000;
+    --ifm-color-primary-light: #181818;
+    --ifm-color-primary-lighter: #242424;
+    --ifm-color-primary-lightest: #3A3A3A;
+}
+
+html[data-brand-theme='sky'] {
+    --brand-primary: #3778B0;
+    --brand-primary-rgb: 55 120 176;
+    --brand-primary-deep: #316EA4;
+    --brand-primary-deep-rgb: 49 110 164;
+    --brand-primary-dark: #2B6497;
+    --brand-primary-dark-rgb: 43 100 151;
+    --brand-primary-darker: #214E77;
+    --brand-primary-darker-rgb: 33 78 119;
+    --brand-primary-darkest: #173752;
+    --brand-primary-tint: #5A98D0;
+    --brand-primary-glow: #89C2FF;
+    --brand-primary-glow-rgb: 137 194 255;
+    --brand-primary-soft: #E6F7FF;
+    --brand-primary-muted: #BEDFFF;
+    --brand-shadow-rgb: 25 66 100;
+    --brand-accent: #89C2FF;
+    --brand-accent-rgb: 137 194 255;
+    --brand-accent-bright: #B9DCFF;
+    --brand-cream: #F1F7FA;
+    --brand-cream-light: #F8FCFE;
+    --brand-cream-warm: #E4F0F5;
+    --brand-paper: #FBFEFF;
+    --brand-surface-faint: #F5FBFF;
+    --brand-surface-soft: #EEF9FF;
+    --brand-surface-callout: #E9F7FF;
+    --brand-surface-note: #E6F7FF;
+    --brand-border-soft: #CBE6F5;
+    --brand-shell: #DCECF3;
+    --brand-terminal: #89C2FF;
+    --brand-footer: #183147;
+    --brand-ink: #20364A;
+    --brand-ink-rgb: 32 54 74;
+    --brand-ink-soft: #304C63;
+
+    --ifm-color-primary-dark: #3371A6;
+    --ifm-color-primary-darker: #306B9D;
+    --ifm-color-primary-darkest: #285881;
+    --ifm-color-primary-light: #4E8BC1;
+    --ifm-color-primary-lighter: #5A98D0;
+    --ifm-color-primary-lightest: #89C2FF;
 }

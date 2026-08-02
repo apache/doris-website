@@ -210,18 +210,18 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                 {isOperatorBinary ? (
                     <Form.Item style={{ marginBottom: 0 }} colon={false}>
                         <div
-                            className="rounded-lg border border-[#49D7AA] bg-black p-4"
+                            className="rounded-lg border border-[var(--brand-terminal)] bg-black p-4"
                             style={{ backgroundColor: '#000000' }}
                         >
-                            <div className="mb-3 flex items-center justify-between gap-4 border-b border-[#49D7AA]/30 pb-3">
-                                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[#49D7AA]">
+                            <div className="mb-3 flex items-center justify-between gap-4 border-b border-[var(--brand-terminal)]/30 pb-3">
+                                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--brand-terminal)]">
                                     Docker command
                                 </span>
                                 <button
                                     aria-label="Copy Docker pull command"
-                                    className="shrink-0 rounded-md border border-[#49D7AA] bg-black px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-[#49D7AA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#49D7AA] focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="shrink-0 rounded-md border border-[var(--brand-terminal)] bg-black px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--brand-terminal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-terminal)] focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-50"
                                     disabled={!operatorBinaryCommand}
-                                    style={{ backgroundColor: '#000000', borderColor: '#49D7AA', color: '#49D7AA' }}
+                                    style={{ backgroundColor: '#000000', borderColor: 'var(--brand-terminal)', color: 'var(--brand-terminal)' }}
                                     type="button"
                                     onClick={() => {
                                         copy(operatorBinaryCommand);
@@ -234,14 +234,14 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                             <div className="flex min-w-0 items-start">
                                 <span
                                     aria-hidden="true"
-                                    className="mr-3 mt-0.5 select-none font-mono text-sm font-semibold text-[#49D7AA]"
+                                    className="mr-3 mt-0.5 select-none font-mono text-sm font-semibold text-[var(--brand-terminal)]"
                                 >
                                     $
                                 </span>
                                 <code
                                     aria-label="Docker pull command"
-                                    className="min-w-0 flex-1 select-text whitespace-normal break-all !bg-black !p-0 font-mono text-sm leading-6 !text-[#49D7AA]"
-                                    style={{ backgroundColor: '#000000', color: '#49D7AA' }}
+                                    className="min-w-0 flex-1 select-text whitespace-normal break-all !bg-black !p-0 font-mono text-sm leading-6 !text-[var(--brand-terminal)]"
+                                    style={{ backgroundColor: '#000000', color: 'var(--brand-terminal)' }}
                                 >
                                     {operatorBinaryCommand}
                                 </code>
@@ -271,12 +271,12 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                     >
                         <span className="mr-2">Copy link</span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <rect x="2.5" y="5.5" width="8" height="8" rx="0.564706" stroke="#11A679" strokeWidth="1.2" />
+                            <rect x="2.5" y="5.5" width="8" height="8" rx="0.564706" stroke="var(--brand-primary)" strokeWidth="1.2" />
                             <path
                                 fillRule="evenodd"
                                 clipRule="evenodd"
                                 d="M6.0999 1.89996C5.43716 1.89996 4.8999 2.43722 4.8999 3.09996V5.49995H6.0999V3.09996L12.8999 3.09996V9.89996H10.5V11.1H12.8999C13.5626 11.1 14.0999 10.5627 14.0999 9.89996V3.09996C14.0999 2.43722 13.5626 1.89996 12.8999 1.89996H6.0999Z"
-                                fill="#11A679"
+                                fill="var(--brand-primary)"
                             />
                         </svg>
                     </div>

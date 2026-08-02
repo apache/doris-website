@@ -8,7 +8,7 @@ module.exports = {
             },
         },
         colors: {
-            primary: '#11A679',
+            primary: 'var(--brand-primary)',
             white: '#FFFFFF',
         },
         fontFamily: {

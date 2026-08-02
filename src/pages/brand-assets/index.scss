@@ -39,9 +39,9 @@
     &__notice {
         margin-bottom: 2rem;
         padding: 1rem 1.25rem;
-        border: 1px solid #d9eee8;
+        border: 1px solid var(--brand-border-soft);
         border-radius: 6px;
-        background: #f4fbf8;
+        background: var(--brand-surface-soft);
         color: #344054;
         font-size: 0.9375rem;
         line-height: 1.7;
@@ -97,7 +97,7 @@
 
         &--dark {
             border-bottom-color: #24352f;
-            background: #0c1613;
+            background: var(--brand-footer);
         }
     }
 

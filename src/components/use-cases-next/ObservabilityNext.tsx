@@ -41,7 +41,7 @@ interface BoltIconProps {
     className?: string;
 }
 
-function BoltIcon({ size = 24, color = '#FFD23F', className }: BoltIconProps): JSX.Element {
+function BoltIcon({ size = 24, color = 'var(--brand-accent)', className }: BoltIconProps): JSX.Element {
     return (
         <svg
             width={size}

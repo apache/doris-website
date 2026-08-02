@@ -124,9 +124,9 @@ test('the ecosystem form renders Operator binary downloads as a copyable command
     assert.match(formSource, /aria-label="Copy Docker pull command"/);
     assert.match(formSource, /options\.filter\(option => option\[downloadType\]\)/);
     assert.match(formSource, /bg-black/);
-    assert.match(formSource, /text-\[#49D7AA\]/);
+    assert.match(formSource, /text-\[var\(--brand-terminal\)\]/);
     assert.match(formSource, /backgroundColor: '#000000'/);
-    assert.match(formSource, /color: '#49D7AA'/);
+    assert.match(formSource, /color: 'var\(--brand-terminal\)'/);
     assert.match(formSource, /aria-hidden="true"[\s\S]*?>\s*\$\s*<\/span>/);
     assert.doesNotMatch(formSource, /event\.currentTarget\.select\(\)/);
     assert.match(formSource, />\s*Docker command\s*<\/span>/);

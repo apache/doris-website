@@ -60,9 +60,10 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
     const isZH = currentLocale === 'zh-CN';
 
     // Older versioned docs keep their timestamp metadata for indexing, but only
-    // Dev, the latest stable version, and community docs display it.
+    // Dev, the latest stable version, community docs, and course lessons display it.
     const showLastUpdate =
         pluginId === 'community' ||
+        pluginId === 'course' ||
         (pluginId === 'default' && (version === 'current' || isLast));
     const canDisplayLastUpdate =
         showLastUpdate && (metadata.lastUpdatedAt || metadata.lastUpdatedBy);
@@ -72,6 +73,16 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
             setIsNew(location.pathname.includes('what-is-new'));
         }
     }, [typeof window !== 'undefined' && location.pathname]);
+
+    if (pluginId === 'course') {
+        return (
+            <>
+                <ContentVisibility metadata={metadata} />
+                <DocItemContent>{children}</DocItemContent>
+            </>
+        );
+    }
+
     return (
         <div className="row">
             <div className={clsx('col', !docTOC.hidden && styles.docItemCol)}>
