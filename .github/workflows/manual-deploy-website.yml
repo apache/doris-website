@@ -36,6 +36,15 @@ jobs:
               with:
                   node-version: 20
 
+            - name: Add Swap Space
+              run: |
+                  sudo fallocate -l 8G /mnt/swapfile2
+                  sudo chmod 600 /mnt/swapfile2
+                  sudo mkswap /mnt/swapfile2
+                  sudo swapon /mnt/swapfile2
+                  free -h
+                  swapon --show
+
             - name: Build
               env:
                   GITHUB_TOKEN: ${{ github.token }}
