@@ -86,6 +86,100 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | "paimon.fs.s3.read.ahead.buffer.size" = "1" | "fs.s3a.read.ahead.buffer.size" = "1" |
   | "paimon.s3a.replication.factor" = "3" | "fs.s3a.replication.factor" = "3" |
 
+  **Paimon Read Options**
+
+  Doris supports the following bounded Paimon batch-read options. Set Catalog-wide query defaults with
+  `paimon.table-option.<option-key>`, or override one table reference with
+  `table@options('<option-key>'='<value>')`. These settings affect only Doris reads and never update the physical
+  Paimon table metadata.
+
+  | Paimon option | Paimon default | Values accepted by Doris | Effect |
+  | --- | --- | --- | --- |
+  | `read.batch-size` | `1024` | Integer from `1` to `65536` | Number of rows requested from each Paimon JNI reader batch. An explicitly configured value is preserved when Doris opens the reader. |
+  | `file-reader-async-threshold` | `10 MB` | Memory size from `1 MB` to `1 GB` | File size threshold at which the Paimon JNI reader switches to asynchronous reading. |
+  | `file-index.read.enabled` | `true` | Boolean | Enables Paimon file-index pruning during a read. |
+  | `source.split.target-size` | `128 MB` | Positive memory size | Target size used when Paimon combines data files into Doris scan splits. |
+  | `source.split.open-file-cost` | `4 MB` | Non-negative memory size | Estimated cost of opening a file when Paimon combines files into splits. |
+  | `scan.manifest.parallelism` | Number of available processors | Integer from `1` to `256` | Requested manifest-read parallelism. At execution time, Doris caps each planning branch independently to the smaller of this value, `256`, and the processors available to that FE or BE. |
+  | `scan.plan-sort-partition` | `false` | Boolean | Sorts partitions during Paimon scan planning. |
+
+  For example, the following Catalog settings override values stored in the physical Paimon table and become the
+  defaults for Doris queries:
+
+  ```sql
+  CREATE CATALOG paimon_hms PROPERTIES (
+      "type" = "paimon",
+      "paimon.catalog.type" = "hms",
+      "hive.metastore.uris" = "thrift://127.0.0.1:9083",
+      "warehouse" = "s3://bucket/paimon-warehouse",
+      "paimon.table-option.read.batch-size" = "4096",
+      "paimon.table-option.file-reader-async-threshold" = "32 MB",
+      "paimon.table-option.source.split.target-size" = "64 MB",
+      "paimon.table-option.scan.manifest.parallelism" = "1"
+  );
+  ```
+
+  A query can override these defaults without modifying the Catalog or Paimon table metadata:
+
+  ```sql
+  SELECT *
+  FROM paimon_hms.db_name.table_name@options(
+      'read.batch-size' = '8192',
+      'source.split.target-size' = '32 MB'
+  );
+  ```
+
+  Each table reference has an independent option set. For example, two aliases of the same table can use different
+  batch sizes in one statement:
+
+  ```sql
+  SELECT small.id
+  FROM paimon_hms.db_name.table_name@options('read.batch-size' = '1') small
+  JOIN paimon_hms.db_name.table_name@options('read.batch-size' = '8192') large
+    ON small.id = large.id;
+  ```
+
+  The precedence from highest to lowest is:
+
+  ```text
+  relation @options > Doris Catalog property > physical Paimon table option > Paimon default
+  ```
+
+  Doris validates the final value after applying this precedence. Therefore, a safe Catalog or relation value can
+  replace an invalid physical table value; if the final value is still invalid, Doris rejects the query before the
+  affected planning or reader stage begins. Manifest limits are also enforced before partition, row-count/statistics,
+  fallback-branch, and system-table manifest planning.
+
+  The first five options in the table are metadata-neutral and can reuse the cached latest partition projection.
+  `scan.manifest.parallelism` and `scan.plan-sort-partition` affect metadata planning, so Doris plans them from the
+  effective relation-specific table handle. Per-query values do not resize Paimon's JVM-global executor.
+
+  Doris rejects unknown or invalid `paimon.table-option.*` properties during `CREATE CATALOG` and `ALTER CATALOG`.
+  `ALTER CATALOG` validates the complete candidate configuration before publishing it, so a failed change leaves the
+  previous Catalog configuration effective. Catalogs persisted by an older Doris version remain loadable, but
+  unsupported or invalid legacy reader properties are ignored instead of being applied; their persisted values are
+  retained for image and edit-log compatibility.
+
+  Snapshot and startup-position options are relation context selectors and must use `@options`, as described in
+  [Time Travel](#time-travel-with-options); they cannot be Catalog defaults. Doris also excludes
+  `scan.max-splits-per-task`, which belongs to Paimon's Flink source enumerator, `scan.fallback-branch`, and streaming,
+  layout, write, and compaction options. Configure Bucket, Primary Key, Partition, Merge Engine, and other physical
+  table behavior in Paimon itself.
+
+  :::info Statement consistency
+  Within one statement, Doris keeps schema binding, partition loading, row-count/statistics collection, system-table
+  planning, and data scanning on the same Paimon snapshot and table generation. A snapshot or tag selected by
+  `@options` uses the schema that belongs to that historical version, including nested `STRUCT`, `MAP`, and `ARRAY`
+  fields. Each execution of a prepared statement obtains fresh statement state, so commits between executions are
+  visible according to the new execution's selectors and cache settings.
+  :::
+
+  For operational safety, Paimon scanner DEBUG configuration messages report only the batch size and projected-field
+  count; Doris does not dump the raw scanner parameter map, which can contain credentials. The
+  `PaimonJniAsyncReaderThreadCount` profile gauge is sampled once per second across scanners, so it can be up to one
+  second stale; this sampling does not affect query execution or scheduling. Reader and IOManager cleanup are
+  independent and retry-safe after a partial close failure.
+
 * `{CommonProperties}`
 
   The CommonProperties section is used to fill in common properties. Please refer to the [Catalog Overview](../catalog-overview.md) section on [Common Properties].
@@ -220,6 +314,10 @@ The currently dependent Paimon version is 1.0.0.
 | map                                | map           |                                                                         |
 | row                                | struct        |                                                                         |
 | other                              | UNSUPPORTED   |                                                                         |
+
+Doris preserves the exact spelling of quoted top-level columns and nested `STRUCT` fields on both Paimon JNI scanner
+paths. Names containing delimiters such as commas (`region,code`), hash signs (`nested#value`), colons (`colon:name`),
+spaces, or Unicode characters do not require escaping beyond normal SQL identifier quoting.
 
 :::info Note
 Doris currently does not support `Timestamp` types with timezone. All `timestamp_without_time_zone` and `timestamp_with_local_time_zone` will be uniformly mapped to `datetime(N)` type. However, during reading, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the return results of `timestamp_with_local_time_zone` columns.
@@ -910,6 +1008,29 @@ SELECT * FROM paimon_tbl FOR TIME AS OF 1755381952740;
 SELECT * FROM paimon_tbl FOR VERSION AS OF 1;
 ```
 
+#### Time Travel with `@options` {#time-travel-with-options}
+
+For Paimon-specific selectors, use `@options` on a query relation. Doris accepts `scan.snapshot-id`,
+`scan.tag-name`, `scan.version`, `scan.timestamp`, `scan.timestamp-millis`, `scan.watermark`,
+`scan.file-creation-time-millis`, `scan.creation-time-millis`, and `scan.mode`. The selected snapshot or tag also
+selects its historical schema; Doris does not bind the latest schema to historical data.
+
+```sql
+-- Read snapshot 1 with the schema stored for snapshot 1.
+SELECT id, old_name
+FROM paimon_tbl@options('scan.snapshot-id' = '1');
+
+-- A retained tag remains readable even after its ordinary snapshot expires.
+SELECT id, old_name
+FROM paimon_tbl@options('scan.tag-name' = 'tag1');
+```
+
+Only one startup-position option can be specified in a table reference. `scan.mode` can be combined with a position
+only when Paimon defines the pair as compatible; for example, `scan.mode='from-creation-timestamp'` requires
+`scan.creation-time-millis`. An unknown or expired snapshot, branch, or tag fails explicitly instead of silently
+falling back to the latest table. The `@options` syntax is supported on query relations and can be stored in a view
+definition, but it cannot be applied to a CTE reference or non-query commands such as `SHOW`.
+
 ### Branch and Tag
 
 > Since version 3.1.0
@@ -964,6 +1085,19 @@ To access metadata of a Paimon table, add a `$` symbol after the table name, fol
 ```sql
 SELECT * FROM my_table$system_table_name;
 ```
+
+The `audit_log`, `binlog`, `manifests`, `partitions`, `ro`, `row_tracking`, and `table_indexes` system tables accept
+relation `@options`. The selected snapshot or tag is applied to the system-table rows and, for system tables that expose
+source columns, the matching historical source-table schema:
+
+```sql
+SELECT rowkind, id, old_name
+FROM paimon_tbl$audit_log@options('scan.tag-name' = 'tag1');
+```
+
+Other system tables reject `@options` because they cannot guarantee that every row-producing stage observes the
+selected snapshot. Paimon system tables also reject `scan.file-creation-time-millis`; silently dropping this file
+filter could return rows outside the requested range.
 
 :::info Note
 Doris does not support reading Paimon global system tables, which are only supported in Flink.
