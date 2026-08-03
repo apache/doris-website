@@ -88,18 +88,19 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     **Paimon 读参数**
 
-    Doris 支持一组经过限制的 Paimon 批读参数。可以通过 Catalog 属性
-    `paimon.table-option.<option-key>` 为所有查询设置默认值，也可以通过
-    `table@options('<option-key>'='<value>')` 仅覆盖单个表引用的参数。
+    Doris 支持下表中有明确边界的 Paimon 批读参数。可以通过 Catalog 属性
+    `paimon.table-option.<option-key>` 为 Doris 查询设置默认值，也可以通过
+    `table@options('<option-key>'='<value>')` 仅覆盖单个表引用。这些参数只影响 Doris 读取，不会修改物理
+    Paimon 表的元数据。
 
-    | Paimon 参数 | 默认值 | Doris 校验范围 | 作用 |
+    | Paimon 参数 | Paimon 默认值 | Doris 接受的值 | 作用 |
     | --- | --- | --- | --- |
-    | `read.batch-size` | `1024` | `1` 到 `65536` 的整数 | Paimon JNI Reader 每批返回的行数。 |
+    | `read.batch-size` | `1024` | `1` 到 `65536` 的整数 | Paimon JNI Reader 每批请求的行数。Doris 打开 Reader 时会保留显式配置的值。 |
     | `file-reader-async-threshold` | `10 MB` | `1 MB` 到 `1 GB` 的内存大小 | Paimon JNI Reader 切换为异步文件读取的文件大小阈值。 |
     | `file-index.read.enabled` | `true` | 布尔值 | 是否在读取时启用 Paimon 文件索引裁剪。 |
     | `source.split.target-size` | `128 MB` | 正数内存大小 | Paimon 将数据文件组合成 Doris 扫描 split 时使用的目标大小。 |
     | `source.split.open-file-cost` | `4 MB` | 非负内存大小 | Paimon 组合文件生成 split 时估算的文件打开成本。 |
-    | `scan.manifest.parallelism` | 可用处理器数量 | `1` 到 FE 可用处理器数量的整数 | Paimon 规划扫描时读取 manifest 的并行度。 |
+    | `scan.manifest.parallelism` | 可用处理器数量 | `1` 到 `256` 的整数 | 请求的 Manifest 读取并行度。执行时，Doris 会分别限制每个规划分支，实际值不超过配置值、`256` 以及执行规划的 FE 或 BE 的可用处理器数量三者中的最小值。 |
     | `scan.plan-sort-partition` | `false` | 布尔值 | 是否在 Paimon 扫描规划时对分区排序。 |
 
     例如，以下 Catalog 配置会覆盖物理 Paimon 表中已有的值，并作为 Doris 查询的默认值：
@@ -127,24 +128,49 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     );
     ```
 
-    每个表引用使用独立的参数集合。优先级从高到低为：
+    每个表引用使用独立的参数集合。例如，同一语句中同一张表的两个别名可以使用不同的批大小：
+
+    ```sql
+    SELECT small.id
+    FROM paimon_hms.db_name.table_name@options('read.batch-size' = '1') small
+    JOIN paimon_hms.db_name.table_name@options('read.batch-size' = '8192') large
+      ON small.id = large.id;
+    ```
+
+    参数优先级从高到低为：
 
     ```text
     表引用 @options > Doris Catalog 属性 > 物理 Paimon 表参数 > Paimon 默认值
     ```
 
-    例如，物理表设置了 `read.batch-size=1024` 时，Catalog 中的 `4096` 会在 Doris 查询中覆盖它；
-    上述查询又会仅针对该表引用把值覆盖为 `8192`。split 和 manifest 规划参数在 FE 中生效，
-    Reader 参数还会被序列化并发送给 BE 上的 Paimon JNI Scanner。
+    Doris 会在应用上述优先级后校验最终值。因此，合法的 Catalog 或表引用参数可以覆盖物理表中的非法值；
+    如果最终值仍然非法，Doris 会在受影响的规划或 Reader 阶段开始前拒绝查询。Manifest 限制还会在分区、
+    行数/统计信息、fallback 分支和系统表的 Manifest 规划前生效。
+
+    表中的前五个参数不会改变元数据选择，可以复用已缓存的最新分区投影。
+    `scan.manifest.parallelism` 和 `scan.plan-sort-partition` 会影响元数据规划，因此 Doris 使用当前表引用的
+    最终 Table Handle 进行规划。查询级参数不会调整 Paimon JVM 全局 Executor 的大小。
 
     Doris 会在 `CREATE CATALOG` 和 `ALTER CATALOG` 时拒绝未知或非法的
-    `paimon.table-option.*` 属性。旧 Doris 版本持久化的 Catalog 仍可加载，但当前白名单之外的历史参数
-    会被忽略。这些动态参数不会修改物理 Paimon 表元数据。
+    `paimon.table-option.*` 属性。`ALTER CATALOG` 会先校验完整的候选配置，再发布修改，因此失败后旧的
+    Catalog 配置仍然生效。旧 Doris 版本持久化的 Catalog 仍可加载，但不受支持或非法的历史 Reader 参数只会被忽略，
+    不会被应用；原始值仍会保留，以兼容 image 和 edit log。
 
-    快照和启动位置参数应使用下文查询章节介绍的专用 `@options` 语法，不应配置为 Catalog Reader
-    默认值。Doris 也不支持 Paimon Flink Source Enumerator 专用的 `scan.max-splits-per-task`，并排除
-    流式 Source、表布局、写入和 Compaction 参数。Bucket、Primary Key、Partition、Merge Engine
-    及其他物理表行为应在 Paimon 中配置。
+    快照和启动位置参数属于表引用上下文选择器，必须使用[通过 `@options` 进行时间旅行](#time-travel-with-options)
+    中介绍的语法，不能配置为 Catalog 默认值。Doris 也不支持仅供 Paimon Flink Source Enumerator 使用的
+    `scan.max-splits-per-task`，以及 `scan.fallback-branch`、流式 Source、表布局、写入和 Compaction 参数。
+    Bucket、Primary Key、Partition、Merge Engine 等物理表行为应在 Paimon 中配置。
+
+    :::info 语句一致性
+    在同一条语句内，Doris 会让 Schema 绑定、分区加载、行数/统计信息收集、系统表规划和数据扫描使用同一个
+    Paimon 快照与表版本。通过 `@options` 选择快照或 Tag 时，会使用该历史版本对应的 Schema，包括嵌套的
+    `STRUCT`、`MAP` 和 `ARRAY` 字段。预处理语句每次执行都会获取新的语句状态，因此两次执行之间的新提交会按照
+    新一次执行的选择器和缓存配置决定是否可见。
+    :::
+
+    为保障运维安全，Paimon Scanner 的 DEBUG 配置日志只输出批大小和投影字段数量；Doris 不会输出可能包含凭据的
+    原始 Scanner 参数 Map。Profile 指标 `PaimonJniAsyncReaderThreadCount` 在所有 Scanner 间按一秒周期采样，
+    因此可能最多滞后一秒；采样不会影响查询执行或调度。Reader 和 IOManager 会独立清理，部分关闭失败后可以安全重试。
 
     **Paimon JNI IOManager**
 
@@ -325,6 +351,10 @@ ORDER BY entry_name;
 | map                                  | map                       |                                                                                                                                                                               |
 | row                                  | struct                    |                                                                                                                                                                               |
 | other                                | UNSUPPORTED               |                                                                                                                                                                               |
+
+在两个 Paimon JNI Scanner 路径上，Doris 都会保留带引号的顶层列名和嵌套 `STRUCT` 字段名的原始大小写与字符。
+包含逗号（`region,code`）、井号（`nested#value`）、冒号（`colon:name`）、空格或 Unicode 字符的名称，除普通
+SQL 标识符引用外无需额外转义。
 
 > 注：
 >
@@ -1020,6 +1050,28 @@ SELECT * FROM paimon_tbl FOR TIME AS OF 1755381952740;
 SELECT * FROM paimon_tbl FOR VERSION AS OF 1;
 ```
 
+#### 通过 `@options` 进行时间旅行 {#time-travel-with-options}
+
+如需使用 Paimon 专用选择器，可以在查询的表引用上使用 `@options`。Doris 支持 `scan.snapshot-id`、
+`scan.tag-name`、`scan.version`、`scan.timestamp`、`scan.timestamp-millis`、`scan.watermark`、
+`scan.file-creation-time-millis`、`scan.creation-time-millis` 和 `scan.mode`。选择快照或 Tag 时也会选择对应的
+历史 Schema；Doris 不会把最新 Schema 错误地绑定到历史数据。
+
+```sql
+-- 使用快照 1 中保存的 Schema 读取快照 1。
+SELECT id, old_name
+FROM paimon_tbl@options('scan.snapshot-id' = '1');
+
+-- 即使普通快照已经过期，保留的 Tag 仍然可以读取。
+SELECT id, old_name
+FROM paimon_tbl@options('scan.tag-name' = 'tag1');
+```
+
+一个表引用只能指定一个启动位置参数。只有 Paimon 定义为兼容的组合才能同时使用 `scan.mode` 和位置参数；例如，
+`scan.mode='from-creation-timestamp'` 必须同时指定 `scan.creation-time-millis`。不存在或已过期的快照、Branch
+或 Tag 会明确报错，不会静默回退到最新表。`@options` 可以用于查询的表引用，也可以保存在 View 定义中，但不能
+应用于 CTE 引用或 `SHOW` 等非查询命令。
+
 ### Branch 和 Tag
 
 > 该功能自 3.1.0 版本支持
@@ -1074,6 +1126,17 @@ Doris 支持查询 Paimon 系统表，用来查询表的相关元信息。支持
 ```sql
 SELECT * FROM my_table$system_table_name;
 ```
+
+`audit_log`、`binlog`、`manifests`、`partitions`、`ro`、`row_tracking` 和 `table_indexes` 系统表支持表引用
+`@options`。选择的快照或 Tag 会应用于系统表数据；如果系统表会显示源表列，也会使用匹配的历史源表 Schema：
+
+```sql
+SELECT rowkind, id, old_name
+FROM paimon_tbl$audit_log@options('scan.tag-name' = 'tag1');
+```
+
+其他系统表不支持 `@options`，因为它们无法保证所有生成结果行的阶段都使用选定的快照。Paimon 系统表也不支持
+`scan.file-creation-time-millis`；静默丢弃这个文件过滤条件可能返回请求范围以外的数据。
 
 > 注意点：Doris 不支持读取 Paimon 全局系统表，其只在 Flink 中支持。
 
