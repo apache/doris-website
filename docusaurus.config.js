@@ -49,6 +49,17 @@ const BRAND_THEME_BOOTSTRAP = `(function () {
     syncKapaScript(document.documentElement);
 }());`;
 
+// Doris 101 remembers whether its module rail is collapsed. Applying the stored
+// choice before first paint keeps the rail from rendering expanded and then
+// snapping shut once React mounts on every lesson navigation.
+const COURSE_RAIL_BOOTSTRAP = `(function () {
+    try {
+        if (localStorage.getItem('doris-101-rail-collapsed') === 'true') {
+            document.documentElement.setAttribute('data-course-rail', 'collapsed');
+        }
+    } catch (error) {}
+}());`;
+
 // Per-document last-update timestamps, generated from git history by
 // scripts/last-update/generate.js and refreshed on demand via the
 // "Refresh Docs Last-Update Map" workflow. markdown.parseFrontMatter (below)
@@ -238,6 +249,11 @@ const config = {
             tagName: 'script',
             attributes: {},
             innerHTML: BRAND_THEME_BOOTSTRAP,
+        },
+        {
+            tagName: 'script',
+            attributes: {},
+            innerHTML: COURSE_RAIL_BOOTSTRAP,
         },
     ],
     scripts: ['/js/custom-script.js',

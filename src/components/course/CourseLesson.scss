@@ -10,6 +10,8 @@ body:has(.course-player) {
 }
 
 .course-player {
+    --course-rail-width: 255px;
+
     min-width: 0;
     min-height: calc(100vh - var(--ifm-navbar-height));
     background: var(--brand-cream-light);
@@ -105,7 +107,8 @@ body:has(.course-player) {
     &__shell {
         display: grid;
         min-width: 0;
-        grid-template-columns: 255px minmax(0, 1fr);
+        grid-template-columns: var(--course-rail-width) minmax(0, 1fr);
+        transition: grid-template-columns 0.24s ease;
     }
 
     &__rail {
@@ -137,13 +140,14 @@ body:has(.course-player) {
             border-radius: 12px;
         }
 
-        li > a {
-            position: relative;
+        li > a:hover {
+            border-color: var(--brand-border-soft);
+            background: var(--brand-paper);
+        }
 
-            &:hover {
-                border-color: var(--brand-border-soft);
-                background: var(--brand-paper);
-            }
+        li > a,
+        :root[data-course-rail='collapsed'] & li > div {
+            position: relative;
 
             &::before,
             &::after {
@@ -191,12 +195,86 @@ body:has(.course-player) {
         }
     }
 
+    &__rail-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
     &__rail-label {
-        margin: 0 0 1rem;
+        min-width: 0;
+        margin: 0;
+        overflow: hidden;
         color: var(--brand-primary-deep);
         font: 800 0.68rem/1 var(--font-mono);
         letter-spacing: 0.12em;
         text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    &__rail-toggle {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        flex-shrink: 0;
+        place-items: center;
+        padding: 0;
+        border: 1px solid var(--brand-border-soft);
+        border-radius: 8px;
+        background: var(--brand-paper);
+        color: var(--brand-ink-soft);
+        cursor: pointer;
+
+        svg {
+            width: 15px;
+            height: 15px;
+            transition: transform 0.24s ease;
+        }
+
+        &:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary-deep);
+        }
+    }
+
+    :root[data-course-rail='collapsed'] & {
+        --course-rail-width: 74px;
+    }
+
+    :root[data-course-rail='collapsed'] &__rail {
+        padding: 1.75rem 0.7rem;
+    }
+
+    :root[data-course-rail='collapsed'] &__rail-head {
+        justify-content: center;
+    }
+
+    :root[data-course-rail='collapsed'] &__rail-label {
+        display: none;
+    }
+
+    :root[data-course-rail='collapsed'] &__rail-toggle svg {
+        transform: rotate(180deg);
+    }
+
+    :root[data-course-rail='collapsed'] &__rail li > a,
+    :root[data-course-rail='collapsed'] &__rail li > div {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+        padding: 0.5rem 0.35rem;
+    }
+
+    :root[data-course-rail='collapsed'] &__rail li > a::after,
+    :root[data-course-rail='collapsed'] &__rail li > div::after {
+        width: 250px;
+        content: attr(data-title) '\a' attr(data-description);
+        white-space: pre-line;
+    }
+
+    :root[data-course-rail='collapsed'] &__module-copy {
+        display: none;
     }
 
     &__module-number {
@@ -928,6 +1006,8 @@ body:has(.course-player) {
 @media (prefers-reduced-motion: reduce) {
     .course-player__rail li > a::before,
     .course-player__rail li > a::after,
+    .course-player__shell,
+    .course-player__rail-toggle svg,
     .course-player__progress b,
     .course-player__dots button {
         transition: none;

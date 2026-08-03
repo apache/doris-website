@@ -79,6 +79,19 @@ interface CourseLayerStackProps {
     items: CourseConceptItem[];
 }
 
+const RAIL_COLLAPSED_STORAGE_KEY = 'doris-101-rail-collapsed';
+
+// The rail is styled off `<html data-course-rail>` rather than off React state so the
+// COURSE_RAIL_BOOTSTRAP script in docusaurus.config.js can apply the stored choice
+// before first paint. React state only mirrors it for the toggle's accessible state.
+function applyRailCollapsed(collapsed: boolean): void {
+    if (collapsed) {
+        document.documentElement.setAttribute('data-course-rail', 'collapsed');
+    } else {
+        document.documentElement.removeAttribute('data-course-rail');
+    }
+}
+
 export function CourseLessonUnit({ children }: CourseLessonUnitProps): JSX.Element {
     return <>{children}</>;
 }
@@ -191,6 +204,7 @@ export function CourseLessonPlayer({
     const units = Children.toArray(children).filter(isValidElement) as ReactElement<CourseLessonUnitProps>[];
     const unitIds = useMemo(() => units.map(unit => unit.props.id), [children]);
     const [activeUnit, setActiveUnit] = useState(0);
+    const [railCollapsed, setRailCollapsed] = useState(false);
     const [answers, setAnswers] = useState<Record<string, number>>({});
     const didMount = useRef(false);
     const activeHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -218,6 +232,23 @@ export function CourseLessonPlayer({
         }
     }, [activeUnit]);
 
+    useEffect(() => {
+        setRailCollapsed(document.documentElement.dataset.courseRail === 'collapsed');
+    }, []);
+
+    const toggleRail = () => {
+        setRailCollapsed(current => {
+            const next = !current;
+            applyRailCollapsed(next);
+            try {
+                window.localStorage.setItem(RAIL_COLLAPSED_STORAGE_KEY, String(next));
+            } catch {
+                // Storage can be unavailable in hardened/private browsing.
+            }
+            return next;
+        });
+    };
+
     const selectUnit = (index: number) => {
         if (index < 0 || index >= units.length || index === activeUnit) return;
         setActiveUnit(index);
@@ -244,7 +275,28 @@ export function CourseLessonPlayer({
 
             <div className="course-player__shell">
                 <aside className="course-player__rail" aria-label="Doris 101 modules">
-                    <p className="course-player__rail-label">Course modules</p>
+                    <div className="course-player__rail-head">
+                        <p className="course-player__rail-label">Course modules</p>
+                        <button
+                            className="course-player__rail-toggle"
+                            type="button"
+                            aria-expanded={!railCollapsed}
+                            aria-label={railCollapsed ? 'Expand course modules' : 'Collapse course modules'}
+                            title={railCollapsed ? 'Expand course modules' : 'Collapse course modules'}
+                            onClick={toggleRail}
+                        >
+                            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                                <path
+                                    d="M10.5 3 5.5 8l5 5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                        </button>
+                    </div>
                     <ol>
                         {COURSE_101_MODULES.map((module, index) => {
                             const isCurrent = index === moduleNumber - 1;
@@ -264,9 +316,19 @@ export function CourseLessonPlayer({
                             return (
                                 <li className={isCurrent ? 'course-player__module--active' : undefined} key={module.number}>
                                     {isCurrent ? (
-                                        <div aria-current="step">{content}</div>
+                                        <div
+                                            aria-current="step"
+                                            data-title={module.shortTitle}
+                                            data-description={module.description}
+                                        >
+                                            {content}
+                                        </div>
                                     ) : (
-                                        <Link to={module.href} data-description={module.description}>
+                                        <Link
+                                            to={module.href}
+                                            data-title={module.shortTitle}
+                                            data-description={module.description}
+                                        >
                                             {content}
                                         </Link>
                                     )}
