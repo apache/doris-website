@@ -222,13 +222,11 @@ For a regular Catalog query, Doris pins a Lance dataset version during planning 
 The following types are not currently supported:
 
 - Arrow `null` and `duration`.
-- Lance Blob v2.
-- Arrow JSON Extension.
-- Lance BFloat16 Extension.
+- Arrow/Lance Extension types with `ARROW:extension:name` metadata, including Lance Blob v2, Arrow JSON Extension, and Lance BFloat16 Extension.
 - Complex types whose child types cannot be mapped recursively.
 - Arrow Dictionary types that preserve the Dictionary marker.
 
-For unsupported columns, `DESC` displays `unknown type: UNSUPPORTED_TYPE`. Queries can still project only supported columns. Doris reports an error during analysis when SQL projects an unsupported column. For example:
+For an unsupported top-level column, `DESC` on a Catalog table and `DESC FUNCTION` on a Lance file TVF both preserve the column and display `unknown type: UNSUPPORTED_TYPE`. If any child of a complex type cannot be mapped, the whole top-level complex column is marked unsupported. Queries can still project only supported columns. Doris reports an error during analysis when SQL projects an unsupported column. For example:
 
 ```sql
 SELECT * EXCEPT(blob_col, json_col)
@@ -263,7 +261,7 @@ Predicates on other readable types, including `float16`, `decimal256`, Binary, `
 | SQL Predicate | Pushdown Condition |
 |---|---|
 | `=`, `!=`, `<>`, `<`, `<=`, `>`, `>=` | Direct comparison between a column and a constant. The constant may be on the left side. |
-| `<=>` | Direct null-safe equality comparison between a column and a constant |
+| `<=>` | Direct null-safe equality comparison between a column and a constant; preserves a non-`NULL`, two-valued result inside `NOT`, `AND`, or `OR` |
 | `IN`, `NOT IN` | Non-empty constant list that does not contain `NULL` |
 | `IS NULL`, `IS NOT NULL` | Direct column reference |
 | `AND` | Top-level conjuncts can be pushed down independently, with unsupported conjuncts retained in Doris |
@@ -313,13 +311,15 @@ For an S3 TVF, the FE obtains the Schema, current version, and Fragment list. Do
 ```sql
 SELECT user_id, name
 FROM local(
-    "file_path" = "lance/user_profiles.lance",
+    "file_path" = "/data/lance/user_profiles.lance",
     "backend_id" = "10001",
     "format" = "lance"
 );
 ```
 
-`file_path` is relative to `user_files_secure_path` on the target BE. For a Local TVF, the BE obtains the Schema and reads the latest version available when execution begins. The current Local Lance TVF uses one Scanner and does not support reading multiple Lance datasets through a Glob pattern.
+`file_path` is passed as written to the Lance Reader on the target BE. Doris does not prepend `user_files_secure_path` or expand this path as a Glob, so it must point directly to the root directory of one Lance dataset that the target BE can access. An absolute path is recommended.
+
+Local TVF Schema discovery and execution each open the latest dataset version independently. The version resolved during Schema discovery is not currently pinned for the subsequent scan. If the dataset changes between query analysis and execution, the discovered Schema and scanned snapshot can differ. Avoid modifying the dataset while a Local TVF query is being analyzed and executed. The current Local Lance TVF uses one Scanner.
 
 Lance file TVFs have the following additional limitations:
 
@@ -349,13 +349,21 @@ FROM vector_search(
 ORDER BY _distance ASC, row_id;
 ```
 
-The result contains all columns from the Lance source table plus a Doris-generated `_distance` column of type `FLOAT`. The source table must not already contain a column named `_distance`. A SQL relation does not guarantee output order, so explicitly specify `ORDER BY _distance ASC` when deterministic nearest-neighbor ordering is required. Adding a unique column as a tie-breaker is recommended for rows with the same distance.
+The result contains all columns from the Lance source table plus the `_distance` column that the Lance Scanner automatically projects for the nearest-neighbor query. Doris deserializes this Arrow column and exposes it as `FLOAT`. `_distance` is a distance, not a generic similarity score: a lower value means that two vectors are closer. The source table must not already contain a column named `_distance`. A SQL relation does not guarantee output order, so explicitly specify `ORDER BY _distance ASC` when deterministic nearest-neighbor ordering is required. Adding a unique column as a tie-breaker is recommended for rows with the same distance.
+
+`table` must parse as exactly three `catalog.database.table` name parts. A multilevel Lance Namespace maps to one Doris database name containing `.`, so quote the database part with backticks. For example, use the following value for table `items` in Namespace `doris.analytics`:
+
+```sql
+"table" = "lance_catalog.`doris.analytics`.items"
+```
+
+Do not use the unquoted form `lance_catalog.doris.analytics.items`; it parses as four name parts and is rejected. A table-only name or `database.table` name is also rejected.
 
 ### Parameters
 
 | Parameter | Required | Default | Description |
 |---|---|---|---|
-| `table` | Yes | - | Fully qualified `catalog.database.table` name. It must identify a table in a Lance Catalog, and the user must have the `SELECT` privilege on the table. |
+| `table` | Yes | - | Fully qualified, three-part `catalog.database.table` name. If a multilevel Namespace maps to a database name containing `.`, quote the database part with backticks. It must identify a table in a Lance Catalog, and the user must have the `SELECT` privilege on the table. |
 | `column` | Yes | - | Vector column name. `fixed_size_list<float16\|float32\|float64\|uint8\|int8>` is currently supported. |
 | `query_vector` | Yes | - | JSON number array. Its dimension must match the vector column, and each value must be representable by the vector element type. |
 | `top_k` | No | `10` | Number of results returned after skipping `offset`. It must be a positive integer. |

@@ -222,13 +222,11 @@ FROM lance_catalog.default.user_profiles;
 当前不支持以下类型：
 
 - Arrow `null` 和 `duration`。
-- Lance Blob v2。
-- Arrow JSON Extension。
-- Lance BFloat16 Extension。
+- 带有 `ARROW:extension:name` 元数据的 Arrow/Lance Extension 类型，例如 Lance Blob v2、Arrow JSON Extension 和 Lance BFloat16 Extension。
 - 无法递归映射其子类型的复杂类型。
 - 保留了 Dictionary 标记的 Arrow Dictionary 类型。
 
-对于不支持的列，`DESC` 会显示 `unknown type: UNSUPPORTED_TYPE`。查询只投影支持的列仍可正常执行；当 SQL 投影不支持的列时，Doris 会在分析阶段报错。例如：
+对于不支持的顶层列，Catalog 表的 `DESC` 和 Lance 文件 TVF 的 `DESC FUNCTION` 都会保留该列，并显示 `unknown type: UNSUPPORTED_TYPE`。如果复杂类型的任一子字段无法映射，则整个顶层复杂列会标记为不支持。查询只投影支持的列仍可正常执行；当 SQL 投影不支持的列时，Doris 会在分析阶段报错。例如：
 
 ```sql
 SELECT * EXCEPT(blob_col, json_col)
@@ -263,7 +261,7 @@ Doris 会将语义兼容的谓词转换为 Substrait 表达式，并交给 Lance
 | SQL 谓词 | 下推条件 |
 |---|---|
 | `=`、`!=`、`<>`、`<`、`<=`、`>`、`>=` | 直接的列与常量比较；支持将常量写在左侧 |
-| `<=>` | 直接的列与常量 Null-safe 等值比较 |
+| `<=>` | 直接的列与常量 Null-safe 等值比较；在 `NOT`、`AND` 或 `OR` 中仍保持非 `NULL` 的二值逻辑结果 |
 | `IN`、`NOT IN` | 非空常量列表，列表中不能包含 `NULL` |
 | `IS NULL`、`IS NOT NULL` | 直接引用列 |
 | `AND` | 顶层 Conjunct 可以分别下推，不能下推的部分保留在 Doris |
@@ -313,13 +311,15 @@ S3 TVF 在 FE 获取 Schema、当前版本和 Fragment 列表，并固定该版�
 ```sql
 SELECT user_id, name
 FROM local(
-    "file_path" = "lance/user_profiles.lance",
+    "file_path" = "/data/lance/user_profiles.lance",
     "backend_id" = "10001",
     "format" = "lance"
 );
 ```
 
-`file_path` 是相对于目标 BE 的 `user_files_secure_path` 的路径。Local TVF 由 BE 获取 Schema，并在执行时读取当时的最新版本。当前 Local Lance TVF 使用单个 Scanner，不支持通过 Glob 同时读取多个 Lance 数据集。
+`file_path` 会按用户填写的值直接传给目标 BE 上的 Lance Reader。Doris 不会自动拼接 `user_files_secure_path`，也不会对该路径执行 Glob 展开，因此该参数必须直接指向目标 BE 可访问的单个 Lance 数据集根目录；建议使用绝对路径。
+
+Local TVF 的 Schema 发现和执行扫描会分别打开数据集的最新版本，当前不会将 Schema 发现时解析出的版本固定到后续扫描。如果数据集在查询分析与执行之间发生更新，Schema 和实际扫描的快照可能不一致。因此，应避免在 Local TVF 查询的分析和执行期间修改数据集。当前 Local Lance TVF 使用单个 Scanner。
 
 Lance 文件 TVF 还有以下限制：
 
@@ -349,13 +349,21 @@ FROM vector_search(
 ORDER BY _distance ASC, row_id;
 ```
 
-结果包含 Lance 源表的所有列，以及 Doris 生成的 `FLOAT` 类型 `_distance` 列。源表不能已经包含名为 `_distance` 的列。SQL 关系本身不保证输出顺序，因此需要稳定的最近邻顺序时，应显式使用 `ORDER BY _distance ASC`，并建议增加唯一列作为距离相同情况下的 Tie-breaker。
+结果包含 Lance 源表的所有列，以及 Lance Scanner 为最近邻查询自动投影的 `_distance` 列。Doris 会反序列化该 Arrow 列，并以 `FLOAT` 类型提供给用户。`_distance` 表示距离，而不是通用的相似度分数；值越小表示两个向量越接近。源表不能已经包含名为 `_distance` 的列。SQL 关系本身不保证输出顺序，因此需要稳定的最近邻顺序时，应显式使用 `ORDER BY _distance ASC`，并建议增加唯一列作为距离相同情况下的 Tie-breaker。
+
+`table` 必须解析为恰好三部分的 `catalog.database.table` 名称。多级 Lance Namespace 在 Doris 中映射为包含 `.` 的单个数据库名，因此必须使用反引号将数据库部分括起来。例如，表 `items` 位于 `doris.analytics` Namespace 时，应写为：
+
+```sql
+"table" = "lance_catalog.`doris.analytics`.items"
+```
+
+不要写成未引用的 `lance_catalog.doris.analytics.items`，因为它会被解析为四部分名称并报错。只填写表名或 `database.table` 也会报错。
 
 ### 参数
 
 | 参数 | 是否必需 | 默认值 | 说明 |
 |---|---|---|---|
-| `table` | 是 | - | 完整的 `catalog.database.table` 名称。必须是 Lance Catalog 中的表，用户需要拥有该表的 `SELECT` 权限。 |
+| `table` | 是 | - | 完整的三部分 `catalog.database.table` 名称。多级 Namespace 对应的数据库名包含 `.` 时，必须使用反引号引用数据库部分。该表必须属于 Lance Catalog，用户需要拥有该表的 `SELECT` 权限。 |
 | `column` | 是 | - | 向量列名。当前支持 `fixed_size_list<float16\|float32\|float64\|uint8\|int8>`。 |
 | `query_vector` | 是 | - | JSON 数字数组。维度必须与向量列一致，元素值必须能由向量元素类型表示。 |
 | `top_k` | 否 | `10` | 跳过 `offset` 后返回的结果数，必须为正整数。 |
