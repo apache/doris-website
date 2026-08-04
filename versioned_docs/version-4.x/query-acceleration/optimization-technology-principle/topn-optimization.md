@@ -2,8 +2,8 @@
 {
     "title": "TOPN Query Optimization: ORDER BY LIMIT Acceleration Principles and Configuration",
     "language": "en",
-    "description": "How does Doris accelerate ORDER BY LIMIT queries? This article explains TOPN optimization principles, applicable limitations, session parameters, and execution plan inspection methods.",
-    "keywords": ["Doris TOPN optimization", "ORDER BY LIMIT acceleration", "topn_opt_limit_threshold", "two-phase read", "RuntimePredicate", "Zonemap filtering"]
+    "description": "How does Doris accelerate ORDER BY LIMIT queries? This article explains TOPN optimization principles, applicable limitations, session parameters, execution plan inspection methods, and the phase-2 File Cache policy for lazy materialization in storage-compute separation deployments.",
+    "keywords": ["Doris TOPN optimization", "ORDER BY LIMIT acceleration", "topn_opt_limit_threshold", "enable_topn_lazy_mat_phase2_no_write_file_cache", "two-phase read", "File Cache", "RuntimePredicate", "Zonemap filtering"]
 }
 ---
 
@@ -53,13 +53,14 @@ SELECT * FROM tablex WHERE xxx ORDER BY c1, c2 ... LIMIT n
 
 ## Configuration Parameters
 
-The following three parameters are all session variables. You can set them for a single SQL statement or globally.
+The following four parameters are all session variables. You can set them for a single SQL statement or globally.
 
 | Parameter | Default | Effect | Tuning Suggestion |
 | :--- | :--- | :--- | :--- |
 | `topn_opt_limit_threshold` | 1024 | TOPN optimization is enabled only when LIMIT n is less than this value | Set to `0` to disable the entire TOPN optimization |
 | `enable_two_phase_read_opt` | true | Whether to enable Optimization 3 (two-phase lazy materialization) | Set to `false` to disable Optimization 3 alone |
 | `topn_filter_ratio` | 0.5 | Ratio threshold of LIMIT n to total table data | When the LIMIT count exceeds half of the table data, the filter is no longer generated |
+| `enable_topn_lazy_mat_phase2_no_write_file_cache` | false | In storage-compute separation mode, controls whether phase 2 of lazy materialization for Doris internal tables skips cache writeback on a File Cache miss | Enable it only when phase-2 reads have low reuse and are likely to pollute the cache |
 
 <!-- Knowledge type: operation -->
 <!-- Applicable scenarios: verifying whether TOPN optimization is enabled -->
@@ -78,7 +79,7 @@ EXPLAIN <your_sql>;
 
 - `TOPN OPT`: **Optimization 1** (dynamic range filtering) is enabled
 - `SORT LIMIT` under `VOlapScanNode`: **Optimization 2** (key-prefix short-circuit read) is enabled
-- `OPT TWO PHASE`: **Optimization 3** (two-phase lazy materialization) is enabled
+- `MaterializeNode` (or `OPT TWO PHASE` in older execution plans): **Optimization 3** (two-phase lazy materialization) is enabled
 
 **Example**:
 
@@ -102,6 +103,116 @@ EXPLAIN <your_sql>;
      cardinality=345472780, avgRowSize=0.0, numNodes=1
      pushAggOp=NONE
 ```
+
+<!-- Knowledge type: configuration + operation + troubleshooting -->
+<!-- Applicable scenarios: controlling File Cache writes during TOPN lazy materialization phase 2 in clusters with storage-compute separation -->
+
+## Control File Cache Writes During Lazy Materialization Phase 2
+
+In a cluster with storage-compute separation, phase 2 of TOPN lazy materialization reads the remaining columns by the row IDs selected in phase 1. When a small number of result rows are scattered across many Segments, the cache blocks populated by these sparse reads may see little reuse and displace hot data. In this case, enable `enable_topn_lazy_mat_phase2_no_write_file_cache` so that phase 2 reads cache misses directly from remote storage without writing them back to File Cache.
+
+This variable does not change query results. It changes only how phase 2 handles File Cache misses:
+
+| Setting | Phase-2 Read Behavior |
+| :--- | :--- |
+| `false` (default) | Uses the regular read-through and writeback policy: on a cache miss, Doris reads remote data and writes the data to File Cache |
+| `true` | Reads local cache only when cache blocks in the `DOWNLOADED` state fully cover the current read range. If any part is uncached or still downloading, Doris reads the entire current range from remote storage without creating or writing cache blocks |
+
+Before enabling this variable, note the following boundaries:
+
+- It takes effect only in storage-compute separation mode and controls only phase 2 of TOPN lazy materialization for Doris internal tables. It currently does not control phase-2 reads for external tables.
+- It supports Doris internal tables both with and without row store enabled.
+- It neither removes existing cache entries nor changes cache writes made by phase 1, other queries, or other operators. The query's total File Cache writes may therefore still be greater than zero.
+- It has no additional effect when File Cache is disabled or when the execution plan does not contain a `MaterializeNode`.
+
+### Basic Usage
+
+The following example requires a cluster with storage-compute separation, File Cache enabled on the BEs, and a user that can create and drop tables and insert and query data in the target database. First, create a Duplicate Key internal table:
+
+```sql
+DROP TABLE IF EXISTS topn_file_cache_demo;
+
+CREATE TABLE topn_file_cache_demo (
+    id BIGINT NOT NULL,
+    event_time DATETIME NOT NULL,
+    payload VARCHAR(128) NOT NULL
+)
+ENGINE=OLAP
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "light_schema_change" = "true"
+);
+
+INSERT INTO topn_file_cache_demo VALUES
+    (1, '2026-01-01 10:00:00', 'alpha'),
+    (2, '2026-01-02 10:00:00', 'beta'),
+    (3, '2026-01-03 10:00:00', 'gamma');
+```
+
+Enable Profile and the phase-2 no-write policy, inspect the execution plan, and run the query:
+
+```sql
+SET enable_profile = true;
+SET profile_level = 2;
+SET enable_sql_cache = false;
+SET enable_query_cache = false;
+SET enable_topn_lazy_mat_phase2_no_write_file_cache = true;
+
+EXPLAIN SELECT id, payload
+FROM topn_file_cache_demo
+ORDER BY event_time DESC
+LIMIT 2;
+
+SELECT id, payload
+FROM topn_file_cache_demo
+ORDER BY event_time DESC
+LIMIT 2;
+```
+
+The execution plan should contain a `MaterializeNode`. The query returns the following result regardless of whether the variable is enabled:
+
+```text
++----+---------+
+| id | payload |
++----+---------+
+|  3 | gamma   |
+|  2 | beta    |
++----+---------+
+2 rows in set
+```
+
+To restore the default cache writeback behavior, run:
+
+```sql
+SET enable_topn_lazy_mat_phase2_no_write_file_cache = false;
+```
+
+### Verify the Cache Policy in Profile
+
+After setting `profile_level` to `2`, inspect the following phase-2-specific metrics under the execution operator corresponding to `MaterializeNode` in Query Profile:
+
+| Dimension | Aggregate Metrics | Meaning |
+| :--- | :--- | :--- |
+| Read scale | `TopNLazyMaterializationSecondPhaseRowsRead`, `TopNLazyMaterializationSecondPhaseSegmentsRead` | Number of rows read and Segments accessed in phase 2 |
+| Local cache reads | `TopNLazyMaterializationSecondPhaseLocalIOCount`, `TopNLazyMaterializationSecondPhaseLocalIOBytes`, `TopNLazyMaterializationSecondPhaseLocalIOTime` | Count, bytes, and time of reads from File Cache |
+| Remote reads | `TopNLazyMaterializationSecondPhaseRemoteIOCount`, `TopNLazyMaterializationSecondPhaseRemoteIOBytes`, `TopNLazyMaterializationSecondPhaseRemoteIOTime` | Count, bytes, and time of reads from remote storage |
+| Cache bypass | `TopNLazyMaterializationSecondPhaseSkipCacheIOCount` | Number of remote reads that were not written to File Cache |
+| Cache writes | `TopNLazyMaterializationSecondPhaseWriteCacheBytes`, `TopNLazyMaterializationSecondPhaseWriteCacheIOTime` | Bytes written to File Cache and time spent writing them |
+
+When the no-write policy is enabled, use the following patterns to verify its behavior:
+
+| Cache State | Expected Metric Pattern |
+| :--- | :--- |
+| The current read range is not fully cached | `RemoteIOCount`, `RemoteIOBytes`, and `SkipCacheIOCount` are greater than 0, while `WriteCacheBytes` is 0 |
+| The current read range is fully covered by downloaded cache blocks | `LocalIOCount` and `LocalIOBytes` are greater than 0, while `RemoteIOCount`, `RemoteIOBytes`, and `WriteCacheBytes` are 0 |
+
+Profile also provides per-BE metrics. `TopNLazyMaterializationSecondPhasePerBackend` lists the BEs. The other metric names add `PerBackend` after `SecondPhase`, for example, `TopNLazyMaterializationSecondPhasePerBackendRowsRead` and `TopNLazyMaterializationSecondPhasePerBackendWriteCacheBytes`. Array elements correspond to the BE list by index and accumulate data from multiple phase-2 fetches within the same query.
+
+:::note
+`TopNLazyMaterializationSecondPhaseWriteCacheBytes` covers only phase 2 of lazy materialization. If general File Cache metrics still report writes, first determine whether they come from phase 1 or another operator. For information about obtaining a Profile, see [Query Profile Analysis](../query-profile.md).
+:::
 
 <!-- Knowledge type: operation -->
 <!-- Applicable scenarios: evaluating the actual benefit of TOPN optimization -->
@@ -210,6 +321,10 @@ Set `enable_two_phase_read_opt = false`.
 
 Confirm that TOPN optimization is not enabled on the MOR table. For MOR tables, use the MOW model or avoid triggering this optimization path.
 
+**Q5: Why does the query still write to File Cache after I enable the phase-2 no-write policy?**
+
+The policy controls only phase 2 of TOPN lazy materialization for Doris internal tables. Phase 1, other operators, and external-table reads may still write to File Cache. Use `TopNLazyMaterializationSecondPhaseWriteCacheBytes` to determine whether phase 2 performed cache writes instead of relying on the query's total write volume.
+
 ## Quick Reference for Related Parameters
 
 | Desired Effect | Setting |
@@ -218,3 +333,5 @@ Confirm that TOPN optimization is not enabled on the MOR table. For MOR tables, 
 | Disable only two-phase lazy materialization | `SET enable_two_phase_read_opt = false;` |
 | Relax the LIMIT upper bound to cover more queries | Increase `topn_opt_limit_threshold` appropriately |
 | Adjust the ratio threshold for generating the filter | Modify `topn_filter_ratio` |
+| Do not write phase-2 cache misses back to File Cache | `SET enable_topn_lazy_mat_phase2_no_write_file_cache = true;` |
+| Restore the default phase-2 cache writeback behavior | `SET enable_topn_lazy_mat_phase2_no_write_file_cache = false;` |

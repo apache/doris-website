@@ -127,7 +127,7 @@ EXPLAIN <your_sql>;
 
 ### 基本使用
 
-以下示例要求使用存算分离集群，并且 BE 已启用 File Cache。先创建一个 Duplicate Key 内表：
+以下示例要求使用存算分离集群，BE 已启用 File Cache，并使用具备建表、删表、写入和查询权限的用户执行。先创建一个 Duplicate Key 内表：
 
 ```sql
 DROP TABLE IF EXISTS topn_file_cache_demo;
