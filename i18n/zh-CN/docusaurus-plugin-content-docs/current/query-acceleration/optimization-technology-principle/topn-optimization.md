@@ -2,8 +2,8 @@
 {
     "title": "TOPN 查询优化：ORDER BY LIMIT 加速原理与配置",
     "language": "zh-CN",
-    "description": "Doris 如何加速 ORDER BY LIMIT 查询？本文介绍 TOPN 优化原理、适用限制、Session 参数与执行计划检查方法。",
-    "keywords": ["Doris TOPN 优化", "ORDER BY LIMIT 加速", "topn_opt_limit_threshold", "两阶段读取", "RuntimePredicate", "Zonemap 过滤"]
+    "description": "Doris 如何加速 ORDER BY LIMIT 查询？本文介绍 TOPN 优化原理、适用限制、Session 参数、执行计划检查方法，以及存算分离场景下延迟物化第二阶段的 File Cache 策略。",
+    "keywords": ["Doris TOPN 优化", "ORDER BY LIMIT 加速", "topn_opt_limit_threshold", "enable_topn_lazy_mat_phase2_no_write_file_cache", "两阶段读取", "File Cache", "RuntimePredicate", "Zonemap 过滤"]
 }
 ---
 
@@ -53,13 +53,14 @@ SELECT * FROM tablex WHERE xxx ORDER BY c1, c2 ... LIMIT n
 
 ## 配置参数
 
-以下三个参数均为 Session Variable，可针对单条 SQL 设置或全局设置。
+以下四个参数均为 Session Variable，可针对单条 SQL 设置或全局设置。
 
 | 参数 | 默认值 | 作用 | 调优建议 |
 | :--- | :--- | :--- | :--- |
 | `topn_opt_limit_threshold` | 1024 | LIMIT n 小于该值才启用 TOPN 优化 | 设为 `0` 可关闭整个 TOPN 优化 |
 | `enable_two_phase_read_opt` | true | 是否启用优化 3（两阶段延迟物化） | 设为 `false` 可单独关闭优化 3 |
 | `topn_filter_ratio` | 0.5 | LIMIT n 与表总数据的比率阈值 | 当 LIMIT 数量超过表数据一半时不再生成 filter |
+| `enable_topn_lazy_mat_phase2_no_write_file_cache` | false | 在存算分离模式下，控制 Doris 内表的延迟物化第二阶段是否在 File Cache miss 时跳过缓存回写 | 仅在第二阶段读取的数据复用率低、容易污染缓存时开启 |
 
 <!-- 知识类型：操作 -->
 <!-- 适用场景：验证 TOPN 优化是否启用 -->
@@ -78,7 +79,7 @@ EXPLAIN <your_sql>;
 
 - `TOPN OPT` —— 启用了 **优化 1**（动态范围过滤）
 - `VOlapScanNode` 下出现 `SORT LIMIT` —— 启用了 **优化 2**（Key 前缀短路读取）
-- `OPT TWO PHASE` —— 启用了 **优化 3**（两阶段延迟物化）
+- `MaterializeNode`（或旧执行计划中的 `OPT TWO PHASE`）—— 启用了 **优化 3**（两阶段延迟物化）
 
 **示例**：
 
@@ -102,6 +103,116 @@ EXPLAIN <your_sql>;
      cardinality=345472780, avgRowSize=0.0, numNodes=1
      pushAggOp=NONE
 ```
+
+<!-- 知识类型：配置 + 操作 + 排查 -->
+<!-- 适用场景：存算分离集群控制 TOPN 延迟物化第二阶段的 File Cache 写入 -->
+
+## 控制延迟物化第二阶段的 File Cache 写入
+
+在存算分离集群中，TOPN 延迟物化的第二阶段会按第一阶段选出的行号读取其余列。若少量结果行分散在大量 Segment 中，这些离散读取填充的缓存块可能很少被再次访问，并挤占热点数据的缓存空间。此时可以开启 `enable_topn_lazy_mat_phase2_no_write_file_cache`，让第二阶段在缓存未命中时直接读取远端存储而不回写 File Cache。
+
+该开关不改变查询结果，只改变第二阶段的 File Cache miss 处理方式：
+
+| 设置 | 第二阶段读取行为 |
+| :--- | :--- |
+| `false`（默认） | 沿用常规的读穿透与回写策略：缓存 miss 时读取远端数据，并将读取的数据写入 File Cache |
+| `true` | 仅当本次读取范围被状态为 `DOWNLOADED` 的缓存块完整覆盖时读取本地缓存；只要存在未缓存或尚未下载完成的范围，本次读取范围就直接从远端读取，且不创建或写入缓存块 |
+
+开启该开关时请注意以下边界：
+
+- 只在存算分离模式下生效，并且只控制 Doris 内表的 TOPN 延迟物化第二阶段；当前不控制外表的第二阶段读取。
+- 同时支持开启和未开启行存的 Doris 内表。
+- 不会清理已有缓存，也不会改变第一阶段、其他查询或其他算子的缓存写入行为。因此，整个查询的 File Cache 写入量仍可能大于 0。
+- 若 File Cache 未启用，或者执行计划中没有 `MaterializeNode`，该开关不会产生额外效果。
+
+### 基本使用
+
+以下示例要求使用存算分离集群，并且 BE 已启用 File Cache。先创建一个 Duplicate Key 内表：
+
+```sql
+DROP TABLE IF EXISTS topn_file_cache_demo;
+
+CREATE TABLE topn_file_cache_demo (
+    id BIGINT NOT NULL,
+    event_time DATETIME NOT NULL,
+    payload VARCHAR(128) NOT NULL
+)
+ENGINE=OLAP
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "light_schema_change" = "true"
+);
+
+INSERT INTO topn_file_cache_demo VALUES
+    (1, '2026-01-01 10:00:00', 'alpha'),
+    (2, '2026-01-02 10:00:00', 'beta'),
+    (3, '2026-01-03 10:00:00', 'gamma');
+```
+
+开启 Profile 和第二阶段不回写策略，然后检查执行计划并执行查询：
+
+```sql
+SET enable_profile = true;
+SET profile_level = 2;
+SET enable_sql_cache = false;
+SET enable_query_cache = false;
+SET enable_topn_lazy_mat_phase2_no_write_file_cache = true;
+
+EXPLAIN SELECT id, payload
+FROM topn_file_cache_demo
+ORDER BY event_time DESC
+LIMIT 2;
+
+SELECT id, payload
+FROM topn_file_cache_demo
+ORDER BY event_time DESC
+LIMIT 2;
+```
+
+执行计划中应包含 `MaterializeNode`。查询结果如下；开关开启或关闭不会改变结果：
+
+```text
++----+---------+
+| id | payload |
++----+---------+
+|  3 | gamma   |
+|  2 | beta    |
++----+---------+
+2 rows in set
+```
+
+如需恢复默认的缓存回写行为，执行：
+
+```sql
+SET enable_topn_lazy_mat_phase2_no_write_file_cache = false;
+```
+
+### 通过 Profile 验证缓存策略
+
+将 `profile_level` 设为 `2` 后，在 Query Profile 的 `MaterializeNode` 对应执行算子中查看以下第二阶段专用指标：
+
+| 观测维度 | 聚合指标 | 含义 |
+| :--- | :--- | :--- |
+| 读取规模 | `TopNLazyMaterializationSecondPhaseRowsRead`、`TopNLazyMaterializationSecondPhaseSegmentsRead` | 第二阶段读取的行数和涉及的 Segment 数 |
+| 本地缓存读取 | `TopNLazyMaterializationSecondPhaseLocalIOCount`、`TopNLazyMaterializationSecondPhaseLocalIOBytes`、`TopNLazyMaterializationSecondPhaseLocalIOTime` | 从 File Cache 读取的次数、字节数和耗时 |
+| 远端读取 | `TopNLazyMaterializationSecondPhaseRemoteIOCount`、`TopNLazyMaterializationSecondPhaseRemoteIOBytes`、`TopNLazyMaterializationSecondPhaseRemoteIOTime` | 从远端存储读取的次数、字节数和耗时 |
+| 跳过缓存 | `TopNLazyMaterializationSecondPhaseSkipCacheIOCount` | 从远端读取但未写入 File Cache 的次数 |
+| 缓存写入 | `TopNLazyMaterializationSecondPhaseWriteCacheBytes`、`TopNLazyMaterializationSecondPhaseWriteCacheIOTime` | 写入 File Cache 的字节数和耗时 |
+
+开启不回写策略后，可以按以下特征确认行为：
+
+| 缓存状态 | 预期指标特征 |
+| :--- | :--- |
+| 本次读取范围未被完整缓存 | `RemoteIOCount`、`RemoteIOBytes` 和 `SkipCacheIOCount` 大于 0，`WriteCacheBytes` 为 0 |
+| 本次读取范围被已下载缓存块完整覆盖 | `LocalIOCount` 和 `LocalIOBytes` 大于 0，`RemoteIOCount`、`RemoteIOBytes` 和 `WriteCacheBytes` 为 0 |
+
+Profile 还提供分 BE 指标。`TopNLazyMaterializationSecondPhasePerBackend` 列出 BE，其他指标在聚合指标名称的 `SecondPhase` 后增加 `PerBackend`，例如 `TopNLazyMaterializationSecondPhasePerBackendRowsRead` 和 `TopNLazyMaterializationSecondPhasePerBackendWriteCacheBytes`。各数组按下标与 BE 列表一一对应，并会累计同一查询中多次第二阶段 Fetch 的数据。
+
+:::note
+`TopNLazyMaterializationSecondPhaseWriteCacheBytes` 只统计延迟物化第二阶段。若通用 File Cache 指标仍显示写入，请先判断写入是否来自第一阶段或其他算子。有关 Profile 的获取方法，参见 [Query Profile 分析](../query-profile.md)。
+:::
 
 <!-- 知识类型：操作 -->
 <!-- 适用场景：评估 TOPN 优化的实际收益 -->
@@ -210,6 +321,10 @@ EXPLAIN <your_sql>;
 
 确认未在 MOR 表上启用 TOPN 优化。MOR 表请使用 MOW 模型或避免触发该优化路径。
 
+**Q5：开启第二阶段不回写策略后，为什么查询仍有 File Cache 写入？**
+
+该策略只控制 Doris 内表的 TOPN 延迟物化第二阶段。第一阶段、其他算子和外表读取仍可能写入 File Cache。请使用 `TopNLazyMaterializationSecondPhaseWriteCacheBytes` 判断第二阶段是否发生写入，不要使用整个查询的写入量代替该指标。
+
 ## 相关参数对照速查
 
 | 想要的效果 | 设置方式 |
@@ -218,3 +333,5 @@ EXPLAIN <your_sql>;
 | 仅关闭两阶段延迟物化 | `SET enable_two_phase_read_opt = false;` |
 | 放宽 LIMIT 上限以覆盖更多查询 | 适当增大 `topn_opt_limit_threshold` |
 | 调整生成 filter 的比率阈值 | 修改 `topn_filter_ratio` |
+| 第二阶段缓存 miss 时不回写 File Cache | `SET enable_topn_lazy_mat_phase2_no_write_file_cache = true;` |
+| 恢复第二阶段默认的缓存回写行为 | `SET enable_topn_lazy_mat_phase2_no_write_file_cache = false;` |
