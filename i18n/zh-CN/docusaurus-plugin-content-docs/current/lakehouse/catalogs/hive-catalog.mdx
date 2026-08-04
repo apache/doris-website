@@ -74,7 +74,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `hive.staging_dir`：用于设置 Hive 写操作的临时 staging 根目录。写入过程中数据会先写入该目录，写入完成后再移动到最终的 Hive 表目录。该路径可以是相对于 Hive 表根目录的相对路径，也可以是绝对路径。默认值为 `/tmp/.doris_staging`。某些情况下，写入 Hive 表时会遇到 `/tmp` 目录和表目录分属不同 namespace，导致无法写入的问题，此时可以通过修改此参数，使用相对路径解决该问题。该参数自 4.0.3 版本开始支持。
 
-  * `hive.parquet.time-zone`：FileScannerV2 读取 Hive 或 Hudi 表时，用于还原旧版 Parquet `INT96` 时间戳的兼容时区。默认值为空，此时 Doris 保留 `INT96` 中存储的日期和时间字段，不做时区转换。仅当 Catalog 中的 `INT96` 文件由写入端按已知时区进行过归一化时，才需要设置此属性。详情请参阅 [Parquet INT96 时间戳兼容性](#timestamp-compatibility)。
+  * `hive.parquet.time-zone`：FileScannerV2 读取 Hive 表时，用于还原旧版 Parquet `INT96` 时间戳的兼容时区。默认值为空，此时 Doris 保留 `INT96` 中存储的日期和时间字段，不做时区转换。仅当 Catalog 中的 `INT96` 文件由写入端按已知时区进行过归一化时，才需要设置此属性。Hudi 表会有意忽略该属性，并保留现有的 SQL 会话时区行为。详情请参阅 [Parquet INT96 时间戳兼容性](#timestamp-compatibility)。
 
 * `{CommonProperties}`
 
@@ -257,7 +257,7 @@ CREATE CATALOG hive_legacy_int96 PROPERTIES (
 该值可以是 `Asia/Shanghai` 等 IANA 时区名称，也可以是 `-12:00` 到 `+14:00` 范围内的 UTC 偏移。非法值会导致 Catalog 创建失败。
 
 :::caution
-`hive.parquet.time-zone` 作用于该 Catalog 中所有 Hive 和 Hudi 表内映射到 `DATETIMEV2` 的 `INT96` 时间戳列。该属性不影响同一 Hive Metastore 中的 Iceberg 表，因为 Iceberg 定义了自己的时间戳语义。Parquet 元数据无法可靠地告诉 Doris 某个 `INT96` 写入端使用了哪种约定。不要仅为了匹配 SQL 会话时区而设置此属性。如果同一个 Hive Metastore 中的 Hive 或 Hudi 表包含使用不同约定写入的 `INT96` 文件，应尽量通过不同 Catalog 分别访问。
+`hive.parquet.time-zone` 作用于该 Catalog 中所有 Hive 表内映射到 `DATETIMEV2` 的 `INT96` 时间戳列。该属性不影响同一 Hive Metastore 中的 Iceberg 表，因为 Iceberg 定义了自己的时间戳语义。Hudi 也会有意忽略该属性：原生 base file 扫描和 JNI merge-on-read 扫描都保留变更前的行为，使用 SQL 会话时区解释时间戳。Parquet 元数据无法可靠地告诉 Doris 某个 `INT96` 写入端使用了哪种约定。不要仅为了匹配 SQL 会话时区而设置此属性。如果同一个 Hive Metastore 中的 Hive 表包含使用不同约定写入的 `INT96` 文件，应尽量通过不同 Catalog 分别访问。
 :::
 
 读取 Parquet 文件的文件表值函数也接受同名属性。该兼容转换仅影响 FileScannerV2 对 Parquet `INT96` 的解码。FileScannerV1 有意保持不变，可能返回不同结果；切换到 FileScannerV1 不是本次变更的兼容方案。Parquet `INT64` 逻辑时间戳不受影响。`INT96` 列映射到 `TIMESTAMPTZ` 时，Doris 会忽略该属性并保留 UTC 时刻；该值的显示仍遵循 `TIMESTAMPTZ` 和会话时区语义。
@@ -265,7 +265,7 @@ CREATE CATALOG hive_legacy_int96 PROPERTIES (
 ### 迁移建议
 
 * Doris 默认写入带逻辑类型的 Parquet `INT64` 时间戳。仅当 Hive 2、Hive 3 等旧版读取端要求 `INT96` 时，才设置 `enable_int96_timestamps = true`。
-* 升级到采用此 FileScannerV2 行为的版本前，请先检查现有 Hive 和 Hudi Catalog。包含由旧版写入端归一化过的 `INT96` 文件时，升级后返回的墙上时间可能发生变化。请比对有代表性的已知值，并在需要转换时将 `hive.parquet.time-zone` 设置为写入端时区。
+* 升级到采用此 FileScannerV2 行为的版本前，请先检查现有 Hive 表。包含由旧版写入端归一化过的 `INT96` 文件时，升级后返回的墙上时间可能发生变化。请比对有代表性的已知值，并在需要转换时将 `hive.parquet.time-zone` 设置为写入端时区。Hudi 保留现有的会话时区行为，因此不需要针对本次变更执行迁移。
 * 设置 `hive.parquet.time-zone` 前，请检查有代表性的文件并与已知时间戳值进行比对。不必要的配置反而会产生原本希望消除的时间偏移。
 * 对使用不同 `INT96` 写入约定的文件，使用不同 Catalog 分别访问，或将文件重写为统一的 `INT64` 编码。
 * Doris 通过 `enable_int96_timestamps = true` 显式导出 `INT96` 时，会使用导出会话时区归一化时间戳。通过 FileScannerV2 读回该文件时，请将 `hive.parquet.time-zone` 设置为相同的导出会话时区。详情请参阅[数据导出概述](../../data-operate/export/export-overview.md)。

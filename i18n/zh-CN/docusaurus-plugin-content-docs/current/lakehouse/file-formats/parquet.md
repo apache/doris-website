@@ -25,7 +25,7 @@
 
 Parquet `INT96` 存储日期和时间字段，但不包含时区标注。因此 FileScannerV2 默认保留原始墙上时间值，而不会根据 SQL 会话时区产生偏移。例如，映射到 `DATETIMEV2` 时，原始值 `2021-01-01 10:11:00` 在 Catalog 扫描、表值函数和 Broker Load 中均保持为 `10:11:00`。
 
-该行为仅适用于 `INT96`。带时间戳逻辑类型的 Parquet `INT64` 值仍遵循逻辑类型语义。如果旧版 Hive 写入端按已知时区归一化过 `INT96` 值，请在 [Hive Catalog](../catalogs/hive-catalog.mdx#timestamp-compatibility) 中配置 `hive.parquet.time-zone`。外部文件表值函数也接受该属性。其他 FileScannerV2 入口会保留原始 `INT96` 墙上时间值。
+该行为仅适用于 `INT96`。带时间戳逻辑类型的 Parquet `INT64` 值仍遵循逻辑类型语义。如果旧版 Hive 写入端按已知时区归一化过 `INT96` 值，请在 [Hive Catalog](../catalogs/hive-catalog.mdx#timestamp-compatibility) 中配置 `hive.parquet.time-zone`。外部文件表值函数也接受该属性。其他 FileScannerV2 入口会保留原始 `INT96` 墙上时间值，但 Hudi 除外：Hudi 的原生扫描和 JNI 扫描会有意保留原有的 SQL 会话时区行为，并忽略 `hive.parquet.time-zone`。
 
 `INT96` 列映射到 `TIMESTAMPTZ` 时，Doris 会保留 UTC 时刻，而不应用兼容时区。
 
@@ -74,4 +74,3 @@ Parquet `INT96` 存储日期和时间字段，但不包含时区标注。因此 
 * `parquet_column_max_buffer_mb` (2.1+, 3.0+)
 
     读取 Parquet Row Group 中的 Column 时所分配的最大 Buffer 大小，默认为 8M。
-
