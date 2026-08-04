@@ -27,11 +27,11 @@ require.extensions['.tsx'] = compileTypeScript;
 const { AnalysisResult } = require('./AnalysisResult.tsx');
 const { AnalysisStatus } = require('./AnalysisStatus.tsx');
 const {
-    MAX_PROFILE_FILE_SIZE_BYTES,
     ProfileUploader,
     formatProfileFileSize,
     validateProfileFile,
 } = require('./ProfileUploader.tsx');
+const { MAX_RAW_BYTES } = require('./profile-analysis.file.ts');
 
 require.extensions['.ts'] = previousTypeScriptLoader;
 require.extensions['.tsx'] = previousTsxLoader;
@@ -42,15 +42,32 @@ test('accepts case-insensitive txt files and rejects other types or oversized fi
 
     const oversizedFile = {
         name: 'query.txt',
-        size: MAX_PROFILE_FILE_SIZE_BYTES + 1,
+        size: MAX_RAW_BYTES + 1,
     };
-    assert.match(validateProfileFile(oversizedFile), /10 MiB/);
+    assert.match(validateProfileFile(oversizedFile), /100 MiB/);
 });
 
 test('formats file sizes for display', () => {
     assert.equal(formatProfileFileSize(800), '800 B');
     assert.equal(formatProfileFileSize(1536), '1.5 KiB');
     assert.equal(formatProfileFileSize(2 * 1024 * 1024), '2.0 MiB');
+});
+
+test('explains the raw file limit and large-profile reduction in English', () => {
+    const markup = renderToStaticMarkup(
+        React.createElement(ProfileUploader, {
+            file: null,
+            language: 'en',
+            disabled: false,
+            hcaptchaSiteKey,
+            onFileChange() {},
+            onLanguageChange() {},
+            onAnalyze() {},
+        }),
+    );
+
+    assert.match(markup, /UTF-8 \.txt file up to 100 MiB/);
+    assert.match(markup, /Files over 10 MiB are reduced to their aggregated Profile sections/);
 });
 
 test('disables Analyze until a file exists and while analysis is running', () => {

@@ -8,6 +8,7 @@ import type {
     ResponseLanguage,
 } from './profile-analysis.types';
 import { isUuid } from './profile-analysis.storage';
+import { prepareProfileFile } from './profile-analysis.file';
 
 const ANALYSIS_JOBS_PATH = '/api/profile/analysis-jobs';
 const ANALYSIS_JOB_REQUESTS_PATH = '/api/profile/analysis-job-requests';
@@ -165,7 +166,7 @@ export async function createAnalysisJob(
     }
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', await prepareProfileFile(file));
     formData.append('language', language);
     formData.append('consent', 'true');
     formData.append('privacyNoticeVersion', PRIVACY_NOTICE_VERSION);
