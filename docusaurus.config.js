@@ -594,7 +594,7 @@ const config = {
                             },
                             {
                                 label: 'Roadmap',
-                                href: 'https://github.com/apache/doris/issues/60036',
+                                href: '/community/roadmap',
                             },
                             {
                                 label: 'Improvement proposal',

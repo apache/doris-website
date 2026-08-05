@@ -28,6 +28,7 @@ function buildNavItems(
     v3xDocsHref: string,
     v21DocsHref: string,
     releasesHref: string,
+    roadmapHref: string,
     joinCommunityHref: string,
     communityReportHref: string,
 ): NavItem[] {
@@ -72,7 +73,7 @@ function buildNavItems(
             label: 'Community',
             items: [
                 { label: 'Community Report', href: communityReportHref },
-                { label: 'Roadmap', href: 'https://github.com/apache/doris/issues/60036', external: true },
+                { label: 'Roadmap', href: roadmapHref },
                 { label: 'Build with Us', href: joinCommunityHref },
                 { label: 'Join GitHub Discussions', href: 'https://github.com/apache/doris/discussions', external: true },
             ],
@@ -128,6 +129,7 @@ export function NavbarNext(): JSX.Element {
     const v3xDocsHref = `${localePrefix}/docs/3.x/gettingStarted/what-is-apache-doris`;
     const v21DocsHref = `${localePrefix}/docs/2.1/gettingStarted/what-is-apache-doris`;
     const releasesHref = `${localePrefix}/releases/all-release`;
+    const roadmapHref = `${localePrefix}/community/roadmap`;
     const joinCommunityHref = `${localePrefix}/community/join-community`;
     const communityReportHref = `${localePrefix}/community-report`;
     const navItems = buildNavItems(
@@ -136,6 +138,7 @@ export function NavbarNext(): JSX.Element {
         v3xDocsHref,
         v21DocsHref,
         releasesHref,
+        roadmapHref,
         joinCommunityHref,
         communityReportHref,
     );
