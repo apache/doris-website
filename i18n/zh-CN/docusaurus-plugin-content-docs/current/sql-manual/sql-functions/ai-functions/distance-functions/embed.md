@@ -2,7 +2,7 @@
 {
     "title": "EMBED",
     "language": "zh-CN",
-    "description": "根据输入文本生成语义嵌入向量，用于表示文本的语义信息，可用于相似度计算、检索等场景。"
+    "description": "根据文本、图像、视频或音频输入生成嵌入向量。"
 }
 ---
 
@@ -27,31 +27,126 @@ under the License.
 
 ## 描述
 
-根据输入文本生成语义嵌入向量，用于表示文本的语义信息，可用于相似度计算、检索等场景。
+根据文本或多模态输入生成嵌入向量，可用于相似度计算、检索等场景。
+
+生成多模态嵌入向量时，需要传入描述图像、视频或音频文件的 JSON 对象。使用某种媒体类型前，请确认配置的 AI Provider 和模型支持该类型。
 
 ## 语法
 
 
 ```sql
-EMBED([<resource_name>], <text>)
+EMBED([<resource_name>], <input>)
 ```
 
 ## 参数
 
-|    参数    | 说明 |
-| ---------- | -------- |
-| `<resource_name>`| 指定的资源名称|
-| `<text>`   | 生成嵌入向量的文本 |
+| 参数 | 说明 |
+| ---- | ---- |
+| `<resource_name>` | 可选。用于生成嵌入向量的 AI Resource 名称。省略时，Doris 使用会话变量 `default_ai_resource` 指定的资源。 |
+| `<input>` | 需要生成嵌入向量的内容。文本嵌入传入字符串，多模态嵌入传入 JSON 对象。 |
+
+多模态 JSON 对象包含以下字段：
+
+| 字段 | 是否必需 | 说明 |
+| ---- | -------- | ---- |
+| `uri` | 是 | `http://` 或 `https://` URL，或者格式为 `s3://<bucket>/<key>` 的 S3 兼容存储 URI。 |
+| `content_type` | 是 | 媒体的 MIME 类型。以 `image/`、`video/` 或 `audio/` 开头的值会被识别，且 AI Provider 和模型必须支持对应的媒体类型。 |
+| `endpoint` | 使用 S3 兼容存储 URI 时必需 | S3 兼容存储的 Endpoint。 |
+| `region` | 使用 S3 兼容存储 URI 时必需 | 对象存储所在的 Region。 |
+| `ak` | 否 | 使用 AK/SK 鉴权时的 Access Key。 |
+| `sk` | 否 | 使用 AK/SK 鉴权时的 Secret Key。 |
+| `role_arn` | 否 | 使用 IAM Role 鉴权时的 Role ARN。 |
+| `external_id` | 否 | Assume Role 时使用的 External ID。 |
+
+使用 HTTP 或 HTTPS URL 时，只需提供 `uri` 和 `content_type`。使用 S3 兼容存储 URI 时，Doris 会根据对象存储凭证生成预签名 URL，支持 AK/SK 和 IAM Role 两种鉴权方式。
 
 ## 返回值
 
-返回类型为 ARRAY<FLOAT> 代表所生成的向量
+返回类型为 `ARRAY<FLOAT>`，表示生成的嵌入向量。
 
-当输入值为 NULL 时返回 NULL
+当输入值为 NULL 时返回 NULL。
 
-结果为大模型生成，所以返回内容并不固定
+向量的维度和值由 AI Provider 和模型决定。
 
-## 示例
+## 多模态示例
+
+以下示例为可通过 HTTPS URL 访问的图像生成嵌入向量：
+
+```sql
+SELECT ARRAY_SIZE(
+    EMBED(
+        'multimodal_embed_resource',
+        CAST('{
+            "uri": "https://example.com/images/product.png",
+            "content_type": "image/png"
+        }' AS JSON)
+    )
+) AS image_embedding_dimension;
+```
+
+```text
++---------------------------+
+| image_embedding_dimension |
++---------------------------+
+|                      2560 |
++---------------------------+
+```
+
+以下示例使用 AK/SK 鉴权，从 S3 兼容对象存储读取视频并生成嵌入向量：
+
+```sql
+SELECT ARRAY_SIZE(
+    EMBED(
+        'multimodal_embed_resource',
+        CAST('{
+            "uri": "s3://example-bucket/videos/demo.mp4",
+            "content_type": "video/mp4",
+            "endpoint": "s3.us-east-1.amazonaws.com",
+            "region": "us-east-1",
+            "ak": "<access_key>",
+            "sk": "<secret_key>"
+        }' AS JSON)
+    )
+) AS video_embedding_dimension;
+```
+
+```text
++---------------------------+
+| video_embedding_dimension |
++---------------------------+
+|                      2560 |
++---------------------------+
+```
+
+也可以使用 IAM Role 代替 AK/SK 进行鉴权。以下示例生成图像嵌入向量：
+
+```sql
+SELECT ARRAY_SIZE(
+    EMBED(
+        'multimodal_embed_resource',
+        CAST('{
+            "uri": "s3://example-bucket/images/product.png",
+            "content_type": "image/png",
+            "endpoint": "s3.us-east-1.amazonaws.com",
+            "region": "us-east-1",
+            "role_arn": "arn:aws:iam::<account_id>:role/<role_name>",
+            "external_id": "<external_id>"
+        }' AS JSON)
+    )
+) AS image_embedding_dimension;
+```
+
+```text
++---------------------------+
+| image_embedding_dimension |
++---------------------------+
+|                      3072 |
++---------------------------+
+```
+
+以上结果仅供参考，实际的嵌入向量维度取决于配置的 Provider 和模型。
+
+## 文本示例
 
 下表模拟某公司的行为手册
 
