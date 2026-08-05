@@ -2,7 +2,7 @@
 {
     "title": "Data Compression",
     "language": "en",
-    "description": "Doris supports columnar storage compression algorithms such as LZ4, ZSTD, Snappy, and Zlib, allowing flexible trade-offs between storage cost and query performance based on workload.",
+    "description": "Doris supports table-level and per-column compression with algorithms such as LZ4, ZSTD, Snappy, and Zlib, allowing flexible trade-offs between storage cost and query performance.",
     "keywords": [
         "Doris data compression",
         "columnar storage compression",
@@ -10,6 +10,8 @@
         "ZSTD",
         "Snappy",
         "Zlib",
+        "per-column compression",
+        "compression level",
         "compression algorithm selection",
         "storage efficiency optimization"
     ]
@@ -105,9 +107,9 @@ Compression effectiveness depends not only on the chosen algorithm but also on t
 | **Column length**       | Shorter columns are usually easier to compress than longer ones, because compression algorithms can find repeating patterns more efficiently in shorter data blocks. |
 | **NULL value ratio**    | When the proportion of NULL values is high, the compression algorithm can encode them as a special pattern, further reducing storage space. |
 
-## Configuring Compression in Doris
+## Configure Table-Level Compression
 
-When creating a table, specify the compression algorithm via the `compression` parameter in `PROPERTIES`:
+When creating a table, use the `compression` property to set the default compression algorithm for all columns:
 
 ```sql
 CREATE TABLE example_table (
@@ -123,3 +125,91 @@ PROPERTIES (
 ```
 
 Supported values for `compression` are: `none`, `lz4`, `lz4f`, `lz4hc`, `zstd`, `snappy`, and `zlib`. If not specified explicitly, Doris uses the default compression algorithm `ZSTD` (controlled by the FE configuration `default_compression_type`).
+
+## Configure Per-Column Compression
+
+In a non-cloud deployment, you can override the table-level compression algorithm for individual columns of an OLAP table. This is useful when a table contains columns with different data characteristics. For example, you can use fast LZ4F compression for most columns and a higher ZSTD compression level for a large text column.
+
+### Syntax
+
+Add the `COMPRESSION` clause to a column definition in `CREATE TABLE`:
+
+```sql
+<column_name> <data_type> [column_attributes]
+    COMPRESSION '<algorithm>[:<level>]'
+```
+
+- `<algorithm>` is case-insensitive.
+- `<level>` is optional. If it is omitted, Doris uses the default level of the selected algorithm.
+- A column without a `COMPRESSION` clause inherits the table-level `compression` property.
+
+### Parameters
+
+| Parameter | Required | Default | Description |
+| --------- | -------- | ------- | ----------- |
+| `<algorithm>` | Yes | None | Compression algorithm for this column. The value is case-insensitive and must be one of the algorithms listed below. |
+| `<level>` | No | Codec default | Compression level. It can be specified only for `zstd` and `lz4hc`. |
+
+### Supported Algorithms and Levels
+
+| Algorithm | Compression level | Description |
+| --------- | ----------------- | ----------- |
+| `no_compression` | Not supported | Disables compression for the column. |
+| `lz4` | Not supported | Uses the LZ4 codec. |
+| `lz4f` | Not supported | Uses the LZ4 frame codec. |
+| `lz4hc` | Optional, `1` to `12` | Uses LZ4 high-compression mode. A higher level generally increases compression time and compression ratio. |
+| `zstd` | Optional, `1` to `22` | Uses Zstandard. A higher level generally increases compression time and compression ratio. |
+| `snappy` | Not supported | Uses the Snappy codec. |
+| `zlib` | Not supported | Uses the Zlib codec. |
+| `default_compression` | Not supported | Uses the algorithm configured by `default_compression_type`; if that configuration also specifies `default_compression`, Doris uses LZ4F. |
+
+Specifying a level for any algorithm other than `zstd` or `lz4hc` causes the DDL statement to fail.
+
+### Example
+
+The following example uses LZ4F as the table default and overrides the `event_body` column with ZSTD level 9:
+
+```sql
+CREATE TABLE compression_example (
+    event_id BIGINT,
+    event_type VARCHAR(32),
+    event_body STRING COMPRESSION 'zstd:9'
+)
+DUPLICATE KEY(event_id)
+DISTRIBUTED BY HASH(event_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "compression" = "lz4f"
+);
+
+INSERT INTO compression_example VALUES
+    (1, 'login', '{"user":"alice","result":"success"}'),
+    (2, 'query', '{"sql":"SELECT COUNT(*) FROM orders"}');
+
+SELECT event_id, event_type FROM compression_example ORDER BY event_id;
+```
+
+```text
++----------+------------+
+| event_id | event_type |
++----------+------------+
+|        1 | login      |
+|        2 | query      |
++----------+------------+
+```
+
+In this table, `event_id` and `event_type` use the table-level LZ4F codec, while `event_body` uses ZSTD level 9.
+
+### Limitations
+
+- Per-column compression is supported only for OLAP tables in non-cloud deployments.
+- You can specify per-column compression only when creating a table. `ALTER TABLE ADD COLUMN` and `ALTER TABLE MODIFY COLUMN` do not support the `COMPRESSION` clause.
+- The `COMPRESSION` clause does not support `ARRAY`, `MAP`, `STRUCT`, `VARIANT`, or `AGG_STATE` columns.
+- An empty specification, an unknown algorithm, a non-integer level, or a level outside the supported range causes the DDL statement to fail.
+
+### Best Practices
+
+- Start with one table-level algorithm, and add per-column overrides only for columns whose size or access pattern justifies a different trade-off.
+- Use ZSTD or LZ4HC levels selectively on large, compressible columns. Higher levels increase write-time CPU consumption and do not always produce a meaningful storage reduction.
+- Benchmark representative load and query workloads before applying different codecs broadly. Compression results depend on value distribution, repetition, encoding, and page size.
+- Because per-column compression cannot be added or changed through schema change, choose the policy during table design. To change it later, create a new table with the desired definitions and migrate the data.

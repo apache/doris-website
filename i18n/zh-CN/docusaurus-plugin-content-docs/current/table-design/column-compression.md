@@ -2,7 +2,7 @@
 {
     "title": "数据压缩",
     "language": "zh_CN",
-    "description": "Doris 支持 LZ4、ZSTD、Snappy、Zlib 等列式存储压缩算法，可根据工作负载在存储成本与查询性能间灵活权衡。",
+    "description": "Doris 支持使用 LZ4、ZSTD、Snappy、Zlib 等算法配置表级和列级压缩，可在存储成本与查询性能间灵活权衡。",
     "keywords": [
         "Doris 数据压缩",
         "列式存储压缩",
@@ -10,6 +10,8 @@
         "ZSTD",
         "Snappy",
         "Zlib",
+        "列级压缩",
+        "压缩级别",
         "压缩算法选择",
         "存储效率优化"
     ]
@@ -105,9 +107,9 @@ Doris 采用**页（Page）级别**的压缩策略：
 | **列长度**         | 较短的列通常比长列更容易压缩，因为压缩算法在较短数据块上能更高效地找到重复模式。      |
 | **空值（NULL）比例** | 空值比例较高时，压缩算法可将其作为特殊模式编码，进一步减少存储空间。                  |
 
-## 在 Doris 中配置压缩
+## 配置表级压缩
 
-建表时通过 `PROPERTIES` 中的 `compression` 参数指定压缩算法：
+建表时通过 `PROPERTIES` 中的 `compression` 参数，为所有列设置默认压缩算法：
 
 ```sql
 CREATE TABLE example_table (
@@ -123,3 +125,91 @@ PROPERTIES (
 ```
 
 `compression` 支持的取值：`none`、`lz4`、`lz4f`、`lz4hc`、`zstd`、`snappy`、`zlib`。如未显式指定，Doris 将使用默认压缩算法 `ZSTD`（由 FE 配置项 `default_compression_type` 控制）。
+
+## 配置列级压缩
+
+在非 Cloud 部署中，可以为 OLAP 表的单个列覆盖表级压缩算法。此功能适用于同一张表中不同列的数据特征差异较大的场景。例如，大多数列使用解压速度较快的 LZ4F，而对大文本列使用更高级别的 ZSTD。
+
+### 语法
+
+在 `CREATE TABLE` 的列定义中添加 `COMPRESSION` 子句：
+
+```sql
+<column_name> <data_type> [column_attributes]
+    COMPRESSION '<algorithm>[:<level>]'
+```
+
+- `<algorithm>` 不区分大小写。
+- `<level>` 可选。省略时，Doris 使用对应算法的默认压缩级别。
+- 未声明 `COMPRESSION` 的列继承表级 `compression` 属性。
+
+### 参数
+
+| 参数 | 是否必需 | 默认值 | 说明 |
+| ---- | -------- | ------ | ---- |
+| `<algorithm>` | 是 | 无 | 该列使用的压缩算法。取值不区分大小写，且必须为下表列出的算法之一。 |
+| `<level>` | 否 | 编解码器默认值 | 压缩级别。仅 `zstd` 和 `lz4hc` 支持指定该参数。 |
+
+### 支持的算法与压缩级别
+
+| 算法 | 压缩级别 | 说明 |
+| ---- | -------- | ---- |
+| `no_compression` | 不支持 | 禁用该列的压缩。 |
+| `lz4` | 不支持 | 使用 LZ4 编解码器。 |
+| `lz4f` | 不支持 | 使用 LZ4 Frame 编解码器。 |
+| `lz4hc` | 可选，取值范围为 `1` 到 `12` | 使用 LZ4 高压缩模式。级别越高，通常压缩耗时和压缩率越高。 |
+| `zstd` | 可选，取值范围为 `1` 到 `22` | 使用 Zstandard。级别越高，通常压缩耗时和压缩率越高。 |
+| `snappy` | 不支持 | 使用 Snappy 编解码器。 |
+| `zlib` | 不支持 | 使用 Zlib 编解码器。 |
+| `default_compression` | 不支持 | 使用 `default_compression_type` 配置指定的算法；如果该配置仍为 `default_compression`，则使用 LZ4F。 |
+
+如果为 `zstd` 和 `lz4hc` 以外的算法指定压缩级别，DDL 语句将执行失败。
+
+### 示例
+
+以下示例使用 LZ4F 作为表级默认算法，并将 `event_body` 列覆盖为 ZSTD 9 级：
+
+```sql
+CREATE TABLE compression_example (
+    event_id BIGINT,
+    event_type VARCHAR(32),
+    event_body STRING COMPRESSION 'zstd:9'
+)
+DUPLICATE KEY(event_id)
+DISTRIBUTED BY HASH(event_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "compression" = "lz4f"
+);
+
+INSERT INTO compression_example VALUES
+    (1, 'login', '{"user":"alice","result":"success"}'),
+    (2, 'query', '{"sql":"SELECT COUNT(*) FROM orders"}');
+
+SELECT event_id, event_type FROM compression_example ORDER BY event_id;
+```
+
+```text
++----------+------------+
+| event_id | event_type |
++----------+------------+
+|        1 | login      |
+|        2 | query      |
++----------+------------+
+```
+
+在该表中，`event_id` 和 `event_type` 使用表级 LZ4F，`event_body` 使用 ZSTD 9 级。
+
+### 使用限制
+
+- 列级压缩仅支持非 Cloud 部署中的 OLAP 表。
+- 只能在建表时指定列级压缩。`ALTER TABLE ADD COLUMN` 和 `ALTER TABLE MODIFY COLUMN` 不支持 `COMPRESSION` 子句。
+- `COMPRESSION` 子句不支持 `ARRAY`、`MAP`、`STRUCT`、`VARIANT` 或 `AGG_STATE` 列。
+- 压缩配置为空、算法未知、压缩级别不是整数或超出取值范围时，DDL 语句将执行失败。
+
+### 最佳实践
+
+- 优先使用统一的表级算法，仅对数据量或访问模式确实需要不同权衡的列设置覆盖算法。
+- 仅对体积较大且易压缩的列选择 ZSTD 或 LZ4HC 压缩级别。更高级别会增加写入时的 CPU 开销，并不一定能显著降低存储空间。
+- 在大范围使用不同编解码器前，使用有代表性的导入与查询负载进行测试。实际压缩效果取决于数据分布、重复度、编码方式和页大小。
+- 由于无法通过 Schema Change 新增或修改列级压缩策略，应在表设计阶段确定该策略。如需后续调整，请使用目标列定义创建新表并迁移数据。
