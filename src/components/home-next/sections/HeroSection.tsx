@@ -896,16 +896,16 @@ export function HeroSection(): JSX.Element {
                             <button
                                 type="button"
                                 className="hero-next__btn hero-next__btn--primary"
-                                onClick={() => {
-                                    // Reuse the Kapa modal trigger bound to the
-                                    // navbar Ask Me button via docusaurus.config.js
-                                    // (data-modal-override-open-selector).
-                                    document.getElementById('navbar-ask-ai-btn')?.click();
-                                }}
                                 aria-label="Ask Me"
+                                aria-busy="false"
+                                aria-disabled="false"
+                                data-kapa-trigger
+                                suppressHydrationWarning
                             >
                                 <StarGreenIcon />
-                                Ask Me
+                                <span data-kapa-label aria-live="polite" suppressHydrationWarning>
+                                    Ask Me
+                                </span>
                             </button>
                             <a
                                 className="hero-next__btn hero-next__btn--ghost"

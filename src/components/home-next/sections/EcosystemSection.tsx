@@ -208,6 +208,8 @@ function EcosystemBlock({ data, side, refMap }: EcosystemBlockProps): JSX.Elemen
                                     src={logo.logoSrc}
                                     alt=""
                                     aria-hidden="true"
+                                    loading="lazy"
+                                    decoding="async"
                                     draggable={false}
                                 />
                             </span>
@@ -526,6 +528,8 @@ function CompactEcosystem(): JSX.Element {
                                 className="ecosystem-next__doris-logo"
                                 src="/images/logo-doris.svg"
                                 alt="Apache Doris"
+                                loading="lazy"
+                                decoding="async"
                                 draggable={false}
                             />
                         </div>
@@ -588,6 +592,8 @@ export function EcosystemSection(): JSX.Element {
                                                     className="ecosystem-next__doris-logo"
                                                     src="/images/logo-doris.svg"
                                                     alt="Apache Doris"
+                                                    loading="lazy"
+                                                    decoding="async"
                                                     draggable={false}
                                                 />
                                             </div>
