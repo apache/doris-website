@@ -356,6 +356,7 @@ function LogoTile({ logo, duplicate = false, expanded = false, onEnter, onLeave 
                     alt={duplicate ? '' : logo.name}
                     title={logo.name}
                     loading="lazy"
+                    decoding="async"
                     draggable={false}
                 />
             </div>

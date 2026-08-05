@@ -205,9 +205,15 @@ export function NavbarNext(): JSX.Element {
                         id="navbar-ask-ai-btn"
                         className="navbar-next__ask-ai"
                         aria-label="Ask Me"
+                        aria-busy="false"
+                        aria-disabled="false"
+                        data-kapa-trigger
+                        suppressHydrationWarning
                     >
                         <StarGreenIcon />
-                        <span>Ask Me</span>
+                        <span data-kapa-label aria-live="polite" suppressHydrationWarning>
+                            Ask Me
+                        </span>
                     </button>
                     <a
                         href={`https://github.com/${GITHUB_REPO}`}

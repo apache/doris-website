@@ -165,6 +165,31 @@ body {
     z-index: 9999 !important;
 }
 
+[data-kapa-trigger][aria-busy='true'] {
+    cursor: progress;
+}
+
+[data-kapa-trigger][aria-busy='true'] svg {
+    animation: doris-kapa-loading 1s linear infinite;
+}
+
+[data-kapa-trigger][aria-disabled='true'] {
+    cursor: not-allowed;
+    opacity: 0.72;
+}
+
+@keyframes doris-kapa-loading {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-kapa-trigger][aria-busy='true'] svg {
+        animation: none;
+    }
+}
+
 // Centering the Kapa modal itself is done by injecting CSS into its shadow
 // root from static/js/custom-script.js, since light-DOM rules can't pierce it.
 
