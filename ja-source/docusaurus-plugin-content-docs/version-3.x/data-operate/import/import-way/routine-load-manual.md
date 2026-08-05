@@ -405,7 +405,6 @@ job_properties句の具体的なパラメータオプションは以下の通り
 | send_batch_parallelism    | バッチデータ送信の並列度を設定するために使用されます。並列度の値がBE設定の`max_send_batch_parallelism_per_job`を超える場合、コーディネーターとして機能するBEは`max_send_batch_parallelism_per_job`の値を使用します。 |
 | load_to_single_tablet     | タスクごとに対応するパーティションの1つのタブレットのみにデータをインポートすることをサポートします。デフォルト値はfalseです。このパラメータは、ランダムバケティングを使用するolapTableにデータをインポートする場合にのみ許可されます。 |
 | partial_columns           | 部分列更新を有効にするかどうかを指定します。デフォルト値はfalseです。このパラメータは、TableモデルがUniqueでMerge on Writeを使用する場合にのみ許可されます。マルチTableストリーミングはこのパラメータをサポートしていません。詳細については、[Partial Column アップデート](../../../data-operate/update/partial-column-update.md)を参照してください |
-| unique_key_update_mode    | Unique KeyTableの更新モードを指定します。オプション値：<ul><li>`UPSERT`（デフォルト）：標準的な全行挿入または更新操作。</li><li>`UPDATE_FIXED_COLUMNS`：部分列更新、すべての行が同じ列を更新。`partial_columns=true`と同等。</li><li>`UPDATE_FLEXIBLE_COLUMNS`：柔軟な部分列更新、各行が異なる列を更新可能。JSON形式が必要で、Tableに`enable_unique_key_skip_bitmap_column=true`が必要。`jsonpaths`、`fuzzy_parse`、`COLUMNS`句、または`WHERE`句と併用不可。</li></ul>詳細については、[Partial Column アップデート](../../../data-operate/update/partial-column-update#flexible-partial-column-update)を参照してください |
 | partial_update_new_key_behavior | Unique Merge on WriteTableで部分列更新を実行する際の新しく挿入された行の処理方法。2つのタイプ：`APPEND`、`ERROR`。<br/>- `APPEND`：新しい行データの挿入を許可<br/>- `ERROR`：新しい行を挿入する際にインポートが失敗してエラーを報告 |
 | max_filter_ratio          | サンプリングウィンドウ内で許可される最大フィルタリング率。0以上1以下である必要があります。デフォルト値は1.0で、任意のエラー行を許容できることを意味します。サンプリングウィンドウは`max_batch_rows * 10`です。サンプリングウィンドウ内のエラー行/総行数が`max_filter_ratio`より大きい場合、routineジョブは一時停止され、データ品質の問題を手動で確認する必要があります。where条件によってフィルタリングされた行はエラー行としてカウントされません。 |
 | enclose                   | 囲み文字を指定します。CSVデータフィールドに行または列の区切り文字が含まれる場合、保護のために単一バイト文字を囲み文字として指定できます。例えば、列区切り文字が","で囲み文字が"'"の場合、データ"a,'b,c'"について、"b,c"が1つのフィールドとして解析されます。 |
@@ -1293,77 +1292,6 @@ Table内のインポート前のデータ:
     +------+----------------+------+------+
     3 rows in set (0.01 sec)
     ```
-**Flexible Partial Column アップデート**
-
-この例では、各行が異なる列を更新できる柔軟な部分列更新の使用方法を示します。これは、変更レコードが異なるフィールドを含む可能性があるCDCシナリオで非常に有用です。
-
-1. サンプルインポートデータ（各JSONレコードは異なる列を更新します）：
-
-    ```json
-    {"id": 1, "balance": 150.00, "last_active": "2024-01-15 10:30:00"}
-    {"id": 2, "city": "Shanghai", "age": 28}
-    {"id": 3, "name": "Alice", "balance": 500.00, "city": "Beijing"}
-    {"id": 1, "age": 30}
-    {"id": 4, "__DORIS_DELETE_SIGN__": 1}
-    ```
-2. Tableの作成（Merge-on-Writeを有効にし、bitmapカラムをスキップする必要があります）：
-
-    ```sql
-    CREATE TABLE demo.routine_test_flexible (
-        id           INT            NOT NULL  COMMENT "id",
-        name         VARCHAR(30)              COMMENT "Name",
-        age          INT                      COMMENT "Age",
-        city         VARCHAR(50)              COMMENT "City",
-        balance      DECIMAL(10,2)            COMMENT "Balance",
-        last_active  DATETIME                 COMMENT "Last Active Time"
-    )
-    UNIQUE KEY(`id`)
-    DISTRIBUTED BY HASH(`id`) BUCKETS 1
-    PROPERTIES (
-        "replication_num" = "1",
-        "enable_unique_key_merge_on_write" = "true",
-        "enable_unique_key_skip_bitmap_column" = "true"
-    );
-    ```
-3. 初期データを挿入する:
-
-    ```sql
-    INSERT INTO demo.routine_test_flexible VALUES
-    (1, 'John', 25, 'Shenzhen', 100.00, '2024-01-01 08:00:00'),
-    (2, 'Jane', 30, 'Guangzhou', 200.00, '2024-01-02 09:00:00'),
-    (3, 'Bob', 35, 'Hangzhou', 300.00, '2024-01-03 10:00:00'),
-    (4, 'Tom', 40, 'Nanjing', 400.00, '2024-01-04 11:00:00');
-    ```
-4. Importコマンド:
-
-    ```sql
-    CREATE ROUTINE LOAD demo.kafka_job_flexible ON routine_test_flexible
-            PROPERTIES
-            (
-                "format" = "json",
-                "unique_key_update_mode" = "UPDATE_FLEXIBLE_COLUMNS"
-            )
-            FROM KAFKA
-            (
-                "kafka_broker_list" = "10.16.10.6:9092",
-                "kafka_topic" = "routineLoadFlexible",
-                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );
-    ```
-5. インポート結果：
-
-    ```sql
-    mysql> SELECT * FROM demo.routine_test_flexible ORDER BY id;
-    +------+-------+------+-----------+---------+---------------------+
-    | id   | name  | age  | city      | balance | last_active         |
-    +------+-------+------+-----------+---------+---------------------+
-    |    1 | John  |   30 | Shenzhen  |  150.00 | 2024-01-15 10:30:00 |
-    |    2 | Jane  |   28 | Shanghai  |  200.00 | 2024-01-02 09:00:00 |
-    |    3 | Alice |   35 | Beijing   |  500.00 | 2024-01-03 10:00:00 |
-    +------+-------+------+-----------+---------+---------------------+
-    3 rows in set (0.01 sec)
-    ```
-注意: `id=4`の行は`__DORIS_DELETE_SIGN__`により削除され、各行は対応するJSONレコードに含まれる列のみを更新しました。
 
 ### 複合型のインポート
 
