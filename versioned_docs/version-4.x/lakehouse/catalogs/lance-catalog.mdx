@@ -1,0 +1,428 @@
+---
+{
+    "title": "Lance Catalog",
+    "language": "en",
+    "description": "Apache Doris Lance Catalog guide: access Lance datasets through Filesystem or REST Namespace catalogs, with parallel reads, predicate pushdown, S3/Local TVFs, and vector search."
+}
+---
+
+Lance is a columnar data format designed for analytics and AI workloads. Doris can use a Lance Catalog to discover databases and tables in a Lance Namespace and directly query Lance datasets stored on a local file system or S3-compatible object storage.
+
+Doris currently provides read-only access to Lance. Creating, writing, updating, or deleting Lance tables is not supported.
+
+## Feature Overview
+
+| Feature | Support |
+|---|---|
+| Filesystem Catalog | Supports warehouses on a local file system, `file://`, or `s3://` |
+| REST Catalog | Supports Lance REST Namespace with no authentication, Bearer Token, API Key, or custom HTTP headers |
+| Metadata access | Supports `SHOW DATABASES`, `SHOW TABLES`, and `DESC` |
+| Data queries | Supports column pruning, parallel Lance Fragment scans, and snapshot-consistent reads of the current version |
+| Predicate pushdown | Supports pushing compatible scalar predicates down to Lance |
+| File TVFs | Supports querying Lance datasets directly through `s3()` and `local()` |
+| Vector search | Supports querying Lance vector indexes or performing Flat Search through `vector_search()` |
+| Writing to Lance | Not supported |
+| Time Travel | Not supported |
+| Full-Text Search / Hybrid Search | Not supported |
+
+## Configure a Catalog
+
+### Syntax
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "<filesystem|rest>",
+    {CatalogProperties},
+    {StorageProperties},
+    {CommonProperties}
+);
+```
+
+### Common Properties
+
+| Property | Required | Default | Description |
+|---|---|---|---|
+| `type` | Yes | - | Must be `lance`. |
+| `lance.catalog.type` | No | `filesystem` | Catalog type. Valid values are `filesystem` and `rest`. |
+| `lance.namespace.parent` | No | Empty | Limits access to the specified Lance Namespace and its child Namespaces. With the default delimiter, for example, `production$analytics` represents a two-level Namespace. |
+| `lance.namespace.delimiter` | No | `$` | Delimiter used to parse `lance.namespace.parent`. It is also passed to the REST Namespace client. This property does not change how multilevel Namespaces are displayed in Doris. |
+| `lance.namespace.root_database` | No | `default` | Doris database name to which the root Lance Namespace is mapped. |
+
+### Filesystem Catalog
+
+A Filesystem Catalog discovers Lance Namespaces and tables directly from a warehouse directory.
+
+| Property | Required | Description |
+|---|---|---|
+| `warehouse` | Yes | Root path of the Lance warehouse. Local absolute paths, `file://` URIs, and `s3://` URIs are supported. |
+
+#### Use S3-Compatible Object Storage
+
+The following example creates a Catalog for MinIO:
+
+```sql
+CREATE CATALOG lance_catalog PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "filesystem",
+    "warehouse" = "s3://my-bucket/lance",
+    "s3.endpoint" = "http://127.0.0.1:9000",
+    "s3.access_key" = "admin",
+    "s3.secret_key" = "password",
+    "s3.region" = "us-east-1",
+    "use_path_style" = "true"
+);
+```
+
+When accessing AWS S3, you can omit `s3.endpoint` and configure credentials, Region, and Path Style for your environment.
+
+#### Use a Local File System
+
+```sql
+CREATE CATALOG lance_local PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "filesystem",
+    "warehouse" = "/data/lance"
+);
+```
+
+For a local file system, `warehouse` must be an absolute path. The FE must be able to read Namespace and table metadata through this path, and each BE that executes a query must be able to access the data through the same path. In a multi-node deployment, mount the same shared directory on all relevant FE and BE nodes.
+
+### REST Catalog
+
+A REST Catalog obtains Namespaces, table locations, and storage access parameters through Lance REST Namespace. A REST Catalog neither requires nor permits the `warehouse` property.
+
+| Property | Required | Default | Description |
+|---|---|---|---|
+| `lance.rest.uri` | Yes | - | REST service URI. It must use `http://` or `https://`. |
+| `lance.rest.security.type` | No | `none` | Authentication type. Valid values are `none`, `bearer`, and `api_key`. |
+| `lance.rest.bearer-token` | Yes for Bearer authentication | - | Bearer Token. |
+| `lance.rest.api-key` | Yes for API Key authentication | - | API Key sent in the `x-api-key` header. |
+| `lance.rest.header.<header-name>` | No | - | Custom HTTP header sent to the REST service. Use the dedicated authentication properties above for authentication headers. |
+
+The following example creates a REST Catalog using a Bearer Token:
+
+```sql
+CREATE CATALOG lance_rest PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "rest",
+    "lance.rest.uri" = "https://lance.example.com",
+    "lance.rest.security.type" = "bearer",
+    "lance.rest.bearer-token" = "your-token"
+);
+```
+
+For API Key authentication, replace the authentication properties with:
+
+```sql
+"lance.rest.security.type" = "api_key",
+"lance.rest.api-key" = "your-api-key"
+```
+
+If the REST service returns temporary storage credentials, Doris uses those credentials to access the corresponding Lance table. You can also configure `s3.endpoint`, `s3.access_key`, `s3.secret_key`, `s3.region`, and `use_path_style` in the Catalog as the default object storage access parameters.
+
+:::caution
+The current BE Reader does not support Lance tables whose versions are managed by REST Namespace (Managed Versioning).
+:::
+
+## Namespace Mapping
+
+Lance supports multilevel Namespaces, while a Doris Catalog represents each Namespace as a database name:
+
+| Lance Namespace | Doris Database Name |
+|---|---|
+| Root Namespace | `default`; configurable through `lance.namespace.root_database` |
+| `doris` | `doris` |
+| `doris.analytics` | `doris.analytics` |
+
+Doris joins the levels of a multilevel Namespace with `.` to form a database name. Use backticks when referencing a database name that contains `.`:
+
+```sql
+SHOW TABLES FROM lance_catalog.`doris.analytics`;
+
+SELECT *
+FROM lance_catalog.`doris.analytics`.user_features;
+```
+
+Use `lance.namespace.parent` to limit a Catalog to a Namespace subtree. For example:
+
+```sql
+CREATE CATALOG lance_analytics PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "filesystem",
+    "warehouse" = "s3://my-bucket/lance",
+    "lance.namespace.parent" = "production$analytics",
+    "s3.region" = "us-east-1"
+);
+```
+
+Doris then displays only the tables and child Namespaces below `production.analytics`.
+
+## Query Lance Tables
+
+After creating a Catalog, you can browse and query Lance tables in the same way as other external tables:
+
+```sql
+SHOW DATABASES FROM lance_catalog;
+
+SHOW TABLES FROM lance_catalog.default;
+
+DESC lance_catalog.default.user_profiles;
+
+SELECT user_id, name, age
+FROM lance_catalog.default.user_profiles
+WHERE age >= 18
+ORDER BY user_id
+LIMIT 100;
+```
+
+You can also load data from Lance into a Doris internal table:
+
+```sql
+INSERT INTO internal.demo.user_profiles
+SELECT user_id, name, age
+FROM lance_catalog.default.user_profiles;
+```
+
+For a regular Catalog query, Doris pins a Lance dataset version during planning and generates scan tasks by Fragment. A query therefore reads a consistent snapshot, while multiple Scanners can read different Fragments in parallel without every Scanner repeatedly scanning the entire dataset.
+
+## Type Mapping
+
+| Lance / Arrow Type | Doris Type | Description |
+|---|---|---|
+| `bool` | `BOOLEAN` | |
+| `int8` | `TINYINT` | |
+| `uint8` | `SMALLINT` | Losslessly widened unsigned integer |
+| `int16` | `SMALLINT` | |
+| `uint16` | `INT` | Losslessly widened unsigned integer |
+| `int32` | `INT` | |
+| `uint32` | `BIGINT` | Losslessly widened unsigned integer |
+| `int64` | `BIGINT` | |
+| `uint64` | `LARGEINT` | Losslessly widened unsigned integer |
+| `float16` | `FLOAT` | Widened to a 32-bit floating-point value |
+| `float32` | `FLOAT` | |
+| `float64` | `DOUBLE` | |
+| `decimal128(P,S)` | `DECIMAL(P,S)` | Maximum precision is 38 |
+| `decimal256(P,S)` | `DECIMAL(P,S)` | Maximum precision is 76 |
+| `utf8`, `large_utf8` | `TEXT` | |
+| `binary`, `large_binary` | `VARBINARY(2147483647)` | |
+| `fixed_size_binary(N)` | `VARBINARY(N)` | Preserves the fixed byte width |
+| `date32(day)`, `date64(ms)` | `DATE` | A `date64` value must represent a complete calendar day |
+| `time32(s)` | `TIME(0)` | |
+| `time32(ms)` | `TIME(3)` | |
+| `time64(us)`, `time64(ns)` | `TIME(6)` | Nanosecond precision is truncated to microseconds |
+| Timezone-naive `timestamp(s)` | `DATETIME` | Not converted according to the Session Time Zone |
+| Timezone-naive `timestamp(ms)` | `DATETIME(3)` | Not converted according to the Session Time Zone |
+| Timezone-naive `timestamp(us)`, `timestamp(ns)` | `DATETIME(6)` | Nanosecond precision is truncated to microseconds |
+| Timezone-aware `timestamp` | `TIMESTAMPTZ(0-6)` | Preserves the instant and displays it in the Doris Session Time Zone |
+| `struct` | `STRUCT` | Child fields are mapped recursively |
+| `list`, `large_list`, `fixed_size_list` | `ARRAY` | Element types are mapped recursively |
+| `map` | `MAP` | Key and value types are mapped recursively |
+
+The following types are not currently supported:
+
+- Arrow `null` and `duration`.
+- Arrow/Lance Extension types with `ARROW:extension:name` metadata, including Lance Blob v2, Arrow JSON Extension, and Lance BFloat16 Extension.
+- Complex types whose child types cannot be mapped recursively.
+- Arrow Dictionary types that preserve the Dictionary marker.
+
+For an unsupported top-level column, `DESC` on a Catalog table and `DESC FUNCTION` on a Lance file TVF both preserve the column and display `unknown type: UNSUPPORTED_TYPE`. If any child of a complex type cannot be mapped, the whole top-level complex column is marked unsupported. Queries can still project only supported columns. Doris reports an error during analysis when SQL projects an unsupported column. For example:
+
+```sql
+SELECT * EXCEPT(blob_col, json_col)
+FROM lance_catalog.default.all_types;
+```
+
+:::note
+Some Lance Java SDK versions may lose the Dictionary marker while reading a Schema and expose a Dictionary column as its physical index type. This behavior does not mean that Doris supports the logical Dictionary values and must not be relied upon.
+:::
+
+## Predicate Pushdown
+
+Doris converts semantically compatible predicates into Substrait expressions and passes them to Lance for evaluation during reads. The Doris BE does not evaluate a condition again after the entire condition has been pushed down. Conditions that cannot be pushed down safely remain in Doris.
+
+### Data Types Supported for Pushdown
+
+| Lance / Arrow Type | Pushdown Support |
+|---|---|
+| `bool` | Equality, null checks, and logical operations; ordering comparisons are not supported |
+| `int8/16/32/64` | Supported |
+| `uint8/16/32/64` | Supported |
+| `float32/64` | Supported |
+| `decimal128` | Precision 1 through 38, with Scale from 0 through Precision |
+| `utf8`, `large_utf8` | Supported |
+| `date32(day)` | Supported |
+| Timezone-naive `timestamp(s/ms/us)` | Supported |
+
+Predicates on other readable types, including `float16`, `decimal256`, Binary, `date64`, Time, nanosecond Timestamp, timezone-aware Timestamp, and complex types, currently remain in Doris.
+
+### Operators Supported for Pushdown
+
+| SQL Predicate | Pushdown Condition |
+|---|---|
+| `=`, `!=`, `<>`, `<`, `<=`, `>`, `>=` | Direct comparison between a column and a constant. The constant may be on the left side. |
+| `<=>` | Direct null-safe equality comparison between a column and a constant; preserves a non-`NULL`, two-valued result inside `NOT`, `AND`, or `OR` |
+| `IN`, `NOT IN` | Non-empty constant list that does not contain `NULL` |
+| `IS NULL`, `IS NOT NULL` | Direct column reference |
+| `AND` | Top-level conjuncts can be pushed down independently, with unsupported conjuncts retained in Doris |
+| `OR` | Both branches must be fully convertible |
+| `NOT` | The operand must be fully convertible |
+
+The following forms are generally not pushed down:
+
+- Functions or arithmetic expressions applied to a column.
+- An empty `IN` list or an `IN` list containing `NULL`.
+- An `OR` or `NOT` expression in which only part of the expression can be converted.
+- A data type or constant value that cannot be converted to Lance without loss.
+
+Use `lancePushdownPredicate` in `EXPLAIN` to inspect the conditions that are actually pushed down:
+
+```sql
+EXPLAIN
+SELECT user_id
+FROM lance_catalog.default.user_profiles
+WHERE age >= 18 AND country IN ('CN', 'US');
+```
+
+## Query Lance with File TVFs
+
+If you only need to read a Lance dataset at a known path, you can use the `s3()` or `local()` TVF without creating a Catalog. `uri` or `file_path` must point to the root directory of a Lance dataset, rather than an internal data file.
+
+### S3 TVF
+
+```sql
+SELECT user_id, name
+FROM s3(
+    "uri" = "s3://my-bucket/lance/user_profiles.lance",
+    "s3.endpoint" = "http://127.0.0.1:9000",
+    "s3.access_key" = "admin",
+    "s3.secret_key" = "password",
+    "s3.region" = "us-east-1",
+    "use_path_style" = "true",
+    "format" = "lance"
+)
+WHERE user_id > 100;
+```
+
+For an S3 TVF, the FE obtains the Schema, current version, and Fragment list. Doris pins that version and scans its Fragments in parallel.
+
+### Local TVF
+
+```sql
+SELECT user_id, name
+FROM local(
+    "file_path" = "/data/lance/user_profiles.lance",
+    "backend_id" = "10001",
+    "format" = "lance"
+);
+```
+
+`file_path` is passed as written to the Lance Reader on the target BE. Doris does not prepend `user_files_secure_path` or expand this path as a Glob, so it must point directly to the root directory of one Lance dataset that the target BE can access. An absolute path is recommended.
+
+Local TVF Schema discovery and execution each open the latest dataset version independently. The version resolved during Schema discovery is not currently pinned for the subsequent scan. If the dataset changes between query analysis and execution, the discovered Schema and scanned snapshot can differ. Avoid modifying the dataset while a Local TVF query is being analyzed and executed. The current Local Lance TVF uses one Scanner.
+
+Lance file TVFs have the following additional limitations:
+
+- Only `s3()` and `local()` are supported. Other file TVFs, such as HDFS and HTTP, are not currently supported.
+- `path_partition_keys` is not supported.
+- One TVF path can represent only one Lance dataset.
+- `DESC FUNCTION` can display a Schema containing unsupported types, but SQL cannot project unsupported columns.
+
+## Vector Search
+
+`vector_search()` is a relational TVF that performs Top-K search on a vector column in a Lance table. It can use an existing Lance vector index or perform Flat Search.
+
+### Syntax and Example
+
+```sql
+SELECT row_id, label, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "metric" = "l2",
+    "nprobes" = "20",
+    "refine_factor" = "10",
+    "use_index" = "true"
+)
+ORDER BY _distance ASC, row_id;
+```
+
+The result contains all columns from the Lance source table plus the `_distance` column that the Lance Scanner automatically projects for the nearest-neighbor query. Doris deserializes this Arrow column and exposes it as `FLOAT`. `_distance` is a distance, not a generic similarity score: a lower value means that two vectors are closer. The source table must not already contain a column named `_distance`. A SQL relation does not guarantee output order, so explicitly specify `ORDER BY _distance ASC` when deterministic nearest-neighbor ordering is required. Adding a unique column as a tie-breaker is recommended for rows with the same distance.
+
+`table` must parse as exactly three `catalog.database.table` name parts. A multilevel Lance Namespace maps to one Doris database name containing `.`, so quote the database part with backticks. For example, use the following value for table `items` in Namespace `doris.analytics`:
+
+```sql
+"table" = "lance_catalog.`doris.analytics`.items"
+```
+
+Do not use the unquoted form `lance_catalog.doris.analytics.items`; it parses as four name parts and is rejected. A table-only name or `database.table` name is also rejected.
+
+### Parameters
+
+| Parameter | Required | Default | Description |
+|---|---|---|---|
+| `table` | Yes | - | Fully qualified, three-part `catalog.database.table` name. If a multilevel Namespace maps to a database name containing `.`, quote the database part with backticks. It must identify a table in a Lance Catalog, and the user must have the `SELECT` privilege on the table. |
+| `column` | Yes | - | Vector column name. `fixed_size_list<float16\|float32\|float64\|uint8\|int8>` is currently supported. |
+| `query_vector` | Yes | - | JSON number array. Its dimension must match the vector column, and each value must be representable by the vector element type. |
+| `top_k` | No | `10` | Number of results returned after skipping `offset`. It must be a positive integer. |
+| `offset` | No | `0` | Number of nearest neighbors skipped inside the vector search. It must be a non-negative integer. `top_k + offset` must not exceed the maximum unsigned 32-bit integer. |
+| `metric` | No | Metric of the matching index; without an index, `hamming` for `uint8` and `l2` for other supported types | Distance metric: `l2`, `cosine`, `dot`, or `hamming`. `dot_product` is an alias for `dot`. `uint8` vectors support only `hamming`; the other currently supported vector element types support `l2`, `cosine`, and `dot`. |
+| `filter` | No | - | Lance SQL condition evaluated before vector candidates are generated; that is, a Prefilter. |
+| `nprobes` | No | Minimum `1`, with no maximum | Number of IVF index partitions to probe. It must be a positive integer. When unset, Lance starts with one partition and can probe additional partitions when a Prefilter leaves too few candidates. Setting it explicitly to `N` fixes both the minimum and maximum number of probes to `N`. |
+| `refine_factor` | No | Refinement disabled | Candidate refinement multiplier. It must be a positive integer. When unset, Lance does not recompute distances from the original vectors, so `_distance` from a quantized index may be approximate. When set to `N`, Lance first retrieves `(top_k + offset) × N` candidates, recomputes their exact distances from the original vectors, and reorders them. Setting it to `1` still enables refinement and therefore differs from leaving it unset. |
+| `ef` | No | `floor(1.5 × (top_k + offset))` | Candidate width retained during HNSW graph search. It must be a positive integer. If `refine_factor` is also set, the default is `floor(1.5 × (top_k + offset) × refine_factor)`. It has no effect on non-HNSW indexes. |
+| `use_index` | No | `true` | When `true`, Doris prefers a compatible Lance vector index and automatically falls back to Flat Search if none is available. When `false`, Doris forces Flat Search. |
+
+These defaults correspond to the Lance Scanner behavior currently integrated with Doris. When `metric` is omitted, Doris uses the metric configured when a compatible vector index was created. If there is no compatible index, or if `"use_index" = "false"`, `uint8` vectors use `hamming`, while the other currently supported vector element types use `l2`.
+
+### Prefilter and Post-Filter
+
+Lance evaluates the TVF `filter` parameter before selecting the Top-K vector candidates:
+
+```sql
+SELECT row_id, category, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "filter" = "category = 'book'"
+)
+ORDER BY _distance ASC, row_id;
+```
+
+Doris evaluates an outer `WHERE` after Lance has returned its Top-K:
+
+```sql
+SELECT row_id, category, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10"
+)
+WHERE category = 'book'
+ORDER BY _distance ASC, row_id;
+```
+
+Consequently, an outer `WHERE` may reduce the final result to fewer than `top_k` rows. If a filter must participate in nearest-neighbor candidate selection, specify it through the TVF `filter` parameter.
+
+### Current Execution Model
+
+`vector_search()` pins one Lance dataset version and uses one Scanner to search every Fragment in that version, which lets Lance produce a global Top-K result. Doris does not currently split vector search across multiple Scanners or merge candidate sets from multiple Scanners.
+
+:::note
+Multi-Scanner vector search is planned as a future optimization. It will require index-aware search partitioning and an internal global candidate merge so that `top_k`, `offset`, Prefilter, and `_distance` semantics remain unchanged.
+:::
+
+## Current Limitations and Recommendations
+
+- Lance Catalogs and Lance TVFs are read-only. `CREATE TABLE`, `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE TABLE`, and writing data back to Lance are not supported.
+- Queries always read the current version selected during planning. SQL cannot select a Version or perform Time Travel.
+- For tables containing unsupported column types, explicitly list the columns to read instead of projecting unsupported columns through `SELECT *`.
+- For regular scans, inspect `lancePushdownPredicate` in `EXPLAIN` to verify which conditions have been pushed down.
+- Create a vector index in Lance that matches the intended query before running indexed vector search. For small datasets or validation, set `"use_index" = "false"` to perform Flat Search.
+- For deterministic vector result ordering, explicitly use `ORDER BY _distance ASC` and add a unique tie-breaker.
+- Use the `vector_search()` `filter` parameter when filtering must occur before vector candidate selection. Use an outer `WHERE` only when post-Top-K filtering is intentional.
