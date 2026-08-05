@@ -1,8 +1,7 @@
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import React, { ChangeEvent, DragEvent, JSX, useCallback, useRef, useState } from 'react';
+import { MAX_RAW_BYTES, prepareProfileFile } from './profile-analysis.file';
 import type { ResponseLanguage } from './profile-analysis.types';
-
-export const MAX_PROFILE_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 
 interface ProfileUploaderProps {
     file: File | null;
@@ -18,8 +17,8 @@ export function validateProfileFile(file: File): string | null {
     if (!file.name.toLowerCase().endsWith('.txt')) {
         return 'Select a .txt file. Other file types are not supported.';
     }
-    if (file.size > MAX_PROFILE_FILE_SIZE_BYTES) {
-        return 'The selected file is larger than 10 MiB.';
+    if (file.size > MAX_RAW_BYTES) {
+        return 'The selected file is larger than 100 MiB. Please provide a merged Profile.';
     }
     return null;
 }
@@ -48,6 +47,7 @@ export function ProfileUploader({
     const [hcaptchaToken, setHCaptchaToken] = useState<string | null>(null);
     const [hcaptchaError, setHCaptchaError] = useState<string | null>(null);
     const hcaptchaRef = useRef<HCaptcha>(null);
+    const filePreparationIdRef = useRef(0);
 
     const resetCaptcha = useCallback(() => {
         hcaptchaRef.current?.resetCaptcha();
@@ -55,7 +55,8 @@ export function ProfileUploader({
         setHCaptchaError(null);
     }, []);
 
-    const acceptFile = (nextFile: File | null) => {
+    const acceptFile = async (nextFile: File | null) => {
+        const preparationId = ++filePreparationIdRef.current;
         if (!nextFile) {
             setValidationError(null);
             onFileChange(null);
@@ -63,12 +64,31 @@ export function ProfileUploader({
         }
 
         const nextError = validateProfileFile(nextFile);
-        setValidationError(nextError);
-        onFileChange(nextError ? null : nextFile);
+        if (nextError) {
+            setValidationError(nextError);
+            onFileChange(null);
+            return;
+        }
+
+        setValidationError(null);
+        onFileChange(null);
+        try {
+            const preparedFile = await prepareProfileFile(nextFile);
+            if (filePreparationIdRef.current !== preparationId) return;
+            onFileChange(preparedFile);
+        } catch (reason) {
+            if (filePreparationIdRef.current !== preparationId) return;
+            setValidationError(
+                reason instanceof Error
+                    ? reason.message
+                    : 'The Profile could not be prepared for upload.',
+            );
+            onFileChange(null);
+        }
     };
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        acceptFile(event.currentTarget.files?.item(0) ?? null);
+        void acceptFile(event.currentTarget.files?.item(0) ?? null);
         event.currentTarget.value = '';
     };
 
@@ -82,14 +102,15 @@ export function ProfileUploader({
             onFileChange(null);
             return;
         }
-        acceptFile(event.dataTransfer.files.item(0));
+        void acceptFile(event.dataTransfer.files.item(0));
     };
 
     return (
         <section className="profile-analysis__uploader" aria-labelledby="profile-analysis-upload-title">
             <h2 id="profile-analysis-upload-title">Upload a Query Profile</h2>
             <p id="profile-analysis-file-help" className="profile-analysis__help">
-                Choose one UTF-8 .txt file up to 10 MiB after reviewing and accepting the notice below.
+                Choose one UTF-8 .txt file up to 100 MiB after reviewing and accepting the notice below. Files
+                over 10 MiB are reduced to their aggregated Profile sections before upload.
             </p>
 
             <fieldset className="profile-analysis__language" disabled={disabled}>
@@ -254,6 +275,7 @@ export function ProfileUploader({
                             const accepted = event.currentTarget.checked;
                             setConsentAccepted(accepted);
                             if (!accepted) {
+                                filePreparationIdRef.current += 1;
                                 resetCaptcha();
                                 onFileChange(null);
                             }
