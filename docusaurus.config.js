@@ -100,6 +100,17 @@ function buildRedirectIndex() {
     add('/download', '/download-next');
     add('/zh-CN/download', '/zh-CN/download-next');
 
+    // The hand-curated /learning sitemap page was retired; Doris 101 is now
+    // the structured entry point for newcomers.
+    add('/course', '/learning');
+    add('/zh-CN/course', '/zh-CN/learning');
+
+    // /vendors lost its navigation entry in the new-homepage refactor and has
+    // no obvious successor page, so it lands on the homepage. Its source is
+    // parked at src/pages/_vendors (underscore = not routed).
+    add('/', '/vendors');
+    add('/zh-CN', '/zh-CN/vendors');
+
     // /ecosystem/* was retired; its closest spiritual home is the Dev tree's
     // Data Integration intro, which catalogs the same connector/tool families
     // the old /ecosystem/ pages did.
@@ -364,8 +375,10 @@ const config = {
 
                     // Static redirects indexed by target. Trim trailing slash
                     // for the lookup since Docusaurus' trailingSlash:true
-                    // gives us paths like /docs/4.x/foo/.
-                    const normalized = existingPath.replace(/\/$/, '');
+                    // gives us paths like /docs/4.x/foo/. The locale root
+                    // ('/' or '/zh-CN/') is the one path whose slash is the
+                    // whole path, so keep it as-is.
+                    const normalized = existingPath === '/' ? '/' : existingPath.replace(/\/$/, '');
                     if (REDIRECT_INDEX[normalized]) {
                         redirects.push(...REDIRECT_INDEX[normalized]);
                     }
