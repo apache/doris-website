@@ -127,22 +127,30 @@ interface PollWithRecoveryOperations {
     wait(milliseconds: number): Promise<void>;
     onRecovering(): void;
     onProgress(job: Extract<AnalysisJobSnapshot, { status: 'QUEUED' | 'RUNNING' }>): void;
+    onSnapshot?(job: AnalysisJobSnapshot): void | Promise<void>;
+    isComplete?(job: AnalysisJobSnapshot): boolean;
     pollIntervalMs: number;
     random?: () => number;
 }
 
 export async function pollAnalysisJobWithRecovery(
     operations: PollWithRecoveryOperations,
-): Promise<Extract<AnalysisJobSnapshot, { status: 'COMPLETED' | 'FAILED' }>> {
+): Promise<AnalysisJobSnapshot> {
     let consecutiveFailures = 0;
     while (true) {
         try {
             const job = await operations.get();
             consecutiveFailures = 0;
-            if (job.status === 'COMPLETED' || job.status === 'FAILED') {
+            await operations.onSnapshot?.(job);
+            const isComplete = operations.isComplete
+                ? operations.isComplete(job)
+                : job.status === 'COMPLETED' || job.status === 'FAILED';
+            if (isComplete) {
                 return job;
             }
-            operations.onProgress(job);
+            if (job.status === 'QUEUED' || job.status === 'RUNNING') {
+                operations.onProgress(job);
+            }
             await operations.wait(operations.pollIntervalMs);
         } catch (reason) {
             if (!isRetryableTransportFailure(reason)) throw reason;

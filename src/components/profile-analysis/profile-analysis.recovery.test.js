@@ -199,6 +199,38 @@ test('keeps polling the same job after three transport failures and recovers on 
     assert.deepEqual(waits, [2000, 4000, 8000, 2000]);
 });
 
+test('keeps polling after Codex completes until the independent DAG work is settled', async () => {
+    let getCalls = 0;
+    let dagSettled = false;
+    const snapshots = [];
+
+    const terminal = await pollAnalysisJobWithRecovery({
+        get: async () => {
+            getCalls += 1;
+            return {
+                jobId,
+                status: 'COMPLETED',
+                result: { id: 'item-1', type: 'agent_message', text: 'done' },
+                dagStatus: getCalls === 1 ? 'PARSING' : 'READY',
+                dagError: null,
+            };
+        },
+        wait: async () => {},
+        onRecovering: () => {},
+        onProgress: () => {},
+        onSnapshot: job => {
+            snapshots.push(job.dagStatus);
+            dagSettled = job.dagStatus === 'READY';
+        },
+        isComplete: () => dagSettled,
+        pollIntervalMs: 2000,
+    });
+
+    assert.equal(terminal.status, 'COMPLETED');
+    assert.equal(getCalls, 2);
+    assert.deepEqual(snapshots, ['PARSING', 'READY']);
+});
+
 test('treats a recovery 404 as final after the grace window', async () => {
     const createdAt = 20_000;
     await assert.rejects(

@@ -33,7 +33,8 @@
     }
 
     &__uploader,
-    &__result {
+    &__result,
+    &__workspace {
         margin-bottom: 1.5rem;
         padding: 1.5rem;
         border: 1px solid var(--brand-border-soft);
@@ -45,6 +46,70 @@
             margin-bottom: 0.5rem;
             font-size: 1.35rem;
         }
+    }
+
+    &__workspace-title {
+        margin: 0 0 1rem;
+        font-size: 1.35rem;
+    }
+
+    &__tabs {
+        display: flex;
+        gap: 0.25rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--brand-border-soft);
+
+        button {
+            position: relative;
+            padding: 0.7rem 1rem;
+            border: 0;
+            color: var(--ifm-color-emphasis-700);
+            background: transparent;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 700;
+        }
+
+        button::after {
+            position: absolute;
+            right: 0.5rem;
+            bottom: -1px;
+            left: 0.5rem;
+            height: 3px;
+            border-radius: 3px 3px 0 0;
+            background: transparent;
+            content: '';
+        }
+
+        button[aria-selected='true'] {
+            color: var(--brand-primary);
+        }
+
+        button[aria-selected='true']::after {
+            background: var(--brand-primary);
+        }
+
+        button:focus-visible {
+            border-radius: 6px;
+            outline: 2px solid var(--brand-primary-glow);
+            outline-offset: 2px;
+        }
+    }
+
+    &__tab-panel[hidden] {
+        display: none;
+    }
+
+    &__tab-panel > &__status,
+    &__tab-panel > &__error,
+    &__tab-panel > &__result {
+        margin-bottom: 0;
+    }
+
+    &__tab-panel > &__result {
+        padding: 0;
+        border: 0;
+        box-shadow: none;
     }
 
     &__help {
@@ -354,8 +419,15 @@
         padding-top: 1rem;
 
         &__uploader,
-        &__result {
+        &__result,
+        &__workspace {
             padding: 1rem;
+        }
+
+        &__tabs button {
+            flex: 1 1 0;
+            padding-right: 0.5rem;
+            padding-left: 0.5rem;
         }
 
         &__drop-zone {

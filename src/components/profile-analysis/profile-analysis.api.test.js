@@ -35,6 +35,8 @@ const {
     createAnalysisJob,
     getAnalysisJob,
     getAnalysisJobByClientRequestId,
+    getProfileDag,
+    MAX_DAG_RESPONSE_BYTES,
     MAX_FINAL_ANSWER_BYTES,
     PRIVACY_NOTICE_VERSION,
     ProfileAnalysisApiError,
@@ -100,18 +102,29 @@ test('parses queued, running, completed, and failed job snapshots', async t => {
     const originalFetch = global.fetch;
     t.after(() => { global.fetch = originalFetch; });
     const responses = [
-        { jobId, status: 'QUEUED', jobsAhead: 3 },
-        { jobId, status: 'RUNNING' },
-        { jobId, status: 'COMPLETED', result: { id: 'item_26', type: 'agent_message', text: 'Done' } },
-        { jobId, status: 'FAILED', error: { code: 'CODEX_EXECUTION_FAILED', message: 'Failed safely.' } },
+        { jobId, status: 'QUEUED', jobsAhead: 3, dagStatus: 'PENDING' },
+        { jobId, status: 'RUNNING', dagStatus: 'PARSING', dagError: null },
+        { jobId, status: 'COMPLETED', result: { id: 'item_26', type: 'agent_message', text: 'Done' }, dagStatus: 'READY' },
+        { jobId, status: 'FAILED', error: { code: 'CODEX_EXECUTION_FAILED', message: 'Failed safely.' }, dagStatus: 'UNAVAILABLE', dagError: 'DAG_UNAVAILABLE' },
     ];
     global.fetch = async (url, options) => {
         assert.equal(url, `/api/profile/analysis-jobs/${jobId}`);
         assert.equal(options.method, 'GET');
         return jsonResponse(responses.shift());
     };
-    assert.deepEqual(await getAnalysisJob('', jobId), { jobId, status: 'QUEUED', jobsAhead: 3 });
-    assert.deepEqual(await getAnalysisJob('', jobId), { jobId, status: 'RUNNING' });
+    assert.deepEqual(await getAnalysisJob('', jobId), {
+        jobId,
+        status: 'QUEUED',
+        jobsAhead: 3,
+        dagStatus: 'PENDING',
+        dagError: null,
+    });
+    assert.deepEqual(await getAnalysisJob('', jobId), {
+        jobId,
+        status: 'RUNNING',
+        dagStatus: 'PARSING',
+        dagError: null,
+    });
     assert.equal((await getAnalysisJob('', jobId)).status, 'COMPLETED');
     assert.equal((await getAnalysisJob('', jobId)).status, 'FAILED');
 });
@@ -263,6 +276,7 @@ test('rejects a completed answer over the frontend UTF-8 byte limit', async t =>
             jobId,
             status: 'COMPLETED',
             result: { id: 'item_26', type: 'agent_message', text: oversized },
+            dagStatus: 'READY',
         });
 
     await assert.rejects(getAnalysisJob('', jobId), error => {
@@ -337,4 +351,239 @@ test('rejects a missing hCaptcha token before sending the Profile', async t => {
         },
     );
     assert.equal(fetchCalls, 0);
+});
+
+function validDag() {
+    return {
+        schemaVersion: '1.0',
+        parserVersion: '0.2.0',
+        jobId,
+        profile: {},
+        graph: {
+            direction: 'BOTTOM_TO_TOP',
+            nodes: [
+                {
+                    id: 'fragment:0/pipeline:0/operator:0',
+                    fragmentId: 'fragment:0',
+                    pipelineId: 'fragment:0/pipeline:0',
+                    ordinal: 0,
+                    operatorType: 'RESULT_SINK_OPERATOR',
+                    operatorFamily: 'RESULT',
+                    role: 'SINK',
+                    label: 'RESULT',
+                    planNodeId: 1,
+                    nereidsId: null,
+                    destId: null,
+                    destIds: [],
+                    known: true,
+                    lineNumber: 10,
+                    planInfo: {},
+                    timing: {
+                        execTime: { sumNs: 10, avgNs: 10, maxNs: 10, minNs: 10, display: '10ns' },
+                        waitTime: {
+                            totalNs: 0,
+                            maxNs: 0,
+                            avgNs: 0,
+                            breakdown: { waitForDependencyNs: 0 },
+                        },
+                    },
+                    metrics: { inputRows: { sum: 1, avg: 1, max: 1, min: 1 } },
+                    analysis: { heat: 1, waitHeat: 0, isBottleneck: true },
+                },
+                {
+                    id: 'fragment:0/pipeline:0/operator:1',
+                    fragmentId: 'fragment:0',
+                    pipelineId: 'fragment:0/pipeline:0',
+                    ordinal: 1,
+                    operatorType: 'OLAP_SCAN_OPERATOR',
+                    operatorFamily: 'SCAN',
+                    role: 'SOURCE',
+                    label: 'OLAP SCAN',
+                    planNodeId: 2,
+                    nereidsId: null,
+                    destId: null,
+                    destIds: [],
+                    known: true,
+                    lineNumber: 20,
+                    planInfo: { table: 'lineitem' },
+                },
+            ],
+            edges: [
+                {
+                    id: 'edge:0',
+                    kind: 'PIPELINE_DATA',
+                    source: 'fragment:0/pipeline:0/operator:1',
+                    target: 'fragment:0/pipeline:0/operator:0',
+                    relationId: null,
+                    resolved: true,
+                    metadata: { pipelineId: 'fragment:0/pipeline:0' },
+                },
+            ],
+        },
+        fragments: [
+            {
+                id: 'fragment:0',
+                number: 0,
+                pipelineIds: ['fragment:0/pipeline:0'],
+                nodeIds: [
+                    'fragment:0/pipeline:0/operator:0',
+                    'fragment:0/pipeline:0/operator:1',
+                ],
+            },
+        ],
+        pipelines: [
+            {
+                id: 'fragment:0/pipeline:0',
+                fragmentId: 'fragment:0',
+                number: 0,
+                instanceNum: 1,
+                nodeIds: [
+                    'fragment:0/pipeline:0/operator:0',
+                    'fragment:0/pipeline:0/operator:1',
+                ],
+            },
+        ],
+        unresolvedReferences: [],
+        warnings: [],
+        summary: {
+            fragmentCount: 1,
+            pipelineCount: 1,
+            nodeCount: 2,
+            edgeCount: 1,
+            unresolvedEdgeCount: 0,
+            criticalNodeId: 'fragment:0/pipeline:0/operator:0',
+            maxExecTimeNs: 10,
+            maxWaitTimeNs: 0,
+        },
+    };
+}
+
+test('fetches and defensively validates a ready Profile DAG', async t => {
+    const originalFetch = global.fetch;
+    t.after(() => { global.fetch = originalFetch; });
+    const dag = validDag();
+    global.fetch = async (url, options) => {
+        assert.equal(url, `https://agent.velodb.io/api/profile/analysis-jobs/${jobId}/dag`);
+        assert.equal(options.method, 'GET');
+        return jsonResponse(dag);
+    };
+
+    assert.deepEqual(await getProfileDag('https://agent.velodb.io/', jobId), {
+        dagStatus: 'READY',
+        dag,
+    });
+});
+
+test('accepts omitted nullable DAG fields without treating them as zero', async t => {
+    const originalFetch = global.fetch;
+    t.after(() => { global.fetch = originalFetch; });
+    const dag = validDag();
+    delete dag.graph.nodes[0].planNodeId;
+    delete dag.graph.nodes[0].nereidsId;
+    delete dag.graph.nodes[0].destId;
+    delete dag.graph.nodes[0].timing.execTime.sumNs;
+    delete dag.graph.nodes[0].timing.waitTime.totalNs;
+    delete dag.graph.nodes[0].metrics.inputRows.min;
+    delete dag.graph.edges[0].relationId;
+    dag.unresolvedReferences.push({
+        kind: 'EXCHANGE',
+        sourceNodeId: dag.graph.nodes[1].id,
+        reason: 'TARGET_NOT_FOUND',
+    });
+    dag.summary.unresolvedEdgeCount = 1;
+    global.fetch = async () => jsonResponse(dag);
+
+    const result = await getProfileDag('', jobId);
+    assert.equal(result.dagStatus, 'READY');
+    assert.equal(result.dag.graph.nodes[0].planNodeId, undefined);
+    assert.equal(result.dag.graph.nodes[0].timing.execTime.sumNs, undefined);
+    assert.equal(result.dag.graph.nodes[0].metrics.inputRows.min, undefined);
+    assert.equal(result.dag.graph.edges[0].relationId, undefined);
+});
+
+test('accepts signed internal ids used by local exchange and multicast operators', async t => {
+    const originalFetch = global.fetch;
+    t.after(() => { global.fetch = originalFetch; });
+    const dag = validDag();
+    dag.graph.nodes[1].operatorType = 'MULTI_CAST_DATA_STREAM_SINK_OPERATOR';
+    dag.graph.nodes[1].operatorFamily = 'MULTICAST';
+    dag.graph.nodes[1].planNodeId = -5;
+    dag.graph.nodes[1].destId = -7;
+    dag.graph.nodes[1].destIds = [-7, -8, -9];
+    global.fetch = async () => jsonResponse(dag);
+
+    const result = await getProfileDag('', jobId);
+    assert.equal(result.dag.graph.nodes[1].planNodeId, -5);
+    assert.equal(result.dag.graph.nodes[1].destId, -7);
+    assert.deepEqual(result.dag.graph.nodes[1].destIds, [-7, -8, -9]);
+});
+
+test('accepts a valid DAG above the ordinary 128 KiB response limit', async t => {
+    const originalFetch = global.fetch;
+    t.after(() => { global.fetch = originalFetch; });
+    const dag = validDag();
+    dag.warnings = Array.from({ length: 10 }, (_, index) => ({
+        kind: 'PARSER_NOTE',
+        nodeId: dag.graph.nodes[0].id,
+        message: `${index}:${'x'.repeat(15 * 1024)}`,
+    }));
+    global.fetch = async () => jsonResponse(dag);
+
+    const result = await getProfileDag('', jobId);
+    assert.equal(result.dagStatus, 'READY');
+    assert.equal(result.dag.warnings.length, 10);
+});
+
+test('returns a recoverable result when the Profile DAG is still parsing', async t => {
+    const originalFetch = global.fetch;
+    t.after(() => { global.fetch = originalFetch; });
+    global.fetch = async () =>
+        new Response(JSON.stringify({ jobId, dagStatus: 'PARSING' }), {
+            status: 202,
+            headers: { 'Content-Type': 'application/json', 'Retry-After': '2' },
+        });
+
+    assert.deepEqual(await getProfileDag('', jobId), {
+        jobId,
+        dagStatus: 'PARSING',
+        retryAfterMs: 2000,
+    });
+});
+
+test('rejects a DAG with duplicate node ids or a dangling edge', async t => {
+    const originalFetch = global.fetch;
+    t.after(() => { global.fetch = originalFetch; });
+    const duplicate = validDag();
+    duplicate.graph.nodes[1].id = duplicate.graph.nodes[0].id;
+    global.fetch = async () => jsonResponse(duplicate);
+    await assert.rejects(getProfileDag('', jobId), error => {
+        assert.ok(error instanceof ProfileAnalysisApiError);
+        assert.equal(error.code, 'INVALID_SERVER_RESPONSE');
+        return true;
+    });
+
+    const dangling = validDag();
+    dangling.graph.edges[0].target = 'fragment:99/pipeline:0/operator:0';
+    global.fetch = async () => jsonResponse(dangling);
+    await assert.rejects(getProfileDag('', jobId), error => {
+        assert.ok(error instanceof ProfileAnalysisApiError);
+        assert.equal(error.code, 'INVALID_SERVER_RESPONSE');
+        return true;
+    });
+});
+
+test('rejects a DAG response over the dedicated 5 MiB client limit', async t => {
+    const originalFetch = global.fetch;
+    t.after(() => { global.fetch = originalFetch; });
+    global.fetch = async () =>
+        new Response(JSON.stringify({ padding: 'x'.repeat(MAX_DAG_RESPONSE_BYTES + 1) }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+    await assert.rejects(getProfileDag('', jobId), error => {
+        assert.ok(error instanceof ProfileAnalysisApiError);
+        assert.equal(error.code, 'INVALID_SERVER_RESPONSE');
+        return true;
+    });
 });

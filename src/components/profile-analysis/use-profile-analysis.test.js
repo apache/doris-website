@@ -39,6 +39,9 @@ test('moves from idle through ready, analyzing, and completed', () => {
         jobsAhead: null,
         result: null,
         error: null,
+        dagState: 'idle',
+        dag: null,
+        dagError: null,
         recoveryWarning: null,
     });
 
@@ -46,7 +49,7 @@ test('moves from idle through ready, analyzing, and completed', () => {
     assert.equal(submitting.state, 'submitting');
     const queued = profileAnalysisReducer(submitting, { type: 'job_created', jobId: 'job-1', status: 'QUEUED' });
     const analyzing = profileAnalysisReducer(queued, {
-        type: 'job_status', job: { jobId: 'job-1', status: 'RUNNING' },
+        type: 'job_status', job: { jobId: 'job-1', status: 'RUNNING', dagStatus: 'PARSING', dagError: null },
     });
 
     const completed = profileAnalysisReducer(analyzing, { type: 'complete', result });
@@ -72,6 +75,9 @@ test('stores failures and clears the old result and error when a new file is sel
         jobsAhead: null,
         result,
         error: null,
+        dagState: 'idle',
+        dag: null,
+        dagError: null,
         recoveryWarning: null,
     };
     const failed = profileAnalysisReducer(completed, { type: 'fail', error: 'Analyzer unavailable' });
@@ -83,6 +89,9 @@ test('stores failures and clears the old result and error when a new file is sel
         jobsAhead: null,
         result: null,
         error: 'Analyzer unavailable',
+        dagState: 'failed',
+        dag: null,
+        dagError: 'The execution graph can no longer be recovered.',
         recoveryWarning: null,
     });
 
@@ -95,6 +104,9 @@ test('stores failures and clears the old result and error when a new file is sel
         jobsAhead: null,
         result: null,
         error: null,
+        dagState: 'idle',
+        dag: null,
+        dagError: null,
         recoveryWarning: null,
     });
 });
@@ -108,6 +120,9 @@ test('stores response language per request, clears stale output, and freezes it 
         jobsAhead: null,
         result,
         error: null,
+        dagState: 'idle',
+        dag: null,
+        dagError: null,
         recoveryWarning: null,
     };
     const chinese = profileAnalysisReducer(completed, { type: 'set_language', language: 'zh-CN' });
@@ -119,6 +134,9 @@ test('stores response language per request, clears stale output, and freezes it 
         jobsAhead: null,
         result: null,
         error: null,
+        dagState: 'idle',
+        dag: null,
+        dagError: null,
         recoveryWarning: null,
     });
 
@@ -145,6 +163,8 @@ test('restores persisted job metadata before polling resumes', () => {
         job: {
             jobId: '550e8400-e29b-41d4-a716-446655440000',
             status: 'RUNNING',
+            dagStatus: 'PARSING',
+            dagError: null,
         },
     });
     assert.equal(running.state, 'analyzing');
@@ -165,6 +185,9 @@ test('keeps an uncertain analysis busy while its original identifiers are recove
         jobsAhead: null,
         result: null,
         error: null,
+        dagState: 'parsing',
+        dag: null,
+        dagError: null,
         recoveryWarning: null,
     };
     const recovering = profileAnalysisReducer(running, { type: 'recovering' });
@@ -173,6 +196,72 @@ test('keeps an uncertain analysis busy while its original identifiers are recove
     assert.equal(recovering.file, firstFile);
     assert.equal(profileAnalysisReducer(recovering, { type: 'start' }), recovering);
     assert.equal(profileAnalysisReducer(recovering, { type: 'select', file: secondFile }), recovering);
+});
+
+test('keeps the current task busy when Codex completes before the execution graph', () => {
+    const ready = profileAnalysisReducer(idleSnapshot, { type: 'select', file: firstFile });
+    const submitting = profileAnalysisReducer(ready, { type: 'start' });
+    const queued = profileAnalysisReducer(submitting, { type: 'job_created', jobId: 'job-1', status: 'QUEUED' });
+    const codexCompleted = profileAnalysisReducer(queued, {
+        type: 'job_status',
+        job: {
+            jobId: 'job-1',
+            status: 'COMPLETED',
+            result,
+            dagStatus: 'PARSING',
+            dagError: null,
+        },
+    });
+
+    assert.equal(codexCompleted.state, 'completed');
+    assert.equal(codexCompleted.dagState, 'parsing');
+    assert.equal(profileAnalysisReducer(codexCompleted, { type: 'select', file: secondFile }), codexCompleted);
+    assert.equal(profileAnalysisReducer(codexCompleted, { type: 'start' }), codexCompleted);
+});
+
+test('keeps a ready execution graph when the independent AI analysis fails', () => {
+    const graph = { schemaVersion: '1.0', jobId: 'job-1' };
+    const withGraph = profileAnalysisReducer(
+        { ...idleSnapshot, state: 'analyzing', jobId: 'job-1', dagState: 'loading' },
+        { type: 'dag_loaded', dag: graph },
+    );
+    const failed = profileAnalysisReducer(withGraph, {
+        type: 'job_status',
+        job: {
+            jobId: 'job-1',
+            status: 'FAILED',
+            error: { code: 'CODEX_EXECUTION_FAILED', message: 'AI analysis failed.' },
+            dagStatus: 'READY',
+            dagError: null,
+        },
+    });
+
+    assert.equal(failed.state, 'failed');
+    assert.equal(failed.error, 'AI analysis failed.');
+    assert.equal(failed.dagState, 'ready');
+    assert.equal(failed.dag, graph);
+});
+
+test('does not turn a terminal DAG client failure back into an endless loading state', () => {
+    const terminalDagFailure = {
+        ...idleSnapshot,
+        state: 'analyzing',
+        jobId: 'job-1',
+        dagState: 'failed',
+        dagError: 'The execution graph could not be loaded.',
+    };
+    const next = profileAnalysisReducer(terminalDagFailure, {
+        type: 'job_status',
+        job: {
+            jobId: 'job-1',
+            status: 'RUNNING',
+            dagStatus: 'READY',
+            dagError: null,
+        },
+    });
+
+    assert.equal(next.dagState, 'failed');
+    assert.equal(next.dagError, terminalDagFailure.dagError);
 });
 
 test('normalizes unknown failures without exposing non-error values', () => {

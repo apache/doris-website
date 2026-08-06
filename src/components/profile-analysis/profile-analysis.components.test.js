@@ -235,3 +235,21 @@ test('the page composes the analyzer inside the Doris Layout without adding navi
     assert.match(pageSource, /<ProfileAnalyzer \/>/);
     assert.match(pageSource, /<main className="container margin-vert--lg">/);
 });
+
+test('adds English result tabs and configures the execution graph as read-only', () => {
+    const analyzerSource = fs.readFileSync(path.join(__dirname, 'ProfileAnalyzer.tsx'), 'utf8');
+    const dagSource = fs.readFileSync(path.join(__dirname, 'ProfileDag.tsx'), 'utf8');
+    const dagNodeSource = fs.readFileSync(path.join(__dirname, 'ProfileDagNode.tsx'), 'utf8');
+
+    assert.match(analyzerSource, />\s*Execution graph\s*</);
+    assert.match(analyzerSource, />\s*AI analysis\s*</);
+    assert.match(analyzerSource, /role="tablist"/);
+    assert.match(analyzerSource, /role="tabpanel"/);
+    assert.match(dagSource, /nodesDraggable=\{false\}/);
+    assert.match(dagSource, /nodesConnectable=\{false\}/);
+    assert.match(dagSource, /edgesReconnectable=\{false\}/);
+    assert.match(dagSource, /deleteKeyCode=\{null\}/);
+    assert.match(dagSource, /panOnDrag/);
+    assert.match(dagSource, /zoomOnScroll/);
+    assert.doesNotMatch(`${analyzerSource}\n${dagSource}\n${dagNodeSource}`, /[\u3400-\u9fff]/);
+});
