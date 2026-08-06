@@ -1,3 +1,7 @@
+// Parked page: kept for reference but intentionally not routed. The underscore
+// prefix tells Docusaurus to skip it, and /vendors now redirects to the
+// homepage (see buildRedirectIndex in docusaurus.config.js). Restore it by
+// renaming this directory back to `vendors` and dropping that redirect.
 import Layout from '../../theme/Layout';
 import { VelodbLogo } from '../../components/Icons/velodb-logo';
 import Link from '@docusaurus/Link';
