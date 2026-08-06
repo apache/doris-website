@@ -3,8 +3,8 @@
     "title": "文件缓存配置与使用指南（存算分离）",
     "sidebar_label": "文件缓存配置",
     "language": "zh-CN",
-    "description": "介绍存算分离架构下 Doris 文件缓存的配置、索引优先写入、配额管理、缓存预热与清理、命中率监控及 TTL 策略，助力提升查询性能、降低对象存储成本。",
-    "keywords": ["Doris 文件缓存", "存算分离缓存", "file cache", "索引优先缓存", "缓存预热", "缓存配额", "TTL 缓存", "LRU", "缓存命中率", "对象存储加速"]
+    "description": "介绍存算分离架构下 Doris 文件缓存的配置、索引优先写入、查询级缓存限制、缓存预热与清理、命中率监控及 TTL 策略，助力提升查询性能、降低对象存储成本。",
+    "keywords": ["Doris 文件缓存", "存算分离缓存", "file cache", "索引优先缓存", "缓存预热", "缓存配额", "file_cache_query_limit_bytes", "TTL 缓存", "LRU", "缓存命中率", "对象存储加速"]
 }
 ---
 
@@ -174,13 +174,18 @@ file_cache_path  默认：BE 部署路径下的 storage 目录
 <!-- 知识类型: 配置参数 -->
 <!-- 适用场景: 多用户共享缓存 / 防止大查询缓存抖动 -->
 
+Doris 提供两种相互独立的查询级 File Cache 限制机制。应根据希望控制的是“查询已占用的缓存空间”还是“查询后续是否继续回填缓存”选择参数：
+
+| 机制 | 主要参数 | 达到限制后的行为 | 适用场景 |
+|---|---|---|---|
+| 按缓存占用比例限制 | `file_cache_query_limit_percent` | 新缓存块仍可写入；BE 优先淘汰当前查询记录的可释放缓存块，并在需要时从其他缓存队列淘汰 | 限制单个查询的缓存占用，兼顾后续缓存回填 |
+| 按远端扫描回填字节数停止写入 | `file_cache_query_limit_bytes` | 当下一个缓存块会使累计准入字节数超过阈值时，查询在该 BE 上进入 remote-only-on-miss 状态；后续未命中范围从远端读取但不再写入 File Cache | 限制一次大范围远端扫描造成的缓存写入和缓存抖动 |
+
+### 按缓存占用比例限制
+
 > 该功能自 4.0.3 版本起支持。
 
-**缓存配额（Cache Query Limit）**功能允许限制单个查询可填充的文件缓存比例。在多用户或复杂查询共享缓存资源的场景下，单个大查询可能占用过多缓存，导致其他查询的热点数据被淘汰。通过设置查询配额，可保证资源的公平使用，防止缓存抖动。
-
-查询占用的缓存空间指该查询因数据未命中而填充到缓存中的数据总大小。若填充总量达到配额上限，后续填充的数据将基于 LRU 算法替换该查询先前填充的数据。
-
-### 配置说明
+缓存占用比例限制用于控制单个查询在每个 File Cache 实例中可使用的最大缓存比例。在多用户或复杂查询共享缓存资源的场景下，该机制可以降低单个大查询长期占用过多缓存并淘汰其他热点数据的风险。
 
 该功能涉及 BE 配置、FE 配置与会话变量三个层面。
 
@@ -198,11 +203,13 @@ file_cache_path  默认：BE 部署路径下的 storage 目录
 
 **会话变量**
 
-| 变量 | 类型 | 说明 |
-|---|---|---|
-| `file_cache_query_limit_percent` | Integer (1–100) | 单个查询可使用的最大缓存比例（%）。上限受 `file_cache_query_limit_max_percent` 约束。建议计算后的缓存配额不低于 256 MB，低于该值时 BE 会在日志中输出告警 |
+| 变量 | 类型 | 默认值 | 说明 |
+|---|---|---|---|
+| `file_cache_query_limit_percent` | Integer | `-1` | 设置时取值范围为 `[1, file_cache_query_limit_max_percent]`。表示单个查询可使用的最大缓存比例（%）。建议计算后的缓存配额不低于 256 MB，低于该值时 BE 会在日志中输出告警 |
 
-### 使用示例
+使用前，需要在 BE 上同时启用 `enable_file_cache` 和 `enable_file_cache_query_limit`，并确保查询会话中的 `enable_file_cache` 为 `true`。
+
+**使用示例**
 
 ```sql
 -- 限制单个查询最多使用 50% 的缓存
@@ -212,7 +219,90 @@ SET file_cache_query_limit_percent = 50;
 SELECT * FROM large_table;
 ```
 
-> **注意：** 设置的值必须在 `[0, file_cache_query_limit_max_percent]` 范围内。
+后续缓存未命中仍允许写入 File Cache；当查询的缓存占用超过配额时，BE 会通过查询级 LRU 记录和其他缓存队列释放空间。该机制不会把查询切换为“后续不再写缓存”的模式。
+
+### 按远端扫描回填字节数停止写入
+
+> 该功能仅在 Doris 4.1.x 中支持，Doris 4.0.x 不支持。
+
+`file_cache_query_limit_bytes` 用于限制单个 SELECT 查询在**每个 BE** 上因远端扫描缓存未命中而获准回填 File Cache 的累计字节数。该机制仅在存算分离模式且 BE 的 `enable_file_cache=true` 时生效，不依赖 `enable_file_cache_query_limit` 或 `file_cache_query_limit_max_percent`。
+
+该阈值由同一查询在一个 BE 上的并行 Scanner 共享，但不是整个查询或整个集群的总量限制。例如，一个查询在 10 个 BE 上执行并将阈值设为 1 GiB，理论上最多可在每个 BE 上分别准入约 1 GiB，而不是所有 BE 合计 1 GiB。
+
+**参数说明**
+
+| 参数 | 位置 | 类型 | 默认值 | 是否必选 | 说明 |
+|---|---|---|---|---|---|
+| `file_cache_query_limit_bytes` | Session Variable | BigInt | `-1` | 是 | 单个查询在每个 BE 上的远端扫描缓存回填阈值，单位为字节。小于 `0` 时关闭限制；等于 `0` 时从查询开始即不回填；大于 `0` 时按缓存块累计准入字节数 |
+| `enable_file_cache_query_limit_segment_meta` | BE 配置 | Boolean | `false` | 否 | 是否将 Segment footer 和 Segment 元数据的缓存写入纳入同一个字节阈值。该参数支持动态修改；数据页和倒排索引写入始终受字节阈值约束 |
+
+`file_cache_query_limit_bytes` 的取值行为如下：
+
+| 取值 | 行为 |
+|---|---|
+| `< 0` | 关闭该限制，保留原有的缓存未命中回填行为 |
+| `= 0` | 查询从开始就在每个 BE 上进入 remote-only-on-miss 状态；已完整覆盖请求范围的本地缓存仍可读取，未完整覆盖的范围直接从远端读取且不回填 |
+| `> 0` | 允许累计准入字节数不超过阈值的缓存块写入；当下一个缓存块会使累计值超过阈值时拒绝该块，并使该查询在当前 BE 上的后续未命中读取不再回填 |
+
+阈值按缓存块进行准入判断，并不保证实际写入量恰好等于阈值。如果剩余预算小于下一个缓存块，该块会被整体跳过，剩余预算不会继续用于更小的后续块。一旦进入 remote-only-on-miss 状态，同一查询在该 BE 上不会恢复缓存回填。
+
+**限制远端扫描回填量**
+
+以下示例假设 `large_table` 位于存算分离集群中，并且所有 BE 已启用 File Cache。该设置允许查询在每个 BE 上最多准入 1 GiB 的远端扫描缓存块：
+
+```sql
+SET enable_profile = true;
+SET profile_level = 2;
+SET file_cache_query_limit_bytes = 1073741824;
+
+SELECT COUNT(*) FROM large_table;
+```
+
+查询结果不受影响。当某个 BE 上的下一个缓存块会使累计准入量超过 1 GiB 时，该 BE 上同一查询的后续缓存未命中会直接读取远端数据，不再产生对应的本地缓存写入。
+
+如果希望一次性扫描从开始就不污染 File Cache，可将阈值设为 `0`；查询结束后可恢复默认值：
+
+```sql
+SET file_cache_query_limit_bytes = 0;
+SELECT COUNT(*) FROM large_table;
+
+SET file_cache_query_limit_bytes = -1;
+```
+
+**是否计入 Segment 元数据**
+
+默认情况下，数据页和倒排索引缓存写入计入阈值，Segment footer 和 Segment 元数据不计入。此时即使查询已经进入 remote-only-on-miss 状态，Segment footer 和元数据仍可能写入 File Cache，因此 Profile 中的总写入量可能大于 `file_cache_query_limit_bytes`。
+
+如果需要连 Segment footer 和元数据也停止回填，请在同一计算组的所有 BE 上设置：
+
+```properties
+enable_file_cache_query_limit_segment_meta=true
+```
+
+该参数可通过 BE 动态配置接口即时修改；若需重启后继续生效，应写入 `be.conf` 或使用持久化动态配置。具体方法参见 [BE 配置](../../admin-manual/config/be-config.md)。
+
+**通过 Profile 验证**
+
+开启 Query Profile 后，可在 Scanner 的 `FileCache` 指标组中关注：
+
+| 指标 | 说明 |
+|---|---|
+| `RemoteOnlyOnMissTriggered` | 值为 `1` 表示该 Scanner 已观察到查询进入 remote-only-on-miss 状态 |
+| `RemoteOnlyOnMissThresholdBytes` | 当前查询配置的字节阈值 |
+| `BytesWriteIntoCache` | 实际写入 File Cache 的总字节数 |
+| `InvertedIndexBytesWriteIntoCache` | 倒排索引实际写入 File Cache 的字节数 |
+| `SegmentFooterIndexBytesWriteIntoCache` | Segment footer 和元数据实际写入 File Cache 的字节数 |
+| `NumSkipCacheIOTotal` | 跳过缓存的 I/O 次数；该指标还可能包含其他跳过缓存策略造成的 I/O，应与 `RemoteOnlyOnMissTriggered` 一起判断 |
+
+如果累计准入量恰好等于阈值，且查询结束前没有新的缓存块尝试超过阈值，`RemoteOnlyOnMissTriggered` 仍可能为 `0`。只有出现会超过阈值的下一个缓存块时，状态才会切换。
+
+**使用建议与注意事项**
+
+- 对一次性全表扫描、低复用率 ETL 或 Ad-hoc 查询，可设置较小的正值，或使用 `0` 从查询开始禁止缓存回填，避免冷数据置换热点数据。
+- 该参数限制的是查询读取未命中后的 File Cache 回填，不限制远端读取量，不会终止查询，也不影响导入、Compaction、Schema Change 或显式缓存预热产生的缓存写入。
+- 进入 remote-only-on-miss 状态后，已完整缓存的请求范围仍可从本地读取；未完整覆盖的请求范围会直接访问远端存储，可能增加对象存储 I/O 和查询延迟。
+- 如果目标是限制查询保留在缓存中的占用比例，并允许后续未命中继续回填，应使用 `file_cache_query_limit_percent`；如果目标是在一定回填量后停止后续写入，应使用 `file_cache_query_limit_bytes`。
+- 默认不计入 Segment footer 和元数据可以保留高复用元数据的缓存收益。如果业务要求查询达到阈值后不再产生这类写入，再启用 `enable_file_cache_query_limit_segment_meta`，并结合 Profile 验证效果。
 
 ## 缓存预热
 

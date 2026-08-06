@@ -2,7 +2,7 @@
 {
   "title": "データキャッシュ",
   "language": "ja",
-  "description": "データキャッシュは、リモートストレージシステム（HDFSまたはオブジェクト）から最近アクセスされたデータファイルをキャッシュすることで、同じデータの後続のクエリを高速化します"
+  "description": "データキャッシュは、HDFSまたはオブジェクトストレージのデータをローカルにキャッシュしてLakehouseクエリを高速化し、ウォームアップ、クエリ単位のキャッシュ書き込み制限、およびキャッシュアドミッション制御をサポートします。"
 }
 ---
 Data Cacheは、リモートストレージシステム（HDFSまたはオブジェクトストレージ）から最近アクセスされたデータファイルをローカルディスクにキャッシュすることで、同じデータの後続のクエリを高速化します。同じデータに頻繁にアクセスするシナリオでは、Data Cacheは繰り返されるリモートデータアクセスのオーバーヘッドを回避し、ホットデータのクエリ分析のパフォーマンスと安定性を向上させることができます。
@@ -104,47 +104,96 @@ SET GLOBAL enable_file_cache = true;
 
 ## Cache Query Limit
 
+Doris には、クエリ単位でData Cacheを制御する独立した2つの方式があります。
+
+| 制御方式 | 主なパラメータ | 制限到達後の動作 |
+|---|---|---|
+| キャッシュ占有率による制限 | `file_cache_query_limit_percent` | キャッシュミス時の書き込みを継続しながら、BEはクエリ単位のLRU記録と他のキャッシュキューを使用して領域を解放します |
+| リモートスキャンの書き込みをバイト閾値で停止 | `file_cache_query_limit_bytes` | 次のキャッシュブロックによって許可済みバイト数が閾値を超える場合、後続のキャッシュミスはリモートストレージから読み取られ、ローカルキャッシュには書き込まれません |
+
+### キャッシュ占有率による制限
+
 > この機能はバージョン4.0.3以降でサポートされています。
 
-Cache Query Limit機能により、ユーザーは単一のクエリが使用できるファイルキャッシュの割合を制限できます。複数のユーザーや複雑なクエリがキャッシュリソースを共有するシナリオでは、単一の大きなクエリが過度にキャッシュ領域を占有し、他のクエリのホットデータが削除される可能性があります。クエリ制限を設定することで、公平なリソース使用を確保し、キャッシュスラッシングを防ぐことができます。
+キャッシュ占有率による制限は、単一クエリが各File Cacheインスタンスで使用できる最大割合を制御します。複数のユーザーや複雑なクエリがキャッシュリソースを共有する場合に、1つの大規模クエリが過剰なキャッシュを保持して他のホットデータを削除するリスクを軽減します。
 
-クエリが占有するキャッシュ領域とは、キャッシュミスによってキャッシュに投入されたデータの総サイズを指します。クエリによって投入された総サイズがクォータ制限に達すると、そのクエリによって投入される後続のデータは、LRUアルゴリズムに基づいて以前に投入されたデータを置き換えます。
+この機能には、BE設定、FE設定、およびセッション変数が関係します。
 
-### Configuration
-
-この機能はBEとFEでの設定、およびセッション変数設定が関係します。
-
-**1. BE Configuration**
+**1. BE設定**
 
 - `enable_file_cache_query_limit`:
-  - Type: Boolean
-  - Default: `false`
-  - Description: BE側でのfile cache query limit機能のマスタースイッチ。有効にした場合のみ、BEはFEから渡されたクエリ制限パラメータを処理します。
+  - 型: Boolean
+  - デフォルト値: `false`
+  - 説明: BE側のFile Cacheクエリ制限のマスタースイッチです。有効な場合のみ、BEはFEから渡されたクエリ制限パラメータを処理します。
 
-**2. FE Configuration**
+**2. FE設定**
 
 - `file_cache_query_limit_max_percent`:
-  - Type: Integer
-  - Default: `100`
-  - Description: セッション変数の上限を検証するために使用される最大クエリ制限制約。ユーザーが設定するクエリ制限がこの値を超えないことを保証します。
+  - 型: Integer
+  - デフォルト値: `100`
+  - 説明: セッション変数の上限を検証するために使用されるクエリ制限の最大値です。
 
-**3. Session Variables**
+**3. セッション変数**
 
 - `file_cache_query_limit_percent`:
-  - Type: Integer (1-100)
-  - Description: ファイルキャッシュクエリ制限の割合。クエリが使用できるキャッシュの最大割合を設定します。この値は`file_cache_query_limit_max_percent`によって制約されます。算出されたキャッシュクォータは256MB以上にすることが推奨されます。この値より低い場合、BEはログに警告を出力します。
+  - 型: Integer (1-100)
+  - デフォルト値: `-1`
+  - 説明: クエリが使用できるキャッシュの最大割合です。この値は `file_cache_query_limit_max_percent` によって制約されます。算出されたキャッシュクォータは256 MB以上を推奨します。これより小さい場合、BEはログに警告を出力します。
 
-**Usage Example**
+**使用例**
 
 ```sql
--- Set session variable to limit a query to use at most 50% of the cache
+-- 単一クエリが使用できるキャッシュを最大50%に制限する
 SET file_cache_query_limit_percent = 50;
 
--- Execute query
+-- クエリを実行する
 SELECT * FROM large_table;
 ```
-**注意:**
-1. 値は [0, `file_cache_query_limit_max_percent`] の範囲内である必要があります。
+
+**注意事項:**
+
+1. 値は `[1, file_cache_query_limit_max_percent]` の範囲内である必要があります。
+2. この制御を使用する前に、BEで `enable_file_cache` と `enable_file_cache_query_limit` の両方を有効にし、クエリセッションの `enable_file_cache` が `true` であることを確認してください。
+3. キャッシュ占有率の上限に達した後も、キャッシュミスはData Cacheへ書き込むことができます。この制御によって、クエリが「以降はキャッシュへ書き込まない」モードに切り替わることはありません。
+
+### リモートスキャンのキャッシュ書き込みをバイト閾値で停止する
+
+ストレージ・コンピューティング分離モードでは、セッション変数 `file_cache_query_limit_bytes` により、Hive、Iceberg、Hudi、またはPaimonのデータファイルのキャッシュミスによってData Cacheへの書き込みを許可された累積バイト数を、単一のSELECTクエリについて**各BE**で制限できます。この機能にはBEの `enable_file_cache=true` が必要ですが、`enable_file_cache_query_limit` または `file_cache_query_limit_max_percent` には依存しません。
+
+| パラメータ | 型 | デフォルト値 | 説明 |
+|---|---|---|---|
+| `file_cache_query_limit_bytes` | BigInt | `-1` | 単一クエリについて、各BEで許可するリモートスキャンのキャッシュ書き込み閾値です。単位はバイトです。`0`未満では無効、`0`ではクエリ開始時からキャッシュへ書き込まず、正の値ではキャッシュブロック単位で許可済みバイト数を累積します |
+
+同一クエリの並列Scannerは、1つのBE上で同じ閾値を共有します。この閾値はクエリ全体またはクラスタ全体の合計値ではありません。次のキャッシュブロックによって許可済みバイト数が閾値を超える場合、そのBE上でクエリはremote-only-on-miss状態になります。要求範囲がローカルキャッシュで完全にカバーされている場合はローカルから読み取れます。完全にカバーされていない範囲はリモートストレージから直接読み取り、Data Cacheへ書き込みません。クエリ結果は変わりません。
+
+次の例では、各BEのリモートスキャンキャッシュ書き込み閾値を1 GiBに設定します。
+
+```sql
+SET enable_profile = true;
+SET profile_level = 2;
+SET file_cache_query_limit_bytes = 1073741824;
+
+SELECT COUNT(*) FROM hive_catalog.sales.orders;
+```
+
+一時的なスキャンで最初からData Cacheへ書き込みたくない場合は閾値を `0` に設定し、クエリ終了後にデフォルト値へ戻します。
+
+```sql
+SET file_cache_query_limit_bytes = 0;
+SELECT COUNT(*) FROM hive_catalog.sales.orders;
+
+SET file_cache_query_limit_bytes = -1;
+```
+
+Query Profileを有効にした後、Scannerの `FileCache` メトリックグループで `RemoteOnlyOnMissTriggered` と `RemoteOnlyOnMissThresholdBytes` を確認します。`RemoteOnlyOnMissTriggered=1` の場合、そのScannerがクエリのremote-only-on-miss状態への移行を確認したことを示します。`BytesWriteIntoCache` と `NumSkipCacheIOTotal` を使用して、実際の書き込みとキャッシュをスキップしたI/Oを確認できます。`NumSkipCacheIOTotal` には他のキャッシュポリシーによってスキップされたI/Oも含まれるため、この値だけでは閾値が発動したことを判断できません。
+
+:::note
+
+- この制御は、ストレージ・コンピューティング分離モードのSELECTクエリで、キャッシュミス後にData Cacheへ書き込む動作のみを制限します。リモート読み取り量を制限せず、明示的なキャッシュウォームアップにも影響しません。remote-only-on-miss状態では、リモートI/Oとクエリレイテンシが増加する可能性があります。
+- 許可判定はキャッシュブロック単位で行われます。残りの容量が次のブロックより小さい場合、そのブロック全体がスキップされます。`RemoteOnlyOnMissTriggered` は、あるブロックによって閾値を超える場合にのみ `1` になります。
+- BEパラメータ `enable_file_cache_query_limit_segment_meta` は、Doris内部テーブルのSegment footerとSegmentメタデータの書き込みを同じ閾値に含めるかどうかを制御します。Hive、Iceberg、Hudi、およびPaimonのデータファイルのキャッシュ書き込みは常に `file_cache_query_limit_bytes` の対象です。パラメータの完全な適用範囲と内部テーブルの動作については、[ファイルキャッシュの設定と使用ガイド](../compute-storage-decoupled/file-cache/file-cache.md)を参照してください。
+
+:::
 
 ## Cache Warmup
 
