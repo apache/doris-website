@@ -3,8 +3,8 @@
     "title": "File Cache Configuration and Usage Guide (Compute-Storage Decoupled)",
     "sidebar_label": "File Cache Configuration",
     "language": "en",
-    "description": "Covers file cache configuration, index-only cache writes, quota management, cache warmup and eviction, hit-rate monitoring, and TTL policies for Doris in compute-storage decoupled mode to improve query performance and reduce object storage costs.",
-    "keywords": ["Doris file cache", "compute-storage decoupled cache", "file cache", "index-only cache writes", "cache warmup", "cache quota", "TTL cache", "LRU", "cache hit rate", "object storage acceleration"]
+    "description": "Covers file cache configuration, index-only cache writes, query-level cache controls, cache warmup and eviction, hit-rate monitoring, and TTL policies for Doris in compute-storage decoupled mode to improve query performance and reduce object storage costs.",
+    "keywords": ["Doris file cache", "compute-storage decoupled cache", "file cache", "index-only cache writes", "cache warmup", "cache quota", "file_cache_query_limit_bytes", "TTL cache", "LRU", "cache hit rate", "object storage acceleration"]
 }
 ---
 
@@ -174,13 +174,18 @@ Proactive eviction actively frees space when cache utilization reaches a thresho
 <!-- Knowledge type: Configuration parameters -->
 <!-- Applicable scenarios: Multi-user shared cache / Preventing large-query cache thrashing -->
 
+Doris provides two independent query-level File Cache controls. Choose the parameter according to whether you need to control the cache footprint already held by a query or stop later cache fills:
+
+| Control | Primary parameter | Behavior after the limit | Use case |
+|---|---|---|---|
+| Limit by cache footprint percentage | `file_cache_query_limit_percent` | New cache blocks can still be written. BE first evicts releasable blocks recorded for the current query and then evicts from other cache queues when necessary | Limit a query's cache footprint while allowing later cache fills |
+| Stop remote-scan cache writes by byte threshold | `file_cache_query_limit_bytes` | When the next cache block would make the admitted byte count exceed the threshold, the query enters remote-only-on-miss mode on that BE. Later misses are read from remote storage without further File Cache writes | Limit cache writes and churn caused by a large remote scan |
+
+### Limit by Cache Footprint Percentage
+
 > This feature is supported starting from version 4.0.3.
 
-The **Cache Query Limit** feature allows you to limit the proportion of the file cache that a single query can fill. In scenarios where multiple users or complex queries share cache resources, a single large query may occupy too much cache and evict hot data belonging to other queries. Setting a query quota ensures fair use of resources and prevents cache thrashing.
-
-The cache space occupied by a query refers to the total size of data that the query fills into the cache due to cache misses. If the total fill reaches the quota ceiling, subsequent data written by the query replaces data that the same query wrote earlier, based on the LRU algorithm.
-
-### Configuration
+The cache-footprint percentage limit controls the maximum percentage of each File Cache instance that a single query can use. When multiple users or complex queries share cache resources, it reduces the risk that one large query retains too much cache and evicts other hot data.
 
 This feature involves three levels of configuration: BE configuration, FE configuration, and session variables.
 
@@ -198,11 +203,13 @@ This feature involves three levels of configuration: BE configuration, FE config
 
 **Session Variables**
 
-| Variable | Type | Description |
-|---|---|---|
-| `file_cache_query_limit_percent` | Integer (1-100) | Maximum percentage of cache that a single query may use. The upper bound is governed by `file_cache_query_limit_max_percent`. The calculated cache quota should not be lower than 256 MB; if it is, BE outputs a warning in the log |
+| Variable | Type | Default | Description |
+|---|---|---|---|
+| `file_cache_query_limit_percent` | Integer | `-1` | When explicitly set, the value must be in `[1, file_cache_query_limit_max_percent]`. It specifies the maximum percentage of cache that a single query may use. The calculated quota should not be lower than 256 MB; otherwise, BE writes a warning to the log |
 
-### Usage Example
+Before using this control, enable both `enable_file_cache` and `enable_file_cache_query_limit` on the BE, and ensure that `enable_file_cache` is `true` in the query session.
+
+**Usage Example**
 
 ```sql
 -- Limit a single query to using at most 50% of the cache
@@ -212,7 +219,88 @@ SET file_cache_query_limit_percent = 50;
 SELECT * FROM large_table;
 ```
 
-> **Note:** The value must be within the range `[0, file_cache_query_limit_max_percent]`.
+Later cache misses remain eligible for File Cache writes. When the query's cache footprint exceeds the quota, BE releases space through the query-level LRU record and other cache queues. This control does not switch the query into a no-more-write mode.
+
+### Stop Remote-Scan Cache Writes by Byte Threshold
+
+`file_cache_query_limit_bytes` limits the cumulative bytes admitted for read-through File Cache writes caused by remote-scan cache misses for one SELECT query on **each BE**. It takes effect only in compute-storage decoupled mode when `enable_file_cache=true` on the BE. It does not depend on `enable_file_cache_query_limit` or `file_cache_query_limit_max_percent`.
+
+Parallel scanners for the same query share one threshold on a BE, but the threshold is not a query-wide or cluster-wide total. For example, if a query runs on 10 BEs with a 1 GiB threshold, each BE can admit approximately 1 GiB independently; the limit is not 1 GiB across all BEs.
+
+**Parameters**
+
+| Parameter | Location | Type | Default | Required | Description |
+|---|---|---|---|---|---|
+| `file_cache_query_limit_bytes` | Session Variable | BigInt | `-1` | Yes | Remote-scan cache-fill threshold for one query on each BE, in bytes. A value below `0` disables the control; `0` disables cache fills from the start of the query; a positive value accumulates admitted bytes by cache block |
+| `enable_file_cache_query_limit_segment_meta` | BE configuration | Boolean | `false` | No | Whether Segment footer and Segment metadata cache writes count toward the same byte threshold. This parameter is dynamically configurable. Data-page and inverted-index writes are subject to the byte threshold whenever this control is active |
+
+`file_cache_query_limit_bytes` has the following behavior:
+
+| Value | Behavior |
+|---|---|
+| `< 0` | Disables this control and preserves the original cache-miss fill behavior |
+| `= 0` | Places the query in remote-only-on-miss mode on every BE from the start. A request range fully covered by local cache can still be read locally; a range that is not fully covered is read directly from remote storage without a cache fill |
+| `> 0` | Allows cache blocks while their cumulative admitted bytes do not exceed the threshold. When the next block would exceed it, that block is rejected and later misses for the query on that BE no longer fill the cache |
+
+Admission is evaluated by cache block, so actual writes are not guaranteed to equal the threshold. If the remaining budget is smaller than the next cache block, the entire block is skipped, and the remaining budget is not used for smaller later blocks. After the query enters remote-only-on-miss mode on a BE, cache filling does not resume there.
+
+**Limit Remote-Scan Cache Fills**
+
+The following example assumes that `large_table` is in a compute-storage decoupled cluster and File Cache is enabled on every BE. It allows up to 1 GiB of remote-scan cache blocks to be admitted on each BE:
+
+```sql
+SET enable_profile = true;
+SET profile_level = 2;
+SET file_cache_query_limit_bytes = 1073741824;
+
+SELECT COUNT(*) FROM large_table;
+```
+
+The query result is unchanged. When the next cache block on a BE would make admitted bytes exceed 1 GiB, later cache misses for that query on the same BE read remote data without additional local cache writes.
+
+To prevent a one-time scan from filling File Cache from the start, set the threshold to `0`, and restore the default after the query:
+
+```sql
+SET file_cache_query_limit_bytes = 0;
+SELECT COUNT(*) FROM large_table;
+
+SET file_cache_query_limit_bytes = -1;
+```
+
+**Whether Segment Metadata Is Counted**
+
+By default, data-page and inverted-index cache writes count toward the threshold, while Segment footer and Segment metadata writes do not. Segment footer and metadata may therefore still be written after the query enters remote-only-on-miss mode, and the total write volume shown in the Profile may exceed `file_cache_query_limit_bytes`.
+
+To stop Segment footer and metadata fills as well, set the following configuration on every BE in the same compute group:
+
+```properties
+enable_file_cache_query_limit_segment_meta=true
+```
+
+This parameter can be changed immediately through the BE dynamic configuration API. To retain it across restarts, add it to `be.conf` or use persistent dynamic configuration. For details, see [BE Configuration](../../admin-manual/config/be-config.md).
+
+**Verify with Query Profile**
+
+After enabling Query Profile, inspect the `FileCache` metric group under the Scanner:
+
+| Metric | Description |
+|---|---|
+| `RemoteOnlyOnMissTriggered` | A value of `1` means that the Scanner observed the query entering remote-only-on-miss mode |
+| `RemoteOnlyOnMissThresholdBytes` | Byte threshold configured for the query |
+| `BytesWriteIntoCache` | Total bytes actually written to File Cache |
+| `InvertedIndexBytesWriteIntoCache` | Inverted-index bytes actually written to File Cache |
+| `SegmentFooterIndexBytesWriteIntoCache` | Segment footer and metadata bytes actually written to File Cache |
+| `NumSkipCacheIOTotal` | Number of I/O operations that skipped the cache. This metric can also include I/O skipped by other cache policies, so evaluate it together with `RemoteOnlyOnMissTriggered` |
+
+If admitted bytes equal the threshold exactly and no later cache block attempts to exceed it before the query finishes, `RemoteOnlyOnMissTriggered` can remain `0`. The state changes only when a subsequent block would exceed the threshold.
+
+**Recommendations and Caveats**
+
+- For one-time full scans, low-reuse ETL, or ad hoc queries, use a small positive threshold or `0` to disable cache fills from the start and avoid replacing hot data with cold data.
+- This parameter limits File Cache fills after query-read misses. It does not limit remote bytes read, terminate the query, or affect cache writes produced by ingestion, Compaction, Schema Change, or explicit cache warmup.
+- In remote-only-on-miss mode, request ranges fully covered by local cache can still be read locally. Ranges that are not fully covered access remote storage directly, which may increase object-storage I/O and query latency.
+- Use `file_cache_query_limit_percent` when the goal is to limit the cache footprint retained by a query while allowing later cache misses to fill the cache. Use `file_cache_query_limit_bytes` when the goal is to stop later fills after a specified amount has been admitted.
+- Excluding Segment footer and metadata by default preserves the cache benefit of highly reusable metadata. Enable `enable_file_cache_query_limit_segment_meta` only when those writes must also stop after the threshold, and verify the result with Query Profile.
 
 ## Cache Warmup
 
