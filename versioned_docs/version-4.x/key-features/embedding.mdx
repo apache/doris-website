@@ -12,7 +12,7 @@ keywords:
 slug: /key-features/embedding
 image: /images/next/key-features/embedding.jpg
 last_update:
-  date: 2026-05-10
+  date: 2026-08-04
   author: Apache Doris
 featureCard:
   tags:
@@ -90,6 +90,40 @@ FROM notes ORDER BY d ASC LIMIT 1;
 ```
 
 The `INSERT` precomputes one vector per row. The `SELECT` embeds the query string once at runtime, then ranks rows by cosine distance. Two API calls in total, both hidden inside SQL.
+
+## Multimodal quick start {#multimodal-quick-start}
+
+For a multimodal embedding, pass a JSON object instead of a text string. The object must contain the file `uri` and its MIME `content_type`. The URI can be an HTTP or HTTPS URL, or an S3-compatible URI. Confirm that your configured provider and model support the input media type.
+
+This example embeds a video stored in S3-compatible object storage:
+
+```sql
+SELECT ARRAY_SIZE(
+  EMBED(
+    'multimodal_embed_resource',
+    CAST('{
+      "uri": "s3://example-bucket/videos/demo.mp4",
+      "content_type": "video/mp4",
+      "endpoint": "s3.us-east-1.amazonaws.com",
+      "region": "us-east-1",
+      "ak": "<access_key>",
+      "sk": "<secret_key>"
+    }' AS JSON)
+  )
+) AS video_embedding_dimension;
+```
+
+**Example result**
+
+```text
++---------------------------+
+| video_embedding_dimension |
++---------------------------+
+|                      2560 |
++---------------------------+
+```
+
+The vector dimension depends on the configured provider and model, so the result above is only an example. For an HTTP or HTTPS URL, only `uri` and `content_type` are required. For an S3-compatible URI, Doris generates a presigned URL and supports either AK/SK credentials or IAM role authentication with `role_arn` and `external_id`.
 
 ## When should you use the Apache Doris EMBED function? {#when}
 
