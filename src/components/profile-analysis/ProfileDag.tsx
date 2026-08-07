@@ -19,6 +19,7 @@ import {
     type ProfileFlowNode,
 } from './profile-analysis.dag';
 import { ProfileDagFragmentNode, ProfileDagNode } from './ProfileDagNode';
+import { ProfileDagEdge } from './ProfileDagEdge';
 import './ProfileDag.scss';
 
 export interface ProfileDagProps {
@@ -30,6 +31,10 @@ export interface ProfileDagProps {
 const nodeTypes = {
     profileOperator: ProfileDagNode,
     profileFragment: ProfileDagFragmentNode,
+};
+
+const edgeTypes = {
+    profileElk: ProfileDagEdge,
 };
 
 const stateMessages: Partial<Record<DagUiState, string>> = {
@@ -207,6 +212,7 @@ function ProfileDagCanvas({ dag }: { dag: ProfileDagResponse }): JSX.Element {
                     nodes={nodes}
                     edges={edges}
                     nodeTypes={nodeTypes}
+                    edgeTypes={edgeTypes}
                     onNodeClick={onNodeClick}
                     nodesDraggable={false}
                     nodesConnectable={false}
@@ -249,7 +255,7 @@ export function ProfileDag({ state, dag, error = null }: ProfileDagProps): JSX.E
             </div>
             <div className="profile-dag__legend" aria-label="Execution graph legend">
                 <span><i className="profile-dag__legend-line" /> Data flow</span>
-                <span><i className="profile-dag__legend-line profile-dag__legend-line--dependency" /> Execution dependency</span>
+                <span><i className="profile-dag__legend-line profile-dag__legend-line--dependency" /> Execution dependency (prerequisite → dependent)</span>
                 <span><i className="profile-dag__legend-swatch profile-dag__legend-swatch--exec" /> Longer execution</span>
                 <span><i className="profile-dag__legend-swatch profile-dag__legend-swatch--wait" /> Longer wait</span>
             </div>

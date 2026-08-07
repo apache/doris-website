@@ -248,6 +248,8 @@ test('adds English result tabs and configures the execution graph as read-only',
     assert.match(dagSource, /nodesDraggable=\{false\}/);
     assert.match(dagSource, /nodesConnectable=\{false\}/);
     assert.match(dagSource, /edgesReconnectable=\{false\}/);
+    assert.match(dagSource, /edgeTypes=\{edgeTypes\}/);
+    assert.match(dagSource, /Execution dependency \(prerequisite → dependent\)/);
     assert.match(dagSource, /deleteKeyCode=\{null\}/);
     assert.match(dagSource, /panOnDrag/);
     assert.match(dagSource, /zoomOnScroll/);

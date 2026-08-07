@@ -1,4 +1,4 @@
-import type { Edge, Node } from '@xyflow/react';
+import { MarkerType, type Edge, type Node } from '@xyflow/react';
 
 import type {
     ProfileDagEdge,
@@ -11,8 +11,8 @@ export const OPERATOR_NODE_WIDTH = 224;
 export const OPERATOR_NODE_HEIGHT = 104;
 export const FRAGMENT_HEADER_HEIGHT = 42;
 
-const DATA_EDGE_COLOR = 'var(--ifm-color-emphasis-600)';
-const DEPENDENCY_EDGE_COLOR = 'var(--ifm-color-warning-dark)';
+const DATA_EDGE_COLOR = '#667085';
+const DEPENDENCY_EDGE_COLOR = '#d98b00';
 
 export type ProfileFlowNodeData =
     | {
@@ -32,6 +32,7 @@ export interface ProfileFlowEdgeData extends Record<string, unknown> {
     relationId: string | null;
     dependency: boolean;
     crossFragment: boolean;
+    elkPath: string | null;
 }
 
 export type ProfileFlowNode = Node<ProfileFlowNodeData>;
@@ -51,6 +52,19 @@ interface ElkEdge {
     id: string;
     sources: string[];
     targets: string[];
+    container?: string;
+    sections?: ElkEdgeSection[];
+}
+
+interface ElkPoint {
+    x: number;
+    y: number;
+}
+
+interface ElkEdgeSection {
+    startPoint: ElkPoint;
+    bendPoints?: ElkPoint[];
+    endPoint: ElkPoint;
 }
 
 export interface ElkGraph extends ElkNode {
@@ -60,6 +74,53 @@ export interface ElkGraph extends ElkNode {
 
 interface ElkLayoutEngine {
     layout(graph: ElkGraph): Promise<ElkGraph>;
+}
+
+function isFinitePoint(point: ElkPoint | undefined): point is ElkPoint {
+    return point !== undefined && Number.isFinite(point.x) && Number.isFinite(point.y);
+}
+
+function simplifyOrthogonalPoints(points: ElkPoint[]): ElkPoint[] {
+    const simplified: ElkPoint[] = [];
+    for (const point of points) {
+        const previous = simplified[simplified.length - 1];
+        if (previous && previous.x === point.x && previous.y === point.y) continue;
+
+        const beforePrevious = simplified[simplified.length - 2];
+        if (
+            beforePrevious &&
+            previous &&
+            ((beforePrevious.x === previous.x && previous.x === point.x) ||
+                (beforePrevious.y === previous.y && previous.y === point.y))
+        ) {
+            simplified[simplified.length - 1] = point;
+        } else {
+            simplified.push(point);
+        }
+    }
+    return simplified;
+}
+
+function elkEdgePath(edge: ElkEdge | undefined, containerOffset: ElkPoint | undefined): string | null {
+    if (!edge?.sections?.length || !containerOffset) return null;
+    const subpaths: string[] = [];
+    for (const section of edge.sections) {
+        const points = [section.startPoint, ...(section.bendPoints ?? []), section.endPoint];
+        if (!points.every(isFinitePoint)) return null;
+        const absolutePoints = simplifyOrthogonalPoints(
+            points.map(point => ({
+                x: point.x + containerOffset.x,
+                y: point.y + containerOffset.y,
+            })),
+        );
+        if (absolutePoints.length < 2) return null;
+        subpaths.push(
+            absolutePoints
+                .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`)
+                .join(' '),
+        );
+    }
+    return subpaths.join(' ');
 }
 
 export function isDependencyEdge(kind: ProfileDagEdge['kind']): boolean {
@@ -161,6 +222,13 @@ export async function layoutProfileDag(
     const fragmentById = new Map(dag.fragments.map(fragment => [fragment.id, fragment]));
     const pipelineById = new Map(dag.pipelines.map(pipeline => [pipeline.id, pipeline]));
     const sourceNodeById = new Map(dag.graph.nodes.map(node => [node.id, node]));
+    const laidOutEdgeById = new Map((laidOut.edges ?? []).map(edge => [edge.id, edge]));
+    const containerOffsetById = new Map<string, ElkPoint>([
+        [laidOut.id, { x: 0, y: 0 }],
+        ...(laidOut.children ?? []).map(
+            fragment => [fragment.id, { x: fragment.x ?? 0, y: fragment.y ?? 0 }] as const,
+        ),
+    ]);
     const flowNodes: ProfileFlowNode[] = [];
 
     for (const fragmentLayout of laidOut.children ?? []) {
@@ -209,11 +277,16 @@ export async function layoutProfileDag(
         nodes: flowNodes,
         edges: dag.graph.edges.map(edge => {
             const dependency = isDependencyEdge(edge.kind);
+            const laidOutEdge = laidOutEdgeById.get(edge.id);
+            const elkPath = elkEdgePath(
+                laidOutEdge,
+                containerOffsetById.get(laidOutEdge?.container ?? laidOut.id),
+            );
             return {
                 id: edge.id,
                 source: edge.source,
                 target: edge.target,
-                type: 'smoothstep',
+                type: 'profileElk',
                 animated: false,
                 selectable: false,
                 reconnectable: false,
@@ -222,11 +295,19 @@ export async function layoutProfileDag(
                     strokeWidth: dependency ? 1.5 : 2,
                     strokeDasharray: dependency ? '7 5' : undefined,
                 },
+                markerEnd: {
+                    type: dependency ? MarkerType.Arrow : MarkerType.ArrowClosed,
+                    color: dependency ? DEPENDENCY_EDGE_COLOR : DATA_EDGE_COLOR,
+                    width: 10,
+                    height: 10,
+                    strokeWidth: dependency ? 1.5 : 1,
+                },
                 data: {
                     kind: edge.kind,
                     relationId: edge.relationId,
                     dependency,
                     crossFragment: edge.metadata?.crossFragment === true,
+                    elkPath,
                 },
             };
         }),

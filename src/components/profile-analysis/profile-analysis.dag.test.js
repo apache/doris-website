@@ -187,13 +187,56 @@ test('visually distinguishes data edges from dependency edges without animation'
 
     assert.equal(data.data.dependency, false);
     assert.equal(data.data.crossFragment, true);
+    assert.equal(data.type, 'profileElk');
+    assert.equal(data.data.elkPath, null);
+    assert.equal(data.markerEnd.type, 'arrowclosed');
     assert.equal(data.style.strokeDasharray, undefined);
     assert.equal(dependency.data.dependency, true);
     assert.equal(dependency.data.crossFragment, false);
+    assert.equal(dependency.markerEnd.type, 'arrow');
     assert.equal(dependency.style.strokeDasharray, '7 5');
     assert.equal(dependency.animated, false);
     assert.equal(isDependencyEdge('BLOCKING_DEPENDENCY'), true);
     assert.equal(isDependencyEdge('MULTICAST'), false);
+});
+
+test('uses simplified orthogonal ELK sections as absolute React Flow paths', async () => {
+    const dag = fixture();
+    const graph = buildElkGraph(dag);
+    const result = await layoutProfileDag(dag, {
+        async layout() {
+            return {
+                ...graph,
+                children: graph.children.map((fragment, index) => ({
+                    ...fragment,
+                    x: index * 500,
+                    y: index * 300,
+                    width: 300,
+                    height: 240,
+                    children: fragment.children.map(node => ({ ...node, x: 20, y: 60 })),
+                })),
+                edges: graph.edges.map((edge, index) => ({
+                    ...edge,
+                    container: index === 0 ? 'profile-dag' : 'fragment:1',
+                    sections: [{
+                        startPoint: { x: 10, y: 50 },
+                        bendPoints: [
+                            { x: 10, y: 40 },
+                            { x: 10, y: 30 },
+                            { x: 80, y: 30 },
+                        ],
+                        endPoint: { x: 80, y: 20 },
+                    }],
+                })),
+            };
+        },
+    });
+
+    const rootEdge = result.edges.find(edge => edge.id === 'edge:data');
+    const fragmentEdge = result.edges.find(edge => edge.id === 'edge:dependency');
+    assert.equal(rootEdge.data.elkPath, 'M 10 50 L 10 30 L 80 30 L 80 20');
+    assert.equal(fragmentEdge.data.elkPath, 'M 510 350 L 510 330 L 580 330 L 580 320');
+    assert.doesNotMatch(rootEdge.data.elkPath, /[CQ]/);
 });
 
 test('ELK lays out a complete graph containing a cross-Fragment edge', async () => {

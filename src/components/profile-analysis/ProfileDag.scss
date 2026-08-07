@@ -32,13 +32,31 @@
     }
 
     &__legend-line {
+        position: relative;
         display: inline-block;
         width: 1.5rem;
-        border-top: 2px solid var(--ifm-color-emphasis-600);
+        border-top: 2px solid #667085;
+
+        &::after {
+            position: absolute;
+            top: -4px;
+            right: -1px;
+            width: 0;
+            height: 0;
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+            border-left: 6px solid #667085;
+            content: '';
+        }
     }
 
     &__legend-line--dependency {
+        border-top-color: #d98b00;
         border-top-style: dashed;
+
+        &::after {
+            border-left-color: #d98b00;
+        }
     }
 
     &__legend-swatch {
