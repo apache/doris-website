@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react';
 import {
     createAnalysisJob,
-    getProfileDag,
     getAnalysisJob,
     getAnalysisJobByClientRequestId,
     ProfileAnalysisApiError,
@@ -16,19 +15,14 @@ import {
 import {
     createOrRecoverAnalysisJob,
     DEFAULT_ANALYSIS_POLL_INTERVAL_MS,
-    isRetryableTransportFailure,
     pollAnalysisJobWithRecovery,
     recoverAnalysisJobWithinGrace,
-    retryDelayMs,
 } from './profile-analysis.recovery';
 import type {
     AgentMessage,
     AnalysisJobSnapshot,
     AnalysisJobStatus,
     AnalysisState,
-    DagStatus,
-    DagUiState,
-    ProfileDagResponse,
     ResponseLanguage,
 } from './profile-analysis.types';
 
@@ -42,9 +36,6 @@ interface ProfileAnalysisSnapshot {
     jobsAhead: number | null;
     result: AgentMessage | null;
     error: string | null;
-    dagState: DagUiState;
-    dag: ProfileDagResponse | null;
-    dagError: string | null;
     recoveryWarning: string | null;
 }
 
@@ -58,10 +49,6 @@ type ProfileAnalysisAction =
     | { type: 'start' }
     | { type: 'job_created'; jobId: string; status: AnalysisJobStatus }
     | { type: 'job_status'; job: AnalysisJobSnapshot }
-    | { type: 'dag_status'; status: Extract<DagStatus, 'PENDING' | 'PARSING'> }
-    | { type: 'dag_loading'; error?: string | null }
-    | { type: 'dag_loaded'; dag: ProfileDagResponse }
-    | { type: 'dag_failed'; state: Extract<DagUiState, 'unavailable' | 'failed'>; error: string }
     | { type: 'complete'; result: AgentMessage }
     | { type: 'fail'; error: string };
 
@@ -73,41 +60,8 @@ export const initialProfileAnalysisSnapshot: ProfileAnalysisSnapshot = {
     jobsAhead: null,
     result: null,
     error: null,
-    dagState: 'idle',
-    dag: null,
-    dagError: null,
     recoveryWarning: null,
 };
-
-function dagErrorMessage(status: Extract<DagStatus, 'UNAVAILABLE' | 'FAILED'>, code: string | null): string {
-    if (code === 'DAG_TOO_LARGE') {
-        return 'This execution graph is too large to display.';
-    }
-    if (status === 'UNAVAILABLE') {
-        return 'An execution graph is not available for this Profile.';
-    }
-    return 'The execution graph could not be generated.';
-}
-
-function dagStateFromJob(snapshot: ProfileAnalysisSnapshot, job: AnalysisJobSnapshot): Pick<
-    ProfileAnalysisSnapshot,
-    'dagState' | 'dagError'
-> {
-    if (snapshot.dag) return { dagState: 'ready', dagError: null };
-    // A client-side schema or rendering failure is terminal for this DAG. The
-    // backend continues to report READY on later job polls, but that must not
-    // turn the terminal error back into an endless local loading state.
-    if (snapshot.dagState === 'failed' || snapshot.dagState === 'unavailable') {
-        return { dagState: snapshot.dagState, dagError: snapshot.dagError };
-    }
-    if (job.dagStatus === 'PENDING') return { dagState: 'pending', dagError: null };
-    if (job.dagStatus === 'PARSING') return { dagState: 'parsing', dagError: null };
-    if (job.dagStatus === 'READY') return { dagState: 'loading', dagError: null };
-    if (job.dagStatus === 'UNAVAILABLE') {
-        return { dagState: 'unavailable', dagError: dagErrorMessage('UNAVAILABLE', job.dagError) };
-    }
-    return { dagState: 'failed', dagError: dagErrorMessage('FAILED', job.dagError) };
-}
 
 export function profileAnalysisReducer(
     snapshot: ProfileAnalysisSnapshot,
@@ -126,9 +80,6 @@ export function profileAnalysisReducer(
                 jobsAhead: null,
                 result: null,
                 error: null,
-                dagState: 'idle',
-                dag: null,
-                dagError: null,
             };
         case 'recovering':
             return {
@@ -140,7 +91,7 @@ export function profileAnalysisReducer(
         case 'storage_unavailable':
             return { ...snapshot, recoveryWarning: STORAGE_UNAVAILABLE_WARNING };
         case 'select':
-            if (isSnapshotBusy(snapshot)) {
+            if (isBusy(snapshot.state)) {
                 return snapshot;
             }
             return {
@@ -149,15 +100,12 @@ export function profileAnalysisReducer(
                 language: snapshot.language,
                 result: null,
                 error: null,
-                dagState: 'idle',
-                dag: null,
-                dagError: null,
                 jobId: null,
                 jobsAhead: null,
                 recoveryWarning: snapshot.recoveryWarning,
             };
         case 'set_language':
-            if (isSnapshotBusy(snapshot)) {
+            if (isBusy(snapshot.state)) {
                 return snapshot;
             }
             return {
@@ -168,12 +116,9 @@ export function profileAnalysisReducer(
                 jobsAhead: null,
                 result: null,
                 error: null,
-                dagState: 'idle',
-                dag: null,
-                dagError: null,
             };
         case 'start':
-            if (!snapshot.file || isSnapshotBusy(snapshot)) {
+            if (!snapshot.file || isBusy(snapshot.state)) {
                 return snapshot;
             }
             return {
@@ -183,9 +128,6 @@ export function profileAnalysisReducer(
                 jobsAhead: null,
                 result: null,
                 error: null,
-                dagState: 'pending',
-                dag: null,
-                dagError: null,
             };
         case 'job_created':
             return {
@@ -195,16 +137,11 @@ export function profileAnalysisReducer(
                 state: action.status === 'QUEUED' ? 'queued' : 'analyzing',
                 jobId: action.jobId,
                 jobsAhead: null,
-                dagState: 'pending',
-                dag: null,
-                dagError: null,
             };
         case 'job_status': {
-            const dagSnapshot = dagStateFromJob(snapshot, action.job);
             if (action.job.status === 'QUEUED') {
                 return {
                     ...snapshot,
-                    ...dagSnapshot,
                     state: 'queued',
                     jobId: action.job.jobId,
                     jobsAhead: action.job.jobsAhead,
@@ -213,7 +150,6 @@ export function profileAnalysisReducer(
             if (action.job.status === 'RUNNING') {
                 return {
                     ...snapshot,
-                    ...dagSnapshot,
                     state: 'analyzing',
                     jobId: action.job.jobId,
                     jobsAhead: null,
@@ -222,7 +158,6 @@ export function profileAnalysisReducer(
             if (action.job.status === 'COMPLETED') {
                 return {
                     ...snapshot,
-                    ...dagSnapshot,
                     state: 'completed',
                     jobId: action.job.jobId,
                     jobsAhead: null,
@@ -232,7 +167,6 @@ export function profileAnalysisReducer(
             }
             return {
                 ...snapshot,
-                ...dagSnapshot,
                 state: 'failed',
                 jobId: action.job.jobId,
                 jobsAhead: null,
@@ -240,20 +174,6 @@ export function profileAnalysisReducer(
                 error: action.job.error.message,
             };
         }
-        case 'dag_status':
-            return snapshot.dag
-                ? snapshot
-                : { ...snapshot, dagState: action.status === 'PENDING' ? 'pending' : 'parsing', dagError: null };
-        case 'dag_loading':
-            return snapshot.dag
-                ? snapshot
-                : { ...snapshot, dagState: 'loading', dagError: action.error ?? null };
-        case 'dag_loaded':
-            return { ...snapshot, dagState: 'ready', dag: action.dag, dagError: null };
-        case 'dag_failed':
-            return snapshot.dag
-                ? snapshot
-                : { ...snapshot, dagState: action.state, dag: null, dagError: action.error };
         case 'complete':
             return {
                 ...snapshot,
@@ -269,12 +189,6 @@ export function profileAnalysisReducer(
                 result: null,
                 error: action.error,
                 jobsAhead: null,
-                dagState: snapshot.dag ? 'ready' : snapshot.jobId ? 'failed' : 'idle',
-                dagError: snapshot.dag
-                    ? null
-                    : snapshot.jobId
-                      ? 'The execution graph can no longer be recovered.'
-                      : null,
             };
     }
 }
@@ -287,14 +201,6 @@ function isBusy(state: AnalysisState): boolean {
         state === 'queued' ||
         state === 'analyzing'
     );
-}
-
-function isDagBusy(state: DagUiState): boolean {
-    return state === 'pending' || state === 'parsing' || state === 'loading';
-}
-
-function isSnapshotBusy(snapshot: ProfileAnalysisSnapshot): boolean {
-    return isBusy(snapshot.state) || isDagBusy(snapshot.dagState);
 }
 
 function wait(milliseconds: number, signal: AbortSignal): Promise<void> {
@@ -345,83 +251,22 @@ export function useProfileAnalysis(apiBaseUrl: string) {
 
     const pollJob = useCallback(
         async (jobId: string, pollIntervalMs: number, controller: AbortController): Promise<void> => {
-            let codexSettled = false;
-            let dagSettled = false;
-            let dagFailureCount = 0;
+            let settled = false;
             await pollAnalysisJobWithRecovery({
                 get: () => getAnalysisJob(apiBaseUrl, jobId, controller.signal),
                 wait: milliseconds => wait(milliseconds, controller.signal),
                 onRecovering: () => {
                     if (mountedRef.current && abortControllerRef.current === controller) {
-                        if (codexSettled) {
-                            dispatch({
-                                type: 'dag_loading',
-                                error: 'Connection interrupted. Retrying the execution graph…',
-                            });
-                        } else {
-                            dispatch({ type: 'recovering' });
-                        }
+                        dispatch({ type: 'recovering' });
                     }
                 },
                 onProgress: () => {},
-                onSnapshot: async job => {
+                onSnapshot: job => {
                     if (!mountedRef.current || abortControllerRef.current !== controller) return;
-                    codexSettled = job.status === 'COMPLETED' || job.status === 'FAILED';
+                    settled = job.status === 'COMPLETED' || job.status === 'FAILED';
                     dispatch({ type: 'job_status', job });
-
-                    if (job.dagStatus === 'UNAVAILABLE' || job.dagStatus === 'FAILED') {
-                        dagSettled = true;
-                        return;
-                    }
-                    if (job.dagStatus !== 'READY' || dagSettled) return;
-
-                    dispatch({ type: 'dag_loading' });
-                    try {
-                        const dagResult = await getProfileDag(apiBaseUrl, jobId, controller.signal);
-                        dagFailureCount = 0;
-                        if (!mountedRef.current || abortControllerRef.current !== controller) return;
-                        if (dagResult.dagStatus === 'READY') {
-                            dagSettled = true;
-                            dispatch({ type: 'dag_loaded', dag: dagResult.dag });
-                        } else {
-                            dispatch({ type: 'dag_status', status: dagResult.dagStatus });
-                        }
-                    } catch (reason) {
-                        if (isAbortError(reason)) throw reason;
-                        if (reason instanceof ProfileAnalysisApiError && reason.status === 404) {
-                            throw reason;
-                        }
-                        if (reason instanceof ProfileAnalysisApiError && reason.status === 409) {
-                            dagSettled = true;
-                            dispatch({
-                                type: 'dag_failed',
-                                state: 'unavailable',
-                                error: dagErrorMessage('UNAVAILABLE', reason.code),
-                            });
-                            return;
-                        }
-                        if (
-                            reason instanceof ProfileAnalysisApiError &&
-                            reason.code !== 'INVALID_SERVER_RESPONSE' &&
-                            isRetryableTransportFailure(reason)
-                        ) {
-                            dagFailureCount += 1;
-                            dispatch({
-                                type: 'dag_loading',
-                                error: 'Connection interrupted. Retrying the execution graph…',
-                            });
-                            await wait(retryDelayMs(dagFailureCount, pollIntervalMs), controller.signal);
-                            return;
-                        }
-                        dagSettled = true;
-                        dispatch({
-                            type: 'dag_failed',
-                            state: 'failed',
-                            error: 'The execution graph could not be loaded.',
-                        });
-                    }
                 },
-                isComplete: () => codexSettled && dagSettled,
+                isComplete: () => settled,
                 pollIntervalMs,
             });
         },
@@ -612,7 +457,7 @@ export function useProfileAnalysis(apiBaseUrl: string) {
 
     return {
         ...snapshot,
-        isBusy: isSnapshotBusy(snapshot),
+        isBusy: isBusy(snapshot.state),
         selectFile,
         setLanguage,
         analyze,

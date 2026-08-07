@@ -24,13 +24,7 @@ export type AnalysisState =
 
 export type AnalysisJobStatus = 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED';
 
-export type DagStatus = 'PENDING' | 'PARSING' | 'READY' | 'UNAVAILABLE' | 'FAILED';
-export type DagUiState = 'idle' | 'pending' | 'parsing' | 'loading' | 'ready' | 'unavailable' | 'failed';
-
-export interface DagJobState {
-    dagStatus: DagStatus;
-    dagError: string | null;
-}
+export type DagUiState = 'idle' | 'parsing' | 'ready' | 'unavailable' | 'failed';
 
 export interface CreateAnalysisJobResponse {
     jobId: string;
@@ -41,16 +35,13 @@ export interface CreateAnalysisJobResponse {
 export interface RecoveredAnalysisJobResponse {
     jobId: string;
     status: AnalysisJobStatus;
-    dagStatus?: DagStatus;
-    dagError?: string | null;
 }
 
-export type AnalysisJobSnapshot = DagJobState & (
+export type AnalysisJobSnapshot =
     | { jobId: string; status: 'QUEUED'; jobsAhead: number }
     | { jobId: string; status: 'RUNNING' }
     | { jobId: string; status: 'COMPLETED'; result: AgentMessage }
-    | { jobId: string; status: 'FAILED'; error: ApiErrorBody }
-);
+    | { jobId: string; status: 'FAILED'; error: ApiErrorBody };
 
 export type DagOperatorRole =
     | 'SOURCE'
@@ -174,10 +165,10 @@ export interface ProfileDagSummary {
     maxWaitTimeNs?: number | null;
 }
 
-export interface ProfileDag {
+export interface ProfileGraphIR {
     schemaVersion: '1.0';
     parserVersion?: string;
-    jobId: string;
+    jobId?: string;
     profile: Record<string, unknown>;
     graph: {
         direction: 'BOTTOM_TO_TOP';
@@ -191,8 +182,5 @@ export interface ProfileDag {
     summary: ProfileDagSummary;
 }
 
-export type ProfileDagResponse = ProfileDag;
-
-export type ProfileDagFetchResult =
-    | { dagStatus: 'READY'; dag: ProfileDagResponse }
-    | { dagStatus: 'PENDING' | 'PARSING'; jobId: string; retryAfterMs: number };
+export type ProfileDag = ProfileGraphIR;
+export type ProfileDagResponse = ProfileGraphIR;

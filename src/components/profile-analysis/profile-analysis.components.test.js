@@ -58,10 +58,12 @@ test('explains the raw file limit and large-profile reduction in English', () =>
         React.createElement(ProfileUploader, {
             file: null,
             language: 'en',
-            disabled: false,
+            aiDisabled: false,
+            dagBusy: false,
             hcaptchaSiteKey,
             onFileChange() {},
             onLanguageChange() {},
+            onBuildGraph() {},
             onAnalyze() {},
         }),
     );
@@ -70,44 +72,52 @@ test('explains the raw file limit and large-profile reduction in English', () =>
     assert.match(markup, /Files over 10 MiB are reduced to their aggregated Profile sections/);
 });
 
-test('disables Analyze until a file exists and while analysis is running', () => {
+test('disables both actions without a file and keeps local graph available during AI processing', () => {
     const withoutFile = renderToStaticMarkup(
         React.createElement(ProfileUploader, {
             file: null,
             language: 'en',
-            disabled: false,
+            aiDisabled: false,
+            dagBusy: false,
             hcaptchaSiteKey,
             onFileChange() {},
             onLanguageChange() {},
+            onBuildGraph() {},
             onAnalyze() {},
         }),
     );
-    assert.match(withoutFile, /<button[^>]*disabled=""[^>]*>Analyze Profile<\/button>/);
+    assert.match(withoutFile, /<button[^>]*disabled=""[^>]*>View execution graph<\/button>/);
+    assert.match(withoutFile, /<button[^>]*disabled=""[^>]*>Analyze with AI<\/button>/);
 
     const analyzing = renderToStaticMarkup(
         React.createElement(ProfileUploader, {
             file: new File(['profile'], 'query.txt'),
             language: 'zh-CN',
-            disabled: true,
+            aiDisabled: true,
+            dagBusy: false,
             hcaptchaSiteKey,
             onFileChange() {},
             onLanguageChange() {},
+            onBuildGraph() {},
             onAnalyze() {},
         }),
     );
     assert.match(analyzing, /<input[^>]*disabled=""/);
     assert.match(analyzing, /<button[^>]*disabled=""[^>]*>Processing…<\/button>/);
+    assert.doesNotMatch(analyzing, /<button[^>]*disabled=""[^>]*>View execution graph<\/button>/);
 });
 
-test('places an unchecked privacy consent after Analyze and displays provider, prohibited-content, and deletion notices', () => {
+test('keeps local file selection independent from unchecked AI consent and displays the required notice', () => {
     const markup = renderToStaticMarkup(
         React.createElement(ProfileUploader, {
             file: null,
             language: 'en',
-            disabled: false,
+            aiDisabled: false,
+            dagBusy: false,
             hcaptchaSiteKey,
             onFileChange() {},
             onLanguageChange() {},
+            onBuildGraph() {},
             onAnalyze() {},
         }),
     );
@@ -118,10 +128,17 @@ test('places an unchecked privacy consent after Analyze and displays provider, p
     assert.match(markup, /not an official Apache Doris project feature/);
     assert.match(markup, /Do not upload passwords, keys, access tokens, personal information/);
     assert.match(markup, /automatically and permanently deleted within one hour/);
-    assert.ok(markup.indexOf('Analyze Profile') < markup.indexOf('Privacy and AI processing notice'));
+    assert.ok(markup.indexOf('Privacy and AI processing notice') < markup.indexOf('Analyze with AI'));
     assert.match(markup, /role="note"/);
     assert.match(markup, /profile-analysis__privacy-notice-icon" aria-hidden="true">!</);
-    assert.match(markup, /type="file"[^>]*disabled=""/);
+    assert.doesNotMatch(markup, /type="file"[^>]*disabled=""/);
+    assert.match(markup, /Parsed locally in your browser\. The file is not uploaded for this action\./);
+    assert.match(markup, /profile-analysis__action-card--local/);
+    assert.match(markup, /button button--primary profile-analysis__action-button[^>]*>View execution graph/);
+
+    const styles = fs.readFileSync(path.join(__dirname, 'ProfileAnalysis.scss'), 'utf8');
+    assert.match(styles, /&__actions\s*{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/s);
+    assert.match(styles, /&--local\s*{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) minmax\(220px, auto\)/s);
 });
 
 test('uses an English accessible label instead of exposing localized native file-input text', () => {
@@ -129,10 +146,12 @@ test('uses an English accessible label instead of exposing localized native file
         React.createElement(ProfileUploader, {
             file: null,
             language: 'en',
-            disabled: false,
+            aiDisabled: false,
+            dagBusy: false,
             hcaptchaSiteKey,
             onFileChange() {},
             onLanguageChange() {},
+            onBuildGraph() {},
             onAnalyze() {},
         }),
     );
@@ -148,10 +167,12 @@ test('renders an English response-language selector with English selected by def
         React.createElement(ProfileUploader, {
             file: null,
             language: 'en',
-            disabled: false,
+            aiDisabled: false,
+            dagBusy: false,
             hcaptchaSiteKey,
             onFileChange() {},
             onLanguageChange() {},
+            onBuildGraph() {},
             onAnalyze() {},
         }),
     );

@@ -1,10 +1,12 @@
-import React, { JSX, useEffect, useId, useState } from 'react';
+import React, { JSX, useCallback, useId, useState } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { AnalysisResult } from './AnalysisResult';
 import { AnalysisStatus } from './AnalysisStatus';
 import { ProfileUploader } from './ProfileUploader';
 import { ProfileDag } from './ProfileDag';
 import { useProfileAnalysis } from './use-profile-analysis';
+import { useLocalProfileDag } from './use-local-profile-dag';
+import type { ProfileParserWorker } from './profile-analysis.parser-client';
 import './ProfileAnalysis.scss';
 
 export function ProfileAnalyzer(): JSX.Element {
@@ -15,9 +17,18 @@ export function ProfileAnalyzer(): JSX.Element {
     const hcaptchaSiteKey =
         typeof configuredHCaptchaSiteKey === 'string' ? configuredHCaptchaSiteKey : '';
     const analysis = useProfileAnalysis(apiBaseUrl);
-    const [activeResultTab, setActiveResultTab] = useState<'graph' | 'analysis'>('graph');
+    const createParserWorker = useCallback(
+        () =>
+            new Worker(new URL('./profile-analysis.parser.worker.ts', import.meta.url), {
+                type: 'module',
+                name: 'doris-profile-parser',
+            }) as ProfileParserWorker,
+        [],
+    );
+    const localDag = useLocalProfileDag(createParserWorker);
+    const [activeResultTab, setActiveResultTab] = useState<'graph' | 'analysis'>('analysis');
     const tabIdPrefix = useId();
-    const isBusy = analysis.isBusy;
+    const isAiBusy = analysis.isBusy;
     const busyState =
         analysis.state === 'restoring' ||
         analysis.state === 'recovering' ||
@@ -26,11 +37,32 @@ export function ProfileAnalyzer(): JSX.Element {
         analysis.state === 'analyzing'
             ? analysis.state
             : null;
-    const hasJob = analysis.jobId !== null;
+    const hasAiActivity =
+        analysis.jobId !== null || busyState !== null || analysis.result !== null || analysis.error !== null;
+    const hasDagActivity = localDag.state !== 'idle';
+    const hasWorkspace = hasAiActivity || hasDagActivity;
 
-    useEffect(() => {
+    const handleFileChange = useCallback(
+        (file: File | null) => {
+            localDag.reset();
+            analysis.selectFile(file);
+        },
+        [analysis.selectFile, localDag.reset],
+    );
+
+    const handleBuildGraph = useCallback(() => {
+        if (!analysis.file) return;
         setActiveResultTab('graph');
-    }, [analysis.jobId]);
+        void localDag.buildGraph(analysis.file);
+    }, [analysis.file, localDag.buildGraph]);
+
+    const handleAnalyze = useCallback(
+        (hcaptchaToken: string, resetCaptcha: () => void) => {
+            setActiveResultTab('analysis');
+            void analysis.analyze(hcaptchaToken, resetCaptcha);
+        },
+        [analysis.analyze],
+    );
 
     const handleTabKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
         if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
@@ -55,34 +87,30 @@ export function ProfileAnalyzer(): JSX.Element {
                 <p className="profile-analysis__eyebrow">Query diagnostics</p>
                 <h1>Apache Doris Profile Analysis</h1>
                 <p>
-                    Upload one Query Profile to receive an independent AI-assisted diagnosis. Each upload starts a
-                    new analysis and does not create a conversation history.
+                    Choose one Query Profile to visualize its execution graph locally or request an independent
+                    AI-assisted diagnosis. Each AI upload starts a new analysis and does not create a conversation
+                    history.
                 </p>
             </header>
 
             <ProfileUploader
                 file={analysis.file}
                 language={analysis.language}
-                disabled={isBusy}
+                aiDisabled={isAiBusy}
+                dagBusy={localDag.isBusy}
                 hcaptchaSiteKey={hcaptchaSiteKey}
-                onFileChange={analysis.selectFile}
+                onFileChange={handleFileChange}
                 onLanguageChange={analysis.setLanguage}
-                onAnalyze={analysis.analyze}
+                onBuildGraph={handleBuildGraph}
+                onAnalyze={handleAnalyze}
             />
 
-            {!hasJob && busyState && <AnalysisStatus state={busyState} jobsAhead={analysis.jobsAhead} />}
             {analysis.recoveryWarning && (
                 <div className="profile-analysis__warning" role="status">
                     {analysis.recoveryWarning}
                 </div>
             )}
-            {!hasJob && analysis.error && (
-                <div className="profile-analysis__error" role="alert">
-                    <strong>Analysis failed.</strong>
-                    <span>{analysis.error}</span>
-                </div>
-            )}
-            {hasJob && (
+            {hasWorkspace && (
                 <section className="profile-analysis__workspace" aria-labelledby={`${tabIdPrefix}-workspace-title`}>
                     <h2 id={`${tabIdPrefix}-workspace-title`} className="profile-analysis__workspace-title">
                         Analysis workspace
@@ -120,7 +148,7 @@ export function ProfileAnalyzer(): JSX.Element {
                         hidden={activeResultTab !== 'graph'}
                         className="profile-analysis__tab-panel"
                     >
-                        <ProfileDag state={analysis.dagState} dag={analysis.dag} error={analysis.dagError} />
+                        <ProfileDag state={localDag.state} dag={localDag.dag} error={localDag.error} />
                     </div>
                     <div
                         id={`${tabIdPrefix}-analysis-panel`}

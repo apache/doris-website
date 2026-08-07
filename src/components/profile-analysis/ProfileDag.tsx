@@ -38,10 +38,8 @@ const edgeTypes = {
 };
 
 const stateMessages: Partial<Record<DagUiState, string>> = {
-    idle: 'The execution graph will appear after an analysis starts.',
-    pending: 'Waiting to parse the execution graph…',
+    idle: 'Choose a Profile and select View execution graph.',
     parsing: 'Parsing the execution graph…',
-    loading: 'Laying out the execution graph…',
     unavailable: 'An execution graph is not available for this Profile.',
     failed: 'The execution graph could not be generated.',
 };
