@@ -39,15 +39,15 @@ Before you start configuration, make sure the following environment is ready:
 | Metabase | Download and install Metabase `0.59.6.3` or later. For installation instructions, see the [Metabase installation documentation](https://www.metabase.com/docs/latest/installation-and-operation/installing-metabase) |
 | Java | Java 21 is required to run Metabase |
 | Apache Doris | Prepare an accessible Apache Doris cluster |
-| Doris driver | Download the [Metabase Doris Driver](https://github.com/xylaaaaa/metabase-doris-driver/releases/tag/v1.0.0) |
+| Doris driver | Download the [Metabase Doris Driver](https://github.com/velodb/metabase-doris-driver/releases/tag/v1.0.0) |
 
 ### Download and verify the driver
 
 Download the Release JAR and its checksum file:
 
 ```bash
-curl -LO https://github.com/xylaaaaa/metabase-doris-driver/releases/download/v1.0.0/doris.metabase-driver-v1.0.0.jar
-curl -LO https://github.com/xylaaaaa/metabase-doris-driver/releases/download/v1.0.0/doris.metabase-driver-v1.0.0.jar.sha256
+curl -LO https://github.com/velodb/metabase-doris-driver/releases/download/v1.0.0/doris.metabase-driver-v1.0.0.jar
+curl -LO https://github.com/velodb/metabase-doris-driver/releases/download/v1.0.0/doris.metabase-driver-v1.0.0.jar.sha256
 sha256sum -c doris.metabase-driver-v1.0.0.jar.sha256
 ```
 

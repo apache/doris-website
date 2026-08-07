@@ -39,15 +39,15 @@ Metabase 是一个开源商业智能工具，提供数据分析、数据可视�
 | Metabase | 下载并安装 Metabase `0.59.6.3` 及以上版本。安装方法请参见 [Metabase 安装文档](https://www.metabase.com/docs/latest/installation-and-operation/installing-metabase) |
 | Java | 运行 Metabase 需要 Java 21 |
 | Apache Doris | 准备可访问的 Apache Doris 集群 |
-| Doris 驱动程序 | 下载 [Metabase Doris Driver](https://github.com/xylaaaaa/metabase-doris-driver/releases/tag/v1.0.0) |
+| Doris 驱动程序 | 下载 [Metabase Doris Driver](https://github.com/velodb/metabase-doris-driver/releases/tag/v1.0.0) |
 
 ### 下载并校验驱动程序
 
 下载 Release JAR 及其校验文件：
 
 ```bash
-curl -LO https://github.com/xylaaaaa/metabase-doris-driver/releases/download/v1.0.0/doris.metabase-driver-v1.0.0.jar
-curl -LO https://github.com/xylaaaaa/metabase-doris-driver/releases/download/v1.0.0/doris.metabase-driver-v1.0.0.jar.sha256
+curl -LO https://github.com/velodb/metabase-doris-driver/releases/download/v1.0.0/doris.metabase-driver-v1.0.0.jar
+curl -LO https://github.com/velodb/metabase-doris-driver/releases/download/v1.0.0/doris.metabase-driver-v1.0.0.jar.sha256
 sha256sum -c doris.metabase-driver-v1.0.0.jar.sha256
 ```
 
