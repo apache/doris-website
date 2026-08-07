@@ -25,6 +25,7 @@ const {
     formatDurationNs,
     isDependencyEdge,
     layoutProfileDag,
+    selectSlowestOperators,
     OPERATOR_NODE_HEIGHT,
     OPERATOR_NODE_WIDTH,
 } = dagModule.exports;
@@ -130,6 +131,65 @@ function fixture() {
         },
     };
 }
+
+function timedFixture(entries) {
+    const dag = fixture();
+    const template = dag.graph.nodes[0];
+    dag.graph.nodes = entries.map(([id, maxNs, overrides = {}]) => {
+        const segments = id.split('/');
+        return {
+            ...template,
+            id,
+            fragmentId: segments[0],
+            pipelineId: segments.slice(0, 2).join('/'),
+            timing: maxNs === null ? {} : { execTime: { maxNs } },
+            ...overrides,
+        };
+    });
+    return dag;
+}
+
+test('ranks the slowest operators by exec max and keeps at most five entries', () => {
+    const hotspots = selectSlowestOperators(
+        timedFixture([
+            ['fragment:0/pipeline:0/operator:0', 5_000_000],
+            ['fragment:1/pipeline:2/operator:0', 900_000_000, { label: 'HASH JOIN', planNodeId: 10 }],
+            ['fragment:2/pipeline:0/operator:0', 300_000_000],
+            ['fragment:3/pipeline:1/operator:0', 80_000_000],
+            ['fragment:4/pipeline:0/operator:0', 40_000_000],
+            ['fragment:5/pipeline:0/operator:0', 20_000_000],
+        ]),
+    );
+
+    assert.deepEqual(
+        hotspots.map(hotspot => hotspot.execMaxNs),
+        [900_000_000, 300_000_000, 80_000_000, 40_000_000, 20_000_000],
+    );
+    assert.equal(hotspots[0].id, 'fragment:1/pipeline:2/operator:0');
+    assert.equal(hotspots[0].label, 'HASH JOIN');
+    assert.equal(hotspots[0].location, 'Fragment 1 · Pipeline 2');
+    assert.equal(hotspots[0].planNodeId, 10);
+    assert.equal(formatDurationNs(hotspots[0].execMaxNs), '900 ms');
+});
+
+test('lists only operators the Profile timed and orders ties predictably', () => {
+    const hotspots = selectSlowestOperators(
+        timedFixture([
+            ['fragment:1/pipeline:0/operator:0', null],
+            ['fragment:0/pipeline:0/operator:0', 0],
+            ['fragment:2/pipeline:0/operator:0', 12_000, { planNodeId: null }],
+            ['fragment:3/pipeline:0/operator:0', 12_000],
+        ]),
+    );
+
+    assert.deepEqual(
+        hotspots.map(hotspot => hotspot.id),
+        ['fragment:2/pipeline:0/operator:0', 'fragment:3/pipeline:0/operator:0'],
+    );
+    assert.equal(hotspots[0].planNodeId, null);
+    assert.deepEqual(selectSlowestOperators(timedFixture([['fragment:0/pipeline:0/operator:0', null]])), []);
+    assert.equal(selectSlowestOperators(timedFixture([['fragment:0/pipeline:0/operator:0', 5]]), 0).length, 0);
+});
 
 test('builds one ELK compound parent per Fragment and keeps all cross-Fragment edges', () => {
     const graph = buildElkGraph(fixture());

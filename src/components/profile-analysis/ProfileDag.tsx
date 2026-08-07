@@ -1,9 +1,10 @@
-import React, { JSX, useEffect, useMemo, useRef, useState } from 'react';
+import React, { JSX, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import {
     Background,
     Controls,
     MiniMap,
+    Panel,
     ReactFlow,
     ReactFlowProvider,
     useReactFlow,
@@ -16,7 +17,11 @@ import {
     formatCount,
     formatDurationNs,
     layoutProfileDag,
+    selectSlowestOperators,
+    OPERATOR_NODE_HEIGHT,
+    OPERATOR_NODE_WIDTH,
     type ProfileFlowNode,
+    type ProfileHotspot,
 } from './profile-analysis.dag';
 import { ProfileDagFragmentNode, ProfileDagNode } from './ProfileDagNode';
 import { ProfileDagEdge } from './ProfileDagEdge';
@@ -36,6 +41,9 @@ const nodeTypes = {
 const edgeTypes = {
     profileElk: ProfileDagEdge,
 };
+
+/** Zoom applied when a hotspot entry centers its operator on the canvas. */
+const FOCUS_ZOOM = 1;
 
 const stateMessages: Partial<Record<DagUiState, string>> = {
     idle: 'Choose a Profile and select Visualize Execution.',
@@ -139,6 +147,64 @@ function NodeDetails({ node, onClose }: { node: ProfileDagNodeData; onClose: () 
     );
 }
 
+function HotspotList({
+    hotspots,
+    onFocus,
+}: {
+    hotspots: ProfileHotspot[];
+    onFocus: (nodeId: string) => void;
+}): JSX.Element {
+    const [expanded, setExpanded] = useState(true);
+    const titleId = useId();
+
+    return (
+        <Panel position="top-left" className="profile-dag-hotspots" role="region" aria-labelledby={titleId}>
+            <div className="profile-dag-hotspots__header">
+                <div>
+                    <h4 id={titleId}>Slowest operators</h4>
+                    <p className="profile-dag-hotspots__hint">Ranked by exec max</p>
+                </div>
+                <button
+                    type="button"
+                    className="profile-dag-hotspots__toggle"
+                    aria-expanded={expanded}
+                    onClick={() => setExpanded(open => !open)}
+                >
+                    {expanded ? 'Hide' : 'Show'}
+                </button>
+            </div>
+            {expanded && (
+                <ol className="profile-dag-hotspots__list">
+                    {hotspots.map((hotspot, index) => (
+                        <li key={hotspot.id}>
+                            <button
+                                type="button"
+                                className="profile-dag-hotspots__item"
+                                title={hotspot.id}
+                                onClick={() => onFocus(hotspot.id)}
+                            >
+                                <span className="profile-dag-hotspots__rank" aria-hidden="true">
+                                    {index + 1}
+                                </span>
+                                <span className="profile-dag-hotspots__body">
+                                    <span className="profile-dag-hotspots__name">{hotspot.label}</span>
+                                    <span className="profile-dag-hotspots__meta">
+                                        {hotspot.planNodeId !== null && `id=${hotspot.planNodeId} · `}
+                                        {hotspot.location}
+                                    </span>
+                                </span>
+                                <span className="profile-dag-hotspots__time">
+                                    {formatDurationNs(hotspot.execMaxNs)}
+                                </span>
+                            </button>
+                        </li>
+                    ))}
+                </ol>
+            )}
+        </Panel>
+    );
+}
+
 function ProfileDagCanvas({ dag }: { dag: ProfileDagResponse }): JSX.Element {
     const [nodes, setNodes] = useState<ProfileFlowNode[]>([]);
     const [edges, setEdges] = useState<Awaited<ReturnType<typeof layoutProfileDag>>['edges']>([]);
@@ -146,7 +212,8 @@ function ProfileDagCanvas({ dag }: { dag: ProfileDagResponse }): JSX.Element {
     const [layoutError, setLayoutError] = useState<string | null>(null);
     const canvasRef = useRef<HTMLDivElement>(null);
     const hasFitVisibleCanvasRef = useRef(false);
-    const { fitView } = useReactFlow<ProfileFlowNode>();
+    const { fitView, getInternalNode, setCenter } = useReactFlow<ProfileFlowNode>();
+    const hotspots = useMemo(() => selectSlowestOperators(dag), [dag]);
 
     useEffect(() => {
         let cancelled = false;
@@ -187,13 +254,31 @@ function ProfileDagCanvas({ dag }: { dag: ProfileDagResponse }): JSX.Element {
         return () => observer.disconnect();
     }, [fitView, nodes.length]);
 
+    const highlightNode = useCallback((nodeId: string) => {
+        setNodes(current => current.map(node => ({ ...node, selected: node.id === nodeId })));
+    }, []);
+
+    const focusNode = useCallback(
+        (nodeId: string) => {
+            const internalNode = getInternalNode(nodeId);
+            if (!internalNode) return;
+            const { x, y } = internalNode.internals.positionAbsolute;
+            const width = internalNode.measured.width ?? OPERATOR_NODE_WIDTH;
+            const height = internalNode.measured.height ?? OPERATOR_NODE_HEIGHT;
+            highlightNode(nodeId);
+            void setCenter(x + width / 2, y + height / 2, { zoom: FOCUS_ZOOM, duration: 500 });
+        },
+        [getInternalNode, highlightNode, setCenter],
+    );
+
     const onNodeClick = useMemo<NodeMouseHandler<ProfileFlowNode>>(
         () => (_event, flowNode) => {
             if (flowNode.data.kind === 'operator') {
                 setSelectedNode(flowNode.data.node);
+                highlightNode(flowNode.id);
             }
         },
-        [],
+        [highlightNode],
     );
 
     if (layoutError) {
@@ -225,6 +310,7 @@ function ProfileDagCanvas({ dag }: { dag: ProfileDagResponse }): JSX.Element {
                     maxZoom={1.8}
                 >
                     <Background gap={24} size={1} />
+                    {hotspots.length > 0 && <HotspotList hotspots={hotspots} onFocus={focusNode} />}
                     <MiniMap pannable zoomable aria-label="Execution graph overview" />
                     <Controls showInteractive={false} />
                 </ReactFlow>

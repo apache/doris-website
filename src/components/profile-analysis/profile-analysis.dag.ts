@@ -166,6 +166,47 @@ function pipelineNumber(pipelineId: string): string {
     return match?.[1] ?? pipelineId;
 }
 
+export function fragmentLabel(fragmentId: string): string {
+    const match = /^fragment:(\d+)$/.exec(fragmentId);
+    return match ? `Fragment ${match[1]}` : fragmentId;
+}
+
+export const DEFAULT_HOTSPOT_LIMIT = 5;
+
+export interface ProfileHotspot {
+    /** Graph node id, used to focus the operator on the canvas. */
+    id: string;
+    label: string;
+    location: string;
+    planNodeId: number | null;
+    execMaxNs: number;
+}
+
+/**
+ * Ranks operators by maximum execution time, the same metric that drives the node
+ * heat colors and the summary bottleneck, so the list and the graph always agree.
+ */
+export function selectSlowestOperators(
+    dag: ProfileDagResponse,
+    limit: number = DEFAULT_HOTSPOT_LIMIT,
+): ProfileHotspot[] {
+    const ranked: ProfileHotspot[] = [];
+    for (const node of dag.graph.nodes) {
+        const execMaxNs = node.timing?.execTime?.maxNs;
+        if (typeof execMaxNs !== 'number' || !Number.isFinite(execMaxNs) || execMaxNs <= 0) continue;
+        ranked.push({
+            id: node.id,
+            label: node.label,
+            location: `${fragmentLabel(node.fragmentId)} · Pipeline ${pipelineNumber(node.pipelineId)}`,
+            planNodeId: node.planNodeId ?? null,
+            execMaxNs,
+        });
+    }
+    // Slowest first; the node id keeps ties in a stable order across renders.
+    ranked.sort((left, right) => right.execMaxNs - left.execMaxNs || left.id.localeCompare(right.id));
+    return ranked.slice(0, Math.max(0, limit));
+}
+
 export function buildElkGraph(dag: ProfileDagResponse): ElkGraph {
     const nodesByFragment = new Map<string, ProfileDagNode[]>();
     for (const node of dag.graph.nodes) {

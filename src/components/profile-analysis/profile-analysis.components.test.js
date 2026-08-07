@@ -240,3 +240,25 @@ test('adds English action tabs and configures the execution graph as read-only',
     assert.match(dagSource, /zoomOnScroll/);
     assert.doesNotMatch(`${analyzerSource}\n${dagSource}\n${dagNodeSource}`, /[\u3400-\u9fff]/);
 });
+
+test('overlays the slowest operators on the canvas and centers the one that is clicked', () => {
+    const dagSource = fs.readFileSync(path.join(__dirname, 'ProfileDag.tsx'), 'utf8');
+
+    assert.match(dagSource, /<Panel position="top-left" className="profile-dag-hotspots"/);
+    assert.match(dagSource, />Slowest operators</);
+    assert.match(dagSource, /hotspots\.length > 0 && <HotspotList hotspots=\{hotspots\} onFocus=\{focusNode\} \/>/);
+    assert.match(dagSource, /onClick=\{\(\) => onFocus\(hotspot\.id\)\}/);
+    // Each entry carries the node id, its name, its location, and the measured duration.
+    assert.match(dagSource, /title=\{hotspot\.id\}/);
+    assert.match(dagSource, /\{hotspot\.label\}/);
+    assert.match(dagSource, /id=\$\{hotspot\.planNodeId\}/);
+    assert.match(dagSource, /formatDurationNs\(hotspot\.execMaxNs\)/);
+    // Focusing centers the operator and highlights it instead of only scrolling near it.
+    assert.match(dagSource, /internalNode\.internals\.positionAbsolute/);
+    assert.match(dagSource, /setCenter\(x \+ width \/ 2, y \+ height \/ 2, \{ zoom: FOCUS_ZOOM, duration: 500 \}\)/);
+    assert.match(dagSource, /selected: node\.id === nodeId/);
+
+    const styles = fs.readFileSync(path.join(__dirname, 'ProfileDag.scss'), 'utf8');
+    assert.match(styles, /\.react-flow__node\.selected \.profile-dag-node\s*{[^}]*outline:\s*3px solid var\(--brand-primary\)/s);
+    assert.match(styles, /\.profile-dag-hotspots\s*{[^}]*max-width:\s*min\(310px, 48%\)/s);
+});

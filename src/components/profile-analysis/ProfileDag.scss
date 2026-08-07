@@ -132,6 +132,126 @@
         background: var(--brand-paper);
         fill: var(--ifm-font-color-base);
     }
+
+    .react-flow__node.selected .profile-dag-node {
+        outline: 3px solid var(--brand-primary);
+        outline-offset: 2px;
+    }
+}
+
+.profile-dag-hotspots {
+    max-width: min(310px, 48%);
+    padding: 0.55rem 0.65rem;
+    border: 1px solid var(--brand-border-soft);
+    border-radius: 10px;
+    color: var(--ifm-font-color-base);
+    background: var(--brand-paper);
+    box-shadow: 0 6px 18px rgb(var(--brand-shadow-rgb) / 14%);
+    font-size: 0.8rem;
+
+    &__header {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        h4 {
+            margin: 0;
+            font-size: 0.85rem;
+        }
+    }
+
+    &__hint {
+        margin: 0.1rem 0 0;
+        color: var(--ifm-color-emphasis-600);
+        font-size: 0.68rem;
+    }
+
+    &__toggle {
+        flex: 0 0 auto;
+        padding: 0 0.15rem;
+        border: 0;
+        color: var(--brand-primary);
+        background: transparent;
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.72rem;
+        font-weight: 700;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        margin: 0.45rem 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    &__item {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 0.5rem;
+        align-items: center;
+        width: 100%;
+        padding: 0.3rem 0.35rem;
+        border: 1px solid transparent;
+        border-radius: 7px;
+        color: inherit;
+        background: transparent;
+        cursor: pointer;
+        font: inherit;
+        text-align: left;
+
+        &:hover,
+        &:focus-visible {
+            border-color: var(--brand-primary);
+            background: var(--brand-surface-callout);
+        }
+    }
+
+    &__rank {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.15rem;
+        height: 1.15rem;
+        border-radius: 50%;
+        color: var(--ifm-color-emphasis-700);
+        background: var(--brand-surface-soft);
+        font-size: 0.65rem;
+        font-weight: 800;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    &__name,
+    &__meta {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__name {
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    &__meta {
+        color: var(--ifm-color-emphasis-600);
+        font-size: 0.66rem;
+    }
+
+    &__time {
+        flex: 0 0 auto;
+        font-size: 0.74rem;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+    }
 }
 
 .profile-dag-fragment {
@@ -334,6 +454,10 @@
         &__canvas {
             height: 520px;
         }
+    }
+
+    .profile-dag-hotspots {
+        max-width: min(220px, 62%);
     }
 
     .profile-dag-details {
