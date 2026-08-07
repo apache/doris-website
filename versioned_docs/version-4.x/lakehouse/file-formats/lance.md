@@ -2,97 +2,66 @@
 {
     "title": "Lance | File Formats",
     "language": "en",
-    "description": "This document introduces the support for reading Lance file formats in Doris.",
+    "description": "This document introduces Apache Doris support for reading the Lance file format.",
     "sidebar_label": "Lance"
 }
 ---
 
 # Lance
 
-:::tip
-Lance format support is an **experimental feature** available since Apache Doris **5.0.0**.
+:::note
+Lance support is available starting from Apache Doris 4.2.
 :::
 
-[Lance](https://docs.lancedb.com/lance) is a modern columnar data format designed for AI/ML workloads, with native support for vector search, multimodal data (images, embeddings), and fast random access.
-
-Doris supports reading Lance format files through Table Valued Functions (TVF).
+[Lance](https://docs.lancedb.com/lance) is a columnar data format designed for analytics and AI workloads. Doris can read Lance datasets through a Lance Catalog or through the `s3()` and `local()` table-valued functions (TVFs).
 
 ## Supported Features
 
 | Feature | Support |
-|---------|---------|
-| Reading data via Table Valued Function (`s3`, `local`) | Yes |
-| Automatic schema inference | Yes |
-| Column projection | Yes |
-| `WHERE` filter, `LIMIT`, `COUNT(*)`, aggregation | Yes |
-| Multi-fragment datasets | Yes |
-| Reading from Catalog | Not supported |
-| Writing data (Outfile/Export/INSERT INTO TVF) | Not supported |
-| Vector ANN search / Full-text search pushdown | Not supported |
-| Doris Data Cache integration | Not supported |
+|---|---|
+| Lance Catalog | Supports Filesystem Catalog and REST Catalog |
+| File TVFs | Supports `s3()` and `local()` |
+| Schema inference and column pruning | Supported |
+| Parallel Fragment scans | Supported by Catalog queries and S3 TVFs |
+| Predicate pushdown | Supports compatible scalar predicates |
+| Vector search | Supports Lance vector indexes and Flat Search through `vector_search()` |
+| Writing to Lance | Not supported |
+| Time Travel | Not supported |
+| Full-Text Search / Hybrid Search | Not supported |
 
-## Dataset Layout
+For Catalog configuration, type mapping, predicate pushdown, and vector search details, see [Lance Catalog](../catalogs/lance-catalog.mdx).
 
-A Lance dataset is a **directory** with the following typical structure:
+## Query a Lance Dataset with a File TVF
 
-```
-my_dataset.lance/
-├── _transactions/
-├── _versions/
-└── data/
-    ├── fragment-0.lance
-    ├── fragment-1.lance
-    └── ...
-```
+The `uri` or `file_path` must point directly to the **root directory of one Lance dataset**, rather than an internal file such as `data/*.lance`.
 
-When querying via TVF, the `uri` / `file_path` should match one or more `.lance` data files inside the `data/` subdirectory of the dataset. Each scan range reads exactly one fragment, and Doris automatically resolves the dataset root from the matched path. To read an entire multi-fragment dataset, use a glob such as `data/*.lance` so that every fragment file is assigned to its own scan range. In practice, real Lance datasets use UUID-named fragment files, so globbing is the natural way to reference them.
-
-## Usage Examples
-
-### Read from S3
+The following example reads a Lance dataset from S3-compatible object storage:
 
 ```sql
-SELECT * FROM s3(
-    "uri" = "s3://bucket/path/to/my_dataset.lance/data/*.lance",
-    "format" = "lance",
-    "s3.access_key" = "ak",
-    "s3.secret_key" = "sk",
+SELECT user_id, name
+FROM s3(
+    "uri" = "s3://my-bucket/lance/user_profiles.lance",
+    "s3.endpoint" = "http://127.0.0.1:9000",
+    "s3.access_key" = "admin",
+    "s3.secret_key" = "password",
     "s3.region" = "us-east-1",
-    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com"
-) ORDER BY id LIMIT 10;
-```
-
-### Read from Local Disk
-
-```sql
--- Get backend_id via: SHOW BACKENDS;
-SELECT * FROM local(
-    "file_path" = "data/my_dataset.lance/data/*.lance",
-    "backend_id" = "<backend_id>",
+    "use_path_style" = "true",
     "format" = "lance"
-) ORDER BY id LIMIT 10;
+)
+WHERE user_id > 100;
 ```
 
-### Aggregation over a Multi-Fragment Dataset
-
-```sql
-SELECT count(*), min(id), max(id) FROM s3(
-    "uri" = "s3://bucket/path/to/large.lance/data/*.lance",
-    "format" = "lance",
-    "s3.access_key" = "ak",
-    "s3.secret_key" = "sk",
-    "s3.region" = "us-east-1",
-    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com"
-);
-```
+To read a local dataset, use `local()` and specify the dataset root with `file_path` and the target BE with `backend_id`. Doris passes `file_path` directly to the Lance Reader and does not prepend `user_files_secure_path` or expand the path as a Glob. An absolute path is recommended.
 
 ## Limitations
 
-- **TVF only**: Only the `s3` and `local` TVFs are supported. `CREATE CATALOG` is not supported yet.
-- **No data cache**: Lance reads bypass Doris's `BlockFileCache`; S3 reads are not cached on the local disk.
-- **No predicate / vector pushdown**: `WHERE` filters, vector search, and full-text search are not pushed down to the Lance reader.
-- **Read-only**: Writing Lance files via `OUTFILE`, `EXPORT`, or `INSERT INTO` TVF is not supported.
+- Lance access is read-only. Creating, writing, updating, or deleting Lance tables is not supported.
+- Only `s3()` and `local()` support the Lance format. Other file TVFs, such as HDFS and HTTP, are not supported.
+- One TVF path can represent only one Lance dataset, and `path_partition_keys` is not supported.
+- Queries read the current dataset version. SQL cannot select a Version or perform Time Travel.
+- Local TVF Schema discovery and execution open the latest dataset version independently. Avoid modifying the dataset while a Local TVF query is being analyzed and executed.
 
 ## References
 
+- [Lance Catalog](../catalogs/lance-catalog.mdx)
 - [Lance Format Documentation](https://docs.lancedb.com/lance)
