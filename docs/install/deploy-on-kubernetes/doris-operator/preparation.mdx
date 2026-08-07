@@ -23,3 +23,25 @@ Before deploying Apache Doris with Doris Operator, check the Kubernetes service,
     link="on-aws"
 />
 </div>
+
+## Pod security requirements
+
+The official Doris FE and BE images currently run as the root user because their startup scripts update configuration files under `/opt/apache-doris` and may initialize system settings. Before deployment, make sure that the security policy applied to the Doris namespace allows containers to run as UID `0`.
+
+For example, you can explicitly configure the container security context in a `DorisCluster` resource:
+
+```yaml
+spec:
+  feSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+  beSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+```
+
+This configuration does not bypass Kubernetes admission policies. If the cluster enforces the `restricted` Pod Security Standard or a non-root policy through tools such as Kyverno or OPA Gatekeeper, ask the cluster administrator to create a namespace- or workload-scoped exception for Doris. Avoid relaxing the policy cluster-wide.
+
+When `enableWorkloadGroup: true` is configured for BE, Doris Operator runs the BE container in privileged mode to manage cgroups. Make sure that the security policy also permits privileged containers, or disable this feature.

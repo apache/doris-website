@@ -23,3 +23,25 @@ import GettingStartedCard from '@site/src/components/getting-started-card/gettin
     link="on-aws"
 />
 </div>
+
+## Pod 安全策略要求
+
+当前官方 Doris FE 和 BE 镜像以 root 用户运行，因为启动脚本需要更新 `/opt/apache-doris` 下的配置文件，并可能初始化系统参数。部署前，请确认 Doris 命名空间适用的安全策略允许容器以 UID `0` 运行。
+
+例如，可以在 `DorisCluster` 资源中显式配置容器安全上下文：
+
+```yaml
+spec:
+  feSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+  beSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+```
+
+此配置不能绕过 Kubernetes 准入策略。如果集群强制执行 `restricted` Pod Security Standard，或者通过 Kyverno、OPA Gatekeeper 等工具要求容器以非 root 用户运行，请联系集群管理员，为 Doris 配置命名空间级或工作负载级策略例外。请勿放宽整个集群的安全策略。
+
+当 BE 配置 `enableWorkloadGroup: true` 时，Doris Operator 会以特权模式运行 BE 容器以管理 cgroup。请确认安全策略同时允许特权容器，否则请关闭此功能。
