@@ -43,6 +43,10 @@ Metabase 是一个开源商业智能工具，提供数据分析、数据可视�
 
 ### 下载并校验驱动程序
 
+:::caution
+Metabase Doris Driver 由第三方提供和维护，不属于 Apache Doris 项目，也不由 Apache Doris 社区发布或背书。请在生产环境使用前自行评估该驱动程序，校验下载文件的摘要，并遵守第三方项目的许可协议。驱动程序相关问题请向其提供方反馈。
+:::
+
 下载 Release JAR 及其校验文件：
 
 ```bash

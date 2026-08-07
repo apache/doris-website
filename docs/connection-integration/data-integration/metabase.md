@@ -43,6 +43,10 @@ Before you start configuration, make sure the following environment is ready:
 
 ### Download and verify the driver
 
+:::caution
+The Metabase Doris Driver is provided and maintained by a third party. It is not part of the Apache Doris project and is not released or endorsed by the Apache Doris community. Evaluate the driver yourself before using it in production, verify the checksum of the file you download, and follow the license of the third-party project. Report driver issues to the project that provides it.
+:::
+
 Download the Release JAR and its checksum file:
 
 ```bash
