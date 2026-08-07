@@ -207,6 +207,182 @@
     @include type.mono-text(12px, 650, 1.2);
 }
 
+/* ---------------- Release plan timeline ---------------- */
+
+.community-roadmap__releases {
+    margin-top: 62px;
+    padding-top: 40px;
+    border-top: 1px solid color-mix(in srgb, var(--brand-cream-light) 14%, transparent);
+}
+
+.community-roadmap__section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 24px;
+}
+
+.community-roadmap__section-head h2 {
+    margin: 0;
+    color: var(--brand-cream-light);
+    font-family: var(--font-mono);
+    font-size: clamp(28px, 2.6vw, 38px);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 1.04;
+}
+
+.community-roadmap__section-note {
+    max-width: 58ch;
+    margin: 12px 0 0;
+    color: color-mix(in srgb, var(--brand-cream-light) 66%, transparent);
+    font-size: 15px;
+    line-height: 1.6;
+    text-wrap: pretty;
+}
+
+.community-roadmap__section-link {
+    flex: 0 0 auto;
+    padding-bottom: 4px;
+    color: var(--brand-cream-light);
+    font: 700 13px/1.4 var(--font-mono);
+    text-decoration-color: var(--brand-primary-glow);
+    text-underline-offset: 5px;
+    white-space: nowrap;
+
+    &:hover {
+        color: var(--brand-accent);
+    }
+
+    &:focus-visible {
+        outline: 3px solid var(--brand-accent);
+        outline-offset: 4px;
+    }
+}
+
+.community-roadmap__timeline {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.community-roadmap__release {
+    // Drives the marker and the two rail segments around it, so all three stay
+    // aligned with the version numeral when it resizes at other breakpoints.
+    --release-marker-size: 12px;
+    --release-marker-top: 30px;
+
+    position: relative;
+    display: grid;
+    padding: 22px 0 24px 34px;
+    column-gap: 26px;
+    grid-template-areas:
+        'version head'
+        'version body';
+    grid-template-columns: 96px minmax(0, 1fr);
+    row-gap: 10px;
+
+    & + & {
+        border-top: 1px solid color-mix(in srgb, var(--brand-cream-light) 10%, transparent);
+    }
+}
+
+.community-roadmap__release::before,
+.community-roadmap__release::after {
+    content: '';
+    position: absolute;
+    left: calc(var(--release-marker-size) / 2 - 0.5px);
+    width: 1px;
+    background: color-mix(in srgb, var(--brand-primary-glow) 45%, transparent);
+}
+
+.community-roadmap__release::before {
+    top: 0;
+    height: calc(var(--release-marker-top) - 6px);
+}
+
+.community-roadmap__release::after {
+    top: calc(var(--release-marker-top) + var(--release-marker-size) + 6px);
+    bottom: 0;
+}
+
+.community-roadmap__release:first-child::before,
+.community-roadmap__release:last-child::after {
+    content: none;
+}
+
+.community-roadmap__release-marker {
+    position: absolute;
+    top: var(--release-marker-top);
+    left: 0;
+    width: var(--release-marker-size);
+    height: var(--release-marker-size);
+    border-radius: 50%;
+}
+
+.community-roadmap__release--shipping .community-roadmap__release-marker {
+    background: var(--brand-primary-glow);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--brand-primary-glow) 14%, transparent);
+}
+
+.community-roadmap__release--planned .community-roadmap__release-marker {
+    border: 1.5px solid color-mix(in srgb, var(--brand-cream-light) 46%, transparent);
+}
+
+.community-roadmap__release-version {
+    align-self: start;
+    color: var(--brand-cream-light);
+    font-family: var(--font-mono);
+    font-size: clamp(30px, 2.4vw, 40px);
+    font-weight: 700;
+    grid-area: version;
+    letter-spacing: -0.05em;
+    line-height: 1;
+}
+
+.community-roadmap__release-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    grid-area: head;
+}
+
+.community-roadmap__release-status {
+    padding: 5px 10px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    @include type.mono-text(11px, 700, 1.1, 0.11em, uppercase);
+}
+
+.community-roadmap__release--shipping .community-roadmap__release-status {
+    border-color: color-mix(in srgb, var(--brand-primary-glow) 55%, transparent);
+    background: color-mix(in srgb, var(--brand-primary-glow) 18%, transparent);
+    color: var(--brand-primary-soft);
+}
+
+.community-roadmap__release--planned .community-roadmap__release-status {
+    border-color: color-mix(in srgb, var(--brand-cream-light) 26%, transparent);
+    color: color-mix(in srgb, var(--brand-cream-light) 74%, transparent);
+}
+
+.community-roadmap__release-timing {
+    color: color-mix(in srgb, var(--brand-cream-light) 78%, transparent);
+    white-space: nowrap;
+    @include type.mono-text(13px, 700, 1.2, 0.09em, uppercase);
+}
+
+.community-roadmap__release-description {
+    max-width: 62ch;
+    margin: 0;
+    color: color-mix(in srgb, var(--brand-cream-light) 68%, transparent);
+    font-size: 15px;
+    grid-area: body;
+    line-height: 1.6;
+    text-wrap: pretty;
+}
+
 .community-roadmap__footer-action {
     display: flex;
     justify-content: flex-end;
@@ -258,6 +434,11 @@
     .community-roadmap__card h3 {
         margin-top: 28px;
     }
+
+    .community-roadmap__release {
+        column-gap: 20px;
+        grid-template-columns: 78px minmax(0, 1fr);
+    }
 }
 
 @media (max-width: 620px) {
@@ -298,6 +479,39 @@
 
     .community-roadmap__card-description {
         max-width: 29ch;
+    }
+
+    .community-roadmap__releases {
+        margin-top: 44px;
+        padding-top: 32px;
+    }
+
+    .community-roadmap__section-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .community-roadmap__release {
+        --release-marker-top: 26px;
+
+        padding-left: 28px;
+        grid-template-areas:
+            'version'
+            'head'
+            'body';
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 9px;
+    }
+
+    .community-roadmap__release-version {
+        font-size: 28px;
+    }
+
+    .community-roadmap__release-head {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 10px 14px;
     }
 
     .community-roadmap__footer-action {

@@ -7,6 +7,7 @@ const ROADMAP_URL = 'https://github.com/apache/doris/issues/60036';
 const TRACKING_ISSUES_URL =
     'https://github.com/apache/doris/issues?q=state%3Aopen%20label%3A%22tracking%20issue%22';
 const GOOD_FIRST_ISSUE_URL = 'https://github.com/apache/doris/issues/17176';
+const ALL_RELEASES_PATH = '/releases/all-release';
 
 interface DevelopmentDestination {
     phase: string;
@@ -43,6 +44,46 @@ const DESTINATIONS: DevelopmentDestination[] = [
         meta: 'Issue #17176',
         href: GOOD_FIRST_ISSUE_URL,
         ariaLabel: 'View Apache Doris Good First Issue opportunities on GitHub (opens in a new tab)',
+    },
+];
+
+interface ReleasePlanEntry {
+    version: string;
+    /** `shipping` releases are maintained today; `planned` ones are still ahead. */
+    stage: 'shipping' | 'planned';
+    status: string;
+    timing: string;
+    description: string;
+}
+
+const RELEASE_PLAN: ReleasePlanEntry[] = [
+    {
+        version: '4.0',
+        stage: 'shipping',
+        status: 'Winding down',
+        timing: 'Aug 2026',
+        description: 'The maintenance window is closing with a final 4.0.x patch release.',
+    },
+    {
+        version: '4.1',
+        stage: 'shipping',
+        status: 'In maintenance',
+        timing: 'Monthly',
+        description: 'Under regular maintenance, with a 4.1.x patch release roughly every month.',
+    },
+    {
+        version: '4.2',
+        stage: 'planned',
+        status: 'Planned',
+        timing: 'Sep 2026',
+        description: 'A feature release focused on the multimodal lakehouse and stronger search capabilities.',
+    },
+    {
+        version: '5.0',
+        stage: 'planned',
+        status: 'Planned',
+        timing: 'Nov 2026',
+        description: 'A feature release focused on real-time incremental computation.',
     },
 ];
 
@@ -103,6 +144,38 @@ export default function CommunityRoadmap(): JSX.Element {
                                 </a>
                             ))}
                         </div>
+                    </section>
+
+                    <section className="community-roadmap__releases" aria-labelledby="community-roadmap-releases-title">
+                        <div className="community-roadmap__section-head">
+                            <div>
+                                <h2 id="community-roadmap-releases-title">Release plan</h2>
+                                <p className="community-roadmap__section-note">
+                                    What the community expects to ship over the coming months. Dates are current
+                                    expectations and may shift.
+                                </p>
+                            </div>
+                            <Link className="community-roadmap__section-link" to={ALL_RELEASES_PATH}>
+                                All release notes →
+                            </Link>
+                        </div>
+
+                        <ol className="community-roadmap__timeline">
+                            {RELEASE_PLAN.map(entry => (
+                                <li
+                                    className={`community-roadmap__release community-roadmap__release--${entry.stage}`}
+                                    key={entry.version}
+                                >
+                                    <span className="community-roadmap__release-marker" aria-hidden="true" />
+                                    <span className="community-roadmap__release-version">{entry.version}</span>
+                                    <div className="community-roadmap__release-head">
+                                        <span className="community-roadmap__release-status">{entry.status}</span>
+                                        <span className="community-roadmap__release-timing">{entry.timing}</span>
+                                    </div>
+                                    <p className="community-roadmap__release-description">{entry.description}</p>
+                                </li>
+                            ))}
+                        </ol>
                     </section>
 
                     <div className="community-roadmap__footer-action">
