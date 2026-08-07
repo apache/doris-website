@@ -48,11 +48,6 @@
         }
     }
 
-    &__workspace-title {
-        margin: 0 0 1rem;
-        font-size: 1.35rem;
-    }
-
     &__tabs {
         display: flex;
         gap: 0.25rem;
@@ -103,6 +98,7 @@
     &__tab-panel > &__status,
     &__tab-panel > &__error,
     &__tab-panel > &__result {
+        margin-top: 1.25rem;
         margin-bottom: 0;
     }
 
@@ -110,6 +106,15 @@
         padding: 0;
         border: 0;
         box-shadow: none;
+    }
+
+    &__panel-intro {
+        margin-bottom: 1rem;
+        color: var(--ifm-color-emphasis-700);
+    }
+
+    &__panel-intro + &__action-button {
+        margin-top: 0;
     }
 
     &__help {
@@ -287,65 +292,9 @@
         font-size: 0.9rem;
     }
 
-    &__actions {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 1rem;
-        margin-top: 1.25rem;
-    }
-
-    &__action-card {
+    &__panel {
         min-width: 0;
-        padding: 1rem;
-        border: 1px solid var(--brand-border-soft);
-        border-radius: 10px;
-        background: var(--brand-surface-soft);
-
-        h3 {
-            margin: 0 0 0.4rem;
-            font-size: 1.05rem;
-        }
-
-        > p {
-            margin-bottom: 1rem;
-            color: var(--ifm-color-emphasis-700);
-            font-size: 0.9rem;
-        }
-
-        &--local {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(220px, auto);
-            grid-template-rows: auto auto;
-            column-gap: 2rem;
-            align-items: center;
-            padding: 1.25rem;
-            border-left: 4px solid var(--brand-primary);
-            background: var(--brand-surface-callout);
-
-            h3 {
-                grid-column: 1;
-                grid-row: 1;
-            }
-
-            > p {
-                grid-column: 1;
-                grid-row: 2;
-                margin: 0;
-            }
-
-            .profile-analysis__action-button {
-                grid-column: 2;
-                grid-row: 1 / span 2;
-                min-width: 220px;
-                margin: 0;
-                padding: 0.8rem 1.25rem;
-                box-shadow: 0 6px 16px rgb(var(--brand-shadow-rgb) / 14%);
-            }
-        }
-
-        &--ai {
-            padding: 1.25rem;
-        }
+        margin-bottom: 1.25rem;
     }
 
     &__action-button {
@@ -505,24 +454,6 @@
             align-items: flex-start;
             flex-direction: column;
             gap: 0.5rem;
-        }
-
-        &__actions {
-            grid-template-columns: 1fr;
-        }
-
-        &__action-card--local {
-            display: block;
-
-            > p {
-                margin-bottom: 1rem;
-            }
-
-            .profile-analysis__action-button {
-                width: 100%;
-                min-width: 0;
-                margin-top: 0.5rem;
-            }
         }
 
         &__file,

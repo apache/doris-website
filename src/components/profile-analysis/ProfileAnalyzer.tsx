@@ -1,5 +1,6 @@
-import React, { JSX, useCallback, useId, useState } from 'react';
+import React, { JSX, useCallback, useEffect, useId, useRef, useState } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import { AiAnalysisForm } from './AiAnalysisForm';
 import { AnalysisResult } from './AnalysisResult';
 import { AnalysisStatus } from './AnalysisStatus';
 import { ProfileUploader } from './ProfileUploader';
@@ -8,6 +9,8 @@ import { useProfileAnalysis } from './use-profile-analysis';
 import { useLocalProfileDag } from './use-local-profile-dag';
 import type { ProfileParserWorker } from './profile-analysis.parser-client';
 import './ProfileAnalysis.scss';
+
+type ProfileAnalysisTab = 'visualize' | 'ai';
 
 export function ProfileAnalyzer(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
@@ -26,7 +29,8 @@ export function ProfileAnalyzer(): JSX.Element {
         [],
     );
     const localDag = useLocalProfileDag(createParserWorker);
-    const [activeResultTab, setActiveResultTab] = useState<'graph' | 'analysis'>('analysis');
+    const [activeTab, setActiveTab] = useState<ProfileAnalysisTab>('visualize');
+    const tabChosenRef = useRef(false);
     const tabIdPrefix = useId();
     const isAiBusy = analysis.isBusy;
     const busyState =
@@ -37,10 +41,18 @@ export function ProfileAnalyzer(): JSX.Element {
         analysis.state === 'analyzing'
             ? analysis.state
             : null;
-    const hasAiActivity =
-        analysis.jobId !== null || busyState !== null || analysis.result !== null || analysis.error !== null;
-    const hasDagActivity = localDag.state !== 'idle';
-    const hasWorkspace = hasAiActivity || hasDagActivity;
+    const hasAiActivity = analysis.jobId !== null || analysis.result !== null || analysis.error !== null;
+
+    const selectTab = useCallback((tab: ProfileAnalysisTab) => {
+        tabChosenRef.current = true;
+        setActiveTab(tab);
+    }, []);
+
+    // An analysis restored after a page refresh resumes on the AI tab so its progress stays visible.
+    useEffect(() => {
+        if (tabChosenRef.current || !hasAiActivity) return;
+        setActiveTab('ai');
+    }, [hasAiActivity]);
 
     const handleFileChange = useCallback(
         (file: File | null) => {
@@ -50,15 +62,13 @@ export function ProfileAnalyzer(): JSX.Element {
         [analysis.selectFile, localDag.reset],
     );
 
-    const handleBuildGraph = useCallback(() => {
+    const handleVisualize = useCallback(() => {
         if (!analysis.file) return;
-        setActiveResultTab('graph');
         void localDag.buildGraph(analysis.file);
     }, [analysis.file, localDag.buildGraph]);
 
     const handleAnalyze = useCallback(
         (hcaptchaToken: string, resetCaptcha: () => void) => {
-            setActiveResultTab('analysis');
             void analysis.analyze(hcaptchaToken, resetCaptcha);
         },
         [analysis.analyze],
@@ -67,15 +77,15 @@ export function ProfileAnalyzer(): JSX.Element {
     const handleTabKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
         if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
         event.preventDefault();
-        const nextTab =
+        const nextTab: ProfileAnalysisTab =
             event.key === 'Home'
-                ? 'graph'
+                ? 'visualize'
                 : event.key === 'End'
-                  ? 'analysis'
-                  : activeResultTab === 'graph'
-                    ? 'analysis'
-                    : 'graph';
-        setActiveResultTab(nextTab);
+                  ? 'ai'
+                  : activeTab === 'visualize'
+                    ? 'ai'
+                    : 'visualize';
+        selectTab(nextTab);
         window.requestAnimationFrame(() => {
             document.getElementById(`${tabIdPrefix}-${nextTab}-tab`)?.focus();
         });
@@ -93,82 +103,91 @@ export function ProfileAnalyzer(): JSX.Element {
                 </p>
             </header>
 
-            <ProfileUploader
-                file={analysis.file}
-                language={analysis.language}
-                aiDisabled={isAiBusy}
-                dagBusy={localDag.isBusy}
-                hcaptchaSiteKey={hcaptchaSiteKey}
-                onFileChange={handleFileChange}
-                onLanguageChange={analysis.setLanguage}
-                onBuildGraph={handleBuildGraph}
-                onAnalyze={handleAnalyze}
-            />
+            <ProfileUploader file={analysis.file} disabled={isAiBusy} onFileChange={handleFileChange} />
 
             {analysis.recoveryWarning && (
                 <div className="profile-analysis__warning" role="status">
                     {analysis.recoveryWarning}
                 </div>
             )}
-            {hasWorkspace && (
-                <section className="profile-analysis__workspace" aria-labelledby={`${tabIdPrefix}-workspace-title`}>
-                    <h2 id={`${tabIdPrefix}-workspace-title`} className="profile-analysis__workspace-title">
-                        Analysis workspace
-                    </h2>
-                    <div className="profile-analysis__tabs" role="tablist" aria-label="Profile analysis results">
-                        <button
-                            type="button"
-                            id={`${tabIdPrefix}-graph-tab`}
-                            role="tab"
-                            aria-selected={activeResultTab === 'graph'}
-                            aria-controls={`${tabIdPrefix}-graph-panel`}
-                            tabIndex={activeResultTab === 'graph' ? 0 : -1}
-                            onClick={() => setActiveResultTab('graph')}
-                            onKeyDown={handleTabKeyDown}
-                        >
-                            Execution graph
-                        </button>
-                        <button
-                            type="button"
-                            id={`${tabIdPrefix}-analysis-tab`}
-                            role="tab"
-                            aria-selected={activeResultTab === 'analysis'}
-                            aria-controls={`${tabIdPrefix}-analysis-panel`}
-                            tabIndex={activeResultTab === 'analysis' ? 0 : -1}
-                            onClick={() => setActiveResultTab('analysis')}
-                            onKeyDown={handleTabKeyDown}
-                        >
-                            AI analysis
-                        </button>
-                    </div>
-                    <div
-                        id={`${tabIdPrefix}-graph-panel`}
-                        role="tabpanel"
-                        aria-labelledby={`${tabIdPrefix}-graph-tab`}
-                        hidden={activeResultTab !== 'graph'}
-                        className="profile-analysis__tab-panel"
+
+            <section className="profile-analysis__workspace" aria-label="Profile analysis actions and results">
+                <div className="profile-analysis__tabs" role="tablist" aria-label="Profile analysis actions">
+                    <button
+                        type="button"
+                        id={`${tabIdPrefix}-visualize-tab`}
+                        role="tab"
+                        aria-selected={activeTab === 'visualize'}
+                        aria-controls={`${tabIdPrefix}-visualize-panel`}
+                        tabIndex={activeTab === 'visualize' ? 0 : -1}
+                        onClick={() => selectTab('visualize')}
+                        onKeyDown={handleTabKeyDown}
                     >
-                        <ProfileDag state={localDag.state} dag={localDag.dag} error={localDag.error} />
-                    </div>
-                    <div
-                        id={`${tabIdPrefix}-analysis-panel`}
-                        role="tabpanel"
-                        aria-labelledby={`${tabIdPrefix}-analysis-tab`}
-                        hidden={activeResultTab !== 'analysis'}
-                        className="profile-analysis__tab-panel"
+                        Visualize Execution
+                    </button>
+                    <button
+                        type="button"
+                        id={`${tabIdPrefix}-ai-tab`}
+                        role="tab"
+                        aria-selected={activeTab === 'ai'}
+                        aria-controls={`${tabIdPrefix}-ai-panel`}
+                        tabIndex={activeTab === 'ai' ? 0 : -1}
+                        onClick={() => selectTab('ai')}
+                        onKeyDown={handleTabKeyDown}
                     >
-                        {busyState && <AnalysisStatus state={busyState} jobsAhead={analysis.jobsAhead} />}
-                        {analysis.state === 'completed' && <AnalysisStatus state="completed" jobsAhead={null} />}
-                        {analysis.error && (
-                            <div className="profile-analysis__error" role="alert">
-                                <strong>Analysis failed.</strong>
-                                <span>{analysis.error}</span>
-                            </div>
-                        )}
-                        {analysis.result && <AnalysisResult result={analysis.result} />}
+                        AI-assisted analysis
+                    </button>
+                </div>
+                <div
+                    id={`${tabIdPrefix}-visualize-panel`}
+                    role="tabpanel"
+                    aria-labelledby={`${tabIdPrefix}-visualize-tab`}
+                    hidden={activeTab !== 'visualize'}
+                    className="profile-analysis__tab-panel"
+                >
+                    <div className="profile-analysis__panel">
+                        <p className="profile-analysis__panel-intro">
+                            Visualize the Profile. Select Visualize Execution to parse the file in your browser
+                            and render its execution graph as an interactive diagram. The file is not uploaded for
+                            this action.
+                        </p>
+                        <button
+                            className="button button--primary profile-analysis__action-button"
+                            type="button"
+                            disabled={!analysis.file || localDag.isBusy}
+                            onClick={handleVisualize}
+                        >
+                            {localDag.isBusy ? 'Visualizing…' : 'Visualize Execution'}
+                        </button>
                     </div>
-                </section>
-            )}
+                    <ProfileDag state={localDag.state} dag={localDag.dag} error={localDag.error} />
+                </div>
+                <div
+                    id={`${tabIdPrefix}-ai-panel`}
+                    role="tabpanel"
+                    aria-labelledby={`${tabIdPrefix}-ai-tab`}
+                    hidden={activeTab !== 'ai'}
+                    className="profile-analysis__tab-panel"
+                >
+                    <AiAnalysisForm
+                        file={analysis.file}
+                        language={analysis.language}
+                        disabled={isAiBusy}
+                        hcaptchaSiteKey={hcaptchaSiteKey}
+                        onLanguageChange={analysis.setLanguage}
+                        onAnalyze={handleAnalyze}
+                    />
+                    {busyState && <AnalysisStatus state={busyState} jobsAhead={analysis.jobsAhead} />}
+                    {analysis.state === 'completed' && <AnalysisStatus state="completed" jobsAhead={null} />}
+                    {analysis.error && (
+                        <div className="profile-analysis__error" role="alert">
+                            <strong>Analysis failed.</strong>
+                            <span>{analysis.error}</span>
+                        </div>
+                    )}
+                    {analysis.result && <AnalysisResult result={analysis.result} />}
+                </div>
+            </section>
         </div>
     );
 }

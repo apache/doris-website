@@ -24,6 +24,7 @@ const compileTypeScript = (module, filename) => {
 require.extensions['.ts'] = compileTypeScript;
 require.extensions['.tsx'] = compileTypeScript;
 
+const { AiAnalysisForm } = require('./AiAnalysisForm.tsx');
 const { AnalysisResult } = require('./AnalysisResult.tsx');
 const { AnalysisStatus } = require('./AnalysisStatus.tsx');
 const {
@@ -53,77 +54,61 @@ test('formats file sizes for display', () => {
     assert.equal(formatProfileFileSize(2 * 1024 * 1024), '2.0 MiB');
 });
 
-test('explains the raw file limit and large-profile reduction in English', () => {
-    const markup = renderToStaticMarkup(
+const renderUploader = (props = {}) =>
+    renderToStaticMarkup(
         React.createElement(ProfileUploader, {
             file: null,
-            language: 'en',
-            aiDisabled: false,
-            dagBusy: false,
-            hcaptchaSiteKey,
+            disabled: false,
             onFileChange() {},
-            onLanguageChange() {},
-            onBuildGraph() {},
-            onAnalyze() {},
+            ...props,
         }),
     );
+
+const renderAiForm = (props = {}) =>
+    renderToStaticMarkup(
+        React.createElement(AiAnalysisForm, {
+            file: null,
+            language: 'en',
+            disabled: false,
+            hcaptchaSiteKey,
+            onLanguageChange() {},
+            onAnalyze() {},
+            ...props,
+        }),
+    );
+
+test('explains the raw file limit and large-profile reduction in English', () => {
+    const markup = renderUploader();
 
     assert.match(markup, /UTF-8 \.txt file up to 100 MiB/);
     assert.match(markup, /Files over 10 MiB are reduced to their aggregated Profile sections/);
 });
 
-test('disables both actions without a file and keeps local graph available during AI processing', () => {
-    const withoutFile = renderToStaticMarkup(
-        React.createElement(ProfileUploader, {
-            file: null,
-            language: 'en',
-            aiDisabled: false,
-            dagBusy: false,
-            hcaptchaSiteKey,
-            onFileChange() {},
-            onLanguageChange() {},
-            onBuildGraph() {},
-            onAnalyze() {},
-        }),
-    );
-    assert.match(withoutFile, /<button[^>]*disabled=""[^>]*>View execution graph<\/button>/);
-    assert.match(withoutFile, /<button[^>]*disabled=""[^>]*>Analyze with AI<\/button>/);
+test('disables both tab actions without a file and keeps visualization available during AI processing', () => {
+    const analyzerSource = fs.readFileSync(path.join(__dirname, 'ProfileAnalyzer.tsx'), 'utf8');
 
-    const analyzing = renderToStaticMarkup(
-        React.createElement(ProfileUploader, {
-            file: new File(['profile'], 'query.txt'),
-            language: 'zh-CN',
-            aiDisabled: true,
-            dagBusy: false,
-            hcaptchaSiteKey,
-            onFileChange() {},
-            onLanguageChange() {},
-            onBuildGraph() {},
-            onAnalyze() {},
-        }),
-    );
+    assert.match(analyzerSource, /disabled=\{!analysis\.file \|\| localDag\.isBusy\}/);
+    assert.match(analyzerSource, /localDag\.isBusy \? 'Visualizing…' : 'Visualize Execution'/);
+    // The AI job never disables the local visualization button.
+    assert.doesNotMatch(analyzerSource, /disabled=\{[^}]*isAiBusy[^}]*\}\s*\n\s*onClick=\{handleVisualize\}/);
+
+    assert.match(renderAiForm(), /<button[^>]*disabled=""[^>]*>Analyze with AI<\/button>/);
+
+    const analyzing = renderAiForm({
+        file: new File(['profile'], 'query.txt'),
+        language: 'zh-CN',
+        disabled: true,
+    });
     assert.match(analyzing, /<input[^>]*disabled=""/);
     assert.match(analyzing, /<button[^>]*disabled=""[^>]*>Processing…<\/button>/);
-    assert.doesNotMatch(analyzing, /<button[^>]*disabled=""[^>]*>View execution graph<\/button>/);
 });
 
 test('keeps local file selection independent from unchecked AI consent and displays the required notice', () => {
-    const markup = renderToStaticMarkup(
-        React.createElement(ProfileUploader, {
-            file: null,
-            language: 'en',
-            aiDisabled: false,
-            dagBusy: false,
-            hcaptchaSiteKey,
-            onFileChange() {},
-            onLanguageChange() {},
-            onBuildGraph() {},
-            onAnalyze() {},
-        }),
-    );
+    const markup = renderAiForm();
 
     assert.match(markup, /type="checkbox"/);
     assert.doesNotMatch(markup, /type="checkbox"[^>]*checked/);
+    assert.match(markup, /The prepared Profile is uploaded only when you start this action\./);
     assert.match(markup, /provided by VeloDB and third-party large language model service providers/);
     assert.match(markup, /not an official Apache Doris project feature/);
     assert.match(markup, /Do not upload passwords, keys, access tokens, personal information/);
@@ -131,51 +116,26 @@ test('keeps local file selection independent from unchecked AI consent and displ
     assert.ok(markup.indexOf('Privacy and AI processing notice') < markup.indexOf('Analyze with AI'));
     assert.match(markup, /role="note"/);
     assert.match(markup, /profile-analysis__privacy-notice-icon" aria-hidden="true">!</);
-    assert.doesNotMatch(markup, /type="file"[^>]*disabled=""/);
-    assert.match(markup, /Parsed locally in your browser\. The file is not uploaded for this action\./);
-    assert.match(markup, /profile-analysis__action-card--local/);
-    assert.match(markup, /button button--primary profile-analysis__action-button[^>]*>View execution graph/);
+    assert.doesNotMatch(renderUploader(), /type="file"[^>]*disabled=""/);
+
+    const analyzerSource = fs.readFileSync(path.join(__dirname, 'ProfileAnalyzer.tsx'), 'utf8');
+    assert.match(analyzerSource.replace(/\s+/g, ' '), /The file is not uploaded for this action\./);
+    assert.match(analyzerSource, /button button--primary profile-analysis__action-button/);
 
     const styles = fs.readFileSync(path.join(__dirname, 'ProfileAnalysis.scss'), 'utf8');
-    assert.match(styles, /&__actions\s*{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/s);
-    assert.match(styles, /&--local\s*{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) minmax\(220px, auto\)/s);
+    assert.match(styles, /&__panel-intro\s*{[^}]*color:\s*var\(--ifm-color-emphasis-700\)/s);
+    assert.match(styles, /&__action-button\s*{[^}]*width:\s*100%/s);
 });
 
 test('uses an English accessible label instead of exposing localized native file-input text', () => {
-    const markup = renderToStaticMarkup(
-        React.createElement(ProfileUploader, {
-            file: null,
-            language: 'en',
-            aiDisabled: false,
-            dagBusy: false,
-            hcaptchaSiteKey,
-            onFileChange() {},
-            onLanguageChange() {},
-            onBuildGraph() {},
-            onAnalyze() {},
-        }),
-    );
-
-    assert.match(markup, /aria-label="Choose an Apache Doris Query Profile file"/);
+    assert.match(renderUploader(), /aria-label="Choose an Apache Doris Query Profile file"/);
 
     const styles = fs.readFileSync(path.join(__dirname, 'ProfileAnalysis.scss'), 'utf8');
     assert.match(styles, /&__file-input\s*{[^}]*clip-path:\s*inset\(50%\)/s);
 });
 
 test('renders an English response-language selector with English selected by default', () => {
-    const markup = renderToStaticMarkup(
-        React.createElement(ProfileUploader, {
-            file: null,
-            language: 'en',
-            aiDisabled: false,
-            dagBusy: false,
-            hcaptchaSiteKey,
-            onFileChange() {},
-            onLanguageChange() {},
-            onBuildGraph() {},
-            onAnalyze() {},
-        }),
-    );
+    const markup = renderAiForm();
 
     assert.match(markup, /<legend>Response language<\/legend>/);
     assert.match(markup, /<input[^>]*checked=""[^>]*value="en"/);
@@ -257,15 +217,19 @@ test('the page composes the analyzer inside the Doris Layout without adding navi
     assert.match(pageSource, /<main className="container margin-vert--lg">/);
 });
 
-test('adds English result tabs and configures the execution graph as read-only', () => {
+test('adds English action tabs and configures the execution graph as read-only', () => {
     const analyzerSource = fs.readFileSync(path.join(__dirname, 'ProfileAnalyzer.tsx'), 'utf8');
     const dagSource = fs.readFileSync(path.join(__dirname, 'ProfileDag.tsx'), 'utf8');
     const dagNodeSource = fs.readFileSync(path.join(__dirname, 'ProfileDagNode.tsx'), 'utf8');
 
-    assert.match(analyzerSource, />\s*Execution graph\s*</);
-    assert.match(analyzerSource, />\s*AI analysis\s*</);
+    assert.match(analyzerSource, />\s*Visualize Execution\s*</);
+    assert.match(analyzerSource, />\s*AI-assisted analysis\s*</);
     assert.match(analyzerSource, /role="tablist"/);
     assert.match(analyzerSource, /role="tabpanel"/);
+    // Both panels stay mounted so switching tabs never discards a finished result.
+    assert.match(analyzerSource, /hidden=\{activeTab !== 'visualize'\}/);
+    assert.match(analyzerSource, /hidden=\{activeTab !== 'ai'\}/);
+    assert.doesNotMatch(analyzerSource, /activeTab === '(visualize|ai)' && </);
     assert.match(dagSource, /nodesDraggable=\{false\}/);
     assert.match(dagSource, /nodesConnectable=\{false\}/);
     assert.match(dagSource, /edgesReconnectable=\{false\}/);
