@@ -75,7 +75,11 @@ function apiUrl(apiBaseUrl: string, path: string): string {
     return `${apiBaseUrl.replace(/\/+$/, '')}${path}`;
 }
 
-async function fetchJson(url: string, init: RequestInit): Promise<{ response: Response; body: unknown }> {
+async function fetchJson(
+    url: string,
+    init: RequestInit,
+    maxResponseBytes = MAX_API_RESPONSE_BYTES,
+): Promise<{ response: Response; body: unknown }> {
     let response: Response;
     try {
         response = await fetch(url, init);
@@ -90,13 +94,15 @@ async function fetchJson(url: string, init: RequestInit): Promise<{ response: Re
         );
     }
 
-    const body = await readJson(response);
+    const body = await readJson(response, maxResponseBytes);
     if (!response.ok) {
-        if (isApiErrorBody(body)) {
+        if (isRecord(body) && typeof body.code === 'string') {
             throw new ProfileAnalysisApiError(
                 response.status,
                 body.code,
-                body.message,
+                typeof body.message === 'string'
+                    ? body.message
+                    : `Profile analysis failed (${body.code}). Please try again.`,
                 retryAfterMs(response),
             );
         }
@@ -110,7 +116,7 @@ async function fetchJson(url: string, init: RequestInit): Promise<{ response: Re
     return { response, body };
 }
 
-async function readJson(response: Response): Promise<unknown> {
+async function readJson(response: Response, maxResponseBytes: number): Promise<unknown> {
     if (!response.body) return undefined;
 
     try {
@@ -121,7 +127,7 @@ async function readJson(response: Response): Promise<unknown> {
             const { done, value } = await reader.read();
             if (done) break;
             totalBytes += value.byteLength;
-            if (totalBytes > MAX_API_RESPONSE_BYTES) {
+            if (totalBytes > maxResponseBytes) {
                 await reader.cancel();
                 throw invalidResponse();
             }
@@ -229,7 +235,6 @@ export async function getAnalysisJob(
     if (!isRecord(body) || body.jobId !== jobId) {
         throw invalidResponse();
     }
-
     switch (body.status) {
         case 'QUEUED':
             if (!Number.isInteger(body.jobsAhead) || (body.jobsAhead as number) < 0) throw invalidResponse();

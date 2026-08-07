@@ -138,7 +138,7 @@ export function profileAnalysisReducer(
                 jobId: action.jobId,
                 jobsAhead: null,
             };
-        case 'job_status':
+        case 'job_status': {
             if (action.job.status === 'QUEUED') {
                 return {
                     ...snapshot,
@@ -148,9 +148,32 @@ export function profileAnalysisReducer(
                 };
             }
             if (action.job.status === 'RUNNING') {
-                return { ...snapshot, state: 'analyzing', jobId: action.job.jobId, jobsAhead: null };
+                return {
+                    ...snapshot,
+                    state: 'analyzing',
+                    jobId: action.job.jobId,
+                    jobsAhead: null,
+                };
             }
-            return snapshot;
+            if (action.job.status === 'COMPLETED') {
+                return {
+                    ...snapshot,
+                    state: 'completed',
+                    jobId: action.job.jobId,
+                    jobsAhead: null,
+                    result: action.job.result,
+                    error: null,
+                };
+            }
+            return {
+                ...snapshot,
+                state: 'failed',
+                jobId: action.job.jobId,
+                jobsAhead: null,
+                result: null,
+                error: action.job.error.message,
+            };
+        }
         case 'complete':
             return {
                 ...snapshot,
@@ -228,7 +251,8 @@ export function useProfileAnalysis(apiBaseUrl: string) {
 
     const pollJob = useCallback(
         async (jobId: string, pollIntervalMs: number, controller: AbortController): Promise<void> => {
-            const terminal = await pollAnalysisJobWithRecovery({
+            let settled = false;
+            await pollAnalysisJobWithRecovery({
                 get: () => getAnalysisJob(apiBaseUrl, jobId, controller.signal),
                 wait: milliseconds => wait(milliseconds, controller.signal),
                 onRecovering: () => {
@@ -236,19 +260,15 @@ export function useProfileAnalysis(apiBaseUrl: string) {
                         dispatch({ type: 'recovering' });
                     }
                 },
-                onProgress: job => {
-                    if (mountedRef.current && abortControllerRef.current === controller) {
-                        dispatch({ type: 'job_status', job });
-                    }
+                onProgress: () => {},
+                onSnapshot: job => {
+                    if (!mountedRef.current || abortControllerRef.current !== controller) return;
+                    settled = job.status === 'COMPLETED' || job.status === 'FAILED';
+                    dispatch({ type: 'job_status', job });
                 },
+                isComplete: () => settled,
                 pollIntervalMs,
             });
-            if (!mountedRef.current || abortControllerRef.current !== controller) return;
-            if (terminal.status === 'COMPLETED') {
-                dispatch({ type: 'complete', result: terminal.result });
-            } else {
-                dispatch({ type: 'fail', error: terminal.error.message });
-            }
         },
         [apiBaseUrl],
     );

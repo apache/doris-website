@@ -1,16 +1,10 @@
-import HCaptcha from '@hcaptcha/react-hcaptcha';
-import React, { ChangeEvent, DragEvent, JSX, useCallback, useRef, useState } from 'react';
+import React, { ChangeEvent, DragEvent, JSX, useRef, useState } from 'react';
 import { MAX_RAW_BYTES, prepareProfileFile } from './profile-analysis.file';
-import type { ResponseLanguage } from './profile-analysis.types';
 
 interface ProfileUploaderProps {
     file: File | null;
-    language: ResponseLanguage;
     disabled: boolean;
-    hcaptchaSiteKey: string;
     onFileChange: (file: File | null) => void;
-    onLanguageChange: (language: ResponseLanguage) => void;
-    onAnalyze: (hcaptchaToken: string, resetCaptcha: () => void) => void;
 }
 
 export function validateProfileFile(file: File): string | null {
@@ -33,27 +27,9 @@ export function formatProfileFileSize(sizeInBytes: number): string {
     return `${(sizeInBytes / (1024 * 1024)).toFixed(1)} MiB`;
 }
 
-export function ProfileUploader({
-    file,
-    language,
-    disabled,
-    hcaptchaSiteKey,
-    onFileChange,
-    onLanguageChange,
-    onAnalyze,
-}: ProfileUploaderProps): JSX.Element {
+export function ProfileUploader({ file, disabled, onFileChange }: ProfileUploaderProps): JSX.Element {
     const [validationError, setValidationError] = useState<string | null>(null);
-    const [consentAccepted, setConsentAccepted] = useState(false);
-    const [hcaptchaToken, setHCaptchaToken] = useState<string | null>(null);
-    const [hcaptchaError, setHCaptchaError] = useState<string | null>(null);
-    const hcaptchaRef = useRef<HCaptcha>(null);
     const filePreparationIdRef = useRef(0);
-
-    const resetCaptcha = useCallback(() => {
-        hcaptchaRef.current?.resetCaptcha();
-        setHCaptchaToken(null);
-        setHCaptchaError(null);
-    }, []);
 
     const acceptFile = async (nextFile: File | null) => {
         const preparationId = ++filePreparationIdRef.current;
@@ -94,7 +70,7 @@ export function ProfileUploader({
 
     const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
         event.preventDefault();
-        if (disabled || !consentAccepted) {
+        if (disabled) {
             return;
         }
         if (event.dataTransfer.files.length > 1) {
@@ -107,39 +83,15 @@ export function ProfileUploader({
 
     return (
         <section className="profile-analysis__uploader" aria-labelledby="profile-analysis-upload-title">
-            <h2 id="profile-analysis-upload-title">Upload a Query Profile</h2>
+            <h2 id="profile-analysis-upload-title">Choose a Query Profile</h2>
             <p id="profile-analysis-file-help" className="profile-analysis__help">
-                Choose one UTF-8 .txt file up to 100 MiB after reviewing and accepting the notice below. Files
-                over 10 MiB are reduced to their aggregated Profile sections before upload.
+                Choose one UTF-8 .txt file up to 100 MiB. Files over 10 MiB are reduced to their aggregated
+                Profile sections before local visualization or AI upload.
             </p>
-
-            <fieldset className="profile-analysis__language" disabled={disabled}>
-                <legend>Response language</legend>
-                <label>
-                    <input
-                        type="radio"
-                        name="profile-analysis-language"
-                        value="en"
-                        checked={language === 'en'}
-                        onChange={() => onLanguageChange('en')}
-                    />
-                    English
-                </label>
-                <label>
-                    <input
-                        type="radio"
-                        name="profile-analysis-language"
-                        value="zh-CN"
-                        checked={language === 'zh-CN'}
-                        onChange={() => onLanguageChange('zh-CN')}
-                    />
-                    Simplified Chinese
-                </label>
-            </fieldset>
 
             <label
                 className={`profile-analysis__drop-zone${
-                    disabled || !consentAccepted ? ' profile-analysis__drop-zone--disabled' : ''
+                    disabled ? ' profile-analysis__drop-zone--disabled' : ''
                 }`}
                 onDragOver={event => event.preventDefault()}
                 onDrop={handleDrop}
@@ -152,7 +104,7 @@ export function ProfileUploader({
                     accept=".txt,text/plain"
                     aria-label="Choose an Apache Doris Query Profile file"
                     aria-describedby="profile-analysis-file-help"
-                    disabled={disabled || !consentAccepted}
+                    disabled={disabled}
                     onChange={handleInputChange}
                 />
             </label>
@@ -171,120 +123,6 @@ export function ProfileUploader({
                     <span className="profile-analysis__file-size">{formatProfileFileSize(file.size)}</span>
                 </div>
             )}
-
-            {consentAccepted && (
-                <div className="profile-analysis__captcha">
-                    <p id="profile-analysis-captcha-help" className="profile-analysis__captcha-label">
-                        Complete the human verification before starting the analysis.
-                    </p>
-                    {hcaptchaSiteKey ? (
-                        <HCaptcha
-                            ref={hcaptchaRef}
-                            sitekey={hcaptchaSiteKey}
-                            reCaptchaCompat={false}
-                            sentry={false}
-                            onVerify={token => {
-                                setHCaptchaToken(token);
-                                setHCaptchaError(null);
-                            }}
-                            onExpire={() => {
-                                setHCaptchaToken(null);
-                                setHCaptchaError('Verification expired. Complete it again.');
-                            }}
-                            onChalExpired={() => {
-                                setHCaptchaToken(null);
-                                setHCaptchaError('Verification expired. Complete it again.');
-                            }}
-                            onError={() => {
-                                setHCaptchaToken(null);
-                                setHCaptchaError(
-                                    'Human verification could not load. Check your connection and try again.',
-                                );
-                            }}
-                        />
-                    ) : (
-                        <div className="profile-analysis__validation-error" role="alert">
-                            Human verification is not configured. Contact the site administrator.
-                        </div>
-                    )}
-                    <small>
-                        This site is protected by hCaptcha and its{' '}
-                        <a
-                            href="https://www.hcaptcha.com/privacy"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Privacy Policy
-                        </a>{' '}
-                        and{' '}
-                        <a
-                            href="https://www.hcaptcha.com/terms"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Terms of Service
-                        </a>{' '}
-                        apply.
-                    </small>
-                    {hcaptchaError && (
-                        <div className="profile-analysis__validation-error" role="alert">
-                            {hcaptchaError}
-                        </div>
-                    )}
-                </div>
-            )}
-
-            <button
-                className="button button--primary profile-analysis__analyze-button"
-                type="button"
-                disabled={!file || disabled || !consentAccepted || !hcaptchaToken}
-                onClick={() => {
-                    if (hcaptchaToken) onAnalyze(hcaptchaToken, resetCaptcha);
-                }}
-            >
-                {disabled ? 'Processing…' : 'Analyze Profile'}
-            </button>
-
-            <div
-                className="profile-analysis__privacy-notice"
-                id="profile-analysis-privacy-notice"
-                role="note"
-            >
-                <div className="profile-analysis__privacy-notice-title">
-                    <span className="profile-analysis__privacy-notice-icon" aria-hidden="true">
-                        !
-                    </span>
-                    <h3>Privacy and AI processing notice</h3>
-                </div>
-                <p>
-                    This feature is provided by VeloDB and third-party large language model service providers.
-                    It is not an official Apache Doris project feature, so please use it at your discretion.
-                </p>
-                <p>
-                    Do not upload passwords, keys, access tokens, personal information, customer-confidential
-                    data, or any other sensitive content that you are not authorized to disclose. All uploaded
-                    information will be automatically and permanently deleted within one hour.
-                </p>
-                <label className="profile-analysis__consent">
-                    <input
-                        type="checkbox"
-                        checked={consentAccepted}
-                        disabled={disabled}
-                        aria-describedby="profile-analysis-privacy-notice"
-                        onChange={event => {
-                            const accepted = event.currentTarget.checked;
-                            setConsentAccepted(accepted);
-                            if (!accepted) {
-                                filePreparationIdRef.current += 1;
-                                resetCaptcha();
-                                onFileChange(null);
-                            }
-                        }}
-                    />
-                    I have read the notice, am authorized to upload this profile, and consent to third-party AI
-                    processing.
-                </label>
-            </div>
         </section>
     );
 }

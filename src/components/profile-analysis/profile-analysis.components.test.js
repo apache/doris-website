@@ -24,6 +24,7 @@ const compileTypeScript = (module, filename) => {
 require.extensions['.ts'] = compileTypeScript;
 require.extensions['.tsx'] = compileTypeScript;
 
+const { AiAnalysisForm } = require('./AiAnalysisForm.tsx');
 const { AnalysisResult } = require('./AnalysisResult.tsx');
 const { AnalysisStatus } = require('./AnalysisStatus.tsx');
 const {
@@ -53,108 +54,88 @@ test('formats file sizes for display', () => {
     assert.equal(formatProfileFileSize(2 * 1024 * 1024), '2.0 MiB');
 });
 
-test('explains the raw file limit and large-profile reduction in English', () => {
-    const markup = renderToStaticMarkup(
+const renderUploader = (props = {}) =>
+    renderToStaticMarkup(
         React.createElement(ProfileUploader, {
+            file: null,
+            disabled: false,
+            onFileChange() {},
+            ...props,
+        }),
+    );
+
+const renderAiForm = (props = {}) =>
+    renderToStaticMarkup(
+        React.createElement(AiAnalysisForm, {
             file: null,
             language: 'en',
             disabled: false,
             hcaptchaSiteKey,
-            onFileChange() {},
             onLanguageChange() {},
             onAnalyze() {},
+            ...props,
         }),
     );
+
+test('explains the raw file limit and large-profile reduction in English', () => {
+    const markup = renderUploader();
 
     assert.match(markup, /UTF-8 \.txt file up to 100 MiB/);
     assert.match(markup, /Files over 10 MiB are reduced to their aggregated Profile sections/);
 });
 
-test('disables Analyze until a file exists and while analysis is running', () => {
-    const withoutFile = renderToStaticMarkup(
-        React.createElement(ProfileUploader, {
-            file: null,
-            language: 'en',
-            disabled: false,
-            hcaptchaSiteKey,
-            onFileChange() {},
-            onLanguageChange() {},
-            onAnalyze() {},
-        }),
-    );
-    assert.match(withoutFile, /<button[^>]*disabled=""[^>]*>Analyze Profile<\/button>/);
+test('disables both tab actions without a file and keeps visualization available during AI processing', () => {
+    const analyzerSource = fs.readFileSync(path.join(__dirname, 'ProfileAnalyzer.tsx'), 'utf8');
 
-    const analyzing = renderToStaticMarkup(
-        React.createElement(ProfileUploader, {
-            file: new File(['profile'], 'query.txt'),
-            language: 'zh-CN',
-            disabled: true,
-            hcaptchaSiteKey,
-            onFileChange() {},
-            onLanguageChange() {},
-            onAnalyze() {},
-        }),
-    );
+    assert.match(analyzerSource, /disabled=\{!analysis\.file \|\| localDag\.isBusy\}/);
+    assert.match(analyzerSource, /localDag\.isBusy \? 'Visualizing…' : 'Visualize Execution'/);
+    // The AI job never disables the local visualization button.
+    assert.doesNotMatch(analyzerSource, /disabled=\{[^}]*isAiBusy[^}]*\}\s*\n\s*onClick=\{handleVisualize\}/);
+
+    assert.match(renderAiForm(), /<button[^>]*disabled=""[^>]*>Analyze with AI<\/button>/);
+
+    const analyzing = renderAiForm({
+        file: new File(['profile'], 'query.txt'),
+        language: 'zh-CN',
+        disabled: true,
+    });
     assert.match(analyzing, /<input[^>]*disabled=""/);
     assert.match(analyzing, /<button[^>]*disabled=""[^>]*>Processing…<\/button>/);
 });
 
-test('places an unchecked privacy consent after Analyze and displays provider, prohibited-content, and deletion notices', () => {
-    const markup = renderToStaticMarkup(
-        React.createElement(ProfileUploader, {
-            file: null,
-            language: 'en',
-            disabled: false,
-            hcaptchaSiteKey,
-            onFileChange() {},
-            onLanguageChange() {},
-            onAnalyze() {},
-        }),
-    );
+test('keeps local file selection independent from unchecked AI consent and displays the required notice', () => {
+    const markup = renderAiForm();
 
     assert.match(markup, /type="checkbox"/);
     assert.doesNotMatch(markup, /type="checkbox"[^>]*checked/);
+    assert.match(markup, /The prepared Profile is uploaded only when you start this action\./);
     assert.match(markup, /provided by VeloDB and third-party large language model service providers/);
     assert.match(markup, /not an official Apache Doris project feature/);
     assert.match(markup, /Do not upload passwords, keys, access tokens, personal information/);
     assert.match(markup, /automatically and permanently deleted within one hour/);
-    assert.ok(markup.indexOf('Analyze Profile') < markup.indexOf('Privacy and AI processing notice'));
+    assert.ok(markup.indexOf('Privacy and AI processing notice') < markup.indexOf('Analyze with AI'));
     assert.match(markup, /role="note"/);
     assert.match(markup, /profile-analysis__privacy-notice-icon" aria-hidden="true">!</);
-    assert.match(markup, /type="file"[^>]*disabled=""/);
+    assert.doesNotMatch(renderUploader(), /type="file"[^>]*disabled=""/);
+
+    const analyzerSource = fs.readFileSync(path.join(__dirname, 'ProfileAnalyzer.tsx'), 'utf8');
+    assert.match(analyzerSource.replace(/\s+/g, ' '), /The file is not uploaded for this action\./);
+    assert.match(analyzerSource, /button button--primary profile-analysis__action-button/);
+
+    const styles = fs.readFileSync(path.join(__dirname, 'ProfileAnalysis.scss'), 'utf8');
+    assert.match(styles, /&__panel-intro\s*{[^}]*color:\s*var\(--ifm-color-emphasis-700\)/s);
+    assert.match(styles, /&__action-button\s*{[^}]*width:\s*100%/s);
 });
 
 test('uses an English accessible label instead of exposing localized native file-input text', () => {
-    const markup = renderToStaticMarkup(
-        React.createElement(ProfileUploader, {
-            file: null,
-            language: 'en',
-            disabled: false,
-            hcaptchaSiteKey,
-            onFileChange() {},
-            onLanguageChange() {},
-            onAnalyze() {},
-        }),
-    );
-
-    assert.match(markup, /aria-label="Choose an Apache Doris Query Profile file"/);
+    assert.match(renderUploader(), /aria-label="Choose an Apache Doris Query Profile file"/);
 
     const styles = fs.readFileSync(path.join(__dirname, 'ProfileAnalysis.scss'), 'utf8');
     assert.match(styles, /&__file-input\s*{[^}]*clip-path:\s*inset\(50%\)/s);
 });
 
 test('renders an English response-language selector with English selected by default', () => {
-    const markup = renderToStaticMarkup(
-        React.createElement(ProfileUploader, {
-            file: null,
-            language: 'en',
-            disabled: false,
-            hcaptchaSiteKey,
-            onFileChange() {},
-            onLanguageChange() {},
-            onAnalyze() {},
-        }),
-    );
+    const markup = renderAiForm();
 
     assert.match(markup, /<legend>Response language<\/legend>/);
     assert.match(markup, /<input[^>]*checked=""[^>]*value="en"/);
@@ -234,4 +215,50 @@ test('the page composes the analyzer inside the Doris Layout without adding navi
     assert.match(pageSource, /import Layout from '@theme\/Layout'/);
     assert.match(pageSource, /<ProfileAnalyzer \/>/);
     assert.match(pageSource, /<main className="container margin-vert--lg">/);
+});
+
+test('adds English action tabs and configures the execution graph as read-only', () => {
+    const analyzerSource = fs.readFileSync(path.join(__dirname, 'ProfileAnalyzer.tsx'), 'utf8');
+    const dagSource = fs.readFileSync(path.join(__dirname, 'ProfileDag.tsx'), 'utf8');
+    const dagNodeSource = fs.readFileSync(path.join(__dirname, 'ProfileDagNode.tsx'), 'utf8');
+
+    assert.match(analyzerSource, />\s*Visualize Execution\s*</);
+    assert.match(analyzerSource, />\s*AI-assisted analysis\s*</);
+    assert.match(analyzerSource, /role="tablist"/);
+    assert.match(analyzerSource, /role="tabpanel"/);
+    // Both panels stay mounted so switching tabs never discards a finished result.
+    assert.match(analyzerSource, /hidden=\{activeTab !== 'visualize'\}/);
+    assert.match(analyzerSource, /hidden=\{activeTab !== 'ai'\}/);
+    assert.doesNotMatch(analyzerSource, /activeTab === '(visualize|ai)' && </);
+    assert.match(dagSource, /nodesDraggable=\{false\}/);
+    assert.match(dagSource, /nodesConnectable=\{false\}/);
+    assert.match(dagSource, /edgesReconnectable=\{false\}/);
+    assert.match(dagSource, /edgeTypes=\{edgeTypes\}/);
+    assert.match(dagSource, /Execution dependency \(prerequisite → dependent\)/);
+    assert.match(dagSource, /deleteKeyCode=\{null\}/);
+    assert.match(dagSource, /panOnDrag/);
+    assert.match(dagSource, /zoomOnScroll/);
+    assert.doesNotMatch(`${analyzerSource}\n${dagSource}\n${dagNodeSource}`, /[\u3400-\u9fff]/);
+});
+
+test('overlays the slowest operators on the canvas and centers the one that is clicked', () => {
+    const dagSource = fs.readFileSync(path.join(__dirname, 'ProfileDag.tsx'), 'utf8');
+
+    assert.match(dagSource, /<Panel position="top-left" className="profile-dag-hotspots"/);
+    assert.match(dagSource, />Slowest operators</);
+    assert.match(dagSource, /hotspots\.length > 0 && <HotspotList hotspots=\{hotspots\} onFocus=\{focusNode\} \/>/);
+    assert.match(dagSource, /onClick=\{\(\) => onFocus\(hotspot\.id\)\}/);
+    // Each entry carries the node id, its name, its location, and the measured duration.
+    assert.match(dagSource, /title=\{hotspot\.id\}/);
+    assert.match(dagSource, /\{hotspot\.label\}/);
+    assert.match(dagSource, /id=\$\{hotspot\.planNodeId\}/);
+    assert.match(dagSource, /formatDurationNs\(hotspot\.execMaxNs\)/);
+    // Focusing centers the operator and highlights it instead of only scrolling near it.
+    assert.match(dagSource, /internalNode\.internals\.positionAbsolute/);
+    assert.match(dagSource, /setCenter\(x \+ width \/ 2, y \+ height \/ 2, \{ zoom: FOCUS_ZOOM, duration: 500 \}\)/);
+    assert.match(dagSource, /selected: node\.id === nodeId/);
+
+    const styles = fs.readFileSync(path.join(__dirname, 'ProfileDag.scss'), 'utf8');
+    assert.match(styles, /\.react-flow__node\.selected \.profile-dag-node\s*{[^}]*outline:\s*3px solid var\(--brand-primary\)/s);
+    assert.match(styles, /\.profile-dag-hotspots\s*{[^}]*max-width:\s*min\(310px, 48%\)/s);
 });

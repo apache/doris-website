@@ -175,6 +175,20 @@ test('keeps an uncertain analysis busy while its original identifiers are recove
     assert.equal(profileAnalysisReducer(recovering, { type: 'select', file: secondFile }), recovering);
 });
 
+test('settles the AI state as soon as Codex completes without waiting for a DAG status', () => {
+    const ready = profileAnalysisReducer(idleSnapshot, { type: 'select', file: firstFile });
+    const submitting = profileAnalysisReducer(ready, { type: 'start' });
+    const queued = profileAnalysisReducer(submitting, { type: 'job_created', jobId: 'job-1', status: 'QUEUED' });
+    const completed = profileAnalysisReducer(queued, {
+        type: 'job_status',
+        job: { jobId: 'job-1', status: 'COMPLETED', result },
+    });
+
+    assert.equal(completed.state, 'completed');
+    assert.equal(completed.result, result);
+    assert.equal(profileAnalysisReducer(completed, { type: 'select', file: secondFile }).file, secondFile);
+});
+
 test('normalizes unknown failures without exposing non-error values', () => {
     assert.equal(getProfileAnalysisErrorMessage(new Error('Backend timed out')), 'Backend timed out');
     assert.equal(getProfileAnalysisErrorMessage({ secret: 'internal detail' }), 'Profile analysis failed. Please try again.');

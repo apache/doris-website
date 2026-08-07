@@ -100,18 +100,25 @@ test('parses queued, running, completed, and failed job snapshots', async t => {
     const originalFetch = global.fetch;
     t.after(() => { global.fetch = originalFetch; });
     const responses = [
-        { jobId, status: 'QUEUED', jobsAhead: 3 },
-        { jobId, status: 'RUNNING' },
-        { jobId, status: 'COMPLETED', result: { id: 'item_26', type: 'agent_message', text: 'Done' } },
-        { jobId, status: 'FAILED', error: { code: 'CODEX_EXECUTION_FAILED', message: 'Failed safely.' } },
+        { jobId, status: 'QUEUED', jobsAhead: 3, dagStatus: 'PENDING' },
+        { jobId, status: 'RUNNING', dagStatus: 'PARSING', dagError: null },
+        { jobId, status: 'COMPLETED', result: { id: 'item_26', type: 'agent_message', text: 'Done' }, dagStatus: 'READY' },
+        { jobId, status: 'FAILED', error: { code: 'CODEX_EXECUTION_FAILED', message: 'Failed safely.' }, dagStatus: 'UNAVAILABLE', dagError: 'DAG_UNAVAILABLE' },
     ];
     global.fetch = async (url, options) => {
         assert.equal(url, `/api/profile/analysis-jobs/${jobId}`);
         assert.equal(options.method, 'GET');
         return jsonResponse(responses.shift());
     };
-    assert.deepEqual(await getAnalysisJob('', jobId), { jobId, status: 'QUEUED', jobsAhead: 3 });
-    assert.deepEqual(await getAnalysisJob('', jobId), { jobId, status: 'RUNNING' });
+    assert.deepEqual(await getAnalysisJob('', jobId), {
+        jobId,
+        status: 'QUEUED',
+        jobsAhead: 3,
+    });
+    assert.deepEqual(await getAnalysisJob('', jobId), {
+        jobId,
+        status: 'RUNNING',
+    });
     assert.equal((await getAnalysisJob('', jobId)).status, 'COMPLETED');
     assert.equal((await getAnalysisJob('', jobId)).status, 'FAILED');
 });
@@ -263,6 +270,7 @@ test('rejects a completed answer over the frontend UTF-8 byte limit', async t =>
             jobId,
             status: 'COMPLETED',
             result: { id: 'item_26', type: 'agent_message', text: oversized },
+            dagStatus: 'READY',
         });
 
     await assert.rejects(getAnalysisJob('', jobId), error => {
