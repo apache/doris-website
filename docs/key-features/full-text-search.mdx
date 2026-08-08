@@ -131,6 +131,7 @@ The analyzer is the most consequential choice. It decides which queries can matc
 - **`none`**: no tokenization. The whole value is one term. Good for IDs, tags, status enums, and exact-match filters.
 - **`english`**: ASCII word-break with light normalization. Suitable for English prose.
 - **`chinese`**: Chinese word segmentation with `parser_mode` of `fine_grained` or `coarse_grained`. Suitable for CJK content.
+- **`kuromoji`**: Japanese morphological analysis. Japanese has no spaces between words, so the text is segmented into dictionary-based morphemes. `parser_mode` selects `search` (default, also breaks long compound nouns apart for better recall), `normal`, or `extended`. Suitable for Japanese content. Disabled by default — set `enable_kuromoji_analyzer = true` in `be.conf` to enable it.
 - **`unicode`**: language-agnostic word break for CJK and punctuation. A reasonable default for mixed content.
 - **`standard`**: Unicode text-segmentation tokenizer; works for most languages.
 - **`icu`**: ICU-based tokenizer for languages that need full Unicode segmentation rules (Thai, Khmer, mixed scripts).
