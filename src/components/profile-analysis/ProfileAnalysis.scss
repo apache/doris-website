@@ -421,7 +421,8 @@
         }
     }
 
-    &__ai-warning {
+    &__ai-warning,
+    &__version-notice {
         margin-bottom: 1rem;
         padding: 0.9rem 1rem;
         border-left: 4px solid var(--ifm-color-warning);

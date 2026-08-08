@@ -67,6 +67,7 @@ function buildNavItems(
                 { label: 'Blogs', href: '/blog' },
                 { label: 'News and Events', href: '/events' },
                 { label: 'Course', href: '/course' },
+                { label: 'Profile Analysis', href: '/profile-analysis' },
             ],
         },
         {
