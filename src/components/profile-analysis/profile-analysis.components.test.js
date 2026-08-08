@@ -84,6 +84,19 @@ test('explains the raw file limit and large-profile reduction in English', () =>
     assert.match(markup, /Files over 10 MiB are reduced to their aggregated Profile sections/);
 });
 
+test('states the supported Doris version before a Profile is chosen', () => {
+    const markup = renderUploader();
+
+    assert.match(markup, /profile-analysis__version-notice/);
+    assert.match(markup, /Apache Doris 4\.1 or later/);
+    assert.match(markup, /Profiles from earlier versions may fail to parse/);
+    // The notice must precede the drop zone so it is read before a file is picked.
+    assert.ok(markup.indexOf('__version-notice') < markup.indexOf('__drop-zone'));
+
+    const styles = fs.readFileSync(path.join(__dirname, 'ProfileAnalysis.scss'), 'utf8');
+    assert.match(styles, /&__version-notice[\s\S]*?{[^}]*border-left:\s*4px solid var\(--ifm-color-warning\)/);
+});
+
 test('disables both tab actions without a file and keeps visualization available during AI processing', () => {
     const analyzerSource = fs.readFileSync(path.join(__dirname, 'ProfileAnalyzer.tsx'), 'utf8');
 

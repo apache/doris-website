@@ -89,6 +89,11 @@ export function ProfileUploader({ file, disabled, onFileChange }: ProfileUploade
                 Profile sections before local visualization or AI upload.
             </p>
 
+            <div className="profile-analysis__version-notice" role="note">
+                Use a Profile produced by Apache Doris 4.1 or later. Profiles from earlier versions may fail to
+                parse.
+            </div>
+
             <label
                 className={`profile-analysis__drop-zone${
                     disabled ? ' profile-analysis__drop-zone--disabled' : ''
