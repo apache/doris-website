@@ -12,8 +12,8 @@
 }
 ---
 
-{/* Knowledge type: Procedure */}
-{/* Applicable scenario: Connect to Apache Doris in Metabase and build visualization dashboards */}
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Connect to Apache Doris in Metabase and build visualization dashboards -->
 
 Metabase is an open source business intelligence tool that provides data analysis, data visualization, interactive dashboards, data drill-down, SQL query editing, and data export. With the Metabase Apache Doris Driver, Metabase can integrate Apache Doris databases and tables as data sources to query Doris internal data and external data, and to build visualization dashboards.
 
@@ -101,8 +101,8 @@ If you start Metabase with Docker, you are recommended to start it by mounting `
 
 ## Configure the Doris data source
 
-{/* Knowledge type: Configuration parameters */}
-{/* Applicable scenario: Add an Apache Doris database connection on the Metabase admin page */}
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenario: Add an Apache Doris database connection on the Metabase admin page -->
 
 After installing Metabase and `metabase-doris-driver`, you can add a data source in Metabase that connects to the Doris `tpch` database.
 
@@ -172,8 +172,8 @@ After the data source configuration is complete, you can build visualizations in
 
 ## Build a visualization dashboard
 
-{/* Knowledge type: Procedure */}
-{/* Applicable scenario: Use Doris TPC-H data to create a Question and a Dashboard in Metabase */}
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Use Doris TPC-H data to create a Question and a Dashboard in Metabase -->
 
 This example uses TPC-H data as the data source. For how to build the Doris TPC-H data source, see the [Doris TPC-H benchmark documentation](../../lakehouse/best-practices/tpch.md).
 
@@ -280,8 +280,8 @@ The following table summarizes the driver capabilities and current support bound
 
 ## Advanced scenarios
 
-{/* Knowledge type: Feature description */}
-{/* Applicable scenario: Access external data sources, create interactive dashboards, and optimize query performance */}
+<!-- Knowledge type: Feature description -->
+<!-- Applicable scenario: Access external data sources, create interactive dashboards, and optimize query performance -->
 
 ### Use Catalog to access external data
 

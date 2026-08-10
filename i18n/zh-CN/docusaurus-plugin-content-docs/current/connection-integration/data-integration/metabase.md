@@ -12,8 +12,8 @@
 }
 ---
 
-{/* 知识类型: 操作步骤 */}
-{/* 适用场景: 在 Metabase 中连接 Apache Doris 并构建可视化仪表盘 */}
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 在 Metabase 中连接 Apache Doris 并构建可视化仪表盘 -->
 
 Metabase 是一个开源商业智能工具，提供数据分析、数据可视化、交互式仪表盘、数据钻取、SQL 查询编辑和数据导出等能力。通过 Metabase Apache Doris Driver，Metabase 可以将 Apache Doris 数据库和表集成为数据源，用于查询 Doris 内部数据和外部数据，并构建可视化看板。
 
@@ -101,8 +101,8 @@ b23e82f19a7f9226343e42566e1e192b6df7a0dfc48a73d2101fc74bfec243f3
 
 ## 配置 Doris 数据源
 
-{/* 知识类型: 配置参数 */}
-{/* 适用场景: 在 Metabase 管理页面新增 Apache Doris 数据库连接 */}
+<!-- 知识类型: 配置参数 -->
+<!-- 适用场景: 在 Metabase 管理页面新增 Apache Doris 数据库连接 -->
 
 安装 Metabase 和 `metabase-doris-driver` 后，可以在 Metabase 中新增一个连接到 Doris `tpch` 数据库的数据源。
 
@@ -172,8 +172,8 @@ b23e82f19a7f9226343e42566e1e192b6df7a0dfc48a73d2101fc74bfec243f3
 
 ## 构建可视化仪表盘
 
-{/* 知识类型: 操作步骤 */}
-{/* 适用场景: 使用 Doris TPC-H 数据在 Metabase 中创建 Question 和 Dashboard */}
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 使用 Doris TPC-H 数据在 Metabase 中创建 Question 和 Dashboard -->
 
 本示例使用 TPC-H 数据作为数据源。Doris TPC-H 数据源构建方式请参见 [Doris TPC-H 基准测试文档](../../lakehouse/best-practices/tpch.md)。
 
@@ -280,8 +280,8 @@ b23e82f19a7f9226343e42566e1e192b6df7a0dfc48a73d2101fc74bfec243f3
 
 ## 高级使用场景
 
-{/* 知识类型: 功能说明 */}
-{/* 适用场景: 访问外部数据源、创建交互式仪表盘和优化查询性能 */}
+<!-- 知识类型: 功能说明 -->
+<!-- 适用场景: 访问外部数据源、创建交互式仪表盘和优化查询性能 -->
 
 ### 使用 Catalog 访问外部数据
 
