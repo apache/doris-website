@@ -2,13 +2,31 @@
 {
     "title": "ADBC Catalog",
     "language": "zh-CN",
-    "description": "Apache Doris ADBC Catalog 使用指南：通过 Arrow Database Connectivity 驱动访问 Arrow Flight SQL 等外部数据源，数据以 Arrow 格式传输并由多个 BE 节点并行读取，支持谓词下推、列裁剪、类型映射和元数据缓存，实现高性能的跨集群联邦查询与数据集成。"
+    "description": "Doris ADBC Catalog 通过 ADBC 驱动以 Arrow 格式读取 Arrow Flight SQL 等外部数据源，支持多 BE 并行读取、谓词下推和联邦查询。",
+    "keywords": [
+        "ADBC Catalog",
+        "Arrow Database Connectivity",
+        "Arrow Flight SQL",
+        "ADBC 驱动",
+        "driver_url",
+        "partitioned_read",
+        "并行读取",
+        "谓词下推",
+        "跨集群联邦查询",
+        "Doris 数据集成",
+        "ADBC 与 JDBC 区别"
+    ]
 }
 ---
 
+<!-- 知识类型: 能力定义 + 配置参考 -->
+<!-- 适用场景: 跨集群联邦查询 / 外部数据源接入 / 数据集成 -->
+
 ## 概述
 
-ADBC（[Arrow Database Connectivity](https://arrow.apache.org/adbc/)）是 Arrow 生态定义的一套数据库访问接口。ADBC Catalog 通过 ADBC 驱动访问外部数据源，与 JDBC Catalog 相比有两点不同：
+ADBC（[Arrow Database Connectivity](https://arrow.apache.org/adbc/)）是 Arrow 生态定义的一套数据库访问接口。**ADBC Catalog 通过 ADBC 驱动访问外部数据源，数据以 Arrow 格式传输，并由多个 BE 节点并行读取。**
+
+与 JDBC Catalog 相比，有两点不同：
 
 - **Arrow 原生传输**：数据以 Arrow 格式在网络上传输并被 Doris 直接读取，无需逐行逐值的格式转换。
 - **多 BE 并行读取**：一次扫描会按驱动自身的结果分区（Partition）拆分，由多个 BE 节点同时读取，而不是由单个 BE 节点通过单条连接读取。
@@ -34,29 +52,33 @@ ADBC（[Arrow Database Connectivity](https://arrow.apache.org/adbc/)）是 Arrow
 
 | 场景 | 说明 |
 | --- | --- |
-| 数据集成 | 读取外部数据源的数据并写入到 Doris 内表，或与内表、其他 Catalog 的表进行联邦查询。数据以 Arrow 格式传输，并由多个 BE 节点并行读取，相比 JDBC 方式可以获得更高性能的数据交互。 |
+| 数据集成 | 读取外部数据源的数据并写入 Doris 内表，或与内表、其他 Catalog 的表进行联邦查询。数据以 Arrow 格式传输，并由多个 BE 节点并行读取，相比 JDBC 方式可以获得更高性能的数据交互。 |
 | 数据写回 | 暂不支持。 |
 
 ## 功能概览
 
-| 功能 | 支持情况 |
-| --- | --- |
-| 元数据访问 | 支持 `SHOW DATABASES`、`SHOW TABLES`、`DESC`、`SHOW CREATE TABLE` 以及 `information_schema` |
-| 数据查询 | 支持对外部表的查询，以及与内表、其他 Catalog 表的 Join、聚合、`ORDER BY`、`UNION` 和子查询 |
-| 列裁剪 | 支持，只向数据源请求查询实际需要的列 |
-| 谓词下推 | 支持将部分标量谓词下推为远端 `WHERE` 条件 |
-| `LIMIT` 下推 | 支持，在 `WHERE` 条件被完整下推后生效 |
-| `COUNT(*)` 优化 | 支持，不读取任何列数据 |
-| 并行读取 | 支持按驱动的结果分区拆分扫描，由多个 BE 并行读取 |
-| 类型映射 | 支持包括 `ARRAY`、`MAP`、`STRUCT`、`DECIMAL`、日期和带/不带时区时间戳在内的自动映射 |
-| 元数据缓存 | 支持，默认缓存 10 分钟，可通过 `REFRESH` 语句清除 |
-| `SELECT INTO OUTFILE` | 支持 |
-| 物化视图（MTMV） | 支持基于 ADBC 表构建和刷新 |
-| 写入数据源 | 暂不支持 `INSERT`、`CREATE TABLE`、`DROP TABLE` 等写操作 |
-| 统计信息 | 暂不支持 |
-| 聚合下推 | 暂不支持 |
+<!-- 知识类型: 能力清单 -->
+
+| 功能 | 支持情况 | 说明 |
+| --- | --- | --- |
+| 元数据访问 | 支持 | `SHOW DATABASES`、`SHOW TABLES`、`DESC`、`SHOW CREATE TABLE` 以及 `information_schema` |
+| 数据查询 | 支持 | 对外部表的查询，以及与内表、其他 Catalog 表的 Join、聚合、`ORDER BY`、`UNION` 和子查询 |
+| 列裁剪 | 支持 | 只向数据源请求查询实际需要的列 |
+| 谓词下推 | 支持 | 将部分标量谓词下推为远端 `WHERE` 条件 |
+| `LIMIT` 下推 | 支持 | 在 `WHERE` 条件被完整下推后生效 |
+| `COUNT(*)` 优化 | 支持 | 不读取任何列数据 |
+| 并行读取 | 支持 | 按驱动的结果分区拆分扫描，由多个 BE 并行读取 |
+| 类型映射 | 支持 | 自动映射，包括 `ARRAY`、`MAP`、`STRUCT`、`DECIMAL`、日期和带/不带时区时间戳 |
+| 元数据缓存 | 支持 | 默认缓存 10 分钟，可通过 `REFRESH` 语句清除 |
+| `SELECT INTO OUTFILE` | 支持 | 可将查询结果导出到文件 |
+| 物化视图（MTMV） | 支持 | 可基于 ADBC 表构建和刷新 |
+| 写入数据源 | 暂不支持 | `INSERT`、`CREATE TABLE`、`DROP TABLE` 等写操作 |
+| 统计信息 | 暂不支持 | 不支持统计信息收集 |
+| 聚合下推 | 暂不支持 | 聚合运算由 Doris 完成 |
 
 ## 部署 ADBC 驱动
+
+<!-- 知识类型: 部署步骤 -->
 
 Doris 不附带任何 ADBC 驱动，使用前需要先将驱动动态库部署到集群节点上。
 
@@ -94,6 +116,8 @@ driver_secure_path=/opt/doris/adbc_drivers
 
 ## 配置 Catalog
 
+<!-- 知识类型: 配置参数 -->
+
 ### 语法
 
 ```sql
@@ -111,15 +135,13 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * `<driver_url>`
 
-    必填。ADBC 驱动动态库。
+    必填。ADBC 驱动动态库，**只支持本地引用**，可以填写以下三种形式：
 
-    **只支持本地引用**，可以填写以下三种形式：
-
-    * 纯文件名：在 `adbc.conf` 的 `drivers_dir` 目录下解析。文件名必须匹配 `[A-Za-z0-9._-]+.so`（允许带版本号后缀，如 `.so.1`），不能包含路径分隔符。
-
-    * `file://` URL：不能带有 authority、query 或 fragment。
-
-    * 绝对路径。
+    | 形式 | 说明 |
+    | --- | --- |
+    | 纯文件名 | 在 `adbc.conf` 的 `drivers_dir` 目录下解析。文件名必须匹配 `[A-Za-z0-9._-]+.so`（允许带版本号后缀，如 `.so.1`），不能包含路径分隔符。 |
+    | `file://` URL | 不能带有 authority、query 或 fragment。 |
+    | 绝对路径 | FE 和所有 BE 都按该路径加载驱动库。 |
 
     不支持 `http://` 等远程协议，因为逐节点下载无法保证各节点拿到同一个驱动构建。
 
@@ -127,67 +149,58 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     必填。ADBC 连接串。
 
-    **必须指向一个确定的远端 Catalog**（例如 `postgresql://host:5432/mydb`），因为 Doris 需要把 ADBC 的三级命名空间映射到自身的两级命名空间。详情可参阅【命名空间映射】部分。
+    **必须指向一个确定的远端 Catalog**（例如 `postgresql://host:5432/mydb`），因为 Doris 需要把 ADBC 的三级命名空间映射到自身的两级命名空间。详情可参阅[命名空间映射](#命名空间映射)部分。
 
 * `{DriverProperties}`
 
     DriverProperties 部分用于填写驱动加载相关的可选属性。
 
-    - `driver_checksum`
+    | 属性名 | 默认值 | 说明 |
+    | --- | --- | --- |
+    | `driver_checksum` | 不校验 | 驱动库文件的 MD5 值，在 `CREATE CATALOG` 时校验。 |
+    | `driver_entrypoint` | 空 | 驱动的入口函数符号名。为空时由驱动自行推断。 |
 
-        驱动库文件的 MD5 值，在 `CREATE CATALOG` 时校验。默认不校验。
+    `driver_checksum` 用于避免放错驱动版本，或某个节点上是旧副本这类问题。这类问题通常可以正常加载驱动，但会在很久之后表现为一个看起来与驱动文件无关的查询失败。
 
-        用于避免放错驱动版本，或某个节点上是旧副本这类问题。这类问题通常可以正常加载驱动，但会在很久之后表现为一个看起来与驱动文件无关的查询失败。
-
-        注意：该校验只作用于 FE 上的驱动副本，不会校验 BE 上的副本。
-
-    - `driver_entrypoint`
-
-        驱动的入口函数符号名。默认为空，此时由驱动自行推断。
+    :::caution
+    `driver_checksum` 只作用于 FE 上的驱动副本，不会校验 BE 上的副本。
+    :::
 
 * `{ConnectionProperties}`
 
     ConnectionProperties 部分用于填写数据源的认证信息，以及生成下推 SQL 时使用的方言。
 
-    - `user`
+    | 属性名 | 默认值 | 说明 |
+    | --- | --- | --- |
+    | `user` | 无 | 用户名。会原样传递给驱动，是否必填取决于数据源。 |
+    | `password` | 无 | 密码。会原样传递给驱动，是否必填取决于数据源。 |
+    | `sql_dialect` | 自动探测 | 生成下推 SQL 时使用的方言。默认由驱动上报数据源的 Vendor 名称来选择方言，无法识别时使用 `ansi`。 |
 
-        用户名。会原样传递给驱动，是否必填取决于数据源。
+    当数据源上报的 Vendor 名称不可用，或其 SQL 与 Vendor 名称暗示的不一致时，可以显式指定 `sql_dialect`。当前内置两种方言：
 
-    - `password`
-
-        密码。会原样传递给驱动，是否必填取决于数据源。
-
-    - `sql_dialect`
-
-        生成下推 SQL 时使用的方言。默认自动探测：由驱动上报数据源的 Vendor 名称来选择方言，无法识别时使用 `ansi`。
-
-        当数据源上报的 Vendor 名称不可用，或其 SQL 与 Vendor 名称暗示的不一致时，可以显式指定。当前内置两种方言：
-
-        * `ansi`：标准 SQL。默认值，也是无法识别的数据源所使用的方言。
-
-        * `doris`：与 `ansi` 的唯一区别是标识符使用反引号（`` ` ``）引用。Doris 会把双引号解析为字符串字面量，因此 ANSI 的引用方式在 Doris 数据源上无法解析。Vendor 名称以 `doris` 开头（不区分大小写）的数据源会自动选中该方言。
+    | 取值 | 说明 |
+    | --- | --- |
+    | `ansi` | 标准 SQL。默认值，也是无法识别的数据源所使用的方言。 |
+    | `doris` | 与 `ansi` 的唯一区别是标识符使用反引号（`` ` ``）引用。Doris 会把双引号解析为字符串字面量，因此 ANSI 的引用方式在 Doris 数据源上无法解析。Vendor 名称以 `doris` 开头（不区分大小写）的数据源会自动选中该方言。 |
 
 * `{ReadProperties}`
 
     ReadProperties 部分用于控制并行读取行为。
 
-    - `partitioned_read`
+    | 属性名 | 默认值 | 说明 |
+    | --- | --- | --- |
+    | `partitioned_read` | `auto` | 并行读取模式。取值非法时直接报错，不会回退到默认值。 |
+    | `max_partitions` | `1024` | 一次扫描最多可以规划的分区数。 |
 
-        并行读取模式，默认为 `auto`。取值非法时直接报错，不会回退到默认值。支持以下三种取值：
+    `partitioned_read` 支持以下三种取值：
 
-        * `auto`：默认值。驱动支持分区时拆分扫描，不支持时回退为单条语句读取。
+    | 取值 | 说明 |
+    | --- | --- |
+    | `auto` | 默认值。驱动支持分区时拆分扫描，不支持时回退为单条语句读取。 |
+    | `disabled` | 从不请求分区。请求分区并非零开销：在 Arrow Flight SQL 数据源上，返回分区的调用**就是**查询的执行，因此会多一次远程交互，并且数据源会在 Doris 决定执行该查询之前就开始工作。当数据源为此付出的代价过高，或其分区 Doris 无法读取时，可以用该值回到单条语句读取的方式。 |
+    | `required` | 必须拆分扫描，否则查询报错并说明原因。适用于不允许静默丢失并行度的场景：在 `auto` 下，驱动一旦停止分区，查询仍然会成功，只是悄悄走了回退路径。 |
 
-        * `disabled`：从不请求分区。请求分区并非零开销：在 Arrow Flight SQL 数据源上，返回分区的调用**就是**查询的执行，因此会多一次远程交互，并且数据源会在 Doris 决定执行该查询之前就开始工作。当数据源为此付出的代价过高，或其分区 Doris 无法读取时，可以用该值回到单条语句读取的方式。
-
-        * `required`：必须拆分扫描，否则查询报错并说明原因。适用于不允许静默丢失并行度的场景：在 `auto` 下，驱动一旦停止分区，查询仍然会成功，只是悄悄走了回退路径。
-
-    - `max_partitions`
-
-        一次扫描最多可以规划的分区数，默认为 `1024`。
-
-        这是防止异常数据源的保护阈值，不是调优参数：每个分区都会占用一定的规划开销，分区过多会耗尽 FE 资源。
-
-        超过该值时查询直接失败，而不是回退为单条语句读取。因为此时数据源已经执行过该查询，回退会导致它再执行一次。
+    `max_partitions` 是防止异常数据源的保护阈值，不是调优参数：每个分区都会占用一定的规划开销，分区过多会耗尽 FE 资源。超过该值时查询直接失败，而不是回退为单条语句读取，因为此时数据源已经执行过该查询，回退会导致它再执行一次。
 
 * `{DriverOptions}`
 
@@ -205,9 +218,11 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     CommonProperties 部分用于填写通用属性。请参阅[数据目录概述](../catalog-overview.md)中【通用属性】部分。
 
-    元数据缓存相关的属性请参阅【元数据缓存】部分。
+    元数据缓存相关的属性请参阅[元数据缓存](#meta-cache)部分。
 
 ## 基础示例
+
+<!-- 知识类型: 操作示例 -->
 
 ### 访问另一个 Doris 集群
 
@@ -229,6 +244,8 @@ SELECT id, name FROM remote_doris.some_db.some_table ORDER BY id LIMIT 10;
 
 ### 使用绝对路径并校验驱动版本
 
+`driver_url` 使用绝对路径引用驱动，并通过 `driver_checksum` 固定 FE 侧的驱动版本：
+
 ```sql
 CREATE CATALOG remote_source PROPERTIES (
     'type' = 'adbc',
@@ -241,6 +258,8 @@ CREATE CATALOG remote_source PROPERTIES (
 ```
 
 ### 显式指定方言并强制并行读取
+
+访问 Doris 数据源时指定 `doris` 方言，并要求扫描必须拆分为分区，避免静默丢失并行度：
 
 ```sql
 CREATE CATALOG remote_doris_parallel PROPERTIES (
@@ -272,6 +291,8 @@ CREATE CATALOG remote_source_single PROPERTIES (
 
 ## 命名空间映射
 
+<!-- 知识类型: 行为规则 -->
+
 ADBC 使用三级命名（catalog / db_schema / table），而 Doris 外部表只有两级（database / table）——最外层的名字已经被用户创建的 Catalog 占用。因此：
 
 - `uri` 必须指向一个确定的远端 Catalog。这样两个远端层级中最多只有一个是变化的，无需将两级名字拼接成一个数据库名。
@@ -287,6 +308,8 @@ ADBC 使用三级命名（catalog / db_schema / table），而 Doris 外部表�
 如果 `uri` 没有指向确定的远端 Catalog，Doris 会在 `CREATE CATALOG` 时报错，提示在 `uri` 中指定远端 Catalog 名（如 `postgresql://host:5432/mydb`），或通过驱动选项指定。部分驱动不实现相关的查询接口，此时 Doris 会接受该 `uri`，问题会在第一次 `SHOW DATABASES` 时暴露。
 
 ## 列类型映射
+
+<!-- 知识类型: 类型参考 -->
 
 Doris 按数据源返回的 Arrow 类型进行映射。
 
@@ -306,7 +329,7 @@ Doris 按数据源返回的 Arrow 类型进行映射。
 | `decimal128(P,S)` | `DECIMAL(P,S)` | 精度上限为 38，超出则报错 |
 | `decimal256(P,S)` | `DECIMAL(P,S)` | 精度上限为 76，超出则报错 |
 | `date32(day)` | `DATE` | |
-| `date64(ms)` | `DATETIME(3)` | `date64` 带有时间部分，映射为 `DATE` 会丢失 |
+| `date64(ms)` | `DATETIME(3)` | `date64` 带有时间部分，映射为 `DATE` 会丢失时间部分 |
 | 无时区 `timestamp(s)` | `DATETIME(0)` | |
 | 无时区 `timestamp(ms)` | `DATETIME(3)` | |
 | 无时区 `timestamp(us)`、`timestamp(ns)` | `DATETIME(6)` | 纳秒精度截断为微秒 |
@@ -320,15 +343,15 @@ Doris 按数据源返回的 Arrow 类型进行映射。
 | `run_end_encoded` | 按值类型映射 | |
 | 其他 | 不支持 | |
 
-> 注：
->
-> Doris 没有无符号整数类型，因此无符号类型会提升一级映射。例如 `uint32` 映射为 `BIGINT` 而不是 `INT`，否则超过 2^31 的值会静默回绕为负数。
->
-> 遇到无法映射的类型时，Doris 会在描述表结构时直接报错，并指出具体的列名和 Arrow 类型，而不是映射为一个有损的类型。可以在源端将该列 CAST 为可映射的类型，或在查询中排除该列。
->
-> 从 Doris 数据源读取时，`IPV4` 列会以 `INT` 返回（两端都按 int32 编码），源端的 `DATETIME` 列会以 `TIMESTAMPTZ` 返回。
+:::note
+- Doris 没有无符号整数类型，因此无符号类型会提升一级映射。例如 `uint32` 映射为 `BIGINT` 而不是 `INT`，否则超过 2^31 的值会静默回绕为负数。
+- 遇到无法映射的类型时，Doris 会在描述表结构时直接报错，并指出具体的列名和 Arrow 类型，而不是映射为一个有损的类型。可以在源端将该列 CAST 为可映射的类型，或在查询中排除该列。
+- 从 Doris 数据源读取时，`IPV4` 列会以 `INT` 返回（两端都按 int32 编码），源端的 `DATETIME` 列会以 `TIMESTAMPTZ` 返回。
+:::
 
 ## 查询操作
+
+<!-- 知识类型: 操作示例 + 行为规则 -->
 
 ### 基础查询
 
@@ -360,9 +383,11 @@ DESC adbc_ctl.adbc_db.adbc_tbl;
 SHOW CREATE TABLE adbc_ctl.adbc_db.adbc_tbl;
 ```
 
-数据库列表和表列表始终实时读取，因此在数据源上新建的表无需执行任何 `REFRESH` 即可看到。表结构（Schema）会被缓存，详见【元数据缓存】。
+数据库列表和表列表始终实时读取，因此在数据源上新建的表无需执行任何 `REFRESH` 即可看到。表结构（Schema）会被缓存，详见[元数据缓存](#meta-cache)。
 
-> 注：数据源上的视图不会作为表列出。
+:::note
+数据源上的视图不会作为表列出。
+:::
 
 ### 数据集成
 
@@ -433,6 +458,8 @@ LIMIT 10;
 
 ## 元数据缓存 {#meta-cache}
 
+<!-- 知识类型: 配置参数 + 使用建议 -->
+
 为了提升访问外部数据源的性能，Doris 会缓存 ADBC Catalog 的部分元数据，包括数据库名解析、表名解析和表结构（Schema）。
 
 数据库列表和表列表**不做缓存**，始终实时读取，因此数据源上新建的表无需 `REFRESH` 即可访问。
@@ -502,6 +529,8 @@ ADBC 连接使用 Catalog 中配置的固定身份访问数据源，与发起查
 
 ## 使用限制
 
+<!-- 知识类型: 使用限制 -->
+
 - **只读**：不支持 `INSERT`、`CREATE TABLE`、`DROP TABLE` 等针对数据源的写操作。
 - 不支持统计信息收集和聚合下推。
 - 数据源上的视图不会作为表列出。
@@ -513,33 +542,14 @@ ADBC 连接使用 Catalog 中配置的固定身份访问数据源，与发起查
 
 ### FAQ
 
-1. `Driver file not found`
+<!-- 知识类型: 故障排查 -->
 
-    FE 无法在解析出的路径上找到驱动文件。请检查：
-
-    - `driver_url` 填写的纯文件名是否位于 `adbc.conf` 的 `drivers_dir` 目录下；
-    - 使用绝对路径或 `file://` URL 时，该路径在 FE 节点上是否存在且可读。
-
-2. `Driver path does not match any path allowed by driver_secure_path`
-
-    驱动路径不在 `adbc.conf` 的 `driver_secure_path` 白名单内。将驱动移动到白名单目录下，或调整 `driver_secure_path` 配置后重启 FE。
-
-3. `scheme 'xxx' is not supported, only a local file is`
-
-    `driver_url` 使用了 `http://` 等远程协议。ADBC 驱动不支持逐节点下载，请将驱动文件放置到 FE 和所有 BE 上，并通过纯文件名、绝对路径或 `file://` URL 引用。
-
-4. `The ADBC source reports no current catalog, so 'uri' does not pin one`
-
-    `uri` 没有指向一个确定的远端 Catalog。请在 `uri` 中指定远端 Catalog 名（如 `postgresql://host:5432/mydb`），或通过 `adbc.` 前缀的驱动选项指定。
-
-5. 查询报错提示某列的 Arrow 类型没有对应的 Doris 类型
-
-    该列的类型当前不支持映射。可以在数据源侧将该列 CAST 为可映射的类型，或在查询中排除该列（不要使用 `SELECT *`）。
-
-6. 查询结果异常，但没有报错
-
-    请确认 FE 和所有 BE 上的驱动文件是同一个构建产物。ADBC 的分区信息使用驱动私有的格式描述，不同实现之间可能会错误解析而不报错。可以通过 `driver_checksum` 固定 FE 侧的驱动版本，并人工核对各 BE 上驱动文件的 MD5。
-
-7. 远端 SQL 报语法错误
-
-    数据源的 SQL 方言与当前使用的方言不匹配。可以通过 `sql_dialect` 显式指定方言，例如访问 Doris 数据源时指定 `'sql_dialect' = 'doris'`。
+| 现象 / 报错 | 原因 | 处理方法 |
+| --- | --- | --- |
+| `Driver file not found` | FE 无法在解析出的路径上找到驱动文件。 | 检查 `driver_url` 填写的纯文件名是否位于 `adbc.conf` 的 `drivers_dir` 目录下；使用绝对路径或 `file://` URL 时，检查该路径在 FE 节点上是否存在且可读。 |
+| `Driver path does not match any path allowed by driver_secure_path` | 驱动路径不在 `adbc.conf` 的 `driver_secure_path` 白名单内。 | 将驱动移动到白名单目录下，或调整 `driver_secure_path` 配置后重启 FE。 |
+| `scheme 'xxx' is not supported, only a local file is` | `driver_url` 使用了 `http://` 等远程协议。 | ADBC 驱动不支持逐节点下载。请将驱动文件放置到 FE 和所有 BE 上，并通过纯文件名、绝对路径或 `file://` URL 引用。 |
+| `The ADBC source reports no current catalog, so 'uri' does not pin one` | `uri` 没有指向一个确定的远端 Catalog。 | 在 `uri` 中指定远端 Catalog 名（如 `postgresql://host:5432/mydb`），或通过 `adbc.` 前缀的驱动选项指定。 |
+| 查询报错提示某列的 Arrow 类型没有对应的 Doris 类型 | 该列的类型当前不支持映射。 | 在数据源侧将该列 CAST 为可映射的类型，或在查询中排除该列（不要使用 `SELECT *`）。 |
+| 查询结果异常，但没有报错 | FE 和 BE 上的驱动文件可能不是同一个构建产物。ADBC 的分区信息使用驱动私有的格式描述，不同实现之间可能会错误解析而不报错。 | 通过 `driver_checksum` 固定 FE 侧的驱动版本，并人工核对各 BE 上驱动文件的 MD5。 |
+| 远端 SQL 报语法错误 | 数据源的 SQL 方言与当前使用的方言不匹配。 | 通过 `sql_dialect` 显式指定方言，例如访问 Doris 数据源时指定 `'sql_dialect' = 'doris'`。 |

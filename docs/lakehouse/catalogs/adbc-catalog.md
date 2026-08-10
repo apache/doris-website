@@ -2,13 +2,31 @@
 {
     "title": "ADBC Catalog",
     "language": "en",
-    "description": "Apache Doris ADBC Catalog guide: query Arrow Flight SQL and other external data sources through an Arrow Database Connectivity driver, with Arrow-native transfer, parallel reads across BE nodes, and predicate pushdown."
+    "description": "Query Arrow Flight SQL and other external sources through an ADBC driver: Arrow-format transfer and parallel BE reads.",
+    "keywords": [
+        "ADBC Catalog",
+        "Arrow Database Connectivity",
+        "Arrow Flight SQL",
+        "ADBC driver",
+        "driver_url",
+        "partitioned_read",
+        "parallel reads",
+        "predicate pushdown",
+        "cross-cluster federated query",
+        "Doris data integration",
+        "ADBC vs JDBC"
+    ]
 }
 ---
 
+<!-- Knowledge Type: Capability Definition + Configuration Reference -->
+<!-- Applicable Scenarios: Cross-cluster federated query / External data source access / Data integration -->
+
 ## Overview
 
-ADBC ([Arrow Database Connectivity](https://arrow.apache.org/adbc/)) is a database access interface defined by the Arrow ecosystem. An ADBC Catalog reads an external data source through an ADBC driver. Two things work differently than in a JDBC Catalog:
+ADBC ([Arrow Database Connectivity](https://arrow.apache.org/adbc/)) is a database access interface defined by the Arrow ecosystem. **An ADBC Catalog reads an external data source through an ADBC driver: data crosses the network in Arrow format, and several BE nodes read it in parallel.**
+
+Two things work differently than in a JDBC Catalog:
 
 - Arrow-native transfer. Data crosses the network in Arrow format and Doris reads it directly, without the row-by-row, value-by-value conversion a JDBC catalog performs.
 - Parallel reads. One scan is split by the driver's own result partitions and read by several BE nodes at once, instead of by a single BE node over one connection.
@@ -39,24 +57,28 @@ The current phase targets Arrow Flight SQL data sources, including another Doris
 
 ## Feature Overview
 
-| Feature | Support |
-| --- | --- |
-| Metadata access | `SHOW DATABASES`, `SHOW TABLES`, `DESC`, `SHOW CREATE TABLE` and `information_schema` |
-| Data query | Queries against external tables, plus joins, aggregation, `ORDER BY`, `UNION` and subqueries with internal tables and tables in other catalogs |
-| Column pruning | Supported. Only the columns a query needs are requested from the data source |
-| Predicate pushdown | Some scalar predicates become the remote `WHERE` clause |
-| `LIMIT` pushdown | Supported once the whole `WHERE` clause has been pushed down |
-| `COUNT(*)` optimization | Supported. No column data is read |
-| Parallel reads | A scan is split by the driver's result partitions and read by several BE nodes |
-| Type mapping | Automatic, including `ARRAY`, `MAP`, `STRUCT`, `DECIMAL`, dates, and timestamps with and without a time zone |
-| Metadata cache | Supported. Cached for 10 minutes by default, cleared by any `REFRESH` statement |
-| `SELECT INTO OUTFILE` | Supported |
-| Materialized views (MTMV) | An MTMV can be built and refreshed on an ADBC table |
-| Writing to the data source | `INSERT`, `CREATE TABLE`, `DROP TABLE` and other write statements are not supported yet |
-| Statistics | Not supported yet |
-| Aggregate pushdown | Not supported yet |
+<!-- Knowledge Type: Capability Matrix -->
+
+| Feature | Support | Description |
+| --- | --- | --- |
+| Metadata access | Supported | `SHOW DATABASES`, `SHOW TABLES`, `DESC`, `SHOW CREATE TABLE` and `information_schema` |
+| Data query | Supported | Queries against external tables, plus joins, aggregation, `ORDER BY`, `UNION` and subqueries with internal tables and tables in other catalogs |
+| Column pruning | Supported | Only the columns a query needs are requested from the data source |
+| Predicate pushdown | Supported | Some scalar predicates become the remote `WHERE` clause |
+| `LIMIT` pushdown | Supported | Applies once the whole `WHERE` clause has been pushed down |
+| `COUNT(*)` optimization | Supported | No column data is read |
+| Parallel reads | Supported | A scan is split by the driver's result partitions and read by several BE nodes |
+| Type mapping | Supported | Automatic, including `ARRAY`, `MAP`, `STRUCT`, `DECIMAL`, dates, and timestamps with and without a time zone |
+| Metadata cache | Supported | Cached for 10 minutes by default, cleared by any `REFRESH` statement |
+| `SELECT INTO OUTFILE` | Supported | Query results can be exported to a file |
+| Materialized views (MTMV) | Supported | An MTMV can be built and refreshed on an ADBC table |
+| Writing to the data source | Not supported yet | `INSERT`, `CREATE TABLE`, `DROP TABLE` and other write statements are rejected |
+| Statistics | Not supported yet | Statistics collection is unavailable |
+| Aggregate pushdown | Not supported yet | Aggregation runs in Doris |
 
 ## Deploying the ADBC Driver
+
+<!-- Knowledge Type: Deployment Steps -->
 
 Doris ships no ADBC driver, so deploy the driver library to the cluster nodes before you create a catalog.
 
@@ -94,6 +116,8 @@ driver_secure_path=/opt/doris/adbc_drivers
 
 ## Configuring Catalog
 
+<!-- Knowledge Type: Configuration Parameters -->
+
 ### Syntax
 
 ```sql
@@ -111,15 +135,13 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * `<driver_url>`
 
-    Required. The ADBC driver shared library.
+    Required. The ADBC driver shared library, given as a **local reference only**. Three forms are accepted:
 
-    **Local references only.** Three forms are accepted:
-
-    * A bare file name, resolved under the `drivers_dir` directory from `adbc.conf`. The name must match `[A-Za-z0-9._-]+.so`, optionally with a version suffix such as `.so.1`, and cannot contain a path separator.
-
-    * A `file://` URL carrying no authority, query or fragment.
-
-    * An absolute path.
+    | Form | Description |
+    | --- | --- |
+    | A bare file name | Resolved under the `drivers_dir` directory from `adbc.conf`. The name must match `[A-Za-z0-9._-]+.so`, optionally with a version suffix such as `.so.1`, and cannot contain a path separator. |
+    | A `file://` URL | Carries no authority, query or fragment. |
+    | An absolute path | The FE and every BE load the driver library from that path. |
 
     Remote schemes such as `http://` are rejected, because a per-node download cannot promise that every node ends up with the same driver build.
 
@@ -127,67 +149,58 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     Required. The ADBC connection string.
 
-    It **must pin one remote catalog**, for example `postgresql://host:5432/mydb`, because Doris maps ADBC's three naming levels onto its own two. Refer to the section on [Namespace Mapping] for details.
+    It **must pin one remote catalog**, for example `postgresql://host:5432/mydb`, because Doris maps ADBC's three naming levels onto its own two. See [Namespace Mapping](#namespace-mapping) for details.
 
 * `{DriverProperties}`
 
     The DriverProperties section holds optional properties that control how the driver is loaded.
 
-    - `driver_checksum`
+    | Property | Default | Description |
+    | --- | --- | --- |
+    | `driver_checksum` | Nothing is verified | MD5 of the driver library file, verified at `CREATE CATALOG`. |
+    | `driver_entrypoint` | Empty | The driver's entry point symbol. When empty, the driver infers it. |
 
-        MD5 of the driver library file, verified at `CREATE CATALOG`. Nothing is verified by default.
+    `driver_checksum` catches the wrong driver build, or a stale copy on one node. Such a file usually loads without complaint and surfaces much later as a query failure that says nothing about a driver.
 
-        It catches a mistake that is easy to make here: the wrong driver build, or a stale copy on one node. Such a file usually loads without complaint and surfaces much later as a query failure that says nothing about a driver.
-
-        This verifies the FE's copy only, not the copies on the BEs.
-
-    - `driver_entrypoint`
-
-        The driver's entry point symbol. Empty by default, in which case the driver infers it.
+    :::caution
+    `driver_checksum` verifies the FE's copy only, not the copies on the BEs.
+    :::
 
 * `{ConnectionProperties}`
 
     The ConnectionProperties section holds the credentials for the data source and the dialect used to generate pushdown SQL.
 
-    - `user`
+    | Property | Default | Description |
+    | --- | --- | --- |
+    | `user` | None | User name, passed to the driver as written. Whether it is required depends on the data source. |
+    | `password` | None | Password, passed to the driver as written. Whether it is required depends on the data source. |
+    | `sql_dialect` | Auto-detected | The dialect used to generate pushdown SQL. By default the driver reports the data source's vendor name and Doris picks a dialect from it. An unrecognized name gets `ansi`. |
 
-        User name. Passed to the driver as written. Whether it is required depends on the data source.
+    Set `sql_dialect` explicitly when the vendor name a data source reports is unhelpful, or when its SQL does not match what that name implies. Two dialects are built in:
 
-    - `password`
-
-        Password. Passed to the driver as written. Whether it is required depends on the data source.
-
-    - `sql_dialect`
-
-        The dialect used to generate pushdown SQL. Auto-detected by default: the driver reports the data source's vendor name and Doris picks a dialect from it. An unrecognized name gets `ansi`.
-
-        Set it explicitly when the vendor name a data source reports is unhelpful, or when its SQL does not match what that name implies. Two dialects are built in:
-
-        * `ansi`: standard SQL. The default, and what an unrecognized data source gets.
-
-        * `doris`: identical to `ansi` except that identifiers are quoted with backticks (`` ` ``). Doris reads a double-quoted name as a string literal, so ANSI quoting does not parse against a Doris data source at all. A data source whose vendor name starts with `doris`, case-insensitively, selects this dialect automatically.
+    | Value | Description |
+    | --- | --- |
+    | `ansi` | Standard SQL. The default, and what an unrecognized data source gets. |
+    | `doris` | Identical to `ansi` except that identifiers are quoted with backticks (`` ` ``). Doris reads a double-quoted name as a string literal, so ANSI quoting does not parse against a Doris data source at all. A data source whose vendor name starts with `doris`, case-insensitively, selects this dialect automatically. |
 
 * `{ReadProperties}`
 
     The ReadProperties section controls parallel reads.
 
-    - `partitioned_read`
+    | Property | Default | Description |
+    | --- | --- | --- |
+    | `partitioned_read` | `auto` | Parallel read mode. An invalid value raises an error rather than falling back to the default. |
+    | `max_partitions` | `1024` | The largest number of partitions one scan may plan. |
 
-        Parallel read mode, `auto` by default. An invalid value raises an error rather than falling back to the default. Three values are accepted:
+    `partitioned_read` accepts three values:
 
-        * `auto`: the default. Split the scan when the driver can partition it, and read it as a single statement when it cannot.
+    | Value | Description |
+    | --- | --- |
+    | `auto` | The default. Splits the scan when the driver can partition it, and reads it as a single statement when it cannot. |
+    | `disabled` | Never asks for partitions. Asking is not free: on an Arrow Flight SQL data source the call that returns partitions **is** the query's execution, so planning costs one more remote round trip and the data source starts working before Doris has committed to running the query. Use this value to get back to single-statement reads when a data source pays too much for that, or when Doris cannot read the partitions it returns. |
+    | `required` | The scan must be split, or the query fails and says why. Use it where parallelism must not be lost quietly. Under `auto`, a driver that stops partitioning still returns a successful query, and nothing in the result shows that it took the fallback path. |
 
-        * `disabled`: never ask for partitions. Asking is not free. On an Arrow Flight SQL data source the call that returns partitions **is** the query's execution, so planning costs one more remote round trip and the data source starts working before Doris has committed to running the query. Use this value to get back to single-statement reads when a data source pays too much for that, or when Doris cannot read the partitions it returns.
-
-        * `required`: the scan must be split, or the query fails and says why. Use it where parallelism must not be lost quietly. Under `auto`, a driver that stops partitioning still returns a successful query, and nothing in the result shows that it took the fallback path.
-
-    - `max_partitions`
-
-        The largest number of partitions one scan may plan, `1024` by default.
-
-        This is a guard rail against a pathological data source, not a tuning knob. Every partition costs some planning resource, and enough of them will exhaust the FE.
-
-        Exceeding the limit fails the query instead of falling back to a single-statement read. By that point the data source has already executed the query, and a fallback would make it execute a second time.
+    `max_partitions` is a guard rail against a pathological data source, not a tuning knob. Every partition costs some planning resource, and enough of them will exhaust the FE. Exceeding the limit fails the query instead of falling back to a single-statement read, because by that point the data source has already executed the query and a fallback would make it execute a second time.
 
 * `{DriverOptions}`
 
@@ -203,11 +216,13 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * `{CommonProperties}`
 
-    The CommonProperties section is used to fill in common properties. Please refer to the [Catalog Overview](../catalog-overview.md) section on [Common Properties].
+    The CommonProperties section is used to fill in common properties. Refer to the Common Properties section of [Catalog Overview](../catalog-overview.md).
 
-    For metadata cache properties, refer to the section on [Metadata Cache].
+    For metadata cache properties, see [Metadata Cache](#meta-cache).
 
 ## Examples
+
+<!-- Knowledge Type: Operational Examples -->
 
 ### Querying Another Doris Cluster
 
@@ -229,6 +244,8 @@ SELECT id, name FROM remote_doris.some_db.some_table ORDER BY id LIMIT 10;
 
 ### Using an Absolute Path and Pinning the Driver Build
 
+Reference the driver by absolute path, and pin the FE's copy with `driver_checksum`:
+
 ```sql
 CREATE CATALOG remote_source PROPERTIES (
     'type' = 'adbc',
@@ -241,6 +258,8 @@ CREATE CATALOG remote_source PROPERTIES (
 ```
 
 ### Setting the Dialect and Requiring Parallel Reads
+
+Use the `doris` dialect against a Doris data source, and require the scan to be split so that parallelism is never lost quietly:
 
 ```sql
 CREATE CATALOG remote_doris_parallel PROPERTIES (
@@ -272,6 +291,8 @@ CREATE CATALOG remote_source_single PROPERTIES (
 
 ## Namespace Mapping
 
+<!-- Knowledge Type: Behavior Rules -->
+
 ADBC names objects in three levels (catalog / db_schema / table), while a Doris external table has two (database / table). The outermost name is already spent on the catalog you created, so one remote level has to be dropped from the name:
 
 - `uri` must pin one remote catalog. At most one of the two remote levels then varies, and Doris never has to join two names into a single database name.
@@ -287,6 +308,8 @@ If the data source reports an object with neither a catalog name nor a db_schema
 If `uri` does not pin a remote catalog, Doris reports this at `CREATE CATALOG` and asks you to name the remote catalog in the uri, such as `postgresql://host:5432/mydb`, or through a driver option. Some drivers do not implement the interface Doris uses for that check. Their catalogs are accepted as written, and the problem surfaces at the first `SHOW DATABASES`.
 
 ## Column Type Mapping
+
+<!-- Knowledge Type: Type Reference -->
 
 Doris maps the Arrow types the data source returns.
 
@@ -320,15 +343,15 @@ Doris maps the Arrow types the data source returns.
 | `run_end_encoded` | Mapped by the value type | |
 | Others | Unsupported | |
 
-> Note:
->
-> Doris has no unsigned integer types, so an unsigned type widens by one step. `uint32` maps to `BIGINT` rather than `INT`, because the narrower type would silently wrap every value above 2^31 into a negative number.
->
-> When a type cannot be mapped, Doris raises an error while describing the table and names the column and its Arrow type, rather than mapping it to something lossy. Cast the column on the source side, or leave it out of the query.
->
-> Reading from a Doris data source, an `IPV4` column arrives as `INT` because both sides encode it as int32, and a source `DATETIME` column arrives as `TIMESTAMPTZ`.
+:::note
+- Doris has no unsigned integer types, so an unsigned type widens by one step. `uint32` maps to `BIGINT` rather than `INT`, because the narrower type would silently wrap every value above 2^31 into a negative number.
+- When a type cannot be mapped, Doris raises an error while describing the table and names the column and its Arrow type, rather than mapping it to something lossy. Cast the column on the source side, or leave it out of the query.
+- Reading from a Doris data source, an `IPV4` column arrives as `INT` because both sides encode it as int32, and a source `DATETIME` column arrives as `TIMESTAMPTZ`.
+:::
 
 ## Query Operations
+
+<!-- Knowledge Type: Operational Examples + Behavior Rules -->
 
 ### Basic Query
 
@@ -360,9 +383,11 @@ DESC adbc_ctl.adbc_db.adbc_tbl;
 SHOW CREATE TABLE adbc_ctl.adbc_db.adbc_tbl;
 ```
 
-Database and table listings are always read live, so a table created on the data source is visible without any `REFRESH`. Table schemas are cached; refer to the section on [Metadata Cache].
+Database and table listings are always read live, so a table created on the data source is visible without any `REFRESH`. Table schemas are cached; see [Metadata Cache](#meta-cache).
 
-> Note: Views on the data source are not listed as tables.
+:::note
+Views on the data source are not listed as tables.
+:::
 
 ### Data Integration
 
@@ -433,6 +458,8 @@ A partition count above `max_partitions` fails the query.
 
 ## Metadata Cache {#meta-cache}
 
+<!-- Knowledge Type: Configuration Parameters + Usage Guidance -->
+
 To speed up access to an external data source, Doris caches part of an ADBC catalog's metadata: database name resolution, table name resolution, and table schemas.
 
 Database and table listings are **not cached**. They are always read live, so a table created on the data source is reachable without a `REFRESH`.
@@ -502,6 +529,8 @@ An ADBC connection reaches the data source as the single identity configured on 
 
 ## Limitations
 
+<!-- Knowledge Type: Limitations -->
+
 - Read only. `INSERT`, `CREATE TABLE`, `DROP TABLE` and other write statements against the data source are rejected.
 - Statistics collection and aggregate pushdown are not supported.
 - Views on the data source are not listed as tables.
@@ -513,33 +542,14 @@ An ADBC connection reaches the data source as the single identity configured on 
 
 ### FAQ
 
-1. `Driver file not found`
+<!-- Knowledge Type: Troubleshooting -->
 
-    The FE cannot find the driver file at the path it resolved. Check that:
-
-    - a bare file name in `driver_url` is present in the `drivers_dir` directory from `adbc.conf`;
-    - an absolute path or `file://` URL exists and is readable on the FE node.
-
-2. `Driver path does not match any path allowed by driver_secure_path`
-
-    The driver path falls outside the allow list in `adbc.conf`. Move the driver into an allowed directory, or change `driver_secure_path` and restart the FE.
-
-3. `scheme 'xxx' is not supported, only a local file is`
-
-    `driver_url` uses a remote scheme such as `http://`. An ADBC driver is not downloaded per node. Place the driver file on the FE and on all BEs, then reference it by bare name, absolute path or `file://` URL.
-
-4. `The ADBC source reports no current catalog, so 'uri' does not pin one`
-
-    `uri` does not pin a remote catalog. Name the remote catalog in the uri, such as `postgresql://host:5432/mydb`, or set it through a driver option with the `adbc.` prefix.
-
-5. A query fails saying a column's Arrow type has no Doris equivalent
-
-    That column's type cannot be mapped. Cast it to a mappable type on the data source, or leave it out of the query rather than using `SELECT *`.
-
-6. Query results look wrong, but nothing reports an error
-
-    Check that the driver file is the same build on the FE and on every BE. ADBC describes partition information in a driver-private format, and different implementations can misread each other's without raising anything. Use `driver_checksum` to pin the FE's build, and compare the MD5 of the driver file on each BE by hand.
-
-7. The remote SQL fails with a syntax error
-
-    The data source's SQL dialect does not match the one in use. Set `sql_dialect` explicitly, for example `'sql_dialect' = 'doris'` against a Doris data source.
+| Symptom or error | Cause | What to do |
+| --- | --- | --- |
+| `Driver file not found` | The FE cannot find the driver file at the path it resolved. | Check that a bare file name in `driver_url` is present in the `drivers_dir` directory from `adbc.conf`, and that an absolute path or `file://` URL exists and is readable on the FE node. |
+| `Driver path does not match any path allowed by driver_secure_path` | The driver path falls outside the allow list in `adbc.conf`. | Move the driver into an allowed directory, or change `driver_secure_path` and restart the FE. |
+| `scheme 'xxx' is not supported, only a local file is` | `driver_url` uses a remote scheme such as `http://`. | An ADBC driver is not downloaded per node. Place the driver file on the FE and on all BEs, then reference it by bare name, absolute path or `file://` URL. |
+| `The ADBC source reports no current catalog, so 'uri' does not pin one` | `uri` does not pin a remote catalog. | Name the remote catalog in the uri, such as `postgresql://host:5432/mydb`, or set it through a driver option with the `adbc.` prefix. |
+| A query fails saying a column's Arrow type has no Doris equivalent | That column's type cannot be mapped. | Cast it to a mappable type on the data source, or leave it out of the query rather than using `SELECT *`. |
+| Query results look wrong, but nothing reports an error | The driver file may not be the same build on the FE and on every BE. ADBC describes partition information in a driver-private format, and different implementations can misread each other's without raising anything. | Use `driver_checksum` to pin the FE's build, and compare the MD5 of the driver file on each BE by hand. |
+| The remote SQL fails with a syntax error | The data source's SQL dialect does not match the one in use. | Set `sql_dialect` explicitly, for example `'sql_dialect' = 'doris'` against a Doris data source. |
