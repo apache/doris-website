@@ -688,6 +688,7 @@ const sidebars: SidebarsConfig = {
                         'lakehouse/catalogs/kafka-catalog',
                         'lakehouse/catalogs/es-catalog',
                         'lakehouse/catalogs/doris-catalog',
+                        'lakehouse/catalogs/adbc-catalog',
                         'lakehouse/catalogs/jdbc-catalog-overview',
                         'lakehouse/catalogs/jdbc-mysql-catalog',
                         'lakehouse/catalogs/jdbc-pg-catalog',
