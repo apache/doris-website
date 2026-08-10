@@ -128,7 +128,7 @@ Supported values for `compression` are: `none`, `lz4`, `lz4f`, `lz4hc`, `zstd`, 
 
 ## Configure Per-Column Compression
 
-In a non-cloud deployment, you can override the table-level compression algorithm for individual columns of an OLAP table. This is useful when a table contains columns with different data characteristics. For example, you can use fast LZ4F compression for most columns and a higher ZSTD compression level for a large text column.
+You can override the table-level compression algorithm for individual columns of an OLAP table. This is useful when a table contains columns with different data characteristics. For example, you can use fast LZ4F compression for most columns and a higher ZSTD compression level for a large text column. Per-column compression is supported in both cloud and non-cloud deployments.
 
 ### Syntax
 
@@ -136,34 +136,34 @@ Add the `COMPRESSION` clause to a column definition in `CREATE TABLE`:
 
 ```sql
 <column_name> <data_type> [column_attributes]
-    COMPRESSION '<algorithm>[:<level>]'
+    COMPRESSION <algorithm> [ (<level>) ]
 ```
 
-- `<algorithm>` is case-insensitive.
+- `<algorithm>` is an SQL keyword and is case-insensitive.
 - `<level>` is optional. If it is omitted, Doris uses the default level of the selected algorithm.
 - A column without a `COMPRESSION` clause inherits the table-level `compression` property.
+- If the column also has a `COMMENT` clause, place `COMPRESSION` before `COMMENT`.
 
 ### Parameters
 
 | Parameter | Required | Default | Description |
 | --------- | -------- | ------- | ----------- |
 | `<algorithm>` | Yes | None | Compression algorithm for this column. The value is case-insensitive and must be one of the algorithms listed below. |
-| `<level>` | No | Codec default | Compression level. It can be specified only for `zstd` and `lz4hc`. |
+| `<level>` | No | Codec default | Compression level. It can be specified only for `ZSTD` and `LZ4HC`. |
 
 ### Supported Algorithms and Levels
 
 | Algorithm | Compression level | Description |
 | --------- | ----------------- | ----------- |
-| `no_compression` | Not supported | Disables compression for the column. |
-| `lz4` | Not supported | Uses the LZ4 codec. |
-| `lz4f` | Not supported | Uses the LZ4 frame codec. |
-| `lz4hc` | Optional, `1` to `12` | Uses LZ4 high-compression mode. A higher level generally increases compression time and compression ratio. |
-| `zstd` | Optional, `1` to `22` | Uses Zstandard. A higher level generally increases compression time and compression ratio. |
-| `snappy` | Not supported | Uses the Snappy codec. |
-| `zlib` | Not supported | Uses the Zlib codec. |
-| `default_compression` | Not supported | Uses the algorithm configured by `default_compression_type`; if that configuration also specifies `default_compression`, Doris uses LZ4F. |
+| `NO_COMPRESSION` | Not supported | Disables compression for the column. |
+| `LZ4` | Not supported | Uses the LZ4 codec. |
+| `LZ4F` | Not supported | Uses the LZ4 frame codec. |
+| `LZ4HC` | Optional, `1` to `12` | Uses LZ4 high-compression mode. A higher level generally increases compression time and compression ratio. |
+| `ZSTD` | Optional, `1` to `22` | Uses Zstandard. A higher level generally increases compression time and compression ratio. |
+| `SNAPPY` | Not supported | Uses the Snappy codec. |
+| `ZLIB` | Not supported | Uses the Zlib codec. |
 
-Specifying a level for any algorithm other than `zstd` or `lz4hc` causes the DDL statement to fail.
+Specifying a level for any algorithm other than `ZSTD` or `LZ4HC` causes the DDL statement to fail.
 
 ### Example
 
@@ -173,7 +173,7 @@ The following example uses LZ4F as the table default and overrides the `event_bo
 CREATE TABLE compression_example (
     event_id BIGINT,
     event_type VARCHAR(32),
-    event_body STRING COMPRESSION 'zstd:9'
+    event_body STRING COMPRESSION ZSTD(9)
 )
 DUPLICATE KEY(event_id)
 DISTRIBUTED BY HASH(event_id) BUCKETS 1
@@ -202,10 +202,10 @@ In this table, `event_id` and `event_type` use the table-level LZ4F codec, while
 
 ### Limitations
 
-- Per-column compression is supported only for OLAP tables in non-cloud deployments.
+- Per-column compression is supported only for OLAP tables.
 - You can specify per-column compression only when creating a table. `ALTER TABLE ADD COLUMN` and `ALTER TABLE MODIFY COLUMN` do not support the `COMPRESSION` clause.
 - The `COMPRESSION` clause does not support `ARRAY`, `MAP`, `STRUCT`, `VARIANT`, or `AGG_STATE` columns.
-- An empty specification, an unknown algorithm, a non-integer level, or a level outside the supported range causes the DDL statement to fail.
+- An unsupported algorithm, an invalid level syntax, or a level outside the supported range causes the DDL statement to fail.
 
 ### Best Practices
 
