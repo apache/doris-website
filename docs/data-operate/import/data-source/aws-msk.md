@@ -16,6 +16,8 @@
 }
 ---
 
+> This feature is supported starting from Doris 4.1.0.
+
 <!-- Knowledge type: Operation guide + Configuration parameters -->
 <!-- Applicable scenarios: Import data from AWS MSK into Doris / IAM authentication configuration / Public network access troubleshooting -->
 
