@@ -77,7 +77,7 @@
         position: relative;
         display: grid;
         grid-template-columns: minmax(0, 1fr);
-        min-height: 680px;
+        grid-template-rows: 680px;
         border: 1px solid var(--brand-border-soft);
         border-radius: 10px;
         overflow: hidden;
@@ -88,9 +88,24 @@
         grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
     }
 
+    // Full screen fills everything below the navbar, which stays reachable because
+    // the sticky navbar (z-index 300) keeps a higher stacking order than the canvas.
+    &__workspace--fullscreen {
+        position: fixed;
+        top: var(--profile-dag-navbar-offset, 64px);
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 250;
+        grid-template-rows: minmax(0, 1fr);
+        border-width: 1px 0 0;
+        border-radius: 0;
+    }
+
     &__canvas {
         min-width: 0;
-        height: 680px;
+        min-height: 0;
+        height: 100%;
     }
 
     &__message {
@@ -254,6 +269,42 @@
     }
 }
 
+.profile-dag-fullscreen {
+    &__button {
+        display: inline-flex;
+        gap: 0.35rem;
+        align-items: center;
+        padding: 0.35rem 0.6rem;
+        border: 1px solid var(--brand-border-soft);
+        border-radius: 8px;
+        color: var(--ifm-font-color-base);
+        background: var(--brand-paper);
+        box-shadow: 0 6px 18px rgb(var(--brand-shadow-rgb) / 14%);
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.75rem;
+        font-weight: 700;
+
+        &:hover,
+        &:focus-visible {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary-deep);
+            background: var(--brand-surface-callout);
+        }
+
+        svg {
+            width: 0.85rem;
+            height: 0.85rem;
+            flex: 0 0 auto;
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 1.6;
+        }
+    }
+}
+
 .profile-dag-fragment {
     width: 100%;
     height: 100%;
@@ -372,7 +423,7 @@
 }
 
 .profile-dag-details {
-    height: 680px;
+    height: 100%;
     padding: 1rem;
     overflow-y: auto;
     border-left: 1px solid var(--brand-border-soft);
@@ -448,11 +499,11 @@
         &__workspace,
         &__workspace--details {
             grid-template-columns: minmax(0, 1fr);
-            min-height: 520px;
+            grid-template-rows: 520px;
         }
 
-        &__canvas {
-            height: 520px;
+        &__workspace--fullscreen {
+            grid-template-rows: minmax(0, 1fr);
         }
     }
 

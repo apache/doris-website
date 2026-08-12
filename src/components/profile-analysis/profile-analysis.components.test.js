@@ -113,7 +113,18 @@ test('disables both tab actions without a file and keeps visualization available
         disabled: true,
     });
     assert.match(analyzing, /<input[^>]*disabled=""/);
-    assert.match(analyzing, /<button[^>]*disabled=""[^>]*>Processing…<\/button>/);
+    assert.match(analyzing, /<button[^>]*disabled=""[^>]*>Processing…[^<]*<\/button>/);
+});
+
+test('states how long the AI analysis is expected to take while it runs', () => {
+    const analyzing = renderAiForm({
+        file: new File(['profile'], 'query.txt'),
+        disabled: true,
+    });
+
+    assert.match(analyzing, /Processing… · Estimated 1–2 minutes/);
+    // The estimate belongs to the waiting state only.
+    assert.doesNotMatch(renderAiForm(), /Estimated 1–2 minutes/);
 });
 
 test('keeps local file selection independent from unchecked AI consent and displays the required notice', () => {
@@ -275,4 +286,34 @@ test('overlays the slowest operators on the canvas and centers the one that is c
     const styles = fs.readFileSync(path.join(__dirname, 'ProfileDag.scss'), 'utf8');
     assert.match(styles, /\.react-flow__node\.selected \.profile-dag-node\s*{[^}]*outline:\s*3px solid var\(--brand-primary\)/s);
     assert.match(styles, /\.profile-dag-hotspots\s*{[^}]*max-width:\s*min\(310px, 48%\)/s);
+});
+
+test('expands the execution graph to every pixel below the navbar in full screen', () => {
+    const dagSource = fs.readFileSync(path.join(__dirname, 'ProfileDag.tsx'), 'utf8');
+
+    assert.match(dagSource, /<Panel position="top-right" className="profile-dag-fullscreen"/);
+    assert.match(dagSource, /<FullscreenToggle active=\{isFullscreen\} onToggle=\{changeFullscreen\} \/>/);
+    assert.match(dagSource, /\{active \? 'Exit full screen' : 'Full screen'\}/);
+    assert.match(dagSource, /aria-pressed=\{active\}/);
+    // The navbar stays visible, so its measured height offsets the canvas.
+    assert.match(dagSource, /const NAVBAR_SELECTOR = '\.navbar-next'/);
+    assert.match(dagSource, /navbar\.getBoundingClientRect\(\)\.bottom/);
+    assert.match(dagSource, /workspace\.style\.setProperty\(NAVBAR_OFFSET_PROPERTY/);
+    // Escape leaves full screen, and the page behind the canvas is restored on exit.
+    assert.match(dagSource, /event\.key === 'Escape'/);
+    assert.match(dagSource, /document\.body\.style\.overflow = 'hidden'/);
+    assert.match(dagSource, /document\.body\.style\.overflow = previousBodyOverflow/);
+    // Resizing the canvas refits the graph instead of leaving it off-centre.
+    assert.match(dagSource, /hasFitVisibleCanvasRef\.current = false;\s*\n\s*setIsFullscreen\(next\)/);
+
+    const styles = fs.readFileSync(path.join(__dirname, 'ProfileDag.scss'), 'utf8');
+    const fullscreenRule = styles.match(/&__workspace--fullscreen\s*{[^}]*}/s)[0];
+    assert.match(fullscreenRule, /position:\s*fixed/);
+    assert.match(fullscreenRule, /top:\s*var\(--profile-dag-navbar-offset, 64px\)/);
+    assert.match(fullscreenRule, /right:\s*0/);
+    assert.match(fullscreenRule, /bottom:\s*0/);
+    assert.match(fullscreenRule, /left:\s*0/);
+    // Below the sticky navbar's z-index (300) so the navigation stays clickable.
+    assert.match(fullscreenRule, /z-index:\s*250/);
+    assert.match(styles, /&__canvas\s*{[^}]*height:\s*100%/s);
 });
