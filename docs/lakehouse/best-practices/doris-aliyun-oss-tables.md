@@ -2,9 +2,25 @@
 {
     "title": "Integration with Alibaba Cloud OSS Tables",
     "language": "en",
-    "description": "Connect Apache Doris to Alibaba Cloud OSS Tables through Iceberg REST Catalog and use S3FileIO to query and write managed Iceberg tables."
+    "description": "Connect Doris to Alibaba Cloud OSS Tables with Iceberg REST Catalog and S3FileIO for managed Iceberg reads and writes.",
+    "keywords": [
+        "Alibaba Cloud OSS Tables",
+        "Apache Doris OSS Tables",
+        "Iceberg REST Catalog",
+        "S3FileIO",
+        "OSS Table Bucket",
+        "OSS Tables Catalog",
+        "managed Iceberg tables",
+        "SigV4 osstables",
+        "OSS Tables 403 Forbidden",
+        "OSS STS credentials",
+        "Doris lakehouse"
+    ]
 }
 ---
+
+<!-- Knowledge Type: Capability Definition + Integration Guide -->
+<!-- Applicable Scenarios: Alibaba Cloud OSS Tables integration / Managed Iceberg table queries and writes -->
 
 [Alibaba Cloud OSS Tables](https://help.aliyun.com/zh/oss/user-guide/spark-access-oss-tables) is a managed storage service for Apache Iceberg tables. OSS Tables uses Table Buckets as storage units, exposes a metadata interface compatible with Apache Iceberg REST Catalog, and provides access to table data through the OSS S3-compatible interface.
 
@@ -20,6 +36,9 @@ Apache Doris connects to OSS Tables through Iceberg REST Catalog: REST Catalog m
 This feature is experimental and will be released in Doris 5.0.0.
 :::
 
+<!-- Knowledge Type: Operational Steps -->
+<!-- Applicable Scenarios: Creating an OSS Tables Catalog / Querying and writing Iceberg tables -->
+
 ## Usage Guide
 
 ### 01 Create an OSS Table Bucket
@@ -33,6 +52,9 @@ acs:osstables:<region>:<account_id>:bucket/<table_bucket_name>
 Create a RAM user AccessKey that has access to the target Table Bucket, or obtain temporary STS credentials. Ensure that FE nodes can access the OSS Tables REST Catalog endpoint, and that FE and BE nodes can access the OSS data access endpoint.
 
 For the permissions required by each OSS Tables operation, see [Alibaba Cloud OSS Tables permissions and access control](https://help.aliyun.com/zh/oss/user-guide/oss-tables-access-control).
+
+<!-- Knowledge Type: Configuration Parameters -->
+<!-- Applicable Scenarios: Configuring REST Catalog authentication and S3FileIO data access -->
 
 ### 02 Create an Iceberg Catalog
 
@@ -108,6 +130,9 @@ SHOW TABLES;
 SELECT * FROM <table_name> LIMIT 10;
 ```
 
+<!-- Knowledge Type: Operational Example -->
+<!-- Applicable Scenarios: Creating an Iceberg table and writing data to OSS Tables -->
+
 ### 04 Create an OSS Tables Table and Write Data
 
 ```sql
@@ -146,11 +171,16 @@ FROM `orders$files`
 ORDER BY file_path;
 ```
 
+<!-- Knowledge Type: Limitations + Usage Guidance -->
+
 ## Usage Notes
 
 - OSS Tables supports only the Iceberg table format.
 - `iceberg.rest.signing-name` must be set to the lowercase value `osstables`. You must also set the correct `iceberg.rest.signing-region` and set `iceberg.rest.sigv4-enabled` to `true`.
 - When using temporary STS credentials, update the AK, SK, and token in the Catalog before the credentials expire.
+
+<!-- Knowledge Type: Troubleshooting -->
+<!-- Applicable Scenarios: 403 authentication errors / Metadata access succeeds but data queries fail -->
 
 ## FAQ
 

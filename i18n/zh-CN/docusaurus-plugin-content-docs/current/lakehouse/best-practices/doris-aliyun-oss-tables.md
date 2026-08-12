@@ -2,9 +2,26 @@
 {
     "title": "集成阿里云 OSS Tables",
     "language": "zh-CN",
-    "description": "阿里云 OSS Tables 是面向 Apache Iceberg 表的托管存储服务。本文介绍如何使用 Apache Doris 接入 OSS Tables，并完成 Iceberg 表的查询与写入。"
+    "description": "使用 Iceberg REST Catalog 和 S3FileIO 将 Doris 接入阿里云 OSS Tables，实现托管 Iceberg 表的查询与写入。",
+    "keywords": [
+        "阿里云 OSS Tables",
+        "Doris OSS Tables",
+        "阿里云 OSS Tables 接入",
+        "Iceberg REST Catalog",
+        "S3FileIO",
+        "OSS Table Bucket",
+        "OSS Tables Catalog",
+        "托管 Iceberg 表",
+        "SigV4 osstables",
+        "OSS Tables 403 Forbidden",
+        "OSS STS 临时凭证",
+        "Doris 湖仓"
+    ]
 }
 ---
+
+<!-- 知识类型: 能力定义 + 集成指南 -->
+<!-- 适用场景: 阿里云 OSS Tables 接入 / 托管 Iceberg 表查询与写入 -->
 
 [阿里云 OSS Tables](https://help.aliyun.com/zh/oss/user-guide/spark-access-oss-tables) 是面向 Apache Iceberg 表的托管存储服务。OSS Tables 以 Table Bucket 作为存储单元，对外提供兼容 Apache Iceberg REST Catalog 的元数据接口，并通过 OSS 的 S3 兼容接口访问表数据。
 
@@ -20,6 +37,9 @@ Apache Doris 可以通过 Iceberg REST Catalog 接入 OSS Tables：使用 REST C
 该功能目前为实验功能，将在 Doris 5.0.0 版本中发布。
 :::
 
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 创建 OSS Tables Catalog / 查询与写入 Iceberg 表 -->
+
 ## 使用指南
 
 ### 01 创建 OSS Table Bucket
@@ -33,6 +53,9 @@ acs:osstables:<region>:<account_id>:bucket/<table_bucket_name>
 创建具有目标 Table Bucket 访问权限的 RAM 用户 AccessKey，或获取 STS 临时凭证。确保 FE 节点可以访问 OSS Tables REST Catalog Endpoint，FE 和 BE 节点可以访问 OSS 数据访问 Endpoint。
 
 OSS Tables 操作与 RAM 权限的对应关系，请参阅[阿里云 OSS Tables 权限与访问控制](https://help.aliyun.com/zh/oss/user-guide/oss-tables-access-control)。
+
+<!-- 知识类型: 配置参数 -->
+<!-- 适用场景: 配置 REST Catalog 鉴权和 S3FileIO 数据访问 -->
 
 ### 02 创建 Iceberg Catalog
 
@@ -108,6 +131,9 @@ SHOW TABLES;
 SELECT * FROM <table_name> LIMIT 10;
 ```
 
+<!-- 知识类型: 操作示例 -->
+<!-- 适用场景: 创建 Iceberg 表并向 OSS Tables 写入数据 -->
+
 ### 04 创建 OSS Tables 表并写入数据
 
 ```sql
@@ -146,11 +172,16 @@ FROM `orders$files`
 ORDER BY file_path;
 ```
 
+<!-- 知识类型: 使用限制 + 使用建议 -->
+
 ## 注意事项
 
 - OSS Tables 仅支持 Iceberg 表格式。
 - `iceberg.rest.signing-name` 必须设置为小写的 `osstables`，并同时设置正确的 `iceberg.rest.signing-region` 和 `iceberg.rest.sigv4-enabled=true`。
 - 使用 STS 临时凭证时，需要在凭证过期前更新 Catalog 中的 AK、SK 和 Token。
+
+<!-- 知识类型: 故障排查 -->
+<!-- 适用场景: 403 鉴权失败 / 元数据访问成功但数据查询失败 -->
 
 ## 常见问题
 
