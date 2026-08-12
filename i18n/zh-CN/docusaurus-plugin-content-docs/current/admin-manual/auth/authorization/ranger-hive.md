@@ -11,16 +11,36 @@
         "ranger.plugin.hive.service.name",
         "access_controller.class",
         "行级过滤",
-        "数据脱敏"
+        "数据脱敏",
+        "Doris Hive Catalog Ranger 鉴权",
+        "Ranger Admin Kerberos",
+        "policy.download.auth.users",
+        "ranger-hive-security.xml 找不到",
+        "Ranger Hive 策略下载失败"
     ]
 }
 ---
+
+<!-- 知识类型: 配置指南 / 权限管理 -->
+<!-- 适用场景: Hive Catalog 鉴权 / 复用 Ranger Hive 策略 -->
 
 Apache Doris 可以为单个 Hive Catalog 指定 Ranger-Hive Access Controller，使用 Apache Ranger 中已有的 Hive 策略校验该 Catalog 下数据库、表和列的访问权限，并支持 Ranger Row Level Filter、Data Masking 和审计。该模式适合已经使用 Ranger 管理 Hive，且希望 Doris 查询同一批 Hive 数据时复用 Hive 策略的场景。
 
 Ranger-Hive 只接管配置了该 Access Controller 的 Hive Catalog，不会替代 Doris 集群级鉴权，也不会校验底层 HDFS、S3 等存储系统的 Ranger 策略。
 
-## 功能定位与鉴权边界
+## 适用场景
+
+| 场景 | 是否适用 | 说明 |
+| --- | --- | --- |
+| Doris 查询 Hive 数据时复用已有 Ranger Hive 策略 | 适用 | 为对应 Hive Catalog 配置 Ranger-Hive Access Controller |
+| 使用 Ranger 统一管理整个 Doris 集群的权限 | 不适用 | 应使用 Ranger-Doris |
+| 校验 HDFS、S3 等底层存储访问 | 不适用 | 应在存储侧配置访问控制和凭据隔离 |
+| 为非 Hive/HMS Catalog 配置 Ranger 鉴权 | 不适用 | Ranger-Hive 只适用于 Hive/HMS Catalog |
+
+<!-- 知识类型: 架构选型决策 -->
+<!-- 适用场景: Ranger-Doris 与 Ranger-Hive 选型 / 鉴权边界确认 -->
+
+## Ranger-Doris 与 Ranger-Hive 的区别
 
 Ranger-Doris 和 Ranger-Hive 解决的问题不同：
 
@@ -34,6 +54,8 @@ Ranger-Doris 和 Ranger-Hive 解决的问题不同：
 | 策略是否互通 | 不会自动转换成 Hive 策略 | 不会自动读取 Ranger-Doris 策略 |
 
 同一个 Doris 集群可以同时使用两者。例如，集群默认使用 Ranger-Doris，而 `hive_ctl` 单独使用 Ranger-Hive。只要 Hive Catalog 配置了 Ranger-Hive，权限请求就会按下表路由；表中的“默认 Access Controller”可以是 Doris 内置鉴权，也可以是 Ranger-Doris。
+
+### 鉴权边界
 
 | 权限范围 | 校验方 | 说明 |
 | --- | --- | --- |
@@ -59,11 +81,24 @@ Ranger-Doris 和 Ranger-Hive 解决的问题不同：
 - Hive Catalog 本身已具备访问 Hive Metastore 和底层存储的网络、认证与权限配置。
 - 所有 FE 节点均可读取 Ranger 配置文件；配置本地策略缓存时，FE 进程用户可创建或写入对应目录。
 
-## 快速开始
+## 配置流程总览
 
-下面以 Ranger WebUI 中的 Hive 服务 `hive_prod`、Doris Catalog `hive_ctl` 和用户 `alice` 为例。
+本文以 Ranger WebUI 中的 Hive 服务 `hive_prod`、Doris Catalog `hive_ctl` 和用户 `alice` 为例，配置步骤如下：
 
-### 1. 确认 Ranger Hive 服务
+1. 在 Ranger WebUI 中确认或创建 Hive 服务 `hive_prod`。
+2. 在所有 FE 上部署 `ranger-hive-security.xml` 和 `ranger-hive-audit.xml`，创建策略缓存目录，然后重启 FE。
+3. 在 Doris 中创建用户 `alice` 和启用 Ranger-Hive 的 Hive Catalog `hive_ctl`。
+4. 在 Ranger 的 `hive_prod` 服务中为 `alice` 创建访问策略。
+5. 使用 `alice` 登录 Doris，分别验证允许和拒绝访问。
+
+Ranger Admin 开启 Kerberos 或 HTTPS 时，先完成基础配置，再按本文对应章节补充安全配置。
+
+<!-- 知识类型: 操作步骤 / 配置参数 -->
+<!-- 适用场景: Ranger-Hive 基础配置 -->
+
+## 配置 Ranger 服务与 FE
+
+### 确认 Ranger Hive 服务
 
 在 Ranger WebUI 的 Service Manager 页面确认或创建一个 Hive 服务：
 
@@ -74,7 +109,7 @@ Ranger-Doris 和 Ranger-Hive 解决的问题不同：
 
 如果 HiveServer2 已经使用 `hive_prod`，Doris 可以读取同一服务中的策略，无需再创建一个名称不同的 Hive 服务。
 
-### 2. 在所有 FE 上准备配置文件
+### 在所有 FE 上准备配置文件
 
 在每个 FE 的 `fe/conf/` 目录中放置以下文件：
 
@@ -86,6 +121,8 @@ fe/conf/
 ```
 
 `ranger-hive-security.xml` 和 `ranger-hive-audit.xml` 需要成对部署。即使不需要审计，也应保留 `ranger-hive-audit.xml` 并显式关闭审计，以避开 Ranger 2.7 的旧审计配置回退问题，详见常见问题。`ranger-policymgr-ssl.xml` 仅在 Ranger Admin 使用 HTTPS 且需要自定义信任库或客户端证书时使用。
+
+#### 配置 ranger-hive-security.xml
 
 本文已经提供可直接使用的模板。将下列 XML 分别保存到每个 FE 的 `fe/conf/` 目录，再替换其中的地址、服务名和路径。
 
@@ -141,14 +178,18 @@ fe/conf/
 
 上述 `ranger-hive-security.xml` 配置项说明如下：
 
-- `ranger.plugin.hive.service.name`：必需，无默认值。在每个 FE 的 `fe/conf/ranger-hive-security.xml` 中，该配置项的 `<value>` 必须与 Ranger WebUI 中 Hive 服务的实际 Service Name 完全一致，例如 `hive_prod`。
-- `ranger.plugin.hive.policy.source.impl`：可选，默认使用 Ranger Admin REST Client。指定从 Ranger Admin REST API 拉取策略的实现。
-- `ranger.plugin.hive.policy.rest.url`：必需，无默认值。填写 Ranger Admin 根地址，不包含策略 API 路径。
-- `ranger.plugin.hive.policy.cache.dir`：本文生产配置中必需。Ranger 客户端允许省略该项，但省略后不会使用本地策略缓存，不利于 FE 重启后的策略恢复和运维检查。该目录必须预先创建，并允许 FE 进程用户写入。
-- `ranger.plugin.hive.policy.pollIntervalMs`：可选，默认 `30000` 毫秒。设置策略轮询间隔。
-- `ranger.plugin.hive.policy.rest.client.connection.timeoutMs`：可选，默认 `120000` 毫秒。设置连接 Ranger Admin 的超时时间。
-- `ranger.plugin.hive.policy.rest.client.read.timeoutMs`：可选，默认 `30000` 毫秒。设置读取 Ranger Admin 响应的超时时间。
-- `ranger.plugin.hive.policy.rest.ssl.config.file`：自定义 HTTPS 证书时必需，默认空。填写 `ranger-policymgr-ssl.xml` 的绝对路径。
+| 配置项 | 是否必需 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `ranger.plugin.hive.service.name` | 必需 | 无 | `<value>` 必须与 Ranger WebUI 中 Hive 服务的实际 Service Name 完全一致，例如 `hive_prod` |
+| `ranger.plugin.hive.policy.source.impl` | 可选 | Ranger Admin REST Client | 指定从 Ranger Admin REST API 拉取策略的实现 |
+| `ranger.plugin.hive.policy.rest.url` | 必需 | 无 | Ranger Admin 根地址，不包含策略 API 路径 |
+| `ranger.plugin.hive.policy.cache.dir` | 本文生产配置中必需 | 不使用本地缓存 | 目录必须预先创建，并允许 FE 进程用户写入；本地缓存有利于 FE 重启后的策略恢复和运维检查 |
+| `ranger.plugin.hive.policy.pollIntervalMs` | 可选 | `30000` 毫秒 | 策略轮询间隔 |
+| `ranger.plugin.hive.policy.rest.client.connection.timeoutMs` | 可选 | `120000` 毫秒 | 连接 Ranger Admin 的超时时间 |
+| `ranger.plugin.hive.policy.rest.client.read.timeoutMs` | 可选 | `30000` 毫秒 | 读取 Ranger Admin 响应的超时时间 |
+| `ranger.plugin.hive.policy.rest.ssl.config.file` | 使用自定义 HTTPS 证书时必需 | 空 | `ranger-policymgr-ssl.xml` 的绝对路径 |
+
+#### 创建策略缓存目录
 
 Ranger-Doris 和 Ranger-Hive 应使用不同的 `policy.cache.dir`，例如分别使用 `/var/lib/doris/ranger/doris_prod/policy-cache` 和 `/var/lib/doris/ranger/hive_prod/policy-cache`。多个 Catalog 复用同一个 Ranger Hive Service 时，会读取同一份 Hive 配置和缓存。
 
@@ -161,6 +202,8 @@ chmod 700 /var/lib/doris/ranger/hive_prod/policy-cache
 ```
 
 示例假设 FE 由 `doris:doris` 用户和用户组运行；实际环境不同时，应替换 `chown` 参数。执行后可使用 `sudo -u doris test -w /var/lib/doris/ranger/hive_prod/policy-cache` 检查 FE 用户是否可写；没有 `sudo` 时，应切换为 FE 运行用户执行等价检查。
+
+#### 配置 ranger-hive-audit.xml
 
 本文默认关闭 Ranger 审计。即使关闭审计，也要在每个 FE 上保存以下 `fe/conf/ranger-hive-audit.xml`：
 
@@ -176,9 +219,16 @@ chmod 700 /var/lib/doris/ranger/hive_prod/policy-cache
 
 `xasecure.audit.is.enabled=false` 表示不输出 Ranger 鉴权审计。生产环境需要审计时，应基于所用 Ranger 版本的 Hive audit 模板配置 Solr、HDFS、Kafka 等集中式后端，并将该项改为 `true`。本文不推荐将 Log4j 作为生产审计目标，因为审计量与 FE 普通日志共用日志滚动策略，难以单独控制审计日志的保留时间和总大小。
 
+#### 重启 FE
+
 完成 XML 和缓存目录配置后，重启所有 FE，再继续创建 Catalog。Ranger 配置在 Access Controller 初始化时加载，所有 FE 必须使用相同文件和路径。
 
-### 3. 创建 Doris 用户
+<!-- 知识类型: 操作步骤 / 配置参数 -->
+<!-- 适用场景: 创建启用 Ranger-Hive 的 Hive Catalog -->
+
+## 创建用户和 Hive Catalog
+
+### 创建 Doris 用户
 
 先创建与 Ranger 用户同名的 Doris 登录用户：
 
@@ -186,7 +236,7 @@ chmod 700 /var/lib/doris/ranger/hive_prod/policy-cache
 CREATE USER 'alice' IDENTIFIED BY 'R8!mQ2#vL7@k';
 ```
 
-### 4. 创建启用 Ranger-Hive 的 Hive Catalog
+### 创建启用 Ranger-Hive 的 Hive Catalog
 
 ```sql
 CREATE CATALOG hive_ctl PROPERTIES (
@@ -223,7 +273,12 @@ Current 版本也可以在 `fe.conf` 中设置 `skip_catalog_priv_check=true`，
 
 创建 Catalog 时，FE 会实例化 Access Controller 并校验配置；各 FE 在首次处理该 Catalog 的鉴权请求时，再按需初始化正式使用的 Access Controller。
 
-### 5. 在 Ranger 中创建访问策略
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 创建并验证 Ranger Hive 访问策略 -->
+
+## 配置并验证 Ranger 策略
+
+### 在 Ranger 中创建访问策略
 
 在 Ranger WebUI 中打开 Hive 服务 `hive_prod`，创建 Access Policy：
 
@@ -238,7 +293,7 @@ Current 版本也可以在 `fe.conf` 中设置 `skip_catalog_priv_check=true`，
 
 保存策略后等待一个拉取周期，本文示例为最多约 30 秒。
 
-### 6. 验证结果
+### 验证结果
 
 使用 `alice` 登录 Doris：
 
@@ -252,6 +307,9 @@ SELECT * FROM hive_ctl.sales.orders LIMIT 10;
 - `alice` 可以看到 `sales` 并查询 `orders`。
 - 查询未授权表（例如 `hive_ctl.sales.customers`）时返回权限不足。
 - 启用集中式 Ranger 审计后，可以在配置的审计后端中查询允许和拒绝记录。
+
+<!-- 知识类型: 权限映射 / 行为说明 -->
+<!-- 适用场景: Ranger 策略设计 / 权限问题定位 -->
 
 ## 鉴权行为
 
@@ -280,6 +338,9 @@ Ranger-Hive 资源只包含 `database`、`table` 和 `column`，不包含 Doris 
 - Doris 与 Ranger 不会自动同步角色。只有确实需要按角色编写 Ranger 策略时，才需要保证 Doris 请求携带的角色名与 Ranger 策略引用的角色名一致。一般场景直接按 Ranger 用户或用户组授权更容易维护。
 - Ranger UserSync 不是 Doris 登录用户同步工具。即使 Ranger 中已有 `alice`，仍需在 Doris 中创建 `alice` 或通过 LDAP 等方式完成认证。
 - 用户主机部分用于 Doris 登录匹配和审计客户端 IP，不应写进 Ranger 用户名。例如 Doris 用户 `'alice'@'10.%'` 对应的 Ranger 用户仍为 `alice`。
+
+<!-- 知识类型: 配置示例 -->
+<!-- 适用场景: 行级权限控制 / 敏感数据脱敏 -->
 
 ## 行级过滤与数据脱敏
 
@@ -322,6 +383,9 @@ SELECT order_id, region FROM hive_ctl.sales.orders;
 :::caution
 过滤和脱敏表达式最终由 Doris SQL 引擎解析。Ranger 中为 HiveServer2 编写的表达式如果使用 Doris 不支持的 Hive UDF 或语法，需要改写为等价的 Doris SQL 表达式。
 :::
+
+<!-- 知识类型: 操作步骤 / 配置参数 -->
+<!-- 适用场景: Ranger Admin 开启 Kerberos / SPNEGO 策略下载 -->
 
 ## Ranger Admin 开启 Kerberos 时的配置
 
@@ -607,6 +671,9 @@ CREATE CATALOG hive_ctl PROPERTIES (
 
 HMS 服务端 principal 从 Hive Metastore 的 Kerberos 配置中确认，示例为 `hive/hms.example.com@EXAMPLE.COM`；它不是 Ranger Admin 的 HTTP principal。两条链路的身份可以属于同一 Realm，但不要互换 principal 或 keytab。
 
+<!-- 知识类型: 操作步骤 / 配置参数 -->
+<!-- 适用场景: Ranger Admin 使用 HTTPS / 自定义 CA / 双向 TLS -->
+
 ## Ranger Admin 使用 HTTPS
 
 在每个 FE 的 `fe/conf/ranger-hive-security.xml` 中，把 `ranger.plugin.hive.policy.rest.url` 改为 HTTPS 地址，并通过 `ranger.plugin.hive.policy.rest.ssl.config.file` 指定 SSL 配置文件：
@@ -661,6 +728,9 @@ sudo chmod 600 /etc/security/ranger/ranger-truststore.jks \
 
 Ranger 客户端固定使用 JCEKS 中的 `sslTrustStore` alias 读取 truststore 密码。双向 TLS 还需要按 Ranger 模板配置 `xasecure.policymgr.clientssl.keystore`，并在 JCEKS 中创建 `sslKeyStore` alias。不要把 truststore/keystore 明文密码直接提交到 XML。
 
+<!-- 知识类型: 架构限制 / 最佳实践 -->
+<!-- 适用场景: 多 Hive Catalog / Ranger-Doris 与 Ranger-Hive 共存 -->
+
 ## 多 Catalog 与运行限制
 
 ### 多个 Catalog 复用同一套 Hive 策略
@@ -702,7 +772,24 @@ CREATE CATALOG hive_prod_b PROPERTIES (
 - 每个已初始化该 Access Controller 的 FE 都会独立拉取并缓存策略。配置文件、keytab、truststore 和目录权限必须在所有 FE 上保持一致。
 - 策略变更不是即时生效，最大延迟通常接近 `policy.pollIntervalMs`，还会受到 Ranger Admin 和网络状态影响。
 
+<!-- 知识类型: FAQ / 故障排查 -->
+<!-- 适用场景: 配置文件加载失败 / 策略下载失败 / 权限不生效 -->
+
 ## 常见问题
+
+先根据现象定位对应检查点，再查看后续小节中的原因和完整处理方法：
+
+| 现象 | 优先检查 |
+| --- | --- |
+| 创建 Catalog 后找不到 Access Controller | `access_controller.class` 是否为完整工厂类名或 `ranger-hive` |
+| 日志提示找不到 `ranger-hive-security.xml` | Catalog 中的配置前缀是否固定为 `hive`，文件是否位于所有 FE 的 `fe/conf/` |
+| 未启用审计时 security XML 仍未生效 | 是否同时部署 `ranger-hive-audit.xml` 并显式关闭审计 |
+| 能访问 Ranger Admin，但没有策略 | Service Name、REST URL、网络、缓存目录和策略状态 |
+| Kerberos 开启后策略下载失败 | UGI 安全模式、HTTP SPN、下载授权、HTTP 状态和策略缓存 |
+| Ranger 已授权，但看不到 Catalog | 默认 Access Controller 的 Catalog 级权限 |
+| Ranger 拒绝策略没有生效 | 用户是否持有 Global 权限或使用 `root`、`admin` 测试 |
+| HiveServer2 生效，Doris 不生效 | Service Name、用户名、角色名和策略表达式兼容性 |
+| 用户可以直接读取 HDFS 或 S3 | Ranger-Hive 不负责底层存储访问控制 |
 
 ### 创建 Catalog 后提示找不到 Access Controller
 
@@ -780,6 +867,9 @@ Current 版本也可以评估 `skip_catalog_priv_check=true`。该配置只影�
 ### Ranger-Hive 是否会阻止用户直接读取 HDFS 或 S3
 
 不会。Ranger-Hive 只对 Doris SQL 层的 Hive database/table/column 请求鉴权。底层 HDFS、S3 等访问由 Catalog 的存储认证配置决定，需要在存储侧单独实施访问控制和凭据隔离。
+
+<!-- 知识类型: 上线检查 -->
+<!-- 适用场景: 生产部署验收 -->
 
 ## 上线检查清单
 

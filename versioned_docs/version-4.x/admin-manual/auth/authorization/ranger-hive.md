@@ -10,16 +10,36 @@
         "ranger.plugin.hive.service.name",
         "access_controller.class",
         "row filter",
-        "data masking"
+        "data masking",
+        "Doris Hive Catalog Ranger authorization",
+        "Ranger Admin Kerberos",
+        "policy.download.auth.users",
+        "ranger-hive-security.xml not found",
+        "Ranger Hive policy download failure"
     ]
 }
 ---
+
+<!-- Knowledge Type: Configuration Guide / Authorization -->
+<!-- Use Case: Hive Catalog Authorization / Reusing Ranger Hive Policies -->
 
 Apache Doris can assign a Ranger-Hive Access Controller to an individual Hive Catalog. Doris then reuses the Hive policies already managed by Apache Ranger to authorize database, table, and column access in that Catalog. Ranger row-level filters, data masking, and auditing are also supported. Use this mode when your organization already manages Hive permissions in Ranger and wants Doris queries over the same data to follow those policies.
 
 Ranger-Hive only controls the Hive Catalogs configured with this Access Controller. It does not replace Doris cluster-level authorization and does not enforce Ranger policies for the underlying HDFS, S3, or other storage systems.
 
-## Positioning and authorization boundaries
+## Use cases
+
+| Scenario | Supported | Description |
+| --- | --- | --- |
+| Reuse existing Ranger Hive policies for Hive data queried through Doris | Yes | Configure the Ranger-Hive Access Controller on the corresponding Hive Catalog |
+| Centrally manage permissions for the entire Doris cluster through Ranger | No | Use Ranger-Doris instead |
+| Authorize access to underlying HDFS or S3 storage | No | Enforce access control and credential isolation in the storage system |
+| Configure Ranger authorization for a non-Hive/HMS Catalog | No | Ranger-Hive only applies to Hive/HMS Catalogs |
+
+<!-- Knowledge Type: Architecture Decision -->
+<!-- Use Case: Choosing Ranger-Doris or Ranger-Hive / Confirming Authorization Boundaries -->
+
+## Ranger-Doris and Ranger-Hive
 
 Ranger-Doris and Ranger-Hive serve different purposes:
 
@@ -33,6 +53,8 @@ Ranger-Doris and Ranger-Hive serve different purposes:
 | Policy sharing | Doris policies are not converted to Hive policies | Hive policies do not read Ranger-Doris policies |
 
 Both can be used in the same Doris cluster. For example, Ranger-Doris can be the default Access Controller while `hive_ctl` uses Ranger-Hive. Whenever a Hive Catalog enables Ranger-Hive, requests are routed as follows. The "default Access Controller" can be Doris built-in authorization or Ranger-Doris.
+
+### Authorization boundaries
 
 | Permission scope | Controller | Notes |
 | --- | --- | --- |
@@ -58,11 +80,24 @@ If the default Access Controller grants the corresponding Global permission, the
 - The Hive Catalog already has the network, authentication, and permission settings required to access Hive Metastore and the underlying storage.
 - Every FE can read the Ranger configuration files. If a local policy cache is configured, the FE process user can create or write its directory.
 
-## Quick start
+## Configuration overview
 
-The following example uses the Ranger Hive service `hive_prod`, Doris Catalog `hive_ctl`, and user `alice`.
+The following procedure uses Hive service `hive_prod` in Ranger WebUI, Doris Catalog `hive_ctl`, and user `alice`:
 
-### 1. Confirm the Ranger Hive service
+1. Confirm or create the Hive service `hive_prod` in Ranger WebUI.
+2. Deploy `ranger-hive-security.xml` and `ranger-hive-audit.xml` on every FE, create the policy cache directory, and restart the FEs.
+3. Create Doris user `alice` and Hive Catalog `hive_ctl` with Ranger-Hive enabled.
+4. Create an access policy for `alice` in the Ranger `hive_prod` service.
+5. Log in to Doris as `alice` and verify both allowed and denied access.
+
+If Ranger Admin uses Kerberos or HTTPS, complete the basic configuration first, then apply the corresponding security configuration later in this guide.
+
+<!-- Knowledge Type: Operational Steps / Configuration Parameters -->
+<!-- Use Case: Basic Ranger-Hive Configuration -->
+
+## Configure the Ranger service and FEs
+
+### Confirm the Ranger Hive service
 
 On the Service Manager page in Ranger WebUI, confirm or create a Hive service:
 
@@ -73,7 +108,7 @@ On the Service Manager page in Ranger WebUI, confirm or create a Hive service:
 
 If HiveServer2 already uses `hive_prod`, Doris can read the same policies. Do not create another service only for Doris.
 
-### 2. Prepare the configuration files on all FEs
+### Prepare the configuration files on all FEs
 
 Place these files in the `fe/conf/` directory of every FE:
 
@@ -85,6 +120,8 @@ fe/conf/
 ```
 
 Deploy `ranger-hive-security.xml` and `ranger-hive-audit.xml` together. Keep the audit file and explicitly disable auditing even if it is not needed, so Ranger 2.7 does not enter its legacy audit-configuration fallback. `ranger-policymgr-ssl.xml` is only needed when Ranger Admin uses HTTPS with a custom truststore or client certificate.
+
+#### Configure ranger-hive-security.xml
 
 Save the following templates under `fe/conf/` on every FE and replace the service name, address, and paths.
 
@@ -140,14 +177,18 @@ Example `ranger-hive-security.xml`:
 
 The properties in `ranger-hive-security.xml` are:
 
-- `ranger.plugin.hive.service.name`: Required, with no default. Its `<value>` must exactly match the Hive Service Name in Ranger WebUI, such as `hive_prod`.
-- `ranger.plugin.hive.policy.source.impl`: Optional. The default is the Ranger Admin REST client. It selects the implementation used to retrieve policies.
-- `ranger.plugin.hive.policy.rest.url`: Required, with no default. Specify the Ranger Admin root URL without a policy API path.
-- `ranger.plugin.hive.policy.cache.dir`: Required for the production setup in this guide. Ranger permits this property to be omitted, but then no local policy cache is used. Create the directory in advance and grant write access to the FE process user.
-- `ranger.plugin.hive.policy.pollIntervalMs`: Optional; default `30000` milliseconds. It controls the policy polling interval.
-- `ranger.plugin.hive.policy.rest.client.connection.timeoutMs`: Optional; default `120000` milliseconds. It controls the connection timeout to Ranger Admin.
-- `ranger.plugin.hive.policy.rest.client.read.timeoutMs`: Optional; default `30000` milliseconds. It controls the Ranger Admin response read timeout.
-- `ranger.plugin.hive.policy.rest.ssl.config.file`: Required for a custom HTTPS trust configuration; default empty. Use the absolute path of `ranger-policymgr-ssl.xml`.
+| Property | Required | Default | Description |
+| --- | --- | --- | --- |
+| `ranger.plugin.hive.service.name` | Yes | None | Its `<value>` must exactly match the Hive Service Name in Ranger WebUI, such as `hive_prod` |
+| `ranger.plugin.hive.policy.source.impl` | No | Ranger Admin REST client | Implementation used to retrieve policies |
+| `ranger.plugin.hive.policy.rest.url` | Yes | None | Ranger Admin root URL without a policy API path |
+| `ranger.plugin.hive.policy.cache.dir` | Required for the production setup in this guide | No local cache | Create the directory in advance and grant the FE process user write access |
+| `ranger.plugin.hive.policy.pollIntervalMs` | No | `30000` milliseconds | Policy polling interval |
+| `ranger.plugin.hive.policy.rest.client.connection.timeoutMs` | No | `120000` milliseconds | Connection timeout to Ranger Admin |
+| `ranger.plugin.hive.policy.rest.client.read.timeoutMs` | No | `30000` milliseconds | Ranger Admin response read timeout |
+| `ranger.plugin.hive.policy.rest.ssl.config.file` | Required for a custom HTTPS trust configuration | Empty | Absolute path of `ranger-policymgr-ssl.xml` |
+
+#### Create the policy cache directory
 
 Use separate `policy.cache.dir` paths for Ranger-Doris and Ranger-Hive, for example `/var/lib/doris/ranger/doris_prod/policy-cache` and `/var/lib/doris/ranger/hive_prod/policy-cache`. Catalogs that reuse the same Ranger Hive service read the same Hive plugin configuration and cache.
 
@@ -160,6 +201,8 @@ chmod 700 /var/lib/doris/ranger/hive_prod/policy-cache
 ```
 
 The commands assume that the FE runs as user and group `doris:doris`. Replace them with the actual process identity. Verify write access with `sudo -u doris test -w /var/lib/doris/ranger/hive_prod/policy-cache`; if `sudo` is unavailable, run an equivalent check as the FE process user.
+
+#### Configure ranger-hive-audit.xml
 
 This guide disables Ranger audit by default. Even when audit is disabled, save this `fe/conf/ranger-hive-audit.xml` on every FE:
 
@@ -175,9 +218,16 @@ This guide disables Ranger audit by default. Even when audit is disabled, save t
 
 `xasecure.audit.is.enabled=false` disables Ranger authorization audit output. For production auditing, start from the Hive audit template for your Ranger version, configure a centralized backend such as Solr, HDFS, or Kafka, and set the property to `true`. Log4j is not recommended as a production audit destination because audit records share the FE log rotation policy, making their retention period and total size difficult to control independently.
 
+#### Restart the FEs
+
 After configuring the XML files and cache directory, restart every FE before creating the Catalog. Ranger configuration is loaded when the Access Controller is initialized, and all FEs must use the same files and paths.
 
-### 3. Create the Doris user
+<!-- Knowledge Type: Operational Steps / Configuration Parameters -->
+<!-- Use Case: Creating a Hive Catalog with Ranger-Hive Enabled -->
+
+## Create the user and Hive Catalog
+
+### Create the Doris user
 
 Create a Doris login user with the same name as the Ranger user:
 
@@ -185,7 +235,7 @@ Create a Doris login user with the same name as the Ranger user:
 CREATE USER 'alice' IDENTIFIED BY 'R8!mQ2#vL7@k';
 ```
 
-### 4. Create a Hive Catalog with Ranger-Hive
+### Create a Hive Catalog with Ranger-Hive
 
 ```sql
 CREATE CATALOG hive_ctl PROPERTIES (
@@ -220,7 +270,12 @@ Configure Hive Metastore, HDFS, or object storage connectivity using the [Hive C
 
 When the Catalog is created, the FE instantiates an Access Controller to validate its configuration. Other FEs initialize their active controller on demand when they first authorize a request for the Catalog.
 
-### 5. Create a Ranger access policy
+<!-- Knowledge Type: Operational Steps -->
+<!-- Use Case: Creating and Verifying a Ranger Hive Access Policy -->
+
+## Configure and verify Ranger policies
+
+### Create a Ranger access policy
 
 Open the Hive service `hive_prod` in Ranger WebUI and create an Access Policy:
 
@@ -235,7 +290,7 @@ Open the Hive service `hive_prod` in Ranger WebUI and create an Access Policy:
 
 Save the policy and wait for one polling interval, which is approximately 30 seconds in this example.
 
-### 6. Verify authorization
+### Verify authorization
 
 Log in to Doris as `alice` and run:
 
@@ -249,6 +304,9 @@ Expected behavior:
 - `alice` can see `sales` and query `orders`.
 - Querying an unauthorized table such as `hive_ctl.sales.customers` returns a permission error.
 - If centralized Ranger audit is enabled, its backend contains both allowed and denied requests.
+
+<!-- Knowledge Type: Permission Mapping / Behavior Reference -->
+<!-- Use Case: Ranger Policy Design / Authorization Troubleshooting -->
 
 ## Authorization behavior
 
@@ -277,6 +335,9 @@ Ranger-Hive resources only contain `database`, `table`, and `column`; they do no
 - Doris and Ranger do not synchronize roles. Only when policies are written against roles must the Doris request role names match the role names referenced by Ranger. User- or group-based Ranger policies are usually easier to maintain.
 - Ranger UserSync does not create Doris login users. Even if Ranger contains `alice`, create `alice` in Doris or authenticate the user through LDAP or another configured provider.
 - The Doris user host portion is used for login matching and audit client IP, not as part of the Ranger username. For example, Doris user `'alice'@'10.%'` maps to Ranger user `alice`.
+
+<!-- Knowledge Type: Configuration Examples -->
+<!-- Use Case: Row-Level Access Control / Sensitive Data Masking -->
 
 ## Row filtering and data masking
 
@@ -319,6 +380,9 @@ Also grant `alice` `select` on the column. When `phone` is queried, Doris replac
 :::caution
 The Doris SQL engine parses row-filter and masking expressions. An expression written for HiveServer2 must be rewritten if it uses Hive UDFs or syntax that Doris does not support.
 :::
+
+<!-- Knowledge Type: Operational Steps / Configuration Parameters -->
+<!-- Use Case: Kerberos-Enabled Ranger Admin / SPNEGO Policy Download -->
 
 ## When Ranger Admin uses Kerberos
 
@@ -603,6 +667,9 @@ The two client identities have separate purposes:
 
 Obtain the HMS server principal from the Hive Metastore Kerberos configuration. The example `hive/hms.example.com@EXAMPLE.COM` is not the Ranger Admin HTTP principal. The connections can use the same realm, but their principals and keytabs are not interchangeable.
 
+<!-- Knowledge Type: Operational Steps / Configuration Parameters -->
+<!-- Use Case: Ranger Admin over HTTPS / Custom CA / Mutual TLS -->
+
 ## When Ranger Admin uses HTTPS
 
 In `fe/conf/ranger-hive-security.xml` on every FE, change the Ranger Admin URL to HTTPS and point `ranger.plugin.hive.policy.rest.ssl.config.file` to the SSL configuration file:
@@ -657,6 +724,9 @@ Example `ranger-policymgr-ssl.xml`:
 
 The Ranger client reads the truststore password from the fixed `sslTrustStore` alias. Mutual TLS additionally requires `xasecure.policymgr.clientssl.keystore` and an `sslKeyStore` alias in JCEKS. Do not put plaintext truststore or keystore passwords in XML.
 
+<!-- Knowledge Type: Architecture Constraints / Best Practices -->
+<!-- Use Case: Multiple Hive Catalogs / Ranger-Doris and Ranger-Hive Coexistence -->
+
 ## Multiple Catalogs and runtime constraints
 
 ### Reuse one Hive policy service across Catalogs
@@ -698,7 +768,24 @@ The standard `hive` prefix corresponds to one `ranger-hive-security.xml`, so all
 - Every FE that initializes the Access Controller downloads and caches policies independently. Keep configuration files, keytabs, truststores, and directory permissions consistent on every FE.
 - Policy changes are not instantaneous. Maximum delay is normally close to `policy.pollIntervalMs`, plus Ranger Admin and network latency.
 
+<!-- Knowledge Type: FAQ / Troubleshooting -->
+<!-- Use Case: Configuration Loading Failure / Policy Download Failure / Authorization Failure -->
+
 ## Troubleshooting
+
+Use the symptom table to identify the first check, then follow the corresponding section for the cause and complete procedure:
+
+| Symptom | First check |
+| --- | --- |
+| Catalog creation cannot find the Access Controller | Verify that `access_controller.class` is the full factory class or `ranger-hive` |
+| The log cannot find `ranger-hive-security.xml` | Verify that the Catalog prefix is fixed to `hive` and the file exists under `fe/conf/` on every FE |
+| The security XML is ineffective when audit is disabled | Deploy `ranger-hive-audit.xml` and disable audit explicitly |
+| Ranger Admin is reachable, but no policy is loaded | Check Service Name, REST URL, network access, cache directory, and policy status |
+| Policy download fails after Kerberos is enabled | Check UGI secure mode, HTTP SPN, download authorization, HTTP status, and policy cache |
+| Ranger allows the user, but the Catalog is not visible | Check Catalog-level permission in the default Access Controller |
+| A Ranger deny policy does not take effect | Check for Global permissions and avoid testing as `root` or `admin` |
+| A policy works in HiveServer2 but not in Doris | Check Service Name, user and role names, and expression compatibility |
+| A user can read HDFS or S3 directly | Ranger-Hive does not enforce underlying storage access control |
 
 ### Catalog creation reports that the Access Controller cannot be found
 
@@ -770,6 +857,9 @@ Confirm that Doris and HiveServer2 read the same Ranger Hive Service Name, and t
 ### Does Ranger-Hive prevent direct HDFS or S3 access?
 
 No. Ranger-Hive only authorizes Hive database, table, and column requests at the Doris SQL layer. Access to HDFS, S3, and other storage uses the Catalog's storage authentication settings and requires separate storage-side access control and credential isolation.
+
+<!-- Knowledge Type: Production Checklist -->
+<!-- Use Case: Production Deployment Acceptance -->
 
 ## Production checklist
 
