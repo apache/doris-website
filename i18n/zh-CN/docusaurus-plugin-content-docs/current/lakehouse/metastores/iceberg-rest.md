@@ -198,3 +198,22 @@ mysql> REFRESH TABLE ice.`ns1.ns2`.tbl1;
         's3.region' = 'us-west-2'
     );
     ```
+
+- 连接 SeaweedFS Rest Catalog
+
+    ```sql
+    CREATE CATALOG seaweedfs_iceberg PROPERTIES (
+        'type' = 'iceberg',
+        'iceberg.catalog.type' = 'rest',
+        'uri' = 'http://<seaweedfs_host>:8181',
+        'warehouse' = 's3://<table_bucket_name>',
+        'credential' = '<ak>:<sk>',
+        's3.access_key' = '<ak>',
+        's3.secret_key' = '<sk>',
+        's3.endpoint' = 'http://<seaweedfs_host>:8333',
+        's3.region' = 'us-west-2',
+        'use_path_style' = 'true'
+    );
+    ```
+
+    SeaweedFS 的 Table Bucket 同时提供两部分能力：内置的 Iceberg REST Catalog 提供表元数据，Table Bucket 本身以 Parquet 文件存储表数据，二者共用同一个 S3 网关。完整教程见[与 SeaweedFS 集成](../best-practices/doris-seaweedfs.md)。
