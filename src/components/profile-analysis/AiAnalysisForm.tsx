@@ -164,7 +164,7 @@ export function AiAnalysisForm({
                     if (hcaptchaToken) onAnalyze(hcaptchaToken, resetCaptcha);
                 }}
             >
-                {disabled ? 'Processing…' : 'Analyze with AI'}
+                {disabled ? 'Processing… · Estimated 1–2 minutes' : 'Analyze with AI'}
             </button>
         </div>
     );

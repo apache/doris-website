@@ -45,6 +45,15 @@ const edgeTypes = {
 /** Zoom applied when a hotspot entry centers its operator on the canvas. */
 const FOCUS_ZOOM = 1;
 
+/** Full screen keeps the site navigation usable, so the canvas starts below this element. */
+const NAVBAR_SELECTOR = '.navbar-next';
+
+/** Custom property holding the measured navbar height the full-screen canvas starts below. */
+const NAVBAR_OFFSET_PROPERTY = '--profile-dag-navbar-offset';
+
+const EXPAND_ICON_PATH = 'M6 1.5H1.5V6M10 1.5h4.5V6M14.5 10v4.5H10M6 14.5H1.5V10';
+const COLLAPSE_ICON_PATH = 'M1.5 5.5H6V1.5M14.5 5.5H10V1.5M10 14.5V10h4.5M6 14.5V10H1.5';
+
 const stateMessages: Partial<Record<DagUiState, string>> = {
     idle: 'Choose a Profile and select Visualize Execution.',
     parsing: 'Parsing the execution graph…',
@@ -205,12 +214,39 @@ function HotspotList({
     );
 }
 
+function FullscreenToggle({
+    active,
+    onToggle,
+}: {
+    active: boolean;
+    onToggle: (next: boolean) => void;
+}): JSX.Element {
+    return (
+        <Panel position="top-right" className="profile-dag-fullscreen">
+            <button
+                type="button"
+                className="profile-dag-fullscreen__button"
+                aria-pressed={active}
+                title={active ? 'Exit full screen (Esc)' : 'Expand the execution graph to full screen'}
+                onClick={() => onToggle(!active)}
+            >
+                <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                    <path d={active ? COLLAPSE_ICON_PATH : EXPAND_ICON_PATH} />
+                </svg>
+                {active ? 'Exit full screen' : 'Full screen'}
+            </button>
+        </Panel>
+    );
+}
+
 function ProfileDagCanvas({ dag }: { dag: ProfileDagResponse }): JSX.Element {
     const [nodes, setNodes] = useState<ProfileFlowNode[]>([]);
     const [edges, setEdges] = useState<Awaited<ReturnType<typeof layoutProfileDag>>['edges']>([]);
     const [selectedNode, setSelectedNode] = useState<ProfileDagNodeData | null>(null);
     const [layoutError, setLayoutError] = useState<string | null>(null);
+    const [isFullscreen, setIsFullscreen] = useState(false);
     const canvasRef = useRef<HTMLDivElement>(null);
+    const workspaceRef = useRef<HTMLDivElement>(null);
     const hasFitVisibleCanvasRef = useRef(false);
     const { fitView, getInternalNode, setCenter } = useReactFlow<ProfileFlowNode>();
     const hotspots = useMemo(() => selectSlowestOperators(dag), [dag]);
@@ -221,6 +257,7 @@ function ProfileDagCanvas({ dag }: { dag: ProfileDagResponse }): JSX.Element {
         setEdges([]);
         setSelectedNode(null);
         setLayoutError(null);
+        setIsFullscreen(false);
         hasFitVisibleCanvasRef.current = false;
         layoutProfileDag(dag)
             .then(layout => {
@@ -253,6 +290,40 @@ function ProfileDagCanvas({ dag }: { dag: ProfileDagResponse }): JSX.Element {
         fitWhenVisible();
         return () => observer.disconnect();
     }, [fitView, nodes.length]);
+
+    const changeFullscreen = useCallback((next: boolean) => {
+        // The canvas changes size, so let the resize observer above fit the graph again.
+        hasFitVisibleCanvasRef.current = false;
+        setIsFullscreen(next);
+    }, []);
+
+    // Full screen stops below the navbar, whose height is measured because it grows on
+    // narrow screens, and the page behind the canvas is kept from scrolling.
+    useEffect(() => {
+        const workspace = workspaceRef.current;
+        if (!isFullscreen || !workspace) return;
+
+        const navbar = document.querySelector(NAVBAR_SELECTOR);
+        const applyNavbarOffset = () => {
+            const offset = navbar ? Math.max(0, navbar.getBoundingClientRect().bottom) : 0;
+            workspace.style.setProperty(NAVBAR_OFFSET_PROPERTY, `${offset}px`);
+        };
+        const exitOnEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') changeFullscreen(false);
+        };
+        const previousBodyOverflow = document.body.style.overflow;
+
+        applyNavbarOffset();
+        document.body.style.overflow = 'hidden';
+        window.addEventListener('resize', applyNavbarOffset);
+        window.addEventListener('keydown', exitOnEscape);
+        return () => {
+            window.removeEventListener('resize', applyNavbarOffset);
+            window.removeEventListener('keydown', exitOnEscape);
+            document.body.style.overflow = previousBodyOverflow;
+            workspace.style.removeProperty(NAVBAR_OFFSET_PROPERTY);
+        };
+    }, [changeFullscreen, isFullscreen]);
 
     const highlightNode = useCallback((nodeId: string) => {
         setNodes(current => current.map(node => ({ ...node, selected: node.id === nodeId })));
@@ -288,8 +359,16 @@ function ProfileDagCanvas({ dag }: { dag: ProfileDagResponse }): JSX.Element {
         return <div className="profile-dag__message"><span className="profile-analysis__spinner" aria-hidden="true" /> Laying out the execution graph…</div>;
     }
 
+    const workspaceClassName = [
+        'profile-dag__workspace',
+        selectedNode ? 'profile-dag__workspace--details' : '',
+        isFullscreen ? 'profile-dag__workspace--fullscreen' : '',
+    ]
+        .filter(Boolean)
+        .join(' ');
+
     return (
-        <div className={`profile-dag__workspace${selectedNode ? ' profile-dag__workspace--details' : ''}`}>
+        <div ref={workspaceRef} className={workspaceClassName}>
             <div ref={canvasRef} className="profile-dag__canvas" aria-label="Profile execution graph">
                 <ReactFlow
                     nodes={nodes}
@@ -311,6 +390,7 @@ function ProfileDagCanvas({ dag }: { dag: ProfileDagResponse }): JSX.Element {
                 >
                     <Background gap={24} size={1} />
                     {hotspots.length > 0 && <HotspotList hotspots={hotspots} onFocus={focusNode} />}
+                    <FullscreenToggle active={isFullscreen} onToggle={changeFullscreen} />
                     <MiniMap pannable zoomable aria-label="Execution graph overview" />
                     <Controls showInteractive={false} />
                 </ReactFlow>
