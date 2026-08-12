@@ -23,7 +23,7 @@
 <!-- 知识类型: 能力定义 + 集成指南 -->
 <!-- 适用场景: 阿里云 OSS Tables 接入 / 托管 Iceberg 表查询与写入 -->
 
-[阿里云 OSS Tables](https://help.aliyun.com/zh/oss/user-guide/spark-access-oss-tables) 是面向 Apache Iceberg 表的托管存储服务。OSS Tables 以 Table Bucket 作为存储单元，对外提供兼容 Apache Iceberg REST Catalog 的元数据接口，并通过 OSS 的 S3 兼容接口访问表数据。
+[阿里云 OSS Tables](https://help.aliyun.com/zh/oss/user-guide/oss-tables/) 是面向 Apache Iceberg 表的托管存储服务。OSS Tables 以 Table Bucket 作为存储单元，对外提供兼容 Apache Iceberg REST Catalog 的元数据接口，并通过 OSS 的 S3 兼容接口访问表数据。
 
 相比在普通 OSS Bucket 中自行管理 Iceberg 表，OSS Tables 提供以下能力：
 

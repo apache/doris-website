@@ -22,7 +22,7 @@
 <!-- Knowledge Type: Capability Definition + Integration Guide -->
 <!-- Applicable Scenarios: Alibaba Cloud OSS Tables integration / Managed Iceberg table queries and writes -->
 
-[Alibaba Cloud OSS Tables](https://www.alibabacloud.com/help/en/oss/user-guide/spark-access-oss-tables) is a managed storage service for Apache Iceberg tables. OSS Tables uses Table Buckets as storage units, exposes a metadata interface compatible with Apache Iceberg REST Catalog, and provides access to table data through the OSS S3-compatible interface.
+[Alibaba Cloud OSS Tables](https://www.alibabacloud.com/help/en/oss/user-guide/oss-tables/) is a managed storage service for Apache Iceberg tables. OSS Tables uses Table Buckets as storage units, exposes a metadata interface compatible with Apache Iceberg REST Catalog, and provides access to table data through the OSS S3-compatible interface.
 
 Compared with managing Iceberg tables in a regular OSS Bucket, OSS Tables provides the following capabilities:
 
