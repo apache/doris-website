@@ -872,6 +872,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'admin-manual/auth/authorization/internal',
                                 'admin-manual/auth/authorization/ranger',
+                                'admin-manual/auth/authorization/ranger-hive',
                                 'admin-manual/auth/authorization/data',
                             ],
                         },
