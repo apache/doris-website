@@ -121,7 +121,8 @@ test('keeps local file selection independent from unchecked AI consent and displ
 
     assert.match(markup, /type="checkbox"/);
     assert.doesNotMatch(markup, /type="checkbox"[^>]*checked/);
-    assert.match(markup, /The prepared Profile is uploaded only when you start this action\./);
+    assert.match(markup, /href="https:\/\/github\.com\/apache\/doris-skills"/);
+    assert.match(markup, /Powered by <strong>Doris Skills<\/strong>/);
     assert.match(markup, /provided by VeloDB and third-party large language model service providers/);
     assert.match(markup, /not an official Apache Doris project feature/);
     assert.match(markup, /Do not upload passwords, keys, access tokens, personal information/);

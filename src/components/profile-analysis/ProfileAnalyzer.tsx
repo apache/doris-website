@@ -96,11 +96,6 @@ export function ProfileAnalyzer(): JSX.Element {
             <header className="profile-analysis__header">
                 <p className="profile-analysis__eyebrow">Query diagnostics</p>
                 <h1>Apache Doris Profile Analysis</h1>
-                <p>
-                    Choose one Query Profile to visualize its execution graph locally or request an independent
-                    AI-assisted diagnosis. Each AI upload starts a new analysis and does not create a conversation
-                    history.
-                </p>
             </header>
 
             <ProfileUploader file={analysis.file} disabled={isAiBusy} onFileChange={handleFileChange} />

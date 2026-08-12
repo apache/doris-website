@@ -8,18 +8,10 @@
         margin-bottom: 2rem;
 
         h1 {
-            margin-bottom: 0.75rem;
+            margin-bottom: 0;
             color: var(--brand-ink);
             font-size: clamp(2rem, 4vw, 3rem);
             line-height: 1.15;
-        }
-
-        > p:last-child {
-            max-width: 720px;
-            margin: 0;
-            color: var(--ifm-color-emphasis-700);
-            font-size: 1.05rem;
-            line-height: 1.7;
         }
     }
 
@@ -115,6 +107,51 @@
 
     &__panel-intro + &__action-button {
         margin-top: 0;
+    }
+
+    &__skills-credit {
+        margin: 0 0 1.25rem;
+
+        a {
+            display: inline-flex;
+            gap: 0.35rem;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--brand-border-soft);
+            border-radius: 8px;
+            color: var(--brand-primary-deep);
+            background: var(--brand-surface-soft);
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+
+            &:hover {
+                border-color: var(--brand-primary);
+                color: var(--brand-primary-deep);
+                background: var(--brand-surface-callout);
+                text-decoration: none;
+                transform: translateY(-1px);
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--brand-primary-glow);
+                outline-offset: 2px;
+            }
+
+            strong {
+                font-weight: 700;
+            }
+
+            svg {
+                width: 0.9rem;
+                height: 0.9rem;
+                fill: none;
+                stroke: currentColor;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-width: 1.5;
+            }
+        }
     }
 
     &__help {

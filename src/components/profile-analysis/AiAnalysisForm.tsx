@@ -32,8 +32,18 @@ export function AiAnalysisForm({
 
     return (
         <div className="profile-analysis__panel">
-            <p className="profile-analysis__panel-intro">
-                The prepared Profile is uploaded only when you start this action.
+            <p className="profile-analysis__skills-credit">
+                <a
+                    href="https://github.com/apache/doris-skills"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Powered by Doris Skills (opens in a new tab)"
+                >
+                    Powered by <strong>Doris Skills</strong>
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M6 3h7v7M13 3 5 11M11 9v4H3V5h4" />
+                    </svg>
+                </a>
             </p>
 
             <fieldset className="profile-analysis__language" disabled={disabled}>
