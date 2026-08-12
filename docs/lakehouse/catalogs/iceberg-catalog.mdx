@@ -1424,6 +1424,36 @@ This is an experimental feature, supported since version 4.1.0.
     </Tabs>
 </details>
 
+### Alibaba Cloud OSS Tables
+
+<details>
+    <summary>5.0+ Version</summary>
+    <Tabs>
+        <TabItem value='OSS Tables REST Catalog' label='OSS Tables REST Catalog' default>
+            For complete configuration and usage instructions, see [Alibaba Cloud OSS Tables Integration](../best-practices/doris-aliyun-oss-tables).
+            ```sql
+            CREATE CATALOG oss_tables PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'rest',
+                'iceberg.rest.uri' = 'https://<region>.oss-tables.aliyuncs.com/iceberg',
+                'warehouse' = 'acs:osstables:<region>:<account_id>:bucket/<table_bucket_name>',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 'osstables',
+                'iceberg.rest.signing-region' = '<region>',
+                'iceberg.rest.view-enabled' = 'false',
+                'io-impl' = 'org.apache.iceberg.aws.s3.S3FileIO',
+                'oss.endpoint' = 'https://oss-<region>.aliyuncs.com',
+                'oss.region' = '<region>',
+                'oss.access_key' = '<access_key_id>',
+                'oss.secret_key' = '<access_key_secret>',
+                'oss.use_path_style' = 'false',
+                'test_connection' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
 ## Query Operations
 
 ### Basic Query

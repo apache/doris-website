@@ -649,6 +649,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'lakehouse/best-practices/doris-iceberg',
                                 'lakehouse/best-practices/doris-aws-s3tables',
+                                'lakehouse/best-practices/doris-aliyun-oss-tables',
                                 'lakehouse/best-practices/doris-polaris',
                                 'lakehouse/best-practices/doris-gravitino',
                                 'lakehouse/best-practices/doris-onelake',
