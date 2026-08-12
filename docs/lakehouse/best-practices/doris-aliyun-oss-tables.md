@@ -22,7 +22,7 @@
 <!-- Knowledge Type: Capability Definition + Integration Guide -->
 <!-- Applicable Scenarios: Alibaba Cloud OSS Tables integration / Managed Iceberg table queries and writes -->
 
-[Alibaba Cloud OSS Tables](https://help.aliyun.com/zh/oss/user-guide/spark-access-oss-tables) is a managed storage service for Apache Iceberg tables. OSS Tables uses Table Buckets as storage units, exposes a metadata interface compatible with Apache Iceberg REST Catalog, and provides access to table data through the OSS S3-compatible interface.
+[Alibaba Cloud OSS Tables](https://www.alibabacloud.com/help/en/oss/user-guide/spark-access-oss-tables) is a managed storage service for Apache Iceberg tables. OSS Tables uses Table Buckets as storage units, exposes a metadata interface compatible with Apache Iceberg REST Catalog, and provides access to table data through the OSS S3-compatible interface.
 
 Compared with managing Iceberg tables in a regular OSS Bucket, OSS Tables provides the following capabilities:
 
@@ -51,7 +51,7 @@ acs:osstables:<region>:<account_id>:bucket/<table_bucket_name>
 
 Create a RAM user AccessKey that has access to the target Table Bucket, or obtain temporary STS credentials. Ensure that FE nodes can access the OSS Tables REST Catalog endpoint, and that FE and BE nodes can access the OSS data access endpoint.
 
-For the permissions required by each OSS Tables operation, see [Alibaba Cloud OSS Tables permissions and access control](https://help.aliyun.com/zh/oss/user-guide/oss-tables-access-control).
+For the permissions required by each OSS Tables operation, see [Alibaba Cloud OSS Tables permissions and access control](https://www.alibabacloud.com/help/en/oss/user-guide/oss-tables-access-control).
 
 <!-- Knowledge Type: Configuration Parameters -->
 <!-- Applicable Scenarios: Configuring REST Catalog authentication and S3FileIO data access -->
@@ -197,4 +197,4 @@ Check the following configurations:
 
 Verify that FE and all BE nodes can access `oss.endpoint`, and that the RAM user or STS identity has the `oss:GetTableMetadataLocation` and `oss:GetTableData` permissions.
 
-For the complete list of permissions required by OSS Tables operations, see [Alibaba Cloud OSS Tables permissions and access control](https://help.aliyun.com/zh/oss/user-guide/oss-tables-access-control).
+For the complete list of permissions required by OSS Tables operations, see [Alibaba Cloud OSS Tables permissions and access control](https://www.alibabacloud.com/help/en/oss/user-guide/oss-tables-access-control).
