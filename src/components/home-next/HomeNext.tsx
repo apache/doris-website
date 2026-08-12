@@ -7,6 +7,7 @@ import { EcosystemSection } from './sections/EcosystemSection';
 import { DeploymentSection } from './sections/DeploymentSection';
 import { CommunitySection } from './sections/CommunitySection';
 import { StatsSection } from './sections/StatsSection';
+import { NewsTicker } from './NewsTicker';
 import './HomeNext.scss';
 
 export default function HomeNext(): JSX.Element {
@@ -16,6 +17,7 @@ export default function HomeNext(): JSX.Element {
             description="Apache Doris is an open-source, real-time analytics database built on MPP architecture. Run OLAP queries, lakehouse analytics, and hybrid search at petabyte scale on a single engine."
         >
             <HeroSection />
+            <NewsTicker />
             <UseCasesSection />
             <StatsSection />
             <FeaturesSection />
