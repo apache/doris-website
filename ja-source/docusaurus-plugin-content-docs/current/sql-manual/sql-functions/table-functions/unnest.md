@@ -21,7 +21,7 @@ UNNEST(<expr>[, ...]) [WITH ORDINALITY] [AS alias [(col1, col2, ...)]]
 - 複数のARRAYパラメータ：位置によって各回展開された要素を複数列（またはStruct）に結合する。展開の長さは最も長い入力によって決定され、短い列はNULLでパディングされる。
 - MAPパラメータ：2列（Struct）（key、value）を返す；NULLキー/値はNULLのまま。
 - BITMAPパラメータ：要素ごとに整数値を返す。
-- WITH ORDINALITY：1から始まるシーケンス番号列を出力に追加する（最後の列として、またはエイリアスで指定された位置に）。
+- WITH ORDINALITY：0から始まるシーケンス番号列を出力に追加する（最初の列として、またはエイリアスで指定された位置に）。
 - 空配列またはNULL：
   - 独立したテーブルを生成する場合（SELECTリストまたはFROM ... UNNEST）、パラメータがNULLまたは空配列の場合、行は生成されない（0行）。
   - FROM/LATERALとLEFT JOINの組み合わせで使用される場合（つまり、外部行セマンティクスを生成）、親行の展開された行がすべてフィルタリングされるか出力がない場合、親行のために行が挿入され、UNNEST出力列はNULLに設定される（左テーブル行を保持するため）。
@@ -33,7 +33,7 @@ UNNEST(<expr>[, ...]) [WITH ORDINALITY] [AS alias [(col1, col2, ...)]]
 4. JOINシナリオにおいて：
    - INNER / CROSS JOIN：展開結果に基づいてデカルト積またはマッチングを実行する。
    - LEFT JOIN LATERAL：外部行セマンティクスを実装する — マッチがないか、すべての展開結果がON/フィルタ条件によってフィルタリングされた場合、NULL値を持つ行が生成される（左テーブル行を保持するため）。
-5. WITH ORDINALITYは展開された行にシーケンス番号（1から開始）を追加する。
+5. WITH ORDINALITYは展開された行にシーケンス番号（0から開始）を追加する。
 6. UNNEST(...)がSELECTリストで直接使用される場合、単一行ソースにテーブル生成関数を適用することと同等であり、式を複数行の出力に展開する。
 
 ## 例
@@ -107,15 +107,15 @@ ORDER BY i.id, t.tag;
 3. WITH ORDINALITY：
 
 ```sql
-SELECT i.id, t.ord, t.tag
-FROM items i, unnest(i.tags) WITH ORDINALITY AS t(tag, ord)
+SELECT i.id, t.tag, t.ord
+FROM items i, unnest(i.tags) WITH ORDINALITY AS t(ord, tag)
 ORDER BY i.id, t.ord;
 ```
 出力（例）：
 
 ```sql
 +------+-------------+------+
-| id   | ord         | tag  |
+| id   | tag         | ord  |
 +------+-------------+------+
 |    1 | Electronics |    0 |
 |    1 | High-End    |    2 |
