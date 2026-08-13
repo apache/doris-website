@@ -44,11 +44,6 @@ This document applies to the published [`v1.1.0` release](https://github.com/vel
 | --- | --- |
 | dbt-for-apache-doris | 1.1.0 |
 | Python | 3.10 or later |
-| dbt Core | 1.12.x (`>=1.12,<1.13`) |
-| MySQL Connector/Python | `>=8.0.33` (installed automatically) |
-| Apache Doris | No adapter-wide minimum is declared; the FE MySQL query port must be reachable |
-
-Asynchronous materialized views have a separate Doris version gate, described in [Asynchronous materialized views](#asynchronous-materialized-views). That gate is not an adapter-wide compatibility guarantee.
 
 <!-- Knowledge Type: Operational Steps -->
 <!-- Use Case: Adapter installation / Installation verification -->

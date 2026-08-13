@@ -39,14 +39,10 @@ ELT 流程中的转换（T）环节，不负责采集或同步源数据。
 | --- | --- |
 | dbt-for-apache-doris | 1.1.0 |
 | Python | 3.10 或更高版本 |
-| dbt Core | 1.12.x（`>=1.12,<1.13`） |
-| MySQL Connector/Python | `>=8.0.33`（自动安装） |
-| Apache Doris | 未声明整个 Adapter 统一的最低版本；FE MySQL Query Port 需要可访问 |
 
 本文以已发布的
 [`v1.1.0`](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0)
-为准。异步物化视图有单独的 Doris 版本准入检查，详见下文；该检查不代表整个
-Adapter 对相同版本范围作出兼容性承诺。
+为准。
 
 :::note
 `v1.1.0` 当前为 Beta。生产使用前，应在实际 Doris 或 VeloDB 版本和部署拓扑上验证。
