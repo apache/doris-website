@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Apache Doris dbt Adapter Guide (Development)",
+    "title": "Apache Doris dbt Adapter",
     "language": "en",
     "description": "Install and configure dbt-for-apache-doris 1.1.0 for Apache Doris models, source freshness, async materialized views.",
     "keywords": [
