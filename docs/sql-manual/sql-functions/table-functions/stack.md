@@ -18,12 +18,14 @@ STACK(<num_rows>, <expr1> [, <expr2> ...])
 
 ## Parameters
 
-- `<num_rows>`: A positive constant integer that specifies the number of rows to generate. Constant expressions, such as `3 - 1`, are supported.
-- `<expr1> [, <expr2> ...]`: Expressions to distribute across the generated rows. Expressions in the same output column must have compatible types. Expressions can reference columns from the input row.
+| Parameter | Description |
+|-----------|-------------|
+| `<num_rows>` | A positive constant integer that specifies the number of rows to generate. Constant expressions, such as `3 - 1`, are supported. |
+| `<expr1> [, <expr2> ...]` | Expressions to distribute across the generated rows. Expressions in the same output column must have compatible types. Expressions can reference columns from the input row. |
 
 ## Return Value
 
-Returns `<num_rows>` rows. The number of output columns is the ceiling of the number of expressions divided by `<num_rows>`. Values are assigned row by row from left to right. If the final row does not contain enough expressions, the missing values are filled with `NULL`.
+Returns `<num_rows>` rows. The number of output columns is the ceiling of the number of expressions divided by `<num_rows>`. Each output column has the common type of the expressions assigned to that column; a column containing only `NULL` expressions has the `NULL` type. Values are assigned row by row from left to right. If the final row does not contain enough expressions, the missing values are filled with `NULL`.
 
 When `stack` is used with a single expression per output column, the table function returns one column. When multiple output columns are produced, specify aliases in the `LATERAL VIEW` clause to name them.
 
@@ -102,6 +104,15 @@ FROM (
 ) AS test_stack
 LATERAL VIEW stack(2, a, s1, b, s2) s AS c1, c2
 ORDER BY id, c1, c2;
+```
+
+```text
++------+------+------+
+| id   | c1   | c2   |
++------+------+------+
+|    1 |   10 | x    |
+|    1 |   20 | y    |
++------+------+------+
 ```
 
 Expressions are evaluated for each input row. In this example, `a` and `b` form one output column and `s1` and `s2` form the other. If expressions assigned to one output column have incompatible types, the query returns an analysis error.
