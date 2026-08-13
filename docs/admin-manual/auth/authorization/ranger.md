@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Ranger Authorization",
+    "title": "Ranger-Doris Authorization",
     "language": "en",
     "description": "Hand Apache Doris permission management over to Apache Ranger: plugin installation, Catalog/database/table/column/row-level and masking policies, Kerberos integration, and common issues.",
     "keywords": [

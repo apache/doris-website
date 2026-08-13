@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Ranger 鉴权",
+    "title": "Ranger-Doris 鉴权",
     "language": "zh-CN",
     "description": "通过 Apache Ranger 接管 Apache Doris 权限管理：插件安装、Catalog/库表列/行级与脱敏策略、Kerberos 集成与常见问题。",
     "keywords": [
