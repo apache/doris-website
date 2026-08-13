@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Apache Doris 4.x dbt Adapter 使用指南",
+    "title": "Apache Doris dbt Adapter",
     "language": "zh-CN",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 3,
