@@ -33,8 +33,8 @@ Source data must already be loaded into Doris. The adapter performs transformati
 
 :::
 
-<!-- Knowledge Type: Version Requirements / Environment Requirements -->
-<!-- Use Case: Pre-installation version check / Environment preparation -->
+<!-- Knowledge Type: Version Requirements / Environment Requirements / Version Differences -->
+<!-- Use Case: Pre-installation version check / Environment preparation / Release comparison -->
 
 ## Environment requirements
 
@@ -42,11 +42,15 @@ Source data must already be loaded into Doris. The adapter performs transformati
 | --- | --- |
 | Python | 3.10 or later |
 
-:::note Version support
+## Adapter version differences
 
-This page documents the current adapter capabilities (supported since version 1.1.0). Capabilities introduced in later releases will state their minimum version at the relevant feature.
+This section centralizes differences between adapter releases. Elsewhere, this page describes current behavior without repeating a specific adapter version.
 
-:::
+| Adapter version | Difference |
+| --- | --- |
+| 1.1.0 | First official release; supports the capabilities documented on this page |
+
+Changes introduced by later releases will be added to this section.
 
 <!-- Knowledge Type: Operational Steps -->
 <!-- Use Case: Adapter installation / Installation verification -->
@@ -122,7 +126,7 @@ Here, `database` is not a Doris catalog. It is a field inherited from dbt's gene
 
 :::caution
 
-External Catalog three-part namespaces using Catalog, Database, and Table are not supported.
+The adapter currently does not support External Catalog three-part namespaces using Catalog, Database, and Table.
 
 :::
 
@@ -270,7 +274,7 @@ For compatibility with existing dbt projects, a source may instead set only `dat
 | `materialized_view` | Doris asynchronous materialized view | Doris-managed refresh and transparent query rewrite |
 | `ephemeral` | Compiles into a CTE in downstream models | Reuse SQL without creating a Doris object |
 
-Seeds and snapshots can also create Doris tables. The adapter does not include the old custom `partition` materialization; use incremental `insert_overwrite` for partition replacement. The examples below keep `replication_num=1` so they also run on a single-BE development cluster; use a production-appropriate replica count in real deployments.
+Seeds and snapshots can also create Doris tables. The adapter currently does not include a custom `partition` materialization; use incremental `insert_overwrite` for partition replacement. The examples below keep `replication_num=1` so they also run on a single-BE development cluster; use a production-appropriate replica count in real deployments.
 
 ### View
 
@@ -324,7 +328,7 @@ The `table` materialization creates a Duplicate Key table and fully replaces the
 | `replication_num` | Positive integer or numeric string; optional | Replica count; the top-level setting overrides the same key in `properties` |
 | `properties` | Dictionary; optional | Key-value pairs rendered into Doris `PROPERTIES` |
 
-Duplicate Key, partition, and distribution columns must be present in the model output and comply with Doris table-creation rules. The adapter renders `partition_by_init` and `properties` into the `CREATE TABLE` statement; Doris validates the partition definitions, property names, and values. An ordinary `table` model does not expose Aggregate Key or standalone Unique Key configuration. Use incremental `merge` for Unique Key upserts.
+Duplicate Key, partition, and distribution columns must be present in the model output and comply with Doris table-creation rules. The adapter renders `partition_by_init` and `properties` into the `CREATE TABLE` statement; Doris validates the partition definitions, property names, and values. An ordinary `table` model currently does not expose Aggregate Key or standalone Unique Key configuration. Use incremental `merge` for Unique Key upserts.
 
 ### Incremental
 
@@ -344,7 +348,7 @@ Microbatch does not use this filtering pattern. dbt Core injects time filters fr
 
 When no strategy is set, `unique_key` selects `merge`; otherwise the adapter uses `append`. The adapter supports all four `on_schema_change` modes: `ignore`, `fail`, `append_new_columns`, and `sync_all_columns`.
 
-`delete+insert` and `delete_insert` are rejected. Use `merge` for Doris Unique Key upserts. `merge` does not generate SQL `MERGE INTO`; it uses full-row `INSERT INTO` with Doris Unique Key semantics. Each batch must contain at most one row for each `unique_key`. To use a Sequence Column, set the visible column through `function_column.sequence_col` in `properties` and continue using `merge`. The bare `sequence_col` setting and `function_column.sequence_type` with the hidden `__DORIS_SEQUENCE_COL__` are not supported.
+`delete+insert` and `delete_insert` are rejected. Use `merge` for Doris Unique Key upserts. `merge` does not generate SQL `MERGE INTO`; it uses full-row `INSERT INTO` with Doris Unique Key semantics. Each batch must contain at most one row for each `unique_key`. To use a Sequence Column, set the visible column through `function_column.sequence_col` in `properties` and continue using `merge`. The bare `sequence_col` setting and `function_column.sequence_type` with the hidden `__DORIS_SEQUENCE_COL__` are currently not supported.
 
 The following example performs a full-row upsert by `order_id`:
 
@@ -529,7 +533,7 @@ from {{ ref('fct_daily_sales') }}
 
 `BUILD IMMEDIATE` starts the initial build when a definition is created or replaced. The adapter creates the new definition under a temporary name, waits for the initial build by default, and then publishes it at the target name; it does not submit an extra `REFRESH MATERIALIZED VIEW`. `BUILD DEFERRED` creates the definition without an initial build.
 
-When the definition has not changed, refresh behavior is controlled entirely by `refresh_trigger`; there is no `refresh_on_run` configuration:
+When the definition has not changed, refresh behavior is controlled entirely by `refresh_trigger`; there is currently no `refresh_on_run` configuration:
 
 - `manual` submits `REFRESH MATERIALIZED VIEW ... AUTO|COMPLETE` when a later `dbt run` selects the model and waits for success by default.
 - `schedule` and `commit` do not submit a refresh from a later dbt run; Doris triggers it from the schedule or base-table commit.
@@ -573,7 +577,7 @@ When model SQL or DDL configuration changes, the default `on_configuration_chang
 | Model contracts | Set `contract.enforced: true` and declare column names and types for Table, View, or Incremental models; does not create database PK or NOT NULL constraints |
 | Persisted docs | Enable `persist_docs` for relation and column comments on primary relation types |
 | Source freshness | Configure `loaded_at_field` or `loaded_at_query` with `freshness`, then run `dbt source freshness` |
-| Grants | Use standard `grants` configuration for Doris `user` and `user@host` table privileges; role principals are not supported |
+| Grants | Use standard `grants` configuration for Doris `user` and `user@host` table privileges; role principals are currently not supported |
 | Hooks | Use `pre_hook` and `post_hook` to execute Doris SQL around materializations; hook side effects have no transactional rollback |
 | Documentation and lineage | Write descriptions and run `dbt docs generate` for metadata about Doris databases, tables, views, columns, comments, and asynchronous materialized views |
 
@@ -633,7 +637,7 @@ sources:
             error_after: {count: 2, period: hour}
 ```
 
-When using `loaded_at_field`, set `filter` under `freshness`, such as `filter: is_valid = 1`, to limit which rows participate in freshness evaluation. Do not configure `loaded_at_field` and `loaded_at_query` together. The adapter does not infer load time from Doris table metadata; provide a field or query explicitly.
+When using `loaded_at_field`, set `filter` under `freshness`, such as `filter: is_valid = 1`, to limit which rows participate in freshness evaluation. Do not configure `loaded_at_field` and `loaded_at_query` together. The adapter currently does not infer load time from Doris table metadata; provide a field or query explicitly.
 
 The adapter uses `utc_timestamp()` as the current time, matching dbt Core's convention of evaluating timezone-naive freshness timestamps as UTC.
 
@@ -650,7 +654,7 @@ models:
         - reporter@10.0.0.%
 ```
 
-A name without `@host` is treated as `username@%`. Privileges map as follows: `select` to `SELECT_PRIV`, `insert` to `LOAD_PRIV`, `alter` to `ALTER_PRIV`, `create` to `CREATE_PRIV`, `drop` to `DROP_PRIV`, and `show_view` to `SHOW_VIEW_PRIV`. Doris roles are not supported in `grants`; configure concrete users. The account running dbt must be able to inspect principals and adjust privileges on target objects.
+A name without `@host` is treated as `username@%`. Privileges map as follows: `select` to `SELECT_PRIV`, `insert` to `LOAD_PRIV`, `alter` to `ALTER_PRIV`, `create` to `CREATE_PRIV`, `drop` to `DROP_PRIV`, and `show_view` to `SHOW_VIEW_PRIV`. Doris roles are currently not supported in `grants`; configure concrete users. The account running dbt must be able to inspect principals and adjust privileges on target objects.
 
 <!-- Knowledge Type: Command Reference -->
 <!-- Use Case: dbt project development / Execution / Testing / Documentation generation -->
@@ -691,9 +695,9 @@ dbt run --select fct_orders --full-refresh
 
 ## Current limitations
 
-- Aggregate Key table modeling and secondary-index configuration are not supported.
-- A complete External Catalog namespace is unsupported.
-- SSL configuration, timeout/retry, multi-FE failover, server-side cancellation, and complete query telemetry are not implemented.
+- The adapter currently does not support Aggregate Key table modeling or secondary-index configuration.
+- The adapter currently does not support a complete External Catalog namespace.
+- The adapter currently does not implement SSL configuration, timeout/retry, multi-FE failover, server-side cancellation, or complete query telemetry.
 - Some Table/View/MV type changes have a short canonical-name availability window rather than a zero-downtime switch.
 
 <!-- Knowledge Type: Troubleshooting -->

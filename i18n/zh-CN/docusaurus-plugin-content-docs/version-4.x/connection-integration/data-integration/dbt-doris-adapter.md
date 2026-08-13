@@ -36,8 +36,8 @@
 
 :::
 
-<!-- 知识类型: 版本要求 / 环境要求 -->
-<!-- 适用场景: 安装前版本核对 / 环境准备 -->
+<!-- 知识类型: 版本要求 / 环境要求 / 版本差异 -->
+<!-- 适用场景: 安装前版本核对 / 环境准备 / 版本对比 -->
 
 ## 环境要求
 
@@ -45,11 +45,15 @@
 | --- | --- |
 | Python | 3.10 或更高版本 |
 
-:::note 版本支持
+## Adapter 版本差异
 
-本文介绍当前 Adapter 功能（自 1.1.0 版本支持）。后续版本新增的功能会在对应位置单独标注最低版本。
+本节集中记录 Adapter 各版本的功能差异。正文其他位置只描述当前行为，不重复标注具体 Adapter 版本。
 
-:::
+| Adapter 版本 | 版本差异 |
+| --- | --- |
+| 1.1.0 | 首个正式版本；支持本文介绍的功能 |
+
+后续版本新增或变更的功能统一补充在本节。
 
 <!-- 知识类型: 操作步骤 -->
 <!-- 适用场景: Adapter 安装 / 安装结果验证 -->
@@ -133,7 +137,9 @@ Adapter 会把它作为 Doris Database 覆盖 `schema`，用于跨 Database 读�
 和标准 `source()` 当前不能同时表示 Doris Catalog 与 Database 两个层级。
 
 :::caution
+
 当前不支持 External Catalog 的 Catalog、Database、Table 三段式命名空间。
+
 :::
 
 确保 `dbt_project.yml` 中的 `profile` 与 `profiles.yml` 顶层名称一致：
@@ -285,7 +291,7 @@ sources:
 | `materialized_view` | Doris 异步物化视图 | 由 Doris 管理刷新和透明改写 |
 | `ephemeral` | 由 dbt 编译为下游 Model 中的公共表表达式（CTE） | 只复用 SQL、不创建 Doris 对象 |
 
-Seed 和 Snapshot 也可创建 Doris Table。Adapter 不包含旧版自定义 `partition`
+Seed 和 Snapshot 也可创建 Doris Table。Adapter 当前不包含自定义 `partition`
 Materialization；需要替换分区时使用
 Incremental `insert_overwrite`。下文示例沿用单 BE 开发环境，将
 `replication_num` 设为 `1`；生产环境应按实际部署设置副本数。
@@ -346,7 +352,7 @@ Table Materialization 创建 Duplicate Key 表，后续运行会完整替换目�
 Adapter 会将 `partition_by_init` 和 `properties` 生成到 `CREATE TABLE` 语句中；分区定义、
 属性名称和取值是否合法，由 Doris 校验。
 
-普通 Table Model 不支持配置 Aggregate Key 或独立 Unique Key；Unique Key Upsert 使用 Incremental `merge`。
+普通 Table Model 当前不支持配置 Aggregate Key 或独立 Unique Key；Unique Key Upsert 使用 Incremental `merge`。
 
 ### Incremental
 
@@ -406,7 +412,7 @@ where updated_at >= (
 表的全行 `INSERT INTO` 语义。每批数据中的 `unique_key` 必须唯一。需要 Sequence
 Column 时，在 `properties` 中设置可见列
 `function_column.sequence_col`，并继续使用 `merge`。裸 `sequence_col` 配置和使用隐藏
-`__DORIS_SEQUENCE_COL__` 的 `function_column.sequence_type` 均不受支持。
+`__DORIS_SEQUENCE_COL__` 的 `function_column.sequence_type` 当前均不受支持。
 
 覆盖指定 Doris 分区：
 
@@ -639,7 +645,7 @@ Model SQL 或 DDL 配置变化时，`on_configuration_change=apply` 默认通过
 | Model Contract | 对 Table、View 或 Incremental Model 设置 `contract.enforced: true` 并声明字段名称和类型；不会创建数据库 PK 或 NOT NULL 约束 |
 | Persisted Docs | 启用 `persist_docs`，为主要 Relation 类型写入 Relation 和字段注释 |
 | Source Freshness | 配置 `loaded_at_field` 或 `loaded_at_query` 以及 `freshness`，执行 `dbt source freshness` |
-| Grants | 使用标准 `grants` 配置管理 Doris `user` 和 `user@host` 表权限；不支持 Role 授权主体 |
+| Grants | 使用标准 `grants` 配置管理 Doris `user` 和 `user@host` 表权限；当前不支持 Role 授权主体 |
 | Hooks | 使用 `pre_hook` 和 `post_hook` 在 Materialization 前后执行 Doris SQL；Hook 副作用没有事务回滚 |
 | 文档与血缘 | 编写 Description 并执行 `dbt docs generate`，生成 Doris Database、Table、View、字段、注释和异步物化视图元数据 |
 
@@ -765,9 +771,9 @@ dbt run --select fct_orders --full-refresh
 
 ## 当前限制
 
-- 暂不支持 Aggregate Key 表建模和 Secondary Index 配置。
-- 暂不支持完整的 External Catalog 命名空间。
-- 暂未实现 SSL 配置、超时与重试、多 FE 故障转移、服务端取消和完整的查询遥测。
+- 当前不支持 Aggregate Key 表建模和 Secondary Index 配置。
+- 当前不支持完整的 External Catalog 命名空间。
+- 当前未实现 SSL 配置、超时与重试、多 FE 故障转移、服务端取消和完整的查询遥测。
 - 部分 Table、View 和 MV 类型切换存在短暂的标准对象名不可用窗口，无法做到零停机切换。
 
 <!-- 知识类型: 故障排查 -->
