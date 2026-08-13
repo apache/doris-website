@@ -76,12 +76,6 @@ dbt --version
 输出的 `Plugins` 列表中应包含 `doris: 1.1.0`，并且 dbt Core 应为 1.12.x。
 dbt Core 和 MySQL Connector/Python 会作为依赖自动安装。
 
-:::caution
-[PyPI 上的 `dbt-doris==1.0.0`](https://pypi.org/project/dbt-doris/1.0.0/)
-是另一个发行包，不包含本文介绍的实现。请安装 `dbt-for-apache-doris==1.1.0`，不要
-执行 `pip install dbt-doris`。
-:::
-
 <!-- 知识类型: 配置参数 / 操作步骤 -->
 <!-- 适用场景: Doris Profile 配置 / 连接验证 / 跨 Database 读取 -->
 
