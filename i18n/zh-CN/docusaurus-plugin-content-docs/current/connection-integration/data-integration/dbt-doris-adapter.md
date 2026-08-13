@@ -755,26 +755,10 @@ dbt run --select fct_orders --full-refresh
 
 ## 当前限制
 
-- 本文对应 `dbt-for-apache-doris` 1.1.0 和 Python dbt Core 1.12.x；未声明 dbt
-  Fusion 兼容性。
-- Incremental `delete+insert` 和 `delete_insert` 不受支持；使用 `merge` 执行 Doris
-  Unique Key Upsert。
-- Incremental `microbatch` 已支持，但要求 dbt Core 1.12.x，并要求每个批次对应一个
-  精确的单列 RANGE 时间分区。
-- Adapter 当前不使用 Doris 4.1+ 的原生 `MERGE INTO`；`merge` 使用全行
-  `INSERT INTO`。
-- `merge_update_columns`、`merge_exclude_columns`、`incremental_predicates` 及其同义
-  配置 `predicates` 尚不支持内置增量策略。
-- Table 暂无 Aggregate Key、独立 Unique Key、Random Distribution、自动 Bucket 和
-  Secondary Index 的结构化配置接口；Unique Key Upsert 通过 Incremental Model
-  使用。
-- External Catalog 三段式命名空间不受支持；跨 Database Source 仍使用 Doris
-  `database.table` 两段式名称。
-- Profile 暂无 SSL、多 FE、连接重试、Session Variable 和 Workload Group 配置。
-- Source Freshness 支持 `loaded_at_field` 和 `loaded_at_query`，但暂不直接读取 Doris
-  表更新时间。
-- 异步物化视图默认等待初始构建和手动刷新任务；超时不会取消 Doris 中已提交的任务。
-- `grants` 支持 Doris 用户，不支持 Doris Role。
+- 暂不支持 Aggregate Key 表建模和 Secondary Index 配置。
+- 暂不支持完整的 External Catalog 命名空间。
+- 暂未实现 SSL 配置、超时与重试、多 FE 故障转移、服务端取消和完整的查询遥测。
+- 部分 Table、View 和 MV 类型切换存在短暂的标准对象名不可用窗口，无法做到零停机切换。
 
 <!-- 知识类型: 故障排查 -->
 <!-- 适用场景: 连接失败 / Profile database 与 schema 不一致 -->

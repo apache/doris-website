@@ -532,14 +532,10 @@ External Catalog three-part namespaces are not supported. Profiles and standard 
 
 ## Current limitations
 
-- This document covers `dbt-for-apache-doris 1.1.0` and Python dbt Core 1.12.x. dbt Fusion compatibility is not declared.
-- Microbatch batches execute serially.
-- Concurrent dbt runs against the same snapshot or asynchronous materialized-view target must be serialized by the scheduler.
-- `delete+insert`, partial-column merge, and `incremental_predicates` are not supported.
-- Table models do not expose structured configuration for Aggregate Key, standalone Unique Key, random distribution, automatic buckets, or secondary indexes.
-- External Catalog three-part namespaces are not supported.
-- Profiles do not expose SSL, multiple FEs, connection retry, session variables, or workload groups.
-- Some Table, View, or asynchronous materialized-view type changes have a short target-name availability window.
+- Aggregate Key table modeling and secondary-index configuration are not supported.
+- A complete External Catalog namespace is unsupported.
+- SSL configuration, timeout/retry, multi-FE failover, server-side cancellation, and complete query telemetry are not implemented.
+- Some Table/View/MV type changes have a short canonical-name availability window rather than a zero-downtime switch.
 
 <!-- Knowledge Type: Troubleshooting -->
 <!-- Use Case: Connection errors / Profile database and schema mismatch -->
