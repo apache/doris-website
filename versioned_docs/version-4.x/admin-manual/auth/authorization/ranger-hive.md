@@ -1,7 +1,7 @@
 ---
 {
     "title": "Ranger-Hive Authorization",
-    "description": "Configure Ranger-Hive authorization for Doris Hive Catalogs, including policies, Kerberos, HTTPS, row filtering, data masking, and troubleshooting.",
+    "description": "Configure Ranger-Hive authorization for Doris Hive Catalogs, including Kerberos, policies, row filtering, and masking.",
     "keywords": [
         "Apache Doris Ranger Hive",
         "Hive Catalog authorization",
