@@ -542,7 +542,7 @@ External Catalog three-part namespaces are not supported. Profiles and standard 
 - Some Table, View, or asynchronous materialized-view type changes have a short target-name availability window.
 
 <!-- Knowledge Type: Troubleshooting -->
-<!-- Use Case: Connection errors / Table creation errors / Incremental failures / Stale materialized views -->
+<!-- Use Case: Connection errors / Profile database and schema mismatch -->
 
 ## Troubleshooting
 
@@ -553,15 +553,3 @@ Verify that `host` and `port` point to a reachable FE MySQL query port. The defa
 ### `database` and `schema` differ
 
 Remove `database` from the profile or set it to exactly the same value as `schema`. Profile `database` is not a Doris catalog.
-
-### Table creation fails on a single-BE cluster
-
-Set `replication_num=1` only for a single-BE development environment. In production, configure replicas according to availability and durability requirements.
-
-### An incremental run fails
-
-Run `dbt compile --select <model>` and inspect the compiled SQL. Verify that the target key model matches the strategy, the output includes key and partition columns, and each `unique_key` appears at most once per batch. Use `--full-refresh` for incompatible physical changes.
-
-### An asynchronous materialized view is not updated
-
-Check `refresh_trigger`. The default `manual` trigger submits refreshes on later selected runs; `schedule` and `commit` are triggered by Doris. Inspect task status in `tasks('type'='mv')`. Setting `wait_for_refresh=false` or reaching a wait timeout does not cancel the task.

@@ -777,7 +777,7 @@ dbt run --select fct_orders --full-refresh
 - `grants` 支持 Doris 用户，不支持 Doris Role。
 
 <!-- 知识类型: 故障排查 -->
-<!-- 适用场景: 连接失败 / 建表失败 / 增量运行失败 / 物化视图不刷新 -->
+<!-- 适用场景: 连接失败 / Profile database 与 schema 不一致 -->
 
 ## 故障处理
 
@@ -791,30 +791,3 @@ dbt run --select fct_orders --full-refresh
 Profile 中的 `schema` 就是目标 Doris Database。删除 `database`；它不是 Doris
 Catalog，而且在 Profile 中没有提供额外命名层级。如果保留该兼容字段，当前实现
 要求它与 `schema` 完全相同。
-
-### 单 BE 环境建表失败
-
-单 BE 开发集群通常无法满足生产副本数。仅在开发环境中为 Model 设置：
-
-```sql
-{{ config(properties={'replication_num': '1'}) }}
-```
-
-生产环境应按集群部署和数据可靠性要求设置副本数。
-
-### Incremental 运行失败
-
-先执行 `dbt compile --select <model>` 检查编译 SQL，再确认：
-
-- `unique_key`、分区列和分桶列存在于 Model 输出中；
-- 本批 Upsert 数据没有重复 `unique_key`；
-- 已有目标表的 Key Model 与 `incremental_strategy` 匹配；
-- Schema 或 Key 发生不兼容变化时使用了 `--full-refresh`。
-
-### 异步物化视图数据未更新
-
-先检查 `refresh_trigger`：`manual` 会在定义不变的后续选中运行中提交刷新；
-`schedule` 和 `commit` 不会由后续 `dbt run` 主动刷新。默认
-`wait_for_refresh=true`，任务失败或超时会使 Model 失败；设置为 `false` 时只提交
-任务，不等待完成。还应确认 Doris 的 MV Task History 已启用，并检查
-`tasks('type'='mv')` 中的状态。不要配置旧版的 `refresh_on_run`，当前实现没有该选项。
