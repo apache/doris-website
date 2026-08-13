@@ -29,6 +29,27 @@ Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lan
 | Time Travel | 暂不支持 |
 | Full-Text Search / Hybrid Search | 暂不支持 |
 
+## Lance 版本与兼容性
+
+Doris BE 数据读取器使用 [`lance-c` `v0.1.2`](https://github.com/lance-format/lance-c/tree/v0.1.2) 构建；该 `lance-c` 发行版声明的 Lance Rust crates 版本为 `4.0.1`。这些实现版本与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
+
+当前读取器的文件格式兼容情况如下：
+
+| `data_storage_version` | 读取支持 | 说明 |
+|---|---|---|
+| `0.1` / `legacy` | 支持 | Lance 的初始文件格式。 |
+| `2.0` | 支持 | 在 Lance `4.0.1` 中，`stable` 别名对应 `2.0`；对于必须由 Doris 读取的数据，这是最保守的选择。 |
+| `2.1` | 支持 | 使用新的嵌套字段编码，将结构字段的有效性信息保存在 repetition/definition level 中。 |
+| `2.2` | 可以识别，但不保证兼容 | Doris 内置的 Lance 版本将该格式标记为不稳定，不应依赖它实现生产环境互操作。 |
+| `2.3` / `next` | 实验性，不保证兼容 | `next` 别名不稳定，可能发生不兼容变更。 |
+| 后续或未知版本 | 不支持 | 打开或扫描数据集时可能返回不支持存储版本的错误。 |
+
+Lance SDK 发行版本号和文件格式版本相互独立。无论数据集由更早还是更新的 Lance SDK 写入，只有当其存储格式、必需的表级 Feature Flag、索引格式以及 Arrow/Lance 数据类型均可被 Doris 内置版本识别时，Doris 才能读取。因此：
+
+- Doris 预期能够读取使用稳定存储格式 `0.1`、`2.0` 和 `2.1` 写入的数据集，同时还需满足下文所述的数据类型限制。
+- 不保证向前兼容。更新的 Lance 版本写入或修改数据集后，如果使用了更新的存储格式、未知的必需 Manifest Feature、新索引格式或不支持的 Extension 类型，Doris 可能无法读取。
+- 对于必须由当前 Doris 版本持续读取的数据集，建议显式设置 `data_storage_version` 为 `2.0`，且不要使用 `next`。引入更新的写入器或可选 Lance 功能后，应先使用目标 Doris 版本验证生成的数据集，再用于生产环境。
+
 ## 配置 Catalog
 
 ### 语法

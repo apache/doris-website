@@ -29,6 +29,27 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 | Time Travel | Not supported |
 | Full-Text Search / Hybrid Search | Not supported |
 
+## Lance Version and Compatibility
+
+The Doris BE data reader is built with [`lance-c` `v0.1.2`](https://github.com/lance-format/lance-c/tree/v0.1.2). This `lance-c` release declares the Lance Rust crates at version `4.0.1`. These implementation versions are different from the Lance `data_storage_version` recorded in a dataset.
+
+The following table describes the file-format compatibility of this reader:
+
+| `data_storage_version` | Read support | Notes |
+|---|---|---|
+| `0.1` / `legacy` | Supported | Original Lance file format. |
+| `2.0` | Supported | The `stable` alias resolves to `2.0` in Lance `4.0.1`; this is the most conservative choice for data that Doris must read. |
+| `2.1` | Supported | Uses the newer nested-field encoding in which structural validity is stored in repetition and definition levels. |
+| `2.2` | Recognized, but not guaranteed | This format was marked unstable by the Lance version embedded in Doris. Do not rely on it for production interoperability. |
+| `2.3` / `next` | Experimental; not guaranteed | The `next` alias is unstable and may change incompatibly. |
+| A later or unknown version | Not supported | Opening or scanning the dataset may fail with an unsupported storage-version error. |
+
+Lance SDK release numbers and file-format versions are independent. A dataset written by an older or newer Lance SDK is readable only when its storage format, required table feature flags, index format, and Arrow/Lance data types are all understood by the versions embedded in Doris. Consequently:
+
+- Doris is expected to read datasets written with the stable `0.1`, `2.0`, and `2.1` storage formats, subject to the type limitations documented below.
+- Forward compatibility is not guaranteed. A dataset written or modified by a later Lance release may be unreadable if it uses a newer storage format, an unknown required manifest feature, a newer index format, or an unsupported extension type.
+- For datasets that must remain readable by this Doris release, explicitly set `data_storage_version` to `2.0`. Do not use `next`. If a newer writer or optional Lance feature is introduced, validate the resulting dataset with the target Doris release before using it in production.
+
 ## Configure a Catalog
 
 ### Syntax
