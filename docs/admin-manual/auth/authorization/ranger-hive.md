@@ -15,7 +15,8 @@
         "Ranger Admin Kerberos",
         "policy.download.auth.users",
         "ranger-hive-security.xml not found",
-        "Ranger Hive policy download failure"
+        "Ranger Hive policy download failure",
+        "Doris Current Ranger Hive"
     ]
 }
 ---
@@ -23,7 +24,9 @@
 <!-- Knowledge Type: Configuration Guide / Authorization -->
 <!-- Use Case: Hive Catalog Authorization / Reusing Ranger Hive Policies -->
 
-Apache Doris can assign a Ranger-Hive Access Controller to an individual Hive Catalog. Doris then reuses the Hive policies already managed by Apache Ranger to authorize database, table, and column access in that Catalog. Ranger row-level filters, data masking, and auditing are also supported. Use this mode when your organization already manages Hive permissions in Ranger and wants Doris queries over the same data to follow those policies.
+Apache Doris can assign a Ranger-Hive Access Controller to an individual Hive Catalog. Doris then reuses the Hive policies already managed by Apache Ranger for database, table, and column authorization in that Catalog. Ranger row-level filters, data masking, and auditing are also supported.
+
+Use this mode when your organization already manages Hive permissions in Ranger and wants Doris queries over the same data to follow those policies.
 
 Ranger-Hive only controls the Hive Catalogs configured with this Access Controller. It does not replace Doris cluster-level authorization and does not enforce Ranger policies for the underlying HDFS, S3, or other storage systems.
 
@@ -182,10 +185,10 @@ The properties in `ranger-hive-security.xml` are:
 | `ranger.plugin.hive.service.name` | Yes | None | Its `<value>` must exactly match the Hive Service Name in Ranger WebUI, such as `hive_prod` |
 | `ranger.plugin.hive.policy.source.impl` | No | Ranger Admin REST client | Implementation used to retrieve policies |
 | `ranger.plugin.hive.policy.rest.url` | Yes | None | Ranger Admin root URL without a policy API path |
-| `ranger.plugin.hive.policy.cache.dir` | Required for the production setup in this guide | No local cache | Create the directory in advance and grant the FE process user write access |
+| `ranger.plugin.hive.policy.cache.dir` | Required for the production setup in this guide | No local cache | The template sets an example path; create the directory in advance and grant the FE process user write access |
 | `ranger.plugin.hive.policy.pollIntervalMs` | No | `30000` milliseconds | Policy polling interval |
-| `ranger.plugin.hive.policy.rest.client.connection.timeoutMs` | No | `120000` milliseconds | Connection timeout to Ranger Admin |
-| `ranger.plugin.hive.policy.rest.client.read.timeoutMs` | No | `30000` milliseconds | Ranger Admin response read timeout |
+| `ranger.plugin.hive.policy.rest.client.connection.timeoutMs` | No | `120000` milliseconds | Connection timeout to Ranger Admin; the template overrides it to `60000` milliseconds |
+| `ranger.plugin.hive.policy.rest.client.read.timeoutMs` | No | `30000` milliseconds | Ranger Admin response read timeout; the template overrides it to `60000` milliseconds |
 | `ranger.plugin.hive.policy.rest.ssl.config.file` | Required for a custom HTTPS trust configuration | Empty | Absolute path of `ranger-policymgr-ssl.xml` |
 
 #### Create the policy cache directory

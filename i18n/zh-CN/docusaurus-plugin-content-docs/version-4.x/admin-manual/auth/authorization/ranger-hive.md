@@ -16,7 +16,8 @@
         "Ranger Admin Kerberos",
         "policy.download.auth.users",
         "ranger-hive-security.xml 找不到",
-        "Ranger Hive 策略下载失败"
+        "Ranger Hive 策略下载失败",
+        "Doris 4.x Ranger Hive"
     ]
 }
 ---
@@ -24,7 +25,9 @@
 <!-- 知识类型: 配置指南 / 权限管理 -->
 <!-- 适用场景: Hive Catalog 鉴权 / 复用 Ranger Hive 策略 -->
 
-Apache Doris 可以为单个 Hive Catalog 指定 Ranger-Hive Access Controller，使用 Apache Ranger 中已有的 Hive 策略校验该 Catalog 下数据库、表和列的访问权限，并支持 Ranger Row Level Filter、Data Masking 和审计。该模式适合已经使用 Ranger 管理 Hive，且希望 Doris 查询同一批 Hive 数据时复用 Hive 策略的场景。
+Apache Doris 可以为单个 Hive Catalog 指定 Ranger-Hive Access Controller，使用 Apache Ranger 中已有的 Hive 策略校验该 Catalog 下数据库、表和列的访问权限，并支持 Ranger Row Level Filter、Data Masking 和审计。
+
+如果已经使用 Ranger 管理 Hive，并希望 Doris 查询同一批 Hive 数据时复用这些策略，可以使用此模式。
 
 Ranger-Hive 只接管配置了该 Access Controller 的 Hive Catalog，不会替代 Doris 集群级鉴权，也不会校验底层 HDFS、S3 等存储系统的 Ranger 策略。
 
@@ -183,10 +186,10 @@ fe/conf/
 | `ranger.plugin.hive.service.name` | 必需 | 无 | `<value>` 必须与 Ranger WebUI 中 Hive 服务的实际 Service Name 完全一致，例如 `hive_prod` |
 | `ranger.plugin.hive.policy.source.impl` | 可选 | Ranger Admin REST Client | 指定从 Ranger Admin REST API 拉取策略的实现 |
 | `ranger.plugin.hive.policy.rest.url` | 必需 | 无 | Ranger Admin 根地址，不包含策略 API 路径 |
-| `ranger.plugin.hive.policy.cache.dir` | 本文生产配置中必需 | 不使用本地缓存 | 目录必须预先创建，并允许 FE 进程用户写入；本地缓存有利于 FE 重启后的策略恢复和运维检查 |
+| `ranger.plugin.hive.policy.cache.dir` | 本文生产配置中必需 | 不使用本地缓存 | 模板设置了示例路径；目录必须预先创建，并允许 FE 进程用户写入。本地缓存有利于 FE 重启后的策略恢复和运维检查 |
 | `ranger.plugin.hive.policy.pollIntervalMs` | 可选 | `30000` 毫秒 | 策略轮询间隔 |
-| `ranger.plugin.hive.policy.rest.client.connection.timeoutMs` | 可选 | `120000` 毫秒 | 连接 Ranger Admin 的超时时间 |
-| `ranger.plugin.hive.policy.rest.client.read.timeoutMs` | 可选 | `30000` 毫秒 | 读取 Ranger Admin 响应的超时时间 |
+| `ranger.plugin.hive.policy.rest.client.connection.timeoutMs` | 可选 | `120000` 毫秒 | 连接 Ranger Admin 的超时时间；模板覆盖为 `60000` 毫秒 |
+| `ranger.plugin.hive.policy.rest.client.read.timeoutMs` | 可选 | `30000` 毫秒 | 读取 Ranger Admin 响应的超时时间；模板覆盖为 `60000` 毫秒 |
 | `ranger.plugin.hive.policy.rest.ssl.config.file` | 使用自定义 HTTPS 证书时必需 | 空 | `ranger-policymgr-ssl.xml` 的绝对路径 |
 
 #### 创建策略缓存目录
