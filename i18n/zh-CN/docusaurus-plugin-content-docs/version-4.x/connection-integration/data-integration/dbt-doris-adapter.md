@@ -311,14 +311,11 @@ where status = 'PAID'
     partition_by_init=[
       "PARTITION p_before_202608 VALUES LESS THAN ('2026-08-01')",
       "PARTITION p202608 VALUES LESS THAN ('2026-09-01')",
-      "PARTITION pmax VALUES LESS THAN ('9999-12-31')"
+      "PARTITION pmax VALUES LESS THAN (MAXVALUE)"
     ],
     distributed_by=['event_id'],
     buckets=16,
-    properties={
-      'replication_num': '1',
-      'disable_auto_compaction': 'false'
-    }
+    properties={'replication_num': '1'}
   )
 }}
 
@@ -329,22 +326,22 @@ select
 from {{ source('raw', 'orders') }}
 ```
 
-Table Materialization 支持以下 Doris 配置：
+Table Model 可配置以下建表参数：
 
 | 配置项 | 类型和默认值 | 说明 |
 | --- | --- | --- |
 | `duplicate_key` | 字符串或列表；可选 | Duplicate Key 列 |
 | `partition_by` | 字符串或列表；可选 | 分区列 |
-| `partition_type` | `RANGE` 或 `LIST`；默认 `RANGE` | 分区类型 |
-| `partition_by_init` | 字符串列表；可选 | 创建表时使用的 Doris 分区定义 |
+| `partition_type` | `RANGE` 或 `LIST`；默认 `RANGE` | 与 `partition_by` 配合使用的分区类型 |
+| `partition_by_init` | 字符串列表；可选 | 创建表时与 `partition_by` 配合使用的 Doris 分区定义 |
 | `distributed_by` | 字符串或列表；可选 | Hash Distribution 列 |
-| `buckets` | 正整数；生成 Hash Distribution 时默认 `10` | Bucket 数量 |
-| `replication_num` | 正整数；可选 | 副本数，也可放入 `properties` |
-| `properties` | 字典；默认 `{}` | 传递给 Doris `PROPERTIES` 的键值对 |
+| `buckets` | 正整数；生成 Hash Distribution 时默认 `10` | Hash 分桶数；仅在配置 `distributed_by` 时使用 |
+| `replication_num` | 正整数或数字字符串；可选 | 副本数；顶层配置会覆盖 `properties` 中的同名项 |
+| `properties` | 字典；可选 | 生成到 Doris `PROPERTIES` 中的键值对 |
 
 `duplicate_key`、分区列和分桶列必须出现在 Model 输出中，并满足 Doris 建表规则。
-`properties` 中的键值会原样写入 Doris `PROPERTIES`；属性是否适用于该表以及取值
-是否合法，由 Doris 校验。
+Adapter 会将 `partition_by_init` 和 `properties` 生成到 `CREATE TABLE` 语句中；分区定义、
+属性名称和取值是否合法，由 Doris 校验。
 
 ### Incremental
 
@@ -420,7 +417,7 @@ Column 时，在 `properties` 中设置可见列
       "PARTITION p_before_202607 VALUES LESS THAN ('2026-07-01')",
       "PARTITION p202607 VALUES LESS THAN ('2026-08-01')",
       "PARTITION p202608 VALUES LESS THAN ('2026-09-01')",
-      "PARTITION pmax VALUES LESS THAN ('9999-12-31')"
+      "PARTITION pmax VALUES LESS THAN (MAXVALUE)"
     ],
     overwrite_partitions=['p202607', 'p202608'],
     distributed_by=['event_id'],

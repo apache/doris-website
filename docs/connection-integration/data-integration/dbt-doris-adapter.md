@@ -238,20 +238,20 @@ A view stores no data. Its query cost depends on the view SQL and downstream que
 
 ### Table
 
-The table materialization creates a Duplicate Key table and fully replaces the target on subsequent runs.
+The `table` materialization creates a Duplicate Key table and fully replaces the target on subsequent runs. Table models accept the following table-creation settings:
 
 | Setting | Type and default | Description |
 | --- | --- | --- |
 | `duplicate_key` | String or list; optional | Duplicate Key columns |
 | `partition_by` | String or list; optional | Partition columns |
-| `partition_type` | `RANGE` or `LIST`; default `RANGE` | Partition type |
-| `partition_by_init` | List of strings; optional | Doris partition definitions used at table creation |
+| `partition_type` | `RANGE` or `LIST`; default `RANGE` | Partition type used with `partition_by` |
+| `partition_by_init` | List of strings; optional | Doris partition definitions used with `partition_by` at table creation |
 | `distributed_by` | String or list; optional | Hash distribution columns |
-| `buckets` | Positive integer; defaults to `10` when Hash Distribution is emitted | Bucket count |
-| `replication_num` | Positive integer; optional | Replica count; may also be set in `properties` |
-| `properties` | Dictionary; default `{}` | Key-value pairs passed to Doris `PROPERTIES` |
+| `buckets` | Positive integer; defaults to `10` when Hash Distribution is emitted | Hash bucket count; used only with `distributed_by` |
+| `replication_num` | Positive integer or numeric string; optional | Replica count; the top-level setting overrides the same key in `properties` |
+| `properties` | Dictionary; optional | Key-value pairs rendered into Doris `PROPERTIES` |
 
-Duplicate Key, partition, and distribution columns must be present in the model output. An ordinary `table` model does not expose Aggregate Key or standalone Unique Key configuration. Use incremental `merge` for Unique Key upserts.
+Duplicate Key, partition, and distribution columns must be present in the model output. The adapter renders `partition_by_init` and `properties` into the `CREATE TABLE` statement; Doris validates the partition definitions, property names, and values. An ordinary `table` model does not expose Aggregate Key or standalone Unique Key configuration. Use incremental `merge` for Unique Key upserts.
 
 ### Incremental
 
@@ -306,7 +306,7 @@ To overwrite named Doris partitions:
       "PARTITION p_before_202607 VALUES LESS THAN ('2026-07-01')",
       "PARTITION p202607 VALUES LESS THAN ('2026-08-01')",
       "PARTITION p202608 VALUES LESS THAN ('2026-09-01')",
-      "PARTITION pmax VALUES LESS THAN ('9999-12-31')"
+      "PARTITION pmax VALUES LESS THAN (MAXVALUE)"
     ],
     overwrite_partitions=['p202607', 'p202608'],
     distributed_by=['event_id'],
