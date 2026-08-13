@@ -1,531 +1,596 @@
 ---
 {
-    "title": "DBT Doris Adapter",
+    "title": "Apache Doris dbt Adapter Guide (Development)",
     "language": "en",
-    "description": "Use the dbt-doris adapter to build ELT data transformation pipelines on Apache Doris, with support for view, table, and incremental materializations as well as advanced capabilities such as seed and catalog."
+    "description": "Install and configure dbt-for-apache-doris 1.1.0 for Apache Doris models, source freshness, async materialized views.",
+    "keywords": [
+        "Apache Doris dbt",
+        "dbt Doris Adapter",
+        "dbt-for-apache-doris",
+        "dbt Doris profile",
+        "Doris data transformation",
+        "Doris incremental model",
+        "Doris insert_overwrite",
+        "Doris microbatch",
+        "Doris source freshness",
+        "Doris asynchronous materialized view",
+        "dbt External Catalog",
+        "dbt debug connection error"
+    ]
 }
 ---
 
-<!-- Knowledge type: Tool integration guide -->
-<!-- Use case: Use dbt on Doris for data transformation (the T step in ELT) -->
+<!-- Knowledge Type: Integration Guide / Capability Definition -->
+<!-- Use Case: Apache Doris data transformation with dbt / ELT modeling -->
 
-[DBT (Data Build Tool)](https://docs.getdbt.com/docs/introduction) is the component that focuses on the T (Transform) step, the data transformation phase, in the ELT (Extract, Load, Transform) flow. The `dbt-doris` adapter is built on top of `dbt-core` and relies on the `mysql-connector-python` driver to perform data transformation on Doris.
+[dbt](https://docs.getdbt.com/docs/introduction) manages the transformation step in an ELT (Extract, Load, Transform) workflow. The `dbt-for-apache-doris` adapter, maintained by the VeloDB community, compiles dbt models into Doris SQL and executes table creation, transformation, testing, and documentation operations through the Doris Frontend (FE) MySQL query port.
 
-Code repository: https://github.com/apache/doris/tree/master/extension/dbt-doris
+Source data must already be loaded into Doris. The adapter performs transformations; it does not ingest or synchronize source data.
 
-## Version Compatibility
+:::note
 
-Before choosing a dbt-doris version, verify the version compatibility between Doris, Python, and dbt-core:
+`dbt-for-apache-doris 1.1.0` is currently Beta. Before production use, validate it against your exact Doris or VeloDB release and deployment topology.
 
-| Doris    | Python        | dbt-core | dbt-doris |
-| -------- | ------------- | -------- | --------- |
-| >= 1.2.5 | >= 3.8, <=3.10 | >= 1.5.0 | <= 0.3    |
-| >= 1.2.5 | >= 3.9        | >= 1.8.0 | >= 0.4    |
+:::
 
-## Quick Start
+<!-- Knowledge Type: Version Requirements / Environment Requirements -->
+<!-- Use Case: Pre-installation version check / Environment preparation -->
 
-### Install the dbt-doris Adapter
+## Supported versions and environment
 
-Install the adapter with pip:
+This document applies to the published [`v1.1.0` release](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0).
+
+| Component | Requirement |
+| --- | --- |
+| dbt-for-apache-doris | 1.1.0 |
+| Python | 3.10 or later |
+| dbt Core | 1.12.x (`>=1.12,<1.13`) |
+| MySQL Connector/Python | `>=8.0.33` (installed automatically) |
+| Apache Doris | No adapter-wide minimum is declared; the FE MySQL query port must be reachable |
+
+Asynchronous materialized views have a separate Doris version gate, described in [Asynchronous materialized views](#asynchronous-materialized-views). That gate is not an adapter-wide compatibility guarantee.
+
+<!-- Knowledge Type: Operational Steps -->
+<!-- Use Case: Adapter installation / Installation verification -->
+
+## Installation
+
+Install the adapter from PyPI in an isolated Python environment:
 
 ```shell
-pip install dbt-doris
-```
-
-The install command automatically pulls in all dependencies required to run dbt. After installation, verify it with the following command:
-
-```shell
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install "dbt-for-apache-doris==1.1.0"
 dbt --version
 ```
 
-If the system does not recognize the `dbt` command, create a symbolic link:
+On Windows PowerShell:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install "dbt-for-apache-doris==1.1.0"
+dbt --version
+```
+
+The `Plugins` section of `dbt --version` should contain `doris: 1.1.0`, and dbt Core should be 1.12.x. dbt Core and MySQL Connector/Python are installed as dependencies.
+
+:::caution
+
+The [`dbt-doris==1.0.0` distribution on PyPI](https://pypi.org/project/dbt-doris/1.0.0/) is a different package and does not contain the implementation documented here. Install `dbt-for-apache-doris==1.1.0`; do not run `pip install dbt-doris`.
+
+:::
+
+<!-- Knowledge Type: Operational Steps / Minimal Example -->
+<!-- Use Case: Connect dbt to Doris / Validate an end-to-end model build -->
+
+## Quick start
+
+### Prepare Doris
+
+The Doris account used by dbt must be able to:
+
+- Read source tables.
+- Create the target database.
+- Create, alter, drop, and write objects in the target database.
+
+The following SQL creates a source table for this example. A replication number of `1` is appropriate only for a single-BE development cluster:
+
+```sql
+CREATE DATABASE IF NOT EXISTS raw;
+
+CREATE TABLE IF NOT EXISTS raw.orders (
+    order_id BIGINT,
+    customer_id BIGINT,
+    order_time DATETIME,
+    amount DECIMAL(18, 2),
+    status VARCHAR(20),
+    updated_at DATETIME,
+    is_valid BOOLEAN
+)
+DUPLICATE KEY(order_id)
+DISTRIBUTED BY HASH(order_id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO raw.orders VALUES
+    (1, 101, '2026-08-01 10:00:00', 20.00, 'PAID', '2026-08-01 10:05:00', true),
+    (2, 102, '2026-08-01 11:00:00', 35.00, 'PAID', '2026-08-01 11:05:00', true);
+```
+
+### Configure the project and connection
+
+Create a dbt project:
 
 ```shell
-ln -s /usr/local/python3/bin/dbt /usr/bin/dbt
+dbt init doris_demo
+cd doris_demo
 ```
 
-### Initialize a dbt Project
-
-Run the following command to enter the interactive initialization flow:
-
-```shell
-dbt init
-
-```
-
-Enter the configuration items in the table below as prompted to complete project initialization:
-
-| Item     | Default | Description                                                                |
-| -------- | ---- | ----------------------------------------------------------------- |
-| project  | -    | Project name                                                              |
-| database | -    | Select the adapter (enter the corresponding number)                                                     |
-| host     | -    | Doris host                                                       |
-| port     | 9030 | Doris MySQL Protocol port                                          |
-| schema   | -    | In dbt-doris this is equivalent to database, that is, the database name                                        |
-| username | -    | Doris username                                                         |
-| password | -    | Doris password                                                          |
-| threads  | 1    | dbt-doris parallelism (setting it too high increases the risk of run failures; align it with your cluster capacity)                                |
-
-### Run the dbt Project
-
-Enter the newly created project directory and execute the default dbt models:
-
-```shell
-dbt run
-```
-
-After a successful run, two example models are executed:
-
-- `my_first_dbt_model`: materialized as a table
-- `my_second_dbt_model`: materialized as a view
-
-You can log in to Doris to inspect the resulting data and the table creation statements. For more details on running dbt, see the [dbt official documentation](https://docs.getdbt.com/docs/get-started/run-your-dbt-projects).
-
-## Materialization
-
-<!-- Knowledge type: Architecture decision -->
-
-dbt-doris supports the following three materialization types:
-
-| Materialization | Use case                                                | Pros                       | Cons                              |
-| ----------- | --------------------------------------------------- | ------------------------ | ------------------------------- |
-| view        | Models that only perform lightweight transformations such as renaming or column changes                                 | No extra storage; always based on the latest source records              | Slow queries for large or nested scenarios                   |
-| table       | Models frequently queried by BI tools or downstream systems                                   | Fast queries                    | Long build time, extra storage, and no incremental support             |
-| incremental | Event-based scenarios, or models where dbt runs are too slow and need incremental syncing                          | Only new data is transformed, significantly reducing build time                 | More complex configuration; an advanced dbt usage that requires the scenario and components to be aligned         |
-
-> The default materialization is `view`. Start with view, and switch to another type only when performance issues arise.
-
-### View Materialization
-
-Each model run rebuilds the view through a `CREATE VIEW AS` statement.
-
-Configure it in `dbt_project.yml`:
+Add a Doris output to `~/.dbt/profiles.yml`. Keep credentials outside version control; this example reads the password from an environment variable:
 
 ```yaml
-models:
-    <resource-path>:
-        +materialized: view
+doris_demo:
+  target: dev
+  outputs:
+    dev:
+      type: doris
+      host: 127.0.0.1
+      port: 9030
+      username: dbt_user
+      password: "{{ env_var('DORIS_PASSWORD') }}"
+      schema: analytics
+      threads: 4
 ```
 
-Or configure it in the model file:
+| Setting | Recommended value | Behavior in 1.1.0 |
+| --- | --- | --- |
+| `type` | Must be `doris` | Selects the Doris adapter |
+| `host` | Doris FE address | Falls back to `127.0.0.1` when omitted |
+| `port` | Usually `9030` | FE MySQL query port, not the HTTP port |
+| `username` | A dedicated Doris user | Falls back to `root` when omitted |
+| `password` | Read from an environment variable | Defaults to an empty string |
+| `schema` | Target Doris database | The `dbt init` prompt defaults to `dbt` |
+| `threads` | Set according to FE and workload capacity | The `dbt init` prompt defaults to `1` |
+| `database` | Omit it | If set, it must exactly equal `schema` |
 
-```jinja
-{{ config(materialized = "view") }}
-```
+For Doris profiles, dbt `schema` maps to a Doris database. The profile `database` field is a generic dbt credential field, not a Doris catalog, and does not add another namespace level.
 
-### Table Materialization
-
-Each model run rebuilds the table through a `CREATE TABLE AS SELECT` statement.
-
-dbt-doris guarantees the atomicity of table materialization during data updates with the following steps:
-
-1. Execute `CREATE TABLE this_table_temp AS {{ model sql }}` to create a temporary table first.
-2. If `this_table` does not exist (first-time creation), execute `RENAME` to rename the temporary table to the final table.
-3. If `this_table` already exists, execute `ALTER TABLE this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`. This operation swaps the table names and drops `this_table_temp`. Atomicity is guaranteed by the [Doris kernel transaction mechanism](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE).
-
-Configure it in `dbt_project.yml`:
+Ensure that `dbt_project.yml` references the same profile:
 
 ```yaml
-models:
-    <resource-path>:
-        +materialized: table
-        +duplicate_key: [ <column-name>, ... ],
-        +replication_num: int,
-        +partition_by: [ <column-name>, ... ],
-        +partition_type: <engine-type>,
-        +partition_by_init: [<pertition-init>, ... ]
-        +distributed_by: [ <column-name>, ... ],
-        +buckets: int | 'auto',
-        +properties: {<key>:<value>,...}
+name: doris_demo
+version: "1.0.0"
+config-version: 2
+profile: doris_demo
+model-paths: ["models"]
 ```
 
-Or configure it in the model file:
-
-```jinja
-{{ config(
-    materialized = "table",
-    duplicate_key = [ "<column-name>", ... ],
-    replication_num = "<int>"
-    partition_by = [ "<column-name>", ... ],
-    partition_type = "<engine-type>",
-    partition_by_init = ["<pertition-init>", ... ]
-    distributed_by = [ "<column-name>", ... ],
-    buckets = "<int>" | "auto",
-    properties = {"<key>":"<value>",...}
-      ...
-    ]
-) }}
-```
-
-Configuration item descriptions:
-
-| Item               | Description                                | Required    |
-| ----------------- | --------------------------------- | ------- |
-| `materialized`    | Materialization type (corresponds to the Doris Duplicate detail model)       | Required |
-| `duplicate_key`   | Sort columns of the Duplicate model                          | Optional |
-| `replication_num` | Number of table replicas                              | Optional |
-| `partition_by`    | Table partition columns                              | Optional |
-| `partition_type`  | Partition type, `range` or `list`, default `RANGE`     | Optional |
-| `partition_by_init` | Initial table partitions                          | Optional |
-| `distributed_by`  | Bucket columns                               | Optional |
-| `buckets`         | Number of buckets                              | Optional |
-| `properties`      | Other configurations for table creation                           | Optional |
-
-### Incremental Materialization
-
-Incremental materialization takes the result of the previous dbt run as the baseline and incrementally inserts or updates new records into the table. dbt-doris provides two incremental strategies (set via `incremental_strategy`):
-
-- `insert_overwrite`: depends on the unique model. The model must be specified as incremental at initialization, and incremental data is overwritten through aggregation columns.
-- `append`: depends on the duplicate model. Only appends incremental data without modifying historical data, and does not require a `unique_key`.
-
-Configure it in `dbt_project.yml`:
+Declare the source in `models/sources.yml`:
 
 ```yaml
-models:
-    <resource-path>:
-        +materialized: incremental
-        +incremental_strategy: <strategy>
-        +unique_key: [ <column-name>, ... ],
-        +replication_num: int,
-        +partition_by: [ <column-name>, ... ],
-        +partition_type: <engine-type>,
-        +partition_by_init: [<pertition-init>, ... ]
-        +distributed_by: [ <column-name>, ... ],
-        +buckets: int | 'auto',
-        +properties: {<key>:<value>,...}
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: orders
 ```
 
-Or configure it in the model file:
+Create `models/fct_daily_sales.sql`:
 
-```jinja
-{{ config(
-    materialized = "incremental",
-    incremental_strategy = "<strategy>"
-    unique_key = [ "<column-name>", ... ],
-    replication_num = "<int>"
-    partition_by = [ "<column-name>", ... ],
-    partition_type = "<engine-type>",
-    partition_by_init = ["<pertition-init>", ... ]
-    distributed_by = [ "<column-name>", ... ],
-    buckets = "<int>" | "auto",
-    properties = {"<key>":"<value>",...}
-      ...
-    )
+```sql
+{{
+  config(
+    materialized='table',
+    duplicate_key=['order_date'],
+    distributed_by=['order_date'],
+    buckets=1,
+    properties={'replication_num': '1'}
+  )
 }}
+
+select
+    cast(order_time as date) as order_date,
+    sum(amount) as sales_amount
+from {{ source('raw', 'orders') }}
+group by cast(order_time as date)
 ```
 
-Configuration item descriptions:
-
-| Item                    | Description                            | Required    |
-| ---------------------- | ----------------------------- | ------- |
-| `materialized`         | Materialization type                          | Required |
-| `incremental_strategy` | Incremental strategy                          | Optional |
-| `unique_key`           | Key columns of the unique table                  | Optional |
-| `replication_num`      | Number of table replicas                          | Optional |
-| `partition_by`         | Table partition columns                          | Optional |
-| `partition_type`       | Partition type, `range` or `list`, default `RANGE` | Optional |
-| `partition_by_init`    | Initial table partitions                       | Optional |
-| `distributed_by`       | Bucket columns                           | Optional |
-| `buckets`              | Number of buckets                          | Optional |
-| `properties`           | Other configurations for table creation                       | Optional |
-
-## Seed: Loading CSV Data
-
-[Seed](https://docs.getdbt.com/docs/build/seeds) is used to load data files such as CSV into the database to participate in model building. Note the following when using it:
-
-1. Seed should not be used to load raw data (for example, large CSV files exported from a production database).
-2. Seeds are version-controlled and are best suited for small files that contain business logic, such as country/region code lists or employee IDs.
-3. For large files, dbt seed has poor performance, so use methods such as Stream Load to load CSV into Doris instead.
-
-After placing the CSV files and the seed configuration files in the `seeds` directory of the dbt project, run:
-
-```shell
-dbt seed --select seed_name
-```
-
-A common seed configuration file example (which supports custom column types):
+Add data tests in `models/schema.yml`:
 
 ```yaml
-seeds:
-    seed_name: # Seed name; used as the table name after build
-        config:
-            schema: demo_seed # Used as part of the database after build
-            full_refresh: true
-            replication_num: 1
-            column_types:
-                id: bigint
-                phone: varchar(32)
-                ip: varchar(15)
-                name: varchar(20)
-                cost: DecimalV3(19,10)
+version: 2
+
+models:
+  - name: fct_daily_sales
+    columns:
+      - name: order_date
+        data_tests: [not_null, unique]
+      - name: sales_amount
+        data_tests: [not_null]
 ```
 
-## Usage Examples
+Run the model and tests:
 
-<!-- Knowledge type: Operation steps -->
+```shell
+export DORIS_PASSWORD='<your-password>'
+dbt debug
+dbt build --select fct_daily_sales
+```
 
-### View Model Example
+On Windows PowerShell, set the password with `$env:DORIS_PASSWORD = '<your-password>'` and run the same dbt commands.
+
+A successful build creates `analytics.fct_daily_sales`. Set the production replication and bucket counts according to your cluster deployment.
+
+<!-- Knowledge Type: Capability Reference / Configuration Parameters / Architecture Decision -->
+<!-- Use Case: Materialization selection / Incremental processing / Materialized views -->
+
+## Materializations
+
+`dbt-for-apache-doris 1.1.0` supports these main materializations:
+
+| Materialization | Doris object or behavior | Use case |
+| --- | --- | --- |
+| `view` | Doris view | Lightweight transformations that should always read current source data |
+| `table` | A fully rebuilt Doris Duplicate Key table | Bounded results that need stable query performance |
+| `incremental` | Appends, upserts, or overwrites data according to a strategy | Incremental processing for large tables |
+| `materialized_view` | Doris asynchronous materialized view | Doris-managed refresh and transparent query rewrite |
+| `ephemeral` | Compiles into a CTE in downstream models | Reuse SQL without creating a Doris object |
+
+Seeds and snapshots can also create Doris tables. Version 1.1.0 does not include the old custom `partition` materialization; use incremental `insert_overwrite` for partition replacement. The examples below keep `replication_num=1` so they also run on the single-BE quick-start cluster; use a production-appropriate replica count in real deployments.
+
+### View
 
 ```sql
 {{ config(materialized='view') }}
 
-select
-    u.user_id,
-    max(o.create_time) as create_time,
-    sum (o.cost) as balance
-from {{ ref('sell_order') }} as o
-left join {{ ref('sell_user') }} as u
-on u.account_id=o.account_id
-group by u.user_id
-order by u.user_id
+select order_id, order_time, amount
+from {{ source('raw', 'orders') }}
 ```
 
-### Table Model Example
+A view stores no data. Its query cost depends on the view SQL and downstream query.
+
+### Table
+
+The table materialization creates a Duplicate Key table and fully replaces the target on subsequent runs.
+
+| Setting | Type and default | Description |
+| --- | --- | --- |
+| `duplicate_key` | String or list; optional | Duplicate Key columns |
+| `partition_by` | String or list; optional | Partition columns |
+| `partition_type` | `RANGE` or `LIST`; default `RANGE` | Partition type |
+| `partition_by_init` | List of strings; optional | Doris partition definitions used at table creation |
+| `distributed_by` | String or list; optional | Hash distribution columns |
+| `buckets` | Positive integer; defaults to `10` when Hash Distribution is emitted | Bucket count |
+| `replication_num` | Positive integer; optional | Replica count; may also be set in `properties` |
+| `properties` | Dictionary; default `{}` | Key-value pairs passed to Doris `PROPERTIES` |
+
+Duplicate Key, partition, and distribution columns must be present in the model output. An ordinary `table` model does not expose Aggregate Key or standalone Unique Key configuration. Use incremental `merge` for Unique Key upserts.
+
+### Incremental
+
+The model SQL determines which source rows are returned for a run, while `incremental_strategy` determines how the batch is written.
+
+| Strategy | Doris target and behavior | Main requirements |
+| --- | --- | --- |
+| `append` | Executes `INSERT INTO` against a Duplicate Key table | Do not set `unique_key` |
+| `merge` | Performs full-row `INSERT INTO` upserts against a MOW or MOR Unique Key table | `unique_key` is required |
+| `insert_overwrite` | Overwrites the whole table, named partitions, or partitions touched by the batch | `unique_key` is rejected |
+| `microbatch` | Overwrites one exact RANGE partition for each dbt Core UTC window | Configure `event_time`, `batch_size`, and `begin` |
+
+When no strategy is set, `unique_key` selects `merge`; otherwise the adapter uses `append`. The adapter supports all four `on_schema_change` modes: `ignore`, `fail`, `append_new_columns`, and `sync_all_columns`.
+
+`merge` does not generate SQL `MERGE INTO`. It uses full-row `INSERT INTO` with Doris Unique Key semantics. Each batch must contain at most one row for each `unique_key`:
 
 ```sql
-{{ config(materialized='table') }}
-
-select
-    u.user_id,
-    max(o.create_time) as create_time,
-    sum (o.cost) as balance
-from {{ ref('sell_order') }} as o
-left join {{ ref('sell_user') }} as u
-on u.account_id=o.account_id
-group by u.user_id
-order by u.user_id
-```
-
-### Incremental Model Example (duplicate Mode)
-
-The duplicate mode does not aggregate data and does not require a `unique_key`:
-
-```sql
-{{ config(
+{{
+  config(
     materialized='incremental',
-    replication_num=1
-) }}
+    incremental_strategy='merge',
+    unique_key=['order_id'],
+    distributed_by=['order_id'],
+    buckets=16,
+    properties={'replication_num': '1'},
+    on_schema_change='append_new_columns'
+  )
+}}
 
-with source_data as (
-    select
-        *
-    from {{ ref('sell_order2') }}
-)
-
-select * from source_data
-```
-
-### Incremental Model Example (unique Mode)
-
-The unique mode aggregates data and must specify a `unique_key`:
-
-```sql
-{{ config(
-    materialized='incremental',
-    unique_key=['account_id','create_time']
-) }}
-
-with source_data as (
-    select
-        *
-    from {{ ref('sell_order2') }}
-)
-
-select * from source_data
-```
-
-### Incremental Model Full Refresh Example
-
-```sql
-{{ config(
-    materialized='incremental',
-    full_refresh = true
-)}}
-
-select * from
- {{ source('dbt_source', 'sell_user') }}
-```
-
-### Bucketing Rule Example
-
-`buckets` accepts `auto` or a positive integer, corresponding to automatic bucketing or a fixed bucket count, respectively:
-
-```sql
-{{ config(
-    materialized='incremental',
-    unique_key=['account_id',"create_time"],
-    distributed_by=['account_id'],
-    buckets='auto'
-) }}
-
-with source_data as (
-    select
-        *
-    from {{ ref('sell_order') }}
-)
-
-select
-    *
-    from source_data
+select order_id, customer_id, amount, updated_at
+from {{ source('raw', 'orders') }}
 
 {% if is_incremental() %}
-    where
-    create_time > (select max(create_time) from {{this}})
+where updated_at >= (
+    select coalesce(max(updated_at), '1970-01-01 00:00:00')
+    from {{ this }}
+)
 {% endif %}
 ```
 
-### Replica Count Example
+To overwrite named Doris partitions:
 
 ```sql
-{{ config(
-    materialized='table',
-    replication_num=1
-)}}
-
-with source_data as (
-    select
-        *
-    from {{ ref('sell_order2') }}
-)
-
-select * from source_data
-```
-
-### Dynamic Partition Example
-
-```sql
-{{ config(
+{{
+  config(
     materialized='incremental',
-    partition_by = 'create_time',
-    partition_type = 'range',
-    -- The properties here are the properties in the create table statement; the dynamic partition configurations are written below
-    properties = {
-        "dynamic_partition.time_unit":"DAY",
-        "dynamic_partition.end":"8",
-        "dynamic_partition.prefix":"p",
-        "dynamic_partition.buckets":"4",
-        "dynamic_partition.create_history_partition":"true",
-        "dynamic_partition.history_partition_num":"3"
-    }
-) }}
+    incremental_strategy='insert_overwrite',
+    duplicate_key=['event_date', 'event_id'],
+    partition_by=['event_date'],
+    partition_type='RANGE',
+    partition_by_init=[
+      "PARTITION p_before_202607 VALUES LESS THAN ('2026-07-01')",
+      "PARTITION p202607 VALUES LESS THAN ('2026-08-01')",
+      "PARTITION p202608 VALUES LESS THAN ('2026-09-01')",
+      "PARTITION pmax VALUES LESS THAN ('9999-12-31')"
+    ],
+    overwrite_partitions=['p202607', 'p202608'],
+    distributed_by=['event_id'],
+    buckets=16,
+    properties={'replication_num': '1'}
+  )
+}}
 
-with source_data as (
+select event_date, event_id, event_type
+from (
     select
-        *
-    from {{ ref('sell_order2') }}
-)
-
-select
-    *
-    from source_data
+        cast(order_time as date) as event_date,
+        order_id as event_id,
+        status as event_type,
+        order_time
+    from {{ source('raw', 'orders') }}
+) events
 
 {% if is_incremental() %}
-    where
-    create_time = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+where order_time >= '2026-07-01'
+  and order_time < '2026-09-01'
 {% endif %}
 ```
 
-### Regular Partition Example
+The first run creates the target through CTAS and does not execute `INSERT OVERWRITE`. The example therefore uses `partition_by_init` to create every required target partition. Once the target exists, `overwrite_partitions` controls the overwrite scope:
 
-In the current Doris version, historical partitions must be manually specified through `partition_by_init`:
+- Omitted: overwrite the whole table.
+- List of partition names: overwrite only those partitions.
+- `'*'`: let Doris dynamically overwrite partitions touched by the batch.
 
-```sql
-{{ config(
-    materialized='incremental',
-    partition_by = 'create_time',
-    partition_type = 'range',
-    -- partition_by_init is used to specify the historical partitions of the partitioned table
-    partition_by_init = [
-        "PARTITION `p20240601` VALUES [(\"2024-06-01\"),  (\"2024-06-02\"))",
-        "PARTITION `p20240602` VALUES [(\"2024-06-02\"),  (\"2024-06-03\"))"
-    ]
- )}}
+A dynamic overwrite cannot infer which partition to clear from an empty batch. Specify partition names when an empty source batch must clear target data.
 
-with source_data as (
-    select
-        *
-    from {{ ref('sell_order2') }}
-)
-
-select
-    *
-    from source_data
-
-{% if is_incremental() %}
-    where
-    -- If the my_date variable is provided, this branch is taken (using the dbt run --vars '{"my_date": "\"2024-06-03\""}' command);
-    -- If the my_date variable is not provided (running dbt run directly), use the day before the current date.
-    -- Using the Doris CURDATE() function is recommended; this is also the common approach in production.
-    create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }}
-
-{% endif %}
-```
-
-### Batch Date Parameter Example
-
-```sql
-{{ config(
-    materialized='incremental',
-    partition_by = 'create_time',
-    partition_type = 'range',
-    ...
-)}}
-
-with source_data as (
-    select
-        *
-    from {{ ref('sell_order2') }}
-)
-
-select
-    *
-    from source_data
-
-{% if is_incremental() %}
-    where
-    -- If the my_date variable is provided, this branch is taken (using the dbt run --vars '{"my_date": "\"2024-06-03\""}' command);
-    -- If the my_date variable is not provided (running dbt run directly), use the day before the current date.
-    -- Using the Doris CURDATE() function is recommended; this is also the common approach in production.
-    create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }}
-
-{% endif %}
-```
-
-### Custom Column Type and Precision Example
-
-In the `schema.yaml` file, you can configure the type of each `column` under `models` through `data_type`:
+`microbatch` uses the dbt Core 1.12 batch context. Configure an `event_time` field on each direct upstream resource and on the target model. For the `raw.orders` source created in the quick start, add this configuration to its existing table declaration:
 
 ```yaml
-models:
-    - name: sell_user
-      description: "A dbt model named sell_user"
-      columns:
-          - name: user_id
-            data_type: BIGINT
-          - name: account_id
-            data_type: VARCHAR(12)
-          - name: status
-          - name: cost_sum
-            data_type: DECIMAL(38,9)
-          - name: update_time
-            data_type: DATETIME
-          - name: create_time
-            data_type: DATETIME
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: orders
+        config:
+          event_time: order_time
 ```
-
-### Catalog Access Example
-
-[Data Catalog](../../lakehouse/catalog-overview.md) is the capability in Doris data lake features that points to different data sources. Its hierarchy sits above Database.
-
-It is recommended to access Catalog through the built-in `catalog_source` macro of dbt-doris:
 
 ```sql
-{{ config(materialized='table', replication_num=1) }}
+{{
+  config(
+    materialized='incremental',
+    incremental_strategy='microbatch',
+    event_time='event_time',
+    batch_size='day',
+    begin=modules.datetime.datetime(2026, 8, 1, 0, 0, 0),
+    duplicate_key=['event_id', 'event_time'],
+    partition_by=['event_time'],
+    partition_type='RANGE',
+    distributed_by=['event_id'],
+    buckets=16,
+    properties={'replication_num': '1'}
+  )
+}}
 
-select *
---  Use the macro 'catalog_source' instead of the macro 'source'
---  catalog name is 'mysql_catalog'
---  database name is 'dbt_source'
---  table name is 'sell_user'
-from {{ catalog_source('mysql_catalog', 'dbt_source', 'sell_user') }}
+select
+    order_id as event_id,
+    order_time as event_time,
+    status as event_type
+from {{ source('raw', 'orders') }}
 ```
+
+`batch_size` supports `hour`, `day`, `month`, and `year`. Microbatch batches execute serially. Do not set `unique_key`, `overwrite_partitions`, or `partition_by_init`.
+
+:::caution
+
+For `append`, `merge`, and partition-scoped `insert_overwrite`, the adapter does not discover new or changed source rows automatically. The model SQL must return the intended batch. Run `dbt run --full-refresh` after incompatible key, partition, or physical-layout changes.
+
+:::
+
+### Asynchronous materialized views
+
+dbt users configure the standard `materialized='materialized_view'`. The adapter implements it with a Doris [asynchronous materialized view](../../query-acceleration/materialized-view/async-materialized-view/overview).
+
+```sql
+{{
+  config(
+    materialized='materialized_view',
+    build_mode='immediate',
+    refresh_method='auto',
+    refresh_trigger='manual',
+    duplicate_key=['order_date'],
+    distribution_type='hash',
+    distributed_by=['order_date'],
+    buckets=8,
+    wait_for_refresh=true,
+    properties={'replication_num': '1'}
+  )
+}}
+
+select order_date, sales_amount
+from {{ ref('fct_daily_sales') }}
+```
+
+| Setting | Type, default, and supported values |
+| --- | --- |
+| `build_mode` | Default `immediate`; supports `immediate` and `deferred` |
+| `refresh_method` | Default `auto`; supports `auto` and `complete` |
+| `refresh_trigger` | Default `manual`; supports `manual`, `schedule`, and `commit` |
+| `refresh_schedule` | Required for `schedule`; contains a positive `interval`, a `minute/hour/day/week` unit, and optional `start_time` |
+| `wait_for_refresh` | Default `true`; wait for the initial build or an adapter-submitted manual refresh |
+| `refresh_wait_timeout` | Default `300` seconds; positive integer |
+| `refresh_poll_interval` | Default `1` second; positive integer no greater than the timeout |
+| `duplicate_key` | String or list; optional | Duplicate Key columns for the asynchronous materialized view |
+| `partition_by` | One partition column or partition-function expression; optional |
+| `distribution_type` | Defaults to `hash` with `distributed_by`, otherwise `random` |
+| `distributed_by` | Hash distribution columns; optional |
+| `buckets` | Default `auto`; positive integer or `auto` |
+| `replication_num` | Positive integer; optional | Convenience setting that overrides the same key in `properties` |
+| `properties` | Doris asynchronous materialized-view properties; default `{}` |
+| `on_configuration_change` | Default `apply`; supports `apply`, `continue`, and `fail` |
+
+`BUILD IMMEDIATE` starts the initial build when a definition is created or replaced. `BUILD DEFERRED` creates the definition without an initial build. When the definition has not changed:
+
+- `manual` submits a refresh when a later `dbt run` selects the model and waits for success by default.
+- `schedule` and `commit` do not submit a refresh from a later dbt run; Doris triggers it from the schedule or base-table commit.
+
+`wait_for_refresh=false` disables task polling; it does not suppress the refresh request. A dbt wait timeout does not cancel an already submitted Doris task. Serialize concurrent dbt runs against the same materialized-view target in your scheduler.
+
+The FE version gate for this materialization accepts Doris 2.x at 2.1.5 or later, Doris 3.x except 3.0.0, Doris 4.x and later, and identifiable source builds reported as `doris-0.0.0-<git-sha>`. Source builds are for development testing only. These gates are not a live compatibility matrix.
+
+<!-- Knowledge Type: Capability Reference / Configuration Parameters -->
+<!-- Use Case: Seeds / Snapshots / Source freshness / Grants -->
+
+## Other dbt capabilities
+
+| Capability | Support in 1.1.0 |
+| --- | --- |
+| Seed | CSV loading, type inference, `column_types`, and `ref` |
+| Snapshot | `check` and `timestamp` strategies, hard deletes, schema evolution, and atomic replacement |
+| Data tests | Singular, generic, ephemeral, and `store_failures` paths |
+| Unit tests | Inline-row and CSV fixtures with Doris type adaptation |
+| Model contracts | Column names and types for Table, View, and Incremental; no database PK or NOT NULL constraints |
+| Persisted docs | Relation and column comments for primary relation types |
+| Grants | Doris `user` and `user@host` table privileges; role principals are not supported |
+| Hooks | Doris SQL before and after materializations; hook side effects have no transactional rollback |
+| Source freshness | `loaded_at_field`, `filter`, and `loaded_at_query` |
+| dbt Docs | Catalog metadata for Doris databases, tables, views, columns, comments, and asynchronous materialized views |
+
+### Source freshness
+
+Use `loaded_at_field` for the common timestamp-column case:
+
+```yaml
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: orders
+        config:
+          loaded_at_field: updated_at
+          freshness:
+            warn_after: {count: 1, period: hour}
+            error_after: {count: 2, period: hour}
+```
+
+Use `loaded_at_query` when the freshness timestamp requires custom SQL or aggregation:
+
+```yaml
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: orders
+        config:
+          loaded_at_query: |
+            select max(updated_at)
+            from {{ this }}
+            where is_valid = 1
+          freshness:
+            warn_after: {count: 1, period: hour}
+            error_after: {count: 2, period: hour}
+```
+
+Do not configure `loaded_at_field` and `loaded_at_query` together. The adapter does not infer load time from Doris table metadata.
+
+### Cross-database sources
+
+Set `schema` when a source is in another Doris database:
+
+```yaml
+sources:
+  - name: finance
+    schema: finance_raw
+    tables:
+      - name: payments
+```
+
+For compatibility with existing dbt projects, a source may instead set only `database: finance_raw`. If source `database` and `schema` differ, version 1.1.0 uses `database` as the Doris database. New projects should consistently use `schema` to avoid ambiguity.
+
+:::caution
+
+External Catalog three-part namespaces are not supported. Profiles and standard `source()` cannot represent Doris Catalog, Database, and Table at the same time. Do not use the `catalog_source` macro shown in older documentation.
+
+:::
+
+<!-- Knowledge Type: Command Reference -->
+<!-- Use Case: dbt project development / Execution / Testing / Documentation generation -->
+
+## Common commands
+
+| Command | Purpose |
+| --- | --- |
+| `dbt debug` | Validate the project configuration and Doris connection |
+| `dbt parse` | Parse the project without executing SQL |
+| `dbt compile` | Compile models and inspect generated Doris SQL |
+| `dbt run` | Build selected models |
+| `dbt test` | Run data tests and unit tests |
+| `dbt build` | Run seeds, models, snapshots, and tests in dependency order |
+| `dbt seed` | Load seed CSV files |
+| `dbt snapshot` | Update snapshots |
+| `dbt source freshness` | Evaluate source freshness |
+| `dbt docs generate` | Generate catalog, documentation, and lineage metadata |
+
+<!-- Knowledge Type: Limitations / Architecture Decision -->
+<!-- Use Case: Version evaluation / Production readiness review -->
+
+## Current limitations
+
+- This document covers `dbt-for-apache-doris 1.1.0` and Python dbt Core 1.12.x. dbt Fusion compatibility is not declared.
+- Microbatch batches execute serially.
+- Concurrent dbt runs against the same snapshot or asynchronous materialized-view target must be serialized by the scheduler.
+- `delete+insert`, partial-column merge, and `incremental_predicates` are not supported.
+- Table models do not expose structured configuration for Aggregate Key, standalone Unique Key, random distribution, automatic buckets, or secondary indexes.
+- External Catalog three-part namespaces are not supported.
+- Profiles do not expose SSL, multiple FEs, connection retry, session variables, or workload groups.
+- Some Table, View, or asynchronous materialized-view type changes have a short target-name availability window.
+
+<!-- Knowledge Type: Troubleshooting -->
+<!-- Use Case: Connection errors / Table creation errors / Incremental failures / Stale materialized views -->
+
+## Troubleshooting
+
+### `dbt debug` cannot connect
+
+Verify that `host` and `port` point to a reachable FE MySQL query port. The default query port is `9030`; `8030` is normally the FE HTTP port.
+
+### `database` and `schema` differ
+
+Remove `database` from the profile or set it to exactly the same value as `schema`. Profile `database` is not a Doris catalog.
+
+### Table creation fails on a single-BE cluster
+
+Set `replication_num=1` only for a single-BE development environment. In production, configure replicas according to availability and durability requirements.
+
+### An incremental run fails
+
+Run `dbt compile --select <model>` and inspect the compiled SQL. Verify that the target key model matches the strategy, the output includes key and partition columns, and each `unique_key` appears at most once per batch. Use `--full-refresh` for incompatible physical changes.
+
+### An asynchronous materialized view is not updated
+
+Check `refresh_trigger`. The default `manual` trigger submits refreshes on later selected runs; `schedule` and `commit` are triggered by Doris. Inspect task status in `tasks('type'='mv')`. Setting `wait_for_refresh=false` or reaching a wait timeout does not cancel the task.
+
+<!-- Knowledge Type: Reference Material -->
+<!-- Use Case: Release verification / Implementation verification / Further reading -->
+
+## Related links
+
+- [dbt-for-apache-doris 1.1.0 release](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0)
+- [dbt-for-apache-doris 1.1.0 source](https://github.com/velodb/dbt-for-apache-doris/tree/v1.1.0)
+- [dbt-for-apache-doris 1.1.0 on PyPI](https://pypi.org/project/dbt-for-apache-doris/1.1.0/)
+- [dbt Developer Hub](https://docs.getdbt.com/)
+- [Doris asynchronous materialized views](../../query-acceleration/materialized-view/async-materialized-view/overview)
+- [Doris INSERT OVERWRITE](../../sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE)
