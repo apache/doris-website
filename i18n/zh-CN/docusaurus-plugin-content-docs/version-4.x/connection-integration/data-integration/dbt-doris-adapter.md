@@ -129,8 +129,7 @@ Adapter 会把它作为 Doris Database 覆盖 `schema`，用于跨 Database 读�
 和标准 `source()` 当前不能同时表示 Doris Catalog 与 Database 两个层级。
 
 :::caution
-v1.1.0 不支持 External Catalog 的 Catalog、Database、Table 三段式命名空间。不要
-继续使用旧版文档中的 `catalog_source` Macro；它不在当前发行包中。
+v1.1.0 不支持 External Catalog 的 Catalog、Database、Table 三段式命名空间。
 :::
 
 确保 `dbt_project.yml` 中的 `profile` 与 `profiles.yml` 顶层名称一致：

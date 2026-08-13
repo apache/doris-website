@@ -505,7 +505,7 @@ For compatibility with existing dbt projects, a source may instead set only `dat
 
 :::caution
 
-External Catalog three-part namespaces are not supported. Profiles and standard `source()` cannot represent Doris Catalog, Database, and Table at the same time. Do not use the `catalog_source` macro shown in older documentation.
+External Catalog three-part namespaces are not supported. Profiles and standard `source()` cannot represent Doris Catalog, Database, and Table at the same time.
 
 :::
 
