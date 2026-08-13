@@ -27,12 +27,6 @@
 
 Source data must already be loaded into Doris. The adapter performs transformations; it does not ingest or synchronize source data.
 
-:::note
-
-`dbt-for-apache-doris 1.1.0` is currently Beta. Before production use, validate it against your exact Doris or VeloDB release and deployment topology.
-
-:::
-
 <!-- Knowledge Type: Version Requirements / Environment Requirements -->
 <!-- Use Case: Pre-installation version check / Environment preparation -->
 

@@ -44,10 +44,6 @@ ELT 流程中的转换（T）环节，不负责采集或同步源数据。
 [`v1.1.0`](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0)
 为准。
 
-:::note
-`v1.1.0` 当前为 Beta。生产使用前，应在实际 Doris 或 VeloDB 版本和部署拓扑上验证。
-:::
-
 <!-- 知识类型: 操作步骤 -->
 <!-- 适用场景: Adapter 安装 / 安装结果验证 -->
 
