@@ -4,7 +4,7 @@
     "language": "zh-CN",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 3,
-    "description": "安装和配置 dbt-for-apache-doris 1.1.0，连接 Apache Doris，并构建增量模型、Source Freshness 和异步物化视图。",
+    "description": "安装和配置 dbt-for-apache-doris，连接 Apache Doris，并构建增量模型、Source Freshness、异步物化视图及其他 dbt 数据转换功能。",
     "keywords": [
         "Apache Doris dbt",
         "dbt Doris Adapter",
@@ -25,56 +25,60 @@
 <!-- 知识类型: 工具集成指南 / 能力定义 -->
 <!-- 适用场景: Apache Doris dbt 数据转换 / ELT 建模 -->
 
-`dbt-for-apache-doris` 是 Apache Doris 的 dbt Core Adapter，由 VeloDB 社区维护。
-它将 dbt Model 编译为 Doris SQL，并通过 Doris Frontend（FE）的 MySQL Query Port
-执行建表、数据转换、测试和文档生成。原始数据需要提前写入 Doris；Adapter 负责
-ELT 流程中的转换（T）环节，不负责采集或同步源数据。
+[dbt](https://docs.getdbt.com/docs/introduction) 用于管理 ELT（Extract、Load、Transform）
+流程中的转换环节。由 VeloDB 社区维护的 `dbt-for-apache-doris` Adapter 会将 dbt Model
+编译为 Doris SQL，并通过 Doris Frontend（FE）的 MySQL Query Port 执行建表、数据转换、
+测试和文档生成。原始数据需要提前写入 Doris；Adapter 不负责采集或同步源数据。
+
+:::caution
+
+`dbt-for-apache-doris` 由 VeloDB 社区提供和维护。它不属于 Apache Doris 项目，也不由 Apache Doris 社区发布或背书。生产使用前，请自行评估 Adapter，核验安装包完整性及发布信息，并遵守第三方项目许可证。Adapter 问题请反馈至 [`dbt-for-apache-doris` 项目](https://github.com/velodb/dbt-for-apache-doris/issues)。
+
+:::
 
 <!-- 知识类型: 版本要求 / 环境要求 -->
 <!-- 适用场景: 安装前版本核对 / 环境准备 -->
 
-## 适用版本与环境
+## 环境要求
 
 | 项目 | 要求 |
 | --- | --- |
-| dbt-for-apache-doris | 1.1.0 |
 | Python | 3.10 或更高版本 |
 
-本文以已发布的
-[`v1.1.0`](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0)
-为准。
+:::note 版本支持
+
+本文介绍当前 Adapter 功能（自 1.1.0 版本支持）。后续版本新增的功能会在对应位置单独标注最低版本。
+
+:::
 
 <!-- 知识类型: 操作步骤 -->
 <!-- 适用场景: Adapter 安装 / 安装结果验证 -->
 
 ## 安装 dbt-for-apache-doris
 
-建议在独立的 Python 虚拟环境中从 PyPI 安装本文对应的 `v1.1.0`：
+以下命令以已发布的 [`v1.1.0`](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0) 为安装示例。安装其他版本时，请替换 `pip` 依赖中的版本号。
+
+建议在独立的 Python 虚拟环境中从 PyPI 安装 Adapter：
 
 ```shell
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install "dbt-for-apache-doris==1.1.0"
+dbt --version
 ```
 
 Windows PowerShell 使用以下命令：
 
 ```powershell
-python -m venv .venv
+py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 python -m pip install "dbt-for-apache-doris==1.1.0"
-```
-
-执行以下命令验证安装结果：
-
-```shell
 dbt --version
 ```
 
-输出的 `Plugins` 列表中应包含 `doris: 1.1.0`，并且 dbt Core 应为 1.12.x。
-dbt Core 和 MySQL Connector/Python 会作为依赖自动安装。
+在本示例中，输出的 `Plugins` 列表中应包含 `doris: 1.1.0`。dbt Core 和 MySQL Connector/Python 会作为依赖项自动安装。
 
 <!-- 知识类型: 配置参数 / 操作步骤 -->
 <!-- 适用场景: Doris Profile 配置 / 连接验证 / 跨 Database 读取 -->
@@ -129,7 +133,7 @@ Adapter 会把它作为 Doris Database 覆盖 `schema`，用于跨 Database 读�
 和标准 `source()` 当前不能同时表示 Doris Catalog 与 Database 两个层级。
 
 :::caution
-v1.1.0 不支持 External Catalog 的 Catalog、Database、Table 三段式命名空间。
+当前不支持 External Catalog 的 Catalog、Database、Table 三段式命名空间。
 :::
 
 确保 `dbt_project.yml` 中的 `profile` 与 `profiles.yml` 顶层名称一致：
@@ -228,15 +232,15 @@ version: 2
 
 models:
   - name: fct_daily_sales
-    description: 每日销售汇总
+    description: Daily sales summary
     columns:
       - name: order_date
-        description: 订单日期
+        description: Order date
         data_tests:
           - not_null
           - unique
       - name: sales_amount
-        description: 当日销售金额
+        description: Daily sales amount
         data_tests:
           - not_null
 ```
@@ -271,20 +275,19 @@ sources:
 
 ## Materialization
 
-`dbt-for-apache-doris` 1.1.0 支持以下主要 Materialization：
+`dbt-for-apache-doris` 支持以下主要 Materialization：
 
 | Materialization | Doris 对象或行为 | 适用场景 |
 | --- | --- | --- |
 | `view` | Doris View | 轻量转换、始终读取最新源数据 |
-| `table` | Doris Table，每次运行完整重建 | 结果规模可控、需要稳定查询性能 |
+| `table` | 每次运行完整重建的 Doris Duplicate Key Table | 结果规模可控、需要稳定查询性能 |
 | `incremental` | 按策略追加、Upsert 或覆盖本批数据 | 大表增量加工 |
 | `materialized_view` | Doris 异步物化视图 | 由 Doris 管理刷新和透明改写 |
 | `ephemeral` | 由 dbt 编译为下游 Model 中的公共表表达式（CTE） | 只复用 SQL、不创建 Doris 对象 |
 
-`seed`、`snapshot`、Data Test、Unit Test、Hook、Source Freshness、Model
-Contract、`grants`、存储 Data Test 失败结果和 `dbt docs generate` 也可用于 Doris
-项目。v1.1.0 不包含旧版自定义 `partition` Materialization；需要替换分区时使用
-Incremental `insert_overwrite`。下文示例沿用单 BE 快速开始环境，将
+Seed 和 Snapshot 也可创建 Doris Table。Adapter 不包含旧版自定义 `partition`
+Materialization；需要替换分区时使用
+Incremental `insert_overwrite`。下文示例沿用单 BE 开发环境，将
 `replication_num` 设为 `1`；生产环境应按实际部署设置副本数。
 
 ### View
@@ -326,7 +329,7 @@ select
 from {{ source('raw', 'orders') }}
 ```
 
-Table Model 可配置以下建表参数：
+Table Materialization 创建 Duplicate Key 表，后续运行会完整替换目标。Table Model 可配置以下建表参数：
 
 | 配置项 | 类型和默认值 | 说明 |
 | --- | --- | --- |
@@ -342,6 +345,8 @@ Table Model 可配置以下建表参数：
 `duplicate_key`、分区列和分桶列必须出现在 Model 输出中，并满足 Doris 建表规则。
 Adapter 会将 `partition_by_init` 和 `properties` 生成到 `CREATE TABLE` 语句中；分区定义、
 属性名称和取值是否合法，由 Doris 校验。
+
+普通 Table Model 不支持配置 Aggregate Key 或独立 Unique Key；Unique Key Upsert 使用 Incremental `merge`。
 
 ### Incremental
 
@@ -445,16 +450,16 @@ where order_time >= '2026-07-01'
 首次运行走 CTAS 建表路径，不执行 `INSERT OVERWRITE`，所以示例必须用
 `partition_by_init` 创建目标分区。`overwrite_partitions` 只决定目标表已存在时的覆盖
 范围。省略 `overwrite_partitions` 会覆盖整张表；设置分区名列表会只覆盖这些分区；
-设置 `overwrite_partitions='*'` 时，Doris 根据本批数据动态覆盖涉及的分区。空批次
+设置 `'*'` 时，Doris 根据本批数据动态覆盖涉及的分区。空批次
 无法识别需要清空的分区；需要清空分区时应显式指定分区名。
 
 ### Microbatch
 
-`microbatch` 使用 dbt Core 1.12 的批处理上下文，把每个 UTC 时间窗口映射为一个
+`microbatch` 使用 dbt Core 的批处理上下文，把每个 UTC 时间窗口映射为一个
 精确的 Doris RANGE 分区，并逐分区执行 `INSERT OVERWRITE`。例如：
 
 先为每个直接上游资源和目标 Model 配置 Event Time 字段，使 dbt Core 能向每批输入
-注入时间过滤。对于快速开始中创建的 `raw.orders` Source，在已有 Table 声明下增加：
+注入时间过滤。对于前文示例中创建的 `raw.orders` Source，在已有 Table 声明下增加：
 
 ```yaml
 sources:
@@ -498,8 +503,8 @@ from {{ source('raw', 'orders') }}
 Key 配置，不是 dbt 的 `unique_key`。不要为 Microbatch 设置 `unique_key`、
 `overwrite_partitions` 或 `partition_by_init`，分区边界和覆盖目标由 Adapter 根据
 当前批次管理。若上游 `ref()` 或 `source()` 也配置了 `event_time`，dbt Core 会按
-当前批次窗口过滤输入。Microbatch 即使遇到空批次，也会覆盖对应的精确分区，因此
-可以清除该窗口中已不存在的数据。
+当前批次窗口过滤输入。Microbatch 批次串行执行；即使遇到空批次，也会覆盖对应的
+精确分区，因此可以清除该窗口中已不存在的数据。
 
 Microbatch 也可使用 Doris Dynamic Partition，但必须在 `properties` 中显式启用并
 满足当前 Adapter 的校验：
@@ -534,7 +539,7 @@ Doris 创建 Dynamic Partition 表时还要求 `dynamic_partition.buckets` 为�
 :::note
 使用该 Materialization 时，Adapter 的 FE 版本检查接受 Doris 2.x 的 2.1.5 及以上
 版本、Doris 3.x 中除 3.0.0 外的版本、Doris 4.x 和更高版本，以及形如
-`doris-0.0.0-<git sha>` 的可识别源码构建。源码构建仅用于开发测试；这些规则只是
+`doris-0.0.0-<git-sha>` 的可识别源码构建。源码构建仅用于开发测试；这些规则只是
 代码中的准入条件，不是相关版本均已通过兼容性测试的结论。
 :::
 
@@ -627,15 +632,16 @@ Model SQL 或 DDL 配置变化时，`on_configuration_change=apply` 默认通过
 
 | 功能 | 用法 |
 | --- | --- |
-| Seed | 将小型、版本受控的 CSV 放入 `seeds/`，执行 `dbt seed` |
-| Snapshot | 在 `snapshots/` 中定义 `check` 或 `timestamp` 策略，执行 `dbt snapshot` |
-| Data Test | 在 YAML 中配置 Generic Test，或在 `tests/` 中编写 Singular Test |
-| Unit Test | 在 Model YAML 中提供模拟输入和预期结果，执行 `dbt test --select test_type:unit` |
-| Model Contract | 对 Table、View 或 Incremental Model 设置 `contract.enforced: true` 并声明字段类型 |
+| Seed | 将小型、版本受控的 CSV 放入 `seeds/`，执行 `dbt seed`；支持类型推断、`column_types` 和 `ref` |
+| Snapshot | 在 `snapshots/` 中定义 `check` 或 `timestamp` 策略，执行 `dbt snapshot`；支持 Hard Delete、Schema 演进和原子替换 |
+| Data Test | 在 YAML 中配置 Generic Test，或在 `tests/` 中编写 Singular Test；支持 Ephemeral 和 `store_failures` 路径 |
+| Unit Test | 在 Model YAML 中提供 Inline Row 或 CSV Fixture，执行 `dbt test --select test_type:unit` |
+| Model Contract | 对 Table、View 或 Incremental Model 设置 `contract.enforced: true` 并声明字段名称和类型；不会创建数据库 PK 或 NOT NULL 约束 |
+| Persisted Docs | 启用 `persist_docs`，为主要 Relation 类型写入 Relation 和字段注释 |
 | Source Freshness | 配置 `loaded_at_field` 或 `loaded_at_query` 以及 `freshness`，执行 `dbt source freshness` |
-| Grants | 使用标准 `grants` 配置管理 Doris Relation 的用户权限 |
-| Hooks | 使用 `pre_hook` 和 `post_hook` 在 Model 前后执行 Doris SQL |
-| 文档与血缘 | 编写 Description，执行 `dbt docs generate` |
+| Grants | 使用标准 `grants` 配置管理 Doris `user` 和 `user@host` 表权限；不支持 Role 授权主体 |
+| Hooks | 使用 `pre_hook` 和 `post_hook` 在 Materialization 前后执行 Doris SQL；Hook 副作用没有事务回滚 |
+| 文档与血缘 | 编写 Description 并执行 `dbt docs generate`，生成 Doris Database、Table、View、字段、注释和异步物化视图元数据 |
 
 Seed 适合国家代码、状态映射等小型静态数据，不适合批量导入业务数据。大文件应使用
 Doris Stream Load、Broker Load 或 Doris Connector。
@@ -648,19 +654,21 @@ Snapshot 源数据中的 `unique_key` 必须非 `NULL` 且每批唯一；使用 
 ```yaml
 models:
   - name: fct_daily_sales
-    description: 每日销售汇总
+    description: Daily sales summary
     config:
       persist_docs:
         relation: true
         columns: true
     columns:
       - name: order_date
-        description: 订单日期
+        description: Order date
       - name: sales_amount
-        description: 当日销售金额
+        description: Daily sales amount
 ```
 
-Source Freshness 支持 dbt Core 1.12 的两种显式取值方式。常见场景使用
+### Source Freshness
+
+Source Freshness 支持两种显式取值方式。常见场景使用
 `loaded_at_field`：
 
 ```yaml
@@ -700,6 +708,8 @@ sources:
 对无时区时间戳按 UTC 计算 Freshness 的约定。当前实现没有从 Doris 表元数据自动
 推导加载时间；必须提供字段或查询。
 
+### Grants
+
 声明式 Grants 以 Doris 用户为授权主体：
 
 ```yaml
@@ -737,16 +747,16 @@ models:
 常用选择器：
 
 ```shell
-# 运行一个 Model
+# Run one model
 dbt run --select fct_daily_sales
 
-# 运行该 Model 及其全部上游依赖
+# Run the model and all upstream dependencies
 dbt build --select +fct_daily_sales
 
-# 运行该 Model 及其全部下游依赖
+# Run the model and all downstream dependencies
 dbt build --select fct_daily_sales+
 
-# 全量重建 Incremental Model
+# Fully rebuild an incremental model
 dbt run --select fct_orders --full-refresh
 ```
 

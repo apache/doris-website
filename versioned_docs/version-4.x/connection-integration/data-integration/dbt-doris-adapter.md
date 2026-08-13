@@ -2,7 +2,7 @@
 {
     "title": "Apache Doris dbt Adapter",
     "language": "en",
-    "description": "Install and configure dbt-for-apache-doris 1.1.0 for Apache Doris models, source freshness, async materialized views.",
+    "description": "Install and configure dbt-for-apache-doris for Apache Doris models, source freshness, and asynchronous materialized views.",
     "keywords": [
         "Apache Doris dbt",
         "dbt Doris Adapter",
@@ -27,22 +27,33 @@
 
 Source data must already be loaded into Doris. The adapter performs transformations; it does not ingest or synchronize source data.
 
+:::caution
+
+`dbt-for-apache-doris` is provided and maintained by the VeloDB community. It is not part of the Apache Doris project and is not released or endorsed by the Apache Doris community. Evaluate the adapter before using it in production, verify the integrity of the package and its release information, and follow the license of the third-party project. Report adapter issues to the [`dbt-for-apache-doris` project](https://github.com/velodb/dbt-for-apache-doris/issues).
+
+:::
+
 <!-- Knowledge Type: Version Requirements / Environment Requirements -->
 <!-- Use Case: Pre-installation version check / Environment preparation -->
 
-## Supported versions and environment
-
-This document applies to the published [`v1.1.0` release](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0).
+## Environment requirements
 
 | Component | Requirement |
 | --- | --- |
-| dbt-for-apache-doris | 1.1.0 |
 | Python | 3.10 or later |
+
+:::note Version support
+
+This page documents the current adapter capabilities (supported since version 1.1.0). Capabilities introduced in later releases will state their minimum version at the relevant feature.
+
+:::
 
 <!-- Knowledge Type: Operational Steps -->
 <!-- Use Case: Adapter installation / Installation verification -->
 
 ## Installation
+
+The following commands use the published [`v1.1.0` release](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0) as an installation example. To install another release, replace the version in the `pip` requirement.
 
 Install the adapter from PyPI in an isolated Python environment:
 
@@ -64,45 +75,12 @@ python -m pip install "dbt-for-apache-doris==1.1.0"
 dbt --version
 ```
 
-The `Plugins` section of `dbt --version` should contain `doris: 1.1.0`, and dbt Core should be 1.12.x. dbt Core and MySQL Connector/Python are installed as dependencies.
+For this example, the `Plugins` section of `dbt --version` should contain `doris: 1.1.0`. dbt Core and MySQL Connector/Python are installed as dependencies.
 
 <!-- Knowledge Type: Operational Steps / Minimal Example -->
 <!-- Use Case: Connect dbt to Doris / Validate an end-to-end model build -->
 
-## Quick start
-
-### Prepare Doris
-
-The Doris account used by dbt must be able to:
-
-- Read source tables.
-- Create the target database.
-- Create, alter, drop, and write objects in the target database.
-
-The following SQL creates a source table for this example. A replication number of `1` is appropriate only for a single-BE development cluster:
-
-```sql
-CREATE DATABASE IF NOT EXISTS raw;
-
-CREATE TABLE IF NOT EXISTS raw.orders (
-    order_id BIGINT,
-    customer_id BIGINT,
-    order_time DATETIME,
-    amount DECIMAL(18, 2),
-    status VARCHAR(20),
-    updated_at DATETIME,
-    is_valid BOOLEAN
-)
-DUPLICATE KEY(order_id)
-DISTRIBUTED BY HASH(order_id) BUCKETS 1
-PROPERTIES ("replication_num" = "1");
-
-INSERT INTO raw.orders VALUES
-    (1, 101, '2026-08-01 10:00:00', 20.00, 'PAID', '2026-08-01 10:05:00', true),
-    (2, 102, '2026-08-01 11:00:00', 35.00, 'PAID', '2026-08-01 11:05:00', true);
-```
-
-### Configure the project and connection
+## Configure the connection
 
 Create a dbt project:
 
@@ -127,18 +105,26 @@ doris_demo:
       threads: 4
 ```
 
-| Setting | Recommended value | Behavior in 1.1.0 |
+| Setting | Recommended value | Behavior |
 | --- | --- | --- |
 | `type` | Must be `doris` | Selects the Doris adapter |
-| `host` | Doris FE address | Falls back to `127.0.0.1` when omitted |
-| `port` | Usually `9030` | FE MySQL query port, not the HTTP port |
-| `username` | A dedicated Doris user | Falls back to `root` when omitted |
+| `host` | Set the Doris FE address explicitly | The underlying credentials fall back to `127.0.0.1` when omitted; `dbt init` has no default input |
+| `port` | Usually `9030` | Defaults to `9030` when omitted; this is the FE query port, not the HTTP port |
+| `username` | Set a dedicated Doris user explicitly | The underlying credentials fall back to `root` when omitted; `dbt init` has no default input |
 | `password` | Read from an environment variable | Defaults to an empty string |
-| `schema` | Target Doris database | The `dbt init` prompt defaults to `dbt` |
+| `schema` | Set the target Doris database | The `dbt init` prompt defaults to `dbt`; the underlying credentials default to `None` |
 | `threads` | Set according to FE and workload capacity | The `dbt init` prompt defaults to `1` |
 | `database` | Omit it | If set, it must exactly equal `schema` |
 
-For Doris profiles, dbt `schema` maps to a Doris database. The profile `database` field is a generic dbt credential field, not a Doris catalog, and does not add another namespace level.
+The adapter maps a dbt schema to a Doris database. If the target database does not exist, the adapter attempts to create it. The Doris account used by dbt therefore needs permission to read source tables and to create, alter, drop, and write objects in the target database.
+
+Here, `database` is not a Doris catalog. It is a field inherited from dbt's generic `database.schema.identifier` naming model. Doris Internal Catalog uses only `database.table`, so set the Doris database in profile `schema` and omit profile `database`. Source `database` has a different compatibility behavior: it can override `schema` as the Doris database for cross-database reads. Profiles and standard `source()` cannot represent both a Doris catalog and database level.
+
+:::caution
+
+External Catalog three-part namespaces using Catalog, Database, and Table are not supported.
+
+:::
 
 Ensure that `dbt_project.yml` references the same profile:
 
@@ -147,7 +133,54 @@ name: doris_demo
 version: "1.0.0"
 config-version: 2
 profile: doris_demo
+
 model-paths: ["models"]
+
+models:
+  doris_demo:
+    +materialized: view
+```
+
+On macOS or Linux, validate the connection with:
+
+```shell
+export DORIS_PASSWORD='your_password'
+dbt debug
+```
+
+On Windows PowerShell:
+
+```powershell
+$env:DORIS_PASSWORD = 'your_password'
+dbt debug
+```
+
+<!-- Knowledge Type: Operational Steps / Minimal Example -->
+<!-- Use Case: Validate an end-to-end model build -->
+
+## Build the first model
+
+The following SQL creates a source table for this example. A replication number of `1` is appropriate only for a single-BE development cluster:
+
+```sql
+CREATE DATABASE IF NOT EXISTS raw;
+
+CREATE TABLE IF NOT EXISTS raw.orders (
+    order_id BIGINT,
+    customer_id BIGINT,
+    order_time DATETIME,
+    amount DECIMAL(18, 2),
+    status VARCHAR(20),
+    updated_at DATETIME,
+    is_valid BOOLEAN
+)
+DUPLICATE KEY(order_id)
+DISTRIBUTED BY HASH(order_id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO raw.orders VALUES
+    (1, 101, '2026-08-01 10:00:00', 20.00, 'PAID', '2026-08-01 10:05:00', true),
+    (2, 102, '2026-08-01 11:00:00', 35.00, 'PAID', '2026-08-01 11:05:00', true);
 ```
 
 Declare the source in `models/sources.yml`:
@@ -189,31 +222,45 @@ version: 2
 
 models:
   - name: fct_daily_sales
+    description: Daily sales summary
     columns:
       - name: order_date
-        data_tests: [not_null, unique]
+        description: Order date
+        data_tests:
+          - not_null
+          - unique
       - name: sales_amount
-        data_tests: [not_null]
+        description: Daily sales amount
+        data_tests:
+          - not_null
 ```
 
 Run the model and tests:
 
 ```shell
-export DORIS_PASSWORD='<your-password>'
-dbt debug
 dbt build --select fct_daily_sales
 ```
 
-On Windows PowerShell, set the password with `$env:DORIS_PASSWORD = '<your-password>'` and run the same dbt commands.
-
 A successful build creates `analytics.fct_daily_sales`. Set the production replication and bucket counts according to your cluster deployment.
+
+When a source is in another Doris database, prefer setting `schema` directly:
+
+```yaml
+sources:
+  - name: finance
+    schema: finance_raw
+    tables:
+      - name: payments
+```
+
+For compatibility with existing dbt projects, a source may instead set only `database: finance_raw`, or set `database` and `schema` to the same value. If source `database` and `schema` differ, the adapter uses `database` as the Doris database. This differs from profile validation, which requires both values to match. New projects should consistently use source `schema` to avoid ambiguity.
 
 <!-- Knowledge Type: Capability Reference / Configuration Parameters / Architecture Decision -->
 <!-- Use Case: Materialization selection / Incremental processing / Materialized views -->
 
 ## Materializations
 
-`dbt-for-apache-doris 1.1.0` supports these main materializations:
+`dbt-for-apache-doris` supports these main materializations:
 
 | Materialization | Doris object or behavior | Use case |
 | --- | --- | --- |
@@ -223,20 +270,46 @@ A successful build creates `analytics.fct_daily_sales`. Set the production repli
 | `materialized_view` | Doris asynchronous materialized view | Doris-managed refresh and transparent query rewrite |
 | `ephemeral` | Compiles into a CTE in downstream models | Reuse SQL without creating a Doris object |
 
-Seeds and snapshots can also create Doris tables. Version 1.1.0 does not include the old custom `partition` materialization; use incremental `insert_overwrite` for partition replacement. The examples below keep `replication_num=1` so they also run on the single-BE quick-start cluster; use a production-appropriate replica count in real deployments.
+Seeds and snapshots can also create Doris tables. The adapter does not include the old custom `partition` materialization; use incremental `insert_overwrite` for partition replacement. The examples below keep `replication_num=1` so they also run on a single-BE development cluster; use a production-appropriate replica count in real deployments.
 
 ### View
 
 ```sql
 {{ config(materialized='view') }}
 
-select order_id, order_time, amount
+select order_id, customer_id, amount
 from {{ source('raw', 'orders') }}
+where status = 'PAID'
 ```
 
-A view stores no data. Its query cost depends on the view SQL and downstream query.
+Each run updates the view definition. A view stores no data; its query cost depends on the view SQL and downstream query.
 
 ### Table
+
+```sql
+{{
+  config(
+    materialized='table',
+    duplicate_key=['event_date', 'event_id'],
+    partition_by=['event_date'],
+    partition_type='RANGE',
+    partition_by_init=[
+      "PARTITION p_before_202608 VALUES LESS THAN ('2026-08-01')",
+      "PARTITION p202608 VALUES LESS THAN ('2026-09-01')",
+      "PARTITION pmax VALUES LESS THAN (MAXVALUE)"
+    ],
+    distributed_by=['event_id'],
+    buckets=16,
+    properties={'replication_num': '1'}
+  )
+}}
+
+select
+    cast(order_time as date) as event_date,
+    order_id as event_id,
+    status as event_type
+from {{ source('raw', 'orders') }}
+```
 
 The `table` materialization creates a Duplicate Key table and fully replaces the target on subsequent runs. Table models accept the following table-creation settings:
 
@@ -251,11 +324,16 @@ The `table` materialization creates a Duplicate Key table and fully replaces the
 | `replication_num` | Positive integer or numeric string; optional | Replica count; the top-level setting overrides the same key in `properties` |
 | `properties` | Dictionary; optional | Key-value pairs rendered into Doris `PROPERTIES` |
 
-Duplicate Key, partition, and distribution columns must be present in the model output. The adapter renders `partition_by_init` and `properties` into the `CREATE TABLE` statement; Doris validates the partition definitions, property names, and values. An ordinary `table` model does not expose Aggregate Key or standalone Unique Key configuration. Use incremental `merge` for Unique Key upserts.
+Duplicate Key, partition, and distribution columns must be present in the model output and comply with Doris table-creation rules. The adapter renders `partition_by_init` and `properties` into the `CREATE TABLE` statement; Doris validates the partition definitions, property names, and values. An ordinary `table` model does not expose Aggregate Key or standalone Unique Key configuration. Use incremental `merge` for Unique Key upserts.
 
 ### Incremental
 
-The model SQL determines which source rows are returned for a run, while `incremental_strategy` determines how the batch is written.
+For `append`, `merge`, and `insert_overwrite`, an incremental model has two parts:
+
+- Model SQL, usually with `is_incremental()`, determines which source rows the current run returns.
+- `incremental_strategy` determines how the adapter writes that batch to the target.
+
+Microbatch does not use this filtering pattern. dbt Core injects time filters from the batch context and the `event_time` configured on upstream resources.
 
 | Strategy | Doris target and behavior | Main requirements |
 | --- | --- | --- |
@@ -266,7 +344,9 @@ The model SQL determines which source rows are returned for a run, while `increm
 
 When no strategy is set, `unique_key` selects `merge`; otherwise the adapter uses `append`. The adapter supports all four `on_schema_change` modes: `ignore`, `fail`, `append_new_columns`, and `sync_all_columns`.
 
-`merge` does not generate SQL `MERGE INTO`. It uses full-row `INSERT INTO` with Doris Unique Key semantics. Each batch must contain at most one row for each `unique_key`:
+`delete+insert` and `delete_insert` are rejected. Use `merge` for Doris Unique Key upserts. `merge` does not generate SQL `MERGE INTO`; it uses full-row `INSERT INTO` with Doris Unique Key semantics. Each batch must contain at most one row for each `unique_key`. To use a Sequence Column, set the visible column through `function_column.sequence_col` in `properties` and continue using `merge`. The bare `sequence_col` setting and `function_column.sequence_type` with the hidden `__DORIS_SEQUENCE_COL__` are not supported.
+
+The following example performs a full-row upsert by `order_id`:
 
 ```sql
 {{
@@ -281,7 +361,11 @@ When no strategy is set, `unique_key` selects `merge`; otherwise the adapter use
   )
 }}
 
-select order_id, customer_id, amount, updated_at
+select
+    order_id,
+    customer_id,
+    amount,
+    updated_at
 from {{ source('raw', 'orders') }}
 
 {% if is_incremental() %}
@@ -339,7 +423,9 @@ The first run creates the target through CTAS and does not execute `INSERT OVERW
 
 A dynamic overwrite cannot infer which partition to clear from an empty batch. Specify partition names when an empty source batch must clear target data.
 
-`microbatch` uses the dbt Core 1.12 batch context. Configure an `event_time` field on each direct upstream resource and on the target model. For the `raw.orders` source created in the quick start, add this configuration to its existing table declaration:
+### Microbatch
+
+`microbatch` uses the dbt Core batch context. Configure an `event_time` field on each direct upstream resource and on the target model. For the `raw.orders` source created in the first-model example above, add this configuration to its existing table declaration:
 
 ```yaml
 sources:
@@ -375,17 +461,33 @@ select
 from {{ source('raw', 'orders') }}
 ```
 
-`batch_size` supports `hour`, `day`, `month`, and `year`. Microbatch batches execute serially. Do not set `unique_key`, `overwrite_partitions`, or `partition_by_init`.
+`event_time` must be an unquoted column name and must refer to the same single column as `partition_by`. `batch_size` supports `hour`, `day`, `month`, and `year`. The target is a Duplicate Key table: `duplicate_key` configures the Doris table key and is not dbt `unique_key`. Do not set `unique_key`, `overwrite_partitions`, or `partition_by_init`; the adapter derives the partition boundary and overwrite target from the current batch. If an upstream `ref()` or `source()` also configures `event_time`, dbt Core filters that input to the current window. Microbatch batches execute serially and overwrite the exact partition even when a batch is empty, so rows removed from that window are cleared.
+
+Microbatch can also use Doris Dynamic Partition when the following properties are configured and pass adapter validation:
+
+- `dynamic_partition.enable='true'`.
+- `dynamic_partition.time_unit` matches `batch_size`, and `dynamic_partition.time_zone` is `UTC`, `Etc/UTC`, or `+00:00`.
+- `dynamic_partition.create_history_partition='true'`, with either `dynamic_partition.start` or `dynamic_partition.history_partition_num`.
+- `dynamic_partition.prefix` is a valid identifier, and `dynamic_partition.end` is a positive integer.
+- For monthly batches, `dynamic_partition.start_day_of_month`, when set, is `1`.
+
+Doris also requires a positive `dynamic_partition.buckets` value when creating a Dynamic Partition table; Doris validates this property rather than the adapter. The retention window must cover `begin`, `lookback`, and any manual backfill range. For an existing target, the physical properties validated by the adapter must match the model configuration; otherwise align the configuration or run `--full-refresh`.
 
 :::caution
 
-For `append`, `merge`, and partition-scoped `insert_overwrite`, the adapter does not discover new or changed source rows automatically. The model SQL must return the intended batch. Run `dbt run --full-refresh` after incompatible key, partition, or physical-layout changes.
+For `append`, `merge`, and partition-scoped `insert_overwrite`, the adapter does not discover new or changed source rows automatically. The model SQL must return the intended batch. Whole-table `insert_overwrite` must return the complete target data. Each `merge` batch must contain unique `unique_key` values. dbt Core supplies Microbatch filtering from upstream resources configured with `event_time`, so Microbatch models do not need `is_incremental()`. Run `dbt run --full-refresh` after incompatible key, partition, or physical-layout changes.
 
 :::
 
 ### Asynchronous materialized views
 
 dbt users configure the standard `materialized='materialized_view'`. The adapter implements it with a Doris [asynchronous materialized view](../../query-acceleration/materialized-view/async-materialized-view/overview).
+
+:::note
+
+The FE version gate for this materialization accepts Doris 2.x at 2.1.5 or later, Doris 3.x except 3.0.0, Doris 4.x and later, and identifiable source builds reported as `doris-0.0.0-<git-sha>`. Source builds are for development testing only. These gates are code admission conditions, not evidence that every accepted version has passed compatibility testing.
+
+:::
 
 ```sql
 {{
@@ -407,54 +509,98 @@ select order_date, sales_amount
 from {{ ref('fct_daily_sales') }}
 ```
 
-| Setting | Type, default, and supported values |
-| --- | --- |
-| `build_mode` | Default `immediate`; supports `immediate` and `deferred` |
-| `refresh_method` | Default `auto`; supports `auto` and `complete` |
-| `refresh_trigger` | Default `manual`; supports `manual`, `schedule`, and `commit` |
-| `refresh_schedule` | Required for `schedule`; contains a positive `interval`, a `minute/hour/day/week` unit, and optional `start_time` |
-| `wait_for_refresh` | Default `true`; wait for the initial build or an adapter-submitted manual refresh |
-| `refresh_wait_timeout` | Default `300` seconds; positive integer |
-| `refresh_poll_interval` | Default `1` second; positive integer no greater than the timeout |
-| `duplicate_key` | String or list; optional | Duplicate Key columns for the asynchronous materialized view |
-| `partition_by` | One partition column or partition-function expression; optional |
-| `distribution_type` | Defaults to `hash` with `distributed_by`, otherwise `random` |
-| `distributed_by` | Hash distribution columns; optional |
-| `buckets` | Default `auto`; positive integer or `auto` |
-| `replication_num` | Positive integer; optional | Convenience setting that overrides the same key in `properties` |
-| `properties` | Doris asynchronous materialized-view properties; default `{}` |
-| `on_configuration_change` | Default `apply`; supports `apply`, `continue`, and `fail` |
+| Setting | Default | Supported values or format |
+| --- | --- | --- |
+| `build_mode` | `immediate` | `immediate`, `deferred` |
+| `refresh_method` | `auto` | `auto` lets Doris determine the refresh scope; `complete` refreshes all partitions |
+| `refresh_trigger` | `manual` | `manual`, `schedule`, `commit` |
+| `refresh_schedule` | - | Required for `schedule`; contains a positive `interval`, a `minute/hour/day/week` unit, and optional `start_time` |
+| `wait_for_refresh` | `true` | Whether to wait for the `BUILD IMMEDIATE` initial build or an adapter-submitted manual refresh |
+| `refresh_wait_timeout` | `300` | Refresh task timeout in seconds; positive integer |
+| `refresh_poll_interval` | `1` | Refresh task polling interval in seconds; positive integer no greater than the timeout |
+| `duplicate_key` | - | Duplicate Key columns for the asynchronous materialized view; string or list |
+| `partition_by` | - | One Doris partition column or partition-function expression; string or one-element list |
+| `distribution_type` | Selected automatically | `hash` when `distributed_by` is set; otherwise `random` |
+| `distributed_by` | - | Hash Distribution columns |
+| `buckets` | `auto` | Positive integer or `auto` |
+| `replication_num` | - | Replica-count convenience setting; overrides the same key in `properties` |
+| `properties` | `{}` | Doris asynchronous materialized-view properties |
+| `on_configuration_change` | `apply` | `apply`, `continue`, `fail` |
 
-`BUILD IMMEDIATE` starts the initial build when a definition is created or replaced. `BUILD DEFERRED` creates the definition without an initial build. When the definition has not changed:
+`BUILD IMMEDIATE` starts the initial build when a definition is created or replaced. The adapter creates the new definition under a temporary name, waits for the initial build by default, and then publishes it at the target name; it does not submit an extra `REFRESH MATERIALIZED VIEW`. `BUILD DEFERRED` creates the definition without an initial build.
 
-- `manual` submits a refresh when a later `dbt run` selects the model and waits for success by default.
+When the definition has not changed, refresh behavior is controlled entirely by `refresh_trigger`; there is no `refresh_on_run` configuration:
+
+- `manual` submits `REFRESH MATERIALIZED VIEW ... AUTO|COMPLETE` when a later `dbt run` selects the model and waits for success by default.
 - `schedule` and `commit` do not submit a refresh from a later dbt run; Doris triggers it from the schedule or base-table commit.
 
-`wait_for_refresh=false` disables task polling; it does not suppress the refresh request. A dbt wait timeout does not cancel an already submitted Doris task. Serialize concurrent dbt runs against the same materialized-view target in your scheduler.
+For example, configure a daily schedule with:
 
-The FE version gate for this materialization accepts Doris 2.x at 2.1.5 or later, Doris 3.x except 3.0.0, Doris 4.x and later, and identifiable source builds reported as `doris-0.0.0-<git-sha>`. Source builds are for development testing only. These gates are not a live compatibility matrix.
+```sql
+{{
+  config(
+    materialized='materialized_view',
+    build_mode='deferred',
+    refresh_method='auto',
+    refresh_trigger='schedule',
+    refresh_schedule={
+      'interval': 1,
+      'unit': 'day'
+    },
+    properties={'replication_num': '1'}
+  )
+}}
+
+select order_date, sales_amount
+from {{ ref('fct_daily_sales') }}
+```
+
+`wait_for_refresh=false` disables task polling; it does not suppress the refresh request. A dbt wait timeout does not cancel an already submitted Doris task. The adapter identifies a newly submitted task by comparing Doris MV task IDs before and after submission, so avoid concurrent manual refreshes of the same target.
+
+When model SQL or DDL configuration changes, the default `on_configuration_change=apply` builds a temporary asynchronous materialized view and atomically replaces the existing definition. `continue` retains the existing definition without submitting a manual refresh, while `fail` stops the run. `--full-refresh` forces the definition to be redeployed.
 
 <!-- Knowledge Type: Capability Reference / Configuration Parameters -->
 <!-- Use Case: Seeds / Snapshots / Source freshness / Grants -->
 
 ## Other dbt capabilities
 
-| Capability | Support in 1.1.0 |
+| Capability | Support |
 | --- | --- |
-| Seed | CSV loading, type inference, `column_types`, and `ref` |
-| Snapshot | `check` and `timestamp` strategies, hard deletes, schema evolution, and atomic replacement |
-| Data tests | Singular, generic, ephemeral, and `store_failures` paths |
-| Unit tests | Inline-row and CSV fixtures with Doris type adaptation |
-| Model contracts | Column names and types for Table, View, and Incremental; no database PK or NOT NULL constraints |
-| Persisted docs | Relation and column comments for primary relation types |
-| Grants | Doris `user` and `user@host` table privileges; role principals are not supported |
-| Hooks | Doris SQL before and after materializations; hook side effects have no transactional rollback |
-| Source freshness | `loaded_at_field`, `filter`, and `loaded_at_query` |
-| dbt Docs | Catalog metadata for Doris databases, tables, views, columns, comments, and asynchronous materialized views |
+| Seed | Put small, version-controlled CSV files in `seeds/`, then run `dbt seed`; supports type inference, `column_types`, and `ref` |
+| Snapshot | Define `check` or `timestamp` strategies in `snapshots/`, then run `dbt snapshot`; supports hard deletes, schema evolution, and atomic replacement |
+| Data tests | Configure Generic Tests in YAML or write Singular Tests in `tests/`; supports ephemeral and `store_failures` paths |
+| Unit tests | Provide inline-row or CSV fixtures in model YAML, then run `dbt test --select test_type:unit` |
+| Model contracts | Set `contract.enforced: true` and declare column names and types for Table, View, or Incremental models; does not create database PK or NOT NULL constraints |
+| Persisted docs | Enable `persist_docs` for relation and column comments on primary relation types |
+| Source freshness | Configure `loaded_at_field` or `loaded_at_query` with `freshness`, then run `dbt source freshness` |
+| Grants | Use standard `grants` configuration for Doris `user` and `user@host` table privileges; role principals are not supported |
+| Hooks | Use `pre_hook` and `post_hook` to execute Doris SQL around materializations; hook side effects have no transactional rollback |
+| Documentation and lineage | Write descriptions and run `dbt docs generate` for metadata about Doris databases, tables, views, columns, comments, and asynchronous materialized views |
+
+Seeds are suitable for small, version-controlled data such as country codes or status mappings, not bulk business-data ingestion. Use Doris Stream Load, Broker Load, or a Doris Connector for large files.
+
+Snapshot source `unique_key` values must be non-`NULL` and unique within each batch. With the `timestamp` strategy, `updated_at` must be non-`NULL` and cannot precede the current historical version for that key.
+
+To persist table and column descriptions:
+
+```yaml
+models:
+  - name: fct_daily_sales
+    description: Daily sales summary
+    config:
+      persist_docs:
+        relation: true
+        columns: true
+    columns:
+      - name: order_date
+        description: Order date
+      - name: sales_amount
+        description: Daily sales amount
+```
 
 ### Source freshness
 
-Use `loaded_at_field` for the common timestamp-column case:
+Source Freshness supports two explicit timestamp paths. Use `loaded_at_field` for the common timestamp-column case:
 
 ```yaml
 sources:
@@ -487,27 +633,24 @@ sources:
             error_after: {count: 2, period: hour}
 ```
 
-Do not configure `loaded_at_field` and `loaded_at_query` together. The adapter does not infer load time from Doris table metadata.
+When using `loaded_at_field`, set `filter` under `freshness`, such as `filter: is_valid = 1`, to limit which rows participate in freshness evaluation. Do not configure `loaded_at_field` and `loaded_at_query` together. The adapter does not infer load time from Doris table metadata; provide a field or query explicitly.
 
-### Cross-database sources
+The adapter uses `utc_timestamp()` as the current time, matching dbt Core's convention of evaluating timezone-naive freshness timestamps as UTC.
 
-Set `schema` when a source is in another Doris database:
+### Grants
+
+Declarative grants use Doris users as principals:
 
 ```yaml
-sources:
-  - name: finance
-    schema: finance_raw
-    tables:
-      - name: payments
+models:
+  doris_demo:
+    +grants:
+      select:
+        - analyst
+        - reporter@10.0.0.%
 ```
 
-For compatibility with existing dbt projects, a source may instead set only `database: finance_raw`. If source `database` and `schema` differ, version 1.1.0 uses `database` as the Doris database. New projects should consistently use `schema` to avoid ambiguity.
-
-:::caution
-
-External Catalog three-part namespaces are not supported. Profiles and standard `source()` cannot represent Doris Catalog, Database, and Table at the same time.
-
-:::
+A name without `@host` is treated as `username@%`. Privileges map as follows: `select` to `SELECT_PRIV`, `insert` to `LOAD_PRIV`, `alter` to `ALTER_PRIV`, `create` to `CREATE_PRIV`, `drop` to `DROP_PRIV`, and `show_view` to `SHOW_VIEW_PRIV`. Doris roles are not supported in `grants`; configure concrete users. The account running dbt must be able to inspect principals and adjust privileges on target objects.
 
 <!-- Knowledge Type: Command Reference -->
 <!-- Use Case: dbt project development / Execution / Testing / Documentation generation -->
@@ -527,6 +670,22 @@ External Catalog three-part namespaces are not supported. Profiles and standard 
 | `dbt source freshness` | Evaluate source freshness |
 | `dbt docs generate` | Generate catalog, documentation, and lineage metadata |
 
+Common selectors:
+
+```shell
+# Run one model
+dbt run --select fct_daily_sales
+
+# Run the model and all upstream dependencies
+dbt build --select +fct_daily_sales
+
+# Run the model and all downstream dependencies
+dbt build --select fct_daily_sales+
+
+# Fully rebuild an incremental model
+dbt run --select fct_orders --full-refresh
+```
+
 <!-- Knowledge Type: Limitations / Architecture Decision -->
 <!-- Use Case: Version evaluation / Production readiness review -->
 
@@ -544,8 +703,8 @@ External Catalog three-part namespaces are not supported. Profiles and standard 
 
 ### `dbt debug` cannot connect
 
-Verify that `host` and `port` point to a reachable FE MySQL query port. The default query port is `9030`; `8030` is normally the FE HTTP port.
+Verify that `host` and `port` point to a reachable FE MySQL query port, and check the username, password, and network policy. The default query port is `9030`; `8030` is normally the FE HTTP port.
 
 ### `database` and `schema` differ
 
-Remove `database` from the profile or set it to exactly the same value as `schema`. Profile `database` is not a Doris catalog.
+Profile `schema` is the target Doris database. Remove `database`; it is not a Doris catalog and does not add another namespace level. If you retain this compatibility field, set it to exactly the same value as `schema`.
