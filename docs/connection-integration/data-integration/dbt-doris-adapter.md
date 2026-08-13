@@ -582,15 +582,3 @@ Run `dbt compile --select <model>` and inspect the compiled SQL. Verify that the
 ### An asynchronous materialized view is not updated
 
 Check `refresh_trigger`. The default `manual` trigger submits refreshes on later selected runs; `schedule` and `commit` are triggered by Doris. Inspect task status in `tasks('type'='mv')`. Setting `wait_for_refresh=false` or reaching a wait timeout does not cancel the task.
-
-<!-- Knowledge Type: Reference Material -->
-<!-- Use Case: Release verification / Implementation verification / Further reading -->
-
-## Related links
-
-- [dbt-for-apache-doris 1.1.0 release](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0)
-- [dbt-for-apache-doris 1.1.0 source](https://github.com/velodb/dbt-for-apache-doris/tree/v1.1.0)
-- [dbt-for-apache-doris 1.1.0 on PyPI](https://pypi.org/project/dbt-for-apache-doris/1.1.0/)
-- [dbt Developer Hub](https://docs.getdbt.com/)
-- [Doris asynchronous materialized views](../../query-acceleration/materialized-view/async-materialized-view/overview)
-- [Doris INSERT OVERWRITE](../../sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE)

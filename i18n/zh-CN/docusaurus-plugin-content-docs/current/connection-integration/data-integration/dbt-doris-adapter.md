@@ -836,15 +836,3 @@ Catalog，而且在 Profile 中没有提供额外命名层级。如果保留该�
 `wait_for_refresh=true`，任务失败或超时会使 Model 失败；设置为 `false` 时只提交
 任务，不等待完成。还应确认 Doris 的 MV Task History 已启用，并检查
 `tasks('type'='mv')` 中的状态。不要配置旧版的 `refresh_on_run`，当前实现没有该选项。
-
-<!-- 知识类型: 参考资料 -->
-<!-- 适用场景: 版本发布核对 / 实现核对 / 延伸阅读 -->
-
-## 相关链接
-
-- [dbt-for-apache-doris 1.1.0 Release](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0)
-- [dbt-for-apache-doris 1.1.0 源码](https://github.com/velodb/dbt-for-apache-doris/tree/v1.1.0)
-- [dbt-for-apache-doris 1.1.0 PyPI](https://pypi.org/project/dbt-for-apache-doris/1.1.0/)
-- [dbt Developer Hub](https://docs.getdbt.com/)
-- [Doris 异步物化视图](../../query-acceleration/materialized-view/async-materialized-view/overview)
-- [Doris INSERT OVERWRITE](../../sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE)
