@@ -36,6 +36,21 @@ Also run git status --short before editing. Existing unrelated modifications and
 
 Collect all missing release decisions in one concise confirmation instead of asking one field at a time. Do not ask again for values the user has already supplied.
 
+Look for the values yourself before asking. Most are discoverable, and proposing a confirmed default is faster than asking cold:
+
+- Release-note source: releases are announced in a tracking issue on the component's repository, titled with the version. Search the repository rather than guessing an issue number:
+
+        gh api "search/issues?q=repo:apache/doris+<version>+in:title&sort=created&order=desc"
+        gh api "repos/apache/doris-operator/issues?state=all&sort=created&direction=desc"
+
+- Release date: prefer the GitHub release for the tag. A tag often has no published release yet, in which case use the upload time of the source tarball on dist.apache.org:
+
+        curl -sSI <source-dir>/apache-doris-<source-version>-src.tar.gz | grep -i last-modified
+
+- Source filename version: read it from the release directory listing rather than deriving it from the public version. It may or may not carry an RC suffix, and this differs between releases in the same series.
+
+Ask only about what is left, and about anything where the discovered answer is ambiguous or would be unsafe to assume.
+
 Use this template:
 
     Please confirm:
@@ -58,7 +73,7 @@ Canonical component IDs:
 | doris-spark-connector | Spark ecosystem page and TOOL_VERSIONS when present | https://downloads.apache.org/doris/spark-connector/<version>/ |
 | doris-kafka-connector | Kafka ecosystem page and TOOL_VERSIONS when present | https://downloads.apache.org/doris/kafka-connector/<version>/ |
 | doris-streamloader | Streamloader ecosystem page and download data when present | Verify from the release directory |
-| doris-operator | Operator ecosystem page, images, and charts when applicable | Verify from the release announcement |
+| doris-operator | Operator ecosystem page, operator download data, images, and charts when applicable | https://downloads.apache.org/doris/doris-operator/&lt;version&gt;/ |
 | doris-mcp-server | MCP Server ecosystem page | Verify package locations |
 | doris-skills | Doris Skills ecosystem page | Verify package locations |
 | doris-cli | Doris CLI ecosystem page | Verify package locations |
@@ -85,9 +100,13 @@ The version field inside each architecture row in download.data.ts controls the 
 
 ### Discover and Verify Artifacts
 
-Inspect the official release directory before editing. Prefer the stable dist.apache.org release repository when downloads.apache.org has not synchronized yet:
+Source artifacts and binaries live in two different places. Check both.
+
+Source artifacts are published to the Apache mirrors. Prefer the stable dist.apache.org release repository when downloads.apache.org has not synchronized yet:
 
     https://dist.apache.org/repos/dist/release/doris/<series>/<public-version>/
+
+Convenience binaries are not on the Apache mirrors at all. They come from the CDN named by the ORIGIN constant in src/constant/download.data.ts. Read that constant instead of assuming a host; it has moved before, and any host written down elsewhere goes stale silently. The validator resolves the same way, so a host change needs no flag.
 
 Record the exact source tarball filename and derive the source filename version from it. Verify this complete matrix:
 
@@ -101,6 +120,14 @@ Record the exact source tarball filename and derive the source filename version 
 This is twelve URLs: three source artifacts and nine binary artifacts. A directory listing alone is insufficient. Check every URL and follow redirects. A small ranged GET may be used when a server rejects HEAD.
 
 If the canonical downloads mirror is delayed but dist.apache.org already serves the official release, use the working dist.apache.org directory in download.data.ts and record that choice in the handoff.
+
+### When Binaries Lag the Source Release
+
+The source tarball is voted on and published before the convenience binaries are uploaded, so it is normal to find the three source artifacts live while all nine binaries still return 404. This is a timing state, not an error in the release data.
+
+Do not silently invent, rename, or drop the binary rows. Confirm the gap is timing rather than a filename mistake by checking a previous release with the same URL shape on the same host; if that one resolves, the pattern is right and the files are simply not uploaded yet.
+
+Then ask the release manager whether to publish now or wait, and state the tradeoff: publishing now means the download page serves broken links until the upload completes. Record the decision and the exact missing artifacts in the handoff, and re-run the validator without --skip-links once the binaries land. Binaries can appear at any time, including mid-task, so re-check before reporting rather than trusting an earlier probe.
 
 ### Files to Update
 
@@ -131,9 +158,20 @@ Add the public version to both structures:
 - DORIS_VERSIONS drives the quick-download selector.
 - ALL_VERSIONS drives the all-releases form.
 
-In both structures, add x64, x64-noavx2, and arm64 rows. Each row must contain the binary gz, asc, sha512, source directory, and exact source filename version.
+In both structures, add x64, x64-noavx2, and arm64 rows. Each row must contain the binary gz, asc, sha512, source directory, and exact source filename version. Build the binary URLs from the ORIGIN constant rather than writing the host inline.
 
-Keep patch releases newest-first within their series. Audit the entire target series in both arrays, not only the new entry. Every target-series version in DORIS_VERSIONS must exist in ALL_VERSIONS and vice versa. Fix a discovered omission when it is clearly a data drift in the requested release scope; mention it explicitly in the handoff.
+Keep patch releases newest-first within their series. Add the new version to both arrays, and audit the target series in both.
+
+The two arrays are not mirrors, and treating them as such produces false alarms:
+
+- ALL_VERSIONS is the exhaustive archive. Every version the site offers anywhere must appear here, so a version present in DORIS_VERSIONS but absent from ALL_VERSIONS is a real defect.
+- DORIS_VERSIONS is a curated shortlist. It carries every patch of the current series but only the newest release of older ones, and a superseded version is sometimes dropped deliberately. A version present only in ALL_VERSIONS is therefore expected, not drift.
+
+The validator reports the second case as a warning rather than a failure. Before "fixing" one, check git history for that version, because the omission is often intentional:
+
+    git log -S"label: '<version>'" -- src/constant/download.data.ts
+
+Restoring a deliberately retired version would put a superseded release back into the quick-download selector. Leave it alone and mention it in the handoff instead.
 
 Do not broadly reformat download.data.ts.
 
@@ -206,10 +244,12 @@ Component profiles:
 | Spark Connector | ecosystem/doris-spark-connector.md | ToolsEnum.Spark | Spark and Scala compatibility; Maven coordinates |
 | Kafka Connector | ecosystem/doris-kafka-connector.md | ToolsEnum.Kafka | Kafka Connect compatibility; plugin package layout |
 | Streamloader | ecosystem/doris-streamloader.md | ToolsEnum.StreamLoader when present | Platform binaries, checksums, usage examples |
-| Doris Operator | ecosystem/doris-operator.md | Usually none | Controller image, Helm chart, CRD compatibility |
+| Doris Operator | ecosystem/doris-operator.md | DORIS_OPERATOR_SOURCE_VERSIONS and DORIS_OPERATOR_BINARY_VERSIONS | Controller image, Helm chart, CRD compatibility |
 | MCP Server | ecosystem/doris-mcp-server.md | Usually none | Package installation and supported Doris versions |
 | Doris Skills | ecosystem/doris-skills.md | Usually none | Installation source and supported environments |
 | Doris CLI | ecosystem/doris-cli.md | Usually none | Platform packages and install commands |
+
+Doris Operator releases add a version to both DORIS_OPERATOR_SOURCE_VERSIONS and DORIS_OPERATOR_BINARY_VERSIONS in download.data.ts. The source list drives the download links; the binary list gates whether a `docker pull` command is shown. Add to both unless the release genuinely ships no image, and confirm the image tag exists before listing it.
 
 For an existing page:
 
@@ -217,6 +257,8 @@ For an existing page:
 - Preserve the page frontmatter and anchors.
 - Update English and zh-CN with matching facts, links, compatibility data, and issue references.
 - Verify every official artifact or package link directly.
+
+Upstream release notes are written for GitHub, so their structure rarely matches the page. Normalize to the page, not to the source: map the source headings onto the heading names the page already uses, and convert bare issue references such as `#507` into the page's linked form. Keep the facts, ordering, and issue numbers exactly as the source has them.
 
 For a new page:
 
@@ -244,6 +286,8 @@ For Doris Core, run the bundled validator with the confirmed values:
 
     node doc-tools/skills/add-release/scripts/validate-release.mjs --component doris-core --version <public-version> --series <series> --source-version <source-version> --release-date <YYYY-MM-DD> --position <latest|prev|earlier|historical> --source-dir <official-source-directory>
 
+The validator resolves the binary host from the ORIGIN constant in download.data.ts, so a host migration needs no flag. Pass --binary-origin only to assert an expected host, which is useful when auditing such a migration; it turns a mismatch with the repository into a failure.
+
 The validator checks:
 
 - Both release-note files, JSON frontmatter, and trailing whitespace
@@ -252,9 +296,11 @@ The validator checks:
 - That both all-release.md project indexes still route to core.md and remain untouched
 - sidebarsReleases.json parseability and newest-first placement
 - VersionEnum positioning
-- Target-series ordering and drift between DORIS_VERSIONS and ALL_VERSIONS
+- Target-series ordering, and that every DORIS_VERSIONS entry is archived in ALL_VERSIONS
 - All six architecture rows, source filename version, source directory, and binary filenames
 - The full twelve-artifact URL matrix
+
+Output is PASS, WARN, and failure lines. WARN reports pre-existing repository state that must not block a correct release, such as an archived version deliberately absent from the curated DORIS_VERSIONS list. Read warnings and account for them in the handoff, but do not treat them as work items by default. Only failures set a nonzero exit code.
 
 Use --skip-links only when external link verification is explicitly out of scope, and disclose the skipped check. --skip-git-routing is intended for isolated test fixtures, not routine release work.
 
@@ -282,6 +328,16 @@ When compilation checks are allowed and download data or TypeScript changed, run
 
     yarn typecheck
 
+This currently exhausts memory on this repository and dies before reporting anything, even with a raised heap. tsconfig.json declares no include or exclude, so tsc walks the entire docs tree; its own comment notes the file is not used for compilation. The failure is environmental and reproduces on an unmodified checkout.
+
+Confirm that before blaming the release: revert the touched TypeScript file, re-run, and observe the same crash. Then typecheck the changed file on its own, which is fast and gives real signal:
+
+    npx tsc --noEmit --strict false --skipLibCheck --jsx react --esModuleInterop \
+        --resolveJsonModule --target es2020 --module esnext --moduleResolution bundler \
+        src/constant/download.data.ts
+
+Report the isolated result and say plainly that the repository-wide check could not run. Do not report Tier 1 as passed on the strength of the isolated check alone.
+
 ### Tier 2: Full Site Build
 
 When the release manager requests full validation, or routing and rendering risk warrants it, run:
@@ -298,8 +354,8 @@ Before reporting completion:
 
 - Re-read the request and compare it with the exact changed-file set.
 - Confirm the public version, source filename version, release date, scope, locales, and positioning.
-- Confirm all artifact checks and note any mirror choice.
-- Confirm DORIS_VERSIONS and ALL_VERSIONS are aligned for the target series.
+- Confirm all artifact checks and note any mirror choice. Re-check any artifact that was missing earlier, because binaries can land mid-task.
+- Confirm the new version is in both DORIS_VERSIONS and ALL_VERSIONS, and that any validator warning about the target series was investigated rather than acted on blindly.
 - Confirm Core history is in core.md, not all-release.md.
 - Confirm no unrelated files were modified.
 
@@ -311,8 +367,10 @@ Report:
 - Public version versus source filename version
 - Release date, position, website scope, and locales
 - Artifact validation result
-- Tier 0, Tier 1, and Tier 2 results or explicit skips
+- Tier 0, Tier 1, and Tier 2 results or explicit skips, including any tier that could not run and why
 - Any repaired pre-existing data drift, such as a missing ALL_VERSIONS entry
+- Any validator warning left in place, and why it is not drift
+- Any pre-existing defect found but deliberately not changed, so the release manager can decide separately
 - Any remaining limitation or manual follow-up
 
 Do not commit, push, publish externally, or open a pull request unless the release manager asks.

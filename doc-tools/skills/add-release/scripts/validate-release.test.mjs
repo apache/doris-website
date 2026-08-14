@@ -18,9 +18,9 @@ function packageRows(version, sourceVersion) {
     return ['x64', 'x64-noavx2', 'arm64']
         .map(
             arch => `{
-                gz: 'https://download.selectdb.com/apache-doris-${version}-bin-${arch}.tar.gz',
-                asc: 'https://download.selectdb.com/apache-doris-${version}-bin-${arch}.tar.gz.asc',
-                sha512: 'https://download.selectdb.com/apache-doris-${version}-bin-${arch}.tar.gz.sha512',
+                gz: 'https://download.velodb.io/apache-doris-${version}-bin-${arch}.tar.gz',
+                asc: 'https://download.velodb.io/apache-doris-${version}-bin-${arch}.tar.gz.asc',
+                sha512: 'https://download.velodb.io/apache-doris-${version}-bin-${arch}.tar.gz.sha512',
                 source: 'https://dist.apache.org/repos/dist/release/doris/4.1/${version}/',
                 version: '${sourceVersion}',
             }`,
@@ -61,11 +61,15 @@ function releaseNote(language, issueRef) {
 `;
 }
 
-function createFixture({ omit412FromAll = false, zhIssueRef = '#10001' } = {}) {
+function createFixture({
+    omit412FromAll = false,
+    omit412FromDoris = false,
+    zhIssueRef = '#10001',
+} = {}) {
     const root = mkdtempSync(path.join(tmpdir(), 'add-release-validator-'));
     const dorisVersions = [
         versionEntry('4.1.3', '4.1.3-rc02'),
-        versionEntry('4.1.2', '4.1.2'),
+        ...(omit412FromDoris ? [] : [versionEntry('4.1.2', '4.1.2')]),
     ].join(',\n');
     const allVersions = [
         versionEntry('4.1.3', '4.1.3-rc02'),
@@ -75,7 +79,7 @@ function createFixture({ omit412FromAll = false, zhIssueRef = '#10001' } = {}) {
     write(
         root,
         'src/constant/download.data.ts',
-        `export const ORIGIN = 'https://download.selectdb.com/';
+        `export const ORIGIN = 'https://download.velodb.io/';
 export enum VersionEnum {
     Latest = '4.1.3',
     Prev = '4.0.7',
@@ -202,6 +206,84 @@ test('validator catches versions missing from ALL_VERSIONS', async () => {
                 checkGitRouting: false,
             }),
             /4\.1\.2.*missing from ALL_VERSIONS/,
+        );
+    } finally {
+        rmSync(root, { recursive: true, force: true });
+    }
+});
+
+test('validator warns, but does not fail, when DORIS_VERSIONS omits an archived version', async () => {
+    // DORIS_VERSIONS is a curated shortlist, so a version present only in
+    // ALL_VERSIONS is normal and must not block an otherwise correct release.
+    const root = createFixture({ omit412FromDoris: true });
+
+    try {
+        const { validateCoreRelease } = await import('./validate-release.mjs');
+        const result = await validateCoreRelease({
+            repoRoot: root,
+            version: '4.1.3',
+            series: '4.1',
+            sourceVersion: '4.1.3-rc02',
+            releaseDate: '2026-07-13',
+            position: 'latest',
+            checkLinks: false,
+            checkGitRouting: false,
+        });
+
+        assert.ok(
+            result.warnings.some(warning => /4\.1\.2.*not DORIS_VERSIONS/.test(warning)),
+            'expected a warning about 4.1.2 being absent from DORIS_VERSIONS',
+        );
+    } finally {
+        rmSync(root, { recursive: true, force: true });
+    }
+});
+
+test('validator resolves the binary origin from download.data.ts', async () => {
+    const root = createFixture();
+
+    try {
+        const { validateCoreRelease } = await import('./validate-release.mjs');
+        const result = await validateCoreRelease({
+            repoRoot: root,
+            version: '4.1.3',
+            series: '4.1',
+            sourceVersion: '4.1.3-rc02',
+            releaseDate: '2026-07-13',
+            position: 'latest',
+            checkLinks: false,
+            checkGitRouting: false,
+        });
+
+        assert.ok(
+            result.checks.some(check =>
+                /Binary ORIGIN read from .*https:\/\/download\.velodb\.io\//.test(check),
+            ),
+            'expected the binary origin to be read from download.data.ts',
+        );
+    } finally {
+        rmSync(root, { recursive: true, force: true });
+    }
+});
+
+test('validator treats an explicit --binary-origin as an assertion', async () => {
+    const root = createFixture();
+
+    try {
+        const { validateCoreRelease } = await import('./validate-release.mjs');
+        await assert.rejects(
+            validateCoreRelease({
+                repoRoot: root,
+                version: '4.1.3',
+                series: '4.1',
+                sourceVersion: '4.1.3-rc02',
+                releaseDate: '2026-07-13',
+                position: 'latest',
+                binaryOrigin: 'https://downloads.example.invalid/',
+                checkLinks: false,
+                checkGitRouting: false,
+            }),
+            /Binary ORIGIN must match https:\/\/downloads\.example\.invalid\//,
         );
     } finally {
         rmSync(root, { recursive: true, force: true });

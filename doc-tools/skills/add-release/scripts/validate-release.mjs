@@ -9,19 +9,23 @@ const ARCHITECTURES = ['x64', 'x64-noavx2', 'arm64'];
 const SIDECAR_SUFFIXES = ['', '.asc', '.sha512'];
 
 class ReleaseValidationError extends Error {
-    constructor(failures, checks) {
+    constructor(failures, checks, warnings) {
         super('Release validation failed:\n- ' + failures.join('\n- '));
         this.name = 'ReleaseValidationError';
         this.failures = failures;
         this.checks = checks;
+        this.warnings = warnings || [];
     }
 }
 
-function addResult(condition, label, failure, checks, failures) {
+// Pass `failures` as the sink for conditions that must block the release, or
+// `warnings` for pre-existing repository state the release manager should see
+// but that must not fail an otherwise correct release.
+function addResult(condition, label, failure, checks, sink) {
     if (condition) {
         checks.push(label);
     } else {
-        failures.push(failure || label);
+        sink.push(failure || label);
     }
 }
 
@@ -412,11 +416,18 @@ export async function validateCoreRelease(options) {
     const sourceDir =
         options.sourceDir ||
         'https://dist.apache.org/repos/dist/release/doris/' + series + '/' + version + '/';
-    const binaryOrigin = options.binaryOrigin || 'https://download.selectdb.com/';
+    // Binaries are not served from the Apache mirrors: they come from the CDN
+    // named by the ORIGIN constant in download.data.ts. Do not hardcode that
+    // host here -- a copy in this script silently rots the moment the host
+    // moves. Default to whatever the repository declares, and treat an explicit
+    // --binary-origin as an assertion about the expected host instead.
+    const expectedBinaryOrigin = options.binaryOrigin || '';
+    let binaryOrigin = expectedBinaryOrigin;
     const checkLinks = options.checkLinks !== false;
     const checkGitRouting = options.checkGitRouting !== false;
     const checks = [];
     const failures = [];
+    const warnings = [];
 
     if (!/^\d+\.\d+\.\d+$/.test(version || '')) {
         throw new Error('version must use x.y.z format');
@@ -594,6 +605,9 @@ export async function validateCoreRelease(options) {
                 failures,
             );
 
+            // ALL_VERSIONS is the exhaustive archive, so anything offered by the
+            // quick-download selector must also appear there. A gap here is a
+            // genuine defect regardless of which release introduced it.
             for (const listedVersion of dorisVersions) {
                 addResult(
                     allVersions.includes(listedVersion),
@@ -603,13 +617,21 @@ export async function validateCoreRelease(options) {
                     failures,
                 );
             }
+            // The reverse does not hold. DORIS_VERSIONS is a curated shortlist:
+            // it carries every patch of the current series but only the newest
+            // release of older ones, and a superseded version is sometimes
+            // dropped on purpose. Report the asymmetry so the release manager
+            // can judge it, but never fail a correct release over pre-existing
+            // curation. The version being released is checked separately above.
             for (const listedVersion of allVersions) {
                 addResult(
                     dorisVersions.includes(listedVersion),
                     listedVersion + ' is mirrored in DORIS_VERSIONS',
-                    listedVersion + ' is missing from DORIS_VERSIONS',
+                    listedVersion +
+                        ' is in ALL_VERSIONS but not DORIS_VERSIONS' +
+                        ' (intentional curation or drift? check git history before changing)',
                     checks,
-                    failures,
+                    warnings,
                 );
             }
 
@@ -688,21 +710,42 @@ export async function validateCoreRelease(options) {
         const originMatch = downloadSource.match(
             /\bORIGIN\s*=\s*['"]([^'"]+)['"]/,
         );
-        addResult(
-            Boolean(originMatch) &&
-                originMatch[1].replace(/\/?$/, '/') === binaryOrigin.replace(/\/?$/, '/'),
-            'Binary ORIGIN matches ' + binaryOrigin,
-            'Binary ORIGIN must match ' + binaryOrigin,
-            checks,
-            failures,
-        );
+        const repoOrigin = originMatch ? originMatch[1].replace(/\/?$/, '/') : '';
+        if (expectedBinaryOrigin) {
+            addResult(
+                repoOrigin === expectedBinaryOrigin.replace(/\/?$/, '/'),
+                'Binary ORIGIN matches ' + expectedBinaryOrigin,
+                'Binary ORIGIN must match ' +
+                    expectedBinaryOrigin +
+                    ' (' +
+                    downloadPath +
+                    ' declares ' +
+                    (repoOrigin || 'no parseable ORIGIN') +
+                    ')',
+                checks,
+                failures,
+            );
+        } else {
+            addResult(
+                Boolean(repoOrigin),
+                'Binary ORIGIN read from ' + downloadPath + ': ' + repoOrigin,
+                downloadPath + ' has no parseable ORIGIN constant to resolve binary URLs from',
+                checks,
+                failures,
+            );
+            if (repoOrigin) {
+                binaryOrigin = repoOrigin;
+            }
+        }
     }
 
     if (checkLinks) {
         const normalizedSourceDir = sourceDir.endsWith('/') ? sourceDir : sourceDir + '/';
-        const normalizedBinaryOrigin = binaryOrigin.endsWith('/')
-            ? binaryOrigin
-            : binaryOrigin + '/';
+        const normalizedBinaryOrigin = binaryOrigin
+            ? binaryOrigin.endsWith('/')
+                ? binaryOrigin
+                : binaryOrigin + '/'
+            : '';
         const urls = [
             ...SIDECAR_SUFFIXES.map(
                 suffix =>
@@ -712,27 +755,31 @@ export async function validateCoreRelease(options) {
                     '-src.tar.gz' +
                     suffix,
             ),
-            ...ARCHITECTURES.flatMap(architecture =>
-                SIDECAR_SUFFIXES.map(
-                    suffix =>
-                        normalizedBinaryOrigin +
-                        'apache-doris-' +
-                        version +
-                        '-bin-' +
-                        architecture +
-                        '.tar.gz' +
-                        suffix,
-                ),
-            ),
+            // Skipped only when ORIGIN could not be resolved, which is already
+            // recorded as a failure above.
+            ...(normalizedBinaryOrigin
+                ? ARCHITECTURES.flatMap(architecture =>
+                      SIDECAR_SUFFIXES.map(
+                          suffix =>
+                              normalizedBinaryOrigin +
+                              'apache-doris-' +
+                              version +
+                              '-bin-' +
+                              architecture +
+                              '.tar.gz' +
+                              suffix,
+                      ),
+                  )
+                : []),
         ];
         await validateLinks(urls, checks, failures);
     }
 
     if (failures.length > 0) {
-        throw new ReleaseValidationError(failures, checks);
+        throw new ReleaseValidationError(failures, checks, warnings);
     }
 
-    return { checks };
+    return { checks, warnings };
 }
 
 function usage() {
@@ -819,11 +866,28 @@ async function main() {
         for (const check of result.checks) {
             console.log('PASS ' + check);
         }
-        console.log('Validated Doris Core ' + args.version + ': ' + result.checks.length + ' checks passed.');
+        for (const warning of result.warnings || []) {
+            console.log('WARN ' + warning);
+        }
+        console.log(
+            'Validated Doris Core ' +
+                args.version +
+                ': ' +
+                result.checks.length +
+                ' checks passed' +
+                ((result.warnings || []).length > 0
+                    ? ', ' + result.warnings.length + ' warning(s) to review.'
+                    : '.'),
+        );
     } catch (error) {
         if (Array.isArray(error.checks)) {
             for (const check of error.checks) {
                 console.log('PASS ' + check);
+            }
+        }
+        if (Array.isArray(error.warnings)) {
+            for (const warning of error.warnings) {
+                console.log('WARN ' + warning);
             }
         }
         console.error(error.message);
