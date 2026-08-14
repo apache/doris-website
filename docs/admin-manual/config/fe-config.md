@@ -328,6 +328,22 @@ Default：true
 
 For forward compatibility, will be removed later. check token when download image file.
 
+#### `fe_meta_auth_token`
+
+Default: "" (empty string)
+
+IsMutable: false
+
+Cluster token used to authenticate the FE meta-service HTTP endpoints (`image`, `role`, `check`, `put`, `journal_id`, and so on) between FE nodes. Added in version 4.0.8.
+
+When set to a non-empty value, these endpoints additionally require the caller to present a matching token header on top of the existing node-host check, which prevents non-members of the cluster from reaching the FE metadata endpoints. Leaving it empty keeps the legacy node-host-only behavior, so existing clusters and rolling upgrades are unaffected.
+
+:::caution Note
+
+This configuration must be identical on **all FEs** and must be written into `fe.conf` before enabling it. Otherwise FEs reject each other's metadata requests and metadata synchronization fails.
+
+:::
+
 #### `enable_multi_tags`
 
 Default: false
@@ -2287,6 +2303,28 @@ MasterOnly：true
 
 In order not to wait too long for create table(index), set a max timeout.
 
+#### `autobucket_min_buckets`
+
+Default: 3 (was 1 before 4.0.8)
+
+IsMutable: true
+
+MasterOnly: true
+
+The minimum bucket number produced by the auto bucketing strategy (`DISTRIBUTED BY ... BUCKETS AUTO`).
+
+**Starting from version 4.0.8, the default value changed from `1` to `3`.** The old default made small partitions fall back to a single bucket, which gave insufficient parallelism and data distribution. After the change, auto bucketing never produces fewer than 3 buckets. The change only affects newly created partitions; the bucket number of existing partitions is unchanged.
+
+#### `autobucket_max_buckets`
+
+Default: 128
+
+IsMutable: true
+
+MasterOnly: true
+
+The maximum bucket number produced by the auto bucketing strategy. A computed result larger than this value is capped at this value.
+
 ### External Table
 
 #### `file_scan_node_split_num`
@@ -2767,3 +2805,15 @@ Description:  The mode in which FE runs. `cloud` indicates the decoupled storage
 Default: ""
 
 Endpoints of the meta service should be specified in the format 'host1:port,host2:port'. This configuration is necessary for the storage and compute disaggregated mode.
+
+#### `enable_group_commit_streamload_be_forward`
+
+Default: false
+
+IsMutable: true
+
+Whether to enable Stream Load BE forwarding for Group Commit in compute-storage decoupled mode. It only takes effect in decoupled mode and when the request uses Group Commit.
+
+When enabled, FE redirects the Stream Load request to the `_stream_load_forward` endpoint, and the BE that receives it forwards the request to the target BE for that table. This prevents a load balancer from scattering Group Commit batching for the same table.
+
+The configuration of the same name must be enabled on both FE and BE. **Starting from version 4.0.8, the BE-side `_stream_load_forward` endpoint is gated by the BE configuration: it returns `403 Forbidden` when disabled, and once enabled, requests must pass authentication and hold the global `LOAD` privilege.** See [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual) and [BE Configuration](./be-config).

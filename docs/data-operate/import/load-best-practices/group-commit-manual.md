@@ -516,6 +516,28 @@ Choose a value that balances memory resources against data reliability requireme
     group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
     ```
 
+### Stream Load forwarding in compute-storage decoupled mode
+
+In compute-storage decoupled mode, if Stream Load requests are randomly distributed by a load balancer, requests for the same table land on different BE nodes and Group Commit cannot batch them effectively. With BE forwarding enabled, the BE that receives a request forwards it to the target BE for that table, so all requests for the same table converge on a single BE.
+
+| Configuration | Location | Default | Description |
+| --- | --- | --- | --- |
+| `enable_group_commit_streamload_be_forward` | FE | `false` | Whether to enable Stream Load BE forwarding. Only takes effect in decoupled mode and when the request uses Group Commit |
+| `enable_group_commit_streamload_be_forward` | BE | `false` | Whether requests to the BE endpoint `/api/{db}/{table}/_stream_load_forward` are allowed. **Added in version 4.0.8** |
+
+The configuration must be set to `true` on **both** FE and BE.
+
+:::caution Behavior change (4.0.8)
+
+Starting from version 4.0.8, the BE `_stream_load_forward` endpoint is restricted in two ways:
+
+- The endpoint is gated by the BE configuration `enable_group_commit_streamload_be_forward`. When it is `false` (the default), requests return `403 Forbidden` with `Stream load forward is disabled`.
+- Once the configuration is enabled, requests to the endpoint must also pass authentication and hold the global `LOAD` privilege.
+
+If the feature was only enabled on FE before the upgrade, forwarding fails after upgrading to 4.0.8. Add `enable_group_commit_streamload_be_forward=true` to every `be.conf` and make sure the load account holds the `LOAD` privilege.
+
+:::
+
 ## Limitations
 
 ### Group Commit Fallback Scenarios

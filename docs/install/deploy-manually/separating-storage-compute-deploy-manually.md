@@ -196,6 +196,30 @@ If not, this document provides a simple deployment tutorial for MinIO:
 
    In production environments, make sure there are at least 3 Meta Service nodes.
 
+3. Using multiple configuration files (optional, 4.0.8+)
+
+   Starting from version 4.0.8, `bin/start.sh` accepts multiple configuration files through the `CONF_FILES` environment variable, which makes it easier to keep shared configuration separate from node-specific configuration:
+
+   ```shell
+   export CONF_FILES="common.conf,doris_cloud.conf"
+   bin/start.sh --daemon
+   ```
+
+   The rules are:
+
+   - Separate multiple files with commas. They are loaded **left to right**.
+   - Relative paths resolve against `${DORIS_HOME}/conf/`; absolute paths work as well. Wildcards are supported (for example `conf.d/*.conf`).
+   - For a variable defined more than once, the **first** occurrence wins; later files do not override it.
+   - Environment variables already exported in the shell have the highest priority and are never overridden by a configuration file.
+   - Missing files are skipped and do not cause a startup failure.
+   - Without `CONF_FILES`, behavior matches earlier versions and only `doris_cloud.conf` is read.
+
+   :::info Note
+
+   This mechanism only handles **uppercase environment variables** written as `KEY=VALUE` in the configuration files (for example `JAVA_HOME`). The Meta Service's own configuration items are still read from `doris_cloud.conf`.
+
+   :::
+
 
 
 ## Step 4: Standalone Deployment of the Data Recycler (Optional)

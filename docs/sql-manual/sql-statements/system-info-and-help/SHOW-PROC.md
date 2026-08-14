@@ -147,20 +147,27 @@ Notes:
    ```
    SHOW PROC '/colocation_group';
    
-   +-------------+--------------+--------------+------------+----------------+----------+----------+
-   | GroupId     | GroupName    | TableIds     | BucketsNum | ReplicationNum | DistCols | IsStable |
-   +-------------+--------------+--------------+------------+----------------+----------+----------+
-   | 10005.10008 | 10005_group1 | 10007, 10040 | 10         | 3              | int(11)  | true     |
-   +-------------+--------------+--------------+------------+----------------+----------+----------+
+   +-------------+--------------+--------------+------------+-------------------+----------+----------+----------+
+   | GroupId     | GroupName    | TableIds     | BucketsNum | ReplicaAllocation | DistCols | IsStable | ErrorMsg |
+   +-------------+--------------+--------------+------------+-------------------+----------+----------+----------+
+   | 10005.10008 | 10005_group1 | 10007, 10040 | 10         | tag.location.default: 3 | int(11)  | true     |          |
+   +-------------+--------------+--------------+------------+-------------------+----------+----------+----------+
    ```
 
    - GroupId: The cluster-wide unique identifier of a group, the first half is the db id, and the second half is the group id.
    - GroupName: The full name of the Group.
-   - TabletIds: The id list of Tables contained in this Group.
+   - TableIds: The id list of Tables contained in this Group.
    - BucketsNum: The number of buckets.
-   - ReplicationNum: The number of replicas.
+   - ReplicaAllocation: The replica allocation policy.
    - DistCols: Distribution columns, that is, the bucket column type.
    - IsStable: Whether the Group is stable (for the definition of stability, see the `Colocation replica balance and repair` section).
+   - ErrorMsg: The current error message of the Group, empty when everything is normal.
+
+   :::caution Behavior change (4.0.8)
+
+   Starting from version 4.0.8, the `ReplicaAllocation` column displays `null` in compute-storage decoupled mode. In the decoupled architecture replicas are managed by the storage layer, so the replica allocation semantics of the integrated mode do not apply and the value previously displayed was misleading.
+
+   :::
 
 4. Use the following commands to further view the data distribution of a Group:
 
@@ -183,6 +190,8 @@ Notes:
 
    - BucketIndex: The index of the bucket sequence.
    - BackendIds: The list of BE node IDs where the data shards in the bucket are located.
+
+   The column names other than `BucketIndex` vary by deployment mode: in integrated storage-compute mode there is one column per resource tag, in compute-storage decoupled mode one column per compute group. When there is no such breakdown, a single `BackendIds` column is used.
 
 5. Display the total number of tasks of various jobs and the number of failures.
 
@@ -240,6 +249,14 @@ Notes:
    ```sql
    mysql> show proc '/cluster_health/tablet_health/25852112';
    ```
+
+   :::caution Behavior change (4.0.8)
+
+   Starting from version 4.0.8, all tablets are counted as `HEALTHY` in compute-storage decoupled mode, and counters such as `UnrecoverableNum` no longer show non-zero values.
+
+   In decoupled mode replica health is handled by the storage layer, while the previous health check followed the logic of the integrated mode and misclassified healthy tablets as `UNRECOVERABLE`, which made `SHOW PROC '/diagnose'` report a `Tablet Health` problem that did not exist. The statistics of the integrated storage-compute mode are unchanged.
+
+   :::
 
 7. Report and diagnose cluster management issues
 

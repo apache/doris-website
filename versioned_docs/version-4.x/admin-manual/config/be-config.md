@@ -652,6 +652,15 @@ BaseCompaction:546859:
 * Description: The time interval in seconds between triggers for cold data compaction. A shorter interval means compaction on cold data will be considered more frequently, potentially leading to faster cleanup but higher resource consumption.
 * Default value: 1800 (seconds)
 
+#### `enable_compaction_pause_on_high_memory`
+
+* Type: bool
+* Description: Whether to pause compaction tasks when process memory usage is high. Supports dynamic modification.
+  - When enabled, the BE pauses compaction while memory is under pressure, prioritizing queries and loads.
+  - However, pausing compaction makes tablets with a high compaction score even harder to merge, which reinforces the metadata and memory backlog it was meant to relieve. **Starting from version 4.0.8, the default value changed from `true` to `false`**, so compaction is no longer paused because of high memory by default.
+  - Set it back to `true` to keep the old behavior.
+* Default value: false (was true before 4.0.8)
+
 ### Load
 
 #### `enable_stream_load_record`
@@ -796,6 +805,15 @@ BaseCompaction:546859:
 
 * Description: If we load data to a table which enabled auto partition. the interval of `olap_table_sink_send_interval_microseconds` is too slow. In that case the real interval will multiply this factor.
 * Default value: 0.001
+
+#### `enable_group_commit_streamload_be_forward`
+
+* Type: bool
+* Description: Whether to enable Stream Load BE forwarding for Group Commit in compute-storage decoupled mode. Added in version 4.0.8. Supports dynamic modification.
+  - This capability solves the problem where a load balancer randomly spreads Group Commit requests for the same table across different BEs, preventing effective batching: once enabled, the BE forwards the request to a single target BE.
+  - **Starting from version 4.0.8, the BE endpoint `/api/{db}/{table}/_stream_load_forward` is gated by this configuration: when it is `false`, requests to that endpoint return `403 Forbidden` with `Stream load forward is disabled`; when it is `true`, requests to that endpoint must also pass authentication and require the global `LOAD` privilege.**
+  - Deployments that rely on this forwarding must set the configuration to `true` on both FE and BE (see the FE configuration of the same name in [FE Configuration](./fe-config)).
+* Default value: false
 
 ### Thread
 

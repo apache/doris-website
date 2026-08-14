@@ -329,6 +329,22 @@ heartbeat_mgr 中处理心跳事件的线程数。
 
 为了向前兼容，稍后将被删除。下载 image 文件时检查令牌。
 
+#### `fe_meta_auth_token`
+
+默认值：""（空字符串）
+
+是否可以动态配置：false
+
+FE 之间元数据 HTTP 接口（`image`、`role`、`check`、`put`、`journal_id` 等）的集群认证 Token。自 4.0.8 版本起新增。
+
+设置为非空值后，这些接口在原有的 node-host 校验之上，额外要求调用方携带匹配的 Token 请求头，可以防止非集群成员访问 FE 元数据接口。保持默认空值时行为与旧版本一致，仅做 node-host 校验，因此存量集群和滚动升级不受影响。
+
+:::caution 注意
+
+该配置必须在**所有 FE** 上取值一致，并在启用前写入 `fe.conf`，否则 FE 之间会互相拒绝元数据请求，导致元数据同步失败。
+
+:::
+
 #### `enable_multi_tags`
 
 默认值：false
@@ -2303,6 +2319,28 @@ OlapTable 在做 schema change 时，允许的最大副本数，副本数过大�
 
 为了在创建表（索引）不等待太久，设置一个最大超时时间
 
+#### `autobucket_min_buckets`
+
+默认值：3（4.0.8 之前为 1）
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+自动分桶（`DISTRIBUTED BY ... BUCKETS AUTO`）策略推算出的最小分桶数。
+
+**自 4.0.8 版本起，默认值由 `1` 调整为 `3`。** 旧的默认值会让小分区被推算成单个分桶，并行度和数据分布都不足；调整后自动分桶的结果不会低于 3 个分桶。该变更只影响新创建的分区，已有分区的分桶数不会改变。
+
+#### `autobucket_max_buckets`
+
+默认值：128
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+自动分桶策略推算出的最大分桶数。推算结果超过该值时会被截断到该值。
+
 ### 外部表
 
 #### `file_scan_node_split_num`
@@ -2775,3 +2813,15 @@ Doris 为了兼用 mysql 周边工具生态，会内置一个名为 mysql 的数
 默认值： ""
 
 Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。此配置对于存储和计算分离模式是必要的。
+
+#### `enable_group_commit_streamload_be_forward`
+
+默认值：false
+
+是否可以动态配置：true
+
+是否开启存算分离模式下 Group Commit 的 Stream Load BE 转发能力。仅在存算分离模式且请求使用 Group Commit 时生效。
+
+开启后，FE 会把 Stream Load 请求重定向到 `_stream_load_forward` 接口，由收到请求的 BE 再转发到该表对应的目标 BE，避免负载均衡器随机分发打散同一张表的 Group Commit 攒批。
+
+需要在 FE 和 BE 上同时开启同名配置。**自 4.0.8 版本起，BE 端的 `_stream_load_forward` 接口受 BE 同名配置控制：关闭时返回 `403 Forbidden`，开启后访问还需要通过认证并具备全局 `LOAD` 权限**，详见 [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual) 与 [BE 配置项](./be-config)。

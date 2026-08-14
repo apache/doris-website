@@ -14,7 +14,13 @@
 
 ## Description
 
-There may be some exceptions that cause segment to be lost on BE node. However, the metadata shows that the tablet is normal. This abnormal replica is not detected by FE and cannot be automatically repaired. When query comes, exception information is thrown that `failed to initialize storage reader`. The function of this interface is to check all tablets on the current BE node that have lost segment.
+There may be some exceptions that cause segment to be lost on BE node. However, the metadata shows that the tablet is normal. This abnormal replica is not detected by FE and cannot be automatically repaired. When query comes, an error about failing to open the data file is thrown, with `tablet=<tablet_id>` and `backend=<be_ip>` appended to the message. The function of this interface is to check all tablets on the current BE node that have lost segment.
+
+:::info Version note
+
+Versions before 4.0.8 prefixed such errors with `failed to initialize storage reader`. Starting from 4.0.8 that prefix is removed and the error message keeps the real underlying cause, so do not use the prefix to identify this situation.
+
+:::
 
 ## Query parameters
 

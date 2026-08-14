@@ -196,6 +196,30 @@ Doris 的存算分离模式依赖于 S3 或 HDFS 服务来存储数据，如果�
 
    生产环境中请确保至少有 3 个 Meta Service 节点。
 
+3. 使用多个配置文件（可选，4.0.8+）
+
+   自 4.0.8 版本起，`bin/start.sh` 支持通过环境变量 `CONF_FILES` 指定多个配置文件，便于把公共配置与节点专属配置拆开维护：
+
+   ```shell
+   export CONF_FILES="common.conf,doris_cloud.conf"
+   bin/start.sh --daemon
+   ```
+
+   规则如下：
+
+   - 多个文件用英文逗号分隔，按**从左到右**的顺序加载。
+   - 相对路径以 `${DORIS_HOME}/conf/` 为基准，也可以直接写绝对路径；支持通配符（如 `conf.d/*.conf`）。
+   - 同名变量以**首次出现**的值为准，后面文件中的同名项不会覆盖它。
+   - 已经在 Shell 中导出的环境变量优先级最高，不会被配置文件覆盖。
+   - 文件不存在时会被跳过，不会导致启动失败。
+   - 未设置 `CONF_FILES` 时，行为与旧版本一致，只读取 `doris_cloud.conf`。
+
+   :::info 备注
+
+   该机制只处理配置文件中形如 `KEY=VALUE` 的**大写环境变量**（如 `JAVA_HOME`），Meta Service 自身的配置项仍从 `doris_cloud.conf` 读取。
+
+   :::
+
 
 
 ## 第 4 步：数据回收功能独立部署（可选）

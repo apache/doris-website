@@ -346,9 +346,9 @@ SHOW WARM UP JOB WHERE id = <job_id>;
     "gap_5m": "0b",
     "fail_5m": "0b"
   },
-  "last_trigger_ts": "14:32:15",
-  "last_finish_ts": "14:32:18",
-  "progress_trigger_ts": "14:32:14",
+  "last_trigger_ts": "2026-08-11 14:32:15",
+  "last_finish_ts": "2026-08-11 14:32:18",
+  "progress_trigger_ts": "2026-08-11 14:32:14",
   "trigger_gap_ms": 1000
 }
 ```
@@ -365,6 +365,14 @@ Pay attention to the following fields:
 | `progress_trigger_ts` | Upstream trigger time corresponding to the current progress on the target compute group |
 | `last_finish_ts` | Most recent warm-up finish time |
 | `trigger_gap_ms` | Time gap between the latest source trigger time and the target progress watermark, in milliseconds |
+
+:::info Version note (4.0.8)
+
+Starting from version 4.0.8, the three timestamp fields `last_trigger_ts`, `last_finish_ts`, and `progress_trigger_ts` changed from `HH:mm:ss` to `yyyy-MM-dd HH:mm:ss`, so they now carry the date. Previously only the time of day was shown, which made the date ambiguous across day boundaries.
+
+Adjust any script that parses these fields with a fixed format before upgrading to 4.0.8.
+
+:::
 
 ### Canceling a Job
 

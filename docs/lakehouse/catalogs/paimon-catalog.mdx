@@ -360,7 +360,15 @@ The currently dependent Paimon version is 1.0.0.
 
 Doris preserves the exact spelling of quoted top-level columns and nested `STRUCT` fields on both Paimon JNI scanner
 paths. Names containing delimiters such as commas (`region,code`), hash signs (`nested#value`), colons (`colon:name`),
-spaces, or Unicode characters do not require escaping beyond normal SQL identifier quoting.
+spaces, or Unicode characters do not require escaping beyond normal SQL identifier quoting. Columns are matched
+case-insensitively when reading, so column names containing uppercase letters or mixed case (for example `UserId`)
+can be queried normally.
+
+:::info Version note
+
+Versions in the 4.0 line before 4.0.8 located columns by exact match when reading, so Paimon and Iceberg tables with mixed-case column names could read the wrong column or fail the query. This was fixed in 4.0.8.
+
+:::
 
 :::info Note
 Doris currently does not support `Timestamp` types with timezone. All `timestamp_without_time_zone` and `timestamp_with_local_time_zone` will be uniformly mapped to `datetime(N)` type. However, during reading, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the return results of `timestamp_with_local_time_zone` columns.

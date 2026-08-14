@@ -146,20 +146,27 @@ Binlog 用于记录 Doris 中的数据变更。通过此命令，管理员可以
    ```sql
    SHOW PROC '/colocation_group';
    
-   +-------------+--------------+--------------+------------+----------------+----------+----------+
-   | GroupId     | GroupName    | TableIds     | BucketsNum | ReplicationNum | DistCols | IsStable |
-   +-------------+--------------+--------------+------------+----------------+----------+----------+
-   | 10005.10008 | 10005_group1 | 10007, 10040 | 10         | 3              | int(11)  | true     |
-   +-------------+--------------+--------------+------------+----------------+----------+----------+
+   +-------------+--------------+--------------+------------+-------------------+----------+----------+----------+
+   | GroupId     | GroupName    | TableIds     | BucketsNum | ReplicaAllocation | DistCols | IsStable | ErrorMsg |
+   +-------------+--------------+--------------+------------+-------------------+----------+----------+----------+
+   | 10005.10008 | 10005_group1 | 10007, 10040 | 10         | tag.location.default: 3 | int(11)  | true     |          |
+   +-------------+--------------+--------------+------------+-------------------+----------+----------+----------+
    ```
 
    - GroupId：一个 Group 的全集群唯一标识，前半部分为 db id，后半部分为 group id。
    - GroupName：Group 的全名。
-   - TabletIds：该 Group 包含的 Table 的 id 列表。
+   - TableIds：该 Group 包含的 Table 的 id 列表。
    - BucketsNum：分桶数。
-   - ReplicationNum：副本数。
+   - ReplicaAllocation：副本分布策略。
    - DistCols：Distribution columns，即分桶列类型。
    - IsStable：该 Group 是否稳定（稳定的定义，见 `Colocation 副本均衡和修复` 一节）。
+   - ErrorMsg：该 Group 当前的错误信息，正常时为空。
+
+   :::caution 版本行为变更（4.0.8）
+
+   自 4.0.8 版本起，存算分离模式下 `ReplicaAllocation` 列显示为 `null`。存算分离架构中副本由存储层统一管理，存算一体的副本分配语义不适用，此前显示的副本分配值会引起误解。
+
+   :::
 
 4. 通过以下命令可以进一步查看一个 Group 的数据分布情况：
 
@@ -182,6 +189,8 @@ Binlog 用于记录 Doris 中的数据变更。通过此命令，管理员可以
 
    - BucketIndex：分桶序列的下标。
    - BackendIds：分桶中数据分片所在的 BE 节点 id 列表。
+
+   除 `BucketIndex` 外的列名会随部署形态变化：存算一体模式下按资源 Tag 分列，存算分离模式下按计算组名称分列；当不存在这种维度拆分时，统一使用 `BackendIds` 列。
 
 5. 显示现在各种作业的任务总量，及失败的数量。
 
@@ -240,6 +249,14 @@ Binlog 用于记录 Doris 中的数据变更。通过此命令，管理员可以
    ```sql
    mysql> show proc '/cluster_health/tablet_health/25852112';
    ```
+
+   :::caution 版本行为变更（4.0.8）
+
+   自 4.0.8 版本起，存算分离模式下所有 tablet 一律按 `HEALTHY` 统计，`UnrecoverableNum` 等异常计数不再出现非零值。
+
+   存算分离模式下副本健康由存储层负责，而此前的健康检查沿用存算一体的判定逻辑，会把正常的 tablet 误判为 `UNRECOVERABLE`，进而使 `SHOW PROC '/diagnose'` 报出不存在的 `Tablet Health` 异常。存算一体模式的统计行为不变。
+
+   :::
 
 7. 报告和诊断集群管控问题
 

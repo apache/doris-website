@@ -233,6 +233,21 @@ properties("estimate_partition_size" = "20G")
 - 该参数为可选设置，未指定时默认值为 `10GB`；
 - 该参数仅影响前期估算，与后续系统通过历史分区数据推算出的未来分区大小无关。
 
+推算出的分桶数会被限制在 FE 配置项 `autobucket_min_buckets` 与 `autobucket_max_buckets` 之间：
+
+| FE 配置项 | 默认值 | 说明 |
+|---|---|---|
+| `autobucket_min_buckets` | 3 | 自动分桶推算结果的下限。**自 4.0.8 版本起，默认值由 `1` 调整为 `3`** |
+| `autobucket_max_buckets` | 128 | 自动分桶推算结果的上限 |
+
+:::caution 版本行为变更（4.0.8）
+
+`autobucket_min_buckets` 的默认值在 4.0.8 中由 `1` 调整为 `3`。此前小分区会被推算成单个分桶，并行度与数据分布都不足；调整后自动分桶的结果不会低于 3 个分桶。
+
+该变更只影响升级后**新创建**的分区，已有分区的分桶数保持不变。如需沿用旧行为，可将 `autobucket_min_buckets` 显式设置回 `1`。
+
+:::
+
 ## 四、维护数据分桶
 
 :::tip 提示
