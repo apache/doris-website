@@ -22,7 +22,7 @@
 
 ```shell
 # 下载 Apache Doris 二进制安装包
-server1:~ doris$ wget https://download.selectdb.com/apache-doris-2.0.12-bin-x64.tar.gz
+server1:~ doris$ wget https://download.velodb.io/apache-doris-2.0.12-bin-x64.tar.gz
 
 # 解压安装包
 server1:~ doris$ tar zxf apache-doris-2.0.12-bin-x64.tar.gz
@@ -93,7 +93,7 @@ mysql -uroot -P9030 -h127.0.0.1
 
 :::caution 注意
 
--   这里使用的 Root 用户是 Apache Doris 内置的超级管理员用户，具体的用户权限查看 [认证和鉴权](../admin-manual/auth/authentication-and-authorization.md)
+-   这里使用的 Root 用户是 Apache Doris 内置的超级管理员用户，具体的用户权限查看 [认证和鉴权](../admin-manual/privilege-ldap/user-privilege.md)
 -   -P：这里是我们连接 Apache Doris 的查询端口，默认端口是 9030，对应的是 fe.conf 里的 `query_port`
 -   -h：这里是我们连接的 FE IP 地址，如果你的客户端和 FE 安装在同一个节点可以使用 127.0.0.1。
 
