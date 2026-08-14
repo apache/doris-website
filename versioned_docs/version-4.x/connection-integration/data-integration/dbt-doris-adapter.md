@@ -42,16 +42,6 @@ Source data must already be loaded into Doris. The adapter performs transformati
 | --- | --- |
 | Python | 3.10 or later |
 
-## Adapter version differences
-
-This section centralizes differences between adapter releases. Elsewhere, this page describes current behavior without repeating a specific adapter version.
-
-| Adapter version | Difference |
-| --- | --- |
-| 1.1.0 | First official release; supports the capabilities documented on this page |
-
-Changes introduced by later releases will be added to this section.
-
 <!-- Knowledge Type: Operational Steps -->
 <!-- Use Case: Adapter installation / Installation verification -->
 
