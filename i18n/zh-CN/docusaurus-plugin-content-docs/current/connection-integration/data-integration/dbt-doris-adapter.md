@@ -26,13 +26,13 @@
 <!-- 适用场景: Apache Doris dbt 数据转换 / ELT 建模 -->
 
 [dbt](https://docs.getdbt.com/docs/introduction) 用于管理 ELT（Extract、Load、Transform）
-流程中的转换环节。由 VeloDB 社区维护的 `dbt-for-apache-doris` Adapter 会将 dbt Model
+流程中的转换环节。`dbt-for-apache-doris` Adapter 会将 dbt Model
 编译为 Doris SQL，并通过 Doris Frontend（FE）的 MySQL Query Port 执行建表、数据转换、
 测试和文档生成。原始数据需要提前写入 Doris；Adapter 不负责采集或同步源数据。
 
 :::caution
 
-`dbt-for-apache-doris` 由 VeloDB 社区提供和维护。它不属于 Apache Doris 项目，也不由 Apache Doris 社区发布或背书。生产使用前，请自行评估 Adapter，核验安装包完整性及发布信息，并遵守第三方项目许可证。Adapter 问题请反馈至 [`dbt-for-apache-doris` 项目](https://github.com/velodb/dbt-for-apache-doris/issues)。
+`dbt-for-apache-doris` 由 VeloDB 提供和维护。它不属于 Apache Doris 项目，也不由 Apache Doris 社区发布或背书。生产使用前，请自行评估 Adapter，核验安装包完整性及发布信息，并遵守第三方项目许可证。Adapter 问题请反馈至 [`dbt-for-apache-doris` 项目](https://github.com/velodb/dbt-for-apache-doris/issues)。
 
 :::
 

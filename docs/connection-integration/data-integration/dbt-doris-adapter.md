@@ -23,13 +23,13 @@
 <!-- Knowledge Type: Integration Guide / Capability Definition -->
 <!-- Use Case: Apache Doris data transformation with dbt / ELT modeling -->
 
-[dbt](https://docs.getdbt.com/docs/introduction) manages the transformation step in an ELT (Extract, Load, Transform) workflow. The `dbt-for-apache-doris` adapter, maintained by the VeloDB community, compiles dbt models into Doris SQL and executes table creation, transformation, testing, and documentation operations through the Doris Frontend (FE) MySQL query port.
+[dbt](https://docs.getdbt.com/docs/introduction) manages the transformation step in an ELT (Extract, Load, Transform) workflow. The `dbt-for-apache-doris` adapter compiles dbt models into Doris SQL and executes table creation, transformation, testing, and documentation operations through the Doris Frontend (FE) MySQL query port.
 
 Source data must already be loaded into Doris. The adapter performs transformations; it does not ingest or synchronize source data.
 
 :::caution
 
-`dbt-for-apache-doris` is provided and maintained by the VeloDB community. It is not part of the Apache Doris project and is not released or endorsed by the Apache Doris community. Evaluate the adapter before using it in production, verify the integrity of the package and its release information, and follow the license of the third-party project. Report adapter issues to the [`dbt-for-apache-doris` project](https://github.com/velodb/dbt-for-apache-doris/issues).
+`dbt-for-apache-doris` is provided and maintained by VeloDB. It is not part of the Apache Doris project and is not released or endorsed by the Apache Doris community. Evaluate the adapter before using it in production, verify the integrity of the package and its release information, and follow the license of the third-party project. Report adapter issues to the [`dbt-for-apache-doris` project](https://github.com/velodb/dbt-for-apache-doris/issues).
 
 :::
 
