@@ -136,7 +136,7 @@ Hive Catalog 包含以下缓存模块：
 * **性能优化**：对于元数据变动不频繁的场景，建议适当增大 `capacity` 和 `ttl-second` 以减少对 Hive Metastore 和文件系统的访问压力。
 
 :::caution
-**Hive Catalog 注意事项**：Hive 的 `meta.cache.hive.*` 属性修改**不支持热生效**。修改配置后，必须重建 Catalog 或重启 FE 节点才能应用新的缓存配置。
+**Hive Catalog 注意事项**：从 Doris 4.1.5 开始，修改 `meta.cache.hive.*` 属性会清理该 Catalog 已初始化的 Hive 元数据缓存，并在下一次访问时按新配置重建。修改过程中已经开始的查询不受影响。
 :::
 
 ### 可观测性 {#meta-cache-unified-observability}
