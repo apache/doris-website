@@ -10,6 +10,29 @@
 
 This document lists Doris Operator release notes in reverse chronological order.
 
+## 26.0.1
+
+Source: [Release Notes 26.0.1](https://github.com/apache/doris-operator/issues/512)
+
+This patch release improves DDC scale-down compatibility with Doris 4.1.3, adds repository-owned release automation, and makes pull request license checks safe for external contributors.
+
+### Features and Improvements
+
+- Added repository-owned release tools for environment checks, source packaging, signing and upload, vote email generation, and release completion, with automated workflow tests. [#507](https://github.com/apache/doris-operator/pull/507)
+
+### Bug Fixes
+
+- Fixed DDC FE and compute group scale-down with Doris 4.1.3 by tolerating extended `SHOW FRONTENDS` and `SHOW BACKENDS` results, executing node removals individually, and making graceful backend cleanup retry-safe. [#510](https://github.com/apache/doris-operator/pull/510)
+
+### Reliability
+
+- Ran the license check in a low-privilege `pull_request` workflow and updated checkout handling so fork pull requests can be scanned safely. [#511](https://github.com/apache/doris-operator/pull/511)
+
+### Thanks
+
+- [morningman](https://github.com/morningman)
+- [Al-assad](https://github.com/Al-assad)
+
 ## 26.0.0
 
 Source: [Release Notes 26.0.0](https://github.com/apache/doris-operator/issues/506)

@@ -360,7 +360,7 @@ PROPERTIES (
 
 1. 下载并安装 Logstash Doris Output 插件，可任选一种方式：
 
-    - 直接下载：[点此下载](https://download.selectdb.com/extension/logstash-output-doris-1.2.0.gem)。
+    - 直接下载：[点此下载](https://download.velodb.io/extension/logstash-output-doris-1.2.0.gem)。
     - 从源码编译，并运行下方命令安装：
 
         ```shell
@@ -426,7 +426,7 @@ PROPERTIES (
 
 按以下步骤操作：
 
-1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://download.selectdb.com/extension/filebeat-doris-2.1.1) 或从 Apache Doris 源码编译。
+1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://download.velodb.io/extension/filebeat-doris-2.1.1) 或从 Apache Doris 源码编译。
 
 2. 配置 Filebeat，主要文件 `filebeat_demo.yml`，配置所采集日志的输入路径与输出到 Apache Doris 的设置：
 

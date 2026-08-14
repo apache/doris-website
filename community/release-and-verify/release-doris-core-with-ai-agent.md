@@ -437,9 +437,9 @@ Recommended validation commands:
 
 ```bash
 curl -sI https://downloads.apache.org/doris/<series>/<version>/apache-doris-<version>-src.tar.gz
-curl -sI https://download.selectdb.com/apache-doris-<version>-bin-x64.tar.gz
-curl -sI https://download.selectdb.com/apache-doris-<version>-bin-x64-noavx2.tar.gz
-curl -sI https://download.selectdb.com/apache-doris-<version>-bin-arm64.tar.gz
+curl -sI https://download.velodb.io/apache-doris-<version>-bin-x64.tar.gz
+curl -sI https://download.velodb.io/apache-doris-<version>-bin-x64-noavx2.tar.gz
+curl -sI https://download.velodb.io/apache-doris-<version>-bin-arm64.tar.gz
 
 git diff --check
 node -e "JSON.parse(require('fs').readFileSync('sidebarsReleases.json','utf8')); console.log('sidebarsReleases.json ok')"

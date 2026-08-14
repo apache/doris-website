@@ -15,7 +15,7 @@ This document presents Apache Doris Core release notes in reverse chronological 
 
 <br />
 
-🎉 Version 4.0.7 is released. Check out the 🔗[Release Notes](./v4.0/release-4.0.7.md) here. Apache Doris 4.0.7 is a maintenance release focused on query correctness, load stability, compute-storage decoupled deployments, File Cache reliability, object storage access, observability, and external data source compatibility. All 4.0.x users are advised to upgrade.
+🎉 Version 4.0.8 is released. Check out the 🔗[Release Notes](./v4.0/release-4.0.8.md) here. Apache Doris 4.0.8 is a maintenance release focused on compute-storage decoupled deployments, load and transaction stability, File Cache behavior, security hardening of internal endpoints, and Lakehouse compatibility. All 4.0.x users are advised to upgrade.
 
 <br />
 
@@ -33,6 +33,8 @@ This document presents Apache Doris Core release notes in reverse chronological 
 
 
 <br />
+
+- [2026-08-14, Apache Doris 4.0.8 is released](./v4.0/release-4.0.8.md)
 
 - [2026-07-13, Apache Doris 4.1.3 is released](./v4.1/release-4.1.3.md)
 

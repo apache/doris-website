@@ -33,7 +33,7 @@ Beats Doris output plugin 支持以下 Beats 组件：
 
 ### 从官网下载
 
-下载 [filebeat-doris-2.1.1](https://download.selectdb.com/extension/filebeat-doris-2.1.1)。
+下载 [filebeat-doris-2.1.1](https://download.velodb.io/extension/filebeat-doris-2.1.1)。
 
 ### 从源码编译
 

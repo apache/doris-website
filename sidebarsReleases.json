@@ -23,6 +23,7 @@
                     "type": "category",
                     "label": "v4.0",
                     "items": [
+                        "v4.0/release-4.0.8",
                         "v4.0/release-4.0.7",
                         "v4.0/release-4.0.6",
                         "v4.0/release-4.0.5",

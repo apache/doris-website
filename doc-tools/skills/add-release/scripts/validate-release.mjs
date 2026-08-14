@@ -412,7 +412,7 @@ export async function validateCoreRelease(options) {
     const sourceDir =
         options.sourceDir ||
         'https://dist.apache.org/repos/dist/release/doris/' + series + '/' + version + '/';
-    const binaryOrigin = options.binaryOrigin || 'https://download.selectdb.com/';
+    const binaryOrigin = options.binaryOrigin || 'https://download.velodb.io/';
     const checkLinks = options.checkLinks !== false;
     const checkGitRouting = options.checkGitRouting !== false;
     const checks = [];
