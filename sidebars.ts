@@ -1050,6 +1050,7 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/open-api/fe-http/system-action',
                                 'admin-manual/open-api/fe-http/colocate-meta-action',
                                 'admin-manual/open-api/fe-http/meta-action',
+                                'admin-manual/open-api/fe-http/meta-backup-action',
                                 'admin-manual/open-api/fe-http/cluster-action',
                                 'admin-manual/open-api/fe-http/node-action',
                                 'admin-manual/open-api/fe-http/query-profile-action',

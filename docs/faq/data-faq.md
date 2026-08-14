@@ -84,6 +84,14 @@ failed to initialize storage reader. tablet=63416.1050661139.aa4d304e7a7aff9c-f0
 
 A -214 error means that the data version for the corresponding tablet is missing. For example, the above error indicates that the data version of the copy of tablet 63416 on the BE of 192.168.100.10 is missing. (There may be other similar error codes, which can be checked and repaired in the following ways).
 
+:::info Version note (4.0.8)
+
+Starting from version 4.0.8, scan-phase errors are no longer uniformly prefixed with `failed to initialize storage reader`. The real underlying error message is kept and only `. tablet=... backend=...` is appended.
+
+Reader initialization also performs an eager first-row read that evaluates pushed-down expressions, so data errors and expression errors reach this path too, and the old prefix made them look like storage-layer failures. When diagnosing -214, rely on the error code and the `tablet=` / `backend=` information rather than matching the prefix text.
+
+:::
+
 Typically, if your data has multiple copies, the system will automatically repair these problematic copies. You can troubleshoot with the following steps:
 
 First, check the status of each copy of the corresponding tablet by executing the `show tablet 63416` statement and executing the `show proc xxx` statement in the result. Usually we need to care about the data in the `Version` column.

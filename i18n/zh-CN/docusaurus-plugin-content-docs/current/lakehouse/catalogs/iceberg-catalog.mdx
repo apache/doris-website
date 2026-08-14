@@ -276,6 +276,16 @@ ORDER BY entry_name;
 >
 > 4.0.3 后开始支持，可以映射 `timestamptz (Timestamp with timezone)` 到 Doris 的 `timestamptz` 类型。
 
+### 列名大小写
+
+Doris 保留 Iceberg 表中列名的原始大小写，并在读取时按不区分大小写的方式匹配列。含大写字母或大小写混合的列名（如 `UserId`、`ORDER_ID`）可以正常查询。
+
+:::info 版本说明
+
+4.0.8 之前的 4.0.x 版本在读取时按精确匹配定位列，含大小写混合列名的 Iceberg / Paimon 表可能读到错误的列或查询失败。该问题已在 4.0.8 中修复。
+
+:::
+
 ## Namespace 映射
 
 Iceberg 的元数据层级关系是 Catalog -> Namespace -> Table。其中 Namespace 可以有多级（Nested Namespace）。

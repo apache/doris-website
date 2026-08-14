@@ -42,19 +42,58 @@ SHOW [ALL] ROUTINE LOAD [FOR <jobName>];
 | EndTime              | Job end time                                                 |
 | DbName               | Corresponding database name                                  |
 | TableName            | Corresponding table name (shows 'multi-table' for multiple tables) |
-| IsMultiTbl           | Whether it's a multi-table job                              |
+| IsMultiTable         | Whether it's a multi-table job                              |
 | State                | Job running status                                          |
 | DataSourceType       | Data source type: KAFKA                                     |
 | CurrentTaskNum       | Current number of subtasks                                  |
 | JobProperties        | Job configuration details                                    |
 | DataSourceProperties | Data source configuration details                            |
-| CustomProperties     | Custom configurations                                        |
+| CustomProperties     | Custom configurations. Sensitive properties are masked as `******`, see "Sensitive property masking" below |
 | Statistic            | Job running statistics                                      |
 | Progress            | Job running progress                                         |
 | Lag                 | Job delay status                                            |
 | ReasonOfStateChanged | Reason for job state change                                 |
 | ErrorLogUrls         | URLs to view filtered data that failed quality checks       |
 | OtherMsg            | Other error messages                                        |
+| User                 | The user who created the job                                |
+| Comment              | The comment of the job                                      |
+| ComputeGroup         | The compute group the job runs on                           |
+| FirstErrorMsg        | The first error message the job hit. Added in version 4.0.8 |
+
+### Sensitive property masking
+
+<!-- Knowledge type: Behavior description -->
+<!-- Applicable scenarios: Protecting Kafka credentials / Audit compliance -->
+
+:::caution Behavior change (4.0.8)
+
+Starting from version 4.0.8, sensitive properties of Kafka Routine Load jobs are shown as `******` in `CustomProperties` instead of in plain text. The output of `SHOW CREATE ROUTINE LOAD` is masked as well.
+
+:::
+
+The following properties are recognized as sensitive and masked:
+
+| Matching rule | Example |
+| --- | --- |
+| Property named `sasl.jaas.config` | `sasl.jaas.config` |
+| Property named `aws.access_key` | `aws.access_key` |
+| Property named `ssl.keystore.key` or `ssl.key.pem` | `ssl.keystore.key` |
+| Ends with `.password`, `.secret`, `.secret_key`, or `.secret.key` | `ssl.keystore.password`, `sasl.oauthbearer.client.secret` |
+| Ends with `.session_key` or `.session.token` | `aws.session.token` |
+| Ends with `.private.key`, `.private_key`, or `.passphrase`, or contains `.private.key.` | `sasl.oauthbearer.assertion.private.key.pem` |
+
+Masking only affects how the values are displayed; the property values the job actually uses are unchanged. To change these properties, set them again with [ALTER ROUTINE LOAD](./ALTER-ROUTINE-LOAD) — the original values cannot be read back from the `SHOW` result.
+
+### FirstErrorMsg versus OtherMsg
+
+- `FirstErrorMsg`: the **first** error the job hit while running, useful for finding the root cause. After a job has run for a long time, later errors are often knock-on effects of the first one.
+- `OtherMsg`: the most recent other error message, overwritten by subsequent errors.
+
+:::info Note
+
+These values can also be queried from [`information_schema.routine_load_job`](../../../../admin-manual/system-tables/information_schema/routine_load_job). Starting from version 4.0.8, that table is served by the master FE, so `FIRST_ERROR_MSG` and `ERROR_LOG_URLS` are no longer empty when the query lands on a non-master FE.
+
+:::
 
 ## Access Control Requirements
 

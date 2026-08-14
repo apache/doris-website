@@ -516,6 +516,28 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
     group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
     ```
 
+### 存算分离模式下的 Stream Load 转发
+
+存算分离模式下，如果 Stream Load 请求经过负载均衡器随机分发，同一张表的请求会落到不同的 BE 节点，Group Commit 无法有效攒批。开启 BE 转发后，收到请求的 BE 会将其再次转发到该表对应的目标 BE 节点，保证同一张表的请求最终汇聚到同一个 BE。
+
+| 配置项 | 位置 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `enable_group_commit_streamload_be_forward` | FE | `false` | 是否开启 Stream Load BE 转发。仅在存算分离模式且请求使用 Group Commit 时生效 |
+| `enable_group_commit_streamload_be_forward` | BE | `false` | 是否允许访问 BE 上的 `/api/{db}/{table}/_stream_load_forward` 转发接口。**自 4.0.8 版本起新增** |
+
+使用该能力时，需要在 FE 和 BE 上**同时**将该配置设置为 `true`。
+
+:::caution 版本行为变更（4.0.8）
+
+自 4.0.8 版本起，BE 的 `_stream_load_forward` 接口有两项收敛：
+
+- 接口受 BE 配置 `enable_group_commit_streamload_be_forward` 控制。配置为 `false`（默认）时，访问该接口返回 `403 Forbidden`，提示 `Stream load forward is disabled`。
+- 配置开启后，访问该接口还需要通过认证，并要求全局 `LOAD` 权限。
+
+升级前如果只在 FE 上开启了该功能，升级到 4.0.8 后转发会失败。请在所有 BE 的 `be.conf` 中补充 `enable_group_commit_streamload_be_forward=true`，并确认导入使用的账号具备 `LOAD` 权限。
+
+:::
+
 ## 使用限制
 
 ### Group Commit 退化场景

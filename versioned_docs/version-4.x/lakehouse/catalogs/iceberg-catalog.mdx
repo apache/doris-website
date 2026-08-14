@@ -255,6 +255,16 @@ See the documentation for this system table: [catalog_meta_cache_statistics](../
 >
 > Supported since version 4.0.3, `timestamptz` (timestamp with time zone) can be mapped to the Doris `timestamptz` type.
 
+### Column Name Case
+
+Doris preserves the original case of column names in an Iceberg table and matches columns case-insensitively when reading. Column names containing uppercase letters or mixed case (for example `UserId` or `ORDER_ID`) can be queried normally.
+
+:::info Version note
+
+Versions before 4.0.8 located columns by exact match when reading, so Iceberg and Paimon tables with mixed-case column names could read the wrong column or fail the query. This was fixed in 4.0.8.
+
+:::
+
 ## Namespace Mapping
 
 Iceberg's metadata hierarchy is Catalog -> Namespace -> Table. Namespace can have multiple levels (Nested Namespace).

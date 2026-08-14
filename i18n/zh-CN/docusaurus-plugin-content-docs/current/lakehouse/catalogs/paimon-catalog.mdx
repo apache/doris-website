@@ -354,7 +354,13 @@ ORDER BY entry_name;
 
 在两个 Paimon JNI Scanner 路径上，Doris 都会保留带引号的顶层列名和嵌套 `STRUCT` 字段名的原始大小写与字符。
 包含逗号（`region,code`）、井号（`nested#value`）、冒号（`colon:name`）、空格或 Unicode 字符的名称，除普通
-SQL 标识符引用外无需额外转义。
+SQL 标识符引用外无需额外转义。读取时列按不区分大小写的方式匹配，因此含大写字母或大小写混合的列名（如 `UserId`）可以正常查询。
+
+:::info 版本说明
+
+4.0.8 之前的 4.0.x 版本在读取时按精确匹配定位列，含大小写混合列名的 Paimon / Iceberg 表可能读到错误的列或查询失败。该问题已在 4.0.8 中修复。
+
+:::
 
 > 注：
 >

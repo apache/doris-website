@@ -57,3 +57,12 @@ under the License.
 | CREATE_TIME        | datetime     | Tablet 创建时间        |
 | UPDATE_TIME        | datetime     | Tablet 更新时间        |
 | IS_OVERLAP         | bool         | Tablets 是否 Overlap  |
+
+## 存算分离模式下的数据大小语义
+
+<!-- 知识类型: 行为说明 -->
+<!-- 适用场景: 存算分离容量核对 -->
+
+该表由 BE 直接上报，`TABLET_LOCAL_SIZE` 与 `TABLET_REMOTE_SIZE` 按 rowset 的实际存储位置区分：存放在远端存储的 rowset 计入 `TABLET_REMOTE_SIZE`。存算分离模式下数据存放于远端存储，因此数据量体现在 `TABLET_REMOTE_SIZE` 上。
+
+自 4.0.8 版本起，[`SHOW TABLETS`](../../../sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET) 与 [`information_schema.partitions`](./partitions) 的本地/远端口径已与该表对齐：存算分离模式下数据量统一按远端大小上报。在 4.0.8 之前，三者的口径可能互相矛盾。

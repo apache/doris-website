@@ -160,6 +160,16 @@ Recycler 实现了 FE 元数据、MS KV 与对象文件的多重相互检查机�
 | `enable_recycler` | `true` | 是否开启 Recycler。设置为 `false` 时，Recycler 将跳过扫描实例、不执行回收（可用于临时停用回收）。支持动态修改。自 4.0.6 版本起支持。 |
 | `enable_recycler_stats_metrics` | `false` | 是否开启 Recycler 观测指标 |
 | `recycler_storage_vault_white_list` | `""` | 存储后端白名单，填写 vault name（逗号分隔），为空则回收所有 vault |
+| `enable_mark_delete_rowset_before_recycle` | `false` | 是否在实际删除 rowset 数据前，先将其 meta 标记为已回收，下一轮扫描再删除数据与 KV。支持动态修改。**自 4.0.8 版本起默认值由 `true` 调整为 `false`** |
+| `enable_abort_txn_and_job_for_delete_rowset_before_recycle` | `false` | 是否在删除 rowset 前，先中止与之关联的事务和任务。支持动态修改。**自 4.0.8 版本起默认值由 `true` 调整为 `false`** |
+
+:::caution 版本行为变更（4.0.8）
+
+`enable_mark_delete_rowset_before_recycle` 与 `enable_abort_txn_and_job_for_delete_rowset_before_recycle` 的默认值在 4.0.8 中由 `true` 调整为 `false`。
+
+这两项是删除 rowset 前的额外保护步骤，但当前实现存在明显的性能开销，会拖慢回收速度，因此默认不再开启。如果需要保留该保护逻辑，可以显式将两项设置为 `true`。
+
+:::
 
 ## 常见调优场景
 

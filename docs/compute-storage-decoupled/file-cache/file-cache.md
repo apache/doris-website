@@ -57,7 +57,7 @@ Doris provides one global policy and two Compaction-specific policies:
 
 | Parameter | Type | Default | Scope | Description |
 |---|---|---|---|---|
-| `enable_file_cache_write_index_file_only` | Boolean | `false` | All rowset writes in compute-storage decoupled mode, including ingestion, Schema Change, Cumulative Compaction, and Base Compaction | When set to `true`, Segment data is not actively cached. After a Segment is closed, its footer and internal index ranges are synchronously preloaded, while independent inverted index files are still written to File Cache. This parameter takes precedence over the two Compaction-specific parameters |
+| `enable_file_cache_write_index_file_only` | Boolean | `false` | All rowset writes in compute-storage decoupled mode, including ingestion, Schema Change, Cumulative Compaction, and Base Compaction | **Supported starting from version 4.0.8.** When set to `true`, Segment data is not actively cached. After a Segment is closed, its footer and internal index ranges are synchronously preloaded, while independent inverted index files are still written to File Cache. This parameter takes precedence over the two Compaction-specific parameters |
 | `enable_file_cache_write_base_compaction_index_only` | Boolean | `false` | Base Compaction | Only when the existing Base Compaction policy has already decided to write output to File Cache, prevents the Segment file from being actively cached while still caching independent inverted index files. This parameter does not cause Base Compaction output that would otherwise bypass the cache to be cached |
 | `enable_file_cache_write_cumu_compaction_index_only` | Boolean | `false` | Cumulative Compaction | When Cumulative Compaction output is written to File Cache, prevents the Segment file from being actively cached while still caching independent inverted index files |
 
@@ -180,6 +180,7 @@ Doris provides two independent query-level File Cache controls. Choose the param
 |---|---|---|---|
 | Limit by cache footprint percentage | `file_cache_query_limit_percent` | New cache blocks can still be written. BE first evicts releasable blocks recorded for the current query and then evicts from other cache queues when necessary | Limit a query's cache footprint while allowing later cache fills |
 | Stop remote-scan cache writes by byte threshold | `file_cache_query_limit_bytes` | When the next cache block would make the admitted byte count exceed the threshold, the query enters remote-only-on-miss mode on that BE. Later misses are read from remote storage without further File Cache writes | Limit cache writes and churn caused by a large remote scan |
+| Stop cache writes in TopN lazy materialization phase 2 | `enable_topn_lazy_mat_phase2_no_write_file_cache` | Phase-2 lookup reads in TopN lazy materialization go remote-only on a cache miss and do not fill File Cache | Prevent low-reuse TopN lookup reads from polluting the cache |
 
 ### Limit by Cache Footprint Percentage
 
@@ -301,6 +302,31 @@ If admitted bytes equal the threshold exactly and no later cache block attempts 
 - In remote-only-on-miss mode, request ranges fully covered by local cache can still be read locally. Ranges that are not fully covered access remote storage directly, which may increase object-storage I/O and query latency.
 - Use `file_cache_query_limit_percent` when the goal is to limit the cache footprint retained by a query while allowing later cache misses to fill the cache. Use `file_cache_query_limit_bytes` when the goal is to stop later fills after a specified amount has been admitted.
 - Excluding Segment footer and metadata by default preserves the cache benefit of highly reusable metadata. Enable `enable_file_cache_query_limit_segment_meta` only when those writes must also stop after the threshold, and verify the result with Query Profile.
+
+### Stop Cache Writes in TopN Lazy Materialization Phase 2
+
+> This feature is supported starting from version 4.0.8.
+
+Queries with `ORDER BY ... LIMIT` use TopN lazy materialization: phase 1 reads only the sort columns to select candidate rows, and phase 2 looks up the remaining columns by row id. Phase-2 reads are sparse and rarely reused, so filling File Cache with them easily displaces hot data in compute-storage decoupled mode.
+
+| Variable | Type | Default | Description |
+|---|---|---|---|
+| `enable_topn_lazy_mat_phase2_no_write_file_cache` | Boolean | `false` | When enabled, phase-2 reads of TopN lazy materialization read directly from remote storage on a File Cache miss and do not fill that range into File Cache |
+
+**Usage example**
+
+```sql
+SET enable_topn_lazy_mat_phase2_no_write_file_cache = true;
+
+SELECT * FROM large_table ORDER BY create_time DESC LIMIT 100;
+```
+
+**Notes**
+
+- The variable only takes effect in compute-storage decoupled mode; setting it in integrated storage-compute mode has no effect.
+- It only affects the phase-2 lookup reads of TopN lazy materialization. Phase-1 sort-column reads, cache fills of other queries, and cache writes from ingestion, Compaction, and cache warmup are unaffected.
+- Ranges that phase 2 finds in File Cache are still read locally. Ranges that miss access remote storage directly, which may increase object-storage I/O.
+- If TopN queries repeatedly hit the same hot rows, disabling the fill may increase remote reads. Evaluate against your query pattern.
 
 ## Cache Warmup
 

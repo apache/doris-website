@@ -57,3 +57,12 @@ View the information of talbet on Backends.(added by doris 3.0.7)
 | CREATE_TIME        | datetime     | Tablet Create Time               |
 | UPDATE_TIME        | datetime     | Last Tablet Writted Time         |
 | IS_OVERLAP         | bool         | Whether tablets overlap          |
+
+## Data size semantics in compute-storage decoupled mode
+
+<!-- Knowledge type: Behavior description -->
+<!-- Applicable scenarios: Capacity reconciliation in decoupled deployments -->
+
+This table is reported directly by the BE. `TABLET_LOCAL_SIZE` and `TABLET_REMOTE_SIZE` are split by where the rowsets actually live: rowsets stored in remote storage are counted into `TABLET_REMOTE_SIZE`. In compute-storage decoupled mode data lives in remote storage, so the data size shows up in `TABLET_REMOTE_SIZE`.
+
+Starting from version 4.0.8, [`SHOW TABLETS`](../../../sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET) and [`information_schema.partitions`](./partitions) are aligned with this table: in decoupled mode, data size is consistently reported as remote size. Before 4.0.8, the three could contradict each other.

@@ -233,6 +233,21 @@ The `estimate_partition_size` property is used to adjust the initial estimate of
 - This parameter is optional. If not specified, the default value is `10GB`.
 - This parameter only affects the initial estimate and is independent of the future partition size that the system later infers from historical partition data.
 
+The computed bucket number is clamped between the FE configurations `autobucket_min_buckets` and `autobucket_max_buckets`:
+
+| FE configuration | Default | Description |
+|---|---|---|
+| `autobucket_min_buckets` | 3 | Lower bound of the auto bucketing result. **Starting from version 4.0.8, the default changed from `1` to `3`** |
+| `autobucket_max_buckets` | 128 | Upper bound of the auto bucketing result |
+
+:::caution Behavior change (4.0.8)
+
+The default of `autobucket_min_buckets` changed from `1` to `3` in 4.0.8. Previously a small partition could be computed down to a single bucket, giving insufficient parallelism and data distribution. After the change, auto bucketing never produces fewer than 3 buckets.
+
+The change only affects partitions **created after** the upgrade; the bucket number of existing partitions is unchanged. Set `autobucket_min_buckets` back to `1` explicitly to keep the old behavior.
+
+:::
+
 ## 4. Maintain Data Bucketing
 
 :::tip Tip

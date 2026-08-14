@@ -332,6 +332,52 @@ admin set frontend config("disable_colocate_balance" = "false");
 admin set frontend config("disable_tablet_scheduler" = "false");
 ```
 
+## Per-Version Upgrade Notes
+
+<!-- Knowledge type: Behavior description -->
+<!-- Applicable scenarios: Cross-version upgrade / Confirming post-upgrade behavior changes -->
+
+This section records behavior changes that need extra attention when upgrading to a specific version. Beyond this section, always read the target version's release notes for the complete list of changes.
+
+### Session variable migration when upgrading from 3.x to 4.0
+
+FE tracks the migration progress of session variable defaults through the internal variable `variable_version`. When upgrading from 3.x to 4.0 (`variable_version` lower than 400), FE automatically adjusts the **global defaults** of the following variables:
+
+| Variable | Default after migration | Description |
+| --- | --- | --- |
+| `enable_ansi_query_organization_behavior` | `false` | Keeps the 3.x query organization behavior so semantics do not change after the upgrade |
+| `enable_new_type_coercion_behavior` | `false` | Keeps the 3.x type coercion behavior |
+| `enable_sql_cache` | `true` | Enables SQL Cache |
+| `enable_nereids_distribute_planner` | `true` | **Migration item added in version 4.0.8**, see below |
+
+The migration runs only once, when `variable_version` is raised from below 400 to 400. It never overwrites a value the user has explicitly set afterwards.
+
+### Upgrading to 4.0.8
+
+:::caution Nereids distribute planner is enabled
+
+Starting from version 4.0.8, upgrading from 3.x to 4.0 enables the Nereids distribute planner (`enable_nereids_distribute_planner`).
+
+Before 4.0.8, if the cluster's metadata image had persisted `enable_nereids_distribute_planner=false`, that value was restored as-is after the upgrade and the cluster kept using the legacy distribute planner. Version 4.0.8 adds the variable to the `variable_version=400` migration, so the new distribute planner is enabled consistently after the upgrade.
+
+If query plan distribution differs from before the upgrade, you can roll back with `SET GLOBAL enable_nereids_distribute_planner = false;` and report the affected queries.
+
+:::
+
+The following changes also need attention when upgrading to 4.0.8:
+
+| Change | Affected scope | What to do |
+| --- | --- | --- |
+| Compaction is no longer paused on high memory (BE config `enable_compaction_pause_on_high_memory` default `true` → `false`) | All deployment modes | Set it back to `true` to keep the old behavior. See [BE Configuration](../config/be-config) |
+| The minimum auto bucket number is raised from 1 to 3 (FE config `autobucket_min_buckets`) | Tables created with `BUCKETS AUTO` | Only newly created partitions are affected. See [Data Bucketing](../../table-design/data-partitioning/data-bucketing) |
+| The BE `_stream_load_forward` endpoint requires the configuration to be enabled and requests to be authenticated | Deployments relying on Group Commit BE forwarding in decoupled mode | Set `enable_group_commit_streamload_be_forward=true` in every `be.conf` and make sure the load account holds the global `LOAD` privilege. See [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual) |
+| Node management APIs require the global `ADMIN` privilege | Automation calling `/rest/v2/manager/node/{action}/{be\|fe\|broker}` | Add authentication with an `ADMIN` account to the caller. See [Node Action](../open-api/fe-http/node-action) |
+| Stream Load validates the account's access to the compute group that actually serves the request | Stream Load in decoupled mode | Grant the load account access to the corresponding compute group. See [Stream Load](../../data-operate/import/import-way/stream-load-manual) |
+| In decoupled mode, data size is consistently reported as remote size | Scripts computing capacity from `SHOW TABLETS` or `information_schema.partitions` | Use `REMOTE_DATA_SIZE` instead. See [partitions](../system-tables/information_schema/partitions) |
+| Sensitive Kafka properties of Routine Load jobs are masked as `******` in query results | Scripts reading credentials from `SHOW ROUTINE LOAD` | Read the original values from your configuration management instead. See [SHOW ROUTINE LOAD](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) |
+| Warm-up timestamps change from `HH:mm:ss` to `yyyy-MM-dd HH:mm:ss` | Scripts parsing warm-up job status | Adjust the time parsing format. See [Read-Write Separation](../../compute-storage-decoupled/rw/read-write-separation) |
+| Scan errors no longer carry the `failed to initialize storage reader` prefix | Monitoring rules matching on that prefix | Use the error code and the `tablet=` / `backend=` information instead |
+
 ## FAQ
 
 <!-- Knowledge type: Troubleshooting -->
