@@ -2,64 +2,80 @@
 {
     "title": "catalog_meta_cache_statistics",
     "language": "en",
-    "description": "View the metadata cache information of the External Catalog in the currently connected FE."
+    "description": "View External Catalog metadata-cache configuration, activity, and memory-governance statistics on FE nodes."
 }
 ---
 
 ## Overview
 
-View the metadata cache information of the External Catalog in the currently connected FE.
+`catalog_meta_cache_statistics` shows one row for each FE, External Catalog, metadata-cache engine, and cache entry visible to the current user. It includes cache configuration and Caffeine activity, together with retained-memory limits, estimated usage, eviction weight, and admission rejections introduced in Doris 4.1.4.
 
 ## Database
 
-
 `information_schema`
-
 
 ## Table Information
 
-One row represents one cache entry on one FE for one external catalog.
+| Column | Type | Description |
+|---|---|---|
+| `FE_HOST` | STRING | FE node that reports the row. |
+| `CATALOG_NAME` | STRING | External Catalog name. |
+| `ENGINE_NAME` | STRING | Metadata-cache engine, such as `hive`, `iceberg`, or `paimon`. |
+| `ENTRY_NAME` | STRING | Cache entry within the engine. |
+| `EFFECTIVE_ENABLED` | BOOLEAN | Whether the entry is currently effective after evaluating enable, TTL, capacity, and weight settings. |
+| `CONFIG_ENABLED` | BOOLEAN | Configured `enable` value. |
+| `AUTO_REFRESH` | BOOLEAN | Whether managed automatic refresh is enabled. |
+| `TTL_SECOND` | BIGINT | Expiration time in seconds. `-1` means no expiration and `0` disables the entry. |
+| `CAPACITY` | BIGINT | Configured count capacity. With `max-weight`, it is not a simultaneous count limit, but `0` still disables the entry. |
+| `ESTIMATED_SIZE` | BIGINT | Approximate number of cached mappings. |
+| `REQUEST_COUNT` | BIGINT | Total cache lookup requests. |
+| `HIT_COUNT` | BIGINT | Cache hits. |
+| `MISS_COUNT` | BIGINT | Cache misses. |
+| `HIT_RATE` | DOUBLE | Cache hit rate from `0.0` to `1.0`. |
+| `LOAD_SUCCESS_COUNT` | BIGINT | Successful cache loads. |
+| `LOAD_FAILURE_COUNT` | BIGINT | Failed cache loads. |
+| `TOTAL_LOAD_TIME_MS` | BIGINT | Total cache load time in milliseconds. |
+| `AVG_LOAD_PENALTY_MS` | DOUBLE | Average load time in milliseconds. |
+| `EVICTION_COUNT` | BIGINT | Number of Caffeine and explicit local-budget evictions. |
+| `INVALIDATE_COUNT` | BIGINT | Number of explicit invalidations. |
+| `LAST_LOAD_SUCCESS_TIME` | STRING | Time of the most recent successful load. |
+| `LAST_LOAD_FAILURE_TIME` | STRING | Time of the most recent failed load. |
+| `LAST_ERROR` | STRING | Most recent load error; empty when none is recorded. |
+| `WEIGHT_BOUNDED` | BOOLEAN | Whether this entry is governed by an applicable FE, Catalog, or entry memory limit. |
+| `MAX_WEIGHT` | BIGINT | Effective entry memory limit in bytes. |
+| `ESTIMATED_WEIGHT` | BIGINT | Current reserved estimated weight of this entry in bytes. |
+| `EVICTION_WEIGHT` | BIGINT | Cumulative estimated bytes released by automatic and local-budget eviction. |
+| `WEIGHT_REJECT_COUNT` | BIGINT | Number of cache admissions rejected by incomplete estimation or insufficient weight budget. |
+| `CATALOG_MAX_WEIGHT` | BIGINT | Catalog memory limit in bytes. |
+| `CATALOG_ESTIMATED_WEIGHT` | BIGINT | Current reserved estimated weight across managed entries in this Catalog. |
+| `GLOBAL_MAX_WEIGHT` | BIGINT | FE-wide external metadata-cache memory limit in bytes. |
+| `GLOBAL_ESTIMATED_WEIGHT` | BIGINT | Current reserved estimated weight across managed external metadata caches on the FE. |
+| `LAST_WEIGHT_REJECT_REASON` | STRING | Most recent weight-admission rejection reason. |
 
-| Column Name | Type | Description |
-| ------------ | ---- | ----------- |
-| FE_HOST | text | FE host that reports the stats |
-| CATALOG_NAME | text | Catalog name |
-| ENGINE_NAME | text | Meta cache engine name, such as `hive`, `iceberg`, `paimon` |
-| ENTRY_NAME | text | Cache entry name inside the engine, such as `schema`, `file`, `manifest` |
-| EFFECTIVE_ENABLED | boolean | Whether the cache is effectively enabled after evaluating `enable` / `ttl-second` / `capacity` |
-| CONFIG_ENABLED | boolean | Raw `enable` flag from the cache config |
-| AUTO_REFRESH | boolean | Whether async refresh-after-write is enabled for this entry |
-| TTL_SECOND | bigint | TTL in seconds. `0` means disabled; `-1` means no expiration |
-| CAPACITY | bigint | Max entry count |
-| ESTIMATED_SIZE | bigint | Estimated current cache size |
-| REQUEST_COUNT | bigint | Total requests |
-| HIT_COUNT | bigint | Cache hits |
-| MISS_COUNT | bigint | Cache misses |
-| HIT_RATE | double | Hit rate |
-| LOAD_SUCCESS_COUNT | bigint | Successful loads |
-| LOAD_FAILURE_COUNT | bigint | Failed loads |
-| TOTAL_LOAD_TIME_MS | bigint | Total load time in milliseconds |
-| AVG_LOAD_PENALTY_MS | double | Average load time in milliseconds |
-| EVICTION_COUNT | bigint | Evicted entries |
-| INVALIDATE_COUNT | bigint | Explicit invalidations |
-| LAST_LOAD_SUCCESS_TIME | text | Last successful load time |
-| LAST_LOAD_FAILURE_TIME | text | Last failed load time |
-| LAST_ERROR | text | Latest load error message |
-
+For count-bounded entries or an unconfigured parent limit, weight-related numeric columns use `-1` when the value is not applicable.
 
 ## Usage Example
 
+Inspect memory-governed entries and their most recent admission result:
+
 ```sql
-SELECT catalog_name, engine_name, entry_name,
-       effective_enabled, ttl_second, capacity,
-       estimated_size, hit_rate, last_error
+SELECT fe_host, catalog_name, engine_name, entry_name,
+       max_weight, estimated_weight, eviction_weight,
+       weight_reject_count, last_weight_reject_reason,
+       catalog_max_weight, catalog_estimated_weight,
+       global_max_weight, global_estimated_weight
 FROM information_schema.catalog_meta_cache_statistics
-ORDER BY catalog_name, engine_name, entry_name;
+WHERE weight_bounded = true
+ORDER BY fe_host, catalog_name, engine_name, entry_name;
 ```
 
-Typical usage:
+Inspect cache effectiveness and load failures for one Catalog:
 
-- Use `ENGINE_NAME` + `ENTRY_NAME` to identify one logical cache entry.
-- Use `EFFECTIVE_ENABLED`, `TTL_SECOND`, and `CAPACITY` to confirm the applied cache policy.
-- Use `HIT_RATE`, `ESTIMATED_SIZE`, `LOAD_FAILURE_COUNT`, and `LAST_ERROR` to diagnose behavior.
-
+```sql
+SELECT engine_name, entry_name, effective_enabled,
+       estimated_size, request_count, hit_rate,
+       load_failure_count, last_error
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'iceberg_ctl'
+ORDER BY engine_name, entry_name;
+```

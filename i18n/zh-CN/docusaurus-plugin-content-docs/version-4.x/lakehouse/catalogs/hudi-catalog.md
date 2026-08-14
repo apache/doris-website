@@ -62,7 +62,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 缓存属性配置（4.1.x+） {#meta-cache-unified-model}
 
-各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+Hudi cache entry 使用配置键格式 `meta.cache.hudi.<entry>.{enable,ttl-second,capacity}`。Hudi 模块当前仍按条目数管理，不接受模块级 `max-weight`，详见[外表元数据缓存内存管理](../external-meta-cache-memory-management.md)。
 
 | 属性 | 示例 | 含义 |
 |---|---|---|
@@ -102,7 +102,7 @@ Hudi Catalog 包含以下缓存模块：
   -- 关闭分区元数据缓存，以感知 Hudi 表的最新分区变动
   ALTER CATALOG hudi_ctl SET PROPERTIES ("meta.cache.hudi.partition.ttl-second" = "0");
   ```
-* **性能优化**：`ALTER CATALOG ... SET PROPERTIES` 的修改在 Hudi 中支持热生效（通过 HMS catalog 属性更新路径）。
+* **性能优化**：自 Doris 4.1.4 起，Catalog 属性修改成功后会重置 Catalog 执行上下文，并清理该 Catalog 路由到的所有元数据缓存引擎中已初始化的条目；下一次访问使用新的上下文和配置重建，正在执行的查询不受影响。
 
 ### 可观测性 {#meta-cache-unified-observability}
 

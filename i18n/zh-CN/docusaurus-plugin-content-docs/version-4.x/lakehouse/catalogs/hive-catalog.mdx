@@ -89,15 +89,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 缓存属性配置（4.1.x+） {#meta-cache-unified-model}
 
-各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`。`max-weight` 当前只适用于部分已接入估算器的模块，详见[外表元数据缓存内存管理](../external-meta-cache-memory-management.md)。
 
 | 属性 | 示例 | 含义 |
 |---|---|---|
 | `enable` | `true/false` | 是否启用该缓存模块。 |
 | `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
-| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+| `capacity` | `10000` | 按条目数计算的最大容量。启用 `max-weight` 后不再同时作为条目数上限，但 `0` 仍会关闭缓存。 |
+| `max-weight` | `1GB` | 可选的估算保留内存上限。Hive 当前仅 `partition_values` 支持；`0` 会关闭该模块。 |
 
-**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
+**生效逻辑说明：** 只有当 `enable=true`、`ttl-second != 0`、`capacity > 0`，并且 `max-weight` 未配置或不为 `0` 时，该模块缓存才会生效。
 
 ### 缓存模块 {#meta-cache-unified-modules}
 
@@ -136,7 +137,7 @@ Hive Catalog 包含以下缓存模块：
 * **性能优化**：对于元数据变动不频繁的场景，建议适当增大 `capacity` 和 `ttl-second` 以减少对 Hive Metastore 和文件系统的访问压力。
 
 :::caution
-**Hive Catalog 注意事项**：Hive 的 `meta.cache.hive.*` 属性修改**不支持热生效**。修改配置后，必须重建 Catalog 或重启 FE 节点才能应用新的缓存配置。
+**Hive Catalog 注意事项**：从 Doris 4.1.4 开始，Catalog 属性修改成功后会重置 Catalog 执行上下文，并清理该 Catalog 路由到的所有元数据缓存引擎中已初始化的条目；下一次访问使用新的上下文和配置重建。已经开始的查询不受影响。
 :::
 
 ### 可观测性 {#meta-cache-unified-observability}

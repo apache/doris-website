@@ -122,7 +122,7 @@ Starting from Doris 4.1.x, MaxCompute Catalog's external metadata cache is confi
 
 ### Cache Property Configuration (4.1.x+) {#meta-cache-unified-model}
 
-Each engine's cache entry uses a unified configuration key format: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`.
+MaxCompute cache entries use the configuration key format `meta.cache.maxcompute.<entry>.{enable,ttl-second,capacity}`. MaxCompute entries are currently count-bounded and do not accept entry-level `max-weight`; see [External Metadata Cache Memory Management](../external-meta-cache-memory-management.md).
 
 | Property | Example | Meaning |
 |---|---|---|
@@ -156,7 +156,7 @@ In version 4.1.x and later, unified keys are recommended. The following is the m
   -- Disable partition value cache to detect the latest partitions in MaxCompute tables
   ALTER CATALOG mc_ctl SET PROPERTIES ("meta.cache.maxcompute.partition_values.ttl-second" = "0");
   ```
-* **Note**: `meta.cache.maxcompute.*` currently does not have a dedicated hot-reload hook. After changing the configuration, it is recommended to recreate the Catalog or restart FE to ensure it takes effect.
+* **Note**: Starting from Doris 4.1.4, a successful Catalog property change resets the Catalog execution context and clears initialized entries for every metadata-cache engine routed by that Catalog. Doris rebuilds them with the new context and configuration on the next access; in-flight queries are not affected.
 
 ### Observability {#meta-cache-unified-observability}
 

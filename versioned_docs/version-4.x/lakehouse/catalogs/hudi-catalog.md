@@ -62,7 +62,7 @@ Starting from Doris 4.1.x, Hudi-related external metadata cache is configured us
 
 ### Cache Property Configuration (4.1.x+) {#meta-cache-unified-model}
 
-Each engine's cache entry uses a unified configuration key format: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`.
+Hudi cache entries use the configuration key format `meta.cache.hudi.<entry>.{enable,ttl-second,capacity}`. Hudi entries are currently count-bounded and do not accept entry-level `max-weight`; see [External Metadata Cache Memory Management](../external-meta-cache-memory-management.md).
 
 | Property | Example | Meaning |
 |---|---|---|
@@ -98,7 +98,7 @@ In version 4.1.x and later, unified keys are recommended. The following is the m
   -- Disable partition metadata cache to detect the latest partition changes in Hudi tables
   ALTER CATALOG hudi_ctl SET PROPERTIES ("meta.cache.hudi.partition.ttl-second" = "0");
   ```
-* **Performance optimization**: Changes via `ALTER CATALOG ... SET PROPERTIES` support hot-reload in Hudi (via the HMS catalog property update path).
+* **Performance optimization**: Starting from Doris 4.1.4, a successful Catalog property change resets the Catalog execution context and clears initialized entries for every metadata-cache engine routed by that Catalog. Doris rebuilds them with the new context and configuration on the next access; in-flight queries are not affected.
 
 ### Observability {#meta-cache-unified-observability}
 

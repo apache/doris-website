@@ -122,7 +122,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 缓存属性配置（4.1.x+） {#meta-cache-unified-model}
 
-各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+MaxCompute cache entry 使用配置键格式 `meta.cache.maxcompute.<entry>.{enable,ttl-second,capacity}`。MaxCompute 模块当前仍按条目数管理，不接受模块级 `max-weight`，详见[外表元数据缓存内存管理](../external-meta-cache-memory-management.md)。
 
 | 属性 | 示例 | 含义 |
 |---|---|---|
@@ -159,7 +159,7 @@ MaxCompute Catalog 包含以下缓存模块：
   -- 关闭分区值缓存，以感知 MaxCompute 表的最新分区
   ALTER CATALOG mc_ctl SET PROPERTIES ("meta.cache.maxcompute.partition_values.ttl-second" = "0");
   ```
-* **注意**：`meta.cache.maxcompute.*` 目前没有专门的热生效 hook。修改配置后，建议重建 Catalog 或重启 FE 以确保生效。
+* **注意**：自 Doris 4.1.4 起，Catalog 属性修改成功后会重置 Catalog 执行上下文，并清理该 Catalog 路由到的所有元数据缓存引擎中已初始化的条目；下一次访问使用新的上下文和配置重建，正在执行的查询不受影响。
 
 ### 可观测性 {#meta-cache-unified-observability}
 
