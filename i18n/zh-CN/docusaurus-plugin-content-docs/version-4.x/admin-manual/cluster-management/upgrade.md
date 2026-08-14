@@ -86,6 +86,30 @@ Doris 升级只需要替换 FE 目录下的 `/bin`、`/lib` 以及 BE 目录下�
 
 :::
 
+### 从 3.x 升级到 4.0 时的变量迁移
+
+<!-- 知识类型: 行为说明 -->
+<!-- 适用场景: 跨大版本升级 / 会话变量兼容 -->
+
+FE 通过内部变量 `variable_version` 记录会话变量默认值的迁移进度。从 3.x 升级到 4.0 时（`variable_version` 低于 400），FE 会自动调整以下变量的**全局默认值**：
+
+| 变量 | 迁移后的默认值 | 说明 |
+| --- | --- | --- |
+| `enable_ansi_query_organization_behavior` | `false` | 保持 3.x 的查询组织行为，避免升级后语义变化 |
+| `enable_new_type_coercion_behavior` | `false` | 保持 3.x 的类型转换行为 |
+| `enable_sql_cache` | `true` | 开启 SQL Cache |
+| `enable_nereids_distribute_planner` | `true` | **自 4.0.8 版本起新增的迁移项**，见下方说明 |
+
+:::caution 版本行为变更（4.0.8）
+
+自 4.0.8 版本起，从 3.x 升级到 4.0 会启用 Nereids 分布式规划器（`enable_nereids_distribute_planner`）。
+
+在 4.0.8 之前，如果集群的元数据镜像中持久化了 `enable_nereids_distribute_planner=false`，升级后该值会被原样恢复，集群继续使用旧版分布式规划器。4.0.8 将该变量纳入 `variable_version=400` 的迁移逻辑，升级后统一启用新的分布式规划器。
+
+升级后如果观察到查询计划的分布方式与升级前不同，可以先执行 `SET GLOBAL enable_nereids_distribute_planner = false;` 回退，并反馈相关查询。该迁移只在 `variable_version` 从低于 400 提升到 400 时执行一次，之后不会覆盖用户显式设置的值。
+
+:::
+
 ## 元数据兼容性测试
 
 <!-- 知识类型: 操作步骤 -->

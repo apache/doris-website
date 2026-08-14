@@ -57,7 +57,7 @@ Doris 提供一个全局策略和两个 Compaction 专用策略：
 
 | 参数 | 类型 | 默认值 | 生效范围 | 说明 |
 |---|---|---|---|---|
-| `enable_file_cache_write_index_file_only` | Boolean | `false` | 所有存算分离 Rowset 写入，包括导入、Schema Change、Cumulative Compaction 和 Base Compaction | 设为 `true` 后，不主动缓存 Segment 数据；Segment 关闭后同步预加载其 footer 和内部索引范围，独立倒排索引文件仍写入 File Cache。该参数的优先级高于两个 Compaction 专用参数 |
+| `enable_file_cache_write_index_file_only` | Boolean | `false` | 所有存算分离 Rowset 写入，包括导入、Schema Change、Cumulative Compaction 和 Base Compaction | **自 4.0.8 版本起支持。** 设为 `true` 后，不主动缓存 Segment 数据；Segment 关闭后同步预加载其 footer 和内部索引范围，独立倒排索引文件仍写入 File Cache。该参数的优先级高于两个 Compaction 专用参数 |
 | `enable_file_cache_write_base_compaction_index_only` | Boolean | `false` | Base Compaction | 仅当 Base Compaction 按原有策略决定写入 File Cache 时，将其输出限制为不主动缓存 Segment 文件、仍缓存独立倒排索引文件。该参数不会使原本不写缓存的 Base Compaction 输出开始写入缓存 |
 | `enable_file_cache_write_cumu_compaction_index_only` | Boolean | `false` | Cumulative Compaction | 当 Cumulative Compaction 输出写入 File Cache 时，将其限制为不主动缓存 Segment 文件、仍缓存独立倒排索引文件 |
 
@@ -180,6 +180,7 @@ Doris 提供两种相互独立的查询级 File Cache 限制机制。应根据�
 |---|---|---|---|
 | 按缓存占用比例限制 | `file_cache_query_limit_percent` | 新缓存块仍可写入；BE 优先淘汰当前查询记录的可释放缓存块，并在需要时从其他缓存队列淘汰 | 限制单个查询的缓存占用，兼顾后续缓存回填 |
 | 按远端扫描回填字节数停止写入 | `file_cache_query_limit_bytes` | 当下一个缓存块会使累计准入字节数超过阈值时，查询在该 BE 上进入 remote-only-on-miss 状态；后续未命中范围从远端读取但不再写入 File Cache | 限制一次大范围远端扫描造成的缓存写入和缓存抖动 |
+| TopN 延迟物化第二阶段不写缓存 | `enable_topn_lazy_mat_phase2_no_write_file_cache` | TopN 延迟物化第二阶段的回表读取在缓存未命中时直接读远端，不回填 File Cache | 避免 TopN 回表读取的低复用数据污染缓存 |
 
 ### 按缓存占用比例限制
 
@@ -303,6 +304,31 @@ enable_file_cache_query_limit_segment_meta=true
 - 进入 remote-only-on-miss 状态后，已完整缓存的请求范围仍可从本地读取；未完整覆盖的请求范围会直接访问远端存储，可能增加对象存储 I/O 和查询延迟。
 - 如果目标是限制查询保留在缓存中的占用比例，并允许后续未命中继续回填，应使用 `file_cache_query_limit_percent`；如果目标是在一定回填量后停止后续写入，应使用 `file_cache_query_limit_bytes`。
 - 默认不计入 Segment footer 和元数据可以保留高复用元数据的缓存收益。如果业务要求查询达到阈值后不再产生这类写入，再启用 `enable_file_cache_query_limit_segment_meta`，并结合 Profile 验证效果。
+
+### TopN 延迟物化第二阶段不写缓存
+
+> 该功能自 4.0.8 版本起支持。
+
+带 `ORDER BY ... LIMIT` 的查询会使用 TopN 延迟物化：第一阶段只读取排序列筛选出候选行，第二阶段再按 row id 回表读取其余列。第二阶段读取的行分布稀疏、复用率低，在存算分离模式下回填 File Cache 容易挤占热点数据。
+
+| 变量 | 类型 | 默认值 | 说明 |
+|---|---|---|---|
+| `enable_topn_lazy_mat_phase2_no_write_file_cache` | Boolean | `false` | 开启后，TopN 延迟物化第二阶段读取在 File Cache 未命中时直接读取远端存储，且不将该范围回填到 File Cache |
+
+**使用示例**
+
+```sql
+SET enable_topn_lazy_mat_phase2_no_write_file_cache = true;
+
+SELECT * FROM large_table ORDER BY create_time DESC LIMIT 100;
+```
+
+**注意事项**
+
+- 该变量仅在存算分离模式下生效，存算一体模式下设置无效果。
+- 只影响 TopN 延迟物化的第二阶段回表读取，不影响第一阶段的排序列读取、其他查询的缓存回填，也不影响导入、Compaction 与缓存预热的缓存写入。
+- 第二阶段命中 File Cache 的范围仍然从本地读取；未命中的范围会直接访问远端存储，可能增加对象存储 I/O。
+- 如果 TopN 查询反复命中同一批热点行，开启后可能因不再回填而增加远端读取，建议结合业务查询特征评估。
 
 ## 缓存预热
 

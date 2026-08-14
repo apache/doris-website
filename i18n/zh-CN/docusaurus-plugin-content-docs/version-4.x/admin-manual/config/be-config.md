@@ -664,6 +664,15 @@ BaseCompaction:546859:
 * 描述：触发冷数据 compaction 的时间间隔，单位为秒。间隔越短，冷数据 compaction 检查越频繁，有助于更快地清理冷数据，但也会消耗更多资源。
 * 默认值：1800（秒）
 
+#### `enable_compaction_pause_on_high_memory`
+
+* 类型：bool
+* 描述：进程内存使用率过高时，是否暂停 compaction 任务。支持动态修改。
+  - 开启后，BE 在内存水位偏高时会暂停 compaction，以优先保障查询与导入。
+  - 但暂停 compaction 会让 Compaction Score 高的 tablet 更难合并，反而加剧元数据与内存的积压，因此**自 4.0.8 版本起默认值由 `true` 调整为 `false`**，即默认不再因内存水位高而暂停 compaction。
+  - 如需保留旧行为，可显式设置为 `true`。
+* 默认值：false（4.0.8 之前为 true）
+
 ### 导入
 
 #### `enable_stream_load_record`
@@ -808,7 +817,14 @@ BaseCompaction:546859:
 * 描述：如果我们向一个启用了自动分区的表导入数据，那么 `olap_table_sink_send_interval_microseconds` 的时间间隔就会太慢。在这种情况下，实际间隔将乘以该系数。
 * 默认值：0.001
 
+#### `enable_group_commit_streamload_be_forward`
 
+* 类型：bool
+* 描述：是否开启存算分离模式下 Group Commit 的 Stream Load BE 转发能力。自 4.0.8 版本起新增。支持动态修改。
+  - 该能力用于解决负载均衡器随机转发导致同一张表的 Group Commit 请求分散到不同 BE、无法有效攒批的问题：开启后 BE 会将请求转发到同一个 BE 节点。
+  - **自 4.0.8 版本起，BE 上的 `/api/{db}/{table}/_stream_load_forward` 接口受该配置控制：配置为 `false` 时访问该接口会返回 `403 Forbidden`（提示 `Stream load forward is disabled`）；配置为 `true` 时访问该接口还需要通过认证，并要求全局 `LOAD` 权限。**
+  - 依赖该转发能力的部署，需要在 FE 和 BE 上同时将该配置设置为 `true`（FE 侧同名配置见 [FE 配置项](./fe-config)）。
+* 默认值：false
 
 ### 线程
 

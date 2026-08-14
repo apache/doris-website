@@ -274,6 +274,8 @@ mysql> show stream load from testdb;
     -H "compute_group:cluster1"
     ```
 
+    同时设置 `compute_group` 与 `cloud_cluster` 时，以 `compute_group` 为准。
+
 2. 在 Stream Load 绑定的 user 属性中指定 Compute Group。如果 user 属性和 HTTP Header 同时指定了 Compute Group，那么以 Header 中指定的 Compute Group 为准。
 
     ```text
@@ -281,6 +283,16 @@ mysql> show stream load from testdb;
     ```
 
 3. 如果 user 属性中和 HTTP Header 中均未指定 Compute Group，那么会从 Stream Load 绑定的 user 有权限访问的 Compute Group 中选择一个。如果 user 没有任何有权限访问的 Compute Group，那么导入就会失败。
+
+:::info 版本说明（4.0.8）
+
+4.0.8 修复了存算分离模式下 Stream Load 的 Compute Group 路由与执行计划不一致的问题：
+
+- `compute_group` Header 的优先级高于 `cloud_cluster`，此前 FE 只识别 `cloud_cluster`。
+- 生成执行计划时，统一使用**实际接收请求的 BE 所属的 Compute Group**，避免计划落在与执行位置不同的 Compute Group 上。
+- 该路径同时会校验导入账号对目标 Compute Group 的访问权限、Compute Group 是否存在及其状态。因此，如果导入账号对实际承载请求的 Compute Group 没有权限，升级到 4.0.8 后该导入会失败并报权限错误，需要为账号补充相应授权。
+
+:::
 
 **存算一体模式**
 
