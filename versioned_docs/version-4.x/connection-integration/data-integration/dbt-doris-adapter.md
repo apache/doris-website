@@ -33,14 +33,20 @@ Source data must already be loaded into Doris. The adapter performs transformati
 
 :::
 
-<!-- Knowledge Type: Version Requirements / Environment Requirements / Version Differences -->
-<!-- Use Case: Pre-installation version check / Environment preparation / Release comparison -->
+<!-- Knowledge Type: Version Requirements / Environment Requirements / Released Versions -->
+<!-- Use Case: Pre-installation version check / Environment preparation / Release lookup -->
 
 ## Environment requirements
 
 | Component | Requirement |
 | --- | --- |
 | Python | 3.10 or later |
+
+## Released versions
+
+| Version |
+| --- |
+| [1.1.0](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0) |
 
 <!-- Knowledge Type: Operational Steps -->
 <!-- Use Case: Adapter installation / Installation verification -->
