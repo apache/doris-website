@@ -86,30 +86,6 @@ Doris 升级只需要替换 FE 目录下的 `/bin`、`/lib` 以及 BE 目录下�
 
 :::
 
-### 从 3.x 升级到 4.0 时的变量迁移
-
-<!-- 知识类型: 行为说明 -->
-<!-- 适用场景: 跨大版本升级 / 会话变量兼容 -->
-
-FE 通过内部变量 `variable_version` 记录会话变量默认值的迁移进度。从 3.x 升级到 4.0 时（`variable_version` 低于 400），FE 会自动调整以下变量的**全局默认值**：
-
-| 变量 | 迁移后的默认值 | 说明 |
-| --- | --- | --- |
-| `enable_ansi_query_organization_behavior` | `false` | 保持 3.x 的查询组织行为，避免升级后语义变化 |
-| `enable_new_type_coercion_behavior` | `false` | 保持 3.x 的类型转换行为 |
-| `enable_sql_cache` | `true` | 开启 SQL Cache |
-| `enable_nereids_distribute_planner` | `true` | **自 4.0.8 版本起新增的迁移项**，见下方说明 |
-
-:::caution 版本行为变更（4.0.8）
-
-自 4.0.8 版本起，从 3.x 升级到 4.0 会启用 Nereids 分布式规划器（`enable_nereids_distribute_planner`）。
-
-在 4.0.8 之前，如果集群的元数据镜像中持久化了 `enable_nereids_distribute_planner=false`，升级后该值会被原样恢复，集群继续使用旧版分布式规划器。4.0.8 将该变量纳入 `variable_version=400` 的迁移逻辑，升级后统一启用新的分布式规划器。
-
-升级后如果观察到查询计划的分布方式与升级前不同，可以先执行 `SET GLOBAL enable_nereids_distribute_planner = false;` 回退，并反馈相关查询。该迁移只在 `variable_version` 从低于 400 提升到 400 时执行一次，之后不会覆盖用户显式设置的值。
-
-:::
-
 ## 元数据兼容性测试
 
 <!-- 知识类型: 操作步骤 -->
@@ -355,6 +331,52 @@ admin set frontend config("disable_balance" = "false");
 admin set frontend config("disable_colocate_balance" = "false");
 admin set frontend config("disable_tablet_scheduler" = "false");
 ```
+
+## 各版本升级注意事项
+
+<!-- 知识类型: 行为说明 -->
+<!-- 适用场景: 跨版本升级 / 升级后行为变更确认 -->
+
+本节记录升级到特定版本时需要额外关注的行为变更。除本节内容外，仍需查阅目标版本的 Release Note 确认完整的变更列表。
+
+### 从 3.x 升级到 4.0 时的会话变量迁移
+
+FE 通过内部变量 `variable_version` 记录会话变量默认值的迁移进度。从 3.x 升级到 4.0 时（`variable_version` 低于 400），FE 会自动调整以下变量的**全局默认值**：
+
+| 变量 | 迁移后的默认值 | 说明 |
+| --- | --- | --- |
+| `enable_ansi_query_organization_behavior` | `false` | 保持 3.x 的查询组织行为，避免升级后语义变化 |
+| `enable_new_type_coercion_behavior` | `false` | 保持 3.x 的类型转换行为 |
+| `enable_sql_cache` | `true` | 开启 SQL Cache |
+| `enable_nereids_distribute_planner` | `true` | **自 4.0.8 版本起新增的迁移项**，见下方说明 |
+
+该迁移只在 `variable_version` 从低于 400 提升到 400 时执行一次，之后不会覆盖用户显式设置的值。
+
+### 升级到 4.0.8
+
+:::caution 启用 Nereids 分布式规划器
+
+自 4.0.8 版本起，从 3.x 升级到 4.0 会启用 Nereids 分布式规划器（`enable_nereids_distribute_planner`）。
+
+在 4.0.8 之前，如果集群的元数据镜像中持久化了 `enable_nereids_distribute_planner=false`，升级后该值会被原样恢复，集群继续使用旧版分布式规划器。4.0.8 将该变量纳入 `variable_version=400` 的迁移逻辑，升级后统一启用新的分布式规划器。
+
+升级后如果观察到查询计划的分布方式与升级前不同，可以先执行 `SET GLOBAL enable_nereids_distribute_planner = false;` 回退，并反馈相关查询。
+
+:::
+
+升级到 4.0.8 时，还需关注以下变更：
+
+| 变更内容 | 影响范围 | 处理方式 |
+| --- | --- | --- |
+| Compaction 不再因内存水位高而暂停（BE 配置 `enable_compaction_pause_on_high_memory` 默认 `true` → `false`） | 所有部署形态 | 如需保留旧行为，显式设置为 `true`。详见 [BE 配置项](../config/be-config) |
+| 自动分桶最小分桶数由 1 提升到 3（FE 配置 `autobucket_min_buckets`） | 使用 `BUCKETS AUTO` 建表 | 只影响升级后新创建的分区。详见 [数据分桶](../../table-design/data-partitioning/data-bucketing) |
+| BE `_stream_load_forward` 接口需要开启配置并通过认证 | 存算分离模式下依赖 Group Commit BE 转发的部署 | 在所有 BE 的 `be.conf` 中设置 `enable_group_commit_streamload_be_forward=true`，并确认导入账号具备全局 `LOAD` 权限。详见 [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual) |
+| 节点增删改接口需要全局 `ADMIN` 权限 | 调用 `/rest/v2/manager/node/{action}/{be\|fe\|broker}` 的自动化脚本 | 为调用方补充带 `ADMIN` 权限的账号认证。详见 [Node Action](../open-api/fe-http/node-action) |
+| Stream Load 会校验账号对实际承载请求的 Compute Group 的访问权限 | 存算分离模式下的 Stream Load | 为导入账号补充对应 Compute Group 的授权。详见 [Stream Load](../../data-operate/import/import-way/stream-load-manual) |
+| 存算分离模式下数据量统一按远端大小上报 | 依赖 `SHOW TABLETS`、`information_schema.partitions` 做容量统计的脚本 | 改用 `REMOTE_DATA_SIZE` 统计。详见 [partitions](../system-tables/information_schema/partitions) |
+| Routine Load 的 Kafka 敏感属性在查询结果中脱敏为 `******` | 依赖 `SHOW ROUTINE LOAD` 读取认证信息的脚本 | 改从配置管理侧获取原值。详见 [SHOW ROUTINE LOAD](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) |
+| 预热任务时间戳格式由 `HH:mm:ss` 改为 `yyyy-MM-dd HH:mm:ss` | 解析预热任务状态的脚本 | 调整时间解析格式。详见 [读写分离](../../compute-storage-decoupled/rw/read-write-separation) |
+| 扫描报错不再统一加 `failed to initialize storage reader` 前缀 | 按该前缀匹配告警的监控规则 | 改用错误码与 `tablet=` / `backend=` 信息定位 |
 
 ## 常见问题
 
