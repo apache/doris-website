@@ -10,6 +10,29 @@
 
 本文按版本倒序列出 Doris Operator 的版本发布说明。
 
+## 26.0.1
+
+来源：[Release Notes 26.0.1](https://github.com/apache/doris-operator/issues/512)
+
+该补丁版本改进了 DDC 与 Doris 4.1.3 的缩容兼容性，新增仓库自有的发版自动化工具，并使 Pull Request 的 License 检查对外部贡献者更安全。
+
+### 功能与改进
+
+- 新增仓库自有的发版工具，覆盖环境检查、源码打包、签名与上传、投票邮件生成以及发版收尾，并配套自动化流程测试。[#507](https://github.com/apache/doris-operator/pull/507)
+
+### Bug 修复
+
+- 修复 DDC FE 与计算组在 Doris 4.1.3 下的缩容问题：兼容扩展后的 `SHOW FRONTENDS` 与 `SHOW BACKENDS` 结果，逐个执行节点下线，并使 Backend 优雅清理可安全重试。[#510](https://github.com/apache/doris-operator/pull/510)
+
+### 可靠性
+
+- 将 License 检查改为在低权限的 `pull_request` workflow 中运行，并调整 checkout 处理方式，使 fork 仓库的 Pull Request 可以被安全扫描。[#511](https://github.com/apache/doris-operator/pull/511)
+
+### 致谢
+
+- [morningman](https://github.com/morningman)
+- [Al-assad](https://github.com/Al-assad)
+
 ## 26.0.0
 
 来源：[Release Notes 26.0.0](https://github.com/apache/doris-operator/issues/506)

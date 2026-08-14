@@ -39,10 +39,10 @@ export const TOOL_RELEASE_NOTES: Record<ToolsEnum, string> = {
     [ToolsEnum.Operator]: '/releases/ecosystem/doris-operator',
 };
 
-export const ORIGIN = 'https://download.selectdb.com/';
+export const ORIGIN = 'https://download.velodb.io/';
 export enum VersionEnum {
     Latest = '4.1.3',
-    Prev = '4.0.7',
+    Prev = '4.0.8',
     Earlier = '3.1.4',
 }
 
@@ -184,6 +184,40 @@ export const DORIS_VERSIONS: Option[] = [
                 sha512: `${ORIGIN}apache-doris-4.1.0-bin-arm64.tar.gz.sha512`,
                 source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.0/',
                 version: '4.1.0',
+            },
+        ],
+    },
+    {
+        label: '4.0.8',
+        value: '4.0.8',
+        majorVersion: '4.0',
+        children: [
+            {
+                label: CPUEnum.X64,
+                value: CPUEnum.X64,
+                gz: `${ORIGIN}apache-doris-4.0.8-bin-x64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.0.8-bin-x64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.0.8-bin-x64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.8/',
+                version: '4.0.8',
+            },
+            {
+                label: CPUEnum.X64NoAvx2,
+                value: CPUEnum.X64NoAvx2,
+                gz: `${ORIGIN}apache-doris-4.0.8-bin-x64-noavx2.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.0.8-bin-x64-noavx2.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.0.8-bin-x64-noavx2.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.8/',
+                version: '4.0.8',
+            },
+            {
+                label: CPUEnum.ARM64,
+                value: CPUEnum.ARM64,
+                gz: `${ORIGIN}apache-doris-4.0.8-bin-arm64.tar.gz`,
+                asc: `${ORIGIN}apache-doris-4.0.8-bin-arm64.tar.gz.asc`,
+                sha512: `${ORIGIN}apache-doris-4.0.8-bin-arm64.tar.gz.sha512`,
+                source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.8/',
+                version: '4.0.8',
             },
         ],
     },
@@ -687,6 +721,40 @@ export const ALL_VERSIONS: AllVersionOption[] = [
         label: '4.0',
         value: '4.0',
         children: [
+            {
+                label: '4.0.8',
+                value: '4.0.8',
+                majorVersion: '4.0',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-4.0.8-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.0.8-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.0.8-bin-x64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.8/',
+                        version: '4.0.8',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-4.0.8-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.0.8-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.0.8-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.8/',
+                        version: '4.0.8',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-4.0.8-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.0.8-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.0.8-bin-arm64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.0/4.0.8/',
+                        version: '4.0.8',
+                    },
+                ],
+            },
             {
                 label: '4.0.7',
                 value: '4.0.7',
@@ -2766,6 +2834,7 @@ const SPARK_SAME_SOURCE_2600 =
     'https://downloads.apache.org/doris/spark-connector/26.0.0/apache-doris-spark-connector-26.0.0-src.tgz';
 
 const DORIS_OPERATOR_SOURCE_VERSIONS = [
+    '26.0.1',
     '26.0.0',
     '25.8.0',
     '25.7.0',
@@ -2785,6 +2854,7 @@ const DORIS_OPERATOR_SOURCE_VERSIONS = [
 ];
 
 const DORIS_OPERATOR_BINARY_VERSIONS = [
+    '26.0.1',
     '26.0.0',
     '25.8.0',
     '25.7.0',
@@ -3530,14 +3600,14 @@ export const TOOL_VERSIONS = [
                     {
                         label: CPUEnum.X64,
                         value: CPUEnum.X64,
-                        gz: 'https://download.selectdb.com/apache-doris-streamloader-1.0.3-bin-x64.tar.gz',
-                        Binary: 'https://download.selectdb.com/apache-doris-streamloader-1.0.3-bin-x64.tar.gz',
+                        gz: 'https://download.velodb.io/apache-doris-streamloader-1.0.3-bin-x64.tar.gz',
+                        Binary: 'https://download.velodb.io/apache-doris-streamloader-1.0.3-bin-x64.tar.gz',
                     },
                     {
                         label: CPUEnum.ARM64,
                         value: CPUEnum.ARM64,
-                        gz: 'https://download.selectdb.com/apache-doris-streamloader-1.0.3-bin-arm64.tar.gz',
-                        Binary: 'https://download.selectdb.com/apache-doris-streamloader-1.0.3-bin-arm64.tar.gz',
+                        gz: 'https://download.velodb.io/apache-doris-streamloader-1.0.3-bin-arm64.tar.gz',
+                        Binary: 'https://download.velodb.io/apache-doris-streamloader-1.0.3-bin-arm64.tar.gz',
                     },
                 ],
                 source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.3/apache-doris-streamloader-1.0.3-src.tar.gz',
@@ -3549,14 +3619,14 @@ export const TOOL_VERSIONS = [
                     {
                         label: CPUEnum.X64,
                         value: CPUEnum.X64,
-                        gz: 'https://download.selectdb.com/apache-doris-streamloader-1.0.2-bin-x64.tar.gz',
-                        Binary: 'https://download.selectdb.com/apache-doris-streamloader-1.0.2-bin-x64.tar.gz',
+                        gz: 'https://download.velodb.io/apache-doris-streamloader-1.0.2-bin-x64.tar.gz',
+                        Binary: 'https://download.velodb.io/apache-doris-streamloader-1.0.2-bin-x64.tar.gz',
                     },
                     {
                         label: CPUEnum.ARM64,
                         value: CPUEnum.ARM64,
-                        gz: 'https://download.selectdb.com/apache-doris-streamloader-1.0.2-bin-arm64.tar.gz',
-                        Binary: 'https://download.selectdb.com/apache-doris-streamloader-1.0.2-bin-arm64.tar.gz',
+                        gz: 'https://download.velodb.io/apache-doris-streamloader-1.0.2-bin-arm64.tar.gz',
+                        Binary: 'https://download.velodb.io/apache-doris-streamloader-1.0.2-bin-arm64.tar.gz',
                     },
                 ],
                 source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.2/apache-doris-streamloader-1.0.2-src.tar.gz',
@@ -3568,14 +3638,14 @@ export const TOOL_VERSIONS = [
                     {
                         label: CPUEnum.X64,
                         value: CPUEnum.X64,
-                        gz: 'https://download.selectdb.com/apache-doris-streamloader-1.0.1-bin-x64.tar.xz',
-                        Binary: 'https://download.selectdb.com/apache-doris-streamloader-1.0.1-bin-x64.tar.xz',
+                        gz: 'https://download.velodb.io/apache-doris-streamloader-1.0.1-bin-x64.tar.xz',
+                        Binary: 'https://download.velodb.io/apache-doris-streamloader-1.0.1-bin-x64.tar.xz',
                     },
                     {
                         label: CPUEnum.ARM64,
                         value: CPUEnum.ARM64,
-                        gz: 'https://download.selectdb.com/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz',
-                        Binary: 'https://download.selectdb.com/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz',
+                        gz: 'https://download.velodb.io/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz',
+                        Binary: 'https://download.velodb.io/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz',
                     },
                 ],
                 source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.1/apache-doris-streamloader-1.0.1-src.tar.gz',

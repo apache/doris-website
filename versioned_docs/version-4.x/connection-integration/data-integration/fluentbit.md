@@ -52,7 +52,7 @@ You can either download a precompiled binary directly or build from source.
 
 ### Download from the official site
 
-Download [fluent-bit-doris-3.1.9](https://download.selectdb.com/integrations/fluent-bit-doris-3.1.9).
+Download [fluent-bit-doris-3.1.9](https://download.velodb.io/integrations/fluent-bit-doris-3.1.9).
 
 ### Build from source
 

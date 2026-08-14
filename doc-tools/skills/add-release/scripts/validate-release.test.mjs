@@ -18,9 +18,9 @@ function packageRows(version, sourceVersion) {
     return ['x64', 'x64-noavx2', 'arm64']
         .map(
             arch => `{
-                gz: 'https://download.selectdb.com/apache-doris-${version}-bin-${arch}.tar.gz',
-                asc: 'https://download.selectdb.com/apache-doris-${version}-bin-${arch}.tar.gz.asc',
-                sha512: 'https://download.selectdb.com/apache-doris-${version}-bin-${arch}.tar.gz.sha512',
+                gz: 'https://download.velodb.io/apache-doris-${version}-bin-${arch}.tar.gz',
+                asc: 'https://download.velodb.io/apache-doris-${version}-bin-${arch}.tar.gz.asc',
+                sha512: 'https://download.velodb.io/apache-doris-${version}-bin-${arch}.tar.gz.sha512',
                 source: 'https://dist.apache.org/repos/dist/release/doris/4.1/${version}/',
                 version: '${sourceVersion}',
             }`,
@@ -75,7 +75,7 @@ function createFixture({ omit412FromAll = false, zhIssueRef = '#10001' } = {}) {
     write(
         root,
         'src/constant/download.data.ts',
-        `export const ORIGIN = 'https://download.selectdb.com/';
+        `export const ORIGIN = 'https://download.velodb.io/';
 export enum VersionEnum {
     Latest = '4.1.3',
     Prev = '4.0.7',
