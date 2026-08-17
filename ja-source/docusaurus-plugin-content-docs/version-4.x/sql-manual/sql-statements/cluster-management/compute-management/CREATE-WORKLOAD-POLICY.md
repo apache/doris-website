@@ -1,47 +1,72 @@
 ---
 {
-  "title": "CREATE WORKLOAD GROUP | コンピュート管理",
-  "sidebar_label": "CREATE WORKLOAD GROUP",
-  "description": "このステートメントはワークロードグループを作成するために使用されます。ワークロードグループは、単一のbe上でcpuリソースとメモリリソースの分離を可能にします。",
-  "language": "ja"
+    "title": "CREATE WORKLOAD POLICY",
+    "language": "ja",
+    "description": "Workload Policyを作成します。クエリが特定の条件を満たした場合に、対応するアクションを実行するために使用します。"
 }
 ---
-# CREATE WORKLOAD GROUP
 
 ## 説明
 
-このステートメントはworkload groupを作成するために使用されます。Workload groupは単一のbe上でcpuリソースとmemoryリソースの分離を可能にします。
+Workload Policyを作成します。クエリが特定の条件を満たした場合に、対応するアクションを実行するために使用します。
 
-文法:
+## 構文
 
 ```sql
-CREATE WORKLOAD GROUP [IF NOT EXISTS] "rg_name"
-PROPERTIES (
-    property_list
-);
+CREATE WORKLOAD POLICY [ IF NOT EXISTS ] <workload_policy_name>
+CONDITIONS(<conditions>) ACTIONS(<actions>)
+[ PROPERTIES (<properties>) ]
 ```
-illustrate:
 
-property_listでサポートされているプロパティ：
+## 必須パラメータ
 
-* cpu_share: 必須。ワークロードグループが取得できるcpu時間を設定するために使用され、cpuリソースのソフト分離を実現できます。cpu_shareは実行中のワークロードグループが利用可能なcpuリソースの重みを示す相対値です。例えば、ユーザーがcpu_shareをそれぞれ10、30、40に設定した3つのワークロードグループrg-a、rg-b、rg-cを作成し、ある時点でrg-aとrg-bがタスクを実行しているがrg-cにはタスクがない場合、rg-aは(10 / (10 + 30)) = 25%のcpuリソースを取得でき、ワークロードグループrg-bは75%のcpuリソースを取得できます。システムで実行されているワークロードグループが1つだけの場合、そのcpu_shareの値に関係なく、すべてのcpuリソースを取得します。
+1. `<workload_policy_name>`：Workload Policyの名前です。
 
-* memory_limit: 必須。ワークロードグループが使用できるbeメモリの割合を設定します。ワークロードグループメモリ制限の絶対値は：`physical_memory * mem_limit * memory_limit`で、mem_limitはbe設定項目です。システム内のすべてのワークロードグループの合計memory_limitは100%を超えてはいけません。ワークロードグループは、ほとんどの場合、グループ内のタスクに対してmemory_limitの使用が保証されています。ワークロードグループのメモリ使用量がこの制限を超えた場合、メモリ使用量の多いグループ内のタスクがキャンセルされ、超過メモリが解放される可能性があります。enable_memory_overcommitを参照してください。
+2. `<conditions>`
+    - be_scan_rows：1つのBEプロセス内でSQLがスキャンした行数です。SQLがBE上で複数の並行処理によって実行される場合は、各並行処理の累積値です。
+    - be_scan_bytes：1つのBEプロセス内でSQLがスキャンしたバイト数です。SQLがBE上で複数の並行処理によって実行される場合は、各並行処理の累積値です。単位はバイトです。
+    - query_time：単一のBEプロセス上でのSQLの実行時間です。単位はミリ秒です。
+    - query_be_memory_bytes：バージョン2.1.5以降でサポートされています。1つのBEプロセス内でSQLが使用するメモリ量です。SQLがBE上で複数の並行処理によって実行される場合は、各並行処理の累積値です。単位はバイトです。
 
-* enable_memory_overcommit: オプション。ワークロードグループのソフトメモリ分離を有効にします。デフォルトはfalseです。falseに設定された場合、ワークロードグループはハードメモリ分離され、ワークロードグループのメモリ使用量が制限を超えた直後に、メモリ使用量が最も大きいタスクが即座にキャンセルされ、超過メモリが解放されます。trueに設定された場合、ワークロードグループはハードメモリ分離され、ワークロードグループのメモリ使用量が制限を超えた直後に、メモリ使用量が最も大きいタスクが即座にキャンセルされ、超過メモリが解放されます。trueに設定された場合、ワークロードグループはソフト分離され、システムに空きメモリリソースがある場合、ワークロードグループはmemory_limit制限を超えてもシステムメモリを継続して使用でき、システム全体のメモリが逼迫した場合、グループ内でメモリ占有量が最も大きい複数のタスクをキャンセルし、超過メモリの一部を解放してシステムメモリ圧迫を緩和します。この設定をワークロードグループで有効にする場合、すべてのワークロードグループの合計memory_limitを100%未満にし、残りの部分をワークロードグループメモリオーバーコミット用に使用することを推奨します。
+3. `<actions>`
+    - cancel_query：クエリをキャンセルします。
 
-## Example
+## オプションパラメータ
 
-1. g1という名前のワークロードグループを作成する：
+1. `<properties>`
+    - enabled：trueまたはfalseを指定できます。デフォルトはtrueです。trueの場合はポリシーが有効になり、falseの場合は無効になります。
+    - priority：0から100までの整数を指定できます。デフォルトは0です。値が大きいほど優先度が高くなります。複数のポリシーがクエリに一致した場合は、優先度が最も高いポリシーが選択されます。
+    - workload_group：ポリシーを1つのWorkload Groupにバインドできます。バインドした場合、そのポリシーは該当するWorkload Groupに対してのみ有効になります。デフォルトは空で、すべてのクエリに適用されます。
 
-   ```sql
-    create workload group if not exists g1
-    properties (
-        "cpu_share"="10",
-        "memory_limit"="30%",
-        "enable_memory_overcommit"="true"
-    );
-   ```
-## Keywords
+        Workload Group自体がCompute Groupに属するため、このプロパティの値は次の規則に従う必要があります。
 
-CREATE、WORKLOAD、GROUP
+        - **クラウド（ストレージ・コンピュート分離）モード**：完全修飾形式 `<compute_group>.<workload_group>` が必要です。例：`'workload_group'='compute_group_a.wg1'`。`<workload_group>` 単独の形式、`.` が2つ以上含まれる形式、または空のセグメント（`.wg1` や `wg1.` など）を含む形式は使用できず、次のエラーが返されます：`workload_group must be '<compute_group>.<workload_group>' in cloud mode`。
+        - **非クラウド（ストレージ・コンピュート統合）モード**：次の2つの形式を使用できます。
+            - `<workload_group>`：デフォルトのリソースグループ（`default`）配下にある同名のWorkload Groupにバインドされます。
+            - `<resource_group>.<workload_group>`：リソースグループを明示的に指定します。ここでのプレフィックスは実際にはリソースグループ（Tag）を指します。構文は、一貫性を保つためにクラウドモードと共通化されています。
+
+            `.` が2つ以上含まれる形式、または空のセグメントを含む形式も使用できず、次のエラーが返されます：`workload_group must be '<workload_group>' or '<resource_group>.<workload_group>' in non-cloud mode`。
+
+## アクセス制御要件
+
+少なくともADMIN_PRIV権限が必要です。
+
+## 例
+
+1. 実行時間が3秒を超えたクエリをキャンセルするWorkload Policyを作成します。
+
+    ```sql
+    create workload policy kill_big_query conditions(query_time > 3000) actions(cancel_query)
+    ```
+
+2. デフォルトで無効になっているWorkload Policyを作成します。
+
+    ```sql
+    create workload policy kill_big_query conditions(query_time > 3000) actions(cancel_query) properties('enabled'='false')
+    ```
+
+3. クラウドモードで、Compute Group `compute_group_a` 配下のWorkload Group `wg1` に対してのみ有効になるポリシーを作成します（完全修飾形式を使用します）。
+
+    ```sql
+    create workload policy kill_big_query conditions(query_time > 3000) actions(cancel_query) properties('workload_group'='compute_group_a.wg1')
+    ```
