@@ -29,7 +29,6 @@ CONDITIONS(<conditions>) ACTIONS(<actions>)
     - query_be_memory_bytes: Supported since version 2.1.5. The memory usage of a SQL within a single BE process. If the SQL is executed with multiple concurrencies on the BE, this is the cumulative value of the concurrent executions, in bytes.
 
 3. `<actions>`
-    - set_session_variable: This action executes a `set_session_variable` statement. A single Policy may contain multiple `set_session_variable` actions, allowing one Policy to execute multiple session-variable updates.
     - cancel_query: Cancel the query.
 
 ## Optional Parameters

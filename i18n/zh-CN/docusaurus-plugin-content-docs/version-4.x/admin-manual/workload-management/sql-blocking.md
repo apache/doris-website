@@ -238,7 +238,7 @@ Conditions 表示策略的触发条件，多个条件之间以逗号 `,` 分隔�
 
 | Condition | 说明 |
 |-----------|------|
-| `username` | 查询携带的用户名。可用于 FE 侧触发 `set_session_variable` Action；自 Doris 4.1.3 版本起，也可与 `query_time`、`be_scan_rows`、`be_scan_bytes`、`query_be_memory_bytes` 等 BE 侧运行时指标组合，用于触发 `cancel_query`。该条件仅支持等值比较（`=`），用户名不能为空 |
+| `username` | 查询携带的用户名，自 Doris 4.1.3 版本起，可与 `query_time`、`be_scan_rows`、`be_scan_bytes`、`query_be_memory_bytes` 等 BE 侧运行时指标组合，用于触发 `cancel_query`。该条件仅支持等值比较（`=`），用户名不能为空 |
 | `be_scan_rows` | 一个 SQL 在单个 BE 进程内扫描的行数，多并发执行时为累加值 |
 | `be_scan_bytes` | 一个 SQL 在单个 BE 进程内扫描的字节数，多并发执行时为累加值（单位：字节） |
 | `query_time` | 一个 SQL 在单个 BE 进程上的运行时间（单位：毫秒） |
@@ -246,12 +246,11 @@ Conditions 表示策略的触发条件，多个条件之间以逗号 `,` 分隔�
 
 #### 执行动作（Actions）
 
-Actions 表示条件触发时采取的动作。目前一个 Policy 只能定义一个 Action（`set_session_variable` 除外）。
+Actions 表示条件触发时采取的动作。目前一个 Policy 只能定义一个 Action。
 
 | Action | 说明 |
 |--------|------|
 | `cancel_query` | 取消查询 |
-| `set_session_variable` | 执行 set session variable 语句；同一个 Policy 可包含多个该选项，目前只会在 FE 由 `username` Condition 触发 |
 
 #### 策略属性（Properties）
 
@@ -319,36 +318,7 @@ MySQL [hits]> SELECT REGEXP_REPLACE(Referer, '^https?://(?:www\\.)?([^/]+)/.*$',
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[CANCELLED]query cancelled by workload policy,id:12345
 ```
 
-#### 示例二：自动调整用户 Session 变量
-
-通过 Workload Policy 可自动修改特定用户的 session 变量，例如降低其并发度以减少资源占用：
-
-```sql
--- 查看 admin 用户当前并发参数
-MySQL [(none)]> show variables like '%parallel_fragment_exec_instance_num%';
-+-------------------------------------+-------+---------------+---------+
-| Variable_name                       | Value | Default_Value | Changed |
-+-------------------------------------+-------+---------------+---------+
-| parallel_fragment_exec_instance_num | 8     | 8             | 0       |
-+-------------------------------------+-------+---------------+---------+
-1 row in set (0.00 sec)
-
--- 创建策略：将 admin 用户的并发参数调整为 1
-CREATE WORKLOAD POLICY test_set_var_policy
-CONDITIONS(username='admin')
-ACTIONS(set_session_variable 'parallel_fragment_exec_instance_num=1');
-
--- 稍后再次查看，参数已生效
-MySQL [(none)]> show variables like '%parallel_fragment_exec_instance_num%';
-+-------------------------------------+-------+---------------+---------+
-| Variable_name                       | Value | Default_Value | Changed |
-+-------------------------------------+-------+---------------+---------+
-| parallel_fragment_exec_instance_num | 1     | 8             | 1       |
-+-------------------------------------+-------+---------------+---------+
-1 row in set (0.01 sec)
-```
-
-#### 示例三：按用户熔断运行时大查询
+#### 示例二：按用户熔断运行时大查询
 
 自 Doris 4.1.3 版本起，可以将 `username` 与 BE 侧运行时指标组合，仅取消特定用户的查询。以下策略会在 `test_user` 提交的查询在单个 BE 上运行超过 3000 ms 时取消该查询：
 
@@ -361,9 +331,6 @@ ACTIONS(cancel_query);
 同理，也可以将 `username` 与 `be_scan_rows`、`be_scan_bytes` 或 `query_be_memory_bytes` 组合，用于限制特定用户的扫描量或 BE 内存使用量。
 
 ### 注意事项
-
-- **FE/BE 侧隔离**：同一个 Policy 的 Condition 和 Action 必须属于同一侧（FE 或 BE）。`set_session_variable` 是 FE 侧 Action，不能与 `query_time`、`be_scan_rows` 等 BE 侧指标组合；`cancel_query` 是 BE 侧 Action，可与 BE 侧运行时指标组合。
-- **`username` 条件限制**：`username` 是共享条件，可用于 FE 侧 `set_session_variable`；自 Doris 4.1.3 版本起，也可与 BE 侧运行时指标组合触发 `cancel_query`。`username` 条件仅支持等值比较（`=`），不支持 `>`、`>=`、`<`、`<=` 等比较操作符。如果 BE 无法获取查询明确携带的用户信息，则 `username` 条件不会匹配。
 - **异步执行延迟**：Policy 由异步线程每 500 ms 执行一次检查，策略生效存在一定滞后。运行时间极短的查询可能会在检查触发前已完成，从而绕过策略。
 - **优先级机制**：一个查询可能匹配多个 Policy，但只有优先级最高（`priority` 值最大）的 Policy 会生效。
 - **修改限制**：目前不支持直接修改已有 Policy 的 Action 和 Condition，需删除后重新创建。
