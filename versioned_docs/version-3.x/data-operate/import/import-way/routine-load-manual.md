@@ -420,7 +420,6 @@ Specific parameter options for the job_properties clause are as follows:
 | send_batch_parallelism    | Used to set the parallelism for sending batch data. If the parallelism value exceeds `max_send_batch_parallelism_per_job` in the BE configuration, the BE serving as coordinator will use the value of `max_send_batch_parallelism_per_job`. |
 | load_to_single_tablet     | Supports importing data to only one tablet of the corresponding partition per task. Default value is false. This parameter is only allowed when importing data to olap tables with random bucketing. |
 | partial_columns           | Specifies whether to enable partial column update. Default value is false. This parameter is only allowed when the table model is Unique and uses Merge on Write. Multi-table streaming does not support this parameter. For details, refer to [Partial Column Update](../../../data-operate/update/partial-column-update.md) |
-| unique_key_update_mode    | Specifies the update mode for Unique Key tables. Optional values: <ul><li>`UPSERT` (default): Standard full-row insert or update operation.</li><li>`UPDATE_FIXED_COLUMNS`: Partial column update, all rows update the same columns. Equivalent to `partial_columns=true`.</li><li>`UPDATE_FLEXIBLE_COLUMNS`: Flexible partial column update, each row can update different columns. Requires JSON format and table must have `enable_unique_key_skip_bitmap_column=true`. Cannot be used with `jsonpaths`, `fuzzy_parse`, `COLUMNS` clause, or `WHERE` clause.</li></ul>For details, refer to [Partial Column Update](../../../data-operate/update/partial-column-update#flexible-partial-column-updates) |
 | partial_update_new_key_behavior | Handling method for newly inserted rows when performing partial column updates on Unique Merge on Write tables. Two types: `APPEND`, `ERROR`.<br/>- `APPEND`: Allow insertion of new row data<br/>- `ERROR`: Import fails and reports an error when inserting new rows |
 | max_filter_ratio          | Maximum allowed filtering rate within the sampling window. Must be between greater than or equal to 0 and less than or equal to 1. Default value is 1.0, meaning any error rows can be tolerated. The sampling window is `max_batch_rows * 10`. If the error rows/total rows in the sampling window is greater than `max_filter_ratio`, the routine job will be paused, requiring manual intervention to check data quality issues. Rows filtered by where conditions are not counted as error rows. |
 | enclose                   | Specifies the enclosing character. When CSV data fields contain row or column separators, a single-byte character can be specified as an enclosing character for protection. For example, if the column separator is "," and the enclosing character is "'", for data "a,'b,c'", "b,c" will be parsed as one field. |
@@ -1373,83 +1372,6 @@ Specific display result descriptions are as follows:
     +------+----------------+------+------+
     3 rows in set (0.01 sec)
     ```
-
-**Flexible Partial Column Update**
-
-This example demonstrates how to use flexible partial column update, where each row can update different columns. This is very useful in CDC scenarios where change records may contain different fields.
-
-1. Sample import data (each JSON record updates different columns):
-
-    ```json
-    {"id": 1, "balance": 150.00, "last_active": "2024-01-15 10:30:00"}
-    {"id": 2, "city": "Shanghai", "age": 28}
-    {"id": 3, "name": "Alice", "balance": 500.00, "city": "Beijing"}
-    {"id": 1, "age": 30}
-    {"id": 4, "__DORIS_DELETE_SIGN__": 1}
-    ```
-
-2. Create table (must enable Merge-on-Write and skip bitmap column):
-
-    ```sql
-    CREATE TABLE demo.routine_test_flexible (
-        id           INT            NOT NULL  COMMENT "id",
-        name         VARCHAR(30)              COMMENT "Name",
-        age          INT                      COMMENT "Age",
-        city         VARCHAR(50)              COMMENT "City",
-        balance      DECIMAL(10,2)            COMMENT "Balance",
-        last_active  DATETIME                 COMMENT "Last Active Time"
-    )
-    UNIQUE KEY(`id`)
-    DISTRIBUTED BY HASH(`id`) BUCKETS 1
-    PROPERTIES (
-        "replication_num" = "1",
-        "enable_unique_key_merge_on_write" = "true",
-        "enable_unique_key_skip_bitmap_column" = "true"
-    );
-    ```
-
-3. Insert initial data:
-
-    ```sql
-    INSERT INTO demo.routine_test_flexible VALUES
-    (1, 'John', 25, 'Shenzhen', 100.00, '2024-01-01 08:00:00'),
-    (2, 'Jane', 30, 'Guangzhou', 200.00, '2024-01-02 09:00:00'),
-    (3, 'Bob', 35, 'Hangzhou', 300.00, '2024-01-03 10:00:00'),
-    (4, 'Tom', 40, 'Nanjing', 400.00, '2024-01-04 11:00:00');
-    ```
-
-4. Import command:
-
-    ```sql
-    CREATE ROUTINE LOAD demo.kafka_job_flexible ON routine_test_flexible
-            PROPERTIES
-            (
-                "format" = "json",
-                "unique_key_update_mode" = "UPDATE_FLEXIBLE_COLUMNS"
-            )
-            FROM KAFKA
-            (
-                "kafka_broker_list" = "10.16.10.6:9092",
-                "kafka_topic" = "routineLoadFlexible",
-                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );
-    ```
-
-5. Import result:
-
-    ```sql
-    mysql> SELECT * FROM demo.routine_test_flexible ORDER BY id;
-    +------+-------+------+-----------+---------+---------------------+
-    | id   | name  | age  | city      | balance | last_active         |
-    +------+-------+------+-----------+---------+---------------------+
-    |    1 | John  |   30 | Shenzhen  |  150.00 | 2024-01-15 10:30:00 |
-    |    2 | Jane  |   28 | Shanghai  |  200.00 | 2024-01-02 09:00:00 |
-    |    3 | Alice |   35 | Beijing   |  500.00 | 2024-01-03 10:00:00 |
-    +------+-------+------+-----------+---------+---------------------+
-    3 rows in set (0.01 sec)
-    ```
-
-    Note: The row with `id=4` was deleted due to `__DORIS_DELETE_SIGN__`, and each row only updated the columns contained in its corresponding JSON record.
 
 ### Import Complex Types
 
