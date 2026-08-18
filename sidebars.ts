@@ -1643,6 +1643,8 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timediff',
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/time-format",
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/time-to-sec',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/timezone-hour',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/timezone-minute',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/to-date',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/to-days',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/to-iso8601',
