@@ -51,6 +51,17 @@ mysql> SELECT timezone_minute(CAST('2024-01-15 12:00:00' AS TIMESTAMPTZ));
 |                                                            45 |
 +---------------------------------------------------------------+
 
+-- A TIMESTAMPTZ value stores only the UTC instant, not the input zone, so
+-- even when the input carries '-04:30', the returned offset is the session
+-- time zone's offset. Trino would return -30 for this input.
+mysql> SET time_zone = '+08:00';
+mysql> SELECT timezone_minute(CAST('2024-01-15 12:00:00-04:30' AS TIMESTAMPTZ));
++----------------------------------------------------------------------+
+| timezone_minute(CAST('2024-01-15 12:00:00-04:30' AS TIMESTAMPTZ))    |
++----------------------------------------------------------------------+
+|                                                                    0 |
++----------------------------------------------------------------------+
+
 -- When the input is NULL, returns NULL
 mysql> SELECT timezone_minute(CAST(NULL AS TIMESTAMPTZ));
 +--------------------------------------------+
