@@ -369,8 +369,6 @@ mysql> SELECT * FROM dt3;
 
 * JDBCを使用してDorisに接続してトランザクション操作を行う場合は、JDBC URLに`useLocalSessionState=true`を追加してください。そうでない場合、`This is in a transaction, only insert, update, delete, commit, rollback is acceptable`エラーが発生する可能性があります。
 
-* cloudモードでは、トランザクションロードは`merge on write` uniqueテーブルをサポートしません。そうでない場合、`Transaction load is not supported for merge on write unique keys table in cloud mode`エラーが発生します。
-
 ## stream Load 2PC
 
 **1. HTTPヘッダーで`two_phase_commit:true`を設定することにより、2フェーズコミットを有効にします。**
