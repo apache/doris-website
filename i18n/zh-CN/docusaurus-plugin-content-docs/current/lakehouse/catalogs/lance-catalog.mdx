@@ -26,7 +26,7 @@ Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lan
 | 数据查询 | 支持列裁剪、并行扫描 Lance Fragment 和当前版本的快照一致性读取 |
 | 谓词下推 | 支持将部分标量谓词下推到 Lance 执行 |
 | 文件 TVF | 支持通过 `s3()` 和 `local()` 直接查询 Lance 数据集 |
-| 向量检索 | 支持通过 `vector_search()` 按 Fragment 并行查询 Lance 向量索引或执行 Flat Search，并由 Doris 合并全局 Top-K |
+| 向量检索 | 使用物理 Lance Index Segment 作为并行 Split，对未覆盖的 Fragment 保留 Flat Search Split，并由 Doris 合并全局 Top-K |
 | 写入 Lance | 暂不支持 |
 | Time Travel | 暂不支持 |
 | Full-Text Search / Hybrid Search | 暂不支持 |
@@ -402,7 +402,7 @@ ORDER BY _distance ASC, user_id;
 | `nprobes` | 否 | 最少 `1`，不限制最大值 | IVF 索引探测的分区数量，必须为正整数。不设置时从 1 个分区开始；使用 Prefilter 且候选不足时，Lance 可以继续探测更多分区。显式设置为 `N` 时，最少和最多探测数都会固定为 `N`。 |
 | `refine_factor` | 否 | 不启用精排 | 候选集精排倍数，必须为正整数。不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。即使设置为 `1` 也会执行精排，因此与不设置不同。 |
 | `ef` | 否 | `floor(1.5 × (top_k + offset))` | HNSW 图索引搜索时保留的候选宽度，必须为正整数。如果同时设置了 `refine_factor`，默认值为 `floor(1.5 × (top_k + offset) × refine_factor)`。对非 HNSW 索引无效。 |
-| `use_index` | 否 | `true` | `true` 表示存在兼容索引时优先使用索引，否则自动执行 Flat Search；`false` 强制执行 Flat Search。 |
+| `use_index` | 否 | `true` | `true` 表示将兼容的物理 Lance Index Segment 规划为索引 Split，并将未覆盖的 Fragment 保留为 Flat Search Split；如果没有可用的兼容索引元数据，则退回按 Fragment 拆分。`false` 表示每个可见 Fragment 生成一个 Split，并强制执行 Flat Search。 |
 
 以上默认值对应 Doris 当前集成的 Lance Scanner 行为。`metric` 未指定时，如果向量列存在兼容索引，查询使用该索引创建时配置的 Metric；不存在兼容索引或 `"use_index" = "false"` 时，`uint8` 向量使用 `hamming`，其他当前支持的向量元素类型使用 `l2`。
 
@@ -419,11 +419,13 @@ ORDER BY _distance ASC, user_id;
 | `IVF_HNSW_SQ` | IVF、HNSW 与 Scalar Quantization | `nprobes`、`ef`、`refine_factor` |
 | `IVF_HNSW_PQ` | IVF、HNSW 与 Product Quantization | `nprobes`、`ef`、`refine_factor` |
 
-`vector_search()` 只负责查询，不负责在 Doris 中创建索引，也不提供指定索引类型或索引名称的参数。当 `use_index=true` 时，Doris 将查询交给 Lance，由 Lance 选择与向量列和 Metric 兼容的现有索引；没有兼容索引时执行 Flat Search。当 `use_index=false` 时强制执行 Flat Search。Flat Search 不是一种 ANN 索引，它需要在 Lance 内直接读取并比较向量。
+`vector_search()` 只负责查询，不负责在 Doris 中创建索引，也不提供指定索引类型或索引名称的参数。当 `use_index=true` 时，FE 从固定的数据集快照读取向量索引元数据，并选择与向量列和 Metric 兼容的一个逻辑索引；随后将该逻辑索引中仍覆盖可见数据的每个物理 Segment 分配给一个索引 Scan Split。每个索引 Split 都携带 Segment UUID 以及该 Segment 覆盖且在当前快照中可见的 Fragment，因此 BE 会检索指定的物理 Segment，而不是再次让 Lance 自行选择索引。
+
+一个 Lance 逻辑索引可以包含多个物理 Index Segment，一个物理 Segment 也可以覆盖多个 Fragment。未被所选索引覆盖的 Fragment 不会被遗漏：Doris 会为每个这样的 Fragment 增加一个执行 Flat Search 的回退 Split。如果 FE 无法生成可用的 Index Segment 计划，则退回按 Fragment 拆分。当 `use_index=false` 时，Doris 跳过索引元数据规划，并对每个可见 Fragment 强制执行 Flat Search。Flat Search 不是一种 ANN 索引，它需要在 Lance 内直接读取并比较向量。
 
 ### Prefilter 和 Post-filter
 
-TVF 的 `filter` 参数是 **Prefilter**。Doris 将该字符串传给每个 Fragment 的 Lance Scanner，Lance 在 ANN 或 Flat Search 生成候选之前执行过滤：
+TVF 的 `filter` 参数是 **Prefilter**。Doris 将该字符串传给每个搜索 Split 的 Lance Scanner，Lance 在 ANN 或 Flat Search 生成候选之前执行过滤：
 
 ```sql
 SELECT user_id, category, _distance
@@ -439,7 +441,7 @@ ORDER BY _distance ASC, user_id;
 
 `filter` 中引用的列由 Lance 内部读取并计算；如果该列没有被 `SELECT` 或其他 Doris 表达式引用，它不需要作为列返回给 Doris。
 
-外层 `WHERE` 是 **Post-filter**。优化器会将它下移到 Doris 的 Lance Scan 中，但不会把它转换成 Lance 的 Prefilter。它的执行位置是：Lance 为每个 Fragment 生成候选之后、Doris 执行局部和全局 TopN 之前。
+外层 `WHERE` 是 **Post-filter**。优化器会将它下移到 Doris 的 Lance Scan 中，但不会把它转换成 Lance 的 Prefilter。它的执行位置是：Lance 为每个搜索 Split 生成候选之后、Doris 执行局部和全局 TopN 之前。
 
 ```sql
 SELECT user_id, category, _distance
@@ -457,20 +459,24 @@ ORDER BY _distance ASC, user_id;
 
 ### 当前执行方式
 
-`vector_search()` 使用分布式候选搜索，而不是由一个 Scanner 扫描整个数据集：
+`vector_search()` 使用分布式候选搜索，而不是由一个 Scanner 扫描整个数据集。Split 的边界取决于索引覆盖范围：
 
-1. FE 在规划阶段固定一个正数版本的 Lance 数据集快照，并读取该快照中可见的 Fragment。
-2. 每个 Fragment 生成一个独立的 Scan Split，可以分发到不同 BE 和 Scanner 并行执行。
-3. 假设查询参数为 `top_k=K`、`offset=n`，每个 Fragment 都请求最多 `K+n` 个候选，并且不在 Fragment 内应用 offset。TVF 的 `filter` 在候选生成前由 Lance 执行；外层 `WHERE` 在候选生成后由 Doris Scan 执行。
-4. Doris 对所有 Fragment 返回的候选执行局部 TopN、Exchange 和全局 TopN，按 `_distance ASC` 合并；只有全局 TopN 应用 `offset=n`，跳过前 `n` 行后返回 `K` 行。
+1. FE 在规划阶段固定一个正数版本的 Lance 数据集快照，并读取该快照中可见的 Fragment；当 `use_index=true` 时，还会读取向量索引元数据。
+2. 如果存在具有可用 Segment 覆盖信息的兼容逻辑向量索引，每个仍覆盖可见 Fragment 的物理 Index Segment 都会生成一个索引 Scan Split。该 Split 包含 Segment UUID，以及其 Fragment Bitmap 与固定快照中可见 Fragment 的交集，因此一个 Split 可以包含多个 Fragment ID。
+3. 没有被这些索引 Split 覆盖的每个可见 Fragment，都会生成一个独立的回退 Fragment Split。这样，即使数据是在索引创建后追加的、尚未执行索引优化，也仍然可以被检索。如果不存在可用的 Index Segment 计划，所有可见 Fragment 都按 Fragment 拆分；当 `use_index=false` 时，所有可见 Fragment 直接使用 Flat Search Split。
+4. 假设查询参数为 `top_k=K`、`offset=n`，每个索引或回退 Split 都请求最多 `K+n` 个候选，并且不在 Split 内应用 offset。索引 Split 只检索为其分配的物理 Index Segment，回退 Fragment Split 对自身 Fragment 执行 Flat Search。TVF 的 `filter` 在候选生成前由 Lance 执行，外层 `WHERE` 则在候选生成后由 Doris Scan 执行。
+5. Doris 对所有 Split 返回的候选执行局部 TopN、Exchange 和全局 TopN，按 `_distance ASC` 合并；只有全局 TopN 应用 `offset=n`，跳过前 `n` 行后返回 `K` 行。
 
-因此，Fragment 级 TopN 只是为全局合并提供候选，不能直接视为最终结果。查询期间所有 Fragment 以及后续按 Row ID 取列都使用同一个固定快照。
+因此，Split 级候选集只用于向全局合并提供候选，不能直接视为最终结果。索引 Segment Split、回退 Fragment Split 以及后续按 Row ID 取列都使用同一个固定快照。刷新索引覆盖会改变新追加 Fragment 的检索方式，但未被索引覆盖的 Fragment 仍会通过 Flat Search 进入检索范围。
 
 执行顺序可以概括为：
 
 ```text
 固定数据集快照
-  -> 每个 Fragment：Lance Prefilter -> ANN/Flat Search -> 最多 K+n 个候选
+  -> FE Split 规划
+       -> 索引覆盖：每个物理 Index Segment 一个 Split -> ANN Search
+       -> 未覆盖或无索引数据：每个 Fragment 一个 Split -> Flat Search
+  -> 每个 Split：Lance Prefilter -> ANN/Flat Search -> 最多 K+n 个候选
   -> Doris Scan Post-filter
   -> Doris 局部 TopN
   -> Exchange
@@ -511,7 +517,7 @@ WHERE category = 'book';
 
 | 阶段或算子 | 读取或输出的列 | 说明 |
 |---|---|---|
-| Lance Fragment Search | 内部使用 `embedding`；向 Doris 返回 `_distance`、`category` 和内部 Lance Row ID | `embedding` 用于 ANN/Flat Search，但没有被 SQL 投影时不作为结果列返回。每个 Fragment 最多产生 `K+n` 个候选。 |
+| Lance Split Search | 内部使用 `embedding`；向 Doris 返回 `_distance`、`category` 和内部 Lance Row ID | `embedding` 用于 ANN/Flat Search，但没有被 SQL 投影时不作为结果列返回。每个 Index Segment 或回退 Fragment Split 最多产生 `K+n` 个候选。 |
 | Doris Scan Post-filter | `_distance`、`category`、内部 Row Location | 执行 `category = 'book'`。外层 `WHERE` 的列必须留在第一阶段。Doris 将 Lance Row ID 和数据集映射编码为内部 Row Location，Fetch 再通过该映射解析到同一个固定快照。 |
 | 局部和全局 TopN | 第一阶段必需列和内部 Row Location | 全局 TopN 按 `_distance` 合并，应用 `offset=n` 和 `limit=K`。 |
 | Row ID Fetch | 使用内部 Row Location 读取 `user_id`、`title`、`payload` | 对全局 TopN 保留的行，在同一个 Lance 数据集快照上调用 Row-ID 随机读取，不重新扫描 Fragment。 |
@@ -521,7 +527,7 @@ WHERE category = 'book';
 
 TVF `filter` 中引用的 Prefilter 列与外层 `WHERE` 列不同：前者由 Lance 在搜索内部使用，并不因为出现在 `filter` 字符串中就必须返回到 Doris；后者由 Doris Scan 执行，所以必须进入第一阶段。
 
-将 `experimental_topn_lazy_materialization_threshold` 设置为 `-1` 会关闭两阶段读取。如果 `top_k` 大于阈值，或者没有可延迟的列，也会使用单阶段读取。单阶段模式会在 Scan 阶段返回查询所需的全部输出列，但向量搜索仍然按 Fragment 并行生成候选并由 Doris 合并全局 TopN；它不会因此退化为 Doris 对整张表做普通全列扫描。是否在 Lance 内扫描全部向量取决于 `use_index`：使用兼容索引时执行索引搜索，强制或回退到 Flat Search 时才需要直接比较向量。
+将 `experimental_topn_lazy_materialization_threshold` 设置为 `-1` 会关闭两阶段读取。如果 `top_k` 大于阈值，或者没有可延迟的列，也会使用单阶段读取。单阶段模式会在 Scan 阶段返回查询所需的全部输出列，但向量搜索仍然按 Index Segment 或回退 Fragment Split 并行生成候选，并由 Doris 合并全局 TopN；它不会因此退化为 Doris 对整张表做普通全列扫描。索引 Split 使用为其分配的物理 Index Segment，强制或回退到 Flat Search 时才直接比较向量。
 
 ## 当前限制和建议
 
@@ -531,4 +537,5 @@ TVF `filter` 中引用的 Prefilter 列与外层 `WHERE` 列不同：前者由 L
 - 对普通扫描使用 `EXPLAIN` 检查 `lancePushdownPredicate`，确认目标条件是否已下推。
 - 向量检索前应在 Lance 中创建与查询方式匹配的索引；小数据集或验证场景可以设置 `"use_index" = "false"` 使用 Flat Search。
 - 向量查询需要稳定顺序时，显式使用 `ORDER BY _distance ASC` 并增加唯一 Tie-breaker。
-- 需要在向量候选生成前过滤时使用 `vector_search()` 的 `filter`；外层 `WHERE` 只过滤每个 Fragment 已生成的候选，并在 Doris 全局 TopN 之前执行，应允许其最终结果少于 `top_k`。
+- 需要在向量候选生成前过滤时使用 `vector_search()` 的 `filter`；外层 `WHERE` 只过滤每个搜索 Split 已生成的候选，并在 Doris 全局 TopN 之前执行，应允许其最终结果少于 `top_k`。
+- 使用 `EXPLAIN` 检查 `lanceSearchFragments` 和 `lanceSearchIndexSegments`。前者表示固定快照中的可见 Fragment 数量，后者表示 FE 选择的物理 Index Segment Split 数量；此外还可能存在回退 Fragment Split。
