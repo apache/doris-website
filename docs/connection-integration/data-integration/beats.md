@@ -33,7 +33,7 @@ You can either download a Beats binary that already includes the Doris output pl
 
 ### Download from the official site
 
-Download [filebeat-doris-2.1.1](https://download.velodb.io/extension/filebeat-doris-2.1.1).
+Download [filebeat-doris-2.1.1](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1).
 
 ### Compile from source
 

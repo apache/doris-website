@@ -360,7 +360,7 @@ Follow these steps:
 
 1. Download and install the Logstash Doris Output plugin. Choose one of the following methods:
 
-    - Direct download: [click here to download](https://download.velodb.io/extension/logstash-output-doris-1.2.0.gem).
+    - Direct download: [click here to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem).
     - Build from source, then install with the following command:
 
         ```shell
@@ -426,7 +426,7 @@ For more configuration details, refer to [Logstash Doris Output Plugin](../conne
 
 Follow these steps:
 
-1. Get a Filebeat binary that supports output to Apache Doris. You can [click here to download](https://download.velodb.io/extension/filebeat-doris-2.1.1) it or build it from the Apache Doris source.
+1. Get a Filebeat binary that supports output to Apache Doris. You can [click here to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1) it or build it from the Apache Doris source.
 
 2. Configure Filebeat. The main file is `filebeat_demo.yml`, which configures the input path of the collected logs and the settings for output to Apache Doris:
 
