@@ -21,7 +21,9 @@ export default function LocaleDropdownNavbarItem({
     const alternatePageUtils = useAlternatePageUtils();
     const { search, hash } = useLocation();
 
-    const COMING_SOON_LOCALES = new Set(['ja']);
+    // Locales listed here render in the dropdown with a "Coming Soon" badge and
+    // are not clickable yet. Empty while no locale is in that state.
+    const COMING_SOON_LOCALES = new Set<string>([]);
 
     const localeItems = locales.map((locale): LinkLikeNavbarItemProps => {
         const baseTo = `pathname://${alternatePageUtils.createUrl({

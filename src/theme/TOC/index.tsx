@@ -30,27 +30,19 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
     const isBrowser = useIsBrowser();
     const locale = currentLocale;
     const isCN = locale === 'zh-CN';
-    const uiText =
-        locale === 'ja'
-            ? {
-                  homepage: 'Doris ホーム',
-                  downloadPdf: 'PDF をダウンロード',
-                  onThisPage: 'このページ',
-                  forum: '技術フォーラム',
-              }
-            : locale === 'zh-CN'
-              ? {
-                    homepage: 'Doris 首页',
-                    downloadPdf: '下载 PDF',
-                    onThisPage: '本页导航',
-                    forum: '技术论坛',
-                }
-              : {
-                    homepage: 'Doris Homepage',
-                    downloadPdf: 'Download PDF',
-                    onThisPage: 'On This Page',
-                    forum: 'Forum',
-                };
+    const uiText = isCN
+        ? {
+              homepage: 'Doris 首页',
+              downloadPdf: '下载 PDF',
+              onThisPage: '本页导航',
+              forum: '技术论坛',
+          }
+        : {
+              homepage: 'Doris Homepage',
+              downloadPdf: 'Download PDF',
+              onThisPage: 'On This Page',
+              forum: 'Forum',
+          };
     const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
     const [loading, setLoading] = useState(false);
 
