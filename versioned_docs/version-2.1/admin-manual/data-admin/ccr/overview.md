@@ -85,9 +85,9 @@ requirement: glibc >= 2.28
 
 | Version | Arch  | Tarball                                                                                                                                        | SHA256                                                           |
 |---------|-------|------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
-| 2.1     | ARM64 | [ccr-syncer-2.1.10-rc08-arm64.tar.xz](https://download.velodb.io/ccr-release/ccr-syncer-2.1.10-rc08-arm64.tar.xz) | 060093e90150ee24f8a784066436a0a4a1116876ebd6f33d5a844e2dc67f10b0 |
-| 2.1     | X64   | [ccr-syncer-2.1.10-rc08-x64.tar.xz](https://download.velodb.io/ccr-release/ccr-syncer-2.1.10-rc08-x64.tar.xz)     | 656c0a46e3f0e12b9ff2fb76116ad8362e344a8d1ac31f1b26834aaaa1987a7b |
-| 3.0     | ARM64 | [ccr-syncer-3.0.6-rc07-arm64.tar.xz](https://download.velodb.io/ccr-release/ccr-syncer-3.0.6-rc07-arm64.tar.xz) | dd5f154c68007732c3c3a9f808f16a7f287fd742bd35d0272ef596779f0eb8e6 |
-| 3.0     | X64   | [ccr-syncer-3.0.6-rc07-x64.tar.xz](https://download.velodb.io/ccr-release/ccr-syncer-3.0.6-rc07-x64.tar.xz)   | 31e514b4d55fb4f11204cd023369ef5988ffda3cb3728e974899623ea81dc1ad |
+| 2.1     | ARM64 | [ccr-syncer-2.1.10-rc08-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc08-arm64.tar.xz) | 060093e90150ee24f8a784066436a0a4a1116876ebd6f33d5a844e2dc67f10b0 |
+| 2.1     | X64   | [ccr-syncer-2.1.10-rc08-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc08-x64.tar.xz)     | 656c0a46e3f0e12b9ff2fb76116ad8362e344a8d1ac31f1b26834aaaa1987a7b |
+| 3.0     | ARM64 | [ccr-syncer-3.0.6-rc07-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc07-arm64.tar.xz) | dd5f154c68007732c3c3a9f808f16a7f287fd742bd35d0272ef596779f0eb8e6 |
+| 3.0     | X64   | [ccr-syncer-3.0.6-rc07-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc07-x64.tar.xz)   | 31e514b4d55fb4f11204cd023369ef5988ffda3cb3728e974899623ea81dc1ad |
 
 
