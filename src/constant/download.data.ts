@@ -39,7 +39,7 @@ export const TOOL_RELEASE_NOTES: Record<ToolsEnum, string> = {
     [ToolsEnum.Operator]: '/releases/ecosystem/doris-operator',
 };
 
-export const ORIGIN = 'https://download.velodb.io/';
+export const ORIGIN = 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/';
 export enum VersionEnum {
     Latest = '4.1.3',
     Prev = '4.0.8',
@@ -2335,40 +2335,6 @@ export const ALL_VERSIONS: AllVersionOption[] = [
                 ],
             },
             {
-                label: '2.0.3',
-                value: '2.0.3',
-                majorVersion: '2.0',
-                items: [
-                    {
-                        label: CPUEnum.X64,
-                        value: CPUEnum.X64,
-                        gz: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz`,
-                        asc: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz.asc`,
-                        sha512: `${ORIGIN}apache-doris-2.0.3-bin-x64.tar.gz.sha512`,
-                        source: 'https://archive.apache.org/dist/doris/2.0/2.0.3/',
-                        version: '2.0.3',
-                    },
-                    {
-                        label: CPUEnum.X64NoAvx2,
-                        value: CPUEnum.X64NoAvx2,
-                        gz: `${ORIGIN}apache-doris-2.0.3-bin-x64-noavx2.tar.gz`,
-                        asc: `${ORIGIN}apache-doris-2.0.3-bin-x64-noavx2.tar.gz.asc`,
-                        sha512: `${ORIGIN}apache-doris-2.0.3-bin-x64-noavx2.tar.gz.sha512`,
-                        source: 'https://archive.apache.org/dist/doris/2.0/2.0.3/',
-                        version: '2.0.3',
-                    },
-                    {
-                        label: CPUEnum.ARM64,
-                        value: CPUEnum.ARM64,
-                        gz: `${ORIGIN}apache-doris-2.0.3-bin-arm64.tar.gz`,
-                        asc: `${ORIGIN}apache-doris-2.0.3-bin-arm64.tar.gz.asc`,
-                        sha512: `${ORIGIN}apache-doris-2.0.3-bin-arm64.tar.gz.sha512`,
-                        source: 'https://archive.apache.org/dist/doris/2.0/2.0.3/',
-                        version: '2.0.3',
-                    },
-                ],
-            },
-            {
                 label: '2.0.2',
                 value: '2.0.2',
                 majorVersion: '2.0',
@@ -3600,14 +3566,14 @@ export const TOOL_VERSIONS = [
                     {
                         label: CPUEnum.X64,
                         value: CPUEnum.X64,
-                        gz: 'https://download.velodb.io/apache-doris-streamloader-1.0.3-bin-x64.tar.gz',
-                        Binary: 'https://download.velodb.io/apache-doris-streamloader-1.0.3-bin-x64.tar.gz',
+                        gz: `${ORIGIN}apache-doris-streamloader-1.0.3-bin-x64.tar.gz`,
+                        Binary: `${ORIGIN}apache-doris-streamloader-1.0.3-bin-x64.tar.gz`,
                     },
                     {
                         label: CPUEnum.ARM64,
                         value: CPUEnum.ARM64,
-                        gz: 'https://download.velodb.io/apache-doris-streamloader-1.0.3-bin-arm64.tar.gz',
-                        Binary: 'https://download.velodb.io/apache-doris-streamloader-1.0.3-bin-arm64.tar.gz',
+                        gz: `${ORIGIN}apache-doris-streamloader-1.0.3-bin-arm64.tar.gz`,
+                        Binary: `${ORIGIN}apache-doris-streamloader-1.0.3-bin-arm64.tar.gz`,
                     },
                 ],
                 source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.3/apache-doris-streamloader-1.0.3-src.tar.gz',
@@ -3619,14 +3585,14 @@ export const TOOL_VERSIONS = [
                     {
                         label: CPUEnum.X64,
                         value: CPUEnum.X64,
-                        gz: 'https://download.velodb.io/apache-doris-streamloader-1.0.2-bin-x64.tar.gz',
-                        Binary: 'https://download.velodb.io/apache-doris-streamloader-1.0.2-bin-x64.tar.gz',
+                        gz: `${ORIGIN}apache-doris-streamloader-1.0.2-bin-x64.tar.gz`,
+                        Binary: `${ORIGIN}apache-doris-streamloader-1.0.2-bin-x64.tar.gz`,
                     },
                     {
                         label: CPUEnum.ARM64,
                         value: CPUEnum.ARM64,
-                        gz: 'https://download.velodb.io/apache-doris-streamloader-1.0.2-bin-arm64.tar.gz',
-                        Binary: 'https://download.velodb.io/apache-doris-streamloader-1.0.2-bin-arm64.tar.gz',
+                        gz: `${ORIGIN}apache-doris-streamloader-1.0.2-bin-arm64.tar.gz`,
+                        Binary: `${ORIGIN}apache-doris-streamloader-1.0.2-bin-arm64.tar.gz`,
                     },
                 ],
                 source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.2/apache-doris-streamloader-1.0.2-src.tar.gz',
@@ -3638,14 +3604,14 @@ export const TOOL_VERSIONS = [
                     {
                         label: CPUEnum.X64,
                         value: CPUEnum.X64,
-                        gz: 'https://download.velodb.io/apache-doris-streamloader-1.0.1-bin-x64.tar.xz',
-                        Binary: 'https://download.velodb.io/apache-doris-streamloader-1.0.1-bin-x64.tar.xz',
+                        gz: `${ORIGIN}apache-doris-streamloader-1.0.1-bin-x64.tar.xz`,
+                        Binary: `${ORIGIN}apache-doris-streamloader-1.0.1-bin-x64.tar.xz`,
                     },
                     {
                         label: CPUEnum.ARM64,
                         value: CPUEnum.ARM64,
-                        gz: 'https://download.velodb.io/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz',
-                        Binary: 'https://download.velodb.io/apache-doris-streamloader-1.0.1-bin-arm64.tar.xz',
+                        gz: `${ORIGIN}apache-doris-streamloader-1.0.1-bin-arm64.tar.xz`,
+                        Binary: `${ORIGIN}apache-doris-streamloader-1.0.1-bin-arm64.tar.xz`,
                     },
                 ],
                 source: 'https://downloads.apache.org/doris/doris-streamloader/1.0.1/apache-doris-streamloader-1.0.1-src.tar.gz',
