@@ -20,6 +20,8 @@
 
 关于**数据缓存**，可参阅[数据缓存文档](./data-cache.md)。
 
+关于 Doris 4.1.5 外部元数据缓存的内存限制，请参阅[外部元数据缓存内存管理](./external-meta-cache-memory-management.md)。
+
 ## 缓存策略
 
 大多数缓存都有如下三个策略指标：

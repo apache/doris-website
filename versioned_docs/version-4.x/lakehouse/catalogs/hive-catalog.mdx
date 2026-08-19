@@ -130,7 +130,7 @@ In version 4.1.x and later, unified keys are recommended. The following is the m
 * **Performance optimization**: For scenarios where metadata changes are infrequent, it is recommended to appropriately increase `capacity` and `ttl-second` to reduce access pressure on Hive Metastore and file systems.
 
 :::caution
-**Hive Catalog Note**: Changes to `meta.cache.hive.*` properties **do not support hot-reload**. To ensure new configurations take effect, you must recreate the catalog or restart the FE node.
+**Hive Catalog Note**: Starting from Doris 4.1.5, changing `meta.cache.hive.*` properties clears the initialized Hive metadata cache for that Catalog. Doris recreates it with the new configuration on the next access. Queries already in progress are not affected.
 :::
 
 ### Observability {#meta-cache-unified-observability}
