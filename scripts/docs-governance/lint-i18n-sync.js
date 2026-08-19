@@ -14,7 +14,7 @@ const {
 const STRONG_SYNC_VERSIONS = new Set(['current', '4.x']);
 const CANDIDATE_VERSION = '3.x';
 const SUPPORTED_SYNC_VERSIONS = new Set(['current', '4.x', CANDIDATE_VERSION]);
-const SUPPORTED_SYNC_LOCALES = new Set(['en', 'zh-CN', 'ja']);
+const SUPPORTED_SYNC_LOCALES = new Set(['en', 'zh-CN']);
 
 function makeFinding(entry, severity, rule, message, relatedPaths = []) {
   return {
@@ -64,12 +64,6 @@ function expectedCounterpartPath(entry, locale, version) {
   }
   if (locale === 'zh-CN') {
     return `i18n/zh-CN/docusaurus-plugin-content-docs/version-${version}/${docPath}`;
-  }
-  if (locale === 'ja' && version === 'current') {
-    return `ja-source/docusaurus-plugin-content-docs/${docPath}`;
-  }
-  if (locale === 'ja') {
-    return `ja-source/docusaurus-plugin-content-docs/version-${version}/${docPath}`;
   }
   return docPath;
 }
@@ -194,29 +188,6 @@ function addMissingVersionFinding(findings, entry, version, exceptions) {
   );
 }
 
-function addJapaneseCandidate(findings, entry, groupEntriesForDoc, changedSet, exceptions) {
-  const counterpart = findCounterpart(groupEntriesForDoc, 'ja', entry.version);
-  if (counterpart && isChanged(counterpart, changedSet)) {
-    return;
-  }
-  const rule = 'i18n-sync-locale-candidate';
-  if (hasException(entry, counterpart, rule, exceptions)) {
-    return;
-  }
-  const relatedPaths = counterpart
-    ? [counterpart.source_path]
-    : [expectedCounterpartPath(entry, 'ja', entry.version)];
-  findings.push(
-    makeFinding(
-      entry,
-      'info',
-      rule,
-      'Japanese docs are report-only. Generate a candidate translation from the changed files and merge it only after human review.',
-      relatedPaths,
-    ),
-  );
-}
-
 function checkEnglishEntry({ entry, groupEntriesForDoc, changedSet, changedOnly, exceptions, findings }) {
   if (!STRONG_SYNC_VERSIONS.has(entry.version)) {
     if (changedOnly && entry.version === CANDIDATE_VERSION) {
@@ -246,7 +217,6 @@ function checkEnglishEntry({ entry, groupEntriesForDoc, changedSet, changedOnly,
       } else if (!zhEntry) {
         addMissingLocaleFinding(findings, entry, 'zh-CN', entry.version, exceptions);
       }
-      addJapaneseCandidate(findings, entry, groupEntriesForDoc, changedSet, exceptions);
     }
     return;
   }
@@ -298,30 +268,10 @@ function checkEnglishEntry({ entry, groupEntriesForDoc, changedSet, changedOnly,
       exceptions,
     );
   }
-
-  if (changedOnly) {
-    addJapaneseCandidate(findings, entry, groupEntriesForDoc, changedSet, exceptions);
-  }
 }
 
 function checkLocalizedEntry({ entry, groupEntriesForDoc, changedSet, changedOnly, exceptions, findings }) {
   if (!changedOnly) {
-    return;
-  }
-
-  if (entry.locale === 'ja') {
-    const source = findCounterpart(groupEntriesForDoc, 'en', 'current');
-    if (source && !isChanged(source, changedSet)) {
-      addFinding(
-        findings,
-        entry,
-        source,
-        'i18n-sync-source-counterpart',
-        'info',
-        'Japanese docs are report-only. Confirm the English source remains accurate before merging translation changes.',
-        exceptions,
-      );
-    }
     return;
   }
 

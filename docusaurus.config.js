@@ -239,7 +239,7 @@ const config = {
     trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
-        locales: ['en', 'zh-CN', 'ja'],
+        locales: ['en', 'zh-CN'],
         localeConfigs: {
             en: {
                 label: 'English',
@@ -248,10 +248,6 @@ const config = {
             'zh-CN': {
                 label: '中文',
                 htmlLang: 'zh-Hans-CN',
-            },
-            ja: {
-                label: '日本語',
-                htmlLang: 'ja-JP',
             },
         },
     },
@@ -480,7 +476,7 @@ const config = {
                         const items = await defaultCreateSitemapItems(rest);
                         const filteredItems = items.filter(item => {
                             const pathname = new URL(item.url).pathname.replace(/\/+$/, '');
-                            if (['/search', '/ja/search', '/zh-CN/search'].includes(pathname)) return false;
+                            if (['/search', '/zh-CN/search'].includes(pathname)) return false;
                             return true;
                         });
                         for (let item of filteredItems) {
@@ -503,11 +499,11 @@ const config = {
             '@yang1666204/docusaurus-search-local',
             {
                 hashed: true,
-                language: ['en', 'zh', 'ja'],
+                language: ['en', 'zh'],
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: ['docs', 'course', 'ja/docs', 'ja/course', 'zh-CN/docs', 'zh-CN/course'],
+                docsRouteBasePath: ['docs', 'course', 'zh-CN/docs', 'zh-CN/course'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,

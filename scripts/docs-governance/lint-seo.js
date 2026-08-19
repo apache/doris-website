@@ -288,7 +288,7 @@ function lintSitemap(rootDir, manifest) {
       makeFinding('warning', 'seo-sitemap-filename', sourcePath, 1, 'Docusaurus sitemap should emit sitemap.xml.'),
     );
   }
-  if (!/\/search/.test(raw) || !/\/zh-CN\/search/.test(raw) || !/\/ja\/search/.test(raw)) {
+  if (!/\/search/.test(raw) || !/\/zh-CN\/search/.test(raw)) {
     findings.push(
       makeFinding(
         'warning',
@@ -326,7 +326,7 @@ function lintSitemap(rootDir, manifest) {
   if (sitemapPath) {
     const sitemapUrls = extractSitemapUrls(readIfExists(rootDir, sitemapPath) || '');
     const normalizedUrls = new Set(sitemapUrls.map((url) => url.replace(/\/+$/, '')));
-    if (sitemapUrls.some((url) => /\/(?:zh-CN\/|ja\/)?search\/?$/i.test(new URL(url).pathname))) {
+    if (sitemapUrls.some((url) => /\/(?:zh-CN\/)?search\/?$/i.test(new URL(url).pathname))) {
       findings.push(
         makeFinding('warning', 'seo-sitemap-search-url', sitemapPath, 1, 'Built sitemap includes a search page URL.'),
       );

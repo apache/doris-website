@@ -9,7 +9,6 @@
 
 - [ ] Chinese
 - [ ] English
-- [ ] Japanese candidate translation needed
 
 ## Docs Checklist
 

@@ -3,30 +3,6 @@
 const fs = require("fs");
 const path = require("path");
 
-const targetTokenizeFile = path.join(
-  process.cwd(),
-  "node_modules",
-  "@yang1666204",
-  "docusaurus-search-local",
-  "dist",
-  "client",
-  "client",
-  "utils",
-  "tokenize.js"
-);
-
-const targetBuildIndexFile = path.join(
-  process.cwd(),
-  "node_modules",
-  "@yang1666204",
-  "docusaurus-search-local",
-  "dist",
-  "server",
-  "server",
-  "utils",
-  "buildIndex.js"
-);
-
 const targetSearchBarFile = path.join(
   process.cwd(),
   "node_modules",
@@ -65,81 +41,8 @@ const targetSearchPageFile = path.join(
   "SearchPage.jsx"
 );
 
-function patchTokenizeContent(content) {
-  if (content.includes("const hasJapaneseKana = /[\\u3040-\\u30ff]/u.test(text);")) {
-    return content;
-  }
-
-  const needle =
-    '    // Some languages have their own tokenizer.\n' +
-    '    if (language.length === 1 && ["ja", "jp", "th"].includes(language[0])) {\n' +
-    "        return lunr[language[0]]\n" +
-    "            .tokenizer(text)\n" +
-    "            .map((token) => token.toString());\n" +
-    "    }\n";
-
-  const replacement =
-    '    // For Japanese queries (especially kana), use Japanese tokenizer even in multi-language mode.\n' +
-    '    // This avoids dropping tokens like "データベース" when language includes "zh".\n' +
-    '    const hasJapaneseKana = /[\\u3040-\\u30ff]/u.test(text);\n' +
-    '    if (hasJapaneseKana && (language.includes("ja") || language.includes("jp"))) {\n' +
-    '        const jaTokenizer = lunr.ja?.tokenizer || lunr.jp?.tokenizer;\n' +
-    "        if (typeof jaTokenizer === \"function\") {\n" +
-    "            return jaTokenizer(text).map((token) => token.toString());\n" +
-    "        }\n" +
-    "    }\n" +
-    '    // Some languages have their own tokenizer.\n' +
-    '    if (language.length === 1 && ["ja", "jp", "th"].includes(language[0])) {\n' +
-    "        return lunr[language[0]]\n" +
-    "            .tokenizer(text)\n" +
-    "            .map((token) => token.toString());\n" +
-    "    }\n";
-
-  if (!content.includes(needle)) {
-    return null;
-  }
-  return content.replace(needle, replacement);
-}
-
-function patchBuildIndexContent(content) {
-  if (content.includes("For zh+ja mixed mode, choose tokenizer by input text.")) {
-    return content;
-  }
-
-  const needle =
-    "            // Override tokenizer when language `zh` is enabled.\n" +
-    '            if (language.includes("zh")) {\n' +
-    "                this.tokenizer = lunr_1.default.zh.tokenizer;\n" +
-    "            }\n";
-
-  const replacement =
-    "            // Override tokenizer when language `zh` is enabled.\n" +
-    "            // For zh+ja mixed mode, choose tokenizer by input text.\n" +
-    '            if (language.includes("zh")) {\n' +
-    '                const hasJa = language.includes("ja") || language.includes("jp");\n' +
-    "                if (hasJa) {\n" +
-    "                    this.tokenizer = function (input, metadata) {\n" +
-    '                        if (input == null) return [];\n' +
-    "                        const text = input.toString();\n" +
-    '                        if (/[\\u3040-\\u30ff]/u.test(text) && lunr_1.default.ja?.tokenizer) {\n' +
-    "                            return lunr_1.default.ja.tokenizer(input, metadata);\n" +
-    "                        }\n" +
-    "                        return lunr_1.default.zh.tokenizer(input, metadata);\n" +
-    "                    };\n" +
-    "                }\n" +
-    "                else {\n" +
-    "                    this.tokenizer = lunr_1.default.zh.tokenizer;\n" +
-    "                }\n" +
-    "            }\n";
-
-  if (!content.includes(needle)) {
-    return null;
-  }
-  return content.replace(needle, replacement);
-}
-
-// On non-default-locale routes (e.g. /zh-CN/docs/..., /ja/docs/...) the
-// plugin strips only `baseUrl` before matching `searchContextByPaths`, so the
+// On non-default-locale routes (e.g. /zh-CN/docs/...) the plugin strips only
+// `baseUrl` before matching `searchContextByPaths`, so the
 // remaining URI keeps the locale prefix and never matches `docs`.
 // Combined with `useAllContextsWithNoSearchContext: true`, this collapses the
 // search back to the root index (which contains every version, including the
@@ -168,7 +71,7 @@ function patchSearchBarContent(content) {
     "        if (location.pathname.startsWith(versionUrl)) {\n" +
     "            const uri = location.pathname.substring(versionUrl.length);\n" +
     "            // PATCH(locale-aware-context): strip non-default locale prefix so\n" +
-    "            // /zh-CN/docs/... and /ja/docs/... match the configured contexts.\n" +
+    "            // /zh-CN/docs/... match the configured contexts.\n" +
     "            const __localePrefix = currentLocale + \"/\";\n" +
     "            const __ctxUri = uri.startsWith(__localePrefix) ? uri.substring(__localePrefix.length) : uri;\n" +
     "            let matchedPath;\n" +
@@ -200,8 +103,8 @@ function patchPostBuildFactoryContent(content) {
     "                if (searchContextByPaths) {\n" +
     "                    const { baseUrl } = buildData;\n" +
     "                    // PATCH(locale-aware-context): strip non-default locale prefix so\n" +
-    "                    // /zh-CN/docs/... and /ja/docs/... get assigned to the\n" +
-    "                    // configured contexts instead of falling into the root bucket.\n" +
+    "                    // /zh-CN/docs/... gets assigned to the configured\n" +
+    "                    // contexts instead of falling into the root bucket.\n" +
     "                    const __i18n = buildData.i18n;\n" +
     "                    const __localePrefix = __i18n && __i18n.currentLocale && __i18n.currentLocale !== __i18n.defaultLocale\n" +
     "                        ? __i18n.currentLocale + \"/\"\n" +
@@ -241,8 +144,8 @@ function patchPostBuildFactoryContent(content) {
 
 // The search worker fetches `${versionUrl}search-index-*.json`. `versionUrl`
 // defaults to `siteConfig.baseUrl` (= "/"), which is locale-agnostic, so on
-// /zh-CN/* or /ja/* pages the worker still hits the default-locale index files
-// at the site root and never sees the per-locale indexes that Docusaurus emits
+// /zh-CN/* pages the worker still hits the default-locale index files at the
+// site root and never sees the per-locale indexes that Docusaurus emits
 // under build/{locale}/. These two patches make `versionUrl` carry the active
 // locale prefix in both the SearchBar (live dropdown + `?version=` it writes
 // into the "see all" link) and the SearchPage (direct loads of /{locale}/search
@@ -336,8 +239,6 @@ function patchOneFile(filePath, patchFn, label) {
 }
 
 function main() {
-  patchOneFile(targetTokenizeFile, patchTokenizeContent, "client-tokenize");
-  patchOneFile(targetBuildIndexFile, patchBuildIndexContent, "server-buildIndex");
   patchOneFile(targetSearchBarFile, patchSearchBarContent, "client-searchBar-locale");
   patchOneFile(
     targetPostBuildFactoryFile,

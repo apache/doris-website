@@ -19,12 +19,6 @@ site:
       html_lang: zh-Hans-CN
       source_state: localized
       rollout_level: blocking
-    ja:
-      label: Japanese
-      html_lang: ja-JP
-      source_state: localized
-      rollout_level: report_only
-      note: "Japanese content is currently published through ja-build/ja-source and should not block PRs until the i18n flow is unified."
 
 versions:
   active:
@@ -94,12 +88,6 @@ content_roots:
     source_root: blog
     route_base: "/blog"
     blocking_scope: true
-  ja_source:
-    plugin: main_docs
-    locale: ja
-    source_root: ja-source/docusaurus-plugin-content-docs
-    route_base: "/ja/docs"
-    blocking_scope: report_only
 
 manifest_schema:
   required_fields:
@@ -219,8 +207,6 @@ sync_policy:
     source_locale: en
     blocking_locales:
       - zh-CN
-    report_only_locales:
-      - ja
   version_rules:
     - when: "source version is 4.x"
       required_counterparts:
@@ -265,7 +251,6 @@ seo_policy:
   noindex_routes:
     - "/search"
     - "/zh-CN/search"
-    - "/ja/search"
   front_matter:
     title:
       required: true
