@@ -52,7 +52,7 @@
 
 ### 从官网下载
 
-下载 [fluent-bit-doris-3.1.9](https://download.velodb.io/integrations/fluent-bit-doris-3.1.9)。
+下载 [fluent-bit-doris-3.1.9](https://apache-doris-releases.oss-accelerate.aliyuncs.com/integrations/fluent-bit-doris-3.1.9)。
 
 ### 从源码编译
 
