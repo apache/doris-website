@@ -82,7 +82,8 @@
                     "type": "category",
                     "label": "Testing",
                     "items": [
-                        "developer-guide/regression-testing"
+                        "developer-guide/regression-testing",
+                        "developer-guide/all-in-one-image"
                     ]
                 },
                 {
