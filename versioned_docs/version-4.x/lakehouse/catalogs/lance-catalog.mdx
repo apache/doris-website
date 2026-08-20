@@ -7,6 +7,8 @@
 ---
 
 :::note
+This is an experimental feature.
+
 Lance Catalog is supported starting from Apache Doris 4.2.
 :::
 
@@ -24,31 +26,31 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 | Data queries | Supports column pruning, parallel Lance Fragment scans, and snapshot-consistent reads of the current version |
 | Predicate pushdown | Supports pushing compatible scalar predicates down to Lance |
 | File TVFs | Supports querying Lance datasets directly through `s3()` and `local()` |
-| Vector search | Supports querying Lance vector indexes or performing Flat Search through `vector_search()` |
+| Vector search | Uses physical Lance index segments as parallel splits, keeps uncovered Fragments as Flat Search splits, and performs a Doris global Top-K merge |
 | Writing to Lance | Not supported |
 | Time Travel | Not supported |
 | Full-Text Search / Hybrid Search | Not supported |
 
 ## Lance Version and Compatibility
 
-The Doris BE data reader is built with [`lance-c` `v0.1.2`](https://github.com/lance-format/lance-c/tree/v0.1.2). This `lance-c` release declares the Lance Rust crates at version `4.0.1`. These implementation versions are different from the Lance `data_storage_version` recorded in a dataset.
+The Doris BE data reader is built with `lance-c v0.1.6`. In Doris, this version is bound to Lance `9.1.0-beta.3` at Lance commit `e934cc2c`. The `lance-c` and Lance Rust crate versions identify the reader implementation integrated with Doris. They are different from the Lance `data_storage_version` recorded in a dataset.
 
 The following table describes the file-format compatibility of this reader:
 
 | `data_storage_version` | Read support | Notes |
 |---|---|---|
 | `0.1` / `legacy` | Supported | Original Lance file format. |
-| `2.0` | Supported | The `stable` alias resolves to `2.0` in Lance `4.0.1`; this is the most conservative choice for data that Doris must read. |
-| `2.1` | Supported | Uses the newer nested-field encoding in which structural validity is stored in repetition and definition levels. |
-| `2.2` | Recognized, but not guaranteed | This format was marked unstable by the Lance version embedded in Doris. Do not rely on it for production interoperability. |
-| `2.3` / `next` | Experimental; not guaranteed | The `next` alias is unstable and may change incompatibly. |
+| `2.0` (writer-option alias `0.3`) | Supported | An earlier version of the Lance v2 file format. |
+| `2.1` / `stable` | Supported; default stable format | In the embedded Lance version, the `stable` writer option and the default format for new datasets both resolve to `2.1`. |
+| `2.2` | Supported | The embedded Lance version treats this as a stable format, but it is not the default writer format. |
+| `2.3` / `next` | Experimental; not guaranteed | The embedded Lance version marks `2.3` as unstable, and the `next` writer option resolves to `2.3`. |
 | A later or unknown version | Not supported | Opening or scanning the dataset may fail with an unsupported storage-version error. |
 
 Lance SDK release numbers and file-format versions are independent. A dataset written by an older or newer Lance SDK is readable only when its storage format, required table feature flags, index format, and Arrow/Lance data types are all understood by the versions embedded in Doris. Consequently:
 
-- Doris is expected to read datasets written with the stable `0.1`, `2.0`, and `2.1` storage formats, subject to the type limitations documented below.
+- Doris is expected to read datasets written with the `0.1`, `2.0`, `2.1`, and `2.2` storage formats, subject to the type limitations documented below.
 - Forward compatibility is not guaranteed. A dataset written or modified by a later Lance release may be unreadable if it uses a newer storage format, an unknown required manifest feature, a newer index format, or an unsupported extension type.
-- For datasets that must remain readable by this Doris release, explicitly set `data_storage_version` to `2.0`. Do not use `next`. If a newer writer or optional Lance feature is introduced, validate the resulting dataset with the target Doris release before using it in production.
+- For datasets that must remain readable by this Doris release, use the current default stable format, `2.1`, and do not use `next`. If a newer writer or optional Lance feature is introduced, validate the resulting dataset with the target Doris release before using it in production.
 
 ## Configure a Catalog
 
@@ -360,21 +362,23 @@ Lance file TVFs have the following additional limitations:
 ### Syntax and Example
 
 ```sql
-SELECT row_id, label, _distance
+SELECT user_id, label, _distance
 FROM vector_search(
     "table" = "lance_catalog.default.items",
     "column" = "embedding",
     "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
     "top_k" = "10",
+    "offset" = "3",
     "metric" = "l2",
     "nprobes" = "20",
     "refine_factor" = "10",
+    "filter" = "category = 'book'",
     "use_index" = "true"
 )
-ORDER BY _distance ASC, row_id;
+ORDER BY _distance ASC, user_id;
 ```
 
-The result contains all columns from the Lance source table plus the `_distance` column that the Lance Scanner automatically projects for the nearest-neighbor query. Doris deserializes this Arrow column and exposes it as `FLOAT`. `_distance` is a distance, not a generic similarity score: a lower value means that two vectors are closer. The source table must not already contain a column named `_distance`. A SQL relation does not guarantee output order, so explicitly specify `ORDER BY _distance ASC` when deterministic nearest-neighbor ordering is required. Adding a unique column as a tie-breaker is recommended for rows with the same distance.
+The relation schema of `vector_search()` contains all columns from the Lance source table plus the `_distance` column generated by the Lance Scanner for the nearest-neighbor query. The final SQL result contains only columns projected by `SELECT`. Doris exposes `_distance` as `FLOAT`. It is a distance, not a generic similarity score: a lower value means that two vectors are closer. The source table must not already contain a column named `_distance`. A SQL relation does not guarantee final display order, so explicitly specify `ORDER BY _distance ASC` when deterministic nearest-neighbor ordering is required. Adding a unique column as a tie-breaker is recommended for rows with the same distance.
 
 `table` must parse as exactly three `catalog.database.table` name parts. A multilevel Lance Namespace maps to one Doris database name containing `.`, so quote the database part with backticks. For example, use the following value for table `items` in Namespace `doris.analytics`:
 
@@ -398,16 +402,33 @@ Do not use the unquoted form `lance_catalog.doris.analytics.items`; it parses as
 | `nprobes` | No | Minimum `1`, with no maximum | Number of IVF index partitions to probe. It must be a positive integer. When unset, Lance starts with one partition and can probe additional partitions when a Prefilter leaves too few candidates. Setting it explicitly to `N` fixes both the minimum and maximum number of probes to `N`. |
 | `refine_factor` | No | Refinement disabled | Candidate refinement multiplier. It must be a positive integer. When unset, Lance does not recompute distances from the original vectors, so `_distance` from a quantized index may be approximate. When set to `N`, Lance first retrieves `(top_k + offset) × N` candidates, recomputes their exact distances from the original vectors, and reorders them. Setting it to `1` still enables refinement and therefore differs from leaving it unset. |
 | `ef` | No | `floor(1.5 × (top_k + offset))` | Candidate width retained during HNSW graph search. It must be a positive integer. If `refine_factor` is also set, the default is `floor(1.5 × (top_k + offset) × refine_factor)`. It has no effect on non-HNSW indexes. |
-| `use_index` | No | `true` | When `true`, Doris prefers a compatible Lance vector index and automatically falls back to Flat Search if none is available. When `false`, Doris forces Flat Search. |
+| `use_index` | No | `true` | When `true`, Doris plans compatible physical Lance index segments as indexed splits and keeps uncovered Fragments as Flat Search splits. If no usable compatible index metadata is available, Doris falls back to Fragment splits. When `false`, Doris creates one split per visible Fragment and forces Flat Search. |
 
 These defaults correspond to the Lance Scanner behavior currently integrated with Doris. When `metric` is omitted, Doris uses the metric configured when a compatible vector index was created. If there is no compatible index, or if `"use_index" = "false"`, `uint8` vectors use `hamming`, while the other currently supported vector element types use `l2`.
 
+### Supported Vector Index Types
+
+The embedded `lance-c v0.1.6` explicitly supports the following Lance vector index combinations:
+
+| Index type | Description | Main query parameters |
+|---|---|---|
+| `IVF_FLAT` | IVF partitions with original-vector distance computation inside each partition | `nprobes` |
+| `IVF_SQ` | IVF with Scalar Quantization | `nprobes`, `refine_factor` |
+| `IVF_PQ` | IVF with Product Quantization | `nprobes`, `refine_factor` |
+| `IVF_HNSW_FLAT` | IVF with HNSW whose graph nodes retain original vectors | `nprobes`, `ef` |
+| `IVF_HNSW_SQ` | IVF and HNSW with Scalar Quantization | `nprobes`, `ef`, `refine_factor` |
+| `IVF_HNSW_PQ` | IVF and HNSW with Product Quantization | `nprobes`, `ef`, `refine_factor` |
+
+`vector_search()` only queries indexes. It does not create an index in Doris and does not expose an index-type or index-name parameter. With `use_index=true`, the FE reads vector-index metadata from the pinned dataset snapshot and selects a logical index compatible with the vector column and metric. It then assigns each physical segment of that logical index that still covers visible data to an indexed Scan Split. Each indexed Split carries the segment UUID and the currently visible Fragments covered by that segment, so the BE searches that specific segment instead of asking Lance to choose an index again.
+
+A logical Lance index can contain multiple physical index segments, and one physical segment can cover multiple Fragments. Fragments not covered by the selected index are not omitted: Doris adds one fallback Split for each such Fragment, which uses Flat Search. If the FE cannot construct a usable index-segment plan, it falls back to Fragment-level splits. With `use_index=false`, Doris skips index metadata planning and forces Flat Search for every visible Fragment. Flat Search is not an ANN index type; Lance must directly read and compare vectors.
+
 ### Prefilter and Post-Filter
 
-Lance evaluates the TVF `filter` parameter before selecting the Top-K vector candidates:
+The TVF `filter` parameter is a **Prefilter**. Doris passes the string to the Lance Scanner for each search Split, and Lance evaluates it before ANN or Flat Search generates candidates:
 
 ```sql
-SELECT row_id, category, _distance
+SELECT user_id, category, _distance
 FROM vector_search(
     "table" = "lance_catalog.default.items",
     "column" = "embedding",
@@ -415,13 +436,15 @@ FROM vector_search(
     "top_k" = "10",
     "filter" = "category = 'book'"
 )
-ORDER BY _distance ASC, row_id;
+ORDER BY _distance ASC, user_id;
 ```
 
-Doris evaluates an outer `WHERE` after Lance has returned its Top-K:
+Lance reads and evaluates columns referenced only by `filter` internally. If such a column is not referenced by `SELECT` or another Doris expression, it does not have to be returned to Doris.
+
+An outer `WHERE` is a **Post-filter**. The optimizer moves it into the Doris Lance Scan, but does not convert it into a Lance Prefilter. It runs after Lance generates candidates for each search Split and before Doris performs its local and global TopN operations.
 
 ```sql
-SELECT row_id, category, _distance
+SELECT user_id, category, _distance
 FROM vector_search(
     "table" = "lance_catalog.default.items",
     "column" = "embedding",
@@ -429,18 +452,82 @@ FROM vector_search(
     "top_k" = "10"
 )
 WHERE category = 'book'
-ORDER BY _distance ASC, row_id;
+ORDER BY _distance ASC, user_id;
 ```
 
-Consequently, an outer `WHERE` may reduce the final result to fewer than `top_k` rows. If a filter must participate in nearest-neighbor candidate selection, specify it through the TVF `filter` parameter.
+Consequently, an outer `WHERE` only filters candidates that have already been generated and does not cause Lance to replenish them. The final result may contain fewer than `top_k` rows. If the filter must reduce the vector search space and nearest neighbors must be selected from the filtered rows, use the TVF `filter` parameter.
 
 ### Current Execution Model
 
-`vector_search()` pins one Lance dataset version and uses one Scanner to search every Fragment in that version, which lets Lance produce a global Top-K result. Doris does not currently split vector search across multiple Scanners or merge candidate sets from multiple Scanners.
+`vector_search()` uses distributed candidate search instead of one Scanner for the entire dataset. Its Split boundary depends on index coverage:
 
-:::note
-Multi-Scanner vector search is planned as a future optimization. It will require index-aware search partitioning and an internal global candidate merge so that `top_k`, `offset`, Prefilter, and `_distance` semantics remain unchanged.
-:::
+1. During planning, the FE pins a positive Lance dataset snapshot version and reads the visible Fragments in that snapshot. When `use_index=true`, it also reads vector-index metadata.
+2. If a compatible logical vector index has usable segment coverage, each physical index segment that still covers visible Fragments becomes one indexed Scan Split. The Split contains that segment's UUID and the intersection of its Fragment bitmap with the visible Fragments in the pinned snapshot. A Split can therefore contain multiple Fragment IDs.
+3. Every visible Fragment not covered by those indexed Splits becomes an independent fallback Fragment Split. This keeps data appended after index creation searchable without requiring the index to be optimized first. If no usable index-segment plan exists, all visible Fragments use Fragment splits. With `use_index=false`, all visible Fragments use Flat Search splits directly.
+4. For query parameters `top_k=K` and `offset=n`, every indexed or fallback Split requests at most `K+n` candidates and does not apply the offset locally. An indexed Split searches only its assigned physical index segment; a fallback Fragment Split performs Flat Search for its Fragment. Lance evaluates the TVF `filter` before generating candidates, while Doris Scan evaluates an outer `WHERE` afterward.
+5. Doris performs local TopN, Exchange, and global TopN over candidates from all Splits, merging by `_distance ASC`. Only the global TopN applies `offset=n`: it skips the first `n` rows and returns `K` rows.
+
+A Split-level candidate set therefore only supplies candidates for global merging and is not the final result. Index-segment splits, fallback Fragment splits, and any later Row-ID fetches all use the same pinned snapshot throughout the query. Refreshing index coverage changes how newly appended Fragments are searched, but uncovered Fragments remain part of the result space through Flat Search.
+
+The execution order is:
+
+```text
+Pinned dataset snapshot
+  -> FE Split planning
+       -> Indexed coverage: one Split per physical Index Segment -> ANN Search
+       -> Uncovered or unindexed data: one Split per Fragment -> Flat Search
+  -> Per Split: Lance Prefilter -> ANN/Flat Search -> at most K+n candidates
+  -> Doris Scan Post-filter
+  -> Doris local TopN
+  -> Exchange
+  -> Doris global TopN (applies offset=n and limit=K)
+  -> Optional lazy-materialization Fetch
+```
+
+### Two-Phase TopN Read and Lazy Materialization
+
+`vector_search()` can use a two-phase read when `experimental_topn_lazy_materialization_threshold` is greater than `0`, `top_k` does not exceed the threshold, and at least one top-level column is eligible for deferred reading. The default threshold is `1024`. Phase 1 carries only the columns required for candidate filtering and TopN, plus an internal Row Location. After global TopN, Phase 2 reads the other output columns only for the retained rows.
+
+For example, assume the source table has these columns:
+
+| Column | Purpose |
+|---|---|
+| `user_id` | Final output column |
+| `category` | Post-filter column used by the outer `WHERE` |
+| `title`, `payload` | Final output columns |
+| `embedding` | Lance vector-search column |
+
+Run this query with `K=10` and `n=3`:
+
+```sql
+SET experimental_topn_lazy_materialization_threshold = 1024;
+
+SELECT user_id, title, payload, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "offset" = "3"
+)
+WHERE category = 'book';
+```
+
+A typical two-phase column flow is:
+
+| Stage or operator | Columns read or output | Description |
+|---|---|---|
+| Lance Split Search | Uses `embedding` internally; returns `_distance`, `category`, and the internal Lance Row ID to Doris | `embedding` participates in ANN/Flat Search but is not returned as a result column unless SQL projects it. Each Index Segment or fallback Fragment Split produces at most `K+n` candidates. |
+| Doris Scan Post-filter | `_distance`, `category`, and the internal Row Location | Evaluates `category = 'book'`. A column used by an outer `WHERE` must remain in Phase 1. Doris encodes the Lance Row ID and dataset mapping into an internal Row Location, which Fetch resolves to the same pinned snapshot. |
+| Local and global TopN | Phase-1 required columns and the internal Row Location | Global TopN merges by `_distance` and applies `offset=n` and `limit=K`. |
+| Row ID Fetch | Uses the internal Row Location to read `user_id`, `title`, and `payload` | Reads deferred columns for rows retained by global TopN from the same Lance dataset snapshot without rescanning Fragments. |
+| Final Materialize | `user_id`, `title`, `payload`, and `_distance` | Combines deferred columns with columns retained from Phase 1 to produce the final SQL output. |
+
+Phase-1 required columns are not limited to `_distance` and Post-filter columns. Any column referenced by a Doris expression or operator before global TopN is operative and must be read in Phase 1. For example, adding `ORDER BY _distance, user_id` makes `user_id` a Phase-1 column, so it cannot be deferred to the Row-ID Fetch. Nested subcolumn projections are also not currently deferred. A top-level column used only by the final projection can be fetched in Phase 2.
+
+A Prefilter column referenced in the TVF `filter` differs from an outer `WHERE` column. Lance uses the former internally during search, so appearing in the `filter` string alone does not require the column to be returned to Doris. Doris Scan evaluates the latter, so it must be present in Phase 1.
+
+Setting `experimental_topn_lazy_materialization_threshold` to `-1` disables the two-phase read. A single-phase read is also used when `top_k` exceeds the threshold or no column can be deferred. Single-phase mode returns all query-required output columns from Scan, but vector search still generates candidates in parallel per Index Segment or fallback Fragment Split and Doris still merges a global TopN. It does not become an ordinary Doris full-column table scan. Indexed splits use their assigned physical index segments, while forced or fallback Flat Search directly compares vectors.
 
 ## Current Limitations and Recommendations
 
@@ -450,4 +537,5 @@ Multi-Scanner vector search is planned as a future optimization. It will require
 - For regular scans, inspect `lancePushdownPredicate` in `EXPLAIN` to verify which conditions have been pushed down.
 - Create a vector index in Lance that matches the intended query before running indexed vector search. For small datasets or validation, set `"use_index" = "false"` to perform Flat Search.
 - For deterministic vector result ordering, explicitly use `ORDER BY _distance ASC` and add a unique tie-breaker.
-- Use the `vector_search()` `filter` parameter when filtering must occur before vector candidate selection. Use an outer `WHERE` only when post-Top-K filtering is intentional.
+- Use the `vector_search()` `filter` parameter when filtering must occur before vector candidates are generated. An outer `WHERE` filters only the candidates already generated by each search Split and runs before Doris global TopN, so allow for a final result with fewer than `top_k` rows.
+- Use `EXPLAIN` to inspect `lanceSearchFragments` and `lanceSearchIndexSegments`. The former is the number of visible Fragments in the pinned snapshot; the latter is the number of physical Index Segment splits selected by the FE. Additional fallback Fragment splits may also be present.
