@@ -23,23 +23,15 @@ The following rapid deployment methods are intended solely for local development
 
 Starting from Doris version 2.1.8, Docker can be used for rapid deployment.
 
-### Step 1: Download the Quick-Start script
+### Step 1: Start the cluster
 
-<a target="_blank" download rel="noopener noreferrer" href="/files/start-doris.sh"> Download the script </a>, run the following command to grant it the corresponding execution permissions.
-
-```shell
-chmod 755 start-doris.sh
-```
-
-### Step 2: Start the cluster
-
-Run the script to start the cluster. Use the `-v` parameter to specify a 3.x version:
+Run the following command to download the startup script and start the cluster in one go. Use the `-v` parameter to specify a 3.x version:
 
 ```shell
-bash start-doris.sh -v 3.0.8
+curl -fsSL https://doris.apache.org/files/start-doris.sh | bash -s -- -v 3.0.8
 ```
 
-### Step 3: Connect to the cluster using MySQL client and check the cluster status
+### Step 2: Connect to the cluster using MySQL client and check the cluster status
 
 ```sql
 ## Check the FE status to ensure that both the Join and Alive columns are true.
