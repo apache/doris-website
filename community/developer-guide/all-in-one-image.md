@@ -1,5 +1,6 @@
 ---
 title: All-in-One Image for Integration Testing
+sidebar_label: All-in-One Image
 language: en
 description: The official Apache Doris all-in-one image runs one FE and one BE in a single container, giving ecosystem projects a real Doris instance for e2e and CI.
 keywords:

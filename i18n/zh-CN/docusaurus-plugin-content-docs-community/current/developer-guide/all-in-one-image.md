@@ -1,5 +1,6 @@
 ---
 title: 集成测试用 all-in-one 镜像
+sidebar_label: All-in-One 镜像
 language: zh-CN
 description: 介绍 Apache Doris 官方 all-in-one 容器镜像，它在单个容器中运行一套 FE + BE，可供上下游生态项目在 e2e / CI 中作为真实 Doris 环境使用，并说明镜像能力、base 与 -full 标签的差异、多架构支持以及自行构建方式。
 keywords:
