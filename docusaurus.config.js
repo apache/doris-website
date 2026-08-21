@@ -61,11 +61,12 @@ const COURSE_RAIL_BOOTSTRAP = `(function () {
 }());`;
 
 // Per-document last-update timestamps, generated from git history by
-// scripts/last-update/generate.js and refreshed on demand via the
-// "Refresh Docs Last-Update Map" workflow. markdown.parseFrontMatter (below)
-// injects these as `last_update` front matter so the 2-hourly deploy renders
-// "last updated" without a full-history clone. Missing file / not-yet-generated
-// map → Docusaurus falls back to its own git lookup.
+// scripts/last-update/generate.js. The 2-hourly Cron Deploy regenerates the map
+// before it builds, so published dates are always current; the committed copy
+// is what local builds use, and what a deploy falls back to if that refresh
+// fails. markdown.parseFrontMatter (below) injects the dates as `last_update`
+// front matter, sparing the build a per-file git lookup. Missing file /
+// not-yet-generated map → Docusaurus falls back to its own git lookup.
 let DOCS_LAST_UPDATE = {};
 try {
     DOCS_LAST_UPDATE = require('./scripts/last-update/data.json');
