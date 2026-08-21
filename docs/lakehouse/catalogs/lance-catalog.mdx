@@ -33,7 +33,7 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 
 ## Lance Version and Compatibility
 
-The Doris BE data reader is built with `lance-c v0.1.6`. In Doris, this version is bound to Lance `9.1.0-beta.3` at Lance commit `e934cc2c`. The `lance-c` and Lance Rust crate versions identify the reader implementation integrated with Doris. They are different from the Lance `data_storage_version` recorded in a dataset.
+The Doris BE data reader is built with `lance-c v0.1.6`, which embeds the Lance Rust crates at version `7.0.0-beta.7` (Lance commit `e0e977a6`). The Doris FE reads Namespace and dataset metadata with the `lance-java` client at version `9.1.0-beta.3` (Lance commit `e934cc2c`). These versions identify the reader implementations integrated with Doris. They are different from the Lance `data_storage_version` recorded in a dataset.
 
 The following table describes the file-format compatibility of this reader:
 
@@ -397,14 +397,14 @@ Do not use the unquoted form `lance_catalog.doris.analytics.items`; it parses as
 | `query_vector` | Yes | - | JSON number array. Its dimension must match the vector column, and each value must be representable by the vector element type. |
 | `top_k` | No | `10` | Number of results returned after skipping `offset`. It must be a positive integer. |
 | `offset` | No | `0` | Number of nearest neighbors skipped inside the vector search. It must be a non-negative integer. `top_k + offset` must not exceed the maximum unsigned 32-bit integer. |
-| `metric` | No | Metric of the matching index; without an index, `hamming` for `uint8` and `l2` for other supported types | Distance metric: `l2`, `cosine`, `dot`, or `hamming`. `dot_product` is an alias for `dot`. `uint8` vectors support only `hamming`; the other currently supported vector element types support `l2`, `cosine`, and `dot`. |
+| `metric` | No | `hamming` for `uint8`, `l2` for the other supported types | Distance metric: `l2`, `cosine`, `dot`, or `hamming`. `dot_product` is an alias for `dot`. `uint8` vectors support only `hamming`; the other currently supported vector element types support `l2`, `cosine`, and `dot`. An unset `metric` is treated as `l2` when Doris selects a vector index, so querying an index built with `cosine` or `dot` requires setting `metric` explicitly. |
 | `filter` | No | - | Lance SQL condition evaluated before vector candidates are generated; that is, a Prefilter. |
 | `nprobes` | No | Minimum `1`, with no maximum | Number of IVF index partitions to probe. It must be a positive integer. When unset, Lance starts with one partition and can probe additional partitions when a Prefilter leaves too few candidates. Setting it explicitly to `N` fixes both the minimum and maximum number of probes to `N`. |
 | `refine_factor` | No | Refinement disabled | Candidate refinement multiplier. It must be a positive integer. When unset, Lance does not recompute distances from the original vectors, so `_distance` from a quantized index may be approximate. When set to `N`, Lance first retrieves `(top_k + offset) × N` candidates, recomputes their exact distances from the original vectors, and reorders them. Setting it to `1` still enables refinement and therefore differs from leaving it unset. |
 | `ef` | No | `floor(1.5 × (top_k + offset))` | Candidate width retained during HNSW graph search. It must be a positive integer. If `refine_factor` is also set, the default is `floor(1.5 × (top_k + offset) × refine_factor)`. It has no effect on non-HNSW indexes. |
 | `use_index` | No | `true` | When `true`, Doris plans compatible physical Lance index segments as indexed splits and keeps uncovered Fragments as Flat Search splits. If no usable compatible index metadata is available, Doris falls back to Fragment splits. When `false`, Doris creates one split per visible Fragment and forces Flat Search. |
 
-These defaults correspond to the Lance Scanner behavior currently integrated with Doris. When `metric` is omitted, Doris uses the metric configured when a compatible vector index was created. If there is no compatible index, or if `"use_index" = "false"`, `uint8` vectors use `hamming`, while the other currently supported vector element types use `l2`.
+These defaults correspond to the Lance Scanner behavior currently integrated with Doris. When `metric` is omitted, Doris treats the query as `l2` while selecting a vector index, so an index built with `cosine` or `dot` is not selected. When no index is selected, or if `"use_index" = "false"`, `uint8` vectors use `hamming`, while the other currently supported vector element types use `l2`.
 
 ### Supported Vector Index Types
 
@@ -422,6 +422,32 @@ The embedded `lance-c v0.1.6` explicitly supports the following Lance vector ind
 `vector_search()` only queries indexes. It does not create an index in Doris and does not expose an index-type or index-name parameter. With `use_index=true`, the FE reads vector-index metadata from the pinned dataset snapshot and selects a logical index compatible with the vector column and metric. It then assigns each physical segment of that logical index that still covers visible data to an indexed Scan Split. Each indexed Split carries the segment UUID and the currently visible Fragments covered by that segment, so the BE searches that specific segment instead of asking Lance to choose an index again.
 
 A logical Lance index can contain multiple physical index segments, and one physical segment can cover multiple Fragments. Fragments not covered by the selected index are not omitted: Doris adds one fallback Split for each such Fragment, which uses Flat Search. If the FE cannot construct a usable index-segment plan, it falls back to Fragment-level splits. With `use_index=false`, Doris skips index metadata planning and forces Flat Search for every visible Fragment. Flat Search is not an ANN index type; Lance must directly read and compare vectors.
+
+### Supported Vector Element Types and Distance Metrics
+
+Whether an index can serve `vector_search()` depends on the vector element type and the distance metric it was built with, because the embedded Lance version does not implement every combination. The following matrix describes index-backed search. Each supported combination was verified end to end: the physical index was created, Doris read it through `lance-c`, and the query returned rows through the indexed path.
+
+| Vector element type | `l2` | `cosine` | `dot` | `hamming` |
+|---|---|---|---|---|
+| `float16` | Flat Search only [1] | Supported | Supported, except `IVF_PQ` [1] | Not supported |
+| `float32` | Supported | Supported | Supported | Not supported |
+| `float64` | Supported | Supported | Supported | Not supported |
+| `uint8` | Not supported | Not supported | Not supported | `IVF_FLAT` and `IVF_HNSW_FLAT` only [2] |
+| `int8` | Flat Search only [3] | Flat Search only [3] | Flat Search only [3] | Not supported |
+
+Unless a footnote states otherwise, a supported combination applies to all six index types listed above.
+
+1. Building a `float16` index with `l2` can overflow while Lance accumulates cluster centroids, and the build does not complete. `IVF_PQ` with `float16` and `dot` can reach the same problem while training its sub-quantizer. This is a limitation of the Lance index builder rather than of the Doris query path: Flat Search over `float16` vectors is supported, and a `float16` index built with `cosine` or `dot` is queried normally.
+2. Lance treats `uint8` vectors as binary vectors, so `hamming` is the only distance it accepts for them. Its Product Quantization and Scalar Quantization builders reject `uint8`, which leaves `IVF_FLAT` and `IVF_HNSW_FLAT` as the only index types available for this element type.
+3. Lance does not currently provide a complete `int8` index build path, so `int8` vectors can only be searched with Flat Search. In addition, with the embedded Lance version, searching a **nullable** `int8` vector column terminates the BE process. Avoid searching nullable `int8` vector columns until Doris upgrades to a `lance-c` release that contains the fix, [lance#7498](https://github.com/lance-format/lance/pull/7498).
+
+Combinations that Lance rejects when the index is created never reach Doris. Building a floating-point index with `hamming`, or a `uint8` index with `l2`, `cosine`, or `dot`, falls into this category.
+
+#### The Query Metric Must Match the Index Metric
+
+Doris selects a vector index only when the requested `metric` equals the metric that index was built with. Otherwise Doris does not use the index and runs Flat Search, which still returns correct results but scans the vectors directly. `EXPLAIN` reports the difference: an indexed plan shows a non-zero `lanceSearchIndexSegments`, while a declined index shows `lanceSearchIndexSegments=0`. Since an unset `metric` is treated as `l2`, remember to set `metric` explicitly when the index was built with `cosine` or `dot`.
+
+Doris also considers only one index per vector column. If a vector column carries several vector indexes built with different metrics, the one Doris selects may not be the one matching the query metric, and the query then falls back to Flat Search. Keep at most one vector index per vector column to make index selection unambiguous.
 
 ### Prefilter and Post-Filter
 
