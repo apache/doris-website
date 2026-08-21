@@ -33,7 +33,7 @@ Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lan
 
 ## Lance 版本与兼容性
 
-Doris BE 数据读取器使用 `lance-c v0.1.6` 构建。该版本在 Doris 中绑定的 Lance 源码版本为 `9.1.0-beta.3`（Lance commit `e934cc2c`）。`lance-c` 和 Lance Rust crates 的版本表示 Doris 集成的读取器实现版本，与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
+Doris BE 数据读取器使用 `lance-c v0.1.6` 构建，其内置的 Lance Rust crates 版本为 `7.0.0-beta.7`（Lance commit `e0e977a6`）。Doris FE 使用 `lance-java` 客户端读取 Namespace 和数据集元数据，版本为 `9.1.0-beta.3`（Lance commit `e934cc2c`）。这些版本表示 Doris 集成的读取器实现版本，与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
 
 当前读取器的文件格式兼容情况如下：
 
@@ -397,14 +397,14 @@ ORDER BY _distance ASC, user_id;
 | `query_vector` | 是 | - | JSON 数字数组。维度必须与向量列一致，元素值必须能由向量元素类型表示。 |
 | `top_k` | 否 | `10` | 跳过 `offset` 后返回的结果数，必须为正整数。 |
 | `offset` | 否 | `0` | 在向量检索内部跳过的最近邻数量，必须为非负整数。`top_k + offset` 不能超过无符号 32 位整数上限。 |
-| `metric` | 否 | 匹配索引的 Metric；无索引时 `uint8` 为 `hamming`，其他支持类型为 `l2` | 距离类型：`l2`、`cosine`、`dot` 或 `hamming`。`dot_product` 是 `dot` 的别名。`uint8` 向量仅支持 `hamming`；其他当前支持的向量元素类型支持 `l2`、`cosine` 和 `dot`。 |
+| `metric` | 否 | `uint8` 为 `hamming`，其他支持类型为 `l2` | 距离类型：`l2`、`cosine`、`dot` 或 `hamming`。`dot_product` 是 `dot` 的别名。`uint8` 向量仅支持 `hamming`；其他当前支持的向量元素类型支持 `l2`、`cosine` 和 `dot`。Doris 选择向量索引时会把未设置的 `metric` 视为 `l2`，因此查询使用 `cosine` 或 `dot` 创建的索引时必须显式设置 `metric`。 |
 | `filter` | 否 | - | Lance SQL 条件，在生成候选向量之前执行，即 Prefilter。 |
 | `nprobes` | 否 | 最少 `1`，不限制最大值 | IVF 索引探测的分区数量，必须为正整数。不设置时从 1 个分区开始；使用 Prefilter 且候选不足时，Lance 可以继续探测更多分区。显式设置为 `N` 时，最少和最多探测数都会固定为 `N`。 |
 | `refine_factor` | 否 | 不启用精排 | 候选集精排倍数，必须为正整数。不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。即使设置为 `1` 也会执行精排，因此与不设置不同。 |
 | `ef` | 否 | `floor(1.5 × (top_k + offset))` | HNSW 图索引搜索时保留的候选宽度，必须为正整数。如果同时设置了 `refine_factor`，默认值为 `floor(1.5 × (top_k + offset) × refine_factor)`。对非 HNSW 索引无效。 |
 | `use_index` | 否 | `true` | `true` 表示将兼容的物理 Lance Index Segment 规划为索引 Split，并将未覆盖的 Fragment 保留为 Flat Search Split；如果没有可用的兼容索引元数据，则退回按 Fragment 拆分。`false` 表示每个可见 Fragment 生成一个 Split，并强制执行 Flat Search。 |
 
-以上默认值对应 Doris 当前集成的 Lance Scanner 行为。`metric` 未指定时，如果向量列存在兼容索引，查询使用该索引创建时配置的 Metric；不存在兼容索引或 `"use_index" = "false"` 时，`uint8` 向量使用 `hamming`，其他当前支持的向量元素类型使用 `l2`。
+以上默认值对应 Doris 当前集成的 Lance Scanner 行为。`metric` 未指定时，Doris 在选择向量索引时按 `l2` 处理，因此不会选中使用 `cosine` 或 `dot` 创建的索引。未选中索引或 `"use_index" = "false"` 时，`uint8` 向量使用 `hamming`，其他当前支持的向量元素类型使用 `l2`。
 
 ### 支持的向量索引类型
 
@@ -422,6 +422,32 @@ ORDER BY _distance ASC, user_id;
 `vector_search()` 只负责查询，不负责在 Doris 中创建索引，也不提供指定索引类型或索引名称的参数。当 `use_index=true` 时，FE 从固定的数据集快照读取向量索引元数据，并选择与向量列和 Metric 兼容的一个逻辑索引；随后将该逻辑索引中仍覆盖可见数据的每个物理 Segment 分配给一个索引 Scan Split。每个索引 Split 都携带 Segment UUID 以及该 Segment 覆盖且在当前快照中可见的 Fragment，因此 BE 会检索指定的物理 Segment，而不是再次让 Lance 自行选择索引。
 
 一个 Lance 逻辑索引可以包含多个物理 Index Segment，一个物理 Segment 也可以覆盖多个 Fragment。未被所选索引覆盖的 Fragment 不会被遗漏：Doris 会为每个这样的 Fragment 增加一个执行 Flat Search 的回退 Split。如果 FE 无法生成可用的 Index Segment 计划，则退回按 Fragment 拆分。当 `use_index=false` 时，Doris 跳过索引元数据规划，并对每个可见 Fragment 强制执行 Flat Search。Flat Search 不是一种 ANN 索引，它需要在 Lance 内直接读取并比较向量。
+
+### 支持的向量元素类型和距离类型
+
+索引能否用于 `vector_search()`，取决于向量元素类型以及创建索引时使用的距离类型，因为内置的 Lance 版本并未实现全部组合。下表描述使用索引检索的支持情况。表中每个可用组合都经过端到端验证：物理索引创建成功，Doris 通过 `lance-c` 读取该索引，并且查询经由索引路径返回了结果。
+
+| 向量元素类型 | `l2` | `cosine` | `dot` | `hamming` |
+|---|---|---|---|---|
+| `float16` | 仅支持 Flat Search [1] | 支持 | 支持，`IVF_PQ` 除外 [1] | 不支持 |
+| `float32` | 支持 | 支持 | 支持 | 不支持 |
+| `float64` | 支持 | 支持 | 支持 | 不支持 |
+| `uint8` | 不支持 | 不支持 | 不支持 | 仅 `IVF_FLAT` 和 `IVF_HNSW_FLAT` [2] |
+| `int8` | 仅支持 Flat Search [3] | 仅支持 Flat Search [3] | 仅支持 Flat Search [3] | 不支持 |
+
+除脚注另有说明外，表中可用的组合适用于上文列出的全部六种索引类型。
+
+1. 使用 `l2` 创建 `float16` 索引时，Lance 在累加聚类中心的过程中可能发生溢出，索引构建无法完成；`IVF_PQ` 使用 `float16` 和 `dot` 训练子量化器时也可能遇到同样的问题。这是 Lance 索引构建器的限制，而不是 Doris 查询路径的问题：`float16` 向量的 Flat Search 可以正常使用，使用 `cosine` 或 `dot` 创建的 `float16` 索引也可以正常查询。
+2. Lance 将 `uint8` 向量视为二进制向量，因此只接受 `hamming` 距离。其 Product Quantization 和 Scalar Quantization 构建器不接受 `uint8`，所以该元素类型只能使用 `IVF_FLAT` 和 `IVF_HNSW_FLAT`。
+3. Lance 目前没有完整的 `int8` 索引构建路径，因此 `int8` 向量只能使用 Flat Search 检索。此外，在当前内置的 Lance 版本下，检索**可为 NULL** 的 `int8` 向量列会导致 BE 进程退出。在 Doris 升级到包含该修复（[lance#7498](https://github.com/lance-format/lance/pull/7498)）的 `lance-c` 版本之前，请避免检索可为 NULL 的 `int8` 向量列。
+
+Lance 在创建索引时就会拒绝的组合不会影响 Doris，例如使用 `hamming` 创建浮点类型索引，或使用 `l2`、`cosine`、`dot` 创建 `uint8` 索引。
+
+#### 查询距离类型必须与索引一致
+
+只有当查询请求的 `metric` 与创建索引时使用的距离类型一致时，Doris 才会选择该向量索引；否则 Doris 不使用索引，改为执行 Flat Search——结果仍然正确，但需要直接扫描向量。`EXPLAIN` 可以区分两者：使用索引的计划中 `lanceSearchIndexSegments` 不为 0，未选中索引时显示 `lanceSearchIndexSegments=0`。由于未设置的 `metric` 会被视为 `l2`，查询使用 `cosine` 或 `dot` 创建的索引时请记得显式设置 `metric`。
+
+此外，Doris 对每个向量列只会考虑一个索引。如果同一个向量列上存在多个使用不同距离类型创建的向量索引，Doris 选中的可能并不是与查询距离类型匹配的那一个，查询会退回 Flat Search。建议每个向量列最多创建一个向量索引，使索引选择结果明确。
 
 ### Prefilter 和 Post-filter
 
