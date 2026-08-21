@@ -10,9 +10,17 @@ import { DownloadIcon } from '../Icons/download-icon';
 interface DownloadFormToolsProps {
     data: Option[];
     onToolChange?: (tool: ToolsEnum) => void;
+    /** Render only the form, without the card chrome — used inside the archive card. */
+    bare?: boolean;
+    /** 'archive' re-tones the popup and the download button for retired releases. */
+    tone?: 'primary' | 'archive';
 }
 export default function DownloadFormTools(props: DownloadFormToolsProps) {
-    const { data, onToolChange } = props;
+    const { data, onToolChange, bare = false, tone = 'primary' } = props;
+    const isArchive = tone === 'archive';
+    const popupExtraClass = isArchive ? 'form-select-select--archive' : '';
+    // With a single tool the picker is redundant: the parent already chose it.
+    const showToolSelect = data.length > 1;
     const [form] = useForm();
     const tool = useWatch('tool', form);
     const architecture = useWatch('architecture', form);
@@ -99,9 +107,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
 
     useEffect(() => {
         if (tool !== ToolsEnum.Operator || !tarBall) return;
-        const options = data
-            .find(item => item.value === ToolsEnum.Operator)
-            .children.filter(option => option[tarBall]);
+        const options = data.find(item => item.value === ToolsEnum.Operator).children.filter(option => option[tarBall]);
         const selectedVersion = Array.isArray(version) ? version[0] : version;
         if (!options.some(option => option.value === selectedVersion)) {
             form.setFieldValue('version', options[0].value);
@@ -123,198 +129,221 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
           })
         : '';
 
-    return (
-        <div className="rounded-lg border border-b-[0.375rem] border-primary px-8 pt-[3.125rem] pb-[2.1875rem]">
-            <div className="mb-8 text-xl font-medium text-left">Downloads</div>
-            <Form
-                form={form}
-                onFinish={val => {
-                    if (isOperatorBinary) return;
-                    const url = getDownloadLinkByCard({
-                        version: version,
-                        cpu: architecture,
-                        tarBall: tarBall,
-                        type: '',
-                    });
-                    window.open(url, '_blank');
-                }}
-                initialValues={{
-                    tool: data[0]?.value,
-                    version: '',
-                    architecture: '',
-                    tarBall: DownloadTypeEnum.Binary,
-                }}
-            >
-                <Form.Item name="tool" rules={[{ required: true }]}>
-                    <FormSelect placeholder="Tools" label="Tools" isCascader={false} options={data} />
-                </Form.Item>
-                <Form.Item noStyle shouldUpdate>
-                    {({ getFieldValue }) =>
-                        getFieldValue('tool') === ToolsEnum.StreamLoader ? (
-                            <>
-                                <Form.Item name="version" rules={[{ required: true }]}>
-                                    <FormSelect
-                                        placeholder="Version"
-                                        label="Version"
-                                        isCascader={false}
-                                        options={getOptions}
-                                    />
-                                </Form.Item>
-                                <Form.Item name="architecture" rules={[{ required: true }]}>
-                                    <FormSelect
-                                        placeholder="Architecture"
-                                        label="Architecture"
-                                        isCascader={false}
-                                        options={getArchitectureOptions}
-                                    />
-                                </Form.Item>
-                            </>
-                        ) : (
+    const formBody = (
+        <Form
+            form={form}
+            onFinish={val => {
+                if (isOperatorBinary) return;
+                const url = getDownloadLinkByCard({
+                    version: version,
+                    cpu: architecture,
+                    tarBall: tarBall,
+                    type: '',
+                });
+                window.open(url, '_blank');
+            }}
+            initialValues={{
+                tool: data[0]?.value,
+                version: '',
+                architecture: '',
+                tarBall: DownloadTypeEnum.Binary,
+            }}
+        >
+            <Form.Item name="tool" rules={[{ required: true }]} hidden={!showToolSelect}>
+                <FormSelect
+                    placeholder="Tools"
+                    label="Tools"
+                    isCascader={false}
+                    popupExtraClass={popupExtraClass}
+                    options={data}
+                />
+            </Form.Item>
+            <Form.Item noStyle shouldUpdate>
+                {({ getFieldValue }) =>
+                    getFieldValue('tool') === ToolsEnum.StreamLoader ? (
+                        <>
                             <Form.Item name="version" rules={[{ required: true }]}>
                                 <FormSelect
                                     placeholder="Version"
                                     label="Version"
-                                    isCascader={tool !== ToolsEnum.Operator}
+                                    isCascader={false}
+                                    popupExtraClass={popupExtraClass}
                                     options={getOptions}
-                                    displayRender={label => {
-                                        if (label.length > 1) {
-                                            return `${label[0]} (${label[1]})`;
-                                        }
-                                        if (label.length > 0) {
-                                            return label[label.length - 1];
-                                        }
-                                        return '';
-                                    }}
                                 />
                             </Form.Item>
-                        )
-                    }
-                </Form.Item>
-                <Form.Item name="tarBall" rules={[{ required: true }]}>
-                    <FormSelect
-                        placeholder="Tarball"
-                        label="Tarball"
-                        isCascader={false}
-                        options={[
-                            {
-                                label: DownloadTypeEnum.Binary,
-                                value: DownloadTypeEnum.Binary,
-                            },
-                            {
-                                label: DownloadTypeEnum.Source,
-                                value: DownloadTypeEnum.Source,
-                            },
-                        ]}
-                    />
-                </Form.Item>
-                {isOperatorBinary ? (
-                    <Form.Item style={{ marginBottom: 0 }} colon={false}>
-                        <div
-                            className="rounded-lg border border-[var(--brand-terminal)] bg-black p-4"
-                            style={{ backgroundColor: '#000000' }}
-                        >
-                            <div className="mb-3 flex items-center justify-between gap-4 border-b border-[var(--brand-terminal)]/30 pb-3">
-                                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--brand-terminal)]">
-                                    Docker command
-                                </span>
-                                <button
-                                    aria-label="Copy Docker pull command"
-                                    className="shrink-0 rounded-md border border-[var(--brand-terminal)] bg-black px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--brand-terminal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-terminal)] focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-50"
-                                    disabled={!operatorBinaryCommand}
-                                    style={{ backgroundColor: '#000000', borderColor: 'var(--brand-terminal)', color: 'var(--brand-terminal)' }}
-                                    type="button"
-                                    onClick={() => {
-                                        copy(operatorBinaryCommand);
-                                        message.success('Copy Successfully!');
-                                    }}
-                                >
-                                    Copy
-                                </button>
-                            </div>
-                            <div className="flex min-w-0 items-start">
-                                <span
-                                    aria-hidden="true"
-                                    className="mr-3 mt-0.5 select-none font-mono text-sm font-semibold text-[var(--brand-terminal)]"
-                                >
-                                    $
-                                </span>
-                                <code
-                                    aria-label="Docker pull command"
-                                    className="min-w-0 flex-1 select-text whitespace-normal break-all !bg-black !p-0 font-mono text-sm leading-6 !text-[var(--brand-terminal)]"
-                                    style={{ backgroundColor: '#000000', color: 'var(--brand-terminal)' }}
-                                >
-                                    {operatorBinaryCommand}
-                                </code>
-                            </div>
-                        </div>
-                    </Form.Item>
-                ) : (
-                    <Form.Item style={{ marginBottom: 0 }} colon={false}>
-                        <button type="submit" className="button-primary w-full text-lg">
-                            Download
-                        </button>
-                    </Form.Item>
-                )}
-                {!isOperatorBinary && (
+                            <Form.Item name="architecture" rules={[{ required: true }]}>
+                                <FormSelect
+                                    placeholder="Architecture"
+                                    label="Architecture"
+                                    isCascader={false}
+                                    popupExtraClass={popupExtraClass}
+                                    options={getArchitectureOptions}
+                                />
+                            </Form.Item>
+                        </>
+                    ) : (
+                        <Form.Item name="version" rules={[{ required: true }]}>
+                            <FormSelect
+                                placeholder="Version"
+                                label="Version"
+                                isCascader={tool !== ToolsEnum.Operator}
+                                popupExtraClass={popupExtraClass}
+                                options={getOptions}
+                                displayRender={label => {
+                                    if (label.length > 1) {
+                                        return `${label[0]} (${label[1]})`;
+                                    }
+                                    if (label.length > 0) {
+                                        return label[label.length - 1];
+                                    }
+                                    return '';
+                                }}
+                            />
+                        </Form.Item>
+                    )
+                }
+            </Form.Item>
+            <Form.Item name="tarBall" rules={[{ required: true }]}>
+                <FormSelect
+                    placeholder="Tarball"
+                    label="Tarball"
+                    isCascader={false}
+                    popupExtraClass={popupExtraClass}
+                    options={[
+                        {
+                            label: DownloadTypeEnum.Binary,
+                            value: DownloadTypeEnum.Binary,
+                        },
+                        {
+                            label: DownloadTypeEnum.Source,
+                            value: DownloadTypeEnum.Source,
+                        },
+                    ]}
+                />
+            </Form.Item>
+            {isOperatorBinary ? (
+                <Form.Item style={{ marginBottom: 0 }} colon={false}>
                     <div
-                        className="flex cursor-pointer text-primary items-center mt-4 justify-center"
+                        className="rounded-lg border border-[var(--brand-terminal)] bg-black p-4"
+                        style={{ backgroundColor: '#000000' }}
+                    >
+                        <div className="mb-3 flex items-center justify-between gap-4 border-b border-[var(--brand-terminal)]/30 pb-3">
+                            <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--brand-terminal)]">
+                                Docker command
+                            </span>
+                            <button
+                                aria-label="Copy Docker pull command"
+                                className="shrink-0 rounded-md border border-[var(--brand-terminal)] bg-black px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--brand-terminal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-terminal)] focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-50"
+                                disabled={!operatorBinaryCommand}
+                                style={{
+                                    backgroundColor: '#000000',
+                                    borderColor: 'var(--brand-terminal)',
+                                    color: 'var(--brand-terminal)',
+                                }}
+                                type="button"
+                                onClick={() => {
+                                    copy(operatorBinaryCommand);
+                                    message.success('Copy Successfully!');
+                                }}
+                            >
+                                Copy
+                            </button>
+                        </div>
+                        <div className="flex min-w-0 items-start">
+                            <span
+                                aria-hidden="true"
+                                className="mr-3 mt-0.5 select-none font-mono text-sm font-semibold text-[var(--brand-terminal)]"
+                            >
+                                $
+                            </span>
+                            <code
+                                aria-label="Docker pull command"
+                                className="min-w-0 flex-1 select-text whitespace-normal break-all !bg-black !p-0 font-mono text-sm leading-6 !text-[var(--brand-terminal)]"
+                                style={{ backgroundColor: '#000000', color: 'var(--brand-terminal)' }}
+                            >
+                                {operatorBinaryCommand}
+                            </code>
+                        </div>
+                    </div>
+                </Form.Item>
+            ) : (
+                <Form.Item style={{ marginBottom: 0 }} colon={false}>
+                    <button
+                        type="submit"
+                        className={`w-full text-lg ${isArchive ? 'download-next__archive-button' : 'button-primary'}`}
+                    >
+                        Download
+                    </button>
+                </Form.Item>
+            )}
+            {!isOperatorBinary && (
+                <div
+                    className="flex cursor-pointer text-primary items-center mt-4 justify-center"
+                    onClick={() => {
+                        const url = getDownloadLinkByCard({
+                            version: version,
+                            cpu: architecture,
+                            tarBall: tarBall,
+                            type: '',
+                        });
+                        copy(url);
+                        message.success('Copy Successfully!');
+                    }}
+                >
+                    <span className="mr-2">Copy link</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <rect
+                            x="2.5"
+                            y="5.5"
+                            width="8"
+                            height="8"
+                            rx="0.564706"
+                            stroke="var(--brand-primary)"
+                            strokeWidth="1.2"
+                        />
+                        <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M6.0999 1.89996C5.43716 1.89996 4.8999 2.43722 4.8999 3.09996V5.49995H6.0999V3.09996L12.8999 3.09996V9.89996H10.5V11.1H12.8999C13.5626 11.1 14.0999 10.5627 14.0999 9.89996V3.09996C14.0999 2.43722 13.5626 1.89996 12.8999 1.89996H6.0999Z"
+                            fill="var(--brand-primary)"
+                        />
+                    </svg>
+                </div>
+            )}
+            {!isOperatorBinary && (
+                <div className="flex justify-center mt-4">
+                    <div
+                        className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-primary"
                         onClick={() => {
                             const url = getDownloadLinkByCard({
                                 version: version,
                                 cpu: architecture,
                                 tarBall: tarBall,
-                                type: '',
+                                type: 'asc',
                             });
-                            copy(url);
-                            message.success('Copy Successfully!');
+                            window.open(url, '_blank');
                         }}
                     >
-                        <span className="mr-2">Copy link</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <rect x="2.5" y="5.5" width="8" height="8" rx="0.564706" stroke="var(--brand-primary)" strokeWidth="1.2" />
-                            <path
-                                fillRule="evenodd"
-                                clipRule="evenodd"
-                                d="M6.0999 1.89996C5.43716 1.89996 4.8999 2.43722 4.8999 3.09996V5.49995H6.0999V3.09996L12.8999 3.09996V9.89996H10.5V11.1H12.8999C13.5626 11.1 14.0999 10.5627 14.0999 9.89996V3.09996C14.0999 2.43722 13.5626 1.89996 12.8999 1.89996H6.0999Z"
-                                fill="var(--brand-primary)"
-                            />
-                        </svg>
+                        ASC
                     </div>
-                )}
-                {!isOperatorBinary && (
-                    <div className="flex justify-center mt-4">
-                        <div
-                            className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-primary"
-                            onClick={() => {
-                                const url = getDownloadLinkByCard({
-                                    version: version,
-                                    cpu: architecture,
-                                    tarBall: tarBall,
-                                    type: 'asc',
-                                });
-                                window.open(url, '_blank');
-                            }}
-                        >
-                            ASC
-                        </div>
-                        <div
-                            className="inline-flex items-center ml-4 text-[#8592A6] hover:text-primary cursor-pointer hover:underline"
-                            onClick={() => {
-                                const url = getDownloadLinkByCard({
-                                    version: version,
-                                    cpu: architecture,
-                                    tarBall: tarBall,
-                                    type: 'sha512',
-                                });
-                                window.open(url, '_blank');
-                            }}
-                        >
-                            SHA-512
-                        </div>
+                    <div
+                        className="inline-flex items-center ml-4 text-[#8592A6] hover:text-primary cursor-pointer hover:underline"
+                        onClick={() => {
+                            const url = getDownloadLinkByCard({
+                                version: version,
+                                cpu: architecture,
+                                tarBall: tarBall,
+                                type: 'sha512',
+                            });
+                            window.open(url, '_blank');
+                        }}
+                    >
+                        SHA-512
                     </div>
-                )}
-                {/* {tool === ToolsEnum.StreamLoader && ( */}
-                {/* <div className="flex justify-center mt-4 hover:text-primary">
+                </div>
+            )}
+            {/* {tool === ToolsEnum.StreamLoader && ( */}
+            {/* <div className="flex justify-center mt-4 hover:text-primary">
                     <div
                         className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-primary"
                         onClick={() => {
@@ -333,8 +362,16 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                         </div>
                     </div>
                 </div> */}
-                {/* )} */}
-            </Form>
+            {/* )} */}
+        </Form>
+    );
+
+    if (bare) return formBody;
+
+    return (
+        <div className="rounded-lg border border-b-[0.375rem] border-primary px-8 pt-[3.125rem] pb-[2.1875rem]">
+            <div className="mb-8 text-xl font-medium text-left">Downloads</div>
+            {formBody}
         </div>
     );
 }

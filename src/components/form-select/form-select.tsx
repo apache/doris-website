@@ -12,6 +12,12 @@ export interface FormSelectProps {
     options: Option[];
     isCascader?: boolean;
     displayRender?: (label, selectedOptions) => ReactNode;
+    /**
+     * Extra class on the antd popup. The popup renders in a body-level portal,
+     * so a wrapper class cannot reach it — pass one here to re-tone the list
+     * (see `.form-select-select--archive` in download-page.scss).
+     */
+    popupExtraClass?: string;
 }
 
 export default function FormSelect({
@@ -24,6 +30,7 @@ export default function FormSelect({
     displayRender = label => {
         return label.length > 0 ? label[0] : '';
     },
+    popupExtraClass = '',
 }: FormSelectProps) {
     return (
         <div className="group relative z-0 w-full form-select text-left">
@@ -38,12 +45,12 @@ export default function FormSelect({
                     }}
                     options={options}
                     className={`peer block h-[3.5rem] w-full appearance-none rounded-lg  bg-transparent text-sm text-[#1D1D1D] focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500`}
-                    popupClassName="form-cascader"
+                    popupClassName={`form-cascader ${popupExtraClass}`}
                 />
             ) : (
                 <Select
                     suffixIcon={<ArrowDownIcon />}
-                    popupClassName="form-select-select"
+                    popupClassName={`form-select-select ${popupExtraClass}`}
                     value={value}
                     onChange={e => onChange && onChange(e || '')}
                     className={`peer block h-[3.5rem] w-full appearance-none rounded-lg  bg-transparent text-sm text-[#1D1D1D] focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500`}

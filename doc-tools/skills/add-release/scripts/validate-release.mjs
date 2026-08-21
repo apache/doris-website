@@ -6,6 +6,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ARCHITECTURES = ['x64', 'x64-noavx2', 'arm64'];
+// Position is now a property of the branch, not of a hand-maintained enum:
+// ACTIVE_CORE_BRANCHES is ordered newest-first, so its first entry is Latest
+// and its last entry is Stable. 'prev' is kept as an alias for 'stable'.
+const POSITIONS = ['latest', 'stable', 'prev', 'maintained', 'historical'];
 const SIDECAR_SUFFIXES = ['', '.asc', '.sha512'];
 
 class ReleaseValidationError extends Error {
@@ -53,14 +57,18 @@ function parseFrontmatter(markdown, relativePath, failures) {
 }
 
 function extractAssignedArray(source, variableName) {
-    const declaration = source.search(new RegExp('\\b' + variableName + '\\b'));
-    if (declaration === -1) {
+    // Anchor on the declaration itself. Matching the bare identifier would also
+    // hit a doc comment that merely names the constant, and then silently
+    // extract the wrong array.
+    const declaration = new RegExp(
+        '(?:export\\s+)?const\\s+' + escapeRegExp(variableName) + '\\b[^=\\n]*=',
+    ).exec(source);
+    if (!declaration) {
         throw new Error(variableName + ' declaration was not found');
     }
 
-    const equals = source.indexOf('=', declaration);
-    const start = source.indexOf('[', equals);
-    if (equals === -1 || start === -1) {
+    const start = source.indexOf('[', declaration.index + declaration[0].length);
+    if (start === -1) {
         throw new Error(variableName + ' array assignment was not found');
     }
 
@@ -125,6 +133,21 @@ function extractAssignedArray(source, variableName) {
     }
 
     throw new Error(variableName + ' array is not balanced');
+}
+
+function parseStringArray(arraySource) {
+    return Array.from(arraySource.matchAll(/['"]([^'"]+)['"]/g)).map(match => match[1]);
+}
+
+function extractBranchValues(arraySource) {
+    const branches = [];
+    for (const match of arraySource.matchAll(/\bvalue\s*:\s*['"]([^'"]+)['"]/g)) {
+        const value = match[1];
+        if ((/^\d+\.\d+$/.test(value) || value === '0.x') && !branches.includes(value)) {
+            branches.push(value);
+        }
+    }
+    return branches;
 }
 
 function extractPatchVersions(arraySource, series) {
@@ -430,8 +453,8 @@ export async function validateCoreRelease(options) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(releaseDate || '')) {
         throw new Error('releaseDate must use YYYY-MM-DD format');
     }
-    if (!['latest', 'prev', 'earlier', 'historical'].includes(position)) {
-        throw new Error('position must be latest, prev, earlier, or historical');
+    if (!POSITIONS.includes(position)) {
+        throw new Error('position must be ' + POSITIONS.join(', '));
     }
 
     const releasePath = 'releasenotes/v' + series + '/release-' + version + '.md';
@@ -552,37 +575,29 @@ export async function validateCoreRelease(options) {
     const downloadPath = 'src/constant/download.data.ts';
     const downloadSource = readRequired(repoRoot, downloadPath, failures);
     if (downloadSource) {
-        let dorisArray = '';
         let allArray = '';
+        let activeBranches = null;
         try {
-            dorisArray = extractAssignedArray(downloadSource, 'DORIS_VERSIONS');
             allArray = extractAssignedArray(downloadSource, 'ALL_VERSIONS');
-            checks.push('DORIS_VERSIONS and ALL_VERSIONS arrays are readable');
+            checks.push('ALL_VERSIONS array is readable');
+        } catch (error) {
+            failures.push(downloadPath + ': ' + error.message);
+        }
+        try {
+            activeBranches = parseStringArray(
+                extractAssignedArray(downloadSource, 'ACTIVE_CORE_BRANCHES'),
+            );
+            checks.push('ACTIVE_CORE_BRANCHES is readable');
         } catch (error) {
             failures.push(downloadPath + ': ' + error.message);
         }
 
-        if (dorisArray && allArray) {
-            const dorisVersions = extractPatchVersions(dorisArray, series);
+        if (allArray) {
             const allVersions = extractPatchVersions(allArray, series);
-            addResult(
-                dorisVersions.includes(version),
-                'DORIS_VERSIONS includes ' + version,
-                version + ' is missing from DORIS_VERSIONS',
-                checks,
-                failures,
-            );
             addResult(
                 allVersions.includes(version),
                 'ALL_VERSIONS includes ' + version,
                 version + ' is missing from ALL_VERSIONS',
-                checks,
-                failures,
-            );
-            addResult(
-                isNewestFirst(dorisVersions),
-                'DORIS_VERSIONS ' + series + ' entries are newest-first',
-                'DORIS_VERSIONS ' + series + ' entries are not newest-first',
                 checks,
                 failures,
             );
@@ -594,20 +609,17 @@ export async function validateCoreRelease(options) {
                 failures,
             );
 
-            for (const listedVersion of dorisVersions) {
+            // ACTIVE_HEADS takes the first child of each maintained branch, and
+            // that is what the quick download card offers. A new headline patch
+            // that is not first in its series never reaches the top of the page.
+            if (position !== 'historical') {
                 addResult(
-                    allVersions.includes(listedVersion),
-                    listedVersion + ' is mirrored in ALL_VERSIONS',
-                    listedVersion + ' is missing from ALL_VERSIONS',
-                    checks,
-                    failures,
-                );
-            }
-            for (const listedVersion of allVersions) {
-                addResult(
-                    dorisVersions.includes(listedVersion),
-                    listedVersion + ' is mirrored in DORIS_VERSIONS',
-                    listedVersion + ' is missing from DORIS_VERSIONS',
+                    allVersions[0] === version,
+                    version + ' is the newest patch of ' + series + ', so ACTIVE_HEADS picks it up',
+                    version +
+                        ' must be the first ' +
+                        series +
+                        ' entry in ALL_VERSIONS; the quick download card offers the first child of each maintained branch',
                     checks,
                     failures,
                 );
@@ -617,15 +629,13 @@ export async function validateCoreRelease(options) {
                 "version\\s*:\\s*['\"]" + escapeRegExp(sourceVersion) + "['\"]",
                 'g',
             );
-            const sourceVersionCount =
-                countMatches(dorisArray, sourceVersionExpression) +
-                countMatches(allArray, sourceVersionExpression);
+            const sourceVersionCount = countMatches(allArray, sourceVersionExpression);
             addResult(
-                sourceVersionCount === ARCHITECTURES.length * 2,
-                'Source filename version ' + sourceVersion + ' is set for all six package rows',
+                sourceVersionCount === ARCHITECTURES.length,
+                'Source filename version ' + sourceVersion + ' is set for all three package rows',
                 'Expected source filename version ' +
                     sourceVersion +
-                    ' in six package rows, found ' +
+                    ' in three package rows, found ' +
                     sourceVersionCount,
                 checks,
                 failures,
@@ -634,16 +644,11 @@ export async function validateCoreRelease(options) {
             for (const architecture of ARCHITECTURES) {
                 for (const suffix of SIDECAR_SUFFIXES) {
                     const filename =
-                        'apache-doris-' +
-                        version +
-                        '-bin-' +
-                        architecture +
-                        '.tar.gz' +
-                        suffix;
+                        'apache-doris-' + version + '-bin-' + architecture + '.tar.gz' + suffix;
                     addResult(
-                        dorisArray.includes(filename) && allArray.includes(filename),
-                        filename + ' exists in both download data arrays',
-                        filename + ' must exist in both DORIS_VERSIONS and ALL_VERSIONS',
+                        allArray.includes(filename),
+                        filename + ' exists in ALL_VERSIONS',
+                        filename + ' must exist in ALL_VERSIONS',
                         checks,
                         failures,
                     );
@@ -651,38 +656,99 @@ export async function validateCoreRelease(options) {
             }
 
             const normalizedSourceDir = sourceDir.endsWith('/') ? sourceDir : sourceDir + '/';
-            const sourceDirCount =
-                dorisArray.split(normalizedSourceDir).length -
-                1 +
-                (allArray.split(normalizedSourceDir).length - 1);
+            const sourceDirCount = allArray.split(normalizedSourceDir).length - 1;
             addResult(
-                sourceDirCount === ARCHITECTURES.length * 2,
-                'Source directory is set for all six package rows',
+                sourceDirCount === ARCHITECTURES.length,
+                'Source directory is set for all three package rows',
                 'Expected source directory ' +
                     normalizedSourceDir +
-                    ' in six package rows, found ' +
+                    ' in three package rows, found ' +
                     sourceDirCount,
                 checks,
                 failures,
             );
         }
 
-        if (position !== 'historical') {
-            const enumName = {
-                latest: 'Latest',
-                prev: 'Prev',
-                earlier: 'Earlier',
-            }[position];
-            const enumExpression = new RegExp(
-                "\\b" + enumName + "\\s*=\\s*['\"]" + escapeRegExp(version) + "['\"]",
-            );
-            addResult(
-                enumExpression.test(downloadSource),
-                'VersionEnum.' + enumName + ' points to ' + version,
-                'VersionEnum.' + enumName + ' must point to ' + version,
-                checks,
-                failures,
-            );
+        if (activeBranches) {
+            // A branch that is not in this list is archived: it disappears from
+            // the maintained sections of /download and moves behind the archive
+            // picker. Opening a new branch without adding it here ships a
+            // release that never appears on the page.
+            const branchIndex = activeBranches.indexOf(series);
+
+            if (position === 'historical') {
+                addResult(
+                    true,
+                    'Historical release: ' +
+                        series +
+                        ' is ' +
+                        (branchIndex === -1 ? 'archived' : 'still maintained') +
+                        ', no branch-list change required',
+                    '',
+                    checks,
+                    failures,
+                );
+            } else {
+                addResult(
+                    branchIndex !== -1,
+                    'ACTIVE_CORE_BRANCHES lists ' + series + ' as maintained',
+                    'ACTIVE_CORE_BRANCHES must list ' +
+                        series +
+                        '; a branch missing from it is treated as archived and is hidden from the maintained download sections',
+                    checks,
+                    failures,
+                );
+
+                if (branchIndex !== -1) {
+                    const lastIndex = activeBranches.length - 1;
+                    if (position === 'latest') {
+                        addResult(
+                            branchIndex === 0,
+                            series + ' is first in ACTIVE_CORE_BRANCHES, so it renders as Latest',
+                            series +
+                                ' must be first in ACTIVE_CORE_BRANCHES to render as Latest, found index ' +
+                                branchIndex,
+                            checks,
+                            failures,
+                        );
+                    } else if (position === 'stable' || position === 'prev') {
+                        addResult(
+                            branchIndex === lastIndex,
+                            series + ' is last in ACTIVE_CORE_BRANCHES, so it renders as Stable',
+                            series +
+                                ' must be last in ACTIVE_CORE_BRANCHES to render as Stable, found index ' +
+                                branchIndex,
+                            checks,
+                            failures,
+                        );
+                    } else {
+                        addResult(
+                            branchIndex > 0 && branchIndex < lastIndex,
+                            series + ' sits between Latest and Stable in ACTIVE_CORE_BRANCHES',
+                            series +
+                                ' must sit between the first and last ACTIVE_CORE_BRANCHES entries to render as Maintained, found index ' +
+                                branchIndex,
+                            checks,
+                            failures,
+                        );
+                    }
+                }
+            }
+
+            if (allArray) {
+                const branchValues = extractBranchValues(allArray);
+                for (const branch of activeBranches) {
+                    addResult(
+                        branchValues.includes(branch),
+                        'Maintained branch ' + branch + ' has data in ALL_VERSIONS',
+                        'ACTIVE_CORE_BRANCHES lists ' +
+                            branch +
+                            ' but ALL_VERSIONS has no such branch, so its download section renders empty',
+                        checks,
+                        failures,
+                    );
+                }
+            }
         }
 
         const originMatch = downloadSource.match(
