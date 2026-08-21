@@ -13,19 +13,29 @@
     --dl-yellow-bright: var(--brand-accent-bright);
     --dl-ink: var(--brand-ink);
     --dl-text: #1d1d1d;
-    --dl-text-muted: #4C576C;
-    --dl-text-subtle: #8592A6;
+    --dl-text-muted: #4c576c;
+    --dl-text-subtle: #8592a6;
     --dl-border: #dfe5f0;
-    --dl-bg-soft: #F7FAFC;
+    --dl-bg-soft: #f7fafc;
     --dl-mono: #{type.$font-mono};
     --dl-sans: #{type.$font-sans};
+
+    // Archive tones. Deliberately outside the brand palette and identical in
+    // every brand theme: "no longer maintained" has to read the same way
+    // whichever theme the visitor has picked.
+    --dl-ended: #b4442a;
+    --dl-drained: #767b84;
+    --dl-drained-bg: #f1f2f4;
+    --dl-drained-line: #dcdee2;
 
     font-family: var(--dl-sans);
     color: var(--dl-text);
     background: #ffffff;
 
     a {
-        transition: color 0.18s ease, opacity 0.18s ease;
+        transition:
+            color 0.18s ease,
+            opacity 0.18s ease;
     }
 }
 
@@ -96,6 +106,28 @@
     max-width: 620px;
 }
 
+.download-next__maintained {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 26px;
+    padding: 8px 15px 8px 12px;
+    border: 1px solid rgb(var(--brand-primary-glow-rgb) / 35%);
+    border-radius: 999px;
+    background: rgb(var(--brand-shadow-rgb) / 35%);
+    color: var(--brand-primary-soft);
+    @include type.mono-text(12.5px, 500, 1.4, 0.02em);
+}
+
+.download-next__maintained-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--dl-green-glow);
+    box-shadow: 0 0 0 3px rgb(var(--brand-primary-glow-rgb) / 25%);
+    flex-shrink: 0;
+}
+
 // ─── Quick download card ────────────────────────────────────────────────────
 
 .download-next__quick {
@@ -130,9 +162,56 @@
     & + & {
         margin-top: 18px;
     }
+}
 
-    &--file {
-        align-items: flex-start;
+.download-next__file-row {
+    display: grid;
+    grid-template-columns: 9.0625rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 20px;
+    margin-top: 22px;
+}
+
+.download-next__file-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 7px;
+    @include type.mono-text(12px, 500, 1.4, 0.02em);
+
+    a {
+        color: var(--dl-text-muted);
+        border-bottom: 1px solid var(--dl-drained-line);
+
+        &:hover {
+            color: var(--ifm-color-primary);
+            border-bottom-color: var(--ifm-color-primary);
+            text-decoration: none;
+        }
+    }
+}
+
+.download-next__download-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 28px;
+    border-radius: 6px;
+    background: var(--dl-yellow);
+    color: var(--dl-ink) !important;
+    white-space: nowrap;
+    @include type.mono-text(13px, 800, 1, 0.05em, uppercase);
+    box-shadow: 0 2px 0 rgb(var(--brand-ink-rgb) / 18%);
+    transition:
+        transform 0.14s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
+
+    &:hover {
+        background: var(--dl-yellow-bright);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 0 rgb(var(--brand-ink-rgb) / 18%);
+        text-decoration: none !important;
     }
 }
 
@@ -190,6 +269,20 @@
         color: #ffffff;
         z-index: 1;
     }
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+}
+
+.download-next__seg-tag {
+    margin-left: 8px;
+    @include type.mono-text(12px, 700, 1, 0.08em, uppercase);
+    opacity: 0.72;
+}
+
+.download-next__seg.is-muted {
+    opacity: 0.45;
 }
 
 .download-next__file {
@@ -212,7 +305,9 @@
 }
 
 .download-next__file-name {
+    display: block;
     font-weight: 600;
+    word-break: break-all;
 }
 
 .download-next__file-meta {
@@ -248,6 +343,13 @@
     max-width: 1180px;
     margin: 0 auto;
     padding: 0 56px;
+}
+
+.download-next__eyebrow {
+    display: block;
+    margin-bottom: 10px;
+    @include type.mono-text(12px, 700, 1.2, 0.18em, uppercase);
+    color: var(--dl-text-subtle);
 }
 
 .download-next__section-title {
@@ -331,11 +433,161 @@
     }
 }
 
+.download-next__tool-version {
+    margin-left: auto;
+    padding: 3px 9px;
+    border-radius: 5px;
+    background: var(--brand-primary-soft);
+    color: var(--brand-primary-darker);
+    @include type.mono-text(12px, 600, 1.4, 0.01em);
+}
+
 .download-next__ecosystem-links {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+}
+
+// ─── Archive ───────────────────────────────────────────────────────────────
+//
+// Everything Apache Doris no longer maintains. The zone is drained rather than
+// alarmed: a decommissioned room with the lights on, not a warning banner. The
+// brand green never appears below this line, so a visitor can tell which half
+// of the page they are in from the colour alone.
+
+.download-next__archive {
+    margin-top: 80px;
+    padding: 46px 0 56px;
+    border-top: 1px solid var(--dl-drained-line);
+    background: var(--dl-drained-bg);
+}
+
+.download-next__section-title--archive {
+    color: #5a5f67;
+}
+
+.download-next__archive .download-next__split {
+    background: #ffffff;
+    border-color: var(--dl-drained-line);
+}
+
+.download-next__archive-lead {
+    margin: 0;
+    color: #3f4652;
+    font-size: 16px;
+    line-height: 1.7;
+
+    strong {
+        color: var(--dl-ended);
+        font-weight: 600;
+    }
+}
+
+.download-next__archive-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+
+    a {
+        color: #3f4652;
+        border-bottom: 1px solid var(--dl-drained-line);
+
+        &:hover {
+            color: var(--dl-ended);
+            border-bottom-color: var(--dl-ended);
+            text-decoration: none;
+        }
+    }
+}
+
+.download-next__archive-card {
+    border: 1px solid var(--dl-drained-line);
+    border-top: 3px solid var(--dl-ended);
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 32px 32px 30px;
+}
+
+.download-next__archive-card-title {
+    margin-bottom: 32px;
+    color: var(--dl-text);
+    font-size: 20px;
+    font-weight: 500;
+    text-align: left;
+}
+
+.download-next__archive-project {
+    margin-bottom: 24px;
+}
+
+// Matches .button-primary in shape, inverted in tone: the archive download is
+// available, not encouraged.
+.download-next__archive-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 10px 24px;
+    border: 1.5px solid var(--dl-ended);
+    border-radius: 6px;
+    background: #ffffff;
+    color: var(--dl-ended);
+    cursor: pointer;
+    transition:
+        background 0.18s ease,
+        color 0.18s ease;
+
+    &:hover {
+        background: var(--dl-ended);
+        color: #ffffff;
+    }
+}
+
+// The shared download form is brand-green throughout. Inside the archive card
+// every one of those accents is re-toned, so no green appears past the cut.
+.download-next__archive-card {
+    .ant-select:not(.ant-select-customize-input) {
+        &:hover .ant-select-selector,
+        &.ant-select-focused .ant-select-selector {
+            border-color: var(--dl-ended) !important;
+        }
+    }
+
+    .ant-select-arrow {
+        color: var(--dl-drained);
+    }
+
+    .text-primary {
+        color: var(--dl-ended) !important;
+
+        svg rect {
+            stroke: var(--dl-ended);
+        }
+
+        svg path {
+            fill: var(--dl-ended);
+        }
+    }
+
+    .hover\:text-primary:hover {
+        color: var(--dl-ended) !important;
+    }
+}
+
+// antd renders the popup in a body-level portal, so it cannot be reached from
+// the card. FormSelect forwards this class through `popupExtraClass`.
+.form-select-select--archive {
+    &.ant-select-dropdown .ant-select-item-option-selected:not(.ant-select-item-option-disabled),
+    .ant-cascader-menu li.ant-cascader-menu-item-active {
+        color: var(--dl-ended);
+
+        .ant-cascader-menu-item-expand-icon {
+            color: var(--dl-ended);
+        }
+    }
 }
 
 // ─── Run anywhere (single CTA card) ────────────────────────────────────────
@@ -360,14 +612,16 @@
     border: 1px solid rgb(var(--brand-primary-glow-rgb) / 30%);
     background:
         radial-gradient(ellipse at 78% 20%, rgb(var(--brand-primary-glow-rgb) / 22%), transparent 58%),
-        radial-gradient(ellipse at 6% 100%, rgb(var(--brand-accent-rgb) / 8%), transparent 58%),
-        var(--dl-green);
+        radial-gradient(ellipse at 6% 100%, rgb(var(--brand-accent-rgb) / 8%), transparent 58%), var(--dl-green);
     color: var(--dl-cream-light);
     text-decoration: none !important;
     box-shadow:
         0 30px 60px -32px rgb(var(--brand-shadow-rgb) / 0.35),
         0 8px 24px -12px rgb(var(--brand-ink-rgb) / 0.12);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
 
     &::before {
         content: '';
@@ -426,7 +680,10 @@
     color: var(--dl-ink);
     border-radius: 6px;
     @include type.mono-text(13px, 800, 1, 0.04em);
-    transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    transition:
+        background 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
 
     svg {
         transition: transform 0.18s ease;
@@ -488,6 +745,29 @@
 
     .download-next__split-card {
         order: -1;
+    }
+
+    .download-next__quick-row,
+    .download-next__file-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .download-next__file-row {
+        gap: 14px;
+    }
+
+    .download-next__quick-label {
+        margin-bottom: 0;
+    }
+
+    .download-next__archive {
+        margin-top: 56px;
+        padding: 36px 0 44px;
+    }
+
+    .download-next__archive-card {
+        padding: 24px 20px 22px;
     }
 
     .download-next__run {

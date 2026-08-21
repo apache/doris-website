@@ -1,121 +1,86 @@
 import Translate, { translate } from '@docusaurus/Translate';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import Link from '@docusaurus/Link';
+import clsx from 'clsx';
 import DownloadFormAllRelease from '@site/src/components/download-form/download-form-all-release';
+import DownloadFormArchive from '@site/src/components/download-form/download-form-archive';
 import DownloadFormTools from '@site/src/components/download-form/download-form-tools';
 import {
+    ACTIVE_HEADS,
+    ACTIVE_TOOL_VERSIONS,
+    ACTIVE_VERSIONS,
+    ARCHIVED_TOOL_VERSIONS,
+    ARCHIVED_VERSIONS,
     CPUEnum,
-    DORIS_VERSIONS,
     DownloadTypeEnum,
+    findCoreRelease,
     ORIGIN,
-    VersionEnum,
+    TOOL_RELEASE_NOTES,
+    ToolsEnum,
 } from '@site/src/constant/download.data';
-import Link from '@docusaurus/Link';
 import './download-page.scss';
 import LinkWithArrow from '@site/src/components/link-arrow';
-import clsx from 'clsx';
-import { ALL_VERSIONS, TOOL_RELEASE_NOTES, TOOL_VERSIONS, ToolsEnum } from '@site/src/constant/download.data';
-import * as semver from 'semver';
 import { CheckedIcon } from '@site/src/components/Icons/checked-icon';
 import { LayoutNext } from '@site/src/components/home-next/LayoutNext';
 
-const BINARY_VERSION = [
-    { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
-    { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
-];
+const KEYS_URL = 'https://downloads.apache.org/doris/KEYS';
+const VERIFY_URL = '/community/release-and-verify/release-verify';
+const VERSIONING_URL = '/community/release-and-verify/release-versioning';
+const SECURITY_URL = '/community/security';
+const ASF_ARCHIVE_URL = 'https://archive.apache.org/dist/doris/';
+
+const CPU_OPTIONS = [CPUEnum.X64, CPUEnum.X64NoAvx2, CPUEnum.ARM64];
+
+/** Canonical release-note route: releasenotes/v4.1/release-4.1.3.md → /releases/v4.1/release-4.1.3 */
+function releaseNotePath(branch: string, version: string) {
+    return `/releases/v${branch}/release-${version}`;
+}
 
 export default function DownloadFormNext(): JSX.Element {
-    const [version, setVersion] = useState<string>(VersionEnum.Latest);
-    const [cpus, setCpus] = useState<any[]>([]);
-    const [cpu, setCPU] = useState<string>(CPUEnum.X64);
-    const [downloadInfo, setDownloadInfo] = useState<any>({});
-    const [releaseFlag, setReleaseFlag] = useState<boolean>(true);
-    const [downloadType, setDownloadType] = useState(DownloadTypeEnum.Binary);
-    const [releaseNote, setReleaseNote] = useState('/docs/dev/releasenotes/v4.0/release-4.0.0');
+    const defaultHead = ACTIVE_HEADS[0];
+    const [version, setVersion] = useState<string>(defaultHead?.version ?? '');
+    const [cpu, setCpu] = useState<string>(CPUEnum.X64);
+    const [downloadType, setDownloadType] = useState<DownloadTypeEnum>(DownloadTypeEnum.Binary);
+    const [releaseNote, setReleaseNote] = useState<string>(
+        defaultHead ? releaseNotePath(defaultHead.branch, defaultHead.version) : '/releases/all-release',
+    );
     const [ecosystemTool, setEcosystemTool] = useState<ToolsEnum>(ToolsEnum.Kafka);
 
-    const changeVersion = (val: string) => {
-        setVersion(val);
-    };
-
-    const changeCPU = (val: string) => {
-        setCPU(val);
-        const nextDownloadInfo = cpus.find(item => item.value === val);
-        if (!nextDownloadInfo || typeof nextDownloadInfo.gz !== 'string') {
-            setDownloadInfo({});
-            return;
-        }
-        const filename = nextDownloadInfo.gz.split(ORIGIN)[1];
-        nextDownloadInfo.filename = filename;
-        setDownloadInfo(nextDownloadInfo);
-    };
-
-    const getIssueCode = (code: string) => {
-        switch (code) {
-            case '1.2.1':
-                return 15508;
-            case '1.2.2':
-                return 16446;
-            case '1.2.3':
-                return 17748;
-            case '1.2.4':
-                return 18762;
-            case '1.2.5':
-                return 20827;
-            case '1.2.6':
-                return 21805;
-            case '1.2.7':
-                return 23711;
-            case '1.2.8':
-                return 31673;
-            default:
-                return null;
-        }
-    };
-
-    function toDocsRelease(version: string) {
-        const SUPPORTED_VERSION = '>=1.1.0';
-        const versionNumber = version.match(/[0-9].[0-9].[0-9]*/)?.[0] || '0.0.0';
-        return semver.satisfies(versionNumber, SUPPORTED_VERSION);
-    }
-
-    function onValuesChange(values: any) {
-        setReleaseFlag(values.version[0] === '1.1' ? false : true);
-        if (!toDocsRelease(values.version[1])) {
-            setReleaseNote('https://github.com/apache/doris/releases');
-        } else if (values.version[0] === '1.2') {
-            setReleaseNote(`https://github.com/apache/doris/issues/${getIssueCode(values.version[1])}`);
-        } else if (['3.0', '2.0', '3.1', '2.1'].includes(values.version[0])) {
-            setReleaseNote(
-                `/docs/${values.version[0] === '3.0' || values.version[0] === '3.1' ? '3.x' : values.version[0]}/releasenotes/v${
-                    values.version[0]
-                }/release-${values.version[1]}`,
-            );
-        } else if (values.version[0] === '4.0') {
-            setReleaseNote(`/docs/dev/releasenotes/v${values.version[0]}/release-${values.version[1]}`);
-        } else {
-            setReleaseNote(`/docs/releasenotes/v${values.version[0]}/release-${values.version[1]}`);
-        }
-    }
+    /** Every CPU build of the release the quick card is currently showing. */
+    const builds = useMemo(() => findCoreRelease(version)?.items ?? [], [version]);
+    const build = useMemo(() => builds.find(item => item.value === cpu) ?? builds[0], [builds, cpu]);
 
     useEffect(() => {
-        const currentVersion = DORIS_VERSIONS.find(doris_version => doris_version.value === version);
-        if (!currentVersion || !Array.isArray(currentVersion.children)) {
-            setCpus([]);
-            setCPU(CPUEnum.X64);
-            setDownloadInfo({});
-            return;
+        if (!builds.some(item => item.value === cpu)) setCpu(CPUEnum.X64);
+    }, [builds]);
+
+    const isSource = downloadType === DownloadTypeEnum.Source;
+
+    const asset = useMemo(() => {
+        if (!build) return null;
+        if (isSource) {
+            const base = `${build.source}apache-doris-${build.version}-src.tar.gz`;
+            return {
+                filename: `apache-doris-${build.version}-src.tar.gz`,
+                gz: base,
+                asc: `${base}.asc`,
+                sha512: `${base}.sha512`,
+            };
         }
-        setCpus(currentVersion.children);
-        setCPU(CPUEnum.X64);
-        const nextDownloadInfo: any = currentVersion.children.find(item => item.value === CPUEnum.X64);
-        if (!nextDownloadInfo || typeof nextDownloadInfo.gz !== 'string') {
-            setDownloadInfo({});
-            return;
-        }
-        const filename = nextDownloadInfo.gz.split(ORIGIN)[1];
-        nextDownloadInfo.filename = filename;
-        setDownloadInfo(nextDownloadInfo);
-    }, [version]);
+        return {
+            filename: typeof build.gz === 'string' ? build.gz.split(ORIGIN)[1] : '',
+            gz: build.gz,
+            asc: build.asc,
+            sha512: build.sha512,
+        };
+    }, [build, isSource]);
+
+    function onCoreVersionChange(values: any) {
+        const [branch, release] = values.version || [];
+        if (branch && release) setReleaseNote(releaseNotePath(branch, release));
+    }
+
+    const maintainedBranches = ACTIVE_VERSIONS.map(branch => branch.value).join(', ');
 
     return (
         <LayoutNext
@@ -136,19 +101,23 @@ export default function DownloadFormNext(): JSX.Element {
                     <div className="download-next__hero-bg-grid" aria-hidden="true" />
                     <div className="download-next__hero-inner">
                         <h1 className="download-next__title">
-                            <span className="download-next__title-line">Quick Download</span>
+                            <span className="download-next__title-line">Download</span>
                             <span className="download-next__title-line">
-                                & <span className="download-next__title-accent">Easy Deployment</span>
+                                Apache <span className="download-next__title-accent">Doris</span>
                             </span>
                         </h1>
                         <p className="download-next__sub">
-                            Download verified binaries or source tarballs of every Apache Doris release, and deploy
-                            anywhere — bare metal, Kubernetes, or cloud.
+                            Verified binaries and source tarballs for the release branches Apache Doris currently
+                            maintains. Every download is signed and checksummed.
                         </p>
+                        <div className="download-next__maintained">
+                            <span className="download-next__maintained-dot" aria-hidden="true" />
+                            Maintained branches — {maintainedBranches}
+                        </div>
                     </div>
                 </section>
 
-                {/* ── Quick download card ─────────────────────────────────────── */}
+                {/* ── Quick download ──────────────────────────────────────────── */}
                 <section className="download-next__quick">
                     <div className="download-next__quick-inner">
                         <div className="download-next__quick-card">
@@ -159,16 +128,18 @@ export default function DownloadFormNext(): JSX.Element {
                                     </Translate>
                                 </label>
                                 <div className="download-next__seg">
-                                    {BINARY_VERSION.map(item => (
+                                    {ACTIVE_HEADS.map(head => (
                                         <button
                                             type="button"
+                                            key={head.version}
+                                            aria-pressed={version === head.version}
                                             className={clsx('download-next__seg-item', {
-                                                'is-checked': version === item.value,
+                                                'is-checked': version === head.version,
                                             })}
-                                            key={item.value}
-                                            onClick={() => changeVersion(item.value)}
+                                            onClick={() => setVersion(head.version)}
                                         >
-                                            {item.label}
+                                            {head.version}
+                                            <span className="download-next__seg-tag">{head.label}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -180,17 +151,23 @@ export default function DownloadFormNext(): JSX.Element {
                                         Architecture
                                     </Translate>
                                 </label>
-                                <div className="download-next__seg">
-                                    {cpus.map(item => (
+                                <div
+                                    className={clsx('download-next__seg', {
+                                        'is-muted': isSource,
+                                    })}
+                                >
+                                    {CPU_OPTIONS.map(option => (
                                         <button
                                             type="button"
+                                            key={option}
+                                            disabled={isSource}
+                                            aria-pressed={cpu === option}
                                             className={clsx('download-next__seg-item', {
-                                                'is-checked': cpu === item.value,
+                                                'is-checked': cpu === option,
                                             })}
-                                            key={item.value}
-                                            onClick={() => changeCPU(item.value)}
+                                            onClick={() => setCpu(option)}
                                         >
-                                            {item.label}
+                                            {option}
                                         </button>
                                     ))}
                                 </div>
@@ -203,160 +180,116 @@ export default function DownloadFormNext(): JSX.Element {
                                     </Translate>
                                 </label>
                                 <div className="download-next__seg">
-                                    <button
-                                        type="button"
-                                        onClick={() => setDownloadType(DownloadTypeEnum.Binary)}
-                                        className={clsx('download-next__seg-item', {
-                                            'is-checked': downloadType === DownloadTypeEnum.Binary,
-                                        })}
-                                    >
-                                        Binary
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setDownloadType(DownloadTypeEnum.Source)}
-                                        className={clsx('download-next__seg-item', {
-                                            'is-checked': downloadType === DownloadTypeEnum.Source,
-                                        })}
-                                    >
-                                        Source
-                                    </button>
+                                    {[DownloadTypeEnum.Binary, DownloadTypeEnum.Source].map(option => (
+                                        <button
+                                            type="button"
+                                            key={option}
+                                            aria-pressed={downloadType === option}
+                                            className={clsx('download-next__seg-item', {
+                                                'is-checked': downloadType === option,
+                                            })}
+                                            onClick={() => setDownloadType(option)}
+                                        >
+                                            {option}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
 
-                            {downloadInfo && (downloadInfo.filename || downloadInfo.version) && (
-                                <div className="download-next__quick-row download-next__quick-row--file">
-                                    <label className="download-next__quick-label" />
+                            {asset && (
+                                <div className="download-next__file-row">
+                                    <span className="download-next__quick-label" aria-hidden="true" />
                                     <div className="download-next__file">
-                                        {downloadType === DownloadTypeEnum.Binary ? (
-                                            <>
-                                                <Link className="download-next__file-name" to={downloadInfo.gz}>
-                                                    {downloadInfo.filename}
-                                                </Link>
-                                                <span className="download-next__file-meta">
-                                                    (
-                                                    <Link to={downloadInfo.asc}>ASC</Link>
-                                                    {', '}
-                                                    <Link to={downloadInfo.sha512}>SHA-512</Link>
-                                                    )
-                                                </span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Link
-                                                    className="download-next__file-name"
-                                                    to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz`}
-                                                >
-                                                    {`apache-doris-${downloadInfo.version}-src.tar.gz`}
-                                                </Link>
-                                                <span className="download-next__file-meta">
-                                                    (
-                                                    <Link
-                                                        to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.asc`}
-                                                    >
-                                                        ASC
-                                                    </Link>
-                                                    {', '}
-                                                    <Link
-                                                        to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.sha512`}
-                                                    >
-                                                        SHA-512
-                                                    </Link>
-                                                    )
-                                                </span>
-                                            </>
-                                        )}
+                                        <code className="download-next__file-name">{asset.filename}</code>
+                                        <div className="download-next__file-links">
+                                            <Link to={asset.asc}>ASC</Link>
+                                            <Link to={asset.sha512}>SHA-512</Link>
+                                            <Link to={KEYS_URL}>KEYS</Link>
+                                            <Link to={VERIFY_URL}>How to verify</Link>
+                                        </div>
                                     </div>
+                                    <Link className="download-next__download-btn" to={asset.gz}>
+                                        Download
+                                    </Link>
                                 </div>
                             )}
 
                             <p className="download-next__quick-note">
-                                Note: For Apache Doris version specifics, please refer to the{' '}
-                                <Link to="https://doris.apache.org/community/release-and-verify/release-versioning">
-                                    release versioning.
-                                </Link>
+                                Apache Doris maintains the two most recent minor branches, labelled Latest and Stable —
+                                see <Link to={VERSIONING_URL}>release versioning</Link>. Releases from older branches
+                                are <Link to="#archive">archived</Link>.
                             </p>
                         </div>
                     </div>
                 </section>
 
-                {/* ── All releases ────────────────────────────────────────────── */}
+                {/* ── Maintained core releases ────────────────────────────────── */}
                 <section className="download-next__section">
                     <div className="download-next__section-inner">
-                        <h2 className="download-next__section-title">Doris All Releases</h2>
+                        <span className="download-next__eyebrow">Maintained</span>
+                        <h2 className="download-next__section-title">Doris Releases</h2>
                         <div className="download-next__split">
                             <div className="download-next__split-intro">
                                 <div className="download-next__split-text">
                                     <p>
-                                        Doris is released as source code tarballs with corresponding binary tarballs
-                                        for convenience. The downloads should be verified for tampering using ASC or
-                                        SHA-512.
+                                        Doris is released as source tarballs, with binary tarballs built for
+                                        convenience. Verify every download against its ASC signature or SHA-512 checksum
+                                        before you deploy it.
                                     </p>
-                                    <p>For more information on the latest release, please refer to the Docs.</p>
                                     <p>
-                                        Kindly note that older releases (v1.2, v1.1, v0.x) are provided for archival
-                                        purposes only, and are no longer supported.
+                                        Every patch on a maintained branch is listed here. Patch releases are compatible
+                                        in both directions, so moving to the newest patch on your branch needs no data
+                                        migration.
                                     </p>
                                 </div>
-                                {releaseFlag && (
-                                    <div>
-                                        <LinkWithArrow to="/releases/all-release" text="Release note" />
-                                    </div>
-                                )}
+                                <div>
+                                    <LinkWithArrow to={releaseNote} text="Release note" />
+                                </div>
                                 <p className="download-next__split-note">
-                                    Note: For detailed upgrade precautions, please refer to the{' '}
-                                    <Link to="/docs/dev/install/intro">deployment</Link> manual and cluster{' '}
-                                    <Link to="/docs/dev/admin-manual/cluster-management/upgrade">upgrade</Link>{' '}
-                                    manual.
+                                    For upgrade precautions see the <Link to="/docs/dev/install/intro">deployment</Link>{' '}
+                                    and{' '}
+                                    <Link to="/docs/dev/admin-manual/cluster-management/upgrade">cluster upgrade</Link>{' '}
+                                    manuals.
                                 </p>
                             </div>
                             <div className="download-next__split-card">
                                 <DownloadFormAllRelease
-                                    versions={ALL_VERSIONS}
-                                    onValuesChange={(values: any) => onValuesChange(values)}
+                                    versions={ACTIVE_VERSIONS}
+                                    onValuesChange={onCoreVersionChange}
                                 />
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* ── Ecosystem tools ─────────────────────────────────────────── */}
+                {/* ── Maintained ecosystem ────────────────────────────────────── */}
                 <a id="doris-ecosystem" className="scroll-mt-20"></a>
                 <section className="download-next__section">
                     <div className="download-next__section-inner">
+                        <span className="download-next__eyebrow">Maintained</span>
                         <h2 className="download-next__section-title">Doris Ecosystem</h2>
                         <div className="download-next__split">
                             <div className="download-next__split-intro">
                                 <div className="download-next__split-text">
-                                    <p>Streamline integration and data loading with Doris tools.</p>
+                                    <p>
+                                        Connectors and tools for loading into and reading out of Doris. Only maintained
+                                        versions are listed; older connector lines are in the{' '}
+                                        <Link to="#archive">archive</Link>.
+                                    </p>
                                 </div>
                                 <ul className="download-next__tool-list">
-                                    <li>
-                                        <CheckedIcon />
-                                        <span>Kafka Doris Connector</span>
-                                    </li>
-                                    <li>
-                                        <CheckedIcon />
-                                        <span>Flink Doris Connector</span>
-                                    </li>
-                                    <li>
-                                        <CheckedIcon />
-                                        <span>Spark Doris Connector</span>
-                                    </li>
-                                    <li>
-                                        <CheckedIcon />
-                                        <span>Doris Streamloader</span>
-                                    </li>
-                                    <li>
-                                        <CheckedIcon />
-                                        <span>Doris Operator</span>
-                                    </li>
+                                    {ACTIVE_TOOL_VERSIONS.map(tool => (
+                                        <li key={tool.value}>
+                                            <CheckedIcon />
+                                            <span>{tool.label}</span>
+                                            <span className="download-next__tool-version">
+                                                {tool.children[0]?.label}
+                                            </span>
+                                        </li>
+                                    ))}
                                 </ul>
                                 <div className="download-next__ecosystem-links">
-                                    <LinkWithArrow
-                                        to={TOOL_RELEASE_NOTES[ecosystemTool]}
-                                        text="Release Notes"
-                                    />
+                                    <LinkWithArrow to={TOOL_RELEASE_NOTES[ecosystemTool]} text="Release Notes" />
                                     <LinkWithArrow
                                         to="/docs/4.x/connection-integration/data-integration/intro"
                                         text="More Tools"
@@ -364,7 +297,39 @@ export default function DownloadFormNext(): JSX.Element {
                                 </div>
                             </div>
                             <div className="download-next__split-card">
-                                <DownloadFormTools data={TOOL_VERSIONS} onToolChange={setEcosystemTool} />
+                                <DownloadFormTools data={ACTIVE_TOOL_VERSIONS} onToolChange={setEcosystemTool} />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* ── Archive ─────────────────────────────────────────────────── */}
+                <a id="archive" className="scroll-mt-20"></a>
+                <section className="download-next__archive">
+                    <div className="download-next__section-inner">
+                        <h2 className="download-next__section-title download-next__section-title--archive">
+                            Archived Releases
+                        </h2>
+                        <div className="download-next__split">
+                            <div className="download-next__split-intro">
+                                <p className="download-next__archive-lead">
+                                    <strong>
+                                        These versions receive no further releases of any kind, security patches
+                                        included.
+                                    </strong>{' '}
+                                    A vulnerability found in one of them stays unfixed there, permanently.
+                                </p>
+                                <div className="download-next__archive-links">
+                                    <Link to="/docs/dev/admin-manual/cluster-management/upgrade">Upgrade guide</Link>
+                                    <Link to={SECURITY_URL}>Report a vulnerability to the ASF security team</Link>
+                                    <Link to={ASF_ARCHIVE_URL}>archive.apache.org/dist/doris</Link>
+                                </div>
+                            </div>
+                            <div className="download-next__split-card">
+                                <DownloadFormArchive
+                                    coreVersions={ARCHIVED_VERSIONS}
+                                    toolVersions={ARCHIVED_TOOL_VERSIONS}
+                                />
                             </div>
                         </div>
                     </div>

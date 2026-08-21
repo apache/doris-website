@@ -21,7 +21,10 @@ function packageRows(version, sourceVersion) {
                 gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-${version}-bin-${arch}.tar.gz',
                 asc: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-${version}-bin-${arch}.tar.gz.asc',
                 sha512: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-${version}-bin-${arch}.tar.gz.sha512',
-                source: 'https://dist.apache.org/repos/dist/release/doris/4.1/${version}/',
+                source: 'https://dist.apache.org/repos/dist/release/doris/${version
+                    .split('.')
+                    .slice(0, 2)
+                    .join('.')}/${version}/',
                 version: '${sourceVersion}',
             }`,
         )
@@ -29,10 +32,11 @@ function packageRows(version, sourceVersion) {
 }
 
 function versionEntry(version, sourceVersion) {
+    const series = version.split('.').slice(0, 2).join('.');
     return `{
         label: '${version}',
         value: '${version}',
-        majorVersion: '4.1',
+        majorVersion: '${series}',
         packages: [
             ${packageRows(version, sourceVersion)}
         ],
@@ -61,35 +65,37 @@ function releaseNote(language, issueRef) {
 `;
 }
 
-function createFixture({ omit412FromAll = false, zhIssueRef = '#10001' } = {}) {
+function createFixture({
+    activeBranches = ['4.1', '4.0'],
+    stalePatchOrder = false,
+    zhIssueRef = '#10001',
+} = {}) {
     const root = mkdtempSync(path.join(tmpdir(), 'add-release-validator-'));
-    const dorisVersions = [
-        versionEntry('4.1.3', '4.1.3-rc02'),
-        versionEntry('4.1.2', '4.1.2'),
-    ].join(',\n');
-    const allVersions = [
-        versionEntry('4.1.3', '4.1.3-rc02'),
-        ...(omit412FromAll ? [] : [versionEntry('4.1.2', '4.1.2')]),
-    ].join(',\n');
+    const entries = [versionEntry('4.1.3', '4.1.3-rc02'), versionEntry('4.1.2', '4.1.2')];
+    const allVersions = (stalePatchOrder ? entries.slice().reverse() : entries).join(',\n');
+    const branchList = activeBranches.map(branch => `'${branch}'`).join(', ');
 
     write(
         root,
         'src/constant/download.data.ts',
         `export const ORIGIN = 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/';
-export enum VersionEnum {
-    Latest = '4.1.3',
-    Prev = '4.0.7',
-    Earlier = '3.1.4',
-}
-export const DORIS_VERSIONS = [
-${dorisVersions}
-];
+
+// A doc comment that names ALL_VERSIONS must not confuse the array extractor.
+export const ACTIVE_CORE_BRANCHES: string[] = [${branchList}];
+
 export const ALL_VERSIONS = [
 {
     label: '4.1',
     value: '4.1',
     children: [
 ${allVersions}
+    ],
+},
+{
+    label: '4.0',
+    value: '4.0',
+    children: [
+${versionEntry('4.0.8', '4.0.8')}
     ],
 }
 ];
@@ -161,6 +167,12 @@ test('skill routes Doris Core history to core.md and uses the bundled validator'
     );
     assert.doesNotMatch(skill, /Update both all-release indexes/);
     assert.match(skill, /scripts\/validate-release\.mjs/);
+    // The download page is driven by ACTIVE_CORE_BRANCHES now, not by a
+    // hand-maintained VersionEnum and a duplicate DORIS_VERSIONS array.
+    assert.match(skill, /ACTIVE_CORE_BRANCHES/);
+    assert.match(skill, /ACTIVE_TOOL_LINES/);
+    assert.doesNotMatch(skill, /DORIS_VERSIONS/);
+    assert.doesNotMatch(skill, /VersionEnum/);
 });
 
 test('validator accepts a complete bilingual Doris Core release', async () => {
@@ -185,8 +197,8 @@ test('validator accepts a complete bilingual Doris Core release', async () => {
     }
 });
 
-test('validator catches versions missing from ALL_VERSIONS', async () => {
-    const root = createFixture({ omit412FromAll: true });
+test('validator rejects a headline release that is not the newest patch of its series', async () => {
+    const root = createFixture({ stalePatchOrder: true });
 
     try {
         const { validateCoreRelease } = await import('./validate-release.mjs');
@@ -201,7 +213,53 @@ test('validator catches versions missing from ALL_VERSIONS', async () => {
                 checkLinks: false,
                 checkGitRouting: false,
             }),
-            /4\.1\.2.*missing from ALL_VERSIONS/,
+            /must be the first 4\.1 entry in ALL_VERSIONS/,
+        );
+    } finally {
+        rmSync(root, { recursive: true, force: true });
+    }
+});
+
+test('validator rejects a release on a branch that ACTIVE_CORE_BRANCHES does not list', async () => {
+    const root = createFixture({ activeBranches: ['4.0'] });
+
+    try {
+        const { validateCoreRelease } = await import('./validate-release.mjs');
+        await assert.rejects(
+            validateCoreRelease({
+                repoRoot: root,
+                version: '4.1.3',
+                series: '4.1',
+                sourceVersion: '4.1.3-rc02',
+                releaseDate: '2026-07-13',
+                position: 'latest',
+                checkLinks: false,
+                checkGitRouting: false,
+            }),
+            /ACTIVE_CORE_BRANCHES must list 4\.1/,
+        );
+    } finally {
+        rmSync(root, { recursive: true, force: true });
+    }
+});
+
+test('validator rejects a maintained branch that has no ALL_VERSIONS data', async () => {
+    const root = createFixture({ activeBranches: ['4.1', '4.0', '3.9'] });
+
+    try {
+        const { validateCoreRelease } = await import('./validate-release.mjs');
+        await assert.rejects(
+            validateCoreRelease({
+                repoRoot: root,
+                version: '4.1.3',
+                series: '4.1',
+                sourceVersion: '4.1.3-rc02',
+                releaseDate: '2026-07-13',
+                position: 'latest',
+                checkLinks: false,
+                checkGitRouting: false,
+            }),
+            /ACTIVE_CORE_BRANCHES lists 3\.9 but ALL_VERSIONS has no such branch/,
         );
     } finally {
         rmSync(root, { recursive: true, force: true });

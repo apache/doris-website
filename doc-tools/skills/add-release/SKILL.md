@@ -21,7 +21,7 @@ Publish release information to /download/ and /releases/ from the doris-website 
 Read these sources before choosing a workflow:
 
 - AGENTS.md
-- src/constant/download.data.ts
+- src/constant/download.data.ts, in particular ACTIVE_CORE_BRANCHES and ACTIVE_TOOL_LINES
 - sidebarsReleases.json
 - releasenotes/all-release.md
 - releasenotes/core.md
@@ -45,7 +45,8 @@ Use this template:
     - Release-note source: <GitHub issue, PR, Markdown, or upstream page>
     - Website scope: </download/, /releases/, or both>
     - Locales: <English, zh-CN, or both>
-    - Position: <Latest, Prev, Earlier, or historical>
+    - Position: <latest, stable, maintained, or historical>
+    - Branch change: <none, promote a new branch, or retire a branch>
     - Source filename version: <plain version or RC-suffixed version>
     - Source directory and binary origin: <URLs, if nonstandard>
 
@@ -78,7 +79,7 @@ Never infer doris-core only because a version has three numeric segments.
 
 Keep these values separate throughout the change:
 
-- Public release version: the version shown in titles, links, VersionEnum, labels, sidebar IDs, binary filenames, and release-note paths, such as 4.1.3.
+- Public release version: the version shown in titles, links, labels, sidebar IDs, binary filenames, and release-note paths, such as 4.1.3.
 - Source filename version: the segment used by the published source tarball, which may include an RC suffix such as 4.1.3-rc02.
 
 The version field inside each architecture row in download.data.ts controls the source filename rendered by the download UI. Never replace an RC-suffixed source filename with the public version unless that exact plain source tarball exists.
@@ -113,27 +114,45 @@ A normal bilingual Core release that updates both website surfaces touches:
     i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/core.md
     sidebarsReleases.json
 
+When the release opens or retires a branch it also changes ACTIVE_CORE_BRANCHES inside src/constant/download.data.ts. See Maintained and Archived Branches below.
+
 releasenotes/all-release.md and its zh-CN mirror are project indexes. They route readers to Doris Core and ecosystem pages. Do not add individual Core versions to them and do not modify them for a routine Core patch release.
+
+### Maintained and Archived Branches
+
+The download page separates maintained releases from archived ones because the ASF security team asked that a page which is still a distribution channel stop presenting unpatched releases beside supported ones. One constant drives the whole split:
+
+    export const ACTIVE_CORE_BRANCHES: string[] = ['4.1', '4.0'];
+
+Read it as an ordered, newest-first list of the branches Apache Doris still maintains.
+
+- A branch in this list appears in the quick download card, in Doris Releases, and nowhere else.
+- A branch missing from this list is archived. It moves behind the archive picker under a notice saying it receives no further security patches.
+- Order determines the label. The first entry renders as Latest, the last as Stable, and anything between them as Maintained. There is no separate Earlier slot any more.
+- ACTIVE_HEADS takes the first child of each maintained branch. A headline release that is not the newest patch of its branch never reaches the quick download card.
+
+This means a release that opens a new branch has one extra, easily forgotten step. Publishing 4.2.0 without adding 4.2 to ACTIVE_CORE_BRANCHES ships a release that never appears on the download page, and the site will not error. The bundled validator checks for exactly this.
+
+Branch changes to confirm with the release manager before editing:
+
+| Situation | ACTIVE_CORE_BRANCHES change |
+| --- | --- |
+| Patch on an existing maintained branch | none |
+| First release of a new minor branch | prepend the new branch, and confirm whether the oldest maintained branch retires in the same change |
+| Retiring a branch | remove it; its releases stay in ALL_VERSIONS and move to the archive picker automatically |
+| Patch on an already archived branch | none; use position historical |
+
+Never delete releases from ALL_VERSIONS to archive them. Archiving is removal from ACTIVE_CORE_BRANCHES, nothing else. The ASF keeps every release it has published, and the archive picker reads straight from ALL_VERSIONS.
 
 ### Update Download Data
 
 Edit src/constant/download.data.ts.
 
-Update VersionEnum only as confirmed:
+ALL_VERSIONS is the single source of core release data. It drives the quick download card, the maintained release form, and the archive picker; ACTIVE_CORE_BRANCHES only decides which side of the split each branch lands on.
 
-- Latest: the headline current release.
-- Prev: the stable previous release line shown beside Latest.
-- Earlier: the older supported line.
-- Historical: no VersionEnum change.
+Add the public version to the matching branch in ALL_VERSIONS with x64, x64-noavx2, and arm64 rows. Each row must contain the binary gz, asc, sha512, source directory, and exact source filename version.
 
-Add the public version to both structures:
-
-- DORIS_VERSIONS drives the quick-download selector.
-- ALL_VERSIONS drives the all-releases form.
-
-In both structures, add x64, x64-noavx2, and arm64 rows. Each row must contain the binary gz, asc, sha512, source directory, and exact source filename version.
-
-Keep patch releases newest-first within their series. Audit the entire target series in both arrays, not only the new entry. Every target-series version in DORIS_VERSIONS must exist in ALL_VERSIONS and vice versa. Fix a discovered omission when it is clearly a data drift in the requested release scope; mention it explicitly in the handoff.
+Keep patch releases newest-first within their branch. A headline release must be the first child of its branch, because that is the entry the quick download card offers. Audit the whole target branch, not only the new entry. Fix a discovered ordering drift when it falls inside the requested release scope; mention it explicitly in the handoff.
 
 Do not broadly reformat download.data.ts.
 
@@ -169,7 +188,7 @@ Edit both Core history pages:
 
 In each file:
 
-- Update the relevant tip entry when the release is Latest, Prev, or Earlier.
+- Update the relevant tip entry when the release is Latest, Stable, or Maintained.
 - Add the dated per-version link to the chronological list.
 - Use the confirmed YYYY-MM-DD release date.
 - Keep the chronological list reverse-sorted by date.
@@ -196,7 +215,7 @@ Most established ecosystem releases update:
 
 Some also update src/constant/download.data.ts. Update sidebarsReleases.json only when adding a new ecosystem page; individual ecosystem versions normally remain sections within one component page.
 
-Do not update Core per-version notes, releasenotes/core.md, its zh-CN mirror, or Core VersionEnum values for an ecosystem release unless the release manager explicitly requests a cross-surface change.
+Do not update Core per-version notes, releasenotes/core.md, its zh-CN mirror, or ACTIVE_CORE_BRANCHES for an ecosystem release unless the release manager explicitly requests a cross-surface change.
 
 Component profiles:
 
@@ -230,7 +249,32 @@ When updating TOOL_VERSIONS:
 - Verify the exact source filename and directory.
 - Preserve the existing Option shape.
 - Keep versions newest-first.
-- Do not add a Core VersionEnum entry.
+- Do not touch ACTIVE_CORE_BRANCHES; that constant is Core-only.
+
+### Maintained and Archived Tool Lines
+
+Ecosystem downloads are split the same way Core downloads are, by ACTIVE_TOOL_LINES:
+
+    export const ACTIVE_TOOL_LINES: Record<ToolsEnum, string[]> = {
+        [ToolsEnum.Kafka]: ['26', '25'],
+        [ToolsEnum.Flink]: ['26'],
+        [ToolsEnum.Spark]: ['26'],
+        [ToolsEnum.StreamLoader]: ['1.0.3'],
+        [ToolsEnum.Operator]: ['26'],
+    };
+
+Each entry is either a major line such as '26', which matches every version beginning with that major, or an exact version such as '1.0.3' for a tool that does not release in lines. A version that matches no entry is archived and moves behind the archive picker.
+
+Consequences for a release:
+
+| Situation | ACTIVE_TOOL_LINES change |
+| --- | --- |
+| New patch inside an already maintained line, for example 26.1.2 | none |
+| First release of a new major line, for example 27.0.0 | add '27', and confirm whether the oldest maintained line retires in the same change |
+| Retiring a line | remove it; its versions stay in TOOL_VERSIONS and move to the archive picker |
+| A tool pinned to an exact version, such as Streamloader | replace the exact version string with the new one, otherwise the new release is archived on arrival |
+
+Streamloader is the easiest one to get wrong: its entry is a full version, so shipping 1.0.4 without editing this constant leaves 1.0.4 archived and 1.0.3 maintained. The bundled validator does not cover ecosystem components, so check this by hand and confirm on the rendered page.
 
 ## Validation
 
@@ -242,7 +286,7 @@ Run the validator tests:
 
 For Doris Core, run the bundled validator with the confirmed values:
 
-    node doc-tools/skills/add-release/scripts/validate-release.mjs --component doris-core --version <public-version> --series <series> --source-version <source-version> --release-date <YYYY-MM-DD> --position <latest|prev|earlier|historical> --source-dir <official-source-directory>
+    node doc-tools/skills/add-release/scripts/validate-release.mjs --component doris-core --version <public-version> --series <series> --source-version <source-version> --release-date <YYYY-MM-DD> --position <latest|stable|maintained|historical> --source-dir <official-source-directory>
 
 The validator checks:
 
@@ -251,9 +295,11 @@ The validator checks:
 - Both core.md indexes, release date, link, and reverse chronology
 - That both all-release.md project indexes still route to core.md and remain untouched
 - sidebarsReleases.json parseability and newest-first placement
-- VersionEnum positioning
-- Target-series ordering and drift between DORIS_VERSIONS and ALL_VERSIONS
-- All six architecture rows, source filename version, source directory, and binary filenames
+- ACTIVE_CORE_BRANCHES lists the target branch, and its index matches the confirmed position
+- Every maintained branch has matching data in ALL_VERSIONS
+- The release is the newest patch of its branch, so ACTIVE_HEADS offers it
+- Target-branch ordering inside ALL_VERSIONS
+- All three architecture rows, source filename version, source directory, and binary filenames
 - The full twelve-artifact URL matrix
 
 Use --skip-links only when external link verification is explicitly out of scope, and disclose the skipped check. --skip-git-routing is intended for isolated test fixtures, not routine release work.
@@ -299,7 +345,9 @@ Before reporting completion:
 - Re-read the request and compare it with the exact changed-file set.
 - Confirm the public version, source filename version, release date, scope, locales, and positioning.
 - Confirm all artifact checks and note any mirror choice.
-- Confirm DORIS_VERSIONS and ALL_VERSIONS are aligned for the target series.
+- Confirm ACTIVE_CORE_BRANCHES matches the intended maintained set, and that any branch it names has data in ALL_VERSIONS.
+- Confirm the new version is the first entry in its branch when the release is a headline one.
+- For ecosystem releases, confirm ACTIVE_TOOL_LINES still covers the new version.
 - Confirm Core history is in core.md, not all-release.md.
 - Confirm no unrelated files were modified.
 
