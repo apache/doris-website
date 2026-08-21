@@ -5,10 +5,13 @@
 // derived from this repo's git history.
 //
 // docusaurus.config.js reads this map at build time (markdown.parseFrontMatter)
-// and injects it as each document's `last_update` front matter, so the regular
-// 2-hourly deploy can render "last updated" without a full-history clone or a
-// per-file git lookup. Refreshed on demand by the "Refresh Docs Last-Update
-// Map" workflow (.github/workflows/refresh-docs-last-update.yml).
+// and injects it as each document's `last_update` front matter, so the build
+// never does a per-file git lookup. The 2-hourly Cron Deploy runs this script
+// itself (its checkout uses fetch-depth: 0 + filter: blob:none) and builds from
+// the result, so published dates track master. The committed data.json is the
+// local-build copy and the deploy's fallback; the "Refresh Docs Last-Update
+// Map" workflow (.github/workflows/refresh-docs-last-update.yml) keeps it fresh
+// via PR.
 //
 // Requires full git history to be accurate. In a shallow clone every file
 // resolves to the single HEAD commit, so run this only where the history is

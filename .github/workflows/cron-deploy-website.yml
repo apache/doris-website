@@ -10,10 +10,16 @@ jobs:
         environment: Production
         steps:
             - name: Checkout
-              uses: actions/checkout@master
+              # v4 (the pinned @master commit predates the `filter` input) with
+              # the full history the last-update map is computed from. Blobless
+              # keeps that affordable: only commit/tree metadata is fetched
+              # (~15MB), not every historical file version (~1.7GB).
+              uses: actions/checkout@v4
               with:
                   persist-credentials: false
                   submodules: recursive
+                  fetch-depth: 0
+                  filter: blob:none
 
             - name: Add Chinese Fonts
               run: |
@@ -31,6 +37,18 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: 20
+
+            - name: Refresh docs last-update map
+              # Recompute scripts/last-update/data.json from the history fetched
+              # above, overwriting the committed copy so every deploy renders
+              # current "last updated" footers instead of waiting for the manual
+              # "Refresh Docs Last-Update Map" PR. Only the build below reads it;
+              # nothing is committed. Non-fatal on purpose - the generator writes
+              # the file only after it succeeds, so a failure leaves the committed
+              # map untouched and the site still ships.
+              run: |
+                  node scripts/last-update/generate.js \
+                    || echo "::warning::last-update refresh failed; deploying with the committed map"
 
             - name: Add Swap Space
               run: |
