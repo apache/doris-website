@@ -27,9 +27,9 @@ VARCHAR TOKENIZE(VARCHAR str, VARCHAR properties)
 
 | 属性 | 描述 | 示例值 |
 |------|------|--------|
-| `built_in_analyzer` | 内置分词器类型 | `"english"`, `"chinese"`, `"unicode"`, `"icu"`, `"basic"`, `"ik"`, `"standard"`, `"none"` |
+| `built_in_analyzer` | 内置分词器类型 | `"english"`, `"chinese"`, `"kuromoji"`, `"unicode"`, `"icu"`, `"basic"`, `"ik"`, `"standard"`, `"none"` |
 | `analyzer` | 自定义分词器名称(通过 `CREATE INVERTED INDEX ANALYZER` 创建) | `"my_custom_analyzer"` |
-| `parser_mode` | 分词器模式(用于中文分词器) | `"fine_grained"`, `"coarse_grained"` |
+| `parser_mode` | 分词器模式。`chinese` 用于控制分词粒度;`kuromoji` 用于控制日文分词模式 | chinese: `"fine_grained"`, `"coarse_grained"`;kuromoji: `"search"`(默认), `"normal"`, `"extended"` |
 | `support_phrase` | 启用短语支持(存储位置信息) | `"true"`, `"false"` |
 | `lower_case` | 将词条转换为小写 | `"true"`, `"false"` |
 | `char_filter_type` | 字符过滤器类型 | 根据过滤器而异 |
@@ -102,6 +102,15 @@ SELECT TOKENIZE("中华人民共和国国歌", '"built_in_analyzer"="ik"');
 [{ "token": "中华人民共和国" }, { "token": "国歌" }]
 ```
 
+```sql
+-- 使用 kuromoji 分词器处理日文文本
+-- 在默认的 search 模式下,复合词也会被拆分为各个组成部分
+SELECT TOKENIZE("関西国際空港", '"built_in_analyzer"="kuromoji"');
+```
+```
+[{ "token": "関西" }, { "token": "国際" }, { "token": "空港" }]
+```
+
 ### 示例 2: 使用自定义分词器
 
 首先创建一个自定义分词器:
@@ -140,6 +149,7 @@ SELECT TOKENIZE("Hello World", '"built_in_analyzer"="standard", "support_phrase"
    - `standard`: 标准分词器,用于通用文本
    - `english`: 带词干提取的英语分词器
    - `chinese`: 中文文本分词器
+   - `kuromoji`: 日文形态素分词器(`parser_mode`: `search`、`normal`、`extended`)。默认关闭 —— 需在 `be.conf` 中设置 `enable_kuromoji_analyzer = true` 才能使用。
    - `unicode`: 基于Unicode的多语言文本分词器
    - `icu`: 基于ICU的高级Unicode处理分词器
    - `basic`: 基础分词
