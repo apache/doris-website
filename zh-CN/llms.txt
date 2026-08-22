@@ -1,0 +1,15 @@
+# Apache Doris Documentation
+
+Curated entry points for LLM-based discovery and retrieval. Prefer these stable pages instead of crawling every generated page at once.
+
+- Overview: https://doris.apache.org/docs/4.x/gettingStarted/what-is-apache-doris
+- Getting Started: https://doris.apache.org/docs/4.x/gettingStarted/quick-start
+- SQL Manual: https://doris.apache.org/docs/4.x/sql-manual/basic-element/object-identifiers
+- Load: https://doris.apache.org/docs/4.x/data-operate/import/load-manual
+- Lakehouse: https://doris.apache.org/docs/4.x/lakehouse/lakehouse-overview
+- AI: https://doris.apache.org/docs/4.x/ai/ai-overview
+- Admin: https://doris.apache.org/docs/4.x/admin-manual/data-admin/overview
+- Release Notes: https://doris.apache.org/releases/all-release
+- Community: https://doris.apache.org/community/join-community
+
+Full-site retrieval should use topic-scoped indexes or the sitemap rather than a single oversized prompt file.
