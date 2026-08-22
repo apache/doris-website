@@ -1767,6 +1767,8 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-contains-key',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-contains-value',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-entries',
+                                        'sql-manual/sql-functions/scalar-functions/map-functions/map-from-arrays',
+                                        'sql-manual/sql-functions/scalar-functions/map-functions/map-from-entries',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-keys',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-size',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-values',
