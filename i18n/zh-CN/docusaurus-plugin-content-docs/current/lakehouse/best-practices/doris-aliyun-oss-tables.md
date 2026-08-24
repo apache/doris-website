@@ -34,7 +34,7 @@
 Apache Doris 可以通过 Iceberg REST Catalog 接入 OSS Tables：使用 REST Catalog 管理 Namespace 和表元数据，使用 `S3FileIO` 读写数据文件。本文介绍如何在 Doris 中创建 OSS Tables Catalog，并查询和写入 Iceberg 表。
 
 :::caution
-该功能目前为实验功能，将在 Doris 5.0.0 版本中发布。
+该功能目前为实验功能，自 Doris 4.2.0 版本起支持。
 :::
 
 <!-- 知识类型: 操作步骤 -->
