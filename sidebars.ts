@@ -1755,6 +1755,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate-uniq',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-except',
+                                        'sql-manual/sql-functions/scalar-functions/array-functions/array-except-all',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-exists',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-filter',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-first',
