@@ -2,7 +2,7 @@
 {
     "title": "Lance Catalog",
     "language": "zh-CN",
-    "description": "Apache Doris Lance Catalog 使用指南：通过 Filesystem 或 REST Namespace 访问 Lance 数据集，支持并行读取、谓词下推、S3/Local TVF 以及向量检索。"
+    "description": "Apache Doris Lance Catalog 使用指南：通过 Filesystem 或 REST Namespace 访问 Lance 数据集，支持并行读取、谓词下推、S3/Local TVF、索引查看以及向量检索。"
 }
 ---
 
@@ -22,7 +22,8 @@ Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lan
 |---|---|
 | Filesystem Catalog | 支持本地文件系统、`file://` 和 `s3://` Warehouse |
 | REST Catalog | 支持 Lance REST Namespace，以及无认证、Bearer Token、API Key 和自定义 HTTP Header |
-| 元数据访问 | 支持 `SHOW DATABASES`、`SHOW TABLES` 和 `DESC` |
+| 元数据访问 | 支持 `SHOW DATABASES`、`SHOW TABLES`、`DESC` 和 `SHOW INDEX`（仅 Filesystem Catalog） |
+| 系统表（`table$...`） | 暂不支持；索引元数据请使用 `SHOW INDEX` |
 | 数据查询 | 支持列裁剪、并行扫描 Lance Fragment 和当前版本的快照一致性读取 |
 | 谓词下推 | 支持将部分标量谓词下推到 Lance 执行 |
 | 文件 TVF | 支持通过 `s3()` 和 `local()` 直接查询 Lance 数据集 |
@@ -212,6 +213,39 @@ FROM lance_catalog.default.user_profiles;
 ```
 
 普通 Catalog 查询会在规划阶段固定一个 Lance 数据集版本，并按 Fragment 生成扫描任务。因此，同一条查询读取一致的快照，同时可以由多个 Scanner 并行扫描不同 Fragment，不会让每个 Scanner 重复扫描整个数据集。
+
+## 查看 Lance 索引
+
+对于 Filesystem Catalog 中的表，`SHOW INDEX` 可以查看 Lance 数据集中记录的逻辑标量索引和向量索引。变种语法 `SHOW INDEXES`、`SHOW KEY` 和 `SHOW KEYS` 返回相同结果：
+
+```sql
+SHOW INDEX FROM lance_catalog.default.items;
+```
+
+Doris 在语句执行时读取数据集最新快照中的索引元数据，结果按索引名和列位置排序。Lance 内部维护的系统索引（如 `__lance_frag_reuse` 和 `__lance_mem_wal`）不会展示。没有索引的表返回空结果。
+
+`SHOW INDEX` 返回标准的 13 列结果集。对于 Lance 表，只有以下列有值，其余列恒为空：
+
+| 列 | Lance 表的取值 |
+|---|---|
+| `Table` | 表名。 |
+| `Key_name` | Lance 逻辑索引名。 |
+| `Seq_in_index` | 列在索引中的位置，从 `1` 开始。索引包含多个字段时，每个字段输出一行。 |
+| `Column_name` | 被索引的字段。嵌套字段上的索引显示以 `.` 连接的字段路径，包含字母、数字和 `_` 以外字符的路径段使用反引号引用，例如 `` attributes.`child.with.dot` ``。 |
+| `Index_type` | Lance SDK 报告的索引类型，例如 `BTree`、`IVF_FLAT`、`IVF_SQ`、`IVF_PQ`、`IVF_HNSW_FLAT`、`IVF_HNSW_SQ` 或 `IVF_HNSW_PQ`。 |
+| `Properties` | 包含固定字段集合的索引详情 JSON：顶层为 `metric_type` 和 `target_partition_size`，`compression` 下为 `type`、`num_bits`、`num_sub_vectors` 和 `rotation_type`，`hnsw` 下为 `construction_ef`、`max_connections` 和 `max_level`。键按字典序排列；索引详情不包含以上字段时值为 `{}`。 |
+
+下面的示例展示了一个 `IVF_PQ` 向量索引和一个建立在嵌套字段上的 `BTree` 索引：
+
+```text
+Table          Key_name              Seq_in_index  Column_name                  Index_type  Properties
+vs_ivf_pq_f32  embedding_ivf_pq_f32  1             embedding                    IVF_PQ      {"compression":{"num_bits":4,"num_sub_vectors":4,"type":"pq"},"metric_type":"L2"}
+nested_index   nested_label_btree    1             attributes.`child.with.dot`  BTree       {}
+```
+
+`SHOW INDEX` 只查看已有索引，不会创建索引。请使用 Lance SDK 或其他 Lance 写入端在 Doris 之外创建 Lance 索引。如果数据集中记录的索引元数据不一致（例如索引引用了未知字段，或两个索引完全重名），语句会直接报错，而不是返回部分元数据。
+
+`SHOW INDEX` 需要用户拥有该表的 `SHOW` 权限。对于 REST Catalog，该语句会被拒绝并返回错误 `SHOW INDEX is not supported for Lance REST catalogs`。
 
 ## 类型映射
 
@@ -536,6 +570,7 @@ TVF `filter` 中引用的 Prefilter 列与外层 `WHERE` 列不同：前者由 L
 - 使用不支持的列类型时，建议显式列出需要读取的列，避免 `SELECT *` 投影到不支持的列。
 - 对普通扫描使用 `EXPLAIN` 检查 `lancePushdownPredicate`，确认目标条件是否已下推。
 - 向量检索前应在 Lance 中创建与查询方式匹配的索引；小数据集或验证场景可以设置 `"use_index" = "false"` 使用 Flat Search。
+- 可以使用 `SHOW INDEX` 查看 Filesystem Catalog 表的 Lance 逻辑索引，例如在执行索引向量检索前确认索引名、索引类型和被索引字段；REST Catalog 不支持 `SHOW INDEX`。
 - 向量查询需要稳定顺序时，显式使用 `ORDER BY _distance ASC` 并增加唯一 Tie-breaker。
 - 需要在向量候选生成前过滤时使用 `vector_search()` 的 `filter`；外层 `WHERE` 只过滤每个搜索 Split 已生成的候选，并在 Doris 全局 TopN 之前执行，应允许其最终结果少于 `top_k`。
 - 使用 `EXPLAIN` 检查 `lanceSearchFragments` 和 `lanceSearchIndexSegments`。前者表示固定快照中的可见 Fragment 数量，后者表示 FE 选择的物理 Index Segment Split 数量；此外还可能存在回退 Fragment Split。

@@ -2,13 +2,17 @@
 {
     "title": "SHOW INDEX",
     "language": "zh-CN",
-    "description": "该语句用于展示一个表中索引的相关信息，目前只支持 inverted index, ann index 索引"
+    "description": "该语句用于展示一个表中索引的相关信息，包括内表的 inverted index、ann index 索引以及 Lance Catalog 表的逻辑索引"
 }
 ---
 
 ## 描述
 
- 该语句用于展示一个表中索引的相关信息，目前只支持 inverted index, ann index 索引
+该语句用于展示一个表中索引的相关信息。对于内表，目前只支持 inverted index、ann index 索引。
+
+对于 Lance Filesystem Catalog 中的表，该语句展示 Lance 数据集中记录的逻辑标量索引和向量索引，且只有 `Table`、`Key_name`、`Seq_in_index`、`Column_name`、`Index_type` 和 `Properties` 列有值。不支持 Lance REST Catalog。详见[查看 Lance 索引](../../../../lakehouse/catalogs/lance-catalog.mdx#查看-lance-索引)。
+
+对于 Iceberg、Paimon 等其他外部 Catalog 中的表，该语句返回空结果。这些格式通过系统表暴露表元数据，参见 [Iceberg 系统表](../../../../lakehouse/catalogs/iceberg-catalog.mdx#系统表)和 [Paimon 系统表](../../../../lakehouse/catalogs/paimon-catalog.mdx#系统表)；Paimon 的索引文件可通过 [`table_indexes`](../../../../lakehouse/catalogs/paimon-catalog.mdx#table_indexes) 系统表查看。
 
 ## 语法  
 
@@ -60,9 +64,13 @@ SHOW KEY[ S ] FROM [ <db_name>. ] <table_name> [ FROM <db_name> ];
 ## 示例
 
 - 展示指定 table_name 的下索引
-     
+
      ```SQL
       SHOW INDEX FROM example_db.table_name;
      ```
 
+- 展示 Lance Catalog 表的逻辑索引
 
+     ```SQL
+      SHOW INDEX FROM lance_catalog.default.items;
+     ```

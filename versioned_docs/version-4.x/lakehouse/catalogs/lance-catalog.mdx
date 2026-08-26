@@ -2,7 +2,7 @@
 {
     "title": "Lance Catalog",
     "language": "en",
-    "description": "Apache Doris Lance Catalog guide: access Lance datasets through Filesystem or REST Namespace catalogs, with parallel reads, predicate pushdown, S3/Local TVFs, and vector search."
+    "description": "Apache Doris Lance Catalog guide: access Lance datasets through Filesystem or REST Namespace catalogs, with parallel reads, predicate pushdown, S3/Local TVFs, index inspection, and vector search."
 }
 ---
 
@@ -22,7 +22,8 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 |---|---|
 | Filesystem Catalog | Supports warehouses on a local file system, `file://`, or `s3://` |
 | REST Catalog | Supports Lance REST Namespace with no authentication, Bearer Token, API Key, or custom HTTP headers |
-| Metadata access | Supports `SHOW DATABASES`, `SHOW TABLES`, and `DESC` |
+| Metadata access | Supports `SHOW DATABASES`, `SHOW TABLES`, `DESC`, and `SHOW INDEX` (Filesystem Catalogs only) |
+| System tables (`table$...`) | Not supported; use `SHOW INDEX` for index metadata |
 | Data queries | Supports column pruning, parallel Lance Fragment scans, and snapshot-consistent reads of the current version |
 | Predicate pushdown | Supports pushing compatible scalar predicates down to Lance |
 | File TVFs | Supports querying Lance datasets directly through `s3()` and `local()` |
@@ -212,6 +213,39 @@ FROM lance_catalog.default.user_profiles;
 ```
 
 For a regular Catalog query, Doris pins a Lance dataset version during planning and generates scan tasks by Fragment. A query therefore reads a consistent snapshot, while multiple Scanners can read different Fragments in parallel without every Scanner repeatedly scanning the entire dataset.
+
+## Inspect Lance Indexes
+
+For a table in a Filesystem Catalog, `SHOW INDEX` displays the logical scalar and vector indexes recorded in the Lance dataset. The variant statements `SHOW INDEXES`, `SHOW KEY`, and `SHOW KEYS` produce the same result:
+
+```sql
+SHOW INDEX FROM lance_catalog.default.items;
+```
+
+Doris reads the index metadata from the latest dataset snapshot at execution time and sorts the result by index name and column position. System indexes that Lance maintains internally, such as `__lance_frag_reuse` and `__lance_mem_wal`, are not displayed. A table without indexes returns an empty result.
+
+`SHOW INDEX` returns the standard 13-column result set. For a Lance table, only the following columns carry values; the other columns are always empty:
+
+| Column | Value for a Lance table |
+|---|---|
+| `Table` | Table name. |
+| `Key_name` | Name of the Lance logical index. |
+| `Seq_in_index` | Position of the column in the index, starting from `1`. An index on multiple fields produces one row per field. |
+| `Column_name` | Indexed field. An index on a nested field displays the field path joined with `.`, and a path segment containing characters other than letters, digits, and `_` is quoted with backticks, for example `` attributes.`child.with.dot` ``. |
+| `Index_type` | Index type reported by the Lance SDK, such as `BTree`, `IVF_FLAT`, `IVF_SQ`, `IVF_PQ`, `IVF_HNSW_FLAT`, `IVF_HNSW_SQ`, or `IVF_HNSW_PQ`. |
+| `Properties` | JSON object with a fixed set of index details: `metric_type` and `target_partition_size` at the top level, `type`, `num_bits`, `num_sub_vectors`, and `rotation_type` under `compression`, and `construction_ef`, `max_connections`, and `max_level` under `hnsw`. Keys are sorted, and the value is `{}` when the index details contain none of these fields. |
+
+The following rows illustrate an `IVF_PQ` vector index and a `BTree` index on a nested field:
+
+```text
+Table          Key_name              Seq_in_index  Column_name                  Index_type  Properties
+vs_ivf_pq_f32  embedding_ivf_pq_f32  1             embedding                    IVF_PQ      {"compression":{"num_bits":4,"num_sub_vectors":4,"type":"pq"},"metric_type":"L2"}
+nested_index   nested_label_btree    1             attributes.`child.with.dot`  BTree       {}
+```
+
+`SHOW INDEX` only inspects existing indexes; it does not create one. Create Lance indexes with the Lance SDK or another Lance writer outside Doris. If the recorded index metadata is inconsistent, for example when an index references an unknown field or two indexes share an identical name, the statement fails instead of returning partial metadata.
+
+`SHOW INDEX` requires the `SHOW` privilege on the table. For a REST Catalog, the statement is rejected with the error `SHOW INDEX is not supported for Lance REST catalogs`.
 
 ## Type Mapping
 
@@ -536,6 +570,7 @@ Setting `experimental_topn_lazy_materialization_threshold` to `-1` disables the 
 - For tables containing unsupported column types, explicitly list the columns to read instead of projecting unsupported columns through `SELECT *`.
 - For regular scans, inspect `lancePushdownPredicate` in `EXPLAIN` to verify which conditions have been pushed down.
 - Create a vector index in Lance that matches the intended query before running indexed vector search. For small datasets or validation, set `"use_index" = "false"` to perform Flat Search.
+- Use `SHOW INDEX` on a Filesystem Catalog table to inspect its logical Lance indexes, for example to verify the index name, type, and indexed fields before indexed vector search. `SHOW INDEX` is not supported for REST Catalogs.
 - For deterministic vector result ordering, explicitly use `ORDER BY _distance ASC` and add a unique tie-breaker.
 - Use the `vector_search()` `filter` parameter when filtering must occur before vector candidates are generated. An outer `WHERE` filters only the candidates already generated by each search Split and runs before Doris global TopN, so allow for a final result with fewer than `top_k` rows.
 - Use `EXPLAIN` to inspect `lanceSearchFragments` and `lanceSearchIndexSegments`. The former is the number of visible Fragments in the pinned snapshot; the latter is the number of physical Index Segment splits selected by the FE. Additional fallback Fragment splits may also be present.
