@@ -20,7 +20,7 @@ TOPN_WEIGHTED(<expr>, <weight>, <top_num> [, <space_expand_rate>])
 
 | Parameter | Description |
 | -- | -- |
-| `<expr>` | The column or expression to be counted. Supported types: TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, IPV4, IPV6, String. |
+| `<expr>` | The column or expression to be counted. Supported types: TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, TimestampNs, IPV4, IPV6, String. |
 | `<weight>` | The column or expression used to adjust the weight. Supported type: Double.|
 | `<top_num>` | The number of most frequent values to return. Must be a positive integer. Supported type: Integer. |
 | `<space_expand_rate>` | Optional. Sets the number of counters used in the Space-Saving algorithm: `counter_numbers = top_num * space_expand_rate`. The larger the value, the more accurate the result. Default is 50. Supported type: Integer. |

@@ -46,11 +46,11 @@ TO_JSON(value)
 - 复杂类型：ARRAY、STRUCT
 
 此外，函数还支持以下类型的转换：
-- 日期类型：DATETIME、DATE、TIME
+- 日期类型：DATETIME、TIMESTAMP_NS、DATE、TIME
 - IP类型：IPV4、IPV6
 - 复杂类型：MAP
 
-对于 DATETIME、DATE、TIME、IPV4、IPV6 这些没有对应 JSONB 类型的数据，它们会被转换成 STRING 类型。
+DATETIME、TIMESTAMP_NS、DATE、TIME、IPV4 和 IPV6 在 JSONB 中没有对应的原生类型，因此会转换为 JSONB 字符串。
 对于 MAP 类型，会被转换成 JSONB 的 Object 类型。其中 Map 的键必须为STRING类型，这是因为JSON的标准规定，Object的Key只能为字符串。
 
 ## 返回值
@@ -264,6 +264,5 @@ SELECT to_json(cast(makedate(2025,5) as string));
 3. Doris 中的 JSONB 对象默认大小限制为 1,048,576 字节（1 MB），可通过 BE 配置 `string_type_length_soft_limit_bytes` 参数调整，最大可调整至 2,147,483,643 字节（约 2 GB）。
 
 4. Doris JSON 类型的对象中，键的长度不能超过 255 个字节。
-
 
 

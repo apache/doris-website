@@ -24,13 +24,13 @@
 
 - `start`、`end`：非负整数。`end` 为上界，结果不包含 `end` 本身。
 - `step`：必须是正整数，步长，默认 1。
-- `start_dt`、`end_dt`：DATETIME。两参形式默认步长为 1 DAY。
+- `start_dt`、`end_dt`：`DATETIME` 或 `TIMESTAMP_NS`。两个参数的类型必须相同。两参形式默认步长为 1 DAY。
 - `interval step unit`：日期时间步长，`unit` 取 `YEAR|QUARTER|MONTH|WEEK|DAY|HOUR|MINUTE|SECOND`，`step` 必须为正整数。
 
 ## 返回值
 
 - 返回 `ARRAY<T>`；当参数非法时返回 `NULL`；当范围为空时返回空数组 `[]`。
-- 数组元素类型 `T` 与输入一致：整型返回 `INT`，日期时间返回 `DATETIME`。
+- 数组元素类型 `T` 与输入一致：整型返回 `INT`；`DATETIME` 和 `TIMESTAMP_NS` 输入分别返回对应的日期时间类型。
 
 ## 使用说明
 
@@ -70,3 +70,6 @@
    - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 14:00:00', interval 1 hour)` -> `["2022-05-15 12:00:00", "2022-05-15 13:00:00"]`
    - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 12:02:00', interval 1 minute)` -> `["2022-05-15 12:00:00", "2022-05-15 12:01:00"]`
    - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 12:00:02', interval 1 second)` -> `["2022-05-15 12:00:00", "2022-05-15 12:00:01"]`
+
+- `TIMESTAMP_NS` 会在生成的元素中保留纳秒精度。
+  - `ARRAY_RANGE(CAST('2022-05-15 12:00:00.123456789' AS TIMESTAMP_NS), CAST('2022-05-15 12:00:02.123456789' AS TIMESTAMP_NS), INTERVAL 1 SECOND)` -> `["2022-05-15 12:00:00.123456789", "2022-05-15 12:00:01.123456789"]`

@@ -29,6 +29,7 @@ The list of data types supported by Apache Doris is as follows:
 | --------------------- | ---------------- | ------------------------------------------------------------------------------------------ |  
 | [DATE](../sql-manual/basic-element/sql-data-types/date-time/DATE)         | 4               | Date type. The current value range is ['0000-01-01', '9999-12-31'], and the default print format is 'yyyy-MM-dd'.         |  
 | [DATETIME](../sql-manual/basic-element/sql-data-types/date-time/DATETIME) | 8               | Date and time type. Format: DATETIME([P]). The optional parameter P represents the time precision, with a value range of [0, 6], meaning up to 6 decimal digits (microseconds) are supported. The default value when not set is 0.<br />The value range is ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']. The print format is 'yyyy-MM-dd HH:mm:ss.SSSSSS'. |
+| [TIMESTAMP_NS](../sql-manual/basic-element/sql-data-types/date-time/TIMESTAMP-NS) | 8 | Time-zone-naive date and time type with fixed nanosecond precision. The range is ['1677-09-21 00:12:43.145224192', '2262-04-11 23:47:16.854775807']. The print format is 'yyyy-MM-dd HH:mm:ss.SSSSSSSSS'. |
 
 ### [String Types](../sql-manual/basic-element/sql-data-types/data-type-overview#string-types)
 

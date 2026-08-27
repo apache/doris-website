@@ -32,17 +32,15 @@ UNIX_TIMESTAMP(`<date_or_date_expr>`, `<fmt>`)
 
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_date_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_date_expr>` | Input date-time value. Supports `DATE`, `DATETIME`, and `TIMESTAMP_NS`. |
 | `<fmt>` | The date parameter specifies the specific part to be converted to timestamp, type is string. If this parameter is provided, only the part matching the format will be converted to timestamp. |
 
 ## Return Value
-Returns two types based on input:
+The return type depends on the input:
 
-1. If the input date_or_date_expr is datetime type with non-zero scale or has format parameter:
-   Returns a timestamp of type Decimal, with up to six decimal places precision
-
-2. If the input date_or_date_expr has scale 0 and no format parameter:
-   Returns a timestamp of type INT
+1. A `TIMESTAMP_NS` input returns a `DECIMAL` timestamp with nine fractional digits.
+2. A `DATETIME` input with non-zero scale, or a call with `<fmt>`, returns a `DECIMAL` timestamp with up to six fractional digits.
+3. A `DATE` or scale-0 `DATETIME` input without `<fmt>` returns an `INT` timestamp.
 
 Converts the input time to the corresponding timestamp, with the epoch time being 1970-01-01 00:00:00.
 

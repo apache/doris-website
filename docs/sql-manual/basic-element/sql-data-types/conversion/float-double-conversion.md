@@ -348,6 +348,47 @@ If the source type is non-nullable, returns non-nullable type.
 | 838:59:58        | 3020398000000 |         |
 | 838:59:58.123456 | 3020398123456 |         |
 
+## From TIMESTAMP_NS to float
+
+### Strict mode
+
+Return error.
+
+### Non-strict mode
+
+Doris discards the nine-digit fractional-second part without rounding, concatenates the year, month, day, hour, minute, and second as a `YYYYMMDDHHMMSS` integer, and then uses `static_cast` to convert the integer to `FLOAT`. Because `FLOAT` has fewer significant digits than the 14-digit integer, this conversion usually loses precision.
+
+If the source type is nullable, the return type is nullable.
+
+If the source type is non-nullable, the return type is non-nullable.
+
+#### Examples
+
+| TIMESTAMP_NS | float | Comment |
+| --- | --- | --- |
+| `2024-02-29 12:34:56.123456789` | `2.02402284E13` | The fractional part is discarded and the 14-digit integer loses precision |
+
+## From TIMESTAMP_NS to double
+
+### Strict mode
+
+Return error.
+
+### Non-strict mode
+
+Doris discards the nine-digit fractional-second part without rounding, concatenates the year, month, day, hour, minute, and second as a `YYYYMMDDHHMMSS` integer, and then uses `static_cast` to convert the integer to `DOUBLE`. `DOUBLE` can exactly represent every 14-digit result in the `TIMESTAMP_NS` range.
+
+If the source type is nullable, the return type is nullable.
+
+If the source type is non-nullable, the return type is non-nullable.
+
+#### Examples
+
+| TIMESTAMP_NS | double | Comment |
+| --- | --- | --- |
+| `2024-02-29 12:34:56.123456789` | `20240229123456` | No precision loss |
+| `2262-04-11 23:47:16.854775807` | `22620411234716` | The fractional part is discarded |
+
 ## From other types
 
 Not supported.

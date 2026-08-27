@@ -22,7 +22,7 @@ TIME(<datetime>)
 
 | Parameter      | Description           |
 |----------------|-----------------------|
-| `<datetime>`   | The datetime value.   |
+| `<datetime>`   | A `DATETIME` or `TIMESTAMP_NS` value. |
 
 ## Return Value
 Returns a `TIME` type value
@@ -41,4 +41,3 @@ mysql>
 | 12:12:12                  |
 +---------------------------+
 ```
-

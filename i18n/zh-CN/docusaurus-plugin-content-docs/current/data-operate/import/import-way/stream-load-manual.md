@@ -511,7 +511,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### 指定导入时区
 
-`DATETIME` 相关类型只表示绝对的时间点，而不包含时区信息，不因 Doris 系统时区变化而发生变化。因此，对于带时区数据的导入，我们统一的处理方式为将其转换为特定目标时区下的数据。在 Doris 系统中，即 session variable `time_zone` 所代表的时区。
+`DATETIME`、`TIMESTAMP_NS` 等不带时区的类型不包含时区信息，存储值不因 Doris 系统时区变化而发生变化。因此，导入带时区的数据时，会先将其转换为指定目标时区中的日期时间，再以不带时区的形式存储。在 Doris 中，目标时区由会话变量 `time_zone` 表示。
 
 而在导入中，我们的目标时区通过参数 `timezone` 指定，该变量在发生时区转换、运算时区敏感函数时将会替代 session variable `time_zone`。因此，如果没有特殊情况，在导入事务中应当设定 `timezone` 与当前 Doris 集群的 `time_zone` 一致。此时意味着所有带时区的时间数据，均会发生向该时区的转换。
 

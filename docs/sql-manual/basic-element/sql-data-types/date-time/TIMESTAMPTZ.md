@@ -15,7 +15,7 @@ In different database systems, time zone-aware timestamp types have various nami
 - SQL Server uses DATETIMEOFFSET
 - Some other databases use TIMESTAMP WITH LOCAL TIME ZONE
 
-According to SQL standards, the standalone TIMESTAMP type should not carry time zone information (equivalent to TIMESTAMP WITHOUT TIME ZONE). Considering user habits and ease of use, Doris chose the more concise name TIMESTAMPTZ to represent the timestamp type with time zone. Note that currently Doris does not have a separate TIMESTAMP type, as users can effectively use DATETIME to store time information.
+According to SQL standards, the standalone TIMESTAMP type should not carry time zone information (equivalent to TIMESTAMP WITHOUT TIME ZONE). Considering user habits and ease of use, Doris chose the more concise name TIMESTAMPTZ to represent the timestamp type with time zone. Doris does not have a standalone `TIMESTAMP` type: use `DATETIME` for a broad-range time-zone-naive value, or [`TIMESTAMP_NS`](./TIMESTAMP-NS.md) for a time-zone-naive value with fixed nanosecond precision.
 
 The range of TIMESTAMPTZ is the same as DATETIME, being `[0000-01-01 00:00:00.000000, 9999-12-31 23:59:59.999999]`.
 TIMESTAMPTZ supports specifying precision in the format TIMESTAMPTZ(p), where `p` represents the precision and can range from `[0, 6]`, with a default value of 0. In other words, TIMESTAMPTZ is equivalent to TIMESTAMPTZ(0). The default output format is `'yyyy-MM-dd HH:mm:ss.SSSSSS +XX:XX'`, where `+XX:XX` represents the time zone offset (note that the number of digits in `SSSSSS` is determined by the precision `p`).
@@ -39,7 +39,7 @@ Therefore, TIMESTAMPTZ can be understood as a DATETIME type with time zone conve
 
 In Doris, a TIMESTAMPTZ type field occupies 8 bytes of storage space.
 
-TIMESTAMPTZ and DATETIME types support mutual conversion, with appropriate time zone adjustments during conversion. TIMESTAMPTZ supports implicit conversion to DATETIME, allowing functions that do not directly support TIMESTAMPTZ to process this type of data.
+TIMESTAMPTZ supports conversion to and from DATETIME and TIMESTAMP_NS, with appropriate time zone adjustments during conversion. TIMESTAMPTZ supports implicit conversion to DATETIME, allowing functions that do not directly support TIMESTAMPTZ to process this type of data. Converting TIMESTAMP_NS to TIMESTAMPTZ rounds from nanoseconds to the target TIMESTAMPTZ precision.
 
 ## Examples
 

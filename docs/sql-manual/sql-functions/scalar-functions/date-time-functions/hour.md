@@ -8,7 +8,7 @@
 
 ## Description
 
-The HOUR function extracts the hour part from a datetime or time expression. This function supports multiple time type inputs, including DATE/DATETIME and TIME, and returns the corresponding hour value.
+The HOUR function extracts the hour part from a datetime or time expression. This function supports multiple time type inputs, including DATE/DATETIME/TIMESTAMP_NS and TIME, and returns the corresponding hour value.
 
 For DATETIME (such as '2023-10-01 14:30:00'), the return value ranges from 0-23 (24-hour format).
 For TIME type (such as '456:26:32'), the return value can exceed 24, ranging from [0,838].
@@ -88,4 +88,3 @@ mysql> select hour(NULL);
 |       NULL |
 +------------+
 ```
-

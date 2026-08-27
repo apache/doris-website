@@ -23,7 +23,7 @@ DATEDIFF(<expr1>, <expr2>)
 | Parameter | Description |
 | -- | -- |
 | `<expr1>` | The minuend date, supporting datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| `<expr2>` | The subtrahend date, supporting date and datetime types |
+| `<expr2>` | The subtrahend date, supporting date, datetime, and timestamp_ns types |
 
 ## Return Value
 

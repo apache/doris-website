@@ -20,10 +20,12 @@ ADD_TIME(`<date_or_time_expr>`, `<time>`)
 
 | Parameter             | Description |
 | ---------------------| ----------- |
-| `<date_or_time_expr>`| A valid date expression. Supports input of timestamptz/datetime/date/time types. If the type is date, it will be converted to the start time of the day (00:00:00). For specific formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [time conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/time-conversion). |
+| `<date_or_time_expr>`| A valid date expression. Supports input of TIMESTAMPTZ/TIMESTAMP_NS/DATETIME/DATE/TIME types. If the type is date, it will be converted to the start time of the day (00:00:00). For specific formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [time conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/time-conversion). |
 | `<time>`             | A valid time expression, representing the time value to be added to `<date_or_time_expr>`. If negative, it means subtraction. Supports input of time type. |
 
 ## Return Value
+
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
 
 Returns the result of adding `<time>` to `<date_or_time_expr>`. The return type depends on the type of the first parameter:
 - If the first parameter is of timestamptz type, returns timestamptz type.

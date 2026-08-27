@@ -2,12 +2,12 @@
 {
     "title": "WEEKS_SUB",
     "language": "zh-CN",
-    "description": "WEEKSSUB 函数用于在指定的日期或时间值上减少（或增加）指定数量的周数，返回调整后的日期或时间（本质是减去 weeksvalue × 7 天）。支持处理 DATE、DATETIME 类型。"
+    "description": "WEEKSSUB 函数用于在指定的日期或时间值上减少（或增加）指定数量的周数，返回调整后的日期或时间（本质是减去 weeksvalue × 7 天）。支持处理 DATE、DATETIME、TIMESTAMP_NS 类型。"
 }
 ---
 
 ## 描述
-WEEKS_SUB 函数用于在指定的日期或时间值上减少（或增加）指定数量的周数，返回调整后的日期或时间（本质是减去 weeks_value × 7 天）。支持处理 DATE、DATETIME 和 TIMESTAMPTZ 类型。
+WEEKS_SUB 函数用于在指定的日期或时间值上减少（或增加）指定数量的周数，返回调整后的日期或时间（本质是减去 weeks_value × 7 天）。支持处理 DATE、DATETIME、TIMESTAMP_NS 和 TIMESTAMPTZ 类型。
 
 该函数与 [weeks_sub 函数](./weeks-sub) 和 mysql 中的 [weeks_sub 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weeks-sub) 使用 WEEK 为单位的行为一致。
 
@@ -19,10 +19,12 @@ WEEKS_SUB(`<date_or_time_expr>`, `<week_period>`)
 ## 参数
 | 参数          | 描述                                                                |
 |---------------|-------------------------------------------------------------------|
-| `<date_or_time_expr>`  | 输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)，[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                                       |
+| `<date_or_time_expr>`  | 输入的日期时间值，支持输入 DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)，[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                                       |
 | `week_period` | INT 类型整数，表示要减少的周数（正数表示减少，负数表示增加）。                                     |
 
 ## 返回值
+
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
 返回减少了指定周数的日期或时间，返回值类型由第一个参数的类型决定：
 
 - 若输入为 DATE 类型，返回值为 DATE 类型（仅调整年月日）。

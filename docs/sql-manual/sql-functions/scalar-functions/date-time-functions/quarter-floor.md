@@ -34,6 +34,10 @@ Notes:
 
 ## Return Value
 
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
+When `<origin>` is omitted for a `TIMESTAMP_NS` input, the documented default origin is used only as an internal alignment reference; it does not need to fall within the storable `TIMESTAMP_NS` range.
+
 When `<datetime>` is of DATE type, the return type is DATE.
 When `<datetime>` is of DATETIME type, the return type is DATETIME.
 The time part of the result will be set to 00:00:00.

@@ -28,7 +28,7 @@ WINDOW_FUNNEL(<window>, <mode>, <timestamp>, <event_1>[, event_2, ... , event_n]
 | -- | -- |
 | `<window>` | window is the length of time window in seconds |
 | `<mode>` | There are four modes in total, `default`, `deduplication`, `fixed`, and `increase`. For details, please refer to the **Mode** below. |
-| `<timestamp>` | timestamp specifies column of DATETIME type, sliding time window works on it |
+| `<timestamp>` | Timestamp column used by the sliding window. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. |
 | `<event_n>` | evnet_n is boolean expression like eventID = 1004 |
 
 **Mode**

@@ -2,13 +2,13 @@
 {
     "title": "HOUR",
     "language": "zh-CN",
-    "description": "HOUR 函数用于提取日期时间或时间表达式中的小时部分。该函数支持多种时间类型输入，包括 DATE/DATETIME、TIME ，返回对应小时数值。"
+    "description": "HOUR 函数用于提取日期时间或时间表达式中的小时部分。该函数支持多种时间类型输入，包括 DATE/DATETIME/TIMESTAMP_NS、TIME ，返回对应小时数值。"
 }
 ---
 
 ## 描述
 
-HOUR 函数用于提取日期时间或时间表达式中的小时部分。该函数支持多种时间类型输入，包括  DATE/DATETIME、TIME ，返回对应小时数值。
+HOUR 函数用于提取日期时间或时间表达式中的小时部分。该函数支持多种时间类型输入，包括  DATE/DATETIME/TIMESTAMP_NS、TIME ，返回对应小时数值。
 
 对于 DATETIME （如 '2023-10-01 14:30:00'），返回值范围为 0-23（24 小时制）。
 对于 TIME 类型（如 '456:26:32'），返回值可超出 24，范围为 [0,838]。
@@ -88,4 +88,3 @@ mysql> select hour(NULL);
 |       NULL |
 +------------+
 ```
-

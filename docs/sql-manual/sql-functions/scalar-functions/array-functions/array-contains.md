@@ -31,7 +31,7 @@ array_contains(ARRAY<T> arr, T value)
 **T supported types:**
 - Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
 - String types: CHAR, VARCHAR, STRING
-- Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2
+- Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2, TIMESTAMP_NS
 - Boolean type: BOOLEAN
 - IP types: IPV4, IPV6
 
@@ -68,7 +68,7 @@ Return value behavior description:
    - CHAR, VARCHAR, STRING types can be compared with each other
 3. **Date and time type compatibility**:
    - DATE and DATEV2 can be compared with each other
-   - DATETIME and DATETIMEV2 can be compared with each other
+   - DATETIME, DATETIMEV2, and TIMESTAMP_NS can be compared with each other. Mixed DATETIME and TIMESTAMP_NS values use TIMESTAMP_NS as the common type.
 
 ### Examples
 

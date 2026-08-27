@@ -8,7 +8,7 @@
 
 ## Description
 
-The YEARS_ADD function is used to add (or subtract) a specified number of years to a given date or time value, returning the adjusted date or time. It supports processing DATE and DATETIME types, where the number of years can be positive (addition) or negative (subtraction). This function supports DATE, DATETIME and TIMESTAMPTZ input types.
+The YEARS_ADD function is used to add (or subtract) a specified number of years to a given date or time value, returning the adjusted date or time. It supports processing DATE, DATETIME, and TIMESTAMP_NS types, where the number of years can be positive (addition) or negative (subtraction). This function supports DATE, DATETIME, TIMESTAMP_NS, and TIMESTAMPTZ input types.
 
 This function is consistent with the [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) using YEAR as the unit in MySQL.
 
@@ -22,13 +22,15 @@ YEARS_ADD(`<date_or_time_expr>`, `<years>`)
 
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_time_expr>` | Input datetime value, supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | Input datetime value, supports DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<years>` | Number of years to add, type INT, negative numbers indicate subtraction, positive numbers indicate addition |
 
 
 ## Return Value
 
-Returns a result consistent with the input type (DATE or DATETIME or TIMESTAMPTZ), representing the adjusted date or time, the return value type is determined by the type of the first parameter:
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
+Returns a result consistent with the input type (DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ), representing the adjusted date or time, the return value type is determined by the type of the first parameter:
 
 - If input is DATE type, return value is DATE type (only adjusts year, month, day).
 - If input is DATETIME type, return value is DATETIME type (year, month, day adjusted, hours, minutes, seconds remain unchanged).

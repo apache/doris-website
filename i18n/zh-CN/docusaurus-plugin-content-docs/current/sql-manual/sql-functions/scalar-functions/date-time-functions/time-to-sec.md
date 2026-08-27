@@ -7,7 +7,7 @@
 ---
 
 ## 描述
-TIME_TO_SEC 函数用于将输入的时间值转换为以秒为单位的总秒数。该函数支持处理 TIME、DATETIME 类型：若输入为 DATETIME 类型，会自动提取其中的时间部分（HH:MM:SS）进行计算；若输入为纯时间值，则直接转换为总秒数。
+TIME_TO_SEC 函数用于将输入的时间值转换为总秒数。支持 `TIME`、`DATETIME` 和 `TIMESTAMP_NS`；对于日期时间值，函数提取时间部分（HH:MM:SS）进行计算。
 
 该函数与 mysql 中的 [time_to_sec 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_time-to-sec).
 
@@ -21,7 +21,7 @@ TIME_TO_SEC(<date_or_time_expr>)
 
 | 参数       | 说明                                                          |
 |----------|-------------------------------------------------------------|
-| `<date_or_time_expr>` | 必填，支持 TIME 或 DATETIME。如果输入为 DATETIME 类型，函数会提取时间部分进行计算。具体 datetime/time 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)， [time 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion)|
+| `<date_or_time_expr>` | 必填。支持 `TIME`、`DATETIME` 或 `TIMESTAMP_NS`；对于日期时间值，函数提取时间部分进行计算。|
 
 ## 返回值
 返回类型为 INT，表示输入时间值对应的总秒数，计算逻辑为：小时×3600 + 分钟×60 + 秒。

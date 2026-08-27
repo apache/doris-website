@@ -8,7 +8,7 @@
 
 ## Description
 
-The SECONDS_DIFF function calculates the difference between two datetime values and returns the result in seconds. This function supports processing DATE and DATETIME types. If the input is DATE type, its time portion defaults to 00:00:00.
+The SECONDS_DIFF function calculates the difference between two datetime values and returns the result in seconds. This function supports processing DATE, DATETIME, and TIMESTAMP_NS types. If the input is DATE type, its time portion defaults to 00:00:00.
 
 ## Syntax
 

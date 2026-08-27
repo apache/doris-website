@@ -21,10 +21,12 @@ ADD_TIME(`<date_or_time_expr>`, `<time>`)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 timestamptz/datetime/date/time 类型,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [time的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 TIMESTAMPTZ/TIMESTAMP_NS/DATETIME/DATE/TIME 类型,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [time的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
 |  `<time>`        |  参数为合法的时间表达式，表示增加到`<date_or_time_expr>` 上面的时间值，若为负数，则表示减少，支持输入 time 类型  |
 
 ## 返回值
+
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
 
 返回 `<date_or_time_expr>` 添加 `<time>` 时间值之后的结果，根据第一个参数类型返回不同的类型
 - 若第一个参数为 timestamptz 类型，则返回 timestamptz 类型

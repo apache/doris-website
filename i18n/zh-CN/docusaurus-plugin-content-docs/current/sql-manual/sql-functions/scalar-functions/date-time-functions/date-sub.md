@@ -57,6 +57,8 @@ DATE_SUB(<date_or_time_part>, INTERVAL <expr> <time_unit>)
 
 ## 返回值
 
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
+
 返回与 date 类型一致的计算结果：
 - 输入 DATE 类型时，返回 DATE（仅日期部分）；
 - 输入 DATETIME 类型时，返回 DATETIME（包含日期和时间）。

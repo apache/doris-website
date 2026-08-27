@@ -113,7 +113,7 @@ VARIANT 的 CAST 包括两个方向：把受支持的 SQL 值转换为 VARIANT�
 | `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT` | 保留整数值。 |
 | `FLOAT`、`DOUBLE` | 保留浮点数值。 |
 | `DECIMALV2`、`DECIMAL(p, s)`（`p <= 38`） | 保留 Decimal 值，但需满足下文限制。 |
-| `DATE`、`DATETIME`、`TIMESTAMPTZ` | 保留对应的逻辑类型和值。 |
+| `DATE`、`DATETIME`、`TIMESTAMP_NS`、`TIMESTAMPTZ` | 保留对应的逻辑类型和值。 |
 | `IPV4`、`IPV6` | 保留 IP 地址值。 |
 | `JSON` / `JSONB` | 将结构化值直接转换为 VARIANT；如果输入包含 VARIANT 无法表示的 JSONB 值类型，BE 会报错。 |
 | `ARRAY<T>` | 当 `T` 为 `VARIANT` 或也在该白名单中时递归转换每个元素，并保留 SQL NULL 元素。 |
@@ -147,7 +147,7 @@ VARIANT 可以 CAST 为兼容的标量、JSON/JSONB 或数组类型：
 | `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT` | 将兼容的标量根值转换为指定整数类型。 |
 | `FLOAT`、`DOUBLE` | 转换兼容的数值根。 |
 | `DECIMALV2`、`DECIMAL(p, s)` | 将兼容的数值根转换为指定 Decimal 类型。 |
-| `DATE`、`DATETIME`、`TIMESTAMPTZ` | 转换兼容的日期时间根值。 |
+| `DATE`、`DATETIME`、`TIMESTAMP_NS`、`TIMESTAMPTZ` | 转换兼容的日期时间根值。 |
 | `CHAR`、`VARCHAR`、`STRING` | 标量根值返回对应文本，对象和数组返回 JSON 文本。Variant/JSON `null` 返回字符串 `null`，外层 SQL `NULL` 仍是 SQL `NULL`。 |
 | `IPV4`、`IPV6` | 将兼容的 IP 地址根值转换为指定的 IP 地址类型。 |
 | `JSON` / `JSONB` | 按结构转换；如果 VARIANT 值包含 JSON/JSONB 无法表示的类型，BE 会报错。 |
@@ -175,6 +175,7 @@ SELECT CAST(PARSE_TO_VARIANT('{"id": 1}') AS JSON) AS json_value;
 | `DATE` | 保留为不含时间和时区的日历日期。 |
 | 旧版 `DATETIME` | 保留到秒，不进行时区调整。 |
 | `DATETIME(p)` | 支持 `0 <= p <= 6`，不进行时区调整。 |
+| `TIMESTAMP_NS` | 保留固定纳秒精度且不进行时区调整；值必须在 TIMESTAMP_NS 取值范围内。 |
 | `TIMESTAMPTZ(p)` | 支持 `0 <= p <= 6`，保留带时区调整的 timestamp 语义。 |
 | precision 超过 38 的 Decimal | 不支持作为 VARIANT 输入。 |
 | `TIME` | 不支持作为 VARIANT 输入。 |

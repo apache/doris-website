@@ -19,8 +19,8 @@ Doris 支持两种自动分区类型：
 
 | 类型 | 分区方式 | 分区函数 | 支持的分区列类型 |
 | --- | --- | --- | --- |
-| AUTO **RANGE** PARTITION | 按范围自动分区 | `date_trunc` | `DATE`、`DATETIME` |
-| AUTO **LIST** PARTITION | 按枚举值自动分区 | 不支持函数调用 | `BOOLEAN`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`DATE`、`DATETIME`、`CHAR`、`VARCHAR` |
+| AUTO **RANGE** PARTITION | 按范围自动分区 | `date_trunc` | `DATE`、`DATETIME`、`TIMESTAMP_NS` |
+| AUTO **LIST** PARTITION | 按枚举值自动分区 | 不支持函数调用 | `BOOLEAN`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`DATE`、`DATETIME`、`TIMESTAMP_NS`、`CHAR`、`VARCHAR` |
 
 ## 使用场景
 
@@ -189,7 +189,7 @@ PROPERTIES (
 | 约束项 | AUTO RANGE PARTITION | AUTO LIST PARTITION |
 | --- | --- | --- |
 | 支持的分区函数 | 仅支持 `date_trunc` | 不支持函数调用 |
-| 支持的分区列类型 | `DATE`、`DATETIME` | `BOOLEAN`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`DATE`、`DATETIME`、`CHAR`、`VARCHAR` |
+| 支持的分区列类型 | `DATE`、`DATETIME`、`TIMESTAMP_NS` | `BOOLEAN`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`DATE`、`DATETIME`、`TIMESTAMP_NS`、`CHAR`、`VARCHAR` |
 | 是否支持多列分区 | 否 | 是 |
 | 分区名长度限制 | — | 不得超过 50（来自分区列内容拼接与转义，实际容许长度可能更短） |
 | 分区取值规则 | 按 `date_trunc` 截断后的时间范围划分 | 每个未存在分区的枚举取值会创建一个独立新分区 |

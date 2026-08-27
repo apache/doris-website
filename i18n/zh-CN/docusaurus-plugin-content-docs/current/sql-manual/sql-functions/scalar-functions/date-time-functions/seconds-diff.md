@@ -2,13 +2,13 @@
 {
     "title": "SECONDS_DIFF",
     "language": "zh-CN",
-    "description": "SECONDSDIFF 函数用于计算两个日期时间值之间的差值，并以秒为单位返回结果。该函数支持处理 DATE、DATETIME 类型，若输入为 DATE 类型，默认其时间部分为 00:00:00。"
+    "description": "SECONDSDIFF 函数用于计算两个日期时间值之间的差值，并以秒为单位返回结果。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，若输入为 DATE 类型，默认其时间部分为 00:00:00。"
 }
 ---
 
 ## 描述
 
-SECONDS_DIFF 函数用于计算两个日期时间值之间的差值，并以秒为单位返回结果。该函数支持处理 DATE、DATETIME 类型，若输入为 DATE 类型，默认其时间部分为 00:00:00。
+SECONDS_DIFF 函数用于计算两个日期时间值之间的差值，并以秒为单位返回结果。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，若输入为 DATE 类型，默认其时间部分为 00:00:00。
 
 
 ## 语法
@@ -21,8 +21,8 @@ SECONDS_DIFF(<date_or_time_expr1>, <date_or_time_expr2>)
 
 | 参数                 | 说明                                 |
 |--------------------|------------------------------------|
-| `<date_or_time_expr1>`   | 必填，结束的日期时间值，类型可以是 DATE、DATETIME，具体 datetime/date 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
-| `<date_or_time_expr2>` | 必填，起始的日期时间值，类型可以是 DATE、DATETIME。。 |
+| `<date_or_time_expr1>`   | 必填，结束的日期时间值，类型可以是 DATE、DATETIME、TIMESTAMP_NS，具体 datetime/date 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
+| `<date_or_time_expr2>` | 必填，起始的日期时间值，类型可以是 DATE、DATETIME、TIMESTAMP_NS。。 |
 
 ## 返回值
 

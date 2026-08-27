@@ -26,6 +26,8 @@ DATE_TRUNC(<time_unit>, <datetime>)
 
 ## Return Value
 
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
 Returns a truncated result with the same type as datetime:
 - When input is DATE, returns DATE ;
 - When input is DATETIME or a time-containing string, returns DATETIME (including the date and the truncated time).

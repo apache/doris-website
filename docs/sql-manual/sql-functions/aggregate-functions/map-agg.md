@@ -18,8 +18,8 @@ The MAP_AGG function is used to form a mapping structure based on key-value pair
 
 | Parameter | Description |
 | -- | -- |
-| `<expr1>` | The expression used as the key. Supported types: Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, String. |
-| `<expr2>` | The expression used as the value. Supported types: Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, String. |
+| `<expr1>` | The expression used as the key. Supported types: Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, TimestampNs, Timestamptz, and String. |
+| `<expr2>` | The expression used as the value. Supported types: Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, TimestampNs, Timestamptz, and String. |
 
 ## Return Value
 

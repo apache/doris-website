@@ -30,13 +30,17 @@ YEAR_FLOOR(<date_or_time_expr>, <period>, <origin>)
 ## 参数
 | 参数                  | 说明                                                       |
 |---------------------|----------------------------------------------------------|
-| `<date_or_time_expr>`       | 要向下舍入的日期时间值，支持输入 date/datetime/timestamptz 类型,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                              |
+| `<date_or_time_expr>`       | 要向下舍入的日期时间值，支持输入 DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ 类型,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                              |
 | `<period>`          | 可选，表示每个周期由多少秒组成，支持正整数类型（INT）。默认为 1 秒。                    |
-| `<origin_datetime>` | 间隔的起始点，支持输入 date/datetime 类型；默认为 0000-01-01 00:00:00。 |
+| `<origin_datetime>` | 间隔的起始点，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型；默认为 0000-01-01 00:00:00。 |
 
 
 ## 返回值
-返回与输入类型一致的结果（TIMESTAMPTZ, DATETIME 或 DATE），表示向下舍入后的年间隔起始时间：
+
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
+
+对 `TIMESTAMP_NS` 输入省略 `<origin>` 时，文档中的默认起点仅作为内部对齐基准使用，无需位于 `TIMESTAMP_NS` 的可存储范围内。
+返回与输入类型一致的结果（TIMESTAMPTZ、TIMESTAMP_NS、DATETIME 或 DATE），表示向下舍入后的年间隔起始时间：
 
 - 若输入为 DATE 类型，返回 DATE 类型（仅包含日期部分）；若输入为 DATETIME 或符合格式的字符串，返回 DATETIME 类型（时间部分与 origin 一致，无 origin 时默认为 00:00:00）。
 - 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`),再进行 FLOOR 计算操作。

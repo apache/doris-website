@@ -59,6 +59,7 @@ Java UDF 为用户提供使用 Java 编写自定义函数的接口，方便用�
 | Double | Double |
 | Date | LocalDate |
 | Datetime | LocalDateTime |
+| TimestampNs | LocalDateTime |
 | IPV4 / IPV6 | InetAddress |
 | String | String |
 | Decimal | BigDecimal |

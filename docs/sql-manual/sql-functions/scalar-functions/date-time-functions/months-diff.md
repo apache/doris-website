@@ -8,7 +8,7 @@
 
 ## Description
 
-The MONTHS_DIFF function is used to calculate the integer month difference between two datetime values, returning the result as the number of months obtained by subtracting `<startdate>` from `<enddate>`. This function supports processing DATE and DATETIME types, calculating based only on the date portion (year, month, day) and ignoring the time portion (hours, minutes, seconds).
+The MONTHS_DIFF function is used to calculate the integer month difference between two datetime values, returning the result as the number of months obtained by subtracting `<startdate>` from `<enddate>`. This function supports processing DATE, DATETIME, and TIMESTAMP_NS types, calculating based only on the date portion (year, month, day) and ignoring the time portion (hours, minutes, seconds).
 
 ## Syntax
 
@@ -20,8 +20,8 @@ MONTHS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr1>` | End date. Supports date/datetime types. For specific datetime and date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
-| `<date_or_time_expr2>` | Start date. Supports date/datetime types. |
+| `<date_or_time_expr1>` | End date. Supports DATE/DATETIME/TIMESTAMP_NS types. For specific datetime and date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr2>` | Start date. Supports DATE/DATETIME/TIMESTAMP_NS types. |
 
 ## Return Value
 

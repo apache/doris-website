@@ -40,7 +40,11 @@ MINUTE_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 ## 返回值
 
-返回类型为 TIMESTAMPTZ, DATETIME 或 DATE，返回以输入日期时间为基准，向下取整到最近的指定月份周期后的时间值。返回值的精度与输入参数 datetime 的精度相同。
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
+
+对 `TIMESTAMP_NS` 输入省略 `<origin>` 时，文档中的默认起点仅作为内部对齐基准使用，无需位于 `TIMESTAMP_NS` 的可存储范围内。
+
+返回根据输入参数确定的日期时间类型，表示向下取整到最近的指定月份周期后的时间值。返回值的精度与输入参数一致。
 
 - 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`),再进行 FLOOR 计算操作。
 - 若输入的时间值(`<date_or_time_expr>` 和`<period>`)同时包含 TIMESTAMPTZ 和 DATETIME 类型，则输出 DATETIME 类型。

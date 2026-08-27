@@ -43,7 +43,7 @@ Doris collects statistics per column at the table level, including the following
 | `max`           | Maximum value                        |
 | `null_count`    | Number of null values                |
 
-**Supported column types**: BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DATE, DATETIME, STRING, VARCHAR, TEXT.
+**Supported column types**: BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DATE, DATETIME, TIMESTAMP_NS, STRING, VARCHAR, TEXT.
 
 **Not supported (automatically skipped)**: JSONB, VARIANT, MAP, STRUCT, ARRAY, HLL, BITMAP, TIME, TIMEV2, VARBINARY.
 

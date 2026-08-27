@@ -15,8 +15,7 @@ TIMESTAMPTZ 是 Doris 中用于存储带时区信息的日期时间数据类型�
 - SQL Server 使用 DATETIMEOFFSET
 - 其他一些数据库使用 TIMESTAMP WITH LOCAL TIME ZONE
 
-根据 SQL 标准，单独的 TIMESTAMP 类型不应携带时区信息（等同于 TIMESTAMP WITHOUT TIME ZONE）。考虑到用户习惯和使用便捷性，Doris 选择使用 TIMESTAMPTZ 这个更加简洁的命名来表示带时区的时间戳类型。
-注意目前 Doris 没有一个单独的 TIMESTAMP 类型，实际上用户完全可以使用 DATETIME 来存储时间。
+根据 SQL 标准，单独的 TIMESTAMP 类型不应携带时区信息（等同于 TIMESTAMP WITHOUT TIME ZONE）。考虑到用户习惯和使用便捷性，Doris 选择使用 TIMESTAMPTZ 这个更加简洁的命名来表示带时区的时间戳类型。Doris 没有单独的 `TIMESTAMP` 类型：不带时区且需要较大日期范围时使用 `DATETIME`，需要固定纳秒精度时使用 [`TIMESTAMP_NS`](./TIMESTAMP-NS.md)。
 
 TIMESTAMPTZ 的取值范围与 DATETIME 相同，为 `[0000-01-01 00:00:00.000000, 9999-12-31 23:59:59.999999]`。
 TIMESTAMPTZ 支持指定精度，格式为 TIMESTAMPTZ(p)，其中 `p` 表示精度，取值范围为 `[0, 6]`，默认值为 0。换句话说，TIMESTAMPTZ 等同于 TIMESTAMPTZ(0)。
@@ -41,7 +40,7 @@ TIMESTAMPTZ 的实现并非在每行数据中单独存储时区信息，而是�
 
 在 Doris 中，一个 TIMESTAMPTZ 类型字段占用 8 字节存储空间。
 
-TIMESTAMPTZ 与 DATETIME 类型之间支持相互转换，转换过程中会根据时区进行适当调整。TIMESTAMPTZ 支持隐式转换为 DATETIME，这使得不直接支持 TIMESTAMPTZ 的函数也能处理此类型的数据。
+TIMESTAMPTZ 支持与 DATETIME 和 TIMESTAMP_NS 相互转换，转换过程中会根据时区进行适当调整。TIMESTAMP_NS 转换为 TIMESTAMPTZ 时，会从纳秒精度四舍五入到目标 TIMESTAMPTZ 精度。
 
 ## 举例
 

@@ -10,7 +10,7 @@
 
 Unlike the [MONTHS_DIFF function](./months-diff), the MONTHS_BETWEEN function does not ignore the day component and returns a floating-point number representing the actual difference in months, rather than the simple difference in month units displayed on the date.
 
-The MONTHS_BETWEEN function is used to calculate the month difference between two datetime values, returning a floating-point result. This function supports processing DATE and DATETIME types and can control whether the result is rounded through an optional parameter.
+The MONTHS_BETWEEN function is used to calculate the month difference between two datetime values, returning a floating-point result. This function supports processing DATE, DATETIME, and TIMESTAMP_NS types and can control whether the result is rounded through an optional parameter.
 
 This function behaves consistently with Oracle's [MONTHS_BETWEEN function](https://docs.oracle.com/cd/E11882_01/olap.112/e23381/row_functions042.htm#OLAXS434).
 
@@ -24,8 +24,8 @@ MONTHS_BETWEEN(`<date_or_time_expr1>`, `<date_or_time_expr2>` [, `<round_type>`]
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr1>` | End date. Supports date/datetime types. For specific datetime and date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
-| `<date_or_time_expr2>` | Start date. Supports date/datetime types and strings that conform to datetime formats. |
+| `<date_or_time_expr1>` | End date. Supports DATE/DATETIME/TIMESTAMP_NS types. For specific datetime and date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr2>` | Start date. Supports DATE/DATETIME/TIMESTAMP_NS types and strings that conform to datetime formats. |
 | `<round_type>` | Whether to round the result to the 8th decimal place. Supports `true` or `false`. Default is `true`. |
 
 ## Return Value

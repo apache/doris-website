@@ -22,6 +22,8 @@ DATETIME 类型可以作为主键、分区列、分桶列。一个 DATETIME 类�
 
 DATETIME 类型不存储时区，即会话变量 `time_zone` 的变化不影响存储的 DATETIME 类型的值。
 
+需要固定纳秒精度时，请使用 [`TIMESTAMP_NS`](./TIMESTAMP-NS.md)。`TIMESTAMP_NS` 同样不携带时区，但取值范围仅覆盖 1677-09-21 到 2262-04-11。
+
 ## 举例
 
 ```sql

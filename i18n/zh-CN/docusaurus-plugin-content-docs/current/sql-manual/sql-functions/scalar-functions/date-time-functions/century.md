@@ -2,12 +2,12 @@
 {
     "title": "CENTURY",
     "language": "zh-CN",
-    "description": "CENTURY 函数用于提取指定日期或时间值中的世纪部分，返回整数形式的世纪。支持处理 DATE、DATETIME 类型。"
+    "description": "CENTURY 函数用于提取指定日期或时间值中的世纪部分，返回整数形式的世纪。支持处理 DATE、DATETIME、TIMESTAMP_NS 类型。"
 }
 ---
 
 ## 描述  
-CENTURY 函数用于提取指定日期或时间值中的世纪部分，返回整数形式的世纪。支持处理 DATE、DATETIME 类型。
+CENTURY 函数用于提取指定日期或时间值中的世纪部分，返回整数形式的世纪。支持处理 DATE、DATETIME、TIMESTAMP_NS 类型。
 
 ## 语法  
 ```sql
@@ -20,7 +20,7 @@ CENTURY(`<date_or_time_expr>`)
 | `<date_or_time_expr>` | 要提取世纪的日期或时间值，支持输入 DATE 或 DATETIME 类型 |
 
 ## 返回值
-返回 date/datetime 类型的 year 部分，INT 类型
+返回 DATE/DATETIME/TIMESTAMP_NS 类型的 year 部分，INT 类型
 
 - 若输入的参数为 NULL，返回 NULL
 

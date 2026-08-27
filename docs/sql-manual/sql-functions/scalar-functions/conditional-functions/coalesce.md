@@ -32,7 +32,7 @@ Returns the first non-null expression in the argument list. If all arguments are
     * String types (String/VARCHAR/CHAR)
     * Boolean type (Boolean)
     * Numeric types (TinyInt, SmallInt, Int, BigInt, LargeInt, Float, Double, Decimal)
-    * Date types (Date, DateTime)
+    * Date types (Date, DateTime, TimestampNs)
     * Bitmap type (Bitmap)
     * Semi-structured types (JSON, Array, MAP, Struct)
 

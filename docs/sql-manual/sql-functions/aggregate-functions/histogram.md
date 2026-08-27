@@ -25,7 +25,7 @@ HIST(<expr>[, <num_buckets>])
 
 | Parameters | Description |
 | -- | -- |
-| `expr` | The expression to be calculated. Supported types: TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, String. |
+| `expr` | The expression to calculate. Supported types: TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, String, Date, Datetime, TimestampNs, and Timestamptz. |
 | `num_buckets` | Optional. Limit the number of histogram buckets. The default value is 128. Supported type: Integer.|
 
 

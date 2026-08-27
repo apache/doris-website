@@ -38,7 +38,7 @@
 
 使用动态分区时，需要遵守以下限制：
 
-- 动态分区只支持在 DATE/DATETIME 列上进行 Range 类型的分区；
+- 动态分区只支持在 `DATE`、`DATETIME` 或 `TIMESTAMP_NS` 列上进行 Range 类型的分区；
 - 动态分区只支持单一分区键。
 
 ## 创建动态分区

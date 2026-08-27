@@ -59,6 +59,7 @@ The following table lists the correspondence between Doris data types and Java U
 | Double | Double |
 | Date | LocalDate |
 | Datetime | LocalDateTime |
+| TimestampNs | LocalDateTime |
 | IPV4 / IPV6 | InetAddress |
 | String | String |
 | Decimal | BigDecimal |

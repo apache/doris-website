@@ -78,7 +78,7 @@ PROPERTIES (
 );
 ```
 
-> Supported types for Sequence columns: integer types, `DATE`, and `DATETIME`. **The type cannot be changed after the column is created.**
+> Supported types for Sequence columns: integer types, `DATE`, `DATETIME`, and `TIMESTAMP_NS`. **The type cannot be changed after the column is created.**
 
 After creation, the table schema is as follows:
 
@@ -304,7 +304,7 @@ When using Sequence Mapping, note the following constraints:
 | Category | Constraint |
 | --- | --- |
 | **Table creation configuration** | `light_schema_change` must be enabled. If the `sequence_mapping` property is not declared at table creation, it cannot be enabled later. |
-| **Column types** | Sequence columns only support integer types and time types (`DATE`, `DATETIME`), and the type cannot be changed after creation. |
+| **Column types** | Sequence columns only support integer types and time types (`DATE`, `DATETIME`, `TIMESTAMP_NS`), and the type cannot be changed after creation. |
 | **Column roles** | Neither Sequence columns nor mapped columns can be Key columns. All non-Key columns must be mapped to a Sequence column. |
 | **Mapping relationships** | Mapped columns of different Sequence columns **cannot overlap** (for example, `d` cannot be mapped to both `s1` and `s2`). After a mapping is established, **it cannot be modified** (for example, a column already mapped to `s1` cannot be remapped to `s2`). |
 | **DDL limitations** | Column renaming is not supported. Rollup creation is not supported. |

@@ -8,7 +8,7 @@
 
 ## Description
 
-The YEARS_DIFF function is used to calculate the complete year difference between two date or time values, with the result being the number of years from the start time to the end time. It supports processing DATE and DATETIME types, and considers the complete time difference (including months, days, hours, minutes, and seconds) when calculating.
+The YEARS_DIFF function is used to calculate the complete year difference between two date or time values, with the result being the number of years from the start time to the end time. It supports processing DATE, DATETIME, and TIMESTAMP_NS types, and considers the complete time difference (including months, days, hours, minutes, and seconds) when calculating.
 
 ## Syntax
 
@@ -20,8 +20,8 @@ YEARS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_time_expr1>` | End date, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| `<date_or_time_expr2>` | Start date, supports date/datetime types and strings conforming to date-time format |
+| `<date_or_time_expr1>` | End date, supports DATE/DATETIME/TIMESTAMP_NS types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr2>` | Start date, supports DATE/DATETIME/TIMESTAMP_NS types and strings conforming to date-time format |
 
 ## Return Value
 

@@ -88,7 +88,7 @@ Sequence 列目前只支持 Unique 模型。
 | `function_column.sequence_col` | 指定 Sequence 列映射到表中已有的某一列 | 是 |
 | `function_column.sequence_type` | 仅指定 Sequence 列的类型，使用隐藏列存储 | 否 |
 
-支持的列类型：整型、`DATE`、`DATETIME`。**列类型一旦创建后不能更改**。
+支持的列类型：整型、`DATE`、`DATETIME`、`TIMESTAMP_NS`。**列类型一旦创建后不能更改**。
 
 ### 使用示例
 

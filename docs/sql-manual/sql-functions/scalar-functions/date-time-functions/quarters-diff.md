@@ -19,8 +19,8 @@ QUARTERS_DIFF(<enddate>, <startdate>)
 
 | Parameter     | Description                                                                           |
 |---------------|--------------------------------------------------------------------------------------|
-| `<enddate>`   | End date, represents the later date when calculating the difference. Supports `DATE` or `DATETIME` types |
-| `<startdate>` | Start date, represents the earlier date when calculating the difference. Supports `DATE` or `DATETIME` types |
+| `<enddate>`   | End date. Supports `DATE`, `DATETIME`, or `TIMESTAMP_NS`. |
+| `<startdate>` | Start date. Supports `DATE`, `DATETIME`, or `TIMESTAMP_NS`. |
 
 ## Return Value
 

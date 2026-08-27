@@ -251,7 +251,7 @@ CREATE TABLE <table_name> LIKE <source_table>
 > - 数值字面量：只能是数值类型时使用。
 > - 字符串字面量：只能是字符串类型时使用。
 > - CURRENT_DATE：只能是 date 类型时使用。用当前日期作为默认值。
-> - CURRENT_TIMESTAMP [ <defaultValuePrecision> ]：只能是 datetime 类型时使用。用当前时间作为默认值。<defaultValuePrecision> 可以指定时间精度。
+> - CURRENT_TIMESTAMP [ <defaultValuePrecision> ]：仅可用于 `DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ` 类型。使用当前时间作为默认值。<defaultValuePrecision> 可以指定时间精度，其中 `TIMESTAMP_NS` 最高支持 9 位。
 > - PI：只能是 double 类型时使用。用圆周率作为默认值。
 > - E：只能是 double 类型时使用。用数学常数作为默认值。
 > - BITMAP_EMPTY：只能当列是 bitmap 类型时使用。填充空的 bitmap。
@@ -356,8 +356,8 @@ rollup 可以创建的同步物化视图功能有限。已不再推荐使用。�
 | colocate_with                                 | 当需要使用 Colocation Join 功能时，使用这个参数设置 Colocation Group。 |
 | bloom_filter_columns                          | 用户指定需要添加 Bloom Filter 索引的列名称列表。各个列的 Bloom Filter 索引是独立的，并不是组合索引。列如：`"bloom_filter_columns" = "k1, k2, k3"` |
 | compression                                   | Doris 表的默认压缩方式是 LZ4。1.1 版本后，支持将压缩方式指定为 ZSTD 以获得更高的压缩比。 |
-| function_column.sequence_col                  | 当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换) 。`function_column.sequence_col`用来指定 sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。 |
-| function_column.sequence_type                 | 当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换) 这里我们仅需指定顺序列的类型，支持时间类型或整型。Doris 会创建一个隐藏的顺序列。 |
+| function_column.sequence_col                  | 当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换) 。`function_column.sequence_col`用来指定 sequence 列到表中某一列的映射，该列可以为整型和时间类型（`DATE`、`DATETIME`、`TIMESTAMP_NS`），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。 |
+| function_column.sequence_type                 | 当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换) 这里我们仅需指定顺序列的类型，支持时间类型（`DATE`、`DATETIME`、`TIMESTAMP_NS`）或整型。Doris 会创建一个隐藏的顺序列。 |
 | enable_unique_key_merge_on_write              | Unique 表是否使用 Merge-on-Write 实现。该属性在 2.1 版本之前默认关闭，从 2.1 版本开始默认开启。 |
 | light_schema_change                           | 是否使用 Light Schema Change 优化。如果设置成 `true`, 对于值列的加减操作，可以更快地，同步地完成。该功能在 2.0.0 及之后版本默认开启。 |
 | disable_auto_compaction                       | 是否对这个表禁用自动 Compaction。如果这个属性设置成 `true`, 后台的自动 Compaction 进程会跳过这个表的所有 Tablet。 |

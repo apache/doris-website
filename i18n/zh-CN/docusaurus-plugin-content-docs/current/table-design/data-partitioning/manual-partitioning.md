@@ -25,7 +25,7 @@
 
 Range 分区按照分区列的取值范围将数据划分到不同分区。分区列通常为时间列，便于管理新旧数据。
 
-**支持的列类型：** `DATE`、`DATETIME`、`TIMESTAMPTZ`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`。
+**支持的列类型：** `DATE`、`DATETIME`、`TIMESTAMP_NS`、`TIMESTAMPTZ`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`。
 
 Range 分区支持以下四种写法，适用于不同场景：
 
@@ -141,7 +141,7 @@ PARTITION BY RANGE(col)
 
 List 分区按照分区列的枚举值将数据划分到不同分区。只有当数据为目标分区枚举值其中之一时，才可以命中分区。
 
-**支持的列类型：** `BOOLEAN`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`DATE`、`DATETIME`、`TIMESTAMPTZ`、`CHAR`、`VARCHAR`。
+**支持的列类型：** `BOOLEAN`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`DATE`、`DATETIME`、`TIMESTAMP_NS`、`TIMESTAMPTZ`、`CHAR`、`VARCHAR`。
 
 **语法关键字：** 通过 `VALUES IN (...)` 指定每个分区包含的枚举值。
 

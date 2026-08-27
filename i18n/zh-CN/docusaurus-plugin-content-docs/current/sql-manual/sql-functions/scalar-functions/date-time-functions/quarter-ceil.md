@@ -34,6 +34,10 @@ QUARTER_CEIL(<datetime>, <period>, <origin>)
 
 ## 返回值
 
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
+
+对 `TIMESTAMP_NS` 输入省略 `<origin>` 时，文档中的默认起点仅作为内部对齐基准使用，无需位于 `TIMESTAMP_NS` 的可存储范围内。
+
 当 `<datetime>` 为 DATE 类型时，返回类型为 DATE。
 当 `<datetime>` 为 DATETIME 类型时，返回类型为 DATETIME。
 表示向上取整后的日期时间值。结果的时间部分将被设置为 00:00:00。

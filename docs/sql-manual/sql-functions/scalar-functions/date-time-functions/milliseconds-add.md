@@ -20,12 +20,14 @@ MILLISECONDS_ADD(`<datetime>`, `<delta>`)
 
 | Parameter    | Description                                                                                   |
 |--------------|-----------------------------------------------------------------------------------------------|
-| `<datetime>` | The input datetime value. Supports the `DATETIME` type. For specific datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
+| `<datetime>` | The input datetime value. Supports `DATETIME` and `TIMESTAMP_NS`. For specific formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [TIMESTAMP_NS conversion](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md). |
 | `<delta>`    | The number of milliseconds to add, of type `BIGINT`. 1 second = 1,000 milliseconds = 1,000,000 microseconds. |
 
 ## Return Value
 
-Returns a value of type `DATETIME`, representing the result of adding the specified milliseconds to the base time.
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
+Returns the same temporal type as the input, representing the result of adding the specified milliseconds to the base time.
 
 - If `<delta>` is negative, the function behaves the same as subtracting the corresponding milliseconds from the base time (i.e., `MILLISECONDS_ADD(basetime, -n)` is equivalent to `MILLISECONDS_SUB(basetime, n)`).
 - If the input is of `DATE` type (only includes year, month, and day), the default time part is set to `00:00:00.000`.

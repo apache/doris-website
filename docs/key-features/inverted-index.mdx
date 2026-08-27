@@ -39,7 +39,7 @@ The Apache Doris inverted index handles all three with the same DDL.
 
 The Apache Doris inverted index is a column-level secondary index that maps each value, or each tokenized term for text columns, to the set of row IDs that contain it. It is built on top of [CLucene](https://github.com/apache/doris-thirdparty/tree/clucene), a C++ port of Lucene, and is fully integrated with Apache Doris columnar storage and vectorized execution.
 
-An inverted index is declared in DDL with `INDEX <name>(<col>) USING INVERTED [PROPERTIES(...)]`. Supported column types include the integer family, `DECIMAL`, `DATE`, `DATETIME`, `IPV4`, `IPV6`, `CHAR`/`VARCHAR`/`STRING`, and `ARRAY<T>` of those. For text columns you can attach a `parser` to control tokenization.
+An inverted index is declared in DDL with `INDEX <name>(<col>) USING INVERTED [PROPERTIES(...)]`. Supported column types include the integer family, `DECIMAL`, `DATE`, `DATETIME`, `TIMESTAMP_NS`, `IPV4`, `IPV6`, `CHAR`/`VARCHAR`/`STRING`, and `ARRAY<T>` of those. For text columns you can attach a `parser` to control tokenization.
 
 **Key terms**
 

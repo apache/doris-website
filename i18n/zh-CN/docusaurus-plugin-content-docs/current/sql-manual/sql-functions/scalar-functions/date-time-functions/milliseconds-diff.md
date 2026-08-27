@@ -8,7 +8,7 @@
 
 ## 描述
 
-MILLISECONDS_DIFF 函数用于计算两个日期时间值之间的毫秒差值，结果为结束时间减去开始时间的毫秒数。该函数支持处理DATETIME 类型。
+MILLISECONDS_DIFF 函数用于计算两个日期时间值之间的毫秒差值，结果为结束时间减去开始时间的毫秒数。该函数支持 `DATETIME` 和 `TIMESTAMP_NS`。
 
 ## 语法
 
@@ -20,8 +20,8 @@ MILLISECONDS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr1>` | 结束时间，支持输入 datetime 类型，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
-| `<date_or_time_expr2>` | 结束时间，支持输入 datetime 类型，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)|
+| `<date_or_time_expr1>` | 结束时间，类型为 `DATETIME` 或 `TIMESTAMP_NS`。 |
+| `<date_or_time_expr2>` | 开始时间，类型为 `DATETIME` 或 `TIMESTAMP_NS`。 |
 
 ## 返回值
 

@@ -25,14 +25,16 @@ TIMESTAMP(<date_or_datetime_string>[, <time_string>])
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `date_or_datetime_string` | 日期时间字符串类型 |
+| `date_or_datetime_string` | 日期或日期时间字符串，或 `DATETIME`、`TIMESTAMP_NS` 表达式。 |
 | `time_string` | 时间字符串类型 |
 
 ## 返回值
 
-返回类型为 DATETIME。
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
 
-当输入参数数量为 1 时，返回将第一个参数转换为 DATETIME 类型的结果。
+日期、日期时间和字符串输入返回 `DATETIME`；`TIMESTAMP_NS` 输入返回 `TIMESTAMP_NS`。
+
+输入一个参数时，按照第一个参数对应的日期时间类型返回结果。
 当输入参数数量为 2 时，返回两参数相加的结果
 
 - 若第一个参数输入为 date 字符串,则时间被设置为 00:00:00

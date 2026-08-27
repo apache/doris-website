@@ -20,12 +20,14 @@ MILLISECONDS_SUB(`<datetime>`, `<delta>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<datetime>` | 输入的日期时间值，类型为 DATETIME ，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)  |
+| `<datetime>` | 输入的日期时间值，类型为 `DATETIME` 或 `TIMESTAMP_NS`。具体格式请参见 [DATETIME 转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)和 [TIMESTAMP_NS 转换](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md)。 |
 | `<delta>` | 要减去的毫秒数，类型为 BIGINT，1 秒 = 1,000 毫秒 = 1,000,000 微秒 |
 
 ## 返回值
 
-返回 DATETIME 类型的值，表示基准时间减去指定毫秒后的结果.
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
+
+返回与输入相同的日期时间类型，表示基准时间减去指定毫秒后的结果。
 
 - 若 `<delta>` 为负数，函数效果等同于向基准时间中添加对应毫秒数
 - 若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00.000。

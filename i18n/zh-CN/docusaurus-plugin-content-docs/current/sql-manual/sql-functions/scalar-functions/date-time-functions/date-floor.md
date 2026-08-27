@@ -36,7 +36,11 @@ $type$ 代表的是周期单位
 
 ## 返回值
 
-返回类型为 TIMESTAMPTZ, DATETIME 或 DATE。返回一个日期按照 period 周期向下取整的结果，类型和 `<date_or_time_expr>` 保持一致。
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
+
+对 `TIMESTAMP_NS` 输入省略 `<origin>` 时，文档中的默认起点仅作为内部对齐基准使用，无需位于 `TIMESTAMP_NS` 的可存储范围内。
+
+返回类型为 TIMESTAMPTZ、TIMESTAMP_NS、DATETIME 或 DATE。返回一个日期按照 period 周期向下取整的结果，类型和 `<date_or_time_expr>` 保持一致。
 
 返回与 datetime 类型一致的取整结果：
 - 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`),再进行 DATE_FLOOR 计算操作。

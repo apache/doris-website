@@ -37,7 +37,11 @@ $type$ represents the unit of period
 
 ## Return Value
 
-The return type is TIMESTAMPTZ, DATETIME, or DATE. Returns a date or time value representing the result of rounding up the input value to the specified unit.
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
+When `<origin>` is omitted for a `TIMESTAMP_NS` input, the documented default origin is used only as an internal alignment reference; it does not need to fall within the storable `TIMESTAMP_NS` range.
+
+The return type is TIMESTAMPTZ, TIMESTAMP_NS, DATETIME, or DATE. Returns a date or time value representing the result of rounding up the input value to the specified unit.
 
 Returns a rounded result consistent with the `<date_or_time_expr>` type:
 - If the input is TIMESTAMPTZ type, it is first converted to local_time (e.g., `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then the DATE_CEIL calculation is performed.

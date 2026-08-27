@@ -7,7 +7,7 @@
 ---
 
 ## Description
-The WEEKS_SUB function is used to subtract (or add) a specified number of weeks from a given date or time value, returning the adjusted date or time (essentially subtracting weeks_value × 7 days). It supports processing DATE, DATETIME and TIMESTAMPTZ types.
+The WEEKS_SUB function is used to subtract (or add) a specified number of weeks from a given date or time value, returning the adjusted date or time (essentially subtracting weeks_value × 7 days). It supports processing DATE, DATETIME, TIMESTAMP_NS, and TIMESTAMPTZ types.
 
 This function is consistent with the [weeks_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weeks-sub) using WEEK as the unit in MySQL.
 
@@ -19,10 +19,12 @@ WEEKS_SUB(`<date_or_time_expr>`, `<week_period>`)
 ## Parameters
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_time_expr>` | Input datetime value, supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | Input datetime value, supports DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | `week_period` | INT type integer, representing the number of weeks to subtract (positive for subtraction, negative for addition). |
 
 ## Return Value
+
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
 Returns the date or time with the specified number of weeks subtracted, the return value type is determined by the type of the first parameter:
 
 - If input is DATE type, return value is DATE type (only adjusts year, month, day).

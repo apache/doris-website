@@ -113,7 +113,7 @@ CAST involving VARIANT has two directions: converting a supported SQL value to V
 | `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT` | Preserves the integer value. |
 | `FLOAT`, `DOUBLE` | Preserves the floating-point value. |
 | `DECIMALV2`, `DECIMAL(p, s)` with `p <= 38` | Preserves the Decimal value, subject to the limits below. |
-| `DATE`, `DATETIME`, `TIMESTAMPTZ` | Preserves the typed logical value. |
+| `DATE`, `DATETIME`, `TIMESTAMP_NS`, `TIMESTAMPTZ` | Preserves the typed logical value. |
 | `IPV4`, `IPV6` | Preserves the IP address value. |
 | `JSON` / `JSONB` | Converts the structured value directly to VARIANT. If the input contains a JSONB value type that VARIANT cannot represent, the BE returns an error. |
 | `ARRAY<T>` | Converts each element recursively when `T` is `VARIANT` or is also in this whitelist, and preserves SQL NULL elements. |
@@ -147,7 +147,7 @@ VARIANT can be cast to a compatible scalar, JSON/JSONB, or array target:
 | `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT` | Converts a compatible scalar root to the requested integer type. |
 | `FLOAT`, `DOUBLE` | Converts a compatible numeric root. |
 | `DECIMALV2`, `DECIMAL(p, s)` | Converts a compatible numeric root to the requested Decimal type. |
-| `DATE`, `DATETIME`, `TIMESTAMPTZ` | Converts a compatible date/time root. |
+| `DATE`, `DATETIME`, `TIMESTAMP_NS`, `TIMESTAMPTZ` | Converts a compatible date/time root. |
 | `CHAR`, `VARCHAR`, `STRING` | Returns scalar text for scalar roots and JSON text for objects and arrays. Variant/JSON `null` becomes the string `null`; outer SQL `NULL` remains SQL `NULL`. |
 | `IPV4`, `IPV6` | Converts a compatible IP address root to the requested IP address type. |
 | `JSON` / `JSONB` | Converts the value structurally. If the VARIANT value contains a type that JSON/JSONB cannot represent, the BE returns an error. |
@@ -175,6 +175,7 @@ SELECT CAST(PARSE_TO_VARIANT('{"id": 1}') AS JSON) AS json_value;
 | `DATE` | Preserved as a calendar date with no time or time zone. |
 | Legacy `DATETIME` | Preserved with whole-second precision and no time-zone adjustment. |
 | `DATETIME(p)` | Supports `0 <= p <= 6` with no time-zone adjustment. |
+| `TIMESTAMP_NS` | Preserves fixed nanosecond precision with no time-zone adjustment; values must be within the TIMESTAMP_NS range. |
 | `TIMESTAMPTZ(p)` | Supports `0 <= p <= 6` with time-zone-adjusted timestamp semantics. |
 | Decimal precision greater than 38 | Not supported as input to VARIANT. |
 | `TIME` | Not supported as input to VARIANT. |

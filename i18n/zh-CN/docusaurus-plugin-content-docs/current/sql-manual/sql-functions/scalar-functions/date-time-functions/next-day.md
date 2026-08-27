@@ -2,13 +2,13 @@
 {
     "title": "NEXT_DAY",
     "language": "cn",
-    "description": "NEXTDAY 函数用于返回指定日期之后第一个匹配目标星期几的日期，例如 NEXTDAY('2020-01-31', 'MONDAY') 表示 2020-01-31 之后的第一个周一。该函数支持处理 DATE、DATETIME 类型，忽略输入中的时间部分（仅基于日期部分计算）。"
+    "description": "NEXTDAY 函数用于返回指定日期之后第一个匹配目标星期几的日期，例如 NEXTDAY('2020-01-31', 'MONDAY') 表示 2020-01-31 之后的第一个周一。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，忽略输入中的时间部分（仅基于日期部分计算）。"
 }
 ---
 
 ## 描述
 
-NEXT_DAY 函数用于返回指定日期之后第一个匹配目标星期几的日期，例如 NEXT_DAY('2020-01-31', 'MONDAY') 表示 2020-01-31 之后的第一个周一。该函数支持处理 DATE、DATETIME 类型，忽略输入中的时间部分（仅基于日期部分计算）。
+NEXT_DAY 函数用于返回指定日期之后第一个匹配目标星期几的日期，例如 NEXT_DAY('2020-01-31', 'MONDAY') 表示 2020-01-31 之后的第一个周一。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，忽略输入中的时间部分（仅基于日期部分计算）。
 
 该函数与 Orcle 的 [next_day 函数](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/NEXT_DAY.html) 行为一致
 
@@ -22,7 +22,7 @@ NEXT_DAY(`<date_or_time_expr>`, `<day_of_week>`)
 
 | 参数              | 描述                                                         |
 |-------------------|--------------------------------------------------------------|
-| ``<date_or_time_expr>`` | 支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。                                 |
+| ``<date_or_time_expr>`` | 支持输入 DATE/DATETIME/TIMESTAMP_NS 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。                                 |
 | ``<day_of_week>``   | 用于标识星期几的字符串表达式，为字符串类型。                               |
 
 

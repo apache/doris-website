@@ -40,7 +40,11 @@ HOUR_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 ## Return Value
 
-Returns a TIMESTAMPTZ, DATETIME or DATE type value representing the nearest period moment after rounding up.
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
+When `<origin>` is omitted for a `TIMESTAMP_NS` input, the documented default origin is used only as an internal alignment reference; it does not need to fall within the storable `TIMESTAMP_NS` range.
+
+Returns a TIMESTAMPTZ, TIMESTAMP_NS, DATETIME, or DATE type value representing the nearest period moment after rounding up.
 
 - If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform CEIL calculation.
 - If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.

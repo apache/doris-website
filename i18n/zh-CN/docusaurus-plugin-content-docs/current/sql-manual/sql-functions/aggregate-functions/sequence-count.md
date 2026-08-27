@@ -25,7 +25,7 @@ SEQUENCE_COUNT(<pattern>, <timestamp>, <cond_1> [, <cond_2>, ..., <cond_n>]);
 | 参数 | 说明 |
 | -- | -- |
 | `<pattern>` | 模式字符串，可参考下面的**模式语法**。支持类型为 String。 |
-| `<timestamp>` | 包含时间的列。支持类型为Date，DateTime。|
+| `<timestamp>` | 包含时间的列，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`。|
 | `<cond_n>` | 事件链的约束条件。支持类型为 Bool。最多可以传递 32 个条件参数。该函数只考虑这些条件中描述的事件。如果序列包含未在条件中描述的数据，则函数将跳过这些数据。 |
 
 **模式语法**

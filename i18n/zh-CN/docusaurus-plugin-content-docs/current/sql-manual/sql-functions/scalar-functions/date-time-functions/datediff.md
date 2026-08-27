@@ -22,8 +22,8 @@ DATEDIFF(<expr1>, <expr2>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr1>` | 日期被减数，支持的类型为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) |
-| `<expr2>` | 日期减数，支持的类型为 date 和 datetime |
+| `<expr1>` | 日期被减数，支持 `DATE`、`DATETIME` 或 `TIMESTAMP_NS`。 |
+| `<expr2>` | 日期减数，支持 `DATE`、`DATETIME` 或 `TIMESTAMP_NS`。 |
 
 ## 返回值
 

@@ -56,6 +56,8 @@ DATE_SUB(<date_or_time_part>, INTERVAL <expr> <time_unit>)
 
 ## Return Value
 
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
 Returns a calculated result with the same type as date:
 - When input is DATE, returns DATE (date part only);
 - When input is DATETIME, returns DATETIME (including date and time).

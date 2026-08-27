@@ -7,7 +7,7 @@
 ---
 
 ## Description
-The WEEKS_DIFF function calculates the difference in complete weeks between two date or time values, with the result being the number of weeks from the end time minus the start time (treating 7 days as 1 week). It supports processing DATE, DATETIME types and properly formatted strings, considering the complete time difference (including hours, minutes, seconds) in calculations.
+The WEEKS_DIFF function calculates the difference in complete weeks between two date or time values, with the result being the number of weeks from the end time minus the start time (treating 7 days as 1 week). It supports processing DATE, DATETIME, TIMESTAMP_NS types and properly formatted strings, considering the complete time difference (including hours, minutes, seconds) in calculations.
 
 ## Syntax
 
@@ -18,8 +18,8 @@ WEEKS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 ## Parameters
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_time_expr1>` | Later date or datetime, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| `<date_or_time_expr2>` | Earlier date or datetime, supports date/datetime types |
+| `<date_or_time_expr1>` | Later date or datetime, supports DATE/DATETIME/TIMESTAMP_NS types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr2>` | Earlier date or datetime, supports DATE/DATETIME/TIMESTAMP_NS types |
 
 ## Return Value
 

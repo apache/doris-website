@@ -2,13 +2,13 @@
 {
     "title": "MICROSECONDS_DIFF",
     "language": "zh-CN",
-    "description": "MICROSECONDSDIFF 函数用于计算两个日期时间值之间的微秒差值，结果为结束时间减去开始时间的微秒数。该函数支持处理含微秒精度的 DATETIME 类型。"
+    "description": "计算 DATETIME 或 TIMESTAMP_NS 值之间的完整微秒差，支持两种类型混合输入。"
 }
 ---
 
 ## 描述
 
-MICROSECONDS_DIFF 函数用于计算两个日期时间值之间的微秒差值，结果为结束时间减去开始时间的微秒数。该函数支持处理含微秒精度的 DATETIME 类型。
+MICROSECONDS_DIFF 函数用于计算两个日期时间值之间的微秒差值，结果为结束时间减去开始时间所得的完整微秒数。该函数支持 DATETIME 和 TIMESTAMP_NS，也支持两种类型混合输入。
 
 ## 语法
 
@@ -20,8 +20,8 @@ MICROSECONDS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr1>` | 结束时间，类型为 DATETIME，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
-| `<date_or_time_expr2>` | 开始时间，类型为 DATETIME 或 符合格式的字符串，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<date_or_time_expr1>` | 结束时间，类型为 DATETIME 或 TIMESTAMP_NS。支持的格式请参见 [DATETIME 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)和 [TIMESTAMP_NS 的转换](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md)。 |
+| `<date_or_time_expr2>` | 开始时间，类型为 DATETIME、TIMESTAMP_NS 或符合格式的日期时间字符串。 |
 
 ## 返回值
 
@@ -30,6 +30,7 @@ MICROSECONDS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 - 如果 `<date_or_time_expr1>` 小于 `<date_or_time_expr2>`，返回负数
 - 1 秒 = 1,000,000 微秒
 - 若两个时间完全相同（包括微秒部分），返回 0。
+- 不足一个完整微秒的剩余纳秒会向零截断。如需精确的纳秒差值，请使用 [NANOSECONDS_DIFF](./nanoseconds-diff)。
 - 若任一参数为 NULL，返回 NULL。
 
 
@@ -52,6 +53,17 @@ SELECT MICROSECONDS_DIFF('2023-10-01 12:00:00.500000', '2023-10-01 12:00:00.8000
 +-------------------------------------------------------------------------------+
 |                                                                       -300000 |
 +-------------------------------------------------------------------------------+
+
+--- TIMESTAMP_NS 可按纳秒精度比较；不足一个微秒的部分会被截断
+SELECT MICROSECONDS_DIFF(
+    CAST('2025-01-02 03:04:05.123457788' AS TIMESTAMP_NS),
+    CAST('2025-01-02 03:04:05.123456789' AS TIMESTAMP_NS)
+);
++----------------------------------------------------------------------------------------------------+
+| MICROSECONDS_DIFF(CAST('2025-01-02 03:04:05.123457788' AS TIMESTAMP_NS), CAST('2025-01-02 03:04:05.123456789' AS TIMESTAMP_NS)) |
++----------------------------------------------------------------------------------------------------+
+|                                                                                                  0 |
++----------------------------------------------------------------------------------------------------+
 
 ---输入类型为 date ,时间部分会自动设置为 00:00:00.000000
 SELECT MICROSECONDS_DIFF('2023-10-01 12:00:00.500000', '2023-10-01');

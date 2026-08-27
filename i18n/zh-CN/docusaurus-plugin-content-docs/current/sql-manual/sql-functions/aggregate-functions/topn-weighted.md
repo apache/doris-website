@@ -19,7 +19,7 @@ TOPN_WEIGHTED(<expr>, <weight>, <top_num> [, <space_expand_rate>])
 ## 参数
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 要统计的列或表达式，支持类型为 TinyInt，SmallInt，Integer，BigInt，LargeInt，Float，Double，Decimal，Date，Datetime，IPV4，IPV6，String。 |
+| `<expr>` | 要统计的列或表达式，支持类型为 TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Date、Datetime、TimestampNs、IPV4、IPV6、String。 |
 | `<weight>` | 用于调整权重的列或表达式，支持类型为 Double。|
 | `<top_num>` | 要返回的最高频率值的数量，必须是正整数，支持类型为 Integer。 |
 | `<space_expand_rate>` | 可选项，该值用来设置 Space-Saving 算法中使用的 counter 个数`counter_numbers = top_num * space_expand_rate` space_expand_rate 的值越大，结果越准确，默认值为 50，支持类型为 Integer。 |

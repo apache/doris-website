@@ -11,7 +11,7 @@
 
 ## 描述
 
-DATE 函数用于从日期时间值(包含日期和时间)中提取出纯日期部分，忽略时间信息。该函数可将 DATETIME 类型转换为 DATE 类型，仅保留年、月、日信息。
+DATE 函数从 `DATETIME` 或 `TIMESTAMP_NS` 值中提取日期部分，忽略时间和小数秒字段。
 
 该函数与 mysql 中的 [date 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date) 行为一致
 
@@ -25,7 +25,7 @@ DATE(<date_or_time_part>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_part>` | 合法的日期表达式,支持的类型为 datetime ，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)) |
+| `<date_or_time_part>` | `DATETIME` 或 `TIMESTAMP_NS` 表达式。 |
 
 ## 返回值
 
