@@ -2989,7 +2989,7 @@ Before using Python UDF/UDAF/UDTF, make sure that the Python runtime environment
 
 Doris provides two ways to manage Python environments:
 
-- **Conda mode**: Manage multi-version environments with Miniconda/Anaconda.
+- **Conda mode**: Manage multi-version environments with Conda. All subsequent examples use Miniforge. Other Conda distributions, including Miniconda and Anaconda, are also supported.
 - **Venv mode**: Manage multi-version environments with the built-in Python virtual environment (venv).
 
 ### Installing and Using Third-party Libraries
@@ -3036,7 +3036,7 @@ Set the following parameters in the `be.conf` configuration file on every BE nod
 | --- | --- | --- | --- | --- |
 | `enable_python_udf_support` | bool | `true` / `false` | `false` | Whether to enable the Python UDF feature |
 | `python_env_mode` | string | `conda` / `venv` | `""` | The Python multi-version environment management mode |
-| `python_conda_root_path` | string | Directory path | `""` | The root directory of Miniconda<br/>Effective only when `python_env_mode = conda` |
+| `python_conda_root_path` | string | Directory path | `""` | The root directory of the Conda installation<br/>Effective only when `python_env_mode = conda` |
 | `python_venv_root_path` | string | Directory path | `${DORIS_HOME}/lib/udf/python` | The root directory of venv multi-version management<br/>Effective only when `python_env_mode = venv` |
 | `python_venv_interpreter_paths` | string | Path list (separated by `:`) | `""` | The list of available Python interpreter directories<br/>Effective only when `python_env_mode = venv` |
 | `max_python_process_num` | int32 | Integer | `0` | The maximum number of processes in the Python Server process pool<br/>`0` means using the CPU core count as the default. You can set another positive integer to override the default |
@@ -3051,7 +3051,7 @@ Add the following configuration to `be.conf`:
 ## be.conf
 enable_python_udf_support = true
 python_env_mode = conda
-python_conda_root_path = /path/to/miniconda3
+python_conda_root_path = /path/to/miniforge3
 ```
 
 #### 2. Environment Lookup Rules
@@ -3075,7 +3075,7 @@ Doris looks up Conda environments under `${python_conda_root_path}/envs/` that m
 ```
 ## File system layout on a Doris BE node (Conda mode)
 
-/path/to/miniconda3                  ← python_conda_root_path (configured in be.conf)
+/path/to/miniforge3                  ← python_conda_root_path (configured in be.conf)
 │
 ├── bin/
 │   ├── conda                        ← conda CLI (used for operations)
@@ -3119,24 +3119,24 @@ The Doris Python UDF/UDAF/UDTF feature has **mandatory dependencies** on `pandas
 Run the following commands **on all BE nodes** to create the Python environments:
 
 ```bash
-# Install Miniconda (when not yet installed)
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3
+# Install Miniforge (when not yet installed)
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+bash Miniforge3-Linux-x86_64.sh -b -p /opt/miniforge3
 
 # Create a Python 3.9.18 environment and install required dependencies (the environment name can be customized)
-/opt/miniconda3/bin/conda create -n py39 python=3.9.18 pandas pyarrow -y
+/opt/miniforge3/bin/conda create -n py39 python=3.9.18 pandas pyarrow -y
 
 # Create a Python 3.12.11 environment and pre-install dependencies (Important: the Python version must be specified exactly, and pandas and pyarrow must be installed)
-/opt/miniconda3/bin/conda create -n py312 python=3.12.11 pandas pyarrow numpy -y
+/opt/miniforge3/bin/conda create -n py312 python=3.12.11 pandas pyarrow numpy -y
 
 # Activate an environment and install additional dependencies
-source /opt/miniconda3/bin/activate py39
+source /opt/miniforge3/bin/activate py39
 conda install requests beautifulsoup4 -y
 conda deactivate
 
 # Verify the Python version in the environment
-/opt/miniconda3/envs/py39/bin/python --version     # Should output: Python 3.9.18
-/opt/miniconda3/envs/py312/bin/python --version    # Should output: Python 3.12.11
+/opt/miniforge3/envs/py39/bin/python --version     # Should output: Python 3.9.18
+/opt/miniforge3/envs/py312/bin/python --version    # Should output: Python 3.12.11
 ```
 
 #### 5. Use in a UDF
@@ -3312,8 +3312,8 @@ Before configuring, verify that the paths are correct:
 
 ```bash
 # Conda mode: verify the conda path
-ls -la /opt/miniconda3/bin/conda
-/opt/miniconda3/bin/conda env list
+ls -la /opt/miniforge3/bin/conda
+/opt/miniforge3/bin/conda env list
 
 # Venv mode: verify interpreter paths
 /opt/python3.9/bin/python3.9 --version
@@ -3326,7 +3326,7 @@ Ensure the Doris BE process has permission to access the Python environment dire
 
 ```bash
 # Conda mode
-chmod -R 755 /opt/miniconda3
+chmod -R 755 /opt/miniforge3
 
 # Venv mode
 chmod -R 755 /doris/python_envs
@@ -3354,8 +3354,8 @@ max_python_process_num = 32
 
 ```bash
 # Conda mode
-/opt/miniconda3/envs/py39/bin/python --version
-/opt/miniconda3/envs/py39/bin/python -c "import pandas; print(pandas.__version__)"
+/opt/miniforge3/envs/py39/bin/python --version
+/opt/miniforge3/envs/py39/bin/python -c "import pandas; print(pandas.__version__)"
 
 # Venv mode
 /doris/python_envs/python3.9.18/bin/python --version
@@ -3369,11 +3369,11 @@ SHOW PYTHON VERSIONS;
 ```
 
 ```text
-+---------+---------+---------+-------------------+----------------------------------------+
-| Version | EnvName | EnvType | BasePath          | ExecutablePath                         |
-+---------+---------+---------+-------------------+----------------------------------------+
-| 3.9.18  | py39    | conda   | path/to/miniconda | path/to/miniconda/envs/py39/bin/python |
-+---------+---------+---------+-------------------+----------------------------------------+
++---------+---------+---------+--------------------+-----------------------------------------+
+| Version | EnvName | EnvType | BasePath           | ExecutablePath                          |
++---------+---------+---------+--------------------+-----------------------------------------+
+| 3.9.18  | py39    | conda   | path/to/miniforge3 | path/to/miniforge3/envs/py39/bin/python |
++---------+---------+---------+--------------------+-----------------------------------------+
 ```
 
 #### Show Installed Dependencies for a Given Version
@@ -3500,7 +3500,7 @@ grep python /path/to/be.conf
 
 :::caution Caution
 - Make sure `pandas` and `pyarrow` appear in the dependency file and that the same versions are installed on all BE nodes.
-- During installation, use the Python interpreter or Conda path that matches the Doris configuration (such as `/opt/miniconda3/bin/conda` or the specified venv interpreter).
+- During installation, use the Python interpreter or Conda path that matches the Doris configuration (such as `/opt/miniforge3/bin/conda` or the specified venv interpreter).
 - Put the dependency file under version control or in shared storage so that operations can distribute it uniformly to all BE nodes.
 - Further reading: [pip official documentation](https://pip.pypa.io/en/stable/cli/pip/), [Conda environment export/import guide](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#exporting-the-environment).
 :::
