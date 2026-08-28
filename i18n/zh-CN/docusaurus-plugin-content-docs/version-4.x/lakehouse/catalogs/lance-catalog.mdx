@@ -83,7 +83,7 @@ Filesystem Catalog 直接从 Warehouse 目录发现 Lance Namespace 和表。
 
 | 属性 | 是否必需 | 说明 |
 |---|---|---|
-| `warehouse` | 是 | Lance Warehouse 根路径。支持本地绝对路径、`file://` URI 和 `s3://` URI。 |
+| `warehouse` | 是 | Lance Warehouse 根路径。支持本地绝对路径、`file://` URI、`s3://` URI 和 `oss://` URI。 |
 
 #### 使用 S3 兼容对象存储
 
@@ -103,6 +103,24 @@ CREATE CATALOG lance_catalog PROPERTIES (
 ```
 
 访问 AWS S3 时，可以省略 `s3.endpoint`，并按实际环境配置访问密钥、Region 和 Path Style。
+
+#### 使用阿里云 OSS
+
+```sql
+CREATE CATALOG lance_oss PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "filesystem",
+    "warehouse" = "oss://my-bucket/lance",
+    "oss.endpoint" = "oss-cn-beijing.aliyuncs.com",
+    "oss.region" = "cn-beijing",
+    "oss.access_key" = "<ak>",
+    "oss.secret_key" = "<sk>"
+);
+```
+
+`warehouse` 也支持带 Endpoint 的形式 `oss://my-bucket.oss-cn-beijing.aliyuncs.com/lance`，Doris 会在打开 Namespace 前将其还原为 Bucket。`warehouse` 必须指定 Bucket，因此 `oss:/lance` 这类根路径会在创建 Catalog 时被拒绝。
+
+使用 STS 临时凭证访问 OSS 时，可以增加 `"oss.session_token" = "<token>"`。仅当 Endpoint 要求 Path Style 寻址时才需要设置 `"oss.use_path_style" = "true"`，OSS 默认使用 Virtual Hosted Style。
 
 #### 使用本地文件系统
 
@@ -147,7 +165,19 @@ CREATE CATALOG lance_rest PROPERTIES (
 "lance.rest.api-key" = "your-api-key"
 ```
 
-如果 REST 服务返回临时存储凭证，Doris 会使用这些凭证访问对应的 Lance 表。也可以在 Catalog 中配置 `s3.endpoint`、`s3.access_key`、`s3.secret_key`、`s3.region` 和 `use_path_style`，作为默认的对象存储访问参数。
+如果 REST 服务返回临时存储凭证，Doris 会使用这些凭证访问对应的 Lance 表。也可以在 Catalog 中配置默认的对象存储访问参数：S3 兼容存储使用 `s3.endpoint`、`s3.access_key`、`s3.secret_key`、`s3.region` 和 `use_path_style`，OSS 使用 `oss.endpoint`、`oss.access_key`、`oss.secret_key`、`oss.region` 和 `oss.session_token`。
+
+对于同一张表，Namespace 下发的凭证优先于 Catalog 中配置的凭证。因此，当 Namespace 能够下发完整凭证时，创建 Catalog 时无需保存任何访问密钥：
+
+```sql
+CREATE CATALOG lance_rest_oss PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "rest",
+    "lance.rest.uri" = "https://lance.example.com"
+);
+```
+
+对于 OSS 表，Namespace 下发的存储选项可以写成 `oss_endpoint`、`oss_access_key_id`、`oss_secret_access_key`、`oss_region`、`oss_security_token`，也可以写成 OSS 原生的 `endpoint`、`access_key_id`、`access_key_secret`、`region`、`security_token`。Doris 同时接受这两种写法，并将其视为同一个选项。如果同一个选项以两种写法下发且取值不同，则会报错。
 
 :::caution
 当前 BE Reader 不支持由 REST Namespace 管理版本的 Lance 表（Managed Versioning）。
