@@ -2996,7 +2996,7 @@ A：技术上可以，但**强烈不推荐**。UDTF 应该是纯函数式的，�
 
 Doris 提供两种 Python 环境管理方式：
 
-- **Conda 模式**：使用 Miniconda/Anaconda 管理多版本环境。
+- **Conda 模式**：使用 Conda 管理多版本环境。后续示例统一使用 Miniforge；同时也支持 Miniconda、Anaconda 等其他 Conda 发行版。
 - **Venv 模式**：使用 Python 内置的虚拟环境（venv）管理多版本环境。
 
 ### 第三方库的安装与使用
@@ -3043,7 +3043,7 @@ Python UDF、UDAF、UDTF 都可以使用第三方库。但由于 Doris 的分布
 | --- | --- | --- | --- | --- |
 | `enable_python_udf_support` | bool | `true` / `false` | `false` | 是否启用 Python UDF 功能 |
 | `python_env_mode` | string | `conda` / `venv` | `""` | Python 多版本环境管理方式 |
-| `python_conda_root_path` | string | 目录路径 | `""` | Miniconda 的根目录<br/>仅在 `python_env_mode = conda` 时生效 |
+| `python_conda_root_path` | string | 目录路径 | `""` | Conda 安装根目录<br/>仅在 `python_env_mode = conda` 时生效 |
 | `python_venv_root_path` | string | 目录路径 | `${DORIS_HOME}/lib/udf/python` | venv 多版本管理的根目录<br/>仅在 `python_env_mode = venv` 时生效 |
 | `python_venv_interpreter_paths` | string | 路径列表（用 `:` 分隔） | `""` | 可用 Python 解释器的目录列表<br/>仅在 `python_env_mode = venv` 时生效 |
 | `max_python_process_num` | int32 | 整数 | `0` | Python Server 进程池最多运行的进程数<br/>`0` 表示使用 CPU 核数作为默认值，用户可以设置其他正整数覆盖默认值 |
@@ -3058,7 +3058,7 @@ Python UDF、UDAF、UDTF 都可以使用第三方库。但由于 Doris 的分布
 ## be.conf
 enable_python_udf_support = true
 python_env_mode = conda
-python_conda_root_path = /path/to/miniconda3
+python_conda_root_path = /path/to/miniforge3
 ```
 
 #### 2. 环境查找规则
@@ -3082,7 +3082,7 @@ Doris 会在 `${python_conda_root_path}/envs/` 目录下查找与 UDF 中 `runti
 ```
 ## Doris BE 节点文件系统结构 (Conda 模式)
 
-/path/to/miniconda3                  ← python_conda_root_path (由 be.conf 配置)
+/path/to/miniforge3                  ← python_conda_root_path (由 be.conf 配置)
 │
 ├── bin/
 │   ├── conda                        ← conda 命令行工具 (运维使用)
@@ -3126,24 +3126,24 @@ Doris Python UDF/UDAF/UDTF 功能**强制依赖** `pandas` 和 `pyarrow` 两个�
 **在所有 BE 节点上**执行以下命令创建 Python 环境：
 
 ```bash
-# 安装 Miniconda (如果尚未安装)
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3
+# 安装 Miniforge（如果尚未安装）
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+bash Miniforge3-Linux-x86_64.sh -b -p /opt/miniforge3
 
 # 创建 Python 3.9.18 环境并安装必需的依赖 (环境名可自定义)
-/opt/miniconda3/bin/conda create -n py39 python=3.9.18 pandas pyarrow -y
+/opt/miniforge3/bin/conda create -n py39 python=3.9.18 pandas pyarrow -y
 
 # 创建 Python 3.12.11 环境并预装依赖 (重要: Python 版本必须精确指定,且必须安装 pandas 和 pyarrow)
-/opt/miniconda3/bin/conda create -n py312 python=3.12.11 pandas pyarrow numpy -y
+/opt/miniforge3/bin/conda create -n py312 python=3.12.11 pandas pyarrow numpy -y
 
 # 激活环境并安装额外依赖
-source /opt/miniconda3/bin/activate py39
+source /opt/miniforge3/bin/activate py39
 conda install requests beautifulsoup4 -y
 conda deactivate
 
 # 验证环境中的 Python 版本
-/opt/miniconda3/envs/py39/bin/python --version     # 应输出: Python 3.9.18
-/opt/miniconda3/envs/py312/bin/python --version    # 应输出: Python 3.12.11
+/opt/miniforge3/envs/py39/bin/python --version     # 应输出: Python 3.9.18
+/opt/miniforge3/envs/py312/bin/python --version    # 应输出: Python 3.12.11
 ```
 
 #### 5. 在 UDF 中使用
@@ -3319,8 +3319,8 @@ $$;
 
 ```bash
 # Conda 模式: 验证 conda 路径
-ls -la /opt/miniconda3/bin/conda
-/opt/miniconda3/bin/conda env list
+ls -la /opt/miniforge3/bin/conda
+/opt/miniforge3/bin/conda env list
 
 # Venv 模式: 验证解释器路径
 /opt/python3.9/bin/python3.9 --version
@@ -3333,7 +3333,7 @@ ls -la /opt/miniconda3/bin/conda
 
 ```bash
 # Conda 模式
-chmod -R 755 /opt/miniconda3
+chmod -R 755 /opt/miniforge3
 
 # Venv 模式
 chmod -R 755 /doris/python_envs
@@ -3361,8 +3361,8 @@ max_python_process_num = 32
 
 ```bash
 # Conda 模式
-/opt/miniconda3/envs/py39/bin/python --version
-/opt/miniconda3/envs/py39/bin/python -c "import pandas; print(pandas.__version__)"
+/opt/miniforge3/envs/py39/bin/python --version
+/opt/miniforge3/envs/py39/bin/python -c "import pandas; print(pandas.__version__)"
 
 # Venv 模式
 /doris/python_envs/python3.9.18/bin/python --version
@@ -3376,11 +3376,11 @@ SHOW PYTHON VERSIONS;
 ```
 
 ```text
-+---------+---------+---------+-------------------+----------------------------------------+
-| Version | EnvName | EnvType | BasePath          | ExecutablePath                         |
-+---------+---------+---------+-------------------+----------------------------------------+
-| 3.9.18  | py39    | conda   | path/to/miniconda | path/to/miniconda/envs/py39/bin/python |
-+---------+---------+---------+-------------------+----------------------------------------+
++---------+---------+---------+--------------------+-----------------------------------------+
+| Version | EnvName | EnvType | BasePath           | ExecutablePath                          |
++---------+---------+---------+--------------------+-----------------------------------------+
+| 3.9.18  | py39    | conda   | path/to/miniforge3 | path/to/miniforge3/envs/py39/bin/python |
++---------+---------+---------+--------------------+-----------------------------------------+
 ```
 
 #### 展示指定版本中已安装的依赖
@@ -3507,7 +3507,7 @@ grep python /path/to/be.conf
 
 :::caution 注意
 - 必须确保 `pandas` 和 `pyarrow` 出现在依赖文件中，并在所有 BE 节点中安装相同版本。
-- 安装时务必使用与 Doris 配置一致的 Python 解释器或 Conda 路径（例如 `/opt/miniconda3/bin/conda` 或指定的 venv 解释器）。
+- 安装时务必使用与 Doris 配置一致的 Python 解释器或 Conda 路径（例如 `/opt/miniforge3/bin/conda` 或指定的 venv 解释器）。
 - 建议将依赖文件纳入版本控制或放入共享存储，由运维统一分发到所有 BE 节点。
 - 更多参考：[pip 官方文档](https://pip.pypa.io/en/stable/cli/pip/)，[Conda 环境导出/导入说明](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#exporting-the-environment)。
 :::
