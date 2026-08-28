@@ -222,7 +222,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 元数据缓存 {#meta-cache}
 
-为了提升访问外部数据源的性能，Apache Doris 会对 Paimon 的元数据进行缓存。元数据包括表结构（Schema）和表对象等。
+为了提升访问外部数据源的性能，Apache Doris 会对 Paimon 的元数据进行缓存。元数据包括表结构（Schema）、表对象、Snapshot 和分区投影等。
 
 :::tip
 对于 Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详情请参阅[元数据缓存](../meta-cache.md)。
@@ -231,15 +231,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 缓存属性配置（4.1.x+） {#meta-cache-unified-model}
 
-各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`。内存上限适用于已接入估算器的 `table` 和 `snapshot` 模块，详见[外表元数据缓存内存管理](../external-meta-cache-memory-management.md)。
 
 | 属性 | 示例 | 含义 |
 |---|---|---|
 | `enable` | `true/false` | 是否启用该缓存模块。 |
 | `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
-| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+| `capacity` | `10000` | 按条目数计算的最大容量。启用 `max-weight` 后不再同时作为条目数上限，但 `0` 仍会关闭缓存。 |
+| `max-weight` | `1GB` | 可选的估算保留内存上限。Paimon 的 `table` 和 `snapshot` 支持；`0` 会关闭对应模块。 |
 
-**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
+**生效逻辑说明：** 只有当 `enable=true`、`ttl-second != 0`、`capacity > 0`，并且 `max-weight` 未配置或不为 `0` 时，该模块缓存才会生效。
 
 ### 缓存模块 {#meta-cache-unified-modules}
 
@@ -249,6 +250,7 @@ Paimon Catalog 包含以下缓存模块：
 |---|---|---|
 | `schema` | `meta.cache.paimon.schema.` | 缓存表结构。影响：列新增、删除、类型变更在 Doris 中的可见性。若关闭，每次查询都会拉取最新 Schema。 |
 | `table` | `meta.cache.paimon.table.` | 缓存 Paimon 表元数据对象。影响：最新 Snapshot、Schema 演进、分支/标签引用等表级元数据在 Doris 中的可见性，同时减少查询规划时的元数据加载开销。 |
+| `snapshot` | `meta.cache.paimon.snapshot.` | 缓存 Snapshot 元数据、Schema 代际和分区投影；支持 `max-weight`。 |
 
 ### 旧参数映射与转换 {#meta-cache-mapping}
 
@@ -268,7 +270,7 @@ Paimon Catalog 包含以下缓存模块：
   -- 关闭表对象缓存，以感知 Paimon 表的最新快照
   ALTER CATALOG paimon_ctl SET PROPERTIES ("meta.cache.paimon.table.ttl-second" = "0");
   ```
-* **性能优化**：`ALTER CATALOG ... SET PROPERTIES` 的修改在 Paimon Catalog 中支持热生效。
+* **性能优化**：自 Doris 4.1.4 起，Catalog 属性修改成功后会重置 Catalog 执行上下文，并清理该 Catalog 路由到的所有元数据缓存引擎中已初始化的条目；下一次访问使用新的上下文和配置重建，正在执行的查询不受影响。启用 Doris 内存治理后，默认关闭 Paimon SDK 自带的 `CachingCatalog`；显式配置 `paimon.cache-enabled` 时以用户配置为准。
 
 ### 可观测性 {#meta-cache-unified-observability}
 
@@ -287,7 +289,7 @@ ORDER BY entry_name;
 
 ### 支持的 Paimon 版本
 
-当前依赖的 Paimon 版本为 1.0.0。
+Doris 4.1.4 当前依赖的 Paimon 版本为 1.4.2。
 
 ### 支持的 Paimon 格式
 

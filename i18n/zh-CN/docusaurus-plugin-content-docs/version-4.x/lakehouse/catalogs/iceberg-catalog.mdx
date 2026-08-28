@@ -99,7 +99,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 元数据缓存 {#meta-cache}
 
-为了提升访问外部数据源的性能，Apache Doris 会对 Iceberg 的元数据进行缓存。元数据包括表结构（Schema）、表对象、View 对象和 Manifest 详情等。
+为了提升访问外部数据源的性能，Apache Doris 会对 Iceberg 的元数据进行缓存。元数据包括表结构（Schema）、表对象、Snapshot、View 对象和 Manifest 详情等。
 
 :::tip
 对于 Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详情请参阅[元数据缓存](../meta-cache.md)。
@@ -108,15 +108,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 缓存属性配置（4.1.x+） {#meta-cache-unified-model}
 
-各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`。内存上限只适用于已接入估算器的模块，详见[外表元数据缓存内存管理](../external-meta-cache-memory-management.md)。
 
 | 属性 | 示例 | 含义 |
 |---|---|---|
 | `enable` | `true/false` | 是否启用该缓存模块。 |
 | `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
-| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+| `capacity` | `10000` | 按条目数计算的最大容量。启用 `max-weight` 后不再同时作为条目数上限，但 `0` 仍会关闭缓存。 |
+| `max-weight` | `1GB` | 可选的估算保留内存上限。Iceberg 的 `table`、`snapshot`、`manifest` 支持；`0` 会关闭对应模块。 |
 
-**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
+**生效逻辑说明：** 只有当 `enable=true`、`ttl-second != 0`、`capacity > 0`，并且 `max-weight` 未配置或不为 `0` 时，该模块缓存才会生效。
 
 ### 缓存模块 {#meta-cache-unified-modules}
 
@@ -126,6 +127,7 @@ Iceberg Catalog 包含以下缓存模块：
 |---|---|---|
 | `schema` | `meta.cache.iceberg.schema.` | 缓存表结构。影响：列新增、删除、类型变更在 Doris 中的可见性。若关闭，每次查询都会拉取最新 Schema。 |
 | `table` | `meta.cache.iceberg.table.` | 缓存 Iceberg 表元数据对象。影响：最新 Snapshot、Partition Spec、Sort Order、表属性等表级元数据在 Doris 中的可见性；若关闭，每次规划都会重新加载表元数据。 |
+| `snapshot` | `meta.cache.iceberg.snapshot.` | 缓存 Snapshot 元数据及其保留的表元数据代际，减少重复加载 Snapshot 和分区投影的开销；支持 `max-weight`。 |
 | `view` | `meta.cache.iceberg.view.` | 缓存 Iceberg View 元数据对象。影响：View 定义、Schema、属性变更在 Doris 中的可见性。 |
 | `manifest` | `meta.cache.iceberg.manifest.` | 缓存 Manifest 详情。主要影响查询规划时重复读取 Manifest 文件的开销，通常不直接决定表或 Snapshot 是否可见。注意：该模块默认关闭，需手动启用。 |
 
@@ -156,7 +158,7 @@ Iceberg Catalog 包含以下缓存模块：
         "meta.cache.iceberg.manifest.ttl-second" = "600"
       );
       ```
-    * `ALTER CATALOG ... SET PROPERTIES` 的修改在 Iceberg Catalog 中支持热生效。
+    * 自 Doris 4.1.4 起，Catalog 属性修改成功后会重置 Catalog 执行上下文，并清理该 Catalog 路由到的所有元数据缓存引擎中已初始化的条目；下一次访问使用新的上下文和配置重建，正在执行的查询不受影响。
 
 ### 可观测性 {#meta-cache-unified-observability}
 
@@ -181,7 +183,7 @@ ORDER BY entry_name;
 | 3.0 | 1.6.1 |
 | 3.1 | 1.9.1 |
 | 4.0 | 1.9.1 |
-| 4.1 | 1.10.1 |
+| 4.1（4.1.4+） | 1.10.1 |
 
 ## 支持的 Iceberg 格式
 

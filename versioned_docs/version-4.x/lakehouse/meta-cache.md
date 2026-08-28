@@ -19,6 +19,8 @@ This article details the types, strategies, and related parameter configurations
 
 For **data cache**, refer to the [data cache documentation](./data-cache.md).
 
+For Doris 4.1.4 external metadata cache memory limits, refer to [External Metadata Cache Memory Management](./external-meta-cache-memory-management.md).
+
 ## Cache Strategies
 
 Most caches have the following three strategy indicators:
