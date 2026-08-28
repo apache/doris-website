@@ -120,7 +120,7 @@ CREATE CATALOG lance_oss PROPERTIES (
 
 `warehouse` also accepts the qualified form `oss://my-bucket.oss-cn-beijing.aliyuncs.com/lance`, which Doris reduces to the bucket before opening the Namespace. It must always name a bucket, so a root such as `oss:/lance` is rejected when the Catalog is created.
 
-To access OSS with a temporary STS credential, add `"oss.session_token" = "<token>"`. Set `"oss.use_path_style" = "true"` only when your endpoint requires path-style addressing; OSS uses virtual-hosted style by default.
+To access OSS with a temporary STS credential, add `"oss.session_token" = "<token>"`.
 
 #### Use a Local File System
 

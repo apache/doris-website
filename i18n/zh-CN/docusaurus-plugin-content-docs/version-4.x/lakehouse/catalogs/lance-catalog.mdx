@@ -120,7 +120,7 @@ CREATE CATALOG lance_oss PROPERTIES (
 
 `warehouse` 也支持带 Endpoint 的形式 `oss://my-bucket.oss-cn-beijing.aliyuncs.com/lance`，Doris 会在打开 Namespace 前将其还原为 Bucket。`warehouse` 必须指定 Bucket，因此 `oss:/lance` 这类根路径会在创建 Catalog 时被拒绝。
 
-使用 STS 临时凭证访问 OSS 时，可以增加 `"oss.session_token" = "<token>"`。仅当 Endpoint 要求 Path Style 寻址时才需要设置 `"oss.use_path_style" = "true"`，OSS 默认使用 Virtual Hosted Style。
+使用 STS 临时凭证访问 OSS 时，可以增加 `"oss.session_token" = "<token>"`。
 
 #### 使用本地文件系统
 
