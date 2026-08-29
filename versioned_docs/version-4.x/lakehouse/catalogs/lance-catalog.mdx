@@ -325,13 +325,17 @@ Predicates on other readable types, including `float16`, `decimal256`, Binary, `
 | `<=>` | Direct null-safe equality comparison between a column and a constant; preserves a non-`NULL`, two-valued result inside `NOT`, `AND`, or `OR` |
 | `IN`, `NOT IN` | Non-empty constant list that does not contain `NULL` |
 | `IS NULL`, `IS NOT NULL` | Direct column reference |
+| Boolean column, `NOT` Boolean column | Direct Boolean column reference |
+| `LIKE`, `NOT LIKE` | Direct `utf8` or `large_utf8` column and a string literal pattern without backslash escapes, an explicit `ESCAPE` clause, or an embedded NUL character |
+| `starts_with`, `ends_with` | Built-in function with a direct `utf8` or `large_utf8` column and a string literal |
 | `AND` | Top-level conjuncts can be pushed down independently, with unsupported conjuncts retained in Doris |
 | `OR` | Both branches must be fully convertible |
 | `NOT` | The operand must be fully convertible |
 
 The following forms are generally not pushed down:
 
-- Functions or arithmetic expressions applied to a column.
+- Functions other than the supported built-in string functions, or arithmetic expressions applied to a column. A user-defined function named `like`, `starts_with`, or `ends_with` is not treated as the corresponding built-in function.
+- String predicates whose pattern contains an embedded NUL character. `LIKE` and `NOT LIKE` patterns that use a backslash escape or an explicit `ESCAPE` clause also remain in Doris.
 - An empty `IN` list or an `IN` list containing `NULL`.
 - An `OR` or `NOT` expression in which only part of the expression can be converted.
 - A data type or constant value that cannot be converted to Lance without loss.
@@ -342,7 +346,9 @@ Use `lancePushdownPredicate` in `EXPLAIN` to inspect the conditions that are act
 EXPLAIN
 SELECT user_id
 FROM lance_catalog.default.user_profiles
-WHERE age >= 18 AND country IN ('CN', 'US');
+WHERE active
+  AND starts_with(name, 'A')
+  AND country LIKE 'C%';
 ```
 
 ## Query Lance with File TVFs
