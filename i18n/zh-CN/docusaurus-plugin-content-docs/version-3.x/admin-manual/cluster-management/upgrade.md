@@ -18,7 +18,7 @@ Doris 版本号由三位组成，第一位表示重大里程碑版本，第二�
 
 * 二位版本及一位版本：不建议跨二位版本升级，考虑到兼容性问题，建议按照二位版本号依次升级，如 3.0 版本升级到 3.3 版本，需要按照 3.0 -> 3.1 -> 3.2 -> 3.3 的执行路径升级。
 
-详细版本说明可以参考[版本规则](https://doris.apache.org/zh-CN/community/release-versioning)。
+详细版本说明可以参考[版本规则](https://doris.apache.org/zh-CN/community/release-and-verify/release-versioning)。
 
 ## 升级注意事项
 
