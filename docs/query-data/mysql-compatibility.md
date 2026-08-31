@@ -55,10 +55,10 @@ The differences from MySQL are listed below, grouped by numeric, date, string, J
 | Date | - Supported<br />- Range: ['1000-01-01', '9999-12-31']<br />- Format: YYYY-MM-DD | - Supported<br />- Range: ['0000-01-01', '9999-12-31']<br />- Format: YYYY-MM-DD |
 | DateTime | - Supported<br />- DATETIME([P]), where the optional parameter P is the precision<br />- Range: '1000-01-01 00:00:00.000000' to '9999-12-31 23:59:59.999999'<br />- Format: YYYY-MM-DD hh:mm:ss[.fraction] | - Supported<br />- DATETIME([P]), where the optional parameter P is the precision<br />- Range: ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']<br />- Format: YYYY-MM-DD hh:mm:ss[.fraction] |
 | Timestamp | - Supported<br />- Timestamp[(p)], where the optional parameter P is the precision<br />- Range: ['1970-01-01 00:00:01.000000' UTC, '2038-01-19 03:14:07.999999' UTC]<br />- Format: YYYY-MM-DD hh:mm:ss[.fraction] | - Supported<br />- TIMESTAMPTZ([P]), where the optional parameter P is the precision<br />- Range: ['0000-01-01 00:00:00[.000000]' UTC, '9999-12-31 23:59:59[.999999]' UTC]<br />- Format: YYYY-MM-DD hh:mm:ss[.fraction]+XX.XX |
-
-`TIMESTAMP_NS` is a Doris extension rather than a MySQL `TIMESTAMP` equivalent. It is time-zone-naive, has fixed nanosecond precision, and supports the range `1677-09-21 00:12:43.145224192` through `2262-04-11 23:47:16.854775807`.
 | Time | - Supported<br />- Time[(p)]<br />- Range: ['-838:59:59.000000', '838:59:59.000000']<br />- Format: hh:mm:ss[.fraction] | - Supported for computation, cannot be stored as a column in OLAP tables<br />- Time[(p)]<br />- Range: ['-838:59:59.999999', '838:59:59.999999']<br />- Format: hh:mm:ss[.fraction] |
 | Year | - Supported<br />- Range: 1901 to 2155, or 0000<br />- Format: yyyy | Not supported |
+
+`TIMESTAMP_NS` is a Doris extension rather than a MySQL `TIMESTAMP` equivalent. It is time-zone-naive, has fixed nanosecond precision, and supports the range `1677-09-21 00:12:43.145224192` through `2262-04-11 23:47:16.854775807`.
 
 ### String Types
 
