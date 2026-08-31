@@ -62,6 +62,62 @@ function BoltIcon({ size = 24, color = 'var(--brand-accent)', className }: BoltI
     );
 }
 
+function ValueIcon({ id }: { id: string }): JSX.Element {
+    const common = {
+        viewBox: '0 0 24 24',
+        fill: 'none',
+        stroke: 'currentColor',
+        strokeWidth: 2,
+        strokeLinecap: 'round',
+        strokeLinejoin: 'round',
+    } as const;
+
+    if (id === 'sla') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <path d="M12 2a10 10 0 1 0 10 10" />
+                <path d="M12 6v6l4 2" />
+            </svg>
+        );
+    }
+    if (id === 'cost') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <path d="M3 3v18h18" />
+                <path d="m7 14 4-4 3 3 5-6" />
+            </svg>
+        );
+    }
+    if (id === 'ai-quality') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <path d="M12 3v4" />
+                <path d="M12 17v4" />
+                <path d="M3 12h4" />
+                <path d="M17 12h4" />
+                <path d="m6 6 2.5 2.5" />
+                <path d="M15.5 15.5 18 18" />
+                <path d="m18 6-2.5 2.5" />
+                <path d="M8.5 15.5 6 18" />
+            </svg>
+        );
+    }
+    if (id === 'business') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+            </svg>
+        );
+    }
+
+    return (
+        <svg {...common} aria-hidden="true">
+            <polyline points="3 12 8 12 11 7 15 17 18 12 21 12" />
+        </svg>
+    );
+}
+
 interface FooterItem {
     label: string;
     href?: string;
@@ -236,6 +292,7 @@ interface ValueCard {
     num: string;
     title: ReactNode;
     desc: string;
+    summary: string;
     scenariosLabel: string;
     scenarios: string[];
 }
@@ -247,6 +304,11 @@ interface CaseStudy {
     quote: string;
     outcomes: string[];
     href: string;
+    logo: string;
+    logoAlt: string;
+    logoClass: string;
+    logoText?: string;
+    logoTextClass?: string;
 }
 
 interface Requirement {
@@ -278,6 +340,8 @@ const valueCards: ValueCard[] = [
         ),
         desc:
             'Observability connects logs, traces, and metrics to help teams detect anomalies and find root causes before failures spread. For AI agents, it turns LLM timeouts, prompt failures, failed tool calls, and runaway loops into analyzable execution data.',
+        summary:
+            'Logs, traces, and agent events become analyzable execution data, so anomalies and root causes surface before failures spread.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Application performance monitoring',
@@ -297,6 +361,8 @@ const valueCards: ValueCard[] = [
         ),
         desc:
             'Modern observability connects system health to real user impact. For AI applications, that means tracking not only latency, errors, and degraded endpoints, but also answer accuracy, task completion, grounded responses, and human handoff.',
+        summary:
+            'System health is tied to real user impact, tracking latency, errors, answer accuracy, task completion, and grounded responses.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Customer-facing analytics',
@@ -316,6 +382,8 @@ const valueCards: ValueCard[] = [
         ),
         desc:
             'Logs, traces, and agent events can grow faster than budgets. Keep recent data fast for troubleshooting, use aggregates for trends, and move historical data to lower-cost storage.',
+        summary:
+            'Hot data stays fast for troubleshooting, aggregates cover trends, and historical data moves to lower-cost storage as telemetry grows.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'High-volume log analytics',
@@ -335,6 +403,8 @@ const valueCards: ValueCard[] = [
         ),
         desc:
             'AI applications can return valid responses that are still wrong, incomplete, or ungrounded. By observing prompts, responses, RAG context, tool calls, scores, and user feedback, teams can continuously improve prompt quality, retrieval accuracy, and task completion.',
+        summary:
+            'Prompt, response, RAG, tool call, score, and user feedback signals drive ongoing prompt, retrieval, and task completion improvements.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'LLM application monitoring',
@@ -354,6 +424,8 @@ const valueCards: ValueCard[] = [
         ),
         desc:
             'Observability becomes more valuable when every signal is tied to business impact. Teams can see which customers, tenants, and workflows are affected — and understand how AI agent failures impact conversion, support load, and revenue.',
+        summary:
+            'Every signal is tied to affected customers, tenants, workflows, and the business impact of AI failures on conversion, support load, and revenue.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Tenant-level impact analysis',
@@ -376,7 +448,10 @@ const cases: CaseStudy[] = [
             '10 GB/s write throughput with second-level ingestion latency',
             '5:1 compression and tiered storage cut storage costs by 70%',
         ],
-        href: 'https://www.velodb.io/blog/ai-unicorn-minimax-migrated-loki'
+        href: 'https://www.velodb.io/blog/ai-unicorn-minimax-migrated-loki',
+        logo: '/images/next/user-logos/minimax-color.png',
+        logoAlt: 'MiniMax',
+        logoClass: 'case-logo case-logo--minimax',
     },
     {
         id: 'monitoring',
@@ -391,6 +466,9 @@ const cases: CaseStudy[] = [
             'Flexible inverted indexes that can be added or dropped incrementally without rewriting tables',
         ],
         href: 'https://www.velodb.io/blog/apache-doris-log-series-analysis-net',
+        logo: '/images/next/user-logos/netease-color.png',
+        logoAlt: 'NetEase',
+        logoClass: 'case-logo case-logo--netease',
     },
     {
         id: 'tencent-music',
@@ -405,6 +483,11 @@ const cases: CaseStudy[] = [
             'Alert frequency dropped from 20+ per day to single digits per month',
         ],
         href: 'https://www.velodb.io/blog/tencent-music-saved-migrating-elasticsearch',
+        logo: '/images/next/user-logos/tencent-music-color.png',
+        logoAlt: 'Tencent Music',
+        logoClass: 'case-logo case-logo--tencent-music',
+        logoText: 'TENCENT MUSIC',
+        logoTextClass: 'case-logo-text',
     },
 ];
 
@@ -571,34 +654,61 @@ function Hero(): JSX.Element {
 }
 
 function ValueSection(): JSX.Element {
-    const items: CoverFlowItem[] = valueCards.map(c => ({
-        id: c.id,
-        num: c.num,
-        title: c.title,
-        desc: c.desc,
-        footer: {
-            label: c.scenariosLabel,
-            items: c.scenarios.map(s => ({ label: s })),
-        },
-    }));
-
     return (
-        <section className="section section-value section-cream" id="value">
+        <section className="section section-value" id="value">
+            <div className="hero-bg-grid" aria-hidden="true" />
             <div className="container section-inner">
-                <div className="section-head section-head-wide" data-reveal>
-                    <h2 className="section-title section-title-stacked">
-                        <span>Why Observability&nbsp;matters</span>
-                        <span>for modern&nbsp;teams.</span>
-                    </h2>
-                    <p className="section-sub">
-                        When teams unify observability across logs, traces, metrics and AI agent
-                        events, five things shift at once: incident detection, user experience,
-                        cost at scale, AI quality, and the link between system behavior and business
-                        outcomes.
-                    </p>
+                <div className="ob-value-layout">
+                    <div className="ob-value-copy" data-reveal>
+                        <h2 className="section-title section-title-stacked">
+                            <span>Why</span>
+                            <span>Observability</span>
+                            <span>matters for</span>
+                            <span>modern teams.</span>
+                        </h2>
+                        <p className="ob-value-copy__lead">
+                            When teams unify observability across logs, traces, metrics and AI
+                            agent events, five things shift at once:
+                        </p>
+                        <ul className="ob-value-points">
+                            <li className="ob-value-point" data-reveal>
+                                Incident detection
+                            </li>
+                            <li className="ob-value-point" data-reveal>
+                                User experience
+                            </li>
+                            <li className="ob-value-point" data-reveal>
+                                Cost at scale
+                            </li>
+                            <li className="ob-value-point" data-reveal>
+                                AI quality
+                            </li>
+                            <li className="ob-value-point" data-reveal>
+                                The link between system behavior and business outcomes
+                            </li>
+                        </ul>
+                    </div>
+                    <ol className="ob-value-cards">
+                        {valueCards.map(c => {
+                            const [numPart, ...titleParts] = c.num.split('/');
+                            const valueTitle = titleParts.join('/').trim();
+                            return (
+                                <li key={c.id} className="ob-value-card" data-reveal>
+                                    <div className="ob-value-card__meta">
+                                        <span className="ob-value-card__num">{numPart.trim()}</span>
+                                        <span className="ob-value-card__icon" aria-hidden="true">
+                                            <ValueIcon id={c.id} />
+                                        </span>
+                                    </div>
+                                    <div className="ob-value-card__body">
+                                        <h3 className="ob-value-card__title">{valueTitle}</h3>
+                                        <p className="ob-value-card__summary">{c.summary}</p>
+                                    </div>
+                                </li>
+                            );
+                        })}
+                    </ol>
                 </div>
-
-                <CoverFlow items={items} footerVariant="scenarios" ariaLabel="Value cards" />
             </div>
         </section>
     );
@@ -639,7 +749,10 @@ function CasesSection(): JSX.Element {
                                 ))}
                             </ul>
                             <span className="case-link">
-                                Read Case Study <span aria-hidden="true">→</span>
+                                <img className={c.logoClass} src={c.logo} alt={c.logoAlt} />
+                                {c.logoText ? (
+                                    <span className={c.logoTextClass}>{c.logoText}</span>
+                                ) : null}
                             </span>
                         </a>
                     ))}
@@ -649,19 +762,41 @@ function CasesSection(): JSX.Element {
     );
 }
 
-function TechSection(): JSX.Element {
-    const useSix = requirements.length === 6;
+function CapabilityTags(): JSX.Element {
+    return (
+        <div className="ob-capability-tags" data-reveal>
+            {capabilities.map((c, index) => (
+                <article className="ob-capability-tag" key={c.id}>
+                    <div className="ob-capability-tag__num">
+                        {String(index + 1).padStart(2, '0')}
+                    </div>
+                    <h4 className="ob-capability-tag__title">{c.title}</h4>
+                    <div className="ob-capability-tag__footer">
+                        <div className="ob-capability-tag__label">{c.poweredLabel}</div>
+                        <ul>
+                            {c.poweredBy.map(item => (
+                                <li key={item.label}>
+                                    {item.href !== undefined ? (
+                                        <a href={item.href}>{item.label}</a>
+                                    ) : (
+                                        item.label
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </article>
+            ))}
+        </div>
+    );
+}
 
-    const capabilityItems: CoverFlowItem[] = capabilities.map(c => ({
-        id: c.id,
-        num: c.num,
-        title: c.title,
-        desc: c.desc,
-        footer: { label: c.poweredLabel, items: c.poweredBy },
-    }));
+function TechSection(): JSX.Element {
+    const [openRequirement, setOpenRequirement] = useState<string | null>(null);
 
     return (
-        <section className="section section-tech section-cream" id="tech">
+        <>
+            <section className="section section-tech" id="tech">
             <div className="container section-inner">
                 <div className="section-head section-head-wide" data-reveal>
                     <h2 className="section-title section-title-stacked">
@@ -674,25 +809,82 @@ function TechSection(): JSX.Element {
                     </p>
                 </div>
 
-                <h3 className="tech-layer-heading">Observability technical requirements</h3>
-                <div className={`req-grid${useSix ? ' req-grid-6' : ''}`} data-reveal>
-                    {requirements.map(r => (
-                        <div className="req-card" key={r.id}>
-                            <h4 className="req-title">{r.title}</h4>
-                            <p className="req-desc">{r.desc}</p>
-                        </div>
-                    ))}
+                <div className="ob-architecture-panel" data-reveal>
+                    <div className="ob-architecture-diagram">
+                        <img
+                            src="/images/use-cases/ob-architecture.png"
+                            alt="Modern observability architecture"
+                            loading="lazy"
+                        />
+                    </div>
+                    <div className="ob-architecture-features">
+                        {requirements.map((r, index) => {
+                            const isOpen = openRequirement === r.id;
+                            return (
+                                <article
+                                    className={`ob-arch-feature${isOpen ? ' is-open' : ''}`}
+                                    key={r.id}
+                                >
+                                    <button
+                                        type="button"
+                                        className="ob-arch-feature__trigger"
+                                        onClick={() =>
+                                            setOpenRequirement(isOpen ? null : r.id)
+                                        }
+                                        aria-expanded={isOpen}
+                                        aria-controls={`ob-req-${r.id}`}
+                                    >
+                                        <span className="ob-arch-feature__index">
+                                            {String(index + 1).padStart(2, '0')}
+                                        </span>
+                                        <span className="ob-arch-feature__title">{r.title}</span>
+                                        <svg
+                                            className="ob-arch-feature__icon"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2.5"
+                                            strokeLinecap="round"
+                                            aria-hidden="true"
+                                        >
+                                            {isOpen ? (
+                                                <path d="M5 12h14" />
+                                            ) : (
+                                                <path d="M12 5v14M5 12h14" />
+                                            )}
+                                        </svg>
+                                    </button>
+                                    {isOpen ? (
+                                        <div
+                                            className="ob-arch-feature__body"
+                                            id={`ob-req-${r.id}`}
+                                        >
+                                            <p>{r.desc}</p>
+                                        </div>
+                                    ) : null}
+                                </article>
+                            );
+                        })}
+                    </div>
                 </div>
 
-                <h3 className="tech-layer-heading">Apache Doris capabilities</h3>
-
-                <CoverFlow
-                    items={capabilityItems}
-                    footerVariant="powered"
-                    ariaLabel="Capability cards"
-                />
             </div>
-        </section>
+            </section>
+
+            <section className="section section-tech-capabilities" id="capabilities">
+                <div className="container section-inner">
+                    <h3 className="tech-layer-heading">Apache Doris capabilities for observability</h3>
+                    <p className="ob-capability-sub">
+                        For more technical details about Apache Doris in observability, refer to the
+                        technical blogs
+                    </p>
+
+                    <CapabilityTags />
+                </div>
+            </section>
+        </>
     );
 }
 
