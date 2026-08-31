@@ -2,13 +2,13 @@
 {
     "title": "MILLISECONDS_ADD",
     "language": "en",
-    "description": "The MILLISECONDSADD function adds a specified number of milliseconds to the input datetime value and returns the resulting new datetime value."
+    "description": "Adds a specified number of milliseconds to a DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value."
 }
 ---
 
 ## Description
 
-The `MILLISECONDS_ADD` function adds a specified number of milliseconds to the input datetime value and returns the resulting new datetime value. This function supports processing `DATETIME` types with millisecond precision.
+The `MILLISECONDS_ADD` function adds a specified number of milliseconds to a `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ` value and returns the resulting value with the same type.
 
 ## Syntax
 
@@ -20,7 +20,7 @@ MILLISECONDS_ADD(`<datetime>`, `<delta>`)
 
 | Parameter    | Description                                                                                   |
 |--------------|-----------------------------------------------------------------------------------------------|
-| `<datetime>` | The input datetime value. Supports `DATETIME` and `TIMESTAMP_NS`. For specific formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [TIMESTAMP_NS conversion](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md). |
+| `<datetime>` | The input datetime value. Supports `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. For specific formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [TIMESTAMP_NS conversion](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md), and [TIMESTAMPTZ conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion). |
 | `<delta>`    | The number of milliseconds to add, of type `BIGINT`. 1 second = 1,000 milliseconds = 1,000,000 microseconds. |
 
 ## Return Value

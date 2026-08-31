@@ -2,13 +2,13 @@
 {
     "title": "HOUR_FLOOR",
     "language": "zh-CN",
-    "description": "HOURFLOOR 函数用于将输入的日期时间值向下取整到指定小时周期的最近时刻。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的起始整点时刻."
+    "description": "HOUR_FLOOR 将 DATE、DATETIME、TIMESTAMP_NS 或 TIMESTAMPTZ 值向下取整到指定小时周期的最近边界，并保持相应的日期时间类型。"
 }
 ---
 
 ## 描述
 
-HOUR_FLOOR 函数用于将输入的日期时间值向下取整到指定小时周期的最近时刻。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的起始整点时刻.
+HOUR_FLOOR 函数用于将输入的日期时间值向下取整到指定小时周期的最近时刻，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ` 输入。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的起始整点时刻。
 
 日期时间的计算公式：
 $$
@@ -33,9 +33,9 @@ HOUR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 datetime/date/timestamptz 类型,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 合法的日期表达式，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`。`DATE` 输入按当天的起始时间 00:00:00 处理。具体格式请查看 [timestamptz 的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)、[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
 | `<period>` | 	可选参数，指定周期长度（单位：小时），为正整数（如 2、6、12）。默认值为 1，表示每 1 小时一个周期。|
-|` <origin>` | 开始的时间起点，支持输入 datetime/date 类型，如果不填，默认是 0001-01-01T00:00:00 |
+| `<origin>` | 周期的起始时间点，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`。若不指定，默认为 0001-01-01T00:00:00。 |
 
 ## 返回值
 

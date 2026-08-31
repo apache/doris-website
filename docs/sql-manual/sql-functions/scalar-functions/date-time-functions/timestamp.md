@@ -2,7 +2,7 @@
 {
     "title": "TIMESTAMP | Date Time Functions",
     "language": "en",
-    "description": "The TIMESTAMP function converts a datetime format string to DATETIME type.",
+    "description": "Converts a date-time string to DATETIME, or preserves a TIMESTAMP_NS input and its nanosecond precision.",
     "sidebar_label": "TIMESTAMP"
 }
 ---
@@ -11,8 +11,7 @@
 
 ## Description
 
-The TIMESTAMP function converts a datetime format string to DATETIME type.
-If a second time parameter exists, it calculates the sum of the two parameters and returns the result in DATETIME format.
+The TIMESTAMP function converts a date-time string to `DATETIME`. For a `TIMESTAMP_NS` input, it returns `TIMESTAMP_NS` and preserves nanosecond precision. If a second time parameter is provided, it adds that time value to the first parameter and preserves the first parameter's corresponding date-time type.
 
 For specific datetime formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion).
 

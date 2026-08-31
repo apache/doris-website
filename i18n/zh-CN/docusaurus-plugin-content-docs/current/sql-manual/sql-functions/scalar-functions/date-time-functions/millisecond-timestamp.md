@@ -2,7 +2,7 @@
 {
     "title": "MILLISECOND_TIMESTAMP",
     "language": "zh-CN",
-    "description": "MILLISECONDTIMESTAMP 函数用于将输入的日期时间值转换为从 1970-01-01 00:00:00 加上本地时区偏移，开始计算的 Unix 时间戳，单位为毫秒（1 秒 = 1,000,000 毫秒）。该函数支持处理包含毫秒精度的 DATETIME 类型，"
+    "description": "MILLISECOND_TIMESTAMP 将 DATETIME 或 TIMESTAMP_NS 值转换为毫秒级 Unix 时间戳，并截断低于毫秒的精度而不进行四舍五入。"
 }
 ---
 

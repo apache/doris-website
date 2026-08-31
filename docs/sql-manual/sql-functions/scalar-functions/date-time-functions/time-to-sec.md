@@ -2,7 +2,7 @@
 {
     "title": "TIME_TO_SEC",
     "language": "en",
-    "description": "The TIMETOSEC function converts an input time value to the total number of seconds."
+    "description": "Converts a TIME, DATETIME, or TIMESTAMP_NS value to the total number of seconds in its time portion."
 }
 ---
 

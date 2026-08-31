@@ -2,7 +2,7 @@
 {
     "title": "SECONDS_SUB",
     "language": "en",
-    "description": "The SECONDSSUB function subtracts or adds a specified number of seconds to a specified datetime value and returns the calculated datetime value."
+    "description": "Subtracts or adds seconds to a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value."
 }
 ---
 

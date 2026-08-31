@@ -2,7 +2,7 @@
 {
     "title": "SECONDS_ADD",
     "language": "en",
-    "description": "The SECONDSADD function adds or subtracts a specified number of seconds to a specified datetime value and returns the calculated datetime value."
+    "description": "Adds or subtracts seconds from a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value."
 }
 ---
 

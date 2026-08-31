@@ -2,7 +2,7 @@
 {
     "title": "HOURS_ADD",
     "language": "en",
-    "description": "The HOURSADD function adds or subtracts a specified number of hours to/from an input date or datetime value and returns the calculated new datetime."
+    "description": "Adds or subtracts hours from a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value."
 }
 ---
 

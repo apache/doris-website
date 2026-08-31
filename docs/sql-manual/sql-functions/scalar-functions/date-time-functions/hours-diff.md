@@ -2,13 +2,13 @@
 {
     "title": "HOURS_DIFF",
     "language": "en",
-    "description": "The HOURSDIFF function calculates the hour difference between two datetime or date values,"
+    "description": "Calculates the complete hour difference between DATE, DATETIME, or TIMESTAMP_NS values."
 }
 ---
 
 ## Description
 
-The HOURS_DIFF function calculates the hour difference between two datetime or date values, representing the number of hours elapsed from the start time to the end time. This function supports both DATE and DATETIME input types, automatically handles time difference calculations across days, months, and years, and returns an integer result. If the input is DATE type (containing only year, month, day), it defaults the time part to 00:00:00.
+The HOURS_DIFF function calculates the complete hour difference between two `DATE`, `DATETIME`, or `TIMESTAMP_NS` values, representing the number of hours elapsed from the start time to the end time. It automatically handles differences across days, months, and years. A `DATE` input is treated as 00:00:00.
 
 ## Syntax
 

@@ -2,17 +2,17 @@
 {
     "title": "UNIX_TIMESTAMP",
     "language": "en",
-    "description": "Converts Date or Datetime types to unix timestamps."
+    "description": "Converts DATE, DATETIME, or TIMESTAMP_NS values to Unix timestamps, preserving nine fractional digits for TIMESTAMP_NS input."
 }
 ---
 
 ## Description
 
-Converts Date or Datetime types to unix timestamps.
+Converts `DATE`, `DATETIME`, or `TIMESTAMP_NS` values to Unix timestamps.
 
 If no parameters are provided, the current time is converted to a timestamp.
 
-Parameters must be Date or Datetime type.
+When a date-time argument is provided, it must be `DATE`, `DATETIME`, or `TIMESTAMP_NS`.
 
 For Format specification, please refer to the format description of the date_format function.
 

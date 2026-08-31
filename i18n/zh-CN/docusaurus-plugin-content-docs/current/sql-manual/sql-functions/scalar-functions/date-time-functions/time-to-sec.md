@@ -2,7 +2,7 @@
 {
     "title": "TIME_TO_SEC",
     "language": "zh-CN",
-    "description": "TIMETOSEC 函数用于将输入的时间值转换为以秒为单位的总秒数。该函数支持处理 TIME、DATETIME 类型：若输入为 DATETIME 类型，会自动提取其中的时间部分（HH:MM:SS）进行计算；若输入为纯时间值，则直接转换为总秒数。"
+    "description": "TIME_TO_SEC 将 TIME、DATETIME 或 TIMESTAMP_NS 值的时间部分转换为以秒为单位的总秒数；日期时间输入会忽略日期部分，NULL 输入返回 NULL。"
 }
 ---
 

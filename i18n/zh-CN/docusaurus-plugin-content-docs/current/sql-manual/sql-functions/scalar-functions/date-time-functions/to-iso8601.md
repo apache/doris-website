@@ -2,13 +2,13 @@
 {
     "title": "TO_ISO8601",
     "language": "zh-CN",
-    "description": "将日期时间值转换为 ISO8601 格式的字符串,支持输入类型为 TIMESTAMPTZ, DATETIME, DATE."
+    "description": "TO_ISO8601 将 DATE、DATETIME、TIMESTAMP_NS 或 TIMESTAMPTZ 值转换为 ISO8601 格式字符串，并为 TIMESTAMP_NS 保留完整 9 位小数秒。"
 }
 ---
 
 ## 描述
 
-将日期时间值转换为 ISO8601 格式的字符串,支持输入类型为 TIMESTAMPTZ, DATETIME, DATE.
+将 `DATE`、`DATETIME`、`TIMESTAMP_NS` 或 `TIMESTAMPTZ` 值转换为 ISO8601 格式的字符串。
 
 ## 语法
 

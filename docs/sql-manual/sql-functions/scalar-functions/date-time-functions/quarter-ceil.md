@@ -1,13 +1,14 @@
 ---
 {
     "title": "QUARTER_CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "Rounds a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value up to the nearest boundary of a specified quarter period."
 }
 ---
 
 ## Description
 
-Rounds a datetime value up to the nearest specified quarter period boundary. If an origin time is specified, the period is calculated based on that time.
+Rounds a `DATE`, `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ` value up to the nearest specified quarter period boundary. If an origin time is specified, the period is calculated based on that time.
 
 ## Syntax
 
@@ -22,9 +23,9 @@ QUARTER_CEIL(<datetime>, <period>, <origin>)
 
 | Parameter | Description |
 | ---- | ---- |
-| `<datetime>` | The datetime value to round up, type is DATE or DATETIME |
+| `<datetime>` | The value to round up. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. |
 | `<period>` | Quarter period value, type is INT, representing the number of quarters contained in each period |
-| `<origin>` | The starting point of the period, type is DATE or DATETIME, default value is 0001-01-01 00:00:00 |
+| `<origin>` | The starting point of the period. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`; the default is 0001-01-01 00:00:00. |
 
 Notes:
 - When period is not specified, it is equivalent to using 1 quarter as the period
@@ -40,6 +41,8 @@ When `<origin>` is omitted for a `TIMESTAMP_NS` input, the documented default or
 
 When `<datetime>` is of DATE type, the return type is DATE.
 When `<datetime>` is of DATETIME type, the return type is DATETIME.
+When `<datetime>` is of TIMESTAMP_NS type, the return type is TIMESTAMP_NS with nine fractional-second digits.
+When `<datetime>` is of TIMESTAMPTZ type, the return type is TIMESTAMPTZ.
 Represents the rounded up datetime value. The time part of the result will be set to 00:00:00.
 
 ## Examples

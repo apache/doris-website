@@ -2,14 +2,14 @@
 {
     "title": "SECOND_CEIL",
     "language": "en",
-    "description": "SECOND_CEIL function rounds the input datetime value up to the nearest specified second period. If origin is specified, it uses that as the basis; if not specified, the default basis is 0001-01-01 00:00:00. Supports processing DATETIME type."
+    "description": "SECOND_CEIL rounds a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value up to the nearest specified second period."
 }
 ---
 
 ## Description
 
 
-SECOND_CEIL function rounds the input datetime value up to the nearest specified second period. If origin is specified, it uses that as the basis; otherwise, it defaults to 0001-01-01 00:00:00. The function supports processing DATETIME type.
+SECOND_CEIL rounds a `DATE`, `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ` value up to the nearest specified second period. If origin is specified, it uses that as the basis; otherwise, it defaults to 0001-01-01 00:00:00.
 
 Date calculation formula:
 $$
@@ -33,7 +33,7 @@ SECOND_CEIL(<datetime>[, <period>][, <origin_datetime>])
 | --------- | ----------- |
 | `<datetime>` | Required. The input datetime value. Supports input of DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ types. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | Optional. Indicates how many seconds make up each period. Supports positive integer type (INT). Default is 1 second. |
-| `<origin_datetime>` | Optional. The alignment starting point. Supports input of datetime type and strings that conform to datetime formats. If not specified, defaults to 0001-01-01T00:00:00. |
+| `<origin_datetime>` | Optional. The alignment starting point. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. If not specified, defaults to 0001-01-01T00:00:00. |
 
 ## Return Value
 

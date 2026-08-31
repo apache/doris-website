@@ -8,7 +8,7 @@
 
 ## 描述
 
-DATE_TRUNC 函数用于将日期或时间值按照指定的时间单位（time_unit）截断，即保留指定单位及更高层级的时间信息，将更低层级的时间信息清至最小日期时间。例如，按 “小时” 截断时，会保留年、月、日、小时，将分钟、秒等清零，按照年截断时，会把日，月截断为 xxxx-01-01。支持输入类型为 TIMESTAMPTZ, DATETIME, DATE。
+DATE_TRUNC 函数用于将日期或时间值按照指定的时间单位（time_unit）截断，即保留指定单位及更高层级的时间信息，将更低层级的时间信息清至最小日期时间。例如，按“小时”截断时，会保留年、月、日、小时，将分钟、秒等清零；按年截断时，会把日期截断为 xxxx-01-01。支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ` 输入。
 
 该函数与 postgresql 中的 [date_trunc函数](https://www.postgresql.org/docs/16/functions-datetime.html#FUNCTIONS-DATETIME-TRUNC) 行为基本一致, 不同的是, doris暂不支持 second 单位以下的截断, postgresql 支持到 microsecond 。
 

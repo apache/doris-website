@@ -2,13 +2,13 @@
 {
     "title": "MINUTE_CEIL",
     "language": "zh-CN",
-    "description": "MINUTECEIL 函数用于将输入的日期时间值向上取整到最近的指定分钟周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。该函数支持处理 DATETIME 类型"
+    "description": "MINUTE_CEIL 将 DATE、DATETIME、TIMESTAMP_NS 或 TIMESTAMPTZ 值向上取整到最近的指定分钟周期，并保持输入对应的日期时间类型和精度。"
 }
 ---
 
 ## 描述
 
-MINUTE_CEIL 函数用于将输入的日期时间值向上取整到最近的指定分钟周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。该函数支持处理 DATETIME 类型
+MINUTE_CEIL 将 `DATE`、`DATETIME`、`TIMESTAMP_NS` 或 `TIMESTAMPTZ` 值向上取整到最近的指定分钟周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。
 
 日期计算公式：
 $$
@@ -35,7 +35,7 @@ MINUTE_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 | ---- | ---- |
 | `<date_or_time_expr>` | 需要向上取整的日期时间值，支持输入 DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 分钟周期值，类型为 INT，表示每个周期包含的分钟数 |
-| `<origin>` | 周期的起始时间点，类型为 DATETIME ，默认值为 0001-01-01 00:00:00 |
+| `<origin>` | 周期的起始时间点，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`，默认值为 0001-01-01 00:00:00。 |
 
 ## 返回值
 

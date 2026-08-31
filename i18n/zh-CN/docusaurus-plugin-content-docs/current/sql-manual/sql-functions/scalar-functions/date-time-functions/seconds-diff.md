@@ -60,6 +60,15 @@ SELECT SECONDS_DIFF('2023-01-02', '2023-01-01') AS result;  -- 相差1天（8640
 |  86400 |
 +--------+
 
+--- 任一参数均可使用 TIMESTAMP_NS
+SELECT SECONDS_DIFF(CAST('2024-01-01 00:00:02.000000000' AS TIMESTAMP_NS),
+                    CAST('2024-01-01 00:00:00' AS DATETIME)) AS result;
++--------+
+| result |
++--------+
+|      2 |
++--------+
+
 --- 包含 scale 的时间,会把小数部分差距算入
 mysql> SELECT SECONDS_DIFF('2023-07-13 12:00:00', '2023-07-13 11:59:59.6') AS result;
 +--------+

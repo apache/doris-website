@@ -2,7 +2,7 @@
 {
     "title": "MILLISECONDS_DIFF",
     "language": "en",
-    "description": "The MILLISECONDSDIFF function calculates the difference in milliseconds between two datetime values."
+    "description": "Calculates the millisecond difference between two DATETIME or TIMESTAMP_NS values."
 }
 ---
 

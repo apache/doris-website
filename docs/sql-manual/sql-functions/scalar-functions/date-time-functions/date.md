@@ -2,7 +2,7 @@
 {
     "title": "DATE | Date Time Functions",
     "language": "en",
-    "description": "The DATE function is used to extract the pure date part from a datetime value (which includes both date and time), ignoring the time information.",
+    "description": "Extracts the date part from a DATETIME or TIMESTAMP_NS value and ignores its time and fractional-second fields.",
     "sidebar_label": "DATE"
 }
 ---

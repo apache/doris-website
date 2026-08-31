@@ -2,13 +2,13 @@
 {
     "title": "MILLISECONDS_ADD",
     "language": "zh-CN",
-    "description": "MILLISECONDSADD 函数用于向输入的日期时间值中添加指定的毫秒数，并返回计算后的新日期时间值。该函数支持处理含毫秒精度的 DATETIME 类型。"
+    "description": "MILLISECONDS_ADD 向 DATETIME、TIMESTAMP_NS 或 TIMESTAMPTZ 值中添加指定的毫秒数，并返回相同类型的结果；结果超出该类型范围时抛出错误。"
 }
 ---
 
 ## 描述
 
-MILLISECONDS_ADD 函数用于向输入的日期时间值中添加指定的毫秒数，并返回计算后的新日期时间值。该函数支持处理含毫秒精度的 DATETIME 类型。
+MILLISECONDS_ADD 函数向 `DATETIME`、`TIMESTAMP_NS` 或 `TIMESTAMPTZ` 值中添加指定的毫秒数，并返回相同类型的计算结果。
 
 ## 语法
 
@@ -20,7 +20,7 @@ MILLISECONDS_ADD(`<datetime>`, `<delta>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<datetime>` | 输入的日期时间值，支持 `DATETIME` 和 `TIMESTAMP_NS`。具体格式请参见 [DATETIME 转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)和 [TIMESTAMP_NS 转换](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md)。 |
+| `<datetime>` | 输入的日期时间值，支持 `DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`。具体格式请参见 [DATETIME 转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)、[TIMESTAMP_NS 转换](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md)和 [TIMESTAMPTZ 转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)。 |
 | `<delta>` | 要添加的毫秒数，类型为 BIGINT，1 秒 = 1,000 毫秒 = 1,000,000 微秒 |
 
 ## 返回值

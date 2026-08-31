@@ -2,7 +2,7 @@
 {
     "title": "MICROSECOND_TIMESTAMP",
     "language": "zh-CN",
-    "description": "MICROSECONDTIMESTAMP 函数用于将输入的日期时间值转换为从 1970-01-01 00:00:00 加上本地时区偏移，开始计算的 Unix 时间戳，单位为微秒（1 秒 = 1,000,000 微秒）。该函数支持处理包含微秒精度的 DATETIME 类型 ，"
+    "description": "MICROSECOND_TIMESTAMP 将 DATETIME 或 TIMESTAMP_NS 值转换为微秒级 Unix 时间戳；TIMESTAMP_NS 的最后 3 位纳秒会被截断而不进行四舍五入。"
 }
 ---
 

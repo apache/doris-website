@@ -2,14 +2,14 @@
 {
     "title": "HOUR_CEIL",
     "language": "en",
-    "description": "HOUR_CEIL function rounds up the input datetime value to the nearest moment of the specified hour period. For example, if the period is 5 hours, the function adjusts the input time to the next hour mark within that period."
+    "description": "Rounds a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value up to the nearest boundary of a specified hour period."
 }
 ---
 
 ## Description
 
 
-HOUR_CEIL function rounds up the input datetime value to the nearest moment of the specified hour period. For example, if the period is 5 hours, the function adjusts the input time to the next hour mark within that period.
+HOUR_CEIL function rounds up the input datetime value to the nearest moment of the specified hour period. It supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ` inputs. For example, if the period is 5 hours, the function adjusts the input time to the next hour mark within that period.
 
 Date calculation formula:
 $$
@@ -34,9 +34,9 @@ HOUR_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_expr>` | A valid date expression that supports datetime/date/timestamptz types. Date type will be converted to the start of the day at 00:00:00. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), and for datetime/date formats refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | A valid date expression that supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. `DATE` input is treated as the start of the day at 00:00:00. For specific formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | Optional parameter that specifies the period length (unit: hours), must be a positive integer (such as 1, 3, 5). Default value is 1, representing one period every 1 hour |
-| `<origin>` | The starting time origin, supports datetime and date types. If not provided, the default is 0001-01-01T00:00:00 |
+| `<origin>` | The starting time origin. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. If not provided, the default is 0001-01-01T00:00:00. |
 
 ## Return Value
 

@@ -2,17 +2,17 @@
 {
     "title": "UNIX_TIMESTAMP",
     "language": "zh-CN",
-    "description": "将 Date 或者 Datetime 类型转化为 unix 时间戳。"
+    "description": "UNIX_TIMESTAMP 将 DATE、DATETIME 或 TIMESTAMP_NS 值转换为 Unix 时间戳；TIMESTAMP_NS 输入返回带 9 位小数的 DECIMAL 时间戳。"
 }
 ---
 
 ## 描述
 
-将 Date 或者 Datetime 类型转化为 unix 时间戳。
+将 `DATE`、`DATETIME` 或 `TIMESTAMP_NS` 值转换为 Unix 时间戳。
 
 如果没有参数，则是将当前的时间转化为时间戳。
 
-参数需要是 Date 或者 Datetime 类型。
+提供日期时间参数时，其类型必须为 `DATE`、`DATETIME` 或 `TIMESTAMP_NS`。
 Format 的格式请参阅 date_format 函数的格式说明。
 
 该函数受时区影响，时区部分请查看 [时区管理](../../../../admin-manual/cluster-management/time-zone)。

@@ -2,7 +2,7 @@
 {
     "title": "HOURS_SUB",
     "language": "en",
-    "description": "The HOURSSUB function subtracts a specified number of hours from an input date or datetime value and returns the calculated new datetime."
+    "description": "Subtracts a specified number of hours from a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value and preserves its temporal type."
 }
 ---
 

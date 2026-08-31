@@ -2,7 +2,7 @@
 {
     "title": "TO_MONDAY",
     "language": "en",
-    "description": "Rounds a date or datetime down to the nearest Monday. As a special case, the date parameters 1970-01-01, 1970-01-02, 1970-01-03,"
+    "description": "Returns the Monday of the week containing a DATE, DATETIME, or TIMESTAMP_NS value."
 }
 ---
 

@@ -8,7 +8,7 @@
 
 ## 描述
 
-HOUR_CEIL 函数用于将输入的日期时间值向上取整到指定小时周期的最近时刻。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的下一个整点时刻（若输入时间已在周期起点，则保持不变）。
+HOUR_CEIL 函数用于将输入的日期时间值向上取整到指定小时周期的最近时刻，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ` 输入。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的下一个整点时刻（若输入时间已在周期起点，则保持不变）。
 日期计算公式：
 $$
 \begin{aligned}
@@ -32,9 +32,9 @@ HOUR_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 datetime/date/timestamptz 类型，date 类型会转换为一天的 00:00:00 开始,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 合法的日期表达式，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`。`DATE` 输入按当天的起始时间 00:00:00 处理。具体格式请查看 [timestamptz 的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)、[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
 | `<period>` | 可选参数，指定周期长度（单位：小时），为正整数（如 1、3、5）。默认值为 1，表示每 1 小时一个周期|
-| `<origin>` | 开始的时间起点，支持输入 datetime 和 date 类型，如果不填，默认是 0001-01-01T00:00:00 |
+| `<origin>` | 周期的起始时间点，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`。若不指定，默认为 0001-01-01T00:00:00。 |
 
 ## 返回值
 

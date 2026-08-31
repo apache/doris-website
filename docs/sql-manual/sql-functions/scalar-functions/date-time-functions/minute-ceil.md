@@ -2,14 +2,14 @@
 {
     "title": "MINUTE_CEIL",
     "language": "en",
-    "description": "MINUTE_CEIL function rounds the input datetime value up to the nearest specified minute period. If origin is specified, it uses that as the basis; if not specified, the default basis is 0001-01-01 00:00:00. Supports processing DATETIME type."
+    "description": "MINUTE_CEIL rounds a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value up to the nearest specified minute period."
 }
 ---
 
 ## Description
 
 
-MINUTE_CEIL function rounds the input datetime value up to the nearest specified minute period. If origin is specified, it uses that as the basis; otherwise, it defaults to 0001-01-01 00:00:00. The function supports processing DATETIME type.
+MINUTE_CEIL rounds a `DATE`, `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ` value up to the nearest specified minute period. If origin is specified, it uses that as the basis; otherwise, it defaults to 0001-01-01 00:00:00.
 
 Date calculation formula:
 $$
@@ -36,7 +36,7 @@ MINUTE_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 | --------- | ----------- |
 | `<date_or_time_expr>` | The datetime value to be rounded up. Supports input of DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ types. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | The minute interval value, of type INT, representing the number of minutes contained in each interval. |
-| `<origin>` | The starting time point of the interval, of type DATETIME. Default value is 0001-01-01 00:00:00. |
+| `<origin>` | The starting time point of the interval. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. Default value is 0001-01-01 00:00:00. |
 
 ## Return Value
 

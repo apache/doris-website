@@ -35,7 +35,7 @@ MONTH_FLOOR(`<datetime>`, `<period>`, `<origin>`)
 | --------- | ----------- |
 | `<datetime>` | The datetime value to be rounded down. Supports DATETIME/DATE/TIMESTAMP_NS/TIMESTAMPTZ types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), and for datetime/date formats refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | The month interval value, of type INT, representing the number of months contained in each interval. |
-| `<origin>` | The starting time point of the interval, of type DATETIME and DATE. Default value is 0001-01-01 00:00:00. |
+| `<origin>` | The starting time point of the interval. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. Default value is 0001-01-01 00:00:00. |
 
 ## Return Value
 

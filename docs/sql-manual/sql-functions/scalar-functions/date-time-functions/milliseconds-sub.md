@@ -2,13 +2,13 @@
 {
     "title": "MILLISECONDS_SUB",
     "language": "en",
-    "description": "The MILLISECONDSSUB function subtracts a specified number of milliseconds from the input datetime value and returns the resulting new datetime value."
+    "description": "Subtracts a specified number of milliseconds from a DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value."
 }
 ---
 
 ## Description
 
-The `MILLISECONDS_SUB` function subtracts a specified number of milliseconds from the input datetime value and returns the resulting new datetime value. This function supports processing `DATETIME` types.
+The `MILLISECONDS_SUB` function subtracts a specified number of milliseconds from a `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ` value and returns the resulting value with the same type.
 
 ## Syntax
 
@@ -20,7 +20,7 @@ MILLISECONDS_SUB(`<datetime>`, `<delta>`)
 
 | Parameter    | Description                                                                                   |
 |--------------|-----------------------------------------------------------------------------------------------|
-| `<datetime>` | The input datetime value, of type `DATETIME` or `TIMESTAMP_NS`. For specific formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [TIMESTAMP_NS conversion](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md). |
+| `<datetime>` | The input datetime value, of type `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ`. For specific formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [TIMESTAMP_NS conversion](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md), and [TIMESTAMPTZ conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion). |
 | `<delta>`    | The number of milliseconds to subtract, of type `BIGINT`. 1 second = 1,000 milliseconds = 1,000,000 microseconds. |
 
 ## Return Value

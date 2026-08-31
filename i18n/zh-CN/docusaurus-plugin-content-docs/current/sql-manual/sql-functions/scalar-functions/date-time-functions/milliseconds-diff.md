@@ -2,7 +2,7 @@
 {
     "title": "MILLISECONDS_DIFF",
     "language": "zh-CN",
-    "description": "MILLISECONDSDIFF 函数用于计算两个日期时间值之间的毫秒差值，结果为结束时间减去开始时间的毫秒数。该函数支持处理DATETIME 类型。"
+    "description": "MILLISECONDS_DIFF 计算两个 DATETIME 或 TIMESTAMP_NS 值之间的毫秒差，结果为结束时间减去开始时间；任一参数为 NULL 时返回 NULL。"
 }
 ---
 

@@ -2,7 +2,7 @@
 {
     "title": "TO_ISO8601 | Date Time Functions",
     "language": "en",
-    "description": "Converts datetime values to ISO8601 formatted strings, supporting input types DATETIME, DATE and TIMESTAMPTZ.",
+    "description": "Converts DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ values to ISO8601 formatted strings.",
     "sidebar_label": "TO_ISO8601"
 }
 ---
@@ -11,7 +11,7 @@
 
 ## Description
 
-Converts datetime values to ISO8601 formatted strings, supporting input types DATETIME, DATE and TIMESTAMPTZ.
+Converts `DATE`, `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ` values to ISO8601 formatted strings.
 The returned ISO8601 formatted datetime is represented as YYYY-MM-DDTHH:MM:SS, where T is the separator between date and time.
 
 ## Syntax

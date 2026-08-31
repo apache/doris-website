@@ -2,13 +2,13 @@
 {
     "title": "TIMEDIFF",
     "language": "zh-CN",
-    "description": "TIMEDIFF 函数用于计算两个日期时间值之间的差值，并以 TIME 类型返回结果。该函数支持处理 DATETIME、DATE 类型，若输入为 DATE 类型，默认其时间部分为 00:00:00。"
+    "description": "TIMEDIFF 计算 DATE、DATETIME 或 TIMESTAMP_NS 值之间的差值，并以 TIME 类型返回结果；结果保留必要的小数秒精度，任一参数为 NULL 时返回 NULL。"
 }
 ---
 
 ## 描述
 
-TIMEDIFF 函数用于计算两个日期时间值之间的差值，并以 TIME 类型返回结果。该函数支持处理 DATETIME、DATE 类型，若输入为 DATE 类型，默认其时间部分为 00:00:00。
+TIMEDIFF 函数计算两个 `DATE`、`DATETIME` 或 `TIMESTAMP_NS` 值之间的差值，并以 `TIME` 类型返回结果。`DATE` 输入按 00:00:00 处理。
 
 该函数与 mysql 中的 [timediff 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_timediff) 行为一致
 

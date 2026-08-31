@@ -2,7 +2,7 @@
 {
     "title": "MINUTES_ADD",
     "language": "en",
-    "description": "The MINUTESADD function adds a specified number of minutes to the input datetime value and returns the resulting new datetime value."
+    "description": "Adds a specified number of minutes to a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value and preserves its temporal type."
 }
 ---
 

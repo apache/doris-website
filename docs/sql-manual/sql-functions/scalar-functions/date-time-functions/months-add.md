@@ -2,7 +2,7 @@
 {
     "title": "MONTHS_ADD",
     "language": "en",
-    "description": "The MONTHSADD function adds a specified number of months to the input datetime value and returns the resulting new datetime value."
+    "description": "Adds a specified number of months to a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value and preserves its temporal type."
 }
 ---
 

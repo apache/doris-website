@@ -8,7 +8,7 @@
 
 ## 描述
 
-MONTH_FLOOR 函数用于将输入的日期时间值向下取整到最近的指定月份周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。
+MONTH_FLOOR 函数用于将 `DATE`、`DATETIME`、`TIMESTAMP_NS` 或 `TIMESTAMPTZ` 值向下取整到最近的指定月份周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。
 
 日期时间的计算公式：
 
@@ -34,9 +34,9 @@ MINUTE_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr>` | 需要向下取整的日期时间值，类型为 DATETIME 或 DATE ，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | 需要向下取整的日期时间值，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`，具体格式请查看 [timestamptz 的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)、[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
 | `<period>` | 月份周期值，类型为 INT，表示每个周期包含的月数 |
-| `<origin>` | 周期的起始时间点，类型为 DATETIME/DATE ，默认值为 0001-01-01 00:00:00 |
+| `<origin>` | 周期的起始时间点，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`，默认值为 0001-01-01 00:00:00。 |
 
 ## 返回值
 

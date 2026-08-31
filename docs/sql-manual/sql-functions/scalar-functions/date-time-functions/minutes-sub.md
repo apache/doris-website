@@ -2,7 +2,7 @@
 {
     "title": "MINUTES_SUB",
     "language": "en",
-    "description": "The MINUTESSUB function subtracts a specified number of minutes from the input datetime value and returns the resulting new datetime value."
+    "description": "Subtracts a specified number of minutes from a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value and preserves its temporal type."
 }
 ---
 
