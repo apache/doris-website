@@ -110,5 +110,5 @@ Building a data platform to suit your use case is not easy, I hope this post hel
 
 Apache Doris [GitHub repo](https://github.com/apache/doris)
 
-Find Apache Doris makers on [Slack](https://doris.apache.org/slack)
+Find Apache Doris makers on [Slack](https://doris.apache.org/slack?utm_source=website&utm_medium=content&utm_content=blog_how-big-data-is-saving-lives-in-real-time-iov-data-analytic)
 

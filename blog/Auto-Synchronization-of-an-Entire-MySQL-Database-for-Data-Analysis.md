@@ -191,5 +191,5 @@ CREATE TABLE doris_sink (
 );
 ```
 
-If you've got any questions, find Apache Doris developers on [Slack](https://doris.apache.org/slack).
+If you've got any questions, find Apache Doris developers on [Slack](https://doris.apache.org/slack?utm_source=website&utm_medium=content&utm_content=blog_auto-synchronization-of-an-entire-mysql-database-for-data-a).
 
