@@ -10,6 +10,21 @@
 
 本文按版本倒序列出 Doris Kafka Connector 的版本发布说明。
 
+## 26.1.0
+
+来源：[Release Note 26.1.0](https://github.com/apache/doris-kafka-connector/issues/102)
+
+### 功能与改进
+
+- 缓存可用 BE，避免每次 load 前都执行 HTTP 探测。[#99](https://github.com/apache/doris-kafka-connector/pull/99)
+- 支持与 Doris 建立单向 TLS 连接。[#100](https://github.com/apache/doris-kafka-connector/pull/100)
+- combined at-least-once 写入支持 S3 TVF Sink 模式。[#101](https://github.com/apache/doris-kafka-connector/pull/101)
+
+### 致谢
+
+- @diggle1
+- @JNSimba
+
 ## 26.0.0
 
 来源：[Release Note 26.0.0](https://github.com/apache/doris-kafka-connector/issues/98)

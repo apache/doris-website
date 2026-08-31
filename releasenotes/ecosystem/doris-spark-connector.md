@@ -10,6 +10,33 @@
 
 This document lists Doris Spark Connector release notes in reverse chronological order.
 
+## 26.1.0
+
+Source: [Spark Doris Connector 26.1.0](https://github.com/apache/doris-spark-connector/issues/372)
+
+### Spark Connector
+
+#### Features and Improvements
+
+- Supported exposing Doris `ARRAY` columns as Spark `Array[String]`. [#362](https://github.com/apache/doris-spark-connector/pull/362)
+- Supported Spark 4.1. [#365](https://github.com/apache/doris-spark-connector/pull/365)
+- Supported one-way TLS connections to Doris. [#369](https://github.com/apache/doris-spark-connector/pull/369)
+- Added Doris regression test programs. [#370](https://github.com/apache/doris-spark-connector/pull/370)
+- Supported S3 TVF batch sink mode. [#371](https://github.com/apache/doris-spark-connector/pull/371)
+- Used Arrow Flight SQL as the default read mode, with fallback to Thrift when unavailable. [#367](https://github.com/apache/doris-spark-connector/pull/367)
+
+#### Bug Fixes
+
+- Fixed backend discovery for the specified compute group in cloud mode. [#361](https://github.com/apache/doris-spark-connector/pull/361)
+- Fixed Arrow timestamp conversion for Doris `DATETIME` and `TIMESTAMPTZ` types. [#366](https://github.com/apache/doris-spark-connector/pull/366)
+
+### Thanks
+
+- @addu390
+- @gnehil
+- @JNSimba
+- @LuciferYang
+
 ## 26.0.0
 
 Source: [Spark Doris Connector 26.0.0](https://github.com/apache/doris-spark-connector/issues/358)

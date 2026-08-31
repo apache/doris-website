@@ -10,6 +10,36 @@
 
 This document lists Doris Flink Connector release notes in reverse chronological order.
 
+## 26.2.0
+
+Source: [Release Note 26.2.0](https://github.com/apache/doris-flink-connector/issues/691)
+
+### Features and Improvements
+
+- Supported snapshot, incremental, and initial scan modes for Doris Source. [#679](https://github.com/apache/doris-flink-connector/pull/679)
+- Supported one-way TLS connections to Doris over HTTP, MySQL/JDBC, Thrift, and Arrow Flight SQL. [#686](https://github.com/apache/doris-flink-connector/pull/686)
+- Supported S3 TVF sink write mode. [#688](https://github.com/apache/doris-flink-connector/pull/688)
+- Added JDK 21 build and CI validation for Flink 2.x. [#678](https://github.com/apache/doris-flink-connector/pull/678)
+- Reported the standard FLIP-33 sink metrics `numRecordsSend` and `numBytesSend`. [#681](https://github.com/apache/doris-flink-connector/pull/681)
+- Supported the PostgreSQL `regclass` type in CDC synchronization. [#658](https://github.com/apache/doris-flink-connector/pull/658)
+- Added Doris regression test programs. [#687](https://github.com/apache/doris-flink-connector/pull/687)
+
+### Bug Fixes
+
+- Fixed oversized checkpoint state for initial snapshots of large tables. [#690](https://github.com/apache/doris-flink-connector/pull/690)
+- Fixed an issue where `DorisWriter` aborted the wrong transaction. [#683](https://github.com/apache/doris-flink-connector/pull/683)
+- Fixed MongoDB CDC parsing when `fullDocument` is returned as a JSON string. [#671](https://github.com/apache/doris-flink-connector/pull/671)
+- Fixed Arrow timestamp conversion for Doris `DATETIME` and `TIMESTAMPTZ` types. [#676](https://github.com/apache/doris-flink-connector/pull/676)
+
+### Thanks
+
+- @Cq-study
+- @JNSimba
+- @liujiwen-up
+- @Sbaia
+- @Tan-JiaLiang
+- @ziyanTOP
+
 ## 26.1.1
 
 Source: [Release Note 26.1.1](https://github.com/apache/doris-flink-connector/issues/654)
