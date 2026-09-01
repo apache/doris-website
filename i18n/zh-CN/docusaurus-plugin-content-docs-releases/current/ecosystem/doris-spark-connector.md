@@ -10,6 +10,33 @@
 
 本文按版本倒序列出 Doris Spark Connector 的版本发布说明。
 
+## 26.1.0
+
+来源：[Spark Doris Connector 26.1.0](https://github.com/apache/doris-spark-connector/issues/372)
+
+### Spark Connector
+
+#### 功能与改进
+
+- 支持将 Doris `ARRAY` 列映射为 Spark `Array[String]`。[#362](https://github.com/apache/doris-spark-connector/pull/362)
+- 支持 Spark 4.1。[#365](https://github.com/apache/doris-spark-connector/pull/365)
+- 支持与 Doris 建立单向 TLS 连接。[#369](https://github.com/apache/doris-spark-connector/pull/369)
+- 增加 Doris 回归测试程序。[#370](https://github.com/apache/doris-spark-connector/pull/370)
+- 支持 S3 TVF batch sink 模式。[#371](https://github.com/apache/doris-spark-connector/pull/371)
+- 默认使用 Arrow Flight SQL 读取，不可用时回退到 Thrift。[#367](https://github.com/apache/doris-spark-connector/pull/367)
+
+#### Bug 修复
+
+- 修复 cloud mode 下指定 compute group 的 backend discovery 问题。[#361](https://github.com/apache/doris-spark-connector/pull/361)
+- 修复 Doris `DATETIME` 和 `TIMESTAMPTZ` 类型的 Arrow timestamp 转换问题。[#366](https://github.com/apache/doris-spark-connector/pull/366)
+
+### 致谢
+
+- @addu390
+- @gnehil
+- @JNSimba
+- @LuciferYang
+
 ## 26.0.0
 
 来源：[Spark Doris Connector 26.0.0](https://github.com/apache/doris-spark-connector/issues/358)

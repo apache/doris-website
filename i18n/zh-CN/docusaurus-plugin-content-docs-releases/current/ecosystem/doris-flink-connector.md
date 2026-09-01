@@ -10,6 +10,36 @@
 
 本文按版本倒序列出 Doris Flink Connector 的版本发布说明。
 
+## 26.2.0
+
+来源：[Release Note 26.2.0](https://github.com/apache/doris-flink-connector/issues/691)
+
+### 功能与改进
+
+- Doris Source 支持 snapshot、incremental 和 initial 三种扫描模式。[#679](https://github.com/apache/doris-flink-connector/pull/679)
+- 支持通过 HTTP、MySQL/JDBC、Thrift 和 Arrow Flight SQL 与 Doris 建立单向 TLS 连接。[#686](https://github.com/apache/doris-flink-connector/pull/686)
+- 支持 S3 TVF Sink 写入模式。[#688](https://github.com/apache/doris-flink-connector/pull/688)
+- 为 Flink 2.x 增加 JDK 21 构建和 CI 验证。[#678](https://github.com/apache/doris-flink-connector/pull/678)
+- 上报标准 FLIP-33 Sink 指标 `numRecordsSend` 和 `numBytesSend`。[#681](https://github.com/apache/doris-flink-connector/pull/681)
+- CDC 同步支持 PostgreSQL `regclass` 类型。[#658](https://github.com/apache/doris-flink-connector/pull/658)
+- 增加 Doris 回归测试程序。[#687](https://github.com/apache/doris-flink-connector/pull/687)
+
+### Bug 修复
+
+- 修复大表 initial snapshot 的 checkpoint state 过大的问题。[#690](https://github.com/apache/doris-flink-connector/pull/690)
+- 修复 `DorisWriter` abort 错误事务的问题。[#683](https://github.com/apache/doris-flink-connector/pull/683)
+- 修复 `fullDocument` 以 JSON 字符串返回时 MongoDB CDC 的解析问题。[#671](https://github.com/apache/doris-flink-connector/pull/671)
+- 修复 Doris `DATETIME` 和 `TIMESTAMPTZ` 类型的 Arrow timestamp 转换问题。[#676](https://github.com/apache/doris-flink-connector/pull/676)
+
+### 致谢
+
+- @Cq-study
+- @JNSimba
+- @liujiwen-up
+- @Sbaia
+- @Tan-JiaLiang
+- @ziyanTOP
+
 ## 26.1.1
 
 来源：[Release Note 26.1.1](https://github.com/apache/doris-flink-connector/issues/654)

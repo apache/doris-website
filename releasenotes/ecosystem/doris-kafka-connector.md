@@ -10,6 +10,21 @@
 
 This document lists Doris Kafka Connector release notes in reverse chronological order.
 
+## 26.1.0
+
+Source: [Release Note 26.1.0](https://github.com/apache/doris-kafka-connector/issues/102)
+
+### Features and Improvements
+
+- Cached the available BE to avoid an HTTP probe before every load. [#99](https://github.com/apache/doris-kafka-connector/pull/99)
+- Supported one-way TLS connections to Doris. [#100](https://github.com/apache/doris-kafka-connector/pull/100)
+- Supported S3 TVF sink mode for combined at-least-once writes. [#101](https://github.com/apache/doris-kafka-connector/pull/101)
+
+### Thanks
+
+- @diggle1
+- @JNSimba
+
 ## 26.0.0
 
 Source: [Release Note 26.0.0](https://github.com/apache/doris-kafka-connector/issues/98)
