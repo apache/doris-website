@@ -251,7 +251,12 @@ The following configurations are used to create a Doris Sink Connector. For othe
 | `doris.user` | - | - | Y | Doris username. |
 | `doris.password` | - | - | Y | Doris password. |
 | `doris.database` | - | - | Y | The database to write to. It can be left empty when writing to multiple databases, in which case the database name must be specified in `topic2table.map`. |
+| `doris.enable.tls` | `true`,<br />`false` | false | N | Whether to enable TLS for Doris HTTP and MySQL connections. |
+| `doris.tls.ca-certificate-path` | - | Empty string | N | Worker-local PEM CA certificate chain path. When empty, the Connector does not load a custom CA and uses the corresponding client's default trust store. |
+| `doris.tls.skip-hostname-verification` | `true`,<br />`false` | false | N | Whether to skip hostname verification while retaining CA verification. |
+| `doris.tls.excluded-protocols` | `http`,<br />`mysql` | Empty string | N | Comma-separated Doris protocols that do not use TLS. |
 | `doris.topic2table.map` | - | - | Y | The mapping between topics and tables, for example `topic1:tb1,topic2:tb2`. If left empty, the topic name is used as the target table name by default. The format for multiple databases is `topic1:db1.tbl1,topic2:db2.tbl2`. |
+| `load.model` | `stream_load`,<br />`tvf` | stream_load | N | Doris write mode. Set this option to `tvf` to write through S3 TVF. |
 | `buffer.count.records` | - | 50000 | N | The number of records written per Stream Load. |
 | `buffer.flush.time` | - | 120 | N | The buffer flush interval in seconds. The default value is 120 seconds. |
 | `buffer.size.bytes` | - | 104857600(100MB) | N | The data size written per Stream Load. |
@@ -260,6 +265,13 @@ The following configurations are used to create a Doris Sink Connector. For othe
 | `label.prefix` | - | `${name}` | N | The label prefix for Stream Load when importing data. The default value is the Connector application name. |
 | `auto.redirect` | - | true | N | Whether to redirect Stream Load requests. When enabled, Stream Load is redirected through the FE to the BE that needs to write the data, and BE information is no longer displayed. |
 | `sink.properties.*` | - | `'sink.properties.format':'json'`,<br />`'sink.properties.read_json_by_line':'true'` | N | Stream Load import parameters. For example, define the column separator with `'sink.properties.column_separator':','`. For detailed parameters, see [Stream Load manual](../../data-operate/import/import-way/stream-load-manual.md).<br /><br />To enable Group Commit, for example to enable `sync_mode`: `"sink.properties.group_commit":"sync_mode"`. Group Commit supports three modes: `off_mode`, `sync_mode`, and `async_mode`. For detailed usage, see [Group Commit](https://doris.apache.org/docs/data-operate/import/group-commit-manual/).<br /><br />To enable partial column update, for example to update the partial column `col2`: `"sink.properties.partial_columns":"true"`, `"sink.properties.columns":"col2"`. |
+| `sink.s3.endpoint` | - | - | TVF write mode only | Absolute HTTP or HTTPS endpoint of the S3-compatible object storage. |
+| `sink.s3.region` | - | - | TVF write mode only | Object storage region. |
+| `sink.s3.bucket` | - | - | TVF write mode only | Bucket used to stage data. |
+| `sink.s3.prefix` | - | - | TVF write mode only | Object key prefix used to stage data. |
+| `sink.s3.access-key` | - | - | TVF write mode only | Object storage access key. |
+| `sink.s3.secret-key` | - | - | TVF write mode only | Object storage secret key. |
+| `sink.s3.path-style-access` | `true`,<br />`false` | false | N | Whether to use path-style object storage access in TVF write mode. |
 | `delivery.guarantee` | `at_least_once`,<br />`exactly_once` | at_least_once | N | The data consistency guarantee when consuming Kafka data and importing it into Doris. Supports `at_least_once` and `exactly_once`. The default value is `at_least_once`. Doris must be upgraded to 2.1.0 or later to guarantee `exactly_once`. |
 | `converter.mode` | `normal`,<br />`debezium_ingestion` | normal | N | The upstream data type conversion mode used when the Connector consumes Kafka data. `normal` means consuming Kafka data normally without special type conversion. `debezium_ingestion` means special type conversion is required when the upstream Kafka data is collected through CDC (Change Data Capture) tools such as Debezium. |
 | `debezium.schema.evolution` | `none`,<br />`basic` | none | N | When collecting from upstream database systems (such as MySQL) through Debezium, if a schema change occurs, added fields can be synchronized to Doris. `none` means schema changes in the upstream database system are not synchronized to Doris. `basic` means data change operations in the upstream database are synchronized. Because column schema changes are dangerous operations and may accidentally drop columns from the Doris table schema, only adding columns from upstream is currently supported. When a column is renamed, the old column remains unchanged, and the Connector adds a new column in the target table and sinks the renamed new data into the new column. |
@@ -557,6 +569,51 @@ After SMT processing, the sample data becomes:
 ```
 
 Here, `repo` is the static field added by `InsertField`, and `registertime` is the time string converted by `TimestampConverter`. For more Kafka Connect Single Message Transforms (SMT) examples, see the [SMT documentation](https://docs.confluent.io/cloud/current/connectors/transforms/overview.html).
+
+## Best practices
+
+### Access a TLS-enabled Doris environment from Kafka Connect
+
+Add the following options to the Connector configuration when writing to a TLS-enabled Doris cluster:
+
+```json
+{
+"doris.urls":"doris-fe.example.com",
+"doris.http.port":"8040",
+"doris.query.port":"9030",
+"doris.enable.tls":"true",
+"doris.tls.ca-certificate-path":"/etc/kafka-connect/certs/doris-ca.pem"
+}
+```
+
+Keep only host names in `doris.urls`; do not add a scheme or port. If the CA path is not configured, the Connector does not load a custom CA and uses the corresponding client's default trust store.
+
+Distribute the CA file according to the Kafka Connect deployment mode:
+
+- **Standalone**: Place the CA file on the Worker host and configure its local path.
+- **Distributed**: Place the CA file at the same local path on every Worker because a task may be assigned to any Worker.
+- **Kubernetes**: Mount the same Secret or volume into every Kafka Connect Worker Pod and configure the mounted path.
+
+### Use S3 TVF write mode
+
+TVF write mode stores data as JSON in S3-compatible object storage and then writes it to Doris through S3 TVF. Ensure that Kafka Connect and Doris can access the object storage and that the target Doris table already exists. Add the following options to the Connector configuration:
+
+```json
+{
+"load.model":"tvf",
+"enable.combine.flush":"true",
+"delivery.guarantee":"at_least_once",
+"sink.properties.columns":"id,name,age",
+"sink.s3.endpoint":"$YOUR_S3_ENDPOINT",
+"sink.s3.region":"$YOUR_S3_REGION",
+"sink.s3.bucket":"$YOUR_S3_BUCKET",
+"sink.s3.prefix":"$YOUR_S3_PREFIX",
+"sink.s3.access-key":"$YOUR_S3_ACCESS_KEY",
+"sink.s3.secret-key":"$YOUR_S3_SECRET_KEY"
+}
+```
+
+`sink.properties.columns` must list the target table columns in write order. The Connector does not automatically delete staged objects; configure an object storage lifecycle policy as needed.
 
 ## FAQ
 

@@ -198,7 +198,7 @@ mysql> select * from test.student_trans;
 
 ### 场景一：读取 Doris 数据
 
-Flink 读取 Doris 数据时，Doris Source 是有界流，不支持以 CDC 的方式持续读取。支持以下两种读取协议：
+默认情况下，Doris Source 读取有界快照。通过增量扫描模式，还可以持续读取 Doris Binlog 中的行级变更。支持以下两种读取协议：
 
 | 协议           | 说明                                                         | 推荐版本           |
 | -------------- | ------------------------------------------------------------ | ------------------ |
@@ -247,6 +247,98 @@ WITH (
 
 SELECT * FROM student;
 ```
+
+#### 使用 Doris Binlog 增量读取
+
+对于使用 Doris 开启 ROW 格式 Binlog 的表，Flink Doris Connector 可以持续读取行级数据变更。使用 `initial` 模式时，Connector 会先读取当前表快照，再无缝切换到增量变更读取。
+
+首先，在 Doris 源表上启用 ROW 格式的 Binlog。如果消费端需要更新前的行数据，还需要启用 `binlog.need_historical_value`：
+
+```sql
+CREATE DATABASE IF NOT EXISTS test;
+
+CREATE TABLE test.student_binlog_source (
+    id INT,
+    name VARCHAR(50),
+    age INT
+)
+UNIQUE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true",
+    "binlog.ttl_seconds" = "86400"
+);
+
+INSERT INTO test.student_binlog_source VALUES (1, 'Alice', 18);
+```
+
+然后启用 Flink Checkpoint 并创建 Doris Source 表：
+
+```sql
+SET 'execution.checkpointing.interval' = '10s';
+
+CREATE TABLE student_binlog (
+    id INT,
+    name STRING,
+    age INT
+) WITH (
+    'connector' = 'doris',
+    'fenodes' = '127.0.0.1:8030',
+    'table.identifier' = 'test.student_binlog_source',
+    'username' = 'root',
+    'password' = '',
+    'source.scan.mode' = 'initial'
+);
+
+SELECT * FROM student_binlog;
+```
+
+任务启动后，对 `test.student_binlog_source` 的修改会以 Flink Changelog 形式持续输出。通过 `source.scan.mode` 选择启动模式：
+
+| 模式 | 行为 |
+| ---- | ---- |
+| `snapshot` | 读取当前快照后结束，为默认模式。 |
+| `initial` | 先读取当前快照，快照读取完成后切换到持续 Binlog 读取。 |
+| `latest` | 跳过快照，只读取任务启动后产生的变更。 |
+| `from-timestamp` | 跳过快照，读取 `source.scan.timestamp` 指定时间之后（不含该时间点）的变更，时间格式为 `yyyy-MM-dd HH:mm:ss`。 |
+
+默认以 `detail` 类型输出完整的行变更。也可以通过 `source.binlog.increment-type` 设置为 `min_delta`（最小变更集）或 `append_only`（仅追加事件）。
+
+使用时请注意：
+
+- 增量读取使用 Arrow Flight SQL，Connector 默认启用并自动获取端口。
+- 需要启用 Flink Checkpoint。
+- Doris Binlog 的保留时间应覆盖任务可能停止的最长时间。如果恢复所需的 Binlog 已过期，需要重新读取快照或指定新的起始时间。
+
+##### 将消费进度写入 Doris（可选）
+
+消费进度默认保存在 Flink Checkpoint 中。如果还需要在 Doris 中查询消费进度，可以创建以下 Offset 表：
+
+```sql
+CREATE DATABASE IF NOT EXISTS ops;
+
+CREATE TABLE ops.flink_source_offsets (
+    consumer_id VARCHAR(256) NOT NULL,
+    offset_timestamp DATETIME NOT NULL,
+    update_time DATETIMEV2(3) NOT NULL
+)
+UNIQUE KEY(consumer_id)
+DISTRIBUTED BY HASH(consumer_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+);
+```
+
+```sql
+'jdbc-url' = 'jdbc:mysql://127.0.0.1:9030',
+'source.binlog.offset-table' = 'ops.flink_source_offsets',
+'source.binlog.consumer-id' = 'student-sync'
+```
+
+`source.binlog.consumer-id` 用于标识当前消费任务，同一任务重启时应保持不变。
 
 #### DataStream API 读取
 
@@ -793,6 +885,10 @@ Flink Doris Connector 集成了 [Flink CDC](https://nightlies.apache.org/flink/f
 | doris.request.retries         | 3             | N        | 向 Doris 发送请求的重试次数                                                           |
 | doris.request.connect.timeout | 30s           | N        | 向 Doris 发送请求的连接超时时间                                                       |
 | doris.request.read.timeout    | 30s           | N        | 向 Doris 发送请求的读取超时时间                                                       |
+| doris.enable.tls              | FALSE         | N        | 是否为 Doris HTTP、MySQL/JDBC、BE Thrift 和 Arrow Flight SQL 连接启用 TLS             |
+| doris.tls.ca-certificate-path | --            | N        | PEM CA 证书链的本地路径。为空时 Connector 不加载自定义 CA，使用对应客户端的默认信任库 |
+| doris.tls.skip-hostname-verification | FALSE | N        | 是否在保留 CA 校验的同时跳过服务端 hostname 校验                                     |
+| doris.tls.excluded-protocols  | --            | N        | 启用 TLS 时仍使用明文的协议列表，逗号分隔。支持 `http`、`mysql`、`thrift` 和 `arrowflight` |
 
 ### Source 配置项
 
@@ -804,6 +900,12 @@ Flink Doris Connector 集成了 [Flink CDC](https://nightlies.apache.org/flink/f
 | doris.exec.mem.limit        | 8192mb        | N        | 单个查询的内存限制。默认为 8GB，单位为字节                                                                                                             |
 | source.use-flight-sql       | TRUE          | N        | 是否使用 Arrow Flight SQL 读取                                                                                                                         |
 | source.flight-sql-port      | -             | N        | 使用 Arrow Flight SQL 读取时，FE 的 `arrow_flight_sql_port`                                                                                            |
+| source.scan.mode            | snapshot      | N        | Source 启动模式，支持 `snapshot`、`initial`、`latest` 和 `from-timestamp`                                                                               |
+| source.scan.timestamp       | --            | N        | `from-timestamp` 模式的开区间起始时间，格式为 `yyyy-MM-dd HH:mm:ss`                                                                                    |
+| source.binlog.increment-type | detail       | N        | Binlog 变更类型，支持 `detail`、`min_delta` 和 `append_only`                                                                                           |
+| source.binlog.poll-interval | 10s           | N        | 轮询新 Binlog 数据的时间间隔，最小值为 1 秒                                                                                                           |
+| source.binlog.offset-table  | --            | N        | 用于发布成功 Checkpoint 所覆盖 offset 的 Doris 表，格式为 `database.table`。需要同时配置 `source.binlog.consumer-id` 和 `jdbc-url`                       |
+| source.binlog.consumer-id   | --            | N        | 写入 `source.binlog.offset-table` 的稳定消费者标识                                                                                                    |
 
 **DataStream 专有配置项**
 
@@ -816,10 +918,18 @@ Flink Doris Connector 集成了 [Flink CDC](https://nightlies.apache.org/flink/f
 
 | Key                         | Default Value | Required | Comment                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| sink.label-prefix           | --            | Y        | Stream Load 导入使用的 label 前缀。2pc 场景下要求全局唯一，用来保证 Flink 的 EOS 语义。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| sink.label-prefix           | --            | Y        | 导入使用的 label 前缀。2PC 场景下要求全局唯一，用来保证 Flink 的 EOS 语义。                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | sink.properties.*           | --            | N        | Stream Load 的导入参数。例如：`'sink.properties.column_separator' = ', '` 定义列分隔符；`'sink.properties.escape_delimiters' = 'true'` 表示特殊字符作为分隔符，`\x01` 会被转换为二进制的 `0x01`；JSON 格式导入：`'sink.properties.format' = 'json'`、`'sink.properties.read_json_by_line' = 'true'`，详细参数参考 [Stream Load](../../data-operate/import/import-way/stream-load-manual.md#导入配置参数)。Group Commit 模式：`'sink.properties.group_commit' = 'sync_mode'` 设置 group commit 为同步模式。Flink Connector 从 1.6.2 开始支持导入配置 group commit，详细使用与限制参考 [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual.md)。从 26.1.0 开始 Stream Load 默认启用 gz 压缩，可通过设置 `'sink.properties.compress_type' = ''` 关闭压缩。 |
 | sink.enable-delete          | TRUE          | N        | 是否启用删除。此选项需要 Doris 表开启批量删除功能（Doris 0.15+ 版本默认开启），只支持 Unique 模型。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | sink.enable-2pc             | TRUE          | N        | 是否开启两阶段提交（2pc），默认为 true，保证 Exactly-Once 语义。关于两阶段提交可参考 [Stream Load 2PC](../../data-operate/transaction.md#streamload-2pc)。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| sink.write-mode             | STREAM_LOAD   | N        | 写入模式，支持 `STREAM_LOAD`、`STREAM_LOAD_BATCH` 和 `TVF`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| sink.s3.endpoint            | --            | 仅 TVF 写入模式 | 兼容 S3 的对象存储 endpoint                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| sink.s3.region              | --            | 仅 TVF 写入模式 | 对象存储 region                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| sink.s3.bucket              | --            | 仅 TVF 写入模式 | 暂存文件使用的 bucket                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| sink.s3.prefix              | --            | 仅 TVF 写入模式 | 暂存文件的对象 key 前缀，不能包含 glob 字符                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| sink.s3.access-key          | --            | 仅 TVF 写入模式 | 对象存储 access key                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| sink.s3.secret-key          | --            | 仅 TVF 写入模式 | 对象存储 secret key                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| sink.s3.path-style-access   | FALSE         | N        | TVF 模式是否使用 path-style 对象存储访问方式                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | sink.buffer-size            | 1MB           | N        | 写数据缓存 buffer 大小，单位字节。不建议修改，默认配置即可                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | sink.buffer-count           | 3             | N        | 写数据缓存 buffer 个数。不建议修改，默认配置即可                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | sink.max-retries            | 3             | N        | Commit 失败后的最大重试次数，默认 3 次                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
@@ -1100,6 +1210,72 @@ from KAFKA_SOURCE;
 针对此场景，通常需要编写 DataStream API 的程序，并使用 DorisSink 提供的 `JsonDebeziumSchemaSerializer` 序列化即可自动完成 Schema Change。
 
 在 Connector 提供的整库同步工具中，无需额外配置，会自动同步上游 DDL 并在 Doris 进行 Schema Change 操作。
+
+### Flink 访问启用 TLS 的 Doris 集群
+
+Connector 可以对 Doris HTTP 和 Stream Load、MySQL/JDBC、BE Thrift 以及 Arrow Flight SQL 连接启用 TLS。TLS 默认关闭。Connector 会校验 Doris 服务端证书。
+
+在 Doris Source、Sink 或 Catalog 配置中增加以下选项：
+
+```sql
+'doris.enable.tls' = 'true',
+'doris.tls.ca-certificate-path' = '/etc/doris-tls/ca-chain.pem'
+```
+
+通过 `doris.tls.ca-certificate-path` 指定 CA 文件时，应使用 PEM 证书链，并确保所有需要连接 Doris 的 Flink 进程都能从本地文件系统读取该文件。未配置该路径时，Connector 不加载自定义 CA，使用对应客户端的默认信任库。生产环境应保持 hostname 校验开启。
+
+如果 Doris 的某个协议有意保留明文连接，只排除该协议即可。支持的值为 `http`、`mysql`、`thrift` 和 `arrowflight`：
+
+```sql
+'doris.tls.excluded-protocols' = 'arrowflight'
+```
+
+Connector 不会探测协议，也不会在 TLS 失败后回退到明文连接。
+
+启用 `doris.enable.tls` 后，Connector 会通过 JDBC 连接属性传入 TLS 配置，不会修改 `jdbc-url`。因此，`jdbc-url` 只需填写连接地址，无需添加 `sslMode`、`useSSL` 或 Trust Store 等 TLS 参数。
+
+Arrow Flight SQL 支持 TLS，但不支持仅跳过 hostname 校验；如果将 `doris.tls.skip-hostname-verification` 设置为 `true`，需要通过 `doris.tls.excluded-protocols` 排除 `arrowflight`。
+
+根据 Flink 部署模式分发 CA 文件：
+
+- **Standalone**：将文件放在所有会连接 Doris 的 JobManager、TaskManager 和 SQL Gateway 主机上的相同路径。
+- **YARN**：通过 `yarn.ship-files: /local/path/ca.pem` 分发文件，并将 `doris.tls.ca-certificate-path` 设置为容器内文件名，例如 `ca.pem`。
+- **Kubernetes**：通过 ConfigMap 或 Secret 将 CA 挂载到相关 JobManager 和 TaskManager Pod 的相同路径。
+
+### 使用 S3 TVF 写入
+
+TVF 写入模式先将数据以 JSON 格式暂存至 S3 对象存储，再通过 S3 表值函数导入 Doris。适合优先使用对象存储作为数据传输通道，或无法使用 Stream Load 网络链路的场景。
+
+使用前，确保 Flink 和 Doris 均可访问 S3，且 Doris 中已创建目标表。
+
+```sql
+SET 'execution.checkpointing.interval' = '30s';
+
+CREATE TABLE student_tvf_sink (
+    id INT,
+    name STRING,
+    age INT
+) WITH (
+    'connector' = 'doris',
+    'fenodes' = '127.0.0.1:8030',
+    'jdbc-url' = 'jdbc:mysql://127.0.0.1:9030',
+    'table.identifier' = 'test.student_tvf',
+    'username' = 'root',
+    'password' = '',
+    'sink.write-mode' = 'TVF',
+    'sink.label-prefix' = 'student_tvf',
+    'sink.s3.endpoint' = 'https://s3.example.com',
+    'sink.s3.region' = 'us-east-1',
+    'sink.s3.bucket' = 'staging-bucket',
+    'sink.s3.prefix' = 'doris/student',
+    'sink.s3.access-key' = 'access-key',
+    'sink.s3.secret-key' = 'secret-key'
+);
+
+INSERT INTO student_tvf_sink VALUES (1, 'Alice', 18);
+```
+
+Connector 不会自动删除 S3 中的暂存对象，请按需配置对象存储生命周期策略。
 
 ## 常见问题
 

@@ -198,7 +198,7 @@ mysql> select * from test.student_trans;
 
 ### Case 1: Reading Doris Data
 
-When Flink reads Doris data, the Doris Source is a bounded stream and does not support continuous reading via CDC. The following two read protocols are supported:
+By default, the Doris Source reads a bounded snapshot. It can also continuously read row-level changes from Doris Binlog by using an incremental scan mode. The following two read protocols are supported:
 
 | Protocol       | Description                                                  | Recommended Version |
 | -------------- | ------------------------------------------------------------ | ------------------- |
@@ -247,6 +247,98 @@ WITH (
 
 SELECT * FROM student;
 ```
+
+#### Incremental Reading with Doris Binlog
+
+For a Doris table with ROW-format Binlog enabled, Flink Doris Connector can continuously read row-level changes. In `initial` mode, the Connector first reads the current table snapshot and then seamlessly switches to incremental reading.
+
+First, enable row-format Binlog on the Doris source table. `binlog.need_historical_value` is required when the consumer needs the before-image of updated rows:
+
+```sql
+CREATE DATABASE IF NOT EXISTS test;
+
+CREATE TABLE test.student_binlog_source (
+    id INT,
+    name VARCHAR(50),
+    age INT
+)
+UNIQUE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true",
+    "binlog.ttl_seconds" = "86400"
+);
+
+INSERT INTO test.student_binlog_source VALUES (1, 'Alice', 18);
+```
+
+Then enable Flink Checkpoint and create the Doris source table:
+
+```sql
+SET 'execution.checkpointing.interval' = '10s';
+
+CREATE TABLE student_binlog (
+    id INT,
+    name STRING,
+    age INT
+) WITH (
+    'connector' = 'doris',
+    'fenodes' = '127.0.0.1:8030',
+    'table.identifier' = 'test.student_binlog_source',
+    'username' = 'root',
+    'password' = '',
+    'source.scan.mode' = 'initial'
+);
+
+SELECT * FROM student_binlog;
+```
+
+After the job starts, changes to `test.student_binlog_source` are continuously emitted as Flink changelog records. Select the startup mode with `source.scan.mode`:
+
+| Mode | Behavior |
+| ---- | -------- |
+| `snapshot` | Reads the current snapshot and stops. This is the default mode. |
+| `initial` | Reads the current snapshot and switches to continuous Binlog reading when the snapshot is complete. |
+| `latest` | Skips the snapshot and reads changes generated after the job starts. |
+| `from-timestamp` | Skips the snapshot and reads changes after the exclusive start time specified by `source.scan.timestamp` in `yyyy-MM-dd HH:mm:ss` format. |
+
+By default, the Connector emits full row changes in `detail` mode. Set `source.binlog.increment-type` to `min_delta` for the minimal change set or `append_only` for append events only.
+
+Note the following:
+
+- Incremental reading uses Arrow Flight SQL. The Connector enables it by default and automatically discovers its port.
+- Enable Flink Checkpoint.
+- Configure Doris Binlog retention to cover the maximum expected job downtime. If the required Binlog data has expired, restart from a new snapshot or specify a new start time.
+
+##### Publishing Consumption Progress to Doris (Optional)
+
+Consumption progress is stored in Flink Checkpoints by default. To also query the progress in Doris, create the following offset table:
+
+```sql
+CREATE DATABASE IF NOT EXISTS ops;
+
+CREATE TABLE ops.flink_source_offsets (
+    consumer_id VARCHAR(256) NOT NULL,
+    offset_timestamp DATETIME NOT NULL,
+    update_time DATETIMEV2(3) NOT NULL
+)
+UNIQUE KEY(consumer_id)
+DISTRIBUTED BY HASH(consumer_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+);
+```
+
+```sql
+'jdbc-url' = 'jdbc:mysql://127.0.0.1:9030',
+'source.binlog.offset-table' = 'ops.flink_source_offsets',
+'source.binlog.consumer-id' = 'student-sync'
+```
+
+`source.binlog.consumer-id` identifies the consumer job and should remain unchanged when the same job restarts.
 
 #### Reading via DataStream API
 
@@ -793,6 +885,10 @@ After the Flink cluster is started, you can run the corresponding command accord
 | doris.request.retries         | 3             | N        | Number of retries for sending requests to Doris                                        |
 | doris.request.connect.timeout | 30s           | N        | Connection timeout for sending requests to Doris                                       |
 | doris.request.read.timeout    | 30s           | N        | Read timeout for sending requests to Doris                                             |
+| doris.enable.tls              | FALSE         | N        | Whether to enable TLS for Doris HTTP, MySQL/JDBC, BE Thrift, and Arrow Flight SQL connections. |
+| doris.tls.ca-certificate-path | --            | N        | Local path to a PEM CA certificate chain. When empty, the Connector does not load a custom CA and uses the corresponding client's default trust store. |
+| doris.tls.skip-hostname-verification | FALSE | N        | Whether to skip server hostname verification while retaining CA validation. |
+| doris.tls.excluded-protocols  | --            | N        | Comma-separated protocols that remain plaintext while TLS is enabled. Supported values: `http`, `mysql`, `thrift`, and `arrowflight`. |
 
 ### Source Configuration
 
@@ -804,6 +900,12 @@ After the Flink cluster is started, you can run the corresponding command accord
 | doris.exec.mem.limit        | 8192mb        | N        | Memory limit for a single query. The default is 8GB, in bytes.                                                                                         |
 | source.use-flight-sql       | TRUE          | N        | Whether to use Arrow Flight SQL for reading                                                                                                            |
 | source.flight-sql-port      | -             | N        | When using Arrow Flight SQL for reading, the FE's `arrow_flight_sql_port`                                                                              |
+| source.scan.mode            | snapshot      | N        | Source startup mode. Supported values: `snapshot`, `initial`, `latest`, and `from-timestamp`.                                                           |
+| source.scan.timestamp       | --            | N        | Exclusive start time in `yyyy-MM-dd HH:mm:ss` format. Required only for `from-timestamp`.                                                              |
+| source.binlog.increment-type | detail       | N        | Binlog change type: `detail`, `min_delta`, or `append_only`.                                                                                           |
+| source.binlog.poll-interval | 10s           | N        | Interval for polling new Binlog data. The minimum value is 1 second.                                                                                    |
+| source.binlog.offset-table  | --            | N        | Doris table in `database.table` format used to publish offsets covered by completed Checkpoints. Configure with `source.binlog.consumer-id` and `jdbc-url`. |
+| source.binlog.consumer-id   | --            | N        | Stable consumer identifier written to `source.binlog.offset-table`.                                                                                   |
 
 **DataStream-Specific Configuration**
 
@@ -816,10 +918,18 @@ After the Flink cluster is started, you can run the corresponding command accord
 
 | Key                         | Default Value | Required | Comment                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| sink.label-prefix           | --            | Y        | The label prefix used for Stream Load imports. In 2pc scenarios, it must be globally unique to guarantee the EOS semantics of Flink.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| sink.label-prefix           | --            | Y        | The label prefix used for imports. In 2PC scenarios, it must be globally unique to guarantee Flink EOS semantics.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | sink.properties.*           | --            | N        | Stream Load import parameters. For example: `'sink.properties.column_separator' = ', '` defines the column separator; `'sink.properties.escape_delimiters' = 'true'` indicates that special characters are used as separators, and `\x01` will be converted to the binary `0x01`; for JSON-format imports: `'sink.properties.format' = 'json'`, `'sink.properties.read_json_by_line' = 'true'`. For detailed parameters, see [Stream Load](../../data-operate/import/import-way/stream-load-manual.md#import-configuration-parameters). Group Commit mode: `'sink.properties.group_commit' = 'sync_mode'` sets group commit to synchronous mode. Flink Connector supports configuring group commit for imports starting from 1.6.2. For detailed usage and limitations, see [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual.md). Since 26.1.0, gz compression is enabled by default for Stream Load; it can be disabled by setting `'sink.properties.compress_type' = ''`. |
 | sink.enable-delete          | TRUE          | N        | Whether to enable deletion. This option requires the Doris table to have batch deletion enabled (enabled by default in Doris 0.15+) and only supports the Unique model.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | sink.enable-2pc             | TRUE          | N        | Whether to enable two-phase commit (2pc). The default is true, which guarantees Exactly-Once semantics. For information on two-phase commit, see [Stream Load 2PC](../../data-operate/transaction.md#streamload-2pc).                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| sink.write-mode             | STREAM_LOAD   | N        | Write mode. Supported values: `STREAM_LOAD`, `STREAM_LOAD_BATCH`, and `TVF`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| sink.s3.endpoint            | --            | TVF write mode only | S3-compatible object-storage endpoint.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| sink.s3.region              | --            | TVF write mode only | Object-storage region.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| sink.s3.bucket              | --            | TVF write mode only | Bucket used to stage files.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| sink.s3.prefix              | --            | TVF write mode only | Object key prefix for staged files. The prefix cannot contain glob characters.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| sink.s3.access-key          | --            | TVF write mode only | Object-storage access key.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| sink.s3.secret-key          | --            | TVF write mode only | Object-storage secret key.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| sink.s3.path-style-access   | FALSE         | N        | Whether TVF mode uses path-style object-storage access.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | sink.buffer-size            | 1MB           | N        | Buffer size for the write data cache, in bytes. Modifying this is not recommended; the default configuration is sufficient.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | sink.buffer-count           | 3             | N        | Number of write data cache buffers. Modifying this is not recommended; the default configuration is sufficient.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | sink.max-retries            | 3             | N        | The maximum number of retries after a Commit failure. The default is 3.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
@@ -1100,6 +1210,72 @@ When synchronizing upstream data sources such as MySQL, Schema Change operations
 For this scenario, you typically need to write a DataStream API program and use the `JsonDebeziumSchemaSerializer` provided by DorisSink for serialization. Schema Change is then performed automatically.
 
 In the full-database synchronization tool provided by Connector, no additional configuration is required; upstream DDL is automatically synchronized and Schema Change operations are performed in Doris.
+
+### Accessing a TLS-Enabled Doris Cluster from Flink
+
+The Connector can enable TLS for Doris HTTP and Stream Load, MySQL/JDBC, BE Thrift, and Arrow Flight SQL connections. TLS is disabled by default, and the Connector verifies the Doris server certificate.
+
+Add the following options to a Doris Source, Sink, or Catalog configuration:
+
+```sql
+'doris.enable.tls' = 'true',
+'doris.tls.ca-certificate-path' = '/etc/doris-tls/ca-chain.pem'
+```
+
+When specifying a CA file with `doris.tls.ca-certificate-path`, use a PEM certificate chain and ensure that every Flink process connecting to Doris can read it from the local filesystem. When this path is not configured, the Connector does not load a custom CA and uses the corresponding client's default trust store. Keep hostname verification enabled in production.
+
+If a Doris protocol intentionally remains plaintext, exclude only that protocol. Supported values are `http`, `mysql`, `thrift`, and `arrowflight`:
+
+```sql
+'doris.tls.excluded-protocols' = 'arrowflight'
+```
+
+The Connector does not probe protocols or fall back to plaintext after a TLS failure.
+
+When `doris.enable.tls` is enabled, the Connector passes TLS settings through JDBC connection properties without modifying `jdbc-url`. Therefore, specify only the connection address in `jdbc-url`; do not add TLS parameters such as `sslMode`, `useSSL`, or trust store settings.
+
+Arrow Flight SQL supports TLS but does not support skipping hostname verification only. If `doris.tls.skip-hostname-verification` is set to `true`, exclude `arrowflight` through `doris.tls.excluded-protocols`.
+
+Distribute the CA file according to the Flink deployment mode:
+
+- **Standalone**: place the file at the same path on all JobManager, TaskManager, and SQL Gateway hosts that connect to Doris.
+- **YARN**: localize the file with `yarn.ship-files: /local/path/ca.pem`, and set `doris.tls.ca-certificate-path` to the container-localized file name, such as `ca.pem`.
+- **Kubernetes**: mount a ConfigMap or Secret at the same path in the relevant JobManager and TaskManager pods.
+
+### Writing with S3 TVF
+
+TVF write mode first stages data in JSON format in S3 object storage and then imports it into Doris through the S3 table-valued function. Use this mode when object storage is the preferred data transfer path or when the Stream Load network path is unavailable.
+
+Before use, ensure that both Flink and Doris can access S3 and that the target table already exists in Doris.
+
+```sql
+SET 'execution.checkpointing.interval' = '30s';
+
+CREATE TABLE student_tvf_sink (
+    id INT,
+    name STRING,
+    age INT
+) WITH (
+    'connector' = 'doris',
+    'fenodes' = '127.0.0.1:8030',
+    'jdbc-url' = 'jdbc:mysql://127.0.0.1:9030',
+    'table.identifier' = 'test.student_tvf',
+    'username' = 'root',
+    'password' = '',
+    'sink.write-mode' = 'TVF',
+    'sink.label-prefix' = 'student_tvf',
+    'sink.s3.endpoint' = 'https://s3.example.com',
+    'sink.s3.region' = 'us-east-1',
+    'sink.s3.bucket' = 'staging-bucket',
+    'sink.s3.prefix' = 'doris/student',
+    'sink.s3.access-key' = 'access-key',
+    'sink.s3.secret-key' = 'secret-key'
+);
+
+INSERT INTO student_tvf_sink VALUES (1, 'Alice', 18);
+```
+
+The Connector does not automatically delete staged objects from S3. Configure an object-storage lifecycle policy as needed.
 
 ## FAQ
 
