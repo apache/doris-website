@@ -149,10 +149,10 @@ CREATE [ GLOBAL ]
         "volatility" = "volatile"
     )
     AS $$
-import uuid
-def py_uuid_token_impl(x):
-    return f"{x}-{uuid.uuid4()}"
-$$;
+    import uuid
+    def py_uuid_token_impl(x):
+        return f"{x}-{uuid.uuid4()}"
+    $$;
 
     SET enable_cte_materialize = true;
     SET inline_cte_referenced_threshold = 10;
@@ -189,10 +189,10 @@ $$;
         "volatility" = "immutable"
     )
     AS $$
-import uuid
-def py_uuid_token_impl(x):
-    return f"{x}-{uuid.uuid4()}"
-$$;
+    import uuid
+    def py_uuid_token_impl(x):
+        return f"{x}-{uuid.uuid4()}"
+    $$;
     ```
 
     重新执行同一条查询：
