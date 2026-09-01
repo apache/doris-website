@@ -1,6 +1,6 @@
 ---
 title: 'dbt-for-apache-doris 1.1.0 Released: Five Business Demos to Get Started with Doris Data Engineering'
-summary: 'dbt-for-apache-doris 1.1.0 targets dbt Core 1.12 and manages Apache Doris asynchronous materialized views through the standard dbt materialized_view. Five demos walk through the Doris + dbt workflow from source data and models to data tests and result tables.'
+summary: 'dbt-for-apache-doris 1.1.0 targets dbt Core 1.12 and manages Apache Doris asynchronous materialized views through the standard dbt materialized_view. Five demos walk through the Doris + dbt workflow, from source tables to tested result tables.'
 description: 'dbt-for-apache-doris 1.1.0 targets dbt Core 1.12, manages Apache Doris asynchronous materialized views through the standard dbt materialized_view, and covers Table, View, Incremental, Snapshot, Seed, and Data Test workflows. Five business demos show how dbt and Apache Doris handle daily order summaries, late-arriving orders, and more.'
 keywords:
   - 'Apache Doris'
@@ -36,40 +36,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-`dbt-for-apache-doris 1.1.0` was released on August 12, 2026, and targets dbt Core 1.12. This version manages Apache Doris asynchronous materialized views through the standard dbt `materialized_view` materialization, and covers the common workflows: Table, View, Incremental, Snapshot, Seed, and Data Test.
+[dbt-for-apache-doris](https://github.com/velodb/dbt-for-apache-doris) 1.1.0 was released on August 12, 2026. It targets dbt Core 1.12, manages Apache Doris asynchronous materialized views through the standard dbt `materialized_view` materialization, and covers the everyday workflows: Table, View, Incremental, Snapshot, Seed, and Data Test.
 
 ```bash
 python -m pip install "dbt-for-apache-doris==1.1.0"
 ```
 
-This post first introduces the problems that dbt and Doris solve together and what the adapter supports, then uses five demos to show the complete Apache Doris + dbt process, from source data and model transformation to data tests and result tables.
+The rest of this post covers what each of the two systems is responsible for, what the adapter supports today, and five demos that run a full pipeline in Doris.
 
-## 1. dbt and Doris: Capability Overview and What's New
+## 1. dbt, Doris, and what 1.1.0 adds
 
 ### 1.1 What is dbt
 
-dbt (data build tool) is an open-source data transformation framework that focuses on the T (transform) step of the ELT process in a data warehouse. In dbt, every data model is a SQL `SELECT` statement, and models reference each other with `ref()`. dbt compiles them into the target database's table creation and write statements, executes them in dependency order, and materializes each one as a table, view, incremental table, or snapshot according to its configuration.
+dbt (data build tool) is an open-source data transformation framework that handles the T of ELT inside a data warehouse. Every model is a SQL `SELECT` statement, and models reference each other with `ref()`. dbt compiles them into the target database's table creation and write statements, runs them in dependency order, and materializes each one as a table, view, incremental table, or snapshot according to its configuration.
 
-The problem dbt sets out to solve is that the transformation layer has long lacked engineering discipline:
+It exists because the transformation layer spent years without much engineering discipline:
 
-- SQL scripts are scattered across schedulers, scripts, and personal machines; dependencies are maintained by hand, and nobody knows what a change will affect.
-- There is no automated testing, so metric errors often surface only when business users look at a report.
-- There is no version control, code review, or separation between development and production environments, so changes are hard to trace.
-- Boilerplate for table creation, incremental writes, and historical snapshots is rewritten by hand in every project.
+- SQL is scattered across schedulers, repos, and personal machines. Dependencies are maintained by hand, and nobody can say for certain what a change will break.
+- Nothing is tested automatically, so a wrong metric usually surfaces when someone in the business questions a number on a report.
+- There is no version control, no code review, and no separation between development and production, which makes changes hard to trace afterwards.
+- The same boilerplate for creating tables, writing incrementally, and keeping history gets rewritten in every project.
 
-In response, dbt provides models as code, dependency graphs derived automatically from `ref()`, declarative Data Tests, built-in materializations such as Table / View / Incremental / Snapshot, auto-generated documentation and lineage, and a package ecosystem built on Jinja macros, such as `dbt_utils`.
+dbt's answer is models as code, a dependency graph derived from `ref()`, declarative Data Tests, built-in materializations (Table, View, Incremental, Snapshot), generated documentation and lineage, and a package ecosystem of Jinja macros such as `dbt_utils`.
 
 ### 1.2 What dbt and Doris solve together
 
-dbt does not perform computation itself; every transformation is pushed down to the target database. The database's capabilities therefore set the ceiling for a dbt project. Apache Doris is an MPP real-time analytical database that is compatible with the MySQL protocol, and it runs aggregations, multi-table JOINs, and window functions inside the database. `dbt-for-apache-doris` connects the two: dbt organizes, orchestrates, and validates the transformation logic, while Doris stores the data and executes the SQL.
+dbt does not compute anything itself. Every transformation is pushed down to the target database, so that database sets the ceiling for the project. Apache Doris is an MPP real-time analytical database that speaks the MySQL protocol and runs aggregations, multi-table JOINs, and window functions in place. `dbt-for-apache-doris` connects the two: dbt organizes, orchestrates, and validates the transformation logic; Doris stores the data and executes the SQL.
 
-Once the two are combined, several common data engineering problems get direct answers:
+Putting them together settles a few things that data teams otherwise handle by convention. Table conventions become part of the code, since Doris Key models, partitions, buckets, and table properties are declared in the model's `config()` and go through version control and code review with everything else, rather than living in someone's memory. Late-arriving data gets a defined path too: a write to a Doris Unique Key table is an Upsert, and dbt Incremental `merge` sits directly on that semantic, so replaying the same batch produces the same table and a failed job can simply be run again.
 
-- **Table conventions as code**: Doris Key models, partitions, buckets, and table properties are all declared in the model's `config()`, so they enter version control and code review together with the code instead of relying on verbal agreements.
-- **Late-arriving data and updates**: A write to a Doris Unique Key table is an Upsert, and dbt Incremental `merge` is built directly on this semantic. Running the same batch again produces the same result, so tasks can be re-run safely.
-- **Pre-aggregation layers and business models managed together**: Doris asynchronous materialized views enter the dbt dependency graph through the standard `materialized_view` materialization. Build and refresh strategies live in the configuration, and they change and get tested together with the upstream models.
-- **In-database computation**: Aggregations, JOINs, and window functions are executed by Doris. dbt only sends SQL, so no extra compute engine is needed to move data around.
-- **Quality checks up front**: Data Tests, Unit Tests, and Model Contracts run directly on Doris, so problems surface at build time instead of being traced back after a report breaks.
+Pre-aggregation stops being a separate system. Doris asynchronous materialized views join the dbt dependency graph through the standard `materialized_view` materialization, with build and refresh strategy in the model configuration, so they change and get tested alongside the models they read from. The computation never leaves Doris. dbt only ships SQL, so no second engine is needed to move data around. Quality checks run in the same place: Data Tests, Unit Tests, and Model Contracts all execute against Doris at build time, which is a better moment to catch a broken metric than the morning after a report goes out.
 
 ### 1.3 Adapter feature support
 
@@ -108,13 +104,9 @@ Once the two are combined, several common data engineering problems get direct a
 
 ### 1.4 What's new in 1.1.0
 
-1.1.0 is the first release of `dbt-for-apache-doris` from its standalone repository and on PyPI. The highlights:
+1.1.0 is the first release of `dbt-for-apache-doris` from its own repository, and the first published to PyPI. It targets dbt Core 1.12 on Python 3.10 and above, manages Doris Async Materialized Views through the standard dbt `materialized_view` materialization, and ships with explicit version constraints and a stated support boundary.
 
-- Targets dbt Core 1.12 and supports Python 3.10 and above
-- Manages Doris Async Materialized Views through the standard dbt `materialized_view` materialization
-- Provides standalone PyPI installation, explicit version constraints, and a defined support boundary
-
-Asynchronous materialized views are integrated as follows: the standard dbt `materialized_view` maps to a Doris Async MV, and the build mode, refresh strategy, and task waiting are all written in the model configuration.
+A `materialized_view` model maps to a Doris Async MV, and the build mode, refresh strategy, and task waiting are all written in the model configuration:
 
 ```sql
 {{ config(
@@ -128,11 +120,9 @@ from {{ ref('orders') }}
 group by order_date
 ```
 
-Next, we walk through several demos to explain the application scenarios of Doris + dbt in detail.
+## 2. Five demos
 
-## 2. Doris + dbt Application Scenarios
-
-Each of the five demos starts from a business question:
+Each demo starts from a business question:
 
 | # | Demo | Business question | Transformation and result | Key capabilities |
 |-|-|-|-|-|
@@ -146,55 +136,49 @@ Each of the five demos starts from a business question:
 >
 > Demo repository: [https://github.com/velodb/dbt-for-apache-doris/tree/main/examples](https://github.com/velodb/dbt-for-apache-doris/tree/main/examples)
 
-Two of these scenarios are covered below. For the other three demos (customer geography analysis, ad data integration, and customer history tracking), the [Doris dbt demos README](https://github.com/velodb/dbt-for-apache-doris/tree/main/examples/doris-demos) in the repository gives the detailed business descriptions, model lists, and step-by-step runs.
+Two of them are walked through below. For the other three, customer geography analysis, ad data integration, and customer history tracking, the [Doris dbt demos README](https://github.com/velodb/dbt-for-apache-doris/tree/main/examples/doris-demos) has the business description, the model list, and the exact commands.
 
 ### 2.1 Demo 01: Order summary and asynchronous materialized views
 
-The question this demo answers: how many valid orders and how much revenue are there per day and per month?
-
-The demo starts from 6 orders in Doris, excludes the `CANCELLED`, `RETURNED`, and `FAILED` statuses, and produces `daily_order_summary`. Data Tests check that dates are unique and key columns are not null, and then `monthly_order_summary_mv` aggregates the daily results through `ref()`.
+The demo starts from 6 orders in Doris, drops the `CANCELLED`, `RETURNED`, and `FAILED` ones, and builds `daily_order_summary`. Data Tests check that dates are unique and key columns are not null, and `monthly_order_summary_mv` then aggregates the daily table through `ref()`.
 
 ![Demo 01 transformation flow: on the dbt side, source(), Table, ref(), and materialized_view; the orders source is filtered into daily_order_summary, checked by Data Tests, and aggregated into monthly_order_summary_mv; on the Doris side, Duplicate Key, Range Partition, Hash Bucket, and Async MV](/images/blogs/dbt-for-apache-doris-1.1.0-five-demos/demo01-daily-order-summary-flow.jpg)
 
-*Figure 1: The transformation chain from raw orders to the monthly asynchronous materialized view. The top row shows what dbt handles: model dependencies, materialization, and tests. The bottom row shows the table model and materialized view capabilities provided by Doris.*
+*Figure 1: The chain from raw orders to the monthly asynchronous materialized view. The top row is what dbt handles: model dependencies, materialization, and tests. The bottom row is what Doris provides for the table model and the materialized view.*
 
-The example ends with 3 valid orders and a monthly revenue of `220.20`. In this chain, dbt is responsible for the model dependencies (from `source()` to `ref()`), the materializations, and the Data Tests. On the Doris side, several capabilities determine how the two result tables are stored and how efficiently they are queried:
+Three orders survive the filter, for a monthly revenue of `220.20`. dbt owns the model dependencies (`source()` through `ref()`), the materializations, and the Data Tests. Doris decides how the two result tables are stored and how fast they answer:
 
-| Doris capability | Value in this scenario |
+| Doris capability | What it does here |
 |-|-|
-| Duplicate Key model | `daily_order_summary` is created with `order_date` as its sort key. Rows are kept as-is, without aggregation or merging. Range queries by date use the prefix index, so daily report queries hit directly. dbt `table` rebuilds the whole table with CTAS on every run, so the result is reproducible |
-| RANGE partitioning (by `order_date`) | The model pre-creates the `p202608` partition and the catch-all `pmax` partition through `partition_by_init`. Monthly queries scan only the matching partition, and historical data can be archived or dropped by month |
-| HASH bucketing (by `order_date`) | Data is distributed across BE nodes by the bucket key and computed in parallel. The demo's single-node environment uses 1 bucket; production can increase the bucket count with data volume |
-| Asynchronous materialized view (Async MV) | `monthly_order_summary_mv` pre-aggregates on top of the daily table, so the monthly dashboard reads precomputed results instead of re-aggregating every time. `build_mode='immediate'` produces data as soon as the view is built, `refresh_method='auto'` lets Doris decide between a full refresh and a partition-level refresh, and `refresh_trigger='manual'` has each dbt run trigger a refresh and wait for it to complete; it can also be switched to a scheduled refresh (`schedule`) or a refresh on base table commit (`commit`). The materialized view itself can also be configured with Keys, bucketing, and table properties |
+| Duplicate Key model | `daily_order_summary` is created with `order_date` as its sort key. Rows are stored as written, with no aggregation or merging. Date range queries use the prefix index, so daily report queries hit it directly. dbt `table` rebuilds the whole table with CTAS on every run, so the result is reproducible |
+| RANGE partitioning (by `order_date`) | The model pre-creates the `p202608` partition and the catch-all `pmax` partition through `partition_by_init`. A monthly query scans one partition, and old data can be archived or dropped by month |
+| HASH bucketing (by `order_date`) | Data is distributed across BE nodes by the bucket key and computed in parallel. The demo runs on a single node with 1 bucket; production raises the bucket count as data grows |
+| Asynchronous materialized view (Async MV) | `monthly_order_summary_mv` pre-aggregates on top of the daily table, so the monthly dashboard reads precomputed results and does not re-aggregate on every open. `build_mode='immediate'` produces data as soon as the view is built, `refresh_method='auto'` lets Doris choose between a full refresh and a partition-level one, and `refresh_trigger='manual'` makes each dbt run trigger a refresh and wait for it; a scheduled refresh (`schedule`) or a refresh on base table commit (`commit`) works as well. The materialized view itself also takes Keys, bucketing, and table properties |
 
 ### 2.2 Demo 04: Incremental updates for late-arriving orders
 
-The problem this demo handles: how to absorb late corrections and avoid duplicate orders?
+The demo writes orders 101, 102, and 103, then receives two late events: the amount of order 101 is corrected from `100.00` to `125.00`, and a new order 104 arrives.
 
-The demo first writes orders 101, 102, and 103, then receives two late events: the amount of order 101 is corrected from `100.00` to `125.00`, and a new order 104 arrives.
-
-The processing chain has two steps:
+Two steps absorb them:
 
 1. `order_version_history` uses window functions to identify the current version of each order.
-2. `incremental_daily_sales` uses `order_id` as its business key and runs Incremental `merge` on top of the Upsert semantics of the Doris Unique Key model.
+2. `incremental_daily_sales` takes `order_id` as its business key and runs Incremental `merge` on top of the Upsert semantics of the Doris Unique Key model.
 
 ![Demo 04 transformation flow: late events for orders 101 and 104 enter the order events table, order_version_history identifies order versions, incremental_daily_sales is updated by Incremental merge with unique_key = order_id and stays unchanged on re-run, and reconciliation models are checked by Data Tests; on the Doris side, window functions, Unique Key upsert, and Hash Bucket](/images/blogs/dbt-for-apache-doris-1.1.0-five-demos/demo04-late-arriving-orders-flow.jpg)
 
-*Figure 2: After late events reach the source table, version identification and Incremental `merge` update the current orders; a re-run with no new data leaves the result unchanged. The top row shows the dbt capabilities, and the bottom row shows the Doris capabilities.*
+*Figure 2: Late events reach the source table, then version identification and Incremental `merge` update the current orders; a re-run with no new data leaves the result alone. The top row is what dbt handles, the bottom row is what Doris provides.*
 
-Running again with no new data leaves the result unchanged. The current orders table `incremental_daily_sales` contains 4 orders (order 101 now carries `125.00`), and revenue for August 1 in the downstream `daily_sales_summary` is updated to `245.00`. The same project also produces data quality, arrival latency, and revenue reconciliation models. In this chain, dbt is responsible for defining the incremental model, the `is_incremental()` filter, and the uniqueness test on `order_id`; "no duplicates, safe to re-run" comes from the following Doris capabilities:
+Run it again with no new data and nothing moves. `incremental_daily_sales` holds 4 orders, order 101 now at `125.00`, and revenue for August 1 in the downstream `daily_sales_summary` becomes `245.00`. The same project also builds data quality, arrival latency, and revenue reconciliation models. dbt's part is the incremental model definition, the `is_incremental()` filter, and the uniqueness test on `order_id`. The "no duplicates, safe to re-run" property comes from Doris:
 
-| Doris capability | Value in this scenario |
+| Doris capability | What it does here |
 |-|-|
-| Unique Key model | `incremental_daily_sales` is created with `order_id` as its Unique Key. A new version of an order overwrites the old one on write, so the table always holds exactly one row per order, and a passing `unique` test proves there are no duplicates. The adapter enables Merge-on-Write by default, so deduplication happens at write time and queries need no further merging |
-| Upsert on write (Incremental `merge`) | The adapter performs a full-row Upsert with a plain `INSERT INTO`, without relying on `MERGE INTO` or delete-then-insert; the correction to order 101 and the new order 104 take the same write path. Re-running with no new data leaves the result unchanged (idempotent), so backfills and retries are safe |
-| HASH bucketing (by `order_id`) | The bucket key matches the primary key, so every version of an order lands in the same tablet. Primary key deduplication and updates complete locally, without cross-node comparison |
-| Window functions | `order_version_history` uses `row_number()` and `lead()` inside Doris to identify the current version of each order and compute `valid_from` / `valid_to`, forming an auditable version history without any external program |
-| Online schema change | The model is configured with `on_schema_change='append_new_columns'`. When upstream adds a column, the adapter syncs the table structure with `ALTER TABLE ... ADD COLUMN` and waits for the change to complete, so the incremental table does not need to be rebuilt |
+| Unique Key model | `incremental_daily_sales` is created with `order_id` as its Unique Key. A new version of an order overwrites the old one on write, so the table always holds exactly one row per order and the `unique` test passes. The adapter enables Merge-on-Write by default, so deduplication happens at write time and queries have nothing left to merge |
+| Upsert on write (Incremental `merge`) | The adapter performs a full-row Upsert with a plain `INSERT INTO`, with no `MERGE INTO` and no delete-then-insert. The correction to order 101 and the new order 104 take the same write path, and re-running with no new data leaves the result unchanged, which is what makes backfills and retries safe |
+| HASH bucketing (by `order_id`) | The bucket key matches the primary key, so every version of an order lands in the same tablet, and primary key deduplication and updates complete inside it without comparing across nodes |
+| Window functions | `order_version_history` uses `row_number()` and `lead()` inside Doris to mark the current version of each order and compute `valid_from` / `valid_to`. The version history is auditable, and no external program is involved |
+| Online schema change | The model sets `on_schema_change='append_new_columns'`. When an upstream model adds a column, the adapter syncs the table structure with `ALTER TABLE ... ADD COLUMN` and waits for the change to finish, so the incremental table never needs a rebuild |
 
-All five demos run interactively in JupyterLab notebooks, so users can get familiar with each step.
-
-The demos live in the repository's `examples/` directory. The unified entry point is [`examples/doris-demos`](https://github.com/velodb/dbt-for-apache-doris/tree/main/examples/doris-demos), whose README gives the complete steps to run them.
+All five demos run as JupyterLab notebooks, one step per cell, so you can stop at any cell and look at what Doris wrote. They live in the repository's `examples/` directory, with [`examples/doris-demos`](https://github.com/velodb/dbt-for-apache-doris/tree/main/examples/doris-demos) as the entry point; its README has the full run instructions.
 
 ## Links
 
