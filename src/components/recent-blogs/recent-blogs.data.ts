@@ -1,19 +1,19 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: 'How StepFun Built a PB-Scale Agent Observability Platform with Apache Doris',
-        link: 'https://www.velodb.io/blog/how-stepfun-built-agent-observability-platform-with-apache-doris',
+        label: 'Dynamic JSON in Agent Workloads: Apache Doris vs ClickHouse, Elasticsearch, and OpenSearch',
+        link: 'https://www.velodb.io/blog/dynamic-json-in-agent-workloads-apache-doris-clickhouse-elasticsearch-and-opensearch',
     },
     {
-        label: "From Hive, HBase, MySQL, and Trino to Apache Doris: Tuhu Car's Unified OLAP Architecture",
-        link: 'https://www.velodb.io/blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture',
+        label: 'PostgreSQL CDC to Apache Doris: Real-Time Sync with One SQL Statement',
+        link: 'https://www.velodb.io/blog/postgresql-cdc-to-apache-doris-real-time-sync-with-one-sql-statement',
     },
     {
-        label: 'ASOF JOIN Benchmark: Apache Doris vs ClickHouse and DuckDB',
-        link: 'https://www.velodb.io/blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb',
+        label: 'From Spark to Apache Doris: How Kwai Made A/B Testing Metrics 145x Faster at Scale',
+        link: 'https://www.velodb.io/blog/from-spark-to-apache-doris-how-kwai-made-a-b-testing-metrics-145x-faster-at-scale',
     },
     {
-        label: 'How We Built Production Vector Search in Apache Doris',
-        link: 'https://www.velodb.io/blog/how-we-built-production-vector-search-in-apache-doris',
+        label: 'Apache Doris Python UDF: Calling the Python Ecosystem from SQL for Agent-Era',
+        link: 'https://www.velodb.io/blog/apache-doris-python-udf-calling-the-python-from-sql-for-agent-era',
     },
 
 ];
