@@ -31,7 +31,7 @@ CREATE [ GLOBAL ]
 
 **2. `<arg_type>`**
 
-> The input parameter type of the function. For variable-length parameters, use `, ...` to indicate them. If it is a variable-length type, the type of the variable-length parameters must be consistent with the type of the last non-variable-length parameter.
+> The input parameter types of the function. One or more fixed arguments can be declared. **Starting from version 4.1.5, declaring variadic functions with `...` is no longer supported. To accept a variable number of values, use an `ARRAY` parameter instead.**
 
 **3. `<ret_type>`**
 
