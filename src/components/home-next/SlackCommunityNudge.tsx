@@ -2,6 +2,7 @@ import React, { JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { normalizePathname } from '@site/src/utils/locale';
+import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
 import {
     computeMascotPupilOffset,
     getSlackNudgeBenefits,
@@ -10,7 +11,6 @@ import {
 } from './SlackCommunityNudge.logic';
 import './SlackCommunityNudge.scss';
 
-const SLACK_URL = 'https://doris.apache.org/slack';
 const DORIS_SUMMIT_URL = 'https://apache-doris-summit.org/';
 const DOCS_FEEDBACK_URL = 'https://github.com/apache/doris-website/issues/364';
 const STORAGE_KEY = 'doris-home-slack-nudge-dismissed';
@@ -68,6 +68,10 @@ export function SlackCommunityNudge(): JSX.Element {
     const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
     const normalizedPathname = normalizePathname(pathname, locales);
     const showDocsFeedback = isDocumentationFeedbackPath(normalizedPathname);
+    const slackUrl = buildSlackEntryUrl({
+        medium: showDocsFeedback ? 'docs' : 'website',
+        content: 'mascot_nudge',
+    });
 
     const openAutomatically = useCallback((ecosystemVisible: boolean) => {
         const mountedAt = mountedAtRef.current ?? Date.now();
@@ -254,7 +258,7 @@ export function SlackCommunityNudge(): JSX.Element {
                 </ul>
                 <a
                     className="slack-community-nudge__cta"
-                    href={SLACK_URL}
+                    href={slackUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={handleJoin}

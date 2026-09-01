@@ -50,7 +50,7 @@ The purpose and use case of each channel is as follows:
 
 | Channel | Purpose | Entry Point |
 |------|------|------|
-| Slack | Real-time discussion, questions, and answers (recommended for new users) | <https://doris.apache.org/slack> |
+| Slack | Real-time discussion, questions, and answers (recommended for new users) | [https://doris.apache.org/slack](https://doris.apache.org/slack?utm_source=website&utm_medium=docs&utm_content=community_join_page) |
 | GitHub | Source code, issues, PRs, release notes | <https://github.com/apache/doris> |
 | Mailing list | Apache official asynchronous discussion and decision-making channel | See [Subscribe to the mailing list](subscribe-mail-list) |
 | Twitter | Global user cases, release updates, event announcements | <https://twitter.com/doris_apache> |
@@ -62,7 +62,7 @@ The purpose and use case of each channel is as follows:
 
 <!-- Knowledge type: Scenario routing -->
 
-- **To ask quick questions or join daily discussions**: join [Slack](https://doris.apache.org/slack).
+- **To ask quick questions or join daily discussions**: join [Slack](https://doris.apache.org/slack?utm_source=website&utm_medium=docs&utm_content=community_join_page).
 - **To report bugs or submit code**: visit [GitHub](https://github.com/apache/doris), and refer to [Feedback](feedback) and the [Community Contribution Guide](how-to-contribute/contribute-to-doris.mdx).
 - **To follow community decisions and release announcements**: [subscribe to the mailing list](subscribe-mail-list).
 - **To see user cases and technical insights**: follow [Twitter](https://twitter.com/doris_apache) and [LinkedIn](https://www.linkedin.com/company/doris-apache/).

@@ -1,5 +1,6 @@
 import React, { JSX, useState, useEffect, useMemo, useRef } from 'react';
 import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
+import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
 import './HeroSection.scss';
 
 // ─── SVG atoms ───────────────────────────────────────────────────────────────
@@ -909,7 +910,7 @@ export function HeroSection(): JSX.Element {
                             </button>
                             <a
                                 className="hero-next__btn hero-next__btn--ghost"
-                                href="https://doris.apache.org/slack"
+                                href={buildSlackEntryUrl({ medium: 'website', content: 'homepage_hero' })}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >

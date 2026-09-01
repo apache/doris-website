@@ -50,7 +50,7 @@ under the License.
 
 | 渠道 | 定位 | 入口 |
 |------|------|------|
-| Slack | 实时讨论、提问与答疑（推荐新用户首选） | <https://doris.apache.org/slack> |
+| Slack | 实时讨论、提问与答疑（推荐新用户首选） | [https://doris.apache.org/slack](https://doris.apache.org/slack?utm_source=website&utm_medium=docs&utm_content=community_join_page) |
 | GitHub | 源码、Issue、PR、Release Note | <https://github.com/apache/doris> |
 | 邮件列表 | Apache 官方异步讨论与决策渠道 | 参见 [订阅邮件列表](subscribe-mail-list) |
 | Twitter | 全球用户案例、版本动态、活动预告 | <https://twitter.com/doris_apache> |
@@ -62,7 +62,7 @@ under the License.
 
 <!-- 知识类型: 场景分流 -->
 
-- **想快速提问或参与日常讨论**：加入 [Slack](https://doris.apache.org/slack)。
+- **想快速提问或参与日常讨论**：加入 [Slack](https://doris.apache.org/slack?utm_source=website&utm_medium=docs&utm_content=community_join_page)。
 - **想报告 Bug 或提交代码**：访问 [GitHub](https://github.com/apache/doris)，参考 [问题反馈](feedback) 与 [社区参与指南](how-to-contribute/contribute-to-doris.mdx)。
 - **想跟进社区决策与版本发布**：[订阅邮件列表](subscribe-mail-list)。
 - **想看用户案例与技术见解**：关注 [Twitter](https://twitter.com/doris_apache) 与 [LinkedIn](https://www.linkedin.com/company/doris-apache/)。

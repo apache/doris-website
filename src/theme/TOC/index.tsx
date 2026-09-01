@@ -13,6 +13,7 @@ import { DOWNLOAD_PDFS } from '@site/src/constant/download.data';
 import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/version';
 import { DiscordIconSmall } from '../../components/Icons/discord-icon-small';
 import { normalizePathname } from '@site/src/utils/locale';
+import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
 import { Spin } from 'antd';
 import Link from '@docusaurus/Link';
 
@@ -135,9 +136,7 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
                 {!isCN ? (
                     <Link
                         className="toc-icon-content group"
-                        to={
-                            'https://doris.apache.org/slack'
-                        }
+                        to={buildSlackEntryUrl({ medium: 'docs', content: 'docs_toc' })}
                     >
                         <div style={{ padding: '2px' }}>
                             <SlackIcon className="group-hover:text-primary" />

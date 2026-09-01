@@ -291,6 +291,12 @@ const config = {
     ],
     projectName: 'apache/doris-website', // Usually your repo name.
     customFields: {
+        // Real Slack invite link. `/slack` (src/pages/slack.tsx) records the
+        // click in Matomo and then forwards visitors here, so every public
+        // channel keeps linking to https://doris.apache.org/slack and this is
+        // the only value to update when the invite is rotated.
+        slackInviteUrl:
+            'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3wvgezmm8-lh5XRaLg0~9AF44ojdIBfw',
         // The public HTTPS reverse proxy is the default browser entry point.
         // Local development can still replace this build-time value when needed.
         profileAnalysisApiBaseUrl: process.env.PROFILE_ANALYSIS_API_BASE_URL ?? 'https://agent.velodb.io',
@@ -362,10 +368,10 @@ const config = {
                     // pointing at an in-site path must go through
                     // createRedirects below, otherwise plugin-client-redirects
                     // rejects cross-locale entries during single-locale builds.
-                    {
-                        from: '/slack',
-                        to: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3wvgezmm8-lh5XRaLg0~9AF44ojdIBfw'
-                    },
+                    //
+                    // `/slack` used to be listed here. It is now a real page
+                    // (src/pages/slack.tsx) that records the click in Matomo
+                    // before forwarding to customFields.slackInviteUrl.
                 ],
                 createRedirects(existingPath) {
                     const redirects = [];
@@ -477,7 +483,10 @@ const config = {
                         const items = await defaultCreateSitemapItems(rest);
                         const filteredItems = items.filter(item => {
                             const pathname = new URL(item.url).pathname.replace(/\/+$/, '');
-                            if (['/search', '/zh-CN/search'].includes(pathname)) return false;
+                            // /slack is a tracking redirect, not content.
+                            if (['/search', '/zh-CN/search', '/slack', '/zh-CN/slack'].includes(pathname)) {
+                                return false;
+                            }
                             return true;
                         });
                         for (let item of filteredItems) {

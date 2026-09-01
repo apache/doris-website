@@ -11,6 +11,7 @@ import { MailIcon } from '@site/src/components/Icons/mail';
 import { GithubIcon } from '@site/src/components/Icons/github';
 import { TwitterIcon } from '@site/src/components/Icons/twitter';
 import { SlackIcon } from '@site/src/components/Icons/slack';
+import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
 import { DiscordIcon } from '@site/src/components/Icons/discord-icon';
 import { BilibiliIcon } from '@site/src/components/Icons/bilibili';
 import { WechatIcon } from '@site/src/components/Icons/wechat';
@@ -93,7 +94,7 @@ function Footer(): React.ReactElement | null {
                                     <TwitterIcon />
                                 </a>
                                 <a
-                                    href="https://doris.apache.org/slack"
+                                    href={buildSlackEntryUrl({ medium: 'website', content: 'footer' })}
                                     title="slack"
                                     target="_blank"
                                     className="item"

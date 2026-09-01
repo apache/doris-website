@@ -174,4 +174,4 @@ From the self-developed pre-aggregation storage engine, materialized views, and 
 - We want to keep inspiring the data world by presenting more use cases.
 - We want to provide more and better choices for users by collaborating with partners along the data pipeline and cloud service providers.
 
-By choosing Apache Doris, you choose to stay in the heartbeat of innovation. The [Apache Doris community](https://doris.apache.org/slack) awaits newcomers.
+By choosing Apache Doris, you choose to stay in the heartbeat of innovation. The [Apache Doris community](https://doris.apache.org/slack?utm_source=website&utm_medium=content&utm_content=blog_apache-doris-summit-asia-2023-what-can-you-expect-from-apac) awaits newcomers.
