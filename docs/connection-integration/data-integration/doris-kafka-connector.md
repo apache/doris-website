@@ -42,6 +42,7 @@ To continuously write data from Kafka into Doris, choose the configuration that 
 | 24.0.0 | 2.4+ | 2.0+ | 8 |
 | 25.0.0 | 2.4+ | 2.0+ | 8 |
 | 26.0.0 | 2.4+ | 2.0+ | 8 |
+| 26.1.0 | 2.4+ | 2.0+ | 8 |
 
 ## Preparing the Doris Kafka Connector
 
@@ -59,7 +60,7 @@ In a Maven project, add the following dependency:
 <dependency>
     <groupId>org.apache.doris</groupId>
     <artifactId>doris-kafka-connector</artifactId>
-    <version>25.0.0</version>
+    <version>26.1.0</version>
 </dependency>
 ```
 

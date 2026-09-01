@@ -42,6 +42,7 @@ First select the corresponding Connector version based on your Spark, Doris, Jav
 
 | Connector | Spark | Doris | Java | Scala |
 | --- | --- | --- | --- | --- |
+| 26.1.0 | 4.1, 3.5 - 3.1, 2.4 | 1.0 + | 17 (4.1), 8 (3.x, 2.x) | 2.13 (4.1), 2.12 (3.x), 2.11 (2.x) |
 | 26.0.0 | 3.5 - 3.1, 2.4 | 1.0 + | 8 | 2.12, 2.11 |
 | 25.2.0 | 3.5 - 3.1, 2.4 | 1.0 + | 8 | 2.12, 2.11 |
 | 25.1.0 | 3.5 - 3.1, 2.4 | 1.0 + | 8 | 2.12, 2.11 |
@@ -62,7 +63,7 @@ Add the Spark Doris Connector dependency in your project `pom.xml`, and replace 
 <dependency>
     <groupId>org.apache.doris</groupId>
     <artifactId>spark-doris-connector-spark-3.5</artifactId>
-    <version>25.2.0</version>
+    <version>26.1.0</version>
 </dependency>
 ```
 
@@ -82,22 +83,22 @@ You can also download the Jar file of the corresponding version from the [Maven 
 
 If you need to compile the source code yourself, run `sh build.sh` in the source directory and enter the required Scala and Spark versions when prompted.
 
-After successful compilation, the target Jar file is generated in the `dist` directory, for example `spark-doris-connector-spark-3.5-25.2.0.jar`. Copy this file into the Spark `classpath` to start using the Spark Doris Connector:
+After successful compilation, the target Jar file is generated in the `dist` directory, for example `spark-doris-connector-spark-3.5-26.1.0.jar`. Copy this file into the Spark `classpath` to start using the Spark Doris Connector:
 
 | Spark run mode | How to place the Jar file |
 | --- | --- |
 | Local mode | Place the Jar file in the `jars/` directory. |
 | Yarn cluster mode | Place the Jar file in the pre-deployed package. |
 
-For example, upload `spark-doris-connector-spark-3.5-25.2.0.jar` to HDFS and add the dependency through `spark.yarn.jars`:
+For example, upload `spark-doris-connector-spark-3.5-26.1.0.jar` to HDFS and add the dependency through `spark.yarn.jars`:
 
 ```shell
-# 1. Upload spark-doris-connector-spark-3.5-25.2.0.jar to HDFS
+# 1. Upload spark-doris-connector-spark-3.5-26.1.0.jar to HDFS
 hdfs dfs -mkdir /spark-jars/
-hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-25.2.0.jar /spark-jars/
+hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-26.1.0.jar /spark-jars/
 
-# 2. Add the spark-doris-connector-spark-3.5-25.2.0.jar dependency in the cluster
-spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-25.2.0.jar
+# 2. Add the spark-doris-connector-spark-3.5-26.1.0.jar dependency in the cluster
+spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-26.1.0.jar
 ```
 
 ## Scenario 1: Batch read Doris data

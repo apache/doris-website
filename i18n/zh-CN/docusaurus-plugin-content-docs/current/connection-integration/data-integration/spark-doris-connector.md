@@ -42,6 +42,7 @@ Spark Doris Connector 是 Apache Doris 与 Apache Spark 的连接器，支持通
 
 | Connector | Spark | Doris | Java | Scala |
 | --- | --- | --- | --- | --- |
+| 26.1.0 | 4.1, 3.5 - 3.1, 2.4 | 1.0 + | 17 (4.1), 8 (3.x, 2.x) | 2.13 (4.1), 2.12 (3.x), 2.11 (2.x) |
 | 26.0.0 | 3.5 - 3.1, 2.4 | 1.0 + | 8 | 2.12, 2.11 |
 | 25.2.0 | 3.5 - 3.1, 2.4 | 1.0 + | 8 | 2.12, 2.11 |
 | 25.1.0 | 3.5 - 3.1, 2.4 | 1.0 + | 8 | 2.12, 2.11 |
@@ -62,7 +63,7 @@ Spark Doris Connector 是 Apache Doris 与 Apache Spark 的连接器，支持通
 <dependency>
     <groupId>org.apache.doris</groupId>
     <artifactId>spark-doris-connector-spark-3.5</artifactId>
-    <version>25.2.0</version>
+    <version>26.1.0</version>
 </dependency>
 ```
 
@@ -82,22 +83,22 @@ Spark Doris Connector 是 Apache Doris 与 Apache Spark 的连接器，支持通
 
 如需自行编译，在源码目录下执行 `sh build.sh`，并根据提示输入需要的 Scala 与 Spark 版本。
 
-编译成功后，目标 Jar 包会生成在 `dist` 目录下，例如 `spark-doris-connector-spark-3.5-25.2.0.jar`。将该文件复制到 Spark 的 `classpath` 中即可使用 Spark Doris Connector：
+编译成功后，目标 Jar 包会生成在 `dist` 目录下，例如 `spark-doris-connector-spark-3.5-26.1.0.jar`。将该文件复制到 Spark 的 `classpath` 中即可使用 Spark Doris Connector：
 
 | Spark 运行模式 | Jar 包放置方式 |
 | --- | --- |
 | Local 模式 | 将 Jar 包放入 `jars/` 目录。 |
 | Yarn 集群模式 | 将 Jar 包放入预部署包中。 |
 
-例如，将 `spark-doris-connector-spark-3.5-25.2.0.jar` 上传到 HDFS，并通过 `spark.yarn.jars` 添加依赖：
+例如，将 `spark-doris-connector-spark-3.5-26.1.0.jar` 上传到 HDFS，并通过 `spark.yarn.jars` 添加依赖：
 
 ```shell
-# 1. 上传 spark-doris-connector-spark-3.5-25.2.0.jar 到 HDFS
+# 1. 上传 spark-doris-connector-spark-3.5-26.1.0.jar 到 HDFS
 hdfs dfs -mkdir /spark-jars/
-hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-25.2.0.jar /spark-jars/
+hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-26.1.0.jar /spark-jars/
 
-# 2. 在集群中添加 spark-doris-connector-spark-3.5-25.2.0.jar 依赖
-spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-25.2.0.jar
+# 2. 在集群中添加 spark-doris-connector-spark-3.5-26.1.0.jar 依赖
+spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-26.1.0.jar
 ```
 
 ## 场景一：批量读取 Doris 数据
