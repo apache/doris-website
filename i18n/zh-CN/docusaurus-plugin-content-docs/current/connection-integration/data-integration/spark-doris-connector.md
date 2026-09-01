@@ -42,6 +42,7 @@ Spark Doris Connector 是 Apache Doris 与 Apache Spark 的连接器，支持通
 
 | Connector | Spark | Doris | Java | Scala |
 | --- | --- | --- | --- | --- |
+| 26.1.0 | 4.1, 3.5 - 3.1, 2.4 | 1.0 + | 17 (4.1), 8 (3.x, 2.x) | 2.13 (4.1), 2.12 (3.x), 2.11 (2.x) |
 | 26.0.0 | 3.5 - 3.1, 2.4 | 1.0 + | 8 | 2.12, 2.11 |
 | 25.2.0 | 3.5 - 3.1, 2.4 | 1.0 + | 8 | 2.12, 2.11 |
 | 25.1.0 | 3.5 - 3.1, 2.4 | 1.0 + | 8 | 2.12, 2.11 |
@@ -62,7 +63,7 @@ Spark Doris Connector 是 Apache Doris 与 Apache Spark 的连接器，支持通
 <dependency>
     <groupId>org.apache.doris</groupId>
     <artifactId>spark-doris-connector-spark-3.5</artifactId>
-    <version>25.2.0</version>
+    <version>26.1.0</version>
 </dependency>
 ```
 
@@ -82,22 +83,22 @@ Spark Doris Connector 是 Apache Doris 与 Apache Spark 的连接器，支持通
 
 如需自行编译，在源码目录下执行 `sh build.sh`，并根据提示输入需要的 Scala 与 Spark 版本。
 
-编译成功后，目标 Jar 包会生成在 `dist` 目录下，例如 `spark-doris-connector-spark-3.5-25.2.0.jar`。将该文件复制到 Spark 的 `classpath` 中即可使用 Spark Doris Connector：
+编译成功后，目标 Jar 包会生成在 `dist` 目录下，例如 `spark-doris-connector-spark-3.5-26.1.0.jar`。将该文件复制到 Spark 的 `classpath` 中即可使用 Spark Doris Connector：
 
 | Spark 运行模式 | Jar 包放置方式 |
 | --- | --- |
 | Local 模式 | 将 Jar 包放入 `jars/` 目录。 |
 | Yarn 集群模式 | 将 Jar 包放入预部署包中。 |
 
-例如，将 `spark-doris-connector-spark-3.5-25.2.0.jar` 上传到 HDFS，并通过 `spark.yarn.jars` 添加依赖：
+例如，将 `spark-doris-connector-spark-3.5-26.1.0.jar` 上传到 HDFS，并通过 `spark.yarn.jars` 添加依赖：
 
 ```shell
-# 1. 上传 spark-doris-connector-spark-3.5-25.2.0.jar 到 HDFS
+# 1. 上传 spark-doris-connector-spark-3.5-26.1.0.jar 到 HDFS
 hdfs dfs -mkdir /spark-jars/
-hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-25.2.0.jar /spark-jars/
+hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-26.1.0.jar /spark-jars/
 
-# 2. 在集群中添加 spark-doris-connector-spark-3.5-25.2.0.jar 依赖
-spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-25.2.0.jar
+# 2. 在集群中添加 spark-doris-connector-spark-3.5-26.1.0.jar 依赖
+spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-26.1.0.jar
 ```
 
 ## 场景一：批量读取 Doris 数据
@@ -458,13 +459,21 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 | `doris.sink.batch.interval.ms` | 0 | 每个批次 Sink 的间隔时间，单位为 ms。 |
 | `doris.sink.enable-2pc` | false | 是否开启两阶段提交。开启后将在作业结束时提交事务，而部分任务失败时会将所有预提交状态的事务回滚。 |
 | `doris.sink.auto-redirect` | true | 是否重定向 Stream Load 请求。开启后 Stream Load 将通过 FE 写入，不再显式获取 BE 信息。 |
-| `doris.enable.https` | false | 是否开启 FE HTTPS 请求。 |
-| `doris.https.key-store-path` | - | HTTPS key store 路径。 |
-| `doris.https.key-store-type` | JKS | HTTPS key store 类型。 |
-| `doris.https.key-store-password` | - | HTTPS key store 密码。 |
+| `doris.enable.tls` | false | 是否为 Doris 连接启用 TLS。 |
+| `doris.tls.ca-certificate-path` | 空字符串 | PEM 格式的 CA 证书链路径。未配置时 Connector 不加载自定义 CA，使用对应客户端的默认信任库。 |
+| `doris.tls.skip-hostname-verification` | false | 是否在保留 CA 验证的同时跳过主机名验证。Arrow Flight SQL 不支持该配置。 |
+| `doris.tls.excluded-protocols` | 空字符串 | 不使用 TLS 的协议，多个协议使用逗号分隔。可选值为 `http`、`mysql`、`thrift` 和 `arrowflight`。 |
 | `doris.read.mode` | thrift | Doris 读取模式，可选项为 `thrift` 和 `arrow`。 |
 | `doris.read.arrow-flight-sql.port` | - | Doris FE 的 Arrow Flight SQL 端口。当 `doris.read.mode` 为 `arrow` 时，用于通过 Arrow Flight SQL 方式读取数据。服务端配置方式请参考 [基于 Arrow Flight SQL 的高速数据传输链路](../arrow-flight-sql.md)。 |
-| `doris.sink.label.prefix` | spark-doris | Stream Load 方式写入时的导入标签前缀。 |
+| `doris.sink.mode` | stream_load | Doris 写入模式，支持 `stream_load` 和 `tvf`。 |
+| `doris.sink.label.prefix` | spark-doris | Doris 写入的 Label 前缀。 |
+| `doris.sink.s3.endpoint` | - | 兼容 S3 的对象存储 Endpoint，仅 TVF 写入模式下必填。 |
+| `doris.sink.s3.region` | - | 对象存储 Region，仅 TVF 写入模式下必填。 |
+| `doris.sink.s3.bucket` | - | 暂存数据的 Bucket，仅 TVF 写入模式下必填。 |
+| `doris.sink.s3.prefix` | - | 暂存数据的对象路径前缀，仅 TVF 写入模式下必填。 |
+| `doris.sink.s3.access-key` | - | 对象存储 Access Key，仅 TVF 写入模式下必填。 |
+| `doris.sink.s3.secret-key` | - | 对象存储 Secret Key，仅 TVF 写入模式下必填。 |
+| `doris.sink.s3.path-style-access` | false | TVF 写入模式下是否使用路径风格访问对象存储。 |
 | `doris.thrift.max.message.size` | 2147483647 | 通过 Thrift 方式读取数据时，消息的最大尺寸。 |
 | `doris.fe.auto.fetch` | false | 是否自动获取 FE 信息。当设置为 `true` 时，会根据 `doris.fenodes` 配置的节点请求所有 FE 节点信息，无需额外配置多个节点以及单独配置 `doris.read.arrow-flight-sql.port` 和 `doris.query.port`。 |
 | `doris.read.bitmap-to-string` | false | 是否将 Bitmap 类型转换为数组索引组成的字符串读取。具体结果形式参考函数定义 [BITMAP_TO_STRING](../../sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-to-string.md)。 |
@@ -544,6 +553,54 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 从 24.0.0 版本开始，Bitmap 类型读取返回类型为字符串，默认返回字符串值 `Read unsupported`。
 
 :::
+
+## 最佳实践
+
+### Spark 访问启用 TLS 的 Doris 环境
+
+Spark 读写启用 TLS 的 Doris 集群时，将 `doris.enable.tls` 设置为 `true`：
+
+```scala
+mockDataDF.write.format("doris")
+    .option("doris.table.identifier", "$YOUR_DORIS_DATABASE_NAME.$YOUR_DORIS_TABLE_NAME")
+    .option("doris.fenodes", "$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_HTTPS_PORT")
+    .option("user", "$YOUR_DORIS_USERNAME")
+    .option("password", "$YOUR_DORIS_PASSWORD")
+    .option("doris.enable.tls", "true")
+    .option("doris.tls.ca-certificate-path", "/etc/doris-tls/ca.pem")
+    .save()
+```
+
+CA 文件需要在 Spark Driver 和所有 Executor 上可访问。未配置 `doris.tls.ca-certificate-path` 时，Connector 不加载自定义 CA，使用对应客户端的默认信任库。
+
+根据 Spark 部署模式分发 CA 文件：
+
+- **YARN**：在 `spark-submit` 中增加 `--files /local/path/ca.pem`，并将 `doris.tls.ca-certificate-path` 设置为 `ca.pem`。
+- **Kubernetes**：通过 Secret 或 Volume 将 CA 挂载到 Driver 和 Executor Pod 的相同路径。例如，在 `spark-submit` 中增加 `--conf spark.kubernetes.driver.secrets.doris-tls=/etc/doris-tls` 和 `--conf spark.kubernetes.executor.secrets.doris-tls=/etc/doris-tls`，并将 CA 路径设置为 `/etc/doris-tls/ca.pem`。
+
+### 使用 S3 TVF 写入
+
+TVF 写入模式先将数据以 JSON 形式存到兼容 S3 的对象存储，再通过 S3 TVF 写入 Doris，目前仅支持批量写入。请确保 Spark 和 Doris 均可访问对象存储，并已创建 Doris 目标表。
+
+```scala
+mockDataDF.write.format("doris")
+    .option("doris.table.identifier", "$YOUR_DORIS_DATABASE_NAME.$YOUR_DORIS_TABLE_NAME")
+    .option("doris.fenodes", "$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_HTTP_PORT")
+    .option("doris.query.port", "$YOUR_DORIS_FE_QUERY_PORT")
+    .option("user", "$YOUR_DORIS_USERNAME")
+    .option("password", "$YOUR_DORIS_PASSWORD")
+    .option("doris.sink.mode", "tvf")
+    .option("doris.sink.s3.endpoint", "$YOUR_S3_ENDPOINT")
+    .option("doris.sink.s3.region", "$YOUR_S3_REGION")
+    .option("doris.sink.s3.bucket", "$YOUR_S3_BUCKET")
+    .option("doris.sink.s3.prefix", "$YOUR_S3_PREFIX")
+    .option("doris.sink.s3.access-key", "$YOUR_S3_ACCESS_KEY")
+    .option("doris.sink.s3.secret-key", "$YOUR_S3_SECRET_KEY")
+    .mode(SaveMode.Append)
+    .save()
+```
+
+Connector 不会自动删除暂存对象，请按需配置对象存储生命周期策略。
 
 ## 常见问题与故障处理
 

@@ -42,6 +42,7 @@
 | 24.0.0 | 2.4+ | 2.0+ | 8 |
 | 25.0.0 | 2.4+ | 2.0+ | 8 |
 | 26.0.0 | 2.4+ | 2.0+ | 8 |
+| 26.1.0 | 2.4+ | 2.0+ | 8 |
 
 ## 准备 Doris Kafka Connector
 
@@ -59,7 +60,7 @@
 <dependency>
     <groupId>org.apache.doris</groupId>
     <artifactId>doris-kafka-connector</artifactId>
-    <version>25.0.0</version>
+    <version>26.1.0</version>
 </dependency>
 ```
 
@@ -251,7 +252,12 @@ errors.deadletterqueue.topic.replication.factor=1
 | `doris.user` | - | - | Y | Doris 用户名。 |
 | `doris.password` | - | - | Y | Doris 密码。 |
 | `doris.database` | - | - | Y | 要写入的数据库。多个库时可以为空，同时需要在 `topic2table.map` 中配置具体库名。 |
+| `doris.enable.tls` | `true`,<br />`false` | false | N | 是否为 Doris HTTP 和 MySQL 连接启用 TLS。 |
+| `doris.tls.ca-certificate-path` | - | 空字符串 | N | Kafka Connect Worker 本地 PEM 格式的 CA 证书链路径。未配置时 Connector 不加载自定义 CA，使用对应客户端的默认信任库。 |
+| `doris.tls.skip-hostname-verification` | `true`,<br />`false` | false | N | 是否在保留 CA 验证的同时跳过主机名验证。 |
+| `doris.tls.excluded-protocols` | `http`,<br />`mysql` | 空字符串 | N | 不使用 TLS 的 Doris 协议，多个协议使用逗号分隔。 |
 | `doris.topic2table.map` | - | - | Y | Topic 和表的对应关系，例如 `topic1:tb1,topic2:tb2`。如果留空，默认将 Topic 名称作为写入的表名。多个库的格式为 `topic1:db1.tbl1,topic2:db2.tbl2`。 |
+| `load.model` | `stream_load`,<br />`tvf` | stream_load | N | Doris 写入模式。设置为 `tvf` 时通过 S3 TVF 写入。 |
 | `buffer.count.records` | - | 50000 | N | 单次 Stream Load 写入的条数。 |
 | `buffer.flush.time` | - | 120 | N | Buffer 刷新间隔，单位为秒，默认值为 120 秒。 |
 | `buffer.size.bytes` | - | 104857600(100MB) | N | 单次 Stream Load 写入的数据大小。 |
@@ -260,6 +266,13 @@ errors.deadletterqueue.topic.replication.factor=1
 | `label.prefix` | - | `${name}` | N | Stream Load 导入数据时的 Label 前缀。默认值为 Connector 应用名称。 |
 | `auto.redirect` | - | true | N | 是否重定向 Stream Load 请求。开启后，Stream Load 会通过 FE 重定向到需要写入数据的 BE，并且不再显示获取 BE 信息。 |
 | `sink.properties.*` | - | `'sink.properties.format':'json'`,<br />`'sink.properties.read_json_by_line':'true'` | N | Stream Load 的导入参数。例如，通过 `'sink.properties.column_separator':','` 定义列分隔符。详细参数请参考 [Stream Load 手册](../../data-operate/import/import-way/stream-load-manual.md)。<br /><br />开启 Group Commit 时，例如开启 `sync_mode` 模式：`"sink.properties.group_commit":"sync_mode"`。Group Commit 可以配置 `off_mode`、`sync_mode`、`async_mode` 三种模式，具体使用请参考 [Group Commit](https://doris.apache.org/docs/data-operate/import/group-commit-manual/)。<br /><br />开启部分列更新时，例如开启更新指定 `col2` 的部分列：`"sink.properties.partial_columns":"true"`、`"sink.properties.columns":"col2"`。 |
+| `sink.s3.endpoint` | - | - | 仅 TVF 写入模式 | 兼容 S3 的对象存储 Endpoint，必须为完整的 HTTP 或 HTTPS 地址。 |
+| `sink.s3.region` | - | - | 仅 TVF 写入模式 | 对象存储 Region。 |
+| `sink.s3.bucket` | - | - | 仅 TVF 写入模式 | 暂存数据的 Bucket。 |
+| `sink.s3.prefix` | - | - | 仅 TVF 写入模式 | 暂存数据的对象路径前缀。 |
+| `sink.s3.access-key` | - | - | 仅 TVF 写入模式 | 对象存储 Access Key。 |
+| `sink.s3.secret-key` | - | - | 仅 TVF 写入模式 | 对象存储 Secret Key。 |
+| `sink.s3.path-style-access` | `true`,<br />`false` | false | N | TVF 写入模式下是否使用路径风格访问对象存储。 |
 | `delivery.guarantee` | `at_least_once`,<br />`exactly_once` | at_least_once | N | 消费 Kafka 数据并导入 Doris 时的数据一致性保障方式。支持 `at_least_once` 和 `exactly_once`，默认值为 `at_least_once`。Doris 需要升级至 2.1.0 以上，才能保障数据的 `exactly_once`。 |
 | `converter.mode` | `normal`,<br />`debezium_ingestion` | normal | N | Connector 消费 Kafka 数据时的上游数据类型转换模式。`normal` 表示正常消费 Kafka 中的数据，不进行特殊类型转换；`debezium_ingestion` 表示当 Kafka 上游数据通过 Debezium 等 CDC（Change Data Capture，变更数据捕获）工具采集时，需要进行特殊类型转换。 |
 | `debezium.schema.evolution` | `none`,<br />`basic` | none | N | 通过 Debezium 采集上游数据库系统（如 MySQL）时，如果发生结构变更，可以将增加的字段同步到 Doris 中。`none` 表示上游数据库系统发生结构变更时，不同步变更后的结构到 Doris 中。`basic` 表示同步上游数据库的数据变更操作。由于列结构变更是危险操作，可能导致误删 Doris 表结构中的列，目前仅支持同步上游增加列。当列被重命名后，旧列保持原样，Connector 会在目标表中新增一列，并将重命名后的新增数据 Sink 到新列中。 |
@@ -557,6 +570,51 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 ```
 
 其中，`repo` 为 `InsertField` 增加的静态字段，`registertime` 为 `TimestampConverter` 转换后的时间字符串。更多 Kafka Connect Single Message Transforms (SMT) 使用案例，请参考 [SMT documentation](https://docs.confluent.io/cloud/current/connectors/transforms/overview.html)。
+
+## 最佳实践
+
+### Kafka Connect 访问启用 TLS 的 Doris 环境
+
+向启用 TLS 的 Doris 集群写入数据时，在 Connector 配置中增加以下参数：
+
+```json
+{
+"doris.urls":"doris-fe.example.com",
+"doris.http.port":"8040",
+"doris.query.port":"9030",
+"doris.enable.tls":"true",
+"doris.tls.ca-certificate-path":"/etc/kafka-connect/certs/doris-ca.pem"
+}
+```
+
+`doris.urls` 中只填写主机名，不要添加协议或端口。未配置 CA 路径时，Connector 不加载自定义 CA，使用对应客户端的默认信任库。
+
+根据 Kafka Connect 部署模式分发 CA 文件：
+
+- **Standalone**：将 CA 文件放置在 Worker 主机上，并配置其本地路径。
+- **Distributed**：Task 可能被分配到任意 Worker，需要将 CA 文件放置在每个 Worker 的相同本地路径。
+- **Kubernetes**：通过 Secret 或 Volume 将 CA 挂载到所有 Kafka Connect Worker Pod 的相同路径，并配置挂载后的文件路径。
+
+### 使用 S3 TVF 写入
+
+TVF 写入模式先将数据以 JSON 形式存到兼容 S3 的对象存储，再通过 S3 TVF 写入 Doris。请确保 Kafka Connect 和 Doris 均可访问对象存储，并已创建 Doris 目标表。在 Connector 配置中增加以下参数：
+
+```json
+{
+"load.model":"tvf",
+"enable.combine.flush":"true",
+"delivery.guarantee":"at_least_once",
+"sink.properties.columns":"id,name,age",
+"sink.s3.endpoint":"$YOUR_S3_ENDPOINT",
+"sink.s3.region":"$YOUR_S3_REGION",
+"sink.s3.bucket":"$YOUR_S3_BUCKET",
+"sink.s3.prefix":"$YOUR_S3_PREFIX",
+"sink.s3.access-key":"$YOUR_S3_ACCESS_KEY",
+"sink.s3.secret-key":"$YOUR_S3_SECRET_KEY"
+}
+```
+
+`sink.properties.columns` 需要按照写入顺序列出 Doris 目标表字段。Connector 不会自动删除暂存对象，请按需配置对象存储生命周期策略。
 
 ## 常见问题
 
