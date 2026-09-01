@@ -64,7 +64,7 @@ ASOF [LEFT | INNER] JOIN <right_table>
 | --- | --- | --- |
 | `left_table` | 是 | 左表（探测表）。该表的所有行都会被评估。 |
 | `right_table` | 是 | 右表（构建表）。用于查找最接近的匹配。 |
-| `MATCH_CONDITION` | 是 | 定义近邻匹配规则。两侧必须引用左右表的列，且两侧列的类型必须为 `DATEV2`、`DATETIMEV2` 或 `TIMESTAMPTZ`；允许使用表达式。支持的运算符：`>=`、`>`、`<=`、`<`。 |
+| `MATCH_CONDITION` | 是 | 定义近邻匹配规则。两侧必须引用左右表的列，且两侧列的类型必须为 `DATEV2`、`DATETIMEV2`、`TIMESTAMP_NS` 或 `TIMESTAMPTZ`；允许使用表达式。支持的运算符：`>=`、`>`、`<=`、`<`。 |
 | `ON` / `USING` 子句 | 是 | 定义一个或多个等值键，作为分组键，匹配仅在同一组内进行。`ON` 支持一个或多个等值（`=`）条件以及表达式（例如 `SUBSTRING(l.code, 1, 3) = r.prefix`）；`USING` 支持一个或多个同名列。 |
 
 ## 匹配规则
@@ -82,7 +82,7 @@ ASOF [LEFT | INNER] JOIN <right_table>
 
 需要特别注意以下规则：
 
-1. `MATCH_CONDITION` 中的列必须为 `DATEV2`、`DATETIMEV2` 或 `TIMESTAMPTZ` 类型。
+1. `MATCH_CONDITION` 中的列必须为 `DATEV2`、`DATETIMEV2`、`TIMESTAMP_NS` 或 `TIMESTAMPTZ` 类型。
 2. `MATCH_CONDITION` 中允许使用表达式，例如 `MATCH_CONDITION(l.ts >= r.ts + INTERVAL 1 HOUR)` 或 `MATCH_CONDITION(l.ts >= DATE_ADD(r.ts, INTERVAL 3 HOUR))`。
 3. 等值键子句可以写成 `ON` 或 `USING`。使用 `ON` 时，只允许使用等值（`=`）条件并用 `AND` 连接；`ON` 子句中不允许使用不等式条件（如 `>`、`OR`）或字面量比较（如 `l.grp = 1`）。
 4. 匹配列或等值列中的 NULL 值不会产生匹配。如果左表行的匹配列为 NULL，或者在同组内没有符合条件的右表行，则右侧列填充 NULL（LEFT JOIN）或该行被丢弃（INNER JOIN）。

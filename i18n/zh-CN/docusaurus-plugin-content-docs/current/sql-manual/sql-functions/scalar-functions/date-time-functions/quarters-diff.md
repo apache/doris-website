@@ -19,8 +19,8 @@ QUARTERS_DIFF(<enddate>, <startdate>)
 
 | 参数            | 说明                                                      |
 |---------------|---------------------------------------------------------|
-| `<enddate>`   | 结束日期，表示计算差值时的较晚日期。支持 `DATE` 或 `DATETIME` 类型 |
-| `<startdate>` | 开始日期，表示计算差值时的较早日期。支持 `DATE` 或 `DATETIME` 类型 |
+| `<enddate>`   | 结束日期，支持 `DATE`、`DATETIME` 或 `TIMESTAMP_NS`。 |
+| `<startdate>` | 开始日期，支持 `DATE`、`DATETIME` 或 `TIMESTAMP_NS`。 |
 
 ## 返回值
 

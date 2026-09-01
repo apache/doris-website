@@ -20,7 +20,7 @@ TO_DATE(`<datetime_value>`)
 ## Parameters
 | Parameter | Description |
 |-----------|-------------|
-| `<datetime_value>` | DATETIME type datetime value, supports DATETIME format, for datetime format please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime_value>` | A `DATETIME` or `TIMESTAMP_NS` value. The time and fractional-second fields are ignored. |
 
 ## Return Value
 
@@ -54,4 +54,3 @@ SELECT TO_DATE(NULL) AS result;
 | NULL   |
 +--------+
 ```
-

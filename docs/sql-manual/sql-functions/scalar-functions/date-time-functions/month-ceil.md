@@ -34,13 +34,17 @@ MONTH_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The datetime value to be rounded up. It is a valid date expression that supports date/datetime/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | The datetime value to be rounded up. It is a valid date expression that supports DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | The month interval value, of type INT, representing the number of months contained in each interval. |
-| `<origin>` | The starting time point of the interval. Supports date/datetime types. Default value is 0001-01-01 00:00:00. |
+| `<origin>` | The starting time point of the interval. Supports DATE/DATETIME/TIMESTAMP_NS types. Default value is 0001-01-01 00:00:00. |
 
 ## Return Value
 
-Returns a value of type DATETIME, representing the time value after rounding up to the nearest specified month interval based on the input datetime. The time component of the result will be set to 00:00:00, and the day component will be truncated to 01.
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
+When `<origin>` is omitted for a `TIMESTAMP_NS` input, the documented default origin is used only as an internal alignment reference; it does not need to fall within the storable `TIMESTAMP_NS` range.
+
+Returns the temporal type selected from the input arguments, representing the time value after rounding up to the nearest specified month interval. The time component is set to 00:00:00, and the day component is set to 01.
 
 - If `<period>` is a non-positive number (≤0), returns an error.
 - If any parameter is NULL, returns NULL.

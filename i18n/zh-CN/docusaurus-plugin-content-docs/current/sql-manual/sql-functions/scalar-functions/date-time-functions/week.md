@@ -34,7 +34,7 @@ WEEK(`<date_or_time_expr>`,`<mode>`)
 
 | 参数                         | 描述                          |
 |----------------------------|-----------------------------|
-| `<datetime_or_date>` | 输入的日期时间值，支持输入 date/datetime 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<datetime_or_date>` | 输入的日期时间值，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `mode` |  指定的一年第一周规则计算方法，为 INT 类型，范围为 0-7|
 
 ## 返回值
@@ -105,4 +105,3 @@ SELECT WEEK('2023-12-31 23:59:59', NULL),WEEK(NULL,3);
 |                              NULL |         NULL |
 +-----------------------------------+--------------+
 ```
-

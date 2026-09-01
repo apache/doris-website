@@ -31,7 +31,7 @@ NULLIF(<expr1>, <expr2>)
 Supported types for parameters:
 1. Boolean
 2. Numeric types (TinyInt, SmallInt, Int, BigInt, LargeInt, Float, Double, Decimal)
-3. Date types (Date, DateTime, Time)
+3. Date types (Date, DateTime, TimestampNs, Time)
 4. String types (String, VARCHAR, CHAR)
 
 ## Return Value

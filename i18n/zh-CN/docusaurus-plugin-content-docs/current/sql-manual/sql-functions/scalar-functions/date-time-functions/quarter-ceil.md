@@ -1,13 +1,14 @@
 ---
 {
     "title": "QUARTER_CEIL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "QUARTER_CEIL 将 DATE、DATETIME、TIMESTAMP_NS 或 TIMESTAMPTZ 值向上取整到最近的指定季度周期边界，并保持相应的日期时间类型。"
 }
 ---
 
 ## 描述
 
-将日期时间值向上取整到最近的指定季度周期的下个周期起点。如果指定了起始时间（origin），则以该时间为基准计算周期。
+将 `DATE`、`DATETIME`、`TIMESTAMP_NS` 或 `TIMESTAMPTZ` 值向上取整到最近的指定季度周期起点。如果指定了起始时间（origin），则以该时间为基准计算周期。
 
 ## 语法
 
@@ -22,20 +23,26 @@ QUARTER_CEIL(<datetime>, <period>, <origin>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<datetime>` | 需要向上取整的日期时间值，类型为 DATE 或 DATETIME |
+| `<datetime>` | 需要向上取整的日期时间值，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`。 |
 | `<period>` | 季度周期值，类型为 INT，表示每个周期包含的季度数 |
-| `<origin>` | 周期的起始时间点，类型为 DATE 或 DATETIME，默认值为 0001-01-01 00:00:00 |
+| `<origin>` | 周期的起始时间点，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`，默认值为 0001-01-01 00:00:00。 |
 
 注意：
 - 不指定 period 时，等价于以 1 个季度为周期
 - 当 period 不为正整数时，函数结果将为 NULL
-- 结果总是向过去时间取整
+- 结果总是向未来时间取整
 - 返回值的时间部分总是 00:00:00
 
 ## 返回值
 
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
+
+对 `TIMESTAMP_NS` 输入省略 `<origin>` 时，文档中的默认起点仅作为内部对齐基准使用，无需位于 `TIMESTAMP_NS` 的可存储范围内。
+
 当 `<datetime>` 为 DATE 类型时，返回类型为 DATE。
 当 `<datetime>` 为 DATETIME 类型时，返回类型为 DATETIME。
+当 `<datetime>` 为 TIMESTAMP_NS 类型时，返回带 9 位小数秒的 TIMESTAMP_NS。
+当 `<datetime>` 为 TIMESTAMPTZ 类型时，返回 TIMESTAMPTZ。
 表示向上取整后的日期时间值。结果的时间部分将被设置为 00:00:00。
 
 ## 举例

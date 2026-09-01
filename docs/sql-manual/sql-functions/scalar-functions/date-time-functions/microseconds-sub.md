@@ -2,13 +2,13 @@
 {
     "title": "MICROSECONDS_SUB",
     "language": "en",
-    "description": "The MICROSECONDSSUB function subtracts a specified number of microseconds from the input datetime value and returns the resulting new datetime value."
+    "description": "Subtracts microseconds from a DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value and returns the same temporal type."
 }
 ---
 
 ## Description
 
-The `MICROSECONDS_SUB` function subtracts a specified number of microseconds from the input datetime value and returns the resulting new datetime value. This function supports processing `DATETIME` and `TIMESTAMPTZ` types with microsecond precision.
+The `MICROSECONDS_SUB` function subtracts a specified number of microseconds from the input datetime value and returns the resulting new datetime value. This function supports `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`.
 
 This function behaves the same as MySQL’s [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) when using MICROSECOND as the unit.
 
@@ -22,15 +22,18 @@ MICROSECONDS_SUB(`<datetime_like_type>`, `<delta>`)
 
 | Parameter    | Description                                                                                     |
 |--------------|-------------------------------------------------------------------------------------------------|
-| `<datetime_like_type>` | The input datetime value, of type `DATETIME` or `TIMESTAMPTZ`. For specific formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
+| `<datetime_like_type>` | The input datetime value, of type `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ`. For formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [timestamp_ns conversion](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md), and [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion). |
 | `<delta>`    | The number of microseconds to subtract, of type `BIGINT`. 1 second = 1,000,000 microseconds.       |
 
 ## Return Value
 
 Return the result of subtracting the specified microseconds `<delta>` from the base time `<datetime_like_type>`, with the return type being the same as the type of the first parameter.
 
+- A TIMESTAMP_NS input returns TIMESTAMP_NS and preserves its nanosecond part.
+
 - If `<delta>` is negative, the function behaves the same as adding the corresponding number of microseconds to the base time (i.e., `MICROSECONDS_SUB(basetime, -n)` is equivalent to `MICROSECONDS_ADD(basetime, n)`).
 - If the calculation result exceeds the valid range of the `DATETIME` type (`0000-01-01 00:00:00` to `9999-12-31 23:59:59.999999`), an exception is thrown.
+- For TIMESTAMP_NS, the result must be in the range `1677-09-21 00:12:43.145224192` to `2262-04-11 23:47:16.854775807`.
 - If any parameter is `NULL`, the function returns `NULL`.
 
 ## Examples
@@ -52,6 +55,14 @@ mysql> SELECT MICROSECONDS_SUB('2023-10-01 12:00:00.200000', -300000) AS after_s
 +----------------------------+
 | 2023-10-01 12:00:00.500000 |
 +----------------------------+
+
+-- TIMESTAMP_NS preserves the nanosecond part
+SELECT MICROSECONDS_SUB(CAST('2025-01-02 03:04:05.123456789' AS TIMESTAMP_NS), 1);
++-----------------------------------------------------------------------------------+
+| MICROSECONDS_SUB(CAST('2025-01-02 03:04:05.123456789' AS TIMESTAMP_NS), 1) |
++-----------------------------------------------------------------------------------+
+| 2025-01-02 03:04:05.123455789                                                     |
++-----------------------------------------------------------------------------------+
 
 -- Any parameter is NULL, returns NULL
 SELECT MICROSECONDS_SUB(NULL, 1000), MICROSECONDS_SUB('2023-01-01', NULL) AS after_sub;

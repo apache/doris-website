@@ -19,8 +19,8 @@ Doris supports two types of auto partitioning:
 
 | Type | Partitioning method | Partition function | Supported partition column types |
 | --- | --- | --- | --- |
-| AUTO **RANGE** PARTITION | Auto partition by range | `date_trunc` | `DATE`, `DATETIME` |
-| AUTO **LIST** PARTITION | Auto partition by enumerated value | Function calls not supported | `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` |
+| AUTO **RANGE** PARTITION | Auto partition by range | `date_trunc` | `DATE`, `DATETIME`, `TIMESTAMP_NS` |
+| AUTO **LIST** PARTITION | Auto partition by enumerated value | Function calls not supported | `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `TIMESTAMP_NS`, `CHAR`, `VARCHAR` |
 
 ## Use Cases
 
@@ -189,7 +189,7 @@ PROPERTIES (
 | Constraint | AUTO RANGE PARTITION | AUTO LIST PARTITION |
 | --- | --- | --- |
 | Supported partition functions | `date_trunc` only | Function calls not supported |
-| Supported partition column types | `DATE`, `DATETIME` | `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` |
+| Supported partition column types | `DATE`, `DATETIME`, `TIMESTAMP_NS` | `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `TIMESTAMP_NS`, `CHAR`, `VARCHAR` |
 | Multi-column partitioning supported | No | Yes |
 | Partition name length limit | - | Must not exceed 50 (derived from concatenation and escaping of partition column content; the actual allowed length may be shorter) |
 | Partition value rule | Divided by the time range truncated by `date_trunc` | Each new enumerated value with no existing partition creates an independent new partition |

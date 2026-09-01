@@ -2,13 +2,13 @@
 {
     "title": "MINUTES_SUB",
     "language": "en",
-    "description": "The MINUTESSUB function subtracts a specified number of minutes from the input datetime value and returns the resulting new datetime value."
+    "description": "Subtracts a specified number of minutes from a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value and preserves its temporal type."
 }
 ---
 
 ## Description
 
-The MINUTES_SUB function subtracts a specified number of minutes from the input datetime value and returns the resulting new datetime value. This function supports processing DATE, DATETIME and TIMESTAMPTZ types.
+The MINUTES_SUB function subtracts a specified number of minutes from the input datetime value and returns the resulting new datetime value. This function supports processing DATE, DATETIME, TIMESTAMP_NS, and TIMESTAMPTZ types.
 
 This function is consistent with [date_sub function](./date-sub) and MySQL's [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) when using MINUTE as the unit.
 
@@ -22,10 +22,12 @@ MINUTES_SUB(`<date_or_time_expr>`, `<minutes>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The input datetime value, which can be of type DATE, DATETIME or TIMESTAMPTZ. For specific datetime/date formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | The input datetime value, which can be of type DATE, DATETIME, TIMESTAMP_NS or TIMESTAMPTZ. For specific datetime/date formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<minutes>` | The number of minutes to subtract, of type BIGINT. Can be positive or negative. |
 
 ## Return Value
+
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
 
 Return the result of subtracting the specified minutes `<minutes>` from the base time `<datetime_like_type>`, with the return type being related to the type of the first parameter:
 - If the first parameter is TIMESTAMPTZ, then return TIMESTAMPTZ.

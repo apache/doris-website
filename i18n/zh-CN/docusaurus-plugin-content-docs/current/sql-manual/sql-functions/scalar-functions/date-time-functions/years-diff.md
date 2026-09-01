@@ -2,12 +2,12 @@
 {
     "title": "YEARS_DIFF",
     "language": "zh-CN",
-    "description": "YEARSDIFF 函数用于计算两个日期或时间值之间的完整年数差值，结果为结束时间减去开始时间的年数。支持处理 DATE、DATETIME 类型，计算时会考虑完整的时间差（包括月份、日期及时分秒）。"
+    "description": "YEARSDIFF 函数用于计算两个日期或时间值之间的完整年数差值，结果为结束时间减去开始时间的年数。支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，计算时会考虑完整的时间差（包括月份、日期及时分秒）。"
 }
 ---
 
 ## 描述
-YEARS_DIFF 函数用于计算两个日期或时间值之间的完整年数差值，结果为结束时间减去开始时间的年数。支持处理 DATE、DATETIME 类型，计算时会考虑完整的时间差（包括月份、日期及时分秒）。
+YEARS_DIFF 函数用于计算两个日期或时间值之间的完整年数差值，结果为结束时间减去开始时间的年数。支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，计算时会考虑完整的时间差（包括月份、日期及时分秒）。
 
 ## 语法
 
@@ -19,8 +19,8 @@ YEARS_DIFF(<date_or_time_expr1>, <date_or_time_expr2>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr1>` | 结束日期，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| `<date_or_time_expr2>` | 开始日期，支持输入 date/datetime 类型和符合日期时间格式的字符串 |
+| `<date_or_time_expr1>` | 结束日期，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr2>` | 开始日期，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型和符合日期时间格式的字符串 |
 
 ## 返回值
 

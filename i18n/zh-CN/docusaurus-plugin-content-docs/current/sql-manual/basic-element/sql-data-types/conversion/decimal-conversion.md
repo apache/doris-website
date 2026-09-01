@@ -266,6 +266,10 @@ true转成1，false转成0。
 
 不支持。
 
+## From TIMESTAMP_NS
+
+不支持。
+
 ## From time
 
 不支持。

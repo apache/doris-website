@@ -8,7 +8,7 @@
 
 ## Description
 
-The DATE_SUB function is used to subtract a specified time interval from a given date or time value and return the calculated date or time result. It supports operations on DATE (date only), DATETIME (date and time) and TIMESTAMPTZ(date, time, and timezone offset) types, where the time interval is defined by both a numerical value and a unit.
+The DATE_SUB function subtracts a specified time interval from a date or time value and returns the calculated result. It supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ` inputs, where the time interval is defined by both a numerical value and a unit.
 
 This function behaves consistently with the [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) in MySQL.
 
@@ -27,7 +27,7 @@ DATE_SUB(<date_or_time_part>, INTERVAL <expr> <time_unit>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_part>` | A valid date value, supporting datetime or date type. For specificformats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_part>` | A valid date value. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<expr>` | The time interval to be subtracted, for independent units (such as `YEAR`) are of `INT` type; for compound units (such as `YEAR_MONTH`) are of `STRING` type, and accept all non-numeric characters as separators. Therefore, for example, `INTERVAL 6/4 HOUR_MINUTE` will be recognized as 6 hours 4 minutes by Doris, rather than 1 hour 30 minutes (6/4 == 1.5). For compound units, if the input interval value is too short, the value of the larger unit will be set to 0. The sign of this value is determined solely by whether the first non-numeric character is `-`. |
 | `<time_unit>` | Enumerated values: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, YEAR_MONTH, DAY_HOUR, DAY_MINUTE, DAY_SECOND, DAY_MICROSECOND, HOUR_MINUTE, HOUR_SECOND, HOUR_MICROSECOND, MINUTE_SECOND, MINUTE_MICROSECOND, SECOND_MICROSECOND |
 
@@ -56,9 +56,12 @@ DATE_SUB(<date_or_time_part>, INTERVAL <expr> <time_unit>)
 
 ## Return Value
 
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
 Returns a calculated result with the same type as date:
 - When input is DATE, returns DATE (date part only);
 - When input is DATETIME, returns DATETIME (including date and time).
+- When input is TIMESTAMP_NS, returns TIMESTAMP_NS with nine fractional-second digits.
 - When input is TIMESTAMPTZ, returns TIMESTAMPTZ (including date, time, and timezone offset).
 - For datetime types with scale, the scale will be preserved and returned.
 

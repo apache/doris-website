@@ -29,7 +29,7 @@ array_max(ARRAY<T> arr)
 **Supported types for T:**
 - Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
 - String types: CHAR, VARCHAR, STRING
-- Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2
+- Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2, TIMESTAMP_NS
 - Boolean type: BOOLEAN
 - IP types: IPV4, IPV6
 

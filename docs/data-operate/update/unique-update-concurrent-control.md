@@ -88,7 +88,7 @@ The two properties differ as follows:
 | `function_column.sequence_col` | Maps the Sequence column to an existing column in the table | Yes |
 | `function_column.sequence_type` | Specifies only the type of the Sequence column, stored in a hidden column | No |
 
-Supported column types: integer types, `DATE`, and `DATETIME`. **The column type cannot be changed once the table is created.**
+Supported column types: integer types, `DATE`, `DATETIME`, and `TIMESTAMP_NS`. **The column type cannot be changed once the table is created.**
 
 ### Usage Example
 

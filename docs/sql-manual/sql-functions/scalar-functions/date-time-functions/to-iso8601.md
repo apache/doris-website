@@ -2,7 +2,7 @@
 {
     "title": "TO_ISO8601 | Date Time Functions",
     "language": "en",
-    "description": "Converts datetime values to ISO8601 formatted strings, supporting input types DATETIME, DATE and TIMESTAMPTZ.",
+    "description": "Converts DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ values to ISO8601 formatted strings.",
     "sidebar_label": "TO_ISO8601"
 }
 ---
@@ -11,7 +11,7 @@
 
 ## Description
 
-Converts datetime values to ISO8601 formatted strings, supporting input types DATETIME, DATE and TIMESTAMPTZ.
+Converts `DATE`, `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ` values to ISO8601 formatted strings.
 The returned ISO8601 formatted datetime is represented as YYYY-MM-DDTHH:MM:SS, where T is the separator between date and time.
 
 ## Syntax
@@ -23,7 +23,7 @@ TO_ISO8601(`<date_or_date_expr>`)
 ## Parameters
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_date_expr>` | Input datetime value, supports date/datetime/timestamptz types. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_date_expr>` | Input datetime value, supports DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ types. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## Return Value
 
@@ -31,6 +31,7 @@ Returns VARCHAR type, representing the ISO8601 formatted datetime string.
 
 - If input is DATE (e.g., '2023-10-05'), returns format YYYY-MM-DD (date only);
 - If input is DATETIME (e.g., '2023-10-05 15:30:25'), returns format YYYY-MM-DDTHH:MM:SS.xxxxxx (date and time separated by T, xxxxxx are all zeros, fractional seconds in input datetime are rounded to seconds);
+- If input is TIMESTAMP_NS, returns format YYYY-MM-DDTHH:MM:SS.nnnnnnnnn and preserves all nine fractional-second digits;
 - If input is TIMESTAMPTZ (e.g., '2023-10-05 15:30:25+03:00'), returns format YYYY-MM-DDTHH:MM:SS.xxxxxx±HH:MM (offset reflects the session variable `time_zone` after converting to local_time);
 - If input is NULL, returns NULL;
 
@@ -85,4 +86,3 @@ SELECT TO_ISO8601(NULL) AS null_input;
 | NULL       |
 +------------+
 ```
-

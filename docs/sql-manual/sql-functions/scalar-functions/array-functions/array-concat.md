@@ -30,7 +30,7 @@ array_concat(ARRAY<T> arr1, [ARRAY<T> arr2, ...])
 **T supported types:**
 - Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
 - String types: CHAR, VARCHAR, STRING
-- Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2
+- Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2, TIMESTAMP_NS
 - Boolean type: BOOLEAN
 - IP types: IPV4, IPV6
 - Complex data types: ARRAY, MAP, STRUCT
@@ -197,4 +197,4 @@ Ensure that all input array element types are compatible, especially for nested 
 
 ### Keywords
 
-ARRAY, CONCAT, ARRAY_CONCAT 
+ARRAY, CONCAT, ARRAY_CONCAT

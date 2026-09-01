@@ -2,13 +2,13 @@
 {
     "title": "MONTHS_SUB",
     "language": "en",
-    "description": "The MONTHSSUB function subtracts a specified number of months from the input datetime value and returns the resulting new datetime value."
+    "description": "Subtracts a specified number of months from a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value and preserves its temporal type."
 }
 ---
 
 ## Description
 
-The MONTHS_SUB function subtracts a specified number of months from the input datetime value and returns the resulting new datetime value. This function supports processing DATE, DATETIME and TIMESTAMPTZ types. If a negative number is input, it is equivalent to adding the corresponding number of months.
+The MONTHS_SUB function subtracts a specified number of months from the input datetime value and returns the resulting new datetime value. This function supports processing DATE, DATETIME, TIMESTAMP_NS, and TIMESTAMPTZ types. If a negative number is input, it is equivalent to adding the corresponding number of months.
 
 This function is consistent with [date_sub function](./date-sub) and MySQL's [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date_sub) when using MONTH as the unit.
 
@@ -22,12 +22,12 @@ MONTHS_SUB(`<date_or_time_expr>`, `<nums>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The date value from which to subtract months. Supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The date value from which to subtract months. Supports DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<nums>` | The number of months to subtract, of type INT. Positive numbers indicate subtracting nums months from the datetime, negative numbers indicate adding nums months. |
 
 ## Return Value
 
-Returns a value of the same type as the input `<date_or_time_expr>`(DATE, DATETIME or TIMESTAMPTZ), representing the result of subtracting the specified months from the base time.
+Returns a value of the same type as the input `<date_or_time_expr>`(DATE, DATETIME, TIMESTAMP_NS or TIMESTAMPTZ), representing the result of subtracting the specified months from the base time.
 
 - If `<nums>` is negative, the function behaves the same as adding the corresponding months to the base time (i.e., MONTHS_SUB(date, -n) is equivalent to MONTHS_ADD(date, n)).
 - If the input date is the last day of the month and the target month has fewer days than that date, it automatically adjusts to the last day of the target month (e.g., March 31st minus 1 month becomes February 28th or 29th, depending on whether it's a leap year).

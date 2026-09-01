@@ -2,13 +2,13 @@
 {
     "title": "YEARS_SUB",
     "language": "zh-CN",
-    "description": "YEARSSUB 函数用于在指定的日期或时间值上减少（或增加）指定数量的年数，返回调整后的日期或时间（本质是减去 yearsvalue × 1 年）。支持处理 DATE、DATETIME 类型，年数可为正数（减少）或负数（增加）。"
+    "description": "YEARSSUB 函数用于在指定的日期或时间值上减少（或增加）指定数量的年数，返回调整后的日期或时间（本质是减去 yearsvalue × 1 年）。支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，年数可为正数（减少）或负数（增加）。"
 }
 ---
 
 ## 描述
 
-YEARS_SUB 函数用于在指定的日期或时间值上减少（或增加）指定数量的年数,返回调整后的日期或时间（本质是减去 years_value × 1 年）。支持处理 DATE、DATETIME 类型,年数可为正数(减少)或负数(增加)。该函数支持 DATE、DATETIME 和 TIMESTAMPTZ 输入类型。
+YEARS_SUB 函数用于在指定的日期或时间值上减少（或增加）指定数量的年数,返回调整后的日期或时间（本质是减去 years_value × 1 年）。支持处理 DATE、DATETIME、TIMESTAMP_NS 类型,年数可为正数(减少)或负数(增加)。该函数支持 DATE、DATETIME、TIMESTAMP_NS 和 TIMESTAMPTZ 输入类型。
 
 该函数与 [date_sub 函数](./date-sub) 和 mysql 中的 [date_sub 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) 使用 YEAR 为单位的行为一致
 
@@ -22,12 +22,14 @@ YEARS_SUB(<date_or_time_expr>, <years>)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr>` | 输入的日期时间值,支持输入 date/datetime/timestamptz 类型,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion),[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | 输入的日期时间值,支持输入 DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ 类型,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion),[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | `<years>` | 要减少的年数，类型为 INT,整数表示减少，负数表示增加 |
 
 ## 返回值
 
-返回与输入类型一致的结果（DATE 或 DATETIME 或 TIMESTAMPTZ）,表示调整后的日期或时间,返回值类型由第一个参数的类型决定:
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
+
+返回与输入类型一致的结果（DATE、DATETIME、TIMESTAMP_NS 或 TIMESTAMPTZ）,表示调整后的日期或时间,返回值类型由第一个参数的类型决定:
 
 - 若输入为 DATE 类型,返回值为 DATE 类型（仅调整年月日）。
 - 若输入为 DATETIME 类型,返回值为 DATETIME 类型（年月日调整后,时分秒保持不变）。

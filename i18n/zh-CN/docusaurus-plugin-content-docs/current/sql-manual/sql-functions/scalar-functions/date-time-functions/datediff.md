@@ -2,13 +2,13 @@
 {
     "title": "DATEDIFF",
     "language": "zh-CN",
-    "description": "DATEDIFF 函数用于计算两个日期或日期时间值之间的差值，结果精确到天，即返回 expr1 减去 expr2 所得到的天数差。该函数仅关注日期部分，忽略时间部分的具体小时、分钟、秒。"
+    "description": "DATEDIFF 计算两个 DATE、DATETIME 或 TIMESTAMP_NS 值之间的天数差，即 expr1 减去 expr2 的结果；计算时仅使用日期部分并忽略时间和小数秒。"
 }
 ---
 
 ## 描述
 
-DATEDIFF 函数用于计算两个日期或日期时间值之间的差值，结果精确到天，即返回 expr1 减去 expr2 所得到的天数差。该函数仅关注日期部分，忽略时间部分的具体小时、分钟、秒。
+DATEDIFF 函数计算两个 `DATE`、`DATETIME` 或 `TIMESTAMP_NS` 值之间的差值，结果精确到天，即返回 expr1 减去 expr2 所得到的天数差。该函数仅使用日期部分，忽略时间部分的小时、分钟、秒和小数秒。
 
 该函数与 mysql 中的 [datediff 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_datediff) 行为一致
 
@@ -22,8 +22,8 @@ DATEDIFF(<expr1>, <expr2>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr1>` | 日期被减数，支持的类型为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) |
-| `<expr2>` | 日期减数，支持的类型为 date 和 datetime |
+| `<expr1>` | 日期被减数，支持 `DATE`、`DATETIME` 或 `TIMESTAMP_NS`。 |
+| `<expr2>` | 日期减数，支持 `DATE`、`DATETIME` 或 `TIMESTAMP_NS`。 |
 
 ## 返回值
 
@@ -53,6 +53,15 @@ select datediff(CAST('2010-11-30 23:59:59' AS DATETIME), CAST('2010-12-31' AS DA
 +-----------------------------------------------------------------------------------+
 |                                                                               -31 |
 +-----------------------------------------------------------------------------------+
+
+-- 任一参数均可使用 TIMESTAMP_NS
+SELECT DATEDIFF(CAST('2024-01-02 00:00:00.000000001' AS TIMESTAMP_NS),
+                CAST('2024-01-01 23:59:59.999999' AS DATETIME(6))) AS result;
++--------+
+| result |
++--------+
+|      1 |
++--------+
 
 --- 任一参数为 NULL
 mysql> select datediff('2023-01-01', NULL);

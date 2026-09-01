@@ -9,7 +9,7 @@
 ## Description
 
 
-The date_ceil function rounds up a specified date or time value to the nearest start of a specified time interval period. The period rules are defined by period (number of units) and type (unit), calculated from the fixed starting point 0001-01-01 00:00:00.
+The date_ceil function rounds up a specified date or time value to the nearest start of a specified time interval period. It supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ` inputs. The period rules are defined by period (number of units) and type (unit), calculated from the fixed starting point 0001-01-01 00:00:00.
 
 Date calculation formula:
 $$
@@ -31,18 +31,23 @@ $type$ represents the unit of period
 
 | Parameter | Description |
 | -- | -- |
-| `date_or_time_expr` | A valid date expression, supporting input of date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `date_or_time_expr` | A valid date expression. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `period` | Specifies the number of units each period consists of, of type INT. The starting time point is 0001-01-01T00:00:00 |
 | `type` | Can be: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND |
 
 ## Return Value
 
-The return type is TIMESTAMPTZ, DATETIME, or DATE. Returns a date or time value representing the result of rounding up the input value to the specified unit.
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
+When `<origin>` is omitted for a `TIMESTAMP_NS` input, the documented default origin is used only as an internal alignment reference; it does not need to fall within the storable `TIMESTAMP_NS` range.
+
+The return type is TIMESTAMPTZ, TIMESTAMP_NS, DATETIME, or DATE. Returns a date or time value representing the result of rounding up the input value to the specified unit.
 
 Returns a rounded result consistent with the `<date_or_time_expr>` type:
 - If the input is TIMESTAMPTZ type, it is first converted to local_time (e.g., `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then the DATE_CEIL calculation is performed.
 - When input is DATE, returns DATE (only the date part);
 - When input is DATETIME, returns DATETIME (including date and time).
+- When input is TIMESTAMP_NS, returns TIMESTAMP_NS with nine fractional-second digits.
 - When input is TIMESTAMPTZ type, returns TIMESTAMPTZ (including date, time, and offset).
 - For DATETIME and TIMESTAMPTZ with scale, the return value will also have scale, with the fractional part being zero.
 

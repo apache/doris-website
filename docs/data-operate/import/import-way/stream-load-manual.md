@@ -511,7 +511,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### Specify the import time zone
 
-The `DATETIME`-related types represent only absolute points in time and do not contain time-zone information; they do not change with the Doris system time zone. Therefore, time-zone-aware data is handled in a unified way during import: it is converted to data in a specified target time zone. In the Doris system, the time zone is the one represented by the session variable `time_zone`.
+Time-zone-naive types such as `DATETIME` and `TIMESTAMP_NS` do not contain time-zone information, and their stored values do not change with the Doris system time zone. Therefore, time-zone-aware input is converted to a specified target time zone during import and then stored without a time zone. In Doris, the target time zone is represented by the session variable `time_zone`.
 
 In imports, the target time zone is specified by the `timezone` parameter. This variable replaces the session variable `time_zone` when time-zone conversions occur and when time-zone-sensitive functions are evaluated. Therefore, unless there are special circumstances, the `timezone` setting in the import transaction should match the current Doris cluster's `time_zone`. This means all time data with time zones is converted to that time zone.
 

@@ -2,13 +2,13 @@
 {
     "title": "MICROSECONDS_ADD",
     "language": "en",
-    "description": "The MICROSECONDSADD function adds a specified number of microseconds to the input datetime value and returns the resulting new datetime value."
+    "description": "Adds microseconds to a DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value and returns the same temporal type."
 }
 ---
 
 ## Description
 
-The MICROSECONDS_ADD function adds a specified number of microseconds to the input datetime value and returns the resulting new datetime value. This function supports processing DATETIME or TIMESTAMPTZ types with microsecond precision.
+The MICROSECONDS_ADD function adds a specified number of microseconds to the input datetime value and returns the resulting new datetime value. This function supports DATETIME, TIMESTAMP_NS, and TIMESTAMPTZ.
 
 This function behaves the same as MySQL’s [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) when using MICROSECOND as the unit.
 
@@ -22,17 +22,19 @@ MICROSECONDS_ADD(`<datetime_like_type>`, `<delta>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<datetime_like_type>` | The input datetime value, of type DATETIME or TIMESTAMPTZ. For formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime_like_type>` | The input datetime value, of type DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ. For formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [timestamp_ns conversion](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md), and [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion). |
 | `<delta>` | The number of microseconds to add, of type BIGINT. 1 second = 1,000,000 microseconds. |
 
 ## Return Value
 
 Return the result of adding the specified microseconds `<delta>` to the base time `<datetime_like_type>`, with the return type being the same as the type of the first parameter.
 - If the first parameter is TIMESTAMPTZ, then return TIMESTAMPTZ.
+- If the first parameter is TIMESTAMP_NS, then return TIMESTAMP_NS and preserve its nanosecond part.
 - If the first parameter is DATETIME, then return DATETIME.
 
 - If `<delta>` is negative, the function subtracts the corresponding microseconds from the base time (i.e., MICROSECONDS_ADD(basetime, -n) is equivalent to MICROSECONDS_SUB(basetime, n)).
 - If the calculation result exceeds the valid range of the DATETIME type (0000-01-01 00:00:00 to 9999-12-31 23:59:59.999999), an exception is thrown.
+- For TIMESTAMP_NS, the result must be in the range `1677-09-21 00:12:43.145224192` to `2262-04-11 23:47:16.854775807`.
 - If any parameter is NULL, returns NULL.
 
 ## Examples
@@ -54,6 +56,14 @@ SELECT MICROSECONDS_ADD('2023-10-01 12:00:00.500000', -300000) AS after_add;
 +----------------------------+
 | 2023-10-01 12:00:00.200000 |
 +----------------------------+
+
+-- TIMESTAMP_NS preserves the nanosecond part
+SELECT MICROSECONDS_ADD(CAST('2025-01-02 03:04:05.123456789' AS TIMESTAMP_NS), 1);
++-----------------------------------------------------------------------------------+
+| MICROSECONDS_ADD(CAST('2025-01-02 03:04:05.123456789' AS TIMESTAMP_NS), 1) |
++-----------------------------------------------------------------------------------+
+| 2025-01-02 03:04:05.123457789                                                     |
++-----------------------------------------------------------------------------------+
 
 -- Input type is date, time part defaults to 00:00:00.000000
 SELECT MICROSECONDS_ADD('2023-10-01', -300000);

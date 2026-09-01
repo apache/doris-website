@@ -8,7 +8,7 @@
 
 ## 描述
 
-MONTH_FLOOR 函数用于将输入的日期时间值向下取整到最近的指定月份周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。
+MONTH_FLOOR 函数用于将 `DATE`、`DATETIME`、`TIMESTAMP_NS` 或 `TIMESTAMPTZ` 值向下取整到最近的指定月份周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。
 
 日期时间的计算公式：
 
@@ -34,13 +34,17 @@ MINUTE_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr>` | 需要向下取整的日期时间值，类型为 DATETIME 或 DATE ，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | 需要向下取整的日期时间值，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`，具体格式请查看 [timestamptz 的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)、[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
 | `<period>` | 月份周期值，类型为 INT，表示每个周期包含的月数 |
-| `<origin>` | 周期的起始时间点，类型为 DATETIME/DATE ，默认值为 0001-01-01 00:00:00 |
+| `<origin>` | 周期的起始时间点，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`，默认值为 0001-01-01 00:00:00。 |
 
 ## 返回值
 
-返回类型为 TIMESTAMPTZ, DATETIME 或 DATE，返回以输入日期时间为基准，向下取整到最近的指定月份周期后的时间值。返回值的精度与输入参数 datetime 的精度相同。
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
+
+对 `TIMESTAMP_NS` 输入省略 `<origin>` 时，文档中的默认起点仅作为内部对齐基准使用，无需位于 `TIMESTAMP_NS` 的可存储范围内。
+
+返回根据输入参数确定的日期时间类型，表示向下取整到最近的指定月份周期后的时间值。返回值的精度与输入参数一致。
 
 - 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`),再进行 FLOOR 计算操作。
 - 若输入的时间值(`<date_or_time_expr>` 和`<period>`)同时包含 TIMESTAMPTZ 和 DATETIME 类型，则输出 DATETIME 类型。

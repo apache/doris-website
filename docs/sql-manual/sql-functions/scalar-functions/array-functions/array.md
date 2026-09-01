@@ -32,7 +32,7 @@ array([element1, element2, ...])
 **Supported element types:**
 - Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
 - String types: CHAR, VARCHAR, STRING
-- Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2
+- Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2, TIMESTAMP_NS
 - Boolean type: BOOLEAN
 - IP types: IPV4, IPV6
 - Complex types: ARRAY, MAP, STRUCT
@@ -139,4 +139,3 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility 
 ### Keywords
 
 ARRAY
-

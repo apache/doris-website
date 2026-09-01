@@ -144,7 +144,7 @@ No. Because the sort key is unique, a table can have only one set of prefix inde
 
 **Q3: Why is my prefix index much shorter than expected?**
 
-The most common reason is that a `VARCHAR` column appears early in the sort key and triggers the truncation rule. Place fixed-length types (such as `BIGINT`, `INT`, and `DATETIME`) at the front of the sort key.
+The most common reason is that a `VARCHAR` column appears early in the sort key and triggers the truncation rule. Place fixed-length types (such as `BIGINT`, `INT`, `DATETIME`, and `TIMESTAMP_NS`) at the front of the sort key.
 
 **Q4: Can the Prefix Index accelerate `LIKE` queries or text retrieval?**
 

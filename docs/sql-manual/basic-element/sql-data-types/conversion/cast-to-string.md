@@ -207,6 +207,24 @@ select cast(cast('20020304121212.123' as datetime(3)) as string);
 +-----------------------------------------------------------+
 ```
 
+## TIMESTAMP_NS
+
+`TIMESTAMP_NS` is formatted as `yyyy-MM-dd HH:mm:ss.SSSSSSSSS`. The fractional-second part always contains exactly nine digits, including trailing zeros. The output does not contain a time zone.
+
+The same representation is used when converting to `CHAR`, `VARCHAR`, or `STRING`. A `NULL` input returns `NULL`.
+
+```sql
+SELECT CAST(CAST('2024-02-29 12:34:56.123456' AS TIMESTAMP_NS) AS STRING) AS str_value;
+```
+
+```text
++-------------------------------+
+| str_value                     |
++-------------------------------+
+| 2024-02-29 12:34:56.123456000 |
++-------------------------------+
+```
+
 ## Time
 
 Time type is output in "hour:minute:second" format. The hour can be at most 3 digits, at least 2 digits, and can be negative; minutes and seconds are always 2 digits. If the type's `Scale` is not 0, then outputs the decimal point and `Scale` digits of fractional seconds.

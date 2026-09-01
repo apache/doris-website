@@ -8,7 +8,7 @@
 
 ## 描述
 
-DATE_TRUNC 函数用于将日期或时间值按照指定的时间单位（time_unit）截断，即保留指定单位及更高层级的时间信息，将更低层级的时间信息清至最小日期时间。例如，按 “小时” 截断时，会保留年、月、日、小时，将分钟、秒等清零，按照年截断时，会把日，月截断为 xxxx-01-01。支持输入类型为 TIMESTAMPTZ, DATETIME, DATE。
+DATE_TRUNC 函数用于将日期或时间值按照指定的时间单位（time_unit）截断，即保留指定单位及更高层级的时间信息，将更低层级的时间信息清至最小日期时间。例如，按“小时”截断时，会保留年、月、日、小时，将分钟、秒等清零；按年截断时，会把日期截断为 xxxx-01-01。支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ` 输入。
 
 该函数与 postgresql 中的 [date_trunc函数](https://www.postgresql.org/docs/16/functions-datetime.html#FUNCTIONS-DATETIME-TRUNC) 行为基本一致, 不同的是, doris暂不支持 second 单位以下的截断, postgresql 支持到 microsecond 。
 
@@ -23,10 +23,12 @@ DATE_TRUNC(<time_unit>, <datetime>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<datetime>` | 合法的日期表达式，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<datetime>` | 合法的日期表达式，支持输入 DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<time_unit>` | 希望截断的时间间隔，可选的值如下：[`second`,`minute`,`hour`,`day`,`week`,`month`,`quarter`,`year`] 该参数必须是字符串常量，不能是列或非常量表达式。 |
 
 ## 返回值
+
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
 
 返回类型与`<datetime>`类型保持一致， 返回对应的日期时间类型截断之后的结果（即保留指定单位及更高层级的时间信息，将更低层级的时间信息清至最小日期时间）
 - 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`)，再进行截断操作。

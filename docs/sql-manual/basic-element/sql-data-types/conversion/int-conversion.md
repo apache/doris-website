@@ -199,6 +199,27 @@ Since version 4.0, does not support casting datetime to tinyint, smallint and in
 | 2025-03-14 17:00:01.123456 | 20250314170001 |
 | 9999-12-31 23:59:59.999999 | 99991231235959 |
 
+## From TIMESTAMP_NS
+
+If the source type is nullable, returns nullable type.
+
+If the source type is non-nullable, returns non-nullable type.
+
+### Rule description
+
+* Does not support casting to tinyint, smallint, or int, as overflow will definitely occur.
+
+* Supports casting to bigint and largeint. Discards the nanosecond part of TIMESTAMP_NS, then concatenates year, month, day, hour, minute, and second in order to form an integer, with month, day, hour, minute, and second treated as two digits, padding with a leading 0 if less than 10.
+
+### Examples
+
+| Input TIMESTAMP_NS | Target Type | Result |
+| --- | --- | --- |
+| `1677-09-21 00:12:43.145224192` | `BIGINT` | `16770921001243` |
+| `1969-12-31 23:59:59.999999999` | `BIGINT` | `19691231235959` |
+| `2024-02-29 12:34:56.123456789` | `LARGEINT` | `20240229123456` |
+| `2262-04-11 23:47:16.854775807` | `LARGEINT` | `22620411234716` |
+
 ## From float/double
 
 Does not support rounding.

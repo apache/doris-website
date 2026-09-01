@@ -146,7 +146,7 @@ Apache Doris 的数据存储在类似 SSTable（Sorted String Table）的有序�
 
 **Q3：为什么我的前缀索引比预期短很多？**
 
-最常见原因是排序键中靠前的位置出现了 `VARCHAR` 列，触发了截断规则。建议把定长类型（如 `BIGINT`、`INT`、`DATETIME`）放在排序键前部。
+最常见原因是排序键中靠前的位置出现了 `VARCHAR` 列，触发了截断规则。建议把定长类型（如 `BIGINT`、`INT`、`DATETIME`、`TIMESTAMP_NS`）放在排序键前部。
 
 **Q4：前缀索引能加速 `LIKE` 或文本检索吗？**
 

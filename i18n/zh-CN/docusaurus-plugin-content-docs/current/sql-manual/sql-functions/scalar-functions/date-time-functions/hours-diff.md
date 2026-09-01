@@ -2,13 +2,13 @@
 {
     "title": "HOURS_DIFF",
     "language": "zh-CN",
-    "description": "HOURSDIFF 函数用于计算两个日期时间或日期之间的小时差值，即从起始时间到结束时间所经过的小时数。该函数支持 DATE 和 DATETIME 两种输入类型，自动处理跨天、跨月、跨年的时间差计算，并返回整数结果，若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00"
+    "description": "HOURS_DIFF 计算 DATE、DATETIME 或 TIMESTAMP_NS 值之间的完整小时差，并自动处理跨天、跨月和跨年的时间差；DATE 输入按 00:00:00 处理。"
 }
 ---
 
 ## 描述
 
-HOURS_DIFF 函数用于计算两个日期时间或日期之间的小时差值，即从起始时间到结束时间所经过的小时数。该函数支持 DATE 和 DATETIME 两种输入类型，自动处理跨天、跨月、跨年的时间差计算，并返回整数结果，若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00
+HOURS_DIFF 函数计算两个 `DATE`、`DATETIME` 或 `TIMESTAMP_NS` 值之间的完整小时差，即从起始时间到结束时间所经过的小时数。该函数自动处理跨天、跨月和跨年的时间差；`DATE` 输入按 00:00:00 处理。
 
 
 ## 语法
@@ -21,8 +21,8 @@ HOURS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr1>` | 结束时间，参数是合法的日期表达式，支持输入 date/datetime 类型，具体 datetime,date格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
-| `<date_or_time_expr2>` | 开始时间，参数是合法的日期表达式，支持输入 date/datetime 类型和符合日期时间格式的字符串 |
+| `<date_or_time_expr1>` | 结束时间，参数是合法的日期表达式，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型，具体 datetime,date格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr2>` | 开始时间，参数是合法的日期表达式，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型和符合日期时间格式的字符串 |
 
 ## 返回值
 

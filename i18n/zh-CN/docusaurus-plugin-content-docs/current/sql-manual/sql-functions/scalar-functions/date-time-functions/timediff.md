@@ -2,13 +2,13 @@
 {
     "title": "TIMEDIFF",
     "language": "zh-CN",
-    "description": "TIMEDIFF 函数用于计算两个日期时间值之间的差值，并以 TIME 类型返回结果。该函数支持处理 DATETIME、DATE 类型，若输入为 DATE 类型，默认其时间部分为 00:00:00。"
+    "description": "TIMEDIFF 计算 DATE、DATETIME 或 TIMESTAMP_NS 值之间的差值，并以 TIME 类型返回结果；结果保留必要的小数秒精度，任一参数为 NULL 时返回 NULL。"
 }
 ---
 
 ## 描述
 
-TIMEDIFF 函数用于计算两个日期时间值之间的差值，并以 TIME 类型返回结果。该函数支持处理 DATETIME、DATE 类型，若输入为 DATE 类型，默认其时间部分为 00:00:00。
+TIMEDIFF 函数计算两个 `DATE`、`DATETIME` 或 `TIMESTAMP_NS` 值之间的差值，并以 `TIME` 类型返回结果。`DATE` 输入按 00:00:00 处理。
 
 该函数与 mysql 中的 [timediff 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_timediff) 行为一致
 
@@ -22,8 +22,8 @@ TIMEDIFF(<date_or_time_expr1>, <date_or_time_expr2>)
 
 | 参数              | 说明                          |
 |-------------------|-------------------------------|
-| `<date_or_time_expr1>`      | 结束的时间或日期时间值,支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)        |
-| `<date_or_time_expr2>`    | 开始的时间或日期时间值,支持输入 date/datetime 类型        |
+| `<date_or_time_expr1>`      | 结束的时间或日期时间值,支持输入 DATE/DATETIME/TIMESTAMP_NS 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)        |
+| `<date_or_time_expr2>`    | 开始的时间或日期时间值,支持输入 DATE/DATETIME/TIMESTAMP_NS 类型        |
 
 ## 返回值
 返回一个 `TIME` 类型的值，表示两个输入之间的时间差：

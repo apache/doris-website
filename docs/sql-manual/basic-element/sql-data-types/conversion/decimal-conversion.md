@@ -266,6 +266,10 @@ Not supported.
 
 Not supported.
 
+## From TIMESTAMP_NS
+
+Not supported.
+
 ## From time
 
 Not supported.

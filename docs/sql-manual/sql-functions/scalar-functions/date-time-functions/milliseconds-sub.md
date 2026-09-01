@@ -2,13 +2,13 @@
 {
     "title": "MILLISECONDS_SUB",
     "language": "en",
-    "description": "The MILLISECONDSSUB function subtracts a specified number of milliseconds from the input datetime value and returns the resulting new datetime value."
+    "description": "Subtracts a specified number of milliseconds from a DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value."
 }
 ---
 
 ## Description
 
-The `MILLISECONDS_SUB` function subtracts a specified number of milliseconds from the input datetime value and returns the resulting new datetime value. This function supports processing `DATETIME` types.
+The `MILLISECONDS_SUB` function subtracts a specified number of milliseconds from a `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ` value and returns the resulting value with the same type.
 
 ## Syntax
 
@@ -20,12 +20,14 @@ MILLISECONDS_SUB(`<datetime>`, `<delta>`)
 
 | Parameter    | Description                                                                                   |
 |--------------|-----------------------------------------------------------------------------------------------|
-| `<datetime>` | The input datetime value, of type `DATETIME`. For specific datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
+| `<datetime>` | The input datetime value, of type `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ`. For specific formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [TIMESTAMP_NS conversion](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md), and [TIMESTAMPTZ conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion). |
 | `<delta>`    | The number of milliseconds to subtract, of type `BIGINT`. 1 second = 1,000 milliseconds = 1,000,000 microseconds. |
 
 ## Return Value
 
-Returns a value of type `DATETIME`, representing the result of subtracting the specified milliseconds from the base time.
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
+Returns the same temporal type as the input, representing the result of subtracting the specified milliseconds from the base time.
 
 - If `<delta>` is negative, the function behaves the same as adding the corresponding milliseconds to the base time.
 - If the input is of `DATE` type (only includes year, month, and day), the default time part is set to `00:00:00.000`.

@@ -20,8 +20,8 @@ MIN_BY(<expr1>, <expr2>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr1>` | 用于指定对应关联的表达式，支持类型为 Bool, TinyInt，SmallInt，Int，BigtInt，LargeInt，Float，Double，Decimal, String, Date, Datetime, Array, Map, Struct。 |
-| `<expr2>` | 用于指定最小值统计的表达式，支持类型为 Bool, TinyInt，SmallInt，Int，BigtInt，LargeInt，Float，Double，Decimal, String, Date, Datetime, Array。 |
+| `<expr1>` | 用于指定对应关联的表达式，支持 Bool、TinyInt、SmallInt、Int、BigInt、LargeInt、Float、Double、Decimal、String、Date、Datetime、TimestampNs、Array、Map、Struct。 |
+| `<expr2>` | 用于指定最小值统计的表达式，支持 Bool、TinyInt、SmallInt、Int、BigInt、LargeInt、Float、Double、Decimal、String、Date、Datetime、TimestampNs、Array。 |
 
 ## 返回值
 

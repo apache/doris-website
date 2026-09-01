@@ -8,7 +8,7 @@
 
 ## 描述
 
-HOUR_CEIL 函数用于将输入的日期时间值向上取整到指定小时周期的最近时刻。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的下一个整点时刻（若输入时间已在周期起点，则保持不变）。
+HOUR_CEIL 函数用于将输入的日期时间值向上取整到指定小时周期的最近时刻，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ` 输入。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的下一个整点时刻（若输入时间已在周期起点，则保持不变）。
 日期计算公式：
 $$
 \begin{aligned}
@@ -32,13 +32,17 @@ HOUR_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 datetime/date/timestamptz 类型，date 类型会转换为一天的 00:00:00 开始,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 合法的日期表达式，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`。`DATE` 输入按当天的起始时间 00:00:00 处理。具体格式请查看 [timestamptz 的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)、[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
 | `<period>` | 可选参数，指定周期长度（单位：小时），为正整数（如 1、3、5）。默认值为 1，表示每 1 小时一个周期|
-| `<origin>` | 开始的时间起点，支持输入 datetime 和 date 类型，如果不填，默认是 0001-01-01T00:00:00 |
+| `<origin>` | 周期的起始时间点，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`。若不指定，默认为 0001-01-01T00:00:00。 |
 
 ## 返回值
 
-返回 TIMESTAMPTZ, DATETIME 或 DATE 类型的值，表示向上取整后的最近周期时刻。
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
+
+对 `TIMESTAMP_NS` 输入省略 `<origin>` 时，文档中的默认起点仅作为内部对齐基准使用，无需位于 `TIMESTAMP_NS` 的可存储范围内。
+
+返回 TIMESTAMPTZ、TIMESTAMP_NS、DATETIME 或 DATE 类型的值，表示向上取整后的最近周期时刻。
 
 - 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`),再进行 CEIL 计算操作。
 - 若输入的时间值(`<date_or_time_expr>` 和`<period>`)同时包含 TIMESTAMPTZ 和 DATETIME 类型，则输出 DATETIME 类型。

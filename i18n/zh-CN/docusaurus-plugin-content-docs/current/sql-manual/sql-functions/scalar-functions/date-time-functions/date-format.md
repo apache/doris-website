@@ -2,13 +2,13 @@
 {
     "title": "DATE_FORMAT",
     "language": "zh-CN",
-    "description": "DATEFORMAT 函数用于将日期或时间值按照指定的格式字符串（format）转换为字符串。支持对 DATE（仅日期）和 DATETIME（日期和时间）类型进行格式化，输出结果为符合格式要求的字符串。"
+    "description": "DATE_FORMAT 函数按照指定格式将 DATE、DATETIME、TIMESTAMP_NS 或 TIMESTAMPTZ 值转换为字符串。"
 }
 ---
 
 ## 描述
 
-DATE_FORMAT 函数用于将日期或时间值按照指定的格式字符串（format）转换为字符串。支持对 DATE（仅日期）和 DATETIME（日期和时间）类型进行格式化，输出结果为符合格式要求的字符串。
+DATE_FORMAT 函数按照指定格式字符串（`format`）将 `DATE`、`DATETIME`、`TIMESTAMP_NS` 或 `TIMESTAMPTZ` 值转换为字符串。
 
 该函数与 mysql 中的 [date_format 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-format) 行为一致
 
@@ -22,7 +22,7 @@ DATE_FORMAT(<date_or_time_expr>, <format>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 合法的日期值，支持为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))|
+| `<date_or_time_expr>` | 合法的 `DATE`、`DATETIME`、`TIMESTAMP_NS` 或 `TIMESTAMPTZ` 值。格式请参见 [date 转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)、[datetime 转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)、[TIMESTAMP_NS 转换](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md)和 [timestamptz 转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)。|
 | `<format>` | 规定日期/时间的输出格式，为 `varchar` 类型 |
 
 支持的 format 格式：
@@ -36,6 +36,7 @@ DATE_FORMAT(<date_or_time_expr>, <format>)
 | %d     | 月的天，数值 (00-31)                |
 | %e     | 月的天，数值 (0-31)                 |
 | %f     | 微秒 (000000-999999)               |
+| %n     | 纳秒 (000000000-999999999)。低精度类型缺少的位数在末尾补零。 |
 | %H     | 小时 (00-23)                        |
 | %h     | 小时 (01-12)                        |
 | %I     | 小时 (01-12)                        |
@@ -82,6 +83,21 @@ yyyy-MM-dd HH:mm:ss --对应标准格式符：%Y-%m-%d %H:%i:%s
 - 如果返回结果字符串长度超过 102 ,返回错误
 
 ## 举例
+
+```sql
+SELECT DATE_FORMAT(
+    CAST('2024-02-29 12:34:56.123456789' AS TIMESTAMP_NS),
+    '%Y-%m-%d %H:%i:%s.%n'
+) AS result;
+```
+
+```text
++-------------------------------+
+| result                        |
++-------------------------------+
+| 2024-02-29 12:34:56.123456789 |
++-------------------------------+
+```
 
 ```sql
 -- 输出星期名、月名、4位年份

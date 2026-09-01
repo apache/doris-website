@@ -8,7 +8,7 @@
 
 ## Description
 
-The MINUTES_DIFF function calculates the difference in minutes between two datetime values. The result is the number of minutes obtained by subtracting the start time from the end time. This function supports processing DATE and DATETIME (including microsecond precision) types.
+The MINUTES_DIFF function calculates the difference in minutes between two datetime values. The result is the number of minutes obtained by subtracting the start time from the end time. This function supports `DATE`, `DATETIME`, and `TIMESTAMP_NS`.
 
 ## Syntax
 
@@ -20,8 +20,8 @@ MINUTES_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr1>` | The end time, which can be of type DATE or DATETIME. For specific datetime/date formats, [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| `<date_or_time_expr2>` | The start time, which can be of type DATE or DATETIME. For specific datetime/date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr1>` | The end time, of type `DATE`, `DATETIME`, or `TIMESTAMP_NS`. |
+| `<date_or_time_expr2>` | The start time, of type `DATE`, `DATETIME`, or `TIMESTAMP_NS`. |
 
 ## Return Value
 

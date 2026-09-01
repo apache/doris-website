@@ -18,7 +18,7 @@ GREATEST(<expr> [, ...])
 
 ## 参数
 ### 必需参数
-- `<expr>` 支持 `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`FLOAT`、`DOUBLE`、`STRING`、`DATETIME` 和 `DECIMAL` 类型。
+- `<expr>` 支持 `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`FLOAT`、`DOUBLE`、`STRING`、`DATETIME`、`TIMESTAMP_NS` 和 `DECIMAL` 类型。
 ### 可选参数
 - 支持多个参数
 

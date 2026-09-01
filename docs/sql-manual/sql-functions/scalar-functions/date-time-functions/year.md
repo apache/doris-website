@@ -7,7 +7,7 @@
 ---
 
 ## Description
-The YEAR function extracts the year part from a specified date or time value, returning the year as an integer. It supports processing DATE and DATETIME types.
+The YEAR function extracts the year part from a specified date or time value, returning the year as an integer. It supports processing DATE, DATETIME, and TIMESTAMP_NS types.
 
 This function behaves consistently with the [year function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_year) in MySQL.
 
@@ -20,11 +20,11 @@ YEAR(`<date_or_time_expr>`)
 
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_time_expr>` | The datetime value to extract year from, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The datetime value to extract year from, supports DATE/DATETIME/TIMESTAMP_NS types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## Return Value
 
-Returns the year part of the date/datetime type, INT type, range from 0-9999.
+Returns the year part of the DATE/DATETIME/TIMESTAMP_NS type, INT type, range from 0-9999.
 
 - If the input parameter is NULL, returns NULL
 

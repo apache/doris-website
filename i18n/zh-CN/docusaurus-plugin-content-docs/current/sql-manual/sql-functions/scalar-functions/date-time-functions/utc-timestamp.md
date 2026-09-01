@@ -21,12 +21,12 @@ UTC_TIMESTAMP([`<precision>`])
 
 | 参数                         | 描述                          |
 |----------------------------|-----------------------------|
-| `<precision>` | 返回的时间值的精度，支持[0, 6]范围内的整数类型。仅接受整数类型常量。 |
+| `<precision>` | `[0, 9]` 范围内的可选整数常量，默认为 0。 |
 
 ## 返回值
 返回当前 UTC 日期时间.
 
-返回 DATETIME 类型（格式：YYYY-MM-DD HH:mm:ss[.ssssss]）。当使用返回结果进行数值运算时，会进行类型转换，返回[整数格式](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-datetime)（格式YYYYMMDDHHmmss）。
+精度为 0 到 6 时返回 `DATETIME(<precision>)`；精度为 7 到 9 时返回 `TIMESTAMP_NS`，并显示 9 位小数。使用返回结果进行数值运算时，会转换为[整数格式](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-datetime)（格式 YYYYMMDDHHmmss）。同一条语句中的返回值保持一致。
 
 当输入为 NULL 或精度超出范围会报错。
 
@@ -45,10 +45,9 @@ SELECT UTC_TIMESTAMP(), UTC_TIMESTAMP() + 0, UTC_TIMESTAMP(5), UTC_TIMESTAMP(5) 
 ```
 
 ```sql
-SELECT UTC_TIMESTAMP(7);
--- ERROR 1105 (HY000): errCode = 2, detailMessage = scale must be between 0 and 6
+SELECT UTC_TIMESTAMP(10);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = Precision of UTC_TIMESTAMP must be between 0 and 9. Precision was set to: 10
 
 SELECT UTC_TIMESTAMP(NULL);
 -- ERROR 1105 (HY000): errCode = 2, detailMessage = UTC_TIMESTAMP argument cannot be NULL.
 ```
-

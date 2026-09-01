@@ -46,11 +46,11 @@ The following types have direct mapping to JSONB types and can be converted dire
 - Complex types: ARRAY, STRUCT
 
 Additionally, the function supports converting the following types:
-- Date types: DATETIME, DATE, TIME
+- Date types: DATETIME, TIMESTAMP_NS, DATE, TIME
 - IP types: IPV4, IPV6
 - Complex types: MAP
 
-For DATETIME, DATE, TIME, IPV4, IPV6 types that don't have corresponding JSONB types, they will be converted to STRING type.
+DATETIME, TIMESTAMP_NS, DATE, TIME, IPV4, and IPV6 values are converted to JSONB strings because JSONB has no corresponding native types.
 For MAP type, it will be converted to JSONB Object type. The Map keys must be STRING type, as JSON standard requires Object keys to be strings.
 
 ## Return Value
