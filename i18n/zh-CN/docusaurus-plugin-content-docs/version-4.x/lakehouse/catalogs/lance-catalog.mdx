@@ -6,21 +6,33 @@
 }
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 :::note
 这是一个实验性功能。
 
 Lance Catalog 自 Apache Doris 4.2 版本开始支持。
 :::
 
-Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lance Catalog 发现 Lance Namespace 中的数据库和表，并直接查询存储在本地文件系统或 S3 兼容对象存储中的 Lance 数据集。
+Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lance Catalog 发现 Lance Namespace 中的数据库和表，并直接查询存储在本地文件系统、S3 兼容对象存储或阿里云 OSS 中的 Lance 数据集。
 
 当前 Doris 对 Lance 提供只读能力，不支持创建、写入、更新或删除 Lance 表。
+
+## 适用场景
+
+| 场景 | 说明 |
+|---|---|
+| 直接分析 Lance 数据 | 无需迁移或导入数据，使用 Doris SQL 查询已有的 Lance 数据集。 |
+| AI 向量检索 | 复用 Lance 中已有的向量索引，通过 `vector_search()` 执行向量检索，并与标量过滤和 Doris SQL 分析结合。 |
+| 数据集成 | 从 Lance 读取数据并写入 Doris 内表，用于后续加工、关联分析或长期存储。 |
+| Namespace 管理 | 简单目录结构可以使用 Filesystem Catalog；需要集中管理 Namespace、表地址或临时存储凭证时使用 REST Catalog。 |
 
 ## 功能概览
 
 | 功能 | 支持情况 |
 |---|---|
-| Filesystem Catalog | 支持本地文件系统、`file://` 和 `s3://` Warehouse |
+| Filesystem Catalog | 支持本地文件系统、`file://`、`s3://` 和 `oss://` Warehouse |
 | REST Catalog | 支持 Lance REST Namespace，以及无认证、Bearer Token、API Key 和自定义 HTTP Header |
 | 元数据访问 | 支持 `SHOW DATABASES`、`SHOW TABLES`、`DESC` 和 `SHOW INDEX`（仅 Filesystem Catalog） |
 | 系统表（`table$...`） | 暂不支持；索引元数据请使用 `SHOW INDEX` |
@@ -85,54 +97,55 @@ Filesystem Catalog 直接从 Warehouse 目录发现 Lance Namespace 和表。
 |---|---|---|
 | `warehouse` | 是 | Lance Warehouse 根路径。支持本地绝对路径、`file://` URI、`s3://` URI 和 `oss://` URI。 |
 
-#### 使用 S3 兼容对象存储
+根据 Warehouse 所在的存储系统选择对应示例：
 
-下面以 MinIO 为例创建 Catalog：
+<Tabs groupId="lance-filesystem-storage">
+    <TabItem value="s3" label="S3 / S3 兼容存储" default>
+        ```sql
+        CREATE CATALOG lance_fs_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
 
-```sql
-CREATE CATALOG lance_catalog PROPERTIES (
-    "type" = "lance",
-    "lance.catalog.type" = "filesystem",
-    "warehouse" = "s3://my-bucket/lance",
-    "s3.endpoint" = "http://127.0.0.1:9000",
-    "s3.access_key" = "admin",
-    "s3.secret_key" = "password",
-    "s3.region" = "us-east-1",
-    "use_path_style" = "true"
-);
-```
+        访问 AWS S3 时可以省略 `s3.endpoint`。访问 MinIO 等 S3 兼容存储时，应设置对应的 `s3.endpoint`；如果服务要求 Path Style，还需设置 `"use_path_style" = "true"`。
+    </TabItem>
 
-访问 AWS S3 时，可以省略 `s3.endpoint`，并按实际环境配置访问密钥、Region 和 Path Style。
+    <TabItem value="oss" label="阿里云 OSS">
+        ```sql
+        CREATE CATALOG lance_fs_oss PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "oss://my-bucket/lance",
+            "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
+            "oss.region" = "cn-beijing",
+            "oss.access_key" = "<ak>",
+            "oss.secret_key" = "<sk>"
+        );
+        ```
 
-#### 使用阿里云 OSS
+        使用 STS 临时凭证时，增加 `"oss.session_token" = "<token>"`。`warehouse` 也支持 `oss://my-bucket.oss-cn-beijing.aliyuncs.com/lance`，Doris 会将其规范化为 Bucket 路径。OSS-HDFS 当前不受支持。
+    </TabItem>
 
-```sql
-CREATE CATALOG lance_oss PROPERTIES (
-    "type" = "lance",
-    "lance.catalog.type" = "filesystem",
-    "warehouse" = "oss://my-bucket/lance",
-    "oss.endpoint" = "oss-cn-beijing.aliyuncs.com",
-    "oss.region" = "cn-beijing",
-    "oss.access_key" = "<ak>",
-    "oss.secret_key" = "<sk>"
-);
-```
+    <TabItem value="local" label="本地文件系统">
+        ```sql
+        CREATE CATALOG lance_fs_local PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "/data/lance"
+        );
+        ```
 
-`warehouse` 也支持带 Endpoint 的形式 `oss://my-bucket.oss-cn-beijing.aliyuncs.com/lance`，Doris 会在打开 Namespace 前将其还原为 Bucket。`warehouse` 必须指定 Bucket，因此 `oss:/lance` 这类根路径会在创建 Catalog 时被拒绝。
+        `warehouse` 必须是绝对路径。FE 和执行查询的 BE 都必须能够通过相同路径访问数据；多节点环境应在所有相关节点挂载同一个共享目录。
+    </TabItem>
+</Tabs>
 
-使用 STS 临时凭证访问 OSS 时，可以增加 `"oss.session_token" = "<token>"`。
-
-#### 使用本地文件系统
-
-```sql
-CREATE CATALOG lance_local PROPERTIES (
-    "type" = "lance",
-    "lance.catalog.type" = "filesystem",
-    "warehouse" = "/data/lance"
-);
-```
-
-使用本地文件系统时，`warehouse` 必须是绝对路径。FE 需要通过该路径读取 Namespace 和表元数据，执行查询的 BE 也需要能够通过相同路径访问数据。因此在多节点环境中，应将相同的共享目录挂载到所有相关 FE 和 BE 节点。
+对于 S3 和 OSS，`warehouse` 必须包含 Bucket，例如 `s3://bucket/path` 或 `oss://bucket/path`。
 
 ### REST Catalog
 
@@ -146,38 +159,49 @@ REST Catalog 通过 Lance REST Namespace 获取 Namespace、表地址和存储�
 | `lance.rest.api-key` | 使用 API Key 认证时是 | - | API Key，通过 `x-api-key` Header 发送。 |
 | `lance.rest.header.<header-name>` | 否 | - | 发送给 REST 服务的自定义 HTTP Header。认证 Header 应使用上面的专用认证属性配置。 |
 
-使用 Bearer Token 创建 REST Catalog：
+REST Namespace 返回每张表的存储地址。根据表所在的存储系统配置默认访问参数：
 
-```sql
-CREATE CATALOG lance_rest PROPERTIES (
-    "type" = "lance",
-    "lance.catalog.type" = "rest",
-    "lance.rest.uri" = "https://lance.example.com",
-    "lance.rest.security.type" = "bearer",
-    "lance.rest.bearer-token" = "your-token"
-);
-```
+<Tabs groupId="lance-rest-storage">
+    <TabItem value="s3" label="S3 / S3 兼容存储" default>
+        ```sql
+        CREATE CATALOG lance_rest_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
 
-使用 API Key 时，将认证配置替换为：
+        该配置用于 REST Namespace 返回的 `s3://` Lance 表。使用 MinIO 等 S3 兼容存储时，将 `s3.endpoint` 替换为实际地址，并按需设置 `"use_path_style" = "true"`。
+    </TabItem>
 
-```sql
-"lance.rest.security.type" = "api_key",
-"lance.rest.api-key" = "your-api-key"
-```
+    <TabItem value="oss" label="阿里云 OSS">
+        ```sql
+        CREATE CATALOG lance_rest_oss PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
+            "oss.region" = "cn-beijing",
+            "oss.access_key" = "<ak>",
+            "oss.secret_key" = "<sk>"
+        );
+        ```
 
-如果 REST 服务返回临时存储凭证，Doris 会使用这些凭证访问对应的 Lance 表。也可以在 Catalog 中配置默认的对象存储访问参数：S3 兼容存储使用 `s3.endpoint`、`s3.access_key`、`s3.secret_key`、`s3.region` 和 `use_path_style`，OSS 使用 `oss.endpoint`、`oss.access_key`、`oss.secret_key`、`oss.region` 和 `oss.session_token`。
+        该配置用于 REST Namespace 返回的 `oss://` Lance 表。使用 STS 临时凭证时，增加 `"oss.session_token" = "<token>"`。
+    </TabItem>
+</Tabs>
 
-对于同一张表，Namespace 下发的凭证优先于 Catalog 中配置的凭证。因此，当 Namespace 能够下发完整凭证时，创建 Catalog 时无需保存任何访问密钥：
+无认证时省略 `lance.rest.security.type` 和认证属性。使用 API Key 时，将认证配置替换为 `"lance.rest.security.type" = "api_key"` 和 `"lance.rest.api-key" = "<api-key>"`。
 
-```sql
-CREATE CATALOG lance_rest_oss PROPERTIES (
-    "type" = "lance",
-    "lance.catalog.type" = "rest",
-    "lance.rest.uri" = "https://lance.example.com"
-);
-```
-
-对于 OSS 表，Namespace 下发的存储选项可以写成 `oss_endpoint`、`oss_access_key_id`、`oss_secret_access_key`、`oss_region`、`oss_security_token`，也可以写成 OSS 原生的 `endpoint`、`access_key_id`、`access_key_secret`、`region`、`security_token`。Doris 同时接受这两种写法，并将其视为同一个选项。如果同一个选项以两种写法下发且取值不同，则会报错。
+如果 REST Namespace 为表下发临时存储凭证，Doris 会优先使用下发的凭证，此时可以省略 Catalog 中的 S3 或 OSS 访问密钥。对于 OSS，Namespace 可以下发 `oss_endpoint`、`oss_access_key_id`、`oss_secret_access_key`、`oss_region`、`oss_security_token`，也可以使用对应的 OSS 原生名称 `endpoint`、`access_key_id`、`access_key_secret`、`region`、`security_token`。
 
 :::caution
 当前 BE Reader 不支持由 REST Namespace 管理版本的 Lance 表（Managed Versioning）。
@@ -598,18 +622,6 @@ SET topn_lazy_materialization_threshold = -1;
 
 关闭后只会改变输出列的读取时机，不会禁用向量索引或改变 Prefilter、Post-filter 和 TopN 的语义。建议根据实际查询和存储环境进行开启与关闭的性能对比。
 
-## 当前限制和建议
-
-- Lance Catalog 和 Lance TVF 当前仅支持读取，不支持 `CREATE TABLE`、`INSERT`、`UPDATE`、`DELETE`、`TRUNCATE TABLE` 或写回 Lance。
-- 查询总是读取规划时选择的当前版本，不支持通过 SQL 指定 Version 或执行 Time Travel。
-- 使用不支持的列类型时，建议显式列出需要读取的列，避免 `SELECT *` 投影到不支持的列。
-- 对普通扫描使用 `EXPLAIN` 检查 `lancePushdownPredicate`，确认目标条件是否已下推。
-- 向量检索前应在 Lance 中创建与查询方式匹配的索引；小数据集或验证场景可以设置 `"use_index" = "false"` 使用 Flat Search。
-- 可以使用 `SHOW INDEX` 查看 Filesystem Catalog 表的 Lance 逻辑索引，例如在执行索引向量检索前确认索引名、索引类型和被索引字段；REST Catalog 不支持 `SHOW INDEX`。
-- 向量查询需要稳定顺序时，显式使用 `ORDER BY _distance ASC` 并增加唯一 Tie-breaker。
-- 需要在向量候选生成前过滤时使用 `vector_search()` 的 `filter`；外层 `WHERE` 只过滤每个搜索 Split 已生成的候选，并在 Doris 全局 TopN 之前执行，应允许其最终结果少于 `top_k`。
-- 使用 `EXPLAIN` 检查 `lanceSearchFragments` 和 `lanceSearchIndexSegments`。前者表示固定快照中的可见 Fragment 数量，后者表示 FE 选择的物理 Index Segment Split 数量；此外还可能存在回退 Fragment Split。
-
 ## 当前执行方式
 
 `vector_search()` 的执行顺序如下：
@@ -626,3 +638,15 @@ SET topn_lazy_materialization_threshold = -1;
   -> Doris 全局 TopN（应用 offset=n 和 limit=K）
   -> 可选的延迟物化 Fetch
 ```
+
+## 当前限制和建议
+
+- Lance Catalog 和 Lance TVF 当前仅支持读取，不支持 `CREATE TABLE`、`INSERT`、`UPDATE`、`DELETE`、`TRUNCATE TABLE` 或写回 Lance。
+- 查询总是读取规划时选择的当前版本，不支持通过 SQL 指定 Version 或执行 Time Travel。
+- 使用不支持的列类型时，建议显式列出需要读取的列，避免 `SELECT *` 投影到不支持的列。
+- 对普通扫描使用 `EXPLAIN` 检查 `lancePushdownPredicate`，确认目标条件是否已下推。
+- 向量检索前应在 Lance 中创建与查询方式匹配的索引；小数据集或验证场景可以设置 `"use_index" = "false"` 使用 Flat Search。
+- 可以使用 `SHOW INDEX` 查看 Filesystem Catalog 表的 Lance 逻辑索引，例如在执行索引向量检索前确认索引名、索引类型和被索引字段；REST Catalog 不支持 `SHOW INDEX`。
+- 向量查询需要稳定顺序时，显式使用 `ORDER BY _distance ASC` 并增加唯一 Tie-breaker。
+- 需要在向量候选生成前过滤时使用 `vector_search()` 的 `filter`；外层 `WHERE` 只过滤每个搜索 Split 已生成的候选，并在 Doris 全局 TopN 之前执行，应允许其最终结果少于 `top_k`。
+- 使用 `EXPLAIN` 检查 `lanceSearchFragments` 和 `lanceSearchIndexSegments`。前者表示固定快照中的可见 Fragment 数量，后者表示 FE 选择的物理 Index Segment Split 数量；此外还可能存在回退 Fragment Split。

@@ -6,21 +6,33 @@
 }
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 :::note
 This is an experimental feature.
 
 Lance Catalog is supported starting from Apache Doris 4.2.
 :::
 
-Lance is a columnar data format designed for analytics and AI workloads. Doris can use a Lance Catalog to discover databases and tables in a Lance Namespace and directly query Lance datasets stored on a local file system or S3-compatible object storage.
+Lance is a columnar data format designed for analytics and AI workloads. Doris can use a Lance Catalog to discover databases and tables in a Lance Namespace and directly query Lance datasets stored on a local file system, S3-compatible object storage, or Alibaba Cloud OSS.
 
 Doris currently provides read-only access to Lance. Creating, writing, updating, or deleting Lance tables is not supported.
+
+## Use Cases
+
+| Use case | Description |
+|---|---|
+| Query Lance data directly | Analyze existing Lance datasets with Doris SQL without migrating or importing the data first. |
+| AI vector search | Reuse vector indexes already present in Lance, run searches through `vector_search()`, and combine them with scalar filtering and Doris SQL analytics. |
+| Data integration | Read Lance data into Doris internal tables for further processing, joins, or long-term storage. |
+| Namespace management | Use a Filesystem Catalog for a simple directory-based layout. Use a REST Catalog when Namespaces, table locations, or temporary storage credentials need centralized management. |
 
 ## Feature Overview
 
 | Feature | Support |
 |---|---|
-| Filesystem Catalog | Supports warehouses on a local file system, `file://`, or `s3://` |
+| Filesystem Catalog | Supports warehouses on a local file system, `file://`, `s3://`, or `oss://` |
 | REST Catalog | Supports Lance REST Namespace with no authentication, Bearer Token, API Key, or custom HTTP headers |
 | Metadata access | Supports `SHOW DATABASES`, `SHOW TABLES`, `DESC`, and `SHOW INDEX` (Filesystem Catalogs only) |
 | System tables (`table$...`) | Not supported; use `SHOW INDEX` for index metadata |
@@ -85,54 +97,55 @@ A Filesystem Catalog discovers Lance Namespaces and tables directly from a wareh
 |---|---|---|
 | `warehouse` | Yes | Root path of the Lance warehouse. Local absolute paths, `file://` URIs, `s3://` URIs, and `oss://` URIs are supported. |
 
-#### Use S3-Compatible Object Storage
+Select the example that matches the storage system hosting the warehouse:
 
-The following example creates a Catalog for MinIO:
+<Tabs groupId="lance-filesystem-storage">
+    <TabItem value="s3" label="S3 / S3-Compatible" default>
+        ```sql
+        CREATE CATALOG lance_fs_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
 
-```sql
-CREATE CATALOG lance_catalog PROPERTIES (
-    "type" = "lance",
-    "lance.catalog.type" = "filesystem",
-    "warehouse" = "s3://my-bucket/lance",
-    "s3.endpoint" = "http://127.0.0.1:9000",
-    "s3.access_key" = "admin",
-    "s3.secret_key" = "password",
-    "s3.region" = "us-east-1",
-    "use_path_style" = "true"
-);
-```
+        You can omit `s3.endpoint` for AWS S3. For S3-compatible storage such as MinIO, set the service endpoint and add `"use_path_style" = "true"` when the service requires path-style access.
+    </TabItem>
 
-When accessing AWS S3, you can omit `s3.endpoint` and configure credentials, Region, and Path Style for your environment.
+    <TabItem value="oss" label="Alibaba Cloud OSS">
+        ```sql
+        CREATE CATALOG lance_fs_oss PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "oss://my-bucket/lance",
+            "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
+            "oss.region" = "cn-beijing",
+            "oss.access_key" = "<ak>",
+            "oss.secret_key" = "<sk>"
+        );
+        ```
 
-#### Use Alibaba Cloud OSS
+        For temporary STS credentials, add `"oss.session_token" = "<token>"`. The qualified form `oss://my-bucket.oss-cn-beijing.aliyuncs.com/lance` is also accepted and normalized to the bucket path. OSS-HDFS is not currently supported.
+    </TabItem>
 
-```sql
-CREATE CATALOG lance_oss PROPERTIES (
-    "type" = "lance",
-    "lance.catalog.type" = "filesystem",
-    "warehouse" = "oss://my-bucket/lance",
-    "oss.endpoint" = "oss-cn-beijing.aliyuncs.com",
-    "oss.region" = "cn-beijing",
-    "oss.access_key" = "<ak>",
-    "oss.secret_key" = "<sk>"
-);
-```
+    <TabItem value="local" label="Local File System">
+        ```sql
+        CREATE CATALOG lance_fs_local PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "/data/lance"
+        );
+        ```
 
-`warehouse` also accepts the qualified form `oss://my-bucket.oss-cn-beijing.aliyuncs.com/lance`, which Doris reduces to the bucket before opening the Namespace. It must always name a bucket, so a root such as `oss:/lance` is rejected when the Catalog is created.
+        `warehouse` must be an absolute path. The FE and every BE executing the query must access the same path. In a multi-node deployment, mount the same shared directory on all relevant nodes.
+    </TabItem>
+</Tabs>
 
-To access OSS with a temporary STS credential, add `"oss.session_token" = "<token>"`.
-
-#### Use a Local File System
-
-```sql
-CREATE CATALOG lance_local PROPERTIES (
-    "type" = "lance",
-    "lance.catalog.type" = "filesystem",
-    "warehouse" = "/data/lance"
-);
-```
-
-For a local file system, `warehouse` must be an absolute path. The FE must be able to read Namespace and table metadata through this path, and each BE that executes a query must be able to access the data through the same path. In a multi-node deployment, mount the same shared directory on all relevant FE and BE nodes.
+For S3 and OSS, `warehouse` must include a bucket, such as `s3://bucket/path` or `oss://bucket/path`.
 
 ### REST Catalog
 
@@ -146,38 +159,49 @@ A REST Catalog obtains Namespaces, table locations, and storage access parameter
 | `lance.rest.api-key` | Yes for API Key authentication | - | API Key sent in the `x-api-key` header. |
 | `lance.rest.header.<header-name>` | No | - | Custom HTTP header sent to the REST service. Use the dedicated authentication properties above for authentication headers. |
 
-The following example creates a REST Catalog using a Bearer Token:
+The REST Namespace returns the storage location of each table. Configure default access properties for the storage system hosting those tables:
 
-```sql
-CREATE CATALOG lance_rest PROPERTIES (
-    "type" = "lance",
-    "lance.catalog.type" = "rest",
-    "lance.rest.uri" = "https://lance.example.com",
-    "lance.rest.security.type" = "bearer",
-    "lance.rest.bearer-token" = "your-token"
-);
-```
+<Tabs groupId="lance-rest-storage">
+    <TabItem value="s3" label="S3 / S3-Compatible" default>
+        ```sql
+        CREATE CATALOG lance_rest_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
 
-For API Key authentication, replace the authentication properties with:
+        This configuration applies to `s3://` Lance tables returned by the REST Namespace. For S3-compatible storage such as MinIO, replace `s3.endpoint` with the service endpoint and add `"use_path_style" = "true"` when required.
+    </TabItem>
 
-```sql
-"lance.rest.security.type" = "api_key",
-"lance.rest.api-key" = "your-api-key"
-```
+    <TabItem value="oss" label="Alibaba Cloud OSS">
+        ```sql
+        CREATE CATALOG lance_rest_oss PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
+            "oss.region" = "cn-beijing",
+            "oss.access_key" = "<ak>",
+            "oss.secret_key" = "<sk>"
+        );
+        ```
 
-If the REST service returns temporary storage credentials, Doris uses those credentials to access the corresponding Lance table. You can also configure default object storage access parameters in the Catalog: `s3.endpoint`, `s3.access_key`, `s3.secret_key`, `s3.region`, and `use_path_style` for S3-compatible storage, or `oss.endpoint`, `oss.access_key`, `oss.secret_key`, `oss.region`, and `oss.session_token` for OSS.
+        This configuration applies to `oss://` Lance tables returned by the REST Namespace. For temporary STS credentials, add `"oss.session_token" = "<token>"`.
+    </TabItem>
+</Tabs>
 
-Credentials vended by the Namespace take precedence over the ones configured in the Catalog, per table. A Namespace that vends complete credentials therefore lets you create the Catalog without storing any access key in it:
+For unauthenticated REST access, omit `lance.rest.security.type` and the authentication property. For API Key authentication, replace them with `"lance.rest.security.type" = "api_key"` and `"lance.rest.api-key" = "<api-key>"`.
 
-```sql
-CREATE CATALOG lance_rest_oss PROPERTIES (
-    "type" = "lance",
-    "lance.catalog.type" = "rest",
-    "lance.rest.uri" = "https://lance.example.com"
-);
-```
-
-For an OSS table, the Namespace may spell the vended options either as `oss_endpoint`, `oss_access_key_id`, `oss_secret_access_key`, `oss_region`, and `oss_security_token`, or with the bare OSS-native names `endpoint`, `access_key_id`, `access_key_secret`, `region`, and `security_token`. Doris accepts both and treats them as the same option. Vending the same option under both spellings with different values is an error.
+If the REST Namespace vends temporary storage credentials for a table, Doris gives them precedence over the Catalog credentials, allowing the S3 or OSS access keys to be omitted from the Catalog. For OSS, the Namespace may vend `oss_endpoint`, `oss_access_key_id`, `oss_secret_access_key`, `oss_region`, and `oss_security_token`, or the corresponding native names `endpoint`, `access_key_id`, `access_key_secret`, `region`, and `security_token`.
 
 :::caution
 The current BE Reader does not support Lance tables whose versions are managed by REST Namespace (Managed Versioning).
@@ -598,18 +622,6 @@ Doris automatically uses a single-phase read when `top_k` exceeds the threshold 
 
 Disabling this optimization changes only when output columns are read. It does not disable vector indexes or change Prefilter, Post-filter, or TopN semantics. Compare both settings with representative queries and storage conditions.
 
-## Current Limitations and Recommendations
-
-- Lance Catalogs and Lance TVFs are read-only. `CREATE TABLE`, `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE TABLE`, and writing data back to Lance are not supported.
-- Queries always read the current version selected during planning. SQL cannot select a Version or perform Time Travel.
-- For tables containing unsupported column types, explicitly list the columns to read instead of projecting unsupported columns through `SELECT *`.
-- For regular scans, inspect `lancePushdownPredicate` in `EXPLAIN` to verify which conditions have been pushed down.
-- Create a vector index in Lance that matches the intended query before running indexed vector search. For small datasets or validation, set `"use_index" = "false"` to perform Flat Search.
-- Use `SHOW INDEX` on a Filesystem Catalog table to inspect its logical Lance indexes, for example to verify the index name, type, and indexed fields before indexed vector search. `SHOW INDEX` is not supported for REST Catalogs.
-- For deterministic vector result ordering, explicitly use `ORDER BY _distance ASC` and add a unique tie-breaker.
-- Use the `vector_search()` `filter` parameter when filtering must occur before vector candidates are generated. An outer `WHERE` filters only the candidates already generated by each search Split and runs before Doris global TopN, so allow for a final result with fewer than `top_k` rows.
-- Use `EXPLAIN` to inspect `lanceSearchFragments` and `lanceSearchIndexSegments`. The former is the number of visible Fragments in the pinned snapshot; the latter is the number of physical Index Segment splits selected by the FE. Additional fallback Fragment splits may also be present.
-
 ## Current Execution Model
 
 The execution order of `vector_search()` is:
@@ -626,3 +638,15 @@ Pinned dataset snapshot
   -> Doris global TopN (applies offset=n and limit=K)
   -> Optional lazy-materialization Fetch
 ```
+
+## Current Limitations and Recommendations
+
+- Lance Catalogs and Lance TVFs are read-only. `CREATE TABLE`, `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE TABLE`, and writing data back to Lance are not supported.
+- Queries always read the current version selected during planning. SQL cannot select a Version or perform Time Travel.
+- For tables containing unsupported column types, explicitly list the columns to read instead of projecting unsupported columns through `SELECT *`.
+- For regular scans, inspect `lancePushdownPredicate` in `EXPLAIN` to verify which conditions have been pushed down.
+- Create a vector index in Lance that matches the intended query before running indexed vector search. For small datasets or validation, set `"use_index" = "false"` to perform Flat Search.
+- Use `SHOW INDEX` on a Filesystem Catalog table to inspect its logical Lance indexes, for example to verify the index name, type, and indexed fields before indexed vector search. `SHOW INDEX` is not supported for REST Catalogs.
+- For deterministic vector result ordering, explicitly use `ORDER BY _distance ASC` and add a unique tie-breaker.
+- Use the `vector_search()` `filter` parameter when filtering must occur before vector candidates are generated. An outer `WHERE` filters only the candidates already generated by each search Split and runs before Doris global TopN, so allow for a final result with fewer than `top_k` rows.
+- Use `EXPLAIN` to inspect `lanceSearchFragments` and `lanceSearchIndexSegments`. The former is the number of visible Fragments in the pinned snapshot; the latter is the number of physical Index Segment splits selected by the FE. Additional fallback Fragment splits may also be present.
