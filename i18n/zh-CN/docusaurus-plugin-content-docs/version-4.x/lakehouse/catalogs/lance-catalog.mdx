@@ -470,9 +470,9 @@ ORDER BY _distance ASC, user_id;
 | `metric` | 否 | `uint8` 为 `hamming`，其他支持类型为 `l2` | 距离类型：`l2`、`cosine`、`dot` 或 `hamming`。`dot_product` 是 `dot` 的别名。`uint8` 向量仅支持 `hamming`；其他当前支持的向量元素类型支持 `l2`、`cosine` 和 `dot`。Doris 选择向量索引时会把未设置的 `metric` 视为 `l2`，因此查询使用 `cosine` 或 `dot` 创建的索引时必须显式设置 `metric`。 |
 | `filter` | 否 | - | Lance SQL 条件，在生成候选向量之前执行，即 Prefilter。 |
 | `nprobes` | 否 | 最少 `1`，不限制最大值 | IVF 索引探测的分区数量，必须为正整数。不设置时从 1 个分区开始；使用 Prefilter 且候选不足时，Lance 可以继续探测更多分区。显式设置为 `N` 时，最少和最多探测数都会固定为 `N`。 |
-| `refine_factor` | 否 | 不启用精排 | 候选集精排倍数，必须为正整数。不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。即使设置为 `1` 也会执行精排，因此与不设置不同。 |
+| `refine_factor` | 否 | 不启用精排 | 候选集精排倍数，必须为正整数。不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。**精排会读取这些候选的原始向量数据；`N` 越大，读取和计算的候选越多，可能显著增加 I/O 并降低查询性能。** 即使设置为 `1` 也会执行精排，因此与不设置不同。 |
 | `ef` | 否 | `floor(1.5 × (top_k + offset))` | HNSW 图索引搜索时保留的候选宽度，必须为正整数。如果同时设置了 `refine_factor`，默认值为 `floor(1.5 × (top_k + offset) × refine_factor)`。对非 HNSW 索引无效。 |
-| `use_index` | 否 | `true` | `true` 表示将兼容的物理 Lance Index Segment 规划为索引 Split，并将未覆盖的 Fragment 保留为 Flat Search Split；如果没有可用的兼容索引元数据，则退回按 Fragment 拆分。`false` 表示每个可见 Fragment 生成一个 Split，并强制执行 Flat Search。 |
+| `use_index` | 否 | `true` | `true` 表示优先使用与向量列和距离类型兼容的 Lance 向量索引；没有可用索引时自动使用 Flat Search。`false` 表示禁用向量索引，对数据执行 Flat Search。 |
 
 以上默认值对应 Doris 当前集成的 Lance Scanner 行为。`metric` 未指定时，Doris 在选择向量索引时按 `l2` 处理，因此不会选中使用 `cosine` 或 `dot` 创建的索引。未选中索引或 `"use_index" = "false"` 时，`uint8` 向量使用 `hamming`，其他当前支持的向量元素类型使用 `l2`。
 
@@ -489,43 +489,39 @@ ORDER BY _distance ASC, user_id;
 | `IVF_HNSW_SQ` | IVF、HNSW 与 Scalar Quantization | `nprobes`、`ef`、`refine_factor` |
 | `IVF_HNSW_PQ` | IVF、HNSW 与 Product Quantization | `nprobes`、`ef`、`refine_factor` |
 
-`vector_search()` 只负责查询，不负责在 Doris 中创建索引，也不提供指定索引类型或索引名称的参数。当 `use_index=true` 时，FE 从固定的数据集快照读取向量索引元数据，并选择与向量列和 Metric 兼容的一个逻辑索引；随后将该逻辑索引中仍覆盖可见数据的每个物理 Segment 分配给一个索引 Scan Split。每个索引 Split 都携带 Segment UUID 以及该 Segment 覆盖且在当前快照中可见的 Fragment，因此 BE 会检索指定的物理 Segment，而不是再次让 Lance 自行选择索引。
-
-一个 Lance 逻辑索引可以包含多个物理 Index Segment，一个物理 Segment 也可以覆盖多个 Fragment。未被所选索引覆盖的 Fragment 不会被遗漏：Doris 会为每个这样的 Fragment 增加一个执行 Flat Search 的回退 Split。如果 FE 无法生成可用的 Index Segment 计划，则退回按 Fragment 拆分。当 `use_index=false` 时，Doris 跳过索引元数据规划，并对每个可见 Fragment 强制执行 Flat Search。Flat Search 不是一种 ANN 索引，它需要在 Lance 内直接读取并比较向量。
+`vector_search()` 只使用 Lance 中已有的向量索引，不负责创建索引，也不能指定索引类型或索引名称。当 `use_index=true` 时，Doris 自动选择与向量列和距离类型兼容的索引；没有可用索引或索引未覆盖的数据会自动使用 Flat Search，不会被遗漏。当 `use_index=false` 时，所有数据都使用 Flat Search。
 
 ### 支持的向量元素类型和距离类型
 
-索引能否用于 `vector_search()`，取决于向量元素类型以及创建索引时使用的距离类型，因为内置的 Lance 版本并未实现全部组合。下表描述使用索引检索的支持情况，其内容来自实测而非推断：元素类型 x 距离类型 x 索引类型矩阵的每个组合都在内置 Lance 版本上实际构建过，标记为可用的正是那些构建成功并能返回检索结果的组合。
-
-每个可用组合都由回归测试覆盖，其中有一项检查对全部组合生效：把检索限制到单个 IVF 分区必须改变结果。Flat Search 没有分区概念，不可能因此给出不同结果，所以这一条能区分真正走索引和静默回退。
-
-大部分组合还额外断言两件事：Doris 规划出索引分片且没有任何 Fragment 退化为无索引扫描；以及索引检索在对候选做精确距离重排后，返回的行与穷举扫描完全一致。按算法、元素类型和距离类型各取的一张代表表则是**换了一种方式**覆盖，而非更强：有提交在库中的查询结果作为基线，数据形状有闭式解时还对照可手工推导的距离值。对量化类和图类算法，这些表只**记录**它们与穷举扫描的一致性而不断言 —— 因为那种一致性来自这份冻结的 fixture，并不是算法本身的保证。所有层次都不测量召回率。
+向量索引支持的距离类型取决于向量元素类型。请选择下表中支持的组合；不支持的组合无法使用向量索引。
 
 | 向量元素类型 | `l2` | `cosine` | `dot` | `hamming` |
 |---|---|---|---|---|
-| `float16` | 支持，但受数值范围限制 [1] | 支持 | 支持 | 不支持 |
+| `float16` | 支持 [1] | 支持 | 支持 | 不支持 |
 | `float32` | 支持 | 支持 | 支持 | 不支持 |
 | `float64` | 支持 | 支持 | 支持 | 不支持 |
 | `uint8` | 不支持 | 不支持 | 不支持 | 仅 `IVF_FLAT` 和 `IVF_HNSW_FLAT` [2] |
 | `int8` | 仅支持 Flat Search [3] | 仅支持 Flat Search [3] | 仅支持 Flat Search [3] | 不支持 |
 
-除脚注另有说明外，表中可用的组合适用于上文列出的全部六种索引类型。
+除脚注另有说明外，“支持”表示该组合适用于上文列出的全部六种索引类型；“仅支持 Flat Search”表示可以查询，但不会使用向量索引。
 
-1. 使用 `l2` 创建 `float16` 索引，随着数据数值增大会变得不可靠，且没有一个干净的阈值可以给出。在 16 维共线向量上实测（最大平方距离随行数增长）：2.6e5 和 1.0e6 时约一秒建成，1.7e7 时始终无法完成，而 4.2e6 时对同一份输入四次尝试只成功一次 —— 说明聚类过程的随机性也参与其中，不只取决于数据。在数值有界的向量上（例如单位量级的 embedding），六种索引类型全部可以正常构建和检索。此处并未确定成因，所以上述数字应视为观测结果而非规则。`cosine` 和 `dot` 在该范围内的每一组数据上都能成功构建，包括 `l2` 无法完成的那些规模；`dot` 还额外在同样形状放大 32 倍（坐标约 33000）的数据上构建成功，因此并非只是在 `l2` 失败的量级上未经测试。这就是已验证的范围；更接近 `float16` 上限 65504 时的行为不在其中，那时存储值本身已无法表示。如果 `float16` 的 `l2` 索引无法构建完成，可改用 `cosine`，或使用 Flat Search —— 后者对 `float16` 在任何情况下都可用。
-2. Lance 将 `uint8` 向量视为二进制向量，因此只接受 `hamming` 距离。其 Product Quantization 和 Scalar Quantization 构建器不接受 `uint8`，所以该元素类型只能使用 `IVF_FLAT` 和 `IVF_HNSW_FLAT`。
-3. Lance 目前没有完整的 `int8` 索引构建路径，因此 `int8` 向量只能使用 Flat Search 检索。此外，在当前内置的 Lance 版本下，检索**可为 NULL** 的 `int8` 向量列会导致 BE 进程退出。在 Doris 升级到包含该修复（[lance#7498](https://github.com/lance-format/lance/pull/7498)）的 `lance-c` 版本之前，请避免检索可为 NULL 的 `int8` 向量列。
-
-Lance 在创建索引时就会拒绝的组合不会影响 Doris，例如使用 `hamming` 创建浮点类型索引，或使用 `l2`、`cosine`、`dot` 创建 `uint8` 索引。
+1. `float16` 数据数值较大时，使用 `l2` 创建索引可能耗时过长或失败。建议使用数值范围受控的向量；如果建索引失败，可使用 Flat Search，或在业务语义允许时改用 `cosine`。
+2. Lance 将 `uint8` 向量视为二进制向量，只支持 `hamming` 距离。`uint8` 不支持 Product Quantization 或 Scalar Quantization，因此只能使用 `IVF_FLAT` 和 `IVF_HNSW_FLAT`。
+3. `int8` 向量目前不能使用向量索引，只能执行 Flat Search。当前内置的 Lance 版本还存在一个已知问题：检索**可为 NULL** 的 `int8` 向量列可能导致 BE 进程退出。在 Doris 升级到包含 [lance#7498](https://github.com/lance-format/lance/pull/7498) 修复的 `lance-c` 版本前，请避免此类查询。
 
 #### 查询距离类型必须与索引一致
 
-只有当查询请求的 `metric` 与创建索引时使用的距离类型一致时，Doris 才会选择该向量索引；否则 Doris 不使用索引，改为执行 Flat Search——结果仍然正确，但需要直接扫描向量。`EXPLAIN` 可以区分两者：使用索引的计划中 `lanceSearchIndexSegments` 不为 0，未选中索引时显示 `lanceSearchIndexSegments=0`。由于未设置的 `metric` 会按 `l2` 处理，凡是不以 `l2` 创建的索引都必须显式设置 `metric`。这包括所有 `uint8` 列：它的索引只能使用 `hamming`，因此不设置 `metric` 时**必然**选不中索引、退回 Flat Search。返回的行仍然正确（flat 路径对 `uint8` 应用 `hamming`），但索引没有被使用。
+查询指定的 `metric` 必须与索引创建时使用的距离类型一致，否则 Doris 会改用 Flat Search。结果仍然正确，但由于需要直接扫描向量，性能通常更低。
 
-此外，Doris 对每个向量列只会考虑一个索引。如果同一个向量列上存在多个使用不同距离类型创建的向量索引，Doris 选中的可能并不是与查询距离类型匹配的那一个，查询会退回 Flat Search。建议每个向量列最多创建一个向量索引，使索引选择结果明确。
+不设置 `metric` 时，Doris 在选择索引时按 `l2` 处理。因此，使用 `cosine`、`dot` 或 `hamming` 索引时必须显式设置 `metric`。例如，查询 `uint8` 向量索引时必须设置 `"metric" = "hamming"`，否则不会使用索引。
+
+可以通过 `EXPLAIN` 确认是否使用索引：`lanceSearchIndexSegments` 大于 `0` 表示使用了索引，等于 `0` 表示使用 Flat Search。
+
+Doris 对每个向量列只考虑一个向量索引。建议每个向量列最多创建一个向量索引，避免多个不同距离类型的索引导致选择不明确。
 
 ### Prefilter 和 Post-filter
 
-TVF 的 `filter` 参数是 **Prefilter**。Doris 将该字符串传给每个搜索 Split 的 Lance Scanner，Lance 在 ANN 或 Flat Search 生成候选之前执行过滤：
+Prefilter 和 Post-filter 可以在同一个查询中使用：
 
 ```sql
 SELECT user_id, category, _distance
@@ -536,40 +532,87 @@ FROM vector_search(
     "top_k" = "10",
     "filter" = "category = 'book'"
 )
+WHERE user_id > 100
 ORDER BY _distance ASC, user_id;
 ```
 
-`filter` 中引用的列由 Lance 内部读取并计算；如果该列没有被 `SELECT` 或其他 Doris 表达式引用，它不需要作为列返回给 Doris。
+| 过滤方式 | 示例条件 | 执行时机 | 对结果的影响 |
+|---|---|---|---|
+| Prefilter | TVF 参数 `"filter" = "category = 'book'"` | Lance 生成向量候选之前 | 只在 `category = 'book'` 的数据中搜索最近邻。 |
+| Post-filter | 外层 `WHERE user_id > 100` | Lance 生成候选之后、Doris 执行最终 TopN 之前 | 从已生成的候选中删除不满足条件的行，不会补充新的候选，因此最终结果可能少于 `top_k`。 |
 
-外层 `WHERE` 是 **Post-filter**。优化器会将它下移到 Doris 的 Lance Scan 中，但不会把它转换成 Lance 的 Prefilter。它的执行位置是：Lance 为每个搜索 Split 生成候选之后、Doris 执行局部和全局 TopN 之前。
+如果 `user_id > 100` 也必须参与最近邻候选生成，应将它合并到 `filter` 中，例如 `"filter" = "category = 'book' AND user_id > 100"`，而不是使用外层 `WHERE`。即使优化器将外层 `WHERE` 下移到 Doris 的 Lance Scan，它仍然是 Post-filter，不会转换成 Lance Prefilter。
+
+`filter` 中引用的列由 Lance 内部读取和计算；如果该列未被 `SELECT` 或其他 Doris 表达式引用，则不需要返回给 Doris。
+
+### TopN 两阶段读取和延迟物化
+
+向量搜索通常会生成多于最终 `top_k` 的候选行。如果在搜索阶段就读取 `title`、`payload` 等较宽的输出列，大部分数据会在 TopN 排序后被丢弃。两阶段读取会延迟读取这些列：第一阶段只读取过滤、排序和 TopN 所需的列；全局 TopN 完成后，第二阶段仅为最终保留的行读取其他输出列。
+
+这种方式可以减少存储 I/O、网络传输和内存占用。当 `top_k` 较小、候选较多，或者查询包含较宽的字符串、JSON 等输出列时，收益通常更明显。
+
+| 阶段 | 读取内容 |
+|---|---|
+| 第一阶段 | 向量搜索内部需要的列、`_distance`、Post-filter 和排序使用的列，以及内部 Row Location。 |
+| 第二阶段 | 只为全局 TopN 保留的行读取仅用于最终输出的顶层列。 |
+
+#### 触发条件
+
+满足以下条件时，Doris 才会使用两阶段读取：
+
+1. `topn_lazy_materialization_threshold` 大于 `0`，默认值为 `1024`。
+2. `top_k` 不超过该阈值。
+3. 查询至少包含一个可以延迟读取的顶层列。仅用于最终 `SELECT` 输出的列可以延迟；Post-filter、`ORDER BY` 或其他 TopN 前表达式使用的列必须在第一阶段读取。嵌套子列当前不能延迟读取。
+
+例如，以下查询中的 `category` 必须在第一阶段用于 Post-filter，而 `user_id`、`title` 和 `payload` 可以在 TopN 完成后读取：
 
 ```sql
-SELECT user_id, category, _distance
+SET topn_lazy_materialization_threshold = 1024;
+
+SELECT user_id, title, payload, _distance
 FROM vector_search(
     "table" = "lance_catalog.default.items",
     "column" = "embedding",
     "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
-    "top_k" = "10"
+    "top_k" = "10",
+    "offset" = "3"
 )
-WHERE category = 'book'
-ORDER BY _distance ASC, user_id;
+WHERE category = 'book';
 ```
 
-因此，外层 `WHERE` 只过滤已经生成的候选，不会触发 Lance 补充候选，最终结果可能少于 `top_k`。如果过滤条件应该缩小向量候选的搜索空间并保证在过滤后的数据中选择最近邻，应使用 TVF 的 `filter` 参数。
+TVF `filter` 中引用的 Prefilter 列由 Lance 在搜索内部使用，不会仅因为出现在 `filter` 字符串中就作为第一阶段结果列返回给 Doris。
 
-### 当前执行方式
+#### 关闭两阶段读取
 
-`vector_search()` 使用分布式候选搜索，而不是由一个 Scanner 扫描整个数据集。Split 的边界取决于索引覆盖范围：
+设置以下会话变量可以关闭两阶段读取：
 
-1. FE 在规划阶段固定一个正数版本的 Lance 数据集快照，并读取该快照中可见的 Fragment；当 `use_index=true` 时，还会读取向量索引元数据。
-2. 如果存在具有可用 Segment 覆盖信息的兼容逻辑向量索引，每个仍覆盖可见 Fragment 的物理 Index Segment 都会生成一个索引 Scan Split。该 Split 包含 Segment UUID，以及其 Fragment Bitmap 与固定快照中可见 Fragment 的交集，因此一个 Split 可以包含多个 Fragment ID。
-3. 没有被这些索引 Split 覆盖的每个可见 Fragment，都会生成一个独立的回退 Fragment Split。这样，即使数据是在索引创建后追加的、尚未执行索引优化，也仍然可以被检索。如果不存在可用的 Index Segment 计划，所有可见 Fragment 都按 Fragment 拆分；当 `use_index=false` 时，所有可见 Fragment 直接使用 Flat Search Split。
-4. 假设查询参数为 `top_k=K`、`offset=n`，每个索引或回退 Split 都请求最多 `K+n` 个候选，并且不在 Split 内应用 offset。索引 Split 只检索为其分配的物理 Index Segment，回退 Fragment Split 对自身 Fragment 执行 Flat Search。TVF 的 `filter` 在候选生成前由 Lance 执行，外层 `WHERE` 则在候选生成后由 Doris Scan 执行。
-5. Doris 对所有 Split 返回的候选执行局部 TopN、Exchange 和全局 TopN，按 `_distance ASC` 合并；只有全局 TopN 应用 `offset=n`，跳过前 `n` 行后返回 `K` 行。
+```sql
+SET topn_lazy_materialization_threshold = -1;
+```
 
-因此，Split 级候选集只用于向全局合并提供候选，不能直接视为最终结果。索引 Segment Split、回退 Fragment Split 以及后续按 Row ID 取列都使用同一个固定快照。刷新索引覆盖会改变新追加 Fragment 的检索方式，但未被索引覆盖的 Fragment 仍会通过 Flat Search 进入检索范围。
+当 `top_k` 大于阈值或没有可延迟列时，Doris 会自动使用单阶段读取，通常不需要手动关闭。以下情况可以考虑关闭并进行性能对比：
 
-执行顺序可以概括为：
+- `top_k` 很大，第二阶段仍需读取大部分候选行。
+- 查询只返回少量窄列，两阶段能够减少的 I/O 很少。
+- 底层存储的随机 Row-ID 读取延迟较高，第二阶段 Fetch 的额外开销超过延迟读取带来的收益。
+
+关闭后只会改变输出列的读取时机，不会禁用向量索引或改变 Prefilter、Post-filter 和 TopN 的语义。建议根据实际查询和存储环境进行开启与关闭的性能对比。
+
+## 当前限制和建议
+
+- Lance Catalog 和 Lance TVF 当前仅支持读取，不支持 `CREATE TABLE`、`INSERT`、`UPDATE`、`DELETE`、`TRUNCATE TABLE` 或写回 Lance。
+- 查询总是读取规划时选择的当前版本，不支持通过 SQL 指定 Version 或执行 Time Travel。
+- 使用不支持的列类型时，建议显式列出需要读取的列，避免 `SELECT *` 投影到不支持的列。
+- 对普通扫描使用 `EXPLAIN` 检查 `lancePushdownPredicate`，确认目标条件是否已下推。
+- 向量检索前应在 Lance 中创建与查询方式匹配的索引；小数据集或验证场景可以设置 `"use_index" = "false"` 使用 Flat Search。
+- 可以使用 `SHOW INDEX` 查看 Filesystem Catalog 表的 Lance 逻辑索引，例如在执行索引向量检索前确认索引名、索引类型和被索引字段；REST Catalog 不支持 `SHOW INDEX`。
+- 向量查询需要稳定顺序时，显式使用 `ORDER BY _distance ASC` 并增加唯一 Tie-breaker。
+- 需要在向量候选生成前过滤时使用 `vector_search()` 的 `filter`；外层 `WHERE` 只过滤每个搜索 Split 已生成的候选，并在 Doris 全局 TopN 之前执行，应允许其最终结果少于 `top_k`。
+- 使用 `EXPLAIN` 检查 `lanceSearchFragments` 和 `lanceSearchIndexSegments`。前者表示固定快照中的可见 Fragment 数量，后者表示 FE 选择的物理 Index Segment Split 数量；此外还可能存在回退 Fragment Split。
+
+## 当前执行方式
+
+`vector_search()` 的执行顺序如下：
 
 ```text
 固定数据集快照
@@ -583,60 +626,3 @@ ORDER BY _distance ASC, user_id;
   -> Doris 全局 TopN（应用 offset=n 和 limit=K）
   -> 可选的延迟物化 Fetch
 ```
-
-### TopN 两阶段读取和延迟物化
-
-当 `experimental_topn_lazy_materialization_threshold` 大于 `0`、`top_k` 不超过该阈值，并且存在可以延迟读取的顶层列时，`vector_search()` 可以使用两阶段读取。默认阈值为 `1024`。第一阶段只传递完成候选过滤和 TopN 所必需的列以及内部 Row Location；全局 TopN 完成后，第二阶段只为最终保留的行读取其他输出列。
-
-例如，源表包含以下列：
-
-| 列 | 用途 |
-|---|---|
-| `user_id` | 最终输出列 |
-| `category` | 外层 `WHERE` 的 Post-filter 列 |
-| `title`、`payload` | 最终输出列 |
-| `embedding` | Lance 向量搜索列 |
-
-执行以下查询，其中 `K=10`、`n=3`：
-
-```sql
-SET experimental_topn_lazy_materialization_threshold = 1024;
-
-SELECT user_id, title, payload, _distance
-FROM vector_search(
-    "table" = "lance_catalog.default.items",
-    "column" = "embedding",
-    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
-    "top_k" = "10",
-    "offset" = "3"
-)
-WHERE category = 'book';
-```
-
-典型的两阶段列流转如下：
-
-| 阶段或算子 | 读取或输出的列 | 说明 |
-|---|---|---|
-| Lance Split Search | 内部使用 `embedding`；向 Doris 返回 `_distance`、`category` 和内部 Lance Row ID | `embedding` 用于 ANN/Flat Search，但没有被 SQL 投影时不作为结果列返回。每个 Index Segment 或回退 Fragment Split 最多产生 `K+n` 个候选。 |
-| Doris Scan Post-filter | `_distance`、`category`、内部 Row Location | 执行 `category = 'book'`。外层 `WHERE` 的列必须留在第一阶段。Doris 将 Lance Row ID 和数据集映射编码为内部 Row Location，Fetch 再通过该映射解析到同一个固定快照。 |
-| 局部和全局 TopN | 第一阶段必需列和内部 Row Location | 全局 TopN 按 `_distance` 合并，应用 `offset=n` 和 `limit=K`。 |
-| Row ID Fetch | 使用内部 Row Location 读取 `user_id`、`title`、`payload` | 对全局 TopN 保留的行，在同一个 Lance 数据集快照上调用 Row-ID 随机读取，不重新扫描 Fragment。 |
-| 最终 Materialize | `user_id`、`title`、`payload`、`_distance` | 将延迟列与第一阶段保留的列合并，形成 SQL 最终输出。 |
-
-第一阶段的必需列不只包括 `_distance` 和 Post-filter 列。凡是在全局 TopN 完成前被 Doris 表达式或算子引用的列，都属于第一阶段列。例如，如果查询增加 `ORDER BY _distance, user_id`，`user_id` 也需要提前读取，不能再等到第二阶段 Fetch。嵌套子列投影当前也不会延迟到 Row-ID Fetch。相反，只被最终投影使用的顶层列可以在第二阶段读取。
-
-TVF `filter` 中引用的 Prefilter 列与外层 `WHERE` 列不同：前者由 Lance 在搜索内部使用，并不因为出现在 `filter` 字符串中就必须返回到 Doris；后者由 Doris Scan 执行，所以必须进入第一阶段。
-
-将 `experimental_topn_lazy_materialization_threshold` 设置为 `-1` 会关闭两阶段读取。如果 `top_k` 大于阈值，或者没有可延迟的列，也会使用单阶段读取。单阶段模式会在 Scan 阶段返回查询所需的全部输出列，但向量搜索仍然按 Index Segment 或回退 Fragment Split 并行生成候选，并由 Doris 合并全局 TopN；它不会因此退化为 Doris 对整张表做普通全列扫描。索引 Split 使用为其分配的物理 Index Segment，强制或回退到 Flat Search 时才直接比较向量。
-
-## 当前限制和建议
-
-- Lance Catalog 和 Lance TVF 当前仅支持读取，不支持 `CREATE TABLE`、`INSERT`、`UPDATE`、`DELETE`、`TRUNCATE TABLE` 或写回 Lance。
-- 查询总是读取规划时选择的当前版本，不支持通过 SQL 指定 Version 或执行 Time Travel。
-- 使用不支持的列类型时，建议显式列出需要读取的列，避免 `SELECT *` 投影到不支持的列。
-- 对普通扫描使用 `EXPLAIN` 检查 `lancePushdownPredicate`，确认目标条件是否已下推。
-- 向量检索前应在 Lance 中创建与查询方式匹配的索引；小数据集或验证场景可以设置 `"use_index" = "false"` 使用 Flat Search。
-- 可以使用 `SHOW INDEX` 查看 Filesystem Catalog 表的 Lance 逻辑索引，例如在执行索引向量检索前确认索引名、索引类型和被索引字段；REST Catalog 不支持 `SHOW INDEX`。
-- 向量查询需要稳定顺序时，显式使用 `ORDER BY _distance ASC` 并增加唯一 Tie-breaker。
-- 需要在向量候选生成前过滤时使用 `vector_search()` 的 `filter`；外层 `WHERE` 只过滤每个搜索 Split 已生成的候选，并在 Doris 全局 TopN 之前执行，应允许其最终结果少于 `top_k`。
-- 使用 `EXPLAIN` 检查 `lanceSearchFragments` 和 `lanceSearchIndexSegments`。前者表示固定快照中的可见 Fragment 数量，后者表示 FE 选择的物理 Index Segment Split 数量；此外还可能存在回退 Fragment Split。
