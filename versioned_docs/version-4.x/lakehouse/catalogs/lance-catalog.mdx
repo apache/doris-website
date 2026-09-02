@@ -83,7 +83,7 @@ A Filesystem Catalog discovers Lance Namespaces and tables directly from a wareh
 
 | Property | Required | Description |
 |---|---|---|
-| `warehouse` | Yes | Root path of the Lance warehouse. Local absolute paths, `file://` URIs, and `s3://` URIs are supported. |
+| `warehouse` | Yes | Root path of the Lance warehouse. Local absolute paths, `file://` URIs, `s3://` URIs, and `oss://` URIs are supported. |
 
 #### Use S3-Compatible Object Storage
 
@@ -103,6 +103,24 @@ CREATE CATALOG lance_catalog PROPERTIES (
 ```
 
 When accessing AWS S3, you can omit `s3.endpoint` and configure credentials, Region, and Path Style for your environment.
+
+#### Use Alibaba Cloud OSS
+
+```sql
+CREATE CATALOG lance_oss PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "filesystem",
+    "warehouse" = "oss://my-bucket/lance",
+    "oss.endpoint" = "oss-cn-beijing.aliyuncs.com",
+    "oss.region" = "cn-beijing",
+    "oss.access_key" = "<ak>",
+    "oss.secret_key" = "<sk>"
+);
+```
+
+`warehouse` also accepts the qualified form `oss://my-bucket.oss-cn-beijing.aliyuncs.com/lance`, which Doris reduces to the bucket before opening the Namespace. It must always name a bucket, so a root such as `oss:/lance` is rejected when the Catalog is created.
+
+To access OSS with a temporary STS credential, add `"oss.session_token" = "<token>"`.
 
 #### Use a Local File System
 
@@ -147,7 +165,19 @@ For API Key authentication, replace the authentication properties with:
 "lance.rest.api-key" = "your-api-key"
 ```
 
-If the REST service returns temporary storage credentials, Doris uses those credentials to access the corresponding Lance table. You can also configure `s3.endpoint`, `s3.access_key`, `s3.secret_key`, `s3.region`, and `use_path_style` in the Catalog as the default object storage access parameters.
+If the REST service returns temporary storage credentials, Doris uses those credentials to access the corresponding Lance table. You can also configure default object storage access parameters in the Catalog: `s3.endpoint`, `s3.access_key`, `s3.secret_key`, `s3.region`, and `use_path_style` for S3-compatible storage, or `oss.endpoint`, `oss.access_key`, `oss.secret_key`, `oss.region`, and `oss.session_token` for OSS.
+
+Credentials vended by the Namespace take precedence over the ones configured in the Catalog, per table. A Namespace that vends complete credentials therefore lets you create the Catalog without storing any access key in it:
+
+```sql
+CREATE CATALOG lance_rest_oss PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "rest",
+    "lance.rest.uri" = "https://lance.example.com"
+);
+```
+
+For an OSS table, the Namespace may spell the vended options either as `oss_endpoint`, `oss_access_key_id`, `oss_secret_access_key`, `oss_region`, and `oss_security_token`, or with the bare OSS-native names `endpoint`, `access_key_id`, `access_key_secret`, `region`, and `security_token`. Doris accepts both and treats them as the same option. Vending the same option under both spellings with different values is an error.
 
 :::caution
 The current BE Reader does not support Lance tables whose versions are managed by REST Namespace (Managed Versioning).
