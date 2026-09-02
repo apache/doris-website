@@ -325,13 +325,17 @@ Doris 会将语义兼容的谓词转换为 Substrait 表达式，并交给 Lance
 | `<=>` | 直接的列与常量 Null-safe 等值比较；在 `NOT`、`AND` 或 `OR` 中仍保持非 `NULL` 的二值逻辑结果 |
 | `IN`、`NOT IN` | 非空常量列表，列表中不能包含 `NULL` |
 | `IS NULL`、`IS NOT NULL` | 直接引用列 |
+| 布尔列、`NOT` 布尔列 | 直接引用布尔列 |
+| `LIKE`、`NOT LIKE` | 直接引用 `utf8` 或 `large_utf8` 列，模式为字符串字面量，且不包含反斜杠转义、显式 `ESCAPE` 子句或 NUL 字符 |
+| `starts_with`、`ends_with` | 使用内置函数，第一个参数直接引用 `utf8` 或 `large_utf8` 列，第二个参数为字符串字面量 |
 | `AND` | 顶层 Conjunct 可以分别下推，不能下推的部分保留在 Doris |
 | `OR` | 两个分支都能完整转换时下推 |
 | `NOT` | 操作数能完整转换时下推 |
 
 以下形式通常不会下推：
 
-- 列上包含函数或算术表达式。
+- 除上述内置字符串函数之外的函数，或列上的算术表达式。名称为 `like`、`starts_with` 或 `ends_with` 的用户自定义函数不会按同名内置函数下推。
+- 模式包含 NUL 字符的字符串谓词。使用反斜杠转义或显式 `ESCAPE` 子句的 `LIKE`、`NOT LIKE` 也保留在 Doris。
 - `IN` 列表为空或包含 `NULL`。
 - `OR` 或 `NOT` 中只有部分表达式可转换。
 - 数据类型或常量值无法无损转换到 Lance。
@@ -342,7 +346,9 @@ Doris 会将语义兼容的谓词转换为 Substrait 表达式，并交给 Lance
 EXPLAIN
 SELECT user_id
 FROM lance_catalog.default.user_profiles
-WHERE age >= 18 AND country IN ('CN', 'US');
+WHERE active
+  AND starts_with(name, 'A')
+  AND country LIKE 'C%';
 ```
 
 ## 使用文件 TVF 查询 Lance
