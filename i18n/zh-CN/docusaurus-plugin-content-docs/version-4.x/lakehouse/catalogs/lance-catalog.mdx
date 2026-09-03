@@ -2,7 +2,7 @@
 {
     "title": "Lance Catalog",
     "language": "zh-CN",
-    "description": "Apache Doris Lance Catalog 使用指南：通过 Filesystem 或 REST Namespace 访问 Lance 数据集，支持并行读取、谓词下推、S3/Local TVF、索引查看以及向量检索。"
+    "description": "Apache Doris Lance Catalog 使用指南：通过 Filesystem 或 REST Namespace 访问 Lance 数据集，支持并行读取、谓词下推、S3/Local TVF、索引查看、向量检索以及全文检索。"
 }
 ---
 
@@ -25,6 +25,7 @@ Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lan
 |---|---|
 | 直接分析 Lance 数据 | 无需迁移或导入数据，使用 Doris SQL 查询已有的 Lance 数据集。 |
 | AI 向量检索 | 复用 Lance 中已有的向量索引，通过 `vector_search()` 执行向量检索，并与标量过滤和 Doris SQL 分析结合。 |
+| 全文检索 | 复用 Lance 中已有的 FTS 倒排索引，通过 `full_text_search()` 执行 BM25 检索，并与标量过滤和 Doris SQL 分析结合。 |
 | 数据集成 | 从 Lance 读取数据并写入 Doris 内表，用于后续加工、关联分析或长期存储。 |
 | Namespace 管理 | 简单目录结构可以使用 Filesystem Catalog；需要集中管理 Namespace、表地址或临时存储凭证时使用 REST Catalog。 |
 
@@ -37,16 +38,17 @@ Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lan
 | 元数据访问 | 支持 `SHOW DATABASES`、`SHOW TABLES`、`DESC` 和 `SHOW INDEX`（仅 Filesystem Catalog） |
 | 系统表（`table$...`） | 暂不支持；索引元数据请使用 `SHOW INDEX` |
 | 数据查询 | 支持列裁剪、并行扫描 Lance Fragment 和当前版本的快照一致性读取 |
-| 谓词下推 | 支持将部分标量谓词下推到 Lance 执行 |
+| 谓词下推 | 支持将部分静态标量谓词和 Join Runtime Filter 下推到 Lance 执行 |
 | 文件 TVF | 支持通过 `s3()` 和 `local()` 直接查询 Lance 数据集 |
 | 向量检索 | 使用物理 Lance Index Segment 作为并行 Split，对未覆盖的 Fragment 保留 Flat Search Split，并由 Doris 合并全局 Top-K |
+| 全文检索 | 通过 `full_text_search()` 使用已有的 Lance FTS 倒排索引，并由 Doris 合并全局 Top-K |
 | 写入 Lance | 暂不支持 |
 | Time Travel | 暂不支持 |
-| Full-Text Search / Hybrid Search | 暂不支持 |
+| Hybrid Search | 暂不支持 |
 
 ## Lance 版本与兼容性
 
-Doris BE 数据读取器使用 `lance-c v0.1.6` 构建，其内置的 Lance Rust crates 版本为 `7.0.0-beta.7`（Lance commit `e0e977a6`）。Doris FE 使用 `lance-java` 客户端读取 Namespace 和数据集元数据，版本为 `9.1.0-beta.3`（Lance commit `e934cc2c`）。这些版本表示 Doris 集成的读取器实现版本，与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
+Doris BE 数据读取器使用 `lance-c v0.1.8` 构建，其内置的 Lance Rust crates 固定在 Lance commit `e934cc2c`。Doris FE 使用 `lance-java` 客户端读取 Namespace 和数据集元数据，版本为 `9.1.0-beta.3`（同一 Lance commit）。这些版本表示 Doris 集成的读取器实现版本，与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
 
 当前读取器的文件格式兼容情况如下：
 
@@ -270,7 +272,7 @@ FROM lance_catalog.default.user_profiles;
 
 ## 查看 Lance 索引
 
-对于 Filesystem Catalog 中的表，`SHOW INDEX` 可以查看 Lance 数据集中记录的逻辑标量索引和向量索引。变种语法 `SHOW INDEXES`、`SHOW KEY` 和 `SHOW KEYS` 返回相同结果：
+对于 Filesystem Catalog 中的表，`SHOW INDEX` 可以查看 Lance 数据集中记录的逻辑标量索引（包括 FTS 倒排索引）和向量索引。变种语法 `SHOW INDEXES`、`SHOW KEY` 和 `SHOW KEYS` 返回相同结果：
 
 ```sql
 SHOW INDEX FROM lance_catalog.default.items;
@@ -286,7 +288,7 @@ Doris 在语句执行时读取数据集最新快照中的索引元数据，结�
 | `Key_name` | Lance 逻辑索引名。 |
 | `Seq_in_index` | 列在索引中的位置，从 `1` 开始。索引包含多个字段时，每个字段输出一行。 |
 | `Column_name` | 被索引的字段。嵌套字段上的索引显示以 `.` 连接的字段路径，包含字母、数字和 `_` 以外字符的路径段使用反引号引用，例如 `` attributes.`child.with.dot` ``。 |
-| `Index_type` | Lance SDK 报告的索引类型，例如 `BTree`、`IVF_FLAT`、`IVF_SQ`、`IVF_PQ`、`IVF_HNSW_FLAT`、`IVF_HNSW_SQ` 或 `IVF_HNSW_PQ`。 |
+| `Index_type` | Lance SDK 报告的索引类型，例如 `BTree`、`INVERTED`、`IVF_FLAT`、`IVF_SQ`、`IVF_PQ`、`IVF_HNSW_FLAT`、`IVF_HNSW_SQ` 或 `IVF_HNSW_PQ`。 |
 | `Properties` | 包含固定字段集合的索引详情 JSON：顶层为 `metric_type` 和 `target_partition_size`，`compression` 下为 `type`、`num_bits`、`num_sub_vectors` 和 `rotation_type`，`hnsw` 下为 `construction_ef`、`max_connections` 和 `max_level`。键按字典序排列；索引详情不包含以上字段时值为 `{}`。 |
 
 下面的示例展示了一个 `IVF_PQ` 向量索引和一个建立在嵌套字段上的 `BTree` 索引：
@@ -405,6 +407,32 @@ WHERE active
   AND country LIKE 'C%';
 ```
 
+### Runtime Filter 下推
+
+普通 Lance 表参与 Join 时，Doris 可以将 Join 构建端生成的部分 Runtime Filter 转换为 Lance SQL 条件，并在 Lance 读取数据时提前过滤。这可以减少返回给 Doris 的数据量，尤其适合大表与过滤结果较小的表进行 Join 的场景。
+
+```sql
+SELECT l.user_id, l.name
+FROM lance_catalog.default.user_profiles l
+JOIN internal.demo.allowed_users a
+  ON l.user_id = a.user_id;
+```
+
+当前支持下推以下 Runtime Filter：
+
+| Runtime Filter | 下推到 Lance 的形式 |
+|---|---|
+| IN Filter | `column IN (...)` |
+| Min/Max Filter | `column >= min_value`、`column <= max_value`，或两者同时使用 |
+
+Runtime Filter 的列和值必须能够安全转换为 Lance SQL 支持的标量类型。其他 Runtime Filter 类型、包含 `NULL` 的 IN Filter，以及无法安全转换的数据类型或值不会下推。未下推的 Runtime Filter 仍由 Doris 执行，因此不会影响查询结果的正确性，只是无法获得 Lance 侧提前过滤的性能收益。
+
+只有在 Lance Scanner 创建前已经就绪的 Runtime Filter 才能进入该 Scanner 的下推条件。较晚到达的 Runtime Filter 仍会由 Doris 执行，但可能不会下推到已经创建的 Scanner。
+
+Runtime Filter 条件会与普通 SQL 谓词的 Substrait 条件同时生效，而不是相互替换。`EXPLAIN` 中的 `runtime filters` 表示计划中的 Runtime Filter；当至少一个 Runtime Filter 成功下推时，可在 Runtime Profile 中通过 `LanceRuntimeFilterPushedIds` 和 `LanceRuntimeFilterSkippedIds` 查看已下推和未下推的 Filter ID。
+
+Runtime Filter 下推目前只适用于普通 Lance 表扫描，不用于 `vector_search()` 或全文检索的候选生成。
+
 ## 使用文件 TVF 查询 Lance
 
 如果只需要读取一个已知路径的 Lance 数据集，可以不创建 Catalog，直接使用 `s3()` 或 `local()` TVF。`uri` 或 `file_path` 必须指向 Lance 数据集的根目录，而不是其内部的数据文件。
@@ -502,7 +530,7 @@ ORDER BY _distance ASC, user_id;
 
 ### 支持的向量索引类型
 
-当前内置 `lance-c v0.1.6` 明确支持以下 Lance 向量索引组合：
+当前内置 `lance-c v0.1.8` 明确支持以下 Lance 向量索引组合：
 
 | 索引类型 | 说明 | 主要查询参数 |
 |---|---|---|
@@ -531,7 +559,7 @@ ORDER BY _distance ASC, user_id;
 
 1. `float16` 数据数值较大时，使用 `l2` 创建索引可能耗时过长或失败。建议使用数值范围受控的向量；如果建索引失败，可使用 Flat Search，或在业务语义允许时改用 `cosine`。
 2. Lance 将 `uint8` 向量视为二进制向量，只支持 `hamming` 距离。`uint8` 不支持 Product Quantization 或 Scalar Quantization，因此只能使用 `IVF_FLAT` 和 `IVF_HNSW_FLAT`。
-3. `int8` 向量目前不能使用向量索引，只能执行 Flat Search。当前内置的 Lance 版本还存在一个已知问题：检索**可为 NULL** 的 `int8` 向量列可能导致 BE 进程退出。在 Doris 升级到包含 [lance#7498](https://github.com/lance-format/lance/pull/7498) 修复的 `lance-c` 版本前，请避免此类查询。
+3. `int8` 向量目前不能使用向量索引，只能执行 Flat Search。
 
 #### 查询距离类型必须与索引一致
 
@@ -569,18 +597,18 @@ ORDER BY _distance ASC, user_id;
 
 `filter` 中引用的列由 Lance 内部读取和计算；如果该列未被 `SELECT` 或其他 Doris 表达式引用，则不需要返回给 Doris。
 
-### TopN 两阶段读取和延迟物化
+## TopN 两阶段读取和延迟物化
 
-向量搜索通常会生成多于最终 `top_k` 的候选行。如果在搜索阶段就读取 `title`、`payload` 等较宽的输出列，大部分数据会在 TopN 排序后被丢弃。两阶段读取会延迟读取这些列：第一阶段只读取过滤、排序和 TopN 所需的列；全局 TopN 完成后，第二阶段仅为最终保留的行读取其他输出列。
+`vector_search()` 和 `full_text_search()` 通常会生成多于最终 `top_k` 的候选行。如果在搜索阶段就读取 `title`、`payload` 等较宽的输出列，大部分数据会在 TopN 排序后被丢弃。两阶段读取会延迟读取这些列：第一阶段只读取过滤、排序和 TopN 所需的列；全局 TopN 完成后，第二阶段仅为最终保留的行读取其他输出列。
 
 这种方式可以减少存储 I/O、网络传输和内存占用。当 `top_k` 较小、候选较多，或者查询包含较宽的字符串、JSON 等输出列时，收益通常更明显。
 
 | 阶段 | 读取内容 |
 |---|---|
-| 第一阶段 | 向量搜索内部需要的列、`_distance`、Post-filter 和排序使用的列，以及内部 Row Location。 |
+| 第一阶段 | 检索内部需要的列、`_distance` 或 `_score`、Post-filter 和排序使用的列，以及内部 Row Location。 |
 | 第二阶段 | 只为全局 TopN 保留的行读取仅用于最终输出的顶层列。 |
 
-#### 触发条件
+### 触发条件
 
 满足以下条件时，Doris 才会使用两阶段读取：
 
@@ -606,7 +634,7 @@ WHERE category = 'book';
 
 TVF `filter` 中引用的 Prefilter 列由 Lance 在搜索内部使用，不会仅因为出现在 `filter` 字符串中就作为第一阶段结果列返回给 Doris。
 
-#### 关闭两阶段读取
+### 关闭两阶段读取
 
 设置以下会话变量可以关闭两阶段读取：
 
@@ -620,18 +648,70 @@ SET topn_lazy_materialization_threshold = -1;
 - 查询只返回少量窄列，两阶段能够减少的 I/O 很少。
 - 底层存储的随机 Row-ID 读取延迟较高，第二阶段 Fetch 的额外开销超过延迟读取带来的收益。
 
-关闭后只会改变输出列的读取时机，不会禁用向量索引或改变 Prefilter、Post-filter 和 TopN 的语义。建议根据实际查询和存储环境进行开启与关闭的性能对比。
+关闭后只会改变输出列的读取时机，不会禁用向量索引或 FTS 索引，也不会改变 Prefilter、Post-filter 和 TopN 的语义。建议根据实际查询和存储环境进行开启与关闭的性能对比。
+
+## 全文检索
+
+`full_text_search()` 是一个关系型 TVF，它使用 Lance 表中已有的 FTS 倒排索引执行 BM25 检索。Doris 将各个物理 Index Segment 的候选结果合并为全局 Top-K，并在源表列之外增加 `_score` 列；分数越高，相关性越高。
+
+使用前，必须通过 Lance SDK 或其他 Lance 写入端在目标字符串列上创建 FTS 倒排索引。Doris 不会创建索引，也不会在缺少 FTS 索引时回退到逐行全文扫描。
+
+### 语法和示例
+
+下面的查询先在 `category = 'storage'` 的文档中检索 `lance database`，再由 Doris 对候选结果执行 `published = true` 的 Post-filter：
+
+```sql
+SELECT document_id, title, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.documents",
+    "column" = "body",
+    "query" = "lance database",
+    "top_k" = "10",
+    "offset" = "0",
+    "filter" = "category = 'storage'",
+    "coverage_mode" = "strict"
+)
+WHERE published = true
+ORDER BY _score DESC, document_id;
+```
+
+`filter` 是 Lance 在生成 FTS 候选结果前执行的 Prefilter；外层 `WHERE` 是生成候选结果后执行的 Post-filter。Post-filter 不会补充被过滤掉的候选行，因此最终结果可能少于 `top_k`。如果 `published = true` 也必须参与候选生成，应将它合并到 `filter` 中。
+
+返回关系包含源 Lance 表的全部列和可为 `NULL` 的 `FLOAT` 列 `_score`。源表不能已经包含同名列。TVF 内部会按 `_score` 从高到低选取 Top-K，但 SQL 关系不保证最终展示顺序；需要稳定顺序时仍应显式使用 `ORDER BY _score DESC`，并增加唯一列作为同分时的排序键。
+
+### 参数
+
+| 参数 | 是否必需 | 默认值 | 说明 |
+|---|---|---|---|
+| `table` | 是 | - | 完整的三段式 `catalog.database.table` 名称，必须指向 Lance Catalog 中的表。多级 Namespace 的数据库名包含 `.` 时，需要使用反引号引用数据库部分。用户必须拥有该表的 `SELECT` 权限。 |
+| `column` | 是 | - | 已创建 FTS 倒排索引的字符串列，支持 Arrow `utf8` 和 `large_utf8`，在 Doris 中映射为 `TEXT`。 |
+| `query` | 是 | - | 非空的检索文本，按照创建 FTS 索引时配置的分词方式处理。 |
+| `top_k` | 否 | `10` | 跳过 `offset` 后返回的结果数，必须为正整数。 |
+| `offset` | 否 | `0` | 按相关性跳过的结果数，必须为非负整数；`top_k + offset` 不能超过无符号 32 位整数的最大值。 |
+| `filter` | 否 | - | 生成全文检索候选结果前由 Lance 执行的 SQL 条件，即 Prefilter。 |
+| `coverage_mode` | 否 | `strict` | FTS 索引未覆盖当前快照全部 Fragment 时的处理方式，可选值为 `strict` 或 `index_only`。 |
+
+### 索引覆盖模式
+
+| 模式 | 行为 | 适用场景 |
+|---|---|---|
+| `strict` | 要求选中的 FTS 索引覆盖当前查询固定快照中的全部 Fragment；只要存在未覆盖 Fragment，查询就会报错。 | 默认且推荐。用于不能接受遗漏数据的查询。追加数据后，应先更新或重建 FTS 索引再查询。 |
+| `index_only` | 只查询已被 FTS 索引覆盖的 Fragment，忽略未覆盖数据。 | 仅在明确允许结果不完整，并希望在索引更新期间继续提供检索服务时使用。 |
+
+两种模式都要求目标列上存在已提交且覆盖信息完整的 FTS 索引。如果没有可用索引，查询都会失败。一个列上还应只保留一个逻辑 FTS 索引；存在多个匹配索引时，Doris 无法确定应使用哪一个并会报错。
+
+使用 `EXPLAIN` 可以确认执行方式：`lanceFtsCoverageMode` 显示覆盖模式，`lanceSearchIndexSegments` 显示使用的物理 FTS Index Segment 数，`lanceSearchUnindexedFragments` 显示当前快照中未被索引覆盖的 Fragment 数。
 
 ## 当前执行方式
 
-`vector_search()` 的执行顺序如下：
+`vector_search()` 和 `full_text_search()` 的执行顺序如下：
 
 ```text
 固定数据集快照
-  -> FE Split 规划
-       -> 索引覆盖：每个物理 Index Segment 一个 Split -> ANN Search
-       -> 未覆盖或无索引数据：每个 Fragment 一个 Split -> Flat Search
-  -> 每个 Split：Lance Prefilter -> ANN/Flat Search -> 最多 K+n 个候选
+  -> FE 规划检索 Split
+       -> 向量检索：物理向量 Index Segment + 未覆盖 Fragment 的 Flat Search
+       -> 全文检索：物理 FTS Index Segment（按 coverage_mode 检查覆盖情况）
+  -> 每个 Split：Lance Prefilter -> 向量/全文检索 -> 最多 K+n 个候选
   -> Doris Scan Post-filter
   -> Doris 局部 TopN
   -> Exchange
@@ -646,7 +726,9 @@ SET topn_lazy_materialization_threshold = -1;
 - 使用不支持的列类型时，建议显式列出需要读取的列，避免 `SELECT *` 投影到不支持的列。
 - 对普通扫描使用 `EXPLAIN` 检查 `lancePushdownPredicate`，确认目标条件是否已下推。
 - 向量检索前应在 Lance 中创建与查询方式匹配的索引；小数据集或验证场景可以设置 `"use_index" = "false"` 使用 Flat Search。
-- 可以使用 `SHOW INDEX` 查看 Filesystem Catalog 表的 Lance 逻辑索引，例如在执行索引向量检索前确认索引名、索引类型和被索引字段；REST Catalog 不支持 `SHOW INDEX`。
+- 全文检索前必须在 Lance 中创建 FTS 倒排索引。默认的 `strict` 模式会在索引未覆盖当前快照全部 Fragment 时拒绝查询；仅在可接受遗漏数据时使用 `index_only`。
+- 可以使用 `SHOW INDEX` 查看 Filesystem Catalog 表的 Lance 逻辑索引，例如在执行向量或全文检索前确认索引名、索引类型和被索引字段；REST Catalog 不支持 `SHOW INDEX`。
 - 向量查询需要稳定顺序时，显式使用 `ORDER BY _distance ASC` 并增加唯一 Tie-breaker。
-- 需要在向量候选生成前过滤时使用 `vector_search()` 的 `filter`；外层 `WHERE` 只过滤每个搜索 Split 已生成的候选，并在 Doris 全局 TopN 之前执行，应允许其最终结果少于 `top_k`。
-- 使用 `EXPLAIN` 检查 `lanceSearchFragments` 和 `lanceSearchIndexSegments`。前者表示固定快照中的可见 Fragment 数量，后者表示 FE 选择的物理 Index Segment Split 数量；此外还可能存在回退 Fragment Split。
+- 全文查询需要稳定顺序时，显式使用 `ORDER BY _score DESC` 并增加唯一 Tie-breaker。
+- 需要在向量或全文候选生成前过滤时使用 TVF 的 `filter`；外层 `WHERE` 只过滤每个搜索 Split 已生成的候选，并在 Doris 全局 TopN 之前执行，应允许其最终结果少于 `top_k`。
+- 使用 `EXPLAIN` 检查 `lanceSearchFragments` 和 `lanceSearchIndexSegments`。前者表示固定快照中的可见 Fragment 数量，后者表示 FE 选择的物理 Index Segment Split 数量。向量检索还可能包含回退的 Flat Search Fragment Split；全文检索不会回退到 Flat Search。
