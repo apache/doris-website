@@ -41,7 +41,7 @@ Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lan
 | 谓词下推 | 支持将部分静态标量谓词和 Join Runtime Filter 下推到 Lance 执行 |
 | 文件 TVF | 支持通过 `s3()` 和 `local()` 直接查询 Lance 数据集 |
 | 向量检索 | 使用物理 Lance Index Segment 作为并行 Split，对未覆盖的 Fragment 保留 Flat Search Split，并由 Doris 合并全局 Top-K |
-| 全文检索 | 通过 `full_text_search()` 使用已有的 Lance FTS 倒排索引，并由 Doris 合并全局 Top-K |
+| 全文检索 | 通过 `full_text_search()` 使用已有的 Lance FTS 倒排索引，支持 Match OR/AND 和 Phrase 查询，并由 Doris 合并全局 Top-K |
 | 写入 Lance | 暂不支持 |
 | Time Travel | 暂不支持 |
 | Hybrid Search | 暂不支持 |
@@ -652,9 +652,9 @@ SET topn_lazy_materialization_threshold = -1;
 
 ## 全文检索
 
-`full_text_search()` 是一个关系型 TVF，它使用 Lance 表中已有的 FTS 倒排索引执行 BM25 检索。Doris 将各个物理 Index Segment 的候选结果合并为全局 Top-K，并在源表列之外增加 `_score` 列；分数越高，相关性越高。
+`full_text_search()` 是一个关系型 TVF，它使用 Lance 表中已有的 FTS 倒排索引执行 BM25 检索，支持使用 OR 或 AND 组合分词后的查询词，以及按词序和间隔执行 Phrase 查询。Doris 将各个物理 Index Segment 的候选结果合并为全局 Top-K，并在源表列之外增加 `_score` 列；分数越高，相关性越高。
 
-使用前，必须通过 Lance SDK 或其他 Lance 写入端在目标字符串列上创建 FTS 倒排索引。Doris 不会创建索引，也不会在缺少 FTS 索引时回退到逐行全文扫描。
+使用前，必须通过 Lance SDK 或其他 Lance 写入端在目标字符串列上创建 FTS 倒排索引。Phrase 查询还要求索引创建时启用 token position，例如在 Lance 的索引参数中设置 `with_position=true`。Doris 不会创建索引，也不会在缺少 FTS 索引时回退到逐行全文扫描。
 
 ### 语法和示例
 
@@ -666,6 +666,8 @@ FROM full_text_search(
     "table" = "lance_catalog.default.documents",
     "column" = "body",
     "query" = "lance database",
+    "query_type" = "match",
+    "operator" = "and",
     "top_k" = "10",
     "offset" = "0",
     "filter" = "category = 'storage'",
@@ -675,7 +677,22 @@ WHERE published = true
 ORDER BY _score DESC, document_id;
 ```
 
-`filter` 是 Lance 在生成 FTS 候选结果前执行的 Prefilter；外层 `WHERE` 是生成候选结果后执行的 Post-filter。Post-filter 不会补充被过滤掉的候选行，因此最终结果可能少于 `top_k`。如果 `published = true` 也必须参与候选生成，应将它合并到 `filter` 中。
+上例使用 Match AND，只返回同时包含分词结果 `lance` 和 `database` 的文档。`filter` 是 Lance 在生成 FTS 候选结果前执行的 Prefilter；外层 `WHERE` 是生成候选结果后执行的 Post-filter。Post-filter 不会补充被过滤掉的候选行，因此最终结果可能少于 `top_k`。如果 `published = true` 也必须参与候选生成，应将它合并到 `filter` 中。
+
+下面的查询使用 Phrase，并允许相邻查询词之间最多存在一个其他 token。例如，它可以匹配 `lance search engine`：
+
+```sql
+SELECT document_id, title, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.documents",
+    "column" = "body",
+    "query" = "lance engine",
+    "query_type" = "phrase",
+    "slop" = "1",
+    "top_k" = "10"
+)
+ORDER BY _score DESC, document_id;
+```
 
 返回关系包含源 Lance 表的全部列和可为 `NULL` 的 `FLOAT` 列 `_score`。源表不能已经包含同名列。TVF 内部会按 `_score` 从高到低选取 Top-K，但 SQL 关系不保证最终展示顺序；需要稳定顺序时仍应显式使用 `ORDER BY _score DESC`，并增加唯一列作为同分时的排序键。
 
@@ -686,10 +703,23 @@ ORDER BY _score DESC, document_id;
 | `table` | 是 | - | 完整的三段式 `catalog.database.table` 名称，必须指向 Lance Catalog 中的表。多级 Namespace 的数据库名包含 `.` 时，需要使用反引号引用数据库部分。用户必须拥有该表的 `SELECT` 权限。 |
 | `column` | 是 | - | 已创建 FTS 倒排索引的字符串列，支持 Arrow `utf8` 和 `large_utf8`，在 Doris 中映射为 `TEXT`。 |
 | `query` | 是 | - | 非空的检索文本，按照创建 FTS 索引时配置的分词方式处理。 |
+| `query_type` | 否 | `match` | 查询类型，可选值为 `match` 或 `phrase`。 |
+| `operator` | 否 | `or` | 仅用于 Match 查询。`or` 表示至少命中一个查询词，`and` 表示命中全部查询词。Phrase 查询不能设置该参数。 |
+| `slop` | 否 | `0` | 仅用于 Phrase 查询，必须是 `0` 到 `2147483647` 之间的整数。`0` 要求精确短语，正数表示相邻查询词之间允许存在的最大 token 数。Match 查询不能设置该参数。 |
 | `top_k` | 否 | `10` | 跳过 `offset` 后返回的结果数，必须为正整数。 |
 | `offset` | 否 | `0` | 按相关性跳过的结果数，必须为非负整数；`top_k + offset` 不能超过无符号 32 位整数的最大值。 |
 | `filter` | 否 | - | 生成全文检索候选结果前由 Lance 执行的 SQL 条件，即 Prefilter。 |
 | `coverage_mode` | 否 | `strict` | FTS 索引未覆盖当前快照全部 Fragment 时的处理方式，可选值为 `strict` 或 `index_only`。 |
+
+### 查询类型
+
+| 查询类型 | 匹配行为 | 相关参数 | 索引要求 |
+|---|---|---|---|
+| Match OR | 至少命中一个分词后的查询词；这是默认行为。 | `query_type=match`、`operator=or` | 普通 FTS 倒排索引。 |
+| Match AND | 必须命中全部分词后的查询词。 | `query_type=match`、`operator=and` | 普通 FTS 倒排索引。 |
+| Phrase | 查询词必须保持分词后的顺序，并满足 `slop` 指定的间隔。 | `query_type=phrase`、`slop=N` | FTS 索引必须保存 token position。 |
+
+当前不支持 Boolean、Boost、Prefix、Wildcard、Regex 或跨多个字段组合的 FTS 查询。
 
 ### 索引覆盖模式
 
@@ -700,7 +730,7 @@ ORDER BY _score DESC, document_id;
 
 两种模式都要求目标列上存在已提交且覆盖信息完整的 FTS 索引。如果没有可用索引，查询都会失败。一个列上还应只保留一个逻辑 FTS 索引；存在多个匹配索引时，Doris 无法确定应使用哪一个并会报错。
 
-使用 `EXPLAIN` 可以确认执行方式：`lanceFtsCoverageMode` 显示覆盖模式，`lanceSearchIndexSegments` 显示使用的物理 FTS Index Segment 数，`lanceSearchUnindexedFragments` 显示当前快照中未被索引覆盖的 Fragment 数。
+使用 `EXPLAIN` 可以确认执行方式：`lanceFtsQueryType` 显示 Match 或 Phrase，`lanceFtsMatchOperator` 显示 Match 的 OR/AND 操作符，`lanceFtsPhraseSlop` 显示 Phrase 间隔；`lanceFtsCoverageMode` 显示覆盖模式，`lanceSearchIndexSegments` 显示使用的物理 FTS Index Segment 数，`lanceSearchUnindexedFragments` 显示当前快照中未被索引覆盖的 Fragment 数。
 
 ## 当前执行方式
 
@@ -727,6 +757,7 @@ ORDER BY _score DESC, document_id;
 - 对普通扫描使用 `EXPLAIN` 检查 `lancePushdownPredicate`，确认目标条件是否已下推。
 - 向量检索前应在 Lance 中创建与查询方式匹配的索引；小数据集或验证场景可以设置 `"use_index" = "false"` 使用 Flat Search。
 - 全文检索前必须在 Lance 中创建 FTS 倒排索引。默认的 `strict` 模式会在索引未覆盖当前快照全部 Fragment 时拒绝查询；仅在可接受遗漏数据时使用 `index_only`。
+- Phrase 查询要求 FTS 索引保存 token position；如果需要 Phrase 能力，应在创建索引时设置 `with_position=true`。
 - 可以使用 `SHOW INDEX` 查看 Filesystem Catalog 表的 Lance 逻辑索引，例如在执行向量或全文检索前确认索引名、索引类型和被索引字段；REST Catalog 不支持 `SHOW INDEX`。
 - 向量查询需要稳定顺序时，显式使用 `ORDER BY _distance ASC` 并增加唯一 Tie-breaker。
 - 全文查询需要稳定顺序时，显式使用 `ORDER BY _score DESC` 并增加唯一 Tie-breaker。

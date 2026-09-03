@@ -41,7 +41,7 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 | Predicate pushdown | Supports pushing compatible static scalar predicates and join Runtime Filters down to Lance |
 | File TVFs | Supports querying Lance datasets directly through `s3()` and `local()` |
 | Vector search | Uses physical Lance index segments as parallel splits, keeps uncovered Fragments as Flat Search splits, and performs a Doris global Top-K merge |
-| Full-text search | Uses existing Lance FTS inverted indexes through `full_text_search()` and performs a Doris global Top-K merge |
+| Full-text search | Uses existing Lance FTS inverted indexes through `full_text_search()`, supports Match OR/AND and Phrase queries, and performs a Doris global Top-K merge |
 | Writing to Lance | Not supported |
 | Time Travel | Not supported |
 | Hybrid Search | Not supported |
@@ -652,9 +652,9 @@ Disabling this optimization changes only when output columns are read. It does n
 
 ## Full-Text Search
 
-`full_text_search()` is a relational TVF that performs BM25 retrieval through an existing FTS inverted index on a Lance table. Doris merges candidates from the physical index segments into a global Top-K and adds `_score` to the source columns. A higher score means greater relevance.
+`full_text_search()` is a relational TVF that performs BM25 retrieval through an existing FTS inverted index on a Lance table. It supports combining analyzed query terms with OR or AND and matching their order and distance with Phrase queries. Doris merges candidates from the physical index segments into a global Top-K and adds `_score` to the source columns. A higher score means greater relevance.
 
-Before using the TVF, create an FTS inverted index on the target string column with the Lance SDK or another Lance writer. Doris does not create this index and does not fall back to a row-by-row full-text scan when no FTS index is available.
+Before using the TVF, create an FTS inverted index on the target string column with the Lance SDK or another Lance writer. Phrase queries also require token positions to be enabled when the index is created, for example by setting `with_position=true` in the Lance index parameters. Doris does not create this index and does not fall back to a row-by-row full-text scan when no FTS index is available.
 
 ### Syntax and Example
 
@@ -666,6 +666,8 @@ FROM full_text_search(
     "table" = "lance_catalog.default.documents",
     "column" = "body",
     "query" = "lance database",
+    "query_type" = "match",
+    "operator" = "and",
     "top_k" = "10",
     "offset" = "0",
     "filter" = "category = 'storage'",
@@ -675,7 +677,22 @@ WHERE published = true
 ORDER BY _score DESC, document_id;
 ```
 
-The `filter` property is a Prefilter that Lance evaluates before generating FTS candidates. The outer `WHERE` is a Post-filter evaluated after candidate generation. A Post-filter does not replenish removed candidates, so the final result can contain fewer than `top_k` rows. If `published = true` must affect candidate generation, include it in `filter` instead.
+This example uses Match AND, so a document must contain both analyzed terms, `lance` and `database`. The `filter` property is a Prefilter that Lance evaluates before generating FTS candidates. The outer `WHERE` is a Post-filter evaluated after candidate generation. A Post-filter does not replenish removed candidates, so the final result can contain fewer than `top_k` rows. If `published = true` must affect candidate generation, include it in `filter` instead.
+
+The following Phrase query permits at most one intervening token between adjacent query terms. For example, it can match `lance search engine`:
+
+```sql
+SELECT document_id, title, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.documents",
+    "column" = "body",
+    "query" = "lance engine",
+    "query_type" = "phrase",
+    "slop" = "1",
+    "top_k" = "10"
+)
+ORDER BY _score DESC, document_id;
+```
 
 The returned relation contains every column from the source Lance table and a nullable `FLOAT` column named `_score`. The source table must not already contain a column with this name. The TVF selects its Top-K by descending `_score`, but a SQL relation does not guarantee final display order. Use `ORDER BY _score DESC` explicitly when stable ordering is required, and add a unique tie-breaker for equal scores.
 
@@ -686,10 +703,23 @@ The returned relation contains every column from the source Lance table and a nu
 | `table` | Yes | - | Fully qualified, three-part `catalog.database.table` name identifying a table in a Lance Catalog. If a multilevel Namespace maps to a database name containing `.`, quote the database part with backticks. The user must have the `SELECT` privilege on the table. |
 | `column` | Yes | - | String column with an FTS inverted index. Arrow `utf8` and `large_utf8`, which map to Doris `TEXT`, are supported. |
 | `query` | Yes | - | Non-empty search text. It is processed with the tokenizer configured when the FTS index was created. |
+| `query_type` | No | `match` | Query type. Valid values are `match` and `phrase`. |
+| `operator` | No | `or` | Match queries only. `or` requires at least one query term to match; `and` requires every query term to match. Phrase queries cannot set this parameter. |
+| `slop` | No | `0` | Phrase queries only. It must be an integer from `0` through `2147483647`. `0` requires an exact phrase; a positive value is the maximum number of intervening tokens permitted between adjacent query terms. Match queries cannot set this parameter. |
 | `top_k` | No | `10` | Number of results returned after skipping `offset`. It must be a positive integer. |
 | `offset` | No | `0` | Number of results skipped by relevance. It must be a non-negative integer, and `top_k + offset` must not exceed the maximum unsigned 32-bit integer. |
 | `filter` | No | - | Lance SQL condition evaluated before full-text candidates are generated; that is, a Prefilter. |
 | `coverage_mode` | No | `strict` | Behavior when the FTS index does not cover every Fragment in the current snapshot. Valid values are `strict` and `index_only`. |
+
+### Query Types
+
+| Query type | Matching behavior | Related parameters | Index requirement |
+|---|---|---|---|
+| Match OR | Matches at least one analyzed query term. This is the default. | `query_type=match`, `operator=or` | A standard FTS inverted index. |
+| Match AND | Matches every analyzed query term. | `query_type=match`, `operator=and` | A standard FTS inverted index. |
+| Phrase | Preserves the analyzed query-term order and applies the distance specified by `slop`. | `query_type=phrase`, `slop=N` | The FTS index must store token positions. |
+
+Boolean, Boost, Prefix, Wildcard, Regex, and cross-field compound FTS queries are not currently supported.
 
 ### Index Coverage Modes
 
@@ -700,7 +730,7 @@ The returned relation contains every column from the source Lance table and a nu
 
 Both modes require a committed FTS index with complete coverage metadata on the target column. A query fails if no usable index exists. Keep only one logical FTS index on a column; if multiple indexes match, Doris cannot select one unambiguously and rejects the query.
 
-Use `EXPLAIN` to verify execution: `lanceFtsCoverageMode` shows the coverage mode, `lanceSearchIndexSegments` shows the number of physical FTS index segments used, and `lanceSearchUnindexedFragments` shows how many Fragments in the current snapshot are not covered by the index.
+Use `EXPLAIN` to verify execution: `lanceFtsQueryType` shows Match or Phrase, `lanceFtsMatchOperator` shows the Match OR/AND operator, and `lanceFtsPhraseSlop` shows the Phrase distance. `lanceFtsCoverageMode` shows the coverage mode, `lanceSearchIndexSegments` shows the number of physical FTS index segments used, and `lanceSearchUnindexedFragments` shows how many Fragments in the current snapshot are not covered by the index.
 
 ## Current Execution Model
 
@@ -727,6 +757,7 @@ Pinned dataset snapshot
 - For regular scans, inspect `lancePushdownPredicate` in `EXPLAIN` to verify which conditions have been pushed down.
 - Create a vector index in Lance that matches the intended query before running indexed vector search. For small datasets or validation, set `"use_index" = "false"` to perform Flat Search.
 - Create an FTS inverted index in Lance before full-text search. The default `strict` mode rejects a query when the index does not cover every Fragment in the current snapshot; use `index_only` only when omitted data is acceptable.
+- Phrase queries require the FTS index to store token positions. Set `with_position=true` when creating the index if Phrase queries are required.
 - Use `SHOW INDEX` on a Filesystem Catalog table to inspect its logical Lance indexes, for example to verify the index name, type, and indexed fields before vector or full-text search. `SHOW INDEX` is not supported for REST Catalogs.
 - For deterministic vector result ordering, explicitly use `ORDER BY _distance ASC` and add a unique tie-breaker.
 - For deterministic full-text result ordering, explicitly use `ORDER BY _score DESC` and add a unique tie-breaker.
