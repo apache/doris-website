@@ -670,6 +670,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/best-practices/doris-dlf-paimon',
                             ],
                         },
+                        'lakehouse/catalogs/fluss-catalog',
                         {
                             type: 'category',
                             label: 'Hudi Catalog',
