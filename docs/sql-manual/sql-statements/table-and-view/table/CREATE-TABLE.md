@@ -63,6 +63,7 @@ columns_definition
       [ AUTO_INCREMENT(<col_auto_increment_start_value>) ]
       [ DEFAULT <col_default_value> ]
       [ ON UPDATE CURRENT_TIMESTAMP (<col_on_update_precision>) ]
+      [ COMPRESSION <algorithm> [ (<level>) ] ]
       [ COMMENT '<col_comment>' ]
     -- Additional column definitions
     [ , <col_name> <col_type> [ ... ] ]
@@ -257,6 +258,10 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 **ON UPDATE CURRENT_TIMESTAMP (<col_on_update_precision>)**
 
 > When data is updated, if no value is specified for this column, the current timestamp is used to update the data in this column. Can only be used on tables with a UNIQUE (primary key model).
+
+**COMPRESSION \<algorithm\> [ (\<level\>) ]**
+
+> Overrides the table-level compression algorithm for this column. This clause is supported only for OLAP tables and can be specified only in `CREATE TABLE`. Supported algorithms are `NO_COMPRESSION`, `LZ4`, `LZ4F`, `LZ4HC`, `ZLIB`, `ZSTD`, and `SNAPPY`. Compression levels are optional and are supported only for ZSTD (`1` to `22`) and LZ4HC (`1` to `12`). For restrictions and examples, see [Data Compression](../../../../table-design/column-compression.md).
 
 ### Index Related Parameters
 
