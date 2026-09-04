@@ -1,5 +1,5 @@
 ---
-title: Review and CI
+title: 代码评审和准入
 language: zh-CN
 description: Apache Doris Pull Request 提交后的 Review、CI 触发、问题修复与合入流程。
 keywords:
