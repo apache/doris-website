@@ -18,7 +18,7 @@ Doris supports two types of schema change operations: lightweight schema change 
 | Data Rewrite Needed  | No                        | Yes, involves rewriting data files |
 | System Performance Impact | Minimal               | May impact system performance, especially during data conversion |
 | Resource Consumption  | Low                       | High, will consume computing resources to reorganize data, and the storage space occupied by the table's data involved in the process will double. |
-| Operation Types      | Add, delete value columns, rename columns, modify VARCHAR length | Modify column data types, change primary keys, modify column order, etc. |
+| Operation Types      | Add, delete value columns, rename columns, modify VARCHAR length | Modify column data types, change NOT NULL to NULL, change primary keys, modify column order, etc. |
 
 ### Lightweight Schema Change
 
@@ -33,6 +33,7 @@ Lightweight schema change refers to simple schema modification operations that d
 Heavyweight schema change involves rewriting or converting data files, and these operations are relatively complex, usually requiring the assistance of Doris's Backend (BE) to perform actual data modifications or reorganizations. Heavyweight schema change operations typically involve deep changes to the table's data structure and may affect the physical layout of storage. All operations that do not support lightweight schema changes fall under heavyweight schema changes, such as:
 
 - Changing the data type of a column
+- Changing a column from NOT NULL to NULL
 - Modifying the order of columns
 
 Heavyweight operations will start a task in the background for data conversion. The background task will convert each tablet of the table, rewriting the original data into new data files on a tablet basis. During the data conversion process, a "double write" phenomenon may occur, where new data is simultaneously written to both the new tablet and the old tablet. After the data conversion is complete, the old tablet will be deleted, and the new tablet will replace it.
@@ -199,7 +200,9 @@ ALTER TABLE example_db.my_table DROP COLUMN col4;
 
 - If a non-aggregate type modifies a key column, the **KEY** keyword must be specified.
 
-- Only the type of the column can be modified; other attributes of the column must remain the same.
+- When modifying column **type**, the aggregation method and default value must stay the same as the original column.
+
+- Changing a column from **NOT NULL to NULL** is supported and runs as a heavyweight Schema Change. Changing from **NULL to NOT NULL** is not supported.
 
 - Partition columns and bucket columns cannot be modified.
 
@@ -255,13 +258,20 @@ ALTER TABLE example_db.my_table
 MODIFY COLUMN col5 VARCHAR(64) REPLACE DEFAULT "abc";
 ```
 
-Note: Only the type of the column can be modified; other attributes of the column must remain the same.
+Note: Only the VARCHAR length changes; aggregation method and default value must remain unchanged.
 
 4. Modify the length of a field in a key column
 
 ```sql
 ALTER TABLE example_db.my_table
 MODIFY COLUMN col3 varchar(50) KEY NULL comment 'to 50';
+```
+
+5. Change a column from NOT NULL to NULL (heavyweight Schema Change)
+
+```sql
+ALTER TABLE example_db.my_table
+MODIFY COLUMN col2 INT NULL;
 ```
 
 ### Reorder
@@ -303,11 +313,11 @@ ORDER BY (k3,k1,k2,k4,v2,v1);
 
 - Because historical data has lost detailed information, the value of the default cannot actually reflect the aggregated value.
 
-- When modifying column types, all fields except Type must be supplemented with the original column's information.
+- When modifying column types, the aggregation method and default value must match the original column information.
 
-- Note that, except for the new column type, aggregation method, Nullable attribute, and default value must be supplemented according to the original information.
+- Changing **NOT NULL to NULL** is supported (heavyweight Schema Change). Changing **NULL to NOT NULL** is not supported.
 
-- Modifying aggregation types, Nullable attributes, and default values is not supported.
+- Modifying aggregation types or default values is not supported.
 
 ## Related Configurations
 

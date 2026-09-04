@@ -33,7 +33,7 @@ Doris supports two types of Schema Change operations: **lightweight** and **heav
 | Requires data rewrite    | No, only metadata is modified                                | Yes, involves rewriting data files                                                   |
 | System performance impact | Small impact                                                 | May affect system performance, especially during data conversion                     |
 | Resource consumption     | Low                                                          | High, occupies compute resources; storage usage of table data doubles during the process |
-| Typical operations       | Add / drop value columns, rename columns, modify VARCHAR length | Modify column data types, change primary keys, modify column order, etc.            |
+| Typical operations       | Add / drop value columns, rename columns, modify VARCHAR length | Modify column data types, change NOT NULL to NULL, change primary keys, modify column order, etc. |
 
 ### Lightweight Schema Change
 
@@ -48,6 +48,7 @@ Doris supports two types of Schema Change operations: **lightweight** and **heav
 **Involves rewriting or converting data files**, with the actual modification or reorganization performed by the Backend (BE) in the background. All operations not in the lightweight category are heavyweight, for example:
 
 - Modifying the data type of a column.
+- Changing a column from NOT NULL to NULL.
 - Modifying the sort order of columns.
 
 Execution flow:
@@ -201,7 +202,8 @@ Notes:
 
 - When modifying a value column in an aggregate model, you must specify `agg_type`.
 - When modifying a key column in a non-aggregate model, you must specify the `KEY` keyword.
-- You can only modify the type of a column. Other column attributes must remain unchanged.
+- When modifying column **type**, the aggregation method and default value must stay the same as the original column.
+- Changing a column from **NOT NULL to NULL** is supported and runs as a heavyweight Schema Change. Changing from **NULL to NOT NULL** is not supported.
 - **Partition columns and bucketing columns cannot be modified in any way.**
 - Pay attention to precision loss when modifying columns. For supported type conversions, see [Supported Type Conversions](#supported-type-conversions) below.
 
@@ -228,7 +230,7 @@ Example:
     MODIFY COLUMN col1 BIGINT KEY DEFAULT "1" AFTER col2;
     ```
 
-3. Modify the maximum length of the `col5` column in the base table. The original `col5` is `VARCHAR(32) REPLACE DEFAULT "abc"` (you can only modify the column type; other attributes must remain unchanged):
+3. Modify the maximum length of the `col5` column in the base table. The original `col5` is `VARCHAR(32) REPLACE DEFAULT "abc"` (only the VARCHAR length changes; aggregation method and default value must remain unchanged):
 
     ```sql
     ALTER TABLE example_db.my_table
@@ -240,6 +242,13 @@ Example:
     ```sql
     ALTER TABLE example_db.my_table
     MODIFY COLUMN col3 varchar(50) KEY NULL COMMENT 'to 50';
+    ```
+
+5. Change a column from NOT NULL to NULL (heavyweight Schema Change):
+
+    ```sql
+    ALTER TABLE example_db.my_table
+    MODIFY COLUMN col2 INT NULL;
     ```
 
 #### Supported Type Conversions
@@ -330,8 +339,9 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 | **Immutable columns**  | Partition columns and bucketing columns cannot be modified                                                                       |
 | **Key column deletion** | When an aggregate table contains value columns aggregated with REPLACE, key columns cannot be deleted; key columns of a Unique table also cannot be deleted |
 | **Aggregate default value** | When adding a SUM or REPLACE type value column, because the historical data has lost its detail information, the default value cannot actually reflect the post-aggregation value and is meaningless for historical data |
-| **Type modification**  | Only the column type can be modified; other fields such as the aggregation method, Nullable, and default value must be filled in according to the original column information |
-| **Unsupported modifications** | Modifying the aggregation type, Nullable attribute, and default value is not supported                                  |
+| **Type modification**  | When modifying column type, the aggregation method and default value must match the original column information |
+| **Nullable modification** | Changing NOT NULL to NULL is supported (heavyweight Schema Change). Changing NULL to NOT NULL is not supported |
+| **Unsupported modifications** | Modifying the aggregation type or default value is not supported |
 
 ## Related Configuration
 
