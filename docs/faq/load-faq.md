@@ -72,6 +72,9 @@ curl --location-trusted -u root:"" \
     http://127.0.0.1:8030/api/db/loadtest/_stream_load
 ```
 
+### Confluent Import Configuration Optimization
+When using Confluent to import data into Doris, you need to adjust `buffer.count.records`. The default value is 10000, which can be increased to 50000 or larger; `buffer.size.bytes` can be increased to 100000000 or larger.
+
 ## Routine Load 
 
 ### Major Bug Fixes
