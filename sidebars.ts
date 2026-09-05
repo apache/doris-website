@@ -173,6 +173,7 @@ const sidebars: SidebarsConfig = {
                         'connection-integration/data-integration/kettle',
                         'connection-integration/data-integration/kyuubi',
                         'connection-integration/data-integration/langfuse',
+                        'connection-integration/data-integration/libredb-studio',
                         'connection-integration/data-integration/logstash',
                         'connection-integration/data-integration/loongcollector',
                         'connection-integration/data-integration/metabase',
