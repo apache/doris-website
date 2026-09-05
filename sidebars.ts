@@ -648,6 +648,7 @@ const sidebars: SidebarsConfig = {
                             label: 'Iceberg Catalog',
                             link: {type: 'doc', id: 'lakehouse/catalogs/iceberg-catalog'},
                             items: [
+                                'lakehouse/best-practices/doris-iceberg-capability-matrix',
                                 'lakehouse/best-practices/doris-iceberg',
                                 'lakehouse/best-practices/doris-aws-s3tables',
                                 'lakehouse/best-practices/doris-aliyun-oss-tables',
@@ -667,6 +668,7 @@ const sidebars: SidebarsConfig = {
                             label: 'Paimon Catalog',
                             link: {type: 'doc', id: 'lakehouse/catalogs/paimon-catalog'},
                             items: [
+                                'lakehouse/best-practices/doris-paimon-capability-matrix',
                                 'lakehouse/best-practices/doris-paimon',
                                 'lakehouse/best-practices/doris-dlf-paimon',
                             ],
