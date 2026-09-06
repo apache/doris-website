@@ -233,6 +233,10 @@ CREATE TABLE <table_name> LIKE <source_table>
 
 > 分桶列和分桶数。明细模型的分桶列可以是任意的列，聚合模型和主键模型的分桶列必须和 key 列保持一致。分桶数是任意的正整数。有关分桶的详细信息，请参阅[手动分桶](../../../../table-design/data-partitioning/data-bucketing#手动设置分桶数)和[自动分桶](../../../../table-design/data-partitioning/data-bucketing#自动设置分桶数)章节。
 
+**distribution_hash_type**
+
+> 可选的 Hash 分桶算法。支持 `crc32` 和 `identity`，默认值为 `crc32`。算法在建表后不可修改，新增分区会继承该属性，同一 Colocation Group 中的所有表必须使用相同算法。完整映射规则、兼容性要求和选型建议请参阅[选择 Hash 算法](../../../../table-design/data-partitioning/data-bucketing#选择-hash-算法)。
+
 ### 列的默认值相关参数
 
 **[ GENERATED ALWAYS ] AS (<col_generate_expression>)**
@@ -354,6 +358,7 @@ rollup 可以创建的同步物化视图功能有限。已不再推荐使用。�
 | storage_medium                                | 声明表数据的初始存储介质                                     |
 | storage_cooldown_time                         | 设定表数据的初始存储介质的到期时间。超过此时间后，会自动降级到第一级别的存储介质上。 |
 | colocate_with                                 | 当需要使用 Colocation Join 功能时，使用这个参数设置 Colocation Group。 |
+| distribution_hash_type                       | Hash 分桶算法。支持 `crc32`（默认）和 `identity`。该属性仅对 `DISTRIBUTED BY HASH` 有效，建表后不可修改。 |
 | bloom_filter_columns                          | 用户指定需要添加 Bloom Filter 索引的列名称列表。各个列的 Bloom Filter 索引是独立的，并不是组合索引。列如：`"bloom_filter_columns" = "k1, k2, k3"` |
 | compression                                   | Doris 表的默认压缩方式是 LZ4。1.1 版本后，支持将压缩方式指定为 ZSTD 以获得更高的压缩比。 |
 | function_column.sequence_col                  | 当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换) 。`function_column.sequence_col`用来指定 sequence 列到表中某一列的映射，该列可以为整型和时间类型（`DATE`、`DATETIME`、`TIMESTAMP_NS`），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。 |
@@ -406,6 +411,7 @@ rollup 可以创建的同步物化视图功能有限。已不再推荐使用。�
   - 一个表必须指定分桶列，但可以不指定分区。关于分区和分桶的具体介绍，可参阅 [数据划分](../../../../table-design/data-partitioning/auto-partitioning.md) 文档。
   - Doris 中的表可以分为分区表和无分区的表。这个属性在建表时确定，之后不可更改。即对于分区表，可以在之后的使用过程中对分区进行增删操作，而对于无分区的表，之后不能再进行增加分区等操作。
   - 分区列和分桶列在表创建之后不可更改，既不能更改分区和分桶列的类型，也不能对这些列进行任何增删操作。
+  - Hash 分桶算法在建表后不可修改，新增分区会继承表级 `distribution_hash_type`。
 - 动态分区
   - 动态分区功能主要用于帮助用户自动的管理分区。通过设定一定的规则，Doris 系统定期增加新的分区或删除历史分区。可参阅 [动态分区](../../../../table-design/data-partitioning/dynamic-partitioning.md) 文档查看更多帮助。
 - 自动分区

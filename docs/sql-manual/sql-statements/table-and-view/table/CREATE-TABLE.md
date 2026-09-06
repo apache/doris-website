@@ -231,6 +231,10 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 
 > Bucketing columns and bucket counts. Detail model bucket columns can be any columns, aggregation model and primary key model bucket columns must be consistent with key columns. Bucket count is any positive integer. For details on bucketing, see the [Manual Bucketing](../../../../table-design/data-partitioning/data-bucketing#1-manually-set-the-number-of-buckets) and [Automatic Bucketing](../../../../table-design/data-partitioning/data-bucketing#2-automatically-set-the-number-of-buckets) sections.
 
+**distribution_hash_type**
+
+> Optional Hash bucketing algorithm. Valid values are `crc32` and `identity`; the default is `crc32`. The algorithm is fixed after table creation, inherited by new partitions, and must be identical for all tables in the same Colocation Group. For the complete mapping rules, compatibility requirements, and selection guidance, see [Choose the Hash Algorithm](../../../../table-design/data-partitioning/data-bucketing#choose-the-hash-algorithm).
+
 ### Column Default Value Related Parameters
 
 **[ GENERATED ALWAYS ] AS (<col_generate_expression>)**
@@ -353,6 +357,7 @@ The functionality of creating synchronized materialized views with rollup is lim
 | storage_medium | Declares the initial storage medium for table data. |
 | storage_cooldown_time | Sets the expiration time for the initial storage medium of the table data. After this time, it will automatically downgrade to the first-level storage medium. |
 | colocate_with | When the Colocation Join feature is needed, use this parameter to set the Colocation Group. |
+| distribution_hash_type | Hash bucketing algorithm. Valid values are `crc32` (default) and `identity`. This property is valid only with `DISTRIBUTED BY HASH` and cannot be changed after table creation. |
 | bloom_filter_columns | A list of column names specified by the user that require the addition of a Bloom Filter index. Each column's Bloom Filter index is independent and not a composite index. For example: `"bloom_filter_columns" = "k1, k2, k3"` |
 | compression | The default compression method for Doris tables is LZ4. After version 1.1, support for specifying ZSTD as the compression method is available for higher compression ratios. |
 | function_column.sequence_col | When using the Unique Key model, you can specify a Sequence column. When Key columns are the same, REPLACE will be performed according to the Sequence column (the larger value replaces the smaller value; otherwise, it cannot be replaced). `function_column.sequence_col` is used to map the sequence column to a specific column in the table, which can be of integer or date/time types (`DATE`, `DATETIME`, `TIMESTAMP_NS`). The type of this column cannot be changed after creation. If `function_column.sequence_col` is set, `function_column.sequence_type` will be ignored. |
@@ -406,6 +411,7 @@ The [user](../../../../admin-manual/auth/authentication-and-authorization.md) ex
   - A table must specify bucketing columns but can opt out of specifying partitions. For detailed information on partitioning and bucketing, refer to the [Data Partitioning](../../../../table-design/data-partitioning/data-bucketing.md) documentation.
   - Tables in Doris can be either partitioned or non-partitioned. This attribute is determined at table creation and cannot be changed afterward. That is, for partitioned tables, partitions can be added or removed in subsequent use, while non-partitioned tables cannot have partitions added later.
   - Partition and bucket columns cannot be altered after table creation; neither the types of partition and bucket columns can be changed nor can these columns be added or removed.
+  - The Hash bucketing algorithm cannot be altered after table creation. New partitions inherit the table-level `distribution_hash_type`.
 - Dynamic Partitioning
   - The dynamic partitioning feature is primarily used to help users manage partitions automatically. By setting certain rules, the Doris system periodically adds new partitions or removes old ones. For more assistance, refer to the [Dynamic Partitioning](../../../../table-design/data-partitioning/dynamic-partitioning.md) documentation.
 - Automatic Partitioning
