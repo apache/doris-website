@@ -973,7 +973,7 @@ BaseCompaction:546859:
 #### `enable_kuromoji_analyzer`
 
 * 类型：bool
-* 描述：是否启用 kuromoji（日文）倒排索引分词器。当为 `false` 时,创建或查询带有 `"parser" = "kuromoji"` 的索引会报错,并提示需要开启此配置。
+* 描述：是否启用 kuromoji（日文）倒排索引分词器。当为 `false` 时,创建或查询带有 `"parser" = "kuromoji"` 的索引会报错,并提示需要开启此配置。自 Doris 5.0.0 版本起支持。
 * 默认值：false
 
 #### `default_num_rows_per_column_file_block`

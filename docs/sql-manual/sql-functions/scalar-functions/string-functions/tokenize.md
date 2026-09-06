@@ -103,7 +103,7 @@ SELECT TOKENIZE("中华人民共和国国歌", '"built_in_analyzer"="ik"');
 ```
 
 ```sql
--- Using the kuromoji analyzer for Japanese text
+-- Using the kuromoji analyzer for Japanese text (supported since Doris 5.0.0)
 -- In the default search mode, the compound noun is also broken into its parts
 SELECT TOKENIZE("関西国際空港", '"built_in_analyzer"="kuromoji"');
 ```
@@ -149,7 +149,7 @@ SELECT TOKENIZE("Hello World", '"built_in_analyzer"="standard", "support_phrase"
    - `standard`: Standard analyzer for general text
    - `english`: English language analyzer with stemming
    - `chinese`: Chinese text analyzer
-   - `kuromoji`: Japanese morphological analyzer (`parser_mode`: `search`, `normal`, `extended`). Disabled by default — set `enable_kuromoji_analyzer = true` in `be.conf` to use it.
+   - `kuromoji`: Japanese morphological analyzer (`parser_mode`: `search`, `normal`, `extended`). Supported since Doris 5.0.0, and disabled by default — set `enable_kuromoji_analyzer = true` in `be.conf` to use it.
    - `unicode`: Unicode-based analyzer for multilingual text
    - `icu`: ICU-based analyzer for advanced Unicode processing
    - `basic`: Basic tokenization

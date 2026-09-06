@@ -103,7 +103,7 @@ SELECT TOKENIZE("中华人民共和国国歌", '"built_in_analyzer"="ik"');
 ```
 
 ```sql
--- 使用 kuromoji 分词器处理日文文本
+-- 使用 kuromoji 分词器处理日文文本（自 Doris 5.0.0 版本起支持）
 -- 在默认的 search 模式下,复合词也会被拆分为各个组成部分
 SELECT TOKENIZE("関西国際空港", '"built_in_analyzer"="kuromoji"');
 ```
@@ -149,7 +149,7 @@ SELECT TOKENIZE("Hello World", '"built_in_analyzer"="standard", "support_phrase"
    - `standard`: 标准分词器,用于通用文本
    - `english`: 带词干提取的英语分词器
    - `chinese`: 中文文本分词器
-   - `kuromoji`: 日文形态素分词器(`parser_mode`: `search`、`normal`、`extended`)。默认关闭 —— 需在 `be.conf` 中设置 `enable_kuromoji_analyzer = true` 才能使用。
+   - `kuromoji`: 日文形态素分词器(`parser_mode`: `search`、`normal`、`extended`)。自 Doris 5.0.0 版本起支持，默认关闭 —— 需在 `be.conf` 中设置 `enable_kuromoji_analyzer = true` 才能使用。
    - `unicode`: 基于Unicode的多语言文本分词器
    - `icu`: 基于ICU的高级Unicode处理分词器
    - `basic`: 基础分词
