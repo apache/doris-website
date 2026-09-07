@@ -34,6 +34,8 @@ under the License.
 
 After opening a Pull Request (PR), a contributor must complete code review, CI checks, and any required fixes before the PR can be merged. This guide covers the complete process from opening a PR through merge. To learn how to open a PR, see the [Pull Request guide](./pull-request.md).
 
+![PR review, CI, and merge workflow](/images/review-and-ci-workflow.jpg)
+
 Process overview:
 
 1. If you are not a Committer, ask a Committer to inspect the change and approve the CI workflow.
