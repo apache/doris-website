@@ -10,6 +10,8 @@
 
 The MAX_BY function returns the associated value based on the maximum value of the specified column.
 
+When `<expr2>` is an Array, arrays are compared lexicographically, element by element; a NULL element is greater than any non-NULL element. A NULL array value is ignored.
+
 ## Syntax
 
 ```sql
