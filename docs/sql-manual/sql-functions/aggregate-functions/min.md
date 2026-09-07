@@ -82,7 +82,7 @@ Decimal type: Returns the minimum high-precision decimal value.
 select k1, min(k_array) from t1 group by k1;
 ```
 
-For Array type: Returns the minimum array value for each group(Compare elements one by one; null is the smallest element.).
+For Array type: Returns the minimum array value for each group. Arrays are compared lexicographically, element by element; a NULL element is greater than any non-NULL element. A NULL array value is ignored like other NULL input values.
 
 ```text
 +------+----------------+
