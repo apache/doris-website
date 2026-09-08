@@ -997,6 +997,12 @@ BaseCompaction:546859:
 
 ### Storage
 
+#### `enable_kuromoji_analyzer`
+
+* Type: bool
+* Description: Whether to enable the kuromoji (Japanese) inverted-index analyzer. Supported since Doris 5.0.0.
+* Default value: false
+
 #### `default_num_rows_per_column_file_block`
 
 * Type: int32
