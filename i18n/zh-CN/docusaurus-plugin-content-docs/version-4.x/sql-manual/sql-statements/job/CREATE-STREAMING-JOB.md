@@ -78,7 +78,7 @@ TO DATABASE <target_db> (
 | schema         | -       | Schema 名称（PostgreSQL）                                     |
 | include_tables | -       | 需要同步的表名，多个表用逗号分隔，不填默认所有的表            |
 | offset         | latest  | `latest`: 仅增量同步（默认）；`initial`: 全量 + 增量同步                    |
-| snapshot_split_size | 8096 | split 的大小（行数），全量同步时，表会被切分成多个 split 进行同步 |
+| snapshot_split_size | 40960（4.1.4 之前为 8096） | split 的大小（行数），全量同步时，表会被切分成多个 split 进行同步 |
 | snapshot_parallelism | 1   | 全量阶段同步的并行度，即单次 Task 最多调度的 split 数量         |
 
 **5. `<target_db>`**（多表 CDC 模式）

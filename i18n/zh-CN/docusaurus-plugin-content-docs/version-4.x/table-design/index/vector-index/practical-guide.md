@@ -98,7 +98,7 @@ Apache Doris 4.x 起支持 ANN（Approximate Nearest Neighbor，近似最近邻�
 | 检查项 | 要求 |
 |---|---|
 | Doris 版本 | `>= 4.0.0` |
-| 表模型 | 仅支持 `DUPLICATE KEY` |
+| 表模型 | `DUPLICATE KEY`；`UNIQUE KEY` 需开启 Merge-on-Write（自 4.1.4 版本支持） |
 | 向量列类型 | `ARRAY<FLOAT> NOT NULL` |
 | 维度一致性 | 写入向量维度必须与索引 `dim` 一致 |
 
@@ -373,7 +373,7 @@ ALTER TABLE document_vectors DROP INDEX idx_embedding;
 
 **Q1：ANN 索引能用在 UNIQUE KEY 或 AGGREGATE KEY 表上吗？**
 
-不能。ANN 索引**仅支持 DUPLICATE KEY 模型**。
+自 4.1.4 版本起，ANN 索引支持 **DUPLICATE KEY** 模型，以及开启了 **Merge-on-Write**（`enable_unique_key_merge_on_write = "true"`）的 **UNIQUE KEY** 模型。Merge-on-Read 的 UNIQUE KEY 表和 AGGREGATE KEY 表仍不支持。4.1.4 之前的版本仅支持 DUPLICATE KEY 模型。
 
 **Q2：可以同时建 ANN 索引和倒排索引吗？**
 

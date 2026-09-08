@@ -335,7 +335,7 @@ heartbeat_mgr 中处理心跳事件的线程数。
 
 是否可以动态配置：false
 
-FE 之间元数据 HTTP 接口（`image`、`role`、`check`、`put`、`journal_id` 等）的集群认证 Token。自 4.0.8 版本起新增。
+FE 之间元数据 HTTP 接口（`image`、`role`、`check`、`put`、`journal_id` 等）的集群认证 Token。Doris 4.0 系列自 4.0.8 版本起新增，4.1 系列自 4.1.4 版本起新增。
 
 设置为非空值后，这些接口在原有的 node-host 校验之上，额外要求调用方携带匹配的 Token 请求头，可以防止非集群成员访问 FE 元数据接口。保持默认空值时行为与旧版本一致，仅做 node-host 校验，因此存量集群和滚动升级不受影响。
 
@@ -694,6 +694,10 @@ http 请求处理/api/query 中 sql 任务的最大线程池
 默认值：2
 
 http 请求处理/api/upload 任务的最大线程池
+
+:::caution 版本行为变更（4.1.4）
+`/api/upload` 系列接口已于 4.1.4 版本移除，该配置项也随之移除。详见 [Upload Action](../open-api/fe-http/upload-action)。
+:::
 
 ### 查询引擎
 
@@ -1474,6 +1478,76 @@ NORMAL 优先级挂起加载作业的并发数。
 
 负载调度器运行间隔。加载作业将其状态从 PENDING 转移到 LOADING 到 FINISHED。加载调度程序将加载作业从 PENDING 转移到 LOADING  而 txn 回调会将加载作业从 LOADING 转移到 FINISHED。因此，当并发未达到上限时，加载作业最多需要一个时间间隔才能完成。
 
+#### `s3_load_endpoint_white_list`
+
+默认值：空
+
+是否可以动态配置：false
+
+S3 Load 允许使用的 Endpoint 白名单，多个值用逗号分隔，例如 `s3_load_endpoint_white_list=a,b,c`。为空表示不设置白名单。
+
+:::caution 版本行为变更（4.1.4）
+自 4.1.4 版本起，出于安全考虑该配置项**不再支持动态修改**，只能在 `fe.conf` 中设置并重启 FE 生效，无法再通过 `ADMIN SET FRONTEND CONFIG` 修改。
+:::
+
+#### `resource_group_load_success_quorum`
+
+默认值：空
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+自 4.1.4 版本起新增。按资源组（Resource Group，即 BE 的 Location Tag）设置导入事务提交时，每个资源组内**必须写入成功的最少副本数**。
+
+取值为逗号分隔的列表，每一项的格式为 `<resource_group>:<min_success_replicas>`，其中 `<min_success_replicas>` 为非负整数。例如：
+
+```properties
+resource_group_load_success_quorum=group_a:2,group_b:1
+```
+
+事务提交时，如果某个已配置的资源组内写入成功的副本数少于配置值，事务会提交失败。未在配置中出现的资源组不做该项检查。格式非法的配置项会被忽略并在 `fe.log` 中打印告警。
+
+该配置用于多机房 / 多可用区部署下，确保数据在指定机房内至少写入若干副本后才认为导入成功。
+
+#### `enable_adaptive_random_bucket_load`
+
+默认值：true
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+自 4.1.4 版本起新增。是否开启自适应随机分桶导入。
+
+开启后，FE 会把 Tablet 的位置信息下发给 BE，每个 BE 据此计算出自己持有主副本的本地桶集合；当单个 Tablet 的写入量超过阈值（默认 200 MB）后，在本地桶之间轮转写入。该策略可以降低导入的内存压力，并提升随机分桶（`DISTRIBUTED BY RANDOM`）表的导入吞吐，且对所有导入方式统一生效。
+
+该功能同时受 BE 配置 `enable_table_memtable_flush_backpressure` 与 `table_memtable_flush_pending_count_limit` 的约束，详见 [BE 配置项](./be-config)。
+
+#### `enable_forward_group_commit_stream_load_to_follower`
+
+默认值：false
+
+是否可以动态配置：false
+
+是否为 Master FE 节点独有的配置项：true
+
+自 4.1.4 版本起新增。是否将使用 Group Commit 的 Stream Load 请求转发到 Follower FE。
+
+开启后，Group Commit 模式的 Stream Load 会以轮询（Round Robin）方式转发到某个 Follower FE 处理，从而把攒批压力分散到多个 FE 上。
+
+注意：目标表的 `light_schema_change` 属性为 `false` 时不支持该转发，会直接报错。
+
+#### `streaming_job_snapshot_offset_persist_interval_sec`
+
+默认值：300（秒）
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+自 4.1.4 版本起新增。Streaming Job（持续导入作业）在全量快照阶段，两次持久化 Offset 之间的最小间隔，单位为秒。调小该值可以减少作业重启后需要重放的数据量，但会增加元数据写入频率。
+
 #### `label_keep_max_second`
 
 默认值：`3 * 24 * 3600`  (3 天)
@@ -1765,6 +1839,24 @@ HOUR: log 前缀是：yyyyMMddHH
 用于存储 nereids trace 日志的目录
 
 ### 存储
+
+#### `enable_variant_v2`
+
+默认值：false
+
+是否可以动态配置：true
+
+自 4.1.4 版本起新增。是否为 VARIANT 类型启用 ColumnVariantV2 存储与执行格式。
+
+开启后：
+
+- VARIANT 列可以参与 `GROUP BY`、`COUNT(DISTINCT ...)`、`UNION DISTINCT` 等需要比较 / 去重的场景；
+- 支持不同 VARIANT 布局之间的转换；
+- 是读写 Iceberg 表 VARIANT 列、以及读取 Paimon 表 VARIANT 列的前提条件，未开启时会直接报错。
+
+:::caution 注意
+该功能为实验性功能，默认关闭。修改后仅对新创建的数据生效，不会转换存量数据。
+:::
 
 #### `min_replication_num_per_tablet`
 
@@ -2321,7 +2413,7 @@ OlapTable 在做 schema change 时，允许的最大副本数，副本数过大�
 
 #### `autobucket_min_buckets`
 
-默认值：3（4.0.8 之前为 1）
+默认值：3（4.0.8 / 4.1.4 之前为 1）
 
 是否可以动态配置：true
 
@@ -2329,7 +2421,7 @@ OlapTable 在做 schema change 时，允许的最大副本数，副本数过大�
 
 自动分桶（`DISTRIBUTED BY ... BUCKETS AUTO`）策略推算出的最小分桶数。
 
-**自 4.0.8 版本起，默认值由 `1` 调整为 `3`。** 旧的默认值会让小分区被推算成单个分桶，并行度和数据分布都不足；调整后自动分桶的结果不会低于 3 个分桶。该变更只影响新创建的分区，已有分区的分桶数不会改变。
+**Doris 4.0 系列自 4.0.8 版本起、4.1 系列自 4.1.4 版本起，默认值由 `1` 调整为 `3`。** 旧的默认值会让小分区被推算成单个分桶，并行度和数据分布都不足；调整后自动分桶的结果不会低于 3 个分桶。该变更只影响新创建的分区，已有分区的分桶数不会改变。
 
 #### `autobucket_max_buckets`
 
@@ -2342,6 +2434,44 @@ OlapTable 在做 schema change 时，允许的最大副本数，副本数过大�
 自动分桶策略推算出的最大分桶数。推算结果超过该值时会被截断到该值。
 
 ### 外部表
+
+#### `external_meta_cache_max_weight`
+
+默认值：`0`
+
+是否可以动态配置：false
+
+是否为 Master FE 节点独有的配置项：false
+
+自 4.1.4 版本起新增。FE 级别的外部元数据缓存（External Meta Cache）总容量上限。
+
+取值可以是带单位的字节数（如 `1024MB`、`4GB`），也可以是 JVM 最大堆内存的百分比（如 `10%`）。取值为 `0` 时表示不设置全局配额，行为与旧版本一致。
+
+该配额用于统一约束各类外部表元数据缓存（Hive 分区值、Iceberg 表 / 快照 / manifest、Paimon 快照等）的内存占用。单个 Catalog 还可以通过 `meta.cache.max-weight`、`meta.cache.<engine>.<entry>.max-weight` 属性做更细粒度的控制，缓存使用情况可通过 `information_schema.catalog_meta_cache_statistics` 系统表观察。
+
+#### `jdbc_driver_url_white_list`
+
+默认值：空
+
+是否可以动态配置：false
+
+创建 JDBC Catalog 时允许使用的 `driver_url` 白名单，多个值用逗号分隔，例如 `jdbc_driver_url_white_list=a,b,c`。为空表示不设置白名单。
+
+:::caution 版本行为变更（4.1.4）
+自 4.1.4 版本起，出于安全考虑该配置项**不再支持动态修改**，只能在 `fe.conf` 中设置并重启 FE 生效，无法再通过 `ADMIN SET FRONTEND CONFIG` 修改。
+:::
+
+#### `force_sqlserver_jdbc_encrypt_false`
+
+默认值：false
+
+是否可以动态配置：false
+
+是否强制将 SQLServer JDBC Catalog 的 `encrypt` 参数设置为 `false`。
+
+:::caution 版本行为变更（4.1.4）
+该配置会关闭 SQLServer JDBC 的传输加密，属于安全敏感开关。自 4.1.4 版本起**不再支持动态修改**，只能在 `fe.conf` 中设置并重启 FE 生效。
+:::
 
 #### `file_scan_node_split_num`
 
@@ -2824,4 +2954,76 @@ Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。此配置
 
 开启后，FE 会把 Stream Load 请求重定向到 `_stream_load_forward` 接口，由收到请求的 BE 再转发到该表对应的目标 BE，避免负载均衡器随机分发打散同一张表的 Group Commit 攒批。
 
-需要在 FE 和 BE 上同时开启同名配置。**自 4.0.8 版本起，BE 端的 `_stream_load_forward` 接口受 BE 同名配置控制：关闭时返回 `403 Forbidden`，开启后访问还需要通过认证并具备全局 `LOAD` 权限**，详见 [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual) 与 [BE 配置项](./be-config)。
+需要在 FE 和 BE 上同时开启同名配置。**Doris 4.0 系列自 4.0.8 版本起、4.1 系列自 4.1.4 版本起，BE 端的 `_stream_load_forward` 接口受 BE 同名配置控制：关闭时返回 `403 Forbidden`，开启后访问还需要通过认证并具备全局 `LOAD` 权限**，详见 [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual) 与 [BE 配置项](./be-config)。
+
+#### `default_get_version_from_ms_timeout_second`
+
+默认值：30（秒）
+
+是否可以动态配置：true
+
+FE 向 Meta Service 获取版本号（Version）的超时时间。
+
+:::caution 版本行为变更（4.1.4）
+默认值自 4.1.4 版本起由 `3` 秒调整为 `30` 秒。此前在 Meta Service 抖动或压力较大时，3 秒的超时容易导致查询直接失败；调大后可以显著减少这类偶发失败。
+:::
+
+#### `enable_cloud_replica_stale_route_clean`
+
+默认值：true
+
+是否可以动态配置：true
+
+自 4.1.4 版本起新增。是否在加载元数据镜像和 Tablet 均衡轮次中，清理 Backend 已不存在的 CloudReplica 主 / 备路由记录。
+
+这些残留记录在查询时本来就会被忽略（副本会重新做一次 Hash 映射），只会白白占用 FE 内存和元数据镜像体积。设置为 `false` 可以保留旧版本不清理的行为。
+
+#### `enable_cloud_colocate_consistent_hash`
+
+默认值：true
+
+是否可以动态配置：false
+
+是否为 Master FE 节点独有的配置项：true
+
+自 4.1.4 版本起新增。存算分离模式下 Colocate 表的分桶放置是否使用 Rendezvous 一致性哈希。设置为 `false` 时退回旧的取模放置方式。该配置只能在 `fe.conf` 中设置，重启后生效。
+
+#### `meta_service_rpc_rate_limit_enabled`
+
+默认值：false
+
+是否可以动态配置：true
+
+自 4.1.4 版本起新增。是否对 FE 发往 Meta Service 的 RPC 请求开启 QPS 限流。
+
+#### `meta_service_rpc_rate_limit_default_qps_per_core`
+
+默认值：50
+
+是否可以动态配置：true
+
+自 4.1.4 版本起新增。未在 `meta_service_rpc_rate_limit_qps_per_core_config` 中单独配置的 Meta Service RPC 方法，每个 CPU 核心允许的默认 QPS。小于等于 `0` 表示不限流。
+
+#### `meta_service_rpc_rate_limit_qps_per_core_config`
+
+默认值：`getPartitionVersion:500;getTableVersion:500;getTabletStats:50;beginTxn:50`
+
+是否可以动态配置：true
+
+自 4.1.4 版本起新增。按 Meta Service RPC 方法单独设置的每核 QPS 限制，格式为 `method1:qps1;method2:qps2`。小于等于 `0` 表示该方法不限流。
+
+#### `meta_service_rpc_rate_limit_burst_seconds`
+
+默认值：2（秒）
+
+是否可以动态配置：true
+
+自 4.1.4 版本起新增。Meta Service RPC 限流的突发窗口长度，单位为秒。长期平均 QPS 不变，但允许在该窗口内突发。
+
+#### `meta_service_rpc_rate_limit_wait_timeout_ms`
+
+默认值：1000（毫秒）
+
+是否可以动态配置：true
+
+自 4.1.4 版本起新增。RPC 被限流时的最长等待时间，单位为毫秒。取值为 `0` 表示不等待，直接快速失败。

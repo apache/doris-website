@@ -54,7 +54,7 @@ cdc_stream(
 |----------------------|---------|--------------------------------------------------------------|
 | `schema`             | -       | Schema 名称，PostgreSQL 必填                                  |
 | `offset`             | latest  | `latest`：仅增量；`initial`：全量 + 增量；另支持 `snapshot`、`earliest`（仅 MySQL）、或一个 JSON 形式的 binlog/LSN 位点 |
-| `snapshot_split_size`  | 8096    | split 的大小（行数），全量同步时表会被切分成多个 split |
+| `snapshot_split_size`  | 40960（4.1.4 之前为 8096）    | split 的大小（行数），全量同步时表会被切分成多个 split |
 | `snapshot_parallelism` | 1       | 全量阶段的并行度，即单次 Task 最多调度的 split 数量 |
 
 ## 注意事项

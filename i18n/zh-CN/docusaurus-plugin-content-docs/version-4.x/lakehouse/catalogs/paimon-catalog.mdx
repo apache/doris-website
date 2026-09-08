@@ -287,7 +287,7 @@ ORDER BY entry_name;
 
 ### 支持的 Paimon 版本
 
-当前依赖的 Paimon 版本为 1.0.0。
+当前依赖的 Paimon 版本为 1.4.2（4.1.4 之前为 1.3.1）。
 
 ### 支持的 Paimon 格式
 
@@ -352,6 +352,7 @@ ORDER BY entry_name;
 | array                                | array                     |                                                                                                                                                                               |
 | map                                  | map                       |                                                                                                                                                                               |
 | row                                  | struct                    |                                                                                                                                                                               |
+| variant                              | variant                   | 自 4.1.4 版本起支持读取。需要开启 FE 配置 `enable_variant_v2`，且只支持 Parquet 格式的 Paimon 表，详见下方说明。                                                              |
 | other                                | UNSUPPORTED               |                                                                                                                                                                               |
 
 在两个 Paimon JNI Scanner 路径上，Doris 都会保留带引号的顶层列名和嵌套 `STRUCT` 字段名的原始大小写与字符。
@@ -371,6 +372,20 @@ SQL 标识符引用外无需额外转义。读取时列按不区分大小写的�
 > 可以在 `DESCRIBE table_name` 语句中的 Extra 列查看源类型是否带时区信息。如显示 `WITH_TIMEZONE`，则表示源类型是带时区的类型（该功能自 3.0.8 版本支持）。
 >
 > 4.0.3 后开始支持，可以映射 `timestamp_with_local_time_zone` 到 Doris 的 `timestamptz` 类型。
+
+### VARIANT 类型 {#paimon-variant}
+
+> 自 4.1.4 版本开始支持。
+
+Doris 支持读取 Paimon 表中的 `VARIANT` 列，包括嵌套在 `ARRAY`、`MAP`、`STRUCT` 中的 `VARIANT`。
+
+使用前提：
+
+- FE 配置 `enable_variant_v2 = true`（默认关闭），可通过 `ADMIN SET FRONTEND CONFIG ("enable_variant_v2" = "true")` 动态开启；
+- 会话变量 `enable_file_scanner_v2 = true`（默认开启）；
+- Paimon 表的文件格式必须是 **Parquet**，ORC 等其他格式不支持。
+
+不满足上述条件时，读取会直接报错。
 
 ## 基础示例
 

@@ -115,7 +115,7 @@ Apache Doris 提供三种跳数索引：
 | 跳数索引 | ZoneMap 索引 | 内置索引，索引存储空间小 | 支持的查询类型少，只支持等于、范围 |
 | 跳数索引 | [BloomFilter 索引](./bloomfilter.md) | 比 ZoneMap 更精细，索引空间中等 | 支持的查询类型少，只支持等于 |
 | 跳数索引 | [NGram BloomFilter 索引](./ngram-bloomfilter-index.md) | 支持 LIKE 加速，索引空间中等 | 支持的查询类型少，只支持 LIKE 加速 |
-| 向量索引 | [ANN 索引](./vector-index/overview.md) | 支持向量相似度 TopN / 范围 / 组合检索，可与标量过滤联动；支持多种量化方式平衡召回与资源 | 仅适用于 `Array<Float>` 列且要求 NOT NULL，仅支持 DUPLICATE KEY 表模型 |
+| 向量索引 | [ANN 索引](./vector-index/overview.md) | 支持向量相似度 TopN / 范围 / 组合检索，可与标量过滤联动；支持多种量化方式平衡召回与资源 | 仅适用于 `Array<Float>` 列且要求 NOT NULL；支持 DUPLICATE KEY 表模型，以及开启 Merge-on-Write 的 UNIQUE KEY 表模型（自 4.1.4 版本支持） |
 
 ## 索引对运算符与函数的支持
 

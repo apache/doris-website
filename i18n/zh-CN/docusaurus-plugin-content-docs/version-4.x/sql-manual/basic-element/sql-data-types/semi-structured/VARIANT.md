@@ -463,6 +463,7 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 - **大宽表优化**：对于会通过子列列式提取（Subcolumnization）生成大量独立子列的宽表场景（例如超过 2000 列），强烈建议开启 **V3 存储格式**。通过在建表 `PROPERTIES` 中指定 `"storage_format" = "V3"`，可以将列元数据与 Segment Footer 解耦，加快文件打开速度并降低内存占用。
 - JSON key 长度 ≤ 255。
+- 可以使用 [`PARSE_TO_VARIANT`](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant.md) 与 [`TRY_PARSE_TO_VARIANT`](../../../sql-functions/scalar-functions/variant-functions/try-parse-to-variant.md)（自 4.1.4 版本起支持）把 JSON 字符串显式转换为 VARIANT，两者的区别是解析失败时前者报错、后者返回 NULL。
 - 不支持作为主键或排序键。
 - 不支持与其他类型嵌套（如 `Array<Variant>`、`Struct<Variant>`）。
 - 在未启用 DOC mode 时，读取整个 VARIANT 列会扫描所有子字段。对于超宽列，一般不建议直接 `SELECT variant_col`；如果整列读取是主要查询模式，建议优先使用 DOC mode。若列包含大量子字段，也可额外存储原始 JSON 的 STRING/JSONB 列，以优化如 `LIKE` 等整体匹配：
@@ -484,6 +485,28 @@ SELECT * FROM example_table WHERE data_string LIKE '%doris%';
 ```
 
 ## 配置
+
+### ColumnVariantV2（`enable_variant_v2`）
+
+> 自 4.1.4 版本开始支持，默认关闭。
+
+FE 配置项 `enable_variant_v2` 用于开启 VARIANT 的 V2 存储与执行格式（ColumnVariantV2）：
+
+```sql
+ADMIN SET FRONTEND CONFIG ("enable_variant_v2" = "true");
+```
+
+开启后：
+
+- VARIANT 列可以参与 `GROUP BY`、`COUNT(DISTINCT ...)`、`UNION DISTINCT` 等需要比较 / 去重的场景。未开启时对旧格式（V1）的 VARIANT 执行 DISTINCT 类集合运算会直接报错；
+- 支持不同 VARIANT 布局之间的类型转换；
+- 是读写 Iceberg 表 VARIANT 列、以及读取 Paimon 表 VARIANT 列的**前提条件**，未开启时会直接报错。详见 [Iceberg Catalog](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-variant) 与 [Paimon Catalog](../../../../lakehouse/catalogs/paimon-catalog.mdx#paimon-variant)。
+
+:::caution 注意
+该功能为实验性功能。修改配置后仅对新写入的数据生效，不会转换已有数据。
+:::
+
+### 列级别属性
 
 在 3.1+ 支持在 VARIANT 类型上声明列级别属性：
 
