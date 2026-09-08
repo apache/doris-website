@@ -11,6 +11,7 @@ keywords:
     - dict_get
     - HASH_MAP
     - IP_TRIE
+    - FLAT
     - KV lookup
 ---
 
@@ -196,12 +197,13 @@ There must be at least one `<key_column>` and one `<value_column>`. The `<key_co
 
 ### Layout Types
 
-Two layout types are currently supported:
+Three layout types are currently supported:
 
 | Layout Type | Use Case | Description |
 | --- | --- | --- |
 | `HASH_MAP` | General key-value lookup scenarios | Hash-table-based implementation |
 | `IP_TRIE` | IP address lookups | Trie-based implementation, optimized specifically for IP address lookups. The key column must be IP addresses in CIDR notation, and queries are matched against the CIDR notation |
+| `FLAT` | Key-value lookups on dense, small-range non-negative integer keys | Array-based implementation that uses the key directly as an array index, offering the fastest lookups and the lowest memory overhead. The key column must be a single integer column, and all keys must be non-negative and smaller than 500000 |
 
 ### Properties
 
@@ -241,6 +243,7 @@ Based on this table, you can use the `city_dict` dictionary together with the `d
 - The key column of an IP_TRIE dictionary must be of type Varchar or String, and **values in the key column must be in CIDR format**.
 - An IP_TRIE dictionary allows only one key column.
 - The key column of a HASH_MAP dictionary supports all simple types (that is, all nested types such as Map and Array are excluded).
+- A FLAT dictionary allows only one key column, and the key column must be an integer type (TINYINT, SMALLINT, INT, BIGINT, or LARGEINT). All key values must be **non-negative** and **strictly smaller than 500000**; otherwise the load fails. FLAT uses the key directly as an array index, so it is best suited to dense keys within a small range.
 - The column used as a key column **must not contain duplicate values in the source table**; otherwise, an error is reported when the dictionary loads data.
 
 **2. Null value handling**
@@ -489,6 +492,7 @@ To view the column definitions of a dictionary, use `DESC DICTIONARY`. For examp
 
     - Use the HASH_MAP layout for general scenarios.
     - Use the IP_TRIE layout for IP address range matching scenarios.
+    - Use the FLAT layout when the key is a single non-negative integer within a small, dense range (below 500000). It provides the fastest lookups and the lowest memory footprint, but a sparse or large-valued key range wastes memory or is rejected, in which case HASH_MAP is the better choice.
 
 3. **State management**:
 
@@ -684,6 +688,50 @@ ORDER BY order_time;
 +----------+---------------------+---------------------+------------+-----------+----------+------------+--------------+---------------+
 ```
 
+### Example 4: FLAT, single integer key
+
+The FLAT layout uses the key value directly as an array index. It is ideal for a dense range of small non-negative integer keys, such as status codes or enumerated dimension IDs.
+
+```sql
+-- Create the source data table (key must be an integer column)
+CREATE TABLE status_info (
+    status_code INT NOT NULL,
+    status_name VARCHAR(32) NOT NULL
+) ENGINE=OLAP
+DISTRIBUTED BY HASH(status_code) BUCKETS 1;
+
+-- Insert data. Keys may be sparse (here 0, 1, 100), but must be
+-- non-negative and smaller than 500000.
+INSERT INTO status_info VALUES
+(0, 'created'),
+(1, 'paid'),
+(100, 'closed');
+
+-- Create the FLAT dictionary
+CREATE DICTIONARY status_dict USING status_info
+(
+    status_code KEY,
+    status_name VALUE
+)
+LAYOUT(FLAT)
+PROPERTIES('data_lifetime' = '600');
+
+-- Look up present keys (0, 1, 100) and a missing key (5, returns null)
+SELECT
+    dict_get("test_refresh_dict.status_dict", "status_name", 0)   AS s0,
+    dict_get("test_refresh_dict.status_dict", "status_name", 1)   AS s1,
+    dict_get("test_refresh_dict.status_dict", "status_name", 100) AS s100,
+    dict_get("test_refresh_dict.status_dict", "status_name", 5)   AS s_missing;
+```
+
+```text
++---------+------+--------+-----------+
+| s0      | s1   | s100   | s_missing |
++---------+------+--------+-----------+
+| created | paid | closed | NULL      |
++---------+------+--------+-----------+
+```
+
 ## Troubleshooting
 
 <!-- Knowledge type: Troubleshooting -->
@@ -696,6 +744,7 @@ ORDER BY order_time;
 | Load reports `Version ID is not greater than the existing version ID for the dictionary.` | Use the `DROP DICTIONARY` command to drop the corresponding dictionary, then re-create it and reload the data |
 | `SHOW DICTIONARIES` shows that the Version of the dictionary on a certain BE is greater than the FE Version | Use the `DROP DICTIONARY` command to drop the corresponding dictionary, then re-create it and reload the data |
 | Load reports `Dictionary X commit version Y failed` | Reload the dictionary |
+| Load of a FLAT dictionary reports `FlatDictionary key must be non-negative` or `FlatDictionary key exceeds max array size` | Check the key column of the FLAT dictionary: all keys must be non-negative and smaller than 500000. If the key range is sparse or large, switch to the HASH_MAP layout |
 
 **Fallback strategy**: For the vast majority of errors, if normal operations fail, dropping the dictionary and re-creating it can resolve the issue.
 
@@ -713,10 +762,14 @@ No. Doris does not maintain strong data consistency between a dictionary and its
 
 Use IP_TRIE when you need to perform IP range matching queries based on CIDR. For all other key-value matching scenarios, use HASH_MAP.
 
-**Q4: What should you do if a dictionary uses too much memory?**
+**Q4: When should you choose FLAT over HASH_MAP?**
+
+Choose FLAT when the key is a single non-negative integer whose values are dense and confined to a small range (below 500000), such as status codes or enumerated dimension IDs. FLAT stores values in an array indexed directly by the key, which gives the fastest lookups and the lowest memory overhead. If the key is non-integer, negative, sparse, or larger than 500000, use HASH_MAP instead.
+
+**Q5: What should you do if a dictionary uses too much memory?**
 
 You can use the `memory_limit` property to limit the memory upper bound on a single BE. It is also recommended to choose columns with moderate cardinality as the source for the dictionary, to avoid the dictionary becoming too large.
 
-**Q5: What are the possible reasons a dictionary query returns null?**
+**Q6: What are the possible reasons a dictionary query returns null?**
 
 When the queried key does not exist in the dictionary, or when the queried key data is null, null is returned.
