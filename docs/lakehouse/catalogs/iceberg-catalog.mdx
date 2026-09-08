@@ -1483,6 +1483,58 @@ SELECT * FROM iceberg_tbl LIMIT 10;
 SELECT * FROM iceberg.iceberg_db.iceberg_tbl LIMIT 10;
 ```
 
+### File Metadata Columns
+
+Doris exposes two hidden metadata columns for Iceberg data tables. You can use them to locate the physical data file and row that produced each query result.
+
+| Column | Type | Description |
+| --- | --- | --- |
+| `_file` | `STRING NOT NULL` | The original path recorded for the Iceberg data file. |
+| `_pos` | `BIGINT NOT NULL` | The zero-based physical row position within the complete data file. |
+
+Prerequisites: configure an Iceberg Catalog as described in the preceding examples, and create an Iceberg data table that contains an `id` column and uses Parquet or ORC files. The following query assumes that `iceberg_tbl` already contains rows with `id` values `1` and `2`:
+
+```sql
+SELECT id, `_file`, `_pos`
+FROM iceberg.iceberg_db.iceberg_tbl
+ORDER BY `_file`, `_pos`;
+```
+
+Example result (the file path depends on the table location):
+
+```text
++----+---------------------------------------+------+
+| id | _file                                 | _pos |
++----+---------------------------------------+------+
+|  1 | s3://bucket/warehouse/db/table/a.orc |    0 |
+|  2 | s3://bucket/warehouse/db/table/a.orc |    1 |
++----+---------------------------------------+------+
+```
+
+The columns do not appear in `SELECT *` or `DESC` by default.
+
+To include hidden columns in `SELECT *` and `DESC`, enable `show_hidden_columns` for the session:
+
+```sql
+SET show_hidden_columns = true;
+```
+
+Relevant session variables:
+
+| Variable | Type | Default | Required | Effect |
+| --- | --- | --- | --- | --- |
+| `show_hidden_columns` | `BOOLEAN` | `false` | No | Includes hidden columns in `SELECT *` and `DESC`. It is not needed when the columns are referenced explicitly. |
+| `enable_file_scanner_v2` | `BOOLEAN` | `true` | No | Must remain enabled when a query references these metadata columns. |
+| `force_jni_scanner` | `BOOLEAN` | `false` | No | Must remain disabled because the JNI reader cannot produce these metadata columns. |
+
+The row position is relative to the complete physical file. Predicate filtering, delete processing, and scan splitting do not renumber the remaining rows. Therefore, the combination of `_file` and `_pos` can locate a physical record within the current table snapshot. Data-file rewrites or compaction can change both values, so they must not be used as a stable logical row ID.
+
+:::caution
+These columns are available only when an Iceberg data table is read through the FileScannerV2 native Parquet or ORC reader. A query that references them fails if `enable_file_scanner_v2` is disabled, `force_jni_scanner` is enabled, or the selected data files cannot use the native Parquet/ORC reader.
+
+`_file` and `_pos` are reserved names, compared case-insensitively. Do not use them as physical column names in an Iceberg table.
+:::
+
 ### Time Travel
 
 You can read a specific snapshot of an Iceberg table.

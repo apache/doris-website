@@ -976,6 +976,58 @@ SELECT * FROM paimon_tbl LIMIT 10;
 SELECT * FROM paimon_ctl.paimon_db.paimon_tbl LIMIT 10;
 ```
 
+### 文件元数据列
+
+Doris 为 Paimon 数据表提供两个隐藏元数据列，可用于定位每条查询结果对应的物理数据文件和文件内行位置。
+
+| 列名 | 类型 | 说明 |
+| --- | --- | --- |
+| `__paimon_file_path` | `STRING NOT NULL` | Paimon 为原始数据文件返回的路径。 |
+| `__paimon_row_index` | `BIGINT NOT NULL` | 该行在完整数据文件中的物理位置，从 0 开始。 |
+
+前置条件：按照前文示例配置 Paimon Catalog，并创建一个包含 `id` 列、使用 Parquet 或 ORC 文件的 Paimon 数据表。以下查询假设 `paimon_tbl` 中已包含 `id` 为 `1` 和 `2` 的记录：
+
+```sql
+SELECT id, `__paimon_file_path`, `__paimon_row_index`
+FROM paimon_ctl.paimon_db.paimon_tbl
+ORDER BY `__paimon_file_path`, `__paimon_row_index`;
+```
+
+示例结果（文件路径由实际表位置决定）：
+
+```text
++----+------------------------------------------+--------------------+
+| id | __paimon_file_path                       | __paimon_row_index |
++----+------------------------------------------+--------------------+
+|  1 | s3://bucket/warehouse/db/table/a.parquet |                  0 |
+|  2 | s3://bucket/warehouse/db/table/a.parquet |                  1 |
++----+------------------------------------------+--------------------+
+```
+
+默认情况下，这些列不会出现在 `SELECT *` 或 `DESC` 的结果中。
+
+如需在 `SELECT *` 和 `DESC` 中显示隐藏列，可以在当前会话开启 `show_hidden_columns`：
+
+```sql
+SET show_hidden_columns = true;
+```
+
+相关会话变量：
+
+| 变量 | 类型 | 默认值 | 是否必需 | 作用 |
+| --- | --- | --- | --- | --- |
+| `show_hidden_columns` | `BOOLEAN` | `false` | 否 | 在 `SELECT *` 和 `DESC` 中显示隐藏列。显式引用列名时无需开启。 |
+| `enable_file_scanner_v2` | `BOOLEAN` | `true` | 否 | 查询引用这些元数据列时必须保持开启。 |
+| `force_jni_scanner` | `BOOLEAN` | `false` | 否 | 必须保持关闭，因为 JNI Reader 无法生成这些元数据列。 |
+
+行位置以完整物理文件为基准。谓词过滤、Deletion Vector 处理及扫描切分不会对保留行重新编号。因此，`__paimon_file_path` 和 `__paimon_row_index` 的组合可以定位当前表快照中的一条物理记录。数据文件重写或 Compaction 后，两列的值可能变化，不能将其作为稳定的逻辑行 ID。
+
+:::caution 注意
+仅当查询涉及的每个 Paimon Split 都能作为原始数据文件，通过 FileScannerV2 原生 Parquet 或 ORC Reader 读取时，才能使用这些列。对于 JNI 或原生/JNI 混合扫描、关闭 `enable_file_scanner_v2`、开启 `force_jni_scanner`，以及所选数据文件无法使用原生 Parquet/ORC Reader 的情况，引用这些列的查询会失败。
+
+`__paimon_file_path` 和 `__paimon_row_index` 是保留列名，名称比较不区分大小写。请勿在 Paimon 表中使用它们作为物理列名。
+:::
+
 ### 增量查询
 
 > 该功能自 3.1.0 版本支持

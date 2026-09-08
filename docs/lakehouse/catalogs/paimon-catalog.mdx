@@ -980,6 +980,58 @@ SELECT * FROM paimon_tbl LIMIT 10;
 SELECT * FROM paimon_ctl.paimon_db.paimon_tbl LIMIT 10;
 ```
 
+### File Metadata Columns
+
+Doris exposes two hidden metadata columns for Paimon data tables. You can use them to locate the physical data file and row that produced each query result.
+
+| Column | Type | Description |
+| --- | --- | --- |
+| `__paimon_file_path` | `STRING NOT NULL` | The original path returned by Paimon for the raw data file. |
+| `__paimon_row_index` | `BIGINT NOT NULL` | The zero-based physical row position within the complete data file. |
+
+Prerequisites: configure a Paimon Catalog as described in the preceding examples, and create a Paimon data table that contains an `id` column and uses Parquet or ORC files. The following query assumes that `paimon_tbl` already contains rows with `id` values `1` and `2`:
+
+```sql
+SELECT id, `__paimon_file_path`, `__paimon_row_index`
+FROM paimon_ctl.paimon_db.paimon_tbl
+ORDER BY `__paimon_file_path`, `__paimon_row_index`;
+```
+
+Example result (the file path depends on the table location):
+
+```text
++----+------------------------------------------+--------------------+
+| id | __paimon_file_path                       | __paimon_row_index |
++----+------------------------------------------+--------------------+
+|  1 | s3://bucket/warehouse/db/table/a.parquet |                  0 |
+|  2 | s3://bucket/warehouse/db/table/a.parquet |                  1 |
++----+------------------------------------------+--------------------+
+```
+
+The columns do not appear in `SELECT *` or `DESC` by default.
+
+To include hidden columns in `SELECT *` and `DESC`, enable `show_hidden_columns` for the session:
+
+```sql
+SET show_hidden_columns = true;
+```
+
+Relevant session variables:
+
+| Variable | Type | Default | Required | Effect |
+| --- | --- | --- | --- | --- |
+| `show_hidden_columns` | `BOOLEAN` | `false` | No | Includes hidden columns in `SELECT *` and `DESC`. It is not needed when the columns are referenced explicitly. |
+| `enable_file_scanner_v2` | `BOOLEAN` | `true` | No | Must remain enabled when a query references these metadata columns. |
+| `force_jni_scanner` | `BOOLEAN` | `false` | No | Must remain disabled because the JNI reader cannot produce these metadata columns. |
+
+The row position is relative to the complete physical file. Predicate filtering, deletion-vector processing, and scan splitting do not renumber the remaining rows. Therefore, the combination of `__paimon_file_path` and `__paimon_row_index` can locate a physical record within the current table snapshot. Data-file rewrites or compaction can change both values, so they must not be used as a stable logical row ID.
+
+:::caution
+These columns are available only when every Paimon split participating in the query can be read as a raw data file through the FileScannerV2 native Parquet or ORC reader. A query that references them fails for JNI or mixed native/JNI scans, when `enable_file_scanner_v2` is disabled, when `force_jni_scanner` is enabled, or when the selected data files cannot use the native Parquet/ORC reader.
+
+`__paimon_file_path` and `__paimon_row_index` are reserved names, compared case-insensitively. Do not use them as physical column names in a Paimon table.
+:::
+
 ### Batch Incremental Query
 
 > Since version 3.1.0
