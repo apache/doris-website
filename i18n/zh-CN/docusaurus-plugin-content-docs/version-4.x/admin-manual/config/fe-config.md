@@ -1840,24 +1840,6 @@ HOUR: log 前缀是：yyyyMMddHH
 
 ### 存储
 
-#### `enable_variant_v2`
-
-默认值：false
-
-是否可以动态配置：true
-
-自 4.1.4 版本起新增。是否为 VARIANT 类型启用 ColumnVariantV2 存储与执行格式。
-
-开启后：
-
-- VARIANT 列可以参与 `GROUP BY`、`COUNT(DISTINCT ...)`、`UNION DISTINCT` 等需要比较 / 去重的场景；
-- 支持不同 VARIANT 布局之间的转换；
-- 是读写 Iceberg 表 VARIANT 列、以及读取 Paimon 表 VARIANT 列的前提条件，未开启时会直接报错。
-
-:::caution 注意
-该功能为实验性功能，默认关闭。修改后仅对新创建的数据生效，不会转换存量数据。
-:::
-
 #### `min_replication_num_per_tablet`
 
 默认值：1

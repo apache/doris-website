@@ -486,28 +486,6 @@ SELECT * FROM example_table WHERE data_string LIKE '%doris%';
 
 ## 配置
 
-### ColumnVariantV2（`enable_variant_v2`）
-
-> 自 4.1.4 版本开始支持，默认关闭。
-
-FE 配置项 `enable_variant_v2` 用于开启 VARIANT 的 V2 存储与执行格式（ColumnVariantV2）：
-
-```sql
-ADMIN SET FRONTEND CONFIG ("enable_variant_v2" = "true");
-```
-
-开启后：
-
-- VARIANT 列可以参与 `GROUP BY`、`COUNT(DISTINCT ...)`、`UNION DISTINCT` 等需要比较 / 去重的场景。未开启时对旧格式（V1）的 VARIANT 执行 DISTINCT 类集合运算会直接报错；
-- 支持不同 VARIANT 布局之间的类型转换；
-- 是读写 Iceberg 表 VARIANT 列、以及读取 Paimon 表 VARIANT 列的**前提条件**，未开启时会直接报错。详见 [Iceberg Catalog](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-variant) 与 [Paimon Catalog](../../../../lakehouse/catalogs/paimon-catalog.mdx#paimon-variant)。
-
-:::caution 注意
-该功能为实验性功能。修改配置后仅对新写入的数据生效，不会转换已有数据。
-:::
-
-### 列级别属性
-
 在 3.1+ 支持在 VARIANT 类型上声明列级别属性：
 
 ```sql
