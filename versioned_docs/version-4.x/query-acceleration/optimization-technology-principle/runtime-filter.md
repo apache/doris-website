@@ -297,6 +297,15 @@ In the vast majority of cases, JRF is adaptive and does not require manual tunin
 | `runtime_filter_type` | Default 12 in version 2.1 | Controls the sum of JRF type enumeration values |
 | `runtime_filter_wait_time_ms` | 1000 | The maximum number of milliseconds the Scan waits for the JRF |
 | `enable_runtime_filter_prune` | `true` | Whether to prune JRFs that are not selective |
+| `runtime_filter_broadcast_join_producer_num` | 3 | The maximum number of BEs that produce each JRF in a Broadcast Join. A value less than or equal to `0` means no limit. **Supported since version 4.1.4** |
+| `runtime_filter_tree_publish_max_send_bytes` | 268435456 (256 MB) | The maximum number of bytes sent in a single RPC when publishing a global JRF. Above this threshold, tree-shaped (multi-level) publishing is used instead, so that the merge node does not repeatedly send a large filter to every Scan node. A value of `0` disables tree-shaped publishing and falls back to direct publishing; the value must be greater than or equal to `0`. **Supported since version 4.1.4** |
+
+:::tip Two variables added in 4.1.4
+
+- `runtime_filter_broadcast_join_producer_num`: the JRF of a Broadcast Join is produced and sent with identical content by every BE on the Build side. This variable caps the number of BEs that actually produce it (3 by default), which noticeably reduces RPC overhead on large clusters. It only takes effect on the Nereids distributed planner path; the legacy Coordinator path keeps its original behavior.
+- `runtime_filter_tree_publish_max_send_bytes`: a large global JRF used to be published directly from the merge node to every Scan node, which produced repeated large RPC attachments. With tree-shaped publishing, the filter is forwarded level by level, which lowers the bandwidth pressure on a single node.
+
+:::
 
 #### 1. Toggle JRF
 

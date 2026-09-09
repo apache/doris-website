@@ -418,6 +418,7 @@
                       "items": [
                         "data-operate/import/import-way/streaming-job/continuous-load-mysql-table",
                         "data-operate/import/import-way/streaming-job/continuous-load-mysql-database",
+                        "data-operate/import/import-way/streaming-job/schema-change-mysql",
                         "data-operate/import/import-way/streaming-job/data-type-mapping-mysql",
                         {
                           "type": "category",
@@ -1495,6 +1496,7 @@
                 "sql-manual/basic-element/object-identifiers",
                 "sql-manual/basic-element/reserved-keywords",
                 "sql-manual/basic-element/variables",
+                "sql-manual/basic-element/session-variables",
                 "sql-manual/basic-element/comments",
                 "sql-manual/basic-element/file-path-pattern",
                 {
@@ -2045,6 +2047,8 @@
                       "label": "Variant Functions",
                       "items": [
                         "sql-manual/sql-functions/scalar-functions/variant-functions/element-at",
+                        "sql-manual/sql-functions/scalar-functions/variant-functions/parse-to-variant",
+                        "sql-manual/sql-functions/scalar-functions/variant-functions/try-parse-to-variant",
                         "sql-manual/sql-functions/scalar-functions/variant-functions/variant-type"
                       ]
                     },

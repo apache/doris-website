@@ -98,7 +98,7 @@ Before using ANN indexes, confirm the following conditions:
 | Check item | Requirement |
 |---|---|
 | Doris version | `>= 4.0.0` |
-| Table model | Only `DUPLICATE KEY` is supported |
+| Table model | `DUPLICATE KEY`; `UNIQUE KEY` requires merge-on-write to be enabled (supported since version 4.1.4) |
 | Vector column type | `ARRAY<FLOAT> NOT NULL` |
 | Dimension consistency | The dimension of ingested vectors must match the index `dim` |
 
@@ -373,7 +373,7 @@ Investigate in this order:
 
 **Q1: Can ANN indexes be used on UNIQUE KEY or AGGREGATE KEY tables?**
 
-No. ANN indexes **only support the DUPLICATE KEY model**.
+Since version 4.1.4, ANN indexes support the **DUPLICATE KEY** model and the **UNIQUE KEY** model with **merge-on-write** enabled (`enable_unique_key_merge_on_write = "true"`). Merge-on-read UNIQUE KEY tables and AGGREGATE KEY tables are still unsupported. Versions before 4.1.4 support only the DUPLICATE KEY model.
 
 **Q2: Can ANN indexes and inverted indexes be created at the same time?**
 

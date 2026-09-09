@@ -8,7 +8,7 @@
 
 ## 功能
 
-`TRY_PARSE_TO_VARIANT` 尝试把一个完整 JSON 值解析为 `VARIANT`。函数名中的 `TRY_` 表示：发生解析或校验错误时返回 SQL `NULL`，而不是使查询失败。该函数自 Doris 4.2 起支持。
+`TRY_PARSE_TO_VARIANT` 尝试把一个完整 JSON 值解析为 `VARIANT`。函数名中的 `TRY_` 表示：发生解析或校验错误时返回 SQL `NULL`，而不是使查询失败。该函数自 Doris 4.1.4 起支持。
 
 ## 语法
 

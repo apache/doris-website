@@ -110,4 +110,4 @@ ERROR: Parse json document failed
 ## Usage Notes
 
 - Use [TRY_PARSE_TO_VARIANT](./try-parse-to-variant) when invalid input should become SQL `NULL` instead of failing the query.
-- `PARSE_TO_VARIANT` explicitly parses JSON. By contrast, `CAST(string AS VARIANT)` preserves the input as a VARIANT string and does not parse JSON; see the [VARIANT CAST rules](../../../basic-element/sql-data-types/semi-structured/VARIANT#cast-rules).
+- `PARSE_TO_VARIANT` explicitly parses JSON. By contrast, `CAST(string AS VARIANT)` preserves the input as a VARIANT string and does not parse JSON; see the [VARIANT CAST rules](../../../basic-element/sql-data-types/semi-structured/VARIANT#supported-operations-and-cast-rules).

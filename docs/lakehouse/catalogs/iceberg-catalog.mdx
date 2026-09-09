@@ -225,6 +225,10 @@ See the documentation for this system table: [catalog_meta_cache_statistics](../
 * [Parquet](../file-formats/parquet.md)
 * [ORC](../file-formats/orc.md)
 
+Since version 4.1.4, the file format is determined per data file (split), so **a single Iceberg table containing both Parquet and ORC data files can be queried normally**.
+
+Since version 4.1.4, the Iceberg identity partition metadata is delivered with every split, and the path partition keys cover the identity columns of all partition specs of the table. As a result, partition column values are also returned correctly for tables that have gone through **Partition Evolution**.
+
 ## Column Type Mapping
 
 | Iceberg Type                           | Doris Type           | Comment                                 |
@@ -781,6 +785,25 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
 
 
 ### Iceberg Rest Catalog
+
+:::caution Behavior Change (4.1.4)
+
+Since version 4.1.4, when `iceberg.rest.signing-name` is set to a managed signing service such as `glue`, `s3tables` or `osstables`, `'iceberg.rest.sigv4-enabled' = 'true'` **must** be set as well. Otherwise, creating the catalog fails with:
+
+```text
+Rest Catalog requires sigv4-enabled set to true when signing-name is <name>
+```
+
+If an existing catalog only sets `signing-name` without enabling `sigv4-enabled`, the validation fails after the upgrade and the property must be added.
+
+When using `osstables`, both `iceberg.rest.signing-region` and `iceberg.rest.sigv4-enabled = 'true'` are required. Otherwise, the following error is reported:
+
+```text
+Rest Catalog requires signing-region and sigv4-enabled set to true when signing-name is osstables
+```
+
+:::
+
 <details>
     <summary>3.1+ Version</summary>
 
@@ -1489,13 +1512,16 @@ You can read a specific snapshot of an Iceberg table.
 
 By default, read requests will access the latest snapshot version.
 
-You can query a specific snapshot of an Iceberg table using the `iceberg_meta()` table function:
+You can query the snapshots of an Iceberg table using the `$snapshots` system table:
+
+:::caution Behavior Change (4.1.4)
+
+Since version 4.1.4, the `iceberg_meta()` table function has been removed. Use the Iceberg system tables (for example, `iceberg_tbl$snapshots`) to query metadata instead. See the [System Tables](#system-tables) section below.
+
+:::
 
 ```sql
-SELECT * FROM iceberg_meta(
-    'table' = 'iceberg_ctl.iceberg_db.iceberg_tbl',
-    'query_type' = 'snapshots'
-)\G
+SELECT * FROM iceberg_ctl.iceberg_db.iceberg_tbl$snapshots\G
 
 *************************** 1. row ***************************
  committed_at: 2024-11-28 11:07:29
@@ -1585,7 +1611,49 @@ DESC iceberg_tbl;
 **Notes:**
 
 1. The Iceberg table's format version (`format-version`) must be configured as `3` for these row-level parameters to be generated. Querying row lineage columns on V1 and V2 format tables may result in errors.
-2. Hidden columns are maintained by the system. Users are not allowed to explicitly specify or write to the `_row_id` or `_last_updated_sequence_number` columns when using writing statements like `INSERT`.
+2. Hidden columns are maintained by the system. Users are not allowed to explicitly specify or write to the `_row_id` or `_last_updated_sequence_number` columns when using writing statements like `INSERT`. Since version 4.1.4, naming a row lineage column in the column list of an `INSERT` statement on a table with `format-version >= 3` fails directly with: `Cannot specify invisible column '<name>' in INSERT statement`.
+
+### Iceberg V3 Default Values
+
+> Supported since version 4.1.4.
+
+Iceberg V3 defines two kinds of column default values, both of which are supported by Doris:
+
+- `initial-default`: the default value assigned to **existing historical data** when a column is added. When reading an old data file that was written before the column existed, Doris returns this default value instead of NULL. It is supported for both Parquet and ORC, and covers top-level columns, nested subfields inside a `STRUCT`, and complex parent columns that are missing as a whole. It also takes effect during predicate evaluation.
+- `write-default`: the default value filled in for **columns that are not specified** at write time. With `INSERT INTO t (subset of columns) VALUES (...)`, the columns that are not listed are written with the current `write-default` (earlier versions wrote NULL).
+
+**Specifying a default value through DDL:**
+
+```sql
+ALTER TABLE iceberg_tbl ADD COLUMN c1 INT DEFAULT 10;
+```
+
+This statement sets both the Iceberg `write-default` and `initial-default`. It **requires the table's `format-version` to be `3`**; V1 and V2 tables do not support columns with a non-null default value.
+
+**The `DEFAULT()` expression:**
+
+Since version 4.1.4, the `DEFAULT(<column>)` expression is available for referencing a column's default value explicitly in DML. It can be used in `INSERT`, `UPDATE ... SET`, and in each branch of `MERGE INTO`:
+
+```sql
+INSERT INTO iceberg_tbl VALUES (1, DEFAULT(c1));
+
+UPDATE iceberg_tbl SET c1 = DEFAULT(c1) WHERE id = 1;
+
+MERGE INTO iceberg_tbl t USING src s ON t.id = s.id
+WHEN NOT MATCHED THEN INSERT VALUES (s.id, DEFAULT(c1));
+```
+
+Semantics:
+
+- For an Iceberg target table, `DEFAULT()` is resolved against the Iceberg schema pinned for this write. Referencing a column that is not part of the write target reports `DEFAULT requires a target column reference` or `Cannot find column information for DEFAULT(<col>)`.
+- For a non-Iceberg column, the column's default value is used. If the column has no default value and is NOT NULL or auto-increment, the error is `Column '<name>' has no default value and does not allow NULL or column is auto-increment`. If the column is nullable and has no default value, NULL is used.
+- Other errors: `DEFAULT requires a column reference, but got: <expr>` and `DEFAULT cannot be used on generated column '<name>'`.
+
+:::info Note
+
+The Iceberg `write-default` is a write-side connector concept. It is **not** exposed through `DESCRIBE`, `SHOW CREATE TABLE`, or `information_schema.columns.COLUMN_DEFAULT`.
+
+:::
 
 ## System Tables
 
@@ -1607,7 +1675,15 @@ SELECT * FROM iceberg_table$history;
 
 > The `all_manifests` system table is supported starting from version 4.0.4.
 >
-> The `position_deletes` system table is not yet supported and is planned to be supported in future versions.
+> The `position_deletes` system table is supported starting from version 4.1.4.
+
+:::caution Behavior Change (4.1.4)
+
+Since version 4.1.4, Iceberg system tables are queried through the native execution path, and the `iceberg_meta()` table function has been **removed**. Use the `<table>$<system_table_name>` system table syntax instead. See [ICEBERG_META](../../sql-manual/sql-functions/table-valued-functions/iceberg-meta.md).
+
+The access syntax and the returned results of the system tables themselves are unchanged. In addition, system tables now support `SHOW CREATE TABLE`.
+
+:::
 
 ### entries
 
@@ -2077,6 +2153,7 @@ Where `<source>` can be a subquery or another table.
 3. In concurrent writing scenarios, Iceberg provides an optimistic concurrency control mechanism. When write conflicts occur, the operation may throw a transaction conflict exception.
 4. The `UPDATE` operation, both independently and within `MERGE INTO`, supports using expressions and functions, such as `age = age * 2 + 1` or `name = concat(name, '-modified')`.
 5. These operations apply to both partitioned and non-partitioned tables.
+6. **Since version 4.1.4**, `MERGE INTO` validates the match relationship between the source and the target table: when the same target row is matched by multiple source rows, the statement fails with `multiple source rows matched the same target row` instead of producing a non-deterministic result. If a one-to-many match is expected, deduplicate on the source side first.
 
 ### Related Parameters
 
@@ -2266,15 +2343,21 @@ Supported schema change operations include:
 
 * **Rename Column**
 
-    Use the `RENAME COLUMN` clause to rename columns. Renaming columns within nested types is not supported.
+    Use the `RENAME COLUMN` clause to rename columns. Since version 4.1.4, renaming columns within nested types is supported, and the `TO` keyword is optional.
 
     ```sql
     ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
+
+    -- Supported since 4.1.4: TO can be omitted
+    ALTER TABLE iceberg_table RENAME COLUMN old_col_name new_col_name;
+
+    -- Supported since 4.1.4: rename a nested field
+    ALTER TABLE iceberg_table RENAME COLUMN s.old_field TO new_field;
     ```
 
 * **Add a Column**
 
-    Use `ADD COLUMN` to add a new column. Adding new columns to nested types is not supported.
+    Use `ADD COLUMN` to add a new column. Since version 4.1.4, adding a new column to a nested type (STRUCT) is supported through a dotted path (for example, `s.new_field`); a newly added nested field must be nullable.
 
     When adding a new column, you can specify nullable attributes, default values, comments, and column position.
 
@@ -2300,10 +2383,13 @@ Supported schema change operations include:
 
 * **Drop Column**
 
-    Use `DROP COLUMN` to drop columns. Dropping columns within nested types is not supported.
+    Use `DROP COLUMN` to drop columns. Since version 4.1.4, dropping a column within a nested type is supported through a dotted path.
 
     ```sql
     ALTER TABLE iceberg_table DROP COLUMN col_name;
+
+    -- Supported since 4.1.4: drop a nested field
+    ALTER TABLE iceberg_table DROP COLUMN s.field_name;
     ```
 
 * **Modify Column**
@@ -2366,6 +2452,26 @@ Supported schema change operations include:
     ```sql
     ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
     ```
+
+#### Nested Column Schema Change (4.1.4+)
+
+Since version 4.1.4, `ADD COLUMN`, `DROP COLUMN`, `MODIFY COLUMN` and `RENAME COLUMN` all accept a dotted path (for example, `a.b.c`) to operate on a nested field directly. This capability applies **only to Iceberg tables**; using it on any other table type reports: `Nested column path is only supported for Iceberg tables: ...`.
+
+Common limitations and errors:
+
+| Error message | Description |
+| --- | --- |
+| `New nested field '<path>' must be nullable` | A newly added nested field must be nullable |
+| `Rollup is not supported for Iceberg column operations` | The Rollup clause is not supported |
+| `PROPERTIES are not supported for Iceberg column operations` | The PROPERTIES clause is not supported |
+| `KEY is not supported for Iceberg ADD/MODIFY COLUMN` | The KEY keyword is not supported |
+| `Generated columns are not supported for Iceberg ADD/MODIFY COLUMN` | Generated columns are not supported |
+| `Modifying default values is not supported for Iceberg columns` | Modifying the default value of an existing column is not supported |
+| `ON UPDATE is not supported for Iceberg ADD COLUMN` | The ON UPDATE clause is not supported |
+| `Modify column type from complex to primitive is not supported` | Changing a complex type to a primitive type is not supported |
+| `Cannot change MAP key type from ...` / `Cannot <op> MAP key nested column` | Changing the MAP key type, or performing a nested column operation on a MAP key, is not supported |
+| `Iceberg does not support comments on collection element or value fields` | Comments on collection element or MAP value fields are not supported |
+| `Multiple Iceberg ALTER clauses are not supported when a statement ...` | When nested columns are involved, a statement may contain only one ALTER clause |
 
 ### Partition Evolution
 

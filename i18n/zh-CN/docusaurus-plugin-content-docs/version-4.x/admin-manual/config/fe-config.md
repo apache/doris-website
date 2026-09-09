@@ -1528,7 +1528,7 @@ resource_group_load_success_quorum=group_a:2,group_b:1
 
 默认值：false
 
-是否可以动态配置：false
+是否可以动态配置：true
 
 是否为 Master FE 节点独有的配置项：true
 
@@ -2942,7 +2942,7 @@ Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。此配置
 
 默认值：30（秒）
 
-是否可以动态配置：true
+是否可以动态配置：false
 
 FE 向 Meta Service 获取版本号（Version）的超时时间。
 

@@ -81,7 +81,7 @@ TO DATABASE <target_db> (
 | `table.<table_name>.target_table` | MySQL, PostgreSQL | Source table name | Sets the Doris target table name for a source table. |
 | `table.<table_name>.exclude_columns` | MySQL, PostgreSQL | - | Excludes non-key columns from a source table, separated by commas. |
 | `offset` | MySQL, PostgreSQL | `latest` | Startup offset. Supports `initial`, `snapshot`, `latest`, and exact JSON offsets. MySQL also supports `earliest`. |
-| `snapshot_split_size` | MySQL, PostgreSQL | `8096` | Full-snapshot split size in rows. Must be a positive integer. |
+| `snapshot_split_size` | MySQL, PostgreSQL | `40960` (`8096` before 4.1.4) | Full-snapshot split size in rows. Must be a positive integer. |
 | `snapshot_parallelism` | MySQL, PostgreSQL | `1` | Maximum number of splits scheduled by a Task at one time during the full-sync phase. Must be a positive integer. |
 | `ssl_mode` | MySQL, PostgreSQL | `disable` | SSL mode. Valid values are `disable`, `require`, and `verify-ca`. |
 | `ssl_rootcert` | MySQL, PostgreSQL | - | CA certificate file in the format `FILE:<file_name>`. Required when `ssl_mode=verify-ca`. |

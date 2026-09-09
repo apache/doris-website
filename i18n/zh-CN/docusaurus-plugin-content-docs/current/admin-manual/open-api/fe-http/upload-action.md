@@ -6,6 +6,16 @@
 }
 ---
 
+:::caution 版本行为变更（4.1.4）
+
+出于安全考虑，Upload Action 相关的所有 HTTP 接口（`/api/<namespace>/<db>/<tbl>/upload`、`/api/<namespace>/<db>/<tbl>/upload/load`、`/api/<namespace>/<db>/<tbl>/upload/delete`）自 **4.1.4** 版本起已移除，调用会返回 404。同时 FE 配置项 `http_load_submitter_max_worker_threads` 也一并移除。
+
+如需导入小文件，请改用 [Stream Load](../../../data-operate/import/import-way/stream-load-manual) 或 [INSERT INTO ... SELECT ... FROM S3/HDFS/LOCAL TVF](../../../sql-manual/sql-functions/table-valued-functions/s3)。
+
+本文保留 4.1.4 之前版本的接口说明以供参考。
+
+:::
+
 Upload Action 目前主要服务于 FE 的前端页面，用于用户导入一些测试性质的小文件。
 
 ## 上传导入文件

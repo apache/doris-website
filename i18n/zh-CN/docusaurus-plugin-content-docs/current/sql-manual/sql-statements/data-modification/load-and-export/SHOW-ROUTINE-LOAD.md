@@ -58,7 +58,7 @@ SHOW [ALL] ROUTINE LOAD [FOR <jobName>];
 | User                  | 创建该作业的用户                                             |
 | Comment               | 作业的注释                                                   |
 | ComputeGroup          | 作业运行所在的计算组                                         |
-| FirstErrorMsg         | 该作业遇到的第一条错误信息。自 4.0.8 版本起新增               |
+| FirstErrorMsg         | 该作业遇到的第一条错误信息。Doris 4.0 系列自 4.0.8 版本起新增，4.1 系列自 4.1.4 版本起新增。该值保存在 FE 内存中，FE 重启后会丢失；错误统计被重置时，`ErrorLogUrls` 也会一并清空 |
 
 ### 敏感属性脱敏
 

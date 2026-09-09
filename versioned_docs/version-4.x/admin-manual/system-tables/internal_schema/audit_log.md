@@ -30,6 +30,7 @@ Store audit logs
 | error_code        | int          | Error code                                                   |
 | error_message     | text         | Error message                                                |
 | query_time        | bigint       | Execution time of the statement                              |
+| queue_time_ms     | bigint       | Time the statement spent waiting in the workload queue, in milliseconds. Supported since version 4.1.4. In the table schema, the column is positioned between `query_time` and `cpu_time_ms`. |
 | scan_bytes        | bigint       | Amount of data scanned                                       |
 | scan_rows         | bigint       | Number of rows scanned                                       |
 | return_rows       | bigint       | Number of rows returned                                      |

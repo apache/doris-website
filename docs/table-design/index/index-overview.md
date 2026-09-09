@@ -115,7 +115,7 @@ The following table summarizes the strengths and limitations of each index type 
 | Skip index | ZoneMap index | Built-in index with small storage footprint | Supports few query types, only equality and range |
 | Skip index | [BloomFilter index](./bloomfilter.md) | More fine-grained than ZoneMap, with moderate storage footprint | Supports few query types, only equality |
 | Skip index | [NGram BloomFilter index](./ngram-bloomfilter-index.md) | Accelerates LIKE queries, with moderate storage footprint | Supports few query types, only LIKE acceleration |
-| Vector index | [ANN index](./vector-index/overview.md) | Supports vector similarity TopN / range / combined search, can be linked with scalar filters; supports multiple quantization methods to balance recall and resource usage | Only applicable to `Array<Float>` columns that are NOT NULL, and only supports the DUPLICATE KEY table model |
+| Vector index | [ANN index](./vector-index/overview.md) | Supports vector similarity TopN / range / combined search, can be linked with scalar filters; supports multiple quantization methods to balance recall and resource usage | Only applicable to `Array<Float>` columns that are NOT NULL; supports the DUPLICATE KEY table model, and the UNIQUE KEY table model with merge-on-write enabled (supported since version 4.1.4) |
 
 ## Index Support for Operators and Functions
 

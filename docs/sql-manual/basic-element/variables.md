@@ -36,6 +36,8 @@ System variables are a set of variables predefined by Doris to control database 
 
     - Use `SHOW VARIABLES LIKE 'pattern'` to view specific variables by pattern matching.
 
+    - For the values and effects of individual session variables, see [Session Variable List](./session-variables.md).
+
 - Persistence:
 
     - Modifications to global variables are reset to default values after a system restart; session restarts do not reset to default values.

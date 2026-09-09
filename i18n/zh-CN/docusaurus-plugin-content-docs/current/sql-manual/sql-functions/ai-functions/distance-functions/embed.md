@@ -29,7 +29,22 @@ under the License.
 
 根据文本或多模态输入生成嵌入向量，可用于相似度计算、检索等场景。
 
+:::note
+多模态 Embedding 自 Apache Doris 4.1.4 版本起支持。
+:::
+
 生成多模态嵌入向量时，需要传入描述图像、视频或音频文件的 JSON 对象。使用某种媒体类型前，请确认配置的 AI Provider 和模型支持该类型。
+
+### 支持多模态 Embedding 的 Provider
+
+| Provider | 支持的媒体类型 |
+| --- | --- |
+| `voyageai` | 图像（`image/`）、视频（`video/`） |
+| `qwen` | 图像（`image/`）、视频（`video/`） |
+| `jina` | 图像（`image/`）、视频（`video/`） |
+| `gemini` | 图像（`image/`）、视频（`video/`）、音频（`audio/`） |
+
+其他 Provider 调用多模态 Embedding 会报错 `<provider> does not support multimodal Embed feature.`；传入 Provider 不支持的媒体类型会报错 `<provider> only supports <types> multimodal embed, got <type>`。
 
 ## 语法
 
@@ -59,6 +74,12 @@ EMBED([<resource_name>], <input>)
 | `external_id` | 否 | Assume Role 时使用的 External ID。 |
 
 使用 HTTP 或 HTTPS URL 时，只需提供 `uri` 和 `content_type`。使用 S3 兼容存储 URI 时，Doris 会根据对象存储凭证生成预签名 URL，支持 AK/SK 和 IAM Role 两种鉴权方式。
+
+预签名 URL 的有效期由会话变量 `file_presigned_url_ttl_seconds` 控制，单位为秒，默认 `3600`（1 小时）。如果媒体文件较大、Provider 拉取耗时较长，可以适当调大：
+
+```sql
+SET file_presigned_url_ttl_seconds = 7200;
+```
 
 ## 返回值
 

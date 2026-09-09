@@ -523,20 +523,50 @@ In compute-storage decoupled mode, if Stream Load requests are randomly distribu
 | Configuration | Location | Default | Description |
 | --- | --- | --- | --- |
 | `enable_group_commit_streamload_be_forward` | FE | `false` | Whether to enable Stream Load BE forwarding. Only takes effect in decoupled mode and when the request uses Group Commit |
-| `enable_group_commit_streamload_be_forward` | BE | `false` | Whether requests to the BE endpoint `/api/{db}/{table}/_stream_load_forward` are allowed. **Added in version 4.0.8** |
+| `enable_group_commit_streamload_be_forward` | BE | `false` | Whether requests to the BE endpoint `/api/{db}/{table}/_stream_load_forward` are allowed. **Added in Doris 4.0.8 in the 4.0 series, and in Doris 4.1.4 in the 4.1 series** |
 
 The configuration must be set to `true` on **both** FE and BE.
 
-:::caution Behavior change (4.0.8)
+:::caution Behavior change (4.0.8 / 4.1.4)
 
-Starting from version 4.0.8, the BE `_stream_load_forward` endpoint is restricted in two ways:
+Starting from Doris 4.0.8 in the 4.0 series, and Doris 4.1.4 in the 4.1 series, the BE `_stream_load_forward` endpoint is restricted in two ways:
 
 - The endpoint is gated by the BE configuration `enable_group_commit_streamload_be_forward`. When it is `false` (the default), requests return `403 Forbidden` with `Stream load forward is disabled`.
 - Once the configuration is enabled, requests to the endpoint must also pass authentication and hold the global `LOAD` privilege.
 
-If the feature was only enabled on FE before the upgrade, forwarding fails after upgrading to 4.0.8. Add `enable_group_commit_streamload_be_forward=true` to every `be.conf` and make sure the load account holds the `LOAD` privilege.
+If the feature was only enabled on FE before the upgrade, forwarding fails after the upgrade. Add `enable_group_commit_streamload_be_forward=true` to every `be.conf` and make sure the load account holds the `LOAD` privilege.
 
 :::
+
+### Forwarding to a Follower FE
+
+> Supported since version 4.1.4.
+
+In addition to the BE forwarding described above, FE can forward Stream Load requests that use Group Commit to Follower FEs in a round-robin fashion, spreading the batching load across multiple FEs.
+
+| Configuration | Location | Default | Description |
+| --- | --- | --- | --- |
+| `enable_forward_group_commit_stream_load_to_follower` | FE | `false` | Whether to forward Group Commit Stream Load requests to Follower FEs in a round-robin fashion |
+
+Note: this forwarding is not supported when the target table has `light_schema_change` set to `false`; such requests fail with an error.
+
+### WAL Count Limit
+
+> Supported since version 4.1.4.
+
+Group Commit in `async_mode` writes data to the WAL first and replays it asynchronously. If WAL replay keeps failing, WAL files accumulate and can fill up the disk. Starting from version 4.1.4, the BE configuration `group_commit_max_wal_num_per_table` limits the number of WAL files per table.
+
+| Configuration | Location | Default | Description |
+| --- | --- | --- | --- |
+| `group_commit_max_wal_num_per_table` | BE | `10` | Maximum number of Group Commit WAL files allowed for a single table. `0` means no limit. Supports dynamic modification |
+
+Once the limit is exceeded, `async_mode` Group Commit loads for that table are rejected with an `EXCEEDED_LIMIT` error, such as:
+
+```text
+Too many group commit async WALs for table <table_name>
+```
+
+This error means that WAL replay has run into a problem (for example, a schema change or a disk failure). Investigate and restore WAL replay rather than simply raising the limit.
 
 ## Limitations
 

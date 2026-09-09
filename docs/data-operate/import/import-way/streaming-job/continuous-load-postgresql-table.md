@@ -105,7 +105,7 @@ Data source parameters are configured through the `cdc_stream(...)` TVF. They de
 | `schema` | Yes | - | Schema name. |
 | `table` | Yes | - | Name of the table to sync. Each SQL Mapping job supports one source table. |
 | `offset` | Yes | - | Startup offset. `initial`: full and incremental sync; `snapshot`: full sync only; `latest`: sync only changes after the job starts. You can also specify an exact JSON offset, such as `{"lsn":"12345678"}`. PostgreSQL does not support `earliest`. |
-| `snapshot_split_size` | No | `8096` | Split size in rows. During full sync, the table is divided into multiple splits. Must be a positive integer. |
+| `snapshot_split_size` | No | `40960` (`8096` before 4.1.4) | Split size in rows. During full sync, the table is divided into multiple splits. Must be a positive integer. |
 | `snapshot_parallelism` | No | `1` | Parallelism of the full-sync phase, that is, the maximum number of splits scheduled by a Task at one time. Must be a positive integer. |
 | `skip_snapshot_backfill` | No | `false` | Whether to skip WAL backfill during the snapshot. When set to `true`, at-least-once semantics are used. |
 | `slot_name` | No | `doris_cdc_<job_id>` | Logical replication slot name. The name can contain only lowercase letters, digits, and underscores, cannot start with a digit, and is limited to 63 characters. A custom slot must be created in advance and is not deleted by Doris. |

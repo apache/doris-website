@@ -94,6 +94,9 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     | `mc.account_format` | `name` | The account systems of Alibaba Cloud International and China sites are inconsistent. For international site users, if you encounter errors like `user 'RAM$xxxxxx:xxxxx' is not a valid aliyun account`, you can set this parameter to `id`. | 3.0.9/3.1.1 (inclusive) and later |
     | `mc.enable.namespace.schema` | `false` | Whether to support MaxCompute Schema hierarchy. See: https://help.aliyun.com/zh/maxcompute/user-guide/schema-related-operations | 3.1.3 (inclusive) and later |
     | `mc.max_field_size_bytes` | `8388608` (8 MB) | Maximum bytes allowed for a single field in a write session. When writing data that contains large string or binary fields, the write may fail if the field size exceeds this value. You can increase this value based on your actual data. | 4.1.0 (inclusive) and later |
+    | `test_connection` | `false` | Whether to verify connectivity when creating the catalog. When set to `true`, Doris checks that the AK/SK, endpoint and `mc.project` are accessible; if `mc.enable.namespace.schema` is enabled, the schema list must be accessible as well. `CREATE CATALOG` fails immediately if the check does not pass. | 4.1.4 (inclusive) and later |
+
+    > Starting from version 4.1.4, `mc.connect_timeout`, `mc.read_timeout` and `mc.retry_count` are actually applied to the underlying REST client. In earlier versions these three properties could be set but had no effect.
 
     - `mc.max_field_size_bytes`
 

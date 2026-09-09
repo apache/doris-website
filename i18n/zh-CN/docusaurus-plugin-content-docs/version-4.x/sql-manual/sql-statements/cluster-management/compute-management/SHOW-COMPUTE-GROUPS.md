@@ -34,7 +34,7 @@ SHOW COMPUTE GROUPS
 **存算一体模式（4.1.4+）：**
 
 - Name - 计算组（即 BE 的资源组 / `location` 标签）名字
-- BackendNum - 该计算组中处于存活且正常状态的 BE 个数
+- BackendNum - 该计算组中的 BE 个数
 
 结果按计算组名字排序。
 

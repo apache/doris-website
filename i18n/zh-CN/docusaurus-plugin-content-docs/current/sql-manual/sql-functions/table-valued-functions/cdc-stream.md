@@ -63,7 +63,7 @@ cdc_stream(
 | `schema` | PostgreSQL | 是 | - | PostgreSQL Schema 名称。 |
 | `table` | MySQL、PostgreSQL | 是 | - | 需要同步的表名。每个 CDC Stream TVF 只支持一张源表。 |
 | `offset` | MySQL、PostgreSQL | 是 | - | 启动位点。`initial`：全量 + 增量；`snapshot`：仅全量；`latest`：仅同步启动后的增量；MySQL 还支持 `earliest`。JSON 精确位点示例：MySQL 使用 `{"file":"binlog.000001","pos":"154"}` 或 `{"gtids":"<gtid_set>"}`，PostgreSQL 使用 `{"lsn":"12345678"}`。 |
-| `snapshot_split_size` | MySQL、PostgreSQL | 否 | `8096` | split 的大小（行数）。全量同步时表会被切分成多个 split。必须为正整数。 |
+| `snapshot_split_size` | MySQL、PostgreSQL | 否 | `40960` | split 的大小（行数）。全量同步时表会被切分成多个 split。必须为正整数。4.1.4 之前的默认值为 `8096`。 |
 | `snapshot_parallelism` | MySQL、PostgreSQL | 否 | `1` | 全量阶段的并行度，即单次 Task 最多调度的 split 数量。必须为正整数。 |
 | `skip_snapshot_backfill` | MySQL、PostgreSQL | 否 | `false` | 是否跳过快照期间的增量回填。设置为 `true` 时采用 at-least-once 语义。 |
 | `ssl_mode` | MySQL、PostgreSQL | 否 | `disable` | SSL 模式，可选值为 `disable`、`require`、`verify-ca`。 |

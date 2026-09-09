@@ -382,7 +382,9 @@ FE 通过内部变量 `variable_version` 记录会话变量默认值的迁移进
 
 :::caution 启用 Nereids 分布式规划器
 
-自 4.1.4 版本起，升级会把会话变量 `enable_nereids_distribute_planner` 的**全局默认值刷新为 `true`**，即使集群元数据中此前持久化的是 `false`。
+4.1 系列自 4.1.4 版本起，**从 3.x 升级到 4.1.4** 时会把会话变量 `enable_nereids_distribute_planner` 的全局默认值刷新为 `true`（4.0 系列自 4.0.8 起已是该行为）。
+
+该刷新只在集群的 `variable_version` 低于 `400` 时触发。因此已经运行在 4.0.x / 4.1.x 的集群升级到 4.1.4 时，不会改变该变量已持久化的取值。
 
 升级后如果观察到查询计划的分布方式与升级前不同，可以执行 `SET GLOBAL enable_nereids_distribute_planner = false;` 回退，并反馈相关查询。
 
@@ -422,7 +424,7 @@ FE 通过内部变量 `variable_version` 记录会话变量默认值的迁移进
 | `jobs()` 表函数中 Streaming Job 的 `Lag` 列改名为 `LagBytes`，单位由秒改为字节；新增 `LastSourceEventTimestamp` 列 | 解析 `jobs()` 输出的脚本、基于 `streaming_job_per_job_lag` 指标的监控 | 改用 `LagBytes` 列和 `streaming_job_per_job_lag_bytes` 指标。详见 [持续导入](../../data-operate/import/import-way/streaming-job/continuous-load-overview) |
 | Arrow Flight SQL 返回的 `DATETIME` / `DATETIMEV2` 改为**不带时区**的 Arrow Timestamp（`TIMESTAMPTZ` 仍带时区） | 通过 Arrow Flight SQL 读取时间列的客户端 | 按不带时区的语义解析 |
 | 聚合函数的任意参数中包含聚合函数时报错 `aggregate function cannot contain aggregate parameters` | 形如 `group_concat(x ORDER BY sum(k))` 的历史 SQL | 改写 SQL，先聚合再引用 |
-| 表属性 `default.replication_num` 与 `default.replication_allocation` 变为互斥 | 同时设置了两者的建表 / 改表语句 | 只保留其中一个 |
+| 修改 `default.replication_num` 或 `default.replication_allocation` 时，会自动移除另一个冲突的历史属性 | 元数据中同时残留这两个属性的老表 | 无需处理。修复后 `SHOW CREATE TABLE` 与实际生效的副本分配保持一致。**滚动升级期间**，请在所有 FE 都升级完成后再修改这两个属性，否则新旧 FE 可能应用不同的副本设置 |
 | Paimon `paimon.table-option.*` Catalog 属性被限制为 7 个键的白名单 | 使用其他 `paimon.table-option.*` 键的 Catalog | 移除白名单外的键。详见 [Paimon Catalog](../../lakehouse/catalogs/paimon-catalog) |
 | 存储属性新增保留键 `doris.fs.cache.key`，并移除隐式的 `fs.<schema>.impl.disable.cache=true` 默认值 | 使用外部存储的 Catalog / TVF | 升级时**先升级 BE 再升级 FE** |
 | 存算分离模式下 `ADMIN SET FRONTEND CONFIG` 限制为 `root` 用户执行 | 使用非 root 账号动态改 FE 配置的脚本 | 改用 root 账号，或改为在 `fe.conf` 中配置 |
