@@ -62,6 +62,33 @@ SET max_file_split_num = 0;
 
 当设置了该限制后，Doris 会动态计算最小的 split 大小，以确保 split 数量不超过设定的上限。
 
+## File Scanner V2
+
+> 自 4.1.4 版本开始支持。
+
+File Scanner V2 是外表文件扫描的新执行引擎，覆盖 Parquet、ORC、CSV、JSON 格式，以及 Hive、Iceberg、Paimon、Hudi 等表格式的读取。相比旧版扫描器，它在裁剪能力、并发切分和内存使用上都做了优化。
+
+由会话变量 `enable_file_scanner_v2` 控制：
+
+- 类型：`boolean`
+- 默认值：`true`（默认开启）
+- 说明：开启后，`FileScanNode` 在支持的查询场景下使用 File Scanner V2。JDBC Catalog、Iceberg 系统表等场景仍走旧的扫描路径。
+
+如果怀疑某个查询的问题与新扫描器相关，可以临时关闭后对比：
+
+```sql
+SET enable_file_scanner_v2 = false;
+```
+
+### 数据裁剪行为
+
+File Scanner V2 会**始终执行安全的分区裁剪与表达式 ZoneMap 裁剪**，不再受下列会话变量控制。这两个变量只影响仍然遵循它们的旧扫描器：
+
+| 变量 | 默认值 | 说明 |
+| --- | --- | --- |
+| `enable_runtime_filter_partition_prune` | `true` | 是否启用 Runtime Filter 分区裁剪。File Scanner V2 始终启用安全的分区裁剪，设置为 `false` 对其无效 |
+| `enable_expr_zonemap_filter` | `true` | 是否启用表达式 ZoneMap 过滤。File Scanner V2 始终启用安全的表达式 ZoneMap 过滤 |
+
 ## Merge IO 优化
 
 针对 HDFS、对象存储等远端存储系统，Doris 会通过 Merge IO 技术来优化 IO 访问。Merge IO 技术，本质上是将多个相邻的小 IO 请求，合并成一个大 IO 请求，这样可以减少 IOPS，增加 IO 吞吐。

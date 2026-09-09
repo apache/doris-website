@@ -544,7 +544,7 @@ When using the Doris vector index, note the following limitations:
 
 1. **Data type limitation**: The column on which an ANN Index is built must be a `NOT NULLABLE` `Array<Float>`. During data load, the length of every vector in this column must equal the dimension specified in the index property (`dim`), otherwise an error is reported.
 
-2. **Table model limitation**: ANN Index can only be used on the **Duplicate Key** table model.
+2. **Table model limitation**: ANN Index can only be used on the **Duplicate Key** table model, or on a **Unique Key** table with merge-on-write enabled (`enable_unique_key_merge_on_write = true`). Support for Unique Key tables was added in version 4.1.4. Merge-on-read Unique Key tables and Aggregate Key tables are still unsupported; creating an index on them reports: `ANN index can only be used in DUP_KEYS table or UNIQUE_KEYS table with merge-on-write enabled`.
 
 3. **Predicate columns must have a secondary index**: Doris uses pre-filter semantics (predicates are evaluated before AnnTopN). When the columns referenced by predicates in the SQL **do not have a secondary index**, Doris falls back to brute-force computation to ensure correctness. For example:
 

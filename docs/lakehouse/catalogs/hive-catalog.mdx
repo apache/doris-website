@@ -791,6 +791,14 @@ You can query Hive partition information using the following two methods:
   +------------+-------------+
   ```
 
+:::caution Behavior change (4.1.4)
+
+Starting from version 4.1.4, the default-partition marker `__HIVE_DEFAULT_PARTITION__` used by Hive directory-style partitioning is resolved to a real **NULL** value, instead of being encoded as the string `\N`. At the same time, a literal `\N` that is genuinely stored in a partition path is preserved as data.
+
+Before 4.1.4 the two cases were indistinguishable and both appeared as `\N` in query results. After upgrading, `WHERE <partition_col> IS NULL` correctly matches the Hive default partition.
+
+:::
+
 ### Querying Hive Transactional Tables
 
 Hive Transactional tables support ACID semantics. For more details, see [Hive Transactions](https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions).

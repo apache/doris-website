@@ -44,9 +44,41 @@ Continuous load supports the following data sources and sync modes:
 | :---------- | :----------------- | :---------------------------------------------------------------- | :---------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
 | MySQL       | 5.6, 5.7, 8.0.x    | [MySQL CDC with SQL Mapping](./continuous-load-mysql-table.md)    | [MySQL CDC with Auto Table Creation](./continuous-load-mysql-database.md) | [Amazon RDS MySQL](./prerequisites/amazon-rds-mysql.md) · [Amazon Aurora MySQL](./prerequisites/amazon-aurora-mysql.md)                   |
 | PostgreSQL  | 14, 15, 16, 17     | [PostgreSQL CDC with SQL Mapping](./continuous-load-postgresql-table.md) | [PostgreSQL CDC with Auto Table Creation](./continuous-load-postgresql-database.md) | [Amazon RDS PostgreSQL](./prerequisites/amazon-rds-postgresql.md) · [Amazon Aurora PostgreSQL](./prerequisites/amazon-aurora-postgresql.md) |
+| OceanBase   | MySQL compatibility mode | -                                                           | Supported (since version 4.1.4). For the syntax, see [OceanBase Data Source](#oceanbase-data-source) | -                                                                                                                                         |
 | S3          | -                  | [S3 Continuous Load](./continuous-load-s3.md)                     | -                                                                       | -                                                                                                                                         |
 
-For how upstream column types map to Doris types, see Data Type Mapping for [MySQL](./data-type-mapping-mysql.md) and [PostgreSQL](./data-type-mapping-postgresql.md).
+For how upstream column types map to Doris types, see Data Type Mapping for [MySQL](./data-type-mapping-mysql.md) and [PostgreSQL](./data-type-mapping-postgresql.md). OceanBase reuses the MySQL type mapping.
+
+### OceanBase Data Source
+
+> Supported since version 4.1.4.
+
+To use OceanBase as a CDC data source for continuous load, use the `FROM OCEANBASE (...)` clause. Its properties are the same as those of the MySQL data source:
+
+```sql
+CREATE JOB oceanbase_sync ON STREAMING
+FROM OCEANBASE (
+    "jdbc_url" = "jdbc:mysql://<host>:<port>",
+    "driver_url" = "<driver_jar_url>",
+    "driver_class" = "com.mysql.cj.jdbc.Driver",
+    "user" = "<user>",
+    "password" = "<password>",
+    "database" = "<ob_database>",
+    "include_tables" = "t1,t2",
+    "offset" = "initial"
+)
+TO DATABASE <doris_db> (
+    "table.create.properties.replication_num" = "1"
+);
+```
+
+Limitations:
+
+- `jdbc_url` must start with `jdbc:mysql://`, otherwise the job fails with `OceanBase jdbc_url must start with 'jdbc:mysql://'`.
+- Only the **MySQL compatibility mode** of OceanBase is supported. When the job is created, Doris runs `SHOW VARIABLES LIKE 'ob_compatibility_mode'` to detect the mode; the Oracle compatibility mode fails with `OceanBase Oracle compatibility mode is not supported for streaming jobs`.
+- The `schema`, `slot_name`, and `publication_name` properties are not supported. Specifying any of them fails with `Property '<key>' is not supported for OceanBase`.
+- `database` is required.
+- `jdbc_url` parameters are normalized in the same way as for MySQL. See [JDBC URL Parameter Normalization](./data-type-mapping-mysql.md#jdbc-url-parameter-normalization).
 
 ## How to Choose a Sync Method
 
@@ -133,6 +165,9 @@ Result columns:
 | LoadStatistic     | Job statistics                                                           |
 | ErrorMsg          | Error message of the Job                                                 |
 | JobRuntimeMsg     | Runtime hints of the Job                                                 |
+| LagBytes          | Number of backlog bytes in the source log (MySQL binlog / PostgreSQL WAL). `-1` means the value is currently unavailable, for example for an S3 data source or during the full snapshot phase. **Since version 4.1.4**, this column replaces the former `Lag` column (in seconds) and is reported in bytes |
+| LastSourceEventTimestamp | Timestamp (in Unix seconds) of the latest source event recorded in the committed offset. Empty when unavailable. **Added in version 4.1.4** |
+| LastTaskSuccessTime | Time when the most recent Task completed successfully                  |
 
 ### View Task Status
 
@@ -213,10 +248,23 @@ Only upstream tables **with a primary key** can be synchronized (both sync metho
 
 ### Schema Change (DDL)
 
-DDL sync applies **only to Auto Table Creation Sync**; SQL Mapping (TVF) does not sync any DDL.
+DDL sync applies **only to Auto Table Creation Sync**; SQL Mapping (TVF) does not sync any DDL — the `cdc_stream()` table function always forces `schema_change_enabled` to `false`.
 
 - **PostgreSQL** (supported since 4.1): only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and constraint / index / partition changes are NOT synced** — apply them manually in Doris.
-- **MySQL**: upstream DDL is **not synced yet** — adjust the Doris table schema manually.
+- **MySQL** (supported since 4.1.4): only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and constraint / index / partition changes are NOT synced** — apply them manually in Doris.
+
+You can turn this capability off with the Job property `schema_change_enabled`:
+
+| Parameter | Applicable data sources | Default | Description |
+| --- | --- | --- | --- |
+| `schema_change_enabled` | MySQL, PostgreSQL | `true` | Whether to automatically sync upstream `ADD COLUMN` / `DROP COLUMN`. Supported since version 4.1.4 |
+
+:::caution Behavior change (4.1.4)
+
+- Starting from version 4.1.4, an added column **no longer carries the `DEFAULT` value of the upstream column** (for both MySQL and PostgreSQL). The new column has no default value in Doris, and historical rows are not backfilled.
+- PostgreSQL schema change detection is now driven by Relation events: only `ADD COLUMN` and `DROP COLUMN` are recognized; a change that both adds and drops columns (possibly a `RENAME`) is skipped, as are column type changes. This capability applies only to the Auto Table Creation Sync (at-least-once) path; the TVF / exactly-once path does not support it.
+
+:::
 
 ## FAQ
 

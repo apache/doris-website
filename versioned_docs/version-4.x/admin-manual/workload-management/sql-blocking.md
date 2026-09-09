@@ -39,7 +39,7 @@ Each rule is defined by the following properties that determine its behavior and
 | `cardinality` | Maximum number of rows allowed to scan | Positive integer |
 | `partition_num` | Maximum number of partitions allowed to scan | Positive integer |
 | `tablet_num` | Maximum number of tablets allowed to scan | Positive integer |
-| `require_partition_filter` | Whether partitioned internal table and Hive table queries must include an effective partition filter. Supported in Doris 4.0.7 and later in the 4.0 series, and in Doris 4.1.2 and later in the 4.1 series. | `"true"` or `"false"` |
+| `require_partition_filter` | Whether partitioned internal table and Hive table queries must include an effective partition filter. Supported in Doris 4.0.7 and later in the 4.0 series, and in Doris 4.1.4 and later in the 4.1 series. | `"true"` or `"false"` |
 | `global` | Whether the rule is global | `"true"` (global) / `"false"` (only applies to bound users) |
 | `enable` | Whether the rule is enabled | `"true"` / `"false"` |
 

@@ -86,10 +86,21 @@ SHOW TABLETS FROM <table_name>
 **4. `ORDER BY <column_name>`**
 
 > Optional. Sorts by a column of the result. The sort column must be one of the columns listed under "Return Value" below.
+>
+> When `ORDER BY` is given, Doris collects every tablet before sorting, so the result is a **globally ordered** Top-N.
 
 **5. `LIMIT [ <offset>, ] <row_count>`**
 
 > Optional. Limits the number of returned rows. Recommended when the table has many tablets.
+>
+> `LIMIT` and `OFFSET` are applied after sorting. Without `ORDER BY`, the scan stops as soon as enough rows have been gathered, and the result is a prefix ordered by `(TabletId, ReplicaId)`.
+
+:::caution Behavior change (4.1.4)
+
+- Before 4.1.4, `ORDER BY` could sort only the rows the scan happened to reach first, so the result was not the true global Top-N. Since 4.1.4, every tablet is collected before sorting.
+- Before 4.1.4, an `OFFSET` given on its own (without a positive `LIMIT`) was ignored, and an `OFFSET` larger than the total number of rows cleared the whole result. Since 4.1.4, `OFFSET` always takes effect.
+
+:::
 
 ## Return Value
 

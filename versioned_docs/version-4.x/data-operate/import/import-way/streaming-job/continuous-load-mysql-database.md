@@ -145,7 +145,7 @@ The MySQL source side (`FROM MYSQL`) supports the following parameters:
 | database             | -       | Database name                                                                                                        |
 | include_tables       | -       | Names of tables to sync, separated by commas. If left empty, all tables are synced by default                        |
 | offset               | latest  | `latest`: incremental sync only; `initial`: full + incremental sync                                                  |
-| snapshot_split_size  | 8096    | Size of a split (in rows). During full sync, a table is divided into multiple splits for sync                        |
+| snapshot_split_size  | 40960 (8096 before 4.1.4)    | Size of a split (in rows). During full sync, a table is divided into multiple splits for sync                        |
 | snapshot_parallelism | 1       | Parallelism during the full-sync phase, that is, the maximum number of splits a single Task can schedule at a time   |
 
 ## Reference Manual

@@ -30,6 +30,7 @@
 | error_code        				| int          | 错误码                                 |
 | error_message     				| text         | 错误信息                               |
 | query_time        				| bigint       | 语句执行时间。单位为毫秒。                |
+| queue_time_ms     				| bigint       | 语句在工作负载队列中的排队时间。单位为毫秒。自 4.1.4 版本起新增，位于 `query_time` 与 `cpu_time_ms` 之间 |
 | scan_bytes        				| bigint       | 扫描的数据量。                           |
 | scan_rows         				| bigint       | 扫描行数                               |
 | return_rows       				| bigint       | 返回的行数                             |

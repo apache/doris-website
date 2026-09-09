@@ -523,20 +523,50 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 | 配置项 | 位置 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `enable_group_commit_streamload_be_forward` | FE | `false` | 是否开启 Stream Load BE 转发。仅在存算分离模式且请求使用 Group Commit 时生效 |
-| `enable_group_commit_streamload_be_forward` | BE | `false` | 是否允许访问 BE 上的 `/api/{db}/{table}/_stream_load_forward` 转发接口。**自 4.0.8 版本起新增** |
+| `enable_group_commit_streamload_be_forward` | BE | `false` | 是否允许访问 BE 上的 `/api/{db}/{table}/_stream_load_forward` 转发接口。**Doris 4.0 系列自 4.0.8 版本起新增，4.1 系列自 4.1.4 版本起新增** |
 
 使用该能力时，需要在 FE 和 BE 上**同时**将该配置设置为 `true`。
 
-:::caution 版本行为变更（4.0.8）
+:::caution 版本行为变更（4.0.8 / 4.1.4）
 
-自 4.0.8 版本起，BE 的 `_stream_load_forward` 接口有两项收敛：
+Doris 4.0 系列自 4.0.8 版本起、4.1 系列自 4.1.4 版本起，BE 的 `_stream_load_forward` 接口有两项收敛：
 
 - 接口受 BE 配置 `enable_group_commit_streamload_be_forward` 控制。配置为 `false`（默认）时，访问该接口返回 `403 Forbidden`，提示 `Stream load forward is disabled`。
 - 配置开启后，访问该接口还需要通过认证，并要求全局 `LOAD` 权限。
 
-升级前如果只在 FE 上开启了该功能，升级到 4.0.8 后转发会失败。请在所有 BE 的 `be.conf` 中补充 `enable_group_commit_streamload_be_forward=true`，并确认导入使用的账号具备 `LOAD` 权限。
+升级前如果只在 FE 上开启了该功能，升级后转发会失败。请在所有 BE 的 `be.conf` 中补充 `enable_group_commit_streamload_be_forward=true`，并确认导入使用的账号具备 `LOAD` 权限。
 
 :::
+
+### 转发到 Follower FE
+
+> 自 4.1.4 版本开始支持。
+
+除了上面的 BE 转发之外，还可以让 FE 把使用 Group Commit 的 Stream Load 请求以轮询方式转发到 Follower FE，从而把攒批压力分散到多个 FE 上。
+
+| 配置项 | 位置 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `enable_forward_group_commit_stream_load_to_follower` | FE | `false` | 是否把 Group Commit 模式的 Stream Load 请求轮询转发到 Follower FE |
+
+注意：目标表的 `light_schema_change` 属性为 `false` 时不支持该转发，会直接报错。
+
+### WAL 数量限制
+
+> 自 4.1.4 版本开始支持。
+
+`async_mode` 的 Group Commit 会先把数据写入 WAL，再异步回放。如果 WAL 回放持续失败，WAL 文件会不断堆积并占满磁盘。自 4.1.4 版本起，BE 新增配置 `group_commit_max_wal_num_per_table` 对单表的 WAL 数量做限制。
+
+| 配置项 | 位置 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `group_commit_max_wal_num_per_table` | BE | `10` | 单张表允许存在的 Group Commit WAL 文件数量上限，`0` 表示不限制。支持动态修改 |
+
+超过上限后，该表的 `async_mode` Group Commit 导入会被拒绝，返回 `EXCEEDED_LIMIT` 错误，错误信息形如：
+
+```text
+Too many group commit async WALs for table <table_name>
+```
+
+出现该错误时，说明 WAL 回放遇到了问题（例如表结构变更、磁盘故障等），需要先排查并恢复 WAL 回放，而不是简单调大该配置。
 
 ## 使用限制
 

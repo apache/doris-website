@@ -237,12 +237,12 @@ The computed bucket number is clamped between the FE configurations `autobucket_
 
 | FE configuration | Default | Description |
 |---|---|---|
-| `autobucket_min_buckets` | 3 | Lower bound of the auto bucketing result. **Starting from version 4.0.8, the default changed from `1` to `3`** |
+| `autobucket_min_buckets` | 3 | Lower bound of the auto bucketing result. **The default changed from `1` to `3` in 4.0.8 for the 4.0 series and in 4.1.4 for the 4.1 series** |
 | `autobucket_max_buckets` | 128 | Upper bound of the auto bucketing result |
 
-:::caution Behavior change (4.0.8)
+:::caution Behavior change (4.0.8 / 4.1.4)
 
-The default of `autobucket_min_buckets` changed from `1` to `3` in 4.0.8. Previously a small partition could be computed down to a single bucket, giving insufficient parallelism and data distribution. After the change, auto bucketing never produces fewer than 3 buckets.
+The default of `autobucket_min_buckets` changed from `1` to `3` in 4.0.8 (the 4.0 series) and in 4.1.4 (the 4.1 series). Previously a small partition could be computed down to a single bucket, giving insufficient parallelism and data distribution. After the change, auto bucketing never produces fewer than 3 buckets.
 
 The change only affects partitions **created after** the upgrade; the bucket number of existing partitions is unchanged. Set `autobucket_min_buckets` back to `1` explicitly to keep the old behavior.
 

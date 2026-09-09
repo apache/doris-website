@@ -8,7 +8,7 @@
 
 ## Description
 
-`PARSE_TO_VARIANT` parses one complete JSON value into `VARIANT`. It accepts JSON objects, arrays, strings, numbers, booleans, and the JSON literal `null`. This function is available in Doris 4.2 and later.
+`PARSE_TO_VARIANT` parses one complete JSON value into `VARIANT`. It accepts JSON objects, arrays, strings, numbers, booleans, and the JSON literal `null`. This function is available in Doris 4.1.4 and later.
 
 ## Syntax
 

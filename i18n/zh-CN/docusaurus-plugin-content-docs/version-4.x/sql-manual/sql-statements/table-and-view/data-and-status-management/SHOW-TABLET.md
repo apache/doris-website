@@ -86,10 +86,21 @@ SHOW TABLETS FROM <table_name>
 **4. `ORDER BY <column_name>`**
 
 > 可选。按返回结果中的列排序，排序列必须是下方「返回值」中列出的列名。
+>
+> 指定 `ORDER BY` 时，Doris 会先收集全部 Tablet 再排序，因此结果是**全局有序**的 Top-N。
 
 **5. `LIMIT [ <offset>, ] <row_count>`**
 
 > 可选。限制返回行数。Tablet 数量较多时建议配合使用。
+>
+> `LIMIT` 与 `OFFSET` 在排序之后生效。未指定 `ORDER BY` 时，扫描到足够行数即停止，结果是按 `(TabletId, ReplicaId)` 排序的前缀。
+
+:::caution 版本行为变更（4.1.4）
+
+- 4.1.4 之前，指定 `ORDER BY` 时可能只对扫描到的前若干行做排序，导致返回的并不是真正的全局 Top-N。4.1.4 起修复为先收集全部 Tablet 再排序。
+- 4.1.4 之前，单独指定 `OFFSET`（不带正数 `LIMIT`）会被忽略，且 `OFFSET` 大于总行数时会清空整个结果。4.1.4 起 `OFFSET` 始终生效。
+
+:::
 
 ## 返回值
 

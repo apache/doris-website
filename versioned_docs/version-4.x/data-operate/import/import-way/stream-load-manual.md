@@ -284,13 +284,21 @@ In storage-compute separation mode, you can specify the Compute Group as follows
 
 3. If neither the user properties nor the HTTP Header specifies a Compute Group, one is selected from the Compute Groups that the user bound to the Stream Load has access to. If the user has no accessible Compute Group, the import fails.
 
-:::info Version note (4.0.8)
+:::info Version note (4.0.8 / 4.1.4)
 
-Version 4.0.8 fixes an inconsistency between Compute Group routing and the execution plan for Stream Load in compute-storage decoupled mode:
+Doris 4.0.8 and later in the 4.0 series, and Doris 4.1.4 and later in the 4.1 series, fix an inconsistency between Compute Group routing and the execution plan for Stream Load in compute-storage decoupled mode:
 
 - The `compute_group` header takes precedence over `cloud_cluster`. Previously FE only recognized `cloud_cluster`.
 - When building the execution plan, the compute group of the **BE that actually receives the request** is used, so the plan no longer lands on a compute group different from where it executes.
-- This path also validates the load account's access to the target compute group, whether the compute group exists, and its status. As a result, if the load account has no access to the compute group actually serving the request, the load fails with a privilege error after upgrading to 4.0.8 and the account needs the corresponding grant.
+- This path also validates the load account's access to the target compute group, whether the compute group exists, and its status. As a result, if the load account has no access to the compute group actually serving the request, the load fails with a privilege error after the upgrade and the account needs the corresponding grant.
+
+:::
+
+:::info Version note (4.1.4)
+
+Starting from version 4.1.4, the Stream Load endpoints on BE (`PUT /api/{db}/{table}/_stream_load`, `PUT /api/_http_stream`, and `PUT /api/{db}/_stream_load_2pc`) no longer perform a global `LOAD` privilege pre-check. Authorization is handled uniformly on FE, against the database and table actually being written.
+
+As a result, an account that only holds database- or table-level `LOAD_PRIV` (without the global `LOAD` privilege) can now run Stream Load as well as 2PC commit / abort.
 
 :::
 

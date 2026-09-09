@@ -246,6 +246,10 @@ ORDER BY entry_name;
 
 * [ORC](../file-formats/orc.md)
 
+自 4.1.4 版本起，文件格式按每个数据文件（Split）单独判定，因此**同一张 Iceberg 表中同时存在 Parquet 和 ORC 数据文件时也可以正常查询**。表级别的 `write.format.default` 未设置时默认按 `parquet` 处理，不再通过嗅探数据文件来推断。
+
+自 4.1.4 版本起，Iceberg 的 Identity 分区元数据会随每个 Split 下发，并且路径分区键只取所有 Partition Spec 共有的 Identity 列。因此经历过 **Partition Evolution** 的表，其分区列取值在查询中也能正确返回。
+
 ## 列类型映射
 
 | Iceberg Type                           | Doris Type           | Comment               |
@@ -780,6 +784,46 @@ Iceberg 的元数据层级关系是 Catalog -> Namespace -> Table。其中 Names
 - REST Catalog：使用 `iceberg.rest.role_arn` 指定要扮演的 Role ARN，并可选地通过 `iceberg.rest.external-id` 指定 External ID。
 - AWS S3 Tables：使用 `s3.role_arn` 与 `s3.external_id`（参见下文 AWS S3 Tables 章节）。
 :::
+
+:::caution 版本行为变更（4.1.4）
+
+自 4.1.4 版本起，当 `iceberg.rest.signing-name` 取值为 `glue`、`s3tables` 或 `osstables` 这类托管签名服务时，**必须**同时设置 `'iceberg.rest.sigv4-enabled' = 'true'`，否则建 Catalog 会报错：
+
+```text
+Rest Catalog requires sigv4-enabled set to true when signing-name is <name>
+```
+
+升级前如果已有 Catalog 只设置了 `signing-name` 而没有开启 `sigv4-enabled`，升级后会校验失败，需要补齐该属性。
+
+:::
+
+#### 阿里云 OSS Tables
+
+> 自 4.1.4 版本开始支持。
+
+`iceberg.rest.signing-name` 新增 `osstables` 取值，用于对接阿里云 OSS Tables。此时 REST 请求签名复用 OSS 的凭证（`oss.access_key`、`oss.secret_key`、`oss.session_token`），而不是 `s3.*` 凭证。
+
+```sql
+CREATE CATALOG iceberg_osstables PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 'rest',
+    'iceberg.rest.uri' = '<oss_tables_rest_endpoint>',
+    'warehouse' = '<your-catalog-name>',
+    'iceberg.rest.sigv4-enabled' = 'true',
+    'iceberg.rest.signing-name' = 'osstables',
+    'iceberg.rest.signing-region' = '<region>',
+    'oss.access_key' = '<ak>',
+    'oss.secret_key' = '<sk>',
+    'oss.endpoint' = 'oss-<region>.aliyuncs.com',
+    'oss.region' = '<region>'
+);
+```
+
+使用 `osstables` 时，`iceberg.rest.signing-region` 与 `iceberg.rest.sigv4-enabled = 'true'` 都是必填项，否则会报错：
+
+```text
+Rest Catalog requires signing-region and sigv4-enabled set to true when signing-name is osstables
+```
 
 <details>
     <summary>3.1+ 版本</summary>
@@ -1481,13 +1525,16 @@ SELECT * FROM iceberg.iceberg_db.iceberg_tbl LIMIT 10;
 
 默认情况下，读取请求只会读取最新版本的快照。
 
-可以通过 `iceberg_meta()` 表函数查询指定 Iceberg 表的 Snapshot：
+可以通过 `$snapshots` 系统表查询指定 Iceberg 表的 Snapshot：
+
+:::caution 版本行为变更（4.1.4）
+
+自 4.1.4 版本起，`iceberg_meta()` 表函数已被移除，请统一改用 Iceberg 系统表（如 `iceberg_tbl$snapshots`）查询元数据，详见下文【系统表】章节。
+
+:::
 
 ```sql
-SELECT * FROM iceberg_meta(
-    'table' = 'iceberg_ctl.iceberg_db.iceberg_tbl',
-    'query_type' = 'snapshots'
-)\G
+SELECT * FROM iceberg_ctl.iceberg_db.iceberg_tbl$snapshots\G
 
 *************************** 1. row ***************************
  committed_at: 2024-11-28 11:07:29
@@ -1575,7 +1622,49 @@ DESC iceberg_tbl;
 **注意事项：**
 
 1. 必须确保 Iceberg 表的格式版本（`format-version`）配置为 `3` 时，才会生成上述行级别参数。对于 V1 和 V2 格式表查询行血缘列可能报错。
-2. 隐藏列由系统进行维护，不允许用户在使用 `INSERT` 等写入语句时显式指定写入 `_row_id` 或 `_last_updated_sequence_number` 列。
+2. 隐藏列由系统进行维护，不允许用户在使用 `INSERT` 等写入语句时显式指定写入 `_row_id` 或 `_last_updated_sequence_number` 列。自 4.1.4 版本起，对 `format-version >= 3` 的表，在 `INSERT` 的列清单中指定行血缘列会直接报错：`Cannot specify row lineage column '<name>' in INSERT statement`。
+
+### Iceberg V3 默认值
+
+> 自 4.1.4 版本开始支持。
+
+Iceberg V3 为列定义了两类默认值，Doris 均已支持：
+
+- `initial-default`：新增列时为**已有历史数据**指定的默认值。读取旧数据文件（写入时该列还不存在）时，Doris 会返回该默认值而不是 NULL。Parquet、ORC 均支持，覆盖顶层列、`STRUCT` 内的嵌套子列，以及整体缺失的复杂类型父列，并且在谓词计算中同样生效。
+- `write-default`：写入时为**未指定的列**填充的默认值。`INSERT INTO t (部分列) VALUES (...)` 时，未列出的列会写入当前的 `write-default`（旧版本写入 NULL）。
+
+**通过 DDL 指定默认值：**
+
+```sql
+ALTER TABLE iceberg_tbl ADD COLUMN c1 INT DEFAULT 10;
+```
+
+该语句会同时设置 Iceberg 的 `write-default` 与 `initial-default`。**要求表的 `format-version` 为 `3`**，V1 / V2 表不支持带非空默认值的列。
+
+**`DEFAULT()` 表达式：**
+
+自 4.1.4 版本起，新增 `DEFAULT(<column>)` 表达式，用于在 DML 中显式引用某列的默认值，可用于 `INSERT`、`UPDATE ... SET` 以及 `MERGE INTO` 的各个分支：
+
+```sql
+INSERT INTO iceberg_tbl VALUES (1, DEFAULT(c1));
+
+UPDATE iceberg_tbl SET c1 = DEFAULT(c1) WHERE id = 1;
+
+MERGE INTO iceberg_tbl t USING src s ON t.id = s.id
+WHEN NOT MATCHED THEN INSERT VALUES (s.id, DEFAULT(c1));
+```
+
+语义说明：
+
+- 对 Iceberg 目标表，`DEFAULT()` 会基于本次写入固定（Pin）的 Iceberg Schema 解析；引用不在写入目标中的列会报错 `DEFAULT(<col>) must reference a column in the pinned Iceberg write target`。
+- 对非 Iceberg 的列，取该列的默认值；若列没有默认值且为 NOT NULL 或自增列，报错 `Column '<name>' has no default value and does not allow NULL or column is auto-increment`；若列可空且没有默认值，取 NULL。
+- 其他报错：`DEFAULT requires a column reference, but got: <expr>`、`Cannot find column information for DEFAULT(<name>)`、`DEFAULT cannot be used on generated column '<name>'`。
+
+:::info 说明
+
+Iceberg 的 `write-default` 属于写入侧的连接器概念，**不会**通过 `DESCRIBE`、`SHOW CREATE TABLE` 或 `information_schema.columns.COLUMN_DEFAULT` 暴露。
+
+:::
 
 ## 系统表
 
@@ -1597,7 +1686,15 @@ SELECT * FROM iceberg_table$history;
 
 > `all_manifests` 系统表从 4.0.4 版本开始支持。
 >
-> `position_deletes` 系统表尚未支持，计划在以后版本中支持。
+> `position_deletes` 系统表从 4.1.4 版本开始支持。
+
+:::caution 版本行为变更（4.1.4）
+
+自 4.1.4 版本起，Iceberg 系统表改为通过原生执行路径（`FileQueryScanNode` -> `IcebergScanNode`）查询，同时**移除了 `iceberg_meta()` 表函数**。请统一使用 `<table>$<system_table_name>` 的系统表语法，详见 [ICEBERG_META](../../sql-manual/sql-functions/table-valued-functions/iceberg-meta.md)。
+
+系统表本身的访问语法和返回结果不变。此外，系统表也支持 `SHOW CREATE TABLE`。
+
+:::
 
 ### entries
 
@@ -2067,6 +2164,7 @@ ON <merge_condition>
 3. 并发写入场景下，Iceberg 提供了乐观并发控制机制。当发生写入冲突时，操作可能会抛出事务冲突异常。
 4. UPDATE 和 MERGE INTO 中的 UPDATE 操作支持使用表达式和函数，例如 `age = age * 2 + 1` 或 `name = concat(name, '-modified')`。
 5. 这些操作同时适用于分区表和非分区表。
+6. **自 4.1.4 版本起**（需要所有 BE 都已升级），`MERGE INTO` 会校验源表与目标表的匹配关系：当同一行目标数据被多行源数据匹配时，语句会报错 `multiple source rows matched the same target row`，而不是产生不确定的结果。如果确实存在一对多匹配，请先在源侧去重。
 
 ### 相关参数
 
@@ -2091,7 +2189,7 @@ SWITCH iceberg;
 CREATE DATABASE [IF NOT EXISTS] iceberg_db;
 ```
 
-也可以使用全限定名创建，或指定 location（目前只有 `hms` 类型的 Catalog 支持指定 location），如：
+也可以使用全限定名创建，或指定 Database 属性，如：
 
 ```sql
 CREATE DATABASE [IF NOT EXISTS] iceberg.iceberg_db;
@@ -2099,6 +2197,22 @@ CREATE DATABASE [IF NOT EXISTS] iceberg.iceberg_db;
 CREATE DATABASE [IF NOT EXISTS] iceberg.iceberg_db
 PROPERTIES ('location'='hdfs://172.21.16.47:4007/path/to/db/');
 ```
+
+**Database 属性支持矩阵（自 4.1.4 版本起扩展）：**
+
+| Catalog 类型（`iceberg.catalog.type`） | 普通 Database 属性 | `location` 属性 |
+| --- | --- | --- |
+| `hms` | 支持 | 支持 |
+| `glue` | 支持（4.1.4 起） | 支持（4.1.4 起） |
+| `jdbc` | 支持（4.1.4 起） | 不支持 |
+| `hadoop` / `rest` / `dlf` / `s3tables` | 不支持 | 不支持 |
+
+不支持时的报错信息：
+
+- 普通属性：`Not supported: create database with properties for iceberg catalog type: <type>`
+- `location` 属性：`Not supported: database property 'location' for iceberg catalog type: <type> because it does not determine the default table location`
+
+> REST Catalog 不支持 Database 属性，是因为 REST 协议允许服务端忽略 Namespace 属性。
 
 之后可以通过 `SHOW CREATE DATABASE` 命令查看 Database 的 Location 信息：
 
@@ -2256,15 +2370,21 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
 * **修改列名称**
 
-    通过 `RENAME COLUMN` 子句修改列名称，不支持修改嵌套类型中的列名称。
+    通过 `RENAME COLUMN` 子句修改列名称。自 4.1.4 版本起支持修改嵌套类型中的列名称，且 `TO` 关键字变为可选。
 
   ```sql
   ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
+
+  -- 4.1.4 起支持：TO 可省略
+  ALTER TABLE iceberg_table RENAME COLUMN old_col_name new_col_name;
+
+  -- 4.1.4 起支持：重命名嵌套字段
+  ALTER TABLE iceberg_table RENAME COLUMN s.old_field TO new_field;
   ```
 
 * **添加一列**
 
-    通过 `ADD COLUMN` 添加新列，不支持为嵌套类型添加新列。
+    通过 `ADD COLUMN` 添加新列。自 4.1.4 版本起，支持通过点号路径（如 `s.new_field`）为嵌套类型（STRUCT）添加新列，新增的嵌套字段必须是 nullable。
 
     在添加新列时，可以指定 nullable 属性、默认值、注释和列位置。
 
@@ -2290,10 +2410,13 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
 * **删除列**
 
-    通过 `DROP COLUMN` 删除列，不支持删除嵌套类型中的列。
+    通过 `DROP COLUMN` 删除列。自 4.1.4 版本起，支持通过点号路径删除嵌套类型中的列。
 
   ```sql
   ALTER TABLE iceberg_table DROP COLUMN col_name;
+
+  -- 4.1.4 起支持：删除嵌套字段
+  ALTER TABLE iceberg_table DROP COLUMN s.field_name;
   ```
 
 * **修改列**
@@ -2356,6 +2479,45 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
   ```sql
   ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
   ```
+
+#### 嵌套列 Schema 变更（4.1.4+）
+
+自 4.1.4 版本起，`ADD COLUMN`、`DROP COLUMN`、`MODIFY COLUMN`、`RENAME COLUMN` 均支持使用点号路径（如 `a.b.c`）直接操作嵌套字段。该能力**仅对 Iceberg 表生效**，对其他类型的表使用会报错：`Nested column path is only supported for Iceberg tables: ...`。
+
+常见限制与报错：
+
+| 报错信息 | 说明 |
+| --- | --- |
+| `New nested field '<path>' must be nullable` | 新增的嵌套字段必须可为 NULL |
+| `Rollup is not supported for Iceberg column operations` | 不支持 Rollup 子句 |
+| `PROPERTIES are not supported for Iceberg column operations` | 不支持 PROPERTIES 子句 |
+| `KEY is not supported for Iceberg ADD/MODIFY COLUMN` | 不支持 KEY 关键字 |
+| `Generated columns are not supported for Iceberg ADD/MODIFY COLUMN` | 不支持生成列 |
+| `Modifying default values is not supported for Iceberg columns` | 不支持修改已有列的默认值 |
+| `ON UPDATE is not supported for Iceberg ADD COLUMN` | 不支持 ON UPDATE 子句 |
+| `Modify column type from complex to primitive is not supported` | 不支持把复杂类型改成基础类型 |
+| `Cannot change MAP key type from ...` / `Cannot <op> MAP key nested column` | 不支持修改 MAP 的 Key 类型或对 MAP Key 做嵌套列操作 |
+| `Iceberg does not support comments on collection element or value fields` | 不支持给集合元素 / MAP Value 字段加注释 |
+| `Multiple Iceberg ALTER clauses are not supported when a statement ...` | 涉及嵌套列时，一条语句只能包含一个 ALTER 子句 |
+
+### 修改表属性
+
+> 自 4.1.4 版本开始支持。
+
+可以通过 `ALTER TABLE ... SET (...)` 修改 Iceberg 表的原生属性，并且**支持在一条语句中设置多个属性**：
+
+```sql
+ALTER TABLE iceberg_ctl.iceberg_db.iceberg_tbl SET (
+    'write.target-file-size-bytes' = '268435456',
+    'commit.manifest.min-count-to-merge' = '50'
+);
+```
+
+说明：
+
+- 所有属性作为一个 Iceberg `UpdateProperties` 事务原子提交，失败时不会只生效一部分，也不会触发 FE 元数据刷新；
+- Doris 自身的 `auto_analyze_policy` 属性不能与连接器原生属性放在同一条语句中设置，否则报错 `auto_analyze_policy cannot be set with external table properties`。单独设置时取值仍为 `enable` / `disable` / `base_on_catalog`；
+- 如果 Catalog 未实现元数据写入能力，会报错 `Update table properties operation is not supported for catalog: <name>`。
 
 ### Partition Evolution
 

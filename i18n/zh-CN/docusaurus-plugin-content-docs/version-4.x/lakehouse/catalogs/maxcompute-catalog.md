@@ -94,6 +94,9 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     | `mc.account_format` | `name` | 阿里云国际站和中国站的账号系统不一致，对于国际站用户，如出现如 `user 'RAM$xxxxxx:xxxxx' is not a valid aliyun account` 的错误，可指定该参数为 `id`。 | 3.0.9/3.1.1（含）之后 |
     | `mc.enable.namespace.schema` | `false` | 是否支持 MaxCompute 的 Schema 层级。详见：https://help.aliyun.com/zh/maxcompute/user-guide/schema-related-operations 。 | 3.1.3（含）之后 |
     | `mc.max_field_size_bytes` | `8388608`（8 MB） | 写入会话中单个字段允许的最大字节数。当写入包含大型字符串或二进制字段的数据时，如果字段大小超过该值，可能会导致写入失败。可根据实际数据情况适当调大该值。 | 4.1.0（含）之后 |
+    | `test_connection` | `false` | 创建 Catalog 时是否校验连通性。设置为 `true` 时，会校验 AK/SK、Endpoint、`mc.project` 是否可访问；开启 `mc.enable.namespace.schema` 时还会校验 Schema 列表是否可访问，校验失败则 `CREATE CATALOG` 直接报错。 | 4.1.4（含）之后 |
+
+    > 自 4.1.4 版本起，`mc.connect_timeout`、`mc.read_timeout`、`mc.retry_count` 才真正应用到底层 REST 客户端；此前这三个配置虽然可以设置，但不生效。
 
     - `mc.max_field_size_bytes`
 

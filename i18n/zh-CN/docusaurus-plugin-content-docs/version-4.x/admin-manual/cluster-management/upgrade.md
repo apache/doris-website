@@ -378,6 +378,67 @@ FE 通过内部变量 `variable_version` 记录会话变量默认值的迁移进
 | 预热任务时间戳格式由 `HH:mm:ss` 改为 `yyyy-MM-dd HH:mm:ss` | 解析预热任务状态的脚本 | 调整时间解析格式。详见 [读写分离](../../compute-storage-decoupled/rw/read-write-separation) |
 | 扫描报错不再统一加 `failed to initialize storage reader` 前缀 | 按该前缀匹配告警的监控规则 | 改用错误码与 `tablet=` / `backend=` 信息定位 |
 
+### 升级到 4.1.4
+
+:::caution 启用 Nereids 分布式规划器
+
+4.1 系列自 4.1.4 版本起，**从 3.x 升级到 4.1.4** 时会把会话变量 `enable_nereids_distribute_planner` 的全局默认值刷新为 `true`（4.0 系列自 4.0.8 起已是该行为）。
+
+该刷新只在集群的 `variable_version` 低于 `400` 时触发。因此已经运行在 4.0.x / 4.1.x 的集群升级到 4.1.4 时，不会改变该变量已持久化的取值。
+
+升级后如果观察到查询计划的分布方式与升级前不同，可以执行 `SET GLOBAL enable_nereids_distribute_planner = false;` 回退，并反馈相关查询。
+
+:::
+
+:::caution 浮点数的字符串输出形式变化
+
+自 4.1.4 版本起，FLOAT / DOUBLE 转字符串时输出**能够无损还原该值的最短字符串**，而不再按固定有效位数输出。存储的数值不变，但文本形式可能与 4.1.3 不同（例如 `246.9120025634766` → `246.91200256347656`，`0.0000123456` → `1.23456e-05`）。
+
+影响 MySQL 协议查询结果、`CAST(... AS STRING)`、复杂类型 / JSON / VARIANT 展示、`SELECT INTO OUTFILE`、EXPORT 以及外表浮点列。如果下游系统对浮点数的字符串形式做精确比对，升级后需要相应调整。详见 [浮点类型](../../sql-manual/basic-element/sql-data-types/numeric/FLOATING-POINT)。
+
+:::
+
+升级到 4.1.4 时，需要关注以下变更：
+
+**接口与语法移除**
+
+| 变更内容 | 影响范围 | 处理方式 |
+| --- | --- | --- |
+| `iceberg_meta()` 表函数移除 | 使用该表函数查询 Iceberg 元数据的 SQL | 改用 Iceberg 系统表 `<table>$<system_table_name>`。详见 [ICEBERG_META](../../sql-manual/sql-functions/table-valued-functions/iceberg-meta) |
+| FE `/api/<ns>/<db>/<tbl>/upload` 系列接口移除，FE 配置 `http_load_submitter_max_worker_threads` 同时移除 | 通过该接口上传小文件导入的脚本 | 改用 Stream Load 或 S3 / HDFS / LOCAL TVF。详见 [Upload Action](../open-api/fe-http/upload-action) |
+| `PLAN REPLAYER PLAY '<file>'` 语句移除 | 回放 Minidump 的调试流程 | 仅保留 `PLAN REPLAYER DUMP` |
+| Workload Policy 的 `set_session_variable` 动作移除 | 使用该动作的 Workload Policy | 改用 `cancel_query` / `move_query_to_group` |
+| BE 配置 `get_stack_trace_tool` 移除，BE 线程栈 HTTP 输出字段调整 | 采集 BE 线程栈的脚本 | 按新的输出字段解析 |
+| 存算分离 BE 配置 `s3_client_retry_slow_down` 移除 | 依赖该配置控制 S3 限流重试的部署 | BE 现在对 S3 429 / 503 始终重试，Recycler 不重试，无需配置 |
+| Query Profile 中的 `HdfsIO` 计时器及其 7 个计数器移除 | 解析 Profile 的自动化脚本 | 改用其他 IO 相关计数器 |
+
+**默认值与行为变更**
+
+| 变更内容 | 影响范围 | 处理方式 |
+| --- | --- | --- |
+| 自动分桶最小分桶数由 1 提升到 3（FE 配置 `autobucket_min_buckets`） | 使用 `BUCKETS AUTO` 建表 | 只影响升级后新创建的分区。详见 [数据分桶](../../table-design/data-partitioning/data-bucketing) |
+| 会话变量 `max_scanners_concurrency` 默认值由 4 调整为 8 | 所有查询 | 如需保留旧行为可显式设置回 4 |
+| FE 配置 `default_get_version_from_ms_timeout_second` 默认值由 3 调整为 30 | 存算分离模式 | 无需处理，可减少 Meta Service 抖动导致的查询失败 |
+| BE 配置 `enable_cache_read_from_peer` 默认值由 `true` 调整为 `false`，`cache_read_from_peer_expired_seconds` 移除 | 依赖跨 Compute Group Peer Cache 读取的部署 | 如需保留旧行为，在 `be.conf` 中显式设置 `enable_cache_read_from_peer=true` |
+| 会话变量 `eager_aggregation_on_join` 移除，新增 `eager_aggregation_on_broadcast_join`（默认 `true`）和 `eager_agg_broadcast_row_count`（默认 250000） | 设置过 `eager_aggregation_on_join` 的会话 / 脚本 | 删除对该变量的设置 |
+| `jobs()` 表函数中 Streaming Job 的 `Lag` 列改名为 `LagBytes`，单位由秒改为字节；新增 `LastSourceEventTimestamp` 列 | 解析 `jobs()` 输出的脚本、基于 `streaming_job_per_job_lag` 指标的监控 | 改用 `LagBytes` 列和 `streaming_job_per_job_lag_bytes` 指标。详见 [持续导入](../../data-operate/import/import-way/streaming-job/continuous-load-overview) |
+| Arrow Flight SQL 返回的 `DATETIME` / `DATETIMEV2` 改为**不带时区**的 Arrow Timestamp（`TIMESTAMPTZ` 仍带时区） | 通过 Arrow Flight SQL 读取时间列的客户端 | 按不带时区的语义解析 |
+| 聚合函数的任意参数中包含聚合函数时报错 `aggregate function cannot contain aggregate parameters` | 形如 `group_concat(x ORDER BY sum(k))` 的历史 SQL | 改写 SQL，先聚合再引用 |
+| 修改 `default.replication_num` 或 `default.replication_allocation` 时，会自动移除另一个冲突的历史属性 | 元数据中同时残留这两个属性的老表 | 无需处理。修复后 `SHOW CREATE TABLE` 与实际生效的副本分配保持一致。**滚动升级期间**，请在所有 FE 都升级完成后再修改这两个属性，否则新旧 FE 可能应用不同的副本设置 |
+| Paimon `paimon.table-option.*` Catalog 属性被限制为 7 个键的白名单 | 使用其他 `paimon.table-option.*` 键的 Catalog | 移除白名单外的键。详见 [Paimon Catalog](../../lakehouse/catalogs/paimon-catalog) |
+| 存储属性新增保留键 `doris.fs.cache.key`，并移除隐式的 `fs.<schema>.impl.disable.cache=true` 默认值 | 使用外部存储的 Catalog / TVF | 升级时**先升级 BE 再升级 FE** |
+| 存算分离模式下 `ADMIN SET FRONTEND CONFIG` 限制为 `root` 用户执行 | 使用非 root 账号动态改 FE 配置的脚本 | 改用 root 账号，或改为在 `fe.conf` 中配置 |
+| FE 配置 `s3_load_endpoint_white_list`、`jdbc_driver_url_white_list`、`force_sqlserver_jdbc_encrypt_false` 不再支持动态修改 | 通过 `ADMIN SET FRONTEND CONFIG` 修改这些配置的脚本 | 改为在 `fe.conf` 中配置并重启 FE |
+| Routine Load 的 Kafka 敏感属性、`information_schema` 加密密钥的 `IV` / `CIPHER` 列在查询结果中脱敏为 `******` | 依赖这些结果读取认证信息的脚本 | 改从配置管理侧获取原值 |
+
+**部署与配置文件变更**
+
+| 变更内容 | 影响范围 | 处理方式 |
+| --- | --- | --- |
+| JDK 17 的 `JAVA_OPTS` 需要把 `--add-opens=java.base/java.nio=ALL-UNNAMED` 改为 `--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED` | 自定义修改过 `fe.conf` / `be.conf` 中 `JAVA_OPTS_FOR_JDK_17` 的部署 | 按新版本发布包中的 `fe.conf` / `be.conf` 同步该参数，否则 Arrow 相关功能（Arrow Flight SQL 等）可能启动或运行失败 |
+| be-java-extensions 中 `paimon-scanner` 模块更名为 `paimon-connector` | 自定义部署脚本中引用 `be/lib/java_extensions/paimon-scanner` 的场景 | 调整为 `paimon-connector` |
+| BE `_stream_load_forward` 接口需要开启配置并通过认证 | 存算分离模式下依赖 Group Commit BE 转发的部署 | 在所有 BE 的 `be.conf` 中设置 `enable_group_commit_streamload_be_forward=true`，并确认导入账号具备全局 `LOAD` 权限。详见 [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual) |
+
 ## 常见问题
 
 <!-- 知识类型: 故障排查 -->

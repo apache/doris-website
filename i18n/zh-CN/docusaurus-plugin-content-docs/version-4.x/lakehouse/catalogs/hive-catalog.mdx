@@ -756,6 +756,14 @@ SELECT * FROM hive_ctl.hive_db.hive_tbl LIMIT 10;
   +------------+-------------+
   ```
 
+:::caution 版本行为变更（4.1.4）
+
+自 4.1.4 版本起，Hive 目录式分区中的默认分区标记 `__HIVE_DEFAULT_PARTITION__` 会被解析为真正的 **NULL** 值，而不再编码为字符串 `\N`。同时，分区路径中真实存储的字符串 `\N` 会被原样保留为数据。
+
+4.1.4 之前这两种情况无法区分，查询结果中都会显示为 `\N`。升级后，`WHERE <partition_col> IS NULL` 才能正确匹配 Hive 默认分区。
+
+:::
+
 ### 查询 Hive 事务表
 
 Hive Transactional 表是 Hive 中支持 ACID 语义的表。详情可见 [Hive Transactions](https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions)。

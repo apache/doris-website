@@ -95,7 +95,7 @@ CDC Stream TVF 支持以下 MySQL 数据源参数。
 | `database` | 是 | - | MySQL 数据库名。 |
 | `table` | 是 | - | 需要同步的表名。SQL Mapping 每个作业只支持一张源表。 |
 | `offset` | 是 | - | 启动位点。`initial`：全量 + 增量同步；`snapshot`：仅全量同步；`earliest`：从当前可用的最早 Binlog 位点开始；`latest`：仅同步作业启动后的增量；也可设置 JSON 精确位点，例如 `{"file":"binlog.000001","pos":"154"}` 或 `{"gtids":"<gtid_set>"}`。 |
-| `snapshot_split_size` | 否 | `8096` | split 的大小（行数）。全量同步时，表会被切分成多个 split。必须为正整数。 |
+| `snapshot_split_size` | 否 | `40960`（4.1.4 之前为 `8096`） | split 的大小（行数）。全量同步时，表会被切分成多个 split。必须为正整数。 |
 | `snapshot_parallelism` | 否 | `1` | 全量阶段的并行度，即单次 Task 最多调度的 split 数量。必须为正整数。 |
 | `skip_snapshot_backfill` | 否 | `false` | 是否跳过快照期间的 Binlog 回填。设置为 `true` 时采用 at-least-once 语义。 |
 | `server_id` | 否 | 自动生成 | MySQL CDC reader 的 server ID。支持单值（如 `5400`）或闭区间（如 `5400-5408`）；区间宽度必须大于等于 `snapshot_parallelism`。 |

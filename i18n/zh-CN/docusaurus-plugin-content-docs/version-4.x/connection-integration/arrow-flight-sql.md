@@ -523,6 +523,24 @@ try (
 }
 ```
 
+## 类型映射说明
+
+<!-- 知识类型: 行为说明 -->
+<!-- 适用场景: 客户端解析 Arrow 结果 -->
+
+:::caution 版本行为变更（4.1.4）
+
+自 4.1.4 版本起，Arrow Flight SQL 返回的 `DATETIME` / `DATETIMEV2` 是**不带时区**（timezone-naive）的 Arrow Timestamp；`TIMESTAMPTZ` 仍然返回带时区的 Timestamp。
+
+4.1.4 之前 `DATETIME` 会被标记为带时区，客户端在本地时区解析时会产生额外的时区偏移。升级后请按"无时区的本地时间"语义解析 `DATETIME` 列。
+
+同一版本还修正了以下类型元数据：
+
+- `GetTables` 元数据接口中 `DATEV2` 的 Arrow 类型由 `Date(MILLISECOND)` 修正为 `Date(DAY)`；
+- `ARRAY` / `MAP` / `STRUCT` 的元数据会返回真实的子字段类型，而不是占位类型。
+
+:::
+
 ## 与第三方组件集成
 
 <!-- 知识类型: 集成方案 -->

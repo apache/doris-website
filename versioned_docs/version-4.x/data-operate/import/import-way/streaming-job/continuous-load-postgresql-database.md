@@ -96,7 +96,7 @@ PostgreSQL source parameters configure the JDBC connection, sync scope, and full
 | schema               | -       | Schema name                                                                                                                                                                       |
 | include_tables       | -       | Tables to sync, separated by commas. If left empty, all tables are synced by default                                                                                              |
 | offset               | latest  | latest: incremental-only sync; initial: full + incremental sync                                                                                                                   |
-| snapshot_split_size  | 8096    | Size of a split (in rows). During full sync, a table is divided into multiple splits for synchronization                                                                          |
+| snapshot_split_size  | 40960 (8096 before 4.1.4)    | Size of a split (in rows). During full sync, a table is divided into multiple splits for synchronization                                                                          |
 | snapshot_parallelism | 1       | Parallelism during the full-sync phase, that is, the maximum number of splits scheduled in a single Task                                                                          |
 
 ### Doris Target Database Parameters

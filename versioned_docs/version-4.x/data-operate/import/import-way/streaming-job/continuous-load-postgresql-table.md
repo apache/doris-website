@@ -103,7 +103,7 @@ Data source parameters are configured through the `cdc_stream(...)` TVF. They de
 | schema               | -       | Schema name.                                                                                                                                                      |
 | table                | -       | Name of the table to sync.                                                                                                                                        |
 | offset               | latest  | `latest`: incremental sync only. `initial`: full + incremental sync.                                                                                              |
-| snapshot_split_size  | 8096    | Split size in rows. During full sync, the table is divided into multiple splits for syncing.                                                                      |
+| snapshot_split_size  | 40960 (8096 before 4.1.4)    | Split size in rows. During full sync, the table is divided into multiple splits for syncing.                                                                      |
 | snapshot_parallelism | 1       | Parallelism for the full sync stage, that is, the maximum number of splits scheduled per Task.                                                                    |
 
 ### Load Configuration Parameters

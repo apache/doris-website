@@ -44,6 +44,15 @@ JOBS(
     | FailedTaskCount    | 失败任务数量                   |
     | CanceledTaskCount  | 取消任务数量                   |
     | Comment            | job 注释                       |
+    | Properties         | job 属性。仅 `ExecuteType = STREAMING` 的作业有值 |
+    | CurrentOffset      | 作业当前已处理完成的 Offset。仅 `ExecuteType = STREAMING` 的作业有值 |
+    | EndOffset          | 作业从数据源端获取到的最大 Offset。仅 `ExecuteType = STREAMING` 的作业有值 |
+    | LoadStatistic      | 作业的导入统计信息             |
+    | ErrorMsg           | 作业执行的错误信息             |
+    | JobRuntimeMsg      | 作业运行时的提示信息           |
+    | LagBytes           | 数据源端日志（如 MySQL Binlog、PostgreSQL WAL）的积压字节数，`-1` 表示当前不可用（例如 S3 数据源或全量快照阶段）。<br/>**自 4.1.4 版本起**，该列由原来的 `Lag`（单位：秒）改名为 `LagBytes`（单位：字节） |
+    | LastSourceEventTimestamp | 作业已提交 Offset 中记录的数据源端最新事件时间戳（Unix 秒），为空表示不可用。**自 4.1.4 版本起新增** |
+    | LastTaskSuccessTime | 最近一次任务成功完成的时间     |
 
 
 - **`jobs("type"="mv")`** MV 类型的 job 返回值

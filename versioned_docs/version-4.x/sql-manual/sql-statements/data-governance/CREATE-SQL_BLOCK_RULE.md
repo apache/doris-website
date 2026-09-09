@@ -48,7 +48,7 @@ PROPERTIES (
 > - partition_num: The maximum number of partitions that a table will scan.
 > - tablet_num: The maximum number of tablets that a table will scan.
 > - cardinality: The number of rows of data that a table will scan.
-> - require_partition_filter: Whether a query on a partitioned internal table or Hive table must contain an effective partition filter. When set to `true`, queries that scan a supported partitioned table without filtering on a partition column will be blocked. The default is `false`. This property is supported in Doris 4.0.7 and later in the 4.0 series, and in Doris 4.1.2 and later in the 4.1 series. Currently, it only takes effect on internal tables and Hive tables.
+> - require_partition_filter: Whether a query on a partitioned internal table or Hive table must contain an effective partition filter. When set to `true`, queries that scan a supported partitioned table without filtering on a partition column will be blocked. The default is `false`. This property is supported in Doris 4.0.7 and later in the 4.0 series, and in Doris 4.1.4 and later in the 4.1 series. Currently, it only takes effect on internal tables and Hive tables.
 >
 > **Switch Category**
 >

@@ -62,6 +62,33 @@ SET max_file_split_num = 0;
 
 When this limit is set, Doris dynamically calculates the minimum split size to ensure the split count does not exceed the specified limit.
 
+## File Scanner V2
+
+> Supported since version 4.1.4.
+
+File Scanner V2 is the new execution engine for scanning external table files. It covers the Parquet, ORC, CSV and JSON formats, as well as reads on table formats such as Hive, Iceberg, Paimon and Hudi. Compared with the previous scanner, it improves data pruning, concurrent splitting and memory usage.
+
+It is controlled by the `enable_file_scanner_v2` session variable:
+
+- Type: `boolean`
+- Default: `true` (enabled by default)
+- Description: When enabled, `FileScanNode` uses File Scanner V2 for supported query scans. Scenarios such as JDBC Catalog and Iceberg system tables still take the old scan path.
+
+If you suspect that a query issue is related to the new scanner, you can temporarily disable it and compare:
+
+```sql
+SET enable_file_scanner_v2 = false;
+```
+
+### Data Pruning Behavior
+
+File Scanner V2 **always performs safe partition pruning and expression ZoneMap pruning**, and is no longer controlled by the session variables below. These two variables only affect the old scanner, which still honors them:
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `enable_runtime_filter_partition_prune` | `true` | Whether to enable Runtime Filter partition pruning. File Scanner V2 always enables safe partition pruning, so setting it to `false` has no effect on it |
+| `enable_expr_zonemap_filter` | `true` | Whether to enable expression ZoneMap filtering. File Scanner V2 always enables safe expression ZoneMap filtering |
+
 ## Merge IO Optimization
 
 For remote storage systems like HDFS and object storage, Doris optimizes IO access through Merge IO technology. Merge IO technology essentially merges multiple adjacent small IO requests into one large IO request, which can reduce IOPS and increase IO throughput.
