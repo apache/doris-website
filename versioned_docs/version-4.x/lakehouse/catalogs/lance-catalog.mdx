@@ -2,7 +2,7 @@
 {
     "title": "Lance Catalog",
     "language": "en",
-    "description": "Apache Doris Lance Catalog guide: access Lance datasets through Filesystem or REST Namespace catalogs, with parallel reads, predicate pushdown, S3/Local TVFs, index inspection, and vector search."
+    "description": "Apache Doris Lance Catalog guide: access Lance datasets through Filesystem or REST Namespace catalogs, with parallel reads, predicate pushdown, S3/Local TVFs, index inspection, vector search, and full-text search."
 }
 ---
 
@@ -25,6 +25,7 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 |---|---|
 | Query Lance data directly | Analyze existing Lance datasets with Doris SQL without migrating or importing the data first. |
 | AI vector search | Reuse vector indexes already present in Lance, run searches through `vector_search()`, and combine them with scalar filtering and Doris SQL analytics. |
+| Full-text search | Reuse FTS inverted indexes already present in Lance, run BM25 searches through `full_text_search()`, and combine them with scalar filtering and Doris SQL analytics. |
 | Data integration | Read Lance data into Doris internal tables for further processing, joins, or long-term storage. |
 | Namespace management | Use a Filesystem Catalog for a simple directory-based layout. Use a REST Catalog when Namespaces, table locations, or temporary storage credentials need centralized management. |
 
@@ -37,16 +38,17 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 | Metadata access | Supports `SHOW DATABASES`, `SHOW TABLES`, `DESC`, and `SHOW INDEX` (Filesystem Catalogs only) |
 | System tables (`table$...`) | Not supported; use `SHOW INDEX` for index metadata |
 | Data queries | Supports column pruning, parallel Lance Fragment scans, and snapshot-consistent reads of the current version |
-| Predicate pushdown | Supports pushing compatible scalar predicates down to Lance |
+| Predicate pushdown | Supports pushing compatible static scalar predicates and join Runtime Filters down to Lance |
 | File TVFs | Supports querying Lance datasets directly through `s3()` and `local()` |
 | Vector search | Uses physical Lance index segments as parallel splits, keeps uncovered Fragments as Flat Search splits, and performs a Doris global Top-K merge |
+| Full-text search | Uses existing Lance FTS inverted indexes through `full_text_search()`, supports Match OR/AND and Phrase queries, and performs a Doris global Top-K merge |
 | Writing to Lance | Not supported |
 | Time Travel | Not supported |
-| Full-Text Search / Hybrid Search | Not supported |
+| Hybrid Search | Not supported |
 
 ## Lance Version and Compatibility
 
-The Doris BE data reader is built with `lance-c v0.1.6`, which embeds the Lance Rust crates at version `7.0.0-beta.7` (Lance commit `e0e977a6`). The Doris FE reads Namespace and dataset metadata with the `lance-java` client at version `9.1.0-beta.3` (Lance commit `e934cc2c`). These versions identify the reader implementations integrated with Doris. They are different from the Lance `data_storage_version` recorded in a dataset.
+The Doris BE data reader is built with `lance-c v0.1.8`, whose embedded Lance Rust crates are pinned to Lance commit `e934cc2c`. The Doris FE reads Namespace and dataset metadata with the `lance-java` client at version `9.1.0-beta.3` (the same Lance commit). These versions identify the reader implementations integrated with Doris. They are different from the Lance `data_storage_version` recorded in a dataset.
 
 The following table describes the file-format compatibility of this reader:
 
@@ -270,7 +272,7 @@ For a regular Catalog query, Doris pins a Lance dataset version during planning 
 
 ## Inspect Lance Indexes
 
-For a table in a Filesystem Catalog, `SHOW INDEX` displays the logical scalar and vector indexes recorded in the Lance dataset. The variant statements `SHOW INDEXES`, `SHOW KEY`, and `SHOW KEYS` produce the same result:
+For a table in a Filesystem Catalog, `SHOW INDEX` displays the logical scalar indexes (including FTS inverted indexes) and vector indexes recorded in the Lance dataset. The variant statements `SHOW INDEXES`, `SHOW KEY`, and `SHOW KEYS` produce the same result:
 
 ```sql
 SHOW INDEX FROM lance_catalog.default.items;
@@ -286,7 +288,7 @@ Doris reads the index metadata from the latest dataset snapshot at execution tim
 | `Key_name` | Name of the Lance logical index. |
 | `Seq_in_index` | Position of the column in the index, starting from `1`. An index on multiple fields produces one row per field. |
 | `Column_name` | Indexed field. An index on a nested field displays the field path joined with `.`, and a path segment containing characters other than letters, digits, and `_` is quoted with backticks, for example `` attributes.`child.with.dot` ``. |
-| `Index_type` | Index type reported by the Lance SDK, such as `BTree`, `IVF_FLAT`, `IVF_SQ`, `IVF_PQ`, `IVF_HNSW_FLAT`, `IVF_HNSW_SQ`, or `IVF_HNSW_PQ`. |
+| `Index_type` | Index type reported by the Lance SDK, such as `BTree`, `INVERTED`, `IVF_FLAT`, `IVF_SQ`, `IVF_PQ`, `IVF_HNSW_FLAT`, `IVF_HNSW_SQ`, or `IVF_HNSW_PQ`. |
 | `Properties` | JSON object with a fixed set of index details: `metric_type` and `target_partition_size` at the top level, `type`, `num_bits`, `num_sub_vectors`, and `rotation_type` under `compression`, and `construction_ef`, `max_connections`, and `max_level` under `hnsw`. Keys are sorted, and the value is `{}` when the index details contain none of these fields. |
 
 The following rows illustrate an `IVF_PQ` vector index and a `BTree` index on a nested field:
@@ -405,6 +407,32 @@ WHERE active
   AND country LIKE 'C%';
 ```
 
+### Runtime Filter Pushdown
+
+When a regular Lance table participates in a join, Doris can convert some Runtime Filters produced by the join build side into Lance SQL conditions and apply them while Lance reads the data. This can reduce the amount of data returned to Doris, especially when a large table is joined with a highly selective build-side table.
+
+```sql
+SELECT l.user_id, l.name
+FROM lance_catalog.default.user_profiles l
+JOIN internal.demo.allowed_users a
+  ON l.user_id = a.user_id;
+```
+
+The following Runtime Filters can currently be pushed down:
+
+| Runtime Filter | Form pushed to Lance |
+|---|---|
+| IN Filter | `column IN (...)` |
+| Min/Max Filter | `column >= min_value`, `column <= max_value`, or both |
+
+The Runtime Filter column and values must be safely convertible to scalar types supported by Lance SQL. Other Runtime Filter types, IN Filters containing `NULL`, and data types or values that cannot be converted safely are not pushed down. Doris still evaluates any Runtime Filter that is not pushed down, so query correctness is preserved; only the performance benefit of early filtering in Lance is lost.
+
+Only a Runtime Filter that is ready before a Lance Scanner is created can be included in that Scanner's pushed-down conditions. A Runtime Filter that arrives later is still evaluated by Doris, but might not be pushed into a Scanner that has already been created.
+
+Runtime Filter conditions are combined with the Substrait conditions generated from regular SQL predicates; one does not replace the other. The `runtime filters` entry in `EXPLAIN` shows planned Runtime Filters. When at least one Runtime Filter is pushed down, `LanceRuntimeFilterPushedIds` and `LanceRuntimeFilterSkippedIds` in the Runtime Profile identify pushed and skipped Filter IDs.
+
+Runtime Filter pushdown currently applies only to regular Lance table scans. It is not used while `vector_search()` or full-text search generates candidates.
+
 ## Query Lance with File TVFs
 
 If you only need to read a Lance dataset at a known path, you can use the `s3()` or `local()` TVF without creating a Catalog. `uri` or `file_path` must point to the root directory of a Lance dataset, rather than an internal data file.
@@ -502,7 +530,7 @@ These defaults correspond to the Lance Scanner behavior currently integrated wit
 
 ### Supported Vector Index Types
 
-The embedded `lance-c v0.1.6` explicitly supports the following Lance vector index combinations:
+The embedded `lance-c v0.1.8` explicitly supports the following Lance vector index combinations:
 
 | Index type | Description | Main query parameters |
 |---|---|---|
@@ -531,7 +559,7 @@ Unless a footnote states otherwise, "Supported" means that the combination works
 
 1. Building an `l2` index over `float16` data with large values may take too long or fail. Keep vector values within a controlled range. If index creation fails, use Flat Search or, when appropriate for the application, use `cosine` instead.
 2. Lance treats `uint8` vectors as binary vectors and supports only the `hamming` metric. Product Quantization and Scalar Quantization do not support `uint8`, so only `IVF_FLAT` and `IVF_HNSW_FLAT` are available.
-3. `int8` vectors cannot currently use a vector index and are limited to Flat Search. The embedded Lance version also has a known issue where searching a **nullable** `int8` vector column may terminate the BE process. Avoid these queries until Doris upgrades to a `lance-c` release containing the [lance#7498](https://github.com/lance-format/lance/pull/7498) fix.
+3. `int8` vectors cannot currently use a vector index and are limited to Flat Search.
 
 #### The Query Metric Must Match the Index Metric
 
@@ -569,18 +597,18 @@ If `user_id > 100` must also participate in candidate generation, include it in 
 
 Lance reads and evaluates columns referenced only by `filter` internally. If such a column is not referenced by `SELECT` or another Doris expression, it does not have to be returned to Doris.
 
-### Two-Phase TopN Read and Lazy Materialization
+## Two-Phase TopN Read and Lazy Materialization
 
-Vector search commonly produces more candidate rows than the final `top_k`. Reading wide output columns such as `title` or `payload` during the search wastes work because most candidate rows are discarded by TopN. Two-phase reading defers these columns: Phase 1 reads only the columns required for filtering, ordering, and TopN; after global TopN, Phase 2 reads the remaining output columns only for the retained rows.
+`vector_search()` and `full_text_search()` commonly produce more candidate rows than the final `top_k`. Reading wide output columns such as `title` or `payload` during the search wastes work because most candidate rows are discarded by TopN. Two-phase reading defers these columns: Phase 1 reads only the columns required for filtering, ordering, and TopN; after global TopN, Phase 2 reads the remaining output columns only for the retained rows.
 
 This reduces storage I/O, network transfer, and memory usage. The benefit is usually greatest when `top_k` is small, the search produces many candidates, or the query returns wide string, JSON, or similar columns.
 
 | Phase | Data read |
 |---|---|
-| Phase 1 | Columns used internally by vector search, `_distance`, columns required by Post-filter or ordering, and an internal Row Location. |
+| Phase 1 | Columns used internally by the search, `_distance` or `_score`, columns required by Post-filter or ordering, and an internal Row Location. |
 | Phase 2 | Top-level columns used only by the final projection, read only for rows retained by global TopN. |
 
-#### Trigger Conditions
+### Trigger Conditions
 
 Doris uses two-phase reading only when all of the following conditions are met:
 
@@ -606,7 +634,7 @@ WHERE category = 'book';
 
 A Prefilter column referenced in the TVF `filter` is used internally by Lance. Its presence in the `filter` string alone does not make it a Phase-1 result column returned to Doris.
 
-#### Disabling Two-Phase Reading
+### Disabling Two-Phase Reading
 
 Use the following session setting to disable two-phase reading:
 
@@ -620,18 +648,100 @@ Doris automatically uses a single-phase read when `top_k` exceeds the threshold 
 - The query returns only a few narrow columns, leaving little I/O for two-phase reading to save.
 - Random Row-ID reads have high latency on the underlying storage, and the extra Phase-2 Fetch costs more than deferred reading saves.
 
-Disabling this optimization changes only when output columns are read. It does not disable vector indexes or change Prefilter, Post-filter, or TopN semantics. Compare both settings with representative queries and storage conditions.
+Disabling this optimization changes only when output columns are read. It does not disable vector or FTS indexes or change Prefilter, Post-filter, or TopN semantics. Compare both settings with representative queries and storage conditions.
+
+## Full-Text Search
+
+`full_text_search()` is a relational TVF that performs BM25 retrieval through an existing FTS inverted index on a Lance table. It supports combining analyzed query terms with OR or AND and matching their order and distance with Phrase queries. Doris merges candidates from the physical index segments into a global Top-K and adds `_score` to the source columns. A higher score means greater relevance.
+
+Before using the TVF, create an FTS inverted index on the target string column with the Lance SDK or another Lance writer. Phrase queries also require token positions to be enabled when the index is created, for example by setting `with_position=true` in the Lance index parameters. Doris does not create this index and does not fall back to a row-by-row full-text scan when no FTS index is available.
+
+### Syntax and Example
+
+The following query searches for `lance database` among documents whose category is `storage`, and then applies `published = true` as a Doris Post-filter:
+
+```sql
+SELECT document_id, title, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.documents",
+    "column" = "body",
+    "query" = "lance database",
+    "query_type" = "match",
+    "operator" = "and",
+    "top_k" = "10",
+    "offset" = "0",
+    "filter" = "category = 'storage'",
+    "coverage_mode" = "strict"
+)
+WHERE published = true
+ORDER BY _score DESC, document_id;
+```
+
+This example uses Match AND, so a document must contain both analyzed terms, `lance` and `database`. The `filter` property is a Prefilter that Lance evaluates before generating FTS candidates. The outer `WHERE` is a Post-filter evaluated after candidate generation. A Post-filter does not replenish removed candidates, so the final result can contain fewer than `top_k` rows. If `published = true` must affect candidate generation, include it in `filter` instead.
+
+The following Phrase query permits at most one intervening token between adjacent query terms. For example, it can match `lance search engine`:
+
+```sql
+SELECT document_id, title, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.documents",
+    "column" = "body",
+    "query" = "lance engine",
+    "query_type" = "phrase",
+    "slop" = "1",
+    "top_k" = "10"
+)
+ORDER BY _score DESC, document_id;
+```
+
+The returned relation contains every column from the source Lance table and a nullable `FLOAT` column named `_score`. The source table must not already contain a column with this name. The TVF selects its Top-K by descending `_score`, but a SQL relation does not guarantee final display order. Use `ORDER BY _score DESC` explicitly when stable ordering is required, and add a unique tie-breaker for equal scores.
+
+### Parameters
+
+| Parameter | Required | Default | Description |
+|---|---|---|---|
+| `table` | Yes | - | Fully qualified, three-part `catalog.database.table` name identifying a table in a Lance Catalog. If a multilevel Namespace maps to a database name containing `.`, quote the database part with backticks. The user must have the `SELECT` privilege on the table. |
+| `column` | Yes | - | String column with an FTS inverted index. Arrow `utf8` and `large_utf8`, which map to Doris `TEXT`, are supported. |
+| `query` | Yes | - | Non-empty search text. It is processed with the tokenizer configured when the FTS index was created. |
+| `query_type` | No | `match` | Query type. Valid values are `match` and `phrase`. |
+| `operator` | No | `or` | Match queries only. `or` requires at least one query term to match; `and` requires every query term to match. Phrase queries cannot set this parameter. |
+| `slop` | No | `0` | Phrase queries only. It must be an integer from `0` through `2147483647`. `0` requires an exact phrase; a positive value is the maximum number of intervening tokens permitted between adjacent query terms. Match queries cannot set this parameter. |
+| `top_k` | No | `10` | Number of results returned after skipping `offset`. It must be a positive integer. |
+| `offset` | No | `0` | Number of results skipped by relevance. It must be a non-negative integer, and `top_k + offset` must not exceed the maximum unsigned 32-bit integer. |
+| `filter` | No | - | Lance SQL condition evaluated before full-text candidates are generated; that is, a Prefilter. |
+| `coverage_mode` | No | `strict` | Behavior when the FTS index does not cover every Fragment in the current snapshot. Valid values are `strict` and `index_only`. |
+
+### Query Types
+
+| Query type | Matching behavior | Related parameters | Index requirement |
+|---|---|---|---|
+| Match OR | Matches at least one analyzed query term. This is the default. | `query_type=match`, `operator=or` | A standard FTS inverted index. |
+| Match AND | Matches every analyzed query term. | `query_type=match`, `operator=and` | A standard FTS inverted index. |
+| Phrase | Preserves the analyzed query-term order and applies the distance specified by `slop`. | `query_type=phrase`, `slop=N` | The FTS index must store token positions. |
+
+Boolean, Boost, Prefix, Wildcard, Regex, and cross-field compound FTS queries are not currently supported.
+
+### Index Coverage Modes
+
+| Mode | Behavior | When to use it |
+|---|---|---|
+| `strict` | Requires the selected FTS index to cover every Fragment in the pinned query snapshot. The query fails if any Fragment is uncovered. | Default and recommended when results must not omit data. After appending data, update or rebuild the FTS index before querying. |
+| `index_only` | Searches only Fragments covered by the FTS index and ignores uncovered data. | Use only when incomplete results are acceptable and search must remain available while an index update is pending. |
+
+Both modes require a committed FTS index with complete coverage metadata on the target column. A query fails if no usable index exists. Keep only one logical FTS index on a column; if multiple indexes match, Doris cannot select one unambiguously and rejects the query.
+
+Use `EXPLAIN` to verify execution: `lanceFtsQueryType` shows Match or Phrase, `lanceFtsMatchOperator` shows the Match OR/AND operator, and `lanceFtsPhraseSlop` shows the Phrase distance. `lanceFtsCoverageMode` shows the coverage mode, `lanceSearchIndexSegments` shows the number of physical FTS index segments used, and `lanceSearchUnindexedFragments` shows how many Fragments in the current snapshot are not covered by the index.
 
 ## Current Execution Model
 
-The execution order of `vector_search()` is:
+The execution order of `vector_search()` and `full_text_search()` is:
 
 ```text
 Pinned dataset snapshot
-  -> FE Split planning
-       -> Indexed coverage: one Split per physical Index Segment -> ANN Search
-       -> Uncovered or unindexed data: one Split per Fragment -> Flat Search
-  -> Per Split: Lance Prefilter -> ANN/Flat Search -> at most K+n candidates
+  -> FE search Split planning
+       -> Vector search: physical vector Index Segments + Flat Search for uncovered Fragments
+       -> Full-text search: physical FTS Index Segments (coverage checked by coverage_mode)
+  -> Per Split: Lance Prefilter -> vector/full-text search -> at most K+n candidates
   -> Doris Scan Post-filter
   -> Doris local TopN
   -> Exchange
@@ -646,7 +756,10 @@ Pinned dataset snapshot
 - For tables containing unsupported column types, explicitly list the columns to read instead of projecting unsupported columns through `SELECT *`.
 - For regular scans, inspect `lancePushdownPredicate` in `EXPLAIN` to verify which conditions have been pushed down.
 - Create a vector index in Lance that matches the intended query before running indexed vector search. For small datasets or validation, set `"use_index" = "false"` to perform Flat Search.
-- Use `SHOW INDEX` on a Filesystem Catalog table to inspect its logical Lance indexes, for example to verify the index name, type, and indexed fields before indexed vector search. `SHOW INDEX` is not supported for REST Catalogs.
+- Create an FTS inverted index in Lance before full-text search. The default `strict` mode rejects a query when the index does not cover every Fragment in the current snapshot; use `index_only` only when omitted data is acceptable.
+- Phrase queries require the FTS index to store token positions. Set `with_position=true` when creating the index if Phrase queries are required.
+- Use `SHOW INDEX` on a Filesystem Catalog table to inspect its logical Lance indexes, for example to verify the index name, type, and indexed fields before vector or full-text search. `SHOW INDEX` is not supported for REST Catalogs.
 - For deterministic vector result ordering, explicitly use `ORDER BY _distance ASC` and add a unique tie-breaker.
-- Use the `vector_search()` `filter` parameter when filtering must occur before vector candidates are generated. An outer `WHERE` filters only the candidates already generated by each search Split and runs before Doris global TopN, so allow for a final result with fewer than `top_k` rows.
-- Use `EXPLAIN` to inspect `lanceSearchFragments` and `lanceSearchIndexSegments`. The former is the number of visible Fragments in the pinned snapshot; the latter is the number of physical Index Segment splits selected by the FE. Additional fallback Fragment splits may also be present.
+- For deterministic full-text result ordering, explicitly use `ORDER BY _score DESC` and add a unique tie-breaker.
+- Use the TVF `filter` parameter when filtering must occur before vector or full-text candidates are generated. An outer `WHERE` filters only the candidates already generated by each search Split and runs before Doris global TopN, so allow for a final result with fewer than `top_k` rows.
+- Use `EXPLAIN` to inspect `lanceSearchFragments` and `lanceSearchIndexSegments`. The former is the number of visible Fragments in the pinned snapshot; the latter is the number of physical Index Segment splits selected by the FE. Vector search can also include fallback Flat Search Fragment splits; full-text search never falls back to Flat Search.
