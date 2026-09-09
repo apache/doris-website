@@ -8,6 +8,8 @@
 
 The following matrix summarizes the Paimon Catalog capabilities currently available in Doris. The rows are grouped by capability area, and the backend columns show whether each operation is available when Doris uses the corresponding metadata service. ✅ indicates that Doris supports the operation, and ❌ indicates that the operation is not currently supported.
 
+The DLF column refers to `paimon.catalog.type=dlf`, which uses a Hive-compatible metastore client and requires OSS or OSS-HDFS storage configuration. DLF accessed through `paimon.catalog.type=rest` is covered by the REST column.
+
 <table>
   <thead>
     <tr>
@@ -15,6 +17,7 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <th>Operation</th>
       <th>Filesystem</th>
       <th>HMS</th>
+      <th>DLF</th>
       <th>JDBC</th>
       <th>REST</th>
     </tr>
@@ -27,9 +30,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>LOAD_NAMESPACE</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -41,9 +46,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>CREATE_NAMESPACE</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -55,9 +62,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>DROP_NAMESPACE</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -69,9 +78,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>MULTILEVEL_NAMESPACE</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -84,9 +95,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>LOAD_TABLE</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -98,9 +111,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>CREATE_TABLE</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -112,9 +127,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>CTAS</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -126,9 +143,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>REGISTER_TABLE</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -140,9 +159,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>DROP_TABLE</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -154,6 +175,7 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>RENAME_TABLE</code></td>
@@ -161,9 +183,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>SET_TABLE_LOCATION</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -176,9 +200,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>DROP_COLUMN</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -190,9 +216,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>ALTER_COLUMN_TYPE</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -204,9 +232,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>SET_TABLE_PROPERTIES</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -218,6 +248,7 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>EVOLVE_PARTITION_SPEC</code></td>
@@ -225,9 +256,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>EVOLVE_SORT_ORDER</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -240,9 +273,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>LOAD_VIEW</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -254,9 +289,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>CREATE_VIEW</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -268,9 +305,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>ALTER_VIEW</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -282,9 +321,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>DROP_VIEW</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -297,9 +338,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>OVERWRITE_TABLE</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -311,9 +354,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>DYNAMIC_PARTITION_OVERWRITE</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -325,9 +370,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>DELETE</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -339,9 +386,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>UPSERT</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -353,6 +402,7 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>WRITE_TO_BRANCH</code></td>
@@ -360,9 +410,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>SCHEMA_EVOLUTION_ON_WRITE</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -375,9 +427,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>MULTI_TABLE_COMMIT</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -389,9 +443,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>OPTIMISTIC_CONCURRENCY</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -403,9 +459,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>COMMIT_RETRY</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -417,9 +475,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>COMMIT_STATUS_RECOVERY</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -429,11 +489,13 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td><code>LOCK_REQUIRED</code></td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
       <td align="center">✅</td>
       <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>LOCK_CONFIGURED</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">✅</td>
@@ -445,9 +507,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>FAILED_WRITE_CLEANUP</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -460,9 +524,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>BRANCH_DROP</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -474,9 +540,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>BRANCH_WRITE</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -488,9 +556,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>TAG_CREATE</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -502,9 +572,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>READ_BY_TAG</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -516,9 +588,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>TAG_FAST_FORWARD</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -531,9 +605,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
+      <td align="center">✅</td>
     </tr>
     <tr>
       <td><code>READ_BY_TIME</code></td>
+      <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
       <td align="center">✅</td>
@@ -545,9 +621,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>EXPIRE</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -560,9 +638,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>REWRITE_DATA_FILES / COMPACT</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -574,6 +654,7 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>REWRITE_DELETE_FILES</code></td>
@@ -581,9 +662,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>EXPIRE_CHANGELOGS</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
@@ -596,6 +679,7 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>MIGRATE_TABLE</code></td>
@@ -603,9 +687,11 @@ The following matrix summarizes the Paimon Catalog capabilities currently availa
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
+      <td align="center">❌</td>
     </tr>
     <tr>
       <td><code>COMPUTE_TABLE_STATS</code></td>
+      <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
       <td align="center">❌</td>
