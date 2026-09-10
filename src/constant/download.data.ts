@@ -91,6 +91,40 @@ export const ALL_VERSIONS: AllVersionOption[] = [
         value: '4.1',
         children: [
             {
+                label: '4.1.4',
+                value: '4.1.4',
+                majorVersion: '4.1',
+                items: [
+                    {
+                        label: CPUEnum.X64,
+                        value: CPUEnum.X64,
+                        gz: `${ORIGIN}apache-doris-4.1.4-bin-x64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.4-bin-x64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.4-bin-x64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.4/',
+                        version: '4.1.4-rc04',
+                    },
+                    {
+                        label: CPUEnum.X64NoAvx2,
+                        value: CPUEnum.X64NoAvx2,
+                        gz: `${ORIGIN}apache-doris-4.1.4-bin-x64-noavx2.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.4-bin-x64-noavx2.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.4-bin-x64-noavx2.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.4/',
+                        version: '4.1.4-rc04',
+                    },
+                    {
+                        label: CPUEnum.ARM64,
+                        value: CPUEnum.ARM64,
+                        gz: `${ORIGIN}apache-doris-4.1.4-bin-arm64.tar.gz`,
+                        asc: `${ORIGIN}apache-doris-4.1.4-bin-arm64.tar.gz.asc`,
+                        sha512: `${ORIGIN}apache-doris-4.1.4-bin-arm64.tar.gz.sha512`,
+                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.4/',
+                        version: '4.1.4-rc04',
+                    },
+                ],
+            },
+            {
                 label: '4.1.3',
                 value: '4.1.3',
                 majorVersion: '4.1',
