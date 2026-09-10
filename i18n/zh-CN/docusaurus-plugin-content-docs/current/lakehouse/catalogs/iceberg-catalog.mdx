@@ -1527,6 +1527,58 @@ SELECT * FROM iceberg_tbl LIMIT 10;
 SELECT * FROM iceberg.iceberg_db.iceberg_tbl LIMIT 10;
 ```
 
+### 文件元数据列
+
+Doris 为 Iceberg 数据表提供两个隐藏元数据列，可用于定位每条查询结果对应的物理数据文件和文件内行位置。
+
+| 列名 | 类型 | 说明 |
+| --- | --- | --- |
+| `_file` | `STRING NOT NULL` | Iceberg 数据文件元数据中记录的原始路径。 |
+| `_pos` | `BIGINT NOT NULL` | 该行在完整数据文件中的物理位置，从 0 开始。 |
+
+前置条件：按照前文示例配置 Iceberg Catalog，并创建一个包含 `id` 列、使用 Parquet 或 ORC 文件的 Iceberg 数据表。以下查询假设 `iceberg_tbl` 中已包含 `id` 为 `1` 和 `2` 的记录：
+
+```sql
+SELECT id, `_file`, `_pos`
+FROM iceberg.iceberg_db.iceberg_tbl
+ORDER BY `_file`, `_pos`;
+```
+
+示例结果（文件路径由实际表位置决定）：
+
+```text
++----+---------------------------------------+------+
+| id | _file                                 | _pos |
++----+---------------------------------------+------+
+|  1 | s3://bucket/warehouse/db/table/a.orc |    0 |
+|  2 | s3://bucket/warehouse/db/table/a.orc |    1 |
++----+---------------------------------------+------+
+```
+
+默认情况下，这些列不会出现在 `SELECT *` 或 `DESC` 的结果中。
+
+如需在 `SELECT *` 和 `DESC` 中显示隐藏列，可以在当前会话开启 `show_hidden_columns`：
+
+```sql
+SET show_hidden_columns = true;
+```
+
+相关会话变量：
+
+| 变量 | 类型 | 默认值 | 是否必需 | 作用 |
+| --- | --- | --- | --- | --- |
+| `show_hidden_columns` | `BOOLEAN` | `false` | 否 | 在 `SELECT *` 和 `DESC` 中显示隐藏列。显式引用列名时无需开启。 |
+| `enable_file_scanner_v2` | `BOOLEAN` | `true` | 否 | 查询引用这些元数据列时必须保持开启。 |
+| `force_jni_scanner` | `BOOLEAN` | `false` | 否 | 必须保持关闭，因为 JNI Reader 无法生成这些元数据列。 |
+
+行位置以完整物理文件为基准。谓词过滤、Delete 处理及扫描切分不会对保留行重新编号。因此，`_file` 和 `_pos` 的组合可以定位当前表快照中的一条物理记录。数据文件重写或 Compaction 后，两列的值可能变化，不能将其作为稳定的逻辑行 ID。
+
+:::caution 注意
+仅当 Iceberg 数据表通过 FileScannerV2 原生 Parquet 或 ORC Reader 读取时，才能使用这些列。如果关闭 `enable_file_scanner_v2`、开启 `force_jni_scanner`，或者所选数据文件无法使用原生 Parquet/ORC Reader，引用这些列的查询会失败。
+
+`_file` 和 `_pos` 是保留列名，名称比较不区分大小写。请勿在 Iceberg 表中使用它们作为物理列名。
+:::
+
 ### 时间旅行
 
 支持读取 Iceberg 表指定的 Snapshot。
