@@ -42,13 +42,15 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 | File TVFs | Supports querying Lance datasets directly through `s3()` and `local()` |
 | Vector search | Uses physical Lance index segments as parallel splits, keeps uncovered Fragments as Flat Search splits, and performs a Doris global Top-K merge |
 | Full-text search | Uses existing Lance FTS inverted indexes through `full_text_search()`, supports Match OR/AND and Phrase queries, and performs a Doris global Top-K merge |
+| Lance Cache | Shares index and metadata caches and a local disk data cache within each BE |
+| Two-phase TopN read | Enabled by default for eligible output columns in vector and full-text searches; controlled independently by `enable_lance_lazy_materialization` |
 | Writing to Lance | Not supported |
 | Time Travel | Not supported |
 | Hybrid Search | Not supported |
 
 ## Lance Version and Compatibility
 
-The Doris BE data reader is built with `lance-c v0.1.8`, whose embedded Lance Rust crates are pinned to Lance commit `e934cc2c`. The Doris FE reads Namespace and dataset metadata with the `lance-java` client at version `9.1.0-beta.3` (the same Lance commit). These versions identify the reader implementations integrated with Doris. They are different from the Lance `data_storage_version` recorded in a dataset.
+The Doris BE data reader is built with `lance-c v0.1.9` plus Doris patches, which upgrade its embedded Lance Rust crates to `11.0.0` (commit `ab6b5bbe`). The Doris FE reads Namespace and dataset metadata with `org.lance:lance-core:11.0.0`, aligning the FE and BE on Lance `11.0.0`. A Dataset must be compatible with both FE metadata loading and BE data reading. These implementation versions are different from the Lance `data_storage_version` recorded in a dataset.
 
 The following table describes the file-format compatibility of this reader:
 
@@ -530,7 +532,7 @@ These defaults correspond to the Lance Scanner behavior currently integrated wit
 
 ### Supported Vector Index Types
 
-The embedded `lance-c v0.1.8` explicitly supports the following Lance vector index combinations:
+The embedded `lance-c v0.1.9` explicitly supports the following Lance vector index combinations:
 
 | Index type | Description | Main query parameters |
 |---|---|---|
@@ -597,6 +599,66 @@ If `user_id > 100` must also participate in candidate generation, include it in 
 
 Lance reads and evaluates columns referenced only by `filter` internally. If such a column is not referenced by `SELECT` or another Doris expression, it does not have to be returned to Doris.
 
+## Lance Cache
+
+Lance Cache reuses index, metadata, and data-file content to reduce repeated reads. Each BE manages its own cache, shared by Lance queries on that BE. Cache capacity and content are not shared across BEs. Ordinary scans, vector search, full-text search, and second-phase fetches can reuse the corresponding caches without additional `CREATE CATALOG` properties.
+
+### Cache Types and Scope
+
+| Cache | Storage | Cached content |
+|---|---|---|
+| Index cache | BE memory | Loaded Lance index content, reducing repeated index loads. |
+| Metadata cache | BE memory | Metadata used by the Lance reader, reducing repeated reads and parsing. |
+| Data cache | BE local disk, with an in-memory tier sized to one read block | Data read from files ending in `.lance` directly under a Dataset's `data/` directory, cached in blocks. |
+
+The data cache uses Foyer within the Lance reader, with its own directory and capacity configured through the `lance_*` BE parameters below. It does not use Doris's general File Cache directory or capacity settings. Index files, manifests, and deletion files bypass this disk data cache and continue to use Lance's existing read and cache paths.
+
+The data cache fills on demand without downloading the entire Dataset in advance. On a miss, it reads from the source storage and enqueues the data for background disk-cache writes. The first read still incurs source I/O and cache-fill overhead. Cache hits can reduce subsequent source reads, but do not eliminate decoding, filtering, or sorting costs.
+
+### BE Configuration
+
+All parameters below are optional. Set them in each BE's `be.conf` and restart that BE for changes to take effect. Capacities are per BE and expressed in bytes.
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `lance_index_cache_size_bytes` | Int64 | `10737418240` (10 GiB) | Index memory-cache capacity. Set to `0` for zero capacity. |
+| `lance_metadata_cache_size_bytes` | Int64 | `1073741824` (1 GiB) | Metadata memory-cache capacity. Set to `0` for zero capacity. |
+| `enable_lance_data_cache` | Boolean | `true` | Enables the disk data cache. Disabling it preserves the index and metadata caches. |
+| `lance_data_cache_path` | String | `${DORIS_HOME}/lance_data_cache` | Data-cache directory. The BE process needs permission to create the directory and read/write files. Use separate directories for different BE processes. |
+| `lance_data_cache_disk_capacity_bytes` | Int64 | `107374182400` (100 GiB) | Disk-cache capacity. Must be a multiple of `4096` and at least twice the read block size. |
+| `lance_data_cache_read_block_size_bytes` | Int64 | `1048576` (1 MiB) | Data-cache read block size. Must be positive and a multiple of `4096`. Also sets the capacity of the data cache's in-memory tier. |
+
+For example, explicitly configure the default capacities and place the cache in a separate local disk directory:
+
+```properties
+lance_index_cache_size_bytes = 10737418240
+lance_metadata_cache_size_bytes = 1073741824
+enable_lance_data_cache = true
+lance_data_cache_path = /mnt/ssd/lance_data_cache
+lance_data_cache_disk_capacity_bytes = 107374182400
+lance_data_cache_read_block_size_bytes = 1048576
+```
+
+After the BE restarts, the shared cache initializes when the first Lance Dataset is opened. With the data cache enabled, an unavailable directory or invalid capacity or block size causes initialization to fail and Lance queries to report an error. There is no automatic fallback to running without the data cache. To disable the disk data cache, set `enable_lance_data_cache` to `false` and restart the BE.
+
+Budget for index and metadata caches alongside query working memory. These capacities do not limit total Lance query memory or BE process memory. The disk cache also consumes local disk space and file descriptors. Larger read blocks reduce the number of blocks but can increase extra I/O for small reads. Use a new cache directory when changing the read block size or disk layout.
+
+### Checking Cache Effectiveness
+
+Inspect the following counters under `LanceReader` in the query Profile:
+
+| Counter | Meaning |
+|---|---|
+| `LanceDataCacheBytesReadFromCache` | Logical bytes returned to the reader from cache hits through the data-cache path. |
+| `LanceDataCacheBytesReadFromRemote` | Logical bytes returned to the reader from source storage after data-cache misses. The source can also be a local file. |
+| `LanceIndexPartitionCacheMissLoads` | Index partitions loaded because of partition-cache misses, rather than the miss count for the entire index cache. |
+
+The two data-cache byte counters exclude extra bytes caused by block-aligned reads and I/O that bypasses the data cache, such as index and manifest reads. They are not complete remote-traffic counters. Both are `0` when the data cache is disabled, which does not imply that no source reads occurred. Statistics are collected when the Dataset closes, so inspect the completed query Profile. Second-phase fetches also reuse the cache, but these scan counters are not a query-wide total of all fetch I/O.
+
+The BE `/metrics` endpoint also exposes metrics prefixed with `doris_be_lance_session_index_cache_` and `doris_be_lance_session_metadata_cache_`. The suffixes `capacity_bytes`, `usage_bytes`, `entries`, `hits_total`, and `misses_total` represent configured capacity, current usage, entry count, cumulative hits, and cumulative misses. These metrics are registered after the shared Lance Session initializes and describe the BE-wide cache, rather than an individual query.
+
+To compare cache effectiveness, use the same Dataset version and query parameters, ensure queries actually execute on the same BEs, and record first-read and repeated-read latency, cache counters, and source I/O. Total latency alone does not distinguish cache benefits from index search, decoding, or second-phase fetch costs.
+
 ## Two-Phase TopN Read and Lazy Materialization
 
 `vector_search()` and `full_text_search()` commonly produce more candidate rows than the final `top_k`. Reading wide output columns such as `title` or `payload` during the search wastes work because most candidate rows are discarded by TopN. Two-phase reading defers these columns: Phase 1 reads only the columns required for filtering, ordering, and TopN; after global TopN, Phase 2 reads the remaining output columns only for the retained rows.
@@ -612,14 +674,16 @@ This reduces storage I/O, network transfer, and memory usage. The benefit is usu
 
 Doris uses two-phase reading only when all of the following conditions are met:
 
-1. `topn_lazy_materialization_threshold` is greater than `0`. Its default value is `1024`.
-2. `top_k` does not exceed the threshold.
+1. The query reads Lance through `vector_search()` or `full_text_search()` and its plan contains a TopN eligible for lazy materialization. This switch does not currently apply to ordinary Lance table scans or Lance file TVFs.
+2. The Boolean session variable `enable_lance_lazy_materialization` is `true`, its default value.
 3. At least one top-level column can be deferred. A column used only by the final `SELECT` projection can be deferred. A column used by a Post-filter, `ORDER BY`, or another expression before TopN must be read in Phase 1. Nested subcolumns cannot currently be deferred.
+
+`enable_lance_lazy_materialization` is independent of `topn_lazy_materialization_threshold`: Lance can still use two-phase reading when the latter is `-1` or `top_k` exceeds that threshold. Other tables that support lazy materialization continue to follow the general threshold. Enabling the switch allows the optimization; the plan structure and eligible columns still determine whether it applies.
 
 In the following query, `category` must be read in Phase 1 for the Post-filter, while `user_id`, `title`, and `payload` can be fetched after TopN:
 
 ```sql
-SET topn_lazy_materialization_threshold = 1024;
+SET enable_lance_lazy_materialization = true;
 
 SELECT user_id, title, payload, _distance
 FROM vector_search(
@@ -634,15 +698,19 @@ WHERE category = 'book';
 
 A Prefilter column referenced in the TVF `filter` is used internally by Lance. Its presence in the `filter` string alone does not make it a Phase-1 result column returned to Doris.
 
+### Verifying the Plan
+
+Prefix the query above with `EXPLAIN VERBOSE`. When two-phase reading is active, the plan includes `VMaterializeNode`, whose `column_descs_lists` lists the columns fetched in Phase 2. Disable the switch and run `EXPLAIN VERBOSE` again for the same simple search query; the corresponding materialization node should disappear. If it is absent with the switch enabled, check whether the output columns are used in filtering, ordering, or other computations before TopN, and whether the plan supports this optimization.
+
 ### Disabling Two-Phase Reading
 
 Use the following session setting to disable two-phase reading:
 
 ```sql
-SET topn_lazy_materialization_threshold = -1;
+SET enable_lance_lazy_materialization = false;
 ```
 
-Doris automatically uses a single-phase read when `top_k` exceeds the threshold or no column can be deferred, so manual disabling is usually unnecessary. Consider disabling it and comparing performance in the following cases:
+Doris uses a single-phase read when no column can be deferred or the plan does not support the optimization. A large `top_k` alone does not automatically disable two-phase reading for Lance. Consider disabling it and comparing performance in the following cases:
 
 - `top_k` is large, so Phase 2 still reads most candidate rows.
 - The query returns only a few narrow columns, leaving little I/O for two-phase reading to save.
