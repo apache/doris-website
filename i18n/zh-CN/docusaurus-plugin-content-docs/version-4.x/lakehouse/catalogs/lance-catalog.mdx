@@ -99,31 +99,87 @@ Filesystem Catalog 直接从 Warehouse 目录发现 Lance Namespace 和表。
 |---|---|---|
 | `warehouse` | 是 | Lance Warehouse 根路径。支持本地绝对路径、`file://` URI、`s3://` URI 和 `oss://` URI。 |
 
-根据 Warehouse 所在的存储系统选择对应示例：
+两个参数的作用不同：
+
+- `fs.s3.support=true` 显式选择 S3 配置解析。访问 AWS S3 时通常可以通过属性自动识别；访问 MinIO、自定义 endpoint 或通过 S3 兼容接口访问 OSS 时，应显式设置，避免识别失败或根据域名选择其他存储类型。下面所有 S3 示例都设置此属性，便于直接使用。
+- `use_path_style` 控制请求地址中 Bucket 的位置，默认值为 `false`。设置为 `true` 时使用 `endpoint/bucket/对象路径`；设置为 `false` 时使用虚拟主机方式。对于当前 Lance 默认 S3 客户端，显式配置的虚拟主机 endpoint 必须包含 Bucket。该参数应与服务支持的访问方式及 endpoint 配套设置。
+
+| 访问场景 | 存储类型设置 | `use_path_style` | endpoint 写法 |
+|---|---|---|---|
+| AWS S3 | 建议设置 `fs.s3.support=true` | `false`，可省略 | 省略 `s3.endpoint`，由客户端生成。 |
+| MinIO（通过服务域名或 IP 访问） | 设置 `fs.s3.support=true` | 显式设置 `true` | 服务地址，不带 Bucket，如 `http://minio.example.com:9000`。 |
+| OSS 的 S3 兼容接口 | 设置 `fs.s3.support=true` | `false`，示例显式设置 | 带 Bucket，如 `https://my-bucket.oss-cn-beijing.aliyuncs.com`。 |
+| OSS 原生接口 | 建议设置 `fs.oss.support=true`，不设置 `fs.s3.support` | 无需设置通用 `use_path_style` | 使用 `oss.endpoint`，不带 Bucket，如 `https://oss-cn-beijing.aliyuncs.com`。 |
+
+以上 S3 endpoint 规则针对 Lance 默认 S3 访问链路。对于单一存储类型的 Filesystem Catalog，只设置对应的 `fs.*.support=true`；不要为了“开启兼容”同时设置多个存储类型。该属性选择配置解析逻辑，不会为存储服务增加协议支持。
+
+根据 Warehouse 所在的存储系统选择对应示例，替换 Bucket、路径、地址和凭证：
 
 <Tabs groupId="lance-filesystem-storage">
-    <TabItem value="s3" label="S3 / S3 兼容存储" default>
+    <TabItem value="s3" label="AWS S3" default>
         ```sql
         CREATE CATALOG lance_fs_s3 PROPERTIES (
             "type" = "lance",
             "lance.catalog.type" = "filesystem",
             "warehouse" = "s3://my-bucket/lance",
-            "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
             "s3.region" = "us-east-1",
             "s3.access_key" = "<ak>",
             "s3.secret_key" = "<sk>"
         );
         ```
 
-        访问 AWS S3 时可以省略 `s3.endpoint`。访问 MinIO 等 S3 兼容存储时，应设置对应的 `s3.endpoint`；如果服务要求 Path Style，还需设置 `"use_path_style" = "true"`。
+        本例省略 `s3.endpoint`，客户端根据 Bucket 和 region 生成 AWS S3 地址。`use_path_style=false` 是默认值，示例中显式写出便于与其他访问方式对照。
     </TabItem>
 
-    <TabItem value="oss" label="阿里云 OSS">
+    <TabItem value="minio" label="MinIO（Path Style）">
+        ```sql
+        CREATE CATALOG lance_fs_minio PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        本例通过 MinIO 的服务域名访问，使用 Path Style，无需为每个 Bucket 配置子域名。endpoint 不带 Bucket；将 region 替换为服务实际配置值。启用 TLS 时，将地址替换为对应的 `https://` endpoint，并确保 FE 和 BE 都能访问该地址。
+    </TabItem>
+
+    <TabItem value="oss-s3" label="阿里云 OSS（S3 兼容访问）">
+        通过 S3 兼容接口访问 OSS 时，使用 `s3://` Warehouse 和 `s3.*` 连接属性：
+
+        ```sql
+        CREATE CATALOG lance_fs_oss_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        本例设置 `use_path_style=false`，使用 Virtual Hosted Style。当前 Lance 的默认 S3 客户端不会自动把 Bucket 拼接到显式配置的 endpoint，因此 `s3.endpoint` 必须包含 Bucket，例如 `https://my-bucket.oss-cn-beijing.aliyuncs.com`；`warehouse` 仍使用 `s3://my-bucket/lance`。使用内网访问时，可替换为 `https://my-bucket.oss-cn-beijing-internal.aliyuncs.com`，并确保 FE 和 BE 都能访问该地址。
+
+        使用 STS 临时凭证时，增加 `"s3.session_token" = "<token>"`。该方式通过 S3 兼容接口读取 OSS 中的原有数据，无需迁移数据；使用 OSS 原生访问时，参见相邻的 OSS 原生访问示例。
+    </TabItem>
+
+    <TabItem value="oss" label="阿里云 OSS（原生访问）">
         ```sql
         CREATE CATALOG lance_fs_oss PROPERTIES (
             "type" = "lance",
             "lance.catalog.type" = "filesystem",
             "warehouse" = "oss://my-bucket/lance",
+            "fs.oss.support" = "true",
             "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
             "oss.region" = "cn-beijing",
             "oss.access_key" = "<ak>",

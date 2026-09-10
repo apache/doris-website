@@ -99,31 +99,87 @@ A Filesystem Catalog discovers Lance Namespaces and tables directly from a wareh
 |---|---|---|
 | `warehouse` | Yes | Root path of the Lance warehouse. Local absolute paths, `file://` URIs, `s3://` URIs, and `oss://` URIs are supported. |
 
-Select the example that matches the storage system hosting the warehouse:
+The two properties serve different purposes:
+
+- `fs.s3.support=true` explicitly selects S3 configuration parsing. AWS S3 can usually be detected from its properties. For MinIO, custom endpoints, or OSS accessed through its S3-compatible API, set it explicitly to avoid failed detection or selection of another storage type based on the domain. All S3 examples below include this property for direct use.
+- `use_path_style` controls where the bucket appears in request URLs and defaults to `false`. Setting it to `true` uses `endpoint/bucket/object-path`; setting it to `false` uses virtual-hosted-style access. With the current default S3 client in Lance, an explicitly configured virtual-hosted-style endpoint must include the bucket. Set this property together with the endpoint according to the access style supported by the service.
+
+| Access scenario | Storage type setting | `use_path_style` | Endpoint format |
+|---|---|---|---|
+| AWS S3 | Recommended: `fs.s3.support=true` | `false`; can be omitted | Omit `s3.endpoint` so the client generates it. |
+| MinIO (access through a service domain or IP) | Set `fs.s3.support=true` | Explicitly set `true` | Service address without the bucket, such as `http://minio.example.com:9000`. |
+| OSS S3-compatible API | Set `fs.s3.support=true` | `false`; explicitly set in the example | Include the bucket, such as `https://my-bucket.oss-cn-beijing.aliyuncs.com`. |
+| Native OSS API | Recommended: `fs.oss.support=true`; do not set `fs.s3.support` | No need to set the generic `use_path_style` | Use `oss.endpoint` without the bucket, such as `https://oss-cn-beijing.aliyuncs.com`. |
+
+These S3 endpoint rules apply to the default S3 access path in Lance. For a Filesystem Catalog using a single storage type, set only the corresponding `fs.*.support=true`; do not enable multiple storage types to “enable compatibility.” This property selects configuration parsing and does not add protocol support to the storage service.
+
+Select the example that matches the storage system hosting the warehouse, and replace the bucket, path, address, and credentials:
 
 <Tabs groupId="lance-filesystem-storage">
-    <TabItem value="s3" label="S3 / S3-Compatible" default>
+    <TabItem value="s3" label="AWS S3" default>
         ```sql
         CREATE CATALOG lance_fs_s3 PROPERTIES (
             "type" = "lance",
             "lance.catalog.type" = "filesystem",
             "warehouse" = "s3://my-bucket/lance",
-            "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
             "s3.region" = "us-east-1",
             "s3.access_key" = "<ak>",
             "s3.secret_key" = "<sk>"
         );
         ```
 
-        You can omit `s3.endpoint` for AWS S3. For S3-compatible storage such as MinIO, set the service endpoint and add `"use_path_style" = "true"` when the service requires path-style access.
+        This example omits `s3.endpoint` so the client generates the AWS S3 address from the bucket and region. `use_path_style=false` is the default and is included explicitly for comparison with other access styles.
     </TabItem>
 
-    <TabItem value="oss" label="Alibaba Cloud OSS">
+    <TabItem value="minio" label="MinIO (Path Style)">
+        ```sql
+        CREATE CATALOG lance_fs_minio PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        This example accesses MinIO through its service domain using path-style requests, without requiring a subdomain for each bucket. Keep the bucket out of the endpoint and replace the region with the value configured for the service. If TLS is enabled, use the corresponding `https://` endpoint and ensure that both the FE and BEs can reach it.
+    </TabItem>
+
+    <TabItem value="oss-s3" label="Alibaba Cloud OSS (S3-Compatible Access)">
+        To access OSS through its S3-compatible API, use a `s3://` warehouse and `s3.*` connection properties:
+
+        ```sql
+        CREATE CATALOG lance_fs_oss_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        This example sets `use_path_style=false` for virtual-hosted-style access. The current default S3 client in Lance does not automatically add the bucket to an explicitly configured endpoint, so `s3.endpoint` must include the bucket, for example `https://my-bucket.oss-cn-beijing.aliyuncs.com`; keep `warehouse` as `s3://my-bucket/lance`. For internal network access, use `https://my-bucket.oss-cn-beijing-internal.aliyuncs.com` and ensure that both the FE and BEs can reach it.
+
+        For temporary STS credentials, add `"s3.session_token" = "<token>"`. This mode reads existing OSS data through the S3-compatible API without moving the data. For native OSS access, see the adjacent native OSS example.
+    </TabItem>
+
+    <TabItem value="oss" label="Alibaba Cloud OSS (Native Access)">
         ```sql
         CREATE CATALOG lance_fs_oss PROPERTIES (
             "type" = "lance",
             "lance.catalog.type" = "filesystem",
             "warehouse" = "oss://my-bucket/lance",
+            "fs.oss.support" = "true",
             "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
             "oss.region" = "cn-beijing",
             "oss.access_key" = "<ak>",
