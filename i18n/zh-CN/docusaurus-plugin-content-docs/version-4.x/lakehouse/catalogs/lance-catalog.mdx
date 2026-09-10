@@ -106,7 +106,7 @@ Filesystem Catalog 直接从 Warehouse 目录发现 Lance Namespace 和表。
 
 | 访问场景 | 存储类型设置 | `use_path_style` | endpoint 写法 |
 |---|---|---|---|
-| AWS S3 | 建议设置 `fs.s3.support=true` | `false`，可省略 | 省略 `s3.endpoint`，由客户端生成。 |
+| AWS S3 | 建议设置 `fs.s3.support=true` | `false`，可省略 | 带 Bucket，如 `https://my-bucket.s3.us-east-1.amazonaws.com`。 |
 | MinIO（通过服务域名或 IP 访问） | 设置 `fs.s3.support=true` | 显式设置 `true` | 服务地址，不带 Bucket，如 `http://minio.example.com:9000`。 |
 | OSS 的 S3 兼容接口 | 设置 `fs.s3.support=true` | `false`，示例显式设置 | 带 Bucket，如 `https://my-bucket.oss-cn-beijing.aliyuncs.com`。 |
 | OSS 原生接口 | 建议设置 `fs.oss.support=true`，不设置 `fs.s3.support` | 无需设置通用 `use_path_style` | 使用 `oss.endpoint`，不带 Bucket，如 `https://oss-cn-beijing.aliyuncs.com`。 |
@@ -124,13 +124,14 @@ Filesystem Catalog 直接从 Warehouse 目录发现 Lance Namespace 和表。
             "warehouse" = "s3://my-bucket/lance",
             "fs.s3.support" = "true",
             "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
             "s3.region" = "us-east-1",
             "s3.access_key" = "<ak>",
             "s3.secret_key" = "<sk>"
         );
         ```
 
-        本例省略 `s3.endpoint`，客户端根据 Bucket 和 region 生成 AWS S3 地址。`use_path_style=false` 是默认值，示例中显式写出便于与其他访问方式对照。
+        本例使用带 Bucket 的 AWS S3 endpoint，配合 `use_path_style=false`。当前 Doris 的 S3 属性校验要求 endpoint；使用这里的 `s3://my-bucket/...` 地址时，不能只设置 region 而省略 endpoint。替换 Bucket 或 region 时，请同步修改 endpoint。
     </TabItem>
 
     <TabItem value="minio" label="MinIO（Path Style）">
@@ -217,10 +218,10 @@ REST Catalog 通过 Lance REST Namespace 获取 Namespace、表地址和存储�
 | `lance.rest.api-key` | 使用 API Key 认证时是 | - | API Key，通过 `x-api-key` Header 发送。 |
 | `lance.rest.header.<header-name>` | 否 | - | 发送给 REST 服务的自定义 HTTP Header。认证 Header 应使用上面的专用认证属性配置。 |
 
-REST Namespace 返回每张表的存储地址。根据表所在的存储系统配置默认访问参数：
+REST 服务认证和对象存储认证是两套独立配置：`lance.rest.*` 用于连接 Namespace 服务，`s3.*` / `oss.*` 用于 FE 和 BE 读取表数据。实际访问链路由 Namespace 返回的表 URI 决定：`s3://` 使用 S3，`oss://` 使用 OSS 原生访问。根据返回的表地址选择默认存储配置：
 
 <Tabs groupId="lance-rest-storage">
-    <TabItem value="s3" label="S3 / S3 兼容存储" default>
+    <TabItem value="s3" label="AWS S3" default>
         ```sql
         CREATE CATALOG lance_rest_s3 PROPERTIES (
             "type" = "lance",
@@ -228,17 +229,59 @@ REST Namespace 返回每张表的存储地址。根据表所在的存储系统�
             "lance.rest.uri" = "https://lance.example.com",
             "lance.rest.security.type" = "bearer",
             "lance.rest.bearer-token" = "<token>",
-            "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
             "s3.region" = "us-east-1",
             "s3.access_key" = "<ak>",
             "s3.secret_key" = "<sk>"
         );
         ```
 
-        该配置用于 REST Namespace 返回的 `s3://` Lance 表。使用 MinIO 等 S3 兼容存储时，将 `s3.endpoint` 替换为实际地址，并按需设置 `"use_path_style" = "true"`。
+        适用于 Namespace 返回的 AWS `s3://my-bucket/...` 表。默认 endpoint 必须包含该 Bucket，并与 region 一致。不同 Bucket 的表需要各自匹配的 endpoint，见下方的多 Bucket 说明。
     </TabItem>
 
-    <TabItem value="oss" label="阿里云 OSS">
+    <TabItem value="minio" label="MinIO（Path Style）">
+        ```sql
+        CREATE CATALOG lance_rest_minio PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        适用于 Namespace 返回的 MinIO `s3://` 表。endpoint 使用 FE 和 BE 都能访问的服务地址，不带 Bucket；`use_path_style=true` 将各表的 Bucket 放入请求路径。region 应与 MinIO 服务配置一致。
+    </TabItem>
+
+    <TabItem value="oss-s3" label="阿里云 OSS（S3 兼容访问）">
+        ```sql
+        CREATE CATALOG lance_rest_oss_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        适用于 Namespace 返回的 `s3://my-bucket/...` 表，通过 S3 兼容接口访问 OSS。endpoint 必须包含同一个 Bucket；内网地址可使用 `https://my-bucket.oss-cn-beijing-internal.aliyuncs.com`。Namespace 必须返回 `s3://` 地址，不能仅设置 `fs.s3.support=true` 就将返回的 `oss://` 地址切换成 S3 访问。
+    </TabItem>
+
+    <TabItem value="oss" label="阿里云 OSS（原生访问）">
         ```sql
         CREATE CATALOG lance_rest_oss PROPERTIES (
             "type" = "lance",
@@ -246,6 +289,7 @@ REST Namespace 返回每张表的存储地址。根据表所在的存储系统�
             "lance.rest.uri" = "https://lance.example.com",
             "lance.rest.security.type" = "bearer",
             "lance.rest.bearer-token" = "<token>",
+            "fs.oss.support" = "true",
             "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
             "oss.region" = "cn-beijing",
             "oss.access_key" = "<ak>",
@@ -253,13 +297,19 @@ REST Namespace 返回每张表的存储地址。根据表所在的存储系统�
         );
         ```
 
-        该配置用于 REST Namespace 返回的 `oss://` Lance 表。使用 STS 临时凭证时，增加 `"oss.session_token" = "<token>"`。
+        适用于 Namespace 返回的 `oss://` 表，使用 OSS 原生访问。`oss.endpoint` 不带 Bucket。使用 STS 临时凭证时，增加 `"oss.session_token" = "<token>"`。
     </TabItem>
 </Tabs>
 
 无认证时省略 `lance.rest.security.type` 和认证属性。使用 API Key 时，将认证配置替换为 `"lance.rest.security.type" = "api_key"` 和 `"lance.rest.api-key" = "<api-key>"`。
 
-如果 REST Namespace 为表下发临时存储凭证，Doris 会优先使用下发的凭证，此时可以省略 Catalog 中的 S3 或 OSS 访问密钥。对于 OSS，Namespace 可以下发 `oss_endpoint`、`oss_access_key_id`、`oss_secret_access_key`、`oss_region`、`oss_security_token`，也可以使用对应的 OSS 原生名称 `endpoint`、`access_key_id`、`access_key_secret`、`region`、`security_token`。
+如果 REST Namespace 在每张表的 `storage_options` 中下发凭证或 endpoint，Doris 会按选项覆盖 Catalog 的对应默认值，并将合并结果用于 FE 和 BE。只下发凭证时，Catalog 中的 endpoint 和访问方式仍然生效；只有 Namespace 提供了完整访问配置时，才可以省略全部 Catalog 存储属性。
+
+对于 S3，Namespace 可以使用 `aws_endpoint`、`aws_region`、`aws_access_key_id`、`aws_secret_access_key`、`aws_session_token` 和 `aws_virtual_hosted_style_request`。注意最后一个参数与 Doris 的 `use_path_style` 取值相反：虚拟主机方式为 `aws_virtual_hosted_style_request=true`，Path Style 为 `false`。`fs.s3.support` 属于 Doris Catalog 属性，不是 Lance 的 `storage_options` 参数。
+
+对于 OSS 原生访问，Namespace 可以下发 `oss_endpoint`、`oss_access_key_id`、`oss_secret_access_key`、`oss_region`、`oss_security_token`，也可以使用对应的 OSS 原生名称 `endpoint`、`access_key_id`、`access_key_secret`、`region`、`security_token`。
+
+如果不同表位于不同 Bucket，不要让它们共用上例中固定为 `my-bucket` 的 S3 虚拟主机 endpoint。应由 Namespace 为每张表下发匹配的 endpoint 和访问方式，或为不同 Bucket 分别配置 Catalog。对于支持 Path Style 的服务，也可以使用不带 Bucket 的服务 endpoint，配合 `use_path_style=true`，由客户端从各表 URI 读取 Bucket。
 
 :::caution
 当前 BE Reader 不支持由 REST Namespace 管理版本的 Lance 表（Managed Versioning）。
@@ -292,7 +342,12 @@ CREATE CATALOG lance_analytics PROPERTIES (
     "lance.catalog.type" = "filesystem",
     "warehouse" = "s3://my-bucket/lance",
     "lance.namespace.parent" = "production$analytics",
-    "s3.region" = "us-east-1"
+    "fs.s3.support" = "true",
+    "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+    "use_path_style" = "false",
+    "s3.region" = "us-east-1",
+    "s3.access_key" = "<ak>",
+    "s3.secret_key" = "<sk>"
 );
 ```
 
@@ -495,21 +550,73 @@ Runtime Filter 下推目前只适用于普通 Lance 表扫描，不用于 `vecto
 
 ### S3 TVF
 
-```sql
-SELECT user_id, name
-FROM s3(
-    "uri" = "s3://my-bucket/lance/user_profiles.lance",
-    "s3.endpoint" = "http://127.0.0.1:9000",
-    "s3.access_key" = "admin",
-    "s3.secret_key" = "password",
-    "s3.region" = "us-east-1",
-    "use_path_style" = "true",
-    "format" = "lance"
-)
-WHERE user_id > 100;
-```
+`s3()` TVF 使用 S3 兼容接口。访问 OSS 时，也应使用 `s3.*` 参数和带 Bucket 的虚拟主机 endpoint；需要 OSS 原生访问时，使用前面的 OSS Catalog 示例。下面的 SQL 读取同一个示例数据集的前 10 行，替换地址、凭证和列名后执行：
 
-S3 TVF 在 FE 获取 Schema、当前版本和 Fragment 列表，并固定该版本后按 Fragment 并行扫描。
+<Tabs groupId="lance-s3-tvf-storage">
+    <TabItem value="s3" label="AWS S3" default>
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        AWS S3 同样显式设置 endpoint。本例使用虚拟主机方式，endpoint 中的 Bucket 和 region 必须与 URI 及 `s3.region` 一致。
+    </TabItem>
+
+    <TabItem value="minio" label="MinIO（Path Style）">
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        endpoint 指向 MinIO 服务地址，不带 Bucket，配合 `use_path_style=true`。不要使用仅 FE 本机可访问的地址；FE 和执行查询的 BE 都需要访问该服务。
+    </TabItem>
+
+    <TabItem value="oss-s3" label="阿里云 OSS（S3 兼容访问）">
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        本例与 Filesystem Catalog 的 OSS S3 兼容配置一致，但 `uri` 指向具体的 `.lance` 数据集，`warehouse` 则指向包含多个数据集的目录。保持 `fs.s3.support=true`、`use_path_style=false`，并确保 endpoint 中的 Bucket 与 URI 一致。
+    </TabItem>
+</Tabs>
+
+对于 OSS，上例的 `uri` 也可以写为 `oss://my-bucket/lance/user_profiles.lance`，但仍需保留相同的 `s3.*` 参数和 `fs.s3.support=true`；TVF 会将 URI 规范化为 `s3://`，不会因此使用 OSS 原生 Provider。不要直接照搬原生 OSS Catalog 的 `oss.*` 配置：不带 Bucket 的 endpoint 与虚拟主机方式组合可能返回数据集不存在；改成 Path Style 则可能被 OSS 以 `SecondLevelDomainForbidden` 拒绝。
+
+S3 TVF 在 FE 获取 Schema、当前版本和 Fragment 列表，并固定该版本后按 Fragment 并行扫描。`EXPLAIN` 中会显示 `VTVF_SCAN_NODE`；多个 split 可以共享同一个数据集 URI，通过各自的 Fragment ID 区分。`totalFileSize=0` 或 `length=0` 是 Lance split 的占位值，不表示数据集为空，也不表示每个 split 都会重复扫描整张表。
 
 ### Local TVF
 
