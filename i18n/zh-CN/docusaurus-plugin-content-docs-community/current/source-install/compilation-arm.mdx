@@ -61,6 +61,10 @@ import TabItem from '@theme/TabItem';
 | CentOS | 7.9 及以上（AltArch） | aarch64 |
 | Ubuntu | 20.04 | aarch64 |
 
+:::info 内存页大小
+ARM 服务器发行版的内核内存页可能是 4 KiB 或 64 KiB（麒麟 V10、CentOS 7/8 aarch64 等常见为 64 KiB，Ubuntu 为 4 KiB），可用 `getconf PAGESIZE` 查看。Doris 在 ARM 上编译的 jemalloc 使用 `--with-lg-page=16`，同一个二进制可以运行在两种页大小的内核上；但部分三方库对页大小有编译期假设，自行编译或验证时请覆盖实际部署的内核，见[常见问题 4.2](#42-启动问题) 第 4 条。
+:::
+
 参考输出：
 
 ```shell
@@ -391,19 +395,17 @@ ARM 平台目前仅推荐使用 LDB Toolchain 进行编译。该方法适用于 
 
 LDB Toolchain 的下载和安装详见上文，之后的编译方式请参阅 [使用 LDB Toolchain 编译](./compilation-with-ldb-toolchain)。其中 JDK 与 NodeJS 需替换为 aarch64 版本（详见上文）。
 
-如果下载预编译三方库遇到问题，请使用 `tools/build_thirdparty.sh` 自行编译。编译三方库时请使用 gcc：
+如果下载预编译三方库遇到问题，请使用 `thirdparty/build-thirdparty.sh` 自行编译。编译三方库时请使用 gcc：
 
 ```shell
 export DORIS_TOOLCHAIN=gcc
 ```
 
-在 ARM 平台编译 Doris 时，**必须关闭 AVX2、LIBUNWIND、AZURE 三方库**：
+ARM 平台上，以下编译开关的行为和 x86_64 不同：
 
-```shell
-export USE_AVX2=OFF
-export USE_UNWIND=OFF
-export DISABLE_BUILD_AZURE=ON
-```
+- **AVX2**：`USE_AVX2` 只对 x86_64 生效，ARM 上无需设置。ARM 指令集由 `ARM_MARCH` 指定（4.0 及之后版本，默认 `armv8-a+crc`），例如 `ARM_MARCH=armv8-a+crc+simd sh build.sh --be`。
+- **libunwind**：4.1.3 及更早版本（含 3.x、4.0）中 libunwind 在 ARM 上不可用，编译前需要 `export USE_UNWIND=OFF`。从 master（2026-07 起）和 4.1.4 开始，`USE_UNWIND` 开关已移除（[apache/doris#64093](https://github.com/apache/doris/pull/64093)），libunwind 在所有 Linux 平台上固定启用，设置该变量不再有任何效果；其中自带的 libunwind 1.6.2 在 64 KiB 内存页的内核上会导致 BE 启动崩溃，见[常见问题 4.2](#42-启动问题) 第 4 条。
+- **Azure**：4.1 及更早版本中 `env.sh` 在 ARM 上自动设置 `DISABLE_BUILD_AZURE=ON`，无需手动设置。master 从 2026-08 起（[apache/doris#66908](https://github.com/apache/doris/pull/66908)）Azure 三方库在 ARM 上也会编译并默认链接进 BE；如需关闭，设置 `export DISABLE_BUILD_AZURE=ON`（BE 不链接），编译三方库时另加 `export DISABLE_THIRDPARTY_BUILD_AZURE=ON` 可跳过 Azure 本身的编译。
 
 如在编译、启动时仍遇到问题，请查阅 [常见问题](#4-常见问题)。如果没有相关解决方案，欢迎 [提出 issue](https://github.com/apache/doris/issues)。
 
@@ -653,6 +655,32 @@ export DISABLE_BUILD_AZURE=ON
 ```shell
       export GLIBC_COMPATIBILITY=OFF
 ```
+
+#### 4. ARM 上 BE 启动即 coredump，core 栈中可见 `unw_backtrace`、`access_mem`、`is_plt_entry`
+
+- 问题描述：
+
+    用 4.1.4 或 2026-07 之后的 master 代码编译出的 ARM BE，执行 `start_be.sh` 后立即段错误，`be.out` 中没有任何 BE 日志，core 栈（由内向外）类似：
+
+    ```text
+    access_mem
+    is_plt_entry
+    _ULaarch64_step
+    _ULaarch64_tdep_trace
+    unw_backtrace
+    ...
+    __libc_csu_init
+    ```
+
+    且 `getconf PAGESIZE` 输出 65536。
+
+- 问题原因：
+
+    这些版本开始在 ARM 上静态链接 GNU libunwind 1.6.2（[apache/doris#64093](https://github.com/apache/doris/pull/64093)），它的 AArch64 内存校验写死了 4 KiB 页大小。在 64 KiB 内存页的内核上校验全部失败，libunwind 在 `main()` 之前就会解引用一个未初始化的地址。4 KiB 页内核不受影响，因此 x86_64 和 Ubuntu ARM 上无法复现。
+
+- 解决方案：
+
+    使用包含 [apache/doris#67877](https://github.com/apache/doris/pull/67877)（libunwind 升级到 1.8.3）的代码或版本编译；在此之前，64 KiB 页内核上请使用 4.1.3 版本。该问题发生在 `main()` 之前，修改 `be.conf` 无法规避。
 
 ### 4.3 其他组件问题
 
