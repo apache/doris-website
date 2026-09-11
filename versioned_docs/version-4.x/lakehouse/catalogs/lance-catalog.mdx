@@ -99,31 +99,88 @@ A Filesystem Catalog discovers Lance Namespaces and tables directly from a wareh
 |---|---|---|
 | `warehouse` | Yes | Root path of the Lance warehouse. Local absolute paths, `file://` URIs, `s3://` URIs, and `oss://` URIs are supported. |
 
-Select the example that matches the storage system hosting the warehouse:
+The two properties serve different purposes:
+
+- `fs.s3.support=true` explicitly selects S3 configuration parsing. AWS S3 can usually be detected from its properties. For MinIO, custom endpoints, or OSS accessed through its S3-compatible API, set it explicitly to avoid failed detection or selection of another storage type based on the domain. All S3 examples below include this property for direct use.
+- `use_path_style` controls where the bucket appears in request URLs and defaults to `false`. Setting it to `true` uses `endpoint/bucket/object-path`; setting it to `false` uses virtual-hosted-style access. With the current default S3 client in Lance, an explicitly configured virtual-hosted-style endpoint must include the bucket. Set this property together with the endpoint according to the access style supported by the service.
+
+| Access scenario | Storage type setting | `use_path_style` | Endpoint format |
+|---|---|---|---|
+| AWS S3 | Recommended: `fs.s3.support=true` | `false`; can be omitted | Include the bucket, such as `https://my-bucket.s3.us-east-1.amazonaws.com`. |
+| MinIO (access through a service domain or IP) | Set `fs.s3.support=true` | Explicitly set `true` | Service address without the bucket, such as `http://minio.example.com:9000`. |
+| OSS S3-compatible API | Set `fs.s3.support=true` | `false`; explicitly set in the example | Include the bucket, such as `https://my-bucket.oss-cn-beijing.aliyuncs.com`. |
+| Native OSS API | Recommended: `fs.oss.support=true`; do not set `fs.s3.support` | No need to set the generic `use_path_style` | Use `oss.endpoint` without the bucket, such as `https://oss-cn-beijing.aliyuncs.com`. |
+
+These S3 endpoint rules apply to the default S3 access path in Lance. For a Filesystem Catalog using a single storage type, set only the corresponding `fs.*.support=true`; do not enable multiple storage types to “enable compatibility.” This property selects configuration parsing and does not add protocol support to the storage service.
+
+Select the example that matches the storage system hosting the warehouse, and replace the bucket, path, address, and credentials:
 
 <Tabs groupId="lance-filesystem-storage">
-    <TabItem value="s3" label="S3 / S3-Compatible" default>
+    <TabItem value="s3" label="AWS S3" default>
         ```sql
         CREATE CATALOG lance_fs_s3 PROPERTIES (
             "type" = "lance",
             "lance.catalog.type" = "filesystem",
             "warehouse" = "s3://my-bucket/lance",
-            "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
             "s3.region" = "us-east-1",
             "s3.access_key" = "<ak>",
             "s3.secret_key" = "<sk>"
         );
         ```
 
-        You can omit `s3.endpoint` for AWS S3. For S3-compatible storage such as MinIO, set the service endpoint and add `"use_path_style" = "true"` when the service requires path-style access.
+        This example uses an AWS S3 endpoint containing the bucket with `use_path_style=false`. Current Doris S3 property validation requires an endpoint; when using the `s3://my-bucket/...` URI shown here, setting only the region is insufficient. Update the endpoint whenever you change the bucket or region.
     </TabItem>
 
-    <TabItem value="oss" label="Alibaba Cloud OSS">
+    <TabItem value="minio" label="MinIO (Path Style)">
+        ```sql
+        CREATE CATALOG lance_fs_minio PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        This example accesses MinIO through its service domain using path-style requests, without requiring a subdomain for each bucket. Keep the bucket out of the endpoint and replace the region with the value configured for the service. If TLS is enabled, use the corresponding `https://` endpoint and ensure that both the FE and BEs can reach it.
+    </TabItem>
+
+    <TabItem value="oss-s3" label="Alibaba Cloud OSS (S3-Compatible Access)">
+        To access OSS through its S3-compatible API, use a `s3://` warehouse and `s3.*` connection properties:
+
+        ```sql
+        CREATE CATALOG lance_fs_oss_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        This example sets `use_path_style=false` for virtual-hosted-style access. The current default S3 client in Lance does not automatically add the bucket to an explicitly configured endpoint, so `s3.endpoint` must include the bucket, for example `https://my-bucket.oss-cn-beijing.aliyuncs.com`; keep `warehouse` as `s3://my-bucket/lance`. For internal network access, use `https://my-bucket.oss-cn-beijing-internal.aliyuncs.com` and ensure that both the FE and BEs can reach it.
+
+        For temporary STS credentials, add `"s3.session_token" = "<token>"`. This mode reads existing OSS data through the S3-compatible API without moving the data. For native OSS access, see the adjacent native OSS example.
+    </TabItem>
+
+    <TabItem value="oss" label="Alibaba Cloud OSS (Native Access)">
         ```sql
         CREATE CATALOG lance_fs_oss PROPERTIES (
             "type" = "lance",
             "lance.catalog.type" = "filesystem",
             "warehouse" = "oss://my-bucket/lance",
+            "fs.oss.support" = "true",
             "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
             "oss.region" = "cn-beijing",
             "oss.access_key" = "<ak>",
@@ -161,10 +218,10 @@ A REST Catalog obtains Namespaces, table locations, and storage access parameter
 | `lance.rest.api-key` | Yes for API Key authentication | - | API Key sent in the `x-api-key` header. |
 | `lance.rest.header.<header-name>` | No | - | Custom HTTP header sent to the REST service. Use the dedicated authentication properties above for authentication headers. |
 
-The REST Namespace returns the storage location of each table. Configure default access properties for the storage system hosting those tables:
+REST service authentication and object storage authentication are separate: `lance.rest.*` connects to the Namespace service, while `s3.*` / `oss.*` lets the FE and BEs read table data. The table URI returned by the Namespace determines the access path: `s3://` uses S3, and `oss://` uses native OSS access. Select default storage properties according to the returned table URIs:
 
 <Tabs groupId="lance-rest-storage">
-    <TabItem value="s3" label="S3 / S3-Compatible" default>
+    <TabItem value="s3" label="AWS S3" default>
         ```sql
         CREATE CATALOG lance_rest_s3 PROPERTIES (
             "type" = "lance",
@@ -172,17 +229,59 @@ The REST Namespace returns the storage location of each table. Configure default
             "lance.rest.uri" = "https://lance.example.com",
             "lance.rest.security.type" = "bearer",
             "lance.rest.bearer-token" = "<token>",
-            "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
             "s3.region" = "us-east-1",
             "s3.access_key" = "<ak>",
             "s3.secret_key" = "<sk>"
         );
         ```
 
-        This configuration applies to `s3://` Lance tables returned by the REST Namespace. For S3-compatible storage such as MinIO, replace `s3.endpoint` with the service endpoint and add `"use_path_style" = "true"` when required.
+        For AWS `s3://my-bucket/...` tables returned by the Namespace. The default endpoint must include that bucket and match the region. Tables in different buckets need matching endpoints, as explained below.
     </TabItem>
 
-    <TabItem value="oss" label="Alibaba Cloud OSS">
+    <TabItem value="minio" label="MinIO (Path Style)">
+        ```sql
+        CREATE CATALOG lance_rest_minio PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        For MinIO `s3://` tables returned by the Namespace. Use a service endpoint reachable by both the FE and BEs, without a bucket. `use_path_style=true` puts each table's bucket in the request path. The region must match the MinIO service configuration.
+    </TabItem>
+
+    <TabItem value="oss-s3" label="Alibaba Cloud OSS (S3-Compatible Access)">
+        ```sql
+        CREATE CATALOG lance_rest_oss_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        For `s3://my-bucket/...` tables returned by the Namespace, accessing OSS through its S3-compatible API. The endpoint must include the same bucket; for internal access, use `https://my-bucket.oss-cn-beijing-internal.aliyuncs.com`. The Namespace must return a `s3://` URI: setting `fs.s3.support=true` does not switch a returned `oss://` URI to S3 access.
+    </TabItem>
+
+    <TabItem value="oss" label="Alibaba Cloud OSS (Native Access)">
         ```sql
         CREATE CATALOG lance_rest_oss PROPERTIES (
             "type" = "lance",
@@ -190,6 +289,7 @@ The REST Namespace returns the storage location of each table. Configure default
             "lance.rest.uri" = "https://lance.example.com",
             "lance.rest.security.type" = "bearer",
             "lance.rest.bearer-token" = "<token>",
+            "fs.oss.support" = "true",
             "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
             "oss.region" = "cn-beijing",
             "oss.access_key" = "<ak>",
@@ -197,13 +297,19 @@ The REST Namespace returns the storage location of each table. Configure default
         );
         ```
 
-        This configuration applies to `oss://` Lance tables returned by the REST Namespace. For temporary STS credentials, add `"oss.session_token" = "<token>"`.
+        For `oss://` tables returned by the Namespace, using native OSS access. Keep the bucket out of `oss.endpoint`. For temporary STS credentials, add `"oss.session_token" = "<token>"`.
     </TabItem>
 </Tabs>
 
 For unauthenticated REST access, omit `lance.rest.security.type` and the authentication property. For API Key authentication, replace them with `"lance.rest.security.type" = "api_key"` and `"lance.rest.api-key" = "<api-key>"`.
 
-If the REST Namespace vends temporary storage credentials for a table, Doris gives them precedence over the Catalog credentials, allowing the S3 or OSS access keys to be omitted from the Catalog. For OSS, the Namespace may vend `oss_endpoint`, `oss_access_key_id`, `oss_secret_access_key`, `oss_region`, and `oss_security_token`, or the corresponding native names `endpoint`, `access_key_id`, `access_key_secret`, `region`, and `security_token`.
+If the REST Namespace vends credentials or an endpoint in each table's `storage_options`, Doris overrides the corresponding Catalog defaults option by option and uses the merged configuration in both the FE and BE. If only credentials are vended, the Catalog endpoint and access style still apply. All Catalog storage properties can be omitted only when the Namespace provides the complete access configuration.
+
+For S3, the Namespace can use `aws_endpoint`, `aws_region`, `aws_access_key_id`, `aws_secret_access_key`, `aws_session_token`, and `aws_virtual_hosted_style_request`. The last option is the inverse of Doris's `use_path_style`: virtual-hosted-style access uses `aws_virtual_hosted_style_request=true`, while path-style access uses `false`. `fs.s3.support` is a Doris Catalog property, not a Lance `storage_options` parameter.
+
+For native OSS access, the Namespace may vend `oss_endpoint`, `oss_access_key_id`, `oss_secret_access_key`, `oss_region`, and `oss_security_token`, or the corresponding native names `endpoint`, `access_key_id`, `access_key_secret`, `region`, and `security_token`.
+
+If tables reside in different buckets, do not share the S3 virtual-hosted-style endpoint fixed to `my-bucket` in the example. Have the Namespace vend a matching endpoint and access style for each table, or configure separate Catalogs for different buckets. For services supporting path-style access, you can also use a service endpoint without a bucket and set `use_path_style=true`, allowing the client to read the bucket from each table URI.
 
 :::caution
 The current BE Reader does not support Lance tables whose versions are managed by REST Namespace (Managed Versioning).
@@ -236,7 +342,12 @@ CREATE CATALOG lance_analytics PROPERTIES (
     "lance.catalog.type" = "filesystem",
     "warehouse" = "s3://my-bucket/lance",
     "lance.namespace.parent" = "production$analytics",
-    "s3.region" = "us-east-1"
+    "fs.s3.support" = "true",
+    "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+    "use_path_style" = "false",
+    "s3.region" = "us-east-1",
+    "s3.access_key" = "<ak>",
+    "s3.secret_key" = "<sk>"
 );
 ```
 
@@ -439,21 +550,73 @@ If you only need to read a Lance dataset at a known path, you can use the `s3()`
 
 ### S3 TVF
 
-```sql
-SELECT user_id, name
-FROM s3(
-    "uri" = "s3://my-bucket/lance/user_profiles.lance",
-    "s3.endpoint" = "http://127.0.0.1:9000",
-    "s3.access_key" = "admin",
-    "s3.secret_key" = "password",
-    "s3.region" = "us-east-1",
-    "use_path_style" = "true",
-    "format" = "lance"
-)
-WHERE user_id > 100;
-```
+The `s3()` TVF uses the S3-compatible API. For OSS, use `s3.*` properties and a virtual-hosted-style endpoint containing the bucket. For native OSS access, use the OSS Catalog example above. The following SQL reads the first 10 rows of the example dataset; replace the address, credentials, and column names before running it:
 
-For an S3 TVF, the FE obtains the Schema, current version, and Fragment list. Doris pins that version and scans its Fragments in parallel.
+<Tabs groupId="lance-s3-tvf-storage">
+    <TabItem value="s3" label="AWS S3" default>
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        Explicitly set the endpoint for AWS S3 as well. This example uses virtual-hosted-style access; the bucket and region in the endpoint must match the URI and `s3.region`.
+    </TabItem>
+
+    <TabItem value="minio" label="MinIO (Path Style)">
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        Use the MinIO service endpoint without a bucket and set `use_path_style=true`. Both the FE and the BEs executing the query must be able to reach the service; avoid an address accessible only from the FE host.
+    </TabItem>
+
+    <TabItem value="oss-s3" label="Alibaba Cloud OSS (S3-Compatible Access)">
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        This example uses the same OSS S3-compatible settings as the Filesystem Catalog, but `uri` points to a specific `.lance` dataset, whereas `warehouse` points to a directory containing datasets. Keep `fs.s3.support=true` and `use_path_style=false`, and ensure the endpoint bucket matches the URI.
+    </TabItem>
+</Tabs>
+
+For OSS, the example's `uri` can also be written as `oss://my-bucket/lance/user_profiles.lance`, while retaining the same `s3.*` properties and `fs.s3.support=true`. The TVF normalizes the URI to `s3://`; it does not switch to the native OSS provider. Do not directly copy the `oss.*` configuration from a native OSS Catalog: a bucketless endpoint combined with virtual-hosted-style access can report that the dataset does not exist, while switching to path-style access can be rejected by OSS with `SecondLevelDomainForbidden`.
+
+For an S3 TVF, the FE obtains the Schema, current version, and Fragment list. Doris pins that version and scans its Fragments in parallel. `EXPLAIN` shows `VTVF_SCAN_NODE`; multiple splits can share the dataset URI and are distinguished by their Fragment IDs. `totalFileSize=0` or `length=0` is a placeholder for Lance splits, not an indication of an empty dataset or repeated whole-table scans by each split.
 
 ### Local TVF
 
