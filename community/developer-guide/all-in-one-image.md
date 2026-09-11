@@ -295,7 +295,7 @@ The Dockerfile and the build script live under `docker/runtime/all-in-one/<relea
 
 # Build from an extracted release tarball, e.g. while the component images of a
 # new release are not on Docker Hub yet
-./build.sh -v 4.1.4 -s tarball --tarball-dir ~/apache-doris-4.1.4-bin-arm64
+./build.sh -v 4.1.4 -s tarball --tarball-dir ~/apache-doris-4.1.4-bin-x64
 ```
 
 The build context is always the repository root (narrowed to a few KB by `Dockerfile.dockerignore`); a local `./output` or a tarball directory is passed as BuildKit named contexts, so it can live anywhere, but this needs `docker buildx`. A self-built image can be used with both compose files directly:

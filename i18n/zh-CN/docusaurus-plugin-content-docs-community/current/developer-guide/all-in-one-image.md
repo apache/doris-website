@@ -293,7 +293,7 @@ Dockerfile 和构建脚本位于 Doris 主仓库的 `docker/runtime/all-in-one/<
 ./build.sh -v dev -s local
 
 # 用解压后的发行包构建，例如新版本的组件镜像还没上 Docker Hub 时
-./build.sh -v 4.1.4 -s tarball --tarball-dir ~/apache-doris-4.1.4-bin-arm64
+./build.sh -v 4.1.4 -s tarball --tarball-dir ~/apache-doris-4.1.4-bin-x64
 ```
 
 构建上下文固定为仓库根目录（由 `Dockerfile.dockerignore` 裁到几 KB），本地 `./output` 或发行包目录以 BuildKit 命名上下文（named context）的方式传入，因此可以放在任意位置，但需要 `docker buildx`。自行构建的镜像可以直接用于两个 Compose 文件：
