@@ -175,20 +175,27 @@ export default function DownloadFormNext(): JSX.Element {
                                         'is-muted': isSource,
                                     })}
                                 >
-                                    {CPU_OPTIONS.map(option => (
-                                        <button
-                                            type="button"
-                                            key={option}
-                                            disabled={isSource}
-                                            aria-pressed={cpu === option}
-                                            className={clsx('download-next__seg-item', {
-                                                'is-checked': cpu === option,
-                                            })}
-                                            onClick={() => setCpu(option)}
-                                        >
-                                            {option}
-                                        </button>
-                                    ))}
+                                    {CPU_OPTIONS.map(option => {
+                                        // A release may ship fewer builds than there are buttons,
+                                        // e.g. when one architecture's binary has been withdrawn.
+                                        const available = builds.some(item => item.value === option);
+                                        return (
+                                            <button
+                                                type="button"
+                                                key={option}
+                                                disabled={isSource || !available}
+                                                aria-pressed={cpu === option}
+                                                title={available ? undefined : `No ${option} build for ${version}`}
+                                                className={clsx('download-next__seg-item', {
+                                                    'is-checked': cpu === option,
+                                                    'is-unavailable': !available,
+                                                })}
+                                                onClick={() => setCpu(option)}
+                                            >
+                                                {option}
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
 

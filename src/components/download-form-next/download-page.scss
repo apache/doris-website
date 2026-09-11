@@ -354,6 +354,12 @@
     &:disabled {
         cursor: not-allowed;
     }
+
+    // The selected release ships no build for this architecture.
+    &.is-unavailable {
+        opacity: 0.45;
+        text-decoration: line-through;
+    }
 }
 
 .download-next__seg-tag {

@@ -113,15 +113,9 @@ export const ALL_VERSIONS: AllVersionOption[] = [
                         source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.4/',
                         version: '4.1.4-rc04',
                     },
-                    {
-                        label: CPUEnum.ARM64,
-                        value: CPUEnum.ARM64,
-                        gz: `${ORIGIN}apache-doris-4.1.4-bin-arm64.tar.gz`,
-                        asc: `${ORIGIN}apache-doris-4.1.4-bin-arm64.tar.gz.asc`,
-                        sha512: `${ORIGIN}apache-doris-4.1.4-bin-arm64.tar.gz.sha512`,
-                        source: 'https://dist.apache.org/repos/dist/release/doris/4.1/4.1.4/',
-                        version: '4.1.4-rc04',
-                    },
+                    // The 4.1.4 arm64 binary was withdrawn because the build is
+                    // broken; add the CPUEnum.ARM64 entry back once a fixed
+                    // build is published.
                 ],
             },
             {
