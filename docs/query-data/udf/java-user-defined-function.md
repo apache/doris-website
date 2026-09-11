@@ -61,6 +61,7 @@ The following table lists the correspondence between Doris data types and Java U
 | Datetime | LocalDateTime |
 | TimestampNs | LocalDateTime |
 | IPV4 / IPV6 | InetAddress |
+| UUID | `java.util.UUID` |
 | String | String |
 | Decimal | BigDecimal |
 | `array<Type>` | `ArrayList<Type>`, `List<Type>` (nesting supported) |

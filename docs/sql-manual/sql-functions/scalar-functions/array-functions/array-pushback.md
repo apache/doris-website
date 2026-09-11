@@ -37,6 +37,7 @@ array_pushback(ARRAY<T> arr, T element)
 - Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2, TIMESTAMP_NS
 - Boolean type: BOOLEAN
 - IP types: IPV4, IPV6
+- UUID: [UUID](../../../basic-element/sql-data-types/uuid.md)
 - Complex types: ARRAY, MAP, STRUCT
 
 ### Return Value

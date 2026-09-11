@@ -16,7 +16,7 @@ Count the number of elements equal to a given target value within an array.
 
 ## Parameters
 
-- `arr`: `ARRAY<T>`, supported element types include numeric, boolean, string, datetime, and IP.
+- `arr`: `ARRAY<T>`, supported element types include numeric, boolean, string, datetime, IP, and UUID.
 - `target`: same type as elements of `arr`.
 
 ## Return value

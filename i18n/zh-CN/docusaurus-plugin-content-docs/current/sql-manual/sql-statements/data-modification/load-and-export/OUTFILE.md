@@ -136,6 +136,7 @@ Outfile 语句返回的结果，各个列的含义如下：
    | float                   | float     |
    | double                  | double    |
    | char / varchar / string | string    |
+   | uuid                    | string    |
    | decimal                 | decimal   |
    | struct                  | struct    |
    | map                     | map       |
@@ -159,10 +160,13 @@ Outfile 语句返回的结果，各个列的含义如下：
    | float                   | float32    |
    | double                  | float64    |
    | char / varchar / string | utf8       |
+   | uuid                    | utf8       |
    | decimal                 | decimal128 |
    | struct                  | struct     |
    | map                     | map        |
    | array                   | list       |
+
+UUID 值导出为小写标准文本；ORC 和 Parquet 中嵌套的 UUID 元素也存储为字符串。
 
 ### 导出数据量和导出效率
 
@@ -392,4 +396,3 @@ Outfile 语句返回的结果，各个列的含义如下：
         "success_file_name" = "SUCCESS"
     )
     ```
-

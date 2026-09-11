@@ -33,6 +33,7 @@ array_map(lambda, ARRAY<T> arr1, [ARRAY<T> arr2, ...])
 - 日期时间类型：DATE、DATETIME、DATEV2、DATETIMEV2、TIMESTAMP_NS
 - 布尔类型：BOOLEAN
 - IP 类型：IPV4、IPV6
+- UUID：[UUID](../../../basic-element/sql-data-types/uuid.md)
 - 复杂类型：ARRAY、MAP、STRUCT
 
 ### 返回值

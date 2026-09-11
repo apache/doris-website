@@ -74,7 +74,8 @@ CREATE CATALOG clickhouse PROPERTIES (
 | int128/uint64             | largeint                | 同上                               |
 | int256/uint128/uint256    | string                  | Doris 没有这个数量级的数据类型，采用 STRING 处理  |
 | decimal(P, S)             | decimal(P, S) or string | 如果超过 Doris 支持的最大精度，使用 string 承接  |
-| enum/ipv4/ipv6/uuid       | string                  |                                  |
+| enum/ipv4/ipv6 | string | |
+| uuid | uuid | 映射为原生 UUID；此前的 4.x、3.x 发布版本映射为 STRING。 |
 | array                     | array                   |                                  |
 | other                     | UNSUPPORTED             |                                  |
 

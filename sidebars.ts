@@ -1290,6 +1290,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/ip/IPV6',
                                     ],
                                 },
+                                'sql-manual/basic-element/sql-data-types/uuid',
                                 {
                                     type: 'category',
                                     label: 'Conversion',
@@ -1311,6 +1312,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/conversion/map-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/struct-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/time-conversion',
+                                        'sql-manual/basic-element/sql-data-types/conversion/uuid-conversion',
                                     ],
                                 },
                             ],
@@ -1399,6 +1401,20 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'Scalar Functions',
                             items: [
+                                {
+                                    type: 'category',
+                                    label: 'UUID Functions',
+                                    items: [
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/uuid-v4',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/uuid-v7',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/uuid-version',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-null',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-zero',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-default',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/uuid-v7-to-datetime',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/datetime-to-uuid-v7',
+                                    ],
+                                },
                                 {
                                     type: 'category',
                                     label: 'Numeric Functions',

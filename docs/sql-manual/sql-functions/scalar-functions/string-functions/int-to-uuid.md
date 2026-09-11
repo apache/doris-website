@@ -10,6 +10,8 @@
 
 For the input encoded LARGEINT, converts it to the original UUID string.
 
+This function still returns a string. To migrate to the native [UUID type](../../../basic-element/sql-data-types/uuid.md), use `CAST(INT_TO_UUID(<int128>) AS UUID)`; direct casts between LARGEINT and UUID are unsupported.
+
 ## Syntax
 
 ```sql

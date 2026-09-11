@@ -34,6 +34,7 @@ array_join(ARRAY<T> arr, STRING separator [, STRING null_replacement])
 - 日期时间类型：DATE、DATETIME、DATEV2、DATETIMEV2、TIMESTAMP_NS
 - 布尔类型：BOOLEAN
 - IP 类型：IPV4、IPV6
+- UUID：UUID，元素转换为标准文本
 - 复杂类型: ARRAY、MAP、STRUCT
 
 ### 返回值

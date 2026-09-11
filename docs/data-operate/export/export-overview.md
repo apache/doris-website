@@ -86,6 +86,8 @@ The Parquet and ORC file formats have their own data type definitions, and Apach
 
 The mappings between Apache Doris data types and the ORC and Parquet formats are listed below.
 
+UUID values are exported as 36-character lowercase canonical text in CSV, ORC, and Parquet. UUID elements nested in ARRAY, MAP, or STRUCT are also written as strings in ORC and Parquet. The exported schema does not preserve the native UUID type; specify UUID target columns or use `CAST(value AS UUID)` when reloading. Writes to Iceberg UUID fields follow the [Iceberg column type mapping](../../lakehouse/catalogs/iceberg-catalog.mdx#column-type-mapping).
+
 ### ORC Type Mapping
 
 | Doris Type              | ORC Type  |
@@ -103,6 +105,7 @@ The mappings between Apache Doris data types and the ORC and Parquet formats are
 | float                   | float     |
 | double                  | double    |
 | char / varchar / string | string    |
+| uuid                    | string    |
 | decimal                 | decimal   |
 | struct                  | struct    |
 | map                     | map       |
@@ -132,6 +135,7 @@ When Apache Doris exports to the Parquet file format, it first converts the in-m
 | float                   | float32     | FLOAT                 |                                  |
 | double                  | float64     | DOUBLE                |                                  |
 | char / varchar / string | utf8        | BYTE_ARRAY            | UTF8                             |
+| uuid                    | utf8        | BYTE_ARRAY            | UTF8                             |
 | decimal                 | decimal128  | FIXED_LEN_BYTE_ARRAY  | DECIMAL(scale, precision)        |
 | struct                  | struct      |                       | Parquet Group                    |
 | map                     | map         |                       | Parquet Map                      |

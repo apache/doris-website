@@ -23,7 +23,7 @@ ARRAYS_OVERLAP(arr1, arr2)
 - `arr2`: The second array, type `ARRAY<T>`.
 
     - The element type `T` of both arrays must be the same or implicitly convertible to each other.
-    - The element type `T` can be numeric, string, date/time, or IP type.
+    - The element type `T` can be numeric, string, date/time, IP, or UUID type.
 
 ## Return Value
 

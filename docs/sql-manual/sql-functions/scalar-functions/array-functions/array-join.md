@@ -34,6 +34,7 @@ array_join(ARRAY<T> arr, STRING separator [, STRING null_replacement])
 - Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2, TIMESTAMP_NS
 - Boolean type: BOOLEAN
 - IP types: IPV4, IPV6
+- UUID: UUID; elements are converted to canonical text
 
 ### Return Value
 

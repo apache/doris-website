@@ -35,6 +35,7 @@ array_filter(array1, array<boolean> filter_array)
 - Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2, TIMESTAMP_NS
 - Boolean type: BOOLEAN
 - IP types: IPV4, IPV6
+- UUID: [UUID](../../../basic-element/sql-data-types/uuid.md)
 - Complex data types: ARRAY, MAP, STRUCT
 
 ### Return Value
