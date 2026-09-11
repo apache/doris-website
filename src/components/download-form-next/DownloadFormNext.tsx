@@ -1,7 +1,8 @@
 import Translate, { translate } from '@docusaurus/Translate';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from '@docusaurus/Link';
 import clsx from 'clsx';
+import copy from 'copy-to-clipboard';
 import DownloadFormAllRelease from '@site/src/components/download-form/download-form-all-release';
 import DownloadFormArchive from '@site/src/components/download-form/download-form-archive';
 import DownloadFormTools from '@site/src/components/download-form/download-form-tools';
@@ -74,6 +75,24 @@ export default function DownloadFormNext(): JSX.Element {
             sha512: build.sha512,
         };
     }, [build, isSource]);
+
+    /** Copy-link feedback: the button's icon flips to a check for a moment. */
+    const [copied, setCopied] = useState(false);
+    const copiedTimer = useRef<ReturnType<typeof setTimeout>>();
+
+    useEffect(() => {
+        setCopied(false);
+        clearTimeout(copiedTimer.current);
+        return () => clearTimeout(copiedTimer.current);
+    }, [asset?.gz]);
+
+    function onCopyLink() {
+        if (!asset?.gz) return;
+        copy(asset.gz);
+        setCopied(true);
+        clearTimeout(copiedTimer.current);
+        copiedTimer.current = setTimeout(() => setCopied(false), 1800);
+    }
 
     function onCoreVersionChange(values: any) {
         const [branch, release] = values.version || [];
@@ -201,16 +220,74 @@ export default function DownloadFormNext(): JSX.Element {
                                     <span className="download-next__quick-label" aria-hidden="true" />
                                     <div className="download-next__file">
                                         <code className="download-next__file-name">{asset.filename}</code>
-                                        <div className="download-next__file-links">
+                                        <div className="download-next__file-verify">
                                             <Link to={asset.asc}>ASC</Link>
                                             <Link to={asset.sha512}>SHA-512</Link>
                                             <Link to={KEYS_URL}>KEYS</Link>
-                                            <Link to={VERIFY_URL}>How to verify</Link>
+                                            <Link className="download-next__file-verify-guide" to={VERIFY_URL}>
+                                                How to verify
+                                            </Link>
                                         </div>
                                     </div>
-                                    <Link className="download-next__download-btn" to={asset.gz}>
-                                        Download
-                                    </Link>
+                                    <div className="download-next__actions">
+                                        <Link className="download-next__download-btn" to={asset.gz}>
+                                            Download
+                                        </Link>
+                                        <button
+                                            type="button"
+                                            className={clsx('download-next__copy-btn', { 'is-copied': copied })}
+                                            aria-label={copied ? 'Download link copied' : 'Copy download link'}
+                                            title={copied ? 'Copied' : 'Copy download link'}
+                                            onClick={onCopyLink}
+                                        >
+                                            {copied ? (
+                                                <svg
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="16"
+                                                    height="16"
+                                                    viewBox="0 0 16 16"
+                                                    fill="none"
+                                                >
+                                                    <path
+                                                        d="M2.5 8.5L6 12L13.5 4.5"
+                                                        stroke="currentColor"
+                                                        strokeWidth="1.8"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                            ) : (
+                                                <svg
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="16"
+                                                    height="16"
+                                                    viewBox="0 0 16 16"
+                                                    fill="none"
+                                                >
+                                                    <rect
+                                                        x="5.5"
+                                                        y="5.5"
+                                                        width="8"
+                                                        height="8"
+                                                        rx="1.2"
+                                                        stroke="currentColor"
+                                                        strokeWidth="1.5"
+                                                    />
+                                                    <path
+                                                        d="M10.5 4V3.2A1.2 1.2 0 0 0 9.3 2H3.2A1.2 1.2 0 0 0 2 3.2v6.1a1.2 1.2 0 0 0 1.2 1.2H4"
+                                                        stroke="currentColor"
+                                                        strokeWidth="1.5"
+                                                        strokeLinecap="round"
+                                                    />
+                                                </svg>
+                                            )}
+                                            <span className="download-next__sr-only" aria-live="polite">
+                                                {copied ? 'Download link copied' : ''}
+                                            </span>
+                                        </button>
+                                    </div>
                                 </div>
                             )}
 
