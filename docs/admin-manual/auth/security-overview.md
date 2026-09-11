@@ -23,7 +23,7 @@ Apache Doris provides complete security capabilities for enterprise-grade data p
 | Encrypting the client-to-FE link | MySQL protocol SSL, FE HTTPS | [MySQL protocol SSL](./certificate), [FE HTTPS configuration](./fe-certificate) |
 | Audit and compliance traceability | Audit log | [Audit log](../audit-plugin) |
 | Data encryption and decryption | Encryption functions | [Data encryption functions](./encryption-function) |
-| Deployment on AWS, integration with IAM | AWS authentication and authorization | [AWS authentication and authorization](./integrations/aws-authentication-and-authorization) |
+| Deployment on AWS, integration with IAM | AWS authentication and authorization | [AWS authentication and authorization](./integrations/aws-authentication-and-authorizations.md) |
 
 ## Security Capability Overview
 
