@@ -16,7 +16,7 @@ Remove all elements equal to the given value from an array while preserving the 
 
 ## Parameters
 
-- `arr`: `ARRAY<T>`, supports numbers, boolean, string, datetime, IP, etc.
+- `arr`: `ARRAY<T>`, supports numbers, boolean, string, datetime, IP, UUID, etc.
 - `target`: a value of the same type as the array elements, used to match elements to remove.
 
 ## Return value

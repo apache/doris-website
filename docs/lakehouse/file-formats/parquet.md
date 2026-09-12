@@ -25,6 +25,12 @@ This behavior applies only to `INT96`. Parquet `INT64` values with a timestamp l
 
 When an `INT96` column maps to `TIMESTAMPTZ`, Doris preserves the UTC instant rather than applying the compatibility time zone.
 
+## UUID Type Mapping
+
+Reading supports UUID-annotated `FIXED_LEN_BYTE_ARRAY(16)` with plain or dictionary encoding in canonical big-endian byte order. For ordinary Parquet TVFs, `enable_mapping_varbinary=false` exposes canonical UUID strings, which can be converted with `CAST(value AS UUID)`. When set to `true`, it preserves raw VARBINARY bytes; use `CAST(HEX(value) AS UUID)`. Iceberg Catalog preserves raw bytes in both STRING and VARBINARY mappings, so use the HEX path there.
+
+For UUID output mappings in OUTFILE and EXPORT, see [Column Type Mapping for Exported Files](../../data-operate/export/export-overview.md#column-type-mapping-for-exported-files).
+
 ## Supported Compression Formats
 
 * uncompressed
@@ -64,4 +70,3 @@ When an `INT96` column maps to `TIMESTAMPTZ`, Doris preserves the UTC instant ra
 * `parquet_column_max_buffer_mb` (2.1+, 3.0+)
 
     The maximum buffer size allocated when reading a Column within a Parquet Row Group. Default is 8M.
-

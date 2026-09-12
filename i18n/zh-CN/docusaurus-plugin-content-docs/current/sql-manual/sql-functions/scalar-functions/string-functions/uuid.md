@@ -10,6 +10,8 @@
 
 UUID 函数用于生成一个随机的通用唯一标识符（Universally Unique Identifier）。生成的 UUID 符合 RFC 4122 标准，格式为 8-4-4-4-12 的36个字符（包含连字符）。
 
+现有 `UUID()` 保持返回 `VARCHAR` 的行为。新增的 [UUID_V4](../uuid-functions/uuid-v4.md) 和 [UUID_V7](../uuid-functions/uuid-v7.md) 返回原生 [UUID 类型](../../../basic-element/sql-data-types/uuid.md)。
+
 ## 语法
 
 ```sql

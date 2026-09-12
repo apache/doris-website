@@ -86,6 +86,8 @@ Parquet 和 ORC 文件格式拥有自己的数据类型定义，Apache Doris 在
 
 下面分别给出 Apache Doris 数据类型与 ORC、Parquet 格式的映射关系。
 
+UUID 值在 CSV、ORC 和 Parquet 中均导出为 36 字符的小写标准文本。ARRAY、MAP 或 STRUCT 中嵌套的 UUID 元素在 ORC 和 Parquet 中也写为字符串。导出文件的 Schema 不保留原生 UUID 类型；重新导入时需指定 UUID 目标列，或使用 `CAST(value AS UUID)` 转换。写入 Iceberg UUID 字段时遵循 [Iceberg 列类型映射](../../lakehouse/catalogs/iceberg-catalog.mdx#列类型映射)。
+
 ### ORC 类型映射
 
 | Doris 类型              | ORC 类型  |
@@ -103,6 +105,7 @@ Parquet 和 ORC 文件格式拥有自己的数据类型定义，Apache Doris 在
 | float                   | float     |
 | double                  | double    |
 | char / varchar / string | string    |
+| uuid                    | string    |
 | decimal                 | decimal   |
 | struct                  | struct    |
 | map                     | map       |
@@ -132,6 +135,7 @@ Apache Doris 导出到 Parquet 文件格式时，会先将 Doris 内存数据转
 | float                   | float32     | FLOAT                 |                                  |
 | double                  | float64     | DOUBLE                |                                  |
 | char / varchar / string | utf8        | BYTE_ARRAY            | UTF8                             |
+| uuid                    | utf8        | BYTE_ARRAY            | UTF8                             |
 | decimal                 | decimal128  | FIXED_LEN_BYTE_ARRAY  | DECIMAL(scale, precision)        |
 | struct                  | struct      |                       | Parquet Group                    |
 | map                     | map         |                       | Parquet Map                      |

@@ -10,6 +10,8 @@
 
 对于输入的已编码 LARGEINT，转译为原始的 uuid 字符串。
 
+本函数仍返回字符串。迁移到原生 [UUID 类型](../../../basic-element/sql-data-types/uuid.md) 时，可使用 `CAST(INT_TO_UUID(<int128>) AS UUID)`；不支持 LARGEINT 与 UUID 之间的直接 CAST。
+
 ## 语法
 
 ```sql

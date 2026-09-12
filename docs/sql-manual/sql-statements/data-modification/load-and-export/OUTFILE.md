@@ -136,6 +136,7 @@ Users executing this SQL command must have at least the following permissions:
    | float                   | float     |
    | double                  | double    |
    | char / varchar / string | string    |
+   | uuid                    | string    |
    | decimal                 | decimal   |
    | struct                  | struct    |
    | map                     | map       |
@@ -159,10 +160,13 @@ Users executing this SQL command must have at least the following permissions:
    | float                   | float32    |
    | double                  | float64    |
    | char / varchar / string | utf8       |
+   | uuid                    | utf8       |
    | decimal                 | decimal128 |
    | struct                  | struct     |
    | map                     | map        |
    | array                   | list       |
+
+UUID values are exported as lowercase canonical text; ORC and Parquet also store nested UUID elements as strings.
 
 ### Export Data Volume and Export Efficiency
 

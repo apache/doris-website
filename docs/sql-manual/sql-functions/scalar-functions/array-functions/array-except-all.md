@@ -29,7 +29,7 @@ ARRAY_EXCEPT_ALL(<arr1>, <arr2>)
 | `<arr1>` | The first array. Its element type must be a supported scalar type and must be compatible with the element type of `<arr2>`. |
 | `<arr2>` | The second array. Each occurrence removes one matching occurrence from `<arr1>`. Its element type must be a supported scalar type and must be compatible with `<arr1>`. |
 
-Supported scalar element types include numeric, boolean, string, date/time, and IPv4/IPv6 types. Complex element types such as `ARRAY`, `MAP`, `STRUCT`, `JSON`, and `VARIANT` are not supported.
+Supported scalar element types include numeric, boolean, string, date/time, IPv4/IPv6, and UUID types. Complex element types such as `ARRAY`, `MAP`, `STRUCT`, `JSON`, and `VARIANT` are not supported.
 
 ## Return Value
 

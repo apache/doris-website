@@ -25,7 +25,9 @@ Before using manual partitioning, you need to understand the general rules for p
 
 Range partitioning divides data into different partitions based on the value range of the partition column. The partition column is typically a time column, which makes it easy to manage old and new data.
 
-**Supported column types:** `DATE`, `DATETIME`, `TIMESTAMP_NS`, `TIMESTAMPTZ`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`.
+**Supported column types:** `DATE`, `DATETIME`, `TIMESTAMP_NS`, `TIMESTAMPTZ`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `UUID`.
+
+UUID partition boundaries accept quoted canonical or compact hexadecimal text. Numeric-step batch RANGE creation does not apply to UUID.
 
 Range partitioning supports the following four forms, suitable for different scenarios:
 
@@ -141,7 +143,9 @@ PARTITION BY RANGE(col)
 
 List partitioning divides data into different partitions based on the enumerated values of the partition column. A row is routed to a partition only if its value matches one of the enumerated values defined for that partition.
 
-**Supported column types:** `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `TIMESTAMP_NS`, `TIMESTAMPTZ`, `CHAR`, `VARCHAR`.
+**Supported column types:** `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `TIMESTAMP_NS`, `TIMESTAMPTZ`, `CHAR`, `VARCHAR`, `UUID`.
+
+UUID partition values accept quoted canonical or compact hexadecimal text. Different letter cases or hyphen formats of the same UUID represent the same partition value.
 
 **Syntax keyword:** Use `VALUES IN (...)` to specify the enumerated values contained in each partition.
 

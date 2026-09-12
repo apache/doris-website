@@ -249,7 +249,8 @@ CREATE TABLE <table_name> LIKE <source_table>
 >
 > - NULL：全部类型均可用，用 NULL 作为默认值。
 > - 数值字面量：只能是数值类型时使用。
-> - 字符串字面量：只能是字符串类型时使用。
+> - 字符串字面量：用于字符串列； UUID 列也支持有效的 UUID 文本默认值。
+> - UUID_V4() / UUID_V7()： UUID 列支持的动态默认值，包括对应别名。省略该列时逐行生成。详见 [UUID 类型](../../../basic-element/sql-data-types/uuid.md)。
 > - CURRENT_DATE：只能是 date 类型时使用。用当前日期作为默认值。
 > - CURRENT_TIMESTAMP [ <defaultValuePrecision> ]：仅可用于 `DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ` 类型。使用当前时间作为默认值。<defaultValuePrecision> 可以指定时间精度，其中 `TIMESTAMP_NS` 最高支持 9 位。
 > - PI：只能是 double 类型时使用。用圆周率作为默认值。

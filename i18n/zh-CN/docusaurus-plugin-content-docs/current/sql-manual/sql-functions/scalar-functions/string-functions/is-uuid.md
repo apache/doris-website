@@ -18,6 +18,8 @@ aaaaaaaabbbbccccddddeeeeeeeeeeee
 {aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee}
 ```
 
+本函数的文本校验规则与原生 [UUID 类型](../../../basic-element/sql-data-types/uuid.md) 不同：本函数接受带花括号的标准 UUID，原生 UUID 解析器不接受。校验可写入原生 UUID 列的文本时，请使用 [TO_UUID_OR_NULL](../uuid-functions/to-uuid-or-null.md) 或 `TRY_CAST(<str> AS UUID)`。
+
 ## 语法
 
 ```sql

@@ -18,8 +18,8 @@ MAP_AGG 函数用于根据多行数据中的键值对形成一个映射结构。
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr1>` | 用于指定作为键的表达式，支持 Bool、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Date、Datetime、TimestampNs、Timestamptz 和 String。|
-| `<expr2>` | 用于指定对应值的表达式，支持 Bool、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Date、Datetime、TimestampNs、Timestamptz 和 String。 |
+| `<expr1>` | 用于指定作为键的表达式，支持 Bool、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Date、Datetime、TimestampNs、Timestamptz、String 和 UUID。|
+| `<expr2>` | 用于指定对应值的表达式，支持 Bool、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Date、Datetime、TimestampNs、Timestamptz、String 和 UUID。 |
 
 ## 返回值
 

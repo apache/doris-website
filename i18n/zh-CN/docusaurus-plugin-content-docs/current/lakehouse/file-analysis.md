@@ -343,6 +343,9 @@ S3 (
 | largeint | | varchar |
 | | | string |
 | | | boolean |
+| | | uuid |
+
+UUID 列可通过 `"csv_schema" = "id:int;u:uuid"` 显式指定。值接受标准格式或紧凑十六进制 UUID 文本；CSV/JSON 的 Schema 推断不会自动识别 UUID。输入规则见 [UUID 类型](../sql-manual/basic-element/sql-data-types/uuid.md)。
 
 :::note
 - 如果列类型不匹配（如文件中为字符串，但指定为 `int`），该列返回 `null`

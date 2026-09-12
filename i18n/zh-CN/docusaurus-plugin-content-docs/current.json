@@ -447,6 +447,10 @@
     "message": "标量函数",
     "description": "The label for category Scalar Functions in sidebar docs"
   },
+  "sidebar.docs.category.UUID Functions": {
+    "message": "UUID 函数",
+    "description": "The label for category UUID Functions in sidebar docs"
+  },
   "sidebar.docs.category.String Functions": {
     "message": "字符串函数",
     "description": "The label for category String Functions in sidebar docs"
