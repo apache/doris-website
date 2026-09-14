@@ -284,7 +284,8 @@ SET 'execution.checkpointing.interval' = '10s';
 CREATE TABLE student_binlog (
     id INT,
     name STRING,
-    age INT
+    age INT,
+    PRIMARY KEY (id) NOT ENFORCED
 ) WITH (
     'connector' = 'doris',
     'fenodes' = '127.0.0.1:8030',
@@ -304,7 +305,7 @@ After the job starts, changes to `test.student_binlog_source` are continuously e
 | `snapshot` | Reads the current snapshot and stops. This is the default mode. |
 | `initial` | Reads the current snapshot and switches to continuous Binlog reading when the snapshot is complete. |
 | `latest` | Skips the snapshot and reads changes generated after the job starts. |
-| `from-timestamp` | Skips the snapshot and reads changes after the exclusive start time specified by `source.scan.timestamp` in `yyyy-MM-dd HH:mm:ss` format. |
+| `from-timestamp` | Skips the snapshot and reads changes starting at the inclusive time specified by `source.scan.timestamp` in `yyyy-MM-dd HH:mm:ss` format. |
 
 By default, the Connector emits full row changes in `detail` mode. Set `source.binlog.increment-type` to `min_delta` for the minimal change set or `append_only` for append events only.
 
@@ -313,6 +314,15 @@ Note the following:
 - Incremental reading uses Arrow Flight SQL. The Connector enables it by default and automatically discovers its port.
 - Enable Flink Checkpoint.
 - Configure Doris Binlog retention to cover the maximum expected job downtime. If the required Binlog data has expired, restart from a new snapshot or specify a new start time.
+- When performing a Binlog incremental read, Doris waits for in-flight transactions affecting the source table within the read window to complete. If the wait times out, the read returns an error. The Connector retries the same window only for this error, for up to `source.binlog.visible-wait-timeout` (default: `5m`). Set it to `0s` to disable Connector retries; other errors fail immediately.
+
+The Doris Binlog Source currently provides at-least-once delivery, so change events can be replayed after a failure and may affect Flink query results. Flink's CDC event deduplication is disabled by default. To use it, set the following option before submitting the query:
+
+```sql
+SET 'table.exec.source.cdc-events-duplicate' = 'true';
+```
+
+When this option is enabled, the source table must declare a primary key, as in the example above. Flink uses an additional stateful operator to normalize the changelog. See the [Flink configuration reference](https://nightlies.apache.org/flink/flink-docs-release-2.3/zh/docs/dev/table/config/#table-exec-source-cdc-events-duplicate) for details.
 
 ##### Publishing Consumption Progress to Doris (Optional)
 
@@ -902,9 +912,10 @@ After the Flink cluster is started, you can run the corresponding command accord
 | source.use-flight-sql       | TRUE          | N        | Whether to use Arrow Flight SQL for reading                                                                                                            |
 | source.flight-sql-port      | -             | N        | When using Arrow Flight SQL for reading, the FE's `arrow_flight_sql_port`                                                                              |
 | source.scan.mode            | snapshot      | N        | Source startup mode. Supported values: `snapshot`, `initial`, `latest`, and `from-timestamp`.                                                           |
-| source.scan.timestamp       | --            | N        | Exclusive start time in `yyyy-MM-dd HH:mm:ss` format. Required only for `from-timestamp`.                                                              |
+| source.scan.timestamp       | --            | N        | Inclusive start time in `yyyy-MM-dd HH:mm:ss` format. Required only for `from-timestamp`.                                                              |
 | source.binlog.increment-type | detail       | N        | Binlog change type: `detail`, `min_delta`, or `append_only`.                                                                                           |
 | source.binlog.poll-interval | 10s           | N        | Interval for polling new Binlog data. The minimum value is 1 second.                                                                                    |
+| source.binlog.visible-wait-timeout | 5m            | N        | Maximum time for the Connector to retry the same read window after Doris returns a transaction visibility wait timeout error. Set to `0s` to disable retries; negative values are invalid. |
 | source.binlog.offset-table  | --            | N        | Doris table in `database.table` format used to publish offsets covered by completed Checkpoints. Configure with `source.binlog.consumer-id` and `jdbc-url`. |
 | source.binlog.consumer-id   | --            | N        | Stable consumer identifier written to `source.binlog.offset-table`.                                                                                   |
 
