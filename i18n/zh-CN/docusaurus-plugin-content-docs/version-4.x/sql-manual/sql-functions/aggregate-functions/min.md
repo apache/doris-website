@@ -82,7 +82,7 @@ Decimal 类型：返回最小的高精度小数值。
 select k1, min(k_array) from t1 group by k1;
 ```
 
-Array 类型: 返回最小的数组值（逐元素比较大小，null为最小元素）。
+Array 类型：返回每组最小的数组值。数组按字典序逐元素比较；数组元素中的 NULL 大于任何非 NULL 元素。整个数组为 NULL 时，与其他 NULL 输入值一样会被忽略。
 
 ```text
 +------+----------------+
