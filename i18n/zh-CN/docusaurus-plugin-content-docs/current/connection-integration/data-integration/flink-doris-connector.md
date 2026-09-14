@@ -284,7 +284,8 @@ SET 'execution.checkpointing.interval' = '10s';
 CREATE TABLE student_binlog (
     id INT,
     name STRING,
-    age INT
+    age INT,
+    PRIMARY KEY (id) NOT ENFORCED
 ) WITH (
     'connector' = 'doris',
     'fenodes' = '127.0.0.1:8030',
@@ -304,7 +305,7 @@ SELECT * FROM student_binlog;
 | `snapshot` | 读取当前快照后结束，为默认模式。 |
 | `initial` | 先读取当前快照，快照读取完成后切换到持续 Binlog 读取。 |
 | `latest` | 跳过快照，只读取任务启动后产生的变更。 |
-| `from-timestamp` | 跳过快照，读取 `source.scan.timestamp` 指定时间之后（不含该时间点）的变更，时间格式为 `yyyy-MM-dd HH:mm:ss`。 |
+| `from-timestamp` | 跳过快照，从 `source.scan.timestamp` 指定的时间点开始读取变更（包含该时间点），时间格式为 `yyyy-MM-dd HH:mm:ss`。 |
 
 默认以 `detail` 类型输出完整的行变更。也可以通过 `source.binlog.increment-type` 设置为 `min_delta`（最小变更集）或 `append_only`（仅追加事件）。
 
@@ -313,6 +314,15 @@ SELECT * FROM student_binlog;
 - 增量读取使用 Arrow Flight SQL，Connector 默认启用并自动获取端口。
 - 需要启用 Flink Checkpoint。
 - Doris Binlog 的保留时间应覆盖任务可能停止的最长时间。如果恢复所需的 Binlog 已过期，需要重新读取快照或指定新的起始时间。
+- 执行 Binlog 增量读取时，如果读取区间内存在影响源表的未完成事务，Doris 会等待这些事务完成。若等待超时，本次读取会报错。Connector 仅针对该错误重试同一读取区间，重试时长由 `source.binlog.visible-wait-timeout` 控制（默认 `5m`）；设置为 `0s` 可关闭 Connector 重试，其他错误会立即失败。
+
+当前 Doris Binlog Source 只保证至少一次交付，任务故障恢复后可能重放变更事件，影响 Flink 查询结果。Flink 的 CDC 事件去重配置默认关闭；如需启用，可在提交查询前设置：
+
+```sql
+SET 'table.exec.source.cdc-events-duplicate' = 'true';
+```
+
+启用该配置时，源表必须像上面的示例一样声明主键。Flink 会增加一个有状态算子来规范化变更流。详情参见 [Flink 配置文档](https://nightlies.apache.org/flink/flink-docs-release-2.3/zh/docs/dev/table/config/#table-exec-source-cdc-events-duplicate)。
 
 ##### 将消费进度写入 Doris（可选）
 
@@ -902,9 +912,10 @@ Flink Doris Connector 集成了 [Flink CDC](https://nightlies.apache.org/flink/f
 | source.use-flight-sql       | TRUE          | N        | 是否使用 Arrow Flight SQL 读取                                                                                                                         |
 | source.flight-sql-port      | -             | N        | 使用 Arrow Flight SQL 读取时，FE 的 `arrow_flight_sql_port`                                                                                            |
 | source.scan.mode            | snapshot      | N        | Source 启动模式，支持 `snapshot`、`initial`、`latest` 和 `from-timestamp`                                                                               |
-| source.scan.timestamp       | --            | N        | `from-timestamp` 模式的开区间起始时间，格式为 `yyyy-MM-dd HH:mm:ss`                                                                                    |
+| source.scan.timestamp       | --            | N        | `from-timestamp` 模式的起始时间（含该时间点），格式为 `yyyy-MM-dd HH:mm:ss`                                                                                    |
 | source.binlog.increment-type | detail       | N        | Binlog 变更类型，支持 `detail`、`min_delta` 和 `append_only`                                                                                           |
 | source.binlog.poll-interval | 10s           | N        | 轮询新 Binlog 数据的时间间隔，最小值为 1 秒                                                                                                           |
+| source.binlog.visible-wait-timeout | 5m            | N        | Doris 返回事务可见性等待超时错误后，Connector 重试同一读取区间的最长时间。设置为 `0s` 可关闭重试；不能为负值。 |
 | source.binlog.offset-table  | --            | N        | 用于发布成功 Checkpoint 所覆盖 offset 的 Doris 表，格式为 `database.table`。需要同时配置 `source.binlog.consumer-id` 和 `jdbc-url`                       |
 | source.binlog.consumer-id   | --            | N        | 写入 `source.binlog.offset-table` 的稳定消费者标识                                                                                                    |
 
