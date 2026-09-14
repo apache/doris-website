@@ -155,7 +155,7 @@ Typical uses:
 
 Like `@snapshot()`, `@reset()` provides no `__DORIS_STREAM_*` virtual columns.
 
-### Comparison of the three read forms
+## Comparison of the three read forms
 
 <!-- Knowledge type: Comparison -->
 
