@@ -1803,6 +1803,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-zip',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/arrays-overlap',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/countequal',
+                                        'sql-manual/sql-functions/scalar-functions/array-functions/trim-array',
                                     ],
                                 },
                                 {
