@@ -215,4 +215,4 @@ DROP TABLE orders;
 - The differences between the three consumption types, the meaning of `show_initial_rows`, and the transactional semantics of reading versus consuming: [Table Stream Basics](table-stream.md)
 - Consuming partition by partition, snapshot reads, joining dimension tables, and the effect of base table DDL on Streams: [Table Stream Advanced](table-stream-advanced.md)
 - Row Binlog properties, supported scope, and limitations: [Row Binlog](row-binlog.md)
-- Reading changes by time window without creating a Stream: [Incremental Query and Time Travel](incremental-query.md)
+- Reading changes by time window without creating a Stream: [Incremental Query](incremental-query.md)

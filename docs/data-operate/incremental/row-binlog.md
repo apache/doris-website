@@ -9,7 +9,7 @@
 <!-- Knowledge type: Feature description + Parameter reference -->
 <!-- Use cases: Enabling row-level change recording on a table / Checking whether a table model is supported / Inspecting change records -->
 
-Row Binlog is the row-level change log of Doris internal tables. Once enabled, every row-level change produced by a write (insert, update, delete) is persisted together with the values before and after the change and the commit timestamp. It is the data source of [Table Stream](table-stream.md) and [Incremental Query and Time Travel](incremental-query.md).
+Row Binlog is the row-level change log of Doris internal tables. Once enabled, every row-level change produced by a write (insert, update, delete) is persisted together with the values before and after the change and the commit timestamp. It is the data source of [Table Stream](table-stream.md) and [Incremental Query](incremental-query.md).
 
 :::caution Experimental feature
 This feature is available since version 5.0.0 and is experimental. It requires `enable_feature_binlog = true` in the FE configuration.
@@ -18,7 +18,7 @@ This feature is available since version 5.0.0 and is experimental. It requires `
 ## Basic concepts
 
 - **Change record**: every time a transaction commits on the base table, each changed row produces one record containing the operation type (insert / update / delete), the values after the change, and optionally the values before the change (the before image).
-- **Commit timestamp (TSO)**: a globally monotonic timestamp obtained from the FE when a write transaction commits, composed of a physical part (milliseconds) and a logical counter. All changes of one transaction share the same TSO. Table Stream offsets, `@incr` time windows, and time travel targets are all measured in TSO.
+- **Commit timestamp (TSO)**: a globally monotonic timestamp obtained from the FE when a write transaction commits, composed of a physical part (milliseconds) and a logical counter. All changes of one transaction share the same TSO. Table Stream offsets and `@incr` time windows are both measured in TSO.
 - **LSN**: the sequence number of a change record within its transaction. Together with the TSO it defines the order of change records.
 
 ## Enabling Row Binlog
@@ -49,7 +49,7 @@ PROPERTIES (
 |---|---|---|
 | `binlog.enable` | `true` / `false`<br />default `false`<br />cannot be disabled once enabled | Whether binlog is enabled; must be set together with `binlog.format = "ROW"` |
 | `binlog.format` | `ROW`<br />not changeable | Must be `ROW`, meaning row-level changes are recorded. The value is case-sensitive; a lowercase `row` fails with `Invalid binlog format value: row` |
-| `binlog.need_historical_value` | `true` / `false`<br />default `false`<br />not changeable | Whether the values before a change (before image) are recorded. Only Unique Key MoW tables can set it to `true`. `min_delta` / `detail` Table Streams, `MIN_DELTA` incremental queries, and time travel on MoW tables all depend on it |
+| `binlog.need_historical_value` | `true` / `false`<br />default `false`<br />not changeable | Whether the values before a change (before image) are recorded. Only Unique Key MoW tables can set it to `true`. `min_delta` / `detail` Table Streams and `MIN_DELTA` incremental queries depend on it |
 | `binlog.ttl_seconds` | integer (seconds)<br />default `86400`<br />changeable | Retention period. **Has no effect in the current version**, see [Retention and cleanup](#retention-and-cleanup) |
 | `binlog.max_bytes` | integer (bytes)<br />default unlimited<br />changeable | Retention size limit. **Has no effect in the current version** |
 | `binlog.max_history_nums` | integer<br />default unlimited<br />changeable | Retention count limit. **Has no effect in the current version** |
@@ -217,7 +217,11 @@ With Row Binlog enabled, every write additionally generates and persists change 
 
 ## Troubleshooting with the binlog() table function
 
-The `binlog()` table function returns the raw change records of a table. It is mainly for troubleshooting, for example to confirm whether a write produced the expected changes or to inspect the change history of a key.
+The `binlog()` table function returns the raw change records of a table, for example to confirm whether a write produced the expected changes or to inspect the change history of a key.
+
+:::caution
+`binlog()` is mainly for internal debugging and is not recommended in production data pipelines. Its output format and parameters may change between versions; use [Table Stream](table-stream.md) or [`@incr`](incremental-query.md) for real incremental consumption.
+:::
 
 ```sql
 SELECT __DORIS_BINLOG_OP__, __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__,
@@ -238,4 +242,4 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 | `partition` | No | Partition names separated by commas; defaults to all partitions |
 | `tablet` | No | Tablet IDs separated by commas; defaults to all tablets |
 
-`binlog()` reads the stored raw records without any folding or filtering, and its `__DORIS_BINLOG_OP__` uses the raw encoding (`0` insert, `1` update, `2` delete). For everyday incremental consumption use [Table Stream](table-stream.md) or [`@incr`](incremental-query.md). The full syntax is in [BINLOG table function](../../sql-manual/sql-functions/table-valued-functions/binlog).
+`binlog()` reads the stored raw records without any folding or filtering, and its `__DORIS_BINLOG_OP__` uses the raw encoding (`0` insert, `1` update, `2` delete). The full syntax is in [BINLOG table function](../../sql-manual/sql-functions/table-valued-functions/binlog).

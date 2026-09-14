@@ -10,7 +10,11 @@
 
 The table function returns the raw row-level change records of an internal table with Row Binlog enabled. Each record contains the visible columns of the base table (values after the change), the operation type, the commit timestamp, the sequence number within the transaction, and optionally the values before the change.
 
-The function reads the stored raw records without folding or filtering and is mainly for troubleshooting. For everyday incremental consumption use [Table Stream](../../../data-operate/incremental/table-stream) or [`@incr` incremental queries](../../../data-operate/incremental/incremental-query).
+The function reads the stored raw records without folding or filtering.
+
+:::caution
+`binlog()` is mainly for internal debugging and is not recommended in production data pipelines. Its output format and parameters may change between versions; use [Table Stream](../../../data-operate/incremental/table-stream) or [`@incr` incremental queries](../../../data-operate/incremental/incremental-query) for real incremental consumption.
+:::
 
 This feature is available since version 5.0.0 and is experimental.
 

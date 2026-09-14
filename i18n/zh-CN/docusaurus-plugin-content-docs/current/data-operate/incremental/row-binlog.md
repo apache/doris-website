@@ -9,7 +9,7 @@
 <!-- 知识类型: Feature 说明 + 参数参考 -->
 <!-- 适用场景: 为表开启行级变更记录 / 评估表模型是否支持 / 排查变更记录内容 -->
 
-Row Binlog 是 Doris 内表的行级变更日志。开启后，每一次写入产生的行级变化（新增、更新、删除）都会连同变更前后的值、提交时间戳一起持久化，作为 [Table Stream](table-stream.md)、[增量查询与时间旅行](incremental-query.md) 的数据来源。
+Row Binlog 是 Doris 内表的行级变更日志。开启后，每一次写入产生的行级变化（新增、更新、删除）都会连同变更前后的值、提交时间戳一起持久化，作为 [Table Stream](table-stream.md) 和 [增量查询](incremental-query.md) 的数据来源。
 
 :::caution 实验性功能
 该功能自 5.0.0 版本起提供，目前处于实验阶段，需要在 FE 中开启 `enable_feature_binlog = true`。
@@ -18,7 +18,7 @@ Row Binlog 是 Doris 内表的行级变更日志。开启后，每一次写入�
 ## 基本概念
 
 - **变更记录**：基表每提交一个事务，其中每一行的变化都会形成一条记录，包含操作类型（新增 / 更新 / 删除）、变更后的值，以及可选的变更前的值（before 镜像）。
-- **提交时间戳（TSO）**：每个写入事务提交时从 FE 获取的全局单调递增时间戳，由物理时间（毫秒）和逻辑计数两部分组成。同一事务内的所有变更共享同一个 TSO。Table Stream 的消费位点、`@incr` 的时间窗口、时间旅行的目标时刻，都以 TSO 作为标尺。
+- **提交时间戳（TSO）**：每个写入事务提交时从 FE 获取的全局单调递增时间戳，由物理时间（毫秒）和逻辑计数两部分组成。同一事务内的所有变更共享同一个 TSO。Table Stream 的消费位点、`@incr` 的时间窗口，都以 TSO 作为标尺。
 - **LSN**：同一事务内变更记录的序号，与 TSO 一起决定变更记录的先后顺序。
 
 ## 开启方式
@@ -49,7 +49,7 @@ PROPERTIES (
 |---|---|---|
 | `binlog.enable` | `true` / `false`<br />默认 `false`<br />开启后不可关闭 | 是否开启 binlog，需与 `binlog.format = "ROW"` 同时设置 |
 | `binlog.format` | `ROW`<br />不可修改 | 必须为 `ROW`，表示记录行级变更。取值区分大小写，小写的 `row` 会报 `Invalid binlog format value: row` |
-| `binlog.need_historical_value` | `true` / `false`<br />默认 `false`<br />不可修改 | 是否记录变更前的值（before 镜像）。仅 Unique Key MoW 表可设为 `true`；`min_delta` / `detail` 类型的 Table Stream、`MIN_DELTA` 增量查询和 MoW 表的时间旅行都依赖它 |
+| `binlog.need_historical_value` | `true` / `false`<br />默认 `false`<br />不可修改 | 是否记录变更前的值（before 镜像）。仅 Unique Key MoW 表可设为 `true`；`min_delta` / `detail` 类型的 Table Stream 和 `MIN_DELTA` 增量查询都依赖它 |
 | `binlog.ttl_seconds` | 整数（秒）<br />默认 `86400`<br />可修改 | 保留时长。**当前版本不生效**，见 [保留与清理](#保留与清理) |
 | `binlog.max_bytes` | 整数（字节）<br />默认无限制<br />可修改 | 保留大小上限。**当前版本不生效** |
 | `binlog.max_history_nums` | 整数<br />默认无限制<br />可修改 | 保留条数上限。**当前版本不生效** |
@@ -217,7 +217,11 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 
 ## 用 binlog() 表函数排查
 
-`binlog()` 表函数返回一张表的原始变更记录，主要用于排查问题，例如确认某次写入是否产生了预期的变更、某个 key 的变更历史。
+`binlog()` 表函数返回一张表的原始变更记录，例如用来确认某次写入是否产生了预期的变更、查看某个 key 的变更历史。
+
+:::caution
+`binlog()` 主要用于内部调试，不建议在正式数据处理流程中使用。它的输出格式和参数可能随版本变化，正式的增量消费请使用 [Table Stream](table-stream.md) 或 [`@incr`](incremental-query.md)。
+:::
 
 ```sql
 SELECT __DORIS_BINLOG_OP__, __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__,
@@ -238,4 +242,4 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 | `partition` | 否 | 分区名，多个用逗号分隔，默认全部分区 |
 | `tablet` | 否 | tablet ID，多个用逗号分隔，默认全部 tablet |
 
-`binlog()` 直接读取存储的原始记录，不做任何折叠或过滤，返回的 `__DORIS_BINLOG_OP__` 使用原始编码（`0` 新增、`1` 更新、`2` 删除）。日常的增量消费请使用 [Table Stream](table-stream.md) 或 [`@incr`](incremental-query.md)。完整语法见 [BINLOG 表函数](../../sql-manual/sql-functions/table-valued-functions/binlog)。
+`binlog()` 直接读取存储的原始记录，不做任何折叠或过滤，返回的 `__DORIS_BINLOG_OP__` 使用原始编码（`0` 新增、`1` 更新、`2` 删除）。完整语法见 [BINLOG 表函数](../../sql-manual/sql-functions/table-valued-functions/binlog)。

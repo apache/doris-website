@@ -2,18 +2,17 @@
 {
     "title": "Change Data and Incremental Consumption Overview",
     "language": "en",
-    "description": "Starting from Doris 5.0, internal tables can record row-level changes (Row Binlog), which can be consumed incrementally through Table Streams, queried by time window, or used for time travel. This page covers the problems these features solve, typical scenarios, the capability matrix, and prerequisites."
+    "description": "Starting from Doris 5.0, internal tables can record row-level changes (Row Binlog), which can be consumed incrementally through Table Streams or queried by time window with @incr. This page covers the problems these features solve, typical scenarios, the capability matrix, and prerequisites."
 }
 ---
 
 <!-- Knowledge type: Concept description + Selection guide -->
-<!-- Use cases: Incremental ETL / Downstream sync / Change auditing / Incremental reads by time window / Historical snapshot queries -->
+<!-- Use cases: Incremental ETL / Downstream sync / Change auditing / Incremental reads by time window -->
 
-Starting from version 5.0, Doris can record a row-level change log (Row Binlog) for internal tables and offers three ways to read those changes:
+Starting from version 5.0, Doris can record a row-level change log (Row Binlog) for internal tables and offers two ways to read those changes:
 
 - **Table Stream**: a named consumption object that remembers how far you have consumed. Each read returns only the changes since the last consumption, and reading plus writing into the target table happen in one transaction.
 - **Incremental query (`@incr`)**: no object to create. Read the changes of a table within a time window you specify.
-- **Time travel (`FOR TIME AS OF`)**: query the image of a table as it was at a past point in time.
 
 :::caution Experimental feature
 This feature is available since version 5.0.0. It is experimental and disabled by default. See [Prerequisites](#prerequisites) for how to enable it.
@@ -26,9 +25,8 @@ Incremental processing inside Doris usually runs into these problems:
 - **Downstream wants increments but cannot get them**: the upstream table receives many updates and deletes every day, so downstream reports, wide tables, and aggregate tables can only be recomputed in full, or rely on an `update_time` column maintained by the application.
 - **Updates and deletes are invisible**: an update on a Unique Key table overwrites the old value and a deleted row simply disappears, so there is no way to know afterwards what was changed or deleted.
 - **Increments of multiple tables do not line up**: when joining incremental data with a dimension table, the dimension table is in its "current" state while the increment covers "a period in the past".
-- **Troubleshooting needs a historical state**: after an accidental update or delete, you want to see what the table looked like at a given moment.
 
-Row Binlog records every insert, update (with values before and after the update), and delete of each row, together with a globally monotonic commit timestamp. Table Stream, incremental query, and time travel read those records in different ways.
+Row Binlog records every insert, update (with values before and after the update), and delete of each row, together with a globally monotonic commit timestamp. Table Stream and incremental query read those records in different ways.
 
 ## Two layers
 
@@ -40,18 +38,17 @@ Row Binlog records every insert, update (with values before and after the update
  │ Row Binlog (table-level switch, set at CREATE TABLE) │
  │ operation type, before/after images, commit TSO      │
  └──────────────────────────────────────────────────────┘
-        │                     │                      │
-        ▼                     ▼                      ▼
-  Table Stream          @incr query            FOR TIME AS OF
-  (stateful,            (stateless,            (time travel,
-   offset-based)         time window)           historical image)
+              │                          │
+              ▼                          ▼
+        Table Stream                @incr query
+        (stateful,                  (stateless,
+         offset-based)               time window)
 ```
 
 | Capability | Object needed / who tracks the position | Best for |
 |---|---|---|
 | Table Stream | `CREATE STREAM` required<br />Doris keeps a consumption offset per partition | Continuous incremental ETL, downstream sync, exactly-once consumption |
 | Incremental query `@incr` | Nothing to create<br />You choose the time window | Ad-hoc analysis, external schedulers that manage their own positions |
-| Time travel `FOR TIME AS OF` | Nothing to create<br />No position involved | Inspecting historical states, troubleshooting accidental changes, aligning with incremental data |
 
 ## Typical scenarios
 
@@ -65,15 +62,11 @@ For detail tables that only receive inserts, use an `append_only` Stream to fetc
 
 **3. Change auditing and replay**
 
-When you need the full trail of every modification, use a `detail` Stream, or export row-by-row changes for a time window with the `DETAIL` mode of `@incr`, and land them in an audit table. See [Incremental Query and Time Travel](incremental-query.md).
+When you need the full trail of every modification, use a `detail` Stream, or export row-by-row changes for a time window with the `DETAIL` mode of `@incr`, and land them in an audit table. See [Incremental Query](incremental-query.md).
 
 **4. Consistent joins between incremental data and dimension tables**
 
 Consuming order changes requires joining the users table. `users_stream@snapshot()` reads the image of the users table aligned with the consumption offset, so a new order is never joined with stale user information or vice versa. See [Table Stream Advanced](table-stream-advanced.md#snapshot-reads-snapshot).
-
-**5. Looking at the data as of a point in time**
-
-`SELECT * FROM orders FOR TIME AS OF '2026-09-14 10:00:00'` returns the image of the table at that moment, for troubleshooting accidental operations or reconciling numbers. See [Incremental Query and Time Travel](incremental-query.md#time-travel).
 
 ## Capability matrix
 
@@ -111,7 +104,7 @@ UPDATE_BEFORE and DELETE rows in `min_delta` and `detail` need before images, so
     `enable_feature_binlog` controls Row Binlog and the allocation of commit timestamps (TSO); `enable_table_stream` controls the Table Stream DDL. When it is off, creating a Stream fails with `Table Stream is experimental. Please set enable_table_stream=true to enable it.`.
 
 3. **Enable Row Binlog at table creation**: Row Binlog can only be enabled when the table is created. An existing table cannot be switched on through `ALTER TABLE`; recreate the table and reload the data.
-4. **Deployment mode**: Row Binlog and Table Stream work in both the integrated storage-compute mode and the compute-storage decoupled mode. Use `@incr` incremental queries and time travel in the integrated mode for now; support in the decoupled mode is still being completed.
+4. **Deployment mode**: Row Binlog and Table Stream work in both the integrated storage-compute mode and the compute-storage decoupled mode. Use `@incr` incremental queries in the integrated mode for now; support in the decoupled mode is still being completed.
 
 :::tip Write overhead
 With Row Binlog enabled, every write additionally generates and persists change records, and MoW tables also need to read the old values. Load throughput drops noticeably. Enable it only on tables that really need incremental consumption, and evaluate with a realistic workload before going to production.
@@ -123,6 +116,6 @@ With Row Binlog enabled, every write additionally generates and persists change 
 |---|---|
 | [Quick Start](quick-start.md) | A 10-minute walkthrough: create the table, create the Stream, write data, view changes, consume |
 | [Row Binlog](row-binlog.md) | How to enable it, properties, supported scope, the change record model, DDL restrictions, overhead and troubleshooting |
-| [Incremental Query and Time Travel](incremental-query.md) | `@incr` time-window queries, the three incremental modes, `FOR TIME AS OF` |
+| [Incremental Query](incremental-query.md) | `@incr` time-window queries and the three incremental modes |
 | [Table Stream Basics](table-stream.md) | Creating and managing Streams, the three consumption types, initial rows, reading versus consuming, virtual columns |
 | [Table Stream Advanced](table-stream-advanced.md) | Partition-level offsets, snapshot and reset, consistent joins, concurrent consumption, the effect of base table changes, monitoring and recovery |

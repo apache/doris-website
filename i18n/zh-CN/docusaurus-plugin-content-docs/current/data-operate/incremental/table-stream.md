@@ -295,7 +295,7 @@ Stream 的列与基表当前的可见列一致（基表 `ADD COLUMN` / `DROP COL
 | 虚拟列 | 类型 | 说明 |
 |---|---|---|
 | `__DORIS_STREAM_CHANGE_TYPE_COL__` | STRING | 变更类型：`APPEND` / `UPDATE_BEFORE` / `UPDATE_AFTER` / `DELETE` |
-| `__DORIS_STREAM_SEQUENCE_COL__` | BIGINT | 变更的提交时间戳（TSO）。同一事务内的变更相同；可用于 `FOR VERSION AS OF` 时间旅行，见 [增量查询与时间旅行](incremental-query.md#时间旅行) |
+| `__DORIS_STREAM_SEQUENCE_COL__` | BIGINT | 变更的提交时间戳（TSO）。同一事务内的变更相同 |
 | `__DORIS_STREAM_LSN_COL__` | BIGINT | 变更在事务内的序号。`ORDER BY __DORIS_STREAM_SEQUENCE_COL__, __DORIS_STREAM_LSN_COL__` 即变更发生的顺序 |
 
 `<stream>@snapshot()` 与 `<stream>@reset()` 读取的是表镜像而非变更，不提供虚拟列，见 [Table Stream 进阶](table-stream-advanced.md)。

@@ -373,9 +373,9 @@ rollup 可以创建的同步物化视图功能有限。已不再推荐使用。�
 | enable_mow_light_delete                       | 是否在 Unique 表 Mow 上开启 Delete 语句写 Delete predicate。若开启，会提升 Delete 语句的性能，但 Delete 后进行部分列更新可能会出现部分数据错误的情况。若关闭，会降低 Delete 语句的性能来保证正确性。此属性的默认值为 `false`。此属性只能在 Unique Merge-on-Write 表上开启。 |
 | 动态分区相关属性                              | 动态分区相关参考[数据划分 - 动态分区](../../../../table-design/data-partitioning/dynamic-partitioning) |
 | enable_unique_key_skip_bitmap_column | 是否在 Unique Merge-on-Write 表上开启[灵活列更新功能](../../../../data-operate/update/update-of-unique-model.md#灵活部分列更新)。此属性只能在 Unique Merge-on-Write 表上开启。 |
-| binlog.enable | 与 `binlog.format = "ROW"` 同时设置时，为该表开启 [Row Binlog](../../../../data-operate/incremental/row-binlog)，记录行级变更，用于 Table Stream 增量消费、`@incr` 增量查询和时间旅行。只能在建表时开启，开启后不可关闭。5.0.0 版本起支持。 |
+| binlog.enable | 与 `binlog.format = "ROW"` 同时设置时，为该表开启 [Row Binlog](../../../../data-operate/incremental/row-binlog)，记录行级变更，用于 Table Stream 增量消费和 `@incr` 增量查询。只能在建表时开启，开启后不可关闭。5.0.0 版本起支持。 |
 | binlog.format | 取值 `ROW`（区分大小写），表示记录行级变更。仅 Duplicate Key 表和 Unique Key Merge-on-Write 表（无 cluster key）支持，建表后不可修改。 |
-| binlog.need_historical_value | 是否在 Row Binlog 中记录变更前的值（before 镜像），默认 `false`。仅 Unique Key Merge-on-Write 表可设为 `true`；`min_delta` / `detail` 类型的 Table Stream 和 Merge-on-Write 表的时间旅行依赖它。建表后不可修改。 |
+| binlog.need_historical_value | 是否在 Row Binlog 中记录变更前的值（before 镜像），默认 `false`。仅 Unique Key Merge-on-Write 表可设为 `true`；`min_delta` / `detail` 类型的 Table Stream 依赖它。建表后不可修改。 |
 ## 权限控制
 
 执行此 SQL 命令的[用户](../../../../admin-manual/auth/security-overview)必须至少具有以下[权限](../../../../admin-manual/auth/authorization/internal)：

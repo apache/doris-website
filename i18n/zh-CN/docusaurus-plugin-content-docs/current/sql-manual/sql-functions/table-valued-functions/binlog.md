@@ -10,7 +10,11 @@
 
 表函数，返回一张开启了 Row Binlog 的内表的原始行级变更记录。每条记录包含基表的可见列（变更后的值）、操作类型、提交时间戳、事务内序号，以及可选的变更前的值。
 
-该函数直接读取存储的原始记录，不做折叠或过滤，主要用于排查问题。日常的增量消费请使用 [Table Stream](../../../data-operate/incremental/table-stream) 或 [`@incr` 增量查询](../../../data-operate/incremental/incremental-query)。
+该函数直接读取存储的原始记录，不做折叠或过滤。
+
+:::caution
+`binlog()` 主要用于内部调试，不建议在正式数据处理流程中使用。它的输出格式和参数可能随版本变化，正式的增量消费请使用 [Table Stream](../../../data-operate/incremental/table-stream) 或 [`@incr` 增量查询](../../../data-operate/incremental/incremental-query)。
+:::
 
 该功能自 5.0.0 版本起提供，目前处于实验阶段。
 

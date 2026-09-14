@@ -295,7 +295,7 @@ The columns of a Stream are the current visible columns of the base table (synch
 | Virtual column | Type | Description |
 |---|---|---|
 | `__DORIS_STREAM_CHANGE_TYPE_COL__` | STRING | Change type: `APPEND` / `UPDATE_BEFORE` / `UPDATE_AFTER` / `DELETE` |
-| `__DORIS_STREAM_SEQUENCE_COL__` | BIGINT | Commit timestamp (TSO) of the change. Changes of one transaction share the same value; it can be used in `FOR VERSION AS OF` time travel, see [Incremental Query and Time Travel](incremental-query.md#time-travel) |
+| `__DORIS_STREAM_SEQUENCE_COL__` | BIGINT | Commit timestamp (TSO) of the change. Changes of one transaction share the same value |
 | `__DORIS_STREAM_LSN_COL__` | BIGINT | Sequence number of the change within its transaction. `ORDER BY __DORIS_STREAM_SEQUENCE_COL__, __DORIS_STREAM_LSN_COL__` is the order in which the changes happened |
 
 `<stream>@snapshot()` and `<stream>@reset()` read table images rather than changes and provide no virtual columns; see [Table Stream Advanced](table-stream-advanced.md).

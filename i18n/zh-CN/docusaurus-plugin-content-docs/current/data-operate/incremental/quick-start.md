@@ -215,4 +215,4 @@ DROP TABLE orders;
 - 三种消费类型的区别、`show_initial_rows` 的含义、查询与消费的事务语义：[Table Stream 基础](table-stream.md)
 - 按分区分批消费、快照读取、与维表关联、基表 DDL 对 Stream 的影响：[Table Stream 进阶](table-stream-advanced.md)
 - Row Binlog 的属性、支持范围和限制：[Row Binlog](row-binlog.md)
-- 不建 Stream，直接按时间窗口读变更：[增量查询与时间旅行](incremental-query.md)
+- 不建 Stream，直接按时间窗口读变更：[增量查询](incremental-query.md)
