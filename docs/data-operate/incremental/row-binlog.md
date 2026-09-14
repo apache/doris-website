@@ -31,7 +31,7 @@
 <!-- Knowledge type: Feature description + Parameter reference -->
 <!-- Use cases: Enabling row-level change recording on a table / Checking whether a table model is supported / Inspecting change records -->
 
-Row Binlog is the row-level change log of Doris internal tables. Once enabled, every row-level change produced by a write (insert, update, delete) is persisted together with the values before and after the change and the commit timestamp. It is the data source of [Table Stream](table-stream) and [Incremental Query](incremental-query).
+Row Binlog is the row-level change log of Doris internal tables. Once enabled, every row-level change produced by a write (insert, update, delete) is persisted together with the values before and after the change and the commit timestamp. It is the data source of [Table Stream](table-stream) and [Incremental Query](incremental-query), and can also be consumed from Flink through the [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector/incremental-read) (Connector 26.3.0 or later).
 
 :::caution Experimental feature
 This feature is available since version 5.0.0 and is experimental. It requires `enable_feature_binlog = true` in the FE configuration.

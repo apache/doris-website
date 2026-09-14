@@ -279,7 +279,7 @@ MemTable 前移是 Apache Doris 2.1.0 版本引入的优化机制，针对 `INSE
 
 #### Flink 端到端时延
 
-采用 Flink Connector 使用攒批模式进行写入，主要关注数据端到端的时延和导入吞吐。攒批时间通过 Flink Connector 的 `sink.buffer-flush.interval` 参数来控制，Flink Connector 的详细使用参考 [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector#使用说明)。
+采用 Flink Connector 使用攒批模式进行写入，主要关注数据端到端的时延和导入吞吐。攒批时间通过 Flink Connector 的 `sink.buffer-flush.interval` 参数来控制，Flink Connector 的详细使用参考 [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector/write.md#write-modes)。
 
 **机器配置：**
 

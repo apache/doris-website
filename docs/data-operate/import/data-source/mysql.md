@@ -18,7 +18,7 @@ Doris uses Streaming Job to continuously sync full and incremental data from MyS
 
 - **Loading MySQL data via Flink Doris Connector**
 
-Use Flink Doris Connector together with Flink MySQL CDC for real-time synchronization. This is suitable for scenarios that require additional Flink stream processing logic. The connector also provides a one-click full-database synchronization tool. For details, see [Flink Doris Connector](../../../connection-integration/data-integration/flink-doris-connector.md).
+Use Flink Doris Connector together with Flink MySQL CDC for real-time synchronization. This is suitable for scenarios that require additional Flink stream processing logic. The connector also provides a one-click full-database synchronization tool. For details, see [Flink Doris Connector](../../../connection-integration/data-integration/flink-doris-connector/cdc-sync.md).
 
 - **Loading MySQL data via third-party tools**
 

@@ -185,7 +185,7 @@ For whole-database or multi-table synchronization from a TP database, the Flink 
     --table-conf replication_num=1
 ```
 
-For more details, see [Whole-Database Synchronization](../../../connection-integration/data-integration/flink-doris-connector.md#case-4-full-database-cdc-synchronization).
+For more details, see [Whole-Database Synchronization](../../../connection-integration/data-integration/flink-doris-connector/cdc-sync.md).
 
 ---
 

@@ -36,10 +36,10 @@ Apache Doris 提供了多种数据导入与集成方式，帮助您从不同数�
 | 应用程序实时写入（极少量、5 分钟级）        | JDBC 客户端                    | [JDBC INSERT](./import-way/insert-into-manual.md)                                                                           |
 | 应用程序高并发或高频小批量写入              | JDBC / HTTP                    | [Group Commit](./load-best-practices/group-commit-manual.md) + JDBC INSERT 或 Stream Load                                                       |
 | 应用程序高吞吐写入                          | HTTP                           | [Stream Load](./import-way/stream-load-manual)                                                                              |
-| 实时数据流接入                              | Flink                          | [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector.md)                                                           |
+| 实时数据流接入                              | Flink                          | [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector/write.md)                                                           |
 | 实时消息队列接入                            | Kafka                          | [Routine Load](./import-way/routine-load-manual.md) 或 [Doris Kafka Connector](../../connection-integration/data-integration/doris-kafka-connector.md)    |
 | 事务数据库实时同步（无需外部组件）          | MySQL / PostgreSQL             | [Streaming Job 持续导入](./import-way/streaming-job/continuous-load-overview.md)                                                       |
-| 事务数据库 CDC 同步                         | MySQL / PostgreSQL 等          | [Flink CDC](../../connection-integration/data-integration/flink-doris-connector.md) 或 [DataX](../../connection-integration/data-integration/datax.md)                                  |
+| 事务数据库 CDC 同步                         | MySQL / PostgreSQL 等          | [Flink CDC](../../connection-integration/data-integration/flink-doris-connector/cdc-sync.md) 或 [DataX](../../connection-integration/data-integration/datax.md)                                  |
 | 对象存储持续导入（增量文件自动加载）        | S3                             | [Streaming Job 持续导入](./import-way/streaming-job/continuous-load-overview.md)                                                       |
 | 对象存储 / HDFS 文件批量导入                | S3 / OSS / HDFS                | [Broker Load](./import-way/broker-load-manual.md) 或 [INSERT INTO SELECT](./import-way/insert-into-manual.md)               |
 | 本地文件批量导入                            | 本地磁盘                       | [Stream Load](./import-way/stream-load-manual) 或 [Doris Streamloader](../../connection-integration/data-integration/doris-streamloader.md)               |
@@ -67,7 +67,7 @@ Apache Doris 提供了多种数据导入与集成方式，帮助您从不同数�
 
 1. **Flink 实时数据流**
 
-    使用 [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector.md) 将 Flink 的实时数据流写入到 Doris 表中。
+    使用 [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector/write.md) 将 Flink 的实时数据流写入到 Doris 表中。
 
 2. **Kafka 实时数据流**
 
@@ -80,7 +80,7 @@ Apache Doris 提供了多种数据导入与集成方式，帮助您从不同数�
 
 3. **事务数据库 CDC 同步**
 
-    可使用 [Flink CDC](../../connection-integration/data-integration/flink-doris-connector.md) 或 [DataX](../../connection-integration/data-integration/datax.md) 将事务数据库的 CDC 数据流写入到 Doris 中。
+    可使用 [Flink CDC](../../connection-integration/data-integration/flink-doris-connector/cdc-sync.md) 或 [DataX](../../connection-integration/data-integration/datax.md) 将事务数据库的 CDC 数据流写入到 Doris 中。
 
 4. **Streaming Job 持续导入（无需外部组件）**
 

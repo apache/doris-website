@@ -18,7 +18,7 @@ Doris 通过 Streaming Job 将 MySQL 的全量与增量数据持续同步到 Dor
 
 - **使用 Flink Doris Connector 导入 MySQL 数据**
 
-可以通过 Flink Doris Connector 配合 Flink MySQL CDC 实现实时同步，适用于需要在 Flink 中对数据进行额外流式处理的场景。Connector 同时提供一键整库同步工具，更多信息请参考 [Flink Doris Connector](../../../connection-integration/data-integration/flink-doris-connector.md)。
+可以通过 Flink Doris Connector 配合 Flink MySQL CDC 实现实时同步，适用于需要在 Flink 中对数据进行额外流式处理的场景。Connector 同时提供一键整库同步工具，更多信息请参考 [Flink Doris Connector](../../../connection-integration/data-integration/flink-doris-connector/cdc-sync.md)。
 
 - **使用第三方工具导入 MySQL 数据**
 

@@ -34,7 +34,7 @@ The **Flink Doris Connector** lets you import data produced by Flink (such as da
 
 ## Procedure
 
-For complete instructions on importing data with Flink, see [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector.md). The following minimal example shows how to quickly complete an import through Flink.
+For complete instructions on importing data with Flink, see [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector/overview.md). The following minimal example shows how to quickly complete an import through Flink.
 
 The overall workflow consists of the following three steps:
 
@@ -122,8 +122,8 @@ The Flink Doris Connector implements imports based on Doris Stream Load. Each tr
 
 **Q4: How can I synchronize data from databases such as MySQL or Oracle to Doris?**
 
-You can use it together with Flink CDC. For details, see the [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector.md) documentation.
+You can use it together with Flink CDC. For details, see the [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector/cdc-sync.md) documentation.
 
 ## Related documents
 
-- [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector.md)
+- [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector/overview.md)
