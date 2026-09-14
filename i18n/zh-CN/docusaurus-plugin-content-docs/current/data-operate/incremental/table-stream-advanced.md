@@ -2,16 +2,56 @@
 {
     "title": "Table Stream 进阶",
     "language": "zh-CN",
-    "description": "Doris Table Stream 进阶用法：分区级消费位点与按分区分批消费、@snapshot() 快照读取与 @reset() 重置、与维表关联、多 Stream 与并发消费、基表 schema change / 分区变更 / 删表对 Stream 的影响、监控与故障恢复，以及常见错误对照。"
+    "description": "Doris Table Stream 进阶：分区级消费位点与 LAG、按分区分批消费、@snapshot() 快照与 @reset() 重置、与维表一致性关联、并发消费、基表 DDL 对 Stream 的影响、监控恢复与错误对照。",
+    "keywords": [
+        "Table Stream 进阶",
+        "table_stream_consumption",
+        "LAG",
+        "CONSUMPTION_STATUS",
+        "分区级消费位点",
+        "按分区消费",
+        "@snapshot()",
+        "@reset()",
+        "快照读取",
+        "全量重刷",
+        "增量关联维表",
+        "并发消费",
+        "target offset already consumed",
+        "cloud_table_stream_max_partitions_per_insert",
+        "IS_STALE",
+        "STALE_REASON",
+        "DROP STREAM FORCE",
+        "Stream 监控告警",
+        "消费故障恢复",
+        "基表 schema change 对 Stream 的影响"
+    ]
 }
 ---
 
 <!-- 知识类型: 操作指南 + 运维手册 -->
 <!-- 适用场景: 大表按分区分批消费 / 增量关联维表 / 下游重建 / 消费链路运维 -->
 
-本文假设你已经读过 [Table Stream 基础](table-stream.md)，示例沿用其中的 `orders` 表和 `orders_stream`。
+本文假设你已经读过 [Table Stream 基础](table-stream)，示例沿用其中的 `orders` 表和 `orders_stream`。
+
+## 适用场景
+
+<!-- 知识类型: 文档导航 -->
+
+| 你想做 | 看哪一节 |
+|---|---|
+| 看每个分区消费到哪了、积压多少；大表只消费活跃分区 | [分区级消费位点](#分区级消费位点) |
+| 消费前对账、重建损坏的下游表 | [快照读取 @snapshot()](#快照读取-snapshot) |
+| 全量重刷下游，然后从当前位置继续增量 | [重置 @reset()](#重置-reset) |
+| 订单增量关联用户表，且维表口径与消费节奏对齐 | [与维表关联](#与维表关联) |
+| 多个下游各自消费、一条语句消费多张表、并行消费 | [多 Stream 与并发消费](#多-stream-与并发消费) |
+| 基表加列、加分区、TRUNCATE、REPLACE、DROP 之后 Stream 会怎样 | [基表变更的影响](#基表变更的影响) |
+| 配置积压告警、消费任务失败后怎么办 | [监控与故障恢复](#监控与故障恢复) |
+| 查某条报错的原因和处理 | [常见错误对照](#常见错误对照) |
 
 ## 分区级消费位点
+
+<!-- 知识类型: 行为规则 + 运维观测 -->
+<!-- 适用场景: 查看消费进度 / 大表按分区分批消费 -->
 
 Stream 的消费位点按基表分区维护，`information_schema.table_stream_consumption` 每行对应一个分区：
 
@@ -64,13 +104,16 @@ WHERE __DORIS_STREAM_CHANGE_TYPE_COL__ IN ('APPEND', 'UPDATE_AFTER');
 
 ## 快照读取 @snapshot()
 
+<!-- 知识类型: 行为规则 + 操作示例 -->
+<!-- 适用场景: 消费前对账 / 重建下游 / 读取变更前的基表镜像 -->
+
 `<stream>@snapshot()` 返回基表在 Stream **当前消费位点**处的镜像，也就是"本轮待消费的变更发生之前"基表的样子：
 
 ```sql
 SELECT order_id, status, amount FROM orders_stream@snapshot() ORDER BY order_id;
 ```
 
-以 [Table Stream 基础](table-stream.md#消费类型) 中的数据为例，创建 Stream 时基表有订单 1、2、3，之后发生了更新 1、删除 2、新增 4 等变更但尚未消费。此时 `@snapshot()` 返回的仍是订单 1（更新前）、2、3，而普通读取返回这些变更。两者的关系是：**快照 + 待消费的变更 = 基表当前状态**。
+以 [Table Stream 基础](table-stream#消费类型) 中的数据为例，创建 Stream 时基表有订单 1、2、3，之后发生了更新 1、删除 2、新增 4 等变更但尚未消费。此时 `@snapshot()` 返回的仍是订单 1（更新前）、2、3，而普通读取返回这些变更。两者的关系是：**快照 + 待消费的变更 = 基表当前状态**。
 
 `@snapshot()` 的特点：
 
@@ -81,11 +124,16 @@ SELECT order_id, status, amount FROM orders_stream@snapshot() ORDER BY order_id;
 
 典型用途：
 
-- **对账**：消费前先把 `@snapshot()` 的结果与下游表比对，确认下游与上一轮消费后的基表状态一致，再消费本轮变更。
-- **重建下游**：下游表损坏时，用 `@snapshot()` 恢复到消费位点对应的状态，再正常消费后续变更，不会漏掉或重复处理位点之后的变更。
-- **增量关联中的"变更前镜像"**：见下文 [与维表关联](#与维表关联)。
+| 用途 | 做法 |
+|---|---|
+| 对账 | 消费前先把 `@snapshot()` 的结果与下游表比对，确认下游与上一轮消费后的基表状态一致，再消费本轮变更 |
+| 重建下游 | 下游表损坏时，用 `@snapshot()` 恢复到消费位点对应的状态，再正常消费后续变更，不会漏掉或重复处理位点之后的变更 |
+| 增量关联中的"变更前镜像" | 见下文 [与维表关联](#与维表关联) |
 
 ## 重置 @reset()
+
+<!-- 知识类型: 行为规则 + 操作示例 -->
+<!-- 适用场景: 全量重刷下游 / 跳过积压的历史变更 -->
 
 `<stream>@reset()` 返回基表**当前**的全量镜像。用普通 `SELECT` 读取它只是查看；用 `INSERT INTO ... SELECT FROM <stream>@reset()` 消费它，会把 Stream 所有分区的位点推进到当前，之后 Stream 只输出这次消费之后的变更：
 
@@ -107,7 +155,22 @@ SELECT COUNT(*) FROM orders_stream;   -- 0
 
 与 `@snapshot()` 一样，`@reset()` 不提供 `__DORIS_STREAM_*` 虚拟列。
 
+### 三种读取方式对比
+
+<!-- 知识类型: 对比说明 -->
+
+| | `<stream>` | `<stream>@snapshot()` | `<stream>@reset()` |
+|---|---|---|---|
+| 返回内容 | 消费位点之后的变更 | 消费位点处的基表镜像 | 基表当前的全量镜像 |
+| 普通 `SELECT` 是否推进位点 | 否 | 否 | 否 |
+| `INSERT INTO ... SELECT` 是否推进位点 | 是，推进到本次读取的上界 | 否 | 是，所有分区推进到当前 |
+| `__DORIS_STREAM_*` 虚拟列 | 有 | 无 | 无 |
+| 典型用途 | 增量消费 | 对账、重建下游、增量关联时的变更前镜像 | 全量重刷、跳过积压 |
+
 ## 与维表关联
+
+<!-- 知识类型: 操作示例 -->
+<!-- 适用场景: 增量数据关联维表 / 维表口径与消费节奏对齐 -->
 
 Stream 可以直接和其它表 JOIN，此时维表读到的是它当前的数据：
 
@@ -121,9 +184,11 @@ WHERE o.__DORIS_STREAM_CHANGE_TYPE_COL__ IN ('APPEND', 'UPDATE_AFTER');
 
 如果维表自身也在变化，而你需要的是与消费节奏对齐的维表状态，可以为维表也创建一个 Stream，并在同一个消费任务里配合使用：
 
-- `users_stream@snapshot()`：上一轮消费时的维表镜像。
-- `users_stream`：上一轮到现在维表的变更。
-- `users_stream@reset()`：当前的维表镜像。
+| 读取方式 | 读到的维表状态 |
+|---|---|
+| `users_stream@snapshot()` | 上一轮消费时的维表镜像 |
+| `users_stream` | 上一轮到现在维表的变更 |
+| `users_stream@reset()` | 当前的维表镜像 |
 
 例如订单增量关联"上一轮消费时"的用户信息，同时单独处理用户表自身的变更：
 
@@ -139,12 +204,20 @@ WHERE o.__DORIS_STREAM_CHANGE_TYPE_COL__ IN ('APPEND', 'UPDATE_AFTER');
 
 ## 多 Stream 与并发消费
 
-- **一张基表多个 Stream**：每个 Stream 独立维护位点，互不影响。不同下游可以各建一个 Stream，按各自的节奏消费。
-- **一条语句消费多个 Stream**：例如把两张表的变更 UNION 后写入同一张目标表，所有涉及的 Stream 的位点在同一个事务里推进。
-- **同一个 Stream 多个消费者**：两个会话同时消费同一个 Stream 的同一个分区时，后提交的事务失败并回滚，报 `target offset already consumed`。请保证一个 Stream 的每个分区同一时刻只有一个消费者；需要并行时，按分区拆分任务，或者为每个消费者单独创建 Stream。
-- **消费与写入并发**：消费 Stream 时基表可以正常写入。消费语句读取的是它开始时已提交的变更，之后提交的写入留到下一轮。
+<!-- 知识类型: 行为规则 -->
+<!-- 适用场景: 多个下游 / 并行消费 / 消费与写入并发 -->
+
+| 场景 | 行为 | 建议 |
+|---|---|---|
+| 一张基表多个 Stream | 每个 Stream 独立维护位点，互不影响 | 不同下游可以各建一个 Stream，按各自的节奏消费 |
+| 一条语句消费多个 Stream | 例如把两张表的变更 UNION 后写入同一张目标表，所有涉及的 Stream 的位点在同一个事务里推进 | - |
+| 同一个 Stream 多个消费者 | 两个会话同时消费同一个 Stream 的同一个分区时，后提交的事务失败并回滚，报 `target offset already consumed` | 保证一个 Stream 的每个分区同一时刻只有一个消费者；需要并行时，按分区拆分任务，或者为每个消费者单独创建 Stream |
+| 消费与写入并发 | 消费 Stream 时基表可以正常写入。消费语句读取的是它开始时已提交的变更，之后提交的写入留到下一轮 | - |
 
 ## 基表变更的影响
+
+<!-- 知识类型: 行为规则 -->
+<!-- 适用场景: 基表 DDL 前评估对 Stream 的影响 -->
 
 | 基表操作 | 对 Stream 的影响 |
 |---|---|
@@ -158,61 +231,43 @@ WHERE o.__DORIS_STREAM_CHANGE_TYPE_COL__ IN ('APPEND', 'UPDATE_AFTER');
 | `DROP TABLE` 基表 | Stream 仍然保留，但无法再读取。请用 `DROP STREAM ... FORCE` 删除 |
 | `DROP DATABASE` | 库内的 Stream 一并删除。位于其它库、以本库的表为基表的 Stream 会保留，同样需要 `FORCE` 删除 |
 
-不允许在开启 Row Binlog 的基表上执行的 DDL（如 `MODIFY COLUMN`）见 [Row Binlog](row-binlog.md#对表-ddl-的约束)。
+不允许在开启 Row Binlog 的基表上执行的 DDL（如 `MODIFY COLUMN`）见 [Row Binlog](row-binlog#对表-ddl-的约束)。
 
 ## 监控与故障恢复
 
+<!-- 知识类型: 运维手册 -->
+<!-- 适用场景: 消费链路告警 / 消费任务失败处理 -->
+
 ### 监控
 
-- **积压**：定期查询 `information_schema.table_stream_consumption` 的 `LAG`，对长时间不为 `0` 或持续增长的分区告警。
-- **状态**：`information_schema.table_streams` 的 `ENABLED`、`IS_STALE`、`STALE_REASON` 反映 Stream 是否可用。当前版本 Row Binlog 不会自动清理，Stream 不会因为长期不消费而失效；自动清理能力上线后，变更记录已被清理的 Stream 会被标记为 stale，需要通过 `@reset()` 重新对齐。
-- **消费历史**：`LAST_CONSUMPTION_TIME` 可用于判断消费任务是否按计划运行。
+| 关注点 | 数据来源 | 说明 |
+|---|---|---|
+| 积压 | `information_schema.table_stream_consumption` 的 `LAG` | 定期查询，对长时间不为 `0` 或持续增长的分区告警 |
+| 状态 | `information_schema.table_streams` 的 `ENABLED`、`IS_STALE`、`STALE_REASON` | 反映 Stream 是否可用。当前版本 Row Binlog 不会自动清理，Stream 不会因为长期不消费而失效；自动清理能力上线后，变更记录已被清理的 Stream 会被标记为 stale，需要通过 `@reset()` 重新对齐 |
+| 消费历史 | `information_schema.table_stream_consumption` 的 `LAST_CONSUMPTION_TIME` | 判断消费任务是否按计划运行 |
 
 ### 故障恢复
 
-- **消费语句失败**：位点不变，直接重跑即可，不会漏掉变更。
-- **消费成功但调度系统没记录到**：如果重跑，本轮读到的是下一批变更，不会重复消费上一批。要让重复执行完全无副作用，目标表建议使用 Unique Key 模型（按主键写入天然幂等）。
-- **下游数据错误需要重建**：用 `@snapshot()` 恢复到消费位点对应的状态后继续增量消费；或者用 `@reset()` 全量重刷并把位点推进到当前。
-- **FE 重启、主从切换**：位点持久化在元数据中，重启后继续消费。
+| 场景 | 处理 |
+|---|---|
+| 消费语句失败 | 位点不变，直接重跑即可，不会漏掉变更 |
+| 消费成功但调度系统没记录到 | 如果重跑，本轮读到的是下一批变更，不会重复消费上一批。要让重复执行完全无副作用，目标表建议使用 Unique Key 模型（按主键写入天然幂等） |
+| 下游数据错误需要重建 | 用 `@snapshot()` 恢复到消费位点对应的状态后继续增量消费；或者用 `@reset()` 全量重刷并把位点推进到当前 |
+| FE 重启、主从切换 | 位点持久化在元数据中，重启后继续消费 |
 
 ## 常见错误对照
 
-- `Table Stream is experimental. Please set enable_table_stream=true to enable it.`
+<!-- 知识类型: 故障排查 -->
 
-    原因：FE 未开启 `enable_table_stream`。处理：修改 `fe.conf` 并重启 FE。
-
-- `Insert plan with Table stream failed. should enable binlog feature in FE config.`
-
-    原因：FE 未开启 `enable_feature_binlog`。处理：修改 `fe.conf` 并重启 FE。
-
-- `Base Olap table ... need to enable row binlog for table stream`
-
-    原因：基表未开启 Row Binlog。处理：重建基表并开启 `binlog.enable` + `binlog.format = ROW`。
-
-- `MIN_DELTA table stream requires base mow table to enable binlog.need_historical_value=true`
-
-    原因：`min_delta` / 默认类型要求 before 镜像。处理：基表开启 `binlog.need_historical_value`，或改用 `append_only`。
-
-- `not supported type: xxx`
-
-    原因：`type` 取值不合法。处理：使用 `append_only` / `min_delta` / `detail`。
-
-- `target offset already consumed`
-
-    原因：并发消费同一分区，本事务提交时位点已被推进。处理：重跑即可读到新的一批；避免并发消费。
-
-- `Cloud Table Stream consumption only supports a normal INSERT into a local OLAP table`
-
-    原因：存算分离模式下在显式事务、Group Commit 中消费，或目标不是内表。处理：改用普通 `INSERT INTO ... SELECT`。
-
-- `Cloud Table Stream consumes N partitions, exceeding cloud_table_stream_max_partitions_per_insert=...`
-
-    原因：单条语句涉及分区过多。处理：按 `PARTITION` 分批消费，或调大该配置。
-
-- `Cloud Table Stream only supports DROP STREAM ... FORCE`
-
-    原因：存算分离模式下删除 Stream 未加 `FORCE`。处理：使用 `DROP STREAM ... FORCE`。
-
-- `Unknown column '__DORIS_STREAM_CHANGE_TYPE_COL__' ...`
-
-    原因：在 `@snapshot()` / `@reset()` 上引用虚拟列。处理：镜像读取不提供虚拟列。
+| 错误信息 | 原因 | 处理 |
+|---|---|---|
+| `Table Stream is experimental. Please set enable_table_stream=true to enable it.` | FE 未开启 `enable_table_stream` | 修改 `fe.conf` 并重启 FE |
+| `Insert plan with Table stream failed. should enable binlog feature in FE config.` | FE 未开启 `enable_feature_binlog` | 修改 `fe.conf` 并重启 FE |
+| `Base Olap table ... need to enable row binlog for table stream` | 基表未开启 Row Binlog | 重建基表并开启 `binlog.enable` + `binlog.format = ROW` |
+| `MIN_DELTA table stream requires base mow table to enable binlog.need_historical_value=true` | `min_delta` / 默认类型要求 before 镜像 | 基表开启 `binlog.need_historical_value`，或改用 `append_only` |
+| `not supported type: xxx` | `type` 取值不合法 | 使用 `append_only` / `min_delta` / `detail` |
+| `target offset already consumed` | 并发消费同一分区，本事务提交时位点已被推进 | 重跑即可读到新的一批；避免并发消费 |
+| `Cloud Table Stream consumption only supports a normal INSERT into a local OLAP table` | 存算分离模式下在显式事务、Group Commit 中消费，或目标不是内表 | 改用普通 `INSERT INTO ... SELECT` |
+| `Cloud Table Stream consumes N partitions, exceeding cloud_table_stream_max_partitions_per_insert=...` | 单条语句涉及分区过多 | 按 `PARTITION` 分批消费，或调大该配置 |
+| `Cloud Table Stream only supports DROP STREAM ... FORCE` | 存算分离模式下删除 Stream 未加 `FORCE` | 使用 `DROP STREAM ... FORCE` |
+| `Unknown column '__DORIS_STREAM_CHANGE_TYPE_COL__' ...` | 在 `@snapshot()` / `@reset()` 上引用虚拟列 | 镜像读取不提供虚拟列 |

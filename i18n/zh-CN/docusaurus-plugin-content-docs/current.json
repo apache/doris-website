@@ -112,7 +112,7 @@
     "description": "The label for category Data Update & Delete in sidebar docs"
   },
   "sidebar.docs.category.Change Data & Table Stream": {
-    "message": "变更数据与增量消费",
+    "message": "数据变更与增量消费",
     "description": "The label for category Change Data & Table Stream in sidebar docs"
   },
   "sidebar.docs.category.Table Stream": {

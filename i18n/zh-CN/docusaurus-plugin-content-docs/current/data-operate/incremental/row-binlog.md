@@ -2,26 +2,63 @@
 {
     "title": "Row Binlog",
     "language": "zh-CN",
-    "description": "Doris Row Binlog 为内表记录行级变更：如何在建表时开启、各属性含义、支持的表模型与限制、变更记录模型（操作类型、before/after 镜像、TSO）、对 DDL 的约束、写入开销，以及用 binlog() 表函数排查。"
+    "description": "Doris Row Binlog 记录内表的行级增删改：建表时如何开启、binlog.* 属性、支持的表模型与限制、before/after 镜像与 TSO 的记录模型、对 DDL 的约束、写入开销与常见报错。",
+    "keywords": [
+        "Row Binlog",
+        "行级 Binlog",
+        "Doris binlog",
+        "binlog.enable",
+        "binlog.format ROW",
+        "binlog.need_historical_value",
+        "before 镜像",
+        "historical value",
+        "commit TSO",
+        "__DORIS_BINLOG_OP__",
+        "__DORIS_COMMIT_TSO_COL__",
+        "binlog() 表函数",
+        "Merge-on-Write 变更记录",
+        "Duplicate Key 变更记录",
+        "light schema change",
+        "enable_mow_light_delete",
+        "变更数据捕获",
+        "Doris CDC",
+        "Not allowed to perform current operation on Table With binlog",
+        "Only duplicate and mow table model support binlog"
+    ]
 }
 ---
 
 <!-- 知识类型: Feature 说明 + 参数参考 -->
 <!-- 适用场景: 为表开启行级变更记录 / 评估表模型是否支持 / 排查变更记录内容 -->
 
-Row Binlog 是 Doris 内表的行级变更日志。开启后，每一次写入产生的行级变化（新增、更新、删除）都会连同变更前后的值、提交时间戳一起持久化，作为 [Table Stream](table-stream.md) 和 [增量查询](incremental-query.md) 的数据来源。
+Row Binlog 是 Doris 内表的行级变更日志。开启后，每一次写入产生的行级变化（新增、更新、删除）都会连同变更前后的值、提交时间戳一起持久化，作为 [Table Stream](table-stream) 和 [增量查询](incremental-query) 的数据来源。
 
 :::caution 实验性功能
 该功能自 5.0.0 版本起提供，目前处于实验阶段，需要在 FE 中开启 `enable_feature_binlog = true`。
 :::
 
+## 前置条件
+
+<!-- 知识类型: 环境要求 -->
+
+- Doris 5.0.0 及以上版本。
+- FE 已在 `fe.conf` 中开启 `enable_feature_binlog = true`（非动态配置，需重启 FE）。
+- 表模型为 Duplicate Key，或 Unique Key Merge-on-Write（MoW）且没有 cluster key，详见 [支持范围与限制](#支持范围与限制)。
+- Row Binlog 只能在建表时开启，请在建表前完成评估。
+
 ## 基本概念
 
-- **变更记录**：基表每提交一个事务，其中每一行的变化都会形成一条记录，包含操作类型（新增 / 更新 / 删除）、变更后的值，以及可选的变更前的值（before 镜像）。
-- **提交时间戳（TSO）**：每个写入事务提交时从 FE 获取的全局单调递增时间戳，由物理时间（毫秒）和逻辑计数两部分组成。同一事务内的所有变更共享同一个 TSO。Table Stream 的消费位点、`@incr` 的时间窗口，都以 TSO 作为标尺。
-- **LSN**：同一事务内变更记录的序号，与 TSO 一起决定变更记录的先后顺序。
+<!-- 知识类型: 概念说明 -->
+
+| 概念 | 说明 |
+|---|---|
+| 变更记录 | 基表每提交一个事务，其中每一行的变化都会形成一条记录，包含操作类型（新增 / 更新 / 删除）、变更后的值，以及可选的变更前的值（before 镜像） |
+| 提交时间戳（TSO） | 每个写入事务提交时从 FE 获取的全局单调递增时间戳，由物理时间（毫秒）和逻辑计数两部分组成。同一事务内的所有变更共享同一个 TSO。Table Stream 的消费位点、`@incr` 的时间窗口，都以 TSO 作为标尺 |
+| LSN | 同一事务内变更记录的序号，与 TSO 一起决定变更记录的先后顺序 |
 
 ## 开启方式
+
+<!-- 知识类型: 操作步骤 + 配置参数 -->
 
 Row Binlog 只能在 `CREATE TABLE` 时通过表属性开启，且开启后不能关闭：
 
@@ -45,14 +82,16 @@ PROPERTIES (
 
 ### 属性
 
-| 属性 | 取值 / 默认值 / 建表后可否修改 | 说明 |
-|---|---|---|
-| `binlog.enable` | `true` / `false`<br />默认 `false`<br />开启后不可关闭 | 是否开启 binlog，需与 `binlog.format = "ROW"` 同时设置 |
-| `binlog.format` | `ROW`<br />不可修改 | 必须为 `ROW`，表示记录行级变更。取值区分大小写，小写的 `row` 会报 `Invalid binlog format value: row` |
-| `binlog.need_historical_value` | `true` / `false`<br />默认 `false`<br />不可修改 | 是否记录变更前的值（before 镜像）。仅 Unique Key MoW 表可设为 `true`；`min_delta` / `detail` 类型的 Table Stream 和 `MIN_DELTA` 增量查询都依赖它 |
-| `binlog.ttl_seconds` | 整数（秒）<br />默认 `86400`<br />可修改 | 保留时长。**当前版本不生效**，见 [保留与清理](#保留与清理) |
-| `binlog.max_bytes` | 整数（字节）<br />默认无限制<br />可修改 | 保留大小上限。**当前版本不生效** |
-| `binlog.max_history_nums` | 整数<br />默认无限制<br />可修改 | 保留条数上限。**当前版本不生效** |
+| 属性 | 取值 | 默认值 | 建表后可否修改 | 说明 |
+|---|---|---|---|---|
+| `binlog.enable` | `true` / `false` | `false` | 开启后不可关闭 | 是否开启 binlog，需与 `binlog.format = "ROW"` 同时设置 |
+| `binlog.format` | `ROW` | - | 不可修改 | 必须为 `ROW`，表示记录行级变更。取值区分大小写，小写的 `row` 会报 `Invalid binlog format value: row` |
+| `binlog.need_historical_value` | `true` / `false` | `false` | 不可修改 | 是否记录变更前的值（before 镜像）。仅 Unique Key MoW 表可设为 `true`；`min_delta` / `detail` 类型的 Table Stream 和 `MIN_DELTA` 增量查询都依赖它 |
+| `binlog.ttl_seconds` | 整数（秒） | `86400` | 可修改 | 保留时长。**当前版本不生效**，见 [保留与清理](#保留与清理) |
+| `binlog.max_bytes` | 整数（字节） | 无限制 | 可修改 | 保留大小上限。**当前版本不生效** |
+| `binlog.max_history_nums` | 整数 | 无限制 | 可修改 | 保留条数上限。**当前版本不生效** |
+
+### 不可变属性的修改
 
 在已有表上修改不可变属性会直接报错：
 
@@ -68,6 +107,8 @@ ALTER TABLE t_without_binlog SET ("binlog.format" = "ROW");
 ```
 
 对于已经存在且没有开启 Row Binlog 的表，需要新建一张开启 Row Binlog 的表并导入数据，再用 [`ALTER TABLE ... REPLACE WITH TABLE`](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE) 原子替换。
+
+### 查看属性
 
 `SHOW CREATE TABLE` 会完整展示 `binlog.*` 属性：
 
@@ -88,6 +129,9 @@ SHOW CREATE TABLE orders\G
 
 ## 支持范围与限制
 
+<!-- 知识类型: 支持矩阵 -->
+<!-- 适用场景: 建表前评估表模型 / 列类型是否支持 -->
+
 ### 表模型
 
 | 表模型 | 是否支持 | 说明 |
@@ -99,8 +143,10 @@ SHOW CREATE TABLE orders\G
 
 ### 列类型
 
-- 不支持 auto-increment 列，建表和 `ADD COLUMN` 都会被拒绝。
-- 不支持 VARIANT 类型的列，建表和 `ADD COLUMN` 都会被拒绝。
+| 限制 | 说明 |
+|---|---|
+| auto-increment 列 | 不支持，建表和 `ADD COLUMN` 都会被拒绝 |
+| VARIANT 类型的列 | 不支持，建表和 `ADD COLUMN` 都会被拒绝 |
 
 ### 部署模式
 
@@ -111,6 +157,9 @@ SHOW CREATE TABLE orders\G
 所有写入方式（`INSERT`、`UPDATE`、`DELETE`、Stream Load、Broker Load、Routine Load、Flink / Spark Connector 等）产生的变更都会被记录，包括部分列更新和灵活部分列更新。
 
 ## 变更记录模型
+
+<!-- 知识类型: 行为规则 -->
+<!-- 适用场景: 理解不同写入操作会产生什么变更记录 -->
 
 ### 操作类型与隐藏列
 
@@ -177,6 +226,9 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 
 ## 对表 DDL 的约束
 
+<!-- 知识类型: 行为规则 -->
+<!-- 适用场景: 评估开启 Row Binlog 后哪些 ALTER TABLE 还能执行 -->
+
 开启 Row Binlog 的表只允许下列 `ALTER TABLE` 操作：
 
 | 允许 | 说明 |
@@ -199,15 +251,21 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 - `BUILD INDEX`
 - 修改 bloom filter 相关属性
 
-开启了 Row Binlog 的表可以正常执行 `TRUNCATE TABLE`、备份恢复等表级操作。对基表结构和分区的变更如何影响已创建的 Table Stream，见 [Table Stream 进阶](table-stream-advanced.md#基表变更的影响)。
+开启了 Row Binlog 的表可以正常执行 `TRUNCATE TABLE`、备份恢复等表级操作。对基表结构和分区的变更如何影响已创建的 Table Stream，见 [Table Stream 进阶](table-stream-advanced#基表变更的影响)。
 
 ## 保留与清理
+
+<!-- 知识类型: 行为规则 -->
+<!-- 适用场景: 容量规划 -->
 
 当前版本不会自动清理 Row Binlog 数据，变更记录随表一直保留，`binlog.ttl_seconds`、`binlog.max_bytes`、`binlog.max_history_nums` 三个属性可以设置但暂不生效。基于时间和大小的自动清理正在开发中，将在下个版本支持。
 
 在此之前，请为开启 Row Binlog 的表预留额外的存储空间：变更记录的体积与写入量成正比，对开启 before 镜像的 MoW 表，每次更新会额外记录一份旧值。
 
 ## 写入开销
+
+<!-- 知识类型: 性能说明 -->
+<!-- 适用场景: 上线前评估导入吞吐 -->
 
 开启 Row Binlog 后，每次写入需要额外生成并持久化变更记录；对 MoW 表，更新和删除还需要读取旧值以生成 before 镜像。导入吞吐会有可感知的下降，实际幅度与表结构、更新比例有关。建议：
 
@@ -217,10 +275,13 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 
 ## 用 binlog() 表函数排查
 
+<!-- 知识类型: 故障排查 -->
+<!-- 适用场景: 确认某次写入是否产生了预期的变更 / 查看某个 key 的变更历史 -->
+
 `binlog()` 表函数返回一张表的原始变更记录，例如用来确认某次写入是否产生了预期的变更、查看某个 key 的变更历史。
 
 :::caution
-`binlog()` 主要用于内部调试，不建议在正式数据处理流程中使用。它的输出格式和参数可能随版本变化，正式的增量消费请使用 [Table Stream](table-stream.md) 或 [`@incr`](incremental-query.md)。
+`binlog()` 主要用于内部调试，不建议在正式数据处理流程中使用。它的输出格式和参数可能随版本变化，正式的增量消费请使用 [Table Stream](table-stream) 或 [`@incr`](incremental-query)。
 :::
 
 ```sql
@@ -243,3 +304,18 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 | `tablet` | 否 | tablet ID，多个用逗号分隔，默认全部 tablet |
 
 `binlog()` 直接读取存储的原始记录，不做任何折叠或过滤，返回的 `__DORIS_BINLOG_OP__` 使用原始编码（`0` 新增、`1` 更新、`2` 删除）。完整语法见 [BINLOG 表函数](../../sql-manual/sql-functions/table-valued-functions/binlog)。
+
+## 常见错误对照
+
+<!-- 知识类型: 故障排查 -->
+
+| 错误信息 | 原因 | 处理 |
+|---|---|---|
+| `Invalid binlog format value: row` | `binlog.format` 使用了小写 `row` | 取值区分大小写，改为大写 `ROW` |
+| `not support change binlog format from STATEMENT_AND_SNAPSHOT to ROW` | 对已有表用 `ALTER TABLE` 开启 Row Binlog | Row Binlog 只能在建表时开启。新建开启 Row Binlog 的表并导入数据，再用 `ALTER TABLE ... REPLACE WITH TABLE` 原子替换 |
+| `can't disable binlog when format is [Row]` | 尝试在已开启 Row Binlog 的表上设置 `binlog.enable = false` | Row Binlog 开启后不可关闭 |
+| `not support change binlog.need_historical_value from true to false` | 尝试修改 `binlog.need_historical_value` | 该属性建表后不可修改 |
+| `Duplicate table model don't support record historical value` | Duplicate Key 表设置了 `binlog.need_historical_value = true` | Duplicate Key 表不支持 before 镜像，去掉该属性；需要 before 镜像时改用 Unique Key MoW 表 |
+| `Unique merge-on-write tables with cluster keys do not support binlog<Row>` | MoW 表带有 cluster key | 建表时不要指定 cluster key |
+| `Only duplicate and mow table model support binlog<Row>` | 表模型为 Aggregate Key 或 Unique Key Merge-on-Read | 改用 Duplicate Key 或 Unique Key MoW 表 |
+| `Not allowed to perform current operation on Table With binlog<row>` | 执行了 `MODIFY COLUMN`、`RENAME COLUMN`、`ORDER BY`、`BUILD INDEX` 或修改 bloom filter 属性等不允许的 DDL | 见 [对表 DDL 的约束](#对表-ddl-的约束) 中的允许清单 |

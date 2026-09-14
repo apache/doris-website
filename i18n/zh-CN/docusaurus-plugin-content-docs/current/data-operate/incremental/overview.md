@@ -1,8 +1,26 @@
 ---
 {
-    "title": "变更数据与增量消费概述",
+    "title": "数据变更与增量消费概述",
     "language": "zh-CN",
-    "description": "Doris 5.0 起支持记录内表的行级变更（Row Binlog），并通过 Table Stream 按位点增量消费变更、用 @incr 按时间窗口查询增量，本文介绍这组能力解决的问题、典型场景、能力矩阵与前置条件。"
+    "description": "Doris 5.0 如何读取内表的行级变更：Row Binlog 记录增删改，Table Stream 按位点不重不漏地增量消费，@incr 按时间窗口查询增量。含场景、表模型矩阵、选型与前置条件。",
+    "keywords": [
+        "Doris 增量消费",
+        "Doris 数据变更",
+        "Row Binlog",
+        "行级 Binlog",
+        "Table Stream",
+        "@incr 增量查询",
+        "增量 ETL",
+        "下游表同步",
+        "变更审计",
+        "CDC",
+        "Change Data Capture",
+        "UPDATE_BEFORE UPDATE_AFTER",
+        "append_only min_delta detail",
+        "enable_feature_binlog",
+        "enable_table_stream",
+        "Merge-on-Write"
+    ]
 }
 ---
 
@@ -20,15 +38,21 @@
 
 ## 解决什么问题
 
+<!-- 知识类型: 问题背景 -->
+
 在 Doris 内部做增量处理时，用户通常会遇到这些问题：
 
-- **下游只想拿增量，拿不到**：上游表每天有大量更新和删除，下游报表、宽表、聚合表只能定期全量重算，或者依赖业务方在数据里维护 `update_time` 字段。
-- **更新和删除不可见**：Unique Key 表的更新会直接覆盖旧值，删除的数据也会消失，事后无法知道"改了什么、删了什么"。
-- **多张表的增量口径对不齐**：用增量数据关联维表时，维表是"现在"的状态，增量是"过去一段时间"的状态，两者口径不一致。
+| 问题 | 没有变更记录时 | 有了 Row Binlog 之后 |
+|---|---|---|
+| 下游只想拿增量，拿不到 | 上游表每天有大量更新和删除，下游报表、宽表、聚合表只能定期全量重算，或者依赖业务方在数据里维护 `update_time` 字段 | Table Stream 只返回两次消费之间的变化，下游按变化增量处理 |
+| 更新和删除不可见 | Unique Key 表的更新会直接覆盖旧值，删除的数据也会消失，事后无法知道"改了什么、删了什么" | 每一行的新增、更新（含更新前后的值）、删除都被记录下来 |
+| 多张表的增量口径对不齐 | 用增量数据关联维表时，维表是"现在"的状态，增量是"过去一段时间"的状态，两者口径不一致 | 用 `<stream>@snapshot()` 读取与消费位点对齐的维表镜像 |
 
 Row Binlog 把每一行的新增、更新（含更新前后的值）、删除都记录下来，并带上全局单调递增的提交时间戳；Table Stream 和增量查询则以不同的方式读取这些记录。
 
 ## 两层能力
+
+<!-- 知识类型: 架构说明 -->
 
 ```text
  INSERT / UPDATE / DELETE / Stream Load / ...
@@ -44,43 +68,41 @@ Row Binlog 把每一行的新增、更新（含更新前后的值）、删除都
          offset-based)               time window)
 ```
 
-| 能力 | 是否需要建对象 / 谁来记录读到哪 | 适合 |
-|---|---|---|
-| Table Stream | 需要 `CREATE STREAM`<br />Doris 按分区维护消费位点 | 持续的增量 ETL、下游同步、消费必须不重不漏 |
-| 增量查询 `@incr` | 不需要<br />用户自己指定时间窗口 | 临时分析、外部调度系统自己管理位点 |
+| 能力 | 是否需要建对象 | 谁来记录读到哪 | 适合 |
+|---|---|---|---|
+| Table Stream | 需要 `CREATE STREAM` | Doris 按分区维护消费位点 | 持续的增量 ETL、下游同步、消费必须不重不漏 |
+| 增量查询 `@incr` | 不需要 | 用户自己指定时间窗口 | 临时分析、外部调度系统自己管理位点 |
 
 ## 典型场景
 
-**1. 增量同步到下游表**
+<!-- 知识类型: 场景说明 -->
+<!-- 适用场景: 增量同步下游表 / 只追加日志 / 变更审计回放 / 增量关联维表 -->
 
-订单表每天有大量状态更新。创建一个 `min_delta` 类型的 Table Stream，定时执行 `INSERT INTO 下游表 SELECT ... FROM 订单表的 stream`，每次只处理两次执行之间的净变化：新增的订单、状态变化的订单（带变更前后的值）、被删除的订单。读取变更和写入下游在一个事务内完成，失败自动回滚、不会漏消费或重复消费。见 [Table Stream 基础](table-stream.md)。
-
-**2. 只追加的日志、事件表**
-
-对于只有新增没有更新的明细表，使用 `append_only` 类型的 Stream，每次只拿新写入的行，开销最小。见 [Table Stream 基础](table-stream.md#消费类型)。
-
-**3. 变更审计与回放**
-
-需要保留每一次修改的完整轨迹时，使用 `detail` 类型的 Stream，或用 `@incr` 的 `DETAIL` 模式按时间窗口导出逐条变更，落到审计表。见 [增量查询](incremental-query.md)。
-
-**4. 增量数据关联维表时的口径对齐**
-
-消费订单增量时需要关联用户表。用 `用户表的 stream@snapshot()` 读取与消费位点对齐的用户表镜像，避免"新订单关联到了旧用户信息"或者反过来。见 [Table Stream 进阶](table-stream-advanced.md#快照读取-snapshot)。
+| 场景 | 推荐方式 | 做法 | 详见 |
+|---|---|---|---|
+| 增量同步到下游表 | Table Stream，`min_delta` 类型 | 订单表每天有大量状态更新。创建一个 `min_delta` 类型的 Table Stream，定时执行 `INSERT INTO 下游表 SELECT ... FROM 订单表的 stream`，每次只处理两次执行之间的净变化：新增的订单、状态变化的订单（带变更前后的值）、被删除的订单。读取变更和写入下游在一个事务内完成，失败自动回滚、不会漏消费或重复消费 | [Table Stream 基础](table-stream) |
+| 只追加的日志、事件表 | Table Stream，`append_only` 类型 | 对于只有新增没有更新的明细表，每次只拿新写入的行，开销最小 | [消费类型](table-stream#消费类型) |
+| 变更审计与回放 | Table Stream `detail` 类型，或 `@incr` 的 `DETAIL` 模式 | 需要保留每一次修改的完整轨迹时，按时间窗口或按消费位点逐条导出变更，落到审计表 | [增量查询](incremental-query) |
+| 增量数据关联维表时的口径对齐 | `<stream>@snapshot()` | 消费订单增量时需要关联用户表。用 `用户表的 stream@snapshot()` 读取与消费位点对齐的用户表镜像，避免"新订单关联到了旧用户信息"或者反过来 | [快照读取](table-stream-advanced#快照读取-snapshot) |
 
 ## 能力一览
 
 ### 表模型支持
 
-| 表模型 | Row Binlog / before 镜像 | 可用的变更类型 |
-|---|---|---|
-| Duplicate Key | 支持<br />不支持 before 镜像 | 仅 APPEND |
-| Unique Key（Merge-on-Write，无 cluster key） | 支持<br />支持 before 镜像（`binlog.need_historical_value = true`） | APPEND / UPDATE_BEFORE / UPDATE_AFTER / DELETE |
-| Unique Key（Merge-on-Read） | 不支持 | - |
-| Aggregate Key | 不支持 | - |
+<!-- 知识类型: 支持矩阵 -->
 
-其它限制（auto-increment 列、VARIANT 列、schema change 范围等）见 [Row Binlog](row-binlog.md#支持范围与限制)。
+| 表模型 | Row Binlog | before 镜像 | 可用的变更类型 |
+|---|---|---|---|
+| Duplicate Key | 支持 | 不支持 | 仅 APPEND |
+| Unique Key（Merge-on-Write，无 cluster key） | 支持 | 支持（`binlog.need_historical_value = true`） | APPEND / UPDATE_BEFORE / UPDATE_AFTER / DELETE |
+| Unique Key（Merge-on-Read） | 不支持 | - | - |
+| Aggregate Key | 不支持 | - | - |
+
+其它限制（auto-increment 列、VARIANT 列、schema change 范围等）见 [Row Binlog](row-binlog#支持范围与限制)。
 
 ### 消费类型选型
+
+<!-- 知识类型: 选型指南 -->
 
 | 你需要 | 选择 | 说明 |
 |---|---|---|
@@ -91,6 +113,9 @@ Row Binlog 把每一行的新增、更新（含更新前后的值）、删除都
 `min_delta` 和 `detail` 中的 UPDATE_BEFORE / DELETE 需要 before 镜像，因此基表必须是 MoW 表且开启 `binlog.need_historical_value`。
 
 ## 前置条件
+
+<!-- 知识类型: 环境要求 -->
+<!-- 适用场景: 上线前检查 / 功能开启 -->
 
 1. **版本**：Doris 5.0.0 及以上。
 2. **FE 配置**：在 `fe.conf` 中开启以下两项并重启 FE（两项均为非动态配置）：
@@ -109,12 +134,27 @@ Row Binlog 把每一行的新增、更新（含更新前后的值）、删除都
 开启 Row Binlog 后，每次写入需要额外生成并持久化变更记录，对 MoW 表还需要读取旧值，导入吞吐会有可感知的下降。建议只对确实需要增量消费的表开启，并在上线前用真实负载评估。
 :::
 
+## 常见问题
+
+<!-- 知识类型: FAQ -->
+
+| 问题 | 回答 |
+|---|---|
+| 已有的表能否开启 Row Binlog？ | 不能。Row Binlog 只能在建表时开启，需要新建一张开启 Row Binlog 的表并导入数据，见 [Row Binlog](row-binlog#开启方式) |
+| Table Stream 和 `@incr` 怎么选？ | 持续的增量 ETL、要求不重不漏，用 Table Stream；临时分析、回溯某段时间的变更、外部系统已有自己的位点管理，用 `@incr`，见 [与 Table Stream 的区别](incremental-query#与-table-stream-的区别) |
+| 创建 Stream 报 `Table Stream is experimental. Please set enable_table_stream=true to enable it.` | FE 未开启 `enable_table_stream`，修改 `fe.conf` 后重启 FE |
+| 存算分离模式能用吗？ | Row Binlog 与 Table Stream 可以；`@incr` 请在存算一体模式下使用 |
+| 开启 Row Binlog 对写入有什么影响？ | 每次写入要额外生成并持久化变更记录，MoW 表还要读取旧值，导入吞吐会有可感知的下降。只对需要增量消费的表开启，上线前用真实负载评估 |
+| 变更记录会自动清理吗？ | 当前版本不会自动清理，需要为开启 Row Binlog 的表预留存储空间，见 [保留与清理](row-binlog#保留与清理) |
+
 ## 文档导读
+
+<!-- 知识类型: 文档导航 -->
 
 | 文档 | 内容 |
 |---|---|
-| [快速上手](quick-start.md) | 10 分钟走通建表、建 Stream、写入、查看变更、消费的完整流程 |
-| [Row Binlog](row-binlog.md) | 开启方式、属性、支持范围、变更记录模型、对 DDL 的约束、开销与排查 |
-| [增量查询](incremental-query.md) | `@incr` 时间窗口查询、三种增量模式 |
-| [Table Stream 基础](table-stream.md) | 创建与管理、三种消费类型、初始数据、查询与消费的区别、虚拟列 |
-| [Table Stream 进阶](table-stream-advanced.md) | 分区级位点、快照与重置、一致性关联、并发消费、基表变更的影响、监控与故障恢复 |
+| [快速上手](quick-start) | 10 分钟走通建表、建 Stream、写入、查看变更、消费的完整流程 |
+| [Row Binlog](row-binlog) | 开启方式、属性、支持范围、变更记录模型、对 DDL 的约束、开销与排查 |
+| [增量查询](incremental-query) | `@incr` 时间窗口查询、三种增量模式 |
+| [Table Stream 基础](table-stream) | 创建与管理、三种消费类型、初始数据、查询与消费的区别、虚拟列 |
+| [Table Stream 进阶](table-stream-advanced) | 分区级位点、快照与重置、一致性关联、并发消费、基表变更的影响、监控与故障恢复 |

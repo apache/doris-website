@@ -2,26 +2,63 @@
 {
     "title": "Row Binlog",
     "language": "en",
-    "description": "Doris Row Binlog records row-level changes of internal tables: how to enable it at table creation, what each property means, supported table models and limitations, the change record model (operation types, before/after images, TSO), DDL restrictions, write overhead, and troubleshooting with the binlog() table function."
+    "description": "Doris Row Binlog records row-level inserts, updates and deletes: enabling it at table creation, binlog.* properties, supported table models, DDL limits, errors.",
+    "keywords": [
+        "Row Binlog",
+        "row-level binlog",
+        "Doris binlog",
+        "binlog.enable",
+        "binlog.format ROW",
+        "binlog.need_historical_value",
+        "before image",
+        "historical value",
+        "commit TSO",
+        "__DORIS_BINLOG_OP__",
+        "__DORIS_COMMIT_TSO_COL__",
+        "binlog() table function",
+        "Merge-on-Write change records",
+        "Duplicate Key change records",
+        "light schema change",
+        "enable_mow_light_delete",
+        "change data capture",
+        "Doris CDC",
+        "Not allowed to perform current operation on Table With binlog",
+        "Only duplicate and mow table model support binlog"
+    ]
 }
 ---
 
 <!-- Knowledge type: Feature description + Parameter reference -->
 <!-- Use cases: Enabling row-level change recording on a table / Checking whether a table model is supported / Inspecting change records -->
 
-Row Binlog is the row-level change log of Doris internal tables. Once enabled, every row-level change produced by a write (insert, update, delete) is persisted together with the values before and after the change and the commit timestamp. It is the data source of [Table Stream](table-stream.md) and [Incremental Query](incremental-query.md).
+Row Binlog is the row-level change log of Doris internal tables. Once enabled, every row-level change produced by a write (insert, update, delete) is persisted together with the values before and after the change and the commit timestamp. It is the data source of [Table Stream](table-stream) and [Incremental Query](incremental-query).
 
 :::caution Experimental feature
 This feature is available since version 5.0.0 and is experimental. It requires `enable_feature_binlog = true` in the FE configuration.
 :::
 
+## Prerequisites
+
+<!-- Knowledge type: Environment requirements -->
+
+- Doris 5.0.0 or later.
+- `enable_feature_binlog = true` in `fe.conf` on the FE (not a dynamic configuration; the FE must be restarted).
+- A Duplicate Key table, or a Unique Key Merge-on-Write (MoW) table without cluster keys; see [Supported scope and limitations](#supported-scope-and-limitations).
+- Row Binlog can only be enabled at table creation, so evaluate it before creating the table.
+
 ## Basic concepts
 
-- **Change record**: every time a transaction commits on the base table, each changed row produces one record containing the operation type (insert / update / delete), the values after the change, and optionally the values before the change (the before image).
-- **Commit timestamp (TSO)**: a globally monotonic timestamp obtained from the FE when a write transaction commits, composed of a physical part (milliseconds) and a logical counter. All changes of one transaction share the same TSO. Table Stream offsets and `@incr` time windows are both measured in TSO.
-- **LSN**: the sequence number of a change record within its transaction. Together with the TSO it defines the order of change records.
+<!-- Knowledge type: Concept description -->
+
+| Concept | Description |
+|---|---|
+| Change record | Every time a transaction commits on the base table, each changed row produces one record containing the operation type (insert / update / delete), the values after the change, and optionally the values before the change (the before image) |
+| Commit timestamp (TSO) | A globally monotonic timestamp obtained from the FE when a write transaction commits, composed of a physical part (milliseconds) and a logical counter. All changes of one transaction share the same TSO. Table Stream offsets and `@incr` time windows are both measured in TSO |
+| LSN | The sequence number of a change record within its transaction. Together with the TSO it defines the order of change records |
 
 ## Enabling Row Binlog
+
+<!-- Knowledge type: Operational steps + Configuration parameters -->
 
 Row Binlog can only be enabled through table properties in `CREATE TABLE`, and cannot be disabled afterwards:
 
@@ -45,14 +82,16 @@ PROPERTIES (
 
 ### Properties
 
-| Property | Values / default / changeable after creation | Description |
-|---|---|---|
-| `binlog.enable` | `true` / `false`<br />default `false`<br />cannot be disabled once enabled | Whether binlog is enabled; must be set together with `binlog.format = "ROW"` |
-| `binlog.format` | `ROW`<br />not changeable | Must be `ROW`, meaning row-level changes are recorded. The value is case-sensitive; a lowercase `row` fails with `Invalid binlog format value: row` |
-| `binlog.need_historical_value` | `true` / `false`<br />default `false`<br />not changeable | Whether the values before a change (before image) are recorded. Only Unique Key MoW tables can set it to `true`. `min_delta` / `detail` Table Streams and `MIN_DELTA` incremental queries depend on it |
-| `binlog.ttl_seconds` | integer (seconds)<br />default `86400`<br />changeable | Retention period. **Has no effect in the current version**, see [Retention and cleanup](#retention-and-cleanup) |
-| `binlog.max_bytes` | integer (bytes)<br />default unlimited<br />changeable | Retention size limit. **Has no effect in the current version** |
-| `binlog.max_history_nums` | integer<br />default unlimited<br />changeable | Retention count limit. **Has no effect in the current version** |
+| Property | Values | Default | Changeable after creation | Description |
+|---|---|---|---|---|
+| `binlog.enable` | `true` / `false` | `false` | Cannot be disabled once enabled | Whether binlog is enabled; must be set together with `binlog.format = "ROW"` |
+| `binlog.format` | `ROW` | - | No | Must be `ROW`, meaning row-level changes are recorded. The value is case-sensitive; a lowercase `row` fails with `Invalid binlog format value: row` |
+| `binlog.need_historical_value` | `true` / `false` | `false` | No | Whether the values before a change (before image) are recorded. Only Unique Key MoW tables can set it to `true`. `min_delta` / `detail` Table Streams and `MIN_DELTA` incremental queries depend on it |
+| `binlog.ttl_seconds` | integer (seconds) | `86400` | Yes | Retention period. **Has no effect in the current version**, see [Retention and cleanup](#retention-and-cleanup) |
+| `binlog.max_bytes` | integer (bytes) | unlimited | Yes | Retention size limit. **Has no effect in the current version** |
+| `binlog.max_history_nums` | integer | unlimited | Yes | Retention count limit. **Has no effect in the current version** |
+
+### Changing immutable properties
 
 Changing an immutable property on an existing table fails immediately:
 
@@ -68,6 +107,8 @@ ALTER TABLE t_without_binlog SET ("binlog.format" = "ROW");
 ```
 
 For an existing table without Row Binlog, create a new table with Row Binlog enabled, load the data, and swap the two atomically with [`ALTER TABLE ... REPLACE WITH TABLE`](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE).
+
+### Viewing the properties
 
 `SHOW CREATE TABLE` lists all `binlog.*` properties:
 
@@ -88,6 +129,9 @@ SHOW CREATE TABLE orders\G
 
 ## Supported scope and limitations
 
+<!-- Knowledge type: Support matrix -->
+<!-- Use cases: Checking table model / column type support before creating the table -->
+
 ### Table models
 
 | Table model | Supported | Notes |
@@ -99,8 +143,10 @@ SHOW CREATE TABLE orders\G
 
 ### Column types
 
-- Auto-increment columns are not supported; both `CREATE TABLE` and `ADD COLUMN` reject them.
-- VARIANT columns are not supported; both `CREATE TABLE` and `ADD COLUMN` reject them.
+| Restriction | Notes |
+|---|---|
+| Auto-increment columns | Not supported; both `CREATE TABLE` and `ADD COLUMN` reject them |
+| VARIANT columns | Not supported; both `CREATE TABLE` and `ADD COLUMN` reject them |
 
 ### Deployment modes
 
@@ -111,6 +157,9 @@ Row Binlog can be enabled in both the integrated storage-compute mode and the co
 Changes produced by every write method (`INSERT`, `UPDATE`, `DELETE`, Stream Load, Broker Load, Routine Load, the Flink / Spark connectors, and so on) are recorded, including partial column updates and flexible partial column updates.
 
 ## Change record model
+
+<!-- Knowledge type: Behavior rules -->
+<!-- Use cases: Understanding which change records each write operation produces -->
 
 ### Operation types and hidden columns
 
@@ -177,6 +226,9 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 
 ## DDL restrictions
 
+<!-- Knowledge type: Behavior rules -->
+<!-- Use cases: Checking which ALTER TABLE operations remain available with Row Binlog enabled -->
+
 Only the following `ALTER TABLE` operations are allowed on a table with Row Binlog enabled:
 
 | Allowed | Notes |
@@ -199,15 +251,21 @@ Other operations are rejected with `Not allowed to perform current operation on 
 - `BUILD INDEX`
 - Modifying bloom filter properties
 
-Table-level operations such as `TRUNCATE TABLE` and backup / restore work as usual on tables with Row Binlog. How schema and partition changes of the base table affect existing Table Streams is described in [Table Stream Advanced](table-stream-advanced.md#effect-of-base-table-changes).
+Table-level operations such as `TRUNCATE TABLE` and backup / restore work as usual on tables with Row Binlog. How schema and partition changes of the base table affect existing Table Streams is described in [Table Stream Advanced](table-stream-advanced#effect-of-base-table-changes).
 
 ## Retention and cleanup
+
+<!-- Knowledge type: Behavior rules -->
+<!-- Use cases: Capacity planning -->
 
 The current version does not clean up Row Binlog data automatically: change records are kept for the lifetime of the table, and the three properties `binlog.ttl_seconds`, `binlog.max_bytes`, and `binlog.max_history_nums` can be set but have no effect yet. Automatic cleanup by time and size is under development and will be supported in the next version.
 
 Until then, reserve extra storage for tables with Row Binlog: the volume of change records grows with the write volume, and for MoW tables with the before image enabled, every update stores an additional copy of the old values.
 
 ## Write overhead
+
+<!-- Knowledge type: Performance notes -->
+<!-- Use cases: Evaluating load throughput before going to production -->
 
 With Row Binlog enabled, every write additionally generates and persists change records; on MoW tables, updates and deletes also read the old values to build the before image. Load throughput drops noticeably, and the actual amount depends on the table schema and the update ratio. Recommendations:
 
@@ -217,10 +275,13 @@ With Row Binlog enabled, every write additionally generates and persists change 
 
 ## Troubleshooting with the binlog() table function
 
+<!-- Knowledge type: Troubleshooting -->
+<!-- Use cases: Confirming whether a write produced the expected changes / Inspecting the change history of a key -->
+
 The `binlog()` table function returns the raw change records of a table, for example to confirm whether a write produced the expected changes or to inspect the change history of a key.
 
 :::caution
-`binlog()` is mainly for internal debugging and is not recommended in production data pipelines. Its output format and parameters may change between versions; use [Table Stream](table-stream.md) or [`@incr`](incremental-query.md) for real incremental consumption.
+`binlog()` is mainly for internal debugging and is not recommended in production data pipelines. Its output format and parameters may change between versions; use [Table Stream](table-stream) or [`@incr`](incremental-query) for real incremental consumption.
 :::
 
 ```sql
@@ -243,3 +304,18 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 | `tablet` | No | Tablet IDs separated by commas; defaults to all tablets |
 
 `binlog()` reads the stored raw records without any folding or filtering, and its `__DORIS_BINLOG_OP__` uses the raw encoding (`0` insert, `1` update, `2` delete). The full syntax is in [BINLOG table function](../../sql-manual/sql-functions/table-valued-functions/binlog).
+
+## Common errors
+
+<!-- Knowledge type: Troubleshooting -->
+
+| Error message | Cause | Action |
+|---|---|---|
+| `Invalid binlog format value: row` | `binlog.format` was given in lowercase | The value is case-sensitive; use uppercase `ROW` |
+| `not support change binlog format from STATEMENT_AND_SNAPSHOT to ROW` | `ALTER TABLE` was used to enable Row Binlog on an existing table | Row Binlog can only be enabled at table creation. Create a new table with Row Binlog enabled, load the data, and swap the two with `ALTER TABLE ... REPLACE WITH TABLE` |
+| `can't disable binlog when format is [Row]` | `binlog.enable = false` was set on a table with Row Binlog enabled | Row Binlog cannot be disabled once enabled |
+| `not support change binlog.need_historical_value from true to false` | `binlog.need_historical_value` was modified | The property cannot be changed after creation |
+| `Duplicate table model don't support record historical value` | `binlog.need_historical_value = true` was set on a Duplicate Key table | Duplicate Key tables have no before image; remove the property, or use a Unique Key MoW table if the before image is needed |
+| `Unique merge-on-write tables with cluster keys do not support binlog<Row>` | The MoW table has cluster keys | Create the table without cluster keys |
+| `Only duplicate and mow table model support binlog<Row>` | The table model is Aggregate Key or Unique Key Merge-on-Read | Use a Duplicate Key or Unique Key MoW table |
+| `Not allowed to perform current operation on Table With binlog<row>` | A disallowed DDL was run, such as `MODIFY COLUMN`, `RENAME COLUMN`, `ORDER BY`, `BUILD INDEX`, or modifying bloom filter properties | See the allowed list in [DDL restrictions](#ddl-restrictions) |

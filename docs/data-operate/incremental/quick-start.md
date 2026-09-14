@@ -2,25 +2,58 @@
 {
     "title": "Quick Start",
     "language": "en",
-    "description": "A 10-minute walkthrough of change data consumption in Doris: create a table with Row Binlog enabled, create a Table Stream, write a few batches, view the changes, consume them into a downstream table, and check the consumption offset."
+    "description": "10-minute walkthrough of Doris Row Binlog and Table Stream: create a table with Row Binlog, create a Stream, write data, view changes, consume them downstream.",
+    "keywords": [
+        "Doris Table Stream quick start",
+        "Row Binlog example",
+        "CREATE STREAM",
+        "binlog.enable",
+        "binlog.format ROW",
+        "binlog.need_historical_value",
+        "min_delta",
+        "show_initial_rows",
+        "__DORIS_STREAM_CHANGE_TYPE_COL__",
+        "__DORIS_STREAM_SEQUENCE_COL__",
+        "INSERT INTO SELECT from stream",
+        "table_stream_consumption",
+        "consumption offset LAG",
+        "incremental consumption tutorial",
+        "Doris CDC example"
+    ]
 }
 ---
 
 <!-- Knowledge type: Operations guide -->
 <!-- Use cases: First use of Row Binlog / Table Stream -->
 
-This page walks through the basic usage of Row Binlog and Table Stream with an orders table. All you need is a MySQL client and about 10 minutes.
+This page walks through the basic usage of Row Binlog and Table Stream with an orders table: record the inserts, updates, and deletes of the orders, then consume them exactly-once into a downstream table. All you need is a MySQL client and about 10 minutes.
 
-## Step 1: Enable the feature
+## Prerequisites
 
-Add the following to `fe.conf` on every FE and restart the FEs:
+<!-- Knowledge type: Environment requirements -->
 
-```text
-enable_feature_binlog = true
-enable_table_stream = true
-```
+- Doris 5.0.0 or later.
+- Add the following to `fe.conf` on every FE and restart the FEs (neither is a dynamic configuration):
 
-## Step 2: Create a table with Row Binlog enabled
+    ```text
+    enable_feature_binlog = true
+    enable_table_stream = true
+    ```
+
+- A MySQL client that can connect to Doris.
+
+## Overview of the steps
+
+1. Create the `orders` table with Row Binlog enabled and write the first batch of data.
+2. Create a `min_delta` Table Stream on `orders`.
+3. Write a second batch containing an update, a delete, and inserts.
+4. View the changes through the Stream and understand the change type of each row.
+5. Consume the changes into a downstream table with `INSERT INTO ... SELECT`.
+6. Check the consumption progress in `information_schema.table_stream_consumption`.
+
+## Step 1: Create a table with Row Binlog enabled
+
+<!-- Knowledge type: Operational steps -->
 
 Row Binlog can only be enabled at table creation. Create a Unique Key Merge-on-Write table and turn on `binlog.need_historical_value`, so that updates and deletes also record the values before the change:
 
@@ -53,7 +86,11 @@ INSERT INTO orders VALUES
     (3, 'created', 300.00);
 ```
 
-## Step 3: Create a Table Stream
+## Step 2: Create a Table Stream
+
+<!-- Knowledge type: Operational steps -->
+
+Create a Stream on the `orders` table; the changes of `orders` are read and consumed through it from now on:
 
 ```sql
 CREATE STREAM orders_stream ON TABLE orders
@@ -76,7 +113,11 @@ SELECT * FROM orders_stream;
 Empty set
 ```
 
-## Step 4: Write the second batch of changes
+## Step 3: Write the second batch of changes
+
+<!-- Knowledge type: Operational steps -->
+
+This batch covers four cases: an update, a delete, an insert, and an insert followed by a delete:
 
 ```sql
 -- Update order 1 (writing the same key into a Unique Key table is an update)
@@ -90,7 +131,9 @@ INSERT INTO orders VALUES (5, 'created', 500.00);
 DELETE FROM orders WHERE order_id = 5;
 ```
 
-## Step 5: View the changes
+## Step 4: View the changes
+
+<!-- Knowledge type: Operational steps + Result interpretation -->
 
 Query through the Stream with two virtual columns: `__DORIS_STREAM_CHANGE_TYPE_COL__` is the change type and `__DORIS_STREAM_SEQUENCE_COL__` is the commit timestamp (TSO) of the change. Virtual columns are not included in `SELECT *` and must be listed explicitly.
 
@@ -113,16 +156,20 @@ ORDER BY order_id, change_type DESC;
 +----------+---------+--------+---------------+--------------------+
 ```
 
-Compared with the operations in step 4:
+Compared with the operations in step 3:
 
-- The update of order 1 is emitted as an `UPDATE_BEFORE` (value before the update) and an `UPDATE_AFTER` (value after the update) pair.
-- The deletion of order 2 is emitted as a `DELETE` carrying the value before deletion.
-- Order 4 is a new key and is emitted as `APPEND`.
-- Order 5 was inserted and then deleted between two consumptions; its net change is empty, so `min_delta` emits nothing.
+| Operation in step 3 | Output of the Stream |
+|---|---|
+| Update order 1 | An `UPDATE_BEFORE` (value before the update) and an `UPDATE_AFTER` (value after the update) pair |
+| Delete order 2 | One `DELETE` carrying the value before deletion |
+| Insert order 4 | One `APPEND` (a new key) |
+| Insert order 5, then delete it | The net change between two consumptions is empty, so `min_delta` emits nothing |
 
 Run the same query again and you get exactly the same result: **a plain SELECT only reads the changes and never advances the consumption offset.**
 
-## Step 6: Consume the changes
+## Step 5: Consume the changes
+
+<!-- Knowledge type: Operational steps -->
 
 Use `INSERT INTO ... SELECT ... FROM <stream>` to write the changes into a downstream table. This statement advances the consumption offset in the same transaction as the write:
 
@@ -177,7 +224,9 @@ FROM orders_stream ORDER BY change_type DESC;
 +----------+---------+---------------+
 ```
 
-## Step 7: Check the consumption progress
+## Step 6: Check the consumption progress
+
+<!-- Knowledge type: Operational steps + Operations monitoring -->
 
 `information_schema.table_stream_consumption` shows the consumption offset and backlog of each Stream per partition:
 
@@ -195,12 +244,14 @@ WHERE DB_NAME = 'demo' AND STREAM_NAME = 'orders_stream';
 +---------------+--------+--------------------+-----------+-----------------------+
 ```
 
-- `UNIT`: the consumption unit, i.e. a partition of the base table. `orders` has no explicit partitions, so it has a single partition named after the table.
-- `CONSUMPTION_STATUS`: the TSO the partition has been consumed up to.
-- `LAG`: the difference between the latest committed TSO of the partition and the consumed TSO; `0` means no backlog.
-- `LAST_CONSUMPTION_TIME`: the time of the most recent consumption (millisecond timestamp); `-1` means never consumed.
+| Column | Meaning |
+|---|---|
+| `UNIT` | The consumption unit, i.e. a partition of the base table. `orders` has no explicit partitions, so it has a single partition named after the table |
+| `CONSUMPTION_STATUS` | The TSO the partition has been consumed up to |
+| `LAG` | The difference between the latest committed TSO of the partition and the consumed TSO; `0` means no backlog |
+| `LAST_CONSUMPTION_TIME` | The time of the most recent consumption (millisecond timestamp); `-1` means never consumed |
 
-Run the `INSERT INTO orders_changes SELECT ...` from step 6 again and `LAG` goes back to `0`.
+Run the `INSERT INTO orders_changes SELECT ...` from step 5 again and `LAG` goes back to `0`.
 
 ## Clean up
 
@@ -210,9 +261,22 @@ DROP TABLE orders_changes;
 DROP TABLE orders;
 ```
 
+## FAQ
+
+<!-- Knowledge type: Troubleshooting -->
+
+| Problem | Cause and action |
+|---|---|
+| Creating the Stream fails with `Table Stream is experimental. Please set enable_table_stream=true to enable it.` | `enable_table_stream` is not enabled on the FE, or the FE was not restarted after editing `fe.conf`. Follow [Prerequisites](#prerequisites) |
+| The Stream is empty right after creation | With `show_initial_rows = false`, the data that already exists when the Stream is created is not emitted as changes. Write new changes and query again |
+| `SELECT * FROM orders_stream` shows no change type | Virtual columns are not included in `SELECT *`; list `__DORIS_STREAM_CHANGE_TYPE_COL__` and `__DORIS_STREAM_SEQUENCE_COL__` explicitly |
+| The same changes keep coming back on every query | A plain `SELECT` only reads changes and never advances the offset. They stop coming back once consumed with `INSERT INTO ... SELECT ... FROM orders_stream` |
+| Enabling Row Binlog on an existing table | Row Binlog can only be enabled at table creation; create a new table with Row Binlog enabled and reload the data, see [Row Binlog](row-binlog#enabling-row-binlog) |
+| `LAST_CONSUMPTION_TIME` shows `-1` | The partition has never been consumed |
+
 ## Next steps
 
-- The differences between the three consumption types, the meaning of `show_initial_rows`, and the transactional semantics of reading versus consuming: [Table Stream Basics](table-stream.md)
-- Consuming partition by partition, snapshot reads, joining dimension tables, and the effect of base table DDL on Streams: [Table Stream Advanced](table-stream-advanced.md)
-- Row Binlog properties, supported scope, and limitations: [Row Binlog](row-binlog.md)
-- Reading changes by time window without creating a Stream: [Incremental Query](incremental-query.md)
+- The differences between the three consumption types, the meaning of `show_initial_rows`, and the transactional semantics of reading versus consuming: [Table Stream Basics](table-stream)
+- Consuming partition by partition, snapshot reads, joining dimension tables, and the effect of base table DDL on Streams: [Table Stream Advanced](table-stream-advanced)
+- Row Binlog properties, supported scope, and limitations: [Row Binlog](row-binlog)
+- Reading changes by time window without creating a Stream: [Incremental Query](incremental-query)

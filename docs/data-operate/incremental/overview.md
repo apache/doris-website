@@ -2,7 +2,25 @@
 {
     "title": "Change Data and Incremental Consumption Overview",
     "language": "en",
-    "description": "Starting from Doris 5.0, internal tables can record row-level changes (Row Binlog), which can be consumed incrementally through Table Streams or queried by time window with @incr. This page covers the problems these features solve, typical scenarios, the capability matrix, and prerequisites."
+    "description": "Row-level change data in Doris 5.0: Row Binlog records inserts, updates and deletes; Table Stream consumes them exactly-once; @incr queries them by time window.",
+    "keywords": [
+        "Doris incremental consumption",
+        "Doris change data",
+        "Row Binlog",
+        "row-level binlog",
+        "Table Stream",
+        "@incr incremental query",
+        "incremental ETL",
+        "downstream table sync",
+        "change auditing",
+        "CDC",
+        "Change Data Capture",
+        "UPDATE_BEFORE UPDATE_AFTER",
+        "append_only min_delta detail",
+        "enable_feature_binlog",
+        "enable_table_stream",
+        "Merge-on-Write"
+    ]
 }
 ---
 
@@ -20,15 +38,21 @@ This feature is available since version 5.0.0. It is experimental and disabled b
 
 ## What problems it solves
 
+<!-- Knowledge type: Problem background -->
+
 Incremental processing inside Doris usually runs into these problems:
 
-- **Downstream wants increments but cannot get them**: the upstream table receives many updates and deletes every day, so downstream reports, wide tables, and aggregate tables can only be recomputed in full, or rely on an `update_time` column maintained by the application.
-- **Updates and deletes are invisible**: an update on a Unique Key table overwrites the old value and a deleted row simply disappears, so there is no way to know afterwards what was changed or deleted.
-- **Increments of multiple tables do not line up**: when joining incremental data with a dimension table, the dimension table is in its "current" state while the increment covers "a period in the past".
+| Problem | Without change records | With Row Binlog |
+|---|---|---|
+| Downstream wants increments but cannot get them | The upstream table receives many updates and deletes every day, so downstream reports, wide tables, and aggregate tables can only be recomputed in full, or rely on an `update_time` column maintained by the application | A Table Stream returns only the changes between two consumptions, so downstream processes the increment |
+| Updates and deletes are invisible | An update on a Unique Key table overwrites the old value and a deleted row simply disappears, so there is no way to know afterwards what was changed or deleted | Every insert, update (with the values before and after), and delete of each row is recorded |
+| Increments of multiple tables do not line up | When joining incremental data with a dimension table, the dimension table is in its "current" state while the increment covers "a period in the past" | `<stream>@snapshot()` reads the dimension table image aligned with the consumption offset |
 
 Row Binlog records every insert, update (with values before and after the update), and delete of each row, together with a globally monotonic commit timestamp. Table Stream and incremental query read those records in different ways.
 
 ## Two layers
+
+<!-- Knowledge type: Architecture description -->
 
 ```text
  INSERT / UPDATE / DELETE / Stream Load / ...
@@ -45,43 +69,41 @@ Row Binlog records every insert, update (with values before and after the update
          offset-based)               time window)
 ```
 
-| Capability | Object needed / who tracks the position | Best for |
-|---|---|---|
-| Table Stream | `CREATE STREAM` required<br />Doris keeps a consumption offset per partition | Continuous incremental ETL, downstream sync, exactly-once consumption |
-| Incremental query `@incr` | Nothing to create<br />You choose the time window | Ad-hoc analysis, external schedulers that manage their own positions |
+| Capability | Object needed | Who tracks the position | Best for |
+|---|---|---|---|
+| Table Stream | `CREATE STREAM` required | Doris keeps a consumption offset per partition | Continuous incremental ETL, downstream sync, exactly-once consumption |
+| Incremental query `@incr` | Nothing to create | You choose the time window | Ad-hoc analysis, external schedulers that manage their own positions |
 
 ## Typical scenarios
 
-**1. Incremental sync to a downstream table**
+<!-- Knowledge type: Scenario description -->
+<!-- Use cases: Incremental sync to a downstream table / Append-only logs / Change auditing and replay / Joining dimension tables -->
 
-An orders table receives many status updates every day. Create a `min_delta` Table Stream and periodically run `INSERT INTO downstream SELECT ... FROM the orders stream`. Each run processes only the net changes between two executions: new orders, orders whose status changed (with the values before and after), and deleted orders. Reading the changes and writing the downstream table happen in one transaction; a failure rolls back automatically, so nothing is skipped or consumed twice. See [Table Stream Basics](table-stream.md).
-
-**2. Append-only logs and event tables**
-
-For detail tables that only receive inserts, use an `append_only` Stream to fetch only the newly written rows at minimal cost. See [Table Stream Basics](table-stream.md#consumption-types).
-
-**3. Change auditing and replay**
-
-When you need the full trail of every modification, use a `detail` Stream, or export row-by-row changes for a time window with the `DETAIL` mode of `@incr`, and land them in an audit table. See [Incremental Query](incremental-query.md).
-
-**4. Consistent joins between incremental data and dimension tables**
-
-Consuming order changes requires joining the users table. `users_stream@snapshot()` reads the image of the users table aligned with the consumption offset, so a new order is never joined with stale user information or vice versa. See [Table Stream Advanced](table-stream-advanced.md#snapshot-reads-snapshot).
+| Scenario | Recommended approach | How it works | See |
+|---|---|---|---|
+| Incremental sync to a downstream table | Table Stream, `min_delta` type | An orders table receives many status updates every day. Create a `min_delta` Table Stream and periodically run `INSERT INTO downstream SELECT ... FROM the orders stream`. Each run processes only the net changes between two executions: new orders, orders whose status changed (with the values before and after), and deleted orders. Reading the changes and writing the downstream table happen in one transaction; a failure rolls back automatically, so nothing is skipped or consumed twice | [Table Stream Basics](table-stream) |
+| Append-only logs and event tables | Table Stream, `append_only` type | For detail tables that only receive inserts, fetch only the newly written rows at minimal cost | [Consumption types](table-stream#consumption-types) |
+| Change auditing and replay | Table Stream `detail` type, or the `DETAIL` mode of `@incr` | When you need the full trail of every modification, export row-by-row changes by consumption offset or by time window and land them in an audit table | [Incremental Query](incremental-query) |
+| Consistent joins between incremental data and dimension tables | `<stream>@snapshot()` | Consuming order changes requires joining the users table. `users_stream@snapshot()` reads the image of the users table aligned with the consumption offset, so a new order is never joined with stale user information or vice versa | [Snapshot reads](table-stream-advanced#snapshot-reads-snapshot) |
 
 ## Capability matrix
 
 ### Table models
 
-| Table model | Row Binlog / before image | Available change types |
-|---|---|---|
-| Duplicate Key | Supported<br />No before image | APPEND only |
-| Unique Key (Merge-on-Write, without cluster key) | Supported<br />Before image supported (`binlog.need_historical_value = true`) | APPEND / UPDATE_BEFORE / UPDATE_AFTER / DELETE |
-| Unique Key (Merge-on-Read) | Not supported | - |
-| Aggregate Key | Not supported | - |
+<!-- Knowledge type: Support matrix -->
 
-Other restrictions (auto-increment columns, VARIANT columns, schema change scope, and so on) are listed in [Row Binlog](row-binlog.md#supported-scope-and-limitations).
+| Table model | Row Binlog | Before image | Available change types |
+|---|---|---|---|
+| Duplicate Key | Supported | Not supported | APPEND only |
+| Unique Key (Merge-on-Write, without cluster key) | Supported | Supported (`binlog.need_historical_value = true`) | APPEND / UPDATE_BEFORE / UPDATE_AFTER / DELETE |
+| Unique Key (Merge-on-Read) | Not supported | - | - |
+| Aggregate Key | Not supported | - | - |
+
+Other restrictions (auto-increment columns, VARIANT columns, schema change scope, and so on) are listed in [Row Binlog](row-binlog#supported-scope-and-limitations).
 
 ### Choosing a consumption type
+
+<!-- Knowledge type: Selection guide -->
 
 | You need | Choose | Notes |
 |---|---|---|
@@ -92,6 +114,9 @@ Other restrictions (auto-increment columns, VARIANT columns, schema change scope
 UPDATE_BEFORE and DELETE rows in `min_delta` and `detail` need before images, so the base table must be a MoW table with `binlog.need_historical_value` enabled.
 
 ## Prerequisites
+
+<!-- Knowledge type: Environment requirements -->
+<!-- Use cases: Pre-deployment check / Enabling the feature -->
 
 1. **Version**: Doris 5.0.0 or later.
 2. **FE configuration**: enable the following two items in `fe.conf` and restart the FE (neither is a dynamic configuration):
@@ -110,12 +135,27 @@ UPDATE_BEFORE and DELETE rows in `min_delta` and `detail` need before images, so
 With Row Binlog enabled, every write additionally generates and persists change records, and MoW tables also need to read the old values. Load throughput drops noticeably. Enable it only on tables that really need incremental consumption, and evaluate with a realistic workload before going to production.
 :::
 
+## FAQ
+
+<!-- Knowledge type: FAQ -->
+
+| Question | Answer |
+|---|---|
+| Can Row Binlog be enabled on an existing table? | No. Row Binlog can only be enabled at table creation; create a new table with Row Binlog enabled and reload the data, see [Row Binlog](row-binlog#enabling-row-binlog) |
+| Table Stream or `@incr`? | Continuous incremental ETL that must be exactly-once: Table Stream. Ad-hoc analysis, looking back at changes in a period, or an external system that already manages its own positions: `@incr`, see [Differences from Table Stream](incremental-query#differences-from-table-stream) |
+| Creating a Stream fails with `Table Stream is experimental. Please set enable_table_stream=true to enable it.` | `enable_table_stream` is not enabled on the FE; update `fe.conf` and restart the FE |
+| Does it work in the compute-storage decoupled mode? | Row Binlog and Table Stream do; use `@incr` in the integrated storage-compute mode for now |
+| How does Row Binlog affect writes? | Every write additionally generates and persists change records, and MoW tables also read the old values, so load throughput drops noticeably. Enable it only on tables that need incremental consumption and evaluate with a realistic workload |
+| Are change records cleaned up automatically? | Not in the current version; reserve extra storage for tables with Row Binlog, see [Retention and cleanup](row-binlog#retention-and-cleanup) |
+
 ## Reading guide
+
+<!-- Knowledge type: Navigation -->
 
 | Page | Content |
 |---|---|
-| [Quick Start](quick-start.md) | A 10-minute walkthrough: create the table, create the Stream, write data, view changes, consume |
-| [Row Binlog](row-binlog.md) | How to enable it, properties, supported scope, the change record model, DDL restrictions, overhead and troubleshooting |
-| [Incremental Query](incremental-query.md) | `@incr` time-window queries and the three incremental modes |
-| [Table Stream Basics](table-stream.md) | Creating and managing Streams, the three consumption types, initial rows, reading versus consuming, virtual columns |
-| [Table Stream Advanced](table-stream-advanced.md) | Partition-level offsets, snapshot and reset, consistent joins, concurrent consumption, the effect of base table changes, monitoring and recovery |
+| [Quick Start](quick-start) | A 10-minute walkthrough: create the table, create the Stream, write data, view changes, consume |
+| [Row Binlog](row-binlog) | How to enable it, properties, supported scope, the change record model, DDL restrictions, overhead and troubleshooting |
+| [Incremental Query](incremental-query) | `@incr` time-window queries and the three incremental modes |
+| [Table Stream Basics](table-stream) | Creating and managing Streams, the three consumption types, initial rows, reading versus consuming, virtual columns |
+| [Table Stream Advanced](table-stream-advanced) | Partition-level offsets, snapshot and reset, consistent joins, concurrent consumption, the effect of base table changes, monitoring and recovery |
