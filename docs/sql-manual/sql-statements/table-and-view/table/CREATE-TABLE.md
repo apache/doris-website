@@ -372,6 +372,9 @@ The functionality of creating synchronized materialized views with rollup is lim
 | enable_mow_light_delete | Whether to enable writing Delete predicate with Delete statements on Unique tables with Mow. If enabled, it will improve the performance of Delete statements, but partial column updates after Delete may result in some data errors. If disabled, it will reduce the performance of Delete statements to ensure correctness. The default value of this property is `false`. This property can only be enabled on Unique Merge-on-Write tables. |
 | Dynamic Partitioning Related Properties | For dynamic partitioning, refer to [Data Partitioning - Dynamic Partitioning](../../../../table-design/data-partitioning/dynamic-partitioning) |
 | enable_unique_key_skip_bitmap_column | Whether to enable the [Flexible Column Update feature](../../../../data-operate/update/partial-column-update.md#flexible-column-update) on Unique Merge-on-Write tables. This property can only be enabled on Unique Merge-on-Write tables. |
+| binlog.enable | Together with `binlog.format = "ROW"`, enables [Row Binlog](../../../../data-operate/incremental/row-binlog) on the table to record row-level changes for Table Stream consumption, `@incr` incremental queries, and time travel. Can only be enabled at table creation and cannot be disabled afterwards. Available since 5.0.0. |
+| binlog.format | `ROW` (case-sensitive), meaning row-level changes are recorded. Only Duplicate Key tables and Unique Key Merge-on-Write tables (without cluster keys) are supported; cannot be changed after creation. |
+| binlog.need_historical_value | Whether Row Binlog records the values before a change (the before image), default `false`. Only Unique Key Merge-on-Write tables can set it to `true`; `min_delta` / `detail` Table Streams and time travel on Merge-on-Write tables depend on it. Cannot be changed after creation. |
 
 ## Access Control Requirements
 

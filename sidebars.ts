@@ -471,6 +471,19 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
+            label: 'Change Data & Table Stream',
+            collapsed: true,
+            link: {type: 'doc', id: 'data-operate/incremental/overview'},
+            items: [
+                'data-operate/incremental/quick-start',
+                'data-operate/incremental/row-binlog',
+                'data-operate/incremental/incremental-query',
+                'data-operate/incremental/table-stream',
+                'data-operate/incremental/table-stream-advanced',
+            ],
+        },
+        {
+            type: 'category',
             label: 'Data Export',
             collapsed: true,
             link: {type: 'doc', id: 'data-operate/export/export-overview'},
@@ -1002,6 +1015,8 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/system-tables/information_schema/table_options',
                                 'admin-manual/system-tables/information_schema/table_privileges',
                                 'admin-manual/system-tables/information_schema/table_properties',
+                                'admin-manual/system-tables/information_schema/table_stream_consumption',
+                                'admin-manual/system-tables/information_schema/table_streams',
                                 'admin-manual/system-tables/information_schema/tables',
                                 'admin-manual/system-tables/information_schema/triggers',
                                 'admin-manual/system-tables/information_schema/user_privileges',
@@ -2243,6 +2258,7 @@ const sidebars: SidebarsConfig = {
                             label: 'Table Valued Functions',
                             items: [
                                 'sql-manual/sql-functions/table-valued-functions/backends',
+                                'sql-manual/sql-functions/table-valued-functions/binlog',
                                 'sql-manual/sql-functions/table-valued-functions/cdc-stream',
                                 'sql-manual/sql-functions/table-valued-functions/catalogs',
                                 'sql-manual/sql-functions/table-valued-functions/file',
@@ -2496,6 +2512,17 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/table-and-view/view/DROP-VIEW',
                                         'sql-manual/sql-statements/table-and-view/view/SHOW-CREATE-VIEW',
                                         'sql-manual/sql-statements/table-and-view/view/SHOW-VIEW',
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'Table Stream',
+                                    items: [
+                                        'sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM',
+                                        'sql-manual/sql-statements/table-and-view/stream/ALTER-STREAM',
+                                        'sql-manual/sql-statements/table-and-view/stream/DROP-STREAM',
+                                        'sql-manual/sql-statements/table-and-view/stream/SHOW-CREATE-STREAM',
+                                        'sql-manual/sql-statements/table-and-view/stream/SHOW-STREAMS',
                                     ],
                                 },
                                 {
