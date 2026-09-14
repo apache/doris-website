@@ -155,7 +155,7 @@ SELECT COUNT(*) FROM orders_stream;   -- 0
 
 与 `@snapshot()` 一样，`@reset()` 不提供 `__DORIS_STREAM_*` 虚拟列。
 
-### 三种读取方式对比
+## 三种读取方式对比
 
 <!-- 知识类型: 对比说明 -->
 
