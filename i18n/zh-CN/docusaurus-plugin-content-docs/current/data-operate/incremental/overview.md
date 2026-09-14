@@ -54,19 +54,7 @@ Row Binlog 把每一行的新增、更新（含更新前后的值）、删除都
 
 <!-- 知识类型: 架构说明 -->
 
-```text
- INSERT / UPDATE / DELETE / Stream Load / ...
-                     │
-                     ▼
- ┌──────────────────────────────────────────────────────┐
- │ Row Binlog: op type, before/after images, commit TSO │
- └──────────────────────────────────────────────────────┘
-              │                          │
-              ▼                          ▼
-        Table Stream                @incr query
-        (stateful,                  (stateless,
-         offset-based)               time window)
-```
+![增量消费的两层能力：Row Binlog 为 Table Stream 和增量查询提供变更记录](/images/next/data-operate/incremental/two-layers.png)
 
 | 能力 | 是否需要建对象 | 谁来记录读到哪 | 适合 |
 |---|---|---|---|
@@ -77,6 +65,8 @@ Row Binlog 把每一行的新增、更新（含更新前后的值）、删除都
 
 <!-- 知识类型: 场景说明 -->
 <!-- 适用场景: 增量同步下游表 / 只追加日志 / 变更审计回放 / 增量关联维表 -->
+
+![四类典型场景对应的增量消费方式](/images/next/data-operate/incremental/typical-scenarios.png)
 
 | 场景 | 推荐方式 | 做法 | 详见 |
 |---|---|---|---|

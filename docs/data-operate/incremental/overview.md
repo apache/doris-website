@@ -54,20 +54,7 @@ Row Binlog records every insert, update (with values before and after the update
 
 <!-- Knowledge type: Architecture description -->
 
-```text
- INSERT / UPDATE / DELETE / Stream Load / ...
-                     │
-                     ▼
- ┌──────────────────────────────────────────────────────┐
- │ Row Binlog (table-level switch, set at CREATE TABLE) │
- │ operation type, before/after images, commit TSO      │
- └──────────────────────────────────────────────────────┘
-              │                          │
-              ▼                          ▼
-        Table Stream                @incr query
-        (stateful,                  (stateless,
-         offset-based)               time window)
-```
+![Two layers of incremental consumption: Row Binlog feeds Table Stream and incremental queries](/images/next/data-operate/incremental/two-layers.png)
 
 | Capability | Object needed | Who tracks the position | Best for |
 |---|---|---|---|
@@ -78,6 +65,8 @@ Row Binlog records every insert, update (with values before and after the update
 
 <!-- Knowledge type: Scenario description -->
 <!-- Use cases: Incremental sync to a downstream table / Append-only logs / Change auditing and replay / Joining dimension tables -->
+
+![Recommended incremental consumption approach for four typical scenarios](/images/next/data-operate/incremental/typical-scenarios.png)
 
 | Scenario | Recommended approach | How it works | See |
 |---|---|---|---|
