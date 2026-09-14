@@ -31,7 +31,7 @@
 <!-- 知识类型: Feature 说明 + 参数参考 -->
 <!-- 适用场景: 为表开启行级变更记录 / 评估表模型是否支持 / 排查变更记录内容 -->
 
-Row Binlog 是 Doris 内表的行级变更日志。开启后，每一次写入产生的行级变化（新增、更新、删除）都会连同变更前后的值、提交时间戳一起持久化，作为 [Table Stream](table-stream) 和 [增量查询](incremental-query) 的数据来源。
+Row Binlog 是 Doris 内表的行级变更日志。开启后，每一次写入产生的行级变化（新增、更新、删除）都会连同变更前后的值、提交时间戳一起持久化，作为 [Table Stream](table-stream) 和 [增量查询](incremental-query) 的数据来源，也可以通过 [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector/incremental-read)（26.3.0 及以上版本）在 Flink 中消费。
 
 :::caution 实验性功能
 该功能自 5.0.0 版本起提供，目前处于实验阶段，需要在 FE 中开启 `enable_feature_binlog = true`。

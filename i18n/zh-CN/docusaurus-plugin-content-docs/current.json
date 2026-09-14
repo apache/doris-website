@@ -787,6 +787,10 @@
     "message": "数据集成",
     "description": "The label for category Data Integration in sidebar docs"
   },
+  "sidebar.docs.category.Flink Doris Connector": {
+    "message": "Flink Doris Connector",
+    "description": "The label for category Flink Doris Connector in sidebar docs"
+  },
   "sidebar.docs.category.Table Design": {
     "message": "表设计",
     "description": "The label for category Table Design in sidebar docs"
