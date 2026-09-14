@@ -136,7 +136,7 @@ Outfile 语句返回的结果，各个列的含义如下：
    | float                   | float     |
    | double                  | double    |
    | char / varchar / string | string    |
-   | uuid                    | string    |
+   | uuid                    | binary    |
    | decimal                 | decimal   |
    | struct                  | struct    |
    | map                     | map       |
@@ -160,13 +160,13 @@ Outfile 语句返回的结果，各个列的含义如下：
    | float                   | float32    |
    | double                  | float64    |
    | char / varchar / string | utf8       |
-   | uuid                    | utf8       |
+   | uuid                    | fixed_size_binary(16) |
    | decimal                 | decimal128 |
    | struct                  | struct     |
    | map                     | map        |
    | array                   | list       |
 
-UUID 值导出为小写标准文本；ORC 和 Parquet 中嵌套的 UUID 元素也存储为字符串。
+CSV 将 UUID 值导出为小写标准文本。Parquet 写入带 UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，ORC 写入 `BINARY` 并附带 Doris 专有的 `doris.logical_type=uuid` 属性，ARRAY、MAP 或 STRUCT 中嵌套的 UUID 元素同样如此。显式指定 ORC `schema` 属性时，UUID 列必须声明为 `binary`；声明为 `string` 等其他类型会被拒绝。
 
 ### 导出数据量和导出效率
 

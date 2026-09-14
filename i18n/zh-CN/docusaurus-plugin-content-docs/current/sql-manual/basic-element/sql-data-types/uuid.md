@@ -110,14 +110,20 @@ WHERE event_id = CAST('550e8400-e29b-41d4-a716-446655440000' AS UUID);
 
 CSV 输入使用 UUID 文本字段；JSON 输入使用 JSON 字符串或 `null`。标准格式和紧凑格式均可接受。需要显式选择默认值时，可将源字段按文本读取，在列映射中使用 `TO_UUID_OR_*` 函数。
 
+结构化接口传输的是 16 字节的值，而不是文本形式：Arrow IPC 与 Arrow Flight SQL 使用标准的 `arrow.uuid` 扩展，底层为 `fixed_size_binary(16)`；Parquet 和 ORC 导出则写入二进制值并附带类型元数据。`STRING` 列不受影响：恰好包含 UUID 文本的字符串列仍按文本传输和导出。
+
 | 接口或格式 | UUID 表示方式 |
 | --- | --- |
-| MySQL 协议 / Arrow Flight SQL | 标准文本；即使 Doris 列为 UUID，客户端也可能将结果类型显示为字符串 |
+| MySQL 协议 | 标准文本；即使 Doris 列为 UUID，客户端也可能将结果类型显示为字符串 |
+| Arrow Flight SQL | 原生 UUID，即基于 16 字节大端序 `fixed_size_binary(16)` 的标准 `arrow.uuid` 扩展，ARRAY、MAP 或 STRUCT 中嵌套的 UUID 元素同样如此。使用 Arrow Flight SQL JDBC 驱动时，列类型为 `Types.OTHER`，`getObject()` 返回 `java.util.UUID`，`getString()` 返回标准文本，`getBytes()` 返回 16 字节 |
 | CSV、JSON 和 Hive Text 输出 | 标准文本；JSON 将 UUID 表示为字符串 |
-| 通用 `OUTFILE` / `EXPORT` 的 Parquet 或 ORC 输出 | UUID 值（包括嵌套的 UUID 元素）以标准字符串导出；自动推断 Schema 不会保留原生类型 |
+| `OUTFILE` / `EXPORT` 导出 Parquet | 写入带 Parquet UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，使用标准大端字节序，嵌套的 UUID 元素同样如此。文件中保留了原生类型，但 TVF 的 Schema 推断仍将 UUID 叶子暴露为 `STRING`/`VARBINARY` |
+| `OUTFILE` / `EXPORT` 导出 ORC | 写入 `BINARY`，并附带 Doris 专有的 `doris.logical_type=uuid` 属性，嵌套的 UUID 元素同样如此。ORC 没有标准 UUID 类型，其他工具会将其视为普通二进制 |
 | 原生 Parquet UUID 输入 | 支持带 UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，使用标准大端字节序。TVF 的 Schema 推断保留由 `enable_mapping_varbinary` 控制的 STRING / VARBINARY 映射；标准 STRING 可用 `CAST(value AS UUID)` 转换，原始 VARBINARY 可用 `CAST(HEX(value) AS UUID)` 转换 |
+| ORC 输入 | 带 `doris.logical_type=uuid` 属性的 `BINARY` 列会还原为原生 UUID，嵌套元素同样如此，新旧两套 ORC Reader 均支持；此时 TVF 报告的列为 `uuid`、`array<uuid>`、`struct<k:uuid>`。不带该属性的其他 `BINARY` 和 `STRING` 列仍保持原 STRING 映射 |
 | Iceberg | Catalog 的 UUID 映射仍由 `enable.mapping.varbinary` 决定为 STRING / VARBINARY。两种映射均保留 16 字节原始值，使用 `CAST(HEX(value) AS UUID)` 转换为原生 UUID。向 Iceberg UUID 字段写入 Parquet 时保留 UUID 逻辑标记 |
 | ClickHouse JDBC Catalog | 将 ClickHouse UUID 映射为 Doris 原生 UUID；此前文档中的发布版本映射为 STRING |
+| Python UDF | SQL UUID 映射为 `uuid.UUID`，`NULL` 映射为 `None`，适用于标量、向量化（`list` 和 `pandas.Series`）、聚合和表函数，也适用于 ARRAY、MAP 或 STRUCT 中嵌套的 UUID 元素。返回类型为 UUID 的函数必须返回 `uuid.UUID` 对象或 `None` |
 | Java UDF | SQL UUID 映射为 `java.util.UUID`，也支持出现在受支持的复杂类型内部 |
 
 ## 最佳实践

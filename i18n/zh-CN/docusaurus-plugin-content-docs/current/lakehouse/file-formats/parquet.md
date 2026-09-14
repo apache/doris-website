@@ -33,7 +33,9 @@ Parquet `INT96` 存储日期和时间字段，但不包含时区标注。因此 
 
 支持读取带 UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，包括普通编码和字典编码，使用标准大端字节序。普通 Parquet TVF 在 `enable_mapping_varbinary=false` 时将其展示为标准 UUID 字符串，可通过 `CAST(value AS UUID)` 转换；设为 `true` 时保留 VARBINARY 原始字节，可通过 `CAST(HEX(value) AS UUID)` 转换。Iceberg Catalog 的 STRING/VARBINARY 映射均保留原始字节，应使用 HEX 路径。
 
-OUTFILE 和 EXPORT 导出 UUID 的类型映射见[导出文件列类型映射](../../data-operate/export/export-overview.md#导出文件列类型映射)。
+写入 Doris `UUID` 列（包括 ARRAY、MAP 或 STRUCT 中嵌套的 UUID 元素）时，输出为带 UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，因此识别该标记的其他引擎可以按 UUID 还原取值；Doris 自身读取这类文件时仍遵循上述 STRING / VARBINARY 映射。
+
+OUTFILE 和 EXPORT 导出 UUID 的完整类型映射见[导出文件列类型映射](../../data-operate/export/export-overview.md#导出文件列类型映射)。
 
 ## 支持的压缩格式
 

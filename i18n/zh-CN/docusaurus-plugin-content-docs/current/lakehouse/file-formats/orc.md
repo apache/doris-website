@@ -33,6 +33,14 @@ ORC 时间戳可以保存纳秒，而 Doris `DATETIMEV2` 和 `TIMESTAMPTZ` 最�
 
 `DATETIMEV2` 和 `TIMESTAMPTZ` 映射均使用该规则，包括向下一秒进位。行解码、统计信息转换和谓词下推使用一致的边界。当 ORC 统计信息的精度不足以准确表示舍入边界时，Doris 会保守地扩大裁剪边界。如果 `!=` 等时间戳谓词无法安全表示，Doris 会跳过对应的搜索条件，并在解码后的数据行上计算谓词。这可能降低该谓词的裁剪效果，但可以避免错误跳过有效数据。
 
+## UUID 类型映射
+
+Doris 写入 `UUID` 列（包括 ARRAY、MAP 或 STRUCT 中嵌套的 UUID 元素）时使用 `BINARY`，其中存放 16 字节的标准大端序值，并附加 `doris.logical_type=uuid` 属性标记为原生 UUID。ORC 没有标准 UUID 类型，因此其他工具只会看到普通二进制列，不具备 UUID 语义。显式指定 ORC `schema` 属性时，UUID 列必须声明为 `binary`；声明为 `string` 等其他类型会被拒绝。
+
+读取带 `doris.logical_type=uuid` 属性的 `BINARY` 列会还原为原生 UUID，嵌套元素同样如此，新旧两套 Reader 均支持，此时表值函数报告的列为 `uuid`、`array<uuid>` 或 `struct<k:uuid>`。不带该属性的 `BINARY` 和 `STRING` 列仍保持原 STRING 映射。
+
+OUTFILE 和 EXPORT 导出 UUID 的完整类型映射见[导出文件列类型映射](../../data-operate/export/export-overview.md#导出文件列类型映射)。
+
 ## 支持的压缩格式
 
 * umcomressed

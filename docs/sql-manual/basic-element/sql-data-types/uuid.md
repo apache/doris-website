@@ -110,14 +110,20 @@ The existing `IS_UUID()` accepts some text, such as canonical UUIDs enclosed in 
 
 For CSV input, provide UUID text as a field; for JSON input, provide it as a JSON string or `null`. Both canonical and compact text are accepted. To choose a fallback explicitly, load the source as text and use one of the `TO_UUID_OR_*` functions in the column mapping.
 
+Structured interfaces carry the 16-byte value rather than its text form: Arrow IPC and Arrow Flight SQL use the standard `arrow.uuid` extension over `fixed_size_binary(16)`, and Parquet and ORC exports write the binary value together with type metadata. `STRING` columns are unaffected: a string that happens to contain UUID text is still transferred and exported as text.
+
 | Interface or format | UUID representation |
 | --- | --- |
-| MySQL protocol / Arrow Flight SQL | Canonical text; a client may report a string type even when the Doris column is UUID |
+| MySQL protocol | Canonical text; a client may report a string type even when the Doris column is UUID |
+| Arrow Flight SQL | Native UUID as the standard `arrow.uuid` extension over a 16-byte big-endian `fixed_size_binary(16)` value, including UUID elements nested in ARRAY, MAP, or STRUCT. With the Arrow Flight SQL JDBC driver, the column type is `Types.OTHER`, `getObject()` returns `java.util.UUID`, `getString()` returns canonical text, and `getBytes()` returns the 16 bytes |
 | CSV, JSON, and Hive Text output | Canonical text; JSON represents UUID values as strings |
-| General `OUTFILE` / `EXPORT` in Parquet or ORC | UUID values, including nested UUID elements, are exported as canonical strings; the native type is not preserved by schema inference |
+| `OUTFILE` / `EXPORT` to Parquet | `FIXED_LEN_BYTE_ARRAY(16)` with the Parquet UUID logical annotation, in canonical big-endian byte order, including nested UUID elements. The file keeps the native type, but TVF schema inference still exposes UUID leaves as `STRING`/`VARBINARY` |
+| `OUTFILE` / `EXPORT` to ORC | `BINARY` with the Doris-specific `doris.logical_type=uuid` attribute, including nested UUID elements. ORC has no standard UUID type, so other tools see plain binary |
 | Native Parquet UUID input | Supports the UUID logical annotation on `FIXED_LEN_BYTE_ARRAY(16)`, in canonical big-endian byte order. TVF schema inference retains the existing STRING / VARBINARY mapping controlled by `enable_mapping_varbinary`; convert canonical STRING with `CAST(value AS UUID)`, or raw VARBINARY with `CAST(HEX(value) AS UUID)` |
+| ORC input | A `BINARY` column that carries the `doris.logical_type=uuid` attribute is read back as native UUID, including nested elements and in both ORC readers; the TVF reports `uuid`, `array<uuid>`, and `struct<k:uuid>` for such columns. Other ORC `BINARY` and `STRING` columns keep the existing STRING mapping |
 | Iceberg | Catalog UUID mapping remains STRING / VARBINARY according to `enable.mapping.varbinary`. Both mappings preserve the 16 raw bytes; use `CAST(HEX(value) AS UUID)` to convert to native UUID. Writes to Iceberg UUID fields preserve the UUID logical annotation in Parquet |
 | ClickHouse JDBC Catalog | ClickHouse UUID maps to native Doris UUID; earlier documented releases map it to STRING |
+| Python UDF | SQL UUID maps to `uuid.UUID`, and `NULL` maps to `None`, in scalar, vectorized (`list` and `pandas.Series`), aggregate, and table functions, including UUID elements nested in ARRAY, MAP, or STRUCT. A function that returns UUID must return a `uuid.UUID` object or `None` |
 | Java UDF | SQL UUID maps to `java.util.UUID`, including within supported complex types |
 
 ## Best practices
