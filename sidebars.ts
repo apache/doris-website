@@ -1507,6 +1507,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/gcd',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/lcm',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/xor',
+                                        'sql-manual/sql-functions/scalar-functions/numeric-functions/gamma',
                                     ],
                                 },
                                 {
