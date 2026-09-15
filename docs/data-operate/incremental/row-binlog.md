@@ -22,6 +22,8 @@
         "enable_mow_light_delete",
         "change data capture",
         "Doris CDC",
+        "Incremental View Maintenance",
+        "IVM",
         "Not allowed to perform current operation on Table With binlog",
         "Only duplicate and mow table model support binlog"
     ]
@@ -31,7 +33,7 @@
 <!-- Knowledge type: Feature description + Parameter reference -->
 <!-- Use cases: Enabling row-level change recording on a table / Checking whether a table model is supported / Inspecting change records -->
 
-Row Binlog is the row-level change log of Doris internal tables. Once enabled, every row-level change produced by a write (insert, update, delete) is persisted together with the values before and after the change and the commit timestamp. It is the data source of [Table Stream](table-stream) and [Incremental Query](incremental-query), and can also be consumed from Flink through the [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector/incremental-read) (Connector 26.3.0 or later).
+Row Binlog is the row-level change log of Doris internal tables. Once enabled, every row-level change produced by a write (insert, update, delete) is persisted together with the values before and after the change and the commit timestamp. It is the data source of [Table Stream](table-stream), [Incremental Query](incremental-query) and [Incremental View Maintenance (IVM)](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view), and can also be consumed from Flink through the [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector/incremental-read) (Connector 26.3.0 or later).
 
 :::caution Experimental feature
 This feature is available since version 5.0.0 and is experimental. It requires `enable_feature_binlog = true` in the FE configuration.
@@ -86,7 +88,7 @@ PROPERTIES (
 |---|---|---|---|---|
 | `binlog.enable` | `true` / `false` | `false` | Cannot be disabled once enabled | Whether binlog is enabled; must be set together with `binlog.format = "ROW"` |
 | `binlog.format` | `ROW` | - | No | Must be `ROW`, meaning row-level changes are recorded. The value is case-sensitive; a lowercase `row` fails with `Invalid binlog format value: row` |
-| `binlog.need_historical_value` | `true` / `false` | `false` | No | Whether the values before a change (before image) are recorded. Only Unique Key MoW tables can set it to `true`. `min_delta` / `detail` Table Streams and `MIN_DELTA` incremental queries depend on it |
+| `binlog.need_historical_value` | `true` / `false` | `false` | No | Whether the values before a change (before image) are recorded. Only Unique Key MoW tables can set it to `true`. `min_delta` / `detail` Table Streams, `MIN_DELTA` incremental queries, and IVMs that need to handle updates or deletes depend on it |
 | `binlog.ttl_seconds` | integer (seconds) | `86400` | Yes | Retention period. **Has no effect in the current version**, see [Retention and cleanup](#retention-and-cleanup) |
 | `binlog.max_bytes` | integer (bytes) | unlimited | Yes | Retention size limit. **Has no effect in the current version** |
 | `binlog.max_history_nums` | integer | unlimited | Yes | Retention count limit. **Has no effect in the current version** |

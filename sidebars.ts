@@ -549,6 +549,7 @@ const sidebars: SidebarsConfig = {
                     link: {type: 'doc', id: 'query-acceleration/materialized-view/async-materialized-view/overview'},
                     items: [
                         'query-acceleration/materialized-view/async-materialized-view/functions-and-demands',
+                        'query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view',
                         'query-acceleration/materialized-view/async-materialized-view/use-guide',
                         'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv',
                         'query-acceleration/materialized-view/async-materialized-view/faq',

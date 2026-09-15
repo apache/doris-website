@@ -26,6 +26,8 @@
         "__DORIS_DELETE_SIGN__",
         "information_schema.table_streams",
         "enable_table_stream",
+        "Incremental View Maintenance",
+        "IVM",
         "变更数据消费"
     ]
 }
@@ -51,6 +53,10 @@ Table Stream（下文简称 Stream）是建立在 [Row Binlog](row-binlog) 之�
 | 变更类型 | `APPEND`（新增）、`UPDATE_BEFORE`（更新前的值）、`UPDATE_AFTER`（更新后的值）、`DELETE`（删除，携带删除前的值） |
 | 消费类型 | Stream 创建时指定的 `type`，决定变更以什么粒度输出，见 [消费类型](#消费类型) |
 | 查询与消费 | 普通 `SELECT` 只读取变更、不推进位点；`INSERT INTO ... SELECT ... FROM <stream>` 在写入成功时推进位点，见 [查询与消费](#查询与消费) |
+
+:::info IVM 内部 Stream
+[物化视图增量维护（IVM）](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view) 会自动创建名称以 `__doris_ivm_stream_` 开头的内部 Stream。用户不需要创建、消费或删除这些 Stream，Doris 也不允许普通 `INSERT INTO` 使用它们。
+:::
 
 ## 前置条件
 

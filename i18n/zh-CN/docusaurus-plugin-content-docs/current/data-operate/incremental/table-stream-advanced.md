@@ -240,6 +240,8 @@ WHERE o.__DORIS_STREAM_CHANGE_TYPE_COL__ IN ('APPEND', 'UPDATE_AFTER');
 
 ### 监控
 
+IVM 创建的内部 Stream 也会出现在相关系统表中。可以观察其状态和积压，但不要手工消费、重置或删除；应通过物化视图刷新任务和 [IVM 运维方法](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#内部-table-stream)处理。
+
 | 关注点 | 数据来源 | 说明 |
 |---|---|---|
 | 积压 | `information_schema.table_stream_consumption` 的 `LAG` | 定期查询，对长时间不为 `0` 或持续增长的分区告警 |

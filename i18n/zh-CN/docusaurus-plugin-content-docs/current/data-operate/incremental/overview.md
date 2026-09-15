@@ -2,13 +2,15 @@
 {
     "title": "数据变更与增量消费概述",
     "language": "zh-CN",
-    "description": "Doris 5.0 如何读取内表的行级变更：Row Binlog 记录增删改，Table Stream 按位点不重不漏地增量消费，@incr 按时间窗口查询增量。含场景、表模型矩阵、选型与前置条件。",
+    "description": "Doris 5.0 的行级变更能力：Row Binlog 记录增删改，Table Stream 按位点增量消费，@incr 按时间窗口查询，IVM 按行维护异步物化视图。",
     "keywords": [
         "Doris 增量消费",
         "Doris 数据变更",
         "Row Binlog",
         "行级 Binlog",
         "Table Stream",
+        "Incremental View Maintenance",
+        "IVM",
         "@incr 增量查询",
         "增量 ETL",
         "下游表同步",
@@ -31,6 +33,8 @@
 
 - **Table Stream**：一个有名字的消费对象，替你记住"消费到哪了"，每次读取只返回上次消费之后的变化，读取和写入目标表在同一个事务里完成。
 - **增量查询（`@incr`）**：不建对象，直接指定时间窗口读取某张表在这段时间内的变化。
+
+异步物化视图还可以使用上层能力 [物化视图增量维护（IVM）](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view)。IVM 由 Doris 自动管理内部 Table Stream，根据行级变化维护物化视图。需要维护物化视图时，直接使用 IVM，不需要自行创建和消费 Stream。
 
 :::caution 实验性功能
 该功能自 5.0.0 版本起提供，目前处于实验阶段，默认关闭。开启方式见本文 [前置条件](#前置条件)。
@@ -60,6 +64,8 @@ Row Binlog 把每一行的新增、更新（含更新前后的值）、删除都
 |---|---|---|---|
 | Table Stream | 需要 `CREATE STREAM` | Doris 按分区维护消费位点 | 持续的增量 ETL、下游同步、消费必须不重不漏 |
 | 增量查询 `@incr` | 不需要 | 用户自己指定时间窗口 | 临时分析、外部调度系统自己管理位点 |
+
+IVM 位于这两层能力之上。它使用 Row Binlog 记录的变化和 Doris 自动创建的内部 Table Stream，但用户入口仍是 `CREATE MATERIALIZED VIEW` 和 `REFRESH MATERIALIZED VIEW`。
 
 ## 典型场景
 
@@ -148,3 +154,4 @@ Row Binlog 把每一行的新增、更新（含更新前后的值）、删除都
 | [增量查询](incremental-query) | `@incr` 时间窗口查询、三种增量模式 |
 | [Table Stream 基础](table-stream) | 创建与管理、三种消费类型、初始数据、查询与消费的区别、虚拟列 |
 | [Table Stream 进阶](table-stream-advanced) | 分区级位点、快照与重置、一致性关联、并发消费、基表变更的影响、监控与故障恢复 |
+| [物化视图增量维护（IVM）](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view) | 基于 Row Binlog 和内部 Table Stream 按行维护异步物化视图 |

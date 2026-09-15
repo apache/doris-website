@@ -64,6 +64,8 @@ TASKS(
    | **CompletedPartitions** | JSON array of partitions that were refreshed successfully. Compare it with `NeedRefreshPartitions` to see whether all required partitions completed. |
    | **Progress** | Refresh progress in the format `percentage (completed/total)`, for example `100.00% (1/1)`. It can be `\N` when there is no partition to refresh. |
    | **LastQueryId** | Query ID of the SQL statement executed by the refresh task. Use this ID to search FE or BE logs when troubleshooting task failures. It can be empty when no refresh SQL was executed. This field is supported since Doris 3.0.0. |
+   | **ComputeGroup** | Compute Group used by the refresh task. It can be empty when none is specified or in non-compute-storage-decoupled deployments. |
+   | **IvmFallbackReason** | Stable reason recorded when IVM cannot run and falls back, or when a strict IVM refresh fails. Empty when no IVM fallback happened. |
 
 ### MV task enum fields
 
@@ -82,10 +84,13 @@ The following enum fields are commonly used when checking materialized view refr
 - `TaskContext.isComplete`: whether the refresh request asks for a complete refresh.
   - `true`: the request asks Doris to refresh all materialized view partitions.
   - `false`: the request does not force complete refresh. Doris can decide the actual refresh scope based on partition freshness.
+- `TaskContext.refreshMode`: the refresh method requested by the user: `AUTO`, `COMPLETE`, `PARTITIONS` or `INCREMENTAL`. Older tasks may not have this field.
+- `TaskContext.af`: whether fallback is allowed, corresponding to `FALLBACK`. This field may also be displayed under the compatible name `allowFallback`; older tasks may not have it.
 - `RefreshMode`: actual refresh scope selected by the task after checking partitions.
   - `COMPLETE`: all materialized view partitions that belong to the MV were selected for refresh.
   - `PARTIAL`: only some materialized view partitions were selected for refresh.
   - `NOT_REFRESH`: no partition needed refresh. In this case, `NeedRefreshPartitions` is usually empty and `Progress` can be `\N`.
+- `IvmFallbackReason`: the reason why an IVM pre-execution fell back or a strict incremental refresh failed, for example `BINLOG_BROKEN`, `MIN_MAX_BOUNDARY_HIT`, `BITMAP_AGG_DELETE` or `PLAN_SIGNATURE_MISMATCH`. See [Incremental View Maintenance (IVM)](../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#fallback-order) for troubleshooting.
 
 :::info Version
 
@@ -126,6 +131,8 @@ NeedRefreshPartitions: ["p_20210101_MAXVALUE","p_20200101_20210101"]
   CompletedPartitions: ["p_20210101_MAXVALUE","p_20200101_20210101"]
              Progress: 100.00% (2/2)
           LastQueryId: 7965b4ddce8a4480-8884e9701679c1c4
+          ComputeGroup: \N
+     IvmFallbackReason: \N
 ```
 
 In this result:
@@ -140,6 +147,8 @@ In this result:
 - `NeedRefreshPartitions` lists two partitions that needed refreshing, and `CompletedPartitions` lists the same two partitions, so all required partitions completed.
 - `Progress` is `100.00% (2/2)`, which also means two of two required partitions completed.
 - `LastQueryId` is the query ID of the refresh SQL. Use it to search Doris logs when the task fails or runs slowly.
+- `ComputeGroup` is empty, which means no dedicated Compute Group was recorded in this example.
+- `IvmFallbackReason` is empty, which means no IVM fallback happened in this task.
 
 :::info Note
 

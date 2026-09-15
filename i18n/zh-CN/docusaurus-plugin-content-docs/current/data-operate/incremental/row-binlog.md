@@ -22,6 +22,8 @@
         "enable_mow_light_delete",
         "变更数据捕获",
         "Doris CDC",
+        "Incremental View Maintenance",
+        "IVM",
         "Not allowed to perform current operation on Table With binlog",
         "Only duplicate and mow table model support binlog"
     ]
@@ -31,7 +33,7 @@
 <!-- 知识类型: Feature 说明 + 参数参考 -->
 <!-- 适用场景: 为表开启行级变更记录 / 评估表模型是否支持 / 排查变更记录内容 -->
 
-Row Binlog 是 Doris 内表的行级变更日志。开启后，每一次写入产生的行级变化（新增、更新、删除）都会连同变更前后的值、提交时间戳一起持久化，作为 [Table Stream](table-stream) 和 [增量查询](incremental-query) 的数据来源，也可以通过 [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector/incremental-read)（26.3.0 及以上版本）在 Flink 中消费。
+Row Binlog 是 Doris 内表的行级变更日志。开启后，每一次写入产生的行级变化（新增、更新、删除）都会连同变更前后的值、提交时间戳一起持久化，作为 [Table Stream](table-stream)、[增量查询](incremental-query) 和 [物化视图增量维护（IVM）](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view) 的数据来源，也可以通过 [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector/incremental-read)（26.3.0 及以上版本）在 Flink 中消费。
 
 :::caution 实验性功能
 该功能自 5.0.0 版本起提供，目前处于实验阶段，需要在 FE 中开启 `enable_feature_binlog = true`。
@@ -86,7 +88,7 @@ PROPERTIES (
 |---|---|---|---|---|
 | `binlog.enable` | `true` / `false` | `false` | 开启后不可关闭 | 是否开启 binlog，需与 `binlog.format = "ROW"` 同时设置 |
 | `binlog.format` | `ROW` | - | 不可修改 | 必须为 `ROW`，表示记录行级变更。取值区分大小写，小写的 `row` 会报 `Invalid binlog format value: row` |
-| `binlog.need_historical_value` | `true` / `false` | `false` | 不可修改 | 是否记录变更前的值（before 镜像）。仅 Unique Key MoW 表可设为 `true`；`min_delta` / `detail` 类型的 Table Stream 和 `MIN_DELTA` 增量查询都依赖它 |
+| `binlog.need_historical_value` | `true` / `false` | `false` | 不可修改 | 是否记录变更前的值（before 镜像）。仅 Unique Key MoW 表可设为 `true`；`min_delta` / `detail` 类型的 Table Stream、`MIN_DELTA` 增量查询和需要处理更新或删除的 IVM 都依赖它 |
 | `binlog.ttl_seconds` | 整数（秒） | `86400` | 可修改 | 保留时长。**当前版本不生效**，见 [保留与清理](#保留与清理) |
 | `binlog.max_bytes` | 整数（字节） | 无限制 | 可修改 | 保留大小上限。**当前版本不生效** |
 | `binlog.max_history_nums` | 整数 | 无限制 | 可修改 | 保留条数上限。**当前版本不生效** |

@@ -18,7 +18,7 @@ CREATE MATERIALIZED VIEW
 [ IF NOT EXISTS ] <materialized_view_name>
     [ (<columns_definition>) ] 
     [ BUILD <build_mode> ]
-    [ REFRESH <refresh_method> [<refresh_trigger>]]
+    [ REFRESH <refresh_method> [FALLBACK] [<refresh_trigger>]]
     [ [DUPLICATE] KEY (<key_cols>) ]
     [ COMMENT '<table_comment>' ]
     [ PARTITION BY (
@@ -49,6 +49,11 @@ refresh_trigger
   : ON MANUAL
   | ON SCHEDULE EVERY <int_value> <refresh_unit> [ STARTS '<start_time>']
   | ON COMMIT
+refresh_method
+  : COMPLETE
+  | AUTO
+  | INCREMENTAL
+  | PARTITIONS
 ```
 
 ## Required Parameters
@@ -87,7 +92,13 @@ refresh_trigger
 >
 > COMPLETE: Refresh all partitions.
 >
-> AUTO: Try to refresh incrementally, only refreshing partitions that have changed since the last materialized view refresh. If incremental refresh is not possible, all partitions will be refreshed.
+> PARTITIONS: Detects base table partition changes and recomputes the affected materialized view partitions. Requires the materialized view to define `PARTITION BY`.
+>
+> INCREMENTAL: Uses Incremental View Maintenance (IVM) to process the row-level changes of the base tables between two refreshes. Available since Doris 5.0.0 and currently experimental.
+>
+> AUTO: Doris automatically chooses an available refresh method. For materialized views that meet the IVM requirements, it tries IVM, partition refresh and complete refresh in turn.
+
+Specify `FALLBACK` after `INCREMENTAL` or `PARTITIONS` to allow the refresh to fall back to a coarser-grained refresh method at run time. `INCREMENTAL FALLBACK` still strictly checks at creation time whether the definition meets the IVM requirements. See [Incremental View Maintenance (IVM)](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view) for details.
 
 :::caution Note
 If a partitioned materialized view uses COMPLETE refresh mode, it will perform a full refresh of all partition data, effectively degenerating into a non-partitioned materialized view.
@@ -133,6 +144,8 @@ Properties used by internal tables, most of which can be used by materialized vi
 | excluded_trigger_tables          | Comma-separated table names to be ignored during data refresh. For example, `table1,table2`. |
 | refresh_partition_num            | The number of partitions refreshed by a single INSERT statement, defaulting to 1. When refreshing a materialized view, it first calculates the list of partitions to be refreshed and then splits them into multiple INSERT statements for sequential execution. If an INSERT statement fails, the entire task will stop. The materialized view ensures the atomicity of a single INSERT statement, and a failed INSERT will not affect partitions that have already been refreshed successfully. |
 | workload_group                   | The name of the `workload_group` used when the materialized view executes refresh tasks. This is used to limit the resources used by the materialized view during data refresh to avoid impacting other business operations. For more information on creating and using `workload_group`, refer to the [WORKLOAD-GROUP](https://doris.apache.org/zh-CN/docs/dev/admin-manual/workload-management/workload-group) documentation. |
+| ivm_use_full_keys                | Whether to add the row identity keys of the source rows to the Unique Key of the IVM. Default `false`. Reduces the risk of hash collisions for composite row identities, but increases key width and storage overhead. Can only be set when the IVM is created. |
+| ivm_partition_window_limit       | Restricts IVM to maintaining only the last N partitions of the specified base tables, in the format `table:N`, with multiple tables separated by commas. Incremental changes outside the window are ignored, so this is a lossy setting; `COMPLETE` still reads the full base tables. |
 | partition_sync_limit             | When the base table's partition field is of type time, this property can be used to configure the range of partitions to synchronize with the base table, in conjunction with `partition_sync_time_unit`. For example, setting it to 2 with `partition_sync_time_unit` set to `MONTH` means that only the partitions and data from the last 2 months of the base table will be synchronized. The minimum value is `1`. As time progresses, the materialized view will automatically add and remove partitions during each refresh. For example, if the materialized view currently has data for months 2 and 3, next month it will automatically remove the data for month 2 and add data for month 4. |
 | partition_sync_time_unit         | The time unit for partition refresh, supporting DAY/MONTH/YEAR (default is DAY). |
 | partition_date_format            | When the base table's partition field is of type string, if you want to use the `partition_sync_limit` capability, you can set the date format to parse the partition time according to the `partition_date_format` setting. |
@@ -179,8 +192,27 @@ The user executing this SQL command must have at least the following permissions
   > 7. Data changes should occur on the partitioned table; if they occur on a non-partitioned table, the materialized view requires a full build.
   > 8. If the materialized view uses a field from the NULL-generating side of a Join as a partition field, it cannot perform partitioned incremental updates. For example, for a LEFT OUTER JOIN, the partition field must be on the left side, not
 
+- IVM creation conditions
+
+  `REFRESH INCREMENTAL` requires Row Binlog to be enabled on the base tables and the materialized view definition SQL to be within the IVM support scope. With an explicit `INCREMENTAL`, an unsupported definition makes the creation fail. See [Incremental View Maintenance (IVM)](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#prerequisites) for the base table models, query operators, aggregate functions and FE switches.
 
 ## Examples
+
+### Creating an IVM
+
+    ```sql
+    CREATE MATERIALIZED VIEW orders_by_status
+    BUILD DEFERRED
+    REFRESH INCREMENTAL FALLBACK ON MANUAL
+    DISTRIBUTED BY RANDOM BUCKETS 1
+    AS
+    SELECT order_status, COUNT(*) AS order_count, SUM(amount) AS total_amount
+    FROM orders
+    GROUP BY order_status;
+    ```
+
+    Run `REFRESH MATERIALIZED VIEW orders_by_status COMPLETE` once after creation to build the full baseline, then run incremental refreshes.
+
 1. Non-Partitioned Materialized View
 
 ```sql
