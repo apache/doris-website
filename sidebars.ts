@@ -420,7 +420,6 @@ const sidebars: SidebarsConfig = {
                         'data-operate/import/file-format/json',
                         'data-operate/import/file-format/parquet',
                         'data-operate/import/file-format/orc',
-                        'data-operate/import/file-format/native',
                     ],
                 },
                 {
