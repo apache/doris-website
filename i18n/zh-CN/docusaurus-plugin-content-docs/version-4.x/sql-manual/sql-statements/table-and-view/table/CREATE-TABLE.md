@@ -355,7 +355,7 @@ rollup 可以创建的同步物化视图功能有限。已不再推荐使用。�
 | storage_cooldown_time                         | 设定表数据的初始存储介质的到期时间。超过此时间后，会自动降级到第一级别的存储介质上。 |
 | colocate_with                                 | 当需要使用 Colocation Join 功能时，使用这个参数设置 Colocation Group。 |
 | bloom_filter_columns                          | 用户指定需要添加 Bloom Filter 索引的列名称列表。各个列的 Bloom Filter 索引是独立的，并不是组合索引。列如：`"bloom_filter_columns" = "k1, k2, k3"` |
-| compression                                   | Doris 表的默认压缩方式是 LZ4。1.1 版本后，支持将压缩方式指定为 ZSTD 以获得更高的压缩比。 |
+| compression                                   | 自 4.0.3 版本起，Doris 表的默认压缩方式为 ZSTD。在 4.0.3 版本之前，默认压缩方式为 LZ4F。 |
 | function_column.sequence_col                  | 当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换) 。`function_column.sequence_col`用来指定 sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。 |
 | function_column.sequence_type                 | 当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换) 这里我们仅需指定顺序列的类型，支持时间类型或整型。Doris 会创建一个隐藏的顺序列。 |
 | enable_unique_key_merge_on_write              | Unique 表是否使用 Merge-on-Write 实现。该属性在 2.1 版本之前默认关闭，从 2.1 版本开始默认开启。 |
