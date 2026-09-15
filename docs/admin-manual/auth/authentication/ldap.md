@@ -226,6 +226,13 @@ LDAP authentication login means using the LDAP service for password verification
 2. If the user does not exist in LDAP, it falls back to Doris local password verification.
 3. If the LDAP password is correct but there is no corresponding account in Doris, a temporary user is created for login.
 
+> Note on Empty Passwords:
+>
+> By default, in legacy authentication mode Doris doesn't allow login with an empty password if the user exists in LDAP (`ldap_allow_empty_pass = false`). 
+> Because of this Doris will reject all login attempts with empty password and return an error message.
+> This behavior can be disabled by setting `ldap_allow_empty_pass = true` in `ldap.conf` to allow successfull login with empty password for existing user.
+> New plugin-based LDAP authentication mode (since 4.1.0) always rejects attempts to login with empty LDAP password despite of value `ldap_allow_empty_pass = true`
+
 ### Login Behavior Overview
 
 After LDAP is enabled, the login behavior under different user states is as follows:
@@ -233,9 +240,12 @@ After LDAP is enabled, the login behavior under different user states is as foll
 | LDAP user | Doris user | Password used | Login result | Login identity |
 | --------- | ---------- | -------------- | ------------ | -------------- |
 | Exists | Exists | LDAP password | Success | Doris user |
-| Exists | Exists | Doris password | Failure | - |
+| Exists | Exists | Doris password | Failed | - |
+| Exists | Exists |	Empty password | Success if `ldap_allow_empty_pass = true`, otherwise Failed | Doris user (if allowed) |
 | Does not exist | Exists | Doris password | Success | Doris user |
 | Exists | Does not exist | LDAP password | Success | LDAP temporary user |
+| Exists | Does not exist | Empty password | Success if `ldap_allow_empty_pass = true`, otherwise Failed | LDAP temporary user (if allowed) |
+
 
 :::info About temporary users
 
@@ -245,6 +255,12 @@ After LDAP is enabled, the login behavior under different user states is as foll
 - If the temporary user has no corresponding group privileges or configured default roles, it has the `select_priv` privilege on `information_schema` by default.
 
 :::
+
+> **About Empty Password Security:**
+>
+> The `ldap_allow_empty_pass` configuration provides additional security control:
+> - When `true`: Users can accidentally or intentionally log in without a password, which might be convenient for development environments but poses security risks in production.
+> - When `false` (default): Empty passwords are strictly rejected, ensuring all users must provide valid credentials. This is recommended for production environments to prevent unauthorized access.
 
 ### Login Examples
 
@@ -457,6 +473,8 @@ You can refresh the cache with the `refresh ldap` statement. For details, see [R
 
 - The LDAP feature of Doris supports only cleartext password verification on the channel from the client to FE, that is, when the user logs in, the password is transmitted in cleartext between the `client` and `fe`. SSL/TLS encryption between the client and Doris FE must be configured separately (see [Client Connection](#step-2-client-connection)).
 - The channel from FE to the LDAP server uses cleartext transmission by default (`ldap_use_ssl = false`). To encrypt this channel, set `ldap_use_ssl = true` to enable LDAPS (see [LDAPS (Encrypted Connection)](#ldaps-encrypted-connection)).
+- **Empty password behavior in legacy LDAP authentication mode:** By default, Doris doesn't allow login with an empty password if the user exists in LDAP (`ldap_allow_empty_pass = false`). This can be disabled by setting `ldap_allow_empty_pass = true` in `ldap.conf`. 
+- **Empty password behavior in new plugin-based LDAP authentication:** By default, logins for users with empty LDAP passwords are rejected by LDAP authentication plugin despite of actual value of setting `ldap_allow_empty_pass` in `ldap.conf`. 
 
 ## Frequently Asked Questions
 
