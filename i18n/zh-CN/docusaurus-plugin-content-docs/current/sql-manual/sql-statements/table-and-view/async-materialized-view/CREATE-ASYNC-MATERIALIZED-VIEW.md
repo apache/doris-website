@@ -17,7 +17,7 @@ CREATE MATERIALIZED VIEW
 [ IF NOT EXISTS ] <materialized_view_name>
     [ (<columns_definition>) ] 
     [ BUILD <build_mode> ]
-    [ REFRESH <refresh_method> [<refresh_trigger>]]
+    [ REFRESH <refresh_method> [FALLBACK] [<refresh_trigger>]]
     [ [DUPLICATE] KEY (<key_cols>) ]
     [ COMMENT '<table_comment>' ]
     [ PARTITION BY (
@@ -47,6 +47,11 @@ refresh_trigger
   : ON MANUAL
   | ON SCHEDULE EVERY <int_value> <refresh_unit> [ STARTS '<start_time>']
   | ON COMMIT
+refresh_method
+  : COMPLETE
+  | AUTO
+  | INCREMENTAL
+  | PARTITIONS
 ```
 
 ## 必选参数
@@ -85,7 +90,13 @@ refresh_trigger
 >
 > COMPLETE：无论分区数据是否有变更，强制刷新所有分区
 >
-> AUTO：尽量增量刷新，只刷新自上次物化刷新后数据变化的分区，如果是分区物化视图建议用此刷新方式
+> PARTITIONS：检测基表分区变化，重新计算受影响的物化视图分区。要求物化视图定义 `PARTITION BY`
+>
+> INCREMENTAL：使用 物化视图增量维护（IVM）处理基表两次刷新之间的行级变化。从 Doris 5.0.0 开始支持，目前处于实验阶段
+>
+> AUTO：由 Doris 自动选择可用的刷新方式。对于满足 IVM 条件的物化视图，依次尝试 IVM、分区刷新和完整刷新
+
+在 `INCREMENTAL` 或 `PARTITIONS` 后指定 `FALLBACK`，允许刷新运行时回退到粒度更大的刷新方式。`INCREMENTAL FALLBACK` 在创建时仍会严格检查定义是否满足 IVM 要求。完整说明见 [物化视图增量维护（IVM）](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view)。
 
 :::caution 注意
 如果是分区物化视图，刷新方式使用 COMPLETE，物化视图会全量刷新所有分区数据，退化成全量物化视图。
@@ -139,6 +150,8 @@ refresh_trigger
 | excluded_trigger_tables          | 数据刷新时忽略的表名，逗号分割。例如`table1,table2`          |
 | refresh_partition_num            | 单次 insert 语句刷新的分区数量，默认为 1。物化视图刷新时会先计算要刷新的分区列表，然后根据该配置拆分成多个 Insert 语句顺序执行。遇到失败的 Insert 语句，整个任务将停止执行。物化视图保证单个 Insert 语句的事务性，失败的 Insert 语句不会影响到已经刷新成功的分区 |
 | workload_group                   | 物化视图执行刷新任务时使用的 `workload_group` 名称。用来限制物化视图刷新数据使用的资源，避免影响到其它业务的运行。关于 `workload_group` 的创建及使用，可参考 [WORKLOAD-GROUP](https://doris.apache.org/zh-CN/docs/dev/admin-manual/workload-management/workload-group) 文档。 |
+| ivm_use_full_keys                | 是否把来源行标识 Key 加入 IVM 的 Unique Key，默认 `false`。可降低复合行标识 Hash 碰撞风险，但会增加 Key 宽度和存储开销。只能在创建 IVM 时设置。 |
+| ivm_partition_window_limit       | 限制 IVM 只维护指定基表最后 N 个分区，格式为 `table:N`，多张表用逗号分隔。该配置会忽略窗口外的增量变化，属于有损配置；`COMPLETE` 仍读取完整基表。 |
 | partition_sync_limit             | 当基表的分区字段为时间时，可以用此属性配置同步基表的分区范围，配合 `partition_sync_time_unit` 一起使用。例如设置为 2，`partition_sync_time_unit` 设置为 `MONTH`，代表仅同步基表近 2 个月的分区和数据。最小值为 `1`。随着时间的变化物化视图每次刷新时都会自动增删分区，例如物化视图现在有 2,3 两个月的数据，下个月的时候，会自动删除 2 月的数据，增加 4 月的数据。 |
 | partition_sync_time_unit         | 分区刷新的时间单位，支持 DAY/MONTH/YEAR（默认DAY）           |
 | partition_date_format            | 当基表的分区字段为字符串时，如果想使用 `partition_sync_limit`的能力，可以设置日期的格式，将按照 `partition_date_format`的设置解析分区时间 |
@@ -182,7 +195,26 @@ refresh_trigger
   > 7. 数据变更应发生在分区表上，如果发生在非分区表，物化视图需要全量构建。
   > 8. 物化视图使用 Join 的 NULL 产生端的字段作为分区字段，不能分区增量更新，例如对于 LEFT OUTER JOIN 分区字段需要在左侧，在右侧则不行。
 
+- IVM 创建条件
+
+  `REFRESH INCREMENTAL` 要求基表开启 Row Binlog，且物化视图定义 SQL 在 IVM 支持范围内。显式指定 `INCREMENTAL` 时，不支持的定义会直接创建失败。基表模型、查询算子、聚合函数和 FE 开关见 [物化视图增量维护（IVM）](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#前置条件)。
+
 ## 示例
+
+### 创建 IVM
+
+    ```sql
+    CREATE MATERIALIZED VIEW orders_by_status
+    BUILD DEFERRED
+    REFRESH INCREMENTAL FALLBACK ON MANUAL
+    DISTRIBUTED BY RANDOM BUCKETS 1
+    AS
+    SELECT order_status, COUNT(*) AS order_count, SUM(amount) AS total_amount
+    FROM orders
+    GROUP BY order_status;
+    ```
+
+    建议创建后先执行一次 `REFRESH MATERIALIZED VIEW orders_by_status COMPLETE` 建立完整基线，再执行增量刷新。
 
 1. 全量物化视图
 

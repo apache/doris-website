@@ -2,13 +2,15 @@
 {
     "title": "Change Data and Incremental Consumption Overview",
     "language": "en",
-    "description": "Row-level change data in Doris 5.0: Row Binlog records inserts, updates and deletes; Table Stream consumes them exactly-once; @incr queries them by time window.",
+    "description": "Row-level change data in Doris 5.0: Row Binlog records inserts, updates and deletes; Table Stream consumes them by offset; @incr queries them by time window; IVM maintains async materialized views by row.",
     "keywords": [
         "Doris incremental consumption",
         "Doris change data",
         "Row Binlog",
         "row-level binlog",
         "Table Stream",
+        "Incremental View Maintenance",
+        "IVM",
         "@incr incremental query",
         "incremental ETL",
         "downstream table sync",
@@ -31,6 +33,8 @@ Starting from version 5.0, Doris can record a row-level change log (Row Binlog) 
 
 - **Table Stream**: a named consumption object that remembers how far you have consumed. Each read returns only the changes since the last consumption, and reading plus writing into the target table happen in one transaction.
 - **Incremental query (`@incr`)**: no object to create. Read the changes of a table within a time window you specify.
+
+Async materialized views can also use the higher-level capability [Incremental View Maintenance (IVM)](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view). IVM lets Doris manage internal Table Streams automatically and maintains the materialized view from row-level changes. When you need to maintain a materialized view, use IVM directly instead of creating and consuming Streams yourself.
 
 :::caution Experimental feature
 This feature is available since version 5.0.0. It is experimental and disabled by default. See [Prerequisites](#prerequisites) for how to enable it.
@@ -60,6 +64,8 @@ Row Binlog records every insert, update (with values before and after the update
 |---|---|---|---|
 | Table Stream | `CREATE STREAM` required | Doris keeps a consumption offset per partition | Continuous incremental ETL, downstream sync, exactly-once consumption |
 | Incremental query `@incr` | Nothing to create | You choose the time window | Ad-hoc analysis, external schedulers that manage their own positions |
+
+IVM sits on top of these two layers. It uses the changes recorded by Row Binlog and the internal Table Streams that Doris creates automatically, but the user entry points remain `CREATE MATERIALIZED VIEW` and `REFRESH MATERIALIZED VIEW`.
 
 ## Typical scenarios
 
@@ -148,3 +154,4 @@ With Row Binlog enabled, every write additionally generates and persists change 
 | [Incremental Query](incremental-query) | `@incr` time-window queries and the three incremental modes |
 | [Table Stream Basics](table-stream) | Creating and managing Streams, the three consumption types, initial rows, reading versus consuming, virtual columns |
 | [Table Stream Advanced](table-stream-advanced) | Partition-level offsets, snapshot and reset, consistent joins, concurrent consumption, the effect of base table changes, monitoring and recovery |
+| [Incremental View Maintenance (IVM)](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view) | Maintains async materialized views by row using Row Binlog and internal Table Streams |

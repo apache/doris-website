@@ -26,6 +26,8 @@
         "__DORIS_DELETE_SIGN__",
         "information_schema.table_streams",
         "enable_table_stream",
+        "Incremental View Maintenance",
+        "IVM",
         "change data consumption"
     ]
 }
@@ -51,6 +53,10 @@ This feature is available since version 5.0.0 and is experimental. It requires `
 | Change type | `APPEND` (insert), `UPDATE_BEFORE` (value before an update), `UPDATE_AFTER` (value after an update), `DELETE` (delete, carrying the value before deletion) |
 | Consumption type | The `type` given when the Stream is created; it decides at what granularity changes are emitted, see [Consumption types](#consumption-types) |
 | Reading versus consuming | A plain `SELECT` only reads changes and never advances the offset; `INSERT INTO ... SELECT ... FROM <stream>` advances the offset when the write succeeds, see [Reading and consuming](#reading-and-consuming) |
+
+:::info IVM internal Streams
+[Incremental View Maintenance (IVM)](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view) automatically creates internal Streams whose names start with `__doris_ivm_stream_`. You do not need to create, consume or drop these Streams, and Doris does not allow regular `INSERT INTO` statements to use them.
+:::
 
 ## Prerequisites
 

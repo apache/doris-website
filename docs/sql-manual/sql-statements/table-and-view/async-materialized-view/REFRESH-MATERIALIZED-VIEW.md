@@ -2,83 +2,127 @@
 {
     "title": "REFRESH MATERIALIZED VIEW",
     "language": "en",
-    "description": "This statement is used to manually refresh the specified asynchronous materialized view"
+    "description": "Manually refresh an asynchronous materialized view with IVM row-level incremental refresh, partition refresh, complete refresh, or an automatically chosen refresh method."
 }
 ---
 
 ## Description
 
-This statement is used to manually refresh the specified asynchronous materialized view
+This statement is used to manually refresh the specified asynchronous materialized view. The refresh task runs asynchronously; check its status with `tasks("type"="mv")`.
 
 ## Syntax
 
 ```sql
-REFRESH MATERIALIZED VIEW <mv_name> <refresh_type>
+REFRESH MATERIALIZED VIEW <mv_name>
+{
+    PARTITIONS (<partition_name> [, <partition_name> [, ... ] ])
+  | COMPLETE
+  | AUTO
+  | PARTITIONS [FALLBACK]
+  | INCREMENTAL [FALLBACK]
+  | INCREMENTAL WITH DRY RUN [LIMIT <limit> [OFFSET <offset>]]
+}
 ```
 
-Where:
-```sql
-refresh_type
-  : { <partitionSpec> | COMPLETE | AUTO }
-```
+To view the refresh plan without running the refresh:
 
 ```sql
-partitionSpec
-  : PARTITIONS (<partition_name> [, <partition_name> [, ... ] ])
+EXPLAIN REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL [WITH ALL STREAMS]
+EXPLAIN REFRESH MATERIALIZED VIEW <mv_name> COMPLETE
 ```
 
 ## Required Parameters
-**1. `<mv_name>`**
-> Specifies the materialized view name.
->
-> The materialized view name must start with a letter character (or any language character if unicode name support is enabled) and cannot contain spaces or special characters unless the entire materialized view name string is enclosed in backticks (e.g., `My Object`).
->
-> The materialized view name cannot use reserved keywords.
->
-> For more details, see Reserved Keywords.
 
-**2. `<refresh_type>`**
-> Specifies the refresh type of this materialized view.
->
-> The refresh type may be one of the partitionSpec, COMPLETE or AUTO.
+**1. `<mv_name>`**
+
+> Specifies the name of the materialized view.
+
+**2. Refresh method**
+
+| Refresh method | Description |
+|---|---|
+| `INCREMENTAL` | Uses Incremental View Maintenance (IVM) to process the row-level changes of the base tables between two refreshes. Only applies to materialized views created with IVM enabled |
+| `PARTITIONS` | Doris computes the materialized view partitions that have changed and recomputes them |
+| `COMPLETE` | Forces a recomputation of all materialized view data without checking whether partitions are synchronized with the base tables |
+| `AUTO` | Doris automatically chooses an available method. For materialized views that support IVM, it tries IVM, partition refresh and complete refresh in turn |
+| `PARTITIONS (<partition_name>, ...)` | Forces a refresh of the specified materialized view partitions without checking whether they are synchronized with the base tables |
 
 ## Optional Parameters
-**1. `<partition_name>`**
-> Specifies the partition name when refresh the partition
->
+
+**1. `FALLBACK`**
+
+Allows this refresh to fall back when the preferred method cannot run safely:
+
+- `INCREMENTAL FALLBACK` tries IVM, partition refresh and complete refresh in that order by default. Some IVM errors fall back directly to a complete refresh.
+- `PARTITIONS FALLBACK` falls back to a complete refresh when a partition refresh cannot run.
+- `INCREMENTAL` or `PARTITIONS` without `FALLBACK` is the strict mode: the task fails when the preferred method fails.
+
+**2. `WITH DRY RUN`**
+
+Only for `INCREMENTAL`. It executes the delta query of the next IVM refresh and returns the rows that would be written, without modifying the materialized view data, advancing the internal Table Stream offsets, or modifying the IVM metadata.
+
+Use `LIMIT` and `OFFSET` to restrict the returned result. The returned columns include the business columns and the internal columns used by IVM.
+
+**3. `WITH ALL STREAMS`**
+
+Only for `EXPLAIN ... INCREMENTAL`. By default the plan only includes the internal Streams that currently have unconsumed changes; with this option, the plan also includes the Streams that have already been fully consumed, which makes it easier to inspect the complete structure of a multi-table delta plan.
 
 ## Access Control Requirements
+
 Users executing this SQL command must have at least the following privileges:
 
-| Privilege  | Object | Notes                                        |
-| :--------- | :----- | :------------------------------------------- |
-| ALTER_PRIV | Materialized View  | REFRESH is an ALTER operation on a materialized view |
-
+| Privilege | Object | Notes |
+|---|---|---|
+| ALTER_PRIV | Materialized View | `REFRESH` is an `ALTER` operation on a materialized view |
 
 ## Usage Notes
 
-- AUTO: The calculation will determine which partitions of the materialized view are not synchronized with the base table. (Currently, if the base table is an external table, it is considered to be always synchronized with the materialized view. Therefore, if the base table is an external table, it is necessary to specify `COMPLETE` or designate the partitions to be refreshed), and then proceed to refresh the corresponding partitions accordingly.
-- COMPLETE: It will forcibly refresh all partitions of the materialized view without checking whether the partitions are synchronized with the base table.
-- partitionSpec: It will forcibly refresh the specified partitions without checking whether the partitions are synchronized with the base table.
+- `INCREMENTAL` is available since Doris 5.0.0 and is currently experimental. See [Incremental View Maintenance (IVM)](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view) for the prerequisites, supported scope, fallback reasons and baseline requirements.
+- An IVM does not support forcing a refresh of specific partitions with `PARTITIONS (<partition_name>, ...)`. For a partition refresh, use `PARTITIONS` without a partition list, or use `COMPLETE` for a complete refresh.
+- When a strict `INCREMENTAL` refresh fails, neither the materialized view data nor the consumption offsets of the internal Streams advance.
+- For regular asynchronous materialized views on external tables whose version changes cannot be detected, specify `COMPLETE` or name the partitions explicitly.
+- Neither `EXPLAIN` nor `WITH DRY RUN` modifies any persisted state.
 
 ## Examples
 
-- Refresh materialized view mv1 (automatically calculate the partition to be refreshed)
+Strict incremental refresh with IVM:
 
-    ```sql
-    REFRESH MATERIALIZED VIEW mv1 AUTO;
-    ```
+```sql
+REFRESH MATERIALIZED VIEW mv1 INCREMENTAL;
+```
 
+Allow fallback when the incremental refresh fails:
 
-- Refresh partition named p_19950801_19950901 and p_19950901_19951001
+```sql
+REFRESH MATERIALIZED VIEW mv1 INCREMENTAL FALLBACK;
+```
 
-    ```sql
-    REFRESH MATERIALIZED VIEW mv1 partitions(p_19950801_19950901,p_19950901_19951001);
-    ```
- 
+Preview up to 100 rows that the next incremental refresh would write:
 
-- Force refresh of all materialized view data
+```sql
+REFRESH MATERIALIZED VIEW mv1 INCREMENTAL WITH DRY RUN LIMIT 100;
+```
 
-    ```sql
-    REFRESH MATERIALIZED VIEW mv1 complete;
-    ```
+View the complete IVM delta plan:
+
+```sql
+EXPLAIN REFRESH MATERIALIZED VIEW mv1 INCREMENTAL WITH ALL STREAMS;
+```
+
+Let Doris compute and refresh the changed partitions:
+
+```sql
+REFRESH MATERIALIZED VIEW mv1 PARTITIONS FALLBACK;
+```
+
+Refresh the specified partitions:
+
+```sql
+REFRESH MATERIALIZED VIEW mv1 PARTITIONS (p_19950801_19950901, p_19950901_19951001);
+```
+
+Force a refresh of all data:
+
+```sql
+REFRESH MATERIALIZED VIEW mv1 COMPLETE;
+```

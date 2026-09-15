@@ -240,6 +240,8 @@ DDL that is not allowed on a base table with Row Binlog (such as `MODIFY COLUMN`
 
 ### Monitoring
 
+The internal Streams created by IVM also appear in these system tables. You can observe their state and backlog, but do not consume, reset or drop them manually; handle them through materialized view refresh tasks and the [IVM operations guidance](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#internal-table-streams).
+
 | Watch | Source | Notes |
 |---|---|---|
 | Backlog | `LAG` in `information_schema.table_stream_consumption` | Query it regularly and alert on partitions where it stays non-zero or keeps growing |

@@ -35,6 +35,8 @@ ALTER MATERIALIZED VIEW mv1 rename mv2;
 
 同[创建异步物化视图](./CREATE-ASYNC-MATERIALIZED-VIEW)
 
+不能通过 `ALTER MATERIALIZED VIEW` 把普通异步物化视图改为 `INCREMENTAL`，也不能把 IVM 改为其他默认刷新方式。如需切换，请重建物化视图。
+
 ##### refreshTrigger
 
 同[创建异步物化视图](./CREATE-ASYNC-MATERIALIZED-VIEW)
@@ -48,6 +50,8 @@ ALTER MATERIALIZED VIEW mv1 rename mv2;
 ```sql
 ALTER MATERIALIZED VIEW mv1 set("grace_period"="3000");
 ```
+
+IVM 属性中，`ivm_use_full_keys` 只能在创建时设置，不能修改。`ivm_partition_window_limit` 可以修改；扩大窗口或移除限制后，下一次刷新需要执行 `COMPLETE` 重建基线。详见 [物化视图增量维护（IVM）](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#ivm-属性)。
 
 ##### REPLACE
 ```sql
@@ -76,4 +80,3 @@ PROPERTIES('swap' = 'false');
 ## 关键词
 
     ALTER, ASYNC, MATERIALIZED, VIEW
-
