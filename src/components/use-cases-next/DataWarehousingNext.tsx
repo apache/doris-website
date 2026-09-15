@@ -89,6 +89,50 @@ function Shapes({ specs }: { specs: ShapeSpec[] }): JSX.Element {
     );
 }
 
+function ValueIcon({ id }: { id: string }): JSX.Element {
+    const common = {
+        viewBox: '0 0 24 24',
+        fill: 'none',
+        stroke: 'currentColor',
+        strokeWidth: 2,
+        strokeLinecap: 'round',
+        strokeLinejoin: 'round',
+    } as const;
+
+    if (id === 'faster-bi') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <path d="M13 2 3 14h7l-1 8 11-13h-7l1-7z" />
+            </svg>
+        );
+    }
+    if (id === 'real-time') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <polyline points="3 12 8 12 11 7 15 17 18 12 21 12" />
+            </svg>
+        );
+    }
+    if (id === 'scalable') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <path d="M12 2 2 7l10 5 10-5-10-5z" />
+                <path d="m2 17 10 5 10-5" />
+                <path d="m2 12 10 5 10-5" />
+            </svg>
+        );
+    }
+
+    return (
+        <svg {...common} aria-hidden="true">
+            <path d="M4 7h16" />
+            <path d="M4 12h16" />
+            <path d="M4 17h16" />
+            <path d="M9 3v18" />
+        </svg>
+    );
+}
+
 interface FooterItem {
     label: string;
     href?: string;
@@ -239,6 +283,7 @@ interface ValueCard {
     num: string;
     title: ReactNode;
     desc: string;
+    summary: string;
     scenariosLabel: string;
     scenarios: string[];
 }
@@ -250,6 +295,11 @@ interface CaseStudy {
     quote: string;
     outcomes: string[];
     href: string;
+    logo: string;
+    logoAlt: string;
+    logoClass: string;
+    logoText?: string;
+    logoTextClass?: string;
 }
 
 interface Requirement {
@@ -279,6 +329,8 @@ const valueCards: ValueCard[] = [
             </>
         ),
         desc: 'Data from orders, customers, payments, CRM, ERP, ads, and logs often tells different versions of the same story. A modern data warehouse brings these signals together into one trusted analytical layer, so every team can work from consistent metrics and make decisions with confidence.',
+        summary:
+            'Orders, customers, payments, CRM, ERP, ads, and logs become one trusted analytical layer, so every team works from consistent metrics.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Executive Business Dashboards',
@@ -297,6 +349,8 @@ const valueCards: ValueCard[] = [
             </>
         ),
         desc: 'Tableau, Power BI, Superset, and Looker are only as responsive as the warehouse behind them. With sub-second SQL, dimensional drill-downs and ad-hoc questions become a conversation, not a wait.',
+        summary:
+            'Sub-second SQL turns dimensional drill-downs and ad-hoc questions into fast, interactive conversations across BI tools.',
         scenariosLabel: 'Where it shows up',
         scenarios: ['Self-Service BI', 'Ad-hoc Query', 'Interactive Dashboards'],
     },
@@ -311,6 +365,8 @@ const valueCards: ValueCard[] = [
             </>
         ),
         desc: 'Batch reports show what happened yesterday. A real-time data warehouse continuously ingests fresh data from CDC streams, Kafka, and Flink, keeping dashboards, alerts, and operational reports aligned with what is happening now.',
+        summary:
+            'Fresh CDC, Kafka, and Flink data keeps dashboards, alerts, and operational reports aligned with what is happening now.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Real-Time Order Monitoring',
@@ -329,6 +385,8 @@ const valueCards: ValueCard[] = [
             </>
         ),
         desc: 'As data grows from TBs to PBs and BI workloads become more concurrent, many warehouses add more systems, pipelines, and serving layers. Apache Doris keeps the architecture simple, so teams can support large-scale analytics with fewer moving parts and lower TCO.',
+        summary:
+            'Doris supports TB-to-PB analytics and high concurrency with fewer systems, pipelines, and serving layers, lowering TCO.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Large-Scale Historical Analysis',
@@ -350,6 +408,11 @@ const cases: CaseStudy[] = [
             '100% of ad-hoc and BI workloads migrated, with 97% SQL compatibility',
         ],
         href: 'https://www.velodb.io/blog/sf-technology-replaced-presto-apache-doris',
+        logo: '/images/next/user-logos/sf-express-white.png',
+        logoAlt: 'SF Express',
+        logoClass: 'case-logo case-logo--sf',
+        logoText: 'SF EXPRESS',
+        logoTextClass: 'case-logo-text',
     },
     {
         id: 'xiaomi',
@@ -362,6 +425,11 @@ const cases: CaseStudy[] = [
             'One unified stack for hot Doris storage and cold Paimon data across user behavior, device, and operations analytics',
         ],
         href: 'https://www.velodb.io/blog/unified-lakehouse-apache-doris-apache-paimon-xiaomi',
+        logo: '/images/next/user-logos/xiaomi.svg',
+        logoAlt: 'Xiaomi',
+        logoClass: 'case-logo case-logo--xiaomi',
+        logoText: 'XIAO MI',
+        logoTextClass: 'case-logo-text',
     },
     {
         id: 'cainiao',
@@ -374,6 +442,11 @@ const cases: CaseStudy[] = [
             '25+ Doris clusters and 10,000+ CPUs across 3 regions running with zero failures, powering inventory, package, and order tracking for 80M daily packages',
         ],
         href: 'https://www.velodb.io/blog/apache-doris-empowers-realtime-lakehouse-cainiao',
+        logo: '/images/next/user-logos/cainiao-icon.png',
+        logoAlt: 'Cainiao',
+        logoClass: 'case-logo case-logo--cainiao',
+        logoText: 'CAI NIAO',
+        logoTextClass: 'case-logo-text',
     },
 ];
 
@@ -538,41 +611,57 @@ function Hero(): JSX.Element {
 }
 
 function ValueSection(): JSX.Element {
-    const shapes: ShapeSpec[] = [
-        { kind: 'diamond', style: { top: 120, right: '12%' } },
-        { kind: 'ring', style: { bottom: 90, left: '8%' } },
-    ];
-
-    const items: CoverFlowItem[] = valueCards.map(c => ({
-        id: c.id,
-        num: c.num,
-        title: c.title,
-        desc: c.desc,
-        footer: {
-            label: c.scenariosLabel,
-            items: c.scenarios.map(s => ({ label: s })),
-        },
-    }));
-
     return (
-        <section className="section section-value section-cream" id="value">
+        <section className="section section-value" id="value">
             <div className="hero-bg-grid" aria-hidden="true" />
             <div className="container section-inner">
-                <div className="section-head section-head-wide" data-reveal>
-                    <h2 className="section-title section-title-stacked">
-                        <span>Why modern Data&nbsp;Warehousing</span>
-                        <span>changes the&nbsp;business.</span>
-                    </h2>
-                    <p className="section-sub">
-                        When the warehouse is unified, fast, real-time, and elastic, four things
-                        shift at once: the trust of the data, the speed of analysis, the freshness
-                        of decisions, and the cost of running it all.
-                    </p>
+                <div className="value-layout">
+                    <div className="value-copy" data-reveal>
+                        <h2 className="section-title section-title-stacked">
+                            <span>Why modern Data&nbsp;Warehousing</span>
+                            <span>changes the&nbsp;business.</span>
+                        </h2>
+                        <p className="value-copy__lead">
+                            When the warehouse is unified, fast, real-time, and elastic, four
+                            things shift at once:
+                        </p>
+                        <ul className="value-points">
+                            <li className="value-point" data-reveal>
+                                The trust of the data
+                            </li>
+                            <li className="value-point" data-reveal>
+                                The speed of analysis
+                            </li>
+                            <li className="value-point" data-reveal>
+                                The freshness of decisions
+                            </li>
+                            <li className="value-point" data-reveal>
+                                The cost of running it all
+                            </li>
+                        </ul>
+                    </div>
+                    <ol className="value-cards">
+                        {valueCards.map(c => {
+                            const [numPart, ...titleParts] = c.num.split('/');
+                            const valueTitle = titleParts.join('/').trim();
+                            return (
+                                <li key={c.id} className="value-card" data-reveal>
+                                    <div className="value-card__meta">
+                                        <span className="value-card__num">{numPart.trim()}</span>
+                                        <span className="value-card__icon" aria-hidden="true">
+                                            <ValueIcon id={c.id} />
+                                        </span>
+                                    </div>
+                                    <div className="value-card__body">
+                                        <h3 className="value-card__title">{valueTitle}</h3>
+                                        <p className="value-card__summary">{c.summary}</p>
+                                    </div>
+                                </li>
+                            );
+                        })}
+                    </ol>
                 </div>
-
-                <CoverFlow items={items} footerVariant="scenarios" ariaLabel="Value cards" />
             </div>
-            <Shapes specs={shapes} />
         </section>
     );
 }
@@ -611,7 +700,10 @@ function CasesSection(): JSX.Element {
                                 ))}
                             </ul>
                             <span className="case-link">
-                                Read Case Study <span aria-hidden="true">→</span>
+                                <img className={c.logoClass} src={c.logo} alt={c.logoAlt} />
+                                {c.logoText ? (
+                                    <span className={c.logoTextClass}>{c.logoText}</span>
+                                ) : null}
                             </span>
                         </a>
                     ))}
@@ -621,17 +713,41 @@ function CasesSection(): JSX.Element {
     );
 }
 
+function CapabilityTags(): JSX.Element {
+    return (
+        <div className="dw-capability-tags" data-reveal>
+            {capabilities.map((c, index) => (
+                <article className="dw-capability-tag" key={c.id}>
+                    <div className="dw-capability-tag__num">
+                        {String(index + 1).padStart(2, '0')}
+                    </div>
+                    <h4 className="dw-capability-tag__title">{c.title}</h4>
+                    <div className="dw-capability-tag__footer">
+                        <div className="dw-capability-tag__label">{c.poweredLabel}</div>
+                        <ul>
+                            {c.poweredBy.map(item => (
+                                <li key={item.label}>
+                                    {item.href !== undefined ? (
+                                        <a href={item.href}>{item.label}</a>
+                                    ) : (
+                                        item.label
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </article>
+            ))}
+        </div>
+    );
+}
+
 function TechSection(): JSX.Element {
-    const capabilityItems: CoverFlowItem[] = capabilities.map(c => ({
-        id: c.id,
-        num: c.num,
-        title: c.title,
-        desc: c.desc,
-        footer: { label: c.poweredLabel, items: c.poweredBy },
-    }));
+    const [openRequirement, setOpenRequirement] = useState<string | null>(null);
 
     return (
-        <section className="section section-tech section-cream" id="tech">
+        <>
+            <section className="section section-tech" id="tech">
             <div className="container section-inner">
                 <div className="section-head section-head-wide" data-reveal>
                     <h2 className="section-title section-title-stacked">
@@ -644,25 +760,82 @@ function TechSection(): JSX.Element {
                     </p>
                 </div>
 
-                <h3 className="tech-layer-heading">Technical requirements</h3>
-                <div className="req-grid" data-reveal>
-                    {requirements.map(r => (
-                        <div className="req-card" key={r.id}>
-                            <h4 className="req-title">{r.title}</h4>
-                            <p className="req-desc">{r.desc}</p>
-                        </div>
-                    ))}
+                <div className="dw-architecture-panel" data-reveal>
+                    <div className="dw-architecture-diagram">
+                        <img
+                            src="/images/use-cases/dw-architecture.png"
+                            alt="Modern data warehouse architecture"
+                            loading="lazy"
+                        />
+                    </div>
+                    <div className="dw-architecture-features">
+                        {requirements.map((r, index) => {
+                            const isOpen = openRequirement === r.id;
+                            return (
+                                <article
+                                    className={`dw-arch-feature${isOpen ? ' is-open' : ''}`}
+                                    key={r.id}
+                                >
+                                    <button
+                                        type="button"
+                                        className="dw-arch-feature__trigger"
+                                        onClick={() =>
+                                            setOpenRequirement(isOpen ? null : r.id)
+                                        }
+                                        aria-expanded={isOpen}
+                                        aria-controls={`dw-req-${r.id}`}
+                                    >
+                                        <span className="dw-arch-feature__index">
+                                            {String(index + 1).padStart(2, '0')}
+                                        </span>
+                                        <span className="dw-arch-feature__title">{r.title}</span>
+                                        <svg
+                                            className="dw-arch-feature__icon"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2.5"
+                                            strokeLinecap="round"
+                                            aria-hidden="true"
+                                        >
+                                            {isOpen ? (
+                                                <path d="M5 12h14" />
+                                            ) : (
+                                                <path d="M12 5v14M5 12h14" />
+                                            )}
+                                        </svg>
+                                    </button>
+                                    {isOpen ? (
+                                        <div
+                                            className="dw-arch-feature__body"
+                                            id={`dw-req-${r.id}`}
+                                        >
+                                            <p>{r.desc}</p>
+                                        </div>
+                                    ) : null}
+                                </article>
+                            );
+                        })}
+                    </div>
                 </div>
 
-                <h3 className="tech-layer-heading">Apache Doris capabilities</h3>
-
-                <CoverFlow
-                    items={capabilityItems}
-                    footerVariant="powered"
-                    ariaLabel="Capability cards"
-                />
             </div>
-        </section>
+            </section>
+
+            <section className="section section-tech-capabilities" id="capabilities">
+                <div className="container section-inner">
+                    <h3 className="tech-layer-heading">Apache Doris capabilities for Warehouse</h3>
+                    <p className="dw-capability-sub">
+                        For more technical details about Apache Doris in warehouse, refer to the
+                        technical blogs
+                    </p>
+
+                    <CapabilityTags />
+                </div>
+            </section>
+        </>
     );
 }
 

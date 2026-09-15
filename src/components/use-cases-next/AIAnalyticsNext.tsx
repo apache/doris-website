@@ -62,6 +62,58 @@ function BoltIcon({ size = 24, color = 'var(--brand-accent)', className }: BoltI
     );
 }
 
+function ValueIcon({ id }: { id: string }): JSX.Element {
+    const common = {
+        viewBox: '0 0 24 24',
+        fill: 'none',
+        stroke: 'currentColor',
+        strokeWidth: 2,
+        strokeLinecap: 'round',
+        strokeLinejoin: 'round',
+    } as const;
+
+    if (id === 'real-time') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <path d="M13 2 3 14h7l-1 8 11-13h-7l1-7z" />
+            </svg>
+        );
+    }
+    if (id === 'data-aware') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <ellipse cx="12" cy="5" rx="8" ry="3" />
+                <path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5" />
+                <path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3" />
+            </svg>
+        );
+    }
+    if (id === 'rag-quality') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m21 21-4.3-4.3" />
+            </svg>
+        );
+    }
+    if (id === 'observable') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+                <circle cx="12" cy="12" r="3" />
+            </svg>
+        );
+    }
+
+    return (
+        <svg {...common} aria-hidden="true">
+            <path d="m12 2 9 5-9 5-9-5 9-5z" />
+            <path d="m3 12 9 5 9-5" />
+            <path d="m3 17 9 5 9-5" />
+        </svg>
+    );
+}
+
 interface FooterItem {
     label: string;
     href?: string;
@@ -239,6 +291,7 @@ interface ValueCard {
     num: string;
     title: ReactNode;
     desc: string;
+    summary: string;
     scenariosLabel: string;
     scenarios: string[];
 }
@@ -281,6 +334,8 @@ const valueCards: ValueCard[] = [
         ),
         desc:
             'AI agents need fresh business context, not yesterday’s batch data. Real-time analytics lets them query live operational data, detect changes, and act while the user interaction or business process is still happening.',
+        summary:
+            'Live operational data reaches AI decisions in time to act while the user interaction or business process is still happening.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Real-time fraud detection',
@@ -302,6 +357,8 @@ const valueCards: ValueCard[] = [
         ),
         desc:
             'AI applications need more than prompts. To deliver useful answers and take reliable actions, copilots, agents, and RAG systems need fresh, trusted, queryable enterprise data. With real-time access to business context, user history, operational metrics, documents, logs, and feedback, AI applications can turn enterprise data into context, memory, and intelligence.',
+        summary:
+            'Copilots and agents get fresh, trusted, queryable enterprise data that turns business context into reliable context, memory, and actions.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Enterprise copilots',
@@ -323,6 +380,8 @@ const valueCards: ValueCard[] = [
         ),
         desc:
             'RAG systems need more than vector search alone. In real enterprise environments, the right context depends on semantic similarity, keyword relevance, metadata, permissions, time ranges, and business signals. By combining SQL filtering, full-text search, BM25, and vector search in one query, teams can retrieve more accurate context for LLMs and reduce hallucinations caused by incomplete or irrelevant retrieval.',
+        summary:
+            'SQL filters, full-text search, BM25, and vector search work together to retrieve accurate context and reduce hallucinations.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'RAG applications',
@@ -344,6 +403,8 @@ const valueCards: ValueCard[] = [
         ),
         desc:
             'AI systems do not fail like traditional applications. A request may complete successfully while still returning a wrong answer, an ungrounded response, excessive cost, or poor user experience. Teams need to analyze prompts, responses, traces, tool calls, retrieval context, token usage, latency, cost, evaluation scores, and user feedback together to debug issues, monitor quality, control spend, and continuously improve agent behavior.',
+        summary:
+            'Prompts, responses, traces, tool calls, token usage, and costs become queryable together for debugging and continuous AI quality control.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'LLM application monitoring',
@@ -365,6 +426,8 @@ const valueCards: ValueCard[] = [
         ),
         desc:
             'AI applications often depend on a fragmented stack of real-time databases, search engines, vector databases, log analytics systems, lakehouse platforms, and LLMOps tools. Apache Doris unifies real-time analytics, semi-structured data analysis, full-text search, vector search, hybrid search, and AI-native SQL in one high-performance analytical engine. Teams can reduce duplicated pipelines, improve result consistency, and lower the operational cost of serving AI workloads at scale.',
+        summary:
+            'One analytical engine unifies real-time analytics, search, log analysis, vector search, and AI-native SQL to reduce pipeline and operational complexity.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Unified AI data platforms',
@@ -494,7 +557,7 @@ const capabilities: Capability[] = [
         num: 'CAP · 03',
         title: (
             <>
-                Flexible JSON Anlytics
+                Flexible JSON Analytics
                 <br />
                 with&nbsp;VARIANT
             </>
@@ -578,34 +641,60 @@ function Hero(): JSX.Element {
 }
 
 function ValueSection(): JSX.Element {
-    const items: CoverFlowItem[] = valueCards.map(c => ({
-        id: c.id,
-        num: c.num,
-        title: c.title,
-        desc: c.desc,
-        footer: {
-            label: c.scenariosLabel,
-            items: c.scenarios.map(s => ({ label: s })),
-        },
-    }));
-
     return (
-        <section className="section section-value section-cream" id="value">
+        <section className="section section-value" id="value">
             <div className="hero-bg-grid" aria-hidden="true" />
             <div className="container section-inner">
-                <div className="section-head section-head-wide" data-reveal>
-                    <h2 className="section-title section-title-stacked">
-                        <span>Why AI-ready&nbsp;analytics&nbsp;matters</span>
-                        <span>for the agent&nbsp;era.</span>
-                    </h2>
-                    <p className="section-sub">
-                        When the analytical foundation is fresh, hybrid, observable, and unified,
-                        five things shift at once for AI: decision quality, application context,
-                        retrieval relevance, agent visibility, and the cost of running it all.
-                    </p>
+                <div className="ai-value-layout">
+                    <div className="ai-value-copy" data-reveal>
+                        <h2 className="section-title section-title-stacked">
+                            <span>Why AI-ready</span>
+                            <span>analytics matters for</span>
+                            <span>the agent era.</span>
+                        </h2>
+                        <p className="ai-value-copy__lead">
+                            When the analytical foundation is fresh, hybrid, observable, and
+                            unified, five things shift at once for AI:
+                        </p>
+                        <ul className="ai-value-points">
+                            <li className="ai-value-point" data-reveal>
+                                Decision quality
+                            </li>
+                            <li className="ai-value-point" data-reveal>
+                                Application context
+                            </li>
+                            <li className="ai-value-point" data-reveal>
+                                Retrieval relevance
+                            </li>
+                            <li className="ai-value-point" data-reveal>
+                                Agent visibility
+                            </li>
+                            <li className="ai-value-point" data-reveal>
+                                The cost of running it all
+                            </li>
+                        </ul>
+                    </div>
+                    <ol className="ai-value-cards">
+                        {valueCards.map(c => {
+                            const [numPart, ...titleParts] = c.num.split('/');
+                            const valueTitle = titleParts.join('/').trim();
+                            return (
+                                <li key={c.id} className="ai-value-card" data-reveal>
+                                    <div className="ai-value-card__meta">
+                                        <span className="ai-value-card__num">{numPart.trim()}</span>
+                                        <span className="ai-value-card__icon" aria-hidden="true">
+                                            <ValueIcon id={c.id} />
+                                        </span>
+                                    </div>
+                                    <div className="ai-value-card__body">
+                                        <h3 className="ai-value-card__title">{valueTitle}</h3>
+                                        <p className="ai-value-card__summary">{c.summary}</p>
+                                    </div>
+                                </li>
+                            );
+                        })}
+                    </ol>
                 </div>
-
-                <CoverFlow items={items} footerVariant="scenarios" ariaLabel="Value cards" />
             </div>
         </section>
     );
@@ -656,61 +745,68 @@ function CasesSection(): JSX.Element {
     );
 }
 
-function TechSection(): JSX.Element {
-    const useSix = requirements.length === 6;
-
-    const relatedLinks: Record<string, { to: string; title: string; desc: string }> = {
+function AICapabilityTags(): JSX.Element {
+    const relatedUseCases: Record<string, { to: string; title: string }> = {
         'cap-realtime': {
             to: '/use-cases/customer-facing-analytics',
             title: 'Customer-Facing Analytics',
-            desc:
-                'How teams use Apache Doris to deliver sub-second, embedded, multi-tenant analytics to end users at scale.',
         },
         'cap-ai-obs': {
             to: '/use-cases/observability',
-            title: 'Observability for the AI Agent Era',
-            desc:
-                'How teams unify logs, metrics, traces, and AI agent events on Apache Doris — from PB-scale logging to interactive dashboards.',
+            title: 'Observability for the AI Agent',
         },
     };
 
-    const capabilityItems: CoverFlowItem[] = capabilities.map(c => {
-        const base: CoverFlowItem = {
-            id: c.id,
-            num: c.num,
-            title: c.title,
-            desc: c.desc,
-            footer: { label: c.poweredLabel, items: c.poweredBy },
-        };
-        const related = relatedLinks[c.id];
-        if (related) {
-            return {
-                ...base,
-                customFooter: (
-                    <div className="cap-related">
-                        <div className="cap-related-eyebrow">
-                            Deep dive · Related use case
+    return (
+        <div className="ai-capability-tags" data-reveal>
+            {capabilities.map((c, index) => {
+                const related = relatedUseCases[c.id];
+                return (
+                    <article className="ai-capability-tag" key={c.id}>
+                        <span className="ai-capability-tag__hole" aria-hidden="true" />
+                        <div className="ai-capability-tag__num">
+                            {String(index + 1).padStart(2, '0')}
                         </div>
-                        <Link
-                            to={related.to}
-                            className="cap-related-card"
-                            onClick={e => e.stopPropagation()}
-                        >
-                            <div className="cap-related-card-title">{related.title}</div>
-                            <p className="cap-related-card-desc">{related.desc}</p>
-                            <span className="cap-related-card-cta">
-                                Explore the use case <span aria-hidden="true">→</span>
-                            </span>
-                        </Link>
-                    </div>
-                ),
-            };
-        }
-        return base;
-    });
+                        <h4 className="ai-capability-tag__title">{c.title}</h4>
+                        {c.poweredBy.length > 0 && c.id !== 'cap-realtime' ? (
+                            <div className="ai-capability-tag__footer">
+                                <div className="ai-capability-tag__label">{c.poweredLabel}</div>
+                                <ul>
+                                    {c.poweredBy.map(item => (
+                                        <li key={item.label}>
+                                            {item.href !== undefined ? (
+                                                <a href={item.href}>{item.label}</a>
+                                            ) : (
+                                                item.label
+                                            )}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ) : null}
+                        {related ? (
+                            <div className="ai-capability-tag__related">
+                                <div className="ai-capability-tag__related-eyebrow">
+                                    Deep dive · Related use case
+                                </div>
+                                <Link to={related.to} className="ai-capability-tag__related-link">
+                                    {related.title}
+                                </Link>
+                            </div>
+                        ) : null}
+                    </article>
+                );
+            })}
+        </div>
+    );
+}
+
+function TechSection(): JSX.Element {
+    const [openRequirement, setOpenRequirement] = useState<string | null>(null);
 
     return (
-        <section className="section section-tech section-cream" id="tech">
+        <>
+            <section className="section section-tech" id="tech">
             <div className="container section-inner">
                 <div className="section-head section-head-wide" data-reveal>
                     <h2 className="section-title section-title-stacked">
@@ -723,25 +819,82 @@ function TechSection(): JSX.Element {
                     </p>
                 </div>
 
-                <h3 className="tech-layer-heading">AI-ready analytics technical requirements</h3>
-                <div className={`req-grid${useSix ? ' req-grid-6' : ''}`} data-reveal>
-                    {requirements.map(r => (
-                        <div className="req-card" key={r.id}>
-                            <h4 className="req-title">{r.title}</h4>
-                            <p className="req-desc">{r.desc}</p>
-                        </div>
-                    ))}
+                <div className="ai-architecture-panel" data-reveal>
+                    <div className="ai-architecture-diagram">
+                        <img
+                            src="/images/use-cases/ai-architecture.png"
+                            alt="Apache Doris hybrid search architecture"
+                            loading="lazy"
+                        />
+                    </div>
+                    <div className="ai-architecture-features">
+                        {requirements.map((r, index) => {
+                            const isOpen = openRequirement === r.id;
+                            return (
+                                <article
+                                    className={`ai-arch-feature${isOpen ? ' is-open' : ''}`}
+                                    key={r.id}
+                                >
+                                    <button
+                                        type="button"
+                                        className="ai-arch-feature__trigger"
+                                        onClick={() =>
+                                            setOpenRequirement(isOpen ? null : r.id)
+                                        }
+                                        aria-expanded={isOpen}
+                                        aria-controls={`ai-req-${r.id}`}
+                                    >
+                                        <span className="ai-arch-feature__index">
+                                            {String(index + 1).padStart(2, '0')}
+                                        </span>
+                                        <span className="ai-arch-feature__title">{r.title}</span>
+                                        <svg
+                                            className="ai-arch-feature__icon"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2.5"
+                                            strokeLinecap="round"
+                                            aria-hidden="true"
+                                        >
+                                            {isOpen ? (
+                                                <path d="M5 12h14" />
+                                            ) : (
+                                                <path d="M12 5v14M5 12h14" />
+                                            )}
+                                        </svg>
+                                    </button>
+                                    {isOpen ? (
+                                        <div
+                                            className="ai-arch-feature__body"
+                                            id={`ai-req-${r.id}`}
+                                        >
+                                            <p>{r.desc}</p>
+                                        </div>
+                                    ) : null}
+                                </article>
+                            );
+                        })}
+                    </div>
                 </div>
 
-                <h3 className="tech-layer-heading">Apache Doris capabilities</h3>
-
-                <CoverFlow
-                    items={capabilityItems}
-                    footerVariant="powered"
-                    ariaLabel="Capability cards"
-                />
             </div>
-        </section>
+            </section>
+
+            <section className="section section-tech-capabilities" id="capabilities">
+                <div className="container section-inner">
+                    <h3 className="tech-layer-heading">Apache Doris capabilities for AI</h3>
+                    <p className="ai-capability-sub">
+                        For more technical details about Apache Doris in AI, refer to the technical
+                        blogs
+                    </p>
+
+                    <AICapabilityTags />
+                </div>
+            </section>
+        </>
     );
 }
 

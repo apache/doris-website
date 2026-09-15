@@ -1,5 +1,4 @@
 import React, {
-    CSSProperties,
     JSX,
     KeyboardEvent,
     ReactNode,
@@ -12,54 +11,6 @@ import React, {
 import Link from '@docusaurus/Link';
 import { LayoutNext } from '@site/src/components/home-next/LayoutNext';
 import './CustomerFacingAnalyticsNext.scss';
-
-interface BoltIconProps {
-    size?: number | string;
-    color?: string;
-    className?: string;
-}
-
-function BoltIcon({ size = 24, color = 'var(--brand-accent)', className }: BoltIconProps): JSX.Element {
-    return (
-        <svg
-            width={size}
-            height={size}
-            viewBox="0 0 24 24"
-            fill="none"
-            className={className}
-            aria-hidden="true"
-        >
-            <path
-                d="M13 2L3 14h7l-1 8 11-13h-7l1-7z"
-                fill={color}
-                stroke={color}
-                strokeWidth="0.5"
-                strokeLinejoin="round"
-            />
-        </svg>
-    );
-}
-
-type ShapeKind = 'diamond' | 'circle' | 'ring' | 'cross';
-
-interface ShapeSpec {
-    kind: ShapeKind;
-    style: CSSProperties;
-}
-
-function Shape({ kind, style }: { kind: ShapeKind; style?: CSSProperties }): JSX.Element {
-    return <span className={`shape shape-${kind}`} style={style} aria-hidden="true" />;
-}
-
-function Shapes({ specs }: { specs: ShapeSpec[] }): JSX.Element {
-    return (
-        <>
-            {specs.map((s, i) => (
-                <Shape key={i} kind={s.kind} style={s.style} />
-            ))}
-        </>
-    );
-}
 
 interface FooterItem {
     label: string;
@@ -206,6 +157,91 @@ function CoverFlow({
     );
 }
 
+function HighlightIcon({ id }: { id: string }): JSX.Element {
+    const common = {
+        viewBox: '0 0 24 24',
+        fill: 'none',
+        stroke: 'currentColor',
+        strokeWidth: 2,
+        strokeLinecap: 'round',
+        strokeLinejoin: 'round',
+    } as const;
+
+    if (id === 'engagement') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+                <polyline points="16 7 22 7 22 13" />
+            </svg>
+        );
+    }
+    if (id === 'monetization') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <line x1="12" y1="2" x2="12" y2="22" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+        );
+    }
+    if (id === 'decisions') {
+        return (
+            <svg {...common} aria-hidden="true">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+        );
+    }
+
+    return (
+        <svg {...common} aria-hidden="true">
+            <path d="M9 18h6" />
+            <path d="M10 22h4" />
+            <path d="M12 2a7 7 0 0 0-4.9 12c.6.6 1 1.5 1 2.5h7.8c0-1 .4-1.9 1-2.5A7 7 0 0 0 12 2z" />
+        </svg>
+    );
+}
+
+function LegacyHero(): JSX.Element {
+    return (
+        <section className="legacy-hero" id="production-hero">
+            <div className="legacy-hero__bg" aria-hidden="true" />
+            <div className="legacy-hero__grid" aria-hidden="true" />
+            <div className="container legacy-hero__inner">
+                <div className="legacy-hero__left">
+                    <h1 className="legacy-hero__title" data-reveal data-reveal-delay="1">
+                        Customer-Facing Analytics,
+                        <br />
+                        Powered by{' '}
+                        <span className="accent">
+                            Real-Time
+                            <span className="legacy-hero__bolt" aria-hidden="true">
+                                <svg
+                                    width="0.85em"
+                                    height="0.85em"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                >
+                                    <path
+                                        d="M13 2L3 14h7l-1 8 11-13h-7l1-7z"
+                                        fill="var(--brand-accent)"
+                                        stroke="var(--brand-accent)"
+                                        strokeWidth="0.5"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </span>{' '}
+                            Data
+                        </span>
+                    </h1>
+                    <p className="legacy-hero__sub" data-reveal data-reveal-delay="2">
+                        Deliver sub-second, interactive analytics directly to your customers,
+                        at scale.
+                    </p>
+                </div>
+            </div>
+        </section>
+    );
+}
+
 function useRevealObserver(): void {
     useEffect(() => {
         const items = document.querySelectorAll<HTMLElement>('.cfa-page [data-reveal]');
@@ -229,13 +265,11 @@ function useRevealObserver(): void {
     }, []);
 }
 
-interface ValueCard {
+interface ValueSummary {
     id: string;
     num: string;
-    title: ReactNode;
-    desc: string;
-    scenariosLabel: string;
-    scenarios: string[];
+    title: string;
+    summary: string;
 }
 
 interface CaseStudy {
@@ -246,6 +280,11 @@ interface CaseStudy {
     scenario: string;
     outcomes: string[];
     href: string;
+    logo: string;
+    logoAlt: string;
+    logoClass: string;
+    logoText?: string;
+    logoTextClass?: string;
 }
 
 interface Requirement {
@@ -264,76 +303,33 @@ interface Capability {
     poweredBy: FooterItem[];
 }
 
-const valueCards: ValueCard[] = [
+const valueSummaries: ValueSummary[] = [
     {
         id: 'better-ux',
-        num: '01 / Better User Experience',
-        title: (
-            <>
-                Instant dashboards.
-                <br />
-                No&nbsp;waiting.
-                <br />
-                No&nbsp;refresh.
-            </>
-        ),
-        desc: 'Dashboards load the moment users arrive. Every interaction feels like part of the product, not a report — with no spinner standing between a question and its answer.',
-        scenariosLabel: 'Where it shows up',
-        scenarios: ['SaaS product dashboards', 'Embedded analytics in applications'],
+        num: '01',
+        title: 'Better User Experience',
+        summary:
+            'Dashboards load the moment users arrive, so analytics feels like a native part of the product instead of a report to wait for.',
     },
     {
         id: 'engagement',
-        num: '02 / Higher Engagement & Retention',
-        title: (
-            <>
-                Data that&rsquo;s alive
-                <br />
-                keeps users coming&nbsp;back.
-            </>
-        ),
-        desc: 'Users engage more when data feels live, responsive, and part of the product experience. Analytics becomes a reason to return, not a separate screen users have to leave the workflow to find.',
-        scenariosLabel: 'Where it shows up',
-        scenarios: [
-            'In-product usage dashboards',
-            'Real-time behavior insights',
-            'Customer activity timelines',
-        ],
+        num: '02',
+        title: 'Higher Engagement & Retention',
+        summary: 'Live, responsive analytics turns product data into a reason for users to come back.',
     },
     {
         id: 'monetization',
-        num: '03 / Monetization',
-        title: (
-            <>
-                Analytics as
-                <br />
-                a product&nbsp;capability.
-            </>
-        ),
-        desc: 'Turn customer-facing analytics into a revenue-generating product feature. Embed dashboards, reporting, and data products into your application, then package them into premium tiers your customers are willing to pay for.',
-        scenariosLabel: 'Where it shows up',
-        scenarios: [
-            'Merchant analytics dashboards',
-            'Partner and customer reporting portals',
-            'Data products and premium analytics tiers',
-        ],
+        num: '03',
+        title: 'Monetization',
+        summary:
+            'Customer-facing analytics becomes a premium, revenue-generating feature inside your own product.',
     },
     {
         id: 'decisions',
-        num: '04 / Faster Decisions',
-        title: (
-            <>
-                Real-time signal,
-                <br />
-                real-time&nbsp;DECISIONS.
-            </>
-        ),
-        desc: 'When dashboards reflect what is happening now, teams can act before opportunities pass instead of reacting to yesterday’s data.',
-        scenariosLabel: 'Where it shows up',
-        scenarios: [
-            'Financial analytics dashboards',
-            'Advertising performance platforms',
-            'Marketing performance dashboards',
-        ],
+        num: '04',
+        title: 'Faster Decisions',
+        summary:
+            'Real-time signal lets teams act before opportunities pass instead of reacting to yesterday\'s data.',
     },
 ];
 
@@ -351,33 +347,46 @@ const cases: CaseStudy[] = [
             'Enables real-time data ingestion by 1 million rows per second.',
         ],
         href: 'https://www.velodb.io/blog/jd-com-s-exploration-practice-apache-doris',
+        logo: '/images/next/user-logos/jd-color.png',
+        logoAlt: 'JD.COM',
+        logoClass: 'case-logo case-logo--jd',
     },
     {
         id: 'merchants',
         num: 'Case · 02',
-        title: 'Real-Time Merchant Analytics at Scale',
-        quote: 'Doris lets us deliver fresh business insights to merchants without waiting for offline reports.',
+        title: 'Real-Time Recommendations for Xanh SM',
+        quote:
+            'Apache Doris and its Compute-Storage Decouple Mode allowed us to run both workloads from a single storage layer, cutting infrastructure cost and complexity without sacrificing performance.',
         scenario:
-            'E-commerce and platform merchant analytics, covering order analysis, conversion analysis, and user behavior analysis.',
+            'Xanh SM, Vietnam\'s leading EV ride-hailing platform, runs analytics and real-time serving on Apache Doris to power personalized destination recommendations.',
         outcomes: [
-            'Real-time order insights',
-            'Concurrent dashboard access',
-            'Faster operational decisions',
+            '175,000 records written per second in under 1 second',
+            'P9999 query latency occasionally exceeded 100ms',
+            'average query latency held at ~76ms across most time windows',
         ],
-        href: '#',
+        href: 'https://www.velodb.io/blog/how-xanhsm-built-real-time-recommendations-with-apache-doris',
+        logo: '/images/next/user-logos/green-sm.svg',
+        logoAlt: 'Green SM',
+        logoClass: 'case-logo case-logo--green-sm',
     },
     {
         id: 'high-frequency',
         num: 'Case · 03',
-        title: 'Interactive Analytics for High-Frequency Business Data',
-        quote: 'Apache Doris gives us interactive analytics on large-scale, high-frequency data with low latency.',
-        scenario: 'Finance, advertising, and marketing analytics platforms serving external users.',
+        title: 'Real-Time Analytics for ZTO',
+        quote: '',
+        scenario:
+            'Inverted indexes on the high-frequency filter fields to support real-time monitoring, multi-dimensional analytics, and precise filtering queries',
         outcomes: [
-            'Large-scale data analysis',
-            'Low-latency interactive queries',
-            'Reliable analytics serving layer',
+            'Multi-dimensional equality filter queries dropped from over 1 minute to under 1 second (60x); complex aggregations dropped from 5-10 minutes to under 1 minute.',
+            'Critical query concurrency grew from under 50 to 100+, while timeout rate fell from 30% to under 5% and latency variance narrowed from ±3s to ±1s.',
+            'The full workload now runs on one-third of the original hardware, with 500 million daily record updates visible in queries within seconds.',
         ],
-        href: '#',
+        href: 'https://www.velodb.io/blog/how-zto-express-rebuilt-real-time-analytics-with-inverted-index',
+        logo: '/images/next/user-logos/zto-circle.png',
+        logoAlt: 'ZTO',
+        logoClass: 'case-logo case-logo--zto',
+        logoText: 'ZTO EXPRESS',
+        logoTextClass: 'case-logo-text case-logo-text--zto',
     },
 ];
 
@@ -492,72 +501,57 @@ const capabilities: Capability[] = [
     },
 ];
 
-const valueShapes: ShapeSpec[] = [
-    { kind: 'diamond', style: { top: 120, right: '12%' } },
-    { kind: 'ring', style: { bottom: 90, left: '8%' } },
-];
-
 function Hero(): JSX.Element {
     return (
         <section className="hero" id="hero">
             <div className="hero-bg" aria-hidden="true" />
             <div className="hero-bg-grid" aria-hidden="true" />
-            <div className="container">
+            <div className="container hero-inner">
                 <div className="hero-left">
+                    <div className="hero-kicker" data-reveal data-reveal-delay="1">
+                        Customer-Facing Analytics
+                    </div>
                     <h1 className="hero-title" data-reveal data-reveal-delay="1">
-                        Customer-Facing Analytics,
-                        <br />
-                        Powered by{' '}
-                        <span className="accent">
-                            Real-Time
-                            <span className="bolt-inline">
-                                <BoltIcon size="0.85em" />
-                            </span>{' '}
-                            Data
-                        </span>
+                        <span className="hero-title__line">Why real-time</span>
+                        <span className="hero-title__line">changes the&nbsp;product.</span>
                     </h1>
                     <p className="hero-sub" data-reveal data-reveal-delay="2">
-                        Deliver sub-second, interactive analytics directly to your customers,
-                        at scale.
+                        When analytics shifts from internal report to live product surface,
+                        four things change at once:
                     </p>
-                </div>
-            </div>
-        </section>
-    );
-}
-
-function ValueSection(): JSX.Element {
-    const items: CoverFlowItem[] = valueCards.map(c => ({
-        id: c.id,
-        num: c.num,
-        title: c.title,
-        desc: c.desc,
-        footer: {
-            label: c.scenariosLabel,
-            items: c.scenarios.map(s => ({ label: s })),
-        },
-    }));
-
-    return (
-        <section className="section section-value section-cream" id="value">
-            <div className="hero-bg-grid" aria-hidden="true" />
-            <div className="container section-inner">
-                <div className="section-head" data-reveal>
-                    <h2 className="section-title">
-                        Why real-time
-                        <br />
-                        changes the product.
-                    </h2>
-                    <p className="section-sub">
-                        When analytics shifts from internal report to live product surface, four
-                        things change at once: the user experience, engagement, revenue, and the
-                        speed of decisions.
-                    </p>
+                    <ul className="hero-points">
+                        <li className="hero-point" data-reveal>
+                            The user experience
+                        </li>
+                        <li className="hero-point" data-reveal>
+                            Engagement
+                        </li>
+                        <li className="hero-point" data-reveal>
+                            Revenue
+                        </li>
+                        <li className="hero-point" data-reveal>
+                            The speed of decisions
+                        </li>
+                    </ul>
                 </div>
 
-                <CoverFlow items={items} footerVariant="scenarios" ariaLabel="Value cards" />
+                <ol className="hero-highlights">
+                    {valueSummaries.map(item => (
+                        <li key={item.id} className="hero-highlight">
+                            <div className="hero-highlight__meta">
+                                <span className="hero-highlight__num">{item.num}</span>
+                                <span className="hero-highlight__icon" aria-hidden="true">
+                                    <HighlightIcon id={item.id} />
+                                </span>
+                            </div>
+                            <div className="hero-highlight__body">
+                                <span className="hero-highlight__title">{item.title}</span>
+                                <span className="hero-highlight__summary">{item.summary}</span>
+                            </div>
+                        </li>
+                    ))}
+                </ol>
             </div>
-            <Shapes specs={valueShapes} />
         </section>
     );
 }
@@ -586,7 +580,9 @@ function CasesSection(): JSX.Element {
                         >
                             <div className="case-num">{c.num}</div>
                             <h3 className="case-title">{c.title}</h3>
-                            <p className="case-quote">&ldquo;{c.quote}&rdquo;</p>
+                            {c.quote ? (
+                                <p className="case-quote">&ldquo;{c.quote}&rdquo;</p>
+                            ) : null}
                             <div className="case-section">Scenario</div>
                             <p className="case-scenario">{c.scenario}</p>
                             <div className="case-section">Outcome</div>
@@ -596,7 +592,10 @@ function CasesSection(): JSX.Element {
                                 ))}
                             </ul>
                             <span className="case-link">
-                                Read Case Study <span aria-hidden="true">→</span>
+                                <img className={c.logoClass} src={c.logo} alt={c.logoAlt} />
+                                {c.logoText ? (
+                                    <span className={c.logoTextClass}>{c.logoText}</span>
+                                ) : null}
                             </span>
                         </a>
                     ))}
@@ -606,17 +605,43 @@ function CasesSection(): JSX.Element {
     );
 }
 
+function CapabilityTags(): JSX.Element {
+    return (
+        <div className="capability-tags" data-reveal>
+            {capabilities.map(c => {
+                const tagNum = c.num.split('·').pop()?.trim() ?? c.num;
+                return (
+                    <article className="capability-tag" key={c.id}>
+                        <span className="capability-tag__hole" aria-hidden="true" />
+                        <div className="capability-tag__num">{tagNum}</div>
+                        <h4 className="capability-tag__title">{c.title}</h4>
+                        <div className="capability-tag__footer">
+                            <div className="capability-tag__label">{c.poweredLabel}</div>
+                            <ul>
+                                {c.poweredBy.map(item => (
+                                    <li key={item.label}>
+                                        {item.href !== undefined ? (
+                                            <a href={item.href}>{item.label}</a>
+                                        ) : (
+                                            item.label
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </article>
+                );
+            })}
+        </div>
+    );
+}
+
 function TechSection(): JSX.Element {
-    const capabilityItems: CoverFlowItem[] = capabilities.map(c => ({
-        id: c.id,
-        num: c.num,
-        title: c.title,
-        desc: c.desc,
-        footer: { label: c.poweredLabel, items: c.poweredBy },
-    }));
+    const [openRequirement, setOpenRequirement] = useState<string | null>(null);
 
     return (
-        <section className="section section-tech section-cream" id="tech">
+        <>
+        <section className="section section-tech" id="tech">
             <div className="container section-inner">
                 <div className="section-head" data-reveal>
                     <h2 className="section-title">
@@ -631,25 +656,80 @@ function TechSection(): JSX.Element {
                     </p>
                 </div>
 
-                <h3 className="tech-layer-heading">Technical requirements</h3>
-                <div className="req-grid" data-reveal>
-                    {requirements.map(r => (
-                        <div className="req-card" key={r.id}>
-                            <h4 className="req-title">{r.title}</h4>
-                            <p className="req-desc">{r.desc}</p>
-                        </div>
-                    ))}
+                <div className="architecture-panel" data-reveal>
+                    <div className="architecture-diagram">
+                        <img
+                            src="/images/use-cases/cfa-architecture.jpg"
+                            alt="Apache Doris product overview architecture"
+                            loading="lazy"
+                        />
+                    </div>
+                    <div className="architecture-features">
+                        {requirements.map((r, index) => {
+                            const isOpen = openRequirement === r.id;
+                            return (
+                                <article
+                                    className={`arch-feature${isOpen ? ' is-open' : ''}`}
+                                    key={r.id}
+                                >
+                                    <button
+                                        type="button"
+                                        className="arch-feature__trigger"
+                                        onClick={() =>
+                                            setOpenRequirement(isOpen ? null : r.id)
+                                        }
+                                        aria-expanded={isOpen}
+                                        aria-controls={`req-${r.id}`}
+                                    >
+                                        <span className="arch-feature__index">
+                                            {String(index + 1).padStart(2, '0')}
+                                        </span>
+                                        <span className="arch-feature__title">{r.title}</span>
+                                        <svg
+                                            className="arch-feature__icon"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2.5"
+                                            strokeLinecap="round"
+                                            aria-hidden="true"
+                                        >
+                                            {isOpen ? (
+                                                <path d="M5 12h14" />
+                                            ) : (
+                                                <path d="M12 5v14M5 12h14" />
+                                            )}
+                                        </svg>
+                                    </button>
+                                    {isOpen ? (
+                                        <div className="arch-feature__body" id={`req-${r.id}`}>
+                                            <p>{r.desc}</p>
+                                        </div>
+                                    ) : null}
+                                </article>
+                            );
+                        })}
+                    </div>
                 </div>
-
-                <h3 className="tech-layer-heading">Apache Doris capabilities</h3>
-
-                <CoverFlow
-                    items={capabilityItems}
-                    footerVariant="powered"
-                    ariaLabel="Capability cards"
-                />
             </div>
         </section>
+
+        <section className="section section-tech section-tech-capabilities" id="capabilities">
+            <div className="container section-inner">
+                <h3 className="tech-layer-heading">
+                    Apache Doris capabilities for Customer-facing Analytics
+                </h3>
+                <p className="capability-sub">
+                    For more technical details about Apache Doris in real-time analytics, refer to
+                    the technical blogs
+                </p>
+
+                <CapabilityTags />
+            </div>
+        </section>
+        </>
     );
 }
 
@@ -699,8 +779,8 @@ export default function CustomerFacingAnalyticsNext(): JSX.Element {
             description="Deliver sub-second, interactive customer-facing analytics with Apache Doris: high concurrency, real-time data, and embedded SQL."
         >
             <div className="cfa-page" data-screen-label="Customer-Facing Analytics">
+                <LegacyHero />
                 <Hero />
-                <ValueSection />
                 <CasesSection />
                 <TechSection />
                 <CTASection />
