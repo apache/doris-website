@@ -136,6 +136,7 @@ Users executing this SQL command must have at least the following permissions:
    | float                   | float     |
    | double                  | double    |
    | char / varchar / string | string    |
+   | uuid                    | binary    |
    | decimal                 | decimal   |
    | struct                  | struct    |
    | map                     | map       |
@@ -159,10 +160,13 @@ Users executing this SQL command must have at least the following permissions:
    | float                   | float32    |
    | double                  | float64    |
    | char / varchar / string | utf8       |
+   | uuid                    | fixed_size_binary(16) |
    | decimal                 | decimal128 |
    | struct                  | struct     |
    | map                     | map        |
    | array                   | list       |
+
+CSV writes UUID values as lowercase canonical text. Parquet writes `FIXED_LEN_BYTE_ARRAY(16)` with the UUID logical annotation, and ORC writes `BINARY` with the Doris-specific `doris.logical_type=uuid` attribute, including nested UUID elements in ARRAY, MAP, or STRUCT. When an ORC `schema` property is specified explicitly, declare UUID columns as `binary`; another type such as `string` is rejected.
 
 ### Export Data Volume and Export Efficiency
 

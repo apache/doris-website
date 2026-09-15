@@ -25,7 +25,7 @@ HIST(<expr>[, <num_buckets>])
 
 | 参数 | 说明 |
 | -- | -- |
-| `expr` | 待计算的表达式，支持 TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、String、Date、Datetime、TimestampNs 和 Timestamptz。 |
+| `expr` | 待计算的表达式，支持 TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、String、UUID、Date、Datetime、TimestampNs 和 Timestamptz。 |
 | `num_buckets` | 可选。用于限制直方图桶（bucket）的数量，默认值 128，支持的类型为 Integer。|
 
 ## 返回值

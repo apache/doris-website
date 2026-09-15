@@ -17,6 +17,8 @@ aaaaaaaabbbbccccddddeeeeeeeeeeee
 {aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee}
 ```
 
+This function uses different text validation rules from the native [UUID type](../../../basic-element/sql-data-types/uuid.md): it accepts canonical UUIDs enclosed in braces, while the native parser rejects them. To validate text for a native UUID column, use [TO_UUID_OR_NULL](../uuid-functions/to-uuid-or-null.md) or `TRY_CAST(<str> AS UUID)`.
+
 ## Syntax
 
 ```sql

@@ -2,7 +2,7 @@
 {
     "title": "数据类型概览",
     "language": "zh-CN",
-    "description": "包括以下 4 种："
+    "description": "Apache Doris 数据类型概览：数值、日期时间、字符串、二进制、半结构化、聚合、IP 及 UUID 类型。"
 }
 ---
 
@@ -91,3 +91,7 @@ IP 类型以二进制形式存储 IP 地址，比用字符串存储更省空间�
 1. [IPv4](../../basic-element/sql-data-types/ip/IPV4.md)：以 4 字节二进制存储 IPv4 地址，配合 ipv4_* 系列函数使用。
 
 2. [IPv6](../../basic-element/sql-data-types/ip/IPV6.md)：以 16 字节二进制存储 IPv6 地址，配合 ipv6_* 系列函数使用。
+
+## UUID
+
+[UUID](./uuid.md) 128 位标识符类型，固定占用 16 字节。接受标准或紧凑十六进制文本，输出小写标准文本，支持比较、排序、分组和关联。。

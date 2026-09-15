@@ -247,7 +247,8 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 >
 > - NULL: Available for all types, using NULL as the default value.
 > - Numeric literals: Can only be used for numeric types.
-> - String literals: Can only be used for string types.
+> - String literals: Used for string columns; UUID columns also accept valid UUID text defaults.
+> - UUID_V4() / UUID_V7(): Dynamic defaults for UUID columns, including their aliases. Values are generated per row when the column is omitted. See the [UUID type](../../../basic-element/sql-data-types/uuid.md).
 > - CURRENT_DATE: Can only be used for date types. Uses the current date as the default value.
 > - CURRENT_TIMESTAMP [ <defaultValuePrecision> ]: Can only be used for `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ` types. Uses the current timestamp as the default value. `<defaultValuePrecision>` can specify the time precision; `TIMESTAMP_NS` supports up to 9 digits.
 > - PI: Can only be used for double types. Uses pi as the default value.

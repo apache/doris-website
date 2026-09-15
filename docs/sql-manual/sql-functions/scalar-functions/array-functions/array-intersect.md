@@ -32,6 +32,7 @@ array_intersect(ARRAY<T> arr1, ARRAY<T> arr2, [ARRAY<T> arr3, ...])
 - Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2, TIMESTAMP_NS
 - Boolean type: BOOLEAN
 - IP types: IPV4, IPV6
+- UUID: [UUID](../../../basic-element/sql-data-types/uuid.md)
 
 ### Return Value
 

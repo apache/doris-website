@@ -251,6 +251,8 @@ Since version 4.1.4, the Iceberg identity partition metadata is delivered with e
 | list                                   | array                |                                         |
 | other                                  | UNSUPPORTED          |                                         |
 
+Iceberg UUID continues to map to STRING or VARBINARY according to `enable.mapping.varbinary`, preserving the 16 raw bytes in both mappings; it is not automatically mapped to native Doris UUID. Use `CAST(HEX(uuid_column) AS UUID)` to obtain a native UUID, rather than parsing the raw bytes as canonical UUID text. Parquet writes to Iceberg UUID fields retain the UUID logical annotation, including nested fields. See the [UUID type](../../sql-manual/basic-element/sql-data-types/uuid.md).
+
 > Note:
 >
 > Doris currently does not support `Timestamp` types with timezone. All `timestamp` and `timestamptz` will be uniformly mapped to `datetime(N)` type. However, during reading and writing, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the reading and writing results of `timestamptz` columns.

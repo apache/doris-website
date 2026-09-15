@@ -10,6 +10,8 @@
 
 返回一个 `LARGEINT` 类型的 `uuid`
 
+本函数继续返回 LARGEINT，新增的原生 [UUID 类型](../../../basic-element/sql-data-types/uuid.md) 不改变这一行为。需要原生 UUID 值时，使用 [UUID_V4](../uuid-functions/uuid-v4.md) 或 [UUID_V7](../uuid-functions/uuid-v7.md)。
+
 ## 语法
 
 ```sql

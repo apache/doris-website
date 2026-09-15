@@ -392,3 +392,7 @@ select cast('::192.0.2.1' as ipv6);
 | ::192.0.2.1                 |
 +-----------------------------+
 ```
+
+## UUID
+
+Native UUID outputs 36-character lowercase canonical text (`8-4-4-4-12`), regardless of input case or hyphens. `NULL` input returns `NULL`. See [UUID conversion](./uuid-conversion.md).

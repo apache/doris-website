@@ -272,6 +272,8 @@ ORDER BY entry_name;
 | list                                   | array                |                       |
 | other                                  | UNSUPPORTED          |                       |
 
+Iceberg UUID 继续按 `enable.mapping.varbinary` 映射为 STRING 或 VARBINARY，两种映射均保留 16 字节原始值；不会自动映射为 Doris 原生 UUID。使用 `CAST(HEX(uuid_column) AS UUID)` 转换为原生 UUID，不要直接将原始字节当作标准 UUID 文本解析。向 Iceberg UUID 字段写入 Parquet 时保留 UUID 逻辑标记，包括嵌套字段。详见 [UUID 类型](../../sql-manual/basic-element/sql-data-types/uuid.md)。
+
 > 注：
 >
 > Doris 当前不支持带时区的 `Timestamp` 类型。所有 `timestamp` 和 `timestamptz` 会统一映射到 `datetime(N)` 类型上。但在读取和写入时，Doris 会根据实际源类型正确处理时区。如通过 `SET time_zone=<tz>` 指定时区后，会影响 `timestamptz` 列的读取和写入结果。
