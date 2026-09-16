@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>Apache Doris Blog</title>
+        <link>https://doris.apache.org/blog/</link>
+        <description>Apache Doris Blog</description>
+        <lastBuildDate>Tue, 01 Sep 2026 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>en</language>
+        <item>
+            <title><![CDATA[dbt-for-apache-doris 1.1.0 Released: Five Business Demos to Get Started with Doris Data Engineering]]></title>
+            <link>https://doris.apache.org/blog/dbt-for-apache-doris-1.1.0-five-demos/</link>
+            <guid>https://doris.apache.org/blog/dbt-for-apache-doris-1.1.0-five-demos/</guid>
+            <pubDate>Tue, 01 Sep 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[dbt-for-apache-doris 1.1.0 targets dbt Core 1.12, manages Apache Doris asynchronous materialized views through the standard dbt materialized_view, and covers Table, View, Incremental, Snapshot, Seed, and Data Test workflows. Five business demos show how dbt and Apache Doris handle daily order summaries, late-arriving orders, and more.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">dbt-for-apache-doris 1.1.0 Released: Five Business Demos to Get Started with Doris Data Engineering</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">Junwei Chen</span></span><time datetime="2026-09-01T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">September 1, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p><a href="https://github.com/velodb/dbt-for-apache-doris" target="_blank" rel="noopener noreferrer">dbt-for-apache-doris</a> 1.1.0 was released on August 12, 2026. It targets dbt Core 1.12, manages Apache Doris asynchronous materialized views through the standard dbt <code>materialized_view</code> materialization, and covers the everyday workflows: Table, View, Incremental, Snapshot, Seed, and Data Test.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">python -m pip install &quot;dbt-for-apache-doris==1.1.0&quot;</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg></span></button></div></div></div>
+<p>The rest of this post covers what each of the two systems is responsible for, what the adapter supports today, and five demos that run a full pipeline in Doris.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="1-dbt-doris-and-what-110-adds">1. dbt, Doris, and what 1.1.0 adds<a href="https://doris.apache.org/blog/dbt-for-apache-doris-1.1.0-five-demos/#1-dbt-doris-and-what-110-adds" class="hash-link" aria-label="Direct link to 1. dbt, Doris, and what 1.1.0 adds" title="Direct link to 1. dbt, Doris, and what 1.1.0 adds">&#x200B;</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="11-what-is-dbt">1.1 What is dbt<a href="https://doris.apache.org/blog/dbt-for-apache-doris-1.1.0-five-demos/#11-what-is-dbt" class="hash-link" aria-label="Direct link to 1.1 What is dbt" title="Direct link to 1.1 What is dbt">&#x200B;</a></h3>
+<p>dbt (data build tool) is an open-source data transformation framework that handles the T of ELT inside a data warehouse. Every model is a SQL <code>SELECT</code> statement, and models reference each other with <code>ref()</code>. dbt compiles them into the target database&apos;s table creation and write statements, runs them in dependency order, and materializes each one as a table, view, incremental table, or snapshot according to its configuration.</p>
+<p>It exists because the transformation layer spent years without much engineering discipline:</p>
+<ul>
+<li>SQL is scattered across schedulers, repos, and personal machines. Dependencies are maintained by hand, and nobody can say for certain what a change will break.</li>
+<li>Nothing is tested automatically, so a wrong metric usually surfaces when someone in the business questions a number on a report.</li>
+<li>There is no version control, no code review, and no separation between development and production, which makes changes hard to trace afterwards.</li>
+<li>The same boilerplate for creating tables, writing incrementally, and keeping history gets rewritten in every project.</li>
+</ul>
+<p>dbt&apos;s answer is models as code, a dependency graph derived from <code>ref()</code>, declarative Data Tests, built-in materializations (Table, View, Incremental, Snapshot), generated documentation and lineage, and a package ecosystem of Jinja macros such as <code>dbt_utils</code>.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="12-what-dbt-and-doris-solve-together">1.2 What dbt and Doris solve together<a href="https://doris.apache.org/blog/dbt-for-apache-doris-1.1.0-five-demos/#12-what-dbt-and-doris-solve-together" class="hash-link" aria-label="Direct link to 1.2 What dbt and Doris solve together" title="Direct link to 1.2 What dbt and Doris solve together">&#x200B;</a></h3>
+<p>dbt does not compute anything itself. Every transformation is pushed down to the target database, so that database sets the ceiling for the project. Apache Doris is an MPP real-time analytical database that speaks the MySQL protocol and runs aggregations, multi-table JOINs, and window functions in place. <code>dbt-for-apache-doris</code> connects the two: dbt organizes, orchestrates, and validates the transformation logic; Doris stores the data and executes the SQL.</p>
+<p>Putting them together settles a few things that data teams otherwise handle by convention. Table conventions become part of the code, since Doris Key models, partitions, buckets, and table properties are declared in the model&apos;s <code>config()</code> and go through version control and code review with everything else, rather than living in someone&apos;s memory. Late-arriving data gets a defined path too: a write to a Doris Unique Key table is an Upsert, and dbt Incremental <code>merge</code> sits directly on that semantic, so replaying the same batch produces the same table and a failed job can simply be run again.</p>
+<p>Pre-aggregation stops being a separate system. Doris asynchronous materialized views join the dbt dependency graph through the standard <code>materialized_view</code> materialization, with build and refresh strategy in the model configuration, so they change and get tested alongside the models they read from. The computation never leaves Doris. dbt only ships SQL, so no second engine is needed to move data around. Quality checks run in the same place: Data Tests, Unit Tests, and Model Contracts all execute against Doris at build time, which is a better moment to catch a broken metric than the morning after a report goes out.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="13-adapter-feature-support">1.3 Adapter feature support<a href="https://doris.apache.org/blog/dbt-for-apache-doris-1.1.0-five-demos/#13-adapter-feature-support" class="hash-link" aria-label="Direct link to 1.3 Adapter feature support" title="Direct link to 1.3 Adapter feature support">&#x200B;</a></h3>
+<ol>
+<li>
+<p><strong>Materializations</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Capability</th><th>Status</th><th>Current scope and boundaries</th></tr></thead><tbody><tr><td>Table</td><td>&#x2705;</td><td>Duplicate Key CTAS; configurable HASH bucketing and bucket count, RANGE / LIST partitioning, table properties, Contracts, docs, Grants, and Hooks. Unique Key tables are created by Incremental <code>merge</code></td></tr><tr><td>View</td><td>&#x2705;</td><td>Standard lifecycle, Contracts, docs, Grants, and Hooks; switching relation types is not zero-downtime</td></tr><tr><td>Incremental</td><td>&#x2705;</td><td>Four strategies, <code>append</code>, <code>merge</code>, <code>insert_overwrite</code>, and <code>microbatch</code>, plus every <code>on_schema_change</code> mode (strategy details in the next table)</td></tr><tr><td>Snapshot</td><td>&#x2705;</td><td><code>check</code> / <code>timestamp</code> strategies, hard-delete handling, schema evolution, atomic replacement and recovery; jobs targeting the same relation must be serialized by the scheduler</td></tr><tr><td>Materialized view</td><td>&#x2705;</td><td>Standard dbt <code>materialized_view</code>, implemented as a Doris Async MV; covers the build / refresh lifecycle, task waiting, configuration changes, atomic replacement and recovery; dbt jobs targeting the same relation must be serialized</td></tr><tr><td>Seed</td><td>&#x2705;</td><td>CSV loading, type inference, <code>column_types</code>, and <code>ref()</code></td></tr><tr><td>Ephemeral</td><td>&#x2705;</td><td>Compiled and inlined by dbt Core</td></tr></tbody></table>
+</li>
+<li>
+<p><strong>Incremental strategies and Doris target tables</strong>. When no strategy is specified explicitly, models configured with a <code>unique_key</code> use <code>merge</code> and all others use <code>append</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Strategy</th><th>Doris target table</th><th>Behavior</th></tr></thead><tbody><tr><td><code>append</code></td><td>Duplicate Key table</td><td>Appends rows with <code>INSERT INTO</code></td></tr><tr><td><code>merge</code></td><td>Unique Key table (MoW or MoR)</td><td>Full-row <code>INSERT INTO</code> Upsert based on Unique Key semantics; requires <code>unique_key</code>, does not generate <code>MERGE INTO</code></td></tr><tr><td><code>insert_overwrite</code></td><td>Any writable Doris table</td><td><code>INSERT OVERWRITE</code> of the whole table, specified partitions, or dynamic partitions; does not accept <code>unique_key</code></td></tr><tr><td><code>microbatch</code></td><td>Duplicate Key table with exact RANGE partitions</td><td>Each dbt time window overwrites one named partition; supports hour / day / month / year windows, and batches run serially</td></tr></tbody></table>
+</li>
+<li>
+<p><strong>dbt engineering capabilities</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Capability</th><th>Status</th><th>Current scope and boundaries</th></tr></thead><tbody><tr><td>Sources and freshness</td><td>&#x2705;</td><td><code>loaded_at_field</code>, filter, and <code>loaded_at_query</code>; cross-database access is implemented as database-as-schema, not through an External Catalog</td></tr><tr><td>Data Test</td><td>&#x2705;</td><td>Singular, Generic, and Ephemeral tests, plus <code>store_failures</code></td></tr><tr><td>Unit Test</td><td>&#x2705;</td><td>Inline and CSV fixtures, case-insensitive column names, invalid-input validation, reserved-word quoting, and data type fixtures adapted to Doris</td></tr><tr><td>Model Contract</td><td>&#x2705;</td><td>Column name and type constraints for Table, View, and Incremental; not mapped to database primary keys or NOT NULL constraints</td></tr><tr><td>Persisted docs</td><td>&#x2705;</td><td>Table / column comments for Table, View, Incremental, Snapshot, Seed, and Async MV; updating a View comment, or a comment that contains both kinds of quotes, may require a rebuild or full refresh</td></tr><tr><td>Grants</td><td>&#x2705;</td><td>Reconciles Doris table-level privileges for Table, View, Incremental, Seed, Snapshot, and Async MV, supporting <code>user</code> and <code>user@host</code> grantees; role grantees are not handled</td></tr><tr><td>Hooks</td><td>&#x2705;</td><td>pre-hook and post-hook for every materialization; Doris does not provide transactional rollback for hook side effects</td></tr><tr><td>Metadata and dbt docs catalog</td><td>&#x2705;</td><td>Relation discovery and documentation catalog for Doris databases, tables, views, columns, comments, and Async MVs</td></tr><tr><td>Cross-database Sources</td><td>&#x2705;</td><td>References Sources in other Doris databases, including definitions that only declare a database; three-part External Catalog names are not supported</td></tr></tbody></table>
+</li>
+</ol>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="14-whats-new-in-110">1.4 What&apos;s new in 1.1.0<a href="https://doris.apache.org/blog/dbt-for-apache-doris-1.1.0-five-demos/#14-whats-new-in-110" class="hash-link" aria-label="Direct link to 1.4 What&apos;s new in 1.1.0" title="Direct link to 1.4 What&apos;s new in 1.1.0">&#x200B;</a></h3>
+<p>1.1.0 is the first release of <code>dbt-for-apache-doris</code> from its own repository, and the first published to PyPI. It targets dbt Core 1.12 on Python 3.10 and above, manages Doris Async Materialized Views through the standard dbt <code>materialized_view</code> materialization, and ships with explicit version constraints and a stated support boundary.</p>
+<p>A <code>materialized_view</code> model maps to a Doris Async MV, and the build mode, refresh strategy, and task waiting are all written in the model configuration:</p>
+<div class="language-sql codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-sql codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">{{ config</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">(</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">    materialized</span><span class="token operator" style="color:hsl(221, 87%, 60%)">=</span><span class="token string" style="color:hsl(119, 34%, 47%)">&apos;materialized_view&apos;</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">    refresh_trigger</span><span class="token operator" style="color:hsl(221, 87%, 60%)">=</span><span class="token string" style="color:hsl(119, 34%, 47%)">&apos;manual&apos;</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">    wait_for_refresh</span><span class="token operator" style="color:hsl(221, 87%, 60%)">=</span><span class="token boolean" style="color:hsl(35, 99%, 36%)">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">)</span><span class="token plain"> }}</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token keyword" style="color:hsl(301, 63%, 40%)">select</span><span class="token plain"> order_date</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"> </span><span class="token function" style="color:hsl(221, 87%, 60%)">sum</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">(</span><span class="token plain">amount</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">)</span><span class="token plain"> </span><span class="token keyword" style="color:hsl(301, 63%, 40%)">as</span><span class="token plain"> sales</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token keyword" style="color:hsl(301, 63%, 40%)">from</span><span class="token plain"> {{ ref</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">(</span><span class="token string" style="color:hsl(119, 34%, 47%)">&apos;orders&apos;</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">)</span><span class="token plain"> }}</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token keyword" style="color:hsl(301, 63%, 40%)">group</span><span class="token plain"> </span><span class="token keyword" style="color:hsl(301, 63%, 40%)">by</span><span class="token plain"> order_date</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg></span></button></div></div></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="2-five-demos">2. Five demos<a href="https://doris.apache.org/blog/dbt-for-apache-doris-1.1.0-five-demos/#2-five-demos" class="hash-link" aria-label="Direct link to 2. Five demos" title="Direct link to 2. Five demos">&#x200B;</a></h2>
+<p>Each demo starts from a business question:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>#</th><th>Demo</th><th>Business question</th><th>Transformation and result</th><th>Key capabilities</th></tr></thead><tbody><tr><td>01</td><td>Daily order summary</td><td>How many valid orders and how much revenue per day and per month?</td><td>Filter out cancelled, returned, and failed orders; produce a daily Table and a monthly Async MV</td><td>Source, Table, Data Test, partitioning and bucketing, Async MV</td></tr><tr><td>02</td><td>Customer geography analysis</td><td>Which states are customers, orders, and revenue concentrated in?</td><td>Read addresses and orders from two Doris databases; output state-level business metrics</td><td>Cross-database Source, View, <code>ref()</code>, Table</td></tr><tr><td>03</td><td>Ad data integration</td><td>How to unify Google, Meta, and TikTok data?</td><td>Load three kinds of CSV with Seeds, align fields, and deduplicate; output daily channel details</td><td>Seed, <code>dbt_utils</code>, <code>QUALIFY</code>, Data Test</td></tr><tr><td>04</td><td>Late-arriving orders</td><td>How to absorb late corrections and avoid duplicate orders?</td><td>Identify order versions and maintain the current state with Incremental <code>merge</code></td><td>Incremental, Unique Key, idempotency</td></tr><tr><td>05</td><td>Customer history tracking</td><td>How to keep the history of attribute changes and hard deletes?</td><td>Two Snapshot rounds produce SCD Type 2 history and a current customer dimension table</td><td>Snapshot, Hard Delete, <code>ref()</code>, Data Test</td></tr></tbody></table>
+<blockquote>
+<p>The demos are selected and adapted from the Snowflake Labs <a href="https://github.com/Snowflake-Labs/data-eng-bench" target="_blank" rel="noopener noreferrer"><code>data-eng-bench</code></a> scenarios (the original project is licensed under the Apache License 2.0). We rewrote the profiles, SQL, fixtures, verifiers, and notebooks for Apache Doris and <code>dbt-for-apache-doris</code>.</p>
+<p>Demo repository: <a href="https://github.com/velodb/dbt-for-apache-doris/tree/main/examples" target="_blank" rel="noopener noreferrer">https://github.com/velodb/dbt-for-apache-doris/tree/main/examples</a></p>
+</blockquote>
+<p>Two of them are walked through below. For the other three, customer geography analysis, ad data integration, and customer history tracking, the <a href="https://github.com/velodb/dbt-for-apache-doris/tree/main/examples/doris-demos" target="_blank" rel="noopener noreferrer">Doris dbt demos README</a> has the business description, the model list, and the exact commands.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="21-demo-01-order-summary-and-asynchronous-materialized-views">2.1 Demo 01: Order summary and asynchronous materialized views<a href="https://doris.apache.org/blog/dbt-for-apache-doris-1.1.0-five-demos/#21-demo-01-order-summary-and-asynchronous-materialized-views" class="hash-link" aria-label="Direct link to 2.1 Demo 01: Order summary and asynchronous materialized views" title="Direct link to 2.1 Demo 01: Order summary and asynchronous materialized views">&#x200B;</a></h3>
+<p>The demo starts from 6 orders in Doris, drops the <code>CANCELLED</code>, <code>RETURNED</code>, and <code>FAILED</code> ones, and builds <code>daily_order_summary</code>. Data Tests check that dates are unique and key columns are not null, and <code>monthly_order_summary_mv</code> then aggregates the daily table through <code>ref()</code>.</p>
+<p><img decoding="async" loading="lazy" alt="Demo 01 transformation flow: on the dbt side, source(), Table, ref(), and materialized_view; the orders source is filtered into daily_order_summary, checked by Data Tests, and aggregated into monthly_order_summary_mv; on the Doris side, Duplicate Key, Range Partition, Hash Bucket, and Async MV" src="https://cdnd.selectdb.com/assets/images/demo01-daily-order-summary-flow-85d79f22e1996d42f084ea796ccb01a1.jpg" width="1731" height="909" class="img_ev3q"></p>
+<p><em>Figure 1: The chain from raw orders to the monthly asynchronous materialized view. The top row is what dbt handles: model dependencies, materialization, and tests. The bottom row is what Doris provides for the table model and the materialized view.</em></p>
+<p>Three orders survive the filter, for a monthly revenue of <code>220.20</code>. dbt owns the model dependencies (<code>source()</code> through <code>ref()</code>), the materializations, and the Data Tests. Doris decides how the two result tables are stored and how fast they answer:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Doris capability</th><th>What it does here</th></tr></thead><tbody><tr><td>Duplicate Key model</td><td><code>daily_order_summary</code> is created with <code>order_date</code> as its sort key. Rows are stored as written, with no aggregation or merging. Date range queries use the prefix index, so daily report queries hit it directly. dbt <code>table</code> rebuilds the whole table with CTAS on every run, so the result is reproducible</td></tr><tr><td>RANGE partitioning (by <code>order_date</code>)</td><td>The model pre-creates the <code>p202608</code> partition and the catch-all <code>pmax</code> partition through <code>partition_by_init</code>. A monthly query scans one partition, and old data can be archived or dropped by month</td></tr><tr><td>HASH bucketing (by <code>order_date</code>)</td><td>Data is distributed across BE nodes by the bucket key and computed in parallel. The demo runs on a single node with 1 bucket; production raises the bucket count as data grows</td></tr><tr><td>Asynchronous materialized view (Async MV)</td><td><code>monthly_order_summary_mv</code> pre-aggregates on top of the daily table, so the monthly dashboard reads precomputed results and does not re-aggregate on every open. <code>build_mode=&apos;immediate&apos;</code> produces data as soon as the view is built, <code>refresh_method=&apos;auto&apos;</code> lets Doris choose between a full refresh and a partition-level one, and <code>refresh_trigger=&apos;manual&apos;</code> makes each dbt run trigger a refresh and wait for it; a scheduled refresh (<code>schedule</code>) or a refresh on base table commit (<code>commit</code>) works as well. The materialized view itself also takes Keys, bucketing, and table properties</td></tr></tbody></table>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="22-demo-04-incremental-updates-for-late-arriving-orders">2.2 Demo 04: Incremental updates for late-arriving orders<a href="https://doris.apache.org/blog/dbt-for-apache-doris-1.1.0-five-demos/#22-demo-04-incremental-updates-for-late-arriving-orders" class="hash-link" aria-label="Direct link to 2.2 Demo 04: Incremental updates for late-arriving orders" title="Direct link to 2.2 Demo 04: Incremental updates for late-arriving orders">&#x200B;</a></h3>
+<p>The demo writes orders 101, 102, and 103, then receives two late events: the amount of order 101 is corrected from <code>100.00</code> to <code>125.00</code>, and a new order 104 arrives.</p>
+<p>Two steps absorb them:</p>
+<ol>
+<li><code>order_version_history</code> uses window functions to identify the current version of each order.</li>
+<li><code>incremental_daily_sales</code> takes <code>order_id</code> as its business key and runs Incremental <code>merge</code> on top of the Upsert semantics of the Doris Unique Key model.</li>
+</ol>
+<p><img decoding="async" loading="lazy" alt="Demo 04 transformation flow: late events for orders 101 and 104 enter the order events table, order_version_history identifies order versions, incremental_daily_sales is updated by Incremental merge with unique_key = order_id and stays unchanged on re-run, and reconciliation models are checked by Data Tests; on the Doris side, window functions, Unique Key upsert, and Hash Bucket" src="https://cdnd.selectdb.com/assets/images/demo04-late-arriving-orders-flow-8392180d4202d9e0b321ad5002d31e38.jpg" width="1728" height="910" class="img_ev3q"></p>
+<p><em>Figure 2: Late events reach the source table, then version identification and Incremental <code>merge</code> update the current orders; a re-run with no new data leaves the result alone. The top row is what dbt handles, the bottom row is what Doris provides.</em></p>
+<p>Run it again with no new data and nothing moves. <code>incremental_daily_sales</code> holds 4 orders, order 101 now at <code>125.00</code>, and revenue for August 1 in the downstream <code>daily_sales_summary</code> becomes <code>245.00</code>. The same project also builds data quality, arrival latency, and revenue reconciliation models. dbt&apos;s part is the incremental model definition, the <code>is_incremental()</code> filter, and the uniqueness test on <code>order_id</code>. The &quot;no duplicates, safe to re-run&quot; property comes from Doris:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Doris capability</th><th>What it does here</th></tr></thead><tbody><tr><td>Unique Key model</td><td><code>incremental_daily_sales</code> is created with <code>order_id</code> as its Unique Key. A new version of an order overwrites the old one on write, so the table always holds exactly one row per order and the <code>unique</code> test passes. The adapter enables Merge-on-Write by default, so deduplication happens at write time and queries have nothing left to merge</td></tr><tr><td>Upsert on write (Incremental <code>merge</code>)</td><td>The adapter performs a full-row Upsert with a plain <code>INSERT INTO</code>, with no <code>MERGE INTO</code> and no delete-then-insert. The correction to order 101 and the new order 104 take the same write path, and re-running with no new data leaves the result unchanged, which is what makes backfills and retries safe</td></tr><tr><td>HASH bucketing (by <code>order_id</code>)</td><td>The bucket key matches the primary key, so every version of an order lands in the same tablet, and primary key deduplication and updates complete inside it without comparing across nodes</td></tr><tr><td>Window functions</td><td><code>order_version_history</code> uses <code>row_number()</code> and <code>lead()</code> inside Doris to mark the current version of each order and compute <code>valid_from</code> / <code>valid_to</code>. The version history is auditable, and no external program is involved</td></tr><tr><td>Online schema change</td><td>The model sets <code>on_schema_change=&apos;append_new_columns&apos;</code>. When an upstream model adds a column, the adapter syncs the table structure with <code>ALTER TABLE ... ADD COLUMN</code> and waits for the change to finish, so the incremental table never needs a rebuild</td></tr></tbody></table>
+<p>All five demos run as JupyterLab notebooks, one step per cell, so you can stop at any cell and look at what Doris wrote. They live in the repository&apos;s <code>examples/</code> directory, with <a href="https://github.com/velodb/dbt-for-apache-doris/tree/main/examples/doris-demos" target="_blank" rel="noopener noreferrer"><code>examples/doris-demos</code></a> as the entry point; its README has the full run instructions.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="links">Links<a href="https://doris.apache.org/blog/dbt-for-apache-doris-1.1.0-five-demos/#links" class="hash-link" aria-label="Direct link to Links" title="Direct link to Links">&#x200B;</a></h2>
+<ul>
+<li>GitHub repository: <a href="https://github.com/velodb/dbt-for-apache-doris" target="_blank" rel="noopener noreferrer">https://github.com/velodb/dbt-for-apache-doris</a></li>
+<li>1.1.0 release: <a href="https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0" target="_blank" rel="noopener noreferrer">https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0</a></li>
+<li>PyPI: <a href="https://pypi.org/project/dbt-for-apache-doris/1.1.0/" target="_blank" rel="noopener noreferrer">https://pypi.org/project/dbt-for-apache-doris/1.1.0/</a></li>
+<li>Demo entry point: <a href="https://github.com/velodb/dbt-for-apache-doris/tree/main/examples/doris-demos" target="_blank" rel="noopener noreferrer">https://github.com/velodb/dbt-for-apache-doris/tree/main/examples/doris-demos</a></li>
+<li>Apache Doris all-in-one image: <a href="https://doris.apache.org/community/developer-guide/all-in-one-image" target="_blank" rel="noopener noreferrer">https://doris.apache.org/community/developer-guide/all-in-one-image</a></li>
+</ul></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Dynamic JSON in Agent Workloads: Apache Doris vs ClickHouse, Elasticsearch, and OpenSearch]]></title>
+            <link>https://doris.apache.org/blog/dynamic-json-in-agent-workloads-apache-doris-clickhouse-elasticsearch-and-opensearch/</link>
+            <guid>https://doris.apache.org/blog/dynamic-json-in-agent-workloads-apache-doris-clickhouse-elasticsearch-and-opensearch/</guid>
+            <pubDate>Thu, 27 Aug 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[AI agent logs create wide, fast-changing JSON payloads that are difficult to analyze with predictable latency. We compare how Apache Doris, ClickHouse, Elasticsearch, and OpenSearch perform in such scenario.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Dynamic JSON in Agent Workloads: Apache Doris vs ClickHouse, Elasticsearch, and OpenSearch</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Max Li</span></span><time datetime="2026-08-27T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">August 27, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/dynamic-json-in-agent-workloads-apache-doris-clickhouse-elasticsearch-and-opensearch">AI agent logs create wide, fast-changing JSON payloads that are difficult to analyze with predictable latency. We compare how Apache Doris, ClickHouse, Elasticsearch, and OpenSearch perform in such scenario. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[PostgreSQL CDC to Apache Doris: Real-Time Sync with One SQL Statement]]></title>
+            <link>https://doris.apache.org/blog/postgresql-cdc-to-apache-doris-real-time-sync-with-one-sql-statement/</link>
+            <guid>https://doris.apache.org/blog/postgresql-cdc-to-apache-doris-real-time-sync-with-one-sql-statement/</guid>
+            <pubDate>Fri, 21 Aug 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris offers native CDC for PostgreSQL, replacing separate CDC, Kafka, Flink, or Spark components with one built-in streaming job.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">PostgreSQL CDC to Apache Doris: Real-Time Sync with One SQL Statement</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Dylan Wu</span></span><time datetime="2026-08-21T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">August 21, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/postgresql-cdc-to-apache-doris-real-time-sync-with-one-sql-statement">Apache Doris offers native CDC for PostgreSQL, replacing separate CDC, Kafka, Flink, or Spark components with one built-in streaming job. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[From Spark to Apache Doris: How Kwai Made A/B Testing Metrics 145x Faster at Scale]]></title>
+            <link>https://doris.apache.org/blog/from-spark-to-apache-doris-how-kwai-made-a-b-testing-metrics-145x-faster-at-scale/</link>
+            <guid>https://doris.apache.org/blog/from-spark-to-apache-doris-how-kwai-made-a-b-testing-metrics-145x-faster-at-scale/</guid>
+            <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Kwai migrated its company-wide A/B testing metrics pipeline from Spark to Apache Doris. The rebuild delivered 145x faster metrics computation and cut resource consumption by 72%.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">From Spark to Apache Doris: How Kwai Made A/B Testing Metrics 145x Faster at Scale</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">Kwai &#xB7; Siwei Zeng</span></span><time datetime="2026-08-12T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">August 12, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/from-spark-to-apache-doris-how-kwai-made-a-b-testing-metrics-145x-faster-at-scale">Kwai migrated its company-wide A/B testing metrics pipeline from Spark to Apache Doris. The rebuild delivered 145x faster metrics computation and cut resource consumption by 72%. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[Apache Doris Python UDF: Calling the Python Ecosystem from SQL for Agent-Era]]></title>
+            <link>https://doris.apache.org/blog/apache-doris-python-udf-calling-the-python-ecosystem-from-sql/</link>
+            <guid>https://doris.apache.org/blog/apache-doris-python-udf-calling-the-python-ecosystem-from-sql/</guid>
+            <pubDate>Thu, 06 Aug 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris adds Python UDF in 4.1.3. This enables teams to create and call Python functions directly in SQL, bringing Pandas, PyArrow, and the rest of the Python ecosystem into the Doris query path.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Apache Doris Python UDF: Calling the Python Ecosystem from SQL for Agent-Era</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Haopeng Li &amp; Zhenqi Lin</span></span><time datetime="2026-08-06T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">August 6, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/apache-doris-python-udf-calling-the-python-from-sql-for-agent-era">Apache Doris adds Python UDF in 4.1.3. This enables teams to create and call Python functions directly in SQL, bringing Pandas, PyArrow, and the rest of the Python ecosystem into the Doris query path. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[How Meituan Consolidated Its Analytics Stack on Apache Doris]]></title>
+            <link>https://doris.apache.org/blog/how-meituan-consolidated-its-analytics-stack-on-apache-doris/</link>
+            <guid>https://doris.apache.org/blog/how-meituan-consolidated-its-analytics-stack-on-apache-doris/</guid>
+            <pubDate>Fri, 31 Jul 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Meituan replaced a multi-engine analytics stack of Hadoop, Kylin, and Druid with a single Apache Doris platform spanning 300+ clusters and tens of PB of data.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">How Meituan Consolidated Its Analytics Stack on Apache Doris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">Apache Doris</span></span><time datetime="2026-07-31T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 31, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/how-meituan-consolidated-its-analytics-stack-on-apache-doris">Meituan replaced a multi-engine analytics stack of Hadoop, Kylin, and Druid with a single Apache Doris platform spanning 300+ clusters and tens of PB of data. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[Meet D-Crew, the Apache Doris Mascot Family]]></title>
+            <link>https://doris.apache.org/blog/meet-d-crew-apache-doris-mascot-family/</link>
+            <guid>https://doris.apache.org/blog/meet-d-crew-apache-doris-mascot-family/</guid>
+            <pubDate>Sun, 26 Jul 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Introducing D-Crew, the Apache Doris mascot family: Pip, Dori, and Flux represent query execution, the core engine, and connected data for real-time analytics.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Top News</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Meet D-Crew, the Apache Doris Mascot Family</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">Apache Doris</span></span><time datetime="2026-07-26T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 26, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><p>Apache Doris is <strong>the fastest open source database project built for real-time analytics</strong>. People often first encounter Doris through architecture diagrams, SQL, performance benchmarks, and technical documentation. But beyond its technical capabilities, we also want Doris to have a more vivid and approachable identity, one that helps more people understand it, remember it, and connect with the community.</p>
+<p>Today, we are excited to introduce three new friends of Apache Doris: the <strong>D-Crew</strong>.</p>
+<p><img decoding="async" loading="lazy" alt="This image introduces D-Crew, the new Apache Doris mascot family. At the top, under &#x201C;From the Doris Logo,&#x201D; it shows the three geometric elements in the Apache Doris logo. Arrows point down to &#x201C;...To the D-Crew,&#x201D; where those elements become three lively mascots with expressive faces and limbs: Pip, Dori, and Flux, from left to right. The image clearly shows how the new mascots evolved from the logo." src="https://cdnd.selectdb.com/assets/images/d-crew-from-doris-logo-e2e68cbab6cfe15433f849f6da0d34ef.jpg" width="1672" height="941" class="img_ev3q"></p>
+<p>D-Crew is the Apache Doris mascot family, made up of three members: Pip, Dori, and Flux. Each grew out of one of the three geometric elements in the Apache Doris logo. They are three distinct characters, but together they represent the capabilities that make Apache Doris powerful.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="meet-the-d-crew">Meet the D-Crew<a href="https://doris.apache.org/blog/meet-d-crew-apache-doris-mascot-family/#meet-the-d-crew" class="hash-link" aria-label="Direct link to Meet the D-Crew" title="Direct link to Meet the D-Crew">&#x200B;</a></h2>
+<p>D-Crew offers a lighter, more visual way to get to know Doris, understand how it works, and follow the story of this evolving open source project.</p>
+<p><img decoding="async" loading="lazy" alt="This image introduces the three members of D-Crew: Pip, Dori, and Flux. Pip is a purple triangle known as the query runner. Pip gets things moving by executing queries, running SQL, and starting real-time analytics, represented by Query, SQL, and Trigger. Dori is a blue capsule and the core engine. Dori keeps everything fast and reliable, powering high-concurrency workloads and complex analytics, represented by Performance, Reliability, and Compute. Flux is a green pen-shaped data explorer. Flux connects lakehouses, search, vectors, and open data formats to provide data for modern applications and agents, represented by Lakehouse, Search, and AI. Together, they turn real-time data into insights." src="https://cdnd.selectdb.com/assets/images/meet-d-crew-3a0c5cf97a77e4096e76814b53f3badb.jpg" width="1448" height="1086" class="img_ev3q"></p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="flux">Flux<a href="https://doris.apache.org/blog/meet-d-crew-apache-doris-mascot-family/#flux" class="hash-link" aria-label="Direct link to Flux" title="Direct link to Flux">&#x200B;</a></h3>
+<p><strong>Flux</strong> is the streamlined green character and D-Crew&apos;s data explorer.</p>
+<p>Flux connects different data worlds, including <strong>lakehouses, search, vectors, open data formats, and more data modalities to come</strong>. Flux makes data discoverable, understandable, and easier to use in different ways. This reflects how Doris is bringing these data capabilities together to provide context and analytics for Agents.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="dori">Dori<a href="https://doris.apache.org/blog/meet-d-crew-apache-doris-mascot-family/#dori" class="hash-link" aria-label="Direct link to Dori" title="Direct link to Dori">&#x200B;</a></h3>
+<p><strong>Dori</strong> is the teal capsule and the character closest to the Doris core engine.</p>
+<p>Dori is the dependable foundation. <strong>Low-latency queries, high-concurrency access, complex analytics, and multi-tenant workloads</strong> all rely on Dori&apos;s steady support behind the scenes. Dori&apos;s reliability represents the continued evolution of Doris as a powerful foundation for data analytics.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="pip">Pip<a href="https://doris.apache.org/blog/meet-d-crew-apache-doris-mascot-family/#pip" class="hash-link" aria-label="Direct link to Pip" title="Direct link to Pip">&#x200B;</a></h3>
+<p><strong>Pip</strong> is the purple triangle. It looks like a play button and the starting point of a query.</p>
+<p>Starting queries, running SQL, and launching real-time analytics are all Pip&apos;s domain. Pip represents the interface between Doris and its users and applications. It starts with the <strong>standard SQL interface and extends to capabilities designed for AI Agents, including a semantic layer, CLI, MCP, and Skills</strong>.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="explore-apache-doris-with-d-crew">Explore Apache Doris with D-Crew<a href="https://doris.apache.org/blog/meet-d-crew-apache-doris-mascot-family/#explore-apache-doris-with-d-crew" class="hash-link" aria-label="Direct link to Explore Apache Doris with D-Crew" title="Direct link to Explore Apache Doris with D-Crew">&#x200B;</a></h2>
+<p>Pip, Dori, and Flux are more than three separate characters. Their different roles and the way they work together offer a more intuitive view of how Apache Doris supports a range of use cases.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="real-time-analytics"><strong>Real-time Analytics</strong><a href="https://doris.apache.org/blog/meet-d-crew-apache-doris-mascot-family/#real-time-analytics" class="hash-link" aria-label="Direct link to real-time-analytics" title="Direct link to real-time-analytics">&#x200B;</a></h3>
+<p>In a <strong>Real-time Analytics</strong> use case, Flux connects to real-time data, Dori handles high-concurrency and high-throughput data processing and storage, and Pip delivers low-latency query responses. Together, they create an end-to-end, low-latency data analytics pipeline.</p>
+<p><img decoding="async" loading="lazy" alt="This image shows the Apache Doris real-time analytics architecture. It focuses on &#x201C;Real-time Analytics&#x201D; with &#x201C;Low Latency, End-to-End&#x201D; and &#x201C;Sub-second Analytics.&#x201D; On the left are four real-time data sources: Events, Apps, IoT, and Database. In the center are the three D-Crew components: Flux, the data explorer; Dori, the core engine; and Pip, the query runner. They connect real-time data, compute quickly, and run instant queries. On the right, a dashboard displays revenue, orders, active users, and other data. The bottom of the image highlights real-time data sources, low-latency compute, instant queries, and live updates." src="https://cdnd.selectdb.com/assets/images/real-time-analytics-5c442d325656cc64418a2ff3f4a9082c.jpg" width="1672" height="941" class="img_ev3q"></p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="lakehouse-analytics"><strong>Lakehouse Analytics</strong><a href="https://doris.apache.org/blog/meet-d-crew-apache-doris-mascot-family/#lakehouse-analytics" class="hash-link" aria-label="Direct link to lakehouse-analytics" title="Direct link to lakehouse-analytics">&#x200B;</a></h3>
+<p>In a <strong>Lakehouse Analytics</strong> use case, Flux connects directly to open data ecosystems such as Iceberg, Paimon, and Delta Lake. Dori efficiently analyzes structured data, text, and vectors through one engine, while Pip presents the resulting hybrid analytics and retrieval results to users.</p>
+<p><img decoding="async" loading="lazy" alt="This image shows how Apache Doris works in a Lakehouse Analytics use case. On the left are data lakes such as Iceberg, Paimon, and Delta Lake, with Flux connecting to their data. In the center is Dori, a unified multimodal engine that supports SQL and tabular data, full-text indexes, and vector indexes. On the right, Pip uses SQL to query hybrid analytics and retrieval results. The Lakehouse Insights dashboard in the upper-right corner shows sales trends, total sales, order counts, and other data. The image illustrates the roles of Flux, Dori, and Pip in the Lakehouse Analytics workflow." src="https://cdnd.selectdb.com/assets/images/lakehouse-analytics-49957215668c9e2f95fe8a39521d9eb3.jpg" width="1672" height="941" class="img_ev3q"></p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="agent-observability"><strong>Agent Observability</strong><a href="https://doris.apache.org/blog/meet-d-crew-apache-doris-mascot-family/#agent-observability" class="hash-link" aria-label="Direct link to agent-observability" title="Direct link to agent-observability">&#x200B;</a></h3>
+<p>In an <strong>Agent Observability</strong> use case, Flux ingests observability data such as Log, Metric, and Trace data. Dori uses Variant and time-series data capabilities to organize and process JSON and time-series data efficiently. Pip presents detected system anomalies and behavioral patterns in real time, helping organizations evaluate Agent performance more efficiently and keep track of system health.</p>
+<p><img decoding="async" loading="lazy" alt="In this Agent Observability use case, Flux ingests real-time observability signals from Logs, Metrics, and Traces. Dori organizes and processes the data using Variant, JSON, and time-series data capabilities. Pip displays anomaly detection results, trace latency, and Agent performance on a real-time health dashboard." src="https://cdnd.selectdb.com/assets/images/agent-observability-e228a1894571ed6053006b53b7797cd7.jpg" width="1672" height="941" class="img_ev3q"></p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="agentic-data-engine"><strong>Agentic Data Engine</strong><a href="https://doris.apache.org/blog/meet-d-crew-apache-doris-mascot-family/#agentic-data-engine" class="hash-link" aria-label="Direct link to agentic-data-engine" title="Direct link to agentic-data-engine">&#x200B;</a></h3>
+<p>Apache Doris is evolving into a data analytics system for Agents. In an <strong>Agentic Data Engine</strong> use case, Flux connects an Agent to real-time, trusted data and finds the context it needs. Pip receives the Agent&apos;s query and analytics requests, while Dori handles the computation and processing quickly behind the scenes.</p>
+<p><img decoding="async" loading="lazy" alt="This image shows how Apache Doris works in an Agentic Data Engine use case. On the left are AI Agent requests from Claude Code Session, Codex Session, Agent Session, and others. In the center are Flux, Pip, and Dori. Flux assembles context and memory, Pip orchestrates queries and analytics, and Dori serves as the high-performance data engine. On the right are trusted answers, real-time metrics, fresh context, and other results. The image illustrates how the three characters work together in the Apache Doris data analytics system for Agents." src="https://cdnd.selectdb.com/assets/images/agentic-data-engine-e92a8fd667d087e7a283b68eff7a73ae.jpg" width="1672" height="941" class="img_ev3q"></p>
+<p>From real-time analytics and lakehouses to hybrid search and Agent-oriented data analytics, the three characters will appear together in different ways. Through these visual stories, we hope to make it easier to understand what Apache Doris can do and how it works with real-world data.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="join-the-community">Join the Community<a href="https://doris.apache.org/blog/meet-d-crew-apache-doris-mascot-family/#join-the-community" class="hash-link" aria-label="Direct link to Join the Community" title="Direct link to Join the Community">&#x200B;</a></h2>
+<p>If you see Pip, Dori, and Flux in our documentation, blog posts, Meetups, or on stickers, remember to say hello.</p>
+<p><strong>Welcome to the Apache Doris community, D-Crew. And everyone else, you are welcome to join us too</strong>.</p>
+<p><img decoding="async" loading="lazy" alt="This image welcomes people to the Apache Doris community. Three cartoon characters, green on the left, blue in the center, and purple on the right, hold signs that read &#x201C;Welcome to Apache Doris&#x201D; and &#x201C;Welcome D-Crew!&#x201D; Colorful streamers and balloons decorate the background as other cartoon figures celebrate around them. The cheerful scene welcomes D-Crew to the Apache Doris community." src="https://cdnd.selectdb.com/assets/images/welcome-d-crew-8a3bfd70151678e01e5dd01efae14171.jpg" width="1916" height="821" class="img_ev3q"></p></div>]]></content:encoded>
+            <category>Top News</category>
+        </item>
+        <item>
+            <title><![CDATA[Search in Apache Doris 4.1: Unifying Full-Text Log Search and Real-Time SQL Analytics]]></title>
+            <link>https://doris.apache.org/blog/search-in-apache-doris-4-1-unifying-full-text-log-search-and-real-time-sql-analytics/</link>
+            <guid>https://doris.apache.org/blog/search-in-apache-doris-4-1-unifying-full-text-log-search-and-real-time-sql-analytics/</guid>
+            <pubDate>Fri, 24 Jul 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris 4.1 uses search(), inverted indexes, BM25 scoring, and standard SQL to unify full-text log search with real-time analytics for observability, SIEM, and product search workloads.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Search in Apache Doris 4.1: Unifying Full-Text Log Search and Real-Time SQL Analytics</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Tom Zhang</span></span><time datetime="2026-07-24T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 24, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/search-in-apache-doris-4-1-unifying-full-text-log-search-and-real-time-sql-analytics">Apache Doris 4.1 uses search(), inverted indexes, BM25 scoring, and standard SQL to unify full-text log search with real-time analytics for observability, SIEM, and product search workloads. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Apache Doris Gets Rust-Native Streaming Ingestion with Apache Iggy]]></title>
+            <link>https://doris.apache.org/blog/apache-doris-rust-native-streaming-ingestion-with-apache-iggy/</link>
+            <guid>https://doris.apache.org/blog/apache-doris-rust-native-streaming-ingestion-with-apache-iggy/</guid>
+            <pubDate>Fri, 17 Jul 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris now supports Rust-native streaming ingestion from Apache Iggy through a new sink connector built with LaserData.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Apache Doris Gets Rust-Native Streaming Ingestion with Apache Iggy</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; VeloDB Product Team &amp; LaserData</span></span><time datetime="2026-07-17T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 17, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/velodb-and-apache-doris-get-rust-native-streaming-ingestion-with-apache-iggy">Apache Doris now supports Rust-native streaming ingestion from Apache Iggy through a new sink connector built with LaserData. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Databricks RT and LTAP are here. How does it fit into OLTP, OLAP, real-time OLAP, and HTAP]]></title>
+            <link>https://doris.apache.org/blog/databricks-rt-and-ltap-oltp-olap-real-time-olap-and-htap/</link>
+            <guid>https://doris.apache.org/blog/databricks-rt-and-ltap-oltp-olap-real-time-olap-and-htap/</guid>
+            <pubDate>Fri, 10 Jul 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Real-time database categories now span across OLTP, OLAP, real-time OLAP, HTAP, and Databricks' new LTAP, but each makes different trade-offs across freshness, query latency, concurrency, and updates.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Databricks RT and LTAP are here. How does it fit into OLTP, OLAP, real-time OLAP, and HTAP</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Kevin Shen</span></span><time datetime="2026-07-10T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 10, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/databricks-rt-and-ltap-are-here-how-does-it-fit-into-oltp-olap-real-time-olap-and-htap">Real-time database categories now span across OLTP, OLAP, real-time OLAP, HTAP, and Databricks&apos; new LTAP, but each makes different trade-offs across freshness, query latency, concurrency, and updates. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[How StepFun Built a PB-Scale Agent Observability Platform with Apache Doris]]></title>
+            <link>https://doris.apache.org/blog/how-stepfun-built-agent-observability-platform-with-apache-doris/</link>
+            <guid>https://doris.apache.org/blog/how-stepfun-built-agent-observability-platform-with-apache-doris/</guid>
+            <pubDate>Wed, 08 Jul 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[StepFun built StepTrace, a PB-scale agent observability platform on Apache Doris, to analyze agent traces, costs, search, evaluation loops, and infrastructure behavior in real time.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">How StepFun Built a PB-Scale Agent Observability Platform with Apache Doris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">StepFun &#xB7; Ric Li</span></span><time datetime="2026-07-08T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 8, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/how-stepfun-built-agent-observability-platform-with-apache-doris">StepFun built StepTrace, a PB-scale agent observability platform on Apache Doris, to analyze agent traces, costs, search, evaluation loops, and infrastructure behavior in real time. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[From Hive, HBase, MySQL, and Trino to Apache Doris: Tuhu Car's Unified OLAP Architecture]]></title>
+            <link>https://doris.apache.org/blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture/</link>
+            <guid>https://doris.apache.org/blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture/</guid>
+            <pubDate>Fri, 03 Jul 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Tuhu Car rebuilt its fragmented Hive, HBase, MySQL, and Trino OLAP stack with Apache Doris, improving audience segmentation, user profiling, BI analysis, and real-time analytics.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">From Hive, HBase, MySQL, and Trino to Apache Doris: Tuhu Car&apos;s Unified OLAP Architecture</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">Tuhu Car &#xB7; Wenbo Wang</span></span><time datetime="2026-07-03T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">July 3, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture">Tuhu Car rebuilt its fragmented Hive, HBase, MySQL, and Trino OLAP stack with Apache Doris, improving audience segmentation, user profiling, BI analysis, and real-time analytics. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[Why AI Agents Need Real-Time Analytics and Hybrid Search: The Data Infra for Production Agents]]></title>
+            <link>https://doris.apache.org/blog/why-ai-agents-need-real-time-analytics-and-hybrid-search/</link>
+            <guid>https://doris.apache.org/blog/why-ai-agents-need-real-time-analytics-and-hybrid-search/</guid>
+            <pubDate>Wed, 24 Jun 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[AI agents need real-time analytics, not just vector search. Apache Doris unifies both capabilities, offering native hybrid search in one real-time engine built for agent workloads.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Why AI Agents Need Real-Time Analytics and Hybrid Search: The Data Infra for Production Agents</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Matt Yi</span></span><time datetime="2026-06-24T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">June 24, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/why-ai-agents-need-real-time-analytics-and-hybrid-search">AI agents need real-time analytics, not just vector search. Apache Doris unifies both capabilities, offering native hybrid search in one real-time engine built for agent workloads. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[ASOF JOIN Benchmark: Apache Doris vs ClickHouse and DuckDB]]></title>
+            <link>https://doris.apache.org/blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb/</link>
+            <guid>https://doris.apache.org/blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb/</guid>
+            <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris 4.1 outperforms ClickHouse and DuckDB on ASOF JOIN across all 11 benchmark scenarios.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">ASOF JOIN Benchmark: Apache Doris vs ClickHouse and DuckDB</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Changle Zhao</span></span><time datetime="2026-06-11T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">June 11, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb">Apache Doris 4.1 outperforms ClickHouse and DuckDB on ASOF JOIN across all 11 benchmark scenarios. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Per-User Identity Mode: New Security Features with Apache Doris and Polaris]]></title>
+            <link>https://doris.apache.org/blog/apache-doris-and-polaris-per-user-identity-mode/</link>
+            <guid>https://doris.apache.org/blog/apache-doris-and-polaris-per-user-identity-mode/</guid>
+            <pubDate>Fri, 05 Jun 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris 4.1 introduces per-user identity mode, forwarding each real user identity to Apache Polaris (Iceberg REST Catalog) instead of routing all queries through a shared service account.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Per-User Identity Mode: New Security Features with Apache Doris and Polaris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Rayner Chen</span></span><time datetime="2026-06-05T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">June 5, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/apache-doris-and-polaris-per-user-identity-mode">Apache Doris 4.1 introduces per-user identity mode, forwarding each real user identity to Apache Polaris (Iceberg REST Catalog) instead of routing all queries through a shared service account. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Hybrid Modeling for JSON in Agent Observability: VARIANT and Inverted Indexes in Apache Doris]]></title>
+            <link>https://doris.apache.org/blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris/</link>
+            <guid>https://doris.apache.org/blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris/</guid>
+            <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[VARIANT data type and native inverted indexes in Apache Doris offer a hybrid modeling approach that handles dynamic, schema-evolving agent observability logs with high performance.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Hybrid Modeling for JSON in Agent Observability: VARIANT and Inverted Indexes in Apache Doris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Max Li</span></span><time datetime="2026-06-03T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">June 3, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris">VARIANT data type and native inverted indexes in Apache Doris offer a hybrid modeling approach that handles dynamic, schema-evolving agent observability logs with high performance. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[How We Built Production Vector Search in Apache Doris]]></title>
+            <link>https://doris.apache.org/blog/how-we-built-production-vector-search-in-apache-doris/</link>
+            <guid>https://doris.apache.org/blog/how-we-built-production-vector-search-in-apache-doris/</guid>
+            <pubDate>Thu, 28 May 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris 4.1 adds more native ANN vector indexes, IVF and IVF_ON_DISK, directly inside its OLAP engine, reaching 900 QPS at 97% recall on VectorDBBench.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">How We Built Production Vector Search in Apache Doris</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Rayner Chen</span></span><time datetime="2026-05-28T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">May 28, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/how-we-built-production-vector-search-in-apache-doris">Apache Doris 4.1 adds more native ANN vector indexes, IVF and IVF_ON_DISK, directly inside its OLAP engine, reaching 900 QPS at 97% recall on VectorDBBench. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[Apache Doris 4.1 on Iceberg V3: Running the Full Lakehouse Lifecycle from One SQL Engine]]></title>
+            <link>https://doris.apache.org/blog/apache-doris-4-1-iceberg-v3/</link>
+            <guid>https://doris.apache.org/blog/apache-doris-4-1-iceberg-v3/</guid>
+            <pubDate>Fri, 22 May 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Apache Doris 4.1 introduces comprehensive Iceberg V3 support, enabling reads, writes (UPDATE, DELETE, MERGE INTO), DDL operations, table maintenance, and diagnostics entirely through SQL without switching to other tools.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">Apache Doris 4.1 on Iceberg V3: Running the Full Lakehouse Lifecycle from One SQL Engine</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Rayner Chen</span></span><time datetime="2026-05-22T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">May 22, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/apache-doris-4-1-on-iceberg-v3-full-lakehouse-lifecycle">Apache Doris 4.1 introduces comprehensive Iceberg V3 support, enabling reads, writes (UPDATE, DELETE, MERGE INTO), DDL operations, table maintenance, and diagnostics entirely through SQL without switching to other tools. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+        <item>
+            <title><![CDATA[NetEase Games: From Elasticsearch, HBase, and ClickHouse to a Unified Apache Doris Lakehouse]]></title>
+            <link>https://doris.apache.org/blog/netease-games-unified-doris-lakehouse/</link>
+            <guid>https://doris.apache.org/blog/netease-games-unified-doris-lakehouse/</guid>
+            <pubDate>Fri, 22 May 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[NetEase Games consolidated six specialized data systems into Apache Doris across two phases, first unifying real-time analytics, then adding batch processing capabilities to create a lakehouse architecture serving 15 million daily queries.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Best Practice</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">NetEase Games: From Elasticsearch, HBase, and ClickHouse to a Unified Apache Doris Lakehouse</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">NetEase Games &#xB7; Biao Hu</span></span><time datetime="2026-05-22T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">May 22, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/netease-games-from-elasticsearch-and-clickhouse-to-a-unified-apache-doris-lakehouse">NetEase Games consolidated six specialized data systems into Apache Doris across two phases, first unifying real-time analytics, then adding batch processing capabilities to create a lakehouse architecture serving 15 million daily queries. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Best Practice</category>
+        </item>
+        <item>
+            <title><![CDATA[The Chunking and Embedding Cookbook for Production Context Engineering]]></title>
+            <link>https://doris.apache.org/blog/chunking-embedding-cookbook/</link>
+            <guid>https://doris.apache.org/blog/chunking-embedding-cookbook/</guid>
+            <pubDate>Fri, 15 May 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[This guide covers three critical decisions for production RAG systems: chunk shaping, embedding selection, and ANN index scaling, bridging the gap between demo retrieval and real-scale deployments.]]></description>
+            <content:encoded><![CDATA[<header><div class="text-center mb-4"><a class="!text-[#8592A6] cursor-pointer hover:no-underline" href="https://doris.apache.org/blog/">Blog</a><span class="px-2 text-[#8592A6]">/</span><span><span class="s-tags"><span class="s-tag">Tech Sharing</span></span></span></div><h1 class="blog-post-title text-[2rem] leading-normal lg:!text-[2.5rem] text-center" itemprop="headline">The Chunking and Embedding Cookbook for Production Context Engineering</h1><div class="blog-info text-center flex justify-center text-sm text-black"><span class="authors"><span class="s-author text-black">velodb.io &#xB7; Tom Zhang</span></span><time datetime="2026-05-15T00:00:00.000Z" itemprop="datePublished" class="text-black ml-4">May 15, 2026</time></div></header><div id="__blog-post-container" class="markdown" itemprop="articleBody"><blockquote>
+<a class="blog-item-link" rel="noopener noreferrer" target="_blank" href="https://www.velodb.io/blog/the-chunking-and-embedding-cookbook-for-production-context-engineering">This guide covers three critical decisions for production RAG systems: chunk shaping, embedding selection, and ANN index scaling, bridging the gap between demo retrieval and real-scale deployments. <span style="color:var(--ifm-color-primary);display:inline-flex;align-items:center;gap:4px">see more <svg width="1rem" height="1rem" viewBox="0 0 18 18" fill="none"><path d="M14.8497 8.99993L14.8497 14.5349C14.8497 14.8332 14.6079 15.0749 14.3097 15.0749H3.68966C3.39142 15.0749 3.14966 14.8332 3.14966 14.5349V3.46493C3.14966 3.16669 3.39142 2.92493 3.68966 2.92493H8.53166" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4746 2.92493H14.3096C14.6078 2.92493 14.8496 3.16669 14.8496 3.46493V6.29993" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.9944 3.82495L8.90322 8.91612" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></a>
+</blockquote></div>]]></content:encoded>
+            <category>Tech Sharing</category>
+        </item>
+    </channel>
+</rss>
