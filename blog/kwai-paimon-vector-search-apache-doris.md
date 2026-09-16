@@ -86,7 +86,13 @@ After data is written, compaction merges files within a bucket into a level abov
 
 The Paimon 2.0 Vector Index currently supports five index implementations, each with different characteristics and trade-offs:
 
-![Comparison of the five Paimon 2.0 vector indexes: IVF-Flat stores original vectors; IVF-PQ uses product quantization; IVF-SQ uses 8-bit scalar-quantized residuals; IVF-RQ uses rotated residual quantization; and DiskANN uses graph search with persistent reranking vectors.](/images/blogs/kwai-paimon-vector-search-apache-doris/vector-index-types.jpg)
+| Index | Main characteristic | Typical trade-off |
+| --- | --- | --- |
+| IVF-Flat | Stores the original vectors after clustering | Higher recall, but a larger index |
+| IVF-PQ | Product quantization | Smaller index, but some quantization loss |
+| IVF-SQ | 8-bit scalar quantization of residuals | Balanced throughput, recall, and storage |
+| IVF-RQ | Rotated residual quantization | Higher compression, but requires tuning around the quality inflection point |
+| DiskANN | Graph search with persistently stored vectors for reranking | Suitable for local SSDs or a fully local cache |
 
 The index types balance query performance, recall, index size, and build time differently. Storing hundreds of millions of 2,048-dimensional vectors at their original precision produces a correspondingly large index and increases the amount of data read from remote storage. RQ uses rotated residual quantization to achieve greater compression, though it must be tuned to meet quality targets. Kwai chose IVF-RQ as a balance between compression and recall. **The measured Recall in Section 3.3 ranges from 96.0% to 99.6%.**
 
@@ -219,11 +225,23 @@ Section 3 reports measured performance for the current one-pass form. Section 4 
 
 Kwai already uses Doris external tables in production to query vector indexes on Paimon tables. The deployment is configured as follows:
 
-![Production deployment: a Paimon primary-key table stores 2,048-dimensional vectors inline with business columns, uses IVF-RQ, is read by Paimon Rust and Doris BE, uses remote Alluxio caching, accepts Doris SQL, and runs on a 64-CU cluster.](/images/blogs/kwai-paimon-vector-search-apache-doris/production-deployment.jpg)
+| Dimension | Choice |
+| --- | --- |
+| Table type | Paimon primary-key table (PK Table) |
+| Vector storage | Inline, in the same table as the business columns |
+| Vector index | IVF-RQ |
+| Vector dimensions | 2,048 (real production data) |
+| Read path | Paimon Rust + Doris BE |
+| Storage acceleration | Remote Alluxio cache |
+| Query interface | Doris SQL |
+| Cluster size | 64 CU |
 
 The tests use the following dataset sizes:
 
-![Test datasets: 16 million rows, approximately 150 GB, and 32 buckets; and 128 million rows, approximately 1.1 TB, and 256 buckets.](/images/blogs/kwai-paimon-vector-search-apache-doris/test-data-scale.jpg)
+| Scale | Rows | Data volume | Buckets |
+| --- | ---: | ---: | ---: |
+| Tens of millions | 16 million | Approximately 150 GB | 32 |
+| Hundreds of millions | 128 million | Approximately 1.1 TB | 256 |
 
 ### 3.2 Two query types
 
@@ -266,7 +284,14 @@ The materialization stage will then replace the self-join, and the SQL will be i
 
 The following table reports query performance and recall for different parameter combinations. Both latency columns measure end-to-end latency. Queries that return only business identifiers use the first SQL statement in Section 3.2. Queries that also return vectors use the self-join SQL. The values are representative results from individual queries:
 
-![Benchmark results for 16 million and 128 million vectors, with Top-K values of 100, 10,000, and 1 million. Returning identifiers takes 1.4 to 8.0 seconds; returning identifiers and vectors takes 2.4 to 76 seconds; Recall ranges from 96.0% to 99.6%.](/images/blogs/kwai-paimon-vector-search-apache-doris/benchmark-results.jpg)
+| Vector count | Top-K | Business identifier | Business identifier + vector | Recall |
+| ---: | ---: | ---: | ---: | ---: |
+| 16 million | 100 | 1.4 seconds | 2.4 seconds | 96.0% |
+| 128 million | 100 | 1.8 seconds | 2.5 seconds | 97.0% |
+| 16 million | 10,000 | 1.8 seconds | 2.3 seconds | 99.2% |
+| 128 million | 10,000 | 2.0 seconds | 4.6 seconds | 98.5% |
+| 16 million | 1 million | 7.9 seconds | 65 seconds | 97.8% |
+| 128 million | 1 million | 8.0 seconds | 76 seconds | 99.6% |
 
 The table supports two conclusions:
 
@@ -279,7 +304,20 @@ These are representative results from individual queries. The table does not cov
 
 Kwai also compared vector retrieval on Paimon tables with retrieval on Doris internal tables. The team loaded the same Paimon data into Doris internal tables and queried it through Doris's own vector indexes. The following table gives the results.
 
-![Comparison of Doris internal tables using local cache and Paimon external tables using Alluxio for 16 million and 128 million vectors at Top-K values of 100 and 10,000. For 16 million vectors and Top-K 100, latency is 0.49 seconds on the internal table and 1.4 seconds on the external table, a 2.86× ratio.](/images/blogs/kwai-paimon-vector-search-apache-doris/internal-external-comparison.jpg)
+| Vector count | Top-K | Returned data | Doris internal table (local cache) | Paimon external table (Alluxio) | External / internal |
+| ---: | ---: | --- | ---: | ---: | ---: |
+| 16 million | 100 | Business identifier | 0.49 seconds | 1.4 seconds | 2.86× |
+| 16 million | 100 | Business identifier + vector | 0.7 seconds | 2.4 seconds | 3.43× |
+| 128 million | 100 | Business identifier | 0.7 seconds | 1.8 seconds | 2.57× |
+| 128 million | 100 | Business identifier + vector | 0.8 seconds | 2.5 seconds | 3.13× |
+| 16 million | 10,000 | Business identifier | 0.58 seconds | 1.8 seconds | 3.10× |
+| 16 million | 10,000 | Business identifier + vector | 1.4 seconds | 2.3 seconds | 1.64× |
+| 128 million | 10,000 | Business identifier | 0.7 seconds | 2.0 seconds | 2.86× |
+| 128 million | 10,000 | Business identifier + vector | 1.1 seconds | 4.6 seconds | 4.18× |
+| 16 million | 1 million | Business identifier | 7.2 seconds | 7.9 seconds | 1.10× |
+| 16 million | 1 million | Business identifier + vector | 61 seconds | 65 seconds | 1.07× |
+| 128 million | 1 million | Business identifier | 7.2 seconds | 8.0 seconds | 1.11× |
+| 128 million | 1 million | Business identifier + vector | 56 seconds | 76 seconds | 1.36× |
 
 - External-table latency is 1.07 to 4.18 times internal-table latency. When the query returns only business identifiers, the absolute difference is 0.7 to 1.3 seconds.
 - At Top-K = 1 million, the difference narrows to 1.07 to 1.36 times. Most of the latency at this setting comes from row lookup and materialization. Both sides read the same amount of data, which reduces the effect of cache location.

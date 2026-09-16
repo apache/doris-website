@@ -49,8 +49,6 @@ Analytical systems have traditionally handled this type of data in three ways:
 | Store data as JSON strings or JSONB | Flexible ingestion | Every SQL query must parse the entire JSON document |
 | Hard-code the structure with STRUCT or MAP | Better read performance | Still strongly typed and insufficiently flexible |
 
-![Comparison of three approaches to semi-structured data](/images/blogs/apache-doris-variant-open-lakehouse/traditional-approaches.jpg)
-
 The Variant type addresses the trade-off between flexibility and query performance. Apache Doris has provided the Variant column type since version 2.1 for storing semi-structured data such as JSON:
 
 - When creating a table, users declare a single VARIANT column without defining its fields in advance.
@@ -142,8 +140,6 @@ The following Variant capabilities for data lakes are planned for Doris 5.0:
 | Interoperability | Internal table ↔ lake table INSERT ... SELECT | Bidirectional | Bidirectional |
 | Interoperability | Query internal and lake tables in the same SQL statement | Supported | Supported |
 
-![Doris 5.0 lake Variant capability matrix for Iceberg and Paimon](/images/blogs/apache-doris-variant-open-lakehouse/variant-capabilities.jpg)
-
 > Iceberg currently writes only the Plain layout. Reading the Shredded layout is fully supported. Shredded writes are planned for a later iteration, as described in the conclusion.
 
 > Availability: The lake Variant capabilities and SQL workflow below are planned for Doris 5.0. They describe the intended behavior rather than a currently released feature.
@@ -203,8 +199,6 @@ The following comparison of Variant in internal and external tables can help use
 | Ingestion latency and updates | ✅ **Real-time ingestion and primary-key updates** | Batch or micro-batch commits; Iceberg row-level updates |
 | Cost | Integrated or decoupled storage and compute | ✅ **Object storage with low per-unit storage cost** |
 
-![Comparison of Variant in internal tables and data lakes](/images/blogs/apache-doris-variant-open-lakehouse/internal-lake-variant-comparison.jpg)
-
 Variant in internal tables provides more features and better read and write performance. Variant in the lake allows multiple engines to access the same data and offers lower storage costs.
 
 The recommendations are:
@@ -214,8 +208,6 @@ The recommendations are:
 | Data is primarily produced and consumed within Doris; workloads require subsecond real-time ingestion and updates, full-text search, or high-concurrency point lookups and filtering | Variant in internal tables |
 | Data is an enterprise asset shared by multiple engines; ingestion is primarily batch or micro-batch; long-term retention and storage costs matter; Spark or Flink production pipelines already exist | Variant in the lake |
 | Both scenarios apply | Put hot data in internal tables and retain the complete dataset in the lake; query both with one SQL statement; accelerate lake Variant tables with asynchronous materialized views; write processing results back to the lake |
-
-![Variant format recommendations by scenario](/images/blogs/apache-doris-variant-open-lakehouse/variant-selection.jpg)
 
 ## 5. Conclusion: Variant follows the data
 
