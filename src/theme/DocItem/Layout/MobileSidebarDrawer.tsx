@@ -1,24 +1,27 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { type JSX, useEffect, useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import { useLocation } from '@docusaurus/router';
-import { useDocsSidebar } from '@docusaurus/plugin-content-docs/client';
+import { useActivePlugin, useDocsSidebar } from '@docusaurus/plugin-content-docs/client';
 import { ThemeClassNames } from '@docusaurus/theme-common';
 import { useAlternatePageUtils } from '@docusaurus/theme-common/internal';
 import DocSidebarItems from '@theme/DocSidebarItems';
 import SearchBar from '@theme/SearchBar';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import { getDocsSidebarScope } from '@site/src/utils/docs-sidebar-scope';
 
 import styles from './MobileSidebarDrawer.module.css';
 
 export default function MobileSidebarDrawer(): JSX.Element | null {
     const sidebar = useDocsSidebar();
+    const activePlugin = useActivePlugin();
     const { pathname, search, hash } = useLocation();
     const {
         i18n: { currentLocale, locales, localeConfigs },
     } = useDocusaurusContext();
     const alternatePageUtils = useAlternatePageUtils();
     const isZH = currentLocale === 'zh-CN';
+    const isMainDocs = activePlugin?.pluginId === 'default';
     const [open, setOpen] = useState(false);
     const [localeOpen, setLocaleOpen] = useState(false);
     const localeContainerRef = useRef<HTMLDivElement>(null);
@@ -59,6 +62,12 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
 
     if (!sidebar) return null;
 
+    const sidebarScope = getDocsSidebarScope(sidebar.items, pathname);
+    const scopedSidebarItems = isMainDocs ? sidebarScope.scopedItems : sidebar.items;
+    const drawerLabel = isMainDocs && sidebarScope.activeDomain
+        ? sidebarScope.activeDomain.label
+        : (isZH ? '目录' : 'Menu');
+
     const drawer = (
         <div className={clsx(open && styles.open)} aria-hidden={!open}>
             <div
@@ -71,7 +80,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                 aria-label={isZH ? '文档目录' : 'Docs sidebar'}
             >
                 <div className={styles.header}>
-                    <span>{isZH ? '目录' : 'Menu'}</span>
+                    <span>{drawerLabel}</span>
                     <button
                         type="button"
                         className={styles.close}
@@ -94,7 +103,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                 >
                     <ul className={clsx(ThemeClassNames.docs.docSidebarMenu, 'menu__list', styles.menu)}>
                         <DocSidebarItems
-                            items={sidebar.items}
+                            items={scopedSidebarItems}
                             activePath={pathname}
                             onItemClick={(item) => {
                                 if (item.type === 'link') {
@@ -115,66 +124,70 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
     return (
         <>
             <div className={styles.toolbar}>
-                <div className={styles.toolbarSearch}>
-                    <SearchBar />
-                </div>
-                <div
-                    ref={localeContainerRef}
-                    className={clsx(styles.toolbarLocale, localeOpen && styles.toolbarLocaleOpen)}
-                >
-                    <button
-                        type="button"
-                        className={styles.toolbarIconBtn}
-                        onClick={() => setLocaleOpen(o => !o)}
-                        aria-label={isZH ? '切换语言' : 'Switch language'}
-                        aria-haspopup="true"
-                        aria-expanded={localeOpen}
-                    >
-                        <svg
-                            className={styles.toolbarIcon}
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                            aria-hidden="true"
+                {!isMainDocs && (
+                    <>
+                        <div className={styles.toolbarSearch}>
+                            <SearchBar />
+                        </div>
+                        <div
+                            ref={localeContainerRef}
+                            className={clsx(styles.toolbarLocale, localeOpen && styles.toolbarLocaleOpen)}
                         >
-                            <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.25" />
-                            <path
-                                d="M1.5 8h13M8 1.5c1.75 1.78 2.7 4.03 2.7 6.5s-.95 4.72-2.7 6.5C6.25 12.72 5.3 10.47 5.3 8S6.25 3.28 8 1.5Z"
-                                stroke="currentColor"
-                                strokeWidth="1.25"
-                            />
-                        </svg>
-                    </button>
-                    <ul className={styles.localeMenu} role="menu">
-                        {locales.map(locale => {
-                            const baseTo = alternatePageUtils.createUrl({
-                                locale,
-                                fullyQualified: false,
-                            });
-                            const to = `${baseTo}${search}${hash}`;
-                            return (
-                                <li key={locale} role="none">
-                                    <a
-                                        role="menuitem"
-                                        href={to}
-                                        lang={localeConfigs[locale]?.htmlLang}
-                                        className={clsx(
-                                            styles.localeMenuItem,
-                                            locale === currentLocale && styles.localeMenuItemActive,
-                                        )}
-                                    >
-                                        {localeConfigs[locale]?.label ?? locale}
-                                    </a>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </div>
+                            <button
+                                type="button"
+                                className={styles.toolbarIconBtn}
+                                onClick={() => setLocaleOpen(o => !o)}
+                                aria-label={isZH ? '切换语言' : 'Switch language'}
+                                aria-haspopup="true"
+                                aria-expanded={localeOpen}
+                            >
+                                <svg
+                                    className={styles.toolbarIcon}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 16 16"
+                                    fill="none"
+                                    aria-hidden="true"
+                                >
+                                    <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.25" />
+                                    <path
+                                        d="M1.5 8h13M8 1.5c1.75 1.78 2.7 4.03 2.7 6.5s-.95 4.72-2.7 6.5C6.25 12.72 5.3 10.47 5.3 8S6.25 3.28 8 1.5Z"
+                                        stroke="currentColor"
+                                        strokeWidth="1.25"
+                                    />
+                                </svg>
+                            </button>
+                            <ul className={styles.localeMenu} role="menu">
+                                {locales.map(locale => {
+                                    const baseTo = alternatePageUtils.createUrl({
+                                        locale,
+                                        fullyQualified: false,
+                                    });
+                                    const to = `${baseTo}${search}${hash}`;
+                                    return (
+                                        <li key={locale} role="none">
+                                            <a
+                                                role="menuitem"
+                                                href={to}
+                                                lang={localeConfigs[locale]?.htmlLang}
+                                                className={clsx(
+                                                    styles.localeMenuItem,
+                                                    locale === currentLocale && styles.localeMenuItemActive,
+                                                )}
+                                            >
+                                                {localeConfigs[locale]?.label ?? locale}
+                                            </a>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    </>
+                )}
                 <button
                     type="button"
-                    className={styles.toolbarIconBtn}
+                    className={clsx(styles.toolbarIconBtn, isMainDocs && styles.toolbarMenuBtn)}
                     onClick={() => setOpen(true)}
                     aria-label={isZH ? '打开文档目录' : 'Open docs sidebar'}
                     aria-expanded={open}
@@ -182,6 +195,11 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                     <svg className={styles.toolbarIcon} viewBox="0 0 16 16" fill="none" aria-hidden="true">
                         <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                     </svg>
+                    {isMainDocs && (
+                        <span className={styles.toolbarMenuLabel}>
+                            {isZH ? '浏览当前分类' : 'Browse this section'}
+                        </span>
+                    )}
                 </button>
             </div>
 

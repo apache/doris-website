@@ -210,7 +210,7 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
-            label: 'Use Doris',
+            label: 'Guides',
             collapsible: false,
             collapsed: false,
             items: [

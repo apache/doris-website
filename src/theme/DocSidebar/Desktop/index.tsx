@@ -1,6 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import {useThemeConfig} from '@docusaurus/theme-common';
+import {useActivePlugin} from '@docusaurus/plugin-content-docs/client';
 import Logo from '@theme/Logo';
 import SearchBar from '@theme/SearchBar';
 import LocaleDropdownNavbarItem from '@theme/NavbarItem/LocaleDropdownNavbarItem';
@@ -11,6 +12,8 @@ import type {Props} from '@theme/DocSidebar/Desktop';
 import styles from './styles.module.css';
 
 function DocSidebarDesktop({path, sidebar, onCollapse, isHidden}: Props) {
+  const activePlugin = useActivePlugin();
+  const usesDomainNavigation = activePlugin?.pluginId === 'default';
   const {
     navbar: {hideOnScroll},
     docs: {
@@ -22,18 +25,21 @@ function DocSidebarDesktop({path, sidebar, onCollapse, isHidden}: Props) {
     <div
       className={clsx(
         styles.sidebar,
+        usesDomainNavigation && styles.sidebarWithDomainNavigation,
         hideOnScroll && styles.sidebarWithHideableNavbar,
         isHidden && styles.sidebarHidden,
       )}>
       {hideOnScroll && <Logo tabIndex={-1} className={styles.sidebarLogo} />}
-      <div className={styles.sidebarHeader}>
-        <div className={styles.sidebarSearch}>
-          <SearchBar />
+      {!usesDomainNavigation && (
+        <div className={styles.sidebarHeader}>
+          <div className={styles.sidebarSearch}>
+            <SearchBar />
+          </div>
+          <div className={styles.sidebarLocale}>
+            <LocaleDropdownNavbarItem mobile={false} {...({} as any)} />
+          </div>
         </div>
-        <div className={styles.sidebarLocale}>
-          <LocaleDropdownNavbarItem mobile={false} {...({} as any)} />
-        </div>
-      </div>
+      )}
       <Content path={path} sidebar={sidebar} />
       {hideable && <CollapseButton onClick={onCollapse} />}
     </div>

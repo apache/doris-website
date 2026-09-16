@@ -1,6 +1,11 @@
 .icon-language {
     vertical-align: text-bottom;
 }
+
+.locale-current-label {
+    display: inline-block;
+    white-space: nowrap;
+}
 .dropdown__menu {
     padding: 6px 0;
     .dropdown__link {
