@@ -11,6 +11,8 @@
         "物化视图增量维护",
         "物化视图行级更新",
         "IVM 增量刷新",
+        "IVM 刷新间隔",
+        "IVM 定时刷新",
         "IVM 回退",
         "IvmFallbackReason",
         "内部 Table Stream",
@@ -163,7 +165,7 @@ INSERT INTO orders VALUES
 
 ### 第 2 步：创建 IVM
 
-在 `CREATE MATERIALIZED VIEW` 中指定 `REFRESH INCREMENTAL`。本例同时指定 `FALLBACK`，当某次变化无法安全地增量计算时，Doris 可以回退到分区刷新或完整刷新。
+在 `CREATE MATERIALIZED VIEW` 中指定 `REFRESH INCREMENTAL`。本例同时指定 `FALLBACK`，当某次变化无法安全地增量计算时，Doris 可以回退到分区刷新或完整刷新。触发方式使用 `ON MANUAL`，便于逐步观察每次刷新的结果；生产环境通常改为定时或提交触发，见 [设置自动刷新间隔](#设置自动刷新间隔)。
 
 ```sql
 CREATE MATERIALIZED VIEW orders_by_status
@@ -317,7 +319,7 @@ IVM 支持以下聚合函数，参数可以是列或确定性表达式：
 严格 `INCREMENTAL` 会在这些情况下失败；`INCREMENTAL FALLBACK` 会回退到 `COMPLETE`。
 
 <!-- 知识类型: 运行机制 / 故障处理 -->
-<!-- 适用场景: 刷新策略配置 / IVM 回退排查 / 基线恢复 -->
+<!-- 适用场景: 刷新策略配置 / 自动刷新间隔 / IVM 回退排查 / 基线恢复 -->
 
 ## 刷新和回退
 
@@ -330,6 +332,55 @@ IVM 支持以下聚合函数，参数可以是列或确定性表达式：
 | `REFRESH AUTO` | 先探测定义是否支持 IVM；不支持时按普通异步物化视图创建 | 对支持 IVM 的视图依次尝试 IVM、分区刷新和完整刷新 |
 | `REFRESH PARTITIONS [FALLBACK]` | 要求物化视图定义 `PARTITION BY` | 重算变化分区；指定 `FALLBACK` 后可回退到完整刷新 |
 | `REFRESH COMPLETE` | 不创建 IVM 元数据 | 始终完整刷新 |
+
+### 设置自动刷新间隔
+
+IVM 复用异步物化视图的触发方式，没有单独的触发语法。在 `REFRESH INCREMENTAL [FALLBACK]` 之后通过 `ON` 子句指定：
+
+| 触发方式 | 语法 | 说明 |
+|---|---|---|
+| 手动触发 | `ON MANUAL` | 默认值。只在执行 `REFRESH MATERIALIZED VIEW` 时刷新 |
+| 定时触发 | `ON SCHEDULE EVERY <interval> <unit> [STARTS '<start_time>']` | 按固定间隔自动执行增量刷新 |
+| 提交触发 | `ON COMMIT` | 基表导入事务提交后自动执行增量刷新 |
+
+定时触发的间隔规则如下：
+
+- `<interval>` 必须是正整数，`<unit>` 支持 `MINUTE`、`HOUR`、`DAY`、`WEEK`。
+- **最小刷新间隔为 `EVERY 1 MINUTE`。** 指定 `SECOND` 会报错 `interval time unit can not be second`。FE 配置 `enable_job_schedule_second_for_test` 可以放开秒级间隔，但该配置仅供测试，生产环境不要开启。
+- `STARTS` 指定首次调度时间，格式为 `'yyyy-MM-dd HH:mm:ss'`，必须晚于当前时间。不指定时，第一次刷新在创建物化视图后经过一个间隔执行。后续调度时间固定为首次调度时间加整数倍间隔，不受上一次任务结束时间影响。
+
+下面的示例每 5 分钟执行一次增量刷新，无法增量计算时允许回退：
+
+```sql
+CREATE MATERIALIZED VIEW orders_by_status
+BUILD IMMEDIATE
+REFRESH INCREMENTAL FALLBACK ON SCHEDULE EVERY 5 MINUTE
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+)
+AS
+SELECT
+    order_status,
+    COUNT(*) AS order_count,
+    SUM(amount) AS total_amount
+FROM orders
+GROUP BY order_status;
+```
+
+定时触发和提交触发的任务按物化视图创建时定义的刷新策略执行：`INCREMENTAL` 只尝试 IVM，`INCREMENTAL FALLBACK` 先尝试 IVM 再按原因回退，`AUTO` 依次尝试 IVM、分区刷新和完整刷新。自动触发的任务还有以下行为：
+
+- **首次自动刷新会自动建立基线。** 物化视图还没有刷新成功过时（例如使用 `BUILD DEFERRED` 创建后尚未刷新），第一次定时或提交触发的任务会自动执行 `COMPLETE` 建立完整基线，不需要手工执行 `COMPLETE`；之后的任务才执行增量刷新。
+- **同一物化视图的刷新任务串行执行，多余的触发会被跳过。** 自动触发的任务最多保留一个正在运行和一个等待执行。当刷新间隔短于单次刷新耗时，或者 `ON COMMIT` 下基表提交非常频繁时，新的触发会被跳过，FE 指标 `async_materialized_view_task_skip_num` 累加。等待中的任务执行时会一次性消费积累的全部变化，因此不会丢失变化，但实际刷新延迟会大于设定间隔。选择间隔时，应保证正常负载下单次增量刷新能在一个间隔内完成。
+- **`ON COMMIT` 只由参与增量维护的基表触发。** `excluded_trigger_tables` 中的基表提交不触发刷新，详见 [excluded_trigger_tables](#excluded_trigger_tables)。
+
+修改触发方式时只指定 `ON` 子句，不要重复写 `INCREMENTAL`。IVM 的刷新方式不能通过 `ALTER` 修改，`ALTER MATERIALIZED VIEW ... REFRESH INCREMENTAL ...` 会被拒绝；只修改触发方式是允许的，修改后 Doris 会按新的触发方式重建调度任务：
+
+```sql
+ALTER MATERIALIZED VIEW orders_by_status REFRESH ON SCHEDULE EVERY 1 MINUTE;
+ALTER MATERIALIZED VIEW orders_by_status REFRESH ON COMMIT;
+ALTER MATERIALIZED VIEW orders_by_status REFRESH ON MANUAL;
+```
 
 ### 手动覆盖刷新方式
 
@@ -513,7 +564,7 @@ PROPERTIES (
 
 - IVM 只能在创建物化视图时启用。不能通过 `ALTER MATERIALIZED VIEW` 把普通物化视图改为 IVM，也不能把 IVM 改为其他默认刷新方式。需要切换时，请重建物化视图。
 - 开启 Row Binlog 会增加写入和存储开销。Unique Key MoW 表还需要读取并保存更新前的值。只为确实需要 IVM 的基表开启，并在生产上线前使用真实负载评估导入吞吐。
-- IVM 仍通过异步任务刷新，不提供与基表事务同步的实时一致性。刷新延迟取决于触发方式、排队时间和增量计划的执行时间。
+- IVM 仍通过异步任务刷新，不提供与基表事务同步的实时一致性。刷新延迟取决于触发方式、排队时间和增量计划的执行时间。定时触发的最小间隔为 1 分钟，见 [设置自动刷新间隔](#设置自动刷新间隔)。
 - 复杂的嵌套外连接会扩大增量计划，尤其是空值产生端的复杂子树。遇到规划或刷新开销过高时，可以简化 Join，或者先把复杂子树物化为下层 IVM。
 - `MIN`、`MAX` 和 Bitmap 聚合在部分删除场景下需要完整重算。生产环境建议使用 `INCREMENTAL FALLBACK` 或 `AUTO`，并监控 `IvmFallbackReason`。
 - Row Binlog 的表模型、列类型、Schema Change 和删除行为限制会直接影响 IVM，详见 [Row Binlog 的支持范围与限制](../../../data-operate/incremental/row-binlog#支持范围与限制)。
@@ -529,6 +580,8 @@ PROPERTIES (
 |---|---|
 | `CREATE MATERIALIZED VIEW ... REFRESH INCREMENTAL` 创建失败 | 检查 FE 是否开启 `enable_feature_binlog` 和 `enable_table_stream`，基表是否满足模型与 Row Binlog 要求，以及定义 SQL 是否在 IVM 支持范围内 |
 | 严格增量刷新提示重建基线 | 执行 `COMPLETE` 或 `AUTO` 刷新，建立新的完整基线后再执行严格增量刷新 |
+| `ON SCHEDULE EVERY 30 SECOND` 报错 `interval time unit can not be second` | 定时刷新的最小间隔是 `EVERY 1 MINUTE`，单位只支持 `MINUTE`、`HOUR`、`DAY`、`WEEK`。需要更低延迟时改用 `ON COMMIT`，见 [设置自动刷新间隔](#设置自动刷新间隔) |
+| 定时刷新的实际延迟大于设定间隔 | 同一物化视图的任务串行执行，单次刷新耗时超过间隔时多余触发会被跳过。检查 `tasks("type"="mv")` 中的任务耗时和 FE 指标 `async_materialized_view_task_skip_num`，拉长间隔、简化定义或通过 `workload_group` 增加刷新资源 |
 | 刷新任务回退到 `COMPLETE` | 查询 `tasks("type"="mv")` 的 `IvmFallbackReason`，并根据 [回退顺序](#回退顺序) 中的原因处理 |
 | 被排除的基表单独变化后，视图数据未更新 | `excluded_trigger_tables` 中的表不会独立触发刷新。等待其他基表变化触发刷新，或调整属性并按提示重建基线 |
 | 能否手工消费或重置内部 Stream | 不能。内部 Stream 仅供 IVM 使用，由 Doris 管理生命周期和消费位点 |
@@ -540,11 +593,12 @@ PROPERTIES (
 
 1. **先比较变化行数和分区大小。** 变化只占分区很小比例时优先考虑 IVM；变化覆盖大部分分区时，`PARTITIONS` 可能更简单。
 2. **生产环境启用安全回退。** 使用 `INCREMENTAL FALLBACK` 或 `AUTO`，避免删除或基线问题让刷新长期失败。
-3. **先建立完整基线。** 创建后先运行 `COMPLETE`，确认结果正确，再开始增量刷新。
-4. **更新和删除场景使用 Unique Key MoW。** Duplicate Key 表只适合追加型数据。
-5. **为刷新任务隔离资源。** 通过 `workload_group` 避免复杂增量计划与在线查询争抢资源。
-6. **监控任务和 Stream 积压。** 同时观察 `tasks("type"="mv")`、`mv_infos` 和 `information_schema.table_stream_consumption`。
-7. **定期检查回退原因。** 偶发回退可以保证正确性；持续回退说明查询形态、Binlog 连续性或基线需要处理。
+3. **按刷新耗时选择触发方式和间隔。** 定时触发的最小间隔为 1 分钟，间隔应大于正常负载下单次增量刷新的耗时；需要更低延迟且基表提交不频繁时使用 `ON COMMIT`。
+4. **先建立完整基线。** 创建后先运行 `COMPLETE`，确认结果正确，再开始增量刷新。
+5. **更新和删除场景使用 Unique Key MoW。** Duplicate Key 表只适合追加型数据。
+6. **为刷新任务隔离资源。** 通过 `workload_group` 避免复杂增量计划与在线查询争抢资源。
+7. **监控任务和 Stream 积压。** 同时观察 `tasks("type"="mv")`、`mv_infos` 和 `information_schema.table_stream_consumption`。
+8. **定期检查回退原因。** 偶发回退可以保证正确性；持续回退说明查询形态、Binlog 连续性或基线需要处理。
 
 <!-- 知识类型: 操作步骤 -->
 <!-- 适用场景: 示例环境清理 -->
