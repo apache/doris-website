@@ -462,17 +462,17 @@ SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
 
 BM25 norms on VARIANT paths:
 
-A tokenized index on a VARIANT path writes BM25 norms just like one on an ordinary column. Norms store the record length used by BM25 and cost one byte per row for every indexed field, written even for rows that hold no value for that path. One segment keeps one index per path, so norms on a VARIANT column with many paths cost `rows × paths` bytes. Turning on the BE config `inverted_index_skip_norms_for_variant` (default `false`, changeable at runtime) drops them for every index on a VARIANT path, whatever that index's `norms` property says. Where norms are missing, queries are unaffected apart from ranking: record-length normalization is skipped, and `score()` depends on term frequency and IDF only.
+A tokenized index on a VARIANT path writes BM25 norms just like one on an ordinary column. Norms store the record length used by BM25 and cost one byte per row for every indexed field, written even for rows that hold no value for that path. One segment keeps one index per path, so norms on a VARIANT column with many paths cost `rows × paths` bytes. Turning on the BE config `inverted_index_skip_norms_for_variant` (default `false`, changeable at runtime) drops them for every index on a VARIANT path, whatever that index's `norms` property says. Without norms, `MATCH` filtering still works, but a query that computes `score()` on that path returns an error, also while only some of the table's segments lack norms.
 
-Add `"norms" = "false"` to a path index that does not need record-length ranking, and it stops paying for norms. An index without `field_pattern` passes the property to every subpath it covers:
+Add `"norms" = "false"` to a path index that is never ranked with `score()`, and it stops paying for norms. An index without `field_pattern` passes the property to every subpath it covers:
 
 ```sql
 CREATE TABLE IF NOT EXISTS tbl (
     k BIGINT,
     v VARIANT<'title' : STRING, 'body_*' : STRING>,
-    -- title keeps the default: norms, so score() applies record-length normalization
+    -- title keeps the default: norms, so it can be ranked with score()
     INDEX idx_title(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "title"),
-    -- body_* gives up record-length normalization to save one byte per row per path
+    -- body_* is only filtered, never ranked: no norms, one byte less per row per path
     INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*", "norms" = "false")
 );
 ```

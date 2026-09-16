@@ -135,7 +135,7 @@ INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern
 INDEX idx_content(content) USING INVERTED PROPERTIES("parser" = "english", "norms" = "false")
 ```
 
-When an index has no norms, scoring skips record-length normalization: every row is scored as if its length were `avgdl`, so `1 - b + b × |d| / avgdl` becomes 1 and the score depends on term frequency and IDF only. The property and the config apply to newly written segments; segments written earlier keep their norms until compaction rewrites them. Turn the config on, or set `"norms" = "false"`, only after every BE has been upgraded to a version that supports them, because an older BE cannot score an index written without norms.
+Relevance scoring needs norms: a query that computes `score()` on a tokenized index returns an error when any segment it reads has no norms for that field, which includes a table where only some segments were written without them. `MATCH_*` filtering is not affected. Set `"norms" = "false"`, or turn the config on, only for indexes that are never ranked with `score()`. The property and the config apply to newly written segments; segments written earlier keep their norms until compaction rewrites them. Change either one only after every BE has been upgraded to a version that supports them.
 
 ## Interpreting the Results
 
