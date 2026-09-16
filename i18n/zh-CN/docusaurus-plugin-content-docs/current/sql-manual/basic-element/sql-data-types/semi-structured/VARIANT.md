@@ -462,18 +462,18 @@ SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
 
 VARIANT 路径上的 BM25 norms：
 
-分词索引默认会写 BM25 norms，但 BE 配置项 `inverted_index_skip_norms_for_variant`（默认 `true`，可动态修改）会让 VARIANT 路径上的索引不写。norms 保存 BM25 使用的记录长度，按行存储，每个被索引的字段每行 1 字节，即使该行在这个路径上没有值也会写入。一个段中每个路径各有一份索引，因此在路径数很多的 VARIANT 列上写 norms 的代价是 `行数 × 路径数` 字节。除排序外查询不受影响：仅跳过记录长度归一化，`score()` 只由词频和 IDF 决定。
+VARIANT 路径上的分词索引和普通列上的一样会写 BM25 norms。norms 保存 BM25 使用的记录长度，按行存储，每个被索引的字段每行 1 字节，即使该行在这个路径上没有值也会写入。一个段中每个路径各有一份索引，因此在路径数很多的 VARIANT 列上写 norms 的代价是 `行数 × 路径数` 字节。打开 BE 配置项 `inverted_index_skip_norms_for_variant`（默认 `false`，可动态修改）之后，VARIANT 路径上的所有索引都不再写 norms，无论该索引的 `norms` 属性如何。没有 norms 时，除排序外查询不受影响：仅跳过记录长度归一化，`score()` 只由词频和 IDF 决定。
 
-如果某个路径需要完整的 BM25 打分，给该路径的索引加上 `"norms" = "true"`。该属性的优先级高于配置项；不带 `field_pattern` 的索引会把它传给自己覆盖的每个子路径：
+如果某个路径不需要按记录长度排序，给它的索引加上 `"norms" = "false"` 即可省下这部分空间。不带 `field_pattern` 的索引会把该属性传给自己覆盖的每个子路径：
 
 ```sql
 CREATE TABLE IF NOT EXISTS tbl (
     k BIGINT,
     v VARIANT<'title' : STRING, 'body_*' : STRING>,
-    -- title 参与记录长度归一化
-    INDEX idx_title(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "title", "norms" = "true"),
-    -- body_* 保持默认：配置项开启时不写 norms，也不做记录长度归一化
-    INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*")
+    -- title 保持默认：写 norms，score() 参与记录长度归一化
+    INDEX idx_title(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "title"),
+    -- body_* 放弃记录长度归一化，省下每行每路径 1 字节
+    INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*", "norms" = "false")
 );
 ```
 

@@ -119,17 +119,17 @@ norms 由索引属性 `norms` 控制，该属性默认为 `true`：
 
 | 索引                     | 是否写 norms                                             |
 | ------------------------ | -------------------------------------------------------- |
-| 普通列上的分词索引       | 写                                                       |
-| VARIANT 路径上的分词索引 | 不写（`inverted_index_skip_norms_for_variant` 开启时）   |
+| 普通列上的分词索引       | 写，除非索引设置了 `"norms" = "false"`                   |
+| VARIANT 路径上的分词索引 | 同上，除非下面的 BE 配置项把它们关掉                     |
 | 非分词索引               | 从不写                                                   |
 
-VARIANT 路径索引指用 `field_pattern` 声明的索引，以及每个被提取的子路径继承到的那份副本。一个段中每个路径各有一份这样的索引，因此在这里写 norms 的代价是 `行数 × 路径数` 字节。BE 配置项 `inverted_index_skip_norms_for_variant`（默认 `true`，可动态修改）因此让这类索引不写 norms；关闭它之后，VARIANT 路径索引与普通索引行为一致。
+VARIANT 路径索引指用 `field_pattern` 声明的索引，以及每个被提取的子路径继承到的那份副本。一个段中每个路径各有一份这样的索引，因此在这里写 norms 的代价是 `行数 × 路径数` 字节。打开 BE 配置项 `inverted_index_skip_norms_for_variant`（默认 `false`，可动态修改）之后，VARIANT 路径上的所有索引都不再写 norms，无论该索引的 `norms` 属性如何，这样集群不必改写索引定义就能收回这部分空间。
 
-`norms` 属性在两种情况下都优先生效；子路径继承到的那份副本会带上它所来源的索引的属性：
+`norms` 属性按索引生效；子路径继承到的那份副本会带上它所来源的索引的属性：
 
 ```sql
--- 为某个 VARIANT 路径保留记录长度归一化
-INDEX idx_title(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "title", "norms" = "true")
+-- 关闭某个 VARIANT 路径上的记录长度归一化
+INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*", "norms" = "false")
 
 -- 关闭普通列上的记录长度归一化
 INDEX idx_content(content) USING INVERTED PROPERTIES("parser" = "english", "norms" = "false")

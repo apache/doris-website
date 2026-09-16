@@ -117,19 +117,19 @@ When a query contains multiple terms, **the final score is the sum of the scores
 
 Norms are controlled per index with the `norms` property, which defaults to `true`:
 
-| Index                                  | Norms written                                           |
-| -------------------------------------- | ------------------------------------------------------- |
-| Tokenized index on an ordinary column  | Yes                                                     |
-| Tokenized index on a VARIANT path      | No, while `inverted_index_skip_norms_for_variant` is on |
-| Non-tokenized index                    | Never                                                   |
+| Index                                  | Norms written                                                    |
+| -------------------------------------- | ---------------------------------------------------------------- |
+| Tokenized index on an ordinary column  | Yes, unless the index sets `"norms" = "false"`                   |
+| Tokenized index on a VARIANT path      | The same, unless the BE config below turns them off              |
+| Non-tokenized index                    | Never                                                            |
 
-A VARIANT path index is an index declared with `field_pattern`, together with the copy of it that each extracted subpath inherits. One segment holds one such index per path, so writing norms there costs `rows × paths` bytes. The BE config `inverted_index_skip_norms_for_variant` (default `true`, changeable at runtime) therefore leaves norms out of those indexes; turn it off and a VARIANT path index behaves like any other index.
+A VARIANT path index is an index declared with `field_pattern`, together with the copy of it that each extracted subpath inherits. One segment holds one such index per path, so writing norms there costs `rows × paths` bytes. Turning on the BE config `inverted_index_skip_norms_for_variant` (default `false`, changeable at runtime) drops norms for every index on a VARIANT path, whatever that index's `norms` property says, so a cluster can reclaim that space without rewriting its index definitions.
 
-The `norms` property decides on its own either way, and the copy inherited by a subpath carries the property of the index it comes from:
+The `norms` property decides per index, and the copy inherited by a subpath carries the property of the index it comes from:
 
 ```sql
--- keep record-length normalization for one VARIANT path
-INDEX idx_title(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "title", "norms" = "true")
+-- drop record-length normalization for one VARIANT path
+INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*", "norms" = "false")
 
 -- drop it for an ordinary column
 INDEX idx_content(content) USING INVERTED PROPERTIES("parser" = "english", "norms" = "false")
