@@ -135,7 +135,7 @@ INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern
 INDEX idx_content(content) USING INVERTED PROPERTIES("parser" = "english", "norms" = "false")
 ```
 
-索引没有 norms 时，打分会跳过记录长度归一化：公式中的 `b × |d| / avgdl` 项不再参与计算，得分只由词频和 IDF 决定。该属性对新写入的段生效；此前写入的段会保留原有的 norms，直到被 compaction 重写。
+索引没有 norms 时，打分会跳过记录长度归一化：每行都按平均长度 `avgdl` 计算，`1 - b + b × |d| / avgdl` 恒为 1，得分只由词频和 IDF 决定。该属性和配置项只对新写入的段生效；此前写入的段会保留原有的 norms，直到被 compaction 重写。请在所有 BE 都升级到支持它们的版本之后，再打开配置项或设置 `"norms" = "false"`，因为旧版本的 BE 无法对没有 norms 的索引打分。
 
 ## 结果解读
 
