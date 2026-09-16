@@ -2442,7 +2442,6 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/session/queries/CLEAN-ALL-PROFILE',
                                         'sql-manual/sql-statements/session/queries/SHOW-QUERY-STATS',
                                         'sql-manual/sql-statements/session/queries/CLEAN-ALL-QUERY-STATS',
-                                        'sql-manual/sql-statements/session/queries/PLAN-REPLAYER-DUMP',
                                     ],
                                 },
                                 {

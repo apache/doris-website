@@ -1832,12 +1832,6 @@ HOUR: log 前缀是：yyyyMMddHH
 
 控制是否压缩 fe.audit.log。如果开启，则使用 gzip 算法进行压缩。
 
-#### `nereids_trace_log_dir`
-
-默认值：DorisFE.DORIS_HOME_DIR + "/log/nereids_trace"
-
-用于存储 nereids trace 日志的目录
-
 ### 存储
 
 #### `min_replication_num_per_tablet`
