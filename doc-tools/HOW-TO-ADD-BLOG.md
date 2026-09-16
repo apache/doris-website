@@ -222,7 +222,67 @@ Set the cover in front matter:
 image: '/images/blogs/<slug>/cover.png'
 ```
 
-A horizontal cover works best with the current cards. Recent Blog covers commonly use an aspect ratio close to `1800 × 766`.
+### Create the cover image
+
+Use a horizontal cover at `1800 × 766` pixels (approximately `2.35:1`) whenever possible. A slightly larger image with the same aspect ratio is acceptable, but do not stretch an image to fit. Use `cover.jpg` for an opaque cover and `cover.png` only when transparency or lossless rendering is necessary.
+
+Before creating a cover, inspect several recent covers under `static/images/blogs/` and choose examples with a similar article type. The new cover should look like part of the same Blog collection while still communicating the subject of the article.
+
+Follow these visual guidelines:
+
+- use a clean light, off-white, or pale-blue background with restrained gradients, geometric shapes, or fine wave patterns;
+- use dark, high-contrast typography and a limited set of accent colors derived from the Apache Doris brand and the article subject;
+- keep one clear visual focus and enough empty space for the design to remain readable when reduced to a Blog card;
+- keep the title or subtitle short, and verify every visible word at full size and thumbnail size;
+- avoid dense paragraphs, small labels, screenshots used as a background, decorative clutter, watermarks, QR codes, calls to action, trial offers, community-group promotions, and commercial branding unrelated to the article;
+- keep important text and logos away from the outer edges so common card crops do not cut them off.
+
+For an integration article or a company case study, the official logos can be the main visual. Use the official Apache Doris logo together with the official project or company logo, preserve their aspect ratios and clear space, and separate them with a simple `×` or `+` when appropriate. Do not ask an image model to recreate a logo or use a guessed wordmark. Obtain the logo from an authoritative source and composite the original asset into the cover.
+
+Use this workflow:
+
+1. identify the article's single main idea and select two or three existing Blog covers as style references;
+2. collect the official logo assets when the topic centers on another project or company;
+3. create the cover at the target aspect ratio and inspect it at both full size and card-thumbnail size;
+4. verify logo accuracy, spelling, contrast, edge clearance, and visual balance;
+5. compress the approved cover using the process below and keep only the compressed file in the article image directory;
+6. set the final path in the front matter and verify that the path, file name, and extension match exactly.
+
+### Compress and replace source images
+
+Compress every cover and content image before the Blog is complete. Follow the detailed settings in the [image compression guide](./prompts/img-compression-guide.md).
+
+Choose the output format according to the image:
+
+- convert opaque photographs, generated illustrations, and diagrams without transparency to JPEG with Pillow using `quality=85` and `optimize=True`;
+- keep PNG for transparent images, flat-color graphics, or screenshots whose sharp text and edges degrade noticeably in JPEG;
+- preserve the original pixel dimensions during compression unless the image is being resized deliberately to meet the cover specification;
+- never change the aspect ratio by stretching the image.
+
+Compress to a temporary output first. Do not delete or overwrite the source until the compressed image has been inspected. For JPEG output, the standard conversion is:
+
+```python
+from pathlib import Path
+from PIL import Image
+
+files = [Path('source-image.png')]
+
+for source in files:
+    output = source.with_suffix('.jpg')
+    image = Image.open(source).convert('RGB')
+    image.save(output, 'JPEG', quality=85, optimize=True)
+    print(f'{source}: {source.stat().st_size} -> {output}: {output.stat().st_size}')
+```
+
+After compression:
+
+1. open the compressed image and check text, diagrams, fine lines, colors, and logos for visible artifacts;
+2. confirm that its dimensions and aspect ratio are correct and that its file size is smaller;
+3. if the extension or file name changed, update the front matter and every Markdown reference;
+4. verify that every `/images/...` reference resolves to an existing file with the same case-sensitive name;
+5. delete the uncompressed source and any superseded variants from the repository.
+
+The final article directory should contain only the compressed images used by the article. Do not keep both the original PNG and the converted JPEG after all references point to the JPEG.
 
 When the supplied Markdown references images:
 
