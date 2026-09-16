@@ -11,6 +11,8 @@
         "materialized view incremental maintenance",
         "materialized view row-level update",
         "IVM incremental refresh",
+        "IVM refresh interval",
+        "IVM scheduled refresh",
         "IVM fallback",
         "IvmFallbackReason",
         "internal Table Stream",
@@ -163,7 +165,7 @@ INSERT INTO orders VALUES
 
 ### Step 2: Create the IVM
 
-Specify `REFRESH INCREMENTAL` in `CREATE MATERIALIZED VIEW`. This example also specifies `FALLBACK`, so that Doris can fall back to a partition refresh or a complete refresh when a change cannot be computed incrementally in a safe way.
+Specify `REFRESH INCREMENTAL` in `CREATE MATERIALIZED VIEW`. This example also specifies `FALLBACK`, so that Doris can fall back to a partition refresh or a complete refresh when a change cannot be computed incrementally in a safe way. The trigger is `ON MANUAL` so that each refresh can be observed step by step; production views usually switch to a scheduled or on-commit trigger, see [Setting the automatic refresh interval](#setting-the-automatic-refresh-interval).
 
 ```sql
 CREATE MATERIALIZED VIEW orders_by_status
@@ -317,7 +319,7 @@ Some aggregate functions cannot safely derive the new result from the current de
 Strict `INCREMENTAL` fails in these cases; `INCREMENTAL FALLBACK` falls back to `COMPLETE`.
 
 <!-- Knowledge type: Runtime behavior / Failure handling -->
-<!-- Use cases: Configuring the refresh strategy / Diagnosing IVM fallback / Rebuilding the baseline -->
+<!-- Use cases: Configuring the refresh strategy / Automatic refresh interval / Diagnosing IVM fallback / Rebuilding the baseline -->
 
 ## Refresh and fallback
 
@@ -330,6 +332,55 @@ Strict `INCREMENTAL` fails in these cases; `INCREMENTAL FALLBACK` falls back to 
 | `REFRESH AUTO` | Probes whether the definition supports IVM; if not, creates a regular asynchronous materialized view | For views that support IVM, tries IVM, partition refresh and complete refresh in turn |
 | `REFRESH PARTITIONS [FALLBACK]` | Requires the materialized view to define `PARTITION BY` | Recomputes the changed partitions; with `FALLBACK`, can fall back to a complete refresh |
 | `REFRESH COMPLETE` | Does not create IVM metadata | Always refreshes completely |
+
+### Setting the automatic refresh interval
+
+IVM reuses the trigger methods of asynchronous materialized views and has no trigger syntax of its own. Specify the trigger in the `ON` clause after `REFRESH INCREMENTAL [FALLBACK]`:
+
+| Trigger | Syntax | Description |
+|---|---|---|
+| Manual | `ON MANUAL` | Default. Refreshes only when `REFRESH MATERIALIZED VIEW` is executed |
+| Scheduled | `ON SCHEDULE EVERY <interval> <unit> [STARTS '<start_time>']` | Runs an incremental refresh automatically at a fixed interval |
+| On commit | `ON COMMIT` | Runs an incremental refresh automatically after a load transaction commits on a base table |
+
+The rules for the scheduled interval are:
+
+- `<interval>` must be a positive integer, and `<unit>` can be `MINUTE`, `HOUR`, `DAY` or `WEEK`.
+- **The minimum refresh interval is `EVERY 1 MINUTE`.** Specifying `SECOND` fails with `interval time unit can not be second`. The FE option `enable_job_schedule_second_for_test` allows second-level intervals, but it is for testing only and must not be enabled in production.
+- `STARTS` sets the first scheduling time in the format `'yyyy-MM-dd HH:mm:ss'` and must be later than the current time. Without it, the first refresh runs one interval after the materialized view is created. Later runs are fixed at the first scheduling time plus whole multiples of the interval, regardless of when the previous task finished.
+
+The following example runs an incremental refresh every 5 minutes and allows fallback when a change cannot be computed incrementally:
+
+```sql
+CREATE MATERIALIZED VIEW orders_by_status
+BUILD IMMEDIATE
+REFRESH INCREMENTAL FALLBACK ON SCHEDULE EVERY 5 MINUTE
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+)
+AS
+SELECT
+    order_status,
+    COUNT(*) AS order_count,
+    SUM(amount) AS total_amount
+FROM orders
+GROUP BY order_status;
+```
+
+Scheduled and on-commit tasks run with the refresh strategy defined when the materialized view was created: `INCREMENTAL` only tries IVM, `INCREMENTAL FALLBACK` tries IVM first and then falls back according to the reason, and `AUTO` tries IVM, partition refresh and complete refresh in turn. Automatically triggered tasks also behave as follows:
+
+- **The first automatic refresh builds the baseline by itself.** If the materialized view has never been refreshed successfully (for example, it was created with `BUILD DEFERRED` and not refreshed yet), the first scheduled or on-commit task automatically runs `COMPLETE` to build the full baseline; you do not need to run `COMPLETE` by hand. Later tasks then refresh incrementally.
+- **Refresh tasks of one materialized view run serially, and surplus triggers are skipped.** At most one running and one waiting automatically triggered task are kept. When the interval is shorter than the duration of a single refresh, or base tables commit very frequently under `ON COMMIT`, new triggers are skipped and the FE metric `async_materialized_view_task_skip_num` increases. The waiting task consumes all accumulated changes in one run, so no change is lost, but the actual refresh latency is longer than the configured interval. Choose an interval that lets a single incremental refresh finish within one interval under normal load.
+- **`ON COMMIT` is triggered only by base tables that participate in incremental maintenance.** Commits on tables listed in `excluded_trigger_tables` do not trigger a refresh, see [excluded_trigger_tables](#excluded_trigger_tables).
+
+When changing the trigger, specify only the `ON` clause and do not repeat `INCREMENTAL`. The refresh method of an IVM cannot be changed with `ALTER`, so `ALTER MATERIALIZED VIEW ... REFRESH INCREMENTAL ...` is rejected; changing only the trigger is allowed, and Doris recreates the scheduling job with the new trigger:
+
+```sql
+ALTER MATERIALIZED VIEW orders_by_status REFRESH ON SCHEDULE EVERY 1 MINUTE;
+ALTER MATERIALIZED VIEW orders_by_status REFRESH ON COMMIT;
+ALTER MATERIALIZED VIEW orders_by_status REFRESH ON MANUAL;
+```
 
 ### Overriding the refresh method manually
 
@@ -513,7 +564,7 @@ For all materialized view properties, see [CREATE ASYNC MATERIALIZED VIEW](../..
 
 - IVM can only be enabled when the materialized view is created. You cannot turn a regular materialized view into an IVM with `ALTER MATERIALIZED VIEW`, nor change an IVM to another default refresh method. To switch, recreate the materialized view.
 - Enabling Row Binlog adds write and storage overhead. Unique Key MoW tables also need to read and store the values before each update. Enable it only for base tables that really need IVM, and evaluate load throughput with realistic workloads before going to production.
-- IVM still refreshes through asynchronous tasks and does not provide real-time consistency with base table transactions. Refresh latency depends on the trigger method, queueing time and the execution time of the delta plan.
+- IVM still refreshes through asynchronous tasks and does not provide real-time consistency with base table transactions. Refresh latency depends on the trigger method, queueing time and the execution time of the delta plan. The minimum scheduled interval is 1 minute, see [Setting the automatic refresh interval](#setting-the-automatic-refresh-interval).
 - Complex nested outer joins enlarge the delta plan, especially complex subtrees on the null-producing side. When planning or refresh becomes too expensive, simplify the joins or materialize the complex subtree as a lower-level IVM first.
 - `MIN`, `MAX` and Bitmap aggregations require a complete recomputation in some delete scenarios. In production, use `INCREMENTAL FALLBACK` or `AUTO` and monitor `IvmFallbackReason`.
 - The table model, column type, schema change and delete restrictions of Row Binlog apply directly to IVM. See [Supported scope and limitations of Row Binlog](../../../data-operate/incremental/row-binlog#supported-scope-and-limitations).
@@ -529,6 +580,8 @@ When creation fails, a refresh falls back, or the data is not updated, use the t
 |---|---|
 | `CREATE MATERIALIZED VIEW ... REFRESH INCREMENTAL` fails | Check that `enable_feature_binlog` and `enable_table_stream` are enabled on the FEs, that the base tables meet the table model and Row Binlog requirements, and that the definition SQL is within the IVM support scope |
 | A strict incremental refresh asks for a baseline rebuild | Run a `COMPLETE` or `AUTO` refresh to build a new full baseline, then run the strict incremental refresh again |
+| `ON SCHEDULE EVERY 30 SECOND` fails with `interval time unit can not be second` | The minimum scheduled interval is `EVERY 1 MINUTE`, and the unit can only be `MINUTE`, `HOUR`, `DAY` or `WEEK`. Use `ON COMMIT` when lower latency is needed, see [Setting the automatic refresh interval](#setting-the-automatic-refresh-interval) |
+| The actual latency of scheduled refreshes is longer than the interval | Tasks of one materialized view run serially, and surplus triggers are skipped when a single refresh takes longer than the interval. Check task durations in `tasks("type"="mv")` and the FE metric `async_materialized_view_task_skip_num`, then lengthen the interval, simplify the definition, or give the refresh more resources through `workload_group` |
 | The refresh task falls back to `COMPLETE` | Query `IvmFallbackReason` in `tasks("type"="mv")` and handle it according to the reasons in [Fallback order](#fallback-order) |
 | The view is not updated after an excluded base table changes on its own | Tables in `excluded_trigger_tables` do not trigger refreshes on their own. Wait for a refresh triggered by other base tables, or adjust the property and rebuild the baseline as prompted |
 | Can internal Streams be consumed or reset manually | No. Internal Streams are reserved for IVM; Doris manages their lifecycle and consumption offsets |
@@ -540,11 +593,12 @@ When creation fails, a refresh falls back, or the data is not updated, use the t
 
 1. **Compare the number of changed rows with the partition size first.** Prefer IVM when changes are a small share of a partition; when changes cover most of a partition, `PARTITIONS` may be simpler.
 2. **Enable safe fallback in production.** Use `INCREMENTAL FALLBACK` or `AUTO` so that deletes or baseline problems do not leave refreshes failing for a long time.
-3. **Build the full baseline first.** Run `COMPLETE` after creation, verify the result, then start incremental refreshes.
-4. **Use Unique Key MoW for update and delete workloads.** Duplicate Key tables only suit append-only data.
-5. **Isolate resources for refresh tasks.** Use `workload_group` to keep complex delta plans from competing with online queries.
-6. **Monitor tasks and Stream backlog.** Watch `tasks("type"="mv")`, `mv_infos` and `information_schema.table_stream_consumption` together.
-7. **Review fallback reasons regularly.** Occasional fallbacks protect correctness; continuous fallbacks indicate that the query shape, Binlog continuity or the baseline needs attention.
+3. **Choose the trigger and interval from the refresh duration.** The minimum scheduled interval is 1 minute, and the interval should exceed the duration of a single incremental refresh under normal load; use `ON COMMIT` when lower latency is needed and base tables do not commit too frequently.
+4. **Build the full baseline first.** Run `COMPLETE` after creation, verify the result, then start incremental refreshes.
+5. **Use Unique Key MoW for update and delete workloads.** Duplicate Key tables only suit append-only data.
+6. **Isolate resources for refresh tasks.** Use `workload_group` to keep complex delta plans from competing with online queries.
+7. **Monitor tasks and Stream backlog.** Watch `tasks("type"="mv")`, `mv_infos` and `information_schema.table_stream_consumption` together.
+8. **Review fallback reasons regularly.** Occasional fallbacks protect correctness; continuous fallbacks indicate that the query shape, Binlog continuity or the baseline needs attention.
 
 <!-- Knowledge type: Step-by-step guide -->
 <!-- Use cases: Cleaning up the example environment -->
