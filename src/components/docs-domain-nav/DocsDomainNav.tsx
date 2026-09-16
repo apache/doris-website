@@ -1,7 +1,6 @@
 import React, { type JSX } from 'react';
 import Link from '@docusaurus/Link';
 import SearchBar from '@theme/SearchBar';
-import DocsVersionDropdownNavbarItem from '@theme/NavbarItem/DocsVersionDropdownNavbarItem';
 import LocaleDropdownNavbarItem from '@theme/NavbarItem/LocaleDropdownNavbarItem';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import type { DocsDomain } from '@site/src/utils/docs-sidebar-scope';
@@ -9,7 +8,6 @@ import type { DocsDomain } from '@site/src/utils/docs-sidebar-scope';
 import styles from './DocsDomainNav.module.scss';
 
 interface DocsDomainNavProps {
-    docsPluginId: string;
     domains: DocsDomain[];
 }
 
@@ -34,7 +32,7 @@ function DomainLinks({ domains, mobile = false }: { domains: DocsDomain[]; mobil
     );
 }
 
-export default function DocsDomainNav({ docsPluginId, domains }: DocsDomainNavProps): JSX.Element | null {
+export default function DocsDomainNav({ domains }: DocsDomainNavProps): JSX.Element | null {
     const {
         i18n: { currentLocale },
     } = useDocusaurusContext();
@@ -70,13 +68,6 @@ export default function DocsDomainNav({ docsPluginId, domains }: DocsDomainNavPr
                     </div>
                     <div className={styles.locale}>
                         <LocaleDropdownNavbarItem mobile={false} {...({} as any)} />
-                    </div>
-                    <div className={styles.version}>
-                        <DocsVersionDropdownNavbarItem
-                            mobile={false}
-                            docsPluginId={docsPluginId}
-                            {...({} as any)}
-                        />
                     </div>
                 </div>
             </div>

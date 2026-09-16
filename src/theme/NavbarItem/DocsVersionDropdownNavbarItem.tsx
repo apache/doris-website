@@ -1,4 +1,4 @@
-import React, { type JSX } from 'react';
+import React from 'react';
 import {
     useVersions,
     useActiveDocContext,
@@ -98,13 +98,9 @@ export default function DocsVersionDropdownNavbarItem({
             {...props}
             mobile={mobile}
             label={
-                <span className="text-sm docs-version-label">
-                    <span className="docs-version-label__prefix">
-                        {currentLocale === 'zh-CN' ? '版本: ' : 'Version: '}
-                    </span>
-                    <span className="docs-version-label__value">
-                        {versionLinks.find(e => e.isActive())?.label}
-                    </span>
+                <span className="text-sm">
+                    {currentLocale === 'zh-CN' ? '版本: ' : 'Versions: '}
+                    {versionLinks.find(e => e.isActive())?.label}
                 </span>
             }
             to={dropdownTo}

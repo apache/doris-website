@@ -38,10 +38,7 @@ export default function DocRootLayout({ children }: Props): JSX.Element {
         <div className={clsx(styles.docsWrapper, showDomainNav && styles.docsWithDomainNav)}>
             <BackToTopButton />
             {showDomainNav && sidebarScope && (
-                <DocsDomainNav
-                    docsPluginId={activePlugin!.pluginId}
-                    domains={sidebarScope.domains}
-                />
+                <DocsDomainNav domains={sidebarScope.domains} />
             )}
             <div className={styles.docRoot}>
                 {sidebar && (
