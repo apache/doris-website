@@ -2,26 +2,27 @@ import React, { type JSX, useEffect, useRef, useState, useCallback } from 'react
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import { useLocation } from '@docusaurus/router';
-import { useActivePlugin, useDocsSidebar } from '@docusaurus/plugin-content-docs/client';
+import { useActivePlugin, useActiveVersion, useDocsSidebar } from '@docusaurus/plugin-content-docs/client';
 import { ThemeClassNames } from '@docusaurus/theme-common';
 import { useAlternatePageUtils } from '@docusaurus/theme-common/internal';
 import DocSidebarItems from '@theme/DocSidebarItems';
 import SearchBar from '@theme/SearchBar';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { getDocsSidebarScope } from '@site/src/utils/docs-sidebar-scope';
+import { getDocsSidebarScope, supportsDocsDomainNavigation } from '@site/src/utils/docs-sidebar-scope';
 
 import styles from './MobileSidebarDrawer.module.css';
 
 export default function MobileSidebarDrawer(): JSX.Element | null {
     const sidebar = useDocsSidebar();
     const activePlugin = useActivePlugin();
+    const activeVersion = useActiveVersion(activePlugin?.pluginId);
     const { pathname, search, hash } = useLocation();
     const {
         i18n: { currentLocale, locales, localeConfigs },
     } = useDocusaurusContext();
     const alternatePageUtils = useAlternatePageUtils();
     const isZH = currentLocale === 'zh-CN';
-    const isMainDocs = activePlugin?.pluginId === 'default';
+    const usesDomainNavigation = supportsDocsDomainNavigation(activePlugin?.pluginId, activeVersion?.name);
     const [open, setOpen] = useState(false);
     const [localeOpen, setLocaleOpen] = useState(false);
     const localeContainerRef = useRef<HTMLDivElement>(null);
@@ -63,8 +64,8 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
     if (!sidebar) return null;
 
     const sidebarScope = getDocsSidebarScope(sidebar.items, pathname);
-    const scopedSidebarItems = isMainDocs ? sidebarScope.scopedItems : sidebar.items;
-    const drawerLabel = isMainDocs && sidebarScope.activeDomain
+    const scopedSidebarItems = usesDomainNavigation ? sidebarScope.scopedItems : sidebar.items;
+    const drawerLabel = usesDomainNavigation && sidebarScope.activeDomain
         ? sidebarScope.activeDomain.label
         : (isZH ? '目录' : 'Menu');
 
@@ -124,7 +125,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
     return (
         <>
             <div className={styles.toolbar}>
-                {!isMainDocs && (
+                {!usesDomainNavigation && (
                     <>
                         <div className={styles.toolbarSearch}>
                             <SearchBar />
@@ -187,7 +188,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                 )}
                 <button
                     type="button"
-                    className={clsx(styles.toolbarIconBtn, isMainDocs && styles.toolbarMenuBtn)}
+                    className={clsx(styles.toolbarIconBtn, usesDomainNavigation && styles.toolbarMenuBtn)}
                     onClick={() => setOpen(true)}
                     aria-label={isZH ? '打开文档目录' : 'Open docs sidebar'}
                     aria-expanded={open}
@@ -195,7 +196,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                     <svg className={styles.toolbarIcon} viewBox="0 0 16 16" fill="none" aria-hidden="true">
                         <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                     </svg>
-                    {isMainDocs && (
+                    {usesDomainNavigation && (
                         <span className={styles.toolbarMenuLabel}>
                             {isZH ? '浏览当前分类' : 'Browse this section'}
                         </span>

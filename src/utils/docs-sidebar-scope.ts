@@ -17,6 +17,13 @@ export interface DocsSidebarScope {
     scopedItems: PropSidebar;
 }
 
+export function supportsDocsDomainNavigation(
+    pluginId: string | undefined,
+    versionName: string | undefined,
+): boolean {
+    return pluginId === 'default' && (versionName === 'current' || versionName === '4.x');
+}
+
 function getNavigationLabel(item: PropSidebarItem): string | undefined {
     if (item.type === 'category' || item.type === 'link') {
         return item.label;

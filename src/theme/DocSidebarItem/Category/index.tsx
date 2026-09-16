@@ -6,6 +6,7 @@ import {
     isActiveSidebarItem,
     findFirstSidebarItemLink,
     useActivePlugin,
+    useActiveVersion,
     useDocSidebarItemsExpandedState,
 } from '@docusaurus/plugin-content-docs/client';
 import Link from '@docusaurus/Link';
@@ -13,6 +14,7 @@ import { translate } from '@docusaurus/Translate';
 import useIsBrowser from '@docusaurus/useIsBrowser';
 import DocSidebarItems from '@theme/DocSidebarItems';
 import type { Props } from '@theme/DocSidebarItem/Category';
+import { supportsDocsDomainNavigation } from '@site/src/utils/docs-sidebar-scope';
 
 import './style.scss';
 
@@ -111,7 +113,9 @@ export default function DocSidebarItemCategory({
     ...props
 }: DocSidebarItemCategoryProps): JSX.Element {
     const activePlugin = useActivePlugin();
+    const activeVersion = useActiveVersion(activePlugin?.pluginId);
     const isMainDocs = activePlugin?.pluginId === 'default';
+    const usesDomainNavigation = supportsDocsDomainNavigation(activePlugin?.pluginId, activeVersion?.name);
     const { items, label, collapsible, className, href } = item;
     const {
         docs: {
@@ -159,7 +163,7 @@ export default function DocSidebarItemCategory({
                 className,
             )}
         >
-            {!(level === 1 && isMainDocs) && (
+            {!(level === 1 && usesDomainNavigation) && (
                 <div
                     className={clsx('menu__list-item-collapsible', {
                         'menu__list-item-collapsible--active': isCurrentPage,
