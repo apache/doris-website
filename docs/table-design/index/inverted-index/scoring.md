@@ -115,17 +115,17 @@ When a query contains multiple terms, **the final score is the sum of the scores
 
 `|d|` comes from norms, which an index stores as one byte per row for every indexed field. The byte is written for every row of the segment, including rows that hold no value for that field, so an index that covers many sparse fields also pays for the rows it never matches.
 
-Norms are controlled per index with the `norms` property:
+Norms are controlled per index with the `norms` property, which defaults to `true`:
 
-| Index                                  | Default | Norms written |
-| -------------------------------------- | ------- | ------------- |
-| Tokenized index on an ordinary column  | `true`  | Yes           |
-| Tokenized index on a VARIANT path      | `false` | No            |
-| Non-tokenized index                    | -       | Never         |
+| Index                                  | Norms written                                           |
+| -------------------------------------- | ------------------------------------------------------- |
+| Tokenized index on an ordinary column  | Yes                                                     |
+| Tokenized index on a VARIANT path      | No, while `inverted_index_skip_norms_for_variant` is on |
+| Non-tokenized index                    | Never                                                   |
 
-A VARIANT path index is an index declared with `field_pattern`, together with the copy of it that each extracted subpath inherits. One segment holds one such index per path, so writing norms there costs `rows × paths` bytes.
+A VARIANT path index is an index declared with `field_pattern`, together with the copy of it that each extracted subpath inherits. One segment holds one such index per path, so writing norms there costs `rows × paths` bytes. The BE config `inverted_index_skip_norms_for_variant` (default `true`, changeable at runtime) therefore leaves norms out of those indexes; turn it off and a VARIANT path index behaves like any other index.
 
-Set the property explicitly to override the default:
+The `norms` property decides on its own either way, and the copy inherited by a subpath carries the property of the index it comes from:
 
 ```sql
 -- keep record-length normalization for one VARIANT path
