@@ -1357,12 +1357,15 @@
               ]
             }
           ]
-        },
-        {
-          "type": "category",
-          "label": "Reference",
-          "collapsed": true,
-          "items": [
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Reference",
+      "collapsible": false,
+      "collapsed": false,
+      "items": [
             {
               "type": "category",
               "label": "Basic Elements",
@@ -2898,7 +2901,5 @@
             }
           ]
         }
-      ]
-    }
   ]
 }
