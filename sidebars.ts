@@ -1226,7 +1226,7 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
-            label: 'Reference',
+            label: 'SQL Reference',
             collapsible: false,
             collapsed: false,
             items: [
