@@ -1,10 +1,12 @@
-import React, { type ComponentProps, useEffect, useMemo } from 'react';
+import React, { type ComponentProps, type JSX, useEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import { ThemeClassNames, useThemeConfig, usePrevious, Collapsible, useCollapsible } from '@docusaurus/theme-common';
 import { isSamePath } from '@docusaurus/theme-common/internal';
 import {
     isActiveSidebarItem,
     findFirstSidebarItemLink,
+    useActivePlugin,
+    useActiveVersion,
     useDocSidebarItemsExpandedState,
 } from '@docusaurus/plugin-content-docs/client';
 import Link from '@docusaurus/Link';
@@ -12,7 +14,7 @@ import { translate } from '@docusaurus/Translate';
 import useIsBrowser from '@docusaurus/useIsBrowser';
 import DocSidebarItems from '@theme/DocSidebarItems';
 import type { Props } from '@theme/DocSidebarItem/Category';
-import useIsDocPage from '../../../hooks/use-is-doc';
+import { supportsDocsDomainNavigation } from '@site/src/utils/docs-sidebar-scope';
 
 import './style.scss';
 
@@ -110,7 +112,10 @@ export default function DocSidebarItemCategory({
     length,
     ...props
 }: DocSidebarItemCategoryProps): JSX.Element {
-    const [isDocsPage] = useIsDocPage(false);
+    const activePlugin = useActivePlugin();
+    const activeVersion = useActiveVersion(activePlugin?.pluginId);
+    const isMainDocs = activePlugin?.pluginId === 'default';
+    const usesDomainNavigation = supportsDocsDomainNavigation(activePlugin?.pluginId, activeVersion?.name);
     const { items, label, collapsible, className, href } = item;
     const {
         docs: {
@@ -158,72 +163,66 @@ export default function DocSidebarItemCategory({
                 className,
             )}
         >
-            <div
-                className={clsx('menu__list-item-collapsible', {
-                    'menu__list-item-collapsible--active': isCurrentPage,
-                })}
-            >
-                {level === 1 && isDocsPage ? (
-                    <p className={clsx('title_level_1')}>
-                        <span className="title_level_1__label">{label}</span>
-                    </p>
-                ) : (
-                    <>
-                        <Link
-                            className={clsx('menu__link', {
-                                'menu__link--sublist': collapsible,
-                                'menu__link--sublist-caret': !href && collapsible,
-                                'menu__link--active': isActive,
-                            })}
-                            onClick={
-                                collapsible
-                                    ? e => {
-                                          onItemClick?.(item);
-                                          if (href) {
-                                              if (isCurrentPage) {
-                                                  // When already on this doc, toggle expand/collapse on text click
-                                                  e.preventDefault();
-                                                  updateCollapsed();
-                                              } else {
-                                                  // When navigating to this doc, just ensure it's expanded
-                                                  updateCollapsed(false);
-                                              }
-                                          } else {
-                                              // No href: behave like a pure toggle button
+            {!(level === 1 && usesDomainNavigation) && (
+                <div
+                    className={clsx('menu__list-item-collapsible', {
+                        'menu__list-item-collapsible--active': isCurrentPage,
+                    })}
+                >
+                    <Link
+                        className={clsx('menu__link', {
+                            'menu__link--sublist': collapsible,
+                            'menu__link--sublist-caret': !href && collapsible,
+                            'menu__link--active': isActive,
+                        })}
+                        onClick={
+                            collapsible
+                                ? e => {
+                                      onItemClick?.(item);
+                                      if (href) {
+                                          if (isCurrentPage) {
+                                              // When already on this doc, toggle expand/collapse on text click
                                               e.preventDefault();
                                               updateCollapsed();
+                                          } else {
+                                              // When navigating to this doc, just ensure it's expanded
+                                              updateCollapsed(false);
                                           }
+                                      } else {
+                                          // No href: behave like a pure toggle button
+                                          e.preventDefault();
+                                          updateCollapsed();
                                       }
-                                    : () => {
-                                          onItemClick?.(item);
-                                      }
-                            }
-                            aria-current={isCurrentPage ? 'page' : undefined}
-                            role={collapsible && !href ? 'button' : undefined}
-                            aria-expanded={collapsible && !href ? !collapsed : undefined}
-                            href={collapsible ? hrefWithSSRFallback ?? '#' : hrefWithSSRFallback}
-                            {...props}
-                        >
-                            {label}
-                        </Link>
-                        {href && collapsible && (
-                            <CollapseButton
-                                collapsed={collapsed}
-                                categoryLabel={label}
-                                onClick={e => {
-                                    e.preventDefault();
-                                    updateCollapsed();
-                                }}
-                            />
-                        )}
-                    </>
-                )}
-            </div>
+                                  }
+                                : () => {
+                                      onItemClick?.(item);
+                                  }
+                        }
+                        aria-current={isCurrentPage ? 'page' : undefined}
+                        role={collapsible && !href ? 'button' : undefined}
+                        aria-expanded={collapsible && !href ? !collapsed : undefined}
+                        href={collapsible ? hrefWithSSRFallback ?? '#' : hrefWithSSRFallback}
+                        {...props}
+                    >
+                        {label}
+                    </Link>
+                    {href && collapsible && (
+                        <CollapseButton
+                            collapsed={collapsed}
+                            categoryLabel={label}
+                            onClick={e => {
+                                e.preventDefault();
+                                updateCollapsed();
+                            }}
+                        />
+                    )}
+                </div>
+            )}
 
             <Collapsible
                 lazy
                 as="ul"
-                className={`menu__list ${level === 1 ? 'menu__list_level_2' : ''} ${level === 1 && !isDocsPage ? 'community_level_2' : ''} `}
+                className={`menu__list ${level === 1 ? 'menu__list_level_2' : ''} ${level === 1 && !isMainDocs ? 'community_level_2' : ''} `}
                 collapsed={collapsed}
             >
                 <DocSidebarItems
@@ -234,7 +233,7 @@ export default function DocSidebarItemCategory({
                     level={level + 1}
                 />
             </Collapsible>
-            {level === 1 && index !== length - 1 && isDocsPage ? <div className="divider"></div> : null}
+            {level === 1 && index !== length - 1 && isMainDocs ? <div className="divider"></div> : null}
         </li>
     );
 }

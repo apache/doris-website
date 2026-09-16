@@ -210,7 +210,7 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
-            label: 'Use Doris',
+            label: 'Guides',
             collapsible: false,
             collapsed: false,
             items: [
@@ -1222,10 +1222,13 @@ const sidebars: SidebarsConfig = {
                 },
             ],
         },
+            ],
+        },
         {
             type: 'category',
-            label: 'Reference',
-            collapsed: true,
+            label: 'SQL References',
+            collapsible: false,
+            collapsed: false,
             items: [
                 {
                     type: 'category',
@@ -2782,8 +2785,6 @@ const sidebars: SidebarsConfig = {
                         },
                     ],
                 },
-            ],
-        },
             ],
         },
     ],

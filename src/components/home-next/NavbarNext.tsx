@@ -1,4 +1,4 @@
-import React, { JSX, useState, useEffect } from 'react';
+import React, { JSX, useState, useEffect, useRef } from 'react';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { getLocalePrefix } from '@site/src/utils/locale';
@@ -65,7 +65,6 @@ function buildNavItems(
             items: [
                 { label: 'Release Notes', href: releasesHref },
                 { label: 'Blogs', href: '/blog' },
-                { label: 'News and Events', href: '/events' },
                 { label: 'Course', href: '/course' },
                 { label: 'Profile Analysis', href: '/profile-analysis' },
             ],
@@ -123,6 +122,7 @@ export function NavbarNext(): JSX.Element {
         i18n: { currentLocale, defaultLocale },
     } = useDocusaurusContext();
     const [mobileOpen, setMobileOpen] = useState(false);
+    const navbarRef = useRef<HTMLElement>(null);
     const localePrefix = getLocalePrefix(currentLocale, defaultLocale);
     const devDocsHref = `${localePrefix}/docs/dev/getting-started/what-is-apache-doris`;
     const stableDocsHref = `${localePrefix}/docs/4.x/getting-started/what-is-apache-doris`;
@@ -157,8 +157,34 @@ export function NavbarNext(): JSX.Element {
         return () => window.removeEventListener('keydown', onKeyDown);
     }, [mobileOpen]);
 
+    useEffect(() => {
+        const navbar = navbarRef.current;
+        if (!navbar) return undefined;
+
+        const root = document.documentElement;
+        const updateNavbarHeight = () => {
+            root.style.setProperty('--navbar-next-height', `${navbar.getBoundingClientRect().height}px`);
+        };
+        updateNavbarHeight();
+
+        const resizeObserver = typeof ResizeObserver !== 'undefined'
+            ? new ResizeObserver(updateNavbarHeight)
+            : undefined;
+        resizeObserver?.observe(navbar);
+        window.addEventListener('resize', updateNavbarHeight);
+
+        return () => {
+            resizeObserver?.disconnect();
+            window.removeEventListener('resize', updateNavbarHeight);
+            root.style.removeProperty('--navbar-next-height');
+        };
+    }, []);
+
     return (
-        <nav className={`navbar navbar--fixed-top navbar-next${mobileOpen ? ' navbar-next--mobile-open' : ''}`}>
+        <nav
+            ref={navbarRef}
+            className={`navbar navbar--fixed-top navbar-next${mobileOpen ? ' navbar-next--mobile-open' : ''}`}
+        >
             <div className="navbar-next__inner">
                 <Link to={homeHref} className="navbar-next__logo" aria-label="Apache Doris">
                     <img

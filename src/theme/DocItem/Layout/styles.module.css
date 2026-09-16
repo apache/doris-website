@@ -36,7 +36,10 @@
 @media (max-width: 996px) {
   .mobileStickyHeader {
     position: sticky;
-    top: 64px;
+    top: var(
+      --docs-navigation-offset,
+      calc(var(--home-next-banner-height, 0px) + var(--navbar-next-height, 64px))
+    );
     z-index: 200;
     background-color: #fff;
     margin-bottom: 0.5rem;
@@ -48,11 +51,5 @@
      strip's padding rather than escaping it. */
   .mobileStickyHeader :global(.theme-doc-breadcrumbs) {
     margin-bottom: 0;
-  }
-}
-
-@media (max-width: 768px) {
-  .mobileStickyHeader {
-    top: 160px;
   }
 }
