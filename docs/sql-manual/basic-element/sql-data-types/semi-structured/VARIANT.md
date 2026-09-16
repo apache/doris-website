@@ -433,7 +433,7 @@ SELECT * FROM tbl WHERE v['id_2'] MATCH 'Apache';
 In 3.1.x/4.0 and later, you can specify index properties for certain VARIANT subpaths, and even configure both tokenized and non-tokenized inverted indexes for the same path. Path-specific indexes require the path type to be declared via Schema Template.
 
 ```sql
--- Common properties: field_pattern (target path), analyzer, parser, support_phrase, etc.
+-- Common properties: field_pattern (target path), analyzer, parser, support_phrase, norms, etc.
 CREATE TABLE IF NOT EXISTS tbl (
     k BIGINT,
     v VARIANT<'content' : STRING>,
@@ -458,6 +458,23 @@ CREATE TABLE IF NOT EXISTS tbl (
 
 SELECT * FROM tbl WHERE v['pattern_1'] MATCH 'Doris';
 SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
+```
+
+BM25 norms on VARIANT paths:
+
+A tokenized index on a VARIANT path does not write BM25 norms by default, while a tokenized index on an ordinary column does. Norms store the record length used by BM25 and cost one byte per row for every indexed field, written even for rows that hold no value for that path. One segment keeps one index per path, so norms on a VARIANT column with many paths would cost `rows × paths` bytes. Queries are unaffected apart from ranking: record-length normalization is skipped, and `score()` depends on term frequency and IDF only.
+
+Add `"norms" = "true"` to a path index when that path needs full BM25 scoring:
+
+```sql
+CREATE TABLE IF NOT EXISTS tbl (
+    k BIGINT,
+    v VARIANT<'title' : STRING, 'body_*' : STRING>,
+    -- title is ranked with record-length normalization
+    INDEX idx_title(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "title", "norms" = "true"),
+    -- body_* keeps the default: no norms, no record-length normalization
+    INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*")
+);
 ```
 
 Note: 2.1.7+ supports only InvertedIndex V2 properties (fewer files, lower write IOPS; suitable for disaggregated storage/compute). 2.1.8+ removes offline Build Index.

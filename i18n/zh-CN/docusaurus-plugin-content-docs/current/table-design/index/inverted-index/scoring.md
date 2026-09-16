@@ -111,6 +111,32 @@ avgdl = total_terms / total_rows
 
 当查询包含多个词项时，**最终得分为各词项得分之和**。
 
+### 记录长度与 `norms` 属性
+
+公式中的 `|d|` 来自 norms。索引会为每个被索引的字段按行存储 norms，每行 1 字节。这个字节对段内每一行都会写入，包括该字段没有值的行，因此覆盖大量稀疏字段的索引也要为从不命中的行付出空间。
+
+norms 由索引属性 `norms` 控制：
+
+| 索引                     | 默认值  | 是否写 norms |
+| ------------------------ | ------- | ------------ |
+| 普通列上的分词索引       | `true`  | 写           |
+| VARIANT 路径上的分词索引 | `false` | 不写         |
+| 非分词索引               | -       | 从不写       |
+
+VARIANT 路径索引指用 `field_pattern` 声明的索引，以及每个被提取的子路径继承到的那份副本。一个段中每个路径各有一份这样的索引，因此在这里写 norms 的代价是 `行数 × 路径数` 字节。
+
+显式设置该属性即可覆盖默认值：
+
+```sql
+-- 为某个 VARIANT 路径保留记录长度归一化
+INDEX idx_title(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "title", "norms" = "true")
+
+-- 关闭普通列上的记录长度归一化
+INDEX idx_content(content) USING INVERTED PROPERTIES("parser" = "english", "norms" = "false")
+```
+
+索引没有 norms 时，打分会跳过记录长度归一化：公式中的 `b × |d| / avgdl` 项不再参与计算，得分只由词频和 IDF 决定。该属性对新写入的段生效；此前写入的段会保留原有的 norms，直到被 compaction 重写。
+
 ## 结果解读
 
 理解打分结果有助于更准确地使用相关性排序：

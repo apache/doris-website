@@ -111,6 +111,32 @@ Where:
 
 When a query contains multiple terms, **the final score is the sum of the scores of each term**.
 
+### Record Length and the `norms` Property
+
+`|d|` comes from norms, which an index stores as one byte per row for every indexed field. The byte is written for every row of the segment, including rows that hold no value for that field, so an index that covers many sparse fields also pays for the rows it never matches.
+
+Norms are controlled per index with the `norms` property:
+
+| Index                                  | Default | Norms written |
+| -------------------------------------- | ------- | ------------- |
+| Tokenized index on an ordinary column  | `true`  | Yes           |
+| Tokenized index on a VARIANT path      | `false` | No            |
+| Non-tokenized index                    | -       | Never         |
+
+A VARIANT path index is an index declared with `field_pattern`, together with the copy of it that each extracted subpath inherits. One segment holds one such index per path, so writing norms there costs `rows × paths` bytes.
+
+Set the property explicitly to override the default:
+
+```sql
+-- keep record-length normalization for one VARIANT path
+INDEX idx_title(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "title", "norms" = "true")
+
+-- drop it for an ordinary column
+INDEX idx_content(content) USING INVERTED PROPERTIES("parser" = "english", "norms" = "false")
+```
+
+When an index has no norms, scoring skips record-length normalization: the `b × |d| / avgdl` term drops out and the score depends on term frequency and IDF only. The property applies to newly written segments; segments written earlier keep their norms until compaction rewrites them.
+
 ## Interpreting the Results
 
 Understanding the scoring results helps you use relevance ranking more accurately:

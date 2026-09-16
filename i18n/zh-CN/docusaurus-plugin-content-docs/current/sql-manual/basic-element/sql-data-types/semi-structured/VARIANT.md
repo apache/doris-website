@@ -433,7 +433,7 @@ SELECT * FROM tbl WHERE v['id_2'] MATCH 'Apache';
 在 3.1.x/4.0 及之后的版本中，可为 VARIANT 的部分子列单独指定索引属性，甚至在同一路径上同时配置“分词与不分词”的两种倒排索引。指定 Path 索引需配合 Path 类型（Schema Template）使用。
 
 ```sql
--- 常用属性：field_pattern（目标子路径）、analyzer、parser、support_phrase 等
+-- 常用属性：field_pattern（目标子路径）、analyzer、parser、support_phrase、norms 等
 CREATE TABLE IF NOT EXISTS tbl (
     k BIGINT,
     v VARIANT<'content' : STRING>,
@@ -458,6 +458,23 @@ CREATE TABLE IF NOT EXISTS tbl (
 
 SELECT * FROM tbl WHERE v['pattern_1'] MATCH 'Doris';
 SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
+```
+
+VARIANT 路径上的 BM25 norms：
+
+VARIANT 路径上的分词索引默认不写 BM25 norms，而普通列上的分词索引会写。norms 保存 BM25 使用的记录长度，按行存储，每个被索引的字段每行 1 字节，即使该行在这个路径上没有值也会写入。一个段中每个路径各有一份索引，因此在路径数很多的 VARIANT 列上写 norms 的代价是 `行数 × 路径数` 字节。除排序外查询不受影响：仅跳过记录长度归一化，`score()` 只由词频和 IDF 决定。
+
+如果某个路径需要完整的 BM25 打分，给该路径的索引加上 `"norms" = "true"`：
+
+```sql
+CREATE TABLE IF NOT EXISTS tbl (
+    k BIGINT,
+    v VARIANT<'title' : STRING, 'body_*' : STRING>,
+    -- title 参与记录长度归一化
+    INDEX idx_title(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "title", "norms" = "true"),
+    -- body_* 保持默认：不写 norms，不做记录长度归一化
+    INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*")
+);
 ```
 
 注意：2.1.7+ 仅支持 InvertedIndex V2 属性（文件更少、写入 IOPS 更低，适配存算分离）。2.1.8+ 不再支持离线 Build Index 构建。
