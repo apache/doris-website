@@ -3,6 +3,18 @@
     "message": "dev",
     "description": "The label for version current"
   },
+  "sidebar.docs.category.Get Started": {
+    "message": "快速入门",
+    "description": "The label for category Get Started in sidebar docs"
+  },
+  "sidebar.docs.category.Solutions": {
+    "message": "解决方案",
+    "description": "The label for category Solutions in sidebar docs"
+  },
+  "sidebar.docs.category.Operate & Maintain": {
+    "message": "运维管理",
+    "description": "The label for category Operate & Maintain in sidebar docs"
+  },
   "sidebar.docs.category.Getting Started": {
     "message": "快速开始",
     "description": "The label for category Getting Started in sidebar docs"
