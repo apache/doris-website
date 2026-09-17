@@ -11,13 +11,15 @@
         "统一身份验证",
         "ldap.conf 配置",
         "ldap_default_roles",
+        "ldap_allow_empty_pass",
         "MysqlClearPasswordPlugin",
         "ldap_admin_password",
         "ldap_use_ssl",
         "SSLHandshakeException",
         "PKIX path building failed",
         "明文密码插件",
-        "cleartext plugin"
+        "cleartext plugin",
+        "空密码登录"
     ]
 }
 ---
@@ -132,6 +134,7 @@ ldap_default_roles = ldap_readonly,ldap_query_user
 | `ldap_user_filter` | 用户匹配过滤器，`{login}` 会被替换为登录用户名 |
 | `ldap_group_basedn` | 组搜索的基准 `dn`，用于组授权 |
 | `ldap_default_roles` | 可选。为所有 LDAP 认证用户授予的 Doris 角色，多个角色用逗号分隔。这些角色会在 LDAP 组角色之外额外授予（自 4.0.7、4.1.3 版本开始支持） |
+| `ldap_allow_empty_pass` | 可选。是否允许 LDAP 中存在的用户使用空密码登录。默认为 `false`，即 Doris 直接拒绝空密码登录。修改后需要重启 FE 才能生效，详见[空密码登录](#空密码登录)（自 4.1.5 版本开始支持） |
 
 :::tip
 如需启用 LDAPS（加密连接至 LDAP 服务器），请参阅下文 [LDAPS（加密连接）](#ldaps加密连接) 章节。
@@ -236,6 +239,7 @@ LDAP 验证登录是指通过 LDAP 服务进行密码验证，以补充 Doris �
 | 存在      | 存在       | Doris 密码  | 失败     | -                 |
 | 不存在    | 存在       | Doris 密码  | 成功     | Doris 用户        |
 | 存在      | 不存在     | LDAP 密码   | 成功     | LDAP 临时用户     |
+| 存在      | 任意       | 空密码      | 默认失败（`ldap_allow_empty_pass = false`） | - |
 
 :::info 关于临时用户
 
@@ -243,6 +247,31 @@ LDAP 验证登录是指通过 LDAP 服务进行密码验证，以补充 Doris �
 - Doris 不会为临时用户创建持久化的用户元数据。
 - 临时用户的权限由 LDAP 组授权和 `ldap_default_roles` 决定（详见下文"组授权"和"LDAP 用户默认角色"章节）。
 - 如果临时用户没有对应的组权限，也没有配置的默认角色，则默认拥有 `information_schema` 的 `select_priv` 权限。
+
+:::
+
+### 空密码登录
+
+:::info 自 4.1.5 版本开始支持
+:::
+
+默认情况下（`ldap_allow_empty_pass = false`），当 LDAP 中存在的用户使用空密码登录时，Doris 会直接拒绝本次登录并返回 Access denied 错误，不会再使用该密码向 LDAP 服务器发起绑定请求。FE 会在 `fe.log` 中记录类似 `Rejected LDAP login with empty password, user=jack` 的 warning 日志。
+
+之所以默认拒绝，是因为 LDAP 协议会将携带 `dn` 但密码为空的绑定请求视为未认证绑定（unauthenticated bind），部分目录服务器（例如 Active Directory）会接受这类请求并返回成功。如果 Doris 将空密码原样转发给 LDAP 服务器，任何知道有效 LDAP 用户名的人都可以不输入密码登录 Doris。在 4.1.5 之前的版本中，Doris 总是将空密码原样转发给 LDAP 服务器，此时能否登录完全取决于 LDAP 服务器的配置。
+
+如果必须保留之前的行为，可以在 `fe/conf/ldap.conf` 中设置以下配置并重启 FE：
+
+```text
+ldap_allow_empty_pass = true
+```
+
+此时 Doris 不再自行检查空密码，而是将绑定请求转发给 LDAP 服务器，登录能否成功取决于 LDAP 服务器是否接受未认证绑定。
+
+:::caution
+
+- 开启 `ldap_allow_empty_pass` 会重新引入上述安全风险，生产环境请保持默认值 `false`。
+- `ldap_allow_empty_pass` 不支持通过 `ADMIN SET FRONTEND CONFIG` 在线修改，修改后必须重启 FE 才能生效。
+- 该配置只影响 LDAP 中存在的用户。仅在 Doris 中存在的用户仍然使用 Doris 本地密码验证。
 
 :::
 
@@ -285,6 +314,16 @@ LDAP 中不存在该用户，回退到 Doris 本地认证，使用 Doris 密码�
 
 ```sql
 mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
+```
+
+**场景四：LDAP 用户使用空密码登录**
+
+- LDAP 用户属性：`uid: jack`，密码：`abcdef`
+
+不输入密码直接登录。在默认配置 `ldap_allow_empty_pass = false` 下，Doris 直接拒绝登录（详见[空密码登录](#空密码登录)）：
+
+```sql
+mysql -hDoris_HOST -PDoris_PORT -ujack
 ```
 
 ## 组授权
@@ -461,7 +500,7 @@ JAVA_OPTS_FOR_JDK_17 = "-Djavax.net.ssl.trustStore=/path/to/your/cacerts -Djavax
 ## 常见问题
 
 <!-- 知识类型: 故障排查 -->
-<!-- 适用场景: 登录失败 / 角色缺失 / LDAPS 握手失败 -->
+<!-- 适用场景: 登录失败 / 空密码登录被拒绝 / 角色缺失 / LDAPS 握手失败 -->
 
 ### Q: 如何查看 LDAP 用户在 Doris 中拥有哪些角色？
 
@@ -478,6 +517,12 @@ JAVA_OPTS_FOR_JDK_17 = "-Djavax.net.ssl.trustStore=/path/to/your/cacerts -Djavax
 3. 检查预期的 `group` 是否包含 `member` 属性。
 4. 检查预期 `group` 的 `member` 属性中是否包含当前用户的 `dn`。
 5. 如果缺少的是 `ldap_default_roles` 中配置的角色，检查角色名是否拼写正确，以及该角色是否已经在 Doris 中创建。
+
+### Q: LDAP 用户之前可以使用空密码登录，升级后登录失败，为什么？
+
+自 4.1.5 版本起，Doris 默认拒绝 LDAP 中存在的用户使用空密码登录（`ldap_allow_empty_pass = false`），因为部分 LDAP 服务器会将空密码绑定视为成功的未认证绑定。此类登录尝试会在 `fe.log` 中记录 `Rejected LDAP login with empty password`。
+
+请让用户使用 LDAP 密码登录。如果必须保留之前的行为，可以在 `fe/conf/ldap.conf` 中设置 `ldap_allow_empty_pass = true` 并重启 FE，但不建议在生产环境中这样做。详见[空密码登录](#空密码登录)。
 
 ### Q: LDAPS 连接失败，如何排查？
 
