@@ -43,6 +43,15 @@
     }
 }
 
+/* Phones stack the domain strip into two rows (section picker + locale, then
+   a full-width search box): 8px padding + 38px row + 6px gap + 42px search
+   box + 8px padding + 1px border. Keep in step with DocsDomainNav.module.scss. */
+@media (max-width: 768px) {
+    .docsWithDomainNav {
+        --docs-domain-nav-height: 103px;
+    }
+}
+
 
 .courseMain {
     width: 100%;

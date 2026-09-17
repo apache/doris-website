@@ -316,9 +316,31 @@
     }
 }
 
-@media (max-width: 420px) {
+// Phones: two rows — [Solutions ▾ … 🌐 ▾] on top, then a full-width search
+// box. `--docs-domain-nav-height` in DocRoot/Layout/styles.module.css mirrors
+// the resulting 103px (8 + 38 + 6 + 42 + 8 padding/rows + 1px border; the
+// search box is 42px because SearchBar.module.css forces its input to 2.5rem)
+// so the sticky "Browse this section" strip lands right underneath.
+@media (max-width: 768px) {
+    .root,
+    .inner {
+        min-height: 0;
+    }
+
+    .inner {
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 8px 12px;
+        row-gap: 6px;
+        column-gap: 8px;
+    }
+
     .mobileDomainPicker {
-        flex-basis: 128px;
+        order: 1;
+        flex: 0 1 auto;
+        min-width: 0;
+        // Always leave room for the locale button on the same row.
+        max-width: calc(100% - 56px);
     }
 
     .mobileDomainPicker summary {
@@ -330,18 +352,32 @@
         text-overflow: ellipsis;
     }
 
+    // Lift search and locale out of their wrapper so they can take different
+    // rows: locale stays on the first row, search gets the second.
+    .utilities {
+        display: contents;
+    }
+
+    .locale {
+        order: 2;
+        margin-left: auto;
+    }
+
     .search {
-        width: 40px;
+        order: 3;
+        flex: 0 0 100%;
+        width: 100%;
         margin-right: 0;
     }
 
     .search :global(.navbar__search-input) {
-        padding-right: 0;
-        color: transparent;
-        caret-color: var(--brand-primary-deep);
+        padding-right: 0.75rem;
     }
 
-    .search :global(.navbar__search-input)::placeholder {
-        color: transparent;
+    .root .search :global([class*='dropdownMenu']) {
+        left: 0 !important;
+        right: 0 !important;
+        width: auto !important;
+        max-width: none !important;
     }
 }
