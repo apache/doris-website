@@ -2,11 +2,13 @@
 title: 领取你的 Apache Doris 社区徽章
 sidebar_label: 社区徽章
 language: zh-CN
-description: Apache Doris 贡献者如何在 Holopin 上领取数字 Contributor 徽章、在 GitHub 和 LinkedIn 上展示，以及如何申请实体徽章。同时介绍 Apache Doris 的五枚社区徽章。
+description: Apache Doris 贡献者如何在 Holopin 上领取数字 Contributor 徽章，Committer 和 PMC Member 如何从 PMC 收到徽章，以及如何在 GitHub 和 LinkedIn 上展示徽章、申请实体徽章。同时介绍 Apache Doris 的五枚社区徽章。
 keywords:
     - Apache Doris
     - 社区徽章
     - Contributor 徽章
+    - Committer 徽章
+    - PMC Member 徽章
     - Holopin
     - 实体徽章
     - 贡献者激励
@@ -331,6 +333,33 @@ a.badge-card:hover {
   color: var(--ifm-color-emphasis-700);
 }
 
+.badge-step-scope {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--brand-surface-note, #E8FAF5);
+  color: var(--brand-primary-deep, #0B7A58);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* where committers and PMC members join the timeline */
+.badge-step--entry .badge-step-number {
+  border: 3px solid var(--ifm-color-primary);
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-color-primary);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.badge-step--entry .badge-step-body {
+  border-color: var(--brand-border-soft, #D9EEE8);
+  background: var(--brand-surface-soft, #F4FBF8);
+}
+
 /* checklist */
 .markdown .badge-checklist {
   display: grid;
@@ -622,7 +651,7 @@ a.badge-card:hover {
 
 ## 五枚社区徽章 {#badges}
 
-每枚徽章对应一种贡献。Contributor 徽章现在就能领。另外四枚由社区评定，标准和领取流程定下来之后，我们会补充到这个页面。
+每枚徽章对应一种贡献。Contributor 徽章现在就能领。Committer 和 PMC Member 徽章由 PMC 直接发放，不用申请。两枚 2026 徽章由社区评定，标准和领取流程定下来之后，我们会补充到这个页面。
 
 <div className="badge-family">
   <a className="badge-card badge-card--open" href="#digital-badge">
@@ -631,18 +660,18 @@ a.badge-card:hover {
     <span>代码、文档、想法或其他形式的贡献，至少有一个 PR 被合入。</span>
     <em className="badge-chip badge-chip--open">现已开放</em>
   </a>
-  <div className="badge-card">
+  <a className="badge-card badge-card--open" href="#committer-pmc-badges">
     <img src="/images/community-badges/badge-committer.png" alt="Apache Doris Committer 徽章" width="104" height="104" />
     <strong>Committer</strong>
     <span>通过持续、可信赖的贡献获得的代码提交权限。</span>
-    <em className="badge-chip">即将推出</em>
-  </div>
-  <div className="badge-card">
+    <em className="badge-chip badge-chip--open">现已开放</em>
+  </a>
+  <a className="badge-card badge-card--open" href="#committer-pmc-badges">
     <img src="/images/community-badges/badge-pmc-member.png" alt="Apache Doris PMC Member 徽章" width="104" height="104" />
     <strong>PMC Member</strong>
     <span>把握项目的技术方向，参与社区治理。</span>
-    <em className="badge-chip">即将推出</em>
-  </div>
+    <em className="badge-chip badge-chip--open">现已开放</em>
+  </a>
   <div className="badge-card">
     <img src="/images/community-badges/badge-active-contributor-2026.png" alt="Apache Doris Active Contributor 2026 徽章" width="104" height="104" />
     <strong>Active Contributor 2026</strong>
@@ -657,17 +686,19 @@ a.badge-card:hover {
   </div>
 </div>
 
-{/* TODO：补充 Active Contributor 2026、Committer、Community Champion 2026 和 PMC Member 的评定标准与领取流程。每枚徽章单独成节；对应章节写好后，把上面的卡片改成链接（参考 Contributor 卡片）。 */}
+{/* TODO：补充 Active Contributor 2026 和 Community Champion 2026 的评定标准与领取流程。每枚徽章单独成节；对应章节写好后，把上面的卡片改成链接（参考 Contributor 卡片）。 */}
 
-## 四步领取数字 Contributor 徽章 {#digital-badge}
+## 领取数字徽章 {#digital-badge}
 
-Holopin 发出邀请之前，每一份申请我们都会人工核对，所以第一步是证明这个 GitHub 账号是你的。
+Contributor 徽章要走完全部四步：Holopin 发出邀请之前，每一份申请我们都会人工核对，所以前两步是证明这个 GitHub 账号是你的。Committer 和 PMC Member 不用走这两步：邀请由 PMC 直接发给你，[从第 3 步开始](#committer-pmc-badges)即可。
 
 <div className="badge-steps">
 
 <div className="badge-step">
 <span className="badge-step-number" aria-hidden="true">1</span>
 <div className="badge-step-body">
+
+<span className="badge-step-scope">仅限 Contributor 徽章</span>
 
 ### 在 GitHub 个人主页 README 里加一句口令 {#step-1}
 
@@ -686,6 +717,8 @@ Apache Doris Community Badge
 <span className="badge-step-number" aria-hidden="true">2</span>
 <div className="badge-step-body">
 
+<span className="badge-step-scope">仅限 Contributor 徽章</span>
+
 ### 填写申领表单 {#step-2}
 
 我们只需要两样东西：你的 GitHub ID，用来查找被合入的 PR；还有一个邮箱，用来接收徽章邀请。
@@ -698,13 +731,30 @@ Apache Doris Community Badge
 </div>
 </div>
 
+<div className="badge-step badge-step--entry">
+<span className="badge-step-number" aria-hidden="true">PMC</span>
+<div className="badge-step-body">
+
+### Committer 或 PMC Member？从这里开始 {#committer-pmc-badges}
+
+这两枚徽章不用申请。Doris PMC 会对照官方的 [Committer](https://people.apache.org/committers-by-project.html#doris) 和 [PMC Member](https://projects.apache.org/committee.html?doris) 名单，直接给名单上的每个人发送 Holopin 邀请：Committer 收到 Committer 徽章，PMC Member 同时收到 PMC Member 和 Committer 两枚徽章。收到邮件后，从第 3 步继续。之后展示徽章、申请实体徽章的流程，和 Contributor 徽章完全一样。
+
+也想要 Contributor 徽章？你和其他人一样有合入的 PR，按第 1、2 步申领就行。
+
+<div className="badge-step-why">还没收到邮件？先看一下 Promotions（推广）分类和垃圾邮件文件夹，还是没有的话，到 <a href="#questions">Slack</a> 找我们。</div>
+
+</div>
+</div>
+
 <div className="badge-step">
 <span className="badge-step-number" aria-hidden="true">3</span>
 <div className="badge-step-body">
 
 ### 在 Holopin 上领取 {#step-3}
 
-我们核对完你的 PR 之后，Holopin 会给你发一封邀请邮件。点击 **Claim Badge**，用 GitHub 账号登录即可。还没有 Holopin 账号的话，注册是免费的。
+Holopin 会给你发一封邀请邮件：Contributor 徽章是在我们核对完你的 PR 之后，Committer 和 PMC Member 徽章是在 PMC 发出之后。点击 **Claim Badge**，用 GitHub 账号登录即可。还没有 Holopin 账号的话，注册是免费的。
+
+没收到邮件？看一下 Promotions（推广）分类和垃圾邮件文件夹，Holopin 的邀请有时会被分到那里。
 
 <figure className="badge-shot badge-shot--narrow">
   <img src="/images/community-badges/holopin-claim.jpg" alt="Holopin 领取页面，显示 Apache Doris 徽章和 Claim 按钮" />
@@ -730,10 +780,18 @@ Apache Doris Community Badge
 <div className="badge-ministeps">
 
 1. 在 Holopin 打开 **Your Profile**。
-2. 把 Apache Doris Contributor 徽章添加到你的 **Board**。如果有多枚徽章，可以拖动、缩放或旋转。
+2. 把你的 Apache Doris 徽章添加到你的 **Board**。如果有多枚徽章，可以拖动、缩放或旋转。
 3. 复制 Board 下方显示的代码，粘贴到你的 GitHub 个人主页 README 里。
 
 </div>
+
+这段代码只有一行 Markdown。下面是 `morningman` 这个账号的那一行，你的会换成你自己的用户名：
+
+```markdown
+[![An image of @morningman's Holopin badges, which is a link to view their full Holopin profile](https://holopin.me/morningman)](https://holopin.io/@morningman)
+```
+
+想看实际效果，可以打开 [github.com/morningman](https://github.com/morningman)，再对照它的 [README 源码](https://github.com/morningman/morningman/blob/main/README.md)，就知道这一行该放在哪里。
 
 <div className="badge-shots">
   <figure className="badge-shot">
@@ -751,7 +809,7 @@ Apache Doris Community Badge
 
 在 LinkedIn 个人资料的 **Licenses & Certifications**（执照和证书）栏目下添加一条：
 
-- Name（名称）：Apache Doris Contributor
+- Name（名称）：Apache Doris Contributor（持有 Committer 或 PMC Member 徽章的话相应替换）
 - Issuing organization（颁发机构）：Apache Doris
 - Credential URL（证书链接）：你的 Holopin 徽章链接
 
@@ -759,6 +817,12 @@ Apache Doris Community Badge
   <img src="/images/community-badges/linkedin-certification.jpg" alt="LinkedIn Licenses and Certifications 栏目中的 Apache Doris Contributor 徽章条目" />
   <figcaption>LinkedIn 上的 Licenses &amp; Certifications</figcaption>
 </figure>
+
+也可以直接发一条动态。一句话加上徽章图片就够了，中英文都行，比如：
+
+> Happy to have received my Contributor Badge from the <a className="badge-linkedin" href="https://www.linkedin.com/company/doris-apache">@Apache Doris</a> community. <span className="badge-linkedin">#ApacheDoris</span> <span className="badge-linkedin">#ApacheDorisCommunityBadge</span>
+
+持有 Committer 或 PMC Member 徽章的话，把徽章名称换掉即可。想要实体徽章的话，[第 5 步](#step-5)要的正是这样一条动态。
 
 </TabItem>
 <TabItem value="anywhere" label="其他地方">
@@ -782,7 +846,7 @@ Apache Doris Community Badge
 
 ## 还想要实体徽章？再加两步 {#physical-badge}
 
-数字徽章一到手就可以申请，因为第 5 步的 LinkedIn 动态里要带上它。持有数字徽章的人都有资格。
+数字徽章一到手就可以申请，因为第 5 步的 LinkedIn 动态里要带上它。持有数字徽章的人都有资格，Contributor、Committer、PMC Member 徽章都算。每人只寄送一枚实体徽章，持有多枚数字徽章也一样。
 
 <div className="badge-steps badge-steps--optional">
 
@@ -792,7 +856,7 @@ Apache Doris Community Badge
 
 ### 在 LinkedIn 上分享你的徽章 {#step-5}
 
-在 LinkedIn 发一条动态，聊聊你新领到的徽章。内容随你：做了什么功能、修了什么问题，或者当初是怎么加入这个社区的。只有下面三点是必须包含的。
+在 LinkedIn 发一条动态，聊聊你新领到的徽章。内容随你：做了什么功能、修了什么问题，或者当初是怎么加入这个社区的。只有下面三点是必须包含的。不想写长的话，[第 4 步](#step-4) LinkedIn 标签页里的那句示例加上徽章图片就够了。
 
 <ul className="badge-checklist">
   <li className="badge-checklist-label">动态里必须包含</li>

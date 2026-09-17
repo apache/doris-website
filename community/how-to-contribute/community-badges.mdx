@@ -2,11 +2,13 @@
 title: Claim Your Apache Doris Community Badge
 sidebar_label: Community Badges
 language: en
-description: How Apache Doris contributors claim the digital Contributor Badge on Holopin, show it on GitHub and LinkedIn, and apply for the physical badge. Overview of all five Apache Doris community badges.
+description: How Apache Doris contributors claim the digital Contributor Badge on Holopin, how committers and PMC members receive theirs from the PMC, how to show a badge on GitHub and LinkedIn, and how to apply for the physical badge. Overview of all five Apache Doris community badges.
 keywords:
     - Apache Doris
     - community badge
     - contributor badge
+    - committer badge
+    - PMC member badge
     - Holopin
     - physical badge
     - contributor recognition
@@ -331,6 +333,33 @@ a.badge-card:hover {
   color: var(--ifm-color-emphasis-700);
 }
 
+.badge-step-scope {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--brand-surface-note, #E8FAF5);
+  color: var(--brand-primary-deep, #0B7A58);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* where committers and PMC members join the timeline */
+.badge-step--entry .badge-step-number {
+  border: 3px solid var(--ifm-color-primary);
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-color-primary);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.badge-step--entry .badge-step-body {
+  border-color: var(--brand-border-soft, #D9EEE8);
+  background: var(--brand-surface-soft, #F4FBF8);
+}
+
 /* checklist */
 .markdown .badge-checklist {
   display: grid;
@@ -622,7 +651,7 @@ a.badge-card:hover {
 
 ## The five community badges {#badges}
 
-Each badge recognizes a different kind of contribution. You can claim the Contributor badge today. The community awards the other four, and we'll add the criteria and the process for each one to this page once they're settled.
+Each badge recognizes a different kind of contribution. You can claim the Contributor badge today. The Committer and PMC Member badges are sent out by the PMC, so there is nothing to apply for. The two 2026 badges are awarded by the community, and we'll add the criteria and the process for each one to this page once they're settled.
 
 <div className="badge-family">
   <a className="badge-card badge-card--open" href="#digital-badge">
@@ -631,18 +660,18 @@ Each badge recognizes a different kind of contribution. You can claim the Contri
     <span>Code, docs, ideas or other work, with at least one PR merged.</span>
     <em className="badge-chip badge-chip--open">Open now</em>
   </a>
-  <div className="badge-card">
+  <a className="badge-card badge-card--open" href="#committer-pmc-badges">
     <img src="/images/community-badges/badge-committer.png" alt="Apache Doris Committer badge" width="104" height="104" />
     <strong>Committer</strong>
     <span>Commit access, earned through sustained and trusted contributions.</span>
-    <em className="badge-chip">Coming soon</em>
-  </div>
-  <div className="badge-card">
+    <em className="badge-chip badge-chip--open">Open now</em>
+  </a>
+  <a className="badge-card badge-card--open" href="#committer-pmc-badges">
     <img src="/images/community-badges/badge-pmc-member.png" alt="Apache Doris PMC Member badge" width="104" height="104" />
     <strong>PMC Member</strong>
     <span>Guides the project's technical direction and community governance.</span>
-    <em className="badge-chip">Coming soon</em>
-  </div>
+    <em className="badge-chip badge-chip--open">Open now</em>
+  </a>
   <div className="badge-card">
     <img src="/images/community-badges/badge-active-contributor-2026.png" alt="Apache Doris Active Contributor 2026 badge" width="104" height="104" />
     <strong>Active Contributor 2026</strong>
@@ -657,17 +686,19 @@ Each badge recognizes a different kind of contribution. You can claim the Contri
   </div>
 </div>
 
-{/* TODO: publish the criteria and claim process for Active Contributor 2026, Committer, Community Champion 2026 and PMC Member. Each badge gets its own section; turn its card above into a link (like the Contributor card) once the section exists. */}
+{/* TODO: publish the criteria and claim process for Active Contributor 2026 and Community Champion 2026. Each badge gets its own section; turn its card above into a link (like the Contributor card) once the section exists. */}
 
-## Get your digital Contributor badge in 4 steps {#digital-badge}
+## Get your digital badge {#digital-badge}
 
-We check every claim by hand before Holopin sends the invitation, so the first step is proving the GitHub account is yours.
+Contributors go through all four steps. We check every claim by hand before Holopin sends the invitation, so the first two prove the GitHub account is yours. Committers and PMC members skip those two: the PMC sends your invitation, so you [join at step 3](#committer-pmc-badges).
 
 <div className="badge-steps">
 
 <div className="badge-step">
 <span className="badge-step-number" aria-hidden="true">1</span>
 <div className="badge-step-body">
+
+<span className="badge-step-scope">Contributor badge only</span>
 
 ### Add the passphrase to your GitHub profile README {#step-1}
 
@@ -686,6 +717,8 @@ Apache Doris Community Badge
 <span className="badge-step-number" aria-hidden="true">2</span>
 <div className="badge-step-body">
 
+<span className="badge-step-scope">Contributor badge only</span>
+
 ### Fill out the claim form {#step-2}
 
 We need two things: your GitHub ID, so we can find the merged PR, and an email address for the badge invitation.
@@ -698,13 +731,30 @@ We need two things: your GitHub ID, so we can find the merged PR, and an email a
 </div>
 </div>
 
+<div className="badge-step badge-step--entry">
+<span className="badge-step-number" aria-hidden="true">PMC</span>
+<div className="badge-step-body">
+
+### Committer or PMC Member? Start here {#committer-pmc-badges}
+
+You don't apply for these two badges. The Doris PMC goes through the official [committer](https://people.apache.org/committers-by-project.html#doris) and [PMC member](https://projects.apache.org/committee.html?doris) lists and sends everyone on them a Holopin invitation directly. Committers receive the Committer badge; PMC members receive both the PMC Member and the Committer badge. When the email arrives, continue from step 3. From there on, showing the badge off and applying for the physical one work the same as for the Contributor badge.
+
+Want the Contributor badge as well? You qualify like anyone with a merged pull request, so claim it through steps 1 and 2.
+
+<div className="badge-step-why">Nothing in your inbox yet? Check your Promotions tab and Spam folder first, then ask us in <a href="#questions">Slack</a>.</div>
+
+</div>
+</div>
+
 <div className="badge-step">
 <span className="badge-step-number" aria-hidden="true">3</span>
 <div className="badge-step-body">
 
 ### Claim it on Holopin {#step-3}
 
-After we've checked your PR, Holopin will email you an invitation. Click **Claim Badge** and sign in with GitHub. If you don't have a Holopin account yet, creating one is free.
+Holopin will email you an invitation: for the Contributor badge once we've checked your PR, and for the Committer and PMC Member badges once the PMC has sent it. Click **Claim Badge** and sign in with GitHub. If you don't have a Holopin account yet, creating one is free.
+
+Can't find the email? Check your Promotions tab or Spam folder, since Holopin's invitations sometimes end up there.
 
 <figure className="badge-shot badge-shot--narrow">
   <img src="/images/community-badges/holopin-claim.jpg" alt="Holopin claim screen showing the Apache Doris badge and a Claim button" />
@@ -730,10 +780,18 @@ The badge is the community's way of saying your work mattered. Put it wherever y
 <div className="badge-ministeps">
 
 1. On Holopin, open **Your Profile**.
-2. Add the Apache Doris Contributor Badge to your **Board**. Move, resize, or rotate it if you have several badges.
+2. Add your Apache Doris badge to your **Board**. Move, resize, or rotate it if you have several badges.
 3. Copy the code shown under your Board and paste it into your GitHub profile README.
 
 </div>
+
+The code is a single line of Markdown. Here is the one for the `morningman` account; yours will carry your own username:
+
+```markdown
+[![An image of @morningman's Holopin badges, which is a link to view their full Holopin profile](https://holopin.me/morningman)](https://holopin.io/@morningman)
+```
+
+To see it in place, open [github.com/morningman](https://github.com/morningman) and the [README behind it](https://github.com/morningman/morningman/blob/main/README.md).
 
 <div className="badge-shots">
   <figure className="badge-shot">
@@ -751,7 +809,7 @@ The badge is the community's way of saying your work mattered. Put it wherever y
 
 Add it under **Licenses & Certifications** on your LinkedIn profile:
 
-- Name: Apache Doris Contributor
+- Name: Apache Doris Contributor (or Committer / PMC Member, whichever badge you hold)
 - Issuing organization: Apache Doris
 - Credential URL: your Holopin badge link
 
@@ -759,6 +817,12 @@ Add it under **Licenses & Certifications** on your LinkedIn profile:
   <img src="/images/community-badges/linkedin-certification.jpg" alt="LinkedIn Licenses and Certifications entry for the Apache Doris Contributor badge" />
   <figcaption>Licenses &amp; Certifications on LinkedIn</figcaption>
 </figure>
+
+You can also post about it. A single line with the badge image attached is enough, for example:
+
+> Happy to have received my Contributor Badge from the <a className="badge-linkedin" href="https://www.linkedin.com/company/doris-apache">@Apache Doris</a> community. <span className="badge-linkedin">#ApacheDoris</span> <span className="badge-linkedin">#ApacheDorisCommunityBadge</span>
+
+Swap in Committer or PMC Member if that's the badge you received. If you want the physical badge as well, this is the post [step 5](#step-5) asks for.
 
 </TabItem>
 <TabItem value="anywhere" label="Anywhere else">
@@ -782,7 +846,7 @@ Your Holopin credential page is a stable link that anyone can check. Add it wher
 
 ## Want the physical badge too? Two more steps {#physical-badge}
 
-You can apply as soon as you've claimed your digital badge, since the LinkedIn post in step 5 needs to show it. Everyone who holds a digital badge is eligible.
+You can apply as soon as you've claimed your digital badge, since the LinkedIn post in step 5 needs to show it. Everyone who holds a digital badge is eligible, whether it's the Contributor, Committer, or PMC Member badge. We ship one physical badge per person, even if you hold more than one digital badge.
 
 <div className="badge-steps badge-steps--optional">
 
@@ -792,7 +856,7 @@ You can apply as soon as you've claimed your digital badge, since the LinkedIn p
 
 ### Share your badge on LinkedIn {#step-5}
 
-Write a LinkedIn post about your new badge. Say whatever you like: what you built or fixed, or how you ended up in the community in the first place. The only requirements are the three below.
+Write a LinkedIn post about your new badge. Say whatever you like: what you built or fixed, or how you ended up in the community in the first place. The only requirements are the three below. If you'd rather keep it short, the sample post under the LinkedIn tab in [step 4](#step-4) plus the badge image is enough.
 
 <ul className="badge-checklist">
   <li className="badge-checklist-label">Your post must include</li>
