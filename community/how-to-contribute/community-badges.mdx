@@ -1,0 +1,857 @@
+---
+title: Claim Your Apache Doris Community Badge
+sidebar_label: Community Badges
+language: en
+description: How Apache Doris contributors claim the digital Contributor Badge on Holopin, show it on GitHub and LinkedIn, and apply for the physical badge. Overview of all five Apache Doris community badges.
+keywords:
+    - Apache Doris
+    - community badge
+    - contributor badge
+    - Holopin
+    - physical badge
+    - contributor recognition
+    - open source contribution
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<style>{`
+/* ---------- hero ---------- */
+.badge-hero {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 8px 32px;
+  align-items: center;
+  margin: 8px 0 32px;
+  padding: 28px 32px 24px 28px;
+  border: 1px solid var(--brand-border-soft, #D9EEE8);
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--brand-surface-soft, #F4FBF8), var(--brand-surface-note, #E8FAF5));
+}
+
+.badge-hero-image {
+  width: 230px;
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(6, 70, 50, 0.18));
+}
+
+.badge-hero-eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brand-primary-deep, #0B7A58);
+}
+
+.badge-hero-lead {
+  margin: 0 0 10px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ifm-font-color-base);
+}
+
+.badge-hero-desc {
+  margin: 0 0 16px;
+  max-width: 52ch;
+  line-height: 1.6;
+}
+
+.badge-eligibility {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--brand-border-soft, #D9EEE8);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+}
+
+.badge-eligibility-tick {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.badge-eligibility strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.badge-eligibility span:not(.badge-eligibility-tick) {
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.badge-hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.badge-hero-note {
+  flex-basis: 100%;
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.badge-journey {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--brand-border-soft, #D9EEE8);
+  font-size: 0.85rem;
+}
+
+.badge-journey-stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px 5px 6px;
+  border: 1px solid var(--brand-border-soft, #D9EEE8);
+  border-radius: 999px;
+  background: var(--ifm-background-surface-color);
+}
+
+.badge-journey-stage i {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--brand-surface-note, #E8FAF5);
+  color: var(--brand-primary-deep, #0B7A58);
+  font-style: normal;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.badge-journey-arrow {
+  color: var(--ifm-color-primary);
+  font-weight: 700;
+}
+
+.badge-journey-hint {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+/* ---------- badge family ---------- */
+.badge-family {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0 8px;
+}
+
+.badge-card {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 6px;
+  justify-items: center;
+  padding: 16px 10px 14px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  text-align: center;
+  text-decoration: none;
+}
+
+.markdown a.badge-card,
+.markdown a.badge-card:hover {
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+}
+
+a.badge-card:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+.badge-card--open {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px var(--brand-surface-note, #E8FAF5);
+}
+
+.badge-card img {
+  width: 104px;
+  height: 104px;
+}
+
+.badge-card strong {
+  font-size: 0.9rem;
+  line-height: 1.25;
+}
+
+.badge-card span {
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.badge-chip {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 3px 9px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-700);
+  font-style: normal;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badge-chip--open {
+  border-color: var(--ifm-color-primary);
+  background: var(--ifm-color-primary);
+  color: #fff;
+}
+
+/* ---------- step cards ---------- */
+.badge-steps {
+  display: grid;
+  margin: 8px 0 24px;
+}
+
+.badge-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 0 18px;
+  padding-bottom: 22px;
+}
+
+.badge-step::before {
+  content: "";
+  position: absolute;
+  left: 25px;
+  top: 52px;
+  bottom: 0;
+  width: 2px;
+  background: var(--ifm-color-emphasis-300);
+}
+
+.badge-step:last-child {
+  padding-bottom: 0;
+}
+
+.badge-step:last-child::before {
+  display: none;
+}
+
+.badge-step-number {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 800;
+  box-shadow: 0 0 0 5px var(--ifm-background-color);
+}
+
+.badge-steps--optional .badge-step-number {
+  border: 3px solid var(--ifm-color-primary);
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-color-primary);
+}
+
+.badge-step-body {
+  padding: 18px 22px 20px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+  background: var(--ifm-background-surface-color);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.markdown .badge-step-body h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem !important;
+  font-size: 1.1rem;
+}
+
+.markdown .badge-step-body > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.badge-step-action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 0;
+}
+
+.badge-step-action span {
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.badge-step-why {
+  margin: 12px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--ifm-color-emphasis-700);
+}
+
+/* checklist */
+.markdown .badge-checklist {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 0 !important;
+  padding: 12px 16px;
+  border: 1px solid var(--brand-border-soft, #D9EEE8);
+  border-radius: 8px;
+  background: var(--brand-surface-soft, #F4FBF8);
+  list-style: none;
+}
+
+.markdown .badge-checklist li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.95rem;
+}
+
+.markdown .badge-checklist li::before {
+  content: "✓";
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 3px;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.markdown .badge-checklist li.badge-checklist-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-primary-deep, #0B7A58);
+}
+
+.markdown .badge-checklist li.badge-checklist-label::before {
+  display: none;
+}
+
+.markdown .badge-linkedin {
+  color: #0A66C2;
+  font-weight: 600;
+}
+
+/* screenshots */
+.badge-shot {
+  margin: 14px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+}
+
+.badge-shot img {
+  display: block;
+  width: 100%;
+}
+
+.badge-shot figcaption {
+  padding: 6px 10px;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  font-size: 0.78rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.badge-shot--narrow {
+  width: 360px;
+  max-width: 100%;
+}
+
+.badge-shots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0 0;
+}
+
+.badge-shots .badge-shot {
+  margin: 0;
+}
+
+/* show-off tabs */
+.markdown .badge-ministeps ol {
+  display: grid;
+  gap: 8px;
+  padding-left: 0;
+  list-style: none;
+  counter-reset: badge-ministep;
+}
+
+.markdown .badge-ministeps li {
+  position: relative;
+  padding-left: 36px;
+  counter-increment: badge-ministep;
+}
+
+.markdown .badge-ministeps li::before {
+  content: counter(badge-ministep, lower-alpha);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--ifm-color-primary);
+  border-radius: 50%;
+  color: var(--ifm-color-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.markdown .badge-where {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 0 !important;
+  padding: 0;
+  list-style: none;
+}
+
+.markdown .badge-where li {
+  padding: 4px 12px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  background: var(--ifm-background-surface-color);
+  font-size: 0.875rem;
+}
+
+/* questions */
+.badge-questions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  margin: 0 0 8px;
+  padding: 16px 20px;
+  border-radius: 10px;
+}
+
+.badge-questions {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-color-emphasis-100);
+}
+
+.badge-questions-title {
+  display: block;
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+}
+
+.badge-questions-text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* buttons: the site's .markdown a rule (markdown.scss) outranks Infima's .button color, so restate it */
+.markdown .badge-button,
+.markdown .badge-button:hover,
+.markdown .badge-button:active {
+  color: var(--ifm-button-color);
+}
+
+/* Infima's primary hover uses --ifm-color-primary-dark, which is a blue leftover on this site */
+.badge-button.button--primary:not(.button--outline):hover,
+.badge-button.button--primary:not(.button--outline):active {
+  --ifm-button-background-color: var(--brand-primary-deep, #0B7A58);
+  --ifm-button-border-color: var(--brand-primary-deep, #0B7A58);
+}
+
+.markdown .badge-questions-text,
+.markdown .badge-closing-signature {
+  margin-bottom: 0 !important;
+}
+
+.markdown .badge-closing-text {
+  margin-bottom: 8px !important;
+}
+
+/* closing */
+.badge-closing {
+  margin: 40px 0 0;
+  padding: 6px 0 6px 22px;
+  border-left: 4px solid var(--ifm-color-primary);
+}
+
+.badge-closing-text {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.badge-closing-signature {
+  margin: 10px 0 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+}
+
+@media (max-width: 996px) {
+  .badge-family {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .badge-card {
+    flex: 0 0 190px;
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 700px) {
+  .badge-hero {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    padding: 22px 20px;
+  }
+
+  .badge-hero-image {
+    width: 170px;
+  }
+
+  .badge-step {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 0 12px;
+  }
+
+  .badge-step-number {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .badge-step::before {
+    left: 19px;
+    top: 40px;
+  }
+
+  .badge-step-body {
+    padding: 14px 16px 16px;
+  }
+
+  .badge-shots,
+  .badge-questions {
+    grid-template-columns: 1fr;
+  }
+}
+`}</style>
+
+<div className="badge-hero">
+  <img className="badge-hero-image" src="/images/community-badges/badge-contributor.png" alt="Apache Doris Contributor badge" width="230" height="230" />
+  <div>
+    <div className="badge-hero-eyebrow">Apache Doris community badges · No closing date</div>
+    <div className="badge-hero-lead">Merged a pull request into Apache Doris? Claim your Contributor Badge.</div>
+    <div className="badge-hero-desc">A digital badge for people who have contributed to Apache Doris. It lives on Holopin and costs nothing to claim. Post about it on LinkedIn afterwards and we'll mail you the physical version as well.</div>
+    <div className="badge-eligibility">
+      <span className="badge-eligibility-tick" aria-hidden="true">✓</span>
+      <div>
+        <strong>You qualify with a single merged pull request in the Apache Doris project.</strong>
+        <span>It doesn't matter how many PRs you have or how long ago they were merged. A docs fix from three years back counts.</span>
+      </div>
+    </div>
+    <div className="badge-hero-cta">
+      <a className="badge-button button button--primary button--lg" href="#step-1">Claim your digital badge →</a>
+      <span className="badge-hero-note">Already received a Holopin invitation from us? Jump straight to <a href="#step-3">step 3</a>.</span>
+    </div>
+  </div>
+  <div className="badge-journey" aria-label="How the program works">
+    <span className="badge-journey-stage"><i>Steps 1-3</i> Digital badge</span>
+    <span className="badge-journey-arrow" aria-hidden="true">→</span>
+    <span className="badge-journey-stage"><i>Step 4</i> Show it off</span>
+    <span className="badge-journey-arrow" aria-hidden="true">→</span>
+    <span className="badge-journey-stage"><i>Steps 5-6</i> Physical badge</span>
+    <span className="badge-journey-hint">Steps 5 and 6 are optional and come after you've claimed the digital badge.</span>
+  </div>
+</div>
+
+## The five community badges {#badges}
+
+Each badge recognizes a different kind of contribution. You can claim the Contributor badge today. The community awards the other four, and we'll add the criteria and the process for each one to this page once they're settled.
+
+<div className="badge-family">
+  <a className="badge-card badge-card--open" href="#digital-badge">
+    <img src="/images/community-badges/badge-contributor.png" alt="Apache Doris Contributor badge" width="104" height="104" />
+    <strong>Contributor</strong>
+    <span>Code, docs, ideas or other work, with at least one PR merged.</span>
+    <em className="badge-chip badge-chip--open">Open now</em>
+  </a>
+  <div className="badge-card">
+    <img src="/images/community-badges/badge-committer.png" alt="Apache Doris Committer badge" width="104" height="104" />
+    <strong>Committer</strong>
+    <span>Commit access, earned through sustained and trusted contributions.</span>
+    <em className="badge-chip">Coming soon</em>
+  </div>
+  <div className="badge-card">
+    <img src="/images/community-badges/badge-pmc-member.png" alt="Apache Doris PMC Member badge" width="104" height="104" />
+    <strong>PMC Member</strong>
+    <span>Guides the project's technical direction and community governance.</span>
+    <em className="badge-chip">Coming soon</em>
+  </div>
+  <div className="badge-card">
+    <img src="/images/community-badges/badge-active-contributor-2026.png" alt="Apache Doris Active Contributor 2026 badge" width="104" height="104" />
+    <strong>Active Contributor 2026</strong>
+    <span>Consistent and impactful contributions during the year.</span>
+    <em className="badge-chip">Coming soon</em>
+  </div>
+  <div className="badge-card">
+    <img src="/images/community-badges/badge-community-champion-2026.png" alt="Apache Doris Community Champion 2026 badge" width="104" height="104" />
+    <strong>Community Champion 2026</strong>
+    <span>Major features, user stories, talks, events or other community initiatives.</span>
+    <em className="badge-chip">Coming soon</em>
+  </div>
+</div>
+
+{/* TODO: publish the criteria and claim process for Active Contributor 2026, Committer, Community Champion 2026 and PMC Member. Each badge gets its own section; turn its card above into a link (like the Contributor card) once the section exists. */}
+
+## Get your digital Contributor badge in 4 steps {#digital-badge}
+
+We check every claim by hand before Holopin sends the invitation, so the first step is proving the GitHub account is yours.
+
+<div className="badge-steps">
+
+<div className="badge-step">
+<span className="badge-step-number" aria-hidden="true">1</span>
+<div className="badge-step-body">
+
+### Add the passphrase to your GitHub profile README {#step-1}
+
+Temporarily add this line anywhere in your profile README (the `username/username` repository):
+
+```text
+Apache Doris Community Badge
+```
+
+<div className="badge-step-why"><strong>Why?</strong> Anyone can type a GitHub ID into a form, so we need proof that the account is yours. Once you have your badge, delete the line and put the badge there instead.</div>
+
+</div>
+</div>
+
+<div className="badge-step">
+<span className="badge-step-number" aria-hidden="true">2</span>
+<div className="badge-step-body">
+
+### Fill out the claim form {#step-2}
+
+We need two things: your GitHub ID, so we can find the merged PR, and an email address for the badge invitation.
+
+<div className="badge-step-action">
+  <a className="badge-button button button--primary" href="https://forms.gle/xTcnWLqDuBeFfnAD8" target="_blank" rel="noopener noreferrer">Open the claim form →</a>
+  <span>Takes about a minute.</span>
+</div>
+
+</div>
+</div>
+
+<div className="badge-step">
+<span className="badge-step-number" aria-hidden="true">3</span>
+<div className="badge-step-body">
+
+### Claim it on Holopin {#step-3}
+
+After we've checked your PR, Holopin will email you an invitation. Click **Claim Badge** and sign in with GitHub. If you don't have a Holopin account yet, creating one is free.
+
+<figure className="badge-shot badge-shot--narrow">
+  <img src="/images/community-badges/holopin-claim.jpg" alt="Holopin claim screen showing the Apache Doris badge and a Claim button" />
+  <figcaption>The Holopin claim screen</figcaption>
+</figure>
+
+<div className="badge-step-why">The badge then sits on your Holopin credential page, which anyone can open to check it, so you can link to it from wherever you like.</div>
+
+</div>
+</div>
+
+<div className="badge-step">
+<span className="badge-step-number" aria-hidden="true">4</span>
+<div className="badge-step-body">
+
+### Show off your badge {#step-4}
+
+The badge is the community's way of saying your work mattered. Put it wherever you like.
+
+<Tabs groupId="badge-showoff">
+<TabItem value="github" label="GitHub profile" default>
+
+<div className="badge-ministeps">
+
+1. On Holopin, open **Your Profile**.
+2. Add the Apache Doris Contributor Badge to your **Board**. Move, resize, or rotate it if you have several badges.
+3. Copy the code shown under your Board and paste it into your GitHub profile README.
+
+</div>
+
+<div className="badge-shots">
+  <figure className="badge-shot">
+    <img src="/images/community-badges/holopin-board-embed-code.jpg" alt="Holopin board with the embed code shown below it" />
+    <figcaption>Copy the embed code under your Board</figcaption>
+  </figure>
+  <figure className="badge-shot">
+    <img src="/images/community-badges/github-profile-badge.jpg" alt="GitHub profile README showing the Apache Doris Contributor badge" />
+    <figcaption>The badge on a GitHub profile</figcaption>
+  </figure>
+</div>
+
+</TabItem>
+<TabItem value="linkedin" label="LinkedIn">
+
+Add it under **Licenses & Certifications** on your LinkedIn profile:
+
+- Name: Apache Doris Contributor
+- Issuing organization: Apache Doris
+- Credential URL: your Holopin badge link
+
+<figure className="badge-shot">
+  <img src="/images/community-badges/linkedin-certification.jpg" alt="LinkedIn Licenses and Certifications entry for the Apache Doris Contributor badge" />
+  <figcaption>Licenses &amp; Certifications on LinkedIn</figcaption>
+</figure>
+
+</TabItem>
+<TabItem value="anywhere" label="Anywhere else">
+
+Your Holopin credential page is a stable link that anyone can check. Add it wherever a record of your contribution helps:
+
+<ul className="badge-where">
+  <li>Résumé / CV</li>
+  <li>Personal website or portfolio</li>
+  <li>Other developer &amp; community profiles</li>
+  <li>Conference speaker bios</li>
+</ul>
+
+</TabItem>
+</Tabs>
+
+</div>
+</div>
+
+</div>
+
+## Want the physical badge too? Two more steps {#physical-badge}
+
+You can apply as soon as you've claimed your digital badge, since the LinkedIn post in step 5 needs to show it. Everyone who holds a digital badge is eligible.
+
+<div className="badge-steps badge-steps--optional">
+
+<div className="badge-step">
+<span className="badge-step-number" aria-hidden="true">5</span>
+<div className="badge-step-body">
+
+### Share your badge on LinkedIn {#step-5}
+
+Write a LinkedIn post about your new badge. Say whatever you like: what you built or fixed, or how you ended up in the community in the first place. The only requirements are the three below.
+
+<ul className="badge-checklist">
+  <li className="badge-checklist-label">Your post must include</li>
+  <li><span>A mention of the official <a className="badge-linkedin" href="https://www.linkedin.com/company/doris-apache">@Apache Doris</a> LinkedIn page</span></li>
+  <li><span>The hashtag <span className="badge-linkedin">#ApacheDorisCommunityBadge</span></span></li>
+  <li><span>Your badge image or Holopin badge link</span></li>
+</ul>
+
+<div className="badge-shots">
+  <figure className="badge-shot">
+    <img src="/images/community-badges/holopin-share.jpg" alt="Holopin badge page with a Share on LinkedIn button" />
+    <figcaption>Share straight from Holopin…</figcaption>
+  </figure>
+  <figure className="badge-shot">
+    <img src="/images/community-badges/linkedin-post.jpg" alt="LinkedIn post composer with the badge attached" />
+    <figcaption>…or write your own post</figcaption>
+  </figure>
+</div>
+
+</div>
+</div>
+
+<div className="badge-step">
+<span className="badge-step-number" aria-hidden="true">6</span>
+<div className="badge-step-body">
+
+### Submit your shipping details {#step-6}
+
+After publishing your post, fill in the physical badge form with the post link and your shipping address.
+
+<div className="badge-step-action">
+  <a className="badge-button button button--primary" href="https://forms.gle/cqG5SchErhoMDDB87" target="_blank" rel="noopener noreferrer">Apply for the physical badge →</a>
+</div>
+
+<div className="badge-step-why">We'll check the post, then email you when we start preparing your shipment.</div>
+
+</div>
+</div>
+
+</div>
+
+:::info Shipping is worldwide, but not guaranteed
+
+Delivery times vary a lot by country, and in some places customs rules or carrier restrictions can stop a package altogether. We'll do our best to get the badge to you, but we can't promise it will reach every address.
+
+:::
+
+## Questions? {#questions}
+
+<div className="badge-questions">
+  <div>
+    <span className="badge-questions-title">Join the Apache Doris Slack and ask us there.</span>
+    <p className="badge-questions-text">The community team answers badge questions in Slack, including anything about the form or shipping.</p>
+  </div>
+  <a className="badge-button button button--primary" href="https://doris.apache.org/slack?utm_source=website&utm_medium=docs&utm_content=community_badge">Join the Slack community →</a>
+</div>
+
+<div className="badge-closing">
+  <p className="badge-closing-text">Some contributions are large and visible. Others are small fixes that quietly make someone's day a little easier. All of them are part of open source, and these badges are our way of saying thank you.</p>
+  <p className="badge-closing-text">The program has no end date. Contribute whenever you like, and claim your badge once your pull request is merged.</p>
+  <p className="badge-closing-signature">The Apache Doris Community</p>
+</div>
