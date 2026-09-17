@@ -19,6 +19,8 @@ This article details the types, strategies, and related parameter configurations
 
 For **data cache**, refer to the [data cache documentation](./data-cache.md).
 
+For memory limits of external metadata caches, refer to [External Metadata Cache Memory Management](./external-meta-cache-memory-management).
+
 ## Cache Strategies
 
 Most caches have the following three strategy indicators:
