@@ -778,6 +778,7 @@ const sidebars: SidebarsConfig = {
                 },
                 'lakehouse/data-cache',
                 'lakehouse/meta-cache',
+                'lakehouse/external-meta-cache-memory-management',
                 'lakehouse/compute-node',
                 'lakehouse/statistics',
                 {

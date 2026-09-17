@@ -82,79 +82,80 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 元数据缓存 {#meta-cache}
 
-为了提升访问外部数据源的性能，Apache Doris 会对 Hive 的元数据进行缓存。元数据包括表结构（Schema）、分区列表、分区属性和文件列表等。
+为了提升访问外部数据源的性能，Apache Doris 会缓存 Hive 的元数据，包括表对象、分区名、分区对象、列统计信息、文件列表以及派生的分区裁剪结构。
 
 :::tip
-对于 Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详情请参阅[元数据缓存](../meta-cache.md)。
-从 Doris 4.1.x 开始，Hive Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。
+Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详见[元数据缓存](../meta-cache)。
+自 Doris 4.1.x 起，Hive Catalog 的外表元数据缓存使用统一的 `meta.cache.*` 键配置。下文的模块描述当前版本；Doris 4.1.x 和 4.2.x 的模块集合与此不同，见本页的 4.x 版本。
 :::
 
-### 缓存属性配置（4.1.x+） {#meta-cache-unified-model}
+### 缓存属性配置 {#meta-cache-unified-model}
 
-各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+每个缓存模块使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`。Hive 的 `<engine>` 为 `hive`。包含 Iceberg 表的 Hive Metastore Catalog 还会使用 [Iceberg Catalog](./iceberg-catalog#meta-cache) 中描述的 `iceberg` 模块。
 
 | 属性 | 示例 | 含义 |
 |---|---|---|
-| `enable` | `true/false` | 是否启用该缓存模块。 |
-| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
-| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+| `enable` | `true/false` | 是否开启该缓存模块。 |
+| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭该模块（立即生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算的 TTL 秒数。 |
+| `capacity` | `10000` | 缓存条目数上限。`0` 表示关闭该模块。 |
+| `max-weight` | `1GB` | 自 Doris 4.1.4 起支持。可选的模块估算保留内存上限。必须为正数，`0` 会被拒绝。只有下表标注的模块接受该属性。 |
 
-**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
+**生效逻辑：** 模块在 `enable=true`、`ttl-second != 0` 且 `capacity > 0` 时生效。FE 总上限、Catalog 上限或模块上限存在时，还会按估算内存控制准入，详见 [外表元数据缓存内存管理](../external-meta-cache-memory-management)。
 
 ### 缓存模块 {#meta-cache-unified-modules}
 
-Hive Catalog 包含以下缓存模块：
+Hive Catalog 包含以下缓存模块，全部接受 `max-weight`。
 
-| 模块 (`<entry>`) | 属性键前缀 | 缓存内容与影响 |
-|---|---|---|
-| `schema` | `meta.cache.hive.schema.` | 缓存表结构。影响：列新增、删除、类型变更在 Doris 中的可见性。若关闭，每次查询都会拉取最新 Schema。 |
-| `partition_values` | `meta.cache.hive.partition_values.` | 缓存分区值/分区名称列表。影响：`SHOW PARTITIONS`、分区枚举、分区裁剪，以及外部新增/删除分区何时在 Doris 中可见。若关闭，可实时查看到分区变动。 |
-| `partition` | `meta.cache.hive.partition.` | 缓存分区属性（Location、InputFormat、Serde 等）。影响：单个分区位置、格式、Serde 等属性变更的可见性。 |
-| `file` | `meta.cache.hive.file.` | 缓存文件列表。影响：新增/删除文件、文件大小变化被 Doris 感知的时效性，同时减少远端 LIST 操作开销。若关闭，每次查询都会重新加载文件列表。 |
+| 模块（`<entry>`） | 属性键前缀 | `ENTRY_NAME` | 缓存内容与影响 | 默认 enable / TTL / capacity |
+|---|---|---|---|---|
+| `table` | `meta.cache.hive.table.` | `hive-table` | Hive Metastore 中的表对象。影响：减少规划阶段访问 Metastore 的次数。 | `true` / 86400 秒 / 10000 |
+| `partition_names` | `meta.cache.hive.partition_names.` | `hive-partition-names` | 分区名列表。影响：分区枚举；关闭后可实时看到新分区。 | `true` / 86400 秒 / 10000 |
+| `partition` | `meta.cache.hive.partition.` | `hive-partition` | 分区对象，例如 Location 和输入格式。 | `true` / 86400 秒 / 100000 |
+| `column_stats` | `meta.cache.hive.column_stats.` | `hive-column-stats` | Hive Metastore 中的列统计信息。 | `true` / 86400 秒 / 10000 |
+| `file` | `meta.cache.hive.file.` | `hive-file` | 文件列表。影响：减少远端 LIST 操作；关闭后可实时看到文件变化。 | `true` / 86400 秒 / 10000 |
+| `partition_view` | `meta.cache.hive.partition_view.` | `hive-partition-view` | 由分区名派生的分区裁剪结构。 | `true` / 86400 秒 / 1000 |
+
+Hive 表的列结构由所有外表 Catalog 共享的 `default` 引擎缓存（`meta.cache.default.schema.*`）。
 
 ### 旧参数映射与转换 {#meta-cache-mapping}
 
-在 4.1.x 之前，Hive 元数据缓存一部分通过 Catalog 兼容属性控制，一部分仍受 FE 全局缓存参数控制，详见[元数据缓存](../meta-cache.md)。升级到 4.1.x 后，建议显式改写为 `meta.cache.hive.*`，不要继续沿用旧键名。
+推荐使用统一键。以下旧 Catalog 属性仍然可用，并按下表映射：
 
-| 4.1 前属性键 | 适用范围 | 4.1.x+ 统一键 | 升级建议与影响 |
-|---|---|---|---|
-| `schema.cache.ttl-second` | 4.1 前 Hive Catalog 兼容属性 | `meta.cache.hive.schema.ttl-second` | 仅对应 Schema 新鲜度。若希望列变更每次查询立即可见，设置为 `0`；`enable` 和 `capacity` 需按需单独配置。 |
-| `partition.cache.ttl-second` | 4.1 前 Hive Catalog 兼容属性 | `meta.cache.hive.partition_values.ttl-second` | 仅对应分区列表新鲜度。若希望新增/删除分区每次查询立即可见，设置为 `0`。 |
-| `file.meta.cache.ttl-second` | 4.1 前 Hive Catalog 兼容属性 | `meta.cache.hive.file.ttl-second` | 仅对应文件列表新鲜度。若希望新增/删除文件每次查询立即可见，设置为 `0`。 |
-
-`meta.cache.hive.partition.*` 是 4.1.x 中单独可调的新模块，4.1 前没有一一对应的 Catalog 级 TTL 键。若您关心分区 Location、Serde、InputFormat 等属性变更的可见性，需要在升级后单独设置它。
-
-4.1.x 的统一模型把每个缓存拆分为 `enable`、`ttl-second`、`capacity` 三个维度；旧键只表达 TTL，不表达是否启用和容量上限。升级后如果只完成键名替换而不评估 `enable/capacity`，则其余行为会落到 4.1.x 的默认值。
+| 旧属性键 | 统一键 | 说明 |
+|---|---|---|
+| `schema.cache.ttl-second` | `meta.cache.default.schema.ttl-second` 和 `meta.cache.hive.table.ttl-second` | 表结构缓存和表对象缓存的过期时间 |
+| `partition.cache.ttl-second` | `meta.cache.hive.partition_names.ttl-second` | 分区名列表的过期时间 |
+| `file.meta.cache.ttl-second` | `meta.cache.hive.file.ttl-second` | 文件列表的过期时间 |
 
 ### 最佳实践 {#meta-cache-best-practices}
 
-* **实时查看最新数据**：如果您希望每次查询都能看到外部数据源的最新分区或文件变动，可以将对应的 `ttl-second` 设置为 `0`。
+* **实时访问最新数据**：希望每次查询都看到外部数据源最新的分区或文件变化时，将对应模块的 `ttl-second` 设为 `0`。
   ```sql
-  -- 关闭文件列表缓存，实时看到文件变动
+  -- 关闭文件列表缓存，实时看到文件变化
   ALTER CATALOG hive_ctl SET PROPERTIES ("meta.cache.hive.file.ttl-second" = "0");
-  -- 关闭分区值缓存，实时看到新增分区
-  ALTER CATALOG hive_ctl SET PROPERTIES ("meta.cache.hive.partition_values.ttl-second" = "0");
+  -- 关闭分区名缓存，实时看到新分区
+  ALTER CATALOG hive_ctl SET PROPERTIES ("meta.cache.hive.partition_names.ttl-second" = "0");
   ```
-* **性能优化**：对于元数据变动不频繁的场景，建议适当增大 `capacity` 和 `ttl-second` 以减少对 Hive Metastore 和文件系统的访问压力。
+* **性能优化**：元数据变化不频繁的场景，可适当增大 `capacity` 和 `ttl-second`，减少对 Hive Metastore 和文件系统的访问压力。对超大表可用 `max-weight` 限制文件列表和分区裁剪缓存的内存。
 
 :::caution
-**Hive Catalog 注意事项**：Hive 的 `meta.cache.hive.*` 属性修改**不支持热生效**。修改配置后，必须重建 Catalog 或重启 FE 节点才能应用新的缓存配置。
+Catalog 属性修改成功后，受影响的元数据缓存会被丢弃，并在下一次访问时按新配置重建。修改 `meta.cache.max-weight` 或 `schema.cache.ttl-second` 会丢弃该 Catalog 的全部缓存；修改 `meta.cache.<engine>.<entry>.*` 只丢弃对应引擎的缓存。正在执行的查询不受影响。
 :::
 
 ### 可观测性 {#meta-cache-unified-observability}
 
-可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观测缓存指标：
+可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观察缓存指标。`ENTRY_NAME` 显示上表中列出的名称，`default` 引擎的行是所有 Catalog 共享的表结构缓存：
 
 ```sql
-SELECT catalog_name, engine_name, entry_name,
+SELECT engine_name, entry_name,
        effective_enabled, ttl_second, capacity,
-       estimated_size, hit_rate, load_failure_count, last_error
+       estimated_size, hit_rate, max_weight, estimated_weight
 FROM information_schema.catalog_meta_cache_statistics
-WHERE catalog_name = 'hive_ctl' AND engine_name = 'hive'
-ORDER BY entry_name;
+WHERE catalog_name = 'hive_ctl'
+ORDER BY engine_name, entry_name;
 ```
 
-该系统表文档见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
+系统表说明请参阅 [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics)。
 
 ### 支持的 Hive 版本
 
