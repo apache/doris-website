@@ -317,7 +317,6 @@ const sidebars: SidebarsConfig = {
                 },
                 'table-design/schema-change',
                 'table-design/auto-increment',
-                'table-design/temporary-table',
             ],
         },
         {
