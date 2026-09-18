@@ -40,7 +40,7 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 | Data queries | Supports column pruning, parallel Lance Fragment scans, and snapshot-consistent reads of the current version |
 | Predicate pushdown | Supports pushing compatible static scalar predicates and join Runtime Filters down to Lance |
 | File TVFs | Supports querying Lance datasets directly through `s3()` and `local()` |
-| Vector search | Uses physical Lance index segments as parallel splits, keeps uncovered Fragments as Flat Search splits, and performs a Doris global Top-K merge |
+| Vector search | Supports single-vector and multi-vector columns, uses physical Lance index segments as parallel splits, keeps uncovered Fragments as Flat Search splits, and performs a Doris global Top-K merge |
 | Full-text search | Uses existing Lance FTS inverted indexes through `full_text_search()`, supports Match OR/AND and Phrase queries, and performs a Doris global Top-K merge |
 | Lance Cache | Shares index and metadata caches and a local disk data cache within each BE |
 | Two-phase TopN read | Enabled by default for eligible output columns in vector and full-text searches; controlled independently by `enable_lance_lazy_materialization` |
@@ -50,7 +50,7 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 
 ## Lance Version and Compatibility
 
-The Doris BE data reader is built with `lance-c v0.1.9` plus Doris patches, which upgrade its embedded Lance Rust crates to `11.0.0` (commit `ab6b5bbe`). The Doris FE reads Namespace and dataset metadata with `org.lance:lance-core:11.0.0`, aligning the FE and BE on Lance `11.0.0`. A Dataset must be compatible with both FE metadata loading and BE data reading. These implementation versions are different from the Lance `data_storage_version` recorded in a dataset.
+The Doris BE data reader is built with `lance-c v0.1.9` plus Doris patches, which add multi-vector search support and upgrade its embedded Lance Rust crates to `11.0.0` (commit `ab6b5bbe`). The Doris FE reads Namespace and dataset metadata with `org.lance:lance-core:11.0.0`, aligning the FE and BE on Lance `11.0.0`. A Dataset must be compatible with both FE metadata loading and BE data reading. These implementation versions are different from the Lance `data_storage_version` recorded in a dataset.
 
 The following table describes the file-format compatibility of this reader:
 
@@ -680,22 +680,22 @@ Do not use the unquoted form `lance_catalog.doris.analytics.items`; it parses as
 | Parameter | Required | Default | Description |
 |---|---|---|---|
 | `table` | Yes | - | Fully qualified, three-part `catalog.database.table` name. If a multilevel Namespace maps to a database name containing `.`, quote the database part with backticks. It must identify a table in a Lance Catalog, and the user must have the `SELECT` privilege on the table. |
-| `column` | Yes | - | Vector column name. `fixed_size_list<float16\|float32\|float64\|uint8\|int8>` is currently supported. |
-| `query_vector` | Yes | - | JSON number array. Its dimension must match the vector column, and each value must be representable by the vector element type. |
+| `column` | Yes | - | Vector column name. Supports single-vector `fixed_size_list<float16\|float32\|float64\|uint8\|int8>` and multi-vector `list<fixed_size_list<float16\|float32\|float64, D>>` columns. See [Multi-Vector Search](#multi-vector-search). |
+| `query_vector` | Yes | - | A JSON number array for a single-vector column, or a non-empty JSON matrix for a multi-vector column. Each subvector dimension must match the column, and each value must be finite and representable by the element type. |
 | `top_k` | No | `10` | Number of results returned after skipping `offset`. It must be a positive integer. |
 | `offset` | No | `0` | Number of nearest neighbors skipped inside the vector search. It must be a non-negative integer. `top_k + offset` must not exceed the maximum unsigned 32-bit integer. |
-| `metric` | No | `hamming` for `uint8`, `l2` for the other supported types | Distance metric: `l2`, `cosine`, `dot`, or `hamming`. `dot_product` is an alias for `dot`. `uint8` vectors support only `hamming`; the other currently supported vector element types support `l2`, `cosine`, and `dot`. An unset `metric` is treated as `l2` when Doris selects a vector index, so querying an index built with `cosine` or `dot` requires setting `metric` explicitly. |
+| `metric` | No | `l2` | Distance metric: `l2`, `cosine`, `dot`, or `hamming`. `dot_product` is an alias for `dot`. `uint8` vectors support only `hamming`; the other currently supported vector element types support `l2`, `cosine`, and `dot`. Set `metric` explicitly when querying a `cosine`, `dot`, or `hamming` index. Integer multi-vector columns and multi-vector `hamming` are unsupported. |
 | `filter` | No | - | Lance SQL condition evaluated before vector candidates are generated; that is, a Prefilter. |
 | `nprobes` | No | Minimum `1`, with no maximum | Number of IVF index partitions to probe. It must be a positive integer. When unset, Lance starts with one partition and can probe additional partitions when a Prefilter leaves too few candidates. Setting it explicitly to `N` fixes both the minimum and maximum number of probes to `N`. |
-| `refine_factor` | No | Refinement disabled | Candidate refinement multiplier. It must be a positive integer. When unset, Lance does not recompute distances from the original vectors, so `_distance` from a quantized index may be approximate. When set to `N`, Lance first retrieves `(top_k + offset) × N` candidates, recomputes their exact distances from the original vectors, and reorders them. **Refinement reads the original vector data for these candidates. As `N` increases, more candidates are read and evaluated, which can significantly increase I/O and reduce query performance.** Setting it to `1` still enables refinement and therefore differs from leaving it unset. |
+| `refine_factor` | No | Single-vector: disabled; multi-vector: `1` | Candidate refinement multiplier. It must be a positive integer. For single-vector search, when unset, Lance does not recompute distances from the original vectors, so `_distance` from a quantized index may be approximate. When set to `N`, Lance first retrieves `(top_k + offset) × N` candidates, recomputes their exact distances from the original vectors, and reorders them. **Refinement reads the original vector data for these candidates. As `N` increases, more candidates are read and evaluated, which can significantly increase I/O and reduce query performance.** For single-vector search, setting it to `1` enables refinement and differs from leaving it unset. Multi-vector search always refines candidates against their original values, using a default factor of `1`. |
 | `ef` | No | `floor(1.5 × (top_k + offset))` | Candidate width retained during HNSW graph search. It must be a positive integer. If `refine_factor` is also set, the default is `floor(1.5 × (top_k + offset) × refine_factor)`. It has no effect on non-HNSW indexes. |
 | `use_index` | No | `true` | When `true`, Doris prefers a Lance vector index compatible with the vector column and distance metric, and automatically uses Flat Search if no usable index is available. When `false`, Doris disables vector indexes and performs Flat Search over the data. |
 
-These defaults correspond to the Lance Scanner behavior currently integrated with Doris. When `metric` is omitted, Doris treats the query as `l2` while selecting a vector index, so an index built with `cosine` or `dot` is not selected. When no index is selected, or if `"use_index" = "false"`, `uint8` vectors use `hamming`, while the other currently supported vector element types use `l2`.
+Omitting `metric` selects `l2` for both indexed and Flat Search paths. For `uint8` columns, explicitly set `"metric" = "hamming"`; the default `l2` is unsupported. Multi-vector searches also enforce the [candidate budgets](#multi-vector-search) described below.
 
 ### Supported Vector Index Types
 
-The embedded `lance-c v0.1.9` explicitly supports the following Lance vector index combinations:
+For single-vector columns, Doris supports the following Lance vector index combinations. Multi-vector index restrictions are described under [Multi-Vector Search](#multi-vector-search).
 
 | Index type | Description | Main query parameters |
 |---|---|---|
@@ -710,7 +710,7 @@ The embedded `lance-c v0.1.9` explicitly supports the following Lance vector ind
 
 ### Supported Vector Element Types and Distance Metrics
 
-The distance metrics supported by a vector index depend on the vector element type. Choose a supported combination from the following table; unsupported combinations cannot use a vector index.
+For single-vector columns, the distance metrics supported by a vector index depend on the vector element type. Choose a supported combination from the following table; unsupported combinations cannot use a vector index.
 
 | Vector element type | `l2` | `cosine` | `dot` | `hamming` |
 |---|---|---|---|---|
@@ -728,13 +728,122 @@ Unless a footnote states otherwise, "Supported" means that the combination works
 
 #### The Query Metric Must Match the Index Metric
 
-The query `metric` must match the metric used to build the index. Otherwise, Doris uses Flat Search. The results remain correct, but performance is usually lower because the vectors must be scanned directly.
+The query `metric` must match the metric used to build the index. Otherwise, if the requested metric is supported for the column type, Doris uses Flat Search. The results remain correct, but performance is usually lower because the vectors must be scanned directly.
 
-When `metric` is omitted, Doris treats it as `l2` while selecting an index. Therefore, explicitly set `metric` when using an index built with `cosine`, `dot`, or `hamming`. For example, a `uint8` vector index requires `"metric" = "hamming"`; otherwise, the index is not used.
+When `metric` is omitted, Doris treats it as `l2` while selecting an index. Therefore, explicitly set `metric` when using an index built with `cosine`, `dot`, or `hamming`. For example, a `uint8` vector index requires `"metric" = "hamming"`; otherwise, the query uses the unsupported `l2` metric and fails.
 
 Use `EXPLAIN` to confirm index usage. A `lanceSearchIndexSegments` value greater than `0` indicates indexed search, while `0` indicates Flat Search.
 
 Doris considers only one vector index per vector column. Keep at most one vector index on each vector column to avoid ambiguous selection among indexes built with different metrics.
+
+### Multi-Vector Search {#multi-vector-search}
+
+A multi-vector column stores several subvectors in each table row, for example token embeddings for a document. A query matrix produces one ranked set of table rows. It is not a batch of independent vector searches and does not search several columns.
+
+#### Prepare Data and Run a Query
+
+Use the AWS S3 Filesystem Catalog example above, with catalog `lance_fs_s3` and warehouse `s3://my-bucket/lance`. Install the Lance Python SDK (`pylance`) and `pyarrow` in the writer environment. Configure its S3 credentials and region, for example through `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_DEFAULT_REGION`. The writer needs write access, and Doris needs read access to the same location. For custom endpoints or other authentication methods, configure the SDK's [object-store options](https://lance.org/guide/object_store/) to match the Catalog.
+
+Create `documents.lance` directly under the warehouse so that Doris discovers it as `lance_fs_s3.default.documents`. Replace the bucket in both the Catalog and Python example. Use a new dataset location:
+
+```python
+import lance
+import pyarrow as pa
+
+vector_type = pa.list_(pa.float32(), 2)
+schema = pa.schema([
+    pa.field("id", pa.int64()),
+    pa.field("embeddings", pa.list_(
+        pa.field("item", vector_type, nullable=False)
+    )),
+])
+data = pa.Table.from_pylist([
+    {"id": 1, "embeddings": [[1.0, 0.0], [0.0, 1.0]]},
+    {"id": 2, "embeddings": [[1.0, 0.0]]},
+    {"id": 3, "embeddings": []},
+    {"id": 4, "embeddings": None},
+], schema=schema)
+lance.write_dataset(
+    data,
+    "s3://my-bucket/lance/documents.lance",
+    data_storage_version="2.1",
+)
+```
+
+The outer list allows each row to have a different number of subvectors. The inner `nullable=False` is required: a subvector itself cannot be null. Query the table with a two-dimensional JSON array:
+
+```sql
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_fs_s3.default.documents",
+    "column" = "embeddings",
+    "query_vector" = "[[1,0],[0,1]]",
+    "top_k" = "2",
+    "metric" = "l2",
+    "use_index" = "false"
+)
+ORDER BY _distance, id;
+```
+
+Expected result:
+
+| id | _distance |
+|---|---|
+| 1 | 0.0 |
+| 2 | 2.0 |
+
+Row 1 contains a perfect match for each query subvector. Row 2 matches the first query subvector with distance `0` and the second with squared L2 distance `2`. Empty and null outer lists do not rank. Adding `"offset" = "1"` and changing `"top_k" = "1"` returns only row 2. Adding `"filter" = "id > 1"` restricts candidate search to matching rows and also returns only row 2 for this dataset.
+
+#### Row-Level Scoring
+
+For query subvectors `Q` and a row's stored subvectors `V`:
+
+```text
+_distance = sum(q in Q, min(v in V, distance(q, v)))
+```
+
+| `metric` | Distance between two subvectors |
+|---|---|
+| `l2` (default) | Squared Euclidean distance |
+| `cosine` | `1 - cosine_similarity` |
+| `dot` or `dot_product` | `1 - dot_product`; the value can be negative |
+
+Smaller `_distance` is better. Each query subvector contributes once, and one stored subvector can match several query subvectors. Scores are summed, not averaged; repeating a query subvector repeats its contribution. `_distance` has Doris type `FLOAT`, including for Float64 inputs. `top_k` and `offset` count table rows, not subvectors. Rows tied at the Top-K boundary have no guaranteed membership or order; an outer `ORDER BY` only orders the returned rows.
+
+#### Types, Dimensions, and Null Values
+
+| Item | Requirement |
+|---|---|
+| Lance column | `list<fixed_size_list<T, D>>`, where `D > 0` and `T` is `float16`, `float32`, or `float64` |
+| Doris type | `ARRAY<ARRAY<FLOAT>>` for Float16/Float32; `ARRAY<ARRAY<DOUBLE>>` for Float64 |
+| Query shape | A non-empty JSON matrix; every inner array has exactly `D` elements. Even a single query subvector must be written as `[[...]]`. Ordinary single-vector columns still require `[...]`. |
+| Query values | Finite numbers representable by `T`. Empty matrices, unequal dimensions, nulls, nonnumeric elements, and out-of-range values are rejected. |
+| Stored values | Subvectors must be declared non-nullable and contain finite, non-null elements. The scoring path rejects actual null or non-finite elements when encountered; a nullable *element* schema flag alone is allowed. |
+| Empty or null rows | A null outer list or `[]` has no matching subvector and is excluded from results. |
+| Cosine zero norms | A zero-norm pair has undefined cosine distance and cannot match. A row is excluded if any query subvector has no defined match. A zero-norm query subvector therefore produces no results. |
+| Unsupported shapes and types | Outer `large_list` or `fixed_size_list`, variable-length inner lists, integer multi-vector elements, extension/dictionary encodings, and `hamming` multi-vector searches are not supported. |
+
+#### Parameter Limits
+
+Let `M` be the number of query subvectors, `K = top_k`, `O = offset`, and `R = refine_factor` (default `1` for multi-vector search).
+
+| Constraint | Limit |
+|---|---|
+| Query subvector count | `1 <= M <= 128` |
+| Result count and offset | `K > 0`, `O >= 0` |
+| Query candidate budget | `M × (K + O) <= 100000` |
+| Refinement candidate budget | `R × (K + O) <= 100000`, with `R > 0` |
+| Explicit `nprobes`, `ef`, or `refine_factor` | Positive 32-bit signed integer, at most `2147483647`; the candidate budgets further constrain `refine_factor` |
+
+Both candidate budgets apply independently, including with `use_index=false`. For example, `M=128, K=1000, O=0` is rejected because the query candidate budget is exceeded. `M=4, K=1000, O=0, R=10` satisfies both budgets. These limits bound candidate work; they do not guarantee a particular memory usage or query latency.
+
+#### Index Usage and Refinement
+
+The integrated Lance version supports multi-vector indexes with the **cosine** metric. To use an existing compatible index, such as a cosine `IVF_FLAT` or `IVF_PQ` index, set `"metric" = "cosine"` and leave `use_index=true`. Omitting `metric` selects `l2`; L2 and dot searches use Flat Search when no compatible index exists. Doris does not create indexes through this function. Use `SHOW INDEX` (Filesystem Catalog only) to inspect index metadata and `EXPLAIN` to check that `lanceSearchIndexSegments > 0`.
+
+With indexed search, candidate selection is approximate. Multi-vector candidates are **always refined against the original vectors**, including when `refine_factor` is omitted or set to `1`, so indexed and unindexed rows use the same row-level score. Increasing `refine_factor` expands the candidate pool, with additional vector reads and computation; it does not guarantee exhaustive recall. `nprobes` controls IVF probing and `ef` applies to HNSW indexes. Tune these only after measuring recall and latency. Rows appended after index creation are included through Flat Search.
+
+For exhaustive scoring of the selected rows, use `"use_index" = "false"`. Prefer the TVF `filter` to restrict candidates before search; an outer SQL `WHERE` can discard candidates without refilling a split's results. The filtering rules in the next section apply to both single-vector and multi-vector searches.
 
 ### Prefilter and Post-Filter
 

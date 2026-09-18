@@ -40,7 +40,7 @@ Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lan
 | 数据查询 | 支持列裁剪、并行扫描 Lance Fragment 和当前版本的快照一致性读取 |
 | 谓词下推 | 支持将部分静态标量谓词和 Join Runtime Filter 下推到 Lance 执行 |
 | 文件 TVF | 支持通过 `s3()` 和 `local()` 直接查询 Lance 数据集 |
-| 向量检索 | 使用物理 Lance Index Segment 作为并行 Split，对未覆盖的 Fragment 保留 Flat Search Split，并由 Doris 合并全局 Top-K |
+| 向量检索 | 支持单向量和多向量列，使用物理 Lance Index Segment 作为并行 Split，对未覆盖的 Fragment 保留 Flat Search Split，并由 Doris 合并全局 Top-K |
 | 全文检索 | 通过 `full_text_search()` 使用已有的 Lance FTS 倒排索引，支持 Match OR/AND 和 Phrase 查询，并由 Doris 合并全局 Top-K |
 | Lance Cache | BE 内共享索引、元数据缓存及本地磁盘数据缓存 |
 | TopN 两阶段读取 | 对向量和全文检索中可延迟的输出列默认开启，由 `enable_lance_lazy_materialization` 独立控制 |
@@ -50,7 +50,7 @@ Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lan
 
 ## Lance 版本与兼容性
 
-Doris BE 数据读取器使用 `lance-c v0.1.9` 加 Doris 补丁构建，补丁将其内置的 Lance Rust crates 升级到 `11.0.0`（commit `ab6b5bbe`）。Doris FE 使用 `org.lance:lance-core:11.0.0` 读取 Namespace 和数据集元数据，FE 与 BE 的 Lance 版本统一为 `11.0.0`。Dataset 必须同时满足 FE 元数据加载和 BE 数据读取的兼容性要求。这些实现版本与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
+Doris BE 数据读取器使用 `lance-c v0.1.9` 加 Doris 补丁构建，补丁包含多向量检索支持，并将其内置的 Lance Rust crates 升级到 `11.0.0`（commit `ab6b5bbe`）。Doris FE 使用 `org.lance:lance-core:11.0.0` 读取 Namespace 和数据集元数据，FE 与 BE 的 Lance 版本统一为 `11.0.0`。Dataset 必须同时满足 FE 元数据加载和 BE 数据读取的兼容性要求。这些实现版本与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
 
 当前读取器的文件格式兼容情况如下：
 
@@ -680,22 +680,22 @@ ORDER BY _distance ASC, user_id;
 | 参数 | 是否必需 | 默认值 | 说明 |
 |---|---|---|---|
 | `table` | 是 | - | 完整的三部分 `catalog.database.table` 名称。多级 Namespace 对应的数据库名包含 `.` 时，必须使用反引号引用数据库部分。该表必须属于 Lance Catalog，用户需要拥有该表的 `SELECT` 权限。 |
-| `column` | 是 | - | 向量列名。当前支持 `fixed_size_list<float16\|float32\|float64\|uint8\|int8>`。 |
-| `query_vector` | 是 | - | JSON 数字数组。维度必须与向量列一致，元素值必须能由向量元素类型表示。 |
+| `column` | 是 | - | 向量列名。支持单向量 `fixed_size_list<float16\|float32\|float64\|uint8\|int8>` 和多向量 `list<fixed_size_list<float16\|float32\|float64, D>>`。详见[多向量检索](#multi-vector-search)。 |
+| `query_vector` | 是 | - | 单向量列使用 JSON 数字数组，多向量列使用非空 JSON 矩阵。每个子向量的维度必须与列一致，元素必须是向量元素类型可表示的有限数值。 |
 | `top_k` | 否 | `10` | 跳过 `offset` 后返回的结果数，必须为正整数。 |
 | `offset` | 否 | `0` | 在向量检索内部跳过的最近邻数量，必须为非负整数。`top_k + offset` 不能超过无符号 32 位整数上限。 |
-| `metric` | 否 | `uint8` 为 `hamming`，其他支持类型为 `l2` | 距离类型：`l2`、`cosine`、`dot` 或 `hamming`。`dot_product` 是 `dot` 的别名。`uint8` 向量仅支持 `hamming`；其他当前支持的向量元素类型支持 `l2`、`cosine` 和 `dot`。Doris 选择向量索引时会把未设置的 `metric` 视为 `l2`，因此查询使用 `cosine` 或 `dot` 创建的索引时必须显式设置 `metric`。 |
+| `metric` | 否 | `l2` | 距离类型：`l2`、`cosine`、`dot` 或 `hamming`。`dot_product` 是 `dot` 的别名。`uint8` 向量仅支持 `hamming`；其他当前支持的向量元素类型支持 `l2`、`cosine` 和 `dot`。查询 `cosine`、`dot` 或 `hamming` 索引时必须显式设置 `metric`。不支持整数多向量列及多向量 `hamming` 检索。 |
 | `filter` | 否 | - | Lance SQL 条件，在生成候选向量之前执行，即 Prefilter。 |
 | `nprobes` | 否 | 最少 `1`，不限制最大值 | IVF 索引探测的分区数量，必须为正整数。不设置时从 1 个分区开始；使用 Prefilter 且候选不足时，Lance 可以继续探测更多分区。显式设置为 `N` 时，最少和最多探测数都会固定为 `N`。 |
-| `refine_factor` | 否 | 不启用精排 | 候选集精排倍数，必须为正整数。不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。**精排会读取这些候选的原始向量数据；`N` 越大，读取和计算的候选越多，可能显著增加 I/O 并降低查询性能。** 即使设置为 `1` 也会执行精排，因此与不设置不同。 |
+| `refine_factor` | 否 | 单向量不启用；多向量为 `1` | 候选集精排倍数，必须为正整数。对于单向量检索，不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。**精排会读取这些候选的原始向量数据；`N` 越大，读取和计算的候选越多，可能显著增加 I/O 并降低查询性能。** 对于单向量检索，设为 `1` 会执行精排，与不设置不同。多向量检索始终使用原始向量精排，默认倍数为 `1`。 |
 | `ef` | 否 | `floor(1.5 × (top_k + offset))` | HNSW 图索引搜索时保留的候选宽度，必须为正整数。如果同时设置了 `refine_factor`，默认值为 `floor(1.5 × (top_k + offset) × refine_factor)`。对非 HNSW 索引无效。 |
 | `use_index` | 否 | `true` | `true` 表示优先使用与向量列和距离类型兼容的 Lance 向量索引；没有可用索引时自动使用 Flat Search。`false` 表示禁用向量索引，对数据执行 Flat Search。 |
 
-以上默认值对应 Doris 当前集成的 Lance Scanner 行为。`metric` 未指定时，Doris 在选择向量索引时按 `l2` 处理，因此不会选中使用 `cosine` 或 `dot` 创建的索引。未选中索引或 `"use_index" = "false"` 时，`uint8` 向量使用 `hamming`，其他当前支持的向量元素类型使用 `l2`。
+不设置 `metric` 时，索引检索和 Flat Search 均使用 `l2`。`uint8` 列必须显式设置 `"metric" = "hamming"`，不支持默认的 `l2`。多向量检索还需要满足下文的[候选预算限制](#multi-vector-search)。
 
 ### 支持的向量索引类型
 
-当前内置 `lance-c v0.1.9` 明确支持以下 Lance 向量索引组合：
+对于单向量列，Doris 支持以下 Lance 向量索引组合。多向量的索引限制见[多向量检索](#multi-vector-search)。
 
 | 索引类型 | 说明 | 主要查询参数 |
 |---|---|---|
@@ -710,7 +710,7 @@ ORDER BY _distance ASC, user_id;
 
 ### 支持的向量元素类型和距离类型
 
-向量索引支持的距离类型取决于向量元素类型。请选择下表中支持的组合；不支持的组合无法使用向量索引。
+对于单向量列，向量索引支持的距离类型取决于向量元素类型。请选择下表中支持的组合；不支持的组合无法使用向量索引。
 
 | 向量元素类型 | `l2` | `cosine` | `dot` | `hamming` |
 |---|---|---|---|---|
@@ -728,13 +728,122 @@ ORDER BY _distance ASC, user_id;
 
 #### 查询距离类型必须与索引一致
 
-查询指定的 `metric` 必须与索引创建时使用的距离类型一致，否则 Doris 会改用 Flat Search。结果仍然正确，但由于需要直接扫描向量，性能通常更低。
+查询指定的 `metric` 必须与索引创建时使用的距离类型一致；否则，如果列类型支持该查询距离，Doris 会改用 Flat Search。结果仍然正确，但由于需要直接扫描向量，性能通常更低。
 
-不设置 `metric` 时，Doris 在选择索引时按 `l2` 处理。因此，使用 `cosine`、`dot` 或 `hamming` 索引时必须显式设置 `metric`。例如，查询 `uint8` 向量索引时必须设置 `"metric" = "hamming"`，否则不会使用索引。
+不设置 `metric` 时，Doris 在选择索引时按 `l2` 处理。因此，使用 `cosine`、`dot` 或 `hamming` 索引时必须显式设置 `metric`。例如，查询 `uint8` 向量索引时必须设置 `"metric" = "hamming"`，否则查询使用不支持的 `l2` 距离并报错。
 
 可以通过 `EXPLAIN` 确认是否使用索引：`lanceSearchIndexSegments` 大于 `0` 表示使用了索引，等于 `0` 表示使用 Flat Search。
 
 Doris 对每个向量列只考虑一个向量索引。建议每个向量列最多创建一个向量索引，避免多个不同距离类型的索引导致选择不明确。
+
+### 多向量检索 {#multi-vector-search}
+
+多向量列在每条表记录中保存多个子向量，例如一篇文档的多个 token embedding。一个查询矩阵产生一组按表记录排序的结果，不是批量执行多个独立向量查询，也不是同时检索多个列。
+
+#### 准备数据并执行查询
+
+使用上文的 AWS S3 Filesystem Catalog 示例，Catalog 名称为 `lance_fs_s3`，warehouse 为 `s3://my-bucket/lance`。在写入环境中安装 Lance Python SDK（`pylance`）和 `pyarrow`，配置 S3 凭证和 region，例如设置 `AWS_ACCESS_KEY_ID`、`AWS_SECRET_ACCESS_KEY` 和 `AWS_DEFAULT_REGION`。写入端需要写权限，Doris 需要同一位置的读权限。使用自定义 endpoint 或其他认证方式时，按 Catalog 配置对应的 SDK [对象存储选项](https://lance.org/guide/object_store/)。
+
+将 `documents.lance` 直接写在 warehouse 下，Doris 会将其发现为 `lance_fs_s3.default.documents`。请同时替换 Catalog 和 Python 示例中的 bucket，并使用尚不存在的数据集路径：
+
+```python
+import lance
+import pyarrow as pa
+
+vector_type = pa.list_(pa.float32(), 2)
+schema = pa.schema([
+    pa.field("id", pa.int64()),
+    pa.field("embeddings", pa.list_(
+        pa.field("item", vector_type, nullable=False)
+    )),
+])
+data = pa.Table.from_pylist([
+    {"id": 1, "embeddings": [[1.0, 0.0], [0.0, 1.0]]},
+    {"id": 2, "embeddings": [[1.0, 0.0]]},
+    {"id": 3, "embeddings": []},
+    {"id": 4, "embeddings": None},
+], schema=schema)
+lance.write_dataset(
+    data,
+    "s3://my-bucket/lance/documents.lance",
+    data_storage_version="2.1",
+)
+```
+
+外层 list 允许每条记录保存不同数量的子向量。内层的 `nullable=False` 是必需的，表示子向量本身不能为 null。使用二维 JSON 数组查询：
+
+```sql
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_fs_s3.default.documents",
+    "column" = "embeddings",
+    "query_vector" = "[[1,0],[0,1]]",
+    "top_k" = "2",
+    "metric" = "l2",
+    "use_index" = "false"
+)
+ORDER BY _distance, id;
+```
+
+预期结果：
+
+| id | _distance |
+|---|---|
+| 1 | 0.0 |
+| 2 | 2.0 |
+
+记录 1 为每个查询子向量都提供了完全匹配。记录 2 与第一个查询子向量的距离为 `0`，与第二个的平方 L2 距离为 `2`。外层为空数组或 null 的记录不参与排名。增加 `"offset" = "1"` 并将 `"top_k" = "1"` 后，仅返回记录 2。增加 `"filter" = "id > 1"` 会先限制候选检索的记录范围，对此数据集也仅返回记录 2。
+
+#### 行级评分
+
+设查询子向量集合为 `Q`，某条记录的子向量集合为 `V`：
+
+```text
+_distance = sum(q in Q, min(v in V, distance(q, v)))
+```
+
+| `metric` | 两个子向量之间的距离 |
+|---|---|
+| `l2`（默认） | 欧氏距离的平方 |
+| `cosine` | `1 - cosine_similarity` |
+| `dot` 或 `dot_product` | `1 - dot_product`，结果可以为负数 |
+
+`_distance` 越小越好。每个查询子向量贡献一次评分，同一个存储子向量可以匹配多个查询子向量。评分取总和而非平均值，重复查询子向量会重复计算其贡献。`_distance` 的 Doris 类型始终为 `FLOAT`，包括输入为 Float64 的情况。`top_k` 和 `offset` 按表记录计数，不按子向量计数。Top-K 边界上同分记录的入选情况和顺序不保证确定；外层 `ORDER BY` 只能排序已经返回的记录。
+
+#### 类型、维度与空值
+
+| 项目 | 要求 |
+|---|---|
+| Lance 列类型 | `list<fixed_size_list<T, D>>`，其中 `D > 0`，`T` 为 `float16`、`float32` 或 `float64` |
+| Doris 类型 | Float16/Float32 对应 `ARRAY<ARRAY<FLOAT>>`，Float64 对应 `ARRAY<ARRAY<DOUBLE>>` |
+| 查询形状 | 非空 JSON 矩阵，每个内层数组必须恰好包含 `D` 个元素。即使只有一个查询子向量，也必须写成 `[[...]]`；普通单向量列仍要求使用 `[...]`。 |
+| 查询元素 | 必须是 `T` 可表示的有限数值。空矩阵、维度不一致、null、非数值元素及超出类型范围的值会被拒绝。 |
+| 存储元素 | 子向量必须声明为不可空，内部元素必须是非 null 的有限数值。评分路径遇到实际的 null 或非有限元素时会报错；仅有元素级的 nullable schema 标记是允许的。 |
+| 空记录 | 外层为 null 或 `[]` 时没有可匹配的子向量，该记录不返回。 |
+| Cosine 零范数 | 零范数向量对的 cosine 距离无定义，不能形成匹配。如果某个查询子向量在一条记录中找不到任何有效匹配，该记录被排除。因此，查询中包含零范数子向量时结果为空。 |
+| 不支持的形状和类型 | 不支持外层为 `large_list` 或 `fixed_size_list`、内层为变长 list、整数多向量元素、extension/dictionary 编码，以及多向量 `hamming` 检索。 |
+
+#### 参数限制
+
+设 `M` 为查询子向量数量，`K = top_k`，`O = offset`，`R = refine_factor`（多向量检索默认为 `1`）。
+
+| 约束 | 限制 |
+|---|---|
+| 查询子向量数量 | `1 <= M <= 128` |
+| 返回记录数与偏移量 | `K > 0`，`O >= 0` |
+| 查询候选预算 | `M × (K + O) <= 100000` |
+| 精排候选预算 | `R × (K + O) <= 100000`，且 `R > 0` |
+| 显式设置的 `nprobes`、`ef` 或 `refine_factor` | 必须为正的 32 位有符号整数，最大 `2147483647`；`refine_factor` 还受候选预算约束 |
+
+两个候选预算分别校验，包括 `use_index=false` 的情况。例如，`M=128, K=1000, O=0` 超过查询候选预算，会被拒绝；`M=4, K=1000, O=0, R=10` 同时满足两个预算。这些限制用于约束候选处理规模，不代表对内存使用量或查询耗时的保证。
+
+#### 索引使用与精排
+
+当前集成的 Lance 版本支持使用 **cosine** 距离的多向量索引。要使用已有的兼容索引，例如 cosine `IVF_FLAT` 或 `IVF_PQ`，请设置 `"metric" = "cosine"` 并保持 `use_index=true`。不设置 `metric` 时使用 `l2`；L2 和 dot 查询没有兼容索引时执行 Flat Search。Doris 不通过此函数创建索引。可以用 `SHOW INDEX`（仅 Filesystem Catalog）查看索引元数据，并通过 `EXPLAIN` 确认 `lanceSearchIndexSegments > 0`。
+
+索引检索的候选选择是近似的。多向量候选**始终使用原始向量精排**，包括不设置 `refine_factor` 或将其设为 `1` 的情况，从而使有索引与无索引的记录使用相同的行级评分。增大 `refine_factor` 会扩大候选集，增加原始向量读取和计算，但不保证完整召回。`nprobes` 控制 IVF 探测范围，`ef` 对 HNSW 索引生效；调参时应同时测量召回率与耗时。索引创建后追加的记录会通过 Flat Search 纳入检索。
+
+如需对选定记录进行穷举评分，使用 `"use_index" = "false"`。优先使用 TVF 的 `filter` 在检索前缩小候选范围；外层 SQL `WHERE` 会丢弃候选，但不会补齐对应 split 的结果。下一节的过滤规则同时适用于单向量和多向量查询。
 
 ### Prefilter 和 Post-filter
 
