@@ -1,0 +1,15 @@
+# Apache Doris Full Documentation Index
+
+This file is intentionally small. The Apache Doris website is too large for a useful single `llms-full-docs.txt` dump, so AI retrieval should use topic-scoped entry points:
+
+- Overview and Getting Started: https://doris.apache.org/docs/4.x/gettingStarted/what-is-apache-doris
+- SQL Manual: https://doris.apache.org/docs/4.x/sql-manual/basic-element/object-identifiers
+- Data Load: https://doris.apache.org/docs/4.x/data-operate/import/load-manual
+- Lakehouse: https://doris.apache.org/docs/4.x/lakehouse/lakehouse-overview
+- AI: https://doris.apache.org/docs/4.x/ai/ai-overview
+- Administration: https://doris.apache.org/docs/4.x/admin-manual/data-admin/overview
+- Release Notes: https://doris.apache.org/releases/all-release
+- Community: https://doris.apache.org/community/join-community
+- Sitemap: https://doris.apache.org/sitemap.xml
+
+Future topic index files should stay small enough for retrieval pipelines to refresh independently, for example `/llms-sql.txt`, `/llms-load.txt`, and `/llms-admin.txt`.
