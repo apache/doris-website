@@ -54,8 +54,8 @@ const GUIDE_STROKE = {
 const GUIDES = [
     {
         to: VERSIONING_URL,
-        title: 'Release versioning',
-        desc: 'Apache Doris maintains the two newest minor branches, labelled Latest and Stable.',
+        title: 'Which version to choose',
+        desc: 'What X.Y.Z means, how Latest differs from Stable, and which binary fits your CPU.',
         icon: (
             <svg {...GUIDE_ICON}>
                 <circle cx="5" cy="4" r="1.8" {...GUIDE_STROKE} />
