@@ -21,7 +21,7 @@ featureCard:
     - coming-soon
 ---
 
-> **TL;DR** Apache Doris Table Stream is the upcoming public API for reading row-level changes (insert, update, delete) out of a Doris table, the way you read a MySQL binlog. The plumbing is already in the codebase: a row-format binlog, a `STREAM` object that pins offsets per partition, and consumption metadata. The feature is not GA yet, and the default `binlog.ttl_seconds` is 86,400 seconds (one day). For general CDC out of Doris, use the [Flink Doris Connector](../connection-integration/data-integration/flink-doris-connector). **Status: Coming Soon (Preview).**
+> **TL;DR** Apache Doris Table Stream is the upcoming public API for reading row-level changes (insert, update, delete) out of a Doris table, the way you read a MySQL binlog. The plumbing is already in the codebase: a row-format binlog, a `STREAM` object that pins offsets per partition, and consumption metadata. The feature is not GA yet, and the default `binlog.ttl_seconds` is 86,400 seconds (one day). For general CDC out of Doris, use the [Flink Doris Connector](../connection-integration/data-integration/flink-doris-connector/incremental-read). **Status: Coming Soon (Preview).**
 
 ![Apache Doris Binlog / Table Stream: A row-level change feed Doris tables will expose to downstream consumers.](/images/next/key-features/binlog-table-stream.jpg)
 :::caution Status: Coming Soon

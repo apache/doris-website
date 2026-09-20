@@ -1,9 +1,10 @@
-import React, { JSX, useState, useEffect } from 'react';
+import React, { JSX, useState, useEffect, useRef } from 'react';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { getLocalePrefix } from '@site/src/utils/locale';
 import { STAR_COUNT } from '@site/src/constant/github.data';
 import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
+import { DorisLogoHorizontal } from '@site/src/components/Icons/doris-logo-horizontal';
 import { BrandThemeSwitcher } from '@site/src/components/brand-theme/BrandThemeSwitcher';
 import './NavbarNext.scss';
 
@@ -65,7 +66,6 @@ function buildNavItems(
             items: [
                 { label: 'Release Notes', href: releasesHref },
                 { label: 'Blogs', href: '/blog' },
-                { label: 'News and Events', href: '/events' },
                 { label: 'Course', href: '/course' },
                 { label: 'Profile Analysis', href: '/profile-analysis' },
             ],
@@ -106,6 +106,28 @@ function GitHubIcon(): JSX.Element {
     );
 }
 
+// Robot-head glyph shown instead of the sparkle on phones, where the label
+// shrinks to "Ask" and the icon has to carry the "AI" meaning on its own.
+function AiIcon(): JSX.Element {
+    return (
+        <svg
+            className="navbar-next__ask-ai-icon navbar-next__ask-ai-icon--compact"
+            width="15"
+            height="15"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+        >
+            <path d="M8 2v2.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="8" cy="1.5" r="1.1" fill="currentColor" />
+            <rect x="2.75" y="4.5" width="10.5" height="8.5" rx="2.25" stroke="currentColor" strokeWidth="1.5" />
+            <circle cx="6" cy="8.75" r="1.15" fill="currentColor" />
+            <circle cx="10" cy="8.75" r="1.15" fill="currentColor" />
+            <path d="M.75 7.75v2.5M15.25 7.75v2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+    );
+}
+
 function MenuIcon({ open }: { open: boolean }): JSX.Element {
     return (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -123,6 +145,7 @@ export function NavbarNext(): JSX.Element {
         i18n: { currentLocale, defaultLocale },
     } = useDocusaurusContext();
     const [mobileOpen, setMobileOpen] = useState(false);
+    const navbarRef = useRef<HTMLElement>(null);
     const localePrefix = getLocalePrefix(currentLocale, defaultLocale);
     const devDocsHref = `${localePrefix}/docs/dev/getting-started/what-is-apache-doris`;
     const stableDocsHref = `${localePrefix}/docs/4.x/getting-started/what-is-apache-doris`;
@@ -157,14 +180,37 @@ export function NavbarNext(): JSX.Element {
         return () => window.removeEventListener('keydown', onKeyDown);
     }, [mobileOpen]);
 
+    useEffect(() => {
+        const navbar = navbarRef.current;
+        if (!navbar) return undefined;
+
+        const root = document.documentElement;
+        const updateNavbarHeight = () => {
+            root.style.setProperty('--navbar-next-height', `${navbar.getBoundingClientRect().height}px`);
+        };
+        updateNavbarHeight();
+
+        const resizeObserver = typeof ResizeObserver !== 'undefined'
+            ? new ResizeObserver(updateNavbarHeight)
+            : undefined;
+        resizeObserver?.observe(navbar);
+        window.addEventListener('resize', updateNavbarHeight);
+
+        return () => {
+            resizeObserver?.disconnect();
+            window.removeEventListener('resize', updateNavbarHeight);
+            root.style.removeProperty('--navbar-next-height');
+        };
+    }, []);
+
     return (
-        <nav className={`navbar navbar--fixed-top navbar-next${mobileOpen ? ' navbar-next--mobile-open' : ''}`}>
+        <nav
+            ref={navbarRef}
+            className={`navbar navbar--fixed-top navbar-next${mobileOpen ? ' navbar-next--mobile-open' : ''}`}
+        >
             <div className="navbar-next__inner">
                 <Link to={homeHref} className="navbar-next__logo" aria-label="Apache Doris">
-                    <img
-                        src="/images/brand-assets/doris-logo-horizontal-white.svg"
-                        alt=""
-                    />
+                    <DorisLogoHorizontal className="navbar-next__logo-mark" />
                 </Link>
 
                 <div className="navbar-next__nav">
@@ -211,9 +257,30 @@ export function NavbarNext(): JSX.Element {
                         data-kapa-trigger
                         suppressHydrationWarning
                     >
-                        <StarGreenIcon />
-                        <span data-kapa-label aria-live="polite" suppressHydrationWarning>
+                        <span className="navbar-next__ask-ai-icon navbar-next__ask-ai-icon--full">
+                            <StarGreenIcon />
+                        </span>
+                        <AiIcon />
+                        {/* static/js/custom-script.js swaps every [data-kapa-label] to a
+                            loading/error text; the compact copy declares short variants so
+                            the one-row phone navbar never has to fit "Loading AI…". */}
+                        <span
+                            data-kapa-label
+                            className="navbar-next__ask-ai-label navbar-next__ask-ai-label--full"
+                            aria-live="polite"
+                            suppressHydrationWarning
+                        >
                             Ask Me
+                        </span>
+                        <span
+                            data-kapa-label
+                            data-kapa-loading-label="…"
+                            data-kapa-error-label="N/A"
+                            className="navbar-next__ask-ai-label navbar-next__ask-ai-label--compact"
+                            aria-live="polite"
+                            suppressHydrationWarning
+                        >
+                            Ask
                         </span>
                     </button>
                     <a
@@ -224,7 +291,7 @@ export function NavbarNext(): JSX.Element {
                         aria-label={`Star Apache Doris on GitHub (${STAR_DISPLAY} stars)`}
                     >
                         <StarIcon />
-                        <span>Star</span>
+                        <span className="navbar-next__star-text">Star</span>
                         <span className="navbar-next__star-divider" />
                         <span className="navbar-next__star-count">{STAR_DISPLAY}</span>
                         <span className="navbar-next__star-divider" />
@@ -285,24 +352,19 @@ export function NavbarNext(): JSX.Element {
 
                 <BrandThemeSwitcher mobile />
 
+                {/* Phones drop the Summit banner from the bar to keep it one row; it
+                    stays reachable from the menu instead. */}
                 <div className="navbar-next__mobile-actions">
                     <a
-                        href={`https://github.com/${GITHUB_REPO}`}
+                        href={DORIS_SUMMIT_URL}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="navbar-next__star-link"
-                        aria-label={`Star Apache Doris on GitHub (${STAR_DISPLAY} stars)`}
+                        className="navbar-next__summit"
+                        aria-label="Visit Doris Summit 2026 (opens in a new tab)"
+                        onClick={() => setMobileOpen(false)}
                     >
-                        <StarIcon />
-                        <span>Star</span>
-                        <span className="navbar-next__star-divider" />
-                        <span className="navbar-next__star-count">{STAR_DISPLAY}</span>
-                        <span className="navbar-next__star-divider" />
-                        <GitHubIcon />
+                        <span>Doris Summit 26</span>
                     </a>
-                    <Link to="/download" className="navbar-next__cta" onClick={() => setMobileOpen(false)}>
-                        DOWNLOAD
-                    </Link>
                 </div>
             </div>
         </nav>

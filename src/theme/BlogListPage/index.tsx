@@ -1,34 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { PageMetadata, HtmlClassNameProvider, ThemeClassNames } from '@docusaurus/theme-common';
+import { translate } from '@docusaurus/Translate';
 import BlogLayout from '@theme/BlogLayout';
 import BlogListItem from '../BlogListItem';
-import useIsBrowser from '@docusaurus/useIsBrowser';
 import BlogListFooter from '../BlogFooter';
-import BlogListPaginator from '@theme/BlogListPaginator';
-import SearchMetadata from '@theme/SearchMetadata';
 import HeadBlogs from '@site/src/components/blogs/components/head-blogs';
 import PageHeader from '@site/src/components/PageHeader';
 import type { Props } from '@theme/BlogListPage';
-import BlogPostItems from '@theme/BlogPostItems';
 import { useHistory, useLocation } from '@docusaurus/router';
+import { filterBlogs } from './blog-search.logic';
+import styles from './styles.module.scss';
 // import BlogListPageStructuredData from '@theme/BlogListPage/StructuredData';
 const allText = 'All';
+const PAGE_SIZE = 9;
 const HIDDEN_BLOG_TABS = new Set(['Release Notes', 'Top News']);
 const FIXED_BLOG_TABS = ['Glossary'];
 
-function getBlogCategories(props) {
-    const { siteConfig } = useDocusaurusContext();
-    const allText = 'All';
-    const { items } = props;
+function getBlogCategories(items) {
     const allCategory = { label: allText, values: [] };
     const categories = [allCategory];
 
-    useEffect(() => {
-        sessionStorage.setItem('tag', allText);
-    }, []);
     items.forEach(({ content: BlogPostContent }) => {
         const { frontMatter } = BlogPostContent;
         const tags = frontMatter.tags || [];
@@ -93,95 +87,158 @@ function BlogListPageMetadata(props) {
     );
 }
 function BlogListPageContent(props) {
-    const { metadata, items, sidebar } = props;
-    const isBrowser = useIsBrowser();
+    const { items, sidebar } = props;
     const [blogs, setBlogs] = useState([]);
-    const blogCategories = getBlogCategories(props);
+    const blogCategories = useMemo(() => getBlogCategories(items), [items]);
     const ALL_BLOG = blogCategories.find(item => item.label === allText).values;
-    
-    const { siteConfig } = useDocusaurusContext();
-    const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
-    const [active, setActive] = useState(() => {
-        const tag = isBrowser ? sessionStorage.getItem('tag') : allText;
-        return tag || allText;
-    });
-    const [pageSize, setPageSize] = useState<number>(9);
-    let [pageNumber, setPageNumber] = useState<number>(1);
+
+    const [active, setActive] = useState(allText);
+    const [searchQuery, setSearchQuery] = useState('');
     const [currentBlogs, setCurrentBlogs] = useState([]);
-    const [currentPage, setCurrentPage] = useState<number>(0);
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const location = useLocation();
     const history = useHistory();
 
     const changeCategory = category => {
-        history.push(
-            `${location.pathname}?currentPage=1&currentCategory=${category ? category : ''}#blog`,
-            location.state,
-        );
+        const params = new URLSearchParams(location.search);
+        params.set('currentPage', '1');
+        params.set('currentCategory', category || allText);
+        history.push(`${location.pathname}?${params.toString()}#blog`, location.state);
     };
-    useEffect(() => {
-        let currentPageNumber = 1;
-        let currentCategoryName = allText;
-        if (location.search && location.search.split('?').length > 0) {
-            const params = location.search.split('?')[1].split('&');
-            if (params) {
-                params.map(e => {
-                    const [key, value] = e.split('=');
-                    if (key === 'currentPage') {
-                        if (value) currentPageNumber = +value;
-                    } else {
-                        if (value) currentCategoryName = decodeURI(value);
-                    }
-                });
-            }
-        }
 
-        setActive(currentCategoryName);
-        setCurrentPage(currentPageNumber);
+    const changeSearchQuery = query => {
+        setSearchQuery(query);
+        const params = new URLSearchParams(location.search);
+        params.set('currentPage', '1');
+        if (query) {
+            params.set('q', query);
+        } else {
+            params.delete('q');
+        }
+        history.replace(`${location.pathname}?${params.toString()}#blog`, location.state);
+    };
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const requestedPage = Number(params.get('currentPage'));
+        const currentPageNumber = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+        const currentCategoryName = params.get('currentCategory') || allText;
+        const currentSearchQuery = params.get('q') || '';
 
         let currentCategory = blogCategories.find(item => item.label === currentCategoryName);
         if (!currentCategory) {
             currentCategory = blogCategories.find(item => item.label === allText);
         }
 
-        setBlogs(currentCategory.values);
-        setCurrentBlogs(currentCategory.values.slice((currentPageNumber - 1) * pageSize, currentPageNumber * pageSize));
-    }, [location.search]);
+        const filteredBlogs = filterBlogs(currentCategory.values, currentSearchQuery);
+        const lastPage = Math.max(1, Math.ceil(filteredBlogs.length / PAGE_SIZE));
+        const normalizedPage = Math.min(currentPageNumber, lastPage);
 
-    useEffect(() => {
-        changeCategory(active);
-        isBrowser && sessionStorage.setItem('tag', active);
-    }, [active]);
+        setActive(currentCategory.label);
+        setSearchQuery(currentSearchQuery);
+        setCurrentPage(normalizedPage);
+        setBlogs(filteredBlogs);
+        setCurrentBlogs(filteredBlogs.slice((normalizedPage - 1) * PAGE_SIZE, normalizedPage * PAGE_SIZE));
+    }, [blogCategories, location.search]);
+
+    const searchLabel = translate({
+        id: 'blog.search.label',
+        message: 'Search blogs',
+        description: 'Accessible label for the search field on the blog list page',
+    });
 
     return (
         <BlogLayout sidebar={sidebar} pageType="blogList" className="lg:max-w-7xl">
             <PageHeader title="Blog" className="bg-white" {...props} />
             <HeadBlogs blogs={ALL_BLOG} />
             <div id="blog" className="flex flex-col lg:max-w-7xl scroll-mt-24">
-                <ul className="scrollbar-none w-[100%] mt-6 custom-scrollbar m-auto flex gap-3 overflow-auto text-[#4C576C] lg:mt-[5.5rem]  lg:justify-center lg:gap-6">
+                <section className={styles.searchSection} aria-label={searchLabel}>
+                    <label className={styles.visuallyHidden} htmlFor="blog-search-input">
+                        {searchLabel}
+                    </label>
+                    <div className={styles.searchControl}>
+                        <svg
+                            className={styles.searchIcon}
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                        >
+                            <circle cx="11" cy="11" r="7" />
+                            <path d="m20 20-4-4" />
+                        </svg>
+                        <input
+                            id="blog-search-input"
+                            className={styles.searchInput}
+                            type="search"
+                            value={searchQuery}
+                            onChange={event => changeSearchQuery(event.target.value)}
+                            placeholder={translate({
+                                id: 'blog.search.placeholder',
+                                message: 'Search by title, summary, tag, or author',
+                            })}
+                            autoComplete="off"
+                        />
+                        {searchQuery && (
+                            <button
+                                className={styles.clearButton}
+                                type="button"
+                                onClick={() => changeSearchQuery('')}
+                            >
+                                {translate({ id: 'blog.search.clear', message: 'Clear' })}
+                            </button>
+                        )}
+                    </div>
+                    {searchQuery.trim() && (
+                        <p className={styles.resultCount} aria-live="polite">
+                            {translate(
+                                {
+                                    id: 'blog.search.resultCount',
+                                    message: '{count} blog posts found',
+                                },
+                                { count: blogs.length },
+                            )}
+                        </p>
+                    )}
+                </section>
+                <ul className="scrollbar-none w-[100%] mt-6 custom-scrollbar m-auto flex gap-3 overflow-auto text-[#4C576C] lg:justify-center lg:gap-6">
                     {blogCategories.map((item: any, index) => (
-                        <li className=" py-px" key={index} onClick={() => changeCategory(item.label)}>
-                            <span
+                        <li className="py-px" key={index}>
+                            <button
+                                type="button"
+                                onClick={() => changeCategory(item.label)}
+                                aria-pressed={active === item.label}
                                 className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm  shadow-[0px_1px_4px_0px_rgba(0,89,68,0.10)] hover:bg-primary hover:text-white lg:px-6 lg:py-3 lg:text-base ${
                                     active === item.label && 'bg-primary text-white'
                                 }`}
                             >
                                 {item.label}
-                            </span>
+                            </button>
                         </li>
                     ))}
                 </ul>
                 <ul className="mt-6 grid gap-6 lg:mt-10 lg:grid-cols-3 m-auto">
-                    {currentBlogs.map((BlogPostContent, i) => (
-                        <BlogListItem
-                            key={BlogPostContent.metadata.permalink + i}
-                            frontMatter={BlogPostContent.frontMatter}
-                            assets={BlogPostContent.assets}
-                            metadata={BlogPostContent.metadata}
-                            truncated={BlogPostContent.metadata.truncated}
-                        >
-                            <BlogPostContent />
-                        </BlogListItem>
-                    ))}
+                    {currentBlogs.length > 0 ? (
+                        currentBlogs.map((BlogPostContent, i) => (
+                            <BlogListItem
+                                key={BlogPostContent.metadata.permalink + i}
+                                frontMatter={BlogPostContent.frontMatter}
+                                assets={BlogPostContent.assets}
+                                metadata={BlogPostContent.metadata}
+                                truncated={BlogPostContent.metadata.truncated}
+                            >
+                                <BlogPostContent />
+                            </BlogListItem>
+                        ))
+                    ) : (
+                        <li className={styles.emptyState}>
+                            {translate({
+                                id: 'blog.search.noResults',
+                                message: 'No blog posts match this search and category.',
+                            })}
+                        </li>
+                    )}
                 </ul>
                 <BlogListFooter total={blogs.length} currentPage={currentPage} currentCategory={active} />
             </div>

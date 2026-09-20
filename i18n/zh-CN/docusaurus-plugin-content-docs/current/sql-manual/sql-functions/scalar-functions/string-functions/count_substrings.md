@@ -32,6 +32,13 @@ COUNT_SUBSTRINGS(<str>, <pattern>[, <start_pos>])
 - 如果 pattern 为空字符串，返回 0
 - 如果 str 为空字符串，返回 0
 - 如果 start_pos 小于等于0或超出字符串长度范围，返回 0
+- 如果 pattern 的长度大于 str（或从 start_pos 开始的剩余部分）的长度，返回 0
+
+:::caution 版本行为变更（4.1.4）
+
+4.1.4 版本修复了字符串尾部的"越界匹配"问题：当剩余字符数已经不足以容纳一个完整的 pattern 时，旧版本可能仍然多计一次。例如 `count_substrings('ab', 'abc')` 旧版本可能返回 `1`，修复后正确返回 `0`；`count_substrings('ccc', 'cc', 3)` 修复后返回 `0`。
+
+:::
 
 ## 示例
 

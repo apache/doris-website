@@ -43,6 +43,15 @@ JOBS(
     | FailedTaskCount    | Number of failed tasks     |
     | CanceledTaskCount  | Number of canceled tasks   |
     | Comment            | Job comment                |
+    | Properties         | Job properties. Only jobs whose `ExecuteType = STREAMING` have a value |
+    | CurrentOffset      | Offset that the job has finished processing. Only jobs whose `ExecuteType = STREAMING` have a value |
+    | EndOffset          | Largest offset the job has fetched from the data source. Only jobs whose `ExecuteType = STREAMING` have a value |
+    | LoadStatistic      | Load statistics of the job |
+    | ErrorMsg           | Error message of the job execution |
+    | JobRuntimeMsg      | Runtime message of the job |
+    | LagBytes           | Backlog in bytes of the source-side log (such as MySQL binlog or PostgreSQL WAL). `-1` means it is currently unavailable, for example for an S3 data source or during the full snapshot phase.<br/>**Since 4.1.4**, this column is renamed from `Lag` (in seconds) to `LagBytes` (in bytes) |
+    | LastSourceEventTimestamp | Timestamp (Unix seconds) of the latest source-side event recorded in the offset the job has committed. Empty means unavailable. **Added in 4.1.4** |
+    | LastTaskSuccessTime | Time when a task last completed successfully |
 
 
 - **`jobs("type"="mv")`** MV type job return value

@@ -63,4 +63,10 @@ The list of data types supported by Apache Doris is as follows:
 | [IPv4](../sql-manual/basic-element/sql-data-types/ip/IPV4)            |   4 bytes  |  Stores an IPv4 address as 4 bytes of binary data, used together with the `ipv4_*` family of functions.         |
 | [IPv6](../sql-manual/basic-element/sql-data-types/ip/IPV6)            |   16 bytes  |  Stores an IPv6 address as 16 bytes of binary data, used together with the `ipv6_*` family of functions.      |
 
+### [UUID](../sql-manual/basic-element/sql-data-types/uuid.md)
+
+| Type Name | Storage Size (Bytes) | Description |
+| --- | --- | --- |
+| [UUID](../sql-manual/basic-element/sql-data-types/uuid.md) | 16 | Native 128-bit identifier, displayed as lowercase canonical text. |
+
 You can also view all data types supported by Apache Doris through the `SHOW DATA TYPES;` statement.

@@ -102,7 +102,7 @@ Doris 支持的所有外表均可用于创建物化视图。但目前**仅 Hive 
 
 ### Q11：物化视图适合近实时场景吗？
 
-不太适合。物化视图刷新的最小单位是分区，数据量较大时会占用较多资源，且实时性不够。建议改用同步物化视图或其他手段。
+异步物化视图不提供实时一致性。普通分区增量刷新的最小计算单位是分区；从 Doris 5.0.0 开始，[物化视图增量维护（IVM）](incremental-materialized-view) 可以只处理两次刷新之间的行级变化，降低高频小批量变更的计算成本，但数据新鲜度仍取决于触发、排队和刷新耗时。要求与基表事务同步时，请使用同步物化视图。
 
 ### Q12：构建分区物化视图报错
 
@@ -297,6 +297,14 @@ and l_suppkey = ps_suppkey;
 ```sql
 ALTER MATERIALIZED VIEW partition_mv set("excluded_trigger_tables"="lineitem,partsupp");
 ```
+
+### Q16：IVM 和分区增量刷新有什么区别？
+
+IVM 对应 `INCREMENTAL`，只计算基表两次刷新之间的行级变化；分区增量刷新对应 `PARTITIONS`，会重新计算受影响的整个物化视图分区。变化行数远小于受影响分区时，IVM 通常能减少计算量。完整对比见 [物化视图增量维护（IVM）](incremental-materialized-view#与分区增量刷新的区别)。
+
+### Q17：IVM 为什么回退到完整刷新？
+
+`INCREMENTAL FALLBACK` 和 `AUTO` 会在增量结果无法安全计算时回退。例如，删除值可能改变 `MIN` 或 `MAX`，删除影响 Bitmap 聚合，Row Binlog 连续性被破坏，或者增量计划布局发生变化。通过 `tasks("type"="mv")` 的 `IvmFallbackReason` 查看稳定的回退原因，详见 [刷新和回退](incremental-materialized-view#刷新和回退)。
 
 ## 查询与透明改写
 

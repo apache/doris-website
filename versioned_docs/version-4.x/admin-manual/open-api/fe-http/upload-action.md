@@ -8,6 +8,16 @@
 
 # Upload Action
 
+:::caution Behavior change (4.1.4)
+
+For security reasons, all Upload Action HTTP endpoints (`/api/<namespace>/<db>/<tbl>/upload`, `/api/<namespace>/<db>/<tbl>/upload/load`, `/api/<namespace>/<db>/<tbl>/upload/delete`) have been removed starting from version **4.1.4**, and calling them returns 404. The FE configuration item `http_load_submitter_max_worker_threads` is removed as well.
+
+To load small files, use [Stream Load](../../../data-operate/import/import-way/stream-load-manual) or [INSERT INTO ... SELECT ... FROM S3/HDFS/LOCAL TVF](../../../sql-manual/sql-functions/table-valued-functions/s3) instead.
+
+This document keeps the endpoint reference for versions earlier than 4.1.4.
+
+:::
+
 Upload Action currently mainly serves the front-end page of FE, and is used for users to load small test files.
 
 ## Upload load file

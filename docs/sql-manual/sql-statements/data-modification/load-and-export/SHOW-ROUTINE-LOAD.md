@@ -58,7 +58,7 @@ SHOW [ALL] ROUTINE LOAD [FOR <jobName>];
 | User                 | The user who created the job                                |
 | Comment              | The comment of the job                                      |
 | ComputeGroup         | The compute group the job runs on                           |
-| FirstErrorMsg        | The first error message the job hit. Added in version 4.0.8 |
+| FirstErrorMsg        | The first error message the job hit. Added in 4.0.8 for the 4.0 series and in 4.1.4 for the 4.1 series. The value is kept in FE memory and is lost when the FE restarts; when the error statistics are reset, `ErrorLogUrls` is cleared as well |
 
 ### Sensitive property masking
 

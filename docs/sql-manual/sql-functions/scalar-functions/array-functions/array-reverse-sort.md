@@ -16,7 +16,7 @@ Sort array elements in descending order.
 
 ## Parameters
 
-- `arr`: `ARRAY<T>`, where `T` can be numeric, boolean, string, datetime, IP, etc. Multi-dimensional arrays are supported, but all array elements (no matter how deeply nested) must be of the supported types.
+- `arr`: `ARRAY<T>`, where `T` can be numeric, boolean, string, datetime, IP, UUID, etc. Multi-dimensional arrays are supported, but all array elements (no matter how deeply nested) must be of the supported types.
 
 ## Return value
 

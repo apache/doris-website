@@ -66,6 +66,8 @@ TASKS(
   | **CompletedPartitions** | JSON 数组，记录本次 task 已成功刷新的分区。可与 `NeedRefreshPartitions` 对比判断是否全部完成。 |
   | **Progress**          | task 刷新进度，格式为 `百分比 (已完成分区数/需刷新分区数)`，例如 `100.00% (1/1)`。没有分区需要刷新时可能为 `\N`。 |
   | **LastQueryId**       | 刷新 task 执行 SQL 的 query ID。排查 task 失败或耗时时，可用该 ID 搜索 FE 或 BE 日志。没有执行刷新 SQL 时可能为空。该字段从 Doris 3.0.0 开始支持。 |
+  | **ComputeGroup**      | 刷新 task 使用的 Compute Group。未指定或非存算分离环境中可能为空。 |
+  | **IvmFallbackReason** | IVM 无法执行并发生回退，或严格 IVM 刷新失败时的稳定原因。没有 IVM 回退时为空。 |
 
 ### MV task 枚举字段说明
 
@@ -84,10 +86,13 @@ TASKS(
 - `TaskContext.isComplete`：刷新请求是否要求全量刷新。
   - `true`：请求 Doris 刷新全部物化视图分区。
   - `false`：请求不强制全量刷新，Doris 可以根据分区新鲜度判断实际刷新范围。
+- `TaskContext.refreshMode`：用户请求的刷新方式，可取 `AUTO`、`COMPLETE`、`PARTITIONS` 或 `INCREMENTAL`。旧任务可能没有该字段。
+- `TaskContext.af`：是否允许回退，对应 `FALLBACK`。该字段也可能以兼容名称 `allowFallback` 展示；旧任务可能没有该字段。
 - `RefreshMode`：task 检查分区后选择的实际刷新范围。
   - `COMPLETE`：选择刷新该物化视图的全部分区。
   - `PARTIAL`：只选择刷新部分物化视图分区。
   - `NOT_REFRESH`：没有分区需要刷新。此时 `NeedRefreshPartitions` 通常为空，`Progress` 可能为 `\N`。
+- `IvmFallbackReason`：记录 IVM 预执行回退或严格增量刷新失败的原因，例如 `BINLOG_BROKEN`、`MIN_MAX_BOUNDARY_HIT`、`BITMAP_AGG_DELETE` 或 `PLAN_SIGNATURE_MISMATCH`。排查方法见 [物化视图增量维护（IVM）](../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#回退顺序)。
 
 :::info 版本说明
 
@@ -128,6 +133,8 @@ NeedRefreshPartitions: ["p_20210101_MAXVALUE","p_20200101_20210101"]
   CompletedPartitions: ["p_20210101_MAXVALUE","p_20200101_20210101"]
              Progress: 100.00% (2/2)
           LastQueryId: 7965b4ddce8a4480-8884e9701679c1c4
+          ComputeGroup: \N
+     IvmFallbackReason: \N
 ```
 
 该结果中：
@@ -142,6 +149,8 @@ NeedRefreshPartitions: ["p_20210101_MAXVALUE","p_20200101_20210101"]
 - `NeedRefreshPartitions` 列出本次需要刷新的两个分区，`CompletedPartitions` 列出同样两个分区，说明需要刷新的分区都已完成。
 - `Progress` 为 `100.00% (2/2)`，也表示两个需要刷新的分区都已完成。
 - `LastQueryId` 是刷新 SQL 的 query ID。排查 task 失败或耗时时，可以用该 ID 搜索 Doris 日志。
+- `ComputeGroup` 为空，表示本例没有记录专用的 Compute Group。
+- `IvmFallbackReason` 为空，表示本次任务没有发生 IVM 回退。
 
 :::info 备注
 

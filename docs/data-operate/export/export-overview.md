@@ -86,6 +86,8 @@ The Parquet and ORC file formats have their own data type definitions, and Apach
 
 The mappings between Apache Doris data types and the ORC and Parquet formats are listed below.
 
+UUID values are exported as 36-character lowercase canonical text in CSV only. In Parquet, a UUID column is written as `FIXED_LEN_BYTE_ARRAY(16)` with the Parquet UUID logical annotation, in canonical big-endian byte order. In ORC, a UUID column is written as `BINARY` with the Doris-specific `doris.logical_type=uuid` attribute, because ORC has no standard UUID type. UUID elements nested in ARRAY, MAP, or STRUCT use the same representation as top-level columns. Reloading a Doris-written ORC file through a table-valued function restores the native UUID type, whereas Parquet schema inference still exposes UUID leaves as `STRING`/`VARBINARY`; specify UUID target columns or use `CAST(value AS UUID)` when reloading a Parquet file. Writes to Iceberg UUID fields follow the [Iceberg column type mapping](../../lakehouse/catalogs/iceberg-catalog.mdx#column-type-mapping).
+
 ### ORC Type Mapping
 
 | Doris Type              | ORC Type  |
@@ -103,6 +105,7 @@ The mappings between Apache Doris data types and the ORC and Parquet formats are
 | float                   | float     |
 | double                  | double    |
 | char / varchar / string | string    |
+| uuid                    | binary    |
 | decimal                 | decimal   |
 | struct                  | struct    |
 | map                     | map       |
@@ -132,6 +135,7 @@ When Apache Doris exports to the Parquet file format, it first converts the in-m
 | float                   | float32     | FLOAT                 |                                  |
 | double                  | float64     | DOUBLE                |                                  |
 | char / varchar / string | utf8        | BYTE_ARRAY            | UTF8                             |
+| uuid                    | fixed_size_binary(16) | FIXED_LEN_BYTE_ARRAY | UUID                    |
 | decimal                 | decimal128  | FIXED_LEN_BYTE_ARRAY  | DECIMAL(scale, precision)        |
 | struct                  | struct      |                       | Parquet Group                    |
 | map                     | map         |                       | Parquet Map                      |

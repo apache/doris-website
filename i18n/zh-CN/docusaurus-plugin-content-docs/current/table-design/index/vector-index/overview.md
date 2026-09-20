@@ -544,7 +544,7 @@ SET enable_profile = false;
 
 1. **数据类型限制**：ANN Index 对应的列必须是 `NOT NULLABLE` 的 `Array<Float>`。导入时需确保该列每个向量的长度均等于索引属性中指定的维度（`dim`），否则会报错。
 
-2. **表模型限制**：ANN Index 只能在 **DuplicateKey** 表模型上使用。
+2. **表模型限制**：ANN Index 只能在 **DuplicateKey** 表模型，或开启了 Merge-on-Write（`enable_unique_key_merge_on_write = true`）的 **UniqueKey** 表模型上使用（UniqueKey 表的支持自 4.1.4 版本开始）。Merge-on-Read 的 UniqueKey 表以及 AggregateKey 表仍不支持，建索引时会报错：`ANN index can only be used in DUP_KEYS table or UNIQUE_KEYS table with merge-on-write enabled`。
 
 3. **谓词列必须有二级索引**：Doris 使用前过滤语义（谓词计算在 AnnTopN 之前）。当 SQL 中的谓词涉及到的列**没有二级索引**时，为保证结果正确性，Doris 会回退到暴力计算。例如：
 

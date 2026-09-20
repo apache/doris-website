@@ -279,7 +279,7 @@ Therefore, while meeting the latency requirements of your business, **maximize t
 
 #### Flink End-to-End Latency
 
-The test uses the Flink Connector in batched-write mode, focusing on end-to-end latency and load throughput. The batching interval is controlled by the Flink Connector parameter `sink.buffer-flush.interval`. For details on using the Flink Connector, see [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector#usage).
+The test uses the Flink Connector in batched-write mode, focusing on end-to-end latency and load throughput. The batching interval is controlled by the Flink Connector parameter `sink.buffer-flush.interval`. For details on using the Flink Connector, see [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector/write.md#write-modes).
 
 **Machine configuration:**
 

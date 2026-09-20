@@ -2,8 +2,8 @@
 {
     "title": "Async Materialized View Overview",
     "language": "en",
-    "description": "What is a Doris async materialized view? This article introduces the use cases, refresh mechanism, transparent rewriting principles, and lakehouse query acceleration capabilities of async materialized views.",
-    "keywords": ["Doris async materialized view", "materialized view", "query acceleration", "transparent rewriting", "lakehouse acceleration", "MTMV"]
+    "description": "What is a Doris async materialized view? This article introduces the use cases, IVM and partition refresh mechanisms, transparent rewriting principles, and lakehouse query acceleration capabilities.",
+    "keywords": ["Doris async materialized view", "materialized view", "Incremental View Maintenance", "IVM", "query acceleration", "transparent rewriting", "lakehouse acceleration", "MTMV"]
 }
 ---
 
@@ -20,7 +20,8 @@ Before using async materialized views, confirm the following points:
 - Does the query follow the SPJG (SELECT-PROJECT-JOIN-GROUP-BY) pattern?
 - Can the data tolerate eventual consistency (non-real-time synchronization)?
 - Is the Catalog of the base table within the supported scope (Internal/Hive/Iceberg/Paimon/Hudi/JDBC/ES)?
-- Is partitioned incremental refresh needed to lower refresh costs?
+- When changes are concentrated in a few partitions, is partitioned incremental refresh needed to lower refresh costs?
+- When base tables receive frequent inserts, updates and deletes but few rows change, is [Incremental View Maintenance (IVM)](incremental-materialized-view) a good fit?
 
 ## Use Cases
 
@@ -55,15 +56,16 @@ An async materialized view is essentially an internal table of type MTMV. When t
 
 ### Refresh Mechanism
 
-Unlike the real-time incremental refresh of synchronous materialized views, async materialized views provide more flexible refresh options:
+Unlike the real-time incremental refresh of synchronous materialized views, async materialized views provide four computation granularities:
 
-| Refresh Mode | Description | Applicable Scenarios |
+| Refresh Method | Description | Applicable Scenarios |
 | :--- | :--- | :--- |
-| **Full refresh** | Recomputes all data referenced by the materialized view definition SQL and writes it into the materialized view in full | Small data volume or when overall consistency must be guaranteed |
-| **Partitioned incremental refresh** | Intelligently identifies changes in base table partition data and refreshes only the affected partitions | Large data volume with changes concentrated in specific partitions |
+| `COMPLETE` | Recomputes all data referenced by the materialized view definition SQL | Small data volume, first baseline, or recovering the baseline |
+| `PARTITIONS` | Identifies base table partition changes and recomputes every affected materialized view partition | Large data volume with changes concentrated in a few partitions |
+| `INCREMENTAL` | Uses IVM to compute the row-level changes between two refreshes and applies them to the materialized view | The number of changed rows is far smaller than the whole table or the affected partitions |
+| `AUTO` | Doris automatically chooses an available refresh method | You want the system to choose among IVM, partition refresh and complete refresh |
 
-- **Full refresh**: Ensures that the materialized view data is fully consistent with the base table, but may consume more compute resources and time.
-- **Partitioned incremental refresh**: Significantly reduces the resources and time required for refresh, while ensuring eventual consistency.
+`INCREMENTAL` and `PARTITIONS` are both incremental refreshes, but at different granularities. The former processes only row-level changes; the latter recomputes the affected partitions in full. IVM is available since Doris 5.0.0 and is currently experimental. See [Incremental View Maintenance (IVM)](incremental-materialized-view) for its requirements and limitations.
 
 ### Transparent Rewriting
 
@@ -272,5 +274,6 @@ It cannot detect changes in the base table and is only suitable for manual on-de
 ## See Also
 
 - Create, query, and maintain async materialized views: [Create, Query, and Maintain Async Materialized Views](../async-materialized-view/functions-and-demands.md)
+- Row-level change maintenance: [Incremental View Maintenance (IVM)](../async-materialized-view/incremental-materialized-view.md)
 - User guide: [User Guide](../async-materialized-view/use-guide.md)
 - FAQ: [FAQ](../async-materialized-view/faq.md)

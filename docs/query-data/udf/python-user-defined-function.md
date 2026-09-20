@@ -469,12 +469,38 @@ The following table lists the mapping between Doris data types and Python types:
 |  | `DECIMAL256` | `decimal.Decimal` | 256-bit fixed-point |
 | IP types | `IPV4` | `ipaddress.IPv4Address` | IPv4 address |
 |  | `IPV6` | `ipaddress.IPv6Address` | IPv6 address |
+| UUID type | `UUID` | `uuid.UUID` | Native 128-bit UUID; `NULL` maps to `None` |
 | Binary types | `BITMAP` | `bytes` | Bitmap data (not supported yet) |
 |  | `HLL` | `bytes` | HyperLogLog data (not supported yet) |
 |  | `QUANTILE_STATE` | `bytes` | Quantile state data (not supported yet) |
 | Complex data types | `ARRAY<T>` | `list` | Array with element type T |
 |  | `MAP<K,V>` | `dict` | Dictionary with key type K and value type V |
 |  | `STRUCT<f1:T1, f2:T2, ...>` | `dict` | Struct with field names as keys and field values as values |
+
+**UUID handling**: a `UUID` argument arrives as a `uuid.UUID` object in scalar, vectorized (`list` and `pandas.Series`), aggregate, and table functions, and also inside `ARRAY`, `MAP`, and `STRUCT` values; SQL `NULL` arrives as `None`. Doris passes the 16-byte value in the Arrow UUID extension rather than its text form, so import `uuid` in the function body and work with `uuid.UUID` objects. A function whose return type is `UUID` must return a `uuid.UUID` object or `None`; returning `str(value)`, `value.bytes`, or `value.int` raises `UUID return value must be uuid.UUID`. `STRING` arguments and results are unchanged, even when the text looks like a UUID.
+
+```sql
+CREATE FUNCTION py_uuid_next(UUID)
+RETURNS UUID
+PROPERTIES (
+    "type" = "PYTHON_UDF",
+    "symbol" = "evaluate",
+    "runtime_version" = "3.10.12",
+    "always_nullable" = "true",
+    "volatility" = "immutable"
+)
+AS $$
+import uuid
+
+def evaluate(value):
+    if value is None:
+        return None
+    return uuid.UUID(int=value.int + 1)
+$$;
+
+SELECT py_uuid_next(CAST('00000000-0000-0000-0000-000000000001' AS UUID)); -- Result: 00000000-0000-0000-0000-000000000002
+SELECT py_uuid_next(NULL); -- Result: NULL
+```
 
 #### NULL Handling
 

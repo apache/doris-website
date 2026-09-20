@@ -167,7 +167,23 @@ const sidebars: SidebarsConfig = {
                         'connection-integration/data-integration/doris-kafka-connector',
                         'connection-integration/data-integration/doris-streamloader',
                         'connection-integration/data-integration/finebi',
-                        'connection-integration/data-integration/flink-doris-connector',
+                        {
+                            type: 'category',
+                            label: 'Flink Doris Connector',
+                            link: {type: 'doc', id: 'connection-integration/data-integration/flink-doris-connector/overview'},
+                            items: [
+                                'connection-integration/data-integration/flink-doris-connector/quick-start',
+                                'connection-integration/data-integration/flink-doris-connector/read',
+                                'connection-integration/data-integration/flink-doris-connector/incremental-read',
+                                'connection-integration/data-integration/flink-doris-connector/write',
+                                'connection-integration/data-integration/flink-doris-connector/lookup-join',
+                                'connection-integration/data-integration/flink-doris-connector/cdc-sync',
+                                'connection-integration/data-integration/flink-doris-connector/datastream-api',
+                                'connection-integration/data-integration/flink-doris-connector/connection',
+                                'connection-integration/data-integration/flink-doris-connector/data-type-mapping',
+                                'connection-integration/data-integration/flink-doris-connector/faq',
+                            ],
+                        },
                         'connection-integration/data-integration/fluentbit',
                         'connection-integration/data-integration/hive-udf',
                         'connection-integration/data-integration/kettle',
@@ -195,7 +211,7 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
-            label: 'Use Doris',
+            label: 'Guides',
             collapsible: false,
             collapsed: false,
             items: [
@@ -302,7 +318,6 @@ const sidebars: SidebarsConfig = {
                 },
                 'table-design/schema-change',
                 'table-design/auto-increment',
-                'table-design/temporary-table',
             ],
         },
         {
@@ -405,7 +420,6 @@ const sidebars: SidebarsConfig = {
                         'data-operate/import/file-format/json',
                         'data-operate/import/file-format/parquet',
                         'data-operate/import/file-format/orc',
-                        'data-operate/import/file-format/native',
                     ],
                 },
                 {
@@ -472,6 +486,19 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
+            label: 'Change Data & Table Stream',
+            collapsed: true,
+            link: {type: 'doc', id: 'data-operate/incremental/overview'},
+            items: [
+                'data-operate/incremental/quick-start',
+                'data-operate/incremental/row-binlog',
+                'data-operate/incremental/incremental-query',
+                'data-operate/incremental/table-stream',
+                'data-operate/incremental/table-stream-advanced',
+            ],
+        },
+        {
+            type: 'category',
             label: 'Data Export',
             collapsed: true,
             link: {type: 'doc', id: 'data-operate/export/export-overview'},
@@ -522,6 +549,7 @@ const sidebars: SidebarsConfig = {
                     link: {type: 'doc', id: 'query-acceleration/materialized-view/async-materialized-view/overview'},
                     items: [
                         'query-acceleration/materialized-view/async-materialized-view/functions-and-demands',
+                        'query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view',
                         'query-acceleration/materialized-view/async-materialized-view/use-guide',
                         'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv',
                         'query-acceleration/materialized-view/async-materialized-view/faq',
@@ -750,6 +778,7 @@ const sidebars: SidebarsConfig = {
                 },
                 'lakehouse/data-cache',
                 'lakehouse/meta-cache',
+                'lakehouse/external-meta-cache-memory-management',
                 'lakehouse/compute-node',
                 'lakehouse/statistics',
                 {
@@ -1003,6 +1032,8 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/system-tables/information_schema/table_options',
                                 'admin-manual/system-tables/information_schema/table_privileges',
                                 'admin-manual/system-tables/information_schema/table_properties',
+                                'admin-manual/system-tables/information_schema/table_stream_consumption',
+                                'admin-manual/system-tables/information_schema/table_streams',
                                 'admin-manual/system-tables/information_schema/tables',
                                 'admin-manual/system-tables/information_schema/triggers',
                                 'admin-manual/system-tables/information_schema/user_privileges',
@@ -1192,10 +1223,13 @@ const sidebars: SidebarsConfig = {
                 },
             ],
         },
+            ],
+        },
         {
             type: 'category',
-            label: 'Reference',
-            collapsed: true,
+            label: 'SQL References',
+            collapsible: false,
+            collapsed: false,
             items: [
                 {
                     type: 'category',
@@ -1291,6 +1325,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/ip/IPV6',
                                     ],
                                 },
+                                'sql-manual/basic-element/sql-data-types/uuid',
                                 {
                                     type: 'category',
                                     label: 'Conversion',
@@ -1312,6 +1347,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/conversion/map-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/struct-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/time-conversion',
+                                        'sql-manual/basic-element/sql-data-types/conversion/uuid-conversion',
                                     ],
                                 },
                             ],
@@ -1329,6 +1365,7 @@ const sidebars: SidebarsConfig = {
                         'sql-manual/basic-element/object-identifiers',
                         'sql-manual/basic-element/reserved-keywords',
                         'sql-manual/basic-element/variables',
+                        'sql-manual/basic-element/session-variables',
                         'sql-manual/basic-element/comments',
                         'sql-manual/basic-element/file-path-pattern',
                         {
@@ -1399,6 +1436,20 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'Scalar Functions',
                             items: [
+                                {
+                                    type: 'category',
+                                    label: 'UUID Functions',
+                                    items: [
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/uuid-v4',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/uuid-v7',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/uuid-version',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-null',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-zero',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-default',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/uuid-v7-to-datetime',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/datetime-to-uuid-v7',
+                                    ],
+                                },
                                 {
                                     type: 'category',
                                     label: 'Numeric Functions',
@@ -2243,6 +2294,7 @@ const sidebars: SidebarsConfig = {
                             label: 'Table Valued Functions',
                             items: [
                                 'sql-manual/sql-functions/table-valued-functions/backends',
+                                'sql-manual/sql-functions/table-valued-functions/binlog',
                                 'sql-manual/sql-functions/table-valued-functions/cdc-stream',
                                 'sql-manual/sql-functions/table-valued-functions/catalogs',
                                 'sql-manual/sql-functions/table-valued-functions/file',
@@ -2394,7 +2446,6 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/session/queries/CLEAN-ALL-PROFILE',
                                         'sql-manual/sql-statements/session/queries/SHOW-QUERY-STATS',
                                         'sql-manual/sql-statements/session/queries/CLEAN-ALL-QUERY-STATS',
-                                        'sql-manual/sql-statements/session/queries/PLAN-REPLAYER-DUMP',
                                     ],
                                 },
                                 {
@@ -2496,6 +2547,17 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/table-and-view/view/DROP-VIEW',
                                         'sql-manual/sql-statements/table-and-view/view/SHOW-CREATE-VIEW',
                                         'sql-manual/sql-statements/table-and-view/view/SHOW-VIEW',
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'Table Stream',
+                                    items: [
+                                        'sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM',
+                                        'sql-manual/sql-statements/table-and-view/stream/ALTER-STREAM',
+                                        'sql-manual/sql-statements/table-and-view/stream/DROP-STREAM',
+                                        'sql-manual/sql-statements/table-and-view/stream/SHOW-CREATE-STREAM',
+                                        'sql-manual/sql-statements/table-and-view/stream/SHOW-STREAMS',
                                     ],
                                 },
                                 {
@@ -2724,8 +2786,6 @@ const sidebars: SidebarsConfig = {
                         },
                     ],
                 },
-            ],
-        },
             ],
         },
     ],

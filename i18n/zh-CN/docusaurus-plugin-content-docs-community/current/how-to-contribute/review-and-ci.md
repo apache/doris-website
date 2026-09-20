@@ -34,6 +34,8 @@ under the License.
 
 创建 Pull Request（PR）后，贡献者还需要完成代码 Review、CI 检查和问题修复，PR 才能进入合入阶段。本文介绍从提交 PR 到最终合入的完整流程。关于创建 PR 的方法，请参阅[代码提交指南](./pull-request.md)。
 
+![PR 提交后的 Review、CI 与合入流程](/images/review-and-ci-workflow.jpg)
+
 流程概览：
 
 1. 如果您不是 Committer，请联系 Committer 审核并 Approve CI workflow。

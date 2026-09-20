@@ -39,7 +39,7 @@ SQL Block Rule（SQL 阻止规则）在查询**规划阶段**拦截符合特定�
 | `cardinality` | 允许扫描的最大行数 | 正整数 |
 | `partition_num` | 允许扫描的最大分区数 | 正整数 |
 | `tablet_num` | 允许扫描的最大分桶数 | 正整数 |
-| `require_partition_filter` | 查询分区内表和 Hive 表时是否必须包含有效分区过滤条件。该属性在 Doris 4.0 系列中从 4.0.7 起支持，在 Doris 4.1 系列中从 4.1.2 起支持。 | `"true"` 或 `"false"` |
+| `require_partition_filter` | 查询分区内表和 Hive 表时是否必须包含有效分区过滤条件。该属性在 Doris 4.0 系列中从 4.0.7 起支持，在 Doris 4.1 系列中从 4.1.4 起支持。 | `"true"` 或 `"false"` |
 | `global` | 是否为全局规则 | `"true"`（全局生效）/ `"false"`（仅对绑定用户生效） |
 | `enable` | 是否启用规则 | `"true"` / `"false"` |
 

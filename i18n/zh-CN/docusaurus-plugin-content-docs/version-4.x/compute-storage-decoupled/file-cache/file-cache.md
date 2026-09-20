@@ -57,7 +57,7 @@ Doris 提供一个全局策略和两个 Compaction 专用策略：
 
 | 参数 | 类型 | 默认值 | 生效范围 | 说明 |
 |---|---|---|---|---|
-| `enable_file_cache_write_index_file_only` | Boolean | `false` | 所有存算分离 Rowset 写入，包括导入、Schema Change、Cumulative Compaction 和 Base Compaction | **自 4.0.8 版本起支持。** 设为 `true` 后，不主动缓存 Segment 数据；Segment 关闭后同步预加载其 footer 和内部索引范围，独立倒排索引文件仍写入 File Cache。该参数的优先级高于两个 Compaction 专用参数 |
+| `enable_file_cache_write_index_file_only` | Boolean | `false` | 所有存算分离 Rowset 写入，包括导入、Schema Change、Cumulative Compaction 和 Base Compaction | **Doris 4.0 系列自 4.0.8 版本起支持，4.1 系列自 4.1.4 版本起支持。** 设为 `true` 后，不主动缓存 Segment 数据；Segment 关闭后同步预加载其 footer 和内部索引范围，独立倒排索引文件仍写入 File Cache。该参数的优先级高于两个 Compaction 专用参数 |
 | `enable_file_cache_write_base_compaction_index_only` | Boolean | `false` | Base Compaction | 仅当 Base Compaction 按原有策略决定写入 File Cache 时，将其输出限制为不主动缓存 Segment 文件、仍缓存独立倒排索引文件。该参数不会使原本不写缓存的 Base Compaction 输出开始写入缓存 |
 | `enable_file_cache_write_cumu_compaction_index_only` | Boolean | `false` | Cumulative Compaction | 当 Cumulative Compaction 输出写入 File Cache 时，将其限制为不主动缓存 Segment 文件、仍缓存独立倒排索引文件 |
 
@@ -534,6 +534,14 @@ PROPERTIES (
 ```
 
 上表中，所有新导入的数据将在缓存中保留 300 秒。
+
+`file_cache_ttl_seconds` 的取值范围为 `0 <= value <= 4611686018427387903`（即 `Long.MAX_VALUE / 2`）。自 4.1.4 版本起，`CREATE TABLE` 与 `ALTER TABLE ... SET` 都会校验该取值，超出范围或非法取值会直接报错：
+
+```text
+The value <v> formats error or is out of range (0 <= integer <= 4611686018427387903). Larger values may overflow in BE and change TTL cache to normal cache; please use 4611686018427387903 or a smaller value.
+```
+
+4.1.4 之前不做上界校验，过大的取值会在 BE 侧溢出，导致 TTL 缓存被降级为普通缓存。
 
 ### 修改表的 TTL 设置
 

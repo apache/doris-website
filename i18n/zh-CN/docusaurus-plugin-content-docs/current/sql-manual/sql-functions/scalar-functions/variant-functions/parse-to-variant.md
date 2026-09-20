@@ -8,7 +8,7 @@
 
 ## 功能
 
-`PARSE_TO_VARIANT` 将一个完整 JSON 值解析为 `VARIANT`，支持 JSON 对象、数组、字符串、数字、布尔值和 JSON 字面量 `null`。该函数自 Doris 4.2 起支持。
+`PARSE_TO_VARIANT` 将一个完整 JSON 值解析为 `VARIANT`，支持 JSON 对象、数组、字符串、数字、布尔值和 JSON 字面量 `null`。该函数自 Doris 4.1.4 起支持。
 
 ## 语法
 

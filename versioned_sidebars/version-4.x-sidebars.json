@@ -228,7 +228,7 @@
     },
     {
       "type": "category",
-      "label": "Use Doris",
+      "label": "Guides",
       "collapsible": false,
       "collapsed": false,
       "items": [
@@ -419,6 +419,7 @@
                       "items": [
                         "data-operate/import/import-way/streaming-job/continuous-load-mysql-table",
                         "data-operate/import/import-way/streaming-job/continuous-load-mysql-database",
+                        "data-operate/import/import-way/streaming-job/schema-change-mysql",
                         "data-operate/import/import-way/streaming-job/data-type-mapping-mysql",
                         {
                           "type": "category",
@@ -460,8 +461,7 @@
                 "data-operate/import/file-format/csv",
                 "data-operate/import/file-format/json",
                 "data-operate/import/file-format/parquet",
-                "data-operate/import/file-format/orc",
-                "data-operate/import/file-format/native"
+                "data-operate/import/file-format/orc"
               ]
             },
             {
@@ -872,6 +872,7 @@
             },
             "lakehouse/data-cache",
             "lakehouse/meta-cache",
+            "lakehouse/external-meta-cache-memory-management",
             "lakehouse/compute-node",
             "lakehouse/statistics",
             {
@@ -1358,12 +1359,15 @@
               ]
             }
           ]
-        },
-        {
-          "type": "category",
-          "label": "Reference",
-          "collapsed": true,
-          "items": [
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "SQL References",
+      "collapsible": false,
+      "collapsed": false,
+      "items": [
             {
               "type": "category",
               "label": "Basic Elements",
@@ -1496,6 +1500,7 @@
                 "sql-manual/basic-element/object-identifiers",
                 "sql-manual/basic-element/reserved-keywords",
                 "sql-manual/basic-element/variables",
+                "sql-manual/basic-element/session-variables",
                 "sql-manual/basic-element/comments",
                 "sql-manual/basic-element/file-path-pattern",
                 {
@@ -2046,6 +2051,8 @@
                       "label": "Variant Functions",
                       "items": [
                         "sql-manual/sql-functions/scalar-functions/variant-functions/element-at",
+                        "sql-manual/sql-functions/scalar-functions/variant-functions/parse-to-variant",
+                        "sql-manual/sql-functions/scalar-functions/variant-functions/try-parse-to-variant",
                         "sql-manual/sql-functions/scalar-functions/variant-functions/variant-type"
                       ]
                     },
@@ -2896,7 +2903,5 @@
             }
           ]
         }
-      ]
-    }
   ]
 }

@@ -2,8 +2,8 @@
 {
     "title": "异步物化视图概述",
     "language": "zh-CN",
-    "description": "什么是 Doris 异步物化视图？本文介绍异步物化视图的使用场景、刷新机制、透明改写原理及湖仓查询加速能力。",
-    "keywords": ["Doris 异步物化视图", "materialized view", "查询加速", "透明改写", "湖仓加速", "MTMV"]
+    "description": "什么是 Doris 异步物化视图？本文介绍使用场景、IVM 与分区刷新机制、透明改写原理及湖仓查询加速能力。",
+    "keywords": ["Doris 异步物化视图", "materialized view", "Incremental View Maintenance", "IVM", "查询加速", "透明改写", "湖仓加速", "MTMV"]
 }
 ---
 
@@ -20,7 +20,8 @@
 - 查询是否符合 SPJG（SELECT-PROJECT-JOIN-GROUP-BY）模式？
 - 数据是否可以接受最终一致性（非实时同步）？
 - 基表所在的 Catalog 是否在受支持范围内（Internal/Hive/Iceberg/Paimon/Hudi/JDBC/ES）？
-- 是否需要分区增量刷新以降低刷新成本？
+- 变化集中在少量分区时，是否需要分区增量刷新以降低刷新成本？
+- 基表频繁增删改且变化行数较少时，是否适合使用 [物化视图增量维护（IVM）](incremental-materialized-view)？
 
 ## 使用场景
 
@@ -55,15 +56,16 @@
 
 ### 刷新机制
 
-异步物化视图与同步物化视图的实时增量刷新不同，提供了更灵活的刷新选项：
+异步物化视图与同步物化视图的实时增量刷新不同，提供四种计算粒度：
 
-| 刷新模式 | 说明 | 适用场景 |
+| 刷新方式 | 说明 | 适用场景 |
 | :--- | :--- | :--- |
-| **全量刷新** | 重新计算物化视图定义 SQL 涉及的所有数据，并完整写入物化视图 | 数据量较小或需要保证整体一致性 |
-| **分区增量刷新** | 智能识别基表分区数据的变化，仅刷新受影响的分区 | 数据量较大、变化集中在部分分区 |
+| `COMPLETE` | 重新计算物化视图定义 SQL 涉及的所有数据 | 数据量较小、首次建立基线或需要恢复基线 |
+| `PARTITIONS` | 识别基表分区变化，重新计算受影响的整个物化视图分区 | 数据量较大，且变化集中在少量分区 |
+| `INCREMENTAL` | 使用 IVM 计算两次刷新之间的行级变化，并把变化应用到物化视图 | 变化行数远小于全表或受影响分区 |
+| `AUTO` | 由 Doris 自动选择可用的刷新方式 | 希望系统在 IVM、分区刷新和完整刷新之间自动选择 |
 
-- **全量刷新**：确保物化视图数据与基表完全一致，但可能消耗较多计算资源与时间。
-- **分区增量刷新**：显著降低刷新所需的资源与时间，并保证最终一致性。
+`INCREMENTAL` 和 `PARTITIONS` 都属于增量刷新，但计算粒度不同。前者只处理行级变化，后者会重算受影响的完整分区。IVM 从 Doris 5.0.0 开始支持，当前处于实验阶段，使用条件和限制见 [物化视图增量维护（IVM）](incremental-materialized-view)。
 
 ### 透明改写
 
@@ -272,5 +274,6 @@ SET materialized_view_rewrite_enable_contain_external_table = true;
 ## 更多参考
 
 - 创建、查询与维护异步物化视图：[创建、查询与维护异步物化视图](../async-materialized-view/functions-and-demands.md)
+- 行级变化维护：[物化视图增量维护（IVM）](../async-materialized-view/incremental-materialized-view.md)
 - 使用指南：[使用指南](../async-materialized-view/use-guide.md)
 - 常见问题：[常见问题](../async-materialized-view/faq.md)

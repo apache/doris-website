@@ -57,7 +57,7 @@ Doris provides one global policy and two Compaction-specific policies:
 
 | Parameter | Type | Default | Scope | Description |
 |---|---|---|---|---|
-| `enable_file_cache_write_index_file_only` | Boolean | `false` | All rowset writes in compute-storage decoupled mode, including ingestion, Schema Change, Cumulative Compaction, and Base Compaction | **Supported starting from version 4.0.8.** When set to `true`, Segment data is not actively cached. After a Segment is closed, its footer and internal index ranges are synchronously preloaded, while independent inverted index files are still written to File Cache. This parameter takes precedence over the two Compaction-specific parameters |
+| `enable_file_cache_write_index_file_only` | Boolean | `false` | All rowset writes in compute-storage decoupled mode, including ingestion, Schema Change, Cumulative Compaction, and Base Compaction | **Supported in Doris 4.0.8 and later in the 4.0 series, and in Doris 4.1.4 and later in the 4.1 series.** When set to `true`, Segment data is not actively cached. After a Segment is closed, its footer and internal index ranges are synchronously preloaded, while independent inverted index files are still written to File Cache. This parameter takes precedence over the two Compaction-specific parameters |
 | `enable_file_cache_write_base_compaction_index_only` | Boolean | `false` | Base Compaction | Only when the existing Base Compaction policy has already decided to write output to File Cache, prevents the Segment file from being actively cached while still caching independent inverted index files. This parameter does not cause Base Compaction output that would otherwise bypass the cache to be cached |
 | `enable_file_cache_write_cumu_compaction_index_only` | Boolean | `false` | Cumulative Compaction | When Cumulative Compaction output is written to File Cache, prevents the Segment file from being actively cached while still caching independent inverted index files |
 
@@ -532,6 +532,14 @@ PROPERTIES (
 ```
 
 All newly ingested data for the table above is retained in the cache for 300 seconds.
+
+The valid range for `file_cache_ttl_seconds` is `0 <= value <= 4611686018427387903` (that is, `Long.MAX_VALUE / 2`). Starting from version 4.1.4, both `CREATE TABLE` and `ALTER TABLE ... SET` validate this value, and an out-of-range or malformed value is rejected with an error:
+
+```text
+The value <v> formats error or is out of range (0 <= integer <= 4611686018427387903). Larger values may overflow in BE and change TTL cache to normal cache; please use 4611686018427387903 or a smaller value.
+```
+
+Before 4.1.4, the upper bound was not validated, and an excessively large value would overflow on the BE side, downgrading the TTL cache to a normal cache.
 
 ### Modifying the TTL Setting for a Table
 

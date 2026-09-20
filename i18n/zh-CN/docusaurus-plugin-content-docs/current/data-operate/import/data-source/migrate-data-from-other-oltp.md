@@ -185,7 +185,7 @@ insert into doris_sink select id,name from cdc_mysql_source;
     --table-conf replication_num=1
 ```
 
-更多细节参见 [整库同步](../../../connection-integration/data-integration/flink-doris-connector.md#整库同步)。
+更多细节参见 [整库同步](../../../connection-integration/data-integration/flink-doris-connector/cdc-sync.md)。
 
 ---
 

@@ -297,6 +297,15 @@ OLAP_SCAN_OPERATOR  (id=2.  nereids_id=351.  table  name  =  orders(orders)):(Ex
 | `runtime_filter_type` | 2.1 版本默认 12 | 控制 JRF 类型枚举值之和 |
 | `runtime_filter_wait_time_ms` | 1000 | Scan 等待 JRF 的最长毫秒数 |
 | `enable_runtime_filter_prune` | `true` | 是否裁剪无过滤性的 JRF |
+| `runtime_filter_broadcast_join_producer_num` | 3 | Broadcast Join 场景下，每个 JRF 的生产者 BE 数量上限。小于等于 `0` 表示不限制。**自 4.1.4 版本起支持** |
+| `runtime_filter_tree_publish_max_send_bytes` | 268435456（256MB） | 全局 JRF 分发时，单次 RPC 发送的最大字节数。超过该阈值时改用树形（多级）分发，避免合并节点向所有 Scan 节点重复发送大 Filter。取值为 `0` 表示关闭树形分发，退回直接分发；取值必须大于等于 `0`。**自 4.1.4 版本起支持** |
+
+:::tip 自 4.1.4 版本新增的两个变量
+
+- `runtime_filter_broadcast_join_producer_num`：Broadcast Join 的 JRF 由所有 Build 端 BE 重复生成并发送同一份内容。该变量限制真正参与生产的 BE 数量（默认 3），可以显著降低大集群下的 RPC 开销。仅对 Nereids 分布式规划路径生效，旧的 Coordinator 路径保持原行为。
+- `runtime_filter_tree_publish_max_send_bytes`：大的全局 JRF 原本由合并节点直接分发给每个 Scan 节点，会产生重复的大 RPC 附件。开启树形分发后，Filter 会分层转发，降低单点带宽压力。
+
+:::
 
 #### 1. 开关 JRF
 

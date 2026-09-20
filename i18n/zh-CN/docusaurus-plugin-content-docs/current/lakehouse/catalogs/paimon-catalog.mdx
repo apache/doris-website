@@ -220,72 +220,76 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 元数据缓存 {#meta-cache}
 
-为了提升访问外部数据源的性能，Apache Doris 会对 Paimon 的元数据进行缓存。元数据包括表结构（Schema）和表对象等。
+为了提升访问外部数据源的性能，Apache Doris 会缓存 Paimon 的元数据，包括指定 Snapshot 下的表结构、最新 Snapshot ID 以及派生的分区投影。
 
 :::tip
-对于 Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详情请参阅[元数据缓存](../meta-cache.md)。
-从 Doris 4.1.x 开始，Paimon Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。
+Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详见[元数据缓存](../meta-cache)。
+自 Doris 4.1.x 起，Paimon Catalog 的外表元数据缓存使用统一的 `meta.cache.*` 键配置。下文的模块描述当前版本；Doris 4.1.x 和 4.2.x 的模块集合与此不同，见本页的 4.x 版本。
 :::
 
-### 缓存属性配置（4.1.x+） {#meta-cache-unified-model}
+### 缓存属性配置 {#meta-cache-unified-model}
 
-各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+每个缓存模块使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`。Paimon 的 `<engine>` 为 `paimon`。`meta.cache.paimon.table.ttl-second` 控制最新 Snapshot 缓存和表结构缓存的 TTL。
 
 | 属性 | 示例 | 含义 |
 |---|---|---|
-| `enable` | `true/false` | 是否启用该缓存模块。 |
-| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
-| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+| `enable` | `true/false` | 是否开启该缓存模块。 |
+| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭该模块（立即生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算的 TTL 秒数。 |
+| `capacity` | `10000` | 缓存条目数上限。`0` 表示关闭该模块。 |
+| `max-weight` | `1GB` | 自 Doris 4.1.4 起支持。可选的模块估算保留内存上限。必须为正数，`0` 会被拒绝。只有下表标注的模块接受该属性。 |
 
-**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
+**生效逻辑：** 模块在 `enable=true`、`ttl-second != 0` 且 `capacity > 0` 时生效。FE 总上限、Catalog 上限或模块上限存在时，还会按估算内存控制准入，详见 [外表元数据缓存内存管理](../external-meta-cache-memory-management)。
 
 ### 缓存模块 {#meta-cache-unified-modules}
 
-Paimon Catalog 包含以下缓存模块：
+以下模块拥有独立配置键并接受 `max-weight`：
 
-| 模块 (`<entry>`) | 属性键前缀 | 缓存内容与影响 |
+| 模块（`<entry>`） | 属性键前缀 | `ENTRY_NAME` | 缓存内容与影响 | 默认 enable / TTL / capacity |
+|---|---|---|---|---|
+| `partition_view` | `meta.cache.paimon.partition_view.` | `paimon.partition-view` | 由表快照派生的分区投影。影响：减少规划阶段重复扫描分区。 | `true` / 86400 秒 / 1000 |
+
+以下缓存没有 `<entry>` 名，只受 Catalog 和 FE 总内存上限约束：
+
+| `ENTRY_NAME` | 缓存内容 | TTL / capacity |
 |---|---|---|
-| `schema` | `meta.cache.paimon.schema.` | 缓存表结构。影响：列新增、删除、类型变更在 Doris 中的可见性。若关闭，每次查询都会拉取最新 Schema。 |
-| `table` | `meta.cache.paimon.table.` | 缓存 Paimon 表元数据对象。影响：最新 Snapshot、Schema 演进、分支/标签引用等表级元数据在 Doris 中的可见性，同时减少查询规划时的元数据加载开销。 |
+| `paimon-schema-at` | 表在指定 Snapshot 下的 Schema | 不过期 / 10000 |
+| `paimon-latest-snapshot` | 表的最新 Snapshot ID | `meta.cache.paimon.table.ttl-second`（86400 秒）/ 1000 |
+
+Paimon 表的列结构由共享的 `default` 引擎缓存（`meta.cache.default.schema.*`）。
 
 ### 旧参数映射与转换 {#meta-cache-mapping}
 
-在 4.1.x 之前，Paimon 的 Schema 与表级元数据主要遵循旧的 Catalog 兼容属性或 FE 全局缓存模型，详见[元数据缓存](../meta-cache.md)。升级到 4.1.x 后，建议改写为 `meta.cache.paimon.*`，并单独评估表级缓存是否需要更强的新鲜度。
-
-| 4.1 前属性键/旧模型 | 适用范围 | 4.1.x+ 统一键 | 升级建议与影响 |
-|---|---|---|---|
-| `schema.cache.ttl-second` | 4.1 前 Paimon Catalog 兼容属性 | `meta.cache.paimon.schema.ttl-second` | 控制 Schema 新鲜度。若希望列变更每次查询立即可见，设置为 `0`。 |
-| Paimon 表级旧模型 | 4.1 前 FE 全局缓存策略（见旧版元数据缓存文档中的旧表级元数据模型说明） | `meta.cache.paimon.table.ttl-second` | 控制最新 Snapshot/表级元数据的可见性。若希望每次查询都读取最新表快照，设置为 `0`。 |
-
-4.1.x 的统一模型把缓存拆分为 `enable`、`ttl-second`、`capacity` 三个维度；旧模型主要表达 TTL/全局缓存行为。升级后建议不要只替换键名，还要同时评估是否需要显式配置 `enable/capacity`。
+| 旧属性键 | 统一键 | 说明 |
+|---|---|---|
+| `schema.cache.ttl-second` | `meta.cache.default.schema.ttl-second` | 表结构缓存的过期时间 |
 
 ### 最佳实践 {#meta-cache-best-practices}
 
-* **实时查看最新数据**：如果您希望每次查询都能看到 Paimon 表的最新数据变动或 Schema 变更，可以将 `schema` 或 `table` 的 `ttl-second` 设置为 `0`。
+* **实时访问最新数据**：希望每次查询都看到 Paimon 表的最新 Snapshot 时，将 `meta.cache.paimon.table.ttl-second` 设为 `0`。
   ```sql
-  -- 关闭表对象缓存，以感知 Paimon 表的最新快照
+  -- 关闭最新 Snapshot 缓存，感知 Paimon 表的最新快照
   ALTER CATALOG paimon_ctl SET PROPERTIES ("meta.cache.paimon.table.ttl-second" = "0");
   ```
-* **性能优化**：`ALTER CATALOG ... SET PROPERTIES` 的修改在 Paimon Catalog 中支持热生效。
+* **性能优化**：Catalog 属性修改成功后，受影响的元数据缓存会被丢弃，并在下一次访问时按新配置重建。修改 `meta.cache.max-weight` 或 `schema.cache.ttl-second` 会丢弃该 Catalog 的全部缓存；修改 `meta.cache.<engine>.<entry>.*` 只丢弃对应引擎的缓存。正在执行的查询不受影响。当 FE 总上限或 Catalog 内存上限生效时，默认关闭 Paimon SDK 自带的 `CachingCatalog`，避免出现第二份不计入配额的元数据缓存；显式配置 `paimon.cache-enabled` 时以用户配置为准。
 
 ### 可观测性 {#meta-cache-unified-observability}
 
-可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观测缓存指标：
+可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观察缓存指标。`ENTRY_NAME` 显示上表中列出的名称，`default` 引擎的行是所有 Catalog 共享的表结构缓存：
 
 ```sql
-SELECT catalog_name, engine_name, entry_name,
+SELECT engine_name, entry_name,
        effective_enabled, ttl_second, capacity,
-       estimated_size, hit_rate, load_failure_count, last_error
+       estimated_size, hit_rate, max_weight, estimated_weight
 FROM information_schema.catalog_meta_cache_statistics
-WHERE catalog_name = 'paimon_ctl' AND engine_name = 'paimon'
-ORDER BY entry_name;
+WHERE catalog_name = 'paimon_ctl'
+ORDER BY engine_name, entry_name;
 ```
 
-该系统表文档见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
+系统表说明请参阅 [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics)。
 
 ### 支持的 Paimon 版本
 
-当前依赖的 Paimon 版本为 1.0.0。
+当前依赖的 Paimon 版本为 1.3.1。
 
 ### 支持的 Paimon 格式
 
@@ -975,6 +979,60 @@ SELECT * FROM paimon_tbl LIMIT 10;
 -- 3. use full qualified name to query
 SELECT * FROM paimon_ctl.paimon_db.paimon_tbl LIMIT 10;
 ```
+
+### 文件元数据列
+
+> 该功能自 4.2.0 版本起支持。
+
+Doris 为 Paimon 数据表提供两个隐藏元数据列，可用于定位每条查询结果对应的物理数据文件和文件内行位置。
+
+| 列名 | 类型 | 说明 |
+| --- | --- | --- |
+| `__paimon_file_path` | `STRING NOT NULL` | Paimon 为原始数据文件返回的路径。 |
+| `__paimon_row_index` | `BIGINT NOT NULL` | 该行在完整数据文件中的物理位置，从 0 开始。 |
+
+前置条件：按照前文示例配置 Paimon Catalog，并创建一个包含 `id` 列、使用 Parquet 或 ORC 文件的 Paimon 数据表。以下查询假设 `paimon_tbl` 中已包含 `id` 为 `1` 和 `2` 的记录：
+
+```sql
+SELECT id, `__paimon_file_path`, `__paimon_row_index`
+FROM paimon_ctl.paimon_db.paimon_tbl
+ORDER BY `__paimon_file_path`, `__paimon_row_index`;
+```
+
+示例结果（文件路径由实际表位置决定）：
+
+```text
++----+------------------------------------------+--------------------+
+| id | __paimon_file_path                       | __paimon_row_index |
++----+------------------------------------------+--------------------+
+|  1 | s3://bucket/warehouse/db/table/a.parquet |                  0 |
+|  2 | s3://bucket/warehouse/db/table/a.parquet |                  1 |
++----+------------------------------------------+--------------------+
+```
+
+默认情况下，这些列不会出现在 `SELECT *` 或 `DESC` 的结果中。
+
+如需在 `SELECT *` 和 `DESC` 中显示隐藏列，可以在当前会话开启 `show_hidden_columns`：
+
+```sql
+SET show_hidden_columns = true;
+```
+
+相关会话变量：
+
+| 变量 | 类型 | 默认值 | 是否必需 | 作用 |
+| --- | --- | --- | --- | --- |
+| `show_hidden_columns` | `BOOLEAN` | `false` | 否 | 在 `SELECT *` 和 `DESC` 中显示隐藏列。显式引用列名时无需开启。 |
+| `enable_file_scanner_v2` | `BOOLEAN` | `true` | 否 | 查询引用这些元数据列时必须保持开启。 |
+| `force_jni_scanner` | `BOOLEAN` | `false` | 否 | 必须保持关闭，因为 JNI Reader 无法生成这些元数据列。 |
+
+行位置以完整物理文件为基准。谓词过滤、Deletion Vector 处理及扫描切分不会对保留行重新编号。因此，`__paimon_file_path` 和 `__paimon_row_index` 的组合可以定位当前表快照中的一条物理记录。数据文件重写或 Compaction 后，两列的值可能变化，不能将其作为稳定的逻辑行 ID。
+
+:::caution 注意
+仅当查询涉及的每个 Paimon Split 都能作为原始数据文件，通过 FileScannerV2 原生 Parquet 或 ORC Reader 读取时，才能使用这些列。对于 JNI 或原生/JNI 混合扫描、关闭 `enable_file_scanner_v2`、开启 `force_jni_scanner`，以及所选数据文件无法使用原生 Parquet/ORC Reader 的情况，引用这些列的查询会失败。
+
+`__paimon_file_path` 和 `__paimon_row_index` 是保留列名，名称比较不区分大小写。请勿在 Paimon 表中使用它们作为物理列名。
+:::
 
 ### 增量查询
 

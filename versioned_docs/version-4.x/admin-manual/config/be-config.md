@@ -663,6 +663,24 @@ BaseCompaction:546859:
 
 ### Load
 
+#### `enable_table_memtable_flush_backpressure`
+
+* Type: bool
+* Description: Added in version 4.1.4. Whether to block new writes to a table when too many of its MemTables on this BE are still waiting to be flushed. Used together with the FE configuration `enable_adaptive_random_bucket_load` to keep MemTables from piling up and inflating memory during adaptive random bucket loads.
+* Default value: true
+
+#### `table_memtable_flush_pending_count_limit`
+
+* Type: int32
+* Description: Added in version 4.1.4. The maximum number of MemTables of a single table that may be waiting to be flushed on this BE. Once the limit is exceeded, new writes are blocked until it drops below the limit. It only takes effect when `enable_table_memtable_flush_backpressure = true`.
+* Default value: 10
+
+#### `group_commit_max_wal_num_per_table`
+
+* Type: int32
+* Description: Added in version 4.1.4. The maximum number of Group Commit WAL files that may exist for a single table; `0` means no limit. When WAL replay keeps failing so that WALs accumulate beyond this limit, `async_mode` Group Commit loads for that table are rejected with an `EXCEEDED_LIMIT` error whose message looks like `Too many group commit async WALs for table ...`. The limit prevents WALs from growing without bound and filling up the disk.
+* Default value: 10
+
 #### `enable_stream_load_record`
 
 * Type: bool
@@ -809,7 +827,7 @@ BaseCompaction:546859:
 #### `enable_group_commit_streamload_be_forward`
 
 * Type: bool
-* Description: Whether to enable Stream Load BE forwarding for Group Commit in compute-storage decoupled mode. Added in version 4.0.8. Supports dynamic modification.
+* Description: Whether to enable Stream Load BE forwarding for Group Commit in compute-storage decoupled mode. Added in version 4.0.8 in the Doris 4.0 series and in version 4.1.4 in the 4.1 series. Supports dynamic modification.
   - This capability solves the problem where a load balancer randomly spreads Group Commit requests for the same table across different BEs, preventing effective batching: once enabled, the BE forwards the request to a single target BE.
   - **Starting from version 4.0.8, the BE endpoint `/api/{db}/{table}/_stream_load_forward` is gated by this configuration: when it is `false`, requests to that endpoint return `403 Forbidden` with `Stream load forward is disabled`; when it is `true`, requests to that endpoint must also pass authentication and require the global `LOAD` privilege.**
   - Deployments that rely on this forwarding must set the configuration to `true` on both FE and BE (see the FE configuration of the same name in [FE Configuration](./fe-config)).
@@ -1261,6 +1279,12 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 ### Others
 
+#### `enable_arrow_input_validation`
+
+* Type: bool
+* Description: Added in version 4.1.4. Whether to validate the Arrow input buffers before converting Arrow data into Doris internal columns. Enabling it prevents malformed Arrow data from crashing the BE, at the cost of a small amount of extra validation overhead.
+* Default value: true
+
 #### `report_tablet_interval_seconds`
 
 * Description: The interval time for the agent to report the olap table to the FE
@@ -1384,6 +1408,91 @@ Default: true for cloud mode, false for non-cloud mode.
 Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Description: The disk paths and other parameters used for file cache, represented as an array, with one entry for each disk. The `path` specifies the disk path, and `total_size` limits the size of the cache; -1 or 0 will use the entire disk space.
 * format: [{"path":"/path/to/file_cache","total_size":21474836480,{"path":"/path/to/file_cache2","total_size":21474836480}]
+
+#### `enable_async_file_cache_write`
+
+* Type: bool
+* Description: Added in version 4.1.4. Whether to write the file cache asynchronously. When enabled, writing remote data back into the file cache is handed to a background thread pool instead of blocking the read path, which lowers cold-read latency.
+* Default value: false
+
+#### `async_file_cache_write_workers_per_disk`
+
+* Type: int32
+* Description: Added in version 4.1.4. The number of write threads used per cache disk when the file cache is written asynchronously. It only takes effect when `enable_async_file_cache_write = true`.
+* Default value: 16
+
+#### `async_file_cache_write_max_pending_bytes`
+
+* Type: int64
+* Description: Added in version 4.1.4. The maximum total size, in bytes, of data pending an asynchronous file cache write. Write-back requests beyond this limit are dropped, which does not affect query correctness but means the data is not cached. `-1` means no limit.
+* Default value: -1
+
+#### `enable_file_cache_write_from_s3_file_writer`
+
+* Type: bool
+* Description: Added in version 4.1.4. Whether to also write data into the local file cache while writing to object storage, so that freshly written data can be read from the cache directly.
+* Default value: true
+
+#### `enable_file_cache_write_index_file_only`
+
+* Type: bool
+* Description: Added in version 4.1.4. Whether to write only index files into the file cache. Enabling it keeps indexes resident in the cache first when cache space is limited.
+* Default value: false
+
+#### `enable_cache_read_from_peer`
+
+* Type: bool
+* Description: Whether to allow reading data from the file cache of other BEs across compute groups.
+
+:::caution Behavior change (4.1.4)
+
+The default value changed from `true` to `false` in version 4.1.4, and the configuration item `cache_read_from_peer_expired_seconds` was removed at the same time. Set it to `true` explicitly to keep using peer cache reads across compute groups.
+
+:::
+
+* Default value: false
+
+#### `s3_get_requests_per_second_per_core` / `s3_put_requests_per_second_per_core`
+
+* Type: int64
+* Description: Added in version 4.1.4. The QPS limit for object storage GET / PUT requests, computed per CPU core. A negative value disables this mode and falls back to the legacy absolute token configuration; `0` means the QPS is not limited.
+* Default value: -1
+
+#### `s3_get_requests_per_second_max` / `s3_put_requests_per_second_max`
+
+* Type: int64
+* Description: Added in version 4.1.4. The hard upper bound on the GET / PUT QPS derived from the number of CPU cores. A value less than or equal to `0` means no upper bound.
+* Default value: 0
+
+#### `s3_get_bytes_per_second_per_core` / `s3_put_bytes_per_second_per_core`
+
+* Type: int64
+* Description: Added in version 4.1.4. The bandwidth limit for object storage GET / PUT, computed per CPU core (bytes per second per core). A value less than or equal to `0` means the bandwidth is not limited.
+* Default value: -1
+
+#### `s3_get_bytes_per_second_max` / `s3_put_bytes_per_second_max`
+
+* Type: int64
+* Description: Added in version 4.1.4. The hard upper bound, in bytes per second, on the GET / PUT bandwidth derived from the number of CPU cores. A value less than or equal to `0` means no upper bound.
+* Default value: 0
+
+#### `s3_rate_limiter_cpu_cores_override`
+
+* Type: int32
+* Description: Added in version 4.1.4. The number of CPU cores used to derive the rate limits above. A value less than or equal to `0` means the number of cores on the machine is detected automatically.
+* Default value: 0
+
+#### `s3_rate_limiter_log_interval`
+
+* Type: int64
+* Description: Added in version 4.1.4. The minimum interval, in milliseconds, between log entries printed when object storage rate limiting is triggered.
+* Default value: 1000
+
+#### `file_cache_mem_storage_shard_num`
+
+* Type: int32
+* Description: Added in version 4.1.4. The number of shards of the file cache memory storage, used to reduce lock contention under concurrent access.
+* Default value: 1024
 
 #### `time_series_max_tablet_version_num`
 
