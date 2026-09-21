@@ -13,7 +13,7 @@
 
 在存算分离架构中，数据存储于远程对象存储（如 S3、HDFS）。Doris 利用 BE 节点本地磁盘作为文件缓存层，配合多队列 LRU（Least Recently Used）策略高效管理缓存空间，特别优化了索引与元数据的访问路径，以最大化热点数据的缓存命中率。
 
-针对多计算组（Compute Group）场景，Doris 额外提供**缓存预热**功能，在新计算组启动时可主动拉取指定表或分区的数据，快速建立本地缓存，提升首次查询性能。此外，开启 [Peer 读](./file-cache-peer-read)后，本地缓存未命中的数据块可以先从其他 BE（包括其他计算组）的缓存读取，再回源远端存储。
+针对多计算组（Compute Group）场景，Doris 额外提供**缓存预热**功能，在新计算组启动时可主动拉取指定表或分区的数据，快速建立本地缓存，提升首次查询性能。默认开启的 [Peer 读](./file-cache-peer-read)则让本地缓存未命中的数据块先从其他 BE（包括其他计算组）的缓存读取，再回源远端存储。
 
 ## 文件缓存的作用
 
@@ -506,7 +506,7 @@ SQL Profile 中缓存相关指标位于 `SegmentIterator` 节点下：
 
 您可以通过[查询性能分析](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile)查看完整的查询性能报告。
 
-开启 Peer 读后，`NumPeerIOTotal`、`PeerIOUseTimer`、`SameCGPeerIOTotal`、`CrossCGPeerIOTotal` 等指标用于判断数据是否来自其他 BE 的缓存，详见 [Peer 读：Query Profile 指标](./file-cache-peer-read#query-profile-指标)。
+`NumPeerIOTotal`、`PeerIOUseTimer`、`SameCGPeerIOTotal`、`CrossCGPeerIOTotal` 等指标用于判断数据是否来自其他 BE 的缓存（Peer 读），详见 [Peer 读：Query Profile 指标](./file-cache-peer-read#query-profile-指标)。
 
 ## TTL 缓存策略
 
@@ -602,7 +602,7 @@ ALTER TABLE fact_table SET ("file_cache_ttl_seconds" = "86400");
 
 **Q：新计算组上线后首次查询很慢？**
 
-使用**缓存预热**功能，提前将热点表或分区数据从远端存储拉取到新计算组的本地缓存中。具体用法详见 [WARM-UP SQL 文档](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md)。如果其他计算组已经缓存了这些数据，也可以开启 [Peer 读](./file-cache-peer-read)，让新计算组未命中时直接从其他计算组的 BE 读取。
+使用**缓存预热**功能，提前将热点表或分区数据从远端存储拉取到新计算组的本地缓存中。具体用法详见 [WARM-UP SQL 文档](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md)。如果其他计算组已经缓存了这些数据，默认开启的 [Peer 读](./file-cache-peer-read)会让新计算组未命中时直接从其他计算组的 BE 读取。
 
 **Q：如何判断当前缓存空间是否已满？**
 

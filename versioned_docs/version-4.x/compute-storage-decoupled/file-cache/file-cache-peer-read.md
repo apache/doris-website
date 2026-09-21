@@ -15,7 +15,7 @@ Peer cache read is a File Cache miss-handling strategy in compute-storage decoup
 
 :::caution Version
 
-Peer cache read is supported since version 4.2.0 and is disabled by default. Enable it on the BE with `enable_cache_read_from_peer = true`.
+Peer cache read is supported since version 4.2.0 and is enabled by default. Set `enable_cache_read_from_peer = false` on the BE to turn it off.
 
 :::
 

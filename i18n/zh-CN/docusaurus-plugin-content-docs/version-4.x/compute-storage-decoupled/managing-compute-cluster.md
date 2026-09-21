@@ -34,7 +34,7 @@
 
 :::caution 注意
 
-上述隔离针对 CPU、内存等计算资源。如果开启了跨计算组 [Peer 读](./file-cache/file-cache-peer-read)或回源填充，一个计算组的查询在本地缓存未命中时可能读取另一个计算组 BE 的 File Cache，甚至让对方代为回源对象存储，计算组之间的网络、磁盘和缓存隔离会被削弱。
+上述隔离针对 CPU、内存等计算资源。[Peer 读](./file-cache/file-cache-peer-read)默认开启，一个计算组的查询在本地缓存未命中时可能读取另一个计算组 BE 的 File Cache；配置回源填充后还可能让对方代为回源对象存储。计算组之间的网络、磁盘和缓存隔离因此会被削弱，有硬性隔离要求时可在 BE 上关闭 Peer 读。
 
 :::
 
@@ -219,7 +219,7 @@ Cloud Rebalance 是 Doris 存算分离架构下的负载均衡机制。当计算
 | `without_warmup` | 最快 | 最大 | FE 直接修改分片映射；首次读写无 file cache，需从 S3 拉取数据 | 需要新节点快速上线，对性能抖动不敏感 |
 | `async_warmup` | 较快 | 可能出现 cache miss | 下发 warm up 任务，成功或超时后再修改映射；映射切换时尽力拉取 file cache，部分场景首次读仍可能 miss | 通用场景，性能可接受 |
 | `sync_warmup` | 较慢 | 基本无 cache miss | 下发 warm up 任务，FE 确认任务完成后才修改映射，确保 cache 迁移完成 | 对扩容后性能要求极高，希望新节点一定存在 file cache |
-| `peer_read_async_warmup` | 最快 | 较小 | FE 直接修改分片映射，并尽力下发 warm up 任务；新节点首次读通过 [Peer 读](./file-cache/file-cache-peer-read)直接从源 BE 的 file cache 拉取，需要 BE 开启 `enable_cache_read_from_peer` | 需要新节点快速上线，又希望避免直接回源 S3；能接受源 BE 承担额外读取压力 |
+| `peer_read_async_warmup` | 最快 | 较小 | FE 直接修改分片映射，并尽力下发 warm up 任务；新节点首次读通过 [Peer 读](./file-cache/file-cache-peer-read)直接从源 BE 的 file cache 拉取，需要 BE 的 `enable_cache_read_from_peer` 保持开启（默认开启） | 需要新节点快速上线，又希望避免直接回源 S3；能接受源 BE 承担额外读取压力 |
 
 #### 配置方式
 

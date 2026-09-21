@@ -63,7 +63,7 @@ enable_warmup_immediately_on_new_rowset = true
 
 预热覆盖不到的冷读，可以用 [Peer 读](../file-cache/file-cache-peer-read)兜底：只读计算组本地缓存未命中时，先从写入计算组 BE 的 File Cache 读取，再回源对象存储。把写入计算组配置为回源填充计算组（`peer_cache_fill_compute_group_id`）后，写入计算组还会代为回源并保留一份缓存。
 
-Peer 读是查询时的被动读取，不能替代预热；它会让只读计算组的查询占用写入计算组的网络和缓存读取能力，开启前请评估隔离要求。
+Peer 读默认开启，是查询时的被动读取，不能替代预热。它会让只读计算组的查询占用写入计算组的网络和缓存读取能力，对隔离有硬性要求时可以关闭。
 
 ## 优化 Compaction / Schema Change 对查询性能的影响
 

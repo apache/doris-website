@@ -1420,13 +1420,8 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 #### `enable_cache_read_from_peer`
 
 * 类型：bool
-* 描述：Peer 读总开关。开启后，本地 File Cache 未命中时先尝试从其他 BE（同计算组或其他计算组）的 File Cache 读取数据块，其他 BE 也没有时再回源对象存储。同计算组和跨计算组的 Peer 读由该开关一起控制，不能单独关闭跨计算组读取。详见 [Peer 读](../../compute-storage-decoupled/file-cache/file-cache-peer-read)。
-
-:::caution 版本行为变更（4.2.0）
-默认值自 4.2.0 版本起由 `true` 调整为 `false`；同时配置项 `cache_read_from_peer_expired_seconds` 被移除。如需继续使用 Peer 读，请显式设置为 `true`。
-:::
-
-* 默认值：false
+* 描述：Peer 读总开关。开启时，本地 File Cache 未命中先尝试从其他 BE（同计算组或其他计算组）的 File Cache 读取数据块，其他 BE 也没有时再回源对象存储。同计算组和跨计算组的 Peer 读由该开关一起控制，不能单独关闭跨计算组读取。自 4.2.0 版本起支持跨计算组 Peer 读，同时移除了配置项 `cache_read_from_peer_expired_seconds`。详见 [Peer 读](../../compute-storage-decoupled/file-cache/file-cache-peer-read)。
+* 默认值：true
 
 #### `enable_peer_s3_race`
 
