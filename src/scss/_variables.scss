@@ -34,6 +34,10 @@
     --brand-ink: #0F1A14;
     --brand-ink-rgb: 15 26 20;
     --brand-ink-soft: #1B2A22;
+    // Prose link colour (docs, blog, release notes). Follows the brand primary;
+    // themes whose primary is near-black override it below with a readable
+    // shade of their accent, otherwise links are indistinguishable from text.
+    --brand-link: var(--brand-primary);
 
     --ifm-color-primary: var(--brand-primary);
     --ifm-color-primary-dark: #2c39d4;
@@ -164,6 +168,7 @@ html[data-brand-theme='blue'] {
     --brand-ink: #2C2C34;
     --brand-ink-rgb: 44 44 52;
     --brand-ink-soft: #3C3C46;
+    --brand-link: #007C9E; // deep Steel Cyan: the primary is near-black
 
     --ifm-color-primary-dark: #27272E;
     --ifm-color-primary-darker: #222229;
@@ -207,6 +212,7 @@ html[data-brand-theme='read'] {
     --brand-ink: #121212;
     --brand-ink-rgb: 18 18 18;
     --brand-ink-soft: #282828;
+    --brand-link: #CC3A00; // deep lava: the primary is near-black
 
     --ifm-color-primary-dark: #101010;
     --ifm-color-primary-darker: #0D0D0D;
@@ -336,6 +342,7 @@ html[data-brand-theme='yellow-black'] {
     --brand-ink: #111111;
     --brand-ink-rgb: 17 17 17;
     --brand-ink-soft: #292929;
+    --brand-link: #8A6D00; // deep gold: the primary is near-black
 
     --ifm-color-primary-dark: #000000;
     --ifm-color-primary-darker: #000000;
