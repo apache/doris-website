@@ -61,6 +61,7 @@ Java UDF 为用户提供使用 Java 编写自定义函数的接口，方便用�
 | Datetime | LocalDateTime |
 | TimestampNs | LocalDateTime |
 | IPV4 / IPV6 | InetAddress |
+| UUID | `java.util.UUID` |
 | String | String |
 | Decimal | BigDecimal |
 | `array<Type>` | `ArrayList<Type>`、`List<Type>`（支持嵌套） |

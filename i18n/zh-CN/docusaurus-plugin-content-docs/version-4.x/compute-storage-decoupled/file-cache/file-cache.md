@@ -4,7 +4,7 @@
     "sidebar_label": "文件缓存配置",
     "language": "zh-CN",
     "description": "介绍存算分离架构下 Doris 文件缓存的配置、索引优先写入、查询级缓存限制、缓存预热与清理、命中率监控及 TTL 策略，助力提升查询性能、降低对象存储成本。",
-    "keywords": ["Doris 文件缓存", "存算分离缓存", "file cache", "索引优先缓存", "缓存预热", "缓存配额", "file_cache_query_limit_bytes", "TTL 缓存", "LRU", "缓存命中率", "对象存储加速"]
+    "keywords": ["Doris 文件缓存", "存算分离缓存", "file cache", "索引优先缓存", "缓存预热", "Peer 读", "缓存配额", "file_cache_query_limit_bytes", "TTL 缓存", "LRU", "缓存命中率", "对象存储加速"]
 }
 ---
 
@@ -13,7 +13,7 @@
 
 在存算分离架构中，数据存储于远程对象存储（如 S3、HDFS）。Doris 利用 BE 节点本地磁盘作为文件缓存层，配合多队列 LRU（Least Recently Used）策略高效管理缓存空间，特别优化了索引与元数据的访问路径，以最大化热点数据的缓存命中率。
 
-针对多计算组（Compute Group）场景，Doris 额外提供**缓存预热**功能，在新计算组启动时可主动拉取指定表或分区的数据，快速建立本地缓存，提升首次查询性能。
+针对多计算组（Compute Group）场景，Doris 额外提供**缓存预热**功能，在新计算组启动时可主动拉取指定表或分区的数据，快速建立本地缓存，提升首次查询性能。默认开启的 [Peer 读](./file-cache-peer-read)则让本地缓存未命中的数据块先从其他 BE（包括其他计算组）的缓存读取，再回源远端存储。
 
 ## 文件缓存的作用
 
@@ -57,7 +57,7 @@ Doris 提供一个全局策略和两个 Compaction 专用策略：
 
 | 参数 | 类型 | 默认值 | 生效范围 | 说明 |
 |---|---|---|---|---|
-| `enable_file_cache_write_index_file_only` | Boolean | `false` | 所有存算分离 Rowset 写入，包括导入、Schema Change、Cumulative Compaction 和 Base Compaction | **自 4.0.8 版本起支持。** 设为 `true` 后，不主动缓存 Segment 数据；Segment 关闭后同步预加载其 footer 和内部索引范围，独立倒排索引文件仍写入 File Cache。该参数的优先级高于两个 Compaction 专用参数 |
+| `enable_file_cache_write_index_file_only` | Boolean | `false` | 所有存算分离 Rowset 写入，包括导入、Schema Change、Cumulative Compaction 和 Base Compaction | **Doris 4.0 系列自 4.0.8 版本起支持，4.1 系列自 4.1.4 版本起支持。** 设为 `true` 后，不主动缓存 Segment 数据；Segment 关闭后同步预加载其 footer 和内部索引范围，独立倒排索引文件仍写入 File Cache。该参数的优先级高于两个 Compaction 专用参数 |
 | `enable_file_cache_write_base_compaction_index_only` | Boolean | `false` | Base Compaction | 仅当 Base Compaction 按原有策略决定写入 File Cache 时，将其输出限制为不主动缓存 Segment 文件、仍缓存独立倒排索引文件。该参数不会使原本不写缓存的 Base Compaction 输出开始写入缓存 |
 | `enable_file_cache_write_cumu_compaction_index_only` | Boolean | `false` | Cumulative Compaction | 当 Cumulative Compaction 输出写入 File Cache 时，将其限制为不主动缓存 Segment 文件、仍缓存独立倒排索引文件 |
 
@@ -345,6 +345,8 @@ Doris 提供缓存预热功能，允许用户从远端存储主动拉取数据�
 
 具体用法详见 [WARM-UP SQL 文档](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md)。
 
+缓存预热是主动把数据从远端存储拉到本地；与之互补的是 [Peer 读](./file-cache-peer-read)：查询时本地缓存未命中，先从其他 BE 的缓存读取，再回源远端存储，用于兜底预热没有覆盖到的冷读。
+
 ## 缓存清理
 
 <!-- 知识类型: 操作步骤 -->
@@ -504,6 +506,8 @@ SQL Profile 中缓存相关指标位于 `SegmentIterator` 节点下：
 
 您可以通过[查询性能分析](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile)查看完整的查询性能报告。
 
+`NumPeerIOTotal`、`PeerIOUseTimer`、`SameCGPeerIOTotal`、`CrossCGPeerIOTotal` 等指标用于判断数据是否来自其他 BE 的缓存（Peer 读），详见 [Peer 读：Query Profile 指标](./file-cache-peer-read#query-profile-指标)。
+
 ## TTL 缓存策略
 
 <!-- 知识类型: 操作步骤 -->
@@ -534,6 +538,14 @@ PROPERTIES (
 ```
 
 上表中，所有新导入的数据将在缓存中保留 300 秒。
+
+`file_cache_ttl_seconds` 的取值范围为 `0 <= value <= 4611686018427387903`（即 `Long.MAX_VALUE / 2`）。自 4.1.4 版本起，`CREATE TABLE` 与 `ALTER TABLE ... SET` 都会校验该取值，超出范围或非法取值会直接报错：
+
+```text
+The value <v> formats error or is out of range (0 <= integer <= 4611686018427387903). Larger values may overflow in BE and change TTL cache to normal cache; please use 4611686018427387903 or a smaller value.
+```
+
+4.1.4 之前不做上界校验，过大的取值会在 BE 侧溢出，导致 TTL 缓存被降级为普通缓存。
 
 ### 修改表的 TTL 设置
 
@@ -590,7 +602,7 @@ ALTER TABLE fact_table SET ("file_cache_ttl_seconds" = "86400");
 
 **Q：新计算组上线后首次查询很慢？**
 
-使用**缓存预热**功能，提前将热点表或分区数据从远端存储拉取到新计算组的本地缓存中。具体用法详见 [WARM-UP SQL 文档](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md)。
+使用**缓存预热**功能，提前将热点表或分区数据从远端存储拉取到新计算组的本地缓存中。具体用法详见 [WARM-UP SQL 文档](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md)。如果其他计算组已经缓存了这些数据，默认开启的 [Peer 读](./file-cache-peer-read)会让新计算组未命中时直接从其他计算组的 BE 读取。
 
 **Q：如何判断当前缓存空间是否已满？**
 

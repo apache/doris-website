@@ -148,7 +148,7 @@ The MySQL source (`FROM MYSQL`) supports the following parameters. Connection in
 | `table.<table_name>.target_table` | No | Source table name | Supported since version 4.1.0. Sets the Doris target table name for a source table. `<table_name>` is the source table name. |
 | `table.<table_name>.exclude_columns` | No | - | Supported since version 4.1.0. Specifies source columns not to sync, separated by commas. The columns must exist and cannot include primary key columns. |
 | `offset` | No | `latest` | Startup offset. `initial`: full and incremental sync; `earliest`: start from the earliest available Binlog offset; `latest`: sync only changes after the job starts. You can also specify an exact JSON offset, such as `{"file":"binlog.000001","pos":"154"}` or `{"gtids":"<gtid_set>"}`. Since version 4.1.0, `snapshot` is also supported for full sync only. |
-| `snapshot_split_size` | No | `8096` | Split size in rows. During full sync, a table is divided into multiple splits. Must be a positive integer. |
+| `snapshot_split_size` | No | `40960` (`8096` before 4.1.4) | Split size in rows. During full sync, a table is divided into multiple splits. Must be a positive integer. |
 | `snapshot_parallelism` | No | `1` | Parallelism of the full-sync phase, that is, the maximum number of splits scheduled by a Task at one time. Must be a positive integer. |
 | `server_id` | No | Automatically generated | Supported since version 4.1.0. Server ID of the MySQL CDC reader. Supports a single value, such as `5400`, or a closed range, such as `5400-5408`. The range width must be greater than or equal to `snapshot_parallelism`. |
 | `ssl_mode` | No | `disable` | Supported since version 4.1.0. SSL mode. Valid values are `disable`, `require`, and `verify-ca`. |

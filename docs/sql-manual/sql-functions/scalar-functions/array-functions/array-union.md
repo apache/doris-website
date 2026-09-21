@@ -20,7 +20,7 @@ ARRAY_UNION(arr1, arr2, ..., arrN)
 
 - `arr1, arr2, ..., arrN`: Any number of array inputs, all of type `ARRAY<T>`.
     - The element type `T` of all arrays must be the same, or implicitly convertible to a unified type.
-    - The element type `T` can be numeric, string, date/time, or IP type.
+    - The element type `T` can be numeric, string, date/time, IP, or UUID.
   
 ## Return Value
 

@@ -463,6 +463,7 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 - **大宽表优化**：对于会通过子列列式提取（Subcolumnization）生成大量独立子列的宽表场景（例如超过 2000 列），强烈建议开启 **V3 存储格式**。通过在建表 `PROPERTIES` 中指定 `"storage_format" = "V3"`，可以将列元数据与 Segment Footer 解耦，加快文件打开速度并降低内存占用。
 - JSON key 长度 ≤ 255。
+- 可以使用 [`PARSE_TO_VARIANT`](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant.md) 与 [`TRY_PARSE_TO_VARIANT`](../../../sql-functions/scalar-functions/variant-functions/try-parse-to-variant.md)（自 4.1.4 版本起支持）把 JSON 字符串显式转换为 VARIANT，两者的区别是解析失败时前者报错、后者返回 NULL。
 - 不支持作为主键或排序键。
 - 不支持与其他类型嵌套（如 `Array<Variant>`、`Struct<Variant>`）。
 - 在未启用 DOC mode 时，读取整个 VARIANT 列会扫描所有子字段。对于超宽列，一般不建议直接 `SELECT variant_col`；如果整列读取是主要查询模式，建议优先使用 DOC mode。若列包含大量子字段，也可额外存储原始 JSON 的 STRING/JSONB 列，以优化如 `LIKE` 等整体匹配：

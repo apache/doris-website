@@ -3,12 +3,13 @@
     "title": "Continuous Load Overview",
     "language": "en",
     "sidebar_label": "Overview",
-    "description": "Explore Doris Streaming Job data sources, sync modes, consistency semantics, job states, common parameters, and operational commands.",
+    "description": "Explore Doris Streaming Job data sources, including MySQL, PostgreSQL, OceanBase, and S3, as well as sync modes, consistency semantics, job states, common parameters, and operational commands.",
     "keywords": [
         "Doris continuous load",
         "Streaming Job",
         "MySQL real-time sync",
         "PostgreSQL real-time sync",
+        "OceanBase real-time sync",
         "S3 continuous load",
         "SQL Mapping Sync",
         "Auto Table Creation Sync",
@@ -44,9 +45,10 @@ Continuous load supports the following data sources and sync modes:
 | :---------- | :----------------- | :---------------------------------------------------------------- | :---------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
 | MySQL       | 5.6, 5.7, 8.0.x    | [MySQL CDC with SQL Mapping](./continuous-load-mysql-table.md)    | [MySQL CDC with Auto Table Creation](./continuous-load-mysql-database.md) | [Amazon RDS MySQL](./prerequisites/amazon-rds-mysql.md) · [Amazon Aurora MySQL](./prerequisites/amazon-aurora-mysql.md)                   |
 | PostgreSQL  | 14, 15, 16, 17     | [PostgreSQL CDC with SQL Mapping](./continuous-load-postgresql-table.md) | [PostgreSQL CDC with Auto Table Creation](./continuous-load-postgresql-database.md) | [Amazon RDS PostgreSQL](./prerequisites/amazon-rds-postgresql.md) · [Amazon Aurora PostgreSQL](./prerequisites/amazon-aurora-postgresql.md) |
+| OceanBase   | MySQL compatibility mode | -                                                           | [OceanBase CDC with Auto Table Creation](./continuous-load-oceanbase-database.md) (since version 4.1.4) | -                                                                                                                                         |
 | S3          | -                  | [S3 Continuous Load](./continuous-load-s3.md)                     | -                                                                       | -                                                                                                                                         |
 
-For how upstream column types map to Doris types, see Data Type Mapping for [MySQL](./data-type-mapping-mysql.md) and [PostgreSQL](./data-type-mapping-postgresql.md).
+For how upstream column types map to Doris types, see Data Type Mapping for [MySQL](./data-type-mapping-mysql.md), [PostgreSQL](./data-type-mapping-postgresql.md), and [OceanBase](./data-type-mapping-oceanbase.md).
 
 ## How to Choose a Sync Method
 
@@ -71,6 +73,7 @@ SQL Mapping Sync and Auto Table Creation Sync are two continuous load methods wi
 
 - **You need to apply SQL processing to the data, or you have strict requirements for exactly-once semantics** -> choose **SQL Mapping Sync**
 - **You want Doris to create tables automatically and sync a group of tables with one configuration** -> choose **Auto Table Creation Sync**
+- **The data source is OceanBase** -> currently, only Auto Table Creation Sync in MySQL compatibility mode is supported
 - **The data source is S3 object storage** -> only SQL Mapping Sync is supported (using the S3 TVF)
 
 ## Job State Transitions
@@ -133,6 +136,9 @@ Result columns:
 | LoadStatistic     | Job statistics                                                           |
 | ErrorMsg          | Error message of the Job                                                 |
 | JobRuntimeMsg     | Runtime hints of the Job                                                 |
+| LagBytes          | Number of backlog bytes in the source log (MySQL / OceanBase binlog or PostgreSQL WAL). `-1` means the value is currently unavailable, for example for an S3 data source or during the full snapshot phase. **Since version 4.1.4**, this column replaces the former `Lag` column (in seconds) and is reported in bytes |
+| LastSourceEventTimestamp | Timestamp (in Unix seconds) of the latest source event recorded in the committed offset. Empty when unavailable. **Added in version 4.1.4** |
+| LastTaskSuccessTime | Time when the most recent Task completed successfully                  |
 
 ### View Task Status
 
@@ -197,7 +203,7 @@ DROP JOB WHERE jobName = <job_name>;
 
 ### Job Common Load Configuration Parameters
 
-Configure the following parameters through `CREATE JOB ... PROPERTIES (...)`. Unless otherwise specified, they can be used by both SQL Mapping Sync and Auto Table Creation Sync for MySQL and PostgreSQL.
+Configure the following parameters through `CREATE JOB ... PROPERTIES (...)`. Unless otherwise specified, MySQL, PostgreSQL, and OceanBase continuous load jobs can use them.
 
 | Parameter | Default | Description |
 | --- | --- | --- |
@@ -205,7 +211,7 @@ Configure the following parameters through `CREATE JOB ... PROPERTIES (...)`. Un
 | `compute_group` | Current session or user default compute group | Supported only in compute-storage decoupled mode. Specifies the compute group in which the job runs. An explicitly configured value cannot be empty, and the user must have the USAGE privilege on the compute group. Job creation fails if this parameter is not set and neither the current session nor the user has an available default compute group. |
 | `session.<variable_name>` | Default value of the corresponding session variable | Supported only in TVF mode. Sets a session variable for the Job's INSERT task, for example, `session.insert_max_filter_ratio`. The variable name and value must be valid Doris session variables. |
 
-When used as a Job Property, `offset` does not set the initial position of a MySQL or PostgreSQL job. When creating a job, set the initial position in the source parameters of `FROM MYSQL`, `FROM POSTGRES`, or `cdc_stream(...)`. After pausing a CDC job, you can reset its position through `ALTER JOB ... PROPERTIES ("offset" = '<json_offset>')`. MySQL uses `{"file":"binlog.000001","pos":"154"}`, and PostgreSQL uses `{"lsn":"12345678"}`. `ALTER JOB` accepts only exact JSON offsets.
+When used as a Job Property, `offset` does not set the initial position of a CDC job. When creating a job, set the initial position in the source parameters of `FROM MYSQL`, `FROM POSTGRES`, `FROM OCEANBASE`, or `cdc_stream(...)`. After pausing a CDC job, you can reset its position through `ALTER JOB ... PROPERTIES ("offset" = '<json_offset>')`. MySQL and OceanBase use `{"file":"binlog.000001","pos":"154"}`, and PostgreSQL uses `{"lsn":"12345678"}`. `ALTER JOB` accepts only exact JSON offsets.
 
 ## Limitations
 
@@ -219,9 +225,11 @@ Only upstream tables **with a primary key** can be synchronized (both sync metho
 
 ### Schema Change (DDL)
 
-DDL sync applies **only to the [Auto Table Creation Sync method](#capability-comparison)**; the [SQL Mapping Sync method](#capability-comparison) does not sync any DDL.
+DDL sync applies **only to the [Auto Table Creation Sync method](#capability-comparison)**; the [SQL Mapping Sync method](#capability-comparison) does not sync any DDL — the `cdc_stream()` table function always forces `schema_change_enabled` to `false`.
 
-- **MySQL and PostgreSQL**: only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and primary key / constraint / index / partition changes are NOT synced** — apply them manually in Doris. For source-specific behavior and limitations, see [MySQL Schema Change Sync](./schema-change-mysql.md) and [PostgreSQL Schema Change Sync](./schema-change-postgresql.md).
+- **MySQL, PostgreSQL, and OceanBase**: only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and primary key / constraint / index / partition changes are NOT synced** — apply them manually in Doris. For source-specific behavior and limitations, see Schema Change Sync for [MySQL](./schema-change-mysql.md), [PostgreSQL](./schema-change-postgresql.md), and [OceanBase](./schema-change-oceanbase.md).
+
+Auto Table Creation Sync enables Schema Change Sync by default. Doris currently does not provide a SQL property to disable it.
 
 ## FAQ
 

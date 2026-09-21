@@ -334,7 +334,7 @@ Default: "" (empty string)
 
 IsMutable: false
 
-Cluster token used to authenticate the FE meta-service HTTP endpoints (`image`, `role`, `check`, `put`, `journal_id`, and so on) between FE nodes. Added in version 4.0.8.
+Cluster token used to authenticate the FE meta-service HTTP endpoints (`image`, `role`, `check`, `put`, `journal_id`, and so on) between FE nodes. Added in version 4.0.8 in the Doris 4.0 series and in version 4.1.4 in the 4.1 series.
 
 When set to a non-empty value, these endpoints additionally require the caller to present a matching token header on top of the existing node-host check, which prevents non-members of the cluster from reaching the FE metadata endpoints. Leaving it empty keeps the legacy node-host-only behavior, so existing clusters and rolling upgrades are unaffected.
 
@@ -693,6 +693,12 @@ The max number work threads of http sql submitter
 Default：2
 
 The max number work threads of http upload submitter
+
+:::caution Behavior change (4.1.4)
+
+The `/api/upload` endpoints were removed in version 4.1.4, and this configuration item was removed along with them. See [Upload Action](../open-api/fe-http/upload-action).
+
+:::
 
 ### Query Engine
 
@@ -1473,6 +1479,78 @@ Concurrency of HIGH priority pending load jobs. Load job priority is defined as 
 Default：5 （s）
 
 The load scheduler running interval. A load job will transfer its state from PENDING to LOADING to FINISHED.  The load scheduler will transfer load job from PENDING to LOADING while the txn callback will transfer load job from LOADING to FINISHED.  So a load job will cost at most one interval to finish when the concurrency has not reached the upper limit.
+
+#### `s3_load_endpoint_white_list`
+
+Default: empty
+
+Is it possible to dynamically configure: false
+
+The whitelist of endpoints that S3 Load is allowed to use. Multiple values are separated by commas, for example `s3_load_endpoint_white_list=a,b,c`. An empty value means that no whitelist is set.
+
+:::caution Behavior change (4.1.4)
+
+For security reasons, starting from version 4.1.4 this configuration item **can no longer be modified dynamically**. It can only be set in `fe.conf` and takes effect after restarting FE; it can no longer be changed with `ADMIN SET FRONTEND CONFIG`.
+
+:::
+
+#### `resource_group_load_success_quorum`
+
+Default: empty
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: true
+
+Added in version 4.1.4. Sets, per resource group (that is, the Location Tag of the BEs), the **minimum number of replicas that must be written successfully** in that group when a load transaction commits.
+
+The value is a comma-separated list in which each item has the format `<resource_group>:<min_success_replicas>`, where `<min_success_replicas>` is a non-negative integer. For example:
+
+```properties
+resource_group_load_success_quorum=group_a:2,group_b:1
+```
+
+When a transaction commits, if the number of replicas written successfully in a configured resource group is lower than the configured value, the transaction fails to commit. Resource groups that do not appear in the configuration are not checked. Malformed items are ignored and a warning is printed to `fe.log`.
+
+Use this configuration in multi-data-center or multi-availability-zone deployments to make sure that a load is considered successful only after a given number of replicas have been written in the specified data center.
+
+#### `enable_adaptive_random_bucket_load`
+
+Default: true
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: true
+
+Added in version 4.1.4. Whether to enable adaptive random bucket load.
+
+When enabled, FE sends tablet location information to the BEs, and each BE uses it to work out the set of local buckets for which it holds the primary replica. Once the amount of data written to a single tablet exceeds a threshold (200 MB by default), writes are rotated among the local buckets. This lowers the memory pressure of loading and improves the load throughput of randomly bucketed (`DISTRIBUTED BY RANDOM`) tables, and it applies uniformly to all load methods.
+
+This feature is also constrained by the BE configurations `enable_table_memtable_flush_backpressure` and `table_memtable_flush_pending_count_limit`. See [BE Configuration](./be-config).
+
+#### `enable_forward_group_commit_stream_load_to_follower`
+
+Default: false
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: true
+
+Added in version 4.1.4. Whether to forward Stream Load requests that use Group Commit to a Follower FE.
+
+When enabled, Stream Load requests in Group Commit mode are forwarded round robin to a Follower FE, which spreads the batching pressure across multiple FEs.
+
+Note that forwarding is not supported when the `light_schema_change` property of the target table is `false`; such requests fail with an error.
+
+#### `streaming_job_snapshot_offset_persist_interval_sec`
+
+Default: 300 (s)
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: true
+
+Added in version 4.1.4. The minimum interval, in seconds, between two offset persistences during the full snapshot phase of a Streaming Job (continuous load job). A smaller value reduces the amount of data that has to be replayed after the job restarts, but increases the frequency of metadata writes.
 
 #### `label_keep_max_second`
 
@@ -2305,7 +2383,7 @@ In order not to wait too long for create table(index), set a max timeout.
 
 #### `autobucket_min_buckets`
 
-Default: 3 (was 1 before 4.0.8)
+Default: 3 (was 1 before 4.0.8 / 4.1.4)
 
 IsMutable: true
 
@@ -2313,7 +2391,7 @@ MasterOnly: true
 
 The minimum bucket number produced by the auto bucketing strategy (`DISTRIBUTED BY ... BUCKETS AUTO`).
 
-**Starting from version 4.0.8, the default value changed from `1` to `3`.** The old default made small partitions fall back to a single bucket, which gave insufficient parallelism and data distribution. After the change, auto bucketing never produces fewer than 3 buckets. The change only affects newly created partitions; the bucket number of existing partitions is unchanged.
+**Starting from version 4.0.8 in the Doris 4.0 series and version 4.1.4 in the 4.1 series, the default value changed from `1` to `3`.** The old default made small partitions fall back to a single bucket, which gave insufficient parallelism and data distribution. After the change, auto bucketing never produces fewer than 3 buckets. The change only affects newly created partitions; the bucket number of existing partitions is unchanged.
 
 #### `autobucket_max_buckets`
 
@@ -2326,6 +2404,48 @@ MasterOnly: true
 The maximum bucket number produced by the auto bucketing strategy. A computed result larger than this value is capped at this value.
 
 ### External Table
+
+#### `external_meta_cache_max_weight`
+
+Default: `0`
+
+Is it possible to dynamically configure: false
+
+Is it a configuration item unique to the Master FE node: false
+
+Added in version 4.1.4. The overall capacity limit of the FE-level external meta cache.
+
+The value can be a byte size with a unit (such as `1024MB` or `4GB`), or a percentage of the JVM max heap size (such as `10%`). A value of `0` means that no global quota is set, which matches the behavior of earlier versions.
+
+This quota uniformly bounds the memory used by the various kinds of external table metadata cache (Hive partition values, Iceberg tables / snapshots / manifests, Paimon snapshots, and so on). An individual catalog can be controlled at a finer granularity with the `meta.cache.max-weight` and `meta.cache.<engine>.<entry>.max-weight` properties, and cache usage can be observed through the `information_schema.catalog_meta_cache_statistics` system table.
+
+#### `jdbc_driver_url_white_list`
+
+Default: empty
+
+Is it possible to dynamically configure: false
+
+The whitelist of `driver_url` values that are allowed when creating a JDBC catalog. Multiple values are separated by commas, for example `jdbc_driver_url_white_list=a,b,c`. An empty value means that no whitelist is set.
+
+:::caution Behavior change (4.1.4)
+
+For security reasons, starting from version 4.1.4 this configuration item **can no longer be modified dynamically**. It can only be set in `fe.conf` and takes effect after restarting FE; it can no longer be changed with `ADMIN SET FRONTEND CONFIG`.
+
+:::
+
+#### `force_sqlserver_jdbc_encrypt_false`
+
+Default: false
+
+Is it possible to dynamically configure: false
+
+Whether to force the `encrypt` parameter of a SQLServer JDBC catalog to `false`.
+
+:::caution Behavior change (4.1.4)
+
+This configuration turns off transport encryption for SQLServer JDBC, so it is a security-sensitive switch. Starting from version 4.1.4 it **can no longer be modified dynamically**; it can only be set in `fe.conf` and takes effect after restarting FE.
+
+:::
 
 #### `file_scan_node_split_num`
 
@@ -2816,4 +2936,78 @@ Whether to enable Stream Load BE forwarding for Group Commit in compute-storage 
 
 When enabled, FE redirects the Stream Load request to the `_stream_load_forward` endpoint, and the BE that receives it forwards the request to the target BE for that table. This prevents a load balancer from scattering Group Commit batching for the same table.
 
-The configuration of the same name must be enabled on both FE and BE. **Starting from version 4.0.8, the BE-side `_stream_load_forward` endpoint is gated by the BE configuration: it returns `403 Forbidden` when disabled, and once enabled, requests must pass authentication and hold the global `LOAD` privilege.** See [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual) and [BE Configuration](./be-config).
+The configuration of the same name must be enabled on both FE and BE. **Starting from version 4.0.8 in the Doris 4.0 series and version 4.1.4 in the 4.1 series, the BE-side `_stream_load_forward` endpoint is gated by the BE configuration: it returns `403 Forbidden` when disabled, and once enabled, requests must pass authentication and hold the global `LOAD` privilege.** See [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual) and [BE Configuration](./be-config).
+
+#### `default_get_version_from_ms_timeout_second`
+
+Default: 30 (s)
+
+Is it possible to dynamically configure: false
+
+The timeout for FE to get a version from the Meta Service.
+
+:::caution Behavior change (4.1.4)
+
+The default value changed from `3` seconds to `30` seconds in version 4.1.4. Previously, when the Meta Service was jittering or under heavy load, a 3-second timeout easily made queries fail outright; the larger value greatly reduces such sporadic failures.
+
+:::
+
+#### `enable_cloud_replica_stale_route_clean`
+
+Default: true
+
+Is it possible to dynamically configure: true
+
+Added in version 4.1.4. Whether to clean up the primary and secondary route records of CloudReplica that point to Backends which no longer exist, when the metadata image is loaded and during tablet balancing rounds.
+
+Such stale records are already ignored at query time (the replica is hashed to a Backend again), and they only waste FE memory and metadata image size. Set it to `false` to keep the old behavior of not cleaning them up.
+
+#### `enable_cloud_colocate_consistent_hash`
+
+Default: true
+
+Is it possible to dynamically configure: false
+
+Is it a configuration item unique to the Master FE node: true
+
+Added in version 4.1.4. Whether bucket placement of colocate tables in the compute-storage decoupled mode uses rendezvous consistent hashing. When set to `false`, it falls back to the old modulo-based placement. This configuration can only be set in `fe.conf` and takes effect after a restart.
+
+#### `meta_service_rpc_rate_limit_enabled`
+
+Default: false
+
+Is it possible to dynamically configure: true
+
+Added in version 4.1.4. Whether to enable QPS rate limiting for the RPC requests that FE sends to the Meta Service.
+
+#### `meta_service_rpc_rate_limit_default_qps_per_core`
+
+Default: 50
+
+Is it possible to dynamically configure: true
+
+Added in version 4.1.4. The default QPS allowed per CPU core for Meta Service RPC methods that are not configured individually in `meta_service_rpc_rate_limit_qps_per_core_config`. A value less than or equal to `0` means no rate limiting.
+
+#### `meta_service_rpc_rate_limit_qps_per_core_config`
+
+Default: `getPartitionVersion:500;getTableVersion:500;getTabletStats:50;beginTxn:50`
+
+Is it possible to dynamically configure: true
+
+Added in version 4.1.4. Per-core QPS limits configured individually for Meta Service RPC methods, in the format `method1:qps1;method2:qps2`. A value less than or equal to `0` means that the method is not rate limited.
+
+#### `meta_service_rpc_rate_limit_burst_seconds`
+
+Default: 2 (s)
+
+Is it possible to dynamically configure: true
+
+Added in version 4.1.4. The length of the burst window for Meta Service RPC rate limiting, in seconds. The long-term average QPS is unchanged, but bursts are allowed within this window.
+
+#### `meta_service_rpc_rate_limit_wait_timeout_ms`
+
+Default: 1000 (ms)
+
+Is it possible to dynamically configure: true
+
+Added in version 4.1.4. The maximum time to wait when an RPC is rate limited, in milliseconds. A value of `0` means no waiting, so the request fails fast.

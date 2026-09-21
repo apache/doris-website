@@ -63,4 +63,10 @@ Apache Doris 已支持的数据类型列表如下：
 | [IPv4](../sql-manual/basic-element/sql-data-types/ip/IPV4)            |   4 字节  |  以 4 字节二进制存储 IPv4 地址，配合 ipv4_* 系列函数使用。         |
 | [IPv6](../sql-manual/basic-element/sql-data-types/ip/IPV6)            |   16 字节  |  以 16 字节二进制存储 IPv6 地址，配合 ipv6_* 系列函数使用。      |
 
+### [UUID](../sql-manual/basic-element/sql-data-types/uuid.md)
+
+| 类型名称 | 存储空间（字节） | 描述 |
+| --- | --- | --- |
+| [UUID](../sql-manual/basic-element/sql-data-types/uuid.md) | 16 | 原生 128 位标识符，以小写标准文本显示。 |
+
 也可通过`SHOW DATA TYPES;`语句查看 Apache Doris 支持的所有数据类型。

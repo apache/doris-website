@@ -523,6 +523,24 @@ try (
 }
 ```
 
+## Type mapping
+
+<!-- Knowledge type: Behavior description -->
+<!-- Applicable scenarios: Parsing Arrow results on the client -->
+
+:::caution Behavior change (4.1.4)
+
+Starting from version 4.1.4, `DATETIME` / `DATETIMEV2` values returned by Arrow Flight SQL are **timezone-naive** Arrow timestamps, while `TIMESTAMPTZ` is still returned as a timezone-aware timestamp.
+
+Before 4.1.4, `DATETIME` was tagged as timezone-aware, so a client parsing it in its local timezone applied an extra timezone offset. After upgrading, parse `DATETIME` columns as local wall-clock values without a timezone.
+
+The same version also corrects the following type metadata:
+
+- In the `GetTables` metadata endpoint, the Arrow type of `DATEV2` is corrected from `Date(MILLISECOND)` to `Date(DAY)`.
+- `ARRAY` / `MAP` / `STRUCT` metadata now reports the real child field types instead of placeholder types.
+
+:::
+
 ## Integration with third-party components
 
 <!-- Knowledge type: Integration solution -->

@@ -14,6 +14,8 @@
 
 转换是否能发生，以及转换的结果是否为 Nullable 类型，与是否开启严格模式有关（session variable `enable_strict_cast`）。一般来说，当开启严格模式时，转换失败的数据将会立即引发报错导致 SQL 失败。当关闭严格模式时，转换失败的数据行结果为 `NULL`。
 
+UUID 的解析和迁移规则详见 [UUID 类型转换](./uuid-conversion.md)。字符串可转换为 UUID；UUID 可转换为字符串或 VARIANT，但不能直接转换为数值、日期时间或 IP 类型。
+
 ## 显式转换
 
 显式转换通过 `CAST` 函数进行，例如：
@@ -35,63 +37,65 @@
 
 ### 严格模式
 
-| **From**\\**To** | bool | tinyint | smallint | int | bigint | largeint | float | double | decimal | date | datetime | timestamp_ns | time | IPv4 | IPv6 | char | varchar | string | bitmap | hll | json | array | map | struct | variant |
-| ---------------- | ---- | ------- | -------- | --- | ------ | -------- | ----- | ------ | ------- | ---- | -------- | ------------ | ---- | ---- | ---- | ---- | ------- | ------ | ------ | --- | ---- | ----- | --- | ------ | ------- |
-| bool             | P    | P       | P        | P   | P      | P        | P     | P      | O       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| tinyint          | P    | P       | P        | P   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| smallint         | P    | A       | P        | P   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| int              | P    | A       | A        | P   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| bigint           | P    | A       | A        | A   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| largeint         | P    | A       | A        | A   | A      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| float            | P    | A       | A        | A   | A      | A        | P     | P      | A       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| double           | P    | A       | A        | A   | A      | A        | P     | P      | A       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| decimal          | P    | O       | O        | O   | O      | O        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| date             | x    | x       | x        | P   | P      | P        | x     | x      | x       | P    | P        | A            | x    | x    | x    |      |         |        | x      | x   | x    | x     | x   | x      |         |
-| datetime         | x    | x       | x        | x   | P      | P        | x     | x      | x       | P    | A        | A            | P    | x    | x    |      |         |        | x      | x   | x    | x     | x   | x      |         |
-| timestamp_ns     | x    | x       | x        | x   | P      | P        | x     | x      | x       | P    | P        | P            | P    | x    | x    | P    | P       | P      | x      | x   | x    | x     | x   | x      | P       |
-| time             | x    | A       | A        | A   | P      | P        | x     | x      | x       | P    | P        | P            | A    | x    | x    |      |         |        | x      | x   | x    | x     | x   | x      |         |
-| IPv4             | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | P    | P    |      |         |        | x      | x   | x    | x     | x   | x      |         |
-| IPv6             | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | P    |      |         |        | x      | x   | x    | x     | x   | x      |         |
-| char             | A    | A       | A        | A   | A      | A        | A     | A      | A       | A    | A        | A            | A    | A    | A    |      |         |        | x      | x   | A    | A     | A   | A      |         |
-| varchar          | A    | A       | A        | A   | A      | A        | A     | A      | A       | A    | A        | A            | A    | A    | A    |      |         |        | x      | x   | A    | A     | A   | A      |         |
-| string           | A    | A       | A        | A   | A      | A        | A     | A      | A       | A    | A        | A            | A    | A    | A    |      |         |        | x      | x   | A    | A     | A   | A      |         |
-| bitmap           | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    | x    | x       | x      | P      | x   | x    | x     | x   | x      |         |
-| hll              | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    | x    | x       | x      | x      | P   | x    | x     | x   | x      |         |
-| json             | A    | A       | A        | A   | A      | A        | A     | A      | A       | x    | x        | x            | x    | x    | x    | A    | A       | A      | x      | x   | P    | A     | x   | A      |         |
-| array            | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | P    | P     | x   | x      |         |
-| map              | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | x    | x     | P   | x      |         |
-| struct           | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | P    | x     | x   | P      |         |
-| variant          |      |         |          |     |        |          |       |        |         |      |          | A            |      |      |      |      |         |        |        |     |      |       |     |        |         |
+| **From**\\**To** | bool | tinyint | smallint | int | bigint | largeint | float | double | decimal | date | datetime | timestamp_ns | time | IPv4 | IPv6 | char | varchar | string | bitmap | hll | json | array | map | struct | variant | UUID |
+| ---------------- | ---- | ------- | -------- | --- | ------ | -------- | ----- | ------ | ------- | ---- | -------- | ------------ | ---- | ---- | ---- | ---- | ------- | ------ | ------ | --- | ---- | ----- | --- | ------ | ------- | ---- |
+| bool             | P    | P       | P        | P   | P      | P        | P     | P      | O       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| tinyint          | P    | P       | P        | P   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| smallint         | P    | A       | P        | P   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| int              | P    | A       | A        | P   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| bigint           | P    | A       | A        | A   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| largeint         | P    | A       | A        | A   | A      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| float            | P    | A       | A        | A   | A      | A        | P     | P      | A       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| double           | P    | A       | A        | A   | A      | A        | P     | P      | A       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| decimal          | P    | O       | O        | O   | O      | O        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| date             | x    | x       | x        | P   | P      | P        | x     | x      | x       | P    | P        | A            | x    | x    | x    |      |         |        | x      | x   | x    | x     | x   | x      |         | x |
+| datetime         | x    | x       | x        | x   | P      | P        | x     | x      | x       | P    | A        | A            | P    | x    | x    |      |         |        | x      | x   | x    | x     | x   | x      |         | x |
+| timestamp_ns     | x    | x       | x        | x   | P      | P        | x     | x      | x       | P    | P        | P            | P    | x    | x    | P    | P       | P      | x      | x   | x    | x     | x   | x      | P       | x |
+| time             | x    | A       | A        | A   | P      | P        | x     | x      | x       | P    | P        | P            | A    | x    | x    |      |         |        | x      | x   | x    | x     | x   | x      |         | x |
+| IPv4             | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | P    | P    |      |         |        | x      | x   | x    | x     | x   | x      |         | x |
+| IPv6             | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | P    |      |         |        | x      | x   | x    | x     | x   | x      |         | x |
+| char             | A    | A       | A        | A   | A      | A        | A     | A      | A       | A    | A        | A            | A    | A    | A    |      |         |        | x      | x   | A    | A     | A   | A      |         | A |
+| varchar          | A    | A       | A        | A   | A      | A        | A     | A      | A       | A    | A        | A            | A    | A    | A    |      |         |        | x      | x   | A    | A     | A   | A      |         | A |
+| string           | A    | A       | A        | A   | A      | A        | A     | A      | A       | A    | A        | A            | A    | A    | A    |      |         |        | x      | x   | A    | A     | A   | A      |         | A |
+| bitmap           | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    | x    | x       | x      | P      | x   | x    | x     | x   | x      |         | x |
+| hll              | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    | x    | x       | x      | x      | P   | x    | x     | x   | x      |         | x |
+| json             | A    | A       | A        | A   | A      | A        | A     | A      | A       | x    | x        | x            | x    | x    | x    | A    | A       | A      | x      | x   | P    | A     | x   | A      |         | x |
+| array            | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | P    | P     | x   | x      |         | x |
+| map              | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | x    | x     | P   | x      |         | x |
+| struct           | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | P    | x     | x   | P      |         | x |
+| variant          |      |         |          |     |        |          |       |        |         |      |          | A            |      |      |      |      |         |        |        |     |      |       |     |        |         | A |
+| UUID | x | x | x | x | x | x | x | x | x | x | x | x | x | x | x | P | P | P | x | x | x | x | x | x | P | P |
 
 ### 非严格模式
 
-| **From**\\**To** | bool | tinyint | smallint | int | bigint | largeint | float | double | decimal | date | datetime | timestamp_ns | time | IPv4 | IPv6 | char | varchar | string | bitmap | hll | json | array | map | struct | variant |
-| ---------------- | ---- | ------- | -------- | --- | ------ | -------- | ----- | ------ | ------- | ---- | -------- | ------------ | ---- | ---- | ---- | ---- | ------- | ------ | ------ | --- | ---- | ----- | --- | ------ | ------- |
-| bool             | P    | P       | P        | P   | P      | P        | P     | P      | O       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| tinyint          | P    | P       | P        | P   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| smallint         | P    | A       | P        | P   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| int              | P    | A       | A        | P   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| bigint           | P    | A       | A        | A   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| largeint         | P    | A       | A        | A   | A      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| float            | P    | A       | A        | A   | A      | A        | P     | P      | A       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| double           | P    | A       | A        | A   | A      | A        | P     | P      | A       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| decimal          | P    | O       | O        | O   | O      | O        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         |
-| date             | x    | x       | x        | P   | P      | P        | P     | P      | x       | P    | P        | A            | x    | x    | x    |      |         |        | x      | x   | x    | x     | x   | x      |         |
-| datetime         | x    | x       | x        | x   | P      | P        | P     | P      | x       | P    | A        | A            | P    | x    | x    |      |         |        | x      | x   | x    | x     | x   | x      |         |
-| timestamp_ns     | x    | x       | x        | x   | P      | P        | P     | P      | x       | P    | P        | P            | P    | x    | x    | P    | P       | P      | x      | x   | x    | x     | x   | x      | P       |
-| time             | x    | A       | A        | A   | P      | P        | P     | P      | x       | P    | P        | P            | A    | x    | x    |      |         |        | x      | x   | x    | x     | x   | x      |         |
-| IPv4             | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | P    | P    |      |         |        | x      | x   | x    | x     | x   | x      |         |
-| IPv6             | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | P    |      |         |        | x      | x   | x    | x     | x   | x      |         |
-| char             | A    | A       | A        | A   | A      | A        | A     | A      | A       | A    | A        | A            | A    | A    | A    |      |         |        | x      | x   | A    | A     | A   | A      |         |
-| varchar          | A    | A       | A        | A   | A      | A        | A     | A      | A       | A    | A        | A            | A    | A    | A    |      |         |        | x      | x   | A    | A     | A   | A      |         |
-| string           | A    | A       | A        | A   | A      | A        | A     | A      | A       | A    | A        | A            | A    | A    | A    |      |         |        | x      | x   | A    | A     | A   | A      |         |
-| bitmap           | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    | x    | x       | x      | P      | x   | x    | x     | x   | x      |         |
-| hll              | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    | x    | x       | x      | x      | P   | x    | x     | x   | x      |         |
-| json             | A    | A       | A        | A   | A      | A        | A     | A      | A       | x    | x        | x            | x    | x    | x    | A    | A       | A      | x      | x   | P    | A     | x   | A      |         |
-| array            | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | P    | P     | x   | x      |         |
-| map              | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | x    | x     | P   | x      |         |
-| struct           | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | P    | x     | x   | P      |         |
-| variant          |      |         |          |     |        |          |       |        |         |      |          | A            |      |      |      |      |         |        |        |     |      |       |     |        |         |
+| **From**\\**To** | bool | tinyint | smallint | int | bigint | largeint | float | double | decimal | date | datetime | timestamp_ns | time | IPv4 | IPv6 | char | varchar | string | bitmap | hll | json | array | map | struct | variant | UUID |
+| ---------------- | ---- | ------- | -------- | --- | ------ | -------- | ----- | ------ | ------- | ---- | -------- | ------------ | ---- | ---- | ---- | ---- | ------- | ------ | ------ | --- | ---- | ----- | --- | ------ | ------- | ---- |
+| bool             | P    | P       | P        | P   | P      | P        | P     | P      | O       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| tinyint          | P    | P       | P        | P   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| smallint         | P    | A       | P        | P   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| int              | P    | A       | A        | P   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| bigint           | P    | A       | A        | A   | P      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| largeint         | P    | A       | A        | A   | A      | P        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| float            | P    | A       | A        | A   | A      | A        | P     | P      | A       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| double           | P    | A       | A        | A   | A      | A        | P     | P      | A       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| decimal          | P    | O       | O        | O   | O      | O        | P     | P      | O       | A    | A        | A            | A    | x    | x    |      |         |        | x      | x   | P    | x     | x   | x      |         | x |
+| date             | x    | x       | x        | P   | P      | P        | P     | P      | x       | P    | P        | A            | x    | x    | x    |      |         |        | x      | x   | x    | x     | x   | x      |         | x |
+| datetime         | x    | x       | x        | x   | P      | P        | P     | P      | x       | P    | A        | A            | P    | x    | x    |      |         |        | x      | x   | x    | x     | x   | x      |         | x |
+| timestamp_ns     | x    | x       | x        | x   | P      | P        | P     | P      | x       | P    | P        | P            | P    | x    | x    | P    | P       | P      | x      | x   | x    | x     | x   | x      | P       | x |
+| time             | x    | A       | A        | A   | P      | P        | P     | P      | x       | P    | P        | P            | A    | x    | x    |      |         |        | x      | x   | x    | x     | x   | x      |         | x |
+| IPv4             | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | P    | P    |      |         |        | x      | x   | x    | x     | x   | x      |         | x |
+| IPv6             | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | P    |      |         |        | x      | x   | x    | x     | x   | x      |         | x |
+| char             | A    | A       | A        | A   | A      | A        | A     | A      | A       | A    | A        | A            | A    | A    | A    |      |         |        | x      | x   | A    | A     | A   | A      |         | A |
+| varchar          | A    | A       | A        | A   | A      | A        | A     | A      | A       | A    | A        | A            | A    | A    | A    |      |         |        | x      | x   | A    | A     | A   | A      |         | A |
+| string           | A    | A       | A        | A   | A      | A        | A     | A      | A       | A    | A        | A            | A    | A    | A    |      |         |        | x      | x   | A    | A     | A   | A      |         | A |
+| bitmap           | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    | x    | x       | x      | P      | x   | x    | x     | x   | x      |         | x |
+| hll              | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    | x    | x       | x      | x      | P   | x    | x     | x   | x      |         | x |
+| json             | A    | A       | A        | A   | A      | A        | A     | A      | A       | x    | x        | x            | x    | x    | x    | A    | A       | A      | x      | x   | P    | A     | x   | A      |         | x |
+| array            | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | P    | P     | x   | x      |         | x |
+| map              | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | x    | x     | P   | x      |         | x |
+| struct           | x    | x       | x        | x   | x      | x        | x     | x      | x       | x    | x        | x            | x    | x    | x    |      |         |        | x      | x   | P    | x     | x   | P      |         | x |
+| variant          |      |         |          |     |        |          |       |        |         |      |          | A            |      |      |      |      |         |        |        |     |      |       |     |        |         | A |
+| UUID | x | x | x | x | x | x | x | x | x | x | x | x | x | x | x | P | P | P | x | x | x | x | x | x | P | P |
 
 `TIMESTAMP_NS` 的详细转换规则请参见[转换为 TIMESTAMP_NS](./timestamp-ns-conversion.md)。上面的矩阵暂未包含 `TIMESTAMPTZ`；`TIMESTAMP_NS` 与 `TIMESTAMPTZ` 之间的双向转换在严格和非严格模式下均受支持。
 
@@ -111,3 +115,5 @@ TODO
 ### 公共类型
 
 在因作为数学运算的操作数而需要发生隐式转换时，首先要确定转换的公共类型。两侧操作数如果与公共类型不一致，则会各自规划到公共类型的 CAST 表达式。
+
+字符串与 UUID 在比较、CASE、COALESCE 或集合运算中推导公共类型时，公共类型为 UUID，字符串按 UUID 格式解析。无效字符串的处理遵循 CAST 规则；UUID 不参与数值算术的公共类型推导。

@@ -81,7 +81,7 @@ TO DATABASE <target_db> (
 | `table.<table_name>.target_table` | MySQL、PostgreSQL | 源表名 | 为指定源表设置 Doris 目标表名。 |
 | `table.<table_name>.exclude_columns` | MySQL、PostgreSQL | - | 排除指定源表中的非主键列，多个列用逗号分隔。 |
 | `offset` | MySQL、PostgreSQL | `latest` | 启动位点。支持 `initial`、`snapshot`、`latest` 和 JSON 精确位点；MySQL 还支持 `earliest`。 |
-| `snapshot_split_size` | MySQL、PostgreSQL | `8096` | 全量切片的大小（行数），必须为正整数。 |
+| `snapshot_split_size` | MySQL、PostgreSQL | `40960`（4.1.4 之前为 `8096`） | 全量切片的大小（行数），必须为正整数。 |
 | `snapshot_parallelism` | MySQL、PostgreSQL | `1` | 全量阶段单次 Task 最多调度的 split 数量，必须为正整数。 |
 | `ssl_mode` | MySQL、PostgreSQL | `disable` | SSL 模式，可选值为 `disable`、`require`、`verify-ca`。 |
 | `ssl_rootcert` | MySQL、PostgreSQL | - | CA 证书文件，格式为 `FILE:<file_name>`；`ssl_mode=verify-ca` 时必填。 |

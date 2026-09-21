@@ -21,6 +21,12 @@
 
 MySQL Schema Change 同步用于在持续导入期间，将上游 MySQL 表的列结构变更自动应用到 Doris 目标表。该能力仅适用于 [MySQL CDC 自动建表同步](./continuous-load-mysql-database.md)，不适用于 [MySQL CDC SQL 映射同步](./continuous-load-mysql-table.md)。
 
+:::tip
+
+MySQL Schema Change 同步自 Doris 4.1.4 起支持。
+
+:::
+
 ## 支持的 Schema Change
 
 | MySQL 操作 | Doris 行为 |
@@ -34,6 +40,7 @@ MySQL Schema Change 同步用于在持续导入期间，将上游 MySQL 表的�
 - `FIRST` 和 `AFTER` 指定的列位置不会同步到 Doris。新增列会追加到 Doris 表的现有列之后。
 - `CHANGE COLUMN`、`MODIFY COLUMN`、`RENAME COLUMN`、DEFAULT 变更以及 `NULL` / `NOT NULL` 约束变更均不会自动同步。执行这些操作前，需要暂停持续导入作业并手动修改 Doris 目标表，确认两端结构兼容后再恢复作业。
 - 主键、索引、分区、表名以及其他表级结构变更不会自动同步。
+- 自动建表同步默认启用 Schema Change 同步，目前未提供通过 SQL 关闭该能力的配置参数。`cdc_stream()` 表函数（SQL 映射同步）会在内部关闭 Schema Change 同步。
 
 ## 相关文档
 

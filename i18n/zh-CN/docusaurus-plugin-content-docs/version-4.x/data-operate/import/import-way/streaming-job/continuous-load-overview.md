@@ -3,12 +3,13 @@
     "title": "持续导入概览",
     "language": "zh-CN",
     "sidebar_label": "概览",
-    "description": "了解 Doris Streaming Job 持续导入：支持的数据源、SQL 映射与自动建表同步选型、作业状态机及通用运维操作。",
+    "description": "了解 Doris Streaming Job 对 MySQL、PostgreSQL、OceanBase 和 S3 的持续导入能力、同步方式选型、作业状态机及通用运维操作。",
     "keywords": [
         "Doris 持续导入",
         "Streaming Job",
         "MySQL 实时同步",
         "PostgreSQL 实时同步",
+        "OceanBase 实时同步",
         "S3 持续导入",
         "SQL 映射同步",
         "自动建表同步",
@@ -44,9 +45,10 @@ Doris 支持通过 **Streaming Job** 的方式，从多种数据源持续导入�
 | :--------- | :---------------- | :-------------------------------------------------------------------- | :-------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
 | MySQL      | 5.6、5.7、8.0.x   | [MySQL CDC SQL 映射同步](./continuous-load-mysql-table.md)            | [MySQL CDC 自动建表同步](./continuous-load-mysql-database.md)               | [Amazon RDS MySQL](./prerequisites/amazon-rds-mysql.md) · [Amazon Aurora MySQL](./prerequisites/amazon-aurora-mysql.md)                   |
 | PostgreSQL | 14、15、16、17    | [PostgreSQL CDC SQL 映射同步](./continuous-load-postgresql-table.md)  | [PostgreSQL CDC 自动建表同步](./continuous-load-postgresql-database.md)     | [Amazon RDS PostgreSQL](./prerequisites/amazon-rds-postgresql.md) · [Amazon Aurora PostgreSQL](./prerequisites/amazon-aurora-postgresql.md) |
+| OceanBase  | MySQL 兼容模式    | -                                                                     | [OceanBase CDC 自动建表同步](./continuous-load-oceanbase-database.md)（自 4.1.4 版本起） | -                                                                                                                                         |
 | S3         | -                 | [S3 持续导入](./continuous-load-s3.md)                                | -                                                                           | -                                                                                                                                         |
 
-上游列类型如何映射为 Doris 类型，见 [MySQL](./data-type-mapping-mysql.md) / [PostgreSQL](./data-type-mapping-postgresql.md) 数据类型映射。
+上游列类型如何映射为 Doris 类型，见 [MySQL](./data-type-mapping-mysql.md)、[PostgreSQL](./data-type-mapping-postgresql.md)和 [OceanBase](./data-type-mapping-oceanbase.md) 数据类型映射。
 
 ## 如何选择同步方式
 
@@ -71,6 +73,7 @@ SQL 映射同步和自动建表同步是两种**实现机制完全不同**的持
 
 - **需要对数据做 SQL 加工，或对精确一次语义有严格要求** → 选 **SQL 映射同步**
 - **希望 Doris 自动建表、一次配置同步一组表** → 选 **自动建表同步**
+- **数据源是 OceanBase** → 目前仅支持 MySQL 兼容模式下的自动建表同步
 - **数据源是 S3 对象存储** → 只支持 SQL 映射同步（S3 TVF 方式）
 
 ## 作业状态流转
@@ -133,6 +136,9 @@ select * from jobs("type"="insert") where ExecuteType = "STREAMING";
 | LoadStatistic     | Job 的统计信息                                                        |
 | ErrorMsg          | Job 执行的错误信息                                                    |
 | JobRuntimeMsg     | Job 运行时的一些提示信息                                              |
+| LagBytes          | 数据源端日志（MySQL / OceanBase Binlog、PostgreSQL WAL）的积压字节数，`-1` 表示当前不可用（例如 S3 数据源或全量快照阶段）。**自 4.1.4 版本起**，该列由原来的 `Lag`（单位：秒）改名为 `LagBytes`（单位：字节） |
+| LastSourceEventTimestamp | 已提交 Offset 中记录的数据源端最新事件时间戳（Unix 秒），为空表示不可用。**自 4.1.4 版本起新增** |
+| LastTaskSuccessTime | 最近一次 Task 成功完成的时间                                        |
 
 ### 查看 Task 状态
 
@@ -213,10 +219,20 @@ DROP JOB WHERE jobName = <job_name>;
 
 ### Schema Change（DDL）
 
-DDL 同步**仅适用于自动建表同步**；SQL 映射（TVF）不同步任何 DDL。
+DDL 同步**仅适用于自动建表同步**；SQL 映射（TVF）不同步任何 DDL——`cdc_stream()` 表函数会强制把 `schema_change_enabled` 设为 `false`。
 
 - **PostgreSQL**（4.1 起支持）：仅 `ADD COLUMN` 和 `DROP COLUMN` 会同步。**列类型变更、`RENAME COLUMN`、约束 / 索引 / 分区变更不会同步**——需在 Doris 端手工处理。
-- **MySQL**：上游 DDL **暂不同步**——需手工调整 Doris 表结构。
+- **MySQL**（自 4.1.4 起支持）：仅 `ADD COLUMN` 和 `DROP COLUMN` 会同步。**列类型变更、`RENAME COLUMN`、约束 / 索引 / 分区变更不会同步**——需在 Doris 端手工处理。
+- **OceanBase**（自 4.1.4 起支持）：仅 `ADD COLUMN` 和 `DROP COLUMN` 会同步。**列类型变更、`RENAME COLUMN`、主键 / 约束 / 索引 / 分区变更不会同步**——需在 Doris 端手工处理。
+
+自动建表同步默认启用 Schema Change 同步，Doris 4.1 目前未提供通过 SQL 关闭该能力的配置参数。
+
+:::caution 版本行为变更（4.1.4）
+
+- 自 4.1.4 版本起，同步新增列时**不再传递上游列的 `DEFAULT` 值**（MySQL、PostgreSQL 和 OceanBase 均如此）。新增列在 Doris 端不带默认值，历史数据不会回填。
+- PostgreSQL 的 Schema Change 检测改为基于 Relation 事件驱动：只识别 `ADD COLUMN` 和 `DROP COLUMN`；同时包含新增和删除列的变更（可能是 `RENAME`）以及列类型变更会被跳过。该能力只在"自动建表同步（at-least-once）"路径上生效，TVF / exactly-once 路径不支持。
+
+:::
 
 ## FAQ
 

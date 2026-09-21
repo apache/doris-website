@@ -78,7 +78,7 @@ TO DATABASE <target_db> (
 | schema         | -       | Schema name (PostgreSQL)                                     |
 | include_tables | -       | Tables to synchronize, comma separated. If not specified, all tables will be synchronized by default. |
 | offset         | latest  | `latest`: incremental only (default); `initial`: full + incremental sync   |
-| snapshot_split_size | 8096 | Split size (in rows). During full sync, the table is divided into multiple splits. |
+| snapshot_split_size | 40960 (8096 before 4.1.4) | Split size (in rows). During full sync, the table is divided into multiple splits. |
 | snapshot_parallelism | 1   | Parallelism during full sync phase, i.e., max splits per task. |
 
 **5. `<target_db>`** (Multi-table CDC Mode)

@@ -35,6 +35,7 @@ MV_INFOS("database"="<database>")
 | MvProperties           | TEXT    | Materialized view properties                                         |
 | MvPartitionInfo        | TEXT    | Partition information of the materialized view                       |
 | SyncWithBaseTables     | BOOLEAN | Whether the data of the materialized view is synchronized with its base tables. To check which partition is not synchronized, use [SHOW PARTITIONS](../../sql-statements/table-and-view/table/SHOW-PARTITIONS). |
+| IvmBaseTableStreams    | TEXT    | Mapping between the IVM base tables and the internal Table Streams that Doris creates automatically. Usually empty for non-IVM materialized views. |
 
 `RefreshInfo` is displayed as `BUILD <BuildMode> REFRESH <RefreshMethod> ON <RefreshTrigger> [schedule]`. The meaning of each part is described in the enum section below.
 
@@ -55,7 +56,9 @@ The following enum fields are commonly used when checking materialized view defi
   - `DEFERRED`: do not build it at creation time. The materialized view needs a later refresh before it has fresh data.
 - `RefreshInfo.RefreshMethod`: how Doris chooses data to refresh.
   - `COMPLETE`: always refresh the materialized view completely.
-  - `AUTO`: Doris decides whether to refresh all partitions or only changed partitions.
+  - `PARTITIONS`: recomputes the materialized view partitions that have changed.
+  - `INCREMENTAL`: uses Incremental View Maintenance (IVM) to process row-level changes.
+  - `AUTO`: Doris automatically chooses IVM, partition refresh or complete refresh.
 - `RefreshInfo.RefreshTrigger`: what triggers refresh tasks.
   - `MANUAL`: refresh is triggered manually.
   - `COMMIT`: refresh is triggered by data changes on related base tables.
@@ -67,6 +70,7 @@ The following enum fields are commonly used when checking materialized view defi
 - `SyncWithBaseTables`: whether materialized view data is synchronized with base tables.
   - `1` or `true`: synchronized.
   - `0` or `false`: not fully synchronized. For partitioned materialized views, use `SHOW PARTITIONS FROM <mv_name>` to check partition-level synchronization.
+- `IvmBaseTableStreams`: mapping between the base tables used by an IVM and its internal Streams. Internal Streams are managed by Doris; do not consume, reset or drop them manually. See [Incremental View Maintenance (IVM)](../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#internal-table-streams).
 
 ## Examples
 
@@ -90,6 +94,7 @@ SchemaChangeDetail:
       MvProperties: {partition_sync_limit=100, partition_sync_time_unit=YEAR}
    MvPartitionInfo: MTMVPartitionInfo{partitionType=FOLLOW_BASE_TABLE, relatedTable=user, relatedCol='k2', partitionCol='k2'}
 SyncWithBaseTables: 1
+IvmBaseTableStreams: \N
 ```
 
 In this result:
@@ -104,6 +109,7 @@ In this result:
 - `MvProperties` shows the properties of the materialized view. In this example, partition synchronization is limited by `partition_sync_limit=100` and `partition_sync_time_unit=YEAR`.
 - `MvPartitionInfo` shows how the materialized view is partitioned. `FOLLOW_BASE_TABLE` means the materialized view follows a base table partition column. `SELF_MANAGE` means the materialized view manages its own partitions. `EXPR` means the materialized view uses an expression-based partition definition.
 - `SyncWithBaseTables` is `1`, which means the materialized view data is synchronized with its base tables. `0` means it is not fully synchronized. For partitioned materialized views, use `SHOW PARTITIONS FROM <mv_name>` to check partition-level synchronization.
+- `IvmBaseTableStreams` is empty because this example is not an IVM.
 
 To view the latest refresh task of this materialized view:
 

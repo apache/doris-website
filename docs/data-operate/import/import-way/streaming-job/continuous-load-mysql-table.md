@@ -95,7 +95,7 @@ CDC Stream TVF supports the following MySQL data source parameters.
 | `database` | Yes | - | MySQL database name. |
 | `table` | Yes | - | Name of the table to sync. Each SQL Mapping job supports one source table. |
 | `offset` | Yes | - | Startup offset. `initial`: full and incremental sync; `snapshot`: full sync only; `earliest`: start from the earliest available Binlog offset; `latest`: sync only changes after the job starts. You can also specify an exact JSON offset, such as `{"file":"binlog.000001","pos":"154"}` or `{"gtids":"<gtid_set>"}`. |
-| `snapshot_split_size` | No | `8096` | Split size in rows. During full sync, the table is divided into multiple splits. Must be a positive integer. |
+| `snapshot_split_size` | No | `40960` (`8096` before 4.1.4) | Split size in rows. During full sync, the table is divided into multiple splits. Must be a positive integer. |
 | `snapshot_parallelism` | No | `1` | Parallelism of the full-sync phase, that is, the maximum number of splits scheduled by a Task at one time. Must be a positive integer. |
 | `skip_snapshot_backfill` | No | `false` | Whether to skip Binlog backfill during the snapshot. When set to `true`, at-least-once semantics are used. |
 | `server_id` | No | Automatically generated | Server ID of the MySQL CDC reader. Supports a single value, such as `5400`, or a closed range, such as `5400-5408`. The range width must be greater than or equal to `snapshot_parallelism`. |

@@ -45,7 +45,7 @@ CREATE MATERIALIZED VIEW
 [ IF NOT EXISTS ] <materialized_view_name>
     [ (<columns_definition>) ]
     [ BUILD <build_mode> ]
-    [ REFRESH <refresh_method> [refresh_trigger]]
+    [ REFRESH <refresh_method> [FALLBACK] [refresh_trigger]]
     [ [DUPLICATE] KEY (<key_cols>) ]
     [ COMMENT '<table_comment>' ]
     [ PARTITION BY (
@@ -75,16 +75,26 @@ Refresh configuration consists of three categories of parameters: **refresh timi
 | Refresh timing | `IMMEDIATE`   | Refresh immediately after creation (default). |
 | Refresh timing | `DEFERRED`    | Defer the refresh after creation. |
 | Refresh method | `COMPLETE`    | Full refresh, refreshes all partitions. |
-| Refresh method | `AUTO`        | Refresh incrementally when possible; falls back to full refresh when changes cannot be detected. |
+| Refresh method | `PARTITIONS`  | Recomputes the materialized view partitions that have changed. |
+| Refresh method | `INCREMENTAL` | Uses Incremental View Maintenance (IVM) to process row-level changes. |
+| Refresh method | `AUTO`        | Doris automatically chooses IVM, partition refresh or complete refresh. |
 | Trigger method | `ON MANUAL`   | Triggered manually by the user via SQL statements. |
 | Trigger method | `ON SCHEDULE` | Triggered periodically at the specified interval. |
 | Trigger method | `ON COMMIT`   | Triggered automatically when the base table data changes (supported since Apache Doris 2.1.4). |
 
 #### 1.3.2 ON MANUAL: Manual Trigger
 
-You trigger a materialized view refresh via a SQL statement. There are three strategies:
+When you trigger a materialized view refresh via a SQL statement, you can override the refresh method defined at creation time.
 
-**Strategy 1**: Detect whether base table partition data has changed since the last refresh, and refresh only the changed partitions.
+**Strategy 1**: Use IVM to process the row-level changes of the base tables between two refreshes.
+
+```sql
+REFRESH MATERIALIZED VIEW mvName INCREMENTAL FALLBACK;
+```
+
+`FALLBACK` allows Doris to fall back to a partition refresh or a complete refresh when IVM cannot run safely. A strict incremental refresh without `FALLBACK` fails directly. See [Incremental View Maintenance (IVM)](incremental-materialized-view) for the prerequisites, supported scope and fallback rules of IVM.
+
+**Strategy 2**: Let Doris choose an available refresh method automatically.
 
 ```sql
 REFRESH MATERIALIZED VIEW mvName AUTO;
@@ -95,13 +105,13 @@ REFRESH MATERIALIZED VIEW mvName AUTO;
 - Currently, Doris can detect data changes only for internal tables and Hive data source tables. Other data sources are being supported gradually.
 :::
 
-**Strategy 2**: Skip checking base table partition data changes and directly refresh all partitions of the materialized view.
+**Strategy 3**: Skip checking base table partition data changes and directly refresh all partitions of the materialized view.
 
 ```sql
 REFRESH MATERIALIZED VIEW mvName COMPLETE;
 ```
 
-**Strategy 3**: Refresh only the specified partitions.
+**Strategy 4**: Refresh only the specified partitions.
 
 ```sql
 REFRESH MATERIALIZED VIEW mvName partitions(partitionName1, partitionName2);

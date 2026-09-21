@@ -63,7 +63,7 @@ cdc_stream(
 | `schema` | PostgreSQL | Yes | - | PostgreSQL Schema name. |
 | `table` | MySQL, PostgreSQL | Yes | - | Name of the table to sync. Each CDC Stream TVF supports one source table. |
 | `offset` | MySQL, PostgreSQL | Yes | - | Startup offset. `initial`: full and incremental sync; `snapshot`: full sync only; `latest`: sync only changes after startup. MySQL also supports `earliest`. Exact JSON offset examples: MySQL uses `{"file":"binlog.000001","pos":"154"}` or `{"gtids":"<gtid_set>"}`, and PostgreSQL uses `{"lsn":"12345678"}`. |
-| `snapshot_split_size` | MySQL, PostgreSQL | No | `8096` | Split size in rows. During full sync, the table is divided into multiple splits. Must be a positive integer. |
+| `snapshot_split_size` | MySQL, PostgreSQL | No | `40960` | Split size in rows. During full sync, the table is divided into multiple splits. Must be a positive integer. The default was `8096` before 4.1.4. |
 | `snapshot_parallelism` | MySQL, PostgreSQL | No | `1` | Parallelism of the full-sync phase, that is, the maximum number of splits scheduled by a Task at one time. Must be a positive integer. |
 | `skip_snapshot_backfill` | MySQL, PostgreSQL | No | `false` | Whether to skip incremental backfill during the snapshot. When set to `true`, at-least-once semantics are used. |
 | `ssl_mode` | MySQL, PostgreSQL | No | `disable` | SSL mode. Valid values are `disable`, `require`, and `verify-ca`. |

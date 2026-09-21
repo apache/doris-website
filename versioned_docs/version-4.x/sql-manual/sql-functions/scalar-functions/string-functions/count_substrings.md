@@ -32,6 +32,13 @@ Special cases:
 - If pattern is an empty string, returns 0
 - If str is an empty string, returns 0
 - If start_pos is less than or equal to 0 or exceeds the string length, returns 0
+- If pattern is longer than str (or than the remaining part of str starting at start_pos), returns 0
+
+:::caution Behavior change (4.1.4)
+
+4.1.4 fixes an out-of-bounds match at the end of the string: when the remaining characters were no longer enough to hold a complete pattern, earlier versions could still count one extra occurrence. For example, `count_substrings('ab', 'abc')` could return `1` in earlier versions and correctly returns `0` after the fix; `count_substrings('ccc', 'cc', 3)` returns `0` after the fix.
+
+:::
 
 ## Examples
 

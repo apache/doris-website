@@ -52,6 +52,12 @@ import GettingStartedCard from '@site/src/components/getting-started-card/gettin
     description="深入了解文件缓存实现机制：1 MB 对齐切片、预读机制与本地文件系统 Block 文件管理。"
     link="file-cache/file-cache-internals"
 />
+
+<GettingStartedCard
+    title="Peer 读（跨 BE 缓存读取）"
+    description="本地 File Cache 未命中时先从其他 BE（含其他计算组）的缓存读取，再回源对象存储，加速扩缩容和跨计算组冷读。"
+    link="file-cache/file-cache-peer-read"
+/>
 </div>
 
 ## 读写分离

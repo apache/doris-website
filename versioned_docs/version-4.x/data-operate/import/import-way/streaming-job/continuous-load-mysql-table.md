@@ -93,7 +93,7 @@ The MySQL data source parameters supported by CDC Stream TVF are as follows:
 | database              | -       | Database name                                                                                                                                   |
 | table                 | -       | Name of the table to sync                                                                                                                       |
 | offset                | latest  | `latest`: incremental sync only; `initial`: full + incremental sync                                                                             |
-| snapshot_split_size   | 8096    | Size of a split (in rows). During full sync, the table is divided into multiple splits for syncing                                              |
+| snapshot_split_size   | 40960 (8096 before 4.1.4)    | Size of a split (in rows). During full sync, the table is divided into multiple splits for syncing                                              |
 | snapshot_parallelism  | 1       | Parallelism during the full sync stage, that is, the maximum number of splits scheduled per Task                                                |
 
 ### Import Configuration Parameters

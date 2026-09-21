@@ -1,7 +1,8 @@
 import Translate, { translate } from '@docusaurus/Translate';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from '@docusaurus/Link';
 import clsx from 'clsx';
+import copy from 'copy-to-clipboard';
 import DownloadFormAllRelease from '@site/src/components/download-form/download-form-all-release';
 import DownloadFormArchive from '@site/src/components/download-form/download-form-archive';
 import DownloadFormTools from '@site/src/components/download-form/download-form-tools';
@@ -26,6 +27,7 @@ import { LayoutNext } from '@site/src/components/home-next/LayoutNext';
 const KEYS_URL = 'https://downloads.apache.org/doris/KEYS';
 const VERIFY_URL = '/community/release-and-verify/release-verify';
 const VERSIONING_URL = '/community/release-and-verify/release-versioning';
+const UPGRADE_NOTES_URL = '/docs/dev/admin-manual/cluster-management/upgrade#per-version-upgrade-notes';
 const SECURITY_URL = '/community/security';
 const ASF_ARCHIVE_URL = 'https://archive.apache.org/dist/doris/';
 
@@ -35,6 +37,58 @@ const CPU_OPTIONS = [CPUEnum.X64, CPUEnum.X64NoAvx2, CPUEnum.ARM64];
 function releaseNotePath(branch: string, version: string) {
     return `/releases/v${branch}/release-${version}`;
 }
+
+const GUIDE_ICON = { width: 18, height: 18, viewBox: '0 0 18 18', fill: 'none' } as const;
+const GUIDE_STROKE = {
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+} as const;
+
+/**
+ * What to read next, shown as one strip under the quick download card so the
+ * versioning policy, the per-version upgrade notes and the archive are found
+ * together rather than in a footnote.
+ */
+const GUIDES = [
+    {
+        to: VERSIONING_URL,
+        title: 'Which version to choose',
+        desc: 'What X.Y.Z means, how Latest differs from Stable, and which binary fits your CPU.',
+        icon: (
+            <svg {...GUIDE_ICON}>
+                <circle cx="5" cy="4" r="1.8" {...GUIDE_STROKE} />
+                <circle cx="5" cy="14" r="1.8" {...GUIDE_STROKE} />
+                <circle cx="13" cy="5" r="1.8" {...GUIDE_STROKE} />
+                <path d="M5 5.8v6.4M13 6.8c0 3.7-8 1.7-8 5.4" {...GUIDE_STROKE} />
+            </svg>
+        ),
+    },
+    {
+        to: UPGRADE_NOTES_URL,
+        title: 'Upgrade notes',
+        desc: 'Per-version precautions to read before moving a cluster to a new release.',
+        icon: (
+            <svg {...GUIDE_ICON}>
+                <path d="M9 12.5V3.5M5.5 7 9 3.5 12.5 7" {...GUIDE_STROKE} />
+                <path d="M3.5 11.5v2A1.5 1.5 0 0 0 5 15h8a1.5 1.5 0 0 0 1.5-1.5v-2" {...GUIDE_STROKE} />
+            </svg>
+        ),
+    },
+    {
+        to: '#archive',
+        title: 'Archived releases',
+        desc: 'Older branches receive no further releases of any kind, security patches included.',
+        archive: true,
+        icon: (
+            <svg {...GUIDE_ICON}>
+                <rect x="2.5" y="3.5" width="13" height="3.5" rx="1" {...GUIDE_STROKE} />
+                <path d="M4 7v6.5A1.5 1.5 0 0 0 5.5 15h7a1.5 1.5 0 0 0 1.5-1.5V7M7.5 10.5h3" {...GUIDE_STROKE} />
+            </svg>
+        ),
+    },
+];
 
 export default function DownloadFormNext(): JSX.Element {
     const defaultHead = ACTIVE_HEADS[0];
@@ -74,6 +128,24 @@ export default function DownloadFormNext(): JSX.Element {
             sha512: build.sha512,
         };
     }, [build, isSource]);
+
+    /** Copy-link feedback: the button's icon flips to a check for a moment. */
+    const [copied, setCopied] = useState(false);
+    const copiedTimer = useRef<ReturnType<typeof setTimeout>>();
+
+    useEffect(() => {
+        setCopied(false);
+        clearTimeout(copiedTimer.current);
+        return () => clearTimeout(copiedTimer.current);
+    }, [asset?.gz]);
+
+    function onCopyLink() {
+        if (!asset?.gz) return;
+        copy(asset.gz);
+        setCopied(true);
+        clearTimeout(copiedTimer.current);
+        copiedTimer.current = setTimeout(() => setCopied(false), 1800);
+    }
 
     function onCoreVersionChange(values: any) {
         const [branch, release] = values.version || [];
@@ -156,20 +228,27 @@ export default function DownloadFormNext(): JSX.Element {
                                         'is-muted': isSource,
                                     })}
                                 >
-                                    {CPU_OPTIONS.map(option => (
-                                        <button
-                                            type="button"
-                                            key={option}
-                                            disabled={isSource}
-                                            aria-pressed={cpu === option}
-                                            className={clsx('download-next__seg-item', {
-                                                'is-checked': cpu === option,
-                                            })}
-                                            onClick={() => setCpu(option)}
-                                        >
-                                            {option}
-                                        </button>
-                                    ))}
+                                    {CPU_OPTIONS.map(option => {
+                                        // A release may ship fewer builds than there are buttons,
+                                        // e.g. when one architecture's binary has been withdrawn.
+                                        const available = builds.some(item => item.value === option);
+                                        return (
+                                            <button
+                                                type="button"
+                                                key={option}
+                                                disabled={isSource || !available}
+                                                aria-pressed={cpu === option}
+                                                title={available ? undefined : `No ${option} build for ${version}`}
+                                                className={clsx('download-next__seg-item', {
+                                                    'is-checked': cpu === option,
+                                                    'is-unavailable': !available,
+                                                })}
+                                                onClick={() => setCpu(option)}
+                                            >
+                                                {option}
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
 
@@ -201,24 +280,112 @@ export default function DownloadFormNext(): JSX.Element {
                                     <span className="download-next__quick-label" aria-hidden="true" />
                                     <div className="download-next__file">
                                         <code className="download-next__file-name">{asset.filename}</code>
-                                        <div className="download-next__file-links">
+                                        <div className="download-next__file-verify">
                                             <Link to={asset.asc}>ASC</Link>
                                             <Link to={asset.sha512}>SHA-512</Link>
                                             <Link to={KEYS_URL}>KEYS</Link>
-                                            <Link to={VERIFY_URL}>How to verify</Link>
+                                            <Link className="download-next__file-verify-guide" to={VERIFY_URL}>
+                                                How to verify
+                                            </Link>
                                         </div>
                                     </div>
-                                    <Link className="download-next__download-btn" to={asset.gz}>
-                                        Download
-                                    </Link>
+                                    <div className="download-next__actions">
+                                        <Link className="download-next__download-btn" to={asset.gz}>
+                                            Download
+                                        </Link>
+                                        <button
+                                            type="button"
+                                            className={clsx('download-next__copy-btn', { 'is-copied': copied })}
+                                            aria-label={copied ? 'Download link copied' : 'Copy download link'}
+                                            title={copied ? 'Copied' : 'Copy download link'}
+                                            onClick={onCopyLink}
+                                        >
+                                            {copied ? (
+                                                <svg
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="16"
+                                                    height="16"
+                                                    viewBox="0 0 16 16"
+                                                    fill="none"
+                                                >
+                                                    <path
+                                                        d="M2.5 8.5L6 12L13.5 4.5"
+                                                        stroke="currentColor"
+                                                        strokeWidth="1.8"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                            ) : (
+                                                <svg
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="16"
+                                                    height="16"
+                                                    viewBox="0 0 16 16"
+                                                    fill="none"
+                                                >
+                                                    <rect
+                                                        x="5.5"
+                                                        y="5.5"
+                                                        width="8"
+                                                        height="8"
+                                                        rx="1.2"
+                                                        stroke="currentColor"
+                                                        strokeWidth="1.5"
+                                                    />
+                                                    <path
+                                                        d="M10.5 4V3.2A1.2 1.2 0 0 0 9.3 2H3.2A1.2 1.2 0 0 0 2 3.2v6.1a1.2 1.2 0 0 0 1.2 1.2H4"
+                                                        stroke="currentColor"
+                                                        strokeWidth="1.5"
+                                                        strokeLinecap="round"
+                                                    />
+                                                </svg>
+                                            )}
+                                            <span className="download-next__sr-only" aria-live="polite">
+                                                {copied ? 'Download link copied' : ''}
+                                            </span>
+                                        </button>
+                                    </div>
                                 </div>
                             )}
 
-                            <p className="download-next__quick-note">
-                                Apache Doris maintains the two most recent minor branches, labelled Latest and Stable —
-                                see <Link to={VERSIONING_URL}>release versioning</Link>. Releases from older branches
-                                are <Link to="#archive">archived</Link>.
-                            </p>
+                            <div className="download-next__guides">
+                                {GUIDES.map(guide => (
+                                    <Link
+                                        key={guide.title}
+                                        to={guide.to}
+                                        className={clsx('download-next__guide', { 'is-archive': guide.archive })}
+                                    >
+                                        <span className="download-next__guide-icon" aria-hidden="true">
+                                            {guide.icon}
+                                        </span>
+                                        <span className="download-next__guide-body">
+                                            <span className="download-next__guide-title">
+                                                {guide.title}
+                                                <svg
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="14"
+                                                    height="14"
+                                                    viewBox="0 0 14 14"
+                                                    fill="none"
+                                                >
+                                                    <path
+                                                        d="M2.5 7h9M7.5 3l4 4-4 4"
+                                                        stroke="currentColor"
+                                                        strokeWidth="1.6"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                            </span>
+                                            <span className="download-next__guide-desc">{guide.desc}</span>
+                                        </span>
+                                    </Link>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </section>

@@ -7,5 +7,20 @@
     },
     "theme.docs.versions.unreleasedText": {
         "message": "尚未发布"
+    },
+    "blog.search.label": {
+        "message": "搜索博客"
+    },
+    "blog.search.placeholder": {
+        "message": "按标题、摘要、标签或作者搜索"
+    },
+    "blog.search.clear": {
+        "message": "清除"
+    },
+    "blog.search.resultCount": {
+        "message": "找到 {count} 篇博客"
+    },
+    "blog.search.noResults": {
+        "message": "当前搜索词和分类下没有匹配的博客。"
     }
 }

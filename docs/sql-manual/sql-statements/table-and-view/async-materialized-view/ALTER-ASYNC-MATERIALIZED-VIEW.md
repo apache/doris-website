@@ -34,6 +34,8 @@ ALTER MATERIALIZED VIEW mv1 rename mv2;
 
 Same as [creating asynchronous materialized views](./CREATE-ASYNC-MATERIALIZED-VIEW)
 
+You cannot change a regular asynchronous materialized view to `INCREMENTAL` with `ALTER MATERIALIZED VIEW`, nor change an IVM to another default refresh method. To switch, recreate the materialized view.
+
 ##### refreshTrigger
 
 Same as [creating asynchronous materialized views](./CREATE-ASYNC-MATERIALIZED-VIEW)
@@ -45,6 +47,8 @@ For example, modifying the grace_period of mv1 to 3000ms
 ```sql
 ALTER MATERIALIZED VIEW mv1 set("grace_period"="3000");
 ```
+
+Among the IVM properties, `ivm_use_full_keys` can only be set at creation time and cannot be modified. `ivm_partition_window_limit` can be modified; after widening the window or removing the limit, the next refresh must run `COMPLETE` to rebuild the baseline. See [Incremental View Maintenance (IVM)](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#ivm-properties).
 
 ##### REPLACE
 ```sql

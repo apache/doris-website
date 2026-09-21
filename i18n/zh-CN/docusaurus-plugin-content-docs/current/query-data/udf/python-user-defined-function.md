@@ -469,12 +469,38 @@ DROP FUNCTION IF EXISTS py_is_prime(INT);
 |  | `DECIMAL256` | `decimal.Decimal` | 256 位定点数 |
 | IP 类型 | `IPV4` | `ipaddress.IPv4Address` | IPv4 地址 |
 |  | `IPV6` | `ipaddress.IPv6Address` | IPv6 地址 |
+| UUID 类型 | `UUID` | `uuid.UUID` | 原生 128 位 UUID；`NULL` 映射为 `None` |
 | 二进制类型 | `BITMAP` | `bytes` | 位图数据（暂不支持该类型） |
 |  | `HLL` | `bytes` | HyperLogLog 数据（暂不支持该类型） |
 |  | `QUANTILE_STATE` | `bytes` | 分位数状态数据（暂不支持该类型） |
 | 复杂数据类型 | `ARRAY<T>` | `list` | 数组，元素类型为 T |
 |  | `MAP<K,V>` | `dict` | 字典，键类型为 K，值类型为 V |
 |  | `STRUCT<f1:T1, f2:T2, ...>` | `dict` | 结构体，字段名为键，字段值为值 |
+
+**UUID 处理**：在标量、向量化（`list` 和 `pandas.Series`）、聚合和表函数中，`UUID` 参数均以 `uuid.UUID` 对象传入，ARRAY、MAP 或 STRUCT 中嵌套的 UUID 值同样如此；SQL `NULL` 传入 `None`。Doris 通过 Arrow UUID 扩展传递 16 字节的值，而不是文本形式，因此请在函数中 `import uuid` 并直接使用 `uuid.UUID` 对象。返回类型为 `UUID` 的函数必须返回 `uuid.UUID` 对象或 `None`；返回 `str(value)`、`value.bytes` 或 `value.int` 会报错 `UUID return value must be uuid.UUID`。`STRING` 参数和返回值不受影响，即使文本内容看起来像 UUID。
+
+```sql
+CREATE FUNCTION py_uuid_next(UUID)
+RETURNS UUID
+PROPERTIES (
+    "type" = "PYTHON_UDF",
+    "symbol" = "evaluate",
+    "runtime_version" = "3.10.12",
+    "always_nullable" = "true",
+    "volatility" = "immutable"
+)
+AS $$
+import uuid
+
+def evaluate(value):
+    if value is None:
+        return None
+    return uuid.UUID(int=value.int + 1)
+$$;
+
+SELECT py_uuid_next(CAST('00000000-0000-0000-0000-000000000001' AS UUID)); -- 结果：00000000-0000-0000-0000-000000000002
+SELECT py_uuid_next(NULL); -- 结果：NULL
+```
 
 #### NULL 值处理
 

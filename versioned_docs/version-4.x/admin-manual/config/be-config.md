@@ -663,6 +663,24 @@ BaseCompaction:546859:
 
 ### Load
 
+#### `enable_table_memtable_flush_backpressure`
+
+* Type: bool
+* Description: Added in version 4.1.4. Whether to block new writes to a table when too many of its MemTables on this BE are still waiting to be flushed. Used together with the FE configuration `enable_adaptive_random_bucket_load` to keep MemTables from piling up and inflating memory during adaptive random bucket loads.
+* Default value: true
+
+#### `table_memtable_flush_pending_count_limit`
+
+* Type: int32
+* Description: Added in version 4.1.4. The maximum number of MemTables of a single table that may be waiting to be flushed on this BE. Once the limit is exceeded, new writes are blocked until it drops below the limit. It only takes effect when `enable_table_memtable_flush_backpressure = true`.
+* Default value: 10
+
+#### `group_commit_max_wal_num_per_table`
+
+* Type: int32
+* Description: Added in version 4.1.4. The maximum number of Group Commit WAL files that may exist for a single table; `0` means no limit. When WAL replay keeps failing so that WALs accumulate beyond this limit, `async_mode` Group Commit loads for that table are rejected with an `EXCEEDED_LIMIT` error whose message looks like `Too many group commit async WALs for table ...`. The limit prevents WALs from growing without bound and filling up the disk.
+* Default value: 10
+
 #### `enable_stream_load_record`
 
 * Type: bool
@@ -809,7 +827,7 @@ BaseCompaction:546859:
 #### `enable_group_commit_streamload_be_forward`
 
 * Type: bool
-* Description: Whether to enable Stream Load BE forwarding for Group Commit in compute-storage decoupled mode. Added in version 4.0.8. Supports dynamic modification.
+* Description: Whether to enable Stream Load BE forwarding for Group Commit in compute-storage decoupled mode. Added in version 4.0.8 in the Doris 4.0 series and in version 4.1.4 in the 4.1 series. Supports dynamic modification.
   - This capability solves the problem where a load balancer randomly spreads Group Commit requests for the same table across different BEs, preventing effective batching: once enabled, the BE forwards the request to a single target BE.
   - **Starting from version 4.0.8, the BE endpoint `/api/{db}/{table}/_stream_load_forward` is gated by this configuration: when it is `false`, requests to that endpoint return `403 Forbidden` with `Stream load forward is disabled`; when it is `true`, requests to that endpoint must also pass authentication and require the global `LOAD` privilege.**
   - Deployments that rely on this forwarding must set the configuration to `true` on both FE and BE (see the FE configuration of the same name in [FE Configuration](./fe-config)).
@@ -1261,6 +1279,12 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 
 ### Others
 
+#### `enable_arrow_input_validation`
+
+* Type: bool
+* Description: Added in version 4.1.4. Whether to validate the Arrow input buffers before converting Arrow data into Doris internal columns. Enabling it prevents malformed Arrow data from crashing the BE, at the cost of a small amount of extra validation overhead.
+* Default value: true
+
 #### `report_tablet_interval_seconds`
 
 * Description: The interval time for the agent to report the olap table to the FE
@@ -1384,6 +1408,180 @@ Default: true for cloud mode, false for non-cloud mode.
 Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Description: The disk paths and other parameters used for file cache, represented as an array, with one entry for each disk. The `path` specifies the disk path, and `total_size` limits the size of the cache; -1 or 0 will use the entire disk space.
 * format: [{"path":"/path/to/file_cache","total_size":21474836480,{"path":"/path/to/file_cache2","total_size":21474836480}]
+
+#### `enable_async_file_cache_write`
+
+* Type: bool
+* Description: Added in version 4.1.4. Whether to write the file cache asynchronously. When enabled, writing remote data back into the file cache is handed to a background thread pool instead of blocking the read path, which lowers cold-read latency.
+* Default value: false
+
+#### `async_file_cache_write_workers_per_disk`
+
+* Type: int32
+* Description: Added in version 4.1.4. The number of write threads used per cache disk when the file cache is written asynchronously. It only takes effect when `enable_async_file_cache_write = true`.
+* Default value: 16
+
+#### `async_file_cache_write_max_pending_bytes`
+
+* Type: int64
+* Description: Added in version 4.1.4. The maximum total size, in bytes, of data pending an asynchronous file cache write. Write-back requests beyond this limit are dropped, which does not affect query correctness but means the data is not cached. `-1` means no limit.
+* Default value: -1
+
+#### `enable_file_cache_write_from_s3_file_writer`
+
+* Type: bool
+* Description: Added in version 4.1.4. Whether to also write data into the local file cache while writing to object storage, so that freshly written data can be read from the cache directly.
+* Default value: true
+
+#### `enable_file_cache_write_index_file_only`
+
+* Type: bool
+* Description: Added in version 4.1.4. Whether to write only index files into the file cache. Enabling it keeps indexes resident in the cache first when cache space is limited.
+* Default value: false
+
+#### `enable_cache_read_from_peer`
+
+* Type: bool
+* Description: Master switch for peer cache read. When on, a local File Cache miss first tries to read the block from the File Cache of another BE (in the same compute group or another one) and falls back to object storage only if no BE has it. Same-group and cross-group peer reads are controlled together by this switch; cross-group reads cannot be turned off separately. Cross-group peer read is supported since version 4.2.0, which also removed the configuration item `cache_read_from_peer_expired_seconds`. See [Peer Cache Read](../../compute-storage-decoupled/file-cache/file-cache-peer-read).
+* Default value: true
+
+#### `enable_peer_s3_race`
+
+* Type: bool
+* Description: Added in version 4.2.0. Whether a peer read races the object storage read, with the first result winning. When off, reads are sequential: peer candidates are tried one by one, and object storage is read only after all of them fail.
+* Default value: true
+
+#### `peer_race_hedge_delay_ms`
+
+* Type: int32
+* Description: Added in version 4.2.0. Head start given to the peer read during a race, in milliseconds. If the peer answers within it, the object storage read is not sent; `0` starts both reads at the same time.
+* Default value: 20
+
+#### `max_concurrent_peer_races`
+
+* Type: int32
+* Description: Added in version 4.2.0. Maximum number of concurrent peer-versus-object-storage races on one BE. Misses beyond this limit are read sequentially.
+* Default value: 64
+
+#### `peer_cache_fill_compute_group_id`
+
+* Type: string
+* Description: Added in version 4.2.0. Set on the BE that issues the read. ID of the compute group responsible for cross-group fills (the `compute_group_id` in the `Tag` column of `SHOW BACKENDS`, not the compute group name). When the chosen peer candidate belongs to this compute group, the request asks it to fetch the block from object storage and write it into its own File Cache if it does not have it. Empty means fills are not used.
+* Default value: ""
+
+#### `enable_peer_server_cache_fill`
+
+* Type: bool
+* Description: Added in version 4.2.0. Set on the BE that serves the cache. Whether to accept peer read requests that carry the fill flag. When off, blocks that are not cached locally are reported as not found and the requesting BE falls back to object storage.
+* Default value: true
+
+#### `peer_server_cache_fill_timeout_ms`
+
+* Type: int32
+* Description: Added in version 4.2.0. Maximum wait for one fill on the serving side, in milliseconds. On timeout the requesting BE falls back to object storage.
+* Default value: 6000
+
+#### `max_concurrent_peer_server_fills`
+
+* Type: int32
+* Description: Added in version 4.2.0. Maximum number of concurrent fills on the serving side. Fill requests beyond the limit are rejected and the requesting BE falls back to object storage.
+* Default value: 32
+
+#### `peer_rpc_failure_eviction_threshold`
+
+* Type: int32
+* Description: Added in version 4.2.0. A peer candidate is removed from the candidate list after this many consecutive RPC failures.
+* Default value: 3
+
+#### `peer_all_miss_cooldown_threshold`
+
+* Type: int32
+* Description: Added in version 4.2.0. Number of consecutive reads in which every peer candidate missed before the tablet enters a cooldown, during which reads go straight to object storage.
+* Default value: 5
+
+#### `peer_all_miss_cooldown_duration_s`
+
+* Type: int64
+* Description: Added in version 4.2.0. Length of the peer read cooldown, in seconds.
+* Default value: 300
+
+#### `peer_candidate_expiry_s`
+
+* Type: int64
+* Description: Added in version 4.2.0. Expiry of peer candidate entries, in seconds, measured from the last use. Expired entries are cleared from memory and fetched from FE again on the next miss.
+* Default value: 3600
+
+#### `peer_candidate_cleanup_interval_s`
+
+* Type: int64
+* Description: Added in version 4.2.0. Interval of the background job that clears expired peer candidates, in seconds.
+* Default value: 3600
+
+#### `peer_fetch_queue_timeout_ms`
+
+* Type: int32
+* Description: Added in version 4.2.0. Maximum time a peer read request may wait in the processing queue on the serving side, in milliseconds. Requests that wait longer are rejected so that the requesting BE falls back to object storage quickly.
+* Default value: 100
+
+#### `brpc_peer_fetch_pool_threads`
+
+* Type: int32
+* Description: Added in version 4.2.0. Size of the thread pool that handles peer read requests on the serving side, isolated from the thread pool of heavy RPCs such as loads. `-1` means `max(64, 2 × CPU cores)`. Not dynamically modifiable.
+* Default value: -1
+
+#### `brpc_peer_fetch_pool_max_queue_size`
+
+* Type: int32
+* Description: Added in version 4.2.0. Queue length of the peer read thread pool on the serving side. `-1` means `max(4096, 128 × CPU cores)`. Not dynamically modifiable.
+* Default value: -1
+
+#### `min_peer_race_s3_thread_num` / `max_peer_race_s3_thread_num`
+
+* Type: int32
+* Description: Added in version 4.2.0. Minimum / maximum number of threads in the pool that performs the object storage read on the requesting side during a peer-versus-object-storage race. Not dynamically modifiable.
+* Default value: 0 / 32
+
+#### `s3_get_requests_per_second_per_core` / `s3_put_requests_per_second_per_core`
+
+* Type: int64
+* Description: Added in version 4.1.4. The QPS limit for object storage GET / PUT requests, computed per CPU core. A negative value disables this mode and falls back to the legacy absolute token configuration; `0` means the QPS is not limited.
+* Default value: -1
+
+#### `s3_get_requests_per_second_max` / `s3_put_requests_per_second_max`
+
+* Type: int64
+* Description: Added in version 4.1.4. The hard upper bound on the GET / PUT QPS derived from the number of CPU cores. A value less than or equal to `0` means no upper bound.
+* Default value: 0
+
+#### `s3_get_bytes_per_second_per_core` / `s3_put_bytes_per_second_per_core`
+
+* Type: int64
+* Description: Added in version 4.1.4. The bandwidth limit for object storage GET / PUT, computed per CPU core (bytes per second per core). A value less than or equal to `0` means the bandwidth is not limited.
+* Default value: -1
+
+#### `s3_get_bytes_per_second_max` / `s3_put_bytes_per_second_max`
+
+* Type: int64
+* Description: Added in version 4.1.4. The hard upper bound, in bytes per second, on the GET / PUT bandwidth derived from the number of CPU cores. A value less than or equal to `0` means no upper bound.
+* Default value: 0
+
+#### `s3_rate_limiter_cpu_cores_override`
+
+* Type: int32
+* Description: Added in version 4.1.4. The number of CPU cores used to derive the rate limits above. A value less than or equal to `0` means the number of cores on the machine is detected automatically.
+* Default value: 0
+
+#### `s3_rate_limiter_log_interval`
+
+* Type: int64
+* Description: Added in version 4.1.4. The minimum interval, in milliseconds, between log entries printed when object storage rate limiting is triggered.
+* Default value: 1000
+
+#### `file_cache_mem_storage_shard_num`
+
+* Type: int32
+* Description: Added in version 4.1.4. The number of shards of the file cache memory storage, used to reduce lock contention under concurrent access.
+* Default value: 1024
 
 #### `time_series_max_tablet_version_num`
 

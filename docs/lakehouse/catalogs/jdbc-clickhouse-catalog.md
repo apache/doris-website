@@ -74,7 +74,8 @@ When mapping ClickHouse, a Database in Doris corresponds to a Database in ClickH
 | int128/uint64             | largeint                | Same as above                    |
 | int256/uint128/uint256    | string                  | Doris does not have data types of this magnitude, so it is handled with STRING |
 | decimal(P, S)             | decimal(P, S) or string | If it exceeds the maximum precision supported by Doris, use string to handle it |
-| enum/ipv4/ipv6/uuid       | string                  |                                  |
+| enum/ipv4/ipv6 | string | |
+| uuid | uuid | Maps to native UUID; the previous 4.x and 3.x releases map it to STRING. |
 | array                     | array                   |                                  |
 | other                     | UNSUPPORTED             |                                  |
 

@@ -194,8 +194,25 @@
         font-weight: 400;
         color: #1F1F26;
     }
+    // Links read as links at rest (themed colour) and underline on hover.
+    // The hover rule stays at (0,1,1) via :where and takes its value from
+    // Infima's variable, so block links that opt out of the underline keep
+    // winning: Infima's .button:hover / DocCard's --ifm-link-hover-decoration
+    // and the card anchors styled inside community-badges / contribute-to-doris.
     a {
-        color: var(--ifm-color-primary);
+        color: var(--brand-link);
+        text-decoration: none;
+        text-underline-offset: 0.15em;
+
+        &:where(:hover) {
+            text-decoration: var(--ifm-link-hover-decoration, underline);
+        }
+
+        // Inline code inside a link keeps the link colour instead of the grey
+        // `.markdown code` colour, so [`foo`](...) is recognisable too.
+        code {
+            color: inherit;
+        }
     }
 
     ul,

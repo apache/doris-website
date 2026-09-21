@@ -10,6 +10,8 @@
 
 The UUID function generates a random Universally Unique Identifier (UUID). The generated UUID conforms to RFC 4122 standard, with a format of 8-4-4-4-12 (36 characters including hyphens).
 
+The existing `UUID()` continues to return `VARCHAR`. The [UUID_V4](../uuid-functions/uuid-v4.md) and [UUID_V7](../uuid-functions/uuid-v7.md) functions return the native [UUID type](../../../basic-element/sql-data-types/uuid.md).
+
 ## Syntax
 
 ```sql

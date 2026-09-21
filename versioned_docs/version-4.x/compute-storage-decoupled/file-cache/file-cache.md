@@ -4,7 +4,7 @@
     "sidebar_label": "File Cache Configuration",
     "language": "en",
     "description": "Covers file cache configuration, index-only cache writes, query-level cache controls, cache warmup and eviction, hit-rate monitoring, and TTL policies for Doris in compute-storage decoupled mode to improve query performance and reduce object storage costs.",
-    "keywords": ["Doris file cache", "compute-storage decoupled cache", "file cache", "index-only cache writes", "cache warmup", "cache quota", "file_cache_query_limit_bytes", "TTL cache", "LRU", "cache hit rate", "object storage acceleration"]
+    "keywords": ["Doris file cache", "compute-storage decoupled cache", "file cache", "index-only cache writes", "cache warmup", "peer cache read", "cache quota", "file_cache_query_limit_bytes", "TTL cache", "LRU", "cache hit rate", "object storage acceleration"]
 }
 ---
 
@@ -13,7 +13,7 @@
 
 In compute-storage decoupled mode, data is stored in remote object storage (such as S3 or HDFS). Doris uses the local disks of BE nodes as a file cache layer and manages cache space efficiently with a multi-queue LRU (Least Recently Used) strategy. The access paths for indexes and metadata are specially optimized to maximize the cache hit rate for hot data.
 
-For multi-compute-group scenarios, Doris provides a **cache warmup** feature that proactively pulls data for specified tables or partitions into a new compute group when it starts, quickly establishing a local cache and improving first-query performance.
+For multi-compute-group scenarios, Doris provides a **cache warmup** feature that proactively pulls data for specified tables or partitions into a new compute group when it starts, quickly establishing a local cache and improving first-query performance. [Peer cache read](./file-cache-peer-read), which is on by default, serves blocks that miss the local cache from the cache of another BE (including BEs in other compute groups) before falling back to remote storage.
 
 ## The Role of File Cache
 
@@ -57,7 +57,7 @@ Doris provides one global policy and two Compaction-specific policies:
 
 | Parameter | Type | Default | Scope | Description |
 |---|---|---|---|---|
-| `enable_file_cache_write_index_file_only` | Boolean | `false` | All rowset writes in compute-storage decoupled mode, including ingestion, Schema Change, Cumulative Compaction, and Base Compaction | **Supported starting from version 4.0.8.** When set to `true`, Segment data is not actively cached. After a Segment is closed, its footer and internal index ranges are synchronously preloaded, while independent inverted index files are still written to File Cache. This parameter takes precedence over the two Compaction-specific parameters |
+| `enable_file_cache_write_index_file_only` | Boolean | `false` | All rowset writes in compute-storage decoupled mode, including ingestion, Schema Change, Cumulative Compaction, and Base Compaction | **Supported in Doris 4.0.8 and later in the 4.0 series, and in Doris 4.1.4 and later in the 4.1 series.** When set to `true`, Segment data is not actively cached. After a Segment is closed, its footer and internal index ranges are synchronously preloaded, while independent inverted index files are still written to File Cache. This parameter takes precedence over the two Compaction-specific parameters |
 | `enable_file_cache_write_base_compaction_index_only` | Boolean | `false` | Base Compaction | Only when the existing Base Compaction policy has already decided to write output to File Cache, prevents the Segment file from being actively cached while still caching independent inverted index files. This parameter does not cause Base Compaction output that would otherwise bypass the cache to be cached |
 | `enable_file_cache_write_cumu_compaction_index_only` | Boolean | `false` | Cumulative Compaction | When Cumulative Compaction output is written to File Cache, prevents the Segment file from being actively cached while still caching independent inverted index files |
 
@@ -345,6 +345,8 @@ Doris provides a cache warmup feature that allows you to proactively pull data f
 
 For detailed usage, see the [WARM-UP SQL documentation](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md).
 
+Cache warmup pulls data from remote storage ahead of time. [Peer cache read](./file-cache-peer-read) complements it at query time: on a local cache miss, the block is read from another BE first and from remote storage only if no BE has it, which covers the cold reads that warmup did not.
+
 ## Cache Clearing
 
 <!-- Knowledge type: Operational steps -->
@@ -504,6 +506,8 @@ After enabling index-only cache writes, monitor the following categorized metric
 
 You can view the complete query performance report through [Query Performance Analysis](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile).
 
+`NumPeerIOTotal`, `PeerIOUseTimer`, `SameCGPeerIOTotal`, `CrossCGPeerIOTotal`, and related counters show whether data came from the cache of another BE (peer cache read). See [Peer Cache Read: Query Profile Counters](./file-cache-peer-read#query-profile-counters).
+
 ## TTL Cache Policy
 
 <!-- Knowledge type: Operational steps -->
@@ -534,6 +538,14 @@ PROPERTIES (
 ```
 
 All newly ingested data for the table above is retained in the cache for 300 seconds.
+
+The valid range for `file_cache_ttl_seconds` is `0 <= value <= 4611686018427387903` (that is, `Long.MAX_VALUE / 2`). Starting from version 4.1.4, both `CREATE TABLE` and `ALTER TABLE ... SET` validate this value, and an out-of-range or malformed value is rejected with an error:
+
+```text
+The value <v> formats error or is out of range (0 <= integer <= 4611686018427387903). Larger values may overflow in BE and change TTL cache to normal cache; please use 4611686018427387903 or a smaller value.
+```
+
+Before 4.1.4, the upper bound was not validated, and an excessively large value would overflow on the BE side, downgrading the TTL cache to a normal cache.
 
 ### Modifying the TTL Setting for a Table
 
@@ -590,7 +602,7 @@ Check whether `clear_file_cache` is set to `true`. If you do not want the cache 
 
 **Q: The first query after a new compute group comes online is very slow.**
 
-Use the **cache warmup** feature to proactively pull hot table or partition data from remote storage into the local cache of the new compute group before queries arrive. For detailed usage, see the [WARM-UP SQL documentation](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md).
+Use the **cache warmup** feature to proactively pull hot table or partition data from remote storage into the local cache of the new compute group before queries arrive. For detailed usage, see the [WARM-UP SQL documentation](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md). If another compute group already holds the data in its cache, [peer cache read](./file-cache-peer-read), which is on by default, lets the new compute group read it from that group's BEs on a miss.
 
 **Q: How do I tell whether the current cache space is full?**
 

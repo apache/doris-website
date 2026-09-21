@@ -11,7 +11,7 @@ This document presents Apache Doris Core release notes in reverse chronological 
 ## Doris Core Release Notes
 
 :::tip Latest Release
-🎉 Version 4.1.3 is released. Check out the 🔗[Release Notes](./v4.1/release-4.1.3.md) here. Apache Doris 4.1.3 adds Python UDF/UDAF/UDTF support, workload policy enhancements, table-level event-driven warm up, and zstd Stream Load compression. It also includes fixes across query execution, storage, load, lakehouse, and authentication.
+🎉 Version 4.1.4 is released. Check out the 🔗[Release Notes](./v4.1/release-4.1.4.md) here. Apache Doris 4.1.4 adds ANN indexes on Merge-on-Write tables, multimodal file embedding, adaptive global runtime filter publishing for large clusters, OceanBase CDC streaming jobs, and TLS for internal communication. It also includes fixes across query execution, storage, load, cloud-native deployments, lakehouse, and authentication.
 
 <br />
 
@@ -33,6 +33,8 @@ This document presents Apache Doris Core release notes in reverse chronological 
 
 
 <br />
+
+- [2026-09-10, Apache Doris 4.1.4 is released](./v4.1/release-4.1.4.md)
 
 - [2026-08-14, Apache Doris 4.0.8 is released](./v4.0/release-4.0.8.md)
 

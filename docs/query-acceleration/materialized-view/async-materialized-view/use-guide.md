@@ -3,7 +3,7 @@
     "title": "Async Materialized View Best Practices",
     "language": "en",
     "description": "When are async materialized views a good fit? How do you choose a refresh strategy? How do you implement them? This article covers scenario assessment, usage principles, refresh strategy selection, implementation practices, and operational considerations.",
-    "keywords": ["async materialized view", "usage recommendations", "best practices", "refresh strategy", "partitioned materialized view", "transparent rewrite", "data layered modeling", "Doris"]
+    "keywords": ["async materialized view", "usage recommendations", "best practices", "refresh strategy", "Incremental View Maintenance", "IVM", "partitioned materialized view", "transparent rewrite", "data layered modeling", "Doris"]
 }
 ---
 
@@ -89,7 +89,7 @@ The table below summarizes typical scenarios where async materialized views are 
 #### Frequently Updated Base Tables
 
 - **Description**: Source table data changes very frequently (such as multiple updates per minute).
-- **Issue**: Async materialized views are hard to keep in sync, and refresh costs are too high. Consider periodic refresh instead.
+- **Issue**: Complete or partition refresh may be too expensive. If the rows changed each time are only a small share of the table or partition, evaluate [Incremental View Maintenance (IVM)](incremental-materialized-view). IVM still refreshes asynchronously and does not provide real-time consistency.
 
 #### Simple Queries
 
@@ -140,7 +140,16 @@ The table below summarizes typical scenarios where async materialized views are 
 
 <!-- Knowledge type: decision guide -->
 
-Async materialized views provide three main refresh strategies: **manual refresh**, **scheduled refresh**, and **trigger-based refresh**. Choosing an appropriate refresh strategy is critical for balancing data freshness and system performance.
+Async materialized views require you to choose a computation granularity and a trigger method separately. The computation granularities are `INCREMENTAL`, `PARTITIONS`, `COMPLETE` and `AUTO`; the trigger methods are manual refresh, scheduled refresh and trigger-based refresh.
+
+| Computation granularity | Recommended scenario |
+|---|---|
+| `INCREMENTAL` | The number of changed rows is far smaller than the whole table or the affected partitions, and the definition meets the IVM requirements |
+| `PARTITIONS` | Changes are concentrated in a few partitions and recomputing those partitions is affordable |
+| `COMPLETE` | Small data volume, first baseline, or recovering the baseline |
+| `AUTO` | You want Doris to choose an available method automatically |
+
+IVM is available since Doris 5.0.0 and is currently experimental. See [Incremental View Maintenance (IVM)](incremental-materialized-view) for selection guidance, prerequisites and limitations.
 
 ### 3.1 Prefer Partitioned Materialized Views
 
@@ -1038,7 +1047,7 @@ Async materialized views are essentially enhanced ETL computations and require o
 
 **Q1: Can async materialized views completely replace real-time queries?**
 
-No. Async materialized views have data latency (depending on the refresh strategy) and are not suitable for scenarios that require data freshness within 1 to 5 minutes. For scenarios with high timeliness requirements, consider synchronous materialized views.
+No. Async materialized views have data latency that depends on the trigger method, queueing and refresh time. IVM lowers the computation cost of frequent small-batch changes but still does not provide real-time consistency. For scenarios with high timeliness requirements, consider synchronous materialized views.
 
 **Q2: Can I set all materialized views to high-frequency scheduled refresh to approach real-time?**
 
@@ -1046,7 +1055,7 @@ Not recommended. Doing so causes continuous occupation of system resources, refr
 
 **Q3: How do I choose a refresh strategy?**
 
-Refer to [Comparison of the Three Refresh Strategies](#32-comparison-of-the-three-refresh-strategies) and [Recommendations for Combining Refresh Strategies](#34-recommendations-for-combining-refresh-strategies), and match by data warehouse layer, business criticality, or data change frequency. First evaluate whether you can build a [partitioned materialized view](#31-prefer-partitioned-materialized-views).
+Choose the computation granularity first, then the trigger method. When the number of changed rows is far smaller than the affected partitions, evaluate [IVM](incremental-materialized-view); when changes are concentrated in a few partitions, first evaluate a [partitioned materialized view](#31-prefer-partitioned-materialized-views). For trigger methods, refer to [Comparison of the Three Refresh Strategies](#32-comparison-of-the-three-refresh-strategies) and [Recommendations for Combining Refresh Strategies](#34-recommendations-for-combining-refresh-strategies).
 
 **Q4: Do materialized views still need maintenance after they are built?**
 

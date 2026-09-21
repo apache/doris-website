@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { useAlternatePageUtils } from '@docusaurus/theme-common/internal';
 import { translate } from '@docusaurus/Translate';
@@ -103,6 +103,7 @@ export default function LocaleDropdownNavbarItem({
                             strokeWidth="1.25"
                         />
                     </svg>
+                    <span className="locale-current-label">{localeConfigs[currentLocale]!.label}</span>
                 </>
             }
             items={items}

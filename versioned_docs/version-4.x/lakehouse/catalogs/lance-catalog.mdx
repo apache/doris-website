@@ -2,7 +2,7 @@
 {
     "title": "Lance Catalog",
     "language": "en",
-    "description": "Apache Doris Lance Catalog guide: access Lance datasets through Filesystem or REST Namespace catalogs, with parallel reads, predicate pushdown, S3/Local TVFs, index inspection, and vector search."
+    "description": "Apache Doris Lance Catalog guide: access Lance datasets through Filesystem or REST Namespace catalogs, with parallel reads, predicate pushdown, S3/Local TVFs, index inspection, vector search, and full-text search."
 }
 ---
 
@@ -25,6 +25,7 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 |---|---|
 | Query Lance data directly | Analyze existing Lance datasets with Doris SQL without migrating or importing the data first. |
 | AI vector search | Reuse vector indexes already present in Lance, run searches through `vector_search()`, and combine them with scalar filtering and Doris SQL analytics. |
+| Full-text search | Reuse FTS inverted indexes already present in Lance, run BM25 searches through `full_text_search()`, and combine them with scalar filtering and Doris SQL analytics. |
 | Data integration | Read Lance data into Doris internal tables for further processing, joins, or long-term storage. |
 | Namespace management | Use a Filesystem Catalog for a simple directory-based layout. Use a REST Catalog when Namespaces, table locations, or temporary storage credentials need centralized management. |
 
@@ -37,16 +38,19 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 | Metadata access | Supports `SHOW DATABASES`, `SHOW TABLES`, `DESC`, and `SHOW INDEX` (Filesystem Catalogs only) |
 | System tables (`table$...`) | Not supported; use `SHOW INDEX` for index metadata |
 | Data queries | Supports column pruning, parallel Lance Fragment scans, and snapshot-consistent reads of the current version |
-| Predicate pushdown | Supports pushing compatible scalar predicates down to Lance |
+| Predicate pushdown | Supports pushing compatible static scalar predicates and join Runtime Filters down to Lance |
 | File TVFs | Supports querying Lance datasets directly through `s3()` and `local()` |
-| Vector search | Uses physical Lance index segments as parallel splits, keeps uncovered Fragments as Flat Search splits, and performs a Doris global Top-K merge |
+| Vector search | Supports single-vector and multi-vector columns, uses physical Lance index segments as parallel splits, keeps uncovered Fragments as Flat Search splits, and performs a Doris global Top-K merge |
+| Full-text search | Uses existing Lance FTS inverted indexes through `full_text_search()`, supports Match OR/AND and Phrase queries, and performs a Doris global Top-K merge |
+| Lance Cache | Shares index and metadata caches and a local disk data cache within each BE |
+| Two-phase TopN read | Enabled by default for eligible output columns in vector and full-text searches; controlled independently by `enable_lance_lazy_materialization` |
 | Writing to Lance | Not supported |
 | Time Travel | Not supported |
-| Full-Text Search / Hybrid Search | Not supported |
+| Hybrid Search | Not supported |
 
 ## Lance Version and Compatibility
 
-The Doris BE data reader is built with `lance-c v0.1.6`, which embeds the Lance Rust crates at version `7.0.0-beta.7` (Lance commit `e0e977a6`). The Doris FE reads Namespace and dataset metadata with the `lance-java` client at version `9.1.0-beta.3` (Lance commit `e934cc2c`). These versions identify the reader implementations integrated with Doris. They are different from the Lance `data_storage_version` recorded in a dataset.
+The Doris BE data reader is built with `lance-c v0.1.9` plus Doris patches, which add multi-vector search support and upgrade its embedded Lance Rust crates to `11.0.0` (commit `ab6b5bbe`). The Doris FE reads Namespace and dataset metadata with `org.lance:lance-core:11.0.0`, aligning the FE and BE on Lance `11.0.0`. A Dataset must be compatible with both FE metadata loading and BE data reading. These implementation versions are different from the Lance `data_storage_version` recorded in a dataset.
 
 The following table describes the file-format compatibility of this reader:
 
@@ -88,6 +92,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | `lance.namespace.parent` | No | Empty | Limits access to the specified Lance Namespace and its child Namespaces. With the default delimiter, for example, `production$analytics` represents a two-level Namespace. |
 | `lance.namespace.delimiter` | No | `$` | Delimiter used to parse `lance.namespace.parent`. It is also passed to the REST Namespace client. This property does not change how multilevel Namespaces are displayed in Doris. |
 | `lance.namespace.root_database` | No | `default` | Doris database name to which the root Lance Namespace is mapped. |
+| `lance.table_access_cache_ttl_seconds` | No | `60` | Non-negative integer. Maximum FE table-access cache lifetime in seconds; `0` disables it. Applies to Filesystem and REST Catalogs. Only results without vended storage options or credential-bearing URIs are cached; see [FE Table Access Cache](#fe-table-access-cache). |
 
 ### Filesystem Catalog
 
@@ -97,31 +102,88 @@ A Filesystem Catalog discovers Lance Namespaces and tables directly from a wareh
 |---|---|---|
 | `warehouse` | Yes | Root path of the Lance warehouse. Local absolute paths, `file://` URIs, `s3://` URIs, and `oss://` URIs are supported. |
 
-Select the example that matches the storage system hosting the warehouse:
+The two properties serve different purposes:
+
+- `fs.s3.support=true` explicitly selects S3 configuration parsing. AWS S3 can usually be detected from its properties. For MinIO, custom endpoints, or OSS accessed through its S3-compatible API, set it explicitly to avoid failed detection or selection of another storage type based on the domain. All S3 examples below include this property for direct use.
+- `use_path_style` controls where the bucket appears in request URLs and defaults to `false`. Setting it to `true` uses `endpoint/bucket/object-path`; setting it to `false` uses virtual-hosted-style access. With the current default S3 client in Lance, an explicitly configured virtual-hosted-style endpoint must include the bucket. Set this property together with the endpoint according to the access style supported by the service.
+
+| Access scenario | Storage type setting | `use_path_style` | Endpoint format |
+|---|---|---|---|
+| AWS S3 | Recommended: `fs.s3.support=true` | `false`; can be omitted | Include the bucket, such as `https://my-bucket.s3.us-east-1.amazonaws.com`. |
+| MinIO (access through a service domain or IP) | Set `fs.s3.support=true` | Explicitly set `true` | Service address without the bucket, such as `http://minio.example.com:9000`. |
+| OSS S3-compatible API | Set `fs.s3.support=true` | `false`; explicitly set in the example | Include the bucket, such as `https://my-bucket.oss-cn-beijing.aliyuncs.com`. |
+| Native OSS API | Recommended: `fs.oss.support=true`; do not set `fs.s3.support` | No need to set the generic `use_path_style` | Use `oss.endpoint` without the bucket, such as `https://oss-cn-beijing.aliyuncs.com`. |
+
+These S3 endpoint rules apply to the default S3 access path in Lance. For a Filesystem Catalog using a single storage type, set only the corresponding `fs.*.support=true`; do not enable multiple storage types to “enable compatibility.” This property selects configuration parsing and does not add protocol support to the storage service.
+
+Select the example that matches the storage system hosting the warehouse, and replace the bucket, path, address, and credentials:
 
 <Tabs groupId="lance-filesystem-storage">
-    <TabItem value="s3" label="S3 / S3-Compatible" default>
+    <TabItem value="s3" label="AWS S3" default>
         ```sql
         CREATE CATALOG lance_fs_s3 PROPERTIES (
             "type" = "lance",
             "lance.catalog.type" = "filesystem",
             "warehouse" = "s3://my-bucket/lance",
-            "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
             "s3.region" = "us-east-1",
             "s3.access_key" = "<ak>",
             "s3.secret_key" = "<sk>"
         );
         ```
 
-        You can omit `s3.endpoint` for AWS S3. For S3-compatible storage such as MinIO, set the service endpoint and add `"use_path_style" = "true"` when the service requires path-style access.
+        This example uses an AWS S3 endpoint containing the bucket with `use_path_style=false`. Current Doris S3 property validation requires an endpoint; when using the `s3://my-bucket/...` URI shown here, setting only the region is insufficient. Update the endpoint whenever you change the bucket or region.
     </TabItem>
 
-    <TabItem value="oss" label="Alibaba Cloud OSS">
+    <TabItem value="minio" label="MinIO (Path Style)">
+        ```sql
+        CREATE CATALOG lance_fs_minio PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        This example accesses MinIO through its service domain using path-style requests, without requiring a subdomain for each bucket. Keep the bucket out of the endpoint and replace the region with the value configured for the service. If TLS is enabled, use the corresponding `https://` endpoint and ensure that both the FE and BEs can reach it.
+    </TabItem>
+
+    <TabItem value="oss-s3" label="Alibaba Cloud OSS (S3-Compatible Access)">
+        To access OSS through its S3-compatible API, use a `s3://` warehouse and `s3.*` connection properties:
+
+        ```sql
+        CREATE CATALOG lance_fs_oss_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        This example sets `use_path_style=false` for virtual-hosted-style access. The current default S3 client in Lance does not automatically add the bucket to an explicitly configured endpoint, so `s3.endpoint` must include the bucket, for example `https://my-bucket.oss-cn-beijing.aliyuncs.com`; keep `warehouse` as `s3://my-bucket/lance`. For internal network access, use `https://my-bucket.oss-cn-beijing-internal.aliyuncs.com` and ensure that both the FE and BEs can reach it.
+
+        For temporary STS credentials, add `"s3.session_token" = "<token>"`. This mode reads existing OSS data through the S3-compatible API without moving the data. For native OSS access, see the adjacent native OSS example.
+    </TabItem>
+
+    <TabItem value="oss" label="Alibaba Cloud OSS (Native Access)">
         ```sql
         CREATE CATALOG lance_fs_oss PROPERTIES (
             "type" = "lance",
             "lance.catalog.type" = "filesystem",
             "warehouse" = "oss://my-bucket/lance",
+            "fs.oss.support" = "true",
             "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
             "oss.region" = "cn-beijing",
             "oss.access_key" = "<ak>",
@@ -159,10 +221,10 @@ A REST Catalog obtains Namespaces, table locations, and storage access parameter
 | `lance.rest.api-key` | Yes for API Key authentication | - | API Key sent in the `x-api-key` header. |
 | `lance.rest.header.<header-name>` | No | - | Custom HTTP header sent to the REST service. Use the dedicated authentication properties above for authentication headers. |
 
-The REST Namespace returns the storage location of each table. Configure default access properties for the storage system hosting those tables:
+REST service authentication and object storage authentication are separate: `lance.rest.*` connects to the Namespace service, while `s3.*` / `oss.*` lets the FE and BEs read table data. The table URI returned by the Namespace determines the access path: `s3://` uses S3, and `oss://` uses native OSS access. Select default storage properties according to the returned table URIs:
 
 <Tabs groupId="lance-rest-storage">
-    <TabItem value="s3" label="S3 / S3-Compatible" default>
+    <TabItem value="s3" label="AWS S3" default>
         ```sql
         CREATE CATALOG lance_rest_s3 PROPERTIES (
             "type" = "lance",
@@ -170,17 +232,59 @@ The REST Namespace returns the storage location of each table. Configure default
             "lance.rest.uri" = "https://lance.example.com",
             "lance.rest.security.type" = "bearer",
             "lance.rest.bearer-token" = "<token>",
-            "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
             "s3.region" = "us-east-1",
             "s3.access_key" = "<ak>",
             "s3.secret_key" = "<sk>"
         );
         ```
 
-        This configuration applies to `s3://` Lance tables returned by the REST Namespace. For S3-compatible storage such as MinIO, replace `s3.endpoint` with the service endpoint and add `"use_path_style" = "true"` when required.
+        For AWS `s3://my-bucket/...` tables returned by the Namespace. The default endpoint must include that bucket and match the region. Tables in different buckets need matching endpoints, as explained below.
     </TabItem>
 
-    <TabItem value="oss" label="Alibaba Cloud OSS">
+    <TabItem value="minio" label="MinIO (Path Style)">
+        ```sql
+        CREATE CATALOG lance_rest_minio PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        For MinIO `s3://` tables returned by the Namespace. Use a service endpoint reachable by both the FE and BEs, without a bucket. `use_path_style=true` puts each table's bucket in the request path. The region must match the MinIO service configuration.
+    </TabItem>
+
+    <TabItem value="oss-s3" label="Alibaba Cloud OSS (S3-Compatible Access)">
+        ```sql
+        CREATE CATALOG lance_rest_oss_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        For `s3://my-bucket/...` tables returned by the Namespace, accessing OSS through its S3-compatible API. The endpoint must include the same bucket; for internal access, use `https://my-bucket.oss-cn-beijing-internal.aliyuncs.com`. The Namespace must return a `s3://` URI: setting `fs.s3.support=true` does not switch a returned `oss://` URI to S3 access.
+    </TabItem>
+
+    <TabItem value="oss" label="Alibaba Cloud OSS (Native Access)">
         ```sql
         CREATE CATALOG lance_rest_oss PROPERTIES (
             "type" = "lance",
@@ -188,6 +292,7 @@ The REST Namespace returns the storage location of each table. Configure default
             "lance.rest.uri" = "https://lance.example.com",
             "lance.rest.security.type" = "bearer",
             "lance.rest.bearer-token" = "<token>",
+            "fs.oss.support" = "true",
             "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
             "oss.region" = "cn-beijing",
             "oss.access_key" = "<ak>",
@@ -195,13 +300,19 @@ The REST Namespace returns the storage location of each table. Configure default
         );
         ```
 
-        This configuration applies to `oss://` Lance tables returned by the REST Namespace. For temporary STS credentials, add `"oss.session_token" = "<token>"`.
+        For `oss://` tables returned by the Namespace, using native OSS access. Keep the bucket out of `oss.endpoint`. For temporary STS credentials, add `"oss.session_token" = "<token>"`.
     </TabItem>
 </Tabs>
 
 For unauthenticated REST access, omit `lance.rest.security.type` and the authentication property. For API Key authentication, replace them with `"lance.rest.security.type" = "api_key"` and `"lance.rest.api-key" = "<api-key>"`.
 
-If the REST Namespace vends temporary storage credentials for a table, Doris gives them precedence over the Catalog credentials, allowing the S3 or OSS access keys to be omitted from the Catalog. For OSS, the Namespace may vend `oss_endpoint`, `oss_access_key_id`, `oss_secret_access_key`, `oss_region`, and `oss_security_token`, or the corresponding native names `endpoint`, `access_key_id`, `access_key_secret`, `region`, and `security_token`.
+If the REST Namespace vends credentials or an endpoint in each table's `storage_options`, Doris overrides the corresponding Catalog defaults option by option and uses the merged configuration in both the FE and BE. If only credentials are vended, the Catalog endpoint and access style still apply. All Catalog storage properties can be omitted only when the Namespace provides the complete access configuration.
+
+For S3, the Namespace can use `aws_endpoint`, `aws_region`, `aws_access_key_id`, `aws_secret_access_key`, `aws_session_token`, and `aws_virtual_hosted_style_request`. The last option is the inverse of Doris's `use_path_style`: virtual-hosted-style access uses `aws_virtual_hosted_style_request=true`, while path-style access uses `false`. `fs.s3.support` is a Doris Catalog property, not a Lance `storage_options` parameter.
+
+For native OSS access, the Namespace may vend `oss_endpoint`, `oss_access_key_id`, `oss_secret_access_key`, `oss_region`, and `oss_security_token`, or the corresponding native names `endpoint`, `access_key_id`, `access_key_secret`, `region`, and `security_token`.
+
+If tables reside in different buckets, do not share the S3 virtual-hosted-style endpoint fixed to `my-bucket` in the example. Have the Namespace vend a matching endpoint and access style for each table, or configure separate Catalogs for different buckets. For services supporting path-style access, you can also use a service endpoint without a bucket and set `use_path_style=true`, allowing the client to read the bucket from each table URI.
 
 :::caution
 The current BE Reader does not support Lance tables whose versions are managed by REST Namespace (Managed Versioning).
@@ -234,7 +345,12 @@ CREATE CATALOG lance_analytics PROPERTIES (
     "lance.catalog.type" = "filesystem",
     "warehouse" = "s3://my-bucket/lance",
     "lance.namespace.parent" = "production$analytics",
-    "s3.region" = "us-east-1"
+    "fs.s3.support" = "true",
+    "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+    "use_path_style" = "false",
+    "s3.region" = "us-east-1",
+    "s3.access_key" = "<ak>",
+    "s3.secret_key" = "<sk>"
 );
 ```
 
@@ -270,7 +386,7 @@ For a regular Catalog query, Doris pins a Lance dataset version during planning 
 
 ## Inspect Lance Indexes
 
-For a table in a Filesystem Catalog, `SHOW INDEX` displays the logical scalar and vector indexes recorded in the Lance dataset. The variant statements `SHOW INDEXES`, `SHOW KEY`, and `SHOW KEYS` produce the same result:
+For a table in a Filesystem Catalog, `SHOW INDEX` displays the logical scalar indexes (including FTS inverted indexes) and vector indexes recorded in the Lance dataset. The variant statements `SHOW INDEXES`, `SHOW KEY`, and `SHOW KEYS` produce the same result:
 
 ```sql
 SHOW INDEX FROM lance_catalog.default.items;
@@ -286,7 +402,7 @@ Doris reads the index metadata from the latest dataset snapshot at execution tim
 | `Key_name` | Name of the Lance logical index. |
 | `Seq_in_index` | Position of the column in the index, starting from `1`. An index on multiple fields produces one row per field. |
 | `Column_name` | Indexed field. An index on a nested field displays the field path joined with `.`, and a path segment containing characters other than letters, digits, and `_` is quoted with backticks, for example `` attributes.`child.with.dot` ``. |
-| `Index_type` | Index type reported by the Lance SDK, such as `BTree`, `IVF_FLAT`, `IVF_SQ`, `IVF_PQ`, `IVF_HNSW_FLAT`, `IVF_HNSW_SQ`, or `IVF_HNSW_PQ`. |
+| `Index_type` | Index type reported by the Lance SDK, such as `BTree`, `INVERTED`, `IVF_FLAT`, `IVF_SQ`, `IVF_PQ`, `IVF_HNSW_FLAT`, `IVF_HNSW_SQ`, or `IVF_HNSW_PQ`. |
 | `Properties` | JSON object with a fixed set of index details: `metric_type` and `target_partition_size` at the top level, `type`, `num_bits`, `num_sub_vectors`, and `rotation_type` under `compression`, and `construction_ef`, `max_connections`, and `max_level` under `hnsw`. Keys are sorted, and the value is `{}` when the index details contain none of these fields. |
 
 The following rows illustrate an `IVF_PQ` vector index and a `BTree` index on a nested field:
@@ -405,27 +521,105 @@ WHERE active
   AND country LIKE 'C%';
 ```
 
+### Runtime Filter Pushdown
+
+When a regular Lance table participates in a join, Doris can convert some Runtime Filters produced by the join build side into Lance SQL conditions and apply them while Lance reads the data. This can reduce the amount of data returned to Doris, especially when a large table is joined with a highly selective build-side table.
+
+```sql
+SELECT l.user_id, l.name
+FROM lance_catalog.default.user_profiles l
+JOIN internal.demo.allowed_users a
+  ON l.user_id = a.user_id;
+```
+
+The following Runtime Filters can currently be pushed down:
+
+| Runtime Filter | Form pushed to Lance |
+|---|---|
+| IN Filter | `column IN (...)` |
+| Min/Max Filter | `column >= min_value`, `column <= max_value`, or both |
+
+The Runtime Filter column and values must be safely convertible to scalar types supported by Lance SQL. Other Runtime Filter types, IN Filters containing `NULL`, and data types or values that cannot be converted safely are not pushed down. Doris still evaluates any Runtime Filter that is not pushed down, so query correctness is preserved; only the performance benefit of early filtering in Lance is lost.
+
+Only a Runtime Filter that is ready before a Lance Scanner is created can be included in that Scanner's pushed-down conditions. A Runtime Filter that arrives later is still evaluated by Doris, but might not be pushed into a Scanner that has already been created.
+
+Runtime Filter conditions are combined with the Substrait conditions generated from regular SQL predicates; one does not replace the other. The `runtime filters` entry in `EXPLAIN` shows planned Runtime Filters. When at least one Runtime Filter is pushed down, `LanceRuntimeFilterPushedIds` and `LanceRuntimeFilterSkippedIds` in the Runtime Profile identify pushed and skipped Filter IDs.
+
+Runtime Filter pushdown currently applies only to regular Lance table scans. It is not used while `vector_search()` or full-text search generates candidates.
+
 ## Query Lance with File TVFs
 
 If you only need to read a Lance dataset at a known path, you can use the `s3()` or `local()` TVF without creating a Catalog. `uri` or `file_path` must point to the root directory of a Lance dataset, rather than an internal data file.
 
 ### S3 TVF
 
-```sql
-SELECT user_id, name
-FROM s3(
-    "uri" = "s3://my-bucket/lance/user_profiles.lance",
-    "s3.endpoint" = "http://127.0.0.1:9000",
-    "s3.access_key" = "admin",
-    "s3.secret_key" = "password",
-    "s3.region" = "us-east-1",
-    "use_path_style" = "true",
-    "format" = "lance"
-)
-WHERE user_id > 100;
-```
+The `s3()` TVF uses the S3-compatible API. For OSS, use `s3.*` properties and a virtual-hosted-style endpoint containing the bucket. For native OSS access, use the OSS Catalog example above. The following SQL reads the first 10 rows of the example dataset; replace the address, credentials, and column names before running it:
 
-For an S3 TVF, the FE obtains the Schema, current version, and Fragment list. Doris pins that version and scans its Fragments in parallel.
+<Tabs groupId="lance-s3-tvf-storage">
+    <TabItem value="s3" label="AWS S3" default>
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        Explicitly set the endpoint for AWS S3 as well. This example uses virtual-hosted-style access; the bucket and region in the endpoint must match the URI and `s3.region`.
+    </TabItem>
+
+    <TabItem value="minio" label="MinIO (Path Style)">
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        Use the MinIO service endpoint without a bucket and set `use_path_style=true`. Both the FE and the BEs executing the query must be able to reach the service; avoid an address accessible only from the FE host.
+    </TabItem>
+
+    <TabItem value="oss-s3" label="Alibaba Cloud OSS (S3-Compatible Access)">
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        This example uses the same OSS S3-compatible settings as the Filesystem Catalog, but `uri` points to a specific `.lance` dataset, whereas `warehouse` points to a directory containing datasets. Keep `fs.s3.support=true` and `use_path_style=false`, and ensure the endpoint bucket matches the URI.
+    </TabItem>
+</Tabs>
+
+For OSS, the example's `uri` can also be written as `oss://my-bucket/lance/user_profiles.lance`, while retaining the same `s3.*` properties and `fs.s3.support=true`. The TVF normalizes the URI to `s3://`; it does not switch to the native OSS provider. Do not directly copy the `oss.*` configuration from a native OSS Catalog: a bucketless endpoint combined with virtual-hosted-style access can report that the dataset does not exist, while switching to path-style access can be rejected by OSS with `SecondLevelDomainForbidden`.
+
+For an S3 TVF, the FE obtains the Schema, current version, and Fragment list. Doris pins that version and scans its Fragments in parallel. `EXPLAIN` shows `VTVF_SCAN_NODE`; multiple splits can share the dataset URI and are distinguished by their Fragment IDs. `totalFileSize=0` or `length=0` is a placeholder for Lance splits, not an indication of an empty dataset or repeated whole-table scans by each split.
 
 ### Local TVF
 
@@ -487,22 +681,22 @@ Do not use the unquoted form `lance_catalog.doris.analytics.items`; it parses as
 | Parameter | Required | Default | Description |
 |---|---|---|---|
 | `table` | Yes | - | Fully qualified, three-part `catalog.database.table` name. If a multilevel Namespace maps to a database name containing `.`, quote the database part with backticks. It must identify a table in a Lance Catalog, and the user must have the `SELECT` privilege on the table. |
-| `column` | Yes | - | Vector column name. `fixed_size_list<float16\|float32\|float64\|uint8\|int8>` is currently supported. |
-| `query_vector` | Yes | - | JSON number array. Its dimension must match the vector column, and each value must be representable by the vector element type. |
+| `column` | Yes | - | Vector column name. Supports single-vector `fixed_size_list<float16\|float32\|float64\|uint8\|int8>` and multi-vector `list<fixed_size_list<float16\|float32\|float64, D>>` columns. See [Multi-Vector Search](#multi-vector-search). |
+| `query_vector` | Yes | - | A JSON number array for a single-vector column, or a non-empty JSON matrix for a multi-vector column. Each subvector dimension must match the column, and each value must be finite and representable by the element type. |
 | `top_k` | No | `10` | Number of results returned after skipping `offset`. It must be a positive integer. |
 | `offset` | No | `0` | Number of nearest neighbors skipped inside the vector search. It must be a non-negative integer. `top_k + offset` must not exceed the maximum unsigned 32-bit integer. |
-| `metric` | No | `hamming` for `uint8`, `l2` for the other supported types | Distance metric: `l2`, `cosine`, `dot`, or `hamming`. `dot_product` is an alias for `dot`. `uint8` vectors support only `hamming`; the other currently supported vector element types support `l2`, `cosine`, and `dot`. An unset `metric` is treated as `l2` when Doris selects a vector index, so querying an index built with `cosine` or `dot` requires setting `metric` explicitly. |
+| `metric` | No | `l2` | Distance metric: `l2`, `cosine`, `dot`, or `hamming`. `dot_product` is an alias for `dot`. `uint8` vectors support only `hamming`; the other currently supported vector element types support `l2`, `cosine`, and `dot`. Set `metric` explicitly when querying a `cosine`, `dot`, or `hamming` index. Integer multi-vector columns and multi-vector `hamming` are unsupported. |
 | `filter` | No | - | Lance SQL condition evaluated before vector candidates are generated; that is, a Prefilter. |
 | `nprobes` | No | Minimum `1`, with no maximum | Number of IVF index partitions to probe. It must be a positive integer. When unset, Lance starts with one partition and can probe additional partitions when a Prefilter leaves too few candidates. Setting it explicitly to `N` fixes both the minimum and maximum number of probes to `N`. |
-| `refine_factor` | No | Refinement disabled | Candidate refinement multiplier. It must be a positive integer. When unset, Lance does not recompute distances from the original vectors, so `_distance` from a quantized index may be approximate. When set to `N`, Lance first retrieves `(top_k + offset) × N` candidates, recomputes their exact distances from the original vectors, and reorders them. **Refinement reads the original vector data for these candidates. As `N` increases, more candidates are read and evaluated, which can significantly increase I/O and reduce query performance.** Setting it to `1` still enables refinement and therefore differs from leaving it unset. |
+| `refine_factor` | No | Single-vector: disabled; multi-vector: `1` | Candidate refinement multiplier. It must be a positive integer. For single-vector search, when unset, Lance does not recompute distances from the original vectors, so `_distance` from a quantized index may be approximate. When set to `N`, Lance first retrieves `(top_k + offset) × N` candidates, recomputes their exact distances from the original vectors, and reorders them. **Refinement reads the original vector data for these candidates. As `N` increases, more candidates are read and evaluated, which can significantly increase I/O and reduce query performance.** For single-vector search, setting it to `1` enables refinement and differs from leaving it unset. Multi-vector search always refines candidates against their original values, using a default factor of `1`. |
 | `ef` | No | `floor(1.5 × (top_k + offset))` | Candidate width retained during HNSW graph search. It must be a positive integer. If `refine_factor` is also set, the default is `floor(1.5 × (top_k + offset) × refine_factor)`. It has no effect on non-HNSW indexes. |
 | `use_index` | No | `true` | When `true`, Doris prefers a Lance vector index compatible with the vector column and distance metric, and automatically uses Flat Search if no usable index is available. When `false`, Doris disables vector indexes and performs Flat Search over the data. |
 
-These defaults correspond to the Lance Scanner behavior currently integrated with Doris. When `metric` is omitted, Doris treats the query as `l2` while selecting a vector index, so an index built with `cosine` or `dot` is not selected. When no index is selected, or if `"use_index" = "false"`, `uint8` vectors use `hamming`, while the other currently supported vector element types use `l2`.
+Omitting `metric` selects `l2` for both indexed and Flat Search paths. For `uint8` columns, explicitly set `"metric" = "hamming"`; the default `l2` is unsupported. Multi-vector searches also enforce the [candidate budgets](#multi-vector-search) described below.
 
 ### Supported Vector Index Types
 
-The embedded `lance-c v0.1.6` explicitly supports the following Lance vector index combinations:
+For single-vector columns, Doris supports the following Lance vector index combinations. Multi-vector index restrictions are described under [Multi-Vector Search](#multi-vector-search).
 
 | Index type | Description | Main query parameters |
 |---|---|---|
@@ -517,7 +711,7 @@ The embedded `lance-c v0.1.6` explicitly supports the following Lance vector ind
 
 ### Supported Vector Element Types and Distance Metrics
 
-The distance metrics supported by a vector index depend on the vector element type. Choose a supported combination from the following table; unsupported combinations cannot use a vector index.
+For single-vector columns, the distance metrics supported by a vector index depend on the vector element type. Choose a supported combination from the following table; unsupported combinations cannot use a vector index.
 
 | Vector element type | `l2` | `cosine` | `dot` | `hamming` |
 |---|---|---|---|---|
@@ -531,17 +725,126 @@ Unless a footnote states otherwise, "Supported" means that the combination works
 
 1. Building an `l2` index over `float16` data with large values may take too long or fail. Keep vector values within a controlled range. If index creation fails, use Flat Search or, when appropriate for the application, use `cosine` instead.
 2. Lance treats `uint8` vectors as binary vectors and supports only the `hamming` metric. Product Quantization and Scalar Quantization do not support `uint8`, so only `IVF_FLAT` and `IVF_HNSW_FLAT` are available.
-3. `int8` vectors cannot currently use a vector index and are limited to Flat Search. The embedded Lance version also has a known issue where searching a **nullable** `int8` vector column may terminate the BE process. Avoid these queries until Doris upgrades to a `lance-c` release containing the [lance#7498](https://github.com/lance-format/lance/pull/7498) fix.
+3. `int8` vectors cannot currently use a vector index and are limited to Flat Search.
 
 #### The Query Metric Must Match the Index Metric
 
-The query `metric` must match the metric used to build the index. Otherwise, Doris uses Flat Search. The results remain correct, but performance is usually lower because the vectors must be scanned directly.
+The query `metric` must match the metric used to build the index. Otherwise, if the requested metric is supported for the column type, Doris uses Flat Search. The results remain correct, but performance is usually lower because the vectors must be scanned directly.
 
-When `metric` is omitted, Doris treats it as `l2` while selecting an index. Therefore, explicitly set `metric` when using an index built with `cosine`, `dot`, or `hamming`. For example, a `uint8` vector index requires `"metric" = "hamming"`; otherwise, the index is not used.
+When `metric` is omitted, Doris treats it as `l2` while selecting an index. Therefore, explicitly set `metric` when using an index built with `cosine`, `dot`, or `hamming`. For example, a `uint8` vector index requires `"metric" = "hamming"`; otherwise, the query uses the unsupported `l2` metric and fails.
 
 Use `EXPLAIN` to confirm index usage. A `lanceSearchIndexSegments` value greater than `0` indicates indexed search, while `0` indicates Flat Search.
 
 Doris considers only one vector index per vector column. Keep at most one vector index on each vector column to avoid ambiguous selection among indexes built with different metrics.
+
+### Multi-Vector Search {#multi-vector-search}
+
+A multi-vector column stores several subvectors in each table row, for example token embeddings for a document. A query matrix produces one ranked set of table rows. It is not a batch of independent vector searches and does not search several columns.
+
+#### Prepare Data and Run a Query
+
+Use the AWS S3 Filesystem Catalog example above, with catalog `lance_fs_s3` and warehouse `s3://my-bucket/lance`. Install the Lance Python SDK (`pylance`) and `pyarrow` in the writer environment. Configure its S3 credentials and region, for example through `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_DEFAULT_REGION`. The writer needs write access, and Doris needs read access to the same location. For custom endpoints or other authentication methods, configure the SDK's [object-store options](https://lance.org/guide/object_store/) to match the Catalog.
+
+Create `documents.lance` directly under the warehouse so that Doris discovers it as `lance_fs_s3.default.documents`. Replace the bucket in both the Catalog and Python example. Use a new dataset location:
+
+```python
+import lance
+import pyarrow as pa
+
+vector_type = pa.list_(pa.float32(), 2)
+schema = pa.schema([
+    pa.field("id", pa.int64()),
+    pa.field("embeddings", pa.list_(
+        pa.field("item", vector_type, nullable=False)
+    )),
+])
+data = pa.Table.from_pylist([
+    {"id": 1, "embeddings": [[1.0, 0.0], [0.0, 1.0]]},
+    {"id": 2, "embeddings": [[1.0, 0.0]]},
+    {"id": 3, "embeddings": []},
+    {"id": 4, "embeddings": None},
+], schema=schema)
+lance.write_dataset(
+    data,
+    "s3://my-bucket/lance/documents.lance",
+    data_storage_version="2.1",
+)
+```
+
+The outer list allows each row to have a different number of subvectors. The inner `nullable=False` is required: a subvector itself cannot be null. Query the table with a two-dimensional JSON array:
+
+```sql
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_fs_s3.default.documents",
+    "column" = "embeddings",
+    "query_vector" = "[[1,0],[0,1]]",
+    "top_k" = "2",
+    "metric" = "l2",
+    "use_index" = "false"
+)
+ORDER BY _distance, id;
+```
+
+Expected result:
+
+| id | _distance |
+|---|---|
+| 1 | 0.0 |
+| 2 | 2.0 |
+
+Row 1 contains a perfect match for each query subvector. Row 2 matches the first query subvector with distance `0` and the second with squared L2 distance `2`. Empty and null outer lists do not rank. Adding `"offset" = "1"` and changing `"top_k" = "1"` returns only row 2. Adding `"filter" = "id > 1"` restricts candidate search to matching rows and also returns only row 2 for this dataset.
+
+#### Row-Level Scoring
+
+For query subvectors `Q` and a row's stored subvectors `V`:
+
+```text
+_distance = sum(q in Q, min(v in V, distance(q, v)))
+```
+
+| `metric` | Distance between two subvectors |
+|---|---|
+| `l2` (default) | Squared Euclidean distance |
+| `cosine` | `1 - cosine_similarity` |
+| `dot` or `dot_product` | `1 - dot_product`; the value can be negative |
+
+Smaller `_distance` is better. Each query subvector contributes once, and one stored subvector can match several query subvectors. Scores are summed, not averaged; repeating a query subvector repeats its contribution. `_distance` has Doris type `FLOAT`, including for Float64 inputs. `top_k` and `offset` count table rows, not subvectors. Rows tied at the Top-K boundary have no guaranteed membership or order; an outer `ORDER BY` only orders the returned rows.
+
+#### Types, Dimensions, and Null Values
+
+| Item | Requirement |
+|---|---|
+| Lance column | `list<fixed_size_list<T, D>>`, where `D > 0` and `T` is `float16`, `float32`, or `float64` |
+| Doris type | `ARRAY<ARRAY<FLOAT>>` for Float16/Float32; `ARRAY<ARRAY<DOUBLE>>` for Float64 |
+| Query shape | A non-empty JSON matrix; every inner array has exactly `D` elements. Even a single query subvector must be written as `[[...]]`. Ordinary single-vector columns still require `[...]`. |
+| Query values | Finite numbers representable by `T`. Empty matrices, unequal dimensions, nulls, nonnumeric elements, and out-of-range values are rejected. |
+| Stored values | Subvectors must be declared non-nullable and contain finite, non-null elements. The scoring path rejects actual null or non-finite elements when encountered; a nullable *element* schema flag alone is allowed. |
+| Empty or null rows | A null outer list or `[]` has no matching subvector and is excluded from results. |
+| Cosine zero norms | A zero-norm pair has undefined cosine distance and cannot match. A row is excluded if any query subvector has no defined match. A zero-norm query subvector therefore produces no results. |
+| Unsupported shapes and types | Outer `large_list` or `fixed_size_list`, variable-length inner lists, integer multi-vector elements, extension/dictionary encodings, and `hamming` multi-vector searches are not supported. |
+
+#### Parameter Limits
+
+Let `M` be the number of query subvectors, `K = top_k`, `O = offset`, and `R = refine_factor` (default `1` for multi-vector search).
+
+| Constraint | Limit |
+|---|---|
+| Query subvector count | `1 <= M <= 128` |
+| Result count and offset | `K > 0`, `O >= 0` |
+| Query candidate budget | `M × (K + O) <= 100000` |
+| Refinement candidate budget | `R × (K + O) <= 100000`, with `R > 0` |
+| Explicit `nprobes`, `ef`, or `refine_factor` | Positive 32-bit signed integer, at most `2147483647`; the candidate budgets further constrain `refine_factor` |
+
+Both candidate budgets apply independently, including with `use_index=false`. For example, `M=128, K=1000, O=0` is rejected because the query candidate budget is exceeded. `M=4, K=1000, O=0, R=10` satisfies both budgets. These limits bound candidate work; they do not guarantee a particular memory usage or query latency.
+
+#### Index Usage and Refinement
+
+The integrated Lance version supports multi-vector indexes with the **cosine** metric. To use an existing compatible index, such as a cosine `IVF_FLAT` or `IVF_PQ` index, set `"metric" = "cosine"` and leave `use_index=true`. Omitting `metric` selects `l2`; L2 and dot searches use Flat Search when no compatible index exists. Doris does not create indexes through this function. Use `SHOW INDEX` (Filesystem Catalog only) to inspect index metadata and `EXPLAIN` to check that `lanceSearchIndexSegments > 0`.
+
+With indexed search, candidate selection is approximate. Multi-vector candidates are **always refined against the original vectors**, including when `refine_factor` is omitted or set to `1`, so indexed and unindexed rows use the same row-level score. Increasing `refine_factor` expands the candidate pool, with additional vector reads and computation; it does not guarantee exhaustive recall. `nprobes` controls IVF probing and `ef` applies to HNSW indexes. Tune these only after measuring recall and latency. Rows appended after index creation are included through Flat Search.
+
+For exhaustive scoring of the selected rows, use `"use_index" = "false"`. Prefer the TVF `filter` to restrict candidates before search; an outer SQL `WHERE` can discard candidates without refilling a split's results. The filtering rules in the next section apply to both single-vector and multi-vector searches.
 
 ### Prefilter and Post-Filter
 
@@ -569,29 +872,119 @@ If `user_id > 100` must also participate in candidate generation, include it in 
 
 Lance reads and evaluates columns referenced only by `filter` internally. If such a column is not referenced by `SELECT` or another Doris expression, it does not have to be returned to Doris.
 
-### Two-Phase TopN Read and Lazy Materialization
+## FE Table Access Cache
 
-Vector search commonly produces more candidate rows than the final `top_k`. Reading wide output columns such as `title` or `payload` during the search wastes work because most candidate rows are discarded by TopN. Two-phase reading defers these columns: Phase 1 reads only the columns required for filtering, ordering, and TopN; after global TopN, Phase 2 reads the remaining output columns only for the retained rows.
+This setting requires a Doris build containing [the table access cache change](https://github.com/apache/doris/pull/68305).
+
+Each FE can cache a table's resolved Dataset URI and access options within a Catalog, avoiding repeated filesystem discovery or REST `describeTable` requests during query planning. Each Catalog client holds at most 10,000 entries. `lance.table_access_cache_ttl_seconds` defaults to `60`; cache hits do not extend the lifetime. This cache does not store Dataset versions: each read still opens the Dataset and selects its snapshot.
+
+A response containing vended storage options is resolved again on every read, even if it reports `expires_at_millis`. URIs containing userinfo, query parameters (including presigned/SAS credentials), or fragments are also not cached. A fixed credential-expiry margin cannot guarantee that credentials remain valid throughout a scan, and the BE cannot renew these credentials during the scan. REST Catalogs without these response fields can use the cache.
+
+An explicit table or database refresh clears all table-access entries in that Catalog, including on follower FEs replaying the refresh when the corresponding local database/table object has been evicted. Routine local database-object eviction does not clear the access cache. Catalog refresh with cache invalidation, namespace removal, or Catalog configuration changes also invalidate access entries. Index inspection and index-job target validation always resolve access afresh.
+
+After a remote table URI or access configuration changes, use an explicit refresh to avoid waiting for TTL expiry. For an existing table `example_lance.default.items`:
+
+```sql
+REFRESH TABLE example_lance.default.items;
+```
+
+The next read resolves table access again. This does not clear the native Lance Session cache; use a Catalog refresh with cache invalidation after replacing a Dataset at the same URI.
+
+To disable table-access caching for an existing Catalog:
+
+```sql
+ALTER CATALOG example_lance SET PROPERTIES (
+    "lance.table_access_cache_ttl_seconds" = "0"
+);
+```
+
+Subsequent reads resolve table access each time. The BE caches described below remain independently configured.
+
+## Lance Cache
+
+Lance Cache reuses index, metadata, and data-file content to reduce repeated reads. Each BE manages its own cache, shared by Lance queries on that BE. Cache capacity and content are not shared across BEs. Ordinary scans, vector search, full-text search, and second-phase fetches can reuse the corresponding caches without additional `CREATE CATALOG` properties.
+
+### Cache Types and Scope
+
+| Cache | Storage | Cached content |
+|---|---|---|
+| Index cache | BE memory | Loaded Lance index content, reducing repeated index loads. |
+| Metadata cache | BE memory | Metadata used by the Lance reader, reducing repeated reads and parsing. |
+| Data cache | BE local disk, with an in-memory tier sized to one read block | Data read from files ending in `.lance` directly under a Dataset's `data/` directory, cached in blocks. |
+
+The data cache uses Foyer within the Lance reader, with its own directory and capacity configured through the `lance_*` BE parameters below. It does not use Doris's general File Cache directory or capacity settings. Index files, manifests, and deletion files bypass this disk data cache and continue to use Lance's existing read and cache paths.
+
+The data cache fills on demand without downloading the entire Dataset in advance. On a miss, it reads from the source storage and enqueues the data for background disk-cache writes. The first read still incurs source I/O and cache-fill overhead. Cache hits can reduce subsequent source reads, but do not eliminate decoding, filtering, or sorting costs.
+
+### BE Configuration
+
+All parameters below are optional. Set them in each BE's `be.conf` and restart that BE for changes to take effect. Capacities are per BE and expressed in bytes.
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `lance_index_cache_size_bytes` | Int64 | `10737418240` (10 GiB) | Index memory-cache capacity. Set to `0` for zero capacity. |
+| `lance_metadata_cache_size_bytes` | Int64 | `1073741824` (1 GiB) | Metadata memory-cache capacity. Set to `0` for zero capacity. |
+| `enable_lance_data_cache` | Boolean | `true` | Enables the disk data cache. Disabling it preserves the index and metadata caches. |
+| `lance_data_cache_path` | String | `${DORIS_HOME}/lance_data_cache` | Data-cache directory. The BE process needs permission to create the directory and read/write files. Use separate directories for different BE processes. |
+| `lance_data_cache_disk_capacity_bytes` | Int64 | `107374182400` (100 GiB) | Disk-cache capacity. Must be a multiple of `4096` and at least twice the read block size. |
+| `lance_data_cache_read_block_size_bytes` | Int64 | `1048576` (1 MiB) | Data-cache read block size. Must be positive and a multiple of `4096`. Also sets the capacity of the data cache's in-memory tier. |
+
+For example, explicitly configure the default capacities and place the cache in a separate local disk directory:
+
+```properties
+lance_index_cache_size_bytes = 10737418240
+lance_metadata_cache_size_bytes = 1073741824
+enable_lance_data_cache = true
+lance_data_cache_path = /mnt/ssd/lance_data_cache
+lance_data_cache_disk_capacity_bytes = 107374182400
+lance_data_cache_read_block_size_bytes = 1048576
+```
+
+After the BE restarts, the shared cache initializes when the first Lance Dataset is opened. With the data cache enabled, an unavailable directory or invalid capacity or block size causes initialization to fail and Lance queries to report an error. There is no automatic fallback to running without the data cache. To disable the disk data cache, set `enable_lance_data_cache` to `false` and restart the BE.
+
+Budget for index and metadata caches alongside query working memory. These capacities do not limit total Lance query memory or BE process memory. The disk cache also consumes local disk space and file descriptors. Larger read blocks reduce the number of blocks but can increase extra I/O for small reads. Use a new cache directory when changing the read block size or disk layout.
+
+### Checking Cache Effectiveness
+
+Inspect the following counters under `LanceReader` in the query Profile:
+
+| Counter | Meaning |
+|---|---|
+| `LanceDataCacheBytesReadFromCache` | Logical bytes returned to the reader from cache hits through the data-cache path. |
+| `LanceDataCacheBytesReadFromRemote` | Logical bytes returned to the reader from source storage after data-cache misses. The source can also be a local file. |
+| `LanceIndexPartitionCacheMissLoads` | Index partitions loaded because of partition-cache misses, rather than the miss count for the entire index cache. |
+
+The two data-cache byte counters exclude extra bytes caused by block-aligned reads and I/O that bypasses the data cache, such as index and manifest reads. They are not complete remote-traffic counters. Both are `0` when the data cache is disabled, which does not imply that no source reads occurred. Statistics are collected when the Dataset closes, so inspect the completed query Profile. Second-phase fetches also reuse the cache, but these scan counters are not a query-wide total of all fetch I/O.
+
+The BE `/metrics` endpoint also exposes metrics prefixed with `doris_be_lance_session_index_cache_` and `doris_be_lance_session_metadata_cache_`. The suffixes `capacity_bytes`, `usage_bytes`, `entries`, `hits_total`, and `misses_total` represent configured capacity, current usage, entry count, cumulative hits, and cumulative misses. These metrics are registered after the shared Lance Session initializes and describe the BE-wide cache, rather than an individual query.
+
+To compare cache effectiveness, use the same Dataset version and query parameters, ensure queries actually execute on the same BEs, and record first-read and repeated-read latency, cache counters, and source I/O. Total latency alone does not distinguish cache benefits from index search, decoding, or second-phase fetch costs.
+
+## Two-Phase TopN Read and Lazy Materialization
+
+`vector_search()` and `full_text_search()` commonly produce more candidate rows than the final `top_k`. Reading wide output columns such as `title` or `payload` during the search wastes work because most candidate rows are discarded by TopN. Two-phase reading defers these columns: Phase 1 reads only the columns required for filtering, ordering, and TopN; after global TopN, Phase 2 reads the remaining output columns only for the retained rows.
 
 This reduces storage I/O, network transfer, and memory usage. The benefit is usually greatest when `top_k` is small, the search produces many candidates, or the query returns wide string, JSON, or similar columns.
 
 | Phase | Data read |
 |---|---|
-| Phase 1 | Columns used internally by vector search, `_distance`, columns required by Post-filter or ordering, and an internal Row Location. |
+| Phase 1 | Columns used internally by the search, `_distance` or `_score`, columns required by Post-filter or ordering, and an internal Row Location. |
 | Phase 2 | Top-level columns used only by the final projection, read only for rows retained by global TopN. |
 
-#### Trigger Conditions
+### Trigger Conditions
 
 Doris uses two-phase reading only when all of the following conditions are met:
 
-1. `topn_lazy_materialization_threshold` is greater than `0`. Its default value is `1024`.
-2. `top_k` does not exceed the threshold.
+1. The query reads Lance through `vector_search()` or `full_text_search()` and its plan contains a TopN eligible for lazy materialization. This switch does not currently apply to ordinary Lance table scans or Lance file TVFs.
+2. The Boolean session variable `enable_lance_lazy_materialization` is `true`, its default value.
 3. At least one top-level column can be deferred. A column used only by the final `SELECT` projection can be deferred. A column used by a Post-filter, `ORDER BY`, or another expression before TopN must be read in Phase 1. Nested subcolumns cannot currently be deferred.
+
+`enable_lance_lazy_materialization` is independent of `topn_lazy_materialization_threshold`: Lance can still use two-phase reading when the latter is `-1` or `top_k` exceeds that threshold. Other tables that support lazy materialization continue to follow the general threshold. Enabling the switch allows the optimization; the plan structure and eligible columns still determine whether it applies.
 
 In the following query, `category` must be read in Phase 1 for the Post-filter, while `user_id`, `title`, and `payload` can be fetched after TopN:
 
 ```sql
-SET topn_lazy_materialization_threshold = 1024;
+SET enable_lance_lazy_materialization = true;
 
 SELECT user_id, title, payload, _distance
 FROM vector_search(
@@ -606,32 +999,118 @@ WHERE category = 'book';
 
 A Prefilter column referenced in the TVF `filter` is used internally by Lance. Its presence in the `filter` string alone does not make it a Phase-1 result column returned to Doris.
 
-#### Disabling Two-Phase Reading
+### Verifying the Plan
+
+Prefix the query above with `EXPLAIN VERBOSE`. When two-phase reading is active, the plan includes `VMaterializeNode`, whose `column_descs_lists` lists the columns fetched in Phase 2. Disable the switch and run `EXPLAIN VERBOSE` again for the same simple search query; the corresponding materialization node should disappear. If it is absent with the switch enabled, check whether the output columns are used in filtering, ordering, or other computations before TopN, and whether the plan supports this optimization.
+
+### Disabling Two-Phase Reading
 
 Use the following session setting to disable two-phase reading:
 
 ```sql
-SET topn_lazy_materialization_threshold = -1;
+SET enable_lance_lazy_materialization = false;
 ```
 
-Doris automatically uses a single-phase read when `top_k` exceeds the threshold or no column can be deferred, so manual disabling is usually unnecessary. Consider disabling it and comparing performance in the following cases:
+Doris uses a single-phase read when no column can be deferred or the plan does not support the optimization. A large `top_k` alone does not automatically disable two-phase reading for Lance. Consider disabling it and comparing performance in the following cases:
 
 - `top_k` is large, so Phase 2 still reads most candidate rows.
 - The query returns only a few narrow columns, leaving little I/O for two-phase reading to save.
 - Random Row-ID reads have high latency on the underlying storage, and the extra Phase-2 Fetch costs more than deferred reading saves.
 
-Disabling this optimization changes only when output columns are read. It does not disable vector indexes or change Prefilter, Post-filter, or TopN semantics. Compare both settings with representative queries and storage conditions.
+Disabling this optimization changes only when output columns are read. It does not disable vector or FTS indexes or change Prefilter, Post-filter, or TopN semantics. Compare both settings with representative queries and storage conditions.
+
+## Full-Text Search
+
+`full_text_search()` is a relational TVF that performs BM25 retrieval through an existing FTS inverted index on a Lance table. It supports combining analyzed query terms with OR or AND and matching their order and distance with Phrase queries. Doris merges candidates from the physical index segments into a global Top-K and adds `_score` to the source columns. A higher score means greater relevance.
+
+Before using the TVF, create an FTS inverted index on the target string column with the Lance SDK or another Lance writer. Phrase queries also require token positions to be enabled when the index is created, for example by setting `with_position=true` in the Lance index parameters. Doris does not create this index and does not fall back to a row-by-row full-text scan when no FTS index is available.
+
+### Syntax and Example
+
+The following query searches for `lance database` among documents whose category is `storage`, and then applies `published = true` as a Doris Post-filter:
+
+```sql
+SELECT document_id, title, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.documents",
+    "column" = "body",
+    "query" = "lance database",
+    "query_type" = "match",
+    "operator" = "and",
+    "top_k" = "10",
+    "offset" = "0",
+    "filter" = "category = 'storage'",
+    "coverage_mode" = "strict"
+)
+WHERE published = true
+ORDER BY _score DESC, document_id;
+```
+
+This example uses Match AND, so a document must contain both analyzed terms, `lance` and `database`. The `filter` property is a Prefilter that Lance evaluates before generating FTS candidates. The outer `WHERE` is a Post-filter evaluated after candidate generation. A Post-filter does not replenish removed candidates, so the final result can contain fewer than `top_k` rows. If `published = true` must affect candidate generation, include it in `filter` instead.
+
+The following Phrase query permits at most one intervening token between adjacent query terms. For example, it can match `lance search engine`:
+
+```sql
+SELECT document_id, title, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.documents",
+    "column" = "body",
+    "query" = "lance engine",
+    "query_type" = "phrase",
+    "slop" = "1",
+    "top_k" = "10"
+)
+ORDER BY _score DESC, document_id;
+```
+
+The returned relation contains every column from the source Lance table and a nullable `FLOAT` column named `_score`. The source table must not already contain a column with this name. The TVF selects its Top-K by descending `_score`, but a SQL relation does not guarantee final display order. Use `ORDER BY _score DESC` explicitly when stable ordering is required, and add a unique tie-breaker for equal scores.
+
+### Parameters
+
+| Parameter | Required | Default | Description |
+|---|---|---|---|
+| `table` | Yes | - | Fully qualified, three-part `catalog.database.table` name identifying a table in a Lance Catalog. If a multilevel Namespace maps to a database name containing `.`, quote the database part with backticks. The user must have the `SELECT` privilege on the table. |
+| `column` | Yes | - | String column with an FTS inverted index. Arrow `utf8` and `large_utf8`, which map to Doris `TEXT`, are supported. |
+| `query` | Yes | - | Non-empty search text. It is processed with the tokenizer configured when the FTS index was created. |
+| `query_type` | No | `match` | Query type. Valid values are `match` and `phrase`. |
+| `operator` | No | `or` | Match queries only. `or` requires at least one query term to match; `and` requires every query term to match. Phrase queries cannot set this parameter. |
+| `slop` | No | `0` | Phrase queries only. It must be an integer from `0` through `2147483647`. `0` requires an exact phrase; a positive value is the maximum number of intervening tokens permitted between adjacent query terms. Match queries cannot set this parameter. |
+| `top_k` | No | `10` | Number of results returned after skipping `offset`. It must be a positive integer. |
+| `offset` | No | `0` | Number of results skipped by relevance. It must be a non-negative integer, and `top_k + offset` must not exceed the maximum unsigned 32-bit integer. |
+| `filter` | No | - | Lance SQL condition evaluated before full-text candidates are generated; that is, a Prefilter. |
+| `coverage_mode` | No | `strict` | Behavior when the FTS index does not cover every Fragment in the current snapshot. Valid values are `strict` and `index_only`. |
+
+### Query Types
+
+| Query type | Matching behavior | Related parameters | Index requirement |
+|---|---|---|---|
+| Match OR | Matches at least one analyzed query term. This is the default. | `query_type=match`, `operator=or` | A standard FTS inverted index. |
+| Match AND | Matches every analyzed query term. | `query_type=match`, `operator=and` | A standard FTS inverted index. |
+| Phrase | Preserves the analyzed query-term order and applies the distance specified by `slop`. | `query_type=phrase`, `slop=N` | The FTS index must store token positions. |
+
+Boolean, Boost, Prefix, Wildcard, Regex, and cross-field compound FTS queries are not currently supported.
+
+### Index Coverage Modes
+
+| Mode | Behavior | When to use it |
+|---|---|---|
+| `strict` | Requires the selected FTS index to cover every Fragment in the pinned query snapshot. The query fails if any Fragment is uncovered. | Default and recommended when results must not omit data. After appending data, update or rebuild the FTS index before querying. |
+| `index_only` | Searches only Fragments covered by the FTS index and ignores uncovered data. | Use only when incomplete results are acceptable and search must remain available while an index update is pending. |
+
+Both modes require a committed FTS index with complete coverage metadata on the target column. A query fails if no usable index exists. Keep only one logical FTS index on a column; if multiple indexes match, Doris cannot select one unambiguously and rejects the query.
+
+Use `EXPLAIN` to verify execution: `lanceFtsQueryType` shows Match or Phrase, `lanceFtsMatchOperator` shows the Match OR/AND operator, and `lanceFtsPhraseSlop` shows the Phrase distance. `lanceFtsCoverageMode` shows the coverage mode, `lanceSearchIndexSegments` shows the number of physical FTS index segments used, and `lanceSearchUnindexedFragments` shows how many Fragments in the current snapshot are not covered by the index.
 
 ## Current Execution Model
 
-The execution order of `vector_search()` is:
+The execution order of `vector_search()` and `full_text_search()` is:
 
 ```text
 Pinned dataset snapshot
-  -> FE Split planning
-       -> Indexed coverage: one Split per physical Index Segment -> ANN Search
-       -> Uncovered or unindexed data: one Split per Fragment -> Flat Search
-  -> Per Split: Lance Prefilter -> ANN/Flat Search -> at most K+n candidates
+  -> FE search Split planning
+       -> Vector search: physical vector Index Segments + Flat Search for uncovered Fragments
+       -> Full-text search: physical FTS Index Segments (coverage checked by coverage_mode)
+  -> Per Split: Lance Prefilter -> vector/full-text search -> at most K+n candidates
   -> Doris Scan Post-filter
   -> Doris local TopN
   -> Exchange
@@ -646,7 +1125,10 @@ Pinned dataset snapshot
 - For tables containing unsupported column types, explicitly list the columns to read instead of projecting unsupported columns through `SELECT *`.
 - For regular scans, inspect `lancePushdownPredicate` in `EXPLAIN` to verify which conditions have been pushed down.
 - Create a vector index in Lance that matches the intended query before running indexed vector search. For small datasets or validation, set `"use_index" = "false"` to perform Flat Search.
-- Use `SHOW INDEX` on a Filesystem Catalog table to inspect its logical Lance indexes, for example to verify the index name, type, and indexed fields before indexed vector search. `SHOW INDEX` is not supported for REST Catalogs.
+- Create an FTS inverted index in Lance before full-text search. The default `strict` mode rejects a query when the index does not cover every Fragment in the current snapshot; use `index_only` only when omitted data is acceptable.
+- Phrase queries require the FTS index to store token positions. Set `with_position=true` when creating the index if Phrase queries are required.
+- Use `SHOW INDEX` on a Filesystem Catalog table to inspect its logical Lance indexes, for example to verify the index name, type, and indexed fields before vector or full-text search. `SHOW INDEX` is not supported for REST Catalogs.
 - For deterministic vector result ordering, explicitly use `ORDER BY _distance ASC` and add a unique tie-breaker.
-- Use the `vector_search()` `filter` parameter when filtering must occur before vector candidates are generated. An outer `WHERE` filters only the candidates already generated by each search Split and runs before Doris global TopN, so allow for a final result with fewer than `top_k` rows.
-- Use `EXPLAIN` to inspect `lanceSearchFragments` and `lanceSearchIndexSegments`. The former is the number of visible Fragments in the pinned snapshot; the latter is the number of physical Index Segment splits selected by the FE. Additional fallback Fragment splits may also be present.
+- For deterministic full-text result ordering, explicitly use `ORDER BY _score DESC` and add a unique tie-breaker.
+- Use the TVF `filter` parameter when filtering must occur before vector or full-text candidates are generated. An outer `WHERE` filters only the candidates already generated by each search Split and runs before Doris global TopN, so allow for a final result with fewer than `top_k` rows.
+- Use `EXPLAIN` to inspect `lanceSearchFragments` and `lanceSearchIndexSegments`. The former is the number of visible Fragments in the pinned snapshot; the latter is the number of physical Index Segment splits selected by the FE. Vector search can also include fallback Flat Search Fragment splits; full-text search never falls back to Flat Search.

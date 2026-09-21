@@ -35,6 +35,7 @@ MV_INFOS("database"="<database>")
 | MvProperties            | TEXT    | 物化视属性                                                         |
 | MvPartitionInfo         | TEXT    | 物化视图的分区信息                                                 |
 | SyncWithBaseTables      | BOOLEAN | 物化视图数据是否和基表数据同步。如需查看哪个分区不同步，请使用 [SHOW PARTITIONS](../../sql-statements/table-and-view/table/SHOW-PARTITIONS)。 |
+| IvmBaseTableStreams     | TEXT    | IVM 基表与 Doris 自动创建的内部 Table Stream 映射。非 IVM 通常为空。 |
 
 `RefreshInfo` 的展示格式为 `BUILD <BuildMode> REFRESH <RefreshMethod> ON <RefreshTrigger> [schedule]`。每一部分的含义见下面的枚举字段说明。
 
@@ -55,7 +56,9 @@ MV_INFOS("database"="<database>")
   - `DEFERRED`：创建时不立即构建，需要后续刷新后才有新鲜数据。
 - `RefreshInfo.RefreshMethod`：Doris 如何选择要刷新的数据。
   - `COMPLETE`：总是全量刷新物化视图。
-  - `AUTO`：Doris 自动判断刷新全部分区还是只刷新变更分区。
+  - `PARTITIONS`：重新计算发生变化的物化视图分区。
+  - `INCREMENTAL`：使用 物化视图增量维护（IVM）处理行级变化。
+  - `AUTO`：Doris 自动选择 IVM、分区刷新或完整刷新。
 - `RefreshInfo.RefreshTrigger`：什么动作触发刷新 task。
   - `MANUAL`：手动触发刷新。
   - `COMMIT`：相关基表数据变更后触发刷新。
@@ -67,6 +70,7 @@ MV_INFOS("database"="<database>")
 - `SyncWithBaseTables`：物化视图数据是否和基表同步。
   - `1` 或 `true`：已同步。
   - `0` 或 `false`：未完全同步。对于分区物化视图，可以用 `SHOW PARTITIONS FROM <mv_name>` 查看分区级同步状态。
+- `IvmBaseTableStreams`：IVM 使用的基表与内部 Stream 映射。内部 Stream 由 Doris 管理，不要手工消费、重置或删除。详见 [物化视图增量维护（IVM）](../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#内部-table-stream)。
 
 
 ## 示例
@@ -91,6 +95,7 @@ SchemaChangeDetail:
       MvProperties: {partition_sync_limit=100, partition_sync_time_unit=YEAR}
    MvPartitionInfo: MTMVPartitionInfo{partitionType=FOLLOW_BASE_TABLE, relatedTable=user, relatedCol='k2', partitionCol='k2'}
 SyncWithBaseTables: 1
+IvmBaseTableStreams: \N
 ```
 
 该结果中：
@@ -105,6 +110,7 @@ SyncWithBaseTables: 1
 - `MvProperties` 展示物化视图属性。本例中，分区同步由 `partition_sync_limit=100` 和 `partition_sync_time_unit=YEAR` 控制。
 - `MvPartitionInfo` 展示物化视图分区方式。`FOLLOW_BASE_TABLE` 表示跟随基表分区列；`SELF_MANAGE` 表示物化视图自己管理分区；`EXPR` 表示基于表达式定义分区。
 - `SyncWithBaseTables` 为 `1`，表示物化视图数据和基表数据同步。`0` 表示不完全同步。对于分区物化视图，可使用 `SHOW PARTITIONS FROM <mv_name>` 查看分区级同步状态。
+- `IvmBaseTableStreams` 为空，因为本例不是 IVM。
 
 查看该物化视图最近一次刷新 task：
 

@@ -259,6 +259,12 @@ Doris supports using auto partitioning together with dynamic partitioning to imp
 
 AUTO RANGE PARTITION tables support managing the lifecycle of historical partitions through the `partition.retention_count` property. This property accepts a positive integer `N`, meaning **only the `N` historical partitions with the largest partition values are retained**; current and future partitions are all retained.
 
+Usage limits:
+
+- Only AUTO RANGE PARTITION tables can set this property. Otherwise the statement fails with `Only AUTO RANGE PARTITION table could set partition.retention_count`.
+- It **cannot be used together with dynamic partitioning that is already enabled** (`dynamic_partition.enable = true`). Otherwise the statement fails with `Can not use partition.retention_count and dynamic_partition properties at the same time`. Creating partitions through dynamic partitioning and recycling partitions through the retention count are mutually exclusive scheduling modes. This restriction applies since version 4.1.4, in both the compute-storage coupled and the compute-storage decoupled mode.
+- Since version 4.1.4, the compute-storage decoupled mode also supports changing this property with `ALTER TABLE ... SET ("partition.retention_count" = "N")`. Before 4.1.4, that `ALTER` was rejected or had no effect in the compute-storage decoupled mode.
+
 ### Concept Definitions
 
 - **Historical partition**: A partition whose upper bound is less than or equal to the current time.

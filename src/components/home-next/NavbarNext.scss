@@ -49,17 +49,14 @@
 	    &__logo {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 10px;
+        // Same 100px slot the old <img> box occupied; the cropped inline mark
+        // (see DorisLogoHorizontal) is ~75px wide and centres inside it.
+        width: 100px;
         text-decoration: none !important;
         flex-shrink: 0;
         color: var(--nb-cream-light) !important;
-
-        img {
-            width: 100px;
-            height: 36px;
-            object-fit: cover;
-            object-position: center;
-        }
 
 	        span {
 	            @include type.mono-text(17px, 700, 1.2, 0.01em);
@@ -260,6 +257,11 @@
             }
         }
 
+        // The robot glyph is stroke-based; keep its paths unfilled.
+        .navbar-next__ask-ai-icon--compact path {
+            fill: none;
+        }
+
         &:hover {
             border-color: rgba(245, 239, 228, 0.45);
             background: rgba(245, 239, 228, 0.06);
@@ -270,6 +272,16 @@
             outline: 2px solid rgb(var(--brand-primary-rgb) / 85%);
             outline-offset: 2px;
         }
+    }
+
+    &__ask-ai-icon--full {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    &__ask-ai-icon--compact,
+    &__ask-ai-label--compact {
+        display: none;
     }
 
     &__summit {
@@ -352,12 +364,17 @@
         }
     }
 
+    // Both nested under .navbar-next on purpose: the legacy
+    // src/scss/components/navbar.scss ships `.navbar a svg { display: none }`,
+    // which these need to out-rank.
     .navbar-next__star-link svg {
         display: inline-block;
     }
 
-    .navbar-next__logo img {
+    .navbar-next__logo-mark {
         display: block;
+        width: auto;
+        height: 26px;
     }
 
     &__star-divider {
@@ -469,6 +486,12 @@
         display: grid;
         gap: 4px;
         padding: 0 0 12px;
+
+        // `display: grid` would otherwise override the UA rule for the
+        // `hidden` attribute and keep every collapsed section expanded.
+        &[hidden] {
+            display: none;
+        }
     }
 
 	    &__mobile-link {
@@ -582,129 +605,127 @@
     }
 }
 
-// Tablet and phone layouts keep the utility controls on row 1, then give
-// Summit and Ask Me a dedicated full-width row each.
+// Phones: one 56px row — [menu] [logo] … [★ 15.9k gh] [AI Ask] [DOWNLOAD].
+// The Summit banner leaves the bar (it lives in the menu panel instead), the
+// star pill drops the word "Star", and Ask Me becomes a robot icon + "Ask".
 @media (max-width: 768px) {
     .navbar-next {
         &.navbar {
             height: auto;
-            min-height: 64px;
+            min-height: 56px;
         }
 
         &__inner {
+            // Wrap only as a safety net for unexpectedly wide content (custom
+            // fonts, huge star counts); the sizes below fit 360px in one row.
             flex-wrap: wrap;
-            height: auto;
-            column-gap: 5px;
-            row-gap: 0;
             align-items: center;
+            height: auto;
+            min-height: 56px;
+            padding: 11px 12px;
+            column-gap: 6px;
+            row-gap: 8px;
         }
 
-        &__logo {
-            height: 64px;
-        }
-
-        // Expose the action children to the wrapping navbar layout.
+        // Expose the action children to the navbar row so they can be ordered
+        // individually.
         &__actions {
             display: contents;
         }
 
-        &__star-link {
-            margin-left: auto;
-        }
-
         &__menu-button {
-            margin-left: 0;
+            order: 0;
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
         }
 
-        &__summit,
+        &__logo {
+            order: 1;
+            width: auto;
+            height: 34px;
+        }
+
+        // Nested for specificity, see the desktop rule.
+        .navbar-next__logo-mark {
+            height: 22px;
+        }
+
+        &__star-link {
+            order: 2;
+            margin-left: auto;
+            gap: 6px;
+            padding: 0 7px 0 6px;
+            font-size: 11px;
+        }
+
+        &__star-text,
+        &__star-divider {
+            display: none;
+        }
+
         &__ask-ai {
-            flex: 0 0 100%;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 38px;
-            margin-left: 0;
-            margin-bottom: 10px;
-            padding: 0 12px;
+            order: 3;
+            gap: 4px;
+            padding: 0 8px;
+            font-size: 11px;
         }
 
-        &__summit {
-            order: 9;
+        &__ask-ai-icon--full,
+        &__ask-ai-label--full {
+            display: none;
         }
 
-        &__ask-ai {
-            order: 10;
+        &__ask-ai-icon--compact {
+            display: inline-block;
         }
 
-        &__mobile-panel {
-            max-height: calc(100vh - 160px);
-        }
-    }
-}
-
-@media (max-width: 640px) {
-    .navbar-next {
-        &__inner {
-            padding: 0 20px;
-            gap: 10px;
-        }
-
-        &__logo img {
-            height: 27px;
-        }
-
-        &__actions {
-            gap: 8px;
+        &__ask-ai-label--compact {
+            display: inline;
         }
 
         &__cta {
-            padding: 0.45rem 0.8rem;
-            font-size: 12px;
+            order: 4;
+            display: inline-flex;
+            align-items: center;
+            box-sizing: border-box;
+            height: 32px;
+            padding: 0 8px;
+            font-size: 11px;
+        }
+
+        &__actions > &__summit {
+            display: none;
         }
 
         &__mobile-panel {
-            padding: 10px 20px 18px;
+            max-height: calc(100vh - 56px);
         }
 
         &__mobile-actions {
             display: grid;
             grid-template-columns: 1fr;
+        }
 
-            .navbar-next__star-link,
-            .navbar-next__cta {
-                justify-content: center;
-                width: 100%;
-            }
+        &__mobile-actions &__summit {
+            width: 100%;
+            height: 40px;
         }
     }
 }
 
-// On narrow phones, trim row-1 spacing while preserving the two full-width
-// campaign rows established at the 768px breakpoint.
-@media (max-width: 480px) {
-    .navbar-next {
-        &__inner {
-            padding: 0 10px;
-        }
-
-        &__logo img {
-            height: 24px;
-        }
-
-        // Trim star-link horizontal padding (only change needed to make everything fit).
-        &__star-link {
-            padding: 0 8px 0 6px;
-        }
+// Small phones: tighten the side padding (≤400px) and, at 360px, drop the
+// GitHub mark from the star pill so the row keeps a few px of slack — the
+// star and count still read as "GitHub stars".
+@media (max-width: 400px) {
+    .navbar-next__inner {
+        padding-inline: 10px;
     }
 }
 
-@media (max-width: 390px) {
-    .navbar-next {
-        &__mobile-actions {
-            display: grid;
-            gap: 10px;
-        }
+@media (max-width: 360px) {
+    .navbar-next__star-link > svg:last-child {
+        display: none;
     }
 }
 

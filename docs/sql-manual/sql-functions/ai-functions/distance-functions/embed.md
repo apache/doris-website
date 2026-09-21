@@ -29,7 +29,22 @@ under the License.
 
 Generates an embedding vector for text or multimodal input. The vector can be used for similarity calculation, retrieval, and other scenarios.
 
+:::note
+Multimodal embedding is supported since Apache Doris 4.1.4.
+:::
+
 For multimodal embedding, pass a JSON object that describes an image, video, or audio file. Before using a media type, confirm that the configured AI provider and model support it.
+
+### Providers That Support Multimodal Embedding
+
+| Provider | Supported media types |
+| --- | --- |
+| `voyageai` | Image (`image/`), video (`video/`) |
+| `qwen` | Image (`image/`), video (`video/`) |
+| `jina` | Image (`image/`), video (`video/`) |
+| `gemini` | Image (`image/`), video (`video/`), audio (`audio/`) |
+
+Calling multimodal embedding on any other provider reports `<provider> does not support multimodal Embed feature.` Passing a media type that the provider does not support reports `<provider> only supports <types> multimodal embed, got <type>`.
 
 ## Syntax
 
@@ -58,6 +73,12 @@ The multimodal JSON object contains the following fields:
 | `external_id` | No | External ID used when assuming the IAM role. |
 
 For an HTTP or HTTPS URL, only `uri` and `content_type` are required. For an S3-compatible URI, Doris uses the storage credentials to generate a presigned URL. Both AK/SK and IAM role authentication are supported.
+
+The lifetime of the presigned URL is controlled by the session variable `file_presigned_url_ttl_seconds`, in seconds, with a default of `3600` (1 hour). If the media files are large and the provider needs longer to fetch them, increase this value:
+
+```sql
+SET file_presigned_url_ttl_seconds = 7200;
+```
 
 ## Return Value
 
