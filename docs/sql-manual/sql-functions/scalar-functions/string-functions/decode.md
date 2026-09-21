@@ -21,16 +21,16 @@ DECODE(<binary>, <charset>)
 | Parameter | Description |
 | :--- | :--- |
 | `<binary>` | The binary value to decode. Type: VARBINARY. |
-| `<charset>` | The character set used by the input bytes. Type: STRING. Supported values are `US-ASCII`, `ISO-8859-1`, `UTF-8`, `UTF-16BE`, `UTF-16LE`, and `UTF-16`. |
+| `<charset>` | A constant expression that evaluates to the character set used by the input bytes. Type: STRING. Supported values are `US-ASCII`, `ISO-8859-1`, `UTF-8`, `UTF-16BE`, `UTF-16LE`, and `UTF-16`. A table column is not allowed. |
 
 ## Return Value
 
 Returns a `STRING` value containing the decoded text.
 
-- If either argument is `NULL`, the function returns `NULL`.
+- If `<charset>` is `NULL`, or `<binary>` is `NULL` and `<charset>` is valid, the function returns `NULL`.
 - If `<binary>` is empty, the function returns an empty string.
 - For `UTF-16`, the function recognizes big-endian (`FE FF`) and little-endian (`FF FE`) BOMs and removes the BOM from the result. Without a BOM, it decodes the input as big-endian. `UTF-16BE` and `UTF-16LE` always use their explicit byte order.
-- If `<charset>` is unsupported, or `<binary>` is malformed for the specified character set, the function returns an error.
+- If `<charset>` is unsupported, the function returns an error even when `<binary>` is `NULL`. If `<binary>` is malformed for the specified character set, the function also returns an error.
 
 ## Example
 
