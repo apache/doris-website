@@ -130,6 +130,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'compute-storage-decoupled/file-cache/file-cache',
                                 'compute-storage-decoupled/file-cache/file-cache-internals',
+                                'compute-storage-decoupled/file-cache/file-cache-peer-read',
                             ],
                         },
                         {

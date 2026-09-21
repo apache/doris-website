@@ -32,6 +32,12 @@ The following scenarios assume two compute groups, C1 and C2:
 | **Read-write isolation** | Avoids resource contention between ingestion and queries; C1 can access data newly ingested in C2 | Queries use `USE @c1`; ingestion uses `USE @c2` |
 | **Write-write isolation** | High-frequency small ingestion and large-batch ingestion run separately to avoid mutual interference | Small ingestion uses `USE @c1`; batch ingestion uses `USE @c2` |
 
+:::caution Note
+
+The isolation above covers compute resources such as CPU and memory. [Peer cache read](./file-cache/file-cache-peer-read) is on by default, so a query in one compute group may read the File Cache of a BE in another compute group on a local cache miss, and with cross-group fill configured it may also make that group fetch from object storage on its behalf. This weakens network, disk, and cache isolation between compute groups. Turn peer cache read off on the BEs if strict isolation is required.
+
+:::
+
 ## Default Compute Group Selection Mechanism
 
 <!-- Knowledge type: System behavior description -->
@@ -206,13 +212,14 @@ The `balance_type` feature is supported starting from **Doris 3.1.3** and **Dori
 
 :::
 
-The following example describes the three strategy types using a scale-out scenario:
+The following example describes the four strategy types using a scale-out scenario:
 
 | Strategy Type | Time Until New Node Is Ready | Performance Impact | Technical Principle | Applicable Scenarios |
 | :--- | :---: | :---: | :--- | :--- |
 | `without_warmup` | Fastest | Largest | FE directly updates the shard mapping; the first read/write has no file cache and must fetch data from S3 | Suitable when the new node must come online quickly and performance fluctuation is acceptable |
 | `async_warmup` | Faster | Possible cache misses | A warm-up task is issued; the mapping is updated after the task succeeds or times out; the system tries to populate the file cache during the mapping switch, but some first reads may still miss | General purpose; acceptable performance |
 | `sync_warmup` | Slower | Virtually no cache misses | A warm-up task is issued; FE modifies the mapping only after confirming the task is complete, ensuring cache migration is finished | Suitable when high performance is required after scaling and new nodes must have a populated file cache |
+| `peer_read_async_warmup` | Fastest | Small | FE modifies the shard mapping directly and issues a best-effort warm-up task; the first reads on the new node fetch data from the source BE's file cache through [peer cache read](./file-cache/file-cache-peer-read), which requires `enable_cache_read_from_peer` to stay on (the default) on the BEs | Suitable when new nodes must come online quickly without reading straight from S3, and the source BEs can absorb the extra read load |
 
 #### Configuration
 
