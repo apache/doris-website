@@ -1448,15 +1448,104 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 #### `enable_cache_read_from_peer`
 
 * Type: bool
-* Description: Whether to allow reading data from the file cache of other BEs across compute groups.
+* Description: Master switch for peer cache read. When on, a local File Cache miss first tries to read the block from the File Cache of another BE (in the same compute group or another one) and falls back to object storage only if no BE has it. Same-group and cross-group peer reads are controlled together by this switch; cross-group reads cannot be turned off separately. Cross-group peer read is supported since version 4.2.0, which also removed the configuration item `cache_read_from_peer_expired_seconds`. See [Peer Cache Read](../../compute-storage-decoupled/file-cache/file-cache-peer-read).
+* Default value: true
 
-:::caution Behavior change (4.1.4)
+#### `enable_peer_s3_race`
 
-The default value changed from `true` to `false` in version 4.1.4, and the configuration item `cache_read_from_peer_expired_seconds` was removed at the same time. Set it to `true` explicitly to keep using peer cache reads across compute groups.
+* Type: bool
+* Description: Added in version 4.2.0. Whether a peer read races the object storage read, with the first result winning. When off, reads are sequential: peer candidates are tried one by one, and object storage is read only after all of them fail.
+* Default value: true
 
-:::
+#### `peer_race_hedge_delay_ms`
 
-* Default value: false
+* Type: int32
+* Description: Added in version 4.2.0. Head start given to the peer read during a race, in milliseconds. If the peer answers within it, the object storage read is not sent; `0` starts both reads at the same time.
+* Default value: 20
+
+#### `max_concurrent_peer_races`
+
+* Type: int32
+* Description: Added in version 4.2.0. Maximum number of concurrent peer-versus-object-storage races on one BE. Misses beyond this limit are read sequentially.
+* Default value: 64
+
+#### `peer_cache_fill_compute_group_id`
+
+* Type: string
+* Description: Added in version 4.2.0. Set on the BE that issues the read. ID of the compute group responsible for cross-group fills (the `compute_group_id` in the `Tag` column of `SHOW BACKENDS`, not the compute group name). When the chosen peer candidate belongs to this compute group, the request asks it to fetch the block from object storage and write it into its own File Cache if it does not have it. Empty means fills are not used.
+* Default value: ""
+
+#### `enable_peer_server_cache_fill`
+
+* Type: bool
+* Description: Added in version 4.2.0. Set on the BE that serves the cache. Whether to accept peer read requests that carry the fill flag. When off, blocks that are not cached locally are reported as not found and the requesting BE falls back to object storage.
+* Default value: true
+
+#### `peer_server_cache_fill_timeout_ms`
+
+* Type: int32
+* Description: Added in version 4.2.0. Maximum wait for one fill on the serving side, in milliseconds. On timeout the requesting BE falls back to object storage.
+* Default value: 6000
+
+#### `max_concurrent_peer_server_fills`
+
+* Type: int32
+* Description: Added in version 4.2.0. Maximum number of concurrent fills on the serving side. Fill requests beyond the limit are rejected and the requesting BE falls back to object storage.
+* Default value: 32
+
+#### `peer_rpc_failure_eviction_threshold`
+
+* Type: int32
+* Description: Added in version 4.2.0. A peer candidate is removed from the candidate list after this many consecutive RPC failures.
+* Default value: 3
+
+#### `peer_all_miss_cooldown_threshold`
+
+* Type: int32
+* Description: Added in version 4.2.0. Number of consecutive reads in which every peer candidate missed before the tablet enters a cooldown, during which reads go straight to object storage.
+* Default value: 5
+
+#### `peer_all_miss_cooldown_duration_s`
+
+* Type: int64
+* Description: Added in version 4.2.0. Length of the peer read cooldown, in seconds.
+* Default value: 300
+
+#### `peer_candidate_expiry_s`
+
+* Type: int64
+* Description: Added in version 4.2.0. Expiry of peer candidate entries, in seconds, measured from the last use. Expired entries are cleared from memory and fetched from FE again on the next miss.
+* Default value: 3600
+
+#### `peer_candidate_cleanup_interval_s`
+
+* Type: int64
+* Description: Added in version 4.2.0. Interval of the background job that clears expired peer candidates, in seconds.
+* Default value: 3600
+
+#### `peer_fetch_queue_timeout_ms`
+
+* Type: int32
+* Description: Added in version 4.2.0. Maximum time a peer read request may wait in the processing queue on the serving side, in milliseconds. Requests that wait longer are rejected so that the requesting BE falls back to object storage quickly.
+* Default value: 100
+
+#### `brpc_peer_fetch_pool_threads`
+
+* Type: int32
+* Description: Added in version 4.2.0. Size of the thread pool that handles peer read requests on the serving side, isolated from the thread pool of heavy RPCs such as loads. `-1` means `max(64, 2 × CPU cores)`. Not dynamically modifiable.
+* Default value: -1
+
+#### `brpc_peer_fetch_pool_max_queue_size`
+
+* Type: int32
+* Description: Added in version 4.2.0. Queue length of the peer read thread pool on the serving side. `-1` means `max(4096, 128 × CPU cores)`. Not dynamically modifiable.
+* Default value: -1
+
+#### `min_peer_race_s3_thread_num` / `max_peer_race_s3_thread_num`
+
+* Type: int32
+* Description: Added in version 4.2.0. Minimum / maximum number of threads in the pool that performs the object storage read on the requesting side during a peer-versus-object-storage race. Not dynamically modifiable.
+* Default value: 0 / 32
 
 #### `s3_get_requests_per_second_per_core` / `s3_put_requests_per_second_per_core`
 
