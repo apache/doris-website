@@ -12,7 +12,7 @@ This document presents release notes for Apache Doris Core and Doris ecosystem p
 
 | Project | Release notes | Repository |
 | --- | --- | --- |
-| Doris Core | [Doris Core Release Notes](./core.md) | [apache/doris](https://github.com/apache/doris) |
+| Doris Core | [Release Notes](./core.md) | [apache/doris](https://github.com/apache/doris) |
 | Doris Flink Connector | [Release Notes](./ecosystem/doris-flink-connector.md) | [apache/doris-flink-connector](https://github.com/apache/doris-flink-connector) |
 | Doris Spark Connector | [Release Notes](./ecosystem/doris-spark-connector.md) | [apache/doris-spark-connector](https://github.com/apache/doris-spark-connector) |
 | Doris Kafka Connector | [Release Notes](./ecosystem/doris-kafka-connector.md) | [apache/doris-kafka-connector](https://github.com/apache/doris-kafka-connector) |
