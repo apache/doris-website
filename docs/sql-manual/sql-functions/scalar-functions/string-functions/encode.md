@@ -21,16 +21,16 @@ ENCODE(<source>, <charset>)
 | Parameter | Description |
 | :--- | :--- |
 | `<source>` | The string to encode. Type: STRING. |
-| `<charset>` | The name of the target character set. Type: STRING. Supported values are `US-ASCII`, `ISO-8859-1`, `UTF-8`, `UTF-16BE`, `UTF-16LE`, and `UTF-16`. |
+| `<charset>` | A constant expression that evaluates to the name of the target character set. Type: STRING. Supported values are `US-ASCII`, `ISO-8859-1`, `UTF-8`, `UTF-16BE`, `UTF-16LE`, and `UTF-16`. A table column is not allowed. |
 
 ## Return Value
 
 Returns a `VARBINARY` value containing the encoded bytes.
 
-- If either argument is `NULL`, the function returns `NULL`.
+- If `<charset>` is `NULL`, or `<source>` is `NULL` and `<charset>` is valid, the function returns `NULL`.
 - If `<source>` is an empty string, the function returns an empty binary value.
 - `UTF-16` writes a big-endian byte order mark (BOM) for a non-empty input. `UTF-16BE` and `UTF-16LE` do not write a BOM.
-- If `<charset>` is unsupported, or `<source>` contains a character that cannot be represented by the target character set, the function returns an error.
+- If `<charset>` is unsupported, the function returns an error even when `<source>` is `NULL`. If `<source>` contains a character that cannot be represented by the target character set, the function also returns an error.
 
 ## Example
 
