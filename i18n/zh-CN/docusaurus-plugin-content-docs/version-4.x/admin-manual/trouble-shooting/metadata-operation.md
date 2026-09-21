@@ -270,7 +270,9 @@ mysql> show proc "/bdbje/110589/114861";
 
 FE 的部署推荐，在 [安装与部署文档](../../install/deploy-manually/integrated-storage-compute-deploy-manually) 中有介绍，这里再做一些补充。
 
-* **如果你并不十分了解 FE 元数据的运行逻辑，或者没有足够 FE 元数据的运维经验，我们强烈建议在实际使用中，只部署一个 FOLLOWER 类型的 FE 作为 MASTER，其余 FE 都是 OBSERVER，这样可以减少很多复杂的运维问题！** 不用过于担心 MASTER 单点故障导致无法进行元数据写操作。首先，如果你配置合理，FE 作为 java 进程很难挂掉。其次，如果 MASTER 磁盘损坏（概率非常低），我们也可以用 OBSERVER 上的元数据，通过 `元数据恢复模式` 的方式手动恢复。
+* 生产环境建议部署 **奇数个 FOLLOWER**（通常为 3 个：1 个 MASTER + 2 个 FOLLOWER），以保证元数据写入高可用。FOLLOWER 参与选举和多数写；Master 故障时，其余 FOLLOWER 会自动选出新 Master。Observer 不参与选举，只同步元数据，适合用来扩展 FE 读能力。测试或开发环境可以只部署 1 个 FOLLOWER。
+
+* 多数写意味着一条 journal 必须写入多数 FOLLOWER 才算成功。3 个 FOLLOWER 时允许 1 个故障；如果同时只剩 1 个存活，该节点也无法继续写元数据。这是预期行为，不是避免部署 3 个 FOLLOWER 的理由。请保证 FOLLOWER 节点时钟同步、JVM 内存充足，并避免同时停掉多数 FOLLOWER。
 
 * FE 进程的 JVM 一定要保证足够的内存。我们**强烈建议** FE 的 JVM 内存至少在 10GB 以上，推荐 32GB 至 64GB。并且部署监控来监控 JVM 的内存使用情况。因为如果 FE 出现 OOM，可能导致元数据写入失败，造成一些**无法恢复**的故障！
 
@@ -303,7 +305,7 @@ FE 的部署推荐，在 [安装与部署文档](../../install/deploy-manually/i
 
 5. FOLLOWER FE 接连挂掉
 
-    因为 Doris 的元数据采用多数写策略，即一条元数据 journal 必须至少写入多数个 FOLLOWER FE 后（比如 3 个 FOLLOWER，必须写成功 2 个），才算成功。而如果写入失败，FE 进程会主动退出。那么假设有 A、B、C 三个 FOLLOWER，C 先挂掉，然后 B 再挂掉，那么 A 也会跟着挂掉。所以如 `最佳实践` 一节中所述，如果你没有丰富的元数据运维经验，不建议部署多 FOLLOWER。
+    因为 Doris 的元数据采用多数写策略，即一条元数据 journal 必须至少写入多数个 FOLLOWER FE 后（比如 3 个 FOLLOWER，必须写成功 2 个），才算成功。而如果写入失败，FE 进程会主动退出。那么假设有 A、B、C 三个 FOLLOWER，C 先挂掉，然后 B 再挂掉，那么 A 也会跟着挂掉。这是多数写的预期行为。生产环境仍建议部署 3 个 FOLLOWER；运维时不要同时停掉多数 FOLLOWER。如果只剩 1 个 FOLLOWER 存活，应先恢复其他 FOLLOWER，再一起启动，而不是只启动这一个。否则会出现第 1 条里的 `meta out of date`。
 
 6. fe.log 中出现 `get exception when try to close previously opened bdb database. ignore it`
 
