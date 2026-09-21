@@ -89,7 +89,8 @@ FROM `test_export_set`;
 ```
 
 ```sql
-SELECT EXPORT_SET(`bits`, `on`, `off`, `sep`, `num_of_b`)
+SELECT `bits`, `on`, `off`, `sep`, `num_of_b`,
+       EXPORT_SET(`bits`, `on`, `off`, `sep`, `num_of_b`) AS ans
 FROM `test_export_set`;
 ```
 ```text
