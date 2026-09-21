@@ -29,6 +29,10 @@ Peer 读自 4.2.0 版本起支持，默认开启。不需要这项能力时，�
 | 跨计算组冷读 | 本计算组没有缓存、其他计算组已经读热过同一份数据时，直接从对方 BE 的 File Cache 读 | 冷查询延迟下降，对象存储回源流量下降 |
 | 跨计算组回源填充 | 指定一个"填充计算组"：对方 BE 自己也没有缓存时，代为回源对象存储、写入自己的 File Cache，再把数据返回给发起查询的 BE | 回源成本由指定计算组承担，数据顺带留在它的缓存里 |
 
+## 性能参考
+
+在 TPC-H 1 TB 数据集的冷读测试中，Peer 读的冷读性能约为直接读取对象存储的 2 倍。实际收益取决于其他 BE 是否已经缓存了所需数据，以及 Peer 网络延迟与对象存储延迟的差距。
+
 ## 前置条件
 
 - 存算分离部署。存算一体模式下 Peer 读不生效。
@@ -299,10 +303,6 @@ curl -X POST "http://<be_host>:<be_webserver_port>/api/peer_cache?op=set&tablet_
 curl -X POST "http://<be_host>:<be_webserver_port>/api/peer_cache?op=remove&tablet_id=<tablet_id>"
 curl -X POST "http://<be_host>:<be_webserver_port>/api/peer_cache?op=reset_cooldown&tablet_id=<tablet_id>"
 ```
-
-## 性能参考
-
-在 TPC-H 1 TB 数据集的冷读测试中，Peer 读的冷读性能约为直接读取对象存储的 2 倍。实际收益取决于其他 BE 是否已经缓存了所需数据，以及 Peer 网络延迟与对象存储延迟的差距。
 
 ## 最佳实践
 
