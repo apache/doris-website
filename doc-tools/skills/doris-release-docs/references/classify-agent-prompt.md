@@ -27,7 +27,7 @@ For EACH commit in your batch:
    or build scripts -> mark NONE and move on quickly.
 3. Otherwise read the relevant parts of the diff (`git show <hash> -- <paths>`) and the full commit
    message (`git log -1 --format=%B <hash>`). The subject tag is NOT a reliable signal: a
-   "[fix](test)" commit has added a session variable before. Judge by the diff.
+   `[fix](test)` commit has added a session variable before. Judge by the diff.
 4. Decide whether the change is USER-VISIBLE, i.e. a Doris user reading the docs would need to know
    about it. User-visible things include:
    - New / changed / removed SQL syntax or statements (parser .g4, Command classes)
