@@ -92,6 +92,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | `lance.namespace.parent` | 否 | 空 | 仅访问指定 Lance Namespace 及其子 Namespace。例如默认分隔符下，`production$analytics` 表示两级 Namespace。 |
 | `lance.namespace.delimiter` | 否 | `$` | 用于解析 `lance.namespace.parent`，同时会传递给 REST Namespace 客户端。该配置不改变 Doris 中多级 Namespace 的展示方式。 |
 | `lance.namespace.root_database` | 否 | `default` | Lance 根 Namespace 在 Doris 中映射的数据库名。 |
+| `lance.table_access_cache_ttl_seconds` | 否 | `60` | 非负整数，表示 FE 表访问缓存的最长有效期，单位为秒；`0` 表示禁用。适用于 Filesystem 和 REST Catalog。仅缓存不含下发存储配置或携带凭证 URI 的结果，详见 [FE 表访问缓存](#fe-表访问缓存)。 |
 
 ### Filesystem Catalog
 
@@ -870,6 +871,34 @@ ORDER BY _distance ASC, user_id;
 如果 `user_id > 100` 也必须参与最近邻候选生成，应将它合并到 `filter` 中，例如 `"filter" = "category = 'book' AND user_id > 100"`，而不是使用外层 `WHERE`。即使优化器将外层 `WHERE` 下移到 Doris 的 Lance Scan，它仍然是 Post-filter，不会转换成 Lance Prefilter。
 
 `filter` 中引用的列由 Lance 内部读取和计算；如果该列未被 `SELECT` 或其他 Doris 表达式引用，则不需要返回给 Doris。
+
+## FE 表访问缓存
+
+该配置要求 Doris 构建版本包含[表访问缓存变更](https://github.com/apache/doris/pull/68305)。
+
+每个 FE 可以在 Catalog 内缓存表解析后的 Dataset URI 和访问配置，避免查询规划时重复执行文件系统发现或 REST `describeTable` 请求。每个 Catalog 客户端最多保留 10,000 个条目。`lance.table_access_cache_ttl_seconds` 默认为 `60` 秒，命中缓存不会延长有效期。此缓存不保存 Dataset 版本：每次读取仍会打开 Dataset 并选择快照。
+
+如果响应包含下发的存储配置，即使提供了 `expires_at_millis`，也会在每次读取时重新解析。包含用户信息、查询参数（包括预签名或 SAS 凭证）或片段的 URI 同样不缓存。固定的凭证到期余量无法保证凭证在整个扫描期间有效，BE 也无法在扫描过程中更新这些凭证。响应不含这些字段的 REST Catalog 可以使用缓存。
+
+显式刷新表或数据库会清除该 Catalog 的全部表访问缓存；Follower FE 重放刷新时，即使对应的本地数据库或表对象已被淘汰，也会清除缓存。普通的本地数据库对象淘汰不会清除此缓存。启用缓存失效的 Catalog 刷新、Namespace 移除或 Catalog 配置变更也会使访问缓存失效。索引检查和索引任务目标校验始终重新解析访问配置。
+
+远端表 URI 或访问配置变更后，可显式刷新，避免等待 TTL 到期。以已有表 `example_lance.default.items` 为例：
+
+```sql
+REFRESH TABLE example_lance.default.items;
+```
+
+下一次读取会重新解析表访问配置。该操作不会清除 Lance 原生 Session 缓存；在相同 URI 下替换 Dataset 后，应刷新 Catalog 并启用缓存失效。
+
+要禁用已有 Catalog 的表访问缓存：
+
+```sql
+ALTER CATALOG example_lance SET PROPERTIES (
+    "lance.table_access_cache_ttl_seconds" = "0"
+);
+```
+
+后续每次读取都会重新解析表访问配置。下文介绍的 BE 缓存仍独立配置。
 
 ## Lance Cache
 
