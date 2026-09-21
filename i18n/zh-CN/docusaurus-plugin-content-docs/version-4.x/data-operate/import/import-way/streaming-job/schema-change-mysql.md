@@ -40,7 +40,7 @@ MySQL Schema Change 同步自 Doris 4.1.4 起支持。
 - `FIRST` 和 `AFTER` 指定的列位置不会同步到 Doris。新增列会追加到 Doris 表的现有列之后。
 - `CHANGE COLUMN`、`MODIFY COLUMN`、`RENAME COLUMN`、DEFAULT 变更以及 `NULL` / `NOT NULL` 约束变更均不会自动同步。执行这些操作前，需要暂停持续导入作业并手动修改 Doris 目标表，确认两端结构兼容后再恢复作业。
 - 主键、索引、分区、表名以及其他表级结构变更不会自动同步。
-- 可以通过 Job 属性 `schema_change_enabled`（默认 `true`，自 4.1.4 版本起支持）关闭 Schema Change 自动同步。`cdc_stream()` 表函数（SQL 映射同步）会强制把该属性设为 `false`。
+- 自动建表同步默认启用 Schema Change 同步，Doris 4.1 未提供通过 SQL 关闭该能力的配置参数。`cdc_stream()` 表函数（SQL 映射同步）会在内部关闭 Schema Change 同步。
 
 ## 相关文档
 

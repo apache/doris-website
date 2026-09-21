@@ -723,6 +723,10 @@
     "message": "优化技术原理",
     "description": "The label for category Optimization Technology Principles in sidebar docs"
   },
+  "sidebar.docs.category.OceanBase (Experimental)": {
+    "message": "OceanBase（实验性）",
+    "description": "The label for category OceanBase (Experimental) in sidebar docs"
+  },
   "sidebar.docs.category.Paimon Catalog": {
     "message": "Paimon Catalog",
     "description": "The label for category Paimon Catalog in sidebar docs"

@@ -41,7 +41,7 @@ PostgreSQL Schema Change 同步自 Doris 4.1.0 起支持。
 - 如果新增列已存在或待删除列不存在，Doris 会跳过对应操作，避免作业因重试失败。
 - 如果一次表结构变更中同时包含新增列和删除列，Doris 会将其视为潜在的列重命名，不会自动修改目标表，以避免误删数据。
 - 列重命名、列类型变更、DEFAULT 变更以及 `NULL` / `NOT NULL` 约束变更均不会自动同步。执行这些操作时，需要暂停持续导入作业并手动修改 Doris 目标表，确认两端结构兼容后再恢复作业。
-- 可以通过 Job 属性 `schema_change_enabled`（默认 `true`，自 4.1.4 版本起支持）关闭 Schema Change 自动同步。`cdc_stream()` 表函数（SQL 映射同步）会强制把该属性设为 `false`。
+- 自动建表同步默认启用 Schema Change 同步，Doris 4.1 未提供通过 SQL 关闭该能力的配置参数。`cdc_stream()` 表函数（SQL 映射同步）会在内部关闭 Schema Change 同步。
 
 :::caution 版本行为变更（4.1.4）
 

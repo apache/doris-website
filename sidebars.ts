@@ -406,6 +406,15 @@ const sidebars: SidebarsConfig = {
                                         },
                                     ],
                                 },
+                                {
+                                    type: 'category',
+                                    label: 'OceanBase (Experimental)',
+                                    items: [
+                                        'data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database',
+                                        'data-operate/import/import-way/streaming-job/schema-change-oceanbase',
+                                        'data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase',
+                                    ],
+                                },
                                 'data-operate/import/import-way/streaming-job/continuous-load-s3',
                             ],
                         },
