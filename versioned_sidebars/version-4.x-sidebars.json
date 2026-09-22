@@ -159,7 +159,8 @@
                   "label": "File Cache",
                   "items": [
                     "compute-storage-decoupled/file-cache/file-cache",
-                    "compute-storage-decoupled/file-cache/file-cache-internals"
+                    "compute-storage-decoupled/file-cache/file-cache-internals",
+                    "compute-storage-decoupled/file-cache/file-cache-peer-read"
                   ]
                 },
                 {
@@ -447,6 +448,15 @@
                             "data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql"
                           ]
                         }
+                      ]
+                    },
+                    {
+                      "type": "category",
+                      "label": "OceanBase (Experimental)",
+                      "items": [
+                        "data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database",
+                        "data-operate/import/import-way/streaming-job/schema-change-oceanbase",
+                        "data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase"
                       ]
                     },
                     "data-operate/import/import-way/streaming-job/continuous-load-s3"

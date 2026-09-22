@@ -92,6 +92,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | `lance.namespace.parent` | No | Empty | Limits access to the specified Lance Namespace and its child Namespaces. With the default delimiter, for example, `production$analytics` represents a two-level Namespace. |
 | `lance.namespace.delimiter` | No | `$` | Delimiter used to parse `lance.namespace.parent`. It is also passed to the REST Namespace client. This property does not change how multilevel Namespaces are displayed in Doris. |
 | `lance.namespace.root_database` | No | `default` | Doris database name to which the root Lance Namespace is mapped. |
+| `lance.table_access_cache_ttl_seconds` | No | `60` | Non-negative integer. Maximum FE table-access cache lifetime in seconds; `0` disables it. Applies to Filesystem and REST Catalogs. Only results without vended storage options or credential-bearing URIs are cached; see [FE Table Access Cache](#fe-table-access-cache). |
 
 ### Filesystem Catalog
 
@@ -870,6 +871,34 @@ ORDER BY _distance ASC, user_id;
 If `user_id > 100` must also participate in candidate generation, include it in the TVF parameter, for example `"filter" = "category = 'book' AND user_id > 100"`, instead of using an outer `WHERE`. Even if the optimizer moves the outer `WHERE` into the Doris Lance Scan, it remains a Post-filter and is not converted into a Lance Prefilter.
 
 Lance reads and evaluates columns referenced only by `filter` internally. If such a column is not referenced by `SELECT` or another Doris expression, it does not have to be returned to Doris.
+
+## FE Table Access Cache
+
+This setting requires a Doris build containing [the table access cache change](https://github.com/apache/doris/pull/68305).
+
+Each FE can cache a table's resolved Dataset URI and access options within a Catalog, avoiding repeated filesystem discovery or REST `describeTable` requests during query planning. Each Catalog client holds at most 10,000 entries. `lance.table_access_cache_ttl_seconds` defaults to `60`; cache hits do not extend the lifetime. This cache does not store Dataset versions: each read still opens the Dataset and selects its snapshot.
+
+A response containing vended storage options is resolved again on every read, even if it reports `expires_at_millis`. URIs containing userinfo, query parameters (including presigned/SAS credentials), or fragments are also not cached. A fixed credential-expiry margin cannot guarantee that credentials remain valid throughout a scan, and the BE cannot renew these credentials during the scan. REST Catalogs without these response fields can use the cache.
+
+An explicit table or database refresh clears all table-access entries in that Catalog, including on follower FEs replaying the refresh when the corresponding local database/table object has been evicted. Routine local database-object eviction does not clear the access cache. Catalog refresh with cache invalidation, namespace removal, or Catalog configuration changes also invalidate access entries. Index inspection and index-job target validation always resolve access afresh.
+
+After a remote table URI or access configuration changes, use an explicit refresh to avoid waiting for TTL expiry. For an existing table `example_lance.default.items`:
+
+```sql
+REFRESH TABLE example_lance.default.items;
+```
+
+The next read resolves table access again. This does not clear the native Lance Session cache; use a Catalog refresh with cache invalidation after replacing a Dataset at the same URI.
+
+To disable table-access caching for an existing Catalog:
+
+```sql
+ALTER CATALOG example_lance SET PROPERTIES (
+    "lance.table_access_cache_ttl_seconds" = "0"
+);
+```
+
+Subsequent reads resolve table access each time. The BE caches described below remain independently configured.
 
 ## Lance Cache
 

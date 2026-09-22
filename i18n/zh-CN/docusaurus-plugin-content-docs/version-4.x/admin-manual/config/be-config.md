@@ -1420,13 +1420,104 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 #### `enable_cache_read_from_peer`
 
 * 类型：bool
-* 描述：是否允许跨 Compute Group 从其他 BE 的 File Cache 读取数据。
+* 描述：Peer 读总开关。开启时，本地 File Cache 未命中先尝试从其他 BE（同计算组或其他计算组）的 File Cache 读取数据块，其他 BE 也没有时再回源对象存储。同计算组和跨计算组的 Peer 读由该开关一起控制，不能单独关闭跨计算组读取。自 4.2.0 版本起支持跨计算组 Peer 读，同时移除了配置项 `cache_read_from_peer_expired_seconds`。详见 [Peer 读](../../compute-storage-decoupled/file-cache/file-cache-peer-read)。
+* 默认值：true
 
-:::caution 版本行为变更（4.1.4）
-默认值自 4.1.4 版本起由 `true` 调整为 `false`；同时配置项 `cache_read_from_peer_expired_seconds` 被移除。如需继续使用跨 Compute Group 的 Peer Cache 读取，请显式设置为 `true`。
-:::
+#### `enable_peer_s3_race`
 
-* 默认值：false
+* 类型：bool
+* 描述：自 4.2.0 版本起新增。Peer 读时是否与对象存储读取并发竞速，先返回者胜出。关闭后改为串行：先依次尝试 Peer 候选节点，全部失败再读对象存储。
+* 默认值：true
+
+#### `peer_race_hedge_delay_ms`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。竞速时给 Peer 读的先手时间，单位为毫秒。Peer 在该时间内返回则不再发起对象存储读取；取值为 `0` 表示两路同时发起。
+* 默认值：20
+
+#### `max_concurrent_peer_races`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。单个 BE 上同时进行的 Peer 与对象存储竞速数上限，超过后新的未命中请求退化为串行读取。
+* 默认值：64
+
+#### `peer_cache_fill_compute_group_id`
+
+* 类型：string
+* 描述：自 4.2.0 版本起新增。在发起读取的 BE 上配置，指定负责跨计算组回源填充的计算组 ID（`SHOW BACKENDS` 中 `Tag` 列的 `compute_group_id`，不是计算组名称）。当选中的 Peer 候选节点属于该计算组时，请求会要求对方在自身也未缓存时代为回源对象存储并写入其 File Cache。为空表示不使用回源填充。
+* 默认值：""
+
+#### `enable_peer_server_cache_fill`
+
+* 类型：bool
+* 描述：自 4.2.0 版本起新增。在提供缓存的 BE 上配置，是否接受带回源填充标记的 Peer 读请求。关闭后本机未缓存的数据块直接返回未找到，由请求方回退到对象存储。
+* 默认值：true
+
+#### `peer_server_cache_fill_timeout_ms`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。服务端一次回源填充的最长等待时间，单位为毫秒。超时后请求方回退到对象存储。
+* 默认值：6000
+
+#### `max_concurrent_peer_server_fills`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。服务端同时进行的回源填充数上限。超过后新的填充请求被直接拒绝，请求方回退到对象存储。
+* 默认值：32
+
+#### `peer_rpc_failure_eviction_threshold`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。某个 Peer 候选节点连续 RPC 失败达到该次数后被从候选列表中剔除。
+* 默认值：3
+
+#### `peer_all_miss_cooldown_threshold`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。某个 tablet 连续多少次"所有 Peer 候选节点都未命中"后进入冷却期，冷却期内直接读取对象存储。
+* 默认值：5
+
+#### `peer_all_miss_cooldown_duration_s`
+
+* 类型：int64
+* 描述：自 4.2.0 版本起新增。Peer 读冷却期的时长，单位为秒。
+* 默认值：300
+
+#### `peer_candidate_expiry_s`
+
+* 类型：int64
+* 描述：自 4.2.0 版本起新增。Peer 候选节点信息的过期时间，单位为秒，按最近一次使用时间计算。过期后从内存清理，下次未命中时重新向 FE 拉取。
+* 默认值：3600
+
+#### `peer_candidate_cleanup_interval_s`
+
+* 类型：int64
+* 描述：自 4.2.0 版本起新增。后台清理过期 Peer 候选节点的周期，单位为秒。
+* 默认值：3600
+
+#### `peer_fetch_queue_timeout_ms`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。服务端 Peer 读请求在处理队列中的最长等待时间，单位为毫秒。等待超过该时间的请求被拒绝，让请求方尽快回退到对象存储。
+* 默认值：100
+
+#### `brpc_peer_fetch_pool_threads`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。服务端处理 Peer 读请求的线程池大小，与导入等重负载 RPC 的线程池隔离。取值为 `-1` 表示使用 `max(64, 2 × CPU 核数)`。不支持动态修改。
+* 默认值：-1
+
+#### `brpc_peer_fetch_pool_max_queue_size`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。服务端 Peer 读线程池的队列长度。取值为 `-1` 表示使用 `max(4096, 128 × CPU 核数)`。不支持动态修改。
+* 默认值：-1
+
+#### `min_peer_race_s3_thread_num` / `max_peer_race_s3_thread_num`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。请求方在 Peer 与对象存储竞速时执行对象存储读取的线程池最小 / 最大线程数。不支持动态修改。
+* 默认值：0 / 32
 
 #### `s3_get_requests_per_second_per_core` / `s3_put_requests_per_second_per_core`
 

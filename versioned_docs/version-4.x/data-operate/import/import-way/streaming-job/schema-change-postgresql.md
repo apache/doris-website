@@ -41,7 +41,7 @@ PostgreSQL Schema Change Sync is supported from Doris 4.1.0.
 - If an added column already exists or a dropped column does not exist, Doris skips the operation so that a retry does not fail the job.
 - If one schema change adds and drops columns at the same time, Doris treats it as a possible column rename and does not automatically change the target table. This prevents accidental data loss.
 - Column renames, column type changes, DEFAULT changes, and `NULL` / `NOT NULL` constraint changes are not synchronized automatically. Pause the continuous load job, change the Doris target table manually, verify that both schemas are compatible, and then resume the job.
-- You can disable automatic schema change synchronization with the Job property `schema_change_enabled` (default `true`, supported since version 4.1.4). The `cdc_stream()` table function (SQL Mapping Sync) always forces this property to `false`.
+- Auto Table Creation Sync enables Schema Change Sync by default. Doris 4.1 does not provide a SQL property to disable it. The `cdc_stream()` table function (SQL Mapping Sync) disables Schema Change Sync internally.
 
 :::caution Behavior change (4.1.4)
 

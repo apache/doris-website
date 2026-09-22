@@ -4,7 +4,7 @@
     "sidebar_label": "File Cache Configuration",
     "language": "en",
     "description": "Covers file cache configuration, index-only cache writes, query-level cache controls, cache warmup and eviction, hit-rate monitoring, and TTL policies for Doris in compute-storage decoupled mode to improve query performance and reduce object storage costs.",
-    "keywords": ["Doris file cache", "compute-storage decoupled cache", "file cache", "index-only cache writes", "cache warmup", "cache quota", "file_cache_query_limit_bytes", "TTL cache", "LRU", "cache hit rate", "object storage acceleration"]
+    "keywords": ["Doris file cache", "compute-storage decoupled cache", "file cache", "index-only cache writes", "cache warmup", "peer cache read", "cache quota", "file_cache_query_limit_bytes", "TTL cache", "LRU", "cache hit rate", "object storage acceleration"]
 }
 ---
 
@@ -13,7 +13,7 @@
 
 In compute-storage decoupled mode, data is stored in remote object storage (such as S3 or HDFS). Doris uses the local disks of BE nodes as a file cache layer and manages cache space efficiently with a multi-queue LRU (Least Recently Used) strategy. The access paths for indexes and metadata are specially optimized to maximize the cache hit rate for hot data.
 
-For multi-compute-group scenarios, Doris provides a **cache warmup** feature that proactively pulls data for specified tables or partitions into a new compute group when it starts, quickly establishing a local cache and improving first-query performance.
+For multi-compute-group scenarios, Doris provides a **cache warmup** feature that proactively pulls data for specified tables or partitions into a new compute group when it starts, quickly establishing a local cache and improving first-query performance. [Peer cache read](./file-cache-peer-read), which is on by default, serves blocks that miss the local cache from the cache of another BE (including BEs in other compute groups) before falling back to remote storage.
 
 ## The Role of File Cache
 
@@ -345,6 +345,8 @@ Doris provides a cache warmup feature that allows you to proactively pull data f
 
 For detailed usage, see the [WARM-UP SQL documentation](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md).
 
+Cache warmup pulls data from remote storage ahead of time. [Peer cache read](./file-cache-peer-read) complements it at query time: on a local cache miss, the block is read from another BE first and from remote storage only if no BE has it, which covers the cold reads that warmup did not.
+
 ## Cache Clearing
 
 <!-- Knowledge type: Operational steps -->
@@ -504,6 +506,8 @@ After enabling index-only cache writes, monitor the following categorized metric
 
 You can view the complete query performance report through [Query Performance Analysis](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile).
 
+`NumPeerIOTotal`, `PeerIOUseTimer`, `SameCGPeerIOTotal`, `CrossCGPeerIOTotal`, and related counters show whether data came from the cache of another BE (peer cache read). See [Peer Cache Read: Query Profile Counters](./file-cache-peer-read#query-profile-counters).
+
 ## TTL Cache Policy
 
 <!-- Knowledge type: Operational steps -->
@@ -598,7 +602,7 @@ Check whether `clear_file_cache` is set to `true`. If you do not want the cache 
 
 **Q: The first query after a new compute group comes online is very slow.**
 
-Use the **cache warmup** feature to proactively pull hot table or partition data from remote storage into the local cache of the new compute group before queries arrive. For detailed usage, see the [WARM-UP SQL documentation](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md).
+Use the **cache warmup** feature to proactively pull hot table or partition data from remote storage into the local cache of the new compute group before queries arrive. For detailed usage, see the [WARM-UP SQL documentation](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md). If another compute group already holds the data in its cache, [peer cache read](./file-cache-peer-read), which is on by default, lets the new compute group read it from that group's BEs on a miss.
 
 **Q: How do I tell whether the current cache space is full?**
 

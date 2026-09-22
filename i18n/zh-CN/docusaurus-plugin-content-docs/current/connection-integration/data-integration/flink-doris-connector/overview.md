@@ -49,6 +49,7 @@
 | 26.0.0            | 1.15 - 1.20,2.0 - 2.2 | 1.0+          | 8(1.x),17(2.x) | -             |
 | 26.1.1            | 1.15 - 1.20,2.0 - 2.2 | 1.0+          | 8(1.x),17(2.x) | -             |
 | 26.2.0            | 1.15 - 1.20,2.0 - 2.2 | 1.0+          | 8(1.x),17(2.x) | -             |
+| 26.3.0            | 1.15 - 1.20,2.0 - 2.3 | 1.0+          | 8(1.x),17(2.x) | -             |
 
 ## 安装方式 {#installation}
 
@@ -79,7 +80,7 @@
 <dependency>
     <groupId>org.apache.doris</groupId>
     <artifactId>flink-doris-connector-1.16</artifactId>
-    <version>26.2.0</version>
+    <version>26.3.0</version>
 </dependency>
 ```
 
