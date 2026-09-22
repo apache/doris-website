@@ -33,11 +33,13 @@ result is computed in double precision, the value actually returned for `gamma(5
 
 ## Special Cases
 
-- When `a` is `0` or a negative integer (`-1`, `-2`, ...), the function has a pole and returns NULL
+- When `a` is `0` (including `-0.0`) or a negative integer (`-1`, `-2`, ...), the function has a pole and returns NULL
 - When `a` is negative infinity, returns NULL
 - When `a` is NaN, returns NaN
 - When `a` is positive infinity, returns Infinity
 - When `a` is so large that the value overflows a double (for example `172`), returns Infinity
+- When `a` is a very small positive number, `gamma(a)` is about `1 / a` and overflows to Infinity as well (for example `1e-320`, or even the smallest subnormal `5e-324`)
+- When `a` is a large negative non-integer, the result is extremely close to zero and can underflow to a signed zero, for example `gamma(-1000.5)` returns `-0.0`
 - When `a` is NULL, returns NULL
 
 ## Examples
@@ -74,7 +76,7 @@ select gamma(-2.5);
 +---------------------+
 | gamma(-2.5)         |
 +---------------------+
-| -0.9453087204829419 |
+| -0.9453087204829418 |
 +---------------------+
 ```
 
