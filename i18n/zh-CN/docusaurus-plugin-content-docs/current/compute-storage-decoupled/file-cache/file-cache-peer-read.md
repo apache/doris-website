@@ -13,9 +13,9 @@
 
 Peer 读是存算分离架构下 File Cache 的未命中处理策略：本 BE 的 File Cache 没有某个数据块时，先向其他 BE（同计算组或其他计算组）的 File Cache 要，其他 BE 也没有再回源对象存储。它只作用于冷读路径，命中本地缓存的读取不受影响。本文中的"计算组"指 Compute Group。
 
-:::caution 版本支持
+:::caution 实验性功能
 
-Peer 读自 4.2.0 版本起支持，默认开启。不需要这项能力时，在 BE 上设置 `enable_cache_read_from_peer = false` 关闭。
+Peer 读自 Doris 4.2.0 起作为实验性功能提供，默认开启。不需要这项能力时，在 BE 上设置 `enable_cache_read_from_peer = false` 关闭。
 
 :::
 
