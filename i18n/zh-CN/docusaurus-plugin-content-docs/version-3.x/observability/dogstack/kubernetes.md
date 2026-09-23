@@ -171,7 +171,7 @@ Doris Operator 是集群级组件，一个 Kubernetes 集群中只能运行一�
    kubectl port-forward -n dog svc/dog-ai-observe-stack-grafana 3000:3000
    ```
 
-   打开 http://localhost:3000，使用 `admin` 和上一步获取的密码登录。此时还没有数据写入网关，仪表盘为空。
+   打开 <http://localhost:3000>，使用 `admin` 和上一步获取的密码登录。此时还没有数据写入网关，仪表盘为空。
 
 ## 步骤 2：安装 Kubernetes 采集器 {#step-2-install-the-kubernetes-collector}
 
