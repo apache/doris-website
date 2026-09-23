@@ -30,6 +30,7 @@ PARSE_TO_VARIANT(<json_value>)
 - 输入为 JSON 字面量 `null` 时返回 VARIANT `null`，它与 SQL `NULL` 不同。
 - 非法 JSON 文本会作为 VARIANT 字符串返回；包含超出 [-2^63, 2^64 - 1] 的整数或超出 `DOUBLE` 范围的数值的 JSON 也是如此，整段文本变为一个字符串。该行为由 BE 配置 `variant_throw_exeception_on_invalid_json`（默认 `false`）控制；设置为 `true` 后，这类输入会使查询失败。
 - 输入为空字符串时返回空对象 `{}`。
+- 嵌套深到 JSON 解析器本身拒绝的文档（约 1000 层）属于非法 JSON，同样作为字符串返回。
 - 以下情况查询失败：对象 key 超过 `variant_max_json_key_length` 字节（BE 配置，默认 255）；同一对象中有重复 key（BE 配置 `variant_enable_duplicate_json_path_check` 为 `true` 时保留第一个值，不报错）；嵌套超过 128 层；字符串不是合法的 UTF-8。
 
 ## 示例

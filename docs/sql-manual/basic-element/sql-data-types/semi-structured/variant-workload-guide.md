@@ -212,7 +212,7 @@ Use it when ingest throughput is the first priority, the workload frequently nee
 Watch for:
 - DOC mode is not the default answer for every wide-JSON workload. If hot-path analytics dominates, sparse columns usually fit better.
 - DOC mode and sparse columns are mutually exclusive. They cannot be enabled at the same time.
-- A column that has a Schema Template cannot be altered, so its `variant_doc_materialization_min_rows` cannot change later. Choose the value when you create the table.
+- Apart from `DROP`, `RENAME`, and comment changes, a column that has a Schema Template cannot be altered, so its `variant_doc_materialization_min_rows` cannot change later. Choose the value when you create the table.
 
 ### Schema Template
 

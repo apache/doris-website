@@ -2,7 +2,7 @@
 {
     "title": "VARIANT",
     "language": "zh-CN",
-    "description": "如何将 CSV 与 JSON 数据导入 Doris VARIANT 列？本文提供建表、Stream Load 命令、导入结果与类型推导验证的完整步骤，并说明导入时 VARIANT 值如何转换。",
+    "description": "如何将 CSV 与 JSON 数据导入 Doris VARIANT 列？本文按步骤介绍建表、执行 Stream Load 命令，以及验证 VARIANT 子列类型推导结果的完整流程。",
     "keywords": [
         "Doris VARIANT 导入",
         "CSV 导入 VARIANT",
@@ -33,18 +33,18 @@
 
 ## 使用限制
 
-- 下文示例导入的是 **CSV** 和 **JSON** 文件。导入作业会把写入 `VARIANT` 列的任何字符串字段按 JSON 解析，因此只要源列是字符串（例如 Parquet 的 `STRING` 列），其他格式也同样适用。
+- 下文示例导入的是 **CSV** 和 **JSON** 文件。导入作业会把写入 `VARIANT` 列的任何字符串字段按 JSON 解析，因此只要源列是字符串（例如 Parquet 的 `STRING` 列），其他格式也同样适用。Arrow 格式不能导入 `VARIANT` 列。
 
 ## 导入时值如何转换
 
 - **CSV 格式：** `VARIANT` 字段的文本按 JSON 解析。`\N` 导入为 SQL `NULL`。非法 JSON 文本导入为 VARIANT 字符串。
 - **JSON 格式：** 字段对应的 JSON 值按原样导入。如果该值是 JSON 字符串，其内容会再按 JSON 文本解析一次，因此 `"123"` 导入为数值 `123`，`"true"` 导入为布尔值 `true`。顶层的 JSON 布尔值导入为数值 `1` 或 `0`。JSON `null` 或缺失的字段导入为 SQL `NULL`。
 - **超范围的数值：** 包含超出 [-2^63, 2^64 - 1] 的整数或超出 `DOUBLE` 范围的数值的文档无法解析，整个文档会作为一个 VARIANT 字符串导入。
-- **`NOT NULL` 列：** VARIANT 值为 SQL `NULL` 的行会被过滤，包括解析失败而得到 SQL `NULL` 的值。
+- **`NOT NULL` 列：** VARIANT 值为 SQL `NULL` 的行会被过滤，包括解析失败而得到 SQL `NULL` 的值。被过滤的行计入 `max_filter_ratio`（默认 `0`），因此默认情况下导入作业会失败。
 - **INSERT 的行为不同：** `INSERT` 不解析字符串。`INSERT INTO t VALUES (1, '{"a": 1}')` 写入的是 VARIANT 字符串 `{"a": 1}`，从 `s3()`、`hdfs()`、`local()` 执行 `INSERT INTO ... SELECT` 也是如此。需要写入对象时请使用 `PARSE_TO_VARIANT`。
-- **存储会规范化值：** 值为 `null` 的对象成员，以及值为空对象或空数组的成员，都不会被存储。
+- **存储会规范化值：** 值为 `null` 的对象成员，以及值为空对象或空数组的成员，在写入时可能被移除。
 
-完整规则请参阅[写入数据](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#write-data)与[存储会保留什么](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps)。
+完整规则请参阅[写入数据](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#write-data)与[写入后值的规范化](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps)。
 
 ## 存储格式建议（V3）
 

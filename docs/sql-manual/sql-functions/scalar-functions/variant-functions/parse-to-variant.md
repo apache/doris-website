@@ -30,6 +30,7 @@ Returns a `VARIANT` value.
 - The JSON literal `null` returns a VARIANT `null`, which is different from SQL `NULL`.
 - Text that is not valid JSON is returned as a VARIANT string. So is JSON that contains an integer outside [-2^63, 2^64 - 1] or a number outside the `DOUBLE` range: the whole text becomes one string. This is controlled by the BE configuration `variant_throw_exeception_on_invalid_json` (default `false`); when it is `true`, such input makes the query fail.
 - An empty string returns an empty object `{}`.
+- A document nested so deeply that the JSON parser itself rejects it (about 1,000 levels) is invalid JSON and is also returned as a string.
 - The query fails when an object key is longer than `variant_max_json_key_length` bytes (BE configuration, default 255), when an object contains duplicate keys (unless the BE configuration `variant_enable_duplicate_json_path_check` is `true`, which keeps the first value), when nesting is deeper than 128 levels, or when a string is not valid UTF-8.
 
 ## Example

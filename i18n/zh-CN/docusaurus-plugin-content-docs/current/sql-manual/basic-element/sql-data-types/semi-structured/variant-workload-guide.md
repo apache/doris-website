@@ -212,7 +212,7 @@ PROPERTIES (
 注意：
 - DOC mode 不是所有宽 JSON 场景的默认答案。若核心诉求是热点路径分析，通常还是 Sparse 更合适。
 - DOC mode 和 Sparse 互斥，不能同时开启。
-- 带 Schema Template 的列不能 ALTER，因此之后也无法修改它的 `variant_doc_materialization_min_rows`，请在建表时确定这个值。
+- 带 Schema Template 的列除了 `DROP`、`RENAME` 和修改注释之外不能 ALTER，因此之后也无法修改它的 `variant_doc_materialization_min_rows`，请在建表时确定这个值。
 
 ### Schema Template 模式
 

@@ -31,7 +31,7 @@ Returns a `STRING` with the type name of the value itself. For an object or an a
 | `string` | A string |
 | `bool` | `true` or `false` |
 | `tinyint`, `smallint`, `int`, `bigint` | An integer, reported with the smallest type that holds it |
-| `decimal` | A decimal, including an integer too large for `BIGINT` and a `LARGEINT` value |
+| `decimal` | A decimal, including an integer too large for `BIGINT` and a `LARGEINT` value of up to 38 digits |
 | `float`, `double` | A floating-point number |
 | `date` | A date |
 | `timestamp` | A timestamp with time zone |

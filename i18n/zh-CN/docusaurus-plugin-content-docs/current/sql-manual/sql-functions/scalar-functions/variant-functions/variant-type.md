@@ -31,7 +31,7 @@ VARIANT_TYPE(variant_value)
 | `string` | 字符串 |
 | `bool` | `true` 或 `false` |
 | `tinyint`、`smallint`、`int`、`bigint` | 整数，按能容纳该值的最小类型报告 |
-| `decimal` | 定点数，包括超出 `BIGINT` 范围的整数和 `LARGEINT` 值 |
+| `decimal` | 定点数，包括超出 `BIGINT` 范围的整数，以及不超过 38 位的 `LARGEINT` 值 |
 | `float`、`double` | 浮点数 |
 | `date` | 日期 |
 | `timestamp` | 带时区的时间戳 |

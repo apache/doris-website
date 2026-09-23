@@ -113,14 +113,15 @@ Where a VARIANT column can be used in a table:
 
 | Write path | Result |
 | --- | --- |
-| `INSERT ... VALUES` or `INSERT ... SELECT` with a `CHAR`, `VARCHAR`, or `STRING` expression | A VARIANT **string**. The text is not parsed, even if it looks like JSON. This includes `INSERT INTO ... SELECT` from table functions such as `s3()`, `hdfs()`, and `local()`, Stream Load with an `http_stream` SQL statement, and group commit INSERT. |
+| `INSERT ... VALUES` or `INSERT ... SELECT` with a `CHAR`, `VARCHAR`, or `STRING` expression | A VARIANT **string**. The text is not parsed, even if it looks like JSON. This includes `INSERT INTO ... SELECT` from table functions such as `s3()`, `hdfs()`, and `local()`, Stream Load with an `http_stream` SQL statement, and group commit INSERT sent as SQL text. |
 | `INSERT` with `PARSE_TO_VARIANT(expr)` or `TRY_PARSE_TO_VARIANT(expr)` | The parsed JSON value. See [Parse errors](#parse-errors). |
 | `INSERT` with a `JSON`/`JSONB` expression | The same structure, converted directly. |
 | `INSERT` with another typed expression | A typed value. See [CAST to VARIANT](#cast-to-variant). |
-| Load jobs (Stream Load, Broker Load, Routine Load) | A string field loaded into a VARIANT column is parsed as JSON, whatever the file format: CSV text, a Parquet `STRING` column, or a JSON string value. `\N` in CSV loads SQL `NULL`. |
+| Group commit INSERT through JDBC server-side prepared statements (`useServerPrepStmts=true`) | Executed like a load job, so a string is parsed as JSON. |
+| Load jobs (Stream Load, Broker Load, Routine Load) | A string field loaded into a VARIANT column is parsed as JSON, whatever the file format: CSV text, a Parquet `STRING` column, or a JSON string value. The Arrow format cannot load VARIANT columns. `\N` in CSV loads SQL `NULL`. |
 | Load jobs in JSON format | The JSON value of the field. A JSON string is parsed again as JSON text: `"123"` loads the number `123`, `"true"` loads the boolean `true`, `"{\"a\": 1}"` loads an object, and `"hello"` stays the string `hello`. A top-level JSON boolean loads the number `1` or `0`. A JSON `null` or a missing field loads SQL `NULL`. |
 
-A `NOT NULL` VARIANT column rejects SQL `NULL`: `INSERT` fails in strict mode, and a load job filters the row, including a row whose text failed to parse into SQL `NULL`.
+A `NOT NULL` VARIANT column rejects SQL `NULL`: `INSERT` fails in strict mode, and a load job filters the row, including a row whose text failed to parse into SQL `NULL`. Filtered rows count toward `max_filter_ratio`, which is `0` by default, so the load job fails.
 
 ```sql
 CREATE TABLE variant_tbl (k INT, v VARIANT)
@@ -163,12 +164,14 @@ For step-by-step load examples, see [Load VARIANT data](../../../../data-operate
 | Duplicate keys in one object | Error | SQL `NULL` |
 | A string that is not valid UTF-8 | Error | SQL `NULL` |
 
+A document nested so deeply that the JSON parser itself rejects it (about 1,000 levels) is invalid JSON, so it is kept as a string.
+
 Two BE configurations change these rules:
 
 - `variant_throw_exeception_on_invalid_json` (default `false`): when `true`, text that the parser rejects, including JSON with out-of-range numbers, is an error for `PARSE_TO_VARIANT` and SQL `NULL` for `TRY_PARSE_TO_VARIANT` and load jobs, instead of a VARIANT string.
-- `variant_enable_duplicate_json_path_check` (default `false`): when `true`, a key that repeats in an object keeps its first value instead of causing an error.
+- `variant_enable_duplicate_json_path_check` (default `false`): when `true`, a key that repeats in an object keeps its first value instead of causing an error. It also keeps a write from failing when a key with a dot repeats a nested path; only one of the values is stored.
 
-To keep a document with out-of-range integers structured, convert it through JSON: `CAST(CAST(text AS JSON) AS VARIANT)`. Integers with up to 38 digits stay exact; larger ones become `DOUBLE`.
+To keep a document with out-of-range integers structured, convert it through JSON: `CAST(CAST(text AS JSON) AS VARIANT)`. Integers with up to 38 digits stay exact numbers, larger integers within the `LARGEINT` range become strings, and larger ones become `DOUBLE`. `PARSE_TO_VARIANT(CAST(text AS JSON))` does not help, because it parses the JSON text again.
 
 ```sql
 SELECT VARIANT_TYPE(PARSE_TO_VARIANT('{"id": 1}')) AS valid_json,    -- object
@@ -190,7 +193,7 @@ Writing a value into a table normalizes it. The value read back can differ from 
 | A root empty array `[]` or empty object `{}` | Kept |
 | `DATE` and `DATETIME` values outside a Schema Template path, such as `CAST(date_col AS VARIANT)` | Stored as their text, so they read back as strings |
 | Booleans and numbers mixed on one path | Booleans can read back as `1` or `0`, depending on the order of values within a write and on compaction |
-| A key that contains a dot, such as `{"a.b": 1}` | Stored as a nested path: `{"a":{"b":1}}`. Both `v['a.b']` and `v['a']['b']` return `1`. A document that has both a key `a.b` and a key `b` inside `a` makes the whole INSERT or load job fail. |
+| A key that contains a dot, such as `{"a.b": 1}` | Stored as a nested path: `{"a":{"b":1}}`. Both `v['a.b']` and `v['a']['b']` return `1`. A document that has both a key `a.b` and a key `b` inside `a` makes the whole INSERT or load job fail, unless `variant_enable_duplicate_json_path_check` is `true`. |
 | Object keys | Returned in byte order |
 
 These rules depend on the other rows written together and on DOC mode, so do not rely on `null` values or empty containers surviving storage. Paths declared in a Schema Template are converted to the declared type instead; see [Schema Template](#schema-template).
@@ -272,7 +275,7 @@ SELECT v FROM variant_tbl WHERE k = 3;
 | `DECIMALV2`, `DECIMAL(p, s)` with `p <= 38` | A decimal. |
 | `DATE`, `DATETIME(p)`, `TIMESTAMP_NS` | A date, or a timestamp without time zone. |
 | `IPV4`, `IPV6` | A string with the text form of the value. |
-| `JSON` / `JSONB` | The same structure. A value that VARIANT cannot hold, such as a `DECIMAL256` number, makes the CAST fail. |
+| `JSON` / `JSONB` | The same structure. A value that VARIANT cannot hold, such as a `DECIMAL256` number, or duplicate keys in an object make the CAST fail. |
 | `ARRAY<T>` | An array; each element is converted. `T` must be `VARIANT` or a type in this table. |
 | `MAP`, `STRUCT`, `TIME`, `TIMESTAMPTZ`, `VARBINARY`, and other types | Not supported. The statement fails. |
 
@@ -285,14 +288,15 @@ The source value must also be valid for its own type; an invalid value is reject
 | `BOOLEAN` | Booleans as they are. Numbers are `true` when not zero. Strings are converted as by `CAST(string AS BOOLEAN)`. |
 | `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT` | Integers. The fraction of a decimal or floating-point value is truncated (`1.5` becomes `1`). Booleans become `1` or `0`. Numeric strings such as `"123"` are converted. |
 | `FLOAT`, `DOUBLE`, `DECIMAL(p, s)` | Numbers and numeric strings. `DECIMAL` rounds to scale `s`. A value too large for `FLOAT` becomes `Infinity`. |
-| `DATE`, `DATETIME(p)`, `TIMESTAMP_NS`, `TIMESTAMPTZ(p)` | Date and time values, strings in a date or time format, and numbers such as `20240102`. |
+| `DATE`, `DATETIME(p)`, `TIMESTAMP_NS` | Date and time values, strings in a date or time format, and numbers such as `20240102`. |
+| `TIMESTAMPTZ(p)` | Date and time values, and strings in a date or time format. |
 | `IPV4`, `IPV6` | Strings in IP address format. |
 | `CHAR`, `VARCHAR`, `STRING` | A string root is returned as is, without quotes. Objects and arrays are returned as JSON text. Other scalars are formatted like the same SQL type: a boolean root becomes `1` or `0`, a `DATETIME` value has six fractional digits, and a `TIMESTAMP_NS` value has nine. A VARIANT `null` becomes the string `null`. |
 | `JSON` / `JSONB` | The same structure. Values without a JSON counterpart, such as dates and timestamps, become JSON strings; a timestamp with time zone is formatted in the session time zone. |
 | `ARRAY<T>` | An array, converted element by element; an element that cannot be converted becomes `NULL`. A string that holds a JSON array, such as `"[1, 2]"`, is converted too. Other values return `NULL`. |
 | `MAP`, `STRUCT`, `TIME`, and other types | Not supported. The statement fails. |
 
-A value that cannot be converted to the target type returns SQL `NULL`. This does not depend on `enable_strict_cast`: a CAST from VARIANT does not fail because of a value, even in strict mode.
+A value that cannot be converted to the target type returns SQL `NULL`, also when `enable_strict_cast` is on. The exception is a value whose type has no conversion to the target type at all, such as a number to `TIMESTAMPTZ`, `IPV4`, or `IPV6`, or a date or timestamp to `BOOLEAN`: then the statement fails.
 
 ```sql
 SELECT CAST(PARSE_TO_VARIANT('"123"') AS INT)      AS from_string,   -- 123
@@ -324,11 +328,11 @@ When these types are converted to VARIANT:
 
 ### Implicit conversion
 
-In this section, a **subpath** is a path expression applied directly to a VARIANT value: `v['a']`, `v['a']['b']`, or `ELEMENT_AT(v, 'a')`. Other VARIANT expressions, such as the column `v` itself, `PARSE_TO_VARIANT(...)`, `CAST(... AS VARIANT)`, or `COALESCE(v['a'], v['b'])`, are **whole values**.
+In this section, a **subpath** is a path expression applied directly to a VARIANT value: `v['a']`, `v['a']['b']`, or `ELEMENT_AT(v, 'a')`. Other VARIANT expressions, such as the column `v` itself, `PARSE_TO_VARIANT(...)`, `CAST(... AS VARIANT)`, or `COALESCE(v['a'], v['b'])`, are **whole values**. So is an alias of a subpath: after `SELECT v['a'] AS x FROM t` in a subquery, CTE, or view, `x = 1` fails, while `x IN (1, 2)` works.
 
 Doris converts VARIANT implicitly in these cases:
 
-- **A subpath compared with a non-VARIANT value.** In `v['a'] = 1`, `v['d'] > DATE '2024-01-01'`, or `v['a'] IN (1, 2)`, the subpath is cast to a type chosen from the other operand: integers and decimals are compared as `DECIMAL(38, 9)`, `FLOAT` and `DOUBLE` as `DOUBLE`, `DATE`, `DATETIME`, and `TIMESTAMPTZ` as `DATETIME(6)` (a time zone is dropped), strings as `STRING`, and booleans as `BOOLEAN`. The conversion follows the CAST rules above, so the string `"1"` equals `1`, and a value that cannot be converted makes the comparison `NULL`. Comparing with a string literal compares strings: `v['d'] > '2024-01-01'` is a string comparison, not a date comparison. The same conversion applies to a join condition such as `t1.v['id'] = t2.id`.
+- **A subpath compared with a non-VARIANT value.** In `v['a'] = 1`, `v['d'] > DATE '2024-01-01'`, or `v['a'] IN (1, 2)`, the subpath is cast to a type chosen from the other operand: integers and decimals are compared as `DECIMAL(38, 9)`, `FLOAT` and `DOUBLE` as `DOUBLE`, `DATE`, `DATETIME`, and `TIMESTAMPTZ` as `DATETIME(6)` (a `TIMESTAMPTZ` value is first converted to the session time zone), strings as `STRING`, and booleans as `BOOLEAN`. The conversion follows the CAST rules above, so the string `"1"` equals `1`, and a value that cannot be converted makes the comparison `NULL`. Comparing with a string literal compares strings: `v['d'] > '2024-01-01'` is a string comparison, not a date comparison. The same conversion applies to a join condition such as `t1.v['id'] = t2.id`.
 - **A whole value with an `IN` list of non-VARIANT values.** `v IN ('a', 'b')` casts `v` to the type of the list, so an object is compared as its JSON text. This is unlike `v = 'a'`, which is rejected.
 - **Function arguments.** A VARIANT argument is cast to the parameter type when the function takes a number, a string, or JSON, for example `ABS(v['n'])`, `LENGTH(v['s'])`, and `SUM(v['n'])`.
 - **JSON functions.** Functions such as `JSON_EXTRACT`, `JSON_KEYS`, `JSON_CONTAINS`, and `TO_JSON` accept a VARIANT argument and convert it with `CAST(v AS JSON)`. Functions that also accept a string (`JSON_VALID`, `JSON_QUOTE`, `JSON_UNQUOTE`, `JSON_PARSE`) use the string form, so `JSON_PARSE(v)` fails on a string root; use `CAST(v AS JSON)` to convert a VARIANT value to JSON. A whole-document JSON function reads and assembles the entire VARIANT value, so `v['a']['b']` is much faster than `JSON_EXTRACT(v, '$.a.b')` for reading one path.
@@ -336,7 +340,7 @@ Doris converts VARIANT implicitly in these cases:
 
 Implicit conversion has two costs:
 
-- **No index or pruning.** An implicitly cast comparison is evaluated row by row. Numeric comparisons such as `v['id'] = 123` cannot use zone maps, BloomFilter, or inverted indexes, even on a Schema Template path. CAST the subpath to its stored type instead, for example `CAST(v['id'] AS BIGINT) = 123`. A string subpath compared with a string literal can still use an inverted index.
+- **No index or pruning.** When the implicit type differs from the stored type of the path, as for an integer literal (`DECIMAL(38, 9)`) against a `BIGINT` path, the comparison is evaluated row by row and cannot use zone maps, BloomFilter, or inverted indexes, even on a Schema Template path. CAST the subpath to its stored type instead, for example `CAST(v['id'] AS BIGINT) = 123`. A string subpath compared with a string literal can still use an inverted index.
 - **`DECIMAL(38, 9)` limits.** A value whose magnitude is 10^29 or more becomes `NULL`, and digits after the ninth decimal place are rounded away. `v['n'] > 5` does not match `1e30`, and `v['x'] = 0.1234567891` also matches `0.123456789`. CAST to `DOUBLE` or to the stored type when values can be that large or that precise.
 
 Doris does not convert implicitly in these cases; CAST explicitly:
@@ -580,6 +584,10 @@ SELECT k, v FROM tpl_demo ORDER BY k;
 - `"abc"`, `"x"`, and `"not a time"` cannot be converted, so they are dropped.
 - A JSON number with a fraction is parsed as `DOUBLE` before the conversion, so a `DECIMAL` path can lose precision. Write such values as JSON strings to keep every digit (see the [FAQ](#faq)).
 - Date and IP values must be JSON strings: `{"date": 2020-01-01}` and `{"ip": 127.0.0.1}` are not valid JSON; write `{"date": "2020-01-01"}` and `{"ip": "127.0.0.1"}`.
+
+:::caution
+A value is only converted when its JSON type has a conversion to the declared type. A JSON number on an `IPV4`, `IPV6`, or `TIMESTAMPTZ` path makes the whole write fail. If one write mixes JSON strings and numbers on a `DATE`, `DATETIME`, `TIMESTAMPTZ`, `IPV4`, or `IPV6` path, even the valid values on that path can be dropped. Write the values of such paths as JSON strings.
+:::
 
 ### Reading template paths
 
@@ -972,7 +980,7 @@ A modified ClickBench (43 queries):
    - Check whether you CAST paths to their stored types (implicit numeric comparisons cannot use indexes), whether the type was promoted to JSONB due to conflicts, and whether you mistakenly expect an index on the whole VARIANT instead of on subpaths.
 5. Why does `ORDER BY v['a']` put `"10"` after `9`, or `GROUP BY v['a']` separate `1` and `"1"`?
    - VARIANT ordering and equality first look at the kind of the value: numbers sort before strings, and a number never equals a string. CAST the path to one type when you need numeric or lexical semantics. See [Comparison, grouping, and ordering](#comparison-grouping-and-ordering).
-6. Why does `COALESCE(v['a'], 0)` return a decimal, or `NULL` for a string value?
+6. Why does `COALESCE(v['a'], 0)` return `0.000000000` when `v['a']` is a string, and `IF(..., v['a'], 1)` return `NULL`?
    - Mixing VARIANT with another type converts the VARIANT values to that type. Write `COALESCE(v['a'], CAST(0 AS VARIANT))` to keep a VARIANT result, or CAST `v['a']` to the type you want. See [Implicit conversion](#implicit-conversion).
 7. Why does DECIMAL lose precision when written into a VARIANT column?
    - JSON numbers with a fraction are inferred as `DOUBLE`, not `DECIMAL`, so trailing digits can be lost. Declaring the path as `DECIMAL` in a Schema Template, for example `v VARIANT<'num': DECIMAL(9, 3)>`, does not fully help, because the value is parsed as `DOUBLE` first. Write the value as a JSON string inside the document, for example `PARSE_TO_VARIANT('{"num": "12.345"}')`; it is then converted directly to `DECIMAL(9, 3)` without loss.

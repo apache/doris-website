@@ -113,14 +113,15 @@ VARIANT 列在表中的使用范围：
 
 | 写入方式 | 结果 |
 | --- | --- |
-| `INSERT ... VALUES` 或 `INSERT ... SELECT` 写入 `CHAR`、`VARCHAR`、`STRING` 表达式 | VARIANT **字符串**。即使内容看起来像 JSON，也不会被解析。从 `s3()`、`hdfs()`、`local()` 等表函数执行 `INSERT INTO ... SELECT`、带 `http_stream` SQL 语句的 Stream Load，以及 Group Commit 方式的 INSERT，都是如此。 |
+| `INSERT ... VALUES` 或 `INSERT ... SELECT` 写入 `CHAR`、`VARCHAR`、`STRING` 表达式 | VARIANT **字符串**。即使内容看起来像 JSON，也不会被解析。从 `s3()`、`hdfs()`、`local()` 等表函数执行 `INSERT INTO ... SELECT`、带 `http_stream` SQL 语句的 Stream Load，以及以 SQL 文本发送的 Group Commit INSERT，都是如此。 |
 | `INSERT` 写入 `PARSE_TO_VARIANT(expr)` 或 `TRY_PARSE_TO_VARIANT(expr)` | 解析后的 JSON 值。参见[解析错误](#parse-errors)。 |
 | `INSERT` 写入 `JSON`/`JSONB` 表达式 | 按原结构直接转换。 |
 | `INSERT` 写入其他类型的表达式 | 带类型的值，参见[其他类型 CAST 为 VARIANT](#cast-to-variant)。 |
-| 导入作业（Stream Load、Broker Load、Routine Load） | 写入 VARIANT 列的字符串字段会按 JSON 解析，与文件格式无关：CSV 文本、Parquet 的 `STRING` 列、JSON 中的字符串值都是如此。CSV 中的 `\N` 导入为 SQL `NULL`。 |
+| 通过 JDBC 服务端预编译语句（`useServerPrepStmts=true`）执行的 Group Commit INSERT | 按导入作业的方式执行，因此字符串会按 JSON 解析。 |
+| 导入作业（Stream Load、Broker Load、Routine Load） | 写入 VARIANT 列的字符串字段会按 JSON 解析，与文件格式无关：CSV 文本、Parquet 的 `STRING` 列、JSON 中的字符串值都是如此。Arrow 格式不能导入 VARIANT 列。CSV 中的 `\N` 导入为 SQL `NULL`。 |
 | JSON 格式的导入作业 | 字段对应的 JSON 值。JSON 字符串会再按 JSON 文本解析一次：`"123"` 导入为数值 `123`，`"true"` 导入为布尔值 `true`，`"{\"a\": 1}"` 导入为对象，`"hello"` 仍是字符串 `hello`。顶层的 JSON 布尔值导入为数值 `1` 或 `0`。JSON `null` 或缺失的字段导入为 SQL `NULL`。 |
 
-`NOT NULL` 的 VARIANT 列不接受 SQL `NULL`：严格模式下 `INSERT` 会失败，导入作业会过滤该行，文本解析失败而得到 SQL `NULL` 的行也会被过滤。
+`NOT NULL` 的 VARIANT 列不接受 SQL `NULL`：严格模式下 `INSERT` 会失败，导入作业会过滤该行，文本解析失败而得到 SQL `NULL` 的行也会被过滤。被过滤的行计入 `max_filter_ratio`，其默认值为 `0`，因此导入作业会失败。
 
 ```sql
 CREATE TABLE variant_tbl (k INT, v VARIANT)
@@ -163,12 +164,14 @@ SELECT k, v, VARIANT_TYPE(v) AS type, v['a'] FROM variant_tbl ORDER BY k;
 | 同一对象中有重复 key | 报错 | SQL `NULL` |
 | 不是合法 UTF-8 的字符串 | 报错 | SQL `NULL` |
 
+嵌套深到 JSON 解析器本身拒绝的文档（约 1000 层）属于非法 JSON，因此会保留为字符串。
+
 有两个 BE 配置会改变上述规则：
 
 - `variant_throw_exeception_on_invalid_json`（默认 `false`）：设置为 `true` 后，解析器无法接受的文本（包括含超范围数值的 JSON）不再保留为 VARIANT 字符串，而是对 `PARSE_TO_VARIANT` 报错，对 `TRY_PARSE_TO_VARIANT` 和导入作业返回 SQL `NULL`。
-- `variant_enable_duplicate_json_path_check`（默认 `false`）：设置为 `true` 后，对象中重复的 key 保留第一个值，不再报错。
+- `variant_enable_duplicate_json_path_check`（默认 `false`）：设置为 `true` 后，对象中重复的 key 保留第一个值，不再报错。含 `.` 的 key 与嵌套路径重复时，写入也不再失败，只会存储其中一个值。
 
-如需让含超范围整数的文档保持结构，可以先转换为 JSON：`CAST(CAST(text AS JSON) AS VARIANT)`。不超过 38 位的整数保持精确，更大的整数变为 `DOUBLE`。
+如需让含超范围整数的文档保持结构，可以先转换为 JSON：`CAST(CAST(text AS JSON) AS VARIANT)`。不超过 38 位的整数保持为精确的数值，更大但仍在 `LARGEINT` 范围内的整数变为字符串，再大的整数变为 `DOUBLE`。`PARSE_TO_VARIANT(CAST(text AS JSON))` 无法解决这个问题，因为它会重新解析 JSON 文本。
 
 ```sql
 SELECT VARIANT_TYPE(PARSE_TO_VARIANT('{"id": 1}')) AS valid_json,    -- object
@@ -190,7 +193,7 @@ SELECT VARIANT_TYPE(PARSE_TO_VARIANT('{"id": 1}')) AS valid_json,    -- object
 | 根值为空数组 `[]` 或空对象 `{}` | 保留 |
 | 不在 Schema Template 路径上的 `DATE`、`DATETIME` 值，如 `CAST(date_col AS VARIANT)` | 以文本形式存储，读回时是字符串 |
 | 同一路径上混有布尔值和数值 | 布尔值可能读回为 `1` 或 `0`，取决于同一次写入中值的先后顺序以及 Compaction |
-| 含 `.` 的 key，如 `{"a.b": 1}` | 按嵌套路径存储：`{"a":{"b":1}}`，`v['a.b']` 和 `v['a']['b']` 都返回 `1`。如果一个文档同时包含 key `a.b` 和 `a` 下的 key `b`，整条 INSERT 或整个导入作业都会失败。 |
+| 含 `.` 的 key，如 `{"a.b": 1}` | 按嵌套路径存储：`{"a":{"b":1}}`，`v['a.b']` 和 `v['a']['b']` 都返回 `1`。如果一个文档同时包含 key `a.b` 和 `a` 下的 key `b`，整条 INSERT 或整个导入作业都会失败，除非 `variant_enable_duplicate_json_path_check` 为 `true`。 |
 | 对象 key | 按字节序返回 |
 
 这些规则会受同一次写入的其他行以及 DOC mode 影响，因此不要依赖 `null` 值或空容器在写入后仍然保留。在 Schema Template 中声明过的路径会转换为声明的类型，参见 [Schema Template](#schema-template)。
@@ -272,7 +275,7 @@ SELECT v FROM variant_tbl WHERE k = 3;
 | `DECIMALV2`、`DECIMAL(p, s)`（`p <= 38`） | 定点数。 |
 | `DATE`、`DATETIME(p)`、`TIMESTAMP_NS` | 日期，或不带时区的时间戳。 |
 | `IPV4`、`IPV6` | 字符串，内容为该值的文本形式。 |
-| `JSON` / `JSONB` | 保持原结构。包含 VARIANT 无法表示的值（如 `DECIMAL256` 数值）时，CAST 报错。 |
+| `JSON` / `JSONB` | 保持原结构。包含 VARIANT 无法表示的值（如 `DECIMAL256` 数值），或对象中有重复 key 时，CAST 报错。 |
 | `ARRAY<T>` | 数组，逐个转换元素。`T` 必须是 `VARIANT` 或本表中的类型。 |
 | `MAP`、`STRUCT`、`TIME`、`TIMESTAMPTZ`、`VARBINARY` 等其他类型 | 不支持，语句报错。 |
 
@@ -285,14 +288,15 @@ SELECT v FROM variant_tbl WHERE k = 3;
 | `BOOLEAN` | 布尔值保持不变；数值非零即为 `true`；字符串按 `CAST(string AS BOOLEAN)` 的规则转换。 |
 | `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT` | 整数。定点数和浮点数的小数部分被截断（`1.5` 变为 `1`）；布尔值变为 `1` 或 `0`；`"123"` 这样的数字字符串会被转换。 |
 | `FLOAT`、`DOUBLE`、`DECIMAL(p, s)` | 数值和数字字符串。`DECIMAL` 按 scale `s` 舍入。超出 `FLOAT` 范围的值变为 `Infinity`。 |
-| `DATE`、`DATETIME(p)`、`TIMESTAMP_NS`、`TIMESTAMPTZ(p)` | 日期时间值、日期时间格式的字符串，以及 `20240102` 这样的数值。 |
+| `DATE`、`DATETIME(p)`、`TIMESTAMP_NS` | 日期时间值、日期时间格式的字符串，以及 `20240102` 这样的数值。 |
+| `TIMESTAMPTZ(p)` | 日期时间值，以及日期时间格式的字符串。 |
 | `IPV4`、`IPV6` | IP 地址格式的字符串。 |
 | `CHAR`、`VARCHAR`、`STRING` | 字符串根值原样返回，不带引号；对象和数组返回 JSON 文本；其他标量按对应 SQL 类型的格式输出：布尔根值为 `1` 或 `0`，`DATETIME` 值带 6 位小数，`TIMESTAMP_NS` 值带 9 位小数。VARIANT `null` 返回字符串 `null`。 |
 | `JSON` / `JSONB` | 保持原结构。没有 JSON 对应类型的值（如日期、时间戳）会变成 JSON 字符串；带时区的时间戳按会话时区格式化。 |
 | `ARRAY<T>` | 按元素转换的数组，无法转换的元素变为 `NULL`。内容为 JSON 数组的字符串（如 `"[1, 2]"`）也会被转换。其他值返回 `NULL`。 |
 | `MAP`、`STRUCT`、`TIME` 等其他类型 | 不支持，语句报错。 |
 
-值无法转换为目标类型时返回 SQL `NULL`。这与 `enable_strict_cast` 无关：即使在严格模式下，把 VARIANT CAST 为其他类型也不会因为值本身而报错。
+值无法转换为目标类型时返回 SQL `NULL`，开启 `enable_strict_cast` 时也是如此。例外是值的类型与目标类型之间根本没有转换，例如把数值 CAST 为 `TIMESTAMPTZ`、`IPV4`、`IPV6`，或把日期、时间戳 CAST 为 `BOOLEAN`：这时语句会报错。
 
 ```sql
 SELECT CAST(PARSE_TO_VARIANT('"123"') AS INT)      AS from_string,   -- 123
@@ -324,11 +328,11 @@ SELECT CAST(PARSE_TO_VARIANT('true') AS STRING)        AS bool_root,     -- 1
 
 ### 隐式转换 {#implicit-conversion}
 
-本节中，**子路径**指直接作用在 VARIANT 值上的路径表达式：`v['a']`、`v['a']['b']` 或 `ELEMENT_AT(v, 'a')`。其他 VARIANT 表达式，如列 `v` 本身、`PARSE_TO_VARIANT(...)`、`CAST(... AS VARIANT)`、`COALESCE(v['a'], v['b'])`，都属于**整个值**。
+本节中，**子路径**指直接作用在 VARIANT 值上的路径表达式：`v['a']`、`v['a']['b']` 或 `ELEMENT_AT(v, 'a')`。其他 VARIANT 表达式，如列 `v` 本身、`PARSE_TO_VARIANT(...)`、`CAST(... AS VARIANT)`、`COALESCE(v['a'], v['b'])`，都属于**整个值**。子路径的别名也是整个值：在子查询、CTE 或视图中写 `SELECT v['a'] AS x FROM t` 后，`x = 1` 会报错，而 `x IN (1, 2)` 可以执行。
 
 以下情况 Doris 会隐式转换 VARIANT：
 
-- **子路径与非 VARIANT 值比较。** 在 `v['a'] = 1`、`v['d'] > DATE '2024-01-01'`、`v['a'] IN (1, 2)` 中，子路径会根据另一侧操作数 CAST 为具体类型：整数和定点数按 `DECIMAL(38, 9)` 比较，`FLOAT`、`DOUBLE` 按 `DOUBLE` 比较，`DATE`、`DATETIME`、`TIMESTAMPTZ` 按 `DATETIME(6)` 比较（时区被丢弃），字符串按 `STRING` 比较，布尔值按 `BOOLEAN` 比较。转换遵循上文的 CAST 规则，因此字符串 `"1"` 等于 `1`，而无法转换的值使比较结果为 `NULL`。与字符串字面量比较时按字符串比较：`v['d'] > '2024-01-01'` 是字符串比较，不是日期比较。Join 条件（如 `t1.v['id'] = t2.id`）也按同样的规则转换。
+- **子路径与非 VARIANT 值比较。** 在 `v['a'] = 1`、`v['d'] > DATE '2024-01-01'`、`v['a'] IN (1, 2)` 中，子路径会根据另一侧操作数 CAST 为具体类型：整数和定点数按 `DECIMAL(38, 9)` 比较，`FLOAT`、`DOUBLE` 按 `DOUBLE` 比较，`DATE`、`DATETIME`、`TIMESTAMPTZ` 按 `DATETIME(6)` 比较（`TIMESTAMPTZ` 值会先换算到会话时区），字符串按 `STRING` 比较，布尔值按 `BOOLEAN` 比较。转换遵循上文的 CAST 规则，因此字符串 `"1"` 等于 `1`，而无法转换的值使比较结果为 `NULL`。与字符串字面量比较时按字符串比较：`v['d'] > '2024-01-01'` 是字符串比较，不是日期比较。Join 条件（如 `t1.v['id'] = t2.id`）也按同样的规则转换。
 - **整个值与非 VARIANT 值组成的 `IN` 列表。** `v IN ('a', 'b')` 会把 `v` CAST 为列表的类型，因此对象按其 JSON 文本比较。这与 `v = 'a'` 不同，后者会被拒绝。
 - **函数参数。** 当函数的参数是数值、字符串或 JSON 类型时，VARIANT 参数会被 CAST 为参数类型，例如 `ABS(v['n'])`、`LENGTH(v['s'])`、`SUM(v['n'])`。
 - **JSON 函数。** `JSON_EXTRACT`、`JSON_KEYS`、`JSON_CONTAINS`、`TO_JSON` 等函数可以直接传入 VARIANT 参数，Doris 会先用 `CAST(v AS JSON)` 转换。同时接受字符串参数的函数（`JSON_VALID`、`JSON_QUOTE`、`JSON_UNQUOTE`、`JSON_PARSE`）使用字符串形式，因此字符串根值传给 `JSON_PARSE(v)` 会失败；把 VARIANT 值转换为 JSON 请使用 `CAST(v AS JSON)`。整文档类的 JSON 函数需要读取并组装完整的 VARIANT 值，因此只读一个路径时，`v['a']['b']` 远快于 `JSON_EXTRACT(v, '$.a.b')`。
@@ -336,8 +340,8 @@ SELECT CAST(PARSE_TO_VARIANT('true') AS STRING)        AS bool_root,     -- 1
 
 隐式转换有两个代价：
 
-- **无法利用索引和裁剪。** 隐式 CAST 后的比较逐行求值。`v['id'] = 123` 这样的数值比较无法利用 zone map、BloomFilter 或倒排索引，即使路径在 Schema Template 中声明过也是如此。请把子路径 CAST 为它的存储类型，例如 `CAST(v['id'] AS BIGINT) = 123`。字符串子路径与字符串字面量比较时仍能使用倒排索引。
-- **`DECIMAL(38, 9)` 的限制。** 绝对值不小于 10^29 的值会变为 `NULL`，小数点后第 9 位之后的数字会被舍去。`v['n'] > 5` 匹配不到 `1e30`，`v['x'] = 0.1234567891` 也会匹配 `0.123456789`。值可能这么大或这么精确时，请 CAST 为 `DOUBLE` 或存储类型。
+- **无法利用索引和裁剪。** 当隐式转换的类型与路径的存储类型不同时（例如整数字面量按 `DECIMAL(38, 9)` 与 `BIGINT` 路径比较），比较会逐行求值，无法利用 zone map、BloomFilter 或倒排索引，即使路径在 Schema Template 中声明过也是如此。请把子路径 CAST 为它的存储类型，例如 `CAST(v['id'] AS BIGINT) = 123`。字符串子路径与字符串字面量比较时仍能使用倒排索引。
+- **`DECIMAL(38, 9)` 的限制。** 绝对值不小于 10^29 的值会变为 `NULL`，小数会四舍五入到小数点后第 9 位。`v['n'] > 5` 匹配不到 `1e30`，`v['x'] = 0.1234567891` 也会匹配 `0.123456789`。值可能这么大或这么精确时，请 CAST 为 `DOUBLE` 或存储类型。
 
 以下情况 Doris 不做隐式转换，需要显式 CAST：
 
@@ -580,6 +584,10 @@ SELECT k, v FROM tpl_demo ORDER BY k;
 - `"abc"`、`"x"`、`"not a time"` 无法转换，因此被丢弃。
 - 带小数部分的 JSON 数值在转换前会先解析为 `DOUBLE`，因此 `DECIMAL` 路径可能丢失精度。如需保留全部位数，请把这类值写成 JSON 字符串（参见 [FAQ](#faq)）。
 - 日期和 IP 值必须写成 JSON 字符串：`{"date": 2020-01-01}` 与 `{"ip": 127.0.0.1}` 都不是合法 JSON，应写作 `{"date": "2020-01-01"}` 与 `{"ip": "127.0.0.1"}`。
+
+:::caution
+只有当值的 JSON 类型能够转换为声明类型时，才会进行转换。`IPV4`、`IPV6` 或 `TIMESTAMPTZ` 路径上出现 JSON 数值时，整次写入会失败。如果同一次写入在 `DATE`、`DATETIME`、`TIMESTAMPTZ`、`IPV4` 或 `IPV6` 路径上混有 JSON 字符串和数值，该路径上合法的值也可能被丢弃。这类路径的值请写成 JSON 字符串。
+:::
 
 ### 读取模板路径 {#reading-template-paths}
 
@@ -972,7 +980,7 @@ SELECT * FROM example_table WHERE data_string LIKE '%doris%';
    - 请检查是否把路径 CAST 为其存储类型（隐式的数值比较无法使用索引）、是否因为类型冲突被提升为 JSONB、或是否误以为给 VARIANT“整体”建的索引可用于子列。
 5. 为什么 `ORDER BY v['a']` 把 `"10"` 排在 `9` 之后，或者 `GROUP BY v['a']` 把 `1` 和 `"1"` 分成两组？
    - VARIANT 的排序和相等判断首先看值的种类：数值排在字符串之前，数值永远不等于字符串。需要数值语义或字典序时，请把路径 CAST 为同一类型。参见[比较、分组与排序](#comparison-grouping-and-ordering)。
-6. 为什么 `COALESCE(v['a'], 0)` 返回定点数，或者对字符串值返回 `NULL`？
+6. 为什么 `v['a']` 是字符串时，`COALESCE(v['a'], 0)` 返回 `0.000000000`，而 `IF(..., v['a'], 1)` 返回 `NULL`？
    - 把 VARIANT 与其他类型混用时，VARIANT 值会被转换为另一侧的类型。请写成 `COALESCE(v['a'], CAST(0 AS VARIANT))` 以保持 VARIANT 结果，或把 `v['a']` CAST 为所需类型。参见[隐式转换](#implicit-conversion)。
 7. 为什么 DECIMAL 写入 VARIANT 列时出现小数位/精度丢失？
    - JSON 中带小数部分的数值会推断为 `DOUBLE` 而不是 `DECIMAL`，因此可能丢失末位小数。即使在 Schema Template 中把路径声明为 `DECIMAL`（例如 `v VARIANT<'num': DECIMAL(9, 3)>`），写入时也会先解析为 `DOUBLE` 再转换，仍不能完全保证精度。应在 JSON 文档中把该值写成字符串，例如 `PARSE_TO_VARIANT('{"num": "12.345"}')`，写入时会直接由字符串转换为 `DECIMAL(9, 3)`，不丢精度。
