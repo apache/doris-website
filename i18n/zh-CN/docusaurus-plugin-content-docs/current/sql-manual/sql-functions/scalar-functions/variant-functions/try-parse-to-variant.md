@@ -2,13 +2,13 @@
 {
     "title": "TRY_PARSE_TO_VARIANT",
     "language": "zh-CN",
-    "description": "TRY_PARSE_TO_VARIANT 尝试把完整 JSON 值解析为 VARIANT，并在解析或校验失败时返回 SQL NULL，而不是使当前查询直接失败。"
+    "description": "TRY_PARSE_TO_VARIANT 把一个完整的 JSON 值解析为 VARIANT。遇到超长 key、重复 key 等解析错误时返回 SQL NULL 而不是报错；非法 JSON 文本默认保留为 VARIANT 字符串。"
 }
 ---
 
 ## 功能
 
-`TRY_PARSE_TO_VARIANT` 尝试把一个完整 JSON 值解析为 `VARIANT`。函数名中的 `TRY_` 表示：发生解析错误时返回 SQL `NULL`，而不是使查询失败。该函数自 Doris 4.1.4 起支持。
+`TRY_PARSE_TO_VARIANT` 尝试把一个完整 JSON 值解析为 `VARIANT`。函数名中的 `TRY_` 表示：发生解析错误时返回 SQL `NULL`，而不是使查询失败。默认情况下，非法 JSON 文本不算解析错误，详见“返回值”。该函数自 Doris 4.1.4 起支持；本页描述的是 Doris 5.0.0 及之后版本中的行为。
 
 ## 语法
 
@@ -27,8 +27,8 @@ TRY_PARSE_TO_VARIANT(<json_value>)
 返回可为 NULL 的 `VARIANT` 值。
 
 - 合法输入返回解析后的 VARIANT 值。
-- 对象 key 超过 `variant_max_json_key_length` 字节（BE 配置，默认 255），或同一对象中有重复 key 时，返回 SQL `NULL`。
-- 不是合法 JSON 的文本与 [PARSE_TO_VARIANT](./parse-to-variant) 一样，作为 VARIANT 字符串返回。只有当 BE 配置 `variant_throw_exeception_on_invalid_json` 为 `true`（默认 `false`）时，才返回 SQL `NULL`。
+- 以下解析错误返回 SQL `NULL`：对象 key 超过 `variant_max_json_key_length` 字节（BE 配置，默认 255）、同一对象中有重复 key、嵌套超过 128 层、字符串不是合法的 UTF-8。
+- 非法 JSON 文本，以及包含超出 [-2^63, 2^64 - 1] 的整数或超出 `DOUBLE` 范围的数值的 JSON，与 [PARSE_TO_VARIANT](./parse-to-variant.md) 一样作为 VARIANT 字符串返回。只有当 BE 配置 `variant_throw_exeception_on_invalid_json` 为 `true`（默认 `false`）时，才返回 SQL `NULL`。
 - 输入为 SQL `NULL` 时返回 SQL `NULL`。
 - JSON 字面量 `null` 返回 VARIANT `null`，不是 SQL `NULL`。
 
@@ -70,7 +70,7 @@ SELECT CAST(
 +------------+
 ```
 
-JSON `null` 不是 SQL `NULL`，不是合法 JSON 的文本保留为字符串：
+JSON `null` 不等于 SQL `NULL`；非法 JSON 文本会保留为字符串：
 
 ```sql
 SELECT TRY_PARSE_TO_VARIANT('null') IS NULL AS json_null_is_sql_null,
@@ -87,6 +87,6 @@ SELECT TRY_PARSE_TO_VARIANT('null') IS NULL AS json_null_is_sql_null,
 
 ## 使用说明
 
-- 如果解析错误应该使查询失败并暴露数据质量问题，请使用 [PARSE_TO_VARIANT](./parse-to-variant)。
+- 如果解析错误应该使查询失败并暴露数据质量问题，请使用 [PARSE_TO_VARIANT](./parse-to-variant.md)。
 - 本函数只会把解析错误转换为 SQL `NULL`，不会改变合法 JSON `null` 的含义。
-- Stream Load 等导入作业按与本函数相同的规则解析 JSON 文本，参见[解析错误](../../../basic-element/sql-data-types/semi-structured/VARIANT#parse-errors)。
+- Stream Load 等导入作业按与本函数相同的规则解析 JSON 文本，参见[解析错误](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#parse-errors)。

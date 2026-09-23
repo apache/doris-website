@@ -16,7 +16,7 @@ Use this guide when you are deciding how to model a new `VARIANT` workload. It h
 - If the JSON is very wide, should I start with default behavior, sparse columns, or DOC mode?
 - Which settings should I leave at defaults, and which ones should I change first?
 
-If you already know you want `VARIANT` and only need syntax or type rules, go to [VARIANT](./VARIANT). If you want the smallest runnable import example, go to [Import Variant Data](../../../../data-operate/import/complex-types/variant).
+If you already know you want `VARIANT` and only need syntax or type rules, go to [VARIANT](./VARIANT.md). If you want the smallest runnable import example, go to [Import Variant Data](../../../../data-operate/import/complex-types/variant.md).
 
 :::tip Why choose VARIANT
 `VARIANT` keeps JSON flexible, but Doris can still apply Subcolumnization to frequently used paths. That lets common filters, aggregations, and path-level indexes work well without freezing the whole document schema in advance. On very wide JSON, storage-layer optimizations keep Subcolumnization practical at much larger path counts.
@@ -60,7 +60,7 @@ You have a wide-JSON problem when path count keeps growing and starts to create 
 
 ## Key Concepts
 
-Before reading the storage modes below, make sure these terms are clear. Each is explained in 2-3 lines; for implementation details, see [VARIANT](./VARIANT).
+Before reading the storage modes below, make sure these terms are clear. Each is explained in 2-3 lines; for implementation details, see [VARIANT](./VARIANT.md).
 
 **Subcolumnization.** When data is written into a `VARIANT` column, Doris automatically discovers JSON paths and extracts hot paths as independent columnar subcolumns for efficient analytics.
 
@@ -212,6 +212,7 @@ Use it when ingest throughput is the first priority, the workload frequently nee
 Watch for:
 - DOC mode is not the default answer for every wide-JSON workload. If hot-path analytics dominates, sparse columns usually fit better.
 - DOC mode and sparse columns are mutually exclusive. They cannot be enabled at the same time.
+- A column that has a Schema Template cannot be altered, so its `variant_doc_materialization_min_rows` cannot change later. Choose the value when you create the table.
 
 ### Schema Template
 
@@ -243,6 +244,7 @@ Use it when only a few fields are business-critical and those paths need stricte
 Watch for:
 - Do not turn the whole JSON schema into a static template. That defeats the point of `VARIANT`.
 - Schema Template should cover key paths only; the rest stays dynamic.
+- The Schema Template cannot be changed after the column is created. Decide the key paths before you load production data.
 
 ## Performance
 
@@ -277,8 +279,8 @@ Key takeaways:
 ### Query Phase
 
 - **Do not use `SELECT *` as the main query pattern for very wide `VARIANT` columns.** Without DOC mode, `SELECT *` or `SELECT variant_col` must reconstruct large JSON from all subcolumns, which is much slower than specifying paths like `SELECT v['path']`.
-- **Always CAST subpaths when the query depends on type.** Type inference may not match expectations. If `v['id']` is actually stored as STRING but you compare it with an integer literal, the path is cast to a number for the comparison, so indexes are not used and values that are not numbers never match.
-- **Know which comparison you get.** Comparing a path with a literal casts the path to a type chosen from the literal. Comparing, grouping, joining, or sorting VARIANT values uses VARIANT semantics instead: numbers sort before strings, and `1` never equals `"1"`. See [Comparison, grouping, and ordering](./VARIANT#comparison-grouping-and-ordering).
+- **CAST subpaths to their stored type in filters.** A comparison such as `v['id'] = 123` casts the path implicitly and is evaluated row by row, so zone maps, BloomFilter, and indexes are not used. Write `CAST(v['id'] AS BIGINT) = 123`, with the type the path is stored as (check it with `DESC` after `SET describe_extend_variant_column = true`). A string path compared with a string literal needs no CAST.
+- **Know which comparison you get.** Comparing a path with a literal casts the path to a type chosen from the literal. Comparing two VARIANT values, or grouping, joining, or sorting by a VARIANT value, uses VARIANT semantics instead: numbers sort before strings, and `1` never equals `"1"`. See [Comparison, grouping, and ordering](./VARIANT.md#comparison-grouping-and-ordering).
 
 ### Operations Phase
 
@@ -310,7 +312,7 @@ SELECT variant_type(payload['user_id']) FROM event_log;
 
 ## Related Reading
 
-- [VARIANT](./VARIANT)
-- [Import Variant Data](../../../../data-operate/import/complex-types/variant)
-- [Storage Format V3](../../../../table-design/storage-format)
+- [VARIANT](./VARIANT.md)
+- [Import Variant Data](../../../../data-operate/import/complex-types/variant.md)
+- [Storage Format V3](../../../../table-design/storage-format.md)
 - [SEARCH Function](../../../../table-design/index/inverted-index/search-function.md)

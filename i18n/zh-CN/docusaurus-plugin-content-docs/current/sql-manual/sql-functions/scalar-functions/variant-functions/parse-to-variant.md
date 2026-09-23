@@ -8,7 +8,7 @@
 
 ## 功能
 
-`PARSE_TO_VARIANT` 将一个完整 JSON 值解析为 `VARIANT`，支持 JSON 对象、数组、字符串、数字、布尔值和 JSON 字面量 `null`。该函数自 Doris 4.1.4 起支持。
+`PARSE_TO_VARIANT` 将一个完整 JSON 值解析为 `VARIANT`，支持 JSON 对象、数组、字符串、数字、布尔值和 JSON 字面量 `null`。该函数自 Doris 4.1.4 起支持；本页描述的是 Doris 5.0.0 及之后版本中的行为。
 
 ## 语法
 
@@ -28,9 +28,9 @@ PARSE_TO_VARIANT(<json_value>)
 
 - 输入为 SQL `NULL` 时返回 SQL `NULL`。
 - 输入为 JSON 字面量 `null` 时返回 VARIANT `null`，它与 SQL `NULL` 不同。
-- 不是合法 JSON 的文本会作为 VARIANT 字符串返回。该行为由 BE 配置 `variant_throw_exeception_on_invalid_json`（默认 `false`）控制；设置为 `true` 后，非法 JSON 会使查询失败。
+- 非法 JSON 文本会作为 VARIANT 字符串返回；包含超出 [-2^63, 2^64 - 1] 的整数或超出 `DOUBLE` 范围的数值的 JSON 也是如此，整段文本变为一个字符串。该行为由 BE 配置 `variant_throw_exeception_on_invalid_json`（默认 `false`）控制；设置为 `true` 后，这类输入会使查询失败。
 - 输入为空字符串时返回空对象 `{}`。
-- 对象 key 超过 `variant_max_json_key_length` 字节（BE 配置，默认 255）或同一对象中有重复 key 时，查询失败。
+- 以下情况查询失败：对象 key 超过 `variant_max_json_key_length` 字节（BE 配置，默认 255）；同一对象中有重复 key（BE 配置 `variant_enable_duplicate_json_path_check` 为 `true` 时保留第一个值，不报错）；嵌套超过 128 层；字符串不是合法的 UTF-8。
 
 ## 示例
 
@@ -99,7 +99,7 @@ SELECT PARSE_TO_VARIANT(NULL) IS NULL AS is_sql_null;
 +-------------+
 ```
 
-不是合法 JSON 的文本会保留为字符串：
+非法 JSON 文本会保留为字符串：
 
 ```sql
 SELECT CAST(PARSE_TO_VARIANT('{"id":') AS STRING) AS value,
@@ -126,5 +126,5 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = [INVALID_ARGUMENT]Parse json do
 
 ## 使用说明
 
-- 如果希望解析错误返回 SQL `NULL` 而不是使查询失败，请使用 [TRY_PARSE_TO_VARIANT](./try-parse-to-variant)。
-- `PARSE_TO_VARIANT` 会显式解析 JSON。相比之下，`CAST(string AS VARIANT)` 以及通过 `INSERT` 把字符串写入 VARIANT 列，都会把输入保留为 VARIANT 字符串，不解析 JSON。用 `INSERT` 写入 JSON 文本时，请用 `PARSE_TO_VARIANT` 包裹。详见[写入数据](../../../basic-element/sql-data-types/semi-structured/VARIANT#write-data)与[其他类型 CAST 为 VARIANT](../../../basic-element/sql-data-types/semi-structured/VARIANT#cast-to-variant)。
+- 如果希望解析错误返回 SQL `NULL` 而不是使查询失败，请使用 [TRY_PARSE_TO_VARIANT](./try-parse-to-variant.md)。
+- `PARSE_TO_VARIANT` 会显式解析 JSON。相比之下，`CAST(string AS VARIANT)` 以及通过 `INSERT` 把字符串写入 VARIANT 列，都会把输入保留为 VARIANT 字符串，不解析 JSON。用 `INSERT` 写入 JSON 文本时，请用 `PARSE_TO_VARIANT` 包裹。详见[写入数据](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#write-data)与[其他类型 CAST 为 VARIANT](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#cast-to-variant)。

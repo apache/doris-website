@@ -9,7 +9,7 @@
 ## 功能
 
 `VARIANT_TYPE` 函数用于返回 `VARIANT` 值的类型名称。
-该函数通常用于调试或分析 `VARIANT` 数据的结构，辅助进行类型判断和数据处理。
+该函数通常用于调试或分析 `VARIANT` 数据的结构，辅助进行类型判断和数据处理。本页描述的是 Doris 5.0.0 及之后版本中的行为。
 
 ## 语法
 
@@ -31,20 +31,21 @@ VARIANT_TYPE(variant_value)
 | `string` | 字符串 |
 | `bool` | `true` 或 `false` |
 | `tinyint`、`smallint`、`int`、`bigint` | 整数，按能容纳该值的最小类型报告 |
-| `decimal` | 定点数，包括超出 `BIGINT` 范围的整数 |
+| `decimal` | 定点数，包括超出 `BIGINT` 范围的整数和 `LARGEINT` 值 |
 | `float`、`double` | 浮点数 |
 | `date` | 日期 |
-| `timestamp`、`timestamp_ntz` | 带时区或不带时区的时间戳 |
+| `timestamp` | 带时区的时间戳 |
+| `timestamp_ntz` | 不带时区的时间戳，如 `DATETIME`、`TIMESTAMP_NS` 值 |
 | `null` | VARIANT `null`（JSON `null`） |
-| `binary`、`time`、`uuid` | 这些类型的值，JSON 解析不会产生这些类型 |
+| `binary`、`time`、`uuid` | Doris 的 JSON 解析和 CAST 都不会产生这些类型的值，它们可能来自其他系统写入的 VARIANT 数据，例如 Parquet 文件 |
 
 输入为 SQL `NULL` 时返回 SQL `NULL`。
 
 ## 使用说明
 
-1. 用于查看 `VARIANT` 列中值的实际类型。对于从表中读取的值，结果反映的是存储后的值，例如写在 Schema Template 路径之外的 `DATE` 会以字符串存储。参见[存储会保留什么](../../../basic-element/sql-data-types/semi-structured/VARIANT#what-storage-keeps)。
-2. 函数会读取每一行，实际使用中请用 `LIMIT` 限制行数。
-3. 如需查看表中每个子列的存储类型，请使用 `SET describe_extend_variant_column = true;` 后执行 `DESC`。
+1. 用于查看 `VARIANT` 列中值的实际类型。对于从表中读取的值，结果反映的是存储后的值，例如写在 Schema Template 路径之外的 `DATE` 会以字符串存储。参见[写入后值的规范化](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps)。
+2. 结果是值的类型，而不是路径的存储类型：从 `BIGINT` 路径读出的整数可能是 `tinyint`。如需查看表中每个子列的存储类型，请使用 `SET describe_extend_variant_column = true;` 后执行 `DESC`。
+3. 函数会读取每一行，实际使用中请用 `LIMIT` 限制行数。
 
 ## 示例
 

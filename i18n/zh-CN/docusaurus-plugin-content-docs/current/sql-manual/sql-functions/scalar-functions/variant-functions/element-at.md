@@ -45,7 +45,7 @@ ELEMENT_AT(container, key_or_index)
 1. **ARRAY 数组以及 Doris 5.0.0 及后续版本中的 VARIANT 数组，索引都从 1 开始**，不是从 0 开始；
 2. ARRAY 和 VARIANT 数组都支持负数索引，`-1` 表示最后一个元素，`-2` 表示倒数第二个，以此类推；
 3. `ELEMENT_AT(container, key_or_index)` 函数的功能与 `container[key_or_index]` 作用一致（详细见示例）；
-4. 对于 `VARIANT`，在查询中计算出的值里，值为 JSON `null` 的成员会返回 VARIANT `null`，它不是 SQL `NULL`；从表中读取的数据不会存储值为 `null` 的成员，同样的访问返回 SQL `NULL`。参见 [NULL 语义](../../../basic-element/sql-data-types/semi-structured/VARIANT#null-semantics)。
+4. 对于 `VARIANT`，在查询中计算出的值里，值为 JSON `null` 的成员会返回 VARIANT `null`，它不是 SQL `NULL`；表中不会存储数组之外、值为 `null` 的对象成员，因此对从表中读取的数据做同样的访问会返回 SQL `NULL`。参见 [NULL 语义](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#null-semantics)。
 
 ```sql
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 1);  -- 10

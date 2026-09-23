@@ -8,7 +8,7 @@
 
 ## Description
 
-`PARSE_TO_VARIANT` parses one complete JSON value into `VARIANT`. It accepts JSON objects, arrays, strings, numbers, booleans, and the JSON literal `null`. This function is available in Doris 4.1.4 and later.
+`PARSE_TO_VARIANT` parses one complete JSON value into `VARIANT`. It accepts JSON objects, arrays, strings, numbers, booleans, and the JSON literal `null`. This function is available in Doris 4.1.4 and later; this page describes its behavior in Doris 5.0.0 and later.
 
 ## Syntax
 
@@ -28,9 +28,9 @@ Returns a `VARIANT` value.
 
 - SQL `NULL` input returns SQL `NULL`.
 - The JSON literal `null` returns a VARIANT `null`, which is different from SQL `NULL`.
-- Text that is not valid JSON is returned as a VARIANT string. This is controlled by the BE configuration `variant_throw_exeception_on_invalid_json` (default `false`); when it is `true`, invalid JSON makes the query fail.
+- Text that is not valid JSON is returned as a VARIANT string. So is JSON that contains an integer outside [-2^63, 2^64 - 1] or a number outside the `DOUBLE` range: the whole text becomes one string. This is controlled by the BE configuration `variant_throw_exeception_on_invalid_json` (default `false`); when it is `true`, such input makes the query fail.
 - An empty string returns an empty object `{}`.
-- The query fails when an object key is longer than `variant_max_json_key_length` bytes (BE configuration, default 255) or when an object contains duplicate keys.
+- The query fails when an object key is longer than `variant_max_json_key_length` bytes (BE configuration, default 255), when an object contains duplicate keys (unless the BE configuration `variant_enable_duplicate_json_path_check` is `true`, which keeps the first value), when nesting is deeper than 128 levels, or when a string is not valid UTF-8.
 
 ## Example
 
@@ -126,5 +126,5 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = [INVALID_ARGUMENT]Parse json do
 
 ## Usage Notes
 
-- Use [TRY_PARSE_TO_VARIANT](./try-parse-to-variant) when a parse error should return SQL `NULL` instead of failing the query.
-- `PARSE_TO_VARIANT` explicitly parses JSON. By contrast, `CAST(string AS VARIANT)` and `INSERT` of a string into a VARIANT column keep the input as a VARIANT string and do not parse JSON. To write JSON text with `INSERT`, wrap it in `PARSE_TO_VARIANT`. See [Write data](../../../basic-element/sql-data-types/semi-structured/VARIANT#write-data) and [CAST to VARIANT](../../../basic-element/sql-data-types/semi-structured/VARIANT#cast-to-variant).
+- Use [TRY_PARSE_TO_VARIANT](./try-parse-to-variant.md) when a parse error should return SQL `NULL` instead of failing the query.
+- `PARSE_TO_VARIANT` explicitly parses JSON. By contrast, `CAST(string AS VARIANT)` and `INSERT` of a string into a VARIANT column keep the input as a VARIANT string and do not parse JSON. To write JSON text with `INSERT`, wrap it in `PARSE_TO_VARIANT`. See [Write data](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#write-data) and [CAST to VARIANT](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#cast-to-variant).

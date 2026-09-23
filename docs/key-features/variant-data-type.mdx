@@ -19,7 +19,7 @@ featureCard:
     - semi-structured
 ---
 
-> **TL;DR** Apache Doris `VARIANT` is a column type for JSON whose shape changes over time. On write, Apache Doris parses each document, infers a type per JSON path, and persists hot paths as their own [columnar subcolumns](./columnar-storage), defaulting to 2048 subcolumns per VARIANT column. Filters and aggregations on `v['user_id']` then read one column instead of parsing the whole document. VARIANT went GA in Apache Doris 2.1.0 (March 2024), inspired by Snowflake and ClickHouse.
+> **TL;DR** Apache Doris `VARIANT` is a column type for JSON whose shape changes over time. On write, Apache Doris parses each document, infers a type per JSON path, and persists hot paths as their own [columnar subcolumns](./columnar-storage.mdx), defaulting to 2048 subcolumns per VARIANT column. Filters and aggregations on `v['user_id']` then read one column instead of parsing the whole document. VARIANT went GA in Apache Doris 2.1.0 (March 2024), inspired by Snowflake and ClickHouse.
 
 ![Apache Doris VARIANT Data Type: A column type that ingests JSON without a fixed schema, then stores hot paths as native columnar subcolumns for column-store-speed analytics.](/images/next/key-features/variant-data-type.jpg)
 ## Why use the VARIANT data type in Apache Doris? {#why}
@@ -40,14 +40,14 @@ The Apache Doris VARIANT data type is a semi-structured column type. VARIANT acc
 - **`Subcolumn`**: an independent on-disk column generated from a JSON path. Each subcolumn has its own encoding, compression, zone map, and bloom filter, just like a static column.
 - **`Subcolumnization`**: the write-time process that promotes hot paths from JSON into subcolumns. Controlled by `variant_max_subcolumns_count`, default `2048`.
 - **`Schema Template`**: the optional `VARIANT<'path' : TYPE, ...>` clause that pins selected paths to a fixed type so the storage and indexes stay stable across loads.
-- **`Sparse column`**: a shared fallback column where long-tail paths land when the path count exceeds the subcolumn budget. One physical column, many logical paths.
+- **`Sparse column`**: shared fallback storage where long-tail paths land when the path count exceeds the subcolumn budget. Many logical paths share one physical column, or a few columns when sparse sharding is enabled.
 - **`Type promotion`**: the rule that decides what to do when the same path arrives as `INT` in one row and `STRING` in another. Integers of different widths widen (`TINYINT` to `BIGINT`); other conflicts, such as integers and doubles or numbers and strings, fall back to `JSONB`.
 
 ## How does the Apache Doris VARIANT data type work? {#how}
 
 Apache Doris VARIANT works by parsing each JSON document at write time, inferring a type per JSON path, and persisting frequent paths as independent columnar subcolumns while long-tail paths land in a shared sparse column. For one path, the lifecycle on disk:
 
-1. **Parse and infer.** As JSON enters the memtable, the writer adds every leaf path to a prefix tree and picks the narrowest type that fits the values: `BIGINT`, `DOUBLE`, `STRING`, one-dimensional `ARRAY<T>`, or a nested `VARIANT`.
+1. **Parse and infer.** As JSON enters the memtable, the writer adds every leaf path to a prefix tree and picks one storage type per path: `BIGINT` for integers, `DOUBLE` for fractional numbers, `STRING`, `BOOLEAN`, or `ARRAY<T>` for arrays of scalars. Nested objects become deeper paths.
 2. **Promote or fall back.** If a new value conflicts with the current type, Doris widens where it can (integers of different widths become `BIGINT`). Otherwise, for example when integers meet doubles or strings, the path falls back to `JSONB` and queries lose pushdown on that path until the schema is corrected.
 3. **Write subcolumns or sparse.** Paths with the highest non-null ratio become independent subcolumns, encoded and compressed exactly like static columns. Once `variant_max_subcolumns_count` is reached, remaining low-frequency paths are packed into the sparse column.
 4. **Merge schemas.** Each rowset records its own subcolumn schema. Compaction merges rowsets using the *least common column schema*, so a new field added today does not require an `ALTER TABLE`.
@@ -67,7 +67,7 @@ CREATE TABLE github_events (
 )
 DUPLICATE KEY(id)
 DISTRIBUTED BY HASH(id) BUCKETS 4
-PROPERTIES ("storage_format" = "V3");
+PROPERTIES ("storage_format" = "V3", "replication_num" = "1");
 
 -- INSERT keeps a plain string as a VARIANT string, so parse the JSON text.
 -- Load jobs such as Stream Load parse JSON automatically.
@@ -109,8 +109,8 @@ Use Apache Doris VARIANT when the JSON schema evolves but most queries hit a han
 - Tables with a stable, well-understood schema. Plain typed columns are simpler to reason about, simpler to index, and they cannot accidentally promote to `JSONB`. Reach for `VARIANT` only when the schema actually changes.
 - Primary keys, sort keys, or join keys. A `VARIANT` column cannot be a key column. VARIANT values can be joined and sorted, but more slowly than static columns. If `id` is the join key, declare it as a static `BIGINT`.
 - Whole-document searches like `WHERE v LIKE '%doris%'`. The inverted index lives on subpaths, not the whole column. Keep the original JSON in a parallel `STRING` column and index that, or enable DOC mode for fast `SELECT v`.
-- Fixed shapes you already know at design time. If every row has exactly `{a, b, c}` and the types never change, [`STRUCT`](../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT) is a better contract: it forbids unexpected fields, where `VARIANT` silently absorbs them.
-- Very wide JSON (10k+ paths) without tuning. Default subcolumnization caps at 2048 paths. Beyond that, plan for sparse columns or DOC mode and read the [VARIANT Workload Guide](../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide) before loading production data.
+- Fixed shapes you already know at design time. If every row has exactly `{a, b, c}` and the types never change, [`STRUCT`](../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md) is a better contract: it forbids unexpected fields, where `VARIANT` silently absorbs them.
+- Very wide JSON (10k+ paths) without tuning. Default subcolumnization caps at 2048 paths. Beyond that, plan for sparse columns or DOC mode and read the [VARIANT Workload Guide](../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md) before loading production data.
 
 ## Performance / numbers {#performance}
 
@@ -119,10 +119,10 @@ Use Apache Doris VARIANT when the JSON schema evolves but most queries hit a han
 
 ## Further reading {#further-reading}
 
-- [VARIANT SQL reference: full syntax, type rules, indexes, configuration](../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT)
-- [VARIANT Workload Guide: when to pick default, sparse, DOC mode, or Schema Template](../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide)
-- [Importing VARIANT data: Stream Load, Routine Load, and Broker Load examples](../data-operate/import/complex-types/variant)
-- [Columnar Storage feature card: how subcolumns are encoded, paged, and indexed under the hood](./columnar-storage)
-- [Inverted Index overview: the index VARIANT uses for text-in-JSON search](../table-design/index/inverted-index/overview)
-- [LLM SQL Functions](./llm-sql-functions): the `AI_*` family whose JSON output (from `AI_EXTRACT`, `AI_CLASSIFY`, and so on) is a natural fit for a VARIANT column.
+- [VARIANT SQL reference: full syntax, type rules, indexes, configuration](../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md)
+- [VARIANT Workload Guide: when to pick default, sparse, DOC mode, or Schema Template](../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md)
+- [Importing VARIANT data: Stream Load, Routine Load, and Broker Load examples](../data-operate/import/complex-types/variant.md)
+- [Columnar Storage feature card: how subcolumns are encoded, paged, and indexed under the hood](./columnar-storage.mdx)
+- [Inverted Index overview: the index VARIANT uses for text-in-JSON search](../table-design/index/inverted-index/overview.md)
+- [LLM SQL Functions](./llm-sql-functions.mdx): the `AI_*` family whose JSON output (from `AI_EXTRACT`, `AI_CLASSIFY`, and so on) is a natural fit for a VARIANT column.
 - [Apache Doris blog: Variant in Apache Doris 2.1.0, the original announcement and benchmarks](/blog/variant-in-apache-doris-2.1/)
