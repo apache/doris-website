@@ -55,7 +55,7 @@ If a DOG Stack is already running (installed with this chart, deployed another w
 - Cluster-level RBAC permissions: the collector creates a ClusterRole and a ClusterRoleBinding.
 - Nodes can pull the images `otel/opentelemetry-collector-contrib`, `otel/opentelemetry-collector-k8s`, `grafana/grafana`, `velodb/doris-app-plugin`, and `busybox`. For a private registry, set `global.imagePullSecrets` in `ai-observe-stack` and `imagePullSecrets` in `dog-k8s-collector`, and point the image parameters at your mirror: `gateway.image.repository`, `grafana.image.repository`, `dorisPlugin.image.repository`, and `global.helperImages.busybox` / `global.helperImages.curl` in `ai-observe-stack`; `agent.image.repository` and `cluster.image.repository` in `dog-k8s-collector`.
 - Doris, one of the following:
-  - An existing Doris cluster whose FE ports 9030 (MySQL protocol) and 8030 (HTTP) are reachable from the Kubernetes cluster, and an account with the `CREATE DATABASE` privilege.
+  - An existing Doris cluster whose FE ports 9030 (MySQL protocol) and 8030 (HTTP) are reachable from the Kubernetes cluster, and an account with the `CREATE DATABASE` privilege. The gateway writes data through Stream Load: FE redirects each request to a BE at the address the BE registered in Doris (shown by `SHOW BACKENDS`), so these BE addresses and the BE HTTP port (8040 by default) must also be reachable from the gateway pods.
   - Or let the chart deploy Doris: a PersistentVolume provisioner, and at least 2 CPU cores and 4 GiB of memory each for FE and BE.
 
 The commands in this article use the release name `dog` and the namespace `dog`. The object names below are derived from them; if you use other names, replace them accordingly.
@@ -129,7 +129,7 @@ Choose where Doris runs:
 The repository provides two sizes:
 
 - `examples/ai-observe-stack/dev.yaml`: one FE and one BE, no persistence, one gateway, debug output on. For trials only.
-- `examples/ai-observe-stack/prod.yaml`: three FE and three BE, persistence, three gateways, and Ingress. A starting point for production.
+- `examples/ai-observe-stack/prod.yaml`: three FE and three BE, persistence, three gateways, and Ingress. A starting point for production. Before using it, adapt the environment-specific settings: `storageClass` (set to the AWS `gp3`), the Ingress class, hosts, and TLS issuer, and the Grafana password (`CHANGE_ME`).
 
 ```Bash
 helm install dog ./ai-observe-stack -n dog --create-namespace -f examples/ai-observe-stack/dev.yaml
@@ -174,6 +174,8 @@ When the installation finishes, Helm prints NOTES, which include the OTLP gRPC a
    Open http://localhost:3000 and log in as `admin` with the password above. The dashboards are empty at this point, because nothing sends data to the gateway yet.
 
 ## Step 2: Install the Kubernetes Collector {#step-2-install-the-kubernetes-collector}
+
+The backend installed in Step 1 only receives data. The collector gathers data from the Kubernetes cluster and sends it to the gateway: on every node, the agent reads the stdout and stderr of all containers and collects kubelet and node metrics; the cluster collector collects cluster-level metrics and Kubernetes Events. Every record carries the pod, namespace, workload, and cluster name. Without the collector, only applications that send OTLP to the gateway directly reach DOG Stack, and there are no container logs, node or cluster metrics, or Events. Install one collector release in every Kubernetes cluster to be observed.
 
 1. Confirm that the gateway is reachable from the cluster to be collected. Replace the address with yours.
 
@@ -262,7 +264,7 @@ logs:
    kubectl logs -n dog ds/dog-k8s-collector-agent | grep '"level":"error"'
    ```
 
-3. Query the data in Doris. With Option B, forward the FE port first and connect with a MySQL client:
+3. Query the data in Doris. With Option A, connect a MySQL client to port 9030 of your Doris FE. With Option B, forward the FE port first and connect with a MySQL client:
 
    ```Bash
    kubectl port-forward -n dog svc/dog-ai-observe-stack-doris-fe-service 9030:9030
@@ -277,7 +279,7 @@ logs:
    GROUP BY 1 ORDER BY 2 DESC;
    ```
 
-   The first records arrive within 30 seconds after the agent starts. `service_name` is the workload name (Deployment, StatefulSet, or DaemonSet), and Kubernetes Events appear as `kubernetes-events`. Only log lines written after the installation are collected; existing log files on the nodes are not read again.
+   The first records arrive within 30 seconds after the agent starts. `service_name` is the name of the workload that owns the pod, looked up in the order Deployment, StatefulSet, DaemonSet, CronJob, and Job, or the pod name for a standalone pod. Kubernetes Events appear as `kubernetes-events`. Only log lines written after the installation are collected; existing log files on the nodes are not read again.
 
 4. Open Grafana and check the dashboards:
 
@@ -468,7 +470,7 @@ kubectl delete crd dorisclusters.doris.selectdb.com
 | `helm test` fails, or the gateway log reports Doris errors | Check that Doris FE ports 9030 and 8030 are reachable and that the account has the `CREATE DATABASE` privilege. View the gateway log with `kubectl logs -n dog dog-ai-observe-stack-otel-gateway-0`. |
 | Agent pod reports `CreateContainerConfigError`, is rejected by Pod Security, or logs `permission denied` on `/var/log/pods` | The namespace enforces `restricted`. Add the `privileged` label, see Step 2. |
 | Agent log reports `connection refused` or `Unavailable` | The gateway address is wrong, the gateway is down, or a network policy blocks port 4317. Records are buffered on the node and sent after the problem is fixed. |
-| Agent log reports `unknown time zone` | A rule sets a time zone but the node has no `/usr/share/zoneinfo`. Use UTC, or set `agent.image.repository` to `otel/opentelemetry-collector-contrib`. |
+| Agent pod stays in `ContainerCreating`, and its events report `MountVolume.SetUp failed for volume "zoneinfo"` | The node has no time zone database (some minimal operating system images). Set `agent.tzdata.hostPath: ""`, and keep `timezone` and the `timestamp.timezone` of every rule at UTC. |
 | A namespace has no logs | It is excluded by `logs.namespaces.exclude` or `logs.containers.exclude`, or no new lines were written after the installation. |
 | Logs arrive but `service_name` is empty | The agent cannot read pod metadata. Check the agent log for RBAC `forbidden` errors. |
 | A parsing rule has no effect (`dog.log.rule` is empty) | `selector.container` contains a pod name instead of a container name, or an earlier rule matched first. Verify with `hack/test-rule.sh`. |
