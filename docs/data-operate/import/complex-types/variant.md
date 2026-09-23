@@ -35,11 +35,12 @@ Before reading this document, choose the reference that best matches your needs:
 
 - The examples below load **CSV** and **JSON** files. In a load job, any string field that is loaded into a `VARIANT` column is parsed as JSON, so other formats work the same way when the source column is a string, for example a Parquet `STRING` column. The Arrow format cannot load `VARIANT` columns.
 
-## How loaded values are converted
+## How loaded values are handled
 
 - **`NOT NULL` columns:** a row whose VARIANT value is SQL `NULL`, including a value that failed to parse into SQL `NULL`, is filtered. Filtered rows count toward `max_filter_ratio` (default `0`), so by default the load job fails.
 - **INSERT is different:** `INSERT` does not parse strings. `INSERT INTO t VALUES (1, '{"a": 1}')` stores the VARIANT string `{"a": 1}`, and so does `INSERT INTO ... SELECT` from `s3()`, `hdfs()`, or `local()`. Use `PARSE_TO_VARIANT` to store an object.
-Stored values are normalized: outside arrays, an object member whose value is `null`, an empty object, or an empty array is removed when the value is stored. The same value computed in a query keeps every member:
+
+Stored values are normalized: outside arrays, object members whose value is `null`, `{}`, or `[]` are removed. The same value computed in a query keeps every member:
 
 ```sql
 CREATE TABLE variant_norm (k INT, v VARIANT)
@@ -67,7 +68,7 @@ SELECT v AS stored, v['a'] IS NULL AS a_is_null FROM variant_norm;
 +---------+-----------+
 ```
 
-For the complete rules, see [Write data](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#write-data) and [What storage keeps](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps).
+For parse errors and the other normalization rules, see [Parse errors](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#parse-errors) and [What storage keeps](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps).
 
 ## Storage format recommendation (V3)
 

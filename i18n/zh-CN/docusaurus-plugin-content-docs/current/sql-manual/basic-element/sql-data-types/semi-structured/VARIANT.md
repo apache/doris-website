@@ -296,7 +296,7 @@ SELECT CAST(PARSE_TO_VARIANT('true') AS STRING)        AS bool_root,     -- 1
 
 VARIANT 中有两种 null：
 
-- **SQL `NULL`** 表示没有值：值为 `NULL` 的列、不存在的路径（如 `v['no_such_key']`）或失败的 CAST。
+- **SQL `NULL`** 表示没有值，它来自值为 `NULL` 的列、不存在的路径（如 `v['no_such_key']`）或失败的 CAST。
 - **VARIANT `null`** 是一个值，即 JSON 字面量 `null`，例如 `PARSE_TO_VARIANT('null')` 或数组中的 `null` 元素。`VARIANT_TYPE` 对它返回 `null`。
 
 | 操作 | SQL `NULL` | VARIANT `null` |
@@ -309,7 +309,7 @@ VARIANT 中有两种 null：
 | `ORDER BY v` | 由 `NULLS FIRST` 或 `NULLS LAST` 决定位置 | 升序时排在其他所有非 NULL 值之前 |
 | `CAST(v AS STRING)` | SQL `NULL` | 字符串 `null` |
 
-值写入表后，值为 `null` 的对象成员会被移除，读回时是 SQL `NULL`；根值 `null` 读回为 `{}`（参见[写入后值的规范化](#what-storage-keeps)）。因此对于已存储的数据，`v['a'] IS NULL` 无法区分成员不存在和成员为 `null`。
+值写入表后，数组之外、值为 `null` 的对象成员会被移除，读取时返回 SQL `NULL`；根值 `null` 读回为 `{}`（参见[写入后值的规范化](#what-storage-keeps)）。因此对于已存储的数据，`v['a'] IS NULL` 无法区分成员不存在和成员为 `null`。
 
 ## 比较、分组与排序 {#comparison-grouping-and-ordering}
 
@@ -325,7 +325,7 @@ VARIANT 值按逻辑值比较，而不是按文本或物理编码比较。相等
 | `ORDER BY`、`ORDER BY ... LIMIT` | 支持 | |
 | 窗口函数的 `PARTITION BY` 与 `ORDER BY` | 支持 | |
 | `COUNT(v)`、`COLLECT_LIST(v)`、`ARRAY_AGG(v)` | 支持 | |
-| `IF`、`CASE`、`IFNULL`、`COALESCE` | 支持 | 把 VARIANT 与其他类型混用时，VARIANT 值会被转换为另一侧的类型。 |
+| `IF`、`CASE`、`IFNULL`、`COALESCE` | 支持 | 把 VARIANT 与其他类型混用时，VARIANT 值会被转换为另一侧的类型（另一侧为整数时是 `DECIMAL(38, 9)`），无法转换的值变为 `NULL`。 |
 | `CAST(v AS ARRAY<VARIANT>)`、`EXPLODE_VARIANT_ARRAY`，以及对 `ARRAY<VARIANT>` 使用 `EXPLODE`、`EXPLODE_OUTER` | 支持 | |
 | VARIANT 值之间的 `<`、`<=`、`>`、`>=`、`BETWEEN` | 不支持 | 请先 CAST 为具体类型。 |
 | 整个 VARIANT 值与非 VARIANT 值比较，如 `v = 1` | 不支持 | 子路径会被隐式转换：`v['a'] = 1` 可以执行。 |
@@ -544,18 +544,18 @@ v1 VARIANT<
 
 ## ALTER TABLE {#alter-table}
 
-VARIANT 列支持：
+`ALTER TABLE` 支持：
 
 - `ADD COLUMN` 新增可为 NULL 的 VARIANT 列，可以带 Schema Template 和属性。
 - `DROP COLUMN`、`RENAME COLUMN` 和 `MODIFY COLUMN ... COMMENT '...'`。
 - `ADD INDEX` 和 `DROP INDEX`。带 `field_pattern` 的索引只能在 `CREATE TABLE` 中定义。
-- 对没有 Schema Template 的列：把 `NOT NULL` 改为 `NULL`，以及修改 `variant_doc_materialization_min_rows`。`MODIFY COLUMN` 需要给出完整的列定义，其他属性请原样写出。
+- 对没有 Schema Template 的列：把 `NOT NULL` 改为 `NULL`，以及修改 `variant_doc_materialization_min_rows`。`MODIFY COLUMN` 需要给出完整的列定义，未写出的属性取对应 `default_variant_*` 会话变量的值，因此取值与会话变量不同的属性都要写出。
 
 不支持：
 
 - `ADD COLUMN ... VARIANT NOT NULL`：通过 `ALTER` 新增的 `NOT NULL` 列需要默认值，而 VARIANT 只允许 `DEFAULT NULL`。`NOT NULL` 的 VARIANT 列请在 `CREATE TABLE` 中定义。
-- 添加或修改 Schema Template。带 Schema Template 的列除注释外不能修改列定义，原样重写同一个模板也不行。
-- 修改其他列属性、把 `NULL` 改为 `NOT NULL`，以及在 VARIANT 与其他类型之间转换。
+- 为已有的列添加 Schema Template。带 Schema Template 的列，`MODIFY COLUMN` 只能修改注释，其他修改都会失败，原样重写同一个模板也不行。
+- 修改 `variant_doc_materialization_min_rows` 以外的属性、把 `NULL` 改为 `NOT NULL`，以及在 VARIANT 与其他类型之间转换。
 - 在 VARIANT 列上执行 `BUILD INDEX`。
 
 需要这些修改时，请按新定义建表，再用 `INSERT INTO ... SELECT` 复制数据；源列为 `STRING` 时用 `PARSE_TO_VARIANT` 包裹。
@@ -564,6 +564,7 @@ VARIANT 列支持：
 ALTER TABLE t ADD COLUMN v2 VARIANT NOT NULL;
 -- ERROR: Field 'v2' doesn't have a default value
 
+-- v 是没有 Schema Template 的 VARIANT 列。
 ALTER TABLE t MODIFY COLUMN v VARIANT<'id': INT>;
 -- ERROR: Can not change variant schema templates
 ```
@@ -852,7 +853,7 @@ SELECT * FROM example_table WHERE data_string LIKE '%doris%';
 ## FAQ {#faq}
 
 1. VARIANT 中的 `null` 与 SQL `NULL` 相同吗？
-   - 不相同。查询中计算出的 JSON `null` 是 VARIANT `null` 值，而不存在的路径是 SQL `NULL`。值写入表后，值为 `null` 的对象成员会被移除，读取时返回 SQL `NULL`。参见 [NULL 语义](#null-semantics)。
+   - 不相同。查询中计算出的 JSON `null` 是 VARIANT `null` 值，而不存在的路径是 SQL `NULL`。值写入表后，数组之外、值为 `null` 的对象成员会被移除，读取时返回 SQL `NULL`。参见 [NULL 语义](#null-semantics)。
 2. 为什么执行 `INSERT INTO t VALUES (1, '{"a": 1}')` 后，`v['a']` 返回 `NULL`？
    - `INSERT` 会把字符串作为 VARIANT 字符串写入，不做解析；从 `s3()`、`hdfs()` 或其他字符串列执行 `INSERT INTO ... SELECT` 也是如此。请使用 `PARSE_TO_VARIANT('{"a": 1}')`，或通过 Stream Load 等导入作业导入数据。参见[写入数据](#write-data)。
 3. 为什么一整个合法的 JSON 文档被存成了字符串？
@@ -862,6 +863,6 @@ SELECT * FROM example_table WHERE data_string LIKE '%doris%';
 5. 为什么 `ORDER BY v['a']` 把 `"10"` 排在 `9` 之后，或者 `GROUP BY v['a']` 把 `1` 和 `"1"` 分成两组？
    - VARIANT 的排序和相等判断首先看值的种类：数值排在字符串之前，数值永远不等于字符串。需要数值语义或字典序时，请把路径 CAST 为同一类型。参见[比较、分组与排序](#comparison-grouping-and-ordering)。
 6. 为什么 `v['a']` 是字符串时，`COALESCE(v['a'], 0)` 返回 `0.000000000`，而 `IF(..., v['a'], 1)` 返回 `NULL`？
-   - 把 VARIANT 与其他类型混用时，VARIANT 值会被转换为另一侧的类型。请写成 `COALESCE(v['a'], CAST(0 AS VARIANT))` 以保持 VARIANT 结果，或把 `v['a']` CAST 为所需类型。
+   - 把 VARIANT 与其他类型混用时，VARIANT 值会被转换为另一侧的类型，另一侧是整数时为 `DECIMAL(38, 9)`。`"abc"` 这样的字符串无法转换，变为 `NULL`，所以 `COALESCE` 返回的 `0` 显示为 `0.000000000`。请写成 `COALESCE(v['a'], CAST(0 AS VARIANT))` 以保持 VARIANT 结果，或把 `v['a']` CAST 为所需类型。
 7. 为什么 DECIMAL 写入 VARIANT 列时出现小数位/精度丢失？
    - JSON 中带小数部分的数值会推断为 `DOUBLE` 而不是 `DECIMAL`，因此可能丢失末位小数。即使在 Schema Template 中把路径声明为 `DECIMAL`（例如 `v VARIANT<'num': DECIMAL(9, 3)>`），写入时也会先解析为 `DOUBLE` 再转换，仍不能完全保证精度。应在 JSON 文档中把该值写成字符串，例如 `PARSE_TO_VARIANT('{"num": "12.345"}')`，写入时会直接由字符串转换为 `DECIMAL(9, 3)`，不丢精度。

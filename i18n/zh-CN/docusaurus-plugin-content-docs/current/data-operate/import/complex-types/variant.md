@@ -35,11 +35,12 @@
 
 - 下文示例导入的是 **CSV** 和 **JSON** 文件。导入作业会把写入 `VARIANT` 列的任何字符串字段按 JSON 解析，因此只要源列是字符串（例如 Parquet 的 `STRING` 列），其他格式也同样适用。Arrow 格式不能导入 `VARIANT` 列。
 
-## 导入时值如何转换
+## 导入时值如何处理
 
 - **`NOT NULL` 列：** VARIANT 值为 SQL `NULL` 的行会被过滤，包括解析失败而得到 SQL `NULL` 的值。被过滤的行计入 `max_filter_ratio`（默认 `0`），因此默认情况下导入作业会失败。
 - **INSERT 的行为不同：** `INSERT` 不解析字符串。`INSERT INTO t VALUES (1, '{"a": 1}')` 写入的是 VARIANT 字符串 `{"a": 1}`，从 `s3()`、`hdfs()`、`local()` 执行 `INSERT INTO ... SELECT` 也是如此。需要写入对象时请使用 `PARSE_TO_VARIANT`。
-写入表时值会被规范化：数组之外的对象成员如果值为 `null`、空对象或空数组，写入时会被移除。同一个值在查询中计算时保留所有成员：
+
+写入表时值会被规范化：数组之外、值为 `null`、`{}` 或 `[]` 的对象成员会被移除。同一个值在查询中计算时保留所有成员：
 
 ```sql
 CREATE TABLE variant_norm (k INT, v VARIANT)
@@ -67,7 +68,7 @@ SELECT v AS stored, v['a'] IS NULL AS a_is_null FROM variant_norm;
 +---------+-----------+
 ```
 
-完整规则请参阅[写入数据](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#write-data)与[写入后值的规范化](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps)。
+解析错误和其他规范化规则请参阅[解析错误](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#parse-errors)与[写入后值的规范化](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps)。
 
 ## 存储格式建议（V3）
 

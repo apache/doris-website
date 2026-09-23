@@ -45,13 +45,14 @@ ELEMENT_AT(container, key_or_index)
 1. **ARRAY and, in Doris 5.0.0 and later, VARIANT array indexes start from 1**, not 0.
 2. Negative indexes are supported for ARRAY and VARIANT array access: `-1` represents the last element, `-2` the second-to-last, and so on.
 3. The `ELEMENT_AT(container, key_or_index)` function behaves the same as `container[key_or_index]` (see examples for details).
-4. For `VARIANT`, a JSON `null` member of a value computed in a query is returned as a VARIANT `null`, which is not SQL `NULL`. In data read from a table, `null` members of objects outside arrays are not stored, so the same access returns SQL `NULL`. See [NULL semantics](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#null-semantics).
 
 ```sql
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 1);  -- 10
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 2);  -- 20
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
 ```
+
+4. For `VARIANT`, a JSON `null` member of a value computed in a query is returned as a VARIANT `null`, which is not SQL `NULL`. In data read from a table, `null` members of objects outside arrays are not stored, so the same access returns SQL `NULL`. See [NULL semantics](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#null-semantics).
 
 ## Examples
 

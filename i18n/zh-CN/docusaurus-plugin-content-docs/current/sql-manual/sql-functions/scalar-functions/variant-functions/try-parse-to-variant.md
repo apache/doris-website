@@ -27,8 +27,9 @@ TRY_PARSE_TO_VARIANT(<json_value>)
 返回可为 NULL 的 `VARIANT` 值。
 
 - 合法输入返回解析后的 VARIANT 值。
-- 以下解析错误返回 SQL `NULL`：对象 key 超过 `variant_max_json_key_length` 字节（BE 配置，默认 255）、同一对象中有重复 key、嵌套超过 128 层、字符串不是合法的 UTF-8。
+- 以下解析错误返回 SQL `NULL`：对象 key 超过 `variant_max_json_key_length` 字节（BE 配置，默认 255）、同一对象中有重复 key（BE 配置 `variant_enable_duplicate_json_path_check` 为 `true` 时保留第一个值，不返回 NULL）、嵌套超过 128 层、字符串不是合法的 UTF-8。
 - 非法 JSON 文本，以及包含超出 [-2^63, 2^64 - 1] 的整数或超出 `DOUBLE` 范围的数值的 JSON，与 [PARSE_TO_VARIANT](./parse-to-variant.md) 一样作为 VARIANT 字符串返回。只有当 BE 配置 `variant_throw_exeception_on_invalid_json` 为 `true`（默认 `false`）时，才返回 SQL `NULL`。
+- 输入为空字符串时返回空对象 `{}`。
 - 输入为 SQL `NULL` 时返回 SQL `NULL`。
 - JSON 字面量 `null` 返回 VARIANT `null`，不是 SQL `NULL`。
 

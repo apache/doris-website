@@ -27,8 +27,9 @@ TRY_PARSE_TO_VARIANT(<json_value>)
 Returns a nullable `VARIANT` value.
 
 - Valid input returns the parsed VARIANT value.
-- These parse errors return SQL `NULL`: an object key longer than `variant_max_json_key_length` bytes (BE configuration, default 255), duplicate keys in one object, nesting deeper than 128 levels, and a string that is not valid UTF-8.
+- These parse errors return SQL `NULL`: an object key longer than `variant_max_json_key_length` bytes (BE configuration, default 255), duplicate keys in one object (unless the BE configuration `variant_enable_duplicate_json_path_check` is `true`, which keeps the first value), nesting deeper than 128 levels, and a string that is not valid UTF-8.
 - Text that is not valid JSON, and JSON that contains an integer outside [-2^63, 2^64 - 1] or a number outside the `DOUBLE` range, are returned as a VARIANT string, the same as [PARSE_TO_VARIANT](./parse-to-variant.md). They return SQL `NULL` only when the BE configuration `variant_throw_exeception_on_invalid_json` is `true` (default `false`).
+- An empty string returns an empty object `{}`.
 - SQL `NULL` input returns SQL `NULL`.
 - The JSON literal `null` returns a VARIANT `null`, not SQL `NULL`.
 
