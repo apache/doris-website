@@ -21,7 +21,7 @@ DECODE(<binary>, <charset>)
 | Parameter | Description |
 | :--- | :--- |
 | `<binary>` | The binary value to decode. Type: VARBINARY. |
-| `<charset>` | A constant expression that evaluates to the character set used by the input bytes. Type: STRING. Supported values are `US-ASCII`, `ISO-8859-1`, `UTF-8`, `UTF-16BE`, `UTF-16LE`, and `UTF-16`. A table column is not allowed. |
+| `<charset>` | A string literal naming the character set used by the input bytes, or `NULL`. Supported values are `US-ASCII`, `ISO-8859-1`, `UTF-8`, `UTF-16BE`, `UTF-16LE`, and `UTF-16`. A column or other expression is not allowed. |
 
 ## Return Value
 
