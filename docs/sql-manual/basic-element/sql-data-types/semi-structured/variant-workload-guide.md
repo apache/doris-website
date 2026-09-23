@@ -34,7 +34,7 @@ If you already know you want `VARIANT` and only need syntax or type rules, go to
 Prefer static columns when these conditions dominate:
 
 - The schema is stable and known in advance.
-- Core fields are regularly used as join keys, sort keys, or tightly controlled typed columns.
+- Core fields are regularly used as join keys, sort keys, or tightly controlled typed columns. VARIANT values can be joined and sorted, but typed columns are faster and keep typed semantics.
 - The main requirement is to archive raw JSON, not to analyze by path.
 
 ## Four Questions First
@@ -277,7 +277,8 @@ Key takeaways:
 ### Query Phase
 
 - **Do not use `SELECT *` as the main query pattern for very wide `VARIANT` columns.** Without DOC mode, `SELECT *` or `SELECT variant_col` must reconstruct large JSON from all subcolumns, which is much slower than specifying paths like `SELECT v['path']`.
-- **Always CAST subpaths when the query depends on type.** Type inference may not match expectations. If `v['id']` is actually stored as STRING but you compare with an integer literal, indexes will not be used and the result may be wrong.
+- **Always CAST subpaths when the query depends on type.** Type inference may not match expectations. If `v['id']` is actually stored as STRING but you compare it with an integer literal, the path is cast to a number for the comparison, so indexes are not used and values that are not numbers never match.
+- **Know which comparison you get.** Comparing a path with a literal casts the path to a type chosen from the literal. Comparing, grouping, joining, or sorting VARIANT values uses VARIANT semantics instead: numbers sort before strings, and `1` never equals `"1"`. See [Comparison, grouping, and ordering](./VARIANT#comparison-grouping-and-ordering).
 
 ### Operations Phase
 
@@ -290,11 +291,11 @@ Key takeaways:
 After creating a table, use this minimal sequence to verify everything works:
 
 ```sql
--- Insert sample data
+-- Insert sample data. INSERT stores a plain string as a VARIANT string, so parse the JSON text.
 INSERT INTO event_log VALUES
-    ('2025-01-01 10:00:00', 1001, 'click', '{"page": "home", "user_id": 42, "duration_ms": 320}'),
-    ('2025-01-01 10:00:01', 1002, 'purchase', '{"item": "widget", "price": 9.99, "user_id": 42}'),
-    ('2025-01-01 10:00:02', 1003, 'click', '{"page": "search", "user_id": 99, "query": "doris variant"}');
+    ('2025-01-01 10:00:00', 1001, 'click', PARSE_TO_VARIANT('{"page": "home", "user_id": 42, "duration_ms": 320}')),
+    ('2025-01-01 10:00:01', 1002, 'purchase', PARSE_TO_VARIANT('{"item": "widget", "price": 9.99, "user_id": 42}')),
+    ('2025-01-01 10:00:02', 1003, 'click', PARSE_TO_VARIANT('{"page": "search", "user_id": 99, "query": "doris variant"}'));
 
 -- Verify data
 SELECT payload['user_id'], payload['page'] FROM event_log;
@@ -303,8 +304,8 @@ SELECT payload['user_id'], payload['page'] FROM event_log;
 SET describe_extend_variant_column = true;
 DESC event_log;
 
--- Check per-row types
-SELECT variant_type(payload) FROM event_log;
+-- Check the type of one path, row by row
+SELECT variant_type(payload['user_id']) FROM event_log;
 ```
 
 ## Related Reading

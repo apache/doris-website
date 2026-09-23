@@ -35,6 +35,15 @@ Before reading this document, choose the reference that best matches your needs:
 
 - Currently, only **CSV** and **JSON** data formats are supported for loading into a `VARIANT` column.
 
+## How loaded values are converted
+
+- **CSV format:** the text of a `VARIANT` field is parsed as JSON. `\N` loads SQL `NULL`. Text that is not valid JSON is loaded as a VARIANT string.
+- **JSON format:** the JSON value of the field is loaded as it is. If the value is a JSON string, its content is parsed again as JSON text, so `"123"` loads the number `123`. A JSON `null` or a missing field loads SQL `NULL`.
+- **INSERT is different:** `INSERT` does not parse strings. `INSERT INTO t VALUES (1, '{"a": 1}')` stores the VARIANT string `{"a": 1}`; use `PARSE_TO_VARIANT('{"a": 1}')` to store an object.
+- **Stored values are normalized:** object members whose value is `null`, and members that are empty objects or arrays, are not stored.
+
+For the complete rules, see [Write data](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT#write-data) and [What storage keeps](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT#what-storage-keeps).
+
 ## Storage format recommendation (V3)
 
 <!-- Knowledge type: Architecture selection decision -->
@@ -218,7 +227,7 @@ created_at: 2020-11-14 02:00:00
 
 By default, `DESC` only shows the top-level VARIANT column and does not expand the inner subcolumns:
 
-``` sql
+```sql
 mysql> desc test_variant;
 +------------------------------------------------------------+------------+------+-------+---------+-------+
 | Field                                                      | Type       | Null | Key   | Default | Extra |
@@ -235,7 +244,7 @@ mysql> desc test_variant;
 
 After enabling `describe_extend_variant_column`, you can view the subcolumn types inferred from the VARIANT column:
 
-``` sql
+```sql
 mysql> set describe_extend_variant_column = true;
 Query OK, 0 rows affected (0.01 sec)
 
@@ -264,7 +273,7 @@ mysql> desc test_variant;
 
 You can also display the inference results per partition:
 
-``` sql
+```sql
 DESCRIBE ${table_name} PARTITION ($partition_name);
 ```
 
@@ -303,3 +312,12 @@ Check the `Status` field in the returned JSON:
 
 - `Status` of `Success` indicates a successful load.
 - `NumberLoadedRows` should equal `NumberTotalRows`, and `NumberFilteredRows` should be `0`.
+
+### Q6: Why does `INSERT` store my JSON text as a string?
+
+`INSERT` converts a string to VARIANT with `CAST(string AS VARIANT)`, which keeps the string and does not parse it. Load jobs such as Stream Load parse JSON text; with `INSERT`, wrap the text in `PARSE_TO_VARIANT`:
+
+```sql
+INSERT INTO testdb.test_variant (id, actor)
+VALUES (1, PARSE_TO_VARIANT('{"id": 282080, "login": "brianchandotcom"}'));
+```

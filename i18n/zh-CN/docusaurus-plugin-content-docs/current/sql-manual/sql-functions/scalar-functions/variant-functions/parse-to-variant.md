@@ -27,8 +27,10 @@ PARSE_TO_VARIANT(<json_value>)
 返回 `VARIANT` 值。
 
 - 输入为 SQL `NULL` 时返回 SQL `NULL`。
-- 输入为 JSON 字面量 `null` 时返回 Variant/JSON `null`，它与 SQL `NULL` 不同。
-- JSON 非法、对象 key 重复且当前校验设置不允许、嵌套深度超限或发生其他校验错误时，查询失败。
+- 输入为 JSON 字面量 `null` 时返回 VARIANT `null`，它与 SQL `NULL` 不同。
+- 不是合法 JSON 的文本会作为 VARIANT 字符串返回。该行为由 BE 配置 `variant_throw_exeception_on_invalid_json`（默认 `false`）控制；设置为 `true` 后，非法 JSON 会使查询失败。
+- 输入为空字符串时返回空对象 `{}`。
+- 对象 key 超过 `variant_max_json_key_length` 字节（BE 配置，默认 255）或同一对象中有重复 key 时，查询失败。
 
 ## 示例
 
@@ -42,11 +44,11 @@ SELECT CAST(
 ```
 
 ```text
-+----------------------------------------+
-| value                                  |
-+----------------------------------------+
-| {"id":42,"tags":["doris","sql"]}    |
-+----------------------------------------+
++----------------------------------+
+| value                            |
++----------------------------------+
+| {"id":42,"tags":["doris","sql"]} |
++----------------------------------+
 ```
 
 解析 JSON/JSONB 表达式：
@@ -97,17 +99,32 @@ SELECT PARSE_TO_VARIANT(NULL) IS NULL AS is_sql_null;
 +-------------+
 ```
 
-非法 JSON 会报错：
+不是合法 JSON 的文本会保留为字符串：
 
 ```sql
-SELECT PARSE_TO_VARIANT('{"id":');
+SELECT CAST(PARSE_TO_VARIANT('{"id":') AS STRING) AS value,
+       VARIANT_TYPE(PARSE_TO_VARIANT('{"id":'))    AS type;
 ```
 
 ```text
-ERROR: Parse json document failed
++--------+--------+
+| value  | type   |
++--------+--------+
+| {"id": | string |
++--------+--------+
+```
+
+重复 key 会报错：
+
+```sql
+SELECT PARSE_TO_VARIANT('{"id": 1, "id": 2}');
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [INVALID_ARGUMENT]Parse json document failed at row 0, error: [INVALID_ARGUMENT]Duplicate Variant object key
 ```
 
 ## 使用说明
 
-- 如果希望把非法输入转换为 SQL `NULL`，请使用 [TRY_PARSE_TO_VARIANT](./try-parse-to-variant)。
-- `PARSE_TO_VARIANT` 会显式解析 JSON。相比之下，`CAST(string AS VARIANT)` 会把输入保留为 VARIANT 字符串，不解析 JSON，详见 [VARIANT CAST 规则](../../../basic-element/sql-data-types/semi-structured/VARIANT#cast-规则)。
+- 如果希望解析错误返回 SQL `NULL` 而不是使查询失败，请使用 [TRY_PARSE_TO_VARIANT](./try-parse-to-variant)。
+- `PARSE_TO_VARIANT` 会显式解析 JSON。相比之下，`CAST(string AS VARIANT)` 以及通过 `INSERT` 把字符串写入 VARIANT 列，都会把输入保留为 VARIANT 字符串，不解析 JSON。用 `INSERT` 写入 JSON 文本时，请用 `PARSE_TO_VARIANT` 包裹。详见[写入数据](../../../basic-element/sql-data-types/semi-structured/VARIANT#write-data)与[其他类型 CAST 为 VARIANT](../../../basic-element/sql-data-types/semi-structured/VARIANT#cast-to-variant)。

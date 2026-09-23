@@ -35,6 +35,15 @@
 
 - 当前仅支持 **CSV** 和 **JSON** 两种数据格式导入 `VARIANT` 列。
 
+## 导入时值如何转换
+
+- **CSV 格式：** `VARIANT` 字段的文本按 JSON 解析。`\N` 导入为 SQL `NULL`。不是合法 JSON 的文本导入为 VARIANT 字符串。
+- **JSON 格式：** 字段对应的 JSON 值按原样导入。如果该值是 JSON 字符串，其内容会再按 JSON 文本解析一次，因此 `"123"` 导入为数值 `123`。JSON `null` 或缺失的字段导入为 SQL `NULL`。
+- **INSERT 的行为不同：** `INSERT` 不解析字符串。`INSERT INTO t VALUES (1, '{"a": 1}')` 写入的是 VARIANT 字符串 `{"a": 1}`；需要写入对象时请使用 `PARSE_TO_VARIANT('{"a": 1}')`。
+- **存储会规范化值：** 值为 `null` 的对象成员，以及值为空对象或空数组的成员，都不会被存储。
+
+完整规则请参阅[写入数据](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT#write-data)与[存储会保留什么](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT#what-storage-keeps)。
+
 ## 存储格式建议（V3）
 
 <!-- 知识类型: 架构选型决策 -->
@@ -218,7 +227,7 @@ created_at: 2020-11-14 02:00:00
 
 默认 `DESC` 输出仅展示顶层 VARIANT 列，不展开内部子列：
 
-``` sql
+```sql
 mysql> desc test_variant;
 +------------------------------------------------------------+------------+------+-------+---------+-------+
 | Field                                                      | Type       | Null | Key   | Default | Extra |
@@ -235,7 +244,7 @@ mysql> desc test_variant;
 
 开启 `describe_extend_variant_column` 后，可以查看 VARIANT 推导出的子列类型：
 
-``` sql
+```sql
 mysql> set describe_extend_variant_column = true;
 Query OK, 0 rows affected (0.01 sec)
 
@@ -264,7 +273,7 @@ mysql> desc test_variant;
 
 也可按 Partition 维度展示推导结果：
 
-``` sql
+```sql
 DESCRIBE ${table_name} PARTITION ($partition_name);
 ```
 
@@ -303,3 +312,12 @@ SET describe_extend_variant_column = true;
 
 - `Status` 为 `Success` 表示导入成功；
 - `NumberLoadedRows` 应等于 `NumberTotalRows`，且 `NumberFilteredRows` 为 `0`。
+
+### Q6：为什么 `INSERT` 把 JSON 文本存成了字符串？
+
+`INSERT` 通过 `CAST(string AS VARIANT)` 把字符串转换为 VARIANT，该转换保留字符串本身，不做解析。Stream Load 等导入作业会解析 JSON 文本；使用 `INSERT` 时，请用 `PARSE_TO_VARIANT` 包裹文本：
+
+```sql
+INSERT INTO testdb.test_variant (id, actor)
+VALUES (1, PARSE_TO_VARIANT('{"id": 282080, "login": "brianchandotcom"}'));
+```

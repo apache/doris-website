@@ -34,7 +34,7 @@
 当以下条件更占主导时，优先考虑静态列：
 
 - schema 稳定，并且可以提前定义清楚。
-- 核心字段经常作为 Join Key、排序键，或者必须严格类型治理。
+- 核心字段经常作为 Join Key、排序键，或者必须严格类型治理。VARIANT 值虽然可以参与 Join 和排序，但静态类型列更快，也保留类型本身的语义。
 - 主要诉求是原样存档 JSON，而不是按路径做分析。
 
 ## 先回答四个问题
@@ -277,7 +277,8 @@ PROPERTIES (
 ### 查询阶段
 
 - **不要把 `SELECT *` 当成超宽 `VARIANT` 列的主查询模式。** 没有 DOC mode 时，`SELECT *` 或 `SELECT variant_col` 需要从所有子列重组 JSON，远慢于指定路径查询如 `SELECT v['path']`。
-- **查询依赖路径类型时，务必显式 CAST。** 自动推断的类型可能与预期不一致。如果 `v['id']` 实际存储为 STRING，但你用整数字面量做比较，索引不会被使用，结果也可能不正确。
+- **查询依赖路径类型时，务必显式 CAST。** 自动推断的类型可能与预期不一致。如果 `v['id']` 实际存储为 STRING，但你用整数字面量做比较，该路径会被转换为数值再比较，因此索引不会被使用，非数字的值也永远不会匹配。
+- **弄清楚比较使用的是哪种语义。** 路径与字面量比较时，路径会根据字面量 CAST 为具体类型；而对 VARIANT 值做比较、分组、Join 或排序时，使用 VARIANT 语义：数值排在字符串之前，`1` 永远不等于 `"1"`。参见[比较、分组与排序](./VARIANT#comparison-grouping-and-ordering)。
 
 ### 运维阶段
 
@@ -290,11 +291,11 @@ PROPERTIES (
 建表后，用以下最小序列验证一切正常：
 
 ```sql
--- 插入示例数据
+-- 插入示例数据。INSERT 会把普通字符串作为 VARIANT 字符串写入，因此需要解析 JSON 文本。
 INSERT INTO event_log VALUES
-    ('2025-01-01 10:00:00', 1001, 'click', '{"page": "home", "user_id": 42, "duration_ms": 320}'),
-    ('2025-01-01 10:00:01', 1002, 'purchase', '{"item": "widget", "price": 9.99, "user_id": 42}'),
-    ('2025-01-01 10:00:02', 1003, 'click', '{"page": "search", "user_id": 99, "query": "doris variant"}');
+    ('2025-01-01 10:00:00', 1001, 'click', PARSE_TO_VARIANT('{"page": "home", "user_id": 42, "duration_ms": 320}')),
+    ('2025-01-01 10:00:01', 1002, 'purchase', PARSE_TO_VARIANT('{"item": "widget", "price": 9.99, "user_id": 42}')),
+    ('2025-01-01 10:00:02', 1003, 'click', PARSE_TO_VARIANT('{"page": "search", "user_id": 99, "query": "doris variant"}'));
 
 -- 验证数据
 SELECT payload['user_id'], payload['page'] FROM event_log;
@@ -303,8 +304,8 @@ SELECT payload['user_id'], payload['page'] FROM event_log;
 SET describe_extend_variant_column = true;
 DESC event_log;
 
--- 查看每行类型
-SELECT variant_type(payload) FROM event_log;
+-- 逐行查看某个路径的类型
+SELECT variant_type(payload['user_id']) FROM event_log;
 ```
 
 ## 延伸阅读

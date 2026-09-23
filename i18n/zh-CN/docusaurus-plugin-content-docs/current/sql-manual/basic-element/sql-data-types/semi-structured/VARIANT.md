@@ -2,15 +2,13 @@
 {
     "title": "VARIANT",
     "language": "zh-CN",
-    "description": "VARIANT 用于存储半结构化 JSON 数据，并支持带类型的路径访问、CAST、基于 Hash 的分组与去重，以及部分 SQL 操作。"
+    "description": "VARIANT 用于存储半结构化 JSON 数据。本页是 VARIANT 的参考文档，涵盖写入与解析、CAST、NULL 语义、比较与排序、Schema Template、ALTER TABLE、属性、索引和限制。"
 }
 ---
 
-## VARIANT
+## 描述 {#overview}
 
-## 描述
-
-VARIANT 类型用于存储半结构化 JSON 数据，可包含不同基础类型（整数、字符串、布尔等）以及一层数组与嵌套对象。写入时会自动基于 JSON Path 推断子列结构与类型，并对高频路径执行子列列式提取（Subcolumnization），使其以独立子列的形式参与分析，兼顾灵活性与性能。
+VARIANT 类型用于存储半结构化 JSON 数据，可以包含对象、数组、字符串、数值、布尔值和 `null`。写入时，Doris 会推断每个 JSON Path 的类型，并对高频路径执行子列列式提取（Subcolumnization），把它们存成独立的列式子列。查询这些路径时只读取所需的子列。
 
 :::tip 为什么使用 VARIANT
 如果文档结构会持续变化，但查询仍集中在少数热点路径上，`VARIANT` 的优势主要体现在三点：
@@ -22,266 +20,435 @@ VARIANT 类型用于存储半结构化 JSON 数据，可包含不同基础类型
 如果你还在决定默认模式、Sparse、DOC mode 还是 Schema Template，建议先阅读 [VARIANT 使用与配置指南](./variant-workload-guide)。本页主要提供语法、类型规则、索引、限制和配置参考。
 :::
 
-## 使用 VARIANT 类型
-
-### 建表语法
-
-建表时将列类型声明为 VARIANT：
-
-```sql
-CREATE TABLE IF NOT EXISTS ${table_name} (
-    k BIGINT,
-    v VARIANT
-)
-PROPERTIES("replication_num" = "1");
-```
-
-通过 Schema Template 约束部分 Path 的类型（更多见“扩展类型”）：
-
-```sql
-CREATE TABLE IF NOT EXISTS ${table_name} (
-    k BIGINT,
-    v VARIANT <
-        'id' : INT,            -- path 为 id 的子列被限制为 INT 类型
-        'message*' : STRING,   -- 前缀匹配 message* 的子列被限制为 STRING 类型
-        'tags*' : ARRAY<TEXT>  -- 前缀匹配 tags* 的子列被限制为 ARRAY<TEXT> 类型
-    >
-)
-PROPERTIES("replication_num" = "1");
-```
-
-### 查询语法
-
-```sql
--- 访问嵌套字段（返回类型为 VARIANT，需要显式或隐式 CAST 才能聚合/比较）
-SELECT v['properties']['title'] FROM ${table_name};
-
--- 聚合前显式 CAST 为确定类型
-SELECT CAST(v['properties']['title'] AS STRING) AS title
-FROM ${table_name}
-GROUP BY title;
-
--- 数组查询示例
-SELECT *
-FROM ${table_name}
-WHERE ARRAY_CONTAINS(CAST(v['tags'] AS ARRAY<TEXT>), 'Doris');
-```
-
-## 创建和访问值
-
 :::info 版本说明
-本节所述行为适用于 Doris 4.2 及后续版本。
+本页描述 Doris 5.0.0 及之后版本中的 VARIANT。与 Doris 4.x 相比，最容易影响已有 SQL 的差异有：
+
+- `INSERT` 会把字符串作为 VARIANT 字符串写入，不再按 JSON 解析。用 `INSERT` 写入 JSON 文本时请使用 `PARSE_TO_VARIANT`；Stream Load 等导入作业仍会解析 JSON。
+- 整个 VARIANT 值支持 `=`、`!=`、`<=>`、等值 Join、`ORDER BY` 和窗口键。
+- 即使路径在 Schema Template 中声明了类型，`v['path']` 仍是 `VARIANT` 类型，需要显式 CAST。
+
+Doris 4.x 的行为请参阅本页的 4.x 版本。
 :::
 
-VARIANT 值可以从 JSON 文本、JSON/JSONB 值或带确定类型的 SQL 表达式创建：
-
-- 如果要将字符串或 JSON/JSONB 表达式解析为结构化 VARIANT 值，请使用 [PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant)。
-- 如果要将受支持的 SQL 值转换为 VARIANT，请使用 `CAST(expression AS VARIANT)`。字符串会保留为 VARIANT 字符串值，该 CAST 不解析 JSON。
-
-### 解析 JSON 文本
+## 快速上手 {#quick-start}
 
 ```sql
-SELECT PARSE_TO_VARIANT('{"user": {"id": 42}, "active": true}');
-SELECT PARSE_TO_VARIANT('[10, 20, 30]');
-SELECT PARSE_TO_VARIANT(CAST('{"user": {"id": 42}}' AS JSON));
+CREATE TABLE events (
+    id BIGINT,
+    v  VARIANT
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+-- INSERT 会把字符串字面量保留为 VARIANT 字符串，因此 JSON 文本需要显式解析。
+INSERT INTO events VALUES
+    (1, PARSE_TO_VARIANT('{"user": {"id": 42, "name": "alice"}, "tags": ["doris", "sql"], "score": 9.5}')),
+    (2, PARSE_TO_VARIANT('{"user": {"id": 7, "name": "bob"}, "score": 3}'));
+
+SELECT id,
+       CAST(v['user']['name'] AS STRING) AS name,
+       v['tags'][1] AS first_tag
+FROM events
+WHERE v['score'] > 5;
 ```
 
-如果非法 JSON 应该返回 SQL `NULL` 而不是使查询失败，请使用 [TRY_PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/try-parse-to-variant)。
+```text
++------+-------+-----------+
+| id   | name  | first_tag |
++------+-------+-----------+
+|    1 | alice | doris     |
++------+-------+-----------+
+```
 
-### 访问对象和数组
+- `v['user']['name']` 和 `v['tags'][1]` 返回 `VARIANT` 值。数组下标从 1 开始。
+- 在 `v['score'] > 5` 中，子路径会根据另一侧操作数 CAST 为一个具体类型，这里是 `DECIMAL(38, 9)`。参见[隐式转换](#implicit-conversion)。
+- Stream Load 等导入作业会自动解析 JSON 文本。参见[写入数据](#write-data)。
 
-对象字段可以使用字符串 key 访问。在 Doris 4.2 及后续版本中，VARIANT 数组的正数索引从 1 开始，负数索引从数组末尾倒数。提取出的值仍是 `VARIANT`，如需按确定类型比较、计算或聚合，请先 CAST。
+## 定义 VARIANT 列 {#define-a-variant-column}
 
 ```sql
-SELECT CAST(PARSE_TO_VARIANT('{"user": {"id": 42}}')['user']['id'] AS BIGINT);
-SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), 1);  -- 10
-SELECT ELEMENT_AT(PARSE_TO_VARIANT('[10, 20, 30]'), -1); -- 30
+column_name VARIANT
+column_name VARIANT< field_definition [, field_definition ...] >
+column_name VARIANT< properties('key' = 'value' [, ...]) >
+column_name VARIANT< field_definition [, ...], properties('key' = 'value' [, ...]) >
+
+field_definition:
+    [MATCH_NAME | MATCH_NAME_GLOB] 'path_or_pattern' : data_type [COMMENT 'comment']
 ```
 
-对象和数组访问的详细说明请参见 [ELEMENT_AT](../../../sql-functions/scalar-functions/variant-functions/element-at)。
+- `field_definition` 列表就是 [Schema Template](#schema-template)，用于固定部分路径的存储类型。
+- `properties(...)` 用于设置列级存储属性，参见[列属性](#column-properties)。
+- VARIANT 列可以是 `NULL` 或 `NOT NULL`，默认值只能是 `NULL`。
 
-## CAST 规则
+```sql
+CREATE TABLE IF NOT EXISTS example_tbl (
+    k BIGINT,
+    v VARIANT<
+        'id' : INT,             -- 路径 id 以 INT 存储
+        'message*' : STRING,    -- 匹配 message* 的路径以 STRING 存储
+        'tags*' : ARRAY<TEXT>,  -- 匹配 tags* 的路径以 ARRAY<TEXT> 存储
+        properties('variant_max_subcolumns_count' = '2048')
+    > NULL
+)
+DUPLICATE KEY(k)
+DISTRIBUTED BY HASH(k) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+```
 
-VARIANT 的 CAST 包括两个方向：把受支持的 SQL 值转换为 VARIANT，以及把 VARIANT 中兼容的值转换为具体 SQL 类型。
+VARIANT 列在表中的使用范围：
 
-### 其他类型 CAST 为 VARIANT
+| 用法 | 是否支持 | 说明 |
+| --- | --- | --- |
+| Duplicate Key、Unique Key、Aggregate Key 表的 Value 列 | 支持 | 在 Aggregate Key 表中，聚合类型必须是 `REPLACE` 或 `REPLACE_IF_NOT_NULL`。 |
+| Key 列、分区列、分桶列 | 不支持 | |
+| 在表结构中嵌套在其他类型内（`ARRAY<VARIANT>`、`MAP`、`STRUCT`） | 不支持 | 查询结果仍可以是 `ARRAY<VARIANT>`，例如 `COLLECT_LIST(v)` 的结果。 |
+| 默认值 | 只能是 `NULL` | `DEFAULT '{}'` 等非 NULL 默认值会被拒绝。 |
 
-| 源类型 | 行为 |
+## 写入数据 {#write-data}
+
+### 输入如何变成 VARIANT 值 {#how-input-becomes-a-variant-value}
+
+| 写入方式 | 结果 |
 | --- | --- |
-| `CHAR`、`VARCHAR`、`STRING` | 将输入保留为 VARIANT 字符串，不解析看起来像 JSON 的文本。 |
-| `BOOLEAN` | 保留 Boolean 值。 |
-| `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT` | 保留整数值。 |
-| `FLOAT`、`DOUBLE` | 保留浮点数值。 |
-| `DECIMALV2`、`DECIMAL(p, s)`（`p <= 38`） | 保留 Decimal 值，但需满足下文限制。 |
-| `DATE`、`DATETIME`、`TIMESTAMP_NS`、`TIMESTAMPTZ` | 保留对应的逻辑类型和值。 |
-| `IPV4`、`IPV6` | 保留 IP 地址值。 |
-| `JSON` / `JSONB` | 将结构化值直接转换为 VARIANT；如果输入包含 VARIANT 无法表示的 JSONB 值类型，BE 会报错。 |
-| `ARRAY<T>` | 当 `T` 为 `VARIANT` 或也在该白名单中时递归转换每个元素，并保留 SQL NULL 元素。 |
-
-仅支持上表列出的源类型。其他源类型，包括 `MAP`、`STRUCT`、`TIME`、precision 超过 38 的 Decimal，以及包含不支持元素类型的数组，都会由 BE 报错。
+| `INSERT ... VALUES` 或 `INSERT ... SELECT` 写入 `CHAR`、`VARCHAR`、`STRING` 表达式 | VARIANT **字符串**。即使内容看起来像 JSON，也不会被解析。Group Commit 方式的 INSERT 行为相同。 |
+| `INSERT` 写入 `PARSE_TO_VARIANT(expr)` 或 `TRY_PARSE_TO_VARIANT(expr)` | 解析后的 JSON 值。参见[解析错误](#parse-errors)。 |
+| `INSERT` 写入 `JSON`/`JSONB` 表达式 | 按原结构直接转换。 |
+| `INSERT` 写入其他类型的表达式 | 带类型的值，参见[其他类型 CAST 为 VARIANT](#cast-to-variant)。 |
+| CSV 格式的导入作业（Stream Load、Broker Load、Routine Load） | 字段文本按 JSON 解析。`\N` 导入为 SQL `NULL`。 |
+| JSON 格式的导入作业 | 字段对应的 JSON 值。如果该值是 JSON 字符串，其内容会再按 JSON 文本解析一次：`"123"` 导入为数值 `123`，`"{\"a\": 1}"` 导入为对象，`"hello"` 仍是字符串 `hello`。JSON `null` 或缺失的字段导入为 SQL `NULL`。 |
 
 ```sql
--- 字符串会保留为 VARIANT 字符串根值，即使内容看起来像 JSON。
-SELECT CAST(CAST('{"id": 1}' AS VARIANT) AS STRING) AS string_value,
-       VARIANT_TYPE(CAST('{"id": 1}' AS VARIANT)) AS root_type;
--- string_value：{"id": 1}；root_type：string
+CREATE TABLE variant_tbl (k INT, v VARIANT)
+DUPLICATE KEY(k)
+DISTRIBUTED BY HASH(k) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
 
--- 需要结构化 VARIANT 值时，显式解析 JSON 文本。
-SELECT PARSE_TO_VARIANT('{"id": 1}') AS parsed_object;
--- {"id":1}
+INSERT INTO variant_tbl VALUES
+    (1, '{"a": 1}'),                     -- 写入为字符串
+    (2, PARSE_TO_VARIANT('{"a": 1}'));   -- 写入为对象
 
--- JSON/JSONB 输入按结构转换。
-SELECT CAST(CAST('{"id": 1}' AS JSON) AS VARIANT) AS parsed_object;
--- {"id":1}
+SELECT k, v, VARIANT_TYPE(v) AS type, v['a'] FROM variant_tbl ORDER BY k;
 ```
 
-字符串 CAST 不解析 JSON，因此非法 JSON 文本仍是合法的 VARIANT 字符串。如需严格解析 JSON，请使用 `PARSE_TO_VARIANT`；如需在解析失败时返回 SQL `NULL`，请使用 `TRY_PARSE_TO_VARIANT`。
+```text
++------+----------+--------+--------+
+| k    | v        | type   | v['a'] |
++------+----------+--------+--------+
+|    1 | {"a": 1} | string | NULL   |
+|    2 | {"a":1}  | object | 1      |
++------+----------+--------+--------+
+```
 
-### VARIANT CAST 为其他类型
+字符串根值输出时不带引号，因此写入的字符串看起来可能和 JSON 一样，可以用 `VARIANT_TYPE` 区分。如需把这类字符串转成结构化值，请通过 `PARSE_TO_VARIANT(CAST(v AS STRING))` 重新写入。
 
-VARIANT 可以 CAST 为兼容的标量、JSON/JSONB 或数组类型：
+分步骤的导入示例请参阅[导入 VARIANT 数据](../../../../data-operate/import/complex-types/variant)。
 
-| 目标类型 | 行为 |
+### 解析错误 {#parse-errors}
+
+[PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/parse-to-variant)、[TRY_PARSE_TO_VARIANT](../../../sql-functions/scalar-functions/variant-functions/try-parse-to-variant) 和导入作业使用同一个 JSON 解析器。导入作业处理错误的方式与 `TRY_PARSE_TO_VARIANT` 相同：
+
+| 输入 | `PARSE_TO_VARIANT` | `TRY_PARSE_TO_VARIANT` 与导入作业 |
+| --- | --- | --- |
+| 合法 JSON | 解析后的值 | 解析后的值 |
+| 不是合法 JSON 的文本，如 `hello` 或 `{"id":` | 保留为 VARIANT 字符串 | 保留为 VARIANT 字符串 |
+| 空字符串 | 空对象 `{}` | 空对象 `{}` |
+| 对象 key 超过 `variant_max_json_key_length` 字节（BE 配置，默认 255） | 报错 | SQL `NULL` |
+| 同一对象中有重复 key | 报错 | SQL `NULL` |
+
+非法 JSON 之所以保留为字符串，是因为 BE 配置 `variant_throw_exeception_on_invalid_json` 默认为 `false`。设置为 `true` 后，非法 JSON 的处理方式与上表最后两行相同。
+
+```sql
+SELECT VARIANT_TYPE(PARSE_TO_VARIANT('{"id": 1}')) AS valid_json,    -- object
+       VARIANT_TYPE(PARSE_TO_VARIANT('{"id":'))    AS invalid_json,  -- string
+       VARIANT_TYPE(CAST('{"id": 1}' AS VARIANT))  AS string_cast;   -- string
+```
+
+### 存储会保留什么 {#what-storage-keeps}
+
+值写入表时会被规范化，读回的值可能与写入前计算出的值不同：
+
+| 写入前 | 从表中读回 |
 | --- | --- |
-| `BOOLEAN` | 转换兼容的 Boolean 或标量根值。 |
-| `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT` | 将兼容的标量根值转换为指定整数类型。 |
-| `FLOAT`、`DOUBLE` | 转换兼容的数值根。 |
-| `DECIMALV2`、`DECIMAL(p, s)` | 将兼容的数值根转换为指定 Decimal 类型。 |
-| `DATE`、`DATETIME`、`TIMESTAMP_NS`、`TIMESTAMPTZ` | 转换兼容的日期时间根值。 |
-| `CHAR`、`VARCHAR`、`STRING` | 标量根值返回对应文本，对象和数组返回 JSON 文本。Variant/JSON `null` 返回字符串 `null`，外层 SQL `NULL` 仍是 SQL `NULL`。 |
-| `IPV4`、`IPV6` | 将兼容的 IP 地址根值转换为指定的 IP 地址类型。 |
-| `JSON` / `JSONB` | 按结构转换；如果 VARIANT 值包含 JSON/JSONB 无法表示的类型，BE 会报错。 |
-| `ARRAY<T>` | 当 `T` 为 `VARIANT` 或也在该白名单中时逐元素转换；不兼容元素遵循目标类型的 CAST 规则。 |
+| 值为 JSON `null` 的对象成员，如 `{"a": null, "b": 1}` | 该成员被移除：`{"b":1}`；`v['a']` 返回 SQL `NULL`。 |
+| 值为空对象或空数组的对象成员，以及按这些规则变空的对象，如 `{"a": {}, "b": [], "c": {"d": null}}` | 被移除：`{}` |
+| 根值为 JSON `null`，如 `PARSE_TO_VARIANT('null')` | 空对象 `{}` |
+| 数组中的 `null` 元素，如 `[1, null]` | 保留：`[1,null]`；该元素读回时是 VARIANT `null`。 |
+| 根值为空数组 `[]` 或空对象 `{}` | 保留 |
+| 不在 Schema Template 路径上的 `DATE`、`DATETIME` 值，如 `CAST(date_col AS VARIANT)` | 以文本形式存储，读回时是字符串 |
+| 同一路径上混有布尔值和数值 | 布尔值可能读回为 `1` 或 `0`，取决于同一次写入中值的先后顺序以及 Compaction |
+| 含 `.` 的 key，如 `{"a.b": 1}` | 按嵌套路径存储：`{"a":{"b":1}}`，`v['a.b']` 和 `v['a']['b']` 都返回 `1`。同时包含 key `a.b` 和 `a` 下的 key `b` 的文档写入会失败。 |
+| 对象 key | 按字节序返回 |
 
-仅支持上表列出的目标类型。其他目标类型，包括 `MAP`、`STRUCT` 和 `TIME`，都会由 BE 报错。对于受支持的目标类型，值形状不兼容、文本非法或数值越界时，按照对应 CAST 模式报错或返回 SQL `NULL`。
+在 Schema Template 中声明过的路径会转换为声明的类型，参见 [Schema Template](#schema-template)。各路径的存储类型参见[类型推断与类型冲突](#type-inference-and-type-conflicts)。
+
+## 访问路径与输出 {#access-paths-and-output}
+
+- `v['key']` 和 `v['a']['b']` 读取对象成员；`v['arr'][1]` 读取数组元素，下标从 1 开始，`-1` 表示最后一个元素。[ELEMENT_AT](../../../sql-functions/scalar-functions/variant-functions/element-at) 与之等价。
+- 结果是 `VARIANT` 值。key 不存在、下标为 `0` 或越界、对数组使用字符串 key、对对象使用整数下标，都返回 SQL `NULL`。
+- 在计算出的值中，含 `.` 的 key 是一个整体：`v['a.b']` 读取 key `a.b`，而 `v['a']['b']` 读取 `a` 下的 `b`。存储不保留这种区分，参见[存储会保留什么](#what-storage-keeps)。
+- 路径不会自动展开数组。对于 `{"a": [{"b": 1}]}`，`v['a']['b']` 返回 `NULL`，应写作 `v['a'][1]['b']`。
 
 ```sql
-SELECT CAST(PARSE_TO_VARIANT('42') AS BIGINT) AS id;
--- 42
-
-SELECT CAST(PARSE_TO_VARIANT('[1, null, 3]') AS ARRAY<INT>) AS values;
--- [1, NULL, 3]
-
-SELECT CAST(PARSE_TO_VARIANT('{"id": 1}') AS JSON) AS json_value;
--- {"id":1}
+SELECT v['user']['id']      AS id,       -- 42
+       v['tags'][-1]        AS last_tag, -- sql
+       v['user']['missing'] AS missing   -- NULL
+FROM events
+WHERE id = 1;
 ```
 
-### Decimal 与日期时间转换限制
+读取整个 VARIANT 值会返回 JSON 文本。对象 key 按字节序输出，且不含空白，因此与输入文本并非按字节完全一致：
 
-| Doris 输入类型 | VARIANT 支持情况 |
+```sql
+INSERT INTO variant_tbl VALUES (3, PARSE_TO_VARIANT('{ "b": 2, "a": 1, "c": { "y": 20, "x": 10 } }'));
+
+SELECT v FROM variant_tbl WHERE k = 3;
+-- {"a":1,"b":2,"c":{"x":10,"y":20}}
+```
+
+## CAST 与隐式转换 {#cast-and-implicit-conversion}
+
+### 其他类型 CAST 为 VARIANT {#cast-to-variant}
+
+| 源类型 | 结果 |
+| --- | --- |
+| `CHAR`、`VARCHAR`、`STRING` | VARIANT 字符串，不解析 JSON 文本。字符串必须是合法的 UTF-8，否则 CAST 报错。 |
+| `BOOLEAN` | 布尔值。 |
+| `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT` | 整数。绝对值超过 10^38 - 1 的 `LARGEINT` 值会变成字符串。 |
+| `FLOAT`、`DOUBLE` | 浮点数。 |
+| `DECIMALV2`、`DECIMAL(p, s)`（`p <= 38`） | 定点数。 |
+| `DATE`、`DATETIME(p)`、`TIMESTAMP_NS` | 日期，或不带时区的时间戳。 |
+| `IPV4`、`IPV6`、`UUID` | 以文本形式保存的字符串。 |
+| `JSON` / `JSONB` | 保持原结构。 |
+| `ARRAY<T>` | 数组，逐个转换元素。`T` 必须是 `VARIANT` 或本表中的类型。 |
+| `MAP`、`STRUCT`、`TIME`、`TIMESTAMPTZ`、`VARBINARY` 等其他类型 | 不支持，语句报错。 |
+
+源值还必须是其类型的合法值，非法值会被拒绝，不会被自动修复。CAST 不会解析字符串：`CAST('{"id": 1}' AS VARIANT)` 得到字符串 `{"id": 1}`。需要解析 JSON 文本时请使用 `PARSE_TO_VARIANT`。
+
+### VARIANT CAST 为其他类型 {#cast-from-variant}
+
+| 目标类型 | 结果 |
+| --- | --- |
+| `BOOLEAN` | 布尔值保持不变；数值非零即为 `true`；字符串按 `CAST(string AS BOOLEAN)` 的规则转换。 |
+| `TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT` | 整数。定点数和浮点数的小数部分被截断（`1.5` 变为 `1`）；布尔值变为 `1` 或 `0`；`"123"` 这样的数字字符串会被转换。 |
+| `FLOAT`、`DOUBLE`、`DECIMAL(p, s)` | 数值和数字字符串。`DECIMAL` 按 scale `s` 舍入。 |
+| `DATE`、`DATETIME(p)`、`TIMESTAMP_NS`、`TIMESTAMPTZ(p)` | 日期时间值，以及日期时间格式的字符串。 |
+| `IPV4`、`IPV6` | IP 地址格式的字符串。 |
+| `CHAR`、`VARCHAR`、`STRING` | 字符串根值原样返回，不带引号；对象和数组返回 JSON 文本；其他标量按对应 SQL 类型的格式输出：布尔根值为 `1` 或 `0`，时间戳带 6 位小数。VARIANT `null` 返回字符串 `null`。 |
+| `JSON` / `JSONB` | 保持原结构。没有 JSON 对应类型的值（如日期、时间戳）会变成 JSON 字符串；带时区的时间戳按会话时区格式化。 |
+| `ARRAY<T>` | 按元素转换的数组，无法转换的元素变为 `NULL`。内容为 JSON 数组的字符串（如 `"[1, 2]"`）也会被转换。其他值返回 `NULL`。 |
+| `MAP`、`STRUCT`、`TIME` 等其他类型 | 不支持，语句报错。 |
+
+值无法转换为目标类型时返回 SQL `NULL`。这与 `enable_strict_cast` 无关：即使在严格模式下，从 VARIANT 的 CAST 也不会因为值本身而报错。
+
+```sql
+SELECT CAST(PARSE_TO_VARIANT('"123"') AS INT)      AS from_string,   -- 123
+       CAST(PARSE_TO_VARIANT('"abc"') AS INT)      AS not_a_number,  -- NULL
+       CAST(PARSE_TO_VARIANT('1.5') AS INT)        AS truncated,     -- 1
+       CAST(PARSE_TO_VARIANT('300') AS TINYINT)    AS overflow,      -- NULL
+       CAST(PARSE_TO_VARIANT('{"a": 1}') AS INT)   AS from_object,   -- NULL
+       CAST(PARSE_TO_VARIANT('[1, "2", null, "x"]') AS ARRAY<INT>) AS arr;  -- [1, 2, null, null]
+
+SELECT CAST(PARSE_TO_VARIANT('true') AS STRING)        AS bool_root,     -- 1
+       CAST(PARSE_TO_VARIANT('{"b": true}') AS STRING) AS object_text,   -- {"b":true}
+       CAST(PARSE_TO_VARIANT('"abc"') AS STRING)       AS string_root,   -- abc
+       CAST(PARSE_TO_VARIANT('null') AS STRING)        AS variant_null;  -- null
+```
+
+### Decimal 与日期时间限制 {#decimal-and-datetime-limits}
+
+| Doris 类型 | 与 VARIANT 相关的行为 |
 | --- | --- |
 | 旧版 `DECIMALV2` | 精确保留 precision 不超过 27、scale 不超过 9 的值。 |
-| `DECIMAL(p, s)` | 精确保留 `1 <= p <= 38` 且 `0 <= s <= p` 的值；不支持需要超过 38 位 precision 的值。 |
-| `DATE` | 保留为不含时间和时区的日历日期。 |
-| 旧版 `DATETIME` | 保留到秒，不进行时区调整。 |
-| `DATETIME(p)` | 支持 `0 <= p <= 6`，不进行时区调整。 |
-| `TIMESTAMP_NS` | 保留固定纳秒精度且不进行时区调整；值必须在 TIMESTAMP_NS 取值范围内。 |
-| `TIMESTAMPTZ(p)` | 支持 `0 <= p <= 6`，保留带时区调整的 timestamp 语义。 |
-| precision 超过 38 的 Decimal | 不支持作为 VARIANT 输入。 |
-| `TIME` | 不支持作为 VARIANT 输入。 |
+| `DECIMAL(p, s)` | 精确保留 `1 <= p <= 38` 且 `0 <= s <= p` 的值；不支持 precision 超过 38 的 Decimal。 |
+| `DATE` | 不含时间和时区的日历日期。 |
+| `DATETIME(p)` | `0 <= p <= 6`，不做时区调整。 |
+| `TIMESTAMP_NS` | 纳秒精度，不做时区调整；值必须在 TIMESTAMP_NS 取值范围内。 |
+| `TIMESTAMPTZ(p)` | 不能作为 CAST 的源类型。可以在 Schema Template 中把路径声明为 `TIMESTAMPTZ`。 |
+| `TIME` | 不支持。 |
 
-源值还必须满足对应 Doris 类型本身的合法性要求。precision 超限、日期非法或值不兼容时会报错，不会自动修复。
+### 隐式转换 {#implicit-conversion}
 
-## 分组、去重与 Hash 语义
+以下情况 Doris 会隐式转换 VARIANT：
 
-在 Doris 4.2 及后续版本中，分组、去重和集合运算会把逻辑上等价的 VARIANT 视为同一个值，不受来源 SQL 类型或物理表示影响：
+- **子路径与非 VARIANT 值比较。** 在 `v['a'] = 1`、`v['d'] > '2024-01-01'`、`v['a'] IN (1, 2)` 中，子路径（`v['a']` 或 `ELEMENT_AT`）会根据另一侧操作数 CAST 为具体类型：整数和定点数按 `DECIMAL(38, 9)` 比较，`FLOAT`、`DOUBLE` 按 `DOUBLE` 比较，日期和日期时间按 `DATETIME(6)` 比较，字符串按 `STRING` 比较，布尔值按 `BOOLEAN` 比较。转换遵循上文的 CAST 规则，因此字符串 `"1"` 等于 `1`，而无法转换的值使比较结果为 `NULL`。
+- **函数参数。** 当函数的参数是数值、字符串或 JSON 类型时，VARIANT 参数会被 CAST 为参数类型，例如 `ABS(v['n'])`、`LENGTH(v['s'])`、`SUM(v['n'])`。
+- **JSON 函数。** `JSON_EXTRACT`、`JSON_KEYS`、`JSON_CONTAINS`、`TO_JSON` 等函数直接接受 VARIANT 参数，并通过 `CAST(v AS JSON)` 转换。同时接受字符串参数的函数（`JSON_VALID`、`JSON_QUOTE`、`JSON_UNQUOTE`、`JSON_PARSE`）使用字符串形式。整文档类的 JSON 函数会读取并组装整个 VARIANT 值，因此读取单个路径时，`v['a']['b']` 远快于 `JSON_EXTRACT(v, '$.a.b')`。
 
-- 等价的整数数值表示会被视为同一个值。
-- Decimal 尾随零不影响值，因此 `1.20` 与 `1.2` 会被视为同一个值。
-- `+0`、`-0` 与整数零会被视为同一个值。
-- 对象 key 的顺序不影响是否视为同一个值，但数组元素顺序会影响。
-- Variant/JSON `null` 与 SQL `NULL` 不同。
+以下情况 Doris 不做隐式转换，需要显式 CAST：
 
-Hash 类算子也按上述逻辑值规则计算 key。因此，只要两个值按上述规则被视为同一个值，无论来源是解析后的 JSON 还是带类型的 CAST，都会得到相同的内部 Hash Key。该 Hash 只用于 Doris 内部执行，不是稳定的用户侧校验值。
+- 算术运算：`v['a'] + 1` 会报错，请写成 `CAST(v['a'] AS BIGINT) + 1`。
+- 整个 VARIANT 列与非 VARIANT 值比较：`v = 1`、`v = 'x'` 会报错。
+- 两个 VARIANT 值之间的 `<`、`<=`、`>`、`>=`，包括两个子路径之间的比较，如 `v['a'] < v['b']`。
+- 对 VARIANT 值使用 `MIN`、`MAX`。
+- Schema Template 中声明的路径：即使 `id` 声明为 `INT`，`v['id']` 仍是 `VARIANT`。
 
-这些规则适用于 `GROUP BY`、`DISTINCT`、`COUNT(DISTINCT ...)`、`INTERSECT`、`EXCEPT` 和 `UNION DISTINCT` 等已支持的操作，但不会开放根 VARIANT 比较谓词：直接执行 `VARIANT = VARIANT` 或排序比较仍不支持。
+## NULL 语义 {#null-semantics}
 
-```sql
--- 1 和 1.0 只有一个 distinct logical value。
-SELECT COUNT(DISTINCT value) AS distinct_count
-FROM (
-    SELECT PARSE_TO_VARIANT('1') AS value
-    UNION ALL
-    SELECT PARSE_TO_VARIANT('1.0') AS value
-) AS numeric_values;
--- distinct_count: 1
+### SQL NULL 与 VARIANT null {#sql-null-and-variant-null}
 
--- 对象 key 顺序被忽略；数组顺序会保留。
-SELECT COUNT(DISTINCT value) AS distinct_count
-FROM (
-    SELECT PARSE_TO_VARIANT('{"a": 1, "b": 2}') AS value
-    UNION ALL
-    SELECT PARSE_TO_VARIANT('{"b": 2, "a": 1}') AS value
-) AS object_values;
--- distinct_count: 1
+VARIANT 中有两种 null：
 
-SELECT COUNT(DISTINCT value) AS distinct_count
-FROM (
-    SELECT PARSE_TO_VARIANT('[1, 2]') AS value
-    UNION ALL
-    SELECT PARSE_TO_VARIANT('[2, 1]') AS value
-) AS array_values;
--- distinct_count: 2
-```
+- **SQL `NULL`** 表示没有值。它来自值为 `NULL` 的列、不存在的路径（如 `v['no_such_key']`）或失败的 CAST，遵循普通的 SQL 规则。
+- **VARIANT `null`** 是一个值，即 JSON 字面量 `null`，例如 `PARSE_TO_VARIANT('null')` 的结果或数组中的 `null` 元素。`VARIANT_TYPE` 对它返回 `null`。它不是 SQL `NULL`。
 
-## NULL 语义
+| 操作 | SQL `NULL` | VARIANT `null` |
+| --- | --- | --- |
+| `v IS NULL` | `true` | `false` |
+| `COALESCE(v, x)`、`IFNULL(v, x)` | 返回 `x` | 返回该 VARIANT `null` |
+| `COUNT(v)`、`COUNT(DISTINCT v)` | 不计数 | 计数 |
+| `GROUP BY v`、`DISTINCT` | 单独一组 | 另成一组 |
+| `ORDER BY v` | 由 `NULLS FIRST` 或 `NULLS LAST` 决定位置；默认升序时排在最前，降序时排在最后 | 排在其他所有非 NULL 值之前 |
+| `v = x`、等值 Join | 不会匹配 | 与另一个 VARIANT `null` 匹配 |
+| `v <=> x` | 与 SQL `NULL` 匹配 | 与另一个 VARIANT `null` 匹配 |
+| `CAST(v AS STRING)` | SQL `NULL` | 字符串 `null` |
+| `CAST(v AS INT)` 等标量类型 | SQL `NULL` | SQL `NULL` |
+| `CAST(v AS JSON)` | SQL `NULL` | JSON `null` |
 
-SQL `NULL` 与 Variant/JSON `null` 是不同的值：
+### 计算侧的值与存储侧的值 {#computed-values-and-stored-values}
 
-- SQL `NULL` 表示 SQL 值缺失，并遵循普通 SQL NULL 传播规则。
-- Variant/JSON `null` 是一个 VARIANT 值，例如 `PARSE_TO_VARIANT('null')` 的返回值。
-- `TRY_PARSE_TO_VARIANT` 遇到非法输入时返回 SQL `NULL`，这与成功解析 JSON 字面量 `null` 不同。
+JSON `null` 最终是 VARIANT `null` 还是 SQL `NULL`，取决于这个值是否写入过表：
 
-## 基本类型
+| 值的来源 | 对象成员为 `null`（`{"a": null}`） | 根值为 `null` | 数组元素为 `null` |
+| --- | --- | --- | --- |
+| 查询中计算得到（`PARSE_TO_VARIANT`、CAST、函数） | `v['a']` 是 VARIANT `null` | VARIANT `null` | VARIANT `null` |
+| 从表中读取 | 该成员已被移除，`v['a']` 是 SQL `NULL` | 读回为 `{}` | VARIANT `null` |
 
-VARIANT 自动推断的子列基础类型包括：
-
-<table>
-<tr><td>支持的类型<br/></td></tr>
-<tr><td>TinyInt<br/></td></tr>
-<tr><td>NULL（等价于 JSON 的 null）<br/></td></tr>
-<tr><td>BigInt(64 bit)<br/>Double<br/></td></tr>
-<tr><td>String(Text)<br/></td></tr>
-<tr><td>Jsonb<br/></td></tr>
-<tr><td>Variant（嵌套对象）<br/></td></tr>
-<tr><td>Array&lt;T&gt;（仅支持一维）<br/></td></tr>
-</table>
-
-简单的 INSERT 示例：
+导入作业还有一条规则：JSON 格式中，`"v": null` 或缺失字段会给该列导入 SQL `NULL`；CSV 格式中，`\N` 导入 SQL `NULL`，而文本 `null` 会被解析为 VARIANT `null`，读回时是 `{}`。
 
 ```sql
-INSERT INTO vartab VALUES
-  (1, 'null'),
-  (2, NULL),
-  (3, 'true'),
-  (4, '-17'),
-  (5, '123.12'),
-  (6, '1.912'),
-  (7, '"A quote"'),
-  (8, '[-1, 12, false]'),
-  (9, '{ "x": "abc", "y": false, "z": 10 }'),
-  (10, '"2021-01-01"');
+-- 计算侧：成员存在，值为 VARIANT null。
+SELECT PARSE_TO_VARIANT('{"a": null}')['a'] IS NULL                AS is_sql_null,  -- 0
+       VARIANT_TYPE(PARSE_TO_VARIANT('{"a": null}')['a'])          AS type;         -- null
+
+-- 存储侧：成员被移除，读取时返回 SQL NULL。
+INSERT INTO variant_tbl VALUES (4, PARSE_TO_VARIANT('{"a": null, "b": 1}'));
+
+SELECT v, v['a'] IS NULL AS is_sql_null FROM variant_tbl WHERE k = 4;
+-- v: {"b":1}, is_sql_null: 1
 ```
 
-提示：日期/时间戳等非标准 JSON 类型在未指定 Schema 时会以字符串形式存储；如需较高计算效率，建议将其提取为静态列或在 Schema Template 中明确声明类型。
+由此带来的影响：
 
-## 扩展类型（Schema Template）
+- 对于已存储的数据，无论 `a` 原本不存在还是为 `null`，`v['a'] IS NULL` 都为 true，写入后无法再区分这两种情况。
+- 对于计算出的值，`IS NULL` 不会匹配 JSON `null`。如果希望把 JSON `null` 也当作缺失处理，需要同时判断类型：`x IS NULL OR VARIANT_TYPE(x) = 'null'`。
+- 存储后的 `{"a": null}`、`{}` 以及根值 `null` 读回时都是 `{}`，因此在 `GROUP BY`、`DISTINCT` 和 Join 中是同一个值。
 
-除基本类型外，VARIANT 还可通过 Schema Template 声明以下扩展类型：
+## 比较、分组与排序 {#comparison-grouping-and-ordering}
 
-- Number（扩展）
-  - Decimal：Decimal32 / Decimal64 / Decimal128 / Decimal256
-  - LargeInt
-- Datetime
-- Timestamptz
-- Date
-- IPV4 / IPV6
-- Boolean
-- ARRAY&lt;T&gt;（T 为以上任意类型，仅支持一维）
+VARIANT 值按逻辑值比较，而不是按文本或物理编码比较。相等判断、Hash（`GROUP BY`、`DISTINCT`、Join）和排序（`ORDER BY`、窗口键）使用同一套规则，因此相等的值一定落在同一分组，排序时也互为并列值。
 
-注意：预定义的 Schema 只能在建表时指定，当前不支持通过 ALTER 修改（后续可能支持“新增”子列定义，但不支持修改既有子列类型）。
+### 支持的操作 {#supported-operations}
 
-示例：
+| 对 VARIANT 值的操作 | 支持情况 | 说明 |
+| --- | --- | --- |
+| 两个 VARIANT 值之间，或与裸 `NULL` 之间的 `=`、`!=`、`<=>` | 支持 | 也包括子路径，如 `v['a'] = w['a']`。 |
+| 等值 Join、Semi/Anti Join、`IN`/`NOT IN` 子查询 | 支持 | VARIANT Join 键不会生成 Runtime Filter。 |
+| `GROUP BY`、`DISTINCT`、`COUNT(DISTINCT ...)`、`UNION`、`INTERSECT`、`EXCEPT` | 支持 | |
+| `ORDER BY`、`ORDER BY ... LIMIT` | 支持 | |
+| 窗口函数的 `PARTITION BY` 与 `ORDER BY` | 支持 | |
+| `COUNT(v)`、`COLLECT_LIST(v)`、`ARRAY_AGG(v)` | 支持 | |
+| `IF`、`CASE`、`IFNULL`、`COALESCE` | 支持 | |
+| `CAST(v AS ARRAY<VARIANT>)`、`EXPLODE_VARIANT_ARRAY`，以及对 `ARRAY<VARIANT>` 使用 `EXPLODE`、`EXPLODE_OUTER` | 支持 | |
+| VARIANT 值之间的 `<`、`<=`、`>`、`>=`、`BETWEEN` | 不支持 | 请先 CAST 为具体类型。 |
+| 整个 VARIANT 值与非 VARIANT 值比较，如 `v = 1` | 不支持 | 子路径会被隐式转换：`v['a'] = 1` 可以执行。 |
+| 对整个 VARIANT 值使用 `IN` 值列表，如 `v IN (...)` | 不支持 | `v['a'] IN (1, 2)` 可以通过隐式转换执行。 |
+| `MIN`、`MAX` | 不支持 | 请先 CAST 子路径。 |
+| 以 VARIANT 作为参数的 `ARRAY(...)`、`MAP(...)`、`NAMED_STRUCT(...)` | 不支持 | |
+
+### 相等规则 {#equality}
+
+- **数值。** 整数、小数部分为零的定点数、值为整数的浮点数相等：`1`、`1.0`、`1.00` 是同一个值。定点数末尾的零不影响取值，`-0.0` 等于 `0`。带小数部分的定点数和浮点数永不相等：`DECIMAL 1.5` 不等于 `DOUBLE 1.5`。带小数部分的 JSON 数值解析为 `DOUBLE`；定点数来自 CAST、Schema Template 路径，以及超出 `BIGINT` 范围的整数。
+- **不同种类的值永不相等。** 数值 `1`、字符串 `"1"` 和 `true` 是三个不同的值。`DATE` 不等于字符串 `"2024-01-01"`，不带时区的时间戳也不等于带时区的时间戳。
+- **字符串** 只有字节完全相同时才相等，区分大小写。
+- **对象** 在 key 集合相同且对应的值都相等时相等，与 key 的顺序无关。
+- **数组** 在长度相同且对应位置的元素都相等时相等，元素顺序有影响。
+- VARIANT `null` 等于另一个 VARIANT `null`；SQL `NULL` 遵循 SQL 规则。
+
+```sql
+SELECT PARSE_TO_VARIANT('1') = PARSE_TO_VARIANT('1.0')                             AS int_double,  -- 1
+       PARSE_TO_VARIANT('1.5') = CAST(CAST(1.5 AS DECIMAL(10, 2)) AS VARIANT)       AS dbl_dec,     -- 0
+       PARSE_TO_VARIANT('1') = PARSE_TO_VARIANT('"1"')                             AS num_str,     -- 0
+       PARSE_TO_VARIANT('{"a": 1, "b": 2}') = PARSE_TO_VARIANT('{"b": 2, "a": 1}') AS obj,         -- 1
+       PARSE_TO_VARIANT('[1, 2]') = PARSE_TO_VARIANT('[2, 1]')                     AS arr;         -- 0
+```
+
+### 排序规则 {#ordering}
+
+对 VARIANT 值执行 `ORDER BY` 时使用一个全序。不同种类的值先按种类排序：
+
+```text
+null < boolean < number < string < binary < date < timestamp with time zone
+     < timestamp without time zone < time < UUID < object < array
+```
+
+同一种类内：
+
+- **布尔值：** `false` 在 `true` 之前。
+- **数值：** 在整数、定点数和浮点数之间统一按数值大小排序。数值相同时，定点数排在浮点数之前。负无穷最小；正无穷和 NaN 最大，NaN 在正无穷之后。
+- **字符串：** 按 UTF-8 字节排序。大写字母排在小写字母之前，`"10"` 排在 `"9"` 之前。
+- **日期与时间戳：** 按时间先后。
+- **对象：** 按 key 的顺序逐项比较：先比较最小的 key，再比较它的值，然后比较下一个 key，依此类推。一个对象的所有项是另一个对象的前缀时，前者排在前面，因此 `{"a":1}` < `{"a":1,"b":2}` < `{"b":0}`。
+- **数组：** 逐个元素比较；前缀排在前面，因此 `[]` < `[null]` < `[1]` < `[1,2]`。
+
+SQL `NULL` 的位置由 `NULLS FIRST` 或 `NULLS LAST` 决定。
+
+```sql
+SELECT v, VARIANT_TYPE(v) AS type
+FROM (
+    SELECT PARSE_TO_VARIANT('[1, 2]') AS v UNION ALL
+    SELECT PARSE_TO_VARIANT('{"a": 1}')    UNION ALL
+    SELECT PARSE_TO_VARIANT('"9"')         UNION ALL
+    SELECT PARSE_TO_VARIANT('"10"')        UNION ALL
+    SELECT PARSE_TO_VARIANT('10')          UNION ALL
+    SELECT PARSE_TO_VARIANT('9.5')         UNION ALL
+    SELECT PARSE_TO_VARIANT('true')        UNION ALL
+    SELECT PARSE_TO_VARIANT('null')        UNION ALL
+    SELECT NULL
+) t
+ORDER BY v;
+```
+
+```text
++---------+---------+
+| v       | type    |
++---------+---------+
+| NULL    | NULL    |
+| null    | null    |
+| true    | bool    |
+| 9.5     | double  |
+| 10      | tinyint |
+| 10      | string  |
+| 9       | string  |
+| {"a":1} | object  |
+| [1,2]   | array   |
++---------+---------+
+```
+
+### 按具体类型比较与按 VARIANT 比较 {#typed-comparison-and-variant-comparison}
+
+比较采用 VARIANT 规则还是具体类型的规则，由操作数决定。假设路径 `a` 上有 `1`、`1.0`、`"1"` 三个值：
+
+| 表达式 | 比较方式 | 结果 |
+| --- | --- | --- |
+| `v['a'] = 1` | 对 `v['a']` 隐式 CAST 后按 `DECIMAL(38, 9)` 比较 | 三个值都匹配 |
+| `v['a'] = CAST(1 AS VARIANT)`、`v['a'] = w['a']` | VARIANT | 匹配 `1` 和 `1.0`，不匹配 `"1"` |
+| `GROUP BY v['a']` | VARIANT | `1` 和 `1.0` 同组，`"1"` 另成一组 |
+| `GROUP BY CAST(v['a'] AS STRING)` | `STRING` | 只有一组 `1` |
+| `ORDER BY v['a']` | VARIANT | 先数值，后字符串 |
+| `ORDER BY CAST(v['a'] AS INT)` | `INT` | 按数值排序；无法转换的值变为 `NULL` |
+
+### 注意事项 {#notes}
+
+- **代价。** VARIANT 键按逻辑值做 Hash 和比较。在一个 4400 万行的测试中，以 VARIANT 为键的 `GROUP BY`、排序和 Join，耗时是对 `CAST(v['path'] AS <type>)` 执行相同操作的 1.2 到 3.7 倍。路径类型确定时，请先 CAST。
+- **结果以存储后的值为准。** [存储会保留什么](#what-storage-keeps)中的规范化发生在比较之前：原本为 `null` 的成员已经不存在；未在 Schema Template 中声明的 `DATE` 按字符串比较；同一路径上与数值混在一起的布尔值可能读回为 `1` 或 `0`。类型重要的路径请在 Schema Template 中声明。
+- **混合类型按种类排序，而不是按值排序。** 如果一个路径上既有数值又有数字字符串，`ORDER BY v['a']` 会把所有数值排在所有字符串之前，字符串之间再按字节排序。需要数值序或字典序时，请先 CAST 为同一类型。
+- 跨种类的排序由 Doris 定义，目的是保证结果确定。它不属于 JSON 标准，也可能与其他系统不同。
+- VARIANT 值的内部 Hash 只用于执行，不是稳定的用户侧校验值。
+
+## Schema Template {#schema-template}
+
+Schema Template 用于声明部分路径的存储类型。只需声明需要稳定类型或路径级索引的关键路径，文档的其余部分仍保持动态。
 
 ```sql
 CREATE TABLE test_var_schema (
@@ -296,55 +463,78 @@ CREATE TABLE test_var_schema (
     > NULL
 )
 PROPERTIES ("replication_num" = "1");
-
-INSERT INTO test_var_schema VALUES (1, '{
-    "large_int_val" : "123222222222222222222222",
-    "string_val" : "Hello World",
-    "decimal_val" : 1.11111111,
-    "datetime_val" : "2025-05-16 11:11:11",
-    "tz_val" : "2025-05-16 11:11:11+08:00",
-    "ip_val" : "127.0.0.1"
-}');
-
-SELECT variant_type(v1) FROM test_var_schema;
-
-+---------------------------------------------------------------------------------------------------------------------------------------------------+
-| variant_type(v1)                                                                                                                                  |
-+---------------------------------------------------------------------------------------------------------------------------------------------------+
-| {"datetime_val":"datetimev2","decimal_val":"decimal128i","ip_val":"ipv4","large_int_val":"largeint","string_val":"string","tz_val":"timestamptz"} |
-+---------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-`{"date": 2020-01-01}` 与 `{"ip": 127.0.0.1}` 均为非法 JSON 文本，正确格式应为 `{"date": "2020-01-01"}` 与 `{"ip": "127.0.0.1"}`。
+模板字段可以使用以下类型：
 
-一旦指定 Schema，若 JSON 实际类型与 Schema 冲突且无法转换，将保存为 NULL。例如：
+- 数值：`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`FLOAT`、`DOUBLE`，以及 `p <= 38` 的 `DECIMAL(p, s)`
+- `STRING`（或 `TEXT`）
+- `BOOLEAN`
+- `DATE`、`DATETIME(p)`、`TIMESTAMPTZ(p)`、`TIMESTAMP_NS`
+- `IPV4`、`IPV6`
+- `ARRAY<T>`，`T` 为以上类型之一（仅支持一维）
+
+`CHAR`、`VARCHAR`、`DECIMALV2`、`TIME`、`JSON`、`MAP`、`STRUCT` 和嵌套数组不能用于 Schema Template。
+
+### 写入模板路径 {#writing-to-template-paths}
+
+在声明过的路径上，每个值都按非严格模式的 CAST 规则转换为声明类型。无法转换的值存为 `NULL`，读回时该路径不存在；这一行的其余部分照常写入。转换可能会改变值：
 
 ```sql
-INSERT INTO test_var_schema VALUES (1, '{
-  "decimal_val" : "1.11111111",
-  "ip_val" : "127.xxxxxx.xxxx",
-  "large_int_val" : "aaabbccc"
-}');
+CREATE TABLE tpl_demo (
+    k INT,
+    v VARIANT<'id': INT, 'price': DECIMAL(10, 2), 'ts': DATETIME(3)>
+)
+DUPLICATE KEY(k)
+DISTRIBUTED BY HASH(k) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
 
--- 仅 decimal_val 保留
-SELECT * FROM test_var_schema;
+INSERT INTO tpl_demo VALUES
+    (1, PARSE_TO_VARIANT('{"id": "123", "price": 9.999, "ts": "2024-01-01 10:00:00.123456"}')),
+    (2, PARSE_TO_VARIANT('{"id": "abc", "price": "x", "ts": "not a time"}')),
+    (3, PARSE_TO_VARIANT('{"id": 1.7}'));
 
-+------+-----------------------------+
-| id   | v1                          |
-+------+-----------------------------+
-|    1 | {"decimal_val":1.111111110} |
-+------+-----------------------------+
+SELECT k, v FROM tpl_demo ORDER BY k;
 ```
 
-Schema 仅指导“存储层”的持久化类型。没有写入表的查询表达式仍保留实际的运行时类型：
+```text
++------+------------------------------------------------------------+
+| k    | v                                                          |
++------+------------------------------------------------------------+
+|    1 | {"id":123,"price":10.00,"ts":"2024-01-01 10:00:00.123000"} |
+|    2 | {}                                                         |
+|    3 | {"id":1}                                                   |
++------+------------------------------------------------------------+
+```
+
+- `"123"` 变为 `123`，`1.7` 被截断为 `1`，`9.999` 被舍入为 `10.00`，时间戳保留声明的精度（毫秒）。
+- `"abc"`、`"x"`、`"not a time"` 无法转换，因此被丢弃。
+- 带小数部分的 JSON 数值在转换前会先解析为 `DOUBLE`，因此 `DECIMAL` 路径可能丢失精度。如需保留全部位数，请把这类值写成 JSON 字符串（参见 [FAQ](#faq)）。
+
+### 读取模板路径 {#reading-template-paths}
+
+即使路径已声明类型，`v['path']` 仍是 `VARIANT`，Doris 不会自动把它 CAST 为声明类型。需要声明类型时请显式 CAST：
 
 ```sql
--- JSON 成员带引号，因此类型为 STRING。这里使用 PARSE_TO_VARIANT，
--- 因为 CAST(string AS VARIANT) 始终把整个输入保留为字符串。
-SELECT variant_type(PARSE_TO_VARIANT('{"a" : "12345"}')['a']);
+SELECT CAST(v['ts'] AS DATETIME(3)) AS ts,       -- 2024-01-01 10:00:00.123
+       CAST(v['ts'] AS STRING)      AS ts_text,  -- 2024-01-01 10:00:00.123000
+       VARIANT_TYPE(v['price'])     AS type      -- decimal
+FROM tpl_demo
+WHERE k = 1;
 ```
 
-通配符与匹配顺序：
+Schema Template 只决定值如何存储。没有写入表的表达式保留自身的类型：
+
+```sql
+-- 带引号的 JSON 成员是字符串。
+SELECT VARIANT_TYPE(PARSE_TO_VARIANT('{"a": "12345"}')['a']);  -- string
+```
+
+`{"date": 2020-01-01}` 与 `{"ip": 127.0.0.1}` 都不是合法 JSON，应写作 `{"date": "2020-01-01"}` 与 `{"ip": "127.0.0.1"}`。
+
+### 通配符匹配 {#pattern-matching}
+
+字段名默认是 glob 模式（`MATCH_NAME_GLOB`）：`*` 匹配任意字符序列，包括嵌套 key 之间的 `.`；`?` 匹配单个字符。例如 `'m*'` 既匹配 `m1`，也匹配 `m2.x`。一个路径匹配多个字段时，使用定义顺序中的第一个：
 
 ```sql
 CREATE TABLE test_var_schema (
@@ -357,10 +547,10 @@ CREATE TABLE test_var_schema (
 )
 PROPERTIES ("replication_num" = "1");
 
--- 若 enumString1 同时匹配上述两个 pattern，则采用定义顺序中第一个匹配到的类型（STRING）
+-- enumString1 同时匹配 enumString* 和 enum*，使用第一个（STRING）。
 ```
 
-如列名中包含 `*` 且希望按名称精确匹配，可使用：
+如需按字面值匹配包含 `*` 的名称，请使用 `MATCH_NAME`：
 
 ```sql
 v1 VARIANT<
@@ -368,38 +558,139 @@ v1 VARIANT<
 > NULL
 ```
 
-匹配成功的子路径默认会参与子列列式提取（Subcolumnization），并展开为独立列。若匹配子列过多导致列数暴增，建议开启 `variant_enable_typed_paths_to_sparse`（见“配置”）。
+匹配成功的路径默认参与子列列式提取（Subcolumnization）。如果匹配的路径过多、生成了过多子列，可以考虑开启 `variant_enable_typed_paths_to_sparse`（参见[列属性](#column-properties)）。
 
-## 类型冲突与提升规则
+限制：
 
-当同一路径出现不兼容类型（如同一字段既出现整数又出现字符串）时，将提升为 JSONB 类型以避免信息丢失：
+- DOC mode 下，模板字段只能是数值、字符串和数组类型。
+- 列创建后不能修改 Schema Template，参见 [ALTER TABLE](#alter-table)。
+
+## 类型推断与类型冲突 {#type-inference-and-type-conflicts}
+
+没有 Schema Template 时，Doris 在解析 JSON 时推断每个值的类型，`VARIANT_TYPE` 返回的就是这个类型：
+
+| JSON 值 | 类型 |
+| --- | --- |
+| `BIGINT` 范围内的整数 | `tinyint`、`smallint`、`int` 或 `bigint` 中能容纳该值的最小类型 |
+| 超出 `BIGINT`、最多 38 位的整数 | `decimal` |
+| 带小数部分或指数的数值 | `double` |
+| 以上类型都无法容纳的数值，如 `1e400` 或 42 位整数 | `string` |
+| 字符串 | `string` |
+| `true`、`false` | `bool` |
+| `null` | `null` |
+| 数组、对象 | `array`、`object` |
+
+数据存储时，每个路径只有一种存储类型：
+
+- 整数存为 `BIGINT`，需要时存为 `LARGEINT`；浮点数存为 `DOUBLE`，定点数存为 `DECIMAL`，字符串存为 `STRING`，布尔值存为 `BOOLEAN`，数组存为 `ARRAY<T>`。
+- 同一路径上出现不同种类的值时，例如整数与浮点数、数值与字符串、标量与数组，该路径存为 `JSONB`（`DESC` 中显示为 `json`）。元素类型冲突的数组存为 `ARRAY<JSONB>`。
 
 ```sql
 {"a" : 12345678}
 {"a" : "HelloWorld"}
--- a 将被提升为 JSONB
+-- a 存为 JSONB
 ```
 
-转换规则如下表格：
+`JSONB` 路径保留所有值，但失去类型化存储的能力：索引和基于类型的裁剪都不再作用于该路径。布尔值是一个特例：如果路径上的第一个值是布尔值、后续的值是数值，该路径可能按数值存储，布尔值读回为 `1` 或 `0`。需要稳定类型的路径，请在 Schema Template 中声明。
 
-| 源类型         | 当前类型       | 最终类型       |
-| -------------- | -------------- | -------------- |
-| `TinyInt`      | `BigInt`       | `BigInt`       |
-| `TinyInt`      | `Double`       | `Double`       |
-| `TinyInt`      | `String`       | `JSONB`        |
-| `TinyInt`      | `Array`        | `JSONB`        |
-| `BigInt`       | `Double`       | `JSONB`        |
-| `BigInt`       | `String`       | `JSONB`        |
-| `BigInt`       | `Array`        | `JSONB`        |
-| `Double`       | `String`       | `JSONB`        |
-| `Double`       | `Array`        | `JSONB`        |
-| `Array<Double>`| `Array<String>`| `Array<Jsonb>` |
+要查看每个路径的存储类型，请执行 `SET describe_extend_variant_column = true;` 后再执行 `DESC table_name;`，参见[查看子列与类型](#inspect-subcolumns-and-types)。
 
-若需严格限制子列类型（以稳定索引和存储），请结合 Schema Template 明确声明类型。
+## ALTER TABLE {#alter-table}
 
-## Variant 索引
+| 操作 | 是否支持 | 说明 |
+| --- | --- | --- |
+| `ADD COLUMN ... VARIANT [NULL]` | 支持 | 新列可以带 Schema Template 和属性。 |
+| `ADD COLUMN ... VARIANT NOT NULL` | 不支持 | 通过 `ALTER` 新增的 `NOT NULL` 列需要默认值，而 VARIANT 只允许 `DEFAULT NULL`。`NOT NULL` 的 VARIANT 列只能在 `CREATE TABLE` 中定义。 |
+| `DROP COLUMN`、`RENAME COLUMN`、修改列注释 | 支持 | |
+| 把 `NOT NULL` 改为 `NULL` | 支持 | |
+| 把 `NULL` 改为 `NOT NULL` | 不支持 | |
+| 增加、删除或修改 Schema Template 字段，或为没有模板的列添加模板 | 不支持 | 报错 `Can not change variant schema templates`。 |
+| 修改 `variant_max_subcolumns_count`、`variant_enable_typed_paths_to_sparse`、`variant_max_sparse_column_statistics_size`、`variant_sparse_hash_shard_count`、`variant_enable_doc_mode` 或 `variant_doc_hash_shard_count` | 不支持 | |
+| 修改 `variant_doc_materialization_min_rows` | 支持 | |
+| 在 VARIANT 与其他类型之间转换，如 `STRING` 转为 `VARIANT` | 不支持 | 新建带 VARIANT 列的表，再用 `INSERT INTO ... SELECT ..., PARSE_TO_VARIANT(str_col) FROM ...` 复制数据。 |
+| 在 VARIANT 列上 `ADD INDEX`、`DROP INDEX` | 支持 | 带 `field_pattern` 的索引只能在 `CREATE TABLE` 中定义。VARIANT 列不支持 `BUILD INDEX`。 |
 
-### 索引选择
+`MODIFY COLUMN` 需要给出完整的新列定义。未写出的属性取对应 `default_variant_*` 会话变量的值，因此取值与会话变量不同的属性都要原样写出，否则语句会被当作修改属性而失败。
+
+```sql
+-- 失败：通过 ALTER 新增的 NOT NULL 列需要默认值。
+ALTER TABLE t ADD COLUMN v2 VARIANT NOT NULL;
+-- ERROR: Field 'v2' doesn't have a default value
+
+ALTER TABLE t ADD COLUMN v2 VARIANT NOT NULL DEFAULT '{}';
+-- ERROR: Json or Variant type column default value just support null
+
+-- 成功：可为 NULL 的列，可以带 Schema Template 和属性。
+ALTER TABLE t ADD COLUMN v3 VARIANT<'id': BIGINT, properties('variant_max_subcolumns_count' = '16')> NULL;
+
+-- 失败：Schema Template 不能修改。
+ALTER TABLE t MODIFY COLUMN v VARIANT<'id': INT>;
+-- ERROR: Can not change variant schema templates
+
+-- 成功：在 DOC mode 列上只修改 variant_doc_materialization_min_rows。
+ALTER TABLE t MODIFY COLUMN vd VARIANT<
+    properties('variant_enable_doc_mode' = 'true', 'variant_doc_materialization_min_rows' = '100')
+>;
+```
+
+## 列属性 {#column-properties}
+
+列属性写在 VARIANT 类型内的 `properties(...)` 中：
+
+```sql
+CREATE TABLE example_table (
+  id INT,
+  data_variant VARIANT<
+      'path_1' : INT,
+      'path_2' : STRING,
+      properties(
+          'variant_max_subcolumns_count' = '2048',
+          'variant_enable_typed_paths_to_sparse' = 'true',
+          'variant_sparse_hash_shard_count' = '64'
+      )
+  >
+);
+```
+
+| 属性 | 默认值 | ALTER | 描述 |
+| --- | --- | --- | --- |
+| `variant_max_subcolumns_count` | `2048` | 否 | 单个数据文件中参与子列列式提取（Subcolumnization）的动态路径数上限；非空值多的路径优先入选，其余路径存入稀疏列。`0` 表示不限制。取值范围 0 到 100000，建议不超过 10000。默认值已足够覆盖大多数 workload；如果确实需要大规模子列，优先考虑 <a href="./variant-workload-guide#doc-mode-template">DOC mode</a>。 |
+| `variant_enable_typed_paths_to_sparse` | `false` | 否 | 默认情况下，Schema Template 路径一定参与子列列式提取，且不计入 `variant_max_subcolumns_count`。设置为 `true` 后，这些路径也计入上限，并可能存入稀疏列。 |
+| `variant_sparse_hash_shard_count` | `1` | 否 | 稀疏路径按 Hash 分散到的物理稀疏列数量。取值范围 0 到 1024，`0` 按 `1` 处理。 |
+| `variant_max_sparse_column_statistics_size` | `10000` | 否 | 单个数据文件中记录统计信息的稀疏路径数上限。超过后，查询没有统计信息的路径时无法跳过稀疏列。取值范围 1 到 50000。 |
+| `variant_enable_doc_mode` | `false` | 否 | 开启 DOC mode。不能与 `variant_max_subcolumns_count`、`variant_enable_typed_paths_to_sparse`、`variant_max_sparse_column_statistics_size`、`variant_sparse_hash_shard_count` 同时设置。 |
+| `variant_doc_materialization_min_rows` | `0` | 是 | 仅用于 DOC mode。行数少于该值的写入只存储文档，待 Compaction 把文件合并到该阈值后再执行子列列式提取。取值范围 0 到 1000000000。 |
+| `variant_doc_hash_shard_count` | `64` | 否 | 仅用于 DOC mode。存储的文档被拆分到的列数。取值范围 0 到 1024。 |
+
+**ALTER** 一列表示 `ALTER TABLE ... MODIFY COLUMN` 能否修改该属性。稀疏列和 DOC mode 相关属性的用法参见[宽列](#wide-columns)。
+
+### 会话变量 {#session-variables}
+
+| 变量 | 默认值 | 描述 |
+| --- | --- | --- |
+| `default_variant_max_subcolumns_count` | `2048` | 定义 VARIANT 列时未指定 `variant_max_subcolumns_count` 所使用的值。 |
+| `default_variant_enable_typed_paths_to_sparse` | `false` | 未指定 `variant_enable_typed_paths_to_sparse` 时使用的值。 |
+| `default_variant_sparse_hash_shard_count` | `0` | 未指定 `variant_sparse_hash_shard_count` 时使用的值。 |
+| `default_variant_max_sparse_column_statistics_size` | `10000` | 未指定 `variant_max_sparse_column_statistics_size` 时使用的值。 |
+| `default_variant_enable_doc_mode` | `false` | 未指定 `variant_enable_doc_mode` 时使用的值。 |
+| `default_variant_doc_materialization_min_rows` | `0` | 未指定 `variant_doc_materialization_min_rows` 时使用的值。 |
+| `default_variant_doc_hash_shard_count` | `64` | 未指定 `variant_doc_hash_shard_count` 时使用的值。 |
+| `describe_extend_variant_column` | `false` | 为 `true` 时，`DESC` 还会列出 VARIANT 列的子列。 |
+
+`default_variant_*` 变量在定义列时生效，包括 `CREATE TABLE` 和 `ALTER TABLE`；修改这些变量不影响已有的列。
+
+### BE 配置 {#be-configuration}
+
+| 配置项 | 默认值 | 描述 |
+| --- | --- | --- |
+| `variant_max_json_key_length` | `255` | JSON 对象 key 的最大字节数，超过即为解析错误。取值范围 1 到 65535。 |
+| `variant_throw_exeception_on_invalid_json` | `false` | 为 `false` 时，不是合法 JSON 的文本保留为 VARIANT 字符串；为 `true` 时，按解析错误处理。 |
+
+两者都支持运行时修改。解析错误的处理方式参见[解析错误](#parse-errors)。
+
+## Variant 索引 {#variant-indexes}
+
+### 索引选择 {#choosing-indexes}
 
 VARIANT 支持对子列建立 BloomFilter 与 Inverted Index 两类索引。
 - 高基数等值/IN 过滤：优先使用 BloomFilter（更省存储、写入更高效）。
@@ -428,7 +719,7 @@ SELECT * FROM tbl WHERE v['id_1'] MATCH 'Doris';
 SELECT * FROM tbl WHERE v['id_2'] MATCH 'Apache';
 ```
 
-### 根据子路径指定索引
+### 根据子路径指定索引 {#index-by-subpath}
 
 在 3.1.x/4.0 及之后的版本中，可为 VARIANT 的部分子列单独指定索引属性，甚至在同一路径上同时配置“分词与不分词”的两种倒排索引。指定 Path 索引需配合 Path 类型（Schema Template）使用。
 
@@ -462,7 +753,7 @@ SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
 
 注意：2.1.7+ 仅支持 InvertedIndex V2 属性（文件更少、写入 IOPS 更低，适配存算分离）。2.1.8+ 不再支持离线 Build Index 构建。
 
-### 索引失效问题
+### 索引失效问题 {#when-indexes-dont-work}
 
 1. 类型变更导致索引丢失：子列类型发生不兼容变更（如 INT→JSONB）会丢失索引。可通过 Schema Template 固定类型与索引。
 2. 查询类型不匹配：
@@ -485,107 +776,7 @@ SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
    SELECT * FROM tbl WHERE v_str MATCH 'Doris';
    ```
 
-## insert 与导入
-
-### INSERT INTO VALUES
-
-```sql
-CREATE TABLE IF NOT EXISTS variant_tbl (
-    k BIGINT,
-    v VARIANT
-) PROPERTIES("replication_num" = "1");
-
-INSERT INTO variant_tbl VALUES (1, '{"a" : 123}');
-
-select * from variant_tbl;
-+------+-----------+
-| k    | v         |
-+------+-----------+
-|    1 | {"a":123} |
-+------+-----------+
-
--- 其中 v['a'] 是 Variant 类型
-select v['a'] from variant_tbl;
-+--------+
-| v['a'] |
-+--------+
-| 123    |
-+--------+
-
--- v['a']['no_such_key'] 对于不存在的 JSON 键，将返回 NULL
-select v['a']['no_such_key'] from variant_tbl;;
-+-----------------------+
-| v['a']['no_such_key'] |
-+-----------------------+
-| NULL                  |
-+-----------------------+
-
-```
-
-### 导入（Stream Load）
-
-```bash
-# 以按行 JSON 为例（每行一条 JSON 记录）
-curl --location-trusted -u root: -T gh_2022-11-07-3.json \
-  -H "read_json_by_line:true" -H "format:json" \
-  http://127.0.0.1:8030/api/test_variant/github_events/_stream_load
-```
-
-参考 [variant](../../../../data-operate/import/complex-types/variant.md)
-
-导入完成后可用 `SELECT count(*)` 或 `SELECT * ... LIMIT 1` 验证。为提升高并发导入性能，推荐建表选择 RANDOM 分桶并开启 Group Commit（参见官方“Group Commit”文档）。
-
-## 输出
-
-从 VARIANT 列读出的 JSON 文本与写入时的 JSON 文本并非按字节完全一致：JSON object 内的 key 会按字典序输出，与输入 JSON 中的顺序无关。
-
-```sql
-INSERT INTO variant_tbl VALUES
-  (2, '{ "b": 2, "a": 1, "c": { "y": 20, "x": 10 } }');
-
-SELECT v FROM variant_tbl WHERE k = 2;
-+-----------------------------------+
-| v                                 |
-+-----------------------------------+
-| {"a":1,"b":2,"c":{"x":10,"y":20}} |
-+-----------------------------------+
-```
-
-排序在每一层都会生效——顶层 key 输出为 `a`、`b`、`c`，嵌套 object 内 key 输出为 `x`、`y`。
-
-## 支持的运算
-
-在 Doris 4.2 及后续版本中，整个 VARIANT 值支持基于 Hash 的分组和去重，但不支持比较、Join Key 或排序语义。
-
-| 对整个 VARIANT 值执行的操作 | 支持情况 | 说明 |
-| --- | --- | --- |
-| `GROUP BY` | 支持 | 使用上文所述的分组与 Hash 规则。 |
-| `DISTINCT`、`COUNT(DISTINCT ...)` | 支持 | 逻辑等价的值会被去重。 |
-| `INTERSECT`、`EXCEPT`、`UNION DISTINCT` | 支持 | 使用上文所述的相同规则。 |
-| `COUNT(*)`、`COUNT(variant)` | 支持 | `COUNT(variant)` 按普通 SQL 规则排除外层 SQL `NULL`。 |
-| `IF`、`CASE`、`IFNULL`、`COALESCE` | 支持 | 条件表达式可以返回和消费 VARIANT 值。 |
-| 临时 `ARRAY`、`MAP` 或 `STRUCT` 表达式中包含 VARIANT | 支持 | 这不表示持久化表结构可以使用这些嵌套类型。 |
-| `EXPLODE_VARIANT_ARRAY`、对 `ARRAY<VARIANT>` 使用 `EXPLODE`/`EXPLODE_OUTER` | 支持 | 输出 VARIANT 元素，并保留 SQL `NULL` 与 Variant/JSON `null` 的区别。 |
-| `=`、`!=`、`<=>`、`<`、`<=`、`>`、`>=` | 不支持 | 请在两侧提取可比较的子路径，并 CAST 为具体类型。 |
-| Join Key | 不支持 | 请把两侧所需子路径 CAST 为相同的具体类型。 |
-| `ORDER BY`、Sort/TopN Key | 不支持 | 排序前请先 CAST 所需子路径。 |
-| 窗口分区键或排序键 | 不支持 | 整个 VARIANT 值不能作为窗口 Key。 |
-| `MIN(variant)`、`MAX(variant)` | 不支持 | 聚合前请先 CAST 标量子路径。 |
-
-如需比较、过滤、计算或排序，请提取所需子路径，再显式或隐式 CAST 为具体类型：
-
-```sql
--- 显式 CAST
-SELECT CAST(v['arr'] AS ARRAY<TEXT>) FROM tbl;
-SELECT * FROM tbl WHERE CAST(v['decimal'] AS DECIMAL(27, 9)) = 1.111111111;
-SELECT * FROM tbl WHERE CAST(v['date'] AS DATE) = '2021-01-02';
-
--- 隐式 CAST
-SELECT * FROM tbl WHERE v['bool'];
-SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
-```
-
-## 宽列
+## 宽列 {#wide-columns}
 
 当导入数据包含大量不同的 JSON key 时，通过子列列式提取（Subcolumnization）生成的子列会迅速增多；当规模达到一定程度，可能出现元数据膨胀、写入/合并开销增大、查询性能下降等问题。为应对“宽列”（子列过多），VARIANT 提供两种机制：**稀疏列** 与 **DOC 编码**。
 
@@ -593,7 +784,7 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 注意：这两种机制**互斥**——启用 DOC 编码后将无法使用稀疏列机制，反之亦然。
 
-### 稀疏列机制
+### 稀疏列机制 {#sparse-columns}
 
 **机制说明**
 
@@ -607,7 +798,7 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 - `variant_max_subcolumns_count` 默认就是 `2048`，已经足够覆盖大多数 workload。不要为了预留更多自动提取子列而激进调大；如果场景确实需要大规模子列列式提取（Subcolumnization），优先参考 <a href="./variant-workload-guide#doc-mode-template">DOC mode</a>。实践上仍建议不超过 **10000**。
 - `variant_sparse_hash_shard_count` 的设置可按“进入稀疏列的总列数 / 128”粗略估算。例如：VARIANT 中所有 JSON key 为 1 万，设置 `variant_max_subcolumns_count = 2000`，进入稀疏列的总列数约为 8000，则 `variant_sparse_hash_shard_count` 可参考 `8000/128`。
 
-### DOC 编码机制
+### DOC 编码机制 {#doc-encoding-doc-mode}
 
 **机制说明**
 
@@ -617,20 +808,66 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 - 对超宽列 workload，DOC mode 也是更稳定的选择，尤其是在 Subcolumnization 规模接近万列时。相比默认的即时 Subcolumnization，compaction 内存可下降约 2/3，在稀疏宽列导入场景下导入性能可提升约 5~10 倍。
 - 当 `VARIANT` 列非常宽、查询又经常读取整条文档时，DOC mode 相比从大量子列重组文档，`SELECT variant_col` 的效率可获得数量级提升。
 
+```sql
+CREATE TABLE example_table (
+  id INT,
+  data_variant VARIANT<
+      'path_1' : INT,
+      'path_2' : STRING,
+      properties(
+          'variant_enable_doc_mode' = 'true',
+          'variant_doc_materialization_min_rows' = '10000',
+          'variant_doc_hash_shard_count' = '64'
+      )
+  >
+);
+```
+
 **参考说明**
 
 - 需开启 `variant_enable_doc_mode`。
 - 使用 DOC 编码机制时，指定了预定义 Schema 的子列类型只能是数值类型、字符串类型、array 类型。
 - `variant_doc_hash_shard_count` 的设置可按 “JSON key 的总个数 / 128” 粗略估算。
 
-两种机制的详细使用见下方“配置”章节。
+### 达到上限后的行为与调优建议 {#behavior-at-limits-and-tuning-suggestions}
 
-## 限制
+1. 超过上限后，新路径写入共享结构；Rowset 合并后也可能触发部分路径回收为共享结构。
+2. 系统会优先让非空比例高、访问频率高的路径保留在子列列式提取（Subcolumnization）中。
+3. 若参与子列列式提取（Subcolumnization）的路径接近 10000，对硬件要求较高（建议单机 ≥128G 内存、≥32C）。如果 workload 已经接近这个规模，建议优先评估 DOC mode。
+4. 写入侧调优：适度增大客户端 batch_size，或使用 Group Commit（按需增大 `group_commit_interval_ms`/`group_commit_data_bytes`）。
+5. 若无分桶裁剪需求，建议采用 RANDOM 分桶，并开启 single tablet 导入以降低 compaction 写放大。
+6. BE 配置可按导入压力调整 `max_cumu_compaction_threads`（建议 ≥8）、`vertical_compaction_num_columns_per_group=500`（提升纵向合并效率，增加内存占用）、`segment_cache_memory_percentage=20`（提升元数据缓存命中）。
+7. 关注 Compaction Score；若持续上升说明 Compaction 跟不动，需要降低导入压力。
+8. 避免大范围 `SELECT *` 或直接扫描 VARIANT；尽量使用具体路径投影 `SELECT v['path']`。
+
+另：当出现 Stream Load 报错 `[DATA_QUALITY_ERROR]Reached max column size limit 2048` 时（只有 2.1.x 和 3.0.x 版本会出现该报错），说明合并后的 Tablet Schema 达到列数上限。可按需调整 BE 配置 `variant_max_merged_tablet_schema_size`（不建议超过 4096，需较高配置机器）。
+
+## 查看子列与类型 {#inspect-subcolumns-and-types}
+
+方案一：使用 [VARIANT_TYPE](../../../sql-functions/scalar-functions/variant-functions/variant-type) 逐行查看某个值或某个路径的类型（结果精确，但需要读取每一行）：
+
+```sql
+SELECT VARIANT_TYPE(v), VARIANT_TYPE(v['a']) FROM variant_tbl LIMIT 10;
+```
+
+方案二：扩展 `DESC`，展示已完成子列列式提取（Subcolumnization）的子路径及其存储类型：
+
+```sql
+SET describe_extend_variant_column = true;
+DESC variant_tbl;
+```
+
+```sql
+DESCRIBE ${table_name} PARTITION ($partition_name);
+```
+
+两种方式可结合使用：方案一精确、方案二高效。
+
+## 限制 {#limitations}
 
 - **大宽表优化**：对于会通过子列列式提取（Subcolumnization）生成大量独立子列的宽表场景（例如超过 2000 列），强烈建议开启 **V3 存储格式**。通过在建表 `PROPERTIES` 中指定 `"storage_format" = "V3"`，可以将列元数据与 Segment Footer 解耦，加快文件打开速度并降低内存占用。
-- JSON key 长度 ≤ 255。
-- 不支持作为主键或排序键。
-- 持久化表结构不能把 VARIANT 嵌套在其他类型中（如 `ARRAY<VARIANT>`、`STRUCT<VARIANT>`）；临时表达式结果可以使用上表列出的嵌套容器能力。
+- JSON key 默认最长 255 字节（`variant_max_json_key_length`）。
+- VARIANT 列不能作为 Key 列、分区列或分桶列，也不能在表结构中嵌套在其他类型内（参见[定义 VARIANT 列](#define-a-variant-column)）。
 - 在未启用 DOC mode 时，读取整个 VARIANT 列会扫描所有子字段。对于超宽列，一般不建议直接 `SELECT variant_col`；如果整列读取是主要查询模式，建议优先使用 DOC mode。若列包含大量子字段，也可额外存储原始 JSON 的 STRING/JSONB 列，以优化如 `LIKE` 等整体匹配：
 
 ```sql
@@ -649,89 +886,7 @@ CREATE TABLE example_table (
 SELECT * FROM example_table WHERE data_string LIKE '%doris%';
 ```
 
-## 配置
-
-在 3.1+ 支持在 VARIANT 类型上声明列级别属性：
-
-```sql
-CREATE TABLE example_table (
-  id INT,
-  data_variant VARIANT<
-      'path_1' : INT,
-      'path_2' : STRING,
-      properties(
-          'variant_max_subcolumns_count' = '2048',
-          'variant_enable_typed_paths_to_sparse' = 'true',
-          'variant_sparse_hash_shard_count' = '64'
-      )
-  >
-);
-```
-
-<table>
-<tr><td>稀疏列属性</td><td>描述</td></tr>
-<tr><td>`variant_max_subcolumns_count`</td><td>控制可参与子列列式提取（Subcolumnization）的路径数上限；超过后新增路径可能存放于共享数据结构。默认 2048（推荐），已经覆盖大多数 workload；避免设置得过大。若场景确实需要大规模自动提取子列，优先参考 <a href="./variant-workload-guide#doc-mode-template">DOC mode</a>。0 表示不限制；不推荐超过 10000。</td></tr>
-<tr><td>`variant_enable_typed_paths_to_sparse`</td><td>默认指定了 Path 类型后，该 Path 一定会参与子列列式提取（Subcolumnization），且不计入 `variant_max_subcolumns_count`。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。</td></tr>
-<tr><td>`variant_sparse_hash_shard_count`</td><td>控制稀疏列的分片数量。将稀疏子列分散存储到多个稀疏列中，以提升查询性能。默认值为 1，建议根据稀疏子列数量适当调整。</td></tr>
-</table>
-
-```sql
-CREATE TABLE example_table (
-  id INT,
-  data_variant VARIANT<
-      'path_1' : INT,
-      'path_2' : STRING,
-      properties(
-          'variant_enable_doc_mode' = 'true',
-          'variant_doc_materialization_min_rows' = '10000',
-          'variant_doc_hash_shard_count' = '64'
-      )
-  >
-);
-```
-
-<table>
-<tr><td>DOC 编码属性</td><td>描述</td></tr>
-<tr><td>`variant_enable_doc_mode`</td><td>是否启用 DOC 编码模式。设置为 `true` 时，原始 JSON 会作为存储字段保存，用于快速返回整个 JSON 文档；启用后将无法使用稀疏列机制。默认值为 `false`。</td></tr>
-<tr><td>`variant_doc_materialization_min_rows`</td><td>DOC 编码模式下触发子列列式提取（Subcolumnization）的最小行数阈值。当写入行数低于该值时，仅存储原始 JSON；当文件合并后行数达到该阈值时，才执行 Subcolumnization，用于减少小批量写入时的开销。</td></tr>
-<tr><td>`variant_doc_hash_shard_count`</td><td>控制 DOC 编码的分片数量。原始 JSON 会被拆散存储到指定数量的列中，查询整个 JSON 时再组装这些分片。默认值为 64，可根据 JSON 大小和并发需求调整。</td></tr>
-</table>
-
-达到上限后的行为与调优建议：
-
-1. 超过上限后，新路径写入共享结构；Rowset 合并后也可能触发部分路径回收为共享结构。
-2. 系统会优先让非空比例高、访问频率高的路径保留在子列列式提取（Subcolumnization）中。
-3. 若参与子列列式提取（Subcolumnization）的路径接近 10000，对硬件要求较高（建议单机 ≥128G 内存、≥32C）。如果 workload 已经接近这个规模，建议优先评估 DOC mode。
-4. 写入侧调优：适度增大客户端 batch_size，或使用 Group Commit（按需增大 `group_commit_interval_ms`/`group_commit_data_bytes`）。
-5. 若无分桶裁剪需求，建议采用 RANDOM 分桶，并开启 single tablet 导入以降低 compaction 写放大。
-6. BE 配置可按导入压力调整 `max_cumu_compaction_threads`（建议 ≥8）、`vertical_compaction_num_columns_per_group=500`（提升纵向合并效率，增加内存占用）、`segment_cache_memory_percentage=20`（提升元数据缓存命中）。
-7. 关注 Compaction Score；若持续上升说明 Compaction 跟不动，需要降低导入压力。
-8. 避免大范围 `SELECT *` 或直接扫描 VARIANT；尽量使用具体路径投影 `SELECT v['path']`。
-
-另：当出现 Stream Load 报错 `[DATA_QUALITY_ERROR]Reached max column size limit 2048` 时（只有 2.1.x 和 3.0.x 版本会出现该报错），说明合并后的 Tablet Schema 达到列数上限。可按需调整 BE 配置 `variant_max_merged_tablet_schema_size`（不建议超过 4096，需较高配置机器）。
-
-## 查看列数、列类型
-
-方案一：使用 `variant_type` 查看行级 Schema（开销更大但更精确）：
-
-```sql
-SELECT variant_type(v) FROM variant_tbl;
-```
-
-方案二：扩展 `DESC` 展示已完成子列列式提取（Subcolumnization）的子路径：
-
-```sql
-SET describe_extend_variant_column = true;
-DESC variant_tbl;
-```
-
-``` sql
-DESCRIBE ${table_name} PARTITION ($partition_name);
-```
-
-两种方式可结合使用：方案一精确、方案二高效。
-
-## 对比 JSON 类型
+## 对比 JSON 类型 {#compared-with-json-type}
 
 - 存储：JSON 类型以 JSONB（行存）写入；VARIANT 写入时执行子列列式提取（Subcolumnization），压缩率更高、存储更小。
 - 查询：JSON 需解析；VARIANT 直接列式扫描，通常显著更快。
@@ -756,11 +911,15 @@ DESCRIBE ${table_name} PARTITION ($partition_name);
 | 第二次查询 (hot)  | 86.02s      | 94.82s       | 789.24s        |
 | 第三次查询 (hot)  | 83.03s      | 92.29s       | 743.69s        |
 
-## FAQ
+## FAQ {#faq}
 
-1. VARIANT 中的 `null` 与 SQL `NULL` 有区别吗？
-   - 没有区别，两者等价。
-2. 为什么我的查询/索引没有生效？
+1. VARIANT 中的 `null` 与 SQL `NULL` 相同吗？
+   - 不相同。查询中计算出的 JSON `null` 是 VARIANT `null` 值，而不存在的路径是 SQL `NULL`。值写入表后，值为 `null` 的对象成员会被移除，读取时返回 SQL `NULL`。参见 [NULL 语义](#null-semantics)。
+2. 为什么执行 `INSERT INTO t VALUES (1, '{"a": 1}')` 后，`v['a']` 返回 `NULL`？
+   - `INSERT` 会把字符串作为 VARIANT 字符串写入，不做解析。请使用 `PARSE_TO_VARIANT('{"a": 1}')`，或通过 Stream Load 等导入作业导入数据。参见[写入数据](#write-data)。
+3. 为什么我的查询/索引没有生效？
    - 请检查是否对路径做了正确的 CAST、是否因为类型冲突被提升为 JSONB、或是否误以为给 VARIANT“整体”建的索引可用于子列。
-3. 为什么 DECIMAL 写入 VARIANT 列时出现小数位/精度丢失？
+4. 为什么 `ORDER BY v['a']` 把 `"10"` 排在 `9` 之后，或者 `GROUP BY v['a']` 把 `1` 和 `"1"` 分成两组？
+   - VARIANT 的排序和相等判断首先看值的种类：数值排在字符串之前，数值永远不等于字符串。需要数值语义或字典序时，请把路径 CAST 为同一类型。参见[比较、分组与排序](#comparison-grouping-and-ordering)。
+5. 为什么 DECIMAL 写入 VARIANT 列时出现小数位/精度丢失？
    - 写入 VARIANT 列时，在推断子列类型时不会推断为 DECIMAL，数值会以 DOUBLE 存储，因而可能丢失末位小数。即使通过 Schema Template 将子路径显式声明为 DECIMAL（例如 `pm25 VARIANT<'xxx': DECIMAL(6, 2)>`），写入路径也会先解析为 DOUBLE 再转换为 DECIMAL，仍不能完全保证精度。如果在 JSON 中将该字段写成字符串形式（例如 `'{"num": "12.345"}'`），并配合 Schema Template 声明为对应的 DECIMAL（例如 `DECIMAL(9, 3)`），写入时会直接由字符串解析为 DECIMAL，可以保证精度。

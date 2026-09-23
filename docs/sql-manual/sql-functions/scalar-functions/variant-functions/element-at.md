@@ -29,22 +29,23 @@ ELEMENT_AT(container, key_or_index)
   - For `MAP`: The key type (`K`) of the `MAP`, which can be any supported primitive type.  
   - For `STRUCT`: A constant integer field position (starting from **1**) or a constant string field name (matched **case-insensitively**).  
   - For `VARIANT` object access: A string key.
-  - For a VARIANT array in Doris 4.2 and later: An integer index; positive indexes are 1-based and negative indexes count backward from the end.
+  - For a VARIANT array in Doris 5.0.0 and later: An integer index; positive indexes are 1-based and negative indexes count backward from the end.
 
 ## Return Value
 
 - For `ARRAY`: Returns the element at the specified index (`T` type).  
 - For `MAP`: Returns the value corresponding to the specified key (`V` type).  
 - For `STRUCT`: Returns the specified subfield value.  
-- For `VARIANT`: Returns a `VARIANT` type value.  
+- For `VARIANT`: Returns a `VARIANT` type value. A missing key, index `0`, an out-of-range index, a string key on an array, an integer index on an object, and a key on a scalar value all return `NULL`.
 - If the index or key does not exist, returns `NULL` (for `STRUCT`, an out-of-bound position or a non-existent field name reports an error).  
 - If the parameter is `NULL`, returns `NULL`.
 
 ## Notes
 
-1. **ARRAY and, in Doris 4.2 and later, VARIANT array indexes start from 1**, not 0.
+1. **ARRAY and, in Doris 5.0.0 and later, VARIANT array indexes start from 1**, not 0.
 2. Negative indexes are supported for ARRAY and VARIANT array access: `-1` represents the last element, `-2` the second-to-last, and so on.
 3. The `ELEMENT_AT(container, key_or_index)` function behaves the same as `container[key_or_index]` (see examples for details).
+4. For `VARIANT`, a JSON `null` member of a value computed in a query is returned as a VARIANT `null`, which is not SQL `NULL`. In data read from a table, `null` members are not stored, so the same access returns SQL `NULL`. See [NULL semantics](../../../basic-element/sql-data-types/semi-structured/VARIANT#null-semantics).
 
 ```sql
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 1);  -- 10
@@ -119,7 +120,7 @@ SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
     +--------------------------------------------------+
     ```
 
-5. When accessing a subfield of a `VARIANT`, if the `VARIANT` value is not an OBJECT, an empty value is returned.
+5. When accessing a subfield of a `VARIANT`, if the `VARIANT` value is not an OBJECT, `NULL` is returned.
 
     ```SQL
     SELECT ELEMENT_AT(PARSE_TO_VARIANT('{"a": 1, "b": 2}'), "a");
@@ -133,6 +134,6 @@ SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
     +-------------------------------------------+
     | ELEMENT_AT(PARSE_TO_VARIANT('123'), "")   |
     +-------------------------------------------+
-    |                                           |
+    | NULL                                      |
     +-------------------------------------------+
     ```

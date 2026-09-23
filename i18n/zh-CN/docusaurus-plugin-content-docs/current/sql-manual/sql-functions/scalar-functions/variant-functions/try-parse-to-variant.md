@@ -8,7 +8,7 @@
 
 ## 功能
 
-`TRY_PARSE_TO_VARIANT` 尝试把一个完整 JSON 值解析为 `VARIANT`。函数名中的 `TRY_` 表示：发生解析或校验错误时返回 SQL `NULL`，而不是使查询失败。该函数自 Doris 4.1.4 起支持。
+`TRY_PARSE_TO_VARIANT` 尝试把一个完整 JSON 值解析为 `VARIANT`。函数名中的 `TRY_` 表示：发生解析错误时返回 SQL `NULL`，而不是使查询失败。该函数自 Doris 4.1.4 起支持。
 
 ## 语法
 
@@ -27,29 +27,30 @@ TRY_PARSE_TO_VARIANT(<json_value>)
 返回可为 NULL 的 `VARIANT` 值。
 
 - 合法输入返回解析后的 VARIANT 值。
-- 非法 JSON 或其他解析、校验错误返回 SQL `NULL`。
+- 对象 key 超过 `variant_max_json_key_length` 字节（BE 配置，默认 255），或同一对象中有重复 key 时，返回 SQL `NULL`。
+- 不是合法 JSON 的文本与 [PARSE_TO_VARIANT](./parse-to-variant) 一样，作为 VARIANT 字符串返回。只有当 BE 配置 `variant_throw_exeception_on_invalid_json` 为 `true`（默认 `false`）时，才返回 SQL `NULL`。
 - 输入为 SQL `NULL` 时返回 SQL `NULL`。
-- 合法的 JSON 字面量 `null` 返回 Variant/JSON `null`，不是 SQL `NULL`。
+- JSON 字面量 `null` 返回 VARIANT `null`，不是 SQL `NULL`。
 
 ## 示例
 
-保留合法值，并把非法 JSON 转换为 SQL `NULL`：
+保留合法值，并把解析错误转换为 SQL `NULL`：
 
 ```sql
 SELECT CAST(
            TRY_PARSE_TO_VARIANT('{"id": 1}')
            AS STRING
        ) AS valid_value,
-       TRY_PARSE_TO_VARIANT('{"id":') IS NULL AS invalid_is_null,
+       TRY_PARSE_TO_VARIANT('{"id": 1, "id": 2}') IS NULL AS duplicate_is_null,
        TRY_PARSE_TO_VARIANT(NULL) IS NULL AS input_is_null;
 ```
 
 ```text
-+-------------+-----------------+---------------+
-| valid_value | invalid_is_null | input_is_null |
-+-------------+-----------------+---------------+
-| {"id":1}    |               1 |             1 |
-+-------------+-----------------+---------------+
++-------------+-------------------+---------------+
+| valid_value | duplicate_is_null | input_is_null |
++-------------+-------------------+---------------+
+| {"id":1}    |                 1 |             1 |
++-------------+-------------------+---------------+
 ```
 
 解析 JSON/JSONB 输入：
@@ -69,22 +70,23 @@ SELECT CAST(
 +------------+
 ```
 
-JSON `null` 与 SQL `NULL` 仍然不同：
+JSON `null` 不是 SQL `NULL`，不是合法 JSON 的文本保留为字符串：
 
 ```sql
 SELECT TRY_PARSE_TO_VARIANT('null') IS NULL AS json_null_is_sql_null,
-       TRY_PARSE_TO_VARIANT('{') IS NULL AS error_is_sql_null;
+       VARIANT_TYPE(TRY_PARSE_TO_VARIANT('{"id":')) AS invalid_json_type;
 ```
 
 ```text
 +-----------------------+-------------------+
-| json_null_is_sql_null | error_is_sql_null |
+| json_null_is_sql_null | invalid_json_type |
 +-----------------------+-------------------+
-|                     0 |                 1 |
+|                     0 | string            |
 +-----------------------+-------------------+
 ```
 
 ## 使用说明
 
-- 如果非法输入应该使查询失败并暴露数据质量问题，请使用 [PARSE_TO_VARIANT](./parse-to-variant)。
-- 本函数只会把解析和校验错误转换为 SQL `NULL`，不会改变合法 JSON `null` 的含义。
+- 如果解析错误应该使查询失败并暴露数据质量问题，请使用 [PARSE_TO_VARIANT](./parse-to-variant)。
+- 本函数只会把解析错误转换为 SQL `NULL`，不会改变合法 JSON `null` 的含义。
+- Stream Load 等导入作业按与本函数相同的规则解析 JSON 文本，参见[解析错误](../../../basic-element/sql-data-types/semi-structured/VARIANT#parse-errors)。

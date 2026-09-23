@@ -27,8 +27,10 @@ PARSE_TO_VARIANT(<json_value>)
 Returns a `VARIANT` value.
 
 - SQL `NULL` input returns SQL `NULL`.
-- The JSON literal `null` returns Variant/JSON `null`, which is different from SQL `NULL`.
-- Invalid JSON, duplicate object keys rejected by the current validation settings, unsupported depth, or another validation error causes the query to fail.
+- The JSON literal `null` returns a VARIANT `null`, which is different from SQL `NULL`.
+- Text that is not valid JSON is returned as a VARIANT string. This is controlled by the BE configuration `variant_throw_exeception_on_invalid_json` (default `false`); when it is `true`, invalid JSON makes the query fail.
+- An empty string returns an empty object `{}`.
+- The query fails when an object key is longer than `variant_max_json_key_length` bytes (BE configuration, default 255) or when an object contains duplicate keys.
 
 ## Example
 
@@ -42,11 +44,11 @@ SELECT CAST(
 ```
 
 ```text
-+----------------------------------------+
-| value                                  |
-+----------------------------------------+
-| {"id":42,"tags":["doris","sql"]}     |
-+----------------------------------------+
++----------------------------------+
+| value                            |
++----------------------------------+
+| {"id":42,"tags":["doris","sql"]} |
++----------------------------------+
 ```
 
 Parse a JSON/JSONB expression:
@@ -97,17 +99,32 @@ SELECT PARSE_TO_VARIANT(NULL) IS NULL AS is_sql_null;
 +-------------+
 ```
 
-Invalid JSON returns an error:
+Text that is not valid JSON is kept as a string:
 
 ```sql
-SELECT PARSE_TO_VARIANT('{"id":');
+SELECT CAST(PARSE_TO_VARIANT('{"id":') AS STRING) AS value,
+       VARIANT_TYPE(PARSE_TO_VARIANT('{"id":'))    AS type;
 ```
 
 ```text
-ERROR: Parse json document failed
++--------+--------+
+| value  | type   |
++--------+--------+
+| {"id": | string |
++--------+--------+
+```
+
+Duplicate keys return an error:
+
+```sql
+SELECT PARSE_TO_VARIANT('{"id": 1, "id": 2}');
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = [INVALID_ARGUMENT]Parse json document failed at row 0, error: [INVALID_ARGUMENT]Duplicate Variant object key
 ```
 
 ## Usage Notes
 
-- Use [TRY_PARSE_TO_VARIANT](./try-parse-to-variant) when invalid input should become SQL `NULL` instead of failing the query.
-- `PARSE_TO_VARIANT` explicitly parses JSON. By contrast, `CAST(string AS VARIANT)` preserves the input as a VARIANT string and does not parse JSON; see the [VARIANT CAST rules](../../../basic-element/sql-data-types/semi-structured/VARIANT#cast-rules).
+- Use [TRY_PARSE_TO_VARIANT](./try-parse-to-variant) when a parse error should return SQL `NULL` instead of failing the query.
+- `PARSE_TO_VARIANT` explicitly parses JSON. By contrast, `CAST(string AS VARIANT)` and `INSERT` of a string into a VARIANT column keep the input as a VARIANT string and do not parse JSON. To write JSON text with `INSERT`, wrap it in `PARSE_TO_VARIANT`. See [Write data](../../../basic-element/sql-data-types/semi-structured/VARIANT#write-data) and [CAST to VARIANT](../../../basic-element/sql-data-types/semi-structured/VARIANT#cast-to-variant).
