@@ -45,12 +45,12 @@ Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lan
 | Lance Cache | BE 内共享索引、元数据缓存及本地磁盘数据缓存 |
 | TopN 两阶段读取 | 对向量和全文检索中可延迟的输出列默认开启，由 `enable_lance_lazy_materialization` 独立控制 |
 | 写入 Lance | 暂不支持 |
-| Time Travel | 暂不支持 |
+| Time Travel | 支持 `FOR VERSION AS OF`、`FOR TIME AS OF`、`@tag(...)` 和 `@branch(...)`，包括由 REST Namespace 管理版本的表 |
 | Hybrid Search | 暂不支持 |
 
 ## Lance 版本与兼容性
 
-Doris BE 数据读取器使用 `lance-c v0.1.9` 加 Doris 补丁构建，补丁包含多向量检索支持，并将其内置的 Lance Rust crates 升级到 `11.0.0`（commit `ab6b5bbe`）。Doris FE 使用 `org.lance:lance-core:11.0.0` 读取 Namespace 和数据集元数据，FE 与 BE 的 Lance 版本统一为 `11.0.0`。Dataset 必须同时满足 FE 元数据加载和 BE 数据读取的兼容性要求。这些实现版本与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
+Doris BE 数据读取器使用 `lance-c v0.1.9` 加 Doris 补丁构建，补丁包含多向量检索支持，并将其内置的 Lance Rust crates 升级到 `11.0.0`（commit `ab6b5bbe`）。Doris FE 使用 `org.lance:lance-core:12.0.0` 读取 Namespace 和数据集元数据；FE 只读元数据、不写数据集，因此 FE 采用较新的 Lance 版本不改变 BE 能读取的范围。Dataset 必须同时满足 FE 元数据加载和 BE 数据读取的兼容性要求。这些实现版本与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
 
 当前读取器的文件格式兼容情况如下：
 
@@ -314,9 +314,7 @@ REST 服务认证和对象存储认证是两套独立配置：`lance.rest.*` 用
 
 如果不同表位于不同 Bucket，不要让它们共用上例中固定为 `my-bucket` 的 S3 虚拟主机 endpoint。应由 Namespace 为每张表下发匹配的 endpoint 和访问方式，或为不同 Bucket 分别配置 Catalog。对于支持 Path Style 的服务，也可以使用不带 Bucket 的服务 endpoint，配合 `use_path_style=true`，由客户端从各表 URI 读取 Bucket。
 
-:::caution
-当前 BE Reader 不支持由 REST Namespace 管理版本的 Lance 表（Managed Versioning）。
-:::
+如果 REST Namespace 管理该表的版本（`DescribeTable` 返回 `managed_versioning = true`），Doris 会通过 Namespace 的版本接口解析最新版本和 Time Travel 指定的版本，再从存储读取对应的 manifest。详见 [Time Travel](#time-travel)。
 
 ## Namespace 映射
 
@@ -383,6 +381,57 @@ FROM lance_catalog.default.user_profiles;
 ```
 
 普通 Catalog 查询会在规划阶段固定一个 Lance 数据集版本，并按 Fragment 生成扫描任务。因此，同一条查询读取一致的快照，同时可以由多个 Scanner 并行扫描不同 Fragment，不会让每个 Scanner 重复扫描整个数据集。
+
+## Time Travel
+
+Lance 数据集的每次提交都会产生一个新版本，版本号从 1 开始。查询可以读取某个历史版本，而不是最新版本：
+
+```sql
+-- 读取表的版本 2
+SELECT * FROM lance_catalog.db.tbl FOR VERSION AS OF 2;
+
+-- 读取指定时间点之前（含）提交的最新版本
+SELECT * FROM lance_catalog.db.tbl FOR TIME AS OF '2026-09-19 13:06:10';
+```
+
+- `FOR VERSION AS OF` 接受正整数版本号；与 Iceberg、Paimon 表一样，也可以写带引号的 tag 名（`FOR VERSION AS OF 'v2'` 等同于 `@tag(v2)`）。
+- `FOR TIME AS OF` 接受会话时区下的时间戳，支持秒或毫秒精度（`yyyy-MM-dd HH:mm:ss` 或 `yyyy-MM-dd HH:mm:ss.SSS`）。Doris 选择提交时间不晚于该时间戳的最新版本，提交时间按毫秒精度比较；早于第一个版本的时间戳会报错。
+- 选中的版本在整条语句内固定：schema、Fragment 规划、谓词下推和 BE 扫描都使用该版本。同一条语句里对同一张表的两次引用可以选择不同版本。`EXPLAIN` 中的 `lanceVersion` 显示选中的版本。
+- 被 Lance `cleanup_old_versions` 清理掉的版本无法读取，报错与从未存在的版本相同。
+- `vector_search()`、`full_text_search()` 和索引查看总是作用于 main 的最新版本，它们的 `table` 参数中不能指定版本、tag 或 branch。
+
+Lance 的 tag 和 branch 使用与 Iceberg、Paimon 表相同的语法：
+
+```sql
+-- 读取 tag "v2" 指向的版本
+SELECT * FROM lance_catalog.db.tbl@tag(v2);
+
+-- 读取 branch "dev" 的最新版本
+SELECT * FROM lance_catalog.db.tbl@branch(dev);
+
+-- 读取 branch "dev" 的版本 2
+SELECT * FROM lance_catalog.db.tbl@branch(dev) FOR VERSION AS OF 2;
+```
+
+- tag 指向某个 branch 上的某个版本，读取时选中的就是该 branch 的该版本：建在 `dev` 上的 tag 读的是 `dev`，而不是 main 上同号的版本。`@tag` 不能再与 `FOR VERSION AS OF` 或 `FOR TIME AS OF` 同时使用。
+- `@branch(main)` 读取 main，与不写 `@branch` 相同。
+- 每个 branch 有自己的版本序列，从创建它时所基于的版本开始。`@branch` 后的 `FOR VERSION AS OF` / `FOR TIME AS OF` 只在该 branch 的版本中选择，因此早于 branch 创建时间的时间戳在 branch 上选不到版本。`@branch`（`main` 除外）后的 `FOR VERSION AS OF` 不能写 tag 名，因为 tag 本身已经确定了 branch。
+- branch 存放在 `<table>/tree/<branch>/` 下，是表的 shallow clone，manifest 以绝对 URI 记录表的位置。因此 branch 只能在创建它的位置读取：把数据集复制或迁移到别处后，main 仍可读，branch 不可读。
+- `EXPLAIN` 中的 `lanceBranch` 显示读取的 branch。不存在的 tag 或 branch 会报错。
+
+### REST Namespace 管理的版本（Managed Versioning）
+
+REST Namespace 可以自行管理表的版本（`DescribeTable` 返回 `managed_versioning = true`）。对这类表，Doris 通过 Namespace 解析版本：最新版本和 `FOR VERSION AS OF` 以 Namespace 的记录为准（`ListTableVersions`、`DescribeTableVersion`），`FOR TIME AS OF` 按 Namespace 返回的提交时间（`timestamp_millis`）选择；tag 与普通 Lance 表一样从数据集的 `_refs/tags/` 读取，branch 的版本同样由 Namespace 解析。选定版本后，Doris 从存储读取对应的 manifest。
+
+- Namespace 没有记录的版本报告为不存在，即使它的 manifest 仍在存储中；最新版本以 Namespace 为准，即使存储中已有更新的 manifest。
+- 如果 Namespace 不返回提交时间，`FOR TIME AS OF` 改用存储中 manifest 记录的提交时间，并且只在 Namespace 列出的版本中选择。
+- 这类表在 `EXPLAIN` 中显示 `lanceManagedVersioning=true`。
+
+限制：
+
+- Doris 以 `DescribeTable` 返回的 `location` 打开数据集，它必须是完整的存储 URI。`location` 为空，或同时返回的 `table_uri` 与它不一致时，查询直接报错，不读取数据。
+- BE 按版本号从表目录读取选中的版本，因此 Namespace 记录的 manifest 最终必须位于规范路径 `_versions/<u64::MAX - version>.manifest`。正常提交产生的 staged manifest 会在读取时被 Lance 落到该路径（见下一条）；如果 Namespace 把最终 manifest 存放在其他位置，Doris 无法发现：规范路径上没有该版本时查询报错，规范路径上有同号的其他 manifest 时会读到它的数据。
+- 如果 Namespace 记录的 manifest 还在 staged 路径，Lance 会在首次读取时把它复制到规范路径，因此读取所用的存储凭证需要允许这次写入；权限不足时报错会提示这一点。
 
 ## 查看 Lance 索引
 
@@ -1119,7 +1168,6 @@ ORDER BY _score DESC, document_id;
 ## 当前限制和建议
 
 - Lance Catalog 和 Lance TVF 当前仅支持读取，不支持 `CREATE TABLE`、`INSERT`、`UPDATE`、`DELETE`、`TRUNCATE TABLE` 或写回 Lance。
-- 查询总是读取规划时选择的当前版本，不支持通过 SQL 指定 Version 或执行 Time Travel。
 - 使用不支持的列类型时，建议显式列出需要读取的列，避免 `SELECT *` 投影到不支持的列。
 - 对普通扫描使用 `EXPLAIN` 检查 `lancePushdownPredicate`，确认目标条件是否已下推。
 - 向量检索前应在 Lance 中创建与查询方式匹配的索引；小数据集或验证场景可以设置 `"use_index" = "false"` 使用 Flat Search。
