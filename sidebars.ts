@@ -839,7 +839,14 @@ const sidebars: SidebarsConfig = {
                             link: {type: 'doc', id: 'observability/dogstack/overview'},
                             items: [
                                 'observability/dogstack/quickstart',
-                                'observability/dogstack/deployment',
+                                {
+                                    type: 'category',
+                                    label: 'Deployment',
+                                    items: [
+                                        'observability/dogstack/docker',
+                                        'observability/dogstack/kubernetes',
+                                    ],
+                                },
                                 'observability/dogstack/search',
                                 'observability/dogstack/trace',
                                 'observability/dogstack/dashboard',

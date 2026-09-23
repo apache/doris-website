@@ -619,6 +619,10 @@
     "message": "性能测试",
     "description": "The label for category Benchmark in sidebar docs"
   },
+  "sidebar.docs.category.Deployment": {
+    "message": "部署",
+    "description": "The label for category Deployment in sidebar docs"
+  },
   "sidebar.docs.category.Observability": {
     "message": "可观测性",
     "description": "Observability"
