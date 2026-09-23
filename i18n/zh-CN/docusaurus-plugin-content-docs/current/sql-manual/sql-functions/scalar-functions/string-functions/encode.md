@@ -21,16 +21,16 @@ ENCODE(<source>, <charset>)
 | 参数 | 说明 |
 | :--- | :--- |
 | `<source>` | 要编码的字符串。类型：STRING。 |
-| `<charset>` | 目标字符集名称。类型：STRING。支持的值为 `US-ASCII`、`ISO-8859-1`、`UTF-8`、`UTF-16BE`、`UTF-16LE` 和 `UTF-16`。 |
+| `<charset>` | 目标字符集名称的字符串字面量，或 `NULL`。支持的值为 `US-ASCII`、`ISO-8859-1`、`UTF-8`、`UTF-16BE`、`UTF-16LE` 和 `UTF-16`。不允许使用列或其他表达式。 |
 
 ## 返回值
 
 返回包含编码后字节的 `VARBINARY` 值。
 
-- 任一参数为 `NULL` 时，返回 `NULL`。
+- `<charset>` 为 `NULL`，或 `<source>` 为 `NULL` 且 `<charset>` 有效时，返回 `NULL`。
 - `<source>` 为空字符串时，返回空的二进制值。
 - 对于非空输入，`UTF-16` 会写入大端字节序标记（BOM）。`UTF-16BE` 和 `UTF-16LE` 不写入 BOM。
-- `<charset>` 不受支持，或 `<source>` 包含无法用目标字符集表示的字符时，函数返回错误。
+- `<charset>` 不受支持时，即使 `<source>` 为 `NULL`，函数也会返回错误。`<source>` 包含无法用目标字符集表示的字符时，函数同样返回错误。
 
 ## 示例
 
