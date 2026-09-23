@@ -55,7 +55,7 @@ ai-observe-stack
 - 集群级 RBAC 权限：采集器会创建 ClusterRole 和 ClusterRoleBinding。
 - 节点能够拉取镜像 `otel/opentelemetry-collector-contrib`、`otel/opentelemetry-collector-k8s`、`grafana/grafana`、`velodb/doris-app-plugin` 和 `busybox`。使用私有镜像仓库时，在 `ai-observe-stack` 中设置 `global.imagePullSecrets`，在 `dog-k8s-collector` 中设置 `imagePullSecrets`，并将镜像参数指向镜像源：`ai-observe-stack` 中的 `gateway.image.repository`、`grafana.image.repository`、`dorisPlugin.image.repository` 以及 `global.helperImages.busybox` / `global.helperImages.curl`；`dog-k8s-collector` 中的 `agent.image.repository` 和 `cluster.image.repository`。
 - Doris，以下二选一：
-  - 已有 Doris 集群：FE 的 9030（MySQL 协议）和 8030（HTTP）端口可以从 Kubernetes 集群访问，并准备一个具有 `CREATE DATABASE` 权限的账号。
+  - 已有 Doris 集群：FE 的 9030（MySQL 协议）和 8030（HTTP）端口可以从 Kubernetes 集群访问，并准备一个具有 `CREATE DATABASE` 权限的账号。网关通过 Stream Load 写入数据：FE 会将每个请求重定向到 BE 在 Doris 中注册的地址（可通过 `SHOW BACKENDS` 查看），因此网关 Pod 还需要能够访问这些 BE 地址及 BE 的 HTTP 端口（默认 8040）。
   - 由 Chart 部署 Doris：集群中有 PersistentVolume 供应器，且 FE 和 BE 各自至少有 2 核 CPU 和 4 GiB 内存。
 
 本文命令使用 Release 名称 `dog` 和命名空间 `dog`，下表中的对象名称由此生成。如果使用其他名称，请相应替换。
@@ -129,7 +129,7 @@ helm dependency update ./ai-observe-stack
 仓库提供两种规格：
 
 - `examples/ai-observe-stack/dev.yaml`：FE 和 BE 各一个，不开启持久化，一个网关，开启调试输出。仅用于试用。
-- `examples/ai-observe-stack/prod.yaml`：FE 和 BE 各三个，开启持久化，三个网关，并配置 Ingress。可作为生产配置的起点。
+- `examples/ai-observe-stack/prod.yaml`：FE 和 BE 各三个，开启持久化，三个网关，并配置 Ingress。可作为生产配置的起点。使用前需要修改其中与环境相关的配置：`storageClass`（示例为 AWS 的 `gp3`）、Ingress 的 class、域名和 TLS 证书签发者，以及 Grafana 密码（`CHANGE_ME`）。
 
 ```Bash
 helm install dog ./ai-observe-stack -n dog --create-namespace -f examples/ai-observe-stack/dev.yaml
@@ -174,6 +174,8 @@ Doris Operator 是集群级组件，一个 Kubernetes 集群中只能运行一�
    打开 <http://localhost:3000>，使用 `admin` 和上一步获取的密码登录。此时还没有数据写入网关，仪表盘为空。
 
 ## 步骤 2：安装 Kubernetes 采集器 {#step-2-install-the-kubernetes-collector}
+
+步骤 1 安装的后端只负责接收数据。采集器从 Kubernetes 集群中采集数据并发送给网关：agent 在每个节点上读取所有容器的 stdout 和 stderr，并采集 kubelet 与节点指标；cluster 采集器采集集群级指标和 Kubernetes Events。每条记录都会附带 Pod、命名空间、工作负载和集群名称。如果不安装采集器，只有直接向网关发送 OTLP 数据的应用能够接入 DOG Stack，不会有容器日志、节点与集群指标以及 Events。每个需要观测的 Kubernetes 集群中都需要安装一个采集器 Release。
 
 1. 确认在待采集的集群中可以访问网关。请将地址替换为实际地址。
 
@@ -262,7 +264,7 @@ logs:
    kubectl logs -n dog ds/dog-k8s-collector-agent | grep '"level":"error"'
    ```
 
-3. 在 Doris 中查询数据。使用方式 B 时，先转发 FE 端口，再用 MySQL 客户端连接：
+3. 在 Doris 中查询数据。使用方式 A 时，用 MySQL 客户端连接已有 Doris FE 的 9030 端口；使用方式 B 时，先转发 FE 端口，再用 MySQL 客户端连接：
 
    ```Bash
    kubectl port-forward -n dog svc/dog-ai-observe-stack-doris-fe-service 9030:9030
@@ -277,7 +279,7 @@ logs:
    GROUP BY 1 ORDER BY 2 DESC;
    ```
 
-   agent 启动后 30 秒内会写入第一批数据。`service_name` 为工作负载名称（Deployment、StatefulSet 或 DaemonSet），Kubernetes Events 显示为 `kubernetes-events`。只采集安装之后写入的日志行，节点上已有的日志文件不会重新读取。
+   agent 启动后 30 秒内会写入第一批数据。`service_name` 为 Pod 所属工作负载的名称，按 Deployment、StatefulSet、DaemonSet、CronJob、Job 的顺序查找；独立运行的 Pod 则为 Pod 名称。Kubernetes Events 显示为 `kubernetes-events`。只采集安装之后写入的日志行，节点上已有的日志文件不会重新读取。
 
 4. 打开 Grafana，检查以下仪表盘：
 
@@ -468,7 +470,7 @@ kubectl delete crd dorisclusters.doris.selectdb.com
 | `helm test` 失败，或网关日志中出现 Doris 相关错误 | 检查 Doris FE 的 9030 和 8030 端口是否可访问，以及账号是否具有 `CREATE DATABASE` 权限。使用 `kubectl logs -n dog dog-ai-observe-stack-otel-gateway-0` 查看网关日志。 |
 | agent Pod 报 `CreateContainerConfigError`、被 Pod Security 拒绝，或日志中出现 `/var/log/pods` 的 `permission denied` | 命名空间启用了 `restricted`。添加 `privileged` 标签，参见步骤 2。 |
 | agent 日志出现 `connection refused` 或 `Unavailable` | 网关地址错误、网关未运行，或网络策略阻止了 4317 端口。问题修复前，记录会缓存在节点上，修复后自动发送。 |
-| agent 日志出现 `unknown time zone` | 规则设置了时区，但节点上没有 `/usr/share/zoneinfo`。改用 UTC，或将 `agent.image.repository` 设置为 `otel/opentelemetry-collector-contrib`。 |
+| agent Pod 一直处于 `ContainerCreating` 状态，事件显示 `MountVolume.SetUp failed for volume "zoneinfo"` | 节点上没有时区数据库（部分精简操作系统镜像）。设置 `agent.tzdata.hostPath: ""`，并将 `timezone` 以及所有规则的 `timestamp.timezone` 保持为 UTC。 |
 | 某个命名空间没有日志 | 被 `logs.namespaces.exclude` 或 `logs.containers.exclude` 排除，或安装后没有写入新的日志行。 |
 | 有日志但 `service_name` 为空 | agent 无法读取 Pod 元数据。检查 agent 日志中是否有 RBAC `forbidden` 错误。 |
 | 解析规则不生效（`dog.log.rule` 为空） | `selector.container` 填写的是 Pod 名称而不是容器名称，或更靠前的规则先匹配。使用 `hack/test-rule.sh` 验证。 |
