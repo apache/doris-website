@@ -152,7 +152,7 @@ Writing a value into a table normalizes it. The value read back can differ from 
 | Values inside arrays, such as `{"arr": [{"a": null}, {}, [], null]}` | Kept as they are. `v['arr'][1]['a']` is a VARIANT `null`. |
 | A root JSON `null`, such as `PARSE_TO_VARIANT('null')` | An empty object `{}` |
 | A root empty array `[]` or empty object `{}` | Kept |
-| `DATE` and `DATETIME` values outside a Schema Template path, such as `CAST(date_col AS VARIANT)` | Stored as their text, so they read back as strings |
+| `DATE` and `DATETIME` values in the root value, such as `CAST(date_col AS VARIANT)`, or on a path that also holds values of other types | Stored as their text, so they read back as strings. On an object path that holds only dates, they keep their type. |
 | Booleans and numbers mixed on one path | Booleans can read back as `1` or `0`, depending on the order of values within a write and on compaction |
 | A key that contains a dot, such as `{"a.b": 1}` | Stored as a nested path: `{"a":{"b":1}}`. Both `v['a.b']` and `v['a']['b']` return `1`. A document that has both a key `a.b` and a key `b` inside `a` makes the whole INSERT or load job fail, unless `variant_enable_duplicate_json_path_check` is `true`. |
 | Object keys | Returned in byte order |
@@ -289,7 +289,7 @@ When these types are converted to VARIANT:
 | `DATE` | A calendar date with no time or time zone. |
 | `DATETIME(p)` | `0 <= p <= 6`, without time-zone adjustment. |
 | `TIMESTAMP_NS` | Nanosecond precision without time-zone adjustment; values must be within the TIMESTAMP_NS range. |
-| `TIMESTAMPTZ(p)` | Not supported by CAST. A Schema Template path can be declared as `TIMESTAMPTZ`. |
+| `TIMESTAMPTZ(p)` | Not supported, neither by CAST nor as a Schema Template path. |
 | `TIME` | Not supported. |
 
 ## NULL semantics
@@ -420,7 +420,7 @@ The operands decide whether a comparison uses the VARIANT rules or the rules of 
 ### Notes
 
 - **Cost.** VARIANT keys are hashed and compared by their logical value. In a benchmark on 44 million rows, `GROUP BY`, sorting, and joins on a VARIANT key took 1.2 to 3.7 times as long as the same operations on `CAST(v['path'] AS <type>)`. When a path has one known type, CAST it.
-- **Results follow the stored values.** The normalizations in [What storage keeps](#what-storage-keeps) happen before comparison: a member that was `null` is missing, a `DATE` written without a Schema Template compares as a string, and booleans mixed with numbers on one path can read back as `1` or `0`. Declare paths whose type matters in a Schema Template.
+- **Results follow the stored values.** The normalizations in [What storage keeps](#what-storage-keeps) happen before comparison: a member that was `null` is missing, a `DATE` in the root value compares as a string, and booleans mixed with numbers on one path can read back as `1` or `0`. Declare paths whose type matters in a Schema Template.
 - **Mixed types sort by kind, not by value.** If a path holds both numbers and numeric strings, `ORDER BY v['a']` puts every number before every string, and orders the strings by bytes. CAST to one type for numeric or lexical order.
 - **Values that look the same can differ.** In a `GROUP BY` result, the number `1` and the string `"1"` are displayed the same way but form two groups. Use `VARIANT_TYPE` to see the difference.
 - The order across kinds is defined by Doris so that results are deterministic. It is not part of the JSON standard and can differ from other systems.
@@ -438,7 +438,6 @@ CREATE TABLE test_var_schema (
         'string_val': STRING,
         'decimal_val': DECIMAL(38, 9),
         'datetime_val': DATETIME,
-        'tz_val': TIMESTAMPTZ,
         'ip_val': IPV4
     > NULL
 )
@@ -450,7 +449,7 @@ A template field can use these types:
 - Numbers: `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, and `DECIMAL(p, s)` with `p <= 38`
 - `STRING` (or `TEXT`)
 - `BOOLEAN`
-- `DATE`, `DATETIME(p)`, `TIMESTAMPTZ(p)`, `TIMESTAMP_NS`
+- `DATE`, `DATETIME(p)`, `TIMESTAMP_NS`
 - `IPV4`, `IPV6`
 - `ARRAY<T>`, where `T` is one of the types above (one dimension only)
 
@@ -491,7 +490,7 @@ SELECT k, v FROM tpl_demo ORDER BY k;
 - Date and IP values must be JSON strings: `{"date": 2020-01-01}` and `{"ip": 127.0.0.1}` are not valid JSON; write `{"date": "2020-01-01"}` and `{"ip": "127.0.0.1"}`.
 
 :::caution
-A value is only converted when its JSON type has a conversion to the declared type. A JSON number on an `IPV4`, `IPV6`, or `TIMESTAMPTZ` path makes the whole write fail. If one write mixes JSON strings and numbers on a `DATE`, `DATETIME`, `TIMESTAMPTZ`, `IPV4`, or `IPV6` path, even the valid values on that path can be dropped. Write the values of such paths as JSON strings.
+A value is only converted when its JSON type has a conversion to the declared type. A JSON number on an `IPV4` or `IPV6` path makes the whole write fail. If one write mixes JSON strings and numbers on a `DATE`, `DATETIME`, `IPV4`, or `IPV6` path, even the valid values on that path can be dropped. Write the values of such paths as JSON strings.
 :::
 
 ### Reading template paths

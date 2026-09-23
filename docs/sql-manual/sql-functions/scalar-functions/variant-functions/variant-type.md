@@ -43,7 +43,7 @@ SQL `NULL` input returns SQL `NULL`.
 
 ## Notes
 
-1. Use it to find the actual type of values in a `VARIANT` column. For values read from a table, the result reflects the stored value; for example, a `DATE` written outside a Schema Template path is stored as a string. See [What storage keeps](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps).
+1. Use it to find the actual type of values in a `VARIANT` column. For values read from a table, the result reflects the stored value; for example, a `DATE` in the root value is stored as a string. See [What storage keeps](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps).
 2. The result is the type of the value, not the storage type of the path: an integer read from a `BIGINT` path can be `tinyint`. To see the storage type of each subcolumn in a table, use `SET describe_extend_variant_column = true;` and `DESC`.
 3. The function reads every row, so use `LIMIT` to restrict the number of rows in practice.
 

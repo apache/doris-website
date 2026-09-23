@@ -43,7 +43,7 @@ VARIANT_TYPE(variant_value)
 
 ## 使用说明
 
-1. 用于查看 `VARIANT` 列中值的实际类型。对于从表中读取的值，结果反映的是存储后的值，例如写在 Schema Template 路径之外的 `DATE` 会以字符串存储。参见[写入后值的规范化](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps)。
+1. 用于查看 `VARIANT` 列中值的实际类型。对于从表中读取的值，结果反映的是存储后的值，例如根值中的 `DATE` 会以字符串存储。参见[写入后值的规范化](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps)。
 2. 结果是值的类型，而不是路径的存储类型：从 `BIGINT` 路径读出的整数可能是 `tinyint`。如需查看表中每个子列的存储类型，请使用 `SET describe_extend_variant_column = true;` 后执行 `DESC`。
 3. 函数会读取每一行，实际使用中请用 `LIMIT` 限制行数。
 

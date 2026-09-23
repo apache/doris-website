@@ -152,7 +152,7 @@ SELECT VARIANT_TYPE(PARSE_TO_VARIANT('{"id": 1}')) AS valid_json,    -- object
 | 数组内的值，如 `{"arr": [{"a": null}, {}, [], null]}` | 原样保留；`v['arr'][1]['a']` 是 VARIANT `null`。 |
 | 根值为 JSON `null`，如 `PARSE_TO_VARIANT('null')` | 空对象 `{}` |
 | 根值为空数组 `[]` 或空对象 `{}` | 保留 |
-| 不在 Schema Template 路径上的 `DATE`、`DATETIME` 值，如 `CAST(date_col AS VARIANT)` | 以文本形式存储，读回时是字符串 |
+| 根值中的 `DATE`、`DATETIME` 值（如 `CAST(date_col AS VARIANT)`），以及所在路径上还有其他类型值的日期 | 以文本形式存储，读回时是字符串。只存日期的对象路径会保留日期类型。 |
 | 同一路径上混有布尔值和数值 | 布尔值可能读回为 `1` 或 `0`，取决于同一次写入中值的先后顺序以及 Compaction |
 | 含 `.` 的 key，如 `{"a.b": 1}` | 按嵌套路径存储：`{"a":{"b":1}}`，`v['a.b']` 和 `v['a']['b']` 都返回 `1`。如果一个文档同时包含 key `a.b` 和 `a` 下的 key `b`，整条 INSERT 或整个导入作业都会失败，除非 `variant_enable_duplicate_json_path_check` 为 `true`。 |
 | 对象 key | 按字节序返回 |
@@ -289,7 +289,7 @@ SELECT CAST(PARSE_TO_VARIANT('true') AS STRING)        AS bool_root,     -- 1
 | `DATE` | 不含时间和时区的日历日期。 |
 | `DATETIME(p)` | `0 <= p <= 6`，不做时区调整。 |
 | `TIMESTAMP_NS` | 纳秒精度，不做时区调整；值必须在 TIMESTAMP_NS 取值范围内。 |
-| `TIMESTAMPTZ(p)` | 不能 CAST 为 VARIANT。可以在 Schema Template 中把路径声明为 `TIMESTAMPTZ`。 |
+| `TIMESTAMPTZ(p)` | 不支持：既不能 CAST 为 VARIANT，也不能在 Schema Template 中声明。 |
 | `TIME` | 不支持。 |
 
 ## NULL 语义 {#null-semantics}
@@ -420,7 +420,7 @@ ORDER BY v;
 ### 注意事项 {#notes}
 
 - **代价。** VARIANT 键按逻辑值做 Hash 和比较。在一个 4400 万行的测试中，以 VARIANT 为键的 `GROUP BY`、排序和 Join，耗时是对 `CAST(v['path'] AS <type>)` 执行相同操作的 1.2 到 3.7 倍。路径类型确定时，请先 CAST。
-- **结果以存储后的值为准。** [写入后值的规范化](#what-storage-keeps)发生在比较之前：原本为 `null` 的成员已经不存在；未在 Schema Template 中声明的 `DATE` 按字符串比较；同一路径上与数值混在一起的布尔值可能读回为 `1` 或 `0`。类型重要的路径请在 Schema Template 中声明。
+- **结果以存储后的值为准。** [写入后值的规范化](#what-storage-keeps)发生在比较之前：原本为 `null` 的成员已经不存在；根值中的 `DATE` 按字符串比较；同一路径上与数值混在一起的布尔值可能读回为 `1` 或 `0`。类型重要的路径请在 Schema Template 中声明。
 - **混合类型按种类排序，而不是按值排序。** 如果一个路径上既有数值又有数字字符串，`ORDER BY v['a']` 会把所有数值排在所有字符串之前，字符串之间再按字节排序。需要数值序或字典序时，请先 CAST 为同一类型。
 - **看起来相同的值可能不同。** 在 `GROUP BY` 结果中，数值 `1` 与字符串 `"1"` 显示得完全一样，却是两个分组。可以用 `VARIANT_TYPE` 区分。
 - 跨种类的排序由 Doris 定义，目的是保证结果确定。它不属于 JSON 标准，也可能与其他系统不同。
@@ -438,7 +438,6 @@ CREATE TABLE test_var_schema (
         'string_val': STRING,
         'decimal_val': DECIMAL(38, 9),
         'datetime_val': DATETIME,
-        'tz_val': TIMESTAMPTZ,
         'ip_val': IPV4
     > NULL
 )
@@ -450,7 +449,7 @@ PROPERTIES ("replication_num" = "1");
 - 数值：`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`FLOAT`、`DOUBLE`，以及 `p <= 38` 的 `DECIMAL(p, s)`
 - `STRING`（或 `TEXT`）
 - `BOOLEAN`
-- `DATE`、`DATETIME(p)`、`TIMESTAMPTZ(p)`、`TIMESTAMP_NS`
+- `DATE`、`DATETIME(p)`、`TIMESTAMP_NS`
 - `IPV4`、`IPV6`
 - `ARRAY<T>`，`T` 为以上类型之一（仅支持一维）
 
@@ -491,7 +490,7 @@ SELECT k, v FROM tpl_demo ORDER BY k;
 - 日期和 IP 值必须写成 JSON 字符串：`{"date": 2020-01-01}` 与 `{"ip": 127.0.0.1}` 都不是合法 JSON，应写作 `{"date": "2020-01-01"}` 与 `{"ip": "127.0.0.1"}`。
 
 :::caution
-只有当值的 JSON 类型能够转换为声明类型时，才会进行转换。`IPV4`、`IPV6` 或 `TIMESTAMPTZ` 路径上出现 JSON 数值时，整次写入会失败。如果同一次写入在 `DATE`、`DATETIME`、`TIMESTAMPTZ`、`IPV4` 或 `IPV6` 路径上混有 JSON 字符串和数值，该路径上合法的值也可能被丢弃。这类路径的值请写成 JSON 字符串。
+只有当值的 JSON 类型能够转换为声明类型时，才会进行转换。`IPV4` 或 `IPV6` 路径上出现 JSON 数值时，整次写入会失败。如果同一次写入在 `DATE`、`DATETIME`、`IPV4` 或 `IPV6` 路径上混有 JSON 字符串和数值，该路径上合法的值也可能被丢弃。这类路径的值请写成 JSON 字符串。
 :::
 
 ### 读取模板路径 {#reading-template-paths}
