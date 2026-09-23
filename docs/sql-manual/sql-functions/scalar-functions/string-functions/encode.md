@@ -21,7 +21,7 @@ ENCODE(<source>, <charset>)
 | Parameter | Description |
 | :--- | :--- |
 | `<source>` | The string to encode. Type: STRING. |
-| `<charset>` | A constant expression that evaluates to the name of the target character set. Type: STRING. Supported values are `US-ASCII`, `ISO-8859-1`, `UTF-8`, `UTF-16BE`, `UTF-16LE`, and `UTF-16`. A table column is not allowed. |
+| `<charset>` | A string literal naming the target character set, or `NULL`. Supported values are `US-ASCII`, `ISO-8859-1`, `UTF-8`, `UTF-16BE`, `UTF-16LE`, and `UTF-16`. A column or other expression is not allowed. |
 
 ## Return Value
 
