@@ -29,22 +29,23 @@ ELEMENT_AT(container, key_or_index)
   - 对于 `MAP`：为 `MAP` 中的键类型（`K`），可为任意支持的基础类型。
   - 对于 `STRUCT`：为常量整数（字段位置，从 **1** 开始）或常量字符串（字段名，按**大小写不敏感**匹配）。
   - 对于 `VARIANT` 对象访问：为字符串类型的 key；
-  - 对于 Doris 4.2 及后续版本中的 VARIANT 数组：为整数索引，正数索引从 1 开始，负数索引从数组末尾倒数。
+  - 对于 Doris 5.0.0 及后续版本中的 VARIANT 数组：为整数索引，正数索引从 1 开始，负数索引从数组末尾倒数。
 
 ## 返回值
 
 - 若为 `ARRAY`，返回数组中对应索引的元素（`T` 类型）；
 - 若为 `MAP`，返回对应键的值（`V` 类型）；
 - 若为 `STRUCT`，返回指定的子列值；
-- 若为 `VARIANT`， 返回 `VARIANT` 类型；
+- 若为 `VARIANT`，返回 `VARIANT` 类型。key 不存在、下标为 `0` 或越界、对数组使用字符串 key、对对象使用整数下标、对标量值使用 key，都返回 `NULL`；
 - 如果索引或键不存在，返回 `NULL`（对于 `STRUCT`，位置越界或字段名不存在会报错）；
 - 如果参数为 `NULL`，返回 `NULL`。
 
 ## 使用说明
 
-1. **ARRAY 数组以及 Doris 4.2 及后续版本中的 VARIANT 数组，索引都从 1 开始**，不是从 0 开始；
+1. **ARRAY 数组以及 Doris 5.0.0 及后续版本中的 VARIANT 数组，索引都从 1 开始**，不是从 0 开始；
 2. ARRAY 和 VARIANT 数组都支持负数索引，`-1` 表示最后一个元素，`-2` 表示倒数第二个，以此类推；
-3. `ELEMENT_AT(container, key_or_index)` 函数的功能与 `container[key_or_index]` 作用一致（详细见示例）。
+3. `ELEMENT_AT(container, key_or_index)` 函数的功能与 `container[key_or_index]` 作用一致（详细见示例）；
+4. 对于 `VARIANT`，在查询中计算出的值里，值为 JSON `null` 的成员会返回 VARIANT `null`，它不是 SQL `NULL`；表中不会存储数组之外、值为 `null` 的对象成员，因此对从表中读取的数据做同样的访问会返回 SQL `NULL`。参见 [NULL 语义](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#null-semantics)。
 
 ```sql
 SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 1);  -- 10
@@ -119,7 +120,7 @@ SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
     +--------------------------------------------------+
     ```
 
-5. 访问 `VARIANT` 的某个子列，如果 `VARIANT` 的值不是 OBJECT，返回空
+5. 访问 `VARIANT` 的某个子列，如果 `VARIANT` 的值不是 OBJECT，返回 `NULL`
 
     ```SQL
      SELECT ELEMENT_AT(PARSE_TO_VARIANT('{"a": 1, "b": 2}'), "a");
@@ -133,6 +134,6 @@ SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
     +-------------------------------------------+
     | ELEMENT_AT(PARSE_TO_VARIANT('123'), "")   |
     +-------------------------------------------+
-    |                                           |
+    | NULL                                      |
     +-------------------------------------------+
     ```

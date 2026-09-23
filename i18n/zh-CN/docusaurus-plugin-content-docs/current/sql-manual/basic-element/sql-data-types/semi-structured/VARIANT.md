@@ -25,7 +25,6 @@ VARIANT 类型用于存储半结构化 JSON 数据，可以包含对象、数组
 
 - `INSERT` 会把字符串作为 VARIANT 字符串写入，不再按 JSON 解析，从 `s3()`、`hdfs()` 等表函数执行 `INSERT INTO ... SELECT` 也是如此。用 `INSERT` 写入 JSON 文本时请使用 `PARSE_TO_VARIANT`；Stream Load 等导入作业仍会解析 JSON。
 - 整个 VARIANT 值支持 `GROUP BY`、`DISTINCT` 和集合运算；两个 VARIANT 值之间可以用 `=`、`!=`、`<=>` 比较，也可以作为 Join 键、`ORDER BY` 键和窗口键。
-- 即使路径在 Schema Template 中声明了类型，`v['path']` 仍是 `VARIANT` 类型，需要显式 CAST。会话变量 `enable_variant_schema_auto_cast` 已不再生效。
 - `VARIANT_TYPE` 返回单个类型名称（如 `object`），不再返回从路径到类型的映射。
 - VARIANT 数组可以用整数下标访问，下标从 1 开始。
 
@@ -64,7 +63,7 @@ WHERE CAST(v['score'] AS DOUBLE) > 5;
 ```
 
 - `v['user']['name']` 和 `v['tags'][1]` 返回 `VARIANT` 值。数组下标从 1 开始。
-- 对路径做比较或计算之前，先把它 CAST 为具体类型。`v['score'] > 5` 通过[隐式转换](#implicit-conversion)也能执行，但它按 `DECIMAL(38, 9)` 比较，而且无法利用索引。
+- 对路径做比较或计算之前，先把它 CAST 为具体类型。
 - Stream Load 等导入作业会自动解析 JSON 文本。参见[写入数据](#write-data)。
 
 ## 定义 VARIANT 列 {#define-a-variant-column}
@@ -109,45 +108,7 @@ VARIANT 列在表中的使用范围：
 
 ## 写入数据 {#write-data}
 
-### 输入如何变成 VARIANT 值 {#how-input-becomes-a-variant-value}
-
-| 写入方式 | 结果 |
-| --- | --- |
-| `INSERT ... VALUES` 或 `INSERT ... SELECT` 写入 `CHAR`、`VARCHAR`、`STRING` 表达式 | VARIANT **字符串**。即使内容看起来像 JSON，也不会被解析。从 `s3()`、`hdfs()`、`local()` 等表函数执行 `INSERT INTO ... SELECT`、带 `http_stream` SQL 语句的 Stream Load，以及以 SQL 文本发送的 Group Commit INSERT，都是如此。 |
-| `INSERT` 写入 `PARSE_TO_VARIANT(expr)` 或 `TRY_PARSE_TO_VARIANT(expr)` | 解析后的 JSON 值。参见[解析错误](#parse-errors)。 |
-| `INSERT` 写入 `JSON`/`JSONB` 表达式 | 按原结构直接转换。 |
-| `INSERT` 写入其他类型的表达式 | 带类型的值，参见[其他类型 CAST 为 VARIANT](#cast-to-variant)。 |
-| 通过 JDBC 服务端预编译语句（`useServerPrepStmts=true`）执行的 Group Commit INSERT | 按导入作业的方式执行，因此字符串会按 JSON 解析。 |
-| 导入作业（Stream Load、Broker Load、Routine Load） | 写入 VARIANT 列的字符串字段会按 JSON 解析，与文件格式无关：CSV 文本、Parquet 的 `STRING` 列、JSON 中的字符串值都是如此。Arrow 格式不能导入 VARIANT 列。CSV 中的 `\N` 导入为 SQL `NULL`。 |
-| JSON 格式的导入作业 | 字段对应的 JSON 值。JSON 字符串会再按 JSON 文本解析一次：`"123"` 导入为数值 `123`，`"true"` 导入为布尔值 `true`，`"{\"a\": 1}"` 导入为对象，`"hello"` 仍是字符串 `hello`。顶层的 JSON 布尔值导入为数值 `1` 或 `0`。JSON `null` 或缺失的字段导入为 SQL `NULL`。 |
-
-`NOT NULL` 的 VARIANT 列不接受 SQL `NULL`：严格模式下 `INSERT` 会失败，导入作业会过滤该行，文本解析失败而得到 SQL `NULL` 的行也会被过滤。被过滤的行计入 `max_filter_ratio`，其默认值为 `0`，因此导入作业会失败。
-
-```sql
-CREATE TABLE variant_tbl (k INT, v VARIANT)
-DUPLICATE KEY(k)
-DISTRIBUTED BY HASH(k) BUCKETS 1
-PROPERTIES ("replication_num" = "1");
-
-INSERT INTO variant_tbl VALUES
-    (1, '{"a": 1}'),                     -- 写入为字符串
-    (2, PARSE_TO_VARIANT('{"a": 1}'));   -- 写入为对象
-
-SELECT k, v, VARIANT_TYPE(v) AS type, v['a'] FROM variant_tbl ORDER BY k;
-```
-
-```text
-+------+----------+--------+--------+
-| k    | v        | type   | v['a'] |
-+------+----------+--------+--------+
-|    1 | {"a": 1} | string | NULL   |
-|    2 | {"a":1}  | object | 1      |
-+------+----------+--------+--------+
-```
-
-字符串根值输出时不带引号，因此写入的字符串看起来可能和 JSON 一样，可以用 `VARIANT_TYPE` 区分。如需把这类字符串转成结构化值，请通过 `PARSE_TO_VARIANT(CAST(v AS STRING))` 重新写入。
-
-分步骤的导入示例请参阅[导入 VARIANT 数据](../../../../data-operate/import/complex-types/variant.md)。
+`INSERT` 和 `CAST` 会把字符串保留为 VARIANT 字符串；`PARSE_TO_VARIANT`、`TRY_PARSE_TO_VARIANT` 以及 Stream Load 等导入作业会解析 JSON 文本。导入示例请参阅[导入 VARIANT 数据](../../../../data-operate/import/complex-types/variant.md)。
 
 ### 解析错误 {#parse-errors}
 
@@ -252,16 +213,21 @@ SELECT * FROM tbl WHERE v['bool'];                -- 隐式 CAST 为 BOOLEAN
 SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';   -- 使用该路径上的倒排索引
 ```
 
-读取整个 VARIANT 值会返回 JSON 文本。对象 key 按字节序输出，且不含空白，因此与输入文本并非按字节完全一致。字符串根值输出时不带引号。`CAST(v AS STRING)` 则按对应 SQL 类型的格式输出标量根值，例如布尔根值变为 `1` 或 `0`。
+读取整个 VARIANT 值会返回 JSON 文本。对象 key 按字节序输出，且不含空白，因此与输入文本并非按字节完全一致。字符串根值输出时不带引号。
 
 ```sql
-INSERT INTO variant_tbl VALUES (3, PARSE_TO_VARIANT('{ "b": 2, "a": 1, "c": { "y": 20, "x": 10 } }'));
+CREATE TABLE variant_tbl (k INT, v VARIANT)
+DUPLICATE KEY(k)
+DISTRIBUTED BY HASH(k) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
 
-SELECT v FROM variant_tbl WHERE k = 3;
+INSERT INTO variant_tbl VALUES (1, PARSE_TO_VARIANT('{ "b": 2, "a": 1, "c": { "y": 20, "x": 10 } }'));
+
+SELECT v FROM variant_tbl WHERE k = 1;
 -- {"a":1,"b":2,"c":{"x":10,"y":20}}
 ```
 
-## CAST 与隐式转换 {#cast-and-implicit-conversion}
+## CAST {#cast}
 
 ### 其他类型 CAST 为 VARIANT {#cast-to-variant}
 
@@ -326,83 +292,24 @@ SELECT CAST(PARSE_TO_VARIANT('true') AS STRING)        AS bool_root,     -- 1
 | `TIMESTAMPTZ(p)` | 不能 CAST 为 VARIANT。可以在 Schema Template 中把路径声明为 `TIMESTAMPTZ`。 |
 | `TIME` | 不支持。 |
 
-### 隐式转换 {#implicit-conversion}
-
-本节中，**子路径**指直接作用在 VARIANT 值上的路径表达式：`v['a']`、`v['a']['b']` 或 `ELEMENT_AT(v, 'a')`。其他 VARIANT 表达式，如列 `v` 本身、`PARSE_TO_VARIANT(...)`、`CAST(... AS VARIANT)`、`COALESCE(v['a'], v['b'])`，都属于**整个值**。子路径的别名也是整个值：在子查询、CTE 或视图中写 `SELECT v['a'] AS x FROM t` 后，`x = 1` 会报错，而 `x IN (1, 2)` 可以执行。
-
-以下情况 Doris 会隐式转换 VARIANT：
-
-- **子路径与非 VARIANT 值比较。** 在 `v['a'] = 1`、`v['d'] > DATE '2024-01-01'`、`v['a'] IN (1, 2)` 中，子路径会根据另一侧操作数 CAST 为具体类型：整数和定点数按 `DECIMAL(38, 9)` 比较，`FLOAT`、`DOUBLE` 按 `DOUBLE` 比较，`DATE`、`DATETIME`、`TIMESTAMPTZ` 按 `DATETIME(6)` 比较（`TIMESTAMPTZ` 值会先换算到会话时区），字符串按 `STRING` 比较，布尔值按 `BOOLEAN` 比较。转换遵循上文的 CAST 规则，因此字符串 `"1"` 等于 `1`，而无法转换的值使比较结果为 `NULL`。与字符串字面量比较时按字符串比较：`v['d'] > '2024-01-01'` 是字符串比较，不是日期比较。Join 条件（如 `t1.v['id'] = t2.id`）也按同样的规则转换。
-- **整个值与非 VARIANT 值组成的 `IN` 列表。** `v IN ('a', 'b')` 会把 `v` CAST 为列表的类型，因此对象按其 JSON 文本比较。这与 `v = 'a'` 不同，后者会被拒绝。
-- **函数参数。** 当函数的参数是数值、字符串或 JSON 类型时，VARIANT 参数会被 CAST 为参数类型，例如 `ABS(v['n'])`、`LENGTH(v['s'])`、`SUM(v['n'])`。
-- **JSON 函数。** `JSON_EXTRACT`、`JSON_KEYS`、`JSON_CONTAINS`、`TO_JSON` 等函数可以直接传入 VARIANT 参数，Doris 会先用 `CAST(v AS JSON)` 转换。同时接受字符串参数的函数（`JSON_VALID`、`JSON_QUOTE`、`JSON_UNQUOTE`、`JSON_PARSE`）使用字符串形式，因此字符串根值传给 `JSON_PARSE(v)` 会失败；把 VARIANT 值转换为 JSON 请使用 `CAST(v AS JSON)`。整文档类的 JSON 函数需要读取并组装完整的 VARIANT 值，因此只读一个路径时，`v['a']['b']` 远快于 `JSON_EXTRACT(v, '$.a.b')`。
-- **在 `IF`、`CASE`、`COALESCE`、`IFNULL` 或 `UNION` 中把 VARIANT 与其他类型混用。** 结果取另一侧的类型（整数变为 `DECIMAL(38, 9)`），所有 VARIANT 值都会 CAST 为该类型，无法转换的值变为 `NULL`：`COALESCE(PARSE_TO_VARIANT('"abc"'), 0)` 返回 `0.000000000`。如需保持 VARIANT 结果，请让另一侧也是 VARIANT：`COALESCE(v['a'], CAST(0 AS VARIANT))`。
-
-隐式转换有两个代价：
-
-- **无法利用索引和裁剪。** 当隐式转换的类型与路径的存储类型不同时（例如整数字面量按 `DECIMAL(38, 9)` 与 `BIGINT` 路径比较），比较会逐行求值，无法利用 zone map、BloomFilter 或倒排索引，即使路径在 Schema Template 中声明过也是如此。请把子路径 CAST 为它的存储类型，例如 `CAST(v['id'] AS BIGINT) = 123`。字符串子路径与字符串字面量比较时仍能使用倒排索引。
-- **`DECIMAL(38, 9)` 的限制。** 绝对值不小于 10^29 的值会变为 `NULL`，小数会四舍五入到小数点后第 9 位。`v['n'] > 5` 匹配不到 `1e30`，`v['x'] = 0.1234567891` 也会匹配 `0.123456789`。值可能这么大或这么精确时，请 CAST 为 `DOUBLE` 或存储类型。
-
-以下情况 Doris 不做隐式转换，需要显式 CAST：
-
-- 算术运算：`v['a'] + 1` 会报错，请写成 `CAST(v['a'] AS BIGINT) + 1`。
-- 整个值与非 VARIANT 值比较：`v = 1`、`v = 'x'`、`PARSE_TO_VARIANT('1') = 1` 会报错。
-- 两个 VARIANT 值之间的 `<`、`<=`、`>`、`>=`，包括两个子路径之间的比较，如 `v['a'] < v['b']`。
-- 对 VARIANT 值使用 `MIN`、`MAX`。
-- Schema Template 中声明的路径：即使 `id` 声明为 `INT`，`v['id']` 仍是 `VARIANT`。上面的子路径规则仍然适用，所以 `v['id'] = 1` 可以执行，而 `v['id'] + 1` 需要 CAST。
-
 ## NULL 语义 {#null-semantics}
-
-### SQL NULL 与 VARIANT null {#sql-null-and-variant-null}
 
 VARIANT 中有两种 null：
 
-- **SQL `NULL`** 表示没有值。它来自值为 `NULL` 的列、不存在的路径（如 `v['no_such_key']`）或失败的 CAST，遵循普通的 SQL 规则。
-- **VARIANT `null`** 是一个值，即 JSON 字面量 `null`，例如 `PARSE_TO_VARIANT('null')` 的结果或数组中的 `null` 元素。`VARIANT_TYPE` 对它返回 `null`。它不是 SQL `NULL`。
+- **SQL `NULL`** 表示没有值：值为 `NULL` 的列、不存在的路径（如 `v['no_such_key']`）或失败的 CAST。
+- **VARIANT `null`** 是一个值，即 JSON 字面量 `null`，例如 `PARSE_TO_VARIANT('null')` 或数组中的 `null` 元素。`VARIANT_TYPE` 对它返回 `null`。
 
 | 操作 | SQL `NULL` | VARIANT `null` |
 | --- | --- | --- |
 | `v IS NULL` | `true` | `false` |
 | `COALESCE(v, x)`、`IFNULL(v, x)`，`x` 为 VARIANT | 返回 `x` | 返回该 VARIANT `null` |
-| `COUNT(v)`、`COUNT(DISTINCT v)` | 不计入 | 计入 |
+| `COUNT(v)` | 不计入 | 计入 |
 | `GROUP BY v`、`DISTINCT` | 所有 SQL `NULL` 归为一组 | 所有 VARIANT `null` 归为另一组 |
-| `ORDER BY v` | 由 `NULLS FIRST` 或 `NULLS LAST` 决定位置；默认升序时排在最前，降序时排在最后 | 升序时排在其他所有非 NULL 值之前 |
 | `v = x`、等值 Join | 不会匹配 | 与另一个 VARIANT `null` 匹配 |
-| `v <=> x` | 与 SQL `NULL` 匹配 | 与另一个 VARIANT `null` 匹配 |
+| `ORDER BY v` | 由 `NULLS FIRST` 或 `NULLS LAST` 决定位置 | 升序时排在其他所有非 NULL 值之前 |
 | `CAST(v AS STRING)` | SQL `NULL` | 字符串 `null` |
-| `CAST(v AS INT)` 等标量类型 | SQL `NULL` | SQL `NULL` |
-| `CAST(v AS JSON)` | SQL `NULL` | JSON `null` |
 
-如果 `COALESCE` 或 `IFNULL` 中的 `x` 不是 VARIANT，VARIANT 一侧会先被 CAST，参见[隐式转换](#implicit-conversion)。
-
-### 计算侧的值与存储侧的值 {#computed-values-and-stored-values}
-
-JSON `null` 最终是 VARIANT `null` 还是 SQL `NULL`，取决于这个值是否写入过表：
-
-| 值的来源 | 对象成员为 `null`（`{"a": null}`） | 根值为 `null` | 数组元素为 `null` |
-| --- | --- | --- | --- |
-| 查询中计算得到（`PARSE_TO_VARIANT`、CAST、函数） | `v['a']` 是 VARIANT `null` | VARIANT `null` | VARIANT `null` |
-| 从表中读取 | 该成员已被移除，`v['a']` 是 SQL `NULL`（数组内对象的成员会保留） | 读回为 `{}` | VARIANT `null` |
-
-导入作业还有一条规则：JSON 格式中，`"v": null` 或缺失字段会给该列导入 SQL `NULL`；CSV 格式中，`\N` 导入 SQL `NULL`，而文本 `null` 会被解析为 VARIANT `null`，读回时是 `{}`。
-
-```sql
--- 计算侧：成员存在，值为 VARIANT null。
-SELECT PARSE_TO_VARIANT('{"a": null}')['a'] IS NULL                AS is_sql_null,  -- 0
-       VARIANT_TYPE(PARSE_TO_VARIANT('{"a": null}')['a'])          AS type;         -- null
-
--- 存储侧：成员被移除，读取时返回 SQL NULL。
-INSERT INTO variant_tbl VALUES (4, PARSE_TO_VARIANT('{"a": null, "b": 1}'));
-
-SELECT v, v['a'] IS NULL AS is_sql_null FROM variant_tbl WHERE k = 4;
--- v: {"b":1}, is_sql_null: 1
-```
-
-由此带来的影响：
-
-- 对于已存储的数据（数组之外的对象成员），无论 `a` 原本不存在还是为 `null`，`v['a'] IS NULL` 都为 true，写入后无法再区分这两种情况。
-- 对于计算出的值，`IS NULL` 不会匹配 JSON `null`。如果希望把 JSON `null` 也当作缺失处理，需要同时判断类型：`x IS NULL OR VARIANT_TYPE(x) = 'null'`。
-- 存储后的 `{"a": null}`、`{}` 以及根值 `null` 读回时都是 `{}`，因此在 `GROUP BY`、`DISTINCT` 和 Join 中是同一个值。
+值写入表后，值为 `null` 的对象成员会被移除，读回时是 SQL `NULL`；根值 `null` 读回为 `{}`（参见[写入后值的规范化](#what-storage-keeps)）。因此对于已存储的数据，`v['a'] IS NULL` 无法区分成员不存在和成员为 `null`。
 
 ## 比较、分组与排序 {#comparison-grouping-and-ordering}
 
@@ -418,7 +325,7 @@ VARIANT 值按逻辑值比较，而不是按文本或物理编码比较。相等
 | `ORDER BY`、`ORDER BY ... LIMIT` | 支持 | |
 | 窗口函数的 `PARTITION BY` 与 `ORDER BY` | 支持 | |
 | `COUNT(v)`、`COLLECT_LIST(v)`、`ARRAY_AGG(v)` | 支持 | |
-| `IF`、`CASE`、`IFNULL`、`COALESCE` | 支持 | 把 VARIANT 与其他类型混用会转换 VARIANT 值，参见[隐式转换](#implicit-conversion)。 |
+| `IF`、`CASE`、`IFNULL`、`COALESCE` | 支持 | 把 VARIANT 与其他类型混用时，VARIANT 值会被转换为另一侧的类型。 |
 | `CAST(v AS ARRAY<VARIANT>)`、`EXPLODE_VARIANT_ARRAY`，以及对 `ARRAY<VARIANT>` 使用 `EXPLODE`、`EXPLODE_OUTER` | 支持 | |
 | VARIANT 值之间的 `<`、`<=`、`>`、`>=`、`BETWEEN` | 不支持 | 请先 CAST 为具体类型。 |
 | 整个 VARIANT 值与非 VARIANT 值比较，如 `v = 1` | 不支持 | 子路径会被隐式转换：`v['a'] = 1` 可以执行。 |
@@ -547,8 +454,6 @@ PROPERTIES ("replication_num" = "1");
 - `IPV4`、`IPV6`
 - `ARRAY<T>`，`T` 为以上类型之一（仅支持一维）
 
-`CHAR`、`VARCHAR`、`DECIMALV2`、`TIME`、`JSON`、`MAP`、`STRUCT` 和嵌套数组不能用于 Schema Template。DOC mode 下，模板字段进一步限制为字符串、整数、`FLOAT`、`DOUBLE`、`BOOLEAN` 以及由这些类型组成的数组。
-
 ### 写入模板路径 {#writing-to-template-paths}
 
 在声明过的路径上，每个值都按非严格模式的 CAST 规则转换为声明类型。无法转换的值存为 `NULL`，读回时该路径不存在；这一行的其余部分照常写入。转换可能会改变值：
@@ -639,52 +544,28 @@ v1 VARIANT<
 
 ## ALTER TABLE {#alter-table}
 
-| 操作 | 是否支持 | 说明 |
-| --- | --- | --- |
-| `ADD COLUMN ... VARIANT [NULL]` | 支持 | 新列可以带 Schema Template 和属性。 |
-| `ADD COLUMN ... VARIANT NOT NULL` | 不支持 | 通过 `ALTER` 新增的 `NOT NULL` 列需要默认值，而 VARIANT 只允许 `DEFAULT NULL`。`NOT NULL` 的 VARIANT 列只能在 `CREATE TABLE` 中定义。 |
-| `DROP COLUMN`、`RENAME COLUMN`、`MODIFY COLUMN ... COMMENT '...'` | 支持 | |
-| 把 `NOT NULL` 改为 `NULL` | 仅限没有 Schema Template 的列 | |
-| 把 `NULL` 改为 `NOT NULL` | 不支持 | |
-| 对带 Schema Template 的列做其他任何修改，包括原样重写同一个模板 | 不支持 | 报错 `Can not change variant schema templates`。 |
-| 为没有模板的列添加 Schema Template | 不支持 | 报同样的错误。 |
-| 修改 `variant_max_subcolumns_count`、`variant_enable_typed_paths_to_sparse`、`variant_max_sparse_column_statistics_size`、`variant_sparse_hash_shard_count`、`variant_enable_doc_mode` 或 `variant_doc_hash_shard_count` | 不支持 | |
-| 修改 `variant_doc_materialization_min_rows` | 仅限没有 Schema Template 的列 | |
-| 在 VARIANT 与其他类型之间转换，如 `STRING` 转为 `VARIANT` | 不支持 | |
-| 在 VARIANT 列上 `ADD INDEX`、`DROP INDEX` | 支持 | 带 `field_pattern` 的索引只能在 `CREATE TABLE` 中定义。VARIANT 列不支持 `BUILD INDEX`。 |
+VARIANT 列支持：
 
-`MODIFY COLUMN` 需要给出完整的新列定义。未写出的属性取对应 `default_variant_*` 会话变量的值。取值与会话变量不同的属性都要原样写出，否则 Doris 会把省略视为修改属性而拒绝执行。
+- `ADD COLUMN` 新增可为 NULL 的 VARIANT 列，可以带 Schema Template 和属性。
+- `DROP COLUMN`、`RENAME COLUMN` 和 `MODIFY COLUMN ... COMMENT '...'`。
+- `ADD INDEX` 和 `DROP INDEX`。带 `field_pattern` 的索引只能在 `CREATE TABLE` 中定义。
+- 对没有 Schema Template 的列：把 `NOT NULL` 改为 `NULL`，以及修改 `variant_doc_materialization_min_rows`。`MODIFY COLUMN` 需要给出完整的列定义，其他属性请原样写出。
 
-`ALTER TABLE` 不支持的修改（如新的 Schema Template、`NOT NULL` 的 VARIANT 列），可以按新定义建表，再用 `INSERT INTO new_table SELECT ... FROM old_table` 复制数据。源列为 `STRING` 时，请用 `PARSE_TO_VARIANT` 包裹。
+不支持：
+
+- `ADD COLUMN ... VARIANT NOT NULL`：通过 `ALTER` 新增的 `NOT NULL` 列需要默认值，而 VARIANT 只允许 `DEFAULT NULL`。`NOT NULL` 的 VARIANT 列请在 `CREATE TABLE` 中定义。
+- 添加或修改 Schema Template。带 Schema Template 的列除注释外不能修改列定义，原样重写同一个模板也不行。
+- 修改其他列属性、把 `NULL` 改为 `NOT NULL`，以及在 VARIANT 与其他类型之间转换。
+- 在 VARIANT 列上执行 `BUILD INDEX`。
+
+需要这些修改时，请按新定义建表，再用 `INSERT INTO ... SELECT` 复制数据；源列为 `STRING` 时用 `PARSE_TO_VARIANT` 包裹。
 
 ```sql
-CREATE TABLE t (
-    k  INT,
-    v  VARIANT,
-    vd VARIANT<properties('variant_enable_doc_mode' = 'true')>
-)
-DUPLICATE KEY(k)
-DISTRIBUTED BY HASH(k) BUCKETS 1
-PROPERTIES ("replication_num" = "1");
-
--- 失败：通过 ALTER 新增的 NOT NULL 列需要默认值。
 ALTER TABLE t ADD COLUMN v2 VARIANT NOT NULL;
 -- ERROR: Field 'v2' doesn't have a default value
 
-ALTER TABLE t ADD COLUMN v2 VARIANT NOT NULL DEFAULT '{}';
--- ERROR: Json or Variant type column default value just support null
-
--- 成功：可为 NULL 的列，可以带 Schema Template 和属性。
-ALTER TABLE t ADD COLUMN v3 VARIANT<'id': BIGINT, properties('variant_max_subcolumns_count' = '16')> NULL;
-
--- 失败：Schema Template 不能修改。
 ALTER TABLE t MODIFY COLUMN v VARIANT<'id': INT>;
 -- ERROR: Can not change variant schema templates
-
--- 成功：在没有模板的 DOC mode 列上，只修改 variant_doc_materialization_min_rows。
-ALTER TABLE t MODIFY COLUMN vd VARIANT<
-    properties('variant_enable_doc_mode' = 'true', 'variant_doc_materialization_min_rows' = '100')
->;
 ```
 
 ## 列属性 {#column-properties}
@@ -981,6 +862,6 @@ SELECT * FROM example_table WHERE data_string LIKE '%doris%';
 5. 为什么 `ORDER BY v['a']` 把 `"10"` 排在 `9` 之后，或者 `GROUP BY v['a']` 把 `1` 和 `"1"` 分成两组？
    - VARIANT 的排序和相等判断首先看值的种类：数值排在字符串之前，数值永远不等于字符串。需要数值语义或字典序时，请把路径 CAST 为同一类型。参见[比较、分组与排序](#comparison-grouping-and-ordering)。
 6. 为什么 `v['a']` 是字符串时，`COALESCE(v['a'], 0)` 返回 `0.000000000`，而 `IF(..., v['a'], 1)` 返回 `NULL`？
-   - 把 VARIANT 与其他类型混用时，VARIANT 值会被转换为另一侧的类型。请写成 `COALESCE(v['a'], CAST(0 AS VARIANT))` 以保持 VARIANT 结果，或把 `v['a']` CAST 为所需类型。参见[隐式转换](#implicit-conversion)。
+   - 把 VARIANT 与其他类型混用时，VARIANT 值会被转换为另一侧的类型。请写成 `COALESCE(v['a'], CAST(0 AS VARIANT))` 以保持 VARIANT 结果，或把 `v['a']` CAST 为所需类型。
 7. 为什么 DECIMAL 写入 VARIANT 列时出现小数位/精度丢失？
    - JSON 中带小数部分的数值会推断为 `DOUBLE` 而不是 `DECIMAL`，因此可能丢失末位小数。即使在 Schema Template 中把路径声明为 `DECIMAL`（例如 `v VARIANT<'num': DECIMAL(9, 3)>`），写入时也会先解析为 `DOUBLE` 再转换，仍不能完全保证精度。应在 JSON 文档中把该值写成字符串，例如 `PARSE_TO_VARIANT('{"num": "12.345"}')`，写入时会直接由字符串转换为 `DECIMAL(9, 3)`，不丢精度。

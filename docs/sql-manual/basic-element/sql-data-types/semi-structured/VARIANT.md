@@ -25,7 +25,6 @@ This page describes VARIANT in Doris 5.0.0 and later. The differences from Doris
 
 - `INSERT` stores a string as a VARIANT string instead of parsing it as JSON. This includes `INSERT INTO ... SELECT` from table functions such as `s3()` and `hdfs()`. Use `PARSE_TO_VARIANT` to write JSON text with `INSERT`. Load jobs such as Stream Load still parse JSON.
 - Whole VARIANT values support `GROUP BY`, `DISTINCT`, and set operations. Two VARIANT values can be compared with `=`, `!=`, and `<=>`, and can be used as join keys, `ORDER BY` keys, and window keys.
-- `v['path']` stays `VARIANT` even when the path is declared in a Schema Template. CAST it explicitly. The session variable `enable_variant_schema_auto_cast` no longer has any effect.
 - `VARIANT_TYPE` returns one type name, such as `object`, instead of a map from paths to types.
 - VARIANT arrays can be indexed with integers, starting from 1.
 
@@ -64,7 +63,7 @@ WHERE CAST(v['score'] AS DOUBLE) > 5;
 ```
 
 - `v['user']['name']` and `v['tags'][1]` return `VARIANT` values. Array indexes start from 1.
-- CAST a path to a concrete type before comparing or computing with it. `v['score'] > 5` also works through [implicit conversion](#implicit-conversion), but it compares as `DECIMAL(38, 9)` and cannot use indexes.
+- CAST a path to a concrete type before comparing or computing with it.
 - Load jobs such as Stream Load parse JSON text automatically. See [Write data](#write-data).
 
 ## Define a VARIANT column
@@ -109,45 +108,7 @@ Where a VARIANT column can be used in a table:
 
 ## Write data
 
-### How input becomes a VARIANT value
-
-| Write path | Result |
-| --- | --- |
-| `INSERT ... VALUES` or `INSERT ... SELECT` with a `CHAR`, `VARCHAR`, or `STRING` expression | A VARIANT **string**. The text is not parsed, even if it looks like JSON. This includes `INSERT INTO ... SELECT` from table functions such as `s3()`, `hdfs()`, and `local()`, Stream Load with an `http_stream` SQL statement, and group commit INSERT sent as SQL text. |
-| `INSERT` with `PARSE_TO_VARIANT(expr)` or `TRY_PARSE_TO_VARIANT(expr)` | The parsed JSON value. See [Parse errors](#parse-errors). |
-| `INSERT` with a `JSON`/`JSONB` expression | The same structure, converted directly. |
-| `INSERT` with another typed expression | A typed value. See [CAST to VARIANT](#cast-to-variant). |
-| Group commit INSERT through JDBC server-side prepared statements (`useServerPrepStmts=true`) | Executed like a load job, so a string is parsed as JSON. |
-| Load jobs (Stream Load, Broker Load, Routine Load) | A string field loaded into a VARIANT column is parsed as JSON, whatever the file format: CSV text, a Parquet `STRING` column, or a JSON string value. The Arrow format cannot load VARIANT columns. `\N` in CSV loads SQL `NULL`. |
-| Load jobs in JSON format | The JSON value of the field. A JSON string is parsed again as JSON text: `"123"` loads the number `123`, `"true"` loads the boolean `true`, `"{\"a\": 1}"` loads an object, and `"hello"` stays the string `hello`. A top-level JSON boolean loads the number `1` or `0`. A JSON `null` or a missing field loads SQL `NULL`. |
-
-A `NOT NULL` VARIANT column rejects SQL `NULL`: `INSERT` fails in strict mode, and a load job filters the row, including a row whose text failed to parse into SQL `NULL`. Filtered rows count toward `max_filter_ratio`, which is `0` by default, so the load job fails.
-
-```sql
-CREATE TABLE variant_tbl (k INT, v VARIANT)
-DUPLICATE KEY(k)
-DISTRIBUTED BY HASH(k) BUCKETS 1
-PROPERTIES ("replication_num" = "1");
-
-INSERT INTO variant_tbl VALUES
-    (1, '{"a": 1}'),                     -- stored as a string
-    (2, PARSE_TO_VARIANT('{"a": 1}'));   -- stored as an object
-
-SELECT k, v, VARIANT_TYPE(v) AS type, v['a'] FROM variant_tbl ORDER BY k;
-```
-
-```text
-+------+----------+--------+--------+
-| k    | v        | type   | v['a'] |
-+------+----------+--------+--------+
-|    1 | {"a": 1} | string | NULL   |
-|    2 | {"a":1}  | object | 1      |
-+------+----------+--------+--------+
-```
-
-A string root is returned without quotes, so a stored string can look like JSON. Use `VARIANT_TYPE` to tell them apart. To turn such strings into structured values, write them again through `PARSE_TO_VARIANT(CAST(v AS STRING))`.
-
-For step-by-step load examples, see [Load VARIANT data](../../../../data-operate/import/complex-types/variant.md).
+`INSERT` and `CAST` keep a string as a VARIANT string. `PARSE_TO_VARIANT`, `TRY_PARSE_TO_VARIANT`, and load jobs such as Stream Load parse JSON text. For load examples, see [Load VARIANT data](../../../../data-operate/import/complex-types/variant.md).
 
 ### Parse errors
 
@@ -252,16 +213,21 @@ SELECT * FROM tbl WHERE v['bool'];                -- implicit CAST to BOOLEAN
 SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';   -- uses an inverted index on the path
 ```
 
-Reading a whole VARIANT value returns JSON text. Object keys are returned in byte order and without whitespace, so the text is not byte-for-byte identical to the input. A string root is returned without quotes. `CAST(v AS STRING)` formats a scalar root like the corresponding SQL type instead; for example, a boolean root becomes `1` or `0`.
+Reading a whole VARIANT value returns JSON text. Object keys are returned in byte order and without whitespace, so the text is not byte-for-byte identical to the input. A string root is returned without quotes.
 
 ```sql
-INSERT INTO variant_tbl VALUES (3, PARSE_TO_VARIANT('{ "b": 2, "a": 1, "c": { "y": 20, "x": 10 } }'));
+CREATE TABLE variant_tbl (k INT, v VARIANT)
+DUPLICATE KEY(k)
+DISTRIBUTED BY HASH(k) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
 
-SELECT v FROM variant_tbl WHERE k = 3;
+INSERT INTO variant_tbl VALUES (1, PARSE_TO_VARIANT('{ "b": 2, "a": 1, "c": { "y": 20, "x": 10 } }'));
+
+SELECT v FROM variant_tbl WHERE k = 1;
 -- {"a":1,"b":2,"c":{"x":10,"y":20}}
 ```
 
-## CAST and implicit conversion
+## CAST
 
 ### CAST to VARIANT
 
@@ -326,83 +292,24 @@ When these types are converted to VARIANT:
 | `TIMESTAMPTZ(p)` | Not supported by CAST. A Schema Template path can be declared as `TIMESTAMPTZ`. |
 | `TIME` | Not supported. |
 
-### Implicit conversion
-
-In this section, a **subpath** is a path expression applied directly to a VARIANT value: `v['a']`, `v['a']['b']`, or `ELEMENT_AT(v, 'a')`. Other VARIANT expressions, such as the column `v` itself, `PARSE_TO_VARIANT(...)`, `CAST(... AS VARIANT)`, or `COALESCE(v['a'], v['b'])`, are **whole values**. So is an alias of a subpath: after `SELECT v['a'] AS x FROM t` in a subquery, CTE, or view, `x = 1` fails, while `x IN (1, 2)` works.
-
-Doris converts VARIANT implicitly in these cases:
-
-- **A subpath compared with a non-VARIANT value.** In `v['a'] = 1`, `v['d'] > DATE '2024-01-01'`, or `v['a'] IN (1, 2)`, the subpath is cast to a type chosen from the other operand: integers and decimals are compared as `DECIMAL(38, 9)`, `FLOAT` and `DOUBLE` as `DOUBLE`, `DATE`, `DATETIME`, and `TIMESTAMPTZ` as `DATETIME(6)` (a `TIMESTAMPTZ` value is first converted to the session time zone), strings as `STRING`, and booleans as `BOOLEAN`. The conversion follows the CAST rules above, so the string `"1"` equals `1`, and a value that cannot be converted makes the comparison `NULL`. Comparing with a string literal compares strings: `v['d'] > '2024-01-01'` is a string comparison, not a date comparison. The same conversion applies to a join condition such as `t1.v['id'] = t2.id`.
-- **A whole value with an `IN` list of non-VARIANT values.** `v IN ('a', 'b')` casts `v` to the type of the list, so an object is compared as its JSON text. This is unlike `v = 'a'`, which is rejected.
-- **Function arguments.** A VARIANT argument is cast to the parameter type when the function takes a number, a string, or JSON, for example `ABS(v['n'])`, `LENGTH(v['s'])`, and `SUM(v['n'])`.
-- **JSON functions.** Functions such as `JSON_EXTRACT`, `JSON_KEYS`, `JSON_CONTAINS`, and `TO_JSON` accept a VARIANT argument and convert it with `CAST(v AS JSON)`. Functions that also accept a string (`JSON_VALID`, `JSON_QUOTE`, `JSON_UNQUOTE`, `JSON_PARSE`) use the string form, so `JSON_PARSE(v)` fails on a string root; use `CAST(v AS JSON)` to convert a VARIANT value to JSON. A whole-document JSON function reads and assembles the entire VARIANT value, so `v['a']['b']` is much faster than `JSON_EXTRACT(v, '$.a.b')` for reading one path.
-- **VARIANT mixed with another type in `IF`, `CASE`, `COALESCE`, `IFNULL`, or `UNION`.** The result takes the other type (integers become `DECIMAL(38, 9)`), and every VARIANT value is cast to it, so values that cannot be converted become `NULL`: `COALESCE(PARSE_TO_VARIANT('"abc"'), 0)` returns `0.000000000`. To keep VARIANT results, make the other operand VARIANT: `COALESCE(v['a'], CAST(0 AS VARIANT))`.
-
-Implicit conversion has two costs:
-
-- **No index or pruning.** When the implicit type differs from the stored type of the path, as for an integer literal (`DECIMAL(38, 9)`) against a `BIGINT` path, the comparison is evaluated row by row and cannot use zone maps, BloomFilter, or inverted indexes, even on a Schema Template path. CAST the subpath to its stored type instead, for example `CAST(v['id'] AS BIGINT) = 123`. A string subpath compared with a string literal can still use an inverted index.
-- **`DECIMAL(38, 9)` limits.** A value whose magnitude is 10^29 or more becomes `NULL`, and digits after the ninth decimal place are rounded away. `v['n'] > 5` does not match `1e30`, and `v['x'] = 0.1234567891` also matches `0.123456789`. CAST to `DOUBLE` or to the stored type when values can be that large or that precise.
-
-Doris does not convert implicitly in these cases; CAST explicitly:
-
-- Arithmetic: `v['a'] + 1` fails. Write `CAST(v['a'] AS BIGINT) + 1`.
-- A whole value compared with a non-VARIANT value: `v = 1`, `v = 'x'`, and `PARSE_TO_VARIANT('1') = 1` fail.
-- `<`, `<=`, `>`, `>=` between two VARIANT values, including two subpaths such as `v['a'] < v['b']`.
-- `MIN` and `MAX` of VARIANT values.
-- Paths declared in a Schema Template: `v['id']` stays `VARIANT` even if `id` is declared as `INT`. The subpath rules above still apply, so `v['id'] = 1` works, but `v['id'] + 1` needs a CAST.
-
 ## NULL semantics
-
-### SQL NULL and VARIANT null
 
 VARIANT has two kinds of null:
 
-- **SQL `NULL`** means that there is no value. It comes from a `NULL` column value, a missing path such as `v['no_such_key']`, or a CAST that fails, and it follows the usual SQL rules.
-- **VARIANT `null`** is a value: the JSON literal `null`, such as the result of `PARSE_TO_VARIANT('null')` or a `null` array element. `VARIANT_TYPE` returns `null` for it. It is not SQL `NULL`.
+- **SQL `NULL`** means that there is no value: a `NULL` column value, a missing path such as `v['no_such_key']`, or a CAST that fails.
+- **VARIANT `null`** is a value: the JSON literal `null`, such as `PARSE_TO_VARIANT('null')` or a `null` array element. `VARIANT_TYPE` returns `null` for it.
 
 | Operation | SQL `NULL` | VARIANT `null` |
 | --- | --- | --- |
 | `v IS NULL` | `true` | `false` |
-| `COALESCE(v, x)`, `IFNULL(v, x)`, where `x` is VARIANT | Returns `x` | Returns the VARIANT `null` |
-| `COUNT(v)`, `COUNT(DISTINCT v)` | Not counted | Counted |
+| `COALESCE(v, x)`, `IFNULL(v, x)` with a VARIANT `x` | Returns `x` | Returns the VARIANT `null` |
+| `COUNT(v)` | Not counted | Counted |
 | `GROUP BY v`, `DISTINCT` | All SQL `NULL` values form one group | All VARIANT `null` values form another group |
-| `ORDER BY v` | Placed by `NULLS FIRST` or `NULLS LAST`; by default first in ascending order and last in descending order | In ascending order, sorts before every other non-NULL value |
 | `v = x`, equality join | Never matches | Matches another VARIANT `null` |
-| `v <=> x` | Matches SQL `NULL` | Matches another VARIANT `null` |
+| `ORDER BY v` | Placed by `NULLS FIRST` or `NULLS LAST` | In ascending order, before every other non-NULL value |
 | `CAST(v AS STRING)` | SQL `NULL` | The string `null` |
-| `CAST(v AS INT)` and other scalar types | SQL `NULL` | SQL `NULL` |
-| `CAST(v AS JSON)` | SQL `NULL` | JSON `null` |
 
-When `x` in `COALESCE` or `IFNULL` is not VARIANT, the VARIANT side is cast first; see [Implicit conversion](#implicit-conversion).
-
-### Computed values and stored values
-
-Whether a JSON `null` is a VARIANT `null` or SQL `NULL` depends on whether the value has been stored:
-
-| Value | `null` object member (`{"a": null}`) | Root `null` | `null` array element |
-| --- | --- | --- | --- |
-| Computed in a query (`PARSE_TO_VARIANT`, CAST, functions) | `v['a']` is a VARIANT `null` | A VARIANT `null` | A VARIANT `null` |
-| Read from a table | The member is removed, so `v['a']` is SQL `NULL` (members of objects inside arrays are kept) | Read back as `{}` | A VARIANT `null` |
-
-Load jobs add one more rule: in JSON format, `"v": null` or a missing field loads SQL `NULL` into the column. In CSV format, `\N` loads SQL `NULL`, while the text `null` is parsed as a VARIANT `null` and is read back as `{}`.
-
-```sql
--- Computed: the member exists and holds a VARIANT null.
-SELECT PARSE_TO_VARIANT('{"a": null}')['a'] IS NULL                AS is_sql_null,  -- 0
-       VARIANT_TYPE(PARSE_TO_VARIANT('{"a": null}')['a'])          AS type;         -- null
-
--- Stored: the member is removed, so reading it returns SQL NULL.
-INSERT INTO variant_tbl VALUES (4, PARSE_TO_VARIANT('{"a": null, "b": 1}'));
-
-SELECT v, v['a'] IS NULL AS is_sql_null FROM variant_tbl WHERE k = 4;
--- v: {"b":1}, is_sql_null: 1
-```
-
-Consequences:
-
-- On stored data, `v['a'] IS NULL` is true both when `a` is missing and when it was `null`, for members outside arrays. The two cases cannot be told apart after the write.
-- On computed values, `IS NULL` does not match a JSON `null`. When a JSON `null` should count as missing, also test the type: `x IS NULL OR VARIANT_TYPE(x) = 'null'`.
-- A stored `{"a": null}`, a stored `{}`, and a stored root `null` all read back as `{}`, so they are one value in `GROUP BY`, `DISTINCT`, and joins.
+After a value is stored, a `null` object member is removed and reads back as SQL `NULL`, and a root `null` reads back as `{}` (see [What storage keeps](#what-storage-keeps)). On stored data, `v['a'] IS NULL` therefore cannot tell a missing member from a `null` member.
 
 ## Comparison, grouping, and ordering
 
@@ -418,7 +325,7 @@ VARIANT values are compared by their logical value, not by their text or physica
 | `ORDER BY`, `ORDER BY ... LIMIT` | Supported | |
 | Window `PARTITION BY` and `ORDER BY` | Supported | |
 | `COUNT(v)`, `COLLECT_LIST(v)`, `ARRAY_AGG(v)` | Supported | |
-| `IF`, `CASE`, `IFNULL`, `COALESCE` | Supported | Mixing VARIANT with another type converts the VARIANT values; see [Implicit conversion](#implicit-conversion). |
+| `IF`, `CASE`, `IFNULL`, `COALESCE` | Supported | Mixing VARIANT with another type converts the VARIANT values to that type. |
 | `CAST(v AS ARRAY<VARIANT>)`, `EXPLODE_VARIANT_ARRAY`, `EXPLODE` and `EXPLODE_OUTER` on `ARRAY<VARIANT>` | Supported | |
 | `<`, `<=`, `>`, `>=`, `BETWEEN` between VARIANT values | Not supported | CAST to a concrete type first. |
 | A whole VARIANT value compared with a non-VARIANT value, such as `v = 1` | Not supported | A subpath is converted implicitly: `v['a'] = 1` works. |
@@ -547,8 +454,6 @@ A template field can use these types:
 - `IPV4`, `IPV6`
 - `ARRAY<T>`, where `T` is one of the types above (one dimension only)
 
-`CHAR`, `VARCHAR`, `DECIMALV2`, `TIME`, `JSON`, `MAP`, `STRUCT`, and nested arrays cannot be used in a Schema Template. In DOC mode, template fields are further limited to strings, integers, `FLOAT`, `DOUBLE`, `BOOLEAN`, and arrays of these types.
-
 ### Writing to template paths
 
 On a declared path, each value is converted to the declared type with non-strict CAST rules. A value that cannot be converted is stored as `NULL`, so the path is missing when read back; the rest of the row is still written. The conversion can change a value:
@@ -639,52 +544,28 @@ The Schema Template cannot be changed after the column is created. See [ALTER TA
 
 ## ALTER TABLE
 
-| Operation | Supported | Notes |
-| --- | --- | --- |
-| `ADD COLUMN ... VARIANT [NULL]` | Yes | The new column can have a Schema Template and properties. |
-| `ADD COLUMN ... VARIANT NOT NULL` | No | A `NOT NULL` column added by `ALTER` needs a default value, and VARIANT only allows `DEFAULT NULL`. Define `NOT NULL` VARIANT columns in `CREATE TABLE`. |
-| `DROP COLUMN`, `RENAME COLUMN`, `MODIFY COLUMN ... COMMENT '...'` | Yes | |
-| Change `NOT NULL` to `NULL` | Only for a column without a Schema Template | |
-| Change `NULL` to `NOT NULL` | No | |
-| Any other change to a column that has a Schema Template, including restating the same template | No | Fails with `Can not change variant schema templates`. |
-| Add a Schema Template to a column that has none | No | Same error. |
-| Change `variant_max_subcolumns_count`, `variant_enable_typed_paths_to_sparse`, `variant_max_sparse_column_statistics_size`, `variant_sparse_hash_shard_count`, `variant_enable_doc_mode`, or `variant_doc_hash_shard_count` | No | |
-| Change `variant_doc_materialization_min_rows` | Only for a column without a Schema Template | |
-| Convert between VARIANT and another type, such as `STRING` to `VARIANT` | No | |
-| `ADD INDEX`, `DROP INDEX` on a VARIANT column | Yes | An index with `field_pattern` can only be defined in `CREATE TABLE`. `BUILD INDEX` is not supported on VARIANT columns. |
+Supported on a VARIANT column:
 
-`MODIFY COLUMN` takes the complete new column definition. Properties that it omits take the values of the `default_variant_*` session variables. Restate every property whose value differs from them; otherwise Doris treats the omission as a property change and rejects it.
+- `ADD COLUMN` of a nullable VARIANT column, with or without a Schema Template and properties.
+- `DROP COLUMN`, `RENAME COLUMN`, and `MODIFY COLUMN ... COMMENT '...'`.
+- `ADD INDEX` and `DROP INDEX`. An index with `field_pattern` can only be defined in `CREATE TABLE`.
+- On a column without a Schema Template: changing `NOT NULL` to `NULL`, and changing `variant_doc_materialization_min_rows`. `MODIFY COLUMN` takes the complete column definition, so restate the other properties unchanged.
 
-For a change that `ALTER TABLE` does not allow, such as a new Schema Template or a `NOT NULL` VARIANT column, create a table with the new definition and copy the data with `INSERT INTO new_table SELECT ... FROM old_table`. Wrap a `STRING` source column in `PARSE_TO_VARIANT`.
+Not supported:
+
+- `ADD COLUMN ... VARIANT NOT NULL`: a `NOT NULL` column added by `ALTER` needs a default value, and VARIANT only allows `DEFAULT NULL`. Define `NOT NULL` VARIANT columns in `CREATE TABLE`.
+- Adding or changing a Schema Template. Apart from its comment, the definition of a column that has a Schema Template cannot be changed, even to restate the same template.
+- Changing the other column properties, changing `NULL` to `NOT NULL`, and converting between VARIANT and other types.
+- `BUILD INDEX` on a VARIANT column.
+
+For these changes, create a table with the new definition and copy the data with `INSERT INTO ... SELECT`; wrap a `STRING` source column in `PARSE_TO_VARIANT`.
 
 ```sql
-CREATE TABLE t (
-    k  INT,
-    v  VARIANT,
-    vd VARIANT<properties('variant_enable_doc_mode' = 'true')>
-)
-DUPLICATE KEY(k)
-DISTRIBUTED BY HASH(k) BUCKETS 1
-PROPERTIES ("replication_num" = "1");
-
--- Fails: a NOT NULL column added by ALTER needs a default value.
 ALTER TABLE t ADD COLUMN v2 VARIANT NOT NULL;
 -- ERROR: Field 'v2' doesn't have a default value
 
-ALTER TABLE t ADD COLUMN v2 VARIANT NOT NULL DEFAULT '{}';
--- ERROR: Json or Variant type column default value just support null
-
--- Works: a nullable column, optionally with a Schema Template and properties.
-ALTER TABLE t ADD COLUMN v3 VARIANT<'id': BIGINT, properties('variant_max_subcolumns_count' = '16')> NULL;
-
--- Fails: the Schema Template cannot be changed.
 ALTER TABLE t MODIFY COLUMN v VARIANT<'id': INT>;
 -- ERROR: Can not change variant schema templates
-
--- Works: on a DOC mode column without a template, change only variant_doc_materialization_min_rows.
-ALTER TABLE t MODIFY COLUMN vd VARIANT<
-    properties('variant_enable_doc_mode' = 'true', 'variant_doc_materialization_min_rows' = '100')
->;
 ```
 
 ## Column properties
@@ -981,6 +862,6 @@ A modified ClickBench (43 queries):
 5. Why does `ORDER BY v['a']` put `"10"` after `9`, or `GROUP BY v['a']` separate `1` and `"1"`?
    - VARIANT ordering and equality first look at the kind of the value: numbers sort before strings, and a number never equals a string. CAST the path to one type when you need numeric or lexical semantics. See [Comparison, grouping, and ordering](#comparison-grouping-and-ordering).
 6. Why does `COALESCE(v['a'], 0)` return `0.000000000` when `v['a']` is a string, and `IF(..., v['a'], 1)` return `NULL`?
-   - Mixing VARIANT with another type converts the VARIANT values to that type. Write `COALESCE(v['a'], CAST(0 AS VARIANT))` to keep a VARIANT result, or CAST `v['a']` to the type you want. See [Implicit conversion](#implicit-conversion).
+   - Mixing VARIANT with another type converts the VARIANT values to that type. Write `COALESCE(v['a'], CAST(0 AS VARIANT))` to keep a VARIANT result, or CAST `v['a']` to the type you want.
 7. Why does DECIMAL lose precision when written into a VARIANT column?
    - JSON numbers with a fraction are inferred as `DOUBLE`, not `DECIMAL`, so trailing digits can be lost. Declaring the path as `DECIMAL` in a Schema Template, for example `v VARIANT<'num': DECIMAL(9, 3)>`, does not fully help, because the value is parsed as `DOUBLE` first. Write the value as a JSON string inside the document, for example `PARSE_TO_VARIANT('{"num": "12.345"}')`; it is then converted directly to `DECIMAL(9, 3)` without loss.

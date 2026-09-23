@@ -37,12 +37,35 @@ Before reading this document, choose the reference that best matches your needs:
 
 ## How loaded values are converted
 
-- **CSV format:** the text of a `VARIANT` field is parsed as JSON. `\N` loads SQL `NULL`. Text that is not valid JSON is loaded as a VARIANT string.
-- **JSON format:** the JSON value of the field is loaded as it is. If the value is a JSON string, its content is parsed again as JSON text, so `"123"` loads the number `123` and `"true"` loads the boolean `true`. A top-level JSON boolean loads the number `1` or `0`. A JSON `null` or a missing field loads SQL `NULL`.
-- **Out-of-range numbers:** a document that contains an integer outside [-2^63, 2^64 - 1] or a number outside the `DOUBLE` range cannot be parsed, and the whole document is loaded as one VARIANT string.
 - **`NOT NULL` columns:** a row whose VARIANT value is SQL `NULL`, including a value that failed to parse into SQL `NULL`, is filtered. Filtered rows count toward `max_filter_ratio` (default `0`), so by default the load job fails.
 - **INSERT is different:** `INSERT` does not parse strings. `INSERT INTO t VALUES (1, '{"a": 1}')` stores the VARIANT string `{"a": 1}`, and so does `INSERT INTO ... SELECT` from `s3()`, `hdfs()`, or `local()`. Use `PARSE_TO_VARIANT` to store an object.
-- **Stored values are normalized:** object members whose value is `null`, and members that are empty objects or arrays, can be dropped when the value is stored.
+Stored values are normalized: outside arrays, an object member whose value is `null`, an empty object, or an empty array is removed when the value is stored. The same value computed in a query keeps every member:
+
+```sql
+CREATE TABLE variant_norm (k INT, v VARIANT)
+DUPLICATE KEY(k)
+DISTRIBUTED BY HASH(k) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO variant_norm VALUES (1, PARSE_TO_VARIANT('{"a": null, "b": {}, "c": [], "d": 1}'));
+
+SELECT PARSE_TO_VARIANT('{"a": null, "b": {}, "c": [], "d": 1}') AS computed;
+SELECT v AS stored, v['a'] IS NULL AS a_is_null FROM variant_norm;
+```
+
+```text
++--------------------------------+
+| computed                       |
++--------------------------------+
+| {"a":null,"b":{},"c":[],"d":1} |
++--------------------------------+
+
++---------+-----------+
+| stored  | a_is_null |
++---------+-----------+
+| {"d":1} |         1 |
++---------+-----------+
+```
 
 For the complete rules, see [Write data](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#write-data) and [What storage keeps](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps).
 

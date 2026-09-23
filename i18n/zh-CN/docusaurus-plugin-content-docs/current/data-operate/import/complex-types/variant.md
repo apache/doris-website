@@ -37,12 +37,35 @@
 
 ## 导入时值如何转换
 
-- **CSV 格式：** `VARIANT` 字段的文本按 JSON 解析。`\N` 导入为 SQL `NULL`。非法 JSON 文本导入为 VARIANT 字符串。
-- **JSON 格式：** 字段对应的 JSON 值按原样导入。如果该值是 JSON 字符串，其内容会再按 JSON 文本解析一次，因此 `"123"` 导入为数值 `123`，`"true"` 导入为布尔值 `true`。顶层的 JSON 布尔值导入为数值 `1` 或 `0`。JSON `null` 或缺失的字段导入为 SQL `NULL`。
-- **超范围的数值：** 包含超出 [-2^63, 2^64 - 1] 的整数或超出 `DOUBLE` 范围的数值的文档无法解析，整个文档会作为一个 VARIANT 字符串导入。
 - **`NOT NULL` 列：** VARIANT 值为 SQL `NULL` 的行会被过滤，包括解析失败而得到 SQL `NULL` 的值。被过滤的行计入 `max_filter_ratio`（默认 `0`），因此默认情况下导入作业会失败。
 - **INSERT 的行为不同：** `INSERT` 不解析字符串。`INSERT INTO t VALUES (1, '{"a": 1}')` 写入的是 VARIANT 字符串 `{"a": 1}`，从 `s3()`、`hdfs()`、`local()` 执行 `INSERT INTO ... SELECT` 也是如此。需要写入对象时请使用 `PARSE_TO_VARIANT`。
-- **存储会规范化值：** 值为 `null` 的对象成员，以及值为空对象或空数组的成员，在写入时可能被移除。
+写入表时值会被规范化：数组之外的对象成员如果值为 `null`、空对象或空数组，写入时会被移除。同一个值在查询中计算时保留所有成员：
+
+```sql
+CREATE TABLE variant_norm (k INT, v VARIANT)
+DUPLICATE KEY(k)
+DISTRIBUTED BY HASH(k) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO variant_norm VALUES (1, PARSE_TO_VARIANT('{"a": null, "b": {}, "c": [], "d": 1}'));
+
+SELECT PARSE_TO_VARIANT('{"a": null, "b": {}, "c": [], "d": 1}') AS computed;
+SELECT v AS stored, v['a'] IS NULL AS a_is_null FROM variant_norm;
+```
+
+```text
++--------------------------------+
+| computed                       |
++--------------------------------+
+| {"a":null,"b":{},"c":[],"d":1} |
++--------------------------------+
+
++---------+-----------+
+| stored  | a_is_null |
++---------+-----------+
+| {"d":1} |         1 |
++---------+-----------+
+```
 
 完整规则请参阅[写入数据](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#write-data)与[写入后值的规范化](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps)。
 
