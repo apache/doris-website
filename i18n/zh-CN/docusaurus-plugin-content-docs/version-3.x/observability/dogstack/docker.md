@@ -80,7 +80,7 @@
 
    接入已有 Doris 时，需要加上 `-f docker-compose-without-doris.yaml`。所有服务的 `STATUS` 列应显示 `Up`。使用内置 Doris 时，OpenTelemetry Collector 会在 Doris 通过健康检查后才启动。
 
-4. 打开 http://localhost:3000，使用 `admin` / `admin` 登录 Grafana。
+4. 打开 <http://localhost:3000>，使用 `admin` / `admin` 登录 Grafana。
 
 ## 服务端点
 
