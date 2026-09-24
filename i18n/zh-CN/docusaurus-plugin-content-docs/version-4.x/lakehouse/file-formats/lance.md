@@ -25,7 +25,8 @@ Lance 支持自 Apache Doris 4.2 版本开始提供。
 | 并行扫描 Fragment | Catalog 查询和 S3 TVF 支持 |
 | 谓词下推 | 支持兼容的标量谓词 |
 | 向量检索 | 支持通过 `vector_search()` 使用 Lance 向量索引或执行 Flat Search |
-| 写入 Lance | 暂不支持 |
+| Lance Catalog DDL | 支持通过 Lance Catalog 执行元数据 DDL |
+| 向 Lance 写入数据 | 暂不支持 |
 | Time Travel | 暂不支持 |
 | Full-Text Search / Hybrid Search | 暂不支持 |
 
@@ -55,7 +56,7 @@ WHERE user_id > 100;
 
 ## 使用限制
 
-- Lance 当前仅支持读取，不支持创建、写入、更新或删除 Lance 表。
+- 文件 TVF 仍为只读。Lance Catalog 支持元数据 DDL，但暂不支持通过 `INSERT`、`UPDATE`、`DELETE` 或 `TRUNCATE TABLE` 向 Lance 写入行数据。
 - Lance 格式仅支持 `s3()` 和 `local()`，暂不支持 HDFS、HTTP 等其他文件 TVF。
 - 一个 TVF 路径只能表示一个 Lance 数据集，且不支持 `path_partition_keys`。
 - 查询读取数据集的当前版本，不支持通过 SQL 指定 Version 或执行 Time Travel。
