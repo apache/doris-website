@@ -394,8 +394,8 @@ SELECT * FROM lance_catalog.db.tbl FOR VERSION AS OF 2;
 SELECT * FROM lance_catalog.db.tbl FOR TIME AS OF '2026-09-19 13:06:10';
 ```
 
-- `FOR VERSION AS OF` takes a positive integer version, or, as for Iceberg and Paimon tables, a quoted tag name (`FOR VERSION AS OF 'v2'` is the same as `@tag(v2)`).
-- `FOR TIME AS OF` takes a timestamp in the session time zone, with second or millisecond precision (`yyyy-MM-dd HH:mm:ss` or `yyyy-MM-dd HH:mm:ss.SSS`). Doris selects the latest version whose commit time is not later than the timestamp, comparing commit times at millisecond precision. A timestamp earlier than the first version is an error.
+- `FOR VERSION AS OF` takes a positive integer version, or, as for Paimon tables and for tag names in Iceberg, a quoted tag name (`FOR VERSION AS OF 'v2'` is the same as `@tag(v2)`).
+- `FOR TIME AS OF` takes a timestamp in the session time zone, with second or millisecond precision (`yyyy-MM-dd HH:mm:ss` or `yyyy-MM-dd HH:mm:ss.SSS`). Doris selects the latest version whose commit time, as recorded in its manifest, is not later than the timestamp, the same rule as Lance's `asof`, comparing commit times at millisecond precision. A timestamp earlier than the first version is an error, and so is a timestamp that falls into history removed by cleanup (for example between a version kept by a tag and the next version that remains), because the table's state at that time is unknown.
 - The selected version is fixed for the whole statement: schema, Fragment planning, predicate pushdown, and the BE scan all use it. Two references to the same table in one statement can select different versions. `EXPLAIN` shows the selected version as `lanceVersion`.
 - Versions removed by Lance's `cleanup_old_versions` cannot be read; they are reported the same way as versions that never existed.
 - `vector_search()`, `full_text_search()` and index inspection always use the latest version of `main`; their `table` argument cannot select a version, tag or branch.
@@ -415,23 +415,24 @@ SELECT * FROM lance_catalog.db.tbl@branch(dev) FOR VERSION AS OF 2;
 
 - A tag points at a version on a branch, and reading the tag selects that version of that branch: a tag created on `dev` reads `dev`, not the version with the same number on `main`. `@tag` cannot be combined with `FOR VERSION AS OF` or `FOR TIME AS OF`.
 - `@branch(main)` reads `main`, the same as leaving `@branch` out.
-- Each branch has its own sequence of versions, starting at the version it was created from. `FOR VERSION AS OF` / `FOR TIME AS OF` after `@branch` select among that branch's versions only, so a timestamp before the branch was created selects nothing on it. After `@branch` (other than `main`), `FOR VERSION AS OF` cannot name a tag, because a tag already determines its branch.
+- Each branch has its own sequence of versions, starting at the version it was created from. `FOR VERSION AS OF` / `FOR TIME AS OF` after `@branch` select among that branch's versions only, so a timestamp before the branch was created selects nothing on it. After `@branch`, `@branch(main)` included, `FOR VERSION AS OF` cannot name a tag, because a tag already determines its branch.
 - A branch is stored under `<table>/tree/<branch>/` as a shallow clone of the table whose manifests record the table's location as an absolute URI. A branch is therefore readable only at the location it was created at: after the dataset is copied or moved elsewhere, `main` stays readable but its branches do not.
+- A branch whose metadata was deleted, or whose creation stopped partway, stays readable through `@branch` until its directory under `tree/` is cleaned up, because the Lance SDK checks a branch out by its directory.
 - `EXPLAIN` shows the branch read as `lanceBranch`. A tag or branch that does not exist is an error.
 
 ### REST Namespace Managed Versioning
 
-A REST Namespace can manage a table's versions itself (`managed_versioning = true` in the `DescribeTable` response). For such a table, Doris resolves versions through the Namespace: the latest version and `FOR VERSION AS OF` follow the Namespace's records (`ListTableVersions`, `DescribeTableVersion`), `FOR TIME AS OF` is resolved from the commit times (`timestamp_millis`) the Namespace reports, a tag is read from the dataset's `_refs/tags/` as for any Lance table, and a branch's versions are resolved through the Namespace as well. Once the version is selected, Doris reads its manifest from storage.
+A REST Namespace can manage a table's versions itself (`managed_versioning = true` in the `DescribeTable` response). For such a table, Doris resolves versions through the Namespace: the latest version and `FOR VERSION AS OF` follow the Namespace's records (`ListTableVersions`, `DescribeTableVersion`), `FOR TIME AS OF` is resolved from the commit times the manifests record, choosing only among the versions the Namespace lists, a tag is read from the dataset's `_refs/tags/` as for any Lance table, and a branch's versions are resolved through the Namespace as well. Once the version is selected, Doris reads its manifest from storage.
 
 - A version the Namespace does not record is reported as not found, even if its manifest still exists in storage; the latest version is the Namespace's latest, even when storage already holds a newer manifest.
-- If the Namespace does not report commit times, `FOR TIME AS OF` uses the commit times recorded in the manifests in storage instead, choosing only among the versions the Namespace lists.
+- A table, or a branch, for which the Namespace records no version is an error, even if storage holds manifests for it.
 - `EXPLAIN` shows `lanceManagedVersioning=true` for these tables.
 
 Limitations:
 
 - Doris opens the dataset at the `location` returned by `DescribeTable`, which must be a complete storage URI. If `location` is empty, or a `table_uri` returned alongside it differs from it, the query fails with an error and reads nothing.
 - The BE reads the selected version by version number from the table directory, so the manifest the Namespace records must end up at its canonical path `_versions/<u64::MAX - version>.manifest`. A staged manifest from a normal commit is moved there by Lance on read (see the next item). If a Namespace stores finalized manifests elsewhere, Doris cannot detect it: the query fails if the canonical path has no manifest for the version, and reads the other manifest's data if a different manifest with the same version number is there.
-- If the Namespace records a manifest at a staged path, Lance copies it to its canonical path on the first read, so the storage credentials used for reading must allow that write; an access-denied error says so.
+- If the Namespace records a manifest at a staged path, Lance copies it to its canonical path whenever that version is read, because the Namespace keeps recording the staged path. The storage credentials used for reading must allow that write; an access-denied error says so.
 
 ## Inspect Lance Indexes
 
