@@ -2296,6 +2296,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/table-functions/json-each-text-outer',
                                 'sql-manual/sql-functions/table-functions/posexplode',
                                 'sql-manual/sql-functions/table-functions/posexplode-outer',
+                                'sql-manual/sql-functions/table-functions/stack',
                                 'sql-manual/sql-functions/table-functions/unnest',
                             ],
                         },
