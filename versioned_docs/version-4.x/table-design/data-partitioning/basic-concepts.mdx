@@ -16,7 +16,7 @@ This document introduces the partitioning (Partition) and bucketing (Bucket) mec
 
 ## 1. Overview
 
-Doris uses a two-tier data partitioning approach of **Partition + Bucket** to organize the data of a table in an orderly manner across the nodes of the cluster:
+Doris distributes a table's data across the cluster in two tiers, **partitions** and **buckets**:
 
 - **Partition**: horizontally divides the table into smaller subsets by column values (such as time or region), making it easier to perform query pruning and data lifecycle management.
 - **Bucket**: further evenly distributes data within each partition into multiple data shards (Tablets), fully utilizing the parallelism of the cluster.
@@ -29,7 +29,7 @@ The data flow can be summarized as:
 Table ──► Partition ──► Bucket ──► Tablet (data shard, stored on BE nodes)
 ```
 
-A reasonable partitioning and bucketing design brings the following benefits at the same time: **faster queries** (partition pruning, parallel scanning), **more flexible management** (archiving/cleanup by time), and **more even writes** (avoiding hotspots).
+Good partitioning and bucketing give you three things at once: **faster queries** (partition pruning and parallel scans), **easier management** (archive or clean up by time), and **more even writes** (no hotspots).
 
 ## 2. Core Concepts
 
@@ -62,27 +62,27 @@ Doris supports two **partition types**:
 
 If no partition is specified at table creation time, Doris generates a default partition that is transparent to the user, containing all the data in the table.
 
-A reasonable partition design brings the following benefits:
+Good partition design provides:
 
-- **Improved query performance**: through partition pruning, the system can filter out irrelevant partitions based on query conditions, reducing the amount of data scanned and significantly lowering the I/O burden, which is especially suitable for large-scale datasets.
-- **Management flexibility**: data can be split along logical dimensions such as time or region, making archiving, cleanup, and backup easier. For example, partitioning by time enables efficient management of historical and incremental data, supporting time-based data maintenance strategies.
+- **Faster queries**: partition pruning skips partitions that can't match the query, so Doris scans less data and does less I/O. This matters most on large datasets.
+- **Easier management**: splitting by time or region makes archiving, cleanup, and backup simpler. For example, partitioning by time lets you manage historical and incoming data separately.
 
 ### 2.3 Bucket
 
 Bucketing further divides the data within a partition into smaller, mutually disjoint data units according to certain rules. Each row of data belongs to exactly one specific bucket.
 
-Unlike partitions that divide by ranges of column values, the goal of bucketing is to **evenly distribute** data across predefined buckets, thereby reducing data skew and improving query execution performance through better data locality.
+Partitions divide data by ranges or lists of column values. Bucketing instead spreads data **evenly** across the buckets in a partition, which reduces skew and improves query performance through better data locality.
 
 Doris supports two **bucketing methods**:
 
 - **Hash bucketing**: computes the `crc32` hash of the bucketing column values and takes the modulo with the number of buckets to evenly distribute the data.
 - **Random bucketing**: randomly assigns data to buckets. When using Random bucketing, you can combine the `load_to_single_tablet` parameter to optimize fast writes for small-scale data.
 
-A reasonable bucketing design brings the following benefits:
+Good bucketing provides:
 
-- **Even data distribution**: reduces the risk of data concentration or skew, and avoids overloading some nodes or storage devices.
-- **Reduced hotspots**: prevents some nodes or partitions from being overloaded, improving system stability and processing capability.
-- **Improved concurrent performance**: when multiple query requests need to access different data within the same partition, bucketing allows the system to process multiple requests in parallel effectively, thereby improving throughput.
+- **Even data distribution**: less risk of skew, and no single node or disk gets overloaded.
+- **Fewer hotspots**: no node or partition gets overloaded, which keeps the system stable.
+- **Better concurrency**: Doris reads different buckets in the same partition in parallel, which improves throughput.
 
 ### 2.4 Tablet and Node Architecture
 
