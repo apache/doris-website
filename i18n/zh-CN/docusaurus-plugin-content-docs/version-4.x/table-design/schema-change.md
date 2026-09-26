@@ -33,7 +33,7 @@ Doris 支持两种类型的 Schema Change 操作：**轻量级**与**重量级**
 | 是否需要数据重写 | 不需要，仅修改元数据                               | 需要，涉及数据文件的重写                                      |
 | 系统性能影响     | 影响较小                                          | 可能影响系统性能，尤其在数据转换过程中                        |
 | 资源消耗         | 较低                                              | 较高，占用计算资源；过程中表数据占用的存储空间会翻倍           |
-| 典型操作         | 增加 / 删除 Value 列、修改列名、修改 VARCHAR 长度 | 修改列的数据类型、更改主键、修改列的顺序等                   |
+| 典型操作         | 增加 / 删除 Value 列、修改列名、修改 VARCHAR 长度 | 修改列的数据类型、NOT NULL 改为 NULL、更改主键、修改列的顺序等 |
 
 ### 轻量级 Schema Change
 
@@ -48,6 +48,7 @@ Doris 支持两种类型的 Schema Change 操作：**轻量级**与**重量级**
 **涉及数据文件的重写或转换**，由 Backend（BE）在后台完成实际修改或重新组织。所有不属于轻量级范围的操作都属于重量级，例如：
 
 - 修改列的数据类型。
+- 将列从 NOT NULL 修改为 NULL。
 - 修改列的排序顺序。
 
 执行流程：
@@ -201,7 +202,8 @@ ALTER TABLE [database.]table RENAME COLUMN old_column_name new_column_name;
 
 - 聚合模型修改 Value 列时，需要指定 `agg_type`。
 - 非聚合模型修改 Key 列时，需要指定 `KEY` 关键字。
-- 只能修改列的类型，列的其他属性需要维持原样。
+- 修改列**类型**时，聚合方式与默认值必须与原列保持一致。
+- 将列从 **NOT NULL 修改为 NULL** 支持，走重量级 Schema Change；从 **NULL 修改为 NOT NULL** 不支持。
 - **分区列和分桶列不能做任何修改**。
 - 修改列时需注意精度损失，支持的类型转换详见下文 [支持的类型转换](#支持的类型转换)。
 
@@ -228,7 +230,7 @@ ALTER TABLE [database.]table RENAME COLUMN old_column_name new_column_name;
     MODIFY COLUMN col1 BIGINT KEY DEFAULT "1" AFTER col2;
     ```
 
-3. 修改 Base Table 的 `col5` 列最大长度，原 `col5` 为 `VARCHAR(32) REPLACE DEFAULT "abc"`（只能修改列的类型，其他属性需维持原样）：
+3. 修改 Base Table 的 `col5` 列最大长度，原 `col5` 为 `VARCHAR(32) REPLACE DEFAULT "abc"`（仅修改 VARCHAR 长度；聚合方式与默认值需维持原样）：
 
     ```sql
     ALTER TABLE example_db.my_table
@@ -240,6 +242,13 @@ ALTER TABLE [database.]table RENAME COLUMN old_column_name new_column_name;
     ```sql
     ALTER TABLE example_db.my_table
     MODIFY COLUMN col3 varchar(50) KEY NULL COMMENT 'to 50';
+    ```
+
+5. 将列从 NOT NULL 修改为 NULL（重量级 Schema Change）：
+
+    ```sql
+    ALTER TABLE example_db.my_table
+    MODIFY COLUMN col2 INT NULL;
     ```
 
 #### 支持的类型转换
@@ -330,8 +339,9 @@ CANCEL ALTER TABLE COLUMN FROM tbl_name;
 | **不可变列**     | 分区列和分桶列不能修改                                                                                    |
 | **Key 列删除**   | 聚合表中含 REPLACE 方式聚合的 Value 列时，不允许删除 Key 列；Unique 表也不允许删除 Key 列                   |
 | **聚合默认值**   | 新增 SUM 或 REPLACE 类型 Value 列时，因历史数据已失去明细信息，默认值无法实际反映聚合后的取值，对历史数据没有含义 |
-| **类型修改**     | 只能修改列的 Type；聚合方式、Nullable、默认值等其余字段必须按原列信息补全                                  |
-| **不支持的修改** | 不支持修改聚合类型、Nullable 属性和默认值                                                                 |
+| **类型修改**     | 修改列类型时，聚合方式与默认值必须与原列信息一致                                  |
+| **Nullable 修改** | 支持 NOT NULL 修改为 NULL（重量级 Schema Change）；不支持 NULL 修改为 NOT NULL |
+| **不支持的修改** | 不支持修改聚合类型或默认值                                                                 |
 
 ## 相关配置
 
