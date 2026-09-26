@@ -13,9 +13,9 @@
 
 Peer cache read is how the File Cache handles a miss in compute-storage decoupled mode. When a BE does not have a block in its local File Cache, it first asks the File Cache of another BE, in the same compute group or a different one, and reads from object storage only when no peer has the block either. It only affects the cold-read path; reads that hit the local cache are unchanged.
 
-:::caution Version
+:::caution Experimental feature
 
-Peer cache read is supported since version 4.2.0 and is enabled by default. To turn it off, set `enable_cache_read_from_peer = false` on the BE.
+Peer cache read is available as an experimental feature starting from Doris 4.2.0 and is enabled by default. To turn it off, set `enable_cache_read_from_peer = false` on the BE.
 
 :::
 
