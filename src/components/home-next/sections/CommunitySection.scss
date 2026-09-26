@@ -1,14 +1,14 @@
 @use '../../shared/typography' as type;
 
 .community-next {
-    --cn-green: #06805F;
-    --cn-green-deep: #054C39;
-    --cn-green-glow: #2DDFA8;
-    --cn-cream: #FAF6EE;
+    --cn-green: var(--brand-primary-dark);
+    --cn-green-deep: var(--brand-primary-darker);
+    --cn-green-glow: var(--brand-primary-glow);
+    --cn-cream: var(--brand-cream-light);
     --cn-cream-muted: rgba(245, 239, 228, 0.72);
-    --cn-yellow: #FFD23F;
-    --cn-yellow-bright: #FFE066;
-    --cn-ink: #0F1A14;
+    --cn-yellow: var(--brand-accent);
+    --cn-yellow-bright: var(--brand-accent-bright);
+    --cn-ink: var(--brand-ink);
 
     position: relative;
     overflow: hidden;
@@ -34,9 +34,9 @@
     &::after {
         z-index: 2;
         background:
-            radial-gradient(ellipse at 50% 0%, rgba(255, 210, 63, 0.12), transparent 58%),
-            radial-gradient(ellipse at 18% 100%, rgba(45, 223, 168, 0.12), transparent 52%),
-            linear-gradient(180deg, rgba(5, 76, 57, 0.08), rgba(5, 76, 57, 0.18));
+            radial-gradient(ellipse at 50% 0%, rgb(var(--brand-accent-rgb) / 12%), transparent 58%),
+            radial-gradient(ellipse at 18% 100%, rgb(var(--brand-primary-glow-rgb) / 12%), transparent 52%),
+            linear-gradient(180deg, rgb(var(--brand-primary-darker-rgb) / 0.08), rgb(var(--brand-primary-darker-rgb) / 0.18));
     }
 
     &__inner {
@@ -103,13 +103,13 @@
             box-shadow 0.18s ease,
             border-color 0.18s ease;
         color: var(--cn-cream);
-        box-shadow: 0 18px 44px -28px rgba(15, 26, 20, 0.72);
+        box-shadow: 0 18px 44px -28px rgb(var(--brand-ink-rgb) / 0.72);
 
         &:hover {
             transform: translateY(-3px);
             background: rgba(245, 239, 228, 0.13);
-            box-shadow: 0 24px 54px -30px rgba(15, 26, 20, 0.9);
-            border-color: rgba(255, 210, 63, 0.58);
+            box-shadow: 0 24px 54px -30px rgb(var(--brand-ink-rgb) / 0.9);
+            border-color: rgb(var(--brand-accent-rgb) / 58%);
             text-decoration: none !important;
         }
 
@@ -141,7 +141,7 @@
         border-radius: 6px;
         background: var(--cn-yellow);
         color: var(--cn-ink);
-        box-shadow: 0 12px 26px -18px rgba(15, 26, 20, 0.7);
+        box-shadow: 0 12px 26px -18px rgb(var(--brand-ink-rgb) / 0.7);
 
         svg {
             display: block;

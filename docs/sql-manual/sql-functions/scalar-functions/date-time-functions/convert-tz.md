@@ -22,11 +22,13 @@ CONVERT_TZ(<dt>, <from_tz>, <to_tz>)
 
 | Parameter | Description |
 | -- | -- | 
-| `<dt>` | The value to be converted, which is of datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<dt>` | The value to convert. Supports `DATE`, `DATETIME`, and `TIMESTAMP_NS`. |
 | `<from_tz>` | The original time zone of dt, this parameter is of `varchar` type |
 | `<to_tz>` | The target time zone to convert to, this parameter is of `varchar` type |
 
 ## Return Value
+
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
 
 - The converted value type of datetime
 - The returned scale is the same as the input scale
@@ -102,5 +104,3 @@ mysql> select CONVERT_TZ('2019-08-01 13:21:03.636', '+08:00', 'America/Los_Angel
 select CONVERT_TZ(CAST('2019-08-01 13:21:03' AS DATETIME), '+08:00', 'America/Los_Anges');
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT][E33] Operation convert_tz invalid timezone: America/Los_Anges
 ```
-
-

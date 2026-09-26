@@ -28,7 +28,8 @@ ELEMENT_AT(container, key_or_index)
   - For `ARRAY`: An integer, with indexing starting from **1**.  
   - For `MAP`: The key type (`K`) of the `MAP`, which can be any supported primitive type.  
   - For `STRUCT`: A constant integer field position (starting from **1**) or a constant string field name (matched **case-insensitively**).  
-  - For `VARIANT`: A string type.
+  - For `VARIANT` object access: A string key.
+  - For a VARIANT array in Doris 4.2 and later: An integer index; positive indexes are 1-based and negative indexes count backward from the end.
 
 ## Return Value
 
@@ -41,9 +42,15 @@ ELEMENT_AT(container, key_or_index)
 
 ## Notes
 
-1. **Array indexes start from 1**, not 0.  
-2. Negative indexes are supported: `-1` represents the last element, `-2` the second-to-last, and so on.  
+1. **ARRAY and, in Doris 4.2 and later, VARIANT array indexes start from 1**, not 0.
+2. Negative indexes are supported for ARRAY and VARIANT array access: `-1` represents the last element, `-2` the second-to-last, and so on.
 3. The `ELEMENT_AT(container, key_or_index)` function behaves the same as `container[key_or_index]` (see examples for details).
+
+```sql
+SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 1);  -- 10
+SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), 2);  -- 20
+SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
+```
 
 ## Examples
 
@@ -115,17 +122,17 @@ ELEMENT_AT(container, key_or_index)
 5. When accessing a subfield of a `VARIANT`, if the `VARIANT` value is not an OBJECT, an empty value is returned.
 
     ```SQL
-    SELECT ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a");
-    +------------------------------------------------------+
-    | ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a") |
-    +------------------------------------------------------+
-    | 1                                                    |
-    +------------------------------------------------------+
+    SELECT ELEMENT_AT(PARSE_TO_VARIANT('{"a": 1, "b": 2}'), "a");
+    +-------------------------------------------------------+
+    | ELEMENT_AT(PARSE_TO_VARIANT('{"a": 1, "b": 2}'), "a") |
+    +-------------------------------------------------------+
+    | 1                                                     |
+    +-------------------------------------------------------+
 
-    SELECT ELEMENT_AT(CAST('123' AS VARIANT), "");
-    +----------------------------------------+
-    | ELEMENT_AT(CAST('123' AS VARIANT), "") |
-    +----------------------------------------+
-    |                                        |
-    +----------------------------------------+
+    SELECT ELEMENT_AT(PARSE_TO_VARIANT('123'), "");
+    +-------------------------------------------+
+    | ELEMENT_AT(PARSE_TO_VARIANT('123'), "")   |
+    +-------------------------------------------+
+    |                                           |
+    +-------------------------------------------+
     ```

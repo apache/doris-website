@@ -2,13 +2,13 @@
 {
     "title": "MILLISECOND_TIMESTAMP",
     "language": "zh-CN",
-    "description": "MILLISECONDTIMESTAMP 函数用于将输入的日期时间值转换为从 1970-01-01 00:00:00 加上本地时区偏移，开始计算的 Unix 时间戳，单位为毫秒（1 秒 = 1,000,000 毫秒）。该函数支持处理包含毫秒精度的 DATETIME 类型，"
+    "description": "MILLISECOND_TIMESTAMP 将 DATETIME 或 TIMESTAMP_NS 值转换为毫秒级 Unix 时间戳，并截断低于毫秒的精度而不进行四舍五入。"
 }
 ---
 
 ## 描述
 
-MILLISECOND_TIMESTAMP 函数用于将输入的日期时间值转换为从 1970-01-01 00:00:00  加上本地时区偏移，开始计算的 Unix 时间戳，单位为毫秒（1 秒 = 1,000,000 毫秒）。该函数支持处理包含毫秒精度的 DATETIME 类型，转换时会自动忽略时区差异（默认以 UTC 时间为基准）
+MILLISECOND_TIMESTAMP 函数将 `DATETIME` 或 `TIMESTAMP_NS` 值转换为以毫秒为单位的 Unix 时间戳。低于毫秒的精度会被截断。
 
 ## 语法
 
@@ -20,7 +20,7 @@ MILLISECOND_TIMESTAMP(`<datetime>`)
 
 | 参数           | 说明                                      |
 |--------------|-----------------------------------------|
-| `<datetime>` | 表示要转换为 Unix 时间戳的日期时间，支持输入 datetime 类型,具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime>` | 要转换的 `DATETIME` 或 `TIMESTAMP_NS` 值。 |
 
 ## 返回值
 

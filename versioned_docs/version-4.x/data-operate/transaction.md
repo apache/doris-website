@@ -381,9 +381,6 @@ mysql> SELECT * FROM dt3;
 
 * When using JDBC to connect to Doris for transactional operations, add `useLocalSessionState=true` in the JDBC URL; otherwise the error `This is in a transaction, only insert, update, delete, commit, rollback is acceptable.` may be raised.
 
-* In compute-storage decoupled mode, transactional writes do not support Merge-on-Write tables. Otherwise the error `Transaction load is not supported for merge on write unique keys table in cloud mode` will be raised.
-
-
 ## Stream Load 2PC
 
 **1. Set `two_phase_commit:true` in the HTTP Header to enable two-phase commit.**

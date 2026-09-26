@@ -24,13 +24,13 @@ Generate an arithmetic sequence array of numbers or datetimes.
 
 - `start`, `end`: non-negative integers. `end` is the upper bound and is excluded from the result.
 - `step`: must be a positive integer; the step length; default is 1.
-- `start_dt`, `end_dt`: DATETIME. In the two-argument form, the default step is 1 DAY.
+- `start_dt`, `end_dt`: `DATETIME` or `TIMESTAMP_NS`. Both arguments must have the same type. In the two-argument form, the default step is 1 DAY.
 - `interval step unit`: datetime step. `unit` can be `YEAR|QUARTER|MONTH|WEEK|DAY|HOUR|MINUTE|SECOND`; `step` must be a positive integer.
 
 ## Return value
 
 - Returns `ARRAY<T>`; returns `NULL` for illegal arguments; returns an empty array `[]` for an empty range.
-- The element type `T` matches the input: integers produce `INT`, datetimes produce `DATETIME`.
+- The element type `T` matches the input: integers produce `INT`; `DATETIME` and `TIMESTAMP_NS` inputs produce the corresponding temporal type.
 
 ## Usage notes
 
@@ -71,3 +71,5 @@ Generate an arithmetic sequence array of numbers or datetimes.
    - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 12:02:00', interval 1 minute)` -> `["2022-05-15 12:00:00", "2022-05-15 12:01:00"]`
    - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 12:00:02', interval 1 second)` -> `["2022-05-15 12:00:00", "2022-05-15 12:00:01"]`
 
+- `TIMESTAMP_NS` preserves nanosecond precision in the generated elements.
+  - `ARRAY_RANGE(CAST('2022-05-15 12:00:00.123456789' AS TIMESTAMP_NS), CAST('2022-05-15 12:00:02.123456789' AS TIMESTAMP_NS), INTERVAL 1 SECOND)` -> `["2022-05-15 12:00:00.123456789", "2022-05-15 12:00:01.123456789"]`

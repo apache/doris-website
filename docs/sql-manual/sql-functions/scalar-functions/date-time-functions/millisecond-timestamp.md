@@ -2,13 +2,13 @@
 {
     "title": "MILLISECOND_TIMESTAMP",
     "language": "en",
-    "description": "The MILLISECONDTIMESTAMP function converts the input datetime value into a Unix timestamp calculated from 1970-01-01 00:00:00 (adjusted by the local "
+    "description": "Converts a DATETIME or TIMESTAMP_NS value to a Unix timestamp in milliseconds, truncating sub-millisecond digits."
 }
 ---
 
 ## Description
 
-The `MILLISECOND_TIMESTAMP` function converts the input datetime value into a Unix timestamp calculated from `1970-01-01 00:00:00` (adjusted by the local time zone offset), with the unit being milliseconds (1 second = 1,000 milliseconds). This function supports processing `DATETIME` types with millisecond precision and automatically ignores time zone differences during conversion (using UTC time as the default reference).
+The `MILLISECOND_TIMESTAMP` function converts a `DATETIME` or `TIMESTAMP_NS` value to a Unix timestamp in milliseconds. Fractional precision below milliseconds is truncated.
 
 ## Syntax
 
@@ -20,7 +20,7 @@ MILLISECOND_TIMESTAMP(`<datetime>`)
 
 | Parameter    | Description                                                                                   |
 |--------------|-----------------------------------------------------------------------------------------------|
-| `<datetime>` | Represents the datetime to be converted into a Unix timestamp. Supports the `DATETIME` type. For specific datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
+| `<datetime>` | The `DATETIME` or `TIMESTAMP_NS` value to convert. |
 
 ## Return Value
 

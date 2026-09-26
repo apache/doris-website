@@ -22,7 +22,7 @@ UNNEST(<expr>[, ...]) [WITH ORDINALITY] [AS alias [(col1, col2, ...)]]
 - Multiple ARRAY parameters: Combines the elements expanded each time into multiple columns (or as a Struct) by position. The expansion length is determined by the longest input, and shorter columns are padded with NULL.
 - MAP parameter: Returns two columns (Struct) (key, value); NULL keys/values remain NULL.
 - BITMAP parameter: Returns integer values by element.
-- WITH ORDINALITY: Appends a sequence number column starting from 1 to the output (as the last column or specified by an alias).
+- WITH ORDINALITY: Appends a sequence number column starting from 0 to the output (as the first column or specified by an alias).
 - Empty array or NULL:
   - When generating an independent table (SELECT list or FROM ... UNNEST), if the parameter is NULL or an empty array, no rows are generated (0 rows).
   - When used in combination with FROM/LATERAL and LEFT JOIN (i.e., generating outer row semantics), if all expanded rows of a parent row are filtered or have no output, a row is inserted for the parent row, with the UNNEST output columns set to NULL (to retain the left table row).
@@ -34,7 +34,7 @@ UNNEST(<expr>[, ...]) [WITH ORDINALITY] [AS alias [(col1, col2, ...)]]
 4. In JOIN scenarios:
    - INNER / CROSS JOIN: Performs Cartesian product or matching based on the expanded results.
    - LEFT JOIN LATERAL: Implements outer row semantics — if there are no matches or all expanded results are filtered by ON/filter conditions, a row with NULL values is generated (to retain the left table row).
-5. WITH ORDINALITY adds a sequence number (starting from 1) to the expanded rows.
+5. WITH ORDINALITY adds a sequence number (starting from 0) to the expanded rows.
 6. When UNNEST(...) is used directly in the SELECT list, it is equivalent to applying the table-generating function to a single-row source, expanding the expression into multiple rows of output.
 
 ## Examples
@@ -102,14 +102,14 @@ Output (example):
 ```
 3. WITH ORDINALITY：
 ```sql
-SELECT i.id, t.ord, t.tag
-FROM items i, unnest(i.tags) WITH ORDINALITY AS t(tag, ord)
+SELECT i.id, t.tag, t.ord
+FROM items i, unnest(i.tags) WITH ORDINALITY AS t(ord, tag)
 ORDER BY i.id, t.ord;
 ```
 Output (example):
 ```sql
 +------+-------------+------+
-| id   | ord         | tag  |
+| id   | tag         | ord  |
 +------+-------------+------+
 |    1 | Electronics |    0 |
 |    1 | High-End    |    2 |

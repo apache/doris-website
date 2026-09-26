@@ -10,13 +10,13 @@ exceptions: []
 
 # Example:
 # exceptions:
-#   - id: missing-ja-sql-function-2026-05-01
+#   - id: missing-zh-sql-function-2026-05-01
 #     type: missing_locale
 #     scope:
 #       doc_id: "sql-manual/sql-functions/scalar-functions/string-functions/example"
-#       locale: ja
+#       locale: zh-CN
 #       version: "4.x"
-#     reason: "Japanese docs are report-only until the ja-source publishing flow is unified."
+#     reason: "Chinese translation is tracked separately and lands in a follow-up PR."
 #     owner: "@apache/doris-website-maintainers"
 #     expires: "2026-07-01"
 #     tracking_issue: "https://github.com/apache/doris-website/issues/TBD"

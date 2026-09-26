@@ -2,13 +2,13 @@
 {
     "title": "HOUR_FLOOR",
     "language": "en",
-    "description": "HOUR_FLOOR function rounds down the input datetime value to the nearest moment of the specified hour period. For example, if the period is 5 hours, the function adjusts the input time to the starting hour mark within that period."
+    "description": "Rounds a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value down to the nearest boundary of a specified hour period."
 }
 ---
 
 ## Description
 
-HOUR_FLOOR function rounds down the input datetime value to the nearest moment of the specified hour period. For example, if the period is 5 hours, the function adjusts the input time to the starting hour mark within that period.
+HOUR_FLOOR function rounds down the input datetime value to the nearest moment of the specified hour period. It supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ` inputs. For example, if the period is 5 hours, the function adjusts the input time to the starting hour mark within that period.
 
 Date calculation formula:
 $$
@@ -33,13 +33,17 @@ HOUR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_expr>` | A valid date expression that supports datetime/date/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), and for datetime/date formats refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | A valid date expression that supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. `DATE` input is treated as the start of the day at 00:00:00. For specific formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | Optional parameter that specifies the period length (unit: hours), must be a positive integer (such as 2, 6, 12). Default value is 1, representing one period every 1 hour |
-| `<origin>` | The starting time origin, supports datetime/date types. If not provided, the default is 0001-01-01T00:00:00 |
+| `<origin>` | The starting time origin. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. If not provided, the default is 0001-01-01T00:00:00. |
 
 ## Return Value
 
-Returns a TIMESTAMPTZ, DATETIME or DATE type value representing the nearest period moment after rounding down.
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
+When `<origin>` is omitted for a `TIMESTAMP_NS` input, the documented default origin is used only as an internal alignment reference; it does not need to fall within the storable `TIMESTAMP_NS` range.
+
+Returns a TIMESTAMPTZ, TIMESTAMP_NS, DATETIME, or DATE type value representing the nearest period moment after rounding down.
 
 - If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform FLOOR calculation.
 - If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.

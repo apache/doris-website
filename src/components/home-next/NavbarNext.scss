@@ -3,12 +3,13 @@
 @use '../shared/typography' as type;
 
 .navbar-next {
-    --nb-green-dark: #06805F;
-    --nb-green-deep: #054C39;
-    --nb-green-glow: #2DDFA8;
-    --nb-cream-light: #FAF6EE;
-    --nb-yellow: #FFD23F;
-    --nb-ink: #0F1A14;
+    --nb-green-dark: var(--brand-primary-dark);
+    --nb-green-deep: var(--brand-primary-darker);
+    --nb-green-glow: var(--brand-primary-glow);
+    --nb-cream-light: var(--brand-cream-light);
+    --nb-yellow: var(--brand-accent);
+    --nb-ink: var(--brand-ink);
+    --nb-summit-cyan: #00F0FF;
 
     position: sticky;
     top: var(--home-next-banner-height, 0px);
@@ -21,13 +22,15 @@
     border-bottom: 1px solid rgba(245, 239, 228, 0.08);
 
     &__inner {
-        max-width: 1280px;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 1600px;
         margin: 0 auto;
         padding: 0 56px;
         height: 64px;
         display: flex;
         align-items: center;
-        gap: 48px;
+        gap: 32px;
     }
 
     // Override the global Docusaurus navbar styles we inherit on Dev docs.
@@ -46,16 +49,14 @@
 	    &__logo {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 10px;
+        // Same 100px slot the old <img> box occupied; the cropped inline mark
+        // (see DorisLogoHorizontal) is ~75px wide and centres inside it.
+        width: 100px;
         text-decoration: none !important;
         flex-shrink: 0;
         color: var(--nb-cream-light) !important;
-
-        img {
-            height: 30px;
-            width: auto;
-            filter: brightness(0) invert(1);
-        }
 
 	        span {
 	            @include type.mono-text(17px, 700, 1.2, 0.01em);
@@ -100,7 +101,7 @@
         border: none;
         background: none;
         cursor: pointer;
-	        @include type.mono-text(type.$label, 500, 1.2, 0.02em);
+	        @include type.mono-text(15px, 600, 1.2, 0.02em);
 	        color: rgba(245, 239, 228, 0.78);
         border-radius: 4px;
         transition: color 0.15s, background 0.15s;
@@ -132,7 +133,7 @@
         top: calc(100% + 8px);
         left: 0;
         min-width: 200px;
-        background: #054C39;
+        background: var(--nb-green-deep);
         border: 1px solid rgba(245, 239, 228, 0.12);
         border-radius: 8px;
         box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -161,7 +162,7 @@
             left: 18px;
             width: 9px;
             height: 9px;
-            background: #054C39;
+            background: var(--nb-green-deep);
             border-left: 1px solid rgba(245, 239, 228, 0.12);
             border-top: 1px solid rgba(245, 239, 228, 0.12);
             transform: rotate(45deg);
@@ -238,25 +239,101 @@
         box-sizing: border-box;
         height: 32px;
         padding: 0 12px;
-        border: 1px solid rgba(17, 166, 121, 0.55);
+        border: 1px solid rgba(245, 239, 228, 0.22);
         border-radius: 4px;
-        background: rgba(17, 166, 121, 0.18);
+        background: transparent;
         color: var(--nb-cream-light);
         cursor: pointer;
         @include type.mono-text(12px, 600, 1.2, 0.02em);
         transition: border-color 0.15s, background 0.15s, transform 0.15s;
         white-space: nowrap;
 
-        svg { flex-shrink: 0; }
+        svg {
+            flex-shrink: 0;
+            color: var(--nb-yellow);
+
+            path {
+                fill: currentColor;
+            }
+        }
+
+        // The robot glyph is stroke-based; keep its paths unfilled.
+        .navbar-next__ask-ai-icon--compact path {
+            fill: none;
+        }
 
         &:hover {
-            border-color: rgba(17, 166, 121, 0.85);
-            background: rgba(17, 166, 121, 0.28);
+            border-color: rgba(245, 239, 228, 0.45);
+            background: rgba(245, 239, 228, 0.06);
             transform: translateY(-1px);
         }
 
         &:focus-visible {
-            outline: 2px solid rgba(17, 166, 121, 0.85);
+            outline: 2px solid rgb(var(--brand-primary-rgb) / 85%);
+            outline-offset: 2px;
+        }
+    }
+
+    &__ask-ai-icon--full {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    &__ask-ai-icon--compact,
+    &__ask-ai-label--compact {
+        display: none;
+    }
+
+    &__summit {
+        position: relative;
+        isolation: isolate;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        height: 32px;
+        overflow: hidden;
+        padding: 0 14px;
+        border: 1px solid var(--nb-yellow);
+        border-radius: 4px;
+        background: var(--nb-yellow);
+        color: var(--nb-ink) !important;
+        text-decoration: none !important;
+        white-space: nowrap;
+        @include type.mono-text(12px, 700, 1.2, 0.02em);
+        animation: navbar-next-summit-breathe 2.8s ease-in-out infinite;
+        transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s, color 0.2s, transform 0.2s;
+
+        span {
+            position: relative;
+            z-index: 1;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            z-index: 0;
+            top: -2px;
+            bottom: -2px;
+            left: -45%;
+            width: 32%;
+            transform: skewX(-18deg);
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.62), transparent);
+            animation: navbar-next-summit-sweep 3.6s ease-in-out infinite;
+            will-change: transform;
+            pointer-events: none;
+        }
+
+        &:hover {
+            border-color: var(--brand-accent-bright);
+            background: var(--brand-accent-bright);
+            color: var(--nb-ink) !important;
+            text-decoration: none !important;
+            transform: translateY(-1px);
+        }
+
+        &:focus-visible {
+            outline: 2px solid rgb(var(--brand-primary-rgb) / 85%);
             outline-offset: 2px;
         }
     }
@@ -287,12 +364,17 @@
         }
     }
 
+    // Both nested under .navbar-next on purpose: the legacy
+    // src/scss/components/navbar.scss ships `.navbar a svg { display: none }`,
+    // which these need to out-rank.
     .navbar-next__star-link svg {
         display: inline-block;
     }
 
-    .navbar-next__logo img {
+    .navbar-next__logo-mark {
         display: block;
+        width: auto;
+        height: 26px;
     }
 
     &__star-divider {
@@ -318,7 +400,7 @@
         white-space: nowrap;
 
         &:hover {
-            background: #FFE066;
+            background: var(--brand-accent-bright);
             color: var(--nb-ink) !important;
             text-decoration: none !important;
             transform: translateY(-1px);
@@ -404,6 +486,12 @@
         display: grid;
         gap: 4px;
         padding: 0 0 12px;
+
+        // `display: grid` would otherwise override the UA rule for the
+        // `hidden` attribute and keep every collapsed section expanded.
+        &[hidden] {
+            display: none;
+        }
     }
 
 	    &__mobile-link {
@@ -429,6 +517,56 @@
     }
 }
 
+// Keep every primary and utility action visible on one row across common
+// desktop widths. Type and spacing scale down only to a readable minimum.
+@media (min-width: 1181px) and (max-width: 1679px) {
+    .navbar-next {
+        &__inner {
+            max-width: none;
+            gap: clamp(12px, 1.5vw, 24px);
+            padding: 0 clamp(16px, 2vw, 28px);
+        }
+
+        &__logo img {
+            width: clamp(86px, 6.5vw, 100px);
+        }
+
+        &__nav {
+            gap: 2px;
+        }
+
+        &__actions {
+            gap: 4px;
+        }
+
+        &__trigger {
+            padding-inline: clamp(0.35rem, 0.55vw, 0.65rem);
+            font-size: clamp(12px, calc(0.7vw + 3px), 14px);
+        }
+
+        &__summit,
+        &__ask-ai,
+        &__star-link,
+        &__cta {
+            font-size: clamp(11px, calc(0.3vw + 7px), 12px);
+        }
+
+        &__summit,
+        &__ask-ai {
+            padding-inline: clamp(8px, 0.8vw, 12px);
+        }
+
+        &__star-link {
+            gap: clamp(5px, 0.5vw, 8px);
+            padding-inline: clamp(7px, 0.7vw, 10px);
+        }
+
+        &__cta {
+            padding-inline: clamp(0.7rem, 1vw, 1.1rem);
+        }
+    }
+}
+
 @media (max-width: 1180px) {
     .navbar-next {
         &__inner {
@@ -440,16 +578,9 @@
             padding: 0.5rem 0.55rem;
             font-size: 12px;
         }
-    }
-}
 
-@media (max-width: 1020px) {
-    .navbar-next {
-        &__inner {
-            padding: 0 24px;
-            gap: 14px;
-        }
-
+        // The extra Summit action needs more horizontal room than the old
+        // action group, so switch to the menu before controls can collide.
         &__nav {
             display: none;
         }
@@ -464,114 +595,170 @@
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1020px) {
     .navbar-next {
         &__inner {
-            padding: 0 20px;
-            gap: 10px;
+            padding: 0 24px;
+            gap: 14px;
         }
 
-        &__logo img {
-            height: 27px;
+    }
+}
+
+// Phones: one 56px row — [menu] [logo] … [★ 15.9k gh] [AI Ask] [DOWNLOAD].
+// The Summit banner leaves the bar (it lives in the menu panel instead), the
+// star pill drops the word "Star", and Ask Me becomes a robot icon + "Ask".
+@media (max-width: 768px) {
+    .navbar-next {
+        &.navbar {
+            height: auto;
+            min-height: 56px;
         }
 
+        &__inner {
+            // Wrap only as a safety net for unexpectedly wide content (custom
+            // fonts, huge star counts); the sizes below fit 360px in one row.
+            flex-wrap: wrap;
+            align-items: center;
+            height: auto;
+            min-height: 56px;
+            padding: 11px 12px;
+            column-gap: 6px;
+            row-gap: 8px;
+        }
+
+        // Expose the action children to the navbar row so they can be ordered
+        // individually.
         &__actions {
-            gap: 8px;
+            display: contents;
+        }
+
+        &__menu-button {
+            order: 0;
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
+        }
+
+        &__logo {
+            order: 1;
+            width: auto;
+            height: 34px;
+        }
+
+        // Nested for specificity, see the desktop rule.
+        .navbar-next__logo-mark {
+            height: 22px;
+        }
+
+        &__star-link {
+            order: 2;
+            margin-left: auto;
+            gap: 6px;
+            padding: 0 7px 0 6px;
+            font-size: 11px;
+        }
+
+        &__star-text,
+        &__star-divider {
+            display: none;
+        }
+
+        &__ask-ai {
+            order: 3;
+            gap: 4px;
+            padding: 0 8px;
+            font-size: 11px;
+        }
+
+        &__ask-ai-icon--full,
+        &__ask-ai-label--full {
+            display: none;
+        }
+
+        &__ask-ai-icon--compact {
+            display: inline-block;
+        }
+
+        &__ask-ai-label--compact {
+            display: inline;
         }
 
         &__cta {
-            padding: 0.45rem 0.8rem;
-            font-size: 12px;
+            order: 4;
+            display: inline-flex;
+            align-items: center;
+            box-sizing: border-box;
+            height: 32px;
+            padding: 0 8px;
+            font-size: 11px;
+        }
+
+        &__actions > &__summit {
+            display: none;
         }
 
         &__mobile-panel {
-            padding: 10px 20px 18px;
+            max-height: calc(100vh - 56px);
         }
 
         &__mobile-actions {
             display: grid;
             grid-template-columns: 1fr;
-
-            .navbar-next__star-link,
-            .navbar-next__cta {
-                justify-content: center;
-                width: 100%;
-            }
-        }
-    }
-}
-
-// On narrow phones (≤480px): row 1 = Logo (left) + Star + Download + ☰ (right, as a group),
-// row 2 = Ask AI full-width centered.
-// Only minimal padding trimming — no font-size or height overrides.
-@media (max-width: 480px) {
-    .navbar-next {
-        &.navbar {
-            height: auto;
-            min-height: 64px;
         }
 
-        &__inner {
-            flex-wrap: wrap;
-            height: auto;
-            padding: 0 10px;
-            column-gap: 5px;
-            row-gap: 0;
-            align-items: center;
-        }
-
-        // Logo link spans the full row-1 height; image slightly smaller to reclaim space.
-        &__logo {
-            height: 64px;
-        }
-
-        &__logo img {
-            height: 24px;
-        }
-
-        // Trim star-link horizontal padding (only change needed to make everything fit).
-        &__star-link {
-            padding: 0 8px 0 6px;
-            // Right-anchor the Star+Download+☰ group. Since `__actions` collapses
-            // to `display: contents` below, Star is the first member of the
-            // right-side group and inherits the auto-margin job from __actions.
-            margin-left: auto;
-        }
-
-        // Collapse `__actions` so its children (Ask Me, Star, Download) become
-        // flex children of `__inner` directly. This lets Ask Me wrap to its own
-        // full-width second row via `flex: 0 0 100%; order: 10` below — which
-        // is impossible while it's nested inside a non-wrapping flex container.
-        &__actions {
-            display: contents;
-        }
-
-        // Hamburger follows actions naturally — no extra margin needed.
-        &__menu-button {
-            margin-left: 0;
-        }
-
-        // Ask Me: full-width second row, icon + text centered both axes.
-        &__ask-ai {
-            order: 10;
-            flex: 0 0 100%;
+        &__mobile-actions &__summit {
             width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 38px;
-            margin-left: 0;
-            margin-bottom: 10px;
-            padding: 0 12px;
+            height: 40px;
         }
     }
 }
 
-@media (max-width: 390px) {
-    .navbar-next {
-        &__mobile-actions {
-            display: grid;
-            gap: 10px;
-        }
+// Small phones: tighten the side padding (≤400px) and, at 360px, drop the
+// GitHub mark from the star pill so the row keeps a few px of slack — the
+// star and count still read as "GitHub stars".
+@media (max-width: 400px) {
+    .navbar-next__inner {
+        padding-inline: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .navbar-next__star-link > svg:last-child {
+        display: none;
+    }
+}
+
+@keyframes navbar-next-summit-breathe {
+    0%,
+    100% {
+        scale: 1;
+    }
+
+    50% {
+        scale: 1.018;
+    }
+}
+
+@keyframes navbar-next-summit-sweep {
+    0%,
+    45% {
+        transform: translateX(0) skewX(-18deg);
+    }
+
+    75%,
+    100% {
+        transform: translateX(520%) skewX(-18deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar-next__summit,
+    .navbar-next__summit::after {
+        animation: none;
+    }
+
+    .navbar-next__summit:hover {
+        transform: none;
     }
 }

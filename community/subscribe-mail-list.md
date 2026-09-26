@@ -1,5 +1,5 @@
 ---
-title: Subscribe to the Apache Doris Mailing List
+title: Subscribe to Mailing List
 language: en
 description: Complete your Apache Doris dev mailing list subscription in 5 steps. Includes a confirmation email example, how to start a discussion, and the unsubscribe address.
 keywords:

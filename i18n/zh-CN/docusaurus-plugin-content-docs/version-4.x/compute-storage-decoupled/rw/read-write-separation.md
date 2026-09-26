@@ -346,9 +346,9 @@ SHOW WARM UP JOB WHERE id = <job_id>;
     "gap_5m": "0b",
     "fail_5m": "0b"
   },
-  "last_trigger_ts": "14:32:15",
-  "last_finish_ts": "14:32:18",
-  "progress_trigger_ts": "14:32:14",
+  "last_trigger_ts": "2026-08-11 14:32:15",
+  "last_finish_ts": "2026-08-11 14:32:18",
+  "progress_trigger_ts": "2026-08-11 14:32:14",
   "trigger_gap_ms": 1000
 }
 ```
@@ -365,6 +365,14 @@ SHOW WARM UP JOB WHERE id = <job_id>;
 | `progress_trigger_ts` | 目标计算组当前预热进度对应的上游触发时间 |
 | `last_finish_ts` | 最近一次预热完成时间 |
 | `trigger_gap_ms` | 源端最新触发时间与目标端进度水位之间的时间差，单位毫秒 |
+
+:::info 版本说明（4.0.8）
+
+自 4.0.8 版本起，`last_trigger_ts`、`last_finish_ts`、`progress_trigger_ts` 三个时间字段的格式由 `HH:mm:ss` 改为 `yyyy-MM-dd HH:mm:ss`，带上了日期。此前只有时分秒，跨天时无法判断具体日期。
+
+如果有脚本按固定格式解析这些字段，升级到 4.0.8 后需要相应调整。
+
+:::
 
 ### 取消任务
 

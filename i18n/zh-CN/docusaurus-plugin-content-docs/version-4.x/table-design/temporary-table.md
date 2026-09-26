@@ -1,14 +1,14 @@
 ---
 {
-    "title": "临时表（实验功能）",
+    "title": "临时表（已弃用）",
     "language": "zh-CN",
-    "description": "Doris 临时表（Temporary Table）是会话级物化内表，用于拆分复杂 SQL 查询、保存中间计算结果，会话结束后自动删除，无需手动清理。"
+    "description": "已弃用：Doris 临时表（Temporary Table）是会话级物化内表，用于拆分复杂 SQL 查询、保存中间计算结果。"
 }
 ---
 
-:::note
+:::caution 已弃用
 
-临时表是一个实验性质的功能。不推荐在生产环境使用。
+临时表功能已弃用。不推荐在生产环境中使用。
 :::
 
 <!-- 知识类型: 功能特性 -->
@@ -61,7 +61,6 @@
 - 建表时 ENGINE 必须为 OLAP。
 - 不支持使用 Alter 语句修改临时表。
 - 由于临时性，不支持基于临时表创建视图和物化视图。
-- 不支持备份临时表，不支持使用 CCR / Sync Job 同步临时表。
+- 不支持备份临时表，也不支持使用 Sync Job 同步临时表。
 - 不支持导出、Stream Load、Broker Load、S3 Load、Mysql Load、Routine Load。
 - 删除临时表时，不进回收站，直接彻底删除。
-

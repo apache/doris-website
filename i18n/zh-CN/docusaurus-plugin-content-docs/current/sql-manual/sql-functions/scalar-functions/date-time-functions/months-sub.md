@@ -2,13 +2,13 @@
 {
     "title": "MONTHS_SUB",
     "language": "zh-CN",
-    "description": "MONTHSSUB 函数用于从输入的日期时间值中减去指定的月份数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME 类型，若输入负数则等效于添加对应月份数。"
+    "description": "MONTHSSUB 函数用于从输入的日期时间值中减去指定的月份数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，若输入负数则等效于添加对应月份数。"
 }
 ---
 
 ## 描述
 
-MONTHS_SUB 函数用于从输入的日期时间值中减去指定的月份数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME 和 TIMESTAMPTZ 类型，若输入负数则等效于添加对应月份数。
+MONTHS_SUB 函数用于从输入的日期时间值中减去指定的月份数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 和 TIMESTAMPTZ 类型，若输入负数则等效于添加对应月份数。
 
 该函数与 [date_sub 函数](./date-sub) 和 mysql 的 [date-sub 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date_sub) 使用 MONTH 为单位的行为一致。
 
@@ -22,12 +22,12 @@ MONTHS_SUB(`<date_or_time_expr>`  `<nums>`)
 
 | 参数                | 说明            |
 |-------------------|---------------|
-| ``<date_or_time_expr>`` | 需要被计算加减月份的日期值,支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)，[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| ``<date_or_time_expr>`` | 需要被计算加减月份的日期值,支持输入 DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)，[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | ``<nums>``          |需要减去的月份数，为 INT 类型，正数表示日期时间减去 nums 月份，负数表示加上 nums 月份 |
 
 ## 返回值
 
-返回与输入 `<date_or_time_expr>` 同类型的值 (DATE, DATETIME 或 TIMESTAMPTZ)，表示基准时间减去指定月份后的结果。
+返回与输入 `<date_or_time_expr>` 同类型的值 (DATE, DATETIME, TIMESTAMP_NS 或 TIMESTAMPTZ)，表示基准时间减去指定月份后的结果。
 
 - 若 `<nums>` 为负数，函数效果等同于向基准时间中添加对应月份数（即 MONTHS_SUB (date, -n) 等价于 MONTHS_ADD (date, n)）。
 - 若输入日期为当月最后一天，且目标月份天数少于该日期，则自动调整为目标月份的最后一天（如 3 月 31 日减 1 个月为 2 月 28 日或 29 日，具体取决于是否为闰年）。

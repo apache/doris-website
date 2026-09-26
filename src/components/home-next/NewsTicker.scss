@@ -1,0 +1,189 @@
+@use '../shared/typography' as type;
+
+.homepage-news-ticker {
+    --hnt-row-height: 60px;
+
+    position: relative;
+    z-index: 5;
+    height: var(--hnt-row-height);
+    overflow: hidden;
+    background: var(--brand-primary-darker);
+    color: var(--brand-cream-light);
+    border-top: 1px solid rgb(var(--brand-primary-glow-rgb) / 18%);
+    border-bottom: 1px solid rgb(var(--brand-accent-rgb) / 22%);
+    font-family: var(--font-mono);
+
+    &__inner {
+        height: 100%;
+        display: grid;
+        grid-template-columns: 98px minmax(0, 1fr) 56px;
+        align-items: center;
+        gap: 20px;
+    }
+
+    &__prompt {
+        @include type.micro-label;
+        color: var(--brand-accent);
+        white-space: nowrap;
+
+        &::before {
+            content: '> ';
+            color: var(--brand-primary-glow);
+        }
+    }
+
+    &__viewport {
+        min-width: 0;
+        height: var(--hnt-row-height);
+        overflow: hidden;
+    }
+
+    &__track {
+        height: var(--hnt-row-height);
+        will-change: transform;
+
+        &--animated {
+            transition: transform 480ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    }
+
+    &__item {
+        height: var(--hnt-row-height);
+        min-width: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 24px;
+        color: var(--brand-cream-light);
+        text-decoration: none;
+
+        &:hover {
+            color: var(--brand-cream-light);
+            text-decoration: none;
+
+            .homepage-news-ticker__action {
+                color: var(--brand-cream-light);
+            }
+        }
+
+        &:focus-visible {
+            color: var(--brand-cream-light);
+            outline: 2px solid var(--brand-accent);
+            outline-offset: -4px;
+            text-decoration: none;
+        }
+    }
+
+    &__message {
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    &__tag {
+        flex: none;
+        @include type.mono-text(12px, 700, 1.2, 0.01em, uppercase);
+        color: var(--brand-accent);
+    }
+
+    &__copy {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--brand-cream-light);
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.35;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__action {
+        flex: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        @include type.micro-label;
+        color: var(--brand-accent);
+        transition: color 160ms ease;
+        white-space: nowrap;
+    }
+
+    &__sequence {
+        @include type.mono-text(10px, 700, 1.2, 0.08em, uppercase);
+        color: var(--brand-primary-glow);
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    &--paused &__sequence {
+        color: var(--brand-accent);
+    }
+}
+
+@media (max-width: 820px) {
+    .homepage-news-ticker {
+        &__inner {
+            grid-template-columns: 28px minmax(0, 1fr) 44px;
+            gap: 12px;
+        }
+
+        &__prompt {
+            overflow: hidden;
+            font-size: 0;
+
+            &::before {
+                font-size: 13px;
+            }
+        }
+
+        &__item {
+            gap: 12px;
+        }
+
+        &__copy {
+            font-size: 13px;
+        }
+
+        &__action-label {
+            display: none;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .homepage-news-ticker {
+        &__inner {
+            grid-template-columns: 14px minmax(0, 1fr) 36px;
+            gap: 8px;
+        }
+
+        &__message {
+            gap: 7px;
+        }
+
+        &__tag {
+            font-size: 11px;
+        }
+
+        &__action {
+            font-size: 12px;
+        }
+
+        &__sequence {
+            font-size: 9px;
+            letter-spacing: 0.02em;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .homepage-news-ticker__track {
+        transition: none !important;
+    }
+
+    .homepage-news-ticker__action {
+        transition: none;
+    }
+}

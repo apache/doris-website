@@ -168,6 +168,7 @@ curl http://be_host:webserver_port/metrics?type=json
 |  | `{type="partition_value"}` | Num | 指定 External Hive Metastore Catalog 对应的 partition value cache 的数量 |  |  |
 |  | `{type="partition"}` | Num | 指定 External Hive Metastore Catalog 对应的 partition cache 的数量 |  |  |
 |  | `{type="file"}` | Num | 指定 External Hive Metastore Catalog 对应的 file cache 的数量 |  |  |
+| `doris_fe_virtual_compute_group_switch_total` | `{virtual_compute_group_id, virtual_compute_group_name, src_compute_group_id, src_compute_group_name, dst_compute_group_id, dst_compute_group_name}` | Num | 虚拟计算组发生主备切换的累计次数。自 4.0.8 版本起支持，仅存算分离模式下产生 | 通过斜率可以观测虚拟计算组是否频繁切换，频繁切换通常意味着主计算组不稳定 |  |
 
 ### JVM 监控
 

@@ -30,6 +30,25 @@
 
 `POST /rest/v2/manager/node/{action}/broker` (3.0.7+)
 
+## 权限要求
+
+<!-- 知识类型: 行为说明 -->
+<!-- 适用场景: 节点管理接口鉴权 -->
+
+:::caution 版本行为变更（4.0.8）
+
+自 4.0.8 版本起，以下节点操作接口需要通过用户名密码认证，并要求全局 `ADMIN` 权限：
+
+- `POST /rest/v2/manager/node/{action}/be`
+- `POST /rest/v2/manager/node/{action}/fe`
+- `POST /rest/v2/manager/node/{action}/broker`
+
+在 4.0.8 之前，这三个接口未做鉴权校验，任何能访问 FE HTTP 端口的调用方都可以增删节点。如果有自动化脚本调用这些接口，升级到 4.0.8 后需要补充带 `ADMIN` 权限账号的认证信息（如 `curl -u <user>:<passwd>`）。
+
+同一版本中，`GET /rest/v2/manager/query/qerror/{id}` 也增加了认证与按用户和 Query ID 的鉴权校验。
+
+:::
+
 ## 获取 fe, be, broker 节点信息
 
 `GET /rest/v2/manager/node/frontends`

@@ -7,7 +7,7 @@
 
 ## 描述
 
-TIME_FORMAT 函数用于将时间值按照指定的格式字符串（format）转换为字符串。支持对 TIME 和 DATETIME 类型进行格式化，输出结果为符合格式要求的字符串。
+TIME_FORMAT 函数按照指定格式字符串（`format`）将 `TIME`、`DATETIME`、`TIMESTAMP_NS` 或 `TIMESTAMPTZ` 值转换为字符串。
 
 该函数与 mysql 中的 [time_format 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_time-format) 行为一致。
 
@@ -21,7 +21,7 @@ TIME_FORMAT(<time_or_datetime_expr>, <format>)
 
 | 参数                      | 说明                                                                                           |
 | ------------------------- | ---------------------------------------------------------------------------------------------- |
-| `<time_or_datetime_expr>` | 合法的时间值，支持为 TIME 或者 DATETIME 类型。                                                 |
+| `<time_or_datetime_expr>` | 合法的 `TIME`、`DATETIME`、`TIMESTAMP_NS` 或 `TIMESTAMPTZ` 值。                               |
 | `<format>`                | 规定时间的输出格式，为 `varchar` 类型。 |
 
 支持的 format 格式：
@@ -29,6 +29,7 @@ TIME_FORMAT(<time_or_datetime_expr>, <format>)
 | 格式符 | 描述                                     |
 | ------ | ---------------------------------------- |
 | %f     | 微秒 (000000-999999)                     |
+| %n     | 纳秒 (000000000-999999999)。低精度类型缺少的位数在末尾补零。 |
 | %H     | 小时 (00-23)                             |
 | %h     | 小时 (01-12)                             |
 | %I     | 小时 (01-12)                             |
@@ -56,6 +57,21 @@ TIME_FORMAT(<time_or_datetime_expr>, <format>)
 - 如果时间值中的小时部分大于 23，`%H` 和 `%k` 格式符会产生大于 23 的值。其他小时格式符则产生小时值对 12 取模的结果。
 
 ## 举例
+
+```sql
+SELECT TIME_FORMAT(
+    CAST('2024-02-29 12:34:56.123456789' AS TIMESTAMP_NS),
+    '%H:%i:%s.%n'
+) AS result;
+```
+
+```text
++--------------------+
+| result             |
++--------------------+
+| 12:34:56.123456789 |
++--------------------+
+```
 
 <!-- setup-sql
 CREATE TABLE test_time_format (id INT, tm VARCHAR(30)) DISTRIBUTED BY HASH(id) BUCKETS 1 PROPERTIES("replication_num"="1");

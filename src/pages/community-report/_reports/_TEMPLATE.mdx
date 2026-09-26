@@ -1,0 +1,35 @@
+{/*
+  Standard weekly-report template.
+
+  To publish a new report:
+    1. Copy this file and rename it to the report's start date: YYYY-MM-DD.mdx
+       (the filename sets the order — the newest date shows first).
+    2. Edit the exports below and write the body in Markdown.
+
+  Files whose name starts with "_" (like this one) are ignored by the build.
+  Metadata is carried as `export const` (not YAML frontmatter) because these
+  files are compiled as MDX partials, which may not contain front matter.
+*/}
+
+export const label = 'Mon DD – Mon DD, YYYY';   // sidebar entry + page title
+export const week = 'Week NN, YYYY';            // optional subtitle — remove if unused
+export const stats = [                          // optional summary cards — remove if unused
+    { num: '0', label: 'PRs merged' },
+    { num: '0', label: 'New contributors' },
+    { num: '0', label: 'Issues closed' },
+];
+
+One or two sentences introducing the week.
+
+## Highlights
+
+- First highlight.
+- Second highlight.
+
+## Development
+
+- Something that was built or fixed.
+
+## Notable Discussions
+
+- A discussion worth reading.

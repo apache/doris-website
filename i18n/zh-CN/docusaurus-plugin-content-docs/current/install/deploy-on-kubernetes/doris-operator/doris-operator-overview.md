@@ -8,7 +8,7 @@
 }
 ---
 
-Doris Operator 是为满足用户在 Kubernetes 平台上高效部署和运维 Apache Doris 而提供的官方 Kubernetes Operator。它把 Doris 组件间的分布式协同经验与 Kubernetes 原生资源管理能力结合起来，为用户提供更简洁、高效、易用的容器化部署方案。
+[Doris Operator](https://github.com/apache/doris-operator) 是为满足用户在 Kubernetes 平台上高效部署和运维 Apache Doris 而提供的官方 Kubernetes Operator。它把 Doris 组件间的分布式协同经验与 Kubernetes 原生资源管理能力结合起来，为用户提供更简洁、高效、易用的容器化部署方案。
 
 Doris Operator 基于 Kubernetes CustomResourceDefinitions（CRD）扩展 Kubernetes API。用户提交 Doris 自定义资源后，Operator 会根据资源中描述的期望状态，自动创建并维护对应的 `StatefulSet`、`Service`、`PersistentVolumeClaim` 等 Kubernetes 资源，并在部分场景下完成节点注册、下线和清理等 Doris 元数据层动作。
 

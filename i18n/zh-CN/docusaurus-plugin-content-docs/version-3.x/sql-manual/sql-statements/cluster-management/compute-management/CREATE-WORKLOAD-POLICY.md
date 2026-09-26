@@ -29,7 +29,6 @@ CONDITIONS(<conditions>) ACTIONS(<actions>)
     - query_be_memory_bytes，从 2.1.5 版本开始支持。一个 SQL 在单个 BE 进程内使用的内存用量，如果这个 SQL 在 BE 上是多并发执行，那么就是多个并发的累加值，单位是字节。
 
 3. `<actions>`
-    - set_session_variable，这个 Action 可以执行一条 `set_session_variable` 的语句。同一个 Policy 可以有多个 `set_session_variable`，也就是说一个 Policy 可以执行多个修改 session 变量的语句。
     - cancel_query，取消查询。
 
 ## 可选参数

@@ -98,10 +98,12 @@ We categorize CAST by the target_data_type:
 - [Cast to DATE](./date-conversion.md)
 - [Cast to TIME](./time-conversion.md)
 - [Cast to DATETIME](./datetime-conversion.md)
+- [Cast to TIMESTAMP_NS](./timestamp-ns-conversion.md)
 - [Cast to TIMESTAMPTZ](./timestamptz-conversion.md)
 - [Cast to integers (INT, etc.)](./int-conversion.md)
 - [Cast to floating point (FLOAT/DOUBLE)](./float-double-conversion.md)
 - [Cast to DECIMAL](./decimal-conversion.md)
+- [Cast to CHAR/VARCHAR/STRING](./cast-to-string.md)
 - [Cast to JSON / From JSON to other types](./json-conversion.md)
 - [Cast to MAP](./map-conversion.md)
 - [Cast to STRUCT](./struct-conversion.md)
@@ -123,4 +125,3 @@ length(CAST(123 AS varchar(65533)))
 ```
 
 You can see from the execution plan above that the system automatically performs a CAST conversion, converting the integer 123 to a string type. This is an example of implicit CAST.
-

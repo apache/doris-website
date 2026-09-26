@@ -249,9 +249,10 @@ CREATE TABLE <table_name> LIKE <source_table>
 >
 > - NULL：全部类型均可用，用 NULL 作为默认值。
 > - 数值字面量：只能是数值类型时使用。
-> - 字符串字面量：只能是字符串类型时使用。
+> - 字符串字面量：用于字符串列； UUID 列也支持有效的 UUID 文本默认值。
+> - UUID_V4() / UUID_V7()： UUID 列支持的动态默认值，包括对应别名。省略该列时逐行生成。详见 [UUID 类型](../../../basic-element/sql-data-types/uuid.md)。
 > - CURRENT_DATE：只能是 date 类型时使用。用当前日期作为默认值。
-> - CURRENT_TIMESTAMP [ <defaultValuePrecision> ]：只能是 datetime 类型时使用。用当前时间作为默认值。<defaultValuePrecision> 可以指定时间精度。
+> - CURRENT_TIMESTAMP [ <defaultValuePrecision> ]：仅可用于 `DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ` 类型。使用当前时间作为默认值。<defaultValuePrecision> 可以指定时间精度，其中 `TIMESTAMP_NS` 最高支持 9 位。
 > - PI：只能是 double 类型时使用。用圆周率作为默认值。
 > - E：只能是 double 类型时使用。用数学常数作为默认值。
 > - BITMAP_EMPTY：只能当列是 bitmap 类型时使用。填充空的 bitmap。
@@ -351,14 +352,13 @@ rollup 可以创建的同步物化视图功能有限。已不再推荐使用。�
 | replication_num                               | 副本数。默认副本数为 3。如果 BE 节点数量小于 3，则需指定副本数小于等于 BE 节点数量。在 0.15 版本后，该属性将自动转换成 `replication_allocation` 属性，如：`"replication_num" = "3"` 会自动转换成 `"replication_allocation" = "tag.location.default:3"`。 |
 | replication_allocation                        | 根据 Tag 设置副本分布情况。该属性可以完全覆盖 `replication_num` 属性的功能。 |
 | min_load_replica_num                          | 设定数据导入成功所需的最小副本数，默认值为 -1。当该属性小于等于 0 时，表示导入数据仍需多数派副本成功。 |
-| is_being_synced                               | 用于标识此表是否是被 CCR 复制而来并且正在被 syncer 同步，默认为 `false`。如果设置为 `true`，`colocate_with`和`storage_policy`属性将被擦除。`dynamic partition`和`auto bucket`功能将会失效。即在`show create table`中显示开启状态，但不会实际生效。当`is_being_synced`被设置为 `false` 时，这些功能将会恢复生效。这个属性仅供 CCR 外围模块使用，在 CCR 同步的过程中不要手动设置。 |
 | storage_medium                                | 声明表数据的初始存储介质                                     |
 | storage_cooldown_time                         | 设定表数据的初始存储介质的到期时间。超过此时间后，会自动降级到第一级别的存储介质上。 |
 | colocate_with                                 | 当需要使用 Colocation Join 功能时，使用这个参数设置 Colocation Group。 |
 | bloom_filter_columns                          | 用户指定需要添加 Bloom Filter 索引的列名称列表。各个列的 Bloom Filter 索引是独立的，并不是组合索引。列如：`"bloom_filter_columns" = "k1, k2, k3"` |
-| compression                                   | Doris 表的默认压缩方式是 LZ4。1.1 版本后，支持将压缩方式指定为 ZSTD 以获得更高的压缩比。 |
-| function_column.sequence_col                  | 当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换) 。`function_column.sequence_col`用来指定 sequence 列到表中某一列的映射，该列可以为整型和时间类型（DATE、DATETIME），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。 |
-| function_column.sequence_type                 | 当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换) 这里我们仅需指定顺序列的类型，支持时间类型或整型。Doris 会创建一个隐藏的顺序列。 |
+| compression                                   | 自 4.0.3 版本起，Doris 表的默认压缩方式为 ZSTD。在 4.0.3 版本之前，默认压缩方式为 LZ4F。 |
+| function_column.sequence_col                  | 当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换) 。`function_column.sequence_col`用来指定 sequence 列到表中某一列的映射，该列可以为整型和时间类型（`DATE`、`DATETIME`、`TIMESTAMP_NS`），创建后不能更改该列的类型。如果设置了`function_column.sequence_col`, `function_column.sequence_type`将被忽略。 |
+| function_column.sequence_type                 | 当使用 Unique Key 模型时，可以指定一个 Sequence 列，当 Key 列相同时，将按照 Sequence 列进行 REPLACE(较大值替换较小值，否则无法替换) 这里我们仅需指定顺序列的类型，支持时间类型（`DATE`、`DATETIME`、`TIMESTAMP_NS`）或整型。Doris 会创建一个隐藏的顺序列。 |
 | enable_unique_key_merge_on_write              | Unique 表是否使用 Merge-on-Write 实现。该属性在 2.1 版本之前默认关闭，从 2.1 版本开始默认开启。 |
 | light_schema_change                           | 是否使用 Light Schema Change 优化。如果设置成 `true`, 对于值列的加减操作，可以更快地，同步地完成。该功能在 2.0.0 及之后版本默认开启。 |
 | disable_auto_compaction                       | 是否对这个表禁用自动 Compaction。如果这个属性设置成 `true`, 后台的自动 Compaction 进程会跳过这个表的所有 Tablet。 |
@@ -374,6 +374,9 @@ rollup 可以创建的同步物化视图功能有限。已不再推荐使用。�
 | enable_mow_light_delete                       | 是否在 Unique 表 Mow 上开启 Delete 语句写 Delete predicate。若开启，会提升 Delete 语句的性能，但 Delete 后进行部分列更新可能会出现部分数据错误的情况。若关闭，会降低 Delete 语句的性能来保证正确性。此属性的默认值为 `false`。此属性只能在 Unique Merge-on-Write 表上开启。 |
 | 动态分区相关属性                              | 动态分区相关参考[数据划分 - 动态分区](../../../../table-design/data-partitioning/dynamic-partitioning) |
 | enable_unique_key_skip_bitmap_column | 是否在 Unique Merge-on-Write 表上开启[灵活列更新功能](../../../../data-operate/update/update-of-unique-model.md#灵活部分列更新)。此属性只能在 Unique Merge-on-Write 表上开启。 |
+| binlog.enable | 与 `binlog.format = "ROW"` 同时设置时，为该表开启 [Row Binlog](../../../../data-operate/incremental/row-binlog)，记录行级变更，用于 Table Stream 增量消费和 `@incr` 增量查询。只能在建表时开启，开启后不可关闭。5.0.0 版本起支持。 |
+| binlog.format | 取值 `ROW`（区分大小写），表示记录行级变更。仅 Duplicate Key 表和 Unique Key Merge-on-Write 表（无 cluster key）支持，建表后不可修改。 |
+| binlog.need_historical_value | 是否在 Row Binlog 中记录变更前的值（before 镜像），默认 `false`。仅 Unique Key Merge-on-Write 表可设为 `true`；`min_delta` / `detail` 类型的 Table Stream 依赖它。建表后不可修改。 |
 ## 权限控制
 
 执行此 SQL 命令的[用户](../../../../admin-manual/auth/security-overview)必须至少具有以下[权限](../../../../admin-manual/auth/authorization/internal)：

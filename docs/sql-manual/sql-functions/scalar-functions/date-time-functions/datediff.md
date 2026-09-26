@@ -2,13 +2,13 @@
 {
     "title": "DATEDIFF",
     "language": "en",
-    "description": "The DATEDIFF function is used to calculate the difference between two date or datetime values, with the result precise to the day. That is,"
+    "description": "Calculates the day difference between two DATE, DATETIME, or TIMESTAMP_NS values."
 }
 ---
 
 ## Description
 
-The DATEDIFF function is used to calculate the difference between two date or datetime values, with the result precise to the day. That is, it returns the number of days obtained by subtracting `expr2` from `expr1`. This function only focuses on the date part and ignores the specific hours, minutes, and seconds in the time part.
+The DATEDIFF function calculates the difference between two `DATE`, `DATETIME`, or `TIMESTAMP_NS` values, with the result precise to the day. It returns the number of days obtained by subtracting `expr2` from `expr1`. This function only uses the date part and ignores the hours, minutes, seconds, and fractional seconds in the time part.
 
 This function is consistent with the [datediff function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_datediff) in MySQL.
 
@@ -22,8 +22,8 @@ DATEDIFF(<expr1>, <expr2>)
 
 | Parameter | Description |
 | -- | -- |
-| `<expr1>` | The minuend date, supporting datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| `<expr2>` | The subtrahend date, supporting date and datetime types |
+| `<expr1>` | The minuend date. Supports `DATE`, `DATETIME`, and `TIMESTAMP_NS`. For specific formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<expr2>` | The subtrahend date. Supports `DATE`, `DATETIME`, and `TIMESTAMP_NS`. |
 
 ## Return Value
 
@@ -52,6 +52,15 @@ select datediff(CAST('2010-11-30 23:59:59' AS DATETIME), CAST('2010-12-31' AS DA
 +-----------------------------------------------------------------------------------+
 |                                                                               -31 |
 +-----------------------------------------------------------------------------------+
+
+-- TIMESTAMP_NS can be used for either parameter
+SELECT DATEDIFF(CAST('2024-01-02 00:00:00.000000001' AS TIMESTAMP_NS),
+                CAST('2024-01-01 23:59:59.999999' AS DATETIME(6))) AS result;
++--------+
+| result |
++--------+
+|      1 |
++--------+
 
 -- Any parameter is NULL
 mysql> select datediff('2023-01-01', NULL);

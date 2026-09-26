@@ -10,6 +10,7 @@
         "Doris streaming ingestion",
         "Publication",
         "dbz_publication",
+        "publication_name",
         "CDC prerequisites"
     ]
 }
@@ -39,7 +40,7 @@ The full configuration workflow consists of 5 steps:
 2. Configure the cluster parameter group
 3. Apply the cluster parameter group and restart the instance
 4. Create a Doris sync user and grant privileges
-5. Create a Publication
+5. Configure the Publication based on the Doris version
 
 If Step 1 shows that logical replication is already enabled, you can skip directly to **Step 4** to create the sync user.
 
@@ -137,23 +138,32 @@ Privilege description:
 | `ALTER DEFAULT PRIVILEGES ... GRANT SELECT` | Automatically grants read privileges on tables created later in this schema |
 | `rds_replication` | The role required to perform logical replication in Aurora PostgreSQL |
 
-## Step 5: Create the Publication
+## Step 5: Configure the Publication
 
 <!-- Knowledge type: Procedure -->
 
-**Purpose:** Create the Publication that Doris will subscribe to.
+### Doris 4.0
 
-Execute the following SQL:
+A Publication named `dbz_publication` must be created in advance with `FOR ALL TABLES`:
 
 ```sql
 CREATE PUBLICATION dbz_publication FOR ALL TABLES;
 ```
 
-:::caution
-Currently, Doris only supports a Publication named `dbz_publication`, and it must be `FOR ALL TABLES`. Custom Publication names or specifying only a subset of tables are not yet supported.
-:::
+If the sync user has superuser privileges, such as the `rds_superuser` role, Doris can automatically create `dbz_publication` when the task starts, and you do not need to execute this statement manually. Doris 4.0 does not support custom Publication names or Publications that contain only a subset of tables.
 
-> **Note:** If the sync user has superuser privileges (such as the `rds_superuser` role), Doris creates the Publication automatically, and you do not need to perform this step manually.
+### Doris 4.1.0 and later
+
+By default, you do not need to create a Publication manually. When `publication_name` is not set, Doris uses the sync account to create a Publication named `doris_pub_<job_id>` and cleans it up when the job is deleted. The sync account therefore needs permission to create Publications.
+
+If `publication_name` is explicitly set when creating the Streaming Job, create a Publication with the same name in advance. A custom Publication must include all source tables synchronized by the job and must be maintained and cleaned up by the user. For example:
+
+```sql
+CREATE PUBLICATION doris_pub_custom
+FOR TABLE public.orders, public.customers;
+```
+
+Set `"publication_name" = "doris_pub_custom"` when creating the job. The name can contain only lowercase letters, digits, and underscores, cannot start with a digit, and is limited to 63 characters.
 
 ## FAQ
 
@@ -169,11 +179,11 @@ No. Doris streaming ingestion requires Aurora PostgreSQL 14 or later.
 
 **Q3: Can I use a Publication with a custom name?**
 
-No. Currently, Doris only supports a Publication named `dbz_publication` with `FOR ALL TABLES`.
+Doris 4.0 does not support custom names and only supports `dbz_publication FOR ALL TABLES`. Since version 4.1.0, you can specify a custom name through `publication_name`, but you must create the Publication before creating the job and ensure that it includes all synchronized tables.
 
 **Q4: Must I use a superuser account for synchronization?**
 
-No. It is recommended to use a regular user `doris_sync` and grant privileges as described in this document. Only when the account has superuser privileges (such as `rds_superuser`) does Doris create the Publication automatically.
+No. In Doris 4.0, a regular sync user requires `dbz_publication` to be created manually, while Doris can create it automatically when the user has superuser privileges. Since version 4.1.0, when `publication_name` is omitted, Doris automatically creates and manages the default Publication. A Publication must be created in advance only when a custom Publication is used.
 
 ## Troubleshooting
 
@@ -185,5 +195,6 @@ No. It is recommended to use a regular user `doris_sync` and grant privileges as
 | `SHOW rds.logical_replication;` still returns `off` | The new parameter group is not bound to the cluster, or the writer instance has not been restarted | Verify that **DB cluster parameter group** has been switched to the new parameter group, and restart the writer instance |
 | User creation or privilege grant fails | The current login account has insufficient privileges | Sign in with an account that has `rds_superuser` or equivalent privileges, then perform the operation |
 | `GRANT rds_replication` returns an error | The current Aurora version is too low, or the cluster is not Aurora PostgreSQL | Upgrade to Aurora PostgreSQL 14 or later |
-| Permission error when creating the Publication | The `doris_sync` user lacks the privilege to create Publications | Use a superuser account to manually execute `CREATE PUBLICATION`, or temporarily grant the required privileges to the sync account |
-| Doris reports `dbz_publication` not found when starting synchronization | The Publication has not been created, and the sync account lacks superuser privileges, so it cannot be created automatically | Manually execute the `CREATE PUBLICATION dbz_publication FOR ALL TABLES;` from Step 5 |
+| Doris 4.0 reports that `dbz_publication` does not exist | `dbz_publication` has not been created, and the sync account lacks superuser privileges | Execute `CREATE PUBLICATION dbz_publication FOR ALL TABLES;`, or use an account with the required privileges |
+| Doris 4.1.0 or later fails to create the default Publication | The sync account lacks permission to create Publications | Grant the required privileges to the sync account, or have an administrator create a custom Publication in advance and configure `publication_name` |
+| Doris 4.1.0 or later reports that a custom Publication does not exist | `publication_name` is configured, but a Publication with the same name has not been created | Create the Publication as described in [Step 5](#step-5-configure-the-publication), or remove the `publication_name` configuration |

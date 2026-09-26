@@ -2,13 +2,13 @@
 {
     "title": "MONTH",
     "language": "zh-CN",
-    "description": "MONTH 函数用于从日期时间值中提取月份值。返回值范围为 1 到 12，分别代表一年中的 12 个月。该函数支持处理 DATE、DATETIME 类型。"
+    "description": "MONTH 函数用于从日期时间值中提取月份值。返回值范围为 1 到 12，分别代表一年中的 12 个月。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型。"
 }
 ---
 
 ## 描述
 
-MONTH 函数用于从日期时间值中提取月份值。返回值范围为 1 到 12，分别代表一年中的 12 个月。该函数支持处理 DATE、DATETIME 类型。
+MONTH 函数用于从日期时间值中提取月份值。返回值范围为 1 到 12，分别代表一年中的 12 个月。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型。
 
 该函数与 mysql 的 [month 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_month) 使用 MONTH 为单位的行为一致。
 
@@ -22,7 +22,7 @@ MONTH(`<date_or_time_expr>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| ``<date_or_time_expr>`` | 输入的日期时间值，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| ``<date_or_time_expr>`` | 输入的日期时间值，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## 返回值
 

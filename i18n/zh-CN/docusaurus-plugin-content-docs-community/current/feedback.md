@@ -1,5 +1,5 @@
 ---
-title: 向 Apache Doris 反馈问题
+title: 反馈问题
 language: zh-CN
 description: 向 Apache Doris 反馈 Bug 或建议的官方渠道：邮件列表与 GitHub Issue，附高质量问题反馈的写作要点。
 keywords:

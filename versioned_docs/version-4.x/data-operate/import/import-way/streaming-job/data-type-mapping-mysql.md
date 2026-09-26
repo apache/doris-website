@@ -15,17 +15,38 @@ The table below shows how each upstream MySQL column type maps to a Doris column
 
 In both cases, the values are written following the same mapping. For types that are not supported, see [Limitations](./continuous-load-overview.md#limitations).
 
+## JDBC URL Parameter Normalization
+
+> Supported since version 4.1.4.
+
+When you create a Streaming Job with a MySQL data source (or use the `cdc_stream()` table function), Doris automatically appends the following parameters to `jdbc_url` unless you set them explicitly:
+
+| Parameter | Injected Value | Effect |
+| --- | --- | --- |
+| `tinyInt1isBit` | `false` | `TINYINT(1)` is read as `TINYINT` (`1` / `0`) instead of `BOOLEAN` (`true` / `false`) |
+| `yearIsDateType` | `false` | `YEAR` is read as an integer year instead of a date |
+| `useUnicode` | `true` | Use Unicode encoding |
+| `characterEncoding` | `utf-8` | Use UTF-8 as the character set |
+
+If any of these parameters is set explicitly in `jdbc_url`, Doris keeps your value and does not override it. The PostgreSQL `jdbc_url` is not normalized.
+
+:::caution Upgrade impact
+
+After upgrading from 4.1.3 or earlier, `TINYINT(1)` columns in existing MySQL CDC jobs are reported as `1` / `0` instead of `true` / `false`, and `YEAR` columns as integer years instead of dates. To keep the previous behavior, set `tinyInt1isBit=true` and `yearIsDateType=true` explicitly in `jdbc_url`.
+
+:::
+
 ## MySQL to Doris
 
 | MySQL Type | Doris Type | Notes |
 | --- | --- | --- |
-| `BOOLEAN` / `TINYINT(1)` | `BOOLEAN` | |
+| `BOOLEAN` / `TINYINT(1)` | `TINYINT` | **Since version 4.1.4** this maps to `TINYINT` (values `1` / `0`); before 4.1.4 it mapped to `BOOLEAN` (`true` / `false`). See [JDBC URL Parameter Normalization](#jdbc-url-parameter-normalization) for the reason |
 | `TINYINT` | `TINYINT` | `UNSIGNED` → `SMALLINT` |
 | `SMALLINT` | `SMALLINT` | `UNSIGNED` → `INT` |
 | `MEDIUMINT` | `INT` | `UNSIGNED` → `INT` |
 | `INT` | `INT` | `UNSIGNED` → `BIGINT` |
 | `BIGINT` | `BIGINT` | `UNSIGNED` → `LARGEINT` |
-| `YEAR` | `SMALLINT` | |
+| `YEAR` | `SMALLINT` | **Since version 4.1.4** the value is read as an integer year rather than as a date; the MySQL zero year (`0000`) is kept as `0` |
 | `FLOAT` | `FLOAT` | |
 | `DOUBLE` | `DOUBLE` | |
 | `DECIMAL(p,s)` | `DECIMAL(p,s)` | Very high precision falls back to `STRING` |

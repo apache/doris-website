@@ -2,13 +2,13 @@
 {
     "title": "TIME_TO_SEC",
     "language": "en",
-    "description": "The TIMETOSEC function converts an input time value to the total number of seconds."
+    "description": "Converts a TIME, DATETIME, or TIMESTAMP_NS value to the total number of seconds in its time portion."
 }
 ---
 
 ## Description
 
-The TIME_TO_SEC function converts an input time value to the total number of seconds. This function supports processing TIME and DATETIME types: if the input is DATETIME type, it automatically extracts the time portion (HH:MM:SS) for calculation; if the input is a pure time value, it directly converts to total seconds.
+The TIME_TO_SEC function converts an input time value to the total number of seconds. It supports `TIME`, `DATETIME`, and `TIMESTAMP_NS`; for a datetime value it extracts the time portion (HH:MM:SS) for calculation.
 
 This function behaves consistently with the [time_to_sec function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_time-to-sec) in MySQL.
 
@@ -22,7 +22,7 @@ TIME_TO_SEC(<date_or_time_expr>)
 
 | Parameter             | Description                                                                                                                                                                                                                                                                                                                                                     |
 |-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<date_or_time_expr>` | Required. Supports TIME or DATETIME. If the input is DATETIME type, the function extracts the time portion for calculation. For specific datetime/time formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | Required. Supports `TIME`, `DATETIME`, or `TIMESTAMP_NS`. For a datetime value, the function extracts the time portion for calculation. |
 
 ## Return Value
 

@@ -490,3 +490,18 @@ Assume the current date is 2025-04-29, then:
 | `500:00:00`  | `2025-05-19`    |
 | `23:59:59`   | `2025-04-29`    |
 | `-128:00:00` | `2025-04-23`    |
+
+### TIMESTAMP_NS
+
+#### Rule Description
+
+When converting from `TIMESTAMP_NS`, Doris returns the date part and discards the time and fractional-second parts without rounding. Every valid `TIMESTAMP_NS` value is within the `DATE` range, so the conversion always succeeds in both strict and non-strict modes. A `NULL` input returns `NULL`.
+
+#### Examples
+
+| Input TIMESTAMP_NS | Cast as DATE Result |
+| --- | --- |
+| `1677-09-21 00:12:43.145224192` | `1677-09-21` |
+| `1969-12-31 23:59:59.999999999` | `1969-12-31` |
+| `2024-02-29 12:34:56.123456789` | `2024-02-29` |
+| `2262-04-11 23:47:16.854775807` | `2262-04-11` |

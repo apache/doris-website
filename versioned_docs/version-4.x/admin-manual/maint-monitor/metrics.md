@@ -168,6 +168,7 @@ curl http://be_host:webserver_port/metrics?type=json
 |  | `{type="partition_value"}` | Num | Number of entries in the partition value cache for a specific External Hive Metastore Catalog |  |  |
 |  | `{type="partition"}` | Num | Number of entries in the partition cache for a specific External Hive Metastore Catalog |  |  |
 |  | `{type="file"}` | Num | Number of entries in the file cache for a specific External Hive Metastore Catalog |  |  |
+| `doris_fe_virtual_compute_group_switch_total` | `{virtual_compute_group_id, virtual_compute_group_name, src_compute_group_id, src_compute_group_name, dst_compute_group_id, dst_compute_group_name}` | Num | Cumulative number of active-standby switches of a virtual compute group. Supported starting from version 4.0.8, only produced in compute-storage decoupled mode | The slope shows whether a virtual compute group switches frequently, which usually means the primary compute group is unstable |  |
 
 ### JVM Monitoring
 

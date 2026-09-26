@@ -29,13 +29,17 @@ WEEK_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_time_expr>` | The datetime value to round down, supports date/datetime/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), and for datetime/date formats refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | The datetime value to round down, supports DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), and for datetime/date formats refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | `<period>` | Week interval value, type INT, representing the number of weeks in each interval |
-| `<origin>` | Starting point for the interval, supports date/datetime types; defaults to 0000-01-01 00:00:00 |
+| `<origin>` | Starting point for the interval, supports DATE/DATETIME/TIMESTAMP_NS types; defaults to 0000-01-01 00:00:00 |
 
 ## Return Value
 
-Returns DATETIME type, representing the rounded-down datetime value. The time portion of the result will be set to 00:00:00.
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
+When `<origin>` is omitted for a `TIMESTAMP_NS` input, the documented default origin is used only as an internal alignment reference; it does not need to fall within the storable `TIMESTAMP_NS` range.
+
+Returns the temporal type selected from the input arguments, representing the rounded-down datetime value. The time portion of the result is set to the origin time.
 
 - If `<period>` is a non-positive (≤0), the function returns an error;
 - If any parameter is NULL, returns NULL;

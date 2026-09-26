@@ -26,7 +26,7 @@ TVF supports reading and analyzing the following file formats. Click the links f
 - [Parquet](./file-formats/parquet.md)
 - [ORC](./file-formats/orc.md)
 - [Text / CSV / JSON](./file-formats/text.md)
-- [Lance](./file-formats/lance.md) (experimental, since version 5.0.0)
+- [Lance](./file-formats/lance.md) (supported since version 4.2)
 
 ## Use Cases
 

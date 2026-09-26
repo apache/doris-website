@@ -19,8 +19,8 @@ Sort the `values` array according to the order of a `keys` array.
 
 ## Parameters
 
-- `values`: `ARRAY<T>`, the value array to be sorted. `T` supports numeric, boolean, string, datetime, IP, etc. Multi-dimensional arrays are supported, but all array elements (no matter how deeply nested) must be of the supported types.
-- `keys`: `ARRAY<T>`, a key array of the same length as `values`. `T` supports numeric, boolean, string, datetime, IP, etc. Multi-dimensional arrays are supported, but all array elements (no matter how deeply nested) must be of the supported types.
+- `values`: `ARRAY<T>`, the value array to be sorted. `T` supports numeric, boolean, string, datetime, IP, UUID, etc. Multi-dimensional arrays are supported, but all array elements (no matter how deeply nested) must be of the supported types.
+- `keys`: `ARRAY<T>`, a key array of the same length as `values`. `T` supports numeric, boolean, string, datetime, IP, UUID, etc. Multi-dimensional arrays are supported, but all array elements (no matter how deeply nested) must be of the supported types.
 - `lambda`: a `lambda` expression applied to `values` to produce the `keys` array used for sorting.
 
 ## Return value

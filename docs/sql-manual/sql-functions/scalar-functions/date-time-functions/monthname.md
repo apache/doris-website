@@ -2,13 +2,13 @@
 {
     "title": "MONTHNAME",
     "language": "en",
-    "description": "The MONTHNAME function returns the English month name corresponding to a datetime value. This function supports processing DATE and DATETIME types,"
+    "description": "The MONTHNAME function returns the English month name corresponding to a datetime value. This function supports processing DATE, DATETIME, and TIMESTAMP_NS types,"
 }
 ---
 
 ## Description
 
-The MONTHNAME function returns the English month name corresponding to a datetime value. This function supports processing DATE and DATETIME types, returning the full English month name (January to December).
+The MONTHNAME function returns the English month name corresponding to a datetime value. This function supports processing DATE, DATETIME, and TIMESTAMP_NS types, returning the full English month name (January to December).
 
 You can set the language of the output result through the session variable [lc_time_names](#appendix-lc_time_names-may-be-set-to-any-of-the-following-locale-valuescase-insensitive), which is set to `en_US` by default, meaning the output is in English.
 
@@ -24,7 +24,7 @@ MONTHNAME(`<date_or_time_expr>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The input datetime value. Supports date/datetime types. For specific datetime and date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The input datetime value. Supports DATE/DATETIME/TIMESTAMP_NS types. For specific datetime and date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## Return Value
 

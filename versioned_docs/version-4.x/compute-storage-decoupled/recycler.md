@@ -159,6 +159,16 @@ The following are commonly used configuration parameters for Recycler:
 | `check_object_interval_seconds` | `43200` (12 hours) | Execution interval for the checker (seconds) |
 | `enable_recycler_stats_metrics` | `false` | Whether to enable Recycler observability metrics |
 | `recycler_storage_vault_white_list` | `""` | Storage backend whitelist; enter vault names (comma-separated); recycles all vaults if empty |
+| `enable_mark_delete_rowset_before_recycle` | `false` | Whether to mark a rowset's meta as recycled before actually deleting its data, deleting the data and KV in the next scan round. Supports dynamic modification. **Starting from version 4.0.8 the default changed from `true` to `false`** |
+| `enable_abort_txn_and_job_for_delete_rowset_before_recycle` | `false` | Whether to abort the transactions and jobs related to a rowset before deleting it. Supports dynamic modification. **Starting from version 4.0.8 the default changed from `true` to `false`** |
+
+:::caution Behavior change (4.0.8)
+
+The defaults of `enable_mark_delete_rowset_before_recycle` and `enable_abort_txn_and_job_for_delete_rowset_before_recycle` changed from `true` to `false` in 4.0.8.
+
+Both are extra protection steps taken before deleting a rowset, but the current implementation carries a noticeable performance cost that slows recycling down, so they are no longer enabled by default. Set both to `true` explicitly to keep the protection.
+
+:::
 
 ## Common Tuning Scenarios
 

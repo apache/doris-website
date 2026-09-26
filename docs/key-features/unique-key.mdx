@@ -66,7 +66,7 @@ Take an upsert against a Unique Key MoW table.
 1. **Buffer the batch.** BEs collect the incoming rows in a memtable and sort them by key.
 2. **Look up each key.** For every key in the batch, the BE consults the per-segment primary-key index (one short read per key) to find any existing rowset and row ID. The index is a sorted, paginated structure built when each segment flushed, conceptually similar to a RocksDB partitioned index.
 3. **Mark the old rows.** Each affected rowset gets the old row IDs flipped on in its delete bitmap. The bitmap is per `(rowset_id, segment_id, version)` and the old data stays on disk until compaction reclaims it.
-4. **Resolve order with the sequence column.** If `function_column.sequence_col` is set, MoW compares the incoming row's sequence value against the current row's `__DORIS_SEQUENCE_COL__`. The larger value wins. Equal values fall back to load order. The sequence type must be an integer or `DATE`/`DATETIME`.
+4. **Resolve order with the sequence column.** If `function_column.sequence_col` is set, MoW compares the incoming row's sequence value against the current row's `__DORIS_SEQUENCE_COL__`. The larger value wins. Equal values fall back to load order. The sequence type must be an integer or `DATE`/`DATETIME`/`TIMESTAMP_NS`.
 5. **Publish the new rowset.** The transaction commits, the new version becomes visible, and queries from that point on filter through the merged delete bitmap. No version-merging step at read time.
 
 `DELETE FROM ... WHERE` follows the same flow without the new rowset. Partial updates add one step: before writing, the BE reads the unmodified columns for each key so it can store a complete row.

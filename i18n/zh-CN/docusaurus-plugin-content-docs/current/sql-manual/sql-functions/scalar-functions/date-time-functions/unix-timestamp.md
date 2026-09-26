@@ -2,17 +2,17 @@
 {
     "title": "UNIX_TIMESTAMP",
     "language": "zh-CN",
-    "description": "将 Date 或者 Datetime 类型转化为 unix 时间戳。"
+    "description": "UNIX_TIMESTAMP 将 DATE、DATETIME 或 TIMESTAMP_NS 值转换为 Unix 时间戳；TIMESTAMP_NS 输入返回带 9 位小数的 DECIMAL 时间戳。"
 }
 ---
 
 ## 描述
 
-将 Date 或者 Datetime 类型转化为 unix 时间戳。
+将 `DATE`、`DATETIME` 或 `TIMESTAMP_NS` 值转换为 Unix 时间戳。
 
 如果没有参数，则是将当前的时间转化为时间戳。
 
-参数需要是 Date 或者 Datetime 类型。
+提供日期时间参数时，其类型必须为 `DATE`、`DATETIME` 或 `TIMESTAMP_NS`。
 Format 的格式请参阅 date_format 函数的格式说明。
 
 该函数受时区影响，时区部分请查看 [时区管理](../../../../admin-manual/cluster-management/time-zone)。
@@ -34,18 +34,16 @@ UNIX_TIMESTAMP(<date_or_time_expr>[, fmt])
 
 | 参数                         | 描述                          |
 |----------------------------|-----------------------------|
-| `<date_or_time_expr>` | 输入的日期时间值，支持输入 date/datetime 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 输入的日期时间值，支持 `DATE`、`DATETIME` 和 `TIMESTAMP_NS`。 |
 | `<fmt>` | date 参数指代需要转换为时间戳的特定部分，其类型为 string。若提供该参数，则仅将与格式匹配的部分转换为时间戳。|
 
 
 ## 返回值
-根据输入返回两种类型
+返回类型取决于输入：
 
-1. 若是输入的 date_or_time_expr 为 datetime 类型且 scale 不为零或者带有 format 参数
-返回一个时间戳，类型为 Decimal，最高六位小数精度
-
-2. 若是输入的 date_or_time_expr 或 scale 为 0 并且不带有 format 参数
-返回一个时间戳，类型为 INT
+1. `TIMESTAMP_NS` 输入返回带 9 位小数的 `DECIMAL` 时间戳。
+2. scale 非 0 的 `DATETIME` 输入，或带 `<fmt>` 的调用，返回最多 6 位小数的 `DECIMAL` 时间戳。
+3. 不带 `<fmt>` 的 `DATE` 或 scale 为 0 的 `DATETIME` 输入返回 `INT` 时间戳。
 
 将输入时间转换为当前输入时间所对应的时间戳，起始时间为 1970-01-01 00:00:00.
 
@@ -139,4 +137,3 @@ mysql> select unix_timestamp('2038-01-19 11:14:08',null);
 mysql> select unix_timestamp('2007-11-30 10:30-19', 's');
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation unix_timestamp of 2007-11-30 10:30-19, s is invalid
 ```
-

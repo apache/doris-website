@@ -8,7 +8,7 @@
 
 ## Description
 
-The NEXT_DAY function returns the first date after the specified date that matches the target day of the week. For example, NEXT_DAY('2020-01-31', 'MONDAY') returns the first Monday after 2020-01-31. This function supports processing DATE and DATETIME types and ignores the time portion in the input (calculation is based only on the date portion).
+The NEXT_DAY function returns the first date after the specified date that matches the target day of the week. For example, NEXT_DAY('2020-01-31', 'MONDAY') returns the first Monday after 2020-01-31. This function supports processing DATE, DATETIME, and TIMESTAMP_NS types and ignores the time portion in the input (calculation is based only on the date portion).
 
 This function is consistent with Oracle's [next_day function](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/NEXT_DAY.html).
 
@@ -22,7 +22,7 @@ NEXT_DAY(`<date_or_time_expr>`, `<day_of_week>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | Supports date/datetime types. For specific datetime and date formats, [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | Supports DATE/DATETIME/TIMESTAMP_NS types. For specific datetime and date formats, [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<day_of_week>` | String expression used to identify the day of the week, of string type. |
 
 `<day_of_week>` must be one of the following values (case insensitive):

@@ -14,21 +14,26 @@ Summary:
 
 | Severity | Count | Meaning |
 | --- | ---: | --- |
-| error | 1,288 | Internal links, images, routes, or anchors that the checker cannot resolve. |
+| error | 786 | Internal links, images, routes, or anchors that the checker cannot resolve. |
 | info | 26,242 | External links classified for scheduled audit only; no network fetch is performed. |
+
+The Japanese `ja-source/` tree was removed from the repository after this scan. Its
+502 internal errors have been subtracted from the internal tables below, which are
+exact per-root counts from the same run. The external `info` count is not broken
+down per content root and still reflects the original scan; the next full
+`yarn docs:links` run will restate it.
 
 Internal error breakdown:
 
 | Rule | Count | Primary fix |
 | --- | ---: | --- |
-| `link-missing-target` | 653 | Update the target path, add redirects, restore the target page, or mark an intentional exception. |
-| `link-missing-anchor` | 635 | Update the anchor, add an explicit heading ID, or rewrite the link to the page without the stale anchor. |
+| `link-missing-target` | 527 | Update the target path, add redirects, restore the target page, or mark an intentional exception. |
+| `link-missing-anchor` | 259 | Update the anchor, add an explicit heading ID, or rewrite the link to the page without the stale anchor. |
 
 Internal error distribution by content root:
 
 | Content root | Missing target | Missing anchor | Total |
 | --- | ---: | ---: | ---: |
-| `ja-source/` | 126 | 376 | 502 |
 | `i18n/` | 270 | 126 | 396 |
 | `versioned_docs/` | 191 | 97 | 288 |
 | `docs/` | 28 | 36 | 64 |
@@ -43,7 +48,6 @@ Representative internal errors from the first full scan:
 | `docs/admin-manual/auth/authentication-and-authorization.md` | `link-missing-target` | `./ldap.md`, `./ranger.md` |
 | `community/developer-guide/docker-dev.md` | `link-missing-target` | `/docs/install/source-install/compilation`, `/docs/install/install-deploy` |
 | `blog/release-note-2.1.6.md` | `link-missing-target` | `../../admin-manual/cluster-management/upgrade` |
-| `ja-source/` pages | `link-missing-anchor` | localized anchors that no longer match the target heading slug |
 | `i18n/` pages | `link-missing-target` and `link-missing-anchor` | localized or versioned links that drifted from current routes |
 
 ## Current Policy
@@ -87,7 +91,7 @@ yarn docs:links --output website-quality-governance/generated/docs-links-full-re
 ## Historical Cleanup Priority
 
 1. Fix active English docs under `docs/` first because these are the highest-traffic canonical pages and should become the quality reference for localized and versioned docs.
-2. Fix active localized docs under `i18n/zh-CN/` and `ja-source/` next, using the corresponding English page as the source of truth when route or anchor drift is caused by translation lag.
+2. Fix active localized docs under `i18n/zh-CN/` next, using the corresponding English page as the source of truth when route or anchor drift is caused by translation lag.
 3. Fix active versioned docs under `versioned_docs/version-4.x/` and `versioned_docs/version-3.x/`, especially links that point to moved install, ecosystem, admin, and table-design pages.
 4. Fix community and release-note pages after canonical docs are stable. These pages often contain older route patterns and should be corrected without changing release semantics.
 5. Keep external links out of PR blocking. A scheduled workflow should fetch them with retry and create an issue that groups failures by domain and owner.

@@ -29,7 +29,7 @@ function useRevealObserver(): void {
     }, []);
 }
 
-function BoltIcon({ size = 24, color = '#FFD23F' }: { size?: number | string; color?: string }) {
+function BoltIcon({ size = 24, color = 'var(--brand-accent)' }: { size?: number | string; color?: string }) {
     return (
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path

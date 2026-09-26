@@ -2,13 +2,13 @@
 {
     "title": "HOURS_DIFF",
     "language": "en",
-    "description": "The HOURSDIFF function calculates the hour difference between two datetime or date values,"
+    "description": "Calculates the complete hour difference between DATE, DATETIME, or TIMESTAMP_NS values."
 }
 ---
 
 ## Description
 
-The HOURS_DIFF function calculates the hour difference between two datetime or date values, representing the number of hours elapsed from the start time to the end time. This function supports both DATE and DATETIME input types, automatically handles time difference calculations across days, months, and years, and returns an integer result. If the input is DATE type (containing only year, month, day), it defaults the time part to 00:00:00.
+The HOURS_DIFF function calculates the complete hour difference between two `DATE`, `DATETIME`, or `TIMESTAMP_NS` values, representing the number of hours elapsed from the start time to the end time. It automatically handles differences across days, months, and years. A `DATE` input is treated as 00:00:00.
 
 ## Syntax
 
@@ -20,8 +20,8 @@ HOURS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | Parameter | Description |
 | ---- | ---- |
-| `<date_or_time_expr1>` | End time, a valid date expression that supports date/datetime types. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| `<date_or_time_expr2>` | Start time, a valid date expression that supports date/datetime types and strings in datetime format |
+| `<date_or_time_expr1>` | End time, a valid date expression that supports DATE/DATETIME/TIMESTAMP_NS types. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr2>` | Start time, a valid date expression that supports DATE/DATETIME/TIMESTAMP_NS types and strings in datetime format |
 
 ## Return Value
 

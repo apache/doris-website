@@ -2,13 +2,13 @@
 {
     "title": "MICROSECOND_TIMESTAMP",
     "language": "zh-CN",
-    "description": "MICROSECONDTIMESTAMP 函数用于将输入的日期时间值转换为从 1970-01-01 00:00:00 加上本地时区偏移，开始计算的 Unix 时间戳，单位为微秒（1 秒 = 1,000,000 微秒）。该函数支持处理包含微秒精度的 DATETIME 类型 ，"
+    "description": "MICROSECOND_TIMESTAMP 将 DATETIME 或 TIMESTAMP_NS 值转换为微秒级 Unix 时间戳；TIMESTAMP_NS 的最后 3 位纳秒会被截断而不进行四舍五入。"
 }
 ---
 
 ## 描述
 
-MICROSECOND_TIMESTAMP 函数用于将输入的日期时间值转换为从 1970-01-01 00:00:00  加上本地时区偏移，开始计算的 Unix 时间戳，单位为微秒（1 秒 = 1,000,000 微秒）。该函数支持处理包含微秒精度的 DATETIME 类型 ，转换时会自动忽略时区差异（默认以 UTC 时间为基准）
+MICROSECOND_TIMESTAMP 函数将 `DATETIME` 或 `TIMESTAMP_NS` 值转换为以微秒为单位的 Unix 时间戳。对于 `TIMESTAMP_NS`，最后 3 位纳秒数字会被截断。
 
 ## 语法
 
@@ -20,7 +20,7 @@ MICROSECOND_TIMESTAMP(`<datetime>`)
 
 | 参数           | 说明                                      |
 |--------------|-----------------------------------------|
-| `<datetime>` | 表示要转换为 Unix 时间戳的日期时间，支持输入 datetime 类型,具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime>` | 要转换的 `DATETIME` 或 `TIMESTAMP_NS` 值。 |
 
 ## 返回值
 返回 BIGINT 类型的整数，表示输入日期时间对应的 Unix 微秒时间戳（输入时间转换到当前时区下的总微秒数）。

@@ -39,7 +39,7 @@ Each rule is defined by the following properties that determine its behavior and
 | `cardinality` | Maximum number of rows allowed to scan | Positive integer |
 | `partition_num` | Maximum number of partitions allowed to scan | Positive integer |
 | `tablet_num` | Maximum number of tablets allowed to scan | Positive integer |
-| `require_partition_filter` | Whether partitioned internal table and Hive table queries must include an effective partition filter. Supported in Doris 4.0.7 and later in the 4.0 series, and in Doris 4.1.2 and later in the 4.1 series. | `"true"` or `"false"` |
+| `require_partition_filter` | Whether partitioned internal table and Hive table queries must include an effective partition filter. Supported in Doris 4.0.7 and later in the 4.0 series, and in Doris 4.1.4 and later in the 4.1 series. | `"true"` or `"false"` |
 | `global` | Whether the rule is global | `"true"` (global) / `"false"` (only applies to bound users) |
 | `enable` | Whether the rule is enabled | `"true"` / `"false"` |
 
@@ -238,7 +238,7 @@ Conditions specify when the policy is triggered. Multiple conditions are separat
 
 | Condition | Description |
 |-----------|------|
-| `username` | The username carried by the query. Only triggers the `set_session_variable` Action on the FE |
+| `username` | The username carried by the query. Starting from Doris 4.1.3, it can be combined with BE-side runtime metrics such as `query_time`, `be_scan_rows`, `be_scan_bytes`, and `query_be_memory_bytes` to trigger `cancel_query`. This condition only supports the equality operator (`=`), and the username cannot be empty |
 | `be_scan_rows` | The number of rows scanned by a SQL within a single BE process. Cumulative value under concurrent execution |
 | `be_scan_bytes` | The number of bytes scanned by a SQL within a single BE process. Cumulative value under concurrent execution (unit: bytes) |
 | `query_time` | The execution time of a SQL on a single BE process (unit: milliseconds) |
@@ -246,12 +246,11 @@ Conditions specify when the policy is triggered. Multiple conditions are separat
 
 #### Actions
 
-Actions specify what to do when the conditions are triggered. Currently, a Policy can define only one Action (except for `set_session_variable`).
+Actions specify what to do when the conditions are triggered. Currently, a Policy can define only one Action.
 
 | Action | Description |
 |--------|------|
 | `cancel_query` | Cancel the query |
-| `set_session_variable` | Execute a set session variable statement. The same Policy can include multiple of these options. Currently, this is only triggered on the FE by the `username` Condition |
 
 #### Policy Properties
 
@@ -319,38 +318,19 @@ MySQL [hits]> SELECT REGEXP_REPLACE(Referer, '^https?://(?:www\\.)?([^/]+)/.*$',
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[CANCELLED]query cancelled by workload policy,id:12345
 ```
 
-#### Example 2: Automatically Adjust User Session Variables
+#### Example 2: Break Runtime Large Queries for a Specific User
 
-Workload Policy can automatically modify session variables for a specific user, for example, lowering concurrency to reduce resource consumption:
+Starting from Doris 4.1.3, you can combine `username` with BE-side runtime metrics to cancel only the queries of a specific user. The following policy cancels queries submitted by `test_user` when their running time on a single BE exceeds 3000 ms:
 
 ```sql
--- Check the current concurrency parameter for the admin user
-MySQL [(none)]> show variables like '%parallel_fragment_exec_instance_num%';
-+-------------------------------------+-------+---------------+---------+
-| Variable_name                       | Value | Default_Value | Changed |
-+-------------------------------------+-------+---------------+---------+
-| parallel_fragment_exec_instance_num | 8     | 8             | 0       |
-+-------------------------------------+-------+---------------+---------+
-1 row in set (0.00 sec)
-
--- Create a policy: set the concurrency parameter for the admin user to 1
-CREATE WORKLOAD POLICY test_set_var_policy
-CONDITIONS(username='admin')
-ACTIONS(set_session_variable 'parallel_fragment_exec_instance_num=1');
-
--- Check again later, the parameter has taken effect
-MySQL [(none)]> show variables like '%parallel_fragment_exec_instance_num%';
-+-------------------------------------+-------+---------------+---------+
-| Variable_name                       | Value | Default_Value | Changed |
-+-------------------------------------+-------+---------------+---------+
-| parallel_fragment_exec_instance_num | 1     | 8             | 1       |
-+-------------------------------------+-------+---------------+---------+
-1 row in set (0.01 sec)
+CREATE WORKLOAD POLICY cancel_user_long_query
+CONDITIONS(username='test_user', query_time > 3000)
+ACTIONS(cancel_query);
 ```
 
-### Notes
+Similarly, `username` can be combined with `be_scan_rows`, `be_scan_bytes`, or `query_be_memory_bytes` to limit the scan volume or BE memory usage of a specific user.
 
-- **FE/BE side isolation**: The Condition and Action of the same Policy must belong to the same side (FE or BE). For example, `set_session_variable` (FE side) and `cancel_query` (BE side) cannot be configured in the same Policy. The same applies to `username` (FE side) and `be_scan_rows` (BE side).
+### Notes
 - **Asynchronous execution latency**: Policies are checked by an asynchronous thread every 500 ms, so policy enforcement has some lag. Queries that run for a very short time may complete before the check is triggered and bypass the policy.
 - **Priority mechanism**: A query may match multiple Policies, but only the one with the highest priority (largest `priority` value) takes effect.
 - **Modification limit**: Currently, directly modifying the Action and Condition of an existing Policy is not supported. Delete the Policy and recreate it.

@@ -664,7 +664,34 @@ BaseCompaction:546859:
 * 描述：触发冷数据 compaction 的时间间隔，单位为秒。间隔越短，冷数据 compaction 检查越频繁，有助于更快地清理冷数据，但也会消耗更多资源。
 * 默认值：1800（秒）
 
+#### `enable_compaction_pause_on_high_memory`
+
+* 类型：bool
+* 描述：进程内存使用率过高时，是否暂停 compaction 任务。支持动态修改。
+  - 开启后，BE 在内存水位偏高时会暂停 compaction，以优先保障查询与导入。
+  - 但暂停 compaction 会让 Compaction Score 高的 tablet 更难合并，反而加剧元数据与内存的积压，因此**自 4.0.8 版本起默认值由 `true` 调整为 `false`**，即默认不再因内存水位高而暂停 compaction。
+  - 如需保留旧行为，可显式设置为 `true`。
+* 默认值：false（4.0.8 之前为 true）
+
 ### 导入
+
+#### `enable_table_memtable_flush_backpressure`
+
+* 类型：bool
+* 描述：自 4.1.4 版本起新增。当同一张表在本 BE 上待 Flush 的 MemTable 数量过多时，是否阻塞该表的新写入。与 FE 配置 `enable_adaptive_random_bucket_load` 配合使用，避免自适应随机分桶导入时 MemTable 堆积导致内存膨胀。
+* 默认值：true
+
+#### `table_memtable_flush_pending_count_limit`
+
+* 类型：int32
+* 描述：自 4.1.4 版本起新增。单张表在本 BE 上待 Flush 的 MemTable 数量上限，超过后新的写入会被阻塞等待。仅在 `enable_table_memtable_flush_backpressure = true` 时生效。
+* 默认值：10
+
+#### `group_commit_max_wal_num_per_table`
+
+* 类型：int32
+* 描述：自 4.1.4 版本起新增。单张表允许存在的 Group Commit WAL 文件数量上限，取值为 `0` 表示不限制。当 WAL 回放持续失败导致 WAL 堆积并超过该上限时，该表的 `async_mode` Group Commit 导入会被拒绝，返回 `EXCEEDED_LIMIT` 错误，错误信息形如 `Too many group commit async WALs for table ...`。该限制用于避免 WAL 无限堆积占满磁盘。
+* 默认值：10
 
 #### `enable_stream_load_record`
 
@@ -808,7 +835,14 @@ BaseCompaction:546859:
 * 描述：如果我们向一个启用了自动分区的表导入数据，那么 `olap_table_sink_send_interval_microseconds` 的时间间隔就会太慢。在这种情况下，实际间隔将乘以该系数。
 * 默认值：0.001
 
+#### `enable_group_commit_streamload_be_forward`
 
+* 类型：bool
+* 描述：是否开启存算分离模式下 Group Commit 的 Stream Load BE 转发能力。Doris 4.0 系列自 4.0.8 版本起新增，4.1 系列自 4.1.4 版本起新增。支持动态修改。
+  - 该能力用于解决负载均衡器随机转发导致同一张表的 Group Commit 请求分散到不同 BE、无法有效攒批的问题：开启后 BE 会将请求转发到同一个 BE 节点。
+  - **自 4.0.8 版本起，BE 上的 `/api/{db}/{table}/_stream_load_forward` 接口受该配置控制：配置为 `false` 时访问该接口会返回 `403 Forbidden`（提示 `Stream load forward is disabled`）；配置为 `true` 时访问该接口还需要通过认证，并要求全局 `LOAD` 权限。**
+  - 依赖该转发能力的部署，需要在 FE 和 BE 上同时将该配置设置为 `true`（FE 侧同名配置见 [FE 配置项](./fe-config)）。
+* 默认值：false
 
 ### 线程
 
@@ -969,6 +1003,12 @@ BaseCompaction:546859:
 * 默认值：5 (分钟)
 
 ### 存储
+
+#### `enable_kuromoji_analyzer`
+
+* 类型：bool
+* 描述：是否启用 kuromoji（日文）倒排索引分词器。当为 `false` 时,创建或查询带有 `"parser" = "kuromoji"` 的索引会报错,并提示需要开启此配置。自 Doris 5.0.0 版本起支持。
+* 默认值：false
 
 #### `default_num_rows_per_column_file_block`
 
@@ -1226,6 +1266,12 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 ### 其它
 
+#### `enable_arrow_input_validation`
+
+* 类型：bool
+* 描述：自 4.1.4 版本起新增。在把 Arrow 数据转换为 Doris 内部列之前，是否校验 Arrow 输入缓冲区的合法性。开启后可以避免非法 Arrow 数据导致 BE 崩溃，代价是少量额外校验开销。
+* 默认值：true
+
 #### `report_tablet_interval_seconds`
 
 * 描述：代理向 FE 报告 olap 表的间隔时间
@@ -1346,6 +1392,180 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 * 描述：用于文件缓存的磁盘路径和其他参数，以数组形式表示，每个磁盘一个条目。`path` 指定磁盘路径，`total_size` 限制缓存的大小；-1 或 0 将使用整个磁盘空间。
 
 * 格式： [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+
+#### `enable_async_file_cache_write`
+
+* 类型：bool
+* 描述：自 4.1.4 版本起新增。是否异步写 File Cache。开启后，读远端数据时回写 File Cache 的动作会交给后台线程池执行，不再阻塞读路径，可以降低冷读延迟。
+* 默认值：false
+
+#### `async_file_cache_write_workers_per_disk`
+
+* 类型：int32
+* 描述：自 4.1.4 版本起新增。异步写 File Cache 时，每块缓存磁盘使用的写线程数。仅在 `enable_async_file_cache_write = true` 时生效。
+* 默认值：16
+
+#### `async_file_cache_write_max_pending_bytes`
+
+* 类型：int64
+* 描述：自 4.1.4 版本起新增。异步写 File Cache 的待写入数据总量上限，单位为字节。超过后新的回写请求会被丢弃（不影响查询正确性，只是不再写入缓存）。取值为 `-1` 表示不限制。
+* 默认值：-1
+
+#### `enable_file_cache_write_from_s3_file_writer`
+
+* 类型：bool
+* 描述：自 4.1.4 版本起新增。写对象存储时，是否同时把数据写入本地 File Cache，使刚写入的数据可以直接命中缓存。
+* 默认值：true
+
+#### `enable_file_cache_write_index_file_only`
+
+* 类型：bool
+* 描述：自 4.1.4 版本起新增。是否只把索引文件写入 File Cache。开启后可以在缓存空间有限时优先保证索引常驻缓存。
+* 默认值：false
+
+#### `enable_cache_read_from_peer`
+
+* 类型：bool
+* 描述：Peer 读总开关。开启时，本地 File Cache 未命中先尝试从其他 BE（同计算组或其他计算组）的 File Cache 读取数据块，其他 BE 也没有时再回源对象存储。同计算组和跨计算组的 Peer 读由该开关一起控制，不能单独关闭跨计算组读取。自 4.2.0 版本起支持跨计算组 Peer 读，同时移除了配置项 `cache_read_from_peer_expired_seconds`。详见 [Peer 读](../../compute-storage-decoupled/file-cache/file-cache-peer-read)。
+* 默认值：true
+
+#### `enable_peer_s3_race`
+
+* 类型：bool
+* 描述：自 4.2.0 版本起新增。Peer 读时是否与对象存储读取并发竞速，先返回者胜出。关闭后改为串行：先依次尝试 Peer 候选节点，全部失败再读对象存储。
+* 默认值：true
+
+#### `peer_race_hedge_delay_ms`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。竞速时给 Peer 读的先手时间，单位为毫秒。Peer 在该时间内返回则不再发起对象存储读取；取值为 `0` 表示两路同时发起。
+* 默认值：20
+
+#### `max_concurrent_peer_races`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。单个 BE 上同时进行的 Peer 与对象存储竞速数上限，超过后新的未命中请求退化为串行读取。
+* 默认值：64
+
+#### `peer_cache_fill_compute_group_id`
+
+* 类型：string
+* 描述：自 4.2.0 版本起新增。在发起读取的 BE 上配置，指定负责跨计算组回源填充的计算组 ID（`SHOW BACKENDS` 中 `Tag` 列的 `compute_group_id`，不是计算组名称）。当选中的 Peer 候选节点属于该计算组时，请求会要求对方在自身也未缓存时代为回源对象存储并写入其 File Cache。为空表示不使用回源填充。
+* 默认值：""
+
+#### `enable_peer_server_cache_fill`
+
+* 类型：bool
+* 描述：自 4.2.0 版本起新增。在提供缓存的 BE 上配置，是否接受带回源填充标记的 Peer 读请求。关闭后本机未缓存的数据块直接返回未找到，由请求方回退到对象存储。
+* 默认值：true
+
+#### `peer_server_cache_fill_timeout_ms`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。服务端一次回源填充的最长等待时间，单位为毫秒。超时后请求方回退到对象存储。
+* 默认值：6000
+
+#### `max_concurrent_peer_server_fills`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。服务端同时进行的回源填充数上限。超过后新的填充请求被直接拒绝，请求方回退到对象存储。
+* 默认值：32
+
+#### `peer_rpc_failure_eviction_threshold`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。某个 Peer 候选节点连续 RPC 失败达到该次数后被从候选列表中剔除。
+* 默认值：3
+
+#### `peer_all_miss_cooldown_threshold`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。某个 tablet 连续多少次"所有 Peer 候选节点都未命中"后进入冷却期，冷却期内直接读取对象存储。
+* 默认值：5
+
+#### `peer_all_miss_cooldown_duration_s`
+
+* 类型：int64
+* 描述：自 4.2.0 版本起新增。Peer 读冷却期的时长，单位为秒。
+* 默认值：300
+
+#### `peer_candidate_expiry_s`
+
+* 类型：int64
+* 描述：自 4.2.0 版本起新增。Peer 候选节点信息的过期时间，单位为秒，按最近一次使用时间计算。过期后从内存清理，下次未命中时重新向 FE 拉取。
+* 默认值：3600
+
+#### `peer_candidate_cleanup_interval_s`
+
+* 类型：int64
+* 描述：自 4.2.0 版本起新增。后台清理过期 Peer 候选节点的周期，单位为秒。
+* 默认值：3600
+
+#### `peer_fetch_queue_timeout_ms`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。服务端 Peer 读请求在处理队列中的最长等待时间，单位为毫秒。等待超过该时间的请求被拒绝，让请求方尽快回退到对象存储。
+* 默认值：100
+
+#### `brpc_peer_fetch_pool_threads`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。服务端处理 Peer 读请求的线程池大小，与导入等重负载 RPC 的线程池隔离。取值为 `-1` 表示使用 `max(64, 2 × CPU 核数)`。不支持动态修改。
+* 默认值：-1
+
+#### `brpc_peer_fetch_pool_max_queue_size`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。服务端 Peer 读线程池的队列长度。取值为 `-1` 表示使用 `max(4096, 128 × CPU 核数)`。不支持动态修改。
+* 默认值：-1
+
+#### `min_peer_race_s3_thread_num` / `max_peer_race_s3_thread_num`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起新增。请求方在 Peer 与对象存储竞速时执行对象存储读取的线程池最小 / 最大线程数。不支持动态修改。
+* 默认值：0 / 32
+
+#### `s3_get_requests_per_second_per_core` / `s3_put_requests_per_second_per_core`
+
+* 类型：int64
+* 描述：自 4.1.4 版本起新增。按 CPU 核数计算的对象存储 GET / PUT 请求 QPS 限制（每核）。取值为负数表示不启用该方式，回退到旧的绝对令牌数配置；取值为 `0` 表示不限制 QPS。
+* 默认值：-1
+
+#### `s3_get_requests_per_second_max` / `s3_put_requests_per_second_max`
+
+* 类型：int64
+* 描述：自 4.1.4 版本起新增。由 CPU 核数推算出的 GET / PUT QPS 的硬上限。取值小于等于 `0` 表示不设上限。
+* 默认值：0
+
+#### `s3_get_bytes_per_second_per_core` / `s3_put_bytes_per_second_per_core`
+
+* 类型：int64
+* 描述：自 4.1.4 版本起新增。按 CPU 核数计算的对象存储 GET / PUT 带宽限制（每核字节数 / 秒）。取值小于等于 `0` 表示不限制带宽。
+* 默认值：-1
+
+#### `s3_get_bytes_per_second_max` / `s3_put_bytes_per_second_max`
+
+* 类型：int64
+* 描述：自 4.1.4 版本起新增。由 CPU 核数推算出的 GET / PUT 带宽硬上限，单位为字节 / 秒。取值小于等于 `0` 表示不设上限。
+* 默认值：0
+
+#### `s3_rate_limiter_cpu_cores_override`
+
+* 类型：int32
+* 描述：自 4.1.4 版本起新增。用于推算上述限流值的 CPU 核数。取值小于等于 `0` 时自动探测本机核数。
+* 默认值：0
+
+#### `s3_rate_limiter_log_interval`
+
+* 类型：int64
+* 描述：自 4.1.4 版本起新增。对象存储限流触发时打印日志的最小间隔，单位为毫秒。
+* 默认值：1000
+
+#### `file_cache_mem_storage_shard_num`
+
+* 类型：int32
+* 描述：自 4.1.4 版本起新增。File Cache 内存存储的分片数量，用于降低并发访问时的锁竞争。
+* 默认值：1024
 
 #### `time_series_max_tablet_version_num`
 

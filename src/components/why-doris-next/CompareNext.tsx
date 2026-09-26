@@ -1,4 +1,4 @@
-import React, { JSX, useState } from 'react';
+import React, { JSX, useEffect, useState } from 'react';
 import { LayoutNext } from '../home-next/LayoutNext';
 import { WhyChooseSection } from './sections/WhyChooseSection';
 import { CoverFlowSection } from './sections/CoverFlowSection';
@@ -93,6 +93,17 @@ function TabSwitcher({ active, onChange }: TabSwitcherProps): JSX.Element {
 
 export default function CompareNext(): JSX.Element {
     const [active, setActive] = useState<string>('clickhouse');
+
+    // Allow deep-linking to a specific competitor tab via URL hash, e.g.
+    // /why-doris/compare#elastic. Read on mount (client-only; window is
+    // undefined during SSR) and fall back to the default ClickHouse tab.
+    useEffect(() => {
+        const hash = window.location.hash.replace(/^#/, '');
+        if (hash && TABS.some(tab => tab.id === hash && tab.enabled)) {
+            setActive(hash);
+        }
+    }, []);
+
     const content = CONTENT[active];
 
     return (

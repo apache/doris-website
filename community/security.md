@@ -1,5 +1,5 @@
 ---
-title: Apache Doris Security Vulnerability Disclosure
+title: Security Vulnerability Disclosure
 language: en
 description: "How to report security vulnerabilities to Apache Doris: contact the ASF Security Team via security@apache.org and follow the official responsible disclosure process."
 keywords:

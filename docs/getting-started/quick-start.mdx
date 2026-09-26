@@ -27,29 +27,21 @@ import TabItem from '@theme/TabItem';
 
 Starting from the latest version, you can use Docker for quick deployment.
 
-### Step 1 (1/3): Download the startup script
+### Step 1 (1/2): Start the cluster
 
-<a target="_blank" download rel="noopener noreferrer" href="/files/start-doris.sh">Download the script</a>, then run the following command to grant execute permission:
-
-```shell
-chmod 755 start-doris.sh
-```
-
-### Step 2 (2/3): Start the cluster
-
-Run the script to start the cluster (the default version is 4.0.1):
+Run the following command to download the startup script and start the cluster in one go. When no version is specified, the latest release (`doris-latest`) is downloaded by default:
 
 ```shell
-bash start-doris.sh
+curl -fsSL https://doris.apache.org/files/start-doris.sh | bash
 ```
 
 To specify a version, use the `-v` parameter:
 
 ```shell
-bash start-doris.sh -v 4.1.0
+curl -fsSL https://doris.apache.org/files/start-doris.sh | bash -s -- -v 4.1.0
 ```
 
-### Step 3 (3/3): Verify cluster status
+### Step 2 (2/2): Verify cluster status
 
 Connect to the cluster with a MySQL client and check the FE and BE status:
 

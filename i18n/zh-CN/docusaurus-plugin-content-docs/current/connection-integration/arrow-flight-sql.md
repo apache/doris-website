@@ -23,7 +23,7 @@
 <!-- 适用场景: 高速读取 Doris 数据 / Python/Java 接入 / BI 工具集成 / 故障排查 -->
 
 :::caution 实验特性
-本文所述的 Arrow Flight SQL 高速数据传输能力目前为**实验特性**，使用过程中如遇到问题，欢迎通过邮件组或 [GitHub Issue](https://github.com/apache/doris/issues) 反馈。
+本文所述的 Arrow Flight SQL 高速数据传输能力目前为**实验特性**。不建议在生产环境中使用。使用过程中如遇到问题，欢迎通过邮件组或 [GitHub Issue](https://github.com/apache/doris/issues/65615) 反馈。
 :::
 
 自 Doris 2.1 版本起，基于 Arrow Flight SQL 协议实现了高速数据传输链路，支持多种语言使用 SQL 从 Doris 高速读取大批量数据。相比 MySQL Client 或 JDBC/ODBC 驱动方案，部分场景性能提升数十倍至百倍。Arrow Flight SQL 还提供通用 JDBC 驱动，可与同样遵循该协议的数据库无缝交互。
@@ -522,6 +522,24 @@ try (
     e.printStackTrace();
 }
 ```
+
+## 类型映射说明
+
+<!-- 知识类型: 行为说明 -->
+<!-- 适用场景: 客户端解析 Arrow 结果 -->
+
+:::caution 版本行为变更（4.1.4）
+
+自 4.1.4 版本起，Arrow Flight SQL 返回的 `DATETIME` / `DATETIMEV2` 是**不带时区**（timezone-naive）的 Arrow Timestamp；`TIMESTAMPTZ` 仍然返回带时区的 Timestamp。
+
+4.1.4 之前 `DATETIME` 会被标记为带时区，客户端在本地时区解析时会产生额外的时区偏移。升级后请按"无时区的本地时间"语义解析 `DATETIME` 列。
+
+同一版本还修正了以下类型元数据：
+
+- `GetTables` 元数据接口中 `DATEV2` 的 Arrow 类型由 `Date(MILLISECOND)` 修正为 `Date(DAY)`；
+- `ARRAY` / `MAP` / `STRUCT` 的元数据会返回真实的子字段类型，而不是占位类型。
+
+:::
 
 ## 与第三方组件集成
 

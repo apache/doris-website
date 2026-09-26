@@ -8,7 +8,7 @@
 
 ## Description
 
-The DATE_TRUNC function is used to truncate a date or time value (`datetime`) to a specified time unit (`time_unit`). This means retaining the time information at the specified unit and higher levels, while resetting the time information at lower levels to the minimum date time. For example, when truncating to the "hour" unit, the year, month, day, and hour are retained, and minutes, seconds, etc., are reset to zero. When truncating by year, the day and month are truncated to xxxx-01-01.
+The DATE_TRUNC function truncates a `DATE`, `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ` value (`datetime`) to a specified time unit (`time_unit`). This means retaining the time information at the specified unit and higher levels, while resetting the time information at lower levels to the minimum date time. For example, when truncating to the "hour" unit, the year, month, day, and hour are retained, and minutes, seconds, etc., are reset to zero. When truncating by year, the day and month are truncated to xxxx-01-01.
 
 ## Syntax
 
@@ -21,14 +21,17 @@ DATE_TRUNC(<time_unit>, <datetime>)
 
 | Parameter | Description |
 | -- | -- |
-| `<datetime>` | A valid date expression, supporting datetime or date type. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<datetime>` | A valid date expression. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<time_unit>` | The time interval to truncate to. The available values are: [`second`,`minute`,`hour`,`day`,`week`,`month`,`quarter`,`year`] The time unit must be a string constant; it cannot be a column or non-constant expression. |
 
 ## Return Value
 
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
 Returns a truncated result with the same type as datetime:
 - When input is DATE, returns DATE ;
 - When input is DATETIME or a time-containing string, returns DATETIME (including the date and the truncated time).
+- When input is TIMESTAMP_NS, returns TIMESTAMP_NS with nine fractional-second digits.
 - If the input is of TIMESTAMPTZ type, it will first be converted to local_time (for example, in the case where the session variable is `+08:00`, the local_time represented by `2025-12-31 23:59:59+05:00` is `2026-01-01 02:59:59`), and then the truncation operation will be performed.
 - For datetime types with scale, the fractional part will be truncated to zero but the scale will be preserved in the return value.
 

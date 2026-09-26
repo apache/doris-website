@@ -4,16 +4,31 @@ on:
     schedule:
         - cron: '0 */2 * * *' # Runs every 2 hours.
 permissions: write-all
+# One deploy at a time. A run whose OSS upload crawls (the 2026-09-21 12:05
+# run spent two hours on it) must not overlap the next cron trigger: both
+# would push the same objects through the same slow pipe and race for the
+# bucket's .actioninfo manifest. Queue the newer run instead of cancelling
+# the running one - killing it mid-upload discards the manifest it writes at
+# the end, and the next run starts the whole upload over.
+concurrency:
+    group: cron-deploy-website
+    cancel-in-progress: false
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         environment: Production
         steps:
             - name: Checkout
-              uses: actions/checkout@master
+              # v4 (the pinned @master commit predates the `filter` input) with
+              # the full history the last-update map is computed from. Blobless
+              # keeps that affordable: only commit/tree metadata is fetched
+              # (~15MB), not every historical file version (~1.7GB).
+              uses: actions/checkout@v4
               with:
                   persist-credentials: false
                   submodules: recursive
+                  fetch-depth: 0
+                  filter: blob:none
 
             - name: Add Chinese Fonts
               run: |
@@ -32,6 +47,27 @@ jobs:
               with:
                   node-version: 20
 
+            - name: Refresh docs last-update map
+              # Recompute scripts/last-update/data.json from the history fetched
+              # above, overwriting the committed copy so every deploy renders
+              # current "last updated" footers instead of waiting for the manual
+              # "Refresh Docs Last-Update Map" PR. Only the build below reads it;
+              # nothing is committed. Non-fatal on purpose - the generator writes
+              # the file only after it succeeds, so a failure leaves the committed
+              # map untouched and the site still ships.
+              run: |
+                  node scripts/last-update/generate.js \
+                    || echo "::warning::last-update refresh failed; deploying with the committed map"
+
+            - name: Add Swap Space
+              run: |
+                  sudo fallocate -l 8G /mnt/swapfile2
+                  sudo chmod 600 /mnt/swapfile2
+                  sudo mkswap /mnt/swapfile2
+                  sudo swapon /mnt/swapfile2
+                  free -h
+                  swapon --show
+
             - name: Build
               env:
                   GITHUB_TOKEN: ${{ github.token }}
@@ -43,13 +79,6 @@ jobs:
                   node ./scripts/update_github_info.js
                   yarn key-features:generate
                   PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build --locale en --locale zh-CN
-                  if [ ! -d "./ja-build" ]; then
-                      echo "ja-build directory not found, aborting to avoid publishing incorrect ja content."
-                      exit 1
-                  fi
-                  rm -rf ./build/ja
-                  mkdir -p ./build/ja
-                  cp -a ./ja-build/. ./build/ja/
                   touch build/.dummy
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/
@@ -65,13 +94,40 @@ jobs:
             #         ls ./build/assets/files/
 
             - name: Upload files to OSS
+              id: oss-upload
+              # The action has no per-request retry (the OSS SDK it embeds never
+              # reads its RetryTimes), so a single PUT hitting the SDK's 60s
+              # timeout among tens of thousands fails the whole step - on
+              # 2026-09-21 that was 6 of 12,320 uploads after two hours on a slow
+              # link. It does write its .actioninfo manifest before exiting
+              # non-zero, so the retry below only re-sends the objects that
+              # failed, plus the manifest. continue-on-error keeps the job alive
+              # for that retry; the retry step fails the job if it fails too.
+              continue-on-error: true
               uses: ./.github/actions/aliyun-oss-website-action
               with:
                   accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
                   accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
                   bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-                  # use your own endpoint
-                  endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
+                  # Transfer-acceleration endpoint of the website bucket (enabled
+                  # on the bucket on 2026-09-21): the runner enters Alibaba's
+                  # backbone at the nearest PoP instead of crossing the public
+                  # internet to the bucket's region. Uploads only - the CDN keeps
+                  # its regional origin for downloads.
+                  endpoint: oss-accelerate.aliyuncs.com
+                  folder: build
+                  onlyUpload: true
+                  otherCacheControl: 0
+                  skipSetting: true
+
+            - name: Upload files to OSS (retry)
+              if: steps.oss-upload.outcome == 'failure'
+              uses: ./.github/actions/aliyun-oss-website-action
+              with:
+                  accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+                  accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+                  bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+                  endpoint: oss-accelerate.aliyuncs.com
                   folder: build
                   onlyUpload: true
                   otherCacheControl: 0

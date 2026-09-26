@@ -99,79 +99,82 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 元数据缓存 {#meta-cache}
 
-为了提升访问外部数据源的性能，Apache Doris 会对 Iceberg 的元数据进行缓存。元数据包括表结构（Schema）、表对象、View 对象和 Manifest 详情等。
+为了提升访问外部数据源的性能，Apache Doris 会缓存 Iceberg 的元数据，包括已加载的表元数据、分区数据、Manifest、派生的分区投影、最新 Snapshot ID 以及推断出的文件格式。
 
 :::tip
-对于 Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详情请参阅[元数据缓存](../meta-cache.md)。
-从 Doris 4.1.x 开始，Iceberg Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。
+Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详见[元数据缓存](../meta-cache)。
+自 Doris 4.1.x 起，Iceberg Catalog 的外表元数据缓存使用统一的 `meta.cache.*` 键配置。下文的模块描述当前版本；Doris 4.1.x 和 4.2.x 的模块集合与此不同，见本页的 4.x 版本。
 :::
 
-### 缓存属性配置（4.1.x+） {#meta-cache-unified-model}
+### 缓存属性配置 {#meta-cache-unified-model}
 
-各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+每个缓存模块使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`。Iceberg 的 `<engine>` 为 `iceberg`。`meta.cache.iceberg.table.ttl-second` 是共享的 TTL 开关：它既是 `table` 和 `partition` 模块的默认 TTL，也是没有独立 `<entry>` 名的各缓存的 TTL。设为 `0` 时这些缓存全部关闭，每次查询实时读取最新 Snapshot。
 
 | 属性 | 示例 | 含义 |
 |---|---|---|
-| `enable` | `true/false` | 是否启用该缓存模块。 |
-| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
-| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+| `enable` | `true/false` | 是否开启该缓存模块。 |
+| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭该模块（立即生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算的 TTL 秒数。 |
+| `capacity` | `10000` | 缓存条目数上限。`0` 表示关闭该模块。 |
+| `max-weight` | `1GB` | 自 Doris 4.1.4 起支持。可选的模块估算保留内存上限。必须为正数，`0` 会被拒绝。只有下表标注的模块接受该属性。 |
 
-**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
+**生效逻辑：** 模块在 `enable=true`、`ttl-second != 0` 且 `capacity > 0` 时生效。FE 总上限、Catalog 上限或模块上限存在时，还会按估算内存控制准入，详见 [外表元数据缓存内存管理](../external-meta-cache-memory-management)。
 
 ### 缓存模块 {#meta-cache-unified-modules}
 
-Iceberg Catalog 包含以下缓存模块：
+以下模块拥有独立配置键并接受 `max-weight`：
 
-| 模块 (`<entry>`) | 属性键前缀 | 缓存内容与影响 |
-|---|---|---|
-| `schema` | `meta.cache.iceberg.schema.` | 缓存表结构。影响：列新增、删除、类型变更在 Doris 中的可见性。若关闭，每次查询都会拉取最新 Schema。 |
-| `table` | `meta.cache.iceberg.table.` | 缓存 Iceberg 表元数据对象。影响：最新 Snapshot、Partition Spec、Sort Order、表属性等表级元数据在 Doris 中的可见性；若关闭，每次规划都会重新加载表元数据。 |
-| `view` | `meta.cache.iceberg.view.` | 缓存 Iceberg View 元数据对象。影响：View 定义、Schema、属性变更在 Doris 中的可见性。 |
-| `manifest` | `meta.cache.iceberg.manifest.` | 缓存 Manifest 详情。主要影响查询规划时重复读取 Manifest 文件的开销，通常不直接决定表或 Snapshot 是否可见。注意：该模块默认关闭，需手动启用。 |
+| 模块（`<entry>`） | 属性键前缀 | `ENTRY_NAME` | 缓存内容与影响 | 默认 enable / TTL / capacity |
+|---|---|---|---|---|
+| `table` | `meta.cache.iceberg.table.` | `iceberg-table` | 已加载的 Iceberg 表元数据。影响：减少访问 Catalog 和读取元数据文件的次数。 | `true` / 86400 秒 / 1000 |
+| `partition` | `meta.cache.iceberg.partition.` | `iceberg-partition` | 表快照的原始分区数据。 | `true` / 与 `table` 相同 / 1000 |
+| `manifest` | `meta.cache.iceberg.manifest.` | `iceberg-manifest` | 解析后的 Manifest 内容。只有 `enable` 为 `true` 时扫描规划才会使用，默认 `false`。 | 缓存本身 `true`，是否使用默认 `false` / 不过期 / 100000 |
+| `partition_view` | `meta.cache.iceberg.partition_view.` | `iceberg.mvcc-partition-view`、`iceberg.list-partitions-view` | 两种派生分区投影，共用一个模块上限。 | `true` / 86400 秒 / 1000 |
+
+以下缓存没有 `<entry>` 名，只受 Catalog 和 FE 总内存上限约束，TTL 取自 `meta.cache.iceberg.table.ttl-second`：`iceberg-latest-snapshot`（最新 Snapshot ID）、`iceberg-format`（推断出的文件格式）、`iceberg-comment`（表注释，仅为使用 vended credentials 的 REST Catalog 创建）和 `iceberg-equality-delete-field-ids`。
+
+Iceberg 表的列结构由共享的 `default` 引擎缓存（`meta.cache.default.schema.*`）。
+
+:::note
+`iceberg.rest.session` 为 `user` 时，不会创建 `table`、`partition`、`partition_view`、latest-snapshot 和 format 缓存，因为共享缓存会绕过按用户的鉴权。使用 vended credentials 的 REST Catalog 也不会创建 `table` 缓存。
+:::
 
 ### 旧参数映射与转换 {#meta-cache-mapping}
 
-在 4.1.x 之前，Iceberg 表级元数据主要受 FE 全局缓存策略控制，`schema.cache.ttl-second` 是常见的 Catalog 兼容属性；详见[元数据缓存](../meta-cache.md)。升级到 4.1.x 后，建议改写为 `meta.cache.iceberg.*`，并按需要分别配置表、View 和 Manifest 缓存。
-
-| 4.1 前属性键/旧模型 | 适用范围 | 4.1.x+ 统一键 | 升级建议与影响 |
-|---|---|---|---|
-| `schema.cache.ttl-second` | 4.1 前 Iceberg Catalog 兼容属性 | `meta.cache.iceberg.schema.ttl-second` | 控制 Schema 新鲜度。若希望列变更每次查询立即可见，设置为 `0`。 |
-| Iceberg 表信息旧模型 | 4.1 前 FE 全局缓存策略（见旧版元数据缓存文档） | `meta.cache.iceberg.table.ttl-second` | 控制表级元数据新鲜度。若希望每次查询都读取最新 Snapshot/表属性，设置为 `0`。 |
-| 无一一对应的旧 Catalog 键 | 4.1 前未单独暴露 View / Manifest TTL | `meta.cache.iceberg.view.*`、`meta.cache.iceberg.manifest.*` | 这是 4.1.x 中拆分出的新模块。升级后如需保证最新 View 定义，单独调低 `view.ttl-second`；`manifest` 主要用于性能优化。 |
-
-4.1.x 的统一模型把缓存拆分为 `enable`、`ttl-second`、`capacity` 三个维度；旧模型主要描述 TTL/全局缓存行为，不覆盖这些新模块的独立开关和容量上限。升级时建议一并评估是否需要补充 `enable/capacity`。
+| 旧属性键 | 统一键 | 说明 |
+|---|---|---|
+| `schema.cache.ttl-second` | `meta.cache.default.schema.ttl-second` | 表结构缓存的过期时间 |
 
 ### 最佳实践 {#meta-cache-best-practices}
 
-* **实时查看最新数据**：如果您希望每次查询都能看到 Iceberg 表的最新快照或 Schema 变动，可以将 `schema` 或 `table` 的 `ttl-second` 设置为 `0`。
+* **实时访问最新数据**：希望每次查询都看到 Iceberg 表的最新 Snapshot 时，将 `meta.cache.iceberg.table.ttl-second` 设为 `0`。
   ```sql
-  -- 关闭表对象缓存，以便感知快照变动
+  -- 关闭 table、partition、latest-snapshot 和 format 缓存，实时读取最新 Snapshot
   ALTER CATALOG iceberg_ctl SET PROPERTIES ("meta.cache.iceberg.table.ttl-second" = "0");
   ```
 * **性能优化**：
-    * 启用 Manifest 缓存可以显著提升大表的查询规划速度：
+    * 开启 Manifest 缓存可以显著加速大表的查询规划。Manifest 很大时用 `max-weight` 限制其内存：
       ```sql
       ALTER CATALOG iceberg_ctl SET PROPERTIES (
         "meta.cache.iceberg.manifest.enable" = "true",
-        "meta.cache.iceberg.manifest.ttl-second" = "600"
+        "meta.cache.iceberg.manifest.max-weight" = "1GB"
       );
       ```
-    * `ALTER CATALOG ... SET PROPERTIES` 的修改在 Iceberg Catalog 中支持热生效。
+    * Catalog 属性修改成功后，受影响的元数据缓存会被丢弃，并在下一次访问时按新配置重建。修改 `meta.cache.max-weight` 或 `schema.cache.ttl-second` 会丢弃该 Catalog 的全部缓存；修改 `meta.cache.<engine>.<entry>.*` 只丢弃对应引擎的缓存。正在执行的查询不受影响。
 
 ### 可观测性 {#meta-cache-unified-observability}
 
-可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观测缓存指标：
+可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观察缓存指标。`ENTRY_NAME` 显示上表中列出的名称，`default` 引擎的行是所有 Catalog 共享的表结构缓存：
 
 ```sql
-SELECT catalog_name, engine_name, entry_name,
+SELECT engine_name, entry_name,
        effective_enabled, ttl_second, capacity,
-       estimated_size, hit_rate, load_failure_count, last_error
+       estimated_size, hit_rate, max_weight, estimated_weight
 FROM information_schema.catalog_meta_cache_statistics
-WHERE catalog_name = 'iceberg_ctl' AND engine_name = 'iceberg'
-ORDER BY entry_name;
+WHERE catalog_name = 'iceberg_ctl'
+ORDER BY engine_name, entry_name;
 ```
 
-该系统表文档见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
+系统表说明请参阅 [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics)。
 
 ## 支持的 Iceberg 版本
 
@@ -181,7 +184,7 @@ ORDER BY entry_name;
 | 3.0 | 1.6.1 |
 | 3.1 | 1.9.1 |
 | 4.0 | 1.9.1 |
-| 4.1 | 1.10.1 |
+| 4.1（4.1.4+） | 1.10.1 |
 
 ## 支持的 Iceberg 格式
 
@@ -236,6 +239,7 @@ ORDER BY entry_name;
 * [华为云 OBS](../storages/huawei-obs.md)
 
 * [MINIO](../storages/minio.md)
+* [SeaweedFS](../storages/seaweedfs.md)
 
 > 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参阅【基础示例】章节。
 
@@ -244,6 +248,10 @@ ORDER BY entry_name;
 * [Parquet](../file-formats/parquet.md)
 
 * [ORC](../file-formats/orc.md)
+
+自 4.1.4 版本起，文件格式按每个数据文件（Split）单独判定，因此**同一张 Iceberg 表中同时存在 Parquet 和 ORC 数据文件时也可以正常查询**。
+
+自 4.1.4 版本起，Iceberg 的 Identity 分区元数据会随每个 Split 下发，路径分区键覆盖表所有 Partition Spec 中的 Identity 列。因此经历过 **Partition Evolution** 的表，其分区列取值在查询中也能正确返回。
 
 ## 列类型映射
 
@@ -267,6 +275,8 @@ ORDER BY entry_name;
 | list                                   | array                |                       |
 | other                                  | UNSUPPORTED          |                       |
 
+Iceberg UUID 继续按 `enable.mapping.varbinary` 映射为 STRING 或 VARBINARY，两种映射均保留 16 字节原始值；不会自动映射为 Doris 原生 UUID。使用 `CAST(HEX(uuid_column) AS UUID)` 转换为原生 UUID，不要直接将原始字节当作标准 UUID 文本解析。向 Iceberg UUID 字段写入 Parquet 时保留 UUID 逻辑标记，包括嵌套字段。详见 [UUID 类型](../../sql-manual/basic-element/sql-data-types/uuid.md)。
+
 > 注：
 >
 > Doris 当前不支持带时区的 `Timestamp` 类型。所有 `timestamp` 和 `timestamptz` 会统一映射到 `datetime(N)` 类型上。但在读取和写入时，Doris 会根据实际源类型正确处理时区。如通过 `SET time_zone=<tz>` 指定时区后，会影响 `timestamptz` 列的读取和写入结果。
@@ -274,6 +284,16 @@ ORDER BY entry_name;
 > 可以在 `DESCRIBE table_name` 语句中的 Extra 列查看源类型是否带时区信息。如显示 `WITH_TIMEZONE`，则表示源类型是带时区的类型（该功能自 3.1.0 版本支持）。
 >
 > 4.0.3 后开始支持，可以映射 `timestamptz (Timestamp with timezone)` 到 Doris 的 `timestamptz` 类型。
+
+### 列名大小写
+
+Doris 保留 Iceberg 表中列名的原始大小写，并在读取时按不区分大小写的方式匹配列。含大写字母或大小写混合的列名（如 `UserId`、`ORDER_ID`）可以正常查询。
+
+:::info 版本说明
+
+4.0.8 之前的 4.0.x 版本在读取时按精确匹配定位列，含大小写混合列名的 Iceberg / Paimon 表可能读到错误的列或查询失败。该问题已在 4.0.8 中修复。
+
+:::
 
 ## Namespace 映射
 
@@ -768,6 +788,24 @@ Iceberg 的元数据层级关系是 Catalog -> Namespace -> Table。其中 Names
 自 4.0.6 版本起，Iceberg REST Catalog 与 AWS S3 Tables 支持通过 IAM Assumed Role 获取访问凭证：
 - REST Catalog：使用 `iceberg.rest.role_arn` 指定要扮演的 Role ARN，并可选地通过 `iceberg.rest.external-id` 指定 External ID。
 - AWS S3 Tables：使用 `s3.role_arn` 与 `s3.external_id`（参见下文 AWS S3 Tables 章节）。
+:::
+
+:::caution 版本行为变更（4.1.4）
+
+自 4.1.4 版本起，当 `iceberg.rest.signing-name` 取值为 `glue`、`s3tables` 或 `osstables` 这类托管签名服务时，**必须**同时设置 `'iceberg.rest.sigv4-enabled' = 'true'`，否则建 Catalog 会报错：
+
+```text
+Rest Catalog requires sigv4-enabled set to true when signing-name is <name>
+```
+
+升级前如果已有 Catalog 只设置了 `signing-name` 而没有开启 `sigv4-enabled`，升级后会校验失败，需要补齐该属性。
+
+使用 `osstables` 时，`iceberg.rest.signing-region` 与 `iceberg.rest.sigv4-enabled = 'true'` 都是必填项，否则会报错：
+
+```text
+Rest Catalog requires signing-region and sigv4-enabled set to true when signing-name is osstables
+```
+
 :::
 
 <details>
@@ -1446,6 +1484,36 @@ Iceberg 的元数据层级关系是 Catalog -> Namespace -> Table。其中 Names
     </Tabs>
 </details>
 
+### 阿里云 OSS Tables
+
+<details>
+    <summary>5.0+ 版本</summary>
+    <Tabs>
+        <TabItem value='OSS Tables REST Catalog' label='OSS Tables REST Catalog' default>
+            完整配置和使用说明请参阅[集成阿里云 OSS Tables](../best-practices/doris-aliyun-oss-tables)。
+            ```sql
+            CREATE CATALOG oss_tables PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'rest',
+                'iceberg.rest.uri' = 'https://<region>.oss-tables.aliyuncs.com/iceberg',
+                'warehouse' = 'acs:osstables:<region>:<account_id>:bucket/<table_bucket_name>',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 'osstables',
+                'iceberg.rest.signing-region' = '<region>',
+                'iceberg.rest.view-enabled' = 'false',
+                'io-impl' = 'org.apache.iceberg.aws.s3.S3FileIO',
+                'oss.endpoint' = 'https://oss-<region>.aliyuncs.com',
+                'oss.region' = '<region>',
+                'oss.access_key' = '<access_key_id>',
+                'oss.secret_key' = '<access_key_secret>',
+                'oss.use_path_style' = 'false',
+                'test_connection' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
 ## 查询操作
 
 ### 基础查询
@@ -1464,19 +1532,76 @@ SELECT * FROM iceberg_tbl LIMIT 10;
 SELECT * FROM iceberg.iceberg_db.iceberg_tbl LIMIT 10;
 ```
 
+### 文件元数据列
+
+> 该功能自 4.2.0 版本起支持。
+
+Doris 为 Iceberg 数据表提供两个隐藏元数据列，可用于定位每条查询结果对应的物理数据文件和文件内行位置。
+
+| 列名 | 类型 | 说明 |
+| --- | --- | --- |
+| `_file` | `STRING NOT NULL` | Iceberg 数据文件元数据中记录的原始路径。 |
+| `_pos` | `BIGINT NOT NULL` | 该行在完整数据文件中的物理位置，从 0 开始。 |
+
+前置条件：按照前文示例配置 Iceberg Catalog，并创建一个包含 `id` 列、使用 Parquet 或 ORC 文件的 Iceberg 数据表。以下查询假设 `iceberg_tbl` 中已包含 `id` 为 `1` 和 `2` 的记录：
+
+```sql
+SELECT id, `_file`, `_pos`
+FROM iceberg.iceberg_db.iceberg_tbl
+ORDER BY `_file`, `_pos`;
+```
+
+示例结果（文件路径由实际表位置决定）：
+
+```text
++----+---------------------------------------+------+
+| id | _file                                 | _pos |
++----+---------------------------------------+------+
+|  1 | s3://bucket/warehouse/db/table/a.orc |    0 |
+|  2 | s3://bucket/warehouse/db/table/a.orc |    1 |
++----+---------------------------------------+------+
+```
+
+默认情况下，这些列不会出现在 `SELECT *` 或 `DESC` 的结果中。
+
+如需在 `SELECT *` 和 `DESC` 中显示隐藏列，可以在当前会话开启 `show_hidden_columns`：
+
+```sql
+SET show_hidden_columns = true;
+```
+
+相关会话变量：
+
+| 变量 | 类型 | 默认值 | 是否必需 | 作用 |
+| --- | --- | --- | --- | --- |
+| `show_hidden_columns` | `BOOLEAN` | `false` | 否 | 在 `SELECT *` 和 `DESC` 中显示隐藏列。显式引用列名时无需开启。 |
+| `enable_file_scanner_v2` | `BOOLEAN` | `true` | 否 | 查询引用这些元数据列时必须保持开启。 |
+| `force_jni_scanner` | `BOOLEAN` | `false` | 否 | 必须保持关闭，因为 JNI Reader 无法生成这些元数据列。 |
+
+行位置以完整物理文件为基准。谓词过滤、Delete 处理及扫描切分不会对保留行重新编号。因此，`_file` 和 `_pos` 的组合可以定位当前表快照中的一条物理记录。数据文件重写或 Compaction 后，两列的值可能变化，不能将其作为稳定的逻辑行 ID。
+
+:::caution 注意
+仅当 Iceberg 数据表通过 FileScannerV2 原生 Parquet 或 ORC Reader 读取时，才能使用这些列。如果关闭 `enable_file_scanner_v2`、开启 `force_jni_scanner`，或者所选数据文件无法使用原生 Parquet/ORC Reader，引用这些列的查询会失败。
+
+`_file` 和 `_pos` 是保留列名，名称比较不区分大小写。请勿在 Iceberg 表中使用它们作为物理列名。
+:::
+
 ### 时间旅行
 
 支持读取 Iceberg 表指定的 Snapshot。
 
 默认情况下，读取请求只会读取最新版本的快照。
 
-可以通过 `iceberg_meta()` 表函数查询指定 Iceberg 表的 Snapshot：
+可以通过 `$snapshots` 系统表查询指定 Iceberg 表的 Snapshot：
+
+:::caution 版本行为变更（4.1.4）
+
+自 4.1.4 版本起，`iceberg_meta()` 表函数已被移除，请统一改用 Iceberg 系统表（如 `iceberg_tbl$snapshots`）查询元数据，详见下文【系统表】章节。
+
+:::
 
 ```sql
-SELECT * FROM iceberg_meta(
-    'table' = 'iceberg_ctl.iceberg_db.iceberg_tbl',
-    'query_type' = 'snapshots'
-)\G
+SELECT * FROM iceberg_ctl.iceberg_db.iceberg_tbl$snapshots\G
 
 *************************** 1. row ***************************
  committed_at: 2024-11-28 11:07:29
@@ -1564,7 +1689,49 @@ DESC iceberg_tbl;
 **注意事项：**
 
 1. 必须确保 Iceberg 表的格式版本（`format-version`）配置为 `3` 时，才会生成上述行级别参数。对于 V1 和 V2 格式表查询行血缘列可能报错。
-2. 隐藏列由系统进行维护，不允许用户在使用 `INSERT` 等写入语句时显式指定写入 `_row_id` 或 `_last_updated_sequence_number` 列。
+2. 隐藏列由系统进行维护，不允许用户在使用 `INSERT` 等写入语句时显式指定写入 `_row_id` 或 `_last_updated_sequence_number` 列。自 4.1.4 版本起，对 `format-version >= 3` 的表，在 `INSERT` 的列清单中指定行血缘列会直接报错：`Cannot specify invisible column '<name>' in INSERT statement`。
+
+### Iceberg V3 默认值
+
+> 自 4.1.4 版本开始支持。
+
+Iceberg V3 为列定义了两类默认值，Doris 均已支持：
+
+- `initial-default`：新增列时为**已有历史数据**指定的默认值。读取旧数据文件（写入时该列还不存在）时，Doris 会返回该默认值而不是 NULL。Parquet、ORC 均支持，覆盖顶层列、`STRUCT` 内的嵌套子列，以及整体缺失的复杂类型父列，并且在谓词计算中同样生效。
+- `write-default`：写入时为**未指定的列**填充的默认值。`INSERT INTO t (部分列) VALUES (...)` 时，未列出的列会写入当前的 `write-default`（旧版本写入 NULL）。
+
+**通过 DDL 指定默认值：**
+
+```sql
+ALTER TABLE iceberg_tbl ADD COLUMN c1 INT DEFAULT 10;
+```
+
+该语句会同时设置 Iceberg 的 `write-default` 与 `initial-default`。**要求表的 `format-version` 为 `3`**，V1 / V2 表不支持带非空默认值的列。
+
+**`DEFAULT()` 表达式：**
+
+自 4.1.4 版本起，新增 `DEFAULT(<column>)` 表达式，用于在 DML 中显式引用某列的默认值，可用于 `INSERT`、`UPDATE ... SET` 以及 `MERGE INTO` 的各个分支：
+
+```sql
+INSERT INTO iceberg_tbl VALUES (1, DEFAULT(c1));
+
+UPDATE iceberg_tbl SET c1 = DEFAULT(c1) WHERE id = 1;
+
+MERGE INTO iceberg_tbl t USING src s ON t.id = s.id
+WHEN NOT MATCHED THEN INSERT VALUES (s.id, DEFAULT(c1));
+```
+
+语义说明：
+
+- 对 Iceberg 目标表，`DEFAULT()` 会基于本次写入固定（Pin）的 Iceberg Schema 解析；引用不在写入目标中的列会报错 `DEFAULT requires a target column reference` 或 `Cannot find column information for DEFAULT(<col>)`。
+- 对非 Iceberg 的列，取该列的默认值；若列没有默认值且为 NOT NULL 或自增列，报错 `Column '<name>' has no default value and does not allow NULL or column is auto-increment`；若列可空且没有默认值，取 NULL。
+- 其他报错：`DEFAULT requires a column reference, but got: <expr>`、`DEFAULT cannot be used on generated column '<name>'`。
+
+:::info 说明
+
+Iceberg 的 `write-default` 属于写入侧的连接器概念，**不会**通过 `DESCRIBE`、`SHOW CREATE TABLE` 或 `information_schema.columns.COLUMN_DEFAULT` 暴露。
+
+:::
 
 ## 系统表
 
@@ -1586,7 +1753,15 @@ SELECT * FROM iceberg_table$history;
 
 > `all_manifests` 系统表从 4.0.4 版本开始支持。
 >
-> `position_deletes` 系统表尚未支持，计划在以后版本中支持。
+> `position_deletes` 系统表从 4.1.4 版本开始支持。
+
+:::caution 版本行为变更（4.1.4）
+
+自 4.1.4 版本起，Iceberg 系统表改为通过原生执行路径查询，同时**移除了 `iceberg_meta()` 表函数**。请统一使用 `<table>$<system_table_name>` 的系统表语法，详见 [ICEBERG_META](../../sql-manual/sql-functions/table-valued-functions/iceberg-meta.md)。
+
+系统表本身的访问语法和返回结果不变。此外，系统表也支持 `SHOW CREATE TABLE`。
+
+:::
 
 ### entries
 
@@ -2056,6 +2231,7 @@ ON <merge_condition>
 3. 并发写入场景下，Iceberg 提供了乐观并发控制机制。当发生写入冲突时，操作可能会抛出事务冲突异常。
 4. UPDATE 和 MERGE INTO 中的 UPDATE 操作支持使用表达式和函数，例如 `age = age * 2 + 1` 或 `name = concat(name, '-modified')`。
 5. 这些操作同时适用于分区表和非分区表。
+6. **自 4.1.4 版本起**，`MERGE INTO` 会校验源表与目标表的匹配关系：当同一行目标数据被多行源数据匹配时，语句会报错 `multiple source rows matched the same target row`，而不是产生不确定的结果。如果确实存在一对多匹配，请先在源侧去重。
 
 ### 相关参数
 
@@ -2245,15 +2421,21 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
 * **修改列名称**
 
-    通过 `RENAME COLUMN` 子句修改列名称，不支持修改嵌套类型中的列名称。
+    通过 `RENAME COLUMN` 子句修改列名称。自 4.1.4 版本起支持修改嵌套类型中的列名称，且 `TO` 关键字变为可选。
 
   ```sql
   ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
+
+  -- 4.1.4 起支持：TO 可省略
+  ALTER TABLE iceberg_table RENAME COLUMN old_col_name new_col_name;
+
+  -- 4.1.4 起支持：重命名嵌套字段
+  ALTER TABLE iceberg_table RENAME COLUMN s.old_field TO new_field;
   ```
 
 * **添加一列**
 
-    通过 `ADD COLUMN` 添加新列，不支持为嵌套类型添加新列。
+    通过 `ADD COLUMN` 添加新列。自 4.1.4 版本起，支持通过点号路径（如 `s.new_field`）为嵌套类型（STRUCT）添加新列，新增的嵌套字段必须是 nullable。
 
     在添加新列时，可以指定 nullable 属性、默认值、注释和列位置。
 
@@ -2279,10 +2461,13 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
 * **删除列**
 
-    通过 `DROP COLUMN` 删除列，不支持删除嵌套类型中的列。
+    通过 `DROP COLUMN` 删除列。自 4.1.4 版本起，支持通过点号路径删除嵌套类型中的列。
 
   ```sql
   ALTER TABLE iceberg_table DROP COLUMN col_name;
+
+  -- 4.1.4 起支持：删除嵌套字段
+  ALTER TABLE iceberg_table DROP COLUMN s.field_name;
   ```
 
 * **修改列**
@@ -2345,6 +2530,26 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
   ```sql
   ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
   ```
+
+#### 嵌套列 Schema 变更（4.1.4+）
+
+自 4.1.4 版本起，`ADD COLUMN`、`DROP COLUMN`、`MODIFY COLUMN`、`RENAME COLUMN` 均支持使用点号路径（如 `a.b.c`）直接操作嵌套字段。该能力**仅对 Iceberg 表生效**，对其他类型的表使用会报错：`Nested column path is only supported for Iceberg tables: ...`。
+
+常见限制与报错：
+
+| 报错信息 | 说明 |
+| --- | --- |
+| `New nested field '<path>' must be nullable` | 新增的嵌套字段必须可为 NULL |
+| `Rollup is not supported for Iceberg column operations` | 不支持 Rollup 子句 |
+| `PROPERTIES are not supported for Iceberg column operations` | 不支持 PROPERTIES 子句 |
+| `KEY is not supported for Iceberg ADD/MODIFY COLUMN` | 不支持 KEY 关键字 |
+| `Generated columns are not supported for Iceberg ADD/MODIFY COLUMN` | 不支持生成列 |
+| `Modifying default values is not supported for Iceberg columns` | 不支持修改已有列的默认值 |
+| `ON UPDATE is not supported for Iceberg ADD COLUMN` | 不支持 ON UPDATE 子句 |
+| `Modify column type from complex to primitive is not supported` | 不支持把复杂类型改成基础类型 |
+| `Cannot change MAP key type from ...` / `Cannot <op> MAP key nested column` | 不支持修改 MAP 的 Key 类型或对 MAP Key 做嵌套列操作 |
+| `Iceberg does not support comments on collection element or value fields` | 不支持给集合元素 / MAP Value 字段加注释 |
+| `Multiple Iceberg ALTER clauses are not supported when a statement ...` | 涉及嵌套列时，一条语句只能包含一个 ALTER 子句 |
 
 ### Partition Evolution
 
@@ -2779,7 +2984,7 @@ EXECUTE rewrite_data_files (
 1. `rewrite_data_files` 操作会读取数据文件并重新写入，会产生额外的 I/O 和计算开销，请合理分配集群资源。
 2. 执行前可以通过[查看数据文件分布](#查看数据文件分布)章节中的 SQL 来评估是否需要执行重写操作。
 3. WHERE 条件可用于限制重写的分区或数据范围，这个条件会过滤掉那些不包含符合 WHERE 条件的数据的文件，从而减少重写的文件数量和数据量。
-4. 执行前可以通过[重写文件选择逻辑](#重写文件选择逻辑)章节中的 SQL 来计算哪些文件会被重写。
+4. 执行前可以通过[重写文件选择逻辑](#rewrite_data_files-文件选择策略)章节中的 SQL 来计算哪些文件会被重写。
 
 ### rewrite_manifests
 

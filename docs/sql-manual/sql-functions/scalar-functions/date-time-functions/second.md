@@ -8,7 +8,7 @@
 
 ## Description
 
-The SECOND function extracts the seconds portion from a specified datetime value, returning an integer result from 0 to 59. This function supports processing DATE, DATETIME, and TIME types.
+The SECOND function extracts the seconds portion from a specified datetime value, returning an integer result from 0 to 59. This function supports processing DATE, DATETIME, TIMESTAMP_NS, and TIME types.
 
 This function is consistent with MySQL's [second function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_second).
 
@@ -22,7 +22,7 @@ SECOND(<date_or_time_expr>)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The input datetime value. Can be of type DATE, DATETIME, or TIME. For specific datetime/date/time formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion), [time conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/time-conversion). |
+| `<date_or_time_expr>` | The input datetime value. Can be of type DATE, DATETIME, TIMESTAMP_NS, or TIME. For specific datetime/date/time formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion), [time conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/time-conversion). |
 
 ## Return Value
 

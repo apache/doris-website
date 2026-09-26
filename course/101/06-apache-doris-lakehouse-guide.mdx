@@ -1,0 +1,234 @@
+---
+title: Apache Doris Lakehouse Guide
+description: Learn the Apache Doris lakehouse workflow through guided units on catalogs, Hive integration, federated SQL, caching, and write-back.
+slug: /101/06-apache-doris-lakehouse-guide
+sidebar_position: 6
+keywords:
+  - Apache Doris 101
+  - lakehouse
+  - data catalog
+  - federated query
+  - Hive catalog
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLayerStack,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={6}
+    title="Apache Doris Lakehouse Guide"
+    readingTime="10–15 minutes"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/lakehouse/lakehouse-overview"
+>
+    <CourseLessonUnit
+        id="lakehouse-mental-model"
+        label="Lakehouse model"
+        title={<>Query open data without building a <em>second silo</em>.</>}
+        summary="Doris can use its MPP, vectorized query engine across warehouse tables and external lake data exposed through catalogs."
+        coachTitle="The source remains the source of truth."
+        coach={<p>External metadata identifies tables and files, Doris plans and executes SQL, and caches reduce repeated remote I/O. Data can stay in Hive, Iceberg, Hudi, object storage, or another connected system.</p>}
+        calloutTitle="Two different architectures"
+        callout={<p>Querying external lake tables is not the same as deploying Doris with compute-storage separation. One is data-source federation; the other is Doris cluster architecture.</p>}
+        check={{
+            question: 'Where does an external Hive table remain authoritative?',
+            options: ['In its external catalog and storage', 'Only in the Doris local cache'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — Doris queries the source; its cache is an acceleration layer.',
+            incorrectFeedback: 'Cached blocks are replaceable and do not become the source of truth.',
+        }}
+    >
+        <CourseLayerStack
+            ariaLabel="Apache Doris lakehouse query layers"
+            items={[
+                { title: 'SQL and optimizer', description: 'Plan joins and push computation toward connected sources.' },
+                { title: 'Catalog and metadata', description: 'Resolve databases, tables, partitions, schemas, and snapshots.' },
+                { title: 'Remote storage and systems', description: 'Keep authoritative data in open tables, files, or databases.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="catalog-hierarchy"
+        label="Catalogs"
+        title={<>Give every external source a familiar <em>SQL address</em>.</>}
+        summary="A Catalog defines a connection and exposes its databases and tables through the same three-level namespace used by SQL."
+        coachTitle="Catalog properties are infrastructure configuration."
+        coach={<p>The catalog type selects a connector. Properties define endpoints, authentication, storage access, and connector behavior. Doris then maps external types and metadata into its SQL model.</p>}
+        calloutTitle="Credential hygiene"
+        callout={<p>Use supported secret-management patterns, narrow permissions, and network controls. Do not commit object-store or metastore credentials into course examples or application code.</p>}
+        check={{
+            question: 'What does a Doris Catalog represent?',
+            options: ['A configured external data source', 'One cached data block'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — a Catalog connects Doris to an external system and its namespace.',
+            incorrectFeedback: 'Caching is separate from the Catalog connection and metadata model.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris external catalog namespace"
+            focusIndex={0}
+            items={[
+                { title: 'Catalog', description: 'Source + connector' },
+                { title: 'Database', description: 'External namespace' },
+                { title: 'Table', description: 'Schema + files' },
+                { title: 'Partition', description: 'Prunable metadata' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="hive-catalog"
+        label="Hive integration"
+        title={<>Connect metadata and storage as <em>one path</em>.</>}
+        summary="A Hive Catalog needs both metastore access and permission to read the files described by that metadata."
+        coachTitle="Metadata success does not prove data access."
+        coach={<p>Doris may list databases through Hive Metastore while queries still fail against HDFS or object storage. Validate DNS, ports, authentication, filesystem configuration, and delegated credentials end to end.</p>}
+        calloutTitle="Kerberos environments"
+        callout={<p>Distribute and protect the required krb5 configuration and keytab material consistently, then test ticket renewal and file access from the actual Doris processes.</p>}
+        check={{
+            question: 'You can list a Hive table but cannot scan it. What should you check?',
+            options: ['Storage access and credentials', 'Only the SQL font'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — metadata and file access are separate parts of the connection.',
+            incorrectFeedback: 'Presentation cannot prevent Doris from reading external files.',
+        }}
+    >
+        <CourseComparison
+            ariaLabel="Hive Catalog access planes"
+            leftTitle="Metadata plane"
+            leftLead="Resolve databases, tables, schemas, and partitions."
+            leftItems={['Hive Metastore endpoint', 'Catalog properties', 'Metadata events and cache']}
+            rightTitle="Data plane"
+            rightLead="Read or write the files behind those table definitions."
+            rightItems={['HDFS or object storage', 'Network and credentials', 'Format and snapshot support']}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="federated-sql"
+        label="Federated SQL"
+        title={<>Join sources, but move the <em>minimum data</em>.</>}
+        summary="Doris can join external lake tables, external databases, and internal tables in one query while applying connector-aware pruning and pushdown."
+        coachTitle="Federation does not make network cost disappear."
+        coach={<p>Filter and project early, keep external partition predicates visible, collect useful statistics, and inspect EXPLAIN to confirm partition pruning, predicate pushdown, and join distribution.</p>}
+        calloutTitle="Production pattern"
+        callout={<p>Federation is ideal for exploration and selective joins. Frequently reused or latency-critical results may belong in an internal table or materialized view.</p>}
+        check={{
+            question: 'What usually reduces a federated query scan most directly?',
+            options: ['A selective external partition predicate', 'Selecting every column'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — partition pruning can avoid reading unrelated remote files.',
+            incorrectFeedback: 'Selecting every column increases rather than reduces remote I/O.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris federated query flow"
+            focusIndex={2}
+            items={[
+                { title: 'Resolve', description: 'Catalog metadata' },
+                { title: 'Prune', description: 'Partitions + columns' },
+                { title: 'Push down', description: 'Supported predicates' },
+                { title: 'Scan', description: 'Parallel remote I/O' },
+                { title: 'Join', description: 'Doris execution' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="cache-and-io"
+        label="Cache and I/O"
+        title={<>Turn repeated remote reads into <em>local work</em>.</>}
+        summary="Metadata caches reduce catalog round trips, while data caching keeps frequently read remote blocks on local storage."
+        coachTitle="Warm and cold performance are different measurements."
+        coach={<p>Cold queries reveal source and network throughput. Warm queries reveal cache benefit. Size cache for the working set, monitor hit rates and eviction, and keep enough local bandwidth for concurrent scans.</p>}
+        calloutTitle="Cache is not correctness"
+        callout={<p>Configure refresh and invalidation behavior to match external change patterns. A fast stale answer is still the wrong answer.</p>}
+        check={{
+            question: 'What should a lakehouse benchmark report separately?',
+            options: ['Cold-cache and warm-cache results', 'Only the fastest repeated run'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — both paths describe different real operating conditions.',
+            incorrectFeedback: 'Only reporting the warmest run hides remote-source performance.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris lakehouse acceleration layers"
+            columns={3}
+            items={[
+                { tag: 'META', title: 'Metadata cache', description: 'Reuse table, partition, file, and snapshot metadata.' },
+                { tag: 'DATA', title: 'Data cache', description: 'Keep hot remote blocks on local disks near compute.' },
+                { tag: 'PUSH', title: 'Pushdown', description: 'Reduce columns, partitions, and rows before transfer.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="write-back-and-ddl"
+        label="Write-back and DDL"
+        title={<>Treat external writes as a <em>shared-system change</em>.</>}
+        summary="Supported catalogs can write data or manage external objects, but the target format, metastore, permissions, and other engines must agree on the result."
+        coachTitle="Capability depends on connector and table format."
+        coach={<p>Check the current version matrix before INSERT, CTAS, or DDL. Preserve external partition conventions, validate commit semantics, and test how Hive, Spark, or other readers observe changes.</p>}
+        calloutTitle="Hive schema rule"
+        callout={<p>When creating Hive tables, follow the connector's schema and transactional-table restrictions, including partition-column placement.</p>}
+        check={{
+            question: 'What should you verify before enabling external write-back?',
+            options: ['Connector support and cross-engine visibility', 'Only SELECT permission in Doris'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — writes must be supported and visible consistently across the shared ecosystem.',
+            incorrectFeedback: 'SELECT permission alone neither authorizes nor validates external writes.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="External write-back contract"
+            columns={4}
+            items={[
+                { tag: 'CAP', title: 'Capability', description: 'Confirm connector, format, and version support.' },
+                { tag: 'AUTH', title: 'Authorization', description: 'Grant only required metastore and storage permissions.' },
+                { tag: 'COMMIT', title: 'Commit behavior', description: 'Understand atomicity, snapshots, and failure cleanup.' },
+                { tag: 'READ', title: 'Cross-engine check', description: 'Verify other consumers observe the intended result.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="lakehouse-recap"
+        label="Lakehouse recap"
+        title={<>Operate the connector boundary as a <em>product</em>.</>}
+        summary="A production lakehouse path combines correct metadata, secure storage access, efficient pruning, measurable caching, and tested write semantics."
+        coachTitle="Own the full path, not only the SQL endpoint."
+        coach={<p>Monitor metastore latency, cache behavior, remote bytes, scan errors, credentials, schema changes, and source availability. Record which team owns each dependency and incident boundary.</p>}
+        calloutTitle="Course complete"
+        callout={<p>You now have the Doris 101 mental model: architecture, deployment, table design, data operations, analytical SQL, and lakehouse integration.</p>}
+        check={{
+            question: 'What is the strongest proof that a catalog is production-ready?',
+            options: ['A representative query works under expected failure and load conditions', 'The catalog was created once'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — production readiness includes workload, observability, security, and failure behavior.',
+            incorrectFeedback: 'CREATE CATALOG validates only a small part of the end-to-end path.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris lakehouse production loop"
+            focusIndex={4}
+            items={[
+                { title: 'Connect', description: 'Catalog + auth' },
+                { title: 'Query', description: 'Prune + push down' },
+                { title: 'Accelerate', description: 'Cache + materialize' },
+                { title: 'Govern', description: 'Writes + schema' },
+                { title: 'Operate', description: 'Observe end to end' },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

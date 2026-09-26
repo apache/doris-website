@@ -40,7 +40,7 @@ under the License.
 
 PR 提交流程还可以参考：
 
-- [为 Doris 做贡献](./contribute-to-doris)
+- [Apache Doris 社区参与指南](./contribute-to-doris.mdx)
 - [代码提交指南](./pull-request)
 
 :::

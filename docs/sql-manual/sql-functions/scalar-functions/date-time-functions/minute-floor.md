@@ -2,13 +2,13 @@
 {
     "title": "MINUTE_FLOOR",
     "language": "en",
-    "description": "MINUTE_FLOOR function rounds the input datetime value down to the nearest specified minute period. If origin is specified, it uses that as the basis; if not specified, the default basis is 0001-01-01 00:00:00. Supports processing DATETIME type."
+    "description": "MINUTE_FLOOR rounds a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value down to the nearest specified minute period."
 }
 ---
 
 ## Description
 
-MINUTE_FLOOR function rounds the input datetime value down to the nearest specified minute period. If origin is specified, it uses that as the baseline; otherwise, it defaults to 0001-01-01 00:00:00. The function supports processing DATETIME type.
+MINUTE_FLOOR rounds a `DATE`, `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ` value down to the nearest specified minute period. If origin is specified, it uses that as the baseline; otherwise, it defaults to 0001-01-01 00:00:00.
 
 Date calculation formula:
 $$
@@ -33,13 +33,17 @@ MINUTE_FLOOR(`<datetime>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<datetime>` | The datetime value to be rounded down. Supports input of date/datetime/timestamptz types. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<datetime>` | The datetime value to be rounded down. Supports input of DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ types. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | The minute interval value, of type INT, representing the number of minutes contained in each interval. |
-| `<origin>` | The starting time point of the interval, of type DATETIME. Default value is 0001-01-01 00:00:00. |
+| `<origin>` | The starting time point of the interval. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. Default value is 0001-01-01 00:00:00. |
 
 ## Return Value
 
-Returns a value of type TIMESTAMPTZ, DATETIME or DATE. Returns the time value after rounding down to the nearest specified minute period based on the input datetime. The precision of the return value is the same as that of the input parameter datetime.
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
+When `<origin>` is omitted for a `TIMESTAMP_NS` input, the documented default origin is used only as an internal alignment reference; it does not need to fall within the storable `TIMESTAMP_NS` range.
+
+Returns a value of type TIMESTAMPTZ, TIMESTAMP_NS, DATETIME, or DATE. Returns the time value after rounding down to the nearest specified minute period based on the input datetime. The precision of the return value is the same as that of the input parameter datetime.
 
 - If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform MINUTE_FLOOR calculation.
 - If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.

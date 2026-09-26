@@ -1,0 +1,237 @@
+---
+title: Apache Doris Data Operations Guide
+description: Learn how to select Apache Doris load, update, delete, and export methods through seven guided workflow units.
+slug: /101/04-apache-doris-data-operations-guide
+sidebar_position: 4
+keywords:
+  - Apache Doris 101
+  - data loading
+  - data update
+  - data delete
+  - data export
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={4}
+    title="Apache Doris Data Operations Guide"
+    readingTime="12–18 minutes"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/data-operate/import/load-manual"
+>
+    <CourseLessonUnit
+        id="data-lifecycle"
+        label="Operation map"
+        title={<>Choose an operation from the <em>data lifecycle</em>.</>}
+        summary="Loading, updating, deleting, and exporting have different correctness and throughput constraints. Start from the desired state change."
+        coachTitle="Method selection follows the workload."
+        coach={<p>Identify source location, batch size, latency target, retry model, table semantics, and output destination before choosing a command or API.</p>}
+        calloutTitle="Atomicity first"
+        callout={<p>Understand the transaction boundary and label behavior of each load method so retries do not silently duplicate or partially apply data.</p>}
+        check={{
+            question: 'What should you define before choosing a load method?',
+            options: ['Source, volume, latency, and retry requirements', 'A random API endpoint'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — workload constraints determine the appropriate operation.',
+            incorrectFeedback: 'An endpoint is an implementation detail, not a workload definition.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris data operation lifecycle"
+            focusIndex={0}
+            items={[
+                { title: 'Load', description: 'Bring data in' },
+                { title: 'Update', description: 'Change logical rows' },
+                { title: 'Delete', description: 'Remove scoped data' },
+                { title: 'Export', description: 'Move results out' },
+                { title: 'Observe', description: 'Verify every job' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-load-method"
+        label="Load selection"
+        title={<>Match the source and latency to a <em>load path</em>.</>}
+        summary="Doris supports synchronous HTTP loads, continuous Kafka ingestion, SQL-based ingestion, and asynchronous batch workflows."
+        coachTitle="Prefer the narrowest method that fits."
+        coach={<p>Use Stream Load for files or HTTP streams, Routine Load for managed Kafka consumption, INSERT INTO SELECT for SQL transformations and external sources, and Group Commit for frequent small writes.</p>}
+        calloutTitle="Legacy batch path"
+        callout={<p>For object storage or HDFS, prefer current Catalog or table-valued-function workflows where applicable. Treat Broker Load as a legacy path and check version guidance.</p>}
+        check={{
+            question: 'Which method fits continuous Kafka ingestion?',
+            options: ['Routine Load', 'TRUNCATE TABLE'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — Routine Load manages a long-running Kafka consumption job.',
+            incorrectFeedback: 'TRUNCATE removes data; it does not ingest a stream.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris load method map"
+            columns={3}
+            items={[
+                { tag: 'HTTP', title: 'Stream Load', description: 'Synchronous files or streams with immediate job results.' },
+                { tag: 'KFK', title: 'Routine Load', description: 'Continuous Kafka consumption with managed progress.' },
+                { tag: 'SQL', title: 'INSERT SELECT', description: 'Transform and load from tables, Catalogs, or file TVFs.' },
+                { tag: 'JDBC', title: 'INSERT VALUES', description: 'Small SQL writes where simplicity matters more than bulk throughput.' },
+                { tag: 'GC', title: 'Group Commit', description: 'Combine high-frequency small writes into efficient commits.' },
+                { tag: 'ASYNC', title: 'Batch jobs', description: 'Track larger asynchronous jobs by label and state.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="reliable-loading"
+        label="Reliable loading"
+        title={<>Design every load to be <em>observable and retryable</em>.</>}
+        summary="Labels, quality thresholds, error samples, job state, and source offsets turn ingestion from a request into an operated workflow."
+        coachTitle="A submitted job is not a successful job."
+        coach={<p>Assign stable labels where supported, inspect accepted and filtered row counts, retain source checkpoints, and alert on paused or failed jobs. Use explicit format, column mapping, and filter settings.</p>}
+        calloutTitle="Data quality"
+        callout={<p>Set filter tolerance intentionally. A high threshold may hide malformed input; a low threshold may stop an otherwise recoverable batch.</p>}
+        check={{
+            question: 'What makes a load retry safer?',
+            options: ['A stable job label and recorded source position', 'Changing the schema on every retry'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — identity and checkpoints help detect or prevent duplicate work.',
+            incorrectFeedback: 'Unplanned schema changes make retries harder to reason about.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Reliable Apache Doris load workflow"
+            focusIndex={2}
+            items={[
+                { title: 'Describe', description: 'Format + mapping' },
+                { title: 'Identify', description: 'Label + source range' },
+                { title: 'Submit', description: 'Atomic transaction' },
+                { title: 'Observe', description: 'Rows + errors + state' },
+                { title: 'Retry', description: 'Resume deliberately' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="update-data"
+        label="Updates"
+        title={<>Let the table model define <em>update semantics</em>.</>}
+        summary="Unique Key tables support UPSERT behavior and SQL UPDATE; Aggregate Key tables update through their declared aggregation functions."
+        coachTitle="Whole-row and partial updates have different costs."
+        coach={<p>A full-row UPSERT supplies the complete logical row. Partial-column updates reduce supplied fields for wide records but require supported table and load settings and can add read or merge overhead.</p>}
+        calloutTitle="Schema contract"
+        callout={<p>On a whole-row UPSERT, omitted values may become defaults or NULL. Use partial-column mode only when the intended semantics and table implementation support it.</p>}
+        check={{
+            question: 'Which model naturally represents latest-state CDC rows?',
+            options: ['Unique Key', 'Duplicate Key'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — Unique Key applies UPSERT semantics by key.',
+            incorrectFeedback: 'Duplicate Key retains every version instead of one current logical row.',
+        }}
+    >
+        <CourseComparison
+            ariaLabel="Whole-row and partial-column updates"
+            leftTitle="Whole-row UPSERT"
+            leftLead="Write the complete new logical row."
+            leftItems={['Simpler semantics', 'Best baseline throughput', 'Omitted values need care']}
+            rightTitle="Partial-column update"
+            rightLead="Write only selected fields of a wide row."
+            rightItems={['Less client payload', 'Requires supported mode', 'Additional merge overhead']}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="delete-data"
+        label="Deletes"
+        title={<>Choose the narrowest safe <em>delete scope</em>.</>}
+        summary="Predicate DELETE handles supported row filters, load-based delete signs handle batches, and TRUNCATE clears a table or partition quickly."
+        coachTitle="Scope determines both speed and risk."
+        coach={<p>Use predicates only within the model-specific restrictions. For large key sets, ingest delete markers through a controlled batch. Use partition or table truncation only when the entire scope should disappear.</p>}
+        calloutTitle="Recoverability"
+        callout={<p>Confirm whether recycle-bin recovery applies in the target version and avoid FORCE operations unless permanent removal is explicitly intended.</p>}
+        check={{
+            question: 'Which operation fits removing an entire old time partition?',
+            options: ['TRUNCATE or drop the partition', 'Update an unrelated value column'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — partition-level removal is the direct scope-aligned operation.',
+            incorrectFeedback: 'Updating values does not remove the partition.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris deletion methods"
+            columns={3}
+            items={[
+                { tag: 'WHERE', title: 'Predicate DELETE', description: 'Remove supported rows matching a bounded condition.' },
+                { tag: 'BATCH', title: 'Delete sign load', description: 'Apply a large set of keyed deletions through ingestion.' },
+                { tag: 'ALL', title: 'TRUNCATE', description: 'Clear a full table or partition without row filtering.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="export-data"
+        label="Exports"
+        title={<>Match output shape to the <em>consumer</em>.</>}
+        summary="SELECT INTO OUTFILE exports transformed query results, EXPORT runs larger asynchronous extraction jobs, and mysqldump captures schema or small logical datasets."
+        coachTitle="Format and destination are part of the contract."
+        coach={<p>Choose Parquet or ORC for analytical systems, CSV for broad interoperability, and secure credentials for object storage or HDFS. Plan file count and parallelism for downstream readers.</p>}
+        calloutTitle="Synchronous versus asynchronous"
+        callout={<p>OUTFILE is flexible and tied to a query. EXPORT is easier to track for larger background work. Neither replaces a tested backup and recovery strategy.</p>}
+        check={{
+            question: 'Which method supports SQL transformations in the exported result?',
+            options: ['SELECT INTO OUTFILE', 'SHOW BACKENDS'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — the SELECT shapes data before OUTFILE writes it.',
+            incorrectFeedback: 'SHOW BACKENDS reports cluster membership; it is not an export method.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris export methods"
+            columns={3}
+            items={[
+                { tag: 'SQL', title: 'SELECT OUTFILE', description: 'Synchronous, transformable results in CSV, Parquet, or ORC.' },
+                { tag: 'JOB', title: 'EXPORT', description: 'Asynchronous extraction for larger table or partition scopes.' },
+                { tag: 'DDL', title: 'mysqldump', description: 'Schema export and small logical backups through MySQL tooling.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="operations-recap"
+        label="Operations recap"
+        title={<>Treat movement as a <em>controlled state transition</em>.</>}
+        summary="A reliable operation has an explicit scope, correctness boundary, observable result, retry strategy, and downstream verification."
+        coachTitle="The happy path is only half the design."
+        coach={<p>Record ownership, credentials, labels, source positions, quality policy, alerts, and cleanup behavior. Rehearse partial failures and verify row counts or business-level invariants after completion.</p>}
+        calloutTitle="Before the next lesson"
+        callout={<p>With trustworthy data in place, the next module focuses on expressing analysis and choosing query structures that Doris can execute efficiently.</p>}
+        check={{
+            question: 'What closes the loop after an operation succeeds?',
+            options: ['Verify the expected data state', 'Discard all job metadata immediately'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — validate the resulting rows, partitions, or files against the intended state.',
+            incorrectFeedback: 'Job metadata is valuable evidence for auditing and diagnosis.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris operation control loop"
+            focusIndex={4}
+            items={[
+                { title: 'Scope', description: 'Define the state change' },
+                { title: 'Execute', description: 'Use the fitting method' },
+                { title: 'Monitor', description: 'Track state + quality' },
+                { title: 'Recover', description: 'Retry or compensate' },
+                { title: 'Verify', description: 'Prove the outcome' },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

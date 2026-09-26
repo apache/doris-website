@@ -2,13 +2,13 @@
 {
     "title": "DATE_SUB",
     "language": "zh-CN",
-    "description": "DATE_SUB 函数用于从指定的日期或时间值中减去指定的时间间隔，返回计算后的日期或时间结果。该函数支持对 DATE（仅日期）, DATETIME（日期和时间）TIMESTAMPTZ(带时区偏移量的日期时间)类型进行操作，时间间隔通过数值和单位共同定义。"
+    "description": "DATE_SUB 从 DATE、DATETIME、TIMESTAMP_NS 或 TIMESTAMPTZ 值中减去指定的时间间隔，并返回相应日期时间类型且保留输入精度的结果。"
 }
 ---
 
 ## 描述
 
-DATE_SUB 函数用于从指定的日期或时间值中减去指定的时间间隔，返回计算后的日期或时间结果。该函数支持对 DATE（仅日期）, DATETIME（日期和时间）TIMESTAMPTZ(带时区偏移量的日期时间)类型进行操作，时间间隔通过数值和单位共同定义。
+DATE_SUB 函数用于从指定的日期或时间值中减去指定的时间间隔，返回计算后的日期或时间结果。该函数支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ` 输入，时间间隔通过数值和单位共同定义。
 
 该函数与 mysql 中的 [date_sub 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) 行为一致。
 
@@ -27,7 +27,7 @@ DATE_SUB(<date_or_time_part>, INTERVAL <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_part>` | 合法的日期值，支持为 timestamptz, datetime 或者 date 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_part>` | 合法的日期值，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ` 类型，具体格式请查看 [timestamptz 的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)、[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
 | `<expr>` | 希望减去的时间间隔，类型为 `INT`, 对于独立单位(如`YEAR`)为 `INT` 类型; 对于复合单位(如`YEAR_MONT`)为字符串类型, 且接受所有非数字作为分隔符，所以对于例如`INTERVAL 6/4 HOUR_MINUTE`，Doris会将其识别为 6 小时 4 分，而非1小时30分(6/4 == 1.5)。对于复合单位, 如果输入的时间间隔值过短，会将空出的大单位的值设为 0。该值的正负性仅由第一个出现的非数字字符是否为`-`决定。|
 | `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, WEEK,DAY, HOUR, MINUTE, SECOND, YEAR_MONTH, DAY_HOUR, DAY_MINUTE, DAY_SECOND, DAY_MICROSECOND, HOUR_MINUTE, HOUR_SECOND, HOUR_MICROSECOND, MINUTE_SECOND, MINUTE_MICROSECOND, SECOND_MICROSECOND。 |
 
@@ -57,9 +57,12 @@ DATE_SUB(<date_or_time_part>, INTERVAL <expr> <time_unit>)
 
 ## 返回值
 
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
+
 返回与 date 类型一致的计算结果：
 - 输入 DATE 类型时，返回 DATE（仅日期部分）；
 - 输入 DATETIME 类型时，返回 DATETIME（包含日期和时间）。
+- 输入 TIMESTAMP_NS 类型时，返回带 9 位小数秒的 TIMESTAMP_NS。
 - 输入 TIMESTAMPTZ 类型时, 返回 TIMESTAMPTZ（包含日期，时间和时区偏移量）。
 - 对于带有 scale 的 datetime 类型，会保留 scale 返回。
 

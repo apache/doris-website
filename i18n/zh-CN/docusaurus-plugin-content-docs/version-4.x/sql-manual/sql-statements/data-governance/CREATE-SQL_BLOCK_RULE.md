@@ -51,7 +51,7 @@ PROPERTIES (
 > - partition_num: 一个表将扫描的最大 partition 数量
 > - tablet_num: 一个表将扫描的最大 tablet 数量
 > - cardinality: 一个表将扫描的数据行数
-> - require_partition_filter：查询分区内表或 Hive 表时是否必须包含有效的分区过滤条件。设置为 `true` 后，如果查询支持的分区表但没有在分区列上添加过滤条件，则会被阻止执行。默认值为 `false`。该属性在 Doris 4.0 系列中从 4.0.7 起支持，在 Doris 4.1 系列中从 4.1.2 起支持。目前仅对内表和 Hive 表生效。
+> - require_partition_filter：查询分区内表或 Hive 表时是否必须包含有效的分区过滤条件。设置为 `true` 后，如果查询支持的分区表但没有在分区列上添加过滤条件，则会被阻止执行。默认值为 `false`。该属性在 Doris 4.0 系列中从 4.0.7 起支持，在 Doris 4.1 系列中从 4.1.4 起支持。目前仅对内表和 Hive 表生效。
 >
 > **开关类**
 >

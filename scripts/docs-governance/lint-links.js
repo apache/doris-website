@@ -22,7 +22,6 @@ const GOVERNED_MARKDOWN_PREFIXES = [
   'community/',
   'docs/',
   'i18n/',
-  'ja-source/',
   'releasenotes/',
   'versioned_docs/',
 ];

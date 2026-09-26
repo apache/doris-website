@@ -44,10 +44,10 @@
 | PARTITION_COMMENT             | text          |                      |
 | NODEGROUP                     | varchar(256)  |                      |
 | TABLESPACE_NAME               | varchar(268)  |                      |
-| LOCAL_DATA_SIZE               | text	        | Partition 本地数据大小 |
+| LOCAL_DATA_SIZE               | text	        | Partition 本地数据大小。存算分离模式下通常为 `0`，详见下方说明 |
 | REMOTE_DATA_SIZE              | text          | Partition 远端数据大小(cloud) |
 | STATE                         | text	        | Partition 的状态      |
-| REPLICA_ALLOCATION            | text	        | 描述 tablet 的副本分布 |
+| REPLICA_ALLOCATION            | text	        | 描述 tablet 的副本分布。存算分离模式下为 `NULL` |
 | REPLICA_NUM                   | int 	        | Partition 的副本数    |
 | STORAGE_POLICY                | text          | 存储策略              |
 | STORAGE_MEDIUM                | text          | 存储介质              |
@@ -59,3 +59,31 @@
 | PARTITION_KEY                 | text          | Partition 的键       |
 | RANGE                         | text          | 分区的范围（最大最小值）|
 | DISTRIBUTION                  | text          | 分区类型              |
+
+## 存算分离模式下的数据大小语义
+
+<!-- 知识类型: 行为说明 -->
+<!-- 适用场景: 存算分离容量核对 / 分区数据量统计 -->
+
+:::caution 版本行为变更（4.0.8）
+
+自 4.0.8 版本起，存算分离模式下分区的数据量统一按**远端数据**语义上报：副本统计中未单独记录远端大小的数据量，会被计入 `REMOTE_DATA_SIZE`，对应的 `LOCAL_DATA_SIZE` 显示为 `0`。因此存算分离集群中通常看到 `LOCAL_DATA_SIZE` 为 `0`，分区的实际数据量体现在 `REMOTE_DATA_SIZE` 上。
+
+在 4.0.8 之前，这部分数据量会被记入 `LOCAL_DATA_SIZE`，导致 `information_schema.partitions`、[`SHOW TABLETS`](../../../sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET) 与 [`information_schema.backend_tablets`](./backend_tablets) 三者的本地/远端口径互相矛盾。该变更只调整展示口径，不改变数据的实际存储位置与总量。
+
+同一变更中，存算分离模式下 `information_schema.partitions` 的 `REPLICA_ALLOCATION` 显示为 `NULL`（此前显示为内部占位符 `\N`）。副本分布由存算分离架构自行管理，不再沿用存算一体的副本分配语义。
+
+:::
+
+统计分区实际占用空间时，存算分离模式下应以 `REMOTE_DATA_SIZE` 为准：
+
+```sql
+SELECT
+    TABLE_SCHEMA,
+    TABLE_NAME,
+    PARTITION_NAME,
+    LOCAL_DATA_SIZE,
+    REMOTE_DATA_SIZE
+FROM information_schema.partitions
+WHERE TABLE_SCHEMA = 'your_db';
+```

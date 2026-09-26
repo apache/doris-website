@@ -28,7 +28,7 @@ WINDOW_FUNNEL(<window>, <mode>, <timestamp>, <event_1>[, event_2, ... , event_n]
 | -- | -- |
 | `<window>` | 滑动时间窗口大小，单位为秒，支持类型为Bigint。 |
 | `<mode>` | 模式，共有四种模式，分别为`default`, `deduplication`, `fixed`, `increase`，详细请参见下面的**模式**，支持类型为String。 |
-| `<timestamp>` | 指定时间列，支持类型为 DATETIME, 滑动窗口沿着此列工作。 |
+| `<timestamp>` | 滑动窗口使用的时间列，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`。 |
 | `<event_n>` | 表示事件的布尔表达式，支持类型为 Bool。 |
 
 **模式**

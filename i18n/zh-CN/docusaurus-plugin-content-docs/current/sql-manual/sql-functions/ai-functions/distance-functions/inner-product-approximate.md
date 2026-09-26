@@ -25,7 +25,9 @@ INNER_PRODUCT_APPROXIMATE(<array1>, <array2>)
 
 ## 返回值
 
-返回两个相同大小向量的标量积。如果输入数组为 NULL，或数组中的任一元素为 NULL，则返回 NULL。
+返回两个相同大小向量的标量积，返回类型为 `FLOAT`。
+
+如果任一输入数组为 `NULL`，或包含 `NULL` 元素，函数会报错。
 
 ## 示例
 
@@ -84,4 +86,24 @@ LIMIT  10
 | 153488 |   231871 |
 +--------+----------+
 10 rows in set (0.04 sec)
+```
+
+如果输入数组为 `NULL`，函数会报错：
+
+```sql
+SELECT INNER_PRODUCT_APPROXIMATE(NULL, [1, 2]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function inner_product_approximate cannot be null
+```
+
+如果输入数组包含 `NULL` 元素，函数会报错：
+
+```sql
+SELECT INNER_PRODUCT_APPROXIMATE([1, NULL], [1, 2]);
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function inner_product_approximate cannot have null
 ```

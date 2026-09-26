@@ -30,14 +30,21 @@ Decoding rules:
 - Accepts standard Base64 character set: A-Z, a-z, 0-9, +, /
 - Supports padding character =
 - Follows RFC 4648 standards
-- Automatically ignores whitespace characters (spaces, newlines, etc.)
+- The input length must be a multiple of 4 (except for the empty string)
 - Decoding result may contain non-printable characters
 
 Special cases:
 - If input is NULL, returns NULL
-- If input contains illegal Base64 characters, returns NULL
+- If input contains illegal Base64 characters (including whitespace such as spaces and newlines), returns NULL
 - If input is an empty string, returns an empty string
+- If the input length is not a multiple of 4, returns NULL
 - If padding is incorrect or format is invalid, returns NULL
+
+:::info Version note (4.0.8)
+
+Version 4.0.8 corrects the decode buffer sizing of `FROM_BASE64` and defines how invalid input is handled: an input whose length is not a multiple of 4 returns NULL directly. Previously the buffer was sized at half the input length, which was too small, so invalid input could trigger an out-of-bounds write. The encode buffer sizing of `TO_BASE64` was corrected in the same version.
+
+:::
 
 ## Examples
 

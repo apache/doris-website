@@ -27,7 +27,6 @@ const CONTENT_ROOTS = [
   'releasenotes',
   'i18n/zh-CN/docusaurus-plugin-content-docs-releases/current',
   'blog',
-  'ja-source/docusaurus-plugin-content-docs',
 ];
 
 function parseFrontMatter(absPath) {
@@ -167,20 +166,6 @@ function getContentInfo(relativePath, rules) {
     };
   }
 
-  if (relativePath.startsWith('ja-source/docusaurus-plugin-content-docs/')) {
-    const docRelative = relativePath.slice('ja-source/docusaurus-plugin-content-docs/'.length);
-    return {
-      contentRoot: 'ja_source',
-      plugin: 'main_docs',
-      locale: 'ja',
-      version: 'current',
-      docRelative,
-      routeBase: '/ja/docs',
-      sidebarSource: null,
-      reportOnly: true,
-    };
-  }
-
   return null;
 }
 
@@ -213,7 +198,7 @@ function resolveCanonicalRoute(entry, rules) {
     return entry.route_path;
   }
   const docPart = routePartFromEntry(entry.doc_id, entry.plugin);
-  const localePrefix = entry.locale === 'zh-CN' ? '/zh-CN' : entry.locale === 'ja' ? '/ja' : '';
+  const localePrefix = entry.locale === 'zh-CN' ? '/zh-CN' : '';
   if (entry.version === 'current') {
     return `${localePrefix}/docs/${rules.defaultVersion}/${docPart}`;
   }
@@ -265,7 +250,7 @@ function resolveOwner(relativePath, docType, ownersConfig) {
 }
 
 function resolveBlockingLevel(info, rules) {
-  if (info.reportOnly || info.locale === 'ja') {
+  if (info.reportOnly) {
     return 'report_only';
   }
   if (info.version && info.version !== 'current' && !rules.activeVersions.includes(info.version)) {

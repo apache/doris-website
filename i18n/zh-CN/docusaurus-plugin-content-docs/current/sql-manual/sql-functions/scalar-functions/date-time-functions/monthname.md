@@ -2,13 +2,13 @@
 {
     "title": "MONTHNAME",
     "language": "zh-CN",
-    "description": "MONTHNAME 函数用于返回日期时间值对应的英文月份名称。该函数支持处理 DATE、DATETIME 类型，返回值为完整的英文月份名称（1月 至 12月）。"
+    "description": "MONTHNAME 函数用于返回日期时间值对应的英文月份名称。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，返回值为完整的英文月份名称（1月 至 12月）。"
 }
 ---
 
 ## 描述
 
-MONTHNAME 函数用于返回日期时间值对应的英文月份名称。该函数支持处理 DATE、DATETIME 类型，返回值为完整的英文月份名称（1月 至 12月）。
+MONTHNAME 函数用于返回日期时间值对应的英文月份名称。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，返回值为完整的英文月份名称（1月 至 12月）。
 
 可以通过会话变量 [lc_time_names](#附表lc_time_names-支持的语言地区代码不区分大小写) 设置输出结果的语言，该变量默认为 `en_US`，即输出英文。
 
@@ -24,7 +24,7 @@ MONTHNAME(`<date_or_time_expr>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| ``<date_or_time_expr>`` | 输入的日期时间值，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| ``<date_or_time_expr>`` | 输入的日期时间值，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## 返回值
 

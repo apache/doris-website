@@ -8,7 +8,7 @@
 
 ## Description
 
-The DATE_FORMAT function is used to convert a date or time value into a string according to a specified format string (`format`). It supports formatting DATE (date only) and DATETIME (date and time) types, and the output result is a string that conforms to the specified format.
+The DATE_FORMAT function converts a date or time value into a string according to a specified format string (`format`). It supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ` values, and the output result is a string that conforms to the specified format.
 
 This function is consistent with the [date_format function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-format) in MySQL.
 
@@ -22,7 +22,7 @@ DATE_FORMAT(<date_or_time_expr>, <format>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_expr>` | A valid date value, supporting datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | A valid `DATE`, `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ` value. For specific datetime and date formats, see [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [timestamp_ns conversion](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md), and [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion). |
 | `<format>` | Specifies the output format of the date/time, of `varchar` type |
 
 Supported format specifiers:
@@ -36,6 +36,7 @@ Supported format specifiers:
 | %d     | Day of the month as a numeric value (00-31)                |
 | %e     | Day of the month as a numeric value (0-31)                 |
 | %f     | Microseconds (000000-999999)               |
+| %n     | Nanoseconds (000000000-999999999). For types with lower precision, missing digits are padded with zeros. |
 | %H     | Hour (00-23)                        |
 | %h     | Hour (01-12)                        |
 | %I     | Hour (01-12)                        |
@@ -82,6 +83,21 @@ Special cases:
 - output length over 102 size,throw error
 
 ## Examples
+
+```sql
+SELECT DATE_FORMAT(
+    CAST('2024-02-29 12:34:56.123456789' AS TIMESTAMP_NS),
+    '%Y-%m-%d %H:%i:%s.%n'
+) AS result;
+```
+
+```text
++-------------------------------+
+| result                        |
++-------------------------------+
+| 2024-02-29 12:34:56.123456789 |
++-------------------------------+
+```
 
 ```sql
 -- Output weekday name, month name, and 4-digit year

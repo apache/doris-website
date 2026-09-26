@@ -10,7 +10,7 @@
 
 DATE_ADD 函数用于向指定的日期或时间值添加指定的时间间隔，并返回计算后的结果。
 
-- 支持的输入日期类型包括 DATE、DATETIME、TIMESTAMPTZ（如 '2023-12-31'、'2023-12-31 23:59:59'、'2023-12-31 23:59:59+08:00'）。
+- 支持的输入日期类型包括 DATE、DATETIME、TIMESTAMP_NS、TIMESTAMPTZ（如 '2023-12-31'、'2023-12-31 23:59:59'、'2023-12-31 23:59:59+08:00'）。
 - 时间间隔由数值（`expre`）和单位（`time_unit`）共同指定，`expr` 为正数时表示“添加”，为负数时等效于“减去”对应间隔。
 
 该函数与 MySQL 的[DATE_ADD函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add)行为一致。
@@ -30,7 +30,7 @@ DATE_ADD(<date_or_time_expr>, INTERVAL <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 待处理的日期/时间值。支持类型：为 timestamptz, datetime 或者 date 类型，最高有六位秒数的精度（如 2022-12-28 23:59:59.999999），具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | 待处理的日期/时间值，支持 `DATE`、`DATETIME`、`TIMESTAMP_NS` 和 `TIMESTAMPTZ`。|
 | `<expr>` | 希望添加的时间间隔，对于独立单位(如`YEAR`)为 `INT` 类型; 对于复合单位(如`YEAR_MONT`)为字符串类型, 且接受所有非数字作为分隔符，所以对于例如`INTERVAL 6/4 HOUR_MINUTE`，Doris会将其识别为 6 小时 4 分，而非1小时30分(6/4 == 1.5)。对于复合单位, 如果输入的时间间隔值过短，会将空出的大单位的值设为 0。该值的正负性仅由第一个出现的非数字字符是否为`-`决定。|
 | `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, WEEK,DAY, HOUR, MINUTE, SECOND, YEAR_MONTH, DAY_HOUR, DAY_MINUTE, DAY_SECOND, DAY_MICROSECOND, HOUR_MINUTE, HOUR_SECOND, HOUR_MICROSECOND, MINUTE_SECOND, MINUTE_MICROSECOND, SECOND_MICROSECOND。|
 
@@ -59,11 +59,13 @@ DATE_ADD(<date_or_time_expr>, INTERVAL <expr> <time_unit>)
 
 ## 返回值
 
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
+
 返回与 <date_or_time_expr> 类型一致的结果：
 - 输入 DATE 类型时，返回 DATE（仅日期部分）；
 - 输入 DATETIME 类型，返回 DATETIME（包含日期和时间）；
 - 输入 TIMESTAMPTZ 类型，返回 TIMESTAMPTZ(包含日期，时间和时区偏移量);
-- 带有 scale 的输入（如 '2024-01-01 12:00:00.123'）会保留 scale，最高六位小数精度。
+- 保留输入精度：`DATETIME` 和 `TIMESTAMPTZ` 最多支持 6 位小数，`TIMESTAMP_NS` 固定为 9 位小数。
 
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；

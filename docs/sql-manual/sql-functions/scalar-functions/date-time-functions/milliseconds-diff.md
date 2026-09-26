@@ -2,13 +2,13 @@
 {
     "title": "MILLISECONDS_DIFF",
     "language": "en",
-    "description": "The MILLISECONDSDIFF function calculates the difference in milliseconds between two datetime values."
+    "description": "Calculates the millisecond difference between two DATETIME or TIMESTAMP_NS values."
 }
 ---
 
 ## Description
 
-The `MILLISECONDS_DIFF` function calculates the difference in milliseconds between two datetime values. The result is the number of milliseconds obtained by subtracting the start time from the end time. This function supports processing `DATETIME` types.
+The `MILLISECONDS_DIFF` function calculates the difference in milliseconds between two datetime values. The result is the number of milliseconds obtained by subtracting the start time from the end time. This function supports `DATETIME` and `TIMESTAMP_NS`.
 
 ## Syntax
 
@@ -20,8 +20,8 @@ MILLISECONDS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr1>` | The end time, of type `DATETIME`. For specific datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
-| `<date_or_time_expr2>` | The start time, of type `DATETIME`. For specific datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr1>` | The end time, of type `DATETIME` or `TIMESTAMP_NS`. |
+| `<date_or_time_expr2>` | The start time, of type `DATETIME` or `TIMESTAMP_NS`. |
 
 ## Return Value
 

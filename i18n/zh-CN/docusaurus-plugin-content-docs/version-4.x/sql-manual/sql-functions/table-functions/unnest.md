@@ -22,7 +22,7 @@ UNNEST(<expr>[, ...]) [WITH ORDINALITY] [AS alias [(col1, col2, ...)]]
 - 多个 ARRAY 参数：将每次展开的元素按位置组合为多列（或作为 Struct），展开长度由最长输入决定，短列用 NULL 补齐。
 - MAP 参数：返回 (key, value) 两列（Struct）；NULL key/value 保持 NULL。
 - BITMAP 参数：按元素返回整型。
-- WITH ORDINALITY：在输出中附加一个从 1 开始的序号列（作为最后一列或由别名指定）。
+- WITH ORDINALITY：在输出中附加一个从 0 开始的序号列（作为第一列或由别名指定）。
 - 空数组或 NULL：
   - 作为独立表生成（SELECT 列表或 FROM ... UNNEST）时，若参数为 NULL 或空数组，不产生行（0 行）。
   - 在 FROM/LATERAL 与 LEFT JOIN 联合使用时（即产生 outer 行语义），若某个父行的所有展开行被过滤或无输出，会为该父行插入一行，其中 UNNEST 输出列为 NULL（以保留左表行）。
@@ -34,7 +34,7 @@ UNNEST(<expr>[, ...]) [WITH ORDINALITY] [AS alias [(col1, col2, ...)]]
 4. 在 JOIN 场景：
    - INNER / CROSS JOIN：按展开结果做笛卡尔或匹配。
    - LEFT JOIN LATERAL：实现 outer 行语义——若没有匹配或展开结果被 ON/过滤条件全部过滤，会产生一行 NULL（保持左表行）。
-5. WITH ORDINALITY 为展开行增加序号（1 起）。
+5. WITH ORDINALITY 为展开行增加序号（0 起）。
 6. 在 SELECT 列表直接使用 `UNNEST(...)` 时，等价于对一个单行源应用表生成函数，会把该表达式展开为多行输出。
 
 ## 示例
@@ -102,14 +102,14 @@ ORDER BY i.id, t.tag;
 ```
 3. WITH ORDINALITY：
 ```sql
-SELECT i.id, t.ord, t.tag
-FROM items i, unnest(i.tags) WITH ORDINALITY AS t(tag, ord)
+SELECT i.id, t.tag, t.ord
+FROM items i, unnest(i.tags) WITH ORDINALITY AS t(ord, tag)
 ORDER BY i.id, t.ord;
 ```
 输出（示例）：
 ```sql
 +------+-------------+------+
-| id   | ord         | tag  |
+| id   | tag         | ord  |
 +------+-------------+------+
 |    1 | Electronics |    0 |
 |    1 | High-End    |    2 |

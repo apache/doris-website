@@ -31,7 +31,7 @@ NULLIF(<expr1>, <expr2>)
 参数支持以下类型：
 1. 布尔（Boolean）
 2. 数字类型（TinyInt、SmallInt、Int、BigInt、LargeInt、Float、Double、Decimal）
-3. 日期类型（Date、DateTime、Time）
+3. 日期类型（Date、DateTime、TimestampNs、Time）
 4. 字符类型（String、VARCHAR、CHAR）
 
 ## 返回值

@@ -1,0 +1,1132 @@
+---
+{
+    "title": "Lance Catalog",
+    "language": "zh-CN",
+    "description": "Apache Doris Lance Catalog 使用指南：通过 Filesystem 或 REST Namespace 访问 Lance 数据集，支持并行读取、谓词下推、S3/Local TVF、索引查看、向量检索以及全文检索。"
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+:::note
+这是一个实验性功能。
+
+Lance Catalog 自 Apache Doris 4.2 版本开始支持。
+:::
+
+Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lance Catalog 发现 Lance Namespace 中的数据库和表，并直接查询存储在本地文件系统、S3 兼容对象存储或阿里云 OSS 中的 Lance 数据集。
+
+当前 Doris 对 Lance 提供只读能力，不支持创建、写入、更新或删除 Lance 表。
+
+## 适用场景
+
+| 场景 | 说明 |
+|---|---|
+| 直接分析 Lance 数据 | 无需迁移或导入数据，使用 Doris SQL 查询已有的 Lance 数据集。 |
+| AI 向量检索 | 复用 Lance 中已有的向量索引，通过 `vector_search()` 执行向量检索，并与标量过滤和 Doris SQL 分析结合。 |
+| 全文检索 | 复用 Lance 中已有的 FTS 倒排索引，通过 `full_text_search()` 执行 BM25 检索，并与标量过滤和 Doris SQL 分析结合。 |
+| 数据集成 | 从 Lance 读取数据并写入 Doris 内表，用于后续加工、关联分析或长期存储。 |
+| Namespace 管理 | 简单目录结构可以使用 Filesystem Catalog；需要集中管理 Namespace、表地址或临时存储凭证时使用 REST Catalog。 |
+
+## 功能概览
+
+| 功能 | 支持情况 |
+|---|---|
+| Filesystem Catalog | 支持本地文件系统、`file://`、`s3://` 和 `oss://` Warehouse |
+| REST Catalog | 支持 Lance REST Namespace，以及无认证、Bearer Token、API Key 和自定义 HTTP Header |
+| 元数据访问 | 支持 `SHOW DATABASES`、`SHOW TABLES`、`DESC` 和 `SHOW INDEX`（仅 Filesystem Catalog） |
+| 系统表（`table$...`） | 暂不支持；索引元数据请使用 `SHOW INDEX` |
+| 数据查询 | 支持列裁剪、并行扫描 Lance Fragment 和当前版本的快照一致性读取 |
+| 谓词下推 | 支持将部分静态标量谓词和 Join Runtime Filter 下推到 Lance 执行 |
+| 文件 TVF | 支持通过 `s3()` 和 `local()` 直接查询 Lance 数据集 |
+| 向量检索 | 支持单向量和多向量列，使用物理 Lance Index Segment 作为并行 Split，对未覆盖的 Fragment 保留 Flat Search Split，并由 Doris 合并全局 Top-K |
+| 全文检索 | 通过 `full_text_search()` 使用已有的 Lance FTS 倒排索引，支持 Match OR/AND 和 Phrase 查询，并由 Doris 合并全局 Top-K |
+| Lance Cache | BE 内共享索引、元数据缓存及本地磁盘数据缓存 |
+| TopN 两阶段读取 | 对向量和全文检索中可延迟的输出列默认开启，由 `enable_lance_lazy_materialization` 独立控制 |
+| 写入 Lance | 暂不支持 |
+| Time Travel | 暂不支持 |
+| Hybrid Search | 暂不支持 |
+
+## Lance 版本与兼容性
+
+Doris BE 数据读取器使用 `lance-c v0.1.9` 加 Doris 补丁构建，补丁包含多向量检索支持，并将其内置的 Lance Rust crates 升级到 `11.0.0`（commit `ab6b5bbe`）。Doris FE 使用 `org.lance:lance-core:11.0.0` 读取 Namespace 和数据集元数据，FE 与 BE 的 Lance 版本统一为 `11.0.0`。Dataset 必须同时满足 FE 元数据加载和 BE 数据读取的兼容性要求。这些实现版本与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
+
+当前读取器的文件格式兼容情况如下：
+
+| `data_storage_version` | 读取支持 | 说明 |
+|---|---|---|
+| `0.1` / `legacy` | 支持 | Lance 的初始文件格式。 |
+| `2.0`（写入选项别名 `0.3`） | 支持 | Lance v2 文件格式的早期版本。 |
+| `2.1` / `stable` | 支持，默认稳定格式 | 当前内置 Lance 的 `stable` 写入选项和新数据集默认格式均解析为 `2.1`。 |
+| `2.2` | 支持 | 当前内置 Lance 将其视为稳定格式，但它不是默认写入格式。 |
+| `2.3` / `next` | 实验性，不保证兼容 | 当前内置 Lance 将 `2.3` 标记为不稳定格式，`next` 写入选项解析为 `2.3`。 |
+| 后续或未知版本 | 不支持 | 打开或扫描数据集时可能返回不支持存储版本的错误。 |
+
+Lance SDK 发行版本号和文件格式版本相互独立。无论数据集由更早还是更新的 Lance SDK 写入，只有当其存储格式、必需的表级 Feature Flag、索引格式以及 Arrow/Lance 数据类型均可被 Doris 内置版本识别时，Doris 才能读取。因此：
+
+- Doris 预期能够读取使用 `0.1`、`2.0`、`2.1` 和 `2.2` 存储格式写入的数据集，同时还需满足下文所述的数据类型限制。
+- 不保证向前兼容。更新的 Lance 版本写入或修改数据集后，如果使用了更新的存储格式、未知的必需 Manifest Feature、新索引格式或不支持的 Extension 类型，Doris 可能无法读取。
+- 对于必须由当前 Doris 版本持续读取的数据集，建议使用当前默认稳定格式 `2.1`，且不要使用 `next`。引入更新的写入器或可选 Lance 功能后，应先使用目标 Doris 版本验证生成的数据集，再用于生产环境。
+
+## 配置 Catalog
+
+### 语法
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "<filesystem|rest>",
+    {CatalogProperties},
+    {StorageProperties},
+    {CommonProperties}
+);
+```
+
+### 通用属性
+
+| 属性 | 是否必需 | 默认值 | 说明 |
+|---|---|---|---|
+| `type` | 是 | - | 固定为 `lance`。 |
+| `lance.catalog.type` | 否 | `filesystem` | Catalog 类型，可选值为 `filesystem` 或 `rest`。 |
+| `lance.namespace.parent` | 否 | 空 | 仅访问指定 Lance Namespace 及其子 Namespace。例如默认分隔符下，`production$analytics` 表示两级 Namespace。 |
+| `lance.namespace.delimiter` | 否 | `$` | 用于解析 `lance.namespace.parent`，同时会传递给 REST Namespace 客户端。该配置不改变 Doris 中多级 Namespace 的展示方式。 |
+| `lance.namespace.root_database` | 否 | `default` | Lance 根 Namespace 在 Doris 中映射的数据库名。 |
+| `lance.table_access_cache_ttl_seconds` | 否 | `60` | 非负整数，表示 FE 表访问缓存的最长有效期，单位为秒；`0` 表示禁用。适用于 Filesystem 和 REST Catalog。仅缓存不含下发存储配置或携带凭证 URI 的结果，详见 [FE 表访问缓存](#fe-表访问缓存)。 |
+
+### Filesystem Catalog
+
+Filesystem Catalog 直接从 Warehouse 目录发现 Lance Namespace 和表。
+
+| 属性 | 是否必需 | 说明 |
+|---|---|---|
+| `warehouse` | 是 | Lance Warehouse 根路径。支持本地绝对路径、`file://` URI、`s3://` URI 和 `oss://` URI。 |
+
+两个参数的作用不同：
+
+- `fs.s3.support=true` 显式选择 S3 配置解析。访问 AWS S3 时通常可以通过属性自动识别；访问 MinIO、自定义 endpoint 或通过 S3 兼容接口访问 OSS 时，应显式设置，避免识别失败或根据域名选择其他存储类型。下面所有 S3 示例都设置此属性，便于直接使用。
+- `use_path_style` 控制请求地址中 Bucket 的位置，默认值为 `false`。设置为 `true` 时使用 `endpoint/bucket/对象路径`；设置为 `false` 时使用虚拟主机方式。对于当前 Lance 默认 S3 客户端，显式配置的虚拟主机 endpoint 必须包含 Bucket。该参数应与服务支持的访问方式及 endpoint 配套设置。
+
+| 访问场景 | 存储类型设置 | `use_path_style` | endpoint 写法 |
+|---|---|---|---|
+| AWS S3 | 建议设置 `fs.s3.support=true` | `false`，可省略 | 带 Bucket，如 `https://my-bucket.s3.us-east-1.amazonaws.com`。 |
+| MinIO（通过服务域名或 IP 访问） | 设置 `fs.s3.support=true` | 显式设置 `true` | 服务地址，不带 Bucket，如 `http://minio.example.com:9000`。 |
+| OSS 的 S3 兼容接口 | 设置 `fs.s3.support=true` | `false`，示例显式设置 | 带 Bucket，如 `https://my-bucket.oss-cn-beijing.aliyuncs.com`。 |
+| OSS 原生接口 | 建议设置 `fs.oss.support=true`，不设置 `fs.s3.support` | 无需设置通用 `use_path_style` | 使用 `oss.endpoint`，不带 Bucket，如 `https://oss-cn-beijing.aliyuncs.com`。 |
+
+以上 S3 endpoint 规则针对 Lance 默认 S3 访问链路。对于单一存储类型的 Filesystem Catalog，只设置对应的 `fs.*.support=true`；不要为了“开启兼容”同时设置多个存储类型。该属性选择配置解析逻辑，不会为存储服务增加协议支持。
+
+根据 Warehouse 所在的存储系统选择对应示例，替换 Bucket、路径、地址和凭证：
+
+<Tabs groupId="lance-filesystem-storage">
+    <TabItem value="s3" label="AWS S3" default>
+        ```sql
+        CREATE CATALOG lance_fs_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        本例使用带 Bucket 的 AWS S3 endpoint，配合 `use_path_style=false`。当前 Doris 的 S3 属性校验要求 endpoint；使用这里的 `s3://my-bucket/...` 地址时，不能只设置 region 而省略 endpoint。替换 Bucket 或 region 时，请同步修改 endpoint。
+    </TabItem>
+
+    <TabItem value="minio" label="MinIO（Path Style）">
+        ```sql
+        CREATE CATALOG lance_fs_minio PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        本例通过 MinIO 的服务域名访问，使用 Path Style，无需为每个 Bucket 配置子域名。endpoint 不带 Bucket；将 region 替换为服务实际配置值。启用 TLS 时，将地址替换为对应的 `https://` endpoint，并确保 FE 和 BE 都能访问该地址。
+    </TabItem>
+
+    <TabItem value="oss-s3" label="阿里云 OSS（S3 兼容访问）">
+        通过 S3 兼容接口访问 OSS 时，使用 `s3://` Warehouse 和 `s3.*` 连接属性：
+
+        ```sql
+        CREATE CATALOG lance_fs_oss_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        本例设置 `use_path_style=false`，使用 Virtual Hosted Style。当前 Lance 的默认 S3 客户端不会自动把 Bucket 拼接到显式配置的 endpoint，因此 `s3.endpoint` 必须包含 Bucket，例如 `https://my-bucket.oss-cn-beijing.aliyuncs.com`；`warehouse` 仍使用 `s3://my-bucket/lance`。使用内网访问时，可替换为 `https://my-bucket.oss-cn-beijing-internal.aliyuncs.com`，并确保 FE 和 BE 都能访问该地址。
+
+        使用 STS 临时凭证时，增加 `"s3.session_token" = "<token>"`。该方式通过 S3 兼容接口读取 OSS 中的原有数据，无需迁移数据；使用 OSS 原生访问时，参见相邻的 OSS 原生访问示例。
+    </TabItem>
+
+    <TabItem value="oss" label="阿里云 OSS（原生访问）">
+        ```sql
+        CREATE CATALOG lance_fs_oss PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "oss://my-bucket/lance",
+            "fs.oss.support" = "true",
+            "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
+            "oss.region" = "cn-beijing",
+            "oss.access_key" = "<ak>",
+            "oss.secret_key" = "<sk>"
+        );
+        ```
+
+        使用 STS 临时凭证时，增加 `"oss.session_token" = "<token>"`。`warehouse` 也支持 `oss://my-bucket.oss-cn-beijing.aliyuncs.com/lance`，Doris 会将其规范化为 Bucket 路径。OSS-HDFS 当前不受支持。
+    </TabItem>
+
+    <TabItem value="local" label="本地文件系统">
+        ```sql
+        CREATE CATALOG lance_fs_local PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "/data/lance"
+        );
+        ```
+
+        `warehouse` 必须是绝对路径。FE 和执行查询的 BE 都必须能够通过相同路径访问数据；多节点环境应在所有相关节点挂载同一个共享目录。
+    </TabItem>
+</Tabs>
+
+对于 S3 和 OSS，`warehouse` 必须包含 Bucket，例如 `s3://bucket/path` 或 `oss://bucket/path`。
+
+### REST Catalog
+
+REST Catalog 通过 Lance REST Namespace 获取 Namespace、表地址和存储访问参数。REST Catalog 不需要、也不允许设置 `warehouse`。
+
+| 属性 | 是否必需 | 默认值 | 说明 |
+|---|---|---|---|
+| `lance.rest.uri` | 是 | - | REST 服务地址，必须使用 `http://` 或 `https://`。 |
+| `lance.rest.security.type` | 否 | `none` | 认证方式，可选值为 `none`、`bearer` 或 `api_key`。 |
+| `lance.rest.bearer-token` | 使用 Bearer 认证时是 | - | Bearer Token。 |
+| `lance.rest.api-key` | 使用 API Key 认证时是 | - | API Key，通过 `x-api-key` Header 发送。 |
+| `lance.rest.header.<header-name>` | 否 | - | 发送给 REST 服务的自定义 HTTP Header。认证 Header 应使用上面的专用认证属性配置。 |
+
+REST 服务认证和对象存储认证是两套独立配置：`lance.rest.*` 用于连接 Namespace 服务，`s3.*` / `oss.*` 用于 FE 和 BE 读取表数据。实际访问链路由 Namespace 返回的表 URI 决定：`s3://` 使用 S3，`oss://` 使用 OSS 原生访问。根据返回的表地址选择默认存储配置：
+
+<Tabs groupId="lance-rest-storage">
+    <TabItem value="s3" label="AWS S3" default>
+        ```sql
+        CREATE CATALOG lance_rest_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        适用于 Namespace 返回的 AWS `s3://my-bucket/...` 表。默认 endpoint 必须包含该 Bucket，并与 region 一致。不同 Bucket 的表需要各自匹配的 endpoint，见下方的多 Bucket 说明。
+    </TabItem>
+
+    <TabItem value="minio" label="MinIO（Path Style）">
+        ```sql
+        CREATE CATALOG lance_rest_minio PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        适用于 Namespace 返回的 MinIO `s3://` 表。endpoint 使用 FE 和 BE 都能访问的服务地址，不带 Bucket；`use_path_style=true` 将各表的 Bucket 放入请求路径。region 应与 MinIO 服务配置一致。
+    </TabItem>
+
+    <TabItem value="oss-s3" label="阿里云 OSS（S3 兼容访问）">
+        ```sql
+        CREATE CATALOG lance_rest_oss_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        适用于 Namespace 返回的 `s3://my-bucket/...` 表，通过 S3 兼容接口访问 OSS。endpoint 必须包含同一个 Bucket；内网地址可使用 `https://my-bucket.oss-cn-beijing-internal.aliyuncs.com`。Namespace 必须返回 `s3://` 地址，不能仅设置 `fs.s3.support=true` 就将返回的 `oss://` 地址切换成 S3 访问。
+    </TabItem>
+
+    <TabItem value="oss" label="阿里云 OSS（原生访问）">
+        ```sql
+        CREATE CATALOG lance_rest_oss PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.oss.support" = "true",
+            "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
+            "oss.region" = "cn-beijing",
+            "oss.access_key" = "<ak>",
+            "oss.secret_key" = "<sk>"
+        );
+        ```
+
+        适用于 Namespace 返回的 `oss://` 表，使用 OSS 原生访问。`oss.endpoint` 不带 Bucket。使用 STS 临时凭证时，增加 `"oss.session_token" = "<token>"`。
+    </TabItem>
+</Tabs>
+
+无认证时省略 `lance.rest.security.type` 和认证属性。使用 API Key 时，将认证配置替换为 `"lance.rest.security.type" = "api_key"` 和 `"lance.rest.api-key" = "<api-key>"`。
+
+如果 REST Namespace 在每张表的 `storage_options` 中下发凭证或 endpoint，Doris 会按选项覆盖 Catalog 的对应默认值，并将合并结果用于 FE 和 BE。只下发凭证时，Catalog 中的 endpoint 和访问方式仍然生效；只有 Namespace 提供了完整访问配置时，才可以省略全部 Catalog 存储属性。
+
+对于 S3，Namespace 可以使用 `aws_endpoint`、`aws_region`、`aws_access_key_id`、`aws_secret_access_key`、`aws_session_token` 和 `aws_virtual_hosted_style_request`。注意最后一个参数与 Doris 的 `use_path_style` 取值相反：虚拟主机方式为 `aws_virtual_hosted_style_request=true`，Path Style 为 `false`。`fs.s3.support` 属于 Doris Catalog 属性，不是 Lance 的 `storage_options` 参数。
+
+对于 OSS 原生访问，Namespace 可以下发 `oss_endpoint`、`oss_access_key_id`、`oss_secret_access_key`、`oss_region`、`oss_security_token`，也可以使用对应的 OSS 原生名称 `endpoint`、`access_key_id`、`access_key_secret`、`region`、`security_token`。
+
+如果不同表位于不同 Bucket，不要让它们共用上例中固定为 `my-bucket` 的 S3 虚拟主机 endpoint。应由 Namespace 为每张表下发匹配的 endpoint 和访问方式，或为不同 Bucket 分别配置 Catalog。对于支持 Path Style 的服务，也可以使用不带 Bucket 的服务 endpoint，配合 `use_path_style=true`，由客户端从各表 URI 读取 Bucket。
+
+:::caution
+当前 BE Reader 不支持由 REST Namespace 管理版本的 Lance 表（Managed Versioning）。
+:::
+
+## Namespace 映射
+
+Lance 支持多级 Namespace，而 Doris Catalog 使用数据库名承载 Namespace：
+
+| Lance Namespace | Doris 数据库名 |
+|---|---|
+| 根 Namespace | `default`，可通过 `lance.namespace.root_database` 修改 |
+| `doris` | `doris` |
+| `doris.analytics` | `doris.analytics` |
+
+多级 Namespace 在 Doris 中使用 `.` 连接为一个数据库名。引用包含 `.` 的数据库名时，需要使用反引号：
+
+```sql
+SHOW TABLES FROM lance_catalog.`doris.analytics`;
+
+SELECT *
+FROM lance_catalog.`doris.analytics`.user_features;
+```
+
+`lance.namespace.parent` 可用于限定 Catalog 可见的 Namespace 子树。例如：
+
+```sql
+CREATE CATALOG lance_analytics PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "filesystem",
+    "warehouse" = "s3://my-bucket/lance",
+    "lance.namespace.parent" = "production$analytics",
+    "fs.s3.support" = "true",
+    "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+    "use_path_style" = "false",
+    "s3.region" = "us-east-1",
+    "s3.access_key" = "<ak>",
+    "s3.secret_key" = "<sk>"
+);
+```
+
+此时 Doris 只展示 `production.analytics` 之下的表和子 Namespace。
+
+## 查询 Lance 表
+
+创建 Catalog 后，可以像查询普通外表一样浏览并查询 Lance 表：
+
+```sql
+SHOW DATABASES FROM lance_catalog;
+
+SHOW TABLES FROM lance_catalog.default;
+
+DESC lance_catalog.default.user_profiles;
+
+SELECT user_id, name, age
+FROM lance_catalog.default.user_profiles
+WHERE age >= 18
+ORDER BY user_id
+LIMIT 100;
+```
+
+也可以将 Lance 数据写入 Doris 内表：
+
+```sql
+INSERT INTO internal.demo.user_profiles
+SELECT user_id, name, age
+FROM lance_catalog.default.user_profiles;
+```
+
+普通 Catalog 查询会在规划阶段固定一个 Lance 数据集版本，并按 Fragment 生成扫描任务。因此，同一条查询读取一致的快照，同时可以由多个 Scanner 并行扫描不同 Fragment，不会让每个 Scanner 重复扫描整个数据集。
+
+## 查看 Lance 索引
+
+对于 Filesystem Catalog 中的表，`SHOW INDEX` 可以查看 Lance 数据集中记录的逻辑标量索引（包括 FTS 倒排索引）和向量索引。变种语法 `SHOW INDEXES`、`SHOW KEY` 和 `SHOW KEYS` 返回相同结果：
+
+```sql
+SHOW INDEX FROM lance_catalog.default.items;
+```
+
+Doris 在语句执行时读取数据集最新快照中的索引元数据，结果按索引名和列位置排序。Lance 内部维护的系统索引（如 `__lance_frag_reuse` 和 `__lance_mem_wal`）不会展示。没有索引的表返回空结果。
+
+`SHOW INDEX` 返回标准的 13 列结果集。对于 Lance 表，只有以下列有值，其余列恒为空：
+
+| 列 | Lance 表的取值 |
+|---|---|
+| `Table` | 表名。 |
+| `Key_name` | Lance 逻辑索引名。 |
+| `Seq_in_index` | 列在索引中的位置，从 `1` 开始。索引包含多个字段时，每个字段输出一行。 |
+| `Column_name` | 被索引的字段。嵌套字段上的索引显示以 `.` 连接的字段路径，包含字母、数字和 `_` 以外字符的路径段使用反引号引用，例如 `` attributes.`child.with.dot` ``。 |
+| `Index_type` | Lance SDK 报告的索引类型，例如 `BTree`、`INVERTED`、`IVF_FLAT`、`IVF_SQ`、`IVF_PQ`、`IVF_HNSW_FLAT`、`IVF_HNSW_SQ` 或 `IVF_HNSW_PQ`。 |
+| `Properties` | 包含固定字段集合的索引详情 JSON：顶层为 `metric_type` 和 `target_partition_size`，`compression` 下为 `type`、`num_bits`、`num_sub_vectors` 和 `rotation_type`，`hnsw` 下为 `construction_ef`、`max_connections` 和 `max_level`。键按字典序排列；索引详情不包含以上字段时值为 `{}`。 |
+
+下面的示例展示了一个 `IVF_PQ` 向量索引和一个建立在嵌套字段上的 `BTree` 索引：
+
+```text
+Table          Key_name              Seq_in_index  Column_name                  Index_type  Properties
+vs_ivf_pq_f32  embedding_ivf_pq_f32  1             embedding                    IVF_PQ      {"compression":{"num_bits":4,"num_sub_vectors":4,"type":"pq"},"metric_type":"L2"}
+nested_index   nested_label_btree    1             attributes.`child.with.dot`  BTree       {}
+```
+
+`SHOW INDEX` 只查看已有索引，不会创建索引。请使用 Lance SDK 或其他 Lance 写入端在 Doris 之外创建 Lance 索引。如果数据集中记录的索引元数据不一致（例如索引引用了未知字段，或两个索引完全重名），语句会直接报错，而不是返回部分元数据。
+
+`SHOW INDEX` 需要用户拥有该表的 `SHOW` 权限。对于 REST Catalog，该语句会被拒绝并返回错误 `SHOW INDEX is not supported for Lance REST catalogs`。
+
+## 类型映射
+
+| Lance / Arrow 类型 | Doris 类型 | 说明 |
+|---|---|---|
+| `bool` | `BOOLEAN` | |
+| `int8` | `TINYINT` | |
+| `uint8` | `SMALLINT` | 无符号整数无损提升 |
+| `int16` | `SMALLINT` | |
+| `uint16` | `INT` | 无符号整数无损提升 |
+| `int32` | `INT` | |
+| `uint32` | `BIGINT` | 无符号整数无损提升 |
+| `int64` | `BIGINT` | |
+| `uint64` | `LARGEINT` | 无符号整数无损提升 |
+| `float16` | `FLOAT` | 提升为 32 位浮点数 |
+| `float32` | `FLOAT` | |
+| `float64` | `DOUBLE` | |
+| `decimal128(P,S)` | `DECIMAL(P,S)` | 最大精度为 38 |
+| `decimal256(P,S)` | `DECIMAL(P,S)` | 最大精度为 76 |
+| `utf8`、`large_utf8` | `TEXT` | |
+| `binary`、`large_binary` | `VARBINARY(2147483647)` | |
+| `fixed_size_binary(N)` | `VARBINARY(N)` | 保留固定字节宽度 |
+| `date32(day)`、`date64(ms)` | `DATE` | `date64` 应表示完整自然日 |
+| `time32(s)` | `TIME(0)` | |
+| `time32(ms)` | `TIME(3)` | |
+| `time64(us)`、`time64(ns)` | `TIME(6)` | 纳秒精度截断为微秒 |
+| 无时区 `timestamp(s)` | `DATETIME` | 不随 Session Time Zone 转换 |
+| 无时区 `timestamp(ms)` | `DATETIME(3)` | 不随 Session Time Zone 转换 |
+| 无时区 `timestamp(us)`、`timestamp(ns)` | `DATETIME(6)` | 纳秒精度截断为微秒 |
+| 带时区 `timestamp` | `TIMESTAMPTZ(0-6)` | 保存时间点，按 Doris Session Time Zone 展示 |
+| `struct` | `STRUCT` | 子字段递归映射 |
+| `list`、`large_list`、`fixed_size_list` | `ARRAY` | 元素类型递归映射 |
+| `map` | `MAP` | Key 和 Value 类型递归映射 |
+
+当前不支持以下类型：
+
+- Arrow `null` 和 `duration`。
+- 带有 `ARROW:extension:name` 元数据的 Arrow/Lance Extension 类型，例如 Lance Blob v2、Arrow JSON Extension 和 Lance BFloat16 Extension。
+- 无法递归映射其子类型的复杂类型。
+- 保留了 Dictionary 标记的 Arrow Dictionary 类型。
+
+对于不支持的顶层列，Catalog 表的 `DESC` 和 Lance 文件 TVF 的 `DESC FUNCTION` 都会保留该列，并显示 `unknown type: UNSUPPORTED_TYPE`。如果复杂类型的任一子字段无法映射，则整个顶层复杂列会标记为不支持。查询只投影支持的列仍可正常执行；当 SQL 投影不支持的列时，Doris 会在分析阶段报错。例如：
+
+```sql
+SELECT * EXCEPT(blob_col, json_col)
+FROM lance_catalog.default.all_types;
+```
+
+:::note
+部分 Lance Java SDK 版本可能在读取 Schema 时丢失 Dictionary 标记，并将 Dictionary 列暴露为物理索引类型。该结果不代表 Doris 已支持 Dictionary 的逻辑值，请勿依赖这一行为。
+:::
+
+## 谓词下推
+
+Doris 会将语义兼容的谓词转换为 Substrait 表达式，并交给 Lance 在读取阶段执行。对于已完整下推的条件，Doris BE 不再重复计算该条件；不能安全下推的条件仍由 Doris 执行。
+
+### 支持下推的数据类型
+
+| Lance / Arrow 类型 | 下推范围 |
+|---|---|
+| `bool` | 等值、空值和逻辑运算，不包含大小比较 |
+| `int8/16/32/64` | 支持 |
+| `uint8/16/32/64` | 支持 |
+| `float32/64` | 支持 |
+| `decimal128` | 精度 1-38，Scale 范围为 0 到 Precision |
+| `utf8`、`large_utf8` | 支持 |
+| `date32(day)` | 支持 |
+| 无时区 `timestamp(s/ms/us)` | 支持 |
+
+其他可读取类型，例如 `float16`、`decimal256`、Binary、`date64`、Time、纳秒 Timestamp、带时区 Timestamp 和复杂类型，当前保留为 Doris 侧谓词。
+
+### 支持下推的操作符
+
+| SQL 谓词 | 下推条件 |
+|---|---|
+| `=`、`!=`、`<>`、`<`、`<=`、`>`、`>=` | 直接的列与常量比较；支持将常量写在左侧 |
+| `<=>` | 直接的列与常量 Null-safe 等值比较；在 `NOT`、`AND` 或 `OR` 中仍保持非 `NULL` 的二值逻辑结果 |
+| `IN`、`NOT IN` | 非空常量列表，列表中不能包含 `NULL` |
+| `IS NULL`、`IS NOT NULL` | 直接引用列 |
+| 布尔列、`NOT` 布尔列 | 直接引用布尔列 |
+| `LIKE`、`NOT LIKE` | 直接引用 `utf8` 或 `large_utf8` 列，模式为字符串字面量，且不包含反斜杠转义、显式 `ESCAPE` 子句或 NUL 字符 |
+| `starts_with`、`ends_with` | 使用内置函数，第一个参数直接引用 `utf8` 或 `large_utf8` 列，第二个参数为字符串字面量 |
+| `AND` | 顶层 Conjunct 可以分别下推，不能下推的部分保留在 Doris |
+| `OR` | 两个分支都能完整转换时下推 |
+| `NOT` | 操作数能完整转换时下推 |
+
+以下形式通常不会下推：
+
+- 除上述内置字符串函数之外的函数，或列上的算术表达式。名称为 `like`、`starts_with` 或 `ends_with` 的用户自定义函数不会按同名内置函数下推。
+- 模式包含 NUL 字符的字符串谓词。使用反斜杠转义或显式 `ESCAPE` 子句的 `LIKE`、`NOT LIKE` 也保留在 Doris。
+- `IN` 列表为空或包含 `NULL`。
+- `OR` 或 `NOT` 中只有部分表达式可转换。
+- 数据类型或常量值无法无损转换到 Lance。
+
+可以通过 `EXPLAIN` 中的 `lancePushdownPredicate` 查看实际下推的条件：
+
+```sql
+EXPLAIN
+SELECT user_id
+FROM lance_catalog.default.user_profiles
+WHERE active
+  AND starts_with(name, 'A')
+  AND country LIKE 'C%';
+```
+
+### Runtime Filter 下推
+
+普通 Lance 表参与 Join 时，Doris 可以将 Join 构建端生成的部分 Runtime Filter 转换为 Lance SQL 条件，并在 Lance 读取数据时提前过滤。这可以减少返回给 Doris 的数据量，尤其适合大表与过滤结果较小的表进行 Join 的场景。
+
+```sql
+SELECT l.user_id, l.name
+FROM lance_catalog.default.user_profiles l
+JOIN internal.demo.allowed_users a
+  ON l.user_id = a.user_id;
+```
+
+当前支持下推以下 Runtime Filter：
+
+| Runtime Filter | 下推到 Lance 的形式 |
+|---|---|
+| IN Filter | `column IN (...)` |
+| Min/Max Filter | `column >= min_value`、`column <= max_value`，或两者同时使用 |
+
+Runtime Filter 的列和值必须能够安全转换为 Lance SQL 支持的标量类型。其他 Runtime Filter 类型、包含 `NULL` 的 IN Filter，以及无法安全转换的数据类型或值不会下推。未下推的 Runtime Filter 仍由 Doris 执行，因此不会影响查询结果的正确性，只是无法获得 Lance 侧提前过滤的性能收益。
+
+只有在 Lance Scanner 创建前已经就绪的 Runtime Filter 才能进入该 Scanner 的下推条件。较晚到达的 Runtime Filter 仍会由 Doris 执行，但可能不会下推到已经创建的 Scanner。
+
+Runtime Filter 条件会与普通 SQL 谓词的 Substrait 条件同时生效，而不是相互替换。`EXPLAIN` 中的 `runtime filters` 表示计划中的 Runtime Filter；当至少一个 Runtime Filter 成功下推时，可在 Runtime Profile 中通过 `LanceRuntimeFilterPushedIds` 和 `LanceRuntimeFilterSkippedIds` 查看已下推和未下推的 Filter ID。
+
+Runtime Filter 下推目前只适用于普通 Lance 表扫描，不用于 `vector_search()` 或全文检索的候选生成。
+
+## 使用文件 TVF 查询 Lance
+
+如果只需要读取一个已知路径的 Lance 数据集，可以不创建 Catalog，直接使用 `s3()` 或 `local()` TVF。`uri` 或 `file_path` 必须指向 Lance 数据集的根目录，而不是其内部的数据文件。
+
+### S3 TVF
+
+`s3()` TVF 使用 S3 兼容接口。访问 OSS 时，也应使用 `s3.*` 参数和带 Bucket 的虚拟主机 endpoint；需要 OSS 原生访问时，使用前面的 OSS Catalog 示例。下面的 SQL 读取同一个示例数据集的前 10 行，替换地址、凭证和列名后执行：
+
+<Tabs groupId="lance-s3-tvf-storage">
+    <TabItem value="s3" label="AWS S3" default>
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        AWS S3 同样显式设置 endpoint。本例使用虚拟主机方式，endpoint 中的 Bucket 和 region 必须与 URI 及 `s3.region` 一致。
+    </TabItem>
+
+    <TabItem value="minio" label="MinIO（Path Style）">
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        endpoint 指向 MinIO 服务地址，不带 Bucket，配合 `use_path_style=true`。不要使用仅 FE 本机可访问的地址；FE 和执行查询的 BE 都需要访问该服务。
+    </TabItem>
+
+    <TabItem value="oss-s3" label="阿里云 OSS（S3 兼容访问）">
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        本例与 Filesystem Catalog 的 OSS S3 兼容配置一致，但 `uri` 指向具体的 `.lance` 数据集，`warehouse` 则指向包含多个数据集的目录。保持 `fs.s3.support=true`、`use_path_style=false`，并确保 endpoint 中的 Bucket 与 URI 一致。
+    </TabItem>
+</Tabs>
+
+对于 OSS，上例的 `uri` 也可以写为 `oss://my-bucket/lance/user_profiles.lance`，但仍需保留相同的 `s3.*` 参数和 `fs.s3.support=true`；TVF 会将 URI 规范化为 `s3://`，不会因此使用 OSS 原生 Provider。不要直接照搬原生 OSS Catalog 的 `oss.*` 配置：不带 Bucket 的 endpoint 与虚拟主机方式组合可能返回数据集不存在；改成 Path Style 则可能被 OSS 以 `SecondLevelDomainForbidden` 拒绝。
+
+S3 TVF 在 FE 获取 Schema、当前版本和 Fragment 列表，并固定该版本后按 Fragment 并行扫描。`EXPLAIN` 中会显示 `VTVF_SCAN_NODE`；多个 split 可以共享同一个数据集 URI，通过各自的 Fragment ID 区分。`totalFileSize=0` 或 `length=0` 是 Lance split 的占位值，不表示数据集为空，也不表示每个 split 都会重复扫描整张表。
+
+### Local TVF
+
+```sql
+SELECT user_id, name
+FROM local(
+    "file_path" = "/data/lance/user_profiles.lance",
+    "backend_id" = "10001",
+    "format" = "lance"
+);
+```
+
+`file_path` 会按用户填写的值直接传给目标 BE 上的 Lance Reader。Doris 不会自动拼接 `user_files_secure_path`，也不会对该路径执行 Glob 展开，因此该参数必须直接指向目标 BE 可访问的单个 Lance 数据集根目录；建议使用绝对路径。
+
+Local TVF 的 Schema 发现和执行扫描会分别打开数据集的最新版本，当前不会将 Schema 发现时解析出的版本固定到后续扫描。如果数据集在查询分析与执行之间发生更新，Schema 和实际扫描的快照可能不一致。因此，应避免在 Local TVF 查询的分析和执行期间修改数据集。当前 Local Lance TVF 使用单个 Scanner。
+
+Lance 文件 TVF 还有以下限制：
+
+- 仅支持 `s3()` 和 `local()`，暂不支持 HDFS、HTTP 等其他文件 TVF。
+- 不支持 `path_partition_keys`。
+- 一个 TVF 路径只能表示一个 Lance 数据集。
+- `DESC FUNCTION` 可以展示包含不支持类型的 Schema，但 SQL 不能投影不支持的列。
+
+## 向量检索
+
+`vector_search()` 是一个关系型 TVF，用于对 Lance 表的向量列执行 Top-K 检索。它既可以使用 Lance 中已建立的向量索引，也可以执行 Flat Search。
+
+### 语法和示例
+
+```sql
+SELECT user_id, label, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "offset" = "3",
+    "metric" = "l2",
+    "nprobes" = "20",
+    "refine_factor" = "10",
+    "filter" = "category = 'book'",
+    "use_index" = "true"
+)
+ORDER BY _distance ASC, user_id;
+```
+
+`vector_search()` 的关系 Schema 包含 Lance 源表的所有列，以及 Lance Scanner 为最近邻查询生成的 `_distance` 列；最终 SQL 结果只包含 `SELECT` 投影的列。Doris 将 `_distance` 作为 `FLOAT` 提供给用户。它表示距离而不是通用的相似度分数，值越小表示两个向量越接近。源表不能已经包含名为 `_distance` 的列。SQL 关系本身不保证最终展示顺序，因此需要稳定的最近邻顺序时，应显式使用 `ORDER BY _distance ASC`，并建议增加唯一列作为距离相同情况下的 Tie-breaker。
+
+`table` 必须解析为恰好三部分的 `catalog.database.table` 名称。多级 Lance Namespace 在 Doris 中映射为包含 `.` 的单个数据库名，因此必须使用反引号将数据库部分括起来。例如，表 `items` 位于 `doris.analytics` Namespace 时，应写为：
+
+```sql
+"table" = "lance_catalog.`doris.analytics`.items"
+```
+
+不要写成未引用的 `lance_catalog.doris.analytics.items`，因为它会被解析为四部分名称并报错。只填写表名或 `database.table` 也会报错。
+
+### 参数
+
+| 参数 | 是否必需 | 默认值 | 说明 |
+|---|---|---|---|
+| `table` | 是 | - | 完整的三部分 `catalog.database.table` 名称。多级 Namespace 对应的数据库名包含 `.` 时，必须使用反引号引用数据库部分。该表必须属于 Lance Catalog，用户需要拥有该表的 `SELECT` 权限。 |
+| `column` | 是 | - | 向量列名。支持单向量 `fixed_size_list<float16\|float32\|float64\|uint8\|int8>` 和多向量 `list<fixed_size_list<float16\|float32\|float64, D>>`。详见[多向量检索](#multi-vector-search)。 |
+| `query_vector` | 是 | - | 单向量列使用 JSON 数字数组，多向量列使用非空 JSON 矩阵。每个子向量的维度必须与列一致，元素必须是向量元素类型可表示的有限数值。 |
+| `top_k` | 否 | `10` | 跳过 `offset` 后返回的结果数，必须为正整数。 |
+| `offset` | 否 | `0` | 在向量检索内部跳过的最近邻数量，必须为非负整数。`top_k + offset` 不能超过无符号 32 位整数上限。 |
+| `metric` | 否 | `l2` | 距离类型：`l2`、`cosine`、`dot` 或 `hamming`。`dot_product` 是 `dot` 的别名。`uint8` 向量仅支持 `hamming`；其他当前支持的向量元素类型支持 `l2`、`cosine` 和 `dot`。查询 `cosine`、`dot` 或 `hamming` 索引时必须显式设置 `metric`。不支持整数多向量列及多向量 `hamming` 检索。 |
+| `filter` | 否 | - | Lance SQL 条件，在生成候选向量之前执行，即 Prefilter。 |
+| `nprobes` | 否 | 最少 `1`，不限制最大值 | IVF 索引探测的分区数量，必须为正整数。不设置时从 1 个分区开始；使用 Prefilter 且候选不足时，Lance 可以继续探测更多分区。显式设置为 `N` 时，最少和最多探测数都会固定为 `N`。 |
+| `refine_factor` | 否 | 单向量不启用；多向量为 `1` | 候选集精排倍数，必须为正整数。对于单向量检索，不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。**精排会读取这些候选的原始向量数据；`N` 越大，读取和计算的候选越多，可能显著增加 I/O 并降低查询性能。** 对于单向量检索，设为 `1` 会执行精排，与不设置不同。多向量检索始终使用原始向量精排，默认倍数为 `1`。 |
+| `ef` | 否 | `floor(1.5 × (top_k + offset))` | HNSW 图索引搜索时保留的候选宽度，必须为正整数。如果同时设置了 `refine_factor`，默认值为 `floor(1.5 × (top_k + offset) × refine_factor)`。对非 HNSW 索引无效。 |
+| `use_index` | 否 | `true` | `true` 表示优先使用与向量列和距离类型兼容的 Lance 向量索引；没有可用索引时自动使用 Flat Search。`false` 表示禁用向量索引，对数据执行 Flat Search。 |
+
+不设置 `metric` 时，索引检索和 Flat Search 均使用 `l2`。`uint8` 列必须显式设置 `"metric" = "hamming"`，不支持默认的 `l2`。多向量检索还需要满足下文的[候选预算限制](#multi-vector-search)。
+
+### 支持的向量索引类型
+
+对于单向量列，Doris 支持以下 Lance 向量索引组合。多向量的索引限制见[多向量检索](#multi-vector-search)。
+
+| 索引类型 | 说明 | 主要查询参数 |
+|---|---|---|
+| `IVF_FLAT` | IVF 分区，分区内使用原始向量计算距离 | `nprobes` |
+| `IVF_SQ` | IVF 与 Scalar Quantization | `nprobes`、`refine_factor` |
+| `IVF_PQ` | IVF 与 Product Quantization | `nprobes`、`refine_factor` |
+| `IVF_HNSW_FLAT` | IVF 与 HNSW，图节点保存原始向量 | `nprobes`、`ef` |
+| `IVF_HNSW_SQ` | IVF、HNSW 与 Scalar Quantization | `nprobes`、`ef`、`refine_factor` |
+| `IVF_HNSW_PQ` | IVF、HNSW 与 Product Quantization | `nprobes`、`ef`、`refine_factor` |
+
+`vector_search()` 只使用 Lance 中已有的向量索引，不负责创建索引，也不能指定索引类型或索引名称。当 `use_index=true` 时，Doris 自动选择与向量列和距离类型兼容的索引；没有可用索引或索引未覆盖的数据会自动使用 Flat Search，不会被遗漏。当 `use_index=false` 时，所有数据都使用 Flat Search。
+
+### 支持的向量元素类型和距离类型
+
+对于单向量列，向量索引支持的距离类型取决于向量元素类型。请选择下表中支持的组合；不支持的组合无法使用向量索引。
+
+| 向量元素类型 | `l2` | `cosine` | `dot` | `hamming` |
+|---|---|---|---|---|
+| `float16` | 支持 [1] | 支持 | 支持 | 不支持 |
+| `float32` | 支持 | 支持 | 支持 | 不支持 |
+| `float64` | 支持 | 支持 | 支持 | 不支持 |
+| `uint8` | 不支持 | 不支持 | 不支持 | 仅 `IVF_FLAT` 和 `IVF_HNSW_FLAT` [2] |
+| `int8` | 仅支持 Flat Search [3] | 仅支持 Flat Search [3] | 仅支持 Flat Search [3] | 不支持 |
+
+除脚注另有说明外，“支持”表示该组合适用于上文列出的全部六种索引类型；“仅支持 Flat Search”表示可以查询，但不会使用向量索引。
+
+1. `float16` 数据数值较大时，使用 `l2` 创建索引可能耗时过长或失败。建议使用数值范围受控的向量；如果建索引失败，可使用 Flat Search，或在业务语义允许时改用 `cosine`。
+2. Lance 将 `uint8` 向量视为二进制向量，只支持 `hamming` 距离。`uint8` 不支持 Product Quantization 或 Scalar Quantization，因此只能使用 `IVF_FLAT` 和 `IVF_HNSW_FLAT`。
+3. `int8` 向量目前不能使用向量索引，只能执行 Flat Search。
+
+#### 查询距离类型必须与索引一致
+
+查询指定的 `metric` 必须与索引创建时使用的距离类型一致；否则，如果列类型支持该查询距离，Doris 会改用 Flat Search。结果仍然正确，但由于需要直接扫描向量，性能通常更低。
+
+不设置 `metric` 时，Doris 在选择索引时按 `l2` 处理。因此，使用 `cosine`、`dot` 或 `hamming` 索引时必须显式设置 `metric`。例如，查询 `uint8` 向量索引时必须设置 `"metric" = "hamming"`，否则查询使用不支持的 `l2` 距离并报错。
+
+可以通过 `EXPLAIN` 确认是否使用索引：`lanceSearchIndexSegments` 大于 `0` 表示使用了索引，等于 `0` 表示使用 Flat Search。
+
+Doris 对每个向量列只考虑一个向量索引。建议每个向量列最多创建一个向量索引，避免多个不同距离类型的索引导致选择不明确。
+
+### 多向量检索 {#multi-vector-search}
+
+多向量列在每条表记录中保存多个子向量，例如一篇文档的多个 token embedding。一个查询矩阵产生一组按表记录排序的结果，不是批量执行多个独立向量查询，也不是同时检索多个列。
+
+#### 准备数据并执行查询
+
+使用上文的 AWS S3 Filesystem Catalog 示例，Catalog 名称为 `lance_fs_s3`，warehouse 为 `s3://my-bucket/lance`。在写入环境中安装 Lance Python SDK（`pylance`）和 `pyarrow`，配置 S3 凭证和 region，例如设置 `AWS_ACCESS_KEY_ID`、`AWS_SECRET_ACCESS_KEY` 和 `AWS_DEFAULT_REGION`。写入端需要写权限，Doris 需要同一位置的读权限。使用自定义 endpoint 或其他认证方式时，按 Catalog 配置对应的 SDK [对象存储选项](https://lance.org/guide/object_store/)。
+
+将 `documents.lance` 直接写在 warehouse 下，Doris 会将其发现为 `lance_fs_s3.default.documents`。请同时替换 Catalog 和 Python 示例中的 bucket，并使用尚不存在的数据集路径：
+
+```python
+import lance
+import pyarrow as pa
+
+vector_type = pa.list_(pa.float32(), 2)
+schema = pa.schema([
+    pa.field("id", pa.int64()),
+    pa.field("embeddings", pa.list_(
+        pa.field("item", vector_type, nullable=False)
+    )),
+])
+data = pa.Table.from_pylist([
+    {"id": 1, "embeddings": [[1.0, 0.0], [0.0, 1.0]]},
+    {"id": 2, "embeddings": [[1.0, 0.0]]},
+    {"id": 3, "embeddings": []},
+    {"id": 4, "embeddings": None},
+], schema=schema)
+lance.write_dataset(
+    data,
+    "s3://my-bucket/lance/documents.lance",
+    data_storage_version="2.1",
+)
+```
+
+外层 list 允许每条记录保存不同数量的子向量。内层的 `nullable=False` 是必需的，表示子向量本身不能为 null。使用二维 JSON 数组查询：
+
+```sql
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_fs_s3.default.documents",
+    "column" = "embeddings",
+    "query_vector" = "[[1,0],[0,1]]",
+    "top_k" = "2",
+    "metric" = "l2",
+    "use_index" = "false"
+)
+ORDER BY _distance, id;
+```
+
+预期结果：
+
+| id | _distance |
+|---|---|
+| 1 | 0.0 |
+| 2 | 2.0 |
+
+记录 1 为每个查询子向量都提供了完全匹配。记录 2 与第一个查询子向量的距离为 `0`，与第二个的平方 L2 距离为 `2`。外层为空数组或 null 的记录不参与排名。增加 `"offset" = "1"` 并将 `"top_k" = "1"` 后，仅返回记录 2。增加 `"filter" = "id > 1"` 会先限制候选检索的记录范围，对此数据集也仅返回记录 2。
+
+#### 行级评分
+
+设查询子向量集合为 `Q`，某条记录的子向量集合为 `V`：
+
+```text
+_distance = sum(q in Q, min(v in V, distance(q, v)))
+```
+
+| `metric` | 两个子向量之间的距离 |
+|---|---|
+| `l2`（默认） | 欧氏距离的平方 |
+| `cosine` | `1 - cosine_similarity` |
+| `dot` 或 `dot_product` | `1 - dot_product`，结果可以为负数 |
+
+`_distance` 越小越好。每个查询子向量贡献一次评分，同一个存储子向量可以匹配多个查询子向量。评分取总和而非平均值，重复查询子向量会重复计算其贡献。`_distance` 的 Doris 类型始终为 `FLOAT`，包括输入为 Float64 的情况。`top_k` 和 `offset` 按表记录计数，不按子向量计数。Top-K 边界上同分记录的入选情况和顺序不保证确定；外层 `ORDER BY` 只能排序已经返回的记录。
+
+#### 类型、维度与空值
+
+| 项目 | 要求 |
+|---|---|
+| Lance 列类型 | `list<fixed_size_list<T, D>>`，其中 `D > 0`，`T` 为 `float16`、`float32` 或 `float64` |
+| Doris 类型 | Float16/Float32 对应 `ARRAY<ARRAY<FLOAT>>`，Float64 对应 `ARRAY<ARRAY<DOUBLE>>` |
+| 查询形状 | 非空 JSON 矩阵，每个内层数组必须恰好包含 `D` 个元素。即使只有一个查询子向量，也必须写成 `[[...]]`；普通单向量列仍要求使用 `[...]`。 |
+| 查询元素 | 必须是 `T` 可表示的有限数值。空矩阵、维度不一致、null、非数值元素及超出类型范围的值会被拒绝。 |
+| 存储元素 | 子向量必须声明为不可空，内部元素必须是非 null 的有限数值。评分路径遇到实际的 null 或非有限元素时会报错；仅有元素级的 nullable schema 标记是允许的。 |
+| 空记录 | 外层为 null 或 `[]` 时没有可匹配的子向量，该记录不返回。 |
+| Cosine 零范数 | 零范数向量对的 cosine 距离无定义，不能形成匹配。如果某个查询子向量在一条记录中找不到任何有效匹配，该记录被排除。因此，查询中包含零范数子向量时结果为空。 |
+| 不支持的形状和类型 | 不支持外层为 `large_list` 或 `fixed_size_list`、内层为变长 list、整数多向量元素、extension/dictionary 编码，以及多向量 `hamming` 检索。 |
+
+#### 参数限制
+
+设 `M` 为查询子向量数量，`K = top_k`，`O = offset`，`R = refine_factor`（多向量检索默认为 `1`）。
+
+| 约束 | 限制 |
+|---|---|
+| 查询子向量数量 | `1 <= M <= 128` |
+| 返回记录数与偏移量 | `K > 0`，`O >= 0` |
+| 查询候选预算 | `M × (K + O) <= 100000` |
+| 精排候选预算 | `R × (K + O) <= 100000`，且 `R > 0` |
+| 显式设置的 `nprobes`、`ef` 或 `refine_factor` | 必须为正的 32 位有符号整数，最大 `2147483647`；`refine_factor` 还受候选预算约束 |
+
+两个候选预算分别校验，包括 `use_index=false` 的情况。例如，`M=128, K=1000, O=0` 超过查询候选预算，会被拒绝；`M=4, K=1000, O=0, R=10` 同时满足两个预算。这些限制用于约束候选处理规模，不代表对内存使用量或查询耗时的保证。
+
+#### 索引使用与精排
+
+当前集成的 Lance 版本支持使用 **cosine** 距离的多向量索引。要使用已有的兼容索引，例如 cosine `IVF_FLAT` 或 `IVF_PQ`，请设置 `"metric" = "cosine"` 并保持 `use_index=true`。不设置 `metric` 时使用 `l2`；L2 和 dot 查询没有兼容索引时执行 Flat Search。Doris 不通过此函数创建索引。可以用 `SHOW INDEX`（仅 Filesystem Catalog）查看索引元数据，并通过 `EXPLAIN` 确认 `lanceSearchIndexSegments > 0`。
+
+索引检索的候选选择是近似的。多向量候选**始终使用原始向量精排**，包括不设置 `refine_factor` 或将其设为 `1` 的情况，从而使有索引与无索引的记录使用相同的行级评分。增大 `refine_factor` 会扩大候选集，增加原始向量读取和计算，但不保证完整召回。`nprobes` 控制 IVF 探测范围，`ef` 对 HNSW 索引生效；调参时应同时测量召回率与耗时。索引创建后追加的记录会通过 Flat Search 纳入检索。
+
+如需对选定记录进行穷举评分，使用 `"use_index" = "false"`。优先使用 TVF 的 `filter` 在检索前缩小候选范围；外层 SQL `WHERE` 会丢弃候选，但不会补齐对应 split 的结果。下一节的过滤规则同时适用于单向量和多向量查询。
+
+### Prefilter 和 Post-filter
+
+Prefilter 和 Post-filter 可以在同一个查询中使用：
+
+```sql
+SELECT user_id, category, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "filter" = "category = 'book'"
+)
+WHERE user_id > 100
+ORDER BY _distance ASC, user_id;
+```
+
+| 过滤方式 | 示例条件 | 执行时机 | 对结果的影响 |
+|---|---|---|---|
+| Prefilter | TVF 参数 `"filter" = "category = 'book'"` | Lance 生成向量候选之前 | 只在 `category = 'book'` 的数据中搜索最近邻。 |
+| Post-filter | 外层 `WHERE user_id > 100` | Lance 生成候选之后、Doris 执行最终 TopN 之前 | 从已生成的候选中删除不满足条件的行，不会补充新的候选，因此最终结果可能少于 `top_k`。 |
+
+如果 `user_id > 100` 也必须参与最近邻候选生成，应将它合并到 `filter` 中，例如 `"filter" = "category = 'book' AND user_id > 100"`，而不是使用外层 `WHERE`。即使优化器将外层 `WHERE` 下移到 Doris 的 Lance Scan，它仍然是 Post-filter，不会转换成 Lance Prefilter。
+
+`filter` 中引用的列由 Lance 内部读取和计算；如果该列未被 `SELECT` 或其他 Doris 表达式引用，则不需要返回给 Doris。
+
+## FE 表访问缓存
+
+该配置要求 Doris 构建版本包含[表访问缓存变更](https://github.com/apache/doris/pull/68305)。
+
+每个 FE 可以在 Catalog 内缓存表解析后的 Dataset URI 和访问配置，避免查询规划时重复执行文件系统发现或 REST `describeTable` 请求。每个 Catalog 客户端最多保留 10,000 个条目。`lance.table_access_cache_ttl_seconds` 默认为 `60` 秒，命中缓存不会延长有效期。此缓存不保存 Dataset 版本：每次读取仍会打开 Dataset 并选择快照。
+
+如果响应包含下发的存储配置，即使提供了 `expires_at_millis`，也会在每次读取时重新解析。包含用户信息、查询参数（包括预签名或 SAS 凭证）或片段的 URI 同样不缓存。固定的凭证到期余量无法保证凭证在整个扫描期间有效，BE 也无法在扫描过程中更新这些凭证。响应不含这些字段的 REST Catalog 可以使用缓存。
+
+显式刷新表或数据库会清除该 Catalog 的全部表访问缓存；Follower FE 重放刷新时，即使对应的本地数据库或表对象已被淘汰，也会清除缓存。普通的本地数据库对象淘汰不会清除此缓存。启用缓存失效的 Catalog 刷新、Namespace 移除或 Catalog 配置变更也会使访问缓存失效。索引检查和索引任务目标校验始终重新解析访问配置。
+
+远端表 URI 或访问配置变更后，可显式刷新，避免等待 TTL 到期。以已有表 `example_lance.default.items` 为例：
+
+```sql
+REFRESH TABLE example_lance.default.items;
+```
+
+下一次读取会重新解析表访问配置。该操作不会清除 Lance 原生 Session 缓存；在相同 URI 下替换 Dataset 后，应刷新 Catalog 并启用缓存失效。
+
+要禁用已有 Catalog 的表访问缓存：
+
+```sql
+ALTER CATALOG example_lance SET PROPERTIES (
+    "lance.table_access_cache_ttl_seconds" = "0"
+);
+```
+
+后续每次读取都会重新解析表访问配置。下文介绍的 BE 缓存仍独立配置。
+
+## Lance Cache
+
+Lance Cache 复用已读取的索引、元数据和数据文件内容，减少重复查询的读取开销。缓存由每个 BE 独立管理，同一 BE 内的 Lance 查询共享缓存；不同 BE 不共享缓存容量或内容。普通扫描、向量检索、全文检索和两阶段读取的回读都可以复用相应缓存，无需在 `CREATE CATALOG` 中增加属性。
+
+### 缓存类型和范围
+
+| 缓存 | 存储位置 | 缓存内容 |
+|---|---|---|
+| 索引缓存 | BE 内存 | Lance 已加载的索引内容，减少重复加载索引的开销。 |
+| 元数据缓存 | BE 内存 | Lance reader 使用的元数据，减少重复读取和解析。 |
+| 数据缓存 | BE 本地磁盘，附带一个读取块大小的内存缓存层 | Dataset 的 `data/` 目录下直接以 `.lance` 结尾的数据文件，按块缓存读取内容。 |
+
+数据缓存由 Lance reader 内的 Foyer 缓存实现，使用独立目录和容量，通过下面的 `lance_*` BE 参数配置。它不使用 Doris 通用 File Cache 的目录和容量配置。索引文件、manifest 和删除文件不进入该磁盘数据缓存；它们仍使用 Lance 原有的读取及缓存路径。
+
+数据缓存按需填充，不会预先下载整个 Dataset。未命中时读取源存储，并将数据交给后台写入磁盘缓存；首次读取仍会产生源存储 I/O 和缓存填充开销。缓存命中可以减少后续读取的源存储访问，但不消除解码、过滤和排序开销。
+
+### BE 配置
+
+以下参数均为可选项，在每个 BE 的 `be.conf` 中配置，修改后需要重启对应 BE。容量均为单个 BE 的容量，单位为字节。
+
+| 参数 | 类型 | 默认值 | 说明 |
+|---|---|---|---|
+| `lance_index_cache_size_bytes` | Int64 | `10737418240`（10 GiB） | 索引内存缓存容量；设为 `0` 表示零容量。 |
+| `lance_metadata_cache_size_bytes` | Int64 | `1073741824`（1 GiB） | 元数据内存缓存容量；设为 `0` 表示零容量。 |
+| `enable_lance_data_cache` | Boolean | `true` | 是否启用磁盘数据缓存；关闭后仍保留索引和元数据缓存。 |
+| `lance_data_cache_path` | String | `${DORIS_HOME}/lance_data_cache` | 数据缓存目录。BE 进程需要有创建目录和读写文件的权限，不同 BE 进程应使用独立目录。 |
+| `lance_data_cache_disk_capacity_bytes` | Int64 | `107374182400`（100 GiB） | 磁盘缓存容量。必须是 `4096` 的整数倍，且至少为读取块大小的两倍。 |
+| `lance_data_cache_read_block_size_bytes` | Int64 | `1048576`（1 MiB） | 数据缓存的读取块大小。必须为正数且是 `4096` 的整数倍；同时决定数据缓存内存层的容量。 |
+
+例如，显式配置默认容量，并将缓存放在独立的本地磁盘目录：
+
+```properties
+lance_index_cache_size_bytes = 10737418240
+lance_metadata_cache_size_bytes = 1073741824
+enable_lance_data_cache = true
+lance_data_cache_path = /mnt/ssd/lance_data_cache
+lance_data_cache_disk_capacity_bytes = 107374182400
+lance_data_cache_read_block_size_bytes = 1048576
+```
+
+重启 BE 后，首次打开 Lance Dataset 时初始化共享缓存。启用数据缓存时，如果目录不可用或容量、块大小不合法，初始化会失败并导致 Lance 查询报错，不会自动退回到禁用数据缓存的模式。需要关闭磁盘数据缓存时，将 `enable_lance_data_cache` 设为 `false` 后重启 BE。
+
+配置容量时应同时考虑索引缓存、元数据缓存和查询工作内存。上述容量不是 Lance 查询总内存的上限，也不是 BE 进程内存的上限。磁盘缓存还需要本地磁盘空间和文件描述符资源；增大读取块可以减少块数量，但小范围读取可能产生更多额外 I/O。调整读取块大小或磁盘布局时使用新的缓存目录。
+
+### 查看缓存效果
+
+在查询 Profile 的 `LanceReader` 下查看以下计数器：
+
+| 计数器 | 含义 |
+|---|---|
+| `LanceDataCacheBytesReadFromCache` | 经过数据缓存路径、命中缓存并返回给 reader 的逻辑字节数。 |
+| `LanceDataCacheBytesReadFromRemote` | 经过数据缓存路径、未命中后从源存储读取并返回给 reader 的逻辑字节数。源存储也可以是本地文件。 |
+| `LanceIndexPartitionCacheMissLoads` | 因索引分区缓存未命中而加载的分区数，不是整个索引缓存的未命中次数。 |
+
+两个数据缓存字节计数不包含按块读取产生的额外字节，也不覆盖索引、manifest 等绕过数据缓存的 I/O，因此不能用它们代替完整的远端流量统计。数据缓存关闭时，这两个计数为 `0`，不代表没有读取源存储。计数在关闭 Dataset 时收集，应查看查询完成后的 Profile；第二阶段回读也会复用缓存，但这两个扫描计数器不能视为整个查询所有回读 I/O 的合计。
+
+BE 的 `/metrics` 还提供以 `doris_be_lance_session_index_cache_` 和 `doris_be_lance_session_metadata_cache_` 为前缀的指标，后缀分别为 `capacity_bytes`、`usage_bytes`、`entries`、`hits_total` 和 `misses_total`，表示配置容量、当前使用量、条目数、累计命中和累计未命中。这些是 BE 共享缓存指标，初始化共享 Lance Session 后注册，不能直接归属于某一条查询。
+
+比较缓存效果时，应使用相同 Dataset 版本和查询参数，确保查询实际执行并落到相同 BE，同时记录首次读取和重复读取的耗时、缓存计数及源存储 I/O。只查看总耗时不足以区分缓存收益与索引搜索、解码或第二阶段回读的开销。
+
+## TopN 两阶段读取和延迟物化
+
+`vector_search()` 和 `full_text_search()` 通常会生成多于最终 `top_k` 的候选行。如果在搜索阶段就读取 `title`、`payload` 等较宽的输出列，大部分数据会在 TopN 排序后被丢弃。两阶段读取会延迟读取这些列：第一阶段只读取过滤、排序和 TopN 所需的列；全局 TopN 完成后，第二阶段仅为最终保留的行读取其他输出列。
+
+这种方式可以减少存储 I/O、网络传输和内存占用。当 `top_k` 较小、候选较多，或者查询包含较宽的字符串、JSON 等输出列时，收益通常更明显。
+
+| 阶段 | 读取内容 |
+|---|---|
+| 第一阶段 | 检索内部需要的列、`_distance` 或 `_score`、Post-filter 和排序使用的列，以及内部 Row Location。 |
+| 第二阶段 | 只为全局 TopN 保留的行读取仅用于最终输出的顶层列。 |
+
+### 触发条件
+
+满足以下条件时，Doris 才会使用两阶段读取：
+
+1. 查询通过 `vector_search()` 或 `full_text_search()` 读取 Lance，且执行计划中存在可进行延迟物化的 TopN。普通 Lance 表扫描和 Lance 文件 TVF 当前不适用此开关。
+2. Boolean 类型的会话变量 `enable_lance_lazy_materialization` 为 `true`，默认开启。
+3. 查询至少包含一个可以延迟读取的顶层列。仅用于最终 `SELECT` 输出的列可以延迟；Post-filter、`ORDER BY` 或其他 TopN 前表达式使用的列必须在第一阶段读取。嵌套子列当前不能延迟读取。
+
+例如，以下查询中的 `category` 必须在第一阶段用于 Post-filter，而 `user_id`、`title` 和 `payload` 可以在 TopN 完成后读取：
+
+```sql
+SET enable_lance_lazy_materialization = true;
+
+SELECT user_id, title, payload, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "offset" = "3"
+)
+WHERE category = 'book';
+```
+
+TVF `filter` 中引用的 Prefilter 列由 Lance 在搜索内部使用，不会仅因为出现在 `filter` 字符串中就作为第一阶段结果列返回给 Doris。
+
+### 验证是否生效
+
+在上述查询前加上 `EXPLAIN VERBOSE`。两阶段读取生效时，计划中可见 `VMaterializeNode`，其中 `column_descs_lists` 列出第二阶段回读的列。关闭开关后，对同一条简单检索查询再次执行 `EXPLAIN VERBOSE`，对应的物化节点应消失。如果开启后仍未出现，应检查输出列是否参与过滤、排序或其他 TopN 前计算，以及计划是否支持该优化。
+
+### 关闭两阶段读取
+
+设置以下会话变量可以关闭两阶段读取：
+
+```sql
+SET enable_lance_lazy_materialization = false;
+```
+
+没有可延迟列或计划不支持该优化时，Doris 会使用单阶段读取。Lance 不会仅因为 `top_k` 较大就自动关闭两阶段读取；以下情况可以考虑关闭并进行性能对比：
+
+- `top_k` 很大，第二阶段仍需读取大部分候选行。
+- 查询只返回少量窄列，两阶段能够减少的 I/O 很少。
+- 底层存储的随机 Row-ID 读取延迟较高，第二阶段 Fetch 的额外开销超过延迟读取带来的收益。
+
+关闭后只会改变输出列的读取时机，不会禁用向量索引或 FTS 索引，也不会改变 Prefilter、Post-filter 和 TopN 的语义。建议根据实际查询和存储环境进行开启与关闭的性能对比。
+
+## 全文检索
+
+`full_text_search()` 是一个关系型 TVF，它使用 Lance 表中已有的 FTS 倒排索引执行 BM25 检索，支持使用 OR 或 AND 组合分词后的查询词，以及按词序和间隔执行 Phrase 查询。Doris 将各个物理 Index Segment 的候选结果合并为全局 Top-K，并在源表列之外增加 `_score` 列；分数越高，相关性越高。
+
+使用前，必须通过 Lance SDK 或其他 Lance 写入端在目标字符串列上创建 FTS 倒排索引。Phrase 查询还要求索引创建时启用 token position，例如在 Lance 的索引参数中设置 `with_position=true`。Doris 不会创建索引，也不会在缺少 FTS 索引时回退到逐行全文扫描。
+
+### 语法和示例
+
+下面的查询先在 `category = 'storage'` 的文档中检索 `lance database`，再由 Doris 对候选结果执行 `published = true` 的 Post-filter：
+
+```sql
+SELECT document_id, title, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.documents",
+    "column" = "body",
+    "query" = "lance database",
+    "query_type" = "match",
+    "operator" = "and",
+    "top_k" = "10",
+    "offset" = "0",
+    "filter" = "category = 'storage'",
+    "coverage_mode" = "strict"
+)
+WHERE published = true
+ORDER BY _score DESC, document_id;
+```
+
+上例使用 Match AND，只返回同时包含分词结果 `lance` 和 `database` 的文档。`filter` 是 Lance 在生成 FTS 候选结果前执行的 Prefilter；外层 `WHERE` 是生成候选结果后执行的 Post-filter。Post-filter 不会补充被过滤掉的候选行，因此最终结果可能少于 `top_k`。如果 `published = true` 也必须参与候选生成，应将它合并到 `filter` 中。
+
+下面的查询使用 Phrase，并允许相邻查询词之间最多存在一个其他 token。例如，它可以匹配 `lance search engine`：
+
+```sql
+SELECT document_id, title, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.documents",
+    "column" = "body",
+    "query" = "lance engine",
+    "query_type" = "phrase",
+    "slop" = "1",
+    "top_k" = "10"
+)
+ORDER BY _score DESC, document_id;
+```
+
+返回关系包含源 Lance 表的全部列和可为 `NULL` 的 `FLOAT` 列 `_score`。源表不能已经包含同名列。TVF 内部会按 `_score` 从高到低选取 Top-K，但 SQL 关系不保证最终展示顺序；需要稳定顺序时仍应显式使用 `ORDER BY _score DESC`，并增加唯一列作为同分时的排序键。
+
+### 参数
+
+| 参数 | 是否必需 | 默认值 | 说明 |
+|---|---|---|---|
+| `table` | 是 | - | 完整的三段式 `catalog.database.table` 名称，必须指向 Lance Catalog 中的表。多级 Namespace 的数据库名包含 `.` 时，需要使用反引号引用数据库部分。用户必须拥有该表的 `SELECT` 权限。 |
+| `column` | 是 | - | 已创建 FTS 倒排索引的字符串列，支持 Arrow `utf8` 和 `large_utf8`，在 Doris 中映射为 `TEXT`。 |
+| `query` | 是 | - | 非空的检索文本，按照创建 FTS 索引时配置的分词方式处理。 |
+| `query_type` | 否 | `match` | 查询类型，可选值为 `match` 或 `phrase`。 |
+| `operator` | 否 | `or` | 仅用于 Match 查询。`or` 表示至少命中一个查询词，`and` 表示命中全部查询词。Phrase 查询不能设置该参数。 |
+| `slop` | 否 | `0` | 仅用于 Phrase 查询，必须是 `0` 到 `2147483647` 之间的整数。`0` 要求精确短语，正数表示相邻查询词之间允许存在的最大 token 数。Match 查询不能设置该参数。 |
+| `top_k` | 否 | `10` | 跳过 `offset` 后返回的结果数，必须为正整数。 |
+| `offset` | 否 | `0` | 按相关性跳过的结果数，必须为非负整数；`top_k + offset` 不能超过无符号 32 位整数的最大值。 |
+| `filter` | 否 | - | 生成全文检索候选结果前由 Lance 执行的 SQL 条件，即 Prefilter。 |
+| `coverage_mode` | 否 | `strict` | FTS 索引未覆盖当前快照全部 Fragment 时的处理方式，可选值为 `strict` 或 `index_only`。 |
+
+### 查询类型
+
+| 查询类型 | 匹配行为 | 相关参数 | 索引要求 |
+|---|---|---|---|
+| Match OR | 至少命中一个分词后的查询词；这是默认行为。 | `query_type=match`、`operator=or` | 普通 FTS 倒排索引。 |
+| Match AND | 必须命中全部分词后的查询词。 | `query_type=match`、`operator=and` | 普通 FTS 倒排索引。 |
+| Phrase | 查询词必须保持分词后的顺序，并满足 `slop` 指定的间隔。 | `query_type=phrase`、`slop=N` | FTS 索引必须保存 token position。 |
+
+当前不支持 Boolean、Boost、Prefix、Wildcard、Regex 或跨多个字段组合的 FTS 查询。
+
+### 索引覆盖模式
+
+| 模式 | 行为 | 适用场景 |
+|---|---|---|
+| `strict` | 要求选中的 FTS 索引覆盖当前查询固定快照中的全部 Fragment；只要存在未覆盖 Fragment，查询就会报错。 | 默认且推荐。用于不能接受遗漏数据的查询。追加数据后，应先更新或重建 FTS 索引再查询。 |
+| `index_only` | 只查询已被 FTS 索引覆盖的 Fragment，忽略未覆盖数据。 | 仅在明确允许结果不完整，并希望在索引更新期间继续提供检索服务时使用。 |
+
+两种模式都要求目标列上存在已提交且覆盖信息完整的 FTS 索引。如果没有可用索引，查询都会失败。一个列上还应只保留一个逻辑 FTS 索引；存在多个匹配索引时，Doris 无法确定应使用哪一个并会报错。
+
+使用 `EXPLAIN` 可以确认执行方式：`lanceFtsQueryType` 显示 Match 或 Phrase，`lanceFtsMatchOperator` 显示 Match 的 OR/AND 操作符，`lanceFtsPhraseSlop` 显示 Phrase 间隔；`lanceFtsCoverageMode` 显示覆盖模式，`lanceSearchIndexSegments` 显示使用的物理 FTS Index Segment 数，`lanceSearchUnindexedFragments` 显示当前快照中未被索引覆盖的 Fragment 数。
+
+## 当前执行方式
+
+`vector_search()` 和 `full_text_search()` 的执行顺序如下：
+
+```text
+固定数据集快照
+  -> FE 规划检索 Split
+       -> 向量检索：物理向量 Index Segment + 未覆盖 Fragment 的 Flat Search
+       -> 全文检索：物理 FTS Index Segment（按 coverage_mode 检查覆盖情况）
+  -> 每个 Split：Lance Prefilter -> 向量/全文检索 -> 最多 K+n 个候选
+  -> Doris Scan Post-filter
+  -> Doris 局部 TopN
+  -> Exchange
+  -> Doris 全局 TopN（应用 offset=n 和 limit=K）
+  -> 可选的延迟物化 Fetch
+```
+
+## 当前限制和建议
+
+- Lance Catalog 和 Lance TVF 当前仅支持读取，不支持 `CREATE TABLE`、`INSERT`、`UPDATE`、`DELETE`、`TRUNCATE TABLE` 或写回 Lance。
+- 查询总是读取规划时选择的当前版本，不支持通过 SQL 指定 Version 或执行 Time Travel。
+- 使用不支持的列类型时，建议显式列出需要读取的列，避免 `SELECT *` 投影到不支持的列。
+- 对普通扫描使用 `EXPLAIN` 检查 `lancePushdownPredicate`，确认目标条件是否已下推。
+- 向量检索前应在 Lance 中创建与查询方式匹配的索引；小数据集或验证场景可以设置 `"use_index" = "false"` 使用 Flat Search。
+- 全文检索前必须在 Lance 中创建 FTS 倒排索引。默认的 `strict` 模式会在索引未覆盖当前快照全部 Fragment 时拒绝查询；仅在可接受遗漏数据时使用 `index_only`。
+- Phrase 查询要求 FTS 索引保存 token position；如果需要 Phrase 能力，应在创建索引时设置 `with_position=true`。
+- 可以使用 `SHOW INDEX` 查看 Filesystem Catalog 表的 Lance 逻辑索引，例如在执行向量或全文检索前确认索引名、索引类型和被索引字段；REST Catalog 不支持 `SHOW INDEX`。
+- 向量查询需要稳定顺序时，显式使用 `ORDER BY _distance ASC` 并增加唯一 Tie-breaker。
+- 全文查询需要稳定顺序时，显式使用 `ORDER BY _score DESC` 并增加唯一 Tie-breaker。
+- 需要在向量或全文候选生成前过滤时使用 TVF 的 `filter`；外层 `WHERE` 只过滤每个搜索 Split 已生成的候选，并在 Doris 全局 TopN 之前执行，应允许其最终结果少于 `top_k`。
+- 使用 `EXPLAIN` 检查 `lanceSearchFragments` 和 `lanceSearchIndexSegments`。前者表示固定快照中的可见 Fragment 数量，后者表示 FE 选择的物理 Index Segment Split 数量。向量检索还可能包含回退的 Flat Search Fragment Split；全文检索不会回退到 Flat Search。

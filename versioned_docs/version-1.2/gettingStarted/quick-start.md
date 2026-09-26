@@ -21,7 +21,7 @@ Download the Apache Doris installation package from doris.apache.org and proceed
 
 ```shell
 # Download the binary installation package of Apache Doris
-server1:~ doris$ wget https://download.selectdb.com/apache-doris-2.0.3-bin-x64.tar.gz
+server1:~ doris$ wget https://download.velodb.io/apache-doris-2.0.3-bin-x64.tar.gz
 
 # Extract the installation package
 server1:~ doris$ tar zxf apache-doris-2.0.3-bin-x64.tar.gz
@@ -92,7 +92,7 @@ mysql -uroot -P9030 -h127.0.0.1
 
 Note:
 
-- The root user here is the built-in super admin user of Apache Doris. See [Authentication and Authorization](../admin-manual/auth/authentication-and-authorization.md) for more information.
+- The root user here is the built-in super admin user of Apache Doris. See [Authentication and Authorization](../admin-manual/privilege-ldap/user-privilege.md) for more information.
 - -P: This specifies the query port that is connected to. The default port is 9030. It corresponds to the `query_port`setting in fe.conf.
 - -h: This specifies the IP address of the FE that is connected to. If your client and FE are installed on the same node, you can use 127.0.0.1.
 

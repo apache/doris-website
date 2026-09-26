@@ -3,12 +3,13 @@
     "title": "Continuous Load Overview",
     "language": "en",
     "sidebar_label": "Overview",
-    "description": "Learn about Doris Streaming Job continuous load: supported data sources, SQL Mapping vs Auto Table Creation selection, job state machine, and common operations.",
+    "description": "Learn about Doris Streaming Job continuous load for MySQL, PostgreSQL, OceanBase, and S3, including sync method selection, job states, and common operations.",
     "keywords": [
         "Doris continuous load",
         "Streaming Job",
         "MySQL real-time sync",
         "PostgreSQL real-time sync",
+        "OceanBase real-time sync",
         "S3 continuous load",
         "SQL Mapping Sync",
         "Auto Table Creation Sync",
@@ -44,9 +45,10 @@ Continuous load supports the following data sources and sync modes:
 | :---------- | :----------------- | :---------------------------------------------------------------- | :---------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
 | MySQL       | 5.6, 5.7, 8.0.x    | [MySQL CDC with SQL Mapping](./continuous-load-mysql-table.md)    | [MySQL CDC with Auto Table Creation](./continuous-load-mysql-database.md) | [Amazon RDS MySQL](./prerequisites/amazon-rds-mysql.md) · [Amazon Aurora MySQL](./prerequisites/amazon-aurora-mysql.md)                   |
 | PostgreSQL  | 14, 15, 16, 17     | [PostgreSQL CDC with SQL Mapping](./continuous-load-postgresql-table.md) | [PostgreSQL CDC with Auto Table Creation](./continuous-load-postgresql-database.md) | [Amazon RDS PostgreSQL](./prerequisites/amazon-rds-postgresql.md) · [Amazon Aurora PostgreSQL](./prerequisites/amazon-aurora-postgresql.md) |
+| OceanBase   | MySQL compatibility mode | -                                                           | [OceanBase CDC with Auto Table Creation](./continuous-load-oceanbase-database.md) (since version 4.1.4) | -                                                                                                                                         |
 | S3          | -                  | [S3 Continuous Load](./continuous-load-s3.md)                     | -                                                                       | -                                                                                                                                         |
 
-For how upstream column types map to Doris types, see Data Type Mapping for [MySQL](./data-type-mapping-mysql.md) and [PostgreSQL](./data-type-mapping-postgresql.md).
+For how upstream column types map to Doris types, see Data Type Mapping for [MySQL](./data-type-mapping-mysql.md), [PostgreSQL](./data-type-mapping-postgresql.md), and [OceanBase](./data-type-mapping-oceanbase.md).
 
 ## How to Choose a Sync Method
 
@@ -71,6 +73,7 @@ SQL Mapping Sync and Auto Table Creation Sync are two continuous load methods wi
 
 - **You need to apply SQL processing to the data, or you have strict requirements for exactly-once semantics** -> choose **SQL Mapping Sync**
 - **You want Doris to create tables automatically and sync a group of tables with one configuration** -> choose **Auto Table Creation Sync**
+- **The data source is OceanBase** -> currently, only Auto Table Creation Sync in MySQL compatibility mode is supported
 - **The data source is S3 object storage** -> only SQL Mapping Sync is supported (using the S3 TVF)
 
 ## Job State Transitions
@@ -133,6 +136,9 @@ Result columns:
 | LoadStatistic     | Job statistics                                                           |
 | ErrorMsg          | Error message of the Job                                                 |
 | JobRuntimeMsg     | Runtime hints of the Job                                                 |
+| LagBytes          | Number of backlog bytes in the source log (MySQL / OceanBase binlog or PostgreSQL WAL). `-1` means the value is currently unavailable, for example for an S3 data source or during the full snapshot phase. **Since version 4.1.4**, this column replaces the former `Lag` column (in seconds) and is reported in bytes |
+| LastSourceEventTimestamp | Timestamp (in Unix seconds) of the latest source event recorded in the committed offset. Empty when unavailable. **Added in version 4.1.4** |
+| LastTaskSuccessTime | Time when the most recent Task completed successfully                  |
 
 ### View Task Status
 
@@ -213,10 +219,20 @@ Only upstream tables **with a primary key** can be synchronized (both sync metho
 
 ### Schema Change (DDL)
 
-DDL sync applies **only to Auto Table Creation Sync**; SQL Mapping (TVF) does not sync any DDL.
+DDL sync applies **only to Auto Table Creation Sync**; SQL Mapping (TVF) does not sync any DDL — the `cdc_stream()` table function always forces `schema_change_enabled` to `false`.
 
 - **PostgreSQL** (supported since 4.1): only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and constraint / index / partition changes are NOT synced** — apply them manually in Doris.
-- **MySQL**: upstream DDL is **not synced yet** — adjust the Doris table schema manually.
+- **MySQL** (supported since 4.1.4): only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and constraint / index / partition changes are NOT synced** — apply them manually in Doris.
+- **OceanBase** (supported since 4.1.4): only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and primary key / constraint / index / partition changes are NOT synced** — apply them manually in Doris.
+
+Auto Table Creation Sync enables Schema Change Sync by default. Doris 4.1 currently does not provide a SQL property to disable it.
+
+:::caution Behavior change (4.1.4)
+
+- Starting from version 4.1.4, an added column **no longer carries the `DEFAULT` value of the upstream column** (for MySQL, PostgreSQL, and OceanBase). The new column has no default value in Doris, and historical rows are not backfilled.
+- PostgreSQL schema change detection is now driven by Relation events: only `ADD COLUMN` and `DROP COLUMN` are recognized; a change that both adds and drops columns (possibly a `RENAME`) is skipped, as are column type changes. This capability applies only to the Auto Table Creation Sync (at-least-once) path; the TVF / exactly-once path does not support it.
+
+:::
 
 ## FAQ
 

@@ -20,14 +20,20 @@ jobs:
 
       - name: Collect added/modified Markdown files
         id: changed
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
         run: |
           # Only added (A) or modified (M) files in this PR — deletions and renames-source are skipped.
-          # Three-dot diff (BASE...HEAD) gives the PR's own changes vs. the merge-base,
-          # so commits that landed on the base branch after this PR diverged are excluded.
+          # github.event.pull_request.base.sha is the base branch tip from when the PR was opened,
+          # not the current one, so diffing against it drags in every commit that landed on the base
+          # branch since then. Resolve the merge base against the base branch as it is now: the
+          # checkout is refs/pull/<n>/merge, so this leaves exactly the PR's own changes.
+          BASE_SHA="$(git merge-base "origin/$BASE_REF" HEAD)"
+          echo "Diffing against origin/$BASE_REF ($BASE_SHA)"
           {
             echo 'files<<EOF'
             git diff --name-only --diff-filter=AM \
-              "${{ github.event.pull_request.base.sha }}...HEAD" \
+              "$BASE_SHA" HEAD \
               -- 'docs/**/*.md' 'docs/**/*.mdx' \
                  'i18n/zh-CN/docusaurus-plugin-content-docs/current/**/*.md' \
                  'i18n/zh-CN/docusaurus-plugin-content-docs/current/**/*.mdx'

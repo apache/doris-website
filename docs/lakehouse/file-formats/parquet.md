@@ -17,6 +17,22 @@ This document introduces the support for reading and writing Parquet file format
 * Writing data during Export.
 * Writing data with Outfile.
 
+## INT96 Timestamp Decoding
+
+Parquet `INT96` stores date and time fields without a time zone annotation. FileScannerV2 therefore preserves the raw wall-clock value by default instead of shifting it with the SQL session time zone. For example, a raw `2021-01-01 10:11:00` remains `10:11:00` when mapped to `DATETIMEV2`, including in Catalog scans, table-valued functions, and Broker Load.
+
+This behavior applies only to `INT96`. Parquet `INT64` values with a timestamp logical type continue to follow the logical-type semantics. If legacy Hive writers normalized `INT96` values with a known time zone, configure `hive.parquet.time-zone` in the [Hive Catalog](../catalogs/hive-catalog.mdx#timestamp-compatibility). External file table-valued functions also accept that property. Other FileScannerV2 entry points preserve the raw `INT96` wall-clock value, except Hudi, which intentionally retains its pre-existing SQL session-time-zone behavior in both native and JNI scans and ignores `hive.parquet.time-zone`.
+
+When an `INT96` column maps to `TIMESTAMPTZ`, Doris preserves the UTC instant rather than applying the compatibility time zone.
+
+## UUID Type Mapping
+
+Reading supports UUID-annotated `FIXED_LEN_BYTE_ARRAY(16)` with plain or dictionary encoding in canonical big-endian byte order. For ordinary Parquet TVFs, `enable_mapping_varbinary=false` exposes canonical UUID strings, which can be converted with `CAST(value AS UUID)`. When set to `true`, it preserves raw VARBINARY bytes; use `CAST(HEX(value) AS UUID)`. Iceberg Catalog preserves raw bytes in both STRING and VARBINARY mappings, so use the HEX path there.
+
+Writing a Doris `UUID` column, including a UUID element nested in ARRAY, MAP, or STRUCT, produces `FIXED_LEN_BYTE_ARRAY(16)` with the UUID logical annotation, so other engines that understand the annotation recover the value as a UUID. Doris itself keeps reading such files through the STRING / VARBINARY mapping described above.
+
+For the complete UUID output mappings in OUTFILE and EXPORT, see [Column Type Mapping for Exported Files](../../data-operate/export/export-overview.md#column-type-mapping-for-exported-files).
+
 ## Supported Compression Formats
 
 * uncompressed
@@ -56,5 +72,3 @@ This document introduces the support for reading and writing Parquet file format
 * `parquet_column_max_buffer_mb` (2.1+, 3.0+)
 
     The maximum buffer size allocated when reading a Column within a Parquet Row Group. Default is 8M.
-
-

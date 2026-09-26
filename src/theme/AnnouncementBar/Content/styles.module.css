@@ -10,7 +10,7 @@
 }
 
 .content a:active {
-  background-color: linear-gradient(90deg, #1FCD94 0%, #11A679 100%), #FFF;
+  background: linear-gradient(90deg, var(--brand-primary-tint) 0%, var(--brand-primary) 100%), #FFF;
 }
 
 .content p:hover {

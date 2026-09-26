@@ -2,12 +2,12 @@
 {
     "title": "WEEKS_DIFF",
     "language": "zh-CN",
-    "description": "WEEKSDIFF 函数用于计算两个日期或时间值之间的完整周数差值，结果为结束时间减去开始时间的周数（以 7 天为 1 周）。支持处理 DATE、DATETIME 类型及符合格式的字符串，计算时会考虑完整的时间差（包括时分秒）。"
+    "description": "WEEKSDIFF 函数用于计算两个日期或时间值之间的完整周数差值，结果为结束时间减去开始时间的周数（以 7 天为 1 周）。支持处理 DATE、DATETIME、TIMESTAMP_NS 类型及符合格式的字符串，计算时会考虑完整的时间差（包括时分秒）。"
 }
 ---
 
 ## 描述
-WEEKS_DIFF 函数用于计算两个日期或时间值之间的完整周数差值，结果为结束时间减去开始时间的周数（以 7 天为 1 周）。支持处理 DATE、DATETIME 类型及符合格式的字符串，计算时会考虑完整的时间差（包括时分秒）。
+WEEKS_DIFF 函数用于计算两个日期或时间值之间的完整周数差值，结果为结束时间减去开始时间的周数（以 7 天为 1 周）。支持处理 DATE、DATETIME、TIMESTAMP_NS 类型及符合格式的字符串，计算时会考虑完整的时间差（包括时分秒）。
 
 ## 语法
 
@@ -18,8 +18,8 @@ WEEKS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 ## 参数
 | 参数                        | 描述                      |
 |----------------------------|--------------------------|
-| `<date_or_time_expr1>`   |较晚的日期或者日期时间,支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
-| `<date_or_time_expr2>` | 较早的日期或者日期时间,支持输入 date/datetime 类型 |
+| `<date_or_time_expr1>`   |较晚的日期或者日期时间,支持输入 DATE/DATETIME/TIMESTAMP_NS 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr2>` | 较早的日期或者日期时间,支持输入 DATE/DATETIME/TIMESTAMP_NS 类型 |
 
 ## 返回值
 

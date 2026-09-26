@@ -386,7 +386,7 @@ test('lintSeo checks static robots, llms, and sitemap policy drafts', () => {
         [
           'module.exports = {',
           "  presets: [[ 'classic', { sitemap: { filename: 'sitemap.xml', createSitemapItems: async () => {",
-          "    return items.filter(item => !['/search', '/ja/search', '/zh-CN/search'].includes(new URL(item.url).pathname.replace(/\\/+$/, '')));",
+          "    return items.filter(item => !['/search', '/zh-CN/search'].includes(new URL(item.url).pathname.replace(/\\/+$/, '')));",
           '  } } } ]],',
           '};',
           '',
@@ -1194,28 +1194,6 @@ description: Legacy fixture that should be ignored by i18n sync.
       (finding) =>
         finding.severity === 'warning' &&
         finding.related_paths.some((relatedPath) => relatedPath.includes('version-2.1/')),
-    ),
-  );
-});
-
-test('lintI18nSync reports Japanese candidate translations as info only', () => {
-  const sourcePath = 'docs/gettingStarted/what-is-apache-doris.md';
-  const findings = withTempFixture(
-    () => {},
-    (rootDir) => {
-      const { lintI18nSync } = loadI18nSyncLinter();
-      const manifest = buildManifest({ rootDir });
-      return lintI18nSync({ rootDir, manifest, changedFiles: [sourcePath] });
-    },
-  );
-
-  assert.ok(
-    findings.some(
-      (finding) =>
-        finding.rule === 'i18n-sync-locale-candidate' &&
-        finding.severity === 'info' &&
-        finding.path === sourcePath &&
-        finding.message.includes('Japanese'),
     ),
   );
 });

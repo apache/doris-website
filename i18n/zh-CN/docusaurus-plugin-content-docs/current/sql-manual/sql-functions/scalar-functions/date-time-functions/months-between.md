@@ -9,7 +9,7 @@
 ## 描述
 
 与 [months_diff 函数](./months-diff) 不同的是，month-between 函数不会忽略日单位，返回的是浮点数，代表真实差距多少个月，而不是日期上显示的月单位所差的月数
-MONTHS_BETWEEN 函数用于计算两个日期时间值之间的月份差值，返回结果为浮点数。该函数支持处理 DATE、DATETIME 类型，并可通过可选参数控制结果是否四舍五入。
+MONTHS_BETWEEN 函数用于计算两个日期时间值之间的月份差值，返回结果为浮点数。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，并可通过可选参数控制结果是否四舍五入。
 
 该函数与 orcle 的 [month-between 函数](https://docs.oracle.com/cd/E11882_01/olap.112/e23381/row_functions042.htm#OLAXS434) 行为一致
 
@@ -23,8 +23,8 @@ MONTHS_BETWEEN(`<date_or_time_expr1>`, `<date_or_time_expr2>` [, `<round_type>`]
 
 | 参数         | 说明                                                |
 |-------------------|------------------------------------------------------------|
-| ``<date_or_time_expr1>``   | 结束日期，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。     |
-| ``<date_or_time_expr2>`` | 开始日期，支持输入 date/datetime 类型和符合日期时间格式的字符串. |
+| ``<date_or_time_expr1>``   | 结束日期，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。     |
+| ``<date_or_time_expr2>`` | 开始日期，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型和符合日期时间格式的字符串. |
 | ``<round_type>`` | 是否将结果四舍五入到第八位小数。支持 `true` 或 `false`。默认为 `true`。 |
 
 ## 返回值

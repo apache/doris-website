@@ -32,7 +32,7 @@ COALESCE( <expr1> [ , ... , <exprN> ] )
     * 字符串类型（String/VARCHAR/CHAR）
     * 布尔类型（Boolean）
     * 数字类型（TinyInt、SmallInt、Int、BigInt、LargeInt、Float、Double、Decimal）
-    * 日期类型（Date、DataTime）
+    * 日期类型（Date、DateTime、TimestampNs）
     * 位图类型（Bitmap）
     * 半结构化类型（JSON、Array、MAP、Struct）
 

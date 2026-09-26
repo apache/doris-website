@@ -20,8 +20,8 @@ MIN_BY(<expr1>, <expr2>)
 
 | Parameter | Description |
 | -- | -- |
-| `<expr1>` | The expression for the associated value, supports types: Bool, TinyInt, SmallInt, Int, BigInt, LargeInt, Float, Double, Decimal, String, Date, Datetime, Array, Map, Struct. |
-| `<expr2>` | The expression for the minimum value, supports types: Bool, TinyInt, SmallInt, Int, BigInt, LargeInt, Float, Double, Decimal, String, Date, Datetime, Array. |
+| `<expr1>` | The expression for the associated value, supports types: Bool, TinyInt, SmallInt, Int, BigInt, LargeInt, Float, Double, Decimal, String, Date, Datetime, TimestampNs, Array, Map, Struct. |
+| `<expr2>` | The expression for the minimum value, supports types: Bool, TinyInt, SmallInt, Int, BigInt, LargeInt, Float, Double, Decimal, String, Date, Datetime, TimestampNs, Array. |
 
 ## Return Value
 

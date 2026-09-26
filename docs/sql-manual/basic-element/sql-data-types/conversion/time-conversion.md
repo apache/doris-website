@@ -320,3 +320,18 @@ If an overflow occurs, NULL is returned.
 | `00:00:00.123456`  | TIME(6) | TIME(3) | `00:00:00.123`    | Reduced precision, no carry             |
 | `120:00:00.99666`  | TIME(6) | TIME(2) | `120:00:01.00`    | Reduced precision, carries to seconds            |
 | `838:59:59.999999` | TIME(6) | TIME(5) | NULL                | Carry overflow, produces invalid TIME |
+
+### From TIMESTAMP_NS
+
+The result is the time-of-day part of the input. Because `TIME(p)` supports precision `p` from 0 to 6, Doris rounds the nine-digit fractional second to the target precision. A carry can propagate to the next second; rounding `23:59:59.999999999` can therefore produce `24:00:00`.
+
+Every valid `TIMESTAMP_NS` time-of-day value is within the `TIME` range, so the conversion always succeeds in both strict and non-strict modes. A `NULL` input returns `NULL`.
+
+#### Examples
+
+| Input TIMESTAMP_NS | Target Type | Cast as TIME Result | Comment |
+| --- | --- | --- | --- |
+| `2024-02-29 12:34:56.123456789` | `TIME(0)` | `12:34:56` | Rounds to whole seconds |
+| `2024-02-29 12:34:56.123456789` | `TIME(3)` | `12:34:56.123` | Rounds to milliseconds |
+| `2024-02-29 12:34:56.123456789` | `TIME(6)` | `12:34:56.123457` | Rounds to microseconds |
+| `1969-12-31 23:59:59.999999999` | `TIME(6)` | `24:00:00.000000` | Carry to the next second |

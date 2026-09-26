@@ -1,0 +1,5 @@
+interface:
+  display_name: "Doris Image Generator"
+  short_description: "Create Doris article illustrations with optional mascot use"
+  default_prompt: "Use $doris-img-gen to create a Doris article illustration from this content brief."
+  brand_color: "#1C6FF0"

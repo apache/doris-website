@@ -29,7 +29,7 @@ Used to view information about routine load jobs.
 | CURRENT_TASK_NUM         | text    | Number of subtasks currently being scheduled or executed.                                                                                               | `1` |
 | JOB_PROPERTIES           | text    | Job property configurations, including batch size, concurrency, import format, column mapping, and error tolerance.                                      | `{"max_batch_rows":"200000","format":"csv","columnToColumnExpr":"user_id,name,age","max_filter_ratio":"1.0"}` |
 | DATA_SOURCE_PROPERTIES   | text    | Data source property configurations. For Kafka, this includes topic, broker list, and current Kafka partitions.                                          | `{"topic":"test-topic","currentKafkaPartitions":"0","brokerList":"192.168.88.62:9092"}` |
-| CUSTOM_PROPERTIES        | text    | Custom properties configured when creating the job. For Kafka, this usually includes offsets, group id, and Kafka client parameters passed with `property.` prefixes. | `{"kafka_default_offsets":"OFFSET_BEGINNING","group.id":"example_routine_load_73daf600-884e-46c0-a02b-4e49fdf3b4dc"}` |
+| CUSTOM_PROPERTIES        | text    | Custom properties configured when creating the job. For Kafka, this usually includes offsets, group id, and Kafka client parameters passed with `property.` prefixes. Starting from version 4.0.8, sensitive properties are shown as `******` | `{"kafka_default_offsets":"OFFSET_BEGINNING","group.id":"example_routine_load_73daf600-884e-46c0-a02b-4e49fdf3b4dc"}` |
 | STATISTIC                | text    | Job runtime statistics. Common fields include `receivedBytes`, `loadedRows`, `errorRows`, `committedTaskNum`, `abortedTaskNum`, `loadRowsRate`, and `taskExecuteTimeMs`. | `{"receivedBytes":28,"runningTxns":[],"errorRows":0,"committedTaskNum":3,"loadedRows":3,"loadRowsRate":0,"abortedTaskNum":0,"errorRowsAfterResumed":0,"totalRows":3,"unselectedRows":0,"receivedBytesRate":0,"taskExecuteTimeMs":30069}` |
 | PROGRESS                 | text    | Job running progress. For Kafka, it shows the consumed offset of each partition.                                                                         | `{"0":"2"}` |
 | LAG                      | text    | Job lag information. For Kafka, it shows the consumption lag of each partition.                                                                          | `{"0":0}` |
@@ -38,6 +38,25 @@ Used to view information about routine load jobs.
 | USER_NAME                | text    | User who created or operated the job.                                                                                                                    | `root` |
 | CURRENT_ABORT_TASK_NUM   | int     | Current number of failed subtasks.                                                                                                                       | `0` |
 | IS_ABNORMAL_PAUSE        | boolean | Whether the job was paused abnormally by the system instead of manually by a user. `true` indicates an abnormal system pause, and `false` indicates no abnormal pause. | `false` |
+| COMPUTE_GROUP            | text    | The compute group the job runs on. | `default_compute_group` |
+| FIRST_ERROR_MSG          | text    | The first error message the job hit, useful for finding the root cause. Empty when there is no error. | `too many filtered rows` |
+
+## Data Source and Completeness
+
+<!-- Knowledge type: Behavior description -->
+<!-- Applicable scenarios: Multi-FE cluster troubleshooting / Empty error messages -->
+
+`FIRST_ERROR_MSG` and `ERROR_LOG_URLS` are transient runtime fields maintained only in the master FE's memory. Follower FEs do not populate them when replaying metadata.
+
+:::caution Behavior change (4.0.8)
+
+Starting from version 4.0.8, scans of `information_schema.routine_load_jobs` are routed to the master FE, so querying from any FE returns complete `FIRST_ERROR_MSG` and `ERROR_LOG_URLS` values.
+
+Before 4.0.8, the table was served by the FE that received the query, so on a non-master FE these two columns came back empty, inconsistent with `SHOW ROUTINE LOAD` (which forwards to the master).
+
+The routing is controlled by the session variable `enable_schema_scan_from_master_fe`, which defaults to `true`.
+
+:::
 
 ## Query Abnormal Jobs
 

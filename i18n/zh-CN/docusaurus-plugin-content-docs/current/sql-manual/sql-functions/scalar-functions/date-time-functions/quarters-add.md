@@ -2,12 +2,12 @@
 {
     "title": "QUARTERS_ADD",
     "language": "zh-CN",
-    "description": "QUARTERSADD 函数用于在指定的日期时间值基础上增加或减少指定的季度数（1 个季度 = 3 个月），并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME 类型，若输入负数则等效于减去对应季度数。"
+    "description": "QUARTERSADD 函数用于在指定的日期时间值基础上增加或减少指定的季度数（1 个季度 = 3 个月），并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，若输入负数则等效于减去对应季度数。"
 }
 ---
 
 ## 描述
-QUARTERS_ADD 函数用于在指定的日期时间值基础上增加或减少指定的季度数（1 个季度 = 3 个月）,并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME 类型,若输入负数则等效于减去对应季度数。该函数支持 DATE、DATETIME 和 TIMESTAMPTZ 输入类型。
+QUARTERS_ADD 函数用于在指定的日期时间值基础上增加或减少指定的季度数（1 个季度 = 3 个月）,并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型,若输入负数则等效于减去对应季度数。该函数支持 DATE、DATETIME、TIMESTAMP_NS 和 TIMESTAMPTZ 输入类型。
 
 该函数与 [date_add 函数](./date-add) 使用 QUARTER 为单位行为一致。
 
@@ -21,10 +21,12 @@ QUARTERS_ADD(`<date_or_time_expr>`, `<quarters>`)
 
 | 参数                | 说明                                 |
 |-------------------|------------------------------------|
-| ``<date_or_time_expr>`` | 输入的日期或日期时间值,支持输入 date/datetime/timestamptz 类型,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion),[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
+| ``<date_or_time_expr>`` | 输入的日期或日期时间值,支持输入 DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ 类型,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion),[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
 | ``<quarters>``      | 要增加或减少的季度数，正整数表示增加，负整数表示减少。        |
 
 ## 返回值
+
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
 返回一个日期值,与输入的日期类型一致,返回值类型由第一个参数的类型决定:
 - 若 `<quarters>` 为负数,函数效果等同于从基准时间中减去对应季度数（即 QUARTERS_ADD(date, -n) 等价于 QUARTERS_SUB(date, n)）。
 - 若输入为 DATE 类型（仅包含年月日）,返回结果为 DATE 类型；若输入为 DATETIME 类型,返回结果为 DATETIME 类型保留原时间部分（如 '2023-01-01 12:34:56' 加 1 个季度后为 '2023-04-01 12:34:56'）。

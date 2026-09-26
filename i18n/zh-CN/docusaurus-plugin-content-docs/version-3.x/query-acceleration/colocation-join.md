@@ -8,8 +8,6 @@
 
 Colocation Join 旨在为某些 Join 查询提供本地性优化，来减少数据在节点间的传输耗时，加速查询。本文档主要介绍 Colocation Join 的原理、实现、使用方式和注意事项。  
 
-注意：这个属性不会被 CCR 同步，如果这个表是被 CCR 复制而来的，即 PROPERTIES 中包含`is_being_synced = true`时，这个属性将会在这个表中被擦除。
-
 ## 名词解释
 
 - Colocation Group（CG）：一个 CG 中会包含一张及以上的 Table。在同一个 Group 内的 Table 有着相同的 Colocation Group Schema，并且有着相同的数据分片分布。

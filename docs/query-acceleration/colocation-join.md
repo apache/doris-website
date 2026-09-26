@@ -18,10 +18,6 @@ Colocation Join is a Join optimization capability provided by Doris. By colocati
 
 This document describes the principles, implementation, usage, and considerations of Colocation Join.
 
-:::caution Note
-This property is not synchronized by CCR. If the table is replicated by CCR (that is, `PROPERTIES` contains `is_being_synced = true`), this property is erased on that table.
-:::
-
 ## Applicability Checklist
 
 <!-- Knowledge type: Prerequisite check -->
@@ -549,7 +545,3 @@ You can temporarily disable automatic balancing by setting `disable_colocate_bal
 ### Can Two Tables in Different Databases Perform Colocation Join
 
 Yes. In version 2.0 and later, you can create tables using a Global Group name with the `__global__` prefix.
-
-### Is the Colocation Property Preserved After CCR Replication
-
-No. This property is not synchronized by CCR, and the Colocation property of the table on the target cluster is erased (when `PROPERTIES` contains `is_being_synced = true`).

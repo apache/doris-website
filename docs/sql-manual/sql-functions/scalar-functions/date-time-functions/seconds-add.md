@@ -2,13 +2,13 @@
 {
     "title": "SECONDS_ADD",
     "language": "en",
-    "description": "The SECONDSADD function adds or subtracts a specified number of seconds to a specified datetime value and returns the calculated datetime value."
+    "description": "Adds or subtracts seconds from a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value."
 }
 ---
 
 ## Description
 
-The SECONDS_ADD function adds or subtracts a specified number of seconds to a specified datetime value and returns the calculated datetime value. This function supports processing DATE, DATETIME and TIMESTAMPTZ types. If a negative number is input, it is equivalent to subtracting the corresponding number of seconds.
+The SECONDS_ADD function adds or subtracts a specified number of seconds to a specified datetime value and returns the calculated datetime value. This function supports processing DATE, DATETIME, TIMESTAMP_NS, and TIMESTAMPTZ types. If a negative number is input, it is equivalent to subtracting the corresponding number of seconds.
 
 This function is consistent with [date_add function](./date-add) and MySQL's [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) when using SECOND as the unit.
 
@@ -22,13 +22,13 @@ SECONDS_ADD(<date_or_time_expr>, <seconds>)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | Required. The input datetime value. Can be of type DATE, DATETIME or TIMESTAMPTZ. For specific formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | Required. The input datetime value. Can be of type DATE, DATETIME, TIMESTAMP_NS or TIMESTAMPTZ. For specific formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<seconds>` | Required. The number of seconds to add or subtract. Supports integer type (BIGINT). Positive numbers indicate adding seconds, negative numbers indicate subtracting seconds. |
 
 ## Return Value
 
 Return the base time `<date_or_time_expr>` by adding the specified number of seconds `<second>`, the return value type is determined by the type of the first parameter:
-- If the type of the first parameter is DATE/DATETIME, then the return type is DATETIME.
+- If the first parameter is `DATE` or `DATETIME`, the return type is `DATETIME`; if it is `TIMESTAMP_NS`, the return type is `TIMESTAMP_NS`.
 - If the type of the first parameter is TIMESTAMPTZ, then the return type is TIMESTAMPTZ.
 
 Special cases:

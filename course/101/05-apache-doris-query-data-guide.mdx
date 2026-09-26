@@ -1,0 +1,263 @@
+---
+title: Apache Doris Query Data Guide
+description: Learn how to compose and accelerate Apache Doris analytical queries through guided units on joins, subqueries, analytics, UDFs, complex types, and materialized views.
+slug: /101/05-apache-doris-query-data-guide
+sidebar_position: 5
+keywords:
+  - Apache Doris 101
+  - analytical SQL
+  - join optimization
+  - window functions
+  - materialized views
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={5}
+    title="Apache Doris Query Data Guide"
+    readingTime="15–20 minutes"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/query-data/querying-overview"
+>
+    <CourseLessonUnit
+        id="query-toolkit"
+        label="Query toolkit"
+        title={<>Choose SQL structure from the <em>question</em>.</>}
+        summary="Joins connect entities, subqueries and CTEs shape logic, analytical operators calculate context, and materialized views avoid repeated work."
+        coachTitle="Correct structure comes before hints."
+        coach={<p>Write the simplest correct relational expression, inspect its plan, and optimize the expensive data movement or scan. Doris can rewrite and distribute clear SQL more effectively than opaque procedural logic.</p>}
+        calloutTitle="Evidence loop"
+        callout={<p>Use EXPLAIN for the planned shape and query profiles for runtime evidence. Do not infer performance from SQL length alone.</p>}
+        check={{
+            question: 'What should guide the first query rewrite?',
+            options: ['Plan and profile evidence', 'The number of lines in the query'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — plan shape and runtime costs reveal the useful rewrite.',
+            incorrectFeedback: 'Short SQL can still move or scan enormous amounts of data.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris analytical query toolkit"
+            columns={4}
+            items={[
+                { tag: 'JOIN', title: 'Relationships', description: 'Combine, test, or exclude matching entities.' },
+                { tag: 'CTE', title: 'Composition', description: 'Name intermediate logic and organize a complex query.' },
+                { tag: 'WIN', title: 'Analytics', description: 'Calculate ranking, running, and peer-aware values.' },
+                { tag: 'MV', title: 'Acceleration', description: 'Reuse stored results through transparent rewrite.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="join-semantics"
+        label="Join semantics"
+        title={<>Choose which rows must <em>survive</em>.</>}
+        summary="Inner, outer, semi, anti, and cross joins answer different questions even when they use the same relationship keys."
+        coachTitle="Think in retained row sets."
+        coach={<p>INNER keeps matches; LEFT, RIGHT, and FULL preserve unmatched rows from selected sides; SEMI tests existence without returning the other side; ANTI keeps non-matches; CROSS forms every pair.</p>}
+        calloutTitle="Physical implementation"
+        callout={<p>Equi-joins usually enable Hash Join. Non-equality conditions and Cartesian logic may require Nested Loop Join and deserve extra cardinality care.</p>}
+        check={{
+            question: 'Which join returns customers with no matching order?',
+            options: ['LEFT ANTI JOIN', 'INNER JOIN'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — LEFT ANTI keeps left-side rows without a right-side match.',
+            incorrectFeedback: 'INNER JOIN keeps only matched customers.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris join families"
+            columns={3}
+            items={[
+                { tag: 'MATCH', title: 'Inner', description: 'Keep only pairs that satisfy the join condition.' },
+                { tag: 'KEEP', title: 'Outer', description: 'Also preserve unmatched rows from one or both sides.' },
+                { tag: 'EXIST', title: 'Semi', description: 'Return one side when at least one match exists.' },
+                { tag: 'MISS', title: 'Anti', description: 'Return one side only when no match exists.' },
+                { tag: 'PAIR', title: 'Cross', description: 'Produce the Cartesian product of both inputs.' },
+                { tag: 'COND', title: 'Non-equi', description: 'Join with ranges or inequalities, often via nested loops.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="join-distribution"
+        label="Join distribution"
+        title={<>Reduce the bytes that must cross the <em>network</em>.</>}
+        summary="Broadcast, shuffle, bucket shuffle, and colocate strategies trade flexibility for increasingly strict data placement."
+        coachTitle="Table size and distribution choose the movement pattern."
+        coach={<p>Broadcast replicates a small build side. Shuffle repartitions both sides. Bucket shuffle can move one side when join keys align with the other table. Colocate avoids movement when both tables share compatible placement.</p>}
+        calloutTitle="Parallelism still matters"
+        callout={<p>A low bucket count can make an apparently efficient colocate or bucket-shuffle plan slower by limiting parallel work.</p>}
+        check={{
+            question: 'Which strategy is attractive for a very small dimension table?',
+            options: ['Broadcast', 'Shuffle both large inputs'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — broadcasting a genuinely small build side can avoid repartitioning the large side.',
+            incorrectFeedback: 'Shuffling both sides usually moves more data for this shape.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris join data movement spectrum"
+            focusIndex={0}
+            items={[
+                { title: 'Broadcast', description: 'Copy small right side' },
+                { title: 'Shuffle', description: 'Move both sides' },
+                { title: 'Bucket shuffle', description: 'Move one side' },
+                { title: 'Colocate', description: 'No join shuffle' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="subqueries-and-ctes"
+        label="Subqueries and CTEs"
+        title={<>Make intermediate logic <em>visible</em>.</>}
+        summary="Subqueries embed a relational question; CTEs give intermediate result sets a name and can express recursive hierarchies."
+        coachTitle="Correlation changes execution freedom."
+        coach={<p>Uncorrelated subqueries stand alone and are broadly supported. Correlated subqueries depend on the current outer row and have shape restrictions. A CTE can clarify stages, but clarity does not guarantee materialization.</p>}
+        calloutTitle="Keep scope local"
+        callout={<p>Avoid deep cross-level correlation. Prefer explicit joins or named stages when they make dependencies easier to optimize and review.</p>}
+        check={{
+            question: 'What makes a subquery correlated?',
+            options: ['It references a column from the outer query', 'It contains an ORDER BY'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — its result depends on the current row or scope of the outer query.',
+            incorrectFeedback: 'ORDER BY does not by itself create correlation.',
+        }}
+    >
+        <CourseComparison
+            ariaLabel="Subquery and CTE roles"
+            leftTitle="Subquery"
+            leftLead="Nest a value, set, or relation inside another expression."
+            leftItems={['Scalar or multi-row result', 'Correlated or independent', 'Useful for existence tests']}
+            rightTitle="CTE"
+            rightLead="Name a query stage before the main statement."
+            rightItems={['Improves readability', 'Reusable logical stage', 'Can express recursion']}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="multidimensional-analysis"
+        label="Multidimensional SQL"
+        title={<>Compute multiple aggregation levels in <em>one statement</em>.</>}
+        summary="GROUPING SETS selects exact groupings, ROLLUP adds hierarchical totals, and CUBE generates every combination."
+        coachTitle="More combinations mean more work."
+        coach={<p>Use GROUPING SETS when the desired levels are known, ROLLUP for drill-down hierarchies such as year to month to day, and CUBE only when all dimension combinations are useful.</p>}
+        calloutTitle="Distinguish subtotal NULLs"
+        callout={<p>Use GROUPING or GROUPING_ID to distinguish a NULL produced by aggregation from a NULL already present in source data.</p>}
+        check={{
+            question: 'Which operator is best for a year → month → day hierarchy?',
+            options: ['ROLLUP', 'CROSS JOIN'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — ROLLUP naturally expresses hierarchical subtotal levels.',
+            incorrectFeedback: 'CROSS JOIN creates pairs; it does not define aggregation levels.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris multidimensional aggregation operators"
+            columns={3}
+            items={[
+                { tag: 'SET', title: 'GROUPING SETS', description: 'Compute only the explicitly requested grouping combinations.' },
+                { tag: 'TREE', title: 'ROLLUP', description: 'Add subtotals along an ordered dimension hierarchy.' },
+                { tag: 'ALL', title: 'CUBE', description: 'Compute every grouping combination across dimensions.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="window-functions"
+        label="Window functions"
+        title={<>Analyze neighboring rows without <em>collapsing them</em>.</>}
+        summary="Window functions preserve row detail while adding rankings, offsets, running aggregates, and peer-aware calculations."
+        coachTitle="Partition, order, and frame answer different questions."
+        coach={<p>PARTITION BY resets the calculation group, ORDER BY establishes sequence and peers, and the frame defines which rows contribute to the current result.</p>}
+        calloutTitle="ROWS versus RANGE"
+        callout={<p>ROWS uses physical row offsets. RANGE groups peers by ordering value and can include more rows than expected when values repeat.</p>}
+        check={{
+            question: 'Which clause defines the sequence for a running total?',
+            options: ['ORDER BY in the window', 'The table comment'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — window ordering defines the calculation sequence.',
+            incorrectFeedback: 'A table comment has no effect on analytical ordering.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Window function definition"
+            focusIndex={2}
+            items={[
+                { title: 'Partition', description: 'Reset groups' },
+                { title: 'Order', description: 'Sequence peers' },
+                { title: 'Frame', description: 'Select contributing rows' },
+                { title: 'Function', description: 'Rank, offset, aggregate' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="extensibility-and-types"
+        label="Functions and types"
+        title={<>Extend SQL only when built-ins cannot express the <em>logic</em>.</>}
+        summary="Alias functions simplify migration, Java and Python UDFs add custom computation, and complex types keep nested values queryable."
+        coachTitle="Extensibility increases ownership."
+        coach={<p>Prefer built-in functions for optimization and portability. Use alias functions to map familiar signatures, Java for managed custom execution, and Python where its ecosystem justifies the runtime cost. Model ARRAY, MAP, STRUCT, and JSON deliberately.</p>}
+        calloutTitle="Production checklist"
+        callout={<p>Version, secure, test, and monitor user code. Confirm type mappings, NULL behavior, determinism, resource limits, and deployment availability on every relevant node.</p>}
+        check={{
+            question: 'What is usually the first choice for a supported transformation?',
+            options: ['A built-in Doris function', 'A new external UDF'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — built-ins provide the clearest optimization and operating path.',
+            incorrectFeedback: 'A UDF adds deployment and runtime ownership; use it for real gaps.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris extensibility options"
+            columns={4}
+            items={[
+                { tag: 'AKA', title: 'Alias function', description: 'Map a compatible name or reusable expression.' },
+                { tag: 'JVM', title: 'Java UDF', description: 'Implement scalar, aggregate, window, or table logic.' },
+                { tag: 'PY', title: 'Python UDF', description: 'Use Python logic where ecosystem value offsets overhead.' },
+                { tag: 'NEST', title: 'Complex types', description: 'Query arrays, maps, structs, and JSON without flattening first.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="materialized-views"
+        label="Materialized views"
+        title={<>Precompute work that queries repeat <em>often</em>.</>}
+        summary="Synchronous materialized views provide strongly consistent single-table acceleration; asynchronous views support complex multi-table results with managed refresh."
+        coachTitle="Freshness and complexity choose the view type."
+        coach={<p>Use synchronous views for supported projections and aggregations that must follow base-table writes. Use asynchronous views for joins, star schemas, and expensive transformations where scheduled or on-demand refresh is acceptable.</p>}
+        calloutTitle="Transparent rewrite"
+        callout={<p>Applications can keep querying base tables while the optimizer selects a compatible materialized view. Verify rewrite behavior with EXPLAIN.</p>}
+        check={{
+            question: 'Which view type fits a multi-table star-schema rollup?',
+            options: ['Asynchronous materialized view', 'Single-table synchronous view'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — asynchronous views support complex multi-table definitions.',
+            incorrectFeedback: 'Synchronous materialized views are limited to supported single-table shapes.',
+        }}
+    >
+        <CourseComparison
+            ariaLabel="Synchronous and asynchronous materialized views"
+            leftTitle="Synchronous MV"
+            leftLead="Single-table acceleration maintained with base data."
+            leftItems={['Strong consistency', 'Transparent rewrite', 'Restricted query shapes']}
+            rightTitle="Asynchronous MV"
+            rightLead="Flexible stored results refreshed by policy."
+            rightItems={['Multi-table definitions', 'Scheduled or manual refresh', 'Freshness must be managed']}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

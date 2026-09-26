@@ -64,6 +64,7 @@ SHOW DATA TYPES;
    | QUANTILE_STATE | 16   |
    | SMALLINT       | 2    |
    | STRING         | 16   |
+   | TIMESTAMP_NS   | 8    |
    | TINYINT        | 1    |
    | VARCHAR        | 16   |
    +----------------+------+

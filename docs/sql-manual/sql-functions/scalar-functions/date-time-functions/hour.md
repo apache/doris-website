@@ -8,7 +8,7 @@
 
 ## Description
 
-The HOUR function extracts the hour part from a datetime or time expression. This function supports multiple time type inputs, including DATE/DATETIME and TIME, and returns the corresponding hour value.
+The HOUR function extracts the hour part from a datetime or time expression. This function supports multiple time type inputs, including DATE/DATETIME/TIMESTAMP_NS and TIME, and returns the corresponding hour value.
 
 For DATETIME (such as '2023-10-01 14:30:00'), the return value ranges from 0-23 (24-hour format).
 For TIME type (such as '456:26:32'), the return value can exceed 24, ranging from [0,838].
@@ -25,12 +25,13 @@ HOUR(`<date_or_time_expr>`)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_expr>` | A valid date expression that supports datetime/date/time types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific datetime/date/time formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion), and [time conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
+| `<date_or_time_expr>` | A valid date or time expression. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIME`. `DATE` input is treated as 00:00:00. For specific formats, refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion), and [time conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/time-conversion). |
 
 ## Return Value
 
 Returns an integer type (INT) representing the hour part of the input expression.
 - For DATETIME, returns an integer from 0-23.
+- For TIMESTAMP_NS, returns an integer from 0-23.
 - For DATE type, returns 0.
 - For TIME type, returns an integer from 0 to 838 (consistent with the TIME type range), it return tht absolute value.
 - If the input parameter is NULL, returns NULL.
@@ -88,4 +89,3 @@ mysql> select hour(NULL);
 |       NULL |
 +------------+
 ```
-

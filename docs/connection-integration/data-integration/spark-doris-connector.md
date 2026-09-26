@@ -42,6 +42,7 @@ First select the corresponding Connector version based on your Spark, Doris, Jav
 
 | Connector | Spark | Doris | Java | Scala |
 | --- | --- | --- | --- | --- |
+| 26.1.0 | 4.1, 3.5 - 3.1, 2.4 | 1.0 + | 17 (4.1), 8 (3.x, 2.x) | 2.13 (4.1), 2.12 (3.x), 2.11 (2.x) |
 | 26.0.0 | 3.5 - 3.1, 2.4 | 1.0 + | 8 | 2.12, 2.11 |
 | 25.2.0 | 3.5 - 3.1, 2.4 | 1.0 + | 8 | 2.12, 2.11 |
 | 25.1.0 | 3.5 - 3.1, 2.4 | 1.0 + | 8 | 2.12, 2.11 |
@@ -62,7 +63,7 @@ Add the Spark Doris Connector dependency in your project `pom.xml`, and replace 
 <dependency>
     <groupId>org.apache.doris</groupId>
     <artifactId>spark-doris-connector-spark-3.5</artifactId>
-    <version>25.2.0</version>
+    <version>26.1.0</version>
 </dependency>
 ```
 
@@ -82,22 +83,22 @@ You can also download the Jar file of the corresponding version from the [Maven 
 
 If you need to compile the source code yourself, run `sh build.sh` in the source directory and enter the required Scala and Spark versions when prompted.
 
-After successful compilation, the target Jar file is generated in the `dist` directory, for example `spark-doris-connector-spark-3.5-25.2.0.jar`. Copy this file into the Spark `classpath` to start using the Spark Doris Connector:
+After successful compilation, the target Jar file is generated in the `dist` directory, for example `spark-doris-connector-spark-3.5-26.1.0.jar`. Copy this file into the Spark `classpath` to start using the Spark Doris Connector:
 
 | Spark run mode | How to place the Jar file |
 | --- | --- |
 | Local mode | Place the Jar file in the `jars/` directory. |
 | Yarn cluster mode | Place the Jar file in the pre-deployed package. |
 
-For example, upload `spark-doris-connector-spark-3.5-25.2.0.jar` to HDFS and add the dependency through `spark.yarn.jars`:
+For example, upload `spark-doris-connector-spark-3.5-26.1.0.jar` to HDFS and add the dependency through `spark.yarn.jars`:
 
 ```shell
-# 1. Upload spark-doris-connector-spark-3.5-25.2.0.jar to HDFS
+# 1. Upload spark-doris-connector-spark-3.5-26.1.0.jar to HDFS
 hdfs dfs -mkdir /spark-jars/
-hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-25.2.0.jar /spark-jars/
+hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-26.1.0.jar /spark-jars/
 
-# 2. Add the spark-doris-connector-spark-3.5-25.2.0.jar dependency in the cluster
-spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-25.2.0.jar
+# 2. Add the spark-doris-connector-spark-3.5-26.1.0.jar dependency in the cluster
+spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-26.1.0.jar
 ```
 
 ## Scenario 1: Batch read Doris data
@@ -458,13 +459,21 @@ A Java version of the example is available under `samples/doris-demo/spark-demo/
 | `doris.sink.batch.interval.ms` | 0 | Interval between sink batches, in ms. |
 | `doris.sink.enable-2pc` | false | Whether to enable two-phase commit. When enabled, transactions are committed at the end of the job, and if some tasks fail, all transactions in pre-commit state are rolled back. |
 | `doris.sink.auto-redirect` | true | Whether to redirect Stream Load requests. When enabled, Stream Load is written through the FE, and BE information is no longer fetched explicitly. |
-| `doris.enable.https` | false | Whether to enable FE HTTPS requests. |
-| `doris.https.key-store-path` | - | HTTPS key store path. |
-| `doris.https.key-store-type` | JKS | HTTPS key store type. |
-| `doris.https.key-store-password` | - | HTTPS key store password. |
+| `doris.enable.tls` | false | Whether to enable TLS for Doris connections. |
+| `doris.tls.ca-certificate-path` | Empty string | Path to a PEM CA certificate chain. When empty, the Connector does not load a custom CA and uses the corresponding client's default trust store. |
+| `doris.tls.skip-hostname-verification` | false | Whether to skip hostname verification while retaining CA verification. Arrow Flight SQL does not support this option. |
+| `doris.tls.excluded-protocols` | Empty string | Comma-separated protocols that do not use TLS. Available values are `http`, `mysql`, `thrift`, and `arrowflight`. |
 | `doris.read.mode` | thrift | Doris read mode. Available options are `thrift` and `arrow`. |
 | `doris.read.arrow-flight-sql.port` | - | Arrow Flight SQL port of the Doris FE. When `doris.read.mode` is `arrow`, this is used to read data through Arrow Flight SQL. For server-side configuration, refer to [High-speed data transmission link based on Arrow Flight SQL](../arrow-flight-sql.md). |
-| `doris.sink.label.prefix` | spark-doris | Import label prefix when writing through Stream Load. |
+| `doris.sink.mode` | stream_load | Doris write mode. Supported values are `stream_load` and `tvf`. |
+| `doris.sink.label.prefix` | spark-doris | Label prefix for Doris writes. |
+| `doris.sink.s3.endpoint` | - | S3-compatible object storage endpoint. Required in TVF write mode. |
+| `doris.sink.s3.region` | - | Object storage region. Required in TVF write mode. |
+| `doris.sink.s3.bucket` | - | Bucket used to stage data. Required in TVF write mode. |
+| `doris.sink.s3.prefix` | - | Object key prefix used to stage data. Required in TVF write mode. |
+| `doris.sink.s3.access-key` | - | Object storage access key. Required in TVF write mode. |
+| `doris.sink.s3.secret-key` | - | Object storage secret key. Required in TVF write mode. |
+| `doris.sink.s3.path-style-access` | false | Whether to use path-style object storage access in TVF write mode. |
 | `doris.thrift.max.message.size` | 2147483647 | Maximum message size when reading data through Thrift. |
 | `doris.fe.auto.fetch` | false | Whether to automatically fetch FE information. When set to `true`, all FE node information is fetched based on the nodes configured in `doris.fenodes`, so there is no need to configure multiple nodes or to configure `doris.read.arrow-flight-sql.port` and `doris.query.port` separately. |
 | `doris.read.bitmap-to-string` | false | Whether to convert the Bitmap type to a string composed of array indexes when reading. For the result format, refer to the function definition [BITMAP_TO_STRING](../../sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-to-string.md). |
@@ -544,6 +553,54 @@ A Java version of the example is available under `samples/doris-demo/spark-demo/
 Starting from version 24.0.0, the read return type for the Bitmap type is string, and the default returned string value is `Read unsupported`.
 
 :::
+
+## Best practices
+
+### Access a TLS-enabled Doris environment from Spark
+
+Set `doris.enable.tls` to `true` when Spark reads from or writes to a TLS-enabled Doris cluster:
+
+```scala
+mockDataDF.write.format("doris")
+    .option("doris.table.identifier", "$YOUR_DORIS_DATABASE_NAME.$YOUR_DORIS_TABLE_NAME")
+    .option("doris.fenodes", "$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_HTTPS_PORT")
+    .option("user", "$YOUR_DORIS_USERNAME")
+    .option("password", "$YOUR_DORIS_PASSWORD")
+    .option("doris.enable.tls", "true")
+    .option("doris.tls.ca-certificate-path", "/etc/doris-tls/ca.pem")
+    .save()
+```
+
+The CA file must be available to the Spark driver and every executor. If `doris.tls.ca-certificate-path` is not configured, the Connector does not load a custom CA and uses the corresponding client's default trust store.
+
+Distribute the CA file according to the Spark deployment mode:
+
+- **YARN**: Add `--files /local/path/ca.pem` to `spark-submit`, and set `doris.tls.ca-certificate-path` to `ca.pem`.
+- **Kubernetes**: Mount the same Secret or volume into both the driver and executor Pods. For example, add `--conf spark.kubernetes.driver.secrets.doris-tls=/etc/doris-tls` and `--conf spark.kubernetes.executor.secrets.doris-tls=/etc/doris-tls` to `spark-submit`, and set the CA path to `/etc/doris-tls/ca.pem`.
+
+### Use S3 TVF write mode
+
+TVF write mode stores data as JSON in S3-compatible object storage and then writes it to Doris through S3 TVF. It supports batch writes only. Ensure that both Spark and Doris can access the object storage and that the target Doris table already exists.
+
+```scala
+mockDataDF.write.format("doris")
+    .option("doris.table.identifier", "$YOUR_DORIS_DATABASE_NAME.$YOUR_DORIS_TABLE_NAME")
+    .option("doris.fenodes", "$YOUR_DORIS_FE_HOSTNAME:$YOUR_DORIS_FE_HTTP_PORT")
+    .option("doris.query.port", "$YOUR_DORIS_FE_QUERY_PORT")
+    .option("user", "$YOUR_DORIS_USERNAME")
+    .option("password", "$YOUR_DORIS_PASSWORD")
+    .option("doris.sink.mode", "tvf")
+    .option("doris.sink.s3.endpoint", "$YOUR_S3_ENDPOINT")
+    .option("doris.sink.s3.region", "$YOUR_S3_REGION")
+    .option("doris.sink.s3.bucket", "$YOUR_S3_BUCKET")
+    .option("doris.sink.s3.prefix", "$YOUR_S3_PREFIX")
+    .option("doris.sink.s3.access-key", "$YOUR_S3_ACCESS_KEY")
+    .option("doris.sink.s3.secret-key", "$YOUR_S3_SECRET_KEY")
+    .mode(SaveMode.Append)
+    .save()
+```
+
+The Connector does not automatically delete staged objects. Configure an object storage lifecycle policy as needed.
 
 ## FAQ and troubleshooting
 

@@ -11,6 +11,10 @@
     padding-top: 0;
   }
 
+  .sidebarWithDomainNavigation {
+    padding-top: 0;
+  }
+
   .sidebarHidden {
     opacity: 0;
     visibility: hidden;

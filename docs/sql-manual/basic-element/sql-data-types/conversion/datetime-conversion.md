@@ -618,3 +618,16 @@ If an overflow occurs, NULL is returned.
 | `2020-12-12 00:00:00.123456+08:00` | Timestamptz(6) | Datetime(3) | `2020-12-12 00:00:00.123`    | Decrease precision, no carr             |
 | `2020-12-12 00:00:00.99666+08:00`  | Timestamptz(6) | Datetime(2) | `2020-12-12 00:00:01.00`     | Decrease precision, carry to second            |
 | `9999-12-31 23:59:59.999999+08:00` | Timestamptz(6) | Datetime(5) | NULL                         | Carry overflow, produces an invalid date of year 10000 |
+
+### TIMESTAMP_NS
+
+`TIMESTAMP_NS` is time-zone-naive like `DATETIME`, so the conversion preserves the civil date and time without applying a time zone adjustment. Because `TIMESTAMP_NS` always has nine fractional digits and `DATETIME` supports at most six, the fractional part is rounded to the target `DATETIME` precision. A carry can propagate to the next second.
+
+Every valid `TIMESTAMP_NS` value is within the `DATETIME` date range, so conversion always succeeds in both strict and non-strict modes. A `NULL` input returns `NULL`.
+
+| Input TIMESTAMP_NS | Target Type | Result DATETIME | Comment |
+| --- | --- | --- | --- |
+| `2024-02-29 12:34:56.123456499` | Datetime(6) | `2024-02-29 12:34:56.123456` | Discarded digits round down |
+| `2024-02-29 12:34:56.123456500` | Datetime(6) | `2024-02-29 12:34:56.123457` | Discarded digits round up |
+| `1969-12-31 23:59:59.999999500` | Datetime(6) | `1970-01-01 00:00:00.000000` | Carry to the next second and date |
+| `2024-02-29 12:34:56.123456789` | Datetime(3) | `2024-02-29 12:34:56.123` | Round to millisecond precision |

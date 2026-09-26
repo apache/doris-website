@@ -8,7 +8,7 @@
 
 ## Description
 
-The QUARTERS_SUB function is used to subtract or add a specified number of quarters (1 quarter = 3 months) from a specified datetime value and returns the calculated datetime value. This function supports processing DATE and DATETIME types. If a negative number is input, it is equivalent to adding the corresponding number of quarters. This function supports DATE, DATETIME and TIMESTAMPTZ input types.
+The QUARTERS_SUB function is used to subtract or add a specified number of quarters (1 quarter = 3 months) from a specified datetime value and returns the calculated datetime value. This function supports processing DATE, DATETIME, and TIMESTAMP_NS types. If a negative number is input, it is equivalent to adding the corresponding number of quarters. This function supports DATE, DATETIME, TIMESTAMP_NS, and TIMESTAMPTZ input types.
 
 This function behaves consistently with the [date_sub function](./date-sub) when using QUARTER as the unit.
 
@@ -22,10 +22,12 @@ QUARTERS_SUB(`<date_or_time_expr>`, `<quarters>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The input date or datetime value. Supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | The input date or datetime value. Supports DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<quarters>` | The number of quarters to add or subtract. Positive integers indicate subtraction, negative integers indicate addition. |
 
 ## Return Value
+
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
 
 Returns a date value consistent with the input date type, the return value type is determined by the type of the first parameter:
 

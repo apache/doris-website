@@ -61,6 +61,10 @@ The following environments have been verified by the community:
 | CentOS | 7.9 and above (AltArch) | aarch64 |
 | Ubuntu | 20.04 | aarch64 |
 
+:::info Memory page size
+ARM server distributions ship kernels with either 4 KiB or 64 KiB memory pages (KylinOS V10 and CentOS 7/8 aarch64 are commonly 64 KiB, Ubuntu is 4 KiB); check with `getconf PAGESIZE`. The jemalloc that Doris builds on ARM uses `--with-lg-page=16`, so one binary runs on kernels of either page size, but some third-party libraries bake page-size assumptions in at build time. When you build or validate yourself, cover the kernel you actually deploy on; see item 4 of [FAQ 4.2](#42-startup-issues).
+:::
+
 Reference output:
 
 ```shell
@@ -391,19 +395,17 @@ On the ARM platform, only LDB Toolchain is recommended for compilation. This met
 
 For how to download and install LDB Toolchain, see the section above. For the subsequent build steps, see [Compile with LDB Toolchain](./compilation-with-ldb-toolchain). JDK and NodeJS must be replaced with the aarch64 versions (see the section above).
 
-If you have trouble downloading the prebuilt third-party libraries, use `tools/build_thirdparty.sh` to build them yourself. Use gcc when building third-party libraries:
+If you have trouble downloading the prebuilt third-party libraries, use `thirdparty/build-thirdparty.sh` to build them yourself. Use gcc when building third-party libraries:
 
 ```shell
 export DORIS_TOOLCHAIN=gcc
 ```
 
-When compiling Doris on the ARM platform, **you must disable the AVX2, LIBUNWIND, and AZURE third-party libraries**:
+The following build switches behave differently on ARM than on x86_64:
 
-```shell
-export USE_AVX2=OFF
-export USE_UNWIND=OFF
-export DISABLE_BUILD_AZURE=ON
-```
+- **AVX2**: `USE_AVX2` only applies to x86_64 and does not need to be set on ARM. The ARM instruction set is selected with `ARM_MARCH` (4.0 and later, default `armv8-a+crc`), for example `ARM_MARCH=armv8-a+crc+simd sh build.sh --be`.
+- **libunwind**: On 4.1.3 and earlier (including 3.x and 4.0), libunwind does not work on ARM and you need `export USE_UNWIND=OFF` before building. Starting with master (July 2026) and 4.1.4, the `USE_UNWIND` switch has been removed ([apache/doris#64093](https://github.com/apache/doris/pull/64093)): libunwind is always enabled on every Linux platform and setting the variable no longer has any effect. The bundled libunwind 1.6.2 crashes the BE on startup on kernels with 64 KiB memory pages; see item 4 of [FAQ 4.2](#42-startup-issues).
+- **Azure**: On 4.1 and earlier, `env.sh` sets `DISABLE_BUILD_AZURE=ON` automatically on ARM, so nothing needs to be set. Since August 2026, master ([apache/doris#66908](https://github.com/apache/doris/pull/66908)) builds the Azure libraries on ARM as well and links them into the BE by default. To opt out, set `export DISABLE_BUILD_AZURE=ON` (the BE does not link them); when building the third-party libraries, `export DISABLE_THIRDPARTY_BUILD_AZURE=ON` additionally skips building Azure itself.
 
 If you still encounter issues during compilation or startup, see [FAQ](#4-faq). If no relevant solution is available, you are welcome to [open an issue](https://github.com/apache/doris/issues).
 
@@ -653,6 +655,32 @@ If you still encounter issues during compilation or startup, see [FAQ](#4-faq). 
 ```shell
       export GLIBC_COMPATIBILITY=OFF
 ```
+
+#### 4. BE coredumps immediately on startup on ARM, with `unw_backtrace`, `access_mem`, `is_plt_entry` in the core stack
+
+- Symptom:
+
+    An ARM BE built from 4.1.4 or from master after July 2026 segfaults right after `start_be.sh`, with no BE log lines in `be.out`, and a core stack (innermost frame first) like:
+
+    ```text
+    access_mem
+    is_plt_entry
+    _ULaarch64_step
+    _ULaarch64_tdep_trace
+    unw_backtrace
+    ...
+    __libc_csu_init
+    ```
+
+    and `getconf PAGESIZE` prints 65536.
+
+- Cause:
+
+    These versions statically link GNU libunwind 1.6.2 on ARM ([apache/doris#64093](https://github.com/apache/doris/pull/64093)), whose AArch64 memory validator hard-codes a 4 KiB page size. On a kernel with 64 KiB memory pages every validation fails and libunwind dereferences an uninitialized address before `main()`. Kernels with 4 KiB pages are not affected, which is why this does not reproduce on x86_64 or on Ubuntu ARM.
+
+- Solution:
+
+    Build from code or use a release that includes [apache/doris#67877](https://github.com/apache/doris/pull/67877) (libunwind upgraded to 1.8.3); until then, use 4.1.3 on kernels with 64 KiB pages. The crash happens before `main()`, so no `be.conf` setting can work around it.
 
 ### 4.3 Issues With Other Components
 

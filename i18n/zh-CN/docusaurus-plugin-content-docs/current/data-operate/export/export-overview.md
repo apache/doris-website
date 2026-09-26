@@ -86,6 +86,8 @@ Parquet 和 ORC 文件格式拥有自己的数据类型定义，Apache Doris 在
 
 下面分别给出 Apache Doris 数据类型与 ORC、Parquet 格式的映射关系。
 
+仅 CSV 将 UUID 值导出为 36 字符的小写标准文本。Parquet 中 UUID 列写入带 UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，使用标准大端字节序；ORC 中 UUID 列写入 `BINARY` 并附带 Doris 专有的 `doris.logical_type=uuid` 属性，因为 ORC 没有标准 UUID 类型。ARRAY、MAP 或 STRUCT 中嵌套的 UUID 元素与顶层列使用相同的表示方式。通过表值函数重新读取 Doris 写出的 ORC 文件可还原原生 UUID 类型，而 Parquet 的 Schema 推断仍将 UUID 叶子暴露为 `STRING`/`VARBINARY`，重新导入 Parquet 文件时需指定 UUID 目标列，或使用 `CAST(value AS UUID)` 转换。写入 Iceberg UUID 字段时遵循 [Iceberg 列类型映射](../../lakehouse/catalogs/iceberg-catalog.mdx#列类型映射)。
+
 ### ORC 类型映射
 
 | Doris 类型              | ORC 类型  |
@@ -103,6 +105,7 @@ Parquet 和 ORC 文件格式拥有自己的数据类型定义，Apache Doris 在
 | float                   | float     |
 | double                  | double    |
 | char / varchar / string | string    |
+| uuid                    | binary    |
 | decimal                 | decimal   |
 | struct                  | struct    |
 | map                     | map       |
@@ -132,6 +135,7 @@ Apache Doris 导出到 Parquet 文件格式时，会先将 Doris 内存数据转
 | float                   | float32     | FLOAT                 |                                  |
 | double                  | float64     | DOUBLE                |                                  |
 | char / varchar / string | utf8        | BYTE_ARRAY            | UTF8                             |
+| uuid                    | fixed_size_binary(16) | FIXED_LEN_BYTE_ARRAY | UUID                    |
 | decimal                 | decimal128  | FIXED_LEN_BYTE_ARRAY  | DECIMAL(scale, precision)        |
 | struct                  | struct      |                       | Parquet Group                    |
 | map                     | map         |                       | Parquet Map                      |
@@ -143,7 +147,7 @@ Apache Doris 导出到 Parquet 文件格式时，会先将 Doris 内存数据转
 | hll                     | binary      | BYTE_ARRAY            |                                  |
 
 :::note
-在 2.1.11 和 3.0.7 版本中，支持通过 `parquet.enable_int96_timestamps` 属性指定 Doris 的 `datetimev2` 类型在 Parquet 中是使用 `INT96` 还是 `INT64` 存储，默认为 `INT96`。`INT96` 在 Parquet 标准中已被废弃，仅用于兼容旧系统（如 Hive 4.0 之前的版本）。
+Parquet Export 和 Outfile 使用 `enable_int96_timestamps` 属性选择 Doris `DATETIMEV2` 值的物理编码。默认值为 `false`，写入带 Parquet 时间戳逻辑类型的 `INT64`。仅当 Hive 2、Hive 3 等下游旧版读取端要求时，才设置为 `true` 写入已废弃的 `INT96` 编码。异步 Export 会将该属性保存在导出作业中，并在作业执行时应用。如果 Doris 后续读取显式导出的 `INT96` 文件，请在 Hive Catalog 或文件表值函数中将 `hive.parquet.time-zone` 设置为导出会话时区，使 FileScannerV2 还原原始墙上时间。
 :::
 
 ## 相关文档

@@ -20,6 +20,10 @@
 <!-- 知识类型: Feature 概览 + 操作指南 + 配置参数 -->
 <!-- 适用场景: 在 Doris 中扩展 SQL 能力 / 使用 Python 实现自定义计算、聚合与表函数 -->
 
+:::caution 实验功能
+Python UDF/UDAF/UDTF 是实验功能，从 Apache Doris 4.1.3 版本开始发布。
+:::
+
 Python UDF/UDAF/UDTF 是 Apache Doris 提供的自定义函数扩展机制，允许用户使用 Python 语言编写标量函数、聚合函数和表函数，用于在 SQL 中完成内置函数难以表达的复杂计算逻辑，并复用 Python 丰富的生态库。
 
 本文从典型用户场景出发，分别介绍三类函数的用法、参数、数据类型映射、性能建议、限制以及多版本 Python 环境的部署方式。
@@ -465,12 +469,38 @@ DROP FUNCTION IF EXISTS py_is_prime(INT);
 |  | `DECIMAL256` | `decimal.Decimal` | 256 位定点数 |
 | IP 类型 | `IPV4` | `ipaddress.IPv4Address` | IPv4 地址 |
 |  | `IPV6` | `ipaddress.IPv6Address` | IPv6 地址 |
+| UUID 类型 | `UUID` | `uuid.UUID` | 原生 128 位 UUID；`NULL` 映射为 `None` |
 | 二进制类型 | `BITMAP` | `bytes` | 位图数据（暂不支持该类型） |
 |  | `HLL` | `bytes` | HyperLogLog 数据（暂不支持该类型） |
 |  | `QUANTILE_STATE` | `bytes` | 分位数状态数据（暂不支持该类型） |
 | 复杂数据类型 | `ARRAY<T>` | `list` | 数组，元素类型为 T |
 |  | `MAP<K,V>` | `dict` | 字典，键类型为 K，值类型为 V |
 |  | `STRUCT<f1:T1, f2:T2, ...>` | `dict` | 结构体，字段名为键，字段值为值 |
+
+**UUID 处理**：在标量、向量化（`list` 和 `pandas.Series`）、聚合和表函数中，`UUID` 参数均以 `uuid.UUID` 对象传入，ARRAY、MAP 或 STRUCT 中嵌套的 UUID 值同样如此；SQL `NULL` 传入 `None`。Doris 通过 Arrow UUID 扩展传递 16 字节的值，而不是文本形式，因此请在函数中 `import uuid` 并直接使用 `uuid.UUID` 对象。返回类型为 `UUID` 的函数必须返回 `uuid.UUID` 对象或 `None`；返回 `str(value)`、`value.bytes` 或 `value.int` 会报错 `UUID return value must be uuid.UUID`。`STRING` 参数和返回值不受影响，即使文本内容看起来像 UUID。
+
+```sql
+CREATE FUNCTION py_uuid_next(UUID)
+RETURNS UUID
+PROPERTIES (
+    "type" = "PYTHON_UDF",
+    "symbol" = "evaluate",
+    "runtime_version" = "3.10.12",
+    "always_nullable" = "true",
+    "volatility" = "immutable"
+)
+AS $$
+import uuid
+
+def evaluate(value):
+    if value is None:
+        return None
+    return uuid.UUID(int=value.int + 1)
+$$;
+
+SELECT py_uuid_next(CAST('00000000-0000-0000-0000-000000000001' AS UUID)); -- 结果：00000000-0000-0000-0000-000000000002
+SELECT py_uuid_next(NULL); -- 结果：NULL
+```
 
 #### NULL 值处理
 
@@ -2992,7 +3022,7 @@ A：技术上可以，但**强烈不推荐**。UDTF 应该是纯函数式的，�
 
 Doris 提供两种 Python 环境管理方式：
 
-- **Conda 模式**：使用 Miniconda/Anaconda 管理多版本环境。
+- **Conda 模式**：使用 Conda 管理多版本环境。后续示例统一使用 Miniforge；同时也支持 Miniconda、Anaconda 等其他 Conda 发行版。
 - **Venv 模式**：使用 Python 内置的虚拟环境（venv）管理多版本环境。
 
 ### 第三方库的安装与使用
@@ -3039,7 +3069,7 @@ Python UDF、UDAF、UDTF 都可以使用第三方库。但由于 Doris 的分布
 | --- | --- | --- | --- | --- |
 | `enable_python_udf_support` | bool | `true` / `false` | `false` | 是否启用 Python UDF 功能 |
 | `python_env_mode` | string | `conda` / `venv` | `""` | Python 多版本环境管理方式 |
-| `python_conda_root_path` | string | 目录路径 | `""` | Miniconda 的根目录<br/>仅在 `python_env_mode = conda` 时生效 |
+| `python_conda_root_path` | string | 目录路径 | `""` | Conda 安装根目录<br/>仅在 `python_env_mode = conda` 时生效 |
 | `python_venv_root_path` | string | 目录路径 | `${DORIS_HOME}/lib/udf/python` | venv 多版本管理的根目录<br/>仅在 `python_env_mode = venv` 时生效 |
 | `python_venv_interpreter_paths` | string | 路径列表（用 `:` 分隔） | `""` | 可用 Python 解释器的目录列表<br/>仅在 `python_env_mode = venv` 时生效 |
 | `max_python_process_num` | int32 | 整数 | `0` | Python Server 进程池最多运行的进程数<br/>`0` 表示使用 CPU 核数作为默认值，用户可以设置其他正整数覆盖默认值 |
@@ -3054,7 +3084,7 @@ Python UDF、UDAF、UDTF 都可以使用第三方库。但由于 Doris 的分布
 ## be.conf
 enable_python_udf_support = true
 python_env_mode = conda
-python_conda_root_path = /path/to/miniconda3
+python_conda_root_path = /path/to/miniforge3
 ```
 
 #### 2. 环境查找规则
@@ -3078,7 +3108,7 @@ Doris 会在 `${python_conda_root_path}/envs/` 目录下查找与 UDF 中 `runti
 ```
 ## Doris BE 节点文件系统结构 (Conda 模式)
 
-/path/to/miniconda3                  ← python_conda_root_path (由 be.conf 配置)
+/path/to/miniforge3                  ← python_conda_root_path (由 be.conf 配置)
 │
 ├── bin/
 │   ├── conda                        ← conda 命令行工具 (运维使用)
@@ -3122,24 +3152,24 @@ Doris Python UDF/UDAF/UDTF 功能**强制依赖** `pandas` 和 `pyarrow` 两个�
 **在所有 BE 节点上**执行以下命令创建 Python 环境：
 
 ```bash
-# 安装 Miniconda (如果尚未安装)
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3
+# 安装 Miniforge（如果尚未安装）
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+bash Miniforge3-Linux-x86_64.sh -b -p /opt/miniforge3
 
 # 创建 Python 3.9.18 环境并安装必需的依赖 (环境名可自定义)
-/opt/miniconda3/bin/conda create -n py39 python=3.9.18 pandas pyarrow -y
+/opt/miniforge3/bin/conda create -n py39 python=3.9.18 pandas pyarrow -y
 
 # 创建 Python 3.12.11 环境并预装依赖 (重要: Python 版本必须精确指定,且必须安装 pandas 和 pyarrow)
-/opt/miniconda3/bin/conda create -n py312 python=3.12.11 pandas pyarrow numpy -y
+/opt/miniforge3/bin/conda create -n py312 python=3.12.11 pandas pyarrow numpy -y
 
 # 激活环境并安装额外依赖
-source /opt/miniconda3/bin/activate py39
+source /opt/miniforge3/bin/activate py39
 conda install requests beautifulsoup4 -y
 conda deactivate
 
 # 验证环境中的 Python 版本
-/opt/miniconda3/envs/py39/bin/python --version     # 应输出: Python 3.9.18
-/opt/miniconda3/envs/py312/bin/python --version    # 应输出: Python 3.12.11
+/opt/miniforge3/envs/py39/bin/python --version     # 应输出: Python 3.9.18
+/opt/miniforge3/envs/py312/bin/python --version    # 应输出: Python 3.12.11
 ```
 
 #### 5. 在 UDF 中使用
@@ -3315,8 +3345,8 @@ $$;
 
 ```bash
 # Conda 模式: 验证 conda 路径
-ls -la /opt/miniconda3/bin/conda
-/opt/miniconda3/bin/conda env list
+ls -la /opt/miniforge3/bin/conda
+/opt/miniforge3/bin/conda env list
 
 # Venv 模式: 验证解释器路径
 /opt/python3.9/bin/python3.9 --version
@@ -3329,7 +3359,7 @@ ls -la /opt/miniconda3/bin/conda
 
 ```bash
 # Conda 模式
-chmod -R 755 /opt/miniconda3
+chmod -R 755 /opt/miniforge3
 
 # Venv 模式
 chmod -R 755 /doris/python_envs
@@ -3357,8 +3387,8 @@ max_python_process_num = 32
 
 ```bash
 # Conda 模式
-/opt/miniconda3/envs/py39/bin/python --version
-/opt/miniconda3/envs/py39/bin/python -c "import pandas; print(pandas.__version__)"
+/opt/miniforge3/envs/py39/bin/python --version
+/opt/miniforge3/envs/py39/bin/python -c "import pandas; print(pandas.__version__)"
 
 # Venv 模式
 /doris/python_envs/python3.9.18/bin/python --version
@@ -3372,11 +3402,11 @@ SHOW PYTHON VERSIONS;
 ```
 
 ```text
-+---------+---------+---------+-------------------+----------------------------------------+
-| Version | EnvName | EnvType | BasePath          | ExecutablePath                         |
-+---------+---------+---------+-------------------+----------------------------------------+
-| 3.9.18  | py39    | conda   | path/to/miniconda | path/to/miniconda/envs/py39/bin/python |
-+---------+---------+---------+-------------------+----------------------------------------+
++---------+---------+---------+--------------------+-----------------------------------------+
+| Version | EnvName | EnvType | BasePath           | ExecutablePath                          |
++---------+---------+---------+--------------------+-----------------------------------------+
+| 3.9.18  | py39    | conda   | path/to/miniforge3 | path/to/miniforge3/envs/py39/bin/python |
++---------+---------+---------+--------------------+-----------------------------------------+
 ```
 
 #### 展示指定版本中已安装的依赖
@@ -3503,7 +3533,7 @@ grep python /path/to/be.conf
 
 :::caution 注意
 - 必须确保 `pandas` 和 `pyarrow` 出现在依赖文件中，并在所有 BE 节点中安装相同版本。
-- 安装时务必使用与 Doris 配置一致的 Python 解释器或 Conda 路径（例如 `/opt/miniconda3/bin/conda` 或指定的 venv 解释器）。
+- 安装时务必使用与 Doris 配置一致的 Python 解释器或 Conda 路径（例如 `/opt/miniforge3/bin/conda` 或指定的 venv 解释器）。
 - 建议将依赖文件纳入版本控制或放入共享存储，由运维统一分发到所有 BE 节点。
 - 更多参考：[pip 官方文档](https://pip.pypa.io/en/stable/cli/pip/)，[Conda 环境导出/导入说明](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#exporting-the-environment)。
 :::

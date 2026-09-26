@@ -11,13 +11,15 @@
         "unified authentication",
         "ldap.conf configuration",
         "ldap_default_roles",
+        "ldap_allow_empty_pass",
         "MysqlClearPasswordPlugin",
         "ldap_admin_password",
         "ldap_use_ssl",
         "SSLHandshakeException",
         "PKIX path building failed",
         "cleartext password plugin",
-        "cleartext plugin"
+        "cleartext plugin",
+        "empty password login"
     ]
 }
 ---
@@ -132,6 +134,7 @@ The configuration items are explained below:
 | `ldap_user_filter` | User match filter. `{login}` is replaced with the login user name |
 | `ldap_group_basedn` | The base `dn` for group search, used for group authorization |
 | `ldap_default_roles` | Optional. Comma-separated Doris roles granted to every LDAP-authenticated user. These roles are added in addition to LDAP group roles (Supported since version 4.0.7 and 4.1.3) |
+| `ldap_allow_empty_pass` | Optional. Whether users that exist in LDAP may log in with an empty password. Default `false`: Doris rejects empty-password logins directly. Changing it requires an FE restart. See [Empty Password Login](#empty-password-login) (Supported since version 4.1.5) |
 
 :::tip
 To enable LDAPS (encrypted connection to the LDAP server), see the [LDAPS (Encrypted Connection)](#ldaps-encrypted-connection) section below.
@@ -236,6 +239,7 @@ After LDAP is enabled, the login behavior under different user states is as foll
 | Exists | Exists | Doris password | Failure | - |
 | Does not exist | Exists | Doris password | Success | Doris user |
 | Exists | Does not exist | LDAP password | Success | LDAP temporary user |
+| Exists | Any | Empty password | Failure by default (`ldap_allow_empty_pass = false`) | - |
 
 :::info About temporary users
 
@@ -243,6 +247,31 @@ After LDAP is enabled, the login behavior under different user states is as foll
 - Doris does not create persistent user metadata for a temporary user.
 - The privileges of a temporary user are determined by LDAP group authorization and `ldap_default_roles` (see the "Group Authorization" and "Default Roles for LDAP Users" sections below).
 - If the temporary user has no corresponding group privileges or configured default roles, it has the `select_priv` privilege on `information_schema` by default.
+
+:::
+
+### Empty Password Login
+
+:::info Supported since version 4.1.5
+:::
+
+By default (`ldap_allow_empty_pass = false`), when a user that exists in LDAP tries to log in with an empty password, Doris rejects the login directly with an access-denied error and does not attempt to bind to the LDAP server with that password. FE records a warning such as `Rejected LDAP login with empty password, user=jack` in `fe.log`.
+
+The reason for this default is that the LDAP protocol treats a bind request that carries a `dn` but an empty password as an *unauthenticated bind*, and some directory servers (Active Directory, for example) accept such a bind and report success. If Doris forwarded the empty password as is, anyone who knows a valid LDAP user name could log in to Doris without a password. In versions earlier than 4.1.5, Doris always forwarded the empty password to the LDAP server, so whether such a login succeeded depended entirely on the LDAP server configuration.
+
+If you must keep the previous behavior, set the following in `fe/conf/ldap.conf` and restart FE:
+
+```text
+ldap_allow_empty_pass = true
+```
+
+After that, Doris no longer checks for an empty password itself and forwards the bind request to the LDAP server. Whether the login succeeds then depends on whether the LDAP server accepts unauthenticated binds.
+
+:::caution
+
+- Enabling `ldap_allow_empty_pass` reopens the security risk described above. Keep the default `false` in production environments.
+- `ldap_allow_empty_pass` cannot be modified online with `ADMIN SET FRONTEND CONFIG`. Changing it requires an FE restart.
+- This configuration only affects users that exist in LDAP. Users that exist only in Doris are still verified by the Doris local password.
 
 :::
 
@@ -285,6 +314,16 @@ The user does not exist in LDAP, so it falls back to Doris local authentication.
 
 ```sql
 mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
+```
+
+**Scenario 4: An LDAP user logs in with an empty password**
+
+- LDAP user attributes: `uid: jack`, password: `abcdef`
+
+Log in without entering a password. With the default `ldap_allow_empty_pass = false`, Doris rejects the login directly (see [Empty Password Login](#empty-password-login)):
+
+```sql
+mysql -hDoris_HOST -PDoris_PORT -ujack
 ```
 
 ## Group Authorization
@@ -461,7 +500,7 @@ You can refresh the cache with the `refresh ldap` statement. For details, see [R
 ## Frequently Asked Questions
 
 <!-- Knowledge type: Troubleshooting -->
-<!-- Applicable scenario: Login failure / missing roles / LDAPS handshake failure -->
+<!-- Applicable scenario: Login failure / empty-password login rejected / missing roles / LDAPS handshake failure -->
 
 ### Q: How do I view which roles an LDAP user has in Doris?
 
@@ -478,6 +517,12 @@ Check the following items one by one:
 3. Check whether the expected `group` contains the `member` attribute.
 4. Check whether the `member` attribute of the expected `group` contains the `dn` of the current user.
 5. If the missing role is configured in `ldap_default_roles`, check whether the role name is spelled correctly and whether the role exists in Doris.
+
+### Q: An LDAP user could log in with an empty password before, but the login fails after upgrading. Why?
+
+Starting from version 4.1.5, Doris rejects empty-password logins from users that exist in LDAP by default (`ldap_allow_empty_pass = false`), because some LDAP servers treat a bind with an empty password as a successful unauthenticated bind. Such attempts are recorded in `fe.log` as `Rejected LDAP login with empty password`.
+
+Ask the user to log in with the LDAP password. If you must keep the previous behavior, set `ldap_allow_empty_pass = true` in `fe/conf/ldap.conf` and restart FE. This is not recommended for production environments. For details, see [Empty Password Login](#empty-password-login).
 
 ### Q: LDAPS connection fails. How do I troubleshoot?
 

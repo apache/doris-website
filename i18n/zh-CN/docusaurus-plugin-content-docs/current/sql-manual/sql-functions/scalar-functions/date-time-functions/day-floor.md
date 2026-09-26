@@ -33,13 +33,17 @@ DAY_FLOOR(<date_or_time_expr>, <period>, <origin>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 参数是指定每个周期包含的天数，类型为 INT。若为负数或 0，返回 错误；若未指定，默认周期为 1 天。 |
-| `<origin>` | 参数是周期计算的起始基准时间，支持 date/datetime 类型。若未指定，默认值为 0001-01-01 00:00:00；若输入无效格式，返回 NULL。 |
+| `<origin>` | 参数是周期计算的起始基准时间，支持 DATE/DATETIME/TIMESTAMP_NS 类型。若未指定，默认值为 0001-01-01 00:00:00；若输入无效格式，返回 NULL。 |
 
 ## 返回值
 
-返回类型为 TIMESTAMPTZ, DATETIME 或 DATE。返回的是一个日期或时间值,表示将输入值向下舍入到指定天数周期的结果。
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
+
+对 `TIMESTAMP_NS` 输入省略 `<origin>` 时，文档中的默认起点仅作为内部对齐基准使用，无需位于 `TIMESTAMP_NS` 的可存储范围内。
+
+返回类型为 TIMESTAMPTZ、TIMESTAMP_NS、DATETIME 或 DATE。返回的是一个日期或时间值,表示将输入值向下舍入到指定天数周期的结果。
 
 若输入有效，返回与 datetime 类型一致的取整结果：
 - 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`),再进行 DAY_FLOOR 计算操作。

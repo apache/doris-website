@@ -2,13 +2,13 @@
 {
     "title": "MONTHS_DIFF",
     "language": "zh-CN",
-    "description": "MONTHSDIFF 函数用于计算两个日期时间值之间的整数月份差值，返回结果为 <enddate> 减去 <startdate> 后的月份数。该函数支持处理 DATE、DATETIME 类型，仅基于日期部分（年、月、日）计算，忽略时间部分（时、分、秒）。"
+    "description": "MONTHSDIFF 函数用于计算两个日期时间值之间的整数月份差值，返回结果为 <enddate> 减去 <startdate> 后的月份数。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，仅基于日期部分（年、月、日）计算，忽略时间部分（时、分、秒）。"
 }
 ---
 
 ## 描述
 
-MONTHS_DIFF 函数用于计算两个日期时间值之间的整数月份差值，返回结果为 `<enddate>` 减去 `<startdate>` 后的月份数。该函数支持处理 DATE、DATETIME 类型，仅基于日期部分（年、月、日）计算，忽略时间部分（时、分、秒）。
+MONTHS_DIFF 函数用于计算两个日期时间值之间的整数月份差值，返回结果为 `<enddate>` 减去 `<startdate>` 后的月份数。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS 类型，仅基于日期部分（年、月、日）计算，忽略时间部分（时、分、秒）。
 
 ## 语法
 
@@ -20,8 +20,8 @@ MONTHS_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | 参数            | 说明                                                      |
 |---------------|---------------------------------------------------------|
-| ``<date_or_time_expr1>``   | 结束日期，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
-| ``<date_or_time_expr2>`` | 开始日期，支持输入 date/datetime 类型 |
+| ``<date_or_time_expr1>``   | 结束日期，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。 |
+| ``<date_or_time_expr2>`` | 开始日期，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型 |
 
 ## 返回值
 

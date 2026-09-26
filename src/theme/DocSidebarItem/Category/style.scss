@@ -3,7 +3,7 @@
     .menu__link.menu__link--active:not(.menu__link--sublist) {
         color: var(--ifm-color-primary) !important;
         font-weight: 500;
-        background-color: #F7FFFB;
+        background-color: var(--brand-surface-faint);
     }
     .menu__list-item {
         a.menu__link {
@@ -47,32 +47,6 @@
     }
     .menu__list .menu__list {
         border-left: 1px solid #dfe5f0;
-    }
-
-    .title_level_1 {
-        color: #0D0D12;
-        font-size: 15px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 20px;
-        letter-spacing: 0.4px;
-        display: flex;
-        padding: 20px 10px 12px 10px;
-        align-items: baseline;
-        gap: 8px;
-        align-self: stretch;
-        margin: 0;
-    }
-
-    .title_level_1__label {
-        font-weight: 600;
-        color: #0D0D12;
-    }
-
-    @media (max-width: 996px) {
-        .title_level_1{
-            font-size: 1.125rem !important;
-        }
     }
 
     .menu__list_level_2 {

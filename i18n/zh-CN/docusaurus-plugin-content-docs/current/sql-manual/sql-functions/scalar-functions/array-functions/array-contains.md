@@ -31,9 +31,10 @@ array_contains(ARRAY<T> arr, T value)
 **T 支持的类型：**
 - 数值类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMAL
 - 字符串类型：CHAR、VARCHAR、STRING
-- 日期时间类型：DATE、DATETIME、DATEV2、DATETIMEV2
+- 日期时间类型：DATE、DATETIME、DATEV2、DATETIMEV2、TIMESTAMP_NS
 - 布尔类型：BOOLEAN
 - IP 类型：IPV4、IPV6
+- UUID：[UUID](../../../basic-element/sql-data-types/uuid.md)
 
 ### 返回值
 
@@ -68,7 +69,7 @@ array_contains(ARRAY<T> arr, T value)
    - CHAR、VARCHAR、STRING 类型之间可以进行比较
 3. **日期时间类型兼容性**：
    - DATE 和 DATEV2 之间可以进行比较
-   - DATETIME 和 DATETIMEV2 之间可以进行比较
+   - DATETIME、DATETIMEV2 和 TIMESTAMP_NS 之间可以进行比较。DATETIME 与 TIMESTAMP_NS 混合使用时，以 TIMESTAMP_NS 作为公共类型。
 
 ### 示例
 
@@ -200,7 +201,6 @@ CREATE TABLE `test_array_index` (
   DISTRIBUTED BY HASH(`id`) BUCKETS 1
   PROPERTIES (
   "replication_allocation" = "tag.location.default: 1",
-  "is_being_synced" = "false",
   "storage_format" = "V2",
   "light_schema_change" = "true",
   "disable_auto_compaction" = "false"

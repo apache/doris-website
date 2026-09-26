@@ -10,7 +10,7 @@
 
 The DATE_ADD function is used to add a specified time interval to a specified date or time value and return the calculated result.
 
-- Supported input date types include DATE, DATETIME, TIMESTAMPTZ (such as '2023-12-31', '2023-12-31 23:59:59', '2023-12-31 23:59:59+08:00').
+- Supported input date types include DATE, DATETIME, TIMESTAMP_NS, TIMESTAMPTZ (such as '2023-12-31', '2023-12-31 23:59:59', '2023-12-31 23:59:59+08:00').
 - The time interval is specified by both a numeric value (`expr`) and a unit (`time_unit`). When `expr` is positive, it means "add", and when it is negative, it is equivalent to "subtract" the corresponding interval.
 
 This function behaves consistently with the [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) in MySQL.
@@ -30,7 +30,7 @@ DATE_ADD(<date_or_time_expr>, INTERVAL <expr> <time_unit>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_expr>` | The date/time value to be processed. Supported types: datetime or date type, with a maximum precision of six decimal places for seconds (e.g., 2022-12-28 23:59:59.999999). For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The date/time value to process. Supports `DATE`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ`. |
 | `<expr>` | The time interval to be added, for independent units (such as `YEAR`) are of `INT` type; for compound units (such as `YEAR_MONTH`) are of `STRING` type, and accept all non-numeric characters as separators. Therefore, for example, `INTERVAL 6/4 HOUR_MINUTE` will be recognized as 6 hours 4 minutes by Doris, rather than 1 hour 30 minutes (6/4 == 1.5). For compound units, if the input interval value is too short, the value of the larger unit will be set to 0. The sign of this value is determined solely by whether the first non-numeric character is `-`. |
 | `<time_unit>` | Enumeration values: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, YEAR_MONTH, DAY_HOUR, DAY_MINUTE, DAY_SECOND, DAY_MICROSECOND, HOUR_MINUTE, HOUR_SECOND, HOUR_MICROSECOND, MINUTE_SECOND, MINUTE_MICROSECOND, SECOND_MICROSECOND | 
 
@@ -59,11 +59,13 @@ DATE_ADD(<date_or_time_expr>, INTERVAL <expr> <time_unit>)
 
 ## Return Value
 
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
+
 Returns a result with the same type as <date_or_time_expr>:
 - When DATE type is input, returns DATE (date part only);
 - When DATETIME type input, returns DATETIME (including date and time);
 - WHEN TIMESTAMPTZ type input, returns TIMESTAMPTZ (including date, time, and timezone offset).
-- Input with scale (such as '2024-01-01 12:00:00.123') will preserve the scale, with a maximum of six decimal places.
+- Input scale is preserved: `DATETIME` and `TIMESTAMPTZ` support up to six fractional digits, while `TIMESTAMP_NS` has fixed nine-digit precision.
 
 Special cases:
 - When any parameter is NULL, returns NULL;

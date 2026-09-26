@@ -29,9 +29,10 @@ array_intersect(ARRAY<T> arr1, ARRAY<T> arr2, [ARRAY<T> arr3, ...])
 **T 支持的类型：**
 - 数值类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMAL
 - 字符串类型：CHAR、VARCHAR、STRING
-- 日期时间类型：DATE、DATETIME、DATEV2、DATETIMEV2
+- 日期时间类型：DATE、DATETIME、DATEV2、DATETIMEV2、TIMESTAMP_NS
 - 布尔类型：BOOLEAN
 - IP 类型：IPV4、IPV6
+- UUID：[UUID](../../../basic-element/sql-data-types/uuid.md)
 
 ### 返回值
 
@@ -143,4 +144,4 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility 
 
 ### Keywords
 
-ARRAY, INTERSECT, ARRAY_INTERSECT 
+ARRAY, INTERSECT, ARRAY_INTERSECT

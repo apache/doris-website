@@ -89,15 +89,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 缓存属性配置（4.1.x+） {#meta-cache-unified-model}
 
-各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`。`max-weight` 当前只适用于部分已接入估算器的模块，详见[外表元数据缓存内存管理](../external-meta-cache-memory-management)。
 
 | 属性 | 示例 | 含义 |
 |---|---|---|
 | `enable` | `true/false` | 是否启用该缓存模块。 |
 | `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
-| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+| `capacity` | `10000` | 按条目数计算的最大容量。启用 `max-weight` 后不再同时作为条目数上限，但 `0` 仍会关闭缓存。 |
+| `max-weight` | `1GB` | 自 Doris 4.1.4 起支持。可选的估算保留内存上限。Hive 当前仅 `partition_values` 支持；`0` 会关闭该模块。 |
 
-**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
+**生效逻辑说明：** 只有当 `enable=true`、`ttl-second != 0`、`capacity > 0`，并且 `max-weight` 未配置或不为 `0` 时，该模块缓存才会生效。
 
 ### 缓存模块 {#meta-cache-unified-modules}
 
@@ -136,7 +137,7 @@ Hive Catalog 包含以下缓存模块：
 * **性能优化**：对于元数据变动不频繁的场景，建议适当增大 `capacity` 和 `ttl-second` 以减少对 Hive Metastore 和文件系统的访问压力。
 
 :::caution
-**Hive Catalog 注意事项**：Hive 的 `meta.cache.hive.*` 属性修改**不支持热生效**。修改配置后，必须重建 Catalog 或重启 FE 节点才能应用新的缓存配置。
+**Hive Catalog 注意事项**：从 Doris 4.1.4 开始，Catalog 属性修改成功后会重置 Catalog 执行上下文，并清理该 Catalog 路由到的所有元数据缓存引擎中已初始化的条目；下一次访问使用新的上下文和配置重建。已经开始的查询不受影响。
 :::
 
 ### 可观测性 {#meta-cache-unified-observability}
@@ -756,6 +757,14 @@ SELECT * FROM hive_ctl.hive_db.hive_tbl LIMIT 10;
   +------------+-------------+
   ```
 
+:::caution 版本行为变更（4.1.4）
+
+自 4.1.4 版本起，Hive 目录式分区中的默认分区标记 `__HIVE_DEFAULT_PARTITION__` 会被解析为真正的 **NULL** 值，而不再编码为字符串 `\N`。同时，分区路径中真实存储的字符串 `\N` 会被原样保留为数据。
+
+4.1.4 之前这两种情况无法区分，查询结果中都会显示为 `\N`。升级后，`WHERE <partition_col> IS NULL` 才能正确匹配 Hive 默认分区。
+
+:::
+
 ### 查询 Hive 事务表
 
 Hive Transactional 表是 Hive 中支持 ACID 语义的表。详情可见 [Hive Transactions](https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions)。
@@ -796,23 +805,55 @@ Hive Transactional 表是 Hive 中支持 ACID 语义的表。详情可见 [Hive 
 
 ### INSERT INTO
 
-INSERT 操作会将数据以追加的方式写入到目标表中。当前不支持指定分区写入。
+INSERT 操作会将数据以追加的方式写入到目标表中。
 
 ```sql
-INSERT INTO hive_tbl values (val1, val2, val3, val4);
+INSERT INTO hive_tbl VALUES (val1, val2, val3, val4);
 INSERT INTO hive_ctl.hive_db.hive_tbl SELECT col1, col2 FROM internal.db1.tbl1;
 
-INSERT INTO hive_tbl(col1, col2) values (val1, val2);
-INSERT INTO hive_tbl(col1, col2, partition_col1, partition_col2) values (1, 2, "beijing", "2023-12-12");
+INSERT INTO hive_tbl(col1, col2) VALUES (val1, val2);
+INSERT INTO hive_tbl(col1, col2, partition_col1, partition_col2) VALUES (1, 2, "beijing", "2023-12-12");
+```
+
+自 4.2.0 版本，支持写入数据到静态分区，或者静态分区和动态分区混合使用：
+
+```sql
+-- Full Static Partition
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+VALUES (val1, val2);
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+SELECT col1, col2 FROM source_table;
+
+-- Hybrid Partition Mode: "partition_col1" is static, "partition_col2" comes from SELECT dynamically
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30')
+VALUES (val1, val2, partition_val2);
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30')
+SELECT col1, col2, partition_col2 FROM source_table;
 ```
 
 ### INSERT OVERWRITE
 
-INSERT OVERWRITE 会使用新的数据完全覆盖原有表中的数据。当前不支持指定分区写入。
+INSERT OVERWRITE 会使用新的数据完全覆盖原有表中的数据。
 
 ```sql
-INSERT OVERWRITE TABLE VALUES(val1, val2, val3, val4)
+INSERT OVERWRITE TABLE VALUES(val1, val2, val3, val4);
 INSERT OVERWRITE TABLE hive_ctl.hive_db.hive_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
+```
+
+自 4.2.0 版本，支持写入数据到静态分区，或者静态分区和动态分区混合使用：
+
+```sql
+-- Full Static Partition
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+VALUES (val1, val2);
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+SELECT col1, col2 FROM source_table;
+
+-- Hybrid Partition Mode: "partition_col1" is static, "partition_col2" comes from SELECT dynamically
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30')
+VALUES (val1, val2, partition_val2);
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30')
+SELECT col1, col2, partition_col2 FROM source_table;
 ```
 
 INSERT OVERWRITE 的语义与 Hive 一致，有如下行为：
@@ -821,7 +862,7 @@ INSERT OVERWRITE 的语义与 Hive 一致，有如下行为：
 
 * 当目的表是非分区表，而源表是空表是，目的表会被清空。
 
-* 当前不支持指定分区写入，因此 INSERT OVERWRITE 为根据源表中的数值，自动处理对应的目的表分区。如果目的表是分区表，则只会覆盖涉及到的分区，不涉及的分区，数据无变化。
+* 自 4.2.0 版本开始，支持指定分区写入，以及指定分区和动态分区混合使用。但是即便指定了静态分区，如果查询内容为空，则指定的分区也不会被清理。
 
 ### CTAS
 

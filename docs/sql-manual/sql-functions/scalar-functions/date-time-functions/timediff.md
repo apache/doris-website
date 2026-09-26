@@ -2,13 +2,13 @@
 {
     "title": "TIMEDIFF",
     "language": "en",
-    "description": "The TIMEDIFF function calculates the difference between two datetime values and returns the result as a TIME type."
+    "description": "Calculates the difference between DATE, DATETIME, or TIMESTAMP_NS values and returns a TIME value."
 }
 ---
 
 ## Description
 
-The TIMEDIFF function calculates the difference between two datetime values and returns the result as a TIME type. This function supports processing DATETIME and DATE types. If the input is DATE type, its time portion defaults to 00:00:00.
+The TIMEDIFF function calculates the difference between two `DATE`, `DATETIME`, or `TIMESTAMP_NS` values and returns the result as a `TIME` value. A `DATE` input is treated as 00:00:00.
 
 This function behaves consistently with the [timediff function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_timediff) in MySQL.
 
@@ -22,8 +22,8 @@ TIMEDIFF(<date_or_time_expr1>, <date_or_time_expr2>)
 
 | Parameter              | Description                                                                                                                                                                                                                                                              |
 |------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<date_or_time_expr1>` | The ending time or datetime value. Supports date/datetime type input. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| `<date_or_time_expr2>` | The starting time or datetime value. Supports date/datetime type input                                                                                                                                                                                                  |
+| `<date_or_time_expr1>` | The ending time or datetime value. Supports DATE/DATETIME/TIMESTAMP_NS type input. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr2>` | The starting time or datetime value. Supports DATE/DATETIME/TIMESTAMP_NS type input                                                                                                                                                                                                  |
 
 ## Return Value
 

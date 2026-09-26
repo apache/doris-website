@@ -259,6 +259,12 @@ Doris 支持同时使用自动分区与动态分区实现生命周期管理，�
 
 AUTO RANGE PARTITION 表支持通过 `partition.retention_count` 属性管理历史分区生命周期。该属性接受一个正整数 `N`，表示**只保留分区值最大的 `N` 个历史分区**；当前及未来分区全部保留。
 
+使用限制：
+
+- 只有 AUTO RANGE PARTITION 表可以设置该属性，否则报错 `Only AUTO RANGE PARTITION table could set partition.retention_count`。
+- **不能与已开启的动态分区（`dynamic_partition.enable = true`）同时使用**，否则报错 `Can not use partition.retention_count and dynamic_partition properties at the same time`。动态分区的分区创建与 retention count 的分区清理属于互斥的调度模式。该限制自 4.1.4 版本起生效，存算一体与存算分离模式都适用。
+- 自 4.1.4 版本起，存算分离模式也支持通过 `ALTER TABLE ... SET ("partition.retention_count" = "N")` 修改该属性；4.1.4 之前该 ALTER 在存算分离模式下会被拒绝或不生效。
+
 ### 概念定义
 
 - **历史分区**：分区上界 <= 当前时间的分区。

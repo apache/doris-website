@@ -1,5 +1,5 @@
 ---
-title: Code Submission Guide (Pull Request)
+title: Pull Request
 language: en
 description: "Complete workflow for submitting an Apache Doris Pull Request: fork, branch, resolve conflicts, and submit the PR."
 keywords:

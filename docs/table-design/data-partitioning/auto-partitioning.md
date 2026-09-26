@@ -19,8 +19,8 @@ Doris supports two types of auto partitioning:
 
 | Type | Partitioning method | Partition function | Supported partition column types |
 | --- | --- | --- | --- |
-| AUTO **RANGE** PARTITION | Auto partition by range | `date_trunc` | `DATE`, `DATETIME` |
-| AUTO **LIST** PARTITION | Auto partition by enumerated value | Function calls not supported | `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` |
+| AUTO **RANGE** PARTITION | Auto partition by range | `date_trunc` | `DATE`, `DATETIME`, `TIMESTAMP_NS` |
+| AUTO **LIST** PARTITION | Auto partition by enumerated value | Function calls not supported | `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `TIMESTAMP_NS`, `CHAR`, `VARCHAR` |
 
 ## Use Cases
 
@@ -189,7 +189,7 @@ PROPERTIES (
 | Constraint | AUTO RANGE PARTITION | AUTO LIST PARTITION |
 | --- | --- | --- |
 | Supported partition functions | `date_trunc` only | Function calls not supported |
-| Supported partition column types | `DATE`, `DATETIME` | `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` |
+| Supported partition column types | `DATE`, `DATETIME`, `TIMESTAMP_NS` | `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `TIMESTAMP_NS`, `CHAR`, `VARCHAR` |
 | Multi-column partitioning supported | No | Yes |
 | Partition name length limit | - | Must not exceed 50 (derived from concatenation and escaping of partition column content; the actual allowed length may be shorter) |
 | Partition value rule | Divided by the time range truncated by `date_trunc` | Each new enumerated value with no existing partition creates an independent new partition |
@@ -258,6 +258,12 @@ Doris supports using auto partitioning together with dynamic partitioning to imp
 :::
 
 AUTO RANGE PARTITION tables support managing the lifecycle of historical partitions through the `partition.retention_count` property. This property accepts a positive integer `N`, meaning **only the `N` historical partitions with the largest partition values are retained**; current and future partitions are all retained.
+
+Usage limits:
+
+- Only AUTO RANGE PARTITION tables can set this property. Otherwise the statement fails with `Only AUTO RANGE PARTITION table could set partition.retention_count`.
+- It **cannot be used together with dynamic partitioning that is already enabled** (`dynamic_partition.enable = true`). Otherwise the statement fails with `Can not use partition.retention_count and dynamic_partition properties at the same time`. Creating partitions through dynamic partitioning and recycling partitions through the retention count are mutually exclusive scheduling modes. This restriction applies since version 4.1.4, in both the compute-storage coupled and the compute-storage decoupled mode.
+- Since version 4.1.4, the compute-storage decoupled mode also supports changing this property with `ALTER TABLE ... SET ("partition.retention_count" = "N")`. Before 4.1.4, that `ALTER` was rejected or had no effect in the compute-storage decoupled mode.
 
 ### Concept Definitions
 

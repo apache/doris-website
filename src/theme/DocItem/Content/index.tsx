@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import {ThemeClassNames} from '@docusaurus/theme-common';
-import {useDoc} from '@docusaurus/plugin-content-docs/client';
+import {useDoc, useDocsVersion} from '@docusaurus/plugin-content-docs/client';
 import Heading from '@theme/Heading';
 import MDXContent from '@theme/MDXContent';
 import type {Props} from '@theme/DocItem/Content';
@@ -28,6 +28,12 @@ function useSyntheticTitle(): string | null {
 
 export default function DocItemContent({children}: Props): JSX.Element {
   const syntheticTitle = useSyntheticTitle();
+  const {pluginId} = useDocsVersion();
+
+  if (pluginId === 'course') {
+    return <div className="course-doc-content"><MDXContent>{children}</MDXContent></div>;
+  }
+
   return (
     <div className={clsx(ThemeClassNames.docs.docMarkdown, 'markdown')}>
       {syntheticTitle && (

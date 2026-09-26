@@ -1,0 +1,109 @@
+@use '../shared/typography' as type;
+
+.slack-redirect {
+    --sr-green: var(--brand-primary-dark);
+    --sr-green-deep: var(--brand-primary-darker);
+    --sr-green-glow: var(--brand-primary-glow);
+    --sr-ink: var(--brand-ink);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+    background:
+        radial-gradient(circle at 20% 0%, rgb(var(--brand-primary-glow-rgb) / 18%), transparent 42%),
+        linear-gradient(180deg, var(--brand-paper) 0%, var(--brand-cream-light) 100%);
+    color: var(--sr-ink);
+    font-family: var(--font-family-base);
+
+    &__card {
+        width: min(420px, 100%);
+        padding: 28px 28px 24px;
+        border: 1px solid rgb(var(--brand-primary-rgb) / 22%);
+        border-radius: 8px;
+        background: var(--brand-paper);
+        box-shadow:
+            0 28px 70px -34px rgb(var(--brand-primary-darker-rgb) / 0.4),
+            0 14px 34px -24px rgb(var(--brand-ink-rgb) / 0.3);
+        text-align: center;
+    }
+
+    &__icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        margin-bottom: 16px;
+        border-radius: 50%;
+        background: rgb(var(--brand-primary-rgb) / 10%);
+        color: var(--sr-green);
+    }
+
+    &__eyebrow {
+        @include type.eyebrow;
+
+        margin: 0 0 8px;
+        color: var(--sr-green);
+    }
+
+    &__title {
+        @include type.mono-text(26px, 800, 1.15, -0.02em);
+
+        margin: 0 0 12px;
+        color: var(--sr-ink);
+    }
+
+    &__copy {
+        @include type.sans-text(type.$body, 400, 1.6);
+
+        margin: 0 0 20px;
+        color: rgb(var(--brand-ink-rgb) / 0.78);
+    }
+
+    &__link {
+        color: var(--sr-green);
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+
+        &:hover,
+        &:focus-visible {
+            color: var(--sr-green-deep);
+        }
+    }
+
+    &__progress {
+        height: 4px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgb(var(--brand-primary-rgb) / 14%);
+    }
+
+    &__progress-bar {
+        display: block;
+        width: 40%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--sr-green), var(--sr-green-glow));
+        animation: slack-redirect-slide 1.2s ease-in-out infinite;
+    }
+}
+
+@keyframes slack-redirect-slide {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(260%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .slack-redirect__progress-bar {
+        width: 100%;
+        animation: none;
+    }
+}

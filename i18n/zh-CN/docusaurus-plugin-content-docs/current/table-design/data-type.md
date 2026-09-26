@@ -29,6 +29,7 @@ Apache Doris 已支持的数据类型列表如下：
 | --------------------- | ---------------- | ------------------------------------------------------------------------------------------ |  
 | [DATE](../sql-manual/basic-element/sql-data-types/date-time/DATE)         | 4               | 日期类型，目前的取值范围是 ['0000-01-01', '9999-12-31']，默认的打印形式是 'yyyy-MM-dd'。         |  
 | [DATETIME](../sql-manual/basic-element/sql-data-types/date-time/DATETIME) | 8               | 日期时间类型，格式：DATETIME([P])。可选参数 P 表示时间精度，取值范围是 [0, 6]，即最多支持 6 位小数（微秒）。不设置时为 0。<br />取值范围是 ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']。打印的形式是 'yyyy-MM-dd HH:mm:ss.SSSSSS'。 |
+| [TIMESTAMP_NS](../sql-manual/basic-element/sql-data-types/date-time/TIMESTAMP-NS) | 8 | 不带时区、固定纳秒精度的日期时间类型。取值范围是 ['1677-09-21 00:12:43.145224192', '2262-04-11 23:47:16.854775807']。打印形式为 'yyyy-MM-dd HH:mm:ss.SSSSSSSSS'。 |
 
 ### [字符串类型](../sql-manual/basic-element/sql-data-types/data-type-overview#字符串类型)
 
@@ -61,5 +62,11 @@ Apache Doris 已支持的数据类型列表如下：
 | -------------- | --------- | ------------------------------------------------------------ |
 | [IPv4](../sql-manual/basic-element/sql-data-types/ip/IPV4)            |   4 字节  |  以 4 字节二进制存储 IPv4 地址，配合 ipv4_* 系列函数使用。         |
 | [IPv6](../sql-manual/basic-element/sql-data-types/ip/IPV6)            |   16 字节  |  以 16 字节二进制存储 IPv6 地址，配合 ipv6_* 系列函数使用。      |
+
+### [UUID](../sql-manual/basic-element/sql-data-types/uuid.md)
+
+| 类型名称 | 存储空间（字节） | 描述 |
+| --- | --- | --- |
+| [UUID](../sql-manual/basic-element/sql-data-types/uuid.md) | 16 | 原生 128 位标识符，以小写标准文本显示。 |
 
 也可通过`SHOW DATA TYPES;`语句查看 Apache Doris 支持的所有数据类型。

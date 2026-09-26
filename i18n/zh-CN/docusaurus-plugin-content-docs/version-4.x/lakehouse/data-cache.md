@@ -2,7 +2,7 @@
 {
     "title": "数据缓存",
     "language": "zh-CN",
-    "description": "Apache Doris 数据缓存（Data Cache）将 HDFS 及对象存储数据缓存至本地磁盘，加速 Lakehouse 查询性能。支持缓存预热、配额限制与准入控制，适用于 Hive、Iceberg、Hudi、Paimon 表查询场景。"
+    "description": "Apache Doris 数据缓存（Data Cache）将 HDFS 及对象存储数据缓存至本地磁盘，加速 Lakehouse 查询性能。支持缓存预热、查询级回填限制与准入控制，适用于 Hive、Iceberg、Hudi、Paimon 表查询场景。"
 }
 ---
 
@@ -109,13 +109,18 @@ SET GLOBAL enable_file_cache = true;
 
 ## 缓存的配额
 
+Doris 提供两种相互独立的查询级 Data Cache 限制机制：
+
+| 机制 | 主要参数 | 达到限制后的行为 |
+|---|---|---|
+| 按缓存占用比例限制 | `file_cache_query_limit_percent` | 继续允许缓存未命中回填，并通过查询级 LRU 记录和其他缓存队列释放空间 |
+| 按远端扫描回填字节数停止写入 | `file_cache_query_limit_bytes` | 当下一个缓存块会使累计准入字节数超过阈值时，后续未命中范围从远端读取但不再回填本地缓存 |
+
+### 按缓存占用比例限制
+
 > 该功能自 4.0.3 版本支持。
 
-缓存配额（Cache Query Limit）功能允许用户限制单个查询可以使用的文件缓存百分比。在多用户或复杂查询共享缓存资源的场景下，单个大查询可能会占用过多的缓存空间，导致其他查询的热点数据被淘汰。通过设置查询配额，可以保证资源的公平使用，防止缓存抖动。
-
-查询占用的缓存空间指的是该查询因数据未命中而填充到缓存中的数据总大小。如果该查询填充的总大小已经达到配额限制，那么查询后续填充的数据会基于 LRU 算法替换先前填充的数据。
-
-### 配置说明
+缓存占用比例限制用于控制单个查询在每个 File Cache 实例中可使用的最大缓存比例。在多用户或复杂查询共享缓存资源的场景下，该机制可以降低单个大查询长期占用过多缓存并淘汰其他热点数据的风险。
 
 该功能涉及 BE 和 FE 两端的配置，以及会话变量（Session Variable）的设置。
 
@@ -137,6 +142,7 @@ SET GLOBAL enable_file_cache = true;
 
 - `file_cache_query_limit_percent`:
   - 类型：Integer (1-100)
+  - 默认值：`-1`
   - 说明：文件缓存查询限制百分比。设置单个查询可使用的最大缓存比例。该值上限受 `file_cache_query_limit_max_percent` 约束。建议计算后的缓存配额不低于 256MB，如果低于该值，BE 会在日志中进行告警提示。
 
 **使用示例**
@@ -150,7 +156,51 @@ SELECT * FROM large_table;
 ```
 
 **注意：**
-1. 设置的值必须在 [0, `file_cache_query_limit_max_percent`] 范围内。
+
+1. 设置的值必须在 `[1, file_cache_query_limit_max_percent]` 范围内。
+2. 使用前，需要在 BE 上同时启用 `enable_file_cache` 和 `enable_file_cache_query_limit`，并确保查询会话中的 `enable_file_cache` 为 `true`。
+3. 达到百分比配额后，后续缓存未命中仍可写入 Data Cache；该机制不会将查询切换为“后续不再写缓存”的模式。
+
+### 按远端扫描回填字节数停止写入
+
+> 该功能仅在 Doris 4.1.x 中支持，Doris 4.0.x 不支持。
+
+在存算分离模式下，可通过会话变量 `file_cache_query_limit_bytes` 限制单个 SELECT 查询在**每个 BE** 上因 Hive、Iceberg、Hudi 或 Paimon 数据文件缓存未命中而获准回填 Data Cache 的累计字节数。该功能要求 BE 的 `enable_file_cache=true`，但不依赖 `enable_file_cache_query_limit` 或 `file_cache_query_limit_max_percent`。
+
+| 参数 | 类型 | 默认值 | 说明 |
+|---|---|---|---|
+| `file_cache_query_limit_bytes` | BigInt | `-1` | 单个查询在每个 BE 上的远端扫描缓存回填阈值，单位为字节。小于 `0` 时关闭限制；等于 `0` 时从查询开始即不回填；大于 `0` 时按缓存块累计准入字节数 |
+
+该阈值由同一查询在一个 BE 上的并行 Scanner 共享，不是整个查询或整个集群的总量限制。当下一个缓存块会使累计准入字节数超过阈值时，该查询在当前 BE 上进入 remote-only-on-miss 状态：已完整覆盖请求范围的本地缓存仍可读取；未完整覆盖的范围直接从远端存储读取，且不再回填 Data Cache。查询结果不受影响。
+
+以下示例将每个 BE 的远端扫描回填阈值设为 1 GiB：
+
+```sql
+SET enable_profile = true;
+SET profile_level = 2;
+SET file_cache_query_limit_bytes = 1073741824;
+
+SELECT COUNT(*) FROM hive_catalog.sales.orders;
+```
+
+如果希望一次性扫描从开始就不写 Data Cache，可将阈值设为 `0`；查询完成后恢复默认值：
+
+```sql
+SET file_cache_query_limit_bytes = 0;
+SELECT COUNT(*) FROM hive_catalog.sales.orders;
+
+SET file_cache_query_limit_bytes = -1;
+```
+
+开启 Query Profile 后，可在 Scanner 的 `FileCache` 指标组中查看 `RemoteOnlyOnMissTriggered` 和 `RemoteOnlyOnMissThresholdBytes`。当 `RemoteOnlyOnMissTriggered=1` 时，表示该 Scanner 已观察到查询进入 remote-only-on-miss 状态；可结合 `BytesWriteIntoCache` 与 `NumSkipCacheIOTotal` 判断实际写入和跳过缓存的情况。`NumSkipCacheIOTotal` 也可能包含其他跳过缓存策略造成的 I/O，不能单独作为阈值触发依据。
+
+:::note
+
+- 该机制仅限制存算分离 SELECT 查询读取未命中后的 Data Cache 回填，不限制远端读取量，也不影响显式缓存预热。进入 remote-only-on-miss 状态后，远端 I/O 和查询延迟可能增加。
+- 阈值按缓存块判断。如果剩余预算小于下一个缓存块，该块会被整体跳过；只有出现会超过阈值的缓存块时，`RemoteOnlyOnMissTriggered` 才会变为 `1`。
+- BE 参数 `enable_file_cache_query_limit_segment_meta` 控制 Doris 内表 Segment footer 和 Segment 元数据是否计入同一阈值。Hive、Iceberg、Hudi 和 Paimon 数据文件的缓存回填始终受 `file_cache_query_limit_bytes` 约束。有关完整参数范围和内表行为，参见[文件缓存配置与使用指南](../compute-storage-decoupled/file-cache/file-cache.md)。
+
+:::
 
 ## 缓存预热
 

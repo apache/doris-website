@@ -17,9 +17,9 @@
             "label": "How to Contribute",
             "items": [
                 "how-to-contribute/contribute-to-doris",
-                "how-to-contribute/contributor-guide",
-                "doris-future",
+                "how-to-contribute/community-badges",
                 "how-to-contribute/pull-request",
+                "how-to-contribute/review-and-ci",
                 {
                     "type": "category",
                     "label": "Documentation Contribution",
@@ -84,7 +84,8 @@
                     "type": "category",
                     "label": "Testing",
                     "items": [
-                        "developer-guide/regression-testing"
+                        "developer-guide/regression-testing",
+                        "developer-guide/all-in-one-image"
                     ]
                 },
                 {
@@ -93,6 +94,13 @@
                     "items": [
                         "developer-guide/data-source-extension/jdbc-catalog-developer-guide",
                         "developer-guide/data-source-extension/trino-connector-developer-guide"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Plugin Development",
+                    "items": [
+                        "developer-guide/data-lineage-plugin-development"
                     ]
                 },
                 {
@@ -110,6 +118,7 @@
             "items": [
                 "release-and-verify/release-versioning",
                 "release-and-verify/release-prepare",
+                "release-and-verify/release-doris-core-with-ai-agent",
                 "release-and-verify/release-doris-core",
                 "release-and-verify/release-doris-connectors",
                 "release-and-verify/release-doris-shade",

@@ -332,6 +332,113 @@ admin set frontend config("disable_colocate_balance" = "false");
 admin set frontend config("disable_tablet_scheduler" = "false");
 ```
 
+## Per-Version Upgrade Notes
+
+<!-- Knowledge type: Behavior description -->
+<!-- Applicable scenarios: Cross-version upgrade / Confirming post-upgrade behavior changes -->
+
+This section records behavior changes that need extra attention when upgrading to a specific version. Beyond this section, always read the target version's release notes for the complete list of changes.
+
+### Session variable migration when upgrading from 3.x to 4.0
+
+FE tracks the migration progress of session variable defaults through the internal variable `variable_version`. When upgrading from 3.x to 4.0 (`variable_version` lower than 400), FE automatically adjusts the **global defaults** of the following variables:
+
+| Variable | Default after migration | Description |
+| --- | --- | --- |
+| `enable_ansi_query_organization_behavior` | `false` | Keeps the 3.x query organization behavior so semantics do not change after the upgrade |
+| `enable_new_type_coercion_behavior` | `false` | Keeps the 3.x type coercion behavior |
+| `enable_sql_cache` | `true` | Enables SQL Cache |
+| `enable_nereids_distribute_planner` | `true` | **Migration item added in version 4.0.8**, see below |
+
+The migration runs only once, when `variable_version` is raised from below 400 to 400. It never overwrites a value the user has explicitly set afterwards.
+
+### Upgrading to 4.0.8
+
+:::caution Nereids distribute planner is enabled
+
+Starting from version 4.0.8, upgrading from 3.x to 4.0 enables the Nereids distribute planner (`enable_nereids_distribute_planner`).
+
+Before 4.0.8, if the cluster's metadata image had persisted `enable_nereids_distribute_planner=false`, that value was restored as-is after the upgrade and the cluster kept using the legacy distribute planner. Version 4.0.8 adds the variable to the `variable_version=400` migration, so the new distribute planner is enabled consistently after the upgrade.
+
+If query plan distribution differs from before the upgrade, you can roll back with `SET GLOBAL enable_nereids_distribute_planner = false;` and report the affected queries.
+
+:::
+
+The following changes also need attention when upgrading to 4.0.8:
+
+| Change | Affected scope | What to do |
+| --- | --- | --- |
+| Compaction is no longer paused on high memory (BE config `enable_compaction_pause_on_high_memory` default `true` → `false`) | All deployment modes | Set it back to `true` to keep the old behavior. See [BE Configuration](../config/be-config) |
+| The minimum auto bucket number is raised from 1 to 3 (FE config `autobucket_min_buckets`) | Tables created with `BUCKETS AUTO` | Only newly created partitions are affected. See [Data Bucketing](../../table-design/data-partitioning/data-bucketing) |
+| The BE `_stream_load_forward` endpoint requires the configuration to be enabled and requests to be authenticated | Deployments relying on Group Commit BE forwarding in decoupled mode | Set `enable_group_commit_streamload_be_forward=true` in every `be.conf` and make sure the load account holds the global `LOAD` privilege. See [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual) |
+| Node management APIs require the global `ADMIN` privilege | Automation calling `/rest/v2/manager/node/{action}/{be\|fe\|broker}` | Add authentication with an `ADMIN` account to the caller. See [Node Action](../open-api/fe-http/node-action) |
+| Stream Load validates the account's access to the compute group that actually serves the request | Stream Load in decoupled mode | Grant the load account access to the corresponding compute group. See [Stream Load](../../data-operate/import/import-way/stream-load-manual) |
+| In decoupled mode, data size is consistently reported as remote size | Scripts computing capacity from `SHOW TABLETS` or `information_schema.partitions` | Use `REMOTE_DATA_SIZE` instead. See [partitions](../system-tables/information_schema/partitions) |
+| Sensitive Kafka properties of Routine Load jobs are masked as `******` in query results | Scripts reading credentials from `SHOW ROUTINE LOAD` | Read the original values from your configuration management instead. See [SHOW ROUTINE LOAD](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) |
+| Warm-up timestamps change from `HH:mm:ss` to `yyyy-MM-dd HH:mm:ss` | Scripts parsing warm-up job status | Adjust the time parsing format. See [Read-Write Separation](../../compute-storage-decoupled/rw/read-write-separation) |
+| Scan errors no longer carry the `failed to initialize storage reader` prefix | Monitoring rules matching on that prefix | Use the error code and the `tablet=` / `backend=` information instead |
+
+### Upgrading to 4.1.4
+
+:::caution Nereids distribute planner is enabled
+
+Starting from version 4.1.4, upgrading **from 3.x to 4.1.4** refreshes the global default of the session variable `enable_nereids_distribute_planner` to `true`. The 4.0 series has behaved this way since 4.0.8.
+
+The refresh only happens when the cluster's `variable_version` is below `400`, so a cluster already running 4.0.x or 4.1.x keeps whatever value it has persisted for this variable.
+
+If query plan distribution differs from before the upgrade, you can roll back with `SET GLOBAL enable_nereids_distribute_planner = false;` and report the affected queries.
+
+:::
+
+:::caution The string form of floating-point values changes
+
+Starting from version 4.1.4, converting a FLOAT / DOUBLE value to a string produces **the shortest string that round-trips back to the same value**, instead of a fixed number of significant digits. The stored value does not change, but its text form may differ from 4.1.3 (for example, `246.9120025634766` becomes `246.91200256347656`, and `0.0000123456` becomes `1.23456e-05`).
+
+This affects MySQL protocol query results, `CAST(... AS STRING)`, the display of complex types / JSON / VARIANT, `SELECT INTO OUTFILE`, EXPORT, and floating-point columns of external tables. If a downstream system compares the string form of floating-point values exactly, adjust it after the upgrade. See [Floating-Point Types](../../sql-manual/basic-element/sql-data-types/numeric/FLOATING-POINT).
+
+:::
+
+The following changes also need attention when upgrading to 4.1.4:
+
+**Removed interfaces and syntax**
+
+| Change | Affected scope | What to do |
+| --- | --- | --- |
+| The `iceberg_meta()` table function is removed | SQL that reads Iceberg metadata through this table function | Use the Iceberg system tables `<table>$<system_table_name>` instead. See [ICEBERG_META](../../sql-manual/sql-functions/table-valued-functions/iceberg-meta) |
+| The FE `/api/<ns>/<db>/<tbl>/upload` endpoints are removed, together with the FE config `http_load_submitter_max_worker_threads` | Scripts that upload small files for loading through these endpoints | Use Stream Load or the S3 / HDFS / LOCAL TVFs instead. See [Upload Action](../open-api/fe-http/upload-action) |
+| The `PLAN REPLAYER PLAY '<file>'` statement is removed | Debugging flows that replay a minidump | Only `PLAN REPLAYER DUMP` remains |
+| The `set_session_variable` action of workload policies is removed | Workload policies using that action | Use `cancel_query` / `move_query_to_group` instead |
+| The BE config `get_stack_trace_tool` is removed, and the fields of the BE thread stack HTTP output change | Scripts collecting BE thread stacks | Parse the new output fields |
+| The BE config `s3_client_retry_slow_down` is removed in decoupled mode | Deployments relying on it to control S3 throttling retries | No configuration is needed: BE now always retries S3 429 / 503, and Recycler never retries |
+| The `HdfsIO` timer and its seven counters are removed from the query profile | Automation parsing the profile | Use the other IO-related counters instead |
+
+**Default value and behavior changes**
+
+| Change | Affected scope | What to do |
+| --- | --- | --- |
+| The minimum auto bucket number is raised from 1 to 3 (FE config `autobucket_min_buckets`) | Tables created with `BUCKETS AUTO` | Only newly created partitions are affected. See [Data Bucketing](../../table-design/data-partitioning/data-bucketing) |
+| The session variable `max_scanners_concurrency` default changes from 4 to 8 | All queries | Set it back to 4 to keep the old behavior |
+| The FE config `default_get_version_from_ms_timeout_second` default changes from 3 to 30 | Decoupled mode | Nothing to do; it reduces query failures caused by Meta Service jitter |
+| The BE config `enable_cache_read_from_peer` default changes from `true` to `false`, and `cache_read_from_peer_expired_seconds` is removed | Deployments relying on peer cache reads across compute groups | Set `enable_cache_read_from_peer=true` explicitly in `be.conf` to keep the old behavior |
+| The session variable `eager_aggregation_on_join` is removed; `eager_aggregation_on_broadcast_join` (default `true`) and `eager_agg_broadcast_row_count` (default 250000) are added | Sessions / scripts that set `eager_aggregation_on_join` | Remove the assignments to that variable |
+| In the `jobs()` table function, the streaming job column `Lag` is renamed to `LagBytes` and its unit changes from seconds to bytes; a `LastSourceEventTimestamp` column is added | Scripts parsing the `jobs()` output, monitoring based on the `streaming_job_per_job_lag` metric | Use the `LagBytes` column and the `streaming_job_per_job_lag_bytes` metric. See [Continuous Load](../../data-operate/import/import-way/streaming-job/continuous-load-overview) |
+| Arrow Flight SQL returns `DATETIME` / `DATETIMEV2` as an Arrow Timestamp **without a time zone** (`TIMESTAMPTZ` stays time zone aware) | Clients reading time columns through Arrow Flight SQL | Interpret the values without a time zone |
+| An aggregate function that contains another aggregate function in any of its arguments now reports `aggregate function cannot contain aggregate parameters` | Existing SQL such as `group_concat(x ORDER BY sum(k))` | Rewrite the SQL to aggregate first and then reference the result |
+| Modifying `default.replication_num` or `default.replication_allocation` now removes the conflicting legacy property | Old tables whose metadata still carries both properties | No action needed. `SHOW CREATE TABLE` and the effective replica allocation now agree. **During a rolling upgrade**, only alter these two properties once every FE has been upgraded, otherwise old and new FEs may apply different replica settings |
+| Paimon `paimon.table-option.*` catalog properties are restricted to an allowlist of seven keys | Catalogs using other `paimon.table-option.*` keys | Remove the keys outside the allowlist. See [Paimon Catalog](../../lakehouse/catalogs/paimon-catalog) |
+| Storage properties add the reserved key `doris.fs.cache.key` and no longer apply the implicit `fs.<schema>.impl.disable.cache=true` default | Catalogs / TVFs that use external storage | **Upgrade the BE nodes before the FE nodes** |
+| In decoupled mode, `ADMIN SET FRONTEND CONFIG` is restricted to the `root` user | Scripts changing FE configs at runtime with a non-root account | Use the root account, or set the configs in `fe.conf` instead |
+| The FE configs `s3_load_endpoint_white_list`, `jdbc_driver_url_white_list` and `force_sqlserver_jdbc_encrypt_false` can no longer be modified at runtime | Scripts changing these configs through `ADMIN SET FRONTEND CONFIG` | Set them in `fe.conf` and restart the FE |
+| Sensitive Kafka properties of Routine Load, and the `IV` / `CIPHER` columns of the `information_schema` encryption keys, are masked as `******` in query results | Scripts reading credentials from these results | Read the original values from your configuration management instead |
+
+**Deployment and configuration file changes**
+
+| Change | Affected scope | What to do |
+| --- | --- | --- |
+| The JDK 17 `JAVA_OPTS` must change `--add-opens=java.base/java.nio=ALL-UNNAMED` to `--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED` | Deployments with a customized `JAVA_OPTS_FOR_JDK_17` in `fe.conf` / `be.conf` | Sync this option from the `fe.conf` / `be.conf` shipped in the new release package. Otherwise Arrow-based features such as Arrow Flight SQL may fail to start or run |
+| The `paimon-scanner` module of be-java-extensions is renamed to `paimon-connector` | Custom deployment scripts referencing `be/lib/java_extensions/paimon-scanner` | Change the path to `paimon-connector` |
+| The BE `_stream_load_forward` endpoint requires the configuration to be enabled and requests to be authenticated | Deployments relying on Group Commit BE forwarding in decoupled mode | Set `enable_group_commit_streamload_be_forward=true` in every `be.conf` and make sure the load account holds the global `LOAD` privilege. See [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual) |
+
 ## FAQ
 
 <!-- Knowledge type: Troubleshooting -->

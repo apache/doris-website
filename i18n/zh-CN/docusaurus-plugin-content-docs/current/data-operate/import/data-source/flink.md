@@ -34,7 +34,7 @@
 
 ## 操作步骤
 
-使用 Flink 导入数据的完整说明可参考 [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector.md)。下文以一个最小示例演示如何通过 Flink 快速完成导入。
+使用 Flink 导入数据的完整说明可参考 [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector/overview.md)。下文以一个最小示例演示如何通过 Flink 快速完成导入。
 
 整体流程包含以下三步：
 
@@ -122,8 +122,8 @@ Flink Doris Connector 基于 Doris 的 Stream Load 实现导入，每个事务�
 
 **Q4：如何同步 MySQL/Oracle 等数据库的数据到 Doris？**
 
-可结合 Flink CDC 使用，详细方案请参考 [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector.md) 文档。
+可结合 Flink CDC 使用，详细方案请参考 [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector/cdc-sync.md) 文档。
 
 ## 相关文档
 
-- [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector.md)
+- [Flink-Doris-Connector](../../../connection-integration/data-integration/flink-doris-connector/overview.md)

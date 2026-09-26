@@ -2,7 +2,7 @@
 {
     "title": "TIMESTAMP | Date Time Functions",
     "language": "en",
-    "description": "The TIMESTAMP function converts a datetime format string to DATETIME type.",
+    "description": "Converts a date-time string to DATETIME, or preserves a TIMESTAMP_NS input and its nanosecond precision.",
     "sidebar_label": "TIMESTAMP"
 }
 ---
@@ -11,8 +11,7 @@
 
 ## Description
 
-The TIMESTAMP function converts a datetime format string to DATETIME type.
-If a second time parameter exists, it calculates the sum of the two parameters and returns the result in DATETIME format.
+The TIMESTAMP function converts a date-time string to `DATETIME`. For a `TIMESTAMP_NS` input, it returns `TIMESTAMP_NS` and preserves nanosecond precision. If a second time parameter is provided, it adds that time value to the first parameter and preserves the first parameter's corresponding date-time type.
 
 For specific datetime formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion).
 
@@ -28,14 +27,16 @@ TIMESTAMP(<date_or_datetime_string>[, <time_string>])
 
 | Parameter | Description                                           |
 |-----------|-------------------------------------------------------|
-| `date_or_datetime_string` | Date or datetime string type |
+| `date_or_datetime_string` | A date or datetime string, or a `DATETIME` or `TIMESTAMP_NS` expression. |
 | `time_string` | Time string type |
 
 ## Return Value
 
-Returns a value of type DATETIME.
+A `TIMESTAMP_NS` input returns `TIMESTAMP_NS` with fixed nine-digit fractional-second precision. Results are validated against the range of the return type; `TIMESTAMP_NS` uses its range of `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`.
 
-When one parameter is provided, returns the result of converting the first parameter to DATETIME type.
+Returns `DATETIME` for date, datetime, and string input, and returns `TIMESTAMP_NS` for `TIMESTAMP_NS` input.
+
+When one parameter is provided, returns the first parameter as the corresponding datetime type.
 When two parameters are provided, returns the sum of the two parameters.
 
 - If the first parameter is a date string, the time is set to 00:00:00
@@ -93,4 +94,3 @@ SELECT TIMESTAMP('2025-12-01', NULL);
 | NULL                          |
 +-------------------------------+
 ```
-

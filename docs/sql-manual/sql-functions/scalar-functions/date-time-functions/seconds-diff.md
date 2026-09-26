@@ -8,7 +8,7 @@
 
 ## Description
 
-The SECONDS_DIFF function calculates the difference between two datetime values and returns the result in seconds. This function supports processing DATE and DATETIME types. If the input is DATE type, its time portion defaults to 00:00:00.
+The SECONDS_DIFF function calculates the difference between two datetime values and returns the result in seconds. This function supports processing DATE, DATETIME, and TIMESTAMP_NS types. If the input is DATE type, its time portion defaults to 00:00:00.
 
 ## Syntax
 
@@ -20,8 +20,8 @@ SECONDS_DIFF(<date_or_time_expr1>, <date_or_time_expr2>)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr1>` | Required. The ending datetime value. Can be of type DATE or DATETIME. For specific datetime/date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| `<date_or_time_expr2>` | Required. The starting datetime value. Can be of type DATE or DATETIME. |
+| `<date_or_time_expr1>` | Required. The ending datetime value. Supports `DATE`, `DATETIME`, and `TIMESTAMP_NS`. For specific formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr2>` | Required. The starting datetime value. Supports `DATE`, `DATETIME`, and `TIMESTAMP_NS`. |
 
 ## Return Value
 
@@ -58,6 +58,15 @@ SELECT SECONDS_DIFF('2023-01-02', '2023-01-01') AS result;  -- 1 day difference 
 | result |
 +--------+
 |  86400 |
++--------+
+
+--- TIMESTAMP_NS can be used for either parameter
+SELECT SECONDS_DIFF(CAST('2024-01-01 00:00:02.000000000' AS TIMESTAMP_NS),
+                    CAST('2024-01-01 00:00:00' AS DATETIME)) AS result;
++--------+
+| result |
++--------+
+|      2 |
 +--------+
 
 --- Times with scale include fractional part difference in calculation

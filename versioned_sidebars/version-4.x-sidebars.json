@@ -159,7 +159,8 @@
                   "label": "File Cache",
                   "items": [
                     "compute-storage-decoupled/file-cache/file-cache",
-                    "compute-storage-decoupled/file-cache/file-cache-internals"
+                    "compute-storage-decoupled/file-cache/file-cache-internals",
+                    "compute-storage-decoupled/file-cache/file-cache-peer-read"
                   ]
                 },
                 {
@@ -227,7 +228,7 @@
     },
     {
       "type": "category",
-      "label": "Use Doris",
+      "label": "Guides",
       "collapsible": false,
       "collapsed": false,
       "items": [
@@ -414,10 +415,11 @@
                   "items": [
                     {
                       "type": "category",
-                      "label": "MySQL",
+                      "label": "MySQL (Experimental)",
                       "items": [
                         "data-operate/import/import-way/streaming-job/continuous-load-mysql-table",
                         "data-operate/import/import-way/streaming-job/continuous-load-mysql-database",
+                        "data-operate/import/import-way/streaming-job/schema-change-mysql",
                         "data-operate/import/import-way/streaming-job/data-type-mapping-mysql",
                         {
                           "type": "category",
@@ -431,10 +433,11 @@
                     },
                     {
                       "type": "category",
-                      "label": "PostgreSQL",
+                      "label": "PostgreSQL (Experimental)",
                       "items": [
                         "data-operate/import/import-way/streaming-job/continuous-load-postgresql-table",
                         "data-operate/import/import-way/streaming-job/continuous-load-postgresql-database",
+                        "data-operate/import/import-way/streaming-job/schema-change-postgresql",
                         "data-operate/import/import-way/streaming-job/data-type-mapping-postgresql",
                         {
                           "type": "category",
@@ -444,6 +447,15 @@
                             "data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql"
                           ]
                         }
+                      ]
+                    },
+                    {
+                      "type": "category",
+                      "label": "OceanBase (Experimental)",
+                      "items": [
+                        "data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database",
+                        "data-operate/import/import-way/streaming-job/schema-change-oceanbase",
+                        "data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase"
                       ]
                     },
                     "data-operate/import/import-way/streaming-job/continuous-load-s3"
@@ -458,8 +470,7 @@
                 "data-operate/import/file-format/csv",
                 "data-operate/import/file-format/json",
                 "data-operate/import/file-format/parquet",
-                "data-operate/import/file-format/orc",
-                "data-operate/import/file-format/native"
+                "data-operate/import/file-format/orc"
               ]
             },
             {
@@ -582,6 +593,33 @@
         },
         {
           "type": "category",
+          "label": "Materialized View",
+          "link": {
+            "type": "doc",
+            "id": "query-acceleration/materialized-view/intro"
+          },
+          "items": [
+            "query-acceleration/materialized-view/overview",
+            "query-acceleration/materialized-view/sync-materialized-view",
+            "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv",
+            {
+              "type": "category",
+              "label": "Async Materialized View",
+              "link": {
+                "type": "doc",
+                "id": "query-acceleration/materialized-view/async-materialized-view/overview"
+              },
+              "items": [
+                "query-acceleration/materialized-view/async-materialized-view/functions-and-demands",
+                "query-acceleration/materialized-view/async-materialized-view/use-guide",
+                "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv",
+                "query-acceleration/materialized-view/async-materialized-view/faq"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "category",
           "label": "Performance & Tuning",
           "collapsed": true,
           "link": {
@@ -619,33 +657,7 @@
                     "query-acceleration/tuning/tuning-plan/optimizing-table-scanning"
                   ]
                 },
-                {
-                  "type": "category",
-                  "label": "Materialized View",
-                  "link": {
-                    "type": "doc",
-                    "id": "query-acceleration/materialized-view/intro"
-                  },
-                  "items": [
-                    "query-acceleration/materialized-view/overview",
-                    "query-acceleration/materialized-view/sync-materialized-view",
-                    "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv",
-                    {
-                      "type": "category",
-                      "label": "Async Materialized View",
-                      "link": {
-                        "type": "doc",
-                        "id": "query-acceleration/materialized-view/async-materialized-view/overview"
-                      },
-                      "items": [
-                        "query-acceleration/materialized-view/async-materialized-view/functions-and-demands",
-                        "query-acceleration/materialized-view/async-materialized-view/use-guide",
-                        "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv",
-                        "query-acceleration/materialized-view/async-materialized-view/faq"
-                      ]
-                    }
-                  ]
-                },
+                "query-acceleration/materialized-view/intro-link",
                 {
                   "type": "category",
                   "label": "Join Optimization",
@@ -771,6 +783,7 @@
                     "lakehouse/best-practices/doris-dlf-iceberg"
                   ]
                 },
+                "lakehouse/catalogs/lance-catalog",
                 {
                   "type": "category",
                   "label": "Paimon Catalog",
@@ -868,6 +881,7 @@
             },
             "lakehouse/data-cache",
             "lakehouse/meta-cache",
+            "lakehouse/external-meta-cache-memory-management",
             "lakehouse/compute-node",
             "lakehouse/statistics",
             {
@@ -880,6 +894,13 @@
                 "lakehouse/best-practices/tpcds"
               ]
             }
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Data Governance",
+          "items": [
+            "data-governance/data-lineage"
           ]
         }
       ]
@@ -1005,6 +1026,7 @@
                   "items": [
                     "admin-manual/auth/authorization/internal",
                     "admin-manual/auth/authorization/ranger",
+                    "admin-manual/auth/authorization/ranger-hive",
                     "admin-manual/auth/authorization/data"
                   ]
                 },
@@ -1085,21 +1107,6 @@
                     "admin-manual/data-admin/backup-restore/restore"
                   ]
                 },
-                {
-                  "type": "category",
-                  "label": "Cross Cluster Replication",
-                  "link": {
-                    "type": "doc",
-                    "id": "admin-manual/data-admin/ccr/overview"
-                  },
-                  "items": [
-                    "admin-manual/data-admin/ccr/quickstart",
-                    "admin-manual/data-admin/ccr/manual",
-                    "admin-manual/data-admin/ccr/feature",
-                    "admin-manual/data-admin/ccr/config",
-                    "admin-manual/data-admin/ccr/performance"
-                  ]
-                },
                 "admin-manual/data-admin/recyclebin"
               ]
             },
@@ -1151,6 +1158,7 @@
                     "admin-manual/system-tables/information_schema/columns",
                     "admin-manual/system-tables/information_schema/engines",
                     "admin-manual/system-tables/information_schema/events",
+                    "admin-manual/system-tables/information_schema/file_cache_info",
                     "admin-manual/system-tables/information_schema/file_cache_statistics",
                     "admin-manual/system-tables/information_schema/files",
                     "admin-manual/system-tables/information_schema/global_variables",
@@ -1222,6 +1230,7 @@
                     "admin-manual/open-api/fe-http/system-action",
                     "admin-manual/open-api/fe-http/colocate-meta-action",
                     "admin-manual/open-api/fe-http/meta-action",
+                    "admin-manual/open-api/fe-http/meta-backup-action",
                     "admin-manual/open-api/fe-http/cluster-action",
                     "admin-manual/open-api/fe-http/node-action",
                     "admin-manual/open-api/fe-http/query-profile-action",
@@ -1359,12 +1368,15 @@
               ]
             }
           ]
-        },
-        {
-          "type": "category",
-          "label": "Reference",
-          "collapsed": true,
-          "items": [
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "SQL References",
+      "collapsible": false,
+      "collapsed": false,
+      "items": [
             {
               "type": "category",
               "label": "Basic Elements",
@@ -1429,14 +1441,14 @@
                           "label": "VARIANT",
                           "link": {
                             "type": "doc",
-                            "id": "sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide"
+                            "id": "sql-manual/basic-element/sql-data-types/semi-structured/VARIANT"
                           },
                           "collapsed": true,
                           "items": [
                             {
                               "type": "doc",
-                              "id": "sql-manual/basic-element/sql-data-types/semi-structured/VARIANT",
-                              "label": "VARIANT Reference"
+                              "id": "sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide",
+                              "label": "VARIANT Internal"
                             }
                           ]
                         }
@@ -1497,6 +1509,7 @@
                 "sql-manual/basic-element/object-identifiers",
                 "sql-manual/basic-element/reserved-keywords",
                 "sql-manual/basic-element/variables",
+                "sql-manual/basic-element/session-variables",
                 "sql-manual/basic-element/comments",
                 "sql-manual/basic-element/file-path-pattern",
                 {
@@ -1646,6 +1659,7 @@
                         "sql-manual/sql-functions/scalar-functions/string-functions/compress",
                         "sql-manual/sql-functions/scalar-functions/string-functions/count_substrings",
                         "sql-manual/sql-functions/scalar-functions/string-functions/cut-to-first-significant-subdomain",
+                        "sql-manual/sql-functions/scalar-functions/string-functions/damerau_levenshtein_distance",
                         "sql-manual/sql-functions/scalar-functions/string-functions/digital-masking",
                         "sql-manual/sql-functions/scalar-functions/string-functions/domain",
                         "sql-manual/sql-functions/scalar-functions/string-functions/domain-without-www",
@@ -1666,6 +1680,7 @@
                         "sql-manual/sql-functions/scalar-functions/string-functions/is-valid-utf8",
                         "sql-manual/sql-functions/scalar-functions/string-functions/lcase",
                         "sql-manual/sql-functions/scalar-functions/string-functions/length",
+                        "sql-manual/sql-functions/scalar-functions/string-functions/levenshtein",
                         "sql-manual/sql-functions/scalar-functions/string-functions/locate",
                         "sql-manual/sql-functions/scalar-functions/string-functions/lpad",
                         "sql-manual/sql-functions/scalar-functions/string-functions/ltrim",
@@ -1930,6 +1945,7 @@
                         "sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate",
                         "sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate-uniq",
                         "sql-manual/sql-functions/scalar-functions/array-functions/array-except",
+                        "sql-manual/sql-functions/scalar-functions/array-functions/array-except-all",
                         "sql-manual/sql-functions/scalar-functions/array-functions/array-exists",
                         "sql-manual/sql-functions/scalar-functions/array-functions/array-filter",
                         "sql-manual/sql-functions/scalar-functions/array-functions/array-first",
@@ -1979,6 +1995,8 @@
                         "sql-manual/sql-functions/scalar-functions/map-functions/map-contains-key",
                         "sql-manual/sql-functions/scalar-functions/map-functions/map-contains-value",
                         "sql-manual/sql-functions/scalar-functions/map-functions/map-entries",
+                        "sql-manual/sql-functions/scalar-functions/map-functions/map-from-arrays",
+                        "sql-manual/sql-functions/scalar-functions/map-functions/map-from-entries",
                         "sql-manual/sql-functions/scalar-functions/map-functions/map-keys",
                         "sql-manual/sql-functions/scalar-functions/map-functions/map-size",
                         "sql-manual/sql-functions/scalar-functions/map-functions/map-values",
@@ -2042,6 +2060,8 @@
                       "label": "Variant Functions",
                       "items": [
                         "sql-manual/sql-functions/scalar-functions/variant-functions/element-at",
+                        "sql-manual/sql-functions/scalar-functions/variant-functions/parse-to-variant",
+                        "sql-manual/sql-functions/scalar-functions/variant-functions/try-parse-to-variant",
                         "sql-manual/sql-functions/scalar-functions/variant-functions/variant-type"
                       ]
                     },
@@ -2236,6 +2256,7 @@
                     "sql-manual/sql-functions/aggregate-functions/min-map",
                     "sql-manual/sql-functions/aggregate-functions/percentile",
                     "sql-manual/sql-functions/aggregate-functions/percentile-approx",
+                    "sql-manual/sql-functions/aggregate-functions/percentile-approx-array",
                     "sql-manual/sql-functions/aggregate-functions/percentile-array",
                     "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
                     "sql-manual/sql-functions/aggregate-functions/percentile_reservoir",
@@ -2337,6 +2358,7 @@
                     "sql-manual/sql-functions/aggregate-functions/min-map",
                     "sql-manual/sql-functions/aggregate-functions/percentile",
                     "sql-manual/sql-functions/aggregate-functions/percentile-approx",
+                    "sql-manual/sql-functions/aggregate-functions/percentile-approx-array",
                     "sql-manual/sql-functions/aggregate-functions/percentile-array",
                     "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
                     "sql-manual/sql-functions/aggregate-functions/quantile-union",
@@ -2554,8 +2576,7 @@
                         "sql-manual/sql-statements/session/queries/CLEAN-ALL-PROFILE",
                         "sql-manual/sql-statements/session/queries/SHOW-QUERY-STATS",
                         "sql-manual/sql-statements/session/queries/CLEAN-ALL-QUERY-STATS",
-                        "sql-manual/sql-statements/session/queries/PLAN-REPLAYER-DUMP",
-                        "sql-manual/sql-statements/session/queries/PLAN-REPLAYER-PLAY"
+                        "sql-manual/sql-statements/session/queries/PLAN-REPLAYER-DUMP"
                       ]
                     },
                     {
@@ -2891,7 +2912,5 @@
             }
           ]
         }
-      ]
-    }
   ]
 }

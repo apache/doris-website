@@ -14,6 +14,8 @@ interface DeploymentCardItem {
     image: {
         src: string;
         alt: string;
+        width: number;
+        height: number;
     };
     cta: {
         label: string;
@@ -33,6 +35,8 @@ const DEPLOYMENT_CARDS: DeploymentCardItem[] = [
         image: {
             src: '/images/next/home-page/cs-coupled.jpg',
             alt: 'Apache Doris compute-storage coupled mode architecture diagram',
+            width: 1774,
+            height: 887,
         },
         cta: {
             label: 'Deploy Now!',
@@ -50,6 +54,8 @@ const DEPLOYMENT_CARDS: DeploymentCardItem[] = [
         image: {
             src: '/images/next/home-page/cs-decoupled.jpg',
             alt: 'Apache Doris compute-storage decoupled mode architecture diagram',
+            width: 1672,
+            height: 941,
         },
         cta: {
             label: 'Deploy Now!',
@@ -75,7 +81,15 @@ function DeploymentCard({ card }: { card: DeploymentCardItem }): JSX.Element {
                 </a>
             </div>
             <div className="deployment-next__visual">
-                <img className="deployment-next__visual-image" src={card.image.src} alt={card.image.alt} />
+                <img
+                    className="deployment-next__visual-image"
+                    src={card.image.src}
+                    alt={card.image.alt}
+                    width={card.image.width}
+                    height={card.image.height}
+                    loading="lazy"
+                    decoding="async"
+                />
             </div>
         </article>
     );
@@ -83,11 +97,11 @@ function DeploymentCard({ card }: { card: DeploymentCardItem }): JSX.Element {
 
 export function DeploymentSection(): JSX.Element {
     return (
-        <section className="deployment-next">
+        <section id="deployment" className="deployment-next" aria-labelledby="deployment-next-title">
             <div className="home-next-container">
                 <div className="deployment-next__header">
                     <div className="deployment-next__eyebrow">Deployment</div>
-                    <h2 className="deployment-next__headline">
+                    <h2 className="deployment-next__headline" id="deployment-next-title">
                         <span className="deployment-next__headline-line">Choose Your Architecture</span>
                         <span className="deployment-next__headline-line deployment-next__headline-line--accent">
                             One Engine, Two Modes

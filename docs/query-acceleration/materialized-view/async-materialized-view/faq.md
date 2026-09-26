@@ -102,7 +102,7 @@ The refresh process locks the table only during a very brief stage, but does not
 
 ### Q11: Are materialized views suitable for near-real-time scenarios?
 
-Not really. The minimum unit of materialized view refresh is a partition, which consumes considerable resources when the data volume is large, and the freshness is not sufficient. Synchronous materialized views or other approaches are recommended instead.
+Async materialized views do not provide real-time consistency. The minimum computation unit of a regular partitioned incremental refresh is a partition. Since Doris 5.0.0, [Incremental View Maintenance (IVM)](incremental-materialized-view) can process only the row-level changes between two refreshes, which lowers the computation cost of frequent small-batch changes, but data freshness still depends on triggering, queueing and refresh time. When results must be transactionally consistent with the base tables, use synchronous materialized views.
 
 ### Q12: Error when building a partition materialized view
 
@@ -297,6 +297,14 @@ If changes to the `lineitem` or `partsupp` table data have no impact on the mate
 ```sql
 ALTER MATERIALIZED VIEW partition_mv set("excluded_trigger_tables"="lineitem,partsupp");
 ```
+
+### Q16: What is the difference between IVM and partitioned incremental refresh?
+
+IVM corresponds to `INCREMENTAL` and computes only the row-level changes of the base tables between two refreshes. Partitioned incremental refresh corresponds to `PARTITIONS` and recomputes every affected materialized view partition in full. When the number of changed rows is far smaller than the affected partitions, IVM usually reduces the amount of computation. See [Incremental View Maintenance (IVM)](incremental-materialized-view#differences-from-partition-level-incremental-refresh) for a full comparison.
+
+### Q17: Why does an IVM fall back to a complete refresh?
+
+`INCREMENTAL FALLBACK` and `AUTO` fall back when the incremental result cannot be computed safely. For example, a deleted value may change `MIN` or `MAX`, a delete affects a Bitmap aggregation, the continuity of Row Binlog is broken, or the delta plan layout has changed. Check the stable fallback reason in `IvmFallbackReason` of `tasks("type"="mv")`. See [Refresh and fallback](incremental-materialized-view#refresh-and-fallback).
 
 ## Query and Transparent Rewrite
 

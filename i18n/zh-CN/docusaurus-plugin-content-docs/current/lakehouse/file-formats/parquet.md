@@ -21,6 +21,22 @@
 
 * Outfile 中对数据的写入操作。
 
+## INT96 时间戳解码
+
+Parquet `INT96` 存储日期和时间字段，但不包含时区标注。因此 FileScannerV2 默认保留原始墙上时间值，而不会根据 SQL 会话时区产生偏移。例如，映射到 `DATETIMEV2` 时，原始值 `2021-01-01 10:11:00` 在 Catalog 扫描、表值函数和 Broker Load 中均保持为 `10:11:00`。
+
+该行为仅适用于 `INT96`。带时间戳逻辑类型的 Parquet `INT64` 值仍遵循逻辑类型语义。如果旧版 Hive 写入端按已知时区归一化过 `INT96` 值，请在 [Hive Catalog](../catalogs/hive-catalog.mdx#timestamp-compatibility) 中配置 `hive.parquet.time-zone`。外部文件表值函数也接受该属性。其他 FileScannerV2 入口会保留原始 `INT96` 墙上时间值，但 Hudi 除外：Hudi 的原生扫描和 JNI 扫描会有意保留原有的 SQL 会话时区行为，并忽略 `hive.parquet.time-zone`。
+
+`INT96` 列映射到 `TIMESTAMPTZ` 时，Doris 会保留 UTC 时刻，而不应用兼容时区。
+
+## UUID 类型映射
+
+支持读取带 UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，包括普通编码和字典编码，使用标准大端字节序。普通 Parquet TVF 在 `enable_mapping_varbinary=false` 时将其展示为标准 UUID 字符串，可通过 `CAST(value AS UUID)` 转换；设为 `true` 时保留 VARBINARY 原始字节，可通过 `CAST(HEX(value) AS UUID)` 转换。Iceberg Catalog 的 STRING/VARBINARY 映射均保留原始字节，应使用 HEX 路径。
+
+写入 Doris `UUID` 列（包括 ARRAY、MAP 或 STRUCT 中嵌套的 UUID 元素）时，输出为带 UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，因此识别该标记的其他引擎可以按 UUID 还原取值；Doris 自身读取这类文件时仍遵循上述 STRING / VARBINARY 映射。
+
+OUTFILE 和 EXPORT 导出 UUID 的完整类型映射见[导出文件列类型映射](../../data-operate/export/export-overview.md#导出文件列类型映射)。
+
 ## 支持的压缩格式
 
 * umcomressed
@@ -66,4 +82,3 @@
 * `parquet_column_max_buffer_mb` (2.1+, 3.0+)
 
     读取 Parquet Row Group 中的 Column 时所分配的最大 Buffer 大小，默认为 8M。
-

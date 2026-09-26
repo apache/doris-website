@@ -1,13 +1,13 @@
 .users-next {
-    --un-green-dark: #06805F;
-    --un-green-darker: #054C39;
-    --un-green-darkest: #033A2C;
-    --un-cream-light: #FAF6EE;
-    --un-cream-warm: #EFE6D2;
-    --un-paper: #FFFCF5;
-    --un-yellow: #FFD23F;
-    --un-yellow-bright: #FFE066;
-    --un-ink: #0F1A14;
+    --un-green-dark: var(--brand-primary-dark);
+    --un-green-darker: var(--brand-primary-darker);
+    --un-green-darkest: var(--brand-primary-darkest);
+    --un-cream-light: var(--brand-cream-light);
+    --un-cream-warm: var(--brand-cream-warm);
+    --un-paper: var(--brand-paper);
+    --un-yellow: var(--brand-accent);
+    --un-yellow-bright: var(--brand-accent-bright);
+    --un-ink: var(--brand-ink);
     --un-container: 1320px;
     --un-gutter: 56px;
 
@@ -73,8 +73,8 @@
     inset: 0;
     z-index: 0;
     background:
-        radial-gradient(ellipse 60% 50% at 78% 22%, rgba(45, 223, 168, 0.18), transparent 70%),
-        radial-gradient(ellipse 50% 70% at 0% 100%, rgba(255, 210, 63, 0.05), transparent 70%);
+        radial-gradient(ellipse 60% 50% at 78% 22%, rgb(var(--brand-primary-glow-rgb) / 18%), transparent 70%),
+        radial-gradient(ellipse 50% 70% at 0% 100%, rgb(var(--brand-accent-rgb) / 5%), transparent 70%);
 }
 
 .users-next__hero-grid {
@@ -190,12 +190,12 @@
 }
 
 .users-next__cat:hover {
-    background: var(--ifm-color-primary, #11A679);
+    background: var(--ifm-color-primary);
     color: #fff;
 }
 
 .users-next__cat.is-active {
-    background: var(--ifm-color-primary, #11A679);
+    background: var(--ifm-color-primary);
     color: #fff;
 }
 
@@ -220,16 +220,16 @@
     gap: 6px;
     cursor: pointer;
     padding: 16px 32px;
-    border: 1px solid var(--ifm-color-primary, #11A679);
+    border: 1px solid var(--ifm-color-primary);
     background: transparent;
     border-radius: 4px;
-    color: var(--ifm-color-primary, #11A679);
+    color: var(--ifm-color-primary);
     font-size: 16px;
     transition: background 0.2s ease, color 0.2s ease;
 }
 
 .users-next__more:hover {
-    background: var(--ifm-color-primary, #11A679);
+    background: var(--ifm-color-primary);
     color: #fff;
 }
 

@@ -45,7 +45,7 @@ CREATE MATERIALIZED VIEW
 [ IF NOT EXISTS ] <materialized_view_name>
     [ (<columns_definition>) ]
     [ BUILD <build_mode> ]
-    [ REFRESH <refresh_method> [refresh_trigger]]
+    [ REFRESH <refresh_method> [FALLBACK] [refresh_trigger]]
     [ [DUPLICATE] KEY (<key_cols>) ]
     [ COMMENT '<table_comment>' ]
     [ PARTITION BY (
@@ -75,16 +75,26 @@ CREATE MATERIALIZED VIEW
 | 刷新时机 | `IMMEDIATE`   | 创建完成后立即刷新（默认）。                                               |
 | 刷新时机 | `DEFERRED`    | 创建完成后延迟刷新。                                                       |
 | 刷新方式 | `COMPLETE`    | 全量刷新，刷新所有分区。                                                   |
-| 刷新方式 | `AUTO`        | 尽量增量刷新；无法感知变化时退化为全量刷新。                               |
+| 刷新方式 | `PARTITIONS`  | 重新计算发生变化的物化视图分区。                                           |
+| 刷新方式 | `INCREMENTAL` | 使用 物化视图增量维护（IVM）处理行级变化。                     |
+| 刷新方式 | `AUTO`        | 由 Doris 自动选择 IVM、分区刷新或完整刷新。                                |
 | 触发方式 | `ON MANUAL`   | 用户通过 SQL 语句手动触发刷新。                                            |
 | 触发方式 | `ON SCHEDULE` | 按指定时间间隔定时触发。                                                   |
 | 触发方式 | `ON COMMIT`   | 基表数据变更时自动触发（自 Apache Doris 2.1.4 起支持）。                   |
 
 #### 1.3.2 ON MANUAL 手动触发
 
-用户通过 SQL 语句触发物化视图的刷新，包括三种策略：
+用户通过 SQL 语句触发物化视图刷新时，可以覆盖创建时定义的刷新方式。
 
-**策略一**：检测基表分区数据自上次刷新后是否有变化，仅刷新变化的分区。
+**策略一**：使用 IVM 处理基表两次刷新之间的行级变化。
+
+```sql
+REFRESH MATERIALIZED VIEW mvName INCREMENTAL FALLBACK;
+```
+
+`FALLBACK` 表示 IVM 无法安全执行时，允许 Doris 回退到分区刷新或完整刷新。不带 `FALLBACK` 的严格增量刷新会直接失败。IVM 的前置条件、支持范围和回退规则见 [物化视图增量维护（IVM）](incremental-materialized-view)。
+
+**策略二**：由 Doris 自动选择可用的刷新方式。
 
 ```sql
 REFRESH MATERIALIZED VIEW mvName AUTO;
@@ -95,13 +105,13 @@ REFRESH MATERIALIZED VIEW mvName AUTO;
 - 目前 Doris 仅能感知内表和 Hive 数据源表的数据变化，其他数据源逐步支持中。
 :::
 
-**策略二**：不校验基表分区数据变化，直接刷新物化视图的所有分区。
+**策略三**：不校验基表分区数据变化，直接刷新物化视图的所有分区。
 
 ```sql
 REFRESH MATERIALIZED VIEW mvName COMPLETE;
 ```
 
-**策略三**：仅刷新指定分区。
+**策略四**：仅刷新指定分区。
 
 ```sql
 REFRESH MATERIALIZED VIEW mvName partitions(partitionName1, partitionName2);

@@ -130,3 +130,19 @@ If overflow occurs, the return value is NULL.
 | `2020-12-12 00:00:00.123456` | Datetime(6) | Timestamptz(3) | `2020-12-12 00:00:00.123+08:00`    | Reduce precision, no carry             |
 | `2020-12-12 00:00:00.99666`  | Datetime(6) | Timestamptz(2) | `2020-12-12 00:00:01.00+08:00`     | Reduce precision, carry to seconds            |
 | `9999-12-31 23:59:59.999999` | Datetime(6) | Timestamptz(5) | NULL                           | Carry overflow, produces invalid date of year 10000 |
+
+### TIMESTAMP_NS
+
+When converting `TIMESTAMP_NS` to `TIMESTAMPTZ(p)`, Doris interprets the time-zone-naive `TIMESTAMP_NS` value in the current session time zone, converts it to the corresponding instant, and rounds the nanosecond fraction to the target precision `p` (`0` to `6`).
+
+Every valid `TIMESTAMP_NS` value is within the `TIMESTAMPTZ` date range, so conversion always succeeds in both strict and non-strict modes. A `NULL` input returns `NULL`.
+
+Assume `time_zone = '+08:00'`:
+
+| Input TIMESTAMP_NS | Target Type | Result TIMESTAMPTZ | Comment |
+| --- | --- | --- | --- |
+| `2024-02-29 12:34:56.123456499` | Timestamptz(6) | `2024-02-29 12:34:56.123456+08:00` | Round down to microseconds |
+| `2024-02-29 12:34:56.123456500` | Timestamptz(6) | `2024-02-29 12:34:56.123457+08:00` | Round up to microseconds |
+| `1969-12-31 23:59:59.999999500` | Timestamptz(6) | `1970-01-01 00:00:00.000000+08:00` | Carry to the next second |
+
+For conversion in the opposite direction, see [Cast to TIMESTAMP_NS](./timestamp-ns-conversion.md).

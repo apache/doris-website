@@ -8,10 +8,10 @@ import EditMetaRow from '@theme/EditMetaRow';
 
 export default function DocItemFooter(): JSX.Element | null {
   const {metadata} = useDoc();
-  const {editUrl, lastUpdatedAt, lastUpdatedBy, tags} = metadata;
+  const {editUrl, tags} = metadata;
 
   const canDisplayTagsRow = tags.length > 0;
-  const canDisplayEditMetaRow = !!(editUrl || lastUpdatedAt || lastUpdatedBy);
+  const canDisplayEditMetaRow = !!editUrl;
 
   const canDisplayFooter = canDisplayTagsRow || canDisplayEditMetaRow;
 
@@ -40,8 +40,6 @@ export default function DocItemFooter(): JSX.Element | null {
             ThemeClassNames.docs.docFooterEditMetaRow,
           )}
           editUrl={editUrl}
-          lastUpdatedAt={lastUpdatedAt}
-          lastUpdatedBy={lastUpdatedBy}
         />
       )}
     </footer>

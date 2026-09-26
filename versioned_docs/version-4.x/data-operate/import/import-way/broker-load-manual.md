@@ -23,6 +23,10 @@
 
 Broker Load is initiated through the MySQL API. Doris actively pulls data from a remote data source according to the information in the `LOAD` statement. It is an **asynchronous import** method. After submission, you need to use the `SHOW LOAD` statement to check the import progress and result.
 
+:::caution Note
+This method is deprecated and will be removed in version 5.0. Please use "insert into table select xxx from tvf or catalog table" instead.
+:::
+
 Broker Load is suitable for the following typical scenarios:
 
 - The source data is stored in a remote system (such as object storage or HDFS).

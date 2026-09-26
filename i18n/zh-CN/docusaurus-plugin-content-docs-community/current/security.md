@@ -1,5 +1,5 @@
 ---
-title: Apache Doris 安全漏洞披露
+title: 安全漏洞披露
 language: zh-CN
 description: 如何向 Apache Doris 报告安全漏洞：通过 security@apache.org 联系 ASF 安全团队，遵循官方负责任披露流程。
 keywords:

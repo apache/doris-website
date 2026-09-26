@@ -15,17 +15,38 @@
 
 两种方式下，写入的值都遵循同一套映射。不支持的类型请参见[使用限制](./continuous-load-overview.md#使用限制)。
 
+## JDBC URL 参数归一化
+
+> 自 4.1.4 版本开始生效。
+
+创建 MySQL 数据源的 Streaming Job（以及使用 `cdc_stream()` 表函数）时，如果用户没有显式指定，Doris 会自动在 `jdbc_url` 上追加以下参数：
+
+| 参数 | 注入值 | 影响 |
+| --- | --- | --- |
+| `tinyInt1isBit` | `false` | `TINYINT(1)` 按 `TINYINT` 读取（`1` / `0`），不再按 `BOOLEAN` 读取（`true` / `false`） |
+| `yearIsDateType` | `false` | `YEAR` 按整数年份读取，不再按日期读取 |
+| `useUnicode` | `true` | 使用 Unicode 编码 |
+| `characterEncoding` | `utf-8` | 字符集统一为 UTF-8 |
+
+如果在 `jdbc_url` 中显式设置了上述参数，Doris 会保留用户的取值，不做覆盖。PostgreSQL 的 `jdbc_url` 不做归一化。
+
+:::caution 升级影响
+
+从 4.1.3 及更早版本升级后，已有的 MySQL CDC 作业中 `TINYINT(1)` 列的取值展示会由 `true` / `false` 变为 `1` / `0`，`YEAR` 列会由日期变为整数年份。如果需要保留旧行为，可在 `jdbc_url` 中显式设置 `tinyInt1isBit=true` 和 `yearIsDateType=true`。
+
+:::
+
 ## MySQL 到 Doris
 
 | MySQL 类型 | Doris 类型 | 备注 |
 | --- | --- | --- |
-| `BOOLEAN` / `TINYINT(1)` | `BOOLEAN` | |
+| `BOOLEAN` / `TINYINT(1)` | `TINYINT` | **自 4.1.4 版本起**映射为 `TINYINT`（取值 `1` / `0`）；4.1.4 之前映射为 `BOOLEAN`（`true` / `false`）。原因见 [JDBC URL 参数归一化](#jdbc-url-参数归一化) |
 | `TINYINT` | `TINYINT` | `UNSIGNED` → `SMALLINT` |
 | `SMALLINT` | `SMALLINT` | `UNSIGNED` → `INT` |
 | `MEDIUMINT` | `INT` | `UNSIGNED` → `INT` |
 | `INT` | `INT` | `UNSIGNED` → `BIGINT` |
 | `BIGINT` | `BIGINT` | `UNSIGNED` → `LARGEINT` |
-| `YEAR` | `SMALLINT` | |
+| `YEAR` | `SMALLINT` | **自 4.1.4 版本起**按整数年份读取，而不是按日期读取；MySQL 的零年（`0000`）保留为 `0` |
 | `FLOAT` | `FLOAT` | |
 | `DOUBLE` | `DOUBLE` | |
 | `DECIMAL(p,s)` | `DECIMAL(p,s)` | 超高精度回退为 `STRING` |

@@ -18,7 +18,7 @@ LEAST(<expr> [, ...])
 
 ## Parameters
 ### Required Parameter
-- `<expr>`: Supports `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `STRING`, `DATETIME`, and `DECIMAL` types.
+- `<expr>`: Supports `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `FLOAT`, `DOUBLE`, `STRING`, `DATETIME`, `TIMESTAMP_NS`, and `DECIMAL` types.
 ### Optional Parameters
 - Supports multiple arguments.
 

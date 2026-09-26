@@ -198,3 +198,22 @@ mysql> REFRESH TABLE ice.`ns1.ns2`.tbl1;
         's3.region' = 'us-west-2'
     );
     ```
+
+- Connecting to SeaweedFS Rest Catalog
+
+    ```sql
+    CREATE CATALOG seaweedfs_iceberg PROPERTIES (
+        'type' = 'iceberg',
+        'iceberg.catalog.type' = 'rest',
+        'uri' = 'http://<seaweedfs_host>:8181',
+        'warehouse' = 's3://<table_bucket_name>',
+        'credential' = '<ak>:<sk>',
+        's3.access_key' = '<ak>',
+        's3.secret_key' = '<sk>',
+        's3.endpoint' = 'http://<seaweedfs_host>:8333',
+        's3.region' = 'us-west-2',
+        'use_path_style' = 'true'
+    );
+    ```
+
+    SeaweedFS table buckets serve the Iceberg REST catalog for table metadata and store the table data as Parquet files behind the same S3 gateway. See [Integration with SeaweedFS](../best-practices/doris-seaweedfs.md) for a full walkthrough.

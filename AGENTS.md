@@ -13,6 +13,8 @@ For review tasks, if the PR involves changes to the website's basic framework an
 - Keep Docusaurus metadata correct. When editing docs or blog files, verify any relevant front matter fields such as `title`, `description`, `slug`, `keywords`, `sidebar_position`, and tags.
 - Prefer targeted edits over broad rewrites. Avoid reformatting unrelated content, reordering large sections, or changing tone across a whole file unless the task explicitly requires it.
 - When touching React, TypeScript, styling, or site configuration, preserve the existing visual language and implementation patterns already used in this repository.
+- Treat `src/scss/_variables.scss` and `src/components/brand-theme/` as the authoritative sources for global brand themes and theme switching.
+- New pages and major visual sections must use the semantic global theme tokens defined in `src/scss/_variables.scss` instead of hard-coded brand colors. If a new semantic color role is required, define it consistently for every supported theme. Verify that the page remains readable and visually coherent after switching themes; embedded or iframe-based content must receive the same theme tokens through the existing theme bridge.
 - When touching community docs, remember that navigation is controlled separately by `sidebarsCommunity.json` and Chinese localized community content lives under `i18n/zh-CN/docusaurus-plugin-content-docs-community/`.
 
 ## Code Review
@@ -33,7 +35,7 @@ Review emphasis by change type:
 
 - **Documentation changes**: check factual consistency, active version/locale consistency, broken relative links, heading hierarchy, front matter, sidebar placement, and whether examples or commands still match surrounding docs. If only one version or locale is changed, determine from the surrounding files and recent history whether the asymmetry is intentional or incorrect.
 - **Doc moves / renames / deletions**: check references from `docs/`, `versioned_docs/`, `i18n/`, `community/`, `sidebars.ts`, `sidebarsCommunity.json`, and `versioned_sidebars/`; verify redirect behavior and moved-link handling.
-- **Frontend changes**: check responsive layout, hydration/build safety, accessibility basics, and visual consistency with the existing site.
+- **Frontend changes**: check responsive layout, hydration/build safety, accessibility basics, visual consistency with the existing site, and correct use of semantic global theme tokens across all supported themes.
 - **Build or workflow changes**: check trigger conditions, required permissions, secret usage, checkout depth, and whether the workflow can operate on pull requests safely.
 
 If you submit a review summary, keep it concrete and actionable. If no issue is found, explicitly say so.

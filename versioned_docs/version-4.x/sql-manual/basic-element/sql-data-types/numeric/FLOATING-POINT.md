@@ -162,18 +162,41 @@ Similar to aggregate functions, it is not recommended to perform table joins on 
 
 ### Floating-Point Output
 
-When floating-point numbers are converted to strings, Doris follows these precision rules:
-- Single-precision floating-point numbers (FLOAT) guarantee at least 7 significant digits
-- Double-precision floating-point numbers (DOUBLE) guarantee at least 16 significant digits
-Note that floating-point output may use scientific notation, so the length of a floating-point string representation is not necessarily equal to its number of significant digits:
+Since **4.1.4**, when a floating-point number is converted to a string, Doris prints **the shortest string that round-trips the value without loss**: parsing that string back into FLOAT / DOUBLE produces exactly the same binary value, and no redundant digits are printed.
+
+Output format rules:
+
+- Fixed-point notation is used when the decimal exponent falls in `[-4, 16)`.
+- Otherwise scientific notation is used, with a lowercase `e`, an explicit sign, and at least two exponent digits, for example `1.23456e-05`.
+- Positive and negative zero are printed distinctly (`0` and `-0`).
+- `NaN`, `Infinity` and `-Infinity` keep their existing spelling.
+
 ```sql
-mysql> select cast('1234567' as float) , cast('12345678' as float);
-+--------------------------+---------------------------+
-| cast('1234567' as float) | cast('12345678' as float) |
-+--------------------------+---------------------------+
-|                  1234567 |              1.234568e+07 |
-+--------------------------+---------------------------+
+mysql> select cast('0.000123456' as double), cast('0.0000123456' as double);
++-------------------------------+--------------------------------+
+| cast('0.000123456' as double) | cast('0.0000123456' as double) |
++-------------------------------+--------------------------------+
+|                   0.000123456 |                    1.23456e-05 |
++-------------------------------+--------------------------------+
 ```
+
+:::caution Behavior change (4.1.4)
+
+Versions before 4.1.4 printed a fixed number of significant digits (about 7 for FLOAT and about 16 for DOUBLE), so the printed string did not always parse back to the original value. After the switch to the shortest round-trip representation, **the stored values are unchanged; only their text form may differ**. For example:
+
+| Before 4.1.4 | 4.1.4 and later |
+| --- | --- |
+| `246.9120025634766` | `246.91200256347656` |
+| `15241.38425247656` | `15241.384252476564` |
+| `11.11107561317707` | `11.111075613177073` |
+| The DOUBLE value `2.0` printed as `2.0` in some text output | printed as `2` |
+| `0.0000123456` | `1.23456e-05` |
+
+The change affects a wide range of output paths: MySQL protocol query results, `CAST(... AS STRING)`, ARRAY / MAP / STRUCT element display, JSON / VARIANT display, the CSV / Parquet / ORC text output of `SELECT INTO OUTFILE`, EXPORT, Stream Load return values, and floating-point columns of external tables (Hive / Iceberg / Paimon / JDBC / ES / TVF).
+
+If a downstream system matches the string form of floating-point numbers exactly (for example, when comparing exported files), adjust it accordingly after the upgrade.
+
+:::
 
 ## Best Practices
 

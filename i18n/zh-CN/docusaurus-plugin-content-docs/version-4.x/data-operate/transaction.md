@@ -381,9 +381,6 @@ mysql> SELECT * FROM dt3;
 
 * 当使用 JDBC 连接 Doris 进行事务操作时，请在 JDBC URL 中添加 `useLocalSessionState=true`，否则可能会遇到错误 `This is in a transaction, only insert, update, delete, commit, rollback is acceptable.`
 
-* 存算分离模式下，事务写不支持 Merge-on-Write 表，否则会遇到报错 `Transaction load is not supported for merge on write unique keys table in cloud mode`
-
-
 ## Stream Load 2PC
 
 **1. 在 HTTP Header 中设置 `two_phase_commit:true` 启用两阶段提交。**

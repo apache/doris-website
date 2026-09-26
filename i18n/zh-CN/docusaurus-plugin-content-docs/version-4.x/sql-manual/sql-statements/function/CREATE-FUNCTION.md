@@ -30,7 +30,7 @@ CREATE [ GLOBAL ]
 
 **2. `<arg_type>`**
 
-> 函数的输入参数类型。变长参数时可以使用`, ...`来表示，如果是变长类型，那么变长部分参数的类型与最后一个非变长参数类型一致。
+> 函数的输入参数类型，可以声明一个或多个固定参数。**自 4.1.5 版本起，不再支持使用 `...` 声明可变参数函数。如需接收数量不定的参数，请改用 `ARRAY` 类型参数。**
 
 **3. `<ret_type>`**
 
@@ -149,10 +149,10 @@ CREATE [ GLOBAL ]
         "volatility" = "volatile"
     )
     AS $$
-import uuid
-def py_uuid_token_impl(x):
-    return f"{x}-{uuid.uuid4()}"
-$$;
+    import uuid
+    def py_uuid_token_impl(x):
+        return f"{x}-{uuid.uuid4()}"
+    $$;
 
     SET enable_cte_materialize = true;
     SET inline_cte_referenced_threshold = 10;
@@ -189,10 +189,10 @@ $$;
         "volatility" = "immutable"
     )
     AS $$
-import uuid
-def py_uuid_token_impl(x):
-    return f"{x}-{uuid.uuid4()}"
-$$;
+    import uuid
+    def py_uuid_token_impl(x):
+        return f"{x}-{uuid.uuid4()}"
+    $$;
     ```
 
     重新执行同一条查询：

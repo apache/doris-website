@@ -21,12 +21,12 @@ UTC_TIMESTAMP([`<precision>`])
 
 | Parameter | Description |
 |-----------|-------------|
-| `<precision>` | The precision of the returned date-time value supports integer types within the range [0, 6]. Only integer type constants are accepted. |
+| `<precision>` | Optional integer constant in the range `[0, 9]`. The default is 0. |
 
 ## Return Value
 Returns the current UTC date and time.
 
-Returns DATETIME type (format: YYYY-MM-DD HH:mm:ss[.ssssss]). When using the returned result for numeric operations, it will be converted to the [integer format](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-datetime) (format YYYYMMDDHHmmss).
+For precision 0 to 6, returns `DATETIME(<precision>)`. For precision 7 to 9, returns `TIMESTAMP_NS`, displayed with nine fractional digits. When using the returned result for numeric operations, it is converted to the [integer format](../../../../sql-manual/basic-element/sql-data-types/conversion/int-conversion#from-datetime) (format YYYYMMDDHHmmss). The value is constant within one statement.
 
 When the input is NULL or the precision is out of range, an error will be thrown.
 
@@ -45,8 +45,8 @@ SELECT UTC_TIMESTAMP(), UTC_TIMESTAMP() + 0, UTC_TIMESTAMP(5), UTC_TIMESTAMP(5) 
 ```
 
 ```sql
-SELECT UTC_TIMESTAMP(7);
--- ERROR 1105 (HY000): errCode = 2, detailMessage = scale must be between 0 and 6
+SELECT UTC_TIMESTAMP(10);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = Precision of UTC_TIMESTAMP must be between 0 and 9. Precision was set to: 10
 
 SELECT UTC_TIMESTAMP(NULL);
 -- ERROR 1105 (HY000): errCode = 2, detailMessage = UTC_TIMESTAMP argument cannot be NULL.

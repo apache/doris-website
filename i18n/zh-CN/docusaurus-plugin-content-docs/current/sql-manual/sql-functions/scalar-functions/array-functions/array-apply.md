@@ -30,7 +30,7 @@ array_apply(arr, op, val)
 
 **T 支持的类型：**
 - 数值类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMAL
-- 日期时间类型：DATE、DATETIME、DATEV2、DATETIMEV2
+- 日期时间类型：DATE、DATETIME、DATEV2、DATETIMEV2、TIMESTAMP_NS
 - 布尔类型：BOOLEAN
 
 ### 返回值
@@ -178,4 +178,4 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = class org.apache.doris.nereids.
 
 ### keywords
 
-ARRAY, APPLY, ARRAY_APPLY 
+ARRAY, APPLY, ARRAY_APPLY

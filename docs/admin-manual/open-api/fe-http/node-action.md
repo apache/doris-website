@@ -30,6 +30,25 @@
 
 `POST /rest/v2/manager/node/{action}/broker` (3.0.7+)
 
+## Privilege Requirements
+
+<!-- Knowledge type: Behavior description -->
+<!-- Applicable scenarios: Node management API authorization -->
+
+:::caution Behavior change (4.0.8)
+
+Starting from version 4.0.8, the following node operation APIs require username and password authentication and the global `ADMIN` privilege:
+
+- `POST /rest/v2/manager/node/{action}/be`
+- `POST /rest/v2/manager/node/{action}/fe`
+- `POST /rest/v2/manager/node/{action}/broker`
+
+Before 4.0.8, these three APIs performed no authorization check, so any caller that could reach the FE HTTP port could add or remove nodes. If automation calls these APIs, add credentials for an account with the `ADMIN` privilege after upgrading to 4.0.8 (for example `curl -u <user>:<passwd>`).
+
+In the same version, `GET /rest/v2/manager/query/qerror/{id}` also gained authentication and an authorization check by user and query ID.
+
+:::
+
 ## Get fe, be, broker Node Information
 
 `GET /rest/v2/manager/node/frontends`

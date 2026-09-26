@@ -19,8 +19,8 @@ Doris 支持两种自动分区类型：
 
 | 类型 | 分区方式 | 分区函数 | 支持的分区列类型 |
 | --- | --- | --- | --- |
-| AUTO **RANGE** PARTITION | 按范围自动分区 | `date_trunc` | `DATE`、`DATETIME` |
-| AUTO **LIST** PARTITION | 按枚举值自动分区 | 不支持函数调用 | `BOOLEAN`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`DATE`、`DATETIME`、`CHAR`、`VARCHAR` |
+| AUTO **RANGE** PARTITION | 按范围自动分区 | `date_trunc` | `DATE`、`DATETIME`、`TIMESTAMP_NS` |
+| AUTO **LIST** PARTITION | 按枚举值自动分区 | 不支持函数调用 | `BOOLEAN`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`DATE`、`DATETIME`、`TIMESTAMP_NS`、`CHAR`、`VARCHAR` |
 
 ## 使用场景
 
@@ -189,7 +189,7 @@ PROPERTIES (
 | 约束项 | AUTO RANGE PARTITION | AUTO LIST PARTITION |
 | --- | --- | --- |
 | 支持的分区函数 | 仅支持 `date_trunc` | 不支持函数调用 |
-| 支持的分区列类型 | `DATE`、`DATETIME` | `BOOLEAN`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`DATE`、`DATETIME`、`CHAR`、`VARCHAR` |
+| 支持的分区列类型 | `DATE`、`DATETIME`、`TIMESTAMP_NS` | `BOOLEAN`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`、`DATE`、`DATETIME`、`TIMESTAMP_NS`、`CHAR`、`VARCHAR` |
 | 是否支持多列分区 | 否 | 是 |
 | 分区名长度限制 | — | 不得超过 50（来自分区列内容拼接与转义，实际容许长度可能更短） |
 | 分区取值规则 | 按 `date_trunc` 截断后的时间范围划分 | 每个未存在分区的枚举取值会创建一个独立新分区 |
@@ -258,6 +258,12 @@ Doris 支持同时使用自动分区与动态分区实现生命周期管理，�
 :::
 
 AUTO RANGE PARTITION 表支持通过 `partition.retention_count` 属性管理历史分区生命周期。该属性接受一个正整数 `N`，表示**只保留分区值最大的 `N` 个历史分区**；当前及未来分区全部保留。
+
+使用限制：
+
+- 只有 AUTO RANGE PARTITION 表可以设置该属性，否则报错 `Only AUTO RANGE PARTITION table could set partition.retention_count`。
+- **不能与已开启的动态分区（`dynamic_partition.enable = true`）同时使用**，否则报错 `Can not use partition.retention_count and dynamic_partition properties at the same time`。动态分区的分区创建与 retention count 的分区清理属于互斥的调度模式。该限制自 4.1.4 版本起生效，存算一体与存算分离模式都适用。
+- 自 4.1.4 版本起，存算分离模式也支持通过 `ALTER TABLE ... SET ("partition.retention_count" = "N")` 修改该属性；4.1.4 之前该 ALTER 在存算分离模式下会被拒绝或不生效。
 
 ### 概念定义
 

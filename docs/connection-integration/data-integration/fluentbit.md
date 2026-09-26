@@ -52,7 +52,7 @@ You can either download a precompiled binary directly or build from source.
 
 ### Download from the official site
 
-Download [fluent-bit-doris-3.1.9](https://download.selectdb.com/integrations/fluent-bit-doris-3.1.9).
+Download [fluent-bit-doris-3.1.9](https://apache-doris-releases.oss-accelerate.aliyuncs.com/integrations/fluent-bit-doris-3.1.9).
 
 ### Build from source
 
@@ -201,7 +201,7 @@ This scenario requires two configuration files:
     table your_table
     # add 'collect_time' to the record
     time_key collect_time
-    # 'collect_time' is timestamp, change it to datatime
+    # 'collect_time' is timestamp, change it to datetime
     header columns collect_time=from_unixtime(collect_time)
     log_request true
     log_progress_interval 10

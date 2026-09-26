@@ -1,5 +1,5 @@
 ---
-title: 订阅 Apache Doris 邮件列表
+title: 订阅邮件列表
 language: zh-CN
 description: 5 步完成 Apache Doris dev 邮件列表订阅，附确认邮件示例、发起讨论方法与退订邮件地址。
 keywords:

@@ -78,7 +78,7 @@ PROPERTIES (
 );
 ```
 
-> Sequence 列支持的类型：整型、`DATE`、`DATETIME`。**列创建后不能更改类型**。
+> Sequence 列支持的类型：整型、`DATE`、`DATETIME`、`TIMESTAMP_NS`。**列创建后不能更改类型**。
 
 创建完成后，表结构如下：
 
@@ -304,7 +304,7 @@ MySQL > select * from upsert_test;
 | 类别 | 约束 |
 | --- | --- |
 | **建表配置** | 必须开启 `light_schema_change`；如果建表时未声明 `sequence_mapping` 属性，后续无法再开启。 |
-| **列类型** | Sequence 列仅支持整型与时间类型（`DATE`、`DATETIME`），创建后不能更改类型。 |
+| **列类型** | Sequence 列仅支持整型与时间类型（`DATE`、`DATETIME`、`TIMESTAMP_NS`），创建后不能更改类型。 |
 | **列角色** | Sequence 列与映射列均不能作为 Key 列；所有非 Key 列必须映射到某个 Sequence 列。 |
 | **映射关系** | 不同 Sequence 列的映射列**不能重叠**（例如 `d` 不能同时映射到 `s1` 与 `s2`）；映射关系建立后**不支持修改**（例如已映射到 `s1` 的列无法再改为映射到 `s2`）。 |
 | **DDL 限制** | 暂不支持列重命名；暂不支持创建 Rollup。 |

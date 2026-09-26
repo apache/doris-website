@@ -7,7 +7,7 @@
 
 ## Description
 
-The TIME_FORMAT function is used to convert a time value into a string according to the specified format string. It supports formatting for TIME and DATETIME types, and the output is a string that conforms to the format requirements.
+The TIME_FORMAT function converts a time value into a string according to the specified format string. It supports `TIME`, `DATETIME`, `TIMESTAMP_NS`, and `TIMESTAMPTZ` values.
 
 This function behaves consistently with the [time_format function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_time-format) in MySQL.
 
@@ -21,7 +21,7 @@ TIME_FORMAT(<time_or_datetime_expr>, <format>)
 
 | Parameter                 | Description                                                                                                                                                |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `<time_or_datetime_expr>` | A valid time value, supporting TIME or DATETIME types.                                                                                                     |
+| `<time_or_datetime_expr>` | A valid `TIME`, `DATETIME`, `TIMESTAMP_NS`, or `TIMESTAMPTZ` value.                                                                                       |
 | `<format>`                | Specifies the output format for the time, as a `varchar` type. If the format string contains date or non-compliant format specifiers, it will return NULL. |
 
 Supported format specifiers:
@@ -29,6 +29,7 @@ Supported format specifiers:
 | Specifier | Description                                   |
 | --------- | --------------------------------------------- |
 | %f        | Microseconds (000000-999999)                  |
+| %n        | Nanoseconds (000000000-999999999). For types with lower precision, missing digits are padded with zeros. |
 | %H        | Hour (00-23)                                  |
 | %h        | Hour (01-12)                                  |
 | %I        | Hour (01-12)                                  |
@@ -56,6 +57,21 @@ Special cases:
 - If the time value contains an hour part greater than 23, the `%H` and `%k` format specifiers will produce a value larger than 23. Other hour format specifiers will produce the hour value modulo 12.
 
 ## Examples
+
+```sql
+SELECT TIME_FORMAT(
+    CAST('2024-02-29 12:34:56.123456789' AS TIMESTAMP_NS),
+    '%H:%i:%s.%n'
+) AS result;
+```
+
+```text
++--------------------+
+| result             |
++--------------------+
+| 12:34:56.123456789 |
++--------------------+
+```
 
 <!-- setup-sql
 CREATE TABLE test_time_format (id INT, tm VARCHAR(30)) DISTRIBUTED BY HASH(id) BUCKETS 1 PROPERTIES("replication_num"="1");

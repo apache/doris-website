@@ -347,7 +347,6 @@ rollup 可以创建的同步物化视图功能有限。已不再推荐使用。�
 | replication_num                               | 副本数。默认副本数为 3。如果 BE 节点数量小于 3，则需指定副本数小于等于 BE 节点数量。在 0.15 版本后，该属性将自动转换成 `replication_allocation` 属性，如：`"replication_num" = "3"` 会自动转换成 `"replication_allocation" = "tag.location.default:3"`。 |
 | replication_allocation                        | 根据 Tag 设置副本分布情况。该属性可以完全覆盖 `replication_num` 属性的功能。 |
 | min_load_replica_num                          | 设定数据导入成功所需的最小副本数，默认值为 -1。当该属性小于等于 0 时，表示导入数据仍需多数派副本成功。 |
-| is_being_synced                               | 用于标识此表是否是被 CCR 复制而来并且正在被 syncer 同步，默认为 `false`。如果设置为 `true`，`colocate_with`和`storage_policy`属性将被擦除。`dynamic partition`和`auto bucket`功能将会失效。即在`show create table`中显示开启状态，但不会实际生效。当`is_being_synced`被设置为 `false` 时，这些功能将会恢复生效。这个属性仅供 CCR 外围模块使用，在 CCR 同步的过程中不要手动设置。 |
 | storage_medium                                | 声明表数据的初始存储介质                                     |
 | storage_cooldown_time                         | 设定表数据的初始存储介质的到期时间。超过此时间后，会自动降级到第一级别的存储介质上。 |
 | colocate_with                                 | 当需要使用 Colocation Join 功能时，使用这个参数设置 Colocation Group。 |
@@ -358,7 +357,7 @@ rollup 可以创建的同步物化视图功能有限。已不再推荐使用。�
 | enable_unique_key_merge_on_write              | Unique 表是否使用 Merge-on-Write 实现。该属性在 2.1 版本之前默认关闭，从 2.1 版本开始默认开启。 |
 | light_schema_change                           | 是否使用 Light Schema Change 优化。如果设置成 `true`, 对于值列的加减操作，可以更快地，同步地完成。该功能在 2.0.0 及之后版本默认开启。 |
 | disable_auto_compaction                       | 是否对这个表禁用自动 Compaction。如果这个属性设置成 `true`, 后台的自动 Compaction 进程会跳过这个表的所有 Tablet。 |
-| enable_single_replica_compaction              | 是否对这个表开启单副本 Compaction。如果这个属性设置成 `true`, 这个表的 Tablet 的所有副本只有一个进行实际的 compaction 动作，其他副本的从该副本拉取完成 compaction 的 rowset。 |
+| enable_single_replica_compaction              | **已废弃**。该功能因对端副本选择存在数据正确性风险，已自 Doris 4.1.2 版本起移除，不建议开启。是否对这个表开启单副本 Compaction。如果这个属性设置成 `true`, 这个表的 Tablet 的所有副本只有一个进行实际的 compaction 动作，其他副本的从该副本拉取完成 compaction 的 rowset。 |
 | enable_duplicate_without_keys_by_default      | 当配置为`true`时，如果创建表的时候没有指定 Unique、Aggregate 或 Duplicate 时，会默认创建一个没有排序列和前缀索引的 Duplicate 模型的表。 |
 | skip_write_index_on_load                      | 是否对这个表开启数据导入时不写索引。如果这个属性设置成 `true`, 数据导入的时候不写索引（目前仅对倒排索引生效），而是在 Compaction 的时候延迟写索引。这样可以避免首次写入和 Compaction 重复写索引的 CPU 和 IO 资源消耗，提升高吞吐导入的性能。 |
 | compaction_policy                             | 配置这个表的 Compaction 的合并策略，仅支持配置为 time_series 或者 size_basedtime_series: 当 rowset 的磁盘体积积攒到一定大小时进行版本合并。合并后的 rowset 直接晋升到 base compaction 阶段。在时序场景持续导入的情况下有效降低 compact 的写入放大率。此策略将使用 time_series_compaction 为前缀的参数调整 Compaction 的执行 |

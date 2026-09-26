@@ -1,7 +1,7 @@
 @use '../../shared/typography' as type;
 
 .stats-next {
-    --stats-next-bg: #F5EFE4;
+    --stats-next-bg: var(--brand-cream);
     --stats-next-content-edge: max(56px, calc((100vw - 1280px) / 2 + 56px));
     --stats-next-tile-width: 176px;
     --stats-next-tile-height: 40px;
@@ -12,8 +12,8 @@
     width: 100%;
     height: 168px;
     background: var(--stats-next-bg);
-    border-top: 1px solid rgba(15, 26, 20, 0.08);
-    border-bottom: 1px solid rgba(15, 26, 20, 0.08);
+    border-top: 1px solid rgb(var(--brand-ink-rgb) / 0.08);
+    border-bottom: 1px solid rgb(var(--brand-ink-rgb) / 0.08);
     overflow: visible;
     z-index: 20;
 
@@ -21,7 +21,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background-image: radial-gradient(rgba(15, 26, 20, 0.07) 1px, transparent 1px);
+        background-image: radial-gradient(rgb(var(--brand-ink-rgb) / 0.07) 1px, transparent 1px);
         background-size: 22px 22px;
         mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
         -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
@@ -35,12 +35,12 @@
         z-index: 5;
         margin: 0;
         padding: 6px 14px;
-        border: 1px solid rgba(15, 26, 20, 0.18);
+        border: 1px solid rgb(var(--brand-ink-rgb) / 0.18);
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.55);
         backdrop-filter: blur(6px);
         -webkit-backdrop-filter: blur(6px);
-        color: rgba(15, 26, 20, 0.72);
+        color: rgb(var(--brand-ink-rgb) / 0.72);
         @include type.micro-label;
         white-space: nowrap;
         pointer-events: none;
@@ -146,7 +146,7 @@
 
         &:focus-visible {
             box-shadow:
-                0 0 0 3px rgba(255, 210, 63, 0.55),
+                0 0 0 3px rgb(var(--brand-accent-rgb) / 55%),
                 0 1px 0 rgba(255, 255, 255, 0.5) inset,
                 0 14px 28px -12px rgba(0, 0, 0, 0.38);
         }
@@ -235,7 +235,7 @@
     &__card-about {
         margin: 0;
         overflow: hidden;
-        color: rgba(15, 26, 20, 0.85);
+        color: rgb(var(--brand-ink-rgb) / 0.85);
         @include type.small-copy;
     }
 
@@ -246,18 +246,18 @@
         flex: 1;
         min-height: 0;
         padding-top: 12px;
-        border-top: 1px dashed rgba(15, 26, 20, 0.18);
+        border-top: 1px dashed rgb(var(--brand-ink-rgb) / 0.18);
     }
 
     &__card-usecase-label {
-        color: rgba(15, 26, 20, 0.5);
+        color: rgb(var(--brand-ink-rgb) / 0.5);
         @include type.micro-label;
     }
 
     &__card-usecase-text {
         margin: 0;
         overflow: hidden;
-        color: rgba(15, 26, 20, 0.78);
+        color: rgb(var(--brand-ink-rgb) / 0.78);
         @include type.small-copy;
     }
 
@@ -265,10 +265,10 @@
         margin-left: auto;
         flex: 0 0 auto;
         padding: 3px 7px;
-        border: 1px solid rgba(11, 122, 88, 0.25);
+        border: 1px solid rgb(var(--brand-primary-deep-rgb) / 25%);
         border-radius: 3px;
-        background: rgba(11, 122, 88, 0.05);
-        color: #0B7A58;
+        background: rgb(var(--brand-primary-deep-rgb) / 5%);
+        color: var(--brand-primary-deep);
         @include type.micro-label;
         white-space: nowrap;
     }

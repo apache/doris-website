@@ -84,7 +84,7 @@ Intermediate nodes such as `FilterNode` and `ProjectNode` are allowed between th
 
 | Trigger Condition  | Description                                                                                                                                |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| Data change        | INSERT, DELETE, UPDATE, or compaction increments the tablet version number; subsequent queries compare versions, and a mismatch is a miss. |
+| Data change        | INSERT, DELETE, UPDATE, or compaction increments the tablet version number; subsequent queries compare versions, and a mismatch is a miss. With [incremental merge](#incremental-merge-experimental) enabled, an entry with an older version may instead be reused by scanning only the delta. |
 | Schema change      | ALTER TABLE changes the table structure, which changes the execution plan and the digest.                                                  |
 | LRU eviction       | When cache memory exceeds the limit, entries are evicted according to LRU-K (K=2); a new entry must be accessed at least twice to be admitted. |
 | Expiration cleanup | Entries older than 24 hours are automatically removed by a periodic cleanup task.                                                          |
@@ -179,6 +179,58 @@ The Query Cache relies on three properties unique to internal OLAP tables:
 
 For caching needs on external tables, use [SQL Cache](./sql-cache-manual.md) instead.
 
+## Incremental Merge (Experimental)
+
+<!-- Knowledge type: principle + operation -->
+<!-- Applicable scenario: hourly batch loads into a hot partition keep invalidating its cache entry -->
+
+By default, a cache entry whose version falls behind (for example, the current partition of a table that receives hourly loads) is discarded, and the whole instance is recomputed from a full scan. With **incremental merge** enabled, BE reuses the stale entry instead: it scans only the delta rowsets in `(cached_version, current_version]`, emits their partial aggregation state **together with** the cached partial blocks (the upstream merge aggregation combines both), and writes the merged entry back under the new version. For an hourly-load pattern this reduces the hot partition's scan cost from "the whole partition, every hour" to "one hour of new data".
+
+![Full recompute vs incremental merge](/images/next/query-cache/incremental-merge-architecture.svg)
+
+```sql
+SET enable_query_cache = true;
+SET enable_query_cache_incremental = true;  -- shown as experimental_enable_query_cache_incremental in SHOW VARIABLES
+```
+
+### Prerequisites
+
+Incremental merge only takes effect when **all** of the following hold; in every other case the query silently falls back to a full recompute, so results are always correct:
+
+1. The scanned index (base table or the selected rollup) is **append-only**: either the **DUP_KEYS** model, or a **merge-on-write UNIQUE_KEYS** table whose delta window did not rewrite any pre-existing key. For merge-on-write tables BE checks the delete bitmap of `(cached_version, current_version]` per tablet: a window that only appended brand-new keys (the common "hourly load" pattern on a primary-key table) is merged incrementally, while an upsert, a partial update or a delete sign that hit an older key falls back to one full recompute, which re-bases the entry so the next pure-append load is incremental again. Merge-on-read UNIQUE tables resolve duplicates while reading and AGG tables merge rows inside the storage layer, so "cached snapshot + delta = new snapshot" would not hold there. Aggregated materialized views are rejected for the same reason.
+2. The cache point is a **non-finalize aggregation directly above the scan** (the common two-phase aggregation shape, e.g. `GROUP BY` on a non-distribution column). One-phase aggregations and nested aggregation cache points are rejected.
+3. The tablet view can be synced to the queried version. This holds trivially in the compute-storage coupled mode; in the **compute-storage decoupled (cloud)** mode the per-tablet decision first brings the local view (rowsets, and for merge-on-write tables the delete bitmap) up to the queried version, which is usually free (a no-op when the view is already fresh, otherwise it merely front-loads the sync the scan would perform anyway); a sync that fails, or that stalls past a short fast-fail budget (`query_cache_decision_sync_timeout_ms`, a BE config, so a slow meta service cannot hold the decision's admission thread), falls back to one full recompute.
+4. The delta version path is still capturable (not merged away by compaction) and contains **no DELETE predicate**, because a delete inside the delta logically removes rows that are already folded into the cached blocks, which cannot be undone by merging.
+
+For merge-on-write tables, the delete bitmap window check works as follows:
+
+![Merge-on-write delete bitmap window check](/images/next/query-cache/incremental-merge-mow-bitmap.svg)
+
+:::note
+On compute-storage decoupled (cloud) clusters, two session variables trade version exactness for speed: `query_freshness_tolerance_ms` lets the scan stop at a warmed-up version below the queried one, and `enable_prefer_cached_rowset` lets it follow the warmed-up rowset layout; under either knob the walk may also reach beyond the queried version (a warmed compaction rowset spanning it drags the path past). A query running with either knob may therefore read a version-inexact view, so it does not use incremental merge: the delta capture always targets the exact queried version, which would defeat the knob. Independent of incremental merge, BE also skips the query cache write-back of such a query on cloud, so no entry whose content mismatches its version stamp is ever created; the query can still consume an exact HIT filled by a plain run. The incremental-merge exclusion itself is applied in every deployment mode (a deliberately mode-agnostic gate); on local storage the knobs are inert, so it merely forgoes the incremental optimization for a query that opted into a cloud-only trade-off, and results stay correct either way.
+:::
+
+### Compaction of Merged Entries
+
+Every incremental merge appends the delta blocks to the entry, so the entry gets more fragmented over time. When an entry has accumulated `query_cache_max_incremental_merge_count` merges (BE configuration, default `8`, changeable at runtime), the next query recomputes it from a full scan, which naturally compacts the entry.
+
+The dataflow inside one instance, including the write-back and both entropy controls:
+
+![Incremental execution dataflow inside one instance](/images/next/query-cache/incremental-merge-dataflow.svg)
+
+### Observability
+
+- In the query profile of the CACHE_SOURCE operator: `HitCacheStale = 1` indicates an incremental merge; `IncrementalDeltaVersions` shows the delta range (for example `(100, 114514]`); when a stale entry could not be reused, `IncrementalFallbackReason` explains why (`delta versions not capturable`, `delta contains delete predicates`, `delta rewrites history rows`, `keys type not append-only`, `cloud rowset sync failed`, `cloud rowset sync timed out`, and so on).
+- BE metrics: `doris_be_query_cache_stale_hit_total`, `doris_be_query_cache_incremental_fallback_total`, `doris_be_query_cache_write_back_total`, and `doris_be_query_cache_decision_sync_time_ms` (only advances in the compute-storage decoupled mode: cumulative wall time the incremental decision spent syncing tablet views to the queried version before capturing the delta).
+
+How BE decides between HIT, INCREMENTAL and MISS, and where each fallback reason comes from:
+
+![Decision flow and the main fallback reasons](/images/next/query-cache/incremental-merge-decision-flow.svg)
+
+Putting it all together, from the FE authorization to the storage-level guards:
+
+![Incremental merge overview across FE, BE and storage](/images/next/query-cache/incremental-merge-overview.svg)
+
 ## Configuration Parameters
 
 <!-- Knowledge type: parameter reference -->
@@ -192,12 +244,15 @@ For caching needs on external tables, use [SQL Cache](./sql-cache-manual.md) ins
 | `query_cache_force_refresh`   | When set to `true`, the cached result is ignored and the query is re-executed; the new result is still written to the cache. | `false`            |
 | `query_cache_entry_max_bytes` | The maximum size in bytes of a single cache entry; fragment results that exceed this limit are not cached. | `5242880` (5 MB)   |
 | `query_cache_entry_max_rows`  | The maximum number of rows of a single cache entry; fragment results that exceed this limit are not cached. | `500000`           |
+| `enable_query_cache_incremental` | (Experimental) Allows BE to reuse a stale cache entry by scanning only the delta rowsets since the cached version and merging them with the cached partial aggregation blocks. See [Incremental Merge](#incremental-merge-experimental). | `false` |
 
 ### BE Configuration (be.conf)
 
 | Parameter          | Description                                              | Default |
 | ------------------ | -------------------------------------------------------- | ------- |
 | `query_cache_size` | The total memory capacity of the Query Cache on each BE (MB). | `512`   |
+| `query_cache_max_incremental_merge_count` | The maximum number of incremental merges accumulated on one cache entry before a full recompute is forced to compact it. `0` disables incremental merge at runtime. | `8` |
+| `query_cache_decision_sync_timeout_ms` | (Cloud mode only) Fast-fail budget in milliseconds for the incremental-merge decision to sync each tablet view up to the queried version before capturing the delta; if a sync does not finish within it the query falls back to one full recompute. `<= 0` disables cloud incremental merge (any pending sync falls back). Runtime-changeable. | `2000` |
 
 :::note
 The `query_cache_max_size_mb` and `query_cache_elasticity_size_mb` settings in `be.conf` control the legacy SQL Result Cache. They are **not** the pipeline-level Query Cache described in this article. Do not confuse them.
@@ -325,7 +380,7 @@ No. The first execution is a "cache miss with cache write"; only the second and 
 
 **Q3: Can aggregations that involve a JOIN be cached?**
 
-No. A `JoinNode` in the cached subtree disables the Query Cache for that fragment. Consider rewriting the query to aggregate first and then JOIN, or use a materialized view.
+It depends on where the aggregation sits relative to the JOIN. If the aggregation is directly above the JOIN (a `JoinNode` appears in the cached subtree), that fragment is not cached, independent of runtime filters. But if you rewrite the query to aggregate first and then JOIN (pushing the aggregation down onto each table's scan), the per-tablet aggregation of each table can be cached on its own. One independent constraint still applies here: the JOIN pushes a runtime filter onto the probe-side scan, which makes that side's fragment non-cacheable, so with runtime filters on, only the build side is cached; to let every table in the JOIN be cached, also set `runtime_filter_mode=OFF`. Alternatively, use a materialized view.
 
 **Q4: Does the cache need warm-up after a BE restart?**
 

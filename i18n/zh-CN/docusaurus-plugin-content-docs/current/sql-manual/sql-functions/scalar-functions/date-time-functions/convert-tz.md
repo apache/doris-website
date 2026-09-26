@@ -22,11 +22,13 @@ CONVERT_TZ(<date_or_time_expr>, <from_tz>, <to_tz>)
 
 | 参数 | 说明 |
 | -- | -- | 
-| `<date_or_time_expr>` | 需要被转换的值，为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) |
+| `<date_or_time_expr>` | 需要转换的值，支持 `DATE`、`DATETIME` 和 `TIMESTAMP_NS`。 |
 | `<from_tz>` | dt 的原始时区，该参数为 `varchar` 类型 |
 | `<to_tz>` | 需要转换的时区，该参数为 `varchar` 类型|
 
 ## 返回值
+
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
 
 - 转换后的值，类型为 datetime
 - 返回的 scale 跟输入的 scale 相同

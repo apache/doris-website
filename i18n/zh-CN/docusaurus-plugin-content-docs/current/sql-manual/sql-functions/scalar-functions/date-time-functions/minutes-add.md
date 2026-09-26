@@ -2,13 +2,13 @@
 {
     "title": "MINUTES_ADD",
     "language": "zh-CN",
-    "description": "MINUTESADD 函数用于向输入的日期时间值中添加指定的分钟数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME、TIMESTAMPTZ类型。"
+    "description": "MINUTESADD 函数用于向输入的日期时间值中添加指定的分钟数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS、TIMESTAMPTZ类型。"
 }
 ---
 
 ## 描述
 
-MINUTES_ADD 函数用于向输入的日期时间值中添加指定的分钟数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME、TIMESTAMPTZ类型。
+MINUTES_ADD 函数用于向输入的日期时间值中添加指定的分钟数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME、TIMESTAMP_NS、TIMESTAMPTZ类型。
 
 该函数与 [date_add 函数](./date-add) 和 mysql 的 [date-add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date_add) 使用 MINUTE 为单位的行为一致。
 
@@ -22,10 +22,12 @@ MINUTES_ADD(`<date_or_time_expr>`, `<minutes>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| ``<date_or_time_expr>`` | 输入的日期时间值，类型可以是 DATE、DATETIME、TIMESTAMPTZ，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion), |
+| ``<date_or_time_expr>`` | 输入的日期时间值，类型可以是 DATE、DATETIME、TIMESTAMP_NS、TIMESTAMPTZ，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion), |
 | ``<minutes>`` | 要增加的分钟数，类型为 BIGINT，可以为正数或负数 |
 
 ## 返回值
+
+输入为 `TIMESTAMP_NS` 时返回 `TIMESTAMP_NS`，并保持固定的 9 位小数秒精度。结果必须位于返回类型的取值范围内；`TIMESTAMP_NS` 的范围为 `[1677-09-21 00:12:43.145224192, 2262-04-11 23:47:16.854775807]`。
 
 返回基准时间`<datetime_like_type>`添加指定分钟`<minutes>`后的结果，返回类型与第一个参数类型相关:
 - 若第一个参数为 TIMESTAMPTZ, 则返回 TIMESTAMPTZ。

@@ -130,6 +130,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'compute-storage-decoupled/file-cache/file-cache',
                                 'compute-storage-decoupled/file-cache/file-cache-internals',
+                                'compute-storage-decoupled/file-cache/file-cache-peer-read',
                             ],
                         },
                         {
@@ -167,7 +168,23 @@ const sidebars: SidebarsConfig = {
                         'connection-integration/data-integration/doris-kafka-connector',
                         'connection-integration/data-integration/doris-streamloader',
                         'connection-integration/data-integration/finebi',
-                        'connection-integration/data-integration/flink-doris-connector',
+                        {
+                            type: 'category',
+                            label: 'Flink Doris Connector',
+                            link: {type: 'doc', id: 'connection-integration/data-integration/flink-doris-connector/overview'},
+                            items: [
+                                'connection-integration/data-integration/flink-doris-connector/quick-start',
+                                'connection-integration/data-integration/flink-doris-connector/read',
+                                'connection-integration/data-integration/flink-doris-connector/incremental-read',
+                                'connection-integration/data-integration/flink-doris-connector/write',
+                                'connection-integration/data-integration/flink-doris-connector/lookup-join',
+                                'connection-integration/data-integration/flink-doris-connector/cdc-sync',
+                                'connection-integration/data-integration/flink-doris-connector/datastream-api',
+                                'connection-integration/data-integration/flink-doris-connector/connection',
+                                'connection-integration/data-integration/flink-doris-connector/data-type-mapping',
+                                'connection-integration/data-integration/flink-doris-connector/faq',
+                            ],
+                        },
                         'connection-integration/data-integration/fluentbit',
                         'connection-integration/data-integration/hive-udf',
                         'connection-integration/data-integration/kettle',
@@ -194,7 +211,7 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
-            label: 'Use Doris',
+            label: 'Guides',
             collapsible: false,
             collapsed: false,
             items: [
@@ -301,7 +318,6 @@ const sidebars: SidebarsConfig = {
                 },
                 'table-design/schema-change',
                 'table-design/auto-increment',
-                'table-design/temporary-table',
             ],
         },
         {
@@ -357,10 +373,11 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 {
                                     type: 'category',
-                                    label: 'MySQL',
+                                    label: 'MySQL (Experimental)',
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-table',
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-database',
+                                        'data-operate/import/import-way/streaming-job/schema-change-mysql',
                                         'data-operate/import/import-way/streaming-job/data-type-mapping-mysql',
                                         {
                                             type: 'category',
@@ -374,10 +391,11 @@ const sidebars: SidebarsConfig = {
                                 },
                                 {
                                     type: 'category',
-                                    label: 'PostgreSQL',
+                                    label: 'PostgreSQL (Experimental)',
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-postgresql-table',
                                         'data-operate/import/import-way/streaming-job/continuous-load-postgresql-database',
+                                        'data-operate/import/import-way/streaming-job/schema-change-postgresql',
                                         'data-operate/import/import-way/streaming-job/data-type-mapping-postgresql',
                                         {
                                             type: 'category',
@@ -387,6 +405,15 @@ const sidebars: SidebarsConfig = {
                                                 'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql',
                                             ],
                                         },
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'OceanBase (Experimental)',
+                                    items: [
+                                        'data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database',
+                                        'data-operate/import/import-way/streaming-job/schema-change-oceanbase',
+                                        'data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase',
                                     ],
                                 },
                                 'data-operate/import/import-way/streaming-job/continuous-load-s3',
@@ -402,7 +429,6 @@ const sidebars: SidebarsConfig = {
                         'data-operate/import/file-format/json',
                         'data-operate/import/file-format/parquet',
                         'data-operate/import/file-format/orc',
-                        'data-operate/import/file-format/native',
                     ],
                 },
                 {
@@ -469,6 +495,19 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
+            label: 'Change Data & Table Stream',
+            collapsed: true,
+            link: {type: 'doc', id: 'data-operate/incremental/overview'},
+            items: [
+                'data-operate/incremental/quick-start',
+                'data-operate/incremental/row-binlog',
+                'data-operate/incremental/incremental-query',
+                'data-operate/incremental/table-stream',
+                'data-operate/incremental/table-stream-advanced',
+            ],
+        },
+        {
+            type: 'category',
             label: 'Data Export',
             collapsed: true,
             link: {type: 'doc', id: 'data-operate/export/export-overview'},
@@ -507,6 +546,28 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
+            label: 'Materialized View',
+            link: {type: 'doc', id: 'query-acceleration/materialized-view/intro'},
+            items: [
+                'query-acceleration/materialized-view/overview',
+                'query-acceleration/materialized-view/sync-materialized-view',
+                'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv',
+                {
+                    type: 'category',
+                    label: 'Async Materialized View',
+                    link: {type: 'doc', id: 'query-acceleration/materialized-view/async-materialized-view/overview'},
+                    items: [
+                        'query-acceleration/materialized-view/async-materialized-view/functions-and-demands',
+                        'query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view',
+                        'query-acceleration/materialized-view/async-materialized-view/use-guide',
+                        'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv',
+                        'query-acceleration/materialized-view/async-materialized-view/faq',
+                    ],
+                },
+            ],
+        },
+        {
+            type: 'category',
             label: 'Performance & Tuning',
             collapsed: true,
             link: {type: 'doc', id: 'query-acceleration/performance-tuning-intro'},
@@ -535,27 +596,7 @@ const sidebars: SidebarsConfig = {
                                 'query-acceleration/tuning/tuning-plan/optimizing-table-scanning',
                             ],
                         },
-                        {
-                            type: 'category',
-                            label: 'Materialized View',
-                            link: {type: 'doc', id: 'query-acceleration/materialized-view/intro'},
-                            items: [
-                                'query-acceleration/materialized-view/overview',
-                                'query-acceleration/materialized-view/sync-materialized-view',
-                                'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv',
-                                {
-                                    type: 'category',
-                                    label: 'Async Materialized View',
-                                    link: {type: 'doc', id: 'query-acceleration/materialized-view/async-materialized-view/overview'},
-                                    items: [
-                                        'query-acceleration/materialized-view/async-materialized-view/functions-and-demands',
-                                        'query-acceleration/materialized-view/async-materialized-view/use-guide',
-                                        'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv',
-                                        'query-acceleration/materialized-view/async-materialized-view/faq',
-                                    ],
-                                },
-                            ],
-                        },
+                        'query-acceleration/materialized-view/intro-link',
                         {
                             type: 'category',
                             label: 'Join Optimization',
@@ -644,8 +685,10 @@ const sidebars: SidebarsConfig = {
                             label: 'Iceberg Catalog',
                             link: {type: 'doc', id: 'lakehouse/catalogs/iceberg-catalog'},
                             items: [
+                                'lakehouse/best-practices/doris-iceberg-capability-matrix',
                                 'lakehouse/best-practices/doris-iceberg',
                                 'lakehouse/best-practices/doris-aws-s3tables',
+                                'lakehouse/best-practices/doris-aliyun-oss-tables',
                                 'lakehouse/best-practices/doris-polaris',
                                 'lakehouse/best-practices/doris-gravitino',
                                 'lakehouse/best-practices/doris-onelake',
@@ -662,10 +705,12 @@ const sidebars: SidebarsConfig = {
                             label: 'Paimon Catalog',
                             link: {type: 'doc', id: 'lakehouse/catalogs/paimon-catalog'},
                             items: [
+                                'lakehouse/best-practices/doris-paimon-capability-matrix',
                                 'lakehouse/best-practices/doris-paimon',
                                 'lakehouse/best-practices/doris-dlf-paimon',
                             ],
                         },
+                        'lakehouse/catalogs/fluss-catalog',
                         {
                             type: 'category',
                             label: 'Hudi Catalog',
@@ -684,6 +729,7 @@ const sidebars: SidebarsConfig = {
                         'lakehouse/catalogs/kafka-catalog',
                         'lakehouse/catalogs/es-catalog',
                         'lakehouse/catalogs/doris-catalog',
+                        'lakehouse/catalogs/adbc-catalog',
                         'lakehouse/catalogs/jdbc-catalog-overview',
                         'lakehouse/catalogs/jdbc-mysql-catalog',
                         'lakehouse/catalogs/jdbc-pg-catalog',
@@ -741,6 +787,7 @@ const sidebars: SidebarsConfig = {
                 },
                 'lakehouse/data-cache',
                 'lakehouse/meta-cache',
+                'lakehouse/external-meta-cache-memory-management',
                 'lakehouse/compute-node',
                 'lakehouse/statistics',
                 {
@@ -753,6 +800,13 @@ const sidebars: SidebarsConfig = {
                         'lakehouse/best-practices/tpcds',
                     ],
                 },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Data Governance',
+            items: [
+                'data-governance/data-lineage',
             ],
         },
             ],
@@ -860,6 +914,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'admin-manual/auth/authorization/internal',
                                 'admin-manual/auth/authorization/ranger',
+                                'admin-manual/auth/authorization/ranger-hive',
                                 'admin-manual/auth/authorization/data',
                             ],
                         },
@@ -925,18 +980,6 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/data-admin/backup-restore/restore',
                             ],
                         },
-                        {
-                            type: 'category',
-                            label: 'Cross Cluster Replication',
-                            link: {type: 'doc', id: 'admin-manual/data-admin/ccr/overview'},
-                            items: [
-                                'admin-manual/data-admin/ccr/quickstart',
-                                'admin-manual/data-admin/ccr/manual',
-                                'admin-manual/data-admin/ccr/feature',
-                                'admin-manual/data-admin/ccr/config',
-                                'admin-manual/data-admin/ccr/performance',
-                            ],
-                        },
                         'admin-manual/data-admin/recyclebin',
                     ],
                 },
@@ -976,6 +1019,7 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/system-tables/information_schema/columns',
                                 'admin-manual/system-tables/information_schema/engines',
                                 'admin-manual/system-tables/information_schema/events',
+                                'admin-manual/system-tables/information_schema/file_cache_info',
                                 'admin-manual/system-tables/information_schema/file_cache_statistics',
                                 'admin-manual/system-tables/information_schema/files',
                                 'admin-manual/system-tables/information_schema/global_variables',
@@ -997,6 +1041,8 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/system-tables/information_schema/table_options',
                                 'admin-manual/system-tables/information_schema/table_privileges',
                                 'admin-manual/system-tables/information_schema/table_properties',
+                                'admin-manual/system-tables/information_schema/table_stream_consumption',
+                                'admin-manual/system-tables/information_schema/table_streams',
                                 'admin-manual/system-tables/information_schema/tables',
                                 'admin-manual/system-tables/information_schema/triggers',
                                 'admin-manual/system-tables/information_schema/user_privileges',
@@ -1047,6 +1093,7 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/open-api/fe-http/system-action',
                                 'admin-manual/open-api/fe-http/colocate-meta-action',
                                 'admin-manual/open-api/fe-http/meta-action',
+                                'admin-manual/open-api/fe-http/meta-backup-action',
                                 'admin-manual/open-api/fe-http/cluster-action',
                                 'admin-manual/open-api/fe-http/node-action',
                                 'admin-manual/open-api/fe-http/query-profile-action',
@@ -1185,10 +1232,13 @@ const sidebars: SidebarsConfig = {
                 },
             ],
         },
+            ],
+        },
         {
             type: 'category',
-            label: 'Reference',
-            collapsed: true,
+            label: 'SQL References',
+            collapsible: false,
+            collapsed: false,
             items: [
                 {
                     type: 'category',
@@ -1220,6 +1270,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/date-time/DATE',
                                         'sql-manual/basic-element/sql-data-types/date-time/TIME',
                                         'sql-manual/basic-element/sql-data-types/date-time/DATETIME',
+                                        'sql-manual/basic-element/sql-data-types/date-time/TIMESTAMP-NS',
                                         'sql-manual/basic-element/sql-data-types/date-time/TIMESTAMPTZ',
                                         'admin-manual/cluster-management/time-zone',
                                     ],
@@ -1252,14 +1303,14 @@ const sidebars: SidebarsConfig = {
                                             label: 'VARIANT',
                                             link: {
                                                 type: 'doc',
-                                                id: 'sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide',
+                                                id: 'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
                                             },
                                             collapsed: true,
                                             items: [
                                                 {
                                                     type: 'doc',
-                                                    id: 'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
-                                                    label: 'VARIANT Reference',
+                                                    id: 'sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide',
+                                                    label: 'VARIANT Internal',
                                                 },
                                             ],
                                         },
@@ -1283,6 +1334,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/ip/IPV6',
                                     ],
                                 },
+                                'sql-manual/basic-element/sql-data-types/uuid',
                                 {
                                     type: 'category',
                                     label: 'Conversion',
@@ -1294,6 +1346,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/conversion/boolean-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/date-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/datetime-conversion',
+                                        'sql-manual/basic-element/sql-data-types/conversion/timestamp-ns-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/decimal-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/float-double-conversion',
@@ -1303,6 +1356,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/conversion/map-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/struct-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/time-conversion',
+                                        'sql-manual/basic-element/sql-data-types/conversion/uuid-conversion',
                                     ],
                                 },
                             ],
@@ -1320,6 +1374,7 @@ const sidebars: SidebarsConfig = {
                         'sql-manual/basic-element/object-identifiers',
                         'sql-manual/basic-element/reserved-keywords',
                         'sql-manual/basic-element/variables',
+                        'sql-manual/basic-element/session-variables',
                         'sql-manual/basic-element/comments',
                         'sql-manual/basic-element/file-path-pattern',
                         {
@@ -1390,6 +1445,20 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'Scalar Functions',
                             items: [
+                                {
+                                    type: 'category',
+                                    label: 'UUID Functions',
+                                    items: [
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/uuid-v4',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/uuid-v7',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/uuid-version',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-null',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-zero',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-default',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/uuid-v7-to-datetime',
+                                        'sql-manual/sql-functions/scalar-functions/uuid-functions/datetime-to-uuid-v7',
+                                    ],
+                                },
                                 {
                                     type: 'category',
                                     label: 'Numeric Functions',
@@ -1469,6 +1538,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/string-functions/compress',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/count_substrings',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/cut-to-first-significant-subdomain',
+                                        'sql-manual/sql-functions/scalar-functions/string-functions/damerau_levenshtein_distance',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/digital-masking',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/domain',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/domain-without-www',
@@ -1489,6 +1559,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/string-functions/is-valid-utf8',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/lcase',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/length',
+                                        'sql-manual/sql-functions/scalar-functions/string-functions/levenshtein',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/locate',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/lpad',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/ltrim',
@@ -1613,6 +1684,10 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/months-between',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/months-diff',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/months-sub',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/nanosecond',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/nanoseconds-add',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/nanoseconds-diff',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/nanoseconds-sub',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/now',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/next-day',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/period-add',
@@ -1750,6 +1825,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate-uniq',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-except',
+                                        'sql-manual/sql-functions/scalar-functions/array-functions/array-except-all',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-exists',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-filter',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-first',
@@ -1787,6 +1863,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-zip',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/arrays-overlap',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/countequal',
+                                        'sql-manual/sql-functions/scalar-functions/array-functions/trim-array',
                                     ],
                                 },
                                 {
@@ -1799,6 +1876,8 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-contains-key',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-contains-value',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-entries',
+                                        'sql-manual/sql-functions/scalar-functions/map-functions/map-from-arrays',
+                                        'sql-manual/sql-functions/scalar-functions/map-functions/map-from-entries',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-keys',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-size',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-values',
@@ -1862,6 +1941,8 @@ const sidebars: SidebarsConfig = {
                                     label: 'Variant Functions',
                                     items: [
                                         'sql-manual/sql-functions/scalar-functions/variant-functions/element-at',
+                                        'sql-manual/sql-functions/scalar-functions/variant-functions/parse-to-variant',
+                                        'sql-manual/sql-functions/scalar-functions/variant-functions/try-parse-to-variant',
                                         'sql-manual/sql-functions/scalar-functions/variant-functions/variant-type',
                                     ],
                                 },
@@ -2057,6 +2138,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/aggregate-functions/min-map',
                                 'sql-manual/sql-functions/aggregate-functions/percentile',
                                 'sql-manual/sql-functions/aggregate-functions/percentile-approx',
+                                'sql-manual/sql-functions/aggregate-functions/percentile-approx-array',
                                 'sql-manual/sql-functions/aggregate-functions/percentile-array',
                                 'sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted',
                                 'sql-manual/sql-functions/aggregate-functions/percentile_reservoir',
@@ -2156,6 +2238,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/aggregate-functions/min-by',
                                 'sql-manual/sql-functions/aggregate-functions/percentile',
                                 'sql-manual/sql-functions/aggregate-functions/percentile-approx',
+                                'sql-manual/sql-functions/aggregate-functions/percentile-approx-array',
                                 'sql-manual/sql-functions/aggregate-functions/percentile-array',
                                 'sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted',
                                 'sql-manual/sql-functions/aggregate-functions/quantile-union',
@@ -2221,6 +2304,7 @@ const sidebars: SidebarsConfig = {
                             label: 'Table Valued Functions',
                             items: [
                                 'sql-manual/sql-functions/table-valued-functions/backends',
+                                'sql-manual/sql-functions/table-valued-functions/binlog',
                                 'sql-manual/sql-functions/table-valued-functions/cdc-stream',
                                 'sql-manual/sql-functions/table-valued-functions/catalogs',
                                 'sql-manual/sql-functions/table-valued-functions/file',
@@ -2372,8 +2456,6 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/session/queries/CLEAN-ALL-PROFILE',
                                         'sql-manual/sql-statements/session/queries/SHOW-QUERY-STATS',
                                         'sql-manual/sql-statements/session/queries/CLEAN-ALL-QUERY-STATS',
-                                        'sql-manual/sql-statements/session/queries/PLAN-REPLAYER-DUMP',
-                                        'sql-manual/sql-statements/session/queries/PLAN-REPLAYER-PLAY',
                                     ],
                                 },
                                 {
@@ -2475,6 +2557,17 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/table-and-view/view/DROP-VIEW',
                                         'sql-manual/sql-statements/table-and-view/view/SHOW-CREATE-VIEW',
                                         'sql-manual/sql-statements/table-and-view/view/SHOW-VIEW',
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'Table Stream',
+                                    items: [
+                                        'sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM',
+                                        'sql-manual/sql-statements/table-and-view/stream/ALTER-STREAM',
+                                        'sql-manual/sql-statements/table-and-view/stream/DROP-STREAM',
+                                        'sql-manual/sql-statements/table-and-view/stream/SHOW-CREATE-STREAM',
+                                        'sql-manual/sql-statements/table-and-view/stream/SHOW-STREAMS',
                                     ],
                                 },
                                 {
@@ -2703,8 +2796,6 @@ const sidebars: SidebarsConfig = {
                         },
                     ],
                 },
-            ],
-        },
             ],
         },
     ],

@@ -22,6 +22,8 @@ Date and time types do not support direct use of mathematical operators for arit
 
 DATETIME type does not store time zone, that is, changes in the session variable `time_zone` do not affect the stored values of DATETIME type.
 
+Use [`TIMESTAMP_NS`](./TIMESTAMP-NS.md) when nanosecond precision is required. `TIMESTAMP_NS` is also time-zone-naive, but its supported range is limited to 1677-09-21 through 2262-04-11.
+
 ## Examples
 
 ```sql

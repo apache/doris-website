@@ -6,6 +6,73 @@ const { DEFAULT_VERSION } = require('./src/constant/version');
 const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const REDIRECTS_4X = require('./config/redirects-4.x.json');
+const path = require('path');
+
+const BRAND_THEME_BOOTSTRAP = `(function () {
+    var theme = 'doris';
+    try {
+        var storedTheme = localStorage.getItem('doris-brand-theme');
+        var themes = ['doris', 'golden', 'blue', 'read', 'yellow-blue', 'purple', 'yellow-black', 'sky'];
+        if (themes.indexOf(storedTheme) !== -1) theme = storedTheme;
+    } catch (error) {}
+    document.documentElement.setAttribute('data-brand-theme', theme);
+
+    var kapaSelector = 'script[data-website-id="a5fb90df-217a-4097-95c0-80490220314b"]';
+    var kapaColors = {
+        doris: '#11A679',
+        golden: '#7B2CBF',
+        blue: '#2C2C34',
+        read: '#121212',
+        'yellow-blue': '#0066FF',
+        purple: '#7255A5',
+        'yellow-black': '#000000',
+        sky: '#3778B0'
+    };
+    var kapaColor = kapaColors[theme];
+    var observer;
+    function syncKapaScript(node) {
+        if (node.nodeType !== 1) return false;
+        var script = node.matches && node.matches(kapaSelector)
+            ? node
+            : node.querySelector && node.querySelector(kapaSelector);
+        if (!script) return false;
+        script.setAttribute('data-project-color', kapaColor);
+        if (observer) observer.disconnect();
+        return true;
+    }
+    observer = new MutationObserver(function (mutations) {
+        mutations.some(function (mutation) {
+            return Array.prototype.some.call(mutation.addedNodes, syncKapaScript);
+        });
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    syncKapaScript(document.documentElement);
+}());`;
+
+// Doris 101 remembers whether its module rail is collapsed. Applying the stored
+// choice before first paint keeps the rail from rendering expanded and then
+// snapping shut once React mounts on every lesson navigation.
+const COURSE_RAIL_BOOTSTRAP = `(function () {
+    try {
+        if (localStorage.getItem('doris-101-rail-collapsed') === 'true') {
+            document.documentElement.setAttribute('data-course-rail', 'collapsed');
+        }
+    } catch (error) {}
+}());`;
+
+// Per-document last-update timestamps, generated from git history by
+// scripts/last-update/generate.js. The 2-hourly Cron Deploy regenerates the map
+// before it builds, so published dates are always current; the committed copy
+// is what local builds use, and what a deploy falls back to if that refresh
+// fails. markdown.parseFrontMatter (below) injects the dates as `last_update`
+// front matter, sparing the build a per-file git lookup. Missing file /
+// not-yet-generated map → Docusaurus falls back to its own git lookup.
+let DOCS_LAST_UPDATE = {};
+try {
+    DOCS_LAST_UPDATE = require('./scripts/last-update/data.json');
+} catch (e) {
+    // Map not generated yet (e.g. first build before the workflow runs).
+}
 
 // Group every static in-site redirect by its target path so we can drive it
 // through @docusaurus/plugin-client-redirects' `createRedirects` callback.
@@ -34,6 +101,17 @@ function buildRedirectIndex() {
     add('/download', '/download-next');
     add('/zh-CN/download', '/zh-CN/download-next');
 
+    // The hand-curated /learning sitemap page was retired; Doris 101 is now
+    // the structured entry point for newcomers.
+    add('/course', '/learning');
+    add('/zh-CN/course', '/zh-CN/learning');
+
+    // /vendors lost its navigation entry in the new-homepage refactor and has
+    // no obvious successor page, so it lands on the homepage. Its source is
+    // parked at src/pages/_vendors (underscore = not routed).
+    add('/', '/vendors');
+    add('/zh-CN', '/zh-CN/vendors');
+
     // /ecosystem/* was retired; its closest spiritual home is the Dev tree's
     // Data Integration intro, which catalogs the same connector/tool families
     // the old /ecosystem/ pages did.
@@ -54,6 +132,17 @@ function buildRedirectIndex() {
         '/zh-CN/ecosystem/data-loading',
         '/zh-CN/ecosystem/data-migration',
         '/zh-CN/ecosystem/distributions-and-packaging',
+    );
+
+    // The Flink Doris Connector page in the Dev tree was split into a
+    // directory; its old single-page URL now lands on the overview.
+    add(
+        '/docs/dev/connection-integration/data-integration/flink-doris-connector/overview',
+        '/docs/dev/connection-integration/data-integration/flink-doris-connector',
+    );
+    add(
+        '/zh-CN/docs/dev/connection-integration/data-integration/flink-doris-connector/overview',
+        '/zh-CN/docs/dev/connection-integration/data-integration/flink-doris-connector',
     );
 
     // Old 4.x slugs that have no 1:1 counterpart in the new 4.x tree
@@ -88,6 +177,7 @@ const SKIP_DOCS = LANDING_ONLY || process.env.SKIP_DOCS === 'true';
 const SKIP_BLOG = LANDING_ONLY || process.env.SKIP_BLOG === 'true';
 const SKIP_COMMUNITY = LANDING_ONLY || process.env.SKIP_COMMUNITY === 'true';
 const SKIP_RELEASES = LANDING_ONLY || process.env.SKIP_RELEASES === 'true';
+const SKIP_COURSE = LANDING_ONLY || process.env.SKIP_COURSE === 'true';
 const SKIP_SEARCH = LANDING_ONLY || process.env.SKIP_SEARCH === 'true';
 
 const LINK_BEHAVIOR_VALUES = new Set(['ignore', 'log', 'warn', 'throw']);
@@ -142,11 +232,26 @@ const config = {
     trailingSlash: false,
     markdown: {
         format: 'detect',
+        // Inject each document's last-update date (from the git-history map in
+        // scripts/last-update/data.json) as `last_update` front matter, so
+        // showLastUpdateTime can render it without the deploy build touching
+        // git. An explicit `last_update` in a file always wins.
+        parseFrontMatter: async ({ defaultParseFrontMatter, filePath, fileContent }) => {
+            const result = await defaultParseFrontMatter({ filePath, fileContent });
+            if (!result.frontMatter.last_update) {
+                const rel = path.relative(__dirname, filePath).split(path.sep).join('/');
+                const date = DOCS_LAST_UPDATE[rel];
+                if (date) {
+                    result.frontMatter.last_update = { date };
+                }
+            }
+            return result;
+        },
     },
     trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
-        locales: ['en', 'zh-CN', 'ja'],
+        locales: ['en', 'zh-CN'],
         localeConfigs: {
             en: {
                 label: 'English',
@@ -156,12 +261,20 @@ const config = {
                 label: '中文',
                 htmlLang: 'zh-Hans-CN',
             },
-            ja: {
-                label: '日本語',
-                htmlLang: 'ja-JP',
-            },
         },
     },
+    headTags: [
+        {
+            tagName: 'script',
+            attributes: {},
+            innerHTML: BRAND_THEME_BOOTSTRAP,
+        },
+        {
+            tagName: 'script',
+            attributes: {},
+            innerHTML: COURSE_RAIL_BOOTSTRAP,
+        },
+    ],
     scripts: ['/js/custom-script.js',
         {
             async: true,
@@ -188,7 +301,21 @@ const config = {
         },
     ],
     projectName: 'apache/doris-website', // Usually your repo name.
-    customFields: {},
+    customFields: {
+        // Real Slack invite link. `/slack` (src/pages/slack.tsx) records the
+        // click in Matomo and then forwards visitors here, so every public
+        // channel keeps linking to https://doris.apache.org/slack and this is
+        // the only value to update when the invite is rotated.
+        slackInviteUrl:
+            'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3wvgezmm8-lh5XRaLg0~9AF44ojdIBfw',
+        // The public HTTPS reverse proxy is the default browser entry point.
+        // Local development can still replace this build-time value when needed.
+        profileAnalysisApiBaseUrl: process.env.PROFILE_ANALYSIS_API_BASE_URL ?? 'https://agent.velodb.io',
+        // hCaptcha site keys are public browser configuration. Never put the
+        // matching secret in this repository or in a Docusaurus environment variable.
+        profileAnalysisHCaptchaSiteKey:
+            process.env.PROFILE_ANALYSIS_HCAPTCHA_SITE_KEY ?? '40f4820a-dc48-466a-b106-960a57ac5bd0',
+    },
     future: {
         experimental_faster: true,
     },
@@ -197,6 +324,17 @@ const config = {
         'docusaurus-plugin-matomo',
         // Use custom blog plugin
         versionsPlugin,
+        SKIP_COURSE ? null : [
+            'content-docs',
+            /** @type {import('@docusaurus/plugin-content-docs').Options} */
+            ({
+                id: 'course',
+                path: 'course',
+                routeBasePath: '/course',
+                sidebarPath: require.resolve('./sidebarsCourse.ts'),
+                showLastUpdateTime: true,
+            }),
+        ],
         SKIP_COMMUNITY ? null : [
             'content-docs',
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
@@ -205,6 +343,9 @@ const config = {
                 path: 'community',
                 routeBasePath: '/community',
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
+                // Community docs are unversioned; the document header always shows their
+                // last-updated date (see src/theme/DocItem/Layout).
+                showLastUpdateTime: true,
             }),
         ],
         SKIP_RELEASES ? null : [
@@ -238,18 +379,20 @@ const config = {
                     // pointing at an in-site path must go through
                     // createRedirects below, otherwise plugin-client-redirects
                     // rejects cross-locale entries during single-locale builds.
-                    {
-                        from: '/slack',
-                        to: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3wvgezmm8-lh5XRaLg0~9AF44ojdIBfw'
-                    },
+                    //
+                    // `/slack` used to be listed here. It is now a real page
+                    // (src/pages/slack.tsx) that records the click in Matomo
+                    // before forwarding to customFields.slackInviteUrl.
                 ],
                 createRedirects(existingPath) {
                     const redirects = [];
 
                     // Static redirects indexed by target. Trim trailing slash
                     // for the lookup since Docusaurus' trailingSlash:true
-                    // gives us paths like /docs/4.x/foo/.
-                    const normalized = existingPath.replace(/\/$/, '');
+                    // gives us paths like /docs/4.x/foo/. The locale root
+                    // ('/' or '/zh-CN/') is the one path whose slash is the
+                    // whole path, so keep it as-is.
+                    const normalized = existingPath === '/' ? '/' : existingPath.replace(/\/$/, '');
                     if (REDIRECT_INDEX[normalized]) {
                         redirects.push(...REDIRECT_INDEX[normalized]);
                     }
@@ -315,7 +458,10 @@ const config = {
                     //     // }
                     // },
                     showLastUpdateAuthor: false,
-                    showLastUpdateTime: false,
+                    // Date comes from the injected `last_update` front matter
+                    // (markdown.parseFrontMatter). The DocItem layout limits
+                    // which versions actually display it (Dev + latest stable).
+                    showLastUpdateTime: true,
                     remarkPlugins: [markdownBoldPlugin, require('remark-math')],
                     rehypePlugins: [
                         [
@@ -348,7 +494,10 @@ const config = {
                         const items = await defaultCreateSitemapItems(rest);
                         const filteredItems = items.filter(item => {
                             const pathname = new URL(item.url).pathname.replace(/\/+$/, '');
-                            if (['/search', '/ja/search', '/zh-CN/search'].includes(pathname)) return false;
+                            // /slack is a tracking redirect, not content.
+                            if (['/search', '/zh-CN/search', '/slack', '/zh-CN/slack'].includes(pathname)) {
+                                return false;
+                            }
                             return true;
                         });
                         for (let item of filteredItems) {
@@ -371,17 +520,17 @@ const config = {
             '@yang1666204/docusaurus-search-local',
             {
                 hashed: true,
-                language: ['en', 'zh', 'ja'],
+                language: ['en', 'zh'],
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: ['docs', 'ja/docs', 'zh-CN/docs'],
+                docsRouteBasePath: ['docs', 'course', 'zh-CN/docs', 'zh-CN/course'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
                 searchBarShortcutHint: true,
                 searchResultLimits: 100,
-                searchContextByPaths: ['docs'],
+                searchContextByPaths: ['docs', 'course'],
                 useAllContextsWithNoSearchContext: false,
                 ignoreFiles: [/^docs\/(?:[^/]+\/)?key-features\//],
             },
@@ -444,6 +593,10 @@ const config = {
                                 label: 'Download',
                                 href: '/download',
                             },
+                            {
+                                label: 'Brand Assets',
+                                href: '/brand-assets',
+                            },
                             // {
                             //     label: 'Docs',
                             //     href: '/docs/get-starting/quick-start',
@@ -471,7 +624,7 @@ const config = {
                             },
                             {
                                 label: 'Roadmap',
-                                href: 'https://github.com/apache/doris/issues/60036',
+                                href: '/community/roadmap',
                             },
                             {
                                 label: 'Improvement proposal',

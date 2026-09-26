@@ -58,6 +58,8 @@ The differences from MySQL are listed below, grouped by numeric, date, string, J
 | Time | - Supported<br />- Time[(p)]<br />- Range: ['-838:59:59.000000', '838:59:59.000000']<br />- Format: hh:mm:ss[.fraction] | - Supported for computation, cannot be stored as a column in OLAP tables<br />- Time[(p)]<br />- Range: ['-838:59:59.999999', '838:59:59.999999']<br />- Format: hh:mm:ss[.fraction] |
 | Year | - Supported<br />- Range: 1901 to 2155, or 0000<br />- Format: yyyy | Not supported |
 
+`TIMESTAMP_NS` is a Doris extension rather than a MySQL `TIMESTAMP` equivalent. It is time-zone-naive, has fixed nanosecond precision, and supports the range `1677-09-21 00:12:43.145224192` through `2262-04-11 23:47:16.854775807`.
+
 ### String Types
 
 | Type | MySQL | Doris |

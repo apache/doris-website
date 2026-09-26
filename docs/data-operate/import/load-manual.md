@@ -36,10 +36,10 @@ Based on data source and timeliness requirements, you can refer to the following
 | Application real-time write (very small volume, every 5 minutes) | JDBC client                    | [JDBC INSERT](./import-way/insert-into-manual.md)                                                                                                                        |
 | Application high-concurrency or high-frequency small-batch write | JDBC / HTTP                    | [Group Commit](./load-best-practices/group-commit-manual.md) + JDBC INSERT or Stream Load                                                                                |
 | Application high-throughput write                                | HTTP                           | [Stream Load](./import-way/stream-load-manual)                                                                                                                           |
-| Real-time data stream ingestion                                  | Flink                          | [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector.md)                                                                          |
+| Real-time data stream ingestion                                  | Flink                          | [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector/write.md)                                                                          |
 | Real-time message queue ingestion                                | Kafka                          | [Routine Load](./import-way/routine-load-manual.md) or [Doris Kafka Connector](../../connection-integration/data-integration/doris-kafka-connector.md)                   |
 | Transactional database real-time sync (no external components)   | MySQL / PostgreSQL             | [Streaming Job continuous load](./import-way/streaming-job/continuous-load-overview.md)                                                                                  |
-| Transactional database CDC sync                                  | MySQL / PostgreSQL, etc.       | [Flink CDC](../../connection-integration/data-integration/flink-doris-connector.md) or [DataX](../../connection-integration/data-integration/datax.md)                   |
+| Transactional database CDC sync                                  | MySQL / PostgreSQL, etc.       | [Flink CDC](../../connection-integration/data-integration/flink-doris-connector/cdc-sync.md) or [DataX](../../connection-integration/data-integration/datax.md)                   |
 | Object storage continuous load (automatic incremental file load) | S3                             | [Streaming Job continuous load](./import-way/streaming-job/continuous-load-overview.md)                                                                                  |
 | Object storage / HDFS file batch load                            | S3 / OSS / HDFS                | [Broker Load](./import-way/broker-load-manual.md) or [INSERT INTO SELECT](./import-way/insert-into-manual.md)                                                            |
 | Local file batch load                                            | Local disk                     | [Stream Load](./import-way/stream-load-manual) or [Doris Streamloader](../../connection-integration/data-integration/doris-streamloader.md)                              |
@@ -67,7 +67,7 @@ This applies to scenarios where data is continuously synchronized to Doris table
 
 1. **Flink real-time data stream**
 
-    Use the [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector.md) to write Flink real-time data streams into Doris tables.
+    Use the [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector/write.md) to write Flink real-time data streams into Doris tables.
 
 2. **Kafka real-time data stream**
 
@@ -80,7 +80,7 @@ This applies to scenarios where data is continuously synchronized to Doris table
 
 3. **Transactional database CDC sync**
 
-    Use [Flink CDC](../../connection-integration/data-integration/flink-doris-connector.md) or [DataX](../../connection-integration/data-integration/datax.md) to write CDC data streams from transactional databases into Doris.
+    Use [Flink CDC](../../connection-integration/data-integration/flink-doris-connector/cdc-sync.md) or [DataX](../../connection-integration/data-integration/datax.md) to write CDC data streams from transactional databases into Doris.
 
 4. **Streaming Job continuous load (no external components)**
 

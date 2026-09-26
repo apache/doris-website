@@ -2,13 +2,17 @@
 {
     "title": "SHOW INDEX",
     "language": "en",
-    "description": "This statement is used to display information about indexes in a table. Currently, only inverted indexes and ann indexes are supported."
+    "description": "This statement is used to display information about indexes in a table, including inverted indexes and ann indexes on internal tables and logical indexes on Lance Catalog tables."
 }
 ---
 
 ## Description
 
-This statement is used to display information about indexes in a table. Currently, only inverted indexes and ann indexes are supported.
+This statement is used to display information about indexes in a table. For internal tables, only inverted indexes and ann indexes are supported.
+
+For a table in a Lance Filesystem Catalog, this statement displays the logical scalar and vector indexes recorded in the Lance dataset, and only the `Table`, `Key_name`, `Seq_in_index`, `Column_name`, `Index_type`, and `Properties` columns carry values. Lance REST Catalogs are not supported. See [Inspect Lance Indexes](../../../../lakehouse/catalogs/lance-catalog.mdx#inspect-lance-indexes) for details.
+
+For tables in other external catalogs, such as Iceberg and Paimon, this statement returns an empty result. Those formats expose table metadata through system tables instead; see [Iceberg system tables](../../../../lakehouse/catalogs/iceberg-catalog.mdx#system-tables) and [Paimon system tables](../../../../lakehouse/catalogs/paimon-catalog.mdx#system-tables). Paimon index files can be inspected through the [`table_indexes`](../../../../lakehouse/catalogs/paimon-catalog.mdx#table_indexes) system table.
 
 ## Syntax
 
@@ -62,5 +66,11 @@ The user executing this SQL command must have at least the following privileges:
 
      ```SQL
       SHOW INDEX FROM example_db.table_name;
+     ```
+
+- Display logical indexes for a Lance Catalog table
+
+     ```SQL
+      SHOW INDEX FROM lance_catalog.default.items;
      ```
 

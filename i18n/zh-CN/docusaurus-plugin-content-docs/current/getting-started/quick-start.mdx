@@ -27,29 +27,21 @@ import TabItem from '@theme/TabItem';
 
 自最新版本起，可以使用 Docker 进行快速部署。
 
-### 第 1 步（1/3）：下载启动脚本
+### 第 1 步（1/2）：启动集群
 
-<a target="_blank" download rel="noopener noreferrer" href="/files/start-doris.sh">下载脚本</a>，运行以下命令赋予执行权限：
-
-```shell
-chmod 755 start-doris.sh
-```
-
-### 第 2 步（2/3）：启动集群
-
-运行脚本启动集群（默认使用 4.0.1 版本）：
+运行以下命令，一步完成启动脚本的下载与集群启动。不指定版本时，默认下载最新版本（`doris-latest`）：
 
 ```shell
-bash start-doris.sh
+curl -fsSL https://doris.apache.org/files/start-doris.sh | bash
 ```
 
 如需指定版本，使用 `-v` 参数：
 
 ```shell
-bash start-doris.sh -v 4.1.0
+curl -fsSL https://doris.apache.org/files/start-doris.sh | bash -s -- -v 4.1.0
 ```
 
-### 第 3 步（3/3）：验证集群状态
+### 第 2 步（2/2）：验证集群状态
 
 使用 MySQL 客户端连接集群，检查 FE 和 BE 状态：
 

@@ -6,7 +6,7 @@
 }
 ---
 
-Doris uses Jemalloc as the general memory allocator by default. The memory occupied by Jemalloc itself includes Cache and Metadata. Cache includes Thread Cache and Dirty Page. You can view the original profile of the memory allocator in real time at http://{be_host}:{be_web_server_port}/memz.
+Doris uses Jemalloc as the general memory allocator by default. The memory occupied by Jemalloc itself includes Cache and Metadata. Cache includes Thread Cache and Dirty Page. You can view the original profile of the memory allocator in real time in the **Jemalloc Profiles** section under **Memory Info** on Doris BE's Process Profile Web page http://{be_host}:{be_web_server_port}/profile.
 
 ## Jemalloc Cache Memory Analysis
 
@@ -26,7 +26,7 @@ During the running of the BE process, Jemalloc Cache consists of two parts.
 
 ### Jemalloc Cache View Method
 
-View Doris BE's Web page `http://{be_host}:{be_web_server_port}/memz` (webserver_port defaults to 8040) to obtain Jemalloc Profile, and interpret the use of Jemalloc Cache based on several sets of key information.
+View the **Jemalloc Profiles** section under **Memory Info** on Doris BE's Process Profile Web page `http://{be_host}:{be_web_server_port}/profile` (webserver_port defaults to 8040) to obtain the Jemalloc Profile, and interpret the use of Jemalloc Cache based on several sets of key information.
 
 - `tcache_bytes` in Jemalloc Profile is the total number of bytes of Jemalloc Thread Cache. If the `tcache_bytes` value is large, it means that the memory used by Jemalloc Thread Cache is too large.
 
@@ -82,7 +82,7 @@ MemTrackerLimiter Label=tc/jemalloc_metadata, Type=overview, Limit=-1.00 B(-1 B)
 
 ### How to view Jemalloc Metadata
 
-You can get the Jemalloc Profile by viewing the Doris BE web page `http://{be_host}:{be_web_server_port}/memz` (webserver_port defaults to 8040). Find the overall memory statistics of Jemalloc in the Jemalloc Profile as follows, where `metadata` is the memory size of Jemalloc Metadata.
+You can get the Jemalloc Profile from the **Jemalloc Profiles** section under **Memory Info** on the Doris BE Process Profile web page `http://{be_host}:{be_web_server_port}/profile` (webserver_port defaults to 8040). Find the overall memory statistics of Jemalloc in the Jemalloc Profile as follows, where `metadata` is the memory size of Jemalloc Metadata.
 
 `Allocated: 2401232080, active: 2526302208, metadata: 535979296 (n_thp 221), resident: 2995621888, mapped: 3221979136, retained: 131542581248`
 

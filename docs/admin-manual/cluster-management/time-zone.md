@@ -93,7 +93,7 @@ Because of implementation differences, some other formats are currently supporte
 
 The time zone affects the values returned by time functions such as `NOW()` and `CURTIME()`, as well as the time values shown in `SHOW LOAD` and `SHOW BACKENDS`.
 
-However, it does **not** affect the `LESS THAN` values of time-typed partition columns in `CREATE TABLE`, and it does not affect the displayed values of data stored as `DATE` or `DATETIME` types.
+However, it does **not** affect the `LESS THAN` values of time-typed partition columns in `CREATE TABLE`, and it does not affect the displayed values of data stored as `DATE`, `DATETIME`, or `TIMESTAMP_NS` types.
 
 Functions affected by the time zone:
 
@@ -107,9 +107,9 @@ Functions affected by the time zone:
 
 ### Effect on Time Types
 
-#### DATE / DATETIME Types
+#### DATE / DATETIME / TIMESTAMP_NS Types
 
-For the `DATE` and `DATETIME` types, time zone conversion is supported during data ingestion:
+For the `DATE`, `DATETIME`, and `TIMESTAMP_NS` types, time zone conversion is supported during data ingestion. `TIMESTAMP_NS` follows the same time-zone-naive storage rule as `DATETIME`, while preserving nine fractional-second digits:
 
 - **Data with time zone**: For example, given `2020-12-12 12:12:12+08:00` and a Stream Load header `timezone` of `+00:00`, the actual value stored in Doris is `2020-12-12 04:12:12`.
 - **Data without time zone**: For example, `2020-12-12 12:12:12` is treated as an absolute time, and no conversion occurs.
@@ -164,7 +164,7 @@ Time zone issues involve three main factors:
 2. **Ingestion time zone**: the header `timezone` specified during Stream Load, Broker Load, and similar ingestion methods.
 3. **Data time zone**: the time-zone literal in the data (for example, the `+08:00` in `2023-12-12 08:00:00+08:00`).
 
-Doris currently supports ingesting data from any time zone into Doris. Because Doris time types such as `DATETIME` do not carry time zone information internally and the stored data does not change with the time zone after ingestion, time data ingested into Doris falls into two categories:
+Doris currently supports ingesting data from any time zone into Doris. Because time types such as `DATETIME` and `TIMESTAMP_NS` do not carry time zone information internally and the stored data does not change with the time zone after ingestion, time data ingested into Doris falls into two categories:
 
 1. **Absolute time**
 
@@ -295,7 +295,7 @@ After all the above operations are completed on the BE machine, **the correspond
 
 ### Q: After changing `time_zone`, the query results for existing data change unexpectedly?
 
-Types such as `DATETIME` do not carry time zone information internally, and changing the cluster time zone after ingestion does not change the stored values. Confirm the cluster time zone before use, set `time_zone`, and do not change it afterward.
+Types such as `DATETIME` and `TIMESTAMP_NS` do not carry time zone information internally, and changing the cluster time zone after ingestion does not change the stored values. Confirm the cluster time zone before use, set `time_zone`, and do not change it afterward.
 
 ### Q: The time offset of Stream Load ingested data does not match expectations?
 

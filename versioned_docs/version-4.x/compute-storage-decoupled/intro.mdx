@@ -52,6 +52,12 @@ The compute-storage decoupled architecture separates compute nodes from remote s
     description="A deep dive into the file cache implementation: 1 MB-aligned slicing, prefetch mechanisms, and local filesystem block file management."
     link="file-cache/file-cache-internals"
 />
+
+<GettingStartedCard
+    title="Peer Cache Read"
+    description="On a local File Cache miss, read the block from another BE (including other compute groups) before falling back to object storage. Speeds up scaling and cross-group cold reads."
+    link="file-cache/file-cache-peer-read"
+/>
 </div>
 
 ## Read-Write Separation

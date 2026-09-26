@@ -95,7 +95,7 @@
         transition: all 0.3s;
 
         &:hover {
-            box-shadow: 10px 14px 40px rgba(17, 166, 121, 0.08);
+            box-shadow: 10px 14px 40px rgb(var(--brand-primary-rgb) / 8%);
             border-radius: 4px;
             text-decoration: none;
         }

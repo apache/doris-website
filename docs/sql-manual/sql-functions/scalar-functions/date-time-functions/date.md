@@ -2,7 +2,7 @@
 {
     "title": "DATE | Date Time Functions",
     "language": "en",
-    "description": "The DATE function is used to extract the pure date part from a datetime value (which includes both date and time), ignoring the time information.",
+    "description": "Extracts the date part from a DATETIME or TIMESTAMP_NS value and ignores its time and fractional-second fields.",
     "sidebar_label": "DATE"
 }
 ---
@@ -11,7 +11,7 @@
 
 ## Description
 
-The DATE function is used to extract the pure date part from a datetime value (which includes both date and time), ignoring the time information. This function can convert a DATETIME type into a DATE type, retaining only the year, month, and day information.
+The DATE function extracts the date part from a `DATETIME` or `TIMESTAMP_NS` value and ignores the time and fractional-second fields.
 
 This function is consistent with the [date function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date) in MySQL.
 
@@ -25,7 +25,7 @@ DATE(<date_or_time_part>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_part>` | A valid date expression of type datetime, supporting datetime. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<date_or_time_part>` | A `DATETIME` or `TIMESTAMP_NS` expression. |
 
 ## Return Value
 

@@ -81,9 +81,9 @@
             z-index: 3;
             box-shadow:
                 0 40px 80px -20px rgba(0, 0, 0, 0.7),
-                0 0 0 1px rgba(255, 210, 63, 0.4),
-                0 0 60px -15px rgba(255, 210, 63, 0.3);
-            border-color: rgba(255, 210, 63, 0.25);
+                0 0 0 1px rgb(var(--brand-accent-rgb) / 40%),
+                0 0 60px -15px rgb(var(--brand-accent-rgb) / 30%);
+            border-color: rgb(var(--brand-accent-rgb) / 25%);
         }
     }
 
@@ -92,7 +92,7 @@
         top: 14px;
         right: 22px;
         @include type.micro-label;
-        color: rgba(255, 210, 63, 0.65);
+        color: rgb(var(--brand-accent-rgb) / 65%);
     }
 
     &__rank {
@@ -289,8 +289,8 @@
                 background: linear-gradient(
                     90deg,
                     var(--cn-green-darker) 0%,
-                    rgba(5, 76, 57, 0.6) 50%,
-                    rgba(5, 76, 57, 0) 100%
+                    rgb(var(--brand-primary-darker-rgb) / 60%) 50%,
+                    rgb(var(--brand-primary-darker-rgb) / 0%) 100%
                 );
             }
 
@@ -299,8 +299,8 @@
                 background: linear-gradient(
                     270deg,
                     var(--cn-green-darker) 0%,
-                    rgba(5, 76, 57, 0.6) 50%,
-                    rgba(5, 76, 57, 0) 100%
+                    rgb(var(--brand-primary-darker-rgb) / 60%) 50%,
+                    rgb(var(--brand-primary-darker-rgb) / 0%) 100%
                 );
             }
 
@@ -390,7 +390,7 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: rgba(255, 210, 63, 0.28);
+            background: rgb(var(--brand-accent-rgb) / 28%);
 
             &--on {
                 width: 16px;
@@ -399,8 +399,8 @@
                 // Override the desktop pill-shape so mobile dots stay round.
                 border-radius: 50%;
                 box-shadow:
-                    0 0 0 5px rgba(255, 210, 63, 0.18),
-                    0 0 14px rgba(255, 210, 63, 0.5);
+                    0 0 0 5px rgb(var(--brand-accent-rgb) / 18%),
+                    0 0 14px rgb(var(--brand-accent-rgb) / 50%);
             }
         }
     }

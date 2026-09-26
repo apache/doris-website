@@ -2,13 +2,13 @@
 {
     "title": "MINUTES_DIFF",
     "language": "zh-CN",
-    "description": "MINUTESDIFF 函数用于计算两个日期时间值之间的分钟差值，结果为结束时间减去开始时间的分钟数。该函数支持处理 DATE、DATETIME（含微秒精度）类型。"
+    "description": "MINUTES_DIFF 计算 DATE、DATETIME 或 TIMESTAMP_NS 值之间的完整分钟差，结果为结束时间减去开始时间的完整分钟数；任一参数为 NULL 时返回 NULL。"
 }
 ---
 
 ## 描述
 
-MINUTES_DIFF 函数用于计算两个日期时间值之间的分钟差值，结果为结束时间减去开始时间的分钟数。该函数支持处理 DATE、DATETIME（含微秒精度）类型。
+MINUTES_DIFF 函数用于计算两个日期时间值之间的完整分钟差，支持 `DATE`、`DATETIME` 和 `TIMESTAMP_NS`。
 
 ## 语法
 
@@ -20,8 +20,8 @@ MINUTES_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| ``<date_or_time_expr1>`` | 结束时间，类型可以是 DATE、DATETIME ，具体 datetime/date 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| ``<date_or_time_expr1>`` | 开始时间，类型可以是 DATE、DATETIME ，具体 datetime/date 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| ``<date_or_time_expr1>`` | 结束时间，类型可以是 DATE、DATETIME、TIMESTAMP_NS ，具体 datetime/date 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| ``<date_or_time_expr2>`` | 开始时间，类型可以是 DATE、DATETIME、TIMESTAMP_NS ，具体 datetime/date 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## 返回值
 

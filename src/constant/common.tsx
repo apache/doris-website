@@ -18,5 +18,3 @@ export const BLOG_TAG_ICONS = {
     'Top News': <TopNewsIcon />,
     All: <AllBlogIcon />,
 };
-
-export const ARCHIVE_PATH = 'archive-docs';

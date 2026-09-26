@@ -1,3 +1,0 @@
-<IfModule mod_headers.c>
-    Header set Content-Security-Policy "script-src 'self' widget.kapa.ai www.google.com https://hcaptcha.com https://*.hcaptcha.com https://www.gstatic.com 'unsafe-inline' 'unsafe-eval'; connect-src 'self' proxy.kapa.ai kapa-widget-proxy-la7dkmplpq-uc.a.run.app metrics.kapa.ai https://hcaptcha.com https://*.hcaptcha.com www.google.com; frame-src 'self' www.google.com https://hcaptcha.com https://*.hcaptcha.com; style-src 'self' 'unsafe-inline' https://hcaptcha.com https://*.hcaptcha.com;"
-</IfModule>

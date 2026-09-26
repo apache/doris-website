@@ -3,29 +3,39 @@
 // ─── Design tokens (mirror home-next) ────────────────────────────────────────
 
 .download-next {
-    --dl-green: #06805F;
-    --dl-green-deep: #054C39;
-    --dl-green-darker: #033A2C;
-    --dl-green-glow: #2DDFA8;
-    --dl-cream: #F5EFE4;
-    --dl-cream-light: #FAF6EE;
-    --dl-yellow: #FFD23F;
-    --dl-yellow-bright: #FFE066;
-    --dl-ink: #0F1A14;
+    --dl-green: var(--brand-primary-dark);
+    --dl-green-deep: var(--brand-primary-darker);
+    --dl-green-darker: var(--brand-primary-darkest);
+    --dl-green-glow: var(--brand-primary-glow);
+    --dl-cream: var(--brand-cream);
+    --dl-cream-light: var(--brand-cream-light);
+    --dl-yellow: var(--brand-accent);
+    --dl-yellow-bright: var(--brand-accent-bright);
+    --dl-ink: var(--brand-ink);
     --dl-text: #1d1d1d;
-    --dl-text-muted: #4C576C;
-    --dl-text-subtle: #8592A6;
+    --dl-text-muted: #4c576c;
+    --dl-text-subtle: #8592a6;
     --dl-border: #dfe5f0;
-    --dl-bg-soft: #F7FAFC;
+    --dl-bg-soft: #f7fafc;
     --dl-mono: #{type.$font-mono};
     --dl-sans: #{type.$font-sans};
+
+    // Archive tones. Deliberately outside the brand palette and identical in
+    // every brand theme: "no longer maintained" has to read the same way
+    // whichever theme the visitor has picked.
+    --dl-ended: #b4442a;
+    --dl-drained: #767b84;
+    --dl-drained-bg: #f1f2f4;
+    --dl-drained-line: #dcdee2;
 
     font-family: var(--dl-sans);
     color: var(--dl-text);
     background: #ffffff;
 
     a {
-        transition: color 0.18s ease, opacity 0.18s ease;
+        transition:
+            color 0.18s ease,
+            opacity 0.18s ease;
     }
 }
 
@@ -50,8 +60,8 @@
 .download-next__hero-bg-glow {
     z-index: 1;
     background:
-        radial-gradient(ellipse at 78% 18%, rgba(45, 223, 168, 0.22), transparent 55%),
-        radial-gradient(ellipse at 8% 100%, rgba(255, 210, 63, 0.08), transparent 55%);
+        radial-gradient(ellipse at 78% 18%, rgb(var(--brand-primary-glow-rgb) / 22%), transparent 55%),
+        radial-gradient(ellipse at 8% 100%, rgb(var(--brand-accent-rgb) / 8%), transparent 55%);
 }
 
 .download-next__hero-bg-grid {
@@ -96,6 +106,28 @@
     max-width: 620px;
 }
 
+.download-next__maintained {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 26px;
+    padding: 8px 15px 8px 12px;
+    border: 1px solid rgb(var(--brand-primary-glow-rgb) / 35%);
+    border-radius: 999px;
+    background: rgb(var(--brand-shadow-rgb) / 35%);
+    color: var(--brand-primary-soft);
+    @include type.mono-text(12.5px, 500, 1.4, 0.02em);
+}
+
+.download-next__maintained-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--dl-green-glow);
+    box-shadow: 0 0 0 3px rgb(var(--brand-primary-glow-rgb) / 25%);
+    flex-shrink: 0;
+}
+
 // ─── Quick download card ────────────────────────────────────────────────────
 
 .download-next__quick {
@@ -117,8 +149,8 @@
     border-radius: 12px;
     padding: 40px 44px;
     box-shadow:
-        0 30px 60px -32px rgba(6, 70, 50, 0.28),
-        0 8px 24px -12px rgba(15, 26, 20, 0.08);
+        0 30px 60px -32px rgb(var(--brand-shadow-rgb) / 0.28),
+        0 8px 24px -12px rgb(var(--brand-ink-rgb) / 0.08);
 }
 
 .download-next__quick-row {
@@ -130,10 +162,138 @@
     & + & {
         margin-top: 18px;
     }
+}
 
-    &--file {
-        align-items: flex-start;
+.download-next__file-row {
+    display: grid;
+    grid-template-columns: 9.0625rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 20px;
+    margin-top: 22px;
+}
+
+// The verification line under the filename: one muted row of small links.
+// Everything here is secondary to the filename above it, so it is lighter,
+// smaller, and underlined only faintly until hovered.
+.download-next__file-verify {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 16px;
+    margin-top: 7px;
+    @include type.mono-text(12px, 500, 1.4, 0.02em);
+
+    a {
+        color: var(--dl-text-muted);
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-decoration-color: rgb(var(--brand-ink-rgb) / 22%);
+        text-underline-offset: 3px;
+
+        &:hover {
+            color: var(--ifm-color-primary);
+            text-decoration-color: currentColor;
+        }
     }
+}
+
+// The guide is a document, not a sibling file of the tarball: a hairline
+// keeps it apart from ASC / SHA-512 / KEYS.
+.download-next__file-verify-guide {
+    position: relative;
+    padding-left: 17px;
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 1px;
+        height: 12px;
+        transform: translateY(-50%);
+        background: var(--dl-border);
+    }
+}
+
+// One physical button with two zones: Download, and copy its link. The
+// shadow and the hover lift belong to the whole button; the backgrounds
+// respond per zone.
+.download-next__actions {
+    display: inline-flex;
+    align-items: stretch;
+    border-radius: 6px;
+    box-shadow: 0 2px 0 rgb(var(--brand-ink-rgb) / 18%);
+    transition:
+        transform 0.14s ease,
+        box-shadow 0.18s ease;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 0 rgb(var(--brand-ink-rgb) / 18%);
+    }
+}
+
+.download-next__download-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 28px;
+    border-radius: 6px 0 0 6px;
+    background: var(--dl-yellow);
+    color: var(--dl-ink) !important;
+    white-space: nowrap;
+    @include type.mono-text(13px, 800, 1, 0.05em, uppercase);
+    transition: background 0.18s ease;
+
+    &:hover {
+        background: var(--dl-yellow-bright);
+        text-decoration: none !important;
+    }
+}
+
+.download-next__copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid rgb(var(--brand-ink-rgb) / 18%);
+    border-radius: 0 6px 6px 0;
+    background: var(--dl-yellow);
+    color: var(--dl-ink);
+    cursor: pointer;
+    transition:
+        background 0.18s ease,
+        color 0.18s ease;
+
+    svg {
+        display: block;
+    }
+
+    &:hover {
+        background: var(--dl-yellow-bright);
+    }
+
+    // Copied: the zone inverts for a moment, so the change reads from across
+    // the room rather than as a 16px icon swap.
+    &.is-copied {
+        background: var(--dl-ink);
+        border-left-color: var(--dl-ink);
+        color: var(--dl-yellow);
+    }
+}
+
+.download-next__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 .download-next__quick-label {
@@ -182,7 +342,7 @@
     }
 
     &:hover {
-        background: rgba(17, 166, 121, 0.06);
+        background: rgb(var(--brand-primary-rgb) / 6%);
     }
 
     &.is-checked {
@@ -190,29 +350,49 @@
         color: #ffffff;
         z-index: 1;
     }
-}
 
-.download-next__file {
-    @include type.mono-text(14px, 500, 1.5, 0);
-    color: var(--ifm-color-primary);
-    padding: 10px 14px;
-    background: var(--dl-bg-soft);
-    border: 1px dashed rgba(17, 166, 121, 0.45);
-    border-radius: 6px;
-    width: 100%;
-    word-break: break-word;
+    &:disabled {
+        cursor: not-allowed;
+    }
 
-    a {
-        color: var(--ifm-color-primary);
-
-        &:hover {
-            text-decoration: underline;
-        }
+    // The selected release ships no build for this architecture.
+    &.is-unavailable {
+        opacity: 0.45;
+        text-decoration: line-through;
     }
 }
 
+.download-next__seg-tag {
+    margin-left: 8px;
+    @include type.mono-text(12px, 700, 1, 0.08em, uppercase);
+    opacity: 0.72;
+}
+
+.download-next__seg.is-muted {
+    opacity: 0.45;
+}
+
+// The resolved file: a single quiet surface. The filename is the only strong
+// element on it; nothing inside carries a frame of its own.
+.download-next__file {
+    width: 100%;
+    min-width: 0;
+    padding: 13px 18px 12px;
+    background: var(--dl-bg-soft);
+    border: 1px solid var(--dl-border);
+    border-radius: 6px;
+}
+
 .download-next__file-name {
-    font-weight: 600;
+    display: block;
+    // Reset Infima's inline-code chrome so the name does not sit in a second box.
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    @include type.mono-text(15px, 600, 1.4, 0);
+    color: var(--dl-ink);
+    word-break: break-all;
 }
 
 .download-next__file-meta {
@@ -221,16 +401,103 @@
     font-size: 13px;
 }
 
-.download-next__quick-note {
-    margin: 24px 0 0;
-    text-align: center;
-    color: var(--dl-text-subtle);
-    font-size: 14px;
-    line-height: 1.6;
+// What to read next. Three equal tiles on one hairline, so the versioning
+// policy, the upgrade notes and the archive sit beside the download button
+// instead of in a footnote under it.
+.download-next__guides {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px 36px;
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--dl-border);
+}
 
-    a {
+.download-next__guide {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    min-width: 0;
+    color: var(--dl-text);
+    text-decoration: none !important;
+
+    &:hover {
+        color: var(--dl-text);
+    }
+
+    &:hover .download-next__guide-title {
         color: var(--ifm-color-primary);
-        text-decoration: underline;
+    }
+
+    &:hover .download-next__guide-title svg {
+        transform: translateX(3px);
+    }
+
+    &:hover .download-next__guide-icon {
+        background: var(--ifm-color-primary);
+        color: #ffffff;
+    }
+}
+
+.download-next__guide-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: var(--brand-primary-soft);
+    color: var(--brand-primary-darker);
+    transition:
+        background 0.18s ease,
+        color 0.18s ease;
+}
+
+.download-next__guide-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.download-next__guide-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--dl-ink);
+    transition: color 0.18s ease;
+
+    svg {
+        flex-shrink: 0;
+        transition: transform 0.18s ease;
+    }
+}
+
+.download-next__guide-desc {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--dl-text-muted);
+}
+
+// The archive tile points past the cut where the brand green stops, so it
+// carries the drained tones of that zone rather than the green of this one.
+.download-next__guide.is-archive {
+    .download-next__guide-icon {
+        background: var(--dl-drained-bg);
+        color: var(--dl-drained);
+    }
+
+    &:hover .download-next__guide-title {
+        color: var(--dl-ended);
+    }
+
+    &:hover .download-next__guide-icon {
+        background: var(--dl-ended);
+        color: #ffffff;
     }
 }
 
@@ -248,6 +515,13 @@
     max-width: 1180px;
     margin: 0 auto;
     padding: 0 56px;
+}
+
+.download-next__eyebrow {
+    display: block;
+    margin-bottom: 10px;
+    @include type.mono-text(12px, 700, 1.2, 0.18em, uppercase);
+    color: var(--dl-text-subtle);
 }
 
 .download-next__section-title {
@@ -331,6 +605,163 @@
     }
 }
 
+.download-next__tool-version {
+    margin-left: auto;
+    padding: 3px 9px;
+    border-radius: 5px;
+    background: var(--brand-primary-soft);
+    color: var(--brand-primary-darker);
+    @include type.mono-text(12px, 600, 1.4, 0.01em);
+}
+
+.download-next__ecosystem-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+// ─── Archive ───────────────────────────────────────────────────────────────
+//
+// Everything Apache Doris no longer maintains. The zone is drained rather than
+// alarmed: a decommissioned room with the lights on, not a warning banner. The
+// brand green never appears below this line, so a visitor can tell which half
+// of the page they are in from the colour alone.
+
+.download-next__archive {
+    margin-top: 80px;
+    padding: 46px 0 56px;
+    border-top: 1px solid var(--dl-drained-line);
+    background: var(--dl-drained-bg);
+}
+
+.download-next__section-title--archive {
+    color: #5a5f67;
+}
+
+.download-next__archive .download-next__split {
+    background: #ffffff;
+    border-color: var(--dl-drained-line);
+}
+
+.download-next__archive-lead {
+    margin: 0;
+    color: #3f4652;
+    font-size: 16px;
+    line-height: 1.7;
+
+    strong {
+        color: var(--dl-ended);
+        font-weight: 600;
+    }
+}
+
+.download-next__archive-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+
+    a {
+        color: #3f4652;
+        border-bottom: 1px solid var(--dl-drained-line);
+
+        &:hover {
+            color: var(--dl-ended);
+            border-bottom-color: var(--dl-ended);
+            text-decoration: none;
+        }
+    }
+}
+
+.download-next__archive-card {
+    border: 1px solid var(--dl-drained-line);
+    border-top: 3px solid var(--dl-ended);
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 32px 32px 30px;
+}
+
+.download-next__archive-card-title {
+    margin-bottom: 32px;
+    color: var(--dl-text);
+    font-size: 20px;
+    font-weight: 500;
+    text-align: left;
+}
+
+.download-next__archive-project {
+    margin-bottom: 24px;
+}
+
+// Matches .button-primary in shape, inverted in tone: the archive download is
+// available, not encouraged.
+.download-next__archive-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 10px 24px;
+    border: 1.5px solid var(--dl-ended);
+    border-radius: 6px;
+    background: #ffffff;
+    color: var(--dl-ended);
+    cursor: pointer;
+    transition:
+        background 0.18s ease,
+        color 0.18s ease;
+
+    &:hover {
+        background: var(--dl-ended);
+        color: #ffffff;
+    }
+}
+
+// The shared download form is brand-green throughout. Inside the archive card
+// every one of those accents is re-toned, so no green appears past the cut.
+.download-next__archive-card {
+    .ant-select:not(.ant-select-customize-input) {
+        &:hover .ant-select-selector,
+        &.ant-select-focused .ant-select-selector {
+            border-color: var(--dl-ended) !important;
+        }
+    }
+
+    .ant-select-arrow {
+        color: var(--dl-drained);
+    }
+
+    .text-primary {
+        color: var(--dl-ended) !important;
+
+        svg rect {
+            stroke: var(--dl-ended);
+        }
+
+        svg path {
+            fill: var(--dl-ended);
+        }
+    }
+
+    .hover\:text-primary:hover {
+        color: var(--dl-ended) !important;
+    }
+}
+
+// antd renders the popup in a body-level portal, so it cannot be reached from
+// the card. FormSelect forwards this class through `popupExtraClass`.
+.form-select-select--archive {
+    &.ant-select-dropdown .ant-select-item-option-selected:not(.ant-select-item-option-disabled),
+    .ant-cascader-menu li.ant-cascader-menu-item-active {
+        color: var(--dl-ended);
+
+        .ant-cascader-menu-item-expand-icon {
+            color: var(--dl-ended);
+        }
+    }
+}
+
 // ─── Run anywhere (single CTA card) ────────────────────────────────────────
 
 .download-next__run {
@@ -350,17 +781,19 @@
     position: relative;
     overflow: hidden;
     border-radius: 12px;
-    border: 1px solid rgba(45, 223, 168, 0.3);
+    border: 1px solid rgb(var(--brand-primary-glow-rgb) / 30%);
     background:
-        radial-gradient(ellipse at 78% 20%, rgba(45, 223, 168, 0.22), transparent 58%),
-        radial-gradient(ellipse at 6% 100%, rgba(255, 210, 63, 0.08), transparent 58%),
-        var(--dl-green);
+        radial-gradient(ellipse at 78% 20%, rgb(var(--brand-primary-glow-rgb) / 22%), transparent 58%),
+        radial-gradient(ellipse at 6% 100%, rgb(var(--brand-accent-rgb) / 8%), transparent 58%), var(--dl-green);
     color: var(--dl-cream-light);
     text-decoration: none !important;
     box-shadow:
-        0 30px 60px -32px rgba(6, 70, 50, 0.35),
-        0 8px 24px -12px rgba(15, 26, 20, 0.12);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        0 30px 60px -32px rgb(var(--brand-shadow-rgb) / 0.35),
+        0 8px 24px -12px rgb(var(--brand-ink-rgb) / 0.12);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
 
     &::before {
         content: '';
@@ -373,10 +806,10 @@
 
     &:hover {
         transform: translateY(-3px);
-        border-color: rgba(45, 223, 168, 0.55);
+        border-color: rgb(var(--brand-primary-glow-rgb) / 55%);
         box-shadow:
-            0 40px 80px -32px rgba(6, 70, 50, 0.45),
-            0 12px 32px -12px rgba(15, 26, 20, 0.18);
+            0 40px 80px -32px rgb(var(--brand-shadow-rgb) / 0.45),
+            0 12px 32px -12px rgb(var(--brand-ink-rgb) / 0.18);
         text-decoration: none !important;
         color: var(--dl-cream-light);
     }
@@ -419,7 +852,10 @@
     color: var(--dl-ink);
     border-radius: 6px;
     @include type.mono-text(13px, 800, 1, 0.04em);
-    transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    transition:
+        background 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
 
     svg {
         transition: transform 0.18s ease;
@@ -481,6 +917,43 @@
 
     .download-next__split-card {
         order: -1;
+    }
+
+    .download-next__quick-row,
+    .download-next__file-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .download-next__file-row {
+        gap: 14px;
+    }
+
+    .download-next__actions {
+        display: flex;
+        width: 100%;
+    }
+
+    .download-next__download-btn {
+        flex: 1;
+    }
+
+    .download-next__quick-label {
+        margin-bottom: 0;
+    }
+
+    .download-next__guides {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .download-next__archive {
+        margin-top: 56px;
+        padding: 36px 0 44px;
+    }
+
+    .download-next__archive-card {
+        padding: 24px 20px 22px;
     }
 
     .download-next__run {
@@ -548,13 +1021,35 @@
     }
 
     .download-next__file {
-        font-size: 13px;
-        padding: 12px 14px;
+        padding: 12px 14px 11px;
+    }
+
+    .download-next__file-name {
+        font-size: 13.5px;
     }
 
     .download-next__file-meta {
         display: block;
         margin: 6px 0 0;
+    }
+
+    .download-next__guides {
+        margin-top: 24px;
+        padding-top: 22px;
+        gap: 18px;
+    }
+
+    .download-next__guide-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .download-next__guide-title {
+        font-size: 14.5px;
+    }
+
+    .download-next__guide-desc {
+        font-size: 13px;
     }
 
     .download-next__section {

@@ -2,15 +2,71 @@
 {
     "title": "ICEBERG_META",
     "language": "en",
-    "description": "icebergmeta table-valued-function(tvf), Use for read iceberg metadata, operation history, snapshots of table, file metadata etc."
+    "description": "iceberg_meta table-valued-function(tvf), used to read various metadata of an iceberg table. This table function was removed in 4.1.4; use Iceberg system tables instead."
 }
 ---
+
+:::caution Behavior change (4.1.4)
+
+The `iceberg_meta()` table function was removed in **4.1.4**. Running it reports:
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = Could not find table function iceberg_meta
+```
+
+Query the same metadata through Iceberg system tables instead. System tables are supported since 3.1.0, cover every `query_type` of `iceberg_meta()`, and expose more metadata types. See [Iceberg Catalog System Tables](../../../lakehouse/catalogs/iceberg-catalog.mdx#system-tables).
+
+Versions earlier than 4.1.4 can still use `iceberg_meta()`, so its usage is kept in this document for reference.
+
+:::
 
 ## Description
 
 iceberg_meta table-valued-function(tvf), Use for read iceberg metadata, operation history, snapshots of table, file metadata etc.
 
-## Syntax
+## Replacement: Iceberg System Tables
+
+A system table is accessed by appending `$` and the system table name to the table name:
+
+```sql
+SELECT * FROM <catalog>.<database>.<table>$<system_table_name>;
+```
+
+Each `query_type` of `iceberg_meta()` maps to a system table as follows:
+
+| `query_type` of `iceberg_meta()` | Equivalent system table   |
+|----------------------------------|---------------------------|
+| `snapshots`                      | `<table>$snapshots`       |
+| `manifests`                      | `<table>$manifests`       |
+| `all_manifests`                  | `<table>$all_manifests`   |
+| `files`                          | `<table>$files`           |
+| `data_files`                     | `<table>$data_files`      |
+| `delete_files`                   | `<table>$delete_files`    |
+| `partitions`                     | `<table>$partitions`      |
+| `refs`                           | `<table>$refs`            |
+| `history`                        | `<table>$history`         |
+| `metadata_log_entries`           | `<table>$metadata_log_entries` |
+
+Rewrite examples:
+
+```sql
+-- Before 4.1.4
+SELECT * FROM iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "snapshots");
+
+-- 4.1.4 and later
+SELECT * FROM iceberg_ctl.test_db.test_tbl$snapshots;
+```
+
+```sql
+-- Before 4.1.4: filtered by the snapshot_id column
+SELECT * FROM iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "snapshots")
+WHERE snapshot_id = 98865735822;
+
+-- 4.1.4 and later
+SELECT * FROM iceberg_ctl.test_db.test_tbl$snapshots WHERE snapshot_id = 98865735822;
+```
+
+## Syntax (Before 4.1.4)
 
 ```sql
 ICEBERG_META(
@@ -19,7 +75,8 @@ ICEBERG_META(
   );
 ```
 
-## Required Parameters
+## Required Parameters (Before 4.1.4)
+
 Each parameter in the `iceberg_meta` table function (tvf) is a `"key"="value"` pair.
 
 | Field          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
@@ -27,24 +84,18 @@ Each parameter in the `iceberg_meta` table function (tvf) is a `"key"="value"` p
 | `<table>`      | The full table name, which must be specified in the format of `database_name.table_name` for the Iceberg table that you want to view.                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `<query_type>` | The type of metadata you want to view. Supported types:<br/>`snapshots`: Snapshot information<br/>`manifests`: Manifest files of current snapshot<br/>`all_manifests`: Manifest files of all valid snapshots (supported from version 4.0.4)<br/>`files`: File information of current snapshot<br/>`data_files`: Data files of current snapshot<br/>`delete_files`: Delete files of current snapshot<br/>`partitions`: Partition information<br/>`refs`: Reference information (branches and tags)<br/>`history`: History records<br/>`metadata_log_entries`: Metadata log entries |
 
-
 ## Examples
 
 - Read and access the iceberg tabular metadata for snapshots.
 
     ```sql
-    select * from iceberg_meta("table" = "ctl.db.tbl", "query_type" = "snapshots");
-    ```
-
-- Can be used with `desc function` :
-
-    ```sql
-    desc function iceberg_meta("table" = "ctl.db.tbl", "query_type" = "snapshots");
+    select * from iceberg_ctl.db.tbl$snapshots;
     ```
 
 - Inspect the iceberg table snapshots :
+
     ```sql
-    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "snapshots");
+    select * from iceberg_ctl.test_db.test_tbl$snapshots;
     ```
     ```text
     +------------------------+----------------+---------------+-----------+-------------------+------------------------------+
@@ -59,7 +110,7 @@ Each parameter in the `iceberg_meta` table function (tvf) is a `"key"="value"` p
 - Filtered by snapshot_id :
 
     ```sql
-    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "snapshots") where snapshot_id = 98865735822;
+    select * from iceberg_ctl.test_db.test_tbl$snapshots where snapshot_id = 98865735822;
     ```
     ```text
     +------------------------+----------------+---------------+-----------+-------------------+------------------------------+
@@ -69,58 +120,18 @@ Each parameter in the `iceberg_meta` table function (tvf) is a `"key"="value"` p
     +------------------------+----------------+---------------+-----------+-------------------+------------------------------+
     ```
 
-- View manifests of the iceberg table (manifest files of current snapshot)
+- View other metadata of the iceberg table
 
     ```sql
-    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "manifests");
-    ```
-
-- View all_manifests of the iceberg table (manifest files of all valid snapshots, supported from version 4.0.4)
-
-    ```sql
-    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "all_manifests");
-    ```
-
-- View files of the iceberg table (file information of current snapshot)
-
-    ```sql
-    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "files");
-    ```
-
-- View data_files of the iceberg table (data files of current snapshot)
-
-    ```sql
-    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "data_files");
-    ```
-
-- View delete_files of the iceberg table (delete files of current snapshot)
-
-    ```sql
-    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "delete_files");
-    ```
-
-- View partitions of the iceberg table
-
-    ```sql
-    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "partitions");
-    ```
-
-- View refs of the iceberg table (reference information)
-
-    ```sql
-    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "refs");
-    ```
-
-- View history of the iceberg table
-
-    ```sql
-    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "history");
-    ```
-
-- View metadata_log_entries of the iceberg table
-
-    ```sql
-    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "metadata_log_entries");
+    select * from iceberg_ctl.test_db.test_tbl$manifests;
+    select * from iceberg_ctl.test_db.test_tbl$all_manifests;
+    select * from iceberg_ctl.test_db.test_tbl$files;
+    select * from iceberg_ctl.test_db.test_tbl$data_files;
+    select * from iceberg_ctl.test_db.test_tbl$delete_files;
+    select * from iceberg_ctl.test_db.test_tbl$partitions;
+    select * from iceberg_ctl.test_db.test_tbl$refs;
+    select * from iceberg_ctl.test_db.test_tbl$history;
+    select * from iceberg_ctl.test_db.test_tbl$metadata_log_entries;
     ```
 
 ## Related

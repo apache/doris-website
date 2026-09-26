@@ -1,19 +1,19 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: 'ASOF JOIN Benchmark: Apache Doris vs ClickHouse and DuckDB',
-        link: 'https://www.velodb.io/blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb',
+        label: 'Dynamic JSON in Agent Workloads: Apache Doris vs ClickHouse, Elasticsearch, and OpenSearch',
+        link: 'https://www.velodb.io/blog/dynamic-json-in-agent-workloads-apache-doris-clickhouse-elasticsearch-and-opensearch',
     },
     {
-        label: 'Why AI Agents Need Real-Time Analytics and Hybrid Search: The Data Infra for Production Agents',
-        link: 'https://www.velodb.io/blog/why-ai-agents-need-real-time-analytics-and-hybrid-search',
+        label: 'PostgreSQL CDC to Apache Doris: Real-Time Sync with One SQL Statement',
+        link: 'https://www.velodb.io/blog/postgresql-cdc-to-apache-doris-real-time-sync-with-one-sql-statement',
     },
     {
-        label: 'How We Built Production Vector Search in Apache Doris',
-        link: 'https://www.velodb.io/blog/how-we-built-production-vector-search-in-apache-doris',
+        label: 'From Spark to Apache Doris: How Kwai Made A/B Testing Metrics 145x Faster at Scale',
+        link: 'https://www.velodb.io/blog/from-spark-to-apache-doris-how-kwai-made-a-b-testing-metrics-145x-faster-at-scale',
     },
     {
-        label: 'Hybrid Modeling for JSON in Agent Observability: VARIANT and Inverted Indexes in Apache Doris',
-        link: 'https://www.velodb.io/blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris',
+        label: 'Apache Doris Python UDF: Calling the Python Ecosystem from SQL for Agent-Era',
+        link: 'https://www.velodb.io/blog/apache-doris-python-udf-calling-the-python-from-sql-for-agent-era',
     },
 
 ];

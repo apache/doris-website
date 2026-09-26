@@ -17,6 +17,26 @@ This document introduces the support for reading and writing ORC file formats in
 * Writing data during Export.
 * Writing data with Outfile.
 
+## Timestamp Fractional-Second Precision
+
+ORC timestamps can store nanoseconds, while Doris `DATETIMEV2` and `TIMESTAMPTZ` support up to microseconds. FileScannerV2 rounds ORC fractional seconds to the nearest microsecond using round half up in Catalog scans, table-valued functions, and Broker Load:
+
+| ORC value | Doris value |
+|---|---|
+| `2024-01-01 00:00:00.123456499` | `2024-01-01 00:00:00.123456` |
+| `2024-01-01 00:00:00.123456500` | `2024-01-01 00:00:00.123457` |
+| `2024-01-01 00:00:00.999999500` | `2024-01-01 00:00:01.000000` |
+
+Both `DATETIMEV2` and `TIMESTAMPTZ` mappings use this rule, including a carry into the next second. Row decoding, statistics conversion, and predicate pushdown use matching boundaries. When ORC statistics do not have enough precision to represent a rounded boundary exactly, Doris widens the pruning boundary conservatively. If a timestamp predicate such as `!=` cannot be represented safely, Doris skips that search argument and evaluates the predicate on decoded rows. This can reduce pruning for that predicate, but prevents valid rows from being incorrectly skipped.
+
+## UUID Type Mapping
+
+Doris writes a `UUID` column, including a UUID element nested in ARRAY, MAP, or STRUCT, as `BINARY` holding the canonical 16-byte big-endian value, and adds the `doris.logical_type=uuid` attribute to mark it as a native UUID. ORC has no standard UUID type, so tools other than Doris see a plain binary column without UUID semantics. When an ORC `schema` property is specified explicitly for OUTFILE, declare UUID columns as `binary`; another type such as `string` is rejected.
+
+Reading a `BINARY` column that carries the `doris.logical_type=uuid` attribute restores the native UUID type, including nested elements and in both file readers, so a table-valued function reports `uuid`, `array<uuid>`, or `struct<k:uuid>` for such columns. `BINARY` and `STRING` columns without the attribute keep the existing `STRING` mapping.
+
+For the complete UUID output mappings in OUTFILE and EXPORT, see [Column Type Mapping for Exported Files](../../data-operate/export/export-overview.md#column-type-mapping-for-exported-files).
+
 ## Supported Compression Formats
 
 * uncompressed

@@ -22,7 +22,7 @@ TO_SECONDS(`<date_or_time_expr>`)
 
 | Parameter             | Description                                                                                                                                                                                                                                                                                                 |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `<date_or_time_expr>` | The input date/time value. Supports date/datetime types. For specific datetime and date formats, please refer to [datetime conversion](../../../basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | The input date/time value. Supports DATE/DATETIME/TIMESTAMP_NS types. For specific datetime and date formats, please refer to [datetime conversion](../../../basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../basic-element/sql-data-types/conversion/date-conversion). |
 
 ## Return Value
 

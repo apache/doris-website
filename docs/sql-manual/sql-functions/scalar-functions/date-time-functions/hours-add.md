@@ -2,13 +2,13 @@
 {
     "title": "HOURS_ADD",
     "language": "en",
-    "description": "The HOURSADD function adds or subtracts a specified number of hours to/from an input date or datetime value and returns the calculated new datetime."
+    "description": "Adds or subtracts hours from a DATE, DATETIME, TIMESTAMP_NS, or TIMESTAMPTZ value."
 }
 ---
 
 ## Description
 
-The HOURS_ADD function adds or subtracts a specified number of hours to/from an input date or datetime value and returns the calculated new datetime. This function supports both DATE, DATETIME and TIMESTAMPTZ input types. If the input is DATE type (containing only year, month, day), it defaults the time part to 00:00:00 before adding hours.
+The HOURS_ADD function adds or subtracts a specified number of hours to/from an input date or datetime value and returns the calculated new datetime. This function supports both DATE, DATETIME, TIMESTAMP_NS, and TIMESTAMPTZ input types. If the input is DATE type (containing only year, month, day), it defaults the time part to 00:00:00 before adding hours.
 
 This function is consistent with the [date_add function](./date-add) and [date_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add) in MySQL when using the `HOUR` unit.
 
@@ -22,13 +22,13 @@ HOURS_ADD(`<date_or_time_expr>`, `<hours>`)
 
 | Parameter | Description |
 | ---- | ---- |
-| `<date_or_time_expr>` | A valid date expression that supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | A valid date expression that supports DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<hours>` | The number of hours to add, of integer (INT) type. Can be positive or negative: positive number adds the specified hours, negative number subtracts the specified hours (equivalent to subtracting hours) |
 
 ## Return Value
 
 Return the base time `<date_or_time_expr>` plus the specified hours `<hours>`, the return value type is determined by the type of the first parameter:
-- If the type of the first parameter is DATE/DATETIME, then the return type is DATETIME.
+- If the first parameter is `DATE` or `DATETIME`, the return type is `DATETIME`; if it is `TIMESTAMP_NS`, the return type is `TIMESTAMP_NS`.
 - If the type of the first parameter is TIMESTAMPTZ, then the return type is TIMESTAMPTZ.
 
 Special cases:

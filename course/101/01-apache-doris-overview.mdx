@@ -1,0 +1,294 @@
+---
+title: Apache Doris Overview
+description: Learn the Apache Doris mental model through nine guided units covering data organization, storage models, architecture, query execution, and optimization.
+slug: /101/01-apache-doris-overview
+sidebar_position: 1
+keywords:
+  - Apache Doris 101
+  - Apache Doris architecture
+  - data model
+  - query execution
+  - query optimization
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLayerStack,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={1}
+    title="Apache Doris Overview"
+    readingTime="10–15 minutes"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/features-architecture/system-architecture"
+>
+    <CourseLessonUnit
+        id="data-organization"
+        label="Data organization"
+        title={<>How does Doris <em>organize</em> data?</>}
+        summary="Start with the logical hierarchy. Then zoom in to see how a table is divided and distributed across the cluster."
+        coachTitle="A table is where logic becomes storage."
+        coach={
+            <p>
+                A Catalog identifies a data source, a Database creates a logical boundary, and a Table defines schema and properties. Inside the table, partitions isolate ranges while buckets distribute data for parallel work.
+            </p>
+        }
+        calloutTitle="Keep this distinction"
+        callout={<p>Partition answers “which data range?” Bucket answers “where and how is it distributed?”</p>}
+        check={{
+            question: 'Which layer enables date-range pruning?',
+            options: ['Bucket', 'Partition'],
+            correctIndex: 1,
+            correctFeedback: 'Correct — a partition gives Doris a logical range to prune.',
+            incorrectFeedback: 'Not quite — buckets distribute rows; partitions define logical ranges.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris data organization hierarchy"
+            focusIndex={2}
+            items={[
+                { title: 'Catalog', description: 'Data source' },
+                { title: 'Database', description: 'Business boundary' },
+                { title: 'Table', description: 'Schema + properties' },
+                { title: 'Partition', description: 'Logical range' },
+                { title: 'Bucket', description: 'Physical distribution' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="columnar-storage"
+        label="Columnar storage"
+        title={<>Why store values by <em>column</em>?</>}
+        summary="Analytical queries often touch a few columns across many rows. Columnar storage lets Doris read and process only the data those queries need."
+        coachTitle="Columnar layout reduces wasted work."
+        coach={<p>Values from one column share a type and often similar distributions. That improves encoding, compression, CPU-cache locality, and batch processing.</p>}
+        calloutTitle="Mental model"
+        callout={<p>Row storage keeps complete records together. Columnar storage keeps values of the same field together.</p>}
+        check={{
+            question: 'A query reads 3 of 80 columns. What is the main advantage?',
+            options: ['It reads fewer unnecessary values', 'It creates more table replicas'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — Doris can avoid reading most unrelated column data.',
+            incorrectFeedback: 'Replicas provide availability; columnar layout primarily reduces unnecessary I/O.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Benefits of columnar storage"
+            columns={3}
+            items={[
+                { tag: 'I/O', title: 'Read less', description: 'Scan only the columns referenced by the query.' },
+                { tag: 'ZIP', title: 'Compress better', description: 'Similar typed values are easier to encode compactly.' },
+                { tag: 'CPU', title: 'Process in batches', description: 'Contiguous vectors improve cache use and enable SIMD.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="table-models"
+        label="Table models"
+        title={<>What happens when keys <em>repeat</em>?</>}
+        summary="The table model defines whether Doris keeps every row, combines values, or maintains one logical row for each Key."
+        coachTitle="Choose row semantics before loading data."
+        coach={<p>Duplicate Key fits immutable details, Aggregate Key stores declared pre-aggregation, and Unique Key supports UPSERT-style mutable records.</p>}
+        calloutTitle="Production rule"
+        callout={<p>A table model cannot be changed after table creation. Confirm the update behavior before choosing one.</p>}
+        check={{
+            question: 'Which model fits CDC updates to customer profiles?',
+            options: ['Duplicate Key', 'Aggregate Key', 'Unique Key'],
+            correctIndex: 2,
+            correctFeedback: 'Correct — Unique Key keeps one logical row per Key and supports UPSERT semantics.',
+            incorrectFeedback: 'Try again — mutable records need one current logical row for each Key.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris table models"
+            columns={3}
+            items={[
+                { tag: 'DUP', title: 'Duplicate Key', description: 'Retains every input row for event details and logs.' },
+                { tag: 'AGG', title: 'Aggregate Key', description: 'Merges Value columns with declared aggregation functions.' },
+                { tag: 'UNI', title: 'Unique Key', description: 'Keeps one logical row per Key for updates and CDC.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="integrated-architecture"
+        label="Integrated architecture"
+        title={<>Meet the classic <em>FE + BE</em> cluster.</>}
+        summary="In the integrated architecture, Frontend nodes coordinate the system while Backend nodes execute queries and persist tablet replicas on local storage."
+        coachTitle="Control and data responsibilities stay separate."
+        coach={<p>FE handles authentication, SQL parsing and planning, metadata, and coordination. BE stores tablets, runs vectorized operators, compacts data, and participates in repair and balancing.</p>}
+        calloutTitle="High availability"
+        callout={<p>Production deployments use multiple FE nodes and configurable tablet replicas. FE metadata replication uses BDB JE and does not require ZooKeeper.</p>}
+        check={{
+            question: 'Which node creates the distributed query plan?',
+            options: ['Frontend', 'Backend'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — FE plans and coordinates; BE executes and stores data.',
+            incorrectFeedback: 'BE executes plan fragments, but the FE creates and coordinates the plan.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Integrated Apache Doris request flow"
+            focusIndex={1}
+            items={[
+                { title: 'SQL client', description: 'MySQL protocol' },
+                { title: 'Frontend', description: 'Parse + plan + coordinate' },
+                { title: 'Backend', description: 'Store + execute' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="decoupled-architecture"
+        label="Decoupled architecture"
+        title={<>What changes when storage and compute <em>separate</em>?</>}
+        summary="Stateless compute groups can scale independently while durable data remains in shared storage."
+        coachTitle="Elasticity adds another operating layer."
+        coach={<p>FE handles requests and SQL-layer metadata, Meta Service manages data-layer metadata, and stateless BE nodes cache hot data while computing against shared persistent storage.</p>}
+        calloutTitle="Operational tradeoff"
+        callout={<p>Shared storage must be reliable, cold cache reads can add latency, and the platform team must operate additional services.</p>}
+        check={{
+            question: 'Where does the durable copy of data live?',
+            options: ['Only in a BE cache', 'In shared storage'],
+            correctIndex: 1,
+            correctFeedback: 'Correct — compute nodes cache data, while shared storage keeps the durable copy.',
+            incorrectFeedback: 'A BE cache accelerates access but is not the durable storage layer.',
+        }}
+    >
+        <CourseLayerStack
+            ariaLabel="Decoupled Apache Doris architecture layers"
+            items={[
+                { title: 'SQL and metadata layer', description: 'FE serves SQL; Meta Service manages data-layer metadata.' },
+                { title: 'Compute groups', description: 'Stateless BE nodes execute work and cache hot data.' },
+                { title: 'Shared storage', description: 'Object storage or a supported distributed file system persists data.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-architecture"
+        label="Choose an architecture"
+        title={<>Start from constraints, not from what is <em>newer</em>.</>}
+        summary="Integrated and decoupled deployments optimize for different operating environments. Neither architecture is universally better."
+        coachTitle="Simplicity and elasticity pull in different directions."
+        coach={<p>Integrated deployments are usually the easier starting point. Decoupled deployments make sense when shared storage, platform ownership, independent scaling, or isolated compute groups are real requirements.</p>}
+        calloutTitle="Decision rule"
+        callout={<p>Do not choose decoupled architecture only because it is newer. Its extra moving parts must solve a concrete constraint.</p>}
+        check={{
+            question: 'Local disks are available and compute can scale with storage. Start with?',
+            options: ['Integrated architecture', 'Decoupled architecture'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — integrated architecture is the simpler fit for those constraints.',
+            incorrectFeedback: 'Decoupled adds value when independent elasticity or shared storage is required.',
+        }}
+    >
+        <CourseComparison
+            ariaLabel="Integrated and decoupled architecture comparison"
+            leftTitle="Integrated"
+            leftLead="Stateful BE nodes compute and persist data locally."
+            leftItems={['Lower operational complexity', 'Local storage access', 'Compute and storage scale together']}
+            rightTitle="Decoupled"
+            rightLead="Stateless compute groups share persistent storage."
+            rightItems={['Independent elasticity', 'Workload-isolated compute groups', 'More platform dependencies']}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="engine-modules"
+        label="Core engine modules"
+        title={<>Two engines cooperate to do <em>less work, faster</em>.</>}
+        summary="The storage engine organizes data and access paths. The query engine converts SQL into distributed, vectorized pipelines."
+        coachTitle="Optimization begins before execution."
+        coach={<p>Sort keys, partitions, indexes, and table models reduce the data that must be visited. MPP, vectorization, Pipeline scheduling, and the optimizer reduce the cost of processing what remains.</p>}
+        calloutTitle="MPP versus Pipeline"
+        callout={<p>MPP distributes work across nodes. Pipeline execution schedules operator work across cores within each node.</p>}
+        check={{
+            question: 'Which mechanism distributes work across BE nodes?',
+            options: ['MPP', 'Pipeline scheduling'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — MPP provides node-level parallelism.',
+            incorrectFeedback: 'Pipeline schedules work inside a node; MPP distributes it across nodes.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Core Apache Doris engine modules"
+            columns={4}
+            items={[
+                { tag: 'COL', title: 'Columnar storage', description: 'Reads required columns and compresses analytical data.' },
+                { tag: 'IDX', title: 'Indexes', description: 'Prefix, Min/Max, Bloom, and inverted indexes prune scans.' },
+                { tag: 'MPP', title: 'Distributed work', description: 'Splits query execution across Backend nodes.' },
+                { tag: 'OPT', title: 'Optimizer', description: 'Applies rule-, cost-, and history-based strategies.' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="query-execution"
+        label="Query execution"
+        title={<>Follow SQL from text to <em>distributed pipelines</em>.</>}
+        summary="A query is validated, optimized, divided into fragments and instances, executed across BE nodes, and then combined into a result."
+        coachTitle="Fragments describe work; instances perform it."
+        coach={<p>A fragment is one logical part of the distributed plan. An instance is a physical copy running on a BE. Exchange operators move rows between instances when redistribution is required.</p>}
+        calloutTitle="Vectorized execution"
+        callout={<p>Operators process column batches instead of one row at a time, reducing per-row overhead and improving CPU efficiency.</p>}
+        check={{
+            question: 'What moves rows between fragment instances?',
+            options: ['Exchange operator', 'Catalog'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — Exchange transfers rows when a plan requires redistribution.',
+            incorrectFeedback: 'A Catalog names a data source; Exchange connects distributed plan instances.',
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris query execution stages"
+            focusIndex={2}
+            items={[
+                { title: 'Parse', description: 'Validate SQL' },
+                { title: 'Plan', description: 'Rewrite + cost' },
+                { title: 'Fragment', description: 'Split distributed work' },
+                { title: 'Execute', description: 'Run vectorized pipelines' },
+                { title: 'Return', description: 'Combine results' },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="optimization-recap"
+        label="Optimization and recap"
+        title={<>The fastest work is work Doris can <em>avoid</em>.</>}
+        summary="Doris combines precomputation, logical rewrites, statistics-based planning, and runtime filtering to reduce data before and during execution."
+        coachTitle="Optimization happens at several moments."
+        coach={<p>Materialized views can replace repeated computation, RBO simplifies plans, CBO compares estimated costs, and runtime filters discard rows early during joins.</p>}
+        calloutTitle="Before the next lesson"
+        callout={<p>Remember the hierarchy, the FE/BE responsibility split, the two architecture choices, and the path from planning to distributed execution.</p>}
+        check={{
+            question: 'What helps CBO compare alternative plans accurately?',
+            options: ['Representative table and column statistics', 'More SQL comments'],
+            correctIndex: 0,
+            correctFeedback: 'Correct — current statistics improve cardinality and cost estimates.',
+            incorrectFeedback: 'Comments can explain SQL to humans; CBO needs representative statistics.',
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris query optimization layers"
+            columns={4}
+            items={[
+                { tag: 'MV', title: 'Materialized view', description: 'Reuse precomputed results through query rewrite.' },
+                { tag: 'RBO', title: 'Rule-based', description: 'Apply deterministic logical transformations.' },
+                { tag: 'CBO', title: 'Cost-based', description: 'Use statistics to compare physical plans.' },
+                { tag: 'RF', title: 'Runtime filter', description: 'Push filters toward scans to discard rows early.' },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

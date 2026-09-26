@@ -26,7 +26,7 @@ TVF 支持读取和分析以下文件格式，点击链接可查看对应格式�
 - [Parquet](./file-formats/parquet.md)
 - [ORC](./file-formats/orc.md)
 - [Text / CSV / JSON](./file-formats/text.md)
-- [Lance](./file-formats/lance.md)（实验性功能，自 5.0.0 版本起支持）
+- [Lance](./file-formats/lance.md)（自 4.2 版本起支持）
 
 ## 使用场景
 

@@ -2,13 +2,13 @@
 {
     "title": "MICROSECOND",
     "language": "zh-CN",
-    "description": "MICROSECOND 函数用于从输入的日期时间值中提取微秒部分（即小数点后第六位及以内的数值），返回范围为 0 到 999999。该函数支持处理含微秒精度的 DATETIME 类型，对于精度不足的输入会自动补 0。"
+    "description": "MICROSECOND 从 DATETIME 或 TIMESTAMP_NS 值中提取前 6 位小数秒，不足 6 位时补零且不进行四舍五入，返回范围为 0 到 999999。"
 }
 ---
 
 ## 描述
 
-MICROSECOND 函数用于从输入的日期时间值中提取微秒部分（即小数点后第六位及以内的数值），返回范围为 0 到 999999。该函数支持处理含微秒精度的 DATETIME 类型，对于精度不足的输入会自动补 0。
+MICROSECOND 函数用于提取输入日期时间值小数部分的前六位，返回范围为 0 到 999999。该函数支持 DATETIME 和 TIMESTAMP_NS。精度不足六位时在右侧补 0；对于 TIMESTAMP_NS，忽略最后三位纳秒数字。如需获取完整九位小数，请使用 [NANOSECOND](./nanosecond)。
 
 该函数与 mysql 中的 [microsecond 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_microsecond) 行为一致。
 
@@ -22,7 +22,7 @@ MICROSECOND(`<datetime>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<datetime>` | 输入的日期时间值，类型为 DATETIME , datetime格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)，精度需要大于 0 |
+| `<datetime>` | 输入的日期时间值，类型为 DATETIME 或 TIMESTAMP_NS。支持的格式请参见 [DATETIME 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)和 [TIMESTAMP_NS 的转换](../../../basic-element/sql-data-types/conversion/timestamp-ns-conversion.md)。 |
 
 ## 返回值
 
@@ -31,6 +31,7 @@ MICROSECOND(`<datetime>`)
 - 若输入的日期时间不含微秒部分（如 '2023-01-01 10:00:00'），返回 0。
 - 若输入为 NULL，返回 NULL。
 - 若输入的日期时间微秒精度小于 6 位，不足的位数自动补 0（例如 12:34:56.123 会解析为 123000 微秒）
+- 对于 TIMESTAMP_NS，函数返回小数部分的前六位，不对最后三位进行四舍五入。
 
 ## 举例
 
@@ -67,6 +68,14 @@ SELECT MICROSECOND(CAST('1999-01-02 10:11:12' AS DATETIME(6)));
 +---------------------------------------------------------+
 |                                                       0 |
 +---------------------------------------------------------+
+
+--- 对于 TIMESTAMP_NS，忽略最后三位纳秒数字
+SELECT MICROSECOND(CAST('2025-01-02 03:04:05.123456789' AS TIMESTAMP_NS));
++-----------------------------------------------------------------------+
+| MICROSECOND(CAST('2025-01-02 03:04:05.123456789' AS TIMESTAMP_NS)) |
++-----------------------------------------------------------------------+
+|                                                                123456 |
++-----------------------------------------------------------------------+
 
 --- 输入字符串同时适用于 datetime/time 时，优先按 time 解析
 SELECT MICROSECOND("22:12:12.123456");

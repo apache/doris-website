@@ -2,7 +2,7 @@
 {
     "title": "Data Cache",
     "language": "en",
-    "description": "Apache Doris Data Cache accelerates Lakehouse queries by caching HDFS and object storage data locally. Supports cache warmup, quota control, and admission control for Hive, Iceberg, Hudi, and Paimon tables."
+    "description": "Apache Doris Data Cache accelerates Lakehouse queries by caching HDFS and object storage data locally. Supports cache warmup, query-level cache-fill controls, and admission control for Hive, Iceberg, Hudi, and Paimon tables."
 }
 ---
 
@@ -109,13 +109,18 @@ Users can view cache statistics for each Backend node through the system table [
 
 ## Cache Query Limit
 
+Doris provides two independent query-level Data Cache controls:
+
+| Control | Primary parameter | Behavior after the limit |
+|---|---|---|
+| Limit by cache footprint percentage | `file_cache_query_limit_percent` | Cache-miss fills remain allowed, while BE releases space through the query-level LRU record and other cache queues |
+| Stop remote-scan cache writes by byte threshold | `file_cache_query_limit_bytes` | When the next cache block would make admitted bytes exceed the threshold, later misses are read from remote storage without filling the local cache |
+
+### Limit by Cache Footprint Percentage
+
 > This feature is supported since version 4.0.3.
 
-The Cache Query Limit feature allows users to limit the percentage of file cache that a single query can use. In scenarios where multiple users or complex queries share cache resources, a single large query might occupy too much cache space, causing other queries' hot data to be evicted. By setting a query limit, you can ensure fair resource usage and prevent cache thrashing.
-
-The cache space occupied by a query refers to the total size of data populated into the cache due to cache misses. If the total size populated by the query reaches the quota limit, subsequent data populated by the query will replace the previously populated data based on the LRU algorithm.
-
-### Configuration
+The cache-footprint percentage limit controls the maximum percentage of each File Cache instance that a single query can use. When multiple users or complex queries share cache resources, it reduces the risk that one large query retains too much cache and evicts other hot data.
 
 This feature involves configuration on BE and FE, as well as session variable settings.
 
@@ -131,26 +136,71 @@ This feature involves configuration on BE and FE, as well as session variable se
 - `file_cache_query_limit_max_percent`:
   - Type: Integer
   - Default: `100`
-  - Description: The max query limit constraint used to validate the upper limit of session variables. It ensures that the query limit set by users does not exceed this value.
+  - Description: The maximum query limit constraint used to validate the upper bound of the session variable.
 
 **3. Session Variables**
 
 - `file_cache_query_limit_percent`:
   - Type: Integer (1-100)
-  - Description: The file cache query limit percentage. It sets the maximum percentage of cache a query can use. This value is constrained by `file_cache_query_limit_max_percent`. It is recommended that the calculated cache quota is not less than 256MB. If it is lower than this value, the BE will print a warning in the log.
+  - Default: `-1`
+  - Description: The maximum percentage of cache that a query can use. This value is constrained by `file_cache_query_limit_max_percent`. The calculated cache quota should be at least 256 MB; otherwise, BE writes a warning to the log.
 
 **Usage Example**
 
 ```sql
--- Set session variable to limit a query to use at most 50% of the cache
+-- Set the session variable to limit a query to at most 50% of the cache
 SET file_cache_query_limit_percent = 50;
 
--- Execute query
+-- Execute the query
 SELECT * FROM large_table;
 ```
 
-**Note:**
-1. The value must be within the range [0, `file_cache_query_limit_max_percent`].
+**Notes:**
+
+1. The value must be in `[1, file_cache_query_limit_max_percent]`.
+2. Before using this control, enable both `enable_file_cache` and `enable_file_cache_query_limit` on the BE, and ensure that `enable_file_cache` is `true` in the query session.
+3. Cache misses remain eligible for Data Cache writes after the percentage quota is reached. This control does not switch the query into a no-more-write mode.
+
+### Stop Remote-Scan Cache Writes by Byte Threshold
+
+> This feature is supported only in Doris 4.1.x. It is not supported in Doris 4.0.x.
+
+In compute-storage decoupled mode, the `file_cache_query_limit_bytes` session variable limits cumulative bytes admitted for Data Cache fills caused by Hive, Iceberg, Hudi, or Paimon data-file cache misses for one SELECT query on **each BE**. It requires `enable_file_cache=true` on the BE but does not depend on `enable_file_cache_query_limit` or `file_cache_query_limit_max_percent`.
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `file_cache_query_limit_bytes` | BigInt | `-1` | Remote-scan cache-fill threshold for one query on each BE, in bytes. A value below `0` disables the control; `0` disables cache fills from the start of the query; a positive value accumulates admitted bytes by cache block |
+
+Parallel scanners for the same query share one threshold on a BE. The threshold is not a query-wide or cluster-wide total. When the next cache block would make admitted bytes exceed the threshold, the query enters remote-only-on-miss mode on that BE: a request range fully covered by local cache can still be read locally; a range that is not fully covered is read directly from remote storage without filling Data Cache. The query result is unchanged.
+
+The following example sets a 1 GiB remote-scan cache-fill threshold on each BE:
+
+```sql
+SET enable_profile = true;
+SET profile_level = 2;
+SET file_cache_query_limit_bytes = 1073741824;
+
+SELECT COUNT(*) FROM hive_catalog.sales.orders;
+```
+
+To prevent a one-time scan from writing Data Cache from the start, set the threshold to `0`, and restore the default after the query:
+
+```sql
+SET file_cache_query_limit_bytes = 0;
+SELECT COUNT(*) FROM hive_catalog.sales.orders;
+
+SET file_cache_query_limit_bytes = -1;
+```
+
+After enabling Query Profile, inspect `RemoteOnlyOnMissTriggered` and `RemoteOnlyOnMissThresholdBytes` in the Scanner's `FileCache` metric group. When `RemoteOnlyOnMissTriggered=1`, the Scanner observed the query entering remote-only-on-miss mode. Use `BytesWriteIntoCache` and `NumSkipCacheIOTotal` to inspect actual writes and skipped-cache I/O. Because `NumSkipCacheIOTotal` can also include I/O skipped by other cache policies, it is not sufficient by itself to prove that the threshold was triggered.
+
+:::note
+
+- This control applies only to Data Cache fills after SELECT query misses in compute-storage decoupled mode. It does not limit remote bytes read or affect explicit cache warmup. Remote-only-on-miss mode may increase remote I/O and query latency.
+- Admission is evaluated by cache block. If the remaining budget is smaller than the next block, the entire block is skipped. `RemoteOnlyOnMissTriggered` changes to `1` only when a block would exceed the threshold.
+- The BE parameter `enable_file_cache_query_limit_segment_meta` controls whether Doris internal-table Segment footer and Segment metadata writes count toward the same threshold. Cache fills for Hive, Iceberg, Hudi, and Paimon data files are always subject to `file_cache_query_limit_bytes`. For the complete parameter scope and internal-table behavior, see [File Cache Configuration and Usage Guide](../compute-storage-decoupled/file-cache/file-cache.md).
+
+:::
 
 ## Cache Warmup
 

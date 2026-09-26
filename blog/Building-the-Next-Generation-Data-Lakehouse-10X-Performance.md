@@ -249,5 +249,5 @@ http://doris.apache.org
 
 https://github.com/apache/doris
 
-Find Apache Doris developers on [Slack](https://doris.apache.org/slack).
+Find Apache Doris developers on [Slack](https://doris.apache.org/slack?utm_source=website&utm_medium=content&utm_content=blog_building-the-next-generation-data-lakehouse-10x-performance).
 

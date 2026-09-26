@@ -93,7 +93,7 @@ SET [global] time_zone = 'Asia/Shanghai';
 
 时区会影响包括 `NOW()` 或 `CURTIME()` 等时间函数显示的值，也包括 `SHOW LOAD`、`SHOW BACKENDS` 中的时间值。
 
-但**不会**影响 `CREATE TABLE` 中时间类型分区列的 `LESS THAN` 值，也不会影响存储为 `DATE`/`DATETIME` 类型的值的显示。
+但**不会**影响 `CREATE TABLE` 中时间类型分区列的 `LESS THAN` 值，也不会影响存储为 `DATE`、`DATETIME` 或 `TIMESTAMP_NS` 类型的值的显示。
 
 受时区影响的函数：
 
@@ -107,9 +107,9 @@ SET [global] time_zone = 'Asia/Shanghai';
 
 ### 对时间类型的影响
 
-#### DATE / DATETIME 类型
+#### DATE / DATETIME / TIMESTAMP_NS 类型
 
-对于 `DATE`、`DATETIME` 类型，支持导入数据时对时区进行转换：
+对于 `DATE`、`DATETIME` 和 `TIMESTAMP_NS` 类型，支持导入数据时对时区进行转换。`TIMESTAMP_NS` 与 `DATETIME` 一样以不带时区的形式存储，同时保留 9 位小数秒：
 
 - **数据带时区**：如 `2020-12-12 12:12:12+08:00`，而 Stream Load 指定的 Header `timezone` 为 `+00:00`，则数据导入 Doris 得到的实际值为 `2020-12-12 04:12:12`。
 - **数据不带时区**：如 `2020-12-12 12:12:12`，则认为该时间为绝对时间，不发生任何转换。
@@ -164,7 +164,7 @@ select * from tz_test;
 2. **导入时区**：Stream Load、Broker Load 等导入时指定的 header `timezone`。
 3. **数据时区**：时区类型字面量（如 `2023-12-12 08:00:00+08:00` 中的 `+08:00`）。
 
-Doris 目前兼容各时区下的数据向 Doris 中进行导入。由于 Doris 自身 `DATETIME` 等各个时间类型本身不内含时区信息，且数据在导入后不会随时区变化而变更，因此时间数据导入 Doris 时，可分为如下两类：
+Doris 目前兼容各时区下的数据向 Doris 中进行导入。由于 `DATETIME`、`TIMESTAMP_NS` 等时间类型本身不内含时区信息，且数据在导入后不会随时区变化而变更，因此时间数据导入 Doris 时，可分为如下两类：
 
 1. **绝对时间**
 
@@ -295,7 +295,7 @@ wget https://www.iana.org/time-zones/repository/tzdb-latest.tar.lz
 
 ### Q: 修改 `time_zone` 后已有数据查询结果变化异常？
 
-`DATETIME` 等类型不内含时区信息，导入后修改集群时区不会改变存储值。在使用前确认集群时区并设置 `time_zone`，之后不再更改。
+`DATETIME`、`TIMESTAMP_NS` 等类型不内含时区信息，导入后修改集群时区不会改变存储值。在使用前确认集群时区并设置 `time_zone`，之后不再更改。
 
 ### Q: Stream Load 导入数据时间偏移与预期不符？
 

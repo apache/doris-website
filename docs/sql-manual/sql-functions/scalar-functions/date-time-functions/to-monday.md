@@ -2,7 +2,7 @@
 {
     "title": "TO_MONDAY",
     "language": "en",
-    "description": "Rounds a date or datetime down to the nearest Monday. As a special case, the date parameters 1970-01-01, 1970-01-02, 1970-01-03,"
+    "description": "Returns the Monday of the week containing a DATE, DATETIME, or TIMESTAMP_NS value."
 }
 ---
 
@@ -20,7 +20,7 @@ TO_MONDAY(`<date_or_time_expr>`)
 
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_date_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_date_expr>` | Input datetime value, supports DATE/DATETIME/TIMESTAMP_NS types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## Return Value
 

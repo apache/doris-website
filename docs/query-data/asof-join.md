@@ -64,7 +64,7 @@ Key points:
 | --- | --- | --- |
 | `left_table` | Yes | The left table (probe table). Every row in this table is evaluated. |
 | `right_table` | Yes | The right table (build table). Used to look up the closest match. |
-| `MATCH_CONDITION` | Yes | Defines the nearest-neighbor matching rule. Each side must reference a column from the corresponding table, and both columns must be of type `DATEV2`, `DATETIMEV2`, or `TIMESTAMPTZ`. Expressions are allowed. Supported operators: `>=`, `>`, `<=`, `<`. |
+| `MATCH_CONDITION` | Yes | Defines the nearest-neighbor matching rule. Each side must reference a column from the corresponding table, and both columns must be of type `DATEV2`, `DATETIMEV2`, `TIMESTAMP_NS`, or `TIMESTAMPTZ`. Expressions are allowed. Supported operators: `>=`, `>`, `<=`, `<`. |
 | `ON` / `USING` clause | Yes | Defines one or more equi-keys used as grouping keys. Matching is performed only within the same group. `ON` supports one or more equality (`=`) conditions and expressions (such as `SUBSTRING(l.code, 1, 3) = r.prefix`). `USING` supports one or more columns with the same name. |
 
 ## Matching Rules
@@ -82,7 +82,7 @@ The matching direction is determined by the comparison operator in `MATCH_CONDIT
 
 Pay special attention to the following rules:
 
-1. The columns in `MATCH_CONDITION` must be of type `DATEV2`, `DATETIMEV2`, or `TIMESTAMPTZ`.
+1. The columns in `MATCH_CONDITION` must be of type `DATEV2`, `DATETIMEV2`, `TIMESTAMP_NS`, or `TIMESTAMPTZ`.
 2. Expressions are allowed inside `MATCH_CONDITION`, for example `MATCH_CONDITION(l.ts >= r.ts + INTERVAL 1 HOUR)` or `MATCH_CONDITION(l.ts >= DATE_ADD(r.ts, INTERVAL 3 HOUR))`.
 3. The equi-key clause can be written as `ON` or `USING`. When using `ON`, only equality (`=`) conditions joined by `AND` are allowed. Inequality conditions (such as `>`, `OR`) and literal comparisons (such as `l.grp = 1`) are not allowed in the `ON` clause.
 4. NULL values in the matching column or in the equi-key columns do not produce a match. If a left-table row has NULL in the matching column, or if no qualifying right-table row exists in the same group, the right-side columns are filled with NULL (LEFT JOIN) or the row is discarded (INNER JOIN).

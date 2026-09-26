@@ -15,7 +15,7 @@ Apache Doris is highly compatible with the MySQL protocol. You can use DBeaver's
 ## Preconditions
 
 Dbeaver installed
-You can visit https://dbeaver.io to download and install DBeaver
+You can visit https://dbeaver.com to download and install DBeaver
 
 ## Add data source
 

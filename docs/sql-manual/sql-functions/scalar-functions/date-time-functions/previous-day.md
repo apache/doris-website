@@ -8,7 +8,7 @@
 
 ## Description
 
-The PREVIOUS_DAY function returns the first date that matches the target day of the week before the specified date. For example, `PREVIOUS_DAY('2020-01-31', 'MONDAY')` represents the first Monday before 2020-01-31. This function accepts DATE and DATETIME inputs, ignoring any time portion (calculation is based on the date part only).
+The PREVIOUS_DAY function returns the first date that matches the target day of the week before the specified date. For example, `PREVIOUS_DAY('2020-01-31', 'MONDAY')` represents the first Monday before 2020-01-31. This function accepts DATE, DATETIME, and TIMESTAMP_NS inputs, ignoring any time portion (calculation is based on the date part only).
 
 ## Syntax
 
@@ -18,12 +18,13 @@ PREVIOUS_DAY(`<date_or_time_expr>`, `<day_of_week>`)
 
 ## Parameters
 
-| Parameter             | Description                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `<date_or_time_expr>` | Supports DATE/DATETIME types. For specific formats, please refer to [TIMESTAMPTZ Conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [DATETIME Conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [DATE Conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
-| `<day_of_week>`       | A string expression identifying the day of the week.                                                                                                                                                                                                                                                                                                                                                                        |
+| Parameter             | Description                                                                                                                                                                                                                                                                                             |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<date_or_time_expr>` | Supports DATE/DATETIME/TIMESTAMP_NS types. For specific formats, please refer to [DATETIME Conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [DATE Conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<day_of_week>`       | A string expression identifying the day of the week.                                                                                                                                                                                                                                                      |
 
 `<day_of_week>` must be one of the following values (case-insensitive):
+
 - 'SU', 'SUN', 'SUNDAY'
 - 'MO', 'MON', 'MONDAY'
 - 'TU', 'TUE', 'TUESDAY'
@@ -37,6 +38,7 @@ PREVIOUS_DAY(`<date_or_time_expr>`, `<day_of_week>`)
 Returns a value of type DATE, representing the first date matching `<day_of_week>` before the base date.
 
 Special cases:
+
 - If the base date itself is the target weekday, returns the target weekday of the previous week (not the current date).
 - If `<date_or_time_expr>` is NULL, returns NULL.
 - If `<day_of_week>` is an invalid value (e.g., 'ABC'), throws an exception.
