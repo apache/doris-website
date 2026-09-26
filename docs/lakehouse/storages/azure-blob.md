@@ -31,6 +31,18 @@ By default, if `ca_cert_file_paths` is not configured, Doris uses the operating 
 - Your environment uses a self-signed certificate, a private CA, or a corporate proxy or gateway that re-signs TLS traffic.
 - You encounter errors such as `Problem with the SSL CA cert` or `curl 77: Problem with the SSL CA cert (path? access rights?)` when accessing Azure Blob Storage.
 
+> **For versions without `ca_cert_file_paths`:** The `ca_cert_file_paths` parameter is available starting from Doris 3.1.5 and 4.0.5. If you are using an older version and encounter SSL CA certificate errors, you must ensure the system CA certificates are properly installed and the CA bundle exists at `/etc/ssl/certs/ca-certificates.crt`:
+>
+> - **RHEL / CentOS / RockyLinux:**
+>   ```bash
+>   yum install -y ca-certificates
+>   update-ca-trust
+>   ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-certificates.crt
+>   ```
+> - **Debian / Ubuntu:** `apt-get install -y ca-certificates`
+>
+> Then restart all BE nodes. For more details on certificate issues, see [Lakehouse FAQ - Certificate Issues](../../faq/lakehouse-faq.md#certificate-issues).
+
 Example:
 
 ```properties
