@@ -2,7 +2,7 @@
 {
     "title": "VARIANT",
     "language": "en",
-    "description": "How do you load CSV and JSON data into a Doris VARIANT column? Provides the full steps for table creation, Stream Load commands, and type inference verification.",
+    "description": "How do you load CSV and JSON data into a Doris VARIANT column? Provides full steps for table creation, Stream Load commands, and type inference verification.",
     "keywords": [
         "Doris VARIANT load",
         "Load CSV into VARIANT",
@@ -28,18 +28,53 @@ Before reading this document, choose the reference that best matches your needs:
 | Your need | Recommended reading |
 | --- | --- |
 | Quickly complete a CSV / JSON load | Continue with this document |
-| Choose between the default mode, Sparse, DOC mode, or Schema Template | [VARIANT Usage and Configuration Guide](../../../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide) |
-| Look up VARIANT query syntax, indexes, limitations, or configuration reference | [VARIANT](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT) |
+| Choose between the default mode, Sparse, DOC mode, or Schema Template | [VARIANT Usage and Configuration Guide](../../../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md) |
+| Look up VARIANT query syntax, indexes, limitations, or configuration reference | [VARIANT](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md) |
 
 ## Limitations
 
-- Currently, only **CSV** and **JSON** data formats are supported for loading into a `VARIANT` column.
+- The examples below load **CSV** and **JSON** files. In a load job, any string field that is loaded into a `VARIANT` column is parsed as JSON, so other formats work the same way when the source column is a string, for example a Parquet `STRING` column. The Arrow format cannot load `VARIANT` columns.
+
+## How loaded values are handled
+
+- **`NOT NULL` columns:** a row whose VARIANT value is SQL `NULL`, including a value that failed to parse into SQL `NULL`, is filtered. Filtered rows count toward `max_filter_ratio` (default `0`), so by default the load job fails.
+- **INSERT is different:** `INSERT` does not parse strings. `INSERT INTO t VALUES (1, '{"a": 1}')` stores the VARIANT string `{"a": 1}`, and so does `INSERT INTO ... SELECT` from `s3()`, `hdfs()`, or `local()`. Use `PARSE_TO_VARIANT` to store an object.
+
+Stored values are normalized: outside arrays, object members whose value is `null`, `{}`, or `[]` are removed. The same value computed in a query keeps every member:
+
+```sql
+CREATE TABLE variant_norm (k INT, v VARIANT)
+DUPLICATE KEY(k)
+DISTRIBUTED BY HASH(k) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO variant_norm VALUES (1, PARSE_TO_VARIANT('{"a": null, "b": {}, "c": [], "d": 1}'));
+
+SELECT PARSE_TO_VARIANT('{"a": null, "b": {}, "c": [], "d": 1}') AS computed;
+SELECT v AS stored, v['a'] IS NULL AS a_is_null FROM variant_norm;
+```
+
+```text
++--------------------------------+
+| computed                       |
++--------------------------------+
+| {"a":null,"b":{},"c":[],"d":1} |
++--------------------------------+
+
++---------+-----------+
+| stored  | a_is_null |
++---------+-----------+
+| {"d":1} |         1 |
++---------+-----------+
+```
+
+For parse errors and the other normalization rules, see [Parse errors](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#parse-errors) and [What storage keeps](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps).
 
 ## Storage format recommendation (V3)
 
 <!-- Knowledge type: Architecture selection decision -->
 
-For newly created `VARIANT` tables, especially for wide JSON scenarios, use **Storage Format V3** directly unless you have a clear reason to use another format. For the design rationale, see [Storage Format V3](../../../table-design/storage-format).
+For newly created `VARIANT` tables, especially for wide JSON scenarios, use **Storage Format V3** directly unless you have a clear reason to use another format. For the design rationale, see [Storage Format V3](../../../table-design/storage-format.md).
 
 Enable it explicitly through `PROPERTIES` when creating the table:
 
@@ -218,53 +253,64 @@ created_at: 2020-11-14 02:00:00
 
 By default, `DESC` only shows the top-level VARIANT column and does not expand the inner subcolumns:
 
-``` sql
+```sql
 mysql> desc test_variant;
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-| Field                                                      | Type       | Null | Key   | Default | Extra |
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-| id                                                         | BIGINT     | No   | true  | NULL    |       |
-| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
-| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
-| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
-| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
-| public                                                     | BOOLEAN    | Yes  | false | NULL    | NONE  |
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-6 rows in set (0.07 sec)
++------------+---------------------------+------+-------+---------+-------+
+| Field      | Type                      | Null | Key   | Default | Extra |
++------------+---------------------------+------+-------+---------+-------+
+| id         | bigint                    | No   | true  | NULL    |       |
+| type       | varchar(30)               | Yes  | false | NULL    | NONE  |
+| actor      | variant<PROPERTIES (...)> | Yes  | false | NULL    | NONE  |
+| repo       | variant<PROPERTIES (...)> | Yes  | false | NULL    | NONE  |
+| payload    | variant<PROPERTIES (...)> | Yes  | false | NULL    | NONE  |
+| public     | boolean                   | Yes  | false | NULL    | NONE  |
+| created_at | datetime                  | Yes  | false | NULL    | NONE  |
++------------+---------------------------+------+-------+---------+-------+
+7 rows in set
 ```
+
+The VARIANT type string, which lists the column properties, is abbreviated here as `variant<PROPERTIES (...)>`.
 
 After enabling `describe_extend_variant_column`, you can view the subcolumn types inferred from the VARIANT column:
 
-``` sql
+```sql
 mysql> set describe_extend_variant_column = true;
-Query OK, 0 rows affected (0.01 sec)
+Query OK, 0 rows affected (0.00 sec)
 
 mysql> desc test_variant;
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-| Field                                                      | Type       | Null | Key   | Default | Extra |
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-| id                                                         | BIGINT     | No   | true  | NULL    |       |
-| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
-| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
-| actor.avatar_url                                           | TEXT       | Yes  | false | NULL    | NONE  |
-| actor.display_login                                        | TEXT       | Yes  | false | NULL    | NONE  |
-| actor.id                                                   | INT        | Yes  | false | NULL    | NONE  |
-| actor.login                                                | TEXT       | Yes  | false | NULL    | NONE  |
-| actor.url                                                  | TEXT       | Yes  | false | NULL    | NONE  |
-| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
-| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
-| payload.action                                             | TEXT       | Yes  | false | NULL    | NONE  |
-| payload.before                                             | TEXT       | Yes  | false | NULL    | NONE  |
-| payload.comment.author_association                         | TEXT       | Yes  | false | NULL    | NONE  |
-| payload.comment.body                                       | TEXT       | Yes  | false | NULL    | NONE  |
-....
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-406 rows in set (0.07 sec)
++-----------------------+---------------------------+------+-------+---------+-------+
+| Field                 | Type                      | Null | Key   | Default | Extra |
++-----------------------+---------------------------+------+-------+---------+-------+
+| id                    | bigint                    | No   | true  | NULL    |       |
+| type                  | varchar(30)               | Yes  | false | NULL    | NONE  |
+| actor                 | variant<PROPERTIES (...)> | Yes  | false | NULL    | NONE  |
+| repo                  | variant<PROPERTIES (...)> | Yes  | false | NULL    | NONE  |
+| payload               | variant<PROPERTIES (...)> | Yes  | false | NULL    | NONE  |
+| public                | boolean                   | Yes  | false | NULL    | NONE  |
+| created_at            | datetime                  | Yes  | false | NULL    | NONE  |
+| actor.avatar_url      | text                      | Yes  | false | NULL    | NONE  |
+| actor.display_login   | text                      | Yes  | false | NULL    | NONE  |
+| actor.gravatar_id     | text                      | Yes  | false | NULL    | NONE  |
+| actor.id              | bigint                    | Yes  | false | NULL    | NONE  |
+| actor.login           | text                      | Yes  | false | NULL    | NONE  |
+| actor.url             | text                      | Yes  | false | NULL    | NONE  |
+| payload.before        | text                      | Yes  | false | NULL    | NONE  |
+| payload.commits       | array<text>               | Yes  | false | NULL    | NONE  |
+| payload.distinct_size | bigint                    | Yes  | false | NULL    | NONE  |
+| payload.head          | text                      | Yes  | false | NULL    | NONE  |
+| payload.push_id       | bigint                    | Yes  | false | NULL    | NONE  |
+| payload.ref           | text                      | Yes  | false | NULL    | NONE  |
+| payload.size          | bigint                    | Yes  | false | NULL    | NONE  |
+| repo.id               | bigint                    | Yes  | false | NULL    | NONE  |
+| repo.name             | text                      | Yes  | false | NULL    | NONE  |
+| repo.url              | text                      | Yes  | false | NULL    | NONE  |
++-----------------------+---------------------------+------+-------+---------+-------+
+23 rows in set
 ```
 
 You can also display the inference results per partition:
 
-``` sql
+```sql
 DESCRIBE ${table_name} PARTITION ($partition_name);
 ```
 
@@ -272,7 +318,7 @@ DESCRIBE ${table_name} PARTITION ($partition_name);
 
 ### Q1: Which data formats does VARIANT support for loading?
 
-Currently, loading into a `VARIANT` column is only supported for **CSV** and **JSON** formats. Other formats must be converted before loading.
+Load jobs parse any string field loaded into a `VARIANT` column as JSON, whatever the file format; the examples in this document use **CSV** and **JSON**. With `INSERT`, including `INSERT INTO ... SELECT` from table functions, wrap string values in `PARSE_TO_VARIANT`.
 
 ### Q2: When is Storage Format V3 required?
 
@@ -294,7 +340,7 @@ The table creation statements are essentially the same. The only difference is t
 
 | Format | Key Header |
 | --- | --- |
-| CSV | `-H "column_separator:|"` |
+| CSV | `-H "column_separator:\|"` |
 | JSON | `-H "format:json"` |
 
 ### Q5: How do you confirm whether a Stream Load succeeded?
@@ -303,3 +349,12 @@ Check the `Status` field in the returned JSON:
 
 - `Status` of `Success` indicates a successful load.
 - `NumberLoadedRows` should equal `NumberTotalRows`, and `NumberFilteredRows` should be `0`.
+
+### Q6: Why does `INSERT` store my JSON text as a string?
+
+`INSERT` converts a string to VARIANT with `CAST(string AS VARIANT)`, which keeps the string and does not parse it. Load jobs such as Stream Load parse JSON text; with `INSERT`, wrap the text in `PARSE_TO_VARIANT`:
+
+```sql
+INSERT INTO testdb.test_variant (id, actor)
+VALUES (1, PARSE_TO_VARIANT('{"id": 282080, "login": "brianchandotcom"}'));
+```
