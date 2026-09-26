@@ -11,6 +11,7 @@ keywords:
     - dict_get
     - HASH_MAP
     - IP_TRIE
+    - FLAT
     - KV 查找
 ---
 
@@ -196,12 +197,13 @@ PROPERTIES(
 
 ### 布局类型
 
-目前支持两种布局类型：
+目前支持三种布局类型：
 
 | 布局类型 | 适用场景 | 说明 |
 | --- | --- | --- |
 | `HASH_MAP` | 一般的键值查找场景 | 基于哈希表的实现 |
 | `IP_TRIE` | IP 地址类型的查找 | 基于 Trie 树的实现，专门优化用于 IP 地址查找。Key 列需要为 CIDR 表示法表示的 IP 地址，查询时依 CIDR 表示法匹配 |
+| `FLAT` | 取值密集、范围较小的非负整数 Key 的键值查找场景 | 基于数组的实现，直接将 Key 作为数组下标，查找速度最快、内存开销最低。Key 列必须为单一整数列，且所有 Key 值必须为非负数且小于 500000 |
 
 ### 属性
 
@@ -241,6 +243,7 @@ PROPERTIES('data_lifetime' = '600');
 - IP_TRIE 类型字典的 Key 列必须为 Varchar 或 String 类型，**Key 列中的值必须为 CIDR 格式**。
 - IP_TRIE 类型的字典只允许出现一个 Key 列。
 - HASH_MAP 类型字典的 Key 列支持所有简单类型（即排除所有 Map、Array 等嵌套类型）。
+- FLAT 类型的字典只允许出现一个 Key 列，且 Key 列必须为整数类型（TINYINT、SMALLINT、INT、BIGINT 或 LARGEINT）。所有 Key 值必须为**非负数**且**严格小于 500000**，否则导入失败。FLAT 直接将 Key 作为数组下标，因此更适用于取值密集、范围较小的 Key。
 - 作为 Key 列的列，**在源表中不得存在重复值**，否则字典导入数据时将报错。
 
 **2. Null 值处理**
@@ -489,6 +492,7 @@ DROP DICTIONARY <dict_name>;
 
     - 对于一般场景使用 HASH_MAP 布局。
     - 对于 IP 地址的范围匹配场景使用 IP_TRIE 布局。
+    - 当 Key 为单一非负整数且取值密集、范围较小（小于 500000）时，使用 FLAT 布局。它提供最快的查找速度和最低的内存开销；但对于取值稀疏或较大的 Key 范围会浪费内存或直接被拒绝，此时应改用 HASH_MAP。
 
 3. **状态管理**：
 
@@ -684,6 +688,50 @@ ORDER BY order_time;
 +----------+---------------------+-----------------+------------+-----------+----------+------------+--------------+---------------+
 ```
 
+### 示例 4：FLAT 单一整数 Key
+
+FLAT 布局直接将 Key 值作为数组下标，适用于取值密集、范围较小的非负整数 Key，例如状态码或枚举型维度 ID。
+
+```sql
+-- 创建源数据表（Key 列必须为整数列）
+CREATE TABLE status_info (
+    status_code INT NOT NULL,
+    status_name VARCHAR(32) NOT NULL
+) ENGINE=OLAP
+DISTRIBUTED BY HASH(status_code) BUCKETS 1;
+
+-- 插入数据。Key 可以稀疏（此处为 0、1、100），
+-- 但必须为非负数且小于 500000。
+INSERT INTO status_info VALUES
+(0, 'created'),
+(1, 'paid'),
+(100, 'closed');
+
+-- 创建 FLAT 字典表
+CREATE DICTIONARY status_dict USING status_info
+(
+    status_code KEY,
+    status_name VALUE
+)
+LAYOUT(FLAT)
+PROPERTIES('data_lifetime' = '600');
+
+-- 查询存在的 Key（0、1、100）以及不存在的 Key（5，返回 null）
+SELECT
+    dict_get("test_refresh_dict.status_dict", "status_name", 0)   AS s0,
+    dict_get("test_refresh_dict.status_dict", "status_name", 1)   AS s1,
+    dict_get("test_refresh_dict.status_dict", "status_name", 100) AS s100,
+    dict_get("test_refresh_dict.status_dict", "status_name", 5)   AS s_missing;
+```
+
+```text
++---------+------+--------+-----------+
+| s0      | s1   | s100   | s_missing |
++---------+------+--------+-----------+
+| created | paid | closed | NULL      |
++---------+------+--------+-----------+
+```
+
 ## 错误排查
 
 <!-- 知识类型: 故障排查 -->
@@ -696,6 +744,7 @@ ORDER BY order_time;
 | 导入报错 `Version ID is not greater than the existing version ID for the dictionary.` | 通过 `DROP DICTIONARY` 命令删除对应字典后重新建立并导入数据 |
 | `SHOW DICTIONARIES` 发现字典在某个 BE 的 Version 大于 FE Version | 通过 `DROP DICTIONARY` 命令删除对应字典后重新建立并导入数据 |
 | 导入报错 `Dictionary X commit version Y failed` | 重新对该字典进行导入 |
+| FLAT 字典导入报错 `FlatDictionary key must be non-negative` 或 `FlatDictionary key exceeds max array size` | 检查 FLAT 字典的 Key 列：所有 Key 必须为非负数且小于 500000。如果 Key 范围稀疏或较大，请改用 HASH_MAP 布局 |
 
 **兜底策略**：对于绝大多数报错，如果正常操作失败，`DROP` 之后重建字典可以解决。
 
@@ -713,10 +762,14 @@ ORDER BY order_time;
 
 当需要基于 CIDR 进行 IP 范围匹配查询时，使用 IP_TRIE；其他键值匹配场景统一使用 HASH_MAP。
 
-**Q4：字典表占用内存过大怎么办？**
+**Q4：什么时候应该选择 FLAT 而非 HASH_MAP？**
+
+当 Key 为单一非负整数，且取值密集、集中在较小范围内（小于 500000）时，例如状态码或枚举型维度 ID，可选择 FLAT。FLAT 将 Value 存储在以 Key 直接作为下标的数组中，查找速度最快、内存开销最低。如果 Key 为非整数、负数、取值稀疏或大于 500000，则应改用 HASH_MAP。
+
+**Q5：字典表占用内存过大怎么办？**
 
 可通过 `memory_limit` 属性限制单 BE 上的内存上限；同时建议选择基数适中的列作为字典派生源，避免字典过大。
 
-**Q5：字典查询时返回 null 的可能原因？**
+**Q6：字典查询时返回 null 的可能原因？**
 
 当查询的 Key 不存在于字典中，或查询的 Key 数据为 null 时，返回 null。
