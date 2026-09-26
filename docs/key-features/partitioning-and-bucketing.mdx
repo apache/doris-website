@@ -8,11 +8,14 @@ keywords:
   - range partition
   - list partition
   - hash bucket
+  - distribution_hash_type
+  - crc32 hash
+  - identity hash
   - Apache Doris table design
 slug: /key-features/partitioning-and-bucketing
 image: /images/next/key-features/partitioning-and-bucketing.jpg
 last_update:
-  date: 2026-05-10
+  date: 2026-09-02
   author: Apache Doris
 featureCard:
   tags:
@@ -44,7 +47,10 @@ Apache Doris partitioning and bucketing are the two-level physical layout for ev
 - **`Tablet`**: the physical data shard. The unit of replication, scheduling, and parallelism inside a BE.
 - **`PARTITION BY RANGE / LIST`**: explicit partitioning declared in DDL. Range fits time and numeric ranges; List fits enumerated dimensions like region or tenant.
 - **`AUTO PARTITION`**: partitions created on demand at write time, by `date_trunc(col, 'month')` for ranges or by enumerated value for lists. Replaces the static partition list.
-- **`DISTRIBUTED BY HASH(col) BUCKETS N`**: hash-distributed shards. `crc32(col) % N` picks the bucket; equality predicates on `col` enable bucket pruning.
+- **`DISTRIBUTED BY HASH(col) BUCKETS N`**: hash-distributed shards. `hash(col) % N` picks the bucket; equality predicates on `col` enable bucket pruning. The `hash` function supports a customizable hash algorithm by table's `distribution_hash_type` property:
+  - **`crc32`** (default): calculates CRC32 over the bucket key;
+  - **`identity`**: an identity hash that maps the bucket key directly without any hash, just like `col % N`.
+  - See [Choose the Hash Algorithm](../table-design/data-partitioning/data-bucketing#choose-the-hash-algorithm).
 - **`DISTRIBUTED BY RANDOM BUCKETS N`**: rows scattered across buckets without a key. Avoids skew, but no bucket pruning. Duplicate-Key tables only.
 - **`BUCKETS AUTO`**: the FE picks the bucket count from `estimate_partition_size`, BE count, and disk count. Set per partition.
 
@@ -53,7 +59,7 @@ Apache Doris partitioning and bucketing are the two-level physical layout for ev
 Apache Doris partitioning and bucketing together route a row's path from `INSERT` to disk through two layers, partition selection and tablet selection.
 
 1. **Map the row to a partition.** The planner evaluates the partition expression. Range partitions binary-search a sorted interval list; List partitions look up the value in a hash map. Auto Partition creates the partition on the fly if none matches.
-2. **Map the row to a bucket.** Hash distribution computes `crc32(bucket_cols) % bucket_num`; random distribution picks a tablet round-robin (or sticks the whole batch on one tablet when `load_to_single_tablet = true`).
+2. **Map the row to a bucket.** Hash distribution applies the table's `distribution_hash_type` (`crc32` by default) to the bucket columns and takes the result modulo `bucket_num`; random distribution picks a tablet round-robin (or sticks the whole batch on one tablet when `load_to_single_tablet = true`).
 3. **Write to that tablet's replicas.** Each tablet has N replicas (default 3) on different BEs. The Coordinator streams the row to all of them.
 4. **Prune at query time (FE).** `PruneOlapScanPartition` matches `WHERE` predicates against the partition tree; `PruneOlapScanTablet` extracts equality predicates on the bucket key and asks `HashDistributionPruner` which buckets they hash to. EXPLAIN shows the survivors as `partitions=1/365` and `tablets=1/32`.
 5. **Scan the survivors in parallel (BE).** Each surviving tablet is a parallel scan unit. The pipeline engine fans them out across BE cores, so a query that touches 16 tablets on 4 BEs runs 16-way parallel without any session tuning.

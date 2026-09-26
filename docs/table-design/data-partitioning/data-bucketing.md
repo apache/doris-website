@@ -6,6 +6,7 @@
     "keywords": [
         "Doris data bucketing",
         "Hash bucketing",
+        "distribution_hash_type",
         "Random bucketing",
         "bucket key selection",
         "bucket number",
@@ -30,8 +31,9 @@ When creating a table, you can complete the bucketing design in the following or
 |------|------|----------|
 | 1 | Choose the bucketing method | Whether there are high-frequency filter columns, whether the data is evenly distributed, and the table model |
 | 2 | Select the bucket key (Hash bucketing only) | Query filter conditions, column cardinality, query concurrency and throughput characteristics |
-| 3 | Determine the number of buckets | Data size per Tablet, number of BEs, number of disks |
-| 4 | Plan the bucket maintenance strategy | Data growth trend, whether dynamic partitioning is used |
+| 3 | Select the hash algorithm (Hash bucketing only) | Choose an appropriate hash algorithm based on the bucket key's data distribution and business logic |
+| 4 | Determine the number of buckets | Data size per Tablet, number of BEs, number of disks |
+| 5 | Plan the bucket maintenance strategy | Data growth trend, whether dynamic partitioning is used |
 
 ## 1. Choose the Bucketing Method
 
@@ -153,7 +155,43 @@ Based on business query characteristics, you can refer to the following principl
 | High-concurrency point query scenarios | Choose a single column or a small number of columns as the bucket key | A single query triggers a scan of only one bucket, reducing IO interference between queries |
 | High-throughput query scenarios | Choose multiple columns as the bucket key | Data is more evenly distributed; when the query conditions cannot fully match the equality conditions, overall throughput is improved |
 
-## 3. Determine the Number of Buckets
+## 3. Select the Hash Algorithm
+
+Hash-bucketed tables support the `distribution_hash_type` table property. It controls how Doris maps the bucket-key values to a bucket and accepts the following values:
+
+| Value | Default | Mapping | Recommended Use |
+|---|---|---|---|
+| `crc32` | Yes | Calculates CRC32 over the canonical bytes of all bucket-key values, then takes the remainder modulo the bucket number. | General-purpose Hash bucketing. Keep this default unless the application requires a predictable mapping. |
+| `identity` | No | Interprets each value's canonical bytes as an unsigned little-endian integer, appends multiple columns in the declared order, and keeps the result modulo the bucket number. | Workloads that require a stable, directly derivable bucket mapping, such as pre-sharded or routing-aware data. |
+
+For a single non-negative integer bucket key, `identity` has the intuitive result `value % bucket_num`. The following table therefore maps `id` values `0`, `1`, `8`, and `9` to buckets `0`, `1`, `0`, and `1`:
+
+```sql
+CREATE TABLE demo.identity_bucket_tbl (
+    id BIGINT NOT NULL,
+    payload STRING
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 8
+PROPERTIES (
+    "distribution_hash_type" = "identity",
+    "replication_num" = "1"
+);
+```
+
+`identity` also supports multiple bucket columns, nullable columns, and all data types that are valid Hash bucket keys. For non-integer values, Doris uses the value's canonical binary representation. `NULL` is represented by four zero bytes. Negative integers use their unsigned two's-complement representation, so their bucket is not calculated with signed modulo.
+
+:::caution Compatibility and immutability
+
+- `crc32` is the default and preserves the bucket layout of existing tables. If the property is omitted, `SHOW CREATE TABLE` does not display it.
+- The hash algorithm is fixed when the table is created and cannot be changed later. New partitions automatically inherit the table's hash algorithm, even when `ADD PARTITION` specifies a different bucket number.
+- Every table in the same Colocation Group must use the same `distribution_hash_type`; Doris rejects a table whose algorithm differs from the group.
+
+:::
+
+**Best practices:** Use `crc32` for normal workloads because it mixes arbitrary input bytes and is generally less sensitive to patterns in the bucket key. Note that `crc32` may produce a certain degree of hash collision, so under some data distributions it may lead to bucket skew (uneven data across buckets). If you observe such skew with the default algorithm, consider switching to another hash algorithm.
+
+## 4. Determine the Number of Buckets
 
 In Doris, each Bucket is stored as a physical file (Tablet). The total number of Tablets in a table equals:
 
@@ -248,7 +286,7 @@ The change only affects partitions **created after** the upgrade; the bucket num
 
 :::
 
-## 4. Maintain Data Bucketing
+## 5. Maintain Data Bucketing
 
 :::tip Tip
 
@@ -256,7 +294,8 @@ Currently, Doris only supports modifying the number of buckets for newly added p
 
 1. Modifying the bucketing type is not supported.
 2. Modifying the bucket key is not supported.
-3. Modifying the number of buckets for already-created buckets is not supported.
+3. Modifying the hash algorithm (`distribution_hash_type`) is not supported.
+4. Modifying the number of buckets for already-created buckets is not supported.
 
 :::
 
