@@ -10,9 +10,15 @@
 
 MAP_AGG 函数用于根据多行数据中的键值对形成一个映射结构。
 
+对于相同的 key，`MAP_AGG` 保留聚合过程中先遇到的 value；如果 key 已存在，则忽略后来遇到的 value。合并局部聚合结果时，同样保留目标聚合状态中已有 key 的 value。
+
+这里的“先遇到”指执行时的处理顺序，不代表数据写入顺序。扫描、并行执行和局部聚合结果的合并顺序都可能影响最终保留的 value，因此重复 key 对应的 value 不保证在多次查询之间保持一致。查询外层的 `ORDER BY` 只对结果行排序，不能决定重复 key 保留哪个 value。
+
 ## 语法
 
-`MAP_AGG(<expr1>, <expr2>)`
+```sql
+MAP_AGG(<expr1>, <expr2>)
+```
 
 ## 参数说明
 
@@ -78,4 +84,23 @@ select map_agg(`n_name`, `n_nationkey` % 5) from `nation` where n_nationkey is n
 +--------------------------------------+
 | {}                                   |
 +--------------------------------------+
+```
+
+下面的查询包含两个相同的 key，结果只包含一个键值对。输出可能为 `{1:"a"}` 或 `{1:"b"}`，取决于执行时先处理哪个 value。以下是一种可能的输出：
+
+```sql
+SELECT MAP_AGG(k, v) AS result
+FROM (
+    SELECT 1 AS k, 'a' AS v
+    UNION ALL
+    SELECT 1 AS k, 'b' AS v
+) AS input;
+```
+
+```text
++---------+
+| result  |
++---------+
+| {1:"a"} |
++---------+
 ```
