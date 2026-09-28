@@ -17,7 +17,7 @@ Lance Catalog is supported starting from Apache Doris 4.2.
 
 Lance is a columnar data format designed for analytics and AI workloads. Doris can use a Lance Catalog to discover databases and tables in a Lance Namespace and directly query Lance datasets stored on a local file system, S3-compatible object storage, or Alibaba Cloud OSS.
 
-Doris currently provides read-only access to Lance. Creating, writing, updating, or deleting Lance tables is not supported.
+Doris supports Lance metadata DDL for Namespaces, tables, and top-level columns. Data write operations such as `INSERT`, `UPDATE`, `DELETE`, and `TRUNCATE TABLE` are not supported.
 
 ## Use Cases
 
@@ -44,7 +44,8 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 | Full-text search | Uses existing Lance FTS inverted indexes through `full_text_search()`, supports Match OR/AND and Phrase queries, and performs a Doris global Top-K merge |
 | Lance Cache | Shares index and metadata caches and a local disk data cache within each BE |
 | Two-phase TopN read | Enabled by default for eligible output columns in vector and full-text searches; controlled independently by `enable_lance_lazy_materialization` |
-| Writing to Lance | Not supported |
+| Lance DDL | Supports Namespace and table creation, deletion, and top-level column schema evolution |
+| Writing data to Lance | Not supported |
 | Time Travel | Not supported |
 | Hybrid Search | Not supported |
 
@@ -355,6 +356,79 @@ CREATE CATALOG lance_analytics PROPERTIES (
 ```
 
 Doris then displays only the tables and child Namespaces below `production.analytics`.
+
+## DDL Operations
+
+Lance Catalog supports the following metadata DDL operations:
+
+| Operation | Support |
+|---|---|
+| `CREATE DATABASE` / `DROP DATABASE` | Supported for non-root Namespaces |
+| `CREATE TABLE` / `DROP TABLE` | Supported |
+| `RENAME TABLE` | Not supported |
+| `ALTER TABLE ADD COLUMN` | Supported for top-level columns |
+| `ALTER TABLE MODIFY COLUMN` | Supported for top-level columns |
+| `ALTER TABLE RENAME COLUMN` | Supported for top-level columns |
+| `ALTER TABLE DROP COLUMN` | Supported for top-level columns |
+| `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE TABLE` | Not supported |
+
+### Create and Drop Namespaces
+
+Use `CREATE DATABASE` and `DROP DATABASE` to create or delete Lance Namespaces:
+
+```sql
+CREATE DATABASE lance_catalog.analytics;
+
+DROP DATABASE lance_catalog.analytics;
+```
+
+The root Namespace mapped by `lance.namespace.root_database` cannot be created or dropped through SQL.
+
+### Create and Drop Tables
+
+Use `CREATE TABLE` to create an empty Lance table with the specified schema:
+
+```sql
+CREATE TABLE lance_catalog.analytics.user_profiles (
+    user_id BIGINT,
+    name STRING,
+    age INT,
+    created_at DATETIME(3)
+);
+```
+
+`DROP TABLE` removes the Lance table and its underlying dataset data:
+
+```sql
+DROP TABLE lance_catalog.analytics.user_profiles;
+```
+
+### Evolve Table Schemas
+
+Lance Catalog supports one top-level column change in each `ALTER TABLE` statement:
+
+```sql
+ALTER TABLE lance_catalog.analytics.user_profiles
+ADD COLUMN email STRING;
+
+ALTER TABLE lance_catalog.analytics.user_profiles
+MODIFY COLUMN age BIGINT;
+
+ALTER TABLE lance_catalog.analytics.user_profiles
+RENAME COLUMN name name_text;
+
+ALTER TABLE lance_catalog.analytics.user_profiles
+DROP COLUMN email;
+```
+
+The following schema changes are not supported:
+
+- Column default values.
+- Column position changes such as `FIRST` or `AFTER`.
+- Column comments in schema changes.
+- Nested-field schema changes.
+- Multiple schema change clauses in one `ALTER TABLE` statement.
+- Type changes involving unsupported Lance/Arrow types.
 
 ## Query Lance Tables
 
@@ -1120,7 +1194,7 @@ Pinned dataset snapshot
 
 ## Current Limitations and Recommendations
 
-- Lance Catalogs and Lance TVFs are read-only. `CREATE TABLE`, `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE TABLE`, and writing data back to Lance are not supported.
+- Lance Catalogs support metadata DDL, but Lance TVFs are read-only. `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE TABLE`, and writing data back to Lance are not supported.
 - Queries always read the current version selected during planning. SQL cannot select a Version or perform Time Travel.
 - For tables containing unsupported column types, explicitly list the columns to read instead of projecting unsupported columns through `SELECT *`.
 - For regular scans, inspect `lancePushdownPredicate` in `EXPLAIN` to verify which conditions have been pushed down.

@@ -25,7 +25,8 @@ Lance support is available starting from Apache Doris 4.2.
 | Parallel Fragment scans | Supported by Catalog queries and S3 TVFs |
 | Predicate pushdown | Supports compatible scalar predicates |
 | Vector search | Supports Lance vector indexes and Flat Search through `vector_search()` |
-| Writing to Lance | Not supported |
+| Lance Catalog DDL | Supports metadata DDL through Lance Catalog |
+| Writing data to Lance | Not supported |
 | Time Travel | Not supported |
 | Full-Text Search / Hybrid Search | Not supported |
 
@@ -55,7 +56,7 @@ To read a local dataset, use `local()` and specify the dataset root with `file_p
 
 ## Limitations
 
-- Lance access is read-only. Creating, writing, updating, or deleting Lance tables is not supported.
+- File TVFs are read-only. Lance Catalog supports metadata DDL, but writing rows back to Lance through `INSERT`, `UPDATE`, `DELETE`, or `TRUNCATE TABLE` is not supported.
 - Only `s3()` and `local()` support the Lance format. Other file TVFs, such as HDFS and HTTP, are not supported.
 - One TVF path can represent only one Lance dataset, and `path_partition_keys` is not supported.
 - Queries read the current dataset version. SQL cannot select a Version or perform Time Travel.
