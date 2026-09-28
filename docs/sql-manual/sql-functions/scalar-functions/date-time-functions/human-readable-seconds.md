@@ -2,7 +2,7 @@
 {
     "title": "HUMAN_READABLE_SECONDS",
     "language": "en",
-    "description": "Converts a time duration in seconds to a human-readable duration string formatted in days, hours, minutes, and seconds."
+    "description": "Formats a duration in seconds into a human-readable string containing weeks, days, hours, minutes, and seconds."
 }
 ---
 
@@ -14,7 +14,15 @@
 
 ## Description
 
-The `HUMAN_READABLE_SECONDS` function converts a time duration in seconds into a human-readable duration string formatted with units in order: days (`d`), hours (`h`), minutes (`m`), and seconds (`s`). Intermediate zero-valued units are omitted. Returns `NULL` if the input is negative or `NULL`.
+The `HUMAN_READABLE_SECONDS` function converts a numeric value representing seconds into a human-readable duration string containing `weeks`, `days`, `hours`, `minutes`, and `seconds`. This function is compatible with Trino's `human_readable_seconds`.
+
+- Non-zero duration units are formatted in descending order (`weeks`, `days`, `hours`, `minutes`, `seconds`), separated by commas.
+- Empty (zero-valued) units are omitted (e.g., `3601` returns `'1 hour, 1 second'`).
+- Singular and plural unit forms are handled automatically (e.g., `'1 day'` vs `'2 days'`).
+- Input `0` returns `'0 seconds'`.
+- Negative values are evaluated using their absolute value (e.g., `-60` returns `'1 minute'`).
+- Fractional values are rounded to the nearest integer second.
+- `NULL`, `NaN`, and `Infinity` return `NULL`.
 
 ## Syntax
 
@@ -26,104 +34,62 @@ HUMAN_READABLE_SECONDS(<seconds>)
 
 | Parameter | Description |
 | -- | -- |
-| `<seconds>` | Required. An integer (`INT` or `BIGINT`) representing seconds. Supported valid range is `0` to `9223372036854775807` (`Long.MAX_VALUE`). Negative values return `NULL`. |
+| `<seconds>` | Required. A numeric value (`DOUBLE`, `FLOAT`, `BIGINT`, or `INT`) representing duration in seconds. |
 
 ## Return Value
 
-Returns a `VARCHAR` value representing the formatted duration.
-
-- If `<seconds>` is `0`, returns `'0s'`.
-- If `<seconds>` is negative (`< 0`) or `NULL`, returns `NULL`.
-- Zero-valued units are omitted (e.g. `86401` returns `'1d 1s'`).
+Returns a `VARCHAR` string representing the formatted duration. Returns `NULL` if input is `NULL`, `NaN`, or `Infinity`.
 
 ## Example
-
-Zero seconds:
 
 ```sql
 SELECT human_readable_seconds(0);
 ```
 
 ```text
-0s
-```
-
-Single unit formatting:
-
-```sql
-SELECT human_readable_seconds(1);
-```
-
-```text
-1s
+0 seconds
 ```
 
 ```sql
-SELECT human_readable_seconds(60);
+SELECT human_readable_seconds(96);
 ```
 
 ```text
-1m
+1 minute, 36 seconds
 ```
 
 ```sql
-SELECT human_readable_seconds(86400);
+SELECT human_readable_seconds(3762);
 ```
 
 ```text
-1d
-```
-
-Multi-unit formatting with zero units omitted:
-
-```sql
-SELECT human_readable_seconds(3661);
-```
-
-```text
-1h 1m 1s
+1 hour, 2 minutes, 42 seconds
 ```
 
 ```sql
-SELECT human_readable_seconds(86401);
+SELECT human_readable_seconds(56363463);
 ```
 
 ```text
-1d 1s
+93 weeks, 1 day, 8 hours, 31 minutes, 3 seconds
 ```
+
+Fractional seconds rounded to nearest second:
 
 ```sql
-SELECT human_readable_seconds(90061);
+SELECT human_readable_seconds(535333.9513888889);
 ```
 
 ```text
-1d 1h 1m 1s
+6 days, 4 hours, 42 minutes, 14 seconds
 ```
 
-Maximum 64-bit integer value:
+Negative inputs:
 
 ```sql
-SELECT human_readable_seconds(9223372036854775807);
+SELECT human_readable_seconds(-60);
 ```
 
 ```text
-106751991167300d 15h 30m 7s
-```
-
-NULL and negative input values return NULL:
-
-```sql
-SELECT human_readable_seconds(NULL);
-```
-
-```text
-NULL
-```
-
-```sql
-SELECT human_readable_seconds(-100);
-```
-
-```text
-NULL
+1 minute
 ```
