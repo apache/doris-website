@@ -395,7 +395,7 @@ SELECT * FROM lance_catalog.db.tbl FOR TIME AS OF '2026-09-19 13:06:10';
 ```
 
 - `FOR VERSION AS OF` 接受正整数版本号；与 Paimon 表以及 Iceberg 的 tag 名用法一样，也可以写带引号的 tag 名（`FOR VERSION AS OF 'v2'` 等同于 `@tag(v2)`）。
-- `FOR TIME AS OF` 接受会话时区下的时间戳，支持秒或毫秒精度（`yyyy-MM-dd HH:mm:ss` 或 `yyyy-MM-dd HH:mm:ss.SSS`）。Doris 按 manifest 记录的提交时间，在不晚于该时间戳的版本中选择提交时间最晚的一个（同一毫秒内提交的取版本号大的）。和 Iceberg 按时间选快照一样，提交时间按记录的原值、以毫秒精度比较，不假设它随版本号递增。cleanup 删掉版本时，提交时间也一起删掉了，所以 Doris 只在 cleanup 删掉的最新一个版本之后选择，和 Iceberg 在过期快照处截断 snapshot log 的做法一致。时间戳早于这些版本时会报错：它可能早于第一个版本，也可能落在 cleanup 删掉的那段历史里（例如落在被 tag 保留的版本和其后仍存在的版本之间），这时无法确定表在那个时刻的状态。
+- `FOR TIME AS OF` 接受会话时区下的时间戳，支持秒或毫秒精度（`yyyy-MM-dd HH:mm:ss` 或 `yyyy-MM-dd HH:mm:ss.SSS`）。Doris 按 manifest 记录的提交时间，在不晚于该时间戳的版本中选择提交时间最晚的一个（提交时间相同的取版本号大的）。和 Iceberg 按时间选快照一样，提交时间按记录的原值比较，不假设它随版本号递增。Lance 记录的提交时间精确到毫秒以下，比较时保留全部精度：Doris 不选在请求的那一毫秒内、晚于请求时间提交的版本。cleanup 删掉版本时，提交时间也一起删掉了，所以 Doris 只在 cleanup 删掉的最新一个版本之后选择，和 Iceberg 在过期快照处截断 snapshot log 的做法一致。时间戳早于这些版本时会报错：它可能早于第一个版本，也可能落在 cleanup 删掉的那段历史里（例如落在被 tag 保留的版本和其后仍存在的版本之间），这时无法确定表在那个时刻的状态。
 - 选中的版本在整条语句内固定：schema、Fragment 规划、谓词下推和 BE 扫描都使用该版本。同一条语句里对同一张表的两次引用可以选择不同版本。`EXPLAIN` 中的 `lanceVersion` 显示选中的版本。
 - 被 Lance `cleanup_old_versions` 清理掉的版本无法读取，报错与从未存在的版本相同。
 - `vector_search()`、`full_text_search()` 和索引查看总是作用于 main 的最新版本，它们的 `table` 参数中不能指定版本、tag 或 branch。
@@ -431,7 +431,7 @@ REST Namespace 可以自行管理表的版本（`DescribeTable` 返回 `managed_
 限制：
 
 - Doris 以 `DescribeTable` 返回的 `location` 打开数据集，它必须是完整的存储 URI。`location` 为空，或同时返回的 `table_uri` 与它不一致时，查询直接报错，不读取数据。FE 打开表时 Lance SDK 会再调用一次 `DescribeTable`，BE 使用这次调用返回的 location 和存储配置读取。即使 Namespace 在两次调用之间改了这些值，FE 和 BE 读的也是同一个位置、用的是同一份配置。FE 之后通过 Namespace 刷新的凭证不会传给 BE。
-- BE 按版本号从表目录读取选中的版本，因此 Namespace 记录的 manifest 最终必须位于规范路径 `_versions/<u64::MAX - version>.manifest`。正常提交产生的 staged manifest 会在读取时被 Lance 落到该路径（见下一条）；如果 Namespace 把最终 manifest 存放在其他位置，Doris 无法发现：规范路径上没有该版本时查询报错，规范路径上有同号的其他 manifest 时会读到它的数据。
+- BE 按版本号从表目录读取选中的版本，因此 Namespace 记录的 manifest 最终必须位于规范路径 `_versions/<u64::MAX - version>.manifest`。正常提交产生的 staged manifest 会在读取时被 Lance 落到该路径（见下一条）；如果 Namespace 把最终 manifest 记录在其他位置，读取该版本的查询会报错，报错信息给出记录的路径和规范路径。
 - 如果 Namespace 记录的 manifest 还在 staged 路径，每次读取该版本时 Lance 都会把它复制到规范路径，因为 Namespace 记录的仍是 staged 路径。读取所用的存储凭证需要允许这次写入；权限不足时报错会提示这一点。
 
 ## 查看 Lance 索引
