@@ -92,7 +92,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | `lance.namespace.parent` | 否 | 空 | 仅访问指定 Lance Namespace 及其子 Namespace。例如默认分隔符下，`production$analytics` 表示两级 Namespace。 |
 | `lance.namespace.delimiter` | 否 | `$` | 用于解析 `lance.namespace.parent`，同时会传递给 REST Namespace 客户端。该配置不改变 Doris 中多级 Namespace 的展示方式。 |
 | `lance.namespace.root_database` | 否 | `default` | Lance 根 Namespace 在 Doris 中映射的数据库名。 |
-| `lance.table_access_cache_ttl_seconds` | 否 | `60` | 非负整数，表示 FE 表访问缓存的最长有效期，单位为秒；`0` 表示禁用。适用于 Filesystem 和 REST Catalog。仅缓存不含下发存储配置或携带凭证 URI 的结果，详见 [FE 表访问缓存](#fe-表访问缓存)。 |
+| `lance.table_access_cache_ttl_seconds` | 否 | `60` | 非负整数，表示 FE 表访问缓存的最长有效期，单位为秒；`0` 表示禁用。适用于 Filesystem 和 REST Catalog。managed versioning 表、含下发存储配置或携带凭证 URI 的结果不缓存，详见 [FE 表访问缓存](#fe-表访问缓存)。 |
 
 ### Filesystem Catalog
 
@@ -397,7 +397,7 @@ SELECT * FROM lance_catalog.db.tbl FOR TIME AS OF '2026-09-19 13:06:10';
 - `FOR VERSION AS OF` 接受正整数版本号；与 Paimon 表以及 Iceberg 的 tag 名用法一样，也可以写带引号的 tag 名（`FOR VERSION AS OF 'v2'` 等同于 `@tag(v2)`）。
 - `FOR TIME AS OF` 接受会话时区下的时间戳，支持秒或毫秒精度（`yyyy-MM-dd HH:mm:ss` 或 `yyyy-MM-dd HH:mm:ss.SSS`）。Doris 按 manifest 记录的提交时间，在不晚于该时间戳的版本中选择提交时间最晚的一个（提交时间相同的取版本号大的）。和 Iceberg 按时间选快照一样，提交时间按记录的原值比较，不假设它随版本号递增。Lance 记录的提交时间精确到毫秒以下，比较时保留全部精度：Doris 不选在请求的那一毫秒内、晚于请求时间提交的版本。cleanup 删掉版本时，提交时间也一起删掉了，所以 Doris 只在 cleanup 删掉的最新一个版本之后选择，和 Iceberg 在过期快照处截断 snapshot log 的做法一致。时间戳早于这些版本时会报错：它可能早于第一个版本，也可能落在 cleanup 删掉的那段历史里（例如落在被 tag 保留的版本和其后仍存在的版本之间），这时无法确定表在那个时刻的状态。
 - 选中的版本在整条语句内固定：schema、Fragment 规划、谓词下推和 BE 扫描都使用该版本。同一条语句里对同一张表的两次引用可以选择不同版本。`EXPLAIN` 中的 `lanceVersion` 显示选中的版本。
-- 被 Lance `cleanup_old_versions` 清理掉的版本无法读取，报错与从未存在的版本相同。
+- 被 Lance `cleanup_old_versions` 清理掉的版本无法读取，报错与从未存在的版本相同。由 REST Namespace 管理版本的表见下文“REST Namespace 管理的版本”。
 - `vector_search()`、`full_text_search()` 和索引查看总是作用于 main 的最新版本，它们的 `table` 参数中不能指定版本、tag 或 branch。
 
 Lance 的 tag 和 branch 使用与 Iceberg、Paimon 表相同的语法：
@@ -417,22 +417,23 @@ SELECT * FROM lance_catalog.db.tbl@branch(dev) FOR VERSION AS OF 2;
 - `@branch(main)` 读取 main，与不写 `@branch` 相同。
 - 每个 branch 有自己的版本序列，从创建它时所基于的版本开始。`@branch` 后的 `FOR VERSION AS OF` / `FOR TIME AS OF` 只在该 branch 的版本中选择，因此早于 branch 创建时间的时间戳在 branch 上选不到版本。`@branch` 后（包括 `@branch(main)`）的 `FOR VERSION AS OF` 不能写 tag 名，因为 tag 本身已经确定了 branch。
 - branch 存放在 `<table>/tree/<branch>/` 下，是表的 shallow clone，manifest 以绝对 URI 记录表的位置。因此 branch 只能在创建它的位置读取：把数据集复制或迁移到别处后，main 仍可读，branch 不可读。
-- branch 的元数据已删除，或创建中途失败时，只要 `tree/` 下的目录还没清理，仍可以通过 `@branch` 读到。原因是 Lance SDK 按目录 checkout branch。
+- branch 的元数据已删除，或创建中途失败时，只要 `tree/` 下的目录还没清理，仍可以通过 `@branch` 读到。原因是 Lance SDK 按目录 checkout branch。由 REST Namespace 管理版本的表，branch 是否存在由 Namespace 决定。
 - `EXPLAIN` 中的 `lanceBranch` 显示读取的 branch。不存在的 tag 或 branch 会报错。
 
 ### REST Namespace 管理的版本（Managed Versioning）
 
-REST Namespace 可以自行管理表的版本（`DescribeTable` 返回 `managed_versioning = true`）。对这类表，Doris 通过 Namespace 解析版本：最新版本和 `FOR VERSION AS OF` 以 Namespace 的记录为准（`ListTableVersions`、`DescribeTableVersion`），`FOR TIME AS OF` 按 manifest 记录的提交时间选择，并且只在 Namespace 列出的版本中选择；tag 与普通 Lance 表一样从数据集的 `_refs/tags/` 读取，branch 的版本同样由 Namespace 解析。选定版本后，Doris 从存储读取对应的 manifest。
+REST Namespace 可以自行管理表的版本（`DescribeTable` 返回 `managed_versioning = true`）。对这类表，哪些版本存在、哪个是最新版本由 Namespace 决定：最新版本和 `FOR VERSION AS OF` 以 Namespace 的记录为准（`ListTableVersions`、`DescribeTableVersion`），`FOR TIME AS OF` 按 manifest 记录的提交时间选择，并且只在 Namespace 列出的版本中选择；tag 与普通 Lance 表一样从数据集的 `_refs/tags/` 读取，它指向的版本必须是 Namespace 记录过的；branch 的版本同样以 Namespace 为准。选定版本后，FE 和 BE 都按表的位置和版本号从存储读取，和其他 Lance 表一样。
 
 - Namespace 没有记录的版本报告为不存在，即使它的 manifest 仍在存储中；最新版本以 Namespace 为准，即使存储中已有更新的 manifest。
+- Namespace 不再记录、但前后版本仍有记录的版本，在 `FOR TIME AS OF` 中视为已删除的历史，和 cleanup 删掉的版本一样：时间戳可能落在这个版本上时报错，不会选择更早的版本。
 - Namespace 对某张表或某个 branch 没有记录任何版本时会报错，即使存储中有它的 manifest。
 - 这类表在 `EXPLAIN` 中显示 `lanceManagedVersioning=true`。
 
 限制：
 
-- Doris 以 `DescribeTable` 返回的 `location` 打开数据集，它必须是完整的存储 URI。`location` 为空，或同时返回的 `table_uri` 与它不一致时，查询直接报错，不读取数据。FE 打开表时 Lance SDK 会再调用一次 `DescribeTable`，BE 使用这次调用返回的 location 和存储配置读取。即使 Namespace 在两次调用之间改了这些值，FE 和 BE 读的也是同一个位置、用的是同一份配置。FE 之后通过 Namespace 刷新的凭证不会传给 BE。
-- BE 按版本号从表目录读取选中的版本，因此 Namespace 记录的 manifest 最终必须位于规范路径 `_versions/<u64::MAX - version>.manifest`。正常提交产生的 staged manifest 会在读取时被 Lance 落到该路径（见下一条）；如果 Namespace 把最终 manifest 记录在其他位置，读取该版本的查询会报错，报错信息给出记录的路径和规范路径。
-- 如果 Namespace 记录的 manifest 还在 staged 路径，每次读取该版本时 Lance 都会把它复制到规范路径，因为 Namespace 记录的仍是 staged 路径。读取所用的存储凭证需要允许这次写入；权限不足时报错会提示这一点。
+- Doris 以 `DescribeTable` 返回的 `location` 读取数据集，它必须是完整的存储 URI。`location` 为空，或同时返回的 `table_uri` 与它不一致时，查询直接报错，不读取数据。managed 表每次读取都会重新调用 `DescribeTable`，不做缓存；FE 和 BE 都用这次返回的位置和存储配置读取。
+- Doris 按版本号读取版本，读的是表目录（branch 则是 `tree/<branch>/`）下的规范路径 `_versions/<u64::MAX - version>.manifest`，Lance 旧的命名方式下是 `_versions/<version>.manifest`。Namespace 为选中版本记录的 manifest 必须是这个路径，或者它旁边的 staged manifest（`<规范路径>-<id>`）。记录在其他位置的版本无法读取，查询会报错，报错信息给出记录的路径和规范路径。查询过程中 Namespace 移动了表时，查询也可能这样报错，重试即可。
+- Namespace 只在 staged manifest 上记录、规范路径上又没有 manifest 的版本无法读取：它的提交没有定稿，或者 cleanup 删掉了这个版本。查询会报错，并说明这两种原因。这个版本的提交时间未知，所以在对应的 `main` 或 branch 上执行 `FOR TIME AS OF` 时，时间戳可能落在它上面就会报错；如果它是最新版本，在写入端或其他使用 Namespace 的读者把它定稿之前，任何时间戳都会报错，不带 `FOR VERSION AS OF` 读取表、加载表结构也会报错。Lance 自带的 Namespace 实现会先定稿再记录版本，只有提交中途中断，或 Namespace 记录的是 staged manifest 时，才会出现未定稿的版本。Doris 读取时不会向表写入任何数据。
 
 ## 查看 Lance 索引
 
@@ -928,7 +929,7 @@ ORDER BY _distance ASC, user_id;
 
 每个 FE 可以在 Catalog 内缓存表解析后的 Dataset URI 和访问配置，避免查询规划时重复执行文件系统发现或 REST `describeTable` 请求。每个 Catalog 客户端最多保留 10,000 个条目。`lance.table_access_cache_ttl_seconds` 默认为 `60` 秒，命中缓存不会延长有效期。此缓存不保存 Dataset 版本：每次读取仍会打开 Dataset 并选择快照。
 
-如果响应包含下发的存储配置，即使提供了 `expires_at_millis`，也会在每次读取时重新解析。包含用户信息、查询参数（包括预签名或 SAS 凭证）或片段的 URI 同样不缓存。固定的凭证到期余量无法保证凭证在整个扫描期间有效，BE 也无法在扫描过程中更新这些凭证。响应不含这些字段的 REST Catalog 可以使用缓存。
+由 Namespace 管理版本（managed versioning）的表在每次读取时重新解析，FE 和 BE 都使用这次返回的位置和存储配置。如果响应包含下发的存储配置，即使提供了 `expires_at_millis`，也会在每次读取时重新解析。包含用户信息、查询参数（包括预签名或 SAS 凭证）或片段的 URI 同样不缓存。固定的凭证到期余量无法保证凭证在整个扫描期间有效，BE 也无法在扫描过程中更新这些凭证。响应不含这些字段的 REST Catalog 可以使用缓存。
 
 显式刷新表或数据库会清除该 Catalog 的全部表访问缓存；Follower FE 重放刷新时，即使对应的本地数据库或表对象已被淘汰，也会清除缓存。普通的本地数据库对象淘汰不会清除此缓存。启用缓存失效的 Catalog 刷新、Namespace 移除或 Catalog 配置变更也会使访问缓存失效。索引检查和索引任务目标校验始终重新解析访问配置。
 
