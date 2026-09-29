@@ -55,15 +55,16 @@ under the License.
 
 ```Shell
 brew install automake autoconf libtool pkg-config texinfo coreutils gnu-getopt \
-python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@20 openjdk@17 npm
+python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@22 llvm@20 openjdk@17 npm
 ```
+
+> 两个版本的 LLVM 都需要安装。`llvm@22` 用于编译 BE（LLVM 22.1.8 是第一个能在 macOS 26.4 及以上版本正常启动 AddressSanitizer 运行时的版本）。`llvm@20` 用于从源码编译第三方库：缺少它时 `thirdparty/build-thirdparty.sh` 会直接退出；当 `thirdparty/installed` 缺少所需的库时，`build.sh` 会自动发起这样的源码编译。构建脚本会通过 Homebrew 找到这两个版本，无需手动加入 `PATH`。
 
 > macOS 上 arm64 版本的 brew 默认没有 JDK 8，因此推荐使用 `openjdk@17`。如需 JDK 8，可手动安装 [Zulu JDK 8](https://www.azul.com/downloads/?version=java-8-lts&os=macos&package=jdk#zulu)；Maven 也可从 [Maven 官网](https://maven.apache.org/download.cgi) 单独下载并配置环境变量。
 
 部分依赖在 Apple Silicon 上还需要手动配置环境变量：
 
 ```Shell
-export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/bison/bin:$PATH"
 export PATH="/opt/homebrew/opt/texinfo/bin:$PATH"
 ln -s -f /opt/homebrew/bin/python3 /opt/homebrew/bin/python
