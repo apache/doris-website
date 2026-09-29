@@ -97,7 +97,8 @@ The existing `IS_UUID()` accepts some text, such as canonical UUIDs enclosed in 
 
 ## Table design and restrictions
 
-- UUID columns can be keys in Duplicate, Unique, and Aggregate tables, hash distribution columns, and manual RANGE or LIST partition columns. Specify partition boundaries as quoted UUID text. Numeric-step batch range creation does not apply to UUID.
+- UUID columns can be keys in Duplicate, Unique, and Aggregate tables and hash distribution columns.
+- UUID columns cannot be RANGE or LIST partition columns, including in multi-column partitions or `AUTO PARTITION BY LIST`. Dynamic partitioning on UUID columns is also unsupported.
 - UUID values support comparison, `IN`, sorting, grouping, joins, `MIN`, `MAX`, and `COUNT(DISTINCT ...)`. UUID is not a numeric type: arithmetic and numeric aggregates such as `SUM` and `AVG` are not supported.
 - Aggregate-table UUID value columns support `MIN`, `MAX`, `REPLACE`, and `REPLACE_IF_NOT_NULL`.
 - UUID can be an ARRAY element, a MAP key or value, or a STRUCT field. The existing constraints on the outer complex type still apply.

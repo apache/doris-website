@@ -97,7 +97,8 @@ WHERE event_id = CAST('550e8400-e29b-41d4-a716-446655440000' AS UUID);
 
 ## 表设计和限制
 
-- UUID 列可作为 Duplicate、Unique 和 Aggregate 表的 Key 列、Hash 分桶列以及手动 RANGE 或 LIST 分区列。分区边界使用带引号的 UUID 文本。基于数值步长批量创建 RANGE 分区的方式不适用于 UUID。
+- UUID 列可作为 Duplicate、Unique 和 Aggregate 表的 Key 列以及 Hash 分桶列。
+- UUID 列不能作为 RANGE 或 LIST 分区列，包括多列分区和 `AUTO PARTITION BY LIST`，也不支持基于 UUID 列进行动态分区。
 - UUID 值支持比较、`IN`、排序、分组、关联、`MIN`、`MAX` 和 `COUNT(DISTINCT ...)`。UUID 不是数值类型，不支持算术运算以及 `SUM`、`AVG` 等数值聚合。
 - Aggregate 表的 UUID Value 列支持 `MIN`、`MAX`、`REPLACE` 和 `REPLACE_IF_NOT_NULL`。
 - UUID 可用作 ARRAY 元素、MAP 的键或值以及 STRUCT 字段；外层复杂类型的原有限制仍然适用。
