@@ -417,7 +417,7 @@ SELECT * FROM lance_catalog.db.tbl@branch(dev) FOR VERSION AS OF 2;
 - `@branch(main)` 读取 main，与不写 `@branch` 相同。
 - 每个 branch 有自己的版本序列，从创建它时所基于的版本开始。`@branch` 后的 `FOR VERSION AS OF` / `FOR TIME AS OF` 只在该 branch 的版本中选择，因此早于 branch 创建时间的时间戳在 branch 上选不到版本。`@branch` 后（包括 `@branch(main)`）的 `FOR VERSION AS OF` 不能写 tag 名，因为 tag 本身已经确定了 branch。
 - branch 存放在 `<table>/tree/<branch>/` 下，是表的 shallow clone，manifest 以绝对 URI 记录表的位置。因此 branch 只能在创建它的位置读取：把数据集复制或迁移到别处后，main 仍可读，branch 不可读。
-- branch 的元数据已删除，或创建中途失败时，只要 `tree/` 下的目录还没清理，仍可以通过 `@branch` 读到。原因是 Lance SDK 按目录 checkout branch。由 REST Namespace 管理版本的表，branch 是否存在由 Namespace 决定。
+- branch 的元数据已删除，或创建中途失败时，只要 `tree/` 下的目录还没清理，仍可以通过 `@branch` 读到。原因是 Lance SDK 按目录 checkout branch。由 REST Namespace 管理版本的表，branch 是否存在由 Namespace 决定，读取 branch 时直接读它的目录，不读取 `main`。
 - `EXPLAIN` 中的 `lanceBranch` 显示读取的 branch。不存在的 tag 或 branch 会报错。
 
 ### REST Namespace 管理的版本（Managed Versioning）
@@ -431,8 +431,8 @@ REST Namespace 可以自行管理表的版本（`DescribeTable` 返回 `managed_
 
 限制：
 
-- Doris 以 `DescribeTable` 返回的 `location` 读取数据集，它必须是完整的存储 URI。`location` 为空，或同时返回的 `table_uri` 与它不一致时，查询直接报错，不读取数据。managed 表每次读取都会重新调用 `DescribeTable`，不做缓存；FE 和 BE 都用这次返回的位置和存储配置读取。
-- Doris 按版本号读取版本，读的是表目录（branch 则是 `tree/<branch>/`）下的规范路径 `_versions/<u64::MAX - version>.manifest`，Lance 旧的命名方式下是 `_versions/<version>.manifest`。Namespace 为选中版本记录的 manifest 必须是这个路径，或者它旁边的 staged manifest（`<规范路径>-<id>`）。记录在其他位置的版本无法读取，查询会报错，报错信息给出记录的路径和规范路径。查询过程中 Namespace 移动了表时，查询也可能这样报错，重试即可。
+- Doris 以 `DescribeTable` 返回的 `table_uri` 读取数据集，没有 `table_uri` 时用 `location`，它们必须是完整的存储 URI。`location` 为空，或同时返回的 `table_uri` 指向别的位置时（查询串不算，例如预签名凭证），查询直接报错，不读取数据。`s3+ddb` URI 同样报错：它的 DynamoDB 提交逻辑会在读取时登记并定稿版本。managed 表每次读取都会重新调用 `DescribeTable`，不做缓存；FE 和 BE 都用这次返回的位置和存储配置读取。
+- Doris 按版本号读取版本，读的是表目录（branch 则是 `tree/<branch>/`）下的规范路径 `_versions/<u64::MAX - version>.manifest`，Lance 旧的命名方式下是 `_versions/<version>.manifest`。Namespace 为选中版本记录的 manifest 必须是这个路径，或者它旁边的 staged manifest（`<规范路径>-<id>`）；执行 `FOR TIME AS OF` 时，对应 `main` 或 branch 上记录的每个版本都要满足这一点，因为选择时要比较它们的提交时间。记录在其他位置的版本无法读取，查询会报错，报错信息给出记录的路径和规范路径。查询过程中 Namespace 移动了表时，查询也可能这样报错，重试即可。
 - Namespace 只在 staged manifest 上记录、规范路径上又没有 manifest 的版本无法读取：它的提交没有定稿，或者 cleanup 删掉了这个版本。查询会报错，并说明这两种原因。这个版本的提交时间未知，所以在对应的 `main` 或 branch 上执行 `FOR TIME AS OF` 时，时间戳可能落在它上面就会报错；如果它是最新版本，在写入端或其他使用 Namespace 的读者把它定稿之前，任何时间戳都会报错，不带 `FOR VERSION AS OF` 读取表、加载表结构也会报错。Lance 自带的 Namespace 实现会先定稿再记录版本，只有提交中途中断，或 Namespace 记录的是 staged manifest 时，才会出现未定稿的版本。Doris 读取时不会向表写入任何数据。
 
 ## 查看 Lance 索引
