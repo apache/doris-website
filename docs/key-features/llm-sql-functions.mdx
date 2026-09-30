@@ -37,7 +37,7 @@ The Apache Doris `AI_*` family is a set of SQL-callable functions that wrap an H
 
 **Key terms**
 
-- **AI resource**: a named connection to an LLM provider. Stores `provider_type`, endpoint, model name, API key, and tuning knobs (`temperature`, `max_token`, `max_retries`, `retry_delay_second`). Twelve providers are supported: OpenAI, Anthropic, Gemini, DeepSeek, MoonShot, QWen, MiniMax, Zhipu, Baichuan, VoyageAI, Jina, and `local` for self-hosted endpoints.
+- **AI resource**: a named connection to an LLM provider. Stores `provider_type`, endpoint, model name, API key, and tuning knobs (`temperature`, `max_token`, `max_retries`, `retry_delay_second`, `max_concurrency`). Twelve providers are supported: OpenAI, Anthropic, Gemini, DeepSeek, MoonShot, QWen, MiniMax, Zhipu, Baichuan, VoyageAI, Jina, and `local` for self-hosted endpoints.
 - **`AI_*` scalar functions**: `AI_GENERATE`, `AI_TRANSLATE`, `AI_SUMMARIZE`, `AI_SENTIMENT`, `AI_CLASSIFY`, `AI_EXTRACT`, `AI_FIXGRAMMAR`, `AI_MASK`, `AI_FILTER`, `AI_SIMILARITY`. Each takes a resource name as the first argument and the column as the second, plus a small set of task-specific arguments such as the label set or target language.
 - **`AI_AGG`**: an aggregate function that joins all rows in a group, sends them to the LLM with a custom prompt, and returns one summary per group. The group equivalent of `AI_SUMMARIZE`.
 - **`default_ai_resource`**: a session variable that selects a resource for the rest of the session, so you can drop the explicit first argument.
@@ -48,7 +48,7 @@ The Apache Doris `AI_*` SQL functions run as scalar UDFs on the BE: the planner 
 
 1. **Register the model.** `CREATE RESOURCE` validates the endpoint with a probe call (skipped for `provider_type = 'local'` or when `ai.validity_check = 'false'`), masks the API key in `SHOW RESOURCES` output, and persists the configuration in the FE's metadata.
 2. **Plan the call.** When the planner sees an `AI_*` function, it routes the work to the BE the same way it would for any scalar UDF. The function's first argument must be a literal resource name; the planner rejects an expression there at analysis time.
-3. **Batch on the BE.** The BE accumulates input rows into a batch capped by `embed_max_batch_size` (default 5) and `ai_context_window_size` (default 128 KB of accumulated text), then issues one HTTP request per batch. An oversized row gets its own batch, so a single long document does not stall the rest of the query.
+3. **Batch on the BE.** The BE accumulates input rows into a batch capped by `embed_max_batch_size` (default 5) and `ai_context_window_size` (default 128 KB of accumulated text), then issues one HTTP request per batch. An oversized row gets its own batch, so a single long document does not stall the rest of the query. When the resource sets `ai.max_concurrency` above its default of 1, up to that many batch requests of a block are in flight at once instead of one after another.
 4. **Retry and time out.** The HTTP call honors `ai.max_retries` and `ai.retry_delay_second` from the resource. Each request inherits the time remaining in the session's `query_timeout`, so a slow provider does not extend the query past its budget.
 5. **Return a typed value.** Scalar functions return `STRING` (or `BOOLEAN` for `AI_FILTER`, `DOUBLE` for `AI_SIMILARITY`). You can store it, filter on it, or feed it to the next operator without leaving SQL.
 
