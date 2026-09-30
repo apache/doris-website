@@ -544,8 +544,9 @@ Doris converts semantically compatible predicates into Substrait expressions and
 | `utf8`, `large_utf8` | Supported |
 | `date32(day)` | Supported |
 | Timezone-naive `timestamp(s/ms/us)` | Supported |
+| `list<utf8>` | Built-in `array_contains` with a non-`NULL` string literal; see [Array Label Predicates](#array-label-predicates) |
 
-Predicates on other readable types, including `float16`, `decimal256`, Binary, `date64`, Time, nanosecond Timestamp, timezone-aware Timestamp, and complex types, currently remain in Doris.
+Predicates on other readable types, including `float16`, `decimal256`, Binary, `date64`, Time, nanosecond Timestamp, timezone-aware Timestamp, and complex types other than the array membership case above, currently remain in Doris.
 
 ### Operators Supported for Pushdown
 
@@ -558,13 +559,14 @@ Predicates on other readable types, including `float16`, `decimal256`, Binary, `
 | Boolean column, `NOT` Boolean column | Direct Boolean column reference |
 | `LIKE`, `NOT LIKE` | Direct `utf8` or `large_utf8` column and a string literal pattern without backslash escapes, an explicit `ESCAPE` clause, or an embedded NUL character |
 | `starts_with`, `ends_with` | Built-in function with a direct `utf8` or `large_utf8` column and a string literal |
+| `array_contains(labels, 'red')` | Direct `list<utf8>` column and a non-`NULL` string literal |
 | `AND` | Top-level conjuncts can be pushed down independently, with unsupported conjuncts retained in Doris |
 | `OR` | Both branches must be fully convertible |
 | `NOT` | The operand must be fully convertible |
 
 The following forms are generally not pushed down:
 
-- Functions other than the supported built-in string functions, or arithmetic expressions applied to a column. A user-defined function named `like`, `starts_with`, or `ends_with` is not treated as the corresponding built-in function.
+- Functions other than the supported built-in string and array membership functions, or arithmetic expressions applied to a column. A user-defined function named `like`, `starts_with`, `ends_with`, or `array_contains` is not treated as the corresponding built-in function.
 - String predicates whose pattern contains an embedded NUL character. `LIKE` and `NOT LIKE` patterns that use a backslash escape or an explicit `ESCAPE` clause also remain in Doris.
 - An empty `IN` list or an `IN` list containing `NULL`.
 - An `OR` or `NOT` expression in which only part of the expression can be converted.
@@ -580,6 +582,46 @@ WHERE active
   AND starts_with(name, 'A')
   AND country LIKE 'C%';
 ```
+
+### Array Label Predicates
+
+The array-label pushdown update for Doris 4.1 supports `array_contains` on a direct Lance `list<utf8>` column with a non-`NULL` string literal. Older builds may keep these conditions in Doris; check `EXPLAIN` before relying on this optimization. A `NULL` array still produces `NULL`, an empty array does not match, and duplicate labels do not duplicate result rows.
+
+For a Lance table with an `id` column and a `labels` column of type `list<utf8>`:
+
+```sql
+EXPLAIN
+SELECT id
+FROM lance_catalog.default.items
+WHERE array_contains(labels, 'red')
+  AND array_contains(labels, 'blue');
+```
+
+This matches arrays containing both labels, regardless of their order or adjacency. Replacing `AND` with `OR` matches either label. `NOT (array_contains(labels, 'red'))` is also convertible and preserves SQL `NULL` semantics. These examples apply to ordinary table scans; they do not change the distinction between a search TVF's `filter` parameter and an outer `WHERE` condition.
+
+The following remain Doris residual predicates:
+
+- `array_contains(labels, NULL)`: Doris can match a `NULL` element; Lance's membership function has different `NULL`-needle semantics.
+- `array_contains_all(labels, ['red', 'blue'])`: Doris tests an ordered, contiguous subsequence. It cannot be replaced with Lance's set-containment function or two independent membership predicates.
+- Dynamic needles, expressions or casts around the array column, and other array element/container types, including `large_list`, fixed-size lists, and `list<large_utf8>`.
+
+### Predicate Pushdown and Scalar Index Use
+
+Predicate pushdown means Lance evaluates a condition; it does not guarantee index use. For ordinary scans, Doris can assign a physical BTree, Bitmap, or LabelList segment to each scan task. Same-column `IN`, `AND`, `OR`, and `NOT` combinations can use the selected index when Lance supports the complete expression. `OR` requires safe candidates from both branches; `NOT` cannot negate an incompletely evaluated subtree. Unsupported index expressions fall back to a scan within the assigned fragment domain.
+
+Each task selects **one logical scalar index**. A query combining label, category, and numeric predicates does not imply that Doris intersects all three indexes. The complete pushed condition is rechecked before applying the scan limit, and fragments outside index coverage are still read. Without a usable index, compatible predicates can still be pushed down and evaluated by a Lance scan.
+
+Use the following evidence together:
+
+| Evidence | Meaning |
+|---|---|
+| `lancePushdownPredicate` in `EXPLAIN` | Conditions sent to Lance. Remaining `predicates:` conditions are evaluated by Doris. |
+| `lanceScalarIndexScan=SEGMENT` and `lanceGroupingIndex` in `EXPLAIN` | A scalar segment scan was planned and identifies the selected logical index. This alone does not prove runtime index use. |
+| `LanceScalarIndexSegmentsSearched` in Profile | Actual searches on the instrumented scalar segment path. |
+| `LanceScalarIndexCandidateRows` in Profile | Candidate rows reported by that path, not necessarily final result rows. Complement masks, such as some `NOT` expressions, may not report a candidate cardinality. |
+| `LanceScalarIndexSegmentFallbacks` in Profile | Tasks that fell back from the planned scalar segment path. |
+
+Enable `enable_profile` to inspect these counters. Compare the same SQL, projection, dataset version, and cache state when measuring an optimization. These counters describe ordinary scalar segment scans and must not be used alone to infer scalar-index use inside ANN or full-text prefiltering.
 
 ### Runtime Filter Pushdown
 
