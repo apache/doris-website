@@ -995,6 +995,8 @@ After the BE restarts, the shared cache initializes when the first Lance Dataset
 
 Budget for index and metadata caches alongside query working memory. These capacities do not limit total Lance query memory or BE process memory. The disk cache also consumes local disk space and file descriptors. Larger read blocks reduce the number of blocks but can increase extra I/O for small reads. Use a new cache directory when changing the read block size or disk layout.
 
+For workload-specific sizing formulas, configuration examples, shared-cache contention, and index segment granularity, see [Lance Query Best Practices](../best-practices/doris-lance.mdx).
+
 ### Checking Cache Effectiveness
 
 Inspect the following counters under `LanceReader` in the query Profile:

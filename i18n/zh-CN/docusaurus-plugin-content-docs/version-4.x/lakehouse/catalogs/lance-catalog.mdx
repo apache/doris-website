@@ -995,6 +995,8 @@ lance_data_cache_read_block_size_bytes = 1048576
 
 配置容量时应同时考虑索引缓存、元数据缓存和查询工作内存。上述容量不是 Lance 查询总内存的上限，也不是 BE 进程内存的上限。磁盘缓存还需要本地磁盘空间和文件描述符资源；增大读取块可以减少块数量，但小范围读取可能产生更多额外 I/O。调整读取块大小或磁盘布局时使用新的缓存目录。
 
+按场景估算缓存、选择配置、分析共享缓存竞争以及确定 Index Segment 粒度，请参阅 [Lance 查询最佳实践](../best-practices/doris-lance.mdx)。
+
 ### 查看缓存效果
 
 在查询 Profile 的 `LanceReader` 下查看以下计数器：
