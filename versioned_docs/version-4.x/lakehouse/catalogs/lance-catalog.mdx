@@ -995,6 +995,87 @@ After the BE restarts, the shared cache initializes when the first Lance Dataset
 
 Budget for index and metadata caches alongside query working memory. These capacities do not limit total Lance query memory or BE process memory. The disk cache also consumes local disk space and file descriptors. Larger read blocks reduce the number of blocks but can increase extra I/O for small reads. Use a new cache directory when changing the read block size or disk layout.
 
+### Estimating Index Cache Capacity {#index-cache-sizing}
+
+Size the index cache for the index partitions that each BE needs to reuse. The total index on storage, the cached working set, and peak query memory are different quantities. The estimates below cover the six [supported vector index types](#supported-vector-index-types); they are planning estimates, not exact cache accounting or memory limits.
+
+#### Vector Payload by Index Type
+
+Use the following symbols. All formulas return bytes; `1 GiB = 1073741824 bytes`.
+
+| Symbol | Meaning |
+|---|---|
+| `N` | Number of indexed vectors in the partitions being estimated. For an ordinary single-vector column this is the indexed row count. For multi-vector columns, count the indexed subvectors and allow separately for row mappings and refinement. |
+| `D` | Vector dimension. |
+| `w` | Bytes per stored, unquantized vector element: 2 for Float16, 4 for Float32, or 8 for Float64. For binary `uint8` vectors, use the actual byte length as `D` and `w=1`. |
+| `m`, `b` | PQ subvector count and bits per subvector code. These are index-build settings, not query parameters. |
+| `G` | Memory occupied by the loaded HNSW graph, including all levels and auxiliary structures. |
+
+Each indexed vector has an 8-byte row ID in addition to its vector representation. Estimate their combined payload as follows:
+
+| Index type | Vector and row-ID payload | Additional graph memory |
+|---|---|---|
+| `IVF_FLAT` | `N * (D * w + 8)` | None |
+| `IVF_SQ` | `N * (D + 8)` for SQ8 | None |
+| `IVF_PQ` | `N * (ceil(m * b / 8) + 8)` | None |
+| `IVF_HNSW_FLAT` | `N * (D * w + 8)` | Add `G` |
+| `IVF_HNSW_SQ` | `N * (D + 8)` for SQ8 | Add `G` |
+| `IVF_HNSW_PQ` | `N * (ceil(m * b / 8) + 8)` | Add `G` |
+
+For PQ with `b=8`, the code occupies `m` bytes per vector; with `b=4`, it occupies `m/2` bytes for supported, even `m`. For example, 1 million vectors with `m=96` and `b=8` have `104000000` bytes (about 99.2 MiB) of codes and row IDs. The row IDs must not be omitted when estimating strongly compressed indexes.
+
+Also budget for IVF centroids, quantizer metadata, loaded index objects, and allocated buffer capacity. FP32 IVF centroids occupy approximately `num_partitions * D * 4` bytes per centroid set; a standard FP32 PQ codebook occupies approximately `2^b * D * 4` bytes per codebook. Independent index segments can have separate centroid sets and codebooks. Other allocations, such as vector norms, partition row-coverage structures, or implementation-specific copies, depend on the embedded Lance version. Do not multiply shared allocations by every partition or assume all copies are shared.
+
+HNSW needs a separate estimate. Its `m` build parameter controls graph connectivity and is unrelated to PQ's `m`. For an Arrow-backed Lance graph retaining both UInt32 neighbor IDs and Float32 edge distances, the main graph buffers are approximately `8 * E + 12 * V` bytes, where `E` is the total number of stored directed neighbor entries across all levels and `V` is the number of node occurrences across all levels. The terms cover neighbor IDs and distances, node IDs, and two list-offset arrays; validity buffers, lookup structures, allocation overhead, and vector storage are additional. This is a layout-specific estimate, not a fixed bytes-per-node guarantee. If only the connectivity parameter is known, do not substitute `N * m * 4` for `G`: actual degree, upper levels, retained distances, and the Lance reader version matter. Calibrate with cache usage after loading a representative set of partitions.
+
+The upstream [Lance Performance Guide](https://lance.org/guide/performance/) explains vector payload and index-build memory estimates. The [Lance vector index format](https://lance.org/format/index/vector/) describes the separation of IVF partitions, sub-indexes, and quantized storage. Their latest content may describe features newer than the Lance version embedded in Doris; use the support matrix on this page for compatibility.
+
+#### From Index Size to a Per-BE Working Set
+
+For segment `s`, let `N_s` be its indexed vector count, `P_s` its IVF partition count, and `H_s` the number of distinct partitions to retain on a particular BE. With reasonably balanced partitions:
+
+```text
+cached_vectors_on_BE ≈ sum over segments (N_s * H_s / P_s)
+index_cache_target ≈ cached vector/row-ID payload
+                   + cached HNSW graphs
+                   + centroids, codebooks and other index allocations
+                   + measured headroom
+```
+
+Use actual partition row counts when partitions are skewed. `H_s` describes the working set across queries, not just the `nprobes` of one query. Diverse queries can eventually touch every partition; repeated or concurrent queries can share the same cached partition. Count distinct `(dataset, index segment, partition)` entries and include all tables, indexes, and versions accessed by that BE. Cache residency on one BE does not warm another BE, and scheduling does not guarantee that every index segment stays on one BE. Do not divide the total index size by the number of BEs unless the observed placement and reuse justify it.
+
+Query-time memory is additional: in-flight partition loads, objects still held by queries after cache eviction, Prefilter state, distance tables, candidate heaps, decoded batches, refinement, and second-phase fetches. `top_k`, `ef`, `refine_factor`, scan concurrency, and `nprobes` affect this memory or the accessed working set; they do not change the stored bytes per vector. A configured cache capacity is not a hard cap on Lance or BE RSS. Increasing the cache also does not remove distance computation or per-query filtering work.
+
+Scalar and full-text indexes share this index cache. For BTree indexes, budget for the loaded sorted-value/row-ID pages and lookup structures; for Bitmap indexes, the loaded compressed bitmaps and keys; for FTS indexes, the loaded dictionaries, postings, and positions when present. Variable-width values, cardinality, token distribution, and compression prevent a universal bytes-per-row formula. Add their measured working sets to the vector estimate when these indexes coexist.
+
+#### Configuration Example and Tuning
+
+Assume an FP32, 768-dimensional `IVF_PQ` index with 100 million vectors, `m=96`, `b=8`, and 4096 balanced partitions in one index segment. A representative workload on one BE repeatedly accesses 1024 distinct partitions:
+
+```text
+Full code/row-ID payload = 100000000 * (96 + 8) = 10400000000 bytes ≈ 9.69 GiB
+Cached payload          = 10400000000 * 1024 / 4096 = 2600000000 bytes ≈ 2.42 GiB
+IVF centroids           = 4096 * 768 * 4 = 12582912 bytes = 12 MiB
+PQ codebook             = 256 * 768 * 4 = 786432 bytes = 0.75 MiB
+```
+
+If this is the only substantial index working set on the BE and its memory budget permits, 4 GiB is a reasonable initial index-cache allocation for this example, leaving room above the calculated payload for additional index allocations. It is an initial value to validate, not a universal overhead ratio. If the workload instead needs the entire index resident, 4 GiB is insufficient, and even the default 10 GiB is close to the 9.69 GiB payload before other allocations.
+
+For a BE where 4 GiB of index cache and 1 GiB of metadata cache fit alongside peak query memory, other Doris workloads, and process/OS headroom, set:
+
+```properties
+lance_index_cache_size_bytes = 4294967296
+lance_metadata_cache_size_bytes = 1073741824
+```
+
+Restart that BE for these settings to take effect. Apply the budget separately to each BE; these are BE configuration parameters, not catalog properties or SQL session variables.
+
+1. Warm up with representative queries and concurrency, including different query vectors, filters, and tables. Repeating one vector alone understates a diverse workload's working set.
+2. Compare `doris_be_lance_session_index_cache_usage_bytes` with `doris_be_lance_session_index_cache_capacity_bytes`, the interval increases of `hits_total`/`misses_total`, and the per-query `LanceIndexPartitionCacheMissLoads`. Persistent misses with usage near capacity suggest cache churn; misses can also come from new partitions, index versions, or different BEs. Increase capacity only when reuse and available memory justify it.
+3. Start metadata-cache sizing from the default 1 GiB when the BE memory budget permits. Adjust using its `usage_bytes` and hit/miss metrics. File/Fragment counts, schema/page metadata, deletion information, and row-ID mappings determine demand; it is not a fixed percentage of vector-index size. The BE metadata cache is separate from the FE table-access cache.
+4. Check BE process memory and query peaks under the intended concurrency before increasing either cache. A high cache hit rate with high latency can indicate scoring, Prefilter, decoding, or fetch costs; additional cache is not necessarily useful.
+5. Size `lance_data_cache_disk_capacity_bytes` independently for repeated data-file reads such as refinement and output-column fetches. Increasing it does not enlarge the index cache or compensate for index-cache misses: index files bypass this disk data cache. Keep `lance_data_cache_read_block_size_bytes` at its 1 MiB default initially, then change it only after measuring useful reads versus read amplification.
+
 ### Checking Cache Effectiveness
 
 Inspect the following counters under `LanceReader` in the query Profile:
