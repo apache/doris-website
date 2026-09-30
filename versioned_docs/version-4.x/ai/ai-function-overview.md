@@ -59,6 +59,7 @@ Doris uses the [resource mechanism](../sql-manual/sql-statements/cluster-managem
 | `ai.max_tokens`         | Optional                                  | Limits the maximum number of tokens in the generated content. The default `-1` means the parameter is not set; the default for Anthropic is `2048`. |
 | `ai.max_retries`        | Optional                                  | The maximum number of retries for a single request. The default value is `3`.                                 |
 | `ai.retry_delay_second` | Optional                                  | The delay between retries, in seconds. The default value is `0`.                                              |
+| `ai.max_concurrency`    | Optional                                  | The maximum number of batch requests one execution instance keeps in flight for the scalar AI functions. The default `1` sends the batches of a block one after another; higher values overlap them. Set it to the provider's rate limit or connection budget; several scan instances multiply it. Changeable with `ALTER RESOURCE`. Not used by `embed` and `ai_agg`. |
 
 :::caution Authentication notes
 Currently only static API key authentication is supported (the credential is sent directly in the request header). Authentication mechanisms that require signing with a private key and exchanging for a temporary access token (such as OAuth or Service Account) are not supported.
