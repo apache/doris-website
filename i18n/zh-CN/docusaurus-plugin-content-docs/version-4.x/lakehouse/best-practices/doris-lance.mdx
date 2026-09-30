@@ -12,6 +12,8 @@
 Lance Catalog 是实验性功能，从 Apache Doris 4.2 开始支持。请先通过 [Lance Catalog](../catalogs/lance-catalog.mdx) 配置访问，并检查其 [Reader 兼容性](../catalogs/lance-catalog.mdx#lance-版本与兼容性)。Doris 读取已有的 Lance 索引；构建和维护索引需要使用兼容的 Lance 工具。
 :::
 
+标量过滤与向量或全文检索组合时，请参阅 [Lance 混合检索性能最佳实践](lance-hybrid-search.mdx)，了解过滤条件位置、索引对齐构建和 Profile 诊断。
+
 ## 1. 根据场景选择调优路径 {#choose-a-scenario}
 
 | 查询场景 | 从哪里开始 | 验证重点 |
