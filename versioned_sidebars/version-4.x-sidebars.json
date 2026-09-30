@@ -890,6 +890,7 @@
               "items": [
                 "lakehouse/best-practices/optimization",
                 "lakehouse/best-practices/doris-lance",
+                "lakehouse/best-practices/lance-hybrid-search",
                 "lakehouse/best-practices/kerberos",
                 "lakehouse/best-practices/tpch",
                 "lakehouse/best-practices/tpcds"

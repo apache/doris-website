@@ -1,0 +1,193 @@
+---
+{
+    "title": "Lance 混合检索性能最佳实践",
+    "language": "zh-CN",
+    "description": "指导 Apache Doris 用户优化 Lance 标量过滤与向量、全文混合检索：对齐索引 Fragment 覆盖范围、选择 Segment 粒度、配置共享缓存并分析查询 Profile。"
+}
+---
+
+当标量条件参与 Lance 向量或全文检索时，可以使用本指南确定过滤条件位置、组织索引 Segment，并识别重复过滤开销。本文的混合检索指检索与标量过滤组合；分别调用向量和全文 TVF 不会自动融合两者的排名。
+
+:::note
+Lance Catalog 为实验性功能，从 Apache Doris 4.2 开始支持。请先按 [Lance Catalog](../catalogs/lance-catalog.mdx) 配置访问并确认读写版本兼容性。Doris 读取已有 Lance 索引，索引构建和维护由兼容的 Lance 工具完成。最新 Lance SDK 或上游提案不代表当前 Doris 内置读取器已经支持对应能力。
+:::
+
+## 1. 将候选生成所需的过滤条件放在检索内部 {#candidate-filters}
+
+假设已配置的表包含整数列 `id`、字符串列 `category`、字符串列 `content` 和四维向量列 `embedding`，对必须影响候选生成的条件，应使用 TVF 的 `filter` 参数。向量索引需要匹配维度和距离度量；文本列需要已有提交完成的 FTS 索引。
+
+```sql
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1,0.2,0.3,0.4]",
+    "metric" = "l2",
+    "top_k" = "20",
+    "filter" = "category = 'book'",
+    "use_index" = "true"
+)
+ORDER BY _distance ASC, id;
+```
+
+这会在满足条件的行中检索最多 20 个近邻。这是近似检索，返回 20 行不能证明召回率。带过滤条件的全文检索示例如下：
+
+```sql
+SELECT id, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "content",
+    "query" = "storage engine",
+    "query_type" = "match",
+    "operator" = "and",
+    "top_k" = "20",
+    "filter" = "category = 'book'",
+    "coverage_mode" = "strict"
+)
+ORDER BY _score DESC, id;
+```
+
+它返回最多 20 篇匹配文档，按 BM25 排序。外层 `WHERE category = 'book'` 的语义不同：Doris 在 Lance 已生成的候选上过滤，然后执行全局 TopN，被删除的候选不会自动补齐。即使 `EXPLAIN` 将外层条件显示在 Doris Scan 算子内部，也应只把有意在检索后执行的条件放在 TVF 外。
+
+## 2. 理解并行工作的单位 {#execution-and-splits}
+
+```text
+查询快照
+  -> FE 按物理检索索引 Segment 规划 Split
+  -> 每个 Split：标量 Prefilter -> 向量或全文候选
+  -> Doris 残余条件过滤 -> 局部 TopN -> 全局 TopN
+  -> 可选的输出列延迟回表
+```
+
+| 查询路径 | Split 切分依据 | 对性能的影响 |
+|---|---|---|
+| 使用索引的向量检索 | 选中的物理向量索引 Segment；未覆盖 Fragment 使用 Flat Search Split | 标量索引 Segment 不会独立决定向量查询的 Split 数。未索引数据可能主导延迟。 |
+| 全文检索 | 选中的物理 FTS 索引 Segment | 默认 `strict` 模式拒绝未覆盖 Fragment；`index_only` 会忽略它们。不存在全文 Flat Search 回退。 |
+| 普通标量扫描 | 自身扫描规划，可能使用标量索引 Segment 或 Fragment 分组 | 不能从纯标量查询的计划推断带过滤向量查询的并行度。 |
+
+`lance_fragments_per_split` 控制普通 Fragment 扫描的分组，不控制物理向量索引 Segment 数。增加 Pipeline 实例数或 Scanner 并发不能产生比规划结果更多的向量 Segment Split。Lance Scanner 内部也可能并行执行，因此一个 Doris Scanner 不等于一个 CPU 线程。
+
+对 `S` 个检索 Split，每个最多返回 `top_k + offset` 个候选，因此残余过滤和全局 TopN 前的候选上界是 `S * (top_k + offset)`。增加 Segment 有助于分发工作，也会增加每段初始化、过滤、候选合并和并发内存需求。
+
+## 3. 对齐 Fragment 覆盖范围，而不是 Segment 数量 {#fragment-alignment}
+
+Fragment 是数据单位；索引 Segment 是覆盖一组 Fragment 的独立索引；逻辑索引将物理 Segment 组织在同一个索引名下。IVF Partition、BTree Page、FTS Posting Block 都是索引内部单位，不是 Doris 检索 Split 的切分单位。
+
+以下示例包含八个数据 Fragment：
+
+| 布局 | 向量索引覆盖范围 | 标量索引覆盖范围 | 支持 Fragment 范围裁剪的标量读取路径中的影响 |
+|---|---|---|---|
+| 边界对齐 | `V0={0,1,2,3}`、`V1={4,5,6,7}` | `B0={0,1,2,3}`、`B1={4,5,6,7}` | 每个向量 Split 只需要对应的标量 Segment。 |
+| 标量更细 | 同上 | 八个 Segment，每个覆盖一个 Fragment | 每个 Split 选择四个标量 Segment，没有跨越向量边界的 Segment。 |
+| 标量更粗 | 同上 | `B0={0,1,2,3,4,5,6,7}` | 两个向量 Split 都可能查询同一个标量 Segment。 |
+| 数量相同但边界交叉 | 同上 | `B0={0,1,4,5}`、`B1={2,3,6,7}` | 两个标量 Segment 都与两个向量 Split 相交。数量相等不代表对齐。 |
+
+按 Fragment 范围裁剪可以跳过完全不相交的标量 Segment。部分相交时仍会保留该 Segment，不会自动重建更小的 BTree，也不会在计算谓词之前自动切小每个 Posting List。重复查询可以复用已缓存的索引内容，但仍可能重复搜索和构建 Row ID 集合。保留一个 BTree Segment 不等于扫描它的所有 Page，实际成本取决于谓词和匹配结果。
+
+:::important
+收益依赖实际读取路径。在具备 Fragment 范围标量加载能力的 Lance V2 Filtered Read 路径中，可以在搜索前排除无关标量 Segment。旧 V1 数据文件路径可能先在更大范围求值逻辑标量索引，再限制结果 Row ID。这里的 V1/V2 指**数据文件格式**，不是 Doris 版本或向量索引类型。不要假设所有读取器版本或 FTS 路径都有相同裁剪能力，应分别验证各类查询的计划和 Profile。
+:::
+
+对经常组合查询的列，构建向量、标量和 FTS 索引时使用相同 Fragment 分组。标量 Segment 可以更细，但应完整包含在服务的检索 Segment 内。如果向量和 FTS 需要不同粒度，可以从共同的基础分组分别合并，并确保标量 Segment 不跨越两者的边界。这是减少潜在重叠的布局策略，不保证所有执行路径都会利用它。
+
+### 选择初始粒度
+
+不存在通用最优的每段行数或字节数。可以从参与查询的 BE 数出发，在固定召回率和目标并发下，比较每个 BE 一个均衡检索 Segment 与每个 BE 少量 Segment 的布局。这些是实验起点，不是必须遵守的比例。
+
+| 场景 | 构建重点 | 需要衡量的取舍 |
+|---|---|---|
+| 低延迟的带过滤向量检索 | 向量分组均衡，标量覆盖范围包含在对应分组内 | 最慢 Split 与重复过滤、候选扇出的成本 |
+| 高并发检索 | 避免单查询产生过多 Split，保留可复用 Partition | 同时观察 QPS、P95、CPU 排队和峰值内存 |
+| 宽范围标量过滤或高频全文词项 | 分组时考虑匹配行数、文本长度和 Posting 大小 | 行数相等不代表过滤或搜索成本相等 |
+| 持续追加 | 对相同的新 Fragment 分组构建所有相关索引 | 新数据覆盖及时性与小 Segment 积累 |
+| 单个 Fragment 非常大 | 在构建索引之前规划数据文件粒度 | 基于 Fragment 的覆盖范围不能把一个 Fragment 拆成多个互不相交的覆盖分组 |
+
+除行数外，还应衡量编码后向量与图的大小、标量值分布、文本和 Posting 大小。每个向量 Segment 应有足够的数据支持其 IVF/PQ 训练配置。`nlist`（IVF Partition 数）与物理 Segment 数是两个独立选择，调整其中一个不会自动调整另一个。
+
+## 4. 按同一分组方案构建相关索引 {#build-aligned-indexes}
+
+Doris 没有自动让多列索引边界对齐的参数。应在兼容 SDK 支持的范围内使用 Lance 分布式索引构建 API。以下展示编排方式，不是可直接运行的数据生成脚本或经过压测的参数配置：
+
+```python
+# ds is an existing LanceDataset at the chosen build snapshot.
+# groups contains non-empty, disjoint lists of actual fragment IDs.
+# vector_params and fts_params are validated for the schema and SDK version.
+# Keep writes and compaction paused for this simple coordinator example.
+visible = {fragment.fragment_id for fragment in ds.get_fragments()}
+assigned = [fragment_id for group in groups for fragment_id in group]
+assert groups and all(groups)
+assert len(assigned) == len(set(assigned))
+assert set(assigned) == visible
+
+specs = [
+    ("embedding_idx", "embedding", "IVF_PQ", vector_params),
+    ("category_idx", "category", "BTREE", {}),
+    ("content_idx", "content", "INVERTED", fts_params),
+]
+segments = {name: [] for name, _, _, _ in specs}
+for fragment_ids in groups:
+    for name, column, index_type, params in specs:
+        segment = ds.create_index_uncommitted(
+            column,
+            index_type,
+            name=name,
+            fragment_ids=fragment_ids,
+            **params,
+        )
+        segments[name].append(segment)
+
+# These are three separate commits, not an atomic multi-index publication.
+for name, column, _, _ in specs:
+    ds.commit_existing_index_segments(name, column, segments[name])
+```
+
+按以下步骤准备并验证输入：
+
+1. **固定构建方案。** 从同一快照枚举真实 Fragment ID，ID 不一定连续。按行数和预估索引字节数均衡分组，所有相关列复用同一组分组结果。分布式 Worker 必须打开相同构建版本。
+2. **选择兼容配置。** 为 IVF_PQ 提供适合向量维度和样本量的 metric、`num_partitions`、`num_sub_vectors`。同一逻辑索引内保持配置一致。FTS 保持分析器和分词配置一致，需要短语检索时启用 `with_position`。
+3. **选择向量模型策略。** 支持的多 Segment 构建流程允许各段独立训练。如果后续物理合并要求共享模型，应给 Worker 提供相同 IVF Centroid 和 PQ Codebook。不要直接合并独立训练的 Segment，也不要假设 HNSW 图会在合并后保留，应确认 SDK 支持的流程。
+4. **先构建，再发布。** 每次构建返回具有独立 UUID 的物理 Segment。收集成功结果，校验覆盖范围和兼容性，再分别提交每个逻辑索引。不同列或 Worker 输出不要共用一个物理 UUID。示例假设使用新的逻辑索引名，替换、重试和失败清理需要额外的协调策略。
+5. **验证最终 Manifest。** 对每个索引，将实际 Segment 到 Fragment 的覆盖关系与规划分组比较，检查遗漏和重叠。只比较 Segment 数量不够，应使用 Lance 索引元数据。Doris 对 Filesystem Catalog 表的 `SHOW INDEX` 有助于检查逻辑索引名、类型和字段，但不能代替覆盖关系检查。
+
+共享分组方案不要求把所有 Worker 输出合并为一个 Segment，否则会丢失刻意保留的边界。构建、提交 API 和支持的合并流程参见 [Lance 分布式索引指南](https://lance.org/guide/distributed_indexing/)。
+
+### 在维护中保持对齐
+
+- 对相同的新 Fragment 分组追加相关向量、标量和 FTS Segment。每次发布后检查查询快照的索引覆盖率。从数据追加到索引发布完成之间，FTS `strict` 模式可能拒绝查询。
+- 将 Compaction、数据重写和索引优化视为布局变化。不同操作和读取器版本可能重映射或重建索引，应检查最终覆盖关系，不要假设旧边界始终保留。
+- 按同一布局方案合并小分组。如果混合检索性能依赖对齐，不要独立把各索引优化为互不相关的分组。
+- 在线维护需要具备快照、冲突处理和恢复能力的协调器。逐索引提交不提供跨列的原子切换。TVF 读取最新 `main` 快照，其 `table` 参数不支持选择历史版本或 Tag。
+
+### 逻辑索引与上游规划
+
+Lance 的[索引格式](https://lance.org/format/index/)定义逻辑索引和物理 Segment，[分布式索引跟踪 Issue](https://github.com/lance-format/lance/issues/6309) 跟踪各索引类型共享的 Segment 生命周期。该模型**不要求不同列拥有相同 Fragment 边界**。跨列分组和维护仍由编排方负责，不能把上游路线图理解成 Doris 已经提供自动对齐功能。
+
+## 5. 同时调优过滤和内存 {#workload-tuning}
+
+| 现象 | 下一步实验 | 正确性或资源约束 |
+|---|---|---|
+| 过滤很强，向量结果不足或召回率低 | 检查过滤位置与索引覆盖率，对比 Probe 设置，并在受控数据集上建立精确基线 | 减少 Probe 可能降低召回率，增加 Probe 也不能产生不满足过滤条件的行。 |
+| 宽范围过滤产生很大的 Prefilter 集合 | 对比对齐布局以及标量谓词实际选择性 | 使用索引不能消除大量匹配 Row ID 的物化成本。 |
+| 向量 Split 增多时标量工作重复 | 比较 Segment 覆盖范围交集与读取路径 | 即使缓存已热，增加 Split 也可能放大过滤开销。 |
+| 冷查询慢 | 使用有代表性的向量和词项比较冷、热 Profile | 一个查询的预热不能覆盖生产工作集。 |
+| 热缓存下混合流量变慢 | 在目标并发下观察共享缓存未命中和 CPU 排队 | 同一 BE 上的标量、向量、FTS 内容可能竞争同一 Session 索引缓存预算。 |
+| `top_k` 大、`offset` 深或输出列宽 | 在语义允许时减少候选需求，检查延迟回表 | 候选堆、Row ID Mask、Refine 和回表缓冲属于额外查询内存。 |
+
+按**合并后的**可复用索引工作集规划缓存，为并发查询内存保留空间。缓存容量不是进程内存上限，增加 Metadata Cache 也不会扩大 Index Cache。各索引载荷公式、HNSW 图开销、缓存作用域和 Doris BE 配置示例参见 [Lance 查询最佳实践](doris-lance.mdx)。
+
+## 6. 用计划和 Profile 验证 {#validation}
+
+使用相同查询集、数据快照、索引类型与配置、`top_k` 和召回率目标进行比较，每次只修改一种布局或参数。覆盖强过滤与宽范围过滤、不同向量和词项、冷缓存与热缓存、目标并发，记录 P50/P95、吞吐、结果数量、召回率和每个 BE 的峰值内存。
+
+| 阶段 | 证据 | 如何解释 |
+|---|---|---|
+| 规划与覆盖率 | `EXPLAIN` 中的 `lanceSearchIndexSegments`、`lanceSearchUnindexedFragments`；Profile 中 Scanner 数 | 确认 Split 数、回退工作量以及计划能否利用预期布局。 |
+| Prefilter | `LancePrefilterInputRows`、`LancePrefilterRowIds`、`LancePrefilterLoadTime`、`LancePrefilterBuildTime` | Load 包含构建过滤器的耗时，不应相加。没有远程 I/O 时，大 Row ID 集合仍可能主导开销。 |
+| 标量 Segment 路径 | 有统计值时的 `LanceScalarIndexSegmentsRequested`、`LanceScalarIndexSegmentsSearched`、`LanceScalarIndexCandidateRows` | 这些计数描述已埋点的标量 Segment 路径，不一定覆盖 ANN/FTS 内部所有标量查询。零值不能证明没有标量过滤。 |
+| 索引加载与搜索 | `LanceIndexPartitionCacheMissLoads`、`LanceExecutionIOBytesRead`、`LanceIndexComparisons`，以及可用的详细索引计时器 | 区分缓存重新加载、热缓存搜索和候选处理。I/O 计数为零不代表没有 CPU 工作。 |
+| 输出回表 | 存在时的 Materialization 算子和 Row ID Fetch 计时 | 将输出列读取与候选检索分开归因。 |
+| 端到端延迟 | 最慢 Scanner、依赖等待、FE 等待/取结果/写结果和客户端墙钟时间 | 不能将重叠算子或所有并行 Scanner 的时间直接相加作为查询延迟。 |
+
+Profile 详细程度取决于 Doris 构建和内置 Lance 埋点。缺失指标不等于实测为零。`FileScannerV2` 包含 Scanner 打开、读取和关闭工作；读取区间可能包括 Prefilter 加载、索引 I/O、运行时等待、ANN 搜索、Refine 和转换。嵌套或并行计时不是可直接相加的分解。如果现有指标无法解释该区间，应收集 CPU/I/O Trace 或使用带所需详细埋点的构建，再判断剩余开销是否来自存储。
+
+对无过滤条件的向量查询，如果读取器具有 Segment 范围优化，且选中的索引 Segment 完整位于扫描 Fragment 范围内，可以避免枚举所有 Row ID。真实标量谓词仍需计算，删除和可见性处理也可能保留。对齐能减少可避免的工作，但不保证带过滤检索的 Prefilter 开销为零。

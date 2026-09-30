@@ -12,6 +12,8 @@ Use this guide to choose a per-BE cache budget and index segment layout for your
 Lance Catalog is experimental and supported starting from Apache Doris 4.2. First configure access using [Lance Catalog](../catalogs/lance-catalog.mdx) and check its [reader compatibility](../catalogs/lance-catalog.mdx#lance-version-and-compatibility). Doris reads existing Lance indexes; use compatible Lance tooling to build or maintain them.
 :::
 
+For scalar filters combined with vector or full-text retrieval, see [Lance Hybrid Search Performance Best Practices](lance-hybrid-search.mdx) for filter placement, aligned index construction, and profile diagnosis.
+
 ## 1. Choose a Tuning Path {#choose-a-scenario}
 
 | Your workload | Start with | What to validate |

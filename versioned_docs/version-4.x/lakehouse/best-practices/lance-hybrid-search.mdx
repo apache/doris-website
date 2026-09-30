@@ -1,0 +1,193 @@
+---
+{
+    "title": "Lance Hybrid Search Performance Best Practices",
+    "language": "en",
+    "description": "Tune filtered vector and full-text search over Lance in Apache Doris: align index coverage, size segments, budget shared caches, and diagnose query profiles."
+}
+---
+
+Use this guide when scalar conditions participate in vector or full-text retrieval over Lance. It explains how to place filters, organize index segments, and identify repeated filtering work. Here, hybrid search means retrieval combined with scalar filtering; calling the vector and full-text TVFs separately does not automatically fuse their rankings.
+
+:::note
+Lance Catalog is experimental and supported starting from Apache Doris 4.2. Configure access and check the reader/writer compatibility requirements in [Lance Catalog](../catalogs/lance-catalog.mdx) first. Doris reads existing Lance indexes; build and maintain them with compatible Lance tooling. The latest Lance SDK or an upstream proposal does not guarantee support in the reader bundled with your Doris build.
+:::
+
+## 1. Put Candidate Filters Inside the Search {#candidate-filters}
+
+For a configured table containing an integer `id`, string `category`, string `content`, and a four-dimensional vector `embedding`, use the TVF's `filter` parameter for conditions that must affect candidate generation. The vector index must match the dimension and metric; the text column must have a committed FTS index.
+
+```sql
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1,0.2,0.3,0.4]",
+    "metric" = "l2",
+    "top_k" = "20",
+    "filter" = "category = 'book'",
+    "use_index" = "true"
+)
+ORDER BY _distance ASC, id;
+```
+
+This searches for up to 20 neighbors among matching rows. It is approximate search: returning 20 rows does not prove recall. For filtered full-text retrieval:
+
+```sql
+SELECT id, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "content",
+    "query" = "storage engine",
+    "query_type" = "match",
+    "operator" = "and",
+    "top_k" = "20",
+    "filter" = "category = 'book'",
+    "coverage_mode" = "strict"
+)
+ORDER BY _score DESC, id;
+```
+
+This returns up to 20 matching documents ranked by BM25. An outer `WHERE category = 'book'` has different semantics: Doris filters candidates that Lance has already generated, before global TopN. Removed candidates are not automatically replenished. Keep only intentional post-retrieval conditions outside the TVF, even if `EXPLAIN` places them inside a Doris Scan operator.
+
+## 2. Understand the Unit of Parallel Work {#execution-and-splits}
+
+```text
+Query snapshot
+  -> FE plans physical search-index segment splits
+  -> Each split: scalar Prefilter -> vector or full-text candidates
+  -> Doris residual filtering -> local TopN -> global TopN
+  -> Optional deferred fetch of output columns
+```
+
+| Query path | Split basis | Consequence |
+|---|---|---|
+| Indexed vector search | Selected physical vector index segments; uncovered fragments get Flat Search splits | Scalar index segments do not independently set vector-query split count. Unindexed data can dominate latency. |
+| Full-text search | Selected physical FTS index segments | Default `strict` coverage rejects uncovered fragments; `index_only` omits them. There is no full-text Flat Search fallback. |
+| Ordinary scalar scan | Its own scan planning, potentially using scalar-index segments or fragment groups | Do not infer filtered vector-query parallelism from a scalar-only query plan. |
+
+`lance_fragments_per_split` controls ordinary fragment scan grouping, not the number of physical vector index segments. Increasing pipeline instances or scanner concurrency cannot create more vector segment splits than the planner produces. A Lance scanner can also execute work internally in parallel, so one Doris scanner is not equivalent to one CPU thread.
+
+For `S` search splits, each can return at most `top_k + offset` candidates. The pre-merge candidate bound is therefore `S * (top_k + offset)`, before residual filtering and global TopN. More segments can improve distribution while increasing per-segment setup, filtering, candidate merging, and concurrent memory demand.
+
+## 3. Align Fragment Coverage, Not Segment Counts {#fragment-alignment}
+
+A fragment is a data unit. An index segment is a self-contained index covering a set of fragments. A logical index groups physical segments under one index name. An IVF partition, BTree page, or FTS posting block is an internal index unit; none of these defines a Doris search split.
+
+The following example uses eight data fragments:
+
+| Layout | Vector coverage | Scalar coverage | Filtering implication on a fragment-scoped scalar reader |
+|---|---|---|---|
+| Aligned | `V0={0,1,2,3}`, `V1={4,5,6,7}` | `B0={0,1,2,3}`, `B1={4,5,6,7}` | Each vector split needs only its corresponding scalar segment. |
+| Scalar is finer | Same as above | Eight segments, one per fragment | Each split selects four scalar segments; none crosses the vector boundary. |
+| Scalar is coarser | Same as above | `B0={0,1,2,3,4,5,6,7}` | Both vector splits can query the same scalar segment. |
+| Same count, crossing boundaries | Same as above | `B0={0,1,4,5}`, `B1={2,3,6,7}` | Both scalar segments overlap both vector splits. Equal counts do not provide alignment. |
+
+Fragment-scoped pruning skips scalar segments with no overlap. Partial overlap keeps the segment: it does not automatically rebuild a smaller BTree or slice every posting list before predicate evaluation. Repeated queries can reuse cached index content but still repeat searches and row-ID set construction. A BTree lookup does not necessarily scan all pages of a retained segment; cost depends on the predicate and matches.
+
+:::important
+This benefit depends on the actual reader path. In Lance's V2 filtered-read path with fragment-scoped scalar loading, unrelated scalar segments can be excluded before search. Legacy V1 data-file paths can evaluate the logical scalar index more broadly and restrict row IDs afterward. V1/V2 here refers to the **data-file format**, not the Doris release or vector index type. Do not assume identical pruning for every reader version or for the FTS path; verify the plan and profile of each query family.
+:::
+
+For frequently combined columns, use the same fragment groups for vector, scalar, and FTS index construction. Scalar segments may be finer if each is contained within the search segment it serves. If vector and FTS segments need different sizes, consider coarsenings of common base groups and keep scalar segments inside both sets of boundaries. This is a layout policy to reduce potential overlap, not a guarantee that every execution path exploits it.
+
+### Choose a Starting Granularity
+
+There is no universal optimal row count or byte size per segment. Start from the BEs eligible for the workload, then compare one balanced search segment per BE with a few segments per BE at fixed recall and target concurrency. These are experiment points, not required ratios.
+
+| Workload | Construction priority | Main tradeoff to measure |
+|---|---|---|
+| Latency-sensitive filtered vector search | Balanced vector groups and scalar coverage contained within them | Slowest split versus repeated filtering and candidate fan-out |
+| High-concurrency retrieval | Avoid excessive per-query split fan-out; retain reusable partitions | QPS, P95 latency, CPU queues, and peak memory together |
+| Broad scalar filters or common FTS terms | Consider match counts, text length, and posting sizes when balancing groups | Equal row counts can still produce unequal filtering/search costs |
+| Frequent appends | Build all related indexes for the same new fragment groups | Fresh-data coverage versus accumulating tiny segments |
+| Very large individual fragments | Plan data-file sizing before index construction | Fragment-based coverage cannot split one fragment into multiple disjoint coverage groups |
+
+Measure encoded vector/graph size, scalar value distribution, and text/posting sizes as well as rows. Keep enough training data in each vector segment for its IVF/PQ configuration. `nlist` (IVF partition count) and physical segment count are separate choices; changing one does not automatically adjust the other.
+
+## 4. Build Related Indexes From One Grouping Plan {#build-aligned-indexes}
+
+Doris has no parameter that automatically aligns indexes across columns. Use the Lance distributed-build APIs where supported by your compatible SDK. The following is an orchestration pattern, not a ready-to-run dataset generator or a benchmark configuration:
+
+```python
+# ds is an existing LanceDataset at the chosen build snapshot.
+# groups contains non-empty, disjoint lists of actual fragment IDs.
+# vector_params and fts_params are validated for the schema and SDK version.
+# Keep writes and compaction paused for this simple coordinator example.
+visible = {fragment.fragment_id for fragment in ds.get_fragments()}
+assigned = [fragment_id for group in groups for fragment_id in group]
+assert groups and all(groups)
+assert len(assigned) == len(set(assigned))
+assert set(assigned) == visible
+
+specs = [
+    ("embedding_idx", "embedding", "IVF_PQ", vector_params),
+    ("category_idx", "category", "BTREE", {}),
+    ("content_idx", "content", "INVERTED", fts_params),
+]
+segments = {name: [] for name, _, _, _ in specs}
+for fragment_ids in groups:
+    for name, column, index_type, params in specs:
+        segment = ds.create_index_uncommitted(
+            column,
+            index_type,
+            name=name,
+            fragment_ids=fragment_ids,
+            **params,
+        )
+        segments[name].append(segment)
+
+# These are three separate commits, not an atomic multi-index publication.
+for name, column, _, _ in specs:
+    ds.commit_existing_index_segments(name, column, segments[name])
+```
+
+Prepare and validate the inputs as follows:
+
+1. **Freeze the build plan.** Enumerate actual fragment IDs from one snapshot; IDs need not be contiguous. Balance groups by rows and estimated index bytes. Reuse these exact groups for every related column. All distributed workers must open the same build version.
+2. **Choose compatible configurations.** For IVF_PQ, supply an appropriate metric, `num_partitions`, and `num_sub_vectors` for the vector dimension and sample size. Keep index configurations consistent across a logical index. For FTS, keep analyzer/tokenizer settings consistent and enable `with_position` when phrase search is needed.
+3. **Choose the vector model strategy.** Supported multi-segment builds can train independently per segment. If later physical merging requires shared models, supply the same IVF centroids and PQ codebook to workers. Do not blindly merge independently trained segments or assume HNSW graphs survive a merge; check the SDK's supported workflow.
+4. **Build first, then publish.** Each build returns a physical segment with its own UUID. Collect successful outputs and verify coverage and compatibility before committing each logical index. Do not assign one shared physical UUID to different columns or worker outputs. The example assumes new logical index names; replacement, retries, and failure cleanup require a separate coordinator policy.
+5. **Verify the resulting manifest.** For each index, compare the actual segment-to-fragment coverage with the planned groups and check for missing or overlapping coverage. Matching segment counts alone are insufficient. Use Lance index metadata; Doris `SHOW INDEX` on Filesystem Catalog tables helps check logical index names, types, and fields but does not replace this coverage audit.
+
+A shared grouping plan does not require merging all worker outputs into one segment. Such a merge would remove the boundaries you intended to preserve. Consult [Lance Distributed Indexing](https://lance.org/guide/distributed_indexing/) for the build/commit APIs and supported merge workflows.
+
+### Preserve Alignment During Maintenance
+
+- Append related vector, scalar, and FTS segments using the same new fragment groups. After each publication, check the query snapshot's coverage. FTS `strict` mode can reject queries between the data append and completion of index publication.
+- Treat compaction, rewrites, and index optimization as layout changes. Depending on the operation and reader version, indexes may be remapped or rebuilt; inspect the resulting coverage instead of assuming previous boundaries survive.
+- Coalesce small groups according to one layout plan. Do not independently optimize each index into unrelated groups if mixed-query performance depends on alignment.
+- For online maintenance, use a coordinator with snapshot/conflict handling and recovery. Separate per-index commits do not provide an atomic switch for all columns. The TVFs read the latest `main` snapshot; their `table` argument does not select a historical version or tag.
+
+### Logical Indexes and Upstream Planning
+
+Lance's [index format](https://lance.org/format/index/) defines logical indexes and physical segments. The [distributed-index tracking issue](https://github.com/lance-format/lance/issues/6309) tracks the shared segment lifecycle across index families. This model does **not** impose identical fragment boundaries on different columns. Cross-column grouping and maintenance remain orchestration responsibilities; do not treat an upstream roadmap as an automatic alignment feature in Doris.
+
+## 5. Tune Filters and Memory Together {#workload-tuning}
+
+| Observation | Next experiment | Correctness or resource constraint |
+|---|---|---|
+| Very selective filter, too few vector results or weak recall | Check filter placement and index coverage; compare probe settings and an exact baseline on a bounded dataset | Reducing probes for latency can reduce recall. More probes cannot create rows that fail the filter. |
+| Broad filter produces large Prefilter sets | Compare aligned layouts and the scalar predicate's actual selectivity | Index use does not eliminate the cost of materializing many matching row IDs. |
+| Repeated scalar work as vector split count rises | Compare segment coverage intersections and reader paths | Increasing splits can amplify filtering even with a warm cache. |
+| Cold queries are slow | Compare cold and warm profiles with representative vectors and terms | Warmup for one query does not cover the production working set. |
+| Warm mixed traffic becomes slow | Measure shared cache misses and CPU queues at target concurrency | Scalar, vector, and FTS index content can compete for the same session index-cache budget on a BE. |
+| Large `top_k`, deep `offset`, or wide output | Reduce requested candidates where semantics permit; inspect deferred fetching | Candidate heaps, row-ID masks, refinement, and fetch buffers are additional query memory. |
+
+Size the **combined** reusable index working set and leave headroom for concurrent query memory. Cache capacity is not a process-memory limit, and increasing metadata cache does not increase index cache. Use [Lance Query Best Practices](doris-lance.mdx) for per-index payload formulas, HNSW graph costs, cache scope, and Doris BE configuration examples.
+
+## 6. Verify With Plans and Profiles {#validation}
+
+Compare the same query set, dataset snapshot, index type/configuration, `top_k`, and recall target. Change one layout or parameter at a time. Include selective and broad filters, diverse vectors/terms, cold and warm runs, and the intended concurrency. Record P50/P95, throughput, result counts, recall, and per-BE peak memory.
+
+| Stage | Evidence | Interpretation |
+|---|---|---|
+| Planning and coverage | `EXPLAIN`: `lanceSearchIndexSegments`, `lanceSearchUnindexedFragments`; profile scanner counts | Confirm split count, fallback work, and whether the plan can use the intended layout. |
+| Prefilter | `LancePrefilterInputRows`, `LancePrefilterRowIds`, `LancePrefilterLoadTime`, `LancePrefilterBuildTime` | Load includes building the filter; do not add these timers. Large row-ID sets can dominate even without remote I/O. |
+| Scalar segment path | `LanceScalarIndexSegmentsRequested`, `LanceScalarIndexSegmentsSearched`, `LanceScalarIndexCandidateRows`, where populated | These counters describe the instrumented scalar-segment path, not necessarily every scalar lookup inside ANN/FTS. Zero is not proof that no scalar filtering happened. |
+| Index loading and search | `LanceIndexPartitionCacheMissLoads`, `LanceExecutionIOBytesRead`, `LanceIndexComparisons`; detailed index timers where available | Separate cache reloads from warm search and candidate-processing work. Zero I/O counters do not imply zero CPU work. |
+| Output fetch | Materialization operator and row-ID fetch timings, where present | Attribute output-column reads separately from candidate search. |
+| End-to-end latency | Slowest scanner, dependency waits, FE wait/fetch/write, and client wall time | Do not sum overlapping operators or all parallel scanner times into query latency. |
+
+Profile detail depends on the Doris build and bundled Lance instrumentation. Missing counters are not measured zeros. `FileScannerV2` includes scanner open/read/close work; its read interval can include Prefilter loading, index I/O, runtime waits, ANN search, refinement, and conversion. Nested or parallel counters are not an additive breakdown. If the exposed metrics cannot explain the interval, collect a CPU/I/O trace or use a build with the necessary detailed instrumentation before attributing the remainder to storage.
+
+For an unfiltered vector query, a reader with the segment-scope optimization can avoid enumerating every row ID when the selected index segment is wholly inside the scan's fragment scope. Actual scalar predicates still need evaluation; deletion and visibility handling can also remain. Alignment reduces avoidable work but does not promise a zero-cost Prefilter for filtered retrieval.

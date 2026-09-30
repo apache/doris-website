@@ -472,6 +472,8 @@ nested_index   nested_label_btree    1             attributes.`child.with.dot`  
 
 | Lance / Arrow Type | Doris Type | Description |
 |---|---|---|
+| `null` (nullable field) | `NULL` | Every value is SQL NULL; non-nullable Null fields are unsupported |
+| `duration(s/ms/us/ns)` | `BIGINT` | Preserves the signed count in the declared unit; does not normalize to seconds |
 | `bool` | `BOOLEAN` | |
 | `int8` | `TINYINT` | |
 | `uint8` | `SMALLINT` | Losslessly widened unsigned integer |
@@ -487,6 +489,9 @@ nested_index   nested_label_btree    1             attributes.`child.with.dot`  
 | `decimal128(P,S)` | `DECIMAL(P,S)` | Maximum precision is 38 |
 | `decimal256(P,S)` | `DECIMAL(P,S)` | Maximum precision is 76 |
 | `utf8`, `large_utf8` | `TEXT` | |
+| `arrow.json` Extension | `JSON` | Requires `utf8` or `large_utf8` storage |
+| `lance.json` Extension | `JSON` | Requires `large_binary` storage; read as the logical JSON type |
+| `lance.bfloat16` Extension | `FLOAT` | Requires `fixed_size_binary(2)` storage; widened to Float32 without precision loss |
 | `binary`, `large_binary` | `VARBINARY(2147483647)` | |
 | `fixed_size_binary(N)` | `VARBINARY(N)` | Preserves the fixed byte width |
 | `date32(day)`, `date64(ms)` | `DATE` | A `date64` value must represent a complete calendar day |
@@ -501,17 +506,21 @@ nested_index   nested_label_btree    1             attributes.`child.with.dot`  
 | `list`, `large_list`, `fixed_size_list` | `ARRAY` | Element types are mapped recursively |
 | `map` | `MAP` | Key and value types are mapped recursively |
 
+Doris recognizes these extensions through `ARROW:extension:name` metadata and validates their storage types. JSON extensions map to Doris `JSON` (internally `JSONB`). An ordinary `utf8`/`large_utf8` column containing JSON text still maps to `TEXT`; its contents do not automatically change its type. JSON read support does not imply pushdown of arbitrary JSON path expressions; see [Predicate Pushdown](#predicate-pushdown) for the supported scope.
+
+Reading JSON, Duration, Null, and BFloat16 requires the corresponding type support in both the FE and the BEs serving the query. Older builds may still report these types as unsupported; verify schema discovery and actual reads when upgrading.
+
 The following types are not currently supported:
 
-- Arrow `null` and `duration`.
-- Arrow/Lance Extension types with `ARROW:extension:name` metadata, including Lance Blob v2, Arrow JSON Extension, and Lance BFloat16 Extension.
+- Non-nullable Arrow `null` fields.
+- Arrow/Lance Extension types not listed as supported, such as Lance Blob v2; known extensions with incompatible storage types are also unsupported.
 - Complex types whose child types cannot be mapped recursively.
 - Arrow Dictionary types that preserve the Dictionary marker.
 
 For an unsupported top-level column, `DESC` on a Catalog table and `DESC FUNCTION` on a Lance file TVF both preserve the column and display `unknown type: UNSUPPORTED_TYPE`. If any child of a complex type cannot be mapped, the whole top-level complex column is marked unsupported. Queries can still project only supported columns. Doris reports an error during analysis when SQL projects an unsupported column. For example:
 
 ```sql
-SELECT * EXCEPT(blob_col, json_col)
+SELECT * EXCEPT(blob_col)
 FROM lance_catalog.default.all_types;
 ```
 
@@ -995,7 +1004,7 @@ After the BE restarts, the shared cache initializes when the first Lance Dataset
 
 Budget for index and metadata caches alongside query working memory. These capacities do not limit total Lance query memory or BE process memory. The disk cache also consumes local disk space and file descriptors. Larger read blocks reduce the number of blocks but can increase extra I/O for small reads. Use a new cache directory when changing the read block size or disk layout.
 
-For workload-specific sizing formulas, configuration examples, shared-cache contention, and index segment granularity, see [Lance Query Best Practices](../best-practices/doris-lance.mdx).
+For workload-specific sizing formulas, configuration examples, shared-cache contention, and index segment granularity, see [Lance Query Best Practices](../best-practices/doris-lance.mdx). For filtering and retrieval together, see [Lance Hybrid Search Performance Best Practices](../best-practices/lance-hybrid-search.mdx).
 
 ### Checking Cache Effectiveness
 

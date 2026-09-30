@@ -472,6 +472,8 @@ nested_index   nested_label_btree    1             attributes.`child.with.dot`  
 
 | Lance / Arrow 类型 | Doris 类型 | 说明 |
 |---|---|---|
+| `null`（可空字段） | `NULL` | 所有值均为 SQL NULL；非可空 Null 字段不支持 |
+| `duration(s/ms/us/ns)` | `BIGINT` | 保留字段声明单位的有符号计数，不统一转换为秒 |
 | `bool` | `BOOLEAN` | |
 | `int8` | `TINYINT` | |
 | `uint8` | `SMALLINT` | 无符号整数无损提升 |
@@ -487,6 +489,9 @@ nested_index   nested_label_btree    1             attributes.`child.with.dot`  
 | `decimal128(P,S)` | `DECIMAL(P,S)` | 最大精度为 38 |
 | `decimal256(P,S)` | `DECIMAL(P,S)` | 最大精度为 76 |
 | `utf8`、`large_utf8` | `TEXT` | |
+| `arrow.json` Extension | `JSON` | 底层类型为 `utf8` 或 `large_utf8` |
+| `lance.json` Extension | `JSON` | 底层类型为 `large_binary`；按 JSON 逻辑类型读取 |
+| `lance.bfloat16` Extension | `FLOAT` | 底层类型为 `fixed_size_binary(2)`；无损提升为 Float32 |
 | `binary`、`large_binary` | `VARBINARY(2147483647)` | |
 | `fixed_size_binary(N)` | `VARBINARY(N)` | 保留固定字节宽度 |
 | `date32(day)`、`date64(ms)` | `DATE` | `date64` 应表示完整自然日 |
@@ -501,17 +506,21 @@ nested_index   nested_label_btree    1             attributes.`child.with.dot`  
 | `list`、`large_list`、`fixed_size_list` | `ARRAY` | 元素类型递归映射 |
 | `map` | `MAP` | Key 和 Value 类型递归映射 |
 
+Doris 根据 `ARROW:extension:name` 元数据识别上述扩展类型，并校验其底层存储类型。JSON 扩展映射为 Doris `JSON`（内部类型 `JSONB`），普通 `utf8`/`large_utf8` 列即使包含 JSON 文本，仍映射为 `TEXT`，不会自动变成 JSON。支持 JSON 读取不代表任意 JSON 路径表达式都能下推；下推范围见[谓词下推](#谓词下推)。
+
+JSON、Duration、Null 和 BFloat16 读取需要 FE 与参与查询的 BE 均包含对应类型支持。旧构建可能仍显示不支持；升级时应同时确认 Schema 识别和实际读取能力。
+
 当前不支持以下类型：
 
-- Arrow `null` 和 `duration`。
-- 带有 `ARROW:extension:name` 元数据的 Arrow/Lance Extension 类型，例如 Lance Blob v2、Arrow JSON Extension 和 Lance BFloat16 Extension。
+- 非可空的 Arrow `null` 字段。
+- 未列为支持的 Arrow/Lance Extension 类型，例如 Lance Blob v2；已知扩展类型的底层存储与上表不匹配时也不支持。
 - 无法递归映射其子类型的复杂类型。
 - 保留了 Dictionary 标记的 Arrow Dictionary 类型。
 
 对于不支持的顶层列，Catalog 表的 `DESC` 和 Lance 文件 TVF 的 `DESC FUNCTION` 都会保留该列，并显示 `unknown type: UNSUPPORTED_TYPE`。如果复杂类型的任一子字段无法映射，则整个顶层复杂列会标记为不支持。查询只投影支持的列仍可正常执行；当 SQL 投影不支持的列时，Doris 会在分析阶段报错。例如：
 
 ```sql
-SELECT * EXCEPT(blob_col, json_col)
+SELECT * EXCEPT(blob_col)
 FROM lance_catalog.default.all_types;
 ```
 
@@ -995,7 +1004,7 @@ lance_data_cache_read_block_size_bytes = 1048576
 
 配置容量时应同时考虑索引缓存、元数据缓存和查询工作内存。上述容量不是 Lance 查询总内存的上限，也不是 BE 进程内存的上限。磁盘缓存还需要本地磁盘空间和文件描述符资源；增大读取块可以减少块数量，但小范围读取可能产生更多额外 I/O。调整读取块大小或磁盘布局时使用新的缓存目录。
 
-按场景估算缓存、选择配置、分析共享缓存竞争以及确定 Index Segment 粒度，请参阅 [Lance 查询最佳实践](../best-practices/doris-lance.mdx)。
+按场景估算缓存、选择配置、分析共享缓存竞争以及确定 Index Segment 粒度，请参阅 [Lance 查询最佳实践](../best-practices/doris-lance.mdx)。过滤与检索组合的调优方法参见 [Lance 混合检索性能最佳实践](../best-practices/lance-hybrid-search.mdx)。
 
 ### 查看缓存效果
 
