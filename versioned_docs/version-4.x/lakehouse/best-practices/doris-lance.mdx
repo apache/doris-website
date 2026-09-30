@@ -68,22 +68,62 @@ Use the following symbols. All formulas return bytes; `1 GiB = 1073741824 bytes`
 | `m`, `b` | PQ subvector count and bits per subvector code. These are index-build settings, not query parameters. |
 | `G` | Memory occupied by the loaded HNSW graph, including all levels and auxiliary structures. |
 
-Each indexed vector has an 8-byte row ID in addition to its vector representation. Estimate their combined payload as follows:
+**Add all applicable components, not just the vector codes.** The first table separates the per-vector payload; the following tables list shared structures and HNSW graph components. All formulas estimate loaded buffers. Rows marked **Measure** still need a budget; they are not zero-cost items. Count each shared allocation once.
 
-| Index type | Vector and row-ID payload | Additional graph memory |
+| Index type | Vector values / codes | UInt64 row IDs | HNSW graph | Other required budget |
+|---|---|---|---|---|
+| `IVF_FLAT` | `N * D * w` | `8 * N` | None | IVF structures + common overhead below |
+| `IVF_SQ` | `N * D` for SQ8 | `8 * N` | None | IVF structures + SQ metadata + common overhead |
+| `IVF_PQ` | `N * ceil(m * b / 8)` | `8 * N` | None | IVF structures + PQ codebook + common overhead |
+| `IVF_HNSW_FLAT` | `N * D * w` | `8 * N` | **Add `G`** | IVF structures + common overhead |
+| `IVF_HNSW_SQ` | `N * D` for SQ8 | `8 * N` | **Add `G`** | IVF structures + SQ metadata + common overhead |
+| `IVF_HNSW_PQ` | `N * ceil(m * b / 8)` | `8 * N` | **Add `G`** | IVF structures + PQ codebook + common overhead |
+
+For PQ with `b=8`, the code occupies `m` bytes per vector; with `b=4`, it occupies `m/2` bytes for supported, even `m`. For example, 1 million vectors with `m=96` and `b=8` have `96000000` bytes of codes and `8000000` bytes of row IDs: `104000000` bytes (about 99.2 MiB) combined. The row IDs must not be omitted when estimating strongly compressed indexes.
+
+| Additional component | Applies to | Loaded payload / how to budget |
 |---|---|---|
-| `IVF_FLAT` | `N * (D * w + 8)` | None |
-| `IVF_SQ` | `N * (D + 8)` for SQ8 | None |
-| `IVF_PQ` | `N * (ceil(m * b / 8) + 8)` | None |
-| `IVF_HNSW_FLAT` | `N * (D * w + 8)` | Add `G` |
-| `IVF_HNSW_SQ` | `N * (D + 8)` for SQ8 | Add `G` |
-| `IVF_HNSW_PQ` | `N * (ceil(m * b / 8) + 8)` | Add `G` |
+| IVF centroids | All six types | FP32: `num_partitions * D * 4` per retained centroid set; use the actual element width for other layouts |
+| IVF partition directory / sub-index metadata | All six types | **Measure** retained partition offsets, lengths, and reader structures; distinct from vector values and centroids |
+| PQ codebook | `IVF_PQ`, `IVF_HNSW_PQ` | Standard FP32 codebook: `2^b * D * 4` per retained copy |
+| SQ quantizer metadata | `IVF_SQ`, `IVF_HNSW_SQ` | **Measure** retained quantizer bounds/parameters; do not assume one fixed layout across versions |
+| Norms, row-coverage structures, additional mappings | Where retained by the reader | **Measure** actual arrays/sets; multi-vector row mappings need their own budget |
+| Index objects, Arrow validity buffers, spare capacity and copies | All six types | **Measure** allocations beyond the logical payload; count shared buffers once |
 
-For PQ with `b=8`, the code occupies `m` bytes per vector; with `b=4`, it occupies `m/2` bytes for supported, even `m`. For example, 1 million vectors with `m=96` and `b=8` have `104000000` bytes (about 99.2 MiB) of codes and row IDs. The row IDs must not be omitted when estimating strongly compressed indexes.
+Independent index segments can retain separate centroid sets and codebooks. Do not multiply shared allocations by every partition or assume all copies are shared. The extra structures depend on the embedded Lance version.
 
-Also budget for IVF centroids, quantizer metadata, loaded index objects, and allocated buffer capacity. FP32 IVF centroids occupy approximately `num_partitions * D * 4` bytes per centroid set; a standard FP32 PQ codebook occupies approximately `2^b * D * 4` bytes per codebook. Independent index segments can have separate centroid sets and codebooks. Other allocations, such as vector norms, partition row-coverage structures, or implementation-specific copies, depend on the embedded Lance version. Do not multiply shared allocations by every partition or assume all copies are shared.
+#### HNSW Graph Components {#hnsw-graph-payload}
 
-HNSW needs a separate estimate. Its `m` build parameter controls graph connectivity and is unrelated to PQ's `m`. For an Arrow-backed Lance graph retaining both UInt32 neighbor IDs and Float32 edge distances, the main graph buffers are approximately `8 * E + 12 * V` bytes, where `E` is the total number of stored directed neighbor entries across all levels and `V` is the number of node occurrences across all levels. The terms cover neighbor IDs and distances, node IDs, and two list-offset arrays; validity buffers, lookup structures, allocation overhead, and vector storage are additional. This is a layout-specific estimate, not a fixed bytes-per-node guarantee. If only the connectivity parameter is known, do not substitute `N * m * 4` for `G`: actual degree, upper levels, retained distances, and the Lance reader version matter. Calibrate with cache usage after loading a representative set of partitions.
+**The graph is additional to vector codes and row IDs.** For an Arrow-backed Lance graph with UInt32 node/neighbor IDs and optional retained Float32 edge distances, let `E` be the stored directed neighbor entries across all loaded levels, `V` the node occurrences across those levels, and `A` the number of independently retained graph batches. A node present at several levels contributes several times to `V`.
+
+| Graph component | Main payload, in bytes | Counting rule |
+|---|---|---|
+| Neighbor IDs | `4 * E` | UInt32 per directed neighbor entry; count all levels |
+| Stored edge distances | `4 * E` | Float32 per neighbor entry; **zero when the reader skips the distance column** |
+| Graph node IDs | `4 * V` | UInt32 per node occurrence; these are distinct from dataset UInt64 row IDs |
+| Neighbor-list offsets | `4 * (V + A)` | Int32 list offsets, including one terminal offset per batch |
+| Distance-list offsets | `4 * (V + A)` | A second Int32 list-offset array; **zero when the reader skips the distance column** |
+| **Subtotal with distances** | **`8 * E + 12 * V + 8 * A`** | Approximately `8 * E + 12 * V` for large batches; not the complete `G` |
+| **Subtotal without distances** | **`4 * E + 8 * V + 4 * A`** | Use when only node IDs and neighbor lists are retained; select one subtotal, not both |
+| Level offsets, entry points and node lookup structures | **Measure** | Include retained metadata and lookup allocations for each loaded graph |
+| Validity buffers, graph objects and spare allocation capacity | **Measure** | Add actual allocations beyond the buffers above, without double-counting shared buffers |
+| **Complete graph budget `G`** | **Main subtotal + measured graph extras** | Add this to the vector/row-ID payload and other index structures |
+
+This is a layout-specific estimate, not a fixed bytes-per-node guarantee. HNSW's `m` controls graph connectivity and is unrelated to PQ's `m`. Do not substitute `N * m * 4` for `G`: actual degree, upper levels, retained distances, and the reader version matter. Calibrate by loading representative partitions and measuring their retained allocations.
+
+For example, suppose the cached `IVF_HNSW_PQ` partitions contain 1 million vectors, PQ `m=96`, `b=8`, `E=32000000`, `V=1100000`, and `A=1`. Assume this reader retains the distance column. These graph counts are illustrative inputs, not values derived from HNSW's `m`:
+
+| Component | Example payload |
+|---|---|
+| PQ codes | `96000000` bytes |
+| Dataset row IDs | `8000000` bytes |
+| Main graph buffers | `8 * 32000000 + 12 * 1100000 + 8 = 269200008` bytes, about 256.7 MiB |
+| **Codes + row IDs + main graph buffers** | **`373200008` bytes, about 355.9 MiB** |
+| Alternative: main graph buffers when distances are skipped | `4 * 32000000 + 8 * 1100000 + 4 = 136800004` bytes, about 130.5 MiB |
+| **Alternative total: codes + row IDs + graph buffers without distances** | **`240800004` bytes, about 229.6 MiB** |
+| Still to add in either case | Graph extras, IVF centroids/directory, PQ codebook and common overhead from the tables above |
+
+Select the example matching the reader's retained columns. Neither subtotal is a complete cache-capacity recommendation.
 
 The upstream [Lance Performance Guide](https://lance.org/guide/performance/) explains vector payload and index-build memory estimates. The [Lance vector index format](https://lance.org/format/index/vector/) describes the separation of IVF partitions, sub-indexes, and quantized storage. Their latest content may describe features newer than the Lance version embedded in Doris; use the Lance Catalog support matrix for compatibility.
 
@@ -93,33 +133,75 @@ Scalar indexes can also be estimated, but the inputs differ by index family. Cou
 
 **BTree.** A loaded leaf page contains values and UInt64 row IDs. Let `R` be the number of records in the cached leaf pages, `H` the number of those pages, `w` the fixed-width value size, and `L` the average string length in bytes in those pages:
 
-| Value representation | Main cached leaf payload, in bytes |
+| Leaf-page component / representation | Value buffer | Offsets | UInt64 row IDs |
+|---|---|---|---|
+| Int32 / Float32 | `4 * R` | None | `8 * R` |
+| Int64 / Float64 / 64-bit timestamp | `8 * R` | None | `8 * R` |
+| Other fixed-width values | `w * R`; use actual bitmap buffers for bit-packed Boolean | None | `8 * R` |
+| Arrow Utf8 / Binary | `R * L` | `4 * (R + H)` for Int32 offsets | `8 * R` |
+| Arrow LargeUtf8 / LargeBinary | `R * L` | `8 * (R + H)` for Int64 offsets | `8 * R` |
+
+**The leaf-page subtotal is the sum of the three payload columns.** Add these components for each opened segment; `P` below counts all leaf pages in that segment, not only cached pages:
+
+| Additional BTree component | Main payload / how to budget |
 |---|---|
-| Int32 / Float32 | `R * (4 + 8)` |
-| Int64 / Float64 / 64-bit timestamp | `R * (8 + 8)` |
-| Other fixed-width values | `R * (w + 8)`; bit-packed Boolean values need a bitmap-sized value buffer instead |
-| Arrow Utf8 / Binary with 32-bit offsets | `R * L + 4 * (R + H) + 8 * R` |
-| Arrow LargeUtf8 / LargeBinary with 64-bit offsets | `R * L + 8 * (R + H) + 8 * R` |
+| Lookup minimum values | `P * w` for fixed-width values; actual value/offset buffers for variable-width values |
+| Lookup maximum values | `P * w` for fixed-width values; actual value/offset buffers for variable-width values |
+| Lookup NULL counts | `4 * P` for the UInt32 layout |
+| Lookup page numbers | `4 * P` for the UInt32 layout |
+| **Fixed-width lookup-buffer subtotal** | **`P * (2 * w + 8)`**; excludes the structures below |
+| NULL-page lists and lookup objects | **Measure** retained lists, objects and implementation-specific copies |
+| Leaf/lookup validity buffers, Arrow objects and spare capacity | **Measure** allocations beyond logical values/offsets/row IDs |
 
-Add validity bitmaps where present, Arrow/object overhead, and buffer capacity above the logical length. String formulas assume those Arrow layouts; dictionary or view representations require their actual buffer sizes. Disk compression does not determine the size of decoded cached pages. The default BTree page size is 4096 **records**, not 4096 bytes; use the page size stored in the index if it differs.
-
-Budget separately for the page lookup over all pages of each opened index segment. For a lookup batch with fixed-width min/max values, UInt32 null counts, and UInt32 page numbers, its main payload is about `P * (2 * w + 8)` bytes for `P` leaf pages. Add validity buffers, null-page lists, lookup objects, and any implementation-specific copies. This lookup belongs to the index working set, not the BE metadata-cache budget merely because it describes pages.
+String formulas assume the listed Arrow layouts; dictionary or view representations need their actual buffers. Disk compression does not determine decoded page size. The default BTree page size is 4096 **records**, not bytes; use the index's actual page size. The lookup belongs to the index working set, not the BE metadata-cache budget merely because it describes pages.
 
 For example, 100 million Int64 values have `100000000 * 16 = 1600000000` bytes (about 1.49 GiB) of leaf value/row-ID payload. If cached pages cover 10 million records, that payload is about 152.6 MiB. With 4096 records per page, the full index has about 24415 pages; the lookup batch's min/max/count/page-number payload is about 572 KiB before extra structures. Returning ten matching rows does not imply caching only ten records: the reader loads pages.
 
-**Bitmap and LabelList.** Estimate `key lookup + sum of loaded bitmap allocations + null tracking`. A bitmap stores membership, so do not automatically charge eight bytes per matching row. For a conventional Roaring container covering a 65536-value range, the main payload is about `2 * c` bytes for an array of `c` 16-bit entries or 8192 bytes for a dense bitset. Use the actual container representation; run containers, full-fragment representations, fragment/high-bit directories, and allocation capacity change the result. For example, 256 loaded dense containers have 2 MiB of bitset payload, before keys and directories. Serialized bitmap size can help characterize the workload but is not a guarantee of resident memory. LabelList uses a bitmap index over labels; estimate memberships across distinct labels, since a row can occur in several label bitmaps.
+**Bitmap, LabelList and NGram.** Sum the applicable component rows below. Membership bitmaps do not automatically cost eight bytes per matching row. LabelList counts membership per distinct label; a row can appear in multiple label bitmaps. NGram counts distinct gram/row memberships; repeated occurrences in one row do not add memberships. This NGram index differs from an FTS index using an n-gram tokenizer.
 
-Other index families can be budgeted from their loaded components:
-
-| Index family | Estimation method | Additional considerations |
+| Index family | Component | Loaded payload / how to budget |
 |---|---|---|
-| NGram | Gram lookup + sum of loaded gram posting bitmaps | Use the bitmap method above. Count distinct gram/row memberships; repeated occurrences within one row are not separate memberships. This is different from using an n-gram tokenizer in an FTS index. |
-| FTS / Inverted | Term dictionary + document metadata + cached posting blocks + cached positions + scoring/block metadata | For a plain posting layout with UInt64 row IDs and Float32 frequencies, the main posting payload is `12 * T` bytes for `T` term/document entries. Int32 positions add `4 * O` bytes for `O` stored occurrences, plus offsets. Compressed posting layouts need actual block sizes; do not apply the plain-layout formula to them. |
-| ZoneMap | Sum of loaded per-zone summaries + optional null-row tracking | Min/max alone need `2 * Z * w` logical bytes for `Z` zones and fixed-width values. Counts, zone boundaries, boxed scalar values, and allocations are additional and can dominate. Use zones per Fragment, including partial zones. |
-| BloomFilter | Sum of allocated filter bytes for loaded zones + zone descriptors + optional null-row tracking | For equal-sized filters, the filter payload is `Z * F`, where `F` is the actual allocated bytes per filter. Use the builder's block-rounded allocation; row count and false-positive probability alone do not describe every implementation's memory layout. |
-| RTree | Cached page payload + tree metadata + NULL tracking | For the 2D layout storing four Float64 bounding-box coordinates and one UInt64 ID per entry, page payload is `40 * Q` bytes for `Q` cached entries across all loaded tree levels. The ID identifies a row or child page. Add page offsets, Arrow/object overhead, and allocation capacity. Original geometry reads for exact rechecks are separate query memory. |
+| Bitmap | Key lookup | **Measure** retained key values, entry references and lookup objects |
+| LabelList | Label lookup / wrapper | **Measure** distinct label keys, entry references and wrapper objects |
+| NGram | Gram lookup | **Measure** retained grams, entry references and lookup objects |
+| All three | Membership bitmap: array containers | About `2 * c` per conventional Roaring array container with `c` UInt16 entries in a 65536-value range |
+| All three | Membership bitmap: dense containers | `8192` bytes per conventional dense container covering a 65536-value range |
+| All three | Membership bitmap: run / full-fragment representations | **Measure** actual representation; use the representation selected for each container, not all alternatives added together |
+| All three | Bitmap directories / capacity | **Measure** fragment/high-bit directories, container objects and spare capacity |
+| Where present | NULL / null-list tracking | **Measure** retained NULL membership structures separately |
+| **Each family total** | **Lookup + its loaded membership representations + directories + NULL tracking** | Count shared allocations once; serialized bitmap size is not a resident-memory guarantee |
 
-For wrappers such as a JSON-path index, estimate the underlying scalar index and add the wrapper/path structures. For unfamiliar or experimental layouts, measure loaded allocations rather than applying a formula from a different index family. A small number of matching rows can still require substantial dictionary, tree, or document metadata. None of these estimates includes temporary intersections/unions, result row-ID sets, rechecks of approximate filters, or output-column reads.
+For example, 256 loaded dense containers have 2 MiB of bitset payload, **before** keys, directories, NULL tracking and object overhead.
+
+**Other scalar and full-text indexes.** Each row identifies a separate component; subtotal rows summarize preceding components and must not be added again. Count only retained content on the BE. **Measure** means the reader's actual allocations are required, not that the component can be omitted.
+
+| Index family | Component | Loaded payload / how to budget |
+|---|---|---|
+| FTS / Inverted | Term dictionary | **Measure** loaded terms, dictionary structure and lookup allocations |
+| FTS / Inverted | Document metadata | **Measure** retained document mappings, lengths and other reader metadata |
+| FTS / Inverted | Plain posting row IDs | `8 * T` for `T` UInt64 term/document entries |
+| FTS / Inverted | Plain posting frequencies | `4 * T` for Float32 frequencies; IDs + frequencies total `12 * T` |
+| FTS / Inverted | Positions, when enabled | `4 * O` for `O` stored Int32 occurrences |
+| FTS / Inverted | Position offsets | Actual retained offset-array bytes; separate from `4 * O` |
+| FTS / Inverted | Compressed posting layout | Use actual retained compressed blocks **instead of** the corresponding plain-layout formulas |
+| FTS / Inverted | Scoring / block metadata and allocation overhead | **Measure** retained block descriptors, scoring data, objects and spare capacity |
+| ZoneMap | Minimum values | `Z * w` logical bytes for `Z` loaded zones and fixed-width values of width `w` |
+| ZoneMap | Maximum values | `Z * w` logical bytes; min + max total `2 * Z * w` |
+| ZoneMap | Counts and zone boundaries | **Measure** retained counts and boundaries; count zones per Fragment, including partial zones |
+| ZoneMap | NULL tracking and boxed-value/object overhead | **Measure** optional NULL row sets and actual scalar allocations; these can dominate logical min/max bytes |
+| BloomFilter | Filter bit arrays | Sum actual allocated filter bytes; `Z * F` for `Z` equal-sized filters of `F` bytes each |
+| BloomFilter | Zone descriptors / filter objects | **Measure** retained descriptors, filter parameters and object overhead |
+| BloomFilter | NULL tracking | **Measure** optional NULL row sets |
+| RTree | Bounding-box coordinates | `32 * Q` for four Float64 coordinates per 2D entry; count `Q` entries across all cached tree levels |
+| RTree | Row / child-page IDs | `8 * Q` for UInt64 IDs; coordinates + IDs total `40 * Q` |
+| RTree | Tree metadata and page offsets | **Measure** retained tree descriptors and page-offset buffers |
+| RTree | NULL tracking, Arrow/objects and spare capacity | **Measure** actual additional allocations |
+| JSON-path wrappers | Underlying index | Use the complete component budget of the selected scalar index family |
+| JSON-path wrappers | Path and wrapper structures | **Measure** retained paths and wrapper allocations in addition to the underlying index |
+
+Bloom filters require the builder's actual block-rounded allocations; row count and false-positive probability alone do not describe every layout. For unfamiliar or experimental layouts, measure loaded allocations instead of applying another family's formula. A small number of matching rows can still require substantial dictionary, tree, or document metadata.
+
+**Keep query working memory separate from all cache tables:** temporary intersections/unions, result row-ID sets, rechecks of approximate filters, original geometry reads for exact RTree checks, and output-column reads need their own budget.
 
 See the upstream [BTree format](https://lance.org/format/index/scalar/btree/), [Bitmap format](https://lance.org/format/index/scalar/bitmap/), and [FTS format](https://lance.org/format/index/scalar/fts/) for the underlying structures. The formulas above estimate loaded payload, not the compressed file size or total query RSS.
 
