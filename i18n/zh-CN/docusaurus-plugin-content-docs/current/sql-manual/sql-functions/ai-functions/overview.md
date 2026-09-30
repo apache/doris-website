@@ -50,6 +50,7 @@ PROPERTIES (
     'ai.max_token' = '1024',
     'ai.max_retries' = '3',
     'ai.retry_delay_second' = '1',
+    'ai.max_concurrency' = '4',
     'ai.dimensions' = '1024'
 );
  ```
@@ -73,6 +74,8 @@ PROPERTIES (
 `ai.max_retries`: 可选，单次请求的最大重试次数。默认值为 3。
 
 `ai.retry_delay_second`: 可选，重试的延迟时间（秒）。默认值为 0。
+
+`ai.max_concurrency`: 可选，单个执行实例同时保持在途的批量请求数上限，适用于标量 AI 函数（`ai_filter`、`ai_classify`、`ai_sentiment`、`ai_summarize`、`ai_translate`、`ai_generate`、`ai_extract`、`ai_mask`、`ai_fix_grammar`、`ai_similarity`）。默认值为 1，表示一个 Block 内的各批次逐个发送；大于 1 时多个批次并发发送。请根据模型服务商的限流或连接配额设置：当执行计划包含多个 Scan 实例时，服务商同时收到的请求数最多为 `实例数 × ai.max_concurrency`。可通过 `ALTER RESOURCE` 修改。不适用于 `embed` 和 `ai_agg`。批次大小由 Session 变量 `ai_context_window_size` 单独控制。
 
 `ai.dimensions`: 可选，控制[EMBED](./distance-functions/embed.md)输出的向量维度。**设置前务必确认`ai.model_name`所填模型支持自定义向量维度**，否则可能会导致模型调用失败。
 
