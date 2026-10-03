@@ -771,7 +771,7 @@ ORDER BY _distance ASC, user_id;
 
 `vector_search()` 只使用 Lance 中已有的向量索引，不负责创建索引，也不能指定索引类型或索引名称。当 `use_index=true` 时，Doris 自动选择与向量列和距离类型兼容的索引；没有可用索引或索引未覆盖的数据会自动使用 Flat Search，不会被遗漏。当 `use_index=false` 时，所有数据都使用 Flat Search。
 
-列上有多个兼容的索引时，Doris 每次查询只选其中一个，按索引名排在最前的那个。这个索引未覆盖的 Fragment 使用 Flat Search，即使另一个索引覆盖了它们，所以实际执行和 `EXPLAIN` 显示的索引覆盖情况始终一致。Doris 无法用于规划的索引完全不使用，整个检索按 Flat Search 执行，例如没有 Fragment 覆盖元数据的索引（`lanceVectorIndexStatus=UNKNOWN_COVERAGE`）、没有记录距离类型的索引（`METRIC_MISMATCH`），以及旧版写入端创建、缺少索引详情而被 Doris 跳过的索引（`NO_MATCH`）。
+列上有多个兼容的索引时，Doris 每次查询只选其中一个，按索引名排在最前的那个。这个索引未覆盖的 Fragment 使用 Flat Search，即使另一个索引覆盖了它们，所以实际执行和 `EXPLAIN` 显示的索引覆盖情况始终一致。Doris 无法用于规划的索引完全不使用，整个检索按 Flat Search 执行，例如没有 Fragment 覆盖元数据的索引（`lanceVectorIndexStatus=UNKNOWN_COVERAGE`）、没有记录距离类型的索引（`METRIC_MISMATCH`），以及缺少索引详情、Lance 也无法从索引文件推断出详情而被 Doris 跳过的旧索引（`NO_MATCH`）。旧版写入端创建、Lance 能推断出详情的索引照常使用。
 
 ### 支持的向量元素类型和距离类型
 
