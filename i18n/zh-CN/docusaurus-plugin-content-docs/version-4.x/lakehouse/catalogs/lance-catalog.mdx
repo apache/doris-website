@@ -398,7 +398,8 @@ SELECT * FROM lance_catalog.db.tbl FOR TIME AS OF '2026-09-19 13:06:10';
 - `FOR TIME AS OF` 接受会话时区下的时间戳，支持秒或毫秒精度（`yyyy-MM-dd HH:mm:ss` 或 `yyyy-MM-dd HH:mm:ss.SSS`）。Doris 按 manifest 记录的提交时间，在不晚于该时间戳的版本中选择提交时间最晚的一个（提交时间相同的取版本号大的）。和 Iceberg 按时间选快照一样，提交时间按记录的原值比较，不假设它随版本号递增。Lance 记录的提交时间精确到毫秒以下，比较时保留全部精度：Doris 不选在请求的那一毫秒内、晚于请求时间提交的版本。cleanup 删掉版本时，提交时间也一起删掉了，所以 Doris 只在 cleanup 删掉的最新一个版本之后选择，和 Iceberg 在过期快照处截断 snapshot log 的做法一致。时间戳早于这些版本时会报错：它可能早于第一个版本，也可能落在 cleanup 删掉的那段历史里（例如落在被 tag 保留的版本和其后仍存在的版本之间），这时无法确定表在那个时刻的状态。
 - 选中的版本在整条语句内固定：schema、Fragment 规划、谓词下推和 BE 扫描都使用该版本。同一条语句里对同一张表的两次引用可以选择不同版本。`EXPLAIN` 中的 `lanceVersion` 显示选中的版本。
 - 被 Lance `cleanup_old_versions` 清理掉的版本无法读取，报错与从未存在的版本相同。由 REST Namespace 管理版本的表见下文“REST Namespace 管理的版本”。
-- `vector_search()`、`full_text_search()` 和索引查看总是作用于 main 的最新版本，它们的 `table` 参数中不能指定版本、tag 或 branch。
+- `vector_search()` 和 `full_text_search()` 用自己的 `version`、`timestamp`、`tag`、`branch` 参数选择版本、时间、tag 或 branch，见[检索历史版本或 branch](#search-a-historical-version-or-branch)。它们的 `table` 参数中不能写 `FOR VERSION AS OF`、`@tag` 或 `@branch`。
+- 索引查看（`SHOW INDEX`、`lance_index_entries()`）总是作用于 main 的最新版本，不显示历史版本或 branch 上的索引。
 
 Lance 的 tag 和 branch 使用与 Iceberg、Paimon 表相同的语法：
 
@@ -751,6 +752,7 @@ ORDER BY _distance ASC, user_id;
 | `refine_factor` | 否 | 单向量不启用；多向量为 `1` | 候选集精排倍数，必须为正整数。对于单向量检索，不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。**精排会读取这些候选的原始向量数据；`N` 越大，读取和计算的候选越多，可能显著增加 I/O 并降低查询性能。** 对于单向量检索，设为 `1` 会执行精排，与不设置不同。多向量检索始终使用原始向量精排，默认倍数为 `1`。 |
 | `ef` | 否 | `floor(1.5 × (top_k + offset))` | HNSW 图索引搜索时保留的候选宽度，必须为正整数。如果同时设置了 `refine_factor`，默认值为 `floor(1.5 × (top_k + offset) × refine_factor)`。对非 HNSW 索引无效。 |
 | `use_index` | 否 | `true` | `true` 表示优先使用与向量列和距离类型兼容的 Lance 向量索引；没有可用索引时自动使用 Flat Search。`false` 表示禁用向量索引，对数据执行 Flat Search。 |
+| `version`、`timestamp`、`tag`、`branch` | 否 | - | 检索历史版本、某个时间点的版本、tag 或 branch，而不是 main 的最新版本。见[检索历史版本或 branch](#search-a-historical-version-or-branch)。 |
 
 不设置 `metric` 时，索引检索和 Flat Search 均使用 `l2`。`uint8` 列必须显式设置 `"metric" = "hamming"`，不支持默认的 `l2`。多向量检索还需要满足下文的[候选预算限制](#multi-vector-search)。
 
@@ -768,6 +770,8 @@ ORDER BY _distance ASC, user_id;
 | `IVF_HNSW_PQ` | IVF、HNSW 与 Product Quantization | `nprobes`、`ef`、`refine_factor` |
 
 `vector_search()` 只使用 Lance 中已有的向量索引，不负责创建索引，也不能指定索引类型或索引名称。当 `use_index=true` 时，Doris 自动选择与向量列和距离类型兼容的索引；没有可用索引或索引未覆盖的数据会自动使用 Flat Search，不会被遗漏。当 `use_index=false` 时，所有数据都使用 Flat Search。
+
+列上有多个兼容的索引时，Doris 每次查询只选其中一个，按索引名排在最前的那个。这个索引未覆盖的 Fragment 使用 Flat Search，即使另一个索引覆盖了它们，所以实际执行和 `EXPLAIN` 显示的索引覆盖情况始终一致。Doris 无法用于规划的索引完全不使用，整个检索按 Flat Search 执行，例如没有 Fragment 覆盖元数据的索引（`lanceVectorIndexStatus=UNKNOWN_COVERAGE`）、没有记录距离类型的索引（`METRIC_MISMATCH`），以及缺少索引详情、Lance 也无法从索引文件推断出详情而被 Doris 跳过的旧索引（`NO_MATCH`）。旧版写入端创建、Lance 能推断出详情的索引照常使用。
 
 ### 支持的向量元素类型和距离类型
 
@@ -948,7 +952,7 @@ ORDER BY _distance ASC, user_id;
 REFRESH TABLE example_lance.default.items;
 ```
 
-下一次读取会重新解析表访问配置。该操作不会清除 Lance 原生 Session 缓存；在相同 URI 下替换 Dataset 后，应刷新 Catalog 并启用缓存失效。
+下一次读取会重新解析表访问配置。该操作不会清除 Lance 原生 Session 缓存；在相同 URI 下替换 Dataset 后，应刷新 Catalog 并启用缓存失效。这样只清除 FE 的 Lance Session，不清除 BE 的缓存，见[检索历史版本或 branch](#search-a-historical-version-or-branch)。
 
 要禁用已有 Catalog 的表访问缓存：
 
@@ -1139,6 +1143,7 @@ ORDER BY _score DESC, document_id;
 | `offset` | 否 | `0` | 按相关性跳过的结果数，必须为非负整数；`top_k + offset` 不能超过无符号 32 位整数的最大值。 |
 | `filter` | 否 | - | 生成全文检索候选结果前由 Lance 执行的 SQL 条件，即 Prefilter。 |
 | `coverage_mode` | 否 | `strict` | FTS 索引未覆盖当前快照全部 Fragment 时的处理方式，可选值为 `strict` 或 `index_only`。 |
+| `version`、`timestamp`、`tag`、`branch` | 否 | - | 检索历史版本、某个时间点的版本、tag 或 branch，而不是 main 的最新版本。见[检索历史版本或 branch](#search-a-historical-version-or-branch)。 |
 
 ### 查询类型
 
@@ -1161,12 +1166,56 @@ ORDER BY _score DESC, document_id;
 
 使用 `EXPLAIN` 可以确认执行方式：`lanceFtsQueryType` 显示 Match 或 Phrase，`lanceFtsMatchOperator` 显示 Match 的 OR/AND 操作符，`lanceFtsPhraseSlop` 显示 Phrase 间隔；`lanceFtsCoverageMode` 显示覆盖模式，`lanceSearchIndexSegments` 显示使用的物理 FTS Index Segment 数，`lanceSearchUnindexedFragments` 显示当前快照中未被索引覆盖的 Fragment 数。
 
+## 检索历史版本或 branch {#search-a-historical-version-or-branch}
+
+`vector_search()` 和 `full_text_search()` 默认检索 main 的最新版本。四个可选参数可以选择其他快照，含义和表的 [Time Travel](#time-travel) 语法相同：
+
+| 参数 | 取值 | 对应的表语法 | 可以同时使用 |
+|---|---|---|---|
+| `version` | 正整数版本号 | `FOR VERSION AS OF N` | `branch` |
+| `timestamp` | 会话时区下的 `yyyy-MM-dd HH:mm:ss` 或 `yyyy-MM-dd HH:mm:ss.SSS` | `FOR TIME AS OF '...'` | `branch` |
+| `tag` | tag 名 | `@tag(name)` | 无 |
+| `branch` | branch 名，`main` 表示 main | `@branch(name)` | `version` 或 `timestamp` |
+
+```sql
+-- 检索版本 3
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.db.documents",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3]",
+    "version" = "3")
+ORDER BY _distance;
+
+-- 检索 branch "dev" 在某个时间点的状态
+SELECT id, _score
+FROM full_text_search(
+    "table" = "lance_catalog.db.documents",
+    "column" = "content",
+    "query" = "database",
+    "branch" = "dev",
+    "timestamp" = "2026-09-20 12:00:00")
+ORDER BY _score DESC;
+```
+
+- 快照的选择规则与表语法相同，包括指向 branch 的 tag 和由 REST Namespace 管理版本的表。`version` 只接受版本号。和 `FOR VERSION AS OF` 不同，它不接受 tag 名，因为 `tag` 参数可以无歧义地指定 tag：名为 `123` 的 tag 用 `"tag" = "123"` 选择。
+- `version` 和 `timestamp` 不能同时使用，`tag` 不能和另外三个同时使用。参数值为空时报错，不会当作没有设置。
+- 输出 schema、检索列、向量索引和 FTS 索引的元数据、Fragment 都来自选中的快照；候选生成、过滤、Top-K 和两阶段读取也都读这个快照。历史版本使用该版本提交的索引：创建向量索引之前的版本使用 Flat Search，创建 FTS 索引之前的版本不能用 `full_text_search()` 检索，`coverage_mode` 按该版本的 Fragment 检查。
+- 选不到快照，或快照的索引文件缺失时报错，不会回退到最新版本。被 Lance cleanup 删掉的版本报告为不存在。被 tag 保留的版本在 cleanup 时保留索引文件；用其他方式删掉索引文件时，执行阶段报错，报错信息给出数据集版本。
+- 每次执行都会重新选择快照，prepared statement 每次 `EXECUTE` 也一样。因此最新版本、未来的时间点、branch 和移动过的 tag 每次可能选到不同的版本。这四个参数只能是常量：prepared statement 中，`vector_search()` 只有 `query_vector`、`top_k`、`offset`、`filter` 可以用占位符（`?`），`full_text_search()` 的参数都不能用占位符。
+- 每个检索 relation 各自选择快照。同一条语句中对同一张表的两个 relation，例如 `vector_search()` 和表本身做 join，期间有新版本提交时可能读到不同版本。要读同一个版本，两边都要固定：检索函数写 `version`，表写 `FOR VERSION AS OF`。
+- `CREATE TABLE AS SELECT` 会规划两次查询，一次推导新表的结构，一次写入数据，所以会移动的选择器两次可能选到不同的版本。要精确复制某个版本，写 `version`。
+- `EXPLAIN` 中 `lanceVersion` 显示选中的版本，`lanceBranch` 显示 branch，`lanceManagedVersioning` 显示版本是否由 REST Namespace 管理。`EXPLAIN` 会重新选择快照，所以一次执行实际读到的快照记录在查询 Profile 中：`LanceDatasetVersion` 和 `LanceDatasetUri`，和 `LanceSearchType` 等 Lance scanner 信息显示在一起。URI 包含 branch 目录，不包含查询串和密码。
+- 从另一个 branch 或 shallow clone 创建的 branch，可能找不到继承来的索引文件，因为 13 之前的 Lance 写入端把它们记录在中间那个 branch 下。这时检索报错，branch 自己创建的索引不受影响。
+- branch 删掉后同名重建，或在同一 URI 下替换 Dataset 后，新数据会重复使用旧的版本号。BE 可能继续使用为这些版本号缓存的内容，直到缓存淘汰或 BE 重启。开启 stable row ID 的 Dataset 上，向量检索和全文检索可能按旧数据的存活行过滤，结果中可能出现新数据已删除的行，或缺少存活的行。manifest 使用 Lance 旧的命名方式（`_versions/<version>.manifest`），或对象存储不返回 ETag 时，BE 和 FE 还可能使用旧的索引元数据，FE 在刷新 Catalog 后恢复。重建的 branch 请换一个名字，或者重启 BE。刷新 Catalog 不会清除这些 BE 缓存。
+- 没有存储 token 位置的 FTS 索引不能执行 Phrase 查询。旧版写入端创建的索引通常不带位置，历史版本可能仍在使用这类索引。
+
 ## 当前执行方式
 
 `vector_search()` 和 `full_text_search()` 的执行顺序如下：
 
 ```text
-固定数据集快照
+按 version / timestamp / tag / branch 选中的数据集快照，或 main 的最新版本
   -> FE 规划检索 Split
        -> 向量检索：物理向量 Index Segment + 未覆盖 Fragment 的 Flat Search
        -> 全文检索：物理 FTS Index Segment（按 coverage_mode 检查覆盖情况）

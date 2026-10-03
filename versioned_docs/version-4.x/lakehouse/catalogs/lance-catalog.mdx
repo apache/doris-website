@@ -398,7 +398,8 @@ SELECT * FROM lance_catalog.db.tbl FOR TIME AS OF '2026-09-19 13:06:10';
 - `FOR TIME AS OF` takes a timestamp in the session time zone, with second or millisecond precision (`yyyy-MM-dd HH:mm:ss` or `yyyy-MM-dd HH:mm:ss.SSS`). Among the versions committed at or before the timestamp, Doris selects the one with the latest commit time as recorded in its manifest (of versions committed at the same instant, the newer one). As in Iceberg's selection of a snapshot by time, commit times are compared as recorded and are not assumed to grow with version numbers. Lance records commit times below a millisecond, and they are compared in full: a version committed later within the requested millisecond is not selected. A version removed by cleanup takes its commit time with it, so, as Iceberg drops its snapshot log before an expired snapshot, Doris only considers the versions newer than the most recently removed one. A timestamp earlier than all of them is an error: it is either earlier than the first version or in history removed by cleanup (for example between a version kept by a tag and the next version that remains), where the table's state at that time is unknown.
 - The selected version is fixed for the whole statement: schema, Fragment planning, predicate pushdown, and the BE scan all use it. Two references to the same table in one statement can select different versions. `EXPLAIN` shows the selected version as `lanceVersion`.
 - Versions removed by Lance's `cleanup_old_versions` cannot be read; they are reported the same way as versions that never existed. For a table whose versions a REST Namespace manages, see REST Namespace Managed Versioning below.
-- `vector_search()`, `full_text_search()` and index inspection always use the latest version of `main`; their `table` argument cannot select a version, tag or branch.
+- `vector_search()` and `full_text_search()` select a version, time, tag or branch with their own `version`, `timestamp`, `tag` and `branch` parameters; see [Search a Historical Version or Branch](#search-a-historical-version-or-branch). Their `table` argument cannot carry `FOR VERSION AS OF`, `@tag` or `@branch`.
+- Index inspection (`SHOW INDEX`, `lance_index_entries()`) always uses the latest version of `main`, and does not show the indexes of a historical version or a branch.
 
 Lance tags and branches are selected with the same syntax as for Iceberg and Paimon tables:
 
@@ -751,6 +752,7 @@ Do not use the unquoted form `lance_catalog.doris.analytics.items`; it parses as
 | `refine_factor` | No | Single-vector: disabled; multi-vector: `1` | Candidate refinement multiplier. It must be a positive integer. For single-vector search, when unset, Lance does not recompute distances from the original vectors, so `_distance` from a quantized index may be approximate. When set to `N`, Lance first retrieves `(top_k + offset) × N` candidates, recomputes their exact distances from the original vectors, and reorders them. **Refinement reads the original vector data for these candidates. As `N` increases, more candidates are read and evaluated, which can significantly increase I/O and reduce query performance.** For single-vector search, setting it to `1` enables refinement and differs from leaving it unset. Multi-vector search always refines candidates against their original values, using a default factor of `1`. |
 | `ef` | No | `floor(1.5 × (top_k + offset))` | Candidate width retained during HNSW graph search. It must be a positive integer. If `refine_factor` is also set, the default is `floor(1.5 × (top_k + offset) × refine_factor)`. It has no effect on non-HNSW indexes. |
 | `use_index` | No | `true` | When `true`, Doris prefers a Lance vector index compatible with the vector column and distance metric, and automatically uses Flat Search if no usable index is available. When `false`, Doris disables vector indexes and performs Flat Search over the data. |
+| `version`, `timestamp`, `tag`, `branch` | No | - | Search a historical version, the version at a time, a tag, or a branch instead of the latest version of `main`. See [Search a Historical Version or Branch](#search-a-historical-version-or-branch). |
 
 Omitting `metric` selects `l2` for both indexed and Flat Search paths. For `uint8` columns, explicitly set `"metric" = "hamming"`; the default `l2` is unsupported. Multi-vector searches also enforce the [candidate budgets](#multi-vector-search) described below.
 
@@ -768,6 +770,8 @@ For single-vector columns, Doris supports the following Lance vector index combi
 | `IVF_HNSW_PQ` | IVF and HNSW with Product Quantization | `nprobes`, `ef`, `refine_factor` |
 
 `vector_search()` only uses vector indexes that already exist in Lance. It does not create indexes or let users specify an index type or name. With `use_index=true`, Doris automatically selects an index compatible with the vector column and distance metric. Data without a usable index, including data not covered by the selected index, automatically uses Flat Search and is not omitted. With `use_index=false`, all data uses Flat Search.
+
+When several indexes on the column are compatible, Doris selects one of them per query, the first by index name. Fragments that index does not cover use Flat Search even if another index covers them, so the execution always matches the index coverage that `EXPLAIN` reports. An index Doris cannot plan with, for example one without Fragment coverage metadata (`lanceVectorIndexStatus=UNKNOWN_COVERAGE`), one without a recorded metric (`METRIC_MISMATCH`), or an older index without index details that Lance cannot infer from its files, which Doris skips (`NO_MATCH`), is not used at all, and the whole search runs as Flat Search. An older index whose details Lance infers is used as usual.
 
 ### Supported Vector Element Types and Distance Metrics
 
@@ -948,7 +952,7 @@ After a remote table URI or access configuration changes, use an explicit refres
 REFRESH TABLE example_lance.default.items;
 ```
 
-The next read resolves table access again. This does not clear the native Lance Session cache; use a Catalog refresh with cache invalidation after replacing a Dataset at the same URI.
+The next read resolves table access again. This does not clear the native Lance Session cache; use a Catalog refresh with cache invalidation after replacing a Dataset at the same URI. That refresh clears the FE's Lance Session only, not the BEs' caches; see [Search a Historical Version or Branch](#search-a-historical-version-or-branch).
 
 To disable table-access caching for an existing Catalog:
 
@@ -1141,6 +1145,7 @@ The returned relation contains every column from the source Lance table and a nu
 | `offset` | No | `0` | Number of results skipped by relevance. It must be a non-negative integer, and `top_k + offset` must not exceed the maximum unsigned 32-bit integer. |
 | `filter` | No | - | Lance SQL condition evaluated before full-text candidates are generated; that is, a Prefilter. |
 | `coverage_mode` | No | `strict` | Behavior when the FTS index does not cover every Fragment in the current snapshot. Valid values are `strict` and `index_only`. |
+| `version`, `timestamp`, `tag`, `branch` | No | - | Search a historical version, the version at a time, a tag, or a branch instead of the latest version of `main`. See [Search a Historical Version or Branch](#search-a-historical-version-or-branch). |
 
 ### Query Types
 
@@ -1163,12 +1168,56 @@ Both modes require a committed FTS index with complete coverage metadata on the 
 
 Use `EXPLAIN` to verify execution: `lanceFtsQueryType` shows Match or Phrase, `lanceFtsMatchOperator` shows the Match OR/AND operator, and `lanceFtsPhraseSlop` shows the Phrase distance. `lanceFtsCoverageMode` shows the coverage mode, `lanceSearchIndexSegments` shows the number of physical FTS index segments used, and `lanceSearchUnindexedFragments` shows how many Fragments in the current snapshot are not covered by the index.
 
+## Search a Historical Version or Branch {#search-a-historical-version-or-branch}
+
+By default, `vector_search()` and `full_text_search()` search the latest version of `main`. Four optional parameters select another snapshot, with the same meaning as the table [Time Travel](#time-travel) syntax:
+
+| Parameter | Value | Equivalent table syntax | Can be combined with |
+|---|---|---|---|
+| `version` | Positive integer version | `FOR VERSION AS OF N` | `branch` |
+| `timestamp` | `yyyy-MM-dd HH:mm:ss` or `yyyy-MM-dd HH:mm:ss.SSS` in the session time zone | `FOR TIME AS OF '...'` | `branch` |
+| `tag` | Tag name | `@tag(name)` | None |
+| `branch` | Branch name; `main` is the main chain | `@branch(name)` | `version` or `timestamp` |
+
+```sql
+-- Search version 3.
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.db.documents",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3]",
+    "version" = "3")
+ORDER BY _distance;
+
+-- Search the branch "dev" as it was at a point in time.
+SELECT id, _score
+FROM full_text_search(
+    "table" = "lance_catalog.db.documents",
+    "column" = "content",
+    "query" = "database",
+    "branch" = "dev",
+    "timestamp" = "2026-09-20 12:00:00")
+ORDER BY _score DESC;
+```
+
+- The snapshot is selected with the same rules as the table syntax, including tags that point into a branch and tables whose versions a REST Namespace manages. `version` only takes a version number. Unlike `FOR VERSION AS OF`, it does not take a tag name, because `tag` names a tag without ambiguity: a tag named `123` is selected with `"tag" = "123"`.
+- `version` and `timestamp` cannot be combined, and `tag` cannot be combined with any of the other three. A parameter set to an empty value is an error rather than being ignored.
+- The output schema, the search column, the vector index and FTS index metadata, and the Fragments all come from the selected snapshot. Candidate generation, filtering, Top-K and the two-phase read all read that snapshot. A historical version uses the indexes committed in that version: a version before a vector index was created uses Flat Search, a version before an FTS index was created cannot be searched with `full_text_search()`, and `coverage_mode` checks the Fragments of that version.
+- A snapshot that cannot be selected, or whose index files are missing, is an error. The search never falls back to the latest version. A version removed by Lance's cleanup is reported as not found. A version kept by a tag keeps its index files through cleanup; index files deleted another way fail at execution, and the error names the dataset version.
+- The snapshot is selected again for every execution, including every `EXECUTE` of a prepared statement, so the latest version, a time in the future, a branch and a moved tag can select a different version each time. The four parameters must be constants: in a prepared statement, `vector_search()` takes placeholders (`?`) only for `query_vector`, `top_k`, `offset` and `filter`, and `full_text_search()` takes none.
+- Each search relation selects its own snapshot. Two relations on the same table in one statement, such as `vector_search()` joined with the table itself, can read different versions when a new version is committed in between. To read the same one, pin both: `version` on the search function and `FOR VERSION AS OF` on the table.
+- `CREATE TABLE AS SELECT` plans its query twice, once for the new table's schema and once for its rows, so a moving selector can select a different version each time. To copy one version exactly, set `version`.
+- `EXPLAIN` shows the selected version as `lanceVersion`, the branch as `lanceBranch`, and whether a REST Namespace manages the versions as `lanceManagedVersioning`. Because `EXPLAIN` selects the snapshot again, the query Profile records what an execution actually read: `LanceDatasetVersion` and `LanceDatasetUri`, shown with the Lance scanner's other information such as `LanceSearchType`. The URI includes the branch directory and omits any query string and password.
+- A branch created from another branch, or from a shallow clone, can fail to find the index files it inherited, because Lance writers before version 13 record them under the intermediate branch. The search then fails with an error, and the branch's own indexes are unaffected.
+- After a branch is deleted and recreated under the same name, or a Dataset is replaced at the same URI, the new data reuses the old version numbers. A BE can keep using what it cached for those version numbers until the entries are evicted or the BE restarts. On a Dataset with stable row IDs, vector and full-text search can filter by the old data's live rows, so the results can include rows deleted in the new data or miss live rows. When a manifest uses Lance's old naming (`_versions/<version>.manifest`) or the object store returns no ETag, the BEs and the FE can also use the old index metadata; the FE stops after a Catalog refresh. Give a recreated branch a new name, or restart the BEs. Refreshing the Catalog does not clear these BE caches.
+- An FTS index built without token positions cannot run Phrase queries. Indexes built by older writers, which a historical version may still use, often lack positions.
+
 ## Current Execution Model
 
 The execution order of `vector_search()` and `full_text_search()` is:
 
 ```text
-Pinned dataset snapshot
+Dataset snapshot selected by version / timestamp / tag / branch, or the latest version of main
   -> FE search Split planning
        -> Vector search: physical vector Index Segments + Flat Search for uncovered Fragments
        -> Full-text search: physical FTS Index Segments (coverage checked by coverage_mode)
