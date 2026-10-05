@@ -51,7 +51,7 @@ ALTER MATERIALIZED VIEW mv1 rename mv2;
 ALTER MATERIALIZED VIEW mv1 set("grace_period"="3000");
 ```
 
-IVM 属性中，`ivm_use_full_keys` 只能在创建时设置，不能修改。`ivm_partition_window_limit` 可以修改；扩大窗口或移除限制后，下一次刷新需要执行 `COMPLETE` 重建基线。详见 [物化视图增量维护（IVM）](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#ivm-属性)。
+IVM 属性中，`ivm_use_full_keys` 只能在创建时设置，不能修改。`ivm_partition_window_limit` 可以修改；扩大窗口或移除限制后，物化视图的基线失效，下一次刷新会完整重建物化视图。详见 [物化视图增量维护（IVM）](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#ivm-属性)。
 
 ##### REPLACE
 ```sql

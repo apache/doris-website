@@ -194,7 +194,7 @@ The user executing this SQL command must have at least the following permissions
 
 - IVM creation conditions
 
-  `REFRESH INCREMENTAL` requires Row Binlog to be enabled on the base tables and the materialized view definition SQL to be within the IVM support scope. With an explicit `INCREMENTAL`, an unsupported definition makes the creation fail. See [Incremental View Maintenance (IVM)](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#prerequisites) for the base table models, query operators, aggregate functions and FE switches.
+  `REFRESH INCREMENTAL` requires Row Binlog to be enabled on the base tables and the materialized view definition SQL to be within the IVM support scope. With an explicit `INCREMENTAL`, an unsupported definition makes the creation fail. See [IVM prerequisites](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#prerequisites) for the base table models and FE switches, and [IVM supported queries](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#supported-queries) for the query operators and aggregate functions.
 
 ## Examples
 

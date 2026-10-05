@@ -15,6 +15,8 @@
         "IVM 定时刷新",
         "IVM 回退",
         "IvmFallbackReason",
+        "IVM 支持的查询",
+        "IVM 聚合函数",
         "内部 Table Stream",
         "行级增量刷新",
         "REFRESH INCREMENTAL",
@@ -24,6 +26,9 @@
     ]
 }
 ---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 <!-- 知识类型: 功能说明 / 操作指南 / 参数参考 / 故障排查 -->
 <!-- 适用场景: 基表频繁增删改 / 变化行数占比较小 / 全量或分区重算成本高 -->
@@ -264,36 +269,582 @@ LIMIT 1;
 - `IvmFallbackReason` 为空表示没有发生 IVM 回退；非空时记录稳定的回退原因。
 - `ErrorMsg` 记录严格增量刷新失败的具体信息。
 
-<!-- 知识类型: 兼容性参考 -->
+<!-- 知识类型: 兼容性参考 / SQL 示例 -->
 <!-- 适用场景: 创建前 SQL 评估 / 不支持语法排查 -->
 
 ## 支持的查询
 
-IVM 在创建物化视图时检查定义 SQL。使用显式 `REFRESH INCREMENTAL` 时，不支持的定义会直接创建失败。
+IVM 在创建物化视图时检查定义 SQL。使用显式 `REFRESH INCREMENTAL` 时，不支持的定义会直接创建失败。本节列出支持的关系运算和聚合函数，并为每一项给出可以直接运行的示例，最后列出不支持的查询形式。
+
+### 示例表
+
+本节示例使用三张基表：客户表 `customers`、销售表 `sales` 和退款表 `refunds`。三张表都是开启了 Row Binlog 和 before 镜像的 Unique Key Merge-on-Write 表，可以在 [快速上手](#快速上手) 创建的 `ivm_demo` 数据库中执行：
+
+```sql
+CREATE TABLE customers (
+    customer_id BIGINT,
+    name VARCHAR(32),
+    city VARCHAR(16)
+)
+UNIQUE KEY(customer_id)
+DISTRIBUTED BY HASH(customer_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+);
+
+CREATE TABLE sales (
+    sale_id BIGINT,
+    customer_id BIGINT,
+    channel VARCHAR(16),
+    amount DECIMAL(10, 2)
+)
+UNIQUE KEY(sale_id)
+DISTRIBUTED BY HASH(sale_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+);
+
+CREATE TABLE refunds (
+    refund_id BIGINT,
+    sale_id BIGINT,
+    amount DECIMAL(10, 2)
+)
+UNIQUE KEY(refund_id)
+DISTRIBUTED BY HASH(refund_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+);
+
+INSERT INTO customers VALUES
+    (1, 'Alice', 'Beijing'),
+    (2, 'Bob',   'Shanghai'),
+    (3, 'Carol', 'Beijing');
+
+INSERT INTO sales VALUES
+    (101, 1,    'web',   120.00),
+    (102, 1,    'app',    80.00),
+    (103, 2,    'web',   200.00),
+    (104, NULL, 'store',  50.00);
+
+INSERT INTO refunds VALUES
+    (9001, 102, 80.00),
+    (9002, 103, 50.00);
+```
+
+数据中有两处特意安排的情况，连接和聚合示例会用到：门店订单 104 没有关联客户，`customer_id` 为 `NULL`；客户 Carol 还没有订单。
+
+每个示例的执行步骤相同：执行示例中的 `CREATE MATERIALIZED VIEW`，再执行 `REFRESH MATERIALIZED VIEW <mv_name> COMPLETE` 建立基线；刷新任务成功后，执行 `SELECT * FROM <mv_name>` 查看结果。文中展示的结果已按前几列排序。
 
 ### 支持的关系运算
 
-| 运算 | 支持情况 |
+| 运算 | 说明 |
 |---|---|
-| 列选择和表达式投影 | 支持 |
-| `WHERE` 过滤 | 支持 |
-| `GROUP BY` 聚合 | 支持，聚合必须位于查询顶层，聚合之上只能有投影 |
-| `INNER JOIN`、`CROSS JOIN` | 支持 |
-| `LEFT OUTER JOIN`、`RIGHT OUTER JOIN`、`FULL OUTER JOIN` | 支持；保留端必须具有确定性的行标识 |
-| 嵌套外连接 | 支持；位于空值产生端的复杂子树会明显增大刷新计划 |
-| `UNION ALL` | 支持 |
-| 单行常量关系 | 支持；首次刷新会使用 `COMPLETE` 建立基线 |
-| 子查询别名 | 支持 |
-| 基于另一个 IVM 创建 IVM | 支持 |
+| 列和表达式 | 选择部分列，或者用确定性表达式计算新列 |
+| `WHERE` 过滤 | 按条件过滤基表的行 |
+| `FROM` 子查询 | `FROM` 子句中带别名的子查询，可以多层嵌套，内部不能包含聚合 |
+| 常量行 | 不带 `FROM` 的 `SELECT`，结果固定为一行常量，例如 `SELECT -1, 'unknown'`。可以作为 `UNION ALL` 的分支或 Join 的一侧，也可以单独作为定义 |
+| `GROUP BY` 聚合 | 聚合必须位于查询最外层，之上只能有投影，且不能在聚合结果外再套表达式 |
+| `GROUPING SETS`、`ROLLUP`、`CUBE` | 可以配合 `GROUPING()`、`GROUPING_ID()` 使用，限制与 `GROUP BY` 相同 |
+| `SELECT DISTINCT` | 按不带聚合函数的 `GROUP BY` 处理，限制与 `GROUP BY` 相同 |
+| `INNER JOIN`、`CROSS JOIN` | 支持多表连接和自连接 |
+| `LEFT OUTER JOIN`、`RIGHT OUTER JOIN`、`FULL OUTER JOIN` | 保留全部行的一侧（LEFT JOIN 的左侧、RIGHT JOIN 的右侧、FULL JOIN 的两侧）不能是 `excluded_trigger_tables` 中未开启 Row Binlog 的 Duplicate Key 表，这类表的行没有固定的行标识 |
+| 嵌套外连接 | 外连接中可能被补 `NULL` 的一侧本身又是一个 Join。这一侧越复杂，增量刷新计划越大 |
+| `UNION ALL` | 分支可以来自不同的表、同一张表或常量行 |
+| 链式 IVM | 以另一个 IVM 作为基表。作为基表的 IVM 需要开启 Row Binlog 和 before 镜像 |
 
-以下形式不支持：
+下面按类别给出示例。
 
-- `SELECT DISTINCT` 和 `UNION DISTINCT`。
-- 带常量分支的 `UNION ALL`。
-- `ORDER BY`、`LIMIT` 和窗口函数。
-- Mark Join，例如包含析取条件的相关子查询转换出的 Join。
-- 不在上述白名单中的计划节点。
-- 使用普通异步物化视图作为 IVM 基表。链式维护要求下层物化视图本身也是 IVM。
+#### 单表查询
+
+<Tabs>
+<TabItem value="projection" label="列和表达式" default>
+
+选择需要的列，或者用表达式计算新列。表达式需要是确定性的，即相同的输入总是得到相同的结果，例如不能使用 `NOW()`、`RAND()`。
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_projection
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT sale_id, channel, amount, amount * 0.9 AS discounted_amount
+FROM sales;
+```
+
+查询结果：
+
+```text
++---------+---------+--------+-------------------+
+| sale_id | channel | amount | discounted_amount |
++---------+---------+--------+-------------------+
+|     101 | web     | 120.00 |           108.000 |
+|     102 | app     |  80.00 |            72.000 |
+|     103 | web     | 200.00 |           180.000 |
+|     104 | store   |  50.00 |            45.000 |
++---------+---------+--------+-------------------+
+```
+
+</TabItem>
+<TabItem value="where" label="WHERE 过滤">
+
+只保留满足条件的行。基表中的行被更新后，Doris 按新值重新判断：不再满足条件的行从物化视图中删除，开始满足条件的行加入物化视图。
+
+```sql
+CREATE MATERIALIZED VIEW mv_large_sales
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT sale_id, customer_id, amount
+FROM sales
+WHERE amount >= 100;
+```
+
+查询结果：
+
+```text
++---------+-------------+--------+
+| sale_id | customer_id | amount |
++---------+-------------+--------+
+|     101 |           1 | 120.00 |
+|     103 |           2 | 200.00 |
++---------+-------------+--------+
+```
+
+</TabItem>
+<TabItem value="subquery" label="FROM 子查询">
+
+在 `FROM` 子句中使用带别名的子查询，例如先筛选出 web 渠道的订单，再与客户表连接。子查询可以多层嵌套，内部同样只能使用本节列出的运算，并且不能包含聚合。
+
+```sql
+CREATE MATERIALIZED VIEW mv_web_sales
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT w.sale_id, c.name, w.amount
+FROM (
+    SELECT sale_id, customer_id, amount
+    FROM sales
+    WHERE channel = 'web'
+) AS w
+INNER JOIN customers AS c ON w.customer_id = c.customer_id;
+```
+
+查询结果：
+
+```text
++---------+-------+--------+
+| sale_id | name  | amount |
++---------+-------+--------+
+|     101 | Alice | 120.00 |
+|     103 | Bob   | 200.00 |
++---------+-------+--------+
+```
+
+</TabItem>
+<TabItem value="constant-row" label="常量行">
+
+常量行是不带 `FROM` 的 `SELECT`，结果固定为一行常量。常见用法是给维表补一行“未知”成员，供关联不到维表的数据使用：
+
+```sql
+CREATE MATERIALIZED VIEW mv_customers_with_unknown
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT customer_id, name, city
+FROM customers
+UNION ALL
+SELECT -1, 'unknown', 'unknown';
+```
+
+查询结果：
+
+```text
++-------------+---------+----------+
+| customer_id | name    | city     |
++-------------+---------+----------+
+|          -1 | unknown | unknown  |
+|           1 | Alice   | Beijing  |
+|           2 | Bob     | Shanghai |
+|           3 | Carol   | Beijing  |
++-------------+---------+----------+
+```
+
+常量行也可以作为 Join 的一侧，例如 `CROSS JOIN (SELECT 0.14 AS usd_rate) r` 为每一行附加一个参数；还可以单独作为物化视图的定义，例如 `SELECT 1 AS id, 'x' AS name`。
+
+常量行不会产生变化数据。包含常量行的物化视图第一次刷新时，Doris 总是执行 `COMPLETE`，即使请求的是 `INCREMENTAL`；之后的增量刷新只处理基表的变化。
+
+</TabItem>
+</Tabs>
+
+#### 聚合
+
+<Tabs>
+<TabItem value="group-by" label="GROUP BY" default>
+
+按分组计算聚合结果。聚合的输入可以是单表、Join、`UNION ALL` 或 `FROM` 子查询，但聚合本身必须位于查询最外层。下面的示例先连接 `sales` 和 `customers`，再按城市聚合；订单 104 没有关联客户，不参与统计。
+
+```sql
+CREATE MATERIALIZED VIEW mv_city_sales
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.city, COUNT(*) AS sale_cnt, SUM(s.amount) AS total_amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id
+GROUP BY c.city;
+```
+
+查询结果：
+
+```text
++----------+----------+--------------+
+| city     | sale_cnt | total_amount |
++----------+----------+--------------+
+| Beijing  |        2 |       200.00 |
+| Shanghai |        1 |       200.00 |
++----------+----------+--------------+
+```
+
+聚合之上的投影可以给列改名、调整列顺序，或者对分组列做计算。`HAVING`、写在子查询或 Join 输入中的聚合，以及在聚合结果外再套表达式的写法都不支持，见 [不支持的查询形式](#不支持的查询形式)。
+
+</TabItem>
+<TabItem value="grouping-sets" label="GROUPING SETS / ROLLUP / CUBE">
+
+在一次聚合中同时计算多种维度组合。下面的示例用 `ROLLUP(c.city, s.channel)` 同时得到“城市 + 渠道”的明细、每个城市的小计和总计，小计和总计行中被汇总掉的列为 `NULL`。`GROUPING SETS`、`CUBE`，以及用于区分汇总行的 `GROUPING()`、`GROUPING_ID()` 函数同样支持。
+
+```sql
+CREATE MATERIALIZED VIEW mv_city_channel_rollup
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.city, s.channel, SUM(s.amount) AS total_amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id
+GROUP BY ROLLUP(c.city, s.channel);
+```
+
+查询结果：
+
+```text
++----------+---------+--------------+
+| city     | channel | total_amount |
++----------+---------+--------------+
+| NULL     | NULL    |       400.00 |
+| Beijing  | NULL    |       200.00 |
+| Beijing  | app     |        80.00 |
+| Beijing  | web     |       120.00 |
+| Shanghai | NULL    |       200.00 |
+| Shanghai | web     |       200.00 |
++----------+---------+--------------+
+```
+
+</TabItem>
+<TabItem value="distinct" label="SELECT DISTINCT">
+
+`SELECT DISTINCT` 按不带聚合函数的 `GROUP BY` 处理，限制与 `GROUP BY` 相同。注意 `UNION`（即 `UNION DISTINCT`）仍然不支持。
+
+```sql
+CREATE MATERIALIZED VIEW mv_channels
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT DISTINCT channel
+FROM sales;
+```
+
+查询结果：
+
+```text
++---------+
+| channel |
++---------+
+| app     |
+| store   |
+| web     |
++---------+
+```
+
+</TabItem>
+</Tabs>
+
+#### 多表连接
+
+<Tabs>
+<TabItem value="inner-join" label="INNER JOIN" default>
+
+只保留两侧都能匹配上的行。订单 104 没有关联客户，因此不在结果中。
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_customer
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT s.sale_id, c.name, c.city, s.amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id;
+```
+
+查询结果：
+
+```text
++---------+-------+----------+--------+
+| sale_id | name  | city     | amount |
++---------+-------+----------+--------+
+|     101 | Alice | Beijing  | 120.00 |
+|     102 | Alice | Beijing  |  80.00 |
+|     103 | Bob   | Shanghai | 200.00 |
++---------+-------+----------+--------+
+```
+
+</TabItem>
+<TabItem value="cross-join" label="CROSS JOIN">
+
+返回两侧所有行的组合（笛卡尔积）。下面的示例对 `customers` 做自连接，列出所有客户的两两组合。
+
+```sql
+CREATE MATERIALIZED VIEW mv_customer_pairs
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT a.name AS customer_a, b.name AS customer_b
+FROM customers a
+CROSS JOIN customers b
+WHERE a.customer_id < b.customer_id;
+```
+
+查询结果：
+
+```text
++------------+------------+
+| customer_a | customer_b |
++------------+------------+
+| Alice      | Bob        |
+| Alice      | Carol      |
+| Bob        | Carol      |
++------------+------------+
+```
+
+</TabItem>
+<TabItem value="outer-join" label="外连接">
+
+外连接保留一侧的全部行，另一侧没有匹配时补 `NULL`。`LEFT OUTER JOIN` 保留左侧，`RIGHT OUTER JOIN` 保留右侧，`FULL OUTER JOIN` 保留两侧。
+
+**LEFT OUTER JOIN**：保留所有订单。订单 104 没有匹配的客户，`name` 为 `NULL`。
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_left
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT s.sale_id, s.amount, c.name
+FROM sales s
+LEFT OUTER JOIN customers c ON s.customer_id = c.customer_id;
+```
+
+查询结果：
+
+```text
++---------+--------+-------+
+| sale_id | amount | name  |
++---------+--------+-------+
+|     101 | 120.00 | Alice |
+|     102 |  80.00 | Alice |
+|     103 | 200.00 | Bob   |
+|     104 |  50.00 | NULL  |
++---------+--------+-------+
+```
+
+**RIGHT OUTER JOIN**：保留所有客户。还没有订单的 Carol 也在结果中。
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_right
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.name, s.sale_id, s.amount
+FROM sales s
+RIGHT OUTER JOIN customers c ON s.customer_id = c.customer_id;
+```
+
+查询结果：
+
+```text
++-------+---------+--------+
+| name  | sale_id | amount |
++-------+---------+--------+
+| Alice |     101 | 120.00 |
+| Alice |     102 |  80.00 |
+| Bob   |     103 | 200.00 |
+| Carol |    NULL |   NULL |
++-------+---------+--------+
+```
+
+**FULL OUTER JOIN**：同时保留没有客户的订单 104 和没有订单的客户 Carol。
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_full
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.name, s.sale_id, s.amount
+FROM customers c
+FULL OUTER JOIN sales s ON c.customer_id = s.customer_id;
+```
+
+查询结果：
+
+```text
++-------+---------+--------+
+| name  | sale_id | amount |
++-------+---------+--------+
+| NULL  |     104 |  50.00 |
+| Alice |     101 | 120.00 |
+| Alice |     102 |  80.00 |
+| Bob   |     103 | 200.00 |
+| Carol |    NULL |   NULL |
++-------+---------+--------+
+```
+
+</TabItem>
+<TabItem value="nested-outer-join" label="嵌套外连接">
+
+外连接中可能被补 `NULL` 的一侧称为空值产生端，例如 LEFT JOIN 的右侧。嵌套外连接是指空值产生端本身又是一个 Join。下面的示例先用 `sales LEFT JOIN refunds` 关联退款，再把这个 Join 整体作为 `customers LEFT JOIN` 的右侧。
+
+```sql
+CREATE MATERIALIZED VIEW mv_customer_refunds
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.name, s.sale_id, r.refund_id, r.amount AS refund_amount
+FROM customers c
+LEFT OUTER JOIN (
+    sales s
+    LEFT OUTER JOIN refunds r ON s.sale_id = r.sale_id
+) ON c.customer_id = s.customer_id;
+```
+
+查询结果：
+
+```text
++-------+---------+-----------+---------------+
+| name  | sale_id | refund_id | refund_amount |
++-------+---------+-----------+---------------+
+| Alice |     101 |      NULL |          NULL |
+| Alice |     102 |      9001 |         80.00 |
+| Bob   |     103 |      9002 |         50.00 |
+| Carol |    NULL |      NULL |          NULL |
++-------+---------+-----------+---------------+
+```
+
+增量刷新需要同时计算空值产生端在变化前后的结果，这一侧越复杂，刷新计划越大。规划或刷新开销过高时，可以先把这一侧创建为下层 IVM，再基于它创建当前物化视图，见 [合并与链式 IVM](#合并与链式-ivm) 中的链式 IVM 示例。
+
+</TabItem>
+</Tabs>
+
+#### 合并与链式 IVM
+
+<Tabs>
+<TabItem value="union-all" label="UNION ALL" default>
+
+合并多个查询的结果，不去重。分支可以来自不同的表、同一张表或常量行。下面的示例把销售和退款合并为一张流水表，退款金额记为负数。
+
+```sql
+CREATE MATERIALIZED VIEW mv_ledger
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT sale_id AS doc_id, 'sale' AS doc_type, amount
+FROM sales
+UNION ALL
+SELECT refund_id, 'refund', -amount
+FROM refunds;
+```
+
+查询结果：
+
+```text
++--------+----------+--------+
+| doc_id | doc_type | amount |
++--------+----------+--------+
+|    101 | sale     | 120.00 |
+|    102 | sale     |  80.00 |
+|    103 | sale     | 200.00 |
+|    104 | sale     |  50.00 |
+|   9001 | refund   | -80.00 |
+|   9002 | refund   | -50.00 |
++--------+----------+--------+
+```
+
+</TabItem>
+<TabItem value="chained" label="链式 IVM">
+
+以一个 IVM 作为另一个 IVM 的基表，把复杂计算拆成多层，例如下层 IVM 负责 Join，上层 IVM 负责聚合。作为基表的 IVM 本身是 Unique Key Merge-on-Write 表，需要像其他 Merge-on-Write 基表一样开启 Row Binlog 和 before 镜像，否则无法创建上层 IVM，例如未开启 Row Binlog 时报错 `row binlog is not enabled for table`。
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_city_detail
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+)
+AS
+SELECT s.sale_id, c.city, s.amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id;
+
+CREATE MATERIALIZED VIEW mv_city_total
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT city, COUNT(*) AS sale_cnt, SUM(amount) AS total_amount
+FROM mv_sales_city_detail
+GROUP BY city;
+```
+
+上层 IVM 只能读取下层已经刷新的结果，因此应先刷新下层，再刷新上层。依次刷新后，`mv_city_total` 的查询结果：
+
+```text
++----------+----------+--------------+
+| city     | sale_cnt | total_amount |
++----------+----------+--------------+
+| Beijing  |        2 |       200.00 |
+| Shanghai |        1 |       200.00 |
++----------+----------+--------------+
+```
+
+普通异步物化视图（非 IVM）不能作为 IVM 的基表。
+
+</TabItem>
+</Tabs>
 
 ### 支持的聚合函数
 
@@ -307,16 +858,224 @@ IVM 支持以下聚合函数，参数可以是列或确定性表达式：
 - `BITMAP_UNION`
 - `BITMAP_UNION_COUNT`
 - `ARRAY_AGG`
-- `COLLECT_LIST`
+- `COLLECT_LIST`（仅支持单参数形式）
 
-不支持带 `DISTINCT` 的聚合函数。`ARRAY_AGG` 不支持 JSONB 或 VARIANT 元素类型。
+下面的示例都按 `sales` 表的渠道分组：
 
-部分聚合函数在删除数据时无法只根据当前增量安全地得到新结果：
+<Tabs>
+<TabItem value="count" label="COUNT" default>
+
+`COUNT(*)` 统计行数；`COUNT(expr)` 只统计 `expr` 不为 `NULL` 的行。门店订单 104 的 `customer_id` 为 `NULL`，因此 store 渠道的 `member_sale_cnt` 为 0。
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_count
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       COUNT(*) AS sale_cnt,
+       COUNT(customer_id) AS member_sale_cnt
+FROM sales
+GROUP BY channel;
+```
+
+查询结果：
+
+```text
++---------+----------+-----------------+
+| channel | sale_cnt | member_sale_cnt |
++---------+----------+-----------------+
+| app     |        1 |               1 |
+| store   |        1 |               0 |
+| web     |        2 |               2 |
++---------+----------+-----------------+
+```
+
+</TabItem>
+<TabItem value="sum" label="SUM">
+
+计算合计。参数可以是列，也可以是确定性表达式，例如只累加 100 及以上的订单金额。
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_sum
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       SUM(amount) AS total_amount,
+       SUM(IF(amount >= 100, amount, 0)) AS large_amount
+FROM sales
+GROUP BY channel;
+```
+
+查询结果：
+
+```text
++---------+--------------+--------------+
+| channel | total_amount | large_amount |
++---------+--------------+--------------+
+| app     |        80.00 |         0.00 |
+| store   |        50.00 |         0.00 |
+| web     |       320.00 |       320.00 |
++---------+--------------+--------------+
+```
+
+</TabItem>
+<TabItem value="avg" label="AVG">
+
+计算平均值。Doris 会在物化视图中额外保存隐藏的合计和计数，增量刷新时用它们重新计算平均值。
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_avg
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel, AVG(amount) AS avg_amount
+FROM sales
+GROUP BY channel;
+```
+
+查询结果：
+
+```text
++---------+------------+
+| channel | avg_amount |
++---------+------------+
+| app     |    80.0000 |
+| store   |    50.0000 |
+| web     |   160.0000 |
++---------+------------+
+```
+
+</TabItem>
+<TabItem value="min-max" label="MIN / MAX">
+
+计算最小值和最大值。
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_minmax
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel, MIN(amount) AS min_amount, MAX(amount) AS max_amount
+FROM sales
+GROUP BY channel;
+```
+
+查询结果：
+
+```text
++---------+------------+------------+
+| channel | min_amount | max_amount |
++---------+------------+------------+
+| app     |      80.00 |      80.00 |
+| store   |      50.00 |      50.00 |
+| web     |     120.00 |     200.00 |
++---------+------------+------------+
+```
+
+新写入的值可以直接与当前的最小值、最大值比较。但如果删除或更新的行恰好持有当前的最小值或最大值，新的结果无法从已有结果推出，需要重新读取完整数据。例如建立基线后删除订单 101（web 渠道当前的最小值 120.00），严格 `INCREMENTAL` 刷新会失败，`IvmFallbackReason` 为 `MIN_MAX_BOUNDARY_HIT`；`INCREMENTAL FALLBACK` 刷新会回退到 `COMPLETE`。
+
+</TabItem>
+<TabItem value="bitmap" label="Bitmap 聚合">
+
+`BITMAP_UNION` 合并分组内的 Bitmap，`BITMAP_UNION_COUNT` 返回合并结果中不同值的个数，常用于精确去重计数。下面的示例统计每个渠道的去重客户：`customer_bitmap` 保存客户 ID 集合，`customer_cnt` 是去重后的客户数，`customer_id` 为 `NULL` 的订单 104 不计入。
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_bitmap
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       BITMAP_UNION(TO_BITMAP(customer_id)) AS customer_bitmap,
+       BITMAP_UNION_COUNT(TO_BITMAP(customer_id)) AS customer_cnt
+FROM sales
+GROUP BY channel;
+```
+
+Bitmap 列需要用 `BITMAP_TO_STRING` 转换后查看：
+
+```sql
+SELECT channel, BITMAP_TO_STRING(customer_bitmap) AS customers, customer_cnt
+FROM mv_agg_bitmap
+ORDER BY channel;
+```
+
+```text
++---------+-----------+--------------+
+| channel | customers | customer_cnt |
++---------+-----------+--------------+
+| app     | 1         |            1 |
+| store   |           |            0 |
+| web     | 1,2       |            2 |
++---------+-----------+--------------+
+```
+
+Bitmap 只保存合并后的结果，无法从中减去某一行贡献的值。因此删除或更新参与聚合的行时，如果所在分组还有其他行，就需要重新计算完整 Bitmap：严格 `INCREMENTAL` 刷新会失败，`IvmFallbackReason` 为 `BITMAP_AGG_DELETE`；`INCREMENTAL FALLBACK` 会回退到 `COMPLETE`。
+
+</TabItem>
+<TabItem value="array" label="数组聚合">
+
+`ARRAY_AGG` 和 `COLLECT_LIST` 把分组内的值收集为数组，两者对 `NULL` 的处理不同：`ARRAY_AGG` 保留 `NULL` 元素，`COLLECT_LIST` 跳过 `NULL`。
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_array
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       ARRAY_AGG(customer_id) AS customer_ids,
+       COLLECT_LIST(customer_id) AS member_ids
+FROM sales
+GROUP BY channel;
+```
+
+查询结果：
+
+```text
++---------+--------------+------------+
+| channel | customer_ids | member_ids |
++---------+--------------+------------+
+| app     | [1]          | [1]        |
+| store   | [null]       | []         |
+| web     | [1, 2]       | [1, 2]     |
++---------+--------------+------------+
+```
+
+增量刷新把数组当作无序集合维护，数组中元素的顺序不固定。`COLLECT_LIST` 只支持单参数形式，不支持指定最大长度的 `COLLECT_LIST(expr, max_size)`；`ARRAY_AGG` 不支持 JSONB 或 VARIANT 类型的元素。
+
+</TabItem>
+</Tabs>
+
+不支持带 `DISTINCT` 的聚合函数，例如 `COUNT(DISTINCT customer_id)`。需要对非负整数列精确去重计数时，可以改用 `BITMAP_UNION_COUNT(TO_BITMAP(customer_id))`，但删除或更新数据时需要重新计算完整 Bitmap，见下文。
+
+部分聚合函数在删除数据时无法只根据当前增量安全地得到新结果。Unique Key 表的更新会先删除旧行再写入新行，因此更新同样会触发以下情况：
 
 - 删除的值可能是当前 `MIN` 或 `MAX` 时，需要重新读取完整数据。
 - 删除影响 Bitmap 聚合结果时，需要重新计算完整 Bitmap。
 
 严格 `INCREMENTAL` 会在这些情况下失败；`INCREMENTAL FALLBACK` 会回退到 `COMPLETE`。
+
+### 不支持的查询形式
+
+以下形式不支持，使用显式 `REFRESH INCREMENTAL` 时创建失败：
+
+- `UNION`（即 `UNION DISTINCT`）、`INTERSECT` 和 `EXCEPT`。
+- `ORDER BY`、`LIMIT` 和窗口函数。
+- `HAVING`，以及写在 `FROM` 子查询或 Join 输入中的聚合。聚合只能位于查询最外层，需要过滤聚合结果时，可以在查询物化视图时再过滤。
+- `WHERE` 或 `SELECT` 列表中的子查询，例如 `IN (SELECT ...)`、`EXISTS (SELECT ...)` 和标量子查询。其中 `IN` 子查询和标量子查询可能报 `Multiple columns returned by subquery are not yet supported`，原因同样是 IVM 不支持这类子查询。
+- `WITH` 子句（CTE）。可以改写为 `FROM` 子查询。
+- `LATERAL VIEW`。
+- 使用普通异步物化视图作为基表。链式维护要求下层物化视图本身也是 IVM。
+- 上文表格之外的其他运算。
+
+另外，在聚合结果外再套表达式的写法虽然可以创建，但每次增量刷新都会失败，例如 `SUM(amount) * 100`、`MAX(amount) + 1` 和 `SUM(amount) / COUNT(*)`。严格 `INCREMENTAL` 刷新失败时，`IvmFallbackReason` 为 `PLAN_REWRITE_FAILED`；`INCREMENTAL FALLBACK` 每次都会回退到 `COMPLETE`。可以直接输出聚合结果，在查询物化视图时再计算；或者把表达式写进聚合函数的参数，例如 `SUM(amount * 100)`。
 
 <!-- 知识类型: 运行机制 / 故障处理 -->
 <!-- 适用场景: 刷新策略配置 / 自动刷新间隔 / IVM 回退排查 / 基线恢复 -->
@@ -408,7 +1167,7 @@ IVM -> PARTITIONS -> COMPLETE
 
 | `IvmFallbackReason` | 含义 | 恢复方式 |
 |---|---|---|
-| `BINLOG_BROKEN` | 上一次刷新未完整结束，或内部 Stream 无法继续使用 | 完整刷新并重新对齐基线 |
+| `STREAM_UNSUPPORTED` | 内部 Stream 缺失或无法继续使用 | 完整刷新，同时重建内部 Stream 并重新对齐消费位点 |
 | `MIN_MAX_BOUNDARY_HIT` | 删除可能改变当前 `MIN` 或 `MAX` | 完整重算聚合结果 |
 | `BITMAP_AGG_DELETE` | 删除影响 Bitmap 聚合 | 完整重算 Bitmap |
 | `PLAN_SIGNATURE_MISMATCH` | 当前查询计划与已持久化的 IVM 布局不一致 | 完整刷新并建立新基线 |
@@ -418,14 +1177,49 @@ IVM -> PARTITIONS -> COMPLETE
 
 ### 首次刷新和基线重建
 
-建议创建 IVM 后先执行一次 `COMPLETE`，再开始增量刷新。以下情况也可能要求重建完整基线：
+增量刷新只能处理基线之后的变化。基线是物化视图最近一次完整计算的结果，以及与之对齐的内部 Stream 消费位点。Doris 按物化视图分区记录基线是否有效：基线失效的分区需要完整重建，其余分区继续增量刷新。
 
-- 物化视图或基表结构变化导致 IVM 布局签名变化。
-- Row Binlog 或内部 Stream 的连续性被破坏。
-- 扩大或移除 `ivm_partition_window_limit`，使之前被忽略的分区重新进入维护范围。
-- 修改 `excluded_trigger_tables`，改变参与增量维护的基表集合。
+**首次刷新**
 
-存在待重建基线时，严格 `INCREMENTAL` 会失败并提示先执行 `AUTO` 或 `COMPLETE`。
+物化视图还没有刷新成功过时，所有分区都没有基线。无论请求哪种刷新方式，第一次刷新都会完整计算全部数据：
+
+| 刷新请求 | 首次刷新的行为 |
+|---|---|
+| `COMPLETE` | 完整刷新全部数据 |
+| `INCREMENTAL` | 先重建全部分区，再处理增量 |
+| `INCREMENTAL FALLBACK`、`AUTO` | 直接执行 `COMPLETE` |
+| 定时或提交触发 | 执行 `COMPLETE`，见 [设置自动刷新间隔](#设置自动刷新间隔) |
+
+这些任务的 `RefreshMode` 都是 `COMPLETE`，`IvmFallbackReason` 为空。因此创建 IVM 后不需要专门执行一次 `COMPLETE`；[快速上手](#快速上手) 中显式执行 `COMPLETE`，是为了让建立基线的步骤更清楚。
+
+**部分分区的基线失效**
+
+以下基表操作只修改元数据，不产生 Row Binlog。增量刷新无法从变化数据中得知哪些行被删除或替换，因此读取了这些基表分区的物化视图分区需要重建：
+
+- `TRUNCATE TABLE`，包括只截断部分分区
+- `ALTER TABLE ... DROP PARTITION`
+- `RECOVER PARTITION`
+- `ALTER TABLE ... REPLACE PARTITION`，使用默认的严格范围匹配时
+
+物化视图按基表的分区列分区时，Doris 只标记受影响的物化视图分区。下一次刷新（包括严格 `INCREMENTAL`）先重建这些分区，再增量刷新其余分区；`tasks("type"="mv")` 的 `IvmRebuiltPartitions` 列记录本次额外重建的分区数。基表分区被删除时，对应的物化视图分区会在分区同步时一并删除，不需要重建。
+
+物化视图没有分区，或者 Doris 无法确定受影响的物化视图分区时，整个物化视图的基线失效，处理方式见下文。`excluded_trigger_tables` 中的基表执行上述操作，不会使基线失效。
+
+**整个物化视图的基线失效**
+
+以下情况会使整个物化视图的基线失效，物化视图进入 `SCHEMA_CHANGE` 状态，可以通过 `mv_infos` 的 `State` 和 `SchemaChangeDetail` 列查看：
+
+- 基表执行 `DROP COLUMN`、`MODIFY COLUMN`、`RENAME COLUMN`、`RENAME`（重命名表）或 `REPLACE WITH TABLE`。`ADD COLUMN` 不会使基线失效。开启 Row Binlog 的表不允许 `MODIFY COLUMN` 和 `RENAME COLUMN`，见 [Row Binlog 对表 DDL 的约束](../../../data-operate/incremental/row-binlog#对表-ddl-的约束)。
+- 基表执行不使用严格范围匹配的 `REPLACE PARTITION`，或者上一节的分区操作无法定位到具体的物化视图分区。
+- 修改物化视图属性扩大了维护范围：从 `excluded_trigger_tables` 中移除基表、扩大或移除 `ivm_partition_window_limit`，或者扩大 `partition_sync_limit` 的同步范围。
+
+物化视图处于 `SCHEMA_CHANGE` 状态时，下一次 `INCREMENTAL`、`INCREMENTAL FALLBACK`、`AUTO`、`COMPLETE` 或 `PARTITIONS FALLBACK` 刷新会完整重建物化视图，成功后状态恢复为 `NORMAL`。不带 `FALLBACK` 的 `PARTITIONS` 刷新会失败，并提示改用 `COMPLETE`、`AUTO` 或 `PARTITIONS FALLBACK`。
+
+如果基表变更后定义 SQL 已无法分析，例如删除了物化视图使用的列，任何刷新都会失败，需要删除并重新创建物化视图。
+
+**内部 Stream 无法使用**
+
+内部 Stream 缺失或无法继续使用时，`INCREMENTAL FALLBACK` 和 `AUTO` 直接执行 `COMPLETE`，`IvmFallbackReason` 为 `STREAM_UNSUPPORTED`；`COMPLETE` 刷新会重建内部 Stream 并重新对齐消费位点。严格 `INCREMENTAL` 刷新会失败，需要执行一次 `COMPLETE` 或 `AUTO`。
 
 <!-- 知识类型: 故障排查 -->
 <!-- 适用场景: 增量计划验证 / 刷新数据预览 -->
@@ -541,7 +1335,7 @@ PROPERTIES (
 
 该属性只限制 IVM 增量刷新读取的分区，不是物化视图分区保留策略。`COMPLETE` 仍会读取完整基表并建立完整结果。被窗口排除的旧分区变化不会进入后续 IVM 结果，因此这是有损配置，只适合业务明确只关心最近分区的场景。
 
-可以通过 `ALTER MATERIALIZED VIEW ... SET` 修改该属性。扩大窗口或移除限制会要求下一次执行完整基线重建，因为先前被忽略的变化无法从已有位点恢复。
+可以通过 `ALTER MATERIALIZED VIEW ... SET` 修改该属性。扩大窗口或移除限制后，先前被忽略的变化无法从已有位点恢复，物化视图的基线随之失效，下一次刷新会完整重建物化视图，见 [首次刷新和基线重建](#首次刷新和基线重建)。
 
 ### excluded_trigger_tables
 
@@ -579,11 +1373,12 @@ PROPERTIES (
 | 问题 | 排查与处理 |
 |---|---|
 | `CREATE MATERIALIZED VIEW ... REFRESH INCREMENTAL` 创建失败 | 检查 FE 是否开启 `enable_feature_binlog` 和 `enable_table_stream`，基表是否满足模型与 Row Binlog 要求，以及定义 SQL 是否在 IVM 支持范围内 |
-| 严格增量刷新提示重建基线 | 执行 `COMPLETE` 或 `AUTO` 刷新，建立新的完整基线后再执行严格增量刷新 |
+| 严格增量刷新任务的 `RefreshMode` 为 `COMPLETE`，或 `IvmRebuiltPartitions` 大于 0 | 这是首次刷新或基线失效后的自动重建，不是错误。触发条件见 [首次刷新和基线重建](#首次刷新和基线重建) |
+| 不带 `FALLBACK` 的 `PARTITIONS` 刷新报错 `The refresh baseline of MV ... was invalidated` | 整个物化视图的基线已失效，改用 `COMPLETE`、`AUTO` 或 `PARTITIONS FALLBACK` 刷新 |
 | `ON SCHEDULE EVERY 30 SECOND` 报错 `interval time unit can not be second` | 定时刷新的最小间隔是 `EVERY 1 MINUTE`，单位只支持 `MINUTE`、`HOUR`、`DAY`、`WEEK`。需要更低延迟时改用 `ON COMMIT`，见 [设置自动刷新间隔](#设置自动刷新间隔) |
 | 定时刷新的实际延迟大于设定间隔 | 同一物化视图的任务串行执行，单次刷新耗时超过间隔时多余触发会被跳过。检查 `tasks("type"="mv")` 中的任务耗时和 FE 指标 `async_materialized_view_task_skip_num`，拉长间隔、简化定义或通过 `workload_group` 增加刷新资源 |
 | 刷新任务回退到 `COMPLETE` | 查询 `tasks("type"="mv")` 的 `IvmFallbackReason`，并根据 [回退顺序](#回退顺序) 中的原因处理 |
-| 被排除的基表单独变化后，视图数据未更新 | `excluded_trigger_tables` 中的表不会独立触发刷新。等待其他基表变化触发刷新，或调整属性并按提示重建基线 |
+| 被排除的基表单独变化后，视图数据未更新 | `excluded_trigger_tables` 中的表不会独立触发刷新。等待其他基表变化触发刷新，或者执行一次 `COMPLETE` 刷新。把该表从 `excluded_trigger_tables` 中移除后，下一次刷新会完整重建物化视图 |
 | 能否手工消费或重置内部 Stream | 不能。内部 Stream 仅供 IVM 使用，由 Doris 管理生命周期和消费位点 |
 
 <!-- 知识类型: 最佳实践 -->
@@ -594,7 +1389,7 @@ PROPERTIES (
 1. **先比较变化行数和分区大小。** 变化只占分区很小比例时优先考虑 IVM；变化覆盖大部分分区时，`PARTITIONS` 可能更简单。
 2. **生产环境启用安全回退。** 使用 `INCREMENTAL FALLBACK` 或 `AUTO`，避免删除或基线问题让刷新长期失败。
 3. **按刷新耗时选择触发方式和间隔。** 定时触发的最小间隔为 1 分钟，间隔应大于正常负载下单次增量刷新的耗时；需要更低延迟且基表提交不频繁时使用 `ON COMMIT`。
-4. **先建立完整基线。** 创建后先运行 `COMPLETE`，确认结果正确，再开始增量刷新。
+4. **先核对基线。** 首次刷新会完整计算全部数据，确认这次的结果正确后，再交给增量刷新维护。
 5. **更新和删除场景使用 Unique Key MoW。** Duplicate Key 表只适合追加型数据。
 6. **为刷新任务隔离资源。** 通过 `workload_group` 避免复杂增量计划与在线查询争抢资源。
 7. **监控任务和 Stream 积压。** 同时观察 `tasks("type"="mv")`、`mv_infos` 和 `information_schema.table_stream_consumption`。

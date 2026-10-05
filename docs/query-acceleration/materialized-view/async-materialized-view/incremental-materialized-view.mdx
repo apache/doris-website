@@ -15,6 +15,8 @@
         "IVM scheduled refresh",
         "IVM fallback",
         "IvmFallbackReason",
+        "IVM supported queries",
+        "IVM aggregate functions",
         "internal Table Stream",
         "row-level incremental refresh",
         "REFRESH INCREMENTAL",
@@ -24,6 +26,9 @@
     ]
 }
 ---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 <!-- Knowledge type: Feature description / How-to guide / Parameter reference / Troubleshooting -->
 <!-- Use cases: Frequent base table inserts, updates and deletes / Small share of changed rows / Expensive full or partition recomputation -->
@@ -264,36 +269,582 @@ LIMIT 1;
 - `IvmFallbackReason` is empty when no IVM fallback happened; otherwise it records a stable fallback reason.
 - `ErrorMsg` records the details of a failed strict incremental refresh.
 
-<!-- Knowledge type: Compatibility reference -->
+<!-- Knowledge type: Compatibility reference / SQL examples -->
 <!-- Use cases: Evaluating SQL before creation / Diagnosing unsupported syntax -->
 
 ## Supported queries
 
-IVM checks the definition SQL when the materialized view is created. With an explicit `REFRESH INCREMENTAL`, an unsupported definition makes the creation fail.
+IVM checks the definition SQL when the materialized view is created. With an explicit `REFRESH INCREMENTAL`, an unsupported definition makes the creation fail. This section lists the supported relational operations and aggregate functions with a runnable example for each, followed by the query forms that are not supported.
+
+### Example tables
+
+The examples in this section use three base tables: the customer table `customers`, the sales table `sales` and the refund table `refunds`. All three are Unique Key Merge-on-Write tables with Row Binlog and the before image enabled. You can run them in the `ivm_demo` database created in [Quick start](#quick-start):
+
+```sql
+CREATE TABLE customers (
+    customer_id BIGINT,
+    name VARCHAR(32),
+    city VARCHAR(16)
+)
+UNIQUE KEY(customer_id)
+DISTRIBUTED BY HASH(customer_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+);
+
+CREATE TABLE sales (
+    sale_id BIGINT,
+    customer_id BIGINT,
+    channel VARCHAR(16),
+    amount DECIMAL(10, 2)
+)
+UNIQUE KEY(sale_id)
+DISTRIBUTED BY HASH(sale_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+);
+
+CREATE TABLE refunds (
+    refund_id BIGINT,
+    sale_id BIGINT,
+    amount DECIMAL(10, 2)
+)
+UNIQUE KEY(refund_id)
+DISTRIBUTED BY HASH(refund_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+);
+
+INSERT INTO customers VALUES
+    (1, 'Alice', 'Beijing'),
+    (2, 'Bob',   'Shanghai'),
+    (3, 'Carol', 'Beijing');
+
+INSERT INTO sales VALUES
+    (101, 1,    'web',   120.00),
+    (102, 1,    'app',    80.00),
+    (103, 2,    'web',   200.00),
+    (104, NULL, 'store',  50.00);
+
+INSERT INTO refunds VALUES
+    (9001, 102, 80.00),
+    (9002, 103, 50.00);
+```
+
+The data deliberately contains two special cases that the join and aggregation examples rely on: store order 104 has no customer, so its `customer_id` is `NULL`, and customer Carol has no orders yet.
+
+Every example follows the same steps: run its `CREATE MATERIALIZED VIEW`, then run `REFRESH MATERIALIZED VIEW <mv_name> COMPLETE` to build the baseline, and after the refresh task succeeds, run `SELECT * FROM <mv_name>` to see the result. The results shown here are sorted by the leading columns.
 
 ### Supported relational operations
 
-| Operation | Support |
+| Operation | Description |
 |---|---|
-| Column selection and expression projection | Supported |
-| `WHERE` filters | Supported |
-| `GROUP BY` aggregation | Supported; the aggregation must be at the top level of the query, with only projections above it |
-| `INNER JOIN`, `CROSS JOIN` | Supported |
-| `LEFT OUTER JOIN`, `RIGHT OUTER JOIN`, `FULL OUTER JOIN` | Supported; the preserved side must have a deterministic row identity |
-| Nested outer joins | Supported; complex subtrees on the null-producing side noticeably enlarge the refresh plan |
-| `UNION ALL` | Supported |
-| Single-row constant relations | Supported; the first refresh builds the baseline with `COMPLETE` |
-| Subquery aliases | Supported |
-| Creating an IVM on top of another IVM | Supported |
+| Columns and expressions | Select some of the columns, or compute new columns with deterministic expressions |
+| `WHERE` filters | Filter the rows of the base tables by a condition |
+| `FROM` subqueries | Aliased subqueries in the `FROM` clause; they can be nested and must not contain aggregations |
+| Constant rows | A `SELECT` without `FROM` that always returns one row of constants, for example `SELECT -1, 'unknown'`. It can be a `UNION ALL` branch, one side of a join, or the whole definition |
+| `GROUP BY` aggregation | The aggregation must be the outermost operation of the query with only projections above it, and an aggregate result must not be wrapped in another expression |
+| `GROUPING SETS`, `ROLLUP`, `CUBE` | Can be used with `GROUPING()` and `GROUPING_ID()`; the same restrictions as `GROUP BY` apply |
+| `SELECT DISTINCT` | Handled as a `GROUP BY` without aggregate functions; the same restrictions as `GROUP BY` apply |
+| `INNER JOIN`, `CROSS JOIN` | Multi-table joins and self-joins are supported |
+| `LEFT OUTER JOIN`, `RIGHT OUTER JOIN`, `FULL OUTER JOIN` | The side that keeps all its rows (the left side of a LEFT JOIN, the right side of a RIGHT JOIN, both sides of a FULL JOIN) must not be a Duplicate Key table without Row Binlog listed in `excluded_trigger_tables`, because the rows of such a table have no fixed row identity |
+| Nested outer joins | The side of an outer join that can be padded with `NULL` is itself a join. The more complex that side, the larger the incremental refresh plan |
+| `UNION ALL` | Branches can come from different tables, the same table, or constant rows |
+| Chained IVM | Another IVM is used as a base table. The IVM used as a base table must enable Row Binlog and the before image |
 
-The following forms are not supported:
+The examples below are grouped by category.
 
-- `SELECT DISTINCT` and `UNION DISTINCT`.
-- `UNION ALL` with constant branches.
-- `ORDER BY`, `LIMIT` and window functions.
-- Mark Join, for example the join produced from a correlated subquery with disjunctive conditions.
-- Plan nodes outside the allowlist above.
-- Using a regular asynchronous materialized view as an IVM base table. Chained maintenance requires the lower-level materialized view to be an IVM as well.
+#### Single-table queries
+
+<Tabs>
+<TabItem value="projection" label="Columns & expressions" default>
+
+Select the columns you need, or compute new columns with expressions. Expressions must be deterministic, that is, the same input always produces the same result; for example, `NOW()` and `RAND()` cannot be used.
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_projection
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT sale_id, channel, amount, amount * 0.9 AS discounted_amount
+FROM sales;
+```
+
+Result:
+
+```text
++---------+---------+--------+-------------------+
+| sale_id | channel | amount | discounted_amount |
++---------+---------+--------+-------------------+
+|     101 | web     | 120.00 |           108.000 |
+|     102 | app     |  80.00 |            72.000 |
+|     103 | web     | 200.00 |           180.000 |
+|     104 | store   |  50.00 |            45.000 |
++---------+---------+--------+-------------------+
+```
+
+</TabItem>
+<TabItem value="where" label="WHERE filter">
+
+Keeps only the rows that satisfy the condition. When a base table row is updated, Doris evaluates the condition again on the new values: a row that no longer matches is removed from the materialized view, and a row that starts to match is added to it.
+
+```sql
+CREATE MATERIALIZED VIEW mv_large_sales
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT sale_id, customer_id, amount
+FROM sales
+WHERE amount >= 100;
+```
+
+Result:
+
+```text
++---------+-------------+--------+
+| sale_id | customer_id | amount |
++---------+-------------+--------+
+|     101 |           1 | 120.00 |
+|     103 |           2 | 200.00 |
++---------+-------------+--------+
+```
+
+</TabItem>
+<TabItem value="subquery" label="FROM subquery">
+
+Use an aliased subquery in the `FROM` clause, for example to select the web orders first and then join them with the customer table. Subqueries can be nested; inside them, too, only the operations listed in this section can be used, and they must not contain aggregations.
+
+```sql
+CREATE MATERIALIZED VIEW mv_web_sales
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT w.sale_id, c.name, w.amount
+FROM (
+    SELECT sale_id, customer_id, amount
+    FROM sales
+    WHERE channel = 'web'
+) AS w
+INNER JOIN customers AS c ON w.customer_id = c.customer_id;
+```
+
+Result:
+
+```text
++---------+-------+--------+
+| sale_id | name  | amount |
++---------+-------+--------+
+|     101 | Alice | 120.00 |
+|     103 | Bob   | 200.00 |
++---------+-------+--------+
+```
+
+</TabItem>
+<TabItem value="constant-row" label="Constant row">
+
+A constant row is a `SELECT` without `FROM` that always returns one row of constants. A common use is to add an "unknown" member to a dimension table for the rows that cannot be matched to it:
+
+```sql
+CREATE MATERIALIZED VIEW mv_customers_with_unknown
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT customer_id, name, city
+FROM customers
+UNION ALL
+SELECT -1, 'unknown', 'unknown';
+```
+
+Result:
+
+```text
++-------------+---------+----------+
+| customer_id | name    | city     |
++-------------+---------+----------+
+|          -1 | unknown | unknown  |
+|           1 | Alice   | Beijing  |
+|           2 | Bob     | Shanghai |
+|           3 | Carol   | Beijing  |
++-------------+---------+----------+
+```
+
+A constant row can also be one side of a join, for example `CROSS JOIN (SELECT 0.14 AS usd_rate) r` to attach a parameter to every row, or the whole definition of a materialized view, for example `SELECT 1 AS id, 'x' AS name`.
+
+A constant row produces no changes. The first refresh of a materialized view that contains a constant row always runs `COMPLETE`, even when `INCREMENTAL` is requested; later incremental refreshes only process the changes of the base tables.
+
+</TabItem>
+</Tabs>
+
+#### Aggregation
+
+<Tabs>
+<TabItem value="group-by" label="GROUP BY" default>
+
+Computes aggregation results per group. The input of the aggregation can be a single table, a join, a `UNION ALL` or a `FROM` subquery, but the aggregation itself must be the outermost operation of the query. The following example joins `sales` with `customers` and then aggregates by city; order 104 has no customer and is not counted.
+
+```sql
+CREATE MATERIALIZED VIEW mv_city_sales
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.city, COUNT(*) AS sale_cnt, SUM(s.amount) AS total_amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id
+GROUP BY c.city;
+```
+
+Result:
+
+```text
++----------+----------+--------------+
+| city     | sale_cnt | total_amount |
++----------+----------+--------------+
+| Beijing  |        2 |       200.00 |
+| Shanghai |        1 |       200.00 |
++----------+----------+--------------+
+```
+
+The projection above the aggregation can rename columns, reorder them, or compute on the group-by columns. `HAVING`, aggregations inside a subquery or a join input, and expressions wrapped around an aggregate result are not supported. See [Unsupported query forms](#unsupported-query-forms).
+
+</TabItem>
+<TabItem value="grouping-sets" label="GROUPING SETS / ROLLUP / CUBE">
+
+Computes several combinations of dimensions in one aggregation. The following example uses `ROLLUP(c.city, s.channel)` to produce the city and channel details, a subtotal per city and a grand total; in the subtotal and total rows, the rolled-up columns are `NULL`. `GROUPING SETS`, `CUBE`, and the `GROUPING()` and `GROUPING_ID()` functions that identify subtotal rows are supported as well.
+
+```sql
+CREATE MATERIALIZED VIEW mv_city_channel_rollup
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.city, s.channel, SUM(s.amount) AS total_amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id
+GROUP BY ROLLUP(c.city, s.channel);
+```
+
+Result:
+
+```text
++----------+---------+--------------+
+| city     | channel | total_amount |
++----------+---------+--------------+
+| NULL     | NULL    |       400.00 |
+| Beijing  | NULL    |       200.00 |
+| Beijing  | app     |        80.00 |
+| Beijing  | web     |       120.00 |
+| Shanghai | NULL    |       200.00 |
+| Shanghai | web     |       200.00 |
++----------+---------+--------------+
+```
+
+</TabItem>
+<TabItem value="distinct" label="SELECT DISTINCT">
+
+`SELECT DISTINCT` is handled as a `GROUP BY` without aggregate functions, and the same restrictions as `GROUP BY` apply. Note that `UNION` (that is, `UNION DISTINCT`) is still not supported.
+
+```sql
+CREATE MATERIALIZED VIEW mv_channels
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT DISTINCT channel
+FROM sales;
+```
+
+Result:
+
+```text
++---------+
+| channel |
++---------+
+| app     |
+| store   |
+| web     |
++---------+
+```
+
+</TabItem>
+</Tabs>
+
+#### Joins
+
+<Tabs>
+<TabItem value="inner-join" label="INNER JOIN" default>
+
+Keeps only the rows that match on both sides. Order 104 has no customer, so it is not in the result.
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_customer
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT s.sale_id, c.name, c.city, s.amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id;
+```
+
+Result:
+
+```text
++---------+-------+----------+--------+
+| sale_id | name  | city     | amount |
++---------+-------+----------+--------+
+|     101 | Alice | Beijing  | 120.00 |
+|     102 | Alice | Beijing  |  80.00 |
+|     103 | Bob   | Shanghai | 200.00 |
++---------+-------+----------+--------+
+```
+
+</TabItem>
+<TabItem value="cross-join" label="CROSS JOIN">
+
+Returns every combination of the rows on both sides (the Cartesian product). The following example self-joins `customers` to list every pair of customers.
+
+```sql
+CREATE MATERIALIZED VIEW mv_customer_pairs
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT a.name AS customer_a, b.name AS customer_b
+FROM customers a
+CROSS JOIN customers b
+WHERE a.customer_id < b.customer_id;
+```
+
+Result:
+
+```text
++------------+------------+
+| customer_a | customer_b |
++------------+------------+
+| Alice      | Bob        |
+| Alice      | Carol      |
+| Bob        | Carol      |
++------------+------------+
+```
+
+</TabItem>
+<TabItem value="outer-join" label="Outer joins">
+
+An outer join keeps all rows of one side and pads the other side with `NULL` when there is no match. `LEFT OUTER JOIN` keeps the left side, `RIGHT OUTER JOIN` keeps the right side, and `FULL OUTER JOIN` keeps both sides.
+
+**LEFT OUTER JOIN**: keeps every order. Order 104 has no matching customer, so `name` is `NULL`.
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_left
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT s.sale_id, s.amount, c.name
+FROM sales s
+LEFT OUTER JOIN customers c ON s.customer_id = c.customer_id;
+```
+
+Result:
+
+```text
++---------+--------+-------+
+| sale_id | amount | name  |
++---------+--------+-------+
+|     101 | 120.00 | Alice |
+|     102 |  80.00 | Alice |
+|     103 | 200.00 | Bob   |
+|     104 |  50.00 | NULL  |
++---------+--------+-------+
+```
+
+**RIGHT OUTER JOIN**: keeps every customer. Carol, who has no orders yet, is in the result as well.
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_right
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.name, s.sale_id, s.amount
+FROM sales s
+RIGHT OUTER JOIN customers c ON s.customer_id = c.customer_id;
+```
+
+Result:
+
+```text
++-------+---------+--------+
+| name  | sale_id | amount |
++-------+---------+--------+
+| Alice |     101 | 120.00 |
+| Alice |     102 |  80.00 |
+| Bob   |     103 | 200.00 |
+| Carol |    NULL |   NULL |
++-------+---------+--------+
+```
+
+**FULL OUTER JOIN**: keeps both order 104, which has no customer, and Carol, who has no orders.
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_full
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.name, s.sale_id, s.amount
+FROM customers c
+FULL OUTER JOIN sales s ON c.customer_id = s.customer_id;
+```
+
+Result:
+
+```text
++-------+---------+--------+
+| name  | sale_id | amount |
++-------+---------+--------+
+| NULL  |     104 |  50.00 |
+| Alice |     101 | 120.00 |
+| Alice |     102 |  80.00 |
+| Bob   |     103 | 200.00 |
+| Carol |    NULL |   NULL |
++-------+---------+--------+
+```
+
+</TabItem>
+<TabItem value="nested-outer-join" label="Nested outer joins">
+
+The side of an outer join that can be padded with `NULL` is called the null-producing side, for example the right side of a LEFT JOIN. A nested outer join is one whose null-producing side is itself a join. The following example first uses `sales LEFT JOIN refunds` to attach refunds, and then uses that whole join as the right side of `customers LEFT JOIN`.
+
+```sql
+CREATE MATERIALIZED VIEW mv_customer_refunds
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.name, s.sale_id, r.refund_id, r.amount AS refund_amount
+FROM customers c
+LEFT OUTER JOIN (
+    sales s
+    LEFT OUTER JOIN refunds r ON s.sale_id = r.sale_id
+) ON c.customer_id = s.customer_id;
+```
+
+Result:
+
+```text
++-------+---------+-----------+---------------+
+| name  | sale_id | refund_id | refund_amount |
++-------+---------+-----------+---------------+
+| Alice |     101 |      NULL |          NULL |
+| Alice |     102 |      9001 |         80.00 |
+| Bob   |     103 |      9002 |         50.00 |
+| Carol |    NULL |      NULL |          NULL |
++-------+---------+-----------+---------------+
+```
+
+An incremental refresh has to compute the null-producing side both before and after the change, so the more complex that side, the larger the refresh plan. If planning or refreshing becomes too expensive, create that side as a lower-level IVM first and build the current materialized view on top of it. See the chained IVM example in [UNION ALL and chained IVM](#union-all-and-chained-ivm).
+
+</TabItem>
+</Tabs>
+
+#### UNION ALL and chained IVM
+
+<Tabs>
+<TabItem value="union-all" label="UNION ALL" default>
+
+Combines the results of several queries without removing duplicates. Branches can come from different tables, the same table, or constant rows. The following example combines sales and refunds into one ledger, with refund amounts recorded as negative numbers.
+
+```sql
+CREATE MATERIALIZED VIEW mv_ledger
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT sale_id AS doc_id, 'sale' AS doc_type, amount
+FROM sales
+UNION ALL
+SELECT refund_id, 'refund', -amount
+FROM refunds;
+```
+
+Result:
+
+```text
++--------+----------+--------+
+| doc_id | doc_type | amount |
++--------+----------+--------+
+|    101 | sale     | 120.00 |
+|    102 | sale     |  80.00 |
+|    103 | sale     | 200.00 |
+|    104 | sale     |  50.00 |
+|   9001 | refund   | -80.00 |
+|   9002 | refund   | -50.00 |
++--------+----------+--------+
+```
+
+</TabItem>
+<TabItem value="chained" label="Chained IVM">
+
+Uses one IVM as a base table of another to split a complex computation into layers, for example a lower-level IVM that performs the join and an upper-level IVM that aggregates. An IVM used as a base table is itself a Unique Key Merge-on-Write table, so like other Merge-on-Write base tables it must enable Row Binlog and the before image. Otherwise the upper-level IVM cannot be created; for example, creation fails with `row binlog is not enabled for table` when Row Binlog is not enabled.
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_city_detail
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+)
+AS
+SELECT s.sale_id, c.city, s.amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id;
+
+CREATE MATERIALIZED VIEW mv_city_total
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT city, COUNT(*) AS sale_cnt, SUM(amount) AS total_amount
+FROM mv_sales_city_detail
+GROUP BY city;
+```
+
+The upper-level IVM can only read the results that the lower-level IVM has already refreshed, so refresh the lower level first and then the upper level. After both refreshes, querying `mv_city_total` returns:
+
+```text
++----------+----------+--------------+
+| city     | sale_cnt | total_amount |
++----------+----------+--------------+
+| Beijing  |        2 |       200.00 |
+| Shanghai |        1 |       200.00 |
++----------+----------+--------------+
+```
+
+A regular asynchronous materialized view (not an IVM) cannot be used as a base table of an IVM.
+
+</TabItem>
+</Tabs>
 
 ### Supported aggregate functions
 
@@ -307,16 +858,224 @@ IVM supports the following aggregate functions. Their arguments can be columns o
 - `BITMAP_UNION`
 - `BITMAP_UNION_COUNT`
 - `ARRAY_AGG`
-- `COLLECT_LIST`
+- `COLLECT_LIST` (single-argument form only)
 
-Aggregate functions with `DISTINCT` are not supported. `ARRAY_AGG` does not support JSONB or VARIANT element types.
+The following examples all group the `sales` table by channel:
 
-Some aggregate functions cannot safely derive the new result from the current delta alone when rows are deleted:
+<Tabs>
+<TabItem value="count" label="COUNT" default>
+
+`COUNT(*)` counts rows; `COUNT(expr)` counts only the rows where `expr` is not `NULL`. The `customer_id` of store order 104 is `NULL`, so `member_sale_cnt` of the store channel is 0.
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_count
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       COUNT(*) AS sale_cnt,
+       COUNT(customer_id) AS member_sale_cnt
+FROM sales
+GROUP BY channel;
+```
+
+Result:
+
+```text
++---------+----------+-----------------+
+| channel | sale_cnt | member_sale_cnt |
++---------+----------+-----------------+
+| app     |        1 |               1 |
+| store   |        1 |               0 |
+| web     |        2 |               2 |
++---------+----------+-----------------+
+```
+
+</TabItem>
+<TabItem value="sum" label="SUM">
+
+Computes a sum. The argument can be a column or a deterministic expression, for example to add up only the orders of 100 or more.
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_sum
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       SUM(amount) AS total_amount,
+       SUM(IF(amount >= 100, amount, 0)) AS large_amount
+FROM sales
+GROUP BY channel;
+```
+
+Result:
+
+```text
++---------+--------------+--------------+
+| channel | total_amount | large_amount |
++---------+--------------+--------------+
+| app     |        80.00 |         0.00 |
+| store   |        50.00 |         0.00 |
+| web     |       320.00 |       320.00 |
++---------+--------------+--------------+
+```
+
+</TabItem>
+<TabItem value="avg" label="AVG">
+
+Computes an average. Doris additionally keeps a hidden sum and count in the materialized view and uses them to recompute the average during incremental refreshes.
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_avg
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel, AVG(amount) AS avg_amount
+FROM sales
+GROUP BY channel;
+```
+
+Result:
+
+```text
++---------+------------+
+| channel | avg_amount |
++---------+------------+
+| app     |    80.0000 |
+| store   |    50.0000 |
+| web     |   160.0000 |
++---------+------------+
+```
+
+</TabItem>
+<TabItem value="min-max" label="MIN / MAX">
+
+Computes the minimum and the maximum.
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_minmax
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel, MIN(amount) AS min_amount, MAX(amount) AS max_amount
+FROM sales
+GROUP BY channel;
+```
+
+Result:
+
+```text
++---------+------------+------------+
+| channel | min_amount | max_amount |
++---------+------------+------------+
+| app     |      80.00 |      80.00 |
+| store   |      50.00 |      50.00 |
+| web     |     120.00 |     200.00 |
++---------+------------+------------+
+```
+
+A newly written value can be compared with the current minimum and maximum directly. But if a deleted or updated row holds the current minimum or maximum, the new result cannot be derived from the existing result, and the full data must be read again. For example, if order 101 (120.00, the current minimum of the web channel) is deleted after the baseline is built, a strict `INCREMENTAL` refresh fails with `IvmFallbackReason` `MIN_MAX_BOUNDARY_HIT`, and an `INCREMENTAL FALLBACK` refresh falls back to `COMPLETE`.
+
+</TabItem>
+<TabItem value="bitmap" label="Bitmap aggregation">
+
+`BITMAP_UNION` merges the Bitmaps of a group, and `BITMAP_UNION_COUNT` returns the number of distinct values in the merged result; they are commonly used for exact distinct counting. The following example counts the distinct customers of each channel: `customer_bitmap` holds the set of customer IDs, and `customer_cnt` is the number of distinct customers. Order 104, whose `customer_id` is `NULL`, is not counted.
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_bitmap
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       BITMAP_UNION(TO_BITMAP(customer_id)) AS customer_bitmap,
+       BITMAP_UNION_COUNT(TO_BITMAP(customer_id)) AS customer_cnt
+FROM sales
+GROUP BY channel;
+```
+
+Bitmap columns must be converted with `BITMAP_TO_STRING` before they can be viewed:
+
+```sql
+SELECT channel, BITMAP_TO_STRING(customer_bitmap) AS customers, customer_cnt
+FROM mv_agg_bitmap
+ORDER BY channel;
+```
+
+```text
++---------+-----------+--------------+
+| channel | customers | customer_cnt |
++---------+-----------+--------------+
+| app     | 1         |            1 |
+| store   |           |            0 |
+| web     | 1,2       |            2 |
++---------+-----------+--------------+
+```
+
+A Bitmap stores only the merged result, so the values contributed by one row cannot be subtracted from it. When a row that takes part in the aggregation is deleted or updated and its group still has other rows, the full Bitmap must be recomputed: a strict `INCREMENTAL` refresh fails with `IvmFallbackReason` `BITMAP_AGG_DELETE`, and `INCREMENTAL FALLBACK` falls back to `COMPLETE`.
+
+</TabItem>
+<TabItem value="array" label="Array aggregation">
+
+`ARRAY_AGG` and `COLLECT_LIST` collect the values of a group into an array. They handle `NULL` differently: `ARRAY_AGG` keeps `NULL` elements, and `COLLECT_LIST` skips `NULL`.
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_array
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       ARRAY_AGG(customer_id) AS customer_ids,
+       COLLECT_LIST(customer_id) AS member_ids
+FROM sales
+GROUP BY channel;
+```
+
+Result:
+
+```text
++---------+--------------+------------+
+| channel | customer_ids | member_ids |
++---------+--------------+------------+
+| app     | [1]          | [1]        |
+| store   | [null]       | []         |
+| web     | [1, 2]       | [1, 2]     |
++---------+--------------+------------+
+```
+
+Incremental refreshes maintain the array as an unordered multiset, so the order of its elements is not fixed. `COLLECT_LIST` supports only the single-argument form; `COLLECT_LIST(expr, max_size)` with a maximum length is not supported. `ARRAY_AGG` does not support JSONB or VARIANT elements.
+
+</TabItem>
+</Tabs>
+
+Aggregate functions with `DISTINCT`, such as `COUNT(DISTINCT customer_id)`, are not supported. For an exact distinct count of a non-negative integer column, use `BITMAP_UNION_COUNT(TO_BITMAP(customer_id))` instead, but deletes and updates then require the full Bitmap to be recomputed, as described below.
+
+Some aggregate functions cannot safely derive the new result from the current delta alone when rows are deleted. An update on a Unique Key table deletes the old row and then writes the new one, so updates can trigger the following cases as well:
 
 - When a deleted value may be the current `MIN` or `MAX`, the full data must be read again.
 - When a delete affects a Bitmap aggregation result, the full Bitmap must be recomputed.
 
 Strict `INCREMENTAL` fails in these cases; `INCREMENTAL FALLBACK` falls back to `COMPLETE`.
+
+### Unsupported query forms
+
+The following forms are not supported, and creation fails with an explicit `REFRESH INCREMENTAL`:
+
+- `UNION` (that is, `UNION DISTINCT`), `INTERSECT` and `EXCEPT`.
+- `ORDER BY`, `LIMIT` and window functions.
+- `HAVING`, and aggregations written inside a `FROM` subquery or a join input. Aggregations can only be the outermost operation of the query; to filter aggregation results, filter them when querying the materialized view.
+- Subqueries in `WHERE` or in the `SELECT` list, such as `IN (SELECT ...)`, `EXISTS (SELECT ...)` and scalar subqueries. `IN` subqueries and scalar subqueries may fail with `Multiple columns returned by subquery are not yet supported`; the cause is also that IVM does not support these subqueries.
+- `WITH` clauses (CTEs). Rewrite them as `FROM` subqueries.
+- `LATERAL VIEW`.
+- Using a regular asynchronous materialized view as a base table. Chained maintenance requires the lower-level materialized view to be an IVM as well.
+- Any other operation not listed in the table above.
+
+In addition, an expression wrapped around an aggregate result can be created, but every incremental refresh of it fails, for example `SUM(amount) * 100`, `MAX(amount) + 1` and `SUM(amount) / COUNT(*)`. A strict `INCREMENTAL` refresh fails with `IvmFallbackReason` `PLAN_REWRITE_FAILED`, and `INCREMENTAL FALLBACK` falls back to `COMPLETE` every time. Output the aggregate result directly and compute on it when querying the materialized view, or move the expression into the argument of the aggregate function, for example `SUM(amount * 100)`.
 
 <!-- Knowledge type: Runtime behavior / Failure handling -->
 <!-- Use cases: Configuring the refresh strategy / Automatic refresh interval / Diagnosing IVM fallback / Rebuilding the baseline -->
@@ -408,7 +1167,7 @@ Some failures mean that the existing IVM baseline can no longer be used safely. 
 
 | `IvmFallbackReason` | Meaning | Recovery |
 |---|---|---|
-| `BINLOG_BROKEN` | The previous refresh did not finish completely, or an internal Stream can no longer be used | Complete refresh and realign the baseline |
+| `STREAM_UNSUPPORTED` | An internal Stream is missing or can no longer be used | Complete refresh, which also rebuilds the internal Streams and realigns the consumption offsets |
 | `MIN_MAX_BOUNDARY_HIT` | A delete may change the current `MIN` or `MAX` | Recompute the aggregation result completely |
 | `BITMAP_AGG_DELETE` | A delete affects a Bitmap aggregation | Recompute the Bitmap completely |
 | `PLAN_SIGNATURE_MISMATCH` | The current query plan does not match the persisted IVM layout | Complete refresh and build a new baseline |
@@ -418,14 +1177,49 @@ Strict `INCREMENTAL` never falls back. When the task fails, the materialized vie
 
 ### First refresh and baseline rebuild
 
-Run `COMPLETE` once after creating an IVM before starting incremental refreshes. The following situations may also require rebuilding the full baseline:
+An incremental refresh can only process the changes made after the baseline. The baseline is the result of the latest complete computation of the materialized view, together with the internal Stream consumption offsets aligned with it. Doris tracks whether the baseline is valid per materialized view partition: partitions whose baseline is invalid are rebuilt in full, and the other partitions keep being refreshed incrementally.
 
-- Structural changes of the materialized view or the base tables change the IVM layout signature.
-- The continuity of Row Binlog or an internal Stream is broken.
-- `ivm_partition_window_limit` is widened or removed, bringing previously ignored partitions back into the maintenance scope.
-- `excluded_trigger_tables` is modified, changing the set of base tables that participate in incremental maintenance.
+**First refresh**
 
-While a baseline rebuild is pending, strict `INCREMENTAL` fails and prompts you to run `AUTO` or `COMPLETE` first.
+Before a materialized view has been refreshed successfully, none of its partitions has a baseline. Whatever refresh method is requested, the first refresh computes all data in full:
+
+| Refresh request | Behavior of the first refresh |
+|---|---|
+| `COMPLETE` | Refreshes all data completely |
+| `INCREMENTAL` | Rebuilds all partitions first, then processes the delta |
+| `INCREMENTAL FALLBACK`, `AUTO` | Runs `COMPLETE` directly |
+| Scheduled or on-commit trigger | Runs `COMPLETE`, see [Setting the automatic refresh interval](#setting-the-automatic-refresh-interval) |
+
+The `RefreshMode` of all these tasks is `COMPLETE`, and `IvmFallbackReason` is empty. You therefore do not need to run `COMPLETE` separately after creating an IVM; [Quick start](#quick-start) runs `COMPLETE` explicitly only to make the baseline step clearer.
+
+**Baseline invalidation of some partitions**
+
+The following base table operations change only metadata and produce no Row Binlog, so an incremental refresh cannot tell from the changes which rows were deleted or replaced. The materialized view partitions that read these base table partitions must be rebuilt:
+
+- `TRUNCATE TABLE`, including truncating only some partitions
+- `ALTER TABLE ... DROP PARTITION`
+- `RECOVER PARTITION`
+- `ALTER TABLE ... REPLACE PARTITION` with the default strict range matching
+
+When the materialized view is partitioned by the partition column of the base table, Doris marks only the affected materialized view partitions. The next refresh, including a strict `INCREMENTAL`, rebuilds these partitions first and then refreshes the other partitions incrementally. The `IvmRebuiltPartitions` column of `tasks("type"="mv")` records how many extra partitions the refresh rebuilt. When a base table partition is dropped, the corresponding materialized view partition is dropped during partition synchronization and does not need to be rebuilt.
+
+If the materialized view is not partitioned, or Doris cannot determine the affected materialized view partitions, the baseline of the whole materialized view becomes invalid, as described below. These operations on base tables listed in `excluded_trigger_tables` do not invalidate the baseline.
+
+**Baseline invalidation of the whole materialized view**
+
+The following situations invalidate the baseline of the whole materialized view and put it in the `SCHEMA_CHANGE` state, which you can check in the `State` and `SchemaChangeDetail` columns of `mv_infos`:
+
+- A base table runs `DROP COLUMN`, `MODIFY COLUMN`, `RENAME COLUMN`, `RENAME` (renaming the table) or `REPLACE WITH TABLE`. `ADD COLUMN` does not invalidate the baseline. Tables with Row Binlog do not allow `MODIFY COLUMN` and `RENAME COLUMN`, see [Row Binlog DDL restrictions](../../../data-operate/incremental/row-binlog#ddl-restrictions).
+- A base table runs `REPLACE PARTITION` without strict range matching, or a partition operation from the previous list cannot be placed on specific materialized view partitions.
+- A property change widens what the materialized view maintains: removing a base table from `excluded_trigger_tables`, widening or removing `ivm_partition_window_limit`, or widening the range of `partition_sync_limit`.
+
+While the materialized view is in the `SCHEMA_CHANGE` state, the next `INCREMENTAL`, `INCREMENTAL FALLBACK`, `AUTO`, `COMPLETE` or `PARTITIONS FALLBACK` refresh rebuilds the whole materialized view, and the state returns to `NORMAL` after it succeeds. A `PARTITIONS` refresh without `FALLBACK` fails and asks you to use `COMPLETE`, `AUTO` or `PARTITIONS FALLBACK` instead.
+
+If the definition SQL can no longer be analyzed after a base table change, for example because a column used by the materialized view was dropped, every refresh fails, and the materialized view must be dropped and created again.
+
+**Internal Stream unavailable**
+
+When an internal Stream is missing or can no longer be used, `INCREMENTAL FALLBACK` and `AUTO` run `COMPLETE` directly with `IvmFallbackReason` `STREAM_UNSUPPORTED`; a `COMPLETE` refresh rebuilds the internal Streams and realigns the consumption offsets. A strict `INCREMENTAL` refresh fails, and you need to run `COMPLETE` or `AUTO` once.
 
 <!-- Knowledge type: Troubleshooting -->
 <!-- Use cases: Verifying the delta plan / Previewing refresh data -->
@@ -541,7 +1335,7 @@ PROPERTIES (
 
 This property only limits the partitions read by IVM incremental refresh. It is not a partition retention policy for the materialized view. `COMPLETE` still reads the full base tables and builds the full result. Changes in old partitions excluded by the window never enter later IVM results, so this is a lossy setting that only suits workloads that explicitly care about recent partitions only.
 
-You can modify this property with `ALTER MATERIALIZED VIEW ... SET`. Widening the window or removing the limit requires a full baseline rebuild on the next refresh, because previously ignored changes cannot be recovered from the existing offsets.
+You can modify this property with `ALTER MATERIALIZED VIEW ... SET`. After the window is widened or the limit is removed, previously ignored changes cannot be recovered from the existing offsets, so the baseline of the materialized view becomes invalid and the next refresh rebuilds the whole materialized view. See [First refresh and baseline rebuild](#first-refresh-and-baseline-rebuild).
 
 ### excluded_trigger_tables
 
@@ -579,11 +1373,12 @@ When creation fails, a refresh falls back, or the data is not updated, use the t
 | Problem | Diagnosis and handling |
 |---|---|
 | `CREATE MATERIALIZED VIEW ... REFRESH INCREMENTAL` fails | Check that `enable_feature_binlog` and `enable_table_stream` are enabled on the FEs, that the base tables meet the table model and Row Binlog requirements, and that the definition SQL is within the IVM support scope |
-| A strict incremental refresh asks for a baseline rebuild | Run a `COMPLETE` or `AUTO` refresh to build a new full baseline, then run the strict incremental refresh again |
+| A strict incremental refresh task shows `RefreshMode` `COMPLETE`, or `IvmRebuiltPartitions` is greater than 0 | This is the automatic rebuild of a first refresh or of an invalidated baseline, not an error. See [First refresh and baseline rebuild](#first-refresh-and-baseline-rebuild) for when it happens |
+| A `PARTITIONS` refresh without `FALLBACK` fails with `The refresh baseline of MV ... was invalidated` | The baseline of the whole materialized view is invalid. Refresh with `COMPLETE`, `AUTO` or `PARTITIONS FALLBACK` instead |
 | `ON SCHEDULE EVERY 30 SECOND` fails with `interval time unit can not be second` | The minimum scheduled interval is `EVERY 1 MINUTE`, and the unit can only be `MINUTE`, `HOUR`, `DAY` or `WEEK`. Use `ON COMMIT` when lower latency is needed, see [Setting the automatic refresh interval](#setting-the-automatic-refresh-interval) |
 | The actual latency of scheduled refreshes is longer than the interval | Tasks of one materialized view run serially, and surplus triggers are skipped when a single refresh takes longer than the interval. Check task durations in `tasks("type"="mv")` and the FE metric `async_materialized_view_task_skip_num`, then lengthen the interval, simplify the definition, or give the refresh more resources through `workload_group` |
 | The refresh task falls back to `COMPLETE` | Query `IvmFallbackReason` in `tasks("type"="mv")` and handle it according to the reasons in [Fallback order](#fallback-order) |
-| The view is not updated after an excluded base table changes on its own | Tables in `excluded_trigger_tables` do not trigger refreshes on their own. Wait for a refresh triggered by other base tables, or adjust the property and rebuild the baseline as prompted |
+| The view is not updated after an excluded base table changes on its own | Tables in `excluded_trigger_tables` do not trigger refreshes on their own. Wait for a refresh triggered by other base tables, or run a `COMPLETE` refresh. After the table is removed from `excluded_trigger_tables`, the next refresh rebuilds the whole materialized view |
 | Can internal Streams be consumed or reset manually | No. Internal Streams are reserved for IVM; Doris manages their lifecycle and consumption offsets |
 
 <!-- Knowledge type: Best practices -->
@@ -594,7 +1389,7 @@ When creation fails, a refresh falls back, or the data is not updated, use the t
 1. **Compare the number of changed rows with the partition size first.** Prefer IVM when changes are a small share of a partition; when changes cover most of a partition, `PARTITIONS` may be simpler.
 2. **Enable safe fallback in production.** Use `INCREMENTAL FALLBACK` or `AUTO` so that deletes or baseline problems do not leave refreshes failing for a long time.
 3. **Choose the trigger and interval from the refresh duration.** The minimum scheduled interval is 1 minute, and the interval should exceed the duration of a single incremental refresh under normal load; use `ON COMMIT` when lower latency is needed and base tables do not commit too frequently.
-4. **Build the full baseline first.** Run `COMPLETE` after creation, verify the result, then start incremental refreshes.
+4. **Check the baseline first.** The first refresh computes all data in full; verify its result before relying on incremental refreshes to maintain it.
 5. **Use Unique Key MoW for update and delete workloads.** Duplicate Key tables only suit append-only data.
 6. **Isolate resources for refresh tasks.** Use `workload_group` to keep complex delta plans from competing with online queries.
 7. **Monitor tasks and Stream backlog.** Watch `tasks("type"="mv")`, `mv_infos` and `information_schema.table_stream_consumption` together.
