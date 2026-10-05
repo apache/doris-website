@@ -21,7 +21,9 @@
         "Fluss primary-key table",
         "Fluss type mapping",
         "streaming storage",
-        "has no readable lake snapshot yet"
+        "has no readable lake snapshot yet",
+        "enable_jni_heap_admission",
+        "Java heap space"
     ]
 }
 ---
@@ -106,6 +108,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     See the [Fluss configuration reference](https://fluss.apache.org/docs/maintenance/configuration/) and the [Fluss authentication guide](https://fluss.apache.org/docs/security/authentication/) for the full list.
 
+    The Fluss client settings of the FE and the BE differ in one place only: the number of network threads. Each Fluss connection on the BE serves one scan range at a time, so when the catalog does not set `fluss.netty.client.num-network-threads`, the BE opens its connections with a single network thread to save threads and file descriptors on the BE, while the FE connection keeps the Fluss client default. There is usually no need to set this parameter; once it is set, the FE and the BE both use that value.
+
 * `{LakeProperties}`
 
     The LakeProperties section holds the connection settings of the Paimon lake behind tiered lake tables, with the prefix `fluss.lake.paimon.`. What follows the prefix is written exactly like `datalake.paimon.*` in the Fluss cluster's `server.yaml`, so the values can be copied over. See Lake Connection Settings.
@@ -153,6 +157,7 @@ CREATE CATALOG fluss_sasl PROPERTIES (
 ### Deployment Requirements
 
 - The FE uses the Fluss client to read metadata and plan queries, and the BE uses it to read data. Both must be able to reach the CoordinatorServer and the TabletServer of the Fluss cluster.
+- The BE reuses its connections to the Fluss cluster. Once a scan range has been read, its connection stays open for the scan ranges and queries that follow, and is closed only after it has been idle for more than 60 seconds. So the Fluss side may still show connections from the BE after a query has finished. Connections are kept apart by client configuration: after you change catalog properties (for example the SASL user name and password), the BE opens new connections with the new settings.
 - The KV snapshots of primary-key tables and the archived log segments live in the remote storage configured in Fluss (`remote.data.dir`). The BE reads those files directly, so it must be able to reach that remote storage as well.
 - To read tiered lake tables, both the FE and the BE must be able to reach the storage that holds the Paimon lake.
 - Lake data is read by the Paimon Connector plugin built into Doris. The plugin ships with Doris and needs no separate installation.
@@ -312,7 +317,7 @@ Log tables are different. A Fluss-only read returns only what is still kept in t
 
 **Row limits for the log tail**
 
-For a Union Read on a primary-key table, the BE keeps the log tail of every bucket in memory: one copy is the set of primary keys used to filter the lake data, and one copy is the rows the tail itself has to emit. To bound memory use, `fluss.union_read.max_tail_rows` limits the tail rows of a single bucket (default 2 million rows), and `fluss.union_read.max_total_tail_rows` limits the total tail rows across all buckets in one scan (default 20 million rows). Both limits are checked during planning, based on the offsets reported by Fluss. Normally the log tail only holds the data written within one `table.datalake.freshness` period, far below the default limits. Hitting a limit usually means the tiering service has stopped or is badly behind.
+For a Union Read on a primary-key table, the BE keeps the log tail of every bucket in memory: one copy is the set of primary keys used to filter the lake data, and one copy is the rows the tail itself has to emit. To bound memory use, `fluss.union_read.max_tail_rows` limits the tail rows of a single bucket (default 2 million rows), and `fluss.union_read.max_total_tail_rows` limits the total tail rows across all buckets in one scan (default 20 million rows). Both limits are checked during planning, based on the offsets reported by Fluss. Normally the log tail only holds the data written within one `table.datalake.freshness` period, far below the default limits. Hitting a limit usually means the tiering service has stopped or is badly behind. The rows the tail emits are held in the BE's JVM heap, so before raising either limit, make sure the JVM heap has room for them. See BE JVM Heap Memory.
 
 **Checking the read path with EXPLAIN**
 
@@ -421,7 +426,17 @@ A scan that reads lake splits also has the following counters under `TableReader
 | `FlussUnionSuppressedRows` | Lake rows dropped because the log tail updated or deleted them. |
 | `FlussUnionTailKeysRead` | Change log records read from the log tails. |
 | `FlussUnionTailKeysRetained` | Distinct primary keys kept in memory to filter the lake rows. |
-| `FlussUnionTailCacheHitCount` | Lake splits that reused a log tail already read for the same bucket. |
+| `FlussUnionTailCacheHitCount` | Lake splits that reused a log tail already read. On one BE, the lake splits of the same bucket share the log tail once it has been read. |
+
+The part read from Fluss goes through the JNI reader, whose counters sit under the `fluss` node below `TableReader` and appear only in the DetailProfile part of the profile. The following ones relate to connections and the JVM heap:
+
+| Counter | Meaning |
+| --- | --- |
+| `FlussJniConnectionsOpened` | Fluss connections opened for the read. The BE reuses idle connections, so a query repeated right afterwards usually shows 0. |
+| `JvmHeapDeclaredBytes` | With JNI heap admission on, the JVM heap the readers declared they would hold. Only whole primary-key table reads and the log tails of Union Reads on primary-key tables declare; other reads show 0. See BE JVM Heap Memory. |
+| `JvmHeapWaitTime` | With JNI heap admission on, the time the readers spent waiting in line for JVM heap. See BE JVM Heap Memory. |
+
+When lake splits are read through Paimon JNI, the JVM heap counters of the same names are under the `paimon` node.
 
 ## Query Performance
 
@@ -431,7 +446,7 @@ A scan that reads lake splits also has the following counters under `TableReader
 The BE has two paths for reading Fluss tables, and their costs differ a lot:
 
 - C++ native reader. The BE reads the ORC/Parquet files in the Paimon lake directly, with the same readers the Paimon Catalog uses. It does not go through the JVM, and it can use the Doris [file cache](../data-cache.md).
-- JNI reader. The BE calls the Fluss Java SDK through JNI to read Fluss's own data. Logs, KV snapshots, and change logs can only be read this way. Every batch has to be converted from Java objects into Doris columnar blocks, which is much slower than the native reader.
+- JNI reader. The BE calls the Fluss Java SDK through JNI to read Fluss's own data. Logs, KV snapshots, and change logs can only be read this way. Every batch has to be converted from Java objects into Doris columnar blocks, which is much slower than the native reader. Some of these reads also hold a lot of JVM heap; see BE JVM Heap Memory.
 
 Which path is used depends on the type of the scan range, which corresponds to the counters on the `flussScan` line of `EXPLAIN`:
 
@@ -456,9 +471,87 @@ For a tiered table, Union Read lets the part in the lake (usually the vast major
 - When analyzing history and freshness does not matter much, query `tbl$lake` directly. It skips the Fluss log entirely: a log table is then read wholly by the native reader, and a primary-key table follows the Paimon rules above.
 - `fluss.union_read.mode = disabled` sends the whole table through JNI. It is not recommended except for troubleshooting.
 - When `auto` mode falls back (`degraded=` appears in `EXPLAIN`), everything read from Fluss also goes through JNI; only the partitions that exist only in the lake are still read from the lake. Watch for the `key-type` and `partition-type` cases: they are determined by the table schema, and only changing the table definition fixes them.
-- A Union Read on a primary-key table reads the primary keys in the log tail once more for every bucket (`FlussUnionTailReadTime` in the profile). The longer the tail, the higher the cost.
+- A Union Read on a primary-key table reads the primary keys in the log tail once more for every bucket on every BE (`FlussUnionTailReadTime` in the profile), and the other lake splits of that bucket on the same BE reuse them. The longer the tail, the higher the cost.
 
 To confirm which path a query took, compare `lakeSplits` with `logRanges`, `pkRanges`, and `pkTailRanges` in `EXPLAIN`, and compare `FlussLakeReadTime` with `FlussLogReadTime` in the profile.
+
+## BE JVM Heap Memory
+
+<!-- Knowledge Type: Capacity Planning + Configuration Parameters + Troubleshooting -->
+<!-- Use Case: OutOfMemoryError when querying primary-key tables / Sizing the BE JVM heap / Turning on JNI heap admission -->
+
+The BE reads Fluss's own data through JNI, and lake Paimon splits that need merging go through JNI as well (see Query Performance). All of these readers run in the JVM embedded in the BE and share one heap with the JNI reads of other catalogs and with Java UDFs. The heap size is set by `-Xmx` in `JAVA_OPTS_FOR_JDK_17` in `be.conf`, and defaults to 2 GB (`-Xmx2048m`).
+
+Most reads stream their data and hold only a few MB of heap, such as the log of a log table. The three reads below are different: before returning their first batch, they load part of the data into the heap and keep it there until the read ends:
+
+| Data read | Heap held |
+| --- | --- |
+| Whole primary-key table read from Fluss (`pkRanges` in `EXPLAIN`) | The change log after the bucket's latest KV snapshot, loaded into memory and merged by primary key. The more changes since the snapshot, the more heap it takes. |
+| Log tail of a Union Read on a primary-key table (`pkTailRanges`) | The latest row of every primary key in the tail. The longer the tail, the more heap it takes. |
+| Lake Paimon splits that need merging (a Paimon primary-key table that has not been compacted yet) | One row group of every file being merged. A single split can take hundreds of MB. |
+
+A query reads several scan ranges in parallel: each scan instance runs up to `max_file_scanners_concurrency` (default 16) readers at once, and one BE may have several instances and several queries reading at the same time. When a few of these heavy readers open together, they can fill the heap and the query fails. The error message gives the heap size and the ways out:
+
+```text
+errCode = 2, detailMessage = (10.0.0.3)[JNI_ERROR]OutOfMemoryError: Java heap space. BE's JVM is out of heap. Its maximum is 2048 MB, the -Xmx in JAVA_OPTS_FOR_JDK_17 of be.conf: raise it and restart the BE, or have the statement hold less of the heap at once - read with fewer scanners by setting max_file_scanners_concurrency below its default of 16, or set enable_jni_heap_admission = true to have JNI readers wait for room by the heap they declare. A statement that ran out of heap frees it only once its scanners have exited
+```
+
+### Handling Insufficient Heap
+
+There are several ways to deal with it:
+
+1. Give the JVM more heap. Change `-Xmx` in `JAVA_OPTS_FOR_JDK_17` in `be.conf`; it takes effect after the BE restarts. For clusters that query primary-key tables often, consider this first. The JVM heap also comes out of the memory of the machine running the BE, so make sure the machine has enough memory before raising it.
+2. Open fewer readers at once. Lower `max_file_scanners_concurrency`: with fewer readers open at the same time, less heap is held, at the cost of slower reads:
+
+    ```sql
+    SET max_file_scanners_concurrency = 4;
+    -- For a single statement only
+    SELECT /*+ SET_VAR(max_file_scanners_concurrency=4) */ * FROM fluss.db.tbl;
+    ```
+
+3. Turn on JNI heap admission, so that these readers wait in line by the heap they will hold. See below.
+4. Reduce the data that has to be loaded into the heap. The more often Fluss takes KV snapshots (`kv.snapshot.interval` of the Fluss cluster), the shorter the change log after a snapshot. The more timely the tiering (`table.datalake.freshness`), the shorter the log tail. Once the lake Paimon primary-key table has been compacted, its splits need no merging, go through the native reader, and take no JVM heap.
+
+### JNI Heap Admission
+
+When the session variable `enable_jni_heap_admission` (default `false`) is on, the FE estimates during planning how much heap each of the three readers above will hold, and passes the estimate to the BE along with the scan range. The BE keeps track of how much the readers it has opened have declared in total. It opens a new reader only if that total plus the new reader's declaration stays within `jni_scanner_heap_budget_ratio` of the maximum JVM heap (that is, `-Xmx`). Otherwise the reader waits in line until earlier readers finish, close, and give back their share.
+
+```sql
+SET enable_jni_heap_admission = true;
+-- For a single statement only
+SELECT /*+ SET_VAR(enable_jni_heap_admission=true) */ * FROM fluss.db.tbl;
+```
+
+With the variable on:
+
+- Only the three readers above declare and wait. The log of a log table and lake splits read by the native reader declare nothing, and are just as fast with the variable on or off.
+- Readers may only wait. Query results do not change.
+- Readers wait in arrival order, so a reader with a large declaration is not passed over indefinitely by smaller readers that arrive later. When no reader holds a share, the next one is always let through, so even a reader that declares more than the whole budget can open; it just runs alone.
+- A reader waits at most `jni_scanner_heap_max_wait_ms` (default 60 seconds). After that it stops waiting and opens.
+- The budget is per BE and shared by all queries on that BE that have the variable on. Queries without it do not declare, do not wait, and do not count against the budget. When several queries read primary-key tables at the same time, use `SET GLOBAL enable_jni_heap_admission = true` to turn it on for all sessions.
+- The variable also applies to splits read through JNI in the [Paimon Catalog](./paimon-catalog.mdx).
+
+Both related BE configuration items can be changed at runtime. See [BE Configuration](../../admin-manual/config/be-config.md) for how to change them:
+
+| Configuration item | Default | Description |
+| --- | --- | --- |
+| `jni_scanner_heap_budget_ratio` | `0.5` | The share of the maximum JVM heap that open readers may declare in total. The rest of the heap is left to readers that declare nothing, to other BE features that use the JVM such as Java UDFs, and to short peaks during reads, so do not set it too high. |
+| `jni_scanner_heap_max_wait_ms` | `60000` | The longest a reader waits in line, in milliseconds. After that it opens anyway. |
+
+`JvmHeapDeclaredBytes` and `JvmHeapWaitTime` in the profile (see Query Profile) record how much heap the readers declared and how long they waited. If `JvmHeapWaitTime` is often high, the budget is too small; consider raising `-Xmx`.
+
+The declarations are estimates, which is why the variable is off by default:
+
+- Values of string, binary, and nested types are all estimated at 64 bytes. For a table with longer values, such as JSON in a string column or long string primary keys, the readers hold more than they declare. Admission cannot stop that, and the query may still fail with `OutOfMemoryError`.
+- A Paimon merge read has short peaks that can reach several times its declaration. Those peaks have to fit into the heap outside the budget.
+- When the same primary key is updated many times in the log, the declaration is larger than what the reader actually holds, so the reader may wait longer than it needs to and the query slows down.
+
+### After the Heap Runs Out
+
+- The query that hit `OutOfMemoryError` fails, and the BE process keeps running.
+- The heap that query held is freed only after all of its readers have exited. Queries run before that may fail with `Failed to attach the current thread to the JVM, code=-1`, followed by the same advice as above. Wait a moment and retry.
+- When the heap runs out, a few background threads of the Fluss client may die with it and are not restarted, so a few Fluss reads can hang for good. The threads and memory they hold are freed only when the BE restarts. After the JVM heap has run out, restart the BE at a convenient time.
+- If you would rather have the BE exit as soon as the JVM heap runs out and let an external process supervisor restart it, add `-XX:+ExitOnOutOfMemoryError` to `JAVA_OPTS_FOR_JDK_17`. The cost is that every query and load running on that BE fails.
 
 ## Limitations
 
@@ -474,7 +567,7 @@ To confirm which path a query took, compare `lakeSplits` with `logRanges`, `pkRa
 ## FAQ
 
 <!-- Knowledge Type: Troubleshooting -->
-<!-- Use Case: Missing Paimon plugin / Object storage credentials / Lake snapshot not ready / Lake table not found / Lake configuration changed / Expired log tail / Unsupported partition column type / Partition matching failure -->
+<!-- Use Case: Missing Paimon plugin / Object storage credentials / Lake snapshot not ready / Lake table not found / Lake configuration changed / Expired log tail / Unsupported partition column type / Partition matching failure / Insufficient JVM heap -->
 
 1. Querying a tiered lake table fails with `the paimon connector plugin is not available`
 
@@ -507,6 +600,14 @@ To confirm which path a query took, compare `lakeSplits` with `logRanges`, `pkRa
 8. Error `cannot be matched safely to a live fluss partition`
 
     The primary-key table is partitioned by a column that is not `STRING`, and the lake holds a partition that Doris cannot match to a partition in Fluss, for example one that Fluss has already dropped. See the `partition-type` case in Union Read Modes. To read the data still in Fluss, set the Union Read mode to `disabled`.
+
+9. Error `OutOfMemoryError: Java heap space` with `BE's JVM is out of heap` in the message
+
+    The BE's JVM heap is full. This mostly happens when reading primary-key tables, doing a Union Read on a primary-key table, or reading many lake Paimon splits that need merging. Raise `-Xmx`, lower `max_file_scanners_concurrency`, or turn on `enable_jni_heap_admission`. See BE JVM Heap Memory. After the heap has run out, restart the BE at a convenient time.
+
+10. Error `Failed to attach the current thread to the JVM, code=-1`
+
+    This usually comes right after the JVM heap ran out: the readers of the query that failed with `OutOfMemoryError` have not all exited yet, so its heap has not been freed. Wait a moment and retry. See BE JVM Heap Memory.
 
 ## Debugging
 
