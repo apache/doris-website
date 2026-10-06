@@ -231,9 +231,9 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 
 > Bucketing columns and bucket counts. Detail model bucket columns can be any columns, aggregation model and primary key model bucket columns must be consistent with key columns. Bucket count is any positive integer. For details on bucketing, see the [Manual Bucketing](../../../../table-design/data-partitioning/data-bucketing#1-manually-set-the-number-of-buckets) and [Automatic Bucketing](../../../../table-design/data-partitioning/data-bucketing#2-automatically-set-the-number-of-buckets) sections.
 
-**distribution_hash_type**
+**<distribution_hash_type>**
 
-> Optional Hash bucketing algorithm. Valid values are `crc32` and `identity`; the default is `crc32`. The algorithm is fixed after table creation, inherited by new partitions, and must be identical for all tables in the same Colocation Group. For the complete mapping rules, compatibility requirements, and selection guidance, see [Choose the Hash Algorithm](../../../../table-design/data-partitioning/data-bucketing#choose-the-hash-algorithm).
+> Optional Hash bucketing algorithm. Valid values are `crc32` and `identity`; the default is `crc32`. The algorithm is fixed after table creation, inherited by new partitions, and must be identical for all tables in the same Colocation Group. For the complete mapping rules, compatibility requirements, and selection guidance, see [Select the Hash Algorithm](../../../../table-design/data-partitioning/data-bucketing#select-the-hash-algorithm).
 
 ### Column Default Value Related Parameters
 

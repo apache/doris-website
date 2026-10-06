@@ -50,7 +50,7 @@ Apache Doris partitioning and bucketing are the two-level physical layout for ev
 - **`DISTRIBUTED BY HASH(col) BUCKETS N`**: hash-distributed shards. `hash(col) % N` picks the bucket; equality predicates on `col` enable bucket pruning. The `hash` function supports a customizable hash algorithm by table's `distribution_hash_type` property:
   - **`crc32`** (default): calculates CRC32 over the bucket key;
   - **`identity`**: an identity hash that maps the bucket key directly without any hash, just like `col % N`.
-  - See [Choose the Hash Algorithm](../table-design/data-partitioning/data-bucketing#choose-the-hash-algorithm).
+  - See [Select the Hash Algorithm](../table-design/data-partitioning/data-bucketing#select-the-hash-algorithm).
 - **`DISTRIBUTED BY RANDOM BUCKETS N`**: rows scattered across buckets without a key. Avoids skew, but no bucket pruning. Duplicate-Key tables only.
 - **`BUCKETS AUTO`**: the FE picks the bucket count from `estimate_partition_size`, BE count, and disk count. Set per partition.
 

@@ -233,7 +233,7 @@ CREATE TABLE <table_name> LIKE <source_table>
 
 > 分桶列和分桶数。明细模型的分桶列可以是任意的列，聚合模型和主键模型的分桶列必须和 key 列保持一致。分桶数是任意的正整数。有关分桶的详细信息，请参阅[手动分桶](../../../../table-design/data-partitioning/data-bucketing#手动设置分桶数)和[自动分桶](../../../../table-design/data-partitioning/data-bucketing#自动设置分桶数)章节。
 
-**distribution_hash_type**
+**<distribution_hash_type>**
 
 > 可选的 Hash 分桶算法。支持 `crc32` 和 `identity`，默认值为 `crc32`。算法在建表后不可修改，新增分区会继承该属性，同一 Colocation Group 中的所有表必须使用相同算法。完整映射规则、兼容性要求和选型建议请参阅[选择 Hash 算法](../../../../table-design/data-partitioning/data-bucketing#选择-hash-算法)。
 
