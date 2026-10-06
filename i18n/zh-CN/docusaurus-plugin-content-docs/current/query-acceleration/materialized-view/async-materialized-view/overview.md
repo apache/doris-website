@@ -274,6 +274,6 @@ SET materialized_view_rewrite_enable_contain_external_table = true;
 ## 更多参考
 
 - 创建、查询与维护异步物化视图：[创建、查询与维护异步物化视图](../async-materialized-view/functions-and-demands.md)
-- 行级变化维护：[物化视图增量维护（IVM）](../async-materialized-view/incremental-materialized-view.md)
+- 行级变化维护：[物化视图增量维护（IVM）](../async-materialized-view/incremental-materialized-view.mdx)
 - 使用指南：[使用指南](../async-materialized-view/use-guide.md)
 - 常见问题：[常见问题](../async-materialized-view/faq.md)

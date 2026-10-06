@@ -21,7 +21,9 @@
         "Fluss 主键表",
         "Fluss 类型映射",
         "流存储",
-        "has no readable lake snapshot yet"
+        "has no readable lake snapshot yet",
+        "enable_jni_heap_admission",
+        "Java heap space"
     ]
 }
 ---
@@ -106,6 +108,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     参数列表见 [Fluss 配置文档](https://fluss.apache.org/docs/maintenance/configuration/) 和 [Fluss 认证文档](https://fluss.apache.org/docs/security/authentication/)。
 
+    FE 和 BE 的 Fluss 客户端配置只有一处不同：网络线程数。BE 上的每个 Fluss 连接同一时间只服务一个扫描范围，所以 Catalog 没有设置 `fluss.netty.client.num-network-threads` 时，BE 的连接只开 1 个网络线程，以节省 BE 上的线程和文件句柄；FE 的连接仍用 Fluss 客户端的默认值。一般不需要设置这个参数，设置之后 FE 和 BE 都用设置的值。
+
 * `{LakeProperties}`
 
     LakeProperties 部分填写湖仓分层表对应的 Paimon 湖的连接信息，前缀为 `fluss.lake.paimon.`。前缀后面的写法和 Fluss 集群 `server.yaml` 里 `datalake.paimon.*` 的写法一样，可以直接复制过来。详见【湖表连接配置】。
@@ -153,6 +157,7 @@ CREATE CATALOG fluss_sasl PROPERTIES (
 ### 部署要求
 
 - FE 用 Fluss 客户端读元数据、做查询规划，BE 用它读数据。两者都要能访问 Fluss 集群的 CoordinatorServer 和 TabletServer。
+- BE 会复用到 Fluss 集群的连接：一个扫描范围读完后，连接留给后面的扫描范围和查询接着用，空闲超过 60 秒才关闭。所以查询结束后，Fluss 一侧仍能看到来自 BE 的连接。连接按客户端配置区分，修改 Catalog 属性（比如 SASL 用户名和密码）之后，BE 会按新配置建立新连接。
 - 主键表的 KV 快照和已归档的日志段放在 Fluss 配置的远端存储（`remote.data.dir`）里，BE 会直接读这些文件，因此也要能访问这个远端存储。
 - 读湖仓分层表时，FE 和 BE 都要能访问 Paimon 湖所在的存储。
 - 湖端数据由 Doris 内置的 Paimon Connector 插件读取，插件随 Doris 一起发布，不用单独安装。
@@ -312,7 +317,7 @@ Union Read 模式决定数据从哪条路径读出来。只要 Fluss 里还保�
 
 **日志尾部行数上限**
 
-对主键表做 Union Read 时，BE 要把每个 Bucket 的日志尾部放在内存里：一份是用来过滤湖端数据的主键集合，一份是尾部自己要输出的行。为了限制内存占用，`fluss.union_read.max_tail_rows` 限制单个 Bucket 的尾部行数（默认 200 万行），`fluss.union_read.max_total_tail_rows` 限制一次扫描所有 Bucket 尾部的总行数（默认 2000 万行）。两个上限都在规划阶段按 Fluss 上报的位点检查。正常情况下，日志尾部只是一个 `table.datalake.freshness` 周期内写入的数据，离默认上限很远；碰到上限，多半是分层服务停了或者严重滞后。
+对主键表做 Union Read 时，BE 要把每个 Bucket 的日志尾部放在内存里：一份是用来过滤湖端数据的主键集合，一份是尾部自己要输出的行。为了限制内存占用，`fluss.union_read.max_tail_rows` 限制单个 Bucket 的尾部行数（默认 200 万行），`fluss.union_read.max_total_tail_rows` 限制一次扫描所有 Bucket 尾部的总行数（默认 2000 万行）。两个上限都在规划阶段按 Fluss 上报的位点检查。正常情况下，日志尾部只是一个 `table.datalake.freshness` 周期内写入的数据，离默认上限很远；碰到上限，多半是分层服务停了或者严重滞后。尾部要输出的行放在 BE 的 JVM 堆里，调大这两个上限之前，先确认 JVM 堆够用，参见【BE JVM 堆内存】。
 
 **通过 EXPLAIN 确认读取路径**
 
@@ -421,7 +426,17 @@ TableReader
 | `FlussUnionSuppressedRows` | 因为被日志尾部更新或删除而丢掉的湖端行数。 |
 | `FlussUnionTailKeysRead` | 从日志尾部读到的变更日志记录数。 |
 | `FlussUnionTailKeysRetained` | 为过滤湖端行而留在内存里的不重复主键数。 |
-| `FlussUnionTailCacheHitCount` | 直接复用同一 Bucket 已读过的日志尾部的湖端 Split 数。 |
+| `FlussUnionTailCacheHitCount` | 直接复用已读过的日志尾部的湖端 Split 数。同一 BE 上，同一 Bucket 的湖端 Split 共用读过的日志尾部。 |
+
+从 Fluss 读取的部分由 JNI 读取器完成，它的计数器在 `TableReader` 下的 `fluss` 节点里，只出现在 Profile 的 DetailProfile 部分。其中下面几个和连接、JVM 堆有关：
+
+| 计数器 | 含义 |
+| --- | --- |
+| `FlussJniConnectionsOpened` | 读取时新建的 Fluss 连接数。BE 会复用空闲的连接，紧接着重复执行的查询通常为 0。 |
+| `JvmHeapDeclaredBytes` | 开启 JNI 堆准入后，读取器声明会占用的 JVM 堆内存。只有主键表整体读取和主键表 Union Read 的日志尾部会声明，其他读取为 0。参见【BE JVM 堆内存】。 |
+| `JvmHeapWaitTime` | 开启 JNI 堆准入后，读取器排队等待 JVM 堆额度的时间。参见【BE JVM 堆内存】。 |
+
+湖端 Split 走 Paimon JNI 读取时，同名的 JVM 堆计数器在 `paimon` 节点里。
 
 ## 查询性能
 
@@ -431,7 +446,7 @@ TableReader
 BE 读 Fluss 表有两条路径，开销差别很大：
 
 - C++ native reader。BE 直接读 Paimon 湖里的 ORC/Parquet 文件，和 Paimon Catalog 用的是同一套读取器，不经过 JVM，也能用上 Doris 的[文件缓存](../data-cache.md)。
-- JNI reader。BE 通过 JNI 调用 Fluss Java SDK 读 Fluss 自身的数据。日志、KV 快照、变更日志都只能这样读，每一批数据都要从 Java 对象转成 Doris 的列式 Block，比 native reader 慢得多。
+- JNI reader。BE 通过 JNI 调用 Fluss Java SDK 读 Fluss 自身的数据。日志、KV 快照、变更日志都只能这样读，每一批数据都要从 Java 对象转成 Doris 的列式 Block，比 native reader 慢得多。有些读取还要占用较多的 JVM 堆内存，参见【BE JVM 堆内存】。
 
 走哪条路径由扫描范围的类型决定，对应 `EXPLAIN` 中 `flussScan` 行的各个计数：
 
@@ -456,9 +471,87 @@ BE 读 Fluss 表有两条路径，开销差别很大：
 - 分析历史数据、对新鲜度要求不高时，直接查 `tbl$lake`，完全不读 Fluss 日志：日志表全程走 native reader，主键表按上面的 Paimon 规则决定。
 - `fluss.union_read.mode = disabled` 会让整张表改走 JNI，除了排查问题不建议使用。
 - `auto` 模式退回时（`EXPLAIN` 里出现 `degraded=`），从 Fluss 读取的部分同样走 JNI，只有只存在于湖里的分区仍从湖里读。要留意 `key-type` 和 `partition-type` 两种情况，它们由表结构决定，得调整建表才能解决。
-- 主键表的 Union Read 要为每个 Bucket 额外读一次日志尾部的主键（Profile 里的 `FlussUnionTailReadTime`），尾部越长开销越大。
+- 主键表的 Union Read 要在每个 BE 上为每个 Bucket 额外读一次日志尾部的主键（Profile 里的 `FlussUnionTailReadTime`），同一 BE 上这个 Bucket 的其他湖端 Split 直接复用。尾部越长，开销越大。
 
 要确认一条查询实际走了哪条路径，看 `EXPLAIN` 里 `lakeSplits` 与 `logRanges`、`pkRanges`、`pkTailRanges` 的比例，以及 Profile 里 `FlussLakeReadTime` 与 `FlussLogReadTime` 的耗时。
+
+## BE JVM 堆内存
+
+<!-- 知识类型: 资源规划 + 配置参数 + 故障排查 -->
+<!-- 适用场景: 查询主键表报 OutOfMemoryError / 规划 BE 的 JVM 堆大小 / 开启 JNI 堆准入 -->
+
+BE 通过 JNI 读 Fluss 自身的数据，湖端需要合并的 Paimon Split 也走 JNI（见【查询性能】）。这些读取器都运行在 BE 内嵌的 JVM 里，和其他 Catalog 的 JNI 读取、Java UDF 共用一个堆。堆的上限由 `be.conf` 中 `JAVA_OPTS_FOR_JDK_17` 的 `-Xmx` 决定，默认 2 GB（`-Xmx2048m`）。
+
+大部分读取边读边输出，只占几 MB 堆内存，比如日志表的日志。下面三种读取不一样，返回第一批数据之前就要把一部分数据放进堆里，一直占到读取结束：
+
+| 读取内容 | 堆内存占用 |
+| --- | --- |
+| 主键表从 Fluss 整体读取（`EXPLAIN` 中的 `pkRanges`） | 把 Bucket 最新 KV 快照之后的变更日志放进内存，按主键合并。快照之后的变更越多，占用越大。 |
+| 主键表 Union Read 的日志尾部（`pkTailRanges`） | 保留尾部里每个主键的最新一行。尾部越长，占用越大。 |
+| 湖端需要合并的 Paimon Split（还没 compaction 的 Paimon 主键表） | 每个参与合并的文件保留一个 Row Group，一个 Split 可能占上百 MB。 |
+
+查询会并行读取多个扫描范围：每个扫描实例最多同时运行 `max_file_scanners_concurrency`（默认 16）个读取器，一个 BE 上还可能有多个实例、多个查询在同时读。几个占用大的读取器同时打开，就可能把堆用满，查询报错。错误信息里会给出堆的上限和处理办法：
+
+```text
+errCode = 2, detailMessage = (10.0.0.3)[JNI_ERROR]OutOfMemoryError: Java heap space. BE's JVM is out of heap. Its maximum is 2048 MB, the -Xmx in JAVA_OPTS_FOR_JDK_17 of be.conf: raise it and restart the BE, or have the statement hold less of the heap at once - read with fewer scanners by setting max_file_scanners_concurrency below its default of 16, or set enable_jni_heap_admission = true to have JNI readers wait for room by the heap they declare. A statement that ran out of heap frees it only once its scanners have exited
+```
+
+### 堆内存不足时的处理
+
+可以从下面几个方向入手：
+
+1. 调大 JVM 堆。修改 `be.conf` 中 `JAVA_OPTS_FOR_JDK_17` 的 `-Xmx`，重启 BE 后生效。经常查询主键表的集群，优先考虑这种做法。JVM 堆用的也是 BE 所在机器的内存，调大之前先确认内存够用。
+2. 少开几个读取器。调小 `max_file_scanners_concurrency`，同时打开的读取器少了，占用的堆也跟着减少，代价是读得慢一些：
+
+    ```sql
+    SET max_file_scanners_concurrency = 4;
+    -- 只对单条语句生效
+    SELECT /*+ SET_VAR(max_file_scanners_concurrency=4) */ * FROM fluss.db.tbl;
+    ```
+
+3. 开启 JNI 堆准入，让这几种读取器按要占用的堆排队打开，见下文。
+4. 减少要放进堆里的数据。Fluss 做 KV 快照越频繁（Fluss 集群的 `kv.snapshot.interval`），快照之后的变更日志越短；分层越及时（`table.datalake.freshness`），日志尾部越短；湖端的 Paimon 主键表经过 compaction 后，Split 不用合并，改走 native reader，不占 JVM 堆。
+
+### JNI 堆准入
+
+会话变量 `enable_jni_heap_admission`（默认 `false`）打开后，FE 规划查询时会估算上面三种读取器各要占用多少堆，随扫描范围一起交给 BE。BE 记着已经打开的读取器一共声明了多少：加上新读取器的声明，仍不超过 JVM 最大堆（即 `-Xmx`）的 `jni_scanner_heap_budget_ratio` 时才打开它，否则让它排队，等前面的读取器读完关闭、归还额度后再打开。
+
+```sql
+SET enable_jni_heap_admission = true;
+-- 只对单条语句生效
+SELECT /*+ SET_VAR(enable_jni_heap_admission=true) */ * FROM fluss.db.tbl;
+```
+
+打开后：
+
+- 只有上面三种读取器会声明并排队。日志表的日志、走 native reader 的湖端 Split 不声明，开不开这个变量都一样快。
+- 只会让读取器等待，不会改变查询结果。
+- 按先来后到排队，声明大的读取器不会一直被后来的小读取器插队。当前没有读取器占着额度时总会放行，所以声明比整个额度还大的读取器也能打开，只是独自运行。
+- 一个读取器最多等 `jni_scanner_heap_max_wait_ms`（默认 60 秒），超时后不再等，直接打开。
+- 额度按 BE 计算，这个 BE 上所有打开了该变量的查询共用。没打开的查询不声明、不排队，也不占额度。多个查询同时读主键表时，可以用 `SET GLOBAL enable_jni_heap_admission = true` 让所有会话都打开。
+- 该变量同样作用于 [Paimon Catalog](./paimon-catalog.mdx) 中走 JNI 读取的 Split。
+
+相关的 BE 配置项都支持动态修改，修改方法见 [BE 配置项](../../admin-manual/config/be-config.md)：
+
+| 配置项 | 默认值 | 说明 |
+| --- | --- | --- |
+| `jni_scanner_heap_budget_ratio` | `0.5` | 已打开的读取器一共可以声明 JVM 最大堆的多少比例。其余的堆留给不声明的读取器、Java UDF 等 BE 中其他用到 JVM 的功能，以及读取时的瞬时峰值，不建议调得太高。 |
+| `jni_scanner_heap_max_wait_ms` | `60000` | 一个读取器最多排队多久，单位为毫秒。超时后直接打开。 |
+
+Profile 中的 `JvmHeapDeclaredBytes` 和 `JvmHeapWaitTime`（见【查询 Profile】）记录了读取器声明了多少堆、排队等了多久。`JvmHeapWaitTime` 经常很高，说明额度不够用，可以考虑调大 `-Xmx`。
+
+声明值是估算出来的，这也是该变量默认关闭的原因：
+
+- 字符串、二进制和嵌套类型的值一律按 64 字节估算。值比较长的表，比如字符串列里存的是 JSON，或者主键是长字符串，实际占用会超过声明，准入拦不住，仍可能报 `OutOfMemoryError`。
+- Paimon 合并读取时会有短暂的峰值，可能达到声明值的几倍，这部分要靠额度之外的堆来承担。
+- 日志里同一个主键被反复更新时，声明值会大于实际占用，读取器可能多排一会儿队，查询变慢。
+
+### 堆耗尽之后
+
+- 报 `OutOfMemoryError` 的查询失败，BE 进程继续运行。
+- 这个查询的读取器全部退出后，它占用的堆才会释放。在此之前执行的查询可能报 `Failed to attach the current thread to the JVM, code=-1`，后面同样附带上述处理建议，稍等一会儿再重试即可。
+- 堆耗尽时，Fluss 客户端的个别后台线程可能随之终止且不会恢复，少数 Fluss 读取会因此一直卡住，占用的线程和内存要等 BE 重启才能释放。所以发生过 JVM 堆耗尽之后，建议找合适的时间重启 BE。
+- 如果希望 JVM 堆耗尽时 BE 立即退出，由外部的进程守护工具拉起，可以在 `JAVA_OPTS_FOR_JDK_17` 中加上 `-XX:+ExitOnOutOfMemoryError`。代价是这个 BE 上正在执行的查询和导入都会失败。
 
 ## 使用限制
 
@@ -474,7 +567,7 @@ BE 读 Fluss 表有两条路径，开销差别很大：
 ## 常见问题
 
 <!-- 知识类型: 故障排查 -->
-<!-- 适用场景: Paimon 插件缺失 / 对象存储凭证 / 湖快照未就绪 / 找不到湖表 / 湖配置变更 / 日志尾部过期 / 分区列类型不支持 / 分区匹配失败 -->
+<!-- 适用场景: Paimon 插件缺失 / 对象存储凭证 / 湖快照未就绪 / 找不到湖表 / 湖配置变更 / 日志尾部过期 / 分区列类型不支持 / 分区匹配失败 / JVM 堆内存不足 -->
 
 1. 查询湖仓分层表时报错 `the paimon connector plugin is not available`
 
@@ -507,6 +600,14 @@ BE 读 Fluss 表有两条路径，开销差别很大：
 8. 报错 `cannot be matched safely to a live fluss partition`
 
     主键表的分区列不是 `STRING`，而湖里有 Doris 无法对应到 Fluss 分区的分区，比如 Fluss 里已经删掉的分区。参见【Union Read 模式】中的 `partition-type`。要读 Fluss 里现有的数据，可以把 Union Read 模式设为 `disabled`。
+
+9. 报错 `OutOfMemoryError: Java heap space`，错误信息里带有 `BE's JVM is out of heap`
+
+    BE 的 JVM 堆用满了，多发生在读主键表、对主键表做 Union Read，或者湖端有大量需要合并的 Paimon Split 时。可以调大 `-Xmx`、调小 `max_file_scanners_concurrency`，或者打开 `enable_jni_heap_admission`，参见【BE JVM 堆内存】。发生过堆耗尽之后，建议找合适的时间重启 BE。
+
+10. 报错 `Failed to attach the current thread to the JVM, code=-1`
+
+    通常紧跟在一次 JVM 堆耗尽之后出现：上一个报 `OutOfMemoryError` 的查询，读取器还没有全部退出，堆还没释放。稍等一会儿再重试即可。参见【BE JVM 堆内存】。
 
 ## 功能调试
 

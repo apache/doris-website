@@ -197,7 +197,7 @@ refresh_method
 
 - IVM 创建条件
 
-  `REFRESH INCREMENTAL` 要求基表开启 Row Binlog，且物化视图定义 SQL 在 IVM 支持范围内。显式指定 `INCREMENTAL` 时，不支持的定义会直接创建失败。基表模型、查询算子、聚合函数和 FE 开关见 [物化视图增量维护（IVM）](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#前置条件)。
+  `REFRESH INCREMENTAL` 要求基表开启 Row Binlog，且物化视图定义 SQL 在 IVM 支持范围内。显式指定 `INCREMENTAL` 时，不支持的定义会直接创建失败。基表模型和 FE 开关见 [IVM 前置条件](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#前置条件)，支持的查询算子和聚合函数见 [IVM 支持的查询](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#支持的查询)。
 
 ## 示例
 
