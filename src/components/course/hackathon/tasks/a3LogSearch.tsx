@@ -136,10 +136,6 @@ Run every SQL statement against the live cluster first.`,
                     language: 'bash',
                     code: dorisLoad('seed/a3_app_logs.sql'),
                 },
-                <p key="windows">
-                    On Windows PowerShell, <code>&lt;</code> doesn&apos;t work: run{' '}
-                    <code>.\doris.ps1 load seed\a3_app_logs.sql</code> instead.
-                </p>,
             ],
             checkpoint: (
                 <>

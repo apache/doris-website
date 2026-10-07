@@ -124,12 +124,7 @@ export const A2_MCP: HackathonTaskContent = {
         },
         {
             title: 'All hackathon tables loaded.',
-            body: (
-                <>
-                    From the starter-kit folder (Windows PowerShell: <code>.\doris.ps1 load seed\seed_all.sql</code>).
-                    It ends with the row count of each table.
-                </>
-            ),
+            body: 'From the starter-kit folder. It ends with the row count of each table.',
             command: dorisLoad('seed/seed_all.sql'),
         },
     ],

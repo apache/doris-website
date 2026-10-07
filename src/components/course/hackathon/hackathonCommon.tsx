@@ -20,7 +20,7 @@ export const BEFORE_IMAGE_PULLED: HackathonChecklistItem = {
     body: (
         <>
             About {HACKATHON_DORIS_DOWNLOAD}, once. Pull it before you arrive: the venue Wi-Fi is shared. Docker Desktop
-            (macOS, Windows) and Docker Engine (Linux) both work.
+            (macOS) and Docker Engine (Linux) both work.
         </>
     ),
     command: DORIS_PULL,
@@ -56,8 +56,8 @@ export const BEFORE_STARTER_KIT: HackathonChecklistItem = {
     body: (
         <>
             Download and unzip <HackathonStarterKit />, then run the commands on this page from inside its{' '}
-            <code>{KIT}</code> folder. Its <code>doris.sh</code> (macOS, Linux) and <code>doris.ps1</code> (Windows)
-            wrap them: <code>start</code>, <code>load</code>, <code>sql</code>, <code>stop</code>.
+            <code>{KIT}</code> folder. Its <code>doris.sh</code> wraps them: <code>start</code>, <code>load</code>,{' '}
+            <code>sql</code>, <code>stop</code>.
         </>
     ),
     command: HACKATHON_EVENT.starterKitUrl

@@ -166,10 +166,6 @@ and a "show SQL" option. Run every SQL statement against the live cluster first.
                     language: 'bash',
                     code: dorisLoad('seed/a1_doc_chunks.sql'),
                 },
-                <p key="windows">
-                    On Windows PowerShell, <code>&lt;</code> doesn&apos;t work: run{' '}
-                    <code>.\doris.ps1 load seed\a1_doc_chunks.sql</code> instead.
-                </p>,
             ],
             checkpoint: (
                 <>

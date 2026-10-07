@@ -144,10 +144,7 @@ Run every SQL statement against the live cluster first.`,
                     language: 'bash',
                     code: dorisLoad('seed/a4_agent_events.sql'),
                 },
-                <p key="windows">
-                    On Windows PowerShell, <code>&lt;</code> doesn&apos;t work: run{' '}
-                    <code>.\doris.ps1 load seed\a4_agent_events.sql</code> instead. Then, in a SQL shell:
-                </p>,
+                <p key="shell">Then, in a SQL shell:</p>,
                 {
                     label: 'M0 · Inspect',
                     file: 'sql',
