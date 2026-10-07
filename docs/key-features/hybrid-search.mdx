@@ -65,6 +65,12 @@ CREATE TABLE docs (
     PROPERTIES("index_type"="hnsw","metric_type"="l2_distance","dim"="8")
 ) DUPLICATE KEY(id) DISTRIBUTED BY HASH(id) BUCKETS 1;
 
+INSERT INTO docs VALUES
+  (1, [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8], 'this is about music'),
+  (2, [0.2,0.1,0.5,0.3,0.9,0.4,0.7,0.1], 'sports news today'),
+  (3, [0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2], 'latest music trend'),
+  (4, [0.05,0.06,0.07,0.08,0.09,0.1,0.2,0.3], 'politics update');
+
 SELECT id, body,
        l2_distance_approximate(embedding, [0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]) AS dist
 FROM docs
@@ -76,12 +82,12 @@ LIMIT 2;
 **Expected result**
 
 ```
-+----+---------------------+----------+
-| id | body                | dist     |
-+----+---------------------+----------+
-|  1 | this is about music | 0.663325 |
-|  3 | latest music trend  | 1.280625 |
-+----+---------------------+----------+
++------+---------------------+------------+
+| id   | body                | dist       |
++------+---------------------+------------+
+|    1 | this is about music | 0.66332495 |
+|    3 | latest music trend  |  1.2806249 |
++------+---------------------+------------+
 ```
 
 `MATCH_ANY 'music'` shrinks the candidate set to rows whose `body` contains "music"; the ANN index then ranks those rows by distance to the query vector and returns the closest two.
