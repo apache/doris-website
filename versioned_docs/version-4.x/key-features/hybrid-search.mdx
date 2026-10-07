@@ -11,7 +11,7 @@ keywords:
 slug: /key-features/hybrid-search
 image: /images/next/key-features/hybrid-search.jpg
 last_update:
-  date: 2026-05-10
+  date: 2026-10-07
   author: Apache Doris
 featureCard:
   tags:
@@ -102,7 +102,7 @@ Use Apache Doris hybrid search when you need keyword filtering and vector simila
 - Pure billion-scale ANN with no filters and no analytics. A dedicated vector DB may use less memory and cost less per query.
 - Tables that need `AGGREGATE KEY`, or `UNIQUE KEY` without merge-on-write. ANN indexes today require `DUPLICATE KEY` or MoW `UNIQUE KEY` tables.
 - Nullable vector columns. The vector column must be `NOT NULL ARRAY<FLOAT>` with a fixed dimension that matches the index.
-- Workloads that depend on Reciprocal Rank Fusion across two scorers. Doris fuses via SQL `ORDER BY`, not RRF. If you need RRF, issue two queries from the application and fuse the rankings yourself.
+- Workloads that depend on Reciprocal Rank Fusion across two scorers. The single-pass pattern ranks by vector distance after a keyword pre-filter; to fuse a BM25 ranking and a vector ranking, use the two-list SQL pattern in [Reciprocal Rank Fusion](./reciprocal-rank-fusion).
 
 ## How it compares {#compares}
 
