@@ -317,7 +317,7 @@
 
 .hk-task__switch-in {
     display: grid;
-    grid-template-columns: auto repeat(4, minmax(0, 1fr));
+    grid-template-columns: auto repeat(5, minmax(0, 1fr));
     align-items: stretch;
     gap: 10px;
 }
@@ -2012,7 +2012,7 @@
 
 .hk-task__tiles {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 16px;
 
     > li {

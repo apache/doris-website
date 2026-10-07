@@ -328,7 +328,7 @@ LIMIT 10;`,
             checkpoint: (
                 <>
                     Every hit mentions Kafka, led by <em>How does the Apache Doris Kafka and CDC integration work?</em>{' '}
-                    Vector mode alone ranks <em>Pipeline Execution Engine › Overview</em> second for the same question.
+                    Vector mode alone ranks <em>Pipeline Execution Engine › Overview</em> first for the same question.
                 </>
             ),
         },

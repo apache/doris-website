@@ -2,7 +2,13 @@ import React, { JSX, KeyboardEvent, RefObject, useCallback, useEffect, useRef, u
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import { useLocation } from '@docusaurus/router';
-import { HACKATHON_EVENT, HACKATHON_TASKS, hackathonTaskPath } from './hackathonEvent';
+import {
+    HACKATHON_EVENT,
+    HACKATHON_TASKS,
+    HACKATHON_TRACK_B,
+    hackathonTaskPath,
+    hackathonTrackBPath,
+} from './hackathonEvent';
 import './HackathonCourseTrack.scss';
 
 // The temporary "Hackathon" track inside the /course "Your Doris path" card.
@@ -155,12 +161,15 @@ export function HackathonTrackPanel({ hidden }: { hidden: boolean }): JSX.Elemen
                     </li>
                 ))}
             </ol>
-            <p className="hk-track__b">
+            <Link className="hk-track__b" to={hackathonTrackBPath()}>
                 <span className="hk-track__bkey" aria-hidden="true">
                     B
                 </span>
-                Track B: turn a docs page into a demo and a PR.
-            </p>
+                <span>
+                    Track B · {HACKATHON_TRACK_B.title}: add a step-by-step demo to a docs page, with a pull request.{' '}
+                    <span className="hk-nw">Open the brief →</span>
+                </span>
+            </Link>
             <div className="hk-track__badge">
                 <img src={badgeUrl} alt="Apache Doris Contributor badge" width="52" height="52" />
                 <p>Take part in a task, show us at the Doris table, collect your Contributor badge.</p>

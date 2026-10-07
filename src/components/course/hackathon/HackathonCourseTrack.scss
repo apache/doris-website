@@ -262,7 +262,7 @@
             box-shadow 0.15s;
     }
 
-    .hk-track__b {
+    a.hk-track__b {
         display: flex;
         align-items: center;
         gap: 10px;
@@ -271,6 +271,21 @@
         color: var(--brand-ink-soft);
         font-size: 14px;
         line-height: 1.4;
+        text-decoration: none;
+
+        .hk-nw {
+            color: var(--brand-primary-deep);
+            font-weight: 700;
+        }
+
+        &:hover {
+            color: var(--brand-ink);
+            text-decoration: none;
+
+            .hk-nw {
+                text-decoration: underline;
+            }
+        }
     }
 
     .hk-track__bkey {

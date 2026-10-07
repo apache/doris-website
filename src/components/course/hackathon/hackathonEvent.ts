@@ -110,3 +110,39 @@ export function getHackathonTask(code: HackathonTaskCode): HackathonTaskMeta {
 export function hackathonTaskPath(task: HackathonTaskMeta): string {
     return `${HACKATHON_EVENT.basePath}/${task.slug}`;
 }
+
+/** Track B: one page for all six "docs to demo" tasks. */
+export const HACKATHON_TRACK_B = {
+    code: 'B',
+    slug: 'track-b',
+    title: 'Docs to Demo',
+    duration: '30–60 min',
+    pitch: 'Pick a feature page of the docs, run it on your local Doris, and add a step-by-step demo to it with a pull request.',
+} as const;
+
+export function hackathonTrackBPath(): string {
+    return `${HACKATHON_EVENT.basePath}/${HACKATHON_TRACK_B.slug}`;
+}
+
+/** Every hackathon page, in the order the task switcher and the "All tasks" tiles show them. */
+export interface HackathonPageLink {
+    code: string;
+    title: string;
+    duration: string;
+    path: string;
+}
+
+export const HACKATHON_PAGE_LINKS: HackathonPageLink[] = [
+    ...HACKATHON_TASKS.map(task => ({
+        code: task.code,
+        title: task.title,
+        duration: task.duration,
+        path: hackathonTaskPath(task),
+    })),
+    {
+        code: HACKATHON_TRACK_B.code,
+        title: `Track B · ${HACKATHON_TRACK_B.title}`,
+        duration: HACKATHON_TRACK_B.duration,
+        path: hackathonTrackBPath(),
+    },
+];

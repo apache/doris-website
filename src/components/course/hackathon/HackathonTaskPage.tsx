@@ -10,10 +10,9 @@ import {
     DORIS_SQL,
     HACKATHON_DORIS_DOWNLOAD,
     HACKATHON_EVENT,
+    HACKATHON_PAGE_LINKS,
     HACKATHON_SLACK_URL,
-    HACKATHON_TASKS,
     HackathonTaskMeta,
-    hackathonTaskPath,
 } from './hackathonEvent';
 import { IconArrowDown, IconArrowLeft, IconArrowRight, IconChevronUp, IconExternal, IconPanel } from './HackathonIcons';
 import './HackathonTaskPage.scss';
@@ -102,7 +101,7 @@ interface StepDef {
     sketch?: boolean;
 }
 
-const START_SNIPPET: CodeSnippet = {
+export const START_SNIPPET: CodeSnippet = {
     label: 'Start Doris',
     file: 'terminal',
     language: 'bash',
@@ -183,7 +182,7 @@ function Blocks({ blocks }: { blocks?: HackathonBlock[] }): JSX.Element | null {
     );
 }
 
-function RowsTable({ head, rows }: { head: [string, string]; rows: HackathonRow[] }): JSX.Element {
+export function RowsTable({ head, rows }: { head: [string, string]; rows: HackathonRow[] }): JSX.Element {
     return (
         <table className="hk-task__table">
             <thead>
@@ -260,7 +259,7 @@ function useTaskModel(content: HackathonTaskContent) {
  * through an anchor (it lands 20px under the bar) is always the active one,
  * however short it is.
  */
-function useActiveStep(steps: StepDef[]): string {
+export function useActiveStep(steps: { id: string }[]): string {
     const [active, setActive] = useState(steps[0].id);
     useEffect(() => {
         let frame = 0;
@@ -299,16 +298,16 @@ function useActiveStep(steps: StepDef[]): string {
     return active;
 }
 
-function TaskTiles({ current }: { current: HackathonTaskMeta }): JSX.Element {
+function TaskTiles({ current }: { current: string }): JSX.Element {
     return (
         <ol className="hk-task__tiles">
-            {HACKATHON_TASKS.map(task => {
-                const isCurrent = task.code === current.code;
+            {HACKATHON_PAGE_LINKS.map(task => {
+                const isCurrent = task.code === current;
                 return (
                     <li key={task.code}>
                         <Link
                             className="hk-task__tile"
-                            to={isCurrent ? '#top' : hackathonTaskPath(task)}
+                            to={isCurrent ? '#top' : task.path}
                             aria-current={isCurrent ? 'page' : undefined}
                         >
                             <span className="hk-task__tile-body">
@@ -412,10 +411,17 @@ function CodePanel({ content, views, activeStep, pinnedLine }: PanelProps): JSX.
     );
 }
 
-function ConnectionCard({ inline = false }: { inline?: boolean }): JSX.Element {
+export function ConnectionCard({
+    inline = false,
+    database = 'hackathon',
+}: {
+    inline?: boolean;
+    database?: string;
+}): JSX.Element {
+    const items = CONNECTION.map(item => (item.label === 'Database' ? { ...item, value: database } : item));
     return (
         <dl className={clsx('hk-task__conn', inline && 'hk-task__conn--inline')}>
-            {CONNECTION.map(item => (
+            {items.map(item => (
                 <div key={item.label}>
                     <dt>{item.label}</dt>
                     <dd>
@@ -469,7 +475,7 @@ function StartExtras({ content }: { content: HackathonTaskContent }): JSX.Elemen
     );
 }
 
-function PanelNote({ children }: { children: ReactNode }): JSX.Element {
+export function PanelNote({ children }: { children: ReactNode }): JSX.Element {
     return (
         <p className="hk-task__panelnote">
             <IconPanel />
@@ -478,8 +484,159 @@ function PanelNote({ children }: { children: ReactNode }): JSX.Element {
     );
 }
 
-export function HackathonTaskPage({ content }: { content: HackathonTaskContent }): JSX.Element {
+/** Sticky bar above every hackathon page: back to /course and the event details. */
+export function HackathonEventBar(): JSX.Element {
+    return (
+        <div className="hk-task__bar">
+            <div className="hk-task__wrap hk-task__bar-in">
+                <Link className="hk-task__back" to="/course">
+                    <IconArrowLeft />
+                    <span>Course</span>
+                </Link>
+                <span className="hk-task__tag">{HACKATHON_EVENT.name}</span>
+                <a className="hk-task__event" href={HACKATHON_EVENT.eventUrl} target="_blank" rel="noopener noreferrer">
+                    <span>
+                        <span className="hk-task__event-long">
+                            {HACKATHON_EVENT.conference} {HACKATHON_EVENT.city} ·{' '}
+                        </span>
+                        {HACKATHON_EVENT.dateShort} · {HACKATHON_EVENT.time} · {HACKATHON_EVENT.room}
+                    </span>
+                    <IconExternal />
+                </a>
+            </div>
+        </div>
+    );
+}
+
+/** Switch between the Track A tasks and the Track B page. */
+export function HackathonTaskSwitch({ current }: { current: string }): JSX.Element {
+    return (
+        <nav className="hk-task__switch" aria-label="Hackathon tasks">
+            <div className="hk-task__wrap hk-task__switch-in">
+                <span className="hk-task__label hk-task__switch-label">
+                    Hackathon
+                    <br />
+                    tasks
+                </span>
+                {HACKATHON_PAGE_LINKS.map(item => (
+                    <Link
+                        key={item.code}
+                        className="hk-task__switch-item"
+                        to={item.path}
+                        aria-current={item.code === current ? 'page' : undefined}
+                    >
+                        <span className="hk-task__switch-code">{item.code}</span>
+                        <span className="hk-task__switch-name">{item.title}</span>
+                        <span className="hk-task__switch-time">{item.duration}</span>
+                    </Link>
+                ))}
+            </div>
+        </nav>
+    );
+}
+
+/** "Stuck?" line under every hero. */
+export function HackathonHelpLine(): JSX.Element {
+    return (
+        <p className="hk-task__help">
+            <b>Stuck for more than 10 minutes?</b> Come to the Doris table and ask Mingyu, or post in{' '}
+            <code>{HACKATHON_EVENT.slackChannel}</code> on the <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>.
+        </p>
+    );
+}
+
+/** The Track A submission: a GitHub-ID folder in the submission repo. */
+export const TRACK_A_SUBMIT_STEPS: ReactNode[] = [
+    <>
+        Put your work in a folder named after <strong>your GitHub ID</strong>: the code, plus a README with what it
+        does, how to run it, one screenshot or GIF, and the Doris features you used.
+    </>,
+    <>
+        <strong>Open a pull request</strong> that adds it to <SubmitTarget /> as{' '}
+        <code>{HACKATHON_EVENT.starterKitFolder}/&lt;your-github-id&gt;/</code>. Fork and push, or use GitHub&apos;s{' '}
+        <em>Add file → Upload files</em>. Nothing else to fill in.
+    </>,
+];
+
+/**
+ * How to submit and the badge. `steps` says what each track submits; showing
+ * the work, Slack and the badge rules are the same for both tracks.
+ */
+export function HackathonSubmit({
+    className,
+    steps,
+    membersIn = 'the README',
+}: {
+    className?: string;
+    steps: ReactNode[];
+    /** Where a team lists every member's GitHub ID. */
+    membersIn?: string;
+}): JSX.Element {
     const badgeUrl = useBaseUrl('/images/community-badges/badge-contributor.png');
+    return (
+        <section className={className} id="submit">
+            <h3>Submit &amp; get your badge</h3>
+            <div className="hk-task__submit">
+                <p className="hk-task__lead">Take part → submit → get your badge.</p>
+                <ol className="hk-task__steps">
+                    {steps.map((step, index) => (
+                        <li key={index}>
+                            <p>{step}</p>
+                        </li>
+                    ))}
+                    <li>
+                        <p>
+                            <strong>Show it</strong> at the Doris table (a 2-minute demo is plenty), or at the
+                            show-and-tell around 14:30.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            <strong>
+                                Join the <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>
+                            </strong>{' '}
+                            and say hi in <code>{HACKATHON_EVENT.slackChannel}</code>: questions, submissions and badges
+                            are all handled there.
+                        </p>
+                    </li>
+                </ol>
+                <p className="hk-task__late">
+                    Everyone who takes part in a task on site gets the <strong>Apache Doris Contributor badge</strong>:
+                    no merged pull request to Doris needed. Didn&apos;t finish by 15:00? Keep going — submissions are
+                    open until {HACKATHON_EVENT.deadline ?? <HackathonTba name="DEADLINE" />}. Teams are fine, but not
+                    needed: list every member&apos;s GitHub ID in {membersIn}.
+                </p>
+                <div className="hk-task__submit-badge">
+                    <Link to="/community/how-to-contribute/community-badges">
+                        <img src={badgeUrl} alt="Apache Doris Contributor badge" width="150" height="150" />
+                    </Link>
+                    <Link to="/community/how-to-contribute/community-badges">About the Contributor badge</Link>
+                </div>
+            </div>
+        </section>
+    );
+}
+
+/** Tiles for every hackathon page, at the bottom of each one. */
+export function HackathonAllTasks({ current }: { current: string }): JSX.Element {
+    return (
+        <section className="hk-task__wrap hk-task__more" id="tasks-all" aria-labelledby="hk-task-more-title">
+            <div className="hk-task__more-head">
+                <div>
+                    <p className="hk-task__label">{HACKATHON_EVENT.name}</p>
+                    <h2 id="hk-task-more-title">All tasks</h2>
+                </div>
+                <Link className="hk-task__btn hk-task__btn--sm" to="/course">
+                    <IconArrowLeft />
+                    <span>Back to the course</span>
+                </Link>
+            </div>
+            <TaskTiles current={current} />
+        </section>
+    );
+}
+
+export function HackathonTaskPage({ content }: { content: HackathonTaskContent }): JSX.Element {
     const { task, Sketch } = content;
     const { views, steps, lastView, hasData } = useTaskModel(content);
     const activeId = useActiveStep(steps);
@@ -495,51 +652,8 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
             description={`${content.hook} A Track A task for the ${HACKATHON_EVENT.name} at ${HACKATHON_EVENT.conference} ${HACKATHON_EVENT.city}.`}
         >
             <div className="hk-task">
-                <div className="hk-task__bar">
-                    <div className="hk-task__wrap hk-task__bar-in">
-                        <Link className="hk-task__back" to="/course">
-                            <IconArrowLeft />
-                            <span>Course</span>
-                        </Link>
-                        <span className="hk-task__tag">{HACKATHON_EVENT.name}</span>
-                        <a
-                            className="hk-task__event"
-                            href={HACKATHON_EVENT.eventUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <span>
-                                <span className="hk-task__event-long">
-                                    {HACKATHON_EVENT.conference} {HACKATHON_EVENT.city} ·{' '}
-                                </span>
-                                {HACKATHON_EVENT.dateShort} · {HACKATHON_EVENT.time} · {HACKATHON_EVENT.room}
-                            </span>
-                            <IconExternal />
-                        </a>
-                    </div>
-                </div>
-
-                <nav className="hk-task__switch" aria-label="Track A tasks">
-                    <div className="hk-task__wrap hk-task__switch-in">
-                        <span className="hk-task__label hk-task__switch-label">
-                            Track A
-                            <br />
-                            tasks
-                        </span>
-                        {HACKATHON_TASKS.map(item => (
-                            <Link
-                                key={item.code}
-                                className="hk-task__switch-item"
-                                to={hackathonTaskPath(item)}
-                                aria-current={item.code === task.code ? 'page' : undefined}
-                            >
-                                <span className="hk-task__switch-code">{item.code}</span>
-                                <span className="hk-task__switch-name">{item.title}</span>
-                                <span className="hk-task__switch-time">{item.duration}</span>
-                            </Link>
-                        ))}
-                    </div>
-                </nav>
+                <HackathonEventBar />
+                <HackathonTaskSwitch current={task.code} />
 
                 <div className="hk-task__wrap hk-task__grid">
                     <div className="hk-task__main">
@@ -568,11 +682,7 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                                     Start Doris <IconArrowDown />
                                 </a>
                             </div>
-                            <p className="hk-task__help">
-                                <b>Stuck for more than 10 minutes?</b> Come to the Doris table and ask Mingyu, or post
-                                in <code>{HACKATHON_EVENT.slackChannel}</code> on the{' '}
-                                <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>.
-                            </p>
+                            <HackathonHelpLine />
                         </header>
 
                         <div className="hk-task__part" id="part-1">
@@ -760,64 +870,7 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                             </ul>
                         </section>
 
-                        <section className={cardClass('submit')} id="submit">
-                            <h3>Submit &amp; get your badge</h3>
-                            <div className="hk-task__submit">
-                                <p className="hk-task__lead">Take part → submit → get your badge.</p>
-                                <ol className="hk-task__steps">
-                                    <li>
-                                        <p>
-                                            Put your work in a folder named after <strong>your GitHub ID</strong>: the
-                                            code, plus a README with what it does, how to run it, one screenshot or GIF,
-                                            and the Doris features you used.
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <p>
-                                            <strong>Open a pull request</strong> that adds it to <SubmitTarget /> as{' '}
-                                            <code>{HACKATHON_EVENT.starterKitFolder}/&lt;your-github-id&gt;/</code>.
-                                            Fork and push, or use GitHub&apos;s <em>Add file → Upload files</em>.
-                                            Nothing else to fill in.
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <p>
-                                            <strong>Show it</strong> at the Doris table (a 2-minute demo is plenty), or
-                                            at the show-and-tell around 14:30.
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <p>
-                                            <strong>
-                                                Join the <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>
-                                            </strong>{' '}
-                                            and say hi in <code>{HACKATHON_EVENT.slackChannel}</code>: questions,
-                                            submissions and badges are all handled there.
-                                        </p>
-                                    </li>
-                                </ol>
-                                <p className="hk-task__late">
-                                    Everyone who takes part in a task on site gets the{' '}
-                                    <strong>Apache Doris Contributor badge</strong>: no merged pull request to Doris
-                                    needed. Didn&apos;t finish by 15:00? Keep going — submissions are open until{' '}
-                                    {HACKATHON_EVENT.deadline ?? <HackathonTba name="DEADLINE" />}. Teams are fine, but
-                                    not needed: list every member&apos;s GitHub ID in the README.
-                                </p>
-                                <div className="hk-task__submit-badge">
-                                    <Link to="/community/how-to-contribute/community-badges">
-                                        <img
-                                            src={badgeUrl}
-                                            alt="Apache Doris Contributor badge"
-                                            width="150"
-                                            height="150"
-                                        />
-                                    </Link>
-                                    <Link to="/community/how-to-contribute/community-badges">
-                                        About the Contributor badge
-                                    </Link>
-                                </div>
-                            </div>
-                        </section>
+                        <HackathonSubmit className={cardClass('submit')} steps={TRACK_A_SUBMIT_STEPS} />
 
                         <section className={cardClass('stretch')} id="stretch">
                             <h3>Stretch goals</h3>
@@ -851,19 +904,7 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                     <CodePanel content={content} views={views} activeStep={activeStep} pinnedLine={pinnedLine} />
                 </div>
 
-                <section className="hk-task__wrap hk-task__more" id="tasks" aria-labelledby="hk-task-more-title">
-                    <div className="hk-task__more-head">
-                        <div>
-                            <p className="hk-task__label">{HACKATHON_EVENT.name} · Track A</p>
-                            <h2 id="hk-task-more-title">All four tasks</h2>
-                        </div>
-                        <Link className="hk-task__btn hk-task__btn--sm" to="/course">
-                            <IconArrowLeft />
-                            <span>Back to the course</span>
-                        </Link>
-                    </div>
-                    <TaskTiles current={task} />
-                </section>
+                <HackathonAllTasks current={task.code} />
             </div>
         </LayoutNext>
     );
