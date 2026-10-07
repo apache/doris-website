@@ -3,7 +3,7 @@ import Link from '@docusaurus/Link';
 import { HackathonTaskContent } from '../HackathonTaskPage';
 import { AgentTraceSketch } from '../HackathonSketch';
 import { AI_INTRO, AI_STEPS, COMMON_BEFORE, COMMON_TROUBLESHOOTING, TRAPS } from '../hackathonCommon';
-import { getHackathonTask, hackathonTaskPath } from '../hackathonEvent';
+import { dorisLoad, getHackathonTask, hackathonTaskPath } from '../hackathonEvent';
 
 export const A4_AGENT_TRACES: HackathonTaskContent = {
     task: getHackathonTask('A4'),
@@ -21,7 +21,7 @@ export const A4_AGENT_TRACES: HackathonTaskContent = {
                     filter, search and aggregate it with plain SQL. No schema migrations.
                 </p>
                 <p>
-                    A trace explorer for <strong>~1,000 AI-agent sessions (~25,000 events)</strong>:
+                    A trace explorer for <strong>1,000 AI-agent sessions (about 20,000 events)</strong>:
                 </p>
                 <ul className="hk-task__bullets">
                     <li>
@@ -87,15 +87,16 @@ PROPERTIES ("replication_num" = "1", "storage_format" = "V3");`,
             label: 'Example payloads',
             file: 'json',
             language: 'json',
-            code: `{"text": "Why did checkout fail at 11:40?", "lang": "en"}
-{"model": "model-large", "usage": {"input_tokens": 812, "output_tokens": 96}, "latency_ms": 1430}
-{"tool": "sql_query", "args": {"sql": "SELECT ..."}, "latency_ms": 37, "status": "ok"}
-{"tool": "http_get", "args": {"url": "..."}, "status": "error",
- "error": {"type": "Timeout", "message": "upstream timed out after 3000 ms"}}`,
+            code: `{"text": "Why did checkout fail at 11:40?", "lang": "en", "agent_version": "v1"}
+{"model": "model-large", "usage": {"input_tokens": 812, "output_tokens": 96}, "latency_ms": 1430, "agent_version": "v1"}
+{"tool": "sql_query", "args": {"sql": "SELECT ..."}, "latency_ms": 37, "status": "ok", "agent_version": "v1"}
+{"tool": "http_get", "args": {"url": "..."}, "latency_ms": 3012, "status": "error", "agent_version": "v1",
+ "error": {"type": "Timeout", "message": "read timeout after 3000 ms calling https://api.internal/orders"}}`,
         },
         <p key="v2">
-            From 13:00 on, events come from <strong>agent v2</strong> and carry extra fields such as{' '}
-            <code>agent_version</code> and <code>cost_usd</code>.
+            Sessions that start at 13:00 or later run <strong>agent v2</strong>: their payloads say{' '}
+            <code>&quot;agent_version&quot;: &quot;v2&quot;</code>, and v2 LLM calls add a <code>cache_hit</code> flag.
+            Milestone 5 then loads events with fields the table has never seen.
         </p>,
     ],
     ai: {
@@ -113,8 +114,8 @@ Use a plain MySQL driver and raw SQL.
 
 Table \`agent_events\`: session_id, ts DATETIME(3), event_id, event_type
 (user_message / llm_call / tool_call / error / final_answer), payload VARIANT
-(inverted index, english parser). Payload shapes differ by event_type; v2 events
-(from 13:00) add agent_version and cost_usd.
+(inverted index, english parser). Payload shapes differ by event_type. Every payload has
+agent_version: "v1" before 13:00, "v2" from 13:00; v2 llm_calls add cache_hit.
 
 Doris SQL rules:
 1. Read JSON paths as payload['a']['b']. CAST to a concrete type before comparing,
@@ -123,11 +124,12 @@ Doris SQL rules:
 3. Text search inside JSON: payload['error']['message'] MATCH_ANY 'timeout'. Never LIKE.
 4. Percentiles: percentile_approx(expr, 0.95).
 5. \`SET describe_extend_variant_column = true; DESC agent_events;\` lists inferred subcolumns.
+6. To insert JSON yourself, CAST the text: CAST('{"a": 1}' AS JSON).
 
 Build: sessions list, session timeline, tool/model stats, and JSON search.
 Run every SQL statement against the live cluster first.`,
         },
-        traps: [TRAPS.variantCast, TRAPS.like, TRAPS.replicas, TRAPS.orm],
+        traps: [TRAPS.variantCast, TRAPS.variantDesc, TRAPS.like, TRAPS.orm],
     },
     milestones: [
         {
@@ -135,21 +137,33 @@ Run every SQL statement against the live cluster first.`,
             title: 'Load and inspect',
             time: '10 min',
             blocks: [
+                <p key="where">From inside the starter-kit folder:</p>,
                 {
                     label: 'M0 · Load',
                     file: 'bash',
                     language: 'bash',
-                    code: 'mysql -h127.0.0.1 -P9030 -uroot < seed/a4_agent_events.sql',
+                    code: dorisLoad('seed/a4_agent_events.sql'),
                 },
+                <p key="windows">
+                    On Windows PowerShell, <code>&lt;</code> doesn&apos;t work: run{' '}
+                    <code>.\doris.ps1 load seed\a4_agent_events.sql</code> instead. Then, in a SQL shell:
+                </p>,
                 {
                     label: 'M0 · Inspect',
                     file: 'sql',
                     language: 'sql',
                     target: true,
-                    code: `SET describe_extend_variant_column = true;
+                    code: `USE hackathon;
+SET describe_extend_variant_column = true;
 DESC agent_events;     -- see the subcolumns Doris inferred: payload.tool, payload.usage.input_tokens, ...`,
                 },
             ],
+            checkpoint: (
+                <>
+                    The load reports <strong>1,000 sessions and 20,401 events</strong>; <code>DESC</code> lists about 20{' '}
+                    <code>payload.*</code> paths, each with an inferred type.
+                </>
+            ),
         },
         {
             code: 'M1',
@@ -167,6 +181,11 @@ GROUP BY tool
 ORDER BY calls DESC;`,
                 },
             ],
+            checkpoint: (
+                <>
+                    Five tools; <code>sql_query</code> is called most (3,506 times).
+                </>
+            ),
         },
         {
             code: 'M2',
@@ -189,6 +208,12 @@ GROUP BY tool
 ORDER BY p95_ms DESC;`,
                 },
             ],
+            checkpoint: (
+                <>
+                    <code>python_exec</code> has the worst p95 (about 2.1 s); <code>http_get</code> fails most often
+                    (425 errors).
+                </>
+            ),
         },
         {
             code: 'M3',
@@ -208,6 +233,9 @@ ORDER BY ts
 LIMIT 20;`,
                 },
             ],
+            checkpoint: (
+                <>398 events mention a timeout in total. Count them per hour: that is your first clue about v2.</>
+            ),
         },
         {
             code: 'M4',
@@ -219,15 +247,22 @@ LIMIT 20;`,
                     file: 'sql',
                     language: 'sql',
                     code: `SELECT ts, event_type,
-       CAST(payload['tool'] AS STRING)   AS tool,
-       CAST(payload['status'] AS STRING) AS status,
-       CAST(payload['text'] AS STRING)   AS text
+       CAST(payload['tool'] AS STRING)      AS tool,
+       CAST(payload['status'] AS STRING)    AS status,
+       CAST(payload['latency_ms'] AS INT)   AS latency_ms,
+       CAST(payload['text'] AS STRING)      AS text
 FROM agent_events
 WHERE session_id = 's-0042'
 ORDER BY ts;`,
                 },
                 <p key="ui">Build the explorer UI around these queries: sessions list → timeline → stats.</p>,
             ],
+            checkpoint: (
+                <>
+                    Session <code>s-0042</code> has 25 events: a question, LLM and tool calls (one failed{' '}
+                    <code>sql_query</code>, retried), and a final answer.
+                </>
+            ),
         },
         {
             code: 'M5',
@@ -239,7 +274,7 @@ ORDER BY ts;`,
                     label: 'M5 · Load the drift batch',
                     file: 'bash',
                     language: 'bash',
-                    code: 'mysql -h127.0.0.1 -P9030 -uroot < a4/drift_batch.sql   # events with new fields',
+                    code: `${dorisLoad('a4/drift_batch.sql')}   # events with new fields`,
                 },
                 {
                     label: 'M5 · Query the new fields',
@@ -247,16 +282,24 @@ ORDER BY ts;`,
                     language: 'sql',
                     target: true,
                     code: `SELECT CAST(payload['agent_version'] AS STRING) AS version,
-       SUM(CAST(payload['cost_usd'] AS DOUBLE)) AS cost_usd
+       COUNT(*) AS llm_calls,
+       ROUND(SUM(CAST(payload['cost_usd'] AS DOUBLE)), 2) AS cost_usd
 FROM agent_events
 WHERE event_type = 'llm_call'
-GROUP BY version;`,
+GROUP BY version
+ORDER BY version;`,
                 },
                 <p key="desc">
                     Run <code>DESC agent_events</code> again: the new paths are there. No <code>ALTER TABLE</code>{' '}
                     happened.
                 </p>,
             ],
+            checkpoint: (
+                <>
+                    A third version appears, <code>v2.1</code>: only its LLM calls carry <code>cost_usd</code>, and{' '}
+                    <code>DESC</code> now lists <code>payload.cost_usd</code> and <code>payload.retries</code>.
+                </>
+            ),
         },
     ],
     done: [
@@ -272,12 +315,14 @@ GROUP BY version;`,
     stretch: [
         <>
             <strong>Bring your own traces.</strong> Export your own AI coding agent&apos;s local session logs (JSONL)
-            and load them. It all stays on your laptop.
+            and load them, one <code>CAST(&apos;…&apos; AS JSON)</code> per line. It all stays on your laptop.
         </>,
         <>
             <strong>Schema Template.</strong> Pin hot paths with{' '}
-            <code>VARIANT&lt;&apos;latency_ms&apos;: INT, &apos;tool&apos;: STRING&gt;</code> and compare{' '}
-            <code>DESC</code> output and query behaviour.
+            <code>VARIANT&lt;&apos;latency_ms&apos;: INT, &apos;tool&apos;: STRING&gt;</code> in a copy of the table and
+            compare <code>DESC</code> output and query behaviour. Fill it with{' '}
+            <code>INSERT … SELECT …, CAST(payload AS JSON)</code>: a VARIANT does not cast straight into a templated
+            one.
         </>,
         <>
             <strong>Let an assistant explore it.</strong> Connect the Doris MCP Server (

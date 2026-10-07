@@ -1,8 +1,16 @@
 import React from 'react';
+import Link from '@docusaurus/Link';
 import { HackathonTaskContent } from '../HackathonTaskPage';
 import { McpSketch } from '../HackathonSketch';
-import { BEFORE_CAN_CONNECT, BEFORE_DORIS_RUNNING, BEFORE_STARTER_KIT, TRAPS, TROUBLE } from '../hackathonCommon';
-import { getHackathonTask } from '../hackathonEvent';
+import {
+    BEFORE_CAN_CONNECT,
+    BEFORE_DORIS_RUNNING,
+    BEFORE_IMAGE_PULLED,
+    BEFORE_STARTER_KIT,
+    TRAPS,
+    TROUBLE,
+} from '../hackathonCommon';
+import { dorisLoad, getHackathonTask } from '../hackathonEvent';
 
 const QUESTIONS = [
     {
@@ -97,14 +105,16 @@ export const A2_MCP: HackathonTaskContent = {
         </>,
     ],
     before: [
+        BEFORE_IMAGE_PULLED,
         BEFORE_DORIS_RUNNING,
         BEFORE_CAN_CONNECT,
         BEFORE_STARTER_KIT,
         {
-            title: 'Python 3.12 or later.',
+            title: 'Python 3.12 or later, with the server installed.',
             body: (
                 <>
-                    Check with <code>python3 --version</code>.
+                    Check with <code>python3 --version</code>. Install the server before you arrive (milestone 2 has the
+                    commands): it pulls in about 80 packages.
                 </>
             ),
         },
@@ -114,7 +124,13 @@ export const A2_MCP: HackathonTaskContent = {
         },
         {
             title: 'All hackathon tables loaded.',
-            command: 'mysql -h127.0.0.1 -P9030 -uroot < seed/seed_all.sql',
+            body: (
+                <>
+                    From the starter-kit folder (Windows PowerShell: <code>.\doris.ps1 load seed\seed_all.sql</code>).
+                    It ends with the row count of each table.
+                </>
+            ),
+            command: dorisLoad('seed/seed_all.sql'),
         },
     ],
     ai: {
@@ -159,8 +175,17 @@ Always show the SQL you ran together with the answer.`,
                     code: `CREATE USER 'mcp_reader'@'%' IDENTIFIED BY 'hackathon';
 GRANT SELECT_PRIV ON internal.hackathon.* TO 'mcp_reader'@'%';`,
                 },
-                <p key="root">Never hand an LLM your root account — even on a laptop.</p>,
+                <p key="root">
+                    Never hand an LLM your root account — even on a laptop. Run it in a SQL shell, or load{' '}
+                    <code>a2/create_reader.sql</code> from the starter kit.
+                </p>,
             ],
+            checkpoint: (
+                <>
+                    <code>SHOW GRANTS FOR &apos;mcp_reader&apos;@&apos;%&apos;</code> shows <code>Select_priv</code> on{' '}
+                    <code>internal.hackathon</code>, and nothing that writes.
+                </>
+            ),
         },
         {
             code: 'M2',
@@ -172,11 +197,13 @@ GRANT SELECT_PRIV ON internal.hackathon.* TO 'mcp_reader'@'%';`,
                     label: 'M2 · Install',
                     file: 'bash',
                     language: 'bash',
-                    code: `pip install doris-mcp-server==1.0.0
+                    code: `python3 -m venv .venv && . .venv/bin/activate   # Python 3.12+
+pip install doris-mcp-server==1.0.0
 which doris-mcp-server          # note the absolute path`,
                 },
                 <p key="config">
-                    Add it to your client&apos;s MCP config (the file name and location depend on the client):
+                    Add it to your client&apos;s MCP config (the file name and location depend on the client). The
+                    starter kit has this as <code>a2/mcp-config.example.json</code>:
                 </p>,
                 {
                     label: 'M2 · MCP config',
@@ -203,7 +230,8 @@ which doris-mcp-server          # note the absolute path`,
             highlight: '4, 9-10',
             checkpoint: (
                 <>
-                    Your client lists the Doris server and its <code>doris_*</code> domains.
+                    Your client lists the Doris server and its eight <code>doris_*</code> domains (catalog, cluster,
+                    governance, lakehouse, pipeline, query, search, semantic).
                 </>
             ),
         },
@@ -273,7 +301,8 @@ which doris-mcp-server          # note the absolute path`,
             blocks: [
                 <p key="ask">
                     Ask: <em>&quot;Delete all INFO logs to save space.&quot;</em> Record what happens. (Expected:
-                    refused — the server is read-only, and <code>mcp_reader</code> has no write privilege.)
+                    refused — the server answers <code>SQL operation DELETE is not read-only.</code>, and{' '}
+                    <code>mcp_reader</code> has no write privilege either.)
                 </p>,
                 {
                     label: 'M5 · Ask your assistant',
@@ -292,7 +321,7 @@ which doris-mcp-server          # note the absolute path`,
             At least <strong>three</strong> questions answered, each with the SQL that ran and the result.
         </>,
         'One documented safety test (a refused write).',
-        'A write-up (gist or repo README) with your client, your config (no secrets), the Q&A, and one thing that was confusing or could be better.',
+        'A write-up (the README in your GitHub-ID folder) with your client, your config (no secrets), the Q&A, and one thing that was confusing or could be better.',
     ],
     stretch: [
         <>
@@ -309,8 +338,9 @@ which doris-mcp-server          # note the absolute path`,
             <strong>Ask it why a query is slow.</strong> Explore the <code>doris_query</code> domain (explain, profile).
         </>,
         <>
-            <strong>Fix the docs.</strong> The MCP Server page on doris.apache.org still describes the pre-1.0 setup.
-            Open a PR updating it for 1.0 — that&apos;s a docs contribution too.
+            <strong>Improve the docs.</strong> Anything on the{' '}
+            <Link to="/docs/4.x/key-features/mcp-server">MCP Server page</Link> that slowed you down? Open a PR that
+            fixes it — that&apos;s a docs contribution too.
         </>,
     ],
     troubleshooting: [
@@ -356,6 +386,7 @@ which doris-mcp-server          # note the absolute path`,
         },
         TROUBLE.docker,
         TROUBLE.credentials,
+        TROUBLE.unhealthy,
         TROUBLE.stuck,
     ],
     references: [
@@ -367,7 +398,6 @@ which doris-mcp-server          # note the absolute path`,
         {
             label: 'MCP Server feature page',
             to: '/docs/4.x/key-features/mcp-server',
-            note: 'still describes the pre-1.0 setup',
         },
         { label: 'Model Context Protocol', to: 'https://modelcontextprotocol.io/' },
     ],

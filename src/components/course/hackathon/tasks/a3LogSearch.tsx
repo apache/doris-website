@@ -3,7 +3,7 @@ import Link from '@docusaurus/Link';
 import { HackathonTaskContent } from '../HackathonTaskPage';
 import { LogSearchSketch } from '../HackathonSketch';
 import { AI_INTRO, AI_STEPS, COMMON_BEFORE, COMMON_TROUBLESHOOTING, TRAPS } from '../hackathonCommon';
-import { getHackathonTask } from '../hackathonEvent';
+import { dorisLoad, getHackathonTask } from '../hackathonEvent';
 
 export const A3_LOG_SEARCH: HackathonTaskContent = {
     task: getHackathonTask('A3'),
@@ -111,7 +111,9 @@ message STRING. Inverted indexes on message (english parser, phrase support), se
 
 Doris SQL rules:
 1. Text search: \`message MATCH_ANY 'a b'\`, \`MATCH_ALL\`, \`MATCH_PHRASE 'a b'\`. Never LIKE.
-2. BM25: \`score()\` only with a MATCH_* predicate + \`ORDER BY score() DESC LIMIT n\`.
+2. BM25: \`score()\` only with a MATCH_* predicate + \`ORDER BY score() DESC LIMIT n\`,
+   selected plain (\`score() AS relevance\`): no ROUND() or JOIN in that SELECT.
+   Bind the user's search text as a driver parameter.
 3. score() cannot be used with GROUP BY. For facet counts run a second query with the
    same WHERE clause and GROUP BY service, level.
 4. Time buckets: \`minute_floor(ts, 5)\`.
@@ -119,7 +121,7 @@ Doris SQL rules:
 Build: search box, service/level/time filters, facet counts, and an error timeline.
 Run every SQL statement against the live cluster first.`,
         },
-        traps: [TRAPS.like, TRAPS.scoreAnywhere, TRAPS.scoreAggregate, TRAPS.orm],
+        traps: [TRAPS.like, TRAPS.scoreAnywhere, TRAPS.scoreWrapped, TRAPS.scoreAggregate, TRAPS.orm],
     },
     milestones: [
         {
@@ -127,13 +129,24 @@ Run every SQL statement against the live cluster first.`,
             title: 'Generate the logs',
             time: '5 min',
             blocks: [
+                <p key="where">From inside the starter-kit folder:</p>,
                 {
                     label: 'M0 · Generate the logs',
                     file: 'bash',
                     language: 'bash',
-                    code: 'mysql -h127.0.0.1 -P9030 -uroot < seed/a3_app_logs.sql',
+                    code: dorisLoad('seed/a3_app_logs.sql'),
                 },
+                <p key="windows">
+                    On Windows PowerShell, <code>&lt;</code> doesn&apos;t work: run{' '}
+                    <code>.\doris.ps1 load seed\a3_app_logs.sql</code> instead.
+                </p>,
             ],
+            checkpoint: (
+                <>
+                    A few seconds later: <strong>200,000</strong> log lines, from <code>00:00:00</code> to{' '}
+                    <code>23:59:59</code> on 13 October.
+                </>
+            ),
         },
         {
             code: 'M1',
@@ -145,13 +158,25 @@ Run every SQL statement against the live cluster first.`,
                     label: 'M1 · Keyword search with BM25',
                     file: 'sql',
                     language: 'sql',
-                    code: `SELECT ts, service, level, message, score() AS relevance
+                    code: `USE hackathon;
+
+SELECT ts, service, level, message, score() AS relevance
 FROM app_logs
 WHERE message MATCH_ANY 'timeout refused'
 ORDER BY relevance DESC
 LIMIT 20;`,
                 },
+                <p key="wire">
+                    Wire it to a search box. Pass the user&apos;s text as a driver parameter (<code>MATCH_ANY %s</code>
+                    ); <code>a3/starter.py</code> in the starter kit does exactly this.
+                </p>,
             ],
+            checkpoint: (
+                <>
+                    All 20 hits are <code>connection refused</code> lines. BM25 weighs rare terms more: <em>refused</em>{' '}
+                    appears in 68 lines, <em>timeout</em> in 347. Search <code>timeout</code> alone to see the others.
+                </>
+            ),
         },
         {
             code: 'M2',
@@ -173,6 +198,7 @@ ORDER BY relevance DESC
 LIMIT 20;`,
                 },
             ],
+            checkpoint: 'Every hit is an ERROR line that mentions a timeout. Only one of the two services shows up.',
         },
         {
             code: 'M3',
@@ -195,6 +221,13 @@ GROUP BY service, level
 ORDER BY hits DESC;`,
                 },
             ],
+            checkpoint: (
+                <>
+                    163 matching lines in that window, all <code>ERROR</code>. The counts must add up to the same search
+                    without <code>GROUP BY</code>: check with <code>SELECT COUNT(*)</code> and the same{' '}
+                    <code>WHERE</code>.
+                </>
+            ),
         },
         {
             code: 'M4',
@@ -214,6 +247,8 @@ GROUP BY bucket, service
 ORDER BY bucket, service;`,
                 },
             ],
+            checkpoint:
+                'Two services jump between 11:35 and 12:00. For the rest of the day no service logs more than 4 errors in a 5-minute bucket.',
         },
         {
             code: 'M5',
@@ -235,7 +270,7 @@ ORDER BY bucket, service;`,
         'At least two structured filters (service, level) plus a time range.',
         'Facet counts that follow the current search.',
         'The outage solved: root-cause service + start time, with the supporting query.',
-        'Public repo with a README (how to run + one screenshot).',
+        'Submitted as a pull request: your GitHub-ID folder with the code and a README (how to run + one screenshot).',
     ],
     stretch: [
         <>

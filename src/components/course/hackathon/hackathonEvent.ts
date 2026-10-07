@@ -1,3 +1,5 @@
+import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
+
 // Temporary pages for the Apache Doris session at the Community over Code 2026
 // hackathon (Glasgow). The /course entry and the four Track A task pages read
 // everything event-specific from here, so the whole hackathon block can be
@@ -16,13 +18,43 @@ export const HACKATHON_EVENT = {
     room: 'Wee Dram Room',
     eventUrl: 'https://events.apache.org/events/2026/community-over-code/doris.html',
     basePath: '/course/hackathon/glasgow-2026',
-    // Not decided yet. Leave null to render a dashed "TBA" placeholder; set the
-    // real value and every task page picks it up.
-    starterKitUrl: null as string | null,
-    submitUrl: null as string | null,
-    submitLabel: null as string | null,
-    deadline: null as string | null,
+    // Set to null to render a dashed "TBA" placeholder instead.
+    starterKitUrl:
+        'https://github.com/morningman/demo-env/releases/download/for-hackathon/doris-hackathon-glasgow-2026.zip' as
+            string | null,
+    /** Folder the ZIP unpacks to. */
+    starterKitFolder: 'doris-hackathon-glasgow-2026',
+    /** Participants open a pull request that adds <their GitHub ID>/ under this folder. */
+    submitUrl: 'https://github.com/morningman/demo-env/tree/main/doris-hackathon-glasgow-2026' as string | null,
+    submitLabel: 'morningman/demo-env' as string | null,
+    deadline: '31 October' as string | null,
+    /** Apache Doris Slack channel for questions, submissions and badges. */
+    slackChannel: '#dev',
 } as const;
+
+/** Tracked entry to the Apache Doris Slack (see developer_docs/slack-utm-convention.md). */
+export const HACKATHON_SLACK_URL = buildSlackEntryUrl({
+    medium: 'event',
+    campaign: 'coc2026_hackathon',
+    content: 'hackathon_task_page',
+});
+
+/**
+ * The Doris every task runs: one FE and one BE in a single container, with a
+ * MySQL client inside (see /community/developer-guide/all-in-one-image).
+ */
+export const HACKATHON_DORIS_IMAGE = 'apache/doris:all-in-one-4.1.3';
+/** Compressed download of the image, per architecture. */
+export const HACKATHON_DORIS_DOWNLOAD = '1.9 GB';
+
+export const DORIS_PULL = `docker pull ${HACKATHON_DORIS_IMAGE}`;
+export const DORIS_RUN = `docker run -d --name doris -p 9030:9030 -p 8030:8030 -p 8040:8040 ${HACKATHON_DORIS_IMAGE}`;
+export const DORIS_SQL = 'docker exec -it doris mysql -uroot -h127.0.0.1 -P9030';
+
+/** Runs a SQL file from the starter kit with the MySQL client inside the container. */
+export function dorisLoad(file: string): string {
+    return `docker exec -i doris mysql -uroot -h127.0.0.1 -P9030 < ${file}`;
+}
 
 export type HackathonTaskCode = 'A1' | 'A2' | 'A3' | 'A4';
 

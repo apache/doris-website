@@ -62,12 +62,12 @@ function Bars({ heights }: { heights: number[] }): JSX.Element {
 const A1_STATES: Record<string, { mode?: 'keyword' | 'vector' | 'hybrid'; query: string; category: string }> = {
     m1: { mode: 'keyword', query: 'vector index recall', category: '—' },
     m2: { mode: 'keyword', query: 'vector index recall', category: 'search' },
-    m3: { mode: 'vector', query: 'how do I store messy JSON from agents?', category: '—' },
-    m4: { mode: 'hybrid', query: 'agent memory', category: 'ai, json' },
+    m3: { mode: 'vector', query: 'store messy nested records whose schema keeps changing', category: '—' },
+    m4: { mode: 'hybrid', query: 'stream kafka changes into doris exactly once', category: 'ingestion, lakehouse' },
 };
 
 export function HybridSearchSketch({ view }: HackathonSketchProps): JSX.Element {
-    const state = A1_STATES[view] ?? { query: 'how do I store messy JSON from agents?', category: '—' };
+    const state = A1_STATES[view] ?? { query: 'how do I store messy JSON?', category: '—' };
     const scoreLabel = !state.mode ? 'Score / dist' : state.mode === 'keyword' ? 'Score' : 'Dist';
     return (
         <div className="hk-sketch__ui" aria-hidden="true">
@@ -228,7 +228,7 @@ export function LogSearchSketch({ view }: HackathonSketchProps): JSX.Element {
 // A4 · Agent Trace Explorer: stats, sessions, one session's timeline, paths.
 // ---------------------------------------------------------------------------
 
-const A4_PATHS = ['tool', 'latency_ms', 'status', 'usage.input_tokens', 'error.message'];
+const A4_PATHS = ['tool', 'latency_ms', 'status', 'usage.input_tokens', 'error.message', 'agent_version'];
 
 export function AgentTraceSketch({ view }: HackathonSketchProps): JSX.Element {
     const evolved = view === 'm5';
@@ -240,8 +240,8 @@ export function AgentTraceSketch({ view }: HackathonSketchProps): JSX.Element {
                     {A4_PATHS.map(path => (
                         <span key={path}>{path}</span>
                     ))}
-                    {evolved && <span className="is-on">agent_version</span>}
                     {evolved && <span className="is-on">cost_usd</span>}
+                    {evolved && <span className="is-on">retries</span>}
                 </div>
             </Zone>
             <Zone focus={view === 'm1' || view === 'm2'} className="hk-sketch__controls">

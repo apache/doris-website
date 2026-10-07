@@ -1,34 +1,68 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import { HackathonChecklistItem, HackathonRow, HackathonStarterKit } from './HackathonTaskPage';
-import { getHackathonTask, hackathonTaskPath } from './hackathonEvent';
+import {
+    DORIS_PULL,
+    DORIS_RUN,
+    DORIS_SQL,
+    HACKATHON_DORIS_DOWNLOAD,
+    HACKATHON_EVENT,
+    HACKATHON_SLACK_URL,
+    getHackathonTask,
+    hackathonTaskPath,
+} from './hackathonEvent';
 
 // Blocks shared by the four Track A pages (the "common" sections of the task
 // outline). Each page picks the traps that match its own SQL.
+
+export const BEFORE_IMAGE_PULLED: HackathonChecklistItem = {
+    title: 'Docker is running and the Doris image is pulled.',
+    body: (
+        <>
+            About {HACKATHON_DORIS_DOWNLOAD}, once. Pull it before you arrive: the venue Wi-Fi is shared. Docker Desktop
+            (macOS, Windows) and Docker Engine (Linux) both work.
+        </>
+    ),
+    command: DORIS_PULL,
+};
 
 export const BEFORE_DORIS_RUNNING: HackathonChecklistItem = {
     title: 'Doris is running.',
     body: (
         <>
-            (Docker must be running.) <Link to="/docs/4.x/getting-started/quick-start">Full quick start</Link>
+            One container runs one FE and one BE. It is ready when <code>docker ps</code> shows <code>(healthy)</code>,
+            about 30 seconds after it starts.{' '}
+            <Link to="/community/developer-guide/all-in-one-image">About this image</Link>
         </>
     ),
-    command: 'curl -fsSL https://doris.apache.org/files/start-doris.sh | bash -s -- -v 4.1.4.1',
+    command: DORIS_RUN,
 };
 
 export const BEFORE_CAN_CONNECT: HackathonChecklistItem = {
     title: 'You can connect.',
-    body: 'Any MySQL-compatible client works; there is no password.',
-    command: 'mysql -h127.0.0.1 -P9030 -uroot',
+    body: (
+        <>
+            The container ships a MySQL client, so you don&apos;t need one. Any MySQL client works too:{' '}
+            <code>127.0.0.1:9030</code>, user <code>root</code>, no password.
+        </>
+    ),
+    command: DORIS_SQL,
 };
+
+const KIT = HACKATHON_EVENT.starterKitFolder;
 
 export const BEFORE_STARTER_KIT: HackathonChecklistItem = {
     title: 'You have the starter kit.',
     body: (
         <>
-            <code>git clone</code> <HackathonStarterKit /> and load this task&apos;s seed file.
+            Download and unzip <HackathonStarterKit />, then run the commands on this page from inside its{' '}
+            <code>{KIT}</code> folder. Its <code>doris.sh</code> (macOS, Linux) and <code>doris.ps1</code> (Windows)
+            wrap them: <code>start</code>, <code>load</code>, <code>sql</code>, <code>stop</code>.
         </>
     ),
+    command: HACKATHON_EVENT.starterKitUrl
+        ? `curl -LO ${HACKATHON_EVENT.starterKitUrl} && unzip ${KIT}.zip && cd ${KIT}`
+        : undefined,
 };
 
 export const BEFORE_TOOLS_READY: HackathonChecklistItem = {
@@ -42,6 +76,7 @@ export const BEFORE_TOOLS_READY: HackathonChecklistItem = {
 };
 
 export const COMMON_BEFORE: HackathonChecklistItem[] = [
+    BEFORE_IMAGE_PULLED,
     BEFORE_DORIS_RUNNING,
     BEFORE_CAN_CONNECT,
     BEFORE_STARTER_KIT,
@@ -60,8 +95,8 @@ export const AI_STEPS = [
         Paste the <strong>context prompt</strong> below into your agent.
     </>,
     <>
-        Point it at <a href="https://doris.apache.org/llms.txt">https://doris.apache.org/llms.txt</a> and the{' '}
-        <a href="#references">reference pages listed on this page</a>.
+        Point it at the <a href="#references">reference pages listed on this page</a> and at <code>AGENTS.md</code> in
+        the starter kit. Many coding agents read that file on their own.
     </>,
     <>Make it run every SQL statement against your live cluster before wiring it into code.</>,
     <>
@@ -98,6 +133,19 @@ export const TRAPS = {
             </>
         ),
     },
+    scoreWrapped: {
+        problem: (
+            <>
+                Rounding, joining or ranking <code>score()</code> in the same query
+            </>
+        ),
+        fix: (
+            <>
+                Keep <code>score() AS relevance</code> plain in a single-table query. Round it, join it or{' '}
+                <code>ROW_NUMBER()</code> it in an outer query, and use a subquery, not a <code>WITH</code> CTE
+            </>
+        ),
+    },
     scoreAggregate: {
         problem: (
             <>
@@ -113,13 +161,24 @@ export const TRAPS = {
     bm25AndDistance: {
         problem: (
             <>
-                Sorting by BM25 and vector distance in one <code>ORDER BY</code>
+                Sorting by BM25 and vector distance in one <code>ORDER BY</code>, or selecting <code>score()</code> in a
+                vector-ranked query
             </>
         ),
         fix: (
             <>
-                Not supported. Use a <code>MATCH_*</code> pre-filter + vector <code>ORDER BY</code>, or fuse two ranked
-                lists (RRF)
+                Not supported. Hybrid = a <code>MATCH_*</code> pre-filter + vector <code>ORDER BY</code>, showing the
+                distance; or fuse two ranked lists (RRF)
+            </>
+        ),
+    },
+    vectorParam: {
+        problem: 'Passing the query vector as a driver parameter',
+        fix: (
+            <>
+                A list becomes <code>(…)</code> in pymysql and 8 separate arguments in mysql2. Pass the string{' '}
+                <code>&apos;[0.1, …]&apos;</code> and write <code>CAST(%s AS ARRAY&lt;FLOAT&gt;)</code>, or inline the
+                literal
             </>
         ),
     },
@@ -140,12 +199,16 @@ export const TRAPS = {
             </>
         ),
     },
-    replicas: {
-        problem: 'Creating tables without a replica setting',
+    variantDesc: {
+        problem: (
+            <>
+                Expecting <code>DESC</code> to list the JSON paths
+            </>
+        ),
         fix: (
             <>
-                The quick-start cluster has one BE: add{' '}
-                <code>PROPERTIES (&quot;replication_num&quot; = &quot;1&quot;)</code>
+                Run <code>SET describe_extend_variant_column = true;</code> first; then <code>DESC</code> shows every
+                inferred subcolumn and its type
             </>
         ),
     },
@@ -159,7 +222,7 @@ export const TROUBLE = {
     docker: {
         problem: (
             <>
-                <code>Docker environment not detected</code> on macOS
+                <code>docker: command not found</code> on macOS
             </>
         ),
         fix: (
@@ -181,15 +244,54 @@ export const TROUBLE = {
             </>
         ),
     },
-    backends: {
+    port: {
         problem: (
             <>
-                <code>CREATE TABLE</code> fails: not enough backends
+                <code>port is already allocated</code>
             </>
         ),
         fix: (
             <>
-                Add <code>PROPERTIES (&quot;replication_num&quot; = &quot;1&quot;)</code>
+                Something else uses 9030, 8030 or 8040, often another Doris. Stop it (<code>docker ps</code>), or
+                publish other host ports, e.g. <code>-p 19030:9030</code>, and connect to 19030
+            </>
+        ),
+    },
+    nameInUse: {
+        problem: (
+            <>
+                <code>The container name &quot;/doris&quot; is already in use</code>
+            </>
+        ),
+        fix: (
+            <>
+                You started it before: <code>docker start doris</code>. To start over, <code>docker rm -f doris</code>{' '}
+                (this deletes its data)
+            </>
+        ),
+    },
+    unhealthy: {
+        problem: (
+            <>
+                The container exits, or never turns <code>(healthy)</code>
+            </>
+        ),
+        fix: (
+            <>
+                Read <code>docker logs doris</code>. Usually it is memory: give Docker Desktop 6 GB or more (Settings →
+                Resources). On Apple Silicon, don&apos;t add <code>--platform linux/amd64</code>
+            </>
+        ),
+    },
+    noDatabase: {
+        problem: (
+            <>
+                <code>Current database is not set</code>
+            </>
+        ),
+        fix: (
+            <>
+                Run <code>USE hackathon;</code> first, or connect with <code>-Dhackathon</code>
             </>
         ),
     },
@@ -197,20 +299,43 @@ export const TROUBLE = {
         problem: <code>score() function requires WHERE clause with MATCH function, ORDER BY and LIMIT</code>,
         fix: (
             <>
-                Add a <code>MATCH_*</code> predicate, <code>ORDER BY score() DESC</code> and a <code>LIMIT</code>
+                Add a <code>MATCH_*</code> predicate, <code>ORDER BY score() DESC</code> and a <code>LIMIT</code>, and
+                keep <code>score()</code> unwrapped (see the traps above)
+            </>
+        ),
+    },
+    permission: {
+        problem: (
+            <>
+                <code>permission denied: ./doris.sh</code>
+            </>
+        ),
+        fix: (
+            <>
+                Your unzip tool dropped the executable bit: <code>chmod +x doris.sh</code>, or run{' '}
+                <code>bash doris.sh start</code>
             </>
         ),
     },
     stuck: {
         problem: 'Stuck for more than 10 minutes',
-        fix: 'Come to the Doris table and ask Mingyu',
+        fix: (
+            <>
+                Come to the Doris table and ask Mingyu, or post in <code>{HACKATHON_EVENT.slackChannel}</code> on the{' '}
+                <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>
+            </>
+        ),
     },
 } satisfies Record<string, HackathonRow>;
 
 export const COMMON_TROUBLESHOOTING: HackathonRow[] = [
     TROUBLE.docker,
     TROUBLE.credentials,
-    TROUBLE.backends,
+    TROUBLE.port,
+    TROUBLE.nameInUse,
+    TROUBLE.unhealthy,
+    TROUBLE.permission,
+    TROUBLE.noDatabase,
     TROUBLE.score,
     TROUBLE.stuck,
 ];

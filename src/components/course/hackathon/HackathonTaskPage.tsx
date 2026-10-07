@@ -4,7 +4,17 @@ import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import { LayoutNext } from '@site/src/components/home-next/LayoutNext';
 import { CodeSnippet, CopyButton, HackathonCodeBlock, isCodeSnippet } from './HackathonCodeBlock';
-import { HACKATHON_EVENT, HACKATHON_TASKS, HackathonTaskMeta, hackathonTaskPath } from './hackathonEvent';
+import {
+    DORIS_PULL,
+    DORIS_RUN,
+    DORIS_SQL,
+    HACKATHON_DORIS_DOWNLOAD,
+    HACKATHON_EVENT,
+    HACKATHON_SLACK_URL,
+    HACKATHON_TASKS,
+    HackathonTaskMeta,
+    hackathonTaskPath,
+} from './hackathonEvent';
 import { IconArrowDown, IconArrowLeft, IconArrowRight, IconChevronUp, IconExternal, IconPanel } from './HackathonIcons';
 import './HackathonTaskPage.scss';
 
@@ -94,9 +104,14 @@ interface StepDef {
 
 const START_SNIPPET: CodeSnippet = {
     label: 'Start Doris',
-    file: 'terminal · bash',
+    file: 'terminal',
     language: 'bash',
-    code: 'curl -fsSL https://doris.apache.org/files/start-doris.sh | bash -s -- -v 4.1.4.1\nmysql -h127.0.0.1 -P9030 -uroot',
+    code: [
+        `${DORIS_PULL}   # ${HACKATHON_DORIS_DOWNLOAD}, once`,
+        DORIS_RUN,
+        'docker ps        # wait for (healthy), about 30 s',
+        DORIS_SQL,
+    ].join('\n'),
 };
 
 const CONNECTION = [
@@ -117,7 +132,9 @@ export function HackathonTba({ name, onDark = false }: { name: string; onDark?: 
 
 export function HackathonStarterKit({ onDark = false }: { onDark?: boolean }): JSX.Element {
     return HACKATHON_EVENT.starterKitUrl ? (
-        <code>{HACKATHON_EVENT.starterKitUrl}</code>
+        <a className="hk-task__kitlink" href={HACKATHON_EVENT.starterKitUrl}>
+            <code>{HACKATHON_EVENT.starterKitFolder}.zip</code>
+        </a>
     ) : (
         <HackathonTba name="STARTER_KIT" onDark={onDark} />
     );
@@ -417,7 +434,7 @@ function StartExtras({ content }: { content: HackathonTaskContent }): JSX.Elemen
             <ConnectionCard />
             <p className="hk-task__kitline">
                 <b>Starter kit</b>
-                <span>git clone</span>
+                <span>download</span>
                 <HackathonStarterKit onDark />
             </p>
             <div className="hk-task__route">
@@ -443,7 +460,7 @@ function StartExtras({ content }: { content: HackathonTaskContent }): JSX.Elemen
                         <a className="hk-task__route-step" href="#done">
                             <b>DoD</b>
                             <span>Done</span>
-                            <i>→ badge</i>
+                            <i>→ submit</i>
                         </a>
                     </li>
                 </ol>
@@ -548,11 +565,13 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                                     </span>
                                 )}
                                 <a className="hk-task__btn hk-task__btn--primary" href="#before">
-                                    Start Doris in 5 min <IconArrowDown />
+                                    Start Doris <IconArrowDown />
                                 </a>
                             </div>
                             <p className="hk-task__help">
-                                <b>Stuck for more than 10 minutes?</b> Come to the Doris table and ask Mingyu.
+                                <b>Stuck for more than 10 minutes?</b> Come to the Doris table and ask Mingyu, or post
+                                in <code>{HACKATHON_EVENT.slackChannel}</code> on the{' '}
+                                <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>.
                             </p>
                         </header>
 
@@ -727,7 +746,7 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                         <section className={cardClass('done', 'hk-task__dod')} id="done">
                             <div className="hk-task__dod-top">
                                 <h3>Definition of Done</h3>
-                                <span className="hk-task__dod-count">Your badge checklist</span>
+                                <span className="hk-task__dod-count">Your checklist</span>
                             </div>
                             <ul className="hk-task__checklist">
                                 {content.done.map((item, index) => (
@@ -742,15 +761,23 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                         </section>
 
                         <section className={cardClass('submit')} id="submit">
-                            <h3>Submit &amp; claim your badge</h3>
+                            <h3>Submit &amp; get your badge</h3>
                             <div className="hk-task__submit">
-                                <p className="hk-task__lead">Finish → show → get your badge.</p>
+                                <p className="hk-task__lead">Take part → submit → get your badge.</p>
                                 <ol className="hk-task__steps">
                                     <li>
                                         <p>
-                                            Push your work to a <strong>public GitHub repo or gist</strong> with a
-                                            README: what it does, how to run it, one screenshot or GIF, and the Doris
-                                            features you used.
+                                            Put your work in a folder named after <strong>your GitHub ID</strong>: the
+                                            code, plus a README with what it does, how to run it, one screenshot or GIF,
+                                            and the Doris features you used.
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p>
+                                            <strong>Open a pull request</strong> that adds it to <SubmitTarget /> as{' '}
+                                            <code>{HACKATHON_EVENT.starterKitFolder}/&lt;your-github-id&gt;/</code>.
+                                            Fork and push, or use GitHub&apos;s <em>Add file → Upload files</em>.
+                                            Nothing else to fill in.
                                         </p>
                                     </li>
                                     <li>
@@ -761,14 +788,20 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                                     </li>
                                     <li>
                                         <p>
-                                            <strong>Post your link</strong> in <SubmitTarget />. We&apos;ll send you the{' '}
-                                            <strong>Apache Doris Contributor badge</strong>.
+                                            <strong>
+                                                Join the <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>
+                                            </strong>{' '}
+                                            and say hi in <code>{HACKATHON_EVENT.slackChannel}</code>: questions,
+                                            submissions and badges are all handled there.
                                         </p>
                                     </li>
                                 </ol>
                                 <p className="hk-task__late">
-                                    Didn&apos;t finish by 15:00? Keep going — submissions are open until{' '}
-                                    {HACKATHON_EVENT.deadline ?? <HackathonTba name="DEADLINE" />}
+                                    Everyone who takes part in a task on site gets the{' '}
+                                    <strong>Apache Doris Contributor badge</strong>: no merged pull request to Doris
+                                    needed. Didn&apos;t finish by 15:00? Keep going — submissions are open until{' '}
+                                    {HACKATHON_EVENT.deadline ?? <HackathonTba name="DEADLINE" />}. Teams are fine, but
+                                    not needed: list every member&apos;s GitHub ID in the README.
                                 </p>
                                 <div className="hk-task__submit-badge">
                                     <Link to="/community/how-to-contribute/community-badges">

@@ -163,7 +163,7 @@ export function HackathonTrackPanel({ hidden }: { hidden: boolean }): JSX.Elemen
             </p>
             <div className="hk-track__badge">
                 <img src={badgeUrl} alt="Apache Doris Contributor badge" width="52" height="52" />
-                <p>Done? Push it to a public repo, show us at the Doris table, collect your badge.</p>
+                <p>Take part in a task, show us at the Doris table, collect your Contributor badge.</p>
             </div>
         </section>
     );

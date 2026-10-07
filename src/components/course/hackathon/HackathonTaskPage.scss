@@ -786,11 +786,15 @@
 }
 
 .hk-task__codehead-label {
-    flex: none;
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
     color: var(--brand-terminal);
     font: 800 12px/1.2 var(--font-mono);
     letter-spacing: 0.08em;
+    text-overflow: ellipsis;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .hk-task__codehead-file {
@@ -805,6 +809,7 @@
 
 .hk-task__copy {
     display: inline-flex;
+    flex: none;
     min-height: 32px;
     align-items: center;
     gap: 7px;
@@ -1075,6 +1080,11 @@
         border: 0;
         background: none;
         color: var(--brand-accent);
+    }
+
+    a {
+        color: var(--brand-accent);
+        text-underline-offset: 3px;
     }
 }
 
@@ -1907,10 +1917,6 @@
 }
 
 .hk-task .hk-task__card .hk-task__late {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
     margin-top: 16px;
     padding: 12px 14px;
     border-radius: 12px;
