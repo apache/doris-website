@@ -12,7 +12,7 @@ keywords:
 slug: /key-features/full-text-search
 image: /images/next/key-features/full-text-search.jpg
 last_update:
-  date: 2026-05-10
+  date: 2026-10-07
   author: Apache Doris
 featureCard:
   tags:
@@ -81,16 +81,16 @@ ORDER BY rel DESC LIMIT 3;
 **Expected result**
 
 ```
-+----+-------------------+----------+
-| id | title             | rel      |
-+----+-------------------+----------+
-|  3 | Vector primer     | 0.523248 |
-|  2 | Storage notes     | 0.346574 |
-|  1 | Doris 4.0 release | 0.287682 |
-+----+-------------------+----------+
++------+-------------------+-----------+
+| id   | title             | rel       |
++------+-------------------+-----------+
+|    3 | Vector primer     | 0.8009131 |
+|    1 | Doris 4.0 release | 0.5634479 |
+|    2 | Storage notes     | 0.1384567 |
++------+-------------------+-----------+
 ```
 
-`MATCH_ANY 'text search'` tokenizes the query into `text` and `search`, looks up both posting lists, and returns rows that contain either term. `score()` ranks them by BM25 once `ORDER BY rel LIMIT 3` makes the optimizer treat it as a Top-N query.
+`MATCH_ANY 'text search'` tokenizes the query into `text` and `search`, looks up both posting lists, and returns rows that contain either term. `score()` ranks them by BM25 once `ORDER BY rel LIMIT 3` makes the optimizer treat it as a Top-N query: row 3 contains both terms (`search` twice), row 1 contains both once, and row 2 contains only `text`.
 
 ## Operator family at a glance {#operators}
 

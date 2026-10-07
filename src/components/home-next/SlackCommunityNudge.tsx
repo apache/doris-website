@@ -4,6 +4,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { normalizePathname } from '@site/src/utils/locale';
 import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
 import {
+    allowsSlackNudgeAutoOpen,
     computeMascotPupilOffset,
     getSlackNudgeBenefits,
     isDocumentationFeedbackPath,
@@ -68,12 +69,16 @@ export function SlackCommunityNudge(): JSX.Element {
     const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
     const normalizedPathname = normalizePathname(pathname, locales);
     const showDocsFeedback = isDocumentationFeedbackPath(normalizedPathname);
+    // The provider outlives client-side navigation, so the timer checks the page it fires on.
+    const autoOpenAllowedRef = useRef(true);
+    autoOpenAllowedRef.current = allowsSlackNudgeAutoOpen(normalizedPathname);
     const slackUrl = buildSlackEntryUrl({
         medium: showDocsFeedback ? 'docs' : 'website',
         content: 'mascot_nudge',
     });
 
     const openAutomatically = useCallback((ecosystemVisible: boolean) => {
+        if (!autoOpenAllowedRef.current) return;
         const mountedAt = mountedAtRef.current ?? Date.now();
         const elapsedMs = Date.now() - mountedAt;
 

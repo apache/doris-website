@@ -11,7 +11,7 @@ keywords:
 slug: /key-features/reciprocal-rank-fusion
 image: /images/next/key-features/reciprocal-rank-fusion.jpg
 last_update:
-  date: 2026-05-10
+  date: 2026-10-07
   author: Apache Doris
 featureCard:
   tags:
@@ -46,17 +46,17 @@ In Apache Doris the implementation is a SQL pattern, not a function. You write t
 
 **Key terms**
 
-- **`score()`**: Doris's BM25 scoring function for inverted indexes. Requires a `MATCH_*` predicate and an `ORDER BY score()` clause to activate.
+- **`score()`**: Doris's BM25 scoring function for inverted indexes. It works only in a single-table query with a `MATCH_*` predicate, an `ORDER BY` on the score, and a `LIMIT`, and it must be selected as is (`score() AS s`). Ranking or rounding it happens in an outer query.
 - **`l2_distance_approximate` / `inner_product_approximate`**: ANN distance functions backed by Doris's vector index (HNSW or IVF).
 - **`ROW_NUMBER() OVER (ORDER BY ...)`**: assigns a 1-based rank to each row within a result set.
 - **`k`**: the RRF smoothing constant. Lower values (20–40) sharpen the influence of top-ranked rows; higher values (80+) flatten it.
 
 ## How does Reciprocal Rank Fusion work in Apache Doris? {#how}
 
-Apache Doris implements Reciprocal Rank Fusion by running two ranked retrievals as CTEs, assigning a `ROW_NUMBER()` to each, `FULL OUTER JOIN`-ing the two lists on document id, and summing `1/(k+rank)` to produce the final ordering. The five-step flow below covers retrieval, ranking, join, fusion, and trim.
+Apache Doris implements Reciprocal Rank Fusion by running two ranked retrievals as subqueries, assigning a `ROW_NUMBER()` to each, `FULL OUTER JOIN`-ing the two lists on document id, and summing `1/(k+rank)` to produce the final ordering. The five-step flow below covers retrieval, ranking, join, fusion, and trim.
 
 1. **Run two ranked retrievals.** A BM25 subquery filters with `MATCH_ANY` and orders by `score()` descending. An ANN subquery orders by vector distance ascending. Each is capped with `LIMIT N`, where `N` is the candidate pool size (typically 50–200).
-2. **Assign per-list ranks.** `ROW_NUMBER() OVER (ORDER BY ...)` numbers the rows 1, 2, 3 within each subquery. The numbers are integers, so they are safe to mix across runs.
+2. **Assign per-list ranks.** `ROW_NUMBER() OVER (ORDER BY ...)` numbers the rows 1, 2, 3 within each subquery. The numbers are integers, so they are safe to mix across runs. For the BM25 list the window function goes one level above the query that computes `score()`: `ROW_NUMBER() OVER (ORDER BY score() DESC)` in that same `SELECT` is rejected with `score() function requires WHERE clause with MATCH function, ORDER BY and LIMIT for optimization`.
 3. **Outer-join the two lists by document id.** A `FULL OUTER JOIN` keeps documents that appear in either list. Rows missing on one side get `NULL` for that rank.
 4. **Sum the reciprocals.** `COALESCE(1.0/(60+bm25_rank), 0) + COALESCE(1.0/(60+ann_rank), 0)` gives each document its fused score. Missing ranks contribute zero, which matches the original RRF definition.
 5. **Sort and trim.** `ORDER BY rrf_score DESC LIMIT K` returns the final top-K.
@@ -65,36 +65,55 @@ The pool size `N` matters. If you only fetch the top 10 from each retriever, a d
 
 ## Quick start {#quick-start}
 
+The same four rows as the [Vector Index](./vector-index) and [Hybrid Search](./hybrid-search) examples, with the comment text in `body`:
+
 ```sql
-WITH bm25 AS (
-  SELECT id, ROW_NUMBER() OVER (ORDER BY score() DESC) AS r
-  FROM docs WHERE body MATCH_ANY 'music' ORDER BY score() DESC LIMIT 100
-),
-ann AS (
-  SELECT id, ROW_NUMBER() OVER (ORDER BY l2_distance_approximate(
-           embedding, [0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]) ASC) AS r
-  FROM docs ORDER BY l2_distance_approximate(
-           embedding, [0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]) ASC LIMIT 100
-)
+CREATE TABLE docs (
+  id INT NOT NULL,
+  embedding ARRAY<FLOAT> NOT NULL,
+  body STRING NOT NULL,
+  INDEX idx_body(body) USING INVERTED PROPERTIES("parser"="english"),
+  INDEX idx_vec(embedding) USING ANN
+    PROPERTIES("index_type"="hnsw","metric_type"="l2_distance","dim"="8")
+) DUPLICATE KEY(id) DISTRIBUTED BY HASH(id) BUCKETS 1;
+
+INSERT INTO docs VALUES
+  (1, [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8], 'this is about music'),
+  (2, [0.2,0.1,0.5,0.3,0.9,0.4,0.7,0.1], 'sports news today'),
+  (3, [0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2], 'latest music trend'),
+  (4, [0.05,0.06,0.07,0.08,0.09,0.1,0.2,0.3], 'politics update');
+
 SELECT COALESCE(b.id, a.id) AS id,
-       COALESCE(1.0/(60+b.r), 0) + COALESCE(1.0/(60+a.r), 0) AS rrf
-FROM bm25 b FULL OUTER JOIN ann a ON b.id = a.id
+       COALESCE(1.0 / (60 + b.r), 0) + COALESCE(1.0 / (60 + a.r), 0) AS rrf
+FROM (
+  -- BM25 list: score() stays plain here; ROW_NUMBER() ranks it one level up
+  SELECT id, ROW_NUMBER() OVER (ORDER BY s DESC) AS r
+  FROM (SELECT id, score() AS s FROM docs
+        WHERE body MATCH_ANY 'music' ORDER BY s DESC LIMIT 100) bm25_hits
+) b
+FULL OUTER JOIN (
+  -- ANN list
+  SELECT id, ROW_NUMBER() OVER (ORDER BY dist ASC) AS r
+  FROM (SELECT id, l2_distance_approximate(embedding, [0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]) AS dist
+        FROM docs ORDER BY dist ASC LIMIT 100) ann_hits
+) a ON b.id = a.id
 ORDER BY rrf DESC LIMIT 5;
 ```
 
 **Expected result**
 
 ```
-+----+----------------------+
-| id | rrf                  |
-+----+----------------------+
-|  1 | 0.032786885245901641 |
-|  3 | 0.016393442622950820 |
-|  7 | 0.016129032258064516 |
-+----+----------------------+
++------+---------+
+| id   | rrf     |
++------+---------+
+|    1 | 0.03224 |
+|    3 | 0.03201 |
+|    4 | 0.01639 |
+|    2 | 0.01587 |
++------+---------+
 ```
 
-Document `1` ranks first in both lists, so its fused score is `1/61 + 1/61 ≈ 0.0328`. Documents `3` and `7` appear in only one list each, so they contribute a single reciprocal term and fall in behind the row that placed in both.
+BM25 ranks document `3` first and `1` second (only these two mention "music"); the vector list ranks `4`, `1`, `2`, `3`. Document `1` is second in both lists, so it scores `1/62 + 1/62 ≈ 0.0322` and edges out document `3`, which tops BM25 but comes last by distance (`1/61 + 1/64 ≈ 0.0320`). Documents `4` and `2` only appear in the vector list and fall in behind.
 
 ## When should you use Reciprocal Rank Fusion in Apache Doris? {#when}
 

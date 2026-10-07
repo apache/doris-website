@@ -1,0 +1,88 @@
+// Track B: one page with six task cards. Everything not defined here comes
+// from HackathonTaskPage.scss (cards, checklists, panel, tabs, buttons).
+
+.hk-trackb__task-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.hk-trackb .hk-trackb__task-head h3 {
+    margin: 0;
+}
+
+.hk-trackb__task-code {
+    display: grid;
+    width: 50px;
+    height: 50px;
+    flex: none;
+    place-items: center;
+    border: 2px solid var(--brand-ink);
+    border-radius: 14px;
+    background: var(--brand-accent);
+    box-shadow: 0 3px 0 var(--brand-ink);
+    color: var(--brand-ink);
+    font: 800 15px/1 var(--font-mono);
+}
+
+.hk-trackb .hk-trackb__task-meta {
+    margin: 4px 0 0;
+    color: var(--brand-ink-soft);
+    font: 700 12px/1.3 var(--font-mono);
+}
+
+.hk-trackb .hk-trackb__doc {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin: 16px 0 0;
+
+    > span {
+        color: var(--brand-ink-soft);
+        font: 800 12px/1.2 var(--font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+}
+
+.hk-trackb a.hk-trackb__also {
+    font-weight: 700;
+}
+
+.hk-trackb .hk-trackb__picklabel {
+    margin: 16px 0 0;
+    color: var(--brand-ink-soft);
+    font: 800 12px/1.2 var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.hk-trackb__picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.hk-trackb__pick {
+    min-width: 44px;
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--brand-border-soft);
+    border-radius: 999px;
+    background: var(--brand-paper);
+    color: var(--brand-ink);
+    cursor: pointer;
+    font: 800 12px/1 var(--font-mono);
+
+    &[aria-pressed='true'] {
+        border: 2px solid var(--brand-ink);
+        background: var(--brand-accent);
+    }
+}
+
+// The panel has a small header instead of the Track A wireframe sketch.
+.hk-trackb__panel .hk-trackb__panelhead .hk-sketch__head {
+    margin-bottom: 0;
+}

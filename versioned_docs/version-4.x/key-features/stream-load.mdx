@@ -12,7 +12,7 @@ keywords:
 slug: /key-features/stream-load
 image: /images/next/key-features/stream-load.jpg
 last_update:
-  date: 2026-05-10
+  date: 2026-10-07
   author: Apache Doris
 featureCard:
   tags:
@@ -59,15 +59,40 @@ The whole sequence is one HTTP request from the client's point of view. If the c
 
 ## Quick start {#quick-start}
 
+Create the target table:
+
+```sql
+CREATE DATABASE IF NOT EXISTS testdb;
+CREATE TABLE testdb.test_streamload (
+  user_id BIGINT NOT NULL,
+  name    VARCHAR(20),
+  age     INT
+) DUPLICATE KEY(user_id) DISTRIBUTED BY HASH(user_id) BUCKETS 1;
+```
+
+Then write a 10-row CSV file and push it to Doris over HTTP PUT. Replace `127.0.0.1` with your FE host if Doris runs elsewhere:
+
 ```shell
-# Push a CSV directly to Doris over HTTP PUT.
+cat > streamload_example.csv <<'CSV'
+1,Emily,25
+2,Benjamin,35
+3,Olivia,28
+4,Alexander,60
+5,Ava,17
+6,William,69
+7,Sophia,32
+8,James,64
+9,Emma,37
+10,Liam,64
+CSV
+
 curl --location-trusted -u root: \
   -H "Expect:100-continue" \
   -H "label:orders_2024_06_01" \
   -H "column_separator:," \
   -H "columns:user_id,name,age" \
   -T streamload_example.csv \
-  -XPUT http://fe_host:8030/api/testdb/test_streamload/_stream_load
+  -XPUT http://127.0.0.1:8030/api/testdb/test_streamload/_stream_load
 ```
 
 **Expected result**
@@ -85,7 +110,7 @@ curl --location-trusted -u root: \
 }
 ```
 
-`Status: Success` means the batch committed and the rows are queryable. Resending the same `curl` returns `Status: Label Already Exists` and writes nothing, so a client that retries on a network blip will not double-load.
+`Status: Success` means the batch committed and the rows are queryable: `SELECT COUNT(*) FROM testdb.test_streamload` returns 10. Resending the same `curl` returns `Status: Label Already Exists` and writes nothing, so a client that retries on a network blip will not double-load.
 
 ## When should you use Apache Doris Stream Load? {#when}
 

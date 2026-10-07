@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 
 const {
+    allowsSlackNudgeAutoOpen,
     computeMascotPupilOffset,
     getSlackNudgeBenefits,
     isDocumentationFeedbackPath,
@@ -133,5 +134,14 @@ test('shows documentation feedback on docs and community pages', () => {
 test('does not show documentation feedback outside docs and community pages', () => {
     ['/', '/blog', '/docs-old', '/community-events'].forEach(pathname => {
         assert.equal(isDocumentationFeedbackPath(pathname), false, pathname);
+    });
+});
+
+test('does not open on its own on the hackathon task pages', () => {
+    ['/course/hackathon', '/course/hackathon/glasgow-2026/a1-hybrid-search'].forEach(pathname => {
+        assert.equal(allowsSlackNudgeAutoOpen(pathname), false, pathname);
+    });
+    ['/', '/course', '/docs/4.x/key-features/hybrid-search', '/course/hackathon-other'].forEach(pathname => {
+        assert.equal(allowsSlackNudgeAutoOpen(pathname), true, pathname);
     });
 });
