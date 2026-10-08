@@ -2,16 +2,14 @@
 {
     "title": "Paimon Catalog",
     "language": "zh-CN",
-    "description": "Apache Doris Paimon Catalog 支持通过 Hive Metastore、阿里云 DLF、FileSystem 等多种元数据服务访问 Paimon 表，提供数据查询、时间旅行、增量查询、Branch/Tag 管理等功能，实现高性能的数据湖分析和 ZeroETL 数据集成。"
+    "description": "Apache Doris Paimon Catalog 支持通过 Hive Metastore、阿里云 DLF、FileSystem 等多种元数据服务访问 Paimon 表，提供数据查询、数据写入、时间旅行、增量查询、Branch/Tag 管理等功能，实现高性能的数据湖分析和 ZeroETL 数据集成。"
 }
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Doris 支持通过多种元数据服务访问 Paimon 表元数据，并进行 Paimon 数据查询。
-
-目前只支持 Paimon 表的读操作，未来会支持写入 Paimon 表。
+Doris 支持通过多种元数据服务访问 Paimon 表元数据，并对 Paimon 数据进行读写。
 
 [使用 Docker 快速体验 Apache Doris & Paimon](../best-practices/doris-paimon.md)
 
@@ -21,7 +19,7 @@ Doris 支持通过多种元数据服务访问 Paimon 表元数据，并进行 Pa
 | ---- | ------------------------------------------------------ |
 | 查询加速 | 利用 Doris 分布式计算引擎，直接访问 Paimon 数据进行查询加速。                 |
 | 数据集成 | 读取 Paimon 数据并写入到 Doris 内表。或通过 Doris 计算引擎进行 ZeroETL 操作。 |
-| 数据写回 | 暂不支持。                                                   |
+| 数据写回 | 使用 Doris SQL 创建和修改 Paimon 表、追加或覆盖数据，以及修改主键表中的行。 |
 
 ## 配置 Catalog
 
@@ -159,7 +157,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     快照和启动位置参数属于表引用上下文选择器，必须使用[通过 `@options` 进行时间旅行](#time-travel-with-options)
     中介绍的语法，不能配置为 Catalog 默认值。Doris 也不支持仅供 Paimon Flink Source Enumerator 使用的
     `scan.max-splits-per-task`，以及 `scan.fallback-branch`、流式 Source、表布局、写入和 Compaction 参数。
-    Bucket、Primary Key、Partition、Merge Engine 等物理表行为应在 Paimon 中配置。
+    Bucket、Primary Key、Partition、Merge Engine 等物理表行为应配置为 Paimon 表属性，也可以在 Doris
+    `CREATE TABLE ... PROPERTIES` 中指定。
 
     :::info 语句一致性
     在同一条语句内，Doris 会让 Schema 绑定、分区加载、行数/统计信息收集、系统表规划和数据扫描使用同一个
@@ -289,7 +288,7 @@ ORDER BY engine_name, entry_name;
 
 ### 支持的 Paimon 版本
 
-当前依赖的 Paimon 版本为 1.3.1。
+当前依赖的 Paimon 版本为 1.4.2。
 
 ### 支持的 Paimon 格式
 
@@ -959,6 +958,175 @@ SQL 标识符引用外无需额外转义。读取时列按不区分大小写的�
         </TabItem>
     </Tabs>
 </details>
+
+## 写入操作
+
+Doris 可以创建和修改 Paimon 表，也可以向表中写入数据。每条成功的写入语句都会提交一个新的 Paimon
+Snapshot；如果语句执行失败，Doris 不会发布只包含部分数据的 Snapshot。
+
+### 写入前检查
+
+写入数据前，请确认以下事项：
+
+* 所有 FE 和 BE 节点都已经运行包含 Paimon 写入功能的 Doris 版本。滚动升级期间，如果还有旧版本 BE
+  节点，请不要向 Paimon 写入数据。
+* Catalog 使用的账号既要有修改元数据服务的权限，也要有在 Warehouse 中创建、写入、重命名和删除文件的
+  权限。具体权限取决于所使用的元数据服务和存储系统。
+* 只能写入普通的 Paimon 数据表。Paimon 系统表以及指定了 Branch、Tag、Snapshot 或时间点的表引用都是只读的。
+
+### 支持的 SQL
+
+| 操作 | 支持情况和说明 |
+| --- | --- |
+| 数据库 DDL | `CREATE DATABASE` 和 `DROP DATABASE` |
+| 表 DDL | `CREATE TABLE`、`CREATE TABLE AS SELECT` 和 `DROP TABLE` |
+| 表结构变更 | 增加、删除、重命名、调整顺序和修改列 |
+| 追加数据 | `INSERT INTO ... VALUES` 和 `INSERT INTO ... SELECT` |
+| 覆盖数据 | 全表、静态分区和动态分区 `INSERT OVERWRITE` |
+| 行级修改 | 主键表上的 `DELETE`、`UPDATE` 和 `MERGE INTO`，需要满足下文列出的限制 |
+
+### 快速开始
+
+下面的示例创建一个主键表并写入数据。Paimon 的表属性应写在 `PROPERTIES` 中，不要添加 Doris 的
+`DISTRIBUTE BY` 子句。
+
+```sql
+SWITCH paimon_ctl;
+CREATE DATABASE IF NOT EXISTS sales;
+USE sales;
+
+CREATE TABLE orders (
+    order_id BIGINT NOT NULL,
+    customer STRING NULL,
+    amount DECIMAL(12, 2) NULL,
+    status STRING NULL
+) ENGINE=paimon
+PROPERTIES (
+    'primary-key' = 'order_id',
+    'bucket' = '2',
+    'bucket-key' = 'order_id'
+);
+
+INSERT INTO orders VALUES
+    (1, 'Alice', 99.90, 'NEW'),
+    (2, 'Bob', 35.00, 'NEW');
+
+UPDATE orders
+SET status = 'PAID'
+WHERE order_id = 1;
+
+DELETE FROM orders
+WHERE order_id = 2;
+
+SELECT * FROM orders ORDER BY order_id;
+```
+
+结果如下：
+
+```text
++----------+----------+--------+--------+
+| order_id | customer | amount | status |
++----------+----------+--------+--------+
+|        1 | Alice    |  99.90 | PAID   |
++----------+----------+--------+--------+
+```
+
+也可以通过 Doris 修改表结构，然后继续按新表结构写入：
+
+```sql
+ALTER TABLE orders ADD COLUMN note STRING NULL;
+ALTER TABLE orders RENAME COLUMN note order_note;
+```
+
+### 追加和覆盖数据
+
+对于 Append Only 表，`INSERT INTO` 会追加数据；对于主键表，则会按照表的 Paimon 属性合并数据。数据源可以是
+`VALUES`、Doris 内表或其他外表。
+
+```sql
+INSERT INTO paimon_ctl.sales.orders
+SELECT order_id, customer, amount, status
+FROM internal.sales.new_orders;
+```
+
+对于非分区表，`INSERT OVERWRITE` 会替换原有的全部数据。因此，如果输入为空，覆盖后的表也为空。
+
+```sql
+INSERT OVERWRITE TABLE paimon_ctl.sales.orders
+SELECT order_id, customer, amount, status
+FROM internal.sales.orders_snapshot;
+```
+
+对于分区表，可以使用以下两种方式：
+
+```sql
+-- 只替换指定分区。静态分区列不需要出现在 SELECT 列表中。
+INSERT OVERWRITE TABLE paimon_ctl.sales.daily_orders
+PARTITION (order_date = '2026-10-08')
+SELECT order_id, customer, amount, status
+FROM internal.sales.daily_orders_stage;
+
+-- 动态覆盖会替换输入数据中出现的分区，并保留其他分区。
+INSERT OVERWRITE TABLE paimon_ctl.sales.daily_orders
+SELECT order_id, customer, amount, status, order_date
+FROM internal.sales.daily_orders_stage;
+```
+
+主键表只有在 `merge-engine` 为 `partial-update` 时，才允许在写入时省略非主键列。对于 Append Only 表，
+省略的列使用默认值；如果列允许为空且没有默认值，则使用 `NULL`。
+
+### 删除、更新和合并数据
+
+行级修改要求目标表是 Paimon 主键表。对于使用默认 `deduplicate` Merge Engine 的表，Doris 支持以下操作：
+
+```sql
+DELETE FROM paimon_ctl.sales.orders
+WHERE order_id = 10;
+
+UPDATE paimon_ctl.sales.orders
+SET amount = amount * 0.9,
+    status = 'DISCOUNTED'
+WHERE order_id = 20;
+
+MERGE INTO paimon_ctl.sales.orders t
+USING internal.sales.order_changes s
+ON t.order_id = s.order_id
+WHEN MATCHED AND s.action = 'DELETE' THEN DELETE
+WHEN MATCHED THEN UPDATE SET
+    customer = s.customer,
+    amount = s.amount,
+    status = s.status
+WHEN NOT MATCHED THEN INSERT (order_id, customer, amount, status)
+    VALUES (s.order_id, s.customer, s.amount, s.status);
+```
+
+由于 Paimon 处理行级变更的方式不同，还需要遵守以下限制：
+
+* `UPDATE` 不能修改主键列，也不能修改 `sequence.field` 指定的列。
+* `UPDATE` 以及 `MERGE` 中的更新操作只支持 `deduplicate` Merge Engine，并且不支持
+  `changelog-producer=input`。
+* 更新分区列时，目标表必须是动态 Bucket 表（`bucket=-1`），并且 `ignore-delete=false`。
+* `DELETE` 以及 `MERGE` 中的删除操作要求 `ignore-delete=false`。默认的 `deduplicate` Merge Engine 可以直接
+  执行删除；`partial-update` 表需要设置 `partial-update.remove-record-on-delete=true`；`aggregation` 表需要设置
+  `aggregation.remove-record-on-delete=true`。
+* 配置了 `rowkind.field` 的表不支持这些行级修改语句。配置了 `cross-partition-upsert.index-ttl` 的动态 Bucket
+  表也不支持这些语句。
+* `MERGE` 中包含哪类操作，就需要同时满足对应的 `UPDATE` 或 `DELETE` 限制。
+
+为保证结果明确，`MERGE` 的源表数据在匹配键上应保持唯一。如果多条源表记录匹配同一条目标表记录，Doris
+会拒绝执行该语句。
+
+### 使用注意事项
+
+* 主键、分区、Bucket、Merge Engine、文件格式、Compaction 等数据组织方式应配置为 Paimon 表属性。Doris
+  会通过 Paimon SDK 校验这些属性。
+* Doris 暂未提供 Paimon 表通用的 `ALTER TABLE ... SET TBLPROPERTIES` 操作。建表后如需修改表属性，请使用
+  其他 Paimon 引擎完成修改，然后在 Doris 中执行 `REFRESH TABLE` 或 `REFRESH CATALOG`。
+* 每个 BE 都需要为写入过程预留足够的本地磁盘空间，并且 Warehouse 账号需要有操作临时文件和提交数据的
+  权限。BE 配置项 `paimon_jni_writer_memory_pool_limit_bytes` 用于限制每个 Paimon JNI Writer 的内存池大小，
+  默认值为 512 MB。
+* 写入或表结构变更成功后，新执行的 Doris 语句会读取已提交的 Paimon Snapshot；已经开始执行的语句仍然使用
+  启动时选定的 Snapshot。
 
 ## 查询操作
 
