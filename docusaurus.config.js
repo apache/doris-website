@@ -307,7 +307,7 @@ const config = {
         // channel keeps linking to https://doris.apache.org/slack and this is
         // the only value to update when the invite is rotated.
         slackInviteUrl:
-            'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3wvgezmm8-lh5XRaLg0~9AF44ojdIBfw',
+            'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-4ce61raf7-LPi99HBnrzHOZ7E0_bQZXA',
         // The public HTTPS reverse proxy is the default browser entry point.
         // Local development can still replace this build-time value when needed.
         profileAnalysisApiBaseUrl: process.env.PROFILE_ANALYSIS_API_BASE_URL ?? 'https://agent.velodb.io',
