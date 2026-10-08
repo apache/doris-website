@@ -1575,7 +1575,6 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/parse-url',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/position',
-                                        'sql-manual/sql-functions/scalar-functions/string-functions/printf',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/protocol',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/quote',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/random_bytes',
