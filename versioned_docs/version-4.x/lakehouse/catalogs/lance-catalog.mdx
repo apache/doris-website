@@ -746,6 +746,8 @@ Do not use the unquoted form `lance_catalog.doris.analytics.items`; it parses as
 | `top_k` | No | `10` | Number of results returned after skipping `offset`. It must be a positive integer. |
 | `offset` | No | `0` | Number of nearest neighbors skipped inside the vector search. It must be a non-negative integer. `top_k + offset` must not exceed the maximum unsigned 32-bit integer. |
 | `metric` | No | `l2` | Distance metric: `l2`, `cosine`, `dot`, or `hamming`. `dot_product` is an alias for `dot`. `uint8` vectors support only `hamming`; the other currently supported vector element types support `l2`, `cosine`, and `dot`. Set `metric` explicitly when querying a `cosine`, `dot`, or `hamming` index. Integer multi-vector columns and multi-vector `hamming` are unsupported. |
+| `distance_lower_bound` | No | Unbounded | Inclusive lower distance bound for single-vector search. Must be a finite `FLOAT`. |
+| `distance_upper_bound` | No | Unbounded | Exclusive upper distance bound for single-vector search. Must be a finite `FLOAT`. When both bounds are set, the lower bound must be smaller after conversion to `FLOAT`. |
 | `filter` | No | - | Lance SQL condition evaluated before vector candidates are generated; that is, a Prefilter. |
 | `nprobes` | No | Minimum `1`, with no maximum | Number of IVF index partitions to probe. It must be a positive integer. When unset, Lance starts with one partition and can probe additional partitions when a Prefilter leaves too few candidates. Setting it explicitly to `N` fixes both the minimum and maximum number of probes to `N`. |
 | `refine_factor` | No | Single-vector: disabled; multi-vector: `1` | Candidate refinement multiplier. It must be a positive integer. For single-vector search, when unset, Lance does not recompute distances from the original vectors, so `_distance` from a quantized index may be approximate. When set to `N`, Lance first retrieves `(top_k + offset) × N` candidates, recomputes their exact distances from the original vectors, and reorders them. **Refinement reads the original vector data for these candidates. As `N` increases, more candidates are read and evaluated, which can significantly increase I/O and reduce query performance.** For single-vector search, setting it to `1` enables refinement and differs from leaving it unset. Multi-vector search always refines candidates against their original values, using a default factor of `1`. |
@@ -753,6 +755,47 @@ Do not use the unquoted form `lance_catalog.doris.analytics.items`; it parses as
 | `use_index` | No | `true` | When `true`, Doris prefers a Lance vector index compatible with the vector column and distance metric, and automatically uses Flat Search if no usable index is available. When `false`, Doris disables vector indexes and performs Flat Search over the data. |
 
 Omitting `metric` selects `l2` for both indexed and Flat Search paths. For `uint8` columns, explicitly set `"metric" = "hamming"`; the default `l2` is unsupported. Multi-vector searches also enforce the [candidate budgets](#multi-vector-search) described below.
+
+### Radius and Range Search
+
+Set `distance_upper_bound` for a radius query, or combine both bounds for an interval `[lower, upper)`. Omitted bounds are unbounded. Distances use the selected metric: `l2` is **squared Euclidean distance**, so a geometric radius of `r` corresponds to an upper bound of `r * r`. Negative bounds are accepted, which is useful for metrics such as `dot`. Bounds use `FLOAT` precision even when the stored vectors use Float64; non-finite bounds, overflow, equal bounds, and reversed intervals are rejected.
+
+For example, given an existing Lance Catalog table `lance_catalog.default.items` with `user_id` and a three-dimensional Float32 `embedding` column:
+
+| user_id | embedding | Squared L2 distance to `[0, 0, 0]` |
+|---|---|---|
+| 1 | `[0, 0, 0]` | 0 |
+| 2 | `[1, 0, 0]` | 1 |
+| 3 | `[2, 0, 0]` | 4 |
+
+```sql
+SELECT user_id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0, 0, 0]",
+    "metric" = "l2",
+    "top_k" = "10",
+    "use_index" = "false",
+    "distance_lower_bound" = "1",
+    "distance_upper_bound" = "4"
+)
+ORDER BY _distance;
+```
+
+```text
++---------+-----------+
+| user_id | _distance |
++---------+-----------+
+|       2 |         1 |
++---------+-----------+
+```
+
+Removing the lower bound also returns row 1. Using only an upper bound of `0` returns no rows. `filter` continues to restrict candidates before vector search, and `offset` skips results after applying the distance range. The output schema is unchanged: table columns plus `_distance` of type `FLOAT`. `EXPLAIN` displays `lanceDistanceRange=[1.0, 4.0)`.
+
+This remains a **Top-K query**, not an API for returning every row in a radius: results are capped by `top_k` and can contain fewer rows. Bounds apply to both indexed and Flat Search splits, including unindexed appended data. With ANN indexes, candidate selection and quantized distances can be approximate; a range does not guarantee exhaustive recall. Use `use_index=false` when exact distances are required, and measure recall when tuning `nprobes` or `refine_factor`. Multi-vector columns do not support distance bounds.
+
+All BEs executing a range query must support distance bounds. Older BEs reject these requests with an unsupported search schema version error instead of ignoring the bounds.
 
 ### Supported Vector Index Types
 
