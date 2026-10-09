@@ -978,7 +978,7 @@ Lance Cache 复用已读取的索引、元数据和数据文件内容，减少�
 
 ### 索引预热 {#index-prewarm}
 
-在延迟敏感的查询前，使用 `WARM UP SELECT ... SETTINGS ("read_index_only" = "true")` 将已有 Lance 索引加载到目标 BE 共享的索引内存缓存中。语句同步执行：只有所有选中索引在每个目标 BE 上都完成预热后才返回成功。该模式读取必要的元数据和索引内容，不扫描或物化表数据。
+在延迟敏感的查询前，使用 `WARM UP SELECT ... PROPERTIES ("read_index_only" = "true")` 将已有 Lance 索引加载到目标 BE 共享的索引内存缓存中。语句同步执行：只有所有选中索引在每个目标 BE 上都完成预热后才返回成功。该模式读取必要的元数据和索引内容，不扫描或物化表数据。
 
 #### 前置条件
 
@@ -992,7 +992,7 @@ Lance Cache 复用已读取的索引、元数据和数据文件内容，减少�
 ```sql
 WARM UP SELECT <column_list_or_star>
 FROM <lance_catalog_table>
-SETTINGS ("read_index_only" = "true");
+PROPERTIES ("read_index_only" = "true");
 ```
 
 | 选项 | 类型 | 是否必选 | 默认值 | 作用 |
@@ -1013,14 +1013,14 @@ SETTINGS ("read_index_only" = "true");
 
 ```sql
 WARM UP SELECT * FROM example_lance.default.items
-SETTINGS ("read_index_only" = "true");
+PROPERTIES ("read_index_only" = "true");
 ```
 
 每个逻辑索引返回一行。若只需要预热 `embedding` 列关联的索引：
 
 ```sql
 WARM UP SELECT embedding FROM example_lance.default.items
-SETTINGS ("read_index_only" = "true");
+PROPERTIES ("read_index_only" = "true");
 ```
 
 假设该列只有一个名为 `embedding_idx` 的索引，返回结果示意如下：

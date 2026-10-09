@@ -978,7 +978,7 @@ The data cache fills on demand without downloading the entire Dataset in advance
 
 ### Index Prewarm {#index-prewarm}
 
-Use `WARM UP SELECT ... SETTINGS ("read_index_only" = "true")` before latency-sensitive queries to load existing Lance indexes into the shared index memory cache on the target BEs. The statement runs synchronously: it returns success only after all selected indexes have completed prewarm on every target BE. It reads the required metadata and index contents without scanning or materializing table data.
+Use `WARM UP SELECT ... PROPERTIES ("read_index_only" = "true")` before latency-sensitive queries to load existing Lance indexes into the shared index memory cache on the target BEs. The statement runs synchronously: it returns success only after all selected indexes have completed prewarm on every target BE. It reads the required metadata and index contents without scanning or materializing table data.
 
 #### Prerequisites
 
@@ -992,7 +992,7 @@ Use `WARM UP SELECT ... SETTINGS ("read_index_only" = "true")` before latency-se
 ```sql
 WARM UP SELECT <column_list_or_star>
 FROM <lance_catalog_table>
-SETTINGS ("read_index_only" = "true");
+PROPERTIES ("read_index_only" = "true");
 ```
 
 | Option | Type | Required | Default | Effect |
@@ -1005,7 +1005,7 @@ The projection determines which **logical indexes** are prewarmed:
 - A column list selects each index associated with any of those columns. Repeated columns or multiple segments do not cause duplicate logical-index results. Column names are matched case-insensitively; unknown or ambiguous names are rejected.
 - A selection with no matching indexes, including `*` on a table without indexes, returns an error. An unindexed column does not add work when other selected columns have indexes.
 
-Index-only mode supports one Lance Catalog table and plain column names or `*`. It does not support file TVFs, expressions, column aliases, `WHERE`, `EXPLAIN`, joins, subqueries, grouping, sorting, or `LIMIT`. Use `*` alone, without `EXCEPT` or `REPLACE`. Unknown settings and values other than `true` or `false` are rejected. Index formats must be supported by the embedded Lance SDK's prewarm implementation; query support alone is not a guarantee that a format supports prewarm.
+Index-only mode supports one Lance Catalog table and plain column names or `*`. It does not support file TVFs, expressions, column aliases, `WHERE`, `EXPLAIN`, joins, subqueries, grouping, sorting, or `LIMIT`. Use `*` alone, without `EXCEPT` or `REPLACE`. Unknown properties and values other than `true` or `false` are rejected. Index formats must be supported by the embedded Lance SDK's prewarm implementation; query support alone is not a guarantee that a format supports prewarm.
 
 #### Examples and Results
 
@@ -1013,14 +1013,14 @@ Prewarm all indexes:
 
 ```sql
 WARM UP SELECT * FROM example_lance.default.items
-SETTINGS ("read_index_only" = "true");
+PROPERTIES ("read_index_only" = "true");
 ```
 
 This returns one row for each logical index. To prewarm only indexes associated with `embedding`:
 
 ```sql
 WARM UP SELECT embedding FROM example_lance.default.items
-SETTINGS ("read_index_only" = "true");
+PROPERTIES ("read_index_only" = "true");
 ```
 
 For a table with one index named `embedding_idx` on that column, an illustrative result is:
