@@ -95,7 +95,9 @@ When this option is enabled, the source table must declare a primary key, as in 
 
 ## Publishing Consumption Progress to Doris (Optional) {#offset-table}
 
-Consumption progress is stored in Flink Checkpoints by default. To also query the progress in Doris, create the following offset table:
+Consumption progress is stored in Flink Checkpoint state. The optional offset table is only for observing progress covered by completed Checkpoints. The Connector does not read this table to automatically resume consumption when a job starts or restarts.
+
+To query consumption progress in Doris, create the following offset table:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS ops;
@@ -118,7 +120,14 @@ PROPERTIES (
 'source.binlog.consumer-id' = 'student-sync'
 ```
 
-`source.binlog.consumer-id` identifies the consumer job and should remain unchanged when the same job restarts.
+`source.binlog.consumer-id` identifies the consumer job in the offset table. Keep it unchanged when the same job restarts to track its progress.
+
+If you cannot restore from a Flink Checkpoint or Savepoint, copy the `offset_timestamp` from the offset table into `source.scan.timestamp` and set `source.scan.mode` to `from-timestamp` to manually resume from that offset. For example:
+
+```sql
+'source.scan.mode' = 'from-timestamp',
+'source.scan.timestamp' = '2026-10-09 10:00:00'
+```
 
 ## Options {#options}
 
@@ -131,5 +140,5 @@ The following options control incremental reading. The other Source options are 
 | source.binlog.increment-type | detail       | N        | Binlog change type: `detail`, `min_delta`, or `append_only`.                                                                                           |
 | source.binlog.poll-interval | 10s           | N        | Interval for polling new Binlog data. The minimum value is 1 second.                                                                                    |
 | source.binlog.visible-wait-timeout | 5m            | N        | Maximum time for the Connector to retry the same read window after Doris returns a transaction visibility wait timeout error. Set to `0s` to disable retries; negative values are invalid. |
-| source.binlog.offset-table  | --            | N        | Doris table in `database.table` format used to publish offsets covered by completed Checkpoints. Configure with `source.binlog.consumer-id` and `jdbc-url`. |
+| source.binlog.offset-table  | --            | N        | Doris table in `database.table` format used to publish offsets covered by completed Checkpoints for observation only, not for automatic recovery. Configure with `source.binlog.consumer-id` and `jdbc-url`. |
 | source.binlog.consumer-id   | --            | N        | Stable consumer identifier written to `source.binlog.offset-table`.                                                                                   |
