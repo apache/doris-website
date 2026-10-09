@@ -208,6 +208,8 @@ Data Cache provides a cache "warmup" feature that allows preloading external dat
 
 > This feature is supported since version 4.0.2.
 
+For Lance indexes, use `WARM UP SELECT ... SETTINGS ("read_index_only" = "true")`; see [Lance Index Prewarm](catalogs/lance-catalog.mdx#index-prewarm) for availability, permissions, index selection, and the per-index result schema. This mode loads the separate Lance index memory cache without a table-data scan. Omitting the setting or specifying `false` retains the data warmup behavior described below. The 4.0.2 version note above applies to ordinary data warmup, not the Lance index-only extension.
+
 ### Syntax
 
 ```sql

@@ -976,6 +976,82 @@ Lance Cache 复用已读取的索引、元数据和数据文件内容，减少�
 
 数据缓存按需填充，不会预先下载整个 Dataset。未命中时读取源存储，并将数据交给后台写入磁盘缓存；首次读取仍会产生源存储 I/O 和缓存填充开销。缓存命中可以减少后续读取的源存储访问，但不消除解码、过滤和排序开销。
 
+### 索引预热 {#index-prewarm}
+
+在延迟敏感的查询前，使用 `WARM UP SELECT ... SETTINGS ("read_index_only" = "true")` 将已有 Lance 索引加载到目标 BE 共享的索引内存缓存中。语句同步执行：只有所有选中索引在每个目标 BE 上都完成预热后才返回成功。该模式读取必要的元数据和索引内容，不扫描或物化表数据。
+
+#### 前置条件
+
+- 按照[配置 Catalog](#配置-catalog)配置 Lance Catalog，并注册已经通过 Lance 工具建立索引的 Dataset。以下示例假设 `example_lance.default.items` 的 `embedding` 列已经建立索引。
+- FE 和所有目标 BE 必须使用支持仅预热索引的 Doris 构建。这是 Lance 的实验性功能；支持普通数据预热不代表支持该模式。
+- 执行用户需要全局 `ADMIN_PRIV` 和目标表的 `SELECT_PRIV`。存算分离模式下，还需要当前计算组的 `USAGE_PRIV`。
+- 目标 BE 必须能够使用 Catalog 的存储访问配置读取 Dataset 及其索引。通过 `lance_index_cache_size_bytes` 规划索引内存容量，参见 [BE 配置](#be-配置)。
+
+#### 语法和选项
+
+```sql
+WARM UP SELECT <column_list_or_star>
+FROM <lance_catalog_table>
+SETTINGS ("read_index_only" = "true");
+```
+
+| 选项 | 类型 | 是否必选 | 默认值 | 作用 |
+|---|---|---|---|---|
+| `read_index_only` | Boolean（`true` 或 `false`，可加引号） | 否 | `false` | `true` 预热投影列所选择的索引；省略或设为 `false` 时保留原有数据预热流程及扫描/缓存统计。该选项仅作用于当前语句，不是 Session 变量或 Catalog 属性。 |
+
+投影决定预热哪些**逻辑索引**：
+
+- `*` 选择已解析快照中的全部逻辑索引，包含每个索引的全部有效 Index Segment。
+- 列列表选择与任意指定列关联的索引。重复列或同一索引的多个 Segment 不会产生重复的逻辑索引结果。列名不区分大小写，未知或存在歧义的列名会被拒绝。
+- 没有匹配索引时返回错误，包括对没有索引的表使用 `*`。如果其他选中列存在索引，列表中的无索引列不会增加预热工作。
+
+仅预热索引模式支持单个 Lance Catalog 表，以及普通列名或 `*`。不支持文件 TVF、表达式、列别名、`WHERE`、`EXPLAIN`、JOIN、子查询、分组、排序或 `LIMIT`。`*` 必须单独使用，不能带 `EXCEPT` 或 `REPLACE`。未知选项以及 `true`、`false` 以外的取值会被拒绝。索引格式必须受内置 Lance SDK 的预热实现支持；支持查询某种格式并不保证支持预热该格式。
+
+#### 示例与返回结果
+
+预热全部索引：
+
+```sql
+WARM UP SELECT * FROM example_lance.default.items
+SETTINGS ("read_index_only" = "true");
+```
+
+每个逻辑索引返回一行。若只需要预热 `embedding` 列关联的索引：
+
+```sql
+WARM UP SELECT embedding FROM example_lance.default.items
+SETTINGS ("read_index_only" = "true");
+```
+
+假设该列只有一个名为 `embedding_idx` 的索引，返回结果示意如下：
+
+```text
+Table                            | Index         | DatasetVersion | BackendCount | ElapsedMs
+`example_lance`.`default`.`items` | embedding_idx | 7              | 3            | 250
+```
+
+实际索引名、版本、BE 数量和耗时取决于 Dataset 与集群。如果该列有多个索引，则每个索引各返回一行。
+
+| 返回列 | 含义 |
+|---|---|
+| `Table` | 完整限定的表名。 |
+| `Index` | 逻辑索引名。 |
+| `DatasetVersion` | 本次语句固定的 Dataset 快照版本，所有返回行使用同一版本。 |
+| `BackendCount` | 该索引完成预热的可用目标 BE 数量，所有返回行使用同一目标集合。 |
+| `ElapsedMs` | 该索引在后端预热阶段的耗时，单位毫秒；不包含初始元数据解析时间，也不表示缓存命中数或字节数。 |
+
+语句使用当前 Session 的计算组，并预热该执行上下文中全部符合条件的 BE。预热其他计算组前，应先在 Session 中切换计算组。语句不会预热无关计算组，也不会包含目标集合确定后新增的 BE。全部索引使用同一个 Dataset 快照和语句超时期限；并发更新 Dataset 不会改变正在预热的快照。
+
+#### 错误处理与缓存生命周期
+
+任意目标 BE 或选中索引失败时，语句返回错误，不返回部分成功行。重试前应检查表和计算组权限、可用 BE、存储访问及索引格式兼容性。不支持预热的旧 BE 不会被静默计为成功。`query_timeout` 和查询/连接取消会终止客户端等待，但不保证立即中断 SDK I/O。失败或取消不会回滚已加载的缓存条目，可以重新执行语句。
+
+仅预热索引模式使用 Lance 索引缓存，独立于通用 File Cache 的 Session 开关和单独的 Lance 磁盘数据缓存，不需要开启数据文件缓存。省略 `read_index_only` 或设为 `false` 时，保留原有[数据预热](../data-cache.md#缓存预热)行为及其缓存前置条件。
+
+已加载的索引条目可由同一 BE 上的后续查询共享，SQL Session 结束不会清除这些条目。条目仍然可以被淘汰：预热成功不代表索引被固定在缓存中，也不保证全部索引持续驻留。BE 重启或替换会丢失内存缓存；新增 BE、新建/替换的索引 Segment 或不同计算组可能需要再次预热。
+
+预热会消耗每个目标 BE 的存储带宽和内存，并可能淘汰其他热索引。只查询部分索引时优先指定所需列，避免使用 `*`；为并发查询预留内存，将大规模预热安排在低峰期。预热不会消除向量距离/Top-K 计算、输出列回读或无索引数据读取。按照[查看缓存效果](#查看缓存效果)对比后续查询 Profile 与源存储 I/O；数据缓存字节计数不能用于衡量索引预热流量。
+
 ### BE 配置
 
 以下参数均为可选项，在每个 BE 的 `be.conf` 中配置，修改后需要重启对应 BE。容量均为单个 BE 的容量，单位为字节。

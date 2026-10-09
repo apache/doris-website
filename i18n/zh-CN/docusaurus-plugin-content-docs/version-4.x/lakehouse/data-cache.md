@@ -208,6 +208,8 @@ Data Cache 提供缓存“预热（Warmup）”功能，允许将外部数据提
 
 > 该功能自 4.0.2 版本支持。
 
+预热 Lance 索引时，使用 `WARM UP SELECT ... SETTINGS ("read_index_only" = "true")`；支持条件、权限、索引选择规则和每个索引的返回列，参见 [Lance 索引预热](catalogs/lance-catalog.mdx#index-prewarm)。该模式加载独立的 Lance 索引内存缓存，不扫描表数据。省略该设置或设为 `false` 时，保留下文的数据预热行为。上述 4.0.2 版本说明针对普通数据预热，不代表该版本支持 Lance 仅预热索引扩展。
+
 ### 语法
 
 ```sql
