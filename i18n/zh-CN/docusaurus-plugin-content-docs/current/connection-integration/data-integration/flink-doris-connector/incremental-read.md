@@ -95,7 +95,9 @@ SET 'table.exec.source.cdc-events-duplicate' = 'true';
 
 ## 将消费进度写入 Doris（可选） {#offset-table}
 
-消费进度默认保存在 Flink Checkpoint 中。如果还需要在 Doris 中查询消费进度，可以创建以下 Offset 表：
+消费进度保存在 Flink Checkpoint 状态中。可选的 Offset 表仅用于观测已完成 Checkpoint 所覆盖的消费进度。Connector 不会在任务启动或重启时读取该表来自动恢复消费位点。
+
+如果需要在 Doris 中查询消费进度，可以创建以下 Offset 表：
 
 ```sql
 CREATE DATABASE IF NOT EXISTS ops;
@@ -118,7 +120,14 @@ PROPERTIES (
 'source.binlog.consumer-id' = 'student-sync'
 ```
 
-`source.binlog.consumer-id` 用于标识当前消费任务，同一任务重启时应保持不变。
+`source.binlog.consumer-id` 用于在 Offset 表中标识当前消费任务，同一任务重启时应保持不变，便于观测消费进度。
+
+如果无法从 Flink Checkpoint 或 Savepoint 恢复，可以取出 Offset 表中的 `offset_timestamp`，填入 `source.scan.timestamp`，并将 `source.scan.mode` 设置为 `from-timestamp`，手动从该位点恢复消费。例如：
+
+```sql
+'source.scan.mode' = 'from-timestamp',
+'source.scan.timestamp' = '2026-10-09 10:00:00'
+```
 
 ## 配置项 {#options}
 
@@ -131,5 +140,5 @@ PROPERTIES (
 | source.binlog.increment-type | detail       | N        | Binlog 变更类型，支持 `detail`、`min_delta` 和 `append_only`                                                                                           |
 | source.binlog.poll-interval | 10s           | N        | 轮询新 Binlog 数据的时间间隔，最小值为 1 秒                                                                                                           |
 | source.binlog.visible-wait-timeout | 5m            | N        | Doris 返回事务可见性等待超时错误后，Connector 重试同一读取区间的最长时间。设置为 `0s` 可关闭重试；不能为负值。 |
-| source.binlog.offset-table  | --            | N        | 用于发布成功 Checkpoint 所覆盖 offset 的 Doris 表，格式为 `database.table`。需要同时配置 `source.binlog.consumer-id` 和 `jdbc-url`                       |
+| source.binlog.offset-table  | --            | N        | 用于发布已完成 Checkpoint 所覆盖 offset 的 Doris 表，仅供观测，不用于自动恢复。格式为 `database.table`，需要同时配置 `source.binlog.consumer-id` 和 `jdbc-url`。 |
 | source.binlog.consumer-id   | --            | N        | 写入 `source.binlog.offset-table` 的稳定消费者标识                                                                                                    |
