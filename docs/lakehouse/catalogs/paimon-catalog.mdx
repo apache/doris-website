@@ -2,16 +2,14 @@
 {
     "title": "Paimon Catalog",
     "language": "en",
-    "description": "Paimon Catalog in Apache Doris connects to multiple Paimon metadata services to query Paimon tables across HDFS and cloud object storage, with detailed configuration, properties and query operations, and planned support for writes."
+    "description": "Use Apache Doris Paimon Catalog to query and write Paimon tables on HDFS and cloud object storage through multiple metadata services."
 }
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Doris currently supports accessing Paimon table metadata through various metadata services and querying Paimon data.
-
-At present, only read operations on Paimon tables are supported. Write operations to Paimon tables will be supported in the future.
+Doris supports accessing Paimon table metadata through various metadata services, and supports reading and writing Paimon data.
 
 [Quick start with Apache Doris and Apache Paimon](../best-practices/doris-paimon.md).
 
@@ -21,7 +19,7 @@ At present, only read operations on Paimon tables are supported. Write operation
 | ------------ | ------------------------------------------------------------ |
 | Query Acceleration | Use Doris's distributed computing engine to directly access Paimon data for query acceleration. |
 | Data Integration   | Read Paimon data and write it into Doris internal tables, or perform ZeroETL operations using the Doris computing engine. |
-| Data Write-back    | Not supported yet.                                      |
+| Data Write-back    | Use Doris SQL to create and modify Paimon tables, append or overwrite data, and perform row-level changes on primary-key tables. |
 
 ## Configuring Catalog
 
@@ -164,7 +162,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   [Time Travel](#time-travel-with-options); they cannot be Catalog defaults. Doris also excludes
   `scan.max-splits-per-task`, which belongs to Paimon's Flink source enumerator, `scan.fallback-branch`, and streaming,
   layout, write, and compaction options. Configure Bucket, Primary Key, Partition, Merge Engine, and other physical
-  table behavior in Paimon itself.
+  behavior as properties of the Paimon table, including through Doris `CREATE TABLE ... PROPERTIES`.
 
   :::info Statement consistency
   Within one statement, Doris keeps schema binding, partition loading, row-count/statistics collection, system-table
@@ -298,7 +296,7 @@ See the documentation for this system table: [catalog_meta_cache_statistics](../
 
 ### Supported Paimon Versions
 
-The currently dependent Paimon version is 1.3.1.
+The currently dependent Paimon version is 1.4.2.
 
 ### Supported Paimon Formats
 
@@ -966,6 +964,179 @@ This is an experimental feature, supported since version 4.1.0.
         </TabItem>
     </Tabs>
 </details>
+
+## Write Operations
+
+Doris can create and modify Paimon tables and write data to them. Each successful write is committed as a Paimon
+snapshot. If a statement fails, Doris does not publish a partial snapshot.
+
+### Before You Begin
+
+Before writing data, check the following items:
+
+* All FE and BE nodes must run a Doris build that includes Paimon write support. Do not write to Paimon during a
+  rolling upgrade in which older BE nodes are still running.
+* The Catalog credentials must have permission to update the metastore and to create, write, rename, and delete files
+  in the warehouse. The exact permissions depend on the metastore and storage system.
+* Writes apply only to regular Paimon data tables. Paimon system tables and table references that select a branch,
+  tag, snapshot, or timestamp are read-only.
+
+### Supported SQL
+
+| Operation | Support and notes |
+| --- | --- |
+| Database DDL | `CREATE DATABASE` and `DROP DATABASE` |
+| Table DDL | `CREATE TABLE`, `CREATE TABLE AS SELECT`, and `DROP TABLE` |
+| Schema changes | Add, drop, rename, reorder, and modify columns |
+| Append data | `INSERT INTO ... VALUES` and `INSERT INTO ... SELECT` |
+| Overwrite data | Full-table, static-partition, and dynamic-partition `INSERT OVERWRITE` |
+| Row-level changes | `DELETE`, `UPDATE`, and `MERGE INTO` on primary-key tables, subject to the restrictions below |
+
+### Quick Start
+
+The following example creates a primary-key table and writes data to it. Paimon table options are specified in
+`PROPERTIES`; do not add a Doris `DISTRIBUTE BY` clause.
+
+```sql
+SWITCH paimon_ctl;
+CREATE DATABASE IF NOT EXISTS sales;
+USE sales;
+
+CREATE TABLE orders (
+    order_id BIGINT NOT NULL,
+    customer STRING NULL,
+    amount DECIMAL(12, 2) NULL,
+    status STRING NULL
+) ENGINE=paimon
+PROPERTIES (
+    'primary-key' = 'order_id',
+    'bucket' = '2',
+    'bucket-key' = 'order_id'
+);
+
+INSERT INTO orders VALUES
+    (1, 'Alice', 99.90, 'NEW'),
+    (2, 'Bob', 35.00, 'NEW');
+
+UPDATE orders
+SET status = 'PAID'
+WHERE order_id = 1;
+
+DELETE FROM orders
+WHERE order_id = 2;
+
+SELECT * FROM orders ORDER BY order_id;
+```
+
+Result:
+
+```text
++----------+----------+--------+--------+
+| order_id | customer | amount | status |
++----------+----------+--------+--------+
+|        1 | Alice    |  99.90 | PAID   |
++----------+----------+--------+--------+
+```
+
+You can evolve the table schema through Doris and then continue writing with the new schema:
+
+```sql
+ALTER TABLE orders ADD COLUMN note STRING NULL;
+ALTER TABLE orders RENAME COLUMN note order_note;
+```
+
+### Insert and Overwrite Data
+
+`INSERT INTO` appends rows to an append-only table or merges rows according to the primary-key table's Paimon
+options. The source can be `VALUES`, a Doris internal table, or another external table.
+
+```sql
+INSERT INTO paimon_ctl.sales.orders
+SELECT order_id, customer, amount, status
+FROM internal.sales.new_orders;
+```
+
+For an unpartitioned table, `INSERT OVERWRITE` replaces all existing rows. An empty input therefore produces an empty
+table.
+
+```sql
+INSERT OVERWRITE TABLE paimon_ctl.sales.orders
+SELECT order_id, customer, amount, status
+FROM internal.sales.orders_snapshot;
+```
+
+For a partitioned table, use one of these forms:
+
+```sql
+-- Replace only the specified partition. The SELECT list omits the static partition column.
+INSERT OVERWRITE TABLE paimon_ctl.sales.daily_orders
+PARTITION (order_date = '2026-10-08')
+SELECT order_id, customer, amount, status
+FROM internal.sales.daily_orders_stage;
+
+-- Dynamic overwrite replaces the partitions present in the input and keeps other partitions.
+INSERT OVERWRITE TABLE paimon_ctl.sales.daily_orders
+SELECT order_id, customer, amount, status, order_date
+FROM internal.sales.daily_orders_stage;
+```
+
+A primary-key table accepts an insert that omits non-key columns only when its `merge-engine` is `partial-update`.
+For an append-only table, omitted columns use their default value, or `NULL` when allowed.
+
+### Delete, Update, and Merge Data
+
+Row-level changes require a Paimon primary-key table. For a table using the default `deduplicate` merge engine, Doris
+supports the following operations:
+
+```sql
+DELETE FROM paimon_ctl.sales.orders
+WHERE order_id = 10;
+
+UPDATE paimon_ctl.sales.orders
+SET amount = amount * 0.9,
+    status = 'DISCOUNTED'
+WHERE order_id = 20;
+
+MERGE INTO paimon_ctl.sales.orders t
+USING internal.sales.order_changes s
+ON t.order_id = s.order_id
+WHEN MATCHED AND s.action = 'DELETE' THEN DELETE
+WHEN MATCHED THEN UPDATE SET
+    customer = s.customer,
+    amount = s.amount,
+    status = s.status
+WHEN NOT MATCHED THEN INSERT (order_id, customer, amount, status)
+    VALUES (s.order_id, s.customer, s.amount, s.status);
+```
+
+The following restrictions come from the way Paimon applies row changes:
+
+* `UPDATE` cannot modify a primary-key column or a column configured by `sequence.field`.
+* `UPDATE`, including an update action in `MERGE`, supports only the `deduplicate` merge engine and does not support
+  `changelog-producer=input`.
+* Updating a partition column requires a dynamic-bucket table (`bucket=-1`) with `ignore-delete=false`.
+* `DELETE`, including a delete action in `MERGE`, requires `ignore-delete=false`. The default `deduplicate` merge
+  engine supports it directly. A `partial-update` table must set `partial-update.remove-record-on-delete=true`, and an
+  `aggregation` table must set `aggregation.remove-record-on-delete=true`.
+* Tables configured with `rowkind.field` do not support these row-level statements. A dynamic-bucket table configured
+  with `cross-partition-upsert.index-ttl` also does not support them.
+* A `MERGE` statement follows the corresponding `UPDATE` and `DELETE` restrictions for the actions it contains.
+
+For predictable results, keep the source side of `MERGE` unique on the match key. Doris rejects a statement when
+multiple source rows match the same target row.
+
+### Operational Notes
+
+* Configure primary keys, partitions, buckets, merge engines, file formats, compaction, and other physical behavior as
+  Paimon table properties. Doris validates these options through the Paimon SDK.
+* Doris does not currently provide a general `ALTER TABLE ... SET TBLPROPERTIES` operation for Paimon tables. To
+  change table properties after creation, use another Paimon engine, and then run `REFRESH TABLE` or `REFRESH CATALOG`
+  in Doris.
+* Keep enough local disk space on each BE for write spill and enough warehouse permissions for temporary files and
+  commit operations. The BE setting `paimon_jni_writer_memory_pool_limit_bytes` limits the memory pool used by each
+  Paimon JNI writer; its default is 512 MB.
+* After a successful write or schema change, new Doris statements load the committed Paimon snapshot. Existing
+  statements continue to use the snapshot selected when they started.
 
 ## Query Operations
 
