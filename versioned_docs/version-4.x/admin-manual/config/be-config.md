@@ -1400,7 +1400,7 @@ Default: ""
 
 #### `enable_file_cache`
 
-Default: true for cloud mode, false for non-cloud mode.
+Default: true (enabled by default since Doris 4.2; always on in cloud mode).
 * Description: Whether to use file cache.
 
 #### `file_cache_path`
