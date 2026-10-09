@@ -355,7 +355,7 @@ INSERT INTO refunds VALUES
 | `WHERE` 过滤 | 按条件过滤基表的行 |
 | `FROM` 子查询 | `FROM` 子句中带别名的子查询，可以多层嵌套，内部不能包含聚合 |
 | 常量行 | 不带 `FROM` 的 `SELECT`，结果固定为一行常量，例如 `SELECT -1, 'unknown'`。可以作为 `UNION ALL` 的分支或 Join 的一侧，也可以单独作为定义 |
-| `GROUP BY` 聚合 | 聚合必须位于查询最外层，之上只能有投影，且不能在聚合结果外再套表达式 |
+| `GROUP BY` 聚合 | 聚合必须位于查询最外层，之上只能有投影；支持对分组列和聚合结果使用确定性表达式 |
 | `GROUPING SETS`、`ROLLUP`、`CUBE` | 可以配合 `GROUPING()`、`GROUPING_ID()` 使用，限制与 `GROUP BY` 相同 |
 | `SELECT DISTINCT` | 按不带聚合函数的 `GROUP BY` 处理，限制与 `GROUP BY` 相同 |
 | `INNER JOIN`、`CROSS JOIN` | 支持多表连接和自连接 |
@@ -521,7 +521,7 @@ GROUP BY c.city;
 +----------+----------+--------------+
 ```
 
-聚合之上的投影可以给列改名、调整列顺序，或者对分组列做计算。`HAVING`、写在子查询或 Join 输入中的聚合，以及在聚合结果外再套表达式的写法都不支持，见 [不支持的查询形式](#不支持的查询形式)。
+聚合之上的投影可以给列改名、调整列顺序，或者用确定性表达式对分组列和聚合结果做计算。例如，`SUM(amount) * 100`、`MAX(amount) + 1` 和 `SUM(amount) / COUNT(*)` 均支持增量刷新，但仍需遵守所用聚合函数的限制。`HAVING` 和写在子查询或 Join 输入中的聚合不支持，见 [不支持的查询形式](#不支持的查询形式)。
 
 </TabItem>
 <TabItem value="grouping-sets" label="GROUPING SETS / ROLLUP / CUBE">
@@ -1074,8 +1074,6 @@ GROUP BY channel;
 - `LATERAL VIEW`。
 - 使用普通异步物化视图作为基表。链式维护要求下层物化视图本身也是 IVM。
 - 上文表格之外的其他运算。
-
-另外，在聚合结果外再套表达式的写法虽然可以创建，但每次增量刷新都会失败，例如 `SUM(amount) * 100`、`MAX(amount) + 1` 和 `SUM(amount) / COUNT(*)`。严格 `INCREMENTAL` 刷新失败时，`IvmFallbackReason` 为 `PLAN_REWRITE_FAILED`；`INCREMENTAL FALLBACK` 每次都会回退到 `COMPLETE`。可以直接输出聚合结果，在查询物化视图时再计算；或者把表达式写进聚合函数的参数，例如 `SUM(amount * 100)`。
 
 <!-- 知识类型: 运行机制 / 故障处理 -->
 <!-- 适用场景: 刷新策略配置 / 自动刷新间隔 / IVM 回退排查 / 基线恢复 -->

@@ -355,7 +355,7 @@ Every example follows the same steps: run its `CREATE MATERIALIZED VIEW`, then r
 | `WHERE` filters | Filter the rows of the base tables by a condition |
 | `FROM` subqueries | Aliased subqueries in the `FROM` clause; they can be nested and must not contain aggregations |
 | Constant rows | A `SELECT` without `FROM` that always returns one row of constants, for example `SELECT -1, 'unknown'`. It can be a `UNION ALL` branch, one side of a join, or the whole definition |
-| `GROUP BY` aggregation | The aggregation must be the outermost operation of the query with only projections above it, and an aggregate result must not be wrapped in another expression |
+| `GROUP BY` aggregation | The aggregation must be the outermost operation of the query with only projections above it; deterministic expressions on group-by columns and aggregate results are supported |
 | `GROUPING SETS`, `ROLLUP`, `CUBE` | Can be used with `GROUPING()` and `GROUPING_ID()`; the same restrictions as `GROUP BY` apply |
 | `SELECT DISTINCT` | Handled as a `GROUP BY` without aggregate functions; the same restrictions as `GROUP BY` apply |
 | `INNER JOIN`, `CROSS JOIN` | Multi-table joins and self-joins are supported |
@@ -521,7 +521,7 @@ Result:
 +----------+----------+--------------+
 ```
 
-The projection above the aggregation can rename columns, reorder them, or compute on the group-by columns. `HAVING`, aggregations inside a subquery or a join input, and expressions wrapped around an aggregate result are not supported. See [Unsupported query forms](#unsupported-query-forms).
+The projection above the aggregation can rename columns, reorder them, or use deterministic expressions to compute on group-by columns and aggregate results. For example, `SUM(amount) * 100`, `MAX(amount) + 1` and `SUM(amount) / COUNT(*)` support incremental refresh, subject to the restrictions of the aggregate functions used. `HAVING` and aggregations inside a subquery or a join input are not supported. See [Unsupported query forms](#unsupported-query-forms).
 
 </TabItem>
 <TabItem value="grouping-sets" label="GROUPING SETS / ROLLUP / CUBE">
@@ -1074,8 +1074,6 @@ The following forms are not supported, and creation fails with an explicit `REFR
 - `LATERAL VIEW`.
 - Using a regular asynchronous materialized view as a base table. Chained maintenance requires the lower-level materialized view to be an IVM as well.
 - Any other operation not listed in the table above.
-
-In addition, an expression wrapped around an aggregate result can be created, but every incremental refresh of it fails, for example `SUM(amount) * 100`, `MAX(amount) + 1` and `SUM(amount) / COUNT(*)`. A strict `INCREMENTAL` refresh fails with `IvmFallbackReason` `PLAN_REWRITE_FAILED`, and `INCREMENTAL FALLBACK` falls back to `COMPLETE` every time. Output the aggregate result directly and compute on it when querying the materialized view, or move the expression into the argument of the aggregate function, for example `SUM(amount * 100)`.
 
 <!-- Knowledge type: Runtime behavior / Failure handling -->
 <!-- Use cases: Configuring the refresh strategy / Automatic refresh interval / Diagnosing IVM fallback / Rebuilding the baseline -->
