@@ -1,11 +1,17 @@
 name: Cron Deploy
 
 on:
+    push:
+        branches:
+            - master
     schedule:
-        - cron: '0 */2 * * *' # Runs every 2 hours.
+        # Refresh dynamic data, such as the GitHub star count, and recover from
+        # a missed push deployment without rebuilding an unchanged site 12
+        # times per day.
+        - cron: '0 1 * * *' # Daily at 01:00 UTC.
 permissions: write-all
 # One deploy at a time. A run whose OSS upload crawls (the 2026-09-21 12:05
-# run spent two hours on it) must not overlap the next cron trigger: both
+# run spent two hours on it) must not overlap a newer push or cron trigger: both
 # would push the same objects through the same slow pipe and race for the
 # bucket's .actioninfo manifest. Queue the newer run instead of cancelling
 # the running one - killing it mid-upload discards the manifest it writes at
