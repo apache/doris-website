@@ -793,9 +793,13 @@ ORDER BY _distance;
 
 Removing the lower bound also returns row 1. Using only an upper bound of `0` returns no rows. `filter` continues to restrict candidates before vector search, and `offset` skips results after applying the distance range. The output schema is unchanged: table columns plus `_distance` of type `FLOAT`. `EXPLAIN` displays `lanceDistanceRange=[1.0, 4.0)`.
 
-This remains a **Top-K query**, not an API for returning every row in a radius: results are capped by `top_k` and can contain fewer rows. Bounds apply to both indexed and Flat Search splits, including unindexed appended data. With ANN indexes, candidate selection and quantized distances can be approximate; a range does not guarantee exhaustive recall. Use `use_index=false` when exact distances are required, and measure recall when tuning `nprobes` or `refine_factor`. Multi-vector columns do not support distance bounds.
+Distance bounds support `?` parameters in prepared statements. Each execution validates and uses its own bound values; NULL bounds are rejected. Omit the property to leave that side unbounded.
 
-All BEs executing a range query must support distance bounds. Older BEs reject these requests with an unsupported search schema version error instead of ignoring the bounds.
+This remains a **Top-K query**, not an API for returning every row in a radius: results are capped by `top_k` and can contain fewer rows.
+
+For range queries, Doris uses index search only when both bounds are provided and the selected index is explicitly identified as IVF_FLAT. Single-sided ranges, quantized indexes, and indexes with unknown subtypes fall back to exact Flat Search, even with `use_index=true`. `EXPLAIN` reports `lanceVectorIndexStatus=DISTANCE_RANGE_FALLBACK` when range safety prevents index selection. This fallback can increase scan cost.
+
+Indexed IVF_FLAT queries still depend on the partitions selected by `nprobes`; use `use_index=false` for exhaustive candidate evaluation. Unindexed appended data is searched with Flat Search. Multi-vector columns do not support distance bounds.
 
 ### Supported Vector Index Types
 

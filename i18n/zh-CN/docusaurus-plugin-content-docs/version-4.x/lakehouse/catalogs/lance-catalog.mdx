@@ -793,9 +793,13 @@ ORDER BY _distance;
 
 去掉下界后还会返回第 1 行。仅设置上界为 `0` 则返回空结果。`filter` 仍在向量检索前限制候选行，`offset` 在应用距离范围后跳过结果。输出 Schema 不变，包含表中的列和 `FLOAT` 类型的 `_distance`。`EXPLAIN` 会显示 `lanceDistanceRange=[1.0, 4.0)`。
 
-该功能仍是 **Top-K 查询**，并非返回半径内所有行的接口：返回行数最多为 `top_k`，也可能不足。边界同时作用于索引和 Flat Search 分片，包括索引未覆盖的追加数据。使用 ANN 索引时，候选选择和量化距离可能是近似的，指定范围并不保证完整召回。需要精确距离时使用 `use_index=false`；调整 `nprobes` 或 `refine_factor` 时应评估召回率。多向量列不支持距离边界。
+距离边界支持预编译语句中的 `?` 参数，每次执行都会校验并使用当次绑定值，不接受 NULL。若不限制某一侧距离，请省略对应属性。
 
-执行范围查询的所有 BE 均须支持距离边界。旧 BE 会以不支持检索协议版本的错误拒绝请求，避免静默忽略边界。
+该功能仍是 **Top-K 查询**，并非返回半径内所有行的接口：返回行数最多为 `top_k`，也可能不足。
+
+对于范围查询，只有同时提供上下界且选中索引明确为 IVF_FLAT 时，Doris 才使用索引检索。单边范围、量化索引以及子类型不明确的索引均回退到精确 Flat Search，即使设置了 `use_index=true`。因距离范围的正确性要求而未选择索引时，`EXPLAIN` 显示 `lanceVectorIndexStatus=DISTANCE_RANGE_FALLBACK`。回退可能增加扫描开销。
+
+IVF_FLAT 索引查询的候选仍取决于 `nprobes` 选择的分区；需要遍历全部候选时使用 `use_index=false`。索引未覆盖的追加数据使用 Flat Search。多向量列不支持距离边界。
 
 ### 支持的向量索引类型
 
