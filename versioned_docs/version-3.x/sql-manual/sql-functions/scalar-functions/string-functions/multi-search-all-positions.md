@@ -16,6 +16,22 @@ Returns an `ARRAY` where the `i`-th element is the position of the `i`-th elemen
 
 ### example
 
+NULL inputs:
+
+```sql
+SELECT multi_search_all_positions(NULL, ['a', 'b']) AS null_haystack,
+       multi_search_all_positions('a', NULL) AS null_needles,
+       multi_search_all_positions(NULL, NULL) AS both_null;
+```
+```text
++---------------+--------------+-----------+
+| null_haystack | null_needles | both_null |
++---------------+--------------+-----------+
+| [0, 0]        | []           | []        |
++---------------+--------------+-----------+
+```
+
+
 ```
 mysql> select multi_search_all_positions('Hello, World!', ['hello', '!', 'world']);
 +----------------------------------------------------------------------+

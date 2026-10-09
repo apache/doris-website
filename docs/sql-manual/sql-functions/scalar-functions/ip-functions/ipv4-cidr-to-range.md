@@ -15,11 +15,15 @@ IPV4_CIDR_TO_RANGE(<ipv4_address>, <cidr_prefix>)
 ```
 
 ### Parameters
-- `<ipv4_address>`: IPv4 type address
-- `<cidr_prefix>`: CIDR prefix length (SMALLINT type, range 0-32)
+| Parameter | Description |
+|-----------|-------------|
+| `<ipv4_address>` | An IPv4 address. Use `TO_IPV4` to convert an address string to IPv4; `INET_ATON` returns BIGINT and cannot be used for this parameter. |
+| `<cidr_prefix>` | CIDR prefix length, SMALLINT type, range 0-32. |
 
 ### Return Value
 Return Type: STRUCT<min: IPv4, max: IPv4>
+
+Returns NULL if either parameter is NULL.
 
 Return Value Meaning:
 - Returns a struct containing two fields:
@@ -35,7 +39,9 @@ Return Value Meaning:
 
 Calculate address range for /24 network segment.
 ```sql
-SELECT ipv4_cidr_to_range(INET_ATON('192.168.1.1'), 24) as range;
+SELECT ipv4_cidr_to_range(TO_IPV4('192.168.1.1'), 24) as range;
+```
+```text
 +------------------------------------------------+
 | range                                          |
 +------------------------------------------------+
@@ -45,19 +51,23 @@ SELECT ipv4_cidr_to_range(INET_ATON('192.168.1.1'), 24) as range;
 
 Calculate address range for /16 network segment.
 ```sql
-SELECT ipv4_cidr_to_range(INET_ATON('10.0.0.1'), 16) as range;
+SELECT ipv4_cidr_to_range(TO_IPV4('10.0.0.1'), 16) as range;
+```
+```text
 +----------------------------------------------+
 | range                                        |
 +----------------------------------------------+
-| {"min": "10.0.0.0", "max": "10.255.255.255"} |
+| {"min": "10.0.0.0", "max": "10.0.255.255"} |
 +----------------------------------------------+
 ```
 
 Access specific fields in the struct.
 ```sql
 SELECT 
-  ipv4_cidr_to_range(INET_ATON('172.16.1.1'), 24).min as min_ip,
-  ipv4_cidr_to_range(INET_ATON('172.16.1.1'), 24).max as max_ip;
+  ipv4_cidr_to_range(TO_IPV4('172.16.1.1'), 24).min as min_ip,
+  ipv4_cidr_to_range(TO_IPV4('172.16.1.1'), 24).max as max_ip;
+```
+```text
 +------------+--------------+
 | min_ip     | max_ip       |
 +------------+--------------+
@@ -67,8 +77,24 @@ SELECT
 
 CIDR prefix out of range throws an exception.
 ```sql
-SELECT ipv4_cidr_to_range(INET_ATON('192.168.1.1'), 33);
+SELECT ipv4_cidr_to_range(TO_IPV4('192.168.1.1'), 33);
+```
+```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (...)[INVALID_ARGUMENT]Illegal cidr value '33'
+```
+
+NULL inputs:
+
+```sql
+SELECT ipv4_cidr_to_range(NULL, 24) AS null_address,
+       ipv4_cidr_to_range(TO_IPV4('192.168.1.1'), NULL) AS null_prefix;
+```
+```text
++--------------+-------------+
+| null_address | null_prefix |
++--------------+-------------+
+| NULL         | NULL        |
++--------------+-------------+
 ```
 
 ### Keywords

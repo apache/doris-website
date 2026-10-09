@@ -28,9 +28,21 @@ SPLIT_BY_STRING ( <str>, <separator> )
 Returns a string array split according to the specified string. Special cases:
 
 - If any of the parameters is NULL, NULL is returned.
+- If `<str>` is an empty string, returns an empty array `[]`.
 - When `<separator>` is an empty string, `<str>` will be split to byte sequence.
 
 ## Examples
+
+```sql
+SELECT split_by_string('', ',') AS result;
+```
+```text
++--------+
+| result |
++--------+
+| []     |
++--------+
+```
 
 ```sql
 SELECT split_by_string('hello','l');

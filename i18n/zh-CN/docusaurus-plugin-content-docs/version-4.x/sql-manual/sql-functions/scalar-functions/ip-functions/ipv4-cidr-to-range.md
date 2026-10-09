@@ -20,11 +20,15 @@ IPV4_CIDR_TO_RANGE(<ipv4_address>, <cidr_prefix>)
 ```
 
 ### 参数
-- `<ipv4_address>`：IPv4 类型的地址
-- `<cidr_prefix>`：CIDR 前缀长度（SMALLINT 类型，范围 0-32）
+| 参数 | 说明 |
+|------|------|
+| `<ipv4_address>` | IPv4 类型的地址。可使用 `TO_IPV4` 将地址字符串转换为 IPv4；`INET_ATON` 返回 BIGINT，不能用作此参数。 |
+| `<cidr_prefix>` | CIDR 前缀长度，SMALLINT 类型，范围 0-32。 |
 
 ### 返回值
 返回类型：STRUCT<min: IPv4, max: IPv4>
+
+任一参数为 NULL 时返回 NULL。
 
 返回值含义：
 - 返回一个结构体，包含两个字段：
@@ -40,7 +44,9 @@ IPV4_CIDR_TO_RANGE(<ipv4_address>, <cidr_prefix>)
 
 计算 /24 网段的地址范围。
 ```sql
-SELECT ipv4_cidr_to_range(INET_ATON('192.168.1.1'), 24) as range;
+SELECT ipv4_cidr_to_range(TO_IPV4('192.168.1.1'), 24) as range;
+```
+```text
 +----------------------------------------+
 | range                                  |
 +----------------------------------------+
@@ -50,19 +56,23 @@ SELECT ipv4_cidr_to_range(INET_ATON('192.168.1.1'), 24) as range;
 
 计算 /16 网段的地址范围。
 ```sql
-SELECT ipv4_cidr_to_range(INET_ATON('10.0.0.1'), 16) as range;
+SELECT ipv4_cidr_to_range(TO_IPV4('10.0.0.1'), 16) as range;
+```
+```text
 +----------------------------------------+
 | range                                  |
 +----------------------------------------+
-| {"min": "10.0.0.0", "max": "10.255.255.255"} |
+| {"min": "10.0.0.0", "max": "10.0.255.255"} |
 +----------------------------------------+
 ```
 
 访问结构体中的具体字段。
 ```sql
 SELECT 
-  ipv4_cidr_to_range(INET_ATON('172.16.1.1'), 24).min as min_ip,
-  ipv4_cidr_to_range(INET_ATON('172.16.1.1'), 24).max as max_ip;
+  ipv4_cidr_to_range(TO_IPV4('172.16.1.1'), 24).min as min_ip,
+  ipv4_cidr_to_range(TO_IPV4('172.16.1.1'), 24).max as max_ip;
+```
+```text
 +-------------+-------------+
 | min_ip      | max_ip      |
 +-------------+-------------+
@@ -72,12 +82,26 @@ SELECT
 
 CIDR 前缀超出范围会抛出异常。
 ```sql
-SELECT ipv4_cidr_to_range(INET_ATON('192.168.1.1'), 33);
+SELECT ipv4_cidr_to_range(TO_IPV4('192.168.1.1'), 33);
+```
+```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (...)[INVALID_ARGUMENT]Illegal cidr value '33'
+```
+
+NULL 输入：
+
+```sql
+SELECT ipv4_cidr_to_range(NULL, 24) AS null_address,
+       ipv4_cidr_to_range(TO_IPV4('192.168.1.1'), NULL) AS null_prefix;
+```
+```text
++--------------+-------------+
+| null_address | null_prefix |
++--------------+-------------+
+| NULL         | NULL        |
++--------------+-------------+
 ```
 
 ### Keywords
 
 IPV4_CIDR_TO_RANGE
-
-
