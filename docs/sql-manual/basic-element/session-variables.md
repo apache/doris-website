@@ -30,6 +30,47 @@ SET enable_file_scanner_v2 = false;
 SET GLOBAL enable_file_scanner_v2 = false;
 ```
 
+## Development Version
+
+### `external_scan_consistent_hash_spread_num`
+
+This option is for development builds that support external split spreading. It can spread independently planned queries for the same remote file split across eligible backends, reducing a persistent scan hotspot.
+
+| Item | Value |
+| --- | --- |
+| Type | Integer |
+| Default | `1` |
+| Valid values | `0` through `2147483647` |
+| Scope | Session; `SET GLOBAL` applies to new sessions |
+
+| Value | Behavior |
+| --- | --- |
+| `1` (default) | Preserve the original scheduling strategy, configured candidate counts and global split redistribution. It does **not** limit scans to one backend. |
+| `0` | Enable automatic spreading across all eligible backends in the query's compute group. Use consistent hashing when `enable_file_cache` or `use_consistent_hash_for_external_scan` is enabled; otherwise use the random strategy. |
+| `N > 1` | Spread within at most N distinct consistent-hash candidates, capped by the eligible backend count, when file caching or consistent hashing is enabled. Otherwise preserve round-robin scheduling. |
+
+```sql
+-- Enable automatic spreading for this session, without requiring file cache or hash scheduling.
+SET external_scan_consistent_hash_spread_num = 0;
+
+-- Limit the hash candidate set. This does not require the cluster to have exactly three backends.
+SET use_consistent_hash_for_external_scan = true;
+SET external_scan_consistent_hash_spread_num = 3;
+
+-- Preserve the original scheduling.
+SET external_scan_consistent_hash_spread_num = 1;
+-- Restore the compiled default, also 1.
+UNSET VARIABLE external_scan_consistent_hash_spread_num;
+```
+
+The spread mode selects the candidate with the least scan weight already assigned by this query's policy; ties are broken uniformly at random. Each split is assigned once. It does not select by live backend CPU usage, and does not guarantee a throughput multiplier. Local preference and mandatory Host constraints take precedence; they may select a backend outside a remote split's hash candidates. File load and schema scans retain their existing behavior.
+
+Spreading disables subsequent global split redistribution, so assignments remain within the split's eligible candidates and locality constraints. With multiple splits, balancing is limited to each split's candidates and may be less even than the original global redistribution.
+
+This option does not enable file caching. When file caching is enabled, `0` can create cached copies on every eligible backend and increase warmup reads and cache storage; explicit N limits remote hash candidates, subject to locality precedence. It does not pre-create cache replicas. Start with `1`; enable spreading when repeated queries concentrate on a saturated backend and other eligible backends have spare capacity. Compare both modes with the same query, cache state and resources.
+
+Persisted global values are retained on upgrade. Changing the compiled default does not reset a saved global value of `0`; use `SET GLOBAL external_scan_consistent_hash_spread_num = 1` if new sessions should preserve original scheduling. Existing sessions must change their session value separately. Negative, non-integer or out-of-range values are rejected.
+
 ## What changed in 4.1.4
 
 | Category | Variables |

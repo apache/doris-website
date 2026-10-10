@@ -27,6 +27,47 @@ SET enable_file_scanner_v2 = false;
 SET GLOBAL enable_file_scanner_v2 = false;
 ```
 
+## 开发版本
+
+### `external_scan_consistent_hash_spread_num`
+
+此参数适用于包含外部 split 分散调度功能的开发版本。对于同一个远程文件 split 的多次独立查询，可将扫描工作分散到合法候选 BE，减少持续的扫描热点。
+
+| 项目 | 值 |
+| --- | --- |
+| 类型 | 整数 |
+| 默认值 | `1` |
+| 合法范围 | `0` 至 `2147483647` |
+| 作用域 | 会话；`SET GLOBAL` 对之后创建的新会话生效 |
+
+| 取值 | 行为 |
+| --- | --- |
+| `1`（默认） | 保留原调度策略、配置的候选数量及全局 split 再分配。**不表示只使用一个 BE**。 |
+| `0` | 开启自动分散，使用查询计算组内全部合法候选 BE。开启 `enable_file_cache` 或 `use_consistent_hash_for_external_scan` 时使用一致性哈希，否则使用随机策略。 |
+| `N > 1` | 开启文件缓存或一致性哈希时，在最多 N 个不同的哈希候选中分散，实际数量不超过合法候选 BE 数量；否则保留轮询调度。 |
+
+```sql
+-- 本会话开启自动分散，无需先开启文件缓存或哈希调度。
+SET external_scan_consistent_hash_spread_num = 0;
+
+-- 限制哈希候选范围，不要求集群恰好有三个 BE。
+SET use_consistent_hash_for_external_scan = true;
+SET external_scan_consistent_hash_spread_num = 3;
+
+-- 保留原调度。
+SET external_scan_consistent_hash_spread_num = 1;
+-- 恢复编译默认值，同样为 1。
+UNSET VARIABLE external_scan_consistent_hash_spread_num;
+```
+
+分散模式优先选择本次查询的调度 policy 中已分配扫描权重最小的候选，权重相同时均匀随机选择。每个 split 仅分配一次；不根据 BE 实时 CPU 选点，也不保证固定吞吐提升倍数。本地优先和强制 Host 约束优先于远程哈希候选范围，可能选择范围外节点。文件导入和 schema 扫描保留原行为。
+
+分散模式关闭后续全局 split 再分配，以保持候选范围和本地约束。多 split 查询仅在各 split 的候选范围内均衡，可能不如原全局再分配均匀。
+
+此参数不会开启文件缓存。文件缓存开启时，`0` 可能在全部合法候选 BE 保存相同数据，增加预热读取和缓存空间；显式 N 可限制远程哈希候选，但本地性仍优先。不会预先创建缓存副本。建议保留默认 `1`；当重复查询集中到已饱和 BE 且其他候选 BE 有可用容量时再开启分散，并使用相同查询、缓存状态和资源进行对比。
+
+升级保留已持久化的全局值。修改编译默认值不会重置已保存的全局 `0`；若需新会话保留原调度，可执行 `SET GLOBAL external_scan_consistent_hash_spread_num = 1`。已有会话需单独修改会话值。负数、非整数和越界值会被拒绝。
+
 ## 4.1.4 版本变更概览
 
 | 类别 | 变量 |
