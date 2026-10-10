@@ -65,9 +65,9 @@ mysql> select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e
 +------+------+
 | k1   | e1   |
 +------+------+
+|    5 | 1    |
 |    5 | 2    |
 |    5 | 3    |
-|    5 | 1    |
 +------+------+
 
 mysql> select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 6 order by k1, e1;
