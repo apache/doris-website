@@ -2,7 +2,7 @@
 {
     "title": "VARIANT",
     "language": "zh-CN",
-    "description": "如何将 CSV 与 JSON 数据导入 Doris VARIANT 列？提供建表、Stream Load 命令、类型推导验证完整步骤。",
+    "description": "如何将 CSV 与 JSON 数据导入 Doris VARIANT 列？本文按步骤介绍建表、执行 Stream Load 命令，以及验证 VARIANT 子列类型推导结果的完整流程。",
     "keywords": [
         "Doris VARIANT 导入",
         "CSV 导入 VARIANT",
@@ -28,18 +28,53 @@
 | 你的需求 | 建议阅读 |
 | --- | --- |
 | 快速完成 CSV / JSON 导入 | 继续阅读本文 |
-| 选择默认模式、Sparse、DOC mode 或 Schema Template | [VARIANT 使用与配置指南](../../../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide) |
-| 查询 VARIANT 语法、索引、限制或配置参考 | [VARIANT](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT) |
+| 选择默认模式、Sparse、DOC mode 或 Schema Template | [VARIANT 使用与配置指南](../../../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md) |
+| 查询 VARIANT 语法、索引、限制或配置参考 | [VARIANT](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md) |
 
 ## 使用限制
 
-- 当前仅支持 **CSV** 和 **JSON** 两种数据格式导入 `VARIANT` 列。
+- 下文示例导入的是 **CSV** 和 **JSON** 文件。导入作业会把写入 `VARIANT` 列的任何字符串字段按 JSON 解析，因此只要源列是字符串（例如 Parquet 的 `STRING` 列），其他格式也同样适用。Arrow 格式不能导入 `VARIANT` 列。
+
+## 导入时值如何处理
+
+- **`NOT NULL` 列：** VARIANT 值为 SQL `NULL` 的行会被过滤，包括解析失败而得到 SQL `NULL` 的值。被过滤的行计入 `max_filter_ratio`（默认 `0`），因此默认情况下导入作业会失败。
+- **INSERT 的行为不同：** `INSERT` 不解析字符串。`INSERT INTO t VALUES (1, '{"a": 1}')` 写入的是 VARIANT 字符串 `{"a": 1}`，从 `s3()`、`hdfs()`、`local()` 执行 `INSERT INTO ... SELECT` 也是如此。需要写入对象时请使用 `PARSE_TO_VARIANT`。
+
+写入表时值会被规范化：数组之外、值为 `null`、`{}` 或 `[]` 的对象成员会被移除。同一个值在查询中计算时保留所有成员：
+
+```sql
+CREATE TABLE variant_norm (k INT, v VARIANT)
+DUPLICATE KEY(k)
+DISTRIBUTED BY HASH(k) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO variant_norm VALUES (1, PARSE_TO_VARIANT('{"a": null, "b": {}, "c": [], "d": 1}'));
+
+SELECT PARSE_TO_VARIANT('{"a": null, "b": {}, "c": [], "d": 1}') AS computed;
+SELECT v AS stored, v['a'] IS NULL AS a_is_null FROM variant_norm;
+```
+
+```text
++--------------------------------+
+| computed                       |
++--------------------------------+
+| {"a":null,"b":{},"c":[],"d":1} |
++--------------------------------+
+
++---------+-----------+
+| stored  | a_is_null |
++---------+-----------+
+| {"d":1} |         1 |
++---------+-----------+
+```
+
+解析错误和其他规范化规则请参阅[解析错误](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#parse-errors)与[写入后值的规范化](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#what-storage-keeps)。
 
 ## 存储格式建议（V3）
 
 <!-- 知识类型: 架构选型决策 -->
 
-对于新建的 `VARIANT` 表，尤其是宽 JSON 场景，建议直接使用 **Storage Format V3**，除非你有明确的理由使用其他格式。设计原因详见 [Storage Format V3](../../../table-design/storage-format)。
+对于新建的 `VARIANT` 表，尤其是宽 JSON 场景，建议直接使用 **Storage Format V3**，除非你有明确的理由使用其他格式。设计原因详见 [Storage Format V3](../../../table-design/storage-format.md)。
 
 建表时通过 `PROPERTIES` 显式开启：
 
@@ -218,53 +253,64 @@ created_at: 2020-11-14 02:00:00
 
 默认 `DESC` 输出仅展示顶层 VARIANT 列，不展开内部子列：
 
-``` sql
+```sql
 mysql> desc test_variant;
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-| Field                                                      | Type       | Null | Key   | Default | Extra |
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-| id                                                         | BIGINT     | No   | true  | NULL    |       |
-| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
-| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
-| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
-| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
-| public                                                     | BOOLEAN    | Yes  | false | NULL    | NONE  |
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-6 rows in set (0.07 sec)
++------------+---------------------------+------+-------+---------+-------+
+| Field      | Type                      | Null | Key   | Default | Extra |
++------------+---------------------------+------+-------+---------+-------+
+| id         | bigint                    | No   | true  | NULL    |       |
+| type       | varchar(30)               | Yes  | false | NULL    | NONE  |
+| actor      | variant<PROPERTIES (...)> | Yes  | false | NULL    | NONE  |
+| repo       | variant<PROPERTIES (...)> | Yes  | false | NULL    | NONE  |
+| payload    | variant<PROPERTIES (...)> | Yes  | false | NULL    | NONE  |
+| public     | boolean                   | Yes  | false | NULL    | NONE  |
+| created_at | datetime                  | Yes  | false | NULL    | NONE  |
++------------+---------------------------+------+-------+---------+-------+
+7 rows in set
 ```
+
+上面把列出所有列属性的 VARIANT 类型字符串简写为 `variant<PROPERTIES (...)>`。
 
 开启 `describe_extend_variant_column` 后，可以查看 VARIANT 推导出的子列类型：
 
-``` sql
+```sql
 mysql> set describe_extend_variant_column = true;
-Query OK, 0 rows affected (0.01 sec)
+Query OK, 0 rows affected (0.00 sec)
 
 mysql> desc test_variant;
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-| Field                                                      | Type       | Null | Key   | Default | Extra |
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-| id                                                         | BIGINT     | No   | true  | NULL    |       |
-| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
-| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
-| actor.avatar_url                                           | TEXT       | Yes  | false | NULL    | NONE  |
-| actor.display_login                                        | TEXT       | Yes  | false | NULL    | NONE  |
-| actor.id                                                   | INT        | Yes  | false | NULL    | NONE  |
-| actor.login                                                | TEXT       | Yes  | false | NULL    | NONE  |
-| actor.url                                                  | TEXT       | Yes  | false | NULL    | NONE  |
-| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
-| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
-| payload.action                                             | TEXT       | Yes  | false | NULL    | NONE  |
-| payload.before                                             | TEXT       | Yes  | false | NULL    | NONE  |
-| payload.comment.author_association                         | TEXT       | Yes  | false | NULL    | NONE  |
-| payload.comment.body                                       | TEXT       | Yes  | false | NULL    | NONE  |
-....
-+------------------------------------------------------------+------------+------+-------+---------+-------+
-406 rows in set (0.07 sec)
++-----------------------+---------------------------+------+-------+---------+-------+
+| Field                 | Type                      | Null | Key   | Default | Extra |
++-----------------------+---------------------------+------+-------+---------+-------+
+| id                    | bigint                    | No   | true  | NULL    |       |
+| type                  | varchar(30)               | Yes  | false | NULL    | NONE  |
+| actor                 | variant<PROPERTIES (...)> | Yes  | false | NULL    | NONE  |
+| repo                  | variant<PROPERTIES (...)> | Yes  | false | NULL    | NONE  |
+| payload               | variant<PROPERTIES (...)> | Yes  | false | NULL    | NONE  |
+| public                | boolean                   | Yes  | false | NULL    | NONE  |
+| created_at            | datetime                  | Yes  | false | NULL    | NONE  |
+| actor.avatar_url      | text                      | Yes  | false | NULL    | NONE  |
+| actor.display_login   | text                      | Yes  | false | NULL    | NONE  |
+| actor.gravatar_id     | text                      | Yes  | false | NULL    | NONE  |
+| actor.id              | bigint                    | Yes  | false | NULL    | NONE  |
+| actor.login           | text                      | Yes  | false | NULL    | NONE  |
+| actor.url             | text                      | Yes  | false | NULL    | NONE  |
+| payload.before        | text                      | Yes  | false | NULL    | NONE  |
+| payload.commits       | array<text>               | Yes  | false | NULL    | NONE  |
+| payload.distinct_size | bigint                    | Yes  | false | NULL    | NONE  |
+| payload.head          | text                      | Yes  | false | NULL    | NONE  |
+| payload.push_id       | bigint                    | Yes  | false | NULL    | NONE  |
+| payload.ref           | text                      | Yes  | false | NULL    | NONE  |
+| payload.size          | bigint                    | Yes  | false | NULL    | NONE  |
+| repo.id               | bigint                    | Yes  | false | NULL    | NONE  |
+| repo.name             | text                      | Yes  | false | NULL    | NONE  |
+| repo.url              | text                      | Yes  | false | NULL    | NONE  |
++-----------------------+---------------------------+------+-------+---------+-------+
+23 rows in set
 ```
 
 也可按 Partition 维度展示推导结果：
 
-``` sql
+```sql
 DESCRIBE ${table_name} PARTITION ($partition_name);
 ```
 
@@ -272,7 +318,7 @@ DESCRIBE ${table_name} PARTITION ($partition_name);
 
 ### Q1：VARIANT 支持哪些导入数据格式？
 
-当前 `VARIANT` 列的导入仅支持 **CSV** 与 **JSON** 两种格式。其他格式需先转换后再导入。
+导入作业会把写入 `VARIANT` 列的任何字符串字段按 JSON 解析，与文件格式无关；本文示例使用 **CSV** 与 **JSON**。使用 `INSERT`（包括从表函数执行 `INSERT INTO ... SELECT`）时，请用 `PARSE_TO_VARIANT` 包裹字符串值。
 
 ### Q2：什么场景必须使用 Storage Format V3？
 
@@ -294,7 +340,7 @@ SET describe_extend_variant_column = true;
 
 | 格式 | 关键 Header |
 | --- | --- |
-| CSV | `-H "column_separator:|"` |
+| CSV | `-H "column_separator:\|"` |
 | JSON | `-H "format:json"` |
 
 ### Q5：如何确认 Stream Load 是否导入成功？
@@ -303,3 +349,12 @@ SET describe_extend_variant_column = true;
 
 - `Status` 为 `Success` 表示导入成功；
 - `NumberLoadedRows` 应等于 `NumberTotalRows`，且 `NumberFilteredRows` 为 `0`。
+
+### Q6：为什么 `INSERT` 把 JSON 文本存成了字符串？
+
+`INSERT` 通过 `CAST(string AS VARIANT)` 把字符串转换为 VARIANT，该转换保留字符串本身，不做解析。Stream Load 等导入作业会解析 JSON 文本；使用 `INSERT` 时，请用 `PARSE_TO_VARIANT` 包裹文本：
+
+```sql
+INSERT INTO testdb.test_variant (id, actor)
+VALUES (1, PARSE_TO_VARIANT('{"id": 282080, "login": "brianchandotcom"}'));
+```
