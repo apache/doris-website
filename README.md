@@ -140,6 +140,6 @@ The site is deployed via GitHub Actions:
 
 | Workflow | Trigger | Description |
 |----------|---------|-------------|
-| `cron-deploy-website.yml` | Daily at 01:00 AM | Syncs from Doris master branch and deploys |
+| `cron-deploy-website.yml` | Push to `master`; daily at 01:00 UTC | Builds and deploys the site; the daily run refreshes dynamic data and provides a fallback |
 | `manual-deploy-website.yml` | Manual | Deploy from a specified branch |
 | `build-check.yml` | On PR | Validates the build passes (incrementally by detected version) |
