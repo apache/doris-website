@@ -2,7 +2,7 @@
 {
     "title": "Row Binlog",
     "language": "en",
-    "description": "Doris Row Binlog records row-level inserts, updates and deletes: enabling it at table creation, binlog.* properties, supported table models, DDL limits, errors.",
+    "description": "Doris Row Binlog records row-level inserts, updates and deletes: table properties, TTL retention, automatic cleanup, supported table models and troubleshooting.",
     "keywords": [
         "Row Binlog",
         "row-level binlog",
@@ -10,6 +10,8 @@
         "binlog.enable",
         "binlog.format ROW",
         "binlog.need_historical_value",
+        "binlog.ttl_seconds",
+        "Row Binlog TTL",
         "before image",
         "historical value",
         "commit TSO",
@@ -35,6 +37,8 @@
 
 Row Binlog is the row-level change log of Doris internal tables. Once enabled, every row-level change produced by a write (insert, update, delete) is persisted together with the values before and after the change and the commit timestamp. It is the data source of [Table Stream](table-stream), [Incremental Query](incremental-query) and [Incremental View Maintenance (IVM)](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view), and can also be consumed from Flink through the [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector/incremental-read) (Connector 26.3.0 or later).
 
+Change records are retained for one day by default. Set `binlog.ttl_seconds` to cover the longest expected consumption delay; expiring change records does not delete data from the base table.
+
 :::caution Experimental feature
 This feature is available since version 5.0.0 and is experimental. It requires `enable_feature_binlog = true` in the FE configuration.
 :::
@@ -45,6 +49,7 @@ This feature is available since version 5.0.0 and is experimental. It requires `
 
 - Doris 5.0.0 or later.
 - `enable_feature_binlog = true` in `fe.conf` on the FE (not a dynamic configuration; the FE must be restarted).
+- For automatic cleanup, also set `enable_feature_binlog = true` in `be.conf` on the BEs (not a dynamic configuration; the BEs must be restarted).
 - A Duplicate Key table, or a Unique Key Merge-on-Write (MoW) table without cluster keys; see [Supported scope and limitations](#supported-scope-and-limitations).
 - Row Binlog can only be enabled at table creation, so evaluate it before creating the table.
 
@@ -76,7 +81,8 @@ PROPERTIES (
     "enable_unique_key_merge_on_write" = "true",
     "binlog.enable" = "true",
     "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "binlog.need_historical_value" = "true",
+    "binlog.ttl_seconds" = "86400"
 );
 ```
 
@@ -89,7 +95,7 @@ PROPERTIES (
 | `binlog.enable` | `true` / `false` | `false` | Cannot be disabled once enabled | Whether binlog is enabled; must be set together with `binlog.format = "ROW"` |
 | `binlog.format` | `ROW` | - | No | Must be `ROW`, meaning row-level changes are recorded. The value is case-sensitive; a lowercase `row` fails with `Invalid binlog format value: row` |
 | `binlog.need_historical_value` | `true` / `false` | `false` | No | Whether the values before a change (before image) are recorded. Only Unique Key MoW tables can set it to `true`. `min_delta` / `detail` Table Streams, `MIN_DELTA` incremental queries, and IVMs that need to handle updates or deletes depend on it |
-| `binlog.ttl_seconds` | integer (seconds) | `86400` | Yes | Retention period. **Has no effect in the current version**, see [Retention and cleanup](#retention-and-cleanup) |
+| `binlog.ttl_seconds` | positive integer (seconds) | `86400` (one day) | Yes | Retention period for change records. Expired records are filtered from incremental reads and reclaimed through background compaction; `0` and negative values are not allowed. See [Retention and cleanup](#retention-and-cleanup) |
 | `binlog.max_bytes` | integer (bytes) | unlimited | Yes | Retention size limit. **Has no effect in the current version** |
 | `binlog.max_history_nums` | integer | unlimited | Yes | Retention count limit. **Has no effect in the current version** |
 
@@ -258,11 +264,111 @@ Table-level operations such as `TRUNCATE TABLE` and backup / restore work as usu
 ## Retention and cleanup
 
 <!-- Knowledge type: Behavior rules -->
-<!-- Use cases: Capacity planning -->
+<!-- Use cases: Setting retention / Handling expired offsets / Capacity planning -->
 
-The current version does not clean up Row Binlog data automatically: change records are kept for the lifetime of the table, and the three properties `binlog.ttl_seconds`, `binlog.max_bytes`, and `binlog.max_history_nums` can be set but have no effect yet. Automatic cleanup by time and size is under development and will be supported in the next version.
+Since Doris 5.0.0, `binlog.ttl_seconds` controls Row Binlog retention in both the integrated storage-compute mode and the compute-storage decoupled mode. Retention is based on the physical time in the commit TSO, using the current Master FE TSO as the reference. Records whose commit time is at or before the reference time minus the TTL are expired. The retention window advances even when the table receives no new writes.
 
-Until then, reserve extra storage for tables with Row Binlog: the volume of change records grows with the write volume, and for MoW tables with the before image enabled, every update stores an additional copy of the old values.
+### Configuring retention
+
+The default TTL is `86400` seconds (one day). When a database explicitly sets `binlog.ttl_seconds`, new tables inherit it unless their table properties override it. Changing the database setting does not change existing tables. `CREATE TABLE ... LIKE` copies the source table's TTL.
+
+To retain changes for seven days on the `orders` table created above:
+
+```sql
+ALTER TABLE orders SET ("binlog.ttl_seconds" = "604800");
+```
+
+After the statement succeeds, `SHOW CREATE TABLE orders` includes:
+
+```text
+"binlog.ttl_seconds" = "604800"
+```
+
+The TTL must be greater than `0`; neither `0` nor `-1` disables expiration. Shortening the TTL can immediately expire existing records. Extending it can make records that are still physically present readable again, but cannot recover records that have already been cleaned up. If an `ALTER TABLE` fails while publishing the setting to partitions, a shorter TTL may already have taken effect; check `SHOW CREATE TABLE` and retry the same statement to complete the update.
+
+### Effect on reads
+
+Incremental reads apply the retention window when the statement is planned, before physical cleanup finishes. A statement uses one reference TSO, and each new statement recalculates the window.
+
+| Read method | Behavior when the requested start is expired |
+|---|---|
+| `@incr` without `startTimestamp` | Reads only retained changes, including in `MIN_DELTA` mode |
+| `@incr` with `incrementType = MIN_DELTA` and an explicit `startTimestamp` | Fails with `Row binlog offset has expired according to binlog.ttl_seconds` to avoid returning incomplete net changes |
+| `@incr` with `incrementType = DETAIL` or `APPEND_ONLY` | Moves the effective start to the first retained TSO and returns only the retained part of the requested window |
+| Table Stream with `type = min_delta` | Fails with the same error if a partition's consumption offset is expired |
+| Table Stream with `type = detail` or `append_only` | Skips expired changes and reads from the first retained TSO |
+| MoW snapshot reads (`FOR TIME AS OF`, `FOR VERSION AS OF`, or a Stream's `@snapshot()`) | When reconstruction requires Row Binlog, an expired target snapshot fails with the same error because its before images are no longer available in the retention window |
+| `binlog()` table function | Does not apply the TTL filter; it can still show expired raw records until physical cleanup removes them |
+
+Expiration does not wait for consumers. Consume changes within the retention window, even if a Stream is still reported as usable by `IS_STALE` / `STALE_REASON`: these fields do not report TTL expiration in the current implementation. After required changes have expired, rebuild downstream data from a full snapshot. For a Table Stream, use the [reset procedure](table-stream-advanced#reset-reset) to reload downstream and advance the offsets. Manage IVM's internal Streams through [materialized view refresh tasks](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#internal-table-streams).
+
+### Example: expired changes with base data preserved
+
+Run this example in an existing database with `CREATE` and `LOAD` privileges, and `SELECT` privilege for the queries:
+
+```sql
+CREATE TABLE row_binlog_ttl_demo (id INT, value INT)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.ttl_seconds" = "30"
+);
+
+INSERT INTO row_binlog_ttl_demo VALUES (1, 10);
+
+SELECT COUNT(*) AS change_count
+FROM row_binlog_ttl_demo@incr("incrementType" = "DETAIL");
+```
+
+Immediately after the insert, the query returns:
+
+```text
++--------------+
+| change_count |
++--------------+
+|            1 |
++--------------+
+```
+
+Wait more than 30 seconds, then run the incremental query again:
+
+```sql
+SELECT COUNT(*) AS change_count
+FROM row_binlog_ttl_demo@incr("incrementType" = "DETAIL");
+```
+
+```text
++--------------+
+| change_count |
++--------------+
+|            0 |
++--------------+
+```
+
+The base row is still present:
+
+```sql
+SELECT id, value FROM row_binlog_ttl_demo;
+```
+
+```text
++------+-------+
+| id   | value |
++------+-------+
+|    1 |    10 |
++------+-------+
+```
+
+### Physical cleanup and capacity planning
+
+Background compaction reclaims fully expired Row Binlog Rowsets, including on idle tables. A Rowset that also contains unexpired records is retained until all its records expire. Cleanup preserves base-table data and version continuity. Storage is reclaimed asynchronously, so the TTL is not a deadline for files to disappear or a strict storage size limit.
+
+Automatic cleanup requires `enable_feature_binlog = true` on the BEs and automatic compaction to be enabled. Setting the BE configuration or table property `disable_auto_compaction = true` pauses automatic cleanup, but incremental reads still filter expired records. After a BE restart, cleanup waits for a valid reference TSO from a Master FE heartbeat.
+
+`binlog.max_bytes` and `binlog.max_history_nums` still have no effect on Row Binlog. Reserve storage according to write volume, TTL and cleanup delay. For MoW tables with the before image enabled, every update stores an additional copy of the old values. Set the TTL longer than the maximum consumption delay, refresh interval and expected outage, with time for recovery.
 
 ## Write overhead
 
@@ -305,7 +411,7 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 | `partition` | No | Partition names separated by commas; defaults to all partitions |
 | `tablet` | No | Tablet IDs separated by commas; defaults to all tablets |
 
-`binlog()` reads the stored raw records without any folding or filtering, and its `__DORIS_BINLOG_OP__` uses the raw encoding (`0` insert, `1` update, `2` delete). The full syntax is in [BINLOG table function](../../sql-manual/sql-functions/table-valued-functions/binlog).
+`binlog()` reads the stored raw records without change folding or TTL filtering, and its `__DORIS_BINLOG_OP__` uses the raw encoding (`0` insert, `1` update, `2` delete). Expired records may remain visible here until physical cleanup finishes. The full syntax is in [BINLOG table function](../../sql-manual/sql-functions/table-valued-functions/binlog).
 
 ## Common errors
 
@@ -314,6 +420,8 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 | Error message | Cause | Action |
 |---|---|---|
 | `Invalid binlog format value: row` | `binlog.format` was given in lowercase | The value is case-sensitive; use uppercase `ROW` |
+| `ROW binlog.ttl_seconds must be greater than 0` | The TTL is `0` or negative | Set a positive integer in seconds; the default is `86400` |
+| `Row binlog offset has expired according to binlog.ttl_seconds` | A `MIN_DELTA` start or a MoW snapshot is outside the retention window | Rebuild downstream from a full snapshot and realign consumption; see [Effect on reads](#effect-on-reads) |
 | `not support change binlog format from STATEMENT_AND_SNAPSHOT to ROW` | `ALTER TABLE` was used to enable Row Binlog on an existing table | Row Binlog can only be enabled at table creation. Create a new table with Row Binlog enabled, load the data, and swap the two with `ALTER TABLE ... REPLACE WITH TABLE` |
 | `can't disable binlog when format is [Row]` | `binlog.enable = false` was set on a table with Row Binlog enabled | Row Binlog cannot be disabled once enabled |
 | `not support change binlog.need_historical_value from true to false` | `binlog.need_historical_value` was modified | The property cannot be changed after creation |

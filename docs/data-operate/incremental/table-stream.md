@@ -376,7 +376,7 @@ The columns of a Stream are the current visible columns of the base table (synch
 - A Stream reads only the base index of the base table; rollups / materialized views cannot be specified, and the `TABLET (...)` clause is not supported.
 - A Stream cannot be the target of `INSERT`, `UPDATE`, or `DELETE`.
 - The consumption type and `show_initial_rows` cannot be changed after creation.
-- The current version never cleans up Row Binlog data, so a Stream that is not consumed for a long time loses no changes. Once automatic cleanup is available, a Stream left unconsumed for too long may be unable to continue because its change records were cleaned up; this will be flagged through `IS_STALE` / `STALE_REASON` in `information_schema.table_streams`.
+- Row Binlog retention is controlled by `binlog.ttl_seconds` (one day by default), regardless of consumption progress. An expired offset makes `min_delta` reads fail; `detail` and `append_only` skip expired changes. `IS_STALE` / `STALE_REASON` do not report TTL expiration in the current implementation. Consume within the retention window; see [Retention and cleanup](row-binlog#retention-and-cleanup).
 - The effect of dropping the base table, dropping or replacing partitions, and similar operations on a Stream is described in [Table Stream Advanced](table-stream-advanced#effect-of-base-table-changes).
 
 ## FAQ

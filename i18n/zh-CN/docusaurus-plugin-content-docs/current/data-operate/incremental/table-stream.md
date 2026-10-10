@@ -376,7 +376,7 @@ Stream 的列与基表当前的可见列一致（基表 `ADD COLUMN` / `DROP COL
 - Stream 只能读取基表的基础索引，不支持指定 rollup / 物化视图，也不支持 `TABLET (...)` 子句。
 - Stream 不能作为 `INSERT`、`UPDATE`、`DELETE` 的目标。
 - 消费类型和 `show_initial_rows` 创建后不可修改。
-- 当前版本 Row Binlog 数据不会自动清理，Stream 长时间不消费不会丢失变更；自动清理能力上线后，长期不消费的 Stream 可能因为变更记录被清理而无法继续消费，届时会通过 `information_schema.table_streams` 的 `IS_STALE` / `STALE_REASON` 标识。
+- Row Binlog 由 `binlog.ttl_seconds` 控制保留时长（默认一天），不受消费进度影响。位点过期后，`min_delta` 读取报错，`detail` 和 `append_only` 跳过过期变更。当前实现不会通过 `IS_STALE` / `STALE_REASON` 报告 TTL 过期。请在保留窗口内完成消费，见 [保留与清理](row-binlog#保留与清理)。
 - 基表被删除、分区被删除或替换等操作对 Stream 的影响见 [Table Stream 进阶](table-stream-advanced#基表变更的影响)。
 
 ## 常见问题
