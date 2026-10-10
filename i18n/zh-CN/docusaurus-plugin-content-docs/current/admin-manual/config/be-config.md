@@ -909,6 +909,18 @@ BaseCompaction:546859:
 * 描述：SendBatch 线程池的队列长度。在 NodeChannel 的发送数据任务之中，每一个 NodeChannel 的 SendBatch 操作会作为一个线程 Task 提交到线程池之中等待被调度，而提交的任务数目超过线程池队列的长度之后，后续提交的任务将阻塞直到队列之中有新的空缺。
 * 默认值：102400
 
+#### `ai_function_thread_pool_thread_num`
+
+* 类型：int32
+* 描述：当 AI 资源的 `ai.max_concurrency` 大于 1 时，用于执行标量 AI 函数批量请求的共享线程池的线程数。线程阻塞在对模型服务商的 HTTP 调用上，因此该值限制的是每个 BE 同时在途的 AI 请求数，而非 CPU 计算量。
+* 默认值：64
+
+#### `ai_function_thread_pool_queue_size`
+
+* 类型：int32
+* 描述：AI 函数线程池的队列长度。队列已满时，批量请求将在调用线程上直接执行，而不会等待。
+* 默认值：10240
+
 #### `make_snapshot_worker_count`
 
 * 描述：制作快照的线程数

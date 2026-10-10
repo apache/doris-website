@@ -54,6 +54,7 @@ PROPERTIES (
     'ai.max_token' = '1024',
     'ai.max_retries' = '3',
     'ai.retry_delay_second' = '1',
+    'ai.max_concurrency' = '4',
     'ai.dimensions' = '1024'
 );
  ```
@@ -79,6 +80,8 @@ The default value is -1, which means this parameter is not set. The default valu
 `ai.max_retries`: Optional. The maximum number of retries for a single request. The default value is 3.
 
 `ai.retry_delay_second`: Optional. The delay time (in seconds) before retrying. The default value is 0.
+
+`ai.max_concurrency`: Optional. The maximum number of batch requests one execution instance keeps in flight for the scalar AI functions (`ai_filter`, `ai_classify`, `ai_sentiment`, `ai_summarize`, `ai_translate`, `ai_generate`, `ai_extract`, `ai_mask`, `ai_fix_grammar`, `ai_similarity`). The default value is 1, which sends the batches of a block one after another; higher values overlap them. Set it according to the provider's rate limit or connection budget: a plan with several scan instances can put `instances × ai.max_concurrency` requests on the provider at once. It can be changed with `ALTER RESOURCE`. It does not apply to `embed` and `ai_agg`. The batch size is controlled separately by the session variable `ai_context_window_size`.
 
 `ai.dimensions`: Optional, control the vector dimension of [EMBED](./distance-functions/embed.md) output. 
 **Make sure to confirm that the model filled in `ai.model_name` supports custom vector dimension before setting**, 

@@ -898,6 +898,18 @@ BaseCompaction:546859:
 * Description: The queue length of the SendBatch thread pool. In NodeChannels' sending data tasks,  the SendBatch operation of each NodeChannel will be submitted as a thread task to the thread pool waiting to be scheduled, and after the number of submitted tasks exceeds the length of the thread pool queue, subsequent submitted tasks will be blocked until there is a empty slot in the queue.
 * Default value: 102400
 
+#### `ai_function_thread_pool_thread_num`
+
+* Type: int32
+* Description: The number of threads in the shared thread pool that runs the batch requests of the scalar AI functions when an AI resource sets `ai.max_concurrency` greater than 1. The threads block on HTTP calls to the model provider, so this value caps the number of in-flight AI requests per BE rather than CPU work.
+* Default value: 64
+
+#### `ai_function_thread_pool_queue_size`
+
+* Type: int32
+* Description: The queue length of the AI function thread pool. When the queue is full, the batch request is executed inline on the calling thread instead of waiting.
+* Default value: 10240
+
 #### `make_snapshot_worker_count`
 
 * Description: Number of threads making snapshots

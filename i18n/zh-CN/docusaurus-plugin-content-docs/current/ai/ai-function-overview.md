@@ -59,6 +59,7 @@ Doris 通过 [资源（Resource）机制](../sql-manual/sql-statements/cluster-m
 | `ai.max_tokens`         | 可选                                    | 限制生成内容的最大 token 数。默认 `-1` 表示不设置该参数；Anthropic 默认值为 `2048`。                          |
 | `ai.max_retries`        | 可选                                    | 单次请求的最大重试次数。默认值 `3`。                                                                          |
 | `ai.retry_delay_second` | 可选                                    | 重试的延迟时间（秒）。默认值 `0`。                                                                            |
+| `ai.max_concurrency`    | 可选                                    | 单个执行实例同时在途的批量请求数上限（标量 AI 函数）。默认 `1` 表示一个 Block 内的批次逐个发送，大于 1 时并发发送。请按模型服务商的限流或连接配额设置；多个 Scan 实例会成倍放大请求数。可通过 `ALTER RESOURCE` 修改。不适用于 `embed` 与 `ai_agg`。 |
 
 :::caution 鉴权方式说明
 当前仅支持静态 API Key 方式进行鉴权（通过请求头直接携带凭证）。需要通过私钥签名并交换临时访问令牌的鉴权机制（如 OAuth、Service Account 等）暂不支持。
