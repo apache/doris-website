@@ -47,7 +47,13 @@ Doris controls file cache behavior through the following parameters in the BE co
 
 | Parameter | Default | Description |
 |---|---|---|
-| `enable_file_cache` | `false` | Whether to enable the file cache feature. Set to `true` in compute-storage decoupled mode. |
+| `enable_file_cache` | `true` | Whether to enable the file cache feature. Enabled by default since Doris 4.2. In compute-storage decoupled mode, BE always forces it on. |
+
+:::caution
+
+`file_cache_path` defaults to the storage directory under the BE deployment path. Without a `total_size`, the cache may grow until the disk is 85%–88% full; set a `total_size` to bound it.
+
+:::
 
 ### Configuring Index-Only Cache Writes
 
