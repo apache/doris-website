@@ -73,11 +73,11 @@ SELECT ... FROM <table_name>@incr(
 
 | Parameter | Default | Description |
 |---|---|---|
-| `startTimestamp` | unbounded | Optional. Start of the window, format `yyyy-MM-dd HH:mm:ss`, parsed in the session `time_zone`. Changes whose commit time is **greater than or equal to** the start are returned |
+| `startTimestamp` | first retained TSO | Optional. Start of the window, format `yyyy-MM-dd HH:mm:ss`, parsed in the session `time_zone`. Changes whose commit time is **greater than or equal to** the start are returned, subject to the base table's `binlog.ttl_seconds` |
 | `endTimestamp` | unbounded | Optional. End of the window, same format. Changes whose commit time is **less than** the end are returned |
 | `incrementType` | `MIN_DELTA` | Optional. Incremental mode, see [The three incremental modes](#the-three-incremental-modes) |
 
-All three parameters can be omitted; `t@incr()` reads the entire change history in `MIN_DELTA` mode. The window is a left-closed, right-open interval `[startTimestamp, endTimestamp)`; a start later than the end, or a start in the future, returns an empty result.
+All three parameters can be omitted; `t@incr()` reads retained changes in `MIN_DELTA` mode. An explicit start outside the retention window fails in `MIN_DELTA`; `DETAIL` and `APPEND_ONLY` move the effective start to the first retained TSO. See [Retention and cleanup](row-binlog#retention-and-cleanup). The window is a left-closed, right-open interval `[startTimestamp, endTimestamp)`; a start later than the end, or a start in the future, returns an empty result when the start passes retention validation.
 
 ### Result columns
 
@@ -206,6 +206,8 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__, op;
 
 ### No window: net changes since the table was created
 
+This example assumes that all changes since table creation are still within the retention window. Otherwise, omitting the window reads only retained changes.
+
 ```sql
 SELECT order_id, status, amount, __DORIS_BINLOG_OP__ AS op
 FROM orders@incr()
@@ -229,7 +231,7 @@ Counting from table creation, every key is absent at the start, so every key tha
 <!-- Knowledge type: Usage recommendations -->
 <!-- Use cases: Periodic increments driven by an external scheduler -->
 
-- When an external scheduler drives the increments, use the previous `endTimestamp` as the next `startTimestamp`; the left-closed, right-open window guarantees no gaps and no duplicates. Note that windows are defined by commit time: a transaction that is still running does not appear in the current window and shows up in the window that contains its commit.
+- When an external scheduler drives the increments, use the previous `endTimestamp` as the next `startTimestamp`; within the retention window, the left-closed, right-open window guarantees no gaps and no duplicates. Keep consumption delay below `binlog.ttl_seconds`. Note that windows are defined by commit time: a transaction that is still running does not appear in the current window and shows up in the window that contains its commit.
 - If only the latest values matter and the values before an update are not needed, keep only the rows with `__DORIS_BINLOG_OP__ IN (0, 1, 3)`.
 - An `@incr` query reads all change records within the window; the larger the window, the more it reads. Specify the window whenever possible.
 
