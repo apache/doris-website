@@ -111,6 +111,32 @@ Where:
 
 When a query contains multiple terms, **the final score is the sum of the scores of each term**.
 
+### Record Length and the `norms` Property
+
+`|d|` comes from norms, which an index stores as one byte per row for every indexed field. The byte is written for every row of the segment, including rows that hold no value for that field, so an index that covers many sparse fields also pays for the rows it never matches.
+
+Norms are controlled per index with the `norms` property, which defaults to `true`:
+
+| Index                                  | Norms written                                                    |
+| -------------------------------------- | ---------------------------------------------------------------- |
+| Tokenized index on an ordinary column  | Yes, unless the index sets `"norms" = "false"`                   |
+| Tokenized index on a VARIANT path      | The same, unless the BE config below turns them off              |
+| Non-tokenized index                    | Never                                                            |
+
+A VARIANT path index is an index declared with `field_pattern`, together with the copy of it that each extracted subpath inherits. One segment holds one such index per path, so writing norms there costs `rows × paths` bytes. Turning on the BE config `inverted_index_skip_norms_for_variant` (default `false`, changeable at runtime) drops norms for every index on a VARIANT path, whatever that index's `norms` property says, so a cluster can reclaim that space without rewriting its index definitions.
+
+The `norms` property decides per index, and the copy inherited by a subpath carries the property of the index it comes from:
+
+```sql
+-- drop record-length normalization for one VARIANT path
+INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*", "norms" = "false")
+
+-- drop it for an ordinary column
+INDEX idx_content(content) USING INVERTED PROPERTIES("parser" = "english", "norms" = "false")
+```
+
+Relevance scoring needs norms: a query that computes `score()` on a tokenized index returns an error when any segment it reads has no norms for that field, which includes a table where only some segments were written without them. `MATCH_*` filtering is not affected. Set `"norms" = "false"`, or turn the config on, only for indexes that are never ranked with `score()`. The property and the config apply to newly written segments; segments written earlier keep their norms until compaction rewrites them. Change either one only after every BE has been upgraded to a version that supports them.
+
 ## Interpreting the Results
 
 Understanding the scoring results helps you use relevance ranking more accurately:
