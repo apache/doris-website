@@ -404,6 +404,58 @@ ORDER BY v;
 +---------+---------+
 ```
 
+**How numbers are compared**
+
+The `number` kind includes integers (`INT`, `BIGINT`, etc.), fixed-point decimals (`DECIMAL`), and floating-point numbers (`FLOAT`, `DOUBLE`). Their SQL type does not determine their order: for example, `DOUBLE 1.5` sorts before `INT 2`.
+
+1. **Normalize integral values.** Integers, decimals with no nonzero fractional digits, and finite floating-point values that are exact integers within the supported 38-digit range use the same integer comparison. Thus `INT 1`, `FLOAT 1.0`, `DOUBLE 1.0`, and `DECIMAL 1.00` are equal and have the same sort position. Decimal trailing zeros are ignored: `DECIMAL 1.50` equals `DECIMAL 1.500`. Negative zero equals zero.
+2. **Compare the actual numeric values.** Integer and decimal comparisons are exact, accounting for the decimal scale. `FLOAT` is widened to `DOUBLE` without recovering precision already lost in the `FLOAT`. When comparing a floating-point value with an integer or decimal, Doris compares the actual binary floating-point value against the exact integer or decimal; it does not first round both operands to `DOUBLE` or use an approximate-equality tolerance.
+3. **Break an exact numeric tie.** If a decimal with a nonzero fraction and a floating-point value represent exactly the same number, the decimal sorts first and they are not equal as VARIANT values. For example, `DECIMAL 1.5` sorts before both `FLOAT 1.5` and `DOUBLE 1.5`; those two floating-point values are equal. This tie rule does not apply to integral values such as `1.0`, which were normalized in step 1.
+
+| Values (converted to VARIANT) | Ascending order / equality |
+| --- | --- |
+| `INT 1`, `FLOAT 1.0`, `DOUBLE 1.0`, `DECIMAL 1.00` | Equal; same sort position |
+| `DECIMAL 1.50`, `DECIMAL 1.500` | Equal; same sort position |
+| `DECIMAL 1.5`, `FLOAT 1.5`, `DOUBLE 1.5`, `INT 2` | Decimal first, then the two equal floating-point values, then `2` |
+| `DECIMAL 0.1`, `DOUBLE 0.1` | Decimal first: the actual `DOUBLE` value is slightly greater than exact `0.1` |
+| `DOUBLE -0.0`, `INT 0`, `DECIMAL 0.00` | Equal; same sort position |
+
+JSON parsing produces an integer for `1` and a `DOUBLE` for `1.0` or `1.5`. To compare an actual `FLOAT` or `DECIMAL`, construct it explicitly with `CAST` as below. The secondary key `id` fixes the output order among equal VARIANT values; `ORDER BY v` alone does not fix their relative order.
+
+```sql
+SELECT label
+FROM (
+    SELECT 1 AS id, 'int 1' AS label, CAST(CAST(1 AS INT) AS VARIANT) AS v UNION ALL
+    SELECT 2, 'float 1.0', CAST(CAST(1.0 AS FLOAT) AS VARIANT) UNION ALL
+    SELECT 3, 'double 1.0', CAST(CAST(1.0 AS DOUBLE) AS VARIANT) UNION ALL
+    SELECT 4, 'decimal 1.00', CAST(CAST(1.00 AS DECIMAL(10, 2)) AS VARIANT) UNION ALL
+    SELECT 5, 'decimal 1.50', CAST(CAST(1.50 AS DECIMAL(10, 2)) AS VARIANT) UNION ALL
+    SELECT 6, 'float 1.5', CAST(CAST(1.5 AS FLOAT) AS VARIANT) UNION ALL
+    SELECT 7, 'double 1.5', CAST(CAST(1.5 AS DOUBLE) AS VARIANT) UNION ALL
+    SELECT 8, 'int 2', CAST(CAST(2 AS INT) AS VARIANT) UNION ALL
+    SELECT 9, 'decimal 0.10', CAST(CAST(0.10 AS DECIMAL(10, 2)) AS VARIANT) UNION ALL
+    SELECT 10, 'double 0.1', CAST(CAST(0.1 AS DOUBLE) AS VARIANT)
+) t
+ORDER BY v, id;
+```
+
+```text
++--------------+
+| label        |
++--------------+
+| decimal 0.10 |
+| double 0.1   |
+| int 1        |
+| float 1.0    |
+| double 1.0   |
+| decimal 1.00 |
+| decimal 1.50 |
+| float 1.5    |
+| double 1.5   |
+| int 2        |
++--------------+
+```
+
 ### Typed comparison and VARIANT comparison
 
 The operands decide whether a comparison uses the VARIANT rules or the rules of a concrete type. Take a path `a` whose values are `1`, `1.0`, and `"1"`:
