@@ -364,7 +364,7 @@ binary、time 和 UUID 值无法通过 Doris 的 JSON 解析或 CAST 产生，�
 同一种类内：
 
 - **布尔值：** `false` 在 `true` 之前。
-- **数值：** 在整数、定点数和浮点数之间统一按数值大小排序。定点数与浮点数数值相同且带小数部分时，定点数排在前面。负无穷最小；正无穷和 NaN 最大，NaN 在正无穷之后。
+- **数值：** 整数（`INT`、`BIGINT` 等）、定点数（`DECIMAL`）和浮点数（`FLOAT`、`DOUBLE`）统一按数值大小排序。`INT 1`、`FLOAT/DOUBLE 1.0` 和 `DECIMAL 1.00` 相等，排序位置相同；定点数末尾的零不影响比较。数值相同且带非零小数部分时，定点数在前：`DECIMAL 1.5` 排在 `FLOAT/DOUBLE 1.5` 前面，两者作为 VARIANT 值不相等。浮点精度也会影响排序，例如 `DOUBLE 0.1` 略大于 `DECIMAL 0.1`。负无穷最小；正无穷和 NaN 最大，NaN 在正无穷之后。
 - **字符串：** 按 UTF-8 字节排序。大写字母排在小写字母之前，`"10"` 排在 `"9"` 之前。
 - **日期与时间戳：** 按时间先后。所有日期都排在所有时间戳之前。
 - **对象：** 按 key 的顺序逐项比较：先比较最小的 key，再比较它的值，然后比较下一个 key，依此类推。一个对象的所有项是另一个对象的前缀时，前者排在前面，因此 `{"a":1}` < `{"a":1,"b":2}` < `{"b":0}`。
@@ -402,58 +402,6 @@ ORDER BY v;
 | {"a":1} | object  |
 | [1,2]   | array   |
 +---------+---------+
-```
-
-**number 内部如何比较**
-
-`number` 包括整数（`INT`、`BIGINT` 等）、定点数（`DECIMAL`）和浮点数（`FLOAT`、`DOUBLE`）。排序不由 SQL 类型决定，例如 `DOUBLE 1.5` 排在 `INT 2` 前面。
-
-1. **先统一整数值。** 整数、没有非零小数位的定点数，以及实际值恰好为整数且在支持的 38 位整数范围内的有限浮点数，都按同一个整数值比较。因此，`INT 1`、`FLOAT 1.0`、`DOUBLE 1.0` 和 `DECIMAL 1.00` 相等，排序位置也相同。定点数末尾的零不影响比较：`DECIMAL 1.50` 等于 `DECIMAL 1.500`。负零等于零。
-2. **再比较实际数值大小。** 整数与定点数按精确值比较，并考虑定点数的小数位数。`FLOAT` 会无损扩展为 `DOUBLE`，但不会恢复在 `FLOAT` 中已经丢失的精度。浮点数与整数或定点数混合比较时，比较的是浮点数实际表示的二进制数值与精确的整数或定点数值，不会先把两边都舍入为 `DOUBLE`，也不使用近似相等的容差。
-3. **数值完全相同时再区分类型。** 带非零小数部分的定点数与浮点数若精确表示同一个数，定点数排在前面，两者作为 VARIANT 值不相等。例如 `DECIMAL 1.5` 排在 `FLOAT 1.5` 和 `DOUBLE 1.5` 前面，后两者相等。`1.0` 这样的整数值已经在第 1 步统一，不再按此规则区分。
-
-| 转换为 VARIANT 的值 | 升序排序 / 相等关系 |
-| --- | --- |
-| `INT 1`、`FLOAT 1.0`、`DOUBLE 1.0`、`DECIMAL 1.00` | 相等，排序位置相同 |
-| `DECIMAL 1.50`、`DECIMAL 1.500` | 相等，排序位置相同 |
-| `DECIMAL 1.5`、`FLOAT 1.5`、`DOUBLE 1.5`、`INT 2` | 定点数在前，其次是两个相等的浮点数，最后是 `2` |
-| `DECIMAL 0.1`、`DOUBLE 0.1` | 定点数在前：`DOUBLE` 的实际值略大于精确的 `0.1` |
-| `DOUBLE -0.0`、`INT 0`、`DECIMAL 0.00` | 相等，排序位置相同 |
-
-JSON 解析将 `1` 解析为整数，将 `1.0` 或 `1.5` 解析为 `DOUBLE`。要比较真正的 `FLOAT` 或 `DECIMAL`，请像下面一样用 `CAST` 显式构造。第二排序键 `id` 用于固定相等 VARIANT 值之间的输出顺序；仅使用 `ORDER BY v` 时，这些值的相对顺序不确定。
-
-```sql
-SELECT label
-FROM (
-    SELECT 1 AS id, 'int 1' AS label, CAST(CAST(1 AS INT) AS VARIANT) AS v UNION ALL
-    SELECT 2, 'float 1.0', CAST(CAST(1.0 AS FLOAT) AS VARIANT) UNION ALL
-    SELECT 3, 'double 1.0', CAST(CAST(1.0 AS DOUBLE) AS VARIANT) UNION ALL
-    SELECT 4, 'decimal 1.00', CAST(CAST(1.00 AS DECIMAL(10, 2)) AS VARIANT) UNION ALL
-    SELECT 5, 'decimal 1.50', CAST(CAST(1.50 AS DECIMAL(10, 2)) AS VARIANT) UNION ALL
-    SELECT 6, 'float 1.5', CAST(CAST(1.5 AS FLOAT) AS VARIANT) UNION ALL
-    SELECT 7, 'double 1.5', CAST(CAST(1.5 AS DOUBLE) AS VARIANT) UNION ALL
-    SELECT 8, 'int 2', CAST(CAST(2 AS INT) AS VARIANT) UNION ALL
-    SELECT 9, 'decimal 0.10', CAST(CAST(0.10 AS DECIMAL(10, 2)) AS VARIANT) UNION ALL
-    SELECT 10, 'double 0.1', CAST(CAST(0.1 AS DOUBLE) AS VARIANT)
-) t
-ORDER BY v, id;
-```
-
-```text
-+--------------+
-| label        |
-+--------------+
-| decimal 0.10 |
-| double 0.1   |
-| int 1        |
-| float 1.0    |
-| double 1.0   |
-| decimal 1.00 |
-| decimal 1.50 |
-| float 1.5    |
-| double 1.5   |
-| int 2        |
-+--------------+
 ```
 
 ### 按具体类型比较与按 VARIANT 比较 {#typed-comparison-and-variant-comparison}
