@@ -31,7 +31,8 @@ MULTI_SEARCH_ALL_POSITIONS(<haystack>, <needles>)
 - 位置从 1 开始计数
 - 如果子串未找到，对应位置返回 0
 - 查找是大小写敏感的
-- 如果 `<haystack>` 或 `<needles>` 为 NULL，返回 NULL
+- 如果 `<haystack>` 为 NULL，返回与 `<needles>` 长度相同、元素均为 0 的数组
+- 如果 `<needles>` 为 NULL，返回空数组 `[]`，包括两个参数均为 NULL 的情况
 - 返回的是字节位置，不是第 n 个字符位置
 
 ## 示例
@@ -94,6 +95,21 @@ SELECT multi_search_all_positions('ṭṛì ḍḍumai Hello', ['ṭṛì', 'Hel
 +----------------------------------------------------------------------------------------+
 | [1, 21, 0]                                                                             |
 +----------------------------------------------------------------------------------------+
+```
+
+NULL 输入：
+
+```sql
+SELECT multi_search_all_positions(NULL, ['a', 'b']) AS null_haystack,
+       multi_search_all_positions('a', NULL) AS null_needles,
+       multi_search_all_positions(NULL, NULL) AS both_null;
+```
+```text
++---------------+--------------+-----------+
+| null_haystack | null_needles | both_null |
++---------------+--------------+-----------+
+| [0, 0]        | []           | []        |
++---------------+--------------+-----------+
 ```
 
 ### Keywords

@@ -29,6 +29,22 @@ The following table describes how the mode argument works.
 The parameter is Date or Datetime type
 
 ### example
+
+Out-of-range modes use their lowest three bits. For example, 8 selects mode 0:
+
+```sql
+SELECT WEEK('2021-01-01', 8) AS mode_8,
+       WEEK('2021-01-01', 0) AS mode_0,
+       WEEK('2021-01-01', 7) AS mode_7;
+```
+```text
++--------+--------+--------+
+| mode_8 | mode_0 | mode_7 |
++--------+--------+--------+
+|      0 |      0 |     52 |
++--------+--------+--------+
+```
+
 ```
 mysql> select week('2020-1-1');
 +------------------+

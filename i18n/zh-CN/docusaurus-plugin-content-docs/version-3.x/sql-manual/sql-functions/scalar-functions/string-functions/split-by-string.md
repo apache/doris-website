@@ -28,9 +28,21 @@ SPLIT_BY_STRING ( <str>, <separator> )
 返回按照指定的字符串拆分成字符串数组。特殊情况：
 
 - 任意参数中有一个为 NULL，则返回 NULL
+- 如果 `<str>` 为空字符串，返回空数组 `[]`
 - `<separator>`为空字符串时，`<str>`会按字节进行拆分
 
 ## 举例
+
+```sql
+SELECT split_by_string('', ',') AS result;
+```
+```text
++--------+
+| result |
++--------+
+| []     |
++--------+
+```
 
 ```sql
 SELECT split_by_string('hello','l');
