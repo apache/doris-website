@@ -324,6 +324,7 @@ REFRESH TABLE catalog_name.db_name.table_name;
 
 Doris also supports disabling metadata caching to enable real-time access to the latest metadata.
 
+
 - Before Doris 4.1.x: please refer to [Metadata Cache](./meta-cache.md).
 - Doris 4.1.x and later: please refer to the "Metadata Cache" section in each Catalog documentation.
     - [Hive Catalog](./catalogs/hive-catalog.mdx#meta-cache)
