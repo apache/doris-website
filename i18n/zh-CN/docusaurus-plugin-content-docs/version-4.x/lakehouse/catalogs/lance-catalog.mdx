@@ -747,6 +747,8 @@ ORDER BY _distance ASC, user_id;
 | `top_k` | 否 | `10` | 跳过 `offset` 后返回的结果数，必须为正整数。 |
 | `offset` | 否 | `0` | 在向量检索内部跳过的最近邻数量，必须为非负整数。`top_k + offset` 不能超过无符号 32 位整数上限。 |
 | `metric` | 否 | `l2` | 距离类型：`l2`、`cosine`、`dot` 或 `hamming`。`dot_product` 是 `dot` 的别名。`uint8` 向量仅支持 `hamming`；其他当前支持的向量元素类型支持 `l2`、`cosine` 和 `dot`。查询 `cosine`、`dot` 或 `hamming` 索引时必须显式设置 `metric`。不支持整数多向量列及多向量 `hamming` 检索。 |
+| `distance_lower_bound` | 否 | 无下界 | 单向量检索的距离下界，包含边界值，必须是有限的 `FLOAT`。 |
+| `distance_upper_bound` | 否 | 无上界 | 单向量检索的距离上界，不包含边界值，必须是有限的 `FLOAT`。同时设置上下界时，转换为 `FLOAT` 后下界必须小于上界。 |
 | `filter` | 否 | - | Lance SQL 条件，在生成候选向量之前执行，即 Prefilter。 |
 | `nprobes` | 否 | 最少 `1`，不限制最大值 | IVF 索引探测的分区数量，必须为正整数。不设置时从 1 个分区开始；使用 Prefilter 且候选不足时，Lance 可以继续探测更多分区。显式设置为 `N` 时，最少和最多探测数都会固定为 `N`。 |
 | `refine_factor` | 否 | 单向量不启用；多向量为 `1` | 候选集精排倍数，必须为正整数。对于单向量检索，不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。**精排会读取这些候选的原始向量数据；`N` 越大，读取和计算的候选越多，可能显著增加 I/O 并降低查询性能。** 对于单向量检索，设为 `1` 会执行精排，与不设置不同。多向量检索始终使用原始向量精排，默认倍数为 `1`。 |
@@ -755,6 +757,51 @@ ORDER BY _distance ASC, user_id;
 | `version`、`timestamp`、`tag`、`branch` | 否 | - | 检索历史版本、某个时间点的版本、tag 或 branch，而不是 main 的最新版本。见[检索历史版本或 branch](#search-a-historical-version-or-branch)。 |
 
 不设置 `metric` 时，索引检索和 Flat Search 均使用 `l2`。`uint8` 列必须显式设置 `"metric" = "hamming"`，不支持默认的 `l2`。多向量检索还需要满足下文的[候选预算限制](#multi-vector-search)。
+
+### 半径与范围检索
+
+设置 `distance_upper_bound` 可执行半径检索，同时设置上下界可查询区间 `[lower, upper)`，未设置的一侧不限制距离。距离含义由所选 metric 决定：`l2` 是**欧氏距离的平方**，因此几何半径 `r` 对应的距离上界为 `r * r`。允许负数边界，适用于 `dot` 等度量。即使存储向量为 Float64，边界也使用 `FLOAT` 精度；非有限值、溢出、相等或反向区间都会被拒绝。
+
+例如，已有 Lance Catalog 表 `lance_catalog.default.items` 包含 `user_id` 和三维 Float32 `embedding` 列，数据如下：
+
+| user_id | embedding | 到 `[0, 0, 0]` 的平方 L2 距离 |
+|---|---|---|
+| 1 | `[0, 0, 0]` | 0 |
+| 2 | `[1, 0, 0]` | 1 |
+| 3 | `[2, 0, 0]` | 4 |
+
+```sql
+SELECT user_id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0, 0, 0]",
+    "metric" = "l2",
+    "top_k" = "10",
+    "use_index" = "false",
+    "distance_lower_bound" = "1",
+    "distance_upper_bound" = "4"
+)
+ORDER BY _distance;
+```
+
+```text
++---------+-----------+
+| user_id | _distance |
++---------+-----------+
+|       2 |         1 |
++---------+-----------+
+```
+
+去掉下界后还会返回第 1 行。仅设置上界为 `0` 则返回空结果。`filter` 仍在向量检索前限制候选行，`offset` 在应用距离范围后跳过结果。输出 Schema 不变，包含表中的列和 `FLOAT` 类型的 `_distance`。`EXPLAIN` 会显示 `lanceDistanceRange=[1.0, 4.0)`。
+
+距离边界支持预编译语句中的 `?` 参数，每次执行都会校验并使用当次绑定值，不接受 NULL。若不限制某一侧距离，请省略对应属性。
+
+该功能仍是 **Top-K 查询**，并非返回半径内所有行的接口：返回行数最多为 `top_k`，也可能不足。
+
+对于范围查询，只有同时提供上下界且选中索引明确为 IVF_FLAT 时，Doris 才使用索引检索。单边范围、量化索引以及子类型不明确的索引均回退到精确 Flat Search，即使设置了 `use_index=true`。因距离范围的正确性要求而未选择索引时，`EXPLAIN` 显示 `lanceVectorIndexStatus=DISTANCE_RANGE_FALLBACK`。回退可能增加扫描开销。
+
+IVF_FLAT 索引查询的候选仍取决于 `nprobes` 选择的分区；需要遍历全部候选时使用 `use_index=false`。索引未覆盖的追加数据使用 Flat Search。多向量列不支持距离边界。
 
 ### 支持的向量索引类型
 
