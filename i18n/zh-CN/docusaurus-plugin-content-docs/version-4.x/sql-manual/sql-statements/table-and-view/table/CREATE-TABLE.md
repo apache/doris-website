@@ -63,6 +63,7 @@ columns_definition
       [ AUTO_INCREMENT(<col_auto_increment_start_value>) ]
       [ DEFAULT <col_default_value> ]
       [ ON UPDATE CURRENT_TIMESTAMP (<col_on_update_precision>) ]
+      [ COMPRESSION <algorithm> [ (<level>) ] ]
       [ COMMENT '<col_comment>' ]
     -- 其他列定义
     [ , <col_name> <col_type> [ ... ] ]
@@ -259,6 +260,10 @@ CREATE TABLE <table_name> LIKE <source_table>
 **ON UPDATE CURRENT_TIMESTAMP (<col_on_update_precision>)**
 
 > 当数据更新时，如果没有指定此列的值，则使用当前时间戳更新此列数据。只能在 UNIQUE（主键模型）的表上使用。
+
+**COMPRESSION \<algorithm\> [ (\<level\>) ]**
+
+> 覆盖该列的表级默认压缩算法。该子句仅支持 OLAP 表，且只能在 `CREATE TABLE` 中指定。支持的算法包括 `NO_COMPRESSION`、`LZ4`、`LZ4F`、`LZ4HC`、`ZLIB`、`ZSTD` 和 `SNAPPY`。压缩级别为可选参数，仅 ZSTD（`1` 到 `22`）和 LZ4HC（`1` 到 `12`）支持。有关使用限制和示例，请参阅[数据压缩](../../../../table-design/column-compression.md)。
 
 ### 索引相关参数
 
