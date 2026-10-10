@@ -545,8 +545,9 @@ Doris 会将语义兼容的谓词转换为 Substrait 表达式，并交给 Lance
 | `utf8`、`large_utf8` | 支持 |
 | `date32(day)` | 支持 |
 | 无时区 `timestamp(s/ms/us)` | 支持 |
+| `list<utf8>` | 内置 `array_contains`，标签为非 `NULL` 字符串字面量；详见[数组标签谓词](#数组标签谓词) |
 
-其他可读取类型，例如 `float16`、`decimal256`、Binary、`date64`、Time、纳秒 Timestamp、带时区 Timestamp 和复杂类型，当前保留为 Doris 侧谓词。
+其他可读取类型，例如 `float16`、`decimal256`、Binary、`date64`、Time、纳秒 Timestamp、带时区 Timestamp，以及上述数组成员判断以外的复杂类型，当前保留为 Doris 侧谓词。
 
 ### 支持下推的操作符
 
@@ -559,13 +560,14 @@ Doris 会将语义兼容的谓词转换为 Substrait 表达式，并交给 Lance
 | 布尔列、`NOT` 布尔列 | 直接引用布尔列 |
 | `LIKE`、`NOT LIKE` | 直接引用 `utf8` 或 `large_utf8` 列，模式为字符串字面量，且不包含反斜杠转义、显式 `ESCAPE` 子句或 NUL 字符 |
 | `starts_with`、`ends_with` | 使用内置函数，第一个参数直接引用 `utf8` 或 `large_utf8` 列，第二个参数为字符串字面量 |
+| `array_contains(labels, 'red')` | 直接引用 `list<utf8>` 列，标签为非 `NULL` 字符串字面量 |
 | `AND` | 顶层 Conjunct 可以分别下推，不能下推的部分保留在 Doris |
 | `OR` | 两个分支都能完整转换时下推 |
 | `NOT` | 操作数能完整转换时下推 |
 
 以下形式通常不会下推：
 
-- 除上述内置字符串函数之外的函数，或列上的算术表达式。名称为 `like`、`starts_with` 或 `ends_with` 的用户自定义函数不会按同名内置函数下推。
+- 除上述内置字符串函数和数组成员判断函数之外的函数，或列上的算术表达式。名称为 `like`、`starts_with`、`ends_with` 或 `array_contains` 的用户自定义函数不会按同名内置函数下推。
 - 模式包含 NUL 字符的字符串谓词。使用反斜杠转义或显式 `ESCAPE` 子句的 `LIKE`、`NOT LIKE` 也保留在 Doris。
 - `IN` 列表为空或包含 `NULL`。
 - `OR` 或 `NOT` 中只有部分表达式可转换。
@@ -581,6 +583,46 @@ WHERE active
   AND starts_with(name, 'A')
   AND country LIKE 'C%';
 ```
+
+### 数组标签谓词
+
+Doris 4.1 的数组标签下推更新支持对直接引用的 Lance `list<utf8>` 列执行 `array_contains`，标签必须为非 `NULL` 字符串字面量。较早的构建版本可能仍将这些条件保留在 Doris，请先通过 `EXPLAIN` 确认。`NULL` 数组仍返回 `NULL`，空数组不匹配，重复标签不会导致结果行重复。
+
+对于包含 `id` 列和 `list<utf8>` 类型 `labels` 列的 Lance 表：
+
+```sql
+EXPLAIN
+SELECT id
+FROM lance_catalog.default.items
+WHERE array_contains(labels, 'red')
+  AND array_contains(labels, 'blue');
+```
+
+该条件匹配同时包含两个标签的数组，不要求标签顺序或相邻位置。将 `AND` 改为 `OR` 表示匹配任一标签。`NOT (array_contains(labels, 'red'))` 也可以转换，并保留 SQL 的 `NULL` 语义。这些示例适用于普通表扫描，不改变搜索 TVF 的 `filter` 参数与外层 `WHERE` 条件的区别。
+
+以下条件仍保留在 Doris 求值：
+
+- `array_contains(labels, NULL)`：Doris 可以匹配数组中的 `NULL` 元素，Lance 成员判断函数对 `NULL` 标签的语义不同。
+- `array_contains_all(labels, ['red', 'blue'])`：Doris 判断有序、连续的子序列，不能替换为 Lance 的集合包含函数或两个独立的成员判断条件。
+- 动态标签、数组列上的表达式或类型转换，以及其他数组元素或容器类型，包括 `large_list`、定长列表和 `list<large_utf8>`。
+
+### 谓词下推与标量索引使用
+
+谓词下推表示由 Lance 求值，不保证使用索引。普通扫描中，Doris 可以为每个扫描任务指定一个物理 BTree、Bitmap 或 LabelList 索引段。对于同列的 `IN`、`AND`、`OR`、`NOT` 组合，Lance 支持相应完整表达式时可以使用选中的索引。`OR` 的两个分支都必须提供安全的候选集，`NOT` 不能对仅求值一部分的子树取反。不支持的索引表达式会回退为分配的 Fragment 范围内的扫描。
+
+每个任务选择**一个逻辑标量索引**。同时包含标签、类别和数值条件的查询，并不表示 Doris 会对三个索引求交集。下推的完整条件会在扫描 LIMIT 生效前再次检查，索引未覆盖的 Fragment 仍会读取。没有可用索引时，兼容的谓词也可以下推，由 Lance 扫描求值。
+
+应结合以下信息验证：
+
+| 验证信息 | 含义 |
+|---|---|
+| `EXPLAIN` 中的 `lancePushdownPredicate` | 已发送给 Lance 的条件；剩余的 `predicates:` 条件由 Doris 求值。 |
+| `EXPLAIN` 中的 `lanceScalarIndexScan=SEGMENT` 和 `lanceGroupingIndex` | 已规划标量索引段扫描，并显示选中的逻辑索引；不能单独证明运行时使用了索引。 |
+| Profile 中的 `LanceScalarIndexSegmentsSearched` | 已埋点的标量索引段路径实际执行的搜索次数。 |
+| Profile 中的 `LanceScalarIndexCandidateRows` | 该路径报告的候选行数，不一定等于最终结果行数。部分 `NOT` 表达式等补集掩码可能不报告候选集基数。 |
+| Profile 中的 `LanceScalarIndexSegmentFallbacks` | 从规划的标量索引段路径回退的任务数。 |
+
+开启 `enable_profile` 后查看这些计数器。衡量优化效果时，应保持 SQL、投影列、数据集版本和缓存状态一致。这些计数器描述普通标量索引段扫描，不能单独用于判断 ANN 或全文搜索预过滤内部是否使用了标量索引。
 
 ### Runtime Filter 下推
 
