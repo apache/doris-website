@@ -19,6 +19,7 @@ import type { Props } from '@theme/DocItem/Layout';
 import { DocsEdit } from '../../../components/Icons/docs-edit';
 import MobileSidebarDrawer from './MobileSidebarDrawer';
 import JapaneseFallback from './JapaneseFallback';
+import { isJapaneseFallback as usesEnglishFallback } from '@site/src/utils/japanese';
 
 import styles from './styles.module.css';
 
@@ -61,11 +62,11 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
     const isZH = currentLocale === 'zh-CN';
     // metadata.source is the file actually selected by the content plugin,
     // including its per-file fallback. Do not infer translation from the URL.
-    const isJapaneseFallback = currentLocale === 'ja' && !metadata.source.startsWith('@site/i18n/ja/');
+    const isJapaneseFallback = usesEnglishFallback(metadata.source, currentLocale);
     const docContent = isJapaneseFallback ? (
         <>
             <JapaneseFallback permalink={metadata.permalink} />
-            <div lang="en"><DocItemContent>{children}</DocItemContent></div>
+            <DocItemContent>{children}</DocItemContent>
         </>
     ) : <DocItemContent>{children}</DocItemContent>;
 

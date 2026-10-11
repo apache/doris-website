@@ -7,6 +7,8 @@ import { translate } from '@docusaurus/Translate';
 export function japaneseHomeLink(href: string): string {
     if (i18n.currentLocale !== 'ja' || !href.startsWith('/')) return href;
     if (href.startsWith('/ja/')) return href;
+    // The course hub is an ordinary page; lessons use the docs plugin.
+    if (/^\/course\/?(?:[?#]|$)/.test(href)) return `pathname://${href}`;
     if (/^\/(docs|community|releases|course)(\/|$)/.test(href)) return href;
     return `pathname://${href}`;
 }
@@ -29,4 +31,8 @@ export function japaneseAiLabels(): Record<string, string> {
         'data-kapa-slow-label': translate({ id: 'homepage.ai.slow', message: 'Still loading…' }),
         'data-kapa-error-label': translate({ id: 'homepage.ai.error', message: 'AI unavailable' }),
     };
+}
+
+export function isJapaneseFallback(source: string, locale: string): boolean {
+    return locale === 'ja' && !source.startsWith('@site/i18n/ja/');
 }

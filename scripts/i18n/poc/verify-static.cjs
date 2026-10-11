@@ -28,6 +28,7 @@ const sampleRoutes = [
 const japaneseRoutes = sampleRoutes.filter(route => route === '/' || route.startsWith('/docs/') || route.startsWith('/community/')).map(route => `/ja${route}`);
 const themes = ['doris', 'golden', 'blue', 'read', 'yellow-blue', 'purple', 'yellow-black', 'sky'];
 const previewAliases = [];
+const ssrAnchorAdjustments = [];
 function fileFor(route) {
     const filename = path.resolve(site, `.${decodeURIComponent(new URL(route, 'http://local').pathname)}`);
     assert(filename === site || filename.startsWith(`${site}${path.sep}`));
@@ -54,6 +55,17 @@ function signature(route) {
     // Japanese is a deliberate additional switch option when enabled. It must
     // not alter existing locale content or destinations.
     $('script, style, noscript, a[lang="ja"]').remove();
+    // The unmodified baseline's HTML serializer sometimes inserts U+FFFD into
+    // Chinese heading IDs/hashes. Record that noise separately; body text and
+    // ordinary URLs remain exact, and hydrated heading IDs are compared below.
+    const cleanAnchor = value => {
+        if (!value.includes('\uFFFD')) return value;
+        const cleaned = value.replace(/\uFFFD/g, '');
+        ssrAnchorAdjustments.push({ route, original: value, cleaned });
+        return cleaned;
+    };
+    $('h1[id],h2[id],h3[id]').each((index, node) => $(node).attr('id', cleanAnchor($(node).attr('id'))));
+    $('a[href^="#"]').each((index, node) => $(node).attr('href', cleanAnchor($(node).attr('href'))));
     return {
         lang: $('html').attr('lang'), title: $('title').text(),
         description: $('meta[name="description"]').attr('content') ?? null,
@@ -65,7 +77,7 @@ function signature(route) {
 }
 const signatures = Object.fromEntries(['', '/zh-CN'].flatMap(prefix => sampleRoutes.map(route => [prefix + route, signature(prefix + route)])));
 fs.writeFileSync(path.join(output, 'signatures.json'), JSON.stringify(signatures, null, 2));
-const results = { site, expectJapanese, redirectCdn, devOnly, previewAliases, checks: [], pages: [], network: [], errors: [] };
+const results = { site, expectJapanese, redirectCdn, devOnly, previewAliases, ssrAnchorAdjustments, checks: [], pages: [], network: [], errors: [] };
 const baselineRenderedPath = option('--baseline') && path.join(path.dirname(option('--baseline')), 'rendered.json');
 const baselineRendered = baselineRenderedPath && fs.existsSync(baselineRenderedPath)
     ? JSON.parse(fs.readFileSync(baselineRenderedPath, 'utf8')) : undefined;
@@ -171,7 +183,7 @@ let browser;
             assert.equal(state.notice, fallback, route);
             const body = page.locator('.theme-doc-markdown');
             if (fallback) {
-                assert(await page.locator('div[lang="en"] .theme-doc-markdown').count(), `English body language missing: ${route}`);
+                assert(await page.locator('.theme-doc-markdown[lang="en"]').count(), `English body language missing: ${route}`);
                 const english = cheerio.load(fs.readFileSync(fileFor(route.replace(/^\/ja/, '')), 'utf8'));
                 assert.equal(normalize(await body.textContent()), normalize(english('.theme-doc-markdown').text()), `Wrong version or stale fallback: ${route}`);
             } else if (route !== '/ja/') {

@@ -48,7 +48,7 @@
     "message": "ブログ（英語）"
   },
   "homepage.navbar.018": {
-    "message": "講座"
+    "message": "講座（英語）"
   },
   "homepage.navbar.019": {
     "message": "プロファイル分析（英語）"
@@ -753,10 +753,10 @@
     "message": "開く（英語）"
   },
   "homepage.news.courseCopy": {
-    "message": "新しい無料の Apache Doris 101 講座で、基礎を学べます。"
+    "message": "新しい無料の Apache Doris 101 講座（英語）で、基礎を学べます。"
   },
   "homepage.news.start": {
-    "message": "はじめる"
+    "message": "はじめる（英語）"
   },
   "homepage.news.roadmapCopy": {
     "message": "Apache Doris コミュニティのロードマップで、今後の開発予定を確認できます。"
