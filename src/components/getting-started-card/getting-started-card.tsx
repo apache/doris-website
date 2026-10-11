@@ -1,3 +1,4 @@
+import { japaneseHomeLink } from '@site/src/utils/japanese';
 import React from 'react';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
@@ -52,7 +53,7 @@ function CardIcon({ icon, title }: { icon: string; title: string }) {
 export default function GettingStartedCard({ title, description, link, icon }: CardProps) {
     const { metadata } = useDoc();
     return (
-        <Link to={resolveDocRelativeLink(link, metadata)} className="getting-started-card">
+        <Link to={japaneseHomeLink(resolveDocRelativeLink(link, metadata))} className="getting-started-card">
             {icon && (
                 <div className="card-icon">
                     <CardIcon icon={icon} title={title} />

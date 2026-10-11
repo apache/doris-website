@@ -1,0 +1,78 @@
+{
+  "link.title.ASF": {
+    "message": "ASF",
+    "description": "The title of the footer links column with title=ASF in the footer"
+  },
+  "link.title.Resources": {
+    "message": "リソース",
+    "description": "The title of the footer links column with title=Resources in the footer"
+  },
+  "link.title.Community": {
+    "message": "コミュニティ",
+    "description": "The title of the footer links column with title=Community in the footer"
+  },
+  "link.item.label.Foundation": {
+    "message": "財団",
+    "description": "The label of footer link with label=Foundation linking to https://www.apache.org/"
+  },
+  "link.item.label.License": {
+    "message": "ライセンス",
+    "description": "The label of footer link with label=License linking to https://www.apache.org/licenses/"
+  },
+  "link.item.label.Events": {
+    "message": "イベント",
+    "description": "The label of footer link with label=Events linking to https://www.apache.org/events/current-event"
+  },
+  "link.item.label.Sponsorship": {
+    "message": "スポンサーシップ",
+    "description": "The label of footer link with label=Sponsorship linking to https://www.apache.org/foundation/sponsorship.html"
+  },
+  "link.item.label.Privacy": {
+    "message": "プライバシー",
+    "description": "The label of footer link with label=Privacy linking to https://privacy.apache.org/policies/privacy-policy-public.html"
+  },
+  "link.item.label.Security": {
+    "message": "セキュリティ",
+    "description": "The label of footer link with label=Security linking to https://www.apache.org/security/"
+  },
+  "link.item.label.Thanks": {
+    "message": "謝辞",
+    "description": "The label of footer link with label=Thanks linking to https://www.apache.org/foundation/thanks.html"
+  },
+  "link.item.label.Download": {
+    "message": "ダウンロード（英語）",
+    "description": "The label of footer link with label=Download linking to /download"
+  },
+  "link.item.label.Brand Assets": {
+    "message": "ブランド素材（英語）",
+    "description": "The label of footer link with label=Brand Assets linking to /brand-assets"
+  },
+  "link.item.label.Blog": {
+    "message": "ブログ（英語）",
+    "description": "The label of footer link with label=Blog linking to /blog"
+  },
+  "link.item.label.How to contribute": {
+    "message": "貢献する方法",
+    "description": "The label of footer link with label=How to contribute linking to /community/how-to-contribute/contribute-to-doris"
+  },
+  "link.item.label.Source code": {
+    "message": "ソースコード",
+    "description": "The label of footer link with label=Source code linking to https://github.com/apache/doris/"
+  },
+  "link.item.label.Doris team": {
+    "message": "Doris チーム",
+    "description": "The label of footer link with label=Doris team linking to /community/team"
+  },
+  "link.item.label.Roadmap": {
+    "message": "ロードマップ",
+    "description": "The label of footer link with label=Roadmap linking to /community/roadmap"
+  },
+  "link.item.label.Improvement proposal": {
+    "message": "改善提案",
+    "description": "The label of footer link with label=Improvement proposal linking to https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals"
+  },
+  "copyright": {
+    "message": "Copyright © 2026 The Apache Software Foundation,Licensed under the <a href=\"https://www.apache.org/licenses/LICENSE-2.0\" target=\"_blank\">Apache License, Version 2.0</a>. Apache, Doris, Apache Doris, the Apache feather logo and the Apache Doris logo are trademarks of The Apache Software Foundation.",
+    "description": "The footer copyright"
+  }
+}

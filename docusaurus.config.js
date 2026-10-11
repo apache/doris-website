@@ -7,6 +7,7 @@ const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const REDIRECTS_4X = require('./config/redirects-4.x.json');
 const path = require('path');
+const ENABLE_JA = process.env.DORIS_ENABLE_JA === 'true';
 
 const BRAND_THEME_BOOTSTRAP = `(function () {
     var theme = 'doris';
@@ -251,7 +252,7 @@ const config = {
     trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
-        locales: ['en', 'zh-CN'],
+        locales: ENABLE_JA ? ['en', 'zh-CN', 'ja'] : ['en', 'zh-CN'],
         localeConfigs: {
             en: {
                 label: 'English',
@@ -261,6 +262,7 @@ const config = {
                 label: '中文',
                 htmlLang: 'zh-Hans-CN',
             },
+            ...(ENABLE_JA && { ja: { label: '日本語', htmlLang: 'ja' } }),
         },
     },
     headTags: [

@@ -1,0 +1,14 @@
+{
+  "version.label": {
+    "message": "Dev",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Get Started": {
+    "message": "入門",
+    "description": "The label for category Get Started in sidebar docs"
+  },
+  "sidebar.docs.category.Getting Started": {
+    "message": "入門",
+    "description": "The label for category Getting Started in sidebar docs"
+  }
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import LinkItem from '@theme/Footer/LinkItem';
 import type {Props} from '@theme/Footer/Links/MultiColumn';
+import { japaneseHomeLink } from '@site/src/utils/japanese';
 
 type ColumnType = Props['columns'][number];
 type ColumnItemType = ColumnType['items'][number];
@@ -15,7 +16,11 @@ function ColumnLinkItem({item}: {item: ColumnItemType}) {
     />
   ) : (
     <li key={item.href ?? item.to} className="footer__item">
-      <LinkItem item={item} />
+      <LinkItem item={{
+        ...item,
+        ...(item.href && { href: japaneseHomeLink(item.href) }),
+        ...(item.to && { to: japaneseHomeLink(item.to) }),
+      }} />
     </li>
   );
 }

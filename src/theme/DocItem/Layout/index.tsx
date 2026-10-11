@@ -18,6 +18,7 @@ import LastUpdated from '@theme/LastUpdated';
 import type { Props } from '@theme/DocItem/Layout';
 import { DocsEdit } from '../../../components/Icons/docs-edit';
 import MobileSidebarDrawer from './MobileSidebarDrawer';
+import JapaneseFallback from './JapaneseFallback';
 
 import styles from './styles.module.css';
 
@@ -58,6 +59,15 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
     } = useDocusaurusContext();
     const [isNew, setIsNew] = useState(true);
     const isZH = currentLocale === 'zh-CN';
+    // metadata.source is the file actually selected by the content plugin,
+    // including its per-file fallback. Do not infer translation from the URL.
+    const isJapaneseFallback = currentLocale === 'ja' && !metadata.source.startsWith('@site/i18n/ja/');
+    const docContent = isJapaneseFallback ? (
+        <>
+            <JapaneseFallback permalink={metadata.permalink} />
+            <div lang="en"><DocItemContent>{children}</DocItemContent></div>
+        </>
+    ) : <DocItemContent>{children}</DocItemContent>;
 
     // Older versioned docs keep their timestamp metadata for indexing, but only
     // Dev, the latest stable version, community docs, and course lessons display it.
@@ -78,7 +88,7 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
         return (
             <>
                 <ContentVisibility metadata={metadata} />
-                <DocItemContent>{children}</DocItemContent>
+                {docContent}
             </>
         );
     }
@@ -104,7 +114,7 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
                                 />
                             </div>
                         )}
-                        <DocItemContent>{children}</DocItemContent>
+                        {docContent}
                         <DocItemFooter />
                     </article>
                     <div className={`flex items-center text-sm lg:text-base justify-end lg:col mt-10`}>

@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, {
     JSX,
     MutableRefObject,
@@ -45,7 +46,7 @@ interface EcosystemBlockProps {
 const SOURCES: EcosystemGroup[] = [
     {
         id: 'db',
-        title: 'Database',
+        title: translate({ id: "homepage.ecosystem.001", message: "Database" }),
         tag: 'OLTP / CDC',
         logos: [
             {
@@ -62,7 +63,7 @@ const SOURCES: EcosystemGroup[] = [
     },
     {
         id: 'stream',
-        title: 'Datastream',
+        title: translate({ id: "homepage.ecosystem.003", message: "Datastream" }),
         tag: 'Pub/Sub',
         logos: [
             {
@@ -79,8 +80,8 @@ const SOURCES: EcosystemGroup[] = [
     },
     {
         id: 'lake',
-        title: 'Datalake',
-        tag: 'Open Tables',
+        title: translate({ id: "homepage.ecosystem.005", message: "Datalake" }),
+        tag: translate({ id: "homepage.ecosystem.006", message: "Open Tables" }),
         logos: [
             {
                 name: 'Iceberg',
@@ -104,8 +105,8 @@ const SOURCES: EcosystemGroup[] = [
 const CONSUMERS: EcosystemGroup[] = [
     {
         id: 'bi',
-        title: 'BI & Visualization',
-        tag: 'Dashboards',
+        title: translate({ id: "homepage.ecosystem.007", message: "BI & Visualization" }),
+        tag: translate({ id: "homepage.ecosystem.008", message: "Dashboards" }),
         logos: [
             {
                 name: 'Superset',
@@ -121,11 +122,11 @@ const CONSUMERS: EcosystemGroup[] = [
     },
     {
         id: 'ai',
-        title: 'AI & Analytics',
-        tag: 'LLM / Agents',
+        title: translate({ id: "homepage.ecosystem.009", message: "AI & Analytics" }),
+        tag: translate({ id: "homepage.ecosystem.010", message: "LLM / Agents" }),
         logos: [
             {
-                name: 'AI Agents',
+                name: translate({ id: 'homepage.ecosystem.aiAgents', message: 'AI Agents' }),
                 logoSrc: '/images/ecomsystem-log/ai-agent.svg',
                 className: 'ecosystem-next__logo--ai-agents',
             },
@@ -138,8 +139,8 @@ const CONSUMERS: EcosystemGroup[] = [
     },
     {
         id: 'obs',
-        title: 'Observability',
-        tag: 'Monitoring',
+        title: translate({ id: "homepage.ecosystem.011", message: "Observability" }),
+        tag: translate({ id: "homepage.ecosystem.012", message: "Monitoring" }),
         logos: [
             {
                 name: 'Grafana',
@@ -159,21 +160,19 @@ function EcosystemHeader({ showCoverage = false }: { showCoverage?: boolean }): 
     return (
         <div className="ecosystem-next__header">
             <div className="ecosystem-next__header-left">
-                <div className="ecosystem-next__eyebrow">Ecosystem</div>
+                <div className="ecosystem-next__eyebrow">{translate({ id: "homepage.ecosystem.013", message: "Ecosystem" })}</div>
                 <h2 className="ecosystem-next__headline" id="ecosystem-next-title">
-                    <span>At the Heart of the</span>
-                    <span className="ecosystem-next__headline-accent">Modern Data Stack.</span>
+                    <span>{translate({ id: "homepage.ecosystem.014", message: "At the Heart of the" })}</span>
+                    <span className="ecosystem-next__headline-accent">{translate({ id: "homepage.ecosystem.015", message: "Modern Data Stack." })}</span>
                 </h2>
             </div>
             {showCoverage ? (
-                <div className="ecosystem-next__header-right" aria-label="Connector coverage summary">
+                <div className="ecosystem-next__header-right" aria-label={translate({ id: "homepage.ecosystem.016", message: "Connector coverage summary" })}>
                     <div className="ecosystem-next__coverage-text">
                         <span className="ecosystem-next__coverage-line ecosystem-next__coverage-line--lead">
-                            50+ Connectors
-                        </span>
+                            {translate({ id: "homepage.ecosystem.017", message: "50+ Connectors" })}</span>
                         <span className="ecosystem-next__coverage-line ecosystem-next__coverage-line--subtle">
-                            Databases, streaming, lakehouse, BI, AI, and observability.
-                        </span>
+                            {translate({ id: "homepage.ecosystem.018", message: "Databases, streaming, lakehouse, BI, AI, and observability." })}</span>
                     </div>
                 </div>
             ) : null}
@@ -517,9 +516,9 @@ function CompactEcosystem(): JSX.Element {
             <Link
                 className="ecosystem-next__graphic-link ecosystem-next__compact-card"
                 to={DATA_INTEGRATION_DOC_LINK}
-                aria-label="View Apache Doris data integration documentation"
+                aria-label={translate({ id: "homepage.ecosystem.019", message: "View Apache Doris data integration documentation" })}
             >
-                <CompactTier label="Upstream — Sources" num="01" groups={SOURCES} />
+                <CompactTier label={translate({ id: "homepage.ecosystem.020", message: "Upstream — Sources" })} num="01" groups={SOURCES} />
                 <CompactConnector />
                 <div className="ecosystem-next__compact-engine">
                     <div className="ecosystem-next__doris">
@@ -536,7 +535,7 @@ function CompactEcosystem(): JSX.Element {
                     </div>
                 </div>
                 <CompactConnector />
-                <CompactTier label="Downstream — Consumers" num="03" groups={CONSUMERS} />
+                <CompactTier label={translate({ id: "homepage.ecosystem.022", message: "Downstream — Consumers" })} num="03" groups={CONSUMERS} />
             </Link>
         </section>
     );
@@ -565,7 +564,7 @@ export function EcosystemSection(): JSX.Element {
                         <Link
                             className="ecosystem-next__graphic-link ecosystem-next__card"
                             to={DATA_INTEGRATION_DOC_LINK}
-                            aria-label="View Apache Doris data integration documentation"
+                            aria-label={translate({ id: "homepage.ecosystem.019", message: "View Apache Doris data integration documentation" })}
                         >
                             <div className="ecosystem-next__panel" ref={panelRef}>
                                 <FlowLines paths={paths} />
@@ -574,8 +573,7 @@ export function EcosystemSection(): JSX.Element {
                                     <div className="ecosystem-next__col ecosystem-next__col--sources">
                                         <div className="ecosystem-next__col-head">
                                             <span className="ecosystem-next__col-num">01</span>
-                                            Upstream - Sources
-                                        </div>
+                                            {translate({ id: "homepage.ecosystem.023", message: "Upstream - Sources" })}</div>
                                         {SOURCES.map(source => (
                                             <EcosystemBlock key={source.id} data={source} side="left" refMap={blockRefs} />
                                         ))}
@@ -584,8 +582,7 @@ export function EcosystemSection(): JSX.Element {
                                     <div className="ecosystem-next__col ecosystem-next__col--center">
                                         <div className="ecosystem-next__col-head ecosystem-next__col-head--center">
                                             <span className="ecosystem-next__col-num">02</span>
-                                            The Engine
-                                        </div>
+                                            {translate({ id: "homepage.ecosystem.024", message: "The Engine" })}</div>
                                         <div className="ecosystem-next__doris" ref={dorisRef}>
                                             <div className="ecosystem-next__doris-core">
                                                 <img
@@ -603,8 +600,7 @@ export function EcosystemSection(): JSX.Element {
                                     <div className="ecosystem-next__col ecosystem-next__col--consumers">
                                         <div className="ecosystem-next__col-head ecosystem-next__col-head--right">
                                             <span className="ecosystem-next__col-num">03</span>
-                                            Downstream - Consumers
-                                        </div>
+                                            {translate({ id: "homepage.ecosystem.025", message: "Downstream - Consumers" })}</div>
                                         {CONSUMERS.map(consumer => (
                                             <EcosystemBlock key={consumer.id} data={consumer} side="right" refMap={blockRefs} />
                                         ))}

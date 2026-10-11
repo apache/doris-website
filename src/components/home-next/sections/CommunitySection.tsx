@@ -1,3 +1,5 @@
+import { japaneseDocLink } from '@site/src/utils/japanese';
+import { translate } from '@docusaurus/Translate';
 import React, { JSX } from 'react';
 import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
 import './CommunitySection.scss';
@@ -28,7 +30,7 @@ const CHANNELS: Channel[] = [
         ),
     },
     {
-        name: 'Dev Mailing List',
+        name: translate({ id: 'homepage.community.mailingList', message: 'Dev Mailing List' }),
         href: '/community/subscribe-mail-list',
         icon: (
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
@@ -72,18 +74,18 @@ export function CommunitySection(): JSX.Element {
         <section className="community-next">
             <div className="community-next__inner">
                 <header className="community-next__header">
-                    <span className="community-next__eyebrow">Community</span>
+                    <span className="community-next__eyebrow">{translate({ id: "homepage.community.001", message: "Community" })}</span>
                     <h2 className="community-next__title">
                         <span className="community-next__title-line">
-                            Connect with <span className="community-next__title-accent">5,000+ teams</span>
+                            {translate({ id: "homepage.community.002", message: "Connect with " })}<span className="community-next__title-accent">{translate({ id: "homepage.community.003", message: "5,000+ teams" })}</span>
                         </span>
-                        <span className="community-next__title-line">building on Apache Doris</span>
+                        <span className="community-next__title-line">{translate({ id: "homepage.community.004", message: "building on Apache Doris" })}</span>
                     </h2>
                 </header>
 
                 <div className="community-next__grid">
                     {CHANNELS.map((ch, i) => (
-                        <a key={i} className="community-next__card" href={ch.href} target="_blank" rel="noopener noreferrer">
+                        <a key={i} className="community-next__card" href={ch.href.startsWith('/') ? japaneseDocLink(ch.href) : ch.href} target="_blank" rel="noopener noreferrer">
                             <div className="community-next__card-main">
                                 <div className="community-next__card-icon">{ch.icon}</div>
                                 <h3 className="community-next__card-name">{ch.name}</h3>

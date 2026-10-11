@@ -1,5 +1,6 @@
 import React, { JSX, useEffect, useRef } from 'react';
 import { BRAND_THEMES, useBrandTheme } from './BrandThemeProvider';
+import { translate } from '@docusaurus/Translate';
 import './BrandThemeSwitcher.scss';
 
 function PaletteIcon(): JSX.Element {
@@ -48,11 +49,14 @@ export function BrandThemeSwitcher({ mobile = false }: { mobile?: boolean }): JS
             ref={detailsRef}
             className={`brand-theme-switcher${mobile ? ' brand-theme-switcher--mobile' : ''}`}
         >
-            <summary aria-label={`Color theme: ${currentTheme.label}`} title="Change color theme">
+            <summary
+                aria-label={translate({ id: 'homepage.theme.current', message: 'Color theme: {theme}' }, { theme: currentTheme.label })}
+                title={translate({ id: 'homepage.theme.change', message: 'Change color theme' })}
+            >
                 <PaletteIcon />
-                {mobile && <span>Color theme</span>}
+                {mobile && <span>{translate({ id: 'homepage.theme.label', message: 'Color theme' })}</span>}
             </summary>
-            <div className="brand-theme-switcher__menu" role="group" aria-label="Color theme">
+            <div className="brand-theme-switcher__menu" role="group" aria-label={translate({ id: 'homepage.theme.label', message: 'Color theme' })}>
                 {BRAND_THEMES.map(theme => (
                     <button
                         key={theme.id}

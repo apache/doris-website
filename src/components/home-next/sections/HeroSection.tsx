@@ -1,3 +1,5 @@
+import { japaneseDocLink, japaneseAiLabels } from '@site/src/utils/japanese';
+import { translate } from '@docusaurus/Translate';
 import React, { JSX, useState, useEffect, useMemo, useRef } from 'react';
 import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
 import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
@@ -161,8 +163,7 @@ function SqlCard({ rendered, isDone, activeLine, runState, onRun, onReset }: Sql
                             <LightningSvg size={14} />
                             {runState === 'executing' && (
                                 <span className="hn-sql-card__result-text" role="status" aria-live="polite">
-                                    EXECUTING QUERY ...
-                                </span>
+                                    {translate({ id: "homepage.hero.002", message: "EXECUTING QUERY ..." })}</span>
                             )}
                             {runState === 'done' && (
                                 <span className="hn-sql-card__result-time">0.043s</span>
@@ -174,22 +175,20 @@ function SqlCard({ rendered, isDone, activeLine, runState, onRun, onReset }: Sql
                             type="button"
                             className="hn-sql-card__run hn-sql-card__run--reset"
                             onClick={onReset}
-                            aria-label="Reset"
+                            aria-label={translate({ id: "homepage.hero.004", message: "Reset" })}
                         >
                             <span className="hn-sql-card__run-glyph" aria-hidden="true">↺</span>
-                            RESET
-                        </button>
+                            {translate({ id: "homepage.hero.005", message: "RESET" })}</button>
                     ) : (
                         <button
                             type="button"
                             className={`hn-sql-card__run${runState === 'ready' ? ' hn-sql-card__run--pulse' : ''}`}
                             onClick={onRun}
                             disabled={runState !== 'ready'}
-                            aria-label="Run query"
+                            aria-label={translate({ id: "homepage.hero.007", message: "Run query" })}
                         >
                             <span className="hn-sql-card__run-glyph" aria-hidden="true">▶</span>
-                            RUN
-                        </button>
+                            {translate({ id: "homepage.hero.008", message: "RUN" })}</button>
                     )}
                 </div>
             </div>
@@ -254,7 +253,7 @@ function ResultTable(): JSX.Element {
             </div>
             <div className="hn-result-table__footer">
                 <LightningSvg size={13} color="#0F1A14" />
-                <span className="hn-result-table__footer-text">3 docs · scanned 18.4M vectors</span>
+                <span className="hn-result-table__footer-text">{translate({ id: "homepage.hero.015", message: "3 docs · scanned 18.4M vectors" })}</span>
             </div>
         </div>
     );
@@ -305,8 +304,7 @@ function SqlEditorPanel(): JSX.Element {
                     <div className="hero-next__perf-pill">
                         <LightningSvg size={14} color="#0F1A14" />
                         <span>
-                            <strong>Structured, full-text, and vector</strong> search, all in one SQL.
-                        </span>
+                            <strong>{translate({ id: "homepage.hero.016", message: "Structured, full-text, and vector" })}</strong> {translate({ id: "homepage.hero.017", message: " search, all in one SQL." })}</span>
                     </div>
                 )}
             </div>
@@ -356,20 +354,17 @@ function SearchResults(): JSX.Element {
     return (
         <div className="hn-search-results">
             <div className="hn-search-results__head">
-                <span className="hn-search-results__head-label">RESULT · 5 DOCS · RANKED</span>
+                <span className="hn-search-results__head-label">{translate({ id: "homepage.hero.020", message: "RESULT · 5 DOCS · RANKED" })}</span>
                 <span className="hn-search-results__legend">
                     <span className="hn-search-results__legend-chip">
                         <i className="hn-search-results__dot hn-search-results__dot--text" />
-                        Full-text
-                    </span>
+                        {translate({ id: "homepage.hero.021", message: "Full-text" })}</span>
                     <span className="hn-search-results__legend-chip">
                         <i className="hn-search-results__dot hn-search-results__dot--vec" />
-                        Vector
-                    </span>
+                        {translate({ id: "homepage.hero.022", message: "Vector" })}</span>
                     <span className="hn-search-results__legend-chip">
                         <i className="hn-search-results__dot hn-search-results__dot--str" />
-                        Filter
-                    </span>
+                        {translate({ id: "homepage.hero.023", message: "Filter" })}</span>
                 </span>
             </div>
             <div className="hn-search-results__rows">
@@ -535,7 +530,7 @@ function NodeGraph(): JSX.Element {
     return (
         <div className="hn-node-graph">
             <div className="hn-node-graph__head">
-                <span className="hn-node-graph__head-label">KNOWLEDGE GRAPH</span>
+                <span className="hn-node-graph__head-label">{translate({ id: "homepage.hero.027", message: "KNOWLEDGE GRAPH" })}</span>
             </div>
             <div
                 className={`hn-node-graph__canvas${drag ? ' hn-node-graph__canvas--dragging' : ''}`}
@@ -639,7 +634,7 @@ function BarChart(): JSX.Element {
     return (
         <div className="hn-bar-chart">
             <div className="hn-bar-chart__head">
-                <span className="hn-bar-chart__head-label">QUERIES / DAY</span>
+                <span className="hn-bar-chart__head-label">{translate({ id: "homepage.hero.033", message: "QUERIES / DAY" })}</span>
                 <span className="hn-bar-chart__head-num">
                     <span className="hn-bar-chart__head-val">2.4M</span>
                     <span className="hn-bar-chart__head-delta">▲ 12%</span>
@@ -671,7 +666,7 @@ function BarChart(): JSX.Element {
             <div className="hn-bar-chart__foot">
                 <span className="hn-bar-chart__foot-chip"><i style={{ background: 'var(--brand-accent)' }} />P50 18ms</span>
                 <span className="hn-bar-chart__foot-chip"><i style={{ background: 'var(--brand-primary-glow)' }} />P99 43ms</span>
-                <span className="hn-bar-chart__foot-chip"><i style={{ background: '#C7B5FF' }} />error 0.00%</span>
+                <span className="hn-bar-chart__foot-chip"><i style={{ background: '#C7B5FF' }} />{translate({ id: "homepage.hero.039", message: "error 0.00%" })}</span>
             </div>
         </div>
     );
@@ -687,8 +682,8 @@ function NodeGraphAndBars(): JSX.Element {
 }
 
 const REPORT_SLIDES = [
-    { label: 'Show search results' },
-    { label: 'Show knowledge graph and query chart' },
+    { label: translate({ id: "homepage.hero.040", message: "Show search results" }) },
+    { label: translate({ id: "homepage.hero.041", message: "Show knowledge graph and query chart" }) },
 ];
 
 function ReportCarousel(): JSX.Element {
@@ -731,7 +726,7 @@ function ReportCarousel(): JSX.Element {
             >
                 <NodeGraphAndBars />
             </div>
-            <div className="hn-report-carousel__dots" role="tablist" aria-label="Switch report animation">
+            <div className="hn-report-carousel__dots" role="tablist" aria-label={translate({ id: "homepage.hero.044", message: "Switch report animation" })}>
                 {REPORT_SLIDES.map((slide, index) => (
                     <button
                         key={slide.label}
@@ -870,43 +865,36 @@ export function HeroSection(): JSX.Element {
                 <div className="hero-next__left">
                     <div className="hero-next__intro">
                         <h1 className="hero-next__title">
-                            <span className="hero-next__title-line">Lightning</span>
+                            <span className="hero-next__title-line">{translate({ id: "homepage.hero.049", message: "Lightning" })}</span>
                             <span className="hero-next__title-line hero-next__title-fast">
-                                <span className="hero-next__title-accent">Fast</span>
+                                <span className="hero-next__title-accent">{translate({ id: "homepage.hero.050", message: "Fast" })}</span>
                                 <LightningSvg size={56} />
                             </span>
                             <span className="hero-next__title-line hero-next__title-line--mascot-host">
-                                <span className="hero-next__title-accent">Analytics</span> and
-                                <MascotWithEyes />
+                                <span className="hero-next__title-accent">{translate({ id: "homepage.hero.051", message: "Analytics" })}</span> {translate({ id: "homepage.hero.052", message: " and" })}<MascotWithEyes />
                             </span>
                             <span className="hero-next__title-line">
-                                <span className="hero-next__title-accent">Search</span> Database
-                            </span>
+                                <span className="hero-next__title-accent">{translate({ id: "homepage.hero.053", message: "Search" })}</span> {translate({ id: "homepage.hero.054", message: " Database" })}</span>
                         </h1>
 
                         <p className="hero-next__sub">
-                            Apache Doris is an open-source, real-time database for modern analytics
-                            and AI. Run it shared-nothing on bare metal, or disaggregated on
-                            cloud object storage.
-                        </p>
+                            {translate({ id: "homepage.hero.055", message: "Apache Doris is an open-source, real-time database for modern analytics and AI. Run it shared-nothing on bare metal, or disaggregated on cloud object storage." })}</p>
 
                         <div className="hero-next__ctas">
-                            <a className="hero-next__btn hero-next__btn--yellow" href={GET_STARTED_HREF}>
-                                Get Started
-                            </a>
+                            <a className="hero-next__btn hero-next__btn--yellow" href={japaneseDocLink(GET_STARTED_HREF)}>
+                                {translate({ id: "homepage.hero.056", message: "Get Started" })}</a>
                             <button
                                 type="button"
                                 className="hero-next__btn hero-next__btn--primary"
-                                aria-label="Ask Me"
+                                aria-label={translate({ id: "homepage.hero.057", message: "Ask Me" })}
                                 aria-busy="false"
                                 aria-disabled="false"
                                 data-kapa-trigger
                                 suppressHydrationWarning
                             >
                                 <StarGreenIcon />
-                                <span data-kapa-label aria-live="polite" suppressHydrationWarning>
-                                    Ask Me
-                                </span>
+                                <span data-kapa-label {...japaneseAiLabels()} aria-live="polite" suppressHydrationWarning>
+                                    {translate({ id: "homepage.hero.057", message: "Ask Me" })}</span>
                             </button>
                             <a
                                 className="hero-next__btn hero-next__btn--ghost"
@@ -915,8 +903,7 @@ export function HeroSection(): JSX.Element {
                                 rel="noopener noreferrer"
                             >
                                 <SlackIcon />
-                                Join Slack
-                            </a>
+                                {translate({ id: "homepage.hero.058", message: "Join Slack" })}</a>
                         </div>
                     </div>
                 </div>
