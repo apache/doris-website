@@ -30,9 +30,7 @@ export default function TranslationStatus({state}: {state: TranslationState}): J
     return (
         <aside className={styles.notice} lang="ja" aria-label="翻訳状況" data-translation-status={state.status}>
             <strong>{description(state)}</strong>{' '}
-            {!state.useTarget && (state.contentLocale === 'en'
-                ? '現在のバージョンの英語原文を表示しています。 '
-                : '現在のバージョンの中国語原文を表示しています。 ')}
+            {!state.useTarget && '現在のバージョンの英語原文を表示しています。 '}
             <Link to={`pathname://${target}${suffix}`} autoAddBaseUrl={false} hrefLang="en">
                 英語版を開く
             </Link>

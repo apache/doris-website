@@ -29,6 +29,7 @@ test('missing and unrecorded files cannot claim to be current Japanese translati
     assert.equal(state.status, 'unverified');
     assert.equal(state.contentLocale, 'en');
     assert.equal(state.indexable, false);
+    assert.equal(decide({...data, page:{...data.page, sourceLocale:'zh-CN'}, target:undefined}).contentLocale, 'en');
 });
 
 test('freshness does not change machine/human review identity or ownership', async () => {

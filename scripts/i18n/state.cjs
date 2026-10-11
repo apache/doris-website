@@ -54,7 +54,7 @@ function decide({page, source, target, record, technicalHash}) {
     const sourceHash = hash(source);
     const targetHash = target === undefined ? null : hash(target);
     const result = (status, useTarget = false, indexable = false) => ({
-        ...page, status, contentLocale: useTarget ? page.locale : page.sourceLocale,
+        ...page, status, contentLocale: useTarget ? page.locale : 'en',
         useTarget, indexable, sourceHash, targetHash,
         reviewStatus: record?.reviewStatus ?? 'unverified',
         translatedAt: record?.translatedAt ?? null,

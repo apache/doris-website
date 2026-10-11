@@ -63,12 +63,18 @@ attributes, and all front matter except `title`, `description` and
 `sidebar_label`. AST positions are excluded. Equal projections alone do **not**
 prove a change is prose: a parameter name in plain text could have changed, so
 an explicit human decision is still required. Unsupported parsing cannot approve
-an exception and conservatively selects the original.
+an exception and conservatively selects English.
 
 For an explicit Chinese source, the registered English identity and slug must
 remain valid. Its Chinese original must exist and match that identity/slug;
 otherwise the build reports a source problem and displays English. Japanese
 heading IDs still follow the current English page.
+
+Untranslated and unsafe pages always use the native English fallback, including
+pages configured with a Chinese translation source. That setting controls the
+translation's freshness and source-update time; its Chinese original remains
+available through a separate link. Fallback body, assets and relative imports
+come from the registered English node without mixing localization directories.
 
 ### Build adapter and SEO
 
@@ -88,8 +94,7 @@ checkout are unsupported; use separate worktrees.
 
 The adapter emits actual framework permalinks and state into each doc's metadata.
 The UI, body `lang`, `noindex`, canonical URL and alternate eligibility use that
-state. Fallback pages canonicalize to the displayed original (English by default,
-Chinese for an explicitly configured Chinese source). Stale Japanese keeps
+state. Fallback pages canonicalize to their registered English node. Stale Japanese keeps
 its Japanese canonical URL but is `noindex`. Native sitemap and local-search
 parsers honor `noindex`; the single `SiteMetadata` alternate emitter excludes
 Japanese for those pages. Current translations receive reciprocal en/zh-CN/ja

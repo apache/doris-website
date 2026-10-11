@@ -89,11 +89,11 @@ module.exports = async function translationDocsPlugin(context, options) {
                 const targetDoc = await metadata(contexts.ja, options, versions.ja[index], filename, targetFile, target).catch(() => null);
                 if (!targetDoc || targetDoc.id !== englishDoc.id || targetDoc.slug !== englishDoc.slug || targetDoc.draft !== englishDoc.draft
                     || targetDoc.unlisted !== englishDoc.unlisted) {
-                    state = {...state, status: 'state_conflict', useTarget: false, indexable: false, contentLocale: sourceLocale};
+                    state = {...state, status: 'state_conflict', useTarget: false, indexable: false, contentLocale: 'en'};
                 } else {
                     try { localizedContent = await alignHeadings(sourceLocale === 'en' ? sourceStructure
                         : await structure(englishContent, path.extname(filename), maintainCase), target, path.extname(filename), maintainCase); }
-                    catch { state = {...state, status: 'heading_conflict', useTarget: false, indexable: false, contentLocale: sourceLocale}; }
+                    catch { state = {...state, status: 'heading_conflict', useTarget: false, indexable: false, contentLocale: 'en'}; }
                 }
             }
             // A Chinese source can supply content only for an English registered
@@ -103,8 +103,7 @@ module.exports = async function translationDocsPlugin(context, options) {
                 state = {...state, status: 'source_route_conflict', useTarget: false, indexable: false, contentLocale: 'en'};
                 reports.push({kind: 'source_divergence', ...page, reason: 'source_route_conflict'});
             }
-            const selectedContent = state.useTarget ? localizedContent
-                : state.contentLocale === 'zh-CN' ? chineseContent : englishContent;
+            const selectedContent = state.useTarget ? localizedContent : englishContent;
             const japaneseDoc = await metadata(contexts.ja, options, versions.ja[index], filename, targetFile, selectedContent);
             const indexable = state.indexable && !japaneseDoc.draft && !japaneseDoc.unlisted && !versions.ja[index].noIndex;
             state = {...state, indexable, draft: japaneseDoc.draft, unlisted: japaneseDoc.unlisted,
@@ -115,7 +114,7 @@ module.exports = async function translationDocsPlugin(context, options) {
             pages.push(state);
             if (context.i18n.currentLocale === locale) {
                 const viewFile = path.join(viewPluginDir, versionDir, filename);
-                if (state.useTarget || state.contentLocale === 'zh-CN') {
+                if (state.useTarget) {
                     await fs.mkdir(path.dirname(viewFile), {recursive: true});
                     await fs.writeFile(viewFile, selectedContent);
                 } else {
@@ -171,7 +170,7 @@ module.exports = async function translationDocsPlugin(context, options) {
                         // Even plugins that hide the date need the real source
                         // timestamp for sitemap lastmod when their file is in
                         // the temporary view (which has no Git history).
-                        const sourceOptions = state.useTarget || state.contentLocale === 'zh-CN'
+                        const sourceOptions = state.useTarget
                             ? {...options, showLastUpdateTime: true} : options;
                         const lastUpdate = await readLastUpdateData(sourceFile, sourceOptions, parsed.frontMatter.last_update);
                         doc.lastUpdatedAt = lastUpdate.lastUpdatedAt;
