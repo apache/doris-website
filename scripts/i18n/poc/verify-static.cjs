@@ -52,6 +52,10 @@ function signature(route) {
     const file = fileFor(route);
     assert(fs.existsSync(file), `Missing static route: ${route}`);
     const $ = cheerio.load(fs.readFileSync(file, 'utf8'));
+    if (!redirectCdn) {
+        assert.equal($('script[src^="https://cdnd.selectdb.com/"],link[href^="https://cdnd.selectdb.com/"]').length, 0,
+            `Static preview still bootstraps old CDN resources: ${route}`);
+    }
     // Japanese is a deliberate additional switch option when enabled. It must
     // not alter existing locale content or destinations.
     $('script, style, noscript, a[lang="ja"]').remove();
@@ -155,7 +159,13 @@ let browser;
         assert.equal(response.status(), 200, route);
         await page.waitForTimeout(250);
         if (route.endsWith('/blog/')) {
-            await page.waitForSelector('article[itemprop="blogPost"] h1', { timeout: 30000 });
+            try {
+                await page.waitForSelector('article[itemprop="blogPost"] h1', { timeout: 30000, state: 'attached' });
+            } catch (error) {
+                fs.writeFileSync(path.join(output, 'blog-render-failure.html'), await page.content());
+                await page.screenshot({ path: path.join(output, 'blog-render-failure.png') });
+                throw error;
+            }
         }
         assert(await page.locator('#__docusaurus').innerText(), `Empty hydrated page: ${route}`);
         return page;
