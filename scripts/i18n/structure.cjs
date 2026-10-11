@@ -61,7 +61,7 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
         .filter(([key]) => !['title', 'description', 'sidebar_label'].includes(key))
         .sort(([a], [b]) => a.localeCompare(b)));
     return {
-        content, headings,
+        content, headings, format,
         technicalHash: hash(JSON.stringify([technicalMetadata, protectedNodes, headings.map(({depth, id}) => ({depth, id}))])),
     };
 }
@@ -81,7 +81,8 @@ async function alignHeadings(sourceStructure, target, extension, maintainCase = 
         // ATX and setext headings both receive the source ID in their text.
         const lines = original.split('\n');
         const textLine = /^\s{0,3}(?:=+|-+)\s*$/.test(lines[lines.length - 1]) ? lines.length - 2 : lines.length - 1;
-        lines[textLine] = lines[textLine].replace(/\s*\{#[^}]+\}\s*(?:#+\s*)?$/, '').replace(/\s+#+\s*$/, '') + ` {#${id}}`;
+        const marker = parsed.format === 'mdx' && textLine !== lines.length - 1 ? ` \\{#${id}}` : ` {#${id}}`;
+        lines[textLine] = lines[textLine].replace(/\s*\\?\{#[^}]+\}\s*(?:#+\s*)?$/, '').replace(/\s+#+\s*$/, '') + marker;
         content = content.slice(0, start.offset) + lines.join('\n') + content.slice(end.offset);
     }
     // Keep original front matter bytes (and raw targetHash). Only the ignored

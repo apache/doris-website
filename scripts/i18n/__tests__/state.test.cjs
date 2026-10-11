@@ -119,4 +119,7 @@ test('MDX imports, expressions and explicit IDs preserve heading order and raw o
     const override = '---\nmdx:\n  format: mdx\n---\n';
     assert.deepEqual((await structure(override + japanese, '.md')).headings.map(h => h.id), ['getting-started', 'usage', 'usage-1']);
     assert.deepEqual((await structure(override + source, '.md')).headings.map(h => h.id), ['getting-started', 'usage', 'usage-1']);
+    const setext = await structure('English heading\n---------------\n', '.mdx');
+    const setextTarget = await alignHeadings(setext, '日本語の見出し\n-------------\n', '.mdx');
+    assert.deepEqual((await structure(setextTarget, '.mdx')).headings.map(h => h.id), ['english-heading']);
 });
