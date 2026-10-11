@@ -27,7 +27,7 @@ function verify({site, manifest}) {
     for (const page of data.pages) {
         const filename = path.join(site, decodeURIComponent(page.permalink), 'index.html');
         if (!fs.existsSync(filename)) {
-            assert(!page.indexable, `Missing indexable page: ${page.permalink}`);
+            assert(page.draft, `Missing non-draft static page: ${page.permalink}`);
             continue;
         }
         const $ = cheerio.load(fs.readFileSync(filename, 'utf8'));

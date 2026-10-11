@@ -105,7 +105,8 @@ module.exports = async function translationDocsPlugin(context, options) {
                 : state.contentLocale === 'zh-CN' ? chineseContent : englishContent;
             const japaneseDoc = await metadata(contexts.ja, options, versions.ja[index], filename, targetFile, selectedContent);
             const indexable = state.indexable && !japaneseDoc.draft && !japaneseDoc.unlisted && !versions.ja[index].noIndex;
-            state = {...state, indexable, permalink: route(japaneseDoc.permalink), englishPermalink: route(englishDoc.permalink),
+            state = {...state, indexable, draft: japaneseDoc.draft, unlisted: japaneseDoc.unlisted,
+                permalink: route(japaneseDoc.permalink), englishPermalink: route(englishDoc.permalink),
                 sourcePermalink: route(nativeSourceDoc.permalink),
                 alternates: {en: route(englishDoc.permalink), 'zh-CN': route(chineseDoc.permalink),
                     ...(indexable ? {ja: route(japaneseDoc.permalink)} : {})}};
