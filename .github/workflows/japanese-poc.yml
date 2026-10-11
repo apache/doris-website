@@ -85,7 +85,9 @@ jobs:
             --source baseline-source --output evidence/baseline
       - name: Save rendered baseline
         env:
-          NODE_PATH: ${{ runner.temp }}/poc-browser/node_modules
+          # The verifier lives in poc-source, whose dependencies are installed
+          # later. Resolve its HTML parser from the already installed baseline.
+          NODE_PATH: ${{ runner.temp }}/poc-browser/node_modules:${{ github.workspace }}/baseline-source/node_modules
         run: |
           node poc-source/scripts/i18n/poc/verify-static.cjs \
             --site evidence/baseline/site --output evidence/baseline/browser --cdn-to-local
