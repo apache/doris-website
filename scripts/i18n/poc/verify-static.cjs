@@ -16,6 +16,11 @@ const devOnly = argv.includes('--dev-only');
 assert(!(expectJapanese && redirectCdn), 'Japanese must load its own real same-origin resources');
 fs.mkdirSync(output, { recursive: true });
 const normalize = value => value.replace(/\s+/g, ' ').trim();
+async function waitForPath(page, target) {
+    const expected = new URL(target, 'http://preview');
+    await page.waitForURL(url => url.pathname.replace(/\/$/, '') === expected.pathname.replace(/\/$/, '')
+        && url.search === expected.search && url.hash === expected.hash);
+}
 function docText(html) {
     const $ = cheerio.load(html);
     // Default admonition captions belong to the localized UI. Keep custom
@@ -240,10 +245,10 @@ let browser;
         let documentRequests = 0;
         page.on('request', request => { if (request.isNavigationRequest() && request.frame() === page.mainFrame()) documentRequests++; });
         await page.locator('a.getting-started-card[href="/ja/docs/dev/getting-started/what-is-apache-doris/"]').click();
-        await page.waitForURL('**/ja/docs/dev/getting-started/what-is-apache-doris/');
+        await waitForPath(page, '/ja/docs/dev/getting-started/what-is-apache-doris/');
         assert.equal(documentRequests, 0, 'MDX card should navigate within Japanese SPA');
         await page.goBack();
-        await page.waitForURL('**/ja/docs/dev/getting-started/intro/');
+        await waitForPath(page, '/ja/docs/dev/getting-started/intro/');
         await page.locator('a.getting-started-card[href="/ja/docs/dev/getting-started/before-you-start-the-poc/"]').click();
         await page.waitForSelector('[aria-label="翻訳状況"]');
         checked('MDX card SPA navigation, browser back and untranslated card destination');
@@ -251,11 +256,11 @@ let browser;
         await page.goto(`${origin}/docs/${version}/getting-started/what-is-apache-doris/?poc=1#technical-features`, { waitUntil: 'networkidle' });
         await page.locator('.dropdown').filter({ has: page.locator('a[lang="ja"]') }).first().hover();
         await page.locator('a[lang="ja"]').first().click();
-        await page.waitForURL(`**/ja/docs/${version}/getting-started/what-is-apache-doris/?poc=1#technical-features`);
+        await waitForPath(page, `/ja/docs/${version}/getting-started/what-is-apache-doris/?poc=1#technical-features`);
         assert(await page.locator('#technical-features').count(), 'Translated heading lost English anchor');
         await page.locator('.dropdown').filter({ has: page.locator('a[lang="en-US"]') }).first().hover();
         await page.locator('a[lang="en-US"]').first().click();
-        await page.waitForURL(`**/docs/${version}/getting-started/what-is-apache-doris/?poc=1#technical-features`);
+        await waitForPath(page, `/docs/${version}/getting-started/what-is-apache-doris/?poc=1#technical-features`);
         checked(`Language switching preserves page, ${version} version, query and English heading hash`);
         await page.close();
         for (const width of [1440, 390]) {
