@@ -1,0 +1,14 @@
+.notice {
+    margin: 1rem 0;
+    padding: 1rem;
+    border-inline-start: 3px solid var(--brand-primary);
+    border-radius: 0.25rem;
+    background: var(--brand-surface-callout);
+    color: var(--brand-ink);
+    overflow-wrap: anywhere;
+}
+
+.notice a {
+    color: inherit;
+    text-decoration: underline;
+}

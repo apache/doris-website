@@ -1,0 +1,14 @@
+{
+  "version.label": {
+    "message": "コミュニティ",
+    "description": "The label for version current"
+  },
+  "sidebar.community.category.About the Community": {
+    "message": "コミュニティについて",
+    "description": "The label for category About the Community in sidebar community"
+  },
+  "sidebar.community.category.How to Contribute": {
+    "message": "貢献する方法",
+    "description": "The label for category How to Contribute in sidebar community"
+  }
+}

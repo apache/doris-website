@@ -1,5 +1,6 @@
+import { translate } from '@docusaurus/Translate';
 import React, { CSSProperties, FocusEvent, JSX, TransitionEvent, useEffect, useRef, useState } from 'react';
-import Link from '@docusaurus/Link';
+import Link from '@site/src/components/home-next/JapaneseLink';
 import { getRandomStartIndex, rotateItems } from './NewsTicker.logic';
 import './NewsTicker.scss';
 
@@ -12,21 +13,21 @@ interface NewsAnnouncement {
 
 const ANNOUNCEMENTS: readonly NewsAnnouncement[] = [
     {
-        tag: 'PROFILE',
-        text: 'Diagnose slow queries with the new Apache Doris Profile Analysis workspace.',
-        action: 'Open',
+        tag: translate({ id: "homepage.newsticker.001", message: "PROFILE" }),
+        text: translate({ id: 'homepage.news.profileCopy', message: 'Diagnose slow queries with the new Apache Doris Profile Analysis workspace.' }),
+        action: translate({ id: 'homepage.news.open', message: 'Open' }),
         href: '/profile-analysis',
     },
     {
-        tag: 'COURSE',
-        text: 'Learn the fundamentals with the new, free Apache Doris 101 course.',
-        action: 'Start',
+        tag: translate({ id: "homepage.newsticker.002", message: "COURSE" }),
+        text: translate({ id: 'homepage.news.courseCopy', message: 'Learn the fundamentals with the new, free Apache Doris 101 course.' }),
+        action: translate({ id: 'homepage.news.start', message: 'Start' }),
         href: '/course',
     },
     {
-        tag: 'ROADMAP',
-        text: 'See what we’re building next on the Apache Doris community roadmap.',
-        action: 'Explore',
+        tag: translate({ id: "homepage.newsticker.003", message: "ROADMAP" }),
+        text: translate({ id: 'homepage.news.roadmapCopy', message: 'See what we’re building next on the Apache Doris community roadmap.' }),
+        action: translate({ id: 'homepage.news.explore', message: 'Explore' }),
         href: '/community/roadmap',
     },
 ];
@@ -109,7 +110,7 @@ export function NewsTicker(): JSX.Element {
     return (
         <aside
             className={`homepage-news-ticker${isInteractionPaused ? ' homepage-news-ticker--paused' : ''}`}
-            aria-label="Latest Apache Doris updates"
+            aria-label={translate({ id: "homepage.newsticker.005", message: "Latest Apache Doris updates" })}
             onMouseEnter={() => setIsInteractionPaused(true)}
             onMouseLeave={() => setIsInteractionPaused(false)}
             onFocus={() => setIsInteractionPaused(true)}
@@ -117,8 +118,7 @@ export function NewsTicker(): JSX.Element {
         >
             <div className="home-next-container homepage-news-ticker__inner">
                 <span className="homepage-news-ticker__prompt" aria-hidden="true">
-                    Latest
-                </span>
+                    {translate({ id: "homepage.newsticker.006", message: "Latest" })}</span>
 
                 <div className="homepage-news-ticker__viewport">
                     <div
@@ -154,7 +154,7 @@ export function NewsTicker(): JSX.Element {
                 </div>
 
                 <span className="homepage-news-ticker__sequence" aria-hidden="true">
-                    {isInteractionPaused ? 'Paused' : sequenceLabel}
+                    {isInteractionPaused ? translate({ id: "homepage.newsticker.010", message: "Paused" }) : sequenceLabel}
                 </span>
             </div>
         </aside>

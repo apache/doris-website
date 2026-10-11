@@ -1,0 +1,128 @@
+name: Japanese PoC
+
+on:
+  workflow_dispatch:
+    inputs:
+      baseline_ref:
+        description: 'English/Chinese baseline commit or ref (no deployment)'
+        required: true
+        default: master
+  pull_request:
+    branches: [master]
+    paths:
+      - 'i18n/ja/**'
+      - 'src/**'
+      - 'static/home-next/**'
+      - 'static/js/embedded-locale.js'
+      - 'config/custom-docusaurus-plugin.js'
+      - 'config/asset-origin.js'
+      - 'config/ssrTemplate.js'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'scripts/patch-react-ssr.js'
+      - 'docusaurus.config.js'
+      - 'scripts/i18n/poc/**'
+      - '.github/workflows/japanese-poc.yml'
+
+# PR code is untrusted. This job has no deployment environment, secrets,
+# publish token, or write permission. It never uses pull_request_target.
+permissions:
+  contents: read
+
+concurrency:
+  group: japanese-poc-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full-build:
+    # Keep this expensive pre-merge probe specific to the PoC branch. Later
+    # translation PRs retain their normal checks; manual probes stay available.
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'feat/japanese-i18n-poc')
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      NODE_OPTIONS: --max-old-space-size=8192
+      PWA_SERVICE_WORKER_URL: https://doris.apache.org/sw.js
+    steps:
+      - name: Checkout PoC source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          path: poc-source
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Checkout baseline source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.baseline_ref || github.event.pull_request.base.sha || 'master' }}
+          path: baseline-source
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Use production Node version
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Add production swap allocation
+        run: |
+          sudo fallocate -l 8G /mnt/swapfile2
+          sudo chmod 600 /mnt/swapfile2
+          sudo mkswap /mnt/swapfile2
+          sudo swapon /mnt/swapfile2
+          free -h
+          swapon --show
+      - name: Prepare browser validation
+        run: |
+          npm install -g yarn@1.22.22
+          npm install --prefix "$RUNNER_TEMP/poc-browser" --no-package-lock --no-save playwright@1.62.1
+          "$RUNNER_TEMP/poc-browser/node_modules/.bin/playwright" install --with-deps chromium
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk
+      - name: Install baseline dependencies and generated inputs
+        working-directory: baseline-source
+        run: |
+          yarn cache clean
+          yarn --frozen-lockfile
+          # Use the same upstream UTF-8 fix in both dependency installations.
+          # Original baseline document/UI source remains at the base SHA.
+          node ../poc-source/scripts/patch-react-ssr.js node_modules/react-dom
+          yarn key-features:generate
+      - name: Full English and Chinese baseline
+        run: |
+          python3 poc-source/scripts/i18n/poc/measure-build.py \
+            --source baseline-source --output evidence/baseline
+      - name: Save rendered baseline
+        env:
+          # The verifier lives in poc-source, whose dependencies are installed
+          # later. Resolve its HTML parser from the already installed baseline.
+          NODE_PATH: ${{ runner.temp }}/poc-browser/node_modules:${{ github.workspace }}/baseline-source/node_modules
+        run: |
+          node poc-source/scripts/i18n/poc/verify-static.cjs \
+            --site evidence/baseline/site --output evidence/baseline/browser --cdn-to-local
+          rm -rf evidence/baseline/site baseline-source/node_modules
+      - name: Install PoC dependencies and generated inputs
+        working-directory: poc-source
+        run: |
+          yarn cache clean
+          yarn --frozen-lockfile
+          yarn key-features:generate
+          node --test scripts/i18n/poc/config.test.cjs scripts/i18n/poc/react-ssr.test.cjs
+      - name: Full sequential English, Chinese and Japanese build
+        run: |
+          python3 poc-source/scripts/i18n/poc/measure-build.py \
+            --source poc-source --output evidence/poc --japanese
+      - name: Validate PoC static artifact and existing locales
+        env:
+          NODE_PATH: ${{ runner.temp }}/poc-browser/node_modules
+        run: |
+          node poc-source/scripts/i18n/poc/verify-static.cjs \
+            --site evidence/poc/site --output evidence/poc/browser --expect-ja \
+            --baseline evidence/baseline/browser/signatures.json
+      - name: Upload evidence even when validation fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: japanese-poc-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence
+          if-no-files-found: warn
+          retention-days: 14

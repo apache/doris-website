@@ -6,7 +6,7 @@
         "docusaurus": "docusaurus",
         "start": "docusaurus start",
         "start:zh-CN": "docusaurus start --locale zh-CN",
-        "postinstall": "node scripts/patch-search-tokenize.js",
+        "postinstall": "node scripts/patch-search-tokenize.js && node scripts/patch-react-ssr.js",
         "prestart": "yarn key-features:generate",
         "build": "PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js docusaurus build",
         "prebuild": "yarn key-features:generate",

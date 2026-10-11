@@ -1,6 +1,6 @@
-export const SLACK_ENTRY_URL: string;
-export const SLACK_EVENT_CATEGORY: string;
-export const SLACK_EVENT_ACTION: string;
+export declare const SLACK_ENTRY_URL: string;
+export declare const SLACK_EVENT_CATEGORY: string;
+export declare const SLACK_EVENT_ACTION: string;
 
 /** utm_medium values the website itself is allowed to emit. */
 export type SlackEntryMedium = 'website' | 'docs';

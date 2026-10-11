@@ -1,3 +1,5 @@
+import { japaneseFrameSource } from '@site/src/utils/japanese';
+import { translate } from '@docusaurus/Translate';
 import React, { CSSProperties, JSX, useEffect, useMemo, useRef, useState } from 'react';
 import './FeaturesSection.scss';
 
@@ -29,58 +31,58 @@ const CAPABILITIES: Capability[] = [
     {
         num: '01',
         hashId: 'real-time-analytics',
-        title: 'Real-Time Analytics',
-        subtitle: 'The fastest end-to-end engine from ingestion to insight.',
+        title: translate({ id: "homepage.features.001", message: "Real-Time Analytics" }),
+        subtitle: translate({ id: "homepage.features.002", message: "The fastest end-to-end engine from ingestion to insight." }),
         tone: 'green',
         visual: 'realtime',
-        illoTag: 'High Concurrency / Low Latency',
+        illoTag: translate({ id: "homepage.features.003", message: "High Concurrency / Low Latency" }),
         rotation: -2.2,
         cta: {
-            label: 'Explore real-time analytics(Comming Soon)',
+            label: translate({ id: "homepage.features.004", message: "Explore real-time analytics(Comming Soon)" }),
             href: '#',
         },
         items: [
-            { term: 'Streaming Ingestion', desc: 'Ingest from Kafka and database CDC with second-level freshness.' },
-            { term: 'Incremental Transform', desc: 'Materialized views refresh complex transforms in minutes, not hours.' },
-            { term: 'Sub-Second Queries', desc: 'Stay sub-second under high concurrency, even on petabyte-scale data.' },
+            { term: translate({ id: "homepage.features.005", message: "Streaming Ingestion" }), desc: translate({ id: "homepage.features.006", message: "Ingest from Kafka and database CDC with second-level freshness." }) },
+            { term: translate({ id: "homepage.features.007", message: "Incremental Transform" }), desc: translate({ id: "homepage.features.008", message: "Materialized views refresh complex transforms in minutes, not hours." }) },
+            { term: translate({ id: "homepage.features.009", message: "Sub-Second Queries" }), desc: translate({ id: "homepage.features.010", message: "Stay sub-second under high concurrency, even on petabyte-scale data." }) },
         ],
     },
     {
         num: '02',
         hashId: 'lakehouse-analytics',
-        title: 'Lakehouse Analytics',
-        subtitle: 'Real-time analytics, applied directly to your open lakehouse.',
+        title: translate({ id: "homepage.features.011", message: "Lakehouse Analytics" }),
+        subtitle: translate({ id: "homepage.features.012", message: "Real-time analytics, applied directly to your open lakehouse." }),
         tone: 'cream',
         visual: 'lakehouse',
         illoTag: 'Iceberg / Delta Lake / Hudi',
         rotation: 1.6,
         cta: {
-            label: 'Explore lakehouse analytics(Comming Soon)',
+            label: translate({ id: "homepage.features.014", message: "Explore lakehouse analytics(Comming Soon)" }),
             href: '#',
         },
         items: [
-            { term: 'Extensive Catalog Support', desc: 'Query Iceberg, Delta Lake, and Hudi tables in place, with no data copy.' },
-            { term: 'Lightning-Fast Query Engine', desc: 'Vectorized execution and smart metadata caching make lake queries fast.' },
-            { term: 'Incremental Bi-directional Sync', desc: 'Stream data both ways between open lake formats and Doris internal storage.' },
+            { term: translate({ id: "homepage.features.015", message: "Extensive Catalog Support" }), desc: translate({ id: "homepage.features.016", message: "Query Iceberg, Delta Lake, and Hudi tables in place, with no data copy." }) },
+            { term: translate({ id: "homepage.features.017", message: "Lightning-Fast Query Engine" }), desc: translate({ id: "homepage.features.018", message: "Vectorized execution and smart metadata caching make lake queries fast." }) },
+            { term: translate({ id: "homepage.features.019", message: "Incremental Bi-directional Sync" }), desc: translate({ id: "homepage.features.020", message: "Stream data both ways between open lake formats and Doris internal storage." }) },
         ],
     },
     {
         num: '03',
         hashId: 'hybrid-search',
-        title: 'Hybrid Search',
-        subtitle: 'First-class search across structured, text, and vector data.',
+        title: translate({ id: "homepage.features.021", message: "Hybrid Search" }),
+        subtitle: translate({ id: "homepage.features.022", message: "First-class search across structured, text, and vector data." }),
         tone: 'ink',
         visual: 'search',
-        illoTag: 'JSON / Text / Vector',
+        illoTag: translate({ id: "homepage.features.023", message: "JSON / Text / Vector" }),
         rotation: -1.4,
         cta: {
-            label: 'Explore hybrid search(Comming Soon)',
+            label: translate({ id: "homepage.features.024", message: "Explore hybrid search(Comming Soon)" }),
             href: '#',
         },
         items: [
-            { term: 'JSON Analytics', desc: 'Auto-columnar storage for agent traces and tool-call metadata, with 50x faster analysis.' },
-            { term: 'Text Search', desc: 'Fast BM25 retrieval for RAG, agent memory, and observability logs.' },
-            { term: 'Vector Search', desc: 'Built-in HNSW and IVF indexes for semantic retrieval over embeddings.' },
+            { term: translate({ id: "homepage.features.025", message: "JSON Analytics" }), desc: translate({ id: "homepage.features.026", message: "Auto-columnar storage for agent traces and tool-call metadata, with 50x faster analysis." }) },
+            { term: translate({ id: "homepage.features.027", message: "Text Search" }), desc: translate({ id: "homepage.features.028", message: "Fast BM25 retrieval for RAG, agent memory, and observability logs." }) },
+            { term: translate({ id: "homepage.features.029", message: "Vector Search" }), desc: translate({ id: "homepage.features.030", message: "Built-in HNSW and IVF indexes for semantic retrieval over embeddings." }) },
         ],
     },
 ];
@@ -190,7 +192,7 @@ function PipelineVisual(): JSX.Element {
             <div className="features-next__pipeline-lane">
                 <span>BI</span>
                 <i />
-                <span>Apps</span>
+                <span>{translate({ id: "homepage.features.037", message: "Apps" })}</span>
             </div>
         </div>
     );
@@ -201,8 +203,8 @@ function LakehouseVisual(): JSX.Element {
         <div className="features-next__visual-content features-next__visual-content--realtime" aria-hidden="true">
             <iframe
                 className="features-next__realtime-frame"
-                src="/home-next/lake-analytics.html"
-                title="Lakehouse Analytics animation"
+                src={japaneseFrameSource('/home-next/lake-analytics.html')}
+                title={translate({ id: "homepage.features.038", message: "Lakehouse Analytics animation" })}
                 loading="lazy"
                 tabIndex={-1}
             />
@@ -215,8 +217,8 @@ function SearchVisual(): JSX.Element {
         <div className="features-next__visual-content features-next__visual-content--realtime" aria-hidden="true">
             <iframe
                 className="features-next__realtime-frame"
-                src="/home-next/hybrid-search.html"
-                title="Hybrid Search animation"
+                src={japaneseFrameSource('/home-next/hybrid-search.html')}
+                title={translate({ id: "homepage.features.039", message: "Hybrid Search animation" })}
                 loading="lazy"
                 tabIndex={-1}
             />
@@ -229,8 +231,8 @@ function RealtimeAnalyticsVisual(): JSX.Element {
         <div className="features-next__visual-content features-next__visual-content--realtime" aria-hidden="true">
             <iframe
                 className="features-next__realtime-frame"
-                src="/home-next/realtime-analytics.html"
-                title="Real-Time Analytics animation"
+                src={japaneseFrameSource('/home-next/realtime-analytics.html')}
+                title={translate({ id: "homepage.features.040", message: "Real-Time Analytics animation" })}
                 loading="lazy"
                 tabIndex={-1}
             />
@@ -424,9 +426,9 @@ export function FeaturesSection(): JSX.Element {
         <section className="features-next">
             <div className="home-next-container">
                 <div className="features-next__header">
-                    <div className="features-next__eyebrow">Core Capabilities</div>
+                    <div className="features-next__eyebrow">{translate({ id: "homepage.features.041", message: "Core Capabilities" })}</div>
                     <h2 className="features-next__headline">
-                        <span className="features-next__headline-line">Three Pillars. One Engine</span>
+                        <span className="features-next__headline-line">{translate({ id: "homepage.features.042", message: "Three Pillars. One Engine" })}</span>
                     </h2>
                 </div>
                 <div

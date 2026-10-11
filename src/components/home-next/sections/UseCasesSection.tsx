@@ -1,5 +1,6 @@
+import { translate } from '@docusaurus/Translate';
 import React, { JSX } from 'react';
-import Link from '@docusaurus/Link';
+import Link from '@site/src/components/home-next/JapaneseLink';
 import './UseCasesSection.scss';
 
 function ArrowIcon(): JSX.Element {
@@ -18,23 +19,23 @@ interface UseCase {
 
 const USE_CASES: UseCase[] = [
     {
-        title: 'Customer-Facing Analytics',
-        desc: 'Ship sub-second, interactive analytics straight to your customers at scale.',
+        title: translate({ id: "homepage.usecases.001", message: "Customer-Facing Analytics" }),
+        desc: translate({ id: "homepage.usecases.002", message: "Ship sub-second, interactive analytics straight to your customers at scale." }),
         href: '/use-cases/customer-facing-analytics',
     },
     {
-        title: 'Data Warehousing',
-        desc: 'One real-time warehouse for analytics across every business domain.',
+        title: translate({ id: "homepage.usecases.003", message: "Data Warehousing" }),
+        desc: translate({ id: "homepage.usecases.004", message: "One real-time warehouse for analytics across every business domain." }),
         href: '/use-cases/data-warehousing',
     },
     {
-        title: 'Observability',
-        desc: 'High-throughput log and metric analytics for monitoring and incident response.',
+        title: translate({ id: "homepage.usecases.005", message: "Observability" }),
+        desc: translate({ id: "homepage.usecases.006", message: "High-throughput log and metric analytics for monitoring and incident response." }),
         href: '/use-cases/observability',
     },
     {
-        title: 'Doris for AI',
-        desc: 'Vector, text, and JSON search unified in SQL, built for AI agents and RAG.',
+        title: translate({ id: "homepage.usecases.007", message: "Doris for AI" }),
+        desc: translate({ id: "homepage.usecases.008", message: "Vector, text, and JSON search unified in SQL, built for AI agents and RAG." }),
         href: '/use-cases/ai',
     },
 ];
@@ -44,9 +45,9 @@ export function UseCasesSection(): JSX.Element {
         <section id="use-cases" className="use-cases-next" aria-labelledby="use-cases-next-title">
             <div className="home-next-container">
                 <div className="use-cases-next__header">
-                    <div className="use-cases-next__eyebrow">Use Cases</div>
+                    <div className="use-cases-next__eyebrow">{translate({ id: "homepage.usecases.009", message: "Use Cases" })}</div>
                     <h2 className="use-cases-next__headline" id="use-cases-next-title">
-                        <span>Where Doris Goes To Work</span>
+                        <span>{translate({ id: "homepage.usecases.010", message: "Where Doris Goes To Work" })}</span>
                     </h2>
                 </div>
 
@@ -56,8 +57,7 @@ export function UseCasesSection(): JSX.Element {
                             <h3 className="use-cases-next__card-title">{useCase.title}</h3>
                             <p className="use-cases-next__card-desc">{useCase.desc}</p>
                             <span className="use-cases-next__card-link">
-                                Learn more
-                                <ArrowIcon />
+                                {translate({ id: "homepage.usecases.011", message: "Learn more" })}<ArrowIcon />
                             </span>
                         </Link>
                     ))}
