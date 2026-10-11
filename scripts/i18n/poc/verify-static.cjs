@@ -67,6 +67,29 @@ if (!expectJapanese) {
     for (const route of Object.keys(signatures)) assert(!fs.readFileSync(fileFor(route), 'utf8').includes('lang="ja"'), `Japanese switch leaked into default build: ${route}`);
     checked('Japanese routes and language options absent by default');
 }
+if (expectJapanese) {
+    const translatedRoutes = [
+        '/ja/docs/dev/getting-started/what-is-apache-doris/',
+        '/ja/docs/4.x/getting-started/what-is-apache-doris/',
+        '/ja/docs/dev/getting-started/intro/', '/ja/community/join-community/',
+    ];
+    for (const route of translatedRoutes) {
+        const $ = cheerio.load(fs.readFileSync(fileFor(route), 'utf8'));
+        const english = cheerio.load(fs.readFileSync(fileFor(route.replace(/^\/ja/, '')), 'utf8'));
+        const ids = root => root('.theme-doc-markdown h1,.theme-doc-markdown h2,.theme-doc-markdown h3')
+            .map((index, node) => root(node).attr('id') || '').get();
+        assert.deepEqual(ids($), ids(english), `English heading IDs changed: ${route}`);
+        assert.deepEqual($('.theme-doc-markdown pre code').map((index, node) => $(node).text()).get(),
+            english('.theme-doc-markdown pre code').map((index, node) => english(node).text()).get(), `Protected code changed: ${route}`);
+        $('.theme-doc-markdown a,.theme-doc-markdown img,.theme-doc-markdown iframe').each((index, node) => {
+            const href = $(node).attr('href') || $(node).attr('src');
+            if (!href || /^(https?:|mailto:|#)/.test(href)) return;
+            const target = new URL(href, `http://local${route}`);
+            assert(fs.existsSync(fileFor(target.pathname)), `Broken sample link/image/frame: ${route} -> ${href}`);
+        });
+    }
+    checked('All four translations preserve English heading IDs/code and resolve their body links/images/frames');
+}
 const server = http.createServer((request, response) => {
     let file = fileFor(request.url);
     if (!fs.existsSync(file)) { response.writeHead(404); response.end('Not found'); return; }
