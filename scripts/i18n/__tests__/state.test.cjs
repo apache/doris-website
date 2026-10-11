@@ -3,6 +3,13 @@ const assert = require('node:assert/strict');
 const {hash, identity, decide} = require('../state.cjs');
 const {structure, alignHeadings} = require('../structure.cjs');
 
+test('Japanese version messages match the custom banner interpolation contract', () => {
+    const dictionary = require('../../../i18n/ja/code.json');
+    const variables = key => [...dictionary[key].message.matchAll(/\{(\w+)\}/g)].map(match => match[1]).sort();
+    assert.deepEqual(variables('theme.docs.versions.unreleasedVersionLabel'), ['unreleased']);
+    assert.deepEqual(variables('theme.docs.versions.latestVersionSuggestionLabel'), ['v21Link', 'v3xLink', 'v4xLink']);
+});
+
 const page = {pluginId: 'default', version: 'current', docId: 'intro', locale: 'ja', sourceLocale: 'en',
     sourcePath: 'docs/intro.md', targetPath: 'i18n/ja/docusaurus-plugin-content-docs/current/intro.md'};
 const original = '## Usage\n\nUse Doris.\n\n```sql\nSELECT 1;\n```\n';

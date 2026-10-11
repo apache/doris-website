@@ -207,6 +207,9 @@ let browser;
         }
         if (route.startsWith('/ja/')) {
             assert.equal(state.lang, 'ja');
+            const banner = await page.locator('.theme-doc-version-banner').textContent().catch(() => '');
+            assert(!/\{(?:unreleased|versionLabel|siteTitle|latestVersionLink|v4xLink|v3xLink|v21Link)\}/.test(banner),
+                `Unexpanded version-banner placeholders: ${route}`);
             const fallback = route.includes('before-you-start-the-poc') || route.endsWith('/feedback/');
             const translationStatus = await page.locator('[data-translation-status]').getAttribute('data-translation-status').catch(() => null);
             if (translationStatus) {
