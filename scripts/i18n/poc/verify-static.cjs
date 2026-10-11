@@ -50,7 +50,7 @@ function signature(route) {
 }
 const signatures = Object.fromEntries(['', '/zh-CN'].flatMap(prefix => sampleRoutes.map(route => [prefix + route, signature(prefix + route)])));
 fs.writeFileSync(path.join(output, 'signatures.json'), JSON.stringify(signatures, null, 2));
-const results = { site, expectJapanese, redirectCdn, checks: [], pages: [], network: [], errors: [] };
+const results = { site, expectJapanese, redirectCdn, devOnly, checks: [], pages: [], network: [], errors: [] };
 const baselineRenderedPath = option('--baseline') && path.join(path.dirname(option('--baseline')), 'rendered.json');
 const baselineRendered = baselineRenderedPath && fs.existsSync(baselineRenderedPath)
     ? JSON.parse(fs.readFileSync(baselineRenderedPath, 'utf8')) : undefined;
