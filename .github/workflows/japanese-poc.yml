@@ -113,6 +113,7 @@ jobs:
         env:
           NODE_PATH: ${{ runner.temp }}/poc-browser/node_modules
         run: |
+          set -o pipefail
           node scripts/i18n/verify-fixture.cjs --browser | tee ../evidence/translation-fixture.log
       - name: Full sequential English, Chinese and Japanese build
         run: |

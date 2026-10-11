@@ -40,12 +40,14 @@ async function verifyBrowser(site) {
         assert.equal(await page.locator('.theme-doc-markdown').getAttribute('lang'), 'en');
         assert.equal((await page.locator('.theme-doc-markdown pre code').textContent()).trim(), 'SELECT 2;');
         assert.equal(await page.locator('[data-translation-status] a[hreflang="en"]').getAttribute('href'), '/docs/dev/technical/?from=fixture#usage');
-        await page.locator('.theme-doc-markdown a').click();
+        await page.locator('.theme-doc-markdown a[href="/ja/docs/dev/machine/"]').click();
         await page.waitForSelector('[data-translation-status="current"]');
         assert.equal(await page.locator('.theme-doc-markdown').getAttribute('lang'), 'ja');
+        await page.waitForFunction(() => !document.querySelector('meta[name="robots"]'));
         assert.equal(await page.locator('meta[name="robots"]').count(), 0);
         await page.goBack();
         await page.waitForSelector('[data-translation-status="stale_technical"]');
+        await page.waitForFunction(() => document.querySelector('link[rel="canonical"]').getAttribute('href') === 'https://doris.apache.org/docs/dev/technical/');
         assert.equal(await page.locator('.theme-doc-markdown').getAttribute('lang'), 'en');
         assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'), 'https://doris.apache.org/docs/dev/technical/');
         assert((await page.locator('meta[name="robots"]').getAttribute('content')).includes('noindex'));
@@ -164,4 +166,5 @@ export default function Layout(props) {
     const browser = process.argv.includes('--browser') ? await verifyBrowser(path.join(fixture, 'build')) : undefined;
     console.log(JSON.stringify({fixture, ...verification, browser}, null, 2));
 }
-main().catch(error => {console.error(error); process.exitCode = 1;});
+if (require.main === module) main().catch(error => {console.error(error); process.exitCode = 1;});
+module.exports = {verifyBrowser};
