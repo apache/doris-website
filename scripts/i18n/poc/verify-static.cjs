@@ -12,6 +12,7 @@ const site = path.resolve(option('--site'));
 const output = path.resolve(option('--output'));
 const expectJapanese = argv.includes('--expect-ja');
 const redirectCdn = argv.includes('--cdn-to-local');
+const devOnly = argv.includes('--dev-only');
 assert(!(expectJapanese && redirectCdn), 'Japanese must load its own real same-origin resources');
 fs.mkdirSync(output, { recursive: true });
 const normalize = value => value.replace(/\s+/g, ' ').trim();
@@ -23,8 +24,8 @@ const sampleRoutes = [
     '/docs/4.x/getting-started/before-you-start-the-poc/',
     '/community/join-community/', '/community/feedback/',
     '/download/', '/use-cases/ai/', '/blog/', '/404.html',
-];
-const japaneseRoutes = sampleRoutes.slice(0, 8).map(route => `/ja${route}`);
+].filter(route => !devOnly || !route.includes('/docs/4.x/'));
+const japaneseRoutes = sampleRoutes.filter(route => route === '/' || route.startsWith('/docs/') || route.startsWith('/community/')).map(route => `/ja${route}`);
 const themes = ['doris', 'golden', 'blue', 'read', 'yellow-blue', 'purple', 'yellow-black', 'sky'];
 function fileFor(route) {
     const filename = path.resolve(site, `.${decodeURIComponent(new URL(route, 'http://local').pathname)}`);
@@ -59,7 +60,10 @@ const baselineErrors = baselineResultPath && fs.existsSync(baselineResultPath)
 function checked(name, details) { results.checks.push({ name, details }); console.log(name); }
 if (option('--baseline')) {
     const baseline = JSON.parse(fs.readFileSync(option('--baseline'), 'utf8'));
-    for (const [route, expected] of Object.entries(baseline)) assert.deepEqual(signatures[route], { description: null, ...expected }, `Existing locale changed at ${route}`);
+    for (const [route, expected] of Object.entries(baseline)) {
+        if (devOnly && route.includes('/docs/4.x/')) continue;
+        assert.deepEqual(signatures[route], { description: null, ...expected }, `Existing locale changed at ${route}`);
+    }
     checked('English/Chinese text, headings, links, metadata match baseline', Object.keys(baseline));
 }
 if (!expectJapanese) {
@@ -72,7 +76,7 @@ if (expectJapanese) {
         '/ja/docs/dev/getting-started/what-is-apache-doris/',
         '/ja/docs/4.x/getting-started/what-is-apache-doris/',
         '/ja/docs/dev/getting-started/intro/', '/ja/community/join-community/',
-    ];
+    ].filter(route => !devOnly || !route.includes('/docs/4.x/'));
     for (const route of translatedRoutes) {
         const $ = cheerio.load(fs.readFileSync(fileFor(route), 'utf8'));
         const english = cheerio.load(fs.readFileSync(fileFor(route.replace(/^\/ja/, '')), 'utf8'));
@@ -165,7 +169,7 @@ let browser;
     }
     checked('Direct static routes, refresh, SSR/hydration and per-file/version fallback');
     for (const prefix of ['', '/zh-CN']) {
-        const page = await pageFor(`${prefix}/docs/4.x/getting-started/what-is-apache-doris/`);
+        const page = await pageFor(`${prefix}/docs/${devOnly ? 'dev' : '4.x'}/getting-started/what-is-apache-doris/`);
         const workers = [];
         page.on('worker', worker => workers.push(worker.url()));
         const input = page.locator('input[aria-label="Search"]:visible').first();
@@ -193,15 +197,16 @@ let browser;
         await page.locator('a.getting-started-card[href="/ja/docs/dev/getting-started/before-you-start-the-poc/"]').click();
         await page.waitForSelector('[aria-label="翻訳状況"]');
         checked('MDX card SPA navigation, browser back and untranslated card destination');
-        await page.goto(`${origin}/docs/4.x/getting-started/what-is-apache-doris/?poc=1#technical-features`, { waitUntil: 'networkidle' });
+        const version = devOnly ? 'dev' : '4.x';
+        await page.goto(`${origin}/docs/${version}/getting-started/what-is-apache-doris/?poc=1#technical-features`, { waitUntil: 'networkidle' });
         await page.locator('.dropdown').filter({ has: page.locator('a[lang="ja"]') }).first().hover();
         await page.locator('a[lang="ja"]').first().click();
-        await page.waitForURL('**/ja/docs/4.x/getting-started/what-is-apache-doris/?poc=1#technical-features');
+        await page.waitForURL(`**/ja/docs/${version}/getting-started/what-is-apache-doris/?poc=1#technical-features`);
         assert(await page.locator('#technical-features').count(), 'Translated heading lost English anchor');
         await page.locator('.dropdown').filter({ has: page.locator('a[lang="en-US"]') }).first().hover();
         await page.locator('a[lang="en-US"]').first().click();
-        await page.waitForURL('**/docs/4.x/getting-started/what-is-apache-doris/?poc=1#technical-features');
-        checked('Language switching preserves page, 4.x version, query and English heading hash');
+        await page.waitForURL(`**/docs/${version}/getting-started/what-is-apache-doris/?poc=1#technical-features`);
+        checked(`Language switching preserves page, ${version} version, query and English heading hash`);
         await page.close();
         for (const width of [1440, 390]) {
             for (const theme of themes) {

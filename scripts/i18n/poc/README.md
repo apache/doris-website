@@ -10,7 +10,7 @@ not provide full CI memory evidence:
 
 ```bash
 yarn key-features:generate
-DORIS_ENABLE_JA=true DORIS_ASSET_ORIGIN= DOCS_VERSIONS=current,4.x \
+DORIS_ENABLE_JA=true DORIS_ASSET_ORIGIN= DOCS_VERSIONS=current \
   PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js \
   yarn docusaurus build --locale en --locale zh-CN --locale ja
 ```
@@ -45,6 +45,9 @@ NODE_PATH=/path/to/browser/node_modules node scripts/i18n/poc/verify-static.cjs 
 Use `--cdn-to-local` only when capturing an unmodified baseline whose original
 configuration hard-codes CDN assets. The check intercepts that CDN and serves the
 baseline's own files. Japanese validation uses real same-origin network requests.
+For a local Dev build, add `--dev-only` to the browser command. It skips 4.x
+routes and validates the Dev locale switch instead. Full 4.x and other active
+versions are validated by CI; keep local builds limited to Dev.
 
 Homepage message IDs are permanent. The numbered IDs are assigned once; do not
 renumber them when reordering content or changing English wording. English
