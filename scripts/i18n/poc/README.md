@@ -42,6 +42,11 @@ per-language times, exit codes, GNU time output, sampled system/process memory,
 cgroup metrics when readable, build logs, browser results and the new static
 site. Process Max RSS and summed process RSS do not establish whole-runner memory
 use. A failed or timed-out build cannot count as an OOM-free completed build.
+Memory availability, swap availability, pressure and kernel/cgroup OOM counters
+are also emitted to the job log every minute. On SIGTERM/SIGINT the observer
+stops its own build process group and persists final counters where possible.
+This keeps evidence visible when artifact upload is skipped; SIGKILL cannot be
+handled, and a partial log cannot establish an OOM-free completed build.
 
 The browser check uses Playwright installed separately from the website's
 locked dependencies:

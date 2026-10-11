@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import re
+import signal
 import subprocess
 import threading
 import time
@@ -56,7 +57,16 @@ cgroup = cgroup_path()
 def cgroup_snapshot():
     if cgroup is None:
         return {'unavailable': 'No readable cgroup v2 path'}
-    return {name: read_file(cgroup / name) for name in ('memory.current', 'memory.peak', 'memory.max', 'memory.events', 'memory.swap.current', 'memory.swap.peak', 'memory.swap.max')}
+    return {name: read_file(cgroup / name) for name in ('memory.current', 'memory.peak', 'memory.max', 'memory.events', 'memory.pressure', 'memory.swap.current', 'memory.swap.peak', 'memory.swap.max')}
+
+def kernel_oom_kills():
+    match = re.search(r'^oom_kill\s+(\d+)$', read_file('/proc/vmstat') or '', re.M)
+    return int(match[1]) if match else None
+
+output_lock = threading.Lock()
+def emit(value):
+    with output_lock:
+        print(json.dumps(value), flush=True)
 
 metadata = {
     'source_sha': run_text(['git', 'rev-parse', 'HEAD']),
@@ -84,20 +94,38 @@ metadata = {
     'swap_config': read_file('/proc/swaps'),
     'cgroup_path': str(cgroup) if cgroup else None,
     'cgroup_before': cgroup_snapshot(),
+    'kernel_oom_kills_before': kernel_oom_kills(),
     'started_at_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
     'language_events': [],
 }
 (output / 'environment.json').write_text(json.dumps(metadata, indent=2) + '\n')
 start = time.monotonic()
+emit({'event': 'environment', 'source_sha': metadata['source_sha'], 'node': metadata['node'],
+      'meminfo': metadata['meminfo_before'], 'swap_config': metadata['swap_config'],
+      'cgroup': metadata['cgroup_before'], 'kernel_oom_kills': metadata['kernel_oom_kills_before']})
 # GNU time reports the command's Max RSS separately from system/cgroup samples.
-process = subprocess.Popen(['/usr/bin/time', '-v', '-o', str(output / 'time.txt')] + command, cwd=source, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors='replace')
+process = subprocess.Popen(['/usr/bin/time', '-v', '-o', str(output / 'time.txt')] + command, cwd=source, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors='replace', start_new_session=True)
+
+def terminate_build(signum, _frame):
+    metadata['termination_signal'] = signal.Signals(signum).name
+    # Terminate only this build's own process group, allowing the observer to
+    # persist the final counters even if the runner skips artifact upload.
+    try:
+        os.killpg(process.pid, signum)
+    except ProcessLookupError:
+        pass
+
+signal.signal(signal.SIGTERM, terminate_build)
+signal.signal(signal.SIGINT, terminate_build)
 stop = threading.Event()
 peaks = {'system_used_bytes': 0, 'system_swap_used_bytes': 0, 'tree_rss_sum_bytes': 0, 'cgroup_current_bytes': None}
+active_locale = None
 
 def sample():
     with (output / 'memory.csv').open('w') as file:
         writer = csv.writer(file)
         writer.writerow(['elapsed_s', 'system_used_bytes', 'system_swap_used_bytes', 'tree_rss_sum_bytes', 'cgroup_current_bytes'])
+        next_report = 0
         while True:
             mem = memory_info()
             used = mem.get('MemTotal', 0) - mem.get('MemAvailable', 0)
@@ -118,12 +146,19 @@ def sample():
                     peaks[key] = max(peaks[key] or 0, value)
             writer.writerow([round(time.monotonic() - start, 3), used, swap, rss, current])
             file.flush()
+            elapsed = time.monotonic() - start
+            if elapsed >= next_report:
+                emit({'event': 'memory', 'locale': active_locale, 'elapsed_s': round(elapsed, 3),
+                      'memory_available_bytes': mem.get('MemAvailable'),
+                      'swap_free_bytes': mem.get('SwapFree'), 'peaks': dict(peaks),
+                      'kernel_oom_kills': kernel_oom_kills(), 'cgroup': cgroup_snapshot(),
+                      'system_memory_pressure': read_file('/proc/pressure/memory')})
+                next_report = elapsed + 60
             if stop.wait(2):
                 break
 
 sampler = threading.Thread(target=sample)
 sampler.start()
-active_locale = None
 with (output / 'build.log').open('w') as log:
     for line in process.stdout:
         log.write(line)
@@ -139,12 +174,20 @@ with (output / 'build.log').open('w') as log:
         if event:
             event.update({'elapsed_s': round(time.monotonic() - start, 3), 'utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())})
             metadata['language_events'].append(event)
-            print(json.dumps(event), flush=True)
+            emit(event)
+        if any(marker in plain_line for marker in ('[ERROR]', 'FATAL ERROR', 'heap out of memory', 'Killed')):
+            emit({'event': 'build_error', 'line': plain_line.rstrip()})
 exit_code = process.wait()
+if exit_code < 0:
+    exit_code = 128 - exit_code
 stop.set()
 sampler.join()
 metadata.update({'exit_code': exit_code, 'elapsed_s': round(time.monotonic() - start, 3), 'sampled_peaks': peaks, 'cgroup_after': cgroup_snapshot(), 'meminfo_after': memory_info()})
+metadata['kernel_oom_kills_after'] = kernel_oom_kills()
 metadata['interpretation'] = 'Process RSS sums can double-count shared pages. System used memory includes the whole runner. cgroup peaks can include earlier steps: compare before/after. Max RSS alone is not whole-job memory. Missing metrics are null, never an asserted zero.'
 (output / 'result.json').write_text(json.dumps(metadata, indent=2) + '\n')
-print(json.dumps({'exit_code': exit_code, 'elapsed_s': metadata['elapsed_s'], 'sampled_peaks': peaks}), flush=True)
+emit({'exit_code': exit_code, 'elapsed_s': metadata['elapsed_s'], 'sampled_peaks': peaks,
+      'termination_signal': metadata.get('termination_signal'), 'cgroup_after': metadata['cgroup_after'],
+      'kernel_oom_kills_before': metadata['kernel_oom_kills_before'],
+      'kernel_oom_kills_after': metadata['kernel_oom_kills_after']})
 raise SystemExit(exit_code)
