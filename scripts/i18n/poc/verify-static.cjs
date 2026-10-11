@@ -27,9 +27,24 @@ const sampleRoutes = [
 ].filter(route => !devOnly || !route.includes('/docs/4.x/'));
 const japaneseRoutes = sampleRoutes.filter(route => route === '/' || route.startsWith('/docs/') || route.startsWith('/community/')).map(route => `/ja${route}`);
 const themes = ['doris', 'golden', 'blue', 'read', 'yellow-blue', 'purple', 'yellow-black', 'sky'];
+const previewAliases = [];
 function fileFor(route) {
     const filename = path.resolve(site, `.${decodeURIComponent(new URL(route, 'http://local').pathname)}`);
     assert(filename === site || filename.startsWith(`${site}${path.sep}`));
+    // With only Current included, the search plugin emits its index at the
+    // locale root. The site's existing SearchBar still requests /docs/dev/.
+    // Adapt only this local preview URL, using the same build's Dev index.
+    // Full CI uses the actual production index layout and never this alias.
+    if (devOnly && !fs.existsSync(filename)) {
+        const match = new URL(route, 'http://local').pathname.match(/^(\/(?:zh-CN|ja))?\/docs\/dev\/(search-index[^/]*\.json)$/);
+        if (match) {
+            const indexFile = path.join(site, match[1] || '', match[2]);
+            if (fs.existsSync(indexFile)) {
+                previewAliases.push({ request: route, file: path.relative(site, indexFile) });
+                return indexFile;
+            }
+        }
+    }
     return path.extname(filename) ? filename : path.join(filename, 'index.html');
 }
 function signature(route) {
@@ -50,7 +65,7 @@ function signature(route) {
 }
 const signatures = Object.fromEntries(['', '/zh-CN'].flatMap(prefix => sampleRoutes.map(route => [prefix + route, signature(prefix + route)])));
 fs.writeFileSync(path.join(output, 'signatures.json'), JSON.stringify(signatures, null, 2));
-const results = { site, expectJapanese, redirectCdn, devOnly, checks: [], pages: [], network: [], errors: [] };
+const results = { site, expectJapanese, redirectCdn, devOnly, previewAliases, checks: [], pages: [], network: [], errors: [] };
 const baselineRenderedPath = option('--baseline') && path.join(path.dirname(option('--baseline')), 'rendered.json');
 const baselineRendered = baselineRenderedPath && fs.existsSync(baselineRenderedPath)
     ? JSON.parse(fs.readFileSync(baselineRenderedPath, 'utf8')) : undefined;

@@ -48,6 +48,10 @@ baseline's own files. Japanese validation uses real same-origin network requests
 For a local Dev build, add `--dev-only` to the browser command. It skips 4.x
 routes and validates the Dev locale switch instead. Full 4.x and other active
 versions are validated by CI; keep local builds limited to Dev.
+In that preview only, the validator aliases `/docs/dev/search-index*.json` to
+the same locale's own Dev index at its root, and records every alias. The
+existing SearchBar assumes the stable version is included. Full CI uses the
+production index layout without this preview adaptation.
 
 Homepage message IDs are permanent. The numbered IDs are assigned once; do not
 renumber them when reordering content or changing English wording. English
