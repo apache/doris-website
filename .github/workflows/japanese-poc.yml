@@ -15,6 +15,11 @@ on:
       - 'static/home-next/**'
       - 'static/js/embedded-locale.js'
       - 'config/custom-docusaurus-plugin.js'
+      - 'config/asset-origin.js'
+      - 'config/ssrTemplate.js'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'scripts/patch-react-ssr.js'
       - 'docusaurus.config.js'
       - 'scripts/i18n/poc/**'
       - '.github/workflows/japanese-poc.yml'
@@ -78,6 +83,9 @@ jobs:
         run: |
           yarn cache clean
           yarn --frozen-lockfile
+          # Use the same upstream UTF-8 fix in both dependency installations.
+          # Original baseline document/UI source remains at the base SHA.
+          node ../poc-source/scripts/patch-react-ssr.js node_modules/react-dom
           yarn key-features:generate
       - name: Full English and Chinese baseline
         run: |
@@ -98,7 +106,7 @@ jobs:
           yarn cache clean
           yarn --frozen-lockfile
           yarn key-features:generate
-          node --test scripts/i18n/poc/config.test.cjs
+          node --test scripts/i18n/poc/config.test.cjs scripts/i18n/poc/react-ssr.test.cjs
       - name: Full sequential English, Chinese and Japanese build
         run: |
           python3 poc-source/scripts/i18n/poc/measure-build.py \

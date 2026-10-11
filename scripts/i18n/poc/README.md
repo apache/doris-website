@@ -27,6 +27,16 @@ three languages on the same Ubuntu runner, Node 20, 8192 MiB Node heap and 8 GiB
 additional swap. Each build keeps every active version and content/search
 plugin. The workflow never deploys or uses deployment secrets.
 
+Both dependency installations apply the same small upstream React 18.3.1 SSR
+fix from [React PR #26228](https://github.com/react/react/pull/26228).
+The original renderer can insert NUL bytes at UTF-8 buffer boundaries, corrupting
+CJK IDs and link URLs when markup shifts. The patch flushes only written bytes;
+it does not upgrade React or change document content. The PoC applies it through
+`postinstall`; the workflow explicitly applies it to the original baseline too.
+Evidence records both installed renderer file hashes to verify this parity.
+The browser verifier rejects NUL bytes and compares all URLs exactly, without
+discarding corrupted anchors. Remove the patch when upgrading to React 19.
+
 The artifact contains the actual source SHAs, lock hashes, environment, commands,
 per-language times, exit codes, GNU time output, sampled system/process memory,
 cgroup metrics when readable, build logs, browser results and the new static

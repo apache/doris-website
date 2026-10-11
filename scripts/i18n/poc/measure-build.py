@@ -64,6 +64,12 @@ metadata = {
     'node': run_text(['node', '--version']),
     'yarn': run_text(['yarn', '--version']),
     'yarn_lock_sha256': hashlib.sha256((source / 'yarn.lock').read_bytes()).hexdigest(),
+    # The baseline and PoC both apply the same pinned React 18 SSR fix.
+    'react_ssr': {
+        'version': json.loads((source / 'node_modules/react-dom/package.json').read_text())['version'],
+        'production_sha256': hashlib.sha256((source / 'node_modules/react-dom/cjs/react-dom-server.node.production.min.js').read_bytes()).hexdigest(),
+        'development_sha256': hashlib.sha256((source / 'node_modules/react-dom/cjs/react-dom-server.node.development.js').read_bytes()).hexdigest(),
+    },
     'runner_os': env.get('RUNNER_OS'),
     'runner_name': env.get('RUNNER_NAME'),
     'uname': run_text(['uname', '-a']),
