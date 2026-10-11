@@ -122,12 +122,13 @@ with (output / 'build.log').open('w') as log:
     for line in process.stdout:
         log.write(line)
         log.flush()
-        match = re.search(r'\[INFO\] \[([^]]+)\] Creating an optimized production build', line)
+        plain_line = re.sub(r'\x1b\[[0-9;]*m', '', line)
+        match = re.search(r'\[INFO\] \[([^]]+)\] Creating an optimized production build', plain_line)
         event = None
         if match:
             active_locale = match[1]
             event = {'locale': active_locale, 'event': 'start'}
-        elif '[SUCCESS] Generated static files' in line:
+        elif '[SUCCESS] Generated static files' in plain_line:
             event = {'locale': active_locale, 'event': 'end'}
         if event:
             event.update({'elapsed_s': round(time.monotonic() - start, 3), 'utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())})
