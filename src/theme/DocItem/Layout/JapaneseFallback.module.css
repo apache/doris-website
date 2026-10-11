@@ -12,3 +12,9 @@
     color: inherit;
     text-decoration: underline;
 }
+
+.translationDate {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.875rem;
+}

@@ -208,7 +208,11 @@ let browser;
         if (route.startsWith('/ja/')) {
             assert.equal(state.lang, 'ja');
             const fallback = route.includes('before-you-start-the-poc') || route.endsWith('/feedback/');
-            assert.equal(state.notice, fallback, route);
+            const translationStatus = await page.locator('[data-translation-status]').getAttribute('data-translation-status').catch(() => null);
+            if (translationStatus) {
+                assert.equal(translationStatus, fallback ? 'untranslated' : 'current', route);
+                assert.equal(state.notice, true, route);
+            } else assert.equal(state.notice, fallback, route); // Original T01 baseline.
             const body = page.locator('.theme-doc-markdown');
             if (fallback) {
                 assert(await page.locator('.theme-doc-markdown[lang="en"]').count(), `English body language missing: ${route}`);

@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "pages": [
+    {
+      "pluginId": "default",
+      "version": "current",
+      "docId": "getting-started/what-is-apache-doris",
+      "locale": "ja",
+      "sourceLocale": "en",
+      "sourcePath": "docs/getting-started/what-is-apache-doris.md",
+      "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/getting-started/what-is-apache-doris.md",
+      "sourceCommit": "ec0bc51d17ff1c32df0241d61371f5f63db29b13",
+      "sourceHash": "c1b950ba12598be8495190f93fd341dd646d98c837bf09c72ccc199c2ebb941e",
+      "sourceTechnicalHash": "2c3ee90a60bae82e00653c8a088e174bf2ecd6eb8ce1bdda96d08cc50a160318",
+      "targetHash": "565ac481aaafe738b0fd193d6f4617cff6698351cfc71c8d0b575de97634e4c4",
+      "reviewStatus": "machine",
+      "ownership": "machine",
+      "translatedAt": "2026-10-11T19:57:10.000Z",
+      "glossaryVersion": "0"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "docId": "getting-started/intro",
+      "locale": "ja",
+      "sourceLocale": "en",
+      "sourcePath": "docs/getting-started/intro.mdx",
+      "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/getting-started/intro.mdx",
+      "sourceCommit": "ec0bc51d17ff1c32df0241d61371f5f63db29b13",
+      "sourceHash": "5c870a2583db46c203dcd610b575d3888bf2ba442e41a58a8acb7177d9db4abe",
+      "sourceTechnicalHash": "691b2315e50a90059f94a53fe7ffa14602ebfe5d0069d69053bf44580d12aa42",
+      "targetHash": "7b759880571be86dfa613ef71ea4b018e2c9b7f323eb9873c9596c1dafb0b33b",
+      "reviewStatus": "machine",
+      "ownership": "machine",
+      "translatedAt": "2026-10-11T19:57:10.000Z",
+      "glossaryVersion": "0"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "docId": "getting-started/what-is-apache-doris",
+      "locale": "ja",
+      "sourceLocale": "en",
+      "sourcePath": "versioned_docs/version-4.x/getting-started/what-is-apache-doris.md",
+      "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/getting-started/what-is-apache-doris.md",
+      "sourceCommit": "ec0bc51d17ff1c32df0241d61371f5f63db29b13",
+      "sourceHash": "c1b950ba12598be8495190f93fd341dd646d98c837bf09c72ccc199c2ebb941e",
+      "sourceTechnicalHash": "2c3ee90a60bae82e00653c8a088e174bf2ecd6eb8ce1bdda96d08cc50a160318",
+      "targetHash": "565ac481aaafe738b0fd193d6f4617cff6698351cfc71c8d0b575de97634e4c4",
+      "reviewStatus": "machine",
+      "ownership": "machine",
+      "translatedAt": "2026-10-11T19:57:10.000Z",
+      "glossaryVersion": "0"
+    },
+    {
+      "pluginId": "community",
+      "version": "current",
+      "docId": "join-community",
+      "locale": "ja",
+      "sourceLocale": "en",
+      "sourcePath": "community/join-community.md",
+      "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/join-community.md",
+      "sourceCommit": "ec0bc51d17ff1c32df0241d61371f5f63db29b13",
+      "sourceHash": "c0fb07e339e759ca4bf071efabafb60ecb13e1978173dc88e3de79e7a32949b9",
+      "sourceTechnicalHash": "7ba43a16e4a34f5071e5c95fdef1a9db9511fee84628708975f6e450281845db",
+      "targetHash": "69442d5fd55657623ba9b98cd6d2875fda3e031d30314877e7b6d2758ba45c8c",
+      "reviewStatus": "machine",
+      "ownership": "machine",
+      "translatedAt": "2026-10-11T19:57:10.000Z",
+      "glossaryVersion": "0"
+    }
+  ]
+}

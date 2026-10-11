@@ -19,6 +19,8 @@ import type { Props } from '@theme/DocItem/Layout';
 import { DocsEdit } from '../../../components/Icons/docs-edit';
 import MobileSidebarDrawer from './MobileSidebarDrawer';
 import JapaneseFallback from './JapaneseFallback';
+import TranslationStatus from './TranslationStatus';
+import {docTranslation} from '@site/src/utils/translation';
 import { isJapaneseFallback as usesEnglishFallback } from '@site/src/utils/japanese';
 
 import styles from './styles.module.css';
@@ -63,7 +65,13 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
     // metadata.source is the file actually selected by the content plugin,
     // including its per-file fallback. Do not infer translation from the URL.
     const isJapaneseFallback = usesEnglishFallback(metadata.source, currentLocale);
-    const docContent = isJapaneseFallback ? (
+    const translation = currentLocale === 'ja' ? docTranslation(metadata) : undefined;
+    const docContent = translation ? (
+        <>
+            <TranslationStatus state={translation} />
+            <DocItemContent>{children}</DocItemContent>
+        </>
+    ) : isJapaneseFallback ? (
         <>
             <JapaneseFallback permalink={metadata.permalink} />
             <DocItemContent>{children}</DocItemContent>
@@ -122,7 +130,8 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
                         {isNew ? (
                             <></>
                         ) : (
-                            <Link to={sourceToEditUrl(metadata.source)} className={`mr-6 ${styles.footerBtn}`}>
+                            <Link to={sourceToEditUrl(translation ? `@site/${translation.useTarget ? translation.targetPath
+                                : translation.contentLocale === 'en' ? translation.englishPath : translation.sourcePath}` : metadata.source)} className={`mr-6 ${styles.footerBtn}`}>
                                 <DocsEdit /> <span className="ml-2">{isZH ? '编辑本页' : 'Edit this page'}</span>
                             </Link>
                         )}

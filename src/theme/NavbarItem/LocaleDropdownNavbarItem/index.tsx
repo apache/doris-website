@@ -6,6 +6,7 @@ import { useLocation } from '@docusaurus/router';
 import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 import type { LinkLikeNavbarItemProps } from '@theme/NavbarItem';
 import type { Props } from '@theme/NavbarItem/LocaleDropdownNavbarItem';
+import {useTranslationRoutes} from '@site/src/utils/translation';
 
 import './styles.scss';
 export default function LocaleDropdownNavbarItem({
@@ -19,6 +20,7 @@ export default function LocaleDropdownNavbarItem({
         i18n: { currentLocale, locales, localeConfigs },
     } = useDocusaurusContext();
     const alternatePageUtils = useAlternatePageUtils();
+    const {group} = useTranslationRoutes();
     const { search, hash } = useLocation();
 
     // Locales listed here render in the dropdown with a "Coming Soon" badge and
@@ -26,10 +28,11 @@ export default function LocaleDropdownNavbarItem({
     const COMING_SOON_LOCALES = new Set<string>([]);
 
     const localeItems = locales.map((locale): LinkLikeNavbarItemProps => {
-        const baseTo = `pathname://${alternatePageUtils.createUrl({
+        const nativeTo = alternatePageUtils.createUrl({
             locale,
             fullyQualified: false,
-        })}`;
+        });
+        const baseTo = `pathname://${(locale === 'ja' || currentLocale === 'ja') && group?.[locale] ? group[locale] : nativeTo}`;
         // preserve ?search#hash suffix on locale switches
         const to = `${baseTo}${search}${hash}${queryString}`;
         const isComingSoon = COMING_SOON_LOCALES.has(locale);
