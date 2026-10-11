@@ -155,10 +155,19 @@ let browser;
     const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
     // Block only unrelated third-party analytics/AI requests, identically for
     // baseline and PoC. Local assets and search are never mocked in the PoC.
-    await context.route(/https:\/\/(widget\.kapa\.ai|analytics\.apache\.org|www\.googletagmanager\.com)\//, route => route.abort());
+    await context.route(/https:\/\/(widget\.kapa\.ai|analytics\.apache\.org|www\.googletagmanager\.com|(?:[\w-]+\.)?clarity\.ms)\//, route => route.abort());
     if (redirectCdn) await context.route('https://cdnd.selectdb.com/**', async route => {
         const url = new URL(route.request().url());
-        await route.fulfill({ response: await context.request.get(`${origin}${url.pathname}`) });
+        const file = fileFor(url.pathname);
+        try {
+            await route.fulfill(fs.existsSync(file)
+                ? { path: file }
+                : { status: 404, body: 'Missing baseline asset' });
+        } catch (error) {
+            // A closed page may cancel its background prefetch. Do not turn
+            // that expected cancellation into an unhandled process rejection.
+            if (!route.request().frame().page().isClosed()) throw error;
+        }
     });
     context.on('response', response => {
         const url = response.url();
