@@ -123,7 +123,7 @@ if (expectJapanese) {
             assert(fs.existsSync(fileFor(target.pathname)), `Broken sample link/image/frame: ${route} -> ${href}`);
         });
     }
-    checked('All four translations preserve English heading IDs/code and resolve their body links/images/frames');
+    checked(`${translatedRoutes.length} translated samples preserve English heading IDs/code and resolve their body links/images/frames`);
 }
 const server = http.createServer((request, response) => {
     let file = fileFor(request.url);
