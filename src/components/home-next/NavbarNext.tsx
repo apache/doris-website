@@ -1,13 +1,13 @@
 import { translate } from '@docusaurus/Translate';
 import React, { JSX, useState, useEffect, useRef } from 'react';
-import Link from '@docusaurus/Link';
+import Link from '@site/src/components/home-next/JapaneseLink';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { getLocalePrefix } from '@site/src/utils/locale';
 import { STAR_COUNT } from '@site/src/constant/github.data';
 import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
 import { DorisLogoHorizontal } from '@site/src/components/Icons/doris-logo-horizontal';
 import { BrandThemeSwitcher } from '@site/src/components/brand-theme/BrandThemeSwitcher';
-import { japaneseHomeLink, japaneseAiLabels } from '@site/src/utils/japanese';
+import { japaneseAiLabels } from '@site/src/utils/japanese';
 import './NavbarNext.scss';
 
 const GITHUB_REPO = 'apache/doris';
@@ -164,7 +164,7 @@ export function NavbarNext(): JSX.Element {
     const roadmapHref = `${localePrefix}/community/roadmap`;
     const joinCommunityHref = `${localePrefix}/community/join-community`;
     const communityReportHref = currentLocale === 'ja'
-        ? japaneseHomeLink('/community-report')
+        ? '/community-report'
         : `${localePrefix}/community-report`;
     const navItems = buildNavItems(
         devDocsHref,
@@ -234,7 +234,7 @@ export function NavbarNext(): JSX.Element {
                                 {item.items.map(sub => (
                                     <Link
                                         key={sub.label}
-                                        to={japaneseHomeLink(sub.href)}
+                                        to={sub.href}
                                         className="navbar-next__dropdown-link"
                                         {...(sub.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                                     >
@@ -306,7 +306,7 @@ export function NavbarNext(): JSX.Element {
                         <span className="navbar-next__star-divider" />
                         <GitHubIcon />
                     </a>
-                    <Link to={japaneseHomeLink('/download')} className="navbar-next__cta">
+                    <Link to="/download" className="navbar-next__cta">
                         {translate({ id: "homepage.navbar.033", message: "DOWNLOAD" })}</Link>
                 </div>
 
@@ -344,7 +344,7 @@ export function NavbarNext(): JSX.Element {
                                     {item.items.map(sub => (
                                         <Link
                                             key={sub.label}
-                                            to={japaneseHomeLink(sub.href)}
+                                            to={sub.href}
                                             className="navbar-next__mobile-link"
                                             onClick={() => setMobileOpen(false)}
                                             {...(sub.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}

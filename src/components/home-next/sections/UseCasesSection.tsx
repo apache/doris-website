@@ -1,7 +1,6 @@
-import { japaneseHomeLink } from '@site/src/utils/japanese';
 import { translate } from '@docusaurus/Translate';
 import React, { JSX } from 'react';
-import Link from '@docusaurus/Link';
+import Link from '@site/src/components/home-next/JapaneseLink';
 import './UseCasesSection.scss';
 
 function ArrowIcon(): JSX.Element {
@@ -54,7 +53,7 @@ export function UseCasesSection(): JSX.Element {
 
                 <div className="use-cases-next__grid">
                     {USE_CASES.map(useCase => (
-                        <Link key={useCase.title} to={japaneseHomeLink(useCase.href)} className="use-cases-next__card">
+                        <Link key={useCase.title} to={useCase.href} className="use-cases-next__card">
                             <h3 className="use-cases-next__card-title">{useCase.title}</h3>
                             <p className="use-cases-next__card-desc">{useCase.desc}</p>
                             <span className="use-cases-next__card-link">

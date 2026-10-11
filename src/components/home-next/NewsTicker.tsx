@@ -1,7 +1,6 @@
-import { japaneseHomeLink } from '@site/src/utils/japanese';
 import { translate } from '@docusaurus/Translate';
 import React, { CSSProperties, FocusEvent, JSX, TransitionEvent, useEffect, useRef, useState } from 'react';
-import Link from '@docusaurus/Link';
+import Link from '@site/src/components/home-next/JapaneseLink';
 import { getRandomStartIndex, rotateItems } from './NewsTicker.logic';
 import './NewsTicker.scss';
 
@@ -135,7 +134,7 @@ export function NewsTicker(): JSX.Element {
                             return (
                                 <Link
                                     className="homepage-news-ticker__item"
-                                    href={japaneseHomeLink(announcement.href)}
+                                    href={announcement.href}
                                     aria-hidden={!isVisible || undefined}
                                     tabIndex={isVisible ? undefined : -1}
                                     key={`${announcement.href}-${isClone ? 'clone' : 'original'}`}

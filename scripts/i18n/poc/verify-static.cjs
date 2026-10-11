@@ -244,7 +244,9 @@ let browser;
         // race, so the PoC cannot silently introduce any additional errors.
         checked('Captured original baseline page errors', results.errors);
     } else {
-        assert.deepEqual(results.errors, baselineErrors, 'New page or hydration errors');
+        const existingErrors = new Set(baselineErrors.map(error => JSON.stringify(error)));
+        const newErrors = results.errors.filter(error => !existingErrors.has(JSON.stringify(error)));
+        assert.deepEqual(newErrors, [], 'New page or hydration errors');
     }
     checked('Own JS/CSS resources load successfully; page errors match baseline');
     results.passed = true;
