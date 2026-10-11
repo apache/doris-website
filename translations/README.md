@@ -88,7 +88,8 @@ checkout are unsupported; use separate worktrees.
 
 The adapter emits actual framework permalinks and state into each doc's metadata.
 The UI, body `lang`, `noindex`, canonical URL and alternate eligibility use that
-state. Fallback pages canonicalize to their English node. Stale Japanese keeps
+state. Fallback pages canonicalize to the displayed original (English by default,
+Chinese for an explicitly configured Chinese source). Stale Japanese keeps
 its Japanese canonical URL but is `noindex`. Native sitemap and local-search
 parsers honor `noindex`; the single `SiteMetadata` alternate emitter excludes
 Japanese for those pages. Current translations receive reciprocal en/zh-CN/ja

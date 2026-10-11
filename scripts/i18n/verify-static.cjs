@@ -35,7 +35,8 @@ function verify({site, manifest}) {
         assert.equal(body.attr('lang'), page.contentLocale, `Body language: ${page.permalink}`);
         assert.equal($('[data-translation-status]').attr('data-translation-status'), page.status, `Notice: ${page.permalink}`);
         assert.equal($('link[rel="canonical"]').length, 1, `Duplicate canonical: ${page.permalink}`);
-        assert.equal($('link[rel="canonical"]').attr('href'), `https://doris.apache.org${page.useTarget ? page.permalink : page.englishPermalink}`);
+        const canonical = page.useTarget ? page.permalink : page.contentLocale === 'en' ? page.englishPermalink : page.sourcePermalink;
+        assert.equal($('link[rel="canonical"]').attr('href'), `https://doris.apache.org${canonical}`);
         const alternates = $('link[rel="alternate"][hreflang]');
         const japanese = alternates.filter('[hreflang="ja"]');
         assert.equal(japanese.length, page.alternates.ja ? 1 : 0, `Japanese alternate: ${page.permalink}`);

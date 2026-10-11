@@ -8,6 +8,7 @@ export default function DocItemMetadata(): JSX.Element {
   const {metadata, frontMatter, assets} = useDoc();
   const translation = docTranslation(metadata);
   const {siteConfig: {url}} = useDocusaurusContext();
+  const sourceCanonical = translation?.contentLocale === 'en' ? translation.englishPermalink : translation?.sourcePermalink;
   return (
     <PageMetadata
       title={metadata.title}
@@ -16,8 +17,8 @@ export default function DocItemMetadata(): JSX.Element {
       image={assets.image ?? frontMatter.image}
     >
       {translation && !translation.indexable && <meta name="robots" content="noindex, follow" />}
-      {translation && !translation.useTarget && <link rel="canonical" href={url + translation.englishPermalink} />}
-      {translation && !translation.useTarget && <meta property="og:url" content={url + translation.englishPermalink} />}
+      {translation && !translation.useTarget && <link rel="canonical" href={url + sourceCanonical} />}
+      {translation && !translation.useTarget && <meta property="og:url" content={url + sourceCanonical} />}
     </PageMetadata>
   );
 }
