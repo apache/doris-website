@@ -154,6 +154,9 @@ let browser;
         const response = await page.goto(`${origin}${route}`, { waitUntil: 'networkidle' });
         assert.equal(response.status(), 200, route);
         await page.waitForTimeout(250);
+        if (route.endsWith('/blog/')) {
+            await page.waitForSelector('article[itemprop="blogPost"] h1', { timeout: 30000 });
+        }
         assert(await page.locator('#__docusaurus').innerText(), `Empty hydrated page: ${route}`);
         return page;
     }
