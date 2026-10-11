@@ -98,8 +98,10 @@ module.exports = async function translationDocsPlugin(context, options) {
             }
             // A Chinese source can supply content only for an English registered
             // node. Its routing metadata must still match that node.
-            if (sourceLocale === 'zh-CN' && (chineseDoc.id !== englishDoc.id || chineseDoc.slug !== englishDoc.slug)) {
+            if (sourceLocale === 'zh-CN' && (chineseDoc.id !== englishDoc.id || chineseDoc.slug !== englishDoc.slug
+                || chineseDoc.draft !== englishDoc.draft)) {
                 state = {...state, status: 'source_route_conflict', useTarget: false, indexable: false, contentLocale: 'en'};
+                reports.push({kind: 'source_divergence', ...page, reason: 'source_route_conflict'});
             }
             const selectedContent = state.useTarget ? localizedContent
                 : state.contentLocale === 'zh-CN' ? chineseContent : englishContent;
@@ -107,8 +109,8 @@ module.exports = async function translationDocsPlugin(context, options) {
             const indexable = state.indexable && !japaneseDoc.draft && !japaneseDoc.unlisted && !versions.ja[index].noIndex;
             state = {...state, indexable, draft: japaneseDoc.draft, unlisted: japaneseDoc.unlisted,
                 permalink: route(japaneseDoc.permalink), englishPermalink: route(englishDoc.permalink),
-                sourcePermalink: route(nativeSourceDoc.permalink),
-                alternates: {en: route(englishDoc.permalink), 'zh-CN': route(chineseDoc.permalink),
+                sourcePermalink: route(nativeSourceDoc.draft ? englishDoc.permalink : nativeSourceDoc.permalink),
+                alternates: {en: route(englishDoc.permalink), ...(!chineseDoc.draft && {'zh-CN': route(chineseDoc.permalink)}),
                     ...(indexable ? {ja: route(japaneseDoc.permalink)} : {})}};
             pages.push(state);
             if (context.i18n.currentLocale === locale) {

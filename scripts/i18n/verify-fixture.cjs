@@ -68,11 +68,12 @@ async function main() {
     await fs.symlink(path.join(root, 'node_modules'), path.join(fixture, 'node_modules'));
     const pages = [];
     for (const name of ['untranslated', 'machine', 'human', 'unverified', 'prose', 'technical', 'unknown',
-        'modified', 'heading', 'bad-metadata', 'deleted', 'chinese-source']) {
+        'modified', 'heading', 'bad-metadata', 'deleted', 'chinese-source', 'chinese-draft']) {
         const sourcePath = `docs/${name}.md`;
         const targetPath = `i18n/ja/docusaurus-plugin-content-docs/current/${name}.md`;
-        const source = name === 'chinese-source' ? sourceBase.replace('Use Doris.', '使用 Doris。') : sourceBase;
-        const sourceLocale = name === 'chinese-source' ? 'zh-CN' : 'en';
+        const source = name === 'chinese-source' ? sourceBase.replace('Use Doris.', '使用 Doris。')
+            : name === 'chinese-draft' ? sourceBase.replace('title: Example', 'title: Example\ndraft: true') : sourceBase;
+        const sourceLocale = name.startsWith('chinese-') ? 'zh-CN' : 'en';
         const record = {pluginId: 'default', version: 'current', docId: name, locale: 'ja', sourceLocale,
             sourcePath: sourceLocale === 'en' ? sourcePath : `i18n/zh-CN/docusaurus-plugin-content-docs/current/${name}.md`,
             targetPath, sourceCommit: 'a'.repeat(40), sourceHash: hash(source),
@@ -105,7 +106,7 @@ async function main() {
     pages.push({...pages.find(page => page.docId === 'machine'), pluginId: 'community',
         sourcePath: 'community/machine.md', targetPath: 'i18n/ja/docusaurus-plugin-content-docs-community/current/machine.md'});
     await write('translations/config.json', JSON.stringify({schemaVersion: 1, locales: {ja: {sourceLocale: 'en',
-        sourceOverrides: ['chinese-source', 'chinese-only'].map(docId => ({pluginId: 'default', version: 'current', docId, sourceLocale: 'zh-CN'}))}}}));
+        sourceOverrides: ['chinese-source', 'chinese-only', 'chinese-draft'].map(docId => ({pluginId: 'default', version: 'current', docId, sourceLocale: 'zh-CN'}))}}}));
     await write('translations/state/ja/docs.json', JSON.stringify({schemaVersion: 1, pages}, null, 2));
     // Reuse the production components, including the single alternate emitter.
     for (const file of ['src/utils/translation.ts', 'src/utils/japanese.ts', 'src/theme/SiteMetadata/index.tsx',
@@ -144,7 +145,7 @@ export default function Layout(props) {
     const stateFor = (docId, version = 'current', pluginId = 'default') => data.pages.find(page => page.docId === docId && page.version === version && page.pluginId === pluginId);
     for (const [name, status] of Object.entries({untranslated:'untranslated',machine:'current',human:'current',unverified:'unverified',
         prose:'stale_prose', technical:'stale_technical',unknown:'stale_unknown',modified:'target_modified',heading:'heading_conflict',
-        'bad-metadata':'state_conflict','chinese-source':'current'})) {
+        'bad-metadata':'state_conflict','chinese-source':'current','chinese-draft':'source_route_conflict'})) {
         assert.equal(stateFor(name).status, status);
     }
     assert.equal(stateFor('machine','4.x').status, 'stale_technical');

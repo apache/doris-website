@@ -8,6 +8,9 @@ import styles from './JapaneseFallback.module.css';
 function description(state: TranslationState): string {
     if (state.status === 'untranslated') return 'このページはまだ日本語に翻訳されていません。';
     if (state.status === 'stale_prose') return '日本語訳は原文の最新の表現を反映していません。';
+    if (state.status === 'source_missing' || state.status === 'source_route_conflict') {
+        return '翻訳元を確認できないため、この日本語訳は表示していません。';
+    }
     if (state.status === 'unverified' || state.status === 'state_conflict' || state.status === 'target_modified'
         || state.status === 'heading_conflict' || state.reviewStatus === 'unverified') {
         return '日本語訳の内容や更新状況を確認できていません。';
