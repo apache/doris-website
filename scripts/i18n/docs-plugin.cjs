@@ -165,7 +165,12 @@ module.exports = async function translationDocsPlugin(context, options) {
                         const parsed = await context.siteConfig.markdown.parseFrontMatter({filePath: sourceFile,
                             fileContent: await fs.readFile(sourceFile, 'utf8'),
                             defaultParseFrontMatter: require('@docusaurus/utils').DEFAULT_PARSE_FRONT_MATTER});
-                        const lastUpdate = await readLastUpdateData(sourceFile, options, parsed.frontMatter.last_update);
+                        // Even plugins that hide the date need the real source
+                        // timestamp for sitemap lastmod when their file is in
+                        // the temporary view (which has no Git history).
+                        const sourceOptions = state.useTarget || state.contentLocale === 'zh-CN'
+                            ? {...options, showLastUpdateTime: true} : options;
+                        const lastUpdate = await readLastUpdateData(sourceFile, sourceOptions, parsed.frontMatter.last_update);
                         doc.lastUpdatedAt = lastUpdate.lastUpdatedAt;
                         doc.lastUpdatedBy = lastUpdate.lastUpdatedBy;
                     }
