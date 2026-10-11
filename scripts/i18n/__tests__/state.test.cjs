@@ -116,4 +116,7 @@ test('MDX imports, expressions and explicit IDs preserve heading order and raw o
     assert.equal((aligned.match(/<Card timeout=\{10\}\/>/g) ?? []).length, 1);
     const prose = source.replace('Welcome.', 'Try Doris.');
     assert.equal((await structure(prose, '.mdx')).technicalHash, parsed.technicalHash);
+    const override = '---\nmdx:\n  format: mdx\n---\n';
+    assert.deepEqual((await structure(override + japanese, '.md')).headings.map(h => h.id), ['getting-started', 'usage', 'usage-1']);
+    assert.deepEqual((await structure(override + source, '.md')).headings.map(h => h.id), ['getting-started', 'usage', 'usage-1']);
 });

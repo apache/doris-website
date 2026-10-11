@@ -2,6 +2,7 @@ const matter = require('gray-matter');
 const {hash} = require('./state.cjs');
 const headingsPlugin = require('@docusaurus/mdx-loader/lib/remark/headings').default;
 const {escapeMarkdownHeadingIds} = require('@docusaurus/utils');
+const {getFormat} = require('@docusaurus/mdx-loader/lib/format.js');
 
 function withoutPositions(value) {
     if (Array.isArray(value)) return value.map(withoutPositions);
@@ -15,11 +16,12 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
     const [{unified}, {default: parse}, {default: gfm}, {default: mdx}, {visit}] = await Promise.all([
         import('unified'), import('remark-parse'), import('remark-gfm'), import('remark-mdx'), import('unist-util-visit'),
     ]);
-    // Match Docusaurus format:'detect': .md is Markdown; .mdx is MDX.
+    // Use native format detection, including front-matter MDX overrides.
     const {data, content} = matter(raw, {});
+    const format = getFormat({filePath: `doc${extension}`, frontMatterFormat: data.mdx?.format, markdownConfigFormat: 'detect'});
     const processor = unified().use(parse).use(gfm);
-    if (extension === '.mdx') processor.use(mdx);
-    const parseContent = extension === '.mdx' ? escapeMarkdownHeadingIds(content) : content;
+    if (format === 'mdx') processor.use(mdx);
+    const parseContent = format === 'mdx' ? escapeMarkdownHeadingIds(content) : content;
     const offsets = [];
     let originalOffset = 0;
     for (let i = 0; i < parseContent.length; i++) {
