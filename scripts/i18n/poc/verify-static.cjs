@@ -16,6 +16,16 @@ const devOnly = argv.includes('--dev-only');
 assert(!(expectJapanese && redirectCdn), 'Japanese must load its own real same-origin resources');
 fs.mkdirSync(output, { recursive: true });
 const normalize = value => value.replace(/\s+/g, ' ').trim();
+function docText(html) {
+    const $ = cheerio.load(html);
+    // Default admonition captions belong to the localized UI. Keep custom
+    // titles such as "Quick Checklist", and compare the document content.
+    const captions = new Set(['note', 'tip', 'info', 'caution', 'danger', '注記', 'ヒント', '情報', '注意', '警告', '危険']);
+    $('[class*="admonitionHeading"]').each((index, node) => {
+        if (captions.has($(node).text().trim().toLowerCase())) $(node).remove();
+    });
+    return normalize($('body').text());
+}
 const sampleRoutes = [
     '/', '/docs/dev/getting-started/what-is-apache-doris/',
     '/docs/4.x/getting-started/what-is-apache-doris/',
@@ -198,7 +208,7 @@ let browser;
             if (fallback) {
                 assert(await page.locator('.theme-doc-markdown[lang="en"]').count(), `English body language missing: ${route}`);
                 const english = cheerio.load(fs.readFileSync(fileFor(route.replace(/^\/ja/, '')), 'utf8'));
-                assert.equal(normalize(await body.textContent()), normalize(english('.theme-doc-markdown').text()), `Wrong version or stale fallback: ${route}`);
+                assert.equal(docText(await body.innerHTML()), docText(english('.theme-doc-markdown').html()), `Wrong version or stale fallback: ${route}`);
             } else if (route !== '/ja/') {
                 assert(/[\u3040-\u30ff]/.test(await body.textContent()), `Not a real translation: ${route}`);
             }
