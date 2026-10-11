@@ -108,6 +108,16 @@ async function main() {
     await write('translations/config.json', JSON.stringify({schemaVersion: 1, locales: {ja: {sourceLocale: 'en',
         sourceOverrides: ['chinese-source', 'chinese-only', 'chinese-draft', 'chinese-untranslated'].map(docId => ({pluginId: 'default', version: 'current', docId, sourceLocale: 'zh-CN'}))}}}));
     await write('translations/state/ja/docs.json', JSON.stringify({schemaVersion: 1, pages}, null, 2));
+    const relativeSource = '---\ntitle: Relative import\nlast_update:\n  date: 2026-01-01\n---\nimport Card from \'../src/components/Card.jsx\';\n\n## Usage\n\n<Card />\n';
+    const relativeTarget = relativeSource.replace('Relative import', '相対パスのインポート')
+        .replace("'../src/components/Card.jsx'", "'../../../../src/components/Card.jsx'").replace('## Usage', '## 使用方法');
+    await write('docs/relative.mdx', relativeSource);
+    await write('i18n/ja/docusaurus-plugin-content-docs/current/relative.mdx', relativeTarget);
+    await write('src/components/Card.jsx', "import React from 'react'; export default function Card(){return <p>SHARED_COMPONENT</p>;}\n");
+    pages.push({...pages.find(page => page.docId === 'machine' && page.version === 'current' && page.pluginId === 'default'),
+        docId:'relative', sourcePath:'docs/relative.mdx', targetPath:'i18n/ja/docusaurus-plugin-content-docs/current/relative.mdx',
+        sourceHash:hash(relativeSource), targetHash:hash(relativeTarget), sourceTechnicalHash:(await structure(relativeSource,'.mdx')).technicalHash});
+    await write('translations/state/ja/docs.json', JSON.stringify({schemaVersion: 1, pages}, null, 2));
     // Reuse the production components, including the single alternate emitter.
     for (const file of ['src/utils/translation.ts', 'src/utils/japanese.ts', 'src/theme/SiteMetadata/index.tsx',
         'src/theme/DocItem/Metadata/index.tsx', 'src/theme/DocItem/Content/index.tsx',
@@ -150,6 +160,8 @@ export default function Layout(props) {
     }
     assert.equal(stateFor('machine','4.x').status, 'stale_technical');
     assert.equal(stateFor('machine','current','community').status, 'current');
+    assert.equal(stateFor('relative').status, 'current');
+    assert((await fs.readFile(path.join(fixture, 'build/ja/docs/dev/relative/index.html'), 'utf8')).includes('SHARED_COMPONENT'));
     assert(data.reports.some(report => report.kind === 'source_deleted' && report.docId === 'deleted'));
     assert(data.reports.some(report => report.kind === 'unsupported_source_route' && report.sourcePath.endsWith('chinese-only.md')));
     await assert.rejects(fs.access(path.join(fixture, 'build/ja/docs/dev/deleted/index.html')));

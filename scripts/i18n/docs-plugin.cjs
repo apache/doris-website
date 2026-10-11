@@ -36,7 +36,9 @@ module.exports = async function translationDocsPlugin(context, options) {
     const contexts = Object.fromEntries(['en', 'zh-CN', locale].map(lang => [lang, localizedContext(context, lang)]));
     const versions = Object.fromEntries(await Promise.all(Object.entries(contexts).map(async ([lang, ctx]) =>
         [lang, await readVersionsMetadata({context: ctx, options})])));
-    const viewRoot = path.join(context.siteDir, '.i18n-build', 'views', locale, options.id);
+    // Match i18n/<locale>'s depth so valid project-relative MDX imports still
+    // reach the same @site files. Native plugin namespaces isolate instances.
+    const viewRoot = path.join(context.siteDir, '.i18n-build', locale);
     const viewPluginDir = getPluginI18nPath({localizationDir: viewRoot, pluginName: 'docusaurus-plugin-content-docs', pluginId: options.id});
     const originalPluginDir = getPluginI18nPath({localizationDir: contexts.ja.localizationDir,
         pluginName: 'docusaurus-plugin-content-docs', pluginId: options.id});
@@ -147,6 +149,7 @@ module.exports = async function translationDocsPlugin(context, options) {
     return {...plugin,
         getPathsToWatch() {
             return [...plugin.getPathsToWatch().filter(file => !file.startsWith(viewRoot)), `${originalPluginDir}/**/*`,
+                ...versions['zh-CN'].map(version => `${version.contentPathLocalized}/**/*`),
                 path.join(context.siteDir, 'translations/**/*.json')];
         },
         async loadContent() {

@@ -81,7 +81,9 @@ come from the registered English node without mixing localization directories.
 `scripts/i18n/docs-plugin.cjs` wraps Docusaurus 3.6.3's native docs plugin, retaining
 its name, option validation, version parsing, sidebar generation and routes. For
 Japanese only, it copies localized inputs into the ignored
-`.i18n-build/views/ja/<pluginId>/` tree. It aligns usable translations' heading IDs
+`.i18n-build/ja/docusaurus-plugin-content-docs[-<pluginId>]/` tree. Its depth
+matches the committed localization tree, preserving project-relative MDX
+imports. It aligns usable translations' heading IDs
 with the native English heading transform. It omits unsafe targets so the
 framework selects English. Committed translations are neither overwritten nor
 deleted. Source deletion removes the route through native enumeration; orphan
