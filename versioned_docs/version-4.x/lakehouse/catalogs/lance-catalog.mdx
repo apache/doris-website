@@ -1027,6 +1027,82 @@ The data cache uses Foyer within the Lance reader, with its own directory and ca
 
 The data cache fills on demand without downloading the entire Dataset in advance. On a miss, it reads from the source storage and enqueues the data for background disk-cache writes. The first read still incurs source I/O and cache-fill overhead. Cache hits can reduce subsequent source reads, but do not eliminate decoding, filtering, or sorting costs.
 
+### Index Prewarm {#index-prewarm}
+
+Use `WARM UP SELECT ... PROPERTIES ("read_index_only" = "true")` before latency-sensitive queries to load existing Lance indexes into the shared index memory cache on the target BEs. The statement runs synchronously: it returns success only after all selected indexes have completed prewarm on every target BE. It reads the required metadata and index contents without scanning or materializing table data.
+
+#### Prerequisites
+
+- Configure a Lance Catalog as described in [Configure a Catalog](#configure-a-catalog), and register a dataset that already contains indexes created with Lance tooling. The examples below assume `example_lance.default.items` has an index on `embedding`.
+- Use a Doris build whose FE and all target BEs support index-only prewarm. This is an experimental Lance feature; the availability of ordinary data warmup alone does not imply support for this mode.
+- The executing user needs global `ADMIN_PRIV` and `SELECT_PRIV` on the table. In compute-storage decoupled mode, the user also needs `USAGE_PRIV` on the current compute group.
+- The target BEs must be able to read the dataset and its indexes with the Catalog's storage access configuration. Budget index memory with `lance_index_cache_size_bytes`; see [BE Configuration](#be-configuration).
+
+#### Syntax and Options
+
+```sql
+WARM UP SELECT <column_list_or_star>
+FROM <lance_catalog_table>
+PROPERTIES ("read_index_only" = "true");
+```
+
+| Option | Type | Required | Default | Effect |
+|---|---|---|---|---|
+| `read_index_only` | Boolean (`true` or `false`, optionally quoted) | No | `false` | `true` prewarms the indexes selected by the projection. Omitted or `false` retains the existing data warmup path and its scan/cache statistics. This is a statement option, not a session variable or Catalog property. |
+
+The projection determines which **logical indexes** are prewarmed:
+
+- `*` selects every logical index in the table's resolved snapshot, including all its active index segments.
+- A column list selects each index associated with any of those columns. Repeated columns or multiple segments do not cause duplicate logical-index results. Column names are matched case-insensitively; unknown or ambiguous names are rejected.
+- A selection with no matching indexes, including `*` on a table without indexes, returns an error. An unindexed column does not add work when other selected columns have indexes.
+
+Index-only mode supports one Lance Catalog table and plain column names or `*`. It does not support file TVFs, expressions, column aliases, `WHERE`, `EXPLAIN`, joins, subqueries, grouping, sorting, or `LIMIT`. Use `*` alone, without `EXCEPT` or `REPLACE`. Unknown properties and values other than `true` or `false` are rejected. Index formats must be supported by the embedded Lance SDK's prewarm implementation; query support alone is not a guarantee that a format supports prewarm.
+
+#### Examples and Results
+
+Prewarm all indexes:
+
+```sql
+WARM UP SELECT * FROM example_lance.default.items
+PROPERTIES ("read_index_only" = "true");
+```
+
+This returns one row for each logical index. To prewarm only indexes associated with `embedding`:
+
+```sql
+WARM UP SELECT embedding FROM example_lance.default.items
+PROPERTIES ("read_index_only" = "true");
+```
+
+For a table with one index named `embedding_idx` on that column, an illustrative result is:
+
+```text
+Table                            | Index         | DatasetVersion | BackendCount | ElapsedMs
+`example_lance`.`default`.`items` | embedding_idx | 7              | 3            | 250
+```
+
+Actual index names, versions, backend counts, and times depend on the dataset and cluster. If the column has multiple indexes, the result contains one row per index.
+
+| Result column | Meaning |
+|---|---|
+| `Table` | Fully qualified table name. |
+| `Index` | Logical index name. |
+| `DatasetVersion` | Dataset snapshot pinned for this statement. All result rows use the same version. |
+| `BackendCount` | Number of eligible target BEs on which this index completed prewarm. All rows use the same target set. |
+| `ElapsedMs` | Elapsed milliseconds for this index's backend prewarm phase; excludes initial metadata resolution and is not a cache-hit or byte count. |
+
+The statement uses the current session's compute group and warms every eligible BE in that execution context. To prewarm another group, select it in the session first. It does not warm unrelated groups or BEs added after the target set was resolved. All indexes use the same dataset snapshot and statement timeout; a concurrent dataset update does not change the snapshot being warmed.
+
+#### Errors and Cache Lifetime
+
+If any target BE or selected index fails, the statement returns an error instead of partial success rows. Check table/compute-group permissions, available BEs, storage access, and index-format compatibility before retrying. Older BEs that do not support prewarm cannot silently count as successful targets. `query_timeout` and query/connection cancellation stop the client wait, but may not immediately interrupt SDK I/O. Failure or cancellation does not roll back cache entries already loaded; the statement can be retried.
+
+Index-only mode uses the Lance index cache independently of the general File Cache session switches and the separate Lance disk data cache. It does not require enabling data-file caching. Omitting `read_index_only` or setting it to `false` keeps the existing [data warmup](../data-cache.md#cache-warmup) behavior and its cache prerequisites.
+
+Loaded index entries are shared by later queries on the same BE and survive the end of the SQL session. They remain evictable: successful prewarm does not pin an index or guarantee that the entire index stays resident. BE restart or replacement loses the in-memory cache; new BEs, newly built/replaced index segments, or a different compute group may need another prewarm.
+
+Prewarm consumes storage bandwidth and memory on each target BE and can evict other hot indexes. Prefer the required columns over `*` when only a subset of indexes will be queried, leave memory for concurrent queries, and schedule large warmups outside peak traffic. It does not eliminate vector distance/Top-K computation, output-column fetches, or reads of unindexed data. Compare subsequent query Profiles and source I/O using [Checking Cache Effectiveness](#checking-cache-effectiveness); the data-cache byte counters do not measure index-prewarm traffic.
+
 ### BE Configuration
 
 All parameters below are optional. Set them in each BE's `be.conf` and restart that BE for changes to take effect. Capacities are per BE and expressed in bytes.
