@@ -4,6 +4,20 @@ const fs = require('node:fs');
 const path = require('node:path');
 const cheerio = require('cheerio');
 
+function verifyRedirect(html, target) {
+    const $ = cheerio.load(html);
+    const origin = 'https://doris.apache.org';
+    const expected = new URL(target, origin).href;
+    assert.equal($('link[rel="canonical"]').length, 1, 'Missing or duplicate redirect canonical');
+    const canonical = $('link[rel="canonical"]').attr('href');
+    assert(canonical, 'Missing redirect canonical URL');
+    assert.equal(new URL(canonical, origin).href, expected);
+    // Native client redirects have a meta refresh and script, with no anchor.
+    const refresh = $('meta[http-equiv="refresh"]').attr('content');
+    assert(refresh?.startsWith('0; url='), 'Missing immediate native redirect');
+    assert.equal(new URL(refresh.slice('0; url='.length), origin).href, expected);
+}
+
 function verify({site, snapshot, devOnly = false}) {
     const summary = JSON.parse(fs.readFileSync(path.join(snapshot, 'summary.json'), 'utf8'));
     let routes = 0;
@@ -45,11 +59,7 @@ function verify({site, snapshot, devOnly = false}) {
     if (!devOnly) {
         const $ = read('/ja/docs/');
         const target = '/ja/docs/4.x/getting-started/what-is-apache-doris/';
-        // Native client-redirect pages use a relative canonical. Resolve it as
-        // a browser would; document pages are checked separately by T02.
-        assert.equal(new URL($('link[rel="canonical"]').attr('href'), 'https://doris.apache.org').href,
-            `https://doris.apache.org${target}`);
-        assert($('a').map((i, node) => $(node).attr('href')).get().includes(target));
+        verifyRedirect($.html(), target);
         checks.push({entry: '/ja/docs/', target});
     }
     return {sourceCommit: summary.sourceCommit, devOnly, routes, checks};
@@ -63,4 +73,4 @@ if (require.main === module) {
     if (args.includes('--output')) fs.writeFileSync(option('--output'), JSON.stringify(result, null, 2) + '\n');
     console.log(JSON.stringify(result));
 }
-module.exports = {verify};
+module.exports = {verify, verifyRedirect};

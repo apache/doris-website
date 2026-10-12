@@ -274,13 +274,20 @@ let browser;
         if (!devOnly) {
             await page.goto(`${origin}/ja/docs/?scope=1#technical-features`, { waitUntil: 'networkidle' });
             await waitForPath(page, '/ja/docs/4.x/getting-started/what-is-apache-doris/?scope=1#technical-features');
-            const versions = page.locator('.dropdown').filter({ has: page.locator('a[href^="/ja/docs/dev/getting-started/what-is-apache-doris/"]') }).first();
+            // NavbarNext owns the visible version-entry menu. The old theme
+            // DocsVersionDropdownNavbarItem is no longer mounted by this site.
+            const versions = page.locator('.navbar-next__nav .navbar-next__item').filter({
+                has: page.getByRole('link', { name: 'Dev', exact: true, includeHidden: true }),
+            });
             await versions.hover();
-            await versions.locator('a[href^="/ja/docs/dev/getting-started/what-is-apache-doris/"]').click();
-            await waitForPath(page, '/ja/docs/dev/getting-started/what-is-apache-doris/?scope=1#technical-features');
+            const devEntry = versions.getByRole('link', { name: 'Dev', exact: true });
+            const devTarget = await devEntry.getAttribute('href');
+            assert.equal(new URL(devTarget, origin).pathname, '/ja/docs/dev/getting-started/what-is-apache-doris/');
+            await devEntry.click();
+            await waitForPath(page, devTarget);
             await page.goBack();
             await waitForPath(page, '/ja/docs/4.x/getting-started/what-is-apache-doris/?scope=1#technical-features');
-            checked('Japanese docs entry and real 4.x/Dev version switching preserve query/hash and browser back');
+            checked('Japanese docs entry preserves query/hash; NavbarNext switches real version entries and back restores the original URL');
         }
         await page.goto(`${origin}/ja/community/join-community/?scope=community#links`, { waitUntil: 'networkidle' });
         const communitySidebar = page.locator('.theme-doc-sidebar-container');
