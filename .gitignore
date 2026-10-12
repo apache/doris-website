@@ -8,6 +8,7 @@
 .docusaurus
 .cache-loader
 .i18n-build/
+/.doris-build-*/
 /src/generated/key-features.ts
 
 # Misc

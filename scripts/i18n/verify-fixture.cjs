@@ -145,8 +145,8 @@ export default function Layout(props) {
  function fixtureCache(){return {name:'fixture-cache',configureWebpack:()=>({cache:false})}}],
  presets: [['classic',{docs:false,blog:false}]],
 };\n`);
-    const result = spawnSync(process.execPath, [path.join(root, 'node_modules/@docusaurus/core/bin/docusaurus.mjs'),
-        'build', fixture, '--locale', 'en', '--locale', 'zh-CN', '--locale', 'ja'], {stdio: 'inherit',
+    const result = spawnSync(process.execPath, [path.join(root, 'scripts/build-locales.cjs'),
+        '--site-dir', fixture], {stdio: 'inherit',
         env: {...process.env, NODE_OPTIONS: '--max-old-space-size=4096'}});
     assert.equal(result.status, 0, 'Docusaurus fixture build failed');
     const manifest = path.join(fixture, '.i18n-build/manifests/ja.json');
