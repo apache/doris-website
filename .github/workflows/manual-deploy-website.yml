@@ -8,16 +8,26 @@ on:
                 required: true
                 default: 'master'
 
+permissions:
+    contents: write
+
+concurrency:
+    group: cron-deploy-website
+    cancel-in-progress: false
+
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         environment: Production
+        env:
+            DORIS_ENABLE_JA: 'true'
         steps:
             - name: Checkout
               uses: actions/checkout@master
               with:
                   persist-credentials: false
                   submodules: recursive
+                  ref: ${{ inputs.branch }}
 
             - name: Add Chinese Fonts
               run: |
@@ -60,7 +70,14 @@ jobs:
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/
                   ls build
-                  export DORIS_COMMIT=`git rev-parse HEAD`
+                  echo "DORIS_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+            - name: Verify Japanese publishing artifact
+              if: env.DORIS_ENABLE_JA == 'true'
+              run: |
+                  test -s build/ja/index.html
+                  node scripts/i18n/verify-static.cjs \
+                    --site build --manifest .i18n-build/manifests/ja.json
 
             - name: Upload files to OSS
               id: oss-upload

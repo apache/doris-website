@@ -26,6 +26,8 @@ on:
       - 'scripts/build-locale.cjs'
       - 'scripts/__tests__/build-locales.test.cjs'
       - 'translations/**'
+      - '.github/workflows/cron-deploy-website.yml'
+      - '.github/workflows/manual-deploy-website.yml'
       - '.github/workflows/japanese-poc.yml'
 
 # PR code is untrusted. This job has no deployment environment, secrets,
@@ -41,7 +43,7 @@ jobs:
   full-build:
     # Keep the expensive full matrix specific to the staged implementation
     # branches. General translation-PR scope detection belongs to T04.
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'feat/japanese-i18n-poc') || startsWith(github.head_ref, 'feat/japanese-i18n-status')
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'feat/japanese-i18n-poc') || startsWith(github.head_ref, 'feat/japanese-i18n-status') || startsWith(github.head_ref, 'feat/japanese-i18n-launch')
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
