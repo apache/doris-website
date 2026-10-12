@@ -113,7 +113,7 @@ not replace it. Generated route/state reports are written to
 node --test scripts/i18n/__tests__/*.test.cjs scripts/i18n/poc/*.test.cjs
 node scripts/i18n/verify-fixture.cjs
 DORIS_ENABLE_JA=true DOCS_VERSIONS=current DORIS_ASSET_ORIGIN='' \
-  yarn docusaurus build --locale en --locale zh-CN --locale ja
+  yarn build:locales
 node scripts/i18n/verify-static.cjs --site build \
   --manifest .i18n-build/manifests/ja.json
 ```
