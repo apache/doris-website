@@ -12,8 +12,10 @@ const site = path.resolve(option('--site'));
 const output = path.resolve(option('--output'));
 const expectJapanese = argv.includes('--expect-ja');
 const redirectCdn = argv.includes('--cdn-to-local');
+const captureBaselineErrors = argv.includes('--capture-baseline-errors');
 const devOnly = argv.includes('--dev-only');
 assert(!(expectJapanese && redirectCdn), 'Japanese must load its own real same-origin resources');
+assert(!(expectJapanese && captureBaselineErrors), 'Only the original locale baseline may capture existing errors');
 fs.mkdirSync(output, { recursive: true });
 const normalize = value => value.replace(/\s+/g, ' ').trim();
 async function waitForPath(page, target) {
@@ -359,7 +361,7 @@ let browser;
     const failedResources = results.network.filter(response => response.status >= 400);
     assert.deepEqual(failedResources, [], 'This artifact has missing JS/CSS/worker resources');
     if (expectJapanese) assert(results.network.some(response => response.url.startsWith('/ja/assets/') && response.url.endsWith('.js')), 'Japanese did not load its own JS');
-    if (redirectCdn) {
+    if (redirectCdn || captureBaselineErrors) {
         // Capture existing failures, including the search widget's empty-context
         // race, so the PoC cannot silently introduce any additional errors.
         checked('Captured original baseline page errors', results.errors);

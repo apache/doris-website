@@ -84,7 +84,7 @@ jobs:
         env:
           NODE_PATH: ${{ runner.temp }}/document-browser/node_modules
         run: |
-          node candidate/scripts/i18n/poc/verify-static.cjs --site baseline/build --output evidence/baseline-browser
+          node candidate/scripts/i18n/poc/verify-static.cjs --site baseline/build --output evidence/baseline-browser --capture-baseline-errors
           rm -rf baseline/build baseline/node_modules
       - name: Build Dev and 4.x in three independent locale processes
         working-directory: candidate
