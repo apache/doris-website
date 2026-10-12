@@ -23,6 +23,8 @@ jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         environment: Production
+        env:
+            DORIS_ENABLE_JA: 'true'
         steps:
             - name: Checkout
               # v4 (the pinned @master commit predates the `filter` input) with
@@ -89,7 +91,14 @@ jobs:
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/
                   ls build
-                  export DORIS_COMMIT=`git rev-parse HEAD`
+                  echo "DORIS_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+            - name: Verify Japanese publishing artifact
+              if: env.DORIS_ENABLE_JA == 'true'
+              run: |
+                  test -s build/ja/index.html
+                  node scripts/i18n/verify-static.cjs \
+                    --site build --manifest .i18n-build/manifests/ja.json
 
             #     - name: Generate PDF
             #       run: |
@@ -143,7 +152,6 @@ jobs:
               run: rm -rf ./build/assets/files/*.pdf
 
             - name: Deploy Website
-              if: ${{ github.event.inputs.branch == 'master' }}
               uses: peaceiris/actions-gh-pages@v3
               with:
                   github_token: ${{ github.token }}
@@ -153,17 +161,4 @@ jobs:
                   destination_dir: ./
                   user_name: 'github-actions[bot]'
                   user_email: 'github-actions[bot]@users.noreply.github.com'
-                  commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
-
-            - name: Deploy Branch
-              if: ${{ github.event.inputs.branch != 'master' }}
-              uses: peaceiris/actions-gh-pages@v3
-              with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_branch: asf-site
-                  publish_dir: ./build
-                  force_orphan: true
-                  destination_dir: ${{ github.event.inputs.branch }}
-                  user_name: 'github-actions[bot]'
-                  user_email: 'github-actions[bot]@users.noreply.github.com'
-                  commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
+                  commit_message: 'Automated deployment with doris master@${{ env.DORIS_COMMIT }}'

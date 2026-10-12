@@ -28,6 +28,7 @@ function buildScope(files, versions) {
             }
         } else if ((match = file.match(/^versioned_sidebars\/version-(.+)-sidebars.json$/))) {shared(); wanted.add(match[1]);}
         else if (file === 'sidebars.ts') {shared(); wanted.add('current');}
+        else if (['.github/workflows/cron-deploy-website.yml', '.github/workflows/manual-deploy-website.yml'].includes(file)) shared();
         else if (/^(blog|community|releasenotes|course)\//.test(file)) {languages.add('en'); build();}
         else if (/^sidebars(Community|Releases|Course)\./.test(file)) shared();
         else if (/^(src|config)\//.test(file) || ['docusaurus.config.js','package.json','yarn.lock','tailwind.config.js','tsconfig.json'].includes(file)
