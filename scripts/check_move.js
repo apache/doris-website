@@ -7,10 +7,11 @@
 const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const { sourceForLocalized } = require("./i18n/paths.cjs");
 
 const commitHash = process.argv[2];
 
-if (!commitHash) {
+if (require.main === module && !commitHash) {
   console.error("❌ Please provide the commit hash, such as: node check-dead-links.js <commit-hash>");
   process.exit(1);
 }
@@ -50,6 +51,19 @@ function isLocalLink(link) {
          !link.startsWith("#") &&
          !path.isAbsolute(link)&&
          !/.*@.*\..*/.test(link);
+}
+
+function existingLocalTarget(filePath, rawLink) {
+  const candidates = [path.resolve(path.dirname(filePath), rawLink)];
+  // The Japanese docs plugin intentionally serves the English page when a
+  // translation is absent. Resolve its relative links from the same plugin
+  // and version of the English source; keep the EN/ZH gate unchanged.
+  if (filePath.startsWith("i18n/ja/")) {
+    const source = sourceForLocalized(filePath);
+    if (source) candidates.push(path.resolve(path.dirname(source), rawLink));
+  }
+  return candidates.some(candidate => [candidate, `${candidate}.md`, `${candidate}.mdx`]
+    .some(file => fs.existsSync(file)));
 }
 
 // Strip Markdown code regions so the link scanner ignores their contents.
@@ -196,7 +210,6 @@ function removeMdxEsmBlocks(content) {
 // Check links in files
 function checkFileLinks(filePath) {
   const content = fs.readFileSync(filePath, "utf-8");
-  const dir = path.dirname(filePath);
 
   const cleanedContent = removeMdxEsmBlocks(removeCodeBlocks(content));
   const matches = [...cleanedContent.matchAll(linkRegex)];
@@ -205,12 +218,7 @@ function checkFileLinks(filePath) {
     if (!isLocalLink(rawLink)) continue;
     console.log('rawLink',rawLink);
     
-    let fullPath = path.resolve(dir, rawLink);
-    if (!fs.existsSync(fullPath)) {
-      // Try adding a .md/.mdx suffix and try again
-      if (fs.existsSync(fullPath + ".md")) continue;
-      if (fs.existsSync(fullPath + ".mdx")) continue;
-
+    if (!existingLocalTarget(filePath, rawLink)) {
       console.error(`❌ ${filePath}: Broken link -> ${rawLink}`);
       hasBrokenLinks = true;
     }
@@ -240,4 +248,5 @@ function main() {
   }
 }
 
-main();
+if (require.main === module) main();
+module.exports = { existingLocalTarget };

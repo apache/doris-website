@@ -117,3 +117,12 @@ test('source-only edits report stale Japanese content; edited stale targets are 
     assert.equal(targetEdit.checked,1);
     assert.match(targetEdit.errors[0].message,/current source\/state/);
 });
+
+test('required legacy link gate follows Japanese fallback in the same version', () => {
+    const {existingLocalTarget} = require('../../check_move.js');
+    for (const version of ['current','version-4.x']) {
+        const file = `i18n/ja/docusaurus-plugin-content-docs/${version}/getting-started/what-is-apache-doris.md`;
+        assert.equal(existingLocalTarget(file,'../ai/ai-overview.md'),true);
+        assert.equal(existingLocalTarget(file,'../ai/not-a-page-t04.md'),false);
+    }
+});
