@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "locale": "ja",
+  "maxBatchPages": 20,
+  "groups": [
+    {"id": "DEV", "pluginId": "default", "version": "current", "sourceRoot": "docs"},
+    {"id": "4X", "pluginId": "default", "version": "4.x", "sourceRoot": "versioned_docs/version-4.x"},
+    {"id": "COMMUNITY", "pluginId": "community", "version": "current", "sourceRoot": "community"}
+  ],
+  "retainEnglish": []
+}

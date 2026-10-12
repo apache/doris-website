@@ -1,0 +1,108 @@
+name: Japanese document scope
+
+on:
+  workflow_dispatch:
+    inputs:
+      baseline_ref:
+        description: 'Merged English/Chinese baseline (no deployment)'
+        required: true
+        default: master
+  pull_request:
+    branches: [master]
+    paths:
+      - 'scripts/i18n/**'
+      - 'translations/**'
+      - 'i18n/ja/**'
+      - 'docusaurus.config.js'
+      - '.github/workflows/japanese-documents.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: japanese-documents-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  document-scope:
+    # T03 validates real Dev/4.x content, without repeating the full memory
+    # experiment. The complete production matrix remains in japanese-poc.yml.
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'feat/japanese-doc-inventory')
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      NODE_OPTIONS: --max-old-space-size=8192
+      DORIS_ASSET_ORIGIN: ''
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.baseline_ref || github.event.pull_request.base.sha }}
+          path: baseline
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Prepare swap and browser
+        run: |
+          sudo fallocate -l 8G /mnt/japanese-documents-swap
+          sudo chmod 600 /mnt/japanese-documents-swap
+          sudo mkswap /mnt/japanese-documents-swap
+          sudo swapon /mnt/japanese-documents-swap
+          npm install -g yarn@1.22.22
+          npm install --prefix "$RUNNER_TEMP/document-browser" --no-package-lock --no-save playwright@1.62.1
+          "$RUNNER_TEMP/document-browser/node_modules/.bin/playwright" install --with-deps chromium
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk
+      - name: Install candidate and verify scope
+        working-directory: candidate
+        run: |
+          yarn --frozen-lockfile
+          yarn key-features:generate
+          mkdir -p ../evidence
+          node --test scripts/i18n/__tests__/*.test.cjs scripts/i18n/poc/*.test.cjs scripts/__tests__/build-locales.test.cjs
+          SOURCE_COMMIT=$(node -p "require('./translations/inventory/ja/2026-10-12/summary.json').sourceCommit")
+          node scripts/i18n/inventory.cjs --source-ref "$SOURCE_COMMIT" --output ../evidence/inventory
+          diff -r translations/inventory/ja/2026-10-12 ../evidence/inventory
+      - name: Build Dev and 4.x English/Chinese baseline
+        working-directory: baseline
+        env:
+          DOCS_VERSIONS: current,4.x
+          DORIS_ENABLE_JA: 'false'
+        run: |
+          yarn --frozen-lockfile
+          yarn key-features:generate
+          yarn build:locales
+      - name: Verify baseline static artifact
+        env:
+          NODE_PATH: ${{ runner.temp }}/document-browser/node_modules
+        run: |
+          node candidate/scripts/i18n/poc/verify-static.cjs --site baseline/build --output evidence/baseline-browser
+          rm -rf baseline/build baseline/node_modules
+      - name: Build Dev and 4.x in three independent locale processes
+        working-directory: candidate
+        env:
+          DOCS_VERSIONS: current,4.x
+          DORIS_ENABLE_JA: 'true'
+        run: yarn build:locales
+      - name: Verify Japanese documents and original locale behavior
+        env:
+          NODE_PATH: ${{ runner.temp }}/document-browser/node_modules
+        run: |
+          node candidate/scripts/i18n/verify-static.cjs --site candidate/build --manifest candidate/.i18n-build/manifests/ja.json --output evidence/static-status.json
+          node candidate/scripts/i18n/verify-doc-navigation.cjs --site candidate/build --output evidence/document-navigation.json
+          node candidate/scripts/i18n/poc/verify-static.cjs --site candidate/build --output evidence/candidate-browser --expect-ja --baseline evidence/baseline-browser/signatures.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: japanese-documents-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence
+          if-no-files-found: warn
+          retention-days: 14

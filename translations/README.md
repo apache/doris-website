@@ -107,6 +107,13 @@ update metadata. The temporary file's creation time and translation commit do
 not replace it. Generated route/state reports are written to
 `.i18n-build/manifests/<build-locale>.json`; they are not published as site pages.
 
+## First-delivery scope
+
+The candidate scope covers all formal Dev, 4.x and community documents. See
+[scope configuration and snapshot instructions](scope/README.md) and the
+[initial complete batch ledger](inventory/ja/2026-10-12/batches.md). Scope limits
+translation candidates, not the native website build or existing fallback routes.
+
 ## Validation
 
 ```bash

@@ -269,7 +269,46 @@ let browser;
         await page.locator('a[lang="en-US"]').first().click();
         await waitForPath(page, `/docs/${version}/getting-started/what-is-apache-doris/?poc=1#technical-features`);
         checked(`Language switching preserves page, ${version} version, query and English heading hash`);
+        if (!devOnly) {
+            await page.goto(`${origin}/ja/docs/?scope=1#technical-features`, { waitUntil: 'networkidle' });
+            await waitForPath(page, '/ja/docs/4.x/getting-started/what-is-apache-doris/?scope=1#technical-features');
+            const versions = page.locator('.dropdown').filter({ has: page.locator('a[href^="/ja/docs/dev/getting-started/what-is-apache-doris/"]') }).first();
+            await versions.hover();
+            await versions.locator('a[href^="/ja/docs/dev/getting-started/what-is-apache-doris/"]').click();
+            await waitForPath(page, '/ja/docs/dev/getting-started/what-is-apache-doris/?scope=1#technical-features');
+            await page.goBack();
+            await waitForPath(page, '/ja/docs/4.x/getting-started/what-is-apache-doris/?scope=1#technical-features');
+            checked('Japanese docs entry and real 4.x/Dev version switching preserve query/hash and browser back');
+        }
+        await page.goto(`${origin}/ja/community/join-community/?scope=community#links`, { waitUntil: 'networkidle' });
+        const communitySidebar = page.locator('.theme-doc-sidebar-container');
+        assert((await communitySidebar.innerText()).includes('コミュニティについて'));
+        await communitySidebar.locator('a[href="/ja/community/feedback/"]').click();
+        await waitForPath(page, '/ja/community/feedback/');
+        assert.equal(await page.locator('.theme-doc-markdown').getAttribute('lang'), 'en');
+        await page.goBack();
+        await waitForPath(page, '/ja/community/join-community/?scope=community#links');
+        await page.locator('.dropdown').filter({ has: page.locator('a[lang="en-US"]') }).first().hover();
+        await page.locator('a[lang="en-US"]').first().click();
+        await waitForPath(page, '/community/join-community/?scope=community#links');
+        checked('Independent community sidebar, untranslated SPA destination and locale switch preserve query/hash');
         await page.close();
+        for (const width of [1440, 390]) {
+            const doc = await pageFor('/ja/docs/dev/getting-started/intro/', { width, height: 1000 });
+            const sections = doc.locator('nav[aria-label="Documentation sections"]');
+            const sectionLinks = width === 390 ? sections.locator('details') : sections;
+            if (width === 390) await sectionLinks.locator('summary').click();
+            const guides = sectionLinks.getByRole('link', { name: 'ガイド', exact: true }).first();
+            const target = await guides.getAttribute('href');
+            assert(target.startsWith('/ja/docs/dev/'));
+            await guides.click();
+            await waitForPath(doc, target);
+            assert((await sections.locator('[aria-current="page"]').first().innerText()).includes('ガイド'));
+            await doc.goBack();
+            await waitForPath(doc, '/ja/docs/dev/getting-started/intro/');
+            await doc.close();
+        }
+        checked('Japanese documentation domains and sidebar switching work on desktop/mobile');
         for (const width of [1440, 390]) {
             for (const theme of themes) {
                 const page = await pageFor('/ja/', { width, height: 1000 });

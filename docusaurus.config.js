@@ -96,6 +96,9 @@ function buildRedirectIndex() {
     // page without this redirect.
     add('/docs/4.x/getting-started/what-is-apache-doris', '/docs');
     add('/zh-CN/docs/4.x/getting-started/what-is-apache-doris', '/zh-CN/docs');
+    if (ENABLE_JA) {
+        add('/ja/docs/4.x/getting-started/what-is-apache-doris', '/ja/docs');
+    }
 
     // Decommissioned standalone pages whose content moved into the
     // homepage/why-doris/download flows.
