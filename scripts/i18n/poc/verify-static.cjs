@@ -207,8 +207,15 @@ let browser;
         }
         if (route.startsWith('/ja/')) {
             assert.equal(state.lang, 'ja');
+            const banner = (await page.locator('.theme-doc-version-banner').allTextContents()).join(' ');
+            assert(!/\{(?:unreleased|versionLabel|siteTitle|latestVersionLink|v4xLink|v3xLink|v21Link)\}/.test(banner),
+                `Unexpanded version-banner placeholders: ${route}`);
             const fallback = route.includes('before-you-start-the-poc') || route.endsWith('/feedback/');
-            assert.equal(state.notice, fallback, route);
+            const translationStatus = await page.locator('[data-translation-status]').getAttribute('data-translation-status').catch(() => null);
+            if (translationStatus) {
+                assert.equal(translationStatus, fallback ? 'untranslated' : 'current', route);
+                assert.equal(state.notice, true, route);
+            } else assert.equal(state.notice, fallback, route); // Original T01 baseline.
             const body = page.locator('.theme-doc-markdown');
             if (fallback) {
                 assert(await page.locator('.theme-doc-markdown[lang="en"]').count(), `English body language missing: ${route}`);
@@ -281,9 +288,28 @@ let browser;
                 await page.screenshot({ path: path.join(output, `ja-${width}-${theme}.png`), fullPage: true });
                 results.checks.push({ name: 'Japanese homepage theme and viewport', theme, width, dimensions });
                 await page.close();
+                for (const [name, route] of [
+                    ['current', '/ja/docs/dev/getting-started/what-is-apache-doris/'],
+                    ['fallback', '/ja/docs/dev/getting-started/before-you-start-the-poc/'],
+                ]) {
+                    const doc = await pageFor(route, { width, height: 1000 });
+                    assert.equal(await doc.locator('html').getAttribute('data-brand-theme'), theme);
+                    const notice = doc.locator('[aria-label="翻訳状況"]');
+                    if (await notice.count()) {
+                        const box = await notice.boundingBox();
+                        assert(box && box.x >= 0 && box.x + box.width <= width + 1,
+                            `Translation notice overflow: ${name} ${width} ${theme}`);
+                        const colors = await notice.evaluate(node => ({color:getComputedStyle(node).color, background:getComputedStyle(node).backgroundColor}));
+                        assert.notEqual(colors.color, colors.background, `Invisible translation notice: ${theme}`);
+                        await doc.screenshot({path:path.join(output, `ja-doc-${name}-${width}-${theme}.png`)});
+                        results.checks.push({name:'Translation notice theme and viewport', state:name, width, theme, box, colors});
+                    }
+                    await doc.close();
+                }
             }
         }
         checked('Japanese homepage desktop/mobile and all eight brand themes');
+        checked('Japanese current/fallback notices fit desktop/mobile and all eight brand themes');
     }
     for (const prefix of ['', '/zh-CN']) for (const width of [1440, 390]) {
         const page = await pageFor(`${prefix}/`, { width, height: 1000 });

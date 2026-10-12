@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "locales": {
+    "ja": {
+      "sourceLocale": "en",
+      "sourceOverrides": []
+    }
+  }
+}

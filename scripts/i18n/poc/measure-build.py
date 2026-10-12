@@ -16,6 +16,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--source', type=Path, required=True)
 parser.add_argument('--output', type=Path, required=True)
 parser.add_argument('--japanese', action='store_true')
+parser.add_argument('--separate-locales', action='store_true')
 args = parser.parse_args()
 source, output = args.source.resolve(), args.output.resolve()
 output.mkdir(parents=True, exist_ok=True)
@@ -27,10 +28,14 @@ if any(env[key] for key in restricted):
 env['DORIS_ENABLE_JA'] = 'true' if args.japanese else 'false'
 env['DORIS_ASSET_ORIGIN'] = ''
 locales = ['en', 'zh-CN'] + (['ja'] if args.japanese else [])
-command = ['yarn', 'docusaurus', 'build']
-for locale in locales:
-    command += ['--locale', locale]
-command += ['--out-dir', str(output / 'site')]
+if args.separate_locales:
+    command = ['node', str(Path(__file__).resolve().parents[2] / 'build-locales.cjs'),
+               '--site-dir', str(source), '--out-dir', str(output / 'site')]
+else:
+    command = ['yarn', 'docusaurus', 'build']
+    for locale in locales:
+        command += ['--locale', locale]
+    command += ['--out-dir', str(output / 'site')]
 
 def run_text(command):
     return subprocess.check_output(command, cwd=source, text=True).strip()
@@ -84,6 +89,7 @@ metadata = {
     'runner_name': env.get('RUNNER_NAME'),
     'uname': run_text(['uname', '-a']),
     'command': command,
+    'build_mode': 'separate-processes' if args.separate_locales else 'in-process',
     'node_options': env.get('NODE_OPTIONS'),
     'pwa_service_worker_url': env.get('PWA_SERVICE_WORKER_URL'),
     'scope_variables': {key: env[key] for key in restricted},
@@ -97,6 +103,7 @@ metadata = {
     'kernel_oom_kills_before': kernel_oom_kills(),
     'started_at_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
     'language_events': [],
+    'process_events': [],
 }
 (output / 'environment.json').write_text(json.dumps(metadata, indent=2) + '\n')
 start = time.monotonic()
@@ -164,6 +171,14 @@ with (output / 'build.log').open('w') as log:
         log.write(line)
         log.flush()
         plain_line = re.sub(r'\x1b\[[0-9;]*m', '', line)
+        if plain_line.lstrip().startswith('{'):
+            try:
+                process_event = json.loads(plain_line)
+                if process_event.get('event') in ('locale_process_start', 'locale_process_end'):
+                    metadata['process_events'].append(process_event)
+                    emit(process_event)
+            except json.JSONDecodeError:
+                pass
         match = re.search(r'\[INFO\] \[([^]]+)\] Creating an optimized production build', plain_line)
         event = None
         if match:
@@ -184,6 +199,9 @@ stop.set()
 sampler.join()
 metadata.update({'exit_code': exit_code, 'elapsed_s': round(time.monotonic() - start, 3), 'sampled_peaks': peaks, 'cgroup_after': cgroup_snapshot(), 'meminfo_after': memory_info()})
 metadata['kernel_oom_kills_after'] = kernel_oom_kills()
+assembly_report = source / '.i18n-build/build-result.json'
+if args.separate_locales and assembly_report.exists():
+    (output / 'build-assembly.json').write_text(assembly_report.read_text())
 metadata['interpretation'] = 'Process RSS sums can double-count shared pages. System used memory includes the whole runner. cgroup peaks can include earlier steps: compare before/after. Max RSS alone is not whole-job memory. Missing metrics are null, never an asserted zero.'
 (output / 'result.json').write_text(json.dumps(metadata, indent=2) + '\n')
 emit({'exit_code': exit_code, 'elapsed_s': metadata['elapsed_s'], 'sampled_peaks': peaks,

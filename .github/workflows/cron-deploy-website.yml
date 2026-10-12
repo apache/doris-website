@@ -78,7 +78,7 @@ jobs:
                   yarn
                   node ./scripts/update_github_info.js
                   yarn key-features:generate
-                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build --locale en --locale zh-CN
+                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn build:locales
                   touch build/.dummy
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/

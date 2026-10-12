@@ -7,6 +7,7 @@ import MDXContent from '@theme/MDXContent';
 import type {Props} from '@theme/DocItem/Content';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { isJapaneseFallback } from '@site/src/utils/japanese';
+import {docTranslation} from '@site/src/utils/translation';
 
 /**
  Title can be declared inside md content or declared through
@@ -33,7 +34,9 @@ export default function DocItemContent({children}: Props): JSX.Element {
   const {pluginId} = useDocsVersion();
   const {metadata} = useDoc();
   const {i18n: {currentLocale}} = useDocusaurusContext();
-  const contentLanguage = isJapaneseFallback(metadata.source, currentLocale) ? 'en' : undefined;
+  const contentLanguage = currentLocale === 'ja'
+    ? docTranslation(metadata)?.contentLocale ?? (isJapaneseFallback(metadata.source, currentLocale) ? 'en' : 'ja')
+    : undefined;
 
   if (pluginId === 'course') {
     return <div className="course-doc-content" lang={contentLanguage}><MDXContent>{children}</MDXContent></div>;

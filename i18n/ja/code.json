@@ -802,18 +802,18 @@
     "description": "The link label to edit the current page"
   },
   "theme.docs.versions.unreleasedVersionLabel": {
-    "message": "これはリリース前のバージョン{versionLabel}の{siteTitle}のドキュメントです。",
+    "message": "このドキュメントは Apache Doris の{unreleased}バージョン向けです。",
     "description": "The label used to tell the user that he's browsing an unreleased doc version"
   },
   "theme.docs.versions.unreleasedText": {
-    "message": "unreleased"
+    "message": "開発中の"
   },
   "theme.docs.versions.unmaintainedVersionLabel": {
     "message": "これはバージョン{versionLabel}の{siteTitle}のドキュメントで現在はメンテナンスされていません",
     "description": "The label used to tell the user that he's browsing an unmaintained doc version"
   },
   "theme.docs.versions.latestVersionSuggestionLabel": {
-    "message": "最新のドキュメントは{latestVersionLink} ({versionLabel}) を見てください",
+    "message": "利用方法は、バージョン {v4xLink} / {v3xLink} / {v21Link} の正式ドキュメントを参照してください。",
     "description": "The label used to tell the user to check the latest version"
   },
   "theme.NotFound.title": {

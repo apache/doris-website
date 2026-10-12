@@ -21,7 +21,11 @@ on:
       - 'yarn.lock'
       - 'scripts/patch-react-ssr.js'
       - 'docusaurus.config.js'
-      - 'scripts/i18n/poc/**'
+      - 'scripts/i18n/**'
+      - 'scripts/build-locales.cjs'
+      - 'scripts/build-locale.cjs'
+      - 'scripts/__tests__/build-locales.test.cjs'
+      - 'translations/**'
       - '.github/workflows/japanese-poc.yml'
 
 # PR code is untrusted. This job has no deployment environment, secrets,
@@ -35,9 +39,9 @@ concurrency:
 
 jobs:
   full-build:
-    # Keep this expensive pre-merge probe specific to the PoC branch. Later
-    # translation PRs retain their normal checks; manual probes stay available.
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'feat/japanese-i18n-poc')
+    # Keep the expensive full matrix specific to the staged implementation
+    # branches. General translation-PR scope detection belongs to T04.
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'feat/japanese-i18n-poc') || startsWith(github.head_ref, 'feat/japanese-i18n-status')
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
@@ -106,11 +110,18 @@ jobs:
           yarn cache clean
           yarn --frozen-lockfile
           yarn key-features:generate
-          node --test scripts/i18n/poc/config.test.cjs scripts/i18n/poc/react-ssr.test.cjs
-      - name: Full sequential English, Chinese and Japanese build
+          node --test scripts/i18n/poc/*.test.cjs scripts/i18n/__tests__/*.test.cjs scripts/__tests__/build-locales.test.cjs
+      - name: Validate translation states in a real fixture site
+        working-directory: poc-source
+        env:
+          NODE_PATH: ${{ runner.temp }}/poc-browser/node_modules
+        run: |
+          set -o pipefail
+          node scripts/i18n/verify-fixture.cjs --browser | tee ../evidence/translation-fixture.log
+      - name: Full sequential build in independent locale processes
         run: |
           python3 poc-source/scripts/i18n/poc/measure-build.py \
-            --source poc-source --output evidence/poc --japanese
+            --source poc-source --output evidence/poc --japanese --separate-locales
       - name: Validate PoC static artifact and existing locales
         env:
           NODE_PATH: ${{ runner.temp }}/poc-browser/node_modules
@@ -118,6 +129,10 @@ jobs:
           node poc-source/scripts/i18n/poc/verify-static.cjs \
             --site evidence/poc/site --output evidence/poc/browser --expect-ja \
             --baseline evidence/baseline/browser/signatures.json
+          node poc-source/scripts/i18n/verify-static.cjs \
+            --site evidence/poc/site --manifest poc-source/.i18n-build/manifests/ja.json \
+            --output evidence/poc/translation-status.json
+          cp -R poc-source/.i18n-build/manifests evidence/poc/manifests
       - name: Upload evidence even when validation fails
         if: always()
         uses: actions/upload-artifact@v4

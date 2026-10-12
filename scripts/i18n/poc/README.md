@@ -5,14 +5,16 @@ translation service runs in the browser or in the website deployment workflows.
 The existing production workflows still build only English and Chinese.
 
 For local debugging, generate the usual inputs, then build all three locales in
-one process. Limiting documentation versions is useful for debugging, but does
+independent Node processes in one sequential job. The T02 run confirmed a
+system OOM when earlier language heaps accumulated; the original same-process
+command remains available only for historical comparison. Limiting documentation versions is useful for debugging, but does
 not provide full CI memory evidence:
 
 ```bash
 yarn key-features:generate
 DORIS_ENABLE_JA=true DORIS_ASSET_ORIGIN= DOCS_VERSIONS=current \
   PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js \
-  yarn docusaurus build --locale en --locale zh-CN --locale ja
+  yarn build:locales
 ```
 
 An empty `DORIS_ASSET_ORIGIN` makes JS and CSS load from the output's own origin.
@@ -84,3 +86,5 @@ The homepage's owned news announcements and HTML illustration captions are
 translated. Japanese search, complete translation status/SEO, and public launch
 remain later tasks; passing this PoC does not authorize enabling Japanese in
 production.
+
+Use `measure-build.py --separate-locales --japanese` for the isolated full three-language probe. It preserves the complete version/plugin scope and records each child PID. Production cron/manual use the same launcher while Japanese remains disabled.

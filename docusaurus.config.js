@@ -7,6 +7,8 @@ const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const REDIRECTS_4X = require('./config/redirects-4.x.json');
 const path = require('path');
+const translationDocsPlugin = require('./scripts/i18n/docs-plugin.cjs');
+const translationStatusPlugin = require('./scripts/i18n/status-plugin.cjs');
 const ENABLE_JA = process.env.DORIS_ENABLE_JA === 'true';
 
 const BRAND_THEME_BOOTSTRAP = `(function () {
@@ -219,6 +221,38 @@ function getLatestVersion() {
     return VERSIONS.includes(DEFAULT_VERSION) ? DEFAULT_VERSION : VERSIONS[0];
 }
 
+const MAIN_DOCS_OPTIONS = {
+    includeCurrentVersion: true,
+    sidebarPath: require.resolve('./sidebars.ts'),
+    ...(ONLY_VERSIONS && { onlyIncludeVersions: ONLY_VERSIONS }),
+    // When filtering versions, lastVersion must be in the
+    // included list. Fall back to the first included version.
+    lastVersion: ONLY_VERSIONS && !ONLY_VERSIONS.includes(getLatestVersion())
+        ? ONLY_VERSIONS[0]
+        : getLatestVersion(),
+    versions: getDocsVersions(),
+    // editUrl: ({ locale, versionDocsDirPath, docPath }) => {
+    //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
+    //     // if (versionDocsDirPath === 'versioned_docs/version-dev') {
+    //     //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
+    //     // }
+    // },
+    showLastUpdateAuthor: false,
+    // Date comes from the injected `last_update` front matter
+    // (markdown.parseFrontMatter). The DocItem layout limits
+    // which versions actually display it (Dev + latest stable).
+    showLastUpdateTime: true,
+    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
+    rehypePlugins: [
+        [
+            require('rehype-katex'),
+            {
+                strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
+            }
+        ]
+    ]
+};
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: 'Apache Doris',
@@ -322,12 +356,14 @@ const config = {
         experimental_faster: true,
     },
     plugins: [
+        SKIP_DOCS ? null : [translationDocsPlugin, MAIN_DOCS_OPTIONS],
+        ENABLE_JA ? translationStatusPlugin : null,
         'docusaurus-plugin-sass',
         'docusaurus-plugin-matomo',
         // Use custom blog plugin
         versionsPlugin,
         SKIP_COURSE ? null : [
-            'content-docs',
+            translationDocsPlugin,
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
             ({
                 id: 'course',
@@ -338,7 +374,7 @@ const config = {
             }),
         ],
         SKIP_COMMUNITY ? null : [
-            'content-docs',
+            translationDocsPlugin,
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
             ({
                 id: 'community',
@@ -351,7 +387,7 @@ const config = {
             }),
         ],
         SKIP_RELEASES ? null : [
-            'content-docs',
+            translationDocsPlugin,
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
             ({
                 id: 'releases',
@@ -443,37 +479,7 @@ const config = {
             'classic',
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
-                docs: SKIP_DOCS ? false : {
-                    includeCurrentVersion: true,
-                    sidebarPath: require.resolve('./sidebars.ts'),
-                    ...(ONLY_VERSIONS && { onlyIncludeVersions: ONLY_VERSIONS }),
-                    // When filtering versions, lastVersion must be in the
-                    // included list. Fall back to the first included version.
-                    lastVersion: ONLY_VERSIONS && !ONLY_VERSIONS.includes(getLatestVersion())
-                        ? ONLY_VERSIONS[0]
-                        : getLatestVersion(),
-                    versions: getDocsVersions(),
-                    // editUrl: ({ locale, versionDocsDirPath, docPath }) => {
-                    //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
-                    //     // if (versionDocsDirPath === 'versioned_docs/version-dev') {
-                    //     //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
-                    //     // }
-                    // },
-                    showLastUpdateAuthor: false,
-                    // Date comes from the injected `last_update` front matter
-                    // (markdown.parseFrontMatter). The DocItem layout limits
-                    // which versions actually display it (Dev + latest stable).
-                    showLastUpdateTime: true,
-                    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
-                    rehypePlugins: [
-                        [
-                            require('rehype-katex'),
-                            {
-                                strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
-                            }
-                        ]
-                    ]
-                },
+                docs: false, // The native docs plugin is wrapped below for translation state.
                 blog: SKIP_BLOG ? false : {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',
                     blogDescription:
