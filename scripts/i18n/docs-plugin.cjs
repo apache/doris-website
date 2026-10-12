@@ -234,3 +234,5 @@ module.exports = async function translationDocsPlugin(context, options) {
     };
 };
 module.exports.validateOptions = native.validateOptions;
+// Allows offline inventory tools to select these configured plugin instances.
+module.exports.isTranslationDocsPlugin = true;
