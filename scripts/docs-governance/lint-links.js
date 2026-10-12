@@ -16,6 +16,7 @@ const {
   stripMarkdownExtension,
 } = require('./lib');
 const { loadSidebarRefs } = require('./lint-sidebar');
+const {sourceForLocalized} = require('../i18n/paths.cjs');
 
 const GOVERNED_MARKDOWN_PREFIXES = [
   'blog/',
@@ -220,6 +221,10 @@ function buildIndexes(rootDir, manifest, fileCache) {
     }
   }
 
+  // Japanese heading IDs always follow the actual version's English source.
+  for (const entry of manifest.entries.filter(entry => entry.locale === 'ja')) {
+    if (entry.source_counterpart) anchorsBySource.set(entry.source_path, anchorsBySource.get(entry.source_counterpart) || new Set());
+  }
   return { bySource, byRoute, anchorsBySource };
 }
 
@@ -280,7 +285,8 @@ function resolveInternalTarget(rootDir, sourcePath, rawTarget, indexes) {
     if (fs.existsSync(path.join(rootDir, staticCandidate))) {
       return { kind: 'asset', sourcePath: staticCandidate, hash };
     }
-    const entry = indexes.byRoute.get(pathname.replace(/\/+$/, ''));
+    const entry = indexes.byRoute.get(pathname.replace(/\/+$/, ''))
+      || (pathname.startsWith('/ja/') ? indexes.byRoute.get(pathname.slice(3).replace(/\/+$/, '')) : null);
     if (entry) {
       return { kind: 'route', sourcePath: entry.source_path, hash };
     }
@@ -295,7 +301,11 @@ function resolveInternalTarget(rootDir, sourcePath, rawTarget, indexes) {
     return { kind: 'missing-route', pathname, hash };
   }
 
-  const files = candidateFiles(rootDir, sourcePath, pathname);
+  let files = candidateFiles(rootDir, sourcePath, pathname);
+  if (!files.length && sourcePath.startsWith('i18n/ja/')) {
+    const source = sourceForLocalized(sourcePath);
+    if (source) files = candidateFiles(rootDir, source, pathname);
+  }
   if (files.length > 0) {
     return { kind: 'file', sourcePath: files[0], hash };
   }

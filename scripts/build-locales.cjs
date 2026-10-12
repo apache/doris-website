@@ -89,7 +89,7 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', run, sta
         throw error;
     } finally {
         fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
-        fs.rmSync(stage,{recursive:true,force:true});
+        fs.rmSync(stage,{recursive:true,force:true,maxRetries:8,retryDelay:250});
     }
 }
 

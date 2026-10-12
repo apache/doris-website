@@ -61,7 +61,7 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
         .filter(([key]) => !['title', 'description', 'sidebar_label'].includes(key))
         .sort(([a], [b]) => a.localeCompare(b)));
     return {
-        content, headings, format,
+        content, headings, format, protectedNodes, technicalMetadata,
         technicalHash: hash(JSON.stringify([technicalMetadata, protectedNodes, headings.map(({depth, id}) => ({depth, id}))])),
     };
 }

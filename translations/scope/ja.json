@@ -3,9 +3,206 @@
   "locale": "ja",
   "maxBatchPages": 20,
   "groups": [
-    {"id": "DEV", "pluginId": "default", "version": "current", "sourceRoot": "docs"},
-    {"id": "4X", "pluginId": "default", "version": "4.x", "sourceRoot": "versioned_docs/version-4.x"},
-    {"id": "COMMUNITY", "pluginId": "community", "version": "current", "sourceRoot": "community"}
+    {
+      "id": "DEV",
+      "pluginId": "default",
+      "version": "current",
+      "sourceRoot": "docs"
+    },
+    {
+      "id": "4X",
+      "pluginId": "default",
+      "version": "4.x",
+      "sourceRoot": "versioned_docs/version-4.x"
+    },
+    {
+      "id": "COMMUNITY",
+      "pluginId": "community",
+      "version": "current",
+      "sourceRoot": "community"
+    }
   ],
-  "retainEnglish": []
+  "retainEnglish": [],
+  "retainSidebarLabels": [
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.Flink Doris Connector",
+      "reason": "Connector product name"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.Iceberg Catalog",
+      "reason": "Catalog connector name"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.Paimon Catalog",
+      "reason": "Catalog connector name"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.Hudi Catalog",
+      "reason": "Catalog connector name"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.MaxCompute Catalog",
+      "reason": "Catalog connector name"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.DOG Stack",
+      "reason": "Named stack"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.information_schema",
+      "reason": "SQL system schema identifier"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.mysql",
+      "reason": "SQL system schema identifier"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.__internal_schema",
+      "reason": "SQL system schema identifier"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.HTTP API",
+      "reason": "Protocol/API name"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.FE HTTP API",
+      "reason": "Frontend HTTP API name"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.BE HTTP API",
+      "reason": "Backend HTTP API name"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.FAQ",
+      "reason": "Conventional documentation acronym"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.VARIANT",
+      "reason": "SQL data type"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.DML",
+      "reason": "SQL term"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.Table Stream",
+      "reason": "Product feature name"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.Iceberg Catalog",
+      "reason": "Catalog connector name"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.Paimon Catalog",
+      "reason": "Catalog connector name"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.Hudi Catalog",
+      "reason": "Catalog connector name"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.MaxCompute Catalog",
+      "reason": "Catalog connector name"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.DOG Stack",
+      "reason": "Named stack"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.information_schema",
+      "reason": "SQL system schema identifier"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.mysql",
+      "reason": "SQL system schema identifier"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.__internal_schema",
+      "reason": "SQL system schema identifier"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.HTTP API",
+      "reason": "Protocol/API name"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.FE HTTP API",
+      "reason": "Frontend HTTP API name"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.BE HTTP API",
+      "reason": "Backend HTTP API name"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.FAQ",
+      "reason": "Conventional documentation acronym"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.VARIANT",
+      "reason": "SQL data type"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.DML",
+      "reason": "SQL term"
+    }
+  ]
 }

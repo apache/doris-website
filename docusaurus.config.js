@@ -9,7 +9,9 @@ const REDIRECTS_4X = require('./config/redirects-4.x.json');
 const path = require('path');
 const translationDocsPlugin = require('./scripts/i18n/docs-plugin.cjs');
 const translationStatusPlugin = require('./scripts/i18n/status-plugin.cjs');
+const searchPlugin = require('./scripts/i18n/search-plugin.cjs');
 const ENABLE_JA = process.env.DORIS_ENABLE_JA === 'true';
+const {enabledLocales} = require('./config/i18n');
 
 const BRAND_THEME_BOOTSTRAP = `(function () {
     var theme = 'doris';
@@ -289,7 +291,7 @@ const config = {
     trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
-        locales: ENABLE_JA ? ['en', 'zh-CN', 'ja'] : ['en', 'zh-CN'],
+        locales: enabledLocales(),
         localeConfigs: {
             en: {
                 label: 'English',
@@ -528,7 +530,7 @@ const config = {
     ],
     themes: SKIP_SEARCH ? [] : [
         [
-            '@yang1666204/docusaurus-search-local',
+            searchPlugin,
             {
                 hashed: true,
                 language: ['en', 'zh'],
