@@ -36,7 +36,7 @@ under the License.
 
 A campaign's conversion rate has dropped. The team needs to compare it with similar past campaigns before calling it abnormal. In a road test, a rise in human interventions means little without today's test-run count, each vehicle's current state, and records from previous weeks. Both investigations need new events and historical data in the same query.
 
-Fluss keeps event logs and current state in tables. With its Fluss Catalog, Apache Doris 5.0 can query those tables alongside history tiered to Paimon. The read path depends on which portion of the data a query needs.
+Fluss keeps event logs and current state in tables. With its [Fluss Catalog](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/), Apache Doris 5.0 can query those tables alongside history tiered to [Paimon](https://doris.apache.org/docs/dev/lakehouse/catalogs/paimon-catalog/). The read path depends on which portion of the data a query needs.
 
 ## 1. How Fluss unifies streams and lakes
 
@@ -73,7 +73,7 @@ Suppose human interventions spike at one intersection during an autonomous drivi
 
 The team then checks current vehicle states, narrows down the trips and time window, and reviews the driving records.
 
-Doris 5.0 queries Fluss tables through the Fluss Catalog. If a table has been tiered to Paimon, the same query can read lake history and records still in the Fluss log.
+Doris 5.0 queries Fluss tables through the [Fluss Catalog](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#configuring-catalog). If a table has been tiered to Paimon, the same query can read lake history and records still in the Fluss log.
 
 ## 2. How Doris reads new events, history, and current state from Fluss
 
@@ -99,7 +99,7 @@ The tiering service writes log records to Paimon, commits a readable snapshot, a
 
 ![Union Read uses a Paimon lake snapshot and reads each Fluss Bucket from its tiering position to the query's fixed end](/images/blogs/apache-doris-fluss-stream-lake-analytics/fluss-lake-log-boundaries.jpg)
 
-For Fluss tables with lake tiering enabled, Doris can use Union Read. At query planning, Doris fixes a Paimon snapshot and the end Offset for each Bucket. Paimon supplies the history covered by the snapshot; Fluss supplies records from the tiering position to the fixed end. Analysts query one logical table. Records that arrive later appear in the next query.
+For Fluss tables with lake tiering enabled, Doris can use [Union Read](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#tiered-lake-tables-and-union-read). At query planning, Doris fixes a Paimon snapshot and the end Offset for each Bucket. Paimon supplies the history covered by the snapshot; Fluss supplies records from the tiering position to the fixed end. Analysts query one logical table. Records that arrive later appear in the next query.
 
 For append-only events such as interventions, the Offset boundary helps prevent duplicate or missing reads. Analysts can inspect the lake and log separately to check tiering progress. If no readable lake snapshot exists yet, the default query can read only data still retained by Fluss. A task that needs complete history should first confirm that a snapshot is ready and check the log retention range.
 
@@ -131,7 +131,7 @@ Trend analysis needs both history and new events. A baseline report for an archi
 
 *Figure 6. The table name covers both lake and log. `$lake` reads only the lake; `$log` reads only the append-only log after the readable lake snapshot.*
 
-When querying the table name directly, `fluss.union_read.mode` controls how Doris chooses the read path. The `$lake` and `$log` entry points already identify a specific data segment.
+When querying the table name directly, [`fluss.union_read.mode`](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#union-read-modes) controls how Doris chooses the read path. The `$lake` and `$log` entry points already identify a specific data segment.
 
 | Mode | Behavior when querying the full table | When to use it |
 | --- | --- | --- |
@@ -143,9 +143,9 @@ When querying the table name directly, `fluss.union_read.mode` controls how Dori
 
 Several factors affect scan cost and the choice of read path:
 
-- The lake side uses Doris's Paimon reader and file cache. Partition filters and selecting only the necessary columns can reduce scanning and decoding. A filter on an ordinary data column gives the right result but may not reduce the data read from the source.
+- The lake side uses Doris's Paimon reader and [file cache](https://doris.apache.org/docs/dev/lakehouse/data-cache/). Partition filters and selecting only the necessary columns can reduce scanning and decoding. A filter on an ordinary data column gives the right result but may not reduce the data read from the source.
 - Tiering delays lengthen the primary-key changelog tail that must be merged, increasing memory use. Doris limits the number of tail records for primary-key Union Read. Above that limit, `auto` changes the read path and `required` returns an error.
-- `EXPLAIN` shows whether Union Read is used and the ranges planned for the lake and log. Query Profile shows row counts and time spent on each side. Together, they reveal whether the cost comes from scanning history, reading the log tail, or tiering progress.
+- [`EXPLAIN`](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#union-read-modes) shows whether Union Read is used and the ranges planned for the lake and log. [Query Profile](https://doris.apache.org/docs/dev/query-acceleration/query-profile/) shows row counts and time spent on each side. Together, they reveal whether the cost comes from scanning history, reading the log tail, or tiering progress.
 
 Teams can save the results of stable, frequently run queries in Doris internal tables when needed.
 
@@ -160,7 +160,7 @@ We tested the read paths on an 18-core development machine with 48 GB of memory.
 We measured three read paths:
 
 - With a pure JNI read (`fluss.union_read.mode = 'disabled'`), the BE does not read the lake. For each Bucket, it copies the full KV snapshot to local disk, scans it with RocksDB, and merges the later changelog to reconstruct current values. The BE calls the Fluss Java SDK through JNI.
-- With Union Read and lake auto-compaction, Doris uses the Paimon lake snapshot as the baseline and reads lake data with its native Parquet reader. For each Bucket with a log tail, the BE reads that tail once from Fluss through JNI and filters older lake rows by primary key. The lake table has `table.datalake.auto-compaction` enabled.
+- With Union Read and lake auto-compaction, Doris uses the Paimon lake snapshot as the baseline and reads lake data with its [native Parquet reader](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#query-performance). For each Bucket with a log tail, the BE reads that tail once from Fluss through JNI and filters older lake rows by primary key. The lake table has `table.datalake.auto-compaction` enabled.
 - With Union Read but no lake auto-compaction, the logical read is the same. Overlapping lake files, however, require the Paimon Java reader through JNI to merge them. This is the default Fluss configuration.
 
 The first column counts keys updated after the lake snapshot, which determines how much Union Read must fetch from Fluss: 0, 10,000, or 100,000 keys per Bucket. Each cell gives the time in seconds for `COUNT(*)`, a grouped aggregation (count, amount sum, and average discount by category), and `SELECT *` (excluding transfer of results to the client), in that order.
@@ -173,7 +173,7 @@ The first column counts keys updated after the lake snapshot, which determines h
 
 - For `SELECT *`, pure JNI finishes 1 to 3 seconds sooner than Union Read, but it uses an average of 9 to 10 cores (68 to 75 core-seconds). Union Read uses 1 to 2 cores (9 to 18 core-seconds). Pure JNI consumes 4 to 8 times as much CPU time. The KV snapshot is on local disk, while lake data crosses a forwarded port, which favors pure JNI in this setup.
 - Pure JNI copies each Bucket's KV snapshot to a BE temporary directory so RocksDB can open it. A query uses a sampled peak of 2.9 to 4.3 GB and releases the space afterward. Union Read does not copy the KV snapshot and does not use that BE disk space.
-- Without lake auto-compaction, a merge read can load data from several files into the BE's JVM heap at once. A full-table read uses 16 scanners in parallel by default and fails with `OutOfMemoryError` on the default 2 GB heap. `enable_jni_heap_admission` prevents that failure in this test, as shown below. Enabling `table.datalake.auto-compaction` for the primary-key lake table addresses the underlying cause.
+- Without lake auto-compaction, a merge read can load data from several files into the [BE's JVM heap](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#be-jvm-heap-memory) at once. A full-table read uses 16 scanners in parallel by default and fails with `OutOfMemoryError` on the default 2 GB heap. `enable_jni_heap_admission` prevents that failure in this test, as shown below. Enabling `table.datalake.auto-compaction` for the primary-key lake table addresses the underlying cause.
 
 ### 3.2 BE JVM Memory Control
 
@@ -187,7 +187,7 @@ We repeated the full-table read without lake auto-compaction on a BE with a 2 GB
 | 160,000 | OOM | 12.2 s |
 | 1.6 million | OOM | 13.5 s |
 
-`enable_jni_heap_admission` is new in Doris 5.0 and defaults to off. When enabled, readers that expect heavy JVM heap use, including the merge readers in this test, declare an estimate before they start. The BE queues a new reader if admitting it would push declared usage beyond half the maximum JVM heap. Readers proceed as earlier ones finish. This prevented OOM in the test, though queueing increased elapsed time.
+[`enable_jni_heap_admission`](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#jni-heap-admission) is new in Doris 5.0 and defaults to off. When enabled, readers that expect heavy JVM heap use, including the merge readers in this test, declare an estimate before they start. The BE queues a new reader if admitting it would push declared usage beyond half the maximum JVM heap. Readers proceed as earlier ones finish. This prevented OOM in the test, though queueing increased elapsed time.
 
 ## 4. Planned work
 
