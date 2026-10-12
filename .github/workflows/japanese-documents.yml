@@ -96,9 +96,24 @@ jobs:
         env:
           NODE_PATH: ${{ runner.temp }}/document-browser/node_modules
         run: |
+          # Execute every independent validator so a failure retains browser
+          # evidence as well. Any nonzero result still fails the complete job.
+          set +e
           node candidate/scripts/i18n/verify-static.cjs --site candidate/build --manifest candidate/.i18n-build/manifests/ja.json --output evidence/static-status.json
+          doc_status_exit=$?
           node candidate/scripts/i18n/verify-doc-navigation.cjs --site candidate/build --output evidence/document-navigation.json
+          doc_navigation_exit=$?
           node candidate/scripts/i18n/poc/verify-static.cjs --site candidate/build --output evidence/candidate-browser --expect-ja --baseline evidence/baseline-browser/signatures.json
+          doc_browser_exit=$?
+          if (( doc_status_exit || doc_navigation_exit || doc_browser_exit )); then exit 1; fi
+      - name: Preserve CI-built site for failed validation replay
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: japanese-document-site-${{ github.event.pull_request.head.sha || github.sha }}
+          path: candidate/build
+          if-no-files-found: ignore
+          retention-days: 3
       - uses: actions/upload-artifact@v4
         if: always()
         with:

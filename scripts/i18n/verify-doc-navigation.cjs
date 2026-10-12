@@ -45,7 +45,10 @@ function verify({site, snapshot, devOnly = false}) {
     if (!devOnly) {
         const $ = read('/ja/docs/');
         const target = '/ja/docs/4.x/getting-started/what-is-apache-doris/';
-        assert.equal($('link[rel="canonical"]').attr('href'), `https://doris.apache.org${target}`);
+        // Native client-redirect pages use a relative canonical. Resolve it as
+        // a browser would; document pages are checked separately by T02.
+        assert.equal(new URL($('link[rel="canonical"]').attr('href'), 'https://doris.apache.org').href,
+            `https://doris.apache.org${target}`);
         assert($('a').map((i, node) => $(node).attr('href')).get().includes(target));
         checks.push({entry: '/ja/docs/', target});
     }
