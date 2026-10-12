@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "pages": [
+    {
+      "pluginId": "default",
+      "version": "current",
+      "docId": "getting-started/what-is-apache-doris",
+      "locale": "ja",
+      "sourceHash": "c1b950ba12598be8495190f93fd341dd646d98c837bf09c72ccc199c2ebb941e",
+      "targetHash": "b22981d476dae36312c2d5631a1d6d10f6e7b28df8b66c96ecd48d8b27a7631f",
+      "reason": "T04 repairs the two merged T01 PoC AI links by adding the missing ../. All other bytes are unchanged; the repair is checked against the merged PoC target.",
+      "repairedFromTargetHash": "565ac481aaafe738b0fd193d6f4617cff6698351cfc71c8d0b575de97634e4c4"
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "docId": "getting-started/intro",
+      "locale": "ja",
+      "sourceHash": "5c870a2583db46c203dcd610b575d3888bf2ba442e41a58a8acb7177d9db4abe",
+      "targetHash": "7b759880571be86dfa613ef71ea4b018e2c9b7f323eb9873c9596c1dafb0b33b",
+      "reason": "Merged T01 PoC: localized visible HTML/metadata, prose quantities written as digits, and equivalent native route links. Exception is bound to these exact source/target bytes; edited translations must pass protection checks."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "docId": "getting-started/what-is-apache-doris",
+      "locale": "ja",
+      "sourceHash": "c1b950ba12598be8495190f93fd341dd646d98c837bf09c72ccc199c2ebb941e",
+      "targetHash": "b22981d476dae36312c2d5631a1d6d10f6e7b28df8b66c96ecd48d8b27a7631f",
+      "reason": "T04 repairs the two merged T01 PoC AI links by adding the missing ../. All other bytes are unchanged; the repair is checked against the merged PoC target.",
+      "repairedFromTargetHash": "565ac481aaafe738b0fd193d6f4617cff6698351cfc71c8d0b575de97634e4c4"
+    },
+    {
+      "pluginId": "community",
+      "version": "current",
+      "docId": "join-community",
+      "locale": "ja",
+      "sourceHash": "c0fb07e339e759ca4bf071efabafb60ecb13e1978173dc88e3de79e7a32949b9",
+      "targetHash": "69442d5fd55657623ba9b98cd6d2875fda3e031d30314877e7b6d2758ba45c8c",
+      "reason": "Merged T01 PoC: localized visible HTML/metadata, prose quantities written as digits, and equivalent native route links. Exception is bound to these exact source/target bytes; edited translations must pass protection checks."
+    }
+  ]
+}

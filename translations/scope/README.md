@@ -52,3 +52,22 @@ These IDs belong to that snapshot. Record actual PRs, review results and merge
 SHAs as batches finish; generate future snapshots separately and reconcile new,
 moved or changed pages explicitly. Do not renumber active assignments by
 regenerating over this directory. T06 will supply incremental planning.
+
+## Continuous coverage audit (T04)
+
+Run `node scripts/i18n/audit-coverage.cjs --source-ref HEAD --output /tmp/ja-coverage.json`
+from a clean checkout of the commit being checked. The audit loads the native
+plugins and sidebars again; the T03 snapshot is a comparison baseline only.
+It verifies source and routing inputs against that exact commit, then reports
+new, changed, moved and removed source nodes, current translations, pending
+translations, draft/unregistered exceptions, and every scoped sidebar message
+key. `retainSidebarLabels` in `ja.json` records technical names that remain
+English, with an explicit reason per plugin and version. A new sidebar key is
+never exempt just because it was absent from the T03 snapshot.
+
+The read-only `Japanese coverage audit` workflow runs weekly and supports
+manual dispatch; matching source PRs also get a report artifact. Pending
+Japanese work does not fail source PRs. Use `--fail-on-pending` only for the
+final T05 coverage gate. Source SHA and routing hashes in each report identify
+the exact checkout; after a failed or cancelled workflow, rerun it manually
+on current master. No model or bot credential is needed.
