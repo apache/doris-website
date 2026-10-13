@@ -33,15 +33,20 @@ test('all open PRs are inspected by files, including unnamed human PRs', async (
     assert.equal(result.blockedTargets.length, 0);
 });
 
-test('an older PR does not treat later master translations as its own state removals', async () => {
-    const later = {...record, docId: 'later', sourcePath: 'docs/later.md',
-        targetPath: 'i18n/ja/docusaurus-plugin-content-docs/current/later.md'};
+test('state changes are compared with the PR merge base, not current master', async () => {
+    const previous = {...record, docId: 'previous', sourcePath: 'docs/previous.md',
+        targetPath: 'i18n/ja/docusaurus-plugin-content-docs/current/previous.md'};
+    let baseReads = 0;
     const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website',
-        pulls: [pull(13)], basePages: [later],
+        pulls: [pull(13)],
         filesFor: async () => [{filename: record.targetPath}, {filename: 'translations/state/ja/docs.json'}],
         readHead: async (_item, file) => file.endsWith('docs.json')
-            ? JSON.stringify({schemaVersion: 1, pages: [record]}) : japanese,
-        readBase: async () => JSON.stringify({schemaVersion: 1, pages: []})});
+            ? JSON.stringify({schemaVersion: 1, pages: [previous, record]}) : japanese,
+        readBase: async () => {
+            baseReads++;
+            return JSON.stringify({schemaVersion: 1, pages: [previous]});
+        }});
+    assert.equal(baseReads, 1);
     assert.deepEqual(result.relevantPrs, [13]);
     assert.deepEqual(result.active.candidates.map(candidate => candidate.docId), ['guide']);
     assert.deepEqual(result.blockedTargets, []);
