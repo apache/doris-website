@@ -21,7 +21,7 @@ These initial IDs remain the audit baseline. Record PRs and proofreading in this
 
 ## T09-DEV-001
 
-Status: IN_PROGRESS. Sub-batch `T09-DEV-001a`: [PR #4213](https://github.com/apache/doris-website/pull/4213) merged as `0bdb4cf482` and covers `getting-started/quick-start` (1 merged). Japanese proofreading remains pending; its state is machine-reviewed. Sub-batch `T09-DEV-001b`: [draft PR #4214](https://github.com/apache/doris-website/pull/4214) covers `features-architecture/intro` and `install/intro` (2 candidates). The other 17 assigned pages remain TODO. These splits keep each set independently reviewable; they do not close or renumber T09-DEV-001.
+Status: IN_PROGRESS. Sub-batch `T09-DEV-001a`: [PR #4213](https://github.com/apache/doris-website/pull/4213) merged as `0bdb4cf482` and covers `getting-started/quick-start` (1 merged). Sub-batch `T09-DEV-001b`: [PR #4214](https://github.com/apache/doris-website/pull/4214) merged as `68e98770b3` and covers `features-architecture/intro` and `install/intro` (2 merged). Sub-batch `T09-DEV-001c` prepares 9 installation planning and deployment pages. The other 8 assigned pages remain TODO. All translated pages retain machine review status until Japanese proofreading is recorded. These splits do not close or renumber T09-DEV-001.
 
 Dependencies: T03 and T04. Pages: 20. Remaining in DEV after this batch: 1617.
 
