@@ -39,12 +39,12 @@ test('an open PR can register its target with a page shard instead of docs.json'
         filesFor: async () => [{filename: record.targetPath}, {filename: shardPath}],
         readHead: async (_item, file) => file === shardPath
             ? JSON.stringify({schemaVersion: 1, page: record})
-            : file.endsWith('docs.json') ? JSON.stringify({schemaVersion: 1, pages: []}) : japanese});
+            : file.endsWith('docs.json') ? JSON.stringify({schemaVersion: 1, pages: []}) : japanese,
+        readBase: async (_item, file) => file === shardPath ? null
+            : JSON.stringify({schemaVersion: 1, pages: []})});
     assert.deepEqual(result.relevantPrs, [13]);
     assert.equal(result.active.candidates[0].pr, '#13');
     assert.deepEqual(result.blockedTargets, []);
-});
-
 test('edited or unparseable PR candidate blocks its target without claiming coverage', async () => {
     const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website', pulls: [pull(12)],
         filesFor: async () => [{filename: record.targetPath}],
