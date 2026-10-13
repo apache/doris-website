@@ -192,7 +192,7 @@ Lance 的[索引格式](https://lance.org/format/index/)定义逻辑索引和物
 | 输出回表 | Row ID Fetch/Materialization 信息：`LanceRowIdFetchCalls`、`LanceRowIdFetchRows`、`LanceRowIdFetchTotalTime`、`LanceRowIdTakeReadTime`、`LanceArrowToDorisBlockTime` 及数据缓存字节计数 | 回表总量包含读取/转换子步骤，使用独立统计路径；不能将同一份导出值再次作为独立工作相加。 |
 | 端到端延迟 | 最慢 Scanner、依赖等待、FE 等待/取结果/写结果和客户端墙钟时间 | 不能将重叠算子或所有并行 Scanner 的时间直接相加作为查询延迟。 |
 
-指标定义和范围见 [Lance 查询 Profile 参考](../catalogs/lance-catalog.mdx#query-profile)；Dataset 数据缓存字节及 BE 全局 Session 指标见[查看缓存效果](../catalogs/lance-catalog.mdx#查看缓存效果)。查询级索引缓存计数不是 Session 总量的差值。
+指标定义和范围见 [Lance 查询 Profile 参考](lance-query-profile.md)；Dataset 数据缓存字节及 BE 全局 Session 指标见[查看缓存效果](../catalogs/lance-catalog.mdx#查看缓存效果)。查询级索引缓存计数不是 Session 总量的差值。
 
 Profile 详细程度取决于运行的 FE/BE 和内置 Lance 埋点。Scanner 指标会预注册，零值也可能表示原生路径未报告指标；执行回调还要求流消费完成，因此失败、取消或提前终止的扫描可能计数不完整。不能仅凭缺失或零值就判断未使用索引或过滤。`LanceScannerNextTime` 与内部搜索和等待计时重叠，其值较大不证明存储是瓶颈。现有指标不能解释读取区间时，应先收集 CPU/I/O Trace，再判断剩余开销是否来自存储。
 
