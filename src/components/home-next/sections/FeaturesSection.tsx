@@ -38,7 +38,7 @@ const CAPABILITIES: Capability[] = [
         illoTag: translate({ id: "homepage.features.003", message: "High Concurrency / Low Latency" }),
         rotation: -2.2,
         cta: {
-            label: translate({ id: "homepage.features.004", message: "Explore real-time analytics(Comming Soon)" }),
+            label: translate({ id: "homepage.features.004", message: "Explore real-time analytics (Coming Soon)" }),
             href: '#',
         },
         items: [
@@ -57,7 +57,7 @@ const CAPABILITIES: Capability[] = [
         illoTag: 'Iceberg / Delta Lake / Hudi',
         rotation: 1.6,
         cta: {
-            label: translate({ id: "homepage.features.014", message: "Explore lakehouse analytics(Comming Soon)" }),
+            label: translate({ id: "homepage.features.014", message: "Explore lakehouse analytics (Coming Soon)" }),
             href: '#',
         },
         items: [
@@ -76,7 +76,7 @@ const CAPABILITIES: Capability[] = [
         illoTag: translate({ id: "homepage.features.023", message: "JSON / Text / Vector" }),
         rotation: -1.4,
         cta: {
-            label: translate({ id: "homepage.features.024", message: "Explore hybrid search(Comming Soon)" }),
+            label: translate({ id: "homepage.features.024", message: "Explore hybrid search (Coming Soon)" }),
             href: '#',
         },
         items: [
