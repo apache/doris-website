@@ -33,6 +33,21 @@ test('all open PRs are inspected by files, including unnamed human PRs', async (
     assert.equal(result.blockedTargets.length, 0);
 });
 
+test('an older PR does not treat later master translations as its own state removals', async () => {
+    const later = {...record, docId: 'later', sourcePath: 'docs/later.md',
+        targetPath: 'i18n/ja/docusaurus-plugin-content-docs/current/later.md'};
+    const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website',
+        pulls: [pull(13)], basePages: [later],
+        filesFor: async () => [{filename: record.targetPath}, {filename: 'translations/state/ja/docs.json'}],
+        readHead: async (_item, file) => file.endsWith('docs.json')
+            ? JSON.stringify({schemaVersion: 1, pages: [record]}) : japanese,
+        readBase: async () => JSON.stringify({schemaVersion: 1, pages: []})});
+    assert.deepEqual(result.relevantPrs, [13]);
+    assert.deepEqual(result.active.candidates.map(candidate => candidate.docId), ['guide']);
+    assert.deepEqual(result.blockedTargets, []);
+    assert.deepEqual(result.exceptions, []);
+});
+
 test('edited or unparseable PR candidate blocks its target without claiming coverage', async () => {
     const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website', pulls: [pull(12)],
         filesFor: async () => [{filename: record.targetPath}],

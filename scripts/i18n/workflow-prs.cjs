@@ -27,9 +27,8 @@ function parseState(raw) {
     return data.pages;
 }
 
-async function reconcileOpenPrs({scope, pulls, filesFor, readHead, basePages = [], repository}) {
+async function reconcileOpenPrs({scope, pulls, filesFor, readHead, readBase, repository}) {
     const active = new Map(), blocked = new Set(), exceptions = [], relevant = [];
-    const base = new Map(basePages.map(page => [identity(page), page]));
     const botPrs = [], botDetails = [];
     for (const pull of pulls) {
         if (pull.base?.ref !== 'master') continue;
@@ -51,6 +50,11 @@ async function reconcileOpenPrs({scope, pulls, filesFor, readHead, basePages = [
             const raw = await readHead(pull, statePath);
             pages = parseState(raw);
             if (stateChanged) {
+                // Compare with this PR's merge base. Current master may contain
+                // translations merged after the PR branch was created.
+                assert(typeof readBase === 'function', 'PR merge-base reader is required');
+                const basePages = parseState(await readBase(pull, statePath));
+                const base = new Map(basePages.map(page => [identity(page), page]));
                 for (const page of pages) {
                     if (!managedTarget(scope, page.targetPath)) continue;
                     const old = base.get(identity(page));
@@ -123,11 +127,10 @@ async function main() {
     const repository = process.env.GITHUB_REPOSITORY || 'apache/doris-website';
     assert(repository === 'apache/doris-website', 'Unexpected repository');
     const scope = json(fs.readFileSync(path.join(root, 'translations/scope/ja.json'), 'utf8'));
-    const basePages = parseState(fs.readFileSync(path.join(root, statePath), 'utf8'));
     const pulls = ghPages(`repos/${repository}/pulls?state=open&base=master&per_page=100`);
     const remote = process.env.I18N_PR_REMOTE || 'origin';
-    const fetched = new Map();
-    const readHead = (pull, file) => {
+    const fetched = new Map(), bases = new Map();
+    const fetchHead = pull => {
         if (!fetched.has(pull.number)) {
             execFileSync('git', ['fetch', '--no-tags', remote, `refs/pull/${pull.number}/head`],
                 {cwd: root, stdio: ['ignore', 'ignore', 'pipe']});
@@ -135,13 +138,26 @@ async function main() {
             assert.equal(fetchedSha, pull.head.sha, `Open PR #${pull.number} changed during reconciliation`);
             fetched.set(pull.number, fetchedSha);
         }
-        try {return execFileSync('git', ['show', `${fetched.get(pull.number)}:${file}`],
+        return fetched.get(pull.number);
+    };
+    const readFile = (commit, file) => {
+        try {return execFileSync('git', ['show', `${commit}:${file}`],
             {cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 16 * 1024 * 1024});}
         catch {return null;}
     };
+    const readHead = (pull, file) => readFile(fetchHead(pull), file);
+    const readBase = (pull, file) => {
+        if (!bases.has(pull.number)) {
+            const commit = execFileSync('git', ['merge-base', 'HEAD', fetchHead(pull)],
+                {cwd: root, encoding: 'utf8'}).trim();
+            assert(/^[a-f0-9]{40}$/.test(commit), `Missing merge base for PR #${pull.number}`);
+            bases.set(pull.number, commit);
+        }
+        return readFile(bases.get(pull.number), file);
+    };
     const result = await reconcileOpenPrs({scope, pulls,
         filesFor: pull => ghPages(`repos/${repository}/pulls/${pull.number}/files?per_page=100`),
-        readHead, basePages, repository});
+        readHead, readBase, repository});
     fs.writeFileSync(path.join(output, 'active-candidates.json'), JSON.stringify(result.active, null, 2) + '\n');
     fs.writeFileSync(path.join(output, 'open-pr-reconciliation.json'), JSON.stringify(result, null, 2) + '\n');
     process.stdout.write(JSON.stringify({openPrCount: result.openPrCount,
