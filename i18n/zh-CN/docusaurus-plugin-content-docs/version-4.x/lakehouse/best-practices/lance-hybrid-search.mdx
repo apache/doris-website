@@ -181,13 +181,19 @@ Lance 的[索引格式](https://lance.org/format/index/)定义逻辑索引和物
 
 | 阶段 | 证据 | 如何解释 |
 |---|---|---|
-| 规划与覆盖率 | `EXPLAIN` 中的 `lanceSearchIndexSegments`、`lanceSearchUnindexedFragments`；Profile 中 Scanner 数 | 确认 Split 数、回退工作量以及计划能否利用预期布局。 |
-| Prefilter | `LancePrefilterInputRows`、`LancePrefilterRowIds`、`LancePrefilterLoadTime`、`LancePrefilterBuildTime` | Load 包含构建过滤器的耗时，不应相加。没有远程 I/O 时，大 Row ID 集合仍可能主导开销。 |
-| 标量 Segment 路径 | 有统计值时的 `LanceScalarIndexSegmentsRequested`、`LanceScalarIndexSegmentsSearched`、`LanceScalarIndexCandidateRows` | 这些计数描述已埋点的标量 Segment 路径，不一定覆盖 ANN/FTS 内部所有标量查询。零值不能证明没有标量过滤。 |
-| 索引加载与搜索 | `LanceIndexPartitionCacheMissLoads`、`LanceExecutionIOBytesRead`、`LanceIndexComparisons`，以及可用的详细索引计时器 | 区分缓存重新加载、热缓存搜索和候选处理。I/O 计数为零不代表没有 CPU 工作。 |
-| 输出回表 | 存在时的 Materialization 算子和 Row ID Fetch 计时 | 将输出列读取与候选检索分开归因。 |
+| FE 元数据与规划 | `Execution Summary` → `Lance Metadata Metrics`：`MetadataReadTime`、`IndexMetadataReadTime`、`SplitPlanningTime` 及对应的 `Calls` | 将 Catalog 元数据访问和 Split 规划与 BE 检索区分；元数据总耗时包含其子步骤。 |
+| 规划与覆盖率 | `EXPLAIN`：`lanceSearchIndexSegments`、`lanceSearchIndexFragments`、`lanceSearchUnindexedFragments`；`LanceSearchPlan`：`LancePlannedIndexSegmentCount`、`LancePlannedIndexedFragmentCount`、`LancePlannedFlatSearchFragmentCount` | 描述已规划/分配的检索工作，不代表已完成搜索；Flat Search 计数适用于向量查询，不适用于 FTS。 |
+| 读取器配置与 batch 读取 | `LanceTiming`：`LanceDatasetOpenTime`、`LanceScannerConfigureTime`、`LanceScannerNextTime`、`LanceArrowToDorisBlockTime` | 区分打开/配置、Lance 读取和 Doris 转换；batch 读取耗时包含内部搜索、I/O、解码和等待。 |
+| Row ID Prefilter | `LanceScan`：`RowIdPrefilterLoads`、`RowIdPrefilterInputRows`、`RowIdPrefilterInputBatches`、`RowIdPrefilterIds`、`RowIdPrefilterLoadTime`、`RowIdPrefilterInputTime`、`RowIdPrefilterBuildTime` | 输入等待/读取和 mask 构造属于总加载耗时；这些指标描述 Row ID 加载器，不覆盖所有标量谓词，也不是最终候选集合。 |
+| 标量 Segment 路径 | `LanceScalarIndex`：`LanceScalarIndexSegmentsRequested`、`LanceScalarIndexSegmentsSearched`、`LanceScalarIndexSegmentFallbacks`、`LanceScalarIndexCandidateRows`、`LanceScalarIndexCandidateEvaluationTime`、`LanceScalarIndexSegmentSearchTime` | 候选求值包含 Segment 搜索；候选计数早于 Fragment 限定和完整过滤，重复任务可能重复计数，基数不可得时也可能为零。 |
+| 索引复用与 I/O | `LanceIndex`：`LanceIndexCacheHits`、`LanceIndexCacheMisses`、`LanceIndexObjectLoads`、`LanceIndexComponentsLoaded`、`LanceIndexComparisons`；`LanceIO`：`LanceIOReadBytes`、`LanceIOReadOps`、`LanceIOReadRequests` | 区分对象/部件加载、缓存查询和搜索工作；加载数不是未命中数，执行 I/O 不是完整远端流量。 |
+| 向量分区选择与搜索 | `LanceIVFPartitionsConsidered`、`LanceIVFPartitionSelectionTime`、`LanceIndexPartitionsSearched`、`LanceVectorIndexDeltasSearched`、`LanceIndexPartitionLoadTime`、`LanceIndexSearchTime`、`LanceIndexDistanceTopKTime` | 区分分区选择和实际搜索；距离/Top-K 耗时包含过滤与堆操作，且与搜索耗时重叠；FTS 也报告已搜索分区。 |
+| 等待与并发 | `LanceIndexPrefilterWaitTime`、`LanceIndexCpuQueueWaitTime`、`LanceScanTaskWaitTime` | 区分索引 Prefilter 等待、CPU 任务队列等待和 FilteredRead 任务等待，均不是完整 I/O 等待或 Doris 调度总量。 |
+| 输出回表 | Row ID Fetch/Materialization 信息：`LanceRowIdFetchCalls`、`LanceRowIdFetchRows`、`LanceRowIdFetchTotalTime`、`LanceRowIdTakeReadTime`、`LanceArrowToDorisBlockTime` 及数据缓存字节计数 | 回表总量包含读取/转换子步骤，使用独立统计路径；不能将同一份导出值再次作为独立工作相加。 |
 | 端到端延迟 | 最慢 Scanner、依赖等待、FE 等待/取结果/写结果和客户端墙钟时间 | 不能将重叠算子或所有并行 Scanner 的时间直接相加作为查询延迟。 |
 
-Profile 详细程度取决于 Doris 构建和内置 Lance 埋点。缺失指标不等于实测为零。`FileScannerV2` 包含 Scanner 打开、读取和关闭工作；读取区间可能包括 Prefilter 加载、索引 I/O、运行时等待、ANN 搜索、Refine 和转换。嵌套或并行计时不是可直接相加的分解。如果现有指标无法解释该区间，应收集 CPU/I/O Trace 或使用带所需详细埋点的构建，再判断剩余开销是否来自存储。
+指标定义和范围见 [Lance 查询 Profile 参考](../catalogs/lance-catalog.mdx#query-profile)；Dataset 数据缓存字节及 BE 全局 Session 指标见[查看缓存效果](../catalogs/lance-catalog.mdx#查看缓存效果)。查询级索引缓存计数不是 Session 总量的差值。
+
+Profile 详细程度取决于运行的 FE/BE 和内置 Lance 埋点。Scanner 指标会预注册，零值也可能表示原生路径未报告指标；执行回调还要求流消费完成，因此失败、取消或提前终止的扫描可能计数不完整。不能仅凭缺失或零值就判断未使用索引或过滤。`LanceScannerNextTime` 与内部搜索和等待计时重叠，其值较大不证明存储是瓶颈。现有指标不能解释读取区间时，应先收集 CPU/I/O Trace，再判断剩余开销是否来自存储。
 
 对无过滤条件的向量查询，如果读取器具有 Segment 范围优化，且选中的索引 Segment 完整位于扫描 Fragment 范围内，可以避免枚举所有 Row ID。真实标量谓词仍需计算，删除和可见性处理也可能保留。对齐能减少可避免的工作，但不保证带过滤检索的 Prefilter 开销为零。
