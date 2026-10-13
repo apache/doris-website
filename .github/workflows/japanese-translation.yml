@@ -116,19 +116,27 @@ jobs:
           OSS_SK: ${{ secrets.OSS_SK }}
           APP_ID: ${{ secrets.I18N_GITHUB_APP_ID }}
           APP_PRIVATE_KEY: ${{ secrets.I18N_GITHUB_APP_PRIVATE_KEY }}
+          I18N_GITHUB_PAT: ${{ secrets.I18N_GITHUB_PAT }}
           I18N_MODE: ${{ inputs.mode || 'dry-run' }}
         run: |
           if [[ -n "$APP_ID" && -n "$APP_PRIVATE_KEY" ]]; then
-            echo 'app_ready=true' >> "$GITHUB_OUTPUT"
+            echo 'auth_kind=app' >> "$GITHUB_OUTPUT"
+          elif [[ -n "$I18N_GITHUB_PAT" ]]; then
+            echo 'auth_kind=pat' >> "$GITHUB_OUTPUT"
           else
-            echo 'app_ready=false' >> "$GITHUB_OUTPUT"
+            echo 'auth_kind=none' >> "$GITHUB_OUTPUT"
           fi
-          if [[ -n "$OSS_AK" && -n "$OSS_SK" && ( -n "$APP_ID" && -n "$APP_PRIVATE_KEY" || "$I18N_MODE" == 'validate' ) ]]; then
+          if [[ -n "$OSS_AK" && -n "$OSS_SK" && ( -n "$APP_ID" && -n "$APP_PRIVATE_KEY" || -n "$I18N_GITHUB_PAT" || "$I18N_MODE" == 'validate' ) ]]; then
             echo 'ready=true' >> "$GITHUB_OUTPUT"
           else
             echo 'ready=false' >> "$GITHUB_OUTPUT"
-            echo 'OSS Codex auth or required GitHub App configuration is missing. No model call or PR write was attempted.' >> "$GITHUB_STEP_SUMMARY"
+            echo 'OSS Codex auth or a GitHub write credential is missing. No model call or PR write was attempted.' >> "$GITHUB_STEP_SUMMARY"
           fi
+      - name: Verify personal token identity before model calls
+        if: steps.config.outputs.auth_kind == 'pat'
+        env:
+          GH_TOKEN: ${{ secrets.I18N_GITHUB_PAT }}
+        run: gh api user --jq '.login' > /dev/null
       - name: Reconcile again immediately before model calls
         if: steps.config.outputs.ready == 'true'
         env:
@@ -197,7 +205,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: node scripts/i18n/workflow-generate.cjs "$RUNNER_TEMP/japanese-translation"
       - uses: actions/create-github-app-token@v2
-        if: steps.translation.outputs.created == 'true' && steps.config.outputs.app_ready == 'true'
+        if: steps.translation.outputs.created == 'true' && steps.config.outputs.auth_kind == 'app'
         id: app
         with:
           app-id: ${{ secrets.I18N_GITHUB_APP_ID }}
@@ -206,14 +214,15 @@ jobs:
           repositories: doris-website
           permission-contents: write
           permission-pull-requests: write
-      - name: Open draft PR with the dedicated App
-        if: steps.translation.outputs.created == 'true' && steps.config.outputs.app_ready == 'true'
+      - name: Open draft PR with the configured write identity
+        if: steps.translation.outputs.created == 'true' && steps.config.outputs.auth_kind != 'none'
         env:
-          GH_TOKEN: ${{ steps.app.outputs.token }}
+          GH_TOKEN: ${{ steps.app.outputs.token || secrets.I18N_GITHUB_PAT }}
+          I18N_PR_AUTH_KIND: ${{ steps.config.outputs.auth_kind }}
         run: node scripts/i18n/workflow-publish.cjs "$RUNNER_TEMP/japanese-translation"
-      - name: Report staged validation without App credentials
-        if: steps.translation.outputs.created == 'true' && steps.config.outputs.app_ready != 'true'
-        run: echo 'One-page Codex candidate is in the generation artifact. App credentials are still required for a draft PR.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Report staged validation without GitHub write credentials
+        if: steps.translation.outputs.created == 'true' && steps.config.outputs.auth_kind == 'none'
+        run: echo 'One-page Codex candidate is in the generation artifact. A GitHub App or personal token is required for a draft PR.' >> "$GITHUB_STEP_SUMMARY"
       - name: Sync refreshed Codex auth without overwriting a newer snapshot
         if: always() && steps.auth.outcome == 'success'
         env:

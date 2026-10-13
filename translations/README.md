@@ -268,8 +268,8 @@ source path filters. `validate` mode requires one exact English source path
 ending in `.md` or `.mdx`; it can call the model and create a draft PR for one
 page with a 30,000-token Codex usage budget while ongoing automation remains
 disabled. It is the first live acceptance path after OSS model access is
-available. With OSS access but no App credentials, `validate` still writes
-the candidate to the generation artifact for review and makes no GitHub write.
+available. With OSS access but no GitHub write credential, `validate` still
+writes the candidate to the generation artifact and makes no GitHub write.
 Pushes are checked against the current registered source
 identities before any generation. The daily full scan recovers missed or
 cancelled pushes. Japanese target or state-only commits do not trigger the
@@ -284,13 +284,20 @@ snapshots in OSS as the Apache Doris code-review runner. The repository's
 selected auth snapshot if Codex refreshes it. `I18N_CODEX_MODEL` is optional
 and defaults to `gpt-6-sol`. A direct OpenAI API key is not used by this
 workflow; the separate T07 manual tool still supports the Responses API.
-The workflow also needs `I18N_GITHUB_APP_ID` and
-`I18N_GITHUB_APP_PRIVATE_KEY`. The App must be installed on
+To open a draft PR, configure one GitHub write identity. The preferred App path
+uses `I18N_GITHUB_APP_ID` and `I18N_GITHUB_APP_PRIVATE_KEY`; install the App on
 `apache/doris-website` with repository Contents and Pull requests write
-permissions. The enablement variables should be set only after the one-page
-`validate` run has been reviewed and its App-created draft PR has shown that
-the normal required checks run. Missing configuration leaves discovery
-available and prevents model calls and GitHub writes.
+permissions. If an App cannot be installed, a maintainer with repository write
+access can use a personal token in the `I18N_GITHUB_PAT` Actions secret. Grant
+a fine-grained token access to this repository with Contents and Pull requests
+write permissions, subject to organization token policy. A repository admin
+must store the secret. The resulting commits and PR use that person's identity.
+When both credentials are present, the App takes precedence. The workflow
+does not use `GITHUB_TOKEN` to create PRs because those PR checks can require
+manual approval. Set the enablement variables only after a one-page `validate`
+run and its App- or PAT-created draft PR have passed the required checks.
+Missing write credentials leave manual validation as an artifact-only run;
+missing OSS credentials leave discovery available without model calls.
 
 When enabled, one run processes at most two pages with a configured
 60,000-token Codex usage budget. The planner separately uses a 20,000-token

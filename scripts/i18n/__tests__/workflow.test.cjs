@@ -8,7 +8,7 @@ const {hash} = require('../state.cjs');
 const {reconcileOpenPrs} = require('../workflow-prs.cjs');
 const {relevantPush, replaceableBotPr} = require('../workflow-scan.cjs');
 const {pairFor, machineOwned, generate, allowGeneration} = require('../workflow-generate.cjs');
-const {expectedFiles} = require('../workflow-publish.cjs');
+const {expectedFiles, authorFor} = require('../workflow-publish.cjs');
 
 const scope = {schemaVersion: 1, locale: 'ja', maxBatchPages: 20, groups: [
     {id: 'DEV', pluginId: 'default', version: 'current', sourceRoot: 'docs'},
@@ -108,6 +108,13 @@ test('publication allows only matching managed ja targets and state', () => {
         [record.targetPath, 'translations/state/ja/docs.json']);
     assert.throws(() => expectedFiles({schemaVersion: 1, provider: 'codex',
         candidates: [{...candidate, targetPath: 'docs/guide.md'}]}, scope), /target/);
+});
+
+test('personal token writes commits under its authenticated owner', () => {
+    assert.deepEqual(authorFor('pat', {login: 'morningman', id: 24620808}),
+        {name: 'morningman', email: '24620808+morningman@users.noreply.github.com'});
+    assert.match(authorFor('app').name, /\[bot\]$/);
+    assert.throws(() => authorFor('pat', {login: 'other name', id: 1}), /Invalid personal/);
 });
 
 test('one model result creates separate Dev and 4.x targets and state records', async () => {

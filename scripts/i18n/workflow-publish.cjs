@@ -1,4 +1,4 @@
-// Run only with a dedicated GitHub App installation token on trusted master.
+// Run only with a dedicated GitHub App token or a maintainer PAT on trusted master.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -32,18 +32,31 @@ function checkStaged(manifest, scope) {
     return expected;
 }
 
+function authorFor(kind, user = {}) {
+    if (kind === 'app') return {name: 'doris-japanese-translation[bot]',
+        email: 'doris-japanese-translation[bot]@users.noreply.github.com'};
+    assert(kind === 'pat' && /^[A-Za-z0-9-]+$/.test(user.login ?? '')
+        && Number.isInteger(user.id) && user.id > 0, 'Invalid personal token owner');
+    return {name: user.login, email: `${user.id}+${user.login}@users.noreply.github.com`};
+}
+
 function main() {
     const output = process.argv[2];
     assert(output && process.argv.length === 3, 'Usage: workflow-publish.cjs <scan-directory>');
-    assert(process.env.GH_TOKEN && process.env.GITHUB_RUN_ID, 'GitHub App token and run ID required');
+    assert(process.env.GH_TOKEN && process.env.GITHUB_RUN_ID, 'GitHub write token and run ID required');
+    const kind = process.env.I18N_PR_AUTH_KIND;
+    assert(kind === 'app' || kind === 'pat', 'Unsupported GitHub write identity');
     const manifest = JSON.parse(fs.readFileSync(path.join(output, 'generation.json'), 'utf8'));
     const scope = JSON.parse(fs.readFileSync(path.join(root, 'translations/scope/ja.json'), 'utf8'));
     assert.equal(git('rev-parse', 'HEAD'), manifest.sourceCommit, 'Source checkout changed before publishing');
     const expected = checkStaged(manifest, scope);
     const branch = `${botBranch}${process.env.GITHUB_RUN_ID}`;
     assert(/^i18n\/ja-automated-[0-9]+$/.test(branch), 'Unsafe run ID');
-    git('config', 'user.name', 'doris-japanese-translation[bot]');
-    git('config', 'user.email', 'doris-japanese-translation[bot]@users.noreply.github.com');
+    const user = kind === 'pat' ? JSON.parse(execFileSync('gh', ['api', 'user', '--jq', '{login,id}'],
+        {cwd: root, encoding: 'utf8'})) : null;
+    const author = authorFor(kind, user);
+    git('config', 'user.name', author.name);
+    git('config', 'user.email', author.email);
     git('switch', '-c', branch);
     git('commit', '-m', 'docs(i18n): add machine Japanese translation candidates');
     const newHead = git('rev-parse', 'HEAD');
@@ -79,4 +92,4 @@ function main() {
 if (require.main === module) {
     try {main();} catch (error) {console.error(error.message); process.exitCode = 1;}
 }
-module.exports = {expectedFiles, checkStaged};
+module.exports = {expectedFiles, checkStaged, authorFor};
