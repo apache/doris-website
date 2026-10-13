@@ -2,15 +2,17 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {identity, hash, loadRecords} = require('./state.cjs');
+const {identity, hash, loadRecords, loadRecordsAt} = require('./state.cjs');
 const {structure, alignHeadings} = require('./structure.cjs');
 const {collect} = require('./inventory.cjs');
 const {protectionSignature} = require('./protection.cjs');
 
 async function checkTranslations({root, pages, reports = [], files, records, previousRecords = new Map()}) {
     const changed = new Set(files);
+    const stateChanged = files.some(file => file === 'translations/state/ja/docs.json'
+        || file.startsWith('translations/state/ja/pages/'));
     const selected = pages.filter(page => changed.has(page.targetPath)
-        || (changed.has('translations/state/ja/docs.json')
+        || (stateChanged
             && JSON.stringify(records.get(identity(page))) !== JSON.stringify(previousRecords.get(identity(page)))));
     const errors = [];
     const exceptionFile = path.join(root,'translations/protection-exceptions/ja.json');
@@ -54,7 +56,7 @@ async function checkTranslations({root, pages, reports = [], files, records, pre
     for (const file of files.filter(file => /^i18n\/ja\/docusaurus-plugin-content-docs[^/]*\/(current|version-[^/]+)\/.+\.(md|mdx)$/.test(file))) {
         if (fs.existsSync(path.join(root,file)) && !known.has(file)) errors.push({path:file, message:'Target has no registered source in the same plugin/version'});
     }
-    if (changed.has('translations/state/ja/docs.json')) for (const [key, record] of records) {
+    if (stateChanged) for (const [key, record] of records) {
         if (JSON.stringify(record) !== JSON.stringify(previousRecords.get(key)) && !pages.some(page => identity(page) === key)) {
             errors.push({path:record.targetPath, message:'Edited state has no native source identity'});
         }
@@ -68,11 +70,7 @@ async function main() {
     if (!args.includes('--base')) throw new Error('Usage: check-translations.cjs --base <PR merge base>');
     const files = execFileSync('git',['diff','--name-only',base,'HEAD'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean);
     const records = loadRecords(root,'ja');
-    let previousRecords = new Map();
-    try {
-        const previous = JSON.parse(execFileSync('git',['show',`${base}:translations/state/ja/docs.json`],{cwd:root,encoding:'utf8'}));
-        previousRecords = new Map(previous.pages.map(record => [identity(record),record]));
-    } catch (error) {if (!String(error.message).includes('does not exist')) throw error;}
+    const previousRecords = loadRecordsAt(root, 'ja', base);
     const native = await collect(root);
     const result = await checkTranslations({root,...native,files,records,previousRecords});
     console.log(JSON.stringify(result,null,2));

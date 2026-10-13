@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {hash, identity} = require('./state.cjs');
+const {hash, identity, stateFileFor} = require('./state.cjs');
 const {managedPath} = require('./translation-engine.cjs');
 
 const statePath = 'translations/state/ja/docs.json';
@@ -43,13 +43,23 @@ async function reconcileOpenPrs({scope, pulls, filesFor, readHead, basePages = [
         }
         const files = await filesFor(pull);
         const changed = new Set(files.map(file => file.filename).filter(file => managedTarget(scope, file)));
-        const stateChanged = files.some(file => file.filename === statePath);
+        const shards = files.map(file => file.filename)
+            .filter(file => /^translations\/state\/ja\/pages\/.+\.json$/.test(file));
+        const stateChanged = files.some(file => file.filename === statePath) || shards.length > 0;
         if (!changed.size && !stateChanged) continue;
         relevant.push(pull.number);
         let pages;
         try {
             const raw = await readHead(pull, statePath);
-            pages = parseState(raw);
+            const byIdentity = new Map(parseState(raw).map(page => [identity(page), page]));
+            for (const file of shards) {
+                const shard = json(await readHead(pull, file));
+                assert(shard.schemaVersion === 1 && shard.page && stateFileFor(shard.page) === file,
+                    `Invalid open PR state shard ${file}`);
+                byIdentity.set(identity(shard.page), shard.page);
+                changed.add(shard.page.targetPath);
+            }
+            pages = [...byIdentity.values()];
             if (stateChanged) {
                 for (const page of pages) {
                     if (!managedTarget(scope, page.targetPath)) continue;

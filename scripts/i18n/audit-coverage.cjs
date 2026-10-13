@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {hash, identity} = require('./state.cjs');
+const {hash, identity, loadRecordsAt} = require('./state.cjs');
 const {collect, validateScope} = require('./inventory.cjs');
 
 const baselineDir = path.resolve(__dirname,'../../translations/inventory/ja/2026-10-12');
@@ -54,6 +54,7 @@ async function audit({root,sourceRef,baseline = baselineDir,native}) {
     assert(!untracked,`Uncommitted Japanese targets/state cannot count at ${commit}: ${untracked}`);
     const scope = JSON.parse(fs.readFileSync(path.join(root,'translations/scope/ja.json'),'utf8'));
     validateScope(scope);
+    const committedRecords = loadRecordsAt(root, 'ja', commit);
     native ||= await collect(root);
     const old = new Map(baselineEntries(baseline).map(page => [key(page),page]));
     const current = new Set(), groups = [];
@@ -75,7 +76,7 @@ async function audit({root,sourceRef,baseline = baselineDir,native}) {
             const mergedCurrent = page.status === 'current' && page.reviewStatus !== 'unverified' && page.useTarget
                     && refContent(root,commit,page.targetPath) !== null
                     && hash(refContent(root,commit,page.targetPath)) === page.targetHash
-                    && refContent(root,commit,'translations/state/ja/docs.json') !== null;
+                && committedRecords.get(key(page))?.targetHash === page.targetHash;
             const state = disposition !== 'translate' ? disposition : page.status === 'current'
                 ? mergedCurrent ? 'current' : 'unverified' : page.status;
             entries.push({pluginId:page.pluginId,version:page.version,docId:page.docId,sourcePath:page.sourcePath,
@@ -103,6 +104,10 @@ async function audit({root,sourceRef,baseline = baselineDir,native}) {
     const routingInputs = ['docusaurus.config.js','versions.json','sidebars.ts','sidebarsCommunity.json','versioned_sidebars/version-4.x-sidebars.json',
         'translations/config.json','translations/scope/ja.json'];
     routingInputs.push('translations/state/ja/docs.json', 'translations/state/ja/resolved-deletions.json');
+    if (refContent(root, commit, 'translations/state/ja/shards.schema.json') !== null)
+        routingInputs.push('translations/state/ja/shards.schema.json');
+    routingInputs.push(...execFileSync('git', ['ls-tree', '-r', '--name-only', commit, '--', 'translations/state/ja/pages'],
+        {cwd:root,encoding:'utf8'}).split('\n').filter(Boolean));
     for (const file of routingInputs) assert.equal(refContent(root,commit,file),fs.readFileSync(path.join(root,file),'utf8'),
         `Routing input differs from source ref: ${file}`);
     return {schemaVersion:1,sourceCommit:commit,baselineCommit:JSON.parse(fs.readFileSync(path.join(baseline,'summary.json'),'utf8')).sourceCommit,

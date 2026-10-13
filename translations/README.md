@@ -12,8 +12,13 @@ English docs plugin. A Chinese-only file is reported as
 
 ## State schema, version 1
 
-`state/ja/docs.json` stores a `schemaVersion` and a `pages` array. Each record
-contains these fields:
+`state/ja/docs.json` is the legacy shared ledger. New Japanese records can live
+in independent files at `state/ja/pages/<pluginId>/<version>/<docId>.json`.
+Each file contains `{"schemaVersion":1,"page":<record>}`. The loader combines
+both locations; a page file supersedes a legacy entry with the same identity.
+The path must match the record's native identity, so independent translation PRs
+modify distinct state files. `state/ja/shards.schema.json` marks the repository
+as ready for page files. Each record contains these fields:
 
 | Field | Meaning |
 | --- | --- |
@@ -181,7 +186,7 @@ links, sidebars and redirects, record the completed task in
 `state/ja/resolved-deletions.json` with its ID, source hash, source path,
 `reviewedBy`, ISO `resolvedAt` and PR `evidence`. This separate schema 1 ledger
 prevents the fixed T03 baseline from reopening an already reviewed deletion.
-The live docs adapter continues to read `state/ja/docs.json` unchanged. A
+The live docs adapter reads the combined legacy and page-file state. A
 reintroduced page returns to normal native enumeration.
 
 ## Manual Japanese translation candidates

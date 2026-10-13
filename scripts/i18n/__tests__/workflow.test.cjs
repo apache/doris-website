@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {hash} = require('../state.cjs');
+const {hash, stateFileFor} = require('../state.cjs');
 const {reconcileOpenPrs} = require('../workflow-prs.cjs');
 const {relevantPush, replaceableBotPr} = require('../workflow-scan.cjs');
 const {pairFor, machineOwned, generate, allowGeneration} = require('../workflow-generate.cjs');
@@ -31,6 +31,18 @@ test('all open PRs are inspected by files, including unnamed human PRs', async (
     assert.deepEqual(result.relevantPrs, [11]);
     assert.equal(result.active.candidates[0].pr, '#11');
     assert.equal(result.blockedTargets.length, 0);
+});
+
+test('an open PR can register its target with a page shard instead of docs.json', async () => {
+    const shardPath = stateFileFor(record);
+    const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website', pulls: [pull(13)],
+        filesFor: async () => [{filename: record.targetPath}, {filename: shardPath}],
+        readHead: async (_item, file) => file === shardPath
+            ? JSON.stringify({schemaVersion: 1, page: record})
+            : file.endsWith('docs.json') ? JSON.stringify({schemaVersion: 1, pages: []}) : japanese});
+    assert.deepEqual(result.relevantPrs, [13]);
+    assert.equal(result.active.candidates[0].pr, '#13');
+    assert.deepEqual(result.blockedTargets, []);
 });
 
 test('edited or unparseable PR candidate blocks its target without claiming coverage', async () => {
