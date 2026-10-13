@@ -140,12 +140,25 @@ async function generate({plan, reconciliation, maxPages = 4, tokenBudget = 20000
     return manifest;
 }
 
+function allowGeneration(env) {
+    if (env.I18N_VALIDATION_RUN === 'true') {
+        return env.GITHUB_EVENT_NAME === 'workflow_dispatch'
+            && /\.mdx?$/.test(env.I18N_PATH || '') && env.I18N_MAX_PAGES === '1'
+            && Number.isInteger(Number(env.I18N_TOKEN_BUDGET))
+            && Number(env.I18N_TOKEN_BUDGET) > 0 && Number(env.I18N_TOKEN_BUDGET) <= 10000;
+    }
+    return env.I18N_AUTO_TRANSLATE_ENABLED === 'true' && env.I18N_LIVE_VERIFIED === 'true';
+}
+
 async function main() {
     const output = process.argv[2];
     assert(output && process.argv.length === 3, 'Usage: workflow-generate.cjs <scan-directory>');
-    assert(process.env.I18N_AUTO_TRANSLATE_ENABLED === 'true'
-        && process.env.I18N_LIVE_VERIFIED === 'true', 'Live automation is not enabled and verified');
+    assert(allowGeneration(process.env), 'Live automation is not enabled or limited validation was not requested');
     const plan = JSON.parse(fs.readFileSync(path.join(output, 'plan.json'), 'utf8'));
+    if (process.env.I18N_VALIDATION_RUN === 'true') {
+        assert(plan.selected.length === 1 && plan.tasks.find(task => task.id === plan.selected[0])?.sourcePath === process.env.I18N_PATH,
+            'Validation mode must select exactly one source file');
+    }
     const reconciliation = JSON.parse(fs.readFileSync(path.join(output, 'open-pr-reconciliation.json'), 'utf8'));
     const glossary = JSON.parse(fs.readFileSync(path.join(root, 'translations/glossary/ja.json'), 'utf8'));
     const tokenBudget = Number(process.env.I18N_TOKEN_BUDGET || '20000');
@@ -163,4 +176,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(error => {console.error(error.message); process.exitCode = 1;});
-module.exports = {pairFor, machineOwned, copyPair, bodyFor, generate};
+module.exports = {pairFor, machineOwned, copyPair, bodyFor, generate, allowGeneration};

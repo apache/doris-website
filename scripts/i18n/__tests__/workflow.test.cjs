@@ -7,7 +7,7 @@ const {execFileSync} = require('node:child_process');
 const {hash} = require('../state.cjs');
 const {reconcileOpenPrs} = require('../workflow-prs.cjs');
 const {relevantPush, replaceableBotPr} = require('../workflow-scan.cjs');
-const {pairFor, machineOwned, generate} = require('../workflow-generate.cjs');
+const {pairFor, machineOwned, generate, allowGeneration} = require('../workflow-generate.cjs');
 const {expectedFiles} = require('../workflow-publish.cjs');
 
 const scope = {schemaVersion: 1, locale: 'ja', maxBatchPages: 20, groups: [
@@ -79,6 +79,17 @@ test('human maintained pages are excluded from automatic generation', () => {
     const task = {pluginId: 'default', version: 'current', docId: 'guide', locale: 'ja'};
     assert.equal(machineOwned(task, {data: {pages: []}}), true);
     assert.equal(machineOwned(task, {data: {pages: [{...task, ownership: 'human'}]}}), false);
+});
+
+test('one-page validation can bootstrap without enabling ongoing automation', () => {
+    const request = {I18N_VALIDATION_RUN: 'true', GITHUB_EVENT_NAME: 'workflow_dispatch',
+        I18N_PATH: 'docs/guide.md', I18N_MAX_PAGES: '1', I18N_TOKEN_BUDGET: '10000'};
+    assert.equal(allowGeneration(request), true);
+    assert.equal(allowGeneration({...request, I18N_MAX_PAGES: '4'}), false);
+    assert.equal(allowGeneration({...request, GITHUB_EVENT_NAME: 'push'}), false);
+    assert.equal(allowGeneration({...request, I18N_PATH: ''}), false);
+    assert.equal(allowGeneration({I18N_AUTO_TRANSLATE_ENABLED: 'true'}), false);
+    assert.equal(allowGeneration({I18N_AUTO_TRANSLATE_ENABLED: 'true', I18N_LIVE_VERIFIED: 'true'}), true);
 });
 
 test('push eligibility follows current native identities and relevant rules', () => {

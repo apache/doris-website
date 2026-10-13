@@ -87,7 +87,13 @@ function main() {
     const mode = process.env.I18N_MODE || 'dry-run';
     const changed = event === 'push' ? changedPaths(process.env.GITHUB_EVENT_BEFORE, plan.sourceCommit) : [];
     const scope = JSON.parse(fs.readFileSync(path.join(root, 'translations/scope/ja.json'), 'utf8'));
-    const eligible = event === 'schedule' || event === 'workflow_dispatch' && mode === 'generate'
+    if (event === 'workflow_dispatch' && mode === 'validate') {
+        assert(/\.mdx?$/.test(process.env.I18N_PATH || ''),
+            'Validation mode needs an exact English .md or .mdx source path');
+        assert(plan.selected.length === 1 && plan.tasks.find(task => task.id === plan.selected[0])?.sourcePath === process.env.I18N_PATH,
+            'Validation mode must select exactly one eligible source file');
+    }
+    const eligible = event === 'schedule' || event === 'workflow_dispatch' && ['generate', 'validate'].includes(mode)
         || event === 'push' && changed !== null && relevantPush(changed, audit, scope);
     const summary = summarize(plan, reconciliation, eligible, mode);
     if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);

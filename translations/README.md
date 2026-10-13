@@ -264,20 +264,24 @@ candidate cannot be verified blocks that target from robot generation and
 appears in the exception report.
 
 Manual dispatch defaults to `dry-run` and accepts optional plugin, version and
-source path filters. Pushes are checked against the current registered source
+source path filters. `validate` mode requires one exact English source path
+ending in `.md` or `.mdx`; it can call the model and create a draft PR for one
+page with a 10,000-token configured budget while ongoing automation remains
+disabled. It is the first live acceptance path after model and App credentials
+are installed. Pushes are checked against the current registered source
 identities before any generation. The daily full scan recovers missed or
 cancelled pushes. Japanese target or state-only commits do not trigger the
 push listener. The workflow does not participate in website builds or release
 deployment.
 
-Generation stays off unless both repository variables
+Ongoing generation stays off unless both repository variables
 `I18N_AUTO_TRANSLATE_ENABLED=true` and `I18N_LIVE_VERIFIED=true` are set. It
 also needs `I18N_MODEL`, `I18N_OPENAI_API_KEY`, `I18N_GITHUB_APP_ID` and
 `I18N_GITHUB_APP_PRIVATE_KEY`. The App must be installed on
 `apache/doris-website` with repository Contents and Pull requests write
-permissions. The enablement variables should be set only after a small live
-model call has been reviewed and a draft PR created with the App has shown
-that the normal required checks run. Missing configuration leaves discovery
+permissions. The enablement variables should be set only after the one-page
+`validate` run has been reviewed and its App-created draft PR has shown that
+the normal required checks run. Missing configuration leaves discovery
 available and prevents model calls and GitHub writes.
 
 When enabled, one run processes at most four pages with a configured

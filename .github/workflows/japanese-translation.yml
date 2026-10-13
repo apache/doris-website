@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: Read-only dry run or a gated small translation batch
+        description: Read-only dry run, one-page live validation, or enabled batch
         type: choice
-        options: [dry-run, generate]
+        options: [dry-run, validate, generate]
         default: dry-run
         required: true
       plugin:
@@ -50,6 +50,7 @@ jobs:
   discover:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     outputs:
       can_generate: ${{ steps.scan.outputs.can_generate }}
       source_commit: ${{ steps.scan.outputs.source_commit }}
@@ -77,7 +78,7 @@ jobs:
           I18N_VERSION: ${{ inputs.version }}
           I18N_PATH: ${{ inputs.path }}
           I18N_LIMIT: '20'
-          I18N_TOKEN_BUDGET: '20000'
+          I18N_TOKEN_BUDGET: ${{ inputs.mode == 'validate' && '10000' || '20000' }}
           DORIS_ENABLE_JA: 'true'
         run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/japanese-translation"
       - uses: actions/upload-artifact@v4
@@ -90,8 +91,9 @@ jobs:
 
   generate:
     needs: discover
-    if: needs.discover.outputs.can_generate == 'true' && vars.I18N_AUTO_TRANSLATE_ENABLED == 'true' && vars.I18N_LIVE_VERIFIED == 'true'
+    if: needs.discover.outputs.can_generate == 'true' && ((github.event_name == 'workflow_dispatch' && inputs.mode == 'validate') || (vars.I18N_AUTO_TRANSLATE_ENABLED == 'true' && vars.I18N_LIVE_VERIFIED == 'true'))
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -137,7 +139,7 @@ jobs:
           I18N_VERSION: ${{ inputs.version }}
           I18N_PATH: ${{ inputs.path }}
           I18N_LIMIT: '20'
-          I18N_TOKEN_BUDGET: '20000'
+          I18N_TOKEN_BUDGET: ${{ inputs.mode == 'validate' && '10000' || '20000' }}
           DORIS_ENABLE_JA: 'true'
         run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/japanese-translation"
       - name: Generate a bounded, validated batch
@@ -148,8 +150,10 @@ jobs:
           I18N_MODEL: ${{ vars.I18N_MODEL }}
           I18N_AUTO_TRANSLATE_ENABLED: ${{ vars.I18N_AUTO_TRANSLATE_ENABLED }}
           I18N_LIVE_VERIFIED: ${{ vars.I18N_LIVE_VERIFIED }}
-          I18N_MAX_PAGES: '4'
-          I18N_TOKEN_BUDGET: '20000'
+          I18N_VALIDATION_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'validate' }}
+          I18N_PATH: ${{ inputs.path }}
+          I18N_MAX_PAGES: ${{ inputs.mode == 'validate' && '1' || '4' }}
+          I18N_TOKEN_BUDGET: ${{ inputs.mode == 'validate' && '10000' || '20000' }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: node scripts/i18n/workflow-generate.cjs "$RUNNER_TEMP/japanese-translation"
       - uses: actions/create-github-app-token@v2
