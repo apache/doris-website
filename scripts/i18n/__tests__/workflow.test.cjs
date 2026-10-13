@@ -45,6 +45,28 @@ test('an open PR can register its target with a page shard instead of docs.json'
     assert.deepEqual(result.relevantPrs, [13]);
     assert.equal(result.active.candidates[0].pr, '#13');
     assert.deepEqual(result.blockedTargets, []);
+});
+
+test('state changes are compared with the PR merge base, not current master', async () => {
+    const previous = {...record, docId: 'previous', sourcePath: 'docs/previous.md',
+        targetPath: 'i18n/ja/docusaurus-plugin-content-docs/current/previous.md'};
+    let baseReads = 0;
+    const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website',
+        pulls: [pull(13)],
+        filesFor: async () => [{filename: record.targetPath}, {filename: 'translations/state/ja/docs.json'}],
+        readHead: async (_item, file) => file.endsWith('docs.json')
+            ? JSON.stringify({schemaVersion: 1, pages: [previous, record]}) : japanese,
+        readBase: async () => {
+            baseReads++;
+            return JSON.stringify({schemaVersion: 1, pages: [previous]});
+        }});
+    assert.equal(baseReads, 1);
+    assert.deepEqual(result.relevantPrs, [13]);
+    assert.deepEqual(result.active.candidates.map(candidate => candidate.docId), ['guide']);
+    assert.deepEqual(result.blockedTargets, []);
+    assert.deepEqual(result.exceptions, []);
+});
+
 test('edited or unparseable PR candidate blocks its target without claiming coverage', async () => {
     const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website', pulls: [pull(12)],
         filesFor: async () => [{filename: record.targetPath}],
