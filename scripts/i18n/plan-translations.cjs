@@ -95,7 +95,8 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     const candidates = validateActive(active, scope);
     const resolvedDeletions = validateResolved(resolved);
     const activeByKey = new Map(candidates.map(candidate => [key(candidate), candidate]));
-    const old = new Map(baseline.filter(page => managed(scope, page)).map(page => [key(page), page]));
+    const baselineByKey = new Map(baseline.filter(page => managed(scope, page)).map(page => [key(page), page]));
+    const old = new Map(baselineByKey);
     for (const record of records.values()) if (managed(scope, record)) old.set(key(record), {...old.get(key(record)), ...record});
     const pages = report.groups.filter(group => managed(scope, group)).flatMap(group =>
         group.entries.filter(page => page.state !== 'draft' && page.state !== 'retain_english')
@@ -113,7 +114,7 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
         const previous = old.get(key(page));
         const group = managed(scope, page);
         const chinese = chinesePath(group, page);
-        if (chinese && changedChinese.has(chinese) && previous?.sourceHash === page.sourceHash) {
+        if (chinese && changedChinese.has(chinese) && baselineByKey.get(key(page))?.sourceHash === page.sourceHash) {
             exceptions.push({kind: 'zh_only_change', groupId: page.groupId, docId: page.docId,
                 sourcePath: page.sourcePath, chinesePath: chinese,
                 reason: 'English source is unchanged since the inventory baseline; check terminology and behavior consistency.'});

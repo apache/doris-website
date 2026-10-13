@@ -145,6 +145,9 @@ test('Chinese-only counterpart edits are reported without creating Japanese work
     assert.equal(result.exceptions.find(item => item.kind === 'zh_only_change').chinesePath, chinese);
     const changedEnglish = await run([current], {old: [{...before, sourceHash: hash('older')}], chineseChangedPaths: [chinese]});
     assert.equal(changedEnglish.exceptions.some(item => item.kind === 'zh_only_change'), false);
+    const translatedAfterEnglishEdit = await run([current], {old: [{...before, sourceHash: hash('older')}],
+        records: [{...before, sourceHash: current.sourceHash}], chineseChangedPaths: [chinese]});
+    assert.equal(translatedAfterEnglishEdit.exceptions.some(item => item.kind === 'zh_only_change'), false);
 });
 
 test('limit, token budget and path filter apply after full counts without renumbering', async () => {
