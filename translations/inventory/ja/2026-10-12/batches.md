@@ -21,7 +21,7 @@ These initial IDs remain the audit baseline. Record PRs and proofreading in this
 
 ## T09-DEV-001
 
-Status: TODO. PR: none. Japanese proofreading: pending.
+Status: IN_PROGRESS. Sub-batch `T09-DEV-001a`: [draft PR #4213](https://github.com/apache/doris-website/pull/4213) covers `getting-started/quick-start` only (1 candidate, 0 merged). Japanese proofreading: pending; its state is machine-reviewed. The other 19 assigned pages remain TODO. This split keeps the first 269-line MDX guide independently reviewable; it does not close or renumber T09-DEV-001.
 
 Dependencies: T03 and T04. Pages: 20. Remaining in DEV after this batch: 1617.
 

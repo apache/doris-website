@@ -1,0 +1,269 @@
+---
+{
+    "title": "5 分で始める Apache Doris",
+    "language": "ja",
+    "sidebar_label": "Apache Doris クイックスタート",
+    "description": "Docker またはバイナリで Apache Doris をローカル環境にデプロイし、クラスターを起動して最初の SQL クエリを実行する手順。"
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+**このチュートリアルでは、次の操作を行います。**
+
+- Docker を使って 5 分以内に Doris クラスターを起動する
+- MySQL クライアントでクラスターに接続し、ノードの状態を確認する
+- データベースとテーブルを作成し、最初のクエリを実行する
+
+:::tip デプロイ方法の選択
+
+- **すぐに試したい場合：** Docker を使えば 5 分で起動できます。
+- **本番環境の構成を理解したい場合：** FE と BE を個別に設定するローカル環境へのフルデプロイを参照してください。
+
+:::
+
+## Docker でクイックデプロイ
+
+最新バージョンでは、Docker を使って簡単にデプロイできます。
+
+### 手順 1 (1/2)：クラスターの起動
+
+次のコマンドは起動スクリプトをダウンロードして、そのままクラスターを起動します。バージョンを指定しない場合、デフォルトで最新リリース（`doris-latest`）をダウンロードします。
+
+```shell
+curl -fsSL https://doris.apache.org/files/start-doris.sh | bash
+```
+
+バージョンを指定するには、`-v` オプションを使用します。
+
+```shell
+curl -fsSL https://doris.apache.org/files/start-doris.sh | bash -s -- -v 4.1.0
+```
+
+### 手順 2 (2/2)：クラスターの状態確認
+
+MySQL クライアントでクラスターに接続し、FE と BE の状態を確認します。
+
+```sql
+-- Purpose: verify that the FE node has joined the cluster
+-- Expected: both Join and Alive columns are true
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
+```
+
+```sql
+-- Purpose: verify that the BE node is heartbeating normally
+-- Expected: the Alive column is 1
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
+```
+
+**出力の見方：** FE の `Alive=true`、または BE の `Alive=1` は、そのノードが正常に稼働していることを示します。
+
+---
+
+## ローカル環境へのフルデプロイ
+
+:::info 環境要件
+
+- **オペレーティングシステム：** Ubuntu などの一般的な AMD/ARM Linux 環境
+- **Java 環境：** JDK 17 以降
+- **ユーザー権限：** 専用の Doris ユーザーを作成し、root は使用しない
+
+:::
+
+### 手順 1 (1/4)：バイナリパッケージのダウンロード
+
+Apache Doris の[ダウンロードページ](https://doris.apache.org/download)からシステムに合ったバイナリパッケージを取得し、任意のディレクトリに展開します。
+
+### 手順 2 (2/4)：システム環境の設定
+
+**開けるファイル数の上限を増やす：** ファイルを開きすぎた場合のエラーを防ぎます。
+
+```bash
+vi /etc/security/limits.conf
+* soft nofile 1000000
+* hard nofile 1000000
+```
+
+**仮想メモリー領域数の上限を増やす：**
+
+```bash
+cat >> /etc/sysctl.conf << EOF
+vm.max_map_count = 2000000
+EOF
+sysctl -p
+```
+
+### 手順 3 (3/4)：FE のデプロイ
+
+1. **FE を設定する：** `apache-doris/fe/conf/fe.conf` を編集します。
+
+   ```properties
+   # Specify the Java environment
+   JAVA_HOME=/home/doris/jdk
+
+   # Specify the FE listening IP (adjust based on the actual network segment)
+   priority_networks=127.0.0.1/32
+   ```
+
+2. **FE を起動する：**
+
+   ```bash
+   apache-doris/fe/bin/start_fe.sh --daemon
+   ```
+
+3. **FE の状態を確認する：**
+
+   ```sql
+   -- Purpose: confirm that the FE has started and joined the cluster
+   -- Expected: Join=true, Alive=true, IsMaster=true
+   mysql -uroot -P9030 -h127.0.0.1 -e "show frontends;"
+   ```
+
+### 手順 4 (4/4)：BE のデプロイ
+
+1. **BE を設定する：** `apache-doris/be/conf/be.conf` を編集します。
+
+   ```properties
+   # Specify the BE listening IP (must be in the same network segment as the FE's priority_networks)
+   priority_networks=127.0.0.1/32
+   ```
+
+2. **BE を起動する：**
+
+   ```bash
+   apache-doris/be/bin/start_be.sh --daemon
+   ```
+
+3. **BE をクラスターに登録する：**
+
+   ```sql
+   -- Purpose: add the BE node to the cluster
+   ALTER SYSTEM ADD BACKEND "127.0.0.1:9050";
+   ```
+
+4. **BE の状態を確認する：**
+
+   ```sql
+   -- Purpose: confirm that the BE is registered and heartbeating normally
+   -- Expected: Alive=true
+   mysql -uroot -P9030 -h127.0.0.1 -e "show backends;"
+   ```
+
+---
+
+## 最初のクエリを実行する
+
+Docker とローカル環境のどちらでデプロイした場合も、クラスターの起動後に以下の手順で Doris の SQL 機能を試せます。
+
+### クラスターに接続する
+
+```sql
+mysql -uroot -P9030 -h127.0.0.1
+```
+
+### データベースとテーブルを作成する
+
+```sql
+-- Purpose: create a demo database and table
+create database demo;
+use demo;
+
+create table mytable
+(
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT "10.05",
+    k3 CHAR(10) COMMENT "string column",
+    k4 INT NOT NULL DEFAULT "1" COMMENT "int column"
+)
+COMMENT "my first table"
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+```
+
+### テストデータを投入する
+
+```sql
+-- Purpose: insert a few rows of test data
+insert into mytable values
+(1, 0.14, 'a1', 20),
+(2, 1.04, 'b2', 21),
+(3, 3.14, 'c3', 22),
+(4, 4.35, 'd4', 23);
+```
+
+### クエリを実行する
+
+```sql
+-- Purpose: verify that the data was loaded successfully
+-- Expected: 4 rows are returned
+select * from demo.mytable;
+```
+
+**出力例：**
+
+```
++------+------+------+------+
+| k1   | k2   | k3   | k4   |
++------+------+------+------+
+|    1 | 0.14 | a1   |   20 |
+|    2 | 1.04 | b2   |   21 |
+|    3 | 3.14 | c3   |   22 |
+|    4 | 4.35 | d4   |   23 |
++------+------+------+------+
+```
+
+---
+
+## よくある質問
+
+### Q：Docker によるデプロイは本番環境に適していますか？
+
+いいえ。Docker によるデプロイはローカル開発とテスト専用です。コンテナーを破棄するとデータが失われます。本番環境では、ローカル環境へのフルデプロイか、複数ノードへのデプロイを使用してください。
+
+### Q：Mac に Docker をインストールするには？
+
+[Docker Desktop](https://www.docker.com/products/docker-desktop/) をダウンロードしてインストールします。
+
+### Q：Mac に Docker Desktop をインストールした後、「Docker environment not detected」と表示されたら？
+
+シンボリックリンクを作成します。
+
+```shell
+sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker /usr/local/bin/docker
+```
+
+### Q：Mac の Docker で「error getting credentials」と表示されたら？
+
+一時的な回避策として、`credsStore` フィールドを `~/.docker/config.json` から削除します。この場合、認証情報が平文で保存されるため、ローカル開発に限って使用してください。
+
+### Q：BE ノードを追加しても「Dead」と表示される場合は？
+
+BE の `priority_networks` が FE と同じネットワークセグメントを指しているか確認します。また、BE のポート（9050/9060/8040/8060）がファイアウォールでブロックされていないか確認します。
+
+### Q：WSL2 でローカル環境にデプロイすると、BE がクラスターに参加しないのはなぜですか？
+
+WSL2 のループバックはディストリビューションごとに分離されています。そのため、FE と BE は `127.0.0.1` を通じて通信できません。デフォルトの `priority_networks=127.0.0.1/32` では、WSL2 上で BE の登録やハートビートが失敗します。
+
+対処するには、`ip addr show eth0` で実際の WSL ネットワークセグメント（通常は `172.16.0.0/12` または `172.x.x.x/20`）を調べます。次に、`priority_networks` にそのセグメントを設定します。設定箇所は `fe/conf/fe.conf` と `be/conf/be.conf` の両方です。FE と BE を再起動してから `ALTER SYSTEM ADD BACKEND` を再実行します。
+
+### Q：クラスター全体が正常に稼働しているか確認するには？
+
+`SHOW FRONTENDS;` と `SHOW BACKENDS;` を実行し、すべてのノードで `Alive` 列が `true` であることを確認します。
+
+---
+
+## 次のステップ
+
+- [データモデリングガイド]：Doris のデータモデルとパーティショニング戦略を学びます（NEXT-TODO）
+- [SQL 操作入門]：データのロード、クエリ、更新を学びます（NEXT-TODO）
+- [クラスター管理]：本番環境向けのクラスター運用を学びます（NEXT-TODO）
+
+:::caution 警告（ローカル環境へのデプロイにのみ適用）
+
+以下の内容は**ローカル開発とテスト専用**です。**本番環境では使用しないでください**。
+
+1. **データ損失のリスク：** Docker でデプロイした場合、コンテナーを破棄するとデータが失われます。単一レプリカの構成ではデータの冗長性がありません。
+2. **単一レプリカの設定：** このページのテーブル作成例は、いずれも単一レプリカを使用します。本番環境では、データの信頼性を確保するために複数のレプリカを使用してください。
+
+:::
