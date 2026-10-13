@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "version": "1",
+  "keep": ["Apache Doris", "Doris", "SelectDB", "SQL", "FE", "BE", "DDL", "DML", "NULL", "JSON", "CSV", "HDFS", "S3", "JDBC", "MySQL", "PostgreSQL"],
+  "terms": [
+    {"source": "table", "target": "テーブル"},
+    {"source": "database", "target": "データベース"},
+    {"source": "load", "target": "データロード"},
+    {"source": "query", "target": "クエリ"},
+    {"source": "materialized view", "target": "マテリアライズドビュー", "required": true}
+  ]
+}
