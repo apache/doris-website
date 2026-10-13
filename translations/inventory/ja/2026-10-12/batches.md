@@ -757,7 +757,7 @@ source/target state recorded; version-specific build and Japanese proofreading r
 
 ## T09-DEV-024
 
-Status: TODO. PR: none. Japanese proofreading: pending.
+Status: IN_PROGRESS. Twenty Dev Japanese translation candidates are prepared from master `74a08a2d8a`; PR pending. Each target has an independent machine-review state record. Dev and 4.x source identities and content hashes match; 4.x targets remain for their own batch. Japanese proofreading is not recorded.
 
 Dependencies: T03 and T04. Pages: 20. Remaining in DEV after this batch: 1157.
 
