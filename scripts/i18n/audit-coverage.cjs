@@ -101,7 +101,7 @@ async function audit({root,sourceRef,baseline = baselineDir,native}) {
         .map(state => [state,sidebar.filter(entry => entry.state === state).length]));
     const routingInputs = ['docusaurus.config.js','versions.json','sidebars.ts','sidebarsCommunity.json','versioned_sidebars/version-4.x-sidebars.json',
         'translations/config.json','translations/scope/ja.json'];
-    routingInputs.push('translations/state/ja/docs.json');
+    routingInputs.push('translations/state/ja/docs.json', 'translations/state/ja/resolved-deletions.json');
     for (const file of routingInputs) assert.equal(refContent(root,commit,file),fs.readFileSync(path.join(root,file),'utf8'),
         `Routing input differs from source ref: ${file}`);
     return {schemaVersion:1,sourceCommit:commit,baselineCommit:JSON.parse(fs.readFileSync(path.join(baseline,'summary.json'),'utf8')).sourceCommit,

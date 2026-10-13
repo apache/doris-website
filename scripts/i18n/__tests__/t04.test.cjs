@@ -83,6 +83,7 @@ test('full audit finds documents and sidebar keys added after the T03 snapshot',
         write('translations/scope/ja.json',JSON.stringify({schemaVersion:1,locale:'ja',maxBatchPages:20,groups,retainEnglish:[]}));
         write('translations/config.json','{}');
         write('translations/state/ja/docs.json',JSON.stringify({schemaVersion:1,pages:[]}));
+        write('translations/state/ja/resolved-deletions.json',JSON.stringify({schemaVersion:1,deletions:[]}));
         for (const file of ['docusaurus.config.js','versions.json','sidebars.ts','sidebarsCommunity.json','versioned_sidebars/version-4.x-sidebars.json'])
             write(file,file+'\n');
         const pages = groups.map(group => {

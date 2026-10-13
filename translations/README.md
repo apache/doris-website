@@ -114,6 +114,72 @@ The candidate scope covers all formal Dev, 4.x and community documents. See
 [initial complete batch ledger](inventory/ja/2026-10-12/batches.md). Scope limits
 translation candidates, not the native website build or existing fallback routes.
 
+## Offline Japanese task planner
+
+The planner recounts the native Dev, 4.x and community pages at the checked-out
+commit. The 2026-10-12 inventory is only a comparison baseline. New registered
+pages enter the plan even when they have never appeared in that inventory.
+
+```bash
+node scripts/i18n/plan-translations.cjs --source-ref HEAD \
+  --limit 20 --token-budget 50000 --output /tmp/japanese-plan.json
+```
+
+The source ref must match the checked-out source, routing files, Japanese state
+and targets. The scanner fails on mismatches instead of counting a working-tree
+candidate as merged coverage. It needs no model credential, network or GitHub
+write permission. Without `--output`, JSON goes to stdout; a compact count goes
+to stderr. `--locale ja`, `--plugin default`, `--version current` and
+`--path docs/install/` filter visible tasks after the full recount. The limit
+cannot exceed `translations/scope/ja.json`'s `maxBatchPages` (20). The token
+budget uses an approximate source length of four characters per token, so a
+generation tool must check its actual model budget again.
+
+`counts` cover the full managed scope. `tasks` list pending work, while
+`selected` holds the next eligible task IDs within the page and token limits.
+Stable numeric IDs derive from the page identity, task kind and source hash;
+they do not renumber existing T09 batches. Updates, deletion and moves precede
+historical backlog. Formatting-only changes still require review of the exact
+new source hash. Target edits, invalid state, missing sources and unsupported
+routes are reported as protected tasks and never enter `selected`. Move tasks
+include old/new paths and a reference checklist; `reuseTarget` is true only
+when the old target's content hash matches its recorded hash. No plan changes
+translation state or declares a page translated.
+
+To avoid assigning work already in an open human or bot PR, pass a local JSON
+file with the reviewed PR candidates:
+
+```json
+{
+  "schemaVersion": 1,
+  "candidates": [
+    {
+      "pluginId": "default",
+      "version": "current",
+      "docId": "getting-started/what-is-apache-doris",
+      "locale": "ja",
+      "sourcePath": "docs/getting-started/what-is-apache-doris.md",
+      "sourceHash": "<64 lowercase hex digits>",
+      "pr": "#1234"
+    }
+  ]
+}
+```
+
+Use `--active-candidates /path/to/open-prs.json`. A matching source hash marks
+the task as active and removes it from `selected`, but does not add coverage.
+A source change makes the PR candidate stale and requeues the page. The planner
+does not query GitHub: a caller that wants complete PR deduplication must supply
+all active candidate PRs, including manually opened T09 PRs.
+
+After a deletion cleanup PR has removed or checked the Japanese target, state,
+links, sidebars and redirects, record the completed task in
+`state/ja/resolved-deletions.json` with its ID, source hash, source path,
+`reviewedBy`, ISO `resolvedAt` and PR `evidence`. This separate schema 1 ledger
+prevents the fixed T03 baseline from reopening an already reviewed deletion.
+The live docs adapter continues to read `state/ja/docs.json` unchanged. A
+reintroduced page returns to normal native enumeration.
+
 ## Validation
 
 ```bash
