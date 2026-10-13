@@ -97,6 +97,7 @@ jobs:
                   yarn key-features:generate
                   node --test scripts/i18n/__tests__/t04.test.cjs
                   node --test scripts/i18n/__tests__/planner.test.cjs
+                  node --test scripts/i18n/__tests__/translation-engine.test.cjs
 
                   # Dependencies are installed unconditionally above because the
                   # governance steps below need node_modules; only the site build

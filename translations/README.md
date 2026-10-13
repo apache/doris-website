@@ -184,6 +184,72 @@ prevents the fixed T03 baseline from reopening an already reviewed deletion.
 The live docs adapter continues to read `state/ja/docs.json` unchanged. A
 reintroduced page returns to normal native enumeration.
 
+## Manual Japanese translation candidates
+
+`scripts/i18n/translate-docs.cjs` consumes **selected** task IDs from a T06
+plan for the checked-out HEAD. It handles new and source-updated Dev, 4.x and
+community documents. Deletions, moves, formatting review, conflicting state and
+human-edited targets remain manual cleanup tasks. The website build never calls
+the model. The generator has no GitHub access and does not create a PR.
+
+The live provider is the [OpenAI Responses API](https://developers.openai.com/api/reference/resources/responses/methods/create)
+with [structured JSON output](https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses).
+Set `OPENAI_API_KEY` and an explicit `I18N_MODEL` model identifier in the shell.
+There is no fallback model. Each request has a 120-second timeout, a 30,000
+estimated input-token cap, a 6,000 output-token cap, one retry for transient
+transport/server failures, and a 50,000 actual-token batch cap by default.
+Limits are configurable with `--timeout-ms`, `--max-input-tokens`,
+`--max-output-tokens`, `--token-budget`, `--max-document-chars` and
+`--max-chunk-chars`. The character-to-token estimate is conservative routing,
+not a tokenizer; the returned API usage is checked against the batch cap.
+The tool processes one task at a time and at most 20 explicit IDs per invocation.
+
+```bash
+node scripts/i18n/plan-translations.cjs --source-ref HEAD \
+  --output /tmp/japanese-plan.json
+export OPENAI_API_KEY='<secret>'
+export I18N_MODEL='<explicit-model-id>'
+node scripts/i18n/translate-docs.cjs --plan /tmp/japanese-plan.json \
+  --task '<selected-task-id>' --stage-dir .i18n-build/translation-candidates
+```
+
+The first command produces a complete, read-only plan. The second produces
+`manifest.json` and candidate Markdown/MDX only under `.i18n-build/`.
+Review the candidate and manifest, then apply those **same bytes** without
+another model call:
+
+```bash
+node scripts/i18n/translate-docs.cjs \
+  --apply-staged .i18n-build/translation-candidates \
+  --plan /tmp/japanese-plan.json
+```
+
+The apply step rechecks HEAD, source/target hashes, managed paths, code, links,
+numbers, MDX, headings and state identity. It refuses an existing target whose
+recorded hash changed. Live generation also requires at least one changed text
+unit containing Japanese characters. A failure leaves managed targets and state untouched;
+successful output has `reviewStatus: machine` and must be reviewed in a normal
+translation PR. Do not mark it `human` without actual Japanese proofreading.
+Translation candidates are not counted as merged coverage until that PR merges.
+
+The tool sends the full source document as context for each bounded group of
+translatable text units. It extracts visible Markdown text, simple front matter
+scalars and keyword lists, image alt text and allowlisted MDX/HTML attributes.
+SQL, code, inline code, link targets, import/expressions, routes and other
+technical content are reconstructed from the source, never accepted from model
+output. Number and explicit-anchor placeholders must survive unchanged. Long
+documents are grouped around section boundaries; unchanged units may be reused
+from a target only when its recorded hash and historical source hash still match.
+Complex unsupported front matter or an overlong unit fails safely for manual
+handling. The [Japanese glossary](glossary/ja.json) has a version stored in each
+new state record; product names in text units are checked after generation.
+
+For offline tests, `--provider mock --mock-file <json>` maps each masked unit
+text to a replacement string and stages a fixture candidate. Mock output cannot
+be applied to managed translation files. The offline fixture does not establish
+live model quality, latency, cost or availability. A real limited call and
+review are required before T08 enables automatic generation.
+
 ## Validation
 
 ```bash
