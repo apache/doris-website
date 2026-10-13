@@ -250,6 +250,76 @@ be applied to managed translation files. The offline fixture does not establish
 live model quality, latency, cost or availability. A real limited call and
 review are required before T08 enables automatic generation.
 
+## Asynchronous Japanese discovery and generation
+
+`.github/workflows/japanese-translation.yml` runs a read-only scan after
+relevant master source pushes, each day, and on manual dispatch. It recounts
+the current native Dev, 4.x and community documents, reads every open master
+PR's changed files, and checks Japanese target files against that PR's state
+records. Each run uploads `plan.json`, `coverage.json`,
+`active-candidates.json` and `open-pr-reconciliation.json` and writes a short
+job summary. Open PR candidates stay pending until merged. A changed source
+hash makes an older PR candidate stale and queues the page again. A PR whose
+candidate cannot be verified blocks that target from robot generation and
+appears in the exception report.
+
+Manual dispatch defaults to `dry-run` and accepts optional plugin, version and
+source path filters. `validate` mode requires one exact English source path
+ending in `.md` or `.mdx`; it can call the model and create a draft PR for one
+page with a 30,000-token Codex usage budget while ongoing automation remains
+disabled. It is the first live acceptance path after OSS model access is
+available. With OSS access but no GitHub write credential, `validate` still
+writes the candidate to the generation artifact and makes no GitHub write.
+Pushes are checked against the current registered source
+identities before any generation. The daily full scan recovers missed or
+cancelled pushes. Japanese target or state-only commits do not trigger the
+push listener. The workflow does not participate in website builds or release
+deployment.
+
+Ongoing generation stays off unless both repository variables
+`I18N_AUTO_TRANSLATE_ENABLED=true` and `I18N_LIVE_VERIFIED=true` are set. The
+workflow uses the same verified Codex CLI package and numbered ChatGPT auth
+snapshots in OSS as the Apache Doris code-review runner. The repository's
+`OSS_AK` and `OSS_SK` secrets must be able to read those objects and update the
+selected auth snapshot if Codex refreshes it. `I18N_CODEX_MODEL` is optional
+and defaults to `gpt-6-sol`. A direct OpenAI API key is not used by this
+workflow; the separate T07 manual tool still supports the Responses API.
+To open a draft PR, configure one GitHub write identity. The preferred App path
+uses `I18N_GITHUB_APP_ID` and `I18N_GITHUB_APP_PRIVATE_KEY`; install the App on
+`apache/doris-website` with repository Contents and Pull requests write
+permissions. If an App cannot be installed, a maintainer with repository write
+access can use a personal token in the `I18N_GITHUB_PAT` Actions secret. Grant
+a fine-grained token access to this repository with Contents and Pull requests
+write permissions, subject to organization token policy. A repository admin
+must store the secret. The resulting commits and PR use that person's identity.
+When both credentials are present, the App takes precedence. The workflow
+does not use `GITHUB_TOKEN` to create PRs because those PR checks can require
+manual approval. Set the enablement variables only after a one-page `validate`
+run and its App- or PAT-created draft PR have passed the required checks.
+Missing write credentials leave manual validation as an artifact-only run;
+missing OSS credentials leave discovery available without model calls.
+
+When enabled, one run processes at most two pages with a configured
+60,000-token Codex usage budget. The planner separately uses a 20,000-token
+estimate for source text selection. A local one-page, two-unit Codex probe
+reported 19,009 tokens, so CLI usage must not be estimated from document
+length alone. The Codex adapter constrains the final answer with a JSON
+schema, rejects tool calls, checks reported token usage and rejects an overage.
+It runs in an isolated temporary directory with read-only sandboxing and no
+GitHub or OSS credentials in the model process. Refreshed auth is uploaded
+only if its OSS source has not changed since download.
+The generator calls the model once for exact Dev/4.x pairs whose doc ID,
+relative source path and normalized source hash match. It writes two separate
+state records. Human-owned or changed targets, moves, deletions and other
+protected tasks stay in the manual queue. The robot opens a draft PR with
+machine review status and never merges it. It keeps one active robot batch PR;
+if its source becomes stale and its head still matches the robot's recorded
+commit, the next run closes that stale draft and opens a fresh batch. A human
+commit on the branch stops replacement and is reported for manual handling.
+The PR body lists the source commit, source links, source hashes, model,
+glossary version, failures and validation. The normal PR checks remain the
+merge gate.
+
 ## Validation
 
 ```bash

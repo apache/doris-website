@@ -209,7 +209,7 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
 }
 
 function argumentsFrom(argv) {
-    const options = {}, known = new Set(['--source-ref', '--output', '--active-candidates', '--locale', '--plugin',
+    const options = {}, known = new Set(['--source-ref', '--output', '--audit-output', '--active-candidates', '--locale', '--plugin',
         '--version', '--path', '--limit', '--token-budget']);
     for (let i = 0; i < argv.length; i += 2) {
         assert(known.has(argv[i]) && argv[i + 1] && !options[argv[i]], `Unknown or incomplete option: ${argv[i]}`);
@@ -225,6 +225,7 @@ async function main() {
     const config = loadConfig(root);
     assert(config.locales[scope.locale]?.sourceLocale === 'en', 'Planner requires an English primary source');
     const report = await audit({root, sourceRef: options['--source-ref'] ?? 'HEAD'});
+    if (options['--audit-output']) fs.writeFileSync(options['--audit-output'], JSON.stringify(report, null, 2) + '\n');
     const chineseRoots = ['i18n/zh-CN/docusaurus-plugin-content-docs', 'i18n/zh-CN/docusaurus-plugin-content-docs-community'];
     execFileSync('git', ['diff', '--quiet', report.sourceCommit, '--', ...chineseRoots], {cwd: root});
     const untrackedChinese = execFileSync('git', ['ls-files', '--others', '--exclude-standard', '--', ...chineseRoots],
