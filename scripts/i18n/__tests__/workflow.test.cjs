@@ -54,15 +54,30 @@ test('state changes are compared with the PR merge base, not current master', as
     const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website',
         pulls: [pull(13)],
         filesFor: async () => [{filename: record.targetPath}, {filename: 'translations/state/ja/docs.json'}],
-        readHead: async (_item, file) => file.endsWith('docs.json')
-            ? JSON.stringify({schemaVersion: 1, pages: [previous, record]}) : japanese,
-        readBase: async () => {
+        readHead: async (_item, file) => file.includes('/pages/') ? null
+            : file.endsWith('docs.json') ? JSON.stringify({schemaVersion: 1, pages: [previous, record]}) : japanese,
+        readBase: async (_item, file) => {
+            if (file.includes('/pages/')) return null;
             baseReads++;
             return JSON.stringify({schemaVersion: 1, pages: [previous]});
         }});
     assert.equal(baseReads, 1);
     assert.deepEqual(result.relevantPrs, [13]);
     assert.deepEqual(result.active.candidates.map(candidate => candidate.docId), ['guide']);
+    assert.deepEqual(result.blockedTargets, []);
+    assert.deepEqual(result.exceptions, []);
+});
+
+test('removing a legacy record already covered by a shard creates no candidate', async () => {
+    const shardPath = stateFileFor(record);
+    const shard = JSON.stringify({schemaVersion: 1, page: record});
+    const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website', pulls: [pull(14)],
+        filesFor: async () => [{filename: 'translations/state/ja/docs.json'}],
+        readHead: async (_item, file) => file === shardPath ? shard
+            : JSON.stringify({schemaVersion: 1, pages: []}),
+        readBase: async (_item, file) => file === shardPath ? shard
+            : JSON.stringify({schemaVersion: 1, pages: [record]})});
+    assert.deepEqual(result.active.candidates, []);
     assert.deepEqual(result.blockedTargets, []);
     assert.deepEqual(result.exceptions, []);
 });

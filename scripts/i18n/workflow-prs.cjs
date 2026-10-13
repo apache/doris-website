@@ -52,13 +52,20 @@ async function reconcileOpenPrs({scope, pulls, filesFor, readHead, readBase, rep
             const raw = await readHead(pull, statePath);
             const byIdentity = new Map(parseState(raw).map(page => [identity(page), page]));
             let base;
+            const shardFiles = new Set(shards);
             if (stateChanged) {
                 // Current master may contain translations merged after this PR branched.
                 assert(typeof readBase === 'function', 'PR merge-base reader is required');
                 base = new Map(parseState(await readBase(pull, statePath))
                     .map(page => [identity(page), page]));
+                if (files.some(file => file.filename === statePath)) {
+                    for (const page of [...byIdentity.values(), ...base.values()]) {
+                        if (JSON.stringify(byIdentity.get(identity(page))) !== JSON.stringify(base.get(identity(page))))
+                            shardFiles.add(stateFileFor(page));
+                    }
+                }
             }
-            for (const file of shards) {
+            for (const file of shardFiles) {
                 for (const [records, rawShard] of [[byIdentity, await readHead(pull, file)],
                     [base, await readBase(pull, file)]]) {
                     if (rawShard === null) continue; // Added or deleted shard.
@@ -66,7 +73,7 @@ async function reconcileOpenPrs({scope, pulls, filesFor, readHead, readBase, rep
                     assert(shard.schemaVersion === 1 && shard.page && stateFileFor(shard.page) === file,
                         `Invalid open PR state shard ${file}`);
                     records.set(identity(shard.page), shard.page);
-                    changed.add(shard.page.targetPath);
+                    if (shards.includes(file)) changed.add(shard.page.targetPath);
                 }
             }
             pages = [...byIdentity.values()];
