@@ -83,7 +83,7 @@ test('human maintained pages are excluded from automatic generation', () => {
 
 test('one-page validation can bootstrap without enabling ongoing automation', () => {
     const request = {I18N_VALIDATION_RUN: 'true', GITHUB_EVENT_NAME: 'workflow_dispatch',
-        I18N_PATH: 'docs/guide.md', I18N_MAX_PAGES: '1', I18N_TOKEN_BUDGET: '10000'};
+        I18N_PATH: 'docs/guide.md', I18N_MAX_PAGES: '1', I18N_TOKEN_BUDGET: '30000'};
     assert.equal(allowGeneration(request), true);
     assert.equal(allowGeneration({...request, I18N_MAX_PAGES: '4'}), false);
     assert.equal(allowGeneration({...request, GITHUB_EVENT_NAME: 'push'}), false);
@@ -104,9 +104,9 @@ test('push eligibility follows current native identities and relevant rules', ()
 
 test('publication allows only matching managed ja targets and state', () => {
     const candidate = {...record, id: 'T06-DEV-123', kind: 'translate_backlog'};
-    assert.deepEqual(expectedFiles({schemaVersion: 1, provider: 'openai', candidates: [candidate]}, scope),
+    assert.deepEqual(expectedFiles({schemaVersion: 1, provider: 'codex', candidates: [candidate]}, scope),
         [record.targetPath, 'translations/state/ja/docs.json']);
-    assert.throws(() => expectedFiles({schemaVersion: 1, provider: 'openai',
+    assert.throws(() => expectedFiles({schemaVersion: 1, provider: 'codex',
         candidates: [{...candidate, targetPath: 'docs/guide.md'}]}, scope), /target/);
 });
 
@@ -153,9 +153,12 @@ test('one model result creates separate Dev and 4.x targets and state records', 
             maxPages: 2, adapter, glossary: require('../../../translations/glossary/ja.json')});
         assert.equal(calls, 1);
         assert.equal(manifest.candidates.length, 2);
+        assert.equal(manifest.provider, 'codex');
         assert.equal(manifest.candidates[1].reusedFrom, dev.id);
         assert.equal(fs.readFileSync(path.join(dir, dev.targetPath), 'utf8'),
             fs.readFileSync(path.join(dir, x4.targetPath), 'utf8'));
+        assert.equal(fs.readFileSync(path.join(dir, 'output/candidates', dev.targetPath), 'utf8'),
+            fs.readFileSync(path.join(dir, dev.targetPath), 'utf8'));
         const state = JSON.parse(fs.readFileSync(path.join(dir, 'translations/state/ja/docs.json'), 'utf8'));
         assert.deepEqual(state.pages.map(page => page.version), ['4.x', 'current']);
         assert(state.pages.every(page => page.reviewStatus === 'machine' && page.sourceHash === hash(source)));

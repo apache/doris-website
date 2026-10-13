@@ -266,17 +266,25 @@ appears in the exception report.
 Manual dispatch defaults to `dry-run` and accepts optional plugin, version and
 source path filters. `validate` mode requires one exact English source path
 ending in `.md` or `.mdx`; it can call the model and create a draft PR for one
-page with a 10,000-token configured budget while ongoing automation remains
-disabled. It is the first live acceptance path after model and App credentials
-are installed. Pushes are checked against the current registered source
+page with a 30,000-token Codex usage budget while ongoing automation remains
+disabled. It is the first live acceptance path after OSS model access is
+available. With OSS access but no App credentials, `validate` still writes
+the candidate to the generation artifact for review and makes no GitHub write.
+Pushes are checked against the current registered source
 identities before any generation. The daily full scan recovers missed or
 cancelled pushes. Japanese target or state-only commits do not trigger the
 push listener. The workflow does not participate in website builds or release
 deployment.
 
 Ongoing generation stays off unless both repository variables
-`I18N_AUTO_TRANSLATE_ENABLED=true` and `I18N_LIVE_VERIFIED=true` are set. It
-also needs `I18N_MODEL`, `I18N_OPENAI_API_KEY`, `I18N_GITHUB_APP_ID` and
+`I18N_AUTO_TRANSLATE_ENABLED=true` and `I18N_LIVE_VERIFIED=true` are set. The
+workflow uses the same verified Codex CLI package and numbered ChatGPT auth
+snapshots in OSS as the Apache Doris code-review runner. The repository's
+`OSS_AK` and `OSS_SK` secrets must be able to read those objects and update the
+selected auth snapshot if Codex refreshes it. `I18N_CODEX_MODEL` is optional
+and defaults to `gpt-6-sol`. A direct OpenAI API key is not used by this
+workflow; the separate T07 manual tool still supports the Responses API.
+The workflow also needs `I18N_GITHUB_APP_ID` and
 `I18N_GITHUB_APP_PRIVATE_KEY`. The App must be installed on
 `apache/doris-website` with repository Contents and Pull requests write
 permissions. The enablement variables should be set only after the one-page
@@ -284,8 +292,15 @@ permissions. The enablement variables should be set only after the one-page
 the normal required checks run. Missing configuration leaves discovery
 available and prevents model calls and GitHub writes.
 
-When enabled, one run processes at most four pages with a configured
-20,000-token budget. The adapter rejects a response that exceeds that budget.
+When enabled, one run processes at most two pages with a configured
+60,000-token Codex usage budget. The planner separately uses a 20,000-token
+estimate for source text selection. A local one-page, two-unit Codex probe
+reported 19,009 tokens, so CLI usage must not be estimated from document
+length alone. The Codex adapter constrains the final answer with a JSON
+schema, rejects tool calls, checks reported token usage and rejects an overage.
+It runs in an isolated temporary directory with read-only sandboxing and no
+GitHub or OSS credentials in the model process. Refreshed auth is uploaded
+only if its OSS source has not changed since download.
 The generator calls the model once for exact Dev/4.x pairs whose doc ID,
 relative source path and normalized source hash match. It writes two separate
 state records. Human-owned or changed targets, moves, deletions and other

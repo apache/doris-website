@@ -5,7 +5,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
 const {hash, identity} = require('./state.cjs');
-const {checkedTask, managedPath, safeFile, openAIAdapter} = require('./translation-engine.cjs');
+const {checkedTask, managedPath, safeFile} = require('./translation-engine.cjs');
+const {codexAdapter} = require('./codex-adapter.cjs');
 const {prepare, applyCandidates, readState} = require('./translate-docs.cjs');
 const {replaceableBotPr} = require('./workflow-scan.cjs');
 
@@ -79,7 +80,7 @@ function bodyFor(manifest) {
         '', '<!-- japanese-translation-automation:v1 bot-head=PENDING -->', ''].join('\n');
 }
 
-async function generate({plan, reconciliation, maxPages = 4, tokenBudget = 20000,
+async function generate({plan, reconciliation, maxPages = 2, tokenBudget = 60000,
     adapter, glossary, rootDir = root, ensureFresh = ensureMasterFresh, output}) {
     assert(Number.isInteger(maxPages) && maxPages > 0 && maxPages <= 20, 'Invalid page limit');
     assert(plan.schemaVersion === 1 && plan.sourceCommit === execFileSync('git', ['rev-parse', 'HEAD'],
@@ -119,7 +120,7 @@ async function generate({plan, reconciliation, maxPages = 4, tokenBudget = 20000
             failures.push({id, sourcePath: task.sourcePath, error: error.message});
         }
     }
-    const manifest = {schemaVersion: 1, sourceCommit: plan.sourceCommit, provider: 'openai',
+    const manifest = {schemaVersion: 1, sourceCommit: plan.sourceCommit, provider: 'codex',
         model: adapter.model, glossaryVersion: glossary.version, liveCall: candidates.length > 0,
         liveVerified: false, usedTokens: adapter.usedTokens,
         replacesPr: replaces ? {number: replaces.number, headSha: replaces.headSha} : null,
@@ -134,6 +135,11 @@ async function generate({plan, reconciliation, maxPages = 4, tokenBudget = 20000
         ensureFresh(plan.sourceCommit);
         for (const item of candidates) checkedTask({...plan, selected: [...plan.selected, item.task.id]},
             item.task.id, scope, rootDir);
+        for (const item of candidates) {
+            const candidateFile = path.join(output, 'candidates', item.task.targetPath);
+            fs.mkdirSync(path.dirname(candidateFile), {recursive: true});
+            fs.writeFileSync(candidateFile, item.target);
+        }
         applyCandidates(state, candidates);
         fs.writeFileSync(path.join(output, 'pr-body.md'), bodyFor(manifest));
     }
@@ -145,7 +151,7 @@ function allowGeneration(env) {
         return env.GITHUB_EVENT_NAME === 'workflow_dispatch'
             && /\.mdx?$/.test(env.I18N_PATH || '') && env.I18N_MAX_PAGES === '1'
             && Number.isInteger(Number(env.I18N_TOKEN_BUDGET))
-            && Number(env.I18N_TOKEN_BUDGET) > 0 && Number(env.I18N_TOKEN_BUDGET) <= 10000;
+            && Number(env.I18N_TOKEN_BUDGET) > 0 && Number(env.I18N_TOKEN_BUDGET) <= 30000;
     }
     return env.I18N_AUTO_TRANSLATE_ENABLED === 'true' && env.I18N_LIVE_VERIFIED === 'true';
 }
@@ -161,10 +167,11 @@ async function main() {
     }
     const reconciliation = JSON.parse(fs.readFileSync(path.join(output, 'open-pr-reconciliation.json'), 'utf8'));
     const glossary = JSON.parse(fs.readFileSync(path.join(root, 'translations/glossary/ja.json'), 'utf8'));
-    const tokenBudget = Number(process.env.I18N_TOKEN_BUDGET || '20000');
-    const adapter = openAIAdapter({apiKey: process.env.OPENAI_API_KEY, model: process.env.I18N_MODEL,
-        tokenBudget});
-    const manifest = await generate({plan, reconciliation, maxPages: Number(process.env.I18N_MAX_PAGES || '4'),
+    const tokenBudget = Number(process.env.I18N_TOKEN_BUDGET || '60000');
+    assert(process.env.CODEX_BIN && fs.existsSync(process.env.CODEX_BIN), 'Pinned Codex runtime is required');
+    const adapter = codexAdapter({model: process.env.I18N_CODEX_MODEL || 'gpt-6-sol',
+        codexBin: process.env.CODEX_BIN, codexHome: process.env.CODEX_HOME, tokenBudget});
+    const manifest = await generate({plan, reconciliation, maxPages: Number(process.env.I18N_MAX_PAGES || '2'),
         tokenBudget, adapter, glossary, output});
     if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT,
         `created=${manifest.candidates.length > 0}\n`);

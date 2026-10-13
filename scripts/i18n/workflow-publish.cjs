@@ -11,7 +11,7 @@ const statePath = 'translations/state/ja/docs.json';
 const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8'}).trim();
 
 function expectedFiles(manifest, scope) {
-    assert(manifest.schemaVersion === 1 && manifest.provider === 'openai'
+    assert(manifest.schemaVersion === 1 && manifest.provider === 'codex'
         && manifest.candidates.length > 0 && manifest.candidates.length <= scope.maxBatchPages,
     'Invalid live candidate manifest');
     const files = manifest.candidates.map(candidate => {
