@@ -6,9 +6,9 @@ const {plan, formattingOnly, validateActive, validateResolved} = require('../pla
 const sha = 'a'.repeat(40);
 const baselineSha = 'b'.repeat(40);
 const scope = {schemaVersion: 1, locale: 'ja', maxBatchPages: 20, groups: [
-    {id: 'DEV', pluginId: 'default', version: 'current'},
-    {id: '4X', pluginId: 'default', version: '4.x'},
-    {id: 'COMMUNITY', pluginId: 'community', version: 'current'},
+    {id: 'DEV', pluginId: 'default', version: 'current', sourceRoot: 'docs'},
+    {id: '4X', pluginId: 'default', version: '4.x', sourceRoot: 'versioned_docs/version-4.x'},
+    {id: 'COMMUNITY', pluginId: 'community', version: 'current', sourceRoot: 'community'},
 ]};
 const source = '# Example\n\nHello.\n';
 function page(docId, options = {}) {
@@ -21,13 +21,14 @@ function page(docId, options = {}) {
         targetHash: options.targetHash ?? null, state: options.state ?? 'untranslated',
         reviewStatus: 'unverified', change: options.change ?? 'new'};
 }
-async function run(pages, {old = [], records = [], removed = [], active, files = {}, historical = {}, reports = [], limit = 20, tokenBudget = 50000} = {}) {
+async function run(pages, {old = [], records = [], removed = [], active, files = {}, historical = {}, reports = [],
+    chineseChangedPaths = [], limit = 20, tokenBudget = 50000} = {}) {
     const all = Object.fromEntries(pages.map(item => [item.sourcePath, source]));
     const report = {schemaVersion: 1, sourceCommit: sha, baselineCommit: baselineSha,
         groups: scope.groups.map(group => ({...group, entries: pages.filter(item => item.pluginId === group.pluginId && item.version === group.version),
             unregistered: []})), removed, reports};
     return plan({report, scope, records: new Map(records.map(item => [JSON.stringify([item.pluginId, item.version, item.docId, 'ja']), item])),
-        baseline: old, active, readCurrent: name => files[name] ?? all[name] ?? null,
+        baseline: old, active, chineseChangedPaths, readCurrent: name => files[name] ?? all[name] ?? null,
         readAt: (ref, name) => historical[`${ref}:${name}`] ?? null, limit, tokenBudget});
 }
 
@@ -133,6 +134,17 @@ test('Chinese-only routes are exceptions and never become translation tasks', as
         version: 'current', sourceLocale: 'zh-CN', sourcePath: 'i18n/zh-CN/only.md'}]});
     assert.equal(result.tasks.length, 0);
     assert.equal(result.exceptions.length, 1);
+});
+
+test('Chinese-only counterpart edits are reported without creating Japanese work', async () => {
+    const current = page('shared', {state: 'current'});
+    const before = {...current, disposition: 'translate'};
+    const chinese = 'i18n/zh-CN/docusaurus-plugin-content-docs/current/shared.md';
+    const result = await run([current], {old: [before], chineseChangedPaths: [chinese]});
+    assert.equal(result.tasks.length, 0);
+    assert.equal(result.exceptions.find(item => item.kind === 'zh_only_change').chinesePath, chinese);
+    const changedEnglish = await run([current], {old: [{...before, sourceHash: hash('older')}], chineseChangedPaths: [chinese]});
+    assert.equal(changedEnglish.exceptions.some(item => item.kind === 'zh_only_change'), false);
 });
 
 test('limit, token budget and path filter apply after full counts without renumbering', async () => {

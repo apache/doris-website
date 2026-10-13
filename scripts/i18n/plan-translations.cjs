@@ -24,6 +24,12 @@ const taskId = item => {
     return `T06-${item.groupId}-${number}`;
 };
 const estimate = source => Math.max(1, Math.ceil((source?.length ?? 0) / 4));
+const chinesePath = (group, page) => {
+    if (!group.sourceRoot || !page.sourcePath.startsWith(`${group.sourceRoot}/`)) return null;
+    const plugin = group.pluginId === 'default' ? '' : `-${group.pluginId}`;
+    const version = group.version === 'current' ? 'current' : `version-${group.version}`;
+    return `i18n/zh-CN/docusaurus-plugin-content-docs${plugin}/${version}/${page.sourcePath.slice(group.sourceRoot.length + 1)}`;
+};
 
 function validateActive(data, scope) {
     if (!data) return [];
@@ -79,7 +85,8 @@ function referenceChecks(oldPage, newPage) {
 }
 
 async function plan({report, scope, records, baseline = [], active, readCurrent, readAt,
-    resolved = {schemaVersion: 1, deletions: []}, limit = scope.maxBatchPages, tokenBudget = 50000, filters = {}}) {
+    resolved = {schemaVersion: 1, deletions: []}, chineseChangedPaths = [],
+    limit = scope.maxBatchPages, tokenBudget = 50000, filters = {}}) {
     assert(report.schemaVersion === 1 && /^[a-f0-9]{40}$/.test(report.sourceCommit), 'Invalid source audit');
     assert(scope.schemaVersion === 1 && scope.locale === 'ja' && Number.isInteger(scope.maxBatchPages), 'Invalid managed scope');
     assert(Number.isInteger(limit) && limit >= 0 && limit <= scope.maxBatchPages, 'Limit exceeds managed batch size');
@@ -101,9 +108,17 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     const tasks = [];
     const exceptions = report.groups.flatMap(group => group.unregistered.map(sourcePath => ({kind: 'unregistered_file',
         groupId: group.id, sourcePath}))).concat(report.reports.filter(item => managed(scope, item)));
+    const changedChinese = new Set(chineseChangedPaths);
     for (const page of pages) {
-        if (page.state === 'current') continue;
         const previous = old.get(key(page));
+        const group = managed(scope, page);
+        const chinese = chinesePath(group, page);
+        if (chinese && changedChinese.has(chinese) && previous?.sourceHash === page.sourceHash) {
+            exceptions.push({kind: 'zh_only_change', groupId: page.groupId, docId: page.docId,
+                sourcePath: page.sourcePath, chinesePath: chinese,
+                reason: 'English source is unchanged since the inventory baseline; check terminology and behavior consistency.'});
+        }
+        if (page.state === 'current') continue;
         const source = readCurrent(page.sourcePath);
         assert(source !== null && hash(source) === page.sourceHash, `Current source/hash mismatch: ${page.sourcePath}`);
         let moveFrom = previous?.sourcePath !== page.sourcePath ? previous : null;
@@ -209,6 +224,13 @@ async function main() {
     const config = loadConfig(root);
     assert(config.locales[scope.locale]?.sourceLocale === 'en', 'Planner requires an English primary source');
     const report = await audit({root, sourceRef: options['--source-ref'] ?? 'HEAD'});
+    const chineseRoots = ['i18n/zh-CN/docusaurus-plugin-content-docs', 'i18n/zh-CN/docusaurus-plugin-content-docs-community'];
+    execFileSync('git', ['diff', '--quiet', report.sourceCommit, '--', ...chineseRoots], {cwd: root});
+    const untrackedChinese = execFileSync('git', ['ls-files', '--others', '--exclude-standard', '--', ...chineseRoots],
+        {cwd: root, encoding: 'utf8'}).trim();
+    assert(!untrackedChinese, `Uncommitted Chinese counterpart: ${untrackedChinese}`);
+    const chineseChangedPaths = execFileSync('git', ['diff', '--name-only', report.baselineCommit, report.sourceCommit, '--', ...chineseRoots],
+        {cwd: root, encoding: 'utf8'}).trim().split('\n').filter(Boolean);
     const records = loadRecords(root, scope.locale);
     const active = options['--active-candidates'] ? JSON.parse(fs.readFileSync(options['--active-candidates'], 'utf8')) : null;
     const resolved = JSON.parse(fs.readFileSync(path.join(root, `translations/state/${scope.locale}/resolved-deletions.json`), 'utf8'));
@@ -223,7 +245,8 @@ async function main() {
             {cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 16 * 1024 * 1024}); }
         catch { return null; }
     };
-    const result = await plan({report, scope, records, baseline: baselineEntries(), active, resolved, readCurrent, readAt,
+    const result = await plan({report, scope, records, baseline: baselineEntries(), active, resolved,
+        chineseChangedPaths, readCurrent, readAt,
         limit: options['--limit'] === undefined ? scope.maxBatchPages : Number(options['--limit']),
         tokenBudget: options['--token-budget'] === undefined ? 50000 : Number(options['--token-budget']),
         filters: {locale: options['--locale'], plugin: options['--plugin'], version: options['--version'], path: options['--path']}});

@@ -172,6 +172,10 @@ A source change makes the PR candidate stale and requeues the page. The planner
 does not query GitHub: a caller that wants complete PR deduplication must supply
 all active candidate PRs, including manually opened T09 PRs.
 
+The plan also reports `zh_only_change` exceptions when a committed Chinese
+counterpart changed since the T03 baseline while its English fact source did
+not. These are consistency checks, never Japanese translation candidates.
+
 After a deletion cleanup PR has removed or checked the Japanese target, state,
 links, sidebars and redirects, record the completed task in
 `state/ja/resolved-deletions.json` with its ID, source hash, source path,
