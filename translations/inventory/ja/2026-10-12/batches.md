@@ -1877,7 +1877,7 @@ source/target state recorded; version-specific build and Japanese proofreading r
 
 ## T09-DEV-059
 
-Status: IN_PROGRESS. All 20 Dev Japanese targets prepared from master `3ddf1a2b41`; PR pending. Independent machine-review state records are present. Japanese proofreading is not recorded.
+Status: IN_PROGRESS. [PR #4225](https://github.com/apache/doris-website/pull/4225) proposes all 20 Dev Japanese targets from master `3ddf1a2b41`. Independent machine-review state records are present. Japanese proofreading is not recorded.
 
 Dependencies: T03 and T04. Pages: 20. Remaining in DEV after this batch: 457.
 
