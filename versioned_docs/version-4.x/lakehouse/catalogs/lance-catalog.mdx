@@ -721,6 +721,7 @@ FROM vector_search(
     "metric" = "l2",
     "nprobes" = "20",
     "refine_factor" = "10",
+    "prefilter" = "true",
     "filter" = "category = 'book'",
     "use_index" = "true"
 )
@@ -749,8 +750,9 @@ Do not use the unquoted form `lance_catalog.doris.analytics.items`; it parses as
 | `metric` | No | `l2` | Distance metric: `l2`, `cosine`, `dot`, or `hamming`. `dot_product` is an alias for `dot`. `uint8` vectors support only `hamming`; the other currently supported vector element types support `l2`, `cosine`, and `dot`. Set `metric` explicitly when querying a `cosine`, `dot`, or `hamming` index. Integer multi-vector columns and multi-vector `hamming` are unsupported. |
 | `distance_lower_bound` | No | Unbounded | Inclusive lower distance bound for single-vector search. Must be a finite `FLOAT`. |
 | `distance_upper_bound` | No | Unbounded | Exclusive upper distance bound for single-vector search. Must be a finite `FLOAT`. When both bounds are set, the lower bound must be smaller after conversion to `FLOAT`. |
-| `filter` | No | - | Lance SQL condition evaluated before vector candidates are generated; that is, a Prefilter. |
-| `nprobes` | No | Minimum `1`, with no maximum | Number of IVF index partitions to probe. It must be a positive integer. When unset, Lance starts with one partition and can probe additional partitions when a Prefilter leaves too few candidates. Setting it explicitly to `N` fixes both the minimum and maximum number of probes to `N`. |
+| `filter` | No | - | Lance SQL condition evaluated by Lance. Its execution timing is controlled by `prefilter`. |
+| `prefilter` | No | `false` | Controls when the TVF `filter` runs. `true` filters before vector candidates are generated; `false` (the default) filters after candidate generation, so the result can contain fewer than `top_k` rows. This parameter does not affect an outer Doris `WHERE`. |
+| `nprobes` | No | Minimum `1`, with no maximum | Number of IVF index partitions to probe. It must be a positive integer. When unset, Lance starts with one partition and can probe additional partitions when `prefilter=true` leaves too few candidates. Setting it explicitly to `N` fixes both the minimum and maximum number of probes to `N`. |
 | `refine_factor` | No | Single-vector: disabled; multi-vector: `1` | Candidate refinement multiplier. It must be a positive integer. For single-vector search, when unset, Lance does not recompute distances from the original vectors, so `_distance` from a quantized index may be approximate. When set to `N`, Lance first retrieves `(top_k + offset) × N` candidates, recomputes their exact distances from the original vectors, and reorders them. **Refinement reads the original vector data for these candidates. As `N` increases, more candidates are read and evaluated, which can significantly increase I/O and reduce query performance.** For single-vector search, setting it to `1` enables refinement and differs from leaving it unset. Multi-vector search always refines candidates against their original values, using a default factor of `1`. |
 | `ef` | No | `floor(1.5 × (top_k + offset))` | Candidate width retained during HNSW graph search. It must be a positive integer. If `refine_factor` is also set, the default is `floor(1.5 × (top_k + offset) × refine_factor)`. It has no effect on non-HNSW indexes. |
 | `use_index` | No | `true` | When `true`, Doris prefers a Lance vector index compatible with the vector column and distance metric, and automatically uses Flat Search if no usable index is available. When `false`, Doris disables vector indexes and performs Flat Search over the data. |
@@ -793,7 +795,7 @@ ORDER BY _distance;
 +---------+-----------+
 ```
 
-Removing the lower bound also returns row 1. Using only an upper bound of `0` returns no rows. `filter` continues to restrict candidates before vector search, and `offset` skips results after applying the distance range. The output schema is unchanged: table columns plus `_distance` of type `FLOAT`. `EXPLAIN` displays `lanceDistanceRange=[1.0, 4.0)`.
+Removing the lower bound also returns row 1. Using only an upper bound of `0` returns no rows. With `prefilter=true`, `filter` restricts candidates before vector search; with the default `prefilter=false`, it filters after candidate generation. `offset` skips results after applying the distance range. The output schema is unchanged: table columns plus `_distance` of type `FLOAT`. `EXPLAIN` displays `lanceDistanceRange=[1.0, 4.0)`.
 
 Distance bounds support `?` parameters in prepared statements. Each execution validates and uses its own bound values; NULL bounds are rejected. Omit the property to leave that side unbounded.
 
@@ -904,7 +906,7 @@ Expected result:
 | 1 | 0.0 |
 | 2 | 2.0 |
 
-Row 1 contains a perfect match for each query subvector. Row 2 matches the first query subvector with distance `0` and the second with squared L2 distance `2`. Empty and null outer lists do not rank. Adding `"offset" = "1"` and changing `"top_k" = "1"` returns only row 2. Adding `"filter" = "id > 1"` restricts candidate search to matching rows and also returns only row 2 for this dataset.
+Row 1 contains a perfect match for each query subvector. Row 2 matches the first query subvector with distance `0` and the second with squared L2 distance `2`. Empty and null outer lists do not rank. Adding `"offset" = "1"` and changing `"top_k" = "1"` returns only row 2. Adding `"filter" = "id > 1"` and setting `"prefilter" = "true"` restricts candidate search to matching rows and also returns only row 2 for this dataset.
 
 #### Row-Level Scoring
 
@@ -955,7 +957,7 @@ The integrated Lance version supports multi-vector indexes with the **cosine** m
 
 With indexed search, candidate selection is approximate. Multi-vector candidates are **always refined against the original vectors**, including when `refine_factor` is omitted or set to `1`, so indexed and unindexed rows use the same row-level score. Increasing `refine_factor` expands the candidate pool, with additional vector reads and computation; it does not guarantee exhaustive recall. `nprobes` controls IVF probing and `ef` applies to HNSW indexes. Tune these only after measuring recall and latency. Rows appended after index creation are included through Flat Search.
 
-For exhaustive scoring of the selected rows, use `"use_index" = "false"`. Prefer the TVF `filter` to restrict candidates before search; an outer SQL `WHERE` can discard candidates without refilling a split's results. The filtering rules in the next section apply to both single-vector and multi-vector searches.
+For exhaustive scoring of the selected rows, use `"use_index" = "false"`. To restrict candidates before search, use the TVF `filter` with `prefilter=true`; the default `prefilter=false` applies the condition after candidate generation. An outer SQL `WHERE` is always evaluated by Doris against generated candidates and does not refill a split's results. The filtering rules in the next section apply to both single-vector and multi-vector searches.
 
 ### Prefilter and Post-Filter
 
@@ -968,6 +970,7 @@ FROM vector_search(
     "column" = "embedding",
     "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
     "top_k" = "10",
+    "prefilter" = "true",
     "filter" = "category = 'book'"
 )
 WHERE user_id > 100
@@ -976,10 +979,11 @@ ORDER BY _distance ASC, user_id;
 
 | Filter type | Example condition | When it runs | Effect on results |
 |---|---|---|---|
-| Prefilter | TVF parameter `"filter" = "category = 'book'"` | Before Lance generates vector candidates | Searches for nearest neighbors only among rows where `category = 'book'`. |
-| Post-filter | Outer `WHERE user_id > 100` | After Lance generates candidates and before Doris applies the final TopN | Removes non-matching rows from the generated candidates. It does not replenish candidates, so the final result may contain fewer than `top_k` rows. |
+| TVF Prefilter | TVF parameters `"filter" = "category = 'book'"` and `"prefilter" = "true"` | Before Lance generates vector candidates | Searches for nearest neighbors only among rows where `category = 'book'`. |
+| TVF Post-filter | TVF parameter `"filter" = "category = 'book'"`, with `prefilter` omitted or set to `false` | After Lance generates candidates | Removes non-matching rows from the generated candidates. It does not replenish candidates, so the result may contain fewer than `top_k` rows. |
+| Doris Scan Post-filter | Outer `WHERE user_id > 100` | After Lance generates candidates and before Doris applies the final TopN | Removes non-matching rows from the generated candidates. It does not replenish candidates, so the final result may contain fewer than `top_k` rows. |
 
-If `user_id > 100` must also participate in candidate generation, include it in the TVF parameter, for example `"filter" = "category = 'book' AND user_id > 100"`, instead of using an outer `WHERE`. Even if the optimizer moves the outer `WHERE` into the Doris Lance Scan, it remains a Post-filter and is not converted into a Lance Prefilter.
+If `user_id > 100` must also participate in candidate generation, include it in the TVF `filter` and set `prefilter=true`, for example `"filter" = "category = 'book' AND user_id > 100"`. With the default `prefilter=false`, that condition is applied after candidate generation. Even if the optimizer moves the outer `WHERE` into the Doris Lance Scan, it remains a Doris Scan Post-filter and is not converted into a Lance Prefilter.
 
 Lance reads and evaluates columns referenced only by `filter` internally. If such a column is not referenced by `SELECT` or another Doris expression, it does not have to be returned to Doris.
 
@@ -1059,15 +1063,16 @@ For workload-specific sizing formulas, configuration examples, shared-cache cont
 
 ### Checking Cache Effectiveness
 
-Inspect the following counters under `LanceReader` in the query Profile:
+Inspect index-cache counters under `LanceReader` → `LanceIndex`, and data-file cache counters under `LanceReader` → `LanceDataCache` in the completed query Profile:
 
 | Counter | Meaning |
 |---|---|
-| `LanceDataCacheBytesReadFromCache` | Logical bytes returned to the reader from cache hits through the data-cache path. |
-| `LanceDataCacheBytesReadFromRemote` | Logical bytes returned to the reader from source storage after data-cache misses. The source can also be a local file. |
-| `LanceIndexPartitionCacheMissLoads` | Index partitions loaded because of partition-cache misses, rather than the miss count for the entire index cache. |
+| `LanceIndexCacheHits`, `LanceIndexCacheMisses` | Cache lookups reported by instrumented index paths for this execution. These are separate from BE-wide Session metrics. |
+| `LanceIndexObjectLoads`, `LanceIndexComponentsLoaded` | Top-level index objects and internal components loaded. Neither is interchangeable with cache misses. |
+| `LanceDataCacheBytesReadFromCache` | Logical request bytes supplied by the data-file cache for this Dataset handle. |
+| `LanceDataCacheBytesReadFromRemote` | Logical request bytes supplied by source storage after misses or cache fallback. The source can also be a local file. |
 
-The two data-cache byte counters exclude extra bytes caused by block-aligned reads and I/O that bypasses the data cache, such as index and manifest reads. They are not complete remote-traffic counters. Both are `0` when the data cache is disabled, which does not imply that no source reads occurred. Statistics are collected when the Dataset closes, so inspect the completed query Profile. Second-phase fetches also reuse the cache, but these scan counters are not a query-wide total of all fetch I/O.
+The two data-cache byte counters exclude block-read amplification and I/O that bypasses the data cache, such as index and manifest reads. They are not complete remote-traffic counters, and their sum need not equal `LanceIOReadBytes`. Both are `0` when the data cache is disabled, which does not imply that no source reads occurred. Doris records the Dataset handle's cumulative snapshot before closing it. Second-phase fetching has separate reader statistics, also exported to Row ID Fetch/Materialization Profile information; scan counters alone do not cover the whole query's fetch I/O. See [Lance Query Profile Reference](../best-practices/lance-query-profile.md) for collection timing and metric boundaries.
 
 The BE `/metrics` endpoint also exposes metrics prefixed with `doris_be_lance_session_index_cache_` and `doris_be_lance_session_metadata_cache_`. The suffixes `capacity_bytes`, `usage_bytes`, `entries`, `hits_total`, and `misses_total` represent configured capacity, current usage, entry count, cumulative hits, and cumulative misses. These metrics are registered after the shared Lance Session initializes and describe the BE-wide cache, rather than an individual query.
 
@@ -1110,7 +1115,7 @@ FROM vector_search(
 WHERE category = 'book';
 ```
 
-A Prefilter column referenced in the TVF `filter` is used internally by Lance. Its presence in the `filter` string alone does not make it a Phase-1 result column returned to Doris.
+Columns referenced in the TVF `filter` are used internally by Lance. Their presence in the `filter` string alone does not make them Phase-1 result columns returned to Doris; `prefilter` only changes when the condition is applied relative to candidate generation.
 
 ### Verifying the Plan
 
@@ -1152,6 +1157,7 @@ FROM full_text_search(
     "operator" = "and",
     "top_k" = "10",
     "offset" = "0",
+    "prefilter" = "true",
     "filter" = "category = 'storage'",
     "coverage_mode" = "strict"
 )
@@ -1159,7 +1165,7 @@ WHERE published = true
 ORDER BY _score DESC, document_id;
 ```
 
-This example uses Match AND, so a document must contain both analyzed terms, `lance` and `database`. The `filter` property is a Prefilter that Lance evaluates before generating FTS candidates. The outer `WHERE` is a Post-filter evaluated after candidate generation. A Post-filter does not replenish removed candidates, so the final result can contain fewer than `top_k` rows. If `published = true` must affect candidate generation, include it in `filter` instead.
+This example uses Match AND, so a document must contain both analyzed terms, `lance` and `database`. With `prefilter=true`, Lance evaluates `filter` before generating FTS candidates. When `prefilter` is omitted, its default is `false`, and Lance applies `filter` after candidate generation; the result can contain fewer than `top_k` rows. The outer `WHERE` is a Doris Post-filter and does not replenish removed candidates. If `published = true` must affect candidate generation, include it in `filter` and set `prefilter=true`.
 
 The following Phrase query permits at most one intervening token between adjacent query terms. For example, it can match `lance search engine`:
 
@@ -1190,7 +1196,8 @@ The returned relation contains every column from the source Lance table and a nu
 | `slop` | No | `0` | Phrase queries only. It must be an integer from `0` through `2147483647`. `0` requires an exact phrase; a positive value is the maximum number of intervening tokens permitted between adjacent query terms. Match queries cannot set this parameter. |
 | `top_k` | No | `10` | Number of results returned after skipping `offset`. It must be a positive integer. |
 | `offset` | No | `0` | Number of results skipped by relevance. It must be a non-negative integer, and `top_k + offset` must not exceed the maximum unsigned 32-bit integer. |
-| `filter` | No | - | Lance SQL condition evaluated before full-text candidates are generated; that is, a Prefilter. |
+| `filter` | No | - | Lance SQL condition. Its execution timing is controlled by `prefilter`. |
+| `prefilter` | No | `false` | Controls when the TVF `filter` runs. `true` filters before full-text candidates are generated; `false` (the default) filters after candidate generation, so the result can contain fewer than `top_k` rows. This parameter does not affect an outer Doris `WHERE`. |
 | `coverage_mode` | No | `strict` | Behavior when the FTS index does not cover every Fragment in the current snapshot. Valid values are `strict` and `index_only`. |
 | `version`, `timestamp`, `tag`, `branch` | No | - | Search a historical version, the version at a time, a tag, or a branch instead of the latest version of `main`. See [Search a Historical Version or Branch](#search-a-historical-version-or-branch). |
 
@@ -1268,13 +1275,18 @@ Dataset snapshot selected by version / timestamp / tag / branch, or the latest v
   -> FE search Split planning
        -> Vector search: physical vector Index Segments + Flat Search for uncovered Fragments
        -> Full-text search: physical FTS Index Segments (coverage checked by coverage_mode)
-  -> Per Split: Lance Prefilter -> vector/full-text search -> at most K+n candidates
+  -> Per Split: vector/full-text search; the TVF `filter` runs before candidate generation when `prefilter=true`, and after candidate generation when `prefilter` is omitted or `false`
+       -> at most K+n candidates
   -> Doris Scan Post-filter
   -> Doris local TopN
   -> Exchange
   -> Doris global TopN (applies offset=n and limit=K)
   -> Optional lazy-materialization Fetch
 ```
+
+## Query Profile {#query-profile}
+
+For Profile collection and viewing, see the [Query Profile Analysis Guide](../../query-acceleration/query-profile.md). For Lance-specific groups, counters, timing boundaries, and second-phase fetch statistics, see the [Lance Query Profile Reference](../best-practices/lance-query-profile.md).
 
 ## Current Limitations and Recommendations
 
@@ -1287,5 +1299,5 @@ Dataset snapshot selected by version / timestamp / tag / branch, or the latest v
 - Use `SHOW INDEX` on a Filesystem Catalog table to inspect its logical Lance indexes, for example to verify the index name, type, and indexed fields before vector or full-text search. `SHOW INDEX` is not supported for REST Catalogs.
 - For deterministic vector result ordering, explicitly use `ORDER BY _distance ASC` and add a unique tie-breaker.
 - For deterministic full-text result ordering, explicitly use `ORDER BY _score DESC` and add a unique tie-breaker.
-- Use the TVF `filter` parameter when filtering must occur before vector or full-text candidates are generated. An outer `WHERE` filters only the candidates already generated by each search Split and runs before Doris global TopN, so allow for a final result with fewer than `top_k` rows.
+- To filter before vector or full-text candidates are generated, set the TVF `filter` and `prefilter=true`; with the default `prefilter=false`, the TVF `filter` is applied after candidate generation. An outer `WHERE` is evaluated by Doris against candidates generated by each search Split before global TopN, so the final result may contain fewer than `top_k` rows.
 - Use `EXPLAIN` to inspect `lanceSearchFragments` and `lanceSearchIndexSegments`. The former is the number of visible Fragments in the pinned snapshot; the latter is the number of physical Index Segment splits selected by the FE. Vector search can also include fallback Flat Search Fragment splits; full-text search never falls back to Flat Search.

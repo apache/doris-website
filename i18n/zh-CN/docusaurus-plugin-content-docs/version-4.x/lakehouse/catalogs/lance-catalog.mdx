@@ -721,6 +721,7 @@ FROM vector_search(
     "metric" = "l2",
     "nprobes" = "20",
     "refine_factor" = "10",
+    "prefilter" = "true",
     "filter" = "category = 'book'",
     "use_index" = "true"
 )
@@ -749,8 +750,9 @@ ORDER BY _distance ASC, user_id;
 | `metric` | 否 | `l2` | 距离类型：`l2`、`cosine`、`dot` 或 `hamming`。`dot_product` 是 `dot` 的别名。`uint8` 向量仅支持 `hamming`；其他当前支持的向量元素类型支持 `l2`、`cosine` 和 `dot`。查询 `cosine`、`dot` 或 `hamming` 索引时必须显式设置 `metric`。不支持整数多向量列及多向量 `hamming` 检索。 |
 | `distance_lower_bound` | 否 | 无下界 | 单向量检索的距离下界，包含边界值，必须是有限的 `FLOAT`。 |
 | `distance_upper_bound` | 否 | 无上界 | 单向量检索的距离上界，不包含边界值，必须是有限的 `FLOAT`。同时设置上下界时，转换为 `FLOAT` 后下界必须小于上界。 |
-| `filter` | 否 | - | Lance SQL 条件，在生成候选向量之前执行，即 Prefilter。 |
-| `nprobes` | 否 | 最少 `1`，不限制最大值 | IVF 索引探测的分区数量，必须为正整数。不设置时从 1 个分区开始；使用 Prefilter 且候选不足时，Lance 可以继续探测更多分区。显式设置为 `N` 时，最少和最多探测数都会固定为 `N`。 |
+| `filter` | 否 | - | 由 Lance 执行的 SQL 条件。执行时机由 `prefilter` 控制。 |
+| `prefilter` | 否 | `false` | 控制 TVF `filter` 的执行时机。`true` 表示在生成向量候选前过滤；`false`（默认值）表示在候选生成后过滤，结果可能少于 `top_k`。该参数不影响外层 Doris `WHERE`。 |
+| `nprobes` | 否 | 最少 `1`，不限制最大值 | IVF 索引探测的分区数量，必须为正整数。不设置时从 1 个分区开始；设置 `prefilter=true` 且候选不足时，Lance 可以继续探测更多分区。显式设置为 `N` 时，最少和最多探测数都会固定为 `N`。 |
 | `refine_factor` | 否 | 单向量不启用；多向量为 `1` | 候选集精排倍数，必须为正整数。对于单向量检索，不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。**精排会读取这些候选的原始向量数据；`N` 越大，读取和计算的候选越多，可能显著增加 I/O 并降低查询性能。** 对于单向量检索，设为 `1` 会执行精排，与不设置不同。多向量检索始终使用原始向量精排，默认倍数为 `1`。 |
 | `ef` | 否 | `floor(1.5 × (top_k + offset))` | HNSW 图索引搜索时保留的候选宽度，必须为正整数。如果同时设置了 `refine_factor`，默认值为 `floor(1.5 × (top_k + offset) × refine_factor)`。对非 HNSW 索引无效。 |
 | `use_index` | 否 | `true` | `true` 表示优先使用与向量列和距离类型兼容的 Lance 向量索引；没有可用索引时自动使用 Flat Search。`false` 表示禁用向量索引，对数据执行 Flat Search。 |
@@ -793,7 +795,7 @@ ORDER BY _distance;
 +---------+-----------+
 ```
 
-去掉下界后还会返回第 1 行。仅设置上界为 `0` 则返回空结果。`filter` 仍在向量检索前限制候选行，`offset` 在应用距离范围后跳过结果。输出 Schema 不变，包含表中的列和 `FLOAT` 类型的 `_distance`。`EXPLAIN` 会显示 `lanceDistanceRange=[1.0, 4.0)`。
+去掉下界后还会返回第 1 行。仅设置上界为 `0` 则返回空结果。`prefilter=true` 时，`filter` 在向量检索前限制候选行；默认 `prefilter=false` 时，它在候选生成后过滤。`offset` 在应用距离范围后跳过结果。输出 Schema 不变，包含表中的列和 `FLOAT` 类型的 `_distance`。`EXPLAIN` 会显示 `lanceDistanceRange=[1.0, 4.0)`。
 
 距离边界支持预编译语句中的 `?` 参数，每次执行都会校验并使用当次绑定值，不接受 NULL。若不限制某一侧距离，请省略对应属性。
 
@@ -904,7 +906,7 @@ ORDER BY _distance, id;
 | 1 | 0.0 |
 | 2 | 2.0 |
 
-记录 1 为每个查询子向量都提供了完全匹配。记录 2 与第一个查询子向量的距离为 `0`，与第二个的平方 L2 距离为 `2`。外层为空数组或 null 的记录不参与排名。增加 `"offset" = "1"` 并将 `"top_k" = "1"` 后，仅返回记录 2。增加 `"filter" = "id > 1"` 会先限制候选检索的记录范围，对此数据集也仅返回记录 2。
+记录 1 为每个查询子向量都提供了完全匹配。记录 2 与第一个查询子向量的距离为 `0`，与第二个的平方 L2 距离为 `2`。外层为空数组或 null 的记录不参与排名。增加 `"offset" = "1"` 并将 `"top_k" = "1"` 后，仅返回记录 2。增加 `"filter" = "id > 1"` 并设置 `"prefilter" = "true"`，会先限制候选检索的记录范围；对此数据集也仅返回记录 2。
 
 #### 行级评分
 
@@ -955,7 +957,7 @@ _distance = sum(q in Q, min(v in V, distance(q, v)))
 
 索引检索的候选选择是近似的。多向量候选**始终使用原始向量精排**，包括不设置 `refine_factor` 或将其设为 `1` 的情况，从而使有索引与无索引的记录使用相同的行级评分。增大 `refine_factor` 会扩大候选集，增加原始向量读取和计算，但不保证完整召回。`nprobes` 控制 IVF 探测范围，`ef` 对 HNSW 索引生效；调参时应同时测量召回率与耗时。索引创建后追加的记录会通过 Flat Search 纳入检索。
 
-如需对选定记录进行穷举评分，使用 `"use_index" = "false"`。优先使用 TVF 的 `filter` 在检索前缩小候选范围；外层 SQL `WHERE` 会丢弃候选，但不会补齐对应 split 的结果。下一节的过滤规则同时适用于单向量和多向量查询。
+如需对选定记录进行穷举评分，使用 `"use_index" = "false"`。需要在检索前缩小候选范围时，使用 TVF 的 `filter` 并设置 `prefilter=true`；默认 `prefilter=false` 会在候选生成后应用该条件。外层 SQL `WHERE` 始终由 Doris 过滤已生成的候选，不会补齐对应 split 的结果。下一节的过滤规则同时适用于单向量和多向量查询。
 
 ### Prefilter 和 Post-filter
 
@@ -968,6 +970,7 @@ FROM vector_search(
     "column" = "embedding",
     "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
     "top_k" = "10",
+    "prefilter" = "true",
     "filter" = "category = 'book'"
 )
 WHERE user_id > 100
@@ -976,10 +979,11 @@ ORDER BY _distance ASC, user_id;
 
 | 过滤方式 | 示例条件 | 执行时机 | 对结果的影响 |
 |---|---|---|---|
-| Prefilter | TVF 参数 `"filter" = "category = 'book'"` | Lance 生成向量候选之前 | 只在 `category = 'book'` 的数据中搜索最近邻。 |
-| Post-filter | 外层 `WHERE user_id > 100` | Lance 生成候选之后、Doris 执行最终 TopN 之前 | 从已生成的候选中删除不满足条件的行，不会补充新的候选，因此最终结果可能少于 `top_k`。 |
+| TVF Prefilter | TVF 参数 `"filter" = "category = 'book'"` 且 `"prefilter" = "true"` | Lance 生成向量候选之前 | 只在 `category = 'book'` 的数据中搜索最近邻。 |
+| TVF Post-filter | TVF 参数 `"filter" = "category = 'book'"`，且 `prefilter` 缺省或为 `false` | Lance 生成候选之后 | 从已生成的候选中删除不满足条件的行，不会补充新的候选，因此结果可能少于 `top_k`。 |
+| Doris Scan Post-filter | 外层 `WHERE user_id > 100` | Lance 生成候选之后、Doris 执行最终 TopN 之前 | 从已生成的候选中删除不满足条件的行，不会补充新的候选，因此最终结果可能少于 `top_k`。 |
 
-如果 `user_id > 100` 也必须参与最近邻候选生成，应将它合并到 `filter` 中，例如 `"filter" = "category = 'book' AND user_id > 100"`，而不是使用外层 `WHERE`。即使优化器将外层 `WHERE` 下移到 Doris 的 Lance Scan，它仍然是 Post-filter，不会转换成 Lance Prefilter。
+如果 `user_id > 100` 也必须参与最近邻候选生成，应将它合并到 TVF `filter` 中并设置 `prefilter=true`，例如 `"filter" = "category = 'book' AND user_id > 100"`。如果 `prefilter` 为默认值 `false`，该条件会在候选生成后过滤。外层 `WHERE` 即使被优化器下推到 Doris 的 Lance Scan，也仍是 Doris Scan Post-filter，不会转换成 Lance Prefilter。
 
 `filter` 中引用的列由 Lance 内部读取和计算；如果该列未被 `SELECT` 或其他 Doris 表达式引用，则不需要返回给 Doris。
 
@@ -1059,15 +1063,16 @@ lance_data_cache_read_block_size_bytes = 1048576
 
 ### 查看缓存效果
 
-在查询 Profile 的 `LanceReader` 下查看以下计数器：
+在已完成查询的 Profile 中，索引缓存计数位于 `LanceReader` → `LanceIndex`，数据文件缓存计数位于 `LanceReader` → `LanceDataCache`：
 
 | 计数器 | 含义 |
 |---|---|
-| `LanceDataCacheBytesReadFromCache` | 经过数据缓存路径、命中缓存并返回给 reader 的逻辑字节数。 |
-| `LanceDataCacheBytesReadFromRemote` | 经过数据缓存路径、未命中后从源存储读取并返回给 reader 的逻辑字节数。源存储也可以是本地文件。 |
-| `LanceIndexPartitionCacheMissLoads` | 因索引分区缓存未命中而加载的分区数，不是整个索引缓存的未命中次数。 |
+| `LanceIndexCacheHits`、`LanceIndexCacheMisses` | 已埋点索引路径报告的本次执行缓存查询，与 BE 共享 Session 指标不同。 |
+| `LanceIndexObjectLoads`、`LanceIndexComponentsLoaded` | 加载的顶层索引对象及内部部件数，均不能替代缓存未命中计数。 |
+| `LanceDataCacheBytesReadFromCache` | 当前 Dataset handle 的数据文件缓存提供的逻辑请求字节数。 |
+| `LanceDataCacheBytesReadFromRemote` | 缓存未命中或回退后由源存储提供的逻辑请求字节数，源存储也可以是本地文件。 |
 
-两个数据缓存字节计数不包含按块读取产生的额外字节，也不覆盖索引、manifest 等绕过数据缓存的 I/O，因此不能用它们代替完整的远端流量统计。数据缓存关闭时，这两个计数为 `0`，不代表没有读取源存储。计数在关闭 Dataset 时收集，应查看查询完成后的 Profile；第二阶段回读也会复用缓存，但这两个扫描计数器不能视为整个查询所有回读 I/O 的合计。
+两个数据缓存字节计数不包含按块读取的放大，也不覆盖索引、manifest 等绕过数据缓存的 I/O，因此不能代替完整的远端流量统计，两者之和也不要求等于 `LanceIOReadBytes`。关闭数据缓存时两个计数均为 `0`，不代表没有读取源存储。Doris 在关闭 Dataset handle 前记录其累计快照。第二阶段回表具有单独的读取器统计，并导出到 Row ID Fetch/Materialization Profile 信息中；仅有扫描计数不能覆盖全查询的回表 I/O。采集时机和指标范围见[Lance 查询 Profile 指标参考](../best-practices/lance-query-profile.md)。
 
 BE 的 `/metrics` 还提供以 `doris_be_lance_session_index_cache_` 和 `doris_be_lance_session_metadata_cache_` 为前缀的指标，后缀分别为 `capacity_bytes`、`usage_bytes`、`entries`、`hits_total` 和 `misses_total`，表示配置容量、当前使用量、条目数、累计命中和累计未命中。这些是 BE 共享缓存指标，初始化共享 Lance Session 后注册，不能直接归属于某一条查询。
 
@@ -1108,7 +1113,7 @@ FROM vector_search(
 WHERE category = 'book';
 ```
 
-TVF `filter` 中引用的 Prefilter 列由 Lance 在搜索内部使用，不会仅因为出现在 `filter` 字符串中就作为第一阶段结果列返回给 Doris。
+TVF `filter` 中引用的列由 Lance 在搜索内部使用，不会仅因为出现在 `filter` 字符串中就作为第一阶段结果列返回给 Doris；`prefilter` 只改变该条件相对候选生成的执行时机。
 
 ### 验证是否生效
 
@@ -1150,6 +1155,7 @@ FROM full_text_search(
     "operator" = "and",
     "top_k" = "10",
     "offset" = "0",
+    "prefilter" = "true",
     "filter" = "category = 'storage'",
     "coverage_mode" = "strict"
 )
@@ -1157,7 +1163,7 @@ WHERE published = true
 ORDER BY _score DESC, document_id;
 ```
 
-上例使用 Match AND，只返回同时包含分词结果 `lance` 和 `database` 的文档。`filter` 是 Lance 在生成 FTS 候选结果前执行的 Prefilter；外层 `WHERE` 是生成候选结果后执行的 Post-filter。Post-filter 不会补充被过滤掉的候选行，因此最终结果可能少于 `top_k`。如果 `published = true` 也必须参与候选生成，应将它合并到 `filter` 中。
+上例使用 Match AND，只返回同时包含分词结果 `lance` 和 `database` 的文档。`prefilter=true` 时，Lance 在生成 FTS 候选结果前执行 `filter`；缺省 `prefilter=false` 时，Lance 在候选生成后应用 `filter`，结果可能少于 `top_k`。外层 `WHERE` 是由 Doris 执行的 Post-filter，也不会补充被过滤掉的候选行。如果 `published = true` 必须参与候选生成，应将它合并到 `filter` 中并设置 `prefilter=true`。
 
 下面的查询使用 Phrase，并允许相邻查询词之间最多存在一个其他 token。例如，它可以匹配 `lance search engine`：
 
@@ -1188,7 +1194,8 @@ ORDER BY _score DESC, document_id;
 | `slop` | 否 | `0` | 仅用于 Phrase 查询，必须是 `0` 到 `2147483647` 之间的整数。`0` 要求精确短语，正数表示相邻查询词之间允许存在的最大 token 数。Match 查询不能设置该参数。 |
 | `top_k` | 否 | `10` | 跳过 `offset` 后返回的结果数，必须为正整数。 |
 | `offset` | 否 | `0` | 按相关性跳过的结果数，必须为非负整数；`top_k + offset` 不能超过无符号 32 位整数的最大值。 |
-| `filter` | 否 | - | 生成全文检索候选结果前由 Lance 执行的 SQL 条件，即 Prefilter。 |
+| `filter` | 否 | - | 由 Lance 执行的 SQL 条件。执行时机由 `prefilter` 控制。 |
+| `prefilter` | 否 | `false` | 控制 TVF `filter` 的执行时机。`true` 表示在生成全文检索候选结果前过滤；`false`（默认值）表示在候选生成后过滤，结果可能少于 `top_k`。该参数不影响外层 Doris `WHERE`。 |
 | `coverage_mode` | 否 | `strict` | FTS 索引未覆盖当前快照全部 Fragment 时的处理方式，可选值为 `strict` 或 `index_only`。 |
 | `version`、`timestamp`、`tag`、`branch` | 否 | - | 检索历史版本、某个时间点的版本、tag 或 branch，而不是 main 的最新版本。见[检索历史版本或 branch](#search-a-historical-version-or-branch)。 |
 
@@ -1266,13 +1273,18 @@ ORDER BY _score DESC;
   -> FE 规划检索 Split
        -> 向量检索：物理向量 Index Segment + 未覆盖 Fragment 的 Flat Search
        -> 全文检索：物理 FTS Index Segment（按 coverage_mode 检查覆盖情况）
-  -> 每个 Split：Lance Prefilter -> 向量/全文检索 -> 最多 K+n 个候选
+  -> 每个 Split：向量/全文检索；TVF filter 在 prefilter=true 时于候选生成前应用，缺省 false 时于候选生成后应用
+       -> 最多 K+n 个候选
   -> Doris Scan Post-filter
   -> Doris 局部 TopN
   -> Exchange
   -> Doris 全局 TopN（应用 offset=n 和 limit=K）
   -> 可选的延迟物化 Fetch
 ```
+
+## 查询 Profile {#query-profile}
+
+Profile 的采集和查看方法见 [Query Profile 分析指南](../../query-acceleration/query-profile.md)。Lance 专用分组、计数器、计时边界和第二阶段回表统计见 [Lance 查询 Profile 指标参考](../best-practices/lance-query-profile.md)。
 
 ## 当前限制和建议
 
@@ -1285,5 +1297,5 @@ ORDER BY _score DESC;
 - 可以使用 `SHOW INDEX` 查看 Filesystem Catalog 表的 Lance 逻辑索引，例如在执行向量或全文检索前确认索引名、索引类型和被索引字段；REST Catalog 不支持 `SHOW INDEX`。
 - 向量查询需要稳定顺序时，显式使用 `ORDER BY _distance ASC` 并增加唯一 Tie-breaker。
 - 全文查询需要稳定顺序时，显式使用 `ORDER BY _score DESC` 并增加唯一 Tie-breaker。
-- 需要在向量或全文候选生成前过滤时使用 TVF 的 `filter`；外层 `WHERE` 只过滤每个搜索 Split 已生成的候选，并在 Doris 全局 TopN 之前执行，应允许其最终结果少于 `top_k`。
+- 需要在向量或全文候选生成前过滤时，设置 TVF 的 `filter` 和 `prefilter=true`；默认 `prefilter=false` 时，TVF `filter` 在候选生成后应用。外层 `WHERE` 则由 Doris 过滤每个搜索 Split 已生成的候选，并在 Doris 全局 TopN 之前执行，最终结果可能少于 `top_k`。
 - 使用 `EXPLAIN` 检查 `lanceSearchFragments` 和 `lanceSearchIndexSegments`。前者表示固定快照中的可见 Fragment 数量，后者表示 FE 选择的物理 Index Segment Split 数量。向量检索还可能包含回退的 Flat Search Fragment Split；全文检索不会回退到 Flat Search。
