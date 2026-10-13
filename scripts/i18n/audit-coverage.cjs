@@ -72,11 +72,12 @@ async function audit({root,sourceRef,baseline = baselineDir,native}) {
             seen.add(page.englishPath); current.add(key(page));
             const previous = old.get(key(page));
             const disposition = page.draft ? 'draft' : scope.retainEnglish.some(entry => key(entry) === key(page)) ? 'retain_english' : 'translate';
-            const state = disposition !== 'translate' ? disposition : page.status === 'untranslated' ? 'untranslated'
-                : page.status === 'current' && page.reviewStatus !== 'unverified' && page.useTarget
+            const mergedCurrent = page.status === 'current' && page.reviewStatus !== 'unverified' && page.useTarget
                     && refContent(root,commit,page.targetPath) !== null
                     && hash(refContent(root,commit,page.targetPath)) === page.targetHash
-                    && refContent(root,commit,'translations/state/ja/docs.json') !== null ? 'current' : page.status;
+                    && refContent(root,commit,'translations/state/ja/docs.json') !== null;
+            const state = disposition !== 'translate' ? disposition : page.status === 'current'
+                ? mergedCurrent ? 'current' : 'unverified' : page.status;
             entries.push({pluginId:page.pluginId,version:page.version,docId:page.docId,sourcePath:page.sourcePath,
                 targetPath:page.targetPath,sourceHash:page.sourceHash,targetHash:page.targetHash,
                 sourceCommit:commit,permalink:page.permalink,reviewStatus:page.reviewStatus,state,
@@ -101,7 +102,7 @@ async function audit({root,sourceRef,baseline = baselineDir,native}) {
         .map(state => [state,sidebar.filter(entry => entry.state === state).length]));
     const routingInputs = ['docusaurus.config.js','versions.json','sidebars.ts','sidebarsCommunity.json','versioned_sidebars/version-4.x-sidebars.json',
         'translations/config.json','translations/scope/ja.json'];
-    routingInputs.push('translations/state/ja/docs.json');
+    routingInputs.push('translations/state/ja/docs.json', 'translations/state/ja/resolved-deletions.json');
     for (const file of routingInputs) assert.equal(refContent(root,commit,file),fs.readFileSync(path.join(root,file),'utf8'),
         `Routing input differs from source ref: ${file}`);
     return {schemaVersion:1,sourceCommit:commit,baselineCommit:JSON.parse(fs.readFileSync(path.join(baseline,'summary.json'),'utf8')).sourceCommit,

@@ -63,6 +63,10 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
     return {
         content, headings, format, protectedNodes, technicalMetadata,
         technicalHash: hash(JSON.stringify([technicalMetadata, protectedNodes, headings.map(({depth, id}) => ({depth, id}))])),
+        // A secondary comparison for planning only. The state sourceHash stays
+        // byte-sensitive, so a formatting edit still needs an explicit review.
+        semanticHash: hash(JSON.stringify([Object.fromEntries(Object.entries(data).sort(([a], [b]) => a.localeCompare(b))),
+            withoutPositions(tree)])),
     };
 }
 

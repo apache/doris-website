@@ -83,6 +83,7 @@ test('full audit finds documents and sidebar keys added after the T03 snapshot',
         write('translations/scope/ja.json',JSON.stringify({schemaVersion:1,locale:'ja',maxBatchPages:20,groups,retainEnglish:[]}));
         write('translations/config.json','{}');
         write('translations/state/ja/docs.json',JSON.stringify({schemaVersion:1,pages:[]}));
+        write('translations/state/ja/resolved-deletions.json',JSON.stringify({schemaVersion:1,deletions:[]}));
         for (const file of ['docusaurus.config.js','versions.json','sidebars.ts','sidebarsCommunity.json','versioned_sidebars/version-4.x-sidebars.json'])
             write(file,file+'\n');
         const pages = groups.map(group => {
@@ -91,6 +92,9 @@ test('full audit finds documents and sidebar keys added after the T03 snapshot',
                 sourceHash:hash(content),targetPath:`i18n/ja/${group.id}/new.md`,targetHash:null,
                 status:'untranslated',reviewStatus:'unverified',useTarget:false,draft:false,permalink:`/ja/${group.id}/new/`};
         });
+        pages[0].status = 'current';
+        pages[0].reviewStatus = 'unverified';
+        pages[0].useTarget = true;
         execFileSync('git',['init','-q'],{cwd:root});
         execFileSync('git',['add','.'],{cwd:root});
         execFileSync('git',['-c','user.name=T04 Test','-c','user.email=t04@example.com','commit','-qm','candidate scope'],{cwd:root});
@@ -102,6 +106,7 @@ test('full audit finds documents and sidebar keys added after the T03 snapshot',
         const report = await audit({root,sourceRef:'HEAD',baseline,native});
         assert.deepEqual(report.groups.map(group => group.counts.new),[1,1,1]);
         assert.deepEqual(report.groups.map(group => group.counts.pending),[1,1,1]);
+        assert.equal(report.groups[0].entries[0].state,'unverified');
         assert.equal(report.labels.missing,3);
         assert.equal(report.removed.length,0);
     } finally {fs.rmSync(root,{recursive:true,force:true});}
