@@ -250,6 +250,50 @@ be applied to managed translation files. The offline fixture does not establish
 live model quality, latency, cost or availability. A real limited call and
 review are required before T08 enables automatic generation.
 
+## Asynchronous Japanese discovery and generation
+
+`.github/workflows/japanese-translation.yml` runs a read-only scan after
+relevant master source pushes, each day, and on manual dispatch. It recounts
+the current native Dev, 4.x and community documents, reads every open master
+PR's changed files, and checks Japanese target files against that PR's state
+records. Each run uploads `plan.json`, `coverage.json`,
+`active-candidates.json` and `open-pr-reconciliation.json` and writes a short
+job summary. Open PR candidates stay pending until merged. A changed source
+hash makes an older PR candidate stale and queues the page again. A PR whose
+candidate cannot be verified blocks that target from robot generation and
+appears in the exception report.
+
+Manual dispatch defaults to `dry-run` and accepts optional plugin, version and
+source path filters. Pushes are checked against the current registered source
+identities before any generation. The daily full scan recovers missed or
+cancelled pushes. Japanese target or state-only commits do not trigger the
+push listener. The workflow does not participate in website builds or release
+deployment.
+
+Generation stays off unless both repository variables
+`I18N_AUTO_TRANSLATE_ENABLED=true` and `I18N_LIVE_VERIFIED=true` are set. It
+also needs `I18N_MODEL`, `I18N_OPENAI_API_KEY`, `I18N_GITHUB_APP_ID` and
+`I18N_GITHUB_APP_PRIVATE_KEY`. The App must be installed on
+`apache/doris-website` with repository Contents and Pull requests write
+permissions. The enablement variables should be set only after a small live
+model call has been reviewed and a draft PR created with the App has shown
+that the normal required checks run. Missing configuration leaves discovery
+available and prevents model calls and GitHub writes.
+
+When enabled, one run processes at most four pages with a configured
+20,000-token budget. The adapter rejects a response that exceeds that budget.
+The generator calls the model once for exact Dev/4.x pairs whose doc ID,
+relative source path and normalized source hash match. It writes two separate
+state records. Human-owned or changed targets, moves, deletions and other
+protected tasks stay in the manual queue. The robot opens a draft PR with
+machine review status and never merges it. It keeps one active robot batch PR;
+if its source becomes stale and its head still matches the robot's recorded
+commit, the next run closes that stale draft and opens a fresh batch. A human
+commit on the branch stops replacement and is reported for manual handling.
+The PR body lists the source commit, source links, source hashes, model,
+glossary version, failures and validation. The normal PR checks remain the
+merge gate.
+
 ## Validation
 
 ```bash

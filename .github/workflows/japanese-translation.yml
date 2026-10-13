@@ -1,0 +1,176 @@
+name: Japanese translation discovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Read-only dry run or a gated small translation batch
+        type: choice
+        options: [dry-run, generate]
+        default: dry-run
+        required: true
+      plugin:
+        description: Optional plugin filter (default or community)
+        type: string
+      version:
+        description: Optional version filter (current or 4.x)
+        type: string
+      path:
+        description: Optional repository-relative source path prefix
+        type: string
+  push:
+    branches: [master]
+    paths:
+      - 'docs/**'
+      - 'versioned_docs/version-4.x/**'
+      - 'community/**'
+      - 'i18n/zh-CN/docusaurus-plugin-content-docs/current/**'
+      - 'i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/**'
+      - 'i18n/zh-CN/docusaurus-plugin-content-docs-community/current/**'
+      - 'translations/config.json'
+      - 'translations/scope/ja.json'
+      - 'translations/glossary/ja.json'
+      - 'sidebars.ts'
+      - 'sidebarsCommunity.json'
+      - 'versioned_sidebars/version-4.x-sidebars.json'
+      - 'docusaurus.config.js'
+      - 'config/i18n.js'
+  schedule:
+    - cron: '23 4 * * *'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: japanese-translation-ja
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    outputs:
+      can_generate: ${{ steps.scan.outputs.can_generate }}
+      source_commit: ${{ steps.scan.outputs.source_commit }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+      - run: yarn --frozen-lockfile
+      - name: Reconcile every open master PR with managed Japanese files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node scripts/i18n/workflow-prs.cjs "$RUNNER_TEMP/japanese-translation"
+      - name: Plan all current and historical pending documents
+        id: scan
+        env:
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+          I18N_MODE: ${{ inputs.mode || 'dry-run' }}
+          I18N_PLUGIN: ${{ inputs.plugin }}
+          I18N_VERSION: ${{ inputs.version }}
+          I18N_PATH: ${{ inputs.path }}
+          I18N_LIMIT: '20'
+          I18N_TOKEN_BUDGET: '20000'
+          DORIS_ENABLE_JA: 'true'
+        run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/japanese-translation"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: japanese-translation-plan-${{ github.run_id }}
+          path: ${{ runner.temp }}/japanese-translation/
+          if-no-files-found: warn
+          retention-days: 30
+
+  generate:
+    needs: discover
+    if: needs.discover.outputs.can_generate == 'true' && vars.I18N_AUTO_TRANSLATE_ENABLED == 'true' && vars.I18N_LIVE_VERIFIED == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.discover.outputs.source_commit }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+      - run: yarn --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: japanese-translation-plan-${{ github.run_id }}
+          path: ${{ runner.temp }}/japanese-translation
+      - name: Check external configuration
+        id: config
+        env:
+          OPENAI_API_KEY: ${{ secrets.I18N_OPENAI_API_KEY }}
+          APP_ID: ${{ secrets.I18N_GITHUB_APP_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.I18N_GITHUB_APP_PRIVATE_KEY }}
+          I18N_MODEL: ${{ vars.I18N_MODEL }}
+        run: |
+          if [[ -n "$OPENAI_API_KEY" && -n "$APP_ID" && -n "$APP_PRIVATE_KEY" && -n "$I18N_MODEL" ]]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'Model or dedicated GitHub App configuration is missing. No generation or PR write was attempted.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Reconcile again immediately before model calls
+        if: steps.config.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node scripts/i18n/workflow-prs.cjs "$RUNNER_TEMP/japanese-translation"
+      - name: Replan exact source and open PRs
+        if: steps.config.outputs.ready == 'true'
+        id: fresh
+        env:
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+          I18N_MODE: ${{ inputs.mode || 'dry-run' }}
+          I18N_PLUGIN: ${{ inputs.plugin }}
+          I18N_VERSION: ${{ inputs.version }}
+          I18N_PATH: ${{ inputs.path }}
+          I18N_LIMIT: '20'
+          I18N_TOKEN_BUDGET: '20000'
+          DORIS_ENABLE_JA: 'true'
+        run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/japanese-translation"
+      - name: Generate a bounded, validated batch
+        if: steps.fresh.outputs.can_generate == 'true'
+        id: translation
+        env:
+          OPENAI_API_KEY: ${{ secrets.I18N_OPENAI_API_KEY }}
+          I18N_MODEL: ${{ vars.I18N_MODEL }}
+          I18N_AUTO_TRANSLATE_ENABLED: ${{ vars.I18N_AUTO_TRANSLATE_ENABLED }}
+          I18N_LIVE_VERIFIED: ${{ vars.I18N_LIVE_VERIFIED }}
+          I18N_MAX_PAGES: '4'
+          I18N_TOKEN_BUDGET: '20000'
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node scripts/i18n/workflow-generate.cjs "$RUNNER_TEMP/japanese-translation"
+      - uses: actions/create-github-app-token@v2
+        if: steps.translation.outputs.created == 'true'
+        id: app
+        with:
+          app-id: ${{ secrets.I18N_GITHUB_APP_ID }}
+          private-key: ${{ secrets.I18N_GITHUB_APP_PRIVATE_KEY }}
+          owner: apache
+          repositories: doris-website
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Open draft PR with the dedicated App
+        if: steps.translation.outputs.created == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: node scripts/i18n/workflow-publish.cjs "$RUNNER_TEMP/japanese-translation"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: japanese-translation-generation-${{ github.run_id }}
+          path: ${{ runner.temp }}/japanese-translation/
+          if-no-files-found: warn
+          retention-days: 30
