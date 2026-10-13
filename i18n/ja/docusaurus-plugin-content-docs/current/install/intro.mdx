@@ -1,0 +1,51 @@
+---
+{
+    "title": "インストールとデプロイ",
+    "language": "ja",
+    "description": "Apache Doris の要件に合ったインストール方法とデプロイ方法を選びます。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# インストールとデプロイ
+
+この章では、Apache Doris のインストールとデプロイについて説明します。まず要件に合ったデプロイ構成を選び、対応するデプロイガイドを参照してください。
+
+## デプロイ前の準備
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="デプロイ構成の選択"
+    description="ストレージ・コンピュート一体型と分離型、手動デプロイと Kubernetes デプロイ、クラウドデプロイを比較します"
+    link="choosing-deployment-mode"
+/>
+
+<GettingStartedCard
+    title="インストールの準備"
+    description="環境の確認、クラスター規模の計画、オペレーティングシステムの要件確認を行います"
+    link="preparation/env-checking"
+/>
+</div>
+
+## デプロイ方法
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="手動デプロイ"
+    description="物理マシンまたは仮想マシンに Apache Doris を直接インストールします"
+    link="deploy-manually/intro"
+/>
+
+<GettingStartedCard
+    title="Kubernetes デプロイ"
+    description="Doris Operator を使って Kubernetes に Apache Doris をデプロイします"
+    link="deploy-on-kubernetes/intro"
+/>
+
+<GettingStartedCard
+    title="クラウドデプロイ"
+    description="AWS などのパブリッククラウドに Apache Doris をデプロイします"
+    link="deploy-on-cloud/doris-on-aws"
+/>
+</div>
