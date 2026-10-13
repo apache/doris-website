@@ -31,7 +31,8 @@ function validateActive(data, scope) {
     const seen = new Set();
     return data.candidates.map(candidate => {
         assert(candidate.locale === scope.locale && managed(scope, candidate), 'Active candidate outside managed scope');
-        assert(typeof candidate.docId === 'string' && candidate.docId && sha(candidate.sourceHash), 'Invalid active candidate identity/hash');
+        assert(typeof candidate.docId === 'string' && candidate.docId && sha(candidate.sourceHash)
+            && typeof candidate.sourcePath === 'string' && candidate.sourcePath, 'Invalid active candidate identity/path/hash');
         assert(typeof candidate.pr === 'string' && candidate.pr.trim(), 'Active candidate needs a PR reference');
         const id = key(candidate);
         assert(!seen.has(id), `Duplicate active candidate: ${id}`);
@@ -119,7 +120,7 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
         }
         if (moveFrom && !current.has(key(moveFrom))) matchedRemoval.add(key(moveFrom));
         const candidate = activeByKey.get(key(page));
-        const activeValid = candidate?.sourceHash === page.sourceHash && (!candidate.sourcePath || candidate.sourcePath === page.sourcePath);
+        const activeValid = candidate?.sourceHash === page.sourceHash && candidate.sourcePath === page.sourcePath;
         if (candidate && !activeValid) exceptions.push({kind: 'stale_active_candidate', groupId: page.groupId,
             docId: page.docId, pr: candidate.pr, candidateHash: candidate.sourceHash, sourceHash: page.sourceHash});
         let kind;

@@ -48,7 +48,7 @@ test('modified completed source is an update and valid active PR suppresses sele
         targetHash: hash('訳文'), disposition: 'translate'};
     const changed = page('edited', {state: 'stale_technical', change: 'source_changed', targetHash: hash('訳文')});
     const active = {schemaVersion: 1, candidates: [{pluginId: 'default', version: 'current', docId: 'edited',
-        locale: 'ja', sourceHash: changed.sourceHash, pr: '#123'}]};
+        locale: 'ja', sourcePath: changed.sourcePath, sourceHash: changed.sourceHash, pr: '#123'}]};
     const result = await run([changed], {old: [previous], active});
     assert.equal(result.tasks[0].kind, 'update');
     assert.equal(result.tasks[0].activePr, '#123');
@@ -59,9 +59,18 @@ test('modified completed source is an update and valid active PR suppresses sele
 test('stale active PR is reported and a later source revision reenters selection', async () => {
     const changed = page('edited', {state: 'stale_unknown'});
     const active = {schemaVersion: 1, candidates: [{pluginId: 'default', version: 'current', docId: 'edited',
-        locale: 'ja', sourceHash: hash('older'), pr: '#123'}]};
+        locale: 'ja', sourcePath: changed.sourcePath, sourceHash: hash('older'), pr: '#123'}]};
     const result = await run([changed], {old: [{...changed, sourceHash: hash('older'), sourceCommit: baselineSha}], active});
     assert.equal(result.exceptions.some(item => item.kind === 'stale_active_candidate'), true);
+    assert.equal(result.selected.length, 1);
+});
+
+test('an active PR for an old path cannot suppress a moved page with the same source hash', async () => {
+    const changed = page('new', {sourcePath: 'docs/new.md'});
+    const active = {schemaVersion: 1, candidates: [{pluginId: 'default', version: 'current', docId: 'new',
+        locale: 'ja', sourcePath: 'docs/old.md', sourceHash: changed.sourceHash, pr: '#123'}]};
+    const result = await run([changed], {active});
+    assert.equal(result.tasks[0].activePr, null);
     assert.equal(result.selected.length, 1);
 });
 
@@ -142,7 +151,8 @@ test('limit, token budget and path filter apply after full counts without renumb
 });
 
 test('active input rejects duplicate, out-of-scope and malformed candidates', () => {
-    const candidate = {pluginId: 'default', version: 'current', docId: 'a', locale: 'ja', sourceHash: hash(source), pr: '#1'};
+    const candidate = {pluginId: 'default', version: 'current', docId: 'a', locale: 'ja', sourcePath: 'docs/a.md',
+        sourceHash: hash(source), pr: '#1'};
     assert.throws(() => validateActive({schemaVersion: 1, candidates: [candidate, candidate]}, scope), /Duplicate/);
     assert.throws(() => validateActive({schemaVersion: 1, candidates: [{...candidate, version: '3.x'}]}, scope), /outside/);
     assert.throws(() => validateActive({schemaVersion: 1, candidates: [{...candidate, sourceHash: 'bad'}]}, scope), /Invalid/);
