@@ -29,7 +29,7 @@
 [dbt](https://docs.getdbt.com/docs/introduction) 用于管理 ELT（Extract、Load、Transform）
 流程中的转换环节。`dbt-for-apache-doris` Adapter 会将 dbt Model
 编译为 Doris SQL，并通过 Doris Frontend（FE）的 MySQL Query Port 执行建表、数据转换、
-测试和文档生成。原始数据需要提前写入 Doris；Adapter 不负责采集或同步源数据。
+测试和文档生成。原始数据需要已能通过 Doris 查询，可以来自 Internal Catalog 内表或已配置的 External Catalog；Adapter 不负责采集或同步源数据。
 
 :::caution
 
@@ -284,8 +284,10 @@ schema: analytics
 ```sql
 {{ config(materialized='table', engine='iceberg') }}
 
-select 1 as id
+select cast(1 as int) as id
 ```
+
+显式转换为 `INT`，避免常量被推断为 Iceberg 不支持的 `TINYINT` 字段类型。
 
 执行 `dbt run --select iceberg_sample`，创建 `iceberg_catalog.analytics.iceberg_sample`。Catalog 必须已存在；Database 必须已存在或允许 dbt 创建，目标需要可写。`engine='iceberg'` 会生成显式 Engine 子句；省略 `engine` 时，Doris 会根据目标 Catalog 推断。Catalog 推断已在 Doris 4.1.3 验证；更早的 Doris 版本可能需要显式设置 Engine。
 
@@ -293,14 +295,14 @@ select 1 as id
 | --- | --- |
 | `table` | 创建 Iceberg 表；再次运行时通过备份和重命名替换目标 |
 | `incremental` | 支持下文介绍的 `append`、`merge`、`insert_overwrite` 和 `microbatch` |
-| Seed 和 Snapshot | 支持；Snapshot 发布和 Seed 完整刷新使用备份和重命名。Iceberg Seed 常规重载使用覆盖或 MERGE |
+| Seed 和 Snapshot | 支持；Snapshot 发布和 Seed 完整刷新使用备份和重命名。非分区表常规重载使用 INSERT OVERWRITE；分区表重载使用原生 MERGE，需要 V2+。V1 分区 Seed 应使用 `dbt seed --full-refresh` |
 | `view` 和 `materialized_view` | 目标必须位于 Internal Catalog；Internal Catalog 中的 View 和 MV 可以查询 External Catalog Source |
 
-Iceberg 的 `merge` 和 `microbatch` 需要支持原生 Iceberg `MERGE INTO` 的 Doris 版本，以及 Iceberg V2 或更高版本的表。这些路径已在 Doris 4.1.3 验证；[Doris 文档将 Iceberg MERGE 标记为自 4.1.0 起的实验功能](../../lakehouse/catalogs/iceberg-catalog#merge-into)。External Catalog 表的替换不是原子操作：两次重命名之间，目标表名会短暂不可用；失败时旧表可能保留在备份名称下。生产使用前，应在隔离项目中验证 Doris 版本、Catalog Connector 和故障恢复流程。
+Iceberg 的 `merge`、`microbatch` 和分区 Seed 常规重载需要支持原生 Iceberg `MERGE INTO` 的 Doris 版本，以及 Iceberg V2 或更高版本的表。这些路径已在 Doris 4.1.3 验证；[Doris 文档将 Iceberg MERGE 标记为自 4.1.0 起的实验功能](../../lakehouse/catalogs/iceberg-catalog#merge-into)。External Catalog 表的替换不是原子操作：两次重命名之间，目标表名会短暂不可用；失败时旧表可能保留在备份名称下。生产使用前，应在隔离项目中验证 Doris 版本、Catalog Connector 和故障恢复流程。
 
 Adapter 会在写入 Table、View、Incremental 或 MV 目标前拒绝 Model 或字段上的 `constraints` 声明。Model Contract 仍会校验字段名称和类型。`not_null` 等 `data_tests` 可在写入后校验数据，但不会创建数据库约束。
 
-[五个可运行的 Doris Demo](https://github.com/velodb/dbt-for-apache-doris/tree/v1.1.1/examples/doris-demos) 展示了 Model、测试、跨 Database Source、增量处理、Snapshot 和异步物化视图。
+[五个可运行的 Doris Demo](https://github.com/velodb/dbt-for-apache-doris/tree/3fb9cc75f9dcdd756b472847728bbdf42fb3b128/examples/doris-demos) 展示了 Model、测试、跨 Database Source、增量处理、Snapshot 和异步物化视图。Demo 环境默认安装 `dbt-for-apache-doris==1.1.1`。
 
 <!-- 知识类型: 能力定义 / 配置参数 / 架构选型决策 -->
 <!-- 适用场景: Materialization 选型 / 增量加工 / 物化视图 -->
@@ -487,8 +489,7 @@ where order_time >= '2026-07-01'
 
 ### Microbatch
 
-`microbatch` 使用 dbt Core 的批处理上下文，把每个 UTC 时间窗口映射为一个
-精确的 Doris RANGE 分区，并逐分区执行 `INSERT OVERWRITE`。例如：
+`microbatch` 使用 dbt Core 的批处理上下文处理每个 UTC 时间窗口。下例针对 Internal Catalog OLAP 目标，将窗口映射为精确的 Doris RANGE 分区，并逐分区执行 `INSERT OVERWRITE`：
 
 先为每个直接上游资源和目标 Model 配置 Event Time 字段，使 dbt Core 能向每批输入
 注入时间过滤。对于前文示例中创建的 `raw.orders` Source，在已有 Table 声明下增加：
@@ -560,7 +561,7 @@ Doris 创建 Dynamic Partition 表时还要求 `dynamic_partition.buckets` 为�
 目标表所需的完整数据。同一批 `merge` 数据中的 `unique_key` 必须唯一。Microbatch
 的时间过滤由 dbt Core 根据已配置 `event_time` 的上游资源生成，不需要使用
 `is_incremental()`。修改 Key、分区方式或其他不兼容表结构后，应执行
-`dbt run --full-refresh`。对于 Iceberg Microbatch，不要配置 OLAP Dynamic Partition 属性、具名 `overwrite_partitions` 或 `partition_by_init`；每个 UTC 时间窗口由原生 MERGE 替换，包括空窗口。
+`dbt run --full-refresh`。对于 Iceberg Microbatch，不要配置 `unique_key`、`overwrite_partitions`（包括字段和值映射）、`partition_by_init` 或 OLAP Dynamic Partition 属性。若设置 `partition_by`，必须显式配置 `partition_type='LIST'`。每个 UTC 时间窗口由原生 MERGE 替换，包括空窗口。
 :::
 
 ### 异步物化视图
