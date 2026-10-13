@@ -1,0 +1,33 @@
+---
+{
+    "title": "Kubernetes へのデプロイ",
+    "language": "ja",
+    "description": "Doris Operator を使って Apache Doris を Kubernetes にデプロイします。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Kubernetes へのデプロイ
+
+Kubernetes では、Doris Operator が Apache Doris を管理します。デプロイするアーキテクチャに合ったガイドを選んでください。
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="デプロイ前の準備"
+    description="Doris Operator の機能と、各クラウドプロバイダーの Kubernetes サービスへのインストール方法を説明します"
+    link="doris-operator/intro"
+/>
+
+<GettingStartedCard
+    title="ストレージ・コンピュート一体型のデプロイ"
+    description="一体型構成の Doris クラスターを Kubernetes にデプロイします"
+    link="integrated-storage-compute/intro"
+/>
+
+<GettingStartedCard
+    title="ストレージ・コンピュート分離型のデプロイ"
+    description="分離型構成の Doris クラスターを Kubernetes にデプロイします"
+    link="separating-storage-compute/install-doris-cluster"
+/>
+</div>
