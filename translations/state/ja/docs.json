@@ -37,6 +37,23 @@
     },
     {
       "pluginId": "default",
+      "version": "current",
+      "docId": "getting-started/quick-start",
+      "locale": "ja",
+      "sourceLocale": "en",
+      "sourcePath": "docs/getting-started/quick-start.mdx",
+      "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/getting-started/quick-start.mdx",
+      "sourceCommit": "de6b50dd09daf92d67eed09672834a71efad9daa",
+      "sourceHash": "c1f1c82c39f02f2368e4f214b72a7be258983de46fcb04615078a1dd8d35a60b",
+      "sourceTechnicalHash": "9c1b0c02f50f363922e3fa34e6e59b15977943a1ada12454ef9ea76ad9bf6367",
+      "targetHash": "1340a796070ffbe49ec953f4123ae48a83fb4ec8deb41b32ea1ee43a429861ae",
+      "reviewStatus": "machine",
+      "ownership": "machine",
+      "translatedAt": "2026-10-13T01:24:34.000Z",
+      "glossaryVersion": "0"
+    },
+    {
+      "pluginId": "default",
       "version": "4.x",
       "docId": "getting-started/what-is-apache-doris",
       "locale": "ja",
