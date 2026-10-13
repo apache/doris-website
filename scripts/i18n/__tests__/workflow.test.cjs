@@ -1,9 +1,13 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const {execFileSync} = require('node:child_process');
 const {hash} = require('../state.cjs');
 const {reconcileOpenPrs} = require('../workflow-prs.cjs');
 const {relevantPush, replaceableBotPr} = require('../workflow-scan.cjs');
-const {pairFor, machineOwned} = require('../workflow-generate.cjs');
+const {pairFor, machineOwned, generate} = require('../workflow-generate.cjs');
 const {expectedFiles} = require('../workflow-publish.cjs');
 
 const scope = {schemaVersion: 1, locale: 'ja', maxBatchPages: 20, groups: [
@@ -93,4 +97,56 @@ test('publication allows only matching managed ja targets and state', () => {
         [record.targetPath, 'translations/state/ja/docs.json']);
     assert.throws(() => expectedFiles({schemaVersion: 1, provider: 'openai',
         candidates: [{...candidate, targetPath: 'docs/guide.md'}]}, scope), /target/);
+});
+
+test('one model result creates separate Dev and 4.x targets and state records', async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ja-workflow-'));
+    const git = (...args) => execFileSync('git', args, {cwd: dir, encoding: 'utf8'}).trim();
+    try {
+        const source = '# Hello\n\nA simple guide.\n';
+        const relative = 'guide.md';
+        const devSource = `docs/${relative}`;
+        const x4Source = `versioned_docs/version-4.x/${relative}`;
+        for (const file of [devSource, x4Source]) {
+            fs.mkdirSync(path.dirname(path.join(dir, file)), {recursive: true});
+            fs.writeFileSync(path.join(dir, file), source);
+        }
+        fs.mkdirSync(path.join(dir, 'translations/scope'), {recursive: true});
+        fs.mkdirSync(path.join(dir, 'translations/state/ja'), {recursive: true});
+        fs.writeFileSync(path.join(dir, 'translations/scope/ja.json'), JSON.stringify(scope));
+        fs.writeFileSync(path.join(dir, 'translations/state/ja/docs.json'), '{"schemaVersion":1,"pages":[]}\n');
+        git('init', '-q');
+        git('config', 'user.name', 'Test');
+        git('config', 'user.email', 'test@example.com');
+        git('add', '.');
+        git('commit', '-qm', 'source');
+        const sourceCommit = git('rev-parse', 'HEAD');
+        const task = (id, version, sourcePath, targetPath) => ({id, groupId: version === 'current' ? 'DEV' : '4X',
+            pluginId: 'default', version, docId: 'guide', locale: 'ja', kind: 'translate_backlog',
+            sourcePath, targetPath, sourceHash: hash(source), sourceCommit,
+            requiresHumanReview: false, activePr: null});
+        const dev = task('T06-DEV-000000000000001', 'current', devSource,
+            'i18n/ja/docusaurus-plugin-content-docs/current/guide.md');
+        const x4 = task('T06-4X-000000000000002', '4.x', x4Source,
+            'i18n/ja/docusaurus-plugin-content-docs/version-4.x/guide.md');
+        let calls = 0;
+        const adapter = {model: 'fixture', usedTokens: 0, translate: async ({units}) => {
+            calls++;
+            return {translations: units.map(unit => ({id: unit.id,
+                text: unit.text === 'Hello' ? 'こんにちは' : '簡単なガイドです。'}))};
+        }};
+        const manifest = await generate({rootDir: dir, output: path.join(dir, 'output'),
+            ensureFresh: commit => assert.equal(commit, sourceCommit),
+            plan: {schemaVersion: 1, locale: 'ja', sourceCommit, selected: [dev.id], tasks: [dev, x4], exceptions: []},
+            reconciliation: {botPrs: [], botDetails: [], blockedTargets: []},
+            maxPages: 2, adapter, glossary: require('../../../translations/glossary/ja.json')});
+        assert.equal(calls, 1);
+        assert.equal(manifest.candidates.length, 2);
+        assert.equal(manifest.candidates[1].reusedFrom, dev.id);
+        assert.equal(fs.readFileSync(path.join(dir, dev.targetPath), 'utf8'),
+            fs.readFileSync(path.join(dir, x4.targetPath), 'utf8'));
+        const state = JSON.parse(fs.readFileSync(path.join(dir, 'translations/state/ja/docs.json'), 'utf8'));
+        assert.deepEqual(state.pages.map(page => page.version), ['4.x', 'current']);
+        assert(state.pages.every(page => page.reviewStatus === 'machine' && page.sourceHash === hash(source)));
+    } finally {fs.rmSync(dir, {recursive: true, force: true});}
 });

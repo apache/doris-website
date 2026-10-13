@@ -35,19 +35,19 @@ function machineOwned(task, state) {
     return !existing || existing.ownership === 'machine';
 }
 
-function copyPair(primary, partner, scope, state) {
+function copyPair(primary, partner, scope, state, rootDir = root) {
     managedPath(scope, partner);
     assert.equal(primary.task.sourceHash, partner.sourceHash, 'Paired source hash differs');
-    const targetFile = safeFile(root, partner.targetPath);
+    const targetFile = safeFile(rootDir, partner.targetPath);
     const previousTarget = fs.existsSync(targetFile) ? fs.readFileSync(targetFile, 'utf8') : null;
     const existing = state.data.pages.find(item => identity(item) === identity(partner));
     assert(!previousTarget || existing, 'Untracked paired target needs human review');
     if (existing) assert(existing.sourcePath === partner.sourcePath && existing.targetPath === partner.targetPath
         && previousTarget !== null && hash(previousTarget) === existing.targetHash
         && existing.ownership === 'machine', 'Paired target changed or is human maintained');
-    const source = fs.readFileSync(safeFile(root, partner.sourcePath), 'utf8');
+    const source = fs.readFileSync(safeFile(rootDir, partner.sourcePath), 'utf8');
     assert.equal(hash(source), partner.sourceHash, 'Paired source changed');
-    assert.equal(execFileSync('git', ['show', `HEAD:${partner.sourcePath}`], {cwd: root, encoding: 'utf8'}), source,
+    assert.equal(execFileSync('git', ['show', `HEAD:${partner.sourcePath}`], {cwd: rootDir, encoding: 'utf8'}), source,
         'Paired source has uncommitted changes');
     const record = {...primary.record, pluginId: partner.pluginId, version: partner.version,
         docId: partner.docId, sourcePath: partner.sourcePath, targetPath: partner.targetPath,
@@ -80,14 +80,15 @@ function bodyFor(manifest) {
 }
 
 async function generate({plan, reconciliation, maxPages = 4, tokenBudget = 20000,
-    adapter, glossary, state = readState(root), output}) {
+    adapter, glossary, rootDir = root, ensureFresh = ensureMasterFresh, output}) {
     assert(Number.isInteger(maxPages) && maxPages > 0 && maxPages <= 20, 'Invalid page limit');
     assert(plan.schemaVersion === 1 && plan.sourceCommit === execFileSync('git', ['rev-parse', 'HEAD'],
-        {cwd: root, encoding: 'utf8'}).trim(), 'Plan does not match trusted checkout');
+        {cwd: rootDir, encoding: 'utf8'}).trim(), 'Plan does not match trusted checkout');
     const replaces = replaceableBotPr(plan, reconciliation);
     assert(reconciliation.botPrs.length === 0 || replaces,
         'An automated Japanese PR is already open or was edited after generation');
-    const scope = JSON.parse(fs.readFileSync(path.join(root, 'translations/scope/ja.json'), 'utf8'));
+    const scope = JSON.parse(fs.readFileSync(path.join(rootDir, 'translations/scope/ja.json'), 'utf8'));
+    const state = readState(rootDir);
     const blocked = new Set(reconciliation.blockedTargets);
     const candidates = [], failures = [], consumed = new Set();
     for (const id of plan.selected) {
@@ -103,12 +104,12 @@ async function generate({plan, reconciliation, maxPages = 4, tokenBudget = 20000
         if (partner && (blocked.has(partner.targetPath) || !machineOwned(partner, state)
             || candidates.length + 2 > maxPages)) partner = null;
         try {
-            checkedTask(plan, id, scope, root);
-            const primary = await prepare({root, plan, taskId: id, scope, state, adapter, glossary,
+            checkedTask(plan, id, scope, rootDir);
+            const primary = await prepare({root: rootDir, plan, taskId: id, scope, state, adapter, glossary,
                 maxDocumentChars: 60000, maxChunkChars: 5000});
             candidates.push(primary);
             if (partner) try {
-                const copy = copyPair(primary, partner, scope, state);
+                const copy = copyPair(primary, partner, scope, state, rootDir);
                 candidates.push(copy);
                 consumed.add(partner.id);
             } catch (error) {
@@ -130,9 +131,9 @@ async function generate({plan, reconciliation, maxPages = 4, tokenBudget = 20000
     fs.mkdirSync(output, {recursive: true});
     fs.writeFileSync(path.join(output, 'generation.json'), JSON.stringify(manifest, null, 2) + '\n');
     if (candidates.length) {
-        ensureMasterFresh(plan.sourceCommit);
+        ensureFresh(plan.sourceCommit);
         for (const item of candidates) checkedTask({...plan, selected: [...plan.selected, item.task.id]},
-            item.task.id, scope, root);
+            item.task.id, scope, rootDir);
         applyCandidates(state, candidates);
         fs.writeFileSync(path.join(output, 'pr-body.md'), bodyFor(manifest));
     }
