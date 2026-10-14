@@ -135,7 +135,7 @@ Doris は StreamLoad モードによるデータのインポートをサポー�
 
 Kubernetes 外のクライアントが StreamLoad を使用して、Kubernetes 上にデプロイした Doris クラスターへデータをインポートする場合は、外部からアクセスできる BE アドレスを StreamLoad のインポート先アドレスとして設定する必要があります。
 ### BE の Service を外部からアクセスできるように設定する
-[NodePort](install-config-cluster.md#nodeport) または [LoadBalancer](install-config-cluster.md#loadbalancer) の設定に従い、BE の `Service` を Kubernetes クラスター外からアクセスできるようにします。その後、Doris クラスターをデプロイする `DorisCluster` リソースを更新します。
+BE の `Service` を、[NodePort](install-config-cluster.md#nodeport) または [LoadBalancer](install-config-cluster.md#loadbalancer) の設定に従って Kubernetes クラスター外からアクセスできるようにします。その後、Doris クラスターをデプロイする `DorisCluster` リソースを更新します。
 
 ### BE のプロキシアドレスを設定する
 [NodePort モード](#nodeport-mode)または [LoadBalancer モード](#loadbalancer-mode)で説明したアクセスアドレスの取得方法に従い、Kubernetes 外からアクセスできるアドレスと、web_server サービスに対応するポートを取得します。取得したアドレスとポートを、StreamLoad によるデータインポートで使用するリクエスト先アドレスとして設定します。

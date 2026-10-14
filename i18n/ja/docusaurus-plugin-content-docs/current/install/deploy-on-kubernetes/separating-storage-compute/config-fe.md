@@ -48,7 +48,7 @@ spec:
 
 ## Follower ノード数の設定
 
-FE サービスには次の 2 つのロールがあります。
+FE サービスには次の二つのロールがあります。
 
 | ロール | 役割 |
 | --- | --- |
@@ -135,7 +135,7 @@ spec:
 
 :::tip Tip
 
-Kubernetes へのデプロイで起動設定をカスタマイズする場合は、次の 2 点に注意してください。
+Kubernetes へのデプロイで起動設定をカスタマイズする場合は、次の二点に注意してください。
 
 1. `meta_service_endpoint` または `cluster_id` を設定に**追加しないでください**。Doris-Operator がこれらの値を自動的に注入します。
 2. `enable_fqdn_mode=true` を**必ず設定してください**。
@@ -144,7 +144,7 @@ Kubernetes へのデプロイで起動設定をカスタマイズする場合は
 
 ## アクセスの設定
 
-Doris-Operator は Kubernetes Service を使用して VIP と負荷分散を提供します。アクセス元に応じて、次の 3 つの公開方式から選択できます。
+Doris-Operator は Kubernetes Service を使用して VIP と負荷分散を提供します。アクセス元に応じて、次の三つの公開方式から選択できます。
 
 | アクセス方式 | 適した場面 | 説明 |
 | --- | --- | --- |
@@ -178,7 +178,7 @@ doriscluster-sample-fe-internal   ClusterIP   None          <none>        9030/T
 doriscluster-sample-fe            ClusterIP   10.1.118.16   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   14m
 ```
 
-出力には 2 種類の Service が含まれます。
+出力には 二種類の Service が含まれます。
 
 - `internal` 接尾辞が付く Service：Doris の内部通信（ハートビートやデータ交換など）にのみ使用され、外部には公開されない
 - `internal` 接尾辞が付かない Service：FE サービスへの外部アクセスに使用される
@@ -199,7 +199,7 @@ mysql -uroot -P9030 -hdoriscluster-sample-fe
 
 ### NodePort 方式
 
-Kubernetes クラスタ外から Doris にアクセスするには、[NodePort 方式](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)を使用します。NodePort 方式には、ポートを割り当てる方法が 2 つあります。
+Kubernetes クラスタ外から Doris にアクセスするには、[NodePort 方式](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)を使用します。NodePort 方式には、ポートを割り当てる方法が二つあります。
 
 | 割り当て方法 | 説明 |
 | --- | --- |
@@ -331,7 +331,7 @@ mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com
 
 [デフォルトのデプロイ](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/cluster/ddc-sample.yaml)では、FE サービスはメタデータの保存先として Kubernetes の [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) を使用します。`EmptyDir` は永続ストレージではないため、**サービスの再起動後にメタデータが失われます**。
 
-FE の再起動後もメタデータを失わないように、FE の永続ストレージを設定します。Doris Operator には次の 3 つの選択肢があります。必要に応じて選択してください。
+FE の再起動後もメタデータを失わないように、FE の永続ストレージを設定します。Doris Operator には次の三つの選択肢があります。必要に応じて選択してください。
 
 | 選択肢 | 適した場面 |
 | --- | --- |
