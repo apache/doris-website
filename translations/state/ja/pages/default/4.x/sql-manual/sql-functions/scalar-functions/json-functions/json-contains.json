@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-contains",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-contains.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-contains.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "360cf0e65c83eb5578fbcc3c6be1e726019963cd7b34a53459cbfe1bfbdbd100",
+    "sourceTechnicalHash": "922d134fdac81d26ae6feb922d72cba7bfb888881ecf845934e5766081d42f70",
+    "targetHash": "dd948d730a513827a7926594b40deb188814d0b0926efe061fa50b110c893d8f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T12:42:57.798Z",
+    "glossaryVersion": "0"
+  }
+}

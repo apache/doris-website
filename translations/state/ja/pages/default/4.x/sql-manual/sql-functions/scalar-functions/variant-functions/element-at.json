@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/variant-functions/element-at",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/variant-functions/element-at.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/variant-functions/element-at.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "db6f90346e1eb85ad05b686b54142a9281f7d456046a68c773bcb3b97cde7b38",
+    "sourceTechnicalHash": "cce75e8bb7f5a8e7042b6d41712968aff55586b45cc0faf176a6491d341c3b00",
+    "targetHash": "8a1a77f33cf987db685d6e3e6710b0bf4f154b4ec821551f65c2d959de9dc7ce",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:06:03.654Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/is-ip-address-in-range",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/is-ip-address-in-range.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/is-ip-address-in-range.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "0fe428a7fc5cf9af6fcc36df79369763a152b9d0319cf41f7f7f198d850f25e3",
+    "sourceTechnicalHash": "d9114cd33db5e17091d287d89db7cbb552ad16025f6ec3672a8ca967a5542b5a",
+    "targetHash": "39af06ba1f1253997bb1edfd2c2469a6713a03b0fa614009c10cad3c7a43aeeb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:32:10.976Z",
+    "glossaryVersion": "0"
+  }
+}

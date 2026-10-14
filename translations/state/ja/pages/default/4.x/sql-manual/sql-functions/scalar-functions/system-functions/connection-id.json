@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/system-functions/connection-id",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/system-functions/connection-id.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/system-functions/connection-id.md",
+    "sourceCommit": "9bd8b356d362e6e0ce821bb464039c73129bff2c",
+    "sourceHash": "a66ceb1984984fee724b4be258a65a8407ff053ff022e777cb38a767a99cc640",
+    "sourceTechnicalHash": "8cfe8d0519f6d699b371efef8324f62288178fc7f43ab83bd55364824642354c",
+    "targetHash": "2cceb21c93660ff7a148ffc6955e20ed2d466aa72fb2f9777025cf2c1ef07e86",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T18:12:09.567Z",
+    "glossaryVersion": "0"
+  }
+}

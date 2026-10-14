@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/variant-functions/try-parse-to-variant",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/variant-functions/try-parse-to-variant.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/variant-functions/try-parse-to-variant.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "72e3d718ad12f85ba4540e75fc4bc919c6f038f92dbca04995a3a5e923d4fff6",
+    "sourceTechnicalHash": "ba687d3239320c9c1b01a94c0f562c7f1784064f3c886ad5651cb4efca2ffca0",
+    "targetHash": "285b8555da6e27b8f140b7c127b7a29f20f56826f69ecef0d095fa3e671782fb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:06:03.658Z",
+    "glossaryVersion": "0"
+  }
+}

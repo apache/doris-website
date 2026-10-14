@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/ai-agg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/ai-agg.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/ai-agg.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "f02c0c3cc608cc4a6bff781a4e365dd45e89fd5f2f25390496cc9686cda3253b",
+    "sourceTechnicalHash": "c0577ab6b324d36aae0633b2f937a6d875c4707bba3c389f26ee6e4cf79ce3c0",
+    "targetHash": "36aabf1b9f2c6873d6eb620d09ed362e838f6788bea7e0f39f29bb511124c418",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:30:24.920Z",
+    "glossaryVersion": "0"
+  }
+}

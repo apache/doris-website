@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/array-agg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/array-agg.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/array-agg.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "9308ae9ff4b600490009d744d902f606a34d356e2607ced9b4b9df4e9d081f86",
+    "sourceTechnicalHash": "ed9537d8a0b813325293c0676fbd309f57b23e2388c9a06d7afc7387c364633e",
+    "targetHash": "6b04ba1afa36ef5dae582d9871f7d4c4f79b42a94c399a07310705b436ad2eca",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:30:24.920Z",
+    "glossaryVersion": "0"
+  }
+}

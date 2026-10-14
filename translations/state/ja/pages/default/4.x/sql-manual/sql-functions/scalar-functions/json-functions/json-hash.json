@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-hash",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-hash.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-hash.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "0d27b73d6277020e19b5f0231e62d1f7b9a029af7ce3110c42d92bb2d405189b",
+    "sourceTechnicalHash": "18ecb2dbdb010c6fc2ac05bb0564a0303aab7071aeb15059957aca0f44d31aea",
+    "targetHash": "b011147fd58181b7492ad4e2f93bcb49587eed23e268566dcac32eaa945a52e5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T13:33:42.788Z",
+    "glossaryVersion": "0"
+  }
+}

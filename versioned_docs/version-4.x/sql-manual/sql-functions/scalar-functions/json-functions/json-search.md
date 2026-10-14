@@ -24,8 +24,8 @@ JSON_SEARCH( <json_object>, <one_or_all>, <search_value> )
 ## Return Value
 Nullable(JSON): Depending on the `<one_or_all>` parameter, there are two cases:
 
-    1. 'one': If a matching value is found, returns a JSON path pointing to the matching value. If no matching value is found, returns NULL.
-    2. 'all': Returns paths to all matching values. If there are multiple values, returns them as a JSON array. If no matches are found, returns NULL.
+1. 'one': If a matching value is found, returns a JSON path pointing to the matching value. If no matching value is found, returns NULL.
+2. 'all': Returns paths to all matching values. If there are multiple values, returns them as a JSON array. If no matches are found, returns NULL.
 
 ## Notes
 - The `one_or_all` parameter determines whether to find all matching values. 'one' returns the first matching path, 'all' returns all matching paths. If it's any other value, an error will be reported.

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/binary-functions/sub-binary",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/binary-functions/sub-binary.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/binary-functions/sub-binary.md",
+    "sourceCommit": "9bd8b356d362e6e0ce821bb464039c73129bff2c",
+    "sourceHash": "641a1431d2bcee01249f2dec6c0eb922994a02f84268e420ef8c8a00f547d35a",
+    "sourceTechnicalHash": "e04dd68d5f698a404131121e283a9ed199fdc982529bfffcc62015f55245a6fa",
+    "targetHash": "e389c4960332e7d94dc103cd97de5878a9e730a385eaef75b2b5b3316916bbbe",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T18:12:09.567Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/to-json",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/to-json.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/to-json.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "f327bc696a529c298fd9d9134830731d44d37b2273751256e7d29d42ac0eda94",
+    "sourceTechnicalHash": "78d947e5dee5289039fd07cc77e82bc2975326cc937b3bb374974800a86486fd",
+    "targetHash": "cda2281317fb9f2d7f3bfac0313ca1b2c67b9a7fa78f21a850bebd8bfa8e22b1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:06:03.650Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-string-to-num-or-default",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-string-to-num-or-default.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-string-to-num-or-default.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "a5c8f7f72ec301ee2cb34aa2d27a5822b8ab2b4967cafe3ff47a18562b1adde0",
+    "sourceTechnicalHash": "f6815f40f860236379d228e1eeb5d9763108c783c46ea1df30075a94dd2de405",
+    "targetHash": "396e3b3741d92814c45e6e6dfdeb9758b467d90f3a94950d69c2f40197139730",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:32:10.974Z",
+    "glossaryVersion": "0"
+  }
+}

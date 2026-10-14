@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-cidr-to-range",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-cidr-to-range.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-cidr-to-range.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "bde9bc8b1c3a5d3676d69fea106238993350e6bb12286958cbb91f01619306d7",
+    "sourceTechnicalHash": "17a9b29552485dfef2623d0c584c4aeb48bfe213596d81eb42ae08e2b5f8b8df",
+    "targetHash": "f7c0cfcbd5056f4e308b0fa2932f605f311c6be33fbbfc589b3d022fef24c56f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:06:03.664Z",
+    "glossaryVersion": "0"
+  }
+}

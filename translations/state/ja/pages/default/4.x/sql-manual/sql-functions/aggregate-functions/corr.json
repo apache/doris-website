@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/corr",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/corr.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/corr.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "d69e01da8d1343acf78d9e51e2c6f444b42c71bad56eb5fb2320093836ad8974",
+    "sourceTechnicalHash": "e758179f465c26ec26f8f5c8ca19b91c95e8c7edb47dfbbb82ca6b7b5ad10662",
+    "targetHash": "8cbe032a2d5a95cd9b12c795cfafd5f0d984ef104adc8a7ea5fa5e2c3b96d3ad",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T20:45:36.247Z",
+    "glossaryVersion": "0"
+  }
+}

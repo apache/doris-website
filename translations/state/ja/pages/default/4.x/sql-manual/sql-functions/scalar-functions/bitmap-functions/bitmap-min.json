@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-min",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-min.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-min.md",
+    "sourceCommit": "9bd8b356d362e6e0ce821bb464039c73129bff2c",
+    "sourceHash": "358336b8c36ad46e966fc99eab0e292cdeb7b12a117a85807fa54c175b3d0693",
+    "sourceTechnicalHash": "96c178837b557ad480d017fc2a08811ca7e2229d130dbab9f5c1c308464c3ae6",
+    "targetHash": "c90757b6521a8ef5d091d95136ebf1240016bf1c5a5a8ef151b678e8834e0058",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T16:38:44.018Z",
+    "glossaryVersion": "0"
+  }
+}

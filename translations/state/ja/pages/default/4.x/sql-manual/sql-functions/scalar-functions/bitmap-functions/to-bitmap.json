@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/to-bitmap",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/to-bitmap.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/to-bitmap.md",
+    "sourceCommit": "9bd8b356d362e6e0ce821bb464039c73129bff2c",
+    "sourceHash": "e95344811acc3c6bdb0737c4d33a0a419348da806bbdb7938119e94a5142c1b6",
+    "sourceTechnicalHash": "e918244844e182a342eca5013b5d95265a3f814f9bd6079a2ec2e0710c9131bf",
+    "targetHash": "e9f5e093d8fe7e9885c68dc871068c4e509d2164ee5accbc97fd685c456b9017",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T18:12:09.567Z",
+    "glossaryVersion": "0"
+  }
+}
