@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-model/tips",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-model/tips.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/data-model/tips.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "e5657529db80fb24c64bbd9f142e535d5c714966cd05ae5b38980d171d263fbc",
+    "sourceTechnicalHash": "1374e1707298a899d391b8d2725f14390d83d5b9e201cc402b748797caa0af5a",
+    "targetHash": "1f04cbd7b2094a069f7c62af7f3a293167a33a8cd58a9069f5c35908e9470de7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:39:04.817Z",
+    "glossaryVersion": "0"
+  }
+}
