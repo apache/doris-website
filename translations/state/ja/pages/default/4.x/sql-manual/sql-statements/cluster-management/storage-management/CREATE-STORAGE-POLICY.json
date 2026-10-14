@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-POLICY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-POLICY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-POLICY.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "7b8699a0bf715bfbdf068523aadc654bc7c1f580b74d050c72a4614601c311cb",
+    "sourceTechnicalHash": "e61eeeb4b0f7a44ed5fcc3147945f97f615c17312bc4174a05660d9b4532c314",
+    "targetHash": "f735e7cf42edcf8eab8d8347d33ea40207c12fc8a09d028ab887fac66b387b36",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:47:19.117Z",
+    "glossaryVersion": "0"
+  }
+}

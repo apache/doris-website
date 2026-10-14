@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/SHOW-COMPUTE-GROUPS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/SHOW-COMPUTE-GROUPS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/SHOW-COMPUTE-GROUPS.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "2ea7aa3e640337d59b0e932b5a926cc63140bb605bf1deaeeaadeadfe227b48a",
+    "sourceTechnicalHash": "02c965c44d52899a8f08797b42cbcbe064f1a32a45a1dd7d58a8e7751cbd240d",
+    "targetHash": "3bd61b3c79e2a91d379f681ad5e19b531f18bae7a8db6a4c6b45589a479a495b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:47:19.117Z",
+    "glossaryVersion": "0"
+  }
+}

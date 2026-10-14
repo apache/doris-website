@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "290dcba0952bf516d8003596dad3bd80cc01f357f822ce163e55c59175c16c5e",
+    "sourceTechnicalHash": "b805cd3b5f0149f7936e508b80e2704482414fe7adef21755031ed4ec97f8071",
+    "targetHash": "b2fe17e69e22853c766a540d30e82ba90fe4f5e2af2264962f6aa8c60f809eb7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:47:19.116Z",
+    "glossaryVersion": "0"
+  }
+}

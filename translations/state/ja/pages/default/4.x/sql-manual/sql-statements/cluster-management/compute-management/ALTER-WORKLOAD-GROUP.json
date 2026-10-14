@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "500d23650c686d2a0cf227889f916f28b93cbdb1c70efe66156d9bea5c420459",
+    "sourceTechnicalHash": "6369769eef40410ed3970dc98abfe34776e54d534ad0c12f826f1d9f3060f43c",
+    "targetHash": "34bd851fe1a5c955027d64baf6ee6a59ef4fb2e86d37d83edfb50fa1afc52493",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:47:19.116Z",
+    "glossaryVersion": "0"
+  }
+}

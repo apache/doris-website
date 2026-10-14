@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/SHOW-RESOURCES",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/SHOW-RESOURCES.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/SHOW-RESOURCES.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "5dc23ff52fe2dc3f83dbb710fd8ed587f156f7484114b52ac152ebc8dc024207",
+    "sourceTechnicalHash": "e9f576f13b1fd540ed41b107e294171fc509ec1078eab2f4a3a123dd30f59f30",
+    "targetHash": "d3c0a680f0f8689860e07f4ebb02a0dbb28024ae3bef06e4c57a1d6789ad5903",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:47:19.115Z",
+    "glossaryVersion": "0"
+  }
+}
