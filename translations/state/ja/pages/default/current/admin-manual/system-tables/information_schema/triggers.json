@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/triggers",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/triggers.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/triggers.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "8c869c939c63d9ea1f43f1b990fe4fd5a62addc648bc6ef9816098cdb905f3a0",
+    "sourceTechnicalHash": "66e98497aff07a2b460a0b66de90d0b53193a87d5a40e2f3e6f6a55c666b8880",
+    "targetHash": "39650cadcdb82aa610f32de5b788730c813dd57ecb80632edc1596be85323edc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.288Z",
+    "glossaryVersion": "0"
+  }
+}

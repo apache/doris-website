@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/columns",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/columns.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/columns.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "a992603739ba4f15d1fbaf58a68ab7e8057a16b213af7917a53675ffe440ee74",
+    "sourceTechnicalHash": "8a93acc798c6af33833984cdf98fc5558102453ee85ef1899091475a0204b3ea",
+    "targetHash": "9ab06a9861515d2dfd7cb0c88d1292b6fd6151eb131fb0f0d0e4af0b34853387",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.284Z",
+    "glossaryVersion": "0"
+  }
+}

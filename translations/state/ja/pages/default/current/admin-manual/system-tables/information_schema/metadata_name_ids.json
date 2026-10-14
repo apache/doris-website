@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/metadata_name_ids",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/metadata_name_ids.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/metadata_name_ids.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "82b4472a984fe9abe8eff6e4f33bf107df41f4701059117a77e6b436b2e9dace",
+    "sourceTechnicalHash": "0031b8ba3d6c57cdd26878295f1a655ff3c708df17cdfbd6608e863e128329fe",
+    "targetHash": "19989f21dcab03b6f589b3bf56c97310cc700d15fda7d448103ba767c6ffaf89",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.285Z",
+    "glossaryVersion": "0"
+  }
+}

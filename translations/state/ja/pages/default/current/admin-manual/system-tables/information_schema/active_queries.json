@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/active_queries",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/active_queries.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/active_queries.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "300618949cfd3b6a0f9b1c99d9add1549d683f6951ade0a5bf3bf96394334ccb",
+    "sourceTechnicalHash": "303a2e177c32207133ae194588b93cb64de0a3331f402ff654a81c6d5ac5127e",
+    "targetHash": "1f7334a28469adac0d02b900dc61ea060123a7aba5e964311d0129fd88813f9b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.283Z",
+    "glossaryVersion": "0"
+  }
+}

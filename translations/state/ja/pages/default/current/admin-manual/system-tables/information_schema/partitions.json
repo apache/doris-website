@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/partitions",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/partitions.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/partitions.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "5606cf9ee8db088beae428cf913c717d8ad21612a90c039b594298242e5bbe93",
+    "sourceTechnicalHash": "bbdda070e346d7df42f68fb049468abf2cc720ebbbdfab5dc10e7e89f156c9bb",
+    "targetHash": "b0b350d10ef557c8c3ce7bf05cb309a3044cb27fa5052a244ce9783da66beae3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.285Z",
+    "glossaryVersion": "0"
+  }
+}

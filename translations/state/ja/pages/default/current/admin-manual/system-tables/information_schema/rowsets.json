@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/rowsets",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/rowsets.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/rowsets.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "c192f32120aebff19386de4e80cbea2eab8da83a5a511213910ac0a47eed0e6d",
+    "sourceTechnicalHash": "1bd528d4d0200ec03a419a325ad494b56a97380a6d67c95779b6e27fae651425",
+    "targetHash": "88b20db937f205362d4b93343bc08428545685cf5bc95e7b7fd8f1e7de7f4996",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.286Z",
+    "glossaryVersion": "0"
+  }
+}

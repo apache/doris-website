@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/overview.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "98173d751fb746af9a9a50f900eec54041c8321b88f847d9cf03ab84653f791a",
+    "sourceTechnicalHash": "b1ec176ccdb7c59b6e79bcd6fb100e6d5b505391ea53f086d5a9f2b2aea9bfe3",
+    "targetHash": "0f38cac8dbe6e5f51eaf719b02809d032a683ebb184e78187cd6c786c2105c8a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.283Z",
+    "glossaryVersion": "0"
+  }
+}

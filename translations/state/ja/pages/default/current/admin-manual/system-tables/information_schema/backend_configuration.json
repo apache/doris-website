@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/backend_configuration",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/backend_configuration.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/backend_configuration.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "766e3eaa2ab507935f41ec4938476f53944a47b739b933844f87a7405261cdbe",
+    "sourceTechnicalHash": "b0ee508ca85ce22aef11591d562384e90f08b27a57ca88ff58ba376c4d04325a",
+    "targetHash": "12f98f993c8893c99f39817d52df3949dc6bfae3e00b4f66b3dc0fa0062bae94",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.283Z",
+    "glossaryVersion": "0"
+  }
+}

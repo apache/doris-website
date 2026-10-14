@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/routines",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/routines.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/routines.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "84d4e47f17d401a03553caa68801ac7c31de1662a940760d86050638434258be",
+    "sourceTechnicalHash": "ee368466dfd57b67e7f262af0c2b50a5cc5682e66f3f1e9ee9d7079d4eba7a70",
+    "targetHash": "89595ff8fb4e35e5c3eabc42161638f352e386a2d80ac7d3321529f3f63233cc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.286Z",
+    "glossaryVersion": "0"
+  }
+}
