@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/regr-avgx",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/regr-avgx.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/regr-avgx.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "2c0753d4176bde67b3e9e3b967e39ef218656e7532f6daab7efde8ba00ab3952",
+    "sourceTechnicalHash": "8ae80ede18456604599d7c4e46f5c1030270aefd953b08eb90f8d82b96287a98",
+    "targetHash": "4f691c6bdb12cc70c1b2f1478c1bdecb6fee2281dbc45b32a1f96833f3dc4e66",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:12:57.466Z",
+    "glossaryVersion": "0"
+  }
+}
