@@ -24,7 +24,7 @@ PROPERTIES (
 
 1.`<property>`
 
-`<property>` の形式は `<key>` = `<value>` です。`<key>` が 'type' の場合、`<value>` の変更はサポートされていません。
+`<property>` の形式は `<key>` = `<value>` です。`<value>` の変更は、`<key>` が 'type' の場合にはサポートされていません。
 
 変更可能なプロパティのパラメータについては、[CREATE-RESOURCE](./CREATE-RESOURCE.md) を参照してください。
 

@@ -145,7 +145,9 @@ Spark 関連のパラメータは次のとおりです。
        - `s3.connection.request.timeout`: S3 リクエストのタイムアウトです。単位はミリ秒で、デフォルトは 3000 です。
        - `s3.connection.timeout`: S3 接続のタイムアウトです。単位はミリ秒で、デフォルトは 1000 です。
 
-    Doris は S3 リソースの作成時に `AWS Assume Role` もサポートしています。詳細は [AWS 連携](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)を参照してください。
+Doris はリソースの作成時に AWS Assume Role もサポートしています。詳細は次の参照先をご確認ください。
+
+    Doris also supported `AWS Assume Role` for creating S3 Resource , please refer to [AWS integration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 **4. JDBC リソースを作成します。**
 

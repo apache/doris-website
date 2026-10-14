@@ -55,7 +55,7 @@ be_identifier
 1. このコマンドを実行した後、[SHOW BACKENDS](./SHOW-BACKENDS.md) ステートメントで廃止状態（`SystemDecommissioned` 列の値が `true`）と進捗（`TabletNum` 列の値が徐々に 0 まで減少）を確認できます。
 2. 通常、`TabletNum` 列の値が 0 になると、この BE ノードは削除されます。Doris に BE を自動削除させたくない場合は、FE Master の設定項目 `drop_backend_after_decommission` を false に変更できます。
 3. 対象の BE に比較的大量のデータが保存されている場合、DECOMMISSION 操作には数時間、場合によっては数日かかることがあります。
-4. DECOMMISSION 操作の進捗が止まり、[SHOW BACKENDS](./SHOW-BACKENDS.md) ステートメントの `TabletNum` 列の値が変化しない場合、次の原因が考えられます。
+4. DECOMMISSION 操作の進捗が止まり、`TabletNum` 列の値が [SHOW BACKENDS](./SHOW-BACKENDS.md) ステートメントで変化しない場合、次の原因が考えられます。
    - 対象の BE 上のタブレットを移行できる、適切な別の BE がありません。たとえば、3 ノードのクラスターに 3 レプリカのテーブルがある場合、いずれかのノードを廃止しようとしても、残りの二台の BE にはすでにそれぞれ一つのレプリカがあるため、データの移行先が見つかりません。
    - 対象の BE 上のタブレットがまだ[ごみ箱](../../recycle/SHOW-CATALOG-RECYCLE-BIN.md)にあります。[ごみ箱を空にする](../../recycle/DROP-CATALOG-RECYCLE-BIN.md)操作を行い、その後、廃止処理の完了を待ちます。
    - 対象の BE 上のタブレットが大きすぎるため、単一タブレットの移行が毎回タイムアウトし、移行できません。FE Master の設定項目 `max_clone_task_timeout_sec` をより大きな値に変更できます（デフォルトは 7200 秒です）。

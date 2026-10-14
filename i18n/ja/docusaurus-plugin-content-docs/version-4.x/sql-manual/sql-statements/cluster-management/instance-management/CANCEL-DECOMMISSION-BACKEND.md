@@ -56,7 +56,7 @@ be_identifier
 
 ## 使用上の注意
 
-1. このコマンドの実行後、[SHOW BACKENDS](./SHOW-BACKENDS.md) ステートメントでデコミッション状態（`SystemDecommissioned` 列の値が false になること）と進行状況（`TabletNum` 列の値が徐々に減少しなくなること）を確認できます。
+1. このコマンドの実行後、デコミッション状態（`SystemDecommissioned` 列の値が false になること）と進行状況（`TabletNum` 列の値が徐々に減少しなくなること）を [SHOW BACKENDS](./SHOW-BACKENDS.md) ステートメントで確認できます。
 2. クラスタは他のノードから現在の BE にタブレットを徐々に移行し、最終的に各 BE のタブレット数が近い値になるようにします。
 
 ## 例
