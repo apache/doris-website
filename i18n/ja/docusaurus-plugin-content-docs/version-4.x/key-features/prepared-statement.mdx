@@ -41,7 +41,7 @@ Apache Doris のプリペアドステートメントは、MySQL ワイヤープ�
 
 - **`useServerPrepStmts=true`**：MySQL Connector/J ドライバーをクライアント側の文字列補間から、バイナリプロトコルによる `COM_STMT_PREPARE` / `COM_STMT_EXECUTE` のやり取りに切り替える JDBC URL のフラグです。
 - **`cachePrepStmts=true`**：プリペアドステートメントのハンドルを*クライアント側*でキャッシュする、別の JDBC フラグです。これがないと、呼び出しのたびに `COM_STMT_PREPARE` が再発行され、高速化の効果が失われます。
-- **セッションごとのステートメントキャッシュ**：解析済みの `PrepareCommand`、`StatementContext`、および任意の `ShortCircuitQueryContext` を保持する FE 上のメモリ内マップ（`ConnectContext.preparedStatementContextMap`）です。上限は `max_prepared_stmt_count`（デフォルトは 100,000）で決まります。
+- **セッションごとのステートメントキャッシュ**：FE 上のメモリ内マップ（`ConnectContext.preparedStatementContextMap`）で、解析済みの `PrepareCommand`、`StatementContext`、および任意の `ShortCircuitQueryContext` を保持します。上限は `max_prepared_stmt_count`（デフォルトは 100,000）で決まります。
 - **プレースホルダー（`?`）**：実行時に値がバインドされる位置パラメータです。一つのステートメントには最大 65,536 個指定できます。
 - **`ShortCircuitQueryContext`**：クエリがショートサーキットによる一点検索の対象となる場合に、プリペアドプランとともに保持される追加のキャッシュです。シリアライズ済みのディスクリプターテーブル、出力式、および BE が自身の事前構築済み構造を検索するために使用する UUID を保持します。
 
@@ -101,7 +101,7 @@ Apache Doris のプリペアドステートメントは、Unique Key テーブ�
 **適したケース**
 
 - 解析コストが支配的となる、Unique Key テーブルに対する高 QPS の一点検索。
-- ローダーが同じ `INSERT INTO t VALUES (?, ?, ?)` を毎秒数千回実行する、[Group Commit](./group-commit) を使ったバッチ INSERT。
+- [Group Commit](./group-commit) を使ったバッチ INSERT。ローダーが同じ `INSERT INTO t VALUES (?, ?, ?)` を毎秒数千回実行する場合に適しています。
 - 特徴量の検索、ステータスの確認、許可リストの照合、オンラインサービスでの読み取りなど、同じクライアントが一定以上の頻度で繰り返すクエリ。
 - Apache Doris と並行して別の KV ストアを運用したくないワークロード。
 
@@ -109,7 +109,7 @@ Apache Doris のプリペアドステートメントは、Unique Key テーブ�
 
 - 一度きりのアドホッククエリ。`PREPARE` のやり取りのコストが、節約できる解析コストを上回ります。
 - サーバー側プリペアドステートメントを適切にサポートしないドライバー。たとえば、Rust の `sqlx` ドライバーでは、Apache Doris の実装に関する[問題が報告されています](https://github.com/launchbadge/sqlx/issues/3335)。バイナリプロトコルに適切に対応する MySQL Connector を使用してください。
-- `cachePrepStmts=true` を指定せずに `useServerPrepStmts=true` を設定した接続。呼び出しのたびに `COM_STMT_PREPARE` が再発行され、デフォルトのクライアント側モードより遅くなります。
+- `useServerPrepStmts=true` を設定し、`cachePrepStmts=true` を指定していない接続。呼び出しのたびに `COM_STMT_PREPARE` が再発行され、デフォルトのクライアント側モードより遅くなります。
 - 非決定的関数（`NOW()`、`RAND()`）を使うステートメント。BE はキャッシュ済みのショートサーキットコンテキストの再利用を拒否するため、節約できるのは解析コストだけです。
 - ショートサーキットによる高速化を期待している範囲クエリや集約クエリ。PreparedStatement で解析コストは節約できますが、BE は通常の分散プランを実行します。このようなワークロードでは、代わりに[データプルーニング](./data-pruning)を活用してください。
 

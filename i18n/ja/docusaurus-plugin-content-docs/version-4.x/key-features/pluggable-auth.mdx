@@ -21,7 +21,7 @@ featureCard:
 language: ja
 ---
 
-> **要約** Apache Doris は ID 管理（誰であるか）とポリシー（何ができるか）を分離しており、FE をフォークせずにそれぞれのバックエンドを切り替えられます。MySQL ハンドシェイクでは、`authentication_type` で選択した `Authenticator` を使います。選択肢は組み込みのパスワード認証、LDAP、Java SPI で検出されるプラグインです。認可には、`access_controller_type` で選択した `CatalogAccessController` を使います。組み込みの RBAC エンジンか、ポリシーを一元管理する Apache Ranger を選べます。設定を行い、プラグインの jar ファイルを配置して再起動すれば利用できます。
+> **要約** Apache Doris は ID 管理（誰であるか）とポリシー（何ができるか）を分離しており、FE をフォークせずにそれぞれのバックエンドを切り替えられます。MySQL ハンドシェイクでは、`Authenticator` を `authentication_type` で選択します。選択肢は組み込みのパスワード認証、LDAP、Java SPI で検出されるプラグインです。認可には、`CatalogAccessController` を `access_controller_type` で選択します。組み込みの RBAC エンジンか、ポリシーを一元管理する Apache Ranger を選べます。設定を行い、プラグインの jar ファイルを配置して再起動すれば利用できます。
 
 ![Apache Doris のプラグイン式認証と認可。FE をフォークせずに ID 管理とポリシーのバックエンドを切り替え、設定で LDAP、Kerberos、OIDC、Ranger を選択し、フォールバック用のチェーンを組み合わせられます。](/images/next/key-features/pluggable-auth.jpg)
 ## Apache Doris でプラグイン式の認証と認可を使う理由 {#why}
