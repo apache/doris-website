@@ -1,0 +1,133 @@
+---
+title: プリペアドステートメント
+description: MySQL プロトコルを介したサーバー側プリペアドステートメントのサポート。解析済みのプランをセッションごとにキャッシュし、繰り返し実行するクエリでの FE の CPU 使用量を削減します。
+keywords:
+  - プリペアドステートメント
+  - MySQL プロトコル
+  - プランキャッシュ
+  - サーバー側プリペア
+  - Apache Doris BI
+  - パラメータ化クエリ
+slug: /key-features/prepared-statement
+image: /images/next/key-features/prepared-statement.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - query-acceleration
+    - performance
+language: ja
+---
+
+> **要約** Apache Doris は、MySQL ワイヤープロトコルを介したサーバー側プリペアドステートメントをサポートします。JDBC URL に `useServerPrepStmts=true` を設定すると、FE はセッションごとにステートメントの解析とプランニングを一度だけ行い、そのプランを `EXECUTE` のたびに再利用します。高 QPS の[一点検索](./high-concurrency-point-query)では、ショートサーキット経路によってスループットが約 4 倍になります。バッチ INSERT や同じ形式のクエリを繰り返す処理でも、行ごとの解析とプランニングのコストを回避できます。
+
+![Apache Doris のプリペアドステートメント：MySQL プロトコルを介したサーバー側プリペアドステートメントのサポート。解析済みのプランをセッションごとにキャッシュし、繰り返し実行するクエリでの FE の CPU 使用量を削減します。](/images/next/key-features/prepared-statement.jpg)
+## Apache Doris でプリペアドステートメントを使う理由 {#why}
+
+Apache Doris のプリペアドステートメントは、解析済みのプランをセッションごとにキャッシュして `EXECUTE` のたびに再利用します。これにより、高 QPS のワークロードで支配的な FE 側の解析、意味解析、最適化のコストを取り除きます。多くの分析エンジンでは、クエリごとに解析とプランニングのコストが発生します。日次レポートのジョブでは、このコストは目立ちません。しかし、サービスが同じクエリを毎秒数千回実行するようになると、無視できなくなります。ユーザー向けダッシュボードはクリックのたびに主キーで行を読み取ります。特徴量ストアは予測のたびにエンティティ ID から[ベクトル](./vector-index)を読み取ります。大量データのローダーは同じ `INSERT INTO t VALUES (?, ?, ?)` を繰り返し実行します。
+
+この三つのケースでは、SQL テキストは同じで、変わるのはパラメータだけです。呼び出しのたびにステートメントを再解析してプランを作り直すと、FE の CPU を無駄に消費します。QPS が数百程度になると、BE が実質的な処理を行う前に FE が飽和し、BE ノードを増やしても効果がありません。このような場合に PreparedStatement を使用します。
+
+- 高 QPS では、ストレージエンジンではなく Frontend のプランナーがボトルネックになります。
+- 同じクエリを繰り返すたびに、解析、意味解析、最適化、シリアライズのコストが発生します。
+- 「一点検索を低コストにしたい」という目的のために別の KV ストアを導入するのは、大がかりな対策です。
+
+## Apache Doris のプリペアドステートメントとは {#what}
+
+Apache Doris のプリペアドステートメントは、MySQL ワイヤープロトコルの `COM_STMT_PREPARE` / `COM_STMT_EXECUTE` の組（削除には `COM_STMT_CLOSE` を使用）をサーバー側で実装したものです。FE が処理し、セッションごとのプランキャッシュを使用します。クライアントが `useServerPrepStmts=true` を指定して接続すると、JDBC ドライバーは SQL テキストごとに `COM_STMT_PREPARE` を一度発行します。FE は SQL を解析し、プランを作成して、ステートメント ID をキーとするセッションごとのキャッシュに保存します。以降の `EXECUTE` では、バイナリ形式のパラメータ値だけを送信します。FE は値をキャッシュ済みのプランにバインドして実行します。
+
+**主な用語**
+
+- **`useServerPrepStmts=true`**：MySQL Connector/J ドライバーをクライアント側の文字列補間から、バイナリプロトコルによる `COM_STMT_PREPARE` / `COM_STMT_EXECUTE` のやり取りに切り替える JDBC URL のフラグです。
+- **`cachePrepStmts=true`**：プリペアドステートメントのハンドルを*クライアント側*でキャッシュする、別の JDBC フラグです。これがないと、呼び出しのたびに `COM_STMT_PREPARE` が再発行され、高速化の効果が失われます。
+- **セッションごとのステートメントキャッシュ**：解析済みの `PrepareCommand`、`StatementContext`、および任意の `ShortCircuitQueryContext` を保持する FE 上のメモリ内マップ（`ConnectContext.preparedStatementContextMap`）です。上限は `max_prepared_stmt_count`（デフォルトは 100,000）で決まります。
+- **プレースホルダー（`?`）**：実行時に値がバインドされる位置パラメータです。一つのステートメントには最大 65,536 個指定できます。
+- **`ShortCircuitQueryContext`**：クエリがショートサーキットによる一点検索の対象となる場合に、プリペアドプランとともに保持される追加のキャッシュです。シリアライズ済みのディスクリプターテーブル、出力式、および BE が自身の事前構築済み構造を検索するために使用する UUID を保持します。
+
+## Apache Doris のプリペアドステートメントの仕組み {#how}
+
+Apache Doris のプリペアドステートメントは、FE で SQL を準備し、条件を満たす場合にショートサーキットプランをキャッシュし、バイナリ形式のパラメータ値で実行し、必要に応じて監査ログを記録し、最後に閉じてキャッシュから削除する、という五段階で動作します。
+
+1. **準備する。** クライアントは `COM_STMT_PREPARE "SELECT ... WHERE k1 = ?"` を送信します。FE は SQL を解析し、Nereids による意味解析を実行して、接続のマップに `PreparedStatementContext` を保存し、ステートメント ID とパラメータ数を返します。
+2. **ショートサーキット経路をキャッシュする（条件を満たす場合）。** クエリの対象が一つの Unique Key テーブルで、キー全体に等価述語が指定されている場合、書き換えルール `LogicalResultSinkToShortCircuitPointQuery` がフラグを切り替えます。FE はディスクリプターテーブルと出力式をシリアライズして、UUID をキーとする `ShortCircuitQueryContext` に保存します。
+3. **実行する。** 各 `COM_STMT_EXECUTE` には、ステートメント ID、NULL ビットマップ、型コード（初回）、パラメータ値のバイト列が含まれます。FE はこれらを `Literal` 値にデコードし、プレースホルダーに設定して、キャッシュ済みのプランを実行します。再解析、意味解析のやり直し、再最適化は行いません。
+4. **監査ログを記録する（任意）。** `enable_prepared_stmt_audit_log=true` を設定すると、デバッグ用に `fe.audit.log` でパラメータ値を埋め込んだステートメントを再構成します。高 QPS のトラフィックではログが大量に出力されるため、デフォルトでは無効です。
+5. **閉じる。** `COM_STMT_CLOSE` はセッションキャッシュからエントリを削除します。接続が閉じられると、マップ全体が破棄されます。
+
+## クイックスタート {#quick-start}
+
+```sql
+CREATE TABLE tbl_point_query (
+  k1 INT,
+  v1 VARCHAR(64)
+)
+UNIQUE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES (
+  "enable_unique_key_merge_on_write" = "true",
+  "light_schema_change" = "true",
+  "store_row_column" = "true"
+);
+```
+
+```java
+String url = "jdbc:mysql://fe-host:9030/db"
+    + "?useServerPrepStmts=true&cachePrepStmts=true"
+    + "&prepStmtCacheSize=500&prepStmtCacheSqlLimit=1024";
+
+try (Connection c = DriverManager.getConnection(url, "root", "");
+     PreparedStatement ps = c.prepareStatement(
+         "SELECT * FROM tbl_point_query WHERE k1 = ?")) {
+    ps.setInt(1, 42);
+    try (ResultSet rs = ps.executeQuery()) { /* ... */ }
+}
+```
+
+**期待される結果**
+
+`fe.audit.log` では、二回目以降の呼び出しに次のように表示されます。
+
+```
+Stmt=EXECUTE(-2147481418)
+```
+
+これは生の SQL の代わりに表示され、キャッシュ済みのプランが再利用されていることを示します。さらに `EXPLAIN` でスキャンノードに `SHORT-CIRCUIT` が表示されることを確認すると、両方の経路が有効であると判断できます。
+
+## Apache Doris のプリペアドステートメントを使う場面 {#when}
+
+Apache Doris のプリペアドステートメントは、Unique Key テーブルに対する高 QPS の一点検索、繰り返し実行するバッチ INSERT、および同じ形式のステートメントを毎秒数千回実行するクライアント側のワークロードに適しています。一度きりのアドホッククエリ、サーバー側の機能を適切にサポートしないドライバー、またはショートサーキット経路で非決定的関数を使うステートメントには適していません。
+
+**適したケース**
+
+- 解析コストが支配的となる、Unique Key テーブルに対する高 QPS の一点検索。
+- ローダーが同じ `INSERT INTO t VALUES (?, ?, ?)` を毎秒数千回実行する、[Group Commit](./group-commit) を使ったバッチ INSERT。
+- 特徴量の検索、ステータスの確認、許可リストの照合、オンラインサービスでの読み取りなど、同じクライアントが一定以上の頻度で繰り返すクエリ。
+- Apache Doris と並行して別の KV ストアを運用したくないワークロード。
+
+**適さないケース**
+
+- 一度きりのアドホッククエリ。`PREPARE` のやり取りのコストが、節約できる解析コストを上回ります。
+- サーバー側プリペアドステートメントを適切にサポートしないドライバー。たとえば、Rust の `sqlx` ドライバーでは、Apache Doris の実装に関する[問題が報告されています](https://github.com/launchbadge/sqlx/issues/3335)。バイナリプロトコルに適切に対応する MySQL Connector を使用してください。
+- `cachePrepStmts=true` を指定せずに `useServerPrepStmts=true` を設定した接続。呼び出しのたびに `COM_STMT_PREPARE` が再発行され、デフォルトのクライアント側モードより遅くなります。
+- 非決定的関数（`NOW()`、`RAND()`）を使うステートメント。BE はキャッシュ済みのショートサーキットコンテキストの再利用を拒否するため、節約できるのは解析コストだけです。
+- ショートサーキットによる高速化を期待している範囲クエリや集約クエリ。PreparedStatement で解析コストは節約できますが、BE は通常の分散プランを実行します。このようなワークロードでは、代わりに[データプルーニング](./data-pruning)を活用してください。
+
+## 性能と検証 {#performance}
+
+Doris は、FE の CPU がボトルネックとなる一点検索のワークロードで、PreparedStatement によって[スループットが 4 倍以上向上する](https://doris.apache.org/docs/2.1/query-acceleration/high-concurrent-point-query/)と報告しています。これは[高並行性の一点検索の機能紹介](./high-concurrency-point-query)でショートサーキットの観点から示される 4 倍と同じ値であり、二つを掛け合わせられるわけではありません。高並行性に向けた構成全体（Unique Key + Merge-on-Write + 行ストア + 行キャッシュ + ショートサーキット + PreparedStatement）では、16 コア / 64GB のマシンで YCSB を実行し、[ノードあたり 30,000+ QPS](https://doris.apache.org/blog/How-We-Increased-Database-Query-Concurrency-by-20-Times/)に達し、最適化前のベースラインと比べて平均レイテンシーが 96% 減少しました。PreparedStatement 単体の寄与をほかの構成要素から切り分けるのは困難です。FE が性能の上限を決めている場合、4 倍をプランニング上の最低目安として扱ってください。
+
+次の二点を確認すると、この経路が有効かどうかを判断できます。
+
+- 繰り返しの呼び出しについて、`fe.audit.log` に生の SQL ではなく `Stmt=EXECUTE(stmtId)` が表示される。
+- 一点検索について、`EXPLAIN` のスキャンノードに `SHORT-CIRCUIT` が表示される。
+
+FE の CPU が引き続き性能の上限となる場合は、Observer を増やし、JDBC のロードバランシングを使用します：`jdbc:mysql:loadbalance://h1,h2,h3/db?useServerPrepStmts=true&cachePrepStmts=true`。
+
+## 関連資料 {#further-reading}
+
+- [高並行性の一点検索（詳細ガイド）](../query-acceleration/high-concurrent-point-query)
+- [高並行性の一点検索の機能紹介](./high-concurrency-point-query)
+- [高スループットの INSERT のための Group Commit](./group-commit)
+- [一点検索以外のクエリのためのデータプルーニング](./data-pruning)
+- [Unique Key](./unique-key)：`store_row_column` と組み合わせることで、KV 形式の一点検索に適したテーブルモデルです。

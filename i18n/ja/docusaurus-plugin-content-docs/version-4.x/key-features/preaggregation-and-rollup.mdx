@@ -1,0 +1,111 @@
+---
+title: 事前集約とロールアップ
+description: Aggregate Key テーブルはロード時に行をまとめ、ROLLUP はクエリプランナーが透過的に選択する、事前計算済みの別のインデックスを追加します。
+keywords:
+  - 事前集約
+  - ロールアップテーブル
+  - Aggregate Key
+  - 透過的な書き換え
+  - Apache Doris のマテリアライズドインデックス
+  - SUM ロールアップ
+slug: /key-features/preaggregation-and-rollup
+image: /images/next/key-features/preaggregation-and-rollup.jpg
+language: ja
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - storage
+    - performance
+---
+
+> **要点** Apache Doris の事前集約では、[Aggregate Key モデル](./data-model)と、`SUM`、`MAX`、`REPLACE`、`BITMAP_UNION` などの列ごとの関数を使用して、同じキーを持つ行をロード時にマージします。`ROLLUP` は、列数が少ないか、ソート順が異なる二つ目のマテリアライズドインデックスです。クエリプランナーは、ベーステーブルでは効率よく処理できないクエリに対して、これを透過的に選択します。クエリは、リクエストのたびに元の行をグループ化する代わりに、事前計算済みの値を読み取ります。
+
+![Apache Doris の事前集約とロールアップ: Aggregate Key テーブルはロード時に行をまとめ、ROLLUP はクエリプランナーが透過的に選択する、事前計算済みの別のインデックスを追加します。](/images/next/key-features/preaggregation-and-rollup.jpg)
+## Apache Doris で事前集約とロールアップを使う理由 {#why}
+
+Apache Doris の事前集約とロールアップは、繰り返し実行する `GROUP BY` の処理をクエリ時からロード時に移します。これにより、ダッシュボードは更新のたびに元のファクトテーブルを再スキャンせず、事前計算済みの合計値を読み取れます。一般的なファクトテーブルは、広告クリックのイベント単位、API ログのリクエスト単位、デバイスの測定値の秒単位など、列数が多く粒度も細かいものです。一方、ダッシュボードでは日ごとの合計、上位 N 件のユーザー、月間の重複しない視聴者数などを求めます。事前集約がなければ、各クエリが数百万行を再スキャンし、昨日も実行したのと同じ `GROUP BY` を繰り返します。
+
+- 処理の繰り返し。ダッシュボードを更新するたびに、同じ元データに対して同じ集約を実行します。
+- 広範囲のスキャン。二つの値列しか必要としない粗い粒度のクエリでも、ベーステーブルのすべての値列を読み取ります。
+- カーディナリティの計算負荷。十億行のテーブルに対する `COUNT(DISTINCT user_id)` は、単純なクエリというより重いジョブです。
+
+事前集約は処理コストをクエリ時からロード時に移します。`ROLLUP` は、ベーステーブルだけでは適さないクエリ向けに、事前計算済みの別のビューを追加します。テーブル間の書き換えやパーティションに対応した書き換えには、[増分マテリアライズドビュー](./incremental-materialized-view)を使用してください。
+
+## Apache Doris の事前集約とロールアップとは {#what}
+
+Apache Doris の事前集約は、列ごとの集約関数を使って同じキーを持つ行をマージする Aggregate Key テーブルモデルです。ロールアップは、そのテーブル上に作成する追加のマテリアライズドインデックスで、クエリプランナーが透過的に選択します。Aggregate Key モデルはテーブルの種類です。どの列をキーにするかを宣言し、各値列に集約関数を指定します。Apache Doris はロード時とコンパクション時に同じキーを持つ行をマージするため、定義済みのマージ規則がある行の重複はテーブルに残りません。
+
+`ROLLUP` は、同じベーステーブル上に作成する二つ目のマテリアライズドインデックスです。同じ列ごとの関数を適用しながら、列の一部を保持し、ソート順を変えることもできます。クエリプランナーは、入力されたクエリに対して利用可能なすべてのインデックスを評価し、最も適したものから読み取ります。
+
+**主な用語**
+
+- **Aggregate Key モデル**: キーの値が同じ行を、値列に宣言された集約関数でマージするテーブルモデルです。
+- **集約関数**: `SUM`、`MIN`、`MAX`、`REPLACE`、`REPLACE_IF_NOT_NULL`、`HLL_UNION`、`BITMAP_UNION`、`QUANTILE_UNION` です。これらは `ROLLUP` の値列にも適用されます。
+- **ベースインデックス**: `CREATE TABLE` の定義に対応するディスク上のレイアウトです。常に存在します。
+- **ロールアップインデックス**: クエリプランナーがベースインデックスの代わりに読み取れる、追加のマテリアライズドレイアウトです。
+- **同期マテリアライズドビュー**: `CREATE MATERIALIZED VIEW` は `ALTER TABLE ADD ROLLUP` に代わる構文です。同じ仕組みを利用でき、より豊富な式をサポートするため、新規の設計に推奨されます。
+
+## Apache Doris の事前集約とロールアップの仕組み {#how}
+
+Apache Doris の事前集約は、DDL で集約規則を宣言し、ロード時とコンパクション時に行をマージし、偏りのあるクエリパターン向けにロールアップを追加し、クエリごとに最適なインデックスを選択する、という五つの段階で機能します。新規のコードには同期マテリアライズドビューを優先します。
+
+1. **集約規則を定義する。** `CREATE TABLE` の `AGGREGATE KEY(...)` 句でキー列を指定します。その他の各列には、`clicks BIGINT SUM`、`last_seen DATETIME REPLACE`、`unique_users BITMAP BITMAP_UNION` のように関数を指定します。Apache Doris はこれらの関数を使用し、同じキーを持つ二つの行をマージします。
+2. **ロード時にマージする。** データが到着すると、Backend ノードは同じキーを持つ既存の行と新しい行をまとめ、新しい不変の行セットを書き込みます。その後、バックグラウンドのコンパクションが同じ規則を使って行セットをマージします。クエリからは元の入力行ではなく、マージ後の内容が見えます。
+3. **偏りのあるクエリパターン向けにロールアップを追加する。** `ALTER TABLE ad_events ADD ROLLUP rollup_ad (dt, ad_id, clicks, cost)` は、`(dt, ad_id)` でソートされた二つ目のマテリアライズドインデックスを作成します。Apache Doris は非同期のスキーマ変更としてこれを構築し、その後の各ロードではベースインデックスへの書き込みと同じトランザクション内で同期を保ちます。
+4. **クエリごとにインデックスを選ぶ。** Nereids オプティマイザーは、クエリの述語とグループ化キーに照らして各インデックスを評価します。述語の列が先頭にあり、スキャンする列数が少ないインデックスを優先します。選択されたインデックスは `EXPLAIN` と BE プロファイルで確認できます。
+5. **新規のコードには同期 MV を使う。** `CREATE MATERIALIZED VIEW` は `ADD ROLLUP` の機能をすべてカバーし、さらに `bitmap_union(to_bitmap(user_id))` のような式も扱えます。Apache Doris のソースコードには、*「機能面では、将来的に MV がロールアップを完全にカバーする」*と明記されています。既存のロールアップは引き続き動作します。
+
+## クイックスタート {#quick-start}
+
+```sql
+CREATE TABLE ad_events (
+  dt DATE,
+  ad_id INT,
+  user_id BIGINT,
+  clicks BIGINT SUM,
+  cost DECIMAL(10,2) SUM
+)
+AGGREGATE KEY(dt, ad_id, user_id)
+DISTRIBUTED BY HASH(ad_id) BUCKETS 4;
+
+ALTER TABLE ad_events ADD ROLLUP rollup_ad (dt, ad_id, clicks, cost);
+
+SELECT dt, ad_id, SUM(clicks) FROM ad_events
+WHERE dt = '2026-05-01' GROUP BY dt, ad_id;
+```
+
+**想定される結果**
+
+```
+EXPLAIN ... shows OlapScanNode: rollupName=rollup_ad
+PREAGGREGATION: ON
+```
+
+ロールアップでは `user_id` を除いているため、クエリプランナーは `(dt, ad_id)` だけでグループ化する集約クエリにこれを選択します。同じ `(dt, ad_id, user_id)` を二回挿入すると、`clicks` と `cost` を合計した一行になり、ロールアップには `(dt, ad_id)` ごとに一行が残ります。
+
+## Apache Doris の事前集約とロールアップを使う場面 {#when}
+
+Apache Doris の事前集約は、集約パターンが安定した追記中心のファクトテーブル、`BITMAP_UNION` と `HLL_UNION` を使った重複なしの件数や分位数のロールアップ、同じ `GROUP BY` を一日に何千回も実行するダッシュボードに適しています。元の行を一行ずつ参照する用途、複数テーブルの結合、主キーによる頻繁な部分更新には適していません。
+
+**適した用途**
+
+- 少数の固定したディメンションで集約し、主に追記するファクトテーブル。
+- 重複なしの件数と分位数。`BITMAP_UNION` と `HLL_UNION` を使うと、日やパーティションをまたいで事前計算済みのスケッチをミリ秒単位でマージできます。
+- イベント単位のデータから作る上位 N 件や「時間別」のレポート。同じ `GROUP BY` を一日に何千回も実行する場合に向いています。
+
+**適さない用途**
+
+- 元の行を一行ずつ参照する必要もあるテーブル。Aggregate Key では元の行がすでにマージされています。代わりに Duplicate Key モデルを使用し、事前集約したビューも必要なら非同期マテリアライズドビューを組み合わせてください。
+- テーブル間の結合。`ROLLUP` と同期 MV は、どちらも単一テーブル専用です。複数テーブルを対象とする書き換えや、パーティション単位の更新が必要なら、[非同期マテリアライズドビュー](../query-acceleration/materialized-view/async-materialized-view/overview)を使用してください。
+- 主キーによる頻繁な部分更新。書き込み時マージを使用する Unique Key モデルを使ってください。
+- `ALTER TABLE ADD ROLLUP` を使おうとしている新規設計。代わりに `CREATE MATERIALIZED VIEW` を使用してください。構文は異なりますが、実行時の仕組みは共通で、新機能は MV の方に追加されます。
+
+## 関連ドキュメント {#further-reading}
+
+- [データモデル](./data-model): Aggregate Key が三つのテーブルモデルの一つである理由と、Duplicate Key および Unique Key の位置づけ。
+- [Aggregate モデル: データレイアウト、マージ規則、チューニング](../table-design/data-model/aggregate)
+- [同期マテリアライズドビュー: `ADD ROLLUP` に代わる新しい方法](../query-acceleration/materialized-view/sync-materialized-view)
+- [非同期マテリアライズドビュー: 複数テーブルの事前集約と更新モード](../query-acceleration/materialized-view/async-materialized-view/overview)
+- [`ALTER TABLE ROLLUP` の構文リファレンス](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ROLLUP)

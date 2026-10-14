@@ -1,0 +1,116 @@
+---
+title: プラグイン式の認証と認可
+description: FE をフォークせずに Doris の ID 管理とポリシーのバックエンドを切り替えます。設定で LDAP、Kerberos、OIDC、Ranger を選び、フォールバック用のチェーンを組み合わせられます。
+keywords:
+  - LDAP 認証
+  - Kerberos 認証
+  - OIDC
+  - Apache Ranger
+  - プラグイン式の ID 管理
+  - Apache Doris のセキュリティ
+slug: /key-features/pluggable-auth
+image: /images/next/key-features/pluggable-auth.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - security
+    - authentication
+    - authorization
+language: ja
+---
+
+> **要約** Apache Doris は ID 管理（誰であるか）とポリシー（何ができるか）を分離しており、FE をフォークせずにそれぞれのバックエンドを切り替えられます。MySQL ハンドシェイクでは、`authentication_type` で選択した `Authenticator` を使います。選択肢は組み込みのパスワード認証、LDAP、Java SPI で検出されるプラグインです。認可には、`access_controller_type` で選択した `CatalogAccessController` を使います。組み込みの RBAC エンジンか、ポリシーを一元管理する Apache Ranger を選べます。設定を行い、プラグインの jar ファイルを配置して再起動すれば利用できます。
+
+![Apache Doris のプラグイン式認証と認可。FE をフォークせずに ID 管理とポリシーのバックエンドを切り替え、設定で LDAP、Kerberos、OIDC、Ranger を選択し、フォールバック用のチェーンを組み合わせられます。](/images/next/key-features/pluggable-auth.jpg)
+## Apache Doris でプラグイン式の認証と認可を使う理由 {#why}
+
+Apache Doris のプラグイン式認証と認可を使うと、既存の IAM 基盤（LDAP、Kerberos、OIDC、Ranger）でウェアハウスの ID とポリシーを管理できるため、プラットフォームチームが別のユーザー一覧を維持する必要がなくなります。多くのチームは Doris を導入する時点で、LDAP ディレクトリ、Kerberos レルム、SSO 用の OIDC プロバイダー、Hive の権限を管理する Ranger や Sentry などの IAM 基盤をすでに運用しています。ウェアハウスがそれらを利用できない場合、プラットフォームチームは別のユーザー一覧を維持し、スクリプトでパスワードを同期し、クエリ履歴に表示される ID がレイクハウスのほかの部分と異なる理由を監査担当者に説明しなければなりません。同じ ID を [マルチカタログ](./multi-catalog)による連携や[データリネージ](./data-lineage)と組み合わせると、レイク全体で監査証跡を対応付けられます。
+
+Apache Doris では、認証と認可の両方をプラグインで拡張できます。認証バックエンドも認可バックエンドも Java SPI で検出されます。ローカルパスワードから LDAP への切り替えには、一つの設定項目を変更します。組み込みの RBAC から Ranger への切り替えには、別の設定項目を変更します。この二つは独立して選択できるため、OIDC プラグインと Ranger、または LDAP と組み込みの RBAC を組み合わせられます。
+
+- Doris 専用のユーザー一覧を別に作らず、データプラットフォーム全体で一つの IdP を利用できます。
+- すでに Hive、HDFS、Iceberg を管理している Ranger のポリシーを Doris にも適用し、ポリシーを一元管理できます。
+- FE のソースを変更せずに、独自形式のトークンやテナントを考慮したパスワード検証などのカスタム認証を追加できます。
+
+## Apache Doris のプラグイン式認証と認可とは {#what}
+
+Apache Doris のプラグイン式認証と認可は、FE に設けられた二つの独立した拡張ポイントです。一つ目は `Authenticator` インターフェースで、MySQL ハンドシェイクごとに呼び出され、認証パケットの資格情報を `UserIdentity` に変換します。二つ目は `CatalogAccessController` インターフェースで、クエリごとに呼び出され、その ID がカタログ、データベース、テーブル、列にアクセスできるかを確認します。どちらも `java.util.ServiceLoader` を通じて読み込まれるため、サードパーティーの jar ファイルをクラスパスに配置すると登録されます。
+
+**主な用語**
+
+- **`authentication_type`**: 主要な認証器を選ぶ FE 設定です。組み込みの値は `default`（別名 `password`）と `ldap` です。それ以外の文字列はプラグイン名として解決されます。
+- **`authentication_chain`**: 主要な認証器が拒否した後に試す、フォールバック用認証器のカンマ区切りリストです。通常のログインを LDAP や OIDC で処理しながら、緊急時用のローカルユーザーを残す場合に役立ちます。
+- **`access_controller_type`**: 内部カタログの認可を行うコントローラーを選ぶ FE 設定です。`default` は組み込みの RBAC を使い、`ranger-doris` はすべての権限チェックを Ranger プラグインに委ねます。
+- **`AuthenticatorFactory` / `AccessControllerFactory`**: `META-INF/services` に列挙する SPI の拡張ポイントです。新しいバックエンドを追加するには、いずれかを実装します。
+- **外部カタログの認可コントローラー**: 各外部カタログ（Hive、Iceberg）は独自のコントローラーを選べます。そのため、内部カタログでは Doris の RBAC を使い、Hive カタログでは既存の Ranger Hive ポリシーに認可を委ねられます。
+
+## Apache Doris のプラグイン式認証と認可の仕組み {#how}
+
+Apache Doris のプラグイン式認証と認可では、二つの独立した SPI チェーンを使います。`Authenticator` が MySQL ハンドシェイクから `UserIdentity` を特定し、カタログごとの `CatalogAccessController` が行フィルターや列マスクを含め、すべてのステートメントを評価します。
+
+1. **起動時に認証器を選択します。** `AuthenticatorManager` は `authentication_type` を読み取って値を正規化し、`ServiceLoader<AuthenticatorFactory>` を通じて認証器を解決します。組み込みのファクトリー（`DefaultAuthenticatorFactory`、`LdapAuthenticatorFactory`）は FE の jar ファイルに含まれ、カスタムファクトリーは `fe/plugins/` に配置します。従来のファクトリーに一致するものがない場合、マネージャーは OIDC、OAuth2、JWT を扱う `AuthenticationPluginAuthenticator` にフォールバックします。
+2. **接続を認証します。** クライアントが MySQL 接続を開くと、選択された認証器がハンドシェイクを調べます。組み込みのパスワード認証はスクランブルされたハッシュを照合し、LDAP はディレクトリにバインドし、OIDC は JWT を検証してクレームを取り出します。成功すると `UserIdentity` を返し、失敗すると種類の付いた理由を返します。
+3. **失敗時にチェーンを試します。** `authentication_chain` が設定されている場合、マネージャーは列挙された認証器を順番に実行します。よくある設定は、`authentication_type = ldap` と `authentication_chain = default` の組み合わせです。これにより、LDAP に接続できない場合も、管理者はローカルパスワードでアクセスできます。
+4. **認可コントローラーに引き渡します。** ID がセッションに結び付けられると、すべてのステートメントが `AccessControllerManager` を通ります。内部カタログは `access_controller_type` で選択されたコントローラーを使います。外部カタログは、カタログプロパティ `access_controller.class` で選択されたコントローラーを使います。そのため、一つのクラスタ内で内部カタログには Doris の RBAC、Hive カタログには Ranger を使えます。
+5. **行と列のポリシーを評価します。** 同じコントローラーが列マスクと行フィルタリング用の拡張ポイントを提供します。組み込みの RBAC は `CREATE ROW POLICY` で保存されたポリシーを読み取ります。Ranger コントローラーは Ranger プラグインの `evalRowFilterPolicies` と `evalDataMaskPolicy` を呼び出すため、同じ Hive のマスク規則を Doris のクエリに適用できます。
+
+## クイックスタート {#quick-start}
+
+```properties
+# fe.conf: enable LDAP for everyone, keep local passwords as fallback
+authentication_type = ldap
+authentication_chain = default
+access_controller_type = ranger-doris
+```
+
+```sql
+-- Roles in Doris match LDAP group names; Ranger holds the actual grants
+CREATE ROLE doris_analyst;
+CREATE ROLE doris_etl;
+
+-- Local break-glass account that survives LDAP / Ranger outages
+CREATE USER 'breakglass'@'127.0.0.1' IDENTIFIED BY 'rotate-me';
+GRANT 'admin' TO 'breakglass'@'127.0.0.1';
+```
+
+**想定される結果**
+
+```
+mysql> SELECT current_user(), user();
++---------------------+----------------------+
+| current_user()      | user()               |
++---------------------+----------------------+
+| jdoe@'%'            | jdoe@'10.0.4.21'     |
++---------------------+----------------------+
+```
+
+`jdoe` は LDAP のパスワードでログインし、LDAP グループのマッピングを通じて `doris_analyst` ロールを取得しています。その後の `SELECT` は、`doris` サービスに紐付く Ranger ポリシーでチェックされます。
+
+## Apache Doris のプラグイン式認証と認可を使う場面 {#when}
+
+既存の IdP またはポリシーサービスでウェアハウスの ID を管理し、FE が資格情報とポリシー判断を利用する場合に、Apache Doris のプラグイン式認証と認可を使います。
+
+**適したケース**
+
+- すでに IdP（LDAP、AD、OIDC、Kerberos KDC）を運用しており、別のユーザー一覧を維持せずに Doris でも使いたい企業。
+- Hive、HDFS、Iceberg 向けに Ranger をすでに使用しており、Doris が管理するテーブルにも同じポリシーを適用したいレイクハウス環境。詳しくは [Ranger による認可](../admin-manual/auth/authorization/ranger)を参照してください。
+- 各テナントが独自の ID プロバイダーを持ち、カスタムの `AuthenticatorFactory` を通じて接続するマルチテナント SaaS。
+- BI ツールからの SSO に、平文またはトークンベースのハンドシェイク（OIDC、JWT）が必要で、Doris によって TLS を適用するチーム。
+
+**適さないケース**
+
+- 到達可能な LDAP、KDC、Ranger Admin がない、外部ネットワークから隔離されたクラスタ。プラグインは再試行を続け、クエリに通信の往復時間がかかります。この場合は、組み込みの RBAC とローカルアカウントを使ってください。
+- クエリごとの Ranger ポリシー検索が問題になる、レイテンシー要件の厳しい短いクエリ。Ranger はポリシーをローカルにキャッシュするため、キャッシュにヒットしたときの負荷は小さいものの、ポリシー更新後の最初のリクエストには時間がかかります。
+- Doris に組み込みのファクトリーがまだないバックエンド。MySQL ハンドシェイク自体の Kerberos / GSSAPI 認証は標準搭載されていません。Ranger Admin サーバーには Kerberos を使えますが、FE とクライアントの間では OIDC トークンまたは LDAP バインドが必要です。必要な場合はカスタムの `AuthenticatorFactory` を作成してください。
+- 同じ内部カタログで Ranger と `GRANT` ステートメントを併用する場合。`access_controller_type = ranger-doris` を有効にすると、組み込みの RBAC は変更を受け付けなくなります。権限管理の正本を一つに決めてください。
+
+## 関連ドキュメント {#further-reading}
+
+- [認証と認可の概要](../admin-manual/auth/authentication-and-authorization): User Identity、ロール、接続に適用されるユーザーを決める優先順位など、概念モデル全体を説明します。
+- [組み込みの認証](../admin-manual/auth/authentication/internal): パスワードポリシー、有効期限、ロックアウト、`validate_password_policy` の強度規則を説明します。
+- [LDAP 認証](../admin-manual/auth/authentication/ldap): `ldap.conf` の設定項目、グループからロールへのマッピング、LDAPS の設定、MySQL および JDBC クライアントで平文認証プラグインを使う手順を説明します。
+- [Ranger による認可](../admin-manual/auth/authorization/ranger): Doris Ranger プラグインのインストール、カタログ、データベース、テーブル、列のポリシー例、行フィルターとマスクの仕組みを説明します。
+- [セキュリティの概要](../admin-manual/auth/security-overview): 監査ログ、SSL 通信、UDF に関するガイダンスなど、セキュリティ全般を説明します。
+- [マルチカタログ](./multi-catalog): Hive、Iceberg などの外部データソースで、Ranger 方式の認可をカタログごとのアクセスコントローラーに組み込む方法を説明します。
