@@ -20,7 +20,7 @@ EXPLODE_BITMAP_OUTER(<bitmap>)
 - `<bitmap>` [`BITMAP`](../../basic-element/sql-data-types/aggregate/BITMAP.md) 型
 
 ## 戻り値
-- `<bitmap>` 内の各ビットについて 1 行を返します。各行にはビットの値が含まれます。
+- `<bitmap>` 内の各ビットを個別の行として返します。各行にはビットの値が含まれます。
 - `<bitmap>` が NULL の場合、NULL を含む 1 行を返します。
 - `<bitmap>` が空の場合、NULL を含む 1 行を返します。
 
