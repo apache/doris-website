@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/session/context/USE-DATABASE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/session/context/USE-DATABASE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/session/context/USE-DATABASE.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "206ce0b8499486ae5eaaf9d99a4fb2a973a20100e637f64faa4686899fb59e99",
+    "sourceTechnicalHash": "5771ce59dd21a18e748a26e80afef9a63bb526e2ca2590a81e91a06fa4aa7733",
+    "targetHash": "5a656f325958ab1b327868cfe98f3d01c892b5b13d6ef8e0d8bb75e2388f0f1f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:03:58.217Z",
+    "glossaryVersion": "0"
+  }
+}

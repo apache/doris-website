@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/session/connection/KILL-CONNECTION",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/session/connection/KILL-CONNECTION.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/session/connection/KILL-CONNECTION.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "f82977fe00c2deb5b84f3cbe13542bdd40a35b14ca1f7858e4e5a52e34e25c34",
+    "sourceTechnicalHash": "6031ecee678fe00b448f697ceba3d4127ff2ad7f7db1c4746ccc3468de6f15df",
+    "targetHash": "e235b5c03290d120afa208c5d9d044000b5807ae8a692789e62515634df51b4c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:03:58.218Z",
+    "glossaryVersion": "0"
+  }
+}

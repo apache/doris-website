@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/catalog/CREATE-CATALOG",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/catalog/CREATE-CATALOG.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/catalog/CREATE-CATALOG.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "d462f81ed1789a8444f2107b2edb8c2001c727d07e46271beb6e820678c200bf",
+    "sourceTechnicalHash": "0fe32cfb3ffdffb18dff1d7e987d654f19a13ceab51365e141390fd456d01437",
+    "targetHash": "e98ba8d00e2d8da20a3bdd5d2c34e9cfdc2f2d9462f0b4d526c50dde1f92785a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:03:58.218Z",
+    "glossaryVersion": "0"
+  }
+}

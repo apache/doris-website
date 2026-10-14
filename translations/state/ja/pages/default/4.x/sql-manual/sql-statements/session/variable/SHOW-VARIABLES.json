@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/session/variable/SHOW-VARIABLES",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/session/variable/SHOW-VARIABLES.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/session/variable/SHOW-VARIABLES.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "c619a804538ecf9a372e12bc2e12673d4f7457319fb42404c561c72222304bee",
+    "sourceTechnicalHash": "a4cd1c5c2fc64b81235749aae8488a50d51aa41fdd084dfbb026cb5e06e56e67",
+    "targetHash": "c96742c66e6d05755f41cacf01ee0de094762354ac9de583b7ec7d3e4796ba2a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:03:58.217Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/session/queries/PLAN-REPLAYER-DUMP",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/session/queries/PLAN-REPLAYER-DUMP.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/session/queries/PLAN-REPLAYER-DUMP.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "356d7ccc63d73e1088af26637958476a87e6f60591db266ab7c5ccdef587501c",
+    "sourceTechnicalHash": "bc5f3db0588a1c0cc9f34240795bb415ae59233ba702eeca9b0188cd37d65589",
+    "targetHash": "72547d926751fa42711eb28c55dbec8bb2ba9216440021e5c74cd5e569cf8709",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:03:58.218Z",
+    "glossaryVersion": "0"
+  }
+}
