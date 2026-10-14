@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/doris-operator/preparation",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/doris-operator/preparation.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/doris-operator/preparation.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "1ffb8bce4ee7adad70f7c492ac27733efad6bd29d12dcccf4268a076c3c623b2",
+    "sourceTechnicalHash": "9668ea7a1b5f0f0cbd15d9a300d44a619886e8a93e6373c8e7b4ac5c5af411e1",
+    "targetHash": "5ca42b7e216a8cd0ca3bcc4bb93202c6b408adb0d63a06eec76fea740e63b568",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T12:03:12.425Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "cd22ab94ec5012929caff1e0ca2e9d916563b24cc1ec33898e689a0241aed77d",
+    "sourceTechnicalHash": "171066805d6a281271565e80fc9c9f0e9a61dc7e137100cb003bf3adc3582299",
+    "targetHash": "d2f086a9beb5a722ea626207d6fb67d04bf927ae2bb6f300bf69e4224990b5ca",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T12:03:12.430Z",
+    "glossaryVersion": "0"
+  }
+}
