@@ -352,6 +352,9 @@ async function translateDocument({source, extension, adapter, glossary, previous
     }
     const sourceStructure = await structure(source, extension);
     target = await alignHeadings(sourceStructure, target, extension);
+    // Source documents may end in blank lines, but new PR files must pass
+    // git diff --check before the draft branch is pushed.
+    target = target.replace(/\n{2,}$/, '\n');
     const targetStructure = await structure(target, extension);
     assert.equal(protectionSignature(targetStructure), protectionSignature(sourceStructure),
         'Protected content changed (code, links, numbers, MDX, anchors, or metadata)');
