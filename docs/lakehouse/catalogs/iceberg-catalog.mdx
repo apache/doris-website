@@ -284,6 +284,8 @@ Iceberg UUID maps directly to native Doris `UUID` in the dev version. Doris 4.1.
 
 The development version supports Iceberg V3 `geometry` and `geography` as Doris `GEOMETRY` and `GEOGRAPHY`. Spatial WKB values are read and written through Parquet. Spatial writes require top-level columns. Doris internal tables and spatial columns nested inside ARRAY, MAP or STRUCT cannot be written.
 
+Spatial types are supported through an Iceberg catalog. Generic file TVFs such as S3 or LOCAL reject Parquet GEOMETRY/GEOGRAPHY annotations, including nested fields. Unannotated BYTE_ARRAY columns retain their ordinary binary mapping.
+
 | Declaration | Default | Effect |
 | --- | --- | --- |
 | `GEOMETRY('<crs>')` | `OGC:CRS84` | Preserves the source coordinate reference system without transforming coordinates. |

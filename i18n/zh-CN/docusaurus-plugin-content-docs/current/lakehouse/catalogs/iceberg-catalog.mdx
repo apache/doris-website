@@ -300,6 +300,8 @@ dev 版本的 Iceberg UUID 直接映射到 Doris 原生 `UUID`，4.1.5 则映射
 
 开发版本将 Iceberg V3 的 `geometry` 和 `geography` 映射为 Doris `GEOMETRY` 和 `GEOGRAPHY`。空间 WKB 值通过 Parquet 读取和写入。空间写入要求顶层空间列，不支持 Doris 内部表，也不支持 ARRAY、MAP 或 STRUCT 内的嵌套空间列写入。
 
+空间类型通过 Iceberg catalog 使用。S3、LOCAL 等通用文件 TVF 会拒绝 Parquet GEOMETRY/GEOGRAPHY 注解，包括嵌套字段；未注解的 BYTE_ARRAY 列保留普通二进制映射。
+
 | 声明 | 默认值 | 作用 |
 | --- | --- | --- |
 | `GEOMETRY('<crs>')` | `OGC:CRS84` | 保留源坐标参考系统，不转换坐标。 |
