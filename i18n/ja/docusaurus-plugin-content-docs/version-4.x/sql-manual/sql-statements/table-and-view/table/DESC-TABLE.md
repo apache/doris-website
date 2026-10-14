@@ -113,7 +113,7 @@ DESC test_table;
 +---------+-------------+------+-------+---------+-------+
 ```
 
-出力に `Comment` 列を追加するには、`show_column_comment_in_describe = true`（3.0.7 で導入）に設定します。
+`show_column_comment_in_describe = true`（3.0.7 で導入）に設定すると、出力に `Comment` 列が追加されます。
 
 ```sql
 SET show_column_comment_in_describe=true;
