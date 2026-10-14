@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/weeks-diff",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/weeks-diff.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/weeks-diff.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f2a1e3495ab7afa364427ec733eb428a5975a925eabf3a2b6d33cb7bb6815228",
+    "sourceTechnicalHash": "a1ad9121d413593987f9548a00582b7cd082555c550b1b5eb352fad5bb6601cc",
+    "targetHash": "190ae234bc385747756f4d78258bf93969a5a90cc49b94b1197ea5e6e1f5a8cd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.183Z",
+    "glossaryVersion": "0"
+  }
+}

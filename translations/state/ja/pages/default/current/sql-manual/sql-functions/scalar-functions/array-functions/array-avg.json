@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-avg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-avg.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-avg.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b8bc92e862a34434a78ca153ee2b07229a1c476cb959ca7b1edffdb02af5d03c",
+    "sourceTechnicalHash": "8c88a164fe83f15943b8212a0e6f7ab1b4cdc8673ee6972c3851b19c6b75d04a",
+    "targetHash": "77f1fcb3174748665af8c9255159dad0e7e9855b0ce69120432d6cbf32d6a224",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.185Z",
+    "glossaryVersion": "0"
+  }
+}

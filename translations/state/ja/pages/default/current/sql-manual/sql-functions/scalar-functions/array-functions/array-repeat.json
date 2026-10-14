@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-repeat",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-repeat.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-repeat.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "788f236d7f2e39629b6dd2a5b32110ddc86fc249bef7f071c8f7bbfe83ba3406",
+    "sourceTechnicalHash": "faad94c8b81913e286c96849d8c550c2019b4db2ef5832fa0f7c473c03f3c79d",
+    "targetHash": "193ac00545a086539db4f39959245d97fbaa3d40109d7079aedceabeeb7b90aa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.187Z",
+    "glossaryVersion": "0"
+  }
+}

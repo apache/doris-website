@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-filter",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-filter.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-filter.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "1294ae852e026ec7522b459b6363892f42aed075f2e8a31d069a9485b7031349",
+    "sourceTechnicalHash": "60f040c9a1dd77c425e1b6a4d8b43ad1ecc9218d2f36d7b04d9b3fd6de615815",
+    "targetHash": "90274894e404c3ebc6652cd18a27b39a520f26cb9a44848f65b17a819f53a44e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.186Z",
+    "glossaryVersion": "0"
+  }
+}

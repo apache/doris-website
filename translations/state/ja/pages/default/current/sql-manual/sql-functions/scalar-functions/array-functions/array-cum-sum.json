@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-cum-sum",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-cum-sum.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-cum-sum.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e7053926e5670512b52c47a631ebd821eb8912b50400fb3c9184f5857bb9b067",
+    "sourceTechnicalHash": "75ce0920556a5bb4313ab5b12a4310549bdff81b3a46545c0bce67ff3e17ca47",
+    "targetHash": "d38364923aaeaf7922ba29d82b8069a800f22cf3065086ec108e424d2337140f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.186Z",
+    "glossaryVersion": "0"
+  }
+}

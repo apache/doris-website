@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-count",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-count.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-count.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f9455cb9dcf8463c4db02465dc9c839dee5457f487374da4243f6f4b476c2315",
+    "sourceTechnicalHash": "054e1a569a71f20812bc57a7bfbd58f7fdc0d829cbb4daa1d9e01ead2ad5cdb3",
+    "targetHash": "d7b53c467f818714343a89674729297ab81d7c11039cfb7abd52b94b92d9722d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.186Z",
+    "glossaryVersion": "0"
+  }
+}

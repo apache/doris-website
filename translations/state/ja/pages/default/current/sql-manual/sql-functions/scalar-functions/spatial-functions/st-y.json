@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-y",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-y.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-y.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "20a0a1aff51a7e5f635f754c2e2fd9956e58ec4da05ccc866df3d808e659654f",
+    "sourceTechnicalHash": "e854c105cfc9151bc9bb816ec34527e3a16f019b30ffe0785ac6222cde7bb21f",
+    "targetHash": "6aef34db703a5d4b2fbb150de3f01671ed9c1d22cf92b70848186d56556c2175",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.185Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/years-add",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/years-add.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/years-add.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "cb61529caa14a1db1bd8b93dc1ddba38a82ff3cb08cfe6bb36787869ed7a4e48",
+    "sourceTechnicalHash": "2c5d6a581523942800164a3b0298c01e3b889fadf65bef0e0b90950b97f9fd31",
+    "targetHash": "a2cd5c1c22d6645ff644404009a3cbc15ee05769f4d3e45b9c00aee15a1cc068",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.183Z",
+    "glossaryVersion": "0"
+  }
+}

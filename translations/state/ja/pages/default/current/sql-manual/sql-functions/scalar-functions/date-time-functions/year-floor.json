@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/year-floor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/year-floor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/year-floor.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "271f7f7a188b5b388b523be0fa6dbcb0aa7817fb09618b0a3e27029e9c968ff0",
+    "sourceTechnicalHash": "beb2e82b05d2e8d0503f04def667133aad41fa7d507007981c98fc3b5c4c45bf",
+    "targetHash": "6a7f6bb3fd0e9d8b629c28e735ccd29c7ed7912baca26ca7567286b0231f7511",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.183Z",
+    "glossaryVersion": "0"
+  }
+}

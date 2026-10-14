@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkb",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkb.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkb.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "9fbe6802f56d52f8c33cea306a950fdd35c86b7cb327ae67496a79329c00633d",
+    "sourceTechnicalHash": "161ca78de9925c8d1126cfd95490604cb403acdacc25381ee8857bd12264c210",
+    "targetHash": "d6ec3cad2be7efc64743916bb895dc3cafc3cb9577283d70e33460ee45806d7f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.184Z",
+    "glossaryVersion": "0"
+  }
+}

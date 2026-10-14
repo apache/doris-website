@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate-uniq",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate-uniq.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate-uniq.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "2a5814ff2498be86dace978ceb36a4103163d4b8bcbfd17562fef3dcfca8a129",
+    "sourceTechnicalHash": "d469727977ba4f5bf218d24bd2b7963b10045b6606c03ce4c81cd2363165276e",
+    "targetHash": "44348d32eaca26993108842556b394507e160703f1b13d6d1b07d7ffb873a25b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.186Z",
+    "glossaryVersion": "0"
+  }
+}

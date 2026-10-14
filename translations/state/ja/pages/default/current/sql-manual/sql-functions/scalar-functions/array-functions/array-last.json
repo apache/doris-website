@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-last",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-last.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-last.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "ffaabf6db6e56f13e1b6390b10dca1ae99b44f3ea0d3f4695dc45993e92133fc",
+    "sourceTechnicalHash": "6779d4a302325f07ede53517b56c54f46824957047c696f629d7dc7cfcd0ed24",
+    "targetHash": "273918649fce0d80eec557b68b99a1bd1bd55a1eda3f2eac30be7707bd333ba4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.186Z",
+    "glossaryVersion": "0"
+  }
+}

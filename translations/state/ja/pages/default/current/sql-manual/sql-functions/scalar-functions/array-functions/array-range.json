@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-range",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-range.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-range.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0267445a7c608cb23a3fcd4d1a9d28b2f697760a5d062c94d11d7c320b5ad0ed",
+    "sourceTechnicalHash": "6e991f144b8d380633e2077352f40474c10475e1d5df4585f5106d29a141d5e1",
+    "targetHash": "ac3bc86937c22a7edc4245d8c30209fe68ea2e9cf49dab2c74e6e96a896f1c9a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.187Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-map",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-map.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-map.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "1f8d0df451c167c3435fde42b3e8764efea5cc4314e606085e9483235a246c7b",
+    "sourceTechnicalHash": "c1219a7a64dc5d3837c94442be0b0b0dde511b7e4e479a27670836c2982aaa2d",
+    "targetHash": "edd121e3dd1e8b31312a721c7aef40ff18fd277b4ec53a6dceb0264e9a4da5f3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.187Z",
+    "glossaryVersion": "0"
+  }
+}
