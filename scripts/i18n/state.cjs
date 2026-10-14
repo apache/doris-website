@@ -24,6 +24,16 @@ function loadConfig(root) {
                 || Object.values(settings.searchContextLabels).some(label => typeof label !== 'string' || !label.trim()))) {
             throw new Error(`Invalid searchContextLabels for ${locale}`);
         }
+        if (typeof settings.languageName !== 'string' || !/^[A-Za-z][A-Za-z -]*$/.test(settings.languageName)) {
+            throw new Error(`Invalid languageName for ${locale}`);
+        }
+        // The script a finished translation must contain, so a model that
+        // answered in the source language is rejected instead of published.
+        if (typeof settings.scriptPattern !== 'string' || !settings.scriptPattern) {
+            throw new Error(`Invalid scriptPattern for ${locale}`);
+        }
+        try {new RegExp(settings.scriptPattern, 'u');}
+        catch {throw new Error(`Invalid scriptPattern for ${locale}`);}
         const keys = new Set();
         for (const override of settings.sourceOverrides) {
             const key = identity({...override, locale});
@@ -36,6 +46,33 @@ function loadConfig(root) {
     return config;
 }
 
+// The translation pipeline works on one locale at a time. A configuration with
+// a single locale needs no selector, so existing runs are unchanged;
+// I18N_LOCALE picks one as soon as several are managed.
+function pipelineLocale(root, requested = process.env.I18N_LOCALE) {
+    const configured = Object.keys(loadConfig(root).locales);
+    assertConfigured(configured, requested, 'translation locale');
+    if (requested) return requested;
+    if (configured.length !== 1) throw new Error(`Set I18N_LOCALE to one of: ${configured.join(', ')}`);
+    return configured[0];
+}
+
+function assertConfigured(configured, requested, what) {
+    if (requested && !configured.includes(requested)) {
+        throw new Error(`Unconfigured ${what}: ${requested} (configured: ${configured.join(', ')})`);
+    }
+}
+
+// A locale's own English name, which the pipeline weaves into model prompts,
+// the bot identity, branch names and PR titles. It stays a declared setting
+// rather than something derived from the code, because renaming it would orphan
+// the branches and markers of runs already in flight.
+function languageName(root, locale) {
+    const settings = loadConfig(root).locales[locale];
+    if (!settings?.languageName) throw new Error(`Missing languageName for ${locale}`);
+    return settings.languageName;
+}
+
 // Locales the render path manages: translation state, status manifests and the
 // localized search index exist only for these. Every other configured locale is
 // served by the native per-file fallback alone, so it needs none of this.
@@ -44,6 +81,18 @@ function loadConfig(root) {
 function managedLocales(root, enabled) {
     const configured = Object.keys(loadConfig(root).locales);
     return enabled === undefined ? configured : configured.filter(locale => enabled.includes(locale));
+}
+
+// A locale's inventory snapshot, used as the comparison baseline for coverage
+// audits. Exactly one is expected, and it stays pinned by name: rebasing an
+// audit onto a newer snapshot has to be a deliberate edit, not a silent pick.
+function inventoryBaseline(root, locale) {
+    const base = path.join(root, 'translations/inventory', locale);
+    const snapshots = fs.existsSync(base)
+        ? fs.readdirSync(base, {withFileTypes: true}).filter(entry => entry.isDirectory()).map(entry => entry.name).sort()
+        : [];
+    if (snapshots.length !== 1) throw new Error(`Expected one ${locale} inventory snapshot, found ${snapshots.length}`);
+    return path.join(base, snapshots[0]);
 }
 
 const stateRoot = locale => `translations/state/${locale}`;
@@ -147,5 +196,5 @@ function decide({page, source, target, record, technicalHash}) {
     return result('stale_unknown');
 }
 
-module.exports = {hash, identity, relative, loadConfig, managedLocales, loadRecords, loadRecordsAt,
+module.exports = {hash, identity, relative, loadConfig, managedLocales, pipelineLocale, languageName, inventoryBaseline, loadRecords, loadRecordsAt,
     stateFileFor, listShardFiles, sourceLocaleFor, decide};

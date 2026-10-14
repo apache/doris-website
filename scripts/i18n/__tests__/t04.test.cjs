@@ -100,7 +100,8 @@ test('full audit finds documents and sidebar keys added after the T03 snapshot',
             {id:'COMMUNITY',pluginId:'community',version:'current',sourceRoot:'community',file:'community/new.md'},
         ];
         write('translations/scope/ja.json',JSON.stringify({schemaVersion:1,locale:'ja',maxBatchPages:20,groups,retainEnglish:[]}));
-        write('translations/config.json','{}');
+        write('translations/config.json',JSON.stringify({schemaVersion:1,locales:{ja:{sourceLocale:'en',
+            sourceOverrides:[],languageName:'Japanese',scriptPattern:'[\\u3040-\\u30ff\\u3400-\\u9fff]'}}}));
         write('translations/state/ja/docs.json',JSON.stringify({schemaVersion:1,pages:[]}));
         write('translations/state/ja/resolved-deletions.json',JSON.stringify({schemaVersion:1,deletions:[]}));
         for (const file of ['docusaurus.config.js','versions.json','sidebars.ts','sidebarsCommunity.json','versioned_sidebars/version-4.x-sidebars.json'])

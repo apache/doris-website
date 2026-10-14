@@ -4,13 +4,17 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
+const {languageName, pipelineLocale} = require('./state.cjs');
 
 const root = path.resolve(__dirname, '../..');
-const rules = new Set(['docusaurus.config.js', 'config/i18n.js', 'sidebars.ts', 'sidebarsCommunity.json',
-    'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json', 'translations/scope/ja.json',
-    'translations/glossary/ja.json']);
+const configInputs = ['docusaurus.config.js', 'config/i18n.js', 'sidebars.ts', 'sidebarsCommunity.json',
+    'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json'];
+// A push to this locale's own scope or glossary changes what may be generated.
+const rulesFor = locale => new Set([...configInputs,
+    `translations/scope/${locale}.json`, `translations/glossary/${locale}.json`]);
 
 function relevantPush(changed, audit, scope) {
+    const rules = rulesFor(scope.locale);
     const source = new Set(audit.groups.flatMap(group => group.entries.map(page => page.sourcePath))
         .concat(audit.removed.map(page => page.sourcePath)));
     const chinese = new Set(audit.groups.flatMap(group => {
@@ -30,12 +34,12 @@ function changedPaths(before, head) {
     catch {return null;}
 }
 
-function summarize(plan, reconciliation, eligible, mode) {
+function summarize(plan, reconciliation, eligible, mode, language) {
     const exceptionKinds = new Map();
     for (const item of [...plan.exceptions, ...reconciliation.exceptions])
         exceptionKinds.set(item.kind, (exceptionKinds.get(item.kind) ?? 0) + 1);
     return [
-        '## Japanese translation discovery',
+        `## ${language} translation discovery`,
         '',
         `- Source commit: \`${plan.sourceCommit}\``,
         `- Mode: \`${mode}\`; generation eligible: **${eligible}**`,
@@ -85,7 +89,8 @@ function main() {
     const event = process.env.GITHUB_EVENT_NAME || 'workflow_dispatch';
     const mode = process.env.I18N_MODE || 'dry-run';
     const changed = event === 'push' ? changedPaths(process.env.GITHUB_EVENT_BEFORE, plan.sourceCommit) : [];
-    const scope = JSON.parse(fs.readFileSync(path.join(root, 'translations/scope/ja.json'), 'utf8'));
+    const locale = pipelineLocale(root);
+    const scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'));
     if (event === 'workflow_dispatch' && mode === 'validate') {
         assert(/\.mdx?$/.test(process.env.I18N_PATH || ''),
             'Validation mode needs an exact English .md or .mdx source path');
@@ -94,7 +99,7 @@ function main() {
     }
     const eligible = event === 'schedule' || event === 'workflow_dispatch' && ['generate', 'validate'].includes(mode)
         || event === 'push' && changed !== null && relevantPush(changed, audit, scope);
-    const summary = summarize(plan, reconciliation, eligible, mode);
+    const summary = summarize(plan, reconciliation, eligible, mode, languageName(root, locale));
     if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
     else process.stdout.write(summary);
     if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT,
@@ -106,4 +111,4 @@ function main() {
 if (require.main === module) {
     try {main();} catch (error) {console.error(error.message); process.exitCode = 1;}
 }
-module.exports = {relevantPush, changedPaths, summarize, replaceableBotPr};
+module.exports = {relevantPush, changedPaths, summarize, replaceableBotPr, rulesFor};

@@ -4,16 +4,15 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {hash, identity, loadRecordsAt} = require('./state.cjs');
+const {hash, identity, inventoryBaseline, loadRecordsAt, pipelineLocale} = require('./state.cjs');
 const {collect, validateScope} = require('./inventory.cjs');
 
-const baselineDir = path.resolve(__dirname,'../../translations/inventory/ja/2026-10-12');
-const key = page => identity({...page,locale:'ja'});
+const keyFor = locale => page => identity({...page,locale});
 const refContent = (root,ref,file) => {
     try {return execFileSync('git',['show',`${ref}:${file}`],{cwd:root,encoding:'utf8',stdio:['ignore','pipe','ignore'],maxBuffer:16*1024*1024});}
     catch {return null;}
 };
-function baselineEntries(root = baselineDir) {
+function baselineEntries(root) {
     return ['dev','4x','community'].flatMap(group => {
         const meta = JSON.parse(fs.readFileSync(path.join(root,`${group}.json`),'utf8'));
         return meta.entryFiles.flatMap(shard => JSON.parse(fs.readFileSync(path.join(root,shard),'utf8')).entries);
@@ -27,7 +26,7 @@ function sidebarAudit(native,root,scope) {
         const versionFile = plugin.files.find(file => file.path === (group.version === 'current' ? 'current' : `version-${group.version}`));
         assert(versionFile, `Missing native sidebar keys ${group.id}`);
         const suffix = group.pluginId === 'default' ? '' : `-${group.pluginId}`;
-        const dir = path.join(root,`i18n/ja/docusaurus-plugin-content-docs${suffix}`);
+        const dir = path.join(root,`i18n/${scope.locale}/docusaurus-plugin-content-docs${suffix}`);
         const target = path.join(dir,`${versionFile.path}.json`);
         const translated = fs.existsSync(target) ? JSON.parse(fs.readFileSync(target,'utf8')) : {};
         const sourceKeys = Object.entries(versionFile.content).filter(([name]) => name.startsWith('sidebar.'));
@@ -46,15 +45,18 @@ function sidebarAudit(native,root,scope) {
     }
     return result;
 }
-async function audit({root,sourceRef,baseline = baselineDir,native}) {
+async function audit({root,sourceRef,baseline,native}) {
+    const locale = pipelineLocale(root);
+    const key = keyFor(locale);
+    baseline ??= inventoryBaseline(root, locale);
     const commit = execFileSync('git',['rev-parse',`${sourceRef}^{commit}`],{cwd:root,encoding:'utf8'}).trim();
-    execFileSync('git',['diff','--quiet',commit,'--','i18n/ja','translations/state/ja'],{cwd:root});
-    const untracked = execFileSync('git',['ls-files','--others','--exclude-standard','--','i18n/ja','translations/state/ja'],
+    execFileSync('git',['diff','--quiet',commit,'--',`i18n/${locale}`,`translations/state/${locale}`],{cwd:root});
+    const untracked = execFileSync('git',['ls-files','--others','--exclude-standard','--',`i18n/${locale}`,`translations/state/${locale}`],
         {cwd:root,encoding:'utf8'}).trim();
-    assert(!untracked,`Uncommitted Japanese targets/state cannot count at ${commit}: ${untracked}`);
-    const scope = JSON.parse(fs.readFileSync(path.join(root,'translations/scope/ja.json'),'utf8'));
-    validateScope(scope);
-    const committedRecords = loadRecordsAt(root, 'ja', commit);
+    assert(!untracked,`Uncommitted translated targets/state cannot count at ${commit}: ${untracked}`);
+    const scope = JSON.parse(fs.readFileSync(path.join(root,`translations/scope/${locale}.json`),'utf8'));
+    validateScope(scope, locale);
+    const committedRecords = loadRecordsAt(root, locale, commit);
     native ||= await collect(root);
     const old = new Map(baselineEntries(baseline).map(page => [key(page),page]));
     const current = new Set(), groups = [];
@@ -102,11 +104,11 @@ async function audit({root,sourceRef,baseline = baselineDir,native}) {
     const labels = Object.fromEntries(['translated','untranslated','missing','retained_technical']
         .map(state => [state,sidebar.filter(entry => entry.state === state).length]));
     const routingInputs = ['docusaurus.config.js','versions.json','sidebars.ts','sidebarsCommunity.json','versioned_sidebars/version-4.x-sidebars.json',
-        'translations/config.json','translations/scope/ja.json'];
-    routingInputs.push('translations/state/ja/docs.json', 'translations/state/ja/resolved-deletions.json');
-    if (refContent(root, commit, 'translations/state/ja/shards.schema.json') !== null)
-        routingInputs.push('translations/state/ja/shards.schema.json');
-    routingInputs.push(...execFileSync('git', ['ls-tree', '-r', '--name-only', commit, '--', 'translations/state/ja/pages'],
+        'translations/config.json',`translations/scope/${locale}.json`];
+    routingInputs.push(`translations/state/${locale}/docs.json`, `translations/state/${locale}/resolved-deletions.json`);
+    if (refContent(root, commit, `translations/state/${locale}/shards.schema.json`) !== null)
+        routingInputs.push(`translations/state/${locale}/shards.schema.json`);
+    routingInputs.push(...execFileSync('git', ['ls-tree', '-r', '--name-only', commit, '--', `translations/state/${locale}/pages`],
         {cwd:root,encoding:'utf8'}).split('\n').filter(Boolean));
     for (const file of routingInputs) assert.equal(refContent(root,commit,file),fs.readFileSync(path.join(root,file),'utf8'),
         `Routing input differs from source ref: ${file}`);

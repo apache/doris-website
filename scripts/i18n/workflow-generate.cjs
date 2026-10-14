@@ -4,11 +4,12 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {hash, identity} = require('./state.cjs');
+const {hash, identity, languageName, pipelineLocale} = require('./state.cjs');
 const {checkedTask, managedPath, safeFile} = require('./translation-engine.cjs');
 const {codexAdapter} = require('./codex-adapter.cjs');
-const {prepare, applyCandidates, readState} = require('./translate-docs.cjs');
+const {prepare, applyCandidates, readState, targetFor} = require('./translate-docs.cjs');
 const {replaceableBotPr} = require('./workflow-scan.cjs');
+const {markerPrefixFor} = require('./automation-naming.cjs');
 
 const root = path.resolve(__dirname, '../..');
 const allowedKinds = new Set(['translate_new', 'translate_backlog', 'update']);
@@ -68,28 +69,28 @@ function ensureMasterFresh(sourceCommit) {
 function bodyFor(manifest) {
     const rows = manifest.candidates.map(item => `| ${item.kind} | ${item.version} | [\`${item.sourcePath}\`](https://github.com/apache/doris-website/blob/${manifest.sourceCommit}/${item.sourcePath}) | \`${item.sourceHash.slice(0, 12)}\` | ${item.reusedFrom ? `copied from \`${item.reusedFrom}\`` : 'model call'} |`);
     const failures = manifest.failures.length ? manifest.failures.map(item => `- \`${item.id}\` (${item.sourcePath}): ${item.error}`).join('\n') : 'None.';
-    return ['## Japanese translation candidate', '',
+    return [`## ${manifest.language} translation candidate`, '',
         `Source commit: \`${manifest.sourceCommit}\``,
         `Model: \`${manifest.model}\`; glossary: \`${manifest.glossaryVersion}\``,
-        'Review status: machine. Japanese proofreading and the normal PR checks are still required.',
+        `Review status: machine. ${manifest.language} proofreading and the normal PR checks are still required.`,
         '', '| Action | Version | English source | SHA-256 prefix | Generation |',
         '| --- | --- | --- | --- | --- |', ...rows, '', '## Failed or skipped tasks', '', failures, '',
         '## Validation', '', 'The generator checked committed source hashes, managed paths, protected syntax,',
         'target/state hashes and the current master SHA before applying the candidate.',
         'The PR checks must verify links, routes, coverage and the site build before merging.',
-        '', '<!-- japanese-translation-automation:v1 bot-head=PENDING -->', ''].join('\n');
+        '', `${markerPrefixFor(manifest.language)}PENDING -->`, ''].join('\n');
 }
 
-async function generate({plan, reconciliation, maxPages = 2,
+async function generate({plan, reconciliation, maxPages = 2, target,
     adapter, glossary, rootDir = root, ensureFresh = ensureMasterFresh, output}) {
     assert(Number.isInteger(maxPages) && maxPages > 0 && maxPages <= 20, 'Invalid page limit');
     assert(plan.schemaVersion === 1 && plan.sourceCommit === execFileSync('git', ['rev-parse', 'HEAD'],
         {cwd: rootDir, encoding: 'utf8'}).trim(), 'Plan does not match trusted checkout');
     const replaces = replaceableBotPr(plan, reconciliation);
     assert(reconciliation.botPrs.length === 0 || replaces,
-        'An automated Japanese PR is already open or was edited after generation');
-    const scope = JSON.parse(fs.readFileSync(path.join(rootDir, 'translations/scope/ja.json'), 'utf8'));
-    const state = readState(rootDir);
+        'An automated translation PR is already open or was edited after generation');
+    const scope = JSON.parse(fs.readFileSync(path.join(rootDir, `translations/scope/${target.locale}.json`), 'utf8'));
+    const state = readState(rootDir, target.locale);
     const blocked = new Set(reconciliation.blockedTargets);
     const candidates = [], failures = [], consumed = new Set();
     for (const id of plan.selected) {
@@ -106,7 +107,7 @@ async function generate({plan, reconciliation, maxPages = 2,
             || candidates.length + 2 > maxPages)) partner = null;
         try {
             checkedTask(plan, id, scope, rootDir);
-            const primary = await prepare({root: rootDir, plan, taskId: id, scope, state, adapter, glossary,
+            const primary = await prepare({root: rootDir, plan, taskId: id, scope, state, adapter, glossary, target,
                 maxDocumentChars: 60000, maxChunkChars: 5000});
             candidates.push(primary);
             if (partner) try {
@@ -121,6 +122,7 @@ async function generate({plan, reconciliation, maxPages = 2,
         }
     }
     const manifest = {schemaVersion: 1, sourceCommit: plan.sourceCommit, provider: 'codex',
+        locale: target.locale, language: target.language,
         model: adapter.model, glossaryVersion: glossary.version, liveCall: adapter.usedTokens > 0,
         liveVerified: false, usedTokens: adapter.usedTokens,
         replacesPr: replaces ? {number: replaces.number, headSha: replaces.headSha} : null,
@@ -164,16 +166,18 @@ async function main() {
             'Validation mode must select exactly one source file');
     }
     const reconciliation = JSON.parse(fs.readFileSync(path.join(output, 'open-pr-reconciliation.json'), 'utf8'));
-    const glossary = JSON.parse(fs.readFileSync(path.join(root, 'translations/glossary/ja.json'), 'utf8'));
+    const locale = pipelineLocale(root);
+    const target = targetFor(root, locale);
+    const glossary = JSON.parse(fs.readFileSync(path.join(root, `translations/glossary/${locale}.json`), 'utf8'));
     assert(process.env.CODEX_BIN && fs.existsSync(process.env.CODEX_BIN), 'Pinned Codex runtime is required');
-    const adapter = codexAdapter({model: process.env.I18N_CODEX_MODEL || 'gpt-6-sol',
+    const adapter = codexAdapter({model: process.env.I18N_CODEX_MODEL || 'gpt-6-sol', language: languageName(root, locale), locale,
         codexBin: process.env.CODEX_BIN, codexHome: process.env.CODEX_HOME});
     const manifest = await generate({plan, reconciliation, maxPages: Number(process.env.I18N_MAX_PAGES || '2'),
-        adapter, glossary, output});
+        target, adapter, glossary, output});
     if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT,
         `created=${manifest.candidates.length > 0}\n`);
     if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
-        `\nGenerated ${manifest.candidates.length} Japanese page candidates at ${manifest.sourceCommit}; `
+        `\nGenerated ${manifest.candidates.length} ${manifest.language} page candidates at ${manifest.sourceCommit}; `
         + `${manifest.failures.length} failed or need manual handling. No translation is merged yet.\n`);
     process.stdout.write(JSON.stringify({candidates: manifest.candidates.length,
         failures: manifest.failures.length, usedTokens: manifest.usedTokens}) + '\n');

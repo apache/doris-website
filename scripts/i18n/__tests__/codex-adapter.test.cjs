@@ -12,7 +12,7 @@ test('Codex returns schema-bound text and usage without exposing job credentials
     try {
         fs.writeFileSync(path.join(home, 'auth.json'), '{}');
         let calls = 0;
-        const adapter = codexAdapter({codexHome: home, codexBin: '/tmp/codex', model: 'gpt-6-sol',
+        const adapter = codexAdapter({language: 'Japanese', locale: 'ja', codexHome: home, codexBin: '/tmp/codex', model: 'gpt-6-sol',
             spawnImpl: (binary, args, options) => {
                 calls++;
                 assert.equal(binary, '/tmp/codex');
@@ -40,7 +40,7 @@ test('Codex records usage without rejecting a former batch token overage', async
     const home = fs.mkdtempSync(path.join(os.tmpdir(), 'ja-codex-unbounded-'));
     try {
         fs.writeFileSync(path.join(home, 'auth.json'), '{}');
-        const adapter = codexAdapter({codexHome: home, codexBin: '/tmp/codex',
+        const adapter = codexAdapter({language: 'Japanese', locale: 'ja', codexHome: home, codexBin: '/tmp/codex',
             spawnImpl: (_binary, args) => {
                 const answer = args[args.indexOf('--output-last-message') + 1];
                 fs.writeFileSync(answer, JSON.stringify({translations: [{id: 'u1', text: '訳文'}]}));

@@ -64,9 +64,9 @@ test('duplicate identities, colliding routes and incorrect source roots fail clo
     assert.throws(() => build([page('one', {englishPath: 'community/one.md'})]), /Source root mismatch/);
 });
 test('English exceptions require explicit reasons, valid identities and a native node', () => {
-    validateScope(scope);
-    assert.throws(() => validateScope({...scope, maxBatchPages: 21}), /Batch limit/);
-    assert.throws(() => validateScope({...scope, retainEnglish: [{...group, docId: 'one'}]}), /reason/);
+    validateScope(scope, 'ja');
+    assert.throws(() => validateScope({...scope, maxBatchPages: 21}, 'ja'), /Batch limit/);
+    assert.throws(() => validateScope({...scope, retainEnglish: [{...group, docId: 'one'}]}, 'ja'), /reason/);
     const retain = {...scope, retainEnglish: [{...group, docId: 'one', reason: 'license text'}]};
     const result = build([page('one')], {scope: retain});
     assert.equal(result.counts.retainEnglish, 1);
