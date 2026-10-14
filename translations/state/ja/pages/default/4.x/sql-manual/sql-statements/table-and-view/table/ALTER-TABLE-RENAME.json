@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-RENAME",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-RENAME.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-RENAME.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "a574e1bf3875a1de62e4bcb7f51a8f2d88d65b1e06933b066d5c0eb06d31ae88",
+    "sourceTechnicalHash": "9bc83acdde0564e41797d6c8619a54823b22895c4c591ce13481fcf19b0333c0",
+    "targetHash": "3e3c3ad537ba7775588c540f9ac9fb265fb3b48f1cd3e30958a67a2b713c8d06",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:18:55.553Z",
+    "glossaryVersion": "0"
+  }
+}

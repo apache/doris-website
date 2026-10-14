@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "6715b7a0e5a912b22af46b1e1aebeb815ac25bbf49cd2006169234da67fa1b09",
+    "sourceTechnicalHash": "3725bf5a8df0b6ee92a4b4f3e05d12fede5380b2b61bf7d684272bf329c1d32a",
+    "targetHash": "c4b70a70c9973d44020656858aec4ac0b24eaefd055d8e2b4de03eae6ef27ed6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:18:55.553Z",
+    "glossaryVersion": "0"
+  }
+}
