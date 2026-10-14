@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/job/PAUSE-JOB",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/job/PAUSE-JOB.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/job/PAUSE-JOB.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "471c11f532a20d7ea79363ba54e00609d9f2b3e5534984daade9eb16ae408cc5",
+    "sourceTechnicalHash": "f591f62f9faca5569eb11c3d9a8a35588ca99e65a536f0845fcb49bfd144e59b",
+    "targetHash": "c629f71a1991bf626b84aa19deba510b0cb08d3b54834036d9015813ebbb171c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:58:17.485Z",
+    "glossaryVersion": "0"
+  }
+}
