@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "7de37330e4d8a3cdfdfb4e368a16224fb252a42a3e68dcf6a26e61c4c3e0ed55",
+    "sourceTechnicalHash": "c5496cffbc543ac44746cdfc13063b66769a3b7a6022c0937e3b60525751c685",
+    "targetHash": "4f4cc445d29f834b8a338b4cc04818d2d402c0b543d1f24bcd14bc1d7a9f9963",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:18:55.553Z",
+    "glossaryVersion": "0"
+  }
+}

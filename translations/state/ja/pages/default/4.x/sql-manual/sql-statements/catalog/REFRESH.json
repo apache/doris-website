@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/catalog/REFRESH",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/catalog/REFRESH.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/catalog/REFRESH.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "761f6e073a66eaa08d718008edfc9962416dbc9b0db314de8dfe70d30cf014e1",
+    "sourceTechnicalHash": "5c7150793dd2e2a6b9cc8ebdab46a6e7e037b5c12509717e18df8babc117a3f0",
+    "targetHash": "8609bedf93cb6d8ba816caece2a0206e28be50eaf506a0313073f7708d9e0187",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:18:55.552Z",
+    "glossaryVersion": "0"
+  }
+}

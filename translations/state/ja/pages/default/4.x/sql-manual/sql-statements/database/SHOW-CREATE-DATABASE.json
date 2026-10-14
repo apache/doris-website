@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/database/SHOW-CREATE-DATABASE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/database/SHOW-CREATE-DATABASE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/database/SHOW-CREATE-DATABASE.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "57debf9f33d3a31c5b5f6b586710c01f730e91385d90e53a2e65156670f7fc63",
+    "sourceTechnicalHash": "fc4e10a4a8d23a199b47136e6f349fa5f24b64dd58a9b56ec42455a46fa69bb2",
+    "targetHash": "86261530da7e55102572a98ae7255022a6a9cdbe65335911761c633e6a50df1a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:18:55.553Z",
+    "glossaryVersion": "0"
+  }
+}

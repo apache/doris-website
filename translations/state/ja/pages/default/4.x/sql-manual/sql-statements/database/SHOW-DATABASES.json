@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/database/SHOW-DATABASES",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/database/SHOW-DATABASES.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/database/SHOW-DATABASES.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "1597cbeeb8cfaeae1aa265b2b58dd3cd37960afd576bcfc0528e72736376247c",
+    "sourceTechnicalHash": "1bf486fdfc22dd0831a2fc45f4d6a3981f78258c45bf5f10871aa6df0682d4ff",
+    "targetHash": "cd46c23bc549d1f1e623b10c832d67f8eae2c0c2d05b4b0e23279f072e10ac4d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:18:55.553Z",
+    "glossaryVersion": "0"
+  }
+}
