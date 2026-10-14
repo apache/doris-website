@@ -1,0 +1,171 @@
+---
+{
+    "title": "MySQL プロトコルによる接続",
+    "language": "ja",
+    "description": "Apache Doris と MySQL ネットワークプロトコルの互換性を説明し、MySQL CLI および Java、Go、Rust、Python、C++ などの主要な言語からの接続例を紹介します。"
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Apache Doris は **MySQL ネットワーク通信プロトコル** と完全な互換性があります。そのため、このプロトコルに対応するクライアントツール、可視化ツール、主要なプログラミング言語向けの MySQL ドライバーやライブラリは、**Doris 専用ドライバーをインストールせずに** Doris に直接接続できます。
+
+> Doris FE はデフォルトでポート `9030` から MySQL プロトコルのサービスを提供します。このポートは設定項目 `query_port`（`fe.conf`）に対応します。
+
+## 主な利用シーン
+
+用途に応じて、MySQL プロトコルによる接続には主に次の二つのシナリオがあります。
+
+| シナリオ | 主な用途 | 推奨方法 |
+| --- | --- | --- |
+| コマンドライン／スクリプトからのアクセス | 運用時のトラブルシューティング、アドホッククエリ、自動化スクリプト | MySQL CLI |
+| アプリケーションとの連携 | バックエンドサービス、データ処理プログラム、ETL ジョブ | 各言語に対応する MySQL ドライバー（Java／Go／Rust／Python／C++ など） |
+
+## 接続前の準備
+
+接続する前に、次の情報を確認してください。
+
+| 項目 | 説明 | 例 |
+| --- | --- | --- |
+| `FE_IP` | Doris FE ノードの IP アドレスまたはホスト名 | `172.20.63.118` |
+| `FE_QUERY_PORT` | FE の MySQL プロトコルサービスのポート。設定項目 `query_port`（`fe.conf`）に対応 | `9030` |
+| `USER` | ログインアカウント | `root` |
+| `PASSWORD` | ログインパスワード（デフォルトの `root` アカウントにはパスワードが設定されていません） | - |
+
+> ポートを変更する場合は、設定項目 `query_port` を FE ノードの `fe.conf` で変更し、FE を再起動してください。
+
+## 接続例
+
+以下に、MySQL クライアントや各言語のドライバーを使用する最小限の接続例を示します。下のタブで切り替えてください。
+
+<Tabs groupId="mysql-client">
+
+<TabItem value="mysql-cli" label="MySQL CLI" default>
+
+コマンドライン操作、アドホッククエリ、スクリプトからの呼び出しなどに適しています。
+
+### 1. MySQL クライアントをダウンロードして展開する
+
+[MySQL 公式サイト](https://dev.mysql.com/downloads/mysql/)から MySQL クライアントをダウンロードしてください。Doris は **MySQL 5.7 以降** のクライアントバージョンに対応しています。
+
+`mysql` コマンドラインツールは、展開後の `bin/` ディレクトリにあります。
+
+### 2. Doris に接続する
+
+次のコマンドを実行して Doris に接続します。
+
+```shell
+mysql -h FE_IP -P FE_QUERY_PORT -u USER -p
+```
+
+Enter キーを押した後、パスワードを入力します（`root` アカウントにはデフォルトでパスワードが設定されていないため、そのまま Enter キーを押します）。
+
+### 3. ログインを確認する
+
+ログインに成功すると、次のメッセージが表示されます。
+
+```text
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 236
+Server version: 5.7.99 Doris version doris-2.0.3-rc06-37d31a5
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>
+```
+
+</TabItem>
+
+<TabItem value="java" label="Java">
+
+Java アプリケーションと Doris を連携する場合に適しています。Doris では、接続に **MySQL JDBC Connector** を使用することを推奨します。
+
+### 1. JDBC ドライバーを追加する
+
+MySQL JDBC Connector の依存関係をプロジェクトに追加します（MySQL 5.1.49 以降を推奨します）。
+
+### 2. 接続コードを記述する
+
+```java
+String user = "user_name";
+String password = "user_password";
+String url = "jdbc:mysql://FE_IP:FE_QUERY_PORT/demo"
+        + "?useUnicode=true"
+        + "&characterEncoding=utf8"
+        + "&useTimezone=true"
+        + "&serverTimezone=Asia/Shanghai"
+        + "&useSSL=false"
+        + "&allowPublicKeyRetrieval=true";
+
+try (Connection conn = DriverManager.getConnection(url, user, password);
+     Statement stmt = conn.createStatement();
+     ResultSet rs = stmt.executeQuery("show databases")) {
+
+    ResultSetMetaData metaData = rs.getMetaData();
+    int columnCount = metaData.getColumnCount();
+    while (rs.next()) {
+        for (int i = 1; i <= columnCount; i++) {
+            System.out.println(rs.getObject(i));
+        }
+    }
+} catch (SQLException e) {
+    log.error("get JDBC connection exception.", e);
+}
+```
+
+### 3. 主な JDBC URL パラメーター
+
+| パラメーター | 意味 | 推奨値／例 | 必須 |
+| --- | --- | --- | --- |
+| `useUnicode` | Unicode 文字セットを使用するかどうか | `true` | いいえ |
+| `characterEncoding` | 文字エンコーディング | `utf8` | いいえ |
+| `useTimezone` | タイムゾーン変換を有効にするかどうか | `true` | いいえ |
+| `serverTimezone` | サーバーのタイムゾーン | `Asia/Shanghai` | いいえ |
+| `useSSL` | 接続に SSL を使用するかどうか | `false` | いいえ |
+| `allowPublicKeyRetrieval` | サーバーからの公開鍵の取得を許可するかどうか（通常、MySQL 8 ドライバーで必要） | `true` | いいえ |
+| `sessionVariables` | 接続の確立時に初期化するセッション変数 | `key1=val1,key2=val2` | いいえ |
+
+### 4. セッション変数を初期化する（任意）
+
+接続の確立時にセッション変数を初期化する場合は、次の URL 形式を使用します。
+
+```text
+jdbc:mysql://FE_IP:FE_QUERY_PORT/demo?sessionVariables=key1=val1,key2=val2
+```
+
+</TabItem>
+
+<TabItem value="go" label="Go">
+
+:::info To be added
+MySQL ドライバーを使用して Go から Doris に接続する例は、今後のリリースで追加される予定です。
+:::
+
+</TabItem>
+
+<TabItem value="rust" label="Rust">
+
+:::info To be added
+MySQL ドライバーを使用して Rust から Doris に接続する例は、今後のリリースで追加される予定です。
+:::
+
+</TabItem>
+
+<TabItem value="python" label="Python">
+
+:::info To be added
+MySQL ドライバーを使用して Python から Doris に接続する例は、今後のリリースで追加される予定です。
+:::
+
+</TabItem>
+
+<TabItem value="cpp" label="C++">
+
+:::info To be added
+MySQL Connector を使用して C++ から Doris に接続する例は、今後のリリースで追加される予定です。
+:::
+
+</TabItem>
+
+</Tabs>
