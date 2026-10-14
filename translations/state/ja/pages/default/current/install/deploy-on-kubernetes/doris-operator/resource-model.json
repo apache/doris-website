@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/doris-operator/resource-model",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/doris-operator/resource-model.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/doris-operator/resource-model.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "81eddd53bf894a3a5f34890c2d2b3460b1183583eafcab446b1f10972c312caf",
+    "sourceTechnicalHash": "69b914d0b0a1e217098fe8cf85cb2669316b8e776049a29373cef355ec8f61fb",
+    "targetHash": "ffb4aaf3a76e3c0fcb4ceff9532cfaca05fd7feb6a155f76b2c058773bae583f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:44:44.431Z",
+    "glossaryVersion": "0"
+  }
+}
