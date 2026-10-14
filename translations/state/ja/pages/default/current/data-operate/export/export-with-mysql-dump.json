@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/export/export-with-mysql-dump",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/export/export-with-mysql-dump.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/export/export-with-mysql-dump.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "41a6ac45c4790d26a50c12b875863554d34484dca2144ed04876250c21db16a2",
+    "sourceTechnicalHash": "dbe6422e6dba7de316a9c002bccfbcdd28e67f638c9cce5e2f85ec387fdf0295",
+    "targetHash": "9b8fc887118cd6c7c76bbf44b8a54f083beb92333eccc334302b7df52945e880",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.221Z",
+    "glossaryVersion": "0"
+  }
+}

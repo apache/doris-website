@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/optimization-technology-principle/pipeline-execution-engine",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/optimization-technology-principle/pipeline-execution-engine.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/optimization-technology-principle/pipeline-execution-engine.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "264eee7ae0c5d6b13dfe88d3d4ac54119ea226f4eaa13096623d184724b78d76",
+    "sourceTechnicalHash": "6e6b786a46a01748f85f86ae8d22c395f1a149a4b7b83bb44b7bd93a088b87da",
+    "targetHash": "fe030d3a9633daa8cd03c79d9f5579bb50997bdf09c4a7b5e51a7f894d58eff7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.224Z",
+    "glossaryVersion": "0"
+  }
+}

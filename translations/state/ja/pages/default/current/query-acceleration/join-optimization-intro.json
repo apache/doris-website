@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/join-optimization-intro",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/join-optimization-intro.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/join-optimization-intro.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "8a58110213d8343fff8b037092b8d48134020ee2d6fb9b1681620ed38f13f917",
+    "sourceTechnicalHash": "9bcab2aa21a93445f1c37fa9332efbe4fe91abc7635beaa604f1e9754b54a9c1",
+    "targetHash": "2894bdab2997917d405afc39a24bafa33a00eb2dd372cb18580ad0c88f4f204f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.223Z",
+    "glossaryVersion": "0"
+  }
+}

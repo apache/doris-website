@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-data/mysql-compatibility",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-data/mysql-compatibility.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-data/mysql-compatibility.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "1eaea4a967b6b8054af5d019bb93dfc9a360e88962602f56c1554fef29634d55",
+    "sourceTechnicalHash": "52936c605c391803a157b7d55b1c368f5cba7551c01051fd3f51f591927ffb3b",
+    "targetHash": "c6b7e4885abd7735891b288e34a866e812910b954dc8ff95f0d1b56de344742d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.221Z",
+    "glossaryVersion": "0"
+  }
+}

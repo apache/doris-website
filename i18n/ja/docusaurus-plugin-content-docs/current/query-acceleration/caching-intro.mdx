@@ -1,0 +1,53 @@
+---
+{
+    "title": "キャッシュ",
+    "language": "ja",
+    "description": "Apache Doris のキャッシュによるクエリ高速化に関する章の案内です。クエリ結果を対象とする SQL キャッシュ、フィルタ結果を対象とする条件キャッシュ、外部テーブルのクエリを対象とするデータキャッシュ、コンピュートとストレージを分離したモードで使用するファイルキャッシュとピアキャッシュ読み取りを紹介します。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris は、複数の階層でキャッシュを使用してクエリを高速化します。結果レベルのキャッシュは、同一の SQL に対するクエリ結果を再利用します。セグメントレベルのキャッシュは、フィルタ条件の計算結果を再利用します。ファイルレベルのキャッシュは、リモートのレイクハウスデータと、コンピュートとストレージを分離したモードにおける内部テーブルのデータをローカルディスクにキャッシュします。ワークロードの特性に応じて適切なキャッシュ方式を選択してください。
+
+## クエリ結果とフィルタのキャッシュ
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="SQL キャッシュ"
+    description="SQL テキストとテーブルまたはパーティションのバージョンに基づいて、クエリ結果全体をキャッシュします。T+1 や更新頻度が低いシナリオに適しています。キャッシュにヒットすると、計算処理全体を省略できます。"
+    link="sql-cache-manual"
+/>
+
+<GettingStartedCard
+    title="条件キャッシュ"
+    description="セグメントに対するフィルタ条件の結果をキャッシュします。同じ条件を使うクエリでは、キャッシュ済みの結果を直接再利用できるため、重複するスキャンとフィルタ計算を回避できます。"
+    link="condition-cache"
+/>
+</div>
+
+## 外部テーブルのファイルキャッシュ
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="データキャッシュ"
+    description="HDFS やオブジェクトストレージのファイルをローカルディスクにキャッシュし、Hive、Iceberg、Hudi、Paimon などの外部テーブルに対するクエリを高速化します。キャッシュのウォームアップ、クォータ、アドミッション制御に対応しています。"
+    link="../lakehouse/data-cache"
+/>
+</div>
+
+## コンピュートとストレージを分離したモードのファイルキャッシュ
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="ファイルキャッシュ（コンピュートとストレージの分離）"
+    description="コンピュートとストレージを分離したモードで、オブジェクトストレージにある内部テーブルのデータを BE のローカルディスクにキャッシュします。複数キューの LRU、キャッシュのウォームアップ、キャッシュクォータ、TTL ポリシーについて説明します。"
+    link="../compute-storage-decoupled/file-cache/file-cache"
+/>
+
+<GettingStartedCard
+    title="ピアキャッシュ読み取り"
+    description="ローカルの File Cache にデータがない場合、オブジェクトストレージにアクセスする前に、別の BE（他のコンピュートグループの BE を含む）からブロックを読み取ります。スケールアウト時やグループ間のコールドリードを高速化します。"
+    link="../compute-storage-decoupled/file-cache/file-cache-peer-read"
+/>
+</div>

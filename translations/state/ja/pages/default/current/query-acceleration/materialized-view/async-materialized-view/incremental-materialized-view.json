@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "6ba3b68ebb850a5d417b3d52945ac00e6984db2e88a807b465ac92d707585f8d",
+    "sourceTechnicalHash": "398d650d83375d141bae72e7e6cf21526f828c20eff7b0914620c5d6798394a4",
+    "targetHash": "59b967ca67363143a08c6ba3d67af8b628c8de5accf8365a2e508a7f0b54db7c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.222Z",
+    "glossaryVersion": "0"
+  }
+}

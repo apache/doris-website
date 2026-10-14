@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/adbc-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/adbc-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/adbc-catalog.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "a38a7e443169fc1f69a25255151a9ea9a6f484c7fbdbb5900ecd8099a574c63f",
+    "sourceTechnicalHash": "2cbd6c90a914641a5a5c26e37ba8ca738de64760f176692fdc41919e45cd959c",
+    "targetHash": "b2df02d3fcb8c07bd1f2b0a4656588847463d253ebc7e0f131d4383926b3b890",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.226Z",
+    "glossaryVersion": "0"
+  }
+}

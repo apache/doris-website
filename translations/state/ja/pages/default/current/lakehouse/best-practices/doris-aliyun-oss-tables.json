@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-aliyun-oss-tables",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-aliyun-oss-tables.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-aliyun-oss-tables.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "08958fcd9817950cc557f8fe88afc52a87276434a702729df3555052a429f9f9",
+    "sourceTechnicalHash": "429201075373739667cb7dc4ecb297b9f46e9a13e42d4dc4551e403d02abacd6",
+    "targetHash": "c930b275c61d872e4e5e7bc9be03707a0ae56ad934530271894b0bf1dddbbbcf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.225Z",
+    "glossaryVersion": "0"
+  }
+}

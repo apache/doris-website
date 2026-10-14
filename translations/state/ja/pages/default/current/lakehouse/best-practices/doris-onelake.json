@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-onelake",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-onelake.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-onelake.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "a35da61d3f732b24b8a839f1d65cefe77b261040819e5615d8f2d9c99cbb3b36",
+    "sourceTechnicalHash": "c4d21051521c7bd53a5a9d93a193f04c54cd7277207078a3a2f11635301739b2",
+    "targetHash": "cf31704b1b1977dd6504f947fe5bacf515d916aa3f9e803ac238b4b53126f2ae",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.225Z",
+    "glossaryVersion": "0"
+  }
+}

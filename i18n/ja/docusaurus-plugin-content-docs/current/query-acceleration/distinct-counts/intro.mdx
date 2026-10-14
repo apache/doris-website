@@ -1,0 +1,31 @@
+---
+{
+    "title": "効率的な重複排除",
+    "language": "ja",
+    "description": "Apache Doris の効率的な重複排除に関する案内：BITMAP による正確な重複排除と HLL による近似的な重複排除。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+重複排除は、分析処理の中でも特に多くのリソースを消費する操作の一つです。Apache Doris は、`COUNT DISTINCT` の代わりに使用できる二つの専用データ型を提供し、メモリ使用量とレイテンシーを抑えて重複を排除します。正確な結果が必要な場合は **BITMAP** を、ストレージ使用量を抑えるために 1%–2% の誤差を許容できる場合は **HLL** を選択してください。
+
+## 正確な重複排除
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="BITMAP による正確な重複排除"
+    description="COUNT DISTINCT の代わりに BITMAP 型を使用すると、正確に重複を排除しながら、クエリ速度を向上させ、メモリとディスクの使用量を削減できます。"
+    link="bitmap-precise-deduplication"
+/>
+</div>
+
+## 近似的な重複排除
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="HLL による近似的な重複排除"
+    description="HyperLogLog に基づく近似的な重複排除です。誤差は 1%–2% 以内に抑えられ、ストレージ使用量も少ないため、大規模な UV やカーディナリティの統計に適しています。"
+    link="hll-approximate-deduplication"
+/>
+</div>

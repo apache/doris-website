@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-dlf-paimon",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-dlf-paimon.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-dlf-paimon.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "07fccf98ed655cbdeea3d065c9b6e63f428bc610019eda64346890fca3657736",
+    "sourceTechnicalHash": "c5b56e7924b9396a2d4c09ce8e101abc726e928934d60c444b2ad0da41be5cc3",
+    "targetHash": "c6a35ad6904aafbb682e4391443f37b11aff5c2e2787ed0b2080ec1108a45223",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.226Z",
+    "glossaryVersion": "0"
+  }
+}

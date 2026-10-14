@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-lakekeeper",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-lakekeeper.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-lakekeeper.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "1ef0478fe87619aa9e32194b1c9f9b6e922f4eb398edbacc1cdf61ac5d9c3a6d",
+    "sourceTechnicalHash": "8122f46fbdd8baab23588a0a6679b462d9640170e6a393606043980ba2c7915f",
+    "targetHash": "0bf0b5978c6b453888519ea091ff091c641313558657fd80db2d0c39db1dcc5c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.225Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/paimon-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/paimon-catalog.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/paimon-catalog.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "40715cc0e35cf2337dc34d212f7eba5955c703398abefdf09dc1a4110591c49e",
+    "sourceTechnicalHash": "505164a4bf4d3bec1963d8437d12cffd5aea5b62109f52780432a92e960c4755",
+    "targetHash": "7f02a257623beddf645b3a6673cd3b8a1d4ea94ea1987cff07bd42cb78321bbf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.225Z",
+    "glossaryVersion": "0"
+  }
+}

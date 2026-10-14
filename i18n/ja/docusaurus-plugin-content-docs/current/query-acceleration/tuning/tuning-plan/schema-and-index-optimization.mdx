@@ -1,0 +1,31 @@
+---
+{
+    "title": "スキーマとインデックスの最適化",
+    "language": "ja",
+    "description": "テーブルスキーマ、インデックス設計、スキャンの最適化によって Apache Doris のクエリ性能を向上させます。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+適切に設計されたテーブルスキーマ、適切なインデックスの選択、効率的なスキャン戦略が、クエリ性能の上限を決めます。以下の順に、段階的に最適化してください。
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="テーブルスキーマ設計の最適化"
+    description="データの偏りを防ぎ、並列処理を十分に活用できるように、テーブルモデル、パーティション列とバケット列、Key 列、フィールドの型を選択します。"
+    link="optimizing-table-schema"
+/>
+
+<GettingStartedCard
+    title="テーブルインデックス設計の最適化"
+    description="クエリのパターンに応じてプレフィックスインデックス、BloomFilter、NGram BloomFilter、転置インデックスを選び、適切な列に適用します。"
+    link="optimizing-table-index"
+/>
+
+<GettingStartedCard
+    title="テーブルスキャンの最適化"
+    description="パーティションプルーニング、プレフィックスインデックスのプッシュダウン、Runtime Filter を使い、クエリごとのスキャン量を減らします。"
+    link="optimizing-table-scanning"
+/>
+</div>

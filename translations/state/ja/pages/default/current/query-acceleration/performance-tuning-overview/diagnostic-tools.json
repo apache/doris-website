@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/performance-tuning-overview/diagnostic-tools",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/performance-tuning-overview/diagnostic-tools.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/performance-tuning-overview/diagnostic-tools.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "c7c6eb568bb95618afbc315b09c81e1c7c2af446d4d079a5f6404c80264088b1",
+    "sourceTechnicalHash": "4d83a20648b9861879a8442edd06c597b7a062532a2de374410a753609cc7d48",
+    "targetHash": "7f689fe7a51f95aa9b23dda774454c02263ea89fa31e75319ee30d796939728b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.222Z",
+    "glossaryVersion": "0"
+  }
+}

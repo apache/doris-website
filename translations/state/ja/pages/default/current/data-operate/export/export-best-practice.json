@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/export/export-best-practice",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/export/export-best-practice.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/export/export-best-practice.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "a72f91ce9191972d14dbd35b6601b12088ce0873571f433ef64352b1181b8096",
+    "sourceTechnicalHash": "5c217df6624ddac6057c251c9a6d7fdb8126dfdcdd923f14413ff26158ca45c5",
+    "targetHash": "6d4551e1cdf9e88291a0cf73fc49ed3671a944f3ba075f944bfe8287cde6be22",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.221Z",
+    "glossaryVersion": "0"
+  }
+}
