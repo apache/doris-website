@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/workload-group",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/workload-group.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/workload-group.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "bfea58d76f4aadd0610c9581d17d776b2e0fd167b5a14a3e3713bc43b01857be",
+    "sourceTechnicalHash": "bd89463937611cd1d65e7a6e69a26fc5d0dc5c7d0941d1d01246977287c560c4",
+    "targetHash": "06f5828c64c926b662809573bc32d8d47b9ba53d5bc5601eb458e0945dd0d4df",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:33:33.244Z",
+    "glossaryVersion": "0"
+  }
+}
