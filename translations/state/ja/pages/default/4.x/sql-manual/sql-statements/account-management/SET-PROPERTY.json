@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/SET-PROPERTY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/SET-PROPERTY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/SET-PROPERTY.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "28a8c785b38c1bdb3ab32e60dfaaefdead58e3d07847b4f8387c03d8861c1ea1",
+    "sourceTechnicalHash": "723ed7cb8a3437e16eebc2a7e64564bf7e7a11a8be6ada67765bf03dd22c31f4",
+    "targetHash": "abf88fb6517f4d9be9fb25c2ae02035df5d865949c26be812e1fea8bfb87d650",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:55:32.509Z",
+    "glossaryVersion": "0"
+  }
+}

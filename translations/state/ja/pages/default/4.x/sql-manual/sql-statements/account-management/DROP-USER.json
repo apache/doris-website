@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/DROP-USER",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/DROP-USER.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/DROP-USER.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "73cf48d4aa8207d360b92cf6da4b8b69bc95aa04bf2cbb00550807db111183ba",
+    "sourceTechnicalHash": "3f507711a1c7120ad200d7eab79e723484d34ed87f9f9d7d8497df8db4f8f8a6",
+    "targetHash": "65308718a53c9b7042d2027ba97d6de83d4495702fa7b65123cc589fcd892120",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:55:32.508Z",
+    "glossaryVersion": "0"
+  }
+}

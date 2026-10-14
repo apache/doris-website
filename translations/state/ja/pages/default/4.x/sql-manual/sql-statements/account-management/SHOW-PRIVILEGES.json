@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/SHOW-PRIVILEGES",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/SHOW-PRIVILEGES.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/SHOW-PRIVILEGES.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "561ceba70f5ea4e9da6edc4c8791c53ba2c5e20734c337a5a4920c760e7711ee",
+    "sourceTechnicalHash": "1435424db69506bec226bdf02a76da2333541a1a7bfc8e6e157a8422ae066882",
+    "targetHash": "6a0c1113948ab4d35286d3e78b942446adf9360cd147bd2f4a50c70cc3c99f47",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:55:32.508Z",
+    "glossaryVersion": "0"
+  }
+}
