@@ -156,7 +156,7 @@ $KAFKA_HOME/bin/connect-distributed.sh -daemon $KAFKA_HOME/config/connect-distri
 ```
 
 :::note
-Kafka Connect の初回起動時には、Kafka クラスターに `config.storage.topic`、`offset.storage.topic`、`status.storage.topic` の 3 つのトピックが作成されます。これらは共有 Connector 設定、オフセットデータ、ステータス更新の記録に使用されます。詳しくは [Kafka Connect の使い方: はじめに](https://docs.confluent.io/platform/current/connect/userguide.html)を参照してください。
+Kafka Connect の初回起動時には、Kafka クラスターに `config.storage.topic`、`offset.storage.topic`、`status.storage.topic` の三つのトピックが作成されます。これらは共有 Connector 設定、オフセットデータ、ステータス更新の記録に使用されます。詳しくは [Kafka Connect の使い方: はじめに](https://docs.confluent.io/platform/current/connect/userguide.html)を参照してください。
 :::
 
 ### 4. Connector の作成
@@ -258,14 +258,14 @@ errors.deadletterqueue.topic.replication.factor=1
 | `doris.tls.excluded-protocols` | `http`,<br />`mysql` | 空文字列 | N | TLS を使用しない Doris プロトコルをカンマで区切って指定します。 |
 | `doris.topic2table.map` | - | - | Y | トピックとテーブルの対応付け。例: `topic1:tb1,topic2:tb2`。空の場合、デフォルトではトピック名が書き込み先テーブル名として使用されます。複数のデータベースを使用する場合の形式は `topic1:db1.tbl1,topic2:db2.tbl2` です。 |
 | `load.model` | `stream_load`,<br />`tvf` | stream_load | N | Doris への書き込みモード。S3 TVF 経由で書き込むには `tvf` に設定します。 |
-| `buffer.count.records` | - | 50000 | N | 1 回の Stream Load で書き込むレコード数。 |
+| `buffer.count.records` | - | 50000 | N | 一回の Stream Load で書き込むレコード数。 |
 | `buffer.flush.time` | - | 120 | N | バッファをフラッシュする間隔（秒）。デフォルトは 120 秒です。 |
-| `buffer.size.bytes` | - | 104857600(100MB) | N | 1 回の Stream Load で書き込むデータサイズ。 |
-| `enable.combine.flush` | `true`,<br />`false` | false | N | すべてのパーティションのデータを 1 回の書き込みにまとめるかどうか。デフォルトは `false` です。有効にした場合、保証できるのは `at_least_once` セマンティクスのみです。 |
+| `buffer.size.bytes` | - | 104857600(100MB) | N | 一回の Stream Load で書き込むデータサイズ。 |
+| `enable.combine.flush` | `true`,<br />`false` | false | N | すべてのパーティションのデータを 一回の書き込みにまとめるかどうか。デフォルトは `false` です。有効にした場合、保証できるのは `at_least_once` セマンティクスのみです。 |
 | `jmx` | - | true | N | JMX を使用して Connector 内部の監視メトリクスを取得するかどうか。[Doris-Connector-JMX](https://github.com/apache/doris-kafka-connector/blob/master/docs/en/Doris-Connector-JMX.md)を参照してください。 |
 | `label.prefix` | - | `${name}` | N | データ取り込み時の Stream Load ラベルのプレフィックス。デフォルトは Connector アプリケーション名です。 |
 | `auto.redirect` | - | true | N | Stream Load リクエストをリダイレクトするかどうか。有効にすると、FE を経由して書き込み先の BE に Stream Load がリダイレクトされ、BE の情報は表示されなくなります。 |
-| `sink.properties.*` | - | `'sink.properties.format':'json'`,<br />`'sink.properties.read_json_by_line':'true'` | N | Stream Load の取り込みパラメータ。たとえば列区切り文字は `'sink.properties.column_separator':','` で指定します。詳しくは [Stream Load マニュアル](../../data-operate/import/import-way/stream-load-manual.md)を参照してください。<br /><br />Group Commit を有効にする場合、たとえば `sync_mode` を有効にするには `"sink.properties.group_commit":"sync_mode"` を指定します。Group Commit では `off_mode`、`sync_mode`、`async_mode` の 3 モードをサポートします。詳しくは [Group Commit](https://doris.apache.org/docs/data-operate/import/group-commit-manual/)を参照してください。<br /><br />一部の列のみを更新する場合、たとえば `col2` 列を更新するには `"sink.properties.partial_columns":"true"` と `"sink.properties.columns":"col2"` を指定します。 |
+| `sink.properties.*` | - | `'sink.properties.format':'json'`,<br />`'sink.properties.read_json_by_line':'true'` | N | Stream Load の取り込みパラメータ。たとえば列区切り文字は `'sink.properties.column_separator':','` で指定します。詳しくは [Stream Load マニュアル](../../data-operate/import/import-way/stream-load-manual.md)を参照してください。<br /><br />Group Commit を有効にする場合、たとえば `sync_mode` を有効にするには `"sink.properties.group_commit":"sync_mode"` を指定します。Group Commit では `off_mode`、`sync_mode`、`async_mode` の三モードをサポートします。詳しくは [Group Commit](https://doris.apache.org/docs/data-operate/import/group-commit-manual/)を参照してください。<br /><br />一部の列のみを更新する場合、たとえば `col2` 列を更新するには `"sink.properties.partial_columns":"true"` と `"sink.properties.columns":"col2"` を指定します。 |
 | `sink.s3.endpoint` | - | - | TVF 書き込みモードのみ | S3 互換オブジェクトストレージの絶対 HTTP または HTTPS エンドポイント。 |
 | `sink.s3.region` | - | - | TVF 書き込みモードのみ | オブジェクトストレージのリージョン。 |
 | `sink.s3.bucket` | - | - | TVF 書き込みモードのみ | データの一時保存に使用するバケット。 |
@@ -279,7 +279,7 @@ errors.deadletterqueue.topic.replication.factor=1
 | `enable.delete` | - | false | N | Debezium による同期で削除レコードを同期するかどうか。デフォルトは `false` です。Debezium を使用しない同期では、メッセージに削除マーカーを追加する必要があります。 |
 | `database.time_zone` | - | UTC | N | `converter.mode` を `normal` 以外に設定した場合、`datetime`、`date`、`timestamp` などの日時データ型に適用するタイムゾーン変換を指定します。デフォルトは UTC です。 |
 | `avro.topic2schema.filepath` | - | - | N | ローカルの Avro スキーマファイルを読み込んでトピック内の Avro ファイルの内容を解析し、Confluent Schema Registry への依存をなくします。この設定は `key.converter` または `value.converter` のプレフィックスとともに使用する必要があります。たとえば `avro-user` と `avro-product` トピックにローカルの Avro スキーマファイルを設定するには、`"value.converter.avro.topic2schema.filepath":"avro-user:file:///opt/avro_user.avsc, avro-product:file:///opt/avro_product.avsc"` を指定します。詳しくは [#32](https://github.com/apache/doris-kafka-connector/pull/32)を参照してください。 |
-| `record.tablename.field` | - | - | N | この項目を有効にすると、1 つのトピックから複数の Doris テーブルにデータを流せます。設定の詳細は [#58](https://github.com/apache/doris-kafka-connector/pull/58)を参照してください。 |
+| `record.tablename.field` | - | - | N | この項目を有効にすると、一つのトピックから複数の Doris テーブルにデータを流せます。設定の詳細は [#58](https://github.com/apache/doris-kafka-connector/pull/58)を参照してください。 |
 | `max.retries` | - | 10 | N | タスクが失敗するまでにエラーを再試行する最大回数。 |
 | `retry.interval.ms` | - | 6000 | N | エラー発生後、再試行するまでの待機時間（ミリ秒）。デフォルトは 6000 ミリ秒です。 |
 | `behavior.on.null.values` | `ignore`,<br />`fail` | ignore | N | `null` 値を持つレコードの処理方法。デフォルトではスキップします。 |
@@ -739,4 +739,4 @@ org.apache.doris.kafka.connector.exception.SchemaChangeException: Cannot alter t
 
 `debezium_ingestion` 変換モードでは、デフォルトでスキーマ変更が無効になっています。スキーマ変更を有効にするには `debezium.schema.evolution=basic` を設定します。
 
-スキーマ変更を有効にしても、変更した列だけが Doris テーブルに存在することは厳密には保証されません。具体的な制限事項については、`debezium.schema.evolution` パラメータの説明を参照してください。上流と下流で列を 1 つだけに保つには、先に Doris テーブルに変更後の列を手動で追加してから Connector タスクを再起動することを推奨します。Connector は最後に未消費だった `offset` から消費を続け、データの整合性を維持します。
+スキーマ変更を有効にしても、変更した列だけが Doris テーブルに存在することは厳密には保証されません。具体的な制限事項については、`debezium.schema.evolution` パラメータの説明を参照してください。上流と下流で列を一つだけに保つには、先に Doris テーブルに変更後の列を手動で追加してから Connector タスクを再起動することを推奨します。Connector は最後に未消費だった `offset` から消費を続け、データの整合性を維持します。
