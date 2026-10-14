@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-extract",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract.md",
+    "sourceCommit": "7e2dbb21f886b5aa5aa87bf640d2ceb38a6e715d",
+    "sourceHash": "7af9efd381f557a7422a89c5e935abc9ee197822b04a45d2db43fc21e68dea57",
+    "sourceTechnicalHash": "a3278a5ee908e6a64557a48d91b012b7ca4c3c7bda208c28f1afadb763dead59",
+    "targetHash": "8b117ddfec5f9a456296293aa27e2b572285035653308008825ecc01616a94fb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T12:59:14.854Z",
+    "glossaryVersion": "0"
+  }
+}

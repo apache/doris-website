@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-mapped",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-mapped.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-mapped.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "f03c4f18f85fc9d337e22d3186bd57daad75ffc942345a1d14f30108d620dca7",
+    "sourceTechnicalHash": "348225ff3807c3c14b1b1512fdd83f9393cf881c1949687a4bcb934d5030a3e4",
+    "targetHash": "eaf40abf5c04996350820fc152b4f5d5bd1186c7e466ebde34f00f8dbfdbf8d6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:32:10.979Z",
+    "glossaryVersion": "0"
+  }
+}

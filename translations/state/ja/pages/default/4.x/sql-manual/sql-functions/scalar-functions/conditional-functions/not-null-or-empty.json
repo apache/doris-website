@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/conditional-functions/not-null-or-empty",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/conditional-functions/not-null-or-empty.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/conditional-functions/not-null-or-empty.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "80cd081f2677fa4fd60495232e12ba3305a2da4e7d8e905fcd93fc2b4363b93b",
+    "sourceTechnicalHash": "8d90044786488f1bdbeef5e52f54e79c1766321ab8fd666d1ed8ac588cb3a0b1",
+    "targetHash": "7ebc149acf4e916f59b7f3ce0daa31691414001ad4828d1242cbf1ec1d1d0b93",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:30:24.920Z",
+    "glossaryVersion": "0"
+  }
+}

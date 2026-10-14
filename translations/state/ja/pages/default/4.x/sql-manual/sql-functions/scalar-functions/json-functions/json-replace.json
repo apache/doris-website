@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-replace",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-replace.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-replace.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "bc20c6676d8e14a84286dc7e71a73ae9f1e768d807d36557861a471bbc0c7b69",
+    "sourceTechnicalHash": "009c365f6896bacab5833c57e0a596282310ca490264811097f3d5a7e2946285",
+    "targetHash": "83e80bd054c5aa73cd41db8625f20f8afaa3b55d3ead676e5f26a75c52142668",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:06:03.622Z",
+    "glossaryVersion": "0"
+  }
+}

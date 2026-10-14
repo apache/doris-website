@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv4",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv4.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv4.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "654d9f7f817bcfd916ae6f780b7844eef1b90878905f30d4f46aa633a45689c0",
+    "sourceTechnicalHash": "1bcda7af121fcf799f76a3f26e506ce8ec236b98ca653fa7d05e545f02a2d413",
+    "targetHash": "bce1b1ff75ab1b2ae8169cfab78191561f0c8fbb58934763e5f2616df5bd0eab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:32:10.982Z",
+    "glossaryVersion": "0"
+  }
+}

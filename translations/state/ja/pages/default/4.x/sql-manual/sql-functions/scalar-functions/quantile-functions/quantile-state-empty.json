@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-state-empty",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-state-empty.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-state-empty.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "ad68f80f3e8aad6aa3b2bc705456ba8815e883f69d5d672cc4dc96caac1c5f5a",
+    "sourceTechnicalHash": "a4d009e38f7044bce980741fa199f4b2fb8f4ce8129714dddc1b621cb3e3e4f6",
+    "targetHash": "129e421495924f9a0c3ee4241a209673f4fb903705ed17a874788743b0e9cc53",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:02:01.386Z",
+    "glossaryVersion": "0"
+  }
+}

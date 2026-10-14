@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/binary-functions/to-base64-binary",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/binary-functions/to-base64-binary.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/binary-functions/to-base64-binary.md",
+    "sourceCommit": "9bd8b356d362e6e0ce821bb464039c73129bff2c",
+    "sourceHash": "8eb96b6e9c554253245d91ec318c12dbfa113a5d94e686fa86a1503c0e8bc1e6",
+    "sourceTechnicalHash": "47e8dd5af0c76618baf9b29bc492f3636ed8aaaa4cb25d8dd853bf656094a7e9",
+    "targetHash": "db830d6495b24166cc9c1cc19a3b7f68f036e717d59d9bc05c08b8bc502214c5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T18:12:09.567Z",
+    "glossaryVersion": "0"
+  }
+}

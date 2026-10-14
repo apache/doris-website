@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-bigint",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-bigint.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-bigint.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "ce6362895c563331b1a780227136a7eb0036c685dc7c97e099669ccd9502b938",
+    "sourceTechnicalHash": "012f279110e087718964d0ee261a097052d5ca480bc6ef5976baf315a4e38c46",
+    "targetHash": "a556ee5ade3fda6870503a3b4043a804c69b953d1f08bcc10957c2bfb034ea65",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T12:42:57.798Z",
+    "glossaryVersion": "0"
+  }
+}

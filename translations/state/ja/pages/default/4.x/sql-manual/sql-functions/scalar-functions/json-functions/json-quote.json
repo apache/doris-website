@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-quote",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-quote.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-quote.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "60ea01f06e9195c772a7c87752168f51067e9cbf0ea9b98b548e2fc2a9eaed7e",
+    "sourceTechnicalHash": "5d5729f2949fd221eae895106f5993914cd055e220663982c7029e766d35480d",
+    "targetHash": "046255c6c3a71e1d65cdf6698664f8966ae673fa6c50bb80f23c997e7d4171ab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:06:03.617Z",
+    "glossaryVersion": "0"
+  }
+}

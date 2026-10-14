@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/hll-functions/hll-empty",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/hll-functions/hll-empty.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/hll-functions/hll-empty.md",
+    "sourceCommit": "9bd8b356d362e6e0ce821bb464039c73129bff2c",
+    "sourceHash": "ee0927c2ae95de8bae4925972e000914fe412c3e61789f18c0bfe70adbb01cda",
+    "sourceTechnicalHash": "f71a8ae59287cc2f072a8dfb39344214abc286636891b7b345d80d62943562d1",
+    "targetHash": "e61abae178497685e921ea3318ab744d2df2ef06c812b93ab9b79f97f5cb274c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T18:12:09.567Z",
+    "glossaryVersion": "0"
+  }
+}

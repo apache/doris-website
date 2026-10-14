@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/conditional-functions/least",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/conditional-functions/least.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/conditional-functions/least.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "e2033552165e808876bbd6fb1283d71e5905921b91df6879a0d12626988b9548",
+    "sourceTechnicalHash": "af69f1e0fefa01601c71b1964856c99aa00302c77f4d28bd27bf05fa2549d685",
+    "targetHash": "6008ae257d369477ce5a85d3fec921f15eded489b6c78c18a461ec25ea62e6b6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:30:24.920Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/sub-bitmap",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/sub-bitmap.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/sub-bitmap.md",
+    "sourceCommit": "9bd8b356d362e6e0ce821bb464039c73129bff2c",
+    "sourceHash": "98a350b68d1608c461a7801dd7430f9f55914a8c4422c45bdfb1fa63131f9f47",
+    "sourceTechnicalHash": "bb9e070bd4cbf3ec9b1a664de811d2f3750366f7984930047aa61853733ade3d",
+    "targetHash": "6a54762ebb0a11f9fe2536612c397643f22f6ab109b152a3e20ee355bcf0ae2f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T18:12:09.567Z",
+    "glossaryVersion": "0"
+  }
+}

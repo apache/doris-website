@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-double",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-double.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-double.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "f54d097449fd56c97edd70573fc6323ddaef9007aec29fe507ac26a658c896de",
+    "sourceTechnicalHash": "0abb068ada15d58078a8eb541ab694661f5bafae176db6e6b61aa4d06293abac",
+    "targetHash": "a58764f855f4e3a7d9f786f5d5ea264a667ca58132570d7e9952d44ea01acdef",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T13:14:16.443Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/bitmap-agg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/bitmap-agg.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/bitmap-agg.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "804b1acdfa63c171c201a7e70f817f6efd94563863919efeb6ed85a6212e1602",
+    "sourceTechnicalHash": "d192d7f2a37794afe298337aa261b46e19f7627069239e88625778db5f5efd8c",
+    "targetHash": "17bf20cc8692a0c406006866682785dd9b86f02131f2f0c8984805743c94f29f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:30:24.920Z",
+    "glossaryVersion": "0"
+  }
+}

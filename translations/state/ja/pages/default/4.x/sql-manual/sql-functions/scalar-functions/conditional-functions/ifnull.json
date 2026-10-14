@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/conditional-functions/ifnull",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/conditional-functions/ifnull.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/conditional-functions/ifnull.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "d0f609d1981091bbff0f7466f6f2b25eacfbef73178dd90febcd7e64e541694b",
+    "sourceTechnicalHash": "17964768f14060293132cdf2a28f1a4aa6bb563c9979aa6247082ce5cda48a2a",
+    "targetHash": "cffce90eee73b15e0bdb27b987893e8c33b50056e327e2287a9539c10d2e5c05",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:30:24.920Z",
+    "glossaryVersion": "0"
+  }
+}

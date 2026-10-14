@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-to-base64",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-to-base64.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-to-base64.md",
+    "sourceCommit": "9bd8b356d362e6e0ce821bb464039c73129bff2c",
+    "sourceHash": "1d8d491ef270822f1fa5bf6ab42ad74034c2ccf15661c35beaa0ecc53ed64079",
+    "sourceTechnicalHash": "1e59faf0f187de1851db82be168f7204d99c2e502b12a5be087232aa070ef7b6",
+    "targetHash": "b3bd4e4dd2f752defad0d169af64646772c6bb83664756965d1a731b3d1439cd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T18:12:09.566Z",
+    "glossaryVersion": "0"
+  }
+}

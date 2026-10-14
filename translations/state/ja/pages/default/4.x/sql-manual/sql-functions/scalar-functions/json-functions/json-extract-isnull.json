@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-isnull",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-isnull.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-isnull.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "695e2129b53e01e61640f9cddc1ded9c4a768d654f1dcf4cb9f8bcf92324f1ef",
+    "sourceTechnicalHash": "61708603c7c18fa62ddc0e97395d41cdf03dd642d838316d36a9275dd5a26d2f",
+    "targetHash": "8fd09de51cf21bd7081b58d391b543cbf37cd96706e0b669b9b342f0fcd2a66d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T13:14:16.443Z",
+    "glossaryVersion": "0"
+  }
+}

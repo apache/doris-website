@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/group-array-union",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/group-array-union.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/group-array-union.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "ca31d1d6c94af5abc78f5223d2f0aea813f4bc26b87bac230a9893eb18de1d3b",
+    "sourceTechnicalHash": "4cc9c7039720cd7805b1f7fa48811b62480c4d74bd9229f7c43302b30d1b33f8",
+    "targetHash": "bbe1d6f979d88125a6cbfa6485cbebd857aaf4cab24c6e89b98ed73df9b7be6c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T20:45:36.248Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/group-bit-and",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/group-bit-and.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/group-bit-and.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "969624e91e1aff4bdb2e56d3aa201c104a20d7e3ce31d7eaf3c46be8f694de54",
+    "sourceTechnicalHash": "f0c75a43d7f80daa5765592883172899f25716b70d1834babc758c0c93dffff9",
+    "targetHash": "16a12dc90245156c430f886a0f2949b8a94c2686ff60991725943ad2acd59d3d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T20:45:36.248Z",
+    "glossaryVersion": "0"
+  }
+}

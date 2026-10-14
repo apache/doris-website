@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-max",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-max.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-max.md",
+    "sourceCommit": "9bd8b356d362e6e0ce821bb464039c73129bff2c",
+    "sourceHash": "027d23a822bb96b388724307c20e98224551954a2f73197d01687b827527b345",
+    "sourceTechnicalHash": "dbb34ff57c4cf1c8f003b694c009ec07583c5d786ba87c753a2533424ac0b33d",
+    "targetHash": "e766d766838e1f6e4c7c6fad4ac48b8964f4cc40692190ee822cab12d7e22768",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T16:38:44.017Z",
+    "glossaryVersion": "0"
+  }
+}

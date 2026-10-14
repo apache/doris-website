@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/sort-json-object-keys",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/sort-json-object-keys.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/sort-json-object-keys.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "0d86f72816a1071e05e489e6f0f7266ec8eed21981fc2dfd21f10eb4ae62069c",
+    "sourceTechnicalHash": "af28070e9d2ae74f749cd1134c7360dcd53d8759622299113c376e207863a4f4",
+    "targetHash": "625f812ad4fc853e192628b3eaeb91958ee28305975a3bc1ab9731ef53cd1697",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:06:03.644Z",
+    "glossaryVersion": "0"
+  }
+}
