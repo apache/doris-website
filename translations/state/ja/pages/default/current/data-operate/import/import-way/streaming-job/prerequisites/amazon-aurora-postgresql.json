@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "92909cda0a07e03538cf90ed2e399bc8a96e75907dcf05245d5a22d1c67c089c",
+    "sourceTechnicalHash": "c05cf2381449c308ffaa7db9e422d04102dedfac200b8f824ed2df9911dd7559",
+    "targetHash": "c8bd060ab17fa4776bcecacf60fda5e8f0ce9b1b867a5d6e80d9a4073475e7f2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T15:18:07.096Z",
+    "glossaryVersion": "0"
+  }
+}

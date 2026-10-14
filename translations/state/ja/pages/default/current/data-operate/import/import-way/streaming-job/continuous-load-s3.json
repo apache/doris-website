@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-s3",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "9cbdf58b5e569f684dd432b8c29b1e87e063365b8f90da161bf2a7ac630125c8",
+    "sourceTechnicalHash": "2508d857e2cf0f0aef02d48f5ccea32d7518c906170b5e4e92012970ed6d176b",
+    "targetHash": "bffe97608b0e707e2037d1536da60931009242cceb602d5d3f8fb318db4ce93b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T15:18:07.097Z",
+    "glossaryVersion": "0"
+  }
+}

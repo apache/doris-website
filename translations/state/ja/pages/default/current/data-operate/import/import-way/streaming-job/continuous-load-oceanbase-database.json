@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "790ee17a3c1a22b2602225f3359df603f0aadde04f65e378c8e71cce93af7fae",
+    "sourceTechnicalHash": "9c495e6fb067ae4589571ad04d37d69067c1d2aa463c392f389886dd063d978f",
+    "targetHash": "8faf2479ffaa295d5c005d82a8a399e3c10ff0c0e3bb8c9d6f5cbe6ff90a8b0f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T15:18:07.097Z",
+    "glossaryVersion": "0"
+  }
+}

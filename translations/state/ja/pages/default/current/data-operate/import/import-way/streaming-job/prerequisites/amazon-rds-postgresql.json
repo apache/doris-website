@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "508b25fe6077b4957db06934598de484c2746b09c3bf30c18258bb32cba30563",
+    "sourceTechnicalHash": "92f984bce32b5c8d3458ed1ceda80292a25fc2c41d8b76bfdb8699d5c3d50670",
+    "targetHash": "a906f59c02a2df506fc29d32d6c9698bc200926c7481a2845a81dee348af9321",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T15:18:07.096Z",
+    "glossaryVersion": "0"
+  }
+}
