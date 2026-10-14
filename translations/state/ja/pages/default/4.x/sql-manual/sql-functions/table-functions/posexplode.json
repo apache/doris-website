@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-functions/posexplode",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-functions/posexplode.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-functions/posexplode.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "dd25fd61edca87cd24f549c0042b23cd717d2380e9ab33d8d2f283e84815da22",
+    "sourceTechnicalHash": "be4c7b2d1868ecfd050efe8963d71e11d836fca342e46a92be9a7ead2ba1dbbc",
+    "targetHash": "c806b8322ee4ab48ee19f384e3a38cfc5971e1c8963046957706fda8340dcbeb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:10:18.482Z",
+    "glossaryVersion": "0"
+  }
+}
