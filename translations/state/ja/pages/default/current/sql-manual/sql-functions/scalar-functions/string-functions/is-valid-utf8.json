@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/is-valid-utf8",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/is-valid-utf8.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/is-valid-utf8.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "1bf0d9c3a98eacaa9b0f6a8be6989c5135938e47fab226c137ad42a1f48fe595",
+    "sourceTechnicalHash": "3efef376922a90716f40e556e4a866b826c332eca65f35b0e1f00c9f99ef67fa",
+    "targetHash": "83959470c0c5d2a2cead6f01292ba1067ba8eba56cb02827322f37ec9b39dba8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.808Z",
+    "glossaryVersion": "0"
+  }
+}

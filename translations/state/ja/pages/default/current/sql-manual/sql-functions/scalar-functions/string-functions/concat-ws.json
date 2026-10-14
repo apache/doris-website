@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/concat-ws",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/concat-ws.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/concat-ws.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f5c8d14c3369ee7df99c1684b815e1927e6b4d8f526bcf679d026d628812a1f7",
+    "sourceTechnicalHash": "f8126578598300d2daecc6034ba099795318c85bb9a9974894bd49327b5e879a",
+    "targetHash": "40a29a052a1727e681902f64271cf1985fc9a2a1b93e47f92ec334108ca890f4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.806Z",
+    "glossaryVersion": "0"
+  }
+}

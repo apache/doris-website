@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace-one",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace-one.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace-one.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c909fc34abda301d3e52105feaa32c1b7f5707372d98de105be55a2ba863fdbc",
+    "sourceTechnicalHash": "fe4a7d266973a846a42eac770d7503423eb7ec58f0e0f32e77de1b742ec77801",
+    "targetHash": "c160de8ebf28da339889c49fbcf2a0222cc5b862c3bdc137adbc09e7910c9a6b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.809Z",
+    "glossaryVersion": "0"
+  }
+}

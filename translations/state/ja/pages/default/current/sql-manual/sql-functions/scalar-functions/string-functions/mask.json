@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/mask",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/mask.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/mask.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f8c25d4dd29ebe31dc1898edf3d2257fb50da390e9d84f8f350023b7db7285c0",
+    "sourceTechnicalHash": "31614e55df69ed63868d68fb22b7b6c6039680621c66f2ec119a688c27cc18b8",
+    "targetHash": "6bdd5c81c8467a66ea30183f20e0b65375336a090b648c08772479ea1a2fcbad",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.808Z",
+    "glossaryVersion": "0"
+  }
+}

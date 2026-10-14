@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/starts-with",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/starts-with.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/starts-with.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "794280620b0480a766b7a7e0ccbafc91450aca17c461a3a27cae341eda33d323",
+    "sourceTechnicalHash": "685e11a2e9483913681fbfc8938fadf00cf663caa1c245121621a325e2a4ee86",
+    "targetHash": "8ac57607287f9e8408be83fb29b5a36f4d843d8663a72b79e5dc8b65f912296e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.810Z",
+    "glossaryVersion": "0"
+  }
+}

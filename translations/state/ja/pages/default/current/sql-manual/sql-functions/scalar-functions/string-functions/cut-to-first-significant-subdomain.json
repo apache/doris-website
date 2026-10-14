@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/cut-to-first-significant-subdomain",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/cut-to-first-significant-subdomain.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/cut-to-first-significant-subdomain.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e462e705f7d8240570fca94a67ef131e21d106d398e41a4dc89a708ee26934f5",
+    "sourceTechnicalHash": "484fa22f239cc26ebaa2b2a5a9d79e6f9fff79139c2fc32bb9ef510b784f25bf",
+    "targetHash": "10673948cadbde547d3c1f4a32167d0c4dcf2d5e92b6ef08f3c5745f4e0643db",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.806Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/split-by-regexp",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/split-by-regexp.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/split-by-regexp.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "d93762890d8eb9dfabb1b93e174353ce943a539ee6147d59f3aaf2cac7f2c712",
+    "sourceTechnicalHash": "ea43863b7a0f61d5469104c49dbf0b115ccbc24bcf18fc90834075ea6ea50018",
+    "targetHash": "896704efbc553b19c97b1168327d82528bb3a2c2bfd05d55542432867dfe5846",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.810Z",
+    "glossaryVersion": "0"
+  }
+}

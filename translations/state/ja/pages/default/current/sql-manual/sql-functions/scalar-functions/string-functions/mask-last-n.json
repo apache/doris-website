@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/mask-last-n",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/mask-last-n.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/mask-last-n.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "1875ea61b169f5ebc75b476cac42fc3f8a3c4d711aae35509d80717ad516c7de",
+    "sourceTechnicalHash": "c4a5b90bc75c0557e825fa2342e4a6d502b567003340bd04e9a93cc96a56ba72",
+    "targetHash": "1e6ce56c7309d4404eee33a45274af0794d47d06874a672d1eb9113e95b8dede",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.808Z",
+    "glossaryVersion": "0"
+  }
+}

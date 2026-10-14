@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/split-part",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/split-part.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/split-part.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "790482792b02b1c5fa073157f1fc38a95b61b968ee020e446791e4fa5e89dd22",
+    "sourceTechnicalHash": "2413ef19afa43f89519223130ed58eb3e9779b9d2bb71fe638b0fa7623988533",
+    "targetHash": "49d8ea73bf9ff1cef769ddba4edd372bfaee7fd77b08bb6d99261660ab05b357",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.810Z",
+    "glossaryVersion": "0"
+  }
+}

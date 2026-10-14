@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/count_substrings",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/count_substrings.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/count_substrings.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "a9193df1a6bf75c4902a59b84ef108038353f6f28a30f646739f67f1fe104446",
+    "sourceTechnicalHash": "feaf54a18a5cf5f93c2c5a81ac8680959fc241f40e832574f6f63c3703b5f6ba",
+    "targetHash": "c41059853765469f6f8530c3dc4748ff06700f10f6fb58381951255d0cb7ce84",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.806Z",
+    "glossaryVersion": "0"
+  }
+}

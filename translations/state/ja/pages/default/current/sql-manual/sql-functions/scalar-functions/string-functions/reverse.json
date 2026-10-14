@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/reverse",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/reverse.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/reverse.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b7b313e23dd37caa5a41026f676b84cff2aaeed0b0a9c913b2115fb7936f3c95",
+    "sourceTechnicalHash": "01f4f32ad03dcf03494461686857debba3fab8e491c2d5a05ae181b0c005de3b",
+    "targetHash": "83e08c7324daec7fd90da7a13f9e2edead233858ae5b35eb7d7117c347b36208",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.809Z",
+    "glossaryVersion": "0"
+  }
+}

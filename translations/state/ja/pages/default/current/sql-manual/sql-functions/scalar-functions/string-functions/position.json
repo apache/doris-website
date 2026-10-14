@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/position",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/position.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/position.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "d73423a0b1bcce0f63b45619bb2b2ee9a1020e5e8b289d5375de62b1a076a3f6",
+    "sourceTechnicalHash": "564358050908e978933b4d28bec840850cc8dbd0270aaf078189701ba656f2d2",
+    "targetHash": "f06c0dd8dd1ed8968174504a1306b94e3fa6ec3fe79b1da68d77cd06276ba419",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.809Z",
+    "glossaryVersion": "0"
+  }
+}

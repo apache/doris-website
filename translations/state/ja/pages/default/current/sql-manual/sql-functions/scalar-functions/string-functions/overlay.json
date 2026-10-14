@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/overlay",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/overlay.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/overlay.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "8c7c14457ac60bfdcfbde7f0a1e2d7121c6cace28ae9ed8cf63e19ab332da93a",
+    "sourceTechnicalHash": "82271c81607dc372314a64d8ffa88bb8c7f1668ff00073160fbf64ecaf9e31bd",
+    "targetHash": "2590e6b8cd3fdef98ca06fe9050f5e1f56c2cf620b1d9daee333ad112ab98bca",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.808Z",
+    "glossaryVersion": "0"
+  }
+}

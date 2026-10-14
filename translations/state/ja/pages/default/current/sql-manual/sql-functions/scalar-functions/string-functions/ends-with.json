@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/ends-with",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/ends-with.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/ends-with.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "7f6b35cc22c5e39ad462d708497a4401551780c603c377c0fd2e6c896181713c",
+    "sourceTechnicalHash": "e330056f8e96fc97a2f3d820d1e81dad8d907379ff3b628afbb6faef8244138e",
+    "targetHash": "d5cea8442f618d2fc308eda736a40ddf4da8c34940d5c9f2d39877a715e1bfe8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.807Z",
+    "glossaryVersion": "0"
+  }
+}

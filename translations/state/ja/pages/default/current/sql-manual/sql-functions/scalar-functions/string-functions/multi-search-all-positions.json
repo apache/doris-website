@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/multi-search-all-positions",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/multi-search-all-positions.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/multi-search-all-positions.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0b347199c2968020484b9d169259c20f896cfdff0cb6cec740c01eee0ccba77c",
+    "sourceTechnicalHash": "ea3c8c441bdca2a1a3480ab7ea0ffcfeda440fc68c3c4bb2918eed084bd7f942",
+    "targetHash": "a494451109983e54c71f85457dc435c6fcb0da724e62bddee3ff05bc09fc2466",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.808Z",
+    "glossaryVersion": "0"
+  }
+}

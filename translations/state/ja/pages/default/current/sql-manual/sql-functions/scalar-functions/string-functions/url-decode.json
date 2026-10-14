@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/url-decode",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/url-decode.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/url-decode.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "19481e2b3b8e0c63a6c965c49a71faf2b04ba47aedd8e17992f654dc03e0a8e3",
+    "sourceTechnicalHash": "fb90ab0e74c5552a397d64db93d49cb7808a92c3afe2c3fd69f0918710bd404f",
+    "targetHash": "5681767f21c519da1d2d24581046670011595e82772641cf02678be89d8c3e46",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.811Z",
+    "glossaryVersion": "0"
+  }
+}

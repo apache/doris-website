@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/tokenize",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/tokenize.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/tokenize.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "ebfbf044e63e2df4c4373a97ba67241d21a43c20414ee80b9d532b9f5d94b90b",
+    "sourceTechnicalHash": "2c2088900504ce996295683347a65723951ef51554aa3f699ce6b777333bbdbd",
+    "targetHash": "4bb55ad4b9b15952917072cf1903b79f1c5b21b1be6a75a96b128162e6cd0647",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.810Z",
+    "glossaryVersion": "0"
+  }
+}

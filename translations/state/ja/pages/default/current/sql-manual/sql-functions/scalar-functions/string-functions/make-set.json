@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/make-set",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/make-set.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/make-set.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "6c32764e0f0540265477e2043125f1f3e37ea75524b255c55369c514f85bfb0e",
+    "sourceTechnicalHash": "ad79a17bbad42c52d50bb4e29f627ccdbc1b7da74d97774455d3d661c317c61d",
+    "targetHash": "03291ede63cdcb9e7979dddc9e2c5c82fb7a044d7493d17478a7ae99f67c3c73",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.808Z",
+    "glossaryVersion": "0"
+  }
+}

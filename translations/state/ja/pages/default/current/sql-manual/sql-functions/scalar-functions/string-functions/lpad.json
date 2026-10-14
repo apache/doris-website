@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/lpad",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/lpad.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/lpad.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "77c8d4efa5d6cebf40e481613123315e4d1970f45da2b4ae836747dce7b14dda",
+    "sourceTechnicalHash": "6f7af7b6e408c3a68b37e6c154ded452d3edf97f895e606aa86afa461ed7003a",
+    "targetHash": "e39d5273f27a7d2cb04a5eb89d0272f7135d970af346673b5f8ecc8dd9b3e7c5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.808Z",
+    "glossaryVersion": "0"
+  }
+}
