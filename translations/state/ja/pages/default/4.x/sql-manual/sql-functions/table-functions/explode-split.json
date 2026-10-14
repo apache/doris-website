@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-functions/explode-split",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-functions/explode-split.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-functions/explode-split.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "d7004d9b12c7f1d4a143a76bbbd7610a8fe146c3a39664c9c44924d70e32cab2",
+    "sourceTechnicalHash": "45750881c9b3e7d39d2252c5bf785769e78545ca9b15a5d77485ef4e9d974cdf",
+    "targetHash": "17741a73d303069ed58b38a436abe5872cfc1afebc417039ec448b014e3cb8a1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:53:51.002Z",
+    "glossaryVersion": "0"
+  }
+}
