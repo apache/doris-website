@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "a1e4a00c680970e6b15a09a91d984dda9db6be7d13461e768f693d2c21bbce3d",
+    "sourceTechnicalHash": "18dc23e2d842c46cb5ca665c7597f277d4b77bc95d2863ef04aeabbb8dbc2998",
+    "targetHash": "ef55950d75fdfcd86fec79a0ae8164408ef0e574df21a08876e2223c0715c140",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:47:19.117Z",
+    "glossaryVersion": "0"
+  }
+}
