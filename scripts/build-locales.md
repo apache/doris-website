@@ -2,8 +2,11 @@
 
 Use `yarn build` or `yarn build:locales` for complete website builds. The launcher
 reads the actual enabled locales from the site configuration and builds each in
-an independent Node process, sequentially. Japanese remains disabled unless
-`DORIS_ENABLE_JA=true`; no translation or deployment service is called.
+an independent Node process, sequentially. Locales still being introduced stay
+disabled unless `DORIS_ENABLE_LOCALES` lists them (CI) or their own
+`DORIS_ENABLE_<LANG>` flag is set (a developer, and every publishing workflow);
+no translation or deployment service is called. Both the locale list and each
+locale's label and `htmlLang` come from `config/i18n.js`.
 
 ```bash
 # Local development: only the actual Dev docs version.

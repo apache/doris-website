@@ -72,12 +72,15 @@ jobs:
                   ls build
                   echo "DORIS_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
-            - name: Verify Japanese publishing artifact
-              if: env.DORIS_ENABLE_JA == 'true'
+            - name: Verify localized publishing artifacts
+              # Publishing builds every enabled locale, so every managed locale
+              # must be present and pass the strict cross-locale verification.
               run: |
-                  test -s build/ja/index.html
-                  node scripts/i18n/verify-static.cjs \
-                    --site build --manifest .i18n-build/manifests/ja.json
+                  for LOCALE in $(node scripts/i18n/managed-locales.cjs); do
+                      test -s "build/${LOCALE}/index.html"
+                      node scripts/i18n/verify-static.cjs \
+                        --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
+                  done
 
             - name: Upload files to OSS
               id: oss-upload

@@ -2,6 +2,11 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const cheerio = require('cheerio');
+const {localeRegistry} = require('../../config/i18n');
+
+// The manifest names the locale it describes, so verified artifacts follow the
+// configured htmlLang instead of a language written into this file.
+const htmlLangFor = locale => localeRegistry.find(item => item.code === locale)?.htmlLang ?? locale;
 
 // `partial` verifies a site built from a locale subset. Assertions about the
 // current locale itself still run; a counterpart page that the subset did not
@@ -9,7 +14,10 @@ const cheerio = require('cheerio');
 // complete site, where every counterpart must be present.
 function verify({site, manifest, partial = false}) {
     const data = JSON.parse(fs.readFileSync(manifest, 'utf8'));
-    const sitemapFile = path.join(site, 'ja/sitemap.xml');
+    const locale = data.locale;
+    if (!locale) throw new Error(`Manifest has no locale: ${manifest}`);
+    const htmlLang = htmlLangFor(locale);
+    const sitemapFile = path.join(site, locale, 'sitemap.xml');
     const sitemap = fs.existsSync(sitemapFile) ? cheerio.load(fs.readFileSync(sitemapFile, 'utf8'), {xmlMode: true}) : null;
     const sitemapPaths = new Set(sitemap ? sitemap('loc').map((i, node) => new URL(sitemap(node).text()).pathname).get() : []);
     const indexedPaths = new Set();
@@ -26,7 +34,7 @@ function verify({site, manifest, partial = false}) {
             }
         }
     }
-    readIndexes(path.join(site, 'ja'));
+    readIndexes(path.join(site, locale));
     let verified = 0;
     let skipped = 0;
     function counterpart(permalink, check) {
@@ -50,8 +58,8 @@ function verify({site, manifest, partial = false}) {
         const canonical = page.useTarget ? page.permalink : page.contentLocale === 'en' ? page.englishPermalink : page.sourcePermalink;
         assert.equal($('link[rel="canonical"]').attr('href'), `https://doris.apache.org${canonical}`);
         const alternates = $('link[rel="alternate"][hreflang]');
-        const japanese = alternates.filter('[hreflang="ja"]');
-        assert.equal(japanese.length, page.alternates.ja ? 1 : 0, `Japanese alternate: ${page.permalink}`);
+        const localized = alternates.filter(`[hreflang="${htmlLang}"]`);
+        assert.equal(localized.length, page.alternates[locale] ? 1 : 0, `Localized alternate: ${page.permalink}`);
         if (!page.indexable) {
             assert($('meta[name="robots"]').attr('content').includes('noindex'), page.permalink);
             assert(!sitemapPaths.has(page.permalink), `Fallback/stale page in sitemap: ${page.permalink}`);
@@ -60,8 +68,8 @@ function verify({site, manifest, partial = false}) {
                 const file = path.join(site, permalink, 'index.html');
                 if (fs.existsSync(file)) {
                     const counterpart = cheerio.load(fs.readFileSync(file, 'utf8'));
-                    assert.equal(counterpart('link[rel="alternate"][hreflang="ja"]').length, 0,
-                        `Fallback/stale Japanese alternate in ${permalink}`);
+                    assert.equal(counterpart(`link[rel="alternate"][hreflang="${htmlLang}"]`).length, 0,
+                        `Fallback/stale localized alternate in ${permalink}`);
                 }
             }
         } else {
@@ -75,10 +83,10 @@ function verify({site, manifest, partial = false}) {
                 if (!counterpart$) continue;
                 const links = counterpart$('link[rel="alternate"][hreflang]');
                 for (const [otherLang, otherPath] of Object.entries(page.alternates)) {
-                    const htmlLang = otherLang === 'en' ? 'en-US' : otherLang === 'zh-CN' ? 'zh-Hans-CN' : otherLang;
-                    assert.equal(links.filter(`[hreflang="${htmlLang}"]`).attr('href'), `https://doris.apache.org${otherPath}`,
+                    const otherHtmlLang = htmlLangFor(otherLang);
+                    assert.equal(links.filter(`[hreflang="${otherHtmlLang}"]`).attr('href'), `https://doris.apache.org${otherPath}`,
                         `Non-reciprocal alternates ${lang} -> ${otherLang}: ${permalink}`);
-                    assert.equal(links.filter(`[hreflang="${htmlLang}"]`).length, 1, `Duplicate hreflang: ${permalink}`);
+                    assert.equal(links.filter(`[hreflang="${otherHtmlLang}"]`).length, 1, `Duplicate hreflang: ${permalink}`);
                 }
             }
         }
