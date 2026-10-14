@@ -1,0 +1,251 @@
+---
+{
+    "title": "Apache Doris テーブル設計ガイド",
+    "language": "ja",
+    "description": "Apache Doris のテーブル設計ガイド。テーブルモデル、データ型、パーティショニングとバケット分割、インデックス、ストレージの最適化、スキーマの変更を説明します。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+{/* Knowledge type: section navigation / concept entry point */}
+{/* Use cases: creating a new table / optimizing the structure of an existing table */}
+
+Apache Doris では、テーブル設計が書き込み性能、クエリ効率、ストレージコストを直接左右します。この章では、一般的な設計シナリオに沿って、新しいテーブルの設計と既存テーブルの構造の最適化を説明します。
+
+## 設計の流れ
+
+Doris のテーブル設計は、通常、次の手順で進めます。
+
+1. **テーブルモデルを選ぶ**: データの保存、重複排除、集約の方法を決めます。
+2. **列とデータ型を定義する**: 業務データの各フィールドに適した型を選びます。
+3. **パーティショニングとバケット分割を計画する**: データを均等に分散させ、不要なデータの読み取りを省けるようにします。
+4. **インデックスを追加する**: 特定の値の検索、範囲スキャン、全文検索を高速化します。
+5. **ストレージを最適化する**: 圧縮、行と列のハイブリッドストレージ、ホットデータとコールドデータの階層化によってコストを削減します。
+6. **スキーマを変更する**: 業務の変化に合わせてスキーマを調整したり、自動採番列を使用したりします。
+
+## テーブルの作成
+
+Doris でテーブルを作成するには、[CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) 文を使用します。既存のテーブルを基に新しいテーブルを作成する場合は、次の方法があります。
+
+- [CREATE TABLE ... LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE): 既存のテーブルの構造を再利用します。
+- [CREATE TABLE ... AS SELECT (CTAS)](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE): クエリ結果に基づいてテーブルを作成します。
+
+### テーブル名の規則
+
+Doris のテーブル名は、デフォルトで大文字と小文字が区別され、最大長は 64 バイトです。次の設定で変更できます。
+
+| 設定 | デフォルト | 説明 |
+| --- | --- | --- |
+| [lower_case_table_names](../admin-manual/config/fe-config.md) | 大文字と小文字を区別 | クラスターの初期化時にのみ設定できます。後から変更することはできません |
+| [table_name_length_limit](../admin-manual/config/fe-config.md) | 64 バイト | 大きすぎる値の設定は推奨されません |
+
+### 主なテーブルプロパティ
+
+テーブルの作成時には、よく使うプロパティを PROPERTIES で指定できます。詳しくは [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) を参照してください。
+
+| プロパティ | 用途 |
+| --- | --- |
+| `buckets` | テーブル内のデータ分散の粒度を決めます |
+| `storage_medium` | HDD、SSD、リモート共有ストレージなどの保存先を制御します |
+| `replication_num` | 冗長性と信頼性を確保するためのデータレプリカ数を制御します |
+| `storage_policy` | ホットデータとコールドデータを階層化する際の移行ポリシーを設定します |
+
+:::tip
+テーブルプロパティはパーティション単位で適用されます。テーブルプロパティを変更しても、変更後に作成されるパーティションにのみ反映され、既存のパーティションには影響しません。詳しくは [ALTER TABLE PROPERTY](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY) と [ALTER TABLE DISTRIBUTION](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION) を参照してください。[動的パーティショニング](data-partitioning/dynamic-partitioning.md)では、これらのプロパティを個別に設定できます。
+:::
+
+## テーブルモデルの選択
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="テーブルモデルの概要"
+    description="Duplicate、Aggregate、Unique の各モデルを比較し、用途に適したデータの保存方法と重複排除方法を選びます"
+    link="./data-model/intro"
+/>
+
+<GettingStartedCard
+    title="Duplicate モデル"
+    description="ログやイベントなど、重複排除や集約が不要な場合に元の明細データをそのまま保持します"
+    link="./data-model/duplicate"
+/>
+
+<GettingStartedCard
+    title="Unique モデル"
+    description="主キーで重複を排除し、高い同時実行性を持つリアルタイム更新に対応します。CDC や注文など、主キーに基づいてデータを更新する用途に適しています"
+    link="./data-model/unique"
+/>
+
+<GettingStartedCard
+    title="Aggregate モデル"
+    description="ディメンションごとにデータを事前集約し、レポートや多次元分析のクエリ性能を向上させます"
+    link="./data-model/aggregate"
+/>
+
+<GettingStartedCard
+    title="モデル選択のヒント"
+    description="一般的な業務シナリオに基づく、テーブルモデルと Key 列の設計に関する推奨事項を紹介します"
+    link="./data-model/tips"
+/>
+</div>
+
+## 列とデータ型の定義
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="データ型"
+    description="数値、文字列、日付、半構造化データの型など、Doris がサポートするすべてのデータ型を参照できます"
+    link="./data-type"
+/>
+</div>
+
+## パーティショニングとバケット分割の計画
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="データ分散の概念"
+    description="パーティショニングとバケット分割によってデータがタブレットにどう配置されるかを理解し、複数ノードのストレージと計算能力を十分に活用します"
+    link="./data-partitioning/basic-concepts"
+/>
+
+<GettingStartedCard
+    title="基本概念"
+    description="パーティション、バケット、タブレット、レプリカなど、データ分散に関する基本用語を説明します"
+    link="./data-partitioning/basic-concepts"
+/>
+
+<GettingStartedCard
+    title="手動パーティショニング"
+    description="テーブル作成時にパーティション範囲を明示的に定義します。パーティションが固定され、細かい制御が必要な場合に適しています"
+    link="./data-partitioning/manual-partitioning"
+/>
+
+<GettingStartedCard
+    title="動的パーティショニング"
+    description="時間軸に沿ってパーティションを自動的に作成、回収し、時系列テーブルの運用を簡素化します"
+    link="./data-partitioning/dynamic-partitioning"
+/>
+
+<GettingStartedCard
+    title="自動パーティショニング"
+    description="取り込むデータに基づいてパーティションを自動作成し、事前にパーティション範囲を定義する必要をなくします"
+    link="./data-partitioning/auto-partitioning"
+/>
+
+<GettingStartedCard
+    title="データのバケット分割"
+    description="各パーティション内でデータが均等に分散されるよう、適切なバケット列とバケット数を選びます"
+    link="./data-partitioning/data-bucketing"
+/>
+
+<GettingStartedCard
+    title="よくある問題"
+    description="パーティショニングとバケット分割の設計でよくある間違いと、そのトラブルシューティング方法を紹介します"
+    link="./data-partitioning/common-issues"
+/>
+</div>
+
+## クエリの高速化: インデックス
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="インデックスの概要"
+    description="Doris がサポートする各種インデックスと、適したクエリの用途を比較します"
+    link="./index/index-overview"
+/>
+
+<GettingStartedCard
+    title="プレフィックスインデックス"
+    description="ソートキーに基づく組み込みインデックスで、等価検索と範囲検索を高速化します"
+    link="./index/prefix-index"
+/>
+
+<GettingStartedCard
+    title="BloomFilter インデックス"
+    description="カーディナリティの高い列に対する等価検索を高速化し、不要なデータスキャンを減らします"
+    link="./index/bloomfilter"
+/>
+
+<GettingStartedCard
+    title="NGram BloomFilter インデックス"
+    description="完全な転置インデックスを導入せずに、LIKE によるあいまい検索を高速化します"
+    link="./index/ngram-bloomfilter-index"
+/>
+
+<GettingStartedCard
+    title="転置インデックス（全文検索）"
+    description="トークン化した全文検索、キーワードやフレーズの照合に対応し、ログやテキストの分析に適しています"
+    link="./index/inverted-index/overview"
+/>
+
+<GettingStartedCard
+    title="ベクトルインデックス"
+    description="HNSW や IVF などのアルゴリズムに基づいて、高次元ベクトルの類似検索を高速化します"
+    link="./index/vector-index/hnsw"
+/>
+</div>
+
+## ストレージの最適化
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="ストレージ形式"
+    description="Doris の列指向ストレージ形式 V3 の設計と利点を説明します"
+    link="./storage-format"
+/>
+
+<GettingStartedCard
+    title="データ圧縮"
+    description="適切な圧縮アルゴリズムを選び、ストレージコストとクエリ性能のバランスを取ります"
+    link="./column-compression"
+/>
+
+<GettingStartedCard
+    title="行と列のハイブリッドストレージ"
+    description="列指向ストレージに行指向ストレージを追加し、列数の多いテーブルで特定の値を検索するクエリを高速化します"
+    link="./row-store"
+/>
+
+<GettingStartedCard
+    title="ホットデータとコールドデータの階層化"
+    description="コールドデータを SSD/HDD、または S3 や HDFS などのリモートストレージに移し、ストレージコストを削減します"
+    link="./tiered-storage/overview"
+/>
+</div>
+
+## スキーマの変更
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="スキーマ変更"
+    description="ALTER TABLE による列や型の追加、削除、変更と、軽量な変更と負荷の大きい変更の違いを説明します"
+    link="./schema-change"
+/>
+
+<GettingStartedCard
+    title="自動採番列"
+    description="自動採番列で一意の数値 ID を自動生成し、データの書き込みを簡素化します"
+    link="./auto-increment"
+/>
+</div>
+
+## 特殊なテーブルとベストプラクティス
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="テーブル設計のベストプラクティス"
+    description="テーブルモデル、Key 列、パーティショニングとバケット分割、インデックスなどに関する主な設計上の推奨事項をまとめます"
+    link="./data-model/tips"
+/>
+</div>
+
+## 設計時の考慮事項
+
+{/* Knowledge type: considerations / design constraints */}
+
+| 設計項目 | 説明 | 影響 |
+| --- | --- | --- |
+| データモデル | テーブル作成後は**変更できません**。適切な[データモデル](./data-model/intro.mdx)を事前に選んでください | その後の書き込みとクエリの方法を決めます |
+| バケット数 | 作成済みパーティションのバケット数は変更できませんが、[パーティションの置き換え](../data-operate/delete/table-temp-partition.md)によって調整できます。動的パーティショニングでは、今後作成されるパーティションのバケット数を変更できます | データの均等な分散とクエリの並列性に影響します |
+| 列の変更 | VALUE 列の追加や削除は軽量な操作で、数秒で完了します。KEY 列の追加や削除、データ型の変更は負荷の大きい操作です | 可能な限り、大規模なデータセットでは KEY 列の変更を避けてください |
+| ストレージポリシー | [ホットデータとコールドデータの階層化](./tiered-storage/overview.md)を使用し、コールドデータを HDD、S3、HDFS に移行します | ストレージコストを大幅に削減します |

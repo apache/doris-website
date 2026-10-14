@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-partitioning/manual-partitioning",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-partitioning/manual-partitioning.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/data-partitioning/manual-partitioning.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "7baecebb7ab7f955c783d80920d8f4eff155d622d9e0a9767aafb8186c8429b2",
+    "sourceTechnicalHash": "379574da74da352f388ae5344837298486821a3a29844438d61a4a6166b663c9",
+    "targetHash": "bedaf69caafe5ca4ba7843d6f69a33d6515333832649dca9c15375b1c429ab09",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:39:04.817Z",
+    "glossaryVersion": "0"
+  }
+}

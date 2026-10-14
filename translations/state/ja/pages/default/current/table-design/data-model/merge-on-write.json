@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-model/merge-on-write",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-model/merge-on-write.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/data-model/merge-on-write.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "72da37504f19e0ff307b2458afef79e01e515cd7bd6ef54da86fa8aa7476a5fc",
+    "sourceTechnicalHash": "ce54b9965895cb1516f0ac4662cf637198f5b7fc6b5ab1075a9bb2932e137ec8",
+    "targetHash": "71916ff166d9d12dbe7bd7596dca6d0f730182cb21620798890038ff50de8514",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:39:04.817Z",
+    "glossaryVersion": "0"
+  }
+}
