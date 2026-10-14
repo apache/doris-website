@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/sequence-count",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/sequence-count.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/sequence-count.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "32d1801d74fa6e40e619bf4eece54e478742dab7f4bc1a31d517d786896e72fc",
+    "sourceTechnicalHash": "654c05b1616839fa94be91286097db6c56a028ca7968c377e7d5584b77bf93da",
+    "targetHash": "ae193ace6ed54b407e7410b90e4a368f903b9241bc3b3f2666042c417e83007e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.703Z",
+    "glossaryVersion": "0"
+  }
+}

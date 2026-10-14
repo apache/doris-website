@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/window-functions/first-value",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/window-functions/first-value.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/window-functions/first-value.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "06b65fa4a96d8052bdf942d8a08f5495f7f6c95e508779d2dd1ff917386cd18f",
+    "sourceTechnicalHash": "f8eb3cf8954d82f5f76b26bb8097387a744b3995dcebd55f9909ce12b1b1c652",
+    "targetHash": "c06b29aaf14c1379c06f77bedeea9f7cff19aad8a4a73c9ecacef24ad9e6f90c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.704Z",
+    "glossaryVersion": "0"
+  }
+}

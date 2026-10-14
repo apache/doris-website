@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/jobs",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/jobs.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/jobs.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "29be1f7bc53a2eb48633b34f869bd14662201a4257ef7d606c1410d82f96fef2",
+    "sourceTechnicalHash": "31818dd799349c83a8feea314e7c4e97e88c8379700883e9bd55748137f36baa",
+    "targetHash": "9fbc7daeb6deb31a0e87499aaa4febf91a07c55e0482e5db846f213ac2f42c9f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.707Z",
+    "glossaryVersion": "0"
+  }
+}

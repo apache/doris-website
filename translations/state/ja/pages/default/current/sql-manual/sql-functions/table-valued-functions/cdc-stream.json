@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/cdc-stream",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/cdc-stream.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/cdc-stream.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "eb8c139d0245924d782d9d0b798b3d403ea8d8da5722ef5dd0089e6729226963",
+    "sourceTechnicalHash": "da2660ac279eac0241f030119508e08a010c45de556e1bf900bbcecd7a392833",
+    "targetHash": "1efa3d57756c7af6d80397390a791361d2ed663c9b4d46271f7d2603edd056af",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.706Z",
+    "glossaryVersion": "0"
+  }
+}

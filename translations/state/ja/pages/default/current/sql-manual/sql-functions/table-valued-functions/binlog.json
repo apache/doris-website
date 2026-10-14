@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/binlog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/binlog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/binlog.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "9ce183c6ca41de947d30a6f055e6039e449cb78541e3b130d9f85820cef6dc90",
+    "sourceTechnicalHash": "ffdd2a2b81d793cb6cbe1486db4447e717ebc03343f096fe723044e6b215caea",
+    "targetHash": "94df3534bc2edf380723358279ee81ca0a03cd775c69ad2dd03f620be8a570be",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.706Z",
+    "glossaryVersion": "0"
+  }
+}

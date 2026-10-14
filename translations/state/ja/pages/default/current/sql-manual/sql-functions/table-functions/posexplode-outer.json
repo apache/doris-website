@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/posexplode-outer",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/posexplode-outer.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/posexplode-outer.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "4b4b26e7a38738fcb15dcb33ac4e9ff501a7a8e07673bb095529a0c7f34629c7",
+    "sourceTechnicalHash": "eb1ac0f2a75c717b62bbd542c8893ce891d5e14d13f2ed276c34a6155ad6c78f",
+    "targetHash": "863b5b57ab1ab4dd3231949b94f7374b970c0dcd670e86f801fb8754cf86a481",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.706Z",
+    "glossaryVersion": "0"
+  }
+}

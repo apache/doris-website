@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/explode",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/explode.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/explode.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "5c7186c36743b03ec1b0789b287556d4e757810c150de54ab4bd1fd375470679",
+    "sourceTechnicalHash": "e5abc599befb5e6dc29fbcc29e2ae1e10f028859fc52e7c4f3619bf3f8ab4ce2",
+    "targetHash": "169348f7070ed3d1f0335f9c2583fb4cd68759afaef5866dcf447f519c45ca73",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.704Z",
+    "glossaryVersion": "0"
+  }
+}

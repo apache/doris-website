@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/window-funnel",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/window-funnel.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/window-funnel.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "d72f84aab169b57da369fa38edd8bc103e9167f20383823309118bf02fc0f881",
+    "sourceTechnicalHash": "47c676dcb0a2851026bd7b51a04f56b2d14353ef6e33a24bec6902d8f590f1f4",
+    "targetHash": "4695dbed575bba665345642987f20d4d249e20e0f5f98f4ca9e0b53eec2a7184",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.704Z",
+    "glossaryVersion": "0"
+  }
+}

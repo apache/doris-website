@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/hdfs",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/hdfs.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/hdfs.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c5c098a1287fffd6231e8dcc8585dd9b12e6ea8d93174c512a7236389207f816",
+    "sourceTechnicalHash": "bb44d3601cc90d4669e412ea22bf63cf54ed0f60036caf2045e149bd2c003692",
+    "targetHash": "98d29c36583946f571b3b381f1f479a21b3ee18b1c5a7dd92197243c35473b42",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.706Z",
+    "glossaryVersion": "0"
+  }
+}

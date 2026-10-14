@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/json-each-text",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/json-each-text.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/json-each-text.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "2dfef7ad1ef162c6edcc4a51b9db30c202ec3f23749a12231e9dedbeb19b4bf6",
+    "sourceTechnicalHash": "b844306c81a7cd28d96863a9e802c19638d43c15ad8fbac99fa62e2c6b2d6e7e",
+    "targetHash": "77f722d76c004f72b701a2f8eb8a9fd46bcd8b304064450c83ab78e18accaf08",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.706Z",
+    "glossaryVersion": "0"
+  }
+}

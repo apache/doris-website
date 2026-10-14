@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/window-functions/last-value",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/window-functions/last-value.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/window-functions/last-value.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "55cd266ecfa3e459ed157e58fb26c011e926bc857045e76fa1c14a938f28bd45",
+    "sourceTechnicalHash": "e29f2c0ad08638778d2bc18bf7d79a5d7fdb620d7ec6194d3b6d36f911bc1d06",
+    "targetHash": "efeefbaa1ebac0e65ca1e422832e392bc22a73425050ca6ada4579e9aec6df82",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.704Z",
+    "glossaryVersion": "0"
+  }
+}
