@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/factorial",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/factorial.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/factorial.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "49b2de90a1e8571d66424e514d7c3828cfca4f1e6233afe8827cb9765daf38be",
+    "sourceTechnicalHash": "7e79010f752ec0f1506e91edd755b0a0e9960265f962d9c26b119480e196ea20",
+    "targetHash": "3f7f5a82651c6a2d071e29c272f945d6b1be87bd3103699a677a92fb0c768427",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.257Z",
+    "glossaryVersion": "0"
+  }
+}

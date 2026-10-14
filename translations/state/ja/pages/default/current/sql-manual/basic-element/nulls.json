@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/nulls",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/nulls.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/nulls.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "8d8cd73e49ebc73593d66d6f2cbeef5ad71ff8d2ee30c2a19eb6d449d7f65dd4",
+    "sourceTechnicalHash": "99e47c3d8add25b1d5e31dba61907884f4104716dd3590a7ce5410bc8f4f612e",
+    "targetHash": "46b7a6a79bb557d4b05ae9f6cb62d27274dfee1931b90b33f1d3a01eb509e86e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.254Z",
+    "glossaryVersion": "0"
+  }
+}

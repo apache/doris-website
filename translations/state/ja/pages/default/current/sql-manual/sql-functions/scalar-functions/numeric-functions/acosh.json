@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/acosh",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/acosh.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/acosh.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e6532e1e59ebce57cf625518c51d38c768279ff8a582b0f22b2e9618877858eb",
+    "sourceTechnicalHash": "cb0a028d1d91c78f7b54b533fbfc11e98add3682ff79d9f6cc4d2d6a08af8744",
+    "targetHash": "4cad8d4ab83cbbe001fb702b1c8bbb521a5ad208cf3ac2dda73113733c0acebc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.256Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/negative",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/negative.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/negative.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e5284ebe0ea1d35a32a61c433212018d9d5a250a936ed0877ad4aa71afe464d3",
+    "sourceTechnicalHash": "0bfdd2c22352a75cba35775af103603cb6aa49bbbc848d3075bf9f348cd7f362",
+    "targetHash": "b117c3db20a3acdbd0bc935a3a1c69b6a9507e3b9a631a43456dccb2095ae5bb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.257Z",
+    "glossaryVersion": "0"
+  }
+}

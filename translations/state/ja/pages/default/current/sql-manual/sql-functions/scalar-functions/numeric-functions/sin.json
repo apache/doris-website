@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/sin",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/sin.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/sin.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "a704a240bbcbd367e646c19dba6e5b00907264b133f4295a21244044254f67fc",
+    "sourceTechnicalHash": "cb69234ebf4c9b8aecb84312e9e6713fcca6de488e9ab783e850783724729387",
+    "targetHash": "9a8a27ca3f8ff38200a1e97c335a4600eb32edc14aecaaa4ffa3609d9dc29623",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.258Z",
+    "glossaryVersion": "0"
+  }
+}

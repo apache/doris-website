@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/map-conversion",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/map-conversion.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/map-conversion.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "d9880e4a74f003cdc30662d31e870e4a032bb3ec23700cbc2b007c7e1d37701b",
+    "sourceTechnicalHash": "8685185bb3f1b0f7a49e2eb7b54d4d026d7b86a01e17f1f2f508e569cc935d75",
+    "targetHash": "7dbc36bb96c9bb47afe8b7792bf46720c02bc1809c3229bfad3e4399bc5fd3e4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.254Z",
+    "glossaryVersion": "0"
+  }
+}

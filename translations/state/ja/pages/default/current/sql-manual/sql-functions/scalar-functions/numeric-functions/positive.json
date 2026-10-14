@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/positive",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/positive.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/positive.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f26f1d38dffbd922cba8dda5a85863abf0202762a5c4d88a33cb410926a0f440",
+    "sourceTechnicalHash": "df5aac780531cf07d358402461cd0ee897dc2bc61fe07dcdded5358233fe16e8",
+    "targetHash": "7a6fed9001cf7b1e8cc6e156540fb0a9ef302166345d5ddb62ecf484f1153f70",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.258Z",
+    "glossaryVersion": "0"
+  }
+}

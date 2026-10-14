@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/abs",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/abs.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/abs.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "516e34fd5a54dc7e6ddfcf2e98cfd015d6440ba8757755193b5845918ded12ad",
+    "sourceTechnicalHash": "b1da2b692a005bda5a2026ba194311672653fadf56c2da8438bd6ba399509c89",
+    "targetHash": "2eb0becd54b99fbfbc688f4b70f23871bbd86e46a80960fd42ac9bc2253bf623",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.256Z",
+    "glossaryVersion": "0"
+  }
+}

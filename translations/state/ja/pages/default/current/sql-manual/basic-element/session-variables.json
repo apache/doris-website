@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/session-variables",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/session-variables.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/session-variables.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "4f37b27e1ed6475d83f6086c83b0c1b6ef019b9ecd9a87ec7db907bc9b57f730",
+    "sourceTechnicalHash": "f27c471980f76c78d37b93ac5523ffd81ec58988a08066782ab1be640b660d87",
+    "targetHash": "73f3d7b25f0c3fddaabddaf85cefb0b747e298c372ebe1d6e21024ca758f37ef",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.255Z",
+    "glossaryVersion": "0"
+  }
+}

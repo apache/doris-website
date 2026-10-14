@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-null",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-null.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-null.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c26ce70c13c9a308d5244edce70e3cc65093adf3f429b9782a1b7d886b0e83ae",
+    "sourceTechnicalHash": "a690b85e8ec8e60e2daf27358070c768102a99d2d67294b2cca54fa1ae151214",
+    "targetHash": "bc55c232eca08fcb9b0888b5b0ee9c7a9595641022e10fc4a4374151a9787840",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.255Z",
+    "glossaryVersion": "0"
+  }
+}

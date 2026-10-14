@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/time-conversion",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/time-conversion.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/time-conversion.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f70c836adecd7c5bdb479985c01514ea9fcfa77a607ed87187a2bafb62dfa5ec",
+    "sourceTechnicalHash": "ba605d629d6079e3facf06ecd3270d437c38654eaf1dcc8b90c3924e68281f22",
+    "targetHash": "0737eb6d02fbe396bfcc7e240a967e330e79b65817d565472f263c0ff082513b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.254Z",
+    "glossaryVersion": "0"
+  }
+}
