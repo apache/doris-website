@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/variant-functions/variant-type",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/variant-functions/variant-type.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/variant-functions/variant-type.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b079da6858fc5638209ffe7cff1a95641b35a284aeaee3e50bb97cb6d15aac2f",
+    "sourceTechnicalHash": "ae23b93e5ed9bde0672d6185f3b52e9c0eea69282226bb3b358aeed1738920e2",
+    "targetHash": "b2a7771208f77097d1446337a6b940a21cc96c112a0bfb7afba2cdfef91081ee",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:05:15.137Z",
+    "glossaryVersion": "0"
+  }
+}

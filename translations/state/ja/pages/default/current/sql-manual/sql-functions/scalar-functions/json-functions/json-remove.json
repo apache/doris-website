@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-remove",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-remove.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-remove.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "645ede3af1c947ce7e01c67ead31866185c7bad8c5d16dae2c4cdb1b94e0f185",
+    "sourceTechnicalHash": "8cec7a0a1d36247bc3878c26480792bac2b6b572e154f7a09c10dd681fa32fb4",
+    "targetHash": "a6297d85e07590c575fb703a0f6049dff661e9bf63941294aa0623dc5d6e729b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:05:15.136Z",
+    "glossaryVersion": "0"
+  }
+}

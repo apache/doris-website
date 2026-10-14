@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-parse-error-to-null",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-parse-error-to-null.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-parse-error-to-null.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "5fef7098d93a3c736bd2242e235eb9ebfcb5e21b6f69ed121578be154bff240f",
+    "sourceTechnicalHash": "4825a01e1be6c3d9d26fb2294fdd4dd50351c18c1f05ae8c6d80b0eee416ec8f",
+    "targetHash": "792e65b1751ad650e6229f7e2ac7a3ff3403f2efb257ad36456698546345dfe8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:05:15.136Z",
+    "glossaryVersion": "0"
+  }
+}
