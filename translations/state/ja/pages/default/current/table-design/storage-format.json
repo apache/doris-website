@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/storage-format",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/storage-format.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/storage-format.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "b7f86b8b9a197f7cf8ff2fe1f2c90aa98adab2e17438cc5a28110b7b56d2bf17",
+    "sourceTechnicalHash": "ffcd25ca5be78e7c699ec02a4a9d8ef836c0bfd7bd58085b928f06c1cbeedad4",
+    "targetHash": "89c08549bdd697d0e059f86498892cbb3114f28e01ae14ece68961df892e310d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:29:57.403Z",
+    "glossaryVersion": "0"
+  }
+}

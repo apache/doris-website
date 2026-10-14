@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/storage-layout-overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/storage-layout-overview.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/storage-layout-overview.mdx",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "a865e8eb896abae382c28b34244c0d212b5170ae6e6acd0a8f3a37be8715d803",
+    "sourceTechnicalHash": "590b4551b25917f0f7a67b8a01f4097b4474707ae5dd8f413035eb021c700b0c",
+    "targetHash": "6842355c4e9f0361430308dac650f6421967f941874414be306b238e003cbfae",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:29:57.403Z",
+    "glossaryVersion": "0"
+  }
+}

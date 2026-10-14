@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/schema-change",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/schema-change.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/schema-change.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "fc124c632c83b650f53ddb81211275542cebd192a61a796287cf65b9f958d716",
+    "sourceTechnicalHash": "37f9f63987b87c13241db21a42ad619c138839aac1b46106e270b92d0f52dd5e",
+    "targetHash": "75ffecd50462b8358e8d8c65d35eb7e578cec8b08636b0bc14cee7f56f8f5d20",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:29:57.403Z",
+    "glossaryVersion": "0"
+  }
+}

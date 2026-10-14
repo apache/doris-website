@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/load-manual",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/load-manual.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/load-manual.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "e0cebc30aef775fb1bd06d3ec949d5c1d0f5a99ffaa11eff5d1b6d8ff29f492e",
+    "sourceTechnicalHash": "9354855a0e579a28215b07cfef2492f83593d0ccff86d799900ff45823cf2a27",
+    "targetHash": "21fbf4107b8d0976fab5e6f0b35b1d700a764b3824b44150b5d397bb7926b7df",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:29:57.403Z",
+    "glossaryVersion": "0"
+  }
+}

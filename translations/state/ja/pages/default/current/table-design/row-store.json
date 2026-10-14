@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/row-store",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/row-store.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/row-store.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "f01324f733d705f896a468e500a59a3e0ee66c820cbb041e9d570ba6c7790790",
+    "sourceTechnicalHash": "121266808a67d88c13da9146956acbcd453fb077cc25297f04fcdf3d2a4a5c85",
+    "targetHash": "f8a1ac3e8fed82af25ee86693352ec796ed794d66efd4ad9aecd0747ca849186",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:29:57.403Z",
+    "glossaryVersion": "0"
+  }
+}
