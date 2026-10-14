@@ -7,8 +7,11 @@ const path = require('node:path');
 const {execFileSync, spawnSync} = require('node:child_process');
 
 const sourceRoot = path.resolve(__dirname, '../..');
-const sourcePath = 'docs/admin-manual/system-tables/information_schema/engines.md';
-const targetPath = 'i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/engines.md';
+const sourcePath = process.env.I18N_SIM_SOURCE_PATH
+    || 'docs/admin-manual/system-tables/information_schema/engines.md';
+assert(sourcePath.startsWith('docs/') && /\.mdx?$/.test(sourcePath)
+    && !sourcePath.split('/').includes('..'), 'Simulation source must be a Dev document');
+const targetPath = `i18n/ja/docusaurus-plugin-content-docs/current/${sourcePath.slice(5)}`;
 const runId = '123456';
 
 function command(binary, args, options = {}) {

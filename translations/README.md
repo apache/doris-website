@@ -326,6 +326,24 @@ The PR body lists the source commit, source links, source hashes, model,
 glossary version, failures and validation. The normal PR checks remain the
 merge gate.
 
+### Local T08 simulation
+
+From a committed checkout with dependencies installed, run:
+
+```bash
+node scripts/i18n/simulate-workflow.cjs /tmp/doris-ja-workflow-sim
+```
+
+The output directory must be empty. Set `I18N_SIM_SOURCE_PATH` to another
+pending Dev `.md` or `.mdx` file if the default example has already been
+translated. The simulator clones the current commit, runs real open-PR
+reconciliation and full planning against a GitHub CLI mock, then runs the
+translation engine with a schema-shaped Codex mock. It checks that an invalid
+model unit fails validation, that a 100,000-token usage report does not stop a
+valid candidate, and that publication pushes only managed Japanese files to a
+local bare Git repository and records a mock draft PR. `report.json` and step
+logs remain in the output directory. No real model call or GitHub write occurs.
+
 ## Validation
 
 ```bash
