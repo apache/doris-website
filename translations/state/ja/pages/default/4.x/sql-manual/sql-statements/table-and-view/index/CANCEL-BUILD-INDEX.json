@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/index/CANCEL-BUILD-INDEX",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/index/CANCEL-BUILD-INDEX.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/index/CANCEL-BUILD-INDEX.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "9800c6153cc574731cb85c5c962dd4acd39e4c3b96ef2097860d03f7da47ebc5",
+    "sourceTechnicalHash": "9d5fb27f63d3fb419b1d952854169103066f68c193d9cec103737268a3e5b15e",
+    "targetHash": "39cec6e03b7fcd61975991b08bb22d856be59cce3697480e28a8fcc077af425e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:35:06.361Z",
+    "glossaryVersion": "0"
+  }
+}
