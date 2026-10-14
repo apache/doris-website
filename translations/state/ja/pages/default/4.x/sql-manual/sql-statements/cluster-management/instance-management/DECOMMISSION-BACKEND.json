@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "257bda4eae6b40a8209e606e966f8d646fc0acbef1a3502a26a0cac079471bf6",
+    "sourceTechnicalHash": "5975c08575a38cf37b5685da0dff558b690feb88e77c8009cc78dfdd4ff7c561",
+    "targetHash": "605044a9b9abbb9960d8473f1dcecd11c1ad7d90eca480c86b3f121662f1d8c4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:35:18.350Z",
+    "glossaryVersion": "0"
+  }
+}
