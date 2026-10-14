@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/CREATE-ROLE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/CREATE-ROLE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/CREATE-ROLE.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "5e57abd27c77f76db7b6e55f1dfd437545644abd9d7c470b648ed57f90290615",
+    "sourceTechnicalHash": "dadc3ac617b2ffc850d655e996119c319e9c886098e53feef6aebedbf7779561",
+    "targetHash": "7893295f7300bade100ab666591daa082d26433d56e102ae5a4002f307edad19",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:55:32.508Z",
+    "glossaryVersion": "0"
+  }
+}

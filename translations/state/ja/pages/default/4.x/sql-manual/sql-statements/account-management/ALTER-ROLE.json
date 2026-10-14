@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/ALTER-ROLE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/ALTER-ROLE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/ALTER-ROLE.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "85e2f87aa4f6cf6bb40a87303b9af1043cfa861e963087449e6dfd845c321283",
+    "sourceTechnicalHash": "52f7309f43efac2747923cda9c1f92a56f8f945ab4aa095aa572558e25ac1855",
+    "targetHash": "eadb605f4e5174788a471c0262bf91fe37f21bdfbf66f0d2568b0ad091a9d0ef",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:55:32.508Z",
+    "glossaryVersion": "0"
+  }
+}
