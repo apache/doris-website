@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/incremental/incremental-query",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/incremental/incremental-query.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/incremental/incremental-query.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "7f1640381216d68ee6d387cd83a1d78b74180d1dc8fcc41fbeca29c52ac6905c",
+    "sourceTechnicalHash": "630b264e4086c04ef6c6d420ba8d90bc2c24b6ea623cd0cafd82d7305ab6ad82",
+    "targetHash": "fcfc9be3a43d18579bb840017aca49b7f4880bd805a56151eec6448451e55383",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T16:06:57.645Z",
+    "glossaryVersion": "0"
+  }
+}

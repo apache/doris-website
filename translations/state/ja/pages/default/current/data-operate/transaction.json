@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/transaction",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/transaction.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/transaction.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "9430bff38572db96b769a04713ac19cbc1477776bc00a39695be9a33691afbb7",
+    "sourceTechnicalHash": "e1679f2d93a9952945dcfeee9369dbee74293491091a1ab3ae89b72913e6c352",
+    "targetHash": "cc5ca4cc995e84ed7161ae084dcf0f5898f711b9325c7cb485be9212ae7fca32",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T16:06:57.644Z",
+    "glossaryVersion": "0"
+  }
+}

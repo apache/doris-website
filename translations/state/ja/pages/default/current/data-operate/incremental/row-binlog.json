@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/incremental/row-binlog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/incremental/row-binlog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/incremental/row-binlog.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "fc51417da6ce259215fb5bea9dc5904a46221b738a0f3987ec783fb8d2631e3d",
+    "sourceTechnicalHash": "eb2a0b5dceeac2bf4dd738a1863fccd803bc6dd6e7db29c9823f2aac90c5a868",
+    "targetHash": "d7c0de0525aef5182a1d0be3aee26da39b9c72c4c66d43bcadcceb6685e3721c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T16:06:57.645Z",
+    "glossaryVersion": "0"
+  }
+}
