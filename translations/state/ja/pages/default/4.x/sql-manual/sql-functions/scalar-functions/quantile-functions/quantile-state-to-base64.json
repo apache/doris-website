@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-state-to-base64",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-state-to-base64.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-state-to-base64.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "c43f2879195fbbbbd347e74126eda4b71ebafff8e19c7dd7799eff06e8074ebc",
+    "sourceTechnicalHash": "bcc105f0372d3e61065b7f5b661788e4f787099b4d7d2928fed6f13925b83529",
+    "targetHash": "f68668292c28290eff7f899d700b41992035218cb9618522a71733b4d9b638f7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:33:33.245Z",
+    "glossaryVersion": "0"
+  }
+}
