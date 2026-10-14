@@ -17,6 +17,11 @@ test('PR build scope separates content locales, shared inputs, and retired versi
     assert.deepEqual(japanese.locales,['ja']);
     assert.equal(japanese.docs_versions,'4.x');
     assert.equal(japanese.enable_ja,true);
+    const shard = 'translations/state/ja/pages/default/4.x/guide.json';
+    const stateOnly = buildScope([shard],versions);
+    assert.deepEqual(stateOnly.locales,['ja']);
+    assert.equal(stateOnly.docs_versions,'4.x');
+    assert.deepEqual(stateOnly.json,[shard]);
     assert.deepEqual(buildScope(['sidebars.ts'],versions).locales,['en','zh-CN','ja']);
     assert.deepEqual(buildScope(['.github/workflows/cron-deploy-website.yml'],versions).locales,['en','zh-CN','ja']);
     assert.deepEqual(buildScope(['.github/workflows/manual-deploy-website.yml'],versions).locales,['en','zh-CN','ja']);

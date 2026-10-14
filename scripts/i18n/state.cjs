@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const {createHash} = require('node:crypto');
+const {execFileSync} = require('node:child_process');
 
 const hash = value => createHash('sha256').update(value.replace(/\r\n/g, '\n')).digest('hex');
 const identity = ({pluginId, version, docId, locale}) => JSON.stringify([pluginId, version, docId, locale]);
@@ -30,8 +31,29 @@ function loadConfig(root) {
     return config;
 }
 
-function loadRecords(root, locale) {
-    const data = readJson(path.join(root, `translations/state/${locale}/docs.json`), {schemaVersion: 1, pages: []});
+const stateRoot = locale => `translations/state/${locale}`;
+const shardRoot = locale => `${stateRoot(locale)}/pages`;
+function stateFileFor(record) {
+    const parts = [record.pluginId, record.version, ...record.docId.split('/')];
+    if (parts.some(part => !part || part === '.' || part === '..' || /[\\/]/.test(part)))
+        throw new Error(`Invalid translation state path: ${identity(record)}`);
+    return `${shardRoot(record.locale)}/${record.pluginId}/${record.version}/${record.docId}.json`;
+}
+function listShardFiles(root, locale) {
+    const base = path.join(root, shardRoot(locale));
+    const files = [];
+    function walk(dir) {
+        if (!fs.existsSync(dir)) return;
+        for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
+            const full = path.join(dir, entry.name);
+            if (entry.isDirectory()) walk(full);
+            else if (entry.isFile() && entry.name.endsWith('.json')) files.push(relative(root, full));
+        }
+    }
+    walk(base);
+    return files.sort();
+}
+function collectRecords(locale, data, shards) {
     if (data.schemaVersion !== 1 || !Array.isArray(data.pages)) throw new Error('Invalid translation state schema');
     const records = new Map();
     for (const record of data.pages) {
@@ -39,7 +61,35 @@ function loadRecords(root, locale) {
         if (record.locale !== locale || records.has(key)) throw new Error(`Duplicate or invalid translation identity: ${key}`);
         records.set(key, record);
     }
+    const seenShards = new Set();
+    for (const [file, raw] of shards) {
+        const shard = JSON.parse(raw);
+        const record = shard.page;
+        if (shard.schemaVersion !== 1 || !record || record.locale !== locale
+            || stateFileFor(record) !== file || seenShards.has(identity(record)))
+            throw new Error(`Invalid or duplicate translation shard: ${file}`);
+        seenShards.add(identity(record));
+        records.set(identity(record), record); // A shard supersedes a legacy docs.json entry.
+    }
     return records;
+}
+function loadRecords(root, locale) {
+    const data = readJson(path.join(root, `${stateRoot(locale)}/docs.json`), {schemaVersion: 1, pages: []});
+    const shards = listShardFiles(root, locale).map(file => [file, fs.readFileSync(path.join(root, file), 'utf8')]);
+    return collectRecords(locale, data, shards);
+}
+function loadRecordsAt(root, locale, ref) {
+    const read = file => {
+        try {return execFileSync('git', ['show', `${ref}:${file}`],
+            {cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 16 * 1024 * 1024});}
+        catch {return null;}
+    };
+    const base = read(`${stateRoot(locale)}/docs.json`);
+    const paths = execFileSync('git', ['ls-tree', '-r', '--name-only', ref, '--', shardRoot(locale)],
+        {cwd: root, encoding: 'utf8'}).split('\n').filter(Boolean).sort();
+    const shards = paths.map(file => [file, read(file)]);
+    if (shards.some(([, raw]) => raw === null)) throw new Error('Committed translation shard is unreadable');
+    return collectRecords(locale, base === null ? {schemaVersion: 1, pages: []} : JSON.parse(base), shards);
 }
 
 function sourceLocaleFor(settings, page) {
@@ -82,4 +132,5 @@ function decide({page, source, target, record, technicalHash}) {
     return result('stale_unknown');
 }
 
-module.exports = {hash, identity, relative, loadConfig, loadRecords, sourceLocaleFor, decide};
+module.exports = {hash, identity, relative, loadConfig, loadRecords, loadRecordsAt,
+    stateFileFor, listShardFiles, sourceLocaleFor, decide};

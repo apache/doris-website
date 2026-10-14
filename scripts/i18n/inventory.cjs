@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {hash, identity, decide} = require('./state.cjs');
+const {hash, identity, decide, loadRecordsAt} = require('./state.cjs');
 
 const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
 const key = page => identity({...page, locale: 'ja'});
@@ -49,8 +49,7 @@ function sidebarOrder(sidebars) {
 // as merged coverage. The caller supplies the reviewed, merged source commit.
 function mergedCurrent(page, committedHash) {
     return page.status === 'current' && page.useTarget && page.reviewStatus !== 'unverified'
-        && committedHash(page.targetPath) === page.targetHash
-        && committedHash('translations/state/ja/docs.json') !== null;
+        && committedHash(page.targetPath) === page.targetHash;
 }
 
 function buildGroup({group, pages, files, order, scope, committedHash, committedRecords}) {
@@ -205,8 +204,7 @@ async function main() {
         catch {return null;}
     };
     execFileSync('git', ['cat-file', '-e', `${sourceCommit}^{commit}`], {cwd: root});
-    const committedText = gitRead('translations/state/ja/docs.json');
-    const committedRecords = new Map((committedText ? JSON.parse(committedText).pages : []).map(record => [key(record), record]));
+    const committedRecords = loadRecordsAt(root, 'ja', sourceCommit);
     const committedCache = new Map();
     const committedHash = file => {
         if (!committedCache.has(file)) {

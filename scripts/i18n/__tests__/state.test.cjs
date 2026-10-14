@@ -1,6 +1,10 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const {hash, identity, decide} = require('../state.cjs');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const {execFileSync} = require('node:child_process');
+const {hash, identity, decide, loadRecords, loadRecordsAt, stateFileFor} = require('../state.cjs');
 const {structure, alignHeadings} = require('../structure.cjs');
 
 test('Japanese version messages match the custom banner interpolation contract', () => {
@@ -100,6 +104,55 @@ test('source hashing includes SQL, parameters, MDX, metadata and whitespace, nor
     assert.equal(hash(original), hash(original.replace(/\n/g, '\r\n')));
     assert.notEqual(hash(original), hash(original.replace('SELECT 1', 'SELECT 2')));
     assert.notEqual(hash(original), hash(original + '\n'));
+});
+
+test('page shards override legacy state without changing other identities', async () => {
+    const data = await setup();
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ja-state-shards-'));
+    try {
+        const stateDir = path.join(root, 'translations/state/ja');
+        fs.mkdirSync(stateDir, {recursive: true});
+        fs.writeFileSync(path.join(stateDir, 'docs.json'), JSON.stringify({schemaVersion: 1,
+            pages: [data.record, {...data.record, docId: 'other'}]}));
+        const file = stateFileFor(data.record);
+        fs.mkdirSync(path.dirname(path.join(root, file)), {recursive: true});
+        fs.writeFileSync(path.join(root, file), JSON.stringify({schemaVersion: 1,
+            page: {...data.record, translatedAt: '2026-10-13T00:00:00Z'}}));
+        const records = loadRecords(root, 'ja');
+        assert.equal(records.size, 2);
+        assert.equal(records.get(identity(data.record)).translatedAt, '2026-10-13T00:00:00Z');
+        assert(records.has(identity({...data.record, docId: 'other'})));
+        fs.writeFileSync(path.join(root, file), JSON.stringify({schemaVersion: 1,
+            page: {...data.record, docId: '../outside'}}));
+        assert.throws(() => loadRecords(root, 'ja'), /Invalid translation state path/);
+    } finally {
+        fs.rmSync(root, {recursive: true, force: true});
+    }
+});
+
+test('committed page shards are read from the selected Git ref', async () => {
+    const data = await setup();
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ja-state-ref-'));
+    const git = (...args) => execFileSync('git', args, {cwd: root, stdio: 'ignore'});
+    try {
+        git('init', '-q');
+        git('config', 'user.name', 'State Test');
+        git('config', 'user.email', 'state@example.com');
+        const stateDir = path.join(root, 'translations/state/ja');
+        fs.mkdirSync(stateDir, {recursive: true});
+        fs.writeFileSync(path.join(stateDir, 'docs.json'), JSON.stringify({schemaVersion: 1, pages: []}));
+        const file = stateFileFor(data.record);
+        fs.mkdirSync(path.dirname(path.join(root, file)), {recursive: true});
+        fs.writeFileSync(path.join(root, file), JSON.stringify({schemaVersion: 1, page: data.record}));
+        git('add', '.');
+        git('commit', '-qm', 'state');
+        assert.equal(loadRecordsAt(root, 'ja', 'HEAD').get(identity(data.record)).targetHash, data.record.targetHash);
+        fs.writeFileSync(path.join(root, file), JSON.stringify({schemaVersion: 1,
+            page: {...data.record, targetHash: 'b'.repeat(64)}}));
+        assert.equal(loadRecordsAt(root, 'ja', 'HEAD').get(identity(data.record)).targetHash, data.record.targetHash);
+    } finally {
+        fs.rmSync(root, {recursive: true, force: true});
+    }
 });
 
 test('heading alignment follows native duplicate IDs, explicit IDs, setext and fenced code', async () => {

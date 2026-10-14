@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {hash} = require('../state.cjs');
+const {hash, stateFileFor} = require('../state.cjs');
 const {reconcileOpenPrs} = require('../workflow-prs.cjs');
 const {relevantPush, replaceableBotPr} = require('../workflow-scan.cjs');
 const {pairFor, machineOwned, generate, allowGeneration} = require('../workflow-generate.cjs');
@@ -31,6 +31,55 @@ test('all open PRs are inspected by files, including unnamed human PRs', async (
     assert.deepEqual(result.relevantPrs, [11]);
     assert.equal(result.active.candidates[0].pr, '#11');
     assert.equal(result.blockedTargets.length, 0);
+});
+
+test('an open PR can register its target with a page shard instead of docs.json', async () => {
+    const shardPath = stateFileFor(record);
+    const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website', pulls: [pull(13)],
+        filesFor: async () => [{filename: record.targetPath}, {filename: shardPath}],
+        readHead: async (_item, file) => file === shardPath
+            ? JSON.stringify({schemaVersion: 1, page: record})
+            : file.endsWith('docs.json') ? JSON.stringify({schemaVersion: 1, pages: []}) : japanese,
+        readBase: async (_item, file) => file === shardPath ? null
+            : JSON.stringify({schemaVersion: 1, pages: []})});
+    assert.deepEqual(result.relevantPrs, [13]);
+    assert.equal(result.active.candidates[0].pr, '#13');
+    assert.deepEqual(result.blockedTargets, []);
+});
+
+test('state changes are compared with the PR merge base, not current master', async () => {
+    const previous = {...record, docId: 'previous', sourcePath: 'docs/previous.md',
+        targetPath: 'i18n/ja/docusaurus-plugin-content-docs/current/previous.md'};
+    let baseReads = 0;
+    const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website',
+        pulls: [pull(13)],
+        filesFor: async () => [{filename: record.targetPath}, {filename: 'translations/state/ja/docs.json'}],
+        readHead: async (_item, file) => file.includes('/pages/') ? null
+            : file.endsWith('docs.json') ? JSON.stringify({schemaVersion: 1, pages: [previous, record]}) : japanese,
+        readBase: async (_item, file) => {
+            if (file.includes('/pages/')) return null;
+            baseReads++;
+            return JSON.stringify({schemaVersion: 1, pages: [previous]});
+        }});
+    assert.equal(baseReads, 1);
+    assert.deepEqual(result.relevantPrs, [13]);
+    assert.deepEqual(result.active.candidates.map(candidate => candidate.docId), ['guide']);
+    assert.deepEqual(result.blockedTargets, []);
+    assert.deepEqual(result.exceptions, []);
+});
+
+test('removing a legacy record already covered by a shard creates no candidate', async () => {
+    const shardPath = stateFileFor(record);
+    const shard = JSON.stringify({schemaVersion: 1, page: record});
+    const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website', pulls: [pull(14)],
+        filesFor: async () => [{filename: 'translations/state/ja/docs.json'}],
+        readHead: async (_item, file) => file === shardPath ? shard
+            : JSON.stringify({schemaVersion: 1, pages: []}),
+        readBase: async (_item, file) => file === shardPath ? shard
+            : JSON.stringify({schemaVersion: 1, pages: [record]})});
+    assert.deepEqual(result.active.candidates, []);
+    assert.deepEqual(result.blockedTargets, []);
+    assert.deepEqual(result.exceptions, []);
 });
 
 test('edited or unparseable PR candidate blocks its target without claiming coverage', async () => {

@@ -34,7 +34,11 @@ function buildScope(files, versions) {
         else if (/^(src|config)\//.test(file) || ['docusaurus.config.js','package.json','yarn.lock','tailwind.config.js','tsconfig.json'].includes(file)
             || /^scripts\/(key-features|last-update)\//.test(file) || /^scripts\/(patch-search-tokenize.js|build-locales.cjs|build-locale.cjs)$/.test(file)
             || /^scripts\/i18n\/(docs-plugin|status-plugin|state|structure)\.cjs$/.test(file)) shared();
-        else if (['translations/config.json', 'translations/state/ja/docs.json'].includes(file)) {languages.add('ja'); build();}
+        else if (['translations/config.json', 'translations/state/ja/docs.json',
+            'translations/state/ja/shards.schema.json'].includes(file)) {languages.add('ja'); build();}
+        else if ((match = file.match(/^translations\/state\/ja\/pages\/[^/]+\/([^/]+)\//))) {
+            languages.add('ja'); wanted.add(match[1]); json.add(file); build();
+        }
         else if (file === 'static/.htaccess') shared();
         else if (/^(static|\.github|\.claude|\.agents|\.vscode|\.idea|scripts|website-quality-governance|translations|plan-doc)\//.test(file)
             || /\.(py|sh)$/.test(file)
