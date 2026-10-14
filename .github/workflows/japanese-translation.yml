@@ -78,7 +78,6 @@ jobs:
           I18N_VERSION: ${{ inputs.version }}
           I18N_PATH: ${{ inputs.path }}
           I18N_LIMIT: '20'
-          I18N_TOKEN_BUDGET: ${{ inputs.mode == 'validate' && '10000' || '20000' }}
           DORIS_ENABLE_JA: 'true'
         run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/japanese-translation"
       - uses: actions/upload-artifact@v4
@@ -153,7 +152,6 @@ jobs:
           I18N_VERSION: ${{ inputs.version }}
           I18N_PATH: ${{ inputs.path }}
           I18N_LIMIT: '20'
-          I18N_TOKEN_BUDGET: ${{ inputs.mode == 'validate' && '10000' || '20000' }}
           DORIS_ENABLE_JA: 'true'
         run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/japanese-translation"
       - name: Install ossutil for the pinned Codex package and auth pool
@@ -201,7 +199,6 @@ jobs:
           I18N_VALIDATION_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'validate' }}
           I18N_PATH: ${{ inputs.path }}
           I18N_MAX_PAGES: ${{ inputs.mode == 'validate' && '1' || '2' }}
-          I18N_TOKEN_BUDGET: ${{ inputs.mode == 'validate' && '30000' || '60000' }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: node scripts/i18n/workflow-generate.cjs "$RUNNER_TEMP/japanese-translation"
       - uses: actions/create-github-app-token@v2

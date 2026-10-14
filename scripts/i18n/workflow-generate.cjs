@@ -80,7 +80,7 @@ function bodyFor(manifest) {
         '', '<!-- japanese-translation-automation:v1 bot-head=PENDING -->', ''].join('\n');
 }
 
-async function generate({plan, reconciliation, maxPages = 2, tokenBudget = 60000,
+async function generate({plan, reconciliation, maxPages = 2,
     adapter, glossary, rootDir = root, ensureFresh = ensureMasterFresh, output}) {
     assert(Number.isInteger(maxPages) && maxPages > 0 && maxPages <= 20, 'Invalid page limit');
     assert(plan.schemaVersion === 1 && plan.sourceCommit === execFileSync('git', ['rev-parse', 'HEAD'],
@@ -121,7 +121,7 @@ async function generate({plan, reconciliation, maxPages = 2, tokenBudget = 60000
         }
     }
     const manifest = {schemaVersion: 1, sourceCommit: plan.sourceCommit, provider: 'codex',
-        model: adapter.model, glossaryVersion: glossary.version, liveCall: candidates.length > 0,
+        model: adapter.model, glossaryVersion: glossary.version, liveCall: adapter.usedTokens > 0,
         liveVerified: false, usedTokens: adapter.usedTokens,
         replacesPr: replaces ? {number: replaces.number, headSha: replaces.headSha} : null,
         candidates: candidates.map(item => ({id: item.task.id, kind: item.task.kind,
@@ -149,9 +149,7 @@ async function generate({plan, reconciliation, maxPages = 2, tokenBudget = 60000
 function allowGeneration(env) {
     if (env.I18N_VALIDATION_RUN === 'true') {
         return env.GITHUB_EVENT_NAME === 'workflow_dispatch'
-            && /\.mdx?$/.test(env.I18N_PATH || '') && env.I18N_MAX_PAGES === '1'
-            && Number.isInteger(Number(env.I18N_TOKEN_BUDGET))
-            && Number(env.I18N_TOKEN_BUDGET) > 0 && Number(env.I18N_TOKEN_BUDGET) <= 30000;
+            && /\.mdx?$/.test(env.I18N_PATH || '') && env.I18N_MAX_PAGES === '1';
     }
     return env.I18N_AUTO_TRANSLATE_ENABLED === 'true' && env.I18N_LIVE_VERIFIED === 'true';
 }
@@ -167,12 +165,11 @@ async function main() {
     }
     const reconciliation = JSON.parse(fs.readFileSync(path.join(output, 'open-pr-reconciliation.json'), 'utf8'));
     const glossary = JSON.parse(fs.readFileSync(path.join(root, 'translations/glossary/ja.json'), 'utf8'));
-    const tokenBudget = Number(process.env.I18N_TOKEN_BUDGET || '60000');
     assert(process.env.CODEX_BIN && fs.existsSync(process.env.CODEX_BIN), 'Pinned Codex runtime is required');
     const adapter = codexAdapter({model: process.env.I18N_CODEX_MODEL || 'gpt-6-sol',
-        codexBin: process.env.CODEX_BIN, codexHome: process.env.CODEX_HOME, tokenBudget});
+        codexBin: process.env.CODEX_BIN, codexHome: process.env.CODEX_HOME});
     const manifest = await generate({plan, reconciliation, maxPages: Number(process.env.I18N_MAX_PAGES || '2'),
-        tokenBudget, adapter, glossary, output});
+        adapter, glossary, output});
     if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT,
         `created=${manifest.candidates.length > 0}\n`);
     if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
@@ -180,6 +177,8 @@ async function main() {
         + `${manifest.failures.length} failed or need manual handling. No translation is merged yet.\n`);
     process.stdout.write(JSON.stringify({candidates: manifest.candidates.length,
         failures: manifest.failures.length, usedTokens: manifest.usedTokens}) + '\n');
+    if (process.env.I18N_VALIDATION_RUN === 'true' && manifest.candidates.length === 0)
+        process.exitCode = 1;
 }
 
 if (require.main === module) main().catch(error => {console.error(error.message); process.exitCode = 1;});

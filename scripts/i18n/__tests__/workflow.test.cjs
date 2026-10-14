@@ -132,7 +132,7 @@ test('human maintained pages are excluded from automatic generation', () => {
 
 test('one-page validation can bootstrap without enabling ongoing automation', () => {
     const request = {I18N_VALIDATION_RUN: 'true', GITHUB_EVENT_NAME: 'workflow_dispatch',
-        I18N_PATH: 'docs/guide.md', I18N_MAX_PAGES: '1', I18N_TOKEN_BUDGET: '30000'};
+        I18N_PATH: 'docs/guide.md', I18N_MAX_PAGES: '1'};
     assert.equal(allowGeneration(request), true);
     assert.equal(allowGeneration({...request, I18N_MAX_PAGES: '4'}), false);
     assert.equal(allowGeneration({...request, GITHUB_EVENT_NAME: 'push'}), false);

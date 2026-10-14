@@ -22,7 +22,7 @@ function page(docId, options = {}) {
         reviewStatus: 'unverified', change: options.change ?? 'new'};
 }
 async function run(pages, {old = [], records = [], removed = [], active, files = {}, historical = {}, reports = [],
-    chineseChangedPaths = [], limit = 20, tokenBudget = 50000} = {}) {
+    chineseChangedPaths = [], limit = 20, tokenBudget = null} = {}) {
     const all = Object.fromEntries(pages.map(item => [item.sourcePath, source]));
     const report = {schemaVersion: 1, sourceCommit: sha, baselineCommit: baselineSha,
         groups: scope.groups.map(group => ({...group, entries: pages.filter(item => item.pluginId === group.pluginId && item.version === group.version),
@@ -163,6 +163,14 @@ test('limit, token budget and path filter apply after full counts without renumb
     assert.equal(filtered.tasks.length, 1);
     assert.equal(filtered.counts.pending, 2);
     assert.equal(filtered.tasks[0].id, result.tasks.find(item => item.docId === 'b').id);
+});
+
+test('default planning does not exclude a document because of estimated tokens', async () => {
+    const large = '# Long\n' + 'Text. '.repeat(40000);
+    const entry = page('large', {content: large});
+    const result = await run([entry], {files: {[entry.sourcePath]: large}});
+    assert.deepEqual(result.selected, [result.tasks[0].id]);
+    assert(result.selectedEstimatedSourceTokens > 50000);
 });
 
 test('active input rejects duplicate, out-of-scope and malformed candidates', () => {

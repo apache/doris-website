@@ -49,6 +49,14 @@ test('object front matter and keyword lists translate without changing route fie
     assert.match(result.target, /# 概要 \{#intro\}/);
 });
 
+test('generated files drop inherited blank lines at EOF before publication', async () => {
+    const source = '# Hello\n\nA guide.\n\n';
+    const result = await translateDocument({source, extension: '.md', glossary,
+        adapter: adapter(text => text === 'Hello' ? 'こんにちは' : 'ガイドです。')});
+    assert.match(result.target, /ガイドです。\n$/);
+    assert(!result.target.endsWith('\n\n'));
+});
+
 test('missing units, modified placeholders and changed product names fail before writes', async () => {
     const source = '# Apache Doris 4.0\n\nUse value 12.\n';
     await assert.rejects(translateDocument({source, extension: '.md', glossary,

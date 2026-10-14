@@ -67,8 +67,7 @@ function main() {
     const auditFile = path.join(output, 'coverage.json');
     const args = [path.join(__dirname, 'plan-translations.cjs'), '--source-ref', 'HEAD',
         '--active-candidates', path.join(output, 'active-candidates.json'), '--output', planFile,
-        '--audit-output', auditFile, '--limit', process.env.I18N_LIMIT || '20',
-        '--token-budget', process.env.I18N_TOKEN_BUDGET || '20000'];
+        '--audit-output', auditFile, '--limit', process.env.I18N_LIMIT || '20'];
     for (const [key, option] of [['I18N_PLUGIN', '--plugin'], ['I18N_VERSION', '--version'], ['I18N_PATH', '--path']]) {
         if (process.env[key]) args.push(option, process.env[key]);
     }
