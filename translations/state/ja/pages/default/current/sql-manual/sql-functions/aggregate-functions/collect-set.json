@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/collect-set",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/collect-set.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/collect-set.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "705c52bd1330c1bf5babe4ed72c1425df2fa9a9debd67d3e89e6b18df7105bfe",
+    "sourceTechnicalHash": "9622a2f36ac402fddd0fe72207996f8f01162a0584f8c4ae7bcdcfd522e599a1",
+    "targetHash": "8c68a4824d00d5f95315987fca3ff6c1e6cbdc2ed9aa97b66436747bea6f9a11",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.054Z",
+    "glossaryVersion": "0"
+  }
+}

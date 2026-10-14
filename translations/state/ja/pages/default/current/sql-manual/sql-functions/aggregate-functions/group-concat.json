@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/group-concat",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/group-concat.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/group-concat.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b50ff8746fb9564b6cc6a46ff2958293f6dda92bf80e36bdf1d038fed4a0bab6",
+    "sourceTechnicalHash": "68b5bd59450450f5e63a9670e0beb315aaf14e82a956e53b87a7b97de445a817",
+    "targetHash": "cbc52dcbcde59089bc54632fa8e2929906d77a9f92be567560d720dd750093f8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.055Z",
+    "glossaryVersion": "0"
+  }
+}

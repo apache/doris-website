@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-subset-limit",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-subset-limit.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-subset-limit.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e5eefa4b606c8e7e69d4790d33eab325581a843c8040512699c052992c7d8496",
+    "sourceTechnicalHash": "0efeaf792cd9bc64a4ed909a6f28eb6673d376af74c08dc213bbea6eaf2d0347",
+    "targetHash": "0e07caa8ab0e8178821ebd2d61a4b1401d09faf8ffcaf92ed30692d9bd7ef2f4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.052Z",
+    "glossaryVersion": "0"
+  }
+}

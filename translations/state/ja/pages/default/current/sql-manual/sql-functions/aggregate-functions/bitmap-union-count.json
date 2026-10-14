@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/bitmap-union-count",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/bitmap-union-count.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/bitmap-union-count.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "172827826018f5eb6cfb3b3746962452dca299e015d5bd45df0c1627d1305aaf",
+    "sourceTechnicalHash": "230352eeb0b513b8140cc6cd92a99ba354615d836070c15cfb37125a26519c77",
+    "targetHash": "83d325483ad40fad4d8056a2921656f11b37d2f684f8d77650affc03b30e04e9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.053Z",
+    "glossaryVersion": "0"
+  }
+}

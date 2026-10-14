@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/bool-xor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/bool-xor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/bool-xor.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "45a253ddacb3ba75e070e2e9f1bc0130a85e870034f40a84fcc9162bd9ff22c7",
+    "sourceTechnicalHash": "df6623821b47605217c66613b2e2cf9f696b5cd6d658059695cbe30396b8188d",
+    "targetHash": "b12d7f7b596acea6c1aa8268930894297dfe96c1ea6e45d9ef862b0b82d350f2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.053Z",
+    "glossaryVersion": "0"
+  }
+}

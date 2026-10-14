@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/bool-and",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/bool-and.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/bool-and.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c6f98699201f47239c30e70097a748673640b7e4371ac99b198309735bdeadb3",
+    "sourceTechnicalHash": "ce8759bced2a12794123631badb158cb32a293035c916b96d4a73c5adaec7d91",
+    "targetHash": "dd9555133306c920cc978858236f8378767e8fe6f07eae0a7cab1063340b4c35",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.053Z",
+    "glossaryVersion": "0"
+  }
+}

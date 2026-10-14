@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-array",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-array.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-array.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "86aeefd42cbb4f6dd964c8447a730c393a03bfe03b645aecbcbf77c938735fa1",
+    "sourceTechnicalHash": "f2321f026770af68ad3a4e72d3bdd61f528a47dc82520ad56656be880d0b467f",
+    "targetHash": "fbbf78e074bd10ef689ff6b0de415b6056717e83264decfd45cda944cde92a26",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.051Z",
+    "glossaryVersion": "0"
+  }
+}

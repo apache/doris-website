@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/hll-union-agg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/hll-union-agg.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/hll-union-agg.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "21769d0f779555691a57421a3174b0ce597d652caadb0b642941e96b7b4d3b57",
+    "sourceTechnicalHash": "3fa5fc2580677e4d11a873e442b5836cdb36100de136bfc5c190303447f379df",
+    "targetHash": "80ccebcc15046f50bb2d71bb6d2e76e7151572b36ea76c1704a59bf93e4f42a9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.055Z",
+    "glossaryVersion": "0"
+  }
+}

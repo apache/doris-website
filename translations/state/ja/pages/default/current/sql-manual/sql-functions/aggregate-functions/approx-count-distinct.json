@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/approx-count-distinct",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/approx-count-distinct.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/approx-count-distinct.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "8d4ffee2b7ae55b15cadcdefdb860b5ca85fe41eb79276adb37c3915d1c6ba41",
+    "sourceTechnicalHash": "8d7f8cef317cb529814c4e95d354cd024fa1d1733003d7efcf37514a0135313d",
+    "targetHash": "d88ad542a1a5723e1837d70efe2f9ea86fa8bab797e6cce163295ddd21605114",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.053Z",
+    "glossaryVersion": "0"
+  }
+}

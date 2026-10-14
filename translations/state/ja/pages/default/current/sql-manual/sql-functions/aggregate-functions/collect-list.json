@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/collect-list",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/collect-list.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/collect-list.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0becbd565990bc4e8ee6a61ad01c2623cde4d63eaf84b99ae54b7de13157e6f1",
+    "sourceTechnicalHash": "e2bf1b6c7f55091ec48b214c2df8e901a38754f1685ff895b0cbf0f962a07634",
+    "targetHash": "79bcd157e1b3996206b671d05fd102ee401b2329cd19a02375a3fbe771a9b8a7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.053Z",
+    "glossaryVersion": "0"
+  }
+}
