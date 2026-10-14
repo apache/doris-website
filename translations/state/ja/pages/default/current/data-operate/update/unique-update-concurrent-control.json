@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/update/unique-update-concurrent-control",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/update/unique-update-concurrent-control.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/update/unique-update-concurrent-control.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "ea7889a6d9289e2c92a51b6bb86e562bfaaacbe6ad27dfad943ace121524b92c",
+    "sourceTechnicalHash": "b5cc05ffd957e043957102af229d163d5ef2198f1aca583384b443b8120708bc",
+    "targetHash": "16af4d4a0a589f3cc6f8c2b23e2047529fb97b4fa422eb2ba73b3bad75bbb704",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T16:06:57.643Z",
+    "glossaryVersion": "0"
+  }
+}

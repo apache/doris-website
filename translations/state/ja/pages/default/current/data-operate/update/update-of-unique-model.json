@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/update/update-of-unique-model",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/update/update-of-unique-model.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/update/update-of-unique-model.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "fd0f02a03a596f241e33ca3d66fe42bb03be608cf0c6891dd65ea6defbc39694",
+    "sourceTechnicalHash": "31f014e1f74cca067b3c0e3f9352fa4bdc2fd8acb57f3bf6ee3c76658322029a",
+    "targetHash": "d8be7250a60094af0262d4bb8222742d5e43ce1db290133ffe94b74766607f0a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T16:06:57.642Z",
+    "glossaryVersion": "0"
+  }
+}

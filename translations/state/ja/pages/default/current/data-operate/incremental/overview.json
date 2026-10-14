@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/incremental/overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/incremental/overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/incremental/overview.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "df1f7e70c9f4d746cfec7229a129026bfc5cd4f93ce5280a4c7bf7a06870b4ba",
+    "sourceTechnicalHash": "71b79e2cd2eb2e597b3b05b341ce52e7aba562de3f11596e6bf486fcc0c7f19c",
+    "targetHash": "bd6e1142ae93b178eccfd661c491287ac9ef9a3d726c3f7be058472ab78c5f53",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T16:06:57.644Z",
+    "glossaryVersion": "0"
+  }
+}
