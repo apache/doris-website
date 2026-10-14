@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/postgresql",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/postgresql.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/data-source/postgresql.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "e8387946d226975a14121576f95e02d32534e3fdcc40084bc0207e7980c33e81",
+    "sourceTechnicalHash": "312f41c983e2249aa30329be3d58c600dd377495549b55dbd19b6027b7baa857",
+    "targetHash": "152fb51ff359474f07ab4b0d121e3ce273626582ddb4a066d71ce0c9ae64aaba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:56:43.008Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/insert-into-values-manual",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/insert-into-values-manual.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/insert-into-values-manual.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "1f9b2dc29ddada32e9ee16d24f1f7874eb7012a6a68c41d88ef58a7330958191",
+    "sourceTechnicalHash": "2f4d8df5b47745d46f4a4e2736f7376d5ae8166a743c0016a9c26e91078f2661",
+    "targetHash": "742a92ed6928d60e50ece38536ada5680e3dff8a44ec6f007f91253287915792",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:56:43.009Z",
+    "glossaryVersion": "0"
+  }
+}

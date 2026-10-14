@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/huawei-obs",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/huawei-obs.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/data-source/huawei-obs.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "7877cd099e94c6c79d957432d5447f89e615e82b4e1be810b7b817e9cf1fa9cc",
+    "sourceTechnicalHash": "728330a8d52ce02bc54b4e48e2cf3ea9936f8f9eb4d6630d008cf72530e249b3",
+    "targetHash": "7bade07a68ffc8cb970c41c6b1cc591f43cc8dc5c938c922c293e2397fbaffd5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:56:43.008Z",
+    "glossaryVersion": "0"
+  }
+}
