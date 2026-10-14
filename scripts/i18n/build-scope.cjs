@@ -46,9 +46,13 @@ function buildScope(files, versions) {
         else {languages.add('en'); build();}
     }
     for (const version of wanted) if (!active.includes(version)) {wanted.delete(version); retired.add(version);}
+    const selected = locales.filter(locale => languages.has(locale));
     return {tier, skip_build: tier === 'skip', need_full_build: tier === 'full',
         docs_versions: tier === 'full' ? '' : active.filter(version => wanted.has(version)).join(',') || versions[0] || 'current',
-        locales: locales.filter(locale => languages.has(locale)), enable_ja: languages.has('ja'),
+        locales: selected, enable_ja: languages.has('ja'),
+        // A subset build cannot prove cross-locale reciprocity, so the caller
+        // must say whether it built the whole configured locale set.
+        partial_build: selected.length !== locales.length,
         json: [...json], retired: [...retired]};
 }
 if (require.main === module) {
@@ -60,7 +64,8 @@ if (require.main === module) {
     for (const file of plan.json) if (fs.existsSync(file)) JSON.parse(fs.readFileSync(file,'utf8'));
     console.log(JSON.stringify({files, ...plan}, null, 2));
     if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT,
-        Object.entries({...plan, locale_args: plan.locales.map(locale => `--locale ${locale}`).join(' '), locale_count: plan.locales.length})
+        Object.entries({...plan, locale_args: plan.locales.map(locale => `--locale ${locale}`).join(' '),
+            locale_count: plan.locales.length, locale_csv: plan.locales.join(',')})
             .filter(([key]) => !['json','retired','locales'].includes(key)).map(([key,value]) => `${key}=${value}\n`).join(''));
 }
 module.exports = {buildScope};

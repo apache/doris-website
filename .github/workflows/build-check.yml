@@ -109,15 +109,21 @@ jobs:
                       exit 0
                   fi
 
-                  echo "Building with DOCS_VERSIONS=${DOCS_VERSIONS:-all}"
+                  echo "Building with DOCS_VERSIONS=${DOCS_VERSIONS:-all} LOCALES=${{ steps.detect.outputs.locale_csv }}"
                   if [ "${{ steps.detect.outputs.locale_count }}" = "1" ] && [ "${{ steps.detect.outputs.enable_ja }}" != "true" ]; then
                       PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build ${{ steps.detect.outputs.locale_args }}
                   else
                       # Every locale gets a separate Node process and its real prefix.
-                      yarn build:locales
+                      # Changes that can only affect some locales build just those.
+                      yarn build:locales --locales "${{ steps.detect.outputs.locale_csv }}"
                   fi
                   if [ "${{ steps.detect.outputs.enable_ja }}" = "true" ]; then
-                      node scripts/i18n/verify-static.cjs --site build --manifest .i18n-build/manifests/ja.json
+                      # A locale subset cannot render the English or Chinese
+                      # counterparts, so cross-locale assertions are reported as
+                      # skipped here. Publishing still verifies the whole site.
+                      VERIFY_PARTIAL=""
+                      if [ "${{ steps.detect.outputs.partial_build }}" = "true" ]; then VERIFY_PARTIAL="--partial"; fi
+                      node scripts/i18n/verify-static.cjs --site build --manifest .i18n-build/manifests/ja.json $VERIFY_PARTIAL
                   fi
                   rm -rf build
 
