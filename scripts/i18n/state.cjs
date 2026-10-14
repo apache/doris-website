@@ -19,6 +19,11 @@ function loadConfig(root) {
             throw new Error(`Invalid translation locale/sourceLocale: ${locale}`);
         }
         if (!Array.isArray(settings.sourceOverrides)) throw new Error(`Missing sourceOverrides for ${locale}`);
+        if (settings.searchContextLabels !== undefined
+            && (!settings.searchContextLabels || typeof settings.searchContextLabels !== 'object'
+                || Object.values(settings.searchContextLabels).some(label => typeof label !== 'string' || !label.trim()))) {
+            throw new Error(`Invalid searchContextLabels for ${locale}`);
+        }
         const keys = new Set();
         for (const override of settings.sourceOverrides) {
             const key = identity({...override, locale});
@@ -29,6 +34,16 @@ function loadConfig(root) {
         }
     }
     return config;
+}
+
+// Locales the render path manages: translation state, status manifests and the
+// localized search index exist only for these. Every other configured locale is
+// served by the native per-file fallback alone, so it needs none of this.
+// Restricting the result to the enabled locales keeps a disabled locale from
+// activating the adapter or its status plugin.
+function managedLocales(root, enabled) {
+    const configured = Object.keys(loadConfig(root).locales);
+    return enabled === undefined ? configured : configured.filter(locale => enabled.includes(locale));
 }
 
 const stateRoot = locale => `translations/state/${locale}`;
@@ -132,5 +147,5 @@ function decide({page, source, target, record, technicalHash}) {
     return result('stale_unknown');
 }
 
-module.exports = {hash, identity, relative, loadConfig, loadRecords, loadRecordsAt,
+module.exports = {hash, identity, relative, loadConfig, managedLocales, loadRecords, loadRecordsAt,
     stateFileFor, listShardFiles, sourceLocaleFor, decide};

@@ -76,8 +76,8 @@ jobs:
                 BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
                 node scripts/i18n/build-scope.cjs "$BASE_SHA"
 
-            - name: Prepare swap for Japanese build
-              if: steps.detect.outputs.enable_ja == 'true' && steps.detect.outputs.skip_build != 'true'
+            - name: Prepare swap for the localized build
+              if: steps.detect.outputs.enabled_locales != '' && steps.detect.outputs.skip_build != 'true'
               run: |
                   sudo fallocate -l 8G /mnt/japanese-build-check-swap
                   sudo chmod 600 /mnt/japanese-build-check-swap
@@ -87,7 +87,7 @@ jobs:
             - name: Build
               env:
                   DOCS_VERSIONS: ${{ steps.detect.outputs.docs_versions }}
-                  DORIS_ENABLE_JA: ${{ steps.detect.outputs.enable_ja }}
+                  DORIS_ENABLE_LOCALES: ${{ steps.detect.outputs.enabled_locales }}
                   PWA_SERVICE_WORKER_URL: https://doris.apache.org/sw.js
               run: |
                   npm install -g yarn
@@ -96,6 +96,7 @@ jobs:
                   yarn
                   yarn key-features:generate
                   node --test scripts/i18n/__tests__/t04.test.cjs
+                  node --test scripts/i18n/__tests__/locale-registry.test.cjs
                   node --test scripts/i18n/__tests__/planner.test.cjs
                   node --test scripts/i18n/__tests__/translation-engine.test.cjs
                   node --test scripts/i18n/__tests__/workflow.test.cjs
@@ -110,15 +111,15 @@ jobs:
                   fi
 
                   echo "Building with DOCS_VERSIONS=${DOCS_VERSIONS:-all}"
-                  if [ "${{ steps.detect.outputs.locale_count }}" = "1" ] && [ "${{ steps.detect.outputs.enable_ja }}" != "true" ]; then
+                  if [ "${{ steps.detect.outputs.locale_count }}" = "1" ] && [ "${{ steps.detect.outputs.enabled_locales }}" = "" ]; then
                       PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build ${{ steps.detect.outputs.locale_args }}
                   else
                       # Every locale gets a separate Node process and its real prefix.
                       yarn build:locales
                   fi
-                  if [ "${{ steps.detect.outputs.enable_ja }}" = "true" ]; then
-                      node scripts/i18n/verify-static.cjs --site build --manifest .i18n-build/manifests/ja.json
-                  fi
+                  for LOCALE in $(echo "${{ steps.detect.outputs.enabled_locales }}" | tr ',' ' '); do
+                      node scripts/i18n/verify-static.cjs --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
+                  done
                   rm -rf build
 
             - name: Japanese translation gate

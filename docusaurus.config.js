@@ -10,8 +10,12 @@ const path = require('path');
 const translationDocsPlugin = require('./scripts/i18n/docs-plugin.cjs');
 const translationStatusPlugin = require('./scripts/i18n/status-plugin.cjs');
 const searchPlugin = require('./scripts/i18n/search-plugin.cjs');
-const ENABLE_JA = process.env.DORIS_ENABLE_JA === 'true';
-const {enabledLocales} = require('./config/i18n');
+const {enabledLocales, enabledLocaleRecords} = require('./config/i18n');
+const {managedLocales} = require('./scripts/i18n/state.cjs');
+const ENABLED_LOCALES = enabledLocales();
+// Locales with translation state that are enabled in this build. Empty whenever
+// no localized content is being served, which disables the whole render path.
+const MANAGED_LOCALES = managedLocales(__dirname, ENABLED_LOCALES);
 
 const BRAND_THEME_BOOTSTRAP = `(function () {
     var theme = 'doris';
@@ -92,14 +96,13 @@ function buildRedirectIndex() {
         (index[to] = index[to] || []).push(...froms);
     };
 
-    // /docs and /zh-CN/docs land on the default stable version's entry doc.
-    // `lastVersion: '4.x'` makes 4.x the stable version but its `path: '4.x'`
-    // keeps it under /docs/4.x/, so the bare /docs route has no generated
-    // page without this redirect.
-    add('/docs/4.x/getting-started/what-is-apache-doris', '/docs');
-    add('/zh-CN/docs/4.x/getting-started/what-is-apache-doris', '/zh-CN/docs');
-    if (ENABLE_JA) {
-        add('/ja/docs/4.x/getting-started/what-is-apache-doris', '/ja/docs');
+    // Every locale lands its bare docs route on the default stable version's
+    // entry doc. `lastVersion: '4.x'` makes 4.x the stable version but its
+    // `path: '4.x'` keeps it under /docs/4.x/, so the bare /docs route has no
+    // generated page without this redirect.
+    for (const locale of ENABLED_LOCALES) {
+        const prefix = locale === 'en' ? '' : `/${locale}`;
+        add(`${prefix}/docs/4.x/getting-started/what-is-apache-doris`, `${prefix}/docs`);
     }
 
     // Decommissioned standalone pages whose content moved into the
@@ -291,18 +294,9 @@ const config = {
     trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
-        locales: enabledLocales(),
-        localeConfigs: {
-            en: {
-                label: 'English',
-                htmlLang: 'en-US',
-            },
-            'zh-CN': {
-                label: '中文',
-                htmlLang: 'zh-Hans-CN',
-            },
-            ...(ENABLE_JA && { ja: { label: '日本語', htmlLang: 'ja' } }),
-        },
+        locales: ENABLED_LOCALES,
+        localeConfigs: Object.fromEntries(enabledLocaleRecords()
+            .map(({code, label, htmlLang}) => [code, {label, htmlLang}])),
     },
     headTags: [
         {
@@ -362,7 +356,7 @@ const config = {
     },
     plugins: [
         SKIP_DOCS ? null : [translationDocsPlugin, MAIN_DOCS_OPTIONS],
-        ENABLE_JA ? translationStatusPlugin : null,
+        MANAGED_LOCALES.length ? translationStatusPlugin : null,
         'docusaurus-plugin-sass',
         'docusaurus-plugin-matomo',
         // Use custom blog plugin

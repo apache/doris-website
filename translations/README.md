@@ -1,14 +1,22 @@
 # Documentation translation state
 
-Japanese remains opt-in (`DORIS_ENABLE_JA=true`). Builds are static and never
-contact a translation service. English and Chinese retain their existing native
-content selection when Japanese is disabled.
+A locale under translation stays opt-in. `DORIS_ENABLE_LOCALES` lists the ones a
+build should serve, and a developer can switch a single one on with its own
+`DORIS_ENABLE_<LANG>` flag instead. Both are read by `config/i18n.js`, which is
+also where a new locale's code, label, `htmlLang` and opt-in state are declared;
+`docusaurus.config.js` and the render path read that registry rather than naming
+a language. Builds are static and never contact a translation service. English
+and Chinese retain their existing native content selection when no managed locale
+is enabled.
 
-`config.json` declares the source policy. English is the default. A
-`sourceOverrides` entry identifies `pluginId`, `version`, `docId` and
-`sourceLocale` (`en` or `zh-CN`). Overrides apply only to nodes registered by the
-English docs plugin. A Chinese-only file is reported as
+`config.json` declares the source policy for every managed locale. English is
+the default source. A `sourceOverrides` entry identifies `pluginId`, `version`,
+`docId` and `sourceLocale` (`en` or `zh-CN`). Overrides apply only to nodes
+registered by the English docs plugin. A Chinese-only file is reported as
 `unsupported_source_route`; setting an override does not create its route.
+`searchContextLabels` maps a search context path (`docs/dev`, `docs/4.x`,
+`community`) to the label that locale's search page shows; a locale without it
+shows the raw context path.
 
 ## State schema, version 1
 

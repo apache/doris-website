@@ -1,5 +1,7 @@
-// Reuse the installed search plugin for EN/ZH. Japanese needs an index of
-// reviewed, current targets only; its native postBuild includes fallback HTML.
+// Reuse the installed search plugin for the source locales. A managed locale
+// needs an index of reviewed, current targets only; the native postBuild
+// includes fallback HTML. Its analyzer comes from the locale language, and its
+// context labels from the translation configuration.
 const fs = require('node:fs');
 const path = require('node:path');
 const {createHash} = require('node:crypto');
@@ -9,6 +11,7 @@ const {processPluginOptions} = require('@yang1666204/docusaurus-search-local/dis
 const {processDocInfos} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/processDocInfos');
 const {scanDocuments} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/scanDocuments');
 const {buildIndex} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/buildIndex');
+const {loadConfig, managedLocales} = require('./state.cjs');
 
 const contexts = ['docs/dev', 'docs/4.x', 'community'];
 const normalize = url => url.replace(/\/+$/, '');
@@ -18,12 +21,14 @@ function groupFor(page) {
     if (page.pluginId === 'community' && page.version === 'current') return 'community';
     return null;
 }
-function japaneseOptions(options) {
-    return {...options, language:['ja'], docsRouteBasePath:['docs','community','ja/docs','ja/community'],
-        searchContextByPaths:contexts.map(value => ({path:value,label:{ja:value === 'community' ? 'コミュニティ' : value === 'docs/dev' ? 'Dev ドキュメント' : '4.x ドキュメント'}})),
+function localizedOptions(options, locale, labels) {
+    return {...options, language:[locale.split('-')[0]],
+        docsRouteBasePath:['docs','community',`${locale}/docs`,`${locale}/community`],
+        // A locale without configured labels falls back to the context path.
+        searchContextByPaths:contexts.map(value => ({path:value,label:{[locale]:labels?.[value] ?? value}})),
         useAllContextsWithNoSearchContext:true, ignoreFiles:[]};
 }
-function targetFingerprint(root) {
+function targetFingerprint(root, locale) {
     const digester = createHash('sha256');
     function scan(dir) {
         if (!fs.existsSync(dir)) return;
@@ -36,8 +41,8 @@ function targetFingerprint(root) {
             }
         }
     }
-    scan(path.join(root,'i18n/ja'));
-    scan(path.join(root,'translations/state/ja'));
+    scan(path.join(root,'i18n',locale));
+    scan(path.join(root,'translations/state',locale));
     for (const dir of ['docs','versioned_docs/version-4.x','community']) scan(path.join(root,dir));
     return digester.digest('hex').slice(0,16);
 }
@@ -49,23 +54,23 @@ function indexFilename(context) {
     if (!/^search-index\{dir\}(?:-[a-f0-9]+)?\.json$/.test(value)) throw new Error('Unexpected search index filename');
     return value;
 }
-function japanesePages(plugins) {
+function localizedPages(plugins, locale) {
     const selected = new Map();
     for (const plugin of plugins.filter(item => item.name === 'docusaurus-plugin-content-docs')) {
         for (const page of plugin.content?.translationManifest?.pages || []) {
             const group = groupFor(page);
-            if (group && page.status === 'current' && page.useTarget && page.indexable)
+            if (page.locale === locale && group && page.status === 'current' && page.useTarget && page.indexable)
                 selected.set(normalize(page.permalink), group);
         }
     }
     return selected;
 }
-async function buildJapaneseIndex(buildData, config, filename) {
-    const selected = japanesePages(buildData.plugins || []);
+async function buildLocalizedIndex(buildData, config, filename, locale) {
+    const selected = localizedPages(buildData.plugins || [], locale);
     const nativePaths = processDocInfos(buildData, config).flatMap(item => item.paths);
     const unique = new Map();
     for (const item of nativePaths) if (selected.has(normalize(item.url))) unique.set(normalize(item.url), item);
-    if (unique.size !== selected.size) throw new Error(`Japanese search routes missing in static output: ${selected.size - unique.size}`);
+    if (unique.size !== selected.size) throw new Error(`Localized search routes missing in static output: ${selected.size - unique.size}`);
     const allDocuments = await scanDocuments([...unique.values()], config);
     const write = (group, documents) => {
         const name = filename.replace('{dir}', group ? `-${group.replace(/\//g,'-')}` : '');
@@ -73,30 +78,31 @@ async function buildJapaneseIndex(buildData, config, filename) {
     };
     for (const group of contexts) write(group, allDocuments.map(documents => documents.filter(doc => selected.get(normalize(doc.u)) === group)));
     write('',allDocuments);
-    fs.writeFileSync(path.join(buildData.outDir,'japanese-search-summary.json'), JSON.stringify({schemaVersion:1,
+    fs.writeFileSync(path.join(buildData.outDir,`${locale}-search-summary.json`), JSON.stringify({schemaVersion:1,locale,
         indexedPages:selected.size, contexts:Object.fromEntries(contexts.map(group => [group,[...selected.values()].filter(value => value === group).length]))})+'\n');
 }
 function searchPlugin(context, options) {
-    if (context.i18n.currentLocale !== 'ja') return native(context,options);
-    const jaOptions = japaneseOptions(options);
-    const plugin = native(context,jaOptions);
-    const config = processPluginOptions(jaOptions,context);
+    const locale = context.i18n.currentLocale;
+    if (!managedLocales(context.siteDir, context.i18n.locales).includes(locale)) return native(context,options);
+    const localized = localizedOptions(options, locale, loadConfig(context.siteDir).locales[locale]?.searchContextLabels);
+    const plugin = native(context,localized);
+    const config = processPluginOptions(localized,context);
     const constants = path.join(context.generatedFilesDir,'@yang1666204/docusaurus-search-local/default/generated-constants.js');
     const generated = fs.readFileSync(constants,'utf8');
-    const fingerprint = targetFingerprint(context.siteDir);
+    const fingerprint = targetFingerprint(context.siteDir, locale);
     const updated = generated.replace(/(export const searchIndexUrl = )("[^"\n]+")/,
         (_,prefix,value) => {
             const url = JSON.parse(value);
-            return prefix + JSON.stringify(`${url}${url.includes('?') ? '&' : '?'}ja=${fingerprint}`);
+            return prefix + JSON.stringify(`${url}${url.includes('?') ? '&' : '?'}${locale}=${fingerprint}`);
         });
-    if (updated === generated) throw new Error('Could not fingerprint Japanese search index');
+    if (updated === generated) throw new Error('Could not fingerprint the localized search index');
     fs.writeFileSync(constants,updated);
     const filename = indexFilename(context);
-    return {...plugin, postBuild: buildData => buildJapaneseIndex(buildData,config,filename)};
+    return {...plugin, postBuild: buildData => buildLocalizedIndex(buildData,config,filename,locale)};
 }
 module.exports = searchPlugin;
 module.exports.validateOptions = nativeModule.validateOptions;
-module.exports.japaneseOptions = japaneseOptions;
+module.exports.localizedOptions = localizedOptions;
 module.exports.groupFor = groupFor;
-module.exports.japanesePages = japanesePages;
-module.exports.buildJapaneseIndex = buildJapaneseIndex;
+module.exports.localizedPages = localizedPages;
+module.exports.buildLocalizedIndex = buildLocalizedIndex;

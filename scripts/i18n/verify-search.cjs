@@ -5,7 +5,7 @@ const http = require('node:http');
 const {chromium} = require('playwright');
 
 async function verify({site,devOnly = false}) {
-    const manifest = JSON.parse(fs.readFileSync(path.join(site,'ja','japanese-search-summary.json'),'utf8'));
+    const manifest = JSON.parse(fs.readFileSync(path.join(site,'ja','ja-search-summary.json'),'utf8'));
     assert.deepEqual(Object.keys(manifest.contexts).sort(),['community','docs/4.x','docs/dev'].sort());
     assert.equal(manifest.indexedPages,Object.values(manifest.contexts).reduce((a,b)=>a+b,0));
     const indexFiles = ['search-index.json','search-index-docs-dev.json','search-index-docs-4.x.json','search-index-community.json'];

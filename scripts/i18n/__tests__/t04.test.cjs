@@ -4,21 +4,22 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {buildScope} = require('../build-scope.cjs');
-const {japanesePages} = require('../search-plugin.cjs');
+const {localizedPages} = require('../search-plugin.cjs');
 const {sidebarAudit} = require('../audit-coverage.cjs');
 const {structure,alignHeadings} = require('../structure.cjs');
 const {protectionSignature} = require('../protection.cjs');
 const versions = ['4.x','3.x','2.1'];
 
 test('PR build scope separates content locales, shared inputs, and retired versions', () => {
+    const managed = ['ja'];
     assert.deepEqual(buildScope(['docs/a.md'],versions).locales,['en']);
     assert.deepEqual(buildScope(['i18n/zh-CN/docusaurus-plugin-content-docs/current/a.md'],versions).locales,['zh-CN']);
-    const japanese = buildScope(['i18n/ja/docusaurus-plugin-content-docs/version-4.x/a.md'],versions);
+    const japanese = buildScope(['i18n/ja/docusaurus-plugin-content-docs/version-4.x/a.md'],versions,managed);
     assert.deepEqual(japanese.locales,['ja']);
     assert.equal(japanese.docs_versions,'4.x');
-    assert.equal(japanese.enable_ja,true);
+    assert.equal(japanese.enabled_locales,'ja');
     const shard = 'translations/state/ja/pages/default/4.x/guide.json';
-    const stateOnly = buildScope([shard],versions);
+    const stateOnly = buildScope([shard],versions,managed);
     assert.deepEqual(stateOnly.locales,['ja']);
     assert.equal(stateOnly.docs_versions,'4.x');
     assert.deepEqual(stateOnly.json,[shard]);
@@ -27,18 +28,26 @@ test('PR build scope separates content locales, shared inputs, and retired versi
     assert.deepEqual(buildScope(['.github/workflows/manual-deploy-website.yml'],versions).locales,['en','zh-CN','ja']);
     assert.equal(buildScope(['versions.json'],versions).need_full_build,true);
     assert.deepEqual(buildScope(['versioned_docs/version-1.2/a.md'],versions).retired,['1.2']);
-    assert.equal(buildScope(['i18n/ja/code.json'],versions).skip_build,false);
-    assert.equal(buildScope(['i18n/zh-CN/code.json'],versions).skip_build,true);
+    // Only a managed locale renders dictionary changes, so only its dictionary
+    // change needs a build.
+    assert.equal(buildScope(['i18n/ja/code.json'],versions,managed).skip_build,false);
+    assert.equal(buildScope(['i18n/ja/code.json'],versions).skip_build,true);
+    assert.equal(buildScope(['i18n/zh-CN/code.json'],versions,managed).skip_build,true);
+    assert.deepEqual(buildScope(['translations/config.json'],versions,managed).locales,['ja']);
     assert.throws(() => buildScope(['i18n/fr/docusaurus-plugin-content-docs/current/a.md'],versions),/Unconfigured/);
+    assert.throws(() => buildScope(['translations/state/fr/docs.json'],versions,managed),/Unconfigured/);
 });
 
-test('Japanese index admits only current, reviewed and in-scope native targets', () => {
-    const page = (pluginId,version,status='current',indexable=true) => ({pluginId,version,status,indexable,useTarget:true,
-        permalink:`/ja/${pluginId}/${version}/${status}/${indexable}/`});
+test('A localized index admits only current, reviewed and in-scope native targets', () => {
+    const page = (pluginId,version,status='current',indexable=true,locale='ja') => ({pluginId,version,status,indexable,useTarget:true,locale,
+        permalink:`/${locale}/${pluginId}/${version}/${status}/${indexable}/`});
     const pages = [page('default','current'),page('default','4.x'),page('community','current'),
         page('default','3.x'),page('default','current','stale_unknown'),page('default','current','current',false)];
-    const found = japanesePages([{name:'docusaurus-plugin-content-docs',content:{translationManifest:{pages}}}]);
+    const found = localizedPages([{name:'docusaurus-plugin-content-docs',content:{translationManifest:{pages}}}],'ja');
     assert.deepEqual([...found.values()],['docs/dev','docs/4.x','community']);
+    // Another locale's pages never enter this locale's index.
+    assert.equal(localizedPages([{name:'docusaurus-plugin-content-docs',content:{translationManifest:{pages:pages.concat(page('default','current','current',true,'ko'))}}}],'ja').size,3);
+    assert.equal(localizedPages([{name:'docusaurus-plugin-content-docs',content:{translationManifest:{pages}}}],'ko').size,0);
 });
 
 test('sidebar audit discovers new native keys without a snapshot allowlist', () => {

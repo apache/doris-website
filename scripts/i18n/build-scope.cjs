@@ -1,9 +1,15 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {locales} = require('../../config/i18n');
+const {locales, localeRegistry} = require('../../config/i18n');
+const {managedLocales} = require('./state.cjs');
+// Locales that stay opt-in, so CI has to enable exactly the ones in scope.
+const optionalLocales = localeRegistry.filter(locale => locale.optional).map(locale => locale.code);
 
-function buildScope(files, versions) {
+// `managed` lists the locales whose content carries translation state. A change
+// to one of their dictionaries or state files needs a real render build, while
+// the same change for a source-only locale does not.
+function buildScope(files, versions, managed = []) {
     const active = ['current', ...versions];
     const wanted = new Set(), languages = new Set(), json = new Set(), retired = new Set();
     let tier = 'skip';
@@ -19,8 +25,9 @@ function buildScope(files, versions) {
             const locale = match[1], content = match[2];
             if (content.endsWith('.json')) {
                 json.add(file);
-                // Japanese dictionary changes need real rendering validation.
-                if (locale === 'ja') {languages.add(locale); build();}
+                // A managed locale's dictionary changes rendered UI text, which
+                // only a real render build validates.
+                if (managed.includes(locale)) {languages.add(locale); build();}
             } else {
                 languages.add(locale); build();
                 const version = content.match(/^docusaurus-plugin-content-docs\/(current|version-([^/]+))\//);
@@ -34,10 +41,15 @@ function buildScope(files, versions) {
         else if (/^(src|config)\//.test(file) || ['docusaurus.config.js','package.json','yarn.lock','tailwind.config.js','tsconfig.json'].includes(file)
             || /^scripts\/(key-features|last-update)\//.test(file) || /^scripts\/(patch-search-tokenize.js|build-locales.cjs|build-locale.cjs)$/.test(file)
             || /^scripts\/i18n\/(docs-plugin|status-plugin|state|structure)\.cjs$/.test(file)) shared();
-        else if (['translations/config.json', 'translations/state/ja/docs.json',
-            'translations/state/ja/shards.schema.json'].includes(file)) {languages.add('ja'); build();}
-        else if ((match = file.match(/^translations\/state\/ja\/pages\/[^/]+\/([^/]+)\//))) {
-            languages.add('ja'); wanted.add(match[1]); json.add(file); build();
+        // Translation configuration applies to every managed locale at once.
+        else if (file === 'translations/config.json') {managed.forEach(locale => languages.add(locale)); build();}
+        else if ((match = file.match(/^translations\/state\/([^/]+)\/[^/]+\.json$/))) {
+            if (!locales.includes(match[1])) throw new Error(`Unconfigured locale: ${match[1]}`);
+            languages.add(match[1]); build();
+        }
+        else if ((match = file.match(/^translations\/state\/([^/]+)\/pages\/[^/]+\/([^/]+)\//))) {
+            if (!locales.includes(match[1])) throw new Error(`Unconfigured locale: ${match[1]}`);
+            languages.add(match[1]); wanted.add(match[2]); json.add(file); build();
         }
         else if (file === 'static/.htaccess') shared();
         else if (/^(static|\.github|\.claude|\.agents|\.vscode|\.idea|scripts|website-quality-governance|translations|plan-doc)\//.test(file)
@@ -48,7 +60,9 @@ function buildScope(files, versions) {
     for (const version of wanted) if (!active.includes(version)) {wanted.delete(version); retired.add(version);}
     return {tier, skip_build: tier === 'skip', need_full_build: tier === 'full',
         docs_versions: tier === 'full' ? '' : active.filter(version => wanted.has(version)).join(',') || versions[0] || 'current',
-        locales: locales.filter(locale => languages.has(locale)), enable_ja: languages.has('ja'),
+        locales: locales.filter(locale => languages.has(locale)),
+        // Only the opt-in locales have to be switched on for the build.
+        enabled_locales: optionalLocales.filter(locale => languages.has(locale)).join(','),
         json: [...json], retired: [...retired]};
 }
 if (require.main === module) {
@@ -56,7 +70,7 @@ if (require.main === module) {
     const base = process.argv[2];
     if (!base) throw new Error('Usage: build-scope.cjs <base SHA>');
     const files = execFileSync('git', ['diff', '--name-only', base, 'HEAD'], {encoding:'utf8'}).trim().split('\n').filter(Boolean);
-    const plan = buildScope(files, JSON.parse(fs.readFileSync(path.join(root,'versions.json'))));
+    const plan = buildScope(files, JSON.parse(fs.readFileSync(path.join(root,'versions.json'))), managedLocales(root));
     for (const file of plan.json) if (fs.existsSync(file)) JSON.parse(fs.readFileSync(file,'utf8'));
     console.log(JSON.stringify({files, ...plan}, null, 2));
     if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT,

@@ -3,7 +3,12 @@
   "locales": {
     "ja": {
       "sourceLocale": "en",
-      "sourceOverrides": []
+      "sourceOverrides": [],
+      "searchContextLabels": {
+        "docs/dev": "Dev ドキュメント",
+        "docs/4.x": "4.x ドキュメント",
+        "community": "コミュニティ"
+      }
     }
   }
 }
