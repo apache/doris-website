@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-PARTITION-VERSION",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-PARTITION-VERSION.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-PARTITION-VERSION.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "2782f051e6917c20283a384716f78ba77e3914348659fe8e5ec600f57c91a0b5",
+    "sourceTechnicalHash": "f1b7d58f6b925b83cdeba2f8c741937c9e03178fbeb7fc87bf20f986f63ce7d2",
+    "targetHash": "f55bf71a0d9106304867feb37813c9b56124903c490d34f3f17b29f6f3d4a338",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:10:39.744Z",
+    "glossaryVersion": "0"
+  }
+}

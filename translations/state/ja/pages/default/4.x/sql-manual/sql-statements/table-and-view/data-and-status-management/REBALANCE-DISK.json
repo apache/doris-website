@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/REBALANCE-DISK",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/REBALANCE-DISK.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/REBALANCE-DISK.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "1d20365a3e82f81393f6e556fcf038de3ac66f0d1227fa5b97635aaa3dc25493",
+    "sourceTechnicalHash": "60a2b261a96c1a41f8b5e69e78ac5f5a3ed4f11f712aec3c2e38c5548eeb0cb2",
+    "targetHash": "97d0ac856ace9708f1a2e62f691f10ba573a91e5d95945ae4180f86f132faa13",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:10:39.742Z",
+    "glossaryVersion": "0"
+  }
+}

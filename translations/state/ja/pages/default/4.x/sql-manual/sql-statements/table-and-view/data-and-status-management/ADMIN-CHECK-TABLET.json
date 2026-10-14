@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-CHECK-TABLET",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-CHECK-TABLET.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-CHECK-TABLET.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "b6e27cfe11b6f3ee62fdd16ea1215f6fc72ffedf797f3c11743c039e52e42569",
+    "sourceTechnicalHash": "1b0920e6b44a5b9f5d722c76f57b9eca759061d6dc2dbd4e003b18a57a7e2dd2",
+    "targetHash": "0899b7adcbe5fd3012652b0eb05a94b53e1db77636e799a9adbfc40330762cef",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:10:39.744Z",
+    "glossaryVersion": "0"
+  }
+}
