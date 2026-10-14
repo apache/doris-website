@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "6e929513742565e816506c13ca9f31d0c056a4ab4b9f1c70aff0ef26a384bcac",
+    "sourceTechnicalHash": "f8b1209a68f3e4c0a30a8244226e58f8beee42dd22fe1c09a044ea8756414a68",
+    "targetHash": "3bfe7c31bf9304bdba323ca11be50d8e08eaf67aa8cdeac3f24ec5491a9f6d3f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T15:18:07.097Z",
+    "glossaryVersion": "0"
+  }
+}

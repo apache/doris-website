@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/file-format/csv",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/file-format/csv.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/file-format/csv.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "6297168b241c1ee49008b191d5b7554a8a8288187d382cdcccbec6f50b3d0cd5",
+    "sourceTechnicalHash": "80e2c218c6cb1dae8c9837a81866b06eb3705025c96bd6c69a9d455bb187e000",
+    "targetHash": "f9b8f477f7cae42dbdfaa5133c27fb5d6357c0cf45316c9597a1b675dc312ea2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T15:18:07.097Z",
+    "glossaryVersion": "0"
+  }
+}
