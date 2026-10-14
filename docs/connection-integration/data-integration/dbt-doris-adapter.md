@@ -26,7 +26,7 @@
 
 [dbt](https://docs.getdbt.com/docs/introduction) manages the transformation step in an ELT (Extract, Load, Transform) workflow. The `dbt-for-apache-doris` adapter compiles dbt models into Doris SQL and executes table creation, transformation, testing, and documentation operations through the Doris Frontend (FE) MySQL query port.
 
-Source data must already be loaded into Doris. The adapter performs transformations; it does not ingest or synchronize source data.
+Source data must already be queryable through Doris, either in Internal Catalog tables or through configured External Catalogs. The adapter performs transformations; it does not ingest or synchronize source data.
 
 :::caution
 
@@ -277,8 +277,10 @@ Create `models/iceberg_sample.sql`:
 ```sql
 {{ config(materialized='table', engine='iceberg') }}
 
-select 1 as id
+select cast(1 as int) as id
 ```
+
+The explicit `INT` cast avoids inferring `TINYINT`, which is not an Iceberg column type.
 
 Run `dbt run --select iceberg_sample`. It creates `iceberg_catalog.analytics.iceberg_sample`. The Catalog must exist; its database must exist or be creatable by dbt, and the target must be writable. `engine='iceberg'` emits an explicit engine clause; omitting `engine` lets Doris infer it from the target Catalog. Catalog-based inference was verified with Doris 4.1.3. Earlier Doris releases may require the explicit engine.
 
@@ -286,14 +288,14 @@ Run `dbt run --select iceberg_sample`. It creates `iceberg_catalog.analytics.ice
 | --- | --- |
 | `table` | Creates an Iceberg table; reruns replace it through backup and rename |
 | `incremental` | Supports `append`, `merge`, `insert_overwrite`, and `microbatch` as described below |
-| Seed and Snapshot | Supported; Snapshot publication and Seed full refresh use backup and rename. Ordinary Iceberg Seed reload uses overwrite or MERGE |
+| Seed and Snapshot | Supported; Snapshot publication and Seed full refresh use backup and rename. Ordinary reload uses INSERT OVERWRITE for unpartitioned tables; partitioned reload uses native MERGE and requires V2+. For V1 partitioned Seeds, use `dbt seed --full-refresh` |
 | `view` and `materialized_view` | Targets must be in Internal Catalog; Internal Catalog views and MVs can query External Catalog sources |
 
-Iceberg `merge` and `microbatch` require a Doris release with native Iceberg `MERGE INTO` and an Iceberg V2 or later table. These paths were verified on Doris 4.1.3; [Doris documents Iceberg MERGE as experimental since 4.1.0](../../lakehouse/catalogs/iceberg-catalog#merge-into). An external table replacement is not atomic: its name is briefly unavailable between renames, and a failure can leave the old table under a backup name. Use an isolated test project to validate your Doris release, Catalog connector, and recovery procedure before production use.
+Iceberg `merge`, `microbatch`, and partitioned Seed reload require a Doris release with native Iceberg `MERGE INTO` and an Iceberg V2 or later table. These paths were verified on Doris 4.1.3; [Doris documents Iceberg MERGE as experimental since 4.1.0](../../lakehouse/catalogs/iceberg-catalog#merge-into). An external table replacement is not atomic: its name is briefly unavailable between renames, and a failure can leave the old table under a backup name. Use an isolated test project to validate your Doris release, Catalog connector, and recovery procedure before production use.
 
 The adapter rejects model or column `constraints` declarations before writing a Table, View, Incremental, or MV target. Model contracts still check column names and types. Use `data_tests` such as `not_null` to check data after writing; these do not create database-enforced constraints.
 
-The [five runnable Doris demos](https://github.com/velodb/dbt-for-apache-doris/tree/v1.1.1/examples/doris-demos) cover models, tests, cross-database sources, incremental processing, snapshots, and asynchronous materialized views.
+The [five runnable Doris demos](https://github.com/velodb/dbt-for-apache-doris/tree/3fb9cc75f9dcdd756b472847728bbdf42fb3b128/examples/doris-demos) cover models, tests, cross-database sources, incremental processing, snapshots, and asynchronous materialized views. The demo setup defaults to `dbt-for-apache-doris==1.1.1`.
 
 <!-- Knowledge Type: Capability Reference / Configuration Parameters / Architecture Decision -->
 <!-- Use Case: Materialization selection / Incremental processing / Materialized views -->
@@ -467,7 +469,7 @@ For Iceberg targets, omit `overwrite_partitions` to use native dynamic overwrite
 
 ### Microbatch
 
-`microbatch` uses the dbt Core batch context. Configure an `event_time` field on each direct upstream resource and on the target model. For the `raw.orders` source created in the first-model example above, add this configuration to its existing table declaration:
+`microbatch` uses the dbt Core batch context. The following example targets an Internal Catalog OLAP table and overwrites one exact RANGE partition for each UTC window. Configure an `event_time` field on each direct upstream resource and on the target model. For the `raw.orders` source created in the first-model example above, add this configuration to its existing table declaration:
 
 ```yaml
 sources:
@@ -517,7 +519,7 @@ Doris also requires a positive `dynamic_partition.buckets` value when creating a
 
 :::caution
 
-For `append`, `merge`, and partition-scoped `insert_overwrite`, the adapter does not discover new or changed source rows automatically. The model SQL must return the intended batch. Whole-table `insert_overwrite` must return the complete target data. Each `merge` batch must contain unique `unique_key` values. dbt Core supplies Microbatch filtering from upstream resources configured with `event_time`, so Microbatch models do not need `is_incremental()`. Run `dbt run --full-refresh` after incompatible key, partition, or physical-layout changes. For Iceberg Microbatch, do not configure OLAP Dynamic Partition properties, named `overwrite_partitions`, or `partition_by_init`; each UTC window is replaced with native MERGE, including empty windows.
+For `append`, `merge`, and partition-scoped `insert_overwrite`, the adapter does not discover new or changed source rows automatically. The model SQL must return the intended batch. Whole-table `insert_overwrite` must return the complete target data. Each `merge` batch must contain unique `unique_key` values. dbt Core supplies Microbatch filtering from upstream resources configured with `event_time`, so Microbatch models do not need `is_incremental()`. Run `dbt run --full-refresh` after incompatible key, partition, or physical-layout changes. For Iceberg Microbatch, omit `unique_key`, `overwrite_partitions` (including column/value mappings), `partition_by_init`, and OLAP Dynamic Partition properties. If `partition_by` is configured, set `partition_type='LIST'`. Each UTC window is replaced with native MERGE, including empty windows.
 
 :::
 
