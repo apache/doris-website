@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/vector-index/quantization-survey",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/vector-index/quantization-survey.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/vector-index/quantization-survey.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "06364abeab7e4969077ba9c86e371cbc52572da6e8af06971ee2c1080161b709",
+    "sourceTechnicalHash": "083e288792511570276128551d82b746955fec728e5237f7dc89496eca0a4b57",
+    "targetHash": "d4b45e41eea333c02c0eb725106fe270c4df15ac8bb1783b328e32b4577c9be9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:29:57.402Z",
+    "glossaryVersion": "0"
+  }
+}
