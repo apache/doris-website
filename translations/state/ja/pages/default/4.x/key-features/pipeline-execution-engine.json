@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/pipeline-execution-engine",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/pipeline-execution-engine.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/pipeline-execution-engine.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "f74dd5ded6b023c9afe48ef694bb2d56adb0e7733e651dd10472c40d291ab6ea",
+    "sourceTechnicalHash": "be5541dd10432449622bb818a497fa3e6f15a3b67cc71f570452a8e5f21253da",
+    "targetHash": "0325a2d6ea8105fc728d501f758b196067bed9dcea6046a2d08b8d4df214dcd5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:20:55.868Z",
+    "glossaryVersion": "0"
+  }
+}

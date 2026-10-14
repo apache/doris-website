@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/managing-lake-table",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/managing-lake-table.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/managing-lake-table.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "e6c89d385b6b29afec0828343f8d0fabb388e7a532429d2edf31571bf9d0161e",
+    "sourceTechnicalHash": "6c97e921f034613ac9944ef9d077d72c572607ac0fa02c332acc2e00495ae1ee",
+    "targetHash": "e70873d53687a91addc7d174f7aad6234e4d8942d536a558287ba7e9962954b8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:20:55.867Z",
+    "glossaryVersion": "0"
+  }
+}
