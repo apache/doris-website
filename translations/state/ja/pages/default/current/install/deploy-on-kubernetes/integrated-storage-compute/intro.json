@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/integrated-storage-compute/intro",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/integrated-storage-compute/intro.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/integrated-storage-compute/intro.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "b1d5ba5805581c58b64404811d1b749b637e33214d3096b8bf5671c97a58619a",
+    "sourceTechnicalHash": "98038fec513aee6b8cf966e7bb2b1477e327e33d5dc696f4791f430de0dc7be3",
+    "targetHash": "b6522b2ba3f087ec0d8a470383c73c4e144b7918f292ac5fbcadb236f3d5f8ba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T12:03:12.426Z",
+    "glossaryVersion": "0"
+  }
+}

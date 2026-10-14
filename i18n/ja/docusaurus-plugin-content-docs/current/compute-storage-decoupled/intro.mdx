@@ -1,0 +1,77 @@
+---
+{
+    "title": "ストレージ・コンピュート分離型の運用ガイド",
+    "language": "ja",
+    "description": "Apache Doris のストレージ・コンピュート分離型アーキテクチャの運用ガイド。コンピュートグループの管理、ストレージボールトの設定、ファイルキャッシュ、読み書き分離、クラスタのアップグレードについて説明します。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+ストレージ・コンピュート分離型アーキテクチャでは、コンピュートノードとリモート共有ストレージを分離し、コンピュートとストレージをそれぞれ独立して柔軟に拡張できます。このガイドでは、ストレージ・コンピュート分離型クラスタの設定と運用について説明します。
+
+## クラスタの運用
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="コンピュートグループの運用"
+    description="1 つ以上の BE ノードをまとめてコンピュートグループを構成します。ストレージ・コンピュート分離モードで、コンピュートグループを作成、拡張、管理する方法を説明します。"
+    link="managing-compute-cluster"
+/>
+
+<GettingStartedCard
+    title="ストレージボールトの管理"
+    description="ストレージ・コンピュート分離モードで使用するリモート共有ストレージ（Storage Vault）を設定します。複数のストレージボールトの設定と、テーブルごとの保存先の指定に対応しています。"
+    link="managing-storage-vault"
+/>
+
+<GettingStartedCard
+    title="データの回収"
+    description="ストレージ・コンピュート分離型アーキテクチャで、Doris が削除済みデータの占めるストレージ領域を安全かつ効率的に回収する仕組みと、データのライフサイクルの管理方法を説明します。"
+    link="recycler"
+/>
+
+<GettingStartedCard
+    title="アップグレード"
+    description="上流のワークロードへの影響を最小限に抑えながら、ローリングアップグレードでストレージ・コンピュート分離モードの Doris クラスタをアップグレードする手順を説明します。"
+    link="upgrade"
+/>
+</div>
+
+## ファイルキャッシュ
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="ファイルキャッシュの概要"
+    description="ローカルディスクのキャッシュでリモートストレージへのアクセスを高速化します。複数キューによる LRU 戦略、新しいコンピュートグループのキャッシュのウォームアップ、設定の詳細を説明します。"
+    link="file-cache/file-cache"
+/>
+
+<GettingStartedCard
+    title="ファイルキャッシュの内部構造"
+    description="ファイルキャッシュの実装を詳しく説明します。1 MB 境界に合わせた分割、プリフェッチの仕組み、ローカルファイルシステム上のブロックファイル管理を扱います。"
+    link="file-cache/file-cache-internals"
+/>
+
+<GettingStartedCard
+    title="ピアキャッシュからの読み取り"
+    description="ローカルの File Cache でミスした場合、オブジェクトストレージにフォールバックする前に、別の BE（他のコンピュートグループを含む）からブロックを読み取ります。スケールアウト時やグループ間でのコールドリードを高速化します。"
+    link="file-cache/file-cache-peer-read"
+/>
+</div>
+
+## 読み書き分離
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="読み書き分離"
+    description="File Cache の能動的な増分ウォームアップ機構により、アベイラビリティゾーンをまたぐ高可用性構成と読み書き分離構成に対応します。クエリのレイテンシーを短縮し、フェイルオーバー時の応答を高速化します。"
+    link="rw/read-write-separation"
+/>
+
+<GettingStartedCard
+    title="読み書き分離におけるキャッシュ最適化のベストプラクティス"
+    description="複数のコンピュートグループを使う読み書き分離構成でキャッシュヒット率を最適化し、読み取り専用コンピュートグループがリモートオブジェクトストレージから頻繁にデータを取得するのを防ぐことで、クエリ性能を高めます。"
+    link="rw/file-cache-rw-compute-group-best-practice"
+/>
+</div>

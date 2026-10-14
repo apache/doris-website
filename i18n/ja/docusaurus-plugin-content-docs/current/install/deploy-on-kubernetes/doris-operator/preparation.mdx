@@ -1,0 +1,47 @@
+---
+{
+    "title": "事前準備",
+    "language": "ja",
+    "description": "クラウドの Kubernetes サービスで Doris Operator を使用して Doris をデプロイする前の環境準備とデプロイに関する推奨事項。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Doris Operator を使用して Apache Doris をデプロイする前に、利用するクラウド環境の Kubernetes サービス、ノードのシステムパラメータ、イメージレジストリ、ストレージ、権限要件を確認してください。
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Alibaba Cloud Container Service でのデプロイに関する推奨事項"
+    description="Doris Operator を使用して Doris をデプロイする前に ACK または ACS を準備する"
+    link="on-alibaba"
+/>
+
+<GettingStartedCard
+    title="AWS EKS でのデプロイに関する推奨事項"
+    description="Doris Operator を使用して Doris をデプロイする前に Amazon EKS を準備する"
+    link="on-aws"
+/>
+</div>
+
+## Pod のセキュリティ要件
+
+現在、Doris の公式 FE および BE イメージは root ユーザーとして実行されます。起動スクリプトが `/opt/apache-doris` 配下の設定ファイルを更新し、システム設定を初期化する場合があるためです。デプロイ前に、Doris の名前空間に適用されるセキュリティポリシーが、コンテナを UID `0` で実行することを許可しているか確認してください。
+
+たとえば、`DorisCluster` リソースでコンテナのセキュリティコンテキストを明示的に設定できます。
+
+```yaml
+spec:
+  feSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+  beSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+```
+
+この設定によって Kubernetes のアドミッションポリシーが回避されるわけではありません。クラスターで `restricted` Pod Security Standard、または Kyverno や OPA Gatekeeper などによる root 以外での実行を義務付けるポリシーが適用されている場合は、クラスター管理者に Doris 用の名前空間単位またはワークロード単位の例外を作成するよう依頼してください。クラスター全体のポリシーを緩めないでください。
+
+BE に `enableWorkloadGroup: true` を設定すると、Doris Operator は cgroups を管理するために BE コンテナを特権モードで実行します。セキュリティポリシーで特権コンテナも許可されていることを確認するか、この機能を無効にしてください。
