@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "f78fbb4477b6958d6ac201f2b755b88bd767303a0267ecec4a0f401b5171e67a",
+    "sourceTechnicalHash": "a42f3e67df8f11c58c4c279aa203a76fbd82278562c8f6f80f867895c917d248",
+    "targetHash": "6279bbfb73220193e58b169bf078fa94e0e848eb51cbf198edcefc307f5b18c6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:24:55.483Z",
+    "glossaryVersion": "0"
+  }
+}

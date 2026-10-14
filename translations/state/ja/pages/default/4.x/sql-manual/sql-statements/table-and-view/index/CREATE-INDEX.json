@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/index/CREATE-INDEX",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/index/CREATE-INDEX.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/index/CREATE-INDEX.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "3bc081f389d53c69d8f4f6c2f6e2dc5a71f64762a5db16d90943f7c6d13532c6",
+    "sourceTechnicalHash": "1ca6c93822fd0d73214c02a6b80ad619f3d88781a1f00f5bc213343034bf0865",
+    "targetHash": "22b2d641ff73afe50f702892cb5bfed0dbd17e447a92a4b83a5587e9f33c50a7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:24:55.485Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/index/SHOW-INDEX",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/index/SHOW-INDEX.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/index/SHOW-INDEX.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "579760693bf7a56561ab1dd95517dfd71086b97f176c51e72d0ed9e0dfa60dc4",
+    "sourceTechnicalHash": "471d0b7e78478a6618db3e57a626c728a729a61f04d6406265e6c05a8805c000",
+    "targetHash": "d5395f75a57cf39bd801c83eaba6e8f23f2fefa010588e1997c5c256ee21efe6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:24:55.485Z",
+    "glossaryVersion": "0"
+  }
+}

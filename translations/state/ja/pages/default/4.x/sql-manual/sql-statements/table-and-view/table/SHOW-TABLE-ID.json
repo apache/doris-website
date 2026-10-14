@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/table/SHOW-TABLE-ID",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/table/SHOW-TABLE-ID.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/table/SHOW-TABLE-ID.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "6d50bc0b7e4b893d6ac9c40a24807d342d8bc1afad610df689a958ff66f7b11a",
+    "sourceTechnicalHash": "9166f5ae4da6a5b7c8738ace9c05ad6bb04b8b52f591f1b2dc6ccad4c2796063",
+    "targetHash": "a274d3fec2544ca794dab279e6eb3dba024fd6cf74cb1a4bb0cbec3bae9004b5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:24:55.484Z",
+    "glossaryVersion": "0"
+  }
+}

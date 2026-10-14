@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-COLOCATE-GROUP",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-COLOCATE-GROUP.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-COLOCATE-GROUP.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "69fcf417df7b5229a1a246b69d93c3463def9d6d38e51c694eeeac286d8d163f",
+    "sourceTechnicalHash": "da89dcb71da7021cf818c13a520443d7e6b229916c6fe67c371ed1aeb7b952be",
+    "targetHash": "ea898d79d0416e5ea11a6b53d0db6e36269dfc857035359f9896f44a187afa5f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:24:55.485Z",
+    "glossaryVersion": "0"
+  }
+}
