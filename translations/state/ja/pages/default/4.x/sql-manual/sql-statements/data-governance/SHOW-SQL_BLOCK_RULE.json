@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-governance/SHOW-SQL_BLOCK_RULE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-governance/SHOW-SQL_BLOCK_RULE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-governance/SHOW-SQL_BLOCK_RULE.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "d750ab9b04f2dab21da7634a1d81b3a95ecf5546aeb684bc4fa950b2c41de9ba",
+    "sourceTechnicalHash": "42ab7b9bff9d76197d9650e43b32ed8c9a5ec50d12b90aac04f30a2c6553810e",
+    "targetHash": "3eb05289ba854edf4edfc883a2b40cdb3e67f9633e316be06ce710dd620f3c6c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:58:17.484Z",
+    "glossaryVersion": "0"
+  }
+}
