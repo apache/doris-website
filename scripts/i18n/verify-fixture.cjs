@@ -106,7 +106,8 @@ async function main() {
     pages.push({...pages.find(page => page.docId === 'machine'), pluginId: 'community',
         sourcePath: 'community/machine.md', targetPath: 'i18n/ja/docusaurus-plugin-content-docs-community/current/machine.md'});
     await write('translations/config.json', JSON.stringify({schemaVersion: 1, locales: {ja: {sourceLocale: 'en',
-        sourceOverrides: ['chinese-source', 'chinese-only', 'chinese-draft', 'chinese-untranslated'].map(docId => ({pluginId: 'default', version: 'current', docId, sourceLocale: 'zh-CN'}))}}}));
+        sourceOverrides: ['chinese-source', 'chinese-only', 'chinese-draft', 'chinese-untranslated'].map(docId => ({pluginId: 'default', version: 'current', docId, sourceLocale: 'zh-CN'})),
+        languageName: 'Japanese', scriptPattern: '[\\u3040-\\u30ff\\u3400-\\u9fff]'}}}));
     await write('translations/state/ja/docs.json', JSON.stringify({schemaVersion: 1, pages}, null, 2));
     const relativeSource = '---\ntitle: Relative import\nlast_update:\n  date: 2026-01-01\n---\nimport Card from \'../src/components/Card.jsx\';\n\n## Usage\n\n<Card />\n';
     const relativeTarget = relativeSource.replace('Relative import', '相対パスのインポート')
@@ -119,9 +120,9 @@ async function main() {
         sourceHash:hash(relativeSource), targetHash:hash(relativeTarget), sourceTechnicalHash:(await structure(relativeSource,'.mdx')).technicalHash});
     await write('translations/state/ja/docs.json', JSON.stringify({schemaVersion: 1, pages}, null, 2));
     // Reuse the production components, including the single alternate emitter.
-    for (const file of ['src/utils/translation.ts', 'src/utils/japanese.ts', 'src/theme/SiteMetadata/index.tsx',
+    for (const file of ['src/utils/translation.ts', 'src/utils/localization.ts', 'src/theme/SiteMetadata/index.tsx',
         'src/theme/DocItem/Metadata/index.tsx', 'src/theme/DocItem/Content/index.tsx',
-        'src/theme/DocItem/Layout/TranslationStatus.tsx', 'src/theme/DocItem/Layout/JapaneseFallback.module.css']) {
+        'src/theme/DocItem/Layout/TranslationStatus.tsx', 'src/theme/DocItem/Layout/LocalizedNotice.module.css']) {
         await write(file, await fs.readFile(path.join(root, file), 'utf8'));
     }
     await write('src/theme/DocItem/Layout/index.tsx', `import React from 'react';
@@ -138,6 +139,7 @@ export default function Layout(props) {
  title: 'Fixture', url: 'https://doris.apache.org', baseUrl: '/', trailingSlash: true,
  i18n: {defaultLocale: 'en', locales: ['en','zh-CN','ja'], localeConfigs: {
  en: {htmlLang:'en-US'}, 'zh-CN': {htmlLang:'zh-Hans-CN'}, ja:{htmlLang:'ja'}}},
+ customFields: {translatedLocales: ['ja'], defaultLocalePageLocales: ['ja']},
  plugins: [[require(${JSON.stringify(path.join(root, 'scripts/i18n/docs-plugin.cjs'))}), {
  path:'docs', sidebarPath:false, lastVersion:'4.x', versions:{current:{path:'dev'},'4.x':{path:'4.x'}},showLastUpdateTime:true}],
  [require(${JSON.stringify(path.join(root, 'scripts/i18n/docs-plugin.cjs'))}), {id:'community', path:'community', routeBasePath:'community',sidebarPath:false}],
