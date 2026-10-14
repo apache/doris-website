@@ -39,13 +39,13 @@ ST_GEOGFROMWKB(<wkb_hex>)
 
 ## 参数
 
-| 参数 | 说明 |
+| 参数 | 描述 |
 | --- | --- |
 | `<wkb_hex>` | 包含标准二维 XY WKB 十六进制内容的 STRING。支持 Point、LineString、Polygon、MultiPoint、MultiLineString、MultiPolygon 和 GeometryCollection，包括 EMPTY 值；不支持 Z/M 和内嵌 SRID。 |
 
 ## 返回值
 
-返回可空的 `GEOGRAPHY`，默认参数为 `OGC:CRS84, spherical`。非法十六进制或 WKB、不支持的维度或 SRID、无穷坐标及超出地理范围的坐标返回 NULL。EMPTY 是几何值，与 SQL NULL 不同。
+返回可空的 `GEOGRAPHY` 类型值，默认参数为 `OGC:CRS84, spherical`。非法十六进制或 WKB、不支持的维度或 SRID、无穷坐标及超出地理范围的坐标返回 NULL。EMPTY 是几何值，与 SQL NULL 不同。
 
 ## 示例
 

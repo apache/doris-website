@@ -45,7 +45,7 @@ ST_GEOGFROMWKB(<wkb_hex>)
 
 ## Return Value
 
-Returns nullable `GEOGRAPHY` with default parameters `OGC:CRS84, spherical`. Invalid hexadecimal/WKB, unsupported dimensions/SRID, infinite coordinates or coordinates outside the geographic range return NULL. EMPTY is a geometry value distinct from SQL NULL.
+Returns a nullable value of type `GEOGRAPHY` with default parameters `OGC:CRS84, spherical`. Invalid hexadecimal/WKB, unsupported dimensions/SRID, infinite coordinates or coordinates outside the geographic range return NULL. EMPTY is a geometry value distinct from SQL NULL.
 
 ## Example
 
