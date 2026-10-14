@@ -350,6 +350,14 @@ const config = {
         // matching secret in this repository or in a Docusaurus environment variable.
         profileAnalysisHCaptchaSiteKey:
             process.env.PROFILE_ANALYSIS_HCAPTCHA_SITE_KEY ?? '40f4820a-dc48-466a-b106-960a57ac5bd0',
+        // Locale facts the browser needs, so UI code reads configuration rather
+        // than naming a language. `translatedLocales` carry per-document
+        // translation state and render its notices; `defaultLocalePageLocales`
+        // show ordinary pages from the default locale, so a link to one must
+        // target it directly.
+        translatedLocales: MANAGED_LOCALES,
+        defaultLocalePageLocales: enabledLocaleRecords()
+            .filter(locale => locale.ordinaryPages === false).map(locale => locale.code),
     },
     future: {
         experimental_faster: true,

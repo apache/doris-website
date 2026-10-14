@@ -6,7 +6,7 @@ import Heading from '@theme/Heading';
 import MDXContent from '@theme/MDXContent';
 import type {Props} from '@theme/DocItem/Content';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { isJapaneseFallback } from '@site/src/utils/japanese';
+import { isFallbackSource, isTranslatedLocale } from '@site/src/utils/localization';
 import {docTranslation} from '@site/src/utils/translation';
 
 /**
@@ -34,8 +34,8 @@ export default function DocItemContent({children}: Props): JSX.Element {
   const {pluginId} = useDocsVersion();
   const {metadata} = useDoc();
   const {i18n: {currentLocale}} = useDocusaurusContext();
-  const contentLanguage = currentLocale === 'ja'
-    ? docTranslation(metadata)?.contentLocale ?? (isJapaneseFallback(metadata.source, currentLocale) ? 'en' : 'ja')
+  const contentLanguage = isTranslatedLocale(currentLocale)
+    ? docTranslation(metadata)?.contentLocale ?? (isFallbackSource(metadata.source, currentLocale) ? 'en' : currentLocale)
     : undefined;
 
   if (pluginId === 'course') {

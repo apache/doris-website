@@ -1,6 +1,6 @@
 import { translate } from '@docusaurus/Translate';
 import React, { JSX } from 'react';
-import Link from '@site/src/components/home-next/JapaneseLink';
+import Link from '@site/src/components/home-next/LocalizedLink';
 import './UseCasesSection.scss';
 
 function ArrowIcon(): JSX.Element {

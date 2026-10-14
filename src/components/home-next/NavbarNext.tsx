@@ -1,13 +1,13 @@
 import { translate } from '@docusaurus/Translate';
 import React, { JSX, useState, useEffect, useRef } from 'react';
-import Link from '@site/src/components/home-next/JapaneseLink';
+import Link from '@site/src/components/home-next/LocalizedLink';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { getLocalePrefix } from '@site/src/utils/locale';
 import { STAR_COUNT } from '@site/src/constant/github.data';
 import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
 import { DorisLogoHorizontal } from '@site/src/components/Icons/doris-logo-horizontal';
 import { BrandThemeSwitcher } from '@site/src/components/brand-theme/BrandThemeSwitcher';
-import { japaneseAiLabels } from '@site/src/utils/japanese';
+import { localizedAiLabels, usesDefaultLocalePages } from '@site/src/utils/localization';
 import './NavbarNext.scss';
 
 const GITHUB_REPO = 'apache/doris';
@@ -163,7 +163,9 @@ export function NavbarNext(): JSX.Element {
     const releasesHref = `${localePrefix}/releases/all-release`;
     const roadmapHref = `${localePrefix}/community/roadmap`;
     const joinCommunityHref = `${localePrefix}/community/join-community`;
-    const communityReportHref = currentLocale === 'ja'
+    // The community report is an ordinary page, so a locale that renders the
+    // default locale's ordinary pages links to it without a prefix.
+    const communityReportHref = usesDefaultLocalePages()
         ? '/community-report'
         : `${localePrefix}/community-report`;
     const navItems = buildNavItems(
@@ -276,7 +278,7 @@ export function NavbarNext(): JSX.Element {
                             the one-row phone navbar never has to fit "Loading AI…". */}
                         <span
                             data-kapa-label
-                            {...japaneseAiLabels()}
+                            {...localizedAiLabels()}
                             className="navbar-next__ask-ai-label navbar-next__ask-ai-label--full"
                             aria-live="polite"
                             suppressHydrationWarning

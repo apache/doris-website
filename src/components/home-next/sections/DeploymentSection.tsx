@@ -1,4 +1,4 @@
-import { japaneseDocLink } from '@site/src/utils/japanese';
+import { localizedDocLink } from '@site/src/utils/localization';
 import { translate } from '@docusaurus/Translate';
 import React, { JSX } from 'react';
 import './DeploymentSection.scss';
@@ -78,7 +78,7 @@ function DeploymentCard({ card }: { card: DeploymentCardItem }): JSX.Element {
                     </span>
                 </h3>
                 <p className="deployment-next__card-subtitle">{card.subtitle}</p>
-                <a className="deployment-next__card-cta" href={japaneseDocLink(card.cta.href)}>
+                <a className="deployment-next__card-cta" href={localizedDocLink(card.cta.href)}>
                     {card.cta.label}
                 </a>
             </div>

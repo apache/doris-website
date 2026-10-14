@@ -3,6 +3,7 @@ import React, { JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { normalizePathname } from '@site/src/utils/locale';
+import { isTranslatedLocale } from '@site/src/utils/localization';
 import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
 import {
     allowsSlackNudgeAutoOpen,
@@ -259,9 +260,9 @@ export function SlackCommunityNudge(): JSX.Element {
                 <p className="slack-community-nudge__copy">
                     {translate({ id: "homepage.slackcommunitynudge.010", message: "Join Slack for setup help, performance tips, and answers from Apache Doris users and maintainers." })}</p>
                 <ul className="slack-community-nudge__benefits">
-                    {getSlackNudgeBenefits().map((benefit, index) => (
-                        <li className="slack-community-nudge__benefit" key={currentLocale === 'ja' ? localizedBenefits[index] : benefit}>
-                            {currentLocale === 'ja' ? localizedBenefits[index] : benefit}
+                    {(isTranslatedLocale(currentLocale) ? localizedBenefits : getSlackNudgeBenefits()).map(benefit => (
+                        <li className="slack-community-nudge__benefit" key={benefit}>
+                            {benefit}
                         </li>
                     ))}
                 </ul>

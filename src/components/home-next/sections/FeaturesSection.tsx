@@ -1,4 +1,4 @@
-import { japaneseFrameSource } from '@site/src/utils/japanese';
+import { localizedFrameSource } from '@site/src/utils/localization';
 import { translate } from '@docusaurus/Translate';
 import React, { CSSProperties, JSX, useEffect, useMemo, useRef, useState } from 'react';
 import './FeaturesSection.scss';
@@ -203,7 +203,7 @@ function LakehouseVisual(): JSX.Element {
         <div className="features-next__visual-content features-next__visual-content--realtime" aria-hidden="true">
             <iframe
                 className="features-next__realtime-frame"
-                src={japaneseFrameSource('/home-next/lake-analytics.html')}
+                src={localizedFrameSource('/home-next/lake-analytics.html')}
                 title={translate({ id: "homepage.features.038", message: "Lakehouse Analytics animation" })}
                 loading="lazy"
                 tabIndex={-1}
@@ -217,7 +217,7 @@ function SearchVisual(): JSX.Element {
         <div className="features-next__visual-content features-next__visual-content--realtime" aria-hidden="true">
             <iframe
                 className="features-next__realtime-frame"
-                src={japaneseFrameSource('/home-next/hybrid-search.html')}
+                src={localizedFrameSource('/home-next/hybrid-search.html')}
                 title={translate({ id: "homepage.features.039", message: "Hybrid Search animation" })}
                 loading="lazy"
                 tabIndex={-1}
@@ -231,7 +231,7 @@ function RealtimeAnalyticsVisual(): JSX.Element {
         <div className="features-next__visual-content features-next__visual-content--realtime" aria-hidden="true">
             <iframe
                 className="features-next__realtime-frame"
-                src={japaneseFrameSource('/home-next/realtime-analytics.html')}
+                src={localizedFrameSource('/home-next/realtime-analytics.html')}
                 title={translate({ id: "homepage.features.040", message: "Real-Time Analytics animation" })}
                 loading="lazy"
                 tabIndex={-1}

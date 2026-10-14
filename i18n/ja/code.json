@@ -1200,5 +1200,44 @@
   },
   "homepage.nudge.benefit3": {
     "message": "コミュニティ活動、機能の議論、PR レビューに参加できます。"
+  },
+  "docs.translation.status.label": {
+    "message": "翻訳状況"
+  },
+  "docs.translation.untranslated": {
+    "message": "このページはまだ日本語に翻訳されていません。"
+  },
+  "docs.translation.showingSource": {
+    "message": "現在のバージョンの英語原文を表示しています。"
+  },
+  "docs.translation.openSource": {
+    "message": "英語版を開く"
+  },
+  "docs.translation.openChineseSource": {
+    "message": "中国語原文を開く"
+  },
+  "docs.translation.staleProse": {
+    "message": "日本語訳は原文の最新の表現を反映していません。"
+  },
+  "docs.translation.sourceMissing": {
+    "message": "翻訳元を確認できないため、この日本語訳は表示していません。"
+  },
+  "docs.translation.unverified": {
+    "message": "日本語訳の内容や更新状況を確認できていません。"
+  },
+  "docs.translation.stale": {
+    "message": "日本語訳は原文の最新の変更を反映していません。"
+  },
+  "docs.translation.reviewedHuman": {
+    "message": "この日本語訳は人が校正しています。"
+  },
+  "docs.translation.machine": {
+    "message": "このページは機械翻訳されています。"
+  },
+  "docs.translation.translatedAt": {
+    "message": "翻訳日: "
+  },
+  "theme.SearchPage.searchSource": {
+    "message": "英語の原文を検索"
   }
 }

@@ -8,9 +8,23 @@ import lunr from "lunr";
  *
  * @returns Tokens.
  */
+// Languages that need their own segmenter instead of the default word regex.
+const SEGMENTER_LANGUAGES = ["ja", "jp", "th"];
+
+/**
+ * Whether a language is indexed with its own segmenter.
+ *
+ * The segmenter also splits SQL identifiers on `_` and `-`, which the index
+ * then drops as punctuation, so a query for a full identifier can come back
+ * empty and has to be retried with its parts.
+ */
+export function usesSegmenterTokenizer(language: string[]): boolean {
+  return language.length === 1 && SEGMENTER_LANGUAGES.includes(language[0]);
+}
+
 export function tokenize(text: string, language: string[]): string[] {
   // Some languages have their own tokenizer.
-  if (language.length === 1 && ["ja", "jp", "th"].includes(language[0])) {
+  if (usesSegmenterTokenizer(language)) {
     return ((lunr as any)[language[0]] as typeof lunr)
       .tokenizer(text)
       .map((token) => token.toString());

@@ -20,7 +20,7 @@ export default function LocaleDropdownNavbarItem({
         i18n: { currentLocale, locales, localeConfigs },
     } = useDocusaurusContext();
     const alternatePageUtils = useAlternatePageUtils();
-    const {group} = useTranslationRoutes();
+    const {group, translatedLocales} = useTranslationRoutes();
     const { search, hash } = useLocation();
 
     // Locales listed here render in the dropdown with a "Coming Soon" badge and
@@ -32,7 +32,10 @@ export default function LocaleDropdownNavbarItem({
             locale,
             fullyQualified: false,
         });
-        const baseTo = `pathname://${(locale === 'ja' || currentLocale === 'ja') && group?.[locale] ? group[locale] : nativeTo}`;
+        // Switching to or from a translated locale prefers the page's exact
+        // counterpart route over the locale's default route.
+        const isTranslatedSwitch = translatedLocales.includes(locale) || translatedLocales.includes(currentLocale);
+        const baseTo = `pathname://${isTranslatedSwitch && group?.[locale] ? group[locale] : nativeTo}`;
         // preserve ?search#hash suffix on locale switches
         const to = `${baseTo}${search}${hash}${queryString}`;
         const isComingSoon = COMING_SOON_LOCALES.has(locale);

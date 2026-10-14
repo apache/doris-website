@@ -1,8 +1,12 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
+const {managedLocales} = require('./state.cjs');
 
 module.exports = function translationStatusPlugin(context) {
     const locale = context.i18n.currentLocale;
+    // The browser needs to know which locales carry translation state, so the
+    // UI can decide from data instead of naming a language.
+    const locales = managedLocales(context.siteDir, context.i18n.locales);
     return {name: 'doris-translation-status',
         async allContentLoaded({allContent, actions}) {
             const manifests = Object.values(allContent['docusaurus-plugin-content-docs'] ?? {})
@@ -25,7 +29,7 @@ module.exports = function translationStatusPlugin(context) {
             const pages = allPages.filter(page => page.locale === locale);
             const prefixes = Object.values(allContent['docusaurus-plugin-content-docs'] ?? {})
                 .flatMap(content => content.loadedVersions.map(version => version.path));
-            actions.setGlobalData({alternates, prefixes});
+            actions.setGlobalData({alternates, prefixes, locales});
             // Reports that belong to no single locale describe the repository,
             // so they stay in every locale's manifest.
             const reports = manifests.flatMap(manifest => manifest.reports)
