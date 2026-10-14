@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/session/context/USE-COMPUTE-GROUP",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/session/context/USE-COMPUTE-GROUP.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/session/context/USE-COMPUTE-GROUP.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "4178b9dc5413d63126451558cd665a3490693b52c38fb8441088fffbdb1045c0",
+    "sourceTechnicalHash": "f916760718cc5421215c3e65abbe8befd86aca790bd164160339bec980e44acd",
+    "targetHash": "ca5b8f090647dcd8e29d2775ee0d0e4444288459beaa1fd045a386e2633391fc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:03:58.217Z",
+    "glossaryVersion": "0"
+  }
+}

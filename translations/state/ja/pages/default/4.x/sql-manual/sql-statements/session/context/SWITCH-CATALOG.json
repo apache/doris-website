@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/session/context/SWITCH-CATALOG",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/session/context/SWITCH-CATALOG.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/session/context/SWITCH-CATALOG.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "590e8260804b98c191b69209a9d8bbbd8748930b3cbbb8b722dc1fae7952ed9f",
+    "sourceTechnicalHash": "812a966ea3bccb1f127fd6f00c17ca6e84f7c508cb5206b937be38a347c7e8da",
+    "targetHash": "e330960dc30e9e39d7845e4398df3d9e798d33f10645acec68129b9d17fbaee7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:03:58.217Z",
+    "glossaryVersion": "0"
+  }
+}

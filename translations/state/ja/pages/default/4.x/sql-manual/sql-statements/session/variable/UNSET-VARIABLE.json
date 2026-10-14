@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/session/variable/UNSET-VARIABLE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/session/variable/UNSET-VARIABLE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/session/variable/UNSET-VARIABLE.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "0c76c424b2203094a721a83e8781c3367fbab1b9c71d9702f25b9d55dd98a83c",
+    "sourceTechnicalHash": "2911afdd02d9d7558966c0284924b80edeea2868d52c8d246b5b63f7cd1121d1",
+    "targetHash": "52d4eb8a5f6f56b66465f18c6b964d453d571e4ae9c32742db647edcb4cba6d5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:03:58.217Z",
+    "glossaryVersion": "0"
+  }
+}
