@@ -54,7 +54,7 @@ WHERE [LABEL = "<load_label>" | LABEL like "<label_pattern>" | STATE = { "PENDIN
 
 ## 例
 
-1. データベース `example_db` で、ラベルが `example_db_test_load_label` のロードジョブをキャンセルします。
+1. ラベルが `example_db_test_load_label` のロードジョブを、データベース `example_db` でキャンセルします。
 
    ```sql
    CANCEL LOAD
@@ -62,7 +62,7 @@ WHERE [LABEL = "<load_label>" | LABEL like "<label_pattern>" | STATE = { "PENDIN
    WHERE LABEL = "example_db_test_load_label";
    ```
 
-2. データベース `example_db` で、`example_` を含むすべてのロードジョブをキャンセルします。
+2. `example_` を含むすべてのロードジョブを、データベース `example_db` でキャンセルします。
 
    ```sql
    CANCEL LOAD
