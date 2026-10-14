@@ -17,6 +17,11 @@ test('PR build scope separates content locales, shared inputs, and retired versi
     assert.deepEqual(japanese.locales,['ja']);
     assert.equal(japanese.docs_versions,'4.x');
     assert.equal(japanese.enable_ja,true);
+    // A Japanese-only change builds Japanese alone, so cross-locale
+    // verification must know the artifact is a subset.
+    assert.equal(japanese.partial_build,true);
+    assert.equal(buildScope(['docs/a.md'],versions).partial_build,true);
+    assert.equal(buildScope(['sidebars.ts'],versions).partial_build,false);
     const shard = 'translations/state/ja/pages/default/4.x/guide.json';
     const stateOnly = buildScope([shard],versions);
     assert.deepEqual(stateOnly.locales,['ja']);
