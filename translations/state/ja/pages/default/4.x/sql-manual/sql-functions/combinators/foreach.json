@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/combinators/foreach",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/combinators/foreach.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/combinators/foreach.md",
+    "sourceCommit": "8d395e5202c28020ca7b4d581deb5cf72df59370",
+    "sourceHash": "53e484eb057c01e070182ac19c9f27cad6efb1603d6f540d71a3ed6c5c174753",
+    "sourceTechnicalHash": "c662fdc9a40d7162c34ccd31e6d1c8fa2c663c8be9fc743557c3092996fdf861",
+    "targetHash": "5d294585b5b068a1f6e78c9ed7a1774fe9aca3d8a1ba242bce4b1f8880a4c2d8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:36:14.112Z",
+    "glossaryVersion": "0"
+  }
+}

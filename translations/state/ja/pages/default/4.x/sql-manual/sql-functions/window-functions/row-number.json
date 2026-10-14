@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/window-functions/row-number",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/window-functions/row-number.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/window-functions/row-number.md",
+    "sourceCommit": "8d395e5202c28020ca7b4d581deb5cf72df59370",
+    "sourceHash": "8175f5429becf9f6ec53cdee8bfff91dfcb84a7a4cc9e437f0e882ccbcbd5f5f",
+    "sourceTechnicalHash": "b3d9b17ee7c47756c8b59d2b2f730fc7cfda7f6b79642aaa01a4212203f53d6b",
+    "targetHash": "a22d2619d469ae6e265d9ad6dedce55058133cdd2df365ca107717134745e803",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:36:14.113Z",
+    "glossaryVersion": "0"
+  }
+}

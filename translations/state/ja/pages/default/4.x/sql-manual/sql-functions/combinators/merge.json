@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/combinators/merge",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/combinators/merge.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/combinators/merge.md",
+    "sourceCommit": "8d395e5202c28020ca7b4d581deb5cf72df59370",
+    "sourceHash": "abda7355363afb8cff418b0187a37abc11a979bf394908bad6fda9552b0306da",
+    "sourceTechnicalHash": "2c5b614532664d975f25c863602b04f0f4a65d789b1f8a64b08e94c92bfbe298",
+    "targetHash": "22e92c92bdb5037cf0feb64e86e36234ae984b8f7207825a2746365221963d2c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:36:14.112Z",
+    "glossaryVersion": "0"
+  }
+}
