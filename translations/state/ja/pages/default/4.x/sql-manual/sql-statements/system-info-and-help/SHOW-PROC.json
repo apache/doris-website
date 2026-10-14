@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/system-info-and-help/SHOW-PROC",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/system-info-and-help/SHOW-PROC.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/system-info-and-help/SHOW-PROC.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "eb641fb9d728ac73583282382e0673a2b2d6e5596201844bf0e40bfe228ac7e5",
+    "sourceTechnicalHash": "5afc350c0fdcebde54403adbf5df9c308d16477b1bd921390c15e67197b6fcd9",
+    "targetHash": "43271685e26c38219a9fd6abd33e25a0526a9f273e7ce738dcb96541cde7ae41",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:15:40.236Z",
+    "glossaryVersion": "0"
+  }
+}

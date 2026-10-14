@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "features-architecture/versioning",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/features-architecture/versioning.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/features-architecture/versioning.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "556c92b1bcfbcc58d1cc81cdcdef3987f5cfc9d13c096aa10fea7df557f246ae",
+    "sourceTechnicalHash": "a46ee66b8fd510402a545ed24daa9e4b5c2d77627a1d1e2006934c56b6664236",
+    "targetHash": "f03cfa4cc8408ff21470eeaa90e91314bc9a1ee97bfdff044a24b28f69ce6d10",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:15:40.237Z",
+    "glossaryVersion": "0"
+  }
+}

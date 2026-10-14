@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/plugin/UNINSTALL-PLUGIN",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/plugin/UNINSTALL-PLUGIN.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/plugin/UNINSTALL-PLUGIN.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "c0a143bc935517d8a92728e11a10c52dc6ae9aaca549f1cd4f7a5a488e95262b",
+    "sourceTechnicalHash": "9a8ce97658d7e90548bfb960dea02a006e7e2f8924b587b1a6eb17488b626ebb",
+    "targetHash": "68aef04dfa81d878aac8cc02f949b4b347a525d492ef83b7ae547bbc4e9caa43",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:15:40.235Z",
+    "glossaryVersion": "0"
+  }
+}
