@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/window-functions/rank",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/window-functions/rank.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/window-functions/rank.md",
+    "sourceCommit": "8d395e5202c28020ca7b4d581deb5cf72df59370",
+    "sourceHash": "5032af683c45911d4ca5363cd93e63a3c54791df0e27ce002ebff0996b91a627",
+    "sourceTechnicalHash": "fba810f4760599782a231f6ad0e445a1be4c34632c05400baaa5d369769e2134",
+    "targetHash": "d9c5b33625463e045eaa73764a7d93f838aeea13177b6462b99f6f9212b283ca",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:36:14.113Z",
+    "glossaryVersion": "0"
+  }
+}

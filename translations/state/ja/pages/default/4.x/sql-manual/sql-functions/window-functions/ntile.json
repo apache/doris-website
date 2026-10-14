@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/window-functions/ntile",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/window-functions/ntile.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/window-functions/ntile.md",
+    "sourceCommit": "8d395e5202c28020ca7b4d581deb5cf72df59370",
+    "sourceHash": "f7eb4ed8169751db348837c456ec6fbf7e87283983e196b74d36b0a503528a60",
+    "sourceTechnicalHash": "e852376dd9ea90a19d8834b70f0355e181eb4d0c6b31bb9f9a7ca8834789a3ca",
+    "targetHash": "e0dec77b73316be043fece44fc6c0caae300e2f0916801d8391d4cd50ef2d711",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:36:14.113Z",
+    "glossaryVersion": "0"
+  }
+}
