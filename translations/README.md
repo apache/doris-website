@@ -198,6 +198,24 @@ prevents the fixed T03 baseline from reopening an already reviewed deletion.
 The live docs adapter reads the combined legacy and page-file state. A
 reintroduced page returns to normal native enumeration.
 
+## Choosing the locale a pipeline run works on
+
+The translation pipeline works on one locale per run. `scripts/i18n/state.cjs`
+exposes `pipelineLocale(root)`: a configuration that declares a single locale
+needs no selector and behaves exactly as before, and `I18N_LOCALE` picks one as
+soon as several are managed. The two discovery workflows take a `locale` input
+and pass it through as that variable.
+
+Each locale also declares, in `translations/config.json`:
+
+- `languageName` — the language's English name, which the pipeline weaves into
+  the model prompt, the bot identity, the automation branch prefix, the PR
+  ownership marker and the generated titles. It stays declared rather than
+  derived, because changing it orphans every branch and open PR already in
+  flight; see `scripts/i18n/automation-naming.cjs`.
+- `scriptPattern` — the script a finished translation must contain. A model that
+  answers in the source language is rejected instead of published.
+
 ## Manual Japanese translation candidates
 
 `scripts/i18n/translate-docs.cjs` consumes **selected** task IDs from a T06
