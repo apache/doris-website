@@ -53,7 +53,7 @@ Apache Doris の高同時実行ポイントクエリは、テーブルとクエ�
 Apache Doris の高同時実行ポイントクエリ経路は、ストレージレイアウト、FE によるプランの書き換え、ショートサーキットでのディスパッチ、サーバー側での `PreparedStatement` の再利用、オプションの Row Cache を使う BE の行検索という五つの層を連携させます。
 
 1. **ストレージレイアウト。** テーブル作成時に `store_row_column=true` を設定すると、BE は各行をカラム指向のセグメントと、行形式でエンコードした隠しカラムの両方に書き込みます。Apache Doris 3.0 以降では、`row_store_columns="k1,v1,v2"` を使って対象を一部のカラムに限定し、ストレージのオーバーヘッドを抑えられます。
-2. **プランの書き換え（FE）。** Nereids のルール `LogicalResultSinkToShortCircuitPointQuery` は、単一の Unique テーブル、すべてのキーカラムに対する等価の連言述語、結合やサブクエリなし、集計なしというクエリの形を確認します。すべて一致すると、`StatementContext` の `isShortCircuitQuery` フラグを有効にします。
+2. **プランの書き換え（FE）。** Nereids のルール `LogicalResultSinkToShortCircuitPointQuery` は、単一の Unique テーブル、すべてのキーカラムに対する等価の連言述語、結合やサブクエリなし、集計なしというクエリの形を確認します。すべて一致すると、`isShortCircuitQuery` フラグを `StatementContext` 内で有効にします。
 3. **ショートサーキットでのディスパッチ。** FE はフラグメントの生成と送信の代わりに、`PartitionPruneV2ForShortCircuitPlan` でバケットを特定し、そのキーを保持し得る一つのタブレットを選び、所有する BE に一回の RPC を送ります。
 4. **サーバー側での `PreparedStatement` の再利用。** `useServerPrepStmts=true` の場合、FE は `ShortCircuitQueryContext` をセッション UUID ごとにキャッシュします。その後の `EXECUTE` 呼び出しでは解析とプランニングをすべて省略し、パラメーター値だけを変更します。
 5. **BE での行検索。** `point_query_executor` はキーで行を特定し、行形式のカラムを読み取ってバイト列を返します。オプションの Row Cache にヒットした場合は、セグメントの読み取りも省略します。
@@ -87,7 +87,7 @@ EXPLAIN SELECT * FROM tbl_point_query WHERE k1 = 42;
   SHORT-CIRCUIT
 ```
 
-重要なのは `SHORT-CIRCUIT` の行です。同じ DDL でも、クエリが条件を満たせない場合（結合、キーカラムの指定漏れ、不等号による条件）は通常の分散プランに切り替わります。FE の CPU 使用量も削減するには、`jdbc:mysql://host:9030/db?useServerPrepStmts=true&cachePrepStmts=true` を指定してクライアントを接続し、`?` プレースホルダーを使う `PreparedStatement` を使用します。繰り返し実行するクエリが、生の SQL ではなく `Stmt=EXECUTE(...)` として `fe.audit.log` に記録されることを確認してください。
+重要なのは `SHORT-CIRCUIT` の行です。同じ DDL でも、クエリが条件を満たせない場合（結合、キーカラムの指定漏れ、不等号による条件）は通常の分散プランに切り替わります。FE の CPU 使用量も削減するには、`jdbc:mysql://host:9030/db?useServerPrepStmts=true&cachePrepStmts=true` を指定してクライアントを接続し、`PreparedStatement` を `?` プレースホルダーとともに使用します。繰り返し実行するクエリが、生の SQL ではなく `fe.audit.log` に `Stmt=EXECUTE(...)` として記録されることを確認してください。
 
 ## Apache Doris の高同時実行ポイントクエリを使う場面 {#when}
 
@@ -115,7 +115,7 @@ Apache Doris によると、FE の CPU がボトルネックの場合、ショ�
 次の二点で、この経路が有効であることを確認できます。
 
 - 対象クエリの `EXPLAIN` で、スキャンノードに `SHORT-CIRCUIT` が表示される。
-- 繰り返し実行する検索が、生の SQL 文字列ではなく `Stmt=EXECUTE(...)` として `fe.audit.log` に表示される。
+- 繰り返し実行する検索が `fe.audit.log` に、生の SQL 文字列ではなく `Stmt=EXECUTE(...)` として表示される。
 
 FE の CPU が引き続き上限となる場合は、Observer を増やし、JDBC のロードバランシング（`jdbc:mysql:loadbalance://host1,host2,host3/db?useServerPrepStmts=true&cachePrepStmts=true`）で接続を分散してください。コンピュートとストレージを分離した構成では、Base Compaction の出力をファイルキャッシュに残すため、`SET GLOBAL enable_snapshot_point_query=false` と BE のフラグ `enable_file_cache_keep_base_compaction_output=1` も検討してください。
 
