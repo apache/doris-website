@@ -13,7 +13,7 @@ test('Codex returns schema-bound text and usage without exposing job credentials
         fs.writeFileSync(path.join(home, 'auth.json'), '{}');
         let calls = 0;
         const adapter = codexAdapter({codexHome: home, codexBin: '/tmp/codex', model: 'gpt-6-sol',
-            tokenBudget: 10000, baseContextReserve: 0, spawnImpl: (binary, args, options) => {
+            spawnImpl: (binary, args, options) => {
                 calls++;
                 assert.equal(binary, '/tmp/codex');
                 assert(args.includes('--output-schema') && args.includes('--output-last-message')
@@ -33,6 +33,23 @@ test('Codex returns schema-bound text and usage without exposing job credentials
         {translations: [{id: 'u1', text: '訳文'}]});
         assert.equal(adapter.usedTokens, 100);
         assert.equal(calls, 1);
+    } finally {fs.rmSync(home, {recursive: true, force: true});}
+});
+
+test('Codex records usage without rejecting a former batch token overage', async () => {
+    const home = fs.mkdtempSync(path.join(os.tmpdir(), 'ja-codex-unbounded-'));
+    try {
+        fs.writeFileSync(path.join(home, 'auth.json'), '{}');
+        const adapter = codexAdapter({codexHome: home, codexBin: '/tmp/codex',
+            spawnImpl: (_binary, args) => {
+                const answer = args[args.indexOf('--output-last-message') + 1];
+                fs.writeFileSync(answer, JSON.stringify({translations: [{id: 'u1', text: '訳文'}]}));
+                return {status: 0, stdout: JSON.stringify({type: 'turn.completed',
+                    usage: {total_tokens: 100000}}) + '\n'};
+            }});
+        await adapter.translate({document: '# Guide', units: [{id: 'u1', text: 'Guide'}],
+            glossary: {schemaVersion: 1, version: '1', keep: [], terms: []}});
+        assert.equal(adapter.usedTokens, 100000);
     } finally {fs.rmSync(home, {recursive: true, force: true});}
 });
 

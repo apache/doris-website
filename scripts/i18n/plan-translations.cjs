@@ -86,11 +86,11 @@ function referenceChecks(oldPage, newPage) {
 
 async function plan({report, scope, records, baseline = [], active, readCurrent, readAt,
     resolved = {schemaVersion: 1, deletions: []}, chineseChangedPaths = [],
-    limit = scope.maxBatchPages, tokenBudget = 50000, filters = {}}) {
+    limit = scope.maxBatchPages, tokenBudget = null, filters = {}}) {
     assert(report.schemaVersion === 1 && /^[a-f0-9]{40}$/.test(report.sourceCommit), 'Invalid source audit');
     assert(scope.schemaVersion === 1 && scope.locale === 'ja' && Number.isInteger(scope.maxBatchPages), 'Invalid managed scope');
     assert(Number.isInteger(limit) && limit >= 0 && limit <= scope.maxBatchPages, 'Limit exceeds managed batch size');
-    assert(Number.isInteger(tokenBudget) && tokenBudget >= 0, 'Invalid token budget');
+    assert(tokenBudget === null || Number.isInteger(tokenBudget) && tokenBudget >= 0, 'Invalid token budget');
     if (filters.locale && filters.locale !== scope.locale) throw new Error(`Unsupported locale: ${filters.locale}`);
     const candidates = validateActive(active, scope);
     const resolvedDeletions = validateResolved(resolved);
@@ -198,7 +198,7 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     for (const task of selectedTasks) {
         if (selected.length >= limit) break;
         if (task.activePr || task.requiresHumanReview) continue;
-        if (tokens + task.estimatedSourceTokens > tokenBudget) continue;
+        if (tokenBudget !== null && tokens + task.estimatedSourceTokens > tokenBudget) continue;
         selected.push(task.id);
         tokens += task.estimatedSourceTokens;
     }
@@ -250,7 +250,7 @@ async function main() {
     const result = await plan({report, scope, records, baseline: baselineEntries(), active, resolved,
         chineseChangedPaths, readCurrent, readAt,
         limit: options['--limit'] === undefined ? scope.maxBatchPages : Number(options['--limit']),
-        tokenBudget: options['--token-budget'] === undefined ? 50000 : Number(options['--token-budget']),
+        tokenBudget: options['--token-budget'] === undefined ? null : Number(options['--token-budget']),
         filters: {locale: options['--locale'], plugin: options['--plugin'], version: options['--version'], path: options['--path']}});
     const output = JSON.stringify(result, null, 2) + '\n';
     if (options['--output']) fs.writeFileSync(options['--output'], output);

@@ -127,7 +127,7 @@ pages enter the plan even when they have never appeared in that inventory.
 
 ```bash
 node scripts/i18n/plan-translations.cjs --source-ref HEAD \
-  --limit 20 --token-budget 50000 --output /tmp/japanese-plan.json
+  --limit 20 --output /tmp/japanese-plan.json
 ```
 
 The source ref must match the checked-out source, routing files, Japanese state
@@ -136,13 +136,14 @@ candidate as merged coverage. It needs no model credential, network or GitHub
 write permission. Without `--output`, JSON goes to stdout; a compact count goes
 to stderr. `--locale ja`, `--plugin default`, `--version current` and
 `--path docs/install/` filter visible tasks after the full recount. The limit
-cannot exceed `translations/scope/ja.json`'s `maxBatchPages` (20). The token
-budget uses an approximate source length of four characters per token, so a
-generation tool must check its actual model budget again.
+cannot exceed `translations/scope/ja.json`'s `maxBatchPages` (20). The optional
+`--token-budget` applies only to an explicitly bounded manual planning run;
+the T08 workflow does not set a token budget.
 
 `counts` cover the full managed scope. `tasks` list pending work, while
-`selected` holds the next eligible task IDs within the page and token limits.
-Stable numeric IDs derive from the page identity, task kind and source hash;
+`selected` holds the next eligible task IDs within the page limit and any
+explicitly requested manual token limit. Stable numeric IDs derive from the
+page identity, task kind and source hash;
 they do not renumber existing T09 batches. Updates, deletion and moves precede
 historical backlog. Formatting-only changes still require review of the exact
 new source hash. Target edits, invalid state, missing sources and unsupported
@@ -271,9 +272,9 @@ appears in the exception report.
 Manual dispatch defaults to `dry-run` and accepts optional plugin, version and
 source path filters. `validate` mode requires one exact English source path
 ending in `.md` or `.mdx`; it can call the model and create a draft PR for one
-page with a 30,000-token Codex usage budget while ongoing automation remains
-disabled. It is the first live acceptance path after OSS model access is
-available. With OSS access but no GitHub write credential, `validate` still
+page while ongoing automation remains disabled. It is the first live acceptance
+path after OSS model access is available. With OSS access but no GitHub write
+credential, `validate` still
 writes the candidate to the generation artifact and makes no GitHub write.
 Pushes are checked against the current registered source
 identities before any generation. The daily full scan recovers missed or
@@ -304,12 +305,12 @@ run and its App- or PAT-created draft PR have passed the required checks.
 Missing write credentials leave manual validation as an artifact-only run;
 missing OSS credentials leave discovery available without model calls.
 
-When enabled, one run processes at most two pages with a configured
-60,000-token Codex usage budget. The planner separately uses a 20,000-token
-estimate for source text selection. A local one-page, two-unit Codex probe
-reported 19,009 tokens, so CLI usage must not be estimated from document
-length alone. The Codex adapter constrains the final answer with a JSON
-schema, rejects tool calls, checks reported token usage and rejects an overage.
+When enabled, one run produces at most two page candidates. The T08 planner
+and Codex adapter do not reject work based on an estimated or accumulated
+token allowance. The adapter still records actual usage for the run summary.
+Document length, chunk size, call timeout and the model's own context limits
+still apply. The adapter constrains the final answer with a JSON schema,
+rejects tool calls and checks that Codex reports token usage.
 It runs in an isolated temporary directory with read-only sandboxing and no
 GitHub or OSS credentials in the model process. Refreshed auth is uploaded
 only if its OSS source has not changed since download.
