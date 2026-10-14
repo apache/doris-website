@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/nanosecond",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/nanosecond.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/nanosecond.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "50b8543097d8eae4bd97bd195cf02d29734689ad15b77863f70298009ea86e08",
+    "sourceTechnicalHash": "9a7b5b7ef140d3fbfe34d9a9d2513e55eb4976ad98919650a2d675c674c7281c",
+    "targetHash": "cb3ed81e3a1c7be44856daf066f8cc790b2713143e72f2f52bcf35ab71c2c431",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.812Z",
+    "glossaryVersion": "0"
+  }
+}

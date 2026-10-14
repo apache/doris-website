@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/makedate",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/makedate.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/makedate.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "ca7a1cf24e6d583d86e8d5bf04cb034349ba1eebef4bb9599306927ff34e6ba2",
+    "sourceTechnicalHash": "fd859ea3c2d2a0ae086be7afda07f149392b6db4cb6b7810f5fd0643c1dc294c",
+    "targetHash": "14432a6fc4f23a70e08457df5551987993ecb0c332f20eab5fb5d3d46303f8c1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.811Z",
+    "glossaryVersion": "0"
+  }
+}

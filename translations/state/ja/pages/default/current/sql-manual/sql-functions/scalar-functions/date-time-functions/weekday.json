@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/weekday",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/weekday.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/weekday.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b616cca4f0b0787e5b6f3fa0d1c4558b0dc549aa4497c36f739f0e91b856a34c",
+    "sourceTechnicalHash": "cee7a3e68a00cf0af410115d81ce958cbca6e30dce8509e2a0833080f95938e0",
+    "targetHash": "60a6fc29f2c25ad1d8a80f7feb6897aa7b6d67aea695378479615223bf33993b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.814Z",
+    "glossaryVersion": "0"
+  }
+}

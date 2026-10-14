@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/minute",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/minute.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/minute.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b5d4aba3775973e32133e20b4fc501f18f55d46c7e802a0b582afd8f1caa4c5b",
+    "sourceTechnicalHash": "1dd3d8683bd25ca37397f38068813e4ba7e3f22a19f2850ce29841932a1c206d",
+    "targetHash": "e7366ef3e2b57160cf59ec06cc3f487539abe702b47c837f4c3e87d1bb317edb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.811Z",
+    "glossaryVersion": "0"
+  }
+}

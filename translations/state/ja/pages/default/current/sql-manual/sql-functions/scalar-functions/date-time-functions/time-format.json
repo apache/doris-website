@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/time-format",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/time-format.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/time-format.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "92bddbcea4b27b297d24823f88237cbdd0823b02b1fec41ffbaf38cee01e4e1b",
+    "sourceTechnicalHash": "480fd4c5ffa466e5baf9dab455d65ef48541d9608dd505985f8faa5578511203",
+    "targetHash": "a97e61d9c64d0fce1a806227dc903e67eb36dba2bcd468fb4b6871509aec4c5e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.814Z",
+    "glossaryVersion": "0"
+  }
+}

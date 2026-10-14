@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/unix-timestamp",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/unix-timestamp.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/unix-timestamp.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "12a494813f5effe709ef7c856f7007835e02e9b068b31f31797443e02af9513a",
+    "sourceTechnicalHash": "b1e64a7d74dd3308346b00b37ced6cf80eca936d36424681c1548c180700a1a4",
+    "targetHash": "126666a0d78e47c78d0f79d65069a337fee4fc305547677f8c6baaddd12354b6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.814Z",
+    "glossaryVersion": "0"
+  }
+}
