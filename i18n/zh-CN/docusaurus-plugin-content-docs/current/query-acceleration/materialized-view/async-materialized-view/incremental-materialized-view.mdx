@@ -30,8 +30,8 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-<!-- 知识类型: 功能说明 / 操作指南 / 参数参考 / 故障排查 -->
-<!-- 适用场景: 基表频繁增删改 / 变化行数占比较小 / 全量或分区重算成本高 -->
+{/* 知识类型: 功能说明 / 操作指南 / 参数参考 / 故障排查 */}
+{/* 适用场景: 基表频繁增删改 / 变化行数占比较小 / 全量或分区重算成本高 */}
 
 物化视图增量维护（Incremental View Maintenance，IVM）根据基表的行级变化维护异步物化视图。普通异步物化视图会重算全部数据或受影响的整个分区；IVM 只计算基表两次刷新之间的新增、更新和删除，并把这些变化应用到物化视图。
 
@@ -39,8 +39,8 @@ import TabItem from '@theme/TabItem';
 IVM 从 Doris 5.0.0 开始支持，目前处于实验阶段，默认关闭。使用前需要在 FE 配置中开启 Row Binlog 和 Table Stream，详见 [前置条件](#前置条件)。
 :::
 
-<!-- 知识类型: 场景选型 -->
-<!-- 适用场景: IVM 选型 / 刷新成本评估 -->
+{/* 知识类型: 场景选型 */}
+{/* 适用场景: IVM 选型 / 刷新成本评估 */}
 
 ## 适用场景
 
@@ -53,8 +53,8 @@ IVM 从 Doris 5.0.0 开始支持，目前处于实验阶段，默认关闭。使
 | 首次建立基线、数据量较小或需要恢复 IVM 基线 | 使用 `COMPLETE` | 重新计算物化视图的全部数据 |
 | 要求与基表事务同步、实时一致 | 不使用异步物化视图 | IVM 仍通过异步任务刷新，不提供实时一致性 |
 
-<!-- 知识类型: 架构决策 -->
-<!-- 适用场景: INCREMENTAL / PARTITIONS / COMPLETE / AUTO 选型 -->
+{/* 知识类型: 架构决策 */}
+{/* 适用场景: INCREMENTAL / PARTITIONS / COMPLETE / AUTO 选型 */}
 
 ## 与分区增量刷新的区别
 
@@ -69,8 +69,8 @@ Doris 支持四种异步物化视图刷新方式。IVM 对应 `INCREMENTAL`，�
 
 `INCREMENTAL FALLBACK` 只改变刷新运行时的失败处理。创建物化视图时，定义 SQL 仍必须满足 IVM 要求；`FALLBACK` 不会让不支持 IVM 的定义通过创建检查。
 
-<!-- 知识类型: 工作原理 -->
-<!-- 适用场景: 理解 IVM 数据流 / 一致性机制 -->
+{/* 知识类型: 工作原理 */}
+{/* 适用场景: 理解 IVM 数据流 / 一致性机制 */}
 
 ## 工作原理
 
@@ -82,8 +82,8 @@ IVM 复用 Doris 的 Row Binlog 和 Table Stream 能力：
 
 刷新时，Doris 根据每张基表的未消费变化生成增量计划。关联查询还会读取与消费位点对齐的基表快照，保证多表计算使用一致的数据边界。物化视图数据和消费位点在同一个事务中提交；事务失败时，两者都不会提交。
 
-<!-- 知识类型: 部署前检查 -->
-<!-- 适用场景: 启用 IVM / 建表前评估 -->
+{/* 知识类型: 部署前检查 */}
+{/* 适用场景: 启用 IVM / 建表前评估 */}
 
 ## 前置条件
 
@@ -124,8 +124,8 @@ PROPERTIES (
 
 Row Binlog 只能在建表时开启，开启后不能关闭。完整的表模型、列类型、写入方式和 DDL 限制见 [Row Binlog](../../../data-operate/incremental/row-binlog)。
 
-<!-- 知识类型: 操作步骤 -->
-<!-- 适用场景: 首次配置 / 功能验证 -->
+{/* 知识类型: 操作步骤 */}
+{/* 适用场景: 首次配置 / 功能验证 */}
 
 ## 快速上手
 
@@ -269,8 +269,8 @@ LIMIT 1;
 - `IvmFallbackReason` 为空表示没有发生 IVM 回退；非空时记录稳定的回退原因。
 - `ErrorMsg` 记录严格增量刷新失败的具体信息。
 
-<!-- 知识类型: 兼容性参考 / SQL 示例 -->
-<!-- 适用场景: 创建前 SQL 评估 / 不支持语法排查 -->
+{/* 知识类型: 兼容性参考 / SQL 示例 */}
+{/* 适用场景: 创建前 SQL 评估 / 不支持语法排查 */}
 
 ## 支持的查询
 
@@ -1075,8 +1075,8 @@ GROUP BY channel;
 - 使用普通异步物化视图作为基表。链式维护要求下层物化视图本身也是 IVM。
 - 上文表格之外的其他运算。
 
-<!-- 知识类型: 运行机制 / 故障处理 -->
-<!-- 适用场景: 刷新策略配置 / 自动刷新间隔 / IVM 回退排查 / 基线恢复 -->
+{/* 知识类型: 运行机制 / 故障处理 */}
+{/* 适用场景: 刷新策略配置 / 自动刷新间隔 / IVM 回退排查 / 基线恢复 */}
 
 ## 刷新和回退
 
@@ -1219,8 +1219,8 @@ IVM -> PARTITIONS -> COMPLETE
 
 内部 Stream 缺失或无法继续使用时，`INCREMENTAL FALLBACK` 和 `AUTO` 直接执行 `COMPLETE`，`IvmFallbackReason` 为 `STREAM_UNSUPPORTED`；`COMPLETE` 刷新会重建内部 Stream 并重新对齐消费位点。严格 `INCREMENTAL` 刷新会失败，需要执行一次 `COMPLETE` 或 `AUTO`。
 
-<!-- 知识类型: 故障排查 -->
-<!-- 适用场景: 增量计划验证 / 刷新数据预览 -->
+{/* 知识类型: 故障排查 */}
+{/* 适用场景: 增量计划验证 / 刷新数据预览 */}
 
 ## 预览和解释增量计划
 
@@ -1260,8 +1260,8 @@ REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL WITH DRY RUN LIMIT 100 OFFSET 20
 
 `DRY RUN` 只支持 IVM 的 `INCREMENTAL` 刷新，不能与 `COMPLETE`、`EXPLAIN` 或分区刷新组合使用。
 
-<!-- 知识类型: 运维说明 -->
-<!-- 适用场景: 内部 Stream 监控 / 生命周期管理 -->
+{/* 知识类型: 运维说明 */}
+{/* 适用场景: 内部 Stream 监控 / 生命周期管理 */}
 
 ## 内部 Table Stream
 
@@ -1288,8 +1288,8 @@ WHERE Name = "<mv_name>";
 
 Table Stream 的位点、快照和并发语义见 [Table Stream 基础](../../../data-operate/incremental/table-stream) 和 [Table Stream 进阶](../../../data-operate/incremental/table-stream-advanced)。
 
-<!-- 知识类型: 配置参数 -->
-<!-- 适用场景: IVM Key 设计 / 增量分区窗口 / 刷新资源控制 -->
+{/* 知识类型: 配置参数 */}
+{/* 适用场景: IVM Key 设计 / 增量分区窗口 / 刷新资源控制 */}
 
 ## IVM 属性
 
@@ -1349,8 +1349,8 @@ PROPERTIES (
 
 所有物化视图属性见 [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW)。
 
-<!-- 知识类型: 使用限制 -->
-<!-- 适用场景: 生产上线评估 / 性能风险检查 -->
+{/* 知识类型: 使用限制 */}
+{/* 适用场景: 生产上线评估 / 性能风险检查 */}
 
 ## 限制和注意事项
 
@@ -1361,8 +1361,8 @@ PROPERTIES (
 - `MIN`、`MAX` 和 Bitmap 聚合在部分删除场景下需要完整重算。生产环境建议使用 `INCREMENTAL FALLBACK` 或 `AUTO`，并监控 `IvmFallbackReason`。
 - Row Binlog 的表模型、列类型、Schema Change 和删除行为限制会直接影响 IVM，详见 [Row Binlog 的支持范围与限制](../../../data-operate/incremental/row-binlog#支持范围与限制)。
 
-<!-- 知识类型: 常见问题 / 故障排查 -->
-<!-- 适用场景: 创建失败 / 刷新回退 / 基线重建 / 数据延迟 -->
+{/* 知识类型: 常见问题 / 故障排查 */}
+{/* 适用场景: 创建失败 / 刷新回退 / 基线重建 / 数据延迟 */}
 
 ## 常见问题
 
@@ -1379,8 +1379,8 @@ PROPERTIES (
 | 被排除的基表单独变化后，视图数据未更新 | `excluded_trigger_tables` 中的表不会独立触发刷新。等待其他基表变化触发刷新，或者执行一次 `COMPLETE` 刷新。把该表从 `excluded_trigger_tables` 中移除后，下一次刷新会完整重建物化视图 |
 | 能否手工消费或重置内部 Stream | 不能。内部 Stream 仅供 IVM 使用，由 Doris 管理生命周期和消费位点 |
 
-<!-- 知识类型: 最佳实践 -->
-<!-- 适用场景: 生产部署 / 资源规划 / 持续运维 -->
+{/* 知识类型: 最佳实践 */}
+{/* 适用场景: 生产部署 / 资源规划 / 持续运维 */}
 
 ## 最佳实践
 
@@ -1393,8 +1393,8 @@ PROPERTIES (
 7. **监控任务和 Stream 积压。** 同时观察 `tasks("type"="mv")`、`mv_infos` 和 `information_schema.table_stream_consumption`。
 8. **定期检查回退原因。** 偶发回退可以保证正确性；持续回退说明查询形态、Binlog 连续性或基线需要处理。
 
-<!-- 知识类型: 操作步骤 -->
-<!-- 适用场景: 示例环境清理 -->
+{/* 知识类型: 操作步骤 */}
+{/* 适用场景: 示例环境清理 */}
 
 ## 清理示例
 
@@ -1406,7 +1406,7 @@ DROP DATABASE ivm_demo;
 
 删除 IVM 时，Doris 会一并清理其内部 Table Stream，不需要单独执行 `DROP STREAM`。
 
-<!-- 知识类型: 文档导航 -->
+{/* 知识类型: 文档导航 */}
 
 ## 更多参考
 
