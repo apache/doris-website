@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/prefix-index",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/prefix-index.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/prefix-index.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "7d0debad8cd2125c59effeb809cdf9681365df6f7b6253b4221b13460f16c1b8",
+    "sourceTechnicalHash": "7a326b4d8212a8b68ed15f1e7ab6ada3958f713f1333b40bd1ff9004ba9c4dfc",
+    "targetHash": "0842338c4783de22e07902e8b44a3ab4128b8cd2305957b57b1f43da6b17cab9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:05:28.127Z",
+    "glossaryVersion": "0"
+  }
+}
