@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/ADD-BROKER",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/ADD-BROKER.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/ADD-BROKER.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "bc7208ed4f9f7ca75b45fc5fe1f3cded2c0493062294506504876dd0fe06a750",
+    "sourceTechnicalHash": "4e8618e4ab32eae74f16926966986764cb3cc8e866af86adf2efc741ed250dbf",
+    "targetHash": "b3cfaaa278273ecfd8aca4ca7725ca67bc72df0641043ce4a07a696f193efae0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:35:18.350Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/MODIFY-FRONTEND-HOSTNAME",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/MODIFY-FRONTEND-HOSTNAME.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/MODIFY-FRONTEND-HOSTNAME.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "ccfad8fdb9fdd4d69047dde221d300e81bac8f990e521c904afb4bd169a6e42e",
+    "sourceTechnicalHash": "41a6b803514c867a9da38b79fbc90686cdda10228fe258513b5cc54a27f78a4b",
+    "targetHash": "5a56cc25245db183d77cb47d89d8ac470d6ba17ed99e969daef7ebd5ec2e31e5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:35:18.349Z",
+    "glossaryVersion": "0"
+  }
+}
