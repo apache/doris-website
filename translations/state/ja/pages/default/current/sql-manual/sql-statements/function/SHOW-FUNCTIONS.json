@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/function/SHOW-FUNCTIONS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/function/SHOW-FUNCTIONS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/function/SHOW-FUNCTIONS.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0e9ddd0122075be6b07adb585fe2c1240fad2d0f42a4fd0fd3f6d4e8dfe2f5cd",
+    "sourceTechnicalHash": "5b0742c53d46f863455585f0478b83adeedebfcbb1ac70bcc1d7733000667c40",
+    "targetHash": "34a5afeebb7e940dbc8f20a42f45b92be813b63f9d73d2d30e6922819338dd04",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.012Z",
+    "glossaryVersion": "0"
+  }
+}

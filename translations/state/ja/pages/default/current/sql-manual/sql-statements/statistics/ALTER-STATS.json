@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/statistics/ALTER-STATS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/statistics/ALTER-STATS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/statistics/ALTER-STATS.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "1cbed2ffee04f9de2c7081cbc3f3571c81d7a4579bbbc70d5953912600cadb04",
+    "sourceTechnicalHash": "cf929040b07d066f55aa787052aa8f91aeb9f282aadd2fb542e1164e57ca8c33",
+    "targetHash": "f57e59cb7c129cf5892995e5ed3fb15a9d812e7314f0d4fb94a8e7050bbeb1e4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.012Z",
+    "glossaryVersion": "0"
+  }
+}

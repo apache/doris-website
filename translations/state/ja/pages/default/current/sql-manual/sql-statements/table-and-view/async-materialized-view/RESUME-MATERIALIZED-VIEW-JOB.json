@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW-JOB",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW-JOB.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/async-materialized-view/RESUME-MATERIALIZED-VIEW-JOB.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "6e5482d8e10f2a9b19845fc44aba5c00b08101a31092c7be733e5049978e74b7",
+    "sourceTechnicalHash": "ab26a3ee5a20e127b2d4f174e10d5eebe8d621c1c19d040d511904fc9dac662a",
+    "targetHash": "3182e6cbdd2628f71713ed6410b2406de5c243afd84b0b3103eebfa4c4e74d26",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.010Z",
+    "glossaryVersion": "0"
+  }
+}

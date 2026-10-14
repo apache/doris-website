@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b033c4164bb1e14f14fca86c4ee72fbf27dcbe3c8fb26e1d1e6ad4bdb623312e",
+    "sourceTechnicalHash": "5ea5069c80d4612c301c7aaa7edef3e1cc6e83c5d72cb9c71ad0fd28cd8cc6f3",
+    "targetHash": "ea41b0ba6e488e4aa1ea1f058db37d3bf8e33e45f9047770349b5dcc8f32ab07",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.013Z",
+    "glossaryVersion": "0"
+  }
+}

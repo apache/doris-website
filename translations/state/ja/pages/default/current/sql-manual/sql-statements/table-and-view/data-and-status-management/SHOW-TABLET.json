@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "591386fc4ddf7c9043df5c304737d649ff059c04a992e8097aed019fc3e3609f",
+    "sourceTechnicalHash": "517dfd55e7a8886e1180799df6f4298d61e26d54f28812b482c4030efa79609e",
+    "targetHash": "bf14cf718ad92f2b60fa38ece5cd1ce7ea1ac758151a97c10ee906ff3794d14a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.011Z",
+    "glossaryVersion": "0"
+  }
+}

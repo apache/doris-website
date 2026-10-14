@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/DROP-BROKER",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/DROP-BROKER.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/DROP-BROKER.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "13de315e41016fdf74b6e6d3b353c6460ef782a8ea04076fdf5fcae8710dd57a",
+    "sourceTechnicalHash": "55f608989356ab069abbe82876a1dc3514f0a5a6ea7ec36d133c5d516a9c5888",
+    "targetHash": "dcb44d4ca67daa48dc63d06b6137d80a13272f6b50ab40bf0d0621166972ee60",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.013Z",
+    "glossaryVersion": "0"
+  }
+}

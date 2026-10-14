@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/statistics/ANALYZE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/statistics/ANALYZE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/statistics/ANALYZE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "233686534cd61bbe507cc4c8f65d3027f8bb8093f3821ad52c0dc0a23343d8fe",
+    "sourceTechnicalHash": "2182e23a8fd8da1930fc9182dbff003c5e5691d492d348d2586608f7eda5df8a",
+    "targetHash": "dec4db6355fcb4bc957e04acb99c9498f5939b55e628375db37b63083a7a5946",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.012Z",
+    "glossaryVersion": "0"
+  }
+}

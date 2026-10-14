@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/DROP-RESOURCE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/DROP-RESOURCE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/DROP-RESOURCE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e445233678d794905d2ec2e8bd13e16ea1809053c27b2f773f0741b6436905f4",
+    "sourceTechnicalHash": "9132291a9e3ed139bfb0bb94b254d91c20ed38a247d8182e7e6846ba7e30a58b",
+    "targetHash": "40a991585a64b0e055e03758aec4905b538b5274aa6aea3df2400014f02328aa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.013Z",
+    "glossaryVersion": "0"
+  }
+}

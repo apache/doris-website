@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/ADD-OBSERVER",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/ADD-OBSERVER.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/ADD-OBSERVER.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "560ec912cfaf078dea2824996b2ea49d3d69a50526d62f23c57122df917f9b1e",
+    "sourceTechnicalHash": "e0693e26dc290f16419b5cd718e6270cbce7479e156576d53d3025653c2ad7cd",
+    "targetHash": "85d8fefffddd2443e97e3434ab77963f924726bf5fedaedd0bcf0a71a5f0a023",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.012Z",
+    "glossaryVersion": "0"
+  }
+}

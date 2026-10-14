@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/statistics/DROP-STATS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/statistics/DROP-STATS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/statistics/DROP-STATS.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0f82b90082ee7d82543ab2dd83661c263351b32a94812c55a0f24e3a11e3cf11",
+    "sourceTechnicalHash": "ead23ea17a92c98ba1a2e00e15d127ebf6655bc6905b01d83694b235f9496112",
+    "targetHash": "ad0adaec841bf0b06431d76905c1618068ad90fa2f90b72757e1573b1b8ab7c0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.012Z",
+    "glossaryVersion": "0"
+  }
+}
