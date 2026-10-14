@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/inverted-index/overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/inverted-index/overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/overview.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "c7e176281e3ad58909bc65d3e25bf12c5f776738891378cebf9de3dbf2124963",
+    "sourceTechnicalHash": "60ff1afed7e6775a0fa7d4838738b740df068b098d244bf8bff52d5c2387cfae",
+    "targetHash": "cb442520115811fd925b1904f0a20ae66626c5b58802c89a43a44467902b463f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:05:28.127Z",
+    "glossaryVersion": "0"
+  }
+}
