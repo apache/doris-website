@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "compute-storage-decoupled/rw/file-cache-rw-compute-group-best-practice",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/compute-storage-decoupled/rw/file-cache-rw-compute-group-best-practice.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/compute-storage-decoupled/rw/file-cache-rw-compute-group-best-practice.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "b70ec0bbb73279e0b6d3d2a24380f9f048bfb327fe662ea136753d804e3d4f64",
+    "sourceTechnicalHash": "f6e1396fba60a5fcb5babb23b0955c3aec33a9c0a6f5f84c0dfa472cdc93d868",
+    "targetHash": "a6e4d5b5bdda6a529510bcd0dc2e9274c642bf1bf4be64f2480adacb7a49c6ca",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T12:26:49.464Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/datax",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/datax.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/datax.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "5526c552e5c5c39127af83f1331ee95bc8b6d836917810ee82cfe58fb682cb7a",
+    "sourceTechnicalHash": "f45ffd099ec8b4f2bd24b9304701eb09839a2b9540915b908cdbe19496b8e420",
+    "targetHash": "88b405b13c43d02aa51f4b18063d3f173096663b2e3acee392fe63ab865ac9a7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T12:26:49.465Z",
+    "glossaryVersion": "0"
+  }
+}
