@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/load-best-practices/stream-load-in-complex-network",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/load-best-practices/stream-load-in-complex-network.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/load-best-practices/stream-load-in-complex-network.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "336c549ee94e144a890160a95ba77789a7c410697ba026a794254ba3c07fdd9f",
+    "sourceTechnicalHash": "e0328f20c03332ab16280e9c5052fbfe57d4cf06694ed2d89460eafe3dc46930",
+    "targetHash": "731447cb504f0c4a995226d80f5f0b9d47684fd2f377f71f1853cced27035b58",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T15:42:24.385Z",
+    "glossaryVersion": "0"
+  }
+}
