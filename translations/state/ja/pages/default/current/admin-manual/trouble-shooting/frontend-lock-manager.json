@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/frontend-lock-manager",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/frontend-lock-manager.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/frontend-lock-manager.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c9fb0ae9505bd65f8538f1f9fa82a73e203c26387fb1dadd8a530df59f89963f",
+    "sourceTechnicalHash": "05eaf7f590c26257eba1e53f019e83dd6461f87fa624305ae6254aba36b7e715",
+    "targetHash": "adf0042cadd3ee72522a6c5ece0ae2d8f7c56ae8f063db50518ab17ebe301095",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.341Z",
+    "glossaryVersion": "0"
+  }
+}

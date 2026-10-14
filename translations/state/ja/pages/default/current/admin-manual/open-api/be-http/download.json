@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/download",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/download.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/download.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "fc27dbff6d35b4fa597b746297334a49324eb349c8c9378a1c5cc4004df3f837",
+    "sourceTechnicalHash": "654375836d1db1a3cdf91ce56314944054c6929faab9bae108e9edcb081f1b27",
+    "targetHash": "c66ab16d7494a9038520edc68adbaae459ce718e4dea62ae1d9928bc673339c4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.339Z",
+    "glossaryVersion": "0"
+  }
+}

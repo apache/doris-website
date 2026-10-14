@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/health",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/health.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/health.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "501e47f4b1d82635fccd8b4d7ae1acc64c328a96431ea18c89c49b2a837950d0",
+    "sourceTechnicalHash": "c7416a90d4ed745c7a51e7be1f7bc6726ab9f6c63f4ff29eec7c4fa78b83e7be",
+    "targetHash": "ad79a7d3a37ab80d5157934c6b1584220e623921a250fe0253acee223b9e141d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.339Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/debug-point-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/debug-point-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/debug-point-action.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "93bb1f2bbb5d577e1bd1384a2009b7d7879fdcf39912d63dd71d2c4bda982acd",
+    "sourceTechnicalHash": "25c0325f92b7cdce959fd7d3ac54e83b2925eef3227ac679bc3f31dea2a5d14d",
+    "targetHash": "df80fea3979703369d5228ca642323e45693d5aba62a66baf8aa877d2f6bc35c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.338Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/timestamp-ns-conversion",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/timestamp-ns-conversion.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/timestamp-ns-conversion.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "6d99db16a6e285c7090ef0fba49612d6e07e7dd555cb8260ddc6cb5392210ba0",
+    "sourceTechnicalHash": "1b5c5b77a944dc6de1a77c49cae955c057a58d1216e534bc77d57e177c2a420e",
+    "targetHash": "83add1d6cd8a06afee87090240446810fd033a0ccf7396e821a26cc36cb21553",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.345Z",
+    "glossaryVersion": "0"
+  }
+}

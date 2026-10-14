@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "faq/sql-faq",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/faq/sql-faq.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/faq/sql-faq.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "6368556a4756749e84a9fcdfd1fc7bee6d8449d8159bcdaf4a373439f6e35b7b",
+    "sourceTechnicalHash": "da7b171ff8e7663afbd923ba0233a9a694a77e36d3a2783c7018042a5f30f32f",
+    "targetHash": "dadfff128fc4f1e3467a45696325bfa3acf12c308fff310a6d2e5017e2d2b288",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.342Z",
+    "glossaryVersion": "0"
+  }
+}

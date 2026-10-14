@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/date-time/TIMESTAMP-NS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/date-time/TIMESTAMP-NS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/date-time/TIMESTAMP-NS.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "1152ee5f855787b43f5e5aafd6009db42f4e3ae88ee671db6b297083c5c22cd2",
+    "sourceTechnicalHash": "6d0ad064fbb4283a63228d248cdef953ad0c841439100968078ac94b7d86b5a1",
+    "targetHash": "b7e1eb94e5c93bbada1d417d8bd2b5a4c1878f12c6b2e1ae3d67787dd86959d8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.343Z",
+    "glossaryVersion": "0"
+  }
+}

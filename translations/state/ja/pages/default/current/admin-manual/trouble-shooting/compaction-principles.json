@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/compaction-principles",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/compaction-principles.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/compaction-principles.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c832de5481302f4d7b1c7ffb3fcb44c311ab3b76eeee513fcd0cb7011ede302d",
+    "sourceTechnicalHash": "9fb472467f953baf340707515a7db98e2f042546005fb224c4e083688f094901",
+    "targetHash": "56e9cdee9aea88726d42beadaaf750881c6c0cbd91212e30a852d736afe0df03",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.341Z",
+    "glossaryVersion": "0"
+  }
+}

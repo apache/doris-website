@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/uuid",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/uuid.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/uuid.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "38696c6457a8c52c7b2fcad3afa5b60456ad393a7d6753268d11d0eef75572d7",
+    "sourceTechnicalHash": "f4557912ea452bb9d312053802674c7dce2d5a1cee52d3eced19efbb6d99e1c7",
+    "targetHash": "c59037a05d4084b432a6a538ee1a6d669cf7edc4e0ec3b44c33f3a54b941fd71",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.345Z",
+    "glossaryVersion": "0"
+  }
+}

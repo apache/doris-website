@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/be-vlog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/be-vlog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/be-vlog.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "8879c248bfe430ac867b52a9fe650e3e53e3a4bd95d3754a82c875e8105c576d",
+    "sourceTechnicalHash": "f32b9e17642a7be8913577a34358e56f32344172bf190bd038b3e59454bafcb4",
+    "targetHash": "fd17470d07e4d236ee939483c1adb9b4bef0308d17a332f2517abe7fa5933c11",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.339Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "faq/correctness-faq",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/faq/correctness-faq.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/faq/correctness-faq.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "d540f6aec81dabcd807abb128f05ef74cd86cca0fc4334bd55a60d06cda28e12",
+    "sourceTechnicalHash": "2199efa0979ac81a6044feb6b56917a77b741f47e52dff2ec89fb3f0c4f7c68e",
+    "targetHash": "ae2638096b82d3ae11366ff2030e63e7703402eaa3019cd5d7d388eaf35ac3c8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.342Z",
+    "glossaryVersion": "0"
+  }
+}

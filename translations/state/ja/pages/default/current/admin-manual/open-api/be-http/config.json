@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/config",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/config.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/config.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "fea236c1f3f3c2713f542173aee05140661976c37bff70a1f0ecf7dc15aa1ca2",
+    "sourceTechnicalHash": "90a89e7e92965cf7ae80a912b8817b606000abb56ae4657def51711642e8424e",
+    "targetHash": "2b67dd5650b77fb196eb640ff7e6c853d25781d63d8b8e574f14121d06787d50",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.338Z",
+    "glossaryVersion": "0"
+  }
+}

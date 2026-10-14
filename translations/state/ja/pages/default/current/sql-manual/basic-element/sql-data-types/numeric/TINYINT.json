@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/TINYINT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/numeric/TINYINT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/numeric/TINYINT.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "6c21a7fbcd49e43b1b35bb2582e74da29115a0587d93c8be6d968685dc101a16",
+    "sourceTechnicalHash": "0b1a69f142ce3065ce122a4ced2c5e29cfd764203df94ed376d96f6d910addf7",
+    "targetHash": "729a4cc63afe5663978de5b5b85890bb4d5d8c02ca59e500161089429f4a2397",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.342Z",
+    "glossaryVersion": "0"
+  }
+}

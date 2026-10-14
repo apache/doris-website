@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "6c5832cc2b4eeb47dfaafefe4f5cc899798f3f8533f1c8de7a6fd09af98d9216",
+    "sourceTechnicalHash": "6d57217e59599f81f1a45f7b1c9d98500f44ea465ffaa6353b07e94b593db110",
+    "targetHash": "70007a002b37b110259b5d50415c43437967f2cf64b37ab52eca27e2df91ad39",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.344Z",
+    "glossaryVersion": "0"
+  }
+}

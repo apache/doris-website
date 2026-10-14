@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/import-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/import-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/import-action.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "79bce6bba764fecd9798f24032d13aa60bea6c2e3fb573a97e44475cf5dc8d08",
+    "sourceTechnicalHash": "a4361e6f24a232e52c615d976b033a4190c958a32a4ffb90493d9a0a2474bb99",
+    "targetHash": "d3fde4763a27e7788afd9f2f1afcc7f04fe66be2c499c6a587ca9dbb6208c7e1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.337Z",
+    "glossaryVersion": "0"
+  }
+}

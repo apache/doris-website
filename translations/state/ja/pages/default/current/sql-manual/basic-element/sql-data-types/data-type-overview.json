@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/data-type-overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/data-type-overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/data-type-overview.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e52763bfe5049662e821e2803c80906ae056d069d6642ef978934256b6c2df18",
+    "sourceTechnicalHash": "160f6733d9a32ab9d947e0c293aebf4712208d6b64bd065e0d932aaeadb2793d",
+    "targetHash": "4b2a315ca59036fc9d2d315719534878f2fae06b5b199e44927d6e0acb22ce49",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.342Z",
+    "glossaryVersion": "0"
+  }
+}
