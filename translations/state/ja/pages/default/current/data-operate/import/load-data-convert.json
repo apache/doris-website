@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/load-data-convert",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/load-data-convert.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/load-data-convert.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "e67c9e8efa977beab8966343ae50f07db3c456d6577ce1bb6ef4d6349968c768",
+    "sourceTechnicalHash": "9b0cac09c383d9e25a83b0296e955a7e9b7cc145e08af6a65eda3376e35fafee",
+    "targetHash": "60f9cd7376135c76851be567e0c5b156b1bd6d72328f92c0390ad0390c148ca9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T15:42:24.384Z",
+    "glossaryVersion": "0"
+  }
+}

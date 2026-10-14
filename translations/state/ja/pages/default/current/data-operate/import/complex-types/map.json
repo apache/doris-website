@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/complex-types/map",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/complex-types/map.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/complex-types/map.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "8b90cff640875e8ee1f923fa8a90ef69cce41d2bb0606795e3325cf2a3cda28c",
+    "sourceTechnicalHash": "18d5f1f50a7a45a22526db22f25c829eecda02ab2be8a8c3a9b8d2c8fa31e367",
+    "targetHash": "44813d7bb66e73152c4ce9bb09d5009f5bf69b0d243c23f3169ffda49362bedd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T15:42:24.384Z",
+    "glossaryVersion": "0"
+  }
+}
