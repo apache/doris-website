@@ -80,7 +80,7 @@ RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>]
 
 ## 使用上の注意
 
-- この操作では、一定期間内に削除されたメタデータのみ復元できます。デフォルトは 1 日です（`fe.conf` の `catalog_trash_expire_second` パラメータで変更できます）。
+- この操作では、一定期間内に削除されたメタデータのみ復元できます。デフォルトは 1 日です（`catalog_trash_expire_second` パラメータを `fe.conf` で設定して変更できます）。
 - メタデータの復元時に ID を指定しない場合、デフォルトでは、同じ名前で最後に削除されたメタデータが復元されます。
 - 現在復元可能なメタデータは、`SHOW CATALOG RECYCLE BIN` で確認できます。
 
@@ -98,7 +98,7 @@ RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>]
     RECOVER TABLE example_db.example_tbl;
     ```
 
-3. テーブル `example_tbl` から `p1` という名前のパーティションを復元する
+3. `p1` という名前のパーティションをテーブル `example_tbl` から復元する
 
     ```sql
     RECOVER PARTITION p1 FROM example_tbl;
@@ -116,7 +116,7 @@ RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>]
     RECOVER TABLE example_db.example_tbl example_tbl_id;
     ```
 
-6. テーブル `example_tbl` から、ID が `p1_id`、名前が `p1` のパーティションを復元する
+6. ID が `p1_id`、名前が `p1` のパーティションをテーブル `example_tbl` から復元する
 
     ```sql
     RECOVER PARTITION p1 p1_id FROM example_tbl;
@@ -134,7 +134,7 @@ RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>]
     RECOVER TABLE example_db.example_tbl AS new_example_tbl;
     ```
 
-9. テーブル `example_tbl` から、ID が `p1_id`、名前が `p1` のパーティションを復元し、`new_p1` に名前を変更する
+9. ID が `p1_id`、名前が `p1` のパーティションをテーブル `example_tbl` から復元し、`new_p1` に名前を変更する
 
     ```sql
     RECOVER PARTITION p1 p1_id AS new_p1 FROM example_tbl;
