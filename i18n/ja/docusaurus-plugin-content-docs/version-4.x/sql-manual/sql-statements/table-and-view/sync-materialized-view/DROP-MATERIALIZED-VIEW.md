@@ -39,7 +39,7 @@ ON <table_name>
 
 ## 例
 
-`lineitem` テーブルの同期マテリアライズドビュー `sync_agg_mv` を削除します。
+`sync_agg_mv`（`lineitem` テーブル上の同期マテリアライズドビュー）を削除します。
 
 
 ```sql
