@@ -1,0 +1,114 @@
+---
+title: Condition Cache
+description: フィルターの評価結果をビットベクトルとして保存するセグメント単位のキャッシュ。同じ WHERE 句を使うクエリで述語の評価結果を再利用できます。
+keywords:
+  - Condition Cache
+  - 述語キャッシュ
+  - ビットベクトルキャッシュ
+  - フィルター結果の再利用
+  - Apache Doris のクエリ高速化
+  - WHERE 句キャッシュ
+slug: /key-features/condition-cache
+image: /images/next/key-features/condition-cache.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - query-acceleration
+    - caching
+language: ja
+---
+
+> **要約** Apache Doris の Condition Cache は、各セグメントでの `WHERE` 句の評価結果を、`(predicate digest, key range)` をキーとする圧縮ビットベクトルとして保存します。次に同じセグメントで同じフィルターを使うクエリは、ビットベクトルによって一致する行がないと分かっているグラニュールをスキップできます。SELECT リスト、GROUP BY、集計が異なっていても再利用できます。五つのダッシュボードパネルがいずれも `WHERE region = 'ASIA' AND order_date >= '2023-01-01'` を使う場合、フィルターはセグメントごとに一度だけ評価され、その結果がすべてのパネルで再利用されます。
+
+![Apache Doris Condition Cache：フィルターの評価結果をビットベクトルとして保存し、同じ WHERE 句を使うクエリで述語の評価結果を再利用するセグメント単位のキャッシュ。](/images/next/key-features/condition-cache.jpg)
+## Apache Doris の Condition Cache を使う理由 {#why}
+
+Apache Doris の Condition Cache は、`WHERE` 句を共有し、それ以外の部分が異なるクエリ間で述語の評価結果を再利用します。SQL Cache と Query Cache の間にある用途をカバーします。多くの分析ワークロードでは、集計よりもフィルタリングの処理量が多くなります。単一の `orders` テーブルを使うダッシュボードでは、十個のパネルがいずれも `WHERE region = ? AND order_date >= ?` を使い、SELECT リストだけが異なることがあります。アプリケーションのバックエンドが、数秒ごとに同じ述語を異なる集計で再実行することもあります。T+1 レポートでは、前夜から変更されていない[パーティション](./partitioning-and-bucketing)に対して異なる集計を実行します。
+
+これらのクエリのたびに、クラスターは列の読み取り、デコード、比較、行マスクの作成という述語の評価コストを負担し、その後に残りのプランを処理します。
+
+SQL Cache は SQL テキストがバイト単位で完全に一致する場合に役立ちますが、SELECT リストが変わると使えません。Query Cache はタブレット全体を共有する集計クエリに役立ちます。WHERE 句だけが共通で SELECT リストが異なる場合には、どちらも対応できません。
+
+Apache Doris の Condition Cache は、周囲のクエリが行をどう処理するかとは独立して、セグメント単位で述語の評価結果をキャッシュします。
+
+## Apache Doris の Condition Cache とは {#what}
+
+Apache Doris の Condition Cache は、BE 側で述語の評価結果を保持するキャッシュです。結果はセグメントごとにグラニュール単位のビットベクトルとして保存されます。セグメントのスキャンを開始するとき、BE は述語式とセグメントのキー範囲から 64 ビットのダイジェストを計算し、キャッシュを検索します。ヒットした場合、ビットが `0` のグラニュールをすべてスキップし、ビットが `1` のグラニュールだけをスキャンします。ミスした場合は通常どおり述語を評価し、得られたビットベクトルをキャッシュに書き込みます。
+
+このキャッシュは、射影、集計、結合、ソートとは独立しています。WHERE 句が同じ二つのクエリは、一方が `SELECT *` を実行し、もう一方が `SELECT COUNT(DISTINCT customer_id)` を実行する場合でも、同じエントリを共有します。
+
+**主な用語**
+
+- **`enable_condition_cache`**：セッション変数。デフォルトで有効です。`false` に設定すると、一つのクエリまたはセッションで使用を停止できます。
+- **セグメント**：タブレット内の書き込みが完了したファイル。一度書き込まれたセグメントは変更されず、コンパクションでは代わりに新しいセグメントが作成されます。この不変性により、キャッシュを安全に利用できます。
+- **グラニュール**：セグメント内の 2048 行からなるブロック。ビットベクトルは行ごとではなく、グラニュールごとに一ビットを保持します。
+- **述語ダイジェスト**：連言述語とセグメントのキー範囲から得られる 64 ビットのハッシュ。意味的に等価な述語は同じダイジェストになります。
+- **`condition_cache_limit`**：BE ごとのキャッシュのメモリ上限。単位は MB、デフォルト値は `1024` です。`be.conf` で設定します。
+
+## Apache Doris の Condition Cache の仕組み {#how}
+
+Apache Doris の Condition Cache は、各連言述語とセグメントのキー範囲をハッシュ化して 64 ビットのダイジェストを作成し、BE ごとの LRU キャッシュで検索して、保存されたビットが `0` のグラニュールをすべてスキップします。
+
+1. **ダイジェストの生成（BE）。** スキャンオペレーターがセグメントで処理を開始すると、連言述語とセグメントのキー範囲を正規化して 64 ビットのダイジェストを生成します。SELECT リスト、GROUP BY、集計は述語に影響しないため、それらが異なっていても同じダイジェストになります。
+2. **セグメントごとの検索。** BE はシャード化された LRU キャッシュで `(digest, segment_id)` を検索します。セグメントに削除マーカーがある場合、または TopN ランタイムフィルターによって実行時に述語が作られた場合は、検索をスキップして通常のスキャンに切り替えます。
+3. **ヒットした場合。** スキャンはビットベクトルを読み取り、ビットが `0` のグラニュールをすべてスキップして、ビットが `1` のグラニュールの列だけをデコードします。その後、グラニュール内の行単位のフィルター処理で一致を確認します。
+4. **ミスした場合。** スキャンは通常どおり述語を評価しながらビットベクトルを作成し、結果を `(digest, segment_id)` をキーとして書き込みます。以後、同じダイジェストを持つクエリはキャッシュにヒットします。
+5. **不変性による無効化。** セグメントは変更されません。新しい INSERT やコンパクションでは新しい ID のセグメントが作られ、古いキャッシュエントリは LRU から自然に追い出されます。Apache Doris で明示的な無効化処理は不要です。
+
+## クイックスタート {#quick-start}
+
+```sql
+SET enable_condition_cache = true;
+
+-- Run 1: misses every segment, builds bit vectors, writes them back
+SELECT region, country, SUM(amount)
+FROM orders
+WHERE region = 'ASIA' AND order_date >= '2023-01-01'
+GROUP BY region, country;
+
+-- Run 2: different SELECT, same WHERE; hits the cache on every segment
+SELECT COUNT(DISTINCT customer_id)
+FROM orders
+WHERE region = 'ASIA' AND order_date >= '2023-01-01';
+```
+
+**期待される結果（2 回目の実行で得られる `EXPLAIN PROFILE` の抜粋）**
+
+```
+ConditionCacheSegmentHit:    42
+ConditionCacheFilteredRows:  18,400,219
+```
+
+一回目の実行では、すべてのセグメントをスキャンして述語を評価し、セグメントごとに一つのビットベクトルを書き込みます。二回目の実行は同じ WHERE 句を使うためダイジェストが一致し、すべてのセグメントでキャッシュにヒットします。BE は、`region = 'ASIA' AND order_date >= '2023-01-01'` に一致する行がないとすでに分かっているグラニュールをスキップします。
+
+## Apache Doris の Condition Cache を使うべき場合 {#when}
+
+多くのクエリが同じ `WHERE` 句を再利用し、テーブルへの書き込みが絶え間なく発生するわけではない、読み取り中心のワークロードでは、Apache Doris の Condition Cache を有効にしてください。
+
+**適したケース**
+
+- 多数のパネルが同じ `WHERE` 句を使い、SELECT リストや集計だけが異なるダッシュボード。
+- 書き込み頻度の低いテーブルに対して、同じ述語を高頻度で再実行するアプリケーショントラフィック。
+- 前日分の読み込み済みパーティションに対して異なる集計を実行する T+1 レポート。
+- ほとんどのグラニュールのビットが `0` になり、キャッシュによって各セグメントの大部分をスキップできる、選択性の高いフィルター。
+
+**適さないケース**
+
+- 書き込みが大量かつ継続的に発生するテーブル。新しいセグメントには新しいダイジェストが必要になり、古いキャッシュエントリは再利用される前に LRU から追い出されます。集計結果をクエリの形が同じ場合に再利用したいなら、代わりに [Query Cache](./query-cache) を使用してください。
+- 削除マーカーがあるセグメントを対象とするクエリ。削除の意味を正しく保つために BE がキャッシュをスキップするので、`DELETE` が頻繁に実行されるワークロードではキャッシュが使われる機会は少なくなります。
+- 実行時に TopN ランタイムフィルターによって述語が作られるクエリ。現時点ではサポートされていません。
+- ほとんどの行に一致する、選択性の低いフィルター。一致するグラニュールは引き続きスキャンする必要があり、キャッシュで処理を省けるのは、一致する行がないとすでに分かっているグラニュールだけです。
+- 他のクエリで再利用されない、一度限りの WHERE 句を持つアドホッククエリ。一回しか読み取られないエントリがキャッシュを占め、互いに追い出し合います。有効のままでも問題はありませんが、ヒット率は低いままと考えてください。
+- 主キーによる検索。代わりに[高並行ポイントクエリ](./high-concurrency-point-query)を使用してください。
+
+## 関連情報 {#further-reading}
+
+- [Condition Cache ユーザーガイド](../query-acceleration/condition-cache)
+- [Query Cache：パイプライン単位の部分集計キャッシュ](./query-cache)
+- [SQL Cache：バイト単位で完全に一致する SQL の結果キャッシュ](../query-acceleration/sql-cache-manual)
+- [Doris のキャッシュ：適切な方法の選択](../query-acceleration/caching-intro)
+- [Data Cache と Page Cache](./data-cache-page-cache)：Condition Cache より下のストレージ層で、データとデコード済みページをキャッシュします。
+- [Metadata Cache](./metadata-cache)：データ側のキャッシュを補完する、外部カタログのメタデータキャッシュです。
+- [MPP アーキテクチャ](./mpp)：Condition Cache が評価済みの述語をスキップするために利用する実行プランのモデルです。
