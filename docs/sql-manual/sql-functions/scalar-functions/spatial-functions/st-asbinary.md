@@ -42,6 +42,8 @@ ST_ASBINARY( <geo>)
 | -- |----------|
 | `<geo>` | 	The geometric object to be converted to WKB format, including: Point, LineString, Polygon. |
 
+The development version also accepts typed Iceberg `GEOMETRY` and `GEOGRAPHY` values. This overload preserves raw two-dimensional XY WKB, including all seven basic WKB kinds and EMPTY, and returns `VARBINARY`. The legacy STRING overload retains its `VARCHAR` result and existing shape support. NULL input returns NULL. See [Iceberg spatial types](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-types) for scope and parameter limits.
+
 ## Return Value
 
 Returns the WKB binary representation of the geometric object, displayed as a hexadecimal string (e.g., \x01010000...).
