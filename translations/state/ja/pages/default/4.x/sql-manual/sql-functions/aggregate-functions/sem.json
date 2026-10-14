@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/sem",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/sem.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/sem.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "780daa6144838247d61d61b4400896f4007f0b098e5bf9eb45cfda3539105a96",
+    "sourceTechnicalHash": "41de7f64acc56db69b99a053899fce394db0417da94c8c68657b8823f94a158c",
+    "targetHash": "54b55f0e792d1ad348f9a53b12e6f9b0ec2ae55976cb10790bc6e3b2521290d3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:27:19.787Z",
+    "glossaryVersion": "0"
+  }
+}

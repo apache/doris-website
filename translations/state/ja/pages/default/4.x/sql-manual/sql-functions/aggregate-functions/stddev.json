@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/stddev",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/stddev.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/stddev.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "2f5a1bbd4a026aba7393b4f28d93fab5c39fade75ee5374e7f67c0c8b102a0c7",
+    "sourceTechnicalHash": "40ee1319f5beb41da51dbb5e06c4bc3464875966596ca0b5a515644161b1b8fe",
+    "targetHash": "e2a3cad8dd9321010bb320bfc50930c3a6d04a0b607ba2d6465626ba53f53019",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:27:19.787Z",
+    "glossaryVersion": "0"
+  }
+}

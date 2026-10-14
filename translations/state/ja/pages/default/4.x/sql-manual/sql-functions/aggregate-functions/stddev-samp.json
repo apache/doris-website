@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/stddev-samp",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/stddev-samp.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/stddev-samp.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "ac34359078404567632d09703b61507617796106896dec6d08a0289e1fc22f19",
+    "sourceTechnicalHash": "647b0ec2a633d672de28a3fd26ce9811e3bb22bec3adb5bdecb0250e7616224c",
+    "targetHash": "b0a8fd3060a9b3d053567e286a3e2e046a5855971caaf16b831ed68f21e86734",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:27:19.788Z",
+    "glossaryVersion": "0"
+  }
+}
