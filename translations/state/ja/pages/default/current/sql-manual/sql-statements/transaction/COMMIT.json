@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/transaction/COMMIT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/transaction/COMMIT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/transaction/COMMIT.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f43e1708d774cb6e6395f13dd71f77e1b57ab1cf3287477315efa3c584cb1151",
+    "sourceTechnicalHash": "dfda1cc225a4254f6edb440853d159903ff0d90d25f814ce3990baafa0e43e21",
+    "targetHash": "0e56f93491d6e0710f0465e70685de1d4e4a068ee80bea8a26f90a7994e12add",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.628Z",
+    "glossaryVersion": "0"
+  }
+}

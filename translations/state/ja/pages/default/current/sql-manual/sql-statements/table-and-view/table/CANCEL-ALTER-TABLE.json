@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0d02229a6c3c5b9b81a09d30de0b72f9a481a5cee7393b36bd62998a616e1221",
+    "sourceTechnicalHash": "6e063eb9daa1a9ec7800481d37f123427541ae388333f30e1ab8f64829730f99",
+    "targetHash": "9a42960040b74df5f404bfb7d06cde46a5b28833a3769928aa0de7047003204d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.630Z",
+    "glossaryVersion": "0"
+  }
+}

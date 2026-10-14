@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-RESTORE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-RESTORE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-RESTORE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "162ad7cb1c2b9e1607ee133224e4725912939f6dcdce9cca6587b37a07037fe0",
+    "sourceTechnicalHash": "0c73793ff82e2a626c5537603623c825546b4b5b5ded625cce7acf8a14c379e4",
+    "targetHash": "ee4b06591f6fc523d287eae2f85e1bc84b17a7cafb51b398a3b81cf7a4085dd9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.628Z",
+    "glossaryVersion": "0"
+  }
+}

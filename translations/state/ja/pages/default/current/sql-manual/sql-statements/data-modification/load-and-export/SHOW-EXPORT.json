@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "6b2b78c429f424465a56a0c9f6784c2c129decaefaa3b640e4be577bb53b98b0",
+    "sourceTechnicalHash": "fb90fa5ab74a87c8b07f73aa2a546f0f3c1ec3c64f3f54efd310b431980b625a",
+    "targetHash": "77f6716e926f32e150bc3de9a5d2285686282dea90588024d4af34161e4a8a9f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.627Z",
+    "glossaryVersion": "0"
+  }
+}

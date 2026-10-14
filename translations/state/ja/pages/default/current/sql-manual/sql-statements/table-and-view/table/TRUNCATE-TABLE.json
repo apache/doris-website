@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/TRUNCATE-TABLE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/TRUNCATE-TABLE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/TRUNCATE-TABLE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "9a22a8306640928094d72449ae30990c16b202576d2439ae732f4e3e83ee6301",
+    "sourceTechnicalHash": "fa702de9a1673e5c3d078d6bab34c4a7bf529eb57525f4d5a8f48512b64eb923",
+    "targetHash": "5eb71b923719043f64ff088f87e5064991302886eca30261cd736db5a9f7624d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.630Z",
+    "glossaryVersion": "0"
+  }
+}

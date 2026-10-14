@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/DROP-TABLE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/DROP-TABLE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/DROP-TABLE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0f4152d8beabfef99a40ed3e35dc1fbc41294b4ed07f6596b5490ea47f444086",
+    "sourceTechnicalHash": "faff17cdff95837494be71af170e5003903db59ce2236b228d5925ba7c6670da",
+    "targetHash": "b7817d9cb814cd69de619b2f5217ac2bbdafb783be174fef06c38da9155fffe0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.630Z",
+    "glossaryVersion": "0"
+  }
+}

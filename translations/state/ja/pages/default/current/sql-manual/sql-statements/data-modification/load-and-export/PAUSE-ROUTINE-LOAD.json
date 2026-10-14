@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/PAUSE-ROUTINE-LOAD",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/PAUSE-ROUTINE-LOAD.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/PAUSE-ROUTINE-LOAD.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "43eb559e1b9208e21d57d24c24b734033d921225842261cf5c9fca13fd274fdb",
+    "sourceTechnicalHash": "3b6912321f673f8d25c8b160e34954a45aa5d942c17d5a737d095cc9477adf4e",
+    "targetHash": "2167510baabcc52a55c867de1470b6b34b58335997b373de0fbb8033578c8d5b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.626Z",
+    "glossaryVersion": "0"
+  }
+}

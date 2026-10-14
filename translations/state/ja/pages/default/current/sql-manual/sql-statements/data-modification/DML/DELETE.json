@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/DML/DELETE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/DML/DELETE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/DML/DELETE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "46740f8f426514500a1de9b6b6279e166165c06ad86f47ce4b029766c5f72f18",
+    "sourceTechnicalHash": "fe2cd516798bcc2433615257b2b8cf8ad0ec4b1fbec94dcf2d69ab16087639ad",
+    "targetHash": "8280fabe76d36f41088277b228b8f33796be7682d1f272e8a060dd98703ff707",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.626Z",
+    "glossaryVersion": "0"
+  }
+}

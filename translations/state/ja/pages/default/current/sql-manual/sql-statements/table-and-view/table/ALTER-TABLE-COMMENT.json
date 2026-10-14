@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "71ff7174f6e0210444c0fcbcdaa3ea1a882e54265f874918f65391c5f721dcb2",
+    "sourceTechnicalHash": "a28019c46421b2e7c1ec3e947b529b2c1753b4b3dc02845316b4882272bc84f3",
+    "targetHash": "ef406e28324dc80b5d2e817290d9e2e0ac35c96bc6b3805981dfe63bb4368294",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.630Z",
+    "glossaryVersion": "0"
+  }
+}

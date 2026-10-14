@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/MYSQL-LOAD",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/MYSQL-LOAD.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/MYSQL-LOAD.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c021f4c158766d6d19877df0a4bcfc36562c2a3dcd204098ddd3a0ea2caa9378",
+    "sourceTechnicalHash": "84cf4d3389998ebc44e8809202580ac5b58a905e7474f7635ca8c5a9d3587969",
+    "targetHash": "3bb600766aaf33c4b43b679868144a9ca010fe3151956fe0db4862b5e2768487",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.626Z",
+    "glossaryVersion": "0"
+  }
+}

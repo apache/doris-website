@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/transaction/SHOW-TRANSACTION",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/transaction/SHOW-TRANSACTION.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/transaction/SHOW-TRANSACTION.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "895a09d67dd1b53cabd56e8c96b6afabf43c1e871ebd647b5f71a3d7754e6151",
+    "sourceTechnicalHash": "17a438240a8a09255f3e314aa1b5de230221fb787c3460a8c8068c531066a815",
+    "targetHash": "1dffdeefede634cbefeebae46252f9638a98ed9ca72050bbeaa262d9882f620a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.628Z",
+    "glossaryVersion": "0"
+  }
+}

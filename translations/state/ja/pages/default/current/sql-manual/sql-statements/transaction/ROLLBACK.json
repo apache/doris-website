@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/transaction/ROLLBACK",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/transaction/ROLLBACK.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/transaction/ROLLBACK.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "819aba3d2cc944a9ca434f13f3ccfb69cd4b9f9eb3604deb5508977759cca3d0",
+    "sourceTechnicalHash": "6edb1f155d90809b6a28301386414b09b485c833a5809448a135be3dd847973d",
+    "targetHash": "3bef8c9097baaf3ce56ae90bd6cfba731133306f1a88698f5f45ad66da1fc1cc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.628Z",
+    "glossaryVersion": "0"
+  }
+}
