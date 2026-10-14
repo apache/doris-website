@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-query/EXPLAIN",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-query/EXPLAIN.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-query/EXPLAIN.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "0667393dba5049b3efb4fa5587ecaee9fc51b3cd8abe05021821b06be0445dfb",
+    "sourceTechnicalHash": "18a74a46af57c50e3c4417da20de277554f234bd1f352daf65e2d9362ae9f36f",
+    "targetHash": "84c4b915a2c1c9f6b9432b9d3fe2998185e9041a0320e8aa31c49314b52c73bd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:30:45.468Z",
+    "glossaryVersion": "0"
+  }
+}

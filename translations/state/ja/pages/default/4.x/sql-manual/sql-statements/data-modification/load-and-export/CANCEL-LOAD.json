@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/load-and-export/CANCEL-LOAD.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "af6b16cc8fbf87afb3b79c8e4670ffe113f9d3aaff87b3e9de4f04e73b2fb86a",
+    "sourceTechnicalHash": "fe80b7f813872b01a188bad19da8554a515bda810d2054dea4bad7b8c52ce737",
+    "targetHash": "b5c2c7489688cdb186e4c2a49c119613e06d7f0528f05d8b242b7a4930701932",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:30:45.469Z",
+    "glossaryVersion": "0"
+  }
+}

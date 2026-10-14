@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "bc521baa0c417cc2242242f1d1693c14a9e27288b7f6d2eff41d66ed1f00f46b",
+    "sourceTechnicalHash": "be8c4b223809a247b5bf56dc35868a364431acdd1084ebb59775ec33f4e021c5",
+    "targetHash": "7926a6a1a2a4b70ad487521ed60814eece24ed14b9f71b4030dd7e529ba9aa78",
+    "reviewStatus": "unverified",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:30:45.468Z",
+    "glossaryVersion": "0"
+  }
+}
