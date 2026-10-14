@@ -7,11 +7,11 @@ const {createHash} = require('node:crypto');
 const {execFileSync} = require('node:child_process');
 const {audit} = require('./audit-coverage.cjs');
 const {baselineEntries} = require('./plan-translations-baseline.cjs');
-const {hash, identity, loadConfig, loadRecords} = require('./state.cjs');
+const {hash, identity, loadConfig, languageName, loadRecords, pipelineLocale} = require('./state.cjs');
 const {structure} = require('./structure.cjs');
 
 const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
-const key = page => identity({...page, locale: 'ja'});
+const keyFor = locale => page => identity({...page, locale});
 const sha = value => /^[a-f0-9]{64}$/.test(value ?? '');
 const priority = {delete: 0, move: 1, move_and_update: 1, update: 2, formatting_review: 2,
     target_modified: 2, state_conflict: 2, source_divergence: 2, unsupported_route: 2,
@@ -32,6 +32,7 @@ const chinesePath = (group, page) => {
 };
 
 function validateActive(data, scope) {
+    const key = keyFor(scope.locale);
     if (!data) return [];
     assert(data.schemaVersion === 1 && Array.isArray(data.candidates), 'Invalid active candidate schema');
     const seen = new Set();
@@ -80,7 +81,7 @@ function referenceChecks(oldPage, newPage) {
         newTargetPath: newPage?.targetPath ?? null,
         newPermalink: newPage?.permalink ?? null,
         actions: ['check inbound Markdown/MDX links and heading anchors', 'check sidebar references and redirects',
-            'remove or relocate obsolete Japanese target and state record'],
+            'remove or relocate obsolete translated target and state record'],
     };
 }
 
@@ -88,10 +89,14 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     resolved = {schemaVersion: 1, deletions: []}, chineseChangedPaths = [],
     limit = scope.maxBatchPages, tokenBudget = null, filters = {}}) {
     assert(report.schemaVersion === 1 && /^[a-f0-9]{40}$/.test(report.sourceCommit), 'Invalid source audit');
-    assert(scope.schemaVersion === 1 && scope.locale === 'ja' && Number.isInteger(scope.maxBatchPages), 'Invalid managed scope');
+    // The caller resolves the scope for the locale it manages and checks that
+    // the locale is configured; here only the scope's own shape is validated.
+    assert(scope.schemaVersion === 1 && /^[a-z]{2}(?:-[A-Za-z0-9]+)*$/.test(scope.locale)
+        && Number.isInteger(scope.maxBatchPages), 'Invalid managed scope');
     assert(Number.isInteger(limit) && limit >= 0 && limit <= scope.maxBatchPages, 'Limit exceeds managed batch size');
     assert(tokenBudget === null || Number.isInteger(tokenBudget) && tokenBudget >= 0, 'Invalid token budget');
     if (filters.locale && filters.locale !== scope.locale) throw new Error(`Unsupported locale: ${filters.locale}`);
+    const key = keyFor(scope.locale);
     const candidates = validateActive(active, scope);
     const resolvedDeletions = validateResolved(resolved);
     const activeByKey = new Map(candidates.map(candidate => [key(candidate), candidate]));
@@ -221,9 +226,11 @@ function argumentsFrom(argv) {
 async function main() {
     const options = argumentsFrom(process.argv.slice(2));
     const root = path.resolve(__dirname, '../..');
-    const scope = JSON.parse(fs.readFileSync(path.join(root, 'translations/scope/ja.json'), 'utf8'));
+    const locale = pipelineLocale(root);
+    const scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'));
     const config = loadConfig(root);
-    assert(config.locales[scope.locale]?.sourceLocale === 'en', 'Planner requires an English primary source');
+    assert(scope.locale === locale, `Scope is for ${scope.locale}, not the managed ${locale}`);
+    assert(config.locales[locale]?.sourceLocale === 'en', 'Planner requires an English primary source');
     const report = await audit({root, sourceRef: options['--source-ref'] ?? 'HEAD'});
     if (options['--audit-output']) fs.writeFileSync(options['--audit-output'], JSON.stringify(report, null, 2) + '\n');
     const chineseRoots = ['i18n/zh-CN/docusaurus-plugin-content-docs', 'i18n/zh-CN/docusaurus-plugin-content-docs-community'];
@@ -255,7 +262,7 @@ async function main() {
     const output = JSON.stringify(result, null, 2) + '\n';
     if (options['--output']) fs.writeFileSync(options['--output'], output);
     else process.stdout.write(output);
-    process.stderr.write(`Japanese plan ${result.sourceCommit}: ${JSON.stringify(result.counts)}, selected ${result.selectedCount}\n`);
+    process.stderr.write(`${languageName(root, locale)} plan ${result.sourceCommit}: ${JSON.stringify(result.counts)}, selected ${result.selectedCount}\n`);
 }
 
 if (require.main === module) main().catch(error => {console.error(error); process.exitCode = 1;});

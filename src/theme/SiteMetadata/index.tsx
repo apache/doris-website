@@ -30,9 +30,9 @@ function AlternateLangHeaders(): JSX.Element {
     i18n: {currentLocale, defaultLocale, localeConfigs},
   } = useDocusaurusContext();
   const alternatePageUtils = useAlternatePageUtils();
-  const {group, managed} = useTranslationRoutes();
+  const {group, managed, translatedLocales} = useTranslationRoutes();
   const availableLocales = Object.entries(localeConfigs).filter(([locale]) =>
-    group ? !!group[locale] : !managed || locale !== 'ja');
+    group ? !!group[locale] : !managed || !translatedLocales.includes(locale));
 
   const currentHtmlLang = localeConfigs[currentLocale]!.htmlLang;
 

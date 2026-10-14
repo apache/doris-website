@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from '@site/src/components/home-next/JapaneseLink';
+import Link from '@site/src/components/home-next/LocalizedLink';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import {useDoc} from '@docusaurus/plugin-content-docs/client';
 import './style.scss';

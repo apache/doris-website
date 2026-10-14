@@ -10,7 +10,21 @@ function sourceStamp(siteDir) {
     };
 }
 
-async function buildLocales({siteDir = process.cwd(), outDir = 'build', run, stamp = sourceStamp}) {
+// Narrow a configured plan to the locales a change can actually affect. The
+// configured order is preserved, so a selection that contains the default
+// locale still builds it first and keeps the root controls.
+function selectLocales(plan, requested) {
+    if (!plan.locales.length || plan.locales[0].locale !== plan.defaultLocale
+        || new Set(plan.locales.map(item => item.locale)).size !== plan.locales.length) throw new Error('Default locale must be first in a unique locale plan');
+    if (requested === undefined) return plan.locales;
+    if (!requested.length || new Set(requested).size !== requested.length) throw new Error('Requested locales must be a non-empty list of unique locales');
+    const configured = new Set(plan.locales.map(item => item.locale));
+    for (const locale of requested) if (!configured.has(locale)) throw new Error(`Requested locale is not configured: ${locale}`);
+    const wanted = new Set(requested);
+    return plan.locales.filter(item => wanted.has(item.locale));
+}
+
+async function buildLocales({siteDir = process.cwd(), outDir = 'build', locales: requestedLocales, run, stamp = sourceStamp}) {
     siteDir = path.resolve(siteDir);
     outDir = path.resolve(siteDir, outDir);
     if (outDir === siteDir || siteDir.startsWith(outDir + path.sep)) throw new Error('Build output must not contain the source checkout');
@@ -20,7 +34,8 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', run, sta
     const verifyStamp = () => {
         if (JSON.stringify(stamp(siteDir)) !== JSON.stringify(initialStamp)) throw new Error('Source changed between locale builds; refusing mixed artifacts');
     };
-    const report = {schemaVersion:1, source:initialStamp, mode:'separate-processes', locales:[]};
+    const report = {schemaVersion:1, source:initialStamp, mode:'separate-processes',
+        requested:requestedLocales ?? null, locales:[]};
     const reportDir = path.join(siteDir, '.i18n-build');
     fs.mkdirSync(reportDir, {recursive:true});
     const reportPath = path.join(reportDir, 'build-result.json');
@@ -45,9 +60,8 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', run, sta
         const planFile = path.join(stage, 'plan.json');
         await execute(['plan',siteDir,path.join(stage,'plan-site'),planFile]);
         const plan = JSON.parse(fs.readFileSync(planFile,'utf8'));
-        if (!plan.locales.length || plan.locales[0].locale !== plan.defaultLocale
-            || new Set(plan.locales.map(item => item.locale)).size !== plan.locales.length) throw new Error('Default locale must be first in a unique locale plan');
-        for (const item of plan.locales) {
+        const selected = selectLocales(plan, requestedLocales);
+        for (const item of selected) {
             if (!/^[a-zA-Z0-9-]+$/.test(item.locale) || item.directory !== (item.locale === plan.defaultLocale ? '.' : item.locale)) {
                 throw new Error('Unsafe locale output directory');
             }
@@ -60,9 +74,15 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', run, sta
             report.locales.push({...item, ...processInfo, elapsedMs:Date.now()-started, resultDir});
         }
         verifyStamp();
+        // The default locale owns the root, so its output becomes the base. A
+        // subset without it is locale-only: every built locale keeps its own
+        // prefix under an otherwise empty root.
         const assembled = path.join(stage,'assembled');
-        fs.renameSync(report.locales[0].resultDir, assembled);
-        for (const item of report.locales.slice(1)) {
+        const includesDefault = report.locales[0].directory === '.';
+        if (includesDefault) fs.renameSync(report.locales[0].resultDir, assembled);
+        else fs.mkdirSync(assembled, {recursive:true});
+        for (const item of report.locales) {
+            if (item.directory === '.') continue;
             const destination = path.join(assembled,item.directory);
             fs.rmSync(destination,{recursive:true,force:true});
             fs.renameSync(item.resultDir,destination);
@@ -96,7 +116,9 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', run, sta
 if (require.main === module) {
     const args = process.argv.slice(2);
     const option = (name, fallback) => args.includes(name) ? args[args.indexOf(name)+1] : fallback;
-    buildLocales({siteDir:option('--site-dir',process.cwd()), outDir:option('--out-dir','build')})
+    const localeList = option('--locales');
+    buildLocales({siteDir:option('--site-dir',process.cwd()), outDir:option('--out-dir','build'),
+        locales:localeList === undefined ? undefined : localeList.split(',').map(locale => locale.trim()).filter(Boolean)})
         .catch(error => {console.error(error);process.exitCode = 1;});
 }
-module.exports = {buildLocales};
+module.exports = {buildLocales, selectLocales};

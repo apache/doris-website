@@ -4,12 +4,15 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {hash, identity, decide, loadRecordsAt} = require('./state.cjs');
+const {hash, identity, decide, loadConfig, languageName, loadRecordsAt, pipelineLocale} = require('./state.cjs');
 
 const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
-const key = page => identity({...page, locale: 'ja'});
-function validateScope(scope) {
-    assert(scope.schemaVersion === 1 && scope.locale === 'ja', 'Unsupported scope');
+// The scope's own locale must be the one this run manages, so a scope file for
+// another language cannot be used by accident.
+const keyFor = locale => page => identity({...page, locale});
+function validateScope(scope, locale) {
+    const key = keyFor(locale);
+    assert(scope.schemaVersion === 1 && scope.locale === locale, `Unsupported scope locale: ${scope.locale}`);
     assert(Number.isInteger(scope.maxBatchPages) && scope.maxBatchPages > 0 && scope.maxBatchPages <= 20, 'Batch limit must be 1..20');
     const groups = new Set();
     const identities = new Set();
@@ -53,6 +56,7 @@ function mergedCurrent(page, committedHash) {
 }
 
 function buildGroup({group, pages, files, order, scope, committedHash, committedRecords}) {
+    const key = keyFor(scope.locale);
     const relevant = pages.filter(page => page.pluginId === group.pluginId && page.version === group.version);
     assert(relevant.length, `Missing native plugin/version: ${group.id}`);
     const identities = new Set();
@@ -73,7 +77,7 @@ function buildGroup({group, pages, files, order, scope, committedHash, committed
             && record?.sourceLocale === page.sourceLocale && record?.reviewStatus === page.reviewStatus;
         if (disposition !== 'translate') exceptions.push({kind: disposition, sourcePath: page.englishPath,
             docId: page.docId, reason: page.draft ? 'Native front matter marks this document as draft; no production page.' : allowed.reason});
-        return {pluginId: page.pluginId, version: page.version, docId: page.docId, locale: 'ja',
+        return {pluginId: page.pluginId, version: page.version, docId: page.docId, locale: scope.locale,
             sourceLocale: page.sourceLocale, sourcePath: page.sourcePath, englishPath: page.englishPath,
             targetPath: page.targetPath, permalink: page.permalink, englishPermalink: page.englishPermalink,
             sourceHash: page.sourceHash, targetHash: page.targetHash, status: page.status,
@@ -126,7 +130,10 @@ async function collect(root) {
     for (const name of ['DOCS_VERSIONS', 'LANDING_ONLY', 'SKIP_DOCS', 'SKIP_COMMUNITY', 'SKIP_COURSE', 'SKIP_RELEASES']) {
         assert(!process.env[name] || process.env[name] === 'false', `Inventory must not use ${name}`);
     }
-    process.env.DORIS_ENABLE_JA = 'true';
+    // Every managed locale must be served, whatever DORIS_ENABLE_* was set to.
+    const locale = pipelineLocale(root);
+    process.env.DORIS_ENABLE_LOCALES = Object.keys(loadConfig(root).locales).join(',');
+    const key = keyFor(locale);
     process.env.NODE_ENV = 'production';
     delete process.env.DOCUSAURUS_CURRENT_LOCALE;
     const {loadContext} = require('@docusaurus/core/lib/server/site.js');
@@ -159,7 +166,7 @@ async function collect(root) {
 }
 
 function renderBatches(snapshot) {
-    const lines = ['# Japanese document batches', '', `Source commit: \`${snapshot.sourceCommit}\`.`, '',
+    const lines = [`# ${snapshot.language} document batches`, '', `Source commit: \`${snapshot.sourceCommit}\`.`, '',
         'Each TODO batch is one independent PR, after T03 and T04 merge. No model calls are needed for manual batches.',
         'Counts below describe the source snapshot. Fallback routes and unmerged candidates do not count as coverage.',
         'Dev and 4.x use their own source files and hashes. Keep each PR at most 20 pages; split a batch further when needed.', '',
@@ -172,10 +179,10 @@ function renderBatches(snapshot) {
     lines.push('', 'Start with DEV-001, then 4X-001 and COMMUNITY-001. Follow the numbered batches within each group.',
         'The native sidebar determines priority; documents outside a sidebar follow in source-path order.',
         'Exact target paths, routes, source hashes and exceptions are in the adjacent group JSON files and their entry shards.',
-        'The four merged PoC translations have machine review status. They still need Japanese proofreading before public delivery.', '',
+        `The four merged PoC translations have machine review status. They still need ${snapshot.language} proofreading before public delivery.`, '',
         'These initial IDs remain the audit baseline. Record PRs and proofreading in this ledger after each batch; regenerate a new snapshot separately rather than overwriting active assignments.', '');
     for (const group of snapshot.groups) for (const batch of group.batches) {
-        lines.push(`## ${batch.id}`, '', `Status: ${batch.status}. PR: none. Japanese proofreading: pending.`, '',
+        lines.push(`## ${batch.id}`, '', `Status: ${batch.status}. PR: none. ${snapshot.language} proofreading: pending.`, '',
             `Dependencies: T03 and T04. Pages: ${batch.pages}. Remaining in ${group.id} after this batch: ${batch.remainingAfterBatch}.`, '',
             '| Doc ID | Source file | Source SHA-256 |', '| --- | --- | --- |');
         for (const docId of batch.docIds) {
@@ -183,7 +190,7 @@ function renderBatches(snapshot) {
             lines.push(`| ${docId} | ${page.sourcePath} | \`${page.sourceHash}\` |`);
         }
         lines.push('', 'Acceptance: protected code/SQL/outputs, front matter, images/alt text, MDX, links and heading IDs verified;',
-            'source/target state recorded; version-specific build and Japanese proofreading recorded in the PR.', '');
+            `source/target state recorded; version-specific build and ${snapshot.language} proofreading recorded in the PR.`, '');
     }
     return lines.join('\n');
 }
@@ -197,14 +204,15 @@ async function main() {
     assert(/^[a-f0-9]{40}$/.test(sourceCommit), 'Use a full merged commit SHA');
     const output = path.resolve(option('--output'));
     assert(!fs.existsSync(output), 'Use a new snapshot directory; never overwrite active batch assignments');
-    const scope = JSON.parse(fs.readFileSync(path.join(root, 'translations/scope/ja.json'), 'utf8'));
-    validateScope(scope);
+    const locale = pipelineLocale(root);
+    const scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'));
+    validateScope(scope, locale);
     const gitRead = file => {
         try {return execFileSync('git', ['show', `${sourceCommit}:${file}`], {cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 16 * 1024 * 1024});}
         catch {return null;}
     };
     execFileSync('git', ['cat-file', '-e', `${sourceCommit}^{commit}`], {cwd: root});
-    const committedRecords = loadRecordsAt(root, 'ja', sourceCommit);
+    const committedRecords = loadRecordsAt(root, locale, sourceCommit);
     const committedCache = new Map();
     const committedHash = file => {
         if (!committedCache.has(file)) {
@@ -239,8 +247,8 @@ async function main() {
     });
     const reports = native.reports.map(report => ({...report, inScope: scope.groups.some(group => group.pluginId === report.pluginId && group.version === report.version)}))
         .sort((a, b) => compare(JSON.stringify(a), JSON.stringify(b)));
-    const routingInputs = ['docusaurus.config.js', 'versions.json', 'sidebars.ts', 'sidebarsCommunity.json', 'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json', 'translations/scope/ja.json'];
-    const snapshot = {schemaVersion: 1, locale: 'ja', sourceCommit,
+    const routingInputs = ['docusaurus.config.js', 'versions.json', 'sidebars.ts', 'sidebarsCommunity.json', 'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json', `translations/scope/${locale}.json`];
+    const snapshot = {schemaVersion: 1, locale, language: languageName(root, locale), sourceCommit,
         routingInputs: Object.fromEntries(routingInputs.map(file => [file, hash(fs.readFileSync(path.join(root, file), 'utf8'))])),
         nativeVersions: native.versions.map(({order, ...version}) => version), groups, reports};
     fs.mkdirSync(output, {recursive: true});
@@ -268,4 +276,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(error => {console.error(error); process.exitCode = 1;});
-module.exports = {validateScope, sidebarOrder, buildGroup, mergedCurrent, renderBatches, collect};
+module.exports = {validateScope, sidebarOrder, buildGroup, mergedCurrent, renderBatches, collect, keyFor};

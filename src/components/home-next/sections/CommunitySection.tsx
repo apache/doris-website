@@ -1,4 +1,4 @@
-import { japaneseDocLink } from '@site/src/utils/japanese';
+import { localizedDocLink } from '@site/src/utils/localization';
 import { translate } from '@docusaurus/Translate';
 import React, { JSX } from 'react';
 import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
@@ -85,7 +85,7 @@ export function CommunitySection(): JSX.Element {
 
                 <div className="community-next__grid">
                     {CHANNELS.map((ch, i) => (
-                        <a key={i} className="community-next__card" href={ch.href.startsWith('/') ? japaneseDocLink(ch.href) : ch.href} target="_blank" rel="noopener noreferrer">
+                        <a key={i} className="community-next__card" href={ch.href.startsWith('/') ? localizedDocLink(ch.href) : ch.href} target="_blank" rel="noopener noreferrer">
                             <div className="community-next__card-main">
                                 <div className="community-next__card-icon">{ch.icon}</div>
                                 <h3 className="community-next__card-name">{ch.name}</h3>

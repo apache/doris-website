@@ -10,7 +10,7 @@ on:
       - 'docs/**'
       - 'versioned_docs/version-4.x/**'
       - 'community/**'
-      - 'i18n/ja/**'
+      - 'i18n/**'
       - 'translations/**'
       - 'sidebars.ts'
       - 'sidebarsCommunity.json'
@@ -35,8 +35,6 @@ jobs:
           cache: yarn
       - run: yarn --frozen-lockfile
       - name: Recount native scope at checked-out source SHA
-        env:
-          DORIS_ENABLE_JA: 'true'
         run: |
           mkdir -p "$RUNNER_TEMP/japanese-audit"
           node scripts/i18n/audit-coverage.cjs --source-ref HEAD --output "$RUNNER_TEMP/japanese-audit/coverage.json"

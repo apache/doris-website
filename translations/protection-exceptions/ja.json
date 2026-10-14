@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "baselineCommit": "3379cb75733e1d8c453f6aae7b44b1fae5497ae2",
   "pages": [
     {
       "pluginId": "default",
@@ -9,7 +10,11 @@
       "sourceHash": "c1b950ba12598be8495190f93fd341dd646d98c837bf09c72ccc199c2ebb941e",
       "targetHash": "b22981d476dae36312c2d5631a1d6d10f6e7b28df8b66c96ecd48d8b27a7631f",
       "reason": "T04 repairs the two merged T01 PoC AI links by adding the missing ../. All other bytes are unchanged; the repair is checked against the merged PoC target.",
-      "repairedFromTargetHash": "565ac481aaafe738b0fd193d6f4617cff6698351cfc71c8d0b575de97634e4c4"
+      "repairedFromTargetHash": "565ac481aaafe738b0fd193d6f4617cff6698351cfc71c8d0b575de97634e4c4",
+      "repair": {
+        "from": "(ai/ai-overview.md)",
+        "to": "(../ai/ai-overview.md)"
+      }
     },
     {
       "pluginId": "default",
@@ -28,7 +33,11 @@
       "sourceHash": "c1b950ba12598be8495190f93fd341dd646d98c837bf09c72ccc199c2ebb941e",
       "targetHash": "b22981d476dae36312c2d5631a1d6d10f6e7b28df8b66c96ecd48d8b27a7631f",
       "reason": "T04 repairs the two merged T01 PoC AI links by adding the missing ../. All other bytes are unchanged; the repair is checked against the merged PoC target.",
-      "repairedFromTargetHash": "565ac481aaafe738b0fd193d6f4617cff6698351cfc71c8d0b575de97634e4c4"
+      "repairedFromTargetHash": "565ac481aaafe738b0fd193d6f4617cff6698351cfc71c8d0b575de97634e4c4",
+      "repair": {
+        "from": "(ai/ai-overview.md)",
+        "to": "(../ai/ai-overview.md)"
+      }
     },
     {
       "pluginId": "community",

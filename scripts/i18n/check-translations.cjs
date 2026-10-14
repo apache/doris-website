@@ -2,31 +2,43 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {identity, hash, loadRecords, loadRecordsAt} = require('./state.cjs');
+const {identity, hash, loadRecords, loadRecordsAt, pipelineLocale} = require('./state.cjs');
 const {structure, alignHeadings} = require('./structure.cjs');
 const {collect} = require('./inventory.cjs');
 const {protectionSignature} = require('./protection.cjs');
 
-async function checkTranslations({root, pages, reports = [], files, records, previousRecords = new Map()}) {
+async function checkTranslations({root, locale = pipelineLocale(root), pages, reports = [], files, records, previousRecords = new Map()}) {
     const changed = new Set(files);
-    const stateChanged = files.some(file => file === 'translations/state/ja/docs.json'
-        || file.startsWith('translations/state/ja/pages/'));
+    const stateChanged = files.some(file => file === `translations/state/${locale}/docs.json`
+        || file.startsWith(`translations/state/${locale}/pages/`));
     const selected = pages.filter(page => changed.has(page.targetPath)
         || (stateChanged
             && JSON.stringify(records.get(identity(page))) !== JSON.stringify(previousRecords.get(identity(page)))));
     const errors = [];
-    const exceptionFile = path.join(root,'translations/protection-exceptions/ja.json');
-    const exceptions = fs.existsSync(exceptionFile) ? JSON.parse(fs.readFileSync(exceptionFile,'utf8')).pages : [];
-    const baselineState = JSON.parse(execFileSync('git',['show','3379cb75733e1d8c453f6aae7b44b1fae5497ae2:translations/state/ja/docs.json'],
-        {cwd:root,encoding:'utf8'}));
+    const exceptionFile = path.join(root,`translations/protection-exceptions/${locale}.json`);
+    const exceptionData = fs.existsSync(exceptionFile)
+        ? JSON.parse(fs.readFileSync(exceptionFile,'utf8')) : {schemaVersion:1, pages:[]};
+    const exceptions = exceptionData.pages;
+    // Every exception is bound to the merged bytes at one commit. A locale that
+    // declares no exception needs no baseline.
+    const baselineCommit = exceptionData.baselineCommit;
+    if (exceptions.length) {
+        if (!/^[a-f0-9]{40}$/.test(baselineCommit ?? '')) throw new Error('Protection exceptions need a baseline commit');
+    }
+    const baselineState = exceptions.length
+        ? JSON.parse(execFileSync('git',['show',`${baselineCommit}:translations/state/${locale}/docs.json`],
+            {cwd:root,encoding:'utf8'}))
+        : {pages:[]};
     const approved = new Map(baselineState.pages.map(record => [identity(record),record]));
     for (const entry of exceptions) {
         const record = approved.get(identity(entry));
-        const mergedTarget = record && execFileSync('git',['show',`3379cb75733e1d8c453f6aae7b44b1fae5497ae2:${record.targetPath}`],
+        const mergedTarget = record && execFileSync('git',['show',`${baselineCommit}:${record.targetPath}`],
             {cwd:root,encoding:'utf8'});
-        const repaired = entry.repairedFromTargetHash === record?.targetHash
-            && mergedTarget?.includes('(ai/ai-overview.md)')
-            && hash(mergedTarget.replace('(ai/ai-overview.md)','(../ai/ai-overview.md)')) === entry.targetHash;
+        // An exception may record one exact repair the merged bytes still need.
+        const repair = entry.repair;
+        const repaired = entry.repairedFromTargetHash === record?.targetHash && repair
+            && mergedTarget?.includes(repair.from)
+            && hash(mergedTarget.replace(repair.from, repair.to)) === entry.targetHash;
         if (!record || record.sourceHash !== entry.sourceHash ||
             !(record.targetHash === entry.targetHash || repaired) || !entry.reason?.trim())
             errors.push({path:exceptionFile,message:'Protection exception is not bound to the merged T01 PoC bytes'});
@@ -53,7 +65,8 @@ async function checkTranslations({root, pages, reports = [], files, records, pre
         } catch (error) {errors.push({path:page.targetPath, message:error.message});}
     }
     const known = new Set(pages.map(page => page.targetPath));
-    for (const file of files.filter(file => /^i18n\/ja\/docusaurus-plugin-content-docs[^/]*\/(current|version-[^/]+)\/.+\.(md|mdx)$/.test(file))) {
+    const targetPattern = new RegExp(`^i18n/${locale}/docusaurus-plugin-content-docs[^/]*/(current|version-[^/]+)/.+\\.(md|mdx)$`);
+    for (const file of files.filter(file => targetPattern.test(file))) {
         if (fs.existsSync(path.join(root,file)) && !known.has(file)) errors.push({path:file, message:'Target has no registered source in the same plugin/version'});
     }
     if (stateChanged) for (const [key, record] of records) {
@@ -69,10 +82,11 @@ async function main() {
     const args = process.argv.slice(2), base = args[args.indexOf('--base')+1];
     if (!args.includes('--base')) throw new Error('Usage: check-translations.cjs --base <PR merge base>');
     const files = execFileSync('git',['diff','--name-only',base,'HEAD'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean);
-    const records = loadRecords(root,'ja');
-    const previousRecords = loadRecordsAt(root, 'ja', base);
+    const locale = pipelineLocale(root);
+    const records = loadRecords(root, locale);
+    const previousRecords = loadRecordsAt(root, locale, base);
     const native = await collect(root);
-    const result = await checkTranslations({root,...native,files,records,previousRecords});
+    const result = await checkTranslations({root, locale, ...native, files, records, previousRecords});
     console.log(JSON.stringify(result,null,2));
     if (result.errors.length) process.exitCode = 1;
 }

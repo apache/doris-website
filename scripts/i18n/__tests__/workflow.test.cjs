@@ -4,11 +4,18 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {hash, stateFileFor} = require('../state.cjs');
+const {hash, loadConfig, stateFileFor} = require('../state.cjs');
 const {reconcileOpenPrs} = require('../workflow-prs.cjs');
 const {relevantPush, replaceableBotPr} = require('../workflow-scan.cjs');
 const {pairFor, machineOwned, generate, allowGeneration} = require('../workflow-generate.cjs');
 const {expectedFiles, authorFor} = require('../workflow-publish.cjs');
+
+// The language facts come from the real configuration, so the tests describe
+// the same automation names the pipeline publishes under.
+const repoRoot = path.resolve(__dirname, '../../..');
+const jaSettings = loadConfig(repoRoot).locales.ja;
+const language = jaSettings.languageName;
+const target = {locale: 'ja', language, scriptPattern: jaSettings.scriptPattern};
 
 const scope = {schemaVersion: 1, locale: 'ja', maxBatchPages: 20, groups: [
     {id: 'DEV', pluginId: 'default', version: 'current', sourceRoot: 'docs'},
@@ -23,7 +30,7 @@ const pull = (number, head = `topic-${number}`) => ({number, base: {ref: 'master
     head: {ref: head, repo: {full_name: 'apache/doris-website'}}});
 
 test('all open PRs are inspected by files, including unnamed human PRs', async () => {
-    const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website', pulls: [pull(10), pull(11)],
+    const result = await reconcileOpenPrs({scope, language, repository: 'apache/doris-website', pulls: [pull(10), pull(11)],
         filesFor: async item => item.number === 10 ? [{filename: 'docs/other.md'}]
             : [{filename: record.targetPath}],
         readHead: async (item, file) => file.endsWith('docs.json')
@@ -35,7 +42,7 @@ test('all open PRs are inspected by files, including unnamed human PRs', async (
 
 test('an open PR can register its target with a page shard instead of docs.json', async () => {
     const shardPath = stateFileFor(record);
-    const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website', pulls: [pull(13)],
+    const result = await reconcileOpenPrs({scope, language, repository: 'apache/doris-website', pulls: [pull(13)],
         filesFor: async () => [{filename: record.targetPath}, {filename: shardPath}],
         readHead: async (_item, file) => file === shardPath
             ? JSON.stringify({schemaVersion: 1, page: record})
@@ -51,7 +58,7 @@ test('state changes are compared with the PR merge base, not current master', as
     const previous = {...record, docId: 'previous', sourcePath: 'docs/previous.md',
         targetPath: 'i18n/ja/docusaurus-plugin-content-docs/current/previous.md'};
     let baseReads = 0;
-    const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website',
+    const result = await reconcileOpenPrs({scope, language, repository: 'apache/doris-website',
         pulls: [pull(13)],
         filesFor: async () => [{filename: record.targetPath}, {filename: 'translations/state/ja/docs.json'}],
         readHead: async (_item, file) => file.includes('/pages/') ? null
@@ -71,7 +78,7 @@ test('state changes are compared with the PR merge base, not current master', as
 test('removing a legacy record already covered by a shard creates no candidate', async () => {
     const shardPath = stateFileFor(record);
     const shard = JSON.stringify({schemaVersion: 1, page: record});
-    const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website', pulls: [pull(14)],
+    const result = await reconcileOpenPrs({scope, language, repository: 'apache/doris-website', pulls: [pull(14)],
         filesFor: async () => [{filename: 'translations/state/ja/docs.json'}],
         readHead: async (_item, file) => file === shardPath ? shard
             : JSON.stringify({schemaVersion: 1, pages: []}),
@@ -83,7 +90,7 @@ test('removing a legacy record already covered by a shard creates no candidate',
 });
 
 test('edited or unparseable PR candidate blocks its target without claiming coverage', async () => {
-    const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website', pulls: [pull(12)],
+    const result = await reconcileOpenPrs({scope, language, repository: 'apache/doris-website', pulls: [pull(12)],
         filesFor: async () => [{filename: record.targetPath}],
         readHead: async (_item, file) => file.endsWith('docs.json')
             ? JSON.stringify({schemaVersion: 1, pages: [record]}) : '# 人間が変更\n'});
@@ -93,7 +100,7 @@ test('edited or unparseable PR candidate blocks its target without claiming cove
 });
 
 test('two open PRs for one source are flagged and robot branch is identified', async () => {
-    const result = await reconcileOpenPrs({scope, repository: 'apache/doris-website',
+    const result = await reconcileOpenPrs({scope, language, repository: 'apache/doris-website',
         pulls: [pull(20), pull(21, 'i18n/ja-automated-123')],
         filesFor: async () => [{filename: record.targetPath}],
         readHead: async (_item, file) => file.endsWith('docs.json')
@@ -160,10 +167,10 @@ test('publication allows only matching managed ja targets and state', () => {
 });
 
 test('personal token writes commits under its authenticated owner', () => {
-    assert.deepEqual(authorFor('pat', {login: 'morningman', id: 24620808}),
+    assert.deepEqual(authorFor('pat', {login: 'morningman', id: 24620808}, language),
         {name: 'morningman', email: '24620808+morningman@users.noreply.github.com'});
-    assert.match(authorFor('app').name, /\[bot\]$/);
-    assert.throws(() => authorFor('pat', {login: 'other name', id: 1}), /Invalid personal/);
+    assert.equal(authorFor('app', {}, language).name, 'doris-japanese-translation[bot]');
+    assert.throws(() => authorFor('pat', {login: 'other name', id: 1}, language), /Invalid personal/);
 });
 
 test('one model result creates separate Dev and 4.x targets and state records', async () => {
@@ -202,7 +209,7 @@ test('one model result creates separate Dev and 4.x targets and state records', 
             return {translations: units.map(unit => ({id: unit.id,
                 text: unit.text === 'Hello' ? 'こんにちは' : '簡単なガイドです。'}))};
         }};
-        const manifest = await generate({rootDir: dir, output: path.join(dir, 'output'),
+        const manifest = await generate({rootDir: dir, target, output: path.join(dir, 'output'),
             ensureFresh: commit => assert.equal(commit, sourceCommit),
             plan: {schemaVersion: 1, locale: 'ja', sourceCommit, selected: [dev.id], tasks: [dev, x4], exceptions: []},
             reconciliation: {botPrs: [], botDetails: [], blockedTargets: []},

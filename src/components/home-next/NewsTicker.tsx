@@ -1,6 +1,6 @@
 import { translate } from '@docusaurus/Translate';
 import React, { CSSProperties, FocusEvent, JSX, TransitionEvent, useEffect, useRef, useState } from 'react';
-import Link from '@site/src/components/home-next/JapaneseLink';
+import Link from '@site/src/components/home-next/LocalizedLink';
 import { getRandomStartIndex, rotateItems } from './NewsTicker.logic';
 import './NewsTicker.scss';
 

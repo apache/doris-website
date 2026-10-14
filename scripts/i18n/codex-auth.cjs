@@ -9,6 +9,10 @@ const {execFileSync} = require('node:child_process');
 const endpoint = 'oss-cn-hongkong.aliyuncs.com';
 const prefix = 'oss://doris-community-ci/codex/auth.json.';
 const candidatePattern = /^oss:\/\/doris-community-ci\/codex\/auth\.json\.[0-9]+$/;
+// The auth pool serves every translation language, and the adapter signals a
+// reused refresh token through this file in the per-run CODEX_HOME.
+const homePrefix = 'doris-codex-home-';
+const refreshTokenReusedFile = 'refresh-token-reused';
 const sha256 = value => createHash('sha256').update(value).digest('hex');
 
 function oss(args) {
@@ -52,7 +56,7 @@ function appendEnv(name, value) {
 function load() {
     const runnerTemp = process.env.RUNNER_TEMP;
     assert(runnerTemp && fs.existsSync(runnerTemp), 'RUNNER_TEMP is required');
-    const home = fs.mkdtempSync(path.join(runnerTemp, 'japanese-codex-home-'));
+    const home = fs.mkdtempSync(path.join(runnerTemp, homePrefix));
     fs.chmodSync(home, 0o700);
     const candidates = shuffle(candidatesFrom(oss(['ls', prefix, '-s'])));
     assert(candidates.length, 'No numbered Codex auth snapshots found');
@@ -98,7 +102,7 @@ function sync() {
     assert(home && object && candidatePattern.test(object) && /^[a-f0-9]{64}$/.test(originalHash ?? ''),
         'Missing selected Codex auth identity');
     assert(/^[a-f0-9]{64}$/.test(refreshHash ?? ''), 'Missing selected refresh-token identity');
-    if (fs.existsSync(path.join(home, 'japanese-refresh-token-reused'))) {
+    if (fs.existsSync(path.join(home, refreshTokenReusedFile))) {
         const invalidFile = path.join(home, 'invalid-token.json');
         fs.writeFileSync(invalidFile, JSON.stringify({version: 1, state: 'auth_invalid',
             reason: 'refresh_token_reused', refresh_token_sha256: refreshHash}) + '\n', {mode: 0o600});
@@ -133,4 +137,4 @@ if (require.main === module) {
     } catch (error) {console.error(error.message); process.exitCode = 1;}
 }
 
-module.exports = {candidatesFrom, validAuth, load, sync};
+module.exports = {candidatesFrom, validAuth, load, sync, refreshTokenReusedFile};

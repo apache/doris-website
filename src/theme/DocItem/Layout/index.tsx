@@ -18,10 +18,10 @@ import LastUpdated from '@theme/LastUpdated';
 import type { Props } from '@theme/DocItem/Layout';
 import { DocsEdit } from '../../../components/Icons/docs-edit';
 import MobileSidebarDrawer from './MobileSidebarDrawer';
-import JapaneseFallback from './JapaneseFallback';
+import SourceFallback from './SourceFallback';
 import TranslationStatus from './TranslationStatus';
 import {docTranslation} from '@site/src/utils/translation';
-import { isJapaneseFallback as usesEnglishFallback } from '@site/src/utils/japanese';
+import { isFallbackSource as usesEnglishFallback, isTranslatedLocale } from '@site/src/utils/localization';
 
 import styles from './styles.module.css';
 
@@ -64,16 +64,16 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
     const isZH = currentLocale === 'zh-CN';
     // metadata.source is the file actually selected by the content plugin,
     // including its per-file fallback. Do not infer translation from the URL.
-    const isJapaneseFallback = usesEnglishFallback(metadata.source, currentLocale);
-    const translation = currentLocale === 'ja' ? docTranslation(metadata) : undefined;
+    const isFallbackSource = usesEnglishFallback(metadata.source, currentLocale);
+    const translation = isTranslatedLocale(currentLocale) ? docTranslation(metadata) : undefined;
     const docContent = translation ? (
         <>
             <TranslationStatus state={translation} />
             <DocItemContent>{children}</DocItemContent>
         </>
-    ) : isJapaneseFallback ? (
+    ) : isFallbackSource ? (
         <>
-            <JapaneseFallback permalink={metadata.permalink} />
+            <SourceFallback permalink={metadata.permalink} />
             <DocItemContent>{children}</DocItemContent>
         </>
     ) : <DocItemContent>{children}</DocItemContent>;

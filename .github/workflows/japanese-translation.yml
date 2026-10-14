@@ -18,6 +18,9 @@ on:
       path:
         description: Optional repository-relative source path prefix
         type: string
+      locale:
+        description: Optional translation locale; required once several are managed
+        type: string
   push:
     branches: [master]
     paths:
@@ -28,8 +31,8 @@ on:
       - 'i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/**'
       - 'i18n/zh-CN/docusaurus-plugin-content-docs-community/current/**'
       - 'translations/config.json'
-      - 'translations/scope/ja.json'
-      - 'translations/glossary/ja.json'
+      - 'translations/scope/**'
+      - 'translations/glossary/**'
       - 'sidebars.ts'
       - 'sidebarsCommunity.json'
       - 'versioned_sidebars/version-4.x-sidebars.json'
@@ -51,6 +54,8 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      I18N_LOCALE: ${{ inputs.locale }}
     outputs:
       can_generate: ${{ steps.scan.outputs.can_generate }}
       source_commit: ${{ steps.scan.outputs.source_commit }}
@@ -78,7 +83,6 @@ jobs:
           I18N_VERSION: ${{ inputs.version }}
           I18N_PATH: ${{ inputs.path }}
           I18N_LIMIT: '20'
-          DORIS_ENABLE_JA: 'true'
         run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/japanese-translation"
       - uses: actions/upload-artifact@v4
         if: always()
@@ -90,6 +94,8 @@ jobs:
 
   generate:
     needs: discover
+    env:
+      I18N_LOCALE: ${{ inputs.locale }}
     if: needs.discover.outputs.can_generate == 'true' && ((github.event_name == 'workflow_dispatch' && inputs.mode == 'validate') || (vars.I18N_AUTO_TRANSLATE_ENABLED == 'true' && vars.I18N_LIVE_VERIFIED == 'true'))
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -152,7 +158,6 @@ jobs:
           I18N_VERSION: ${{ inputs.version }}
           I18N_PATH: ${{ inputs.path }}
           I18N_LIMIT: '20'
-          DORIS_ENABLE_JA: 'true'
         run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/japanese-translation"
       - name: Install ossutil for the pinned Codex package and auth pool
         if: steps.fresh.outputs.can_generate == 'true'

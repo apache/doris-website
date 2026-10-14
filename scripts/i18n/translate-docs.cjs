@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {randomUUID} = require('node:crypto');
 const {execFileSync} = require('node:child_process');
-const {hash, identity} = require('./state.cjs');
+const {hash, identity, loadConfig, pipelineLocale} = require('./state.cjs');
 const {structure} = require('./structure.cjs');
 const {protectionSignature} = require('./protection.cjs');
 const {checkedTask, safeFile, openAIAdapter, mockAdapter, translateDocument} = require('./translation-engine.cjs');
@@ -34,23 +34,35 @@ function readCommitted(root, commit, sourcePath) {
         {cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 16 * 1024 * 1024});
 }
 
-function readState(root) {
-    const file = path.join(root, 'translations/state/ja/docs.json');
+// Everything the engine needs to know about the language it translates into.
+// `languageName` names it in the model prompt and `scriptPattern` is the script
+// a finished translation must contain.
+function targetFor(root, locale) {
+    const settings = loadConfig(root).locales[locale];
+    assert(settings?.scriptPattern, `Missing scriptPattern for ${locale}`);
+    return {locale, language: settings.languageName, scriptPattern: settings.scriptPattern};
+}
+
+function scopeFile(root, locale) { return path.join(root, `translations/scope/${locale}.json`); }
+function glossaryFile(root, locale) { return path.join(root, `translations/glossary/${locale}.json`); }
+
+function readState(root, locale) {
+    const file = path.join(root, `translations/state/${locale}/docs.json`);
     const raw = fs.readFileSync(file, 'utf8');
     const data = JSON.parse(raw);
-    assert(data.schemaVersion === 1 && Array.isArray(data.pages), 'Invalid Japanese state');
+    assert(data.schemaVersion === 1 && Array.isArray(data.pages), 'Invalid translation state');
     return {file, raw, data};
 }
 
 function writeAtomic(file, value) {
-    const temp = path.join(path.dirname(file), `.japanese-translation-${randomUUID()}.tmp`);
+    const temp = path.join(path.dirname(file), `.translation-${randomUUID()}.tmp`);
     try {
         fs.writeFileSync(temp, value, {flag: 'wx'});
         fs.renameSync(temp, file);
     } finally {fs.rmSync(temp, {force: true});}
 }
 
-async function prepare({root, plan, taskId, scope, state, adapter, glossary, maxDocumentChars, maxChunkChars}) {
+async function prepare({root, plan, taskId, scope, state, adapter, glossary, target, maxDocumentChars, maxChunkChars}) {
     const {task, source} = checkedTask(plan, taskId, scope, root);
     const existing = state.data.pages.find(item => identity(item) === identity(task));
     const targetFile = safeFile(root, task.targetPath);
@@ -67,10 +79,12 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, max
     const canReuse = existing?.glossaryVersion === glossary.version;
     const generated = await translateDocument({source, extension, adapter, glossary,
         previousSource: canReuse ? previousSource : null,
-        previousTarget: canReuse ? previousTarget : null, maxDocumentChars, maxChunkChars});
+        previousTarget: canReuse ? previousTarget : null,
+        targetLocale: target.locale, targetScriptPattern: target.scriptPattern,
+        maxDocumentChars, maxChunkChars});
     if (adapter.model !== 'fixture') {
-        assert(generated.japaneseChanged,
-            'Live candidate contains no Japanese text; review manually');
+        assert(generated.targetChanged,
+            `Live candidate contains no ${target.language} text; review manually`);
     }
     const sourceParsed = await structure(source, extension);
     const record = {pluginId: task.pluginId, version: task.version, docId: task.docId, locale: task.locale,
@@ -81,7 +95,7 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, max
         glossaryVersion: glossary.version};
     return {task, targetFile, previousTarget, target: generated.target, record,
         units: generated.units, reusedUnits: generated.reusedUnits, requests: generated.requests,
-        japaneseChanged: generated.japaneseChanged};
+        targetChanged: generated.targetChanged};
 }
 
 function applyCandidates(state, candidates) {
@@ -120,14 +134,15 @@ function stageDirectory(root, relative) {
 
 async function applyStaged(root, planFile, relativeStage) {
     const plan = JSON.parse(fs.readFileSync(planFile, 'utf8'));
-    const scope = JSON.parse(fs.readFileSync(path.join(root, 'translations/scope/ja.json'), 'utf8'));
+    const locale = pipelineLocale(root);
+    const scope = JSON.parse(fs.readFileSync(scopeFile(root, locale), 'utf8'));
     const stage = stageDirectory(root, relativeStage);
     const manifest = JSON.parse(fs.readFileSync(path.join(stage, 'manifest.json'), 'utf8'));
     assert(manifest.schemaVersion === 1 && manifest.provider === 'openai' && manifest.liveCall === true
         && manifest.applied === false && manifest.sourceCommit === plan.sourceCommit
         && Array.isArray(manifest.candidates) && manifest.candidates.length > 0
         && manifest.candidates.length <= scope.maxBatchPages, 'Invalid staged live candidates');
-    const state = readState(root);
+    const state = readState(root, locale);
     const candidates = [];
     for (const item of manifest.candidates) {
         assert(/^T06-(DEV|4X|COMMUNITY)-[0-9]{15}$/.test(item.id ?? ''), 'Invalid staged task ID');
@@ -144,7 +159,7 @@ async function applyStaged(root, planFile, relativeStage) {
         assert(item.sourceHash === task.sourceHash && item.sourcePath === task.sourcePath
             && item.targetPath === task.targetPath && item.record?.sourceHash === task.sourceHash
             && item.record?.sourcePath === task.sourcePath && item.record?.targetPath === task.targetPath
-            && item.record?.sourceCommit === plan.sourceCommit && item.japaneseChanged === true,
+            && item.record?.sourceCommit === plan.sourceCommit && item.targetChanged === true,
         'Staged identity does not match current plan');
         const target = fs.readFileSync(safeFile(stage, `${item.id}/candidate${path.extname(task.targetPath)}`), 'utf8');
         assert(hash(target) === item.targetHash && item.record.targetHash === item.targetHash,
@@ -181,9 +196,11 @@ async function main() {
     const options = optionsFrom(process.argv.slice(2));
     const root = path.resolve(__dirname, '../..');
     const plan = JSON.parse(fs.readFileSync(options['--plan'], 'utf8'));
-    const scope = JSON.parse(fs.readFileSync(path.join(root, 'translations/scope/ja.json'), 'utf8'));
-    const glossary = JSON.parse(fs.readFileSync(path.join(root, 'translations/glossary/ja.json'), 'utf8'));
-    const state = readState(root);
+    const locale = pipelineLocale(root);
+    const target = targetFor(root, locale);
+    const scope = JSON.parse(fs.readFileSync(scopeFile(root, locale), 'utf8'));
+    const glossary = JSON.parse(fs.readFileSync(glossaryFile(root, locale), 'utf8'));
+    const state = readState(root, locale);
     const provider = options['--provider'] ?? 'openai';
     let adapter;
     if (provider === 'mock') {
@@ -192,6 +209,7 @@ async function main() {
     } else {
         assert(provider === 'openai', `Unsupported provider: ${provider}`);
         adapter = openAIAdapter({apiKey: process.env.OPENAI_API_KEY, model: options['--model'] ?? process.env.I18N_MODEL,
+            language: target.language,
             timeoutMs: positive(options['--timeout-ms'], 120000, 'timeout'),
             maxInputTokens: positive(options['--max-input-tokens'], 30000, 'input context tokens'),
             maxOutputTokens: positive(options['--max-output-tokens'], 6000, 'max output tokens'),
@@ -201,7 +219,7 @@ async function main() {
     const maxChunkChars = positive(options['--max-chunk-chars'], 5000, 'chunk length');
     const candidates = [];
     for (const id of options.tasks) candidates.push(await prepare({root, plan, taskId: id, scope, state,
-        adapter, glossary, maxDocumentChars, maxChunkChars}));
+        adapter, glossary, target, maxDocumentChars, maxChunkChars}));
     const stageRelative = options['--stage-dir'] ?? '.i18n-build/translation-candidates';
     const stage = stageDirectory(root, stageRelative);
     fs.mkdirSync(stage, {recursive: true});
@@ -209,10 +227,10 @@ async function main() {
         model: adapter.model, glossaryVersion: glossary.version,
         liveCall: provider === 'openai', liveVerified: false,
         applied: false, usedTokens: adapter.usedTokens,
-        candidates: candidates.map(({task, record, units, reusedUnits, requests, japaneseChanged}) => ({
+        candidates: candidates.map(({task, record, units, reusedUnits, requests, targetChanged}) => ({
             id: task.id, kind: task.kind, sourcePath: task.sourcePath, targetPath: task.targetPath,
             sourceHash: record.sourceHash, targetHash: record.targetHash, units, reusedUnits, requests,
-            japaneseChanged, record,
+            targetChanged, record,
         }))};
     for (const candidate of candidates) {
         const folder = path.join(stage, candidate.task.id);
@@ -224,4 +242,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(error => {console.error(error.message); process.exitCode = 1;});
-module.exports = {optionsFrom, prepare, applyCandidates, applyStaged, readState};
+module.exports = {optionsFrom, prepare, applyCandidates, applyStaged, readState, targetFor, scopeFile, glossaryFile};

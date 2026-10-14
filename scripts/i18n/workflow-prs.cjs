@@ -4,11 +4,11 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {hash, identity, stateFileFor} = require('./state.cjs');
+const {hash, identity, languageName, pipelineLocale, stateFileFor} = require('./state.cjs');
 const {managedPath} = require('./translation-engine.cjs');
+const {botBranchFor, ownershipMarker} = require('./automation-naming.cjs');
 
-const statePath = 'translations/state/ja/docs.json';
-const botBranch = 'i18n/ja-automated-';
+const statePathFor = locale => `translations/state/${locale}/docs.json`;
 const json = value => JSON.parse(value);
 const ordered = values => [...values].sort((a, b) => a.localeCompare(b, 'en'));
 
@@ -23,18 +23,20 @@ function managedTarget(scope, target) {
 
 function parseState(raw) {
     const data = json(raw);
-    assert(data.schemaVersion === 1 && Array.isArray(data.pages), 'Invalid Japanese state in open PR');
+    assert(data.schemaVersion === 1 && Array.isArray(data.pages), 'Invalid translation state in open PR');
     return data.pages;
 }
 
-async function reconcileOpenPrs({scope, pulls, filesFor, readHead, readBase, repository}) {
+async function reconcileOpenPrs({scope, language, pulls, filesFor, readHead, readBase, repository}) {
     const active = new Map(), blocked = new Set(), exceptions = [], relevant = [];
     const botPrs = [], botDetails = [];
+    const statePath = statePathFor(scope.locale);
+    const markerPattern = ownershipMarker(language);
     for (const pull of pulls) {
         if (pull.base?.ref !== 'master') continue;
-        if (pull.head?.repo?.full_name === repository && pull.head?.ref?.startsWith(botBranch)) {
+        if (pull.head?.repo?.full_name === repository && pull.head?.ref?.startsWith(botBranchFor(scope.locale))) {
             botPrs.push(pull.number);
-            const marker = /<!-- japanese-translation-automation:v1 bot-head=([a-f0-9]{40}) -->/.exec(pull.body || '');
+            const marker = markerPattern.exec(pull.body || '');
             botDetails.push({number: pull.number, branch: pull.head.ref, headSha: pull.head.sha,
                 expectedHead: marker?.[1] || null, untouched: marker?.[1] === pull.head.sha});
             if (marker?.[1] !== pull.head.sha) exceptions.push({kind: 'edited_robot_branch', pr: pull.number,
@@ -43,7 +45,7 @@ async function reconcileOpenPrs({scope, pulls, filesFor, readHead, readBase, rep
         const files = await filesFor(pull);
         const changed = new Set(files.map(file => file.filename).filter(file => managedTarget(scope, file)));
         const shards = files.map(file => file.filename)
-            .filter(file => /^translations\/state\/ja\/pages\/.+\.json$/.test(file));
+            .filter(file => new RegExp(`^translations/state/${scope.locale}/pages/.+\\.json$`).test(file));
         const stateChanged = files.some(file => file.filename === statePath) || shards.length > 0;
         if (!changed.size && !stateChanged) continue;
         relevant.push(pull.number);
@@ -149,7 +151,8 @@ async function main() {
     fs.mkdirSync(output, {recursive: true});
     const repository = process.env.GITHUB_REPOSITORY || 'apache/doris-website';
     assert(repository === 'apache/doris-website', 'Unexpected repository');
-    const scope = json(fs.readFileSync(path.join(root, 'translations/scope/ja.json'), 'utf8'));
+    const locale = pipelineLocale(root);
+    const scope = json(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'));
     const pulls = ghPages(`repos/${repository}/pulls?state=open&base=master&per_page=100`);
     const remote = process.env.I18N_PR_REMOTE || 'origin';
     const fetched = new Map(), bases = new Map();
@@ -178,7 +181,7 @@ async function main() {
         }
         return readFile(bases.get(pull.number), file);
     };
-    const result = await reconcileOpenPrs({scope, pulls,
+    const result = await reconcileOpenPrs({scope, language: languageName(root, locale), pulls,
         filesFor: pull => ghPages(`repos/${repository}/pulls/${pull.number}/files?per_page=100`),
         readHead, readBase, repository});
     fs.writeFileSync(path.join(output, 'active-candidates.json'), JSON.stringify(result.active, null, 2) + '\n');
@@ -189,4 +192,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(error => {console.error(error.message); process.exitCode = 1;});
-module.exports = {reconcileOpenPrs, managedTarget, targetFor, botBranch};
+module.exports = {reconcileOpenPrs, managedTarget, targetFor, statePathFor};

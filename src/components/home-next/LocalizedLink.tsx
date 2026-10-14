@@ -1,15 +1,15 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
-import { japaneseHomeLink } from '@site/src/utils/japanese';
+import { localizedHomeLink } from '@site/src/utils/localization';
 
 type Props = React.ComponentPropsWithoutRef<typeof Link>;
 
 // pathname:// prevents SPA navigation, but Link still adds the locale base URL
 // unless autoAddBaseUrl is disabled. English targets must opt out of both.
-const JapaneseLink = React.forwardRef<HTMLAnchorElement, Props>(function JapaneseLink(
+const LocalizedLink = React.forwardRef<HTMLAnchorElement, Props>(function LocalizedLink(
     { to, href, autoAddBaseUrl, ...props }, ref,
 ) {
-    const destination = japaneseHomeLink(to || href || '');
+    const destination = localizedHomeLink(to || href || '');
     const isEnglishTarget = destination.startsWith('pathname://');
     return (
         <Link
@@ -23,4 +23,4 @@ const JapaneseLink = React.forwardRef<HTMLAnchorElement, Props>(function Japanes
     );
 });
 
-export default JapaneseLink;
+export default LocalizedLink;
