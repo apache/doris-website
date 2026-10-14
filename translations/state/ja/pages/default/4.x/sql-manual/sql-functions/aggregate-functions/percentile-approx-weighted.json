@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "af112f4309eb7d19d705833a5e310a43cf01c85c96f2b55395c87f7016a11954",
+    "sourceTechnicalHash": "31269a18374f500b88490b410192a2fb2d4cdb72a422e2385a6d63b23c2872fb",
+    "targetHash": "e7c139205aa752422961cf1580b814ca3141ae9fde294a4b928ee4b7b85ba155",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:12:57.466Z",
+    "glossaryVersion": "0"
+  }
+}

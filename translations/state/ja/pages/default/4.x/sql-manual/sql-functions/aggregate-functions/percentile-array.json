@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/percentile-array",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile-array.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile-array.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "7732dfad156610c7ba13e240e19a6ec1f0879bd421a773526dcfa25d2129cfb3",
+    "sourceTechnicalHash": "5cc53d18a19ffbe776c6b839e0da7f64133c06baa949a1601440084d8ead9b51",
+    "targetHash": "b79df793e4f1d3d031944f90e74d4ce16affb0e44eb1793a9bd5038e91678aa9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:12:57.466Z",
+    "glossaryVersion": "0"
+  }
+}

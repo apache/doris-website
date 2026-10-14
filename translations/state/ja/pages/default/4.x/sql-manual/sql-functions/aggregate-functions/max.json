@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/max",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/max.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/max.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "a516191fc093af9b05a62b060b62aac1291daa1601ee070952c37d87610ba1c2",
+    "sourceTechnicalHash": "272e0ba6e2788aec7c7979d4384de0158c65c2c3a0ba9ceb97e8fd3bf003403a",
+    "targetHash": "c3c95cc28269eded635c765e1efe81ffd0a1b3bfa4cbeb131df6e9db33d02dbc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:12:57.465Z",
+    "glossaryVersion": "0"
+  }
+}
