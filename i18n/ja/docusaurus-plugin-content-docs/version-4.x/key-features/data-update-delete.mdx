@@ -1,0 +1,126 @@
+---
+title: データの更新と削除
+description: Unique KeyテーブルのMerge-on-Writeを基盤とする、SQL UPDATE、条件付きDELETE、部分列アップサート、アトミックなパーティション入れ替え。
+keywords:
+  - SQL UPDATE
+  - 条件付きDELETE
+  - 部分列更新
+  - Merge-on-Write
+  - Unique Keyテーブル
+  - Apache Dorisのアップサート
+slug: /key-features/data-update-delete
+image: /images/next/key-features/data-update-delete.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+language: ja
+featureCard:
+  tags:
+    - update
+    - delete
+---
+
+> **要点** Apache Dorisは、トランザクションデータベースと同様にSQLの`UPDATE`と`DELETE`をサポートします。これに加えて、[ストリーミングロード](./stream-load)による部分列アップサート、条件に一致する行の一括削除、アトミックなパーティション入れ替えも利用できます。Unique Keyテーブルでは、[Merge-on-Writeエンジン](./data-model)が読み取り時にバージョンをマージする代わりに、書き込み時に行セットごとのビットマップで古い行を削除済みとしてマークするため、クエリのレイテンシーを低く抑えられます。Merge-on-Writeはバージョン2.1でUnique Keyのデフォルトになりました。
+
+![Apache Dorisのデータの更新と削除：Unique KeyテーブルのMerge-on-Writeを基盤とする、SQL UPDATE、条件付きDELETE、部分列アップサート、アトミックなパーティション入れ替え。](/images/next/key-features/data-update-delete.jpg)
+## Apache Dorisでデータの更新と削除を使う理由 {#why}
+
+Apache Dorisのデータ更新・削除機能は、分析エンジンでトランザクションを伴う行単位の変更を可能にします。これにより、CDC、GDPRに基づく消去、単発のデータ修正のためにパーティション全体を書き換える必要がありません。多くの分析エンジンは、データウェアハウスにはデータを追記するだけという前提で作られました。しかし、CDCやGDPRへの対応が必要になり、実運用のデータには誤りも発生します。データウェアハウスでパーティションを書き換えずに誤った1行を修正できなければ、後から届いた修正データのたびに運用作業が発生します。
+
+- [Flink CDCジョブ](./kafka-cdc-integration)がMySQLを監視しており、各行の更新を数秒以内に反映する必要がある。
+- ユーザーからGDPRに基づく削除要求があった。次のコンパクションを待たずに、データウェアハウスから削除する必要がある。
+- 100億行のファクトテーブルにある1行の誤記が原因で、レポートの数値が間違っている。
+
+Apache Dorisでは、この三つすべてにSQLの機能で対応できます。`UPDATE`、`DELETE FROM ... WHERE`、Stream Loadによる部分列アップサート、一括クリーンアップ用の`TRUNCATE`またはアトミックなパーティション入れ替えを利用できます。いずれもテーブルが小さいことを前提とせず、後で書き換えジョブをスケジュールする必要もありません。
+
+## Apache Dorisのデータの更新と削除とは {#what}
+
+Apache Dorisのデータ更新・削除機能は、Unique KeyテーブルのMerge-on-Writeエンジンを基盤とする四つの操作、SQLの`UPDATE`、条件付き`DELETE`、部分列アップサート、パーティション入れ替えで構成されます。行単位のSQL `UPDATE`はUnique Keyテーブルで使用できます。条件を指定する`DELETE FROM ... WHERE`はどのテーブルでも使用できます。部分列アップサートはデータ取り込みで実行します（Stream Loadヘッダーの`partial_columns: true`、または対応するセッション変数を使用）。パーティション単位の操作には、`TRUNCATE PARTITION`と一時パーティションのアトミックな入れ替えがあります。内部ではUnique KeyモデルがMerge-on-Write（MoW）を使用するため、削除と更新はクエリ時ではなく書き込み時に反映されます。MoWは1.2で導入され、2.1でUnique Keyのデフォルトになりました。
+
+**主な用語**
+
+- **`Unique Key model`**：主キーごとに1行を保持するテーブルモデル。`UPDATE`とバッチアップサートに必要です。
+- **`Merge-on-Write (MoW)`**：Apache Dorisが書き込み時に新しい各キーを既存データから探し、古い行を削除ビットマップでマークして、新しい行を新規の行セットに書き込む方式。
+- **`Delete bitmap`**（削除ビットマップ）：クエリで読み飛ばす行IDを、行セットごとに記録するビットマップ。読み取り時のキーごとのバージョンマージに代わるものです。
+- **`Partial column update`**（部分列更新）：一部の列だけを変更する書き込み。Apache Dorisは既存行から指定されていない列の値を読み取り、完全な行を書き戻します。
+- **`Sequence column`**（シーケンス列）（`function_column.sequence_col`）：書き込みが順序どおりに到着しない場合に、MoWが同じキーのどのバージョンを採用するかを決める、ユーザーが選択する列。
+- **`__DORIS_DELETE_SIGN__`**：`1`を設定すると、どのロード経路からでも行を論理削除できる隠し列。
+
+## Apache Dorisのデータの更新と削除の仕組み {#how}
+
+Unique KeyのMoWテーブルでは、Apache Dorisによるデータの更新と削除は、計画と読み取り、キーの検索、古い行の削除ビットマップへの記録、新しい行セットへの書き込み、新しいバージョンの公開という五つの段階で進みます。
+
+Unique KeyのMoWテーブルに対する`UPDATE`を例に説明します。
+
+1. **計画と読み取り。** FEがステートメントを解析し、WHERE条件を解決して、BEレプリカに読み取りを振り分けます。部分列の書き込みでは、BEは影響を受ける各キーについて、指定されていない列の値も取得します。
+2. **キーの検索。** 各BEは行セットごとのメモリ内の主キーインデックスを参照し、対象キーが現在どの行セットと行IDにあるかを調べます。
+3. **古い行のマーク。** 対象キーを持つ各行セットで、対応する行IDの削除ビットマップのビットを立てます。古い行はコンパクションで回収されるまでディスクに残ります。
+4. **新しい行の書き込み。** 新しい値と、部分更新のためにApache Dorisが読み取った変更のない列を、次のバージョン番号を持つ新規の行セットに書き込みます。
+5. **公開。** トランザクションがコミットされ、新しいバージョンが参照可能になります。それ以降のクエリは、統合された削除ビットマップに従って行を除外します。古いデータはコンパクション時に回収されます。
+
+`DELETE FROM ... WHERE`も書き込み段階を除いて同じ流れです。AggregateテーブルまたはDuplicateテーブルでは、代わりにApache Dorisが条件をタブレットのメタデータに記録し、クエリが読み取り時に適用します。
+
+## クイックスタート {#quick-start}
+
+```sql
+CREATE TABLE orders (
+  order_id BIGINT,
+  status   VARCHAR(20),
+  amount   DECIMAL(10, 2),
+  updated  DATETIME
+)
+UNIQUE KEY(order_id)
+DISTRIBUTED BY HASH(order_id) BUCKETS 4
+PROPERTIES ("function_column.sequence_col" = "updated");
+
+INSERT INTO orders VALUES
+  (1, 'created', 99.50,  '2026-05-08 10:00:00'),
+  (2, 'created', 149.00, '2026-05-08 10:01:00');
+
+UPDATE orders SET status = 'shipped', updated = NOW() WHERE order_id = 1;
+DELETE FROM orders WHERE order_id = 2;
+```
+
+**想定される結果**
+
+```
++----------+---------+--------+---------------------+
+| order_id | status  | amount | updated             |
++----------+---------+--------+---------------------+
+|        1 | shipped |  99.50 | 2026-05-08 11:42:31 |
++----------+---------+--------+---------------------+
+```
+
+注文1の行はその場で書き換えられ、注文2の行は削除されました。`function_column.sequence_col`プロパティは、順序が前後して到着する書き込みからテーブルを保護します。`updated`のタイムスタンプが古いCDCイベントは、新しい行より後に到着しても、すでに存在する行より優先されません。
+
+## Apache Dorisのデータの更新と削除を使う場面 {#when}
+
+Apache Dorisのデータ更新・削除機能は、Unique KeyテーブルへのCDCアップサート、幅の広いテーブルでの頻繁に変わる列の更新、GDPRに基づく行単位の削除、バックフィル時のアトミックな入れ替え、複数ストリームからの幅の広いテーブルの構築に適しています。AggregateテーブルまたはDuplicateテーブルに対する`UPDATE`、ループ内で連続実行する1行ずつの更新、主キーの名前変更、パーティションの入れ替えで一度に処理できる大量の条件付き`DELETE`には適していません。
+
+**適した用途**
+
+- FlinkやSparkのCDCパイプラインから、ソースの主キーをApache Dorisのキーとして、Unique Keyテーブルにアップサートする。
+- 部分列のStream Loadを使い、幅の広いテーブルで頻繁に変わる列（注文ステータス、最終アクセス時刻、現在残高）を更新する。
+- 追記専用のDuplicateテーブルも含め、ユーザーIDを指定してGDPRに基づく行単位の削除を行う。
+- `ALTER TABLE ... REPLACE PARTITION`を使い、修正したパーティションをアトミックに入れ替えてバックフィルする。
+- 複数の上流ストリームがそれぞれ担当する列群だけを書き込んで、幅の広いテーブルを構築する。
+
+**適さない用途**
+
+- AggregateテーブルまたはDuplicateテーブルに対する`UPDATE`。ステートメントは拒否されます。データ取り込みで再ロードするか（Aggregateでは`REPLACE_IF_NOT_NULL`で値を上書きします）、テーブルモデルを変更してください。
+- ループ内で高頻度に実行する1行ずつの`UPDATE`。各ステートメントが個別のトランザクションとなるため、コミットのオーバーヘッドが支配的になります。代わりに`partial_columns: true`を指定したStream Loadで更新をまとめるか、[Group Commit](../data-operate/import/load-best-practices/group-commit-manual)を使用してください。
+- 主キーの名前変更。キーを書き換える経路はありません。`__DORIS_DELETE_SIGN__`を使って古い行を論理削除し、新しい行を挿入してください。可能なら同じロードで行います。
+- 数十億行もの一致行を対象とする条件付き`DELETE`。削除ごとに条件またはビットマップが記録され、コンパクションで処理する必要があります。パーティションの入れ替えや`INSERT OVERWRITE`のほうが高速です。
+- キー以外の列を条件に指定するAggregateモデルの`DELETE`。条件にはキー列しか指定できません。エンジンは集約前に値列の条件を評価できません。
+
+## 関連資料 {#further-reading}
+
+- [データの更新と削除の概要](../data-operate/update-and-delete)
+- [更新の概要：SQL UPDATE、部分列更新、シーケンス列](../data-operate/update/update-overview)
+- [部分列更新](../data-operate/update/partial-column-update)
+- [削除の概要：条件付き削除、バッチ削除、アトミックな入れ替え](../data-operate/delete/delete-overview)
+- [データモデル](./data-model)：Unique KeyがUPDATE/DELETEを支えるテーブルモデルである理由と、DuplicateおよびAggregateの位置付け。
+- [高並行性ポイントクエリ](./high-concurrency-point-query)：Unique KeyのMerge-on-Writeテーブルで利用できる、KV形式の読み取り向けショートカット経路。
+- [Binlog Table Stream](./binlog-table-stream)：コミット済みの行単位の変更を下流のコンシューマーに公開する仕組み。
+- [Apache Doris 2.1.0：Merge-on-WriteがUnique Keyのデフォルトに](https://doris.apache.org/blog/release-note-2.1.0/)
+- [Unique Key](./unique-key)：SQL UPDATE/DELETEを支えるテーブルモデル。Merge-on-Writeは各アップサートを書き込み時に解決します。

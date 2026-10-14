@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/iceberg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/iceberg.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/iceberg.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "d95c7a10897df6ce6f2e51246eeedf21a5e54c0a923d5a4d9cb2624c7d9329c1",
+    "sourceTechnicalHash": "8bc18d4f63d9051d6fe7b2679b0b78352e115672fccbee179192c5cd3914fd12",
+    "targetHash": "dba75caf26179ab6b69aa821906b470f0d6b9e0505cd5d0824925e68be367a9d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:36:53.452Z",
+    "glossaryVersion": "0"
+  }
+}

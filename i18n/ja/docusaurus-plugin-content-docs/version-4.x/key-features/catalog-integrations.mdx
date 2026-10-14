@@ -1,0 +1,132 @@
+---
+title: カタログ連携
+description: Doris を Glue、Iceberg REST、HMS、S3 Tables、Polaris、Unity、DLF などに接続し、単一のエンジンからさまざまなレイクハウスカタログを利用できます。
+keywords:
+  - 外部カタログ
+  - Iceberg REST
+  - Glue カタログ
+  - Hive Metastore
+  - Unity Catalog
+  - Polaris
+  - S3 Tables
+  - レイクハウス
+slug: /key-features/catalog-integrations
+image: /images/next/key-features/catalog-integrations.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - lakehouse
+    - iceberg
+    - catalog
+language: ja
+---
+
+> **要約** Apache Doris のカタログ連携は、レイクハウスですでに利用されている主なカタログサービスに対応しています。対象には Hive Metastore、AWS Glue、Iceberg REST 仕様に対応するサービス（Tabular、Polaris、Lakekeeper、Snowflake Open Catalog、Gravitino、Unity）、AWS S3 Tables、Aliyun DLF、ファイルベースの Hadoop、JDBC バックエンドが含まれます。どのバックエンドも `CREATE CATALOG` 文で接続でき、`iceberg.catalog.type` または `hive.metastore.type` で選択します。認証情報とウェアハウスを指定すれば、どのバックエンドに対しても同じ SQL を使用できます。
+
+![Apache Doris のカタログ連携：Doris を Glue、Iceberg REST、HMS、S3 Tables、Polaris、Unity、DLF などに接続し、単一のエンジンからさまざまなレイクハウスカタログを利用できます。](/images/next/key-features/catalog-integrations.jpg)
+## Apache Doris のカタログ連携を使う理由 {#why}
+
+Apache Doris のカタログ連携を使うと、単一のエンジンから一般的なレイクハウスカタログに接続でき、メタストアの選択にクエリエンジンを縛られません。カタログは分析エンジンとは別の事情で決まることがほとんどです。たとえば、何年も前から Hive Metastore を使っている Hadoop クラスター、Glue を標準としている AWS アカウント、新たに Polaris を導入したプラットフォームチーム、Unity を使う Databricks ワークスペースがあります。クエリエンジンがそのうち一種類にしか対応していなければ、変換レイヤーを構築するか、エンジンが対応するデータレイクに対象を限定する必要があります。
+
+Apache Doris は複数のカタログに対応しながら、SQL を統一します。`CREATE CATALOG` で種類を選択すれば、メタデータの保存先にかかわらず、同じ Iceberg または Hive テーブルに対して `SHOW DATABASES`、`SELECT`、結合、書き込み、タイムトラベルを利用できます。[マルチカタログ](./multi-catalog)によるフェデレーションと統一された[メタデータキャッシュ](./metadata-cache)を組み合わせると、[データレイクのテーブル管理](./managing-lake-table)も一貫して行えます。
+
+- さまざまなメタストアを単一のエンジンで利用できます。カタログごとにクエリレイヤーを運用する必要はありません。
+- 新しいカタログサービスは別のバックエンドとして追加できます。Iceberg REST、S3 Tables、Polaris、Unity は同じ接続の仕組みを再利用します。
+- 従来のメタストアから移行するときは、プラットフォーム全体を移行する代わりに `CREATE CATALOG` で接続できます。
+
+## Apache Doris のカタログ連携とは {#what}
+
+Apache Doris のカタログ連携は、外部カタログのインターフェースを特定のメタデータサービスに対応付けるバックエンドドライバーです。Iceberg テーブルでは `iceberg.catalog.type` で種類を選択します。Hive 系のテーブルでは `type = 'hms'` を指定したうえで、`hive.metastore.type` で選択します。ストレージの認証情報（S3、OSS、COS、HDFS）は、選択したカタログに応じて追加で設定します。
+
+現在提供されているバックエンドは次のとおりです。
+
+- **Hive Metastore (`hms`)**：長く利用されている Thrift サービスです。シンプル認証または Kerberos 認証に対応し、Hive、Iceberg、Paimon テーブルに使用します。
+- **AWS Glue (`glue`)**：AWS が管理する Hive 互換カタログです。Hive バックエンド（`hive.metastore.type=glue`）、Iceberg 向けのネイティブ Glue クライアント（`iceberg.catalog.type=glue`）、または S3 Table Bucket の前段で使用する Glue の Iceberg REST エンドポイントから接続できます。
+- **Iceberg REST (`rest`)**：オープンな Iceberg REST Catalog 仕様に対応します。同じバックエンドで Tabular 系のサービス、Apache Polaris、Lakekeeper、Snowflake Open Catalog、Apache Gravitino、Databricks Unity の Iceberg REST エンドポイントに接続できます。
+- **AWS S3 Tables (`s3tables`)**：Table Bucket に結び付いた AWS 管理の Iceberg カタログです。SigV4 署名を使用して Glue の REST エンドポイントから接続することもできます。
+- **Aliyun DLF (`dlf`)**：Iceberg と Hive では HMS 互換インターフェース経由で Data Lake Formation 1.0 に接続します。Paimon では REST 経由で DLF 2.5 以降に接続します。
+- **Hadoop ファイルシステム (`hadoop`)**：ファイルベースの Iceberg メタデータを使用します。メタストアのデーモンが不要なため、独立したウェアハウスに適しています。
+- **JDBC カタログ (`jdbc`)**：Iceberg のメタデータを SQL データベース（Postgres、MySQL）に保存します。サービスを運用せずにトランザクション対応のメタストアを使いたい場合に適しています。
+- **Unity Catalog**：OAuth2 とカタログが払い出す認証情報を使用し、Iceberg REST バックエンド経由で接続します。
+
+**主な用語**
+
+- **`type`**：カタログの種類です。`iceberg`、`hms`、`paimon`、`hudi`、`jdbc` などを指定します。
+- **`iceberg.catalog.type`**：Iceberg カタログ内で使用するメタストアドライバーです。`hms`、`rest`、`glue`、`dlf`、`jdbc`、`hadoop`、`s3tables` のいずれかを指定します。
+- **`hive.metastore.type`**：Hive 系カタログに対応する切り替え項目です。`hms`（デフォルト）、`glue`、`dlf` のいずれかを指定します。
+- **カタログが払い出す認証情報（Vended credentials）**：REST カタログからテーブルごとに短期間有効なストレージ認証情報を取得する Apache Doris の機能です。カタログのプロパティにアクセスキーを手動で設定せずに済みます。
+- **ウェアハウス**：カタログが新しいテーブルを作成する際のストレージのルートです。`hadoop` では必須で、ほとんどのほかのバックエンドでは任意です。
+
+## Apache Doris のカタログ連携の仕組み {#how}
+
+Apache Doris のカタログ連携では、`CREATE CATALOG` 時に選択したバックエンドドライバーを通じてメタデータ操作を行います。データの読み書きには、BE が使用する共通のストレージレイヤーを使用します。
+
+1. **バックエンドを選択します。** Apache Doris の `IcebergExternalCatalogFactory` は `iceberg.catalog.type` に応じて、`IcebergHMSExternalCatalog`、`IcebergGlueExternalCatalog`、`IcebergRestExternalCatalog`、`IcebergDLFExternalCatalog`、`IcebergJdbcExternalCatalog`、`IcebergHadoopExternalCatalog`、`IcebergS3TablesExternalCatalog` のいずれかを生成します。Hive 系のカタログも `hms` ドライバーと `hive.metastore.type` を通じて同様に処理されます。
+2. **メタデータを取得します。** 選択したバックエンドは、固有のプロトコル（HMS は Thrift、Glue は AWS SDK、REST は HTTP）を使って、`SHOW DATABASES`、スキーマの取得、スナップショットの参照、パーティションの一覧取得を処理します。
+3. **ストレージに接続します。** 指定した認証情報（`s3.access_key`、`oss.endpoint`、REST カタログが払い出す認証情報）は、BE が Parquet、ORC、Avro ファイルを読み取るための共通のストレージレイヤーに渡されます。
+4. **キャッシュで高速化します。** スキーマ、テーブルオブジェクト、マニフェスト、ビューは、`meta.cache.iceberg.*` のキーを使ってカタログごとにキャッシュされます。キャッシュの削除方法については[メタデータキャッシュ](./metadata-cache)を参照してください。
+5. **計画して実行します。** その後は Apache Doris の内部クエリと同じ MPP パイプラインで処理され、同じデータキャッシュ、マテリアライズドビューの書き換え、ベクトル化実行を利用します。
+
+## クイックスタート {#quick-start}
+
+```sql
+-- Connect to an Iceberg REST catalog (Polaris, Lakekeeper, Tabular,
+-- Snowflake Open Catalog, Unity, or any spec-compatible service).
+CREATE CATALOG iceberg_rest PROPERTIES (
+  'type' = 'iceberg',
+  'iceberg.catalog.type' = 'rest',
+  'iceberg.rest.uri' = 'https://catalog.example.com/api/catalog',
+  'warehouse' = 'analytics',
+  'iceberg.rest.security.type' = 'oauth2',
+  'iceberg.rest.oauth2.credential' = 'client_id:client_secret',
+  'iceberg.rest.vended-credentials-enabled' = 'true',
+  's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
+  's3.region' = 'us-west-2'
+);
+
+SWITCH iceberg_rest;
+SELECT region, SUM(amount) FROM sales.orders WHERE dt = '2026-05-01' GROUP BY region;
+```
+
+**期待される結果**
+
+```
++--------+-----------+
+| region | sum       |
++--------+-----------+
+| us     | 184320.50 |
+| eu     |  91200.00 |
++--------+-----------+
+```
+
+`SHOW CATALOGS` を実行すると、`iceberg_rest` が `internal` とともに表示されます。PROPERTIES ブロックを Glue、HMS、S3 Tables 用の設定に変更しても、同じ形のクエリを使用できます。変わるのは接続設定だけです。
+
+## Apache Doris のカタログ連携を使う場面 {#when}
+
+レイクハウスのメタデータがすでに外部サービスにあり、データを移動せずに単一のエンジンから読み書きしたい場合に、Apache Doris のカタログ連携を使用します。
+
+**適しているケース**
+
+- Hive Metastore、Glue、DLF、または Iceberg REST サービスをすでに利用しているデータレイクを、データを移動せずに Apache Doris から読み書きする場合。
+- リージョンやベンダーをまたぐ処理を行う場合。たとえば、あるアカウントの Glue カタログを読み取り、別のアカウントの Polaris カタログと結合できます。フェデレーションについては[マルチカタログ](./multi-catalog)を参照してください。
+- カタログサービス間で移行する場合。移行元と移行先を別々のカタログとして接続して並行運用し、準備ができたら切り替えます。
+- エンジンが長期間有効なストレージキーを扱わないよう、カタログが払い出す認証情報を必要とするクラウドネイティブな環境。
+- メタストアのデーモンを運用するほどの規模ではない、ファイルベースまたは単一テナントの Iceberg データレイク。`hadoop` バックエンドはファイルシステムからメタデータを直接読み取ります。
+
+**適していないケース**
+
+- Confluent Schema Registry のような運用向けメタデータストア。これらはテーブルではなく、データ転送時の形式を記述します。
+- Apache Doris をデータレイクのメタデータの正本として使用する場合。書き込みは接続先のカタログに反映されますが、Apache Doris 自体はそのカタログではありません。Apache Doris が管理するテーブルには `internal` カタログを使用してください。
+- カタログが存在しない状態で生ファイルを読み取る場合。空のカタログを立ち上げる代わりに、[Table Value Function](../lakehouse/file-analysis)（`s3()`、`hdfs()`、`local()`）を使用してください。
+
+## 関連ドキュメント {#further-reading}
+
+- [マルチカタログ](./multi-catalog)：ここで接続したカタログ間の結合を可能にするフェデレーションレイヤー。
+- [データレイクのテーブル管理](./managing-lake-table)：カタログ接続後の Iceberg と Hive テーブルの書き込み、スキーマ変更、ライフサイクル管理。
+- [Iceberg カタログ](../lakehouse/catalogs/iceberg-catalog)：各プロパティのリファレンス、バージョン対応表、バックエンド別の機能対応表。
+- [AWS Glue](../lakehouse/metastores/aws-glue)、[Iceberg REST カタログ](../lakehouse/metastores/iceberg-rest)、[Hive Metastore](../lakehouse/metastores/hive-metastore)、[Aliyun DLF](../lakehouse/metastores/aliyun-dlf)：各バックエンドの接続手順と例。
+- [カタログの概要](../lakehouse/catalog-overview)：すべてのバックエンドに適用される共通プロパティ（`include_database_list`、大文字と小文字の区別、更新）。
+- [メタデータキャッシュ](./metadata-cache)：メタデータの鮮度を保ちながら、繰り返し実行するクエリを高速化するキャッシュの仕組み。
+- [Iceberg](./iceberg)：七種類の Iceberg カタログバックエンドで Doris が提供するエンジン側の機能。

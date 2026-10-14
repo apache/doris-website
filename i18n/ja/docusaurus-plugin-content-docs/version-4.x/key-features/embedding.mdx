@@ -1,0 +1,165 @@
+---
+title: エンベディング
+description: Doris は外部モデルを呼び出す SQL 関数 EMBED() を使ってテキストやメディアをベクトルに変換し、ベクトル検索に使用できる ARRAY<FLOAT> を返します。
+language: ja
+keywords:
+  - エンベディング関数
+  - EMBED SQL
+  - ベクトル生成
+  - AI エンベディング
+  - ARRAY FLOAT
+  - Apache Doris AI
+  - ベクトル検索
+slug: /key-features/embedding
+image: /images/next/key-features/embedding.jpg
+last_update:
+  date: 2026-08-04
+  author: Apache Doris
+featureCard:
+  tags:
+    - ai
+    - search
+---
+
+> **要点** Apache Doris には組み込みの SQL 関数 `EMBED()` があります。テキスト（または画像、動画、音声ファイル）を外部のエンベディングモデルに送り、列への保存や[距離関数](./vector-index)への入力に使える `ARRAY<FLOAT>` を返します。モデルを AI `RESOURCE` として一度設定すれば、値を指定できる場所ならどこでも `EMBED('your text')` を使えます。UDF、クライアント側の連携コード、別の運用サービスは不要です。
+
+![Apache Doris のエンベディング：Doris は外部モデルを呼び出す SQL 関数 EMBED() を使ってテキストやメディアをベクトルに変換し、ベクトル検索用の FLOAT 型の配列を返します。](/images/next/key-features/embedding.jpg)
+## Apache Doris で EMBED 関数を使う理由 {#why}
+
+Apache Doris の `EMBED()` 関数を使うと、通常はアプリケーション側に必要なエンベディング処理を 1 回の SQL 呼び出しにまとめられます。別の ETL サービスを用意せずに、データベース内でベクトルを生成、保存、検索できます。ベクトル検索にはベクトルが必要で、そのベクトルはエンベディングモデルから得ます。一般的な構成では、アプリケーションサーバーがデータベースから行を読み出し、OpenAI またはローカルモデルに送信し、返されたベクトルをベクトルテーブルに書き込みます。検索時にも、検索文字列に対して同じ往復処理が発生します。その結果、HTTP API を呼び出して結果を保存するだけの小さな ETL サービスを保守することになります。
+
+この構成では、次の問題が起こりがちです。
+
+- 処理パイプラインと元のテーブルが同期しなくなります。次のバッチ処理まで、新しい行にエンベディングがありません。
+- 既存データへのエンベディングの追加は独立したジョブになり、多くの場合、元の取り込みより時間と費用がかかります。
+- 1 つの論理的な処理を 2 つのチームが担当します。データチームが行を、アプリケーションチームがベクトルを担当しますが、その間の処理はどちらも担当しません。
+
+`EMBED()` はこの一連の処理を SQL に戻します。モデルは Apache Doris のリソース、呼び出しは関数、結果は `INSERT` で保存するかその場で計算できる列になります。
+
+## Apache Doris の EMBED 関数とは {#what}
+
+Apache Doris の `EMBED()` 関数は、テキストまたはマルチモーダルファイルへの参照を受け取り、外部のエンベディングプロバイダーからベクトルを取得して `ARRAY<FLOAT>` を返す組み込みの [AI 関数](../sql-manual/sql-functions/ai-functions/overview)です。Apache Doris は、`CREATE RESOURCE` で一度設定した AI リソースを通じてプロバイダーに接続します。同じ関数呼び出しをロード時に使ってエンベディングを列に保存することも、クエリ時に使ってユーザーの検索文字列を SQL 内でその場でベクトル化することもできます。
+
+**主な用語**
+
+- **AI リソース**：エンベディングプロバイダーへの名前付き接続です。`EMBED()` には `openai`、`gemini`、`voyageai`、`jina`、`qwen`、`minimax` 用の専用アダプターと、自社運用のモデルサーバー向けの `local` オプションがあります。エンドポイント、モデル名、API キー、任意の次元数を保存します。
+- **`EMBED([resource_name], input)`**：SQL 関数です。引数が 1 つの場合、Apache Doris はセッションのデフォルトリソースを使用します。引数が 2 つの場合、最初の引数でリソースを明示的に指定します。
+- **`default_ai_resource`**：その後のセッションで使用するリソースを選ぶセッション変数です。
+- **マルチモーダル入力**：ファイルの URI、コンテンツタイプ、任意の S3 認証情報を記述した JSON 値です。Apache Doris は S3 URL の署名付き URL を生成し、画像、動画、音声のエンベディングに対応するプロバイダーに転送します。
+
+## Apache Doris の EMBED 関数の仕組み {#how}
+
+Apache Doris の `EMBED()` 関数は、AI リソースの登録、FE での呼び出し計画、BE での行のバッチ化、失敗時の再試行、行ごとの `ARRAY<FLOAT>` の返却という 5 つの段階で動作します。
+
+1. **モデルを登録します。** `CREATE RESOURCE` はプロバイダーの種類、エンドポイント、モデル名、認証情報を保存します。Apache Doris はプロバイダーへの試験的な呼び出しでリソースを検証します。ただし、`provider_type = "local"` の場合はこの検証を省略します。
+2. **呼び出しを計画します。** プランナーは `EMBED()` を検出すると、処理を BE に送ります。関数は入力列を行ごとに処理しますが、プロバイダーを行ごとに呼び出すわけではありません。
+3. **BE でバッチ化します。** BE は `embed_max_batch_size`（デフォルトは 5 入力）と `ai_context_window_size`（蓄積されたテキストのデフォルトは 128 KB）を上限として行をバッチにまとめます。各バッチを 1 件の HTTP リクエストにすることで、往復回数と分単位のレート制限への影響を抑えます。
+4. **再試行し、エラーを明確に報告します。** プロバイダーへの呼び出しには、リソースの `ai.max_retries` と `ai.retry_delay_second` が適用されます。API が誤った数のベクトルを返した場合、Apache Doris は行とベクトルの対応がずれることを避けるため、クエリを失敗させます。
+5. **列を返します。** 各行に固有の `ARRAY<FLOAT>` が返されます。これを保存するか、`cosine_distance` に渡すか、ベクトル検索用の ANN インデックスに読み込めます。
+
+## クイックスタート {#quick-start}
+
+```sql
+CREATE RESOURCE "openai_embed" PROPERTIES (
+  "type" = "ai", "ai.provider_type" = "openai",
+  "ai.endpoint"   = "https://api.openai.com/v1/embeddings",
+  "ai.model_name" = "text-embedding-3-small",
+  "ai.api_key"    = "sk-xxx", "ai.dimensions" = "8"
+);
+
+SET default_ai_resource = "openai_embed";
+
+CREATE TABLE notes (id INT, body STRING, vec ARRAY<FLOAT>)
+  DUPLICATE KEY(id) DISTRIBUTED BY HASH(id) BUCKETS 1;
+
+INSERT INTO notes VALUES
+  (1, 'travel reimbursement policy', EMBED('travel reimbursement policy')),
+  (2, 'VPN setup guide',             EMBED('VPN setup guide'));
+
+SELECT id, body, cosine_distance(vec, EMBED('how do I expense a trip?')) AS d
+FROM notes ORDER BY d ASC LIMIT 1;
+```
+
+**期待される結果**
+
+```
++----+-----------------------------+--------+
+| id | body                        | d      |
++----+-----------------------------+--------+
+|  1 | travel reimbursement policy | 0.4463 |
++----+-----------------------------+--------+
+```
+
+`INSERT` は各行のベクトルを事前に計算します。`SELECT` は実行時に検索文字列を一度ベクトル化し、コサイン距離で行を順位付けします。API 呼び出しは合計 2 回で、どちらも SQL 内で処理されます。
+
+## マルチモーダルのクイックスタート {#multimodal-quick-start}
+
+マルチモーダルなエンベディングでは、テキスト文字列の代わりに JSON オブジェクトを渡します。オブジェクトには、ファイルの `uri` と MIME の `content_type` が必要です。URI には HTTP または HTTPS の URL、あるいは S3 互換の URI を指定できます。設定したプロバイダーとモデルが、入力するメディアの種類に対応していることを確認してください。
+
+次の例では、S3 互換のオブジェクトストレージに保存された動画をベクトル化します。
+
+```sql
+SELECT ARRAY_SIZE(
+  EMBED(
+    'multimodal_embed_resource',
+    CAST('{
+      "uri": "s3://example-bucket/videos/demo.mp4",
+      "content_type": "video/mp4",
+      "endpoint": "s3.us-east-1.amazonaws.com",
+      "region": "us-east-1",
+      "ak": "<access_key>",
+      "sk": "<secret_key>"
+    }' AS JSON)
+  )
+) AS video_embedding_dimension;
+```
+
+**結果の例**
+
+```text
++---------------------------+
+| video_embedding_dimension |
++---------------------------+
+|                      2560 |
++---------------------------+
+```
+
+ベクトルの次元数は設定したプロバイダーとモデルによって異なるため、上記は一例です。HTTP または HTTPS の URL では、`uri` と `content_type` だけが必要です。S3 互換の URI では、Doris が署名付き URL を生成し、AK/SK 認証情報、または `role_arn` と `external_id` を使う IAM ロール認証に対応します。
+
+## Apache Doris の EMBED 関数を使う場面 {#when}
+
+Apache Doris の `EMBED()` 関数は、すでに Apache Doris に保存されているデータ群に対する RAG やセマンティック検索、SQL 内で完結させたい既存データへのエンベディングの追加、ベクトルとキーワードフィルターを組み合わせるハイブリッド処理、元ファイルが S3 にあるマルチモーダルなエンベディングに適しています。処理の集中する経路で数百万行を行ごとにベクトル化する場合、対応プロバイダーの一覧にないモデルを使う場合、プロバイダーへの接続経路がない外部ネットワークから隔離されたクラスターには適していません。
+
+**適した用途**
+
+- データ群がすでに Apache Doris にあり、取り込み、エンベディング、検索を 1 つのシステムで扱いたい場合の RAG とセマンティック検索。
+- 既存テーブルへのエンベディングの追加：`UPDATE t SET vec = EMBED(body) WHERE vec IS NULL` を使えば、処理をデータベース内で完結できます。
+- `EMBED()` を保存用の ANN インデックスやキーワードフィルタリング用の `MATCH_*` 述語と組み合わせるハイブリッド処理。[ハイブリッド検索](./hybrid-search)を参照してください。
+- ファイルが S3 にあり、ダウンロードしてからアップロードするスクリプトを作りたくない場合のマルチモーダルなエンベディング（画像、動画、音声）。
+
+**適さない用途**
+
+- 数百万行を行ごとにベクトル化するリアルタイムクエリ。各行でプロバイダーを 1 回呼び出すため、費用と遅延は行数に比例して増えます。一度事前計算し、その結果を繰り返し利用してください。
+- 対応プロバイダーの一覧にない特定のエンベディングモデルが必要なワークロード。エンベディング用アダプターがあるのは OpenAI、Gemini、VoyageAI、Jina、Qwen、MiniMax と、自社運用のモデルサーバー向けの `local` です。Apache Doris の AI リソース全体では DeepSeek、MoonShot、Anthropic、Zhipu、Baichuan も受け付けますが、これらは [LLM SQL 関数](./llm-sql-functions)を使用し、チャットと補完にのみ対応していて `EMBED()` には対応していません。エンベディング用アダプターの対象外のモデルを接続するには、OpenAI または Gemini と互換性のある API を公開する必要があります。
+- プロバイダーへの接続経路がない外部ネットワークから隔離されたクラスター。自社運用のモデルサーバーに対して `provider_type = "local"` を使用するか、独自のパイプラインでベクトルを事前計算してください。
+- エンベディングモデルの次元数が ANN インデックスと一致しない列。ARRAY の長さはモデル（または次元数の削減を許可するモデルでは `ai.dimensions`）で決まり、インデックスの次元数はテーブル作成時に固定されます。一致しない場合、書き込み時に失敗します。
+
+## コストとスループットに関する注意点 {#cost}
+
+`EMBED()` の処理速度は、接続先のプロバイダーに左右されます。`EMBED()` を処理の集中する経路に組み込む前に、次の点を確認してください。
+
+- 外部 API にはレート制限があります。`embed_max_batch_size` を増やすと往復回数は減りますが、リクエストごとのトークン数は増えるため、両方を考慮して調整してください。
+- 入力が `ai_context_window_size` を超える行は自動的に単独のバッチに入るため、大きすぎる文書がクエリの残りの処理を妨げることはありません。
+- プロバイダーは行数ではなく入力トークン数に基づいて課金します。同じテキストを 2 回ベクトル化すると、費用も 2 回分かかります。ベクトルを複数回読み取る場合は保存してください。
+- `local` プロバイダーでは認証情報の検証を省略し、ネットワーク内で実行します。トークン単位の課金はなくなりますが、推論サーバーの運用が必要です。
+
+## 関連資料 {#further-reading}
+
+- [EMBED 関数リファレンス](../sql-manual/sql-functions/ai-functions/distance-functions/embed)：完全な構文、マルチモーダル入力の JSON、各種距離の例。
+- [AI 関数の概要](../sql-manual/sql-functions/ai-functions/overview)：対応するすべてのプロバイダーと `CREATE RESOURCE` の全プロパティ一覧。
+- [ハイブリッド検索](./hybrid-search)：1 つのクエリで `EMBED()`、全文検索の述語、ANN インデックスを組み合わせる方法。
+- [ベクトルインデックスの概要](../table-design/index/vector-index/overview)：HNSW または IVF を使った ANN 検索用にエンベディングを保存する方法。
+- [転置インデックス](./inverted-index)：ハイブリッドクエリでベクトルの順位付けを行う前に行を事前フィルタリングするためのインデックス。
+- [Reciprocal Rank Fusion](./reciprocal-rank-fusion)：エンベディングを用意した後、BM25 とベクトルの順位を統合する方法。
+- [LLM SQL 関数](./llm-sql-functions)：`EMBED()` は `AI_*` ファミリーと AI リソースの仕組みを共有します。こちらでは AI SQL 機能のもう一方を説明します。
+- [Doris の AI 機能](../ai/ai-overview)：分類、生成、行をまたぐ集約など、その他の AI 関数。

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/llm-sql-functions",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/llm-sql-functions.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/llm-sql-functions.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "93fb4073dab77e5c4073de47ad82c9cc5ed786d54066628e1f889bb8c2bbf469",
+    "sourceTechnicalHash": "759e97e736050a0e233dcb2c7ca2037d61c44df94a38820688c0b207faf65742",
+    "targetHash": "fc190fb9414f5b1e7503ff7fb2e25c1f4938487fefd3a010b41275ec5da5988e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:36:53.453Z",
+    "glossaryVersion": "0"
+  }
+}

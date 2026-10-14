@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/compute-group",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/compute-group.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/compute-group.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "ad3936df194dc496cb4a505e8980836b5cf2586715debf46d949364770bfa1af",
+    "sourceTechnicalHash": "f31bd3eb64b0c8a1f5303256408fb35806f44dfed272756fbad4d6bbf83fb13c",
+    "targetHash": "e0bf6a967bce6b0b75a81367ee564fc0c04c3d2e4e4bf59ea778d268b2579f93",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:36:53.451Z",
+    "glossaryVersion": "0"
+  }
+}

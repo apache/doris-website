@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/embedding",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/embedding.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/embedding.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "d8f115ca21c0970891cf97090614c9ad262326457583455f9767c2eae0405f1e",
+    "sourceTechnicalHash": "dd2cbb6c5237830b2b9ca6c69ea20b8c2ea6d5dc6ba4254c90bdb8f3d1a10fcf",
+    "targetHash": "5ada97f856d0601d48b0b69f5c69d6dce9af743c4d6fdbb80f84db46bb894f44",
+    "reviewStatus": "unverified",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:36:53.452Z",
+    "glossaryVersion": "0"
+  }
+}
