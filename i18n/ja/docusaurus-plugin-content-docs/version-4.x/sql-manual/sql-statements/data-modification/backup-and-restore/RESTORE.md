@@ -103,7 +103,7 @@ PROPERTIES
 );
 ```
 
-2. example_repo のバックアップ snapshot_2 から、テーブル backup_tbl のパーティション p1 と p2、およびテーブル backup_tbl2 をデータベース example_db1 に復元します。backup_tbl2 は new_tbl に改名します。バックアップの時点は "2018-05-04-17-11-01" で、デフォルトの 3 レプリカとして復元します。
+2. example_repo のバックアップ snapshot_2 から、テーブル backup_tbl のパーティション p1 と p2、およびテーブル backup_tbl2 をデータベース example_db1 に復元します。このテーブルは new_tbl に改名します。バックアップの時点は "2018-05-04-17-11-01" で、デフォルトの 3 レプリカとして復元します。
 
 ```sql
 RESTORE SNAPSHOT example_db1.`snapshot_2`
