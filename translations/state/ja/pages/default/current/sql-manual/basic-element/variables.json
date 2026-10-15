@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/variables",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/variables.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/variables.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "6c3d4b7d7693306963c2b4286b8f315719e3e2381755bd07789d1983d95ab664",
+    "sourceTechnicalHash": "98c455aa1a47e17aa4dc13eb61945108434887702c0061ec4c0d490bb8307f98",
+    "targetHash": "e6fc11662df9c098f87d7de0f639f6e1b5c420384c625b2c5e734709671e42de",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.255Z",
+    "glossaryVersion": "0"
+  }
+}

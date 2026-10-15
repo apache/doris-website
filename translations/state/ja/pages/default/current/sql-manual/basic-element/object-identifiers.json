@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/object-identifiers",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/object-identifiers.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/object-identifiers.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "89737a3128c6cb2b5cec4c86eb51fbf1a2a360f3ad1d3d6a3a040ca5d82752d4",
+    "sourceTechnicalHash": "a11f20e0459505580315cbcc38128364dbb02f65927cf4c70e93a58a194a53de",
+    "targetHash": "4f04561d33889c4b116937dc47a0443fbb706cb4b6fdacbbf8d8c50363a4e86c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.254Z",
+    "glossaryVersion": "0"
+  }
+}

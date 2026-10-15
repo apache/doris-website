@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/sqrt",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/sqrt.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/sqrt.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "9124026d3d2f6dd9e7ec6e5f7a4621489e5d96ef8da47b6bd4a358f597f584cf",
+    "sourceTechnicalHash": "3b359b32bf650a2e0366e144c49bec60d7b6b4421a47d2caa78a7aec3856dd8c",
+    "targetHash": "4aca2c87057ea5593dc554bffdde17e61c56fca0ab5b80198444c2a03fce40cc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.258Z",
+    "glossaryVersion": "0"
+  }
+}

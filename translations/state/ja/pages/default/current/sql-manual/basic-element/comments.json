@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/comments",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/comments.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/comments.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c4ff6782cc393008739db78ab50bd64c18a19f3988e3e6078316e4e92d0fc902",
+    "sourceTechnicalHash": "d83424395d5c4cfb75c0fe52e014da998c433a1548ec329159d6fb845fb91bd6",
+    "targetHash": "491fc106955b06eb41faf722a6b84f395e074a77f310ebbe57b192cb8ad84e15",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.255Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-summarize",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/ai-summarize.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/ai-summarize.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "5edf9bba0d9c351b2a82d263178691e35f0c3fff2683a63b5291e830741d94f0",
+    "sourceTechnicalHash": "882bffb4e7a8b21a3ab6c2636662da2689b4089175d85fe4f545358f4fc098ac",
+    "targetHash": "46733240ddbcd942ee279c75045785aa104f2d6571b086f3010cb89ea8421bf3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.255Z",
+    "glossaryVersion": "0"
+  }
+}
