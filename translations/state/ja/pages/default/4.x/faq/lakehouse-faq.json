@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "faq/lakehouse-faq",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/faq/lakehouse-faq.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/faq/lakehouse-faq.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "1f8e4c05cf5a3fc58106830afa27431552a0abe8d6636fdf5be6992bc52dc44c",
+    "sourceTechnicalHash": "ae5db40644a46b288b8734613d96f8e05357d8e4a6ab3db0f8569391bf4742d2",
+    "targetHash": "e12c94583069c1179743a862d3655c2a5b83f69b95bee2a7db10e4db09736518",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.556Z",
+    "glossaryVersion": "0"
+  }
+}

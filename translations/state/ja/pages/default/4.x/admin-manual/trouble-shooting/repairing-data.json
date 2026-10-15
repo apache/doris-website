@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/repairing-data",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/repairing-data.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/repairing-data.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "e501091297dcfeac8d806d9321f5dc65133887638565d3dcab6810d358f5aa5c",
+    "sourceTechnicalHash": "e2c266e07b162f3fa25d4f27d7f4fc1d07037b3302cfcf0ad8efb6bafe5e03c5",
+    "targetHash": "a0750a8c9fba50e70f4a494b6ec154a728ee9c20c136519323025a2949edb4e3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.555Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/system-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/system-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/system-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "8101cd8bffb67822659643b97e510278262ef77a0fdb31d21702f81fa34a5310",
+    "sourceTechnicalHash": "89db5f2b5fc370874deb8cd8a59c1ee4d9573cc08166ae05052ebd3b876d6022",
+    "targetHash": "69d9a992fd41b19b713475959f43c6c11f49f377d60f3fabd88f3248c4d39c72",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.550Z",
+    "glossaryVersion": "0"
+  }
+}

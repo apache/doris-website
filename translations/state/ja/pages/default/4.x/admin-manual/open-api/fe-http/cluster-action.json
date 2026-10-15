@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/cluster-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/cluster-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/cluster-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "096b661d0712fa892aa9efe659a8fc6c1ea01d78283b7793cb0d4ca210ac61ca",
+    "sourceTechnicalHash": "96ece8f7597e787d2385b60826ca90f68deea589952a1d27b36ebaef94e7f036",
+    "targetHash": "26cfcd23dfb4b1ff20fdbc96385465110b603281322a945edf78034559986229",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.550Z",
+    "glossaryVersion": "0"
+  }
+}

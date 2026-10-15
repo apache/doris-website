@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/meta-backup-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/meta-backup-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/meta-backup-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "8cd709db351987933046dd45c2e948639637ca00c3725bc99081b5bc54b98d87",
+    "sourceTechnicalHash": "0992b947ce5d1191b6a47e27a8ff5819e918cd216d0adac706d63859a91ff0b4",
+    "targetHash": "ebdf094c3ceb7ca892f4a5587288de8b3d67817a730185a98f630b76e0747c86",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.550Z",
+    "glossaryVersion": "0"
+  }
+}

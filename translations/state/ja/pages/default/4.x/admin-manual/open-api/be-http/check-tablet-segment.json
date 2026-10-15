@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/be-http/check-tablet-segment",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/be-http/check-tablet-segment.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/be-http/check-tablet-segment.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "cb334a73094db4d382cee390cf2fe061350dadc922afaa11369f173dc003be71",
+    "sourceTechnicalHash": "3605ad4cd9c51bd4db6ef46b5c0f1ad6fd3381383226b79f28213ed3449c1362",
+    "targetHash": "2bee576c69ba66bc4be6db08fe5087b4feaf1abc1f5ec1cfad33dcb580bf641d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.553Z",
+    "glossaryVersion": "0"
+  }
+}

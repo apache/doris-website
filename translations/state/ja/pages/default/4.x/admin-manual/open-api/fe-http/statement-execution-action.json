@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/statement-execution-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/statement-execution-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/statement-execution-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "e8d2e6a452d452663706d28e043816c1db8f05bb394b6117bdc5377c772e244e",
+    "sourceTechnicalHash": "524f556a936a7a86f083d5da4dce71ce358732c4d5905a66c9f9ec5bb2433929",
+    "targetHash": "80ded6a02950845ed1e25489d9463bf719cd314e89caa9c3f0c357d078815a0e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.552Z",
+    "glossaryVersion": "0"
+  }
+}

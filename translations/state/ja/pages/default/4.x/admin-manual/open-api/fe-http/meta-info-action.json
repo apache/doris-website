@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/meta-info-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/meta-info-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/meta-info-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "1b2630a48a9a4c7846eeb8245351100416186d0658d918cc9f4eb6a0a69b9fd6",
+    "sourceTechnicalHash": "27396789bbccfcddc33f572aea9a6b46328322d2f165a656ca943f47d1fe5343",
+    "targetHash": "ea494a44248481447c2785a40533f8fb6d0fa60587cc2a763eb744baf67dad6b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.551Z",
+    "glossaryVersion": "0"
+  }
+}

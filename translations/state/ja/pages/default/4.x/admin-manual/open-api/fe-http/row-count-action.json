@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/row-count-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/row-count-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/row-count-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "bc324d82d3b6c7cf56fd6f9c1aa51d616f2570e53cab9cc7104c19f382126c8e",
+    "sourceTechnicalHash": "ea8ac34c2d8fc2677d60be8d9dc0e4811be3bf11bb92dde06662b6b05702db61",
+    "targetHash": "8c18160b05c156a2b13445f733632321490ca5d3335f147cc234645bcd12e423",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.552Z",
+    "glossaryVersion": "0"
+  }
+}

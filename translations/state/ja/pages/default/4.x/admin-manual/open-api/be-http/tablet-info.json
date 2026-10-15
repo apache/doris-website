@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/be-http/tablet-info",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/be-http/tablet-info.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/be-http/tablet-info.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "ff6bc20dfdd5502c107b333c738ba922a87bdfc66580dd96151f0c662b749236",
+    "sourceTechnicalHash": "4864a129b74f3b8b66aa9dacee4cd88780a23c12d0b9cd57c20a887c0b3ac2b0",
+    "targetHash": "f60f2dfeffad7de891a8086ddc9f525a00cdf5c1607f2b96559b8d1f3bd9f7f3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.554Z",
+    "glossaryVersion": "0"
+  }
+}
