@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-distinct",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-distinct.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-distinct.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "b400b4e2df3270a2918d18b65140752079dacb055c799a2895c705054bdc74ad",
+    "sourceTechnicalHash": "89557400757e518771141a6bc12ffae6afed0457cb9bbd47b83422531ce949ec",
+    "targetHash": "bc25fb89b5d83c00d2c53437b5894602605e8e63c2eaceef598c83ea5dfed5b1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.924Z",
+    "glossaryVersion": "0"
+  }
+}

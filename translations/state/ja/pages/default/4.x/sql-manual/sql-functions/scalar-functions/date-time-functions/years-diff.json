@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "e9e76e8d037c9d9431a7a5f571f9d233413db53d725017a19344900e7bb92222",
+    "sourceTechnicalHash": "70f5dd3ee8174de06a8c14a3e3c5a36668af375494b87f5f612e3682324a5936",
+    "targetHash": "3e93daec418dfbbc028293882976f7e77556ff96d7cc080f3ae36d3e5ee0f126",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.920Z",
+    "glossaryVersion": "0"
+  }
+}

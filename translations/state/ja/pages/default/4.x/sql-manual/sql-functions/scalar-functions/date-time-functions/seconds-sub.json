@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-sub",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-sub.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-sub.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "9631d6cab67480fc89b464807797ab7538cc4322c253e99ced6c53e649969d7d",
+    "sourceTechnicalHash": "daae66d577161330c0a4e25881e0bfa34c9f0517d89d5a85e7d5b1f96b7d529d",
+    "targetHash": "22d05b42781b67c96467e29ab637881731f80b6ae339795e2fe61035d53c25f3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.918Z",
+    "glossaryVersion": "0"
+  }
+}

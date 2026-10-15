@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-astext",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-astext.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-astext.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "b0bfc00517adf32c7c1428683193675278a34f9cdf0d6835ac108f9b6b372baf",
+    "sourceTechnicalHash": "187d1a60aa0931855583261e37fd2927b5513038d9cd419ba213006bf6dbe750",
+    "targetHash": "64dc1053f22c4f8fcf69972208782d534467ace3d611bff8882f49fbc5d46fb1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.920Z",
+    "glossaryVersion": "0"
+  }
+}

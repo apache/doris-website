@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitcount",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitcount.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitcount.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "4a5bbef62ee2c48d24b5989492d45c8dce620d1638f5696efc30ca1728cbedba",
+    "sourceTechnicalHash": "9d9f3c6231ed43d85cadcd0bad1b347e6c4c9ef19bf3f8e4d4e24dad76f69531",
+    "targetHash": "a222737a7cc2ce03bd5f6735ee460195021ec63bd64cdccf13708694c4b7db50",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.923Z",
+    "glossaryVersion": "0"
+  }
+}

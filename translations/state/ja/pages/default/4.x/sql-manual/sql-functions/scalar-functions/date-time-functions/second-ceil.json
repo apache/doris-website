@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/second-ceil",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/second-ceil.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/second-ceil.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "cc7c21b9f53ffc71cacd796e17767d6913a1b7e9b6c64de7aabf75e81617f925",
+    "sourceTechnicalHash": "005a66eca9698c2ad30f56c021c47179f984079e835d08a5aee5fd0c407ff6e2",
+    "targetHash": "5115bd1a358b0e3499dc3a9a4641ca0f44cc07d7de08879aff094a00c3172f75",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.917Z",
+    "glossaryVersion": "0"
+  }
+}

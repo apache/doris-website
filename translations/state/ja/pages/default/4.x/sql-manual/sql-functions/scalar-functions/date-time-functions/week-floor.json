@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/week-floor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/week-floor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/week-floor.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "2f15842317d6dd7dbd0e0be268d4f25ba3ab67e5c272cd5cdacb2a47f059ac06",
+    "sourceTechnicalHash": "fad30bf3f5682374c85739295ed20e119055796031fcfa5dcb7cb642a3547e9a",
+    "targetHash": "d80f13aaa9688c5bea5a29a3364d56401bf56f2ec95a605e69f651c2f30f4ac3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.919Z",
+    "glossaryVersion": "0"
+  }
+}

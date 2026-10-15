@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-difference",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-difference.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-difference.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "ac26d0e8d02db886bce4f82b8a3e529f2d0e6d467c8859b62b92b48913674c0e",
+    "sourceTechnicalHash": "2b37b99332cbe54faf5bba89bdc57a9a404abcb7f4913c22033db3c713a77316",
+    "targetHash": "6399cbd87742f5741922e4bc4a65610277920ddde2fc51f359864e371c138f1e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.924Z",
+    "glossaryVersion": "0"
+  }
+}

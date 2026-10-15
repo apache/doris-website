@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/timediff",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/timediff.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/timediff.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "47315c3730c7887c3a0919ee2b81f453d0a81b2fc67fc59b15e20964496ad117",
+    "sourceTechnicalHash": "f06c32b1d479611e2d9866fddd9bb25967358f1c01ab882c80b2eac8116e760e",
+    "targetHash": "00fa3fc64659c016fabe2eb6ad0cd97911eb24d45edb8ad93e2641343e29aa4c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.918Z",
+    "glossaryVersion": "0"
+  }
+}

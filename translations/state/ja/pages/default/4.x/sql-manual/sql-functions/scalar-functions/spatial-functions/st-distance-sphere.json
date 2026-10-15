@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance-sphere",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance-sphere.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance-sphere.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "4c3e13b650538aab9369e4990df02de4d4d16c7287d361b39d8a1925109d028c",
+    "sourceTechnicalHash": "cc8bd59fdac545299b6cb121d4c5ae56c388c6cd9317b8ec6bae86019c4a19c8",
+    "targetHash": "e12b3e0a7e405b772491a070860e40e0912794ec3c898086a8339ce6b86c7ec5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.921Z",
+    "glossaryVersion": "0"
+  }
+}
