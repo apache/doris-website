@@ -13,13 +13,13 @@ function withoutPositions(value) {
 }
 
 async function structure(raw, extension, anchorsMaintainCase = false) {
-    const [{unified}, {default: parse}, {default: gfm}, {default: mdx}, {visit}] = await Promise.all([
-        import('unified'), import('remark-parse'), import('remark-gfm'), import('remark-mdx'), import('unist-util-visit'),
+    const [{unified}, {default: parse}, {default: gfm}, {default: mdx}, {visit}, {default: directive}] = await Promise.all([
+        import('unified'), import('remark-parse'), import('remark-gfm'), import('remark-mdx'), import('unist-util-visit'), import('remark-directive'),
     ]);
     // Use native format detection, including front-matter MDX overrides.
     const {data, content} = matter(raw, {});
     const format = getFormat({filePath: `doc${extension}`, frontMatterFormat: data.mdx?.format, markdownConfigFormat: 'detect'});
-    const processor = unified().use(parse).use(gfm);
+    const processor = unified().use(parse).use(gfm).use(directive);
     if (format === 'mdx') processor.use(mdx);
     const parseContent = format === 'mdx' ? escapeMarkdownHeadingIds(content) : content;
     const offsets = [];
@@ -43,6 +43,9 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
     });
     const protectedNodes = [];
     visit(tree, node => {
+        if (['textDirective', 'leafDirective', 'containerDirective'].includes(node.type)) {
+            protectedNodes.push([node.type, node.name, node.attributes]);
+        }
         if (['code', 'inlineCode', 'html', 'mdxjsEsm', 'mdxFlowExpression', 'mdxTextExpression'].includes(node.type)) {
             protectedNodes.push([node.type, node.lang ?? null, node.meta ?? null, node.value]);
         }
