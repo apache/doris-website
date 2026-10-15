@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/tanh",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/tanh.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/tanh.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "630ea0f6a244d4b00f657dc352dc6273c5ca085333cca8a204569e6149c29a00",
+    "sourceTechnicalHash": "e4410cd31ef8fd13196dfeaa671caa19afeb95d0c16c129c93141d6e78e8ac5c",
+    "targetHash": "d8bbed33582a3dd5360c04a8f1f32c9e8fbf43f87f6886f4e64acdc12ee68f89",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.826Z",
+    "glossaryVersion": "0"
+  }
+}

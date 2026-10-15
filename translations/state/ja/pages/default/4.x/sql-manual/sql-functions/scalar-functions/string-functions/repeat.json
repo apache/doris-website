@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/repeat",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/repeat.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/repeat.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "c3512ec5ad38db73314d4f9ef013095cc1471fee5323ed362dc34c9884e38bda",
+    "sourceTechnicalHash": "3a75c550f7810c96016aa9cc873dddb8e6840088bde81bb8b65a6468c60eae5c",
+    "targetHash": "40108cbb1417299f076170042cc13854f5f351d5d574fd343c5cac8193554f9d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.835Z",
+    "glossaryVersion": "0"
+  }
+}

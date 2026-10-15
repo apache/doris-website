@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/format-number",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/format-number.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/format-number.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "51920a6784cc1c2c60a4066f178327bc6ccad2fdd9fc72067126afaa0a154acc",
+    "sourceTechnicalHash": "21f2d10805eed4c054058921259d0baec9c61fd9fd6fbcdc16ae94943224cc86",
+    "targetHash": "8bf5167d514af5cf4768ced7214b75bb3becfab40059ee02dd70d61d634338a2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.831Z",
+    "glossaryVersion": "0"
+  }
+}

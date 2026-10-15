@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/hex",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/hex.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/hex.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "3d3915c81ca5417ec64a8f76b93f3c9622880feae42819afc09599f007c3c571",
+    "sourceTechnicalHash": "3550ef0a0556a2eef6c2173b558b50897cde4a2ebe9e6f51d62ad61435a5badd",
+    "targetHash": "34c1cd02f18a0c8cc47acf9bcbca0e184b73dfa11073d97a580b10e5dd5b663e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.831Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/fmod",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/fmod.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/fmod.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "23408e7ef997ac1f55e4f6de77ee4b96614d4635090b7c09ff6062cbc2629700",
+    "sourceTechnicalHash": "14f15f6614d8a06a2de6cdfe1d210790fbb1f8cba86d1038491d44c914ffa047",
+    "targetHash": "ef3b16d92d237455de60ab5bb5f5e6836e8ff69dcc42cca965bc17f7a3bef40f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.821Z",
+    "glossaryVersion": "0"
+  }
+}

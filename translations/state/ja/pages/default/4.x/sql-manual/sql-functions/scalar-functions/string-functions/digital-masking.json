@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/digital-masking",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/digital-masking.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/digital-masking.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "2b761d6e4423fa27f25d08bc619356489ac2309f5f1ca60c56d53cb9683fc6ab",
+    "sourceTechnicalHash": "762dad3e7df8509cee890c10764eb864a79b9d63ba88522ab3fb89ca3357d259",
+    "targetHash": "6b0d46d02f13dcc3e674450b6d3c68ac74d85e2c12c9021f45af51bf709f6b0a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.830Z",
+    "glossaryVersion": "0"
+  }
+}

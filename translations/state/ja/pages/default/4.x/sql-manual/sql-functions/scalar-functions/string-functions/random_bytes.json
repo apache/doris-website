@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/random_bytes",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/random_bytes.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/random_bytes.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "388329c095de5f5d7e9262cb5d94ff39c0686b6c8da7f4fe93fdb3acab553f8d",
+    "sourceTechnicalHash": "821b67cc6e0ba3bf82851d17fd96389a1347bbb24e006db2355b91d9b1b88c9a",
+    "targetHash": "6ee1f6b7717cb794faca64b213cb74ef8c4c4b35da6171c3fc34d9091c7d2fe3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.834Z",
+    "glossaryVersion": "0"
+  }
+}

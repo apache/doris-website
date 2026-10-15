@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/radians",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/radians.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/radians.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "fba9a594b2561dc5d2a5022e9a61a6b3bc4767c4f6ea64c77e24dd2b3fbfaef7",
+    "sourceTechnicalHash": "063e89df67ee44a2e8df9b70aa5d0d57163e7558f6dde2ec824548e3545f9c1d",
+    "targetHash": "9c98855f780de8e456bc025a1670b660b8b0142769478b9418002a44d0dba505",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.823Z",
+    "glossaryVersion": "0"
+  }
+}

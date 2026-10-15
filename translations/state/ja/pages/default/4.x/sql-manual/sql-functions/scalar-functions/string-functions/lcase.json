@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/lcase",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/lcase.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/lcase.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "2c57fa411624fb04b56718118fd5f5fb32c363567cc4cb607844a77e8ce70e8d",
+    "sourceTechnicalHash": "9967fa1fc2c6e3d0c658953ad6e4f330c97283a448d4e3a4ff01ffbf287c7854",
+    "targetHash": "58c222e5819b0c9ef05f1152d2ba4fac3674bee8299e464a3a11d27d56b1fd09",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.832Z",
+    "glossaryVersion": "0"
+  }
+}

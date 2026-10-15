@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/tan",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/tan.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/tan.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "3814450d250f72cab47ae6e9880e9ddfc5bb91c67953eef3a625c9751bfbf162",
+    "sourceTechnicalHash": "8d29b51a4ca842656c5fa69c01faebd08ac069eb589770b4d38fadf22658521e",
+    "targetHash": "7ff2e085f3cf7729ee249921e011293b9ce13835396d71f0d093aa349313b75b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.826Z",
+    "glossaryVersion": "0"
+  }
+}

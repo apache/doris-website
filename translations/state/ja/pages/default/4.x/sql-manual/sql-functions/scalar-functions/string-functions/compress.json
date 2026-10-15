@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/compress",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/compress.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/compress.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "63147c3c840b70169640f14e7425914288be57fd92c3b19cd42ca997bae47dcb",
+    "sourceTechnicalHash": "b95ff712bc75f7f810294808732653b06cd3da856ad5ef57dfdfa1bb92c07482",
+    "targetHash": "1d4bdf20a4200938c9323e46aab00f44a008efbf7d9de60e67668edded89d497",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.830Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/sec",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/sec.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/sec.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "3797ae945a4dff59613154fa2ff371978aa99e375c0e75dba5089db14585ed51",
+    "sourceTechnicalHash": "3416fd93d3b3752f5a9774ad2ec64139fa5fe133147d200c40f82274c38703bd",
+    "targetHash": "d222b7aa64823591e5d19540eb1746543cd4727375d9ed69b2d3de7510fde58b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.824Z",
+    "glossaryVersion": "0"
+  }
+}
