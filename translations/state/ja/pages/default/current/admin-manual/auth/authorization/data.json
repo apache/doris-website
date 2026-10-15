@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/auth/authorization/data",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/auth/authorization/data.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/auth/authorization/data.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "448714b09c24123c8fb8cfbc617ed2f11da970b272c67643ce4903741a552dfa",
+    "sourceTechnicalHash": "b68cf22ecf245da5f0193cc0ee5ffb99597d672a36ddecef36de0c76d64d5fb2",
+    "targetHash": "135d5aa23bb8b06e270fe3b0ea86de79e7ddaf7f7004a6aff2781e9c5fe0cf6f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.871Z",
+    "glossaryVersion": "0"
+  }
+}

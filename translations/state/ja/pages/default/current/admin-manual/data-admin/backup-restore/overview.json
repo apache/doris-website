@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/data-admin/backup-restore/overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/data-admin/backup-restore/overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/data-admin/backup-restore/overview.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "049f27035b6899b9af38a16d3e29e83f24670e5c85b3f229453217d80efb136d",
+    "sourceTechnicalHash": "7f90507b9efc0e696a251e5979e929afaa7a8d23dbdda7c0f94b4c92a62f20ac",
+    "targetHash": "c7a790fee342c6d350f52e56b6fde2c49041c9bc2259a87fcf3062499994c46a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.873Z",
+    "glossaryVersion": "0"
+  }
+}

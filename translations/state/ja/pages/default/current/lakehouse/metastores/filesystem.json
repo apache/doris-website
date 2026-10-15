@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/metastores/filesystem",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/metastores/filesystem.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/metastores/filesystem.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "cc498b604120a5086b7e067000848c936017431aca39479f02f14693426152ce",
+    "sourceTechnicalHash": "82bf6717c7f9e166a164a29f4650fa8f7e532e64bd27a58d0d72da877992ecc1",
+    "targetHash": "81c4850a9bd8520cc594efe11782b547649bc617947f76a70c635880198b32fb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.866Z",
+    "glossaryVersion": "0"
+  }
+}

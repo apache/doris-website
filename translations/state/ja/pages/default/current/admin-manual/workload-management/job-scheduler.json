@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/workload-management/job-scheduler",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/workload-management/job-scheduler.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/workload-management/job-scheduler.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "3b700dc993a19acbdf63305103a049b2ee51f9279a42a192f39cc99273db44d9",
+    "sourceTechnicalHash": "bb072e7dfba9b3ed2b9d820f109de70a1d7e9115a860abbedba33aa93663c6b7",
+    "targetHash": "82e1ad87e4bf8c4a1a417c79ce5c32ac2b042391548c1a3facfcc6b1d1632133",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.873Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/optimization",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/optimization.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/optimization.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "8eaedfe6ce44fb05eb1fe15c21a899a6734f8a98acec9495d4631b8bfdd3a9da",
+    "sourceTechnicalHash": "27ee9b60efb9871401198d2a046824ac0f64216cff90def8f81f6b3608161d6e",
+    "targetHash": "bfb7a8d24f236ccc4f8e8ba0f3bbad2fd73950577be9c04096e5339e51fc847c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.868Z",
+    "glossaryVersion": "0"
+  }
+}

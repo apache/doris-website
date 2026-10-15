@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/kerberos",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/kerberos.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/kerberos.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "3cf272cc91a73588ffe34998c9de5c37d78637b5659e1e343faea38c78ff432b",
+    "sourceTechnicalHash": "a7892e17b9c7c0566d119910a35d794854b78e3834dd0f790c273edba29466ca",
+    "targetHash": "19aec9de98035094bde0aa7b58426386ca7f8f0b4a4b5f8b027e6c0266066e26",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.868Z",
+    "glossaryVersion": "0"
+  }
+}

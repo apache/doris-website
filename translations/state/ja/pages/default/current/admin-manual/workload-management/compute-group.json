@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/workload-management/compute-group",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/workload-management/compute-group.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/workload-management/compute-group.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "4e4b8edb0ebc33a6db9734a33deb0319b5c6a0d6a3e0ca4f1a5b03922884e6ae",
+    "sourceTechnicalHash": "92891303b17487673512d3c1fe86ac9b7f92ae00f5bfc90927dd0cd24c92ed58",
+    "targetHash": "e91293fad5a602039921210ee75ec20dc224a92999bab1928962a9f3bc100933",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.872Z",
+    "glossaryVersion": "0"
+  }
+}

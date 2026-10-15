@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/tpch",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/tpch.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/tpch.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "01f110c83b5757a16d095ff711d4edacbbfc57d88f7437ee95711c113b34e8cf",
+    "sourceTechnicalHash": "8bbc83bda50d95d0d350fe7a4d577f05fa3e2fc4d59c0cd367a4d297ed6675ab",
+    "targetHash": "3a8ad77f18577f86b40368b1c42197213e5a617f19367244bc4590d8572971a3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.868Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/auth/authorization/ranger-hive",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/auth/authorization/ranger-hive.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/auth/authorization/ranger-hive.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "712f0c25161e59144c7e42e534b25f34114291ada4d60229070e434968b0a779",
+    "sourceTechnicalHash": "3c484aeaf72c83f03e107a3f39ccda52763cb7c501d6ba5e59296e5af79d76cf",
+    "targetHash": "bef7b2ecce9b2acd2d64e9fd15f803b206fb3e1b04664ebc9ca7be3003750a98",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.870Z",
+    "glossaryVersion": "0"
+  }
+}

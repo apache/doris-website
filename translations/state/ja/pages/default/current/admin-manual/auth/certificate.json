@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/auth/certificate",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/auth/certificate.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/auth/certificate.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "efbfc5df855603b3fb9c93c65fa16dfab974c63a71d763c4f755a0b143532e59",
+    "sourceTechnicalHash": "c9b1c554a7c56cf797bac04bb61dd3ee8c9ea524b9d5e752a5bc317ee2feeefc",
+    "targetHash": "6002f64771754d76273cbc70ec79b2193539a07c6f65fe922b3c48a3661ee202",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.871Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/workload-management/resource-group",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/workload-management/resource-group.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/workload-management/resource-group.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "996562bcf5094fa091ec1d1865d6ed6c2a829ff32991913cc80a82f64d2a3246",
+    "sourceTechnicalHash": "440a187bb4dfe3949ab7dc3054bd61676e7b29ffa00d7c0320b96408c4befb9f",
+    "targetHash": "d83bb0116808421c88b6fd963c446d30ed5d8ac98166adb165262e5413b6bc4f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.872Z",
+    "glossaryVersion": "0"
+  }
+}

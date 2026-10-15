@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/config/user-property",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/config/user-property.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/config/user-property.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "caf59cf1e334c6b0a965a6f16f7a2eca4f4570441f14c32aec888f227b3bc0b4",
+    "sourceTechnicalHash": "46cda50f95b6f91c2231f2d5692ac0850d4b885b46be78410d614a66a987a053",
+    "targetHash": "0292d8ef5b31faf1d3837a4238ef17e47d8cf01bd0c257e75a97c06ba307d764",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.870Z",
+    "glossaryVersion": "0"
+  }
+}

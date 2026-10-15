@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/maint-monitor/monitor-alert",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/maint-monitor/monitor-alert.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/maint-monitor/monitor-alert.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "7ab6f3c72465c8b364418a5388b4873d2dccf817daf265142d14777c71491ac3",
+    "sourceTechnicalHash": "345de557805ff0b92c1c33da3dd05911aade47b7b2d263105949e8c5b7241c2b",
+    "targetHash": "fbb45d668d9f3bda2ea2c7c1cf085f975db73ee965561b9ce7a361a201ac2363",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.874Z",
+    "glossaryVersion": "0"
+  }
+}
