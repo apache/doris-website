@@ -10,12 +10,9 @@
 
 STRING
     
-
-变长字符串，默认支持 1048576 字节（1MB），可调大到 2147483643 字节（2G），可通过 be 配置 `string_type_length_soft_limit_bytes`调整。String 类型只能用在 value 列，不能用在 key 列和分区 分桶列
- String 类型只能用在 value 列，不能用在 key 列和分区分桶列。
+变长字符串，默认软限制为 10485760 字节（10 MB），可通过 BE 配置项 `string_type_length_soft_limit_bytes` 调整，最大为 2147483643 字节（2 GB）。String 类型只能用于 value 列，不能用于 key 列、分区列或分桶列。
     
-
-注意：变长字符串是以 UTF-8 编码存储的，因此通常英文字符占 1 个字节，中文字符占 3 个字节。
+注意：变长字符串以 UTF-8 编码存储，因此通常英文字符占 1 字节，中文字符占 3 字节。
 
 ## keywords
 
