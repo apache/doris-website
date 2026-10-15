@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-position",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-position.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-position.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "d1d274b454ba49e7bec6241753282611684ce6c1ae51cd161cb8affbb3d010c2",
+    "sourceTechnicalHash": "32aa4d9dca99bf0c9d36f2ab0c79b0d3dc4666fa8fbfd51334bb53cb852273b6",
+    "targetHash": "4c1fe9b194203a69969cace5851a91ef6fa874aca98d62f6a08b71577b3d7c74",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:59:59.331Z",
+    "glossaryVersion": "0"
+  }
+}

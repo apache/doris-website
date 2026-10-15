@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-sum",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-sum.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-sum.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "865840fe2178ebf443dbecb306d4daaee0bf47e9b8a3c0a1b1e5e496c058f8a6",
+    "sourceTechnicalHash": "21bce646a0d07d5b2424c8993d5593947d6db4fc49a766c150c55e9542a9372f",
+    "targetHash": "c9173d35bec7133c0838645af2f25c98e5c3b5b8dd2657bac65ce45bcb86870e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:59:59.332Z",
+    "glossaryVersion": "0"
+  }
+}

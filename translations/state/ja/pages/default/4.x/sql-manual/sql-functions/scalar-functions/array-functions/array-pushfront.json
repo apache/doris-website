@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-pushfront",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-pushfront.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-pushfront.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "3e21fd2a4e390a1daac6b34a2b04d492dfdd2e54bbdda10fb87eb71a3036fa69",
+    "sourceTechnicalHash": "3807dea450ccb7940f6a2392dd3cf98d18a34bf3781e5524da4defe39bf7d4dc",
+    "targetHash": "9b9c6a638ec6c9077d27501a7487370b43d07ffdd95bba32a188f1d27f313286",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:59:59.331Z",
+    "glossaryVersion": "0"
+  }
+}

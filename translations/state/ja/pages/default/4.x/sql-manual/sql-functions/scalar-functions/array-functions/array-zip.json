@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-zip",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-zip.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-zip.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "ba4b6d28e56d6c6bd40776b7b083ddf27ad85bde2674cb9a32fd70ec4a4ceef5",
+    "sourceTechnicalHash": "59598b58ead26c8a0cf43b5ae6c76d8b67d85830b625463d26c165a2a5018e58",
+    "targetHash": "fcc4538eacdcc699f57ea5cbec39d999ed7674a1d020ed257f61f8d599fdeee0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:59:59.332Z",
+    "glossaryVersion": "0"
+  }
+}

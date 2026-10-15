@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/arrays-overlap",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/arrays-overlap.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/arrays-overlap.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "03e60f3d5df46c7178902e2279be7e1b2daf5bce7414b9c8e7183a932e501d19",
+    "sourceTechnicalHash": "660682d4135d9bb6d6ec731930692097f7a734deda46b3b591f716287179c1c2",
+    "targetHash": "f87a1b3b6f5e539a59548b096f779ab5e98936b4315e85ab4fddef02fbab5c70",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:59:59.332Z",
+    "glossaryVersion": "0"
+  }
+}

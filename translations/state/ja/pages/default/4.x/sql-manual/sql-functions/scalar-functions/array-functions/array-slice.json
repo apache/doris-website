@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-slice",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-slice.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-slice.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "96f0346a8b2b61985f2463a0fc37a8501951ad92240a308e48a8a594eece8cdc",
+    "sourceTechnicalHash": "f78e68e6d31373df2488a3c82c620dcb4c14ae5f081044fcb7664b3f589ddb7a",
+    "targetHash": "7f7c0c18ee30dd885cf4d84e1f2e5d5571ccd96a567087ec48379d0dfe3bcfbe",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:59:59.331Z",
+    "glossaryVersion": "0"
+  }
+}
