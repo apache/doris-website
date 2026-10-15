@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "cb6b525e4f6e11c0e8e93ab7f74fe8fa489dcf153cc43a7a9f464eae3df0577b",
+    "sourceTechnicalHash": "4266524900c2e84f02b21638c9c041c29bced8ed69ea3e37f217da58628b487c",
+    "targetHash": "70cc2149df4947eb93ad758a1ccd370050f15647193d5175094084b281460ad5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.610Z",
+    "glossaryVersion": "0"
+  }
+}

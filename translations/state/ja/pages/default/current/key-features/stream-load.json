@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/stream-load",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/stream-load.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/stream-load.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "3aff2bc07fa1adfc6c04036675b4bd238e6ed37a19e38df4661506583e0855cf",
+    "sourceTechnicalHash": "652e0d09a4669688783c2d8ddba3973debb4651a34b787da04df51245006c7ca",
+    "targetHash": "2004db251b90d4db265d5e5d0afdc61fb7f1aa6cd706154c42ec57527541ea9e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.615Z",
+    "glossaryVersion": "0"
+  }
+}

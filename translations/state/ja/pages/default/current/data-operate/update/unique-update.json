@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/update/unique-update",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/update/unique-update.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/update/unique-update.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "cd1a28fa1bc01c7faf0cd5c716eb4b5375901528a08d74a02b3d9f059fa721ac",
+    "sourceTechnicalHash": "6dae12a019cc8ba9182cf149bfae3348f32bb29e5b5941ec6d1756d2aa0b6a5b",
+    "targetHash": "58bc4a693f79b94322d15fec03c539635d298f23e25b9cb70025b5e1204dbf68",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.613Z",
+    "glossaryVersion": "0"
+  }
+}

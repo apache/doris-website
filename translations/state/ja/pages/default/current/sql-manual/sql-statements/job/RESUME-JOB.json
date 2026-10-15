@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/job/RESUME-JOB",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/job/RESUME-JOB.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/RESUME-JOB.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "7d96aefe7fa972cbcab2f297e131e25a01f49ca852c581d7df8cc5ef84d892e9",
+    "sourceTechnicalHash": "d0dfdef97a5d3953fe31445a529b808add1a3d6dc4e4716a2e5a98c0614fbbba",
+    "targetHash": "6b36bbfcce322e07f4abb37a5d2459334026464b713f30dda8b358b758f0ba54",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.612Z",
+    "glossaryVersion": "0"
+  }
+}

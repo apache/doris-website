@@ -1,0 +1,162 @@
+---
+title: MCP サーバー
+description: Doris MCP Server 1.0 は、八つのツールドメインと 55 の機能を通じて、Claude Desktop、Cursor、その他の MCP クライアントから Apache Doris クラスターへの読み取り専用アクセスを提供します。
+keywords:
+  - MCP サーバー
+  - Model Context Protocol
+  - doris-mcp-server
+  - Claude Desktop
+  - Cursor 連携
+  - Apache Doris AI ツール
+  - ツール呼び出し
+slug: /key-features/mcp-server
+image: /images/next/key-features/mcp-server.jpg
+last_update:
+  date: 2026-10-07
+  author: Apache Doris
+featureCard:
+  tags:
+    - ai
+    - integration
+language: ja
+---
+
+> **要約** Apache Doris MCP Server（`doris-mcp-server` 1.0）は、[Model Context Protocol](https://modelcontextprotocol.io/specification/2026-07-28) を stdio または Streamable HTTP で使用する Python サービスです。Apache Doris を、八つの読み取り専用ツールドメイン（catalog、query、cluster、pipeline、search、governance、lakehouse、semantic）に含まれる 55 の機能として AI アシスタントに公開します。アシスタントは必要になったときに機能を検出します。`pip` でインストールし、Claude Desktop、Cursor、または任意の MCP クライアントから接続すると、独自の連携機能を開発しなくても、モデルが実際のクラスターのスキーマを調べ、実行範囲を制限した読み取り専用 SQL を実行できます。
+
+![Apache Doris MCP Server: Doris MCP Server 1.0 は、八つのツールドメインと 55 の機能を通じて、Claude Desktop、Cursor、その他の MCP クライアントから Apache Doris クラスターへの読み取り専用アクセスを提供します。](/images/next/key-features/mcp-server.jpg)
+## Apache Doris MCP Server を使う理由 {#why}
+
+Apache Doris MCP Server は、各企業がゼロから構築することになるチャットアシスタントとデータベースの連携機能を代替します。自前で構築する場合は、小さな Python サービスを立ち上げ、SQL ヘルパーを用意し、認証情報、タイムアウト、結果の切り詰め、読み取り専用の制約を処理したうえで、Claude Desktop、Cursor、さらに今後登場するクライアントごとに連携コードを書き直す必要があります。作業の大半は定型的ですが、バグが起きる箇所は多くあります。LLM が意図せず `DELETE` を実行すれば、実際に障害につながります。データベース内で利用する AI 機能である [LLM SQL 関数](./llm-sql-functions)と[埋め込み](./embedding)は、SQL 側からこの機能を補完します。
+
+[Anthropic による MCP の公開](https://www.anthropic.com/news/model-context-protocol)は 2024 年十一月で、この連携方法を標準化するためのものでした。サーバーは型付きの入力と出力を持つツールを公開し、クライアント（Claude Desktop、Cursor、Cline、Continue、Zed など）は同じプロトコルを使用します。モデルがツールを呼び出すタイミングを決めます。データベースベンダーも追随しており、ClickHouse、Snowflake、MotherDuck、BigQuery、Supabase はいずれも公式サーバーを提供しています。
+
+Apache Doris MCP Server は、Apache Doris 向けの同等のサーバーです。独立したリポジトリ（[`apache/doris-mcp-server`](https://github.com/apache/doris-mcp-server)）で管理され、Apache 2.0 ライセンスのもと PyPI で配布されています。数行の設定で任意の MCP クライアントから起動できます。
+
+## Apache Doris MCP Server とは {#what}
+
+Apache Doris MCP Server は、Python 3.12 以降に対応し、MySQL プロトコルを介して Apache Doris 2.0 以降に接続するサービスです。バージョン 1.0 では、従来のフラットなツール一覧を 八つの安定したドメインに置き換えました。各ドメインは 一つの MCP ツールで、その内部の操作は必要に応じて検出されるため、モデルが最初に見る項目は 55 個ではなく 八個です。サーバーは接続先クラスターで実際に利用できる操作を確認し、読み取り専用の処理だけを実行して、スキーマ検証済みの JSON を返します。
+
+**主な用語**
+
+- **MCP（Model Context Protocol）**：LLM クライアントを外部のツールやデータに接続するための、オープンな JSON-RPC 2.0 プロトコルです。ツールは型付きの関数、リソースは読み取り専用データ、プロンプトは再利用可能なテンプレートです。
+- **ドメイン**：サーバーが登録する 八つのツールのいずれかです。`doris_catalog`、`doris_query`、`doris_cluster`、`doris_pipeline`、`doris_search`、`doris_governance`、`doris_lakehouse`、`doris_semantic` があります。
+- **子機能**：ドメイン内の操作です。たとえば、`list_tables`（`doris_catalog` 内）、`execute_query` と `explain_query`（`doris_query` 内）、`search_data`（`doris_search` 内）などがあります。全部で 55 個あり、[ツールレジストリ](https://github.com/apache/doris-mcp-server/blob/master/docs/tool-registry.md)にすべて掲載されています。
+- **段階的な公開**：デフォルトの `hierarchical` モードです。アシスタントは空のオブジェクトを渡してドメインを呼び出し、その子機能、入力スキーマ、接続先クラスターでの各機能の利用可否を取得します。その後、同じドメインを `child_tool` と `arguments` を指定して再度呼び出します。この 二段階の呼び出しができないクライアントでは、`MCP_TOOL_EXPOSURE_MODE=flat` を設定すると、55 個の子機能すべてをツールとして公開できます。
+- **トランスポート**：`stdio` では、ローカルクライアントのサブプロセスとしてサーバーを実行します。Streamable HTTP では、`/mcp` エンドポイントと `/live`、`/ready` ヘルスチェックを備える常駐サービスとして実行します。ループバックアドレス以外で HTTP を待ち受ける場合は、認証（静的トークン、JWT、または OAuth/OIDC）が必要です。
+- **読み取り専用ランタイム**：組み込みの機能は書き込みを行いません。データを変更するステートメントは拒否され、サーバーから返す前にすべての結果に行数、バイト数、実行時間の上限が適用されます。接続に使うアカウントが何を閲覧できるかは、引き続き Doris の権限で決まります。
+
+## Apache Doris MCP Server の動作 {#how}
+
+Apache Doris MCP Server は、クライアントがサーバーに接続し、サーバーがクラスターに接続し、モデルがドメインを検出して子機能を呼び出し、上限を適用した結果を JSON で受け取る、という 五つのステップで動作します。
+
+1. **クライアントがサーバーに接続します。** `stdio` モードでは、MCP クライアントが `doris-mcp-server --transport stdio` をサブプロセスとして起動し、標準入力と標準出力で通信します。HTTP モードでは、`doris-mcp-server --transport http --host 127.0.0.1 --port 3000` を実行し、クライアントが `http://127.0.0.1:3000/mcp` にリクエストを送ります。
+2. **サーバーが Apache Doris に接続します。** 環境変数 `DORIS_HOST`、`DORIS_PORT`、`DORIS_USER`、`DORIS_PASSWORD`、`DORIS_DATABASE`（または対応する `--doris-*` フラグ）を読み取り、ポート 9030 の FE への MySQL プロトコル接続を開いて、クラスターのバージョンと設定でサポートされる機能を確認します。
+3. **モデルが必要な機能を検出します。** クライアントは 八つのドメインツールを列挙します。「注文データが入っているテーブルは？」という質問では、モデルは `doris_catalog` を `{}` で呼び出し、`list_tables` と `get_table_context` を含む 五つの子機能と、このクラスターでの各機能の状態を取得します。`doris_semantic` の MetricFlow のようにオプションの連携に依存する機能は、設定されるまで `misconfigured` と報告されます。機能は一覧に表示されたままですが、呼び出しは拒否されます。
+4. **モデルが子機能を呼び出します。** `doris_catalog` を `child_tool: "list_tables"` の指定で再度呼び出し、続いて `doris_query` を `child_tool: "execute_query"` とモデルが作成した SQL の指定で呼び出します。サーバーは子機能のスキーマに照らして引数を検証し、読み取り専用でない操作を拒否します。`DELETE` に対しては `SQL operation DELETE is not read-only.` が返されます。
+5. **上限を適用した結果が JSON で返されます。** デフォルトでは、クエリの返却結果は最大 100 行、1 MB で、実行時間は最大 30 秒です。呼び出し側はサーバーの上限内でより大きい値（`max_rows` は最大 100,000、`timeout_ms` は最大 300,000）を要求できます。このため、無造作な `SELECT *` がモデルのコンテキストウィンドウを埋め尽くすことを防げます。
+
+## クイックスタート {#quick-start}
+
+サーバーをインストールし（Python 3.12 以降が必要です）、サンプルデータと読み取り専用アカウントを作成します。
+
+```bash
+pip install doris-mcp-server==1.0.0
+which doris-mcp-server        # note the absolute path
+```
+
+```sql
+CREATE DATABASE demo;
+CREATE TABLE demo.orders (
+  order_id   INT NOT NULL,
+  region     VARCHAR(16) NOT NULL,
+  amount     DECIMAL(10, 2) NOT NULL,
+  created_at DATETIME NOT NULL
+) DUPLICATE KEY(order_id) DISTRIBUTED BY HASH(order_id) BUCKETS 1;
+
+INSERT INTO demo.orders VALUES
+  (1, 'emea', 120.00, '2026-10-01 09:00:00'),
+  (2, 'apac',  80.50, '2026-10-01 10:30:00'),
+  (3, 'emea',  42.25, '2026-10-02 14:10:00'),
+  (4, 'amer', 310.00, '2026-10-03 08:45:00');
+
+-- Never hand an LLM a write-capable account
+CREATE USER 'mcp_reader'@'%' IDENTIFIED BY 'replace-me';
+GRANT SELECT_PRIV ON internal.demo.* TO 'mcp_reader'@'%';
+```
+
+MCP クライアントの設定にサーバーを登録します（設定ファイルとその保存場所はクライアントによって異なります）。`which doris-mcp-server` で確認した絶対パスを使用してください。GUI クライアントはシェルの `PATH` や仮想環境を引き継ぎません。
+
+```json
+{
+  "mcpServers": {
+    "doris": {
+      "command": "/absolute/path/to/doris-mcp-server",
+      "args": ["--transport", "stdio"],
+      "env": {
+        "DORIS_HOST": "127.0.0.1",
+        "DORIS_PORT": "9030",
+        "DORIS_USER": "mcp_reader",
+        "DORIS_PASSWORD": "replace-me",
+        "DORIS_DATABASE": "demo"
+      }
+    }
+  }
+}
+```
+
+**期待される結果**
+
+再起動すると、クライアントには `doris` サーバーが 一つ表示され、そのサーバーには `doris_catalog`、`doris_cluster`、`doris_governance`、`doris_lakehouse`、`doris_pipeline`、`doris_query`、`doris_search`、`doris_semantic` の 八つのツールがあります。「demo.orders の地域別売上はいくら？」と質問すると、アシスタントは `doris_query` を `{}` で呼び出して `execute_query` を検出し、続いて次のように呼び出します。
+
+```json
+{
+  "child_tool": "execute_query",
+  "arguments": {
+    "database": "demo",
+    "sql": "SELECT region, SUM(amount) AS revenue FROM orders GROUP BY region ORDER BY revenue DESC"
+  }
+}
+```
+
+適用された上限とともに、次の行が返されます。
+
+```json
+"rows": [
+  {"region": "amer", "revenue": "310.00"},
+  {"region": "emea", "revenue": "162.25"},
+  {"region": "apac", "revenue": "80.50"}
+],
+"limits": {"max_bytes": 1048576, "max_rows": 100, "timeout_seconds": 30}
+```
+
+「apac の注文を削除して」と指示すると、同じ呼び出しで `SQL operation DELETE is not read-only.` というエラーが返されます。また、`mcp_reader` に書き込み権限はありません。
+
+## Apache Doris MCP Server を使う場面 {#when}
+
+Apache Doris MCP Server は、実際のクラスターを対象とする、主に読み取りを行う AI アシスタントの用途に適しています。特に、スキーマの検出、アドホック分析、検索、オンコールでの調査に有用です。
+
+**適した用途**
+
+- Cursor や Claude Code での AI 支援による SQL 作成。アシスタントが実際のスキーマ（`doris_catalog` → `get_table_context`）を読み取り、列名を推測せずにクエリの下書きを作成できます。
+- Claude Desktop でのアドホックな「データへの質問」。特に、これまでスキーマを手作業でチャットに貼り付けていたエンジニアに適しています。
+- オンコール対応を支援するアシスタント。`doris_query` は遅いクエリを一覧表示し、実行計画を説明し、プロファイルを読み取ります。`doris_cluster` はノード、コンパクション、ワークロードグループの情報を報告するため、ダッシュボードに問題が生じた原因を絞り込めます。
+- 検索機能を使うアシスタント。`doris_search` は `search_data` を使ってテキスト検索、ベクトル検索、ハイブリッド検索を実行し、アナライザーとインデックスを調べます。モデルが `MATCH_*` や ANN の SQL を手書きする必要がなくなります。
+
+**適さない用途**
+
+- 本番環境の書き込み処理。1.0 のサーバーは設計上読み取り専用であり、LLM を介して `INSERT` や `UPDATE` を実行するのは適切ではありません。書き込みには通常のアプリケーションを使用してください。
+- 信頼できないデータ。攻撃者がアシスタントの読み取る行にテキストを挿入できる場合、プロンプトインジェクションを試みることができます。コミュニティでは Postgres MCP サーバーでの実際の事例が報告されています。モデルが取得した内容は指示ではなくデータとして扱い、ツール呼び出しを実行前に確認してください。[MCP のセキュリティに関するベストプラクティス](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices)も参照してください。
+- 数百万行あるテーブルの閲覧。ツールの結果はモデルのコンテキストウィンドウに入り、トークン数に応じて費用が増えます。デフォルトの行数上限を維持し、モデルには集約クエリを書かせ、サンプルを超える分析にはノートブックを使用してください。
+- 行単位のアクセス制御がないマルチテナントクラスター。サーバーは設定した Doris アカウントで接続するため、そのアカウントが閲覧できる内容はモデルも閲覧できます。専用の読み取り専用ユーザーを作成してデータベース権限を制限し、強い権限を持つユーザーのアカウントを使い回さないでください。
+- 読み取り以外のワークフロー。55 の機能はスキーマ、クエリ、運用、検索に関する操作をカバーしますが、独自のワークフロー、バッチジョブ、独自のプロンプトを使う NL2SQL は、Apache Doris を直接呼び出す連携機能か[カスタムツールプロバイダー](https://github.com/apache/doris-mcp-server/blob/master/docs/custom-tool-providers.md)で実装してください。
+
+## 関連資料 {#further-reading}
+
+- [Doris の AI 機能](../ai/ai-overview)：MCP サーバーと `AI_*` SQL 関数、埋め込み、ベクトル検索の関係について説明します。
+- [LLM SQL 関数](./llm-sql-functions)：テキスト列をバッチで拡充するための、データベース内の AI 機能について説明します。
+- [Doris MCP Server リポジトリ](https://github.com/apache/doris-mcp-server)：ソース、ドキュメント、1.0 のリリースノートを参照できます。
+- [ツールレジストリ](https://github.com/apache/doris-mcp-server/blob/master/docs/tool-registry.md)：八つのドメインと 55 の子機能、および各スキーマを確認できます。
+- [1.0 への移行](https://github.com/apache/doris-mcp-server/blob/master/docs/migration-1.0.0.md)：1.0 より前のツールと設定が、1.0 のドメインにどう対応するかを説明します。
+- [設定リファレンス](https://github.com/apache/doris-mcp-server/blob/master/docs/reference/configuration.md)と[セキュリティモデル](https://github.com/apache/doris-mcp-server/blob/master/docs/security/security-model.md)：HTTP 配備時の認証を含め、すべての設定項目を確認できます。
+- [Model Context Protocol の仕様](https://modelcontextprotocol.io/specification/2026-07-28)：トランスポートの詳細とセキュリティガイダンスを含む、サーバーが使用するプロトコルのバージョンについて説明します。
+- [Anthropic による MCP の発表](https://www.anthropic.com/news/model-context-protocol)：当初の課題と、ツール、リソース、プロンプトに関する設計上の選択を説明します。

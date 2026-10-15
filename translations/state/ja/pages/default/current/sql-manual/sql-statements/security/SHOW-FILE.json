@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/security/SHOW-FILE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/security/SHOW-FILE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/security/SHOW-FILE.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "5d208abc06e59cc4c0c64867d63557f1355434333711dab868b7660485f0e261",
+    "sourceTechnicalHash": "fb74e68b47a779d9f8bf3623ab93106376aeb63149df3aafa4f69835f2401355",
+    "targetHash": "a8270d8641b1928ba9eb874813013b4b87ab3e9aae4ef1b65e7399f0605a1ea6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.611Z",
+    "glossaryVersion": "0"
+  }
+}

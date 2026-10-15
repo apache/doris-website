@@ -1,0 +1,39 @@
+---
+{
+    "title": "データ操作",
+    "language": "ja",
+    "description": "Apache Doris でのデータのロード、更新、削除、エクスポートについて、データの取り込み方法、書き込みセマンティクス、結果セットのエクスポートを説明します。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris は、データの取り込みからエクスポートまでの一連の処理をカバーするデータ操作機能を備えています。さまざまなデータソースからデータをロードし、トランザクション保証のもとでデータを更新・削除し、クエリ結果やテーブルデータを外部ストレージシステムにエクスポートできます。
+
+また、Apache Doris は Apache Iceberg のテーブルデータを直接管理できます。これには、Iceberg テーブルに対する直接クエリの高速化、書き込み、更新、削除が含まれます。詳しくは、Iceberg Catalog のデータ管理セクションを参照してください。
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="データのロード"
+    description="Stream Load、Broker Load、Routine Load、INSERT、ストリーミングデータ同期ジョブを使用して、ファイル、メッセージキュー、トランザクションデータベース、その他の OLAP システムからデータをロードします。"
+    link="./import/load-manual"
+/>
+
+<GettingStartedCard
+    title="データの更新と削除"
+    description="既存のデータを更新し、DELETE、TRUNCATE、アトミックな上書きなどの方法でデータを削除します。また、トランザクションによって複数の書き込み操作を単一のアトミックな処理にまとめます。"
+    link="./update-and-delete"
+/>
+
+<GettingStartedCard
+    title="データのエクスポート"
+    description="EXPORT、SELECT INTO OUTFILE、mysqldump を使用して、クエリ結果やテーブルデータを HDFS、オブジェクトストレージ、ローカルファイルシステムにエクスポートします。"
+    link="./export/export-overview"
+/>
+
+<GettingStartedCard
+    title="Iceberg データ管理"
+    description="Iceberg Catalog を作成して Iceberg のテーブルデータに接続し、データ操作を実行します。"
+    link="../lakehouse/catalogs/iceberg-catalog"
+/>
+</div>

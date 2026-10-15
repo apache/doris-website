@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/security/DROP-ENCRYPTKEY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/security/DROP-ENCRYPTKEY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/security/DROP-ENCRYPTKEY.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "bbf941629b886f44ab32b61795694f0e1ccdcaf97b1fc4e22e53c04328e2f07d",
+    "sourceTechnicalHash": "1b0b36f5f07989f45b0d2be9f493b184d7d7c46afcfe4e20360f2b87e1da5d97",
+    "targetHash": "5c3288565ae8a05180c903c3293ccec52586d25e50d448739227022280d9582a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.611Z",
+    "glossaryVersion": "0"
+  }
+}

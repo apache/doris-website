@@ -1,0 +1,122 @@
+---
+title: Group Commit（グループコミット）
+description: 多数の小さな INSERT と Stream Load をサーバー側で一つのトランザクションにまとめます。同期モードと非同期モードから、レイテンシーとスループットの要件に合わせて選択できます。
+keywords:
+  - グループコミット
+  - 高頻度の INSERT
+  - 小規模バッチのデータ取り込み
+  - 同期モード
+  - 非同期モード
+  - Apache Doris の書き込みスループット
+slug: /key-features/group-commit
+image: /images/next/key-features/group-commit.jpg
+language: ja
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - load
+    - ingest
+---
+
+> **要約** Apache Doris の Group Commit は、多数の小さな `INSERT VALUES` 文や [Stream Load](./stream-load) を、サーバー側で一つの[トランザクション](./load-transaction)にまとめます。これにより、高頻度で書き込むクライアントが、FE に解析とプラン作成の負荷を、BE に小さな行セットを大量に発生させることを防ぎます。ロードがデータの可視化まで待つ必要がある場合は `sync_mode`、行が先行書き込みログに永続化された時点で応答すればよい場合は `async_mode` を選びます。同じワークロードで発生していた `-235` のバックプレッシャーエラーを解消し、単一の BE で毎秒 100,000 行を超える処理が可能になります。
+
+![Apache Doris の Group Commit：多数の小さな INSERT と Stream Load をサーバー側で一つのトランザクションにまとめ、同期モードと非同期モードでレイテンシーとスループットの要件に対応します。](/images/next/key-features/group-commit.jpg)
+## Apache Doris の Group Commit を使う理由 {#why}
+
+Apache Doris の Group Commit は、クライアントからの高頻度な書き込みによって FE のプランナーと BE のストレージエンジンに生じる、書き込みごとの負荷を減らします。実際のシステムでは、行ごとの `INSERT INTO ... VALUES` や少量の Stream Load がよく使われます。マイクロサービスはユーザーの操作のたびに JDBC 経由で `INSERT` を実行します。[Kafka コンシューマー](./kafka-cdc-integration)は数百ミリ秒ごとに、その時点で受け取ったデータをフラッシュします。IoT の収集プログラムはイベントの到着と同時にデータを送ります。まだ到着していないイベントはまとめられないため、これらのクライアントではバッチを大きくできません。バッチ化しなければ、ロードごとにトランザクションが開始され、FE のプランナーを通り、タブレットの新しいバージョンが生成されます。この組み合わせが Doris のストレージエンジンに負荷をかけます。
+
+- 高頻度の `INSERT VALUES` は、BE の CPU より先に FE のパーサーとプランキャッシュを飽和させます。
+- ストリーミングパイプラインからの小さな Stream Load がタブレットのバージョンを増やし、バックグラウンドのコンパクションが追いつかなくなります。典型的な症状は、`-235` の「too many segments」エラーです。
+- ロードごとに個別のトランザクションが作られるため、実際のデータ処理と同じくらいの時間がコミット時のやり取りに費やされます。
+
+Group Commit は、クライアント側の変更を必要とせず、サーバー側で多数の小さな書き込みを一つのトランザクションにまとめます。
+
+## Apache Doris の Group Commit とは {#what}
+
+Apache Doris の Group Commit は、小さな書き込みをまとめるサーバー側のバッファです。BE は複数の同時ロードから行を集め、数秒ごと、またはバッファがいっぱいになったときに、一つのトランザクションとしてコミットします。`INSERT INTO ... VALUES`、Stream Load、JDBC のプリペアドステートメントに適用でき、公開 API は変わりません。有効化には、INSERT ならセッション変数、Stream Load なら HTTP ヘッダー、デフォルト値として設定するならテーブルプロパティを使用します。選択したモードによって、ロードの応答タイミングが決まります。
+
+**主な用語**
+
+- **`group_commit`**：モードを選択するセッション変数（INSERT 用）および HTTP ヘッダー（Stream Load 用）です。値は `off_mode`、`sync_mode`、`async_mode` です。
+- **`sync_mode`**：行を BE 上で同時実行中のロードと統合し、統合されたトランザクションがコミットされてデータが参照可能になるまでリクエストを待機させます。
+- **`async_mode`**：行を BE の先行書き込みログに書き込み、リクエストにステータス `PREPARE` を付けて直ちに応答します。統合されたトランザクションのコミットは後で行われます。
+- **`WAL`**：`async_mode` で使用する BE ごとの先行書き込みログです。単一レプリカで、リクエストを受け取った BE 上に保存されます。
+- **`group_commit_interval_ms`** と **`group_commit_data_bytes`**：テーブルごとのフラッシュ条件です。デフォルト値は、それぞれ 10 秒と 128 MB です。
+
+## Apache Doris の Group Commit の仕組み {#how}
+
+Apache Doris の Group Commit は、同時に実行される小さなロードをテーブルごとに共有する BE のキューへ集め、時間またはサイズのしきい値に達したときにフラッシュし、統合したバッチを FE の一つのトランザクションとしてコミットします。
+
+1. **キューを開く、または既存のキューに加わる。** リクエストが BE に到着します。BE は新しいトランザクションを開始する代わりに、テーブルと現在開いている Group Commit トランザクションをキーとする `LoadBlockQueue` に行を追加します。
+2. **（非同期モードのみ）WAL に書き込む。** `async_mode` では、行が永続化された時点で応答できるよう、ローカル WAL にも行を書き込みます。`sync_mode` ではこの手順を省略します。
+3. **フラッシュ条件を待つ。** `group_commit_interval_ms` の時間が経過するか、キューに蓄積したデータが `group_commit_data_bytes` に達すると、BE がキューをフラッシュします。どちらもテーブルごとのプロパティです。
+4. **バッチを一つのトランザクションとしてコミットする。** BE は統合したバッチをストレージエンジンに渡し、FE はちょうど一つのトランザクションをコミットします。FE が割り当てる `group_commit_` で始まる一つの Label を、統合されたすべてのロードが共有します。
+5. **応答する。** ここまで待機していた `sync_mode` のリクエストに応答します。`async_mode` のリクエストにはすでに応答しており、この時点でデータをクエリできるようになります。
+
+リクエストがフォールバック条件（明示的なトランザクション、ユーザーが指定した Label、列の一部だけを更新する操作、`VALUES` 内の式、`async_mode` での WAL ディスクの空き容量不足）に該当する場合、Doris はそのリクエストだけ通常のロード処理に切り替えます。リクエストの形式だけが、その切り替えを示す手掛かりになります。
+
+## クイックスタート {#quick-start}
+
+```sql
+CREATE TABLE events (
+  id BIGINT, ts DATETIME, payload STRING
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 4
+PROPERTIES ("group_commit_interval_ms" = "1000");
+
+SET group_commit = async_mode;
+INSERT INTO events VALUES (1, NOW(), 'a');
+INSERT INTO events VALUES (2, NOW(), 'b');
+-- the second insert merges into the first one's transaction
+```
+
+**期待される結果**
+
+```
+Query OK, 1 row affected (0.01 sec)
+{'label':'group_commit_a145ce07f1c972fc-bd2c54597052a9ad', 'status':'PREPARE', 'txnId':'181508'}
+```
+
+二つの INSERT は同じ `label` と `txnId` を返します。これにより、両者が統合されたことを確認できます。BE がフラッシュするまで行は参照できません。この例では、テーブルの `group_commit_interval_ms` が `1000` なので、一秒後にフラッシュします。Stream Load では、セッション変数の代わりに `-H "group_commit:async_mode"` ヘッダーを指定します。
+
+## Apache Doris の Group Commit を使う場面 {#when}
+
+多数のクライアントが小さなバッチを同時に書き込み、クライアント側でバッチを大きくできない場合に、Apache Doris の Group Commit を使用します。
+
+**適しているケース**
+
+- JDBC 経由でイベントごとに `INSERT INTO ... VALUES` を実行する、毎秒数十件以上のトランザクションを処理するマイクロサービス。
+- MB 未満の小さなバッチしか作れず、BE で `-235` エラーが発生している Kafka または Flink のシンク。
+- 各イベントを数秒以内に取り込む必要があり、クライアント側でまとめられない IoT またはクリックストリームのパイプライン。
+- 個別のロードによるタブレットバージョンの増加に、バックグラウンドのコンパクションが追いつかないテーブル。
+
+**適していないケース**
+
+- 呼び出し側の記録処理とロードを厳密に一つのトランザクションにする必要がある場合。明示的な `BEGIN ... COMMIT` を使用すると、Group Commit は通常のロード処理に切り替わります。トランザクションが必要なシンクでは、[Load Transactions](./load-transaction) を直接使用してください。
+- Stream Load の 2PC、および独自の Label を指定する書き込み。どちらも Group Commit を使用しません。チェックポイントに基づく exactly-once 処理が必要なら、Stream Load の 2PC を使用してください。
+- 列の一部だけを更新する操作。Group Commit は `partial_columns: true` をサポートせず、通常のロード処理に切り替わります。
+- 厳密なコミット順序が必要な Unique Key テーブル。Group Commit は統合されたロード間の順序を保証しません。ユーザーが指定したタイムスタンプで最新のバージョンを選べるよう、`function_column.sequence_col` を指定してください。
+- すでに大きい単一のロードバッチ（数百 MB 以上）。通常のロードを一回実行する場合と比べ、Group Commit の調整処理は余分な負荷になります。そのままロードを送信してください。
+
+## パフォーマンスと数値 {#performance}
+
+Apache Doris 2.1.0 のリリースノートより：
+
+- JDBC、1 FE + 1 BE、TPC-H SF10 Lineitem、同時実行数 20、INSERT あたり 100 行未満：`async_mode` で **106,900 行/秒**。
+- Stream Load、3 BE、同時実行数 10、1 MB 未満のバッチ：**810,000 行/秒、104 MB/秒**。Group Commit を使用しない場合、同じワークロードでは `-235` エラーが発生して処理が停止します。
+- Stream Load、3 BE、同時実行数 30、1 MB のバッチ：**2,077,723 行/秒**。
+
+出典：[Apache Doris 2.1.0 リリースノート](https://doris.apache.org/blog/release-note-2.1.0/)。
+
+## 関連資料 {#further-reading}
+
+- [高同時実行ロードの最適化（Group Commit）](../data-operate/import/load-best-practices/group-commit-manual)
+- [Stream Load の HTTP ヘッダーリファレンス](../data-operate/import/import-way/stream-load-manual)
+- [INSERT INTO によるロード](../data-operate/import/import-way/insert-into-manual)
+- [Load Transactions：明示的な `BEGIN ... COMMIT` または 2PC が必要な場合](./load-transaction)
+- [Stream Load](./stream-load)：Group Commit がサーバー側でまとめる同期 HTTP ロードの処理方式。
+- [Apache Doris 2.1.0：Group Commit のベンチマーク](https://doris.apache.org/blog/release-note-2.1.0/)
+- [Unique Key](./unique-key)：Group Commit がまとめる、単一行に対する高頻度の UPDATE を使うテーブルモデル。

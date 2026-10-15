@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "127048c3fcd2244a9cd1ae67b7d673f84516ea09a1bf8d4de3fe94d9b3c1cb13",
+    "sourceTechnicalHash": "425f65a57d1f3a270c55a815acead26554ad248cf97939c1da4afab4a6bdec3e",
+    "targetHash": "cf8c97e250401f656a0e43a52789c9f5bb1dc4744c163b4fa40b37e65a409fdd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.611Z",
+    "glossaryVersion": "0"
+  }
+}

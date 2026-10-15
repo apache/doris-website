@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/unique-key",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/unique-key.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/unique-key.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "9489b879a8824c4d7c5d7481094a062697ea289a8ba7b6b8c260a907fded1cf8",
+    "sourceTechnicalHash": "a71480f6e428ede1f413ea2b8af48433222e93bd91b1aa7c0c156b016f618280",
+    "targetHash": "31ab20e650381981f354dba504e77d987ddbc2425bf25b60263a7ff6ebc8920d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.615Z",
+    "glossaryVersion": "0"
+  }
+}

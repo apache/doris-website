@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/auth/authentication-and-authorization",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/auth/authentication-and-authorization.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/auth/authentication-and-authorization.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "36e82c03adf6fc59eee707f71d8196390889a7c741b7d6e9f06d56c605b52f34",
+    "sourceTechnicalHash": "475554e5676ddb7d0e5fe2206b54a34b7b492aca25307492f191abfbe4905c39",
+    "targetHash": "fef116fd1822ce19729a98967ac3f59f8e5452fe35be578f23b0fe073bd09eb5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.612Z",
+    "glossaryVersion": "0"
+  }
+}

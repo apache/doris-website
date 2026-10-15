@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/job/CREATE-STREAMING-JOB",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "a17ae96ee1bf2ff7c5e4f1f5cd4ab8812e36c1c48ab0716a4b60d0cbeaa04d2e",
+    "sourceTechnicalHash": "b1c1b340439a0ae81d9677f65944e9805b81be16c2ea39408335cd72ba19988e",
+    "targetHash": "588415eb1276e38c434f13f15a52b1ba8e9a881ec147f563fe88ac64aec79c39",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.612Z",
+    "glossaryVersion": "0"
+  }
+}

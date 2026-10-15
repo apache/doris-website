@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/data-lineage",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/data-lineage.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/data-lineage.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "8fd437ac1c233f79c1affbd9b169809881f107264a7ec0ce8be37a3cd4cd0d2c",
+    "sourceTechnicalHash": "547698e5c581a92448f2adfb228a2be120bcded0ef503c2fe5c707f058353e64",
+    "targetHash": "9df06a1c7e0461e3d6895d79b0eb54a72f46b46d7d7f556eb1539c435dd97e47",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.613Z",
+    "glossaryVersion": "0"
+  }
+}

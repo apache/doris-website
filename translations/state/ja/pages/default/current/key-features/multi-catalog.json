@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/multi-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/multi-catalog.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/multi-catalog.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "918853b9add6586228bbfc8fa1e504c581f78eafe93d5d08785f9ba93b03e1de",
+    "sourceTechnicalHash": "71e02d34a64d9e660e412f32e936d9a1dabf803ee008813e8b8e492990847119",
+    "targetHash": "a2918816867daf41be7510c3992b5bb30382e503d46c8d9e0cd20d4c52625e69",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.614Z",
+    "glossaryVersion": "0"
+  }
+}
