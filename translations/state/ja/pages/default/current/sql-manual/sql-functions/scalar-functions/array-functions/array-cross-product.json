@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-cross-product",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-cross-product.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-cross-product.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "3d144ed0b8e92f683d429b92fd5639fe6826178754ff3a9909cff285ed4f76a6",
+    "sourceTechnicalHash": "ec9a1d1334bf654486b740e17b3629dc384e9122f3df767e84730f2b486e92f0",
+    "targetHash": "72bdf01e1b93c9c8c62b943c87c232c27ea8093c64cc0252a4d4fe285dfbe2d8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.186Z",
+    "glossaryVersion": "0"
+  }
+}

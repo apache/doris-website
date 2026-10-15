@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-intersect",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-intersect.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-intersect.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "bcfb999781182cfddf20b30ffb6997b65fd5e6bd6a2691bbadbed44ba7825c8b",
+    "sourceTechnicalHash": "c2de4928a947051e8fcbc2c1376717dbe2a0d0338c6c1a6e90dffb4407084897",
+    "targetHash": "a00874add3a7ae530e92adb87e4550414a495d447e52536895e808df5454dfb6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.186Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-x",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-x.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-x.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "57448215a7f9b58640f55ec5616b106a312b9de7664979e705a010a5b522eb58",
+    "sourceTechnicalHash": "2d33582935e9a04596df8350ecab8a6c92dc6330193f444b046de1e4a3eff5f5",
+    "targetHash": "853fc889d00ededef49ff6953de020a65dbd3ab326c328766e15a374493f2d34",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.185Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-azimuth",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-azimuth.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-azimuth.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0da4751449f928796e35896eae96eb75548b51dbbf1b7783bc6072647ab544bd",
+    "sourceTechnicalHash": "02f40a8b3b63d2816b117aa9fe8075d5968936512f9254053e77d9f391fb15d0",
+    "targetHash": "7b8008e21b1d248285cbe27ab94bb15346e0bdb54dd00b2588f2b39d8140e5db",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.184Z",
+    "glossaryVersion": "0"
+  }
+}

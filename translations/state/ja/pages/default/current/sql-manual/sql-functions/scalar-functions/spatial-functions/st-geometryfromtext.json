@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromtext",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromtext.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromtext.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "da03ae5df0ed679f08778b828ea9d1cc94a744c04afd337a96fcdd2cfad4a72c",
+    "sourceTechnicalHash": "d622495443f22427957e5f152017203536a8c1d74587c1d2c212eefdd5985656",
+    "targetHash": "d4bd70c8b1b0a00880dcd4ab018880349ae483c2107079b4d09142c2b955d5ba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.184Z",
+    "glossaryVersion": "0"
+  }
+}

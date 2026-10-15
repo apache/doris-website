@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-meters",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-meters.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-meters.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "8277650d50c01d9482ca8025e7d0d68c55c4266a7d957996c56be5d369f31546",
+    "sourceTechnicalHash": "e97ba473dc42ba771719d26ca0c0762c189129f5f169ec1e5a9e9b44d115e0c4",
+    "targetHash": "da296f389ab9b33812047b206ee463162e46ad2ed5dabe6b5a7fd7b37fd7ce6d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.184Z",
+    "glossaryVersion": "0"
+  }
+}

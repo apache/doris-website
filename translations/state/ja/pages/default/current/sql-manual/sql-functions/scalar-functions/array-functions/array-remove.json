@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-remove",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-remove.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-remove.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c2fcf97611f9252621fc27072ac1155e844fe73d1ad2c0f6c12bcc699343dde1",
+    "sourceTechnicalHash": "8304aff32d5abd862dbeff9c8b5259e2ee55de967a0fe1832d9380cdce433c9e",
+    "targetHash": "13d8265768c38e7c67e789b8abd62635c67c8e0cb85b974b5c312fc92bc954b4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.187Z",
+    "glossaryVersion": "0"
+  }
+}

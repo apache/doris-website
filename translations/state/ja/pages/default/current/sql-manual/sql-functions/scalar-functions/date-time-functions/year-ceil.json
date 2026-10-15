@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/year-ceil",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/year-ceil.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/year-ceil.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "ea9437642ed088c212db377eb790c364b9dc7e5f2f78475dc53afdf9b6737503",
+    "sourceTechnicalHash": "961b14869897d33edda1b34b73ce08dd5ea3d3a7119815bb44f7fce0384cb261",
+    "targetHash": "d27f8d176105a0f081ee669475acad1452dedf61ec8ae69eed36aa9b7005f704",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.183Z",
+    "glossaryVersion": "0"
+  }
+}

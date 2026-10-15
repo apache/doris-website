@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-popfront",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-popfront.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-popfront.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "d721fe6a8b6c6779fd1dee1aba0adf81f0ae2e21449faf60ff09454883b1043c",
+    "sourceTechnicalHash": "c95d72ab3f64b78366f5343d721d77eb4e063683a15c36ad30be5cdda9ff7b3e",
+    "targetHash": "1caa0e52ad72b5f5d0395f5aa2fc98835bbac69c987437e0d388d4d8b7a27ea9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.187Z",
+    "glossaryVersion": "0"
+  }
+}

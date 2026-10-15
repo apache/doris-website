@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-touches",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-touches.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-touches.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "5089b823f89364824f04f7d27437431aa8178f97e99a09f5970faa68bd7f7e61",
+    "sourceTechnicalHash": "bd6e0eece3d8aa504c92112b88bf8fa3e76b734817689b5295ab19e9584cef37",
+    "targetHash": "b1545e5085aa9fcc1d151070b0228124c3e6e6cbae3d4cc78fba5ae6ae8d6bd7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.185Z",
+    "glossaryVersion": "0"
+  }
+}

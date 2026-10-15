@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-exists",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-exists.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-exists.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "8618c9f282658ccfbd4e26dac008365be674048fa2f933f6993ae19a0b7cbf3a",
+    "sourceTechnicalHash": "8e5324e31696fb04294a329e9d0af9a270efc90142568c71f9f7ec6f59c54513",
+    "targetHash": "c631ccd483b4b972b9f0b16d8d1a63a62ed264bc3371aae6f9ad2631313e9bb2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.186Z",
+    "glossaryVersion": "0"
+  }
+}

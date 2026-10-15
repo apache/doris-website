@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-popback",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-popback.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-popback.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "fd4d04089ed3f8a8a34670801cf3db5797f250c52adb5f07e23ccd32d00e0974",
+    "sourceTechnicalHash": "e9ba0b9c95bd58b34fed83a82fd83bf6b80a26ff8345d60a59ddcbbc4f3b3e9b",
+    "targetHash": "6a51e1868f326e0da45e1e0a19c4da71448dbbebe7c6b240f333ec4abf96124c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.187Z",
+    "glossaryVersion": "0"
+  }
+}

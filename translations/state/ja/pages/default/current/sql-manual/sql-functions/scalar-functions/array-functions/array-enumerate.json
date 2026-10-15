@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "2383336f5b9fffd5b459f2b47362351da307ff08be3444129b88c320b5ef57a3",
+    "sourceTechnicalHash": "0a752e166696f11ea3c360d15267c45bcc419c009b62431972ba2accc35097cf",
+    "targetHash": "7e02493f1aa0fb6799f73f6e1ad0059e2b3a500cc9d18c3bf112e36f1c36b998",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.186Z",
+    "glossaryVersion": "0"
+  }
+}

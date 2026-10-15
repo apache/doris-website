@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-flatten",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-flatten.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-flatten.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "19ecdb11508a0c7350dcc64573c9186af076c673ca35b3e947ed6e2fa11f4b01",
+    "sourceTechnicalHash": "6be0c1ee059cc4080afc962391ecb71a3b7018d5e116c79525ca898dce08865d",
+    "targetHash": "faa0665226f1a490646c5c9f6596adb607e2cf705cffbc2c19cdcb4c06dbc22b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.186Z",
+    "glossaryVersion": "0"
+  }
+}
