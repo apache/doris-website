@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/last-day",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/last-day.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/last-day.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "ef1cb3253e4a55d83c0700ba429a5cb3bb7f5568e7f4f4b668e961ac6cbff27e",
+    "sourceTechnicalHash": "69789e8512132f442c34207cc7c9915f1feb78270f9512c58ef2afe7887c0e6f",
+    "targetHash": "b77779fa0a09301bb77e6efb994026a3cef0400afdffb2c8af4eb0fe17b7a093",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.811Z",
+    "glossaryVersion": "0"
+  }
+}

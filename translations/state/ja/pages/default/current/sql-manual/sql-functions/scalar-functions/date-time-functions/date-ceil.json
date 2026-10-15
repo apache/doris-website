@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/date-ceil",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/date-ceil.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/date-ceil.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "390e97e8a2de178d9e3ce8e69d144be490199e12b56c9326c4b95ea1961df248",
+    "sourceTechnicalHash": "015e2af5e0adc31487f9d593256ce7c02c5f1e09ef3289cd5505c3d447b1beac",
+    "targetHash": "f1c547d2d5fae3693ca26ad8f5a2c409e937b13a31f3ebf3f6bd26cd822bab11",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.809Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/utc-date",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/utc-date.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/utc-date.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "a19afb059b0830b325cc56a5681e856b598fd80014a66f67044647f324dbd9a5",
+    "sourceTechnicalHash": "4355d09de4d20260994a998b770388156531c08f2ee0f7423aaf799ed9b56edc",
+    "targetHash": "071609aa74a5894247f1492dbcb997075df49d769e46d1f36a991c16c7ec41c6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.814Z",
+    "glossaryVersion": "0"
+  }
+}

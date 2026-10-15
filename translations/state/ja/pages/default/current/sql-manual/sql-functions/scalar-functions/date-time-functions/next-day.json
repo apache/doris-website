@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/next-day",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/next-day.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/next-day.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "7dbb675ba44e6ffbb05a90e945e73fc6991c34ed6e934675a34224d62db1bf3f",
+    "sourceTechnicalHash": "ccf7586cfba1bd19d2e00d51cd79a5eebbd6b513bbbb90fb18c20645450f9431",
+    "targetHash": "c8dfea215203d69d5ff317b8c1505123f97ecb99ce0c1d36ef1eef0af91abf0d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.812Z",
+    "glossaryVersion": "0"
+  }
+}

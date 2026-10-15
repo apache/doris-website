@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/months-diff",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/months-diff.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/months-diff.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "bf3b9d69e272e81cc5abc7996ecf8b96ab9147354ed3ebc47566b31fa8adb9fa",
+    "sourceTechnicalHash": "c59a5e58d476441571bfc79bbe5c70687c13a1858d3084f0ea6e5aae66de8121",
+    "targetHash": "637b446aa3c12c1e137eeecef428e38556e6c825b8a7a344df4baf4c8605342f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.812Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/from-millisecond",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/from-millisecond.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/from-millisecond.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "3d4f39c4c1ea3ef8caa21406500236fd8176cfe5333fe78560c9c05ff2bf80f9",
+    "sourceTechnicalHash": "4c9e1897f686259d029ac890dc83b20cc4b12fc4c8638dba6fcb4a6a678f963a",
+    "targetHash": "6dcd9256e700ca3e7bc2bf3b3d36a975037377e821df2d28b5306951f0321dfe",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.810Z",
+    "glossaryVersion": "0"
+  }
+}

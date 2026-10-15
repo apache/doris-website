@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/month-ceil",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/month-ceil.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/month-ceil.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "526a4af81ae2669cff14e2e8cbf2fa5f3c13c9ebd99d07764418a4fa5c107840",
+    "sourceTechnicalHash": "0e4ca9f6bc4453f9b6568d5cb6789e4936640275b6fba9beb09e55ed988e768d",
+    "targetHash": "a67d7c8e2d32c5b943430dd8e3dce294a508c34bda5e85462cb0f9c33b3f3e4d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.812Z",
+    "glossaryVersion": "0"
+  }
+}

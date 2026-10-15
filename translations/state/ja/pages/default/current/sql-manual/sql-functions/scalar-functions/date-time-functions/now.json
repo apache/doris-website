@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/now",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/now.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/now.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f848158b2b0f6dd10ad24eb459953e8019b5872ce3a43816fb10081e7690b831",
+    "sourceTechnicalHash": "f3dffb8a266e19aa38bed72a8920e7d9a0b54e6b3fb362e44b3b166a02a8f6ab",
+    "targetHash": "401f25d94a708862ea5a076ef892168bdcfb12ecbad733925780bc36c31447be",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.812Z",
+    "glossaryVersion": "0"
+  }
+}

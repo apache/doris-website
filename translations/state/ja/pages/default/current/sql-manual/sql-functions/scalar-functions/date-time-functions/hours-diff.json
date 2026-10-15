@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/hours-diff",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/hours-diff.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/hours-diff.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "83b83dd99b546e5e8510daaf5780b4a88c4b169771ba103b9499609d9b215a4c",
+    "sourceTechnicalHash": "baa6e51cda63af4ca28a9df8f7518e351989023febc658bae63cf73708ac9049",
+    "targetHash": "58ac4a35f60944e95426497ef40cb20e28f41c8eefb9358aabc919967e71c31b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.811Z",
+    "glossaryVersion": "0"
+  }
+}

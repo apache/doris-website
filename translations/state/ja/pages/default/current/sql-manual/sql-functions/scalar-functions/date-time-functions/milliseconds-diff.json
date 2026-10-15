@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/milliseconds-diff",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/milliseconds-diff.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/milliseconds-diff.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "3411c95e1331040091c297b91787462b9db08394c56b91e4df3c7853fc9650d3",
+    "sourceTechnicalHash": "cb36fba157c63a7b44d242be56d748429ac17b70458390cefd6a84c6116674a3",
+    "targetHash": "a83aafafea388f0cb56d8caede5445a505925ace98e1c9128e5f43478349a388",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.811Z",
+    "glossaryVersion": "0"
+  }
+}

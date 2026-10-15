@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/date-floor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/date-floor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/date-floor.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "2845c16b4c0c1a3deec34014914742fdee40e12ab5290298a19b9abca4acd702",
+    "sourceTechnicalHash": "c5241f0d9468f953c17e55d664a1b4480d9a5e3dec64e89303489b68c2eb0ea4",
+    "targetHash": "2eec5f307a55a23b5ea68ca59126ee7ee26c188db40f5e1329ff407be2444e4e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.809Z",
+    "glossaryVersion": "0"
+  }
+}

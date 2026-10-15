@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/to-monday",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/to-monday.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/to-monday.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "11cfdf8429b514082b75d8be853679a61a577f29c0337641d9d8b11837fd6931",
+    "sourceTechnicalHash": "1e45ad65f896719230d585fc31c9cc1170067251fb34555d65e832f38564fa8d",
+    "targetHash": "ecfb077685087f6d7e8486c20588c78f093610e79bba36b090d62806553a7818",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.814Z",
+    "glossaryVersion": "0"
+  }
+}

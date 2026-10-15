@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/hours-sub",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/hours-sub.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/hours-sub.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "5f611e151f314f4f2858413a885b07a3ee3d3af42fe4f5873b51238d8c381381",
+    "sourceTechnicalHash": "0573cd74c33659818270222f24cf8275d23458c7f365389f76d8e75dda6d7a11",
+    "targetHash": "d586f6636f7745e9ba44d1ca0c195b12e42c2fedb2d3a034f01b6c1751df0cf2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.811Z",
+    "glossaryVersion": "0"
+  }
+}

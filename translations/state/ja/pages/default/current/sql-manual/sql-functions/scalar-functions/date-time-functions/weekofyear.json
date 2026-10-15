@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/weekofyear",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/weekofyear.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/weekofyear.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "da400dfb498dec78b8345ed65134723105435b28e22c0ad099ca4ef9253ee887",
+    "sourceTechnicalHash": "73a3466cc7385c2a70376957a23a11fe4183ecd6bad568d2cad0f830acd0014e",
+    "targetHash": "691d6809cb0312feb2f3790386e9bc219e352c383b69b9d1edf3fb334b6ae9ff",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.814Z",
+    "glossaryVersion": "0"
+  }
+}
