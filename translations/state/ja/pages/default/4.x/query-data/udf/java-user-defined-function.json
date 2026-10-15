@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-data/udf/java-user-defined-function",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-data/udf/java-user-defined-function.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-data/udf/java-user-defined-function.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "2b580f0086194bbd53357c5e345718c6570e91e83390add6609a3f439cae83a4",
+    "sourceTechnicalHash": "8daa31889f6e76c17f0216f7b82854710ae071e713080f64df69bcd4dcc2ef33",
+    "targetHash": "92dbd0c71032f99a20d067973af9e2f4dcbd41276d6533dfc80027c60512a1fd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.708Z",
+    "glossaryVersion": "0"
+  }
+}

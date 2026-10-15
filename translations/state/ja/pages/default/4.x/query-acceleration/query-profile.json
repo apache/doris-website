@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/query-profile",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/query-profile.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/query-profile.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "ac9f6b79f13dda7eb98e1c5478bcb51dbf210b430333372d453099b30d5eef8e",
+    "sourceTechnicalHash": "34f2afc548adaea878463e9134cf43fc26c077057977759399f744fa8fff7d51",
+    "targetHash": "9c6d7a651c40c61e85d1d9af81c4834975804ec9cf69df9f1321f06a76e6f86f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.711Z",
+    "glossaryVersion": "0"
+  }
+}

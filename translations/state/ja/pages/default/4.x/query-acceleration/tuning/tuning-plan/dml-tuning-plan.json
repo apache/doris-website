@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/tuning/tuning-plan/dml-tuning-plan",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/tuning/tuning-plan/dml-tuning-plan.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/tuning/tuning-plan/dml-tuning-plan.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "fc0179ae9a93f5f69c86b7c2f1aae2a80a6c91689a56a7dc83aad2d2cef8dc90",
+    "sourceTechnicalHash": "d06d74d12728bf08869f75687ae6bba805b5e0f8fee61527ab12e213eb0788af",
+    "targetHash": "563605dfda8efef1b2cf91face211015c311399f0de419169a1fca71ccec3d86",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.711Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,71 @@
+---
+{
+    "title": "マテリアライズドビュー",
+    "language": "ja",
+    "description": "Apache Doris のマテリアライズドビューに関する章のナビゲーション。概念、同期マテリアライズドビュー、非同期マテリアライズドビュー、透過的な書き換え、よくある質問を扱います。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+マテリアライズドビューは、計算ロジックとデータの両方を保持するエンティティです。クエリの高速化、軽量な ETL モデリング、レイクハウスのフェデレーテッドクエリの高速化に利用できます。まず概念を理解し、データの鮮度に関する要件に応じて、同期マテリアライズドビューと非同期マテリアライズドビューのどちらを使うか選択してください。
+
+## 概念の紹介
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="マテリアライズドビューの概要"
+    description="マテリアライズドビューが適するシナリオを理解し、データの鮮度、SQL パターン、更新方法に基づいて選択します。"
+    link="overview"
+/>
+</div>
+
+## 同期マテリアライズドビュー
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="同期マテリアライズドビュー"
+    description="同期マテリアライズドビューを使用してベーステーブルのデータとの強い整合性を保ち、リアルタイムの集約やソートを高速化します。"
+    link="sync-materialized-view"
+/>
+
+<GettingStartedCard
+    title="同期マテリアライズドビューによる透過的な書き換え"
+    description="オプティマイザがクエリを同期マテリアライズドビューへ透過的に書き換える仕組みと、対応するパターンや制限事項を説明します。"
+    link="../tuning/tuning-plan/transparent-rewriting-with-sync-mv"
+/>
+</div>
+
+## 非同期マテリアライズドビュー
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="非同期マテリアライズドビューの概要"
+    description="非同期マテリアライズドビューの更新モード、複数テーブルのサポート、パーティションの増分更新、代表的なユースケースを理解します。"
+    link="async-materialized-view/overview"
+/>
+
+<GettingStartedCard
+    title="作成と保守"
+    description="非同期マテリアライズドビューの作成、直接クエリ、更新の管理、パーティションの保守に関する操作ガイドです。"
+    link="async-materialized-view/functions-and-demands"
+/>
+
+<GettingStartedCard
+    title="利用ガイド"
+    description="適用シナリオの判断、利用時の原則、更新戦略の選択、構築の実施に関するベストプラクティスを説明します。"
+    link="async-materialized-view/use-guide"
+/>
+
+<GettingStartedCard
+    title="非同期マテリアライズドビューによる透過的な書き換え"
+    description="SPJG パターンに基づく書き換えアルゴリズムが、SQL を変更せずに既存のクエリを非同期マテリアライズドビューへ透過的に書き換える仕組みを説明します。"
+    link="../tuning/tuning-plan/transparent-rewriting-with-async-mv"
+/>
+
+<GettingStartedCard
+    title="よくある質問"
+    description="パーティションの更新、ベーステーブルのバージョン、運用時のトラブルシューティングに関するよくある質問に回答します。"
+    link="async-materialized-view/faq"
+/>
+</div>

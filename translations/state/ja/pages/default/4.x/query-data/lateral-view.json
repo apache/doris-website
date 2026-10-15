@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-data/lateral-view",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-data/lateral-view.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-data/lateral-view.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "d075331112ffc2bde21d685b94d295c96496a212a638daf01d1cf28e2dc362c6",
+    "sourceTechnicalHash": "2ca75491271c1841fa3392ecf3896b640b201532176474b750606ede3b910638",
+    "targetHash": "50579c607e959efcb92d964fd858ef90eb87b8a28ee8fd9559b990921569886d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.708Z",
+    "glossaryVersion": "0"
+  }
+}

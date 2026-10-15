@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/materialized-view/intro-link",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/materialized-view/intro-link.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/materialized-view/intro-link.mdx",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "73d1497a03f54536e539d6bc486073f15a6fad1710da0df760715b3eb21082fc",
+    "sourceTechnicalHash": "5802f084b531758c9ca9cde1324eb37e7eb237c9f0a8f88b896f65f390816a37",
+    "targetHash": "e1e787ee12fbca2e70459df192c55cf753f52011ab07ad88dbdd2fbb2acfb910",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.710Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,105 @@
+---
+{
+    "title": "データクエリ",
+    "language": "ja",
+    "description": "ユースケースに応じて Apache Doris のクエリ機能を探します。SQL 互換性、複数テーブルの結合、集約分析、半構造化データのクエリ、ユーザー定義関数を扱います。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# データクエリ
+
+Apache Doris は MySQL との高い互換性を持つ標準 SQL をサポートし、さらに高性能な結合クエリ、豊富な分析関数、半構造化データへのアクセス、ユーザー定義関数を提供します。以下から目的に合ったドキュメントを選んでください。
+
+## SQL 互換性
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="MySQL 互換性"
+    description="Doris と MySQL の違いを手早く確認できます。データ型、DDL/DML 構文、SQL 関数、主要な SQL Mode の違いを扱います。"
+    link="mysql-compatibility"
+/>
+</div>
+
+## 複数テーブルの結合
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="結合（JOIN）"
+    description="INNER / LEFT / RIGHT / FULL / SEMI / ANTI などの JOIN の種類と、Broadcast、Shuffle、Bucket Shuffle、Colocate の 4 つの分散 JOIN 実装を説明します。"
+    link="join"
+/>
+
+<GettingStartedCard
+    title="時系列の最近傍マッチング向け ASOF JOIN"
+    description="左テーブルの各行に対し、時間の方向に沿って右テーブルで最も近い行を見つけます。ウィンドウ関数を使わずに時系列データを整列できます。"
+    link="asof-join"
+/>
+
+<GettingStartedCard
+    title="サブクエリ"
+    description="スカラー／非スカラー、相関／非相関サブクエリの構文、制約、Mark Join による処理を説明します。"
+    link="subquery"
+/>
+
+<GettingStartedCard
+    title="共通テーブル式（CTE）"
+    description="WITH 句を使って一時的な結果セットを定義します。ネストした CTE と再帰 CTE をサポートし、階層やグラフの探索などに適しています。"
+    link="cte"
+/>
+</div>
+
+## 集約と分析
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="多次元集約分析"
+    description="ROLLUP、CUBE、GROUPING SETS を使って、1 つの SQL 文で多次元集約分析を実行します。"
+    link="multi-dimensional-analytics"
+/>
+
+<GettingStartedCard
+    title="分析関数（ウィンドウ関数）"
+    description="OVER 句で結果セットをパーティションに分割し、ウィンドウを設定します。順位付け、累積和、移動平均、前年同期比や前四半期比の比較などを実行できます。"
+    link="window-function"
+/>
+</div>
+
+## 半構造化データと複合型
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="複合型のクエリ"
+    description="Array、Map、Struct、JSON などの複合型をクエリし、専用の SQL 関数で半構造化データを処理します。"
+    link="complex-type"
+/>
+
+<GettingStartedCard
+    title="列から行への変換（Lateral View）"
+    description="LATERAL VIEW と EXPLODE などの生成関数を使って 1 行を複数行に展開し、列から行への変換を伴う SQL クエリを実行します。"
+    link="lateral-view"
+/>
+</div>
+
+## ユーザー定義関数（UDF）
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Java UDF / UDAF / UDWF / UDTF"
+    description="Java で UDF/UDAF/UDWF/UDTF を実装する方法を説明します。型マッピング、登録構文、ベストプラクティス、例を含みます。"
+    link="udf/java-user-defined-function"
+/>
+
+<GettingStartedCard
+    title="Python UDF / UDAF / UDWF / UDTF"
+    description="Python で UDF/UDAF/UDTF を実装する方法を説明します。作成方法、ベクトル化、環境設定、一般的なトラブルシューティングを扱います。"
+    link="udf/python-user-defined-function"
+/>
+
+<GettingStartedCard
+    title="エイリアス関数"
+    description="CREATE ALIAS FUNCTION を使って関数や式の一部に新しいシグネチャを登録し、移行時の互換性を高め、複雑なクエリの記述を簡単にします。"
+    link="udf/alias-function"
+/>
+</div>

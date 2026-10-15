@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-dlf-iceberg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-dlf-iceberg.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-dlf-iceberg.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "fed4821ef70d0e5f9021f5c91207a2451268e06dfede2656400f0a87e743704e",
+    "sourceTechnicalHash": "0f6fec4c7b79731344606f01ebbdb9617d764924ef2b6c4a949091398ff8555a",
+    "targetHash": "6d59a5f2b6f5e3bb49beb667a610b0b88ef407b164302910868d9ab34158af09",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.712Z",
+    "glossaryVersion": "0"
+  }
+}

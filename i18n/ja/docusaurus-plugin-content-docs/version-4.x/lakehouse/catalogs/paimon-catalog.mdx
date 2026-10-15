@@ -1,0 +1,1625 @@
+---
+{
+    "title": "Paimon Catalog",
+    "language": "ja",
+    "description": "Apache Doris の Paimon Catalog を使用し、複数のメタデータサービスを通じて HDFS やクラウドオブジェクトストレージ上の Paimon テーブルをクエリおよび書き込みます。"
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Doris は、さまざまなメタデータサービスを通じた Paimon テーブルのメタデータへのアクセスと、Paimon データの読み取りおよび書き込みをサポートします。
+
+[Apache Doris と Apache Paimon のクイックスタート](../best-practices/doris-paimon.md)。
+
+## 適用シナリオ
+
+| シナリオ | 説明 |
+| ------------ | ------------------------------------------------------------ |
+| クエリの高速化 | Doris の分散コンピューティングエンジンから Paimon データに直接アクセスし、クエリを高速化します。 |
+| データ統合 | Paimon データを読み取って Doris の内部テーブルに書き込むか、Doris のコンピューティングエンジンを使用して ZeroETL 処理を行います。 |
+| データの書き戻し | Doris SQL を使用して Paimon テーブルを作成、変更し、データの追加や上書き、主キーテーブルの行単位の変更を行います。 |
+
+## Catalog の設定
+
+### 構文
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    'type' = 'paimon',
+    'paimon.catalog.type' = '<paimon_catalog_type>',
+    'warehouse' = '<paimon_warehouse>'
+    {MetaStoreProperties},
+    {StorageProperties},
+    {PaimonProperties},
+    {CommonProperties}
+);
+```
+
+* `<paimon_catalog_type>`
+
+  Paimon Catalog の種類です。次の種類をサポートします。
+
+  * `filesystem`: デフォルト。ファイルシステムに保存されたメタデータに直接アクセスします。
+
+  * `hms`: Hive Metastore をメタデータサービスとして使用します。
+
+  * `dlf`: Alibaba Cloud DLF をメタデータサービスとして使用します。
+
+  * `jdbc`: JDBC インターフェースを使用して、メタデータサービスとなるリレーショナルデータベースに接続します（バージョン 4.1.0 以降でサポート）。
+
+* `<paimon_warehouse>`
+
+  Paimon のウェアハウスパスです。`<paimon_catalog_type>` が `filesystem` の場合は必須です。
+
+  `warehouse` パスは `Database` パスの一つ上の階層を指す必要があります。たとえば、テーブルのパスが `s3://bucket/path/to/db1/table1` の場合、`warehouse` は `s3://bucket/path/to/` にします。
+
+* `{MetaStoreProperties}`
+
+  MetaStoreProperties セクションには、Metastore メタデータサービスへの接続情報と認証情報を指定します。詳しくは[サポートされるメタデータサービス]のセクションを参照してください。
+
+* `{StorageProperties}`
+
+  StorageProperties セクションには、ストレージシステムに関する接続情報と認証情報を指定します。詳しくは[サポートされるストレージシステム]のセクションを参照してください。
+
+* `{PaimonProperties}`
+
+  PaimonProperties セクションには、Paimon 関連のプロパティを指定します。
+
+  Doris が Paimon のメタデータにアクセスする際には Paimon Java SDK を一部使用するため、カスタムパラメータを Paimon Java SDK に渡す必要がある場合があります。次のプレフィックスを使用できます。
+
+  ```
+  paimon.s3.xxx
+  paimon.s3a.xxx
+  paimon.fs.xxx
+  ```
+
+  これらのパラメータは自動的に変換され、転送されます。例を次に示します。
+
+  | 入力パラメータ | Paimon Java SDK に渡される変換後のパラメータ |
+  | --- | --- |
+  | "paimon.s3.list.version" = "1" | "fs.s3a.list.version" = "1" |
+  | "paimon.s3.paging.maximum" = "100" | "fs.s3a.paging.maximum" = "100" |
+  | "paimon.fs.s3.read.ahead.buffer.size" = "1" | "fs.s3a.read.ahead.buffer.size" = "1" |
+  | "paimon.s3a.replication.factor" = "3" | "fs.s3a.replication.factor" = "3" |
+
+  **Paimon の読み取りオプション**
+
+  Doris は、次の範囲が定められた Paimon バッチ読み取りオプションをサポートします。Catalog 全体のクエリデフォルト値は `paimon.table-option.<option-key>` で設定し、個々のテーブル参照では `table@options('<option-key>'='<value>')` で上書きします。これらの設定が影響するのは Doris による読み取りだけで、Paimon テーブルの物理メタデータは更新されません。
+
+  | Paimon オプション | Paimon のデフォルト | Doris が受け付ける値 | 効果 |
+  | --- | --- | --- | --- |
+  | `read.batch-size` | `1024` | `1` から `65536` の整数 | Paimon JNI リーダーの各バッチで要求する行数。明示的に設定した値は、Doris がリーダーを開く際にも保持されます。 |
+  | `file-reader-async-threshold` | `10 MB` | `1 MB` から `1 GB` のメモリサイズ | Paimon JNI リーダーが非同期読み取りに切り替えるファイルサイズのしきい値。 |
+  | `file-index.read.enabled` | `true` | 真偽値 | 読み取り時の Paimon ファイルインデックスによるプルーニングを有効にします。 |
+  | `source.split.target-size` | `128 MB` | 正のメモリサイズ | Paimon がデータファイルを Doris のスキャンスプリットにまとめる際に使用する目標サイズ。 |
+  | `source.split.open-file-cost` | `4 MB` | 負でないメモリサイズ | Paimon がファイルをスプリットにまとめる際の、ファイルを開くための推定コスト。 |
+  | `scan.manifest.parallelism` | 利用可能なプロセッサー数 | `1` から `256` の整数 | 要求するマニフェスト読み取りの並列度。実行時、Doris は各計画ブランチを個別に、この値、`256`、およびその FE または BE で利用可能なプロセッサー数の最小値に制限します。 |
+  | `scan.plan-sort-partition` | `false` | 真偽値 | Paimon スキャンの計画中にパーティションをソートします。 |
+
+  たとえば、次の Catalog 設定は Paimon テーブルの物理メタデータに保存された値を上書きし、Doris のクエリのデフォルト値になります。
+
+  ```sql
+  CREATE CATALOG paimon_hms PROPERTIES (
+      "type" = "paimon",
+      "paimon.catalog.type" = "hms",
+      "hive.metastore.uris" = "thrift://127.0.0.1:9083",
+      "warehouse" = "s3://bucket/paimon-warehouse",
+      "paimon.table-option.read.batch-size" = "4096",
+      "paimon.table-option.file-reader-async-threshold" = "32 MB",
+      "paimon.table-option.source.split.target-size" = "64 MB",
+      "paimon.table-option.scan.manifest.parallelism" = "1"
+  );
+  ```
+
+  Catalog や Paimon テーブルのメタデータを変更せずに、クエリでこれらのデフォルト値を上書きできます。
+
+  ```sql
+  SELECT *
+  FROM paimon_hms.db_name.table_name@options(
+      'read.batch-size' = '8192',
+      'source.split.target-size' = '32 MB'
+  );
+  ```
+
+  各テーブル参照には独立したオプションセットがあります。たとえば、同じテーブルの二つのエイリアスで、一つの文に異なるバッチサイズを指定できます。
+
+  ```sql
+  SELECT small.id
+  FROM paimon_hms.db_name.table_name@options('read.batch-size' = '1') small
+  JOIN paimon_hms.db_name.table_name@options('read.batch-size' = '8192') large
+    ON small.id = large.id;
+  ```
+
+  優先順位は高い順に次のとおりです。
+
+  ```text
+  relation @options > Doris Catalog property > physical Paimon table option > Paimon default
+  ```
+
+  Doris は、この優先順位を適用した後の最終的な値を検証します。そのため、Catalog またはリレーションに安全な値を指定すれば、物理テーブルの無効な値を置き換えられます。最終的な値が無効な場合、Doris は該当する計画段階またはリーダー段階が始まる前にクエリを拒否します。マニフェストの上限は、パーティション、行数と統計情報、フォールバックブランチ、システムテーブルのマニフェストを計画する前にも適用されます。
+
+  表の最初の五つのオプションはメタデータに影響せず、キャッシュされた最新のパーティション投影を再利用できます。`scan.manifest.parallelism` と `scan.plan-sort-partition` はメタデータの計画に影響するため、Doris はリレーションごとの実効的なテーブルハンドルからこれらを計画します。クエリごとの値によって Paimon の JVM 全体で共有するエグゼキューターのサイズが変更されることはありません。
+
+  Doris は、未知または無効な `paimon.table-option.*` プロパティを `CREATE CATALOG` および `ALTER CATALOG` の実行時に拒否します。`ALTER CATALOG` は公開前に変更後の設定全体を検証するため、変更が失敗しても以前の Catalog 設定が有効なままです。古い Doris バージョンで永続化された Catalog は引き続き読み込めますが、サポートされない、または無効な従来のリーダープロパティは適用されず無視されます。保存済みの値は、イメージおよび編集ログとの互換性のために保持されます。
+
+  スナップショットと開始位置のオプションはリレーションのコンテキストを選択するもので、`@options` を使用する必要があります（[タイムトラベル](#time-travel-with-options)を参照）。Catalog のデフォルト値にはできません。また、Doris は Paimon の Flink ソース列挙子に属する `scan.max-splits-per-task`、`scan.fallback-branch`、ストリーミング、レイアウト、書き込み、コンパクションの各オプションを対象外とします。バケット、主キー、パーティション、マージエンジンなどの物理的な動作は、Doris の `CREATE TABLE ... PROPERTIES` を含め、Paimon テーブルのプロパティとして設定してください。
+
+  :::info 文内の一貫性
+  一つの文の中で、Doris はスキーマの結び付け、パーティションの読み込み、行数と統計情報の収集、システムテーブルの計画、データのスキャンに、同じ Paimon スナップショットとテーブル世代を使用します。`@options` で選択したスナップショットまたはタグでは、ネストした `STRUCT`、`MAP`、`ARRAY` フィールドを含め、その過去のバージョンに属するスキーマを使用します。プリペアドステートメントは実行ごとに新しい文の状態を取得するため、実行間のコミットは新しい実行のセレクターとキャッシュ設定に従って参照されます。
+  :::
+
+  運用上の安全性のため、Paimon スキャナーの DEBUG 設定メッセージはバッチサイズと投影フィールド数のみを報告します。認証情報を含む可能性があるスキャナーパラメータの生のマップは出力しません。`PaimonJniAsyncReaderThreadCount` プロファイルゲージは、複数のスキャナーを通じて毎秒一回サンプリングされるため、最大一秒古い値になる可能性があります。このサンプリングはクエリの実行やスケジューリングに影響しません。リーダーと IOManager のクリーンアップは独立しており、部分的なクローズ失敗後も安全に再試行できます。
+
+  **Paimon JNI IOManager**
+
+  > この機能はバージョン 4.0.8 以降でサポートされます。
+
+  Paimon の主キーテーブルでは、JNI マージ読み取り時に複数のファイルのデータをソートしてマージする必要がある場合があります。Paimon IOManager を有効にすると、この処理の中間データを BE のローカルディスクにスピルでき、大量データのマージ読み取りでメモリ負荷を軽減できます。
+
+  | プロパティ | 必須 | デフォルト | 説明 |
+  | --- | --- | --- | --- |
+  | `paimon.jni.enable_jni_io_manager` | いいえ | `false` | JNI 読み取りで Paimon IOManager を有効にするかどうか。他の IOManager プロパティが有効になるのは、このプロパティが `true` の場合だけです。 |
+  | `paimon.jni.io_manager.tmp_dir` | いいえ | `<storage_root_path>/paimon_jni_scanner_io_tmp` | Paimon IOManager が一時スピルファイルに使用するローカルディレクトリ。複数のディレクトリはコンマまたはコロンで区切れます。省略すると、Doris は各 BE ストレージパスの下に一つずつディレクトリを作成します。 |
+  | `paimon.jni.io_manager.impl_class` | いいえ | Paimon のデフォルト実装 | カスタム `org.apache.paimon.disk.IOManager` 実装の完全修飾クラス名。このクラスは、すべての BE の Paimon JNI Scanner クラスパスで使用可能である必要があります。 |
+
+  次の例では IOManager を有効にし、BE のストレージパスから一時ディレクトリを Doris に選択させます。
+
+  ```sql
+  CREATE CATALOG paimon_hms PROPERTIES (
+      "type" = "paimon",
+      "paimon.catalog.type" = "hms",
+      "hive.metastore.uris" = "thrift://127.0.0.1:9083",
+      "warehouse" = "s3://bucket/paimon-warehouse",
+      "paimon.jni.enable_jni_io_manager" = "true"
+  );
+  ```
+
+  IOManager を有効にしても、すべてのマージ読み取りでスピルが発生するわけではありません。Paimon は、マージリーダーの数が `sort-spill-threshold` を超えた場合にのみスピルします。これは Doris の動的リーダーオプションではありません。異なるスピル動作が必要な場合は、Paimon テーブルの物理プロパティとして設定してください。
+
+  専用のスピルディスクを使用するには、すべての BE で存在するか作成できるローカルパスを設定します。
+
+  ```sql
+  "paimon.jni.io_manager.tmp_dir" = "/mnt/ssd1/paimon_io:/mnt/ssd2/paimon_io"
+  ```
+
+  Doris は JNI スキャナーごとに IOManager を作成し、スキャナーと一緒にクローズします。設定したディレクトリに書き込み権限と、同時実行クエリに十分な容量があることを確認してください。カスタム実装クラスを設定する場合、`String[]` を受け取る public コンストラクター、`String` を受け取る public コンストラクター、または引数なしの public コンストラクターが必要です。クラスの読み込みやインスタンス化に失敗すると、クエリは失敗します。
+
+  これらのプロパティは、JNI 経路を使用する Paimon データテーブルの読み取りにのみ影響します。ネイティブ読み取りには影響しません。`paimon.table-option.file-reader-async-threshold` オプションは独立しており、Paimon ファイルの非同期読み取りのしきい値を制御します。IOManager を有効にしたり、スピルディレクトリを設定したりするものではありません。
+
+* `{CommonProperties}`
+
+  CommonProperties セクションには共通プロパティを指定します。[Catalog の概要](../catalog-overview.md)の[共通プロパティ]セクションを参照してください。
+  
+## メタデータキャッシュ {#meta-cache}
+
+外部データソースへのアクセス性能を高めるため、Apache Doris は Paimon のメタデータをキャッシュします。メタデータには、テーブル構造（スキーマ）、テーブルオブジェクト、スナップショット、パーティションの投影が含まれます。
+
+:::tip
+Doris 4.1.x より前のバージョンでは、メタデータキャッシュは主に FE の設定項目によってグローバルに制御されます。詳しくは[メタデータキャッシュ](../meta-cache.md)を参照してください。
+Doris 4.1.x 以降では、Paimon Catalog の外部メタデータキャッシュを統一された `meta.cache.*` キーで設定します。
+:::
+
+### キャッシュプロパティの設定（4.1.x 以降） {#meta-cache-unified-model}
+
+各エンジンのキャッシュエントリには、統一された設定キー形式 `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}` を使用します。メモリ制限は、推定量を持つ `table` および `snapshot` エントリに適用されます。詳しくは[外部メタデータキャッシュのメモリ管理](../external-meta-cache-memory-management)を参照してください。
+
+| プロパティ | 例 | 意味 |
+|---|---|---|
+| `enable` | `true/false` | このキャッシュモジュールを有効にするかどうか。 |
+| `ttl-second` | `600`、`0`、`-1` | `0` はキャッシュを無効にします（即時に反映され、最新データの確認に使用できます）。`-1` は期限切れにならないことを意味します。その他の正の整数は、アクセス時刻に基づく TTL（秒）です。 |
+| `capacity` | `10000` | キャッシュエントリ数の上限。`max-weight` が有効な場合、同時に適用される件数上限ではありませんが、`0` にするとキャッシュは無効になります。 |
+| `max-weight` | `1GB` | Doris 4.1.4 以降でサポート。保持メモリ量の推定値に対する任意の上限です。Paimon の `table` と `snapshot` でサポートされ、`0` にするとそのエントリは無効になります。 |
+
+**有効になる条件:** モジュールキャッシュは、`enable=true`、`ttl-second != 0`、`capacity > 0` で、`max-weight` が未指定または `0` 以外の場合に有効になります。
+
+### キャッシュモジュール {#meta-cache-unified-modules}
+
+Paimon Catalog には次のキャッシュモジュールがあります。
+
+| モジュール（`<entry>`） | プロパティキーのプレフィックス | キャッシュする内容と影響 |
+|---|---|---|
+| `schema` | `meta.cache.paimon.schema.` | テーブル構造をキャッシュします。影響: テーブル列情報の可視性。無効にした場合は、クエリごとに最新のスキーマを取得します。 |
+| `table` | `meta.cache.paimon.table.` | Paimon テーブルのメタデータオブジェクトをキャッシュします。影響: クエリ計画時のメタデータ読み込みの負荷を軽減します。 |
+| `snapshot` | `meta.cache.paimon.snapshot.` | スナップショットのメタデータ、スキーマ世代、パーティションの投影をキャッシュします。このエントリは `max-weight` をサポートします。 |
+
+### 従来のパラメータの対応と変換 {#meta-cache-mapping}
+
+バージョン 4.1.x 以降では、統一されたキーを推奨します。従来の Catalog プロパティと 4.1.x 以降の統一キーの対応は次のとおりです。
+
+| 従来のプロパティキー | 4.1.x 以降の統一キー | 説明 |
+|---|---|---|
+| `schema.cache.ttl-second` | `meta.cache.paimon.schema.ttl-second` | テーブル構造キャッシュの有効期限 |
+
+### ベストプラクティス {#meta-cache-best-practices}
+
+* **最新データへのリアルタイムアクセス**: Paimon テーブルのデータ変更やスキーマ変更を各クエリで確認したい場合は、`ttl-second` を `schema` または `table` に対して `0` に設定できます。
+  ```sql
+  -- Disable table object cache to detect the latest snapshots of Paimon tables
+  ALTER CATALOG paimon_ctl SET PROPERTIES ("meta.cache.paimon.table.ttl-second" = "0");
+  ```
+* **性能の最適化**: Doris 4.1.4 以降では、Catalog プロパティの変更が成功すると Catalog の実行コンテキストがリセットされ、その Catalog を経由するすべてのメタデータキャッシュエンジンで初期化済みのエントリがクリアされます。次回のアクセス時に新しいコンテキストと設定で再構築されます。実行中のクエリには影響しません。Doris のメモリ管理が有効な場合、Paimon SDK の `CachingCatalog` はデフォルトで無効になりますが、`paimon.cache-enabled` を明示的に設定するとその値が優先されます。
+
+### 可観測性 {#meta-cache-unified-observability}
+
+キャッシュのメトリクスは、`information_schema.catalog_meta_cache_statistics` システムテーブルで確認できます。
+
+```sql
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'paimon_ctl' AND engine_name = 'paimon'
+ORDER BY entry_name;
+```
+
+このシステムテーブルについては、[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md) のドキュメントを参照してください。
+
+### サポートされる Paimon のバージョン
+
+現在依存している Paimon のバージョンは 1.4.2 です（1.3.1 は 4.1.4 より前に使用）。
+
+### サポートされる Paimon の形式
+
+* Paimon の Deletion Vector の読み取りをサポートします。
+
+### サポートされるメタデータサービス
+
+* [Hive Metastore](../metastores/hive-metastore.md)
+
+* [Aliyun DLF](../metastores/aliyun-dlf.md)
+
+* [Paimon JDBC Catalog](../metastores/paimon-jdbc.md)（バージョン 4.1.0 以降でサポート）
+
+* [FileSystem](../metastores/filesystem.md)
+
+> 注意: Doris のバージョンによって、サポートされるサービスの種類とパラメータは少し異なります。[例]セクションを参照してください。
+
+### サポートされるストレージシステム
+
+* [HDFS](../storages/hdfs.md)
+
+* [AWS S3](../storages/s3.md)
+
+* [Google Cloud Storage](../storages/gcs.md)
+
+* [Apache Ozone](../storages/ozone.md)（4.0.4 以降でサポート）
+
+* [Alibaba Cloud OSS](../storages/aliyun-oss.md)
+
+* [Tencent Cloud COS](../storages/tencent-cos.md)
+
+* [Huawei Cloud OBS](../storages/huawei-obs.md)
+
+* [MINIO](../storages/minio.md)
+
+> 注意: Doris のバージョンによって、サポートされるサービスの種類とパラメータは少し異なります。[例]セクションを参照してください。
+
+### サポートされるデータ形式
+
+* [Parquet](../file-formats/parquet.md)
+
+* [ORC](../file-formats/orc.md)
+
+## 列型のマッピング
+
+| Paimon の型 | Doris の型 | 備考 |
+| ---------------------------------- | ------------- | ----------------------------------------------------------------------- |
+| boolean                            | boolean       |                                                                         |
+| tinyint                            | tinyint       |                                                                         |
+| smallint                           | smallint      |                                                                         |
+| integer                            | int           |                                                                         |
+| bigint                             | bigint        |                                                                         |
+| float                              | float         |                                                                         |
+| double                             | double        |                                                                         |
+| decimal(P, S)                      | decimal(P, S) |                                                                         |
+| varchar                            | string        |                                                                         |
+| char                               | string        |                                                                         |
+| binary, varbinary                             | string/varbinary | Catalog の `enable.mapping.varbinary` プロパティで制御します（4.0.2 以降でサポート）。デフォルトの `false` では `string` に、`true` では `varbinary` 型にマッピングします。|
+| date                               | date          |                                                                         |
+| timestamp\_without\_time\_zone     | datetime(N)   | 精度に従ってマッピングします。精度が 6 を超える場合は最大 6 にマッピングされます（精度が失われる可能性があります）。 |
+| timestamp\_with\_local\_time\_zone | datetime(N)/timestamptz(N)  | 精度に従ってマッピングします。精度が 6 を超える場合は最大 6 にマッピングされます（精度が失われる可能性があります）。`enable.mapping.timestamp_tz` プロパティ（バージョン 4.0.3 以降でサポート）がマッピングを制御します。デフォルトの `false` では `datetime` に、`true` では `timestamptz` 型にマッピングします。|
+| array                              | array         |                                                                         |
+| map                                | map           |                                                                         |
+| row                                | struct        |                                                                         |
+| other                              | UNSUPPORTED   |                                                                         |
+
+Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲まれたトップレベルの列名とネストした `STRUCT` フィールド名の表記を正確に保持します。コンマ（`region,code`）、ハッシュ記号（`nested#value`）、コロン（`colon:name`）、空白、Unicode 文字を含む名前でも、通常の SQL 識別子の引用符以外にエスケープは不要です。読み取り時は列名を大文字と小文字を区別せずに照合するため、`UserId` のような大文字や大文字小文字が混在した列名も通常どおりクエリできます。
+
+:::info バージョンに関する注意
+
+4.0.8 より前のバージョンでは、読み取り時に列名を完全一致で検索していたため、大文字と小文字が混在する列名を持つ Paimon または Iceberg テーブルでは、誤った列を読み取ったりクエリが失敗したりする可能性がありました。この問題は 4.0.8 で修正されました。
+
+:::
+
+:::info 注意
+Doris は現在、タイムゾーン付きの `Timestamp` 型をサポートしていません。`timestamp_without_time_zone` と `timestamp_with_local_time_zone` はどちらも `datetime(N)` 型にマッピングされます。ただし読み取り時には、Doris は実際の元の型に基づいてタイムゾーンを正しく処理します。たとえば、`SET time_zone=<tz>` でタイムゾーンを指定すると、`timestamp_with_local_time_zone` 列の戻り値に影響します。
+
+元の型にタイムゾーン情報が含まれるかどうかは、`DESCRIBE table_name` 文の Extra 列で確認できます。`WITH_TIMEZONE` と表示される場合、元の型はタイムゾーンを認識する型です（この機能は 3.0.8 以降でサポート）。
+
+バージョン 4.0.3 以降では、`timestamp_with_local_time_zone` を Doris の `timestamptz` 型にマッピングできます。
+:::
+
+## 例
+
+### Hive Metastore
+
+<details>
+    <summary>バージョン 3.1+</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_hdfs_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'hdfs://127.0.0.1:8320/user/hive/warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320',
+                'hadoop.username' = 'doris'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_aws_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 's3://bucket/paimon_warehouse',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+            IAM 引き受けロールを使用して S3 アクセス認証情報を取得する（3.1.221+）
+            ```sql
+            CREATE CATALOG paimon_hms_on_s3_iamrole PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 's3://bucket/warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_ali_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 'oss://bucket/regression/paimon_warehouse',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_tx_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'cosn://bucket/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_hw_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'obs://bucket/regression/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='GCS' label='GCS'>
+            ```sql
+            CREATE CATALOG `paimon_on_gcs` PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'gs://bucket/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.gcs.support' = 'true',
+                'gs.secret_key' = '<sk>',
+                'gs.access_key' = '<ak>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Ozone' label='Ozone'>
+            4.0.4 以降でサポート
+            ```sql
+            CREATE CATALOG paimon_hms_on_ozone_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 's3a://test-bucket/paimon-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.ozone.support' = 'true',
+                'ozone.endpoint' = 'http://ozone-s3g:9878',
+                'ozone.access_key' = '<ak>',
+                'ozone.secret_key' = '<sk>',
+                'ozone.region' = 'us-east-1',
+                'ozone.use_path_style' = 'true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG paimon_hms_on_minio_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 's3://test-bucket/paimon-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.minio.support' = 'true',
+                'minio.endpoint' = 'http://127.0.0.1:19000',
+                'minio.access_key' = 'minioadmin',
+                'minio.secret_key' = 'minioadmin',
+                'minio.use_path_style' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+<details>
+    <summary>バージョン 2.1 と 3.0</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Kerberos 認証なしで HMS にアクセスする
+            ```sql
+            CREATE CATALOG paimon_hms_on_hdfs_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 'hdfs://127.0.0.1:8320/user/paimon/warehouse/paimon-hms-hdfs-warehouse',
+                'hadoop.username' = 'doris',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
+            );
+            ```
+            Kerberos 認証を有効にして HMS にアクセスする
+            ```sql
+            CREATE CATALOG paimon_hms_on_hdfs_kerberos_hdfs_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'hdfs://127.0.0.1:8520/paimon-hms-hdfs-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled' = 'true',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                    RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                    RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                    DEFAULT',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_aws_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 's3://bucket-hk/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.region' = 'ap-east-1',
+                'paimon.s3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                'paimon.s3.endpoint' = 'ap-east-1',
+                's3.access_key' = '<ak>',
+                'paimon.s3.access-key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                'paimon.s3.secret-key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_ali_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'oss://bucket/regression/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_tx_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'cosn://bucket/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_hw_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'obs://bucket/regression/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_minio_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 's3://bucket/paimon-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.endpoint' = 'http://127.0.0.1:19000',
+                'paimon.s3.endpoint' = 'http://127.0.0.1:19000',
+                's3.access_key' = '<ak>',
+                'paimon.s3.access-key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                'paimon.s3.secret-key' = '<sk>',
+                's3.path.style.access' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+### Aliyun DLF メタストア
+
+<details>
+    <summary>バージョン 3.1+</summary>
+    <Tabs>
+        <TabItem value='DLF 1.0' label='DLF 1.0' default>
+            ```sql
+            CREATE CATALOG paimon_dlf_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'dlf',
+                'warehouse' = 'oss://bucket/p2_regression_case',
+                'dlf.uid' = '772905',
+                'dlf.catalog_id' = 'p2_regression_case',
+                'dlf.region' = 'cn-beijing',
+                'dlf.endpoint' = 'dlf.cn-beijing.aliyuncs.com',
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='DLF(2.5+)' label='DLF(2.5+)'>
+            ```sql
+            CREATE CATALOG paimon_dlf_test PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'rest',
+                'uri' = 'http://cn-beijing-vpc.dlf.aliyuncs.com',
+                'warehouse' = 'new_dfl_paimon_catalog',
+                'paimon.rest.token.provider' = 'dlf',
+                'paimon.rest.dlf.access-key-id' = '<ak>',
+                'paimon.rest.dlf.access-key-secret' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+<details>
+    <summary>バージョン 2.1 と 3.0</summary>
+
+    <Tabs>
+        <TabItem value='DLF 1.0' label='DLF 1.0' default>
+            ```sql
+            CREATE CATALOG paimon_dlf_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'dlf',
+                'warehouse' = 'oss://bucket/paimon-dlf-oss-warehouse',
+                'dlf.uid' = '7716890',
+                'dlf.catalog.id' = 'p2_regression_case',
+                'dlf.region' = 'cn-beijing',
+                'dlf.endpoint' = 'dlf.cn-beijing.aliyuncs.com',
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+### FileSystem メタストア
+
+<details>
+    <summary>バージョン 3.1+</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Kerberos 認証なしで HMS と HDFS のサービスにアクセスする
+            ```sql
+            CREATE CATALOG ctl_test_paimon_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'hdfs://127.0.0.1:8020/user/doris/paimon1',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8020'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG test_paimon_on_fs_aws_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 's3://bucket/paimon_warehouse',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+
+            IAM 引き受けロールを使用して S3 アクセス認証情報を取得する（3.1.2+）
+
+            ```sql
+            CREATE CATALOG paimon_fs_on_s3_iamrole PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
+            );
+            ``` 
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            OSS を使用する
+
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_oss PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'oss://bucket/regression/paimon1',
+                'oss.region'='cn-beijing',
+                'oss.endpoint'='oss-cn-beijing.aliyuncs.com',
+                'oss.access_key'='<ak>',
+                'oss.secret_key'='<sk>'
+            );
+            ```
+
+            OSS-HDFS を使用する
+
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_oss_hdfs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'oss://bucket/regression/paimon1',
+                'fs.oss-hdfs.support' = 'true',
+                'oss.hdfs.access_key' = '<ak>',
+                'oss.hdfs.secret_key' = '<sk>',
+                'oss.hdfs.endpoint' = 'cn-beijing.oss-dls.aliyuncs.com',
+                'oss.hdfs.region' = 'cn-beijing'
+            );
+            ```
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_cosn PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'cosn://bucket/regression/paimon1',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_obs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'obs://bucket/regression/paimon1',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='GCS' label='GCS'>
+            ```sql
+            CREATE CATALOG paimon_on_gcs_s3_fs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 's3://bucket/paimon_warehouse',
+                'fs.gcs.support' = 'true',
+                'gs.secret_key' = '<sk>',
+                'gs.access_key' = '<ak>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG test_paimon_minio_minio PROPERTIES (
+                'type' = 'paimon',
+                'warehouse' = 's3://warehouse/wh',
+                'fs.minio.support' = 'true',
+                'minio.endpoint' = 'http://127.0.0.1:19001',
+                'minio.access_key' = 'admin',
+                'minio.secret_key' = 'password',
+                'minio.use_path_style' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+<details>
+    <summary>バージョン 2.1 と 3.0</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Kerberos 認証なしで HMS と HDFS のサービスにアクセスする
+            ```sql
+            CREATE CATALOG ctl_test_paimon_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'hdfs://127.0.0.1:8020/user/doris/paimon1',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8020'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG test_paimon_on_fs_aws_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 's3://bucket/paimon_warehouse',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            OSS を使用する
+
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_oss PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'oss://bucket/regression/paimon1',
+                'oss.region'='cn-beijing',
+                'oss.endpoint'='oss-cn-beijing.aliyuncs.com',
+                'oss.access_key'='<ak>',
+                'oss.secret_key'='<sk>'
+            );
+            ```
+
+            OSS-HDFS を使用する
+
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_oss_hdfs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'oss://bucket/regression/paimon1',
+                'oss.hdfs.enabled' = 'true',
+                'oss.access_key' = 'your-access-key',
+                'oss.secret_key' = 'your-secret-key',
+                'oss.endpoint' = 'cn-hangzhou.oss-dls.aliyuncs.com',
+                'oss.region' = 'cn-hangzhou'
+            );
+            ```
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_cosn PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'cosn://bucket/regression/paimon1',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_obs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'obs://bucket/regression/paimon1',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_minio PROPERTIES (
+                'type' = 'paimon',
+                'warehouse' = 's3://warehouse/wh',
+                'paimon.catalog.type' = 'filesystem',
+                's3.endpoint' = 'http://127.0.0.1:19001',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.path.style.access' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+### Paimon JDBC Catalog
+
+:::tip 注意
+これはバージョン 4.1.0 以降でサポートされる実験的な機能です。
+:::
+
+<details>
+    <summary>バージョン 4.1+</summary>
+    <Tabs>
+        <TabItem value='PostgreSQL' label='PostgreSQL' default>
+            メタデータストアに PostgreSQL、ストレージに S3 を使用する
+            ```sql
+            CREATE CATALOG paimon_jdbc_postgresql PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'jdbc',
+                'paimon.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/paimon_db',
+                'paimon.jdbc.user' = 'paimon_user',
+                'paimon.jdbc.password' = 'password',
+                'paimon.jdbc.driver_class' = 'org.postgresql.Driver',
+                'paimon.jdbc.driver_url' = '<jdbc_driver_jar>',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MySQL' label='MySQL'>
+            メタデータストアに MySQL、ストレージに S3 を使用する
+            ```sql
+            CREATE CATALOG paimon_jdbc_mysql PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'jdbc',
+                'paimon.jdbc.uri' = 'jdbc:mysql://127.0.0.1:3306/paimon_db',
+                'paimon.jdbc.user' = 'paimon_user',
+                'paimon.jdbc.password' = 'password',
+                'paimon.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
+                'paimon.jdbc.driver_url' = '<jdbc_driver_jar>',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+## 書き込み操作
+
+Doris では Paimon テーブルを作成、変更し、データを書き込めます。書き込みが成功するたびに Paimon スナップショットとしてコミットされます。文が失敗した場合、Doris は部分的なスナップショットを公開しません。
+
+### 始める前に
+
+データを書き込む前に、次の点を確認してください。
+
+* すべての FE ノードと BE ノードで、Paimon の書き込みをサポートする Doris ビルドが稼働している必要があります。古い BE ノードが残っているローリングアップグレード中は、Paimon に書き込まないでください。
+* Catalog の認証情報には、メタストアを更新し、ウェアハウス内のファイルを作成、書き込み、名前変更、削除する権限が必要です。具体的な権限はメタストアとストレージシステムによって異なります。
+* 書き込みが適用されるのは通常の Paimon データテーブルだけです。ブランチ、タグ、スナップショット、タイムスタンプを選択する Paimon システムテーブルやテーブル参照は読み取り専用です。
+
+### サポートされる SQL
+
+| 操作 | サポート内容と注意事項 |
+| --- | --- |
+| データベース DDL | `CREATE DATABASE` と `DROP DATABASE` |
+| テーブル DDL | `CREATE TABLE`、`CREATE TABLE AS SELECT`、`DROP TABLE` |
+| スキーマ変更 | 列の追加、削除、名前変更、並べ替え、変更 |
+| データの追加 | `INSERT INTO ... VALUES` と `INSERT INTO ... SELECT` |
+| データの上書き | テーブル全体、静的パーティション、動的パーティションの `INSERT OVERWRITE` |
+| 行単位の変更 | 以下の制約に従う、主キーテーブルに対する `DELETE`、`UPDATE`、`MERGE INTO` |
+
+### クイックスタート
+
+次の例では主キーテーブルを作成してデータを書き込みます。Paimon テーブルのオプションは `PROPERTIES` に指定します。Doris の `DISTRIBUTE BY` 句は追加しないでください。
+
+```sql
+SWITCH paimon_ctl;
+CREATE DATABASE IF NOT EXISTS sales;
+USE sales;
+
+CREATE TABLE orders (
+    order_id BIGINT NOT NULL,
+    customer STRING NULL,
+    amount DECIMAL(12, 2) NULL,
+    status STRING NULL
+) ENGINE=paimon
+PROPERTIES (
+    'primary-key' = 'order_id',
+    'bucket' = '2',
+    'bucket-key' = 'order_id'
+);
+
+INSERT INTO orders VALUES
+    (1, 'Alice', 99.90, 'NEW'),
+    (2, 'Bob', 35.00, 'NEW');
+
+UPDATE orders
+SET status = 'PAID'
+WHERE order_id = 1;
+
+DELETE FROM orders
+WHERE order_id = 2;
+
+SELECT * FROM orders ORDER BY order_id;
+```
+
+結果:
+
+```text
++----------+----------+--------+--------+
+| order_id | customer | amount | status |
++----------+----------+--------+--------+
+|        1 | Alice    |  99.90 | PAID   |
++----------+----------+--------+--------+
+```
+
+Doris からテーブルのスキーマを変更し、新しいスキーマで書き込みを続けることもできます。
+
+```sql
+ALTER TABLE orders ADD COLUMN note STRING NULL;
+ALTER TABLE orders RENAME COLUMN note order_note;
+```
+
+### データの挿入と上書き
+
+`INSERT INTO` は、追加専用テーブルには行を追加し、主キーテーブルにはその Paimon オプションに従って行をマージします。入力には `VALUES`、Doris の内部テーブル、または別の外部テーブルを使用できます。
+
+```sql
+INSERT INTO paimon_ctl.sales.orders
+SELECT order_id, customer, amount, status
+FROM internal.sales.new_orders;
+```
+
+パーティションのないテーブルでは、`INSERT OVERWRITE` は既存のすべての行を置き換えます。したがって、入力が空の場合はテーブルも空になります。
+
+```sql
+INSERT OVERWRITE TABLE paimon_ctl.sales.orders
+SELECT order_id, customer, amount, status
+FROM internal.sales.orders_snapshot;
+```
+
+パーティションテーブルでは、次のいずれかの形式を使用します。
+
+```sql
+-- Replace only the specified partition. The SELECT list omits the static partition column.
+INSERT OVERWRITE TABLE paimon_ctl.sales.daily_orders
+PARTITION (order_date = '2026-10-08')
+SELECT order_id, customer, amount, status
+FROM internal.sales.daily_orders_stage;
+
+-- Dynamic overwrite replaces the partitions present in the input and keeps other partitions.
+INSERT OVERWRITE TABLE paimon_ctl.sales.daily_orders
+SELECT order_id, customer, amount, status, order_date
+FROM internal.sales.daily_orders_stage;
+```
+
+主キーテーブルで非キー列を省略した挿入ができるのは、`merge-engine` が `partial-update` の場合だけです。
+追加専用テーブルでは、省略した列にはデフォルト値が使用され、NULL が許可されている場合は `NULL` が使用されます。
+
+### データの削除、更新、マージ
+
+行単位の変更には Paimon の主キーテーブルが必要です。デフォルトの `deduplicate` マージエンジンを使用するテーブルでは、Doris は次の操作をサポートします。
+
+```sql
+DELETE FROM paimon_ctl.sales.orders
+WHERE order_id = 10;
+
+UPDATE paimon_ctl.sales.orders
+SET amount = amount * 0.9,
+    status = 'DISCOUNTED'
+WHERE order_id = 20;
+
+MERGE INTO paimon_ctl.sales.orders t
+USING internal.sales.order_changes s
+ON t.order_id = s.order_id
+WHEN MATCHED AND s.action = 'DELETE' THEN DELETE
+WHEN MATCHED THEN UPDATE SET
+    customer = s.customer,
+    amount = s.amount,
+    status = s.status
+WHEN NOT MATCHED THEN INSERT (order_id, customer, amount, status)
+    VALUES (s.order_id, s.customer, s.amount, s.status);
+```
+
+次の制約は、Paimon が行の変更を適用する方法によるものです。
+
+* `UPDATE` では、主キー列または `sequence.field` で設定した列を変更できません。
+* `UPDATE` は、`MERGE` の更新アクションを含め、`deduplicate` マージエンジンでのみサポートされ、`changelog-producer=input` には対応していません。
+* パーティション列を更新するには、動的バケットテーブル（`bucket=-1`）で `ignore-delete=false` を設定する必要があります。
+* `DELETE` は、`MERGE` の削除アクションを含め、`ignore-delete=false` が必要です。デフォルトの `deduplicate` エンジンはこれを直接サポートします。`partial-update` テーブルでは `partial-update.remove-record-on-delete=true`、`aggregation` テーブルでは `aggregation.remove-record-on-delete=true` も設定する必要があります。
+* `rowkind.field` を設定したテーブルでは、これらの行単位の文はサポートされません。`cross-partition-upsert.index-ttl` を設定した動的バケットテーブルでもサポートされません。
+* `MERGE` 文では、含まれるアクションに応じて、対応する `UPDATE` と `DELETE` の制約が適用されます。
+
+結果を予測可能にするため、`MERGE` の入力側では照合キーが一意になるようにしてください。複数の入力行が同じ対象行に一致する文は Doris が拒否します。
+
+### 運用上の注意
+
+* 主キー、パーティション、バケット、マージエンジン、ファイル形式、コンパクションなどの物理的な動作は、Paimon テーブルのプロパティとして設定します。Doris は Paimon SDK を使用してこれらのオプションを検証します。
+* Doris は現在、Paimon テーブルに対する汎用の `ALTER TABLE ... SET TBLPROPERTIES` 操作を提供していません。作成後にテーブルプロパティを変更するには、別の Paimon エンジンを使用し、その後 Doris で `REFRESH TABLE` または `REFRESH CATALOG` を実行します。
+* 各 BE に書き込み時のスピルに十分なローカルディスク容量を確保し、ウェアハウス内の一時ファイルとコミット操作に必要な権限を付与してください。BE の設定項目 `paimon_jni_writer_memory_pool_limit_bytes` は、各 Paimon JNI ライターが使用するメモリプールを制限します。デフォルトは 512 MB です。
+* 書き込みまたはスキーマ変更が成功すると、新しい Doris 文はコミット済みの Paimon スナップショットを読み込みます。実行中の文は、開始時に選択したスナップショットを引き続き使用します。
+
+## クエリ操作
+
+### 基本的なクエリ
+
+Catalog の設定後、次のように Catalog 内のテーブルデータをクエリできます。
+
+```sql
+-- 1. Switch to catalog, use database, and query
+SWITCH paimon_ctl;
+USE paimon_db;
+SELECT * FROM paimon_tbl LIMIT 10;
+
+-- 2. Use Paimon database directly
+USE paimon_ctl.paimon_db;
+SELECT * FROM paimon_tbl LIMIT 10;
+
+-- 3. Use fully qualified name to query
+SELECT * FROM paimon_ctl.paimon_db.paimon_tbl LIMIT 10;
+```
+
+### バッチ増分クエリ
+
+> バージョン 3.1.0 以降
+
+Paimon に対して、Flink と同様の[バッチ増分クエリ](https://paimon.apache.org/docs/master/flink/sql-query/#batch-incremental)をサポートします。
+
+指定したスナップショットまたはタイムスタンプの区間にある増分データをクエリできます。区間は左閉右開です。
+
+```sql
+-- between snapshots [0, 5)
+SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5');
+
+-- between snapshots [0, 5) with specified scan mode
+SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5', 'incrementalBetweenScanMode'='diff');
+
+-- read from start timestamp
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000');
+
+-- read between timestamp
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000', 'endTimestamp'='1750944949000');
+```
+
+パラメータ:
+
+| パラメータ | 説明 | 例 |
+| --- | --- | --- |
+| `startSnapshotId` | 開始スナップショット ID。0 より大きい値を指定します。`endSnapshotId` と併せて指定する必要があります。 | `'startSnapshotId'='3'` |
+| `endSnapshotId` | 終了スナップショット ID。`startSnapshotId` より大きい値を指定します。`startSnapshotId` と併せて指定する必要があります。 | `'endSnapshotId'='10'` |
+| `incrementalBetweenScanMode` | 増分読み取りモードを指定します。デフォルトは `auto` で、`delta`、`changelog`、`diff` をサポートします。 | `'incrementalBetweenScanMode'='delta'` |
+| `startTimestamp` | 開始スナップショットのタイムスタンプ。0 以上を指定します。単位はミリ秒です。 | `'startTimestamp'='1750844949000'` |
+| `endTimestamp` | 終了スナップショットのタイムスタンプ。`startTimestamp` より大きい値を指定します。省略した場合は `startTimestamp` から最新のスナップショットまで読み取ります。単位はミリ秒です。 | `'endTimestamp'='1750944949000'` |
+
+:::tip 注意
+`startSnapshotId` と `endSnapshotId` は、Paimon パラメータ `'incremental-between'='3,10'` を構成します。
+
+`startTimestamp` と `endTimestamp` は、Paimon パラメータ `'incremental-between-timestamp'='1750844949000,1750944949000'` を構成します。
+
+`incrementalBetweenScanMode` は、Paimon パラメータ `incremental-between-scan-mode` に対応します。
+:::
+
+これらのパラメータの詳細については、[Paimon のドキュメント](https://paimon.apache.org/docs/master/maintenance/configurations/)を参照してください。
+
+### タイムトラベル
+
+> バージョン 3.1.0 以降
+
+Paimon テーブルの指定したスナップショットを読み取れます。
+
+デフォルトでは、読み取りリクエストは最新バージョンのスナップショットのみを読み取ります。
+
+`$snapshots` テーブル関数を使用して、指定した Paimon テーブルのスナップショットをクエリできます。
+
+```sql
+Doris > SELECT snapshot_id,commit_time FROM paimon_tbl$snapshots;
++-------------+-------------------------+
+| snapshot_id | commit_time             |
++-------------+-------------------------+
+|           1 | 2025-08-17 06:05:52.740 |
+|           2 | 2025-08-17 06:05:52.979 |
+|           3 | 2025-08-17 06:05:53.240 |
+|           4 | 2025-08-17 06:05:53.561 |
++-------------+-------------------------+
+```
+
+`FOR TIME AS OF` と `FOR VERSION AS OF` 文を使用すると、スナップショット ID またはスナップショットの作成時刻に基づいて過去のバージョンのデータを読み取れます。例:
+
+```sql
+-- Notice: Before 3.1.1, only support format like YYYY-MM-DD HH:MM:SS.SSS
+-- After 3.1.2, support YYYY-MM-DD HH:MM:SS and YYYY-MM-DD
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52.740";
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52";
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17";
+
+-- Notice: The timestamp must be precise down to the millisecond.
+SELECT * FROM paimon_tbl FOR TIME AS OF 1755381952740;
+-- Use snapshot id
+SELECT * FROM paimon_tbl FOR VERSION AS OF 1;
+```
+
+#### `@options` を使用したタイムトラベル {#time-travel-with-options}
+
+Paimon 固有のセレクターは、クエリのリレーションに `@options` を指定して使用します。Doris は `scan.snapshot-id`、`scan.tag-name`、`scan.version`、`scan.timestamp`、`scan.timestamp-millis`、`scan.watermark`、`scan.file-creation-time-millis`、`scan.creation-time-millis`、`scan.mode` を受け付けます。選択したスナップショットまたはタグに対応する過去のスキーマも選択されます。Doris が過去のデータに最新のスキーマを結び付けることはありません。
+
+```sql
+-- Read snapshot 1 with the schema stored for snapshot 1.
+SELECT id, old_name
+FROM paimon_tbl@options('scan.snapshot-id' = '1');
+
+-- A retained tag remains readable even after its ordinary snapshot expires.
+SELECT id, old_name
+FROM paimon_tbl@options('scan.tag-name' = 'tag1');
+```
+
+一つのテーブル参照に指定できる開始位置オプションは一つだけです。`scan.mode` を開始位置と組み合わせられるのは、Paimon がその組み合わせを許可している場合だけです。たとえば、`scan.mode='from-creation-timestamp'` には `scan.creation-time-millis` が必要です。存在しない、または期限切れのスナップショット、ブランチ、タグを指定した場合、最新のテーブルに暗黙にフォールバックせず、明示的にエラーになります。`@options` 構文はクエリのリレーションで使用でき、ビュー定義にも保存できますが、CTE 参照や `SHOW` などのクエリ以外のコマンドには適用できません。
+
+### ブランチとタグ
+
+> バージョン 3.1.0 以降
+
+指定した Paimon テーブルのブランチとタグを読み取れます。
+
+`$branches` および `$tags` システムテーブルを使用して、Paimon テーブルのブランチとタグを確認できます。
+
+```
+Doris > SELECT * FROM paimon_tbl$branches;
++-------------+-------------------------+
+| branch_name | create_time             |
++-------------+-------------------------+
+| b_1         | 2025-08-17 06:34:37.294 |
+| b_2         | 2025-08-17 06:34:37.297 |
++-------------+-------------------------+
+
+Doris > SELECT * FROM paimon_tbl$tags;
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+| tag_name | snapshot_id | schema_id | commit_time             | record_count | create_time | time_retained |
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+| t_1      |           1 |         0 | 2025-08-17 06:05:52.740 |            3 | NULL        | NULL          |
+| t_2      |           2 |         0 | 2025-08-17 06:05:52.979 |            6 | NULL        | NULL          |
+| t_3      |           3 |         0 | 2025-08-17 06:05:53.240 |            9 | NULL        | NULL          |
+| t_4      |           4 |         0 | 2025-08-17 06:05:53.561 |           12 | NULL        | NULL          |
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+```
+
+Spark や Trino などのシステムとの互換性を保つため、複数の構文形式をサポートします。
+
+```sql
+-- BRANCH
+SELECT * FROM paimon_tbl@branch(branch1);
+SELECT * FROM paimon_tbl@branch("name" = "branch1");
+
+-- TAG
+SELECT * FROM paimon_tbl@tag(tag1);
+SELECT * FROM paimon_tbl@tag("name" = "tag1");
+SELECT * FROM paimon_tbl FOR VERSION AS OF 'tag1';
+```
+
+`FOR VERSION AS OF` 構文では、Doris は指定されたパラメータがタイムスタンプかどうかを自動的に判定します
+
+## システムテーブル
+
+> バージョン 3.1.0 以降
+
+Doris では Paimon のシステムテーブルをクエリして、テーブルに関するメタデータを取得できます。システムテーブルでは、スナップショットの履歴、マニフェストファイル、データファイル、パーティションなどの情報を確認できます。
+
+Paimon テーブルのメタデータにアクセスするには、テーブル名の後に `$` とシステムテーブル名を付けます。
+
+```sql
+SELECT * FROM my_table$system_table_name;
+```
+
+`audit_log`、`binlog`、`manifests`、`partitions`、`ro`、`row_tracking`、`table_indexes` の各システムテーブルでは、リレーションの `@options` を指定できます。選択したスナップショットまたはタグは、システムテーブルの行に適用されます。元テーブルの列を公開するシステムテーブルでは、対応する過去の元テーブルのスキーマにも適用されます。
+
+```sql
+SELECT rowkind, id, old_name
+FROM paimon_tbl$audit_log@options('scan.tag-name' = 'tag1');
+```
+
+その他のシステムテーブルは、行を生成するすべての段階で選択したスナップショットが参照されることを保証できないため、`@options` を受け付けません。また、Paimon のシステムテーブルは `scan.file-creation-time-millis` を受け付けません。このファイルフィルターを黙って無視すると、指定した範囲外の行が返される可能性があるためです。
+
+:::info 注意
+Doris は Paimon のグローバルシステムテーブルの読み取りには対応していません。これらは Flink でのみサポートされています。
+:::
+
+### schemas
+
+テーブルの現在および過去のスキーマ情報を表示します。`ALTER TABLE`、`CREATE TABLE AS`、`CREATE DATABASE AS` 文でテーブルのスキーマを変更すると、その都度 schemas テーブルにレコードが生成されます。
+
+```sql
+SELECT * FROM my_table$schemas;
+```
+
+結果:
+```text
++-----------+--------------------------------------------------------------------------------------------------------------------+----------------+--------------+---------+---------+-------------------------+
+| schema_id | fields                                                                                                             | partition_keys | primary_keys | options | comment | update_time             |
++-----------+--------------------------------------------------------------------------------------------------------------------+----------------+--------------+---------+---------+-------------------------+
+|         0 | [{"id":0,"name":"k","type":"INT NOT NULL"},{"id":1,"name":"f0","type":"INT"},{"id":2,"name":"f1","type":"STRING"}] | []             | ["k"]        | {}      |         | 2025-03-04 22:48:41.666 |
++-----------+--------------------------------------------------------------------------------------------------------------------+----------------+--------------+---------+---------+-------------------------+
+```
+
+### snapshots
+
+テーブルの有効なすべてのスナップショットについて、作成時刻、コミットしたユーザー、操作の種類などの情報を表示します。
+
+```sql
+SELECT * FROM my_table$snapshots;
+```
+
+結果:
+```text
++-------------+-----------+--------------------------------------+---------------------+-------------+-------------------------+------------------------------------------------------+------------------------------------------------------+-------------------------+--------------------+--------------------+------------------------+----------------------+
+| snapshot_id | schema_id | commit_user                          | commit_identifier   | commit_kind | commit_time             | base_manifest_list                                   | delta_manifest_list                                  | changelog_manifest_list | total_record_count | delta_record_count | changelog_record_count | watermark            |
++-------------+-----------+--------------------------------------+---------------------+-------------+-------------------------+------------------------------------------------------+------------------------------------------------------+-------------------------+--------------------+--------------------+------------------------+----------------------+
+|           1 |         0 | d7ea4996-92c7-469f-b9ff-c76525954f1c | 9223372036854775807 | APPEND      | 2025-03-04 22:48:45.575 | manifest-list-dc5490ba-420c-445a-b6f7-6962d394935c-0 | manifest-list-dc5490ba-420c-445a-b6f7-6962d394935c-1 | NULL                    |                  1 |                  1 |                      0 | -9223372036854775808 |
+|           2 |         0 | 34de47f6-31d1-4f06-b378-c85ef4fbca41 | 9223372036854775807 | APPEND      | 2025-07-01 23:11:35.406 | manifest-list-dca6aa5b-6fc6-4b4f-ac22-acfa15bbf171-0 | manifest-list-dca6aa5b-6fc6-4b4f-ac22-acfa15bbf171-1 | NULL                    |                  2 |                  1 |                      0 | -9223372036854775808 |
+|           3 |         0 | 89f67183-a1f8-4ee9-b73c-3f7e992b79a7 | 9223372036854775807 | APPEND      | 2025-07-01 23:11:45.114 | manifest-list-6d624d1b-c774-4d95-905e-8258a7b89ecb-0 | manifest-list-6d624d1b-c774-4d95-905e-8258a7b89ecb-1 | NULL                    |                  3 |                  1 |                      0 | -9223372036854775808 |
+|           4 |         0 | 31924a7c-1389-490c-adf1-3bb805b33cd7 | 9223372036854775807 | APPEND      | 2025-07-01 23:12:42.042 | manifest-list-09097a51-afde-485e-929b-d2cc39eb6eb2-0 | manifest-list-09097a51-afde-485e-929b-d2cc39eb6eb2-1 | NULL                    |                  5 |                  2 |                      0 | -9223372036854775808 |
+|           5 |         0 | 1e90a80b-41cb-4242-b97c-889728f76810 | 9223372036854775807 | APPEND      | 2025-07-01 23:14:26.445 | manifest-list-b8471969-9c4d-41cd-b790-64f6efb2d142-0 | manifest-list-b8471969-9c4d-41cd-b790-64f6efb2d142-1 | NULL                    |                  6 |                  1 |                      0 | -9223372036854775808 |
+|           6 |         0 | 1e90a80b-41cb-4242-b97c-889728f76810 | 9223372036854775807 | COMPACT     | 2025-07-01 23:14:29.317 | manifest-list-b8471969-9c4d-41cd-b790-64f6efb2d142-2 | manifest-list-b8471969-9c4d-41cd-b790-64f6efb2d142-3 | NULL                    |                  5 |                 -1 |                      0 | -9223372036854775808 |
++-------------+-----------+--------------------------------------+---------------------+-------------+-------------------------+------------------------------------------------------+------------------------------------------------------+-------------------------+--------------------+--------------------+------------------------+----------------------+
+```
+
+### options
+
+テーブルの現在の設定オプションを表示します。テーブル内に含まれていないオプションには、デフォルト値が設定されています。
+
+```sql
+SELECT * FROM my_table$options;
+```
+
+結果:
+```text
++------------------------+--------------------+
+|         key            |        value       |
++------------------------+--------------------+
+| snapshot.time-retained |         5 h        |
++------------------------+--------------------+
+```
+
+### files
+
+現在のスナップショットが参照するすべてのデータファイルについて、ファイル形式、レコード数、ファイルサイズなどの情報を表示します。
+
+```sql
+SELECT * FROM my_table$files;
+```
+
+結果:
+```text
+mysql> SELECT * FROM my_table$files;
++-----------+--------+------------------------------------------------------------------------------------------------------------------------+-------------+-----------+-------+--------------+--------------------+---------+---------+-------------------+---------------------+---------------------+---------------------+---------------------+-------------------------+-------------+
+| partition | bucket | file_path                                                                                                              | file_format | schema_id | level | record_count | file_size_in_bytes | min_key | max_key | null_value_counts | min_value_stats     | max_value_stats     | min_sequence_number | max_sequence_number | creation_time           | file_source |
++-----------+--------+------------------------------------------------------------------------------------------------------------------------+-------------+-----------+-------+--------------+--------------------+---------+---------+-------------------+---------------------+---------------------+---------------------+---------------------+-------------------------+-------------+
+| {}        |      0 | s3://paimon-warehouse-dev/test-flink/cookbook.db/my_table/bucket-0/data-b4a49c57-6ef6-4c04-8813-07a4960d987c-0.parquet | parquet     |         0 |     5 |            5 |               1321 | [1]     | [6]     | {f0=0, f1=0, k=0} | {f0=4, f1=111, k=1} | {f0=11, f1=k7, k=6} |                   0 |                   5 | 2025-07-01 23:14:23.967 | COMPACT     |
++-----------+--------+------------------------------------------------------------------------------------------------------------------------+-------------+-----------+-------+--------------+--------------------+---------+---------+-------------------+---------------------+---------------------+---------------------+---------------------+-------------------------+-------------+
+```
+
+### tags
+
+テーブルのすべてのタグについて、タグ名と関連するスナップショットの情報を表示します。
+
+```sql
+SELECT * FROM my_table$tags;
+```
+
+結果:
+```text
++----------+-------------+-----------+-------------------------+--------------+--------------+
+| tag_name | snapshot_id | schema_id |             commit_time | record_count |   branches   |
++----------+-------------+-----------+-------------------------+--------------+--------------+
+|     tag1 |           1 |         0 | 2025-03-04 14:55:29.344 |            3 |      []      |
+|     tag3 |           3 |         0 | 2025-03-04 14:58:24.691 |            7 |  [branch-1]  |
++----------+-------------+-----------+-------------------------+--------------+--------------+
+```
+
+### branches
+
+テーブルで認識されているすべてのブランチの情報を表示します。
+
+```sql
+SELECT * FROM my_table$branches;
+```
+
+結果:
+```text
++----------------------+-------------------------+
+|          branch_name |             create_time |
++----------------------+-------------------------+
+|              branch1 | 2025-03-04 20:31:39.084 |
+|              branch2 | 2025-03-04 21:11:14.373 |
++----------------------+-------------------------+
+```
+
+### consumers
+
+データの消費状況を追跡するための、テーブルのコンシューマー情報を表示します。
+
+```sql
+SELECT * FROM my_table$consumers;
+```
+
+結果:
+```text
++-------------+------------------+
+| consumer_id | next_snapshot_id |
++-------------+------------------+
+|         id1 |                1 |
+|         id2 |                3 |
++-------------+------------------+
+```
+
+### manifests
+
+テーブルの現在のスナップショットのマニフェストファイル情報を表示します。
+
+```sql
+SELECT * FROM my_table$manifests;
+```
+
+結果:
+```text
++-------------------------------------------------+-----------+-----------------+-------------------+-----------+---------------------+---------------------+
+| file_name                                       | file_size | num_added_files | num_deleted_files | schema_id | min_partition_stats | max_partition_stats |
++-------------------------------------------------+-----------+-----------------+-------------------+-----------+---------------------+---------------------+
+| manifest-3df9bb64-5c11-4aef-994e-d8717fedfc70-0 |      1949 |               1 |                 0 |         0 | {}                  | {}                  |
+| manifest-d7eb4ec4-7238-478a-9ae6-91a4ccebd561-0 |      1946 |               1 |                 0 |         0 | {}                  | {}                  |
+| manifest-3b6f4079-c893-4413-aedc-1e8fbcea6db1-0 |      1948 |               1 |                 0 |         0 | {}                  | {}                  |
+| manifest-abe5177f-82da-4e86-9864-40efffb391bd-0 |      1964 |               1 |                 0 |         0 | {}                  | {}                  |
+| manifest-ee89dff3-a523-4655-a4b8-d7c9e471a1d6-0 |      1949 |               1 |                 0 |         0 | {}                  | {}                  |
+| manifest-ee89dff3-a523-4655-a4b8-d7c9e471a1d6-1 |      2232 |               1 |                 5 |         0 | {}                  | {}                  |
++-------------------------------------------------+-----------+-----------------+-------------------+-----------+---------------------+---------------------+
+```
+
+### aggregation_fields
+
+集計テーブルのフィールド設定に使用する、テーブルの集計フィールド情報を表示します。
+
+```sql
+SELECT * FROM my_table$aggregation_fields;
+```
+
+結果:
+```text
++------------+--------------+----------+------------------+---------+
+| field_name | field_type   | function | function_options | comment |
++------------+--------------+----------+------------------+---------+
+| k          | INT NOT NULL | []       | []               | NULL    |
+| f0         | INT          | []       | []               | NULL    |
+| f1         | STRING       | []       | []               | NULL    |
++------------+--------------+----------+------------------+---------+
+```
+
+### partitions
+
+テーブルの各パーティションについて、総レコード数と合計ファイルサイズを含む情報を表示します。
+
+```sql
+SELECT * FROM my_table$partitions;
+```
+
+結果:
+```text
++-----------+--------------+--------------------+------------+-------------------------+
+| partition | record_count | file_size_in_bytes | file_count | last_update_time        |
++-----------+--------------+--------------------+------------+-------------------------+
+| {}        |            5 |               1321 |          1 | 2025-07-01 23:14:23.967 |
++-----------+--------------+--------------------+------------+-------------------------+
+```
+
+### buckets
+
+各バケットの統計情報を含む、テーブルのバケット情報を表示します。
+
+```sql
+SELECT * FROM my_table$buckets;
+```
+
+結果:
+```text
++-----------+--------+--------------+--------------------+------------+-------------------------+
+| partition | bucket | record_count | file_size_in_bytes | file_count | last_update_time        |
++-----------+--------+--------------+--------------------+------------+-------------------------+
+| {}        |      0 |            5 |               1321 |          1 | 2025-07-01 23:14:23.967 |
++-----------+--------+--------------+--------------------+------------+-------------------------+
+```
+
+### statistics
+
+行数、データサイズなどを含む、テーブルの統計情報を表示します。
+
+```sql
+SELECT * FROM my_table$statistics;
+```
+
+結果:
+```text
++--------------+------------+-----------------------+------------------+----------+
+|  snapshot_id |  schema_id |     mergedRecordCount | mergedRecordSize |  colstat |
++--------------+------------+-----------------------+------------------+----------+
+|            2 |          0 |              2        |         2        |    {}    |
++--------------+------------+-----------------------+------------------+----------+
+```
+
+### table_indexes
+
+テーブルのインデックス情報を表示します。
+
+```sql
+SELECT * FROM my_table$table_indexes;
+```
+
+結果:
+```text
++--------------------------------+-------------+--------------------------------+--------------------------------+----------------------+----------------------+--------------------------------+
+|                      partition |      bucket |                     index_type |                      file_name |            file_size |            row_count |                      dv_ranges |
++--------------------------------+-------------+--------------------------------+--------------------------------+----------------------+----------------------+--------------------------------+
+|                   {2025-03-01} |           0 |                           HASH | index-70abfebf-149e-4796-9f... |                   12 |                    3 |                         <NULL> |
+|                   {2025-04-01} |           0 |               DELETION_VECTORS | index-633857e7-cdce-47d2-87... |                   33 |                    1 | [(data-346cb9c8-4032-4d66-a... |
++--------------------------------+-------------+--------------------------------+--------------------------------+----------------------+----------------------+--------------------------------+
+```
+
+### システムテーブルの使用例
+
+システムテーブルを使うと、次の操作や監視を簡単に行えます。
+
+#### テーブルの最新スナップショットを確認して現在の状態を把握する
+
+```sql
+SELECT snapshot_id, commit_time, commit_kind, total_record_count FROM catalog_sales$snapshots ORDER BY snapshot_id DESC;
+```
+結果:
+
+```text
++-------------+-------------------------+-------------+--------------------+
+| snapshot_id | commit_time             | commit_kind | total_record_count |
++-------------+-------------------------+-------------+--------------------+
+|           1 | 2025-07-01 21:21:54.179 | APPEND      |           14329288 |
++-------------+-------------------------+-------------+--------------------+
+```
+
+#### スナップショットのテーブル情報を確認する
+
+```sql
+SELECT s.snapshot_id, t.schema_id, t.fields FROM store_sales$snapshots s JOIN store_sales$schemas t ON s.schema_id=t.schema_id;
+```
+
+結果:
+
+```text
++-------------+-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| snapshot_id | schema_id | fields                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
++-------------+-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|           1 |         0 | [{"id":0,"name":"ss_sold_date_sk","type":"INT"},{"id":1,"name":"ss_item_sk","type":"INT NOT NULL"},{"id":2,"name":"ss_ticket_number","type":"INT NOT NULL"},{"id":3,"name":"ss_sold_time_sk","type":"INT"},{"id":4,"name":"ss_customer_sk","type":"INT"},{"id":5,"name":"ss_cdemo_sk","type":"INT"},{"id":6,"name":"ss_hdemo_sk","type":"INT"},{"id":7,"name":"ss_addr_sk","type":"INT"},{"id":8,"name":"ss_store_sk","type":"INT"},{"id":9,"name":"ss_promo_sk","type":"INT"},{"id":10,"name":"ss_quantity","type":"INT"},{"id":11,"name":"ss_wholesale_cost","type":"DECIMAL(7, 2)"},{"id":12,"name":"ss_list_price","type":"DECIMAL(7, 2)"},{"id":13,"name":"ss_sales_price","type":"DECIMAL(7, 2)"},{"id":14,"name":"ss_ext_discount_amt","type":"DECIMAL(7, 2)"},{"id":15,"name":"ss_ext_sales_price","type":"DECIMAL(7, 2)"},{"id":16,"name":"ss_ext_wholesale_cost","type":"DECIMAL(7, 2)"},{"id":17,"name":"ss_ext_list_price","type":"DECIMAL(7, 2)"},{"id":18,"name":"ss_ext_tax","type":"DECIMAL(7, 2)"},{"id":19,"name":"ss_coupon_amt","type":"DECIMAL(7, 2)"},{"id":20,"name":"ss_net_paid","type":"DECIMAL(7, 2)"},{"id":21,"name":"ss_net_paid_inc_tax","type":"DECIMAL(7, 2)"},{"id":22,"name":"ss_net_profit","type":"DECIMAL(7, 2)"}] |
+|           2 |         0 | [{"id":0,"name":"ss_sold_date_sk","type":"INT"},{"id":1,"name":"ss_item_sk","type":"INT NOT NULL"},{"id":2,"name":"ss_ticket_number","type":"INT NOT NULL"},{"id":3,"name":"ss_sold_time_sk","type":"INT"},{"id":4,"name":"ss_customer_sk","type":"INT"},{"id":5,"name":"ss_cdemo_sk","type":"INT"},{"id":6,"name":"ss_hdemo_sk","type":"INT"},{"id":7,"name":"ss_addr_sk","type":"INT"},{"id":8,"name":"ss_store_sk","type":"INT"},{"id":9,"name":"ss_promo_sk","type":"INT"},{"id":10,"name":"ss_quantity","type":"INT"},{"id":11,"name":"ss_wholesale_cost","type":"DECIMAL(7, 2)"},{"id":12,"name":"ss_list_price","type":"DECIMAL(7, 2)"},{"id":13,"name":"ss_sales_price","type":"DECIMAL(7, 2)"},{"id":14,"name":"ss_ext_discount_amt","type":"DECIMAL(7, 2)"},{"id":15,"name":"ss_ext_sales_price","type":"DECIMAL(7, 2)"},{"id":16,"name":"ss_ext_wholesale_cost","type":"DECIMAL(7, 2)"},{"id":17,"name":"ss_ext_list_price","type":"DECIMAL(7, 2)"},{"id":18,"name":"ss_ext_tax","type":"DECIMAL(7, 2)"},{"id":19,"name":"ss_coupon_amt","type":"DECIMAL(7, 2)"},{"id":20,"name":"ss_net_paid","type":"DECIMAL(7, 2)"},{"id":21,"name":"ss_net_paid_inc_tax","type":"DECIMAL(7, 2)"},{"id":22,"name":"ss_net_profit","type":"DECIMAL(7, 2)"}] |
++-------------+-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+#### バケットのデータ分布を確認する
+
+```sql
+SELECT `bucket`, COUNT(*) as file_count, SUM(file_size_in_bytes)/1024/1024 as total_size_mb FROM paimon_s3.tpcds.catalog_sales$files GROUP BY `bucket` ORDER BY total_size_mb;
+```
+
+:::info 注意
+Paimon のシステムテーブルには Doris のキーワードと同じ名前のフィールドが多いため、バッククォートで囲む必要があります。
+:::
+
+結果:
+
+```text
++--------+------------+--------------------+
+| bucket | file_count | total_size_mb      |
++--------+------------+--------------------+
+|     35 |          1 | 12.144722938537598 |
+|     81 |          1 | 12.143454551696777 |
+|     37 |          1 |  12.14071273803711 |
+|     36 |          1 | 12.139023780822754 |
+|     63 |          1 | 12.137332916259766 |
+|      7 |          1 | 12.122495651245117 |
+|     15 |          1 | 12.117934226989746 |
+|     11 |          1 | 12.116133689880371 |
+|     12 |          1 |  12.11155891418457 |
+|     46 |          1 | 12.111005783081055 |
++--------+------------+--------------------+
+```
+
+## 付録
+
+### よくある質問
+
+**1. `Could not find a file io implementation for scheme 's3a' in the classpath`**
+
+3.1 より前のバージョンで、HMS をメタデータストアとして使用し、ストレージ側で 's3a' または 's3' プロトコルを使用すると、次のエラーが発生します。
+
+```text
+java.io.UncheckedIOException: org.apache.paimon.fs.UnsupportedSchemeException: Could not find a file io implementation for scheme 's3a' in the classpath. Hadoop FileSystem also cannot access this path 's3a://`.
+```
+
+**バージョン 3.1 より前**
+
+3.1 より前のバージョンは `s3a` プロトコルに対応していません。使用する必要がある場合は、暫定的な回避策として `s3a` 関連のパラメータを追加できます。
+
+**バージョン 3.1 以降**
+
+バージョン 3.1 以降では、`s3a` パラメータを明示的に追加する必要はありません。Paimon のストレージパラメータを上書きする場合は、`paimon.fs.` プレフィックスを付けたパラメータを追加できます。Paimon は内部で HDFS API を使用するため、すべての `fs.s3a.*` パラメータがサポートされています。
+
+例:
+
+```sql
+CREATE CATALOG `paimon_hms_on_s3a` PROPERTIES (
+    "type" = "paimon",
+    "paimon.catalog.type" = "hms",
+    "hive.metastore.uris" = "thrift://172.20.48.119:9383",
+    "warehouse" = "s3a://bucket/paimon_warehouse",
+    "s3.access_key" = "<ak>",
+    "s3.secret_key" = "<sk>",
+    "s3.region" = "ap-east-1",
+    "s3.endpoint" = "https://s3.ap-east-1.amazonaws.com",
+    -- Explicitly add s3a parameters
+    "fs.s3a.access.key" = "<ak>",
+    "fs.s3a.secret.key" = "<sk>",
+    "fs.s3a.endpoint.region" = "ap-east-1",
+    "fs.s3a.endpoint" = "https://s3.ap-east-1.amazonaws.com",
+    "fs.s3a.impl" = "org.apache.hadoop.fs.s3a.S3AFileSystem"
+);
+```
+
+`s3` プロトコルを使用する場合は、Paimon の S3 関連パラメータを明示的に追加する必要があります。つまり、`paimon.` プレフィックスを付けます。例:
+
+```sql
+CREATE CATALOG test_paimon_on_hms_aws_catalog PROPERTIES (
+    'type' = 'paimon',
+    'paimon.catalog.type' = 'hms',
+    'warehouse' = 's3://bucket-hk/paimon_warehouse',
+    'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+    's3.region' = 'ap-east-1',
+    's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+    's3.access_key' = '<ak>',
+    's3.secret_key' = '<sk>',
+    -- Explicitly add Paimon S3 parameters
+    'paimon.s3.region' = 'ap-east-1',
+    'paimon.s3.endpoint' = 'ap-east-1',
+    'paimon.s3.access-key' = '<ak>',
+    'paimon.s3.secret-key' = '<sk>'
+);
+```

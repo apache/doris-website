@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/delete/table-temp-partition",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/delete/table-temp-partition.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/delete/table-temp-partition.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "503636e4d6487d6df488baac0750823056d55385131bb2d6f3a69aade332f590",
+    "sourceTechnicalHash": "2f3446e52f97bbf2d9c4b929b403f71e03e04214c8033a960704713da949b373",
+    "targetHash": "5ac334a1ed3cbc805e21877bd116001007051dd0b02c5613fae452de37dafd4d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.707Z",
+    "glossaryVersion": "0"
+  }
+}

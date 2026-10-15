@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/optimization-technology-principle/query-optimizer",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/optimization-technology-principle/query-optimizer.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/optimization-technology-principle/query-optimizer.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "c6debc8b4b29f3ae2f9847524a2a53328944edff58dd387654c03d7c14ae18b4",
+    "sourceTechnicalHash": "ea54ff4c5be275839294ed4a92c5679867b3693967709a6bf8ae78275ad767a7",
+    "targetHash": "467b116e2668f920991ad771362ac9883f16ef7732e2ccf9efcbf2ff192a6321",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.711Z",
+    "glossaryVersion": "0"
+  }
+}

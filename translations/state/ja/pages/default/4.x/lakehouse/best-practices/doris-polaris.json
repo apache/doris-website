@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-polaris",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-polaris.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-polaris.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "9d209d465a3f19b2a3bb7a547587533daec8edb1847202a3f0fafa8e17f207f4",
+    "sourceTechnicalHash": "8bf879bdee14ef909127a9a37c62a6ebb79d4e38c6d7aa1b9923fa43fb1d8bb7",
+    "targetHash": "9adb796fdf3d682ad25d2d5961debf15e50c66c507b60e12ab7bc1fb97b640a0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.712Z",
+    "glossaryVersion": "0"
+  }
+}

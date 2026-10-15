@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-maxcompute",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-maxcompute.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-maxcompute.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "fc10288f13cfb3584d96da1e727032497995d7c2c5bbd47c3efe4b5d7ed7a687",
+    "sourceTechnicalHash": "3fc2451a87dd722bc00648647c11296dd5efd3fda4779ad65867cd62867c5b5c",
+    "targetHash": "76691e6cab3106185cf4808196d0e30d40dc9509e0ddc58365a32170d61458f2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.713Z",
+    "glossaryVersion": "0"
+  }
+}

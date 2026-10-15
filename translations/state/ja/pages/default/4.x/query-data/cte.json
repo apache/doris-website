@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-data/cte",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-data/cte.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-data/cte.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "928875f4a7adac1f5216eb9af9ea96d5d39d87068163cc96d9aa7f39062aca38",
+    "sourceTechnicalHash": "fd3db12a34df0ff6502fd89d1b936379abb66bf3c53d2fb03f4336a634ce91cf",
+    "targetHash": "8979af7744deb10e3b05b56412d9eeba710706eeefc91633f16e04574ca98545",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.708Z",
+    "glossaryVersion": "0"
+  }
+}

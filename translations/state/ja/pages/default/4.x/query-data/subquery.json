@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-data/subquery",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-data/subquery.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-data/subquery.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "58356bf430fff67a1acd608cd8caad75c8e8f99e1f565e0ca8dcb6c408b34f09",
+    "sourceTechnicalHash": "d47aa60993447639304d19aef8eb5b9058946ab30f4040bd40e8211f7ec30980",
+    "targetHash": "2aa1d4ce8a34f7ae9ca886733d841c9c2a9e38ae11ac6eca758e22b3c2eb5946",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.708Z",
+    "glossaryVersion": "0"
+  }
+}

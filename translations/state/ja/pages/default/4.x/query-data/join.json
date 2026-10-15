@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-data/join",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-data/join.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-data/join.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "b515f4e5ddefeb903d15edbd3083455a71b2a89631d9700b23980627f3de4341",
+    "sourceTechnicalHash": "23ce17013b3ed37dce45a6233c0d1ee7033725e3c3ba90f0b03acb2f142a0e11",
+    "targetHash": "b56cf7ea5c6a39807fa5152ec6855efd28694431c7e199e83ce0f808c6b119a7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.708Z",
+    "glossaryVersion": "0"
+  }
+}
