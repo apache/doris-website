@@ -19,7 +19,9 @@ import { searchResultLimits } from "../../utils/proxiedGeneratedConstants";
 import styles from "./SearchPage.module.css";
 import { normalizeContextByPath } from "../../utils/normalizeContextByPath";
 import {searchWithLocaleFallback} from "../../utils/searchInput";
+import {fetchContextIndexes, searchAcrossContexts} from "../../utils/searchContexts";
 import {isTranslatedLocale} from "../../utils/localization";
+const searchContextsByWorker = searchAcrossContexts(searchByWorker);
 export default function SearchPage() {
     return (<Layout>
       <SearchPageContent />
@@ -49,7 +51,7 @@ function SearchPageContent() {
         updateSearchPath(searchQuery);
         if (searchQuery) {
             (async () => {
-                const results = await searchWithLocaleFallback(searchByWorker, versionUrl, searchContext, searchQuery, searchResultLimits);
+                const results = await searchWithLocaleFallback(searchContextsByWorker, versionUrl, searchContext, searchQuery, searchResultLimits);
                 setSearchResults(results);
             })();
         }
@@ -80,7 +82,7 @@ function SearchPageContent() {
             if (!Array.isArray(searchContextByPaths) ||
                 searchContext ||
                 useAllContextsWithNoSearchContext) {
-                await fetchIndexesByWorker(versionUrl, searchContext);
+                await fetchContextIndexes(fetchIndexesByWorker, versionUrl, searchContext);
             }
             setSearchWorkerReady(true);
         }

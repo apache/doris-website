@@ -10,6 +10,9 @@ async function verify({site,devOnly = false}) {
     assert.equal(manifest.indexedPages,Object.values(manifest.contexts).reduce((a,b)=>a+b,0));
     const indexFiles = ['search-index.json','search-index-docs-dev.json','search-index-docs-4.x.json','search-index-community.json'];
     const indexes = Object.fromEntries(indexFiles.map(file => [file,JSON.parse(fs.readFileSync(path.join(site,'ja',file),'utf8'))]));
+    // "Everywhere" searches each context index in the browser; a union copy at
+    // the root outgrew GitHub's 100 MiB file limit.
+    assert(indexes['search-index.json'].every(section => section.documents.length === 0),'Root index repeats the contexts');
     for (const [file,index] of Object.entries(indexes)) {
         for (const section of index) for (const doc of section.documents) {
             assert(doc.u.startsWith('/ja/'),`Cross-locale result in ${file}: ${doc.u}`);
@@ -57,6 +60,22 @@ async function verify({site,devOnly = false}) {
             results.push({...item,indexRequests:requests,results:links.length});
             await page.close();
         }
+        // Without ctx the page searches "Everywhere": every context index, merged.
+        for (const item of [{query:'SQL',path:'/ja/docs/dev/'},{query:'コミュニティ',path:'/ja/community/'}]) {
+            const everywhere = await browser.newPage();
+            const requests = [];
+            everywhere.on('request',request => {if(request.url().includes('search-index')) requests.push(new URL(request.url()).pathname);});
+            await everywhere.goto(`${origin}/ja/search/?${new URLSearchParams({q:item.query})}`);
+            await everywhere.locator('section article a').first().waitFor({timeout:30000});
+            const links = await everywhere.locator('section article a').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')));
+            const expected = ['docs-dev','docs-4.x','community'].map(ctx => `/ja/search-index-${ctx}.json`);
+            assert(expected.every(file => requests.includes(file)),`Everywhere skipped a context index: ${requests}`);
+            assert(!requests.includes('/ja/search-index.json'),`Everywhere fetched the root index: ${requests}`);
+            assert(links.some(link => link.startsWith(item.path)),`Everywhere missed ${item.path}: ${links.slice(0,10)}`);
+            results.push({everywhereQuery:item.query,results:links.length,indexRequests:requests});
+            await everywhere.close();
+        }
+
         const bar = await browser.newPage();
         const barRequests = [];
         bar.on('request',request => {if(request.url().includes('search-index')) barRequests.push(new URL(request.url()).pathname);});
