@@ -305,6 +305,20 @@ SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
 
 注意：2.1.7+ 仅支持 InvertedIndex V2 属性（文件更少、写入 IOPS 更低，适配存算分离）。2.1.8+ 不再支持离线 Build Index 构建。
 
+自 Doris 4.1.0 起，可通过以下索引属性或 BE 配置项关闭 norms。
+
+VARIANT 路径上的分词索引默认写入 BM25 norms，每行每路径占 1 字节，包括该路径没有值的行。仅用于过滤的路径可通过 `"norms" = "false"` 关闭；不带 `field_pattern` 时，该属性作用于索引覆盖的所有子路径：
+
+```sql
+CREATE TABLE IF NOT EXISTS tbl (
+    k BIGINT,
+    v VARIANT<'body_*' : STRING>,
+    INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*", "norms" = "false")
+);
+```
+
+关闭 norms 不影响 `MATCH` 过滤，但 `score()` 读到缺少 norms 的段时会报错。BE 配置项 `inverted_index_skip_norms_for_variant` 可统一关闭 VARIANT 路径的 norms，详见[记录长度与 norms 属性](../../../../table-design/index/inverted-index/scoring.md#记录长度与-norms-属性)。
+
 ### 索引失效问题
 
 1. 类型变更导致索引丢失：子列类型发生不兼容变更（如 INT→JSONB）会丢失索引。可通过 Schema Template 固定类型与索引。
