@@ -114,6 +114,22 @@ MAP 类型用于存储和处理键值对数据，可以包含各种基本类型�
 | '{   "123":"abc"  }' | Cast to MAP\<int,int\>: {123:null} | "abc" 无法转换成 int 类型，转换为 null |
 | '{ 1:2 ,34, 5:6}' | NULL | 不满足 MAP 的格式 |
 
+#### 嵌套 MAP 中的重复键
+
+将字符串转换为 `MAP`、`ARRAY` 或 `STRUCT` 时，Doris 会删除转换结果中所有 `MAP` 的重复键，包括嵌套在 `ARRAY`、`STRUCT` 或 MAP 值中的 MAP。同一个键出现多次时，保留最后一次出现的值。
+
+```sql
+SELECT CAST('{"outer":[{"a":1,"a":2}]}' AS MAP<STRING, ARRAY<MAP<STRING, INT>>>);
+SELECT CAST('[{"a":1,"a":2}]' AS ARRAY<MAP<STRING, INT>>);
+SELECT CAST('{"m":{"a":1,"a":2}}' AS STRUCT<m:MAP<STRING, INT>>);
+```
+
+```text
+{"outer":[{"a":2}]}
+[{"a":2}]
+{"m":{"a":2}}
+```
+
 ### FROM MAP\<Other Type\>
 
 #### 严格模式
