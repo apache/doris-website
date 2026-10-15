@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/statistics",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/statistics.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/statistics.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "c9e78d2f5b5f2c8097d35686f7f73d10a7f7f23b822316947dd45f57d723e888",
+    "sourceTechnicalHash": "497f73b41c6634e1d44364ddaf75db413876fd3ce5fc4691393fce0591d86323",
+    "targetHash": "5da570b952edef83655e80f9b720c8098b75560107a3b44b1edf21b4ef1a0271",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.745Z",
+    "glossaryVersion": "0"
+  }
+}

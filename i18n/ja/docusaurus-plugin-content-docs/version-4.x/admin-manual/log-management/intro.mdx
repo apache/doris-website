@@ -1,0 +1,29 @@
+---
+{
+    "title": "ログ管理",
+    "language": "ja",
+    "description": "Apache Doris の FE および BE プロセスが生成するログファイルと、その管理方法を紹介します。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# ログ管理
+
+Apache Doris の FE ノードと BE ノードは、複数の種類のログファイルを生成します。この章では、各ログファイルの内容と、ログレベル、ローテーションポリシー、保存ポリシーの設定方法を説明します。
+
+## FE と BE のログ
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="FE ログ管理"
+    description="フロントエンド（FE）プロセスが生成する fe.log、fe.warn.log、fe.audit.log、fe.out の分類、形式、設定について説明します。"
+    link="fe-log"
+/>
+
+<GettingStartedCard
+    title="BE ログ管理"
+    description="バックエンド（BE）プロセスが生成する be.INFO、be.WARNING、be.out の分類、形式、設定について説明します。"
+    link="be-log"
+/>
+</div>

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/table_properties",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/table_properties.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/table_properties.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "3a1336aaf3e8b7223336621284b0f56ec73e718b0ea234d24ec1db911797dc96",
+    "sourceTechnicalHash": "19cdd7a07e3b11c0344ce3ec59e4b0aee53ec577d6a2a904952f84f2f987ff04",
+    "targetHash": "e1007083cf6901dcf656bb4a05e70407e420d80b288da079f201a12c621faae1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.745Z",
+    "glossaryVersion": "0"
+  }
+}

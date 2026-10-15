@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/referential_constraints",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/referential_constraints.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/referential_constraints.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "a44ff39cf267e07b28187f5675f6772581820448a6938a7289d690e7ef0184fb",
+    "sourceTechnicalHash": "29a97c25302b14a80911125a49cac6eb94eaae6d1a6346329492eede731c0f11",
+    "targetHash": "a03882829efaa9d35a638883f78f420b6c7ddc1fa802a96206170404a6b03af2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.745Z",
+    "glossaryVersion": "0"
+  }
+}

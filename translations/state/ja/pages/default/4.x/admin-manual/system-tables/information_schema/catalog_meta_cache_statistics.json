@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/catalog_meta_cache_statistics",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "d1323fc3185f94c06f39bd2b760926fb2bda186568f8bf93e77c4a09a003fd2f",
+    "sourceTechnicalHash": "473fafa887e25204a3e69ab383770e029c1c9ebe96892613b1e31dab53210dfd",
+    "targetHash": "be5ff73e8669edcc7f7b4c48650f2d6347116d83c0a4083ae8787840597307a1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.744Z",
+    "glossaryVersion": "0"
+  }
+}

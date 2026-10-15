@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/profiling",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/profiling.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/profiling.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "8392f48b13cdfc8c87f37711ea73cf5050e4cf4621d742b04b67e850e04ada61",
+    "sourceTechnicalHash": "ac7288c6d885eed5dae41aa5bee4ce1dae3d8f56aefbcce4c617b09e36af0108",
+    "targetHash": "0793554c829cc36f51687a8d434a1b893ef7cf9b7d6f93558035d49d14279a4b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.745Z",
+    "glossaryVersion": "0"
+  }
+}
