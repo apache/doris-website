@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-ceil",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-ceil.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-ceil.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "a81318d3636c75c6c79e3a7369d76639d69816e5e210c46e155f3569505aac95",
+    "sourceTechnicalHash": "952f6d66fba31af31e5e0939f5becb1c845e652270e4751632e974afed340f1d",
+    "targetHash": "458579f7f38674d1d788bf7cbcc13e014bf2b192a4c833f45066ec1caac13314",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:58:39.582Z",
+    "glossaryVersion": "0"
+  }
+}

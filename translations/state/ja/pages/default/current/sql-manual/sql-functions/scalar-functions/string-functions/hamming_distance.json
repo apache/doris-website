@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/hamming_distance",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/hamming_distance.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/hamming_distance.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "fd67a20fa052b6048f8f1cecf44f8e85c3d337b83d7cfe033901298c85686138",
+    "sourceTechnicalHash": "64a2a4e33db6deb1258e2cf9f82cdad6e8fd609d4bdefdba410c242d1a125ad2",
+    "targetHash": "1fded758051c248b0252da67018ad1e2a0fae95f51e2f175e8e9b9906d62b3b8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:58:39.583Z",
+    "glossaryVersion": "0"
+  }
+}
