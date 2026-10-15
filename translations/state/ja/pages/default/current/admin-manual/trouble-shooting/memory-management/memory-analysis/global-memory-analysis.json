@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/global-memory-analysis",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-analysis/global-memory-analysis.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-analysis/global-memory-analysis.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b53b21a6923a19c4d1c743229eac715cf622a519acfad28e582d9338f641330e",
+    "sourceTechnicalHash": "74b7a73237dd7b04c9f13ea026345b21eae434e4e7f99699aae90d418e33ff6f",
+    "targetHash": "07b97128b3413315e33425a77c509b4c7da922c01a150e550336bb9bd17b7c0c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.340Z",
+    "glossaryVersion": "0"
+  }
+}

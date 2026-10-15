@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "faq/data-faq",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/faq/data-faq.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/faq/data-faq.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e59339132c10309a49f76642da45c9a362a404ab47f009292f3448c120c055da",
+    "sourceTechnicalHash": "30722099c7a037b5aef3e27a2d85e7bbdd51ce0455bec5efd94c57110261580b",
+    "targetHash": "c5dd711fe5c33b464d29d3e7b771a79be4ac8294725db36afd69bcefdfb5a5eb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.341Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/binary-type/VARBINARY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/binary-type/VARBINARY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/binary-type/VARBINARY.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "37686de7eed3e80c1ffe82ebe2189eece9f4e8fbfa3ac7af322af05e1af22a9b",
+    "sourceTechnicalHash": "e8037d1e88a7ffeac18c4754bcbb931a9d52ba67cbe198efad3bd0a4d7de0ccd",
+    "targetHash": "e0b2cabdabc1bb70548c0d5d95a4f7b0c847ff07be290bcdb7a728739763c0be",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.343Z",
+    "glossaryVersion": "0"
+  }
+}

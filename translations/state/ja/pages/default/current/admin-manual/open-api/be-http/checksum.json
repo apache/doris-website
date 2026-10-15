@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/checksum",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/checksum.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/checksum.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "71e6fdcb1a6456950e75912e509301e4682343a8b45c6738de5cde024bd0f665",
+    "sourceTechnicalHash": "f3d639e3f4948baa64ecc7d1ffdbf8e10ca34ce2743f26ebdd5befdd554215bb",
+    "targetHash": "7603e8b932e49cce42ddf4acf653ace625605da8b80ac899ca48cc353a48c50e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.339Z",
+    "glossaryVersion": "0"
+  }
+}

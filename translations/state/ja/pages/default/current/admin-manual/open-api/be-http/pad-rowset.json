@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/pad-rowset",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/pad-rowset.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/pad-rowset.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "dc3f17d3fa46bcf2cc592a5a6043e6675aee117a8a7a6d588dd449393c0d5fba",
+    "sourceTechnicalHash": "0e19f45a8c1d703ddd2cefc041cdcb9bcceb47f3716e70e22c4b41ab17dcf308",
+    "targetHash": "a88fddabe0b2d92f02cd676e9248f39cbaf8bef563d450475be1ca99a386f859",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.339Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/string-type/VARCHAR",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/string-type/VARCHAR.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/string-type/VARCHAR.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0f4fa9829196e9a8146697797a229c11ac03781b4143231cd0c084af6fa225d9",
+    "sourceTechnicalHash": "1c29b9ce7b5abcce4a44d1ea73cef67f15decc892155e48cdf2ca4b2ba0852fb",
+    "targetHash": "f85773a579220042d404568a62748fdac4ee8f48ba2efc84157a83de676c3680",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.343Z",
+    "glossaryVersion": "0"
+  }
+}

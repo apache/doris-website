@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/metadata-operation",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/metadata-operation.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/metadata-operation.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f4928968f43f71fe8239711f8aace9a8ae39bd2fc699f474017fadb0c27c886d",
+    "sourceTechnicalHash": "4d5473f1e910bfc1a51499323ee41bdac67d1c67b382cdee10602cc08b29f99a",
+    "targetHash": "5a1a717b5954634ce8654e67059e87d9cd4bb5ef150af2fb0ccddc0cfc3fbdd6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.341Z",
+    "glossaryVersion": "0"
+  }
+}

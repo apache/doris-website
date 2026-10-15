@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "faq/install-faq",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/faq/install-faq.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/faq/install-faq.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "90fb6c11e2ec0ae6ac973761434fccb6d0112a8c3ff7160fc288b39f3847bb3a",
+    "sourceTechnicalHash": "c48e9e8176c8c36a85a7900e8fd43251223c16d591915a6b30c59baa3dc6cb3e",
+    "targetHash": "d5f59c0322b86551b066e3c538e89eae99224d61a74f0ed925ba542b8cafddc5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.341Z",
+    "glossaryVersion": "0"
+  }
+}

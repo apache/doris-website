@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/compaction-run",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/compaction-run.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/compaction-run.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "4edc564ac4eaad19b9a0df703556f4231adf8dbc231b55f9db026ba94ce2ffdc",
+    "sourceTechnicalHash": "caec0e01a49c337401085920244c5dea5d4b6c0fd023be97c78594b6c0b0774c",
+    "targetHash": "b331fa568440712bd7eaa3b9dc37deb5fa76df10c90b10ca8e1cef94db312e39",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.338Z",
+    "glossaryVersion": "0"
+  }
+}

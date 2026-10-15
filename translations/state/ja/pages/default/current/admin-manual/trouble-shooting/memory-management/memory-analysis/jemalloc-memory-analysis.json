@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/jemalloc-memory-analysis",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-analysis/jemalloc-memory-analysis.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-analysis/jemalloc-memory-analysis.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "019683e00e5c19d20a070bf0c9027842ce12a2503dad81cafb1f6d2a5700554d",
+    "sourceTechnicalHash": "02e9dbc7c2315d061878e78cd7d5b70974581463a13f647eb7b6003ca1e4899f",
+    "targetHash": "f097bf183373fe8fdb7df2e75bbb797fa545bbb8bc3b0f536a9e8f505d35de84",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.340Z",
+    "glossaryVersion": "0"
+  }
+}

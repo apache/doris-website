@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/aggregate/QUANTILE-STATE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/aggregate/QUANTILE-STATE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/aggregate/QUANTILE-STATE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "3d6f437469d18715c6e0e2a1a5545ee1975fc7ae94f930962614bb6bdd76ece3",
+    "sourceTechnicalHash": "35ddcbd1e0759d3edfb4081ce199b81e956f430814f5a0222ccadbda83e1534c",
+    "targetHash": "96c86551ee7114fb4ef19851e6f8a71d8a9edebd6899d77780487d4dfa5cb130",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.344Z",
+    "glossaryVersion": "0"
+  }
+}

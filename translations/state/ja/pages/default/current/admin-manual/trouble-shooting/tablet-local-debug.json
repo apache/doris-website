@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/tablet-local-debug",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/tablet-local-debug.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/tablet-local-debug.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "ccbd274d34783c2481eb8d2ee79e60ad74adb1cabd2420e8184ef0a30c1c60b2",
+    "sourceTechnicalHash": "1545cc98b360800bacdf410b12074cbe0e54bf4a9275b80918328289038ed6ba",
+    "targetHash": "eceab726bc396a3aaf667c39c1244ac99e5dbbab3915b43af51f048945031091",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.341Z",
+    "glossaryVersion": "0"
+  }
+}

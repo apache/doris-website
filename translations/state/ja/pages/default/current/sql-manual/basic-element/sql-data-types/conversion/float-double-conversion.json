@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/float-double-conversion",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/float-double-conversion.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/float-double-conversion.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "5c28061ad36ea5c202467587b9d9e6fc71ad70fd4e5ed4dd4f485a2a7abd190f",
+    "sourceTechnicalHash": "d439d1c655d2dbf9dc123e7f47d2ce6246700b4da8115177df7b24850e681a65",
+    "targetHash": "6c5499fd085c2bcc99a482484b14b4f2e518b90732971079ac1d611b50b8a768",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.345Z",
+    "glossaryVersion": "0"
+  }
+}

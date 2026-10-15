@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "34e0c7466a562720d2b03fa557b1fea0429a09da135a7d8ffb9450e02d4a4f3d",
+    "sourceTechnicalHash": "a447139559cf3a7340276c32096725868b6f5b1463fdf085d7b2730bd22b549a",
+    "targetHash": "c159b997748a316e42a3de90d55aaa62782828ee1d4f648bf9258ee4ed1d6fc4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.340Z",
+    "glossaryVersion": "0"
+  }
+}

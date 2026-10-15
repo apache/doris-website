@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/int-conversion",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/int-conversion.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/int-conversion.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f40d43e8c831e48a85d6de3604e1d7e7a731b2b3df77993ae0f2e622d81a211d",
+    "sourceTechnicalHash": "e405cabfa3d1343ab14d2fac300c7a5dd3aa3faa936136c7b72541f201d4eee8",
+    "targetHash": "c002e84b21c87bf0ceaded4b64cfc89343bac69956ed92a59b4f54c8d566abac",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.346Z",
+    "glossaryVersion": "0"
+  }
+}

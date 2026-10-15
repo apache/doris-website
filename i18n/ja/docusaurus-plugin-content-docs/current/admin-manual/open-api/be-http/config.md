@@ -1,0 +1,88 @@
+---
+{
+    "title": "BE の設定",
+    "language": "ja",
+    "description": "BE の設定を照会および更新する"
+}
+---
+
+# BE の設定
+
+## リクエスト
+
+`GET /api/show_config`
+`POST /api/update_config?{key}={val}`
+
+## 説明
+
+BE の設定を照会および更新します。
+
+## クエリパラメータ
+
+* `persist`
+    変更を永続化するかどうかを指定します。省略可能で、デフォルトは `false` です。
+
+* `key`
+    設定項目の名前です。
+
+* `val`
+    設定項目の値です。
+
+## リクエストボディ
+
+なし
+
+## レスポンス
+
+### 照会
+
+```
+[["agent_task_trace_threshold_sec","int32_t","2","true"], ...]
+```
+
+### 更新
+```
+[
+    {
+        "config_name": "agent_task_trace_threshold_sec",
+        "status": "OK",
+        "msg": ""
+    }
+]
+```
+
+```
+[
+    {
+        "config_name": "agent_task_trace_threshold_sec",
+        "status": "OK",
+        "msg": ""
+    },
+    {
+        "config_name": "enable_segcompaction",
+        "status": "BAD",
+        "msg": "set enable_segcompaction=false failed, reason: [NOT_IMPLEMENTED_ERROR]'enable_segcompaction' is not support to modify."
+    },
+    {
+        "config_name": "enable_time_lut",
+        "status": "BAD",
+        "msg": "set enable_time_lut=false failed, reason: [NOT_IMPLEMENTED_ERROR]'enable_time_lut' is not support to modify."
+    }
+]
+```
+
+## 例
+
+
+```
+curl "http://127.0.0.1:8040/api/show_config"
+```
+
+```
+curl -X POST "http://127.0.0.1:8040/api/update_config?agent_task_trace_threshold_sec=2&persist=true"
+
+```
+
+```
+curl -X POST "http://127.0.0.1:8040/api/update_config?agent_task_trace_threshold_sec=2&enable_merge_on_write_correctness_check=true&persist=true"
+```

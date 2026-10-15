@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/check-rpc-channel",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/check-rpc-channel.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/check-rpc-channel.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b2caea994bc3034a3fb456708417f29e3e4432fb748f303445a8d70762d6030c",
+    "sourceTechnicalHash": "e180c7bc36ce7888c1bd11b767ce1f57f26fae20a0f059f0975b2c2bd415fa96",
+    "targetHash": "1236c0d309b2ea6d88113cacf1167d08719d3760cff4226791208eb8961064bd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.338Z",
+    "glossaryVersion": "0"
+  }
+}

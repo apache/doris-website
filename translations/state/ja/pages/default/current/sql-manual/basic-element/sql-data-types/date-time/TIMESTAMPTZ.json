@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/date-time/TIMESTAMPTZ",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/date-time/TIMESTAMPTZ.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/date-time/TIMESTAMPTZ.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c6fc43ca2bc386402a7d0380688f1b7823763349c0a7ec3bd9b605d6b907c85a",
+    "sourceTechnicalHash": "ff0ab6e2515f467acd2e77ca08ef5fee9f04c0ab24f27ff9bd5483082173f631",
+    "targetHash": "445ea37537de0fc3ae925e5f4a1751734f139bd421e1075be012d70c257a3d1b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.343Z",
+    "glossaryVersion": "0"
+  }
+}
