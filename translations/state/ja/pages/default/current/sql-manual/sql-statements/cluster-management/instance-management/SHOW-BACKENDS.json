@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/SHOW-BACKENDS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/SHOW-BACKENDS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/SHOW-BACKENDS.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "7ccfdce12171f9d8e691f69e3ff67ecab26abd7ef9c95c366f4acdf004b868db",
+    "sourceTechnicalHash": "f5b73d998c937f7620a1d3de4e62e616ca1b83c44ac444f39ac0e34a042cb82e",
+    "targetHash": "9c3b70c4664e6a1c4c89b6e289e46783dca6634a5e9fcac658a2d0ff3944604a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.013Z",
+    "glossaryVersion": "0"
+  }
+}

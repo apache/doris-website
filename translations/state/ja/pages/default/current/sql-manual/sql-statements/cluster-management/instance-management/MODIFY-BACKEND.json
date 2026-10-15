@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/MODIFY-BACKEND",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/MODIFY-BACKEND.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/MODIFY-BACKEND.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0739c1625bcb2004aab14fa63341b1b2217d3713435af07fed93d1acec7336d1",
+    "sourceTechnicalHash": "751644f2b356444746408a839fcd1b80b59d5cdebe883c6a8f760b55ac37048b",
+    "targetHash": "63ee7352fe0cf36cb977340352e94579bd807ded5a2f07ee5e6739e1c044ae44",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.013Z",
+    "glossaryVersion": "0"
+  }
+}

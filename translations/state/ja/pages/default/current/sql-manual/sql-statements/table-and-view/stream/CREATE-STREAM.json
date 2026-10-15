@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "aebe6117548d85ebb44d5c443c27ea3e64ecd54a3c742669119b77cf50a23018",
+    "sourceTechnicalHash": "f950fb076dd5a6e16f724a16fcc1826ae5c7ba299aa1edf31594111667b79f01",
+    "targetHash": "c12d54c397247588aadd713b5039ddd450d4bb65d5f02c4a2d1217e0adab72a6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.009Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTENDS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTENDS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTENDS.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f86da97d5d1811f540ee3abfaca18fa158beea668a9a1f0926fb5a78b90d764f",
+    "sourceTechnicalHash": "f8aabf2c4d290797a79f44bc00622b0b3020902e37337d60e9e1fe5b5ff0fc88",
+    "targetHash": "ffe26c3d07a1489bcfe3ad55f4fa84fc732d59df7466c89fcf5a8da3ed83232f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.013Z",
+    "glossaryVersion": "0"
+  }
+}

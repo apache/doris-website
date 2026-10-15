@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/DROP-FOLLOWER",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/DROP-FOLLOWER.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/DROP-FOLLOWER.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "21f3c6adde7a8c6f9de91f4c35b345999fe4184f2454c1798c7583eae130c6ce",
+    "sourceTechnicalHash": "331d1416d47bcf77c833fcc9a0ad42b5dde2a0c0abc1a8373703a40024423d8e",
+    "targetHash": "cf5d4aa8f6382ffacf23273cce4569c3faaf4a9919cc1371af57cd6dd4ffe9d6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.012Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REBALANCE-DISK",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REBALANCE-DISK.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REBALANCE-DISK.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "5b30baa82150c61d877de07e4f29f1700d22c7c4d3f2814d64144020ff7f2479",
+    "sourceTechnicalHash": "1839cd6e725e0fa139465cdbf49b96701300f6e8c970f4a3dce61d4785304571",
+    "targetHash": "73c28601074116dc1b28f5f8fffc16b16a7b2e19d3f9871fe8684f4982824f0e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.010Z",
+    "glossaryVersion": "0"
+  }
+}

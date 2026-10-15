@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "342e237a86df2f9c7306fad685cc37b405940a6fdbae0256429a7727affb774f",
+    "sourceTechnicalHash": "fee05a628244e6c943ccf464c75047e164476e670ddbee8a4b98da27f6f146eb",
+    "targetHash": "7b8906b8381c60c874113c090c3462714a471bee5e876684b7bc5e5035ab5765",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.013Z",
+    "glossaryVersion": "0"
+  }
+}

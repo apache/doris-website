@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/recycle/RECOVER",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/recycle/RECOVER.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/recycle/RECOVER.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "dd397620db8baa8583654417ce2fabf404a3b3182a295656f98531fd7e9ceae0",
+    "sourceTechnicalHash": "ed1a7cc2545c70691ba20c2eb870bf7911bba9561ceb9d7b91465349d267dfe9",
+    "targetHash": "33a7dc59a8d3189ec046d6cbb33af9ae26e68e6e9bf0fef7bcdff3e6afc39d8c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.012Z",
+    "glossaryVersion": "0"
+  }
+}

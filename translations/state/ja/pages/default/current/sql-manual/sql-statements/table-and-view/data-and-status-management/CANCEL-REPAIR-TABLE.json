@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REPAIR-TABLE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REPAIR-TABLE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REPAIR-TABLE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "3d71e5d2d2d0d9f3e713db792f420f1b479067cc680f9b2b25118228ebff9ea9",
+    "sourceTechnicalHash": "ecc03ff5b4c147ebce896c4a72e6e0159ba9c3322ca2c3a8bc1905af2ede17e5",
+    "targetHash": "c5b45ff4c8e591c2c43dc72310ef713c3377235f1a8723bf9391e0cd2785937b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.010Z",
+    "glossaryVersion": "0"
+  }
+}
