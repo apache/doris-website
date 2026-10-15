@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-int",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-int.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-int.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "59e1b308603d916d5b8b475898e7b3a06c76288c0e61930f03a112ed6061f064",
+    "sourceTechnicalHash": "eb9e4cdab0f228ef9c31c52394287692afd3171ee4c9862905d11c327bf8c592",
+    "targetHash": "87a777fda13b4af8680f68be6871c6d54c9f0dffdcf5400bb8929ca96d7b56be",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:05:15.135Z",
+    "glossaryVersion": "0"
+  }
+}

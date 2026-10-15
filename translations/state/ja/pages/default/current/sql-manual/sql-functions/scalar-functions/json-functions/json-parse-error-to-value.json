@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-parse-error-to-value",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-parse-error-to-value.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-parse-error-to-value.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "29ff9ad98c4d49e438de0e71c67139018108c7ec606e2abaec3d237d0d145ac8",
+    "sourceTechnicalHash": "4825a01e1be6c3d9d26fb2294fdd4dd50351c18c1f05ae8c6d80b0eee416ec8f",
+    "targetHash": "76b94492521a20e0a3e31581f036d8628b728258cea819096d5731e03c81747b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:05:15.136Z",
+    "glossaryVersion": "0"
+  }
+}

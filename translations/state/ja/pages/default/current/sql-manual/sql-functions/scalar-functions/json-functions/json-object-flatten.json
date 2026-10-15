@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-object-flatten",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-object-flatten.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-object-flatten.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e1ac625975f06abed9f65da497f0e0c082985373def106265d393c1997f00a54",
+    "sourceTechnicalHash": "4a4bc4ca6e9378a84cf68db8192c5aea00f207a823bb902817fe3d593a9201c1",
+    "targetHash": "c8d5b9b732c7d17c671ce777f8d11df67700adc88e6c6befeb2e5afe96b6fcdb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:05:15.136Z",
+    "glossaryVersion": "0"
+  }
+}

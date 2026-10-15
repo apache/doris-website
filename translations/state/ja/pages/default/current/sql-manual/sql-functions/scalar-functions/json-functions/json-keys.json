@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-keys",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-keys.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-keys.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "73115c5b56490e6cb01de13f287f3d3e69dcafca02de6ed6226237b01d696166",
+    "sourceTechnicalHash": "7701ae1ea384d15f14f700578060b3a604337c5e82d01a4b793e3a4301fd606e",
+    "targetHash": "5ed05c08b22d13bbb4abf935c07b57ce46652cbbc071a62d0aead737760337e6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:05:15.136Z",
+    "glossaryVersion": "0"
+  }
+}

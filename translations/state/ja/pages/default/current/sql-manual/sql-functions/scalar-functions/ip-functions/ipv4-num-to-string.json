@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-num-to-string",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-num-to-string.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-num-to-string.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "2856b3951235d91c26a0f128e5031ca6f5a5241f0f4f503310666c604de2f988",
+    "sourceTechnicalHash": "711ddfd34b548873332ebc47b1d9935865835a8eac51c88a166ca2a2e6d66d3e",
+    "targetHash": "646eba560987412607b01dd594f43f2a3e911f3d1875bf7e18b35191b13bb1c9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:05:15.137Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-search",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-search.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-search.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c69b61b7f173104465a5abc54c20ed7e2a8cddb2c268b1a9c8b5fa06fbcdfc2d",
+    "sourceTechnicalHash": "70ea06972c2e284b3e77c4674362591d960bbbf87c3316ff962dbe298dc94565",
+    "targetHash": "2ca7e082c004d21ad7d0bba04c0b94712b96caaf847475e935d8951d70d9b847",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:05:15.137Z",
+    "glossaryVersion": "0"
+  }
+}
