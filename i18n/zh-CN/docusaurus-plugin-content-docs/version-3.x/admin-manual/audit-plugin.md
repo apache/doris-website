@@ -10,17 +10,37 @@ Doris 提供了对于数据库操作的审计能力，可以记录用户对数�
 
 ## 开启审计日志
 
-通过全局变量 `enable_audit_plugin` 可以随时开启或关闭审计日志插件（默认为关闭状态），如：
+Doris 自 2.1.0 起内置审计日志插件，无需单独安装。全局变量 `enable_audit_plugin` 控制是否将审计日志写入 `__internal_schema.audit_log` 表，其默认值随 Doris 版本而不同：
 
-`set global enable_audit_plugin = true;`
+| Doris 版本 | `enable_audit_plugin` 默认值 |
+| --- | --- |
+| 2.1.x、3.0.x、3.1.0 和 3.1.1 | `false`（关闭） |
+| 3.1.2 及后续 3.1.x 版本 | `true`（开启） |
+| 4.0.0 及后续版本 | `true`（开启） |
 
-开启后，Doris 会将开启后的审计日志写入 `audit_log` 表。
+其中，Doris 从 4.0.0 起默认开启审计日志插件。
 
-可以随时关闭审计日志插件：
+可以通过以下语句查看当前集群的实际值：
 
-`set global enable_audit_plugin = false;`
+```sql
+SHOW GLOBAL VARIABLES LIKE 'enable_audit_plugin';
+```
 
-关闭后，Doris 将会停止 `audit_log` 表的写入。已写入的审计日志不会变化。
+如果当前值为 `false`，可以随时开启：
+
+```sql
+SET GLOBAL enable_audit_plugin = true;
+```
+
+开启后，Doris 会将后续产生的审计日志写入 `__internal_schema.audit_log` 表。
+
+如需停止向审计日志表写入数据，可以关闭插件：
+
+```sql
+SET GLOBAL enable_audit_plugin = false;
+```
+
+关闭插件后，Doris 将停止向 `__internal_schema.audit_log` 表写入新记录，已写入的记录仍然保留。该变量不控制下文介绍的 `fe.audit.log` 文件。
 
 ## 查看审计日志表
 

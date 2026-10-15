@@ -10,17 +10,37 @@ Doris provides auditing capabilities for database operations, allowing the recor
 
 ## Enabling Audit Logs
 
-The audit log plugin can be enabled or disabled at any time using the global variable `enable_audit_plugin` (disabled by default), for example:
+Doris has included a built-in audit log plugin since version 2.1.0; no separate installation is required. The global variable `enable_audit_plugin` controls whether audit logs are written to `__internal_schema.audit_log`. Its default value depends on the Doris version:
 
-`set global enable_audit_plugin = true;`
+| Doris version | Default value of `enable_audit_plugin` |
+| --- | --- |
+| 2.1.x, 3.0.x, 3.1.0, and 3.1.1 | `false` (disabled) |
+| 3.1.2 and later 3.1.x releases | `true` (enabled) |
+| 4.0.0 and later releases | `true` (enabled) |
 
-Once enabled, Doris will write the audit logs to the `audit_log` table.
+In particular, the audit log plugin is enabled by default starting with Doris 4.0.0.
 
-You can disable the audit log plugin at any time:
+Check the current value on your cluster:
 
-`set global enable_audit_plugin = false;`
+```sql
+SHOW GLOBAL VARIABLES LIKE 'enable_audit_plugin';
+```
 
-After disabling, Doris will stop writing to the `audit_log` table. The already written audit logs will remain unchanged.
+If it is `false`, you can enable it at any time:
+
+```sql
+SET GLOBAL enable_audit_plugin = true;
+```
+
+Once enabled, Doris writes subsequent audit logs to `__internal_schema.audit_log`.
+
+To disable writing to the audit log table:
+
+```sql
+SET GLOBAL enable_audit_plugin = false;
+```
+
+Disabling the plugin stops new writes to `__internal_schema.audit_log` and preserves existing records. This variable does not control the `fe.audit.log` files described below.
 
 ## Viewing the Audit Log Table
 
