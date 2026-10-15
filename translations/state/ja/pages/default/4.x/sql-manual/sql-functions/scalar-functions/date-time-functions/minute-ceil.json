@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/minute-ceil",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minute-ceil.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minute-ceil.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "0d8bb1bafb80f02a24272977ecf62ff2f7bbe8a3e71b9c2db4b1181d028dae34",
+    "sourceTechnicalHash": "eb41b9f9fb7644a71b30a89faae6978676476853bf4a5f0da5a32601913303ce",
+    "targetHash": "188432b21ac020b333488f68786ff725e222389e51bc972ae27da89faf4894c5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.701Z",
+    "glossaryVersion": "0"
+  }
+}

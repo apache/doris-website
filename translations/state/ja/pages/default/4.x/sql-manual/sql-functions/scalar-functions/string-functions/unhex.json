@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/unhex",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/unhex.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/unhex.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "42dbd56911167944d7bdb45e67cfd9f51d4d83777a08a71ffdc082adc9e8052f",
+    "sourceTechnicalHash": "2464025b80638db0261bf8b2769c9f74bb9057f7c3a9d1cdf29120f877ee89fe",
+    "targetHash": "c2f3ffcd20d13bf3511e5de3fd9cca41e30a4383c0bfc55a4b34a3d0e38ccdc8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.696Z",
+    "glossaryVersion": "0"
+  }
+}

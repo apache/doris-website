@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/microseconds-add",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/microseconds-add.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/microseconds-add.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "e9c7ea265a0ea8925e594d3707df758c6a04d7c648ad7715227f1d5fb4640eb1",
+    "sourceTechnicalHash": "f889346e9770a68ad12272de92facc45cb1356c620fc13db1e989f899612d761",
+    "targetHash": "858fd89e310648cab5e3fe9d6e41bf446d2f1e2e7fb9c3c7faa37fd3624f12e7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.700Z",
+    "glossaryVersion": "0"
+  }
+}

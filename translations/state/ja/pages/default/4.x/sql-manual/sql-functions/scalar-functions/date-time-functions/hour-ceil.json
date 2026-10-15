@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/hour-ceil",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hour-ceil.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hour-ceil.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "8ae5b8a28ecec193aa4aa1005dcbc56eaf1a6270d26405452410046e9e478624",
+    "sourceTechnicalHash": "259926f666e0cc334ef95a6e8175c81e07dfef1312cb05512cd643728a5dd9b7",
+    "targetHash": "d22ee2d531bac8e7c1c0c74c254f06b40a93946003d0389d7cf874465e7194e1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.699Z",
+    "glossaryVersion": "0"
+  }
+}

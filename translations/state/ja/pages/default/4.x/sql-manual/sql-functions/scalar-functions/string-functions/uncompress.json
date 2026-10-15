@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/uncompress",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/uncompress.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/uncompress.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "410074051ace19020ee1f232a5cb40be5b0a300daec69194361b18ea77708035",
+    "sourceTechnicalHash": "c3b2ce6d2e95cb8914b73446ab73fd9e5372e228b467f79410836825ab20b5a5",
+    "targetHash": "6bf3915d92a87ef01827368d3871d1540891eede20d60607433416c8a8aff83a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.695Z",
+    "glossaryVersion": "0"
+  }
+}

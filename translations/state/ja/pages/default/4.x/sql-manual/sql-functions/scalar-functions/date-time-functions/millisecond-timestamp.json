@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/millisecond-timestamp",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/millisecond-timestamp.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/millisecond-timestamp.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "21e26fd35deaea5dd6126691512d6d2f61092ca586c2eaa9966ddc5c528b1164",
+    "sourceTechnicalHash": "63ddebf888aff462bb45e0a640e8958eef941f2882dfa610dc68966c0f51bc1d",
+    "targetHash": "36e646143d1bef340edcdbcfded8aacafad534221b4bec447b3c15bd05b1cc35",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.701Z",
+    "glossaryVersion": "0"
+  }
+}

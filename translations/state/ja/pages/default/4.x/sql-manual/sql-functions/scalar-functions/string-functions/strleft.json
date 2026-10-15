@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/strleft",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/strleft.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/strleft.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "99e45e7f41701de8ff760a7cf47931baf7ff8f8225a47d82b8d3c6adbc829e0a",
+    "sourceTechnicalHash": "6ef8ee6457543583ae8ada4a7e8dfdefbd7f3a41265be45255955cfc0df44b23",
+    "targetHash": "1f87924d7678a28e367efac47e57fe65b1524e88595371014673efde32a4f8cb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.694Z",
+    "glossaryVersion": "0"
+  }
+}

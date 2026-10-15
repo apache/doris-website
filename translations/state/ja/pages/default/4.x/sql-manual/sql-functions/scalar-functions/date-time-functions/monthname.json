@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/monthname",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/monthname.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/monthname.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "608abcb2732ec6248100f1d9b4b8f4624783f2d4bf3406de0bec990d10546ae0",
+    "sourceTechnicalHash": "059f682644c36f1279944e6e1feba4c11452d605953cebd43f87087d6a3520a2",
+    "targetHash": "447e11d9281bd83d5c6fec7a27b84788dd0b45fd4d7bfadbfbb42cf8ee66296b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.702Z",
+    "glossaryVersion": "0"
+  }
+}

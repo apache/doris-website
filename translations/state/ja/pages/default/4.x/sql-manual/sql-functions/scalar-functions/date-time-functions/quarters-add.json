@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-add",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-add.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-add.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "2023136ce135dcf7580badd0a206ee4bd3353ceb412bbb40d0ff5be8e4f374d8",
+    "sourceTechnicalHash": "4d2ad8a49d24d778f27829727c411ac2e0712901d6d9e8429067156acb9af4b4",
+    "targetHash": "bb087b28c76f4833b220dbe06eb58ebbab345f784dcd624145a53780ea311514",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.703Z",
+    "glossaryVersion": "0"
+  }
+}

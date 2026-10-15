@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/rtrim-in",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/rtrim-in.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/rtrim-in.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "eb6bd595db13ed130db719ca6523472d715129ad761745a24408e9b0f141823e",
+    "sourceTechnicalHash": "c6890992e581b9794c5e510f7c85455beb1557799ffa8531911bea12095416b6",
+    "targetHash": "ff4caf30573b2e5753ec144fe450dbdfae7ebf3f5d1a77d8a445ab8486b7a0e4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.693Z",
+    "glossaryVersion": "0"
+  }
+}
