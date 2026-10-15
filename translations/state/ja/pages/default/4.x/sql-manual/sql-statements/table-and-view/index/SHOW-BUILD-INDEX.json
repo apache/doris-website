@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/index/SHOW-BUILD-INDEX",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/index/SHOW-BUILD-INDEX.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/index/SHOW-BUILD-INDEX.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "7f8e8d891ba87b4d9a66743429bcd891b02a23adf8311acd08cf26c6d3db6f12",
+    "sourceTechnicalHash": "6bc17daf343467adbc9a9f4d548ea2bdbf9dc4cb10f62d015b0973f730d136cd",
+    "targetHash": "23051f424dac5ddc0525cf3b538d660e04e3c605306b3fcc21827d5fad6e19e0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:35:06.361Z",
+    "glossaryVersion": "0"
+  }
+}

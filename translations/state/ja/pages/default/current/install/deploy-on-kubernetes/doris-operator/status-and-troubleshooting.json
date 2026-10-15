@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/doris-operator/status-and-troubleshooting",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/doris-operator/status-and-troubleshooting.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/doris-operator/status-and-troubleshooting.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "da5974b7499a537b8ade5a8d65a92d98abedfec4e00fce656db4c2b770720096",
+    "sourceTechnicalHash": "5c07f9cc8a47b80314ba6e4483bb2237ef272fe23a07ec51b4aeb3763576eb07",
+    "targetHash": "a281416f1e53a742283658129ad5143eb8a200b590f4a381ff8f6afb4c547d9e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:44:44.431Z",
+    "glossaryVersion": "0"
+  }
+}

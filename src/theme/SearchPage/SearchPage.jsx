@@ -18,6 +18,8 @@ import { Mark, searchContextByPaths, useAllContextsWithNoSearchContext } from ".
 import { searchResultLimits } from "../../utils/proxiedGeneratedConstants";
 import styles from "./SearchPage.module.css";
 import { normalizeContextByPath } from "../../utils/normalizeContextByPath";
+import {searchWithLocaleFallback} from "../../utils/searchInput";
+import {isTranslatedLocale} from "../../utils/localization";
 export default function SearchPage() {
     return (<Layout>
       <SearchPageContent />
@@ -29,7 +31,7 @@ function SearchPageContent() {
     const { searchValue, searchContext, searchVersion, updateSearchPath, updateSearchContext, } = useSearchQuery();
     const [searchQuery, setSearchQuery] = useState(searchValue);
     const [searchResults, setSearchResults] = useState();
-    const versionUrl = `${baseUrl}${searchVersion}`;
+    const versionUrl = isTranslatedLocale(currentLocale) ? baseUrl : `${baseUrl}${searchVersion}`;
     const pageTitle = useMemo(() => searchQuery
         ? translate({
             id: "theme.SearchPage.existingResultsTitle",
@@ -47,7 +49,7 @@ function SearchPageContent() {
         updateSearchPath(searchQuery);
         if (searchQuery) {
             (async () => {
-                const results = await searchByWorker(versionUrl, searchContext, searchQuery, searchResultLimits);
+                const results = await searchWithLocaleFallback(searchByWorker, versionUrl, searchContext, searchQuery, searchResultLimits);
                 setSearchResults(results);
             })();
         }
@@ -66,6 +68,13 @@ function SearchPageContent() {
         }
     }, [searchValue]);
     const [searchWorkerReady, setSearchWorkerReady] = useState(false);
+    // The source index lives at the site root, so drop this locale's prefix.
+    const sourceBaseUrl = isTranslatedLocale(currentLocale)
+        ? baseUrl.replace(new RegExp(`${currentLocale.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/$`), '')
+        : baseUrl;
+    const englishSearch = `${sourceBaseUrl}search/?${new URLSearchParams({q: searchQuery,
+        ...(searchContext?.startsWith('docs/') ? {ctx: 'docs'} : {}),
+        ...(searchContext === 'docs/dev' ? {version: 'docs/dev/'} : {})}).toString()}`;
     useEffect(() => {
         async function doFetchIndexes() {
             if (!Array.isArray(searchContextByPaths) ||
@@ -133,6 +142,7 @@ function SearchPageContent() {
                     message: "No documents were found",
                     description: "The paragraph for empty search result",
                 })}
+              {isTranslatedLocale(currentLocale) && <> <a href={englishSearch}>{translate({id: 'theme.SearchPage.searchSource', message: 'Search the source documents'})}</a></>}
             </p>) : (<p>
               ⚠️ The search index is only available when you run docusaurus
               build!

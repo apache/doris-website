@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/vector-index/ivf",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/vector-index/ivf.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/vector-index/ivf.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "8d7110283bc5ca00a42f6ecdfef16850d0afbd50c65a43e2faff5a49f4e3ec38",
+    "sourceTechnicalHash": "416dbd8643dbb6d73e0de1c7c0b592e30b7fe6a5cd7fa9440a582dc03bace556",
+    "targetHash": "6890177728bd9add27f8a8c77588eab346305c2323befe5a3dfd10e29d343b98",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:05:28.128Z",
+    "glossaryVersion": "0"
+  }
+}

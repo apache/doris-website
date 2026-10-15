@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-valued-functions/partition-values",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/partition-values.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/partition-values.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "e59f301ec54840d65046513b3671cb3481e31d1ee0f1b40c233d482e56256a0d",
+    "sourceTechnicalHash": "d0e9f88a2a9433427461c31a5e74ab999ffbcbe947f058fc7f3adee23fad7474",
+    "targetHash": "0632b5ccca95fd2b2c6ad0542288e28c461003c06d8afefe51ca08e0bd53a146",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:10:18.484Z",
+    "glossaryVersion": "0"
+  }
+}

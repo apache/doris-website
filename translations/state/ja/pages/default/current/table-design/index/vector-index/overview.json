@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/vector-index/overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/vector-index/overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/vector-index/overview.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "c01fde75791fd51c1b7b99a107de9d2dcb579addf19113326910d16e606f60fc",
+    "sourceTechnicalHash": "d5c9a9cedb93e972e182713690e625c0145eed26fdc1b3971dd6b9f12a0c1bf3",
+    "targetHash": "a52b00bbdd8252cf03085d5a1e3c2eb4f0b1f1b8f0fd944c7d9871e5c912f614",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:05:28.128Z",
+    "glossaryVersion": "0"
+  }
+}

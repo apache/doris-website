@@ -270,7 +270,9 @@ The third level can display the value information of the specified key.
 
 The deployment recommendation of FE is described in the Installation and [Deployment Document](../../install/deploy-manually/integrated-storage-compute-deploy-manually.md). Here are some supplements.
 
-* **If you don't know the operation logic of FE metadata very well, or you don't have enough experience in the operation and maintenance of FE metadata, we strongly recommend that only one FOLLOWER-type FE be deployed as MASTER in practice, and the other FEs are OBSERVER, which can reduce many complex operation and maintenance problems.** Don't worry too much about the failure of MASTER single point to write metadata. First, if you configure it properly, FE as a java process is very difficult to hang up. Secondly, if the MASTER disk is damaged (the probability is very low), we can also use the metadata on OBSERVER to recover manually through `metadata recovery mode`.
+* In production, deploy an **odd number of FOLLOWER FEs** (typically 3: 1 MASTER + 2 FOLLOWERs) so that metadata writes remain highly available. FOLLOWERs participate in leader election and majority writes; if the Master fails, the remaining FOLLOWERs elect a new Master. OBSERVERs do not participate in elections; they only sync metadata and are used to scale FE read capacity. A single FOLLOWER is acceptable for test or development.
+
+* Majority write means a journal is committed only after it is written to a majority of FOLLOWERs. With 3 FOLLOWERs, one failure is tolerated; if only one FOLLOWER remains, it cannot continue writing metadata. This is expected, not a reason to avoid a 3-FOLLOWER deployment. Keep FOLLOWER clocks in sync, give the FE JVM enough memory, and do not stop a majority of FOLLOWERs at the same time.
 
 * The JVM of the FE process must ensure sufficient memory. We **strongly recommend** that FE's JVM memory should be at least 10GB and 32GB to 64GB. And deploy monitoring to monitor JVM memory usage. Because if OOM occurs in FE, metadata writing may fail, resulting in some failures that **cannot recover**!
 
@@ -304,7 +306,7 @@ The deployment recommendation of FE is described in the Installation and [Deploy
 
 5. FOLLOWER FE hangs up one after another
 
-	Because Doris's metadata adopts the majority writing strategy, that is, a metadata journal must be written to at least a number of FOLLOWER FEs (for example, three FOLLOWERs, two must be written successfully) before it can be considered successful. If the write fails, the FE process exits on its own initiative. So suppose there are three FOLLOWERs: A, B and C. C hangs up first, and then B hangs up, then A will hang up. So as described in the `Best Practices `section, if you don't have extensive experience in metadata operations and maintenance, it's not recommended to deploy multiple FOLLOWERs.
+	Because Doris's metadata adopts the majority writing strategy, that is, a metadata journal must be written to at least a number of FOLLOWER FEs (for example, three FOLLOWERs, two must be written successfully) before it can be considered successful. If the write fails, the FE process exits on its own initiative. So suppose there are three FOLLOWERs: A, B and C. C hangs up first, and then B hangs up, then A will hang up. This is expected majority-write behavior. Production environments should still deploy 3 FOLLOWERs; do not stop a majority of FOLLOWERs at the same time. If only one FOLLOWER remains alive, recover the other FOLLOWERs first and start them together, instead of starting only the remaining one. Otherwise, you may see the `meta out of date` message described in item 1.
 
 6. fe.log 中出现 `get exception when try to close previously opened bdb database. ignore it`
 

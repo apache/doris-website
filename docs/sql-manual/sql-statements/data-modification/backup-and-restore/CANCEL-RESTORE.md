@@ -13,7 +13,7 @@ This statement is used to cancel an ongoing RESTORE task.
 ## Syntax
 
 ```sql
-CANCEL [GLOBAL] RESTORE [FROM <db_name>];
+CANCEL RESTORE FROM <db_name>;
 ```
 
 ## Parameters
@@ -32,10 +32,4 @@ The name of the database to which the recovery task belongs.
 
 ```sql
 CANCEL RESTORE FROM example_db;
-```
-
-2. Cancel the GLOBAL RESTORE task.
-
-```sql
-CANCEL GLOBAL RESTORE;
 ```

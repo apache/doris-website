@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/other-functions/grouping",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/other-functions/grouping.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/other-functions/grouping.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "a2404e22f33b5c8323720ffdcfad1c229c8952aebd1eedd4330818725eb8a2ac",
+    "sourceTechnicalHash": "bb0e553e9afb9888a6136098fe89a0583a8c09ff123bf0a15e646c481ddf9605",
+    "targetHash": "4f942de3623abd3c0e637159cbb245db4c315a0a0c4461e37a7db27dbbe5c0a8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:02:01.386Z",
+    "glossaryVersion": "0"
+  }
+}

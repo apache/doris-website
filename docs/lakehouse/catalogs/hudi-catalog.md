@@ -53,64 +53,66 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## Metadata Cache {#meta-cache}
 
-To improve the performance of accessing external data sources, Apache Doris caches Hudi metadata. Metadata includes table structure (Schema), partition information, FS View, and Meta Client objects.
+To improve the performance of accessing external data sources, Apache Doris caches the Hive Metastore metadata that Hudi tables depend on: table objects, partition names, partition objects, and column statistics.
 
 :::tip
 For versions before Doris 4.1.x, metadata caching is mainly controlled globally by FE configuration items. For details, see [Metadata Cache](../meta-cache.md).
-Starting from Doris 4.1.x, Hudi-related external metadata cache is configured using the unified `meta.cache.*` keys.
+Starting from Doris 4.1.x, Hudi Catalog's external metadata cache is configured using the unified `meta.cache.*` keys. The entries below describe the current version; Doris 4.1.x and 4.2.x use a different set of entries, described in the 4.x version of this page.
 :::
 
-### Cache Property Configuration (4.1.x+) {#meta-cache-unified-model}
+### Cache Property Configuration {#meta-cache-unified-model}
 
-Each engine's cache entry uses a unified configuration key format: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`.
+Each cache entry uses a unified configuration key format: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`. A Hudi Catalog reports its caches under the `hudi` engine in the system table, but they are the shared Hive Metastore caches and are configured with the `hive` engine token: `meta.cache.hive.<entry>.*`.
 
 | Property | Example | Meaning |
 |---|---|---|
-| `enable` | `true/false` | Whether to enable this cache module. |
-| `ttl-second` | `600`, `0`, `-1` | `0` means disable cache (takes effect immediately, can be used to see the latest data); `-1` means never expire; other positive integers mean TTL in seconds based on access time. |
-| `capacity` | `10000` | Maximum number of cache entries (by count). `0` means disable. |
+| `enable` | `true/false` | Whether to enable this cache entry. |
+| `ttl-second` | `600`, `0`, `-1` | `0` disables the entry (takes effect immediately, can be used to see the latest data); `-1` means never expire; other positive integers mean TTL in seconds based on access time. |
+| `capacity` | `10000` | Maximum number of cache entries by count. `0` disables the entry. |
+| `max-weight` | `1GB` | Supported since Doris 4.1.4. Optional estimated retained-memory limit of the entry. Must be positive; `0` is rejected. Accepted only by the entries marked below. |
 
-**Effective Logic:** The module cache only takes effect when `enable=true`, `ttl-second != 0`, and `capacity > 0`.
+**Effective Logic:** The entry takes effect when `enable=true`, `ttl-second != 0`, and `capacity > 0`. An FE-wide, Catalog, or entry memory limit additionally governs admission by estimated memory; see [External Metadata Cache Memory Management](../external-meta-cache-memory-management).
 
 ### Cache Modules {#meta-cache-unified-modules}
 
-Hudi Catalog includes the following cache modules:
+Hudi Catalog includes the following cache entries. All of them accept `max-weight`.
 
-| Module (`<entry>`) | Property Key Prefix | Cached Content and Impact |
-|---|---|---|
-| `schema` | `meta.cache.hudi.schema.` | Caches table structure. Impact: Visibility of table column information. If disabled, the latest Schema is pulled for each query. |
-| `partition` | `meta.cache.hudi.partition.` | Caches Hudi partition-related metadata. Impact: Used for partition discovery and pruning. |
-| `fs_view` | `meta.cache.hudi.fs_view.` | Caches Hudi filesystem view related metadata. |
-| `meta_client` | `meta.cache.hudi.meta_client.` | Caches Hudi Meta Client objects. Impact: Reduces redundant loading of Hudi metadata. |
+| Entry (`<entry>`) | Property Key Prefix | `ENTRY_NAME` | Cached Content and Impact | Default enable / TTL / capacity |
+|---|---|---|---|---|
+| `table` | `meta.cache.hive.table.` | `hive-table` | Table objects from the Hive Metastore. | `true` / 86400 s / 10000 |
+| `partition_names` | `meta.cache.hive.partition_names.` | `hive-partition-names` | Partition name lists. Impact: partition discovery and pruning; if disabled, new partitions are visible immediately. | `true` / 86400 s / 10000 |
+| `partition` | `meta.cache.hive.partition.` | `hive-partition` | Partition objects such as location and input format. | `true` / 86400 s / 100000 |
+| `column_stats` | `meta.cache.hive.column_stats.` | `hive-column-stats` | Column statistics from the Hive Metastore. | `true` / 86400 s / 10000 |
+
+The column schema of Hudi tables is cached by the shared `default` engine (`meta.cache.default.schema.*`).
 
 ### Legacy Parameter Mapping and Conversion {#meta-cache-mapping}
 
-In version 4.1.x and later, unified keys are recommended. The following is the mapping between legacy Catalog properties and 4.1.x+ unified keys:
-
-| Legacy Property Key | 4.1.x+ Unified Key | Description |
+| Legacy Property Key | Unified Key | Description |
 |---|---|---|
-| `schema.cache.ttl-second` | `meta.cache.hudi.schema.ttl-second` | Expiration time of table structure cache |
+| `schema.cache.ttl-second` | `meta.cache.default.schema.ttl-second` and `meta.cache.hive.table.ttl-second` | Expiration time of table schema and table object caches |
+| `partition.cache.ttl-second` | `meta.cache.hive.partition_names.ttl-second` | Expiration time of partition name lists |
 
 ### Best Practices {#meta-cache-best-practices}
 
-* **Real-time access to the latest data**: If you want each query to see the latest data changes or schema changes for Hudi tables, you can set the `ttl-second` for `schema` or `partition` to `0`.
+* **Real-time access to the latest data**: If you want each query to see the latest partitions of Hudi tables, set the partition name cache TTL to `0`.
   ```sql
-  -- Disable partition metadata cache to detect the latest partition changes in Hudi tables
-  ALTER CATALOG hudi_ctl SET PROPERTIES ("meta.cache.hudi.partition.ttl-second" = "0");
+  -- Disable the partition name cache to detect the latest partitions of Hudi tables
+  ALTER CATALOG hudi_ctl SET PROPERTIES ("meta.cache.hive.partition_names.ttl-second" = "0");
   ```
-* **Performance optimization**: Changes via `ALTER CATALOG ... SET PROPERTIES` support hot-reload in Hudi (via the HMS catalog property update path).
+* **Performance optimization**: A successful Catalog property change drops the affected metadata caches and rebuilds them with the new configuration on the next access. Changing `meta.cache.max-weight` or `schema.cache.ttl-second` drops every cache of the Catalog; changing `meta.cache.<engine>.<entry>.*` drops the caches of that engine. Queries already in progress are not affected.
 
 ### Observability {#meta-cache-unified-observability}
 
-Cache metrics can be observed through the `information_schema.catalog_meta_cache_statistics` system table:
+Cache metrics can be observed through the `information_schema.catalog_meta_cache_statistics` system table. `ENTRY_NAME` shows the names listed in the table above, and the `default` engine row is the shared table-schema cache:
 
 ```sql
-SELECT catalog_name, engine_name, entry_name,
+SELECT engine_name, entry_name,
        effective_enabled, ttl_second, capacity,
-       estimated_size, hit_rate, load_failure_count, last_error
+       estimated_size, hit_rate, max_weight, estimated_weight
 FROM information_schema.catalog_meta_cache_statistics
-WHERE catalog_name = 'hudi_ctl' AND engine_name = 'hudi'
-ORDER BY entry_name;
+WHERE catalog_name = 'hudi_ctl'
+ORDER BY engine_name, entry_name;
 ```
 
 See the documentation for this system table: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).

@@ -130,6 +130,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'compute-storage-decoupled/file-cache/file-cache',
                                 'compute-storage-decoupled/file-cache/file-cache-internals',
+                                'compute-storage-decoupled/file-cache/file-cache-peer-read',
                             ],
                         },
                         {
@@ -210,7 +211,7 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
-            label: 'Use Doris',
+            label: 'Guides',
             collapsible: false,
             collapsed: false,
             items: [
@@ -317,7 +318,6 @@ const sidebars: SidebarsConfig = {
                 },
                 'table-design/schema-change',
                 'table-design/auto-increment',
-                'table-design/temporary-table',
             ],
         },
         {
@@ -405,6 +405,15 @@ const sidebars: SidebarsConfig = {
                                                 'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql',
                                             ],
                                         },
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'OceanBase (Experimental)',
+                                    items: [
+                                        'data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database',
+                                        'data-operate/import/import-way/streaming-job/schema-change-oceanbase',
+                                        'data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase',
                                     ],
                                 },
                                 'data-operate/import/import-way/streaming-job/continuous-load-s3',
@@ -778,6 +787,7 @@ const sidebars: SidebarsConfig = {
                 },
                 'lakehouse/data-cache',
                 'lakehouse/meta-cache',
+                'lakehouse/external-meta-cache-memory-management',
                 'lakehouse/compute-node',
                 'lakehouse/statistics',
                 {
@@ -1222,10 +1232,13 @@ const sidebars: SidebarsConfig = {
                 },
             ],
         },
+            ],
+        },
         {
             type: 'category',
-            label: 'Reference',
-            collapsed: true,
+            label: 'SQL References',
+            collapsible: false,
+            collapsed: false,
             items: [
                 {
                     type: 'category',
@@ -1562,7 +1575,6 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/parse-url',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/position',
-                                        'sql-manual/sql-functions/scalar-functions/string-functions/printf',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/protocol',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/quote',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/random_bytes',
@@ -1850,6 +1862,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-zip',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/arrays-overlap',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/countequal',
+                                        'sql-manual/sql-functions/scalar-functions/array-functions/trim-array',
                                     ],
                                 },
                                 {
@@ -2782,8 +2795,6 @@ const sidebars: SidebarsConfig = {
                         },
                     ],
                 },
-            ],
-        },
             ],
         },
     ],

@@ -7,11 +7,13 @@ import argparse
 import json
 import re
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
 
 DEFAULT_SITE_URL = "https://doris.apache.org"
+SURVEY_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeSppR5JJyXIxNoPlG_hS8RTW8k2tsCkpC0h68WSN6CEUsWcA/viewform"
 
 
 class ReportError(RuntimeError):
@@ -90,9 +92,24 @@ def generate_post(report_path: Path, report_link: str | None, site_url: str) -> 
             "👉 Read the full weekly report:",
             link,
             "",
+            "📝 We’d love your feedback—please fill out our survey:",
+            SURVEY_URL,
+            "",
             "Big thanks to everyone who contributed, reviewed, tested, reported issues, and shared feedback this week! 🙌",
         ]
     )
+
+
+def save_temp_post(post: str, report_path: Path) -> Path:
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        prefix=f"doris-weekly-report-{report_path.stem}-",
+        suffix=".md",
+        delete=False,
+    ) as output_file:
+        output_file.write(f"{post}\n")
+        return Path(output_file.name).resolve()
 
 
 def main() -> int:
@@ -107,8 +124,11 @@ def main() -> int:
         return 2
 
     try:
-        print(generate_post(args.report_path, args.report_link, args.site_url))
-    except ReportError as exc:
+        post = generate_post(args.report_path, args.report_link, args.site_url)
+        output_path = save_temp_post(post, args.report_path)
+        print(post)
+        print(f"Saved Markdown file: {output_path}", file=sys.stderr)
+    except (OSError, ReportError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
 

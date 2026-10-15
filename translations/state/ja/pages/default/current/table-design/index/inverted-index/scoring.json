@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/inverted-index/scoring",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/inverted-index/scoring.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/scoring.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "7f7d49bee863793e694103d36856ff0bb4af3e31f5f779e14d5e0b70b782e5a8",
+    "sourceTechnicalHash": "02787b610e10a7955244dcde39e533b3ae747bd64a300ed0beaf072c818fb197",
+    "targetHash": "b1a7946cc458cac822d2761e0ef4bec8d37b423aac0d4eebe9a06afaf1d216a6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:05:28.128Z",
+    "glossaryVersion": "0"
+  }
+}

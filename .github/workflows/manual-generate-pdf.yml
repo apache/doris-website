@@ -42,7 +42,7 @@ jobs:
           accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
           accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
           bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-          # use your own endpoint
-          endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
+          # Transfer-acceleration endpoint, same as the website deploys.
+          endpoint: oss-accelerate.aliyuncs.com
           folder: build-pdf
           onlyUpload: true

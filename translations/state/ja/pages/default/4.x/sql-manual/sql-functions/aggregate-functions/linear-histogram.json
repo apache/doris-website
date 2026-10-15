@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/linear-histogram",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/linear-histogram.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/linear-histogram.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "64f17409c81bd9b0ba3606d0aab4f6cd1947afd2682b449b424d99746ec33689",
+    "sourceTechnicalHash": "28821fc72395fcc3853a834b0af22a541dbe3ce1da278d07a743faea9a9a74c2",
+    "targetHash": "88cf1f32d88841aa30f5a8f520de94191b411d4ada7d7b8ced0dcef980e23c0f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:12:57.465Z",
+    "glossaryVersion": "0"
+  }
+}

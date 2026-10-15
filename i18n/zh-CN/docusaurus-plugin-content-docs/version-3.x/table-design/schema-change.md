@@ -18,7 +18,7 @@ Doris 支持两种类型的 Schema Change 操作：轻量级 Schema Change 和�
 | 是否需要数据重写   | 不需要               | 需要，涉及数据文件的重写 |
 | 系统性能影响       | 影响较小             | 可能影响系统性能，尤其是在数据转换过程中 |
 | 资源消耗           | 较低                 | 较高，会占用计算资源重新组织数据，过程中涉及到的表的数据占用的存储空间翻倍。 |
-| 操作类型           | 增加、删除 Value 列，修改列名，修改 VARCHAR 长度 | 修改列的数据类型、更改主键、修改列的顺序等 |
+| 操作类型           | 增加、删除 Value 列，修改列名，修改 VARCHAR 长度 | 修改列的数据类型、NOT NULL 改为 NULL、更改主键、修改列的顺序等 |
 
 ### 轻量级 Schema Change
 
@@ -33,6 +33,7 @@ Doris 支持两种类型的 Schema Change 操作：轻量级 Schema Change 和�
 重量级 Schema Change 涉及到数据文件的重写或转换，这些操作相对复杂，通常需要借助 Doris 的 Backend（BE）进行数据的实际修改或重新组织。重量级 Schema Change 操作通常涉及对表数据结构的深度变更，可能会影响到存储的物理布局。所有不支持轻量级 Schema Change 的操作，均属于重量级 Schema Change，比如：
 
 - 更改列的数据类型
+- 将列从 NOT NULL 修改为 NULL
 - 修改列的排序顺序
 
 重量级操作会在后台启动一个任务进行数据转换。后台任务会对表的每个 tablet 进行转换，按 tablet 为单位，将原始数据重写到新的数据文件中。数据转换过程中，可能会出现数据"双写"现象，即在转换期间，新数据同时写入新 tablet 旧 tablet 中。完成数据转换后，旧 tablet 会被删除，新 tablet 将取而代之。
@@ -199,7 +200,9 @@ ALTER TABLE example_db.my_table DROP COLUMN col4;
 
 - 非聚合类型如果修改 Key 列，需要指定 **KEY** 关键字
 
-- 只能修改列的类型，列的其他属性维持原样
+- 修改列**类型**时，聚合方式与默认值必须与原列保持一致。
+
+- 将列从 **NOT NULL 修改为 NULL** 支持，走重量级 Schema Change；从 **NULL 修改为 NOT NULL** 不支持。
 
 - 分区列和分桶列不能做任何修改
 
@@ -256,13 +259,20 @@ ALTER TABLE example_db.my_table
 MODIFY COLUMN col5 VARCHAR(64) REPLACE DEFAULT "abc";
 ```
 
-注意：只能修改列的类型，列的其他属性需要维持原样
+注意：仅修改 VARCHAR 长度；聚合方式与默认值需维持原样
 
 3. 修改 Key 列的某个字段的长度
 
 ```sql
 ALTER TABLE example_db.my_table
 MODIFY COLUMN col3 varchar(50) KEY NULL comment 'to 50';
+```
+
+4. 将列从 NOT NULL 修改为 NULL（重量级 Schema Change）
+
+```sql
+ALTER TABLE example_db.my_table
+MODIFY COLUMN col2 INT NULL;
 ```
 
 ### 重新排序
@@ -304,11 +314,11 @@ ORDER BY (k3,k1,k2,k4,v2,v1);
 
 - 因为历史数据已经失去明细信息，所以默认值的取值并不能实际反映聚合后的取值。
 
-- 当修改列类型时，除 Type 以外的字段都需要按原列上的信息补全。
+- 修改列类型时，聚合方式与默认值必须与原列信息一致。
 
-- 注意，除新的列类型外，如聚合方式，Nullable 属性，以及默认值都要按照原信息补全。
+- 支持 **NOT NULL 修改为 NULL**（重量级 Schema Change）；不支持 **NULL 修改为 NOT NULL**。
 
-- 不支持修改聚合类型、Nullable 属性和默认值。
+- 不支持修改聚合类型或默认值。
 
 ## 相关配置
 

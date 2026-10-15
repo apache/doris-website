@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/routine-load-manual",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/routine-load-manual.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/routine-load-manual.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "40970d21904a268c338e733243f38a76976bd40def51e6227587b59b4bcfdd09",
+    "sourceTechnicalHash": "1006402a0c98fcc712a12534acefd3384c63c90cf717d8dd794588525258bc45",
+    "targetHash": "3f2941a117f77b8c041c4764a206b3c786357b2dec1395aa0ed9989ef6fe3882",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:56:43.009Z",
+    "glossaryVersion": "0"
+  }
+}

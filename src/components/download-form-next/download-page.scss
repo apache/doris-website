@@ -401,16 +401,103 @@
     font-size: 13px;
 }
 
-.download-next__quick-note {
-    margin: 24px 0 0;
-    text-align: center;
-    color: var(--dl-text-subtle);
-    font-size: 14px;
-    line-height: 1.6;
+// What to read next. Three equal tiles on one hairline, so the versioning
+// policy, the upgrade notes and the archive sit beside the download button
+// instead of in a footnote under it.
+.download-next__guides {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px 36px;
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--dl-border);
+}
 
-    a {
+.download-next__guide {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    min-width: 0;
+    color: var(--dl-text);
+    text-decoration: none !important;
+
+    &:hover {
+        color: var(--dl-text);
+    }
+
+    &:hover .download-next__guide-title {
         color: var(--ifm-color-primary);
-        text-decoration: underline;
+    }
+
+    &:hover .download-next__guide-title svg {
+        transform: translateX(3px);
+    }
+
+    &:hover .download-next__guide-icon {
+        background: var(--ifm-color-primary);
+        color: #ffffff;
+    }
+}
+
+.download-next__guide-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: var(--brand-primary-soft);
+    color: var(--brand-primary-darker);
+    transition:
+        background 0.18s ease,
+        color 0.18s ease;
+}
+
+.download-next__guide-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.download-next__guide-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--dl-ink);
+    transition: color 0.18s ease;
+
+    svg {
+        flex-shrink: 0;
+        transition: transform 0.18s ease;
+    }
+}
+
+.download-next__guide-desc {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--dl-text-muted);
+}
+
+// The archive tile points past the cut where the brand green stops, so it
+// carries the drained tones of that zone rather than the green of this one.
+.download-next__guide.is-archive {
+    .download-next__guide-icon {
+        background: var(--dl-drained-bg);
+        color: var(--dl-drained);
+    }
+
+    &:hover .download-next__guide-title {
+        color: var(--dl-ended);
+    }
+
+    &:hover .download-next__guide-icon {
+        background: var(--dl-ended);
+        color: #ffffff;
     }
 }
 
@@ -855,6 +942,11 @@
         margin-bottom: 0;
     }
 
+    .download-next__guides {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
     .download-next__archive {
         margin-top: 56px;
         padding: 36px 0 44px;
@@ -939,6 +1031,25 @@
     .download-next__file-meta {
         display: block;
         margin: 6px 0 0;
+    }
+
+    .download-next__guides {
+        margin-top: 24px;
+        padding-top: 22px;
+        gap: 18px;
+    }
+
+    .download-next__guide-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .download-next__guide-title {
+        font-size: 14.5px;
+    }
+
+    .download-next__guide-desc {
+        font-size: 13px;
     }
 
     .download-next__section {

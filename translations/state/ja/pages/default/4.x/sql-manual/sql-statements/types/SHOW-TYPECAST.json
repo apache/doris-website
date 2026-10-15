@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/types/SHOW-TYPECAST",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/types/SHOW-TYPECAST.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/types/SHOW-TYPECAST.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "2733d55bbabd4b83d626b1bdc3bc3558d96fd08e27f76d00ce98a469e7089244",
+    "sourceTechnicalHash": "0c64f16eedf01764a8e94e4de5e2596c19a255277d9a15ad2e9aae8f90988b5e",
+    "targetHash": "65f383d1d76254a46c5ea4459da64fb4290763c9769d65318860c67aad48007c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:15:40.236Z",
+    "glossaryVersion": "0"
+  }
+}

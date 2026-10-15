@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/window-functions/cume-dist",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/window-functions/cume-dist.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/window-functions/cume-dist.md",
+    "sourceCommit": "8d395e5202c28020ca7b4d581deb5cf72df59370",
+    "sourceHash": "00da9e17986ec79fb3e9cd425ac3013ebc82d2315eafe6c7d166b727d3b4ea06",
+    "sourceTechnicalHash": "8648ff85e0b8241a2faaaf2a1275ca526ff7bd5b79e864d192ed83afecf97548",
+    "targetHash": "e0f14a57f589e92ee9f829a20e6c7ce5f0c4f8381ee8be911b3f2853cc537137",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:36:14.113Z",
+    "glossaryVersion": "0"
+  }
+}

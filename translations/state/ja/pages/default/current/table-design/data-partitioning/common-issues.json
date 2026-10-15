@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-partitioning/common-issues",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-partitioning/common-issues.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/data-partitioning/common-issues.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "cc11224d7babb79a62defcae69405d9cc252e8d08497df7132443832705e0057",
+    "sourceTechnicalHash": "b67ba9fa0ea60da5794c0e17bfecdee3cac0f0815142920d127c64950f352ec1",
+    "targetHash": "1ccac21cb2812610d44e6acd3bda0b59255855d58a46bc9ff1bc55e20db54e58",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:05:28.127Z",
+    "glossaryVersion": "0"
+  }
+}

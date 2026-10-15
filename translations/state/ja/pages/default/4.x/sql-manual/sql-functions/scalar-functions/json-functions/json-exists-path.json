@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-exists-path",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-exists-path.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-exists-path.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "1037d939eb7dc2d95331b38a1335d7ab862c9752bfff28564e0278068d4e65c7",
+    "sourceTechnicalHash": "51a12d62fc4bb17663e894da69a45f328e785335c8cc3929f66a58292ef888bb",
+    "targetHash": "c0edfffe966b0f9153394cff53dea7b4e038b84b577599f897c3f3958552160e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T12:42:57.798Z",
+    "glossaryVersion": "0"
+  }
+}

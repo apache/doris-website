@@ -21,7 +21,9 @@
         "Fluss primary-key table",
         "Fluss type mapping",
         "streaming storage",
-        "has no readable lake snapshot yet"
+        "has no readable lake snapshot yet",
+        "enable_jni_heap_admission",
+        "Java heap space"
     ]
 }
 ---
@@ -106,6 +108,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     See the [Fluss configuration reference](https://fluss.apache.org/docs/maintenance/configuration/) and the [Fluss authentication guide](https://fluss.apache.org/docs/security/authentication/) for the full list.
 
+    The Fluss client settings of the FE and the BE differ in one place only: the number of network threads. Each Fluss connection on the BE serves one scan range at a time, so when the catalog does not set `fluss.netty.client.num-network-threads`, the BE opens its connections with a single network thread to save threads and file descriptors on the BE, while the FE connection keeps the Fluss client default. There is usually no need to set this parameter; once it is set, the FE and the BE both use that value.
+
 * `{LakeProperties}`
 
     The LakeProperties section holds the connection settings of the Paimon lake behind tiered lake tables, with the prefix `fluss.lake.paimon.`. What follows the prefix is written exactly like `datalake.paimon.*` in the Fluss cluster's `server.yaml`, so the values can be copied over. See Lake Connection Settings.
@@ -153,6 +157,7 @@ CREATE CATALOG fluss_sasl PROPERTIES (
 ### Deployment Requirements
 
 - The FE uses the Fluss client to read metadata and plan queries, and the BE uses it to read data. Both must be able to reach the CoordinatorServer and the TabletServer of the Fluss cluster.
+- The BE reuses its connections to the Fluss cluster. Once a scan range has been read, its connection stays open for the scan ranges and queries that follow, and is closed only after it has been idle for more than 60 seconds. So the Fluss side may still show connections from the BE after a query has finished. Connections are kept apart by client configuration: after you change catalog properties (for example the SASL user name and password), the BE opens new connections with the new settings.
 - The KV snapshots of primary-key tables and the archived log segments live in the remote storage configured in Fluss (`remote.data.dir`). The BE reads those files directly, so it must be able to reach that remote storage as well.
 - To read tiered lake tables, both the FE and the BE must be able to reach the storage that holds the Paimon lake.
 - Lake data is read by the Paimon Connector plugin built into Doris. The plugin ships with Doris and needs no separate installation.
@@ -165,6 +170,8 @@ CREATE CATALOG fluss_sasl PROPERTIES (
 | --- | --- |
 | 5.0 | 1.0 |
 
+Fluss clusters older than 1.0 are not supported: the client APIs that Doris relies on first appeared in Fluss 1.0.
+
 ## Metadata Mapping
 
 <!-- Knowledge Type: Behavior Rules -->
@@ -173,7 +180,7 @@ The Fluss metadata hierarchy is Database -> Table, which maps one to one onto Do
 
 For a table with lake tiering enabled, `SHOW TABLES` lists only the table itself. `tbl$lake` and `tbl$log` are two ways of reading the same table and do not appear as separate entries.
 
-`SHOW CREATE TABLE` lists the Fluss table properties. They show whether lake tiering is enabled (`table.datalake.enabled`) and which lake format is used (`table.datalake.format`).
+`SHOW CREATE TABLE` shows the columns and comments of a Fluss table but not its table properties. To find out whether a table has lake tiering enabled (`table.datalake.enabled`) and which lake format it uses (`table.datalake.format`), check the table definition on the Fluss side, for example in Flink SQL. In Doris, only tables with lake tiering enabled have `tbl$lake` and `tbl$log`.
 
 ## Column Type Mapping
 
@@ -251,8 +258,9 @@ SELECT * FROM fluss.db.`tbl$log`;   -- Only the data in the Fluss log that has n
 
 **`tbl$lake`**
 
-- The Paimon Connector reads the Paimon table written by the tiering service directly. Besides the table's own columns, it exposes three system columns that Fluss adds when writing to the lake: `__bucket`, `__offset`, and `__timestamp`.
-- If the tiering service has not committed any data to the lake yet, the query fails with `nothing has been tiered`.
+- The Paimon Connector reads the Paimon table written by the tiering service directly. For a table tiered by Fluss 1.0, `tbl$lake` has exactly the same columns as `tbl`. The `__bucket`, `__offset`, and `__timestamp` system columns that earlier Fluss releases added to lake tables no longer exist.
+- It reads the lake at the readable lake snapshot that Fluss records, or at the latest state of the lake when there is none yet. Fluss creates the Paimon table together with the Fluss table, so before the tiering service commits anything, `tbl$lake` returns an empty result instead of an error.
+- If Doris cannot find the lake table with the current lake connection settings, the query fails with `nothing has been tiered`. This usually means that settings such as `fluss.lake.paimon.warehouse` do not point to the warehouse the Fluss cluster writes to. See Lake Connection Settings.
 - The time travel and incremental queries of the Paimon Catalog are not supported.
 
 **`tbl$log`**
@@ -265,17 +273,17 @@ SELECT * FROM fluss.db.`tbl$log`;   -- Only the data in the Fluss log that has n
 ### Union Read Modes
 
 <!-- Knowledge Type: Configuration Parameters + Behavior Rules -->
-<!-- Use Case: Controlling whether Union Read happens / Finding out why auto mode fell back to a Fluss-only read -->
+<!-- Use Case: Controlling whether Union Read happens / Finding out why auto mode fell back -->
 
 Whether a query on the tiered lake table itself (`SELECT * FROM tbl`) does a Union Read is controlled by the catalog property `fluss.union_read.mode`:
 
 | Value | Behavior |
 | --- | --- |
-| `auto` (default) | Does a Union Read when a readable lake snapshot exists. Falls back to reading only Fluss when the conditions are not met. |
+| `auto` (default) | Does a Union Read when a readable lake snapshot exists. When the conditions are not met, it falls back to reading the data from Fluss instead of failing. See the cases below. |
 | `required` | Union Read is mandatory. Fails when the conditions are not met instead of falling back. |
-| `disabled` | No Union Read. Reads only Fluss and ignores the data in the lake. |
+| `disabled` | No Union Read. Reads only the data currently in Fluss and ignores the lake, including partitions that exist only in the lake. |
 
-The session variable `fluss_union_read_mode` overrides the catalog setting for a single statement:
+The session variable `fluss_union_read_mode` overrides the catalog setting for the current session:
 
 ```sql
 SET fluss_union_read_mode = 'required';  -- No fallback to a Fluss-only read; fail instead
@@ -283,23 +291,33 @@ SET fluss_union_read_mode = 'disabled';  -- Read from Fluss only
 SET fluss_union_read_mode = '';          -- Default: follow the catalog setting
 ```
 
-The Union Read mode only decides which path the data is read through; it does not change the result. As long as the log in Fluss is still complete, all three modes return the same rows. `required` is useful for regression tests and troubleshooting, because it fails when the read path is not what you expect instead of quietly taking another path.
+To change the mode for a single statement only, use the `SET_VAR` hint:
 
-**Cases where `auto` falls back to a Fluss-only read**
+```sql
+SELECT /*+ SET_VAR(fluss_union_read_mode='required') */ * FROM fluss.db.tbl;
+```
+
+The Union Read mode decides which path the data is read through. As long as Fluss still holds all of the table's data, that is, no log has expired under the TTL and no partition has been dropped from Fluss while it still exists in the lake, all three modes return the same rows. `required` is useful for regression tests and troubleshooting, because it fails when the read path is not what you expect instead of quietly taking another path.
+
+**Cases where `auto` falls back**
 
 | Case | Description |
 | --- | --- |
-| No readable lake snapshot | The tiering service has not committed anything yet, so all data is still in the log. |
-| `key-type` | The primary-key columns of a primary-key table have types that cannot be compared exactly between the lake side and the log side: `FLOAT`, `DOUBLE`, `TIMESTAMP`/`TIMESTAMP_LTZ` with precision greater than 6, and `TIME`. |
+| No readable lake snapshot | The tiering service has not committed anything yet, so all data is still in Fluss. The table is read from Fluss alone. |
+| `key-type` | A primary-key column of a primary-key table, other than a partition column, has a type whose values cannot be compared exactly between the lake side and the log side: `FLOAT`, `DOUBLE`, `TIME`, `TIMESTAMP` with precision greater than 6, and `TIMESTAMP_LTZ`. When `enable.mapping.timestamp_tz` is `false` (the default), a `TIMESTAMP_LTZ` column of any precision falls in this case, because two different instants can have the same local time during a daylight saving time overlap. When it is `true`, only a precision greater than 6 does. |
 | `partition-type` | A partition column of a primary-key table is not `STRING`. Lake splits are matched to Fluss partitions by the text form of the partition value, and only `STRING` guarantees that both sides write it the same way. |
 | `tail-truncated` | Part of the log after the lake snapshot of a primary-key table has already been deleted by the Fluss TTL, so the log tail cannot be read in full. |
 | `tail-too-large` | The log tail of a primary-key table has more rows than `fluss.union_read.max_tail_rows` or `fluss.union_read.max_total_tail_rows` allows. |
 
-A primary-key table loses no data when it falls back to a Fluss-only read. Fluss keeps the full state of a primary-key table; the query cannot use the columnar files in the lake and runs slower. Log tables are different. A Fluss-only read returns only what is still kept in the Fluss log, and once the early log expires under the TTL, the result has fewer rows than a Union Read would. `disabled` is not recommended for log tables that have been tiered.
+The last four cases apply to primary-key tables only, and `EXPLAIN` reports them in the `degraded` field. When a primary-key table falls back, the partitions that still exist in Fluss are read from Fluss in full. This loses no data, because Fluss keeps the complete state of those partitions; the query just cannot use the columnar files in the lake for them and runs slower. Partitions that have been dropped from Fluss but still exist in the lake, for example because of partition expiration, keep being read from the lake. An unpartitioned table is read from Fluss alone.
+
+For `partition-type`, Doris cannot reliably tell which Fluss partition a lake split belongs to. If the lake holds a partition that Fluss no longer has, or a partition value that the two sides write differently, the query fails with `cannot be matched safely to a live fluss partition` instead of falling back. Set the Union Read mode to `disabled` to read only the data in Fluss.
+
+Log tables are different. A Fluss-only read returns only what is still kept in the Fluss log, and once the early log expires under the TTL, the result has fewer rows than a Union Read would. `disabled` is not recommended for log tables that have been tiered. A log table also has no fallback when its log tail is incomplete: if part of the log after the lake snapshot has already expired, a Union Read fails with `Part of the log tail has expired` in both `auto` and `required` mode, and so does a query on `tbl$log` in any mode. Wait for Fluss to publish a newer readable lake snapshot.
 
 **Row limits for the log tail**
 
-For a Union Read on a primary-key table, the BE keeps the log tail of every bucket in memory: one copy is the set of primary keys used to filter the lake data, and one copy is the rows the tail itself has to emit. To bound memory use, `fluss.union_read.max_tail_rows` limits the tail rows of a single bucket (default 2 million rows), and `fluss.union_read.max_total_tail_rows` limits the total tail rows across all buckets in one scan (default 20 million rows). Both limits are checked during planning, based on the offsets reported by Fluss. Normally the log tail only holds the data written within one `table.datalake.freshness` period, far below the default limits. Hitting a limit usually means the tiering service has stopped or is badly behind.
+For a Union Read on a primary-key table, the BE keeps the log tail of every bucket in memory: one copy is the set of primary keys used to filter the lake data, and one copy is the rows the tail itself has to emit. To bound memory use, `fluss.union_read.max_tail_rows` limits the tail rows of a single bucket (default 2 million rows), and `fluss.union_read.max_total_tail_rows` limits the total tail rows across all buckets in one scan (default 20 million rows). Both limits are checked during planning, based on the offsets reported by Fluss. Normally the log tail only holds the data written within one `table.datalake.freshness` period, far below the default limits. Hitting a limit usually means the tiering service has stopped or is badly behind. The rows the tail emits are held in the BE's JVM heap, so before raising either limit, make sure the JVM heap has room for them. See BE JVM Heap Memory.
 
 **Checking the read path with EXPLAIN**
 
@@ -312,14 +330,14 @@ flussScan: readMode=default, unionRead=yes, lakeSplits=3, suppressedLakeSplits=1
 | Field | Meaning |
 | --- | --- |
 | `readMode` | `default` reads the whole table; `log` reads `tbl$log`. |
-| `unionRead` | Whether a Union Read was done. |
+| `unionRead` | Whether a Union Read was done. It is also `yes` for `tbl$log`, whose starting offsets come from the lake snapshot; `lakeSplits` is 0 there. |
 | `lakeSplits` | Number of lake splits. |
 | `suppressedLakeSplits` | Number of those lake splits that have to be filtered by the log tail. Primary-key tables only. |
 | `logRanges` | Number of log scan ranges of a log table. |
 | `pkRanges` | Number of buckets of a primary-key table read entirely from Fluss (KV snapshot + change log). |
 | `pkTailRanges` | Number of log tail scan ranges in a Union Read on a primary-key table. |
 | `mode` | The Union Read mode in effect. Carries a `(session)` suffix when it comes from the session variable. |
-| `degraded` | Appears only when `auto` mode has fallen back to a Fluss-only read. The value is the reason from the table above. |
+| `degraded` | Appears only when a primary-key table falls back in `auto` mode. The value is one of `key-type`, `partition-type`, `tail-truncated`, and `tail-too-large` from the table above. Having no readable lake snapshot is not reported here; it only shows as `unionRead=no`. When partitions that exist only in the lake are still read from the lake, `unionRead=yes` and `degraded` appear together. |
 
 ### Lake Connection Settings
 
@@ -350,21 +368,24 @@ After the prefix, use Paimon's own parameter names, the same as what follows `da
 
 Overrides are applied per key, not as a whole. A key set in the catalog overrides the same key reported by the Fluss cluster, and keys that are not set still come from the cluster. If you only supply credentials, `warehouse`, `metastore`, and the rest still come from the cluster.
 
-Storage parameters (credentials, endpoint, region, and addressing style) are not handed to the Paimon Catalog. They are converted to Doris's own storage parameter names and applied by the Doris storage layer. The reason is that these settings serve both the FE (reading manifests) and the BE (reading data files), and only the storage layer gives both sides the same set. The mapping is as follows:
+Storage parameters (credentials, session tokens, endpoint, region, addressing style, and Hadoop settings) are not handed to the Paimon Catalog. They are converted to Doris's own storage parameter names and applied by the Doris storage layer. The reason is that these settings serve both the FE (reading manifests) and the BE (reading data files), and only the storage layer gives both sides the same set. The mapping is as follows:
 
 | Paimon parameter | Doris storage parameter |
 | --- | --- |
-| `s3.access-key` / `s3.access.key` | `s3.access_key` |
-| `s3.secret-key` / `s3.secret.key` | `s3.secret_key` |
-| `s3.endpoint` | `s3.endpoint` |
-| `s3.region` | `s3.region` |
-| `s3.path-style-access` / `s3.path.style.access` | `use_path_style` |
+| `s3.access-key` / `s3.access.key` / `fs.s3a.access.key` | `s3.access_key` |
+| `s3.secret-key` / `s3.secret.key` / `fs.s3a.secret.key` | `s3.secret_key` |
+| `s3.session-token` / `s3.session.token` / `fs.s3a.session.token` | `s3.session_token` |
+| `s3.endpoint` / `fs.s3a.endpoint` | `s3.endpoint` |
+| `s3.region` / `fs.s3a.endpoint.region` | `s3.region` |
+| `s3.path-style-access` / `s3.path.style.access` / `fs.s3a.path.style.access` | `use_path_style` |
 | `fs.oss.accessKeyId` | `oss.access_key` |
 | `fs.oss.accessKeySecret` | `oss.secret_key` |
 | `fs.oss.endpoint` | `oss.endpoint` |
 | `fs.obs.access.key` / `fs.obs.access-key` | `obs.access_key` |
 | `fs.obs.secret.key` / `fs.obs.secret-key` | `obs.secret_key` |
 | `fs.obs.endpoint` | `obs.endpoint` |
+
+Other parameters that start with `fs.`, `dfs.`, or `hadoop.`, such as HDFS HA and Kerberos settings, are handed to the Doris storage layer as well, under their original names.
 
 `fluss.lake.paimon.metastore` accepts `filesystem` (default), `hive`, and `rest`. Other parameters, such as the Hive Metastore address or the REST authentication settings, are written the same way as in the [Paimon Catalog](./paimon-catalog.mdx).
 
@@ -374,7 +395,7 @@ Storage parameters (credentials, endpoint, region, and addressing style) are not
 ALTER CATALOG fluss SET PROPERTIES ('fluss.lake.paimon.warehouse' = '');
 ```
 
-One Fluss Catalog reads lake tables with a single set of lake settings. After the Fluss cluster changes `datalake.paimon.*`, run `REFRESH CATALOG` so that Doris reloads it.
+One Fluss Catalog reads lake tables with a single set of lake settings. After the Fluss cluster changes `datalake.paimon.*`, drop and recreate the catalog so that Doris loads the new settings. `REFRESH CATALOG` only clears the metadata cache and does not reload the lake settings.
 
 ### Query Profile
 
@@ -391,12 +412,31 @@ TableReader
 ├── FlussLakeReadTime           8s25ms      Total time on the Paimon side, including tail reads and filtering
 │   ├── FlussLakeRangeNum            1
 │   ├── FlussLakeSuppressRangeNum    2
-│   └── FlussLakeRowsReturned        7      Rows after filtering; add SuppressedRows to get the count before filtering
+│   └── FlussLakeRowsReturned        7      Rows after filtering; add FlussUnionSuppressedRows to get the count before filtering
 ├── FlussUnionTailReadTime      5s20ms      One round trip to Fluss per bucket
 └── FlussUnionSuppressTime      16.1us      Filtering per block, grows with the number of lake rows
 ```
 
 Subtracting the time of each range type from the total of its side gives the cost of initializing that reader (JNI class loading, or setting up the Paimon read stack). A query that only reads a log table has no lake or primary-key counters in its profile.
+
+A scan that reads lake splits also has the following counters under `TableReader`. They carry values in a Union Read on a primary-key table:
+
+| Counter | Meaning |
+| --- | --- |
+| `FlussUnionSuppressedRows` | Lake rows dropped because the log tail updated or deleted them. |
+| `FlussUnionTailKeysRead` | Change log records read from the log tails. |
+| `FlussUnionTailKeysRetained` | Distinct primary keys kept in memory to filter the lake rows. |
+| `FlussUnionTailCacheHitCount` | Lake splits that reused a log tail already read. On one BE, the lake splits of the same bucket share the log tail once it has been read. |
+
+The part read from Fluss goes through the JNI reader, whose counters sit under the `fluss` node below `TableReader` and appear only in the DetailProfile part of the profile. The following ones relate to connections and the JVM heap:
+
+| Counter | Meaning |
+| --- | --- |
+| `FlussJniConnectionsOpened` | Fluss connections opened for the read. The BE reuses idle connections, so a query repeated right afterwards usually shows 0. |
+| `JvmHeapDeclaredBytes` | With JNI heap admission on, the JVM heap the readers declared they would hold. Only whole primary-key table reads and the log tails of Union Reads on primary-key tables declare; other reads show 0. See BE JVM Heap Memory. |
+| `JvmHeapWaitTime` | With JNI heap admission on, the time the readers spent waiting in line for JVM heap. See BE JVM Heap Memory. |
+
+When lake splits are read through Paimon JNI, the JVM heap counters of the same names are under the `paimon` node.
 
 ## Query Performance
 
@@ -406,7 +446,7 @@ Subtracting the time of each range type from the total of its side gives the cos
 The BE has two paths for reading Fluss tables, and their costs differ a lot:
 
 - C++ native reader. The BE reads the ORC/Parquet files in the Paimon lake directly, with the same readers the Paimon Catalog uses. It does not go through the JVM, and it can use the Doris [file cache](../data-cache.md).
-- JNI reader. The BE calls the Fluss Java SDK through JNI to read Fluss's own data. Logs, KV snapshots, and change logs can only be read this way. Every batch has to be converted from Java objects into Doris columnar blocks, which is much slower than the native reader.
+- JNI reader. The BE calls the Fluss Java SDK through JNI to read Fluss's own data. Logs, KV snapshots, and change logs can only be read this way. Every batch has to be converted from Java objects into Doris columnar blocks, which is much slower than the native reader. Some of these reads also hold a lot of JVM heap; see BE JVM Heap Memory.
 
 Which path is used depends on the type of the scan range, which corresponds to the counters on the `flussScan` line of `EXPLAIN`:
 
@@ -415,8 +455,10 @@ Which path is used depends on the type of the scan range, which corresponds to t
 | Log of a log table | `logRanges` | JNI |
 | Whole primary-key table read (KV snapshot + change log) | `pkRanges` | JNI |
 | Log tail of a primary-key table in a Union Read | `pkTailRanges` | JNI |
-| Lake splits of a log table, in a Union Read or `tbl$lake` | `lakeSplits` | C++ native reader |
-| Lake splits of a primary-key table, in a Union Read or `tbl$lake` | `lakeSplits`, `suppressedLakeSplits` | Decided by the Paimon Catalog rules, see below. Filtering lake rows by the primary keys in the log tail happens in C++ on the BE |
+| Lake splits of a log table in a Union Read | `lakeSplits` | C++ native reader |
+| Lake splits of a primary-key table in a Union Read | `lakeSplits`, `suppressedLakeSplits` | Decided by the Paimon Catalog rules, see below. Filtering lake rows by the primary keys in the log tail happens in C++ on the BE |
+
+`tbl$lake` is planned by the Paimon Connector directly, so its `EXPLAIN` has no `flussScan` line. It shows `paimonNativeReadSplits=N/M` instead, meaning N of the M splits use the native reader, and its profile has no Fluss counters.
 
 Lake splits are planned by the Paimon Connector, and whether they use the native reader follows the same rules as a plain Paimon table:
 
@@ -426,28 +468,106 @@ Lake splits are planned by the Paimon Connector, and whether they use the native
 
 For a tiered table, Union Read lets the part in the lake (usually the vast majority of the data) go through the native reader, and only the small amount of log after the tiering offset goes through JNI. The more timely the tiering (the smaller `table.datalake.freshness`), the less goes through JNI. That is why tiered tables use Union Read by default. A few suggestions:
 
-- When analyzing history and freshness does not matter much, query `tbl$lake` directly. The whole path is then the native reader.
+- When analyzing history and freshness does not matter much, query `tbl$lake` directly. It skips the Fluss log entirely: a log table is then read wholly by the native reader, and a primary-key table follows the Paimon rules above.
 - `fluss.union_read.mode = disabled` sends the whole table through JNI. It is not recommended except for troubleshooting.
-- When `auto` mode falls back to a Fluss-only read (`degraded=` appears in `EXPLAIN`), the whole table also goes through JNI. For primary-key tables, watch for the `key-type` and `partition-type` cases: they are determined by the table schema, and only changing the table definition fixes them.
-- A Union Read on a primary-key table reads the primary keys in the log tail once more for every bucket (`FlussUnionTailReadTime` in the profile). The longer the tail, the higher the cost.
+- When `auto` mode falls back (`degraded=` appears in `EXPLAIN`), everything read from Fluss also goes through JNI; only the partitions that exist only in the lake are still read from the lake. Watch for the `key-type` and `partition-type` cases: they are determined by the table schema, and only changing the table definition fixes them.
+- A Union Read on a primary-key table reads the primary keys in the log tail once more for every bucket on every BE (`FlussUnionTailReadTime` in the profile), and the other lake splits of that bucket on the same BE reuse them. The longer the tail, the higher the cost.
 
 To confirm which path a query took, compare `lakeSplits` with `logRanges`, `pkRanges`, and `pkTailRanges` in `EXPLAIN`, and compare `FlussLakeReadTime` with `FlussLogReadTime` in the profile.
+
+## BE JVM Heap Memory
+
+<!-- Knowledge Type: Capacity Planning + Configuration Parameters + Troubleshooting -->
+<!-- Use Case: OutOfMemoryError when querying primary-key tables / Sizing the BE JVM heap / Turning on JNI heap admission -->
+
+The BE reads Fluss's own data through JNI, and lake Paimon splits that need merging go through JNI as well (see Query Performance). All of these readers run in the JVM embedded in the BE and share one heap with the JNI reads of other catalogs and with Java UDFs. The heap size is set by `-Xmx` in `JAVA_OPTS_FOR_JDK_17` in `be.conf`, and defaults to 2 GB (`-Xmx2048m`).
+
+Most reads stream their data and hold only a few MB of heap, such as the log of a log table. The three reads below are different: before returning their first batch, they load part of the data into the heap and keep it there until the read ends:
+
+| Data read | Heap held |
+| --- | --- |
+| Whole primary-key table read from Fluss (`pkRanges` in `EXPLAIN`) | The change log after the bucket's latest KV snapshot, loaded into memory and merged by primary key. The more changes since the snapshot, the more heap it takes. |
+| Log tail of a Union Read on a primary-key table (`pkTailRanges`) | The latest row of every primary key in the tail. The longer the tail, the more heap it takes. |
+| Lake Paimon splits that need merging (a Paimon primary-key table that has not been compacted yet) | One row group of every file being merged. A single split can take hundreds of MB. |
+
+A query reads several scan ranges in parallel: each scan instance runs up to `max_file_scanners_concurrency` (default 16) readers at once, and one BE may have several instances and several queries reading at the same time. When a few of these heavy readers open together, they can fill the heap and the query fails. The error message gives the heap size and the ways out:
+
+```text
+errCode = 2, detailMessage = (10.0.0.3)[JNI_ERROR]OutOfMemoryError: Java heap space. BE's JVM is out of heap. Its maximum is 2048 MB, the -Xmx in JAVA_OPTS_FOR_JDK_17 of be.conf: raise it and restart the BE, or have the statement hold less of the heap at once - read with fewer scanners by setting max_file_scanners_concurrency below its default of 16, or set enable_jni_heap_admission = true to have JNI readers wait for room by the heap they declare. A statement that ran out of heap frees it only once its scanners have exited
+```
+
+### Handling Insufficient Heap
+
+There are several ways to deal with it:
+
+1. Give the JVM more heap. Change `-Xmx` in `JAVA_OPTS_FOR_JDK_17` in `be.conf`; it takes effect after the BE restarts. For clusters that query primary-key tables often, consider this first. The JVM heap also comes out of the memory of the machine running the BE, so make sure the machine has enough memory before raising it.
+2. Open fewer readers at once. Lower `max_file_scanners_concurrency`: with fewer readers open at the same time, less heap is held, at the cost of slower reads:
+
+    ```sql
+    SET max_file_scanners_concurrency = 4;
+    -- For a single statement only
+    SELECT /*+ SET_VAR(max_file_scanners_concurrency=4) */ * FROM fluss.db.tbl;
+    ```
+
+3. Turn on JNI heap admission, so that these readers wait in line by the heap they will hold. See below.
+4. Reduce the data that has to be loaded into the heap. The more often Fluss takes KV snapshots (`kv.snapshot.interval` of the Fluss cluster), the shorter the change log after a snapshot. The more timely the tiering (`table.datalake.freshness`), the shorter the log tail. Once the lake Paimon primary-key table has been compacted, its splits need no merging, go through the native reader, and take no JVM heap.
+
+### JNI Heap Admission
+
+When the session variable `enable_jni_heap_admission` (default `false`) is on, the FE estimates during planning how much heap each of the three readers above will hold, and passes the estimate to the BE along with the scan range. The BE keeps track of how much the readers it has opened have declared in total. It opens a new reader only if that total plus the new reader's declaration stays within `jni_scanner_heap_budget_ratio` of the maximum JVM heap (that is, `-Xmx`). Otherwise the reader waits in line until earlier readers finish, close, and give back their share.
+
+```sql
+SET enable_jni_heap_admission = true;
+-- For a single statement only
+SELECT /*+ SET_VAR(enable_jni_heap_admission=true) */ * FROM fluss.db.tbl;
+```
+
+With the variable on:
+
+- Only the three readers above declare and wait. The log of a log table and lake splits read by the native reader declare nothing, and are just as fast with the variable on or off.
+- Readers may only wait. Query results do not change.
+- Readers wait in arrival order, so a reader with a large declaration is not passed over indefinitely by smaller readers that arrive later. When no reader holds a share, the next one is always let through, so even a reader that declares more than the whole budget can open; it just runs alone.
+- A reader waits at most `jni_scanner_heap_max_wait_ms` (default 60 seconds). After that it stops waiting and opens.
+- The budget is per BE and shared by all queries on that BE that have the variable on. Queries without it do not declare, do not wait, and do not count against the budget. When several queries read primary-key tables at the same time, use `SET GLOBAL enable_jni_heap_admission = true` to turn it on for all sessions.
+- The variable also applies to splits read through JNI in the [Paimon Catalog](./paimon-catalog.mdx).
+
+Both related BE configuration items can be changed at runtime. See [BE Configuration](../../admin-manual/config/be-config.md) for how to change them:
+
+| Configuration item | Default | Description |
+| --- | --- | --- |
+| `jni_scanner_heap_budget_ratio` | `0.5` | The share of the maximum JVM heap that open readers may declare in total. The rest of the heap is left to readers that declare nothing, to other BE features that use the JVM such as Java UDFs, and to short peaks during reads, so do not set it too high. |
+| `jni_scanner_heap_max_wait_ms` | `60000` | The longest a reader waits in line, in milliseconds. After that it opens anyway. |
+
+`JvmHeapDeclaredBytes` and `JvmHeapWaitTime` in the profile (see Query Profile) record how much heap the readers declared and how long they waited. If `JvmHeapWaitTime` is often high, the budget is too small; consider raising `-Xmx`.
+
+The declarations are estimates, which is why the variable is off by default:
+
+- Values of string, binary, and nested types are all estimated at 64 bytes. For a table with longer values, such as JSON in a string column or long string primary keys, the readers hold more than they declare. Admission cannot stop that, and the query may still fail with `OutOfMemoryError`.
+- A Paimon merge read has short peaks that can reach several times its declaration. Those peaks have to fit into the heap outside the budget.
+- When the same primary key is updated many times in the log, the declaration is larger than what the reader actually holds, so the reader may wait longer than it needs to and the query slows down.
+
+### After the Heap Runs Out
+
+- The query that hit `OutOfMemoryError` fails, and the BE process keeps running.
+- The heap that query held is freed only after all of its readers have exited. Queries run before that may fail with `Failed to attach the current thread to the JVM, code=-1`, followed by the same advice as above. Wait a moment and retry.
+- When the heap runs out, a few background threads of the Fluss client may die with it and are not restarted, so a few Fluss reads can hang for good. The threads and memory they hold are freed only when the BE restarts. After the JVM heap has run out, restart the BE at a convenient time.
+- If you would rather have the BE exit as soon as the JVM heap runs out and let an external process supervisor restart it, add `-XX:+ExitOnOutOfMemoryError` to `JAVA_OPTS_FOR_JDK_17`. The cost is that every query and load running on that BE fails.
 
 ## Limitations
 
 <!-- Knowledge Type: Limitations -->
 
 - Read only. `INSERT`, `UPDATE`, and `DELETE` are not supported, nor are database and table management statements such as `CREATE TABLE` and `DROP TABLE`.
-- Paimon is the only supported lake format. For tables whose `table.datalake.format` is something else, the lake data cannot be read.
+- Paimon is the only supported lake format. For a table whose `table.datalake.format` is something else, `tbl$lake` fails. Once such a table has a readable lake snapshot, a query on the table itself also fails in `auto` and `required` mode; set the Union Read mode to `disabled` to read the data in Fluss.
 - The Fluss `TIME` type maps to `UNSUPPORTED`, and that column cannot be queried.
-- Predicates are not pushed down to Fluss or to the Paimon lake. Apart from partition pruning, Doris applies all filters after reading the data. Column pruning and sub-column pruning of nested types are both supported.
+- Predicates are not pushed down to Fluss: apart from partition pruning, Doris filters the data read from Fluss after reading it. For the lake, the filter is passed to Paimon when splits are planned, and Paimon uses it to skip partitions and data files. Column pruning and sub-column pruning of nested types are both supported.
 - Time travel and incremental queries are not supported, including on `tbl$lake`.
 - Fluss provides only table-level row counts, without column-level statistics.
 
 ## FAQ
 
 <!-- Knowledge Type: Troubleshooting -->
-<!-- Use Case: Missing Paimon plugin / Object storage credentials / Lake snapshot not ready / Lake configuration changed / Unsupported partition column type -->
+<!-- Use Case: Missing Paimon plugin / Object storage credentials / Lake snapshot not ready / Lake table not found / Lake configuration changed / Expired log tail / Unsupported partition column type / Partition matching failure / Insufficient JVM heap -->
 
 1. Querying a tiered lake table fails with `the paimon connector plugin is not available`
 
@@ -459,15 +579,35 @@ To confirm which path a query took, compare `lakeSplits` with `logRanges`, `pkRa
 
 3. Error `has no readable lake snapshot yet`
 
-    The tiering service has not committed any data to the lake yet. In `required` mode this is an error. Wait for the tiering service to commit, or switch to `auto`.
+    The tiering service has not committed any data to the lake yet. A query on the table itself reports this only in `required` mode: wait for the tiering service to commit, or switch to `auto`. A query on `tbl$log` reports it in every mode, because `tbl$log` starts from the lake snapshot; query the table itself instead.
 
-4. Error `is already serving lake tables with a different paimon configuration`
+4. `tbl$lake` fails with `nothing has been tiered`
 
-    The `datalake.paimon.*` configuration of the Fluss cluster changed after the catalog was created. Run `REFRESH CATALOG` to reload it.
+    Doris cannot find the lake table with the current lake connection settings. Fluss 1.0 creates the lake table together with the Fluss table, so this usually means that settings such as `fluss.lake.paimon.warehouse` do not point to the warehouse the Fluss cluster writes to. See Lake Connection Settings.
 
-5. Error `cannot be read: its partition column 'xx' has fluss type TIMESTAMP(3)`
+5. Error `is already serving lake tables with a different paimon configuration`
+
+    The `datalake.paimon.*` configuration of the Fluss cluster changed after the catalog started reading lake tables. Drop and recreate the catalog. `REFRESH CATALOG` does not reload the lake settings.
+
+6. Error `Part of the log tail has expired`
+
+    A Union Read on a log table, or a query on `tbl$log`, needs the log after the lake snapshot, and part of it has already been deleted by the Fluss TTL. Wait for Fluss to publish a newer readable lake snapshot. See Union Read Modes.
+
+7. Error `cannot be read: its partition column 'xx' has fluss type TIMESTAMP(3)`
 
     Doris cannot read partition columns of that type. See Partitioned Tables.
+
+8. Error `cannot be matched safely to a live fluss partition`
+
+    The primary-key table is partitioned by a column that is not `STRING`, and the lake holds a partition that Doris cannot match to a partition in Fluss, for example one that Fluss has already dropped. See the `partition-type` case in Union Read Modes. To read the data still in Fluss, set the Union Read mode to `disabled`.
+
+9. Error `OutOfMemoryError: Java heap space` with `BE's JVM is out of heap` in the message
+
+    The BE's JVM heap is full. This mostly happens when reading primary-key tables, doing a Union Read on a primary-key table, or reading many lake Paimon splits that need merging. Raise `-Xmx`, lower `max_file_scanners_concurrency`, or turn on `enable_jni_heap_admission`. See BE JVM Heap Memory. After the heap has run out, restart the BE at a convenient time.
+
+10. Error `Failed to attach the current thread to the JVM, code=-1`
+
+    This usually comes right after the JVM heap ran out: the readers of the query that failed with `OutOfMemoryError` have not all exited yet, so its heap has not been freed. Wait a moment and retry. See BE JVM Heap Memory.
 
 ## Debugging
 

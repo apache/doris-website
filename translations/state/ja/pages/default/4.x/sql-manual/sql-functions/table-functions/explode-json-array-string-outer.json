@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-functions/explode-json-array-string-outer",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-functions/explode-json-array-string-outer.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-functions/explode-json-array-string-outer.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "0b489436118b392c39e535b23f0d20b9e8fec03d69928dc63c9b8009d6921616",
+    "sourceTechnicalHash": "5c9a51d19d703ee602cfba63fbbc297518847c1fb6ea1ecc7f3722a5cb118218",
+    "targetHash": "f5b5a76f6f3502fd225ca41da2c8a6b7f1acb814fac61bb5769e2ea933b6fdd6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:53:51.001Z",
+    "glossaryVersion": "0"
+  }
+}

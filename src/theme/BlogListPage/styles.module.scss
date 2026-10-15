@@ -1,0 +1,108 @@
+.searchSection {
+    align-self: center;
+    margin-top: 5.5rem;
+    max-width: 42rem;
+    width: 100%;
+}
+
+.searchControl {
+    align-items: center;
+    background: var(--global-colors-white);
+    border: 1px solid var(--global-colors-split);
+    border-radius: var(--global-border-radius);
+    color: var(--global-colors-text-secondary);
+    display: flex;
+    min-height: 3rem;
+    position: relative;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.searchControl:focus-within {
+    border-color: var(--ifm-color-primary);
+    box-shadow: 0 0 0 3px rgb(var(--brand-primary-rgb) / 16%);
+}
+
+.searchIcon {
+    flex: 0 0 auto;
+    height: 1.25rem;
+    margin-left: 1rem;
+    width: 1.25rem;
+}
+
+.searchInput {
+    background: transparent;
+    border: 0;
+    color: var(--global-colors-text-primary);
+    flex: 1;
+    font-size: var(--global-font-size-medium);
+    min-width: 0;
+    outline: 0;
+    padding: 0.75rem 1rem;
+}
+
+.searchInput::placeholder {
+    color: var(--global-colors-text-secondary);
+}
+
+.searchInput::-webkit-search-cancel-button,
+.searchInput::-webkit-search-decoration {
+    appearance: none;
+}
+
+.clearButton {
+    background: transparent;
+    border: 0;
+    color: var(--ifm-color-primary);
+    cursor: pointer;
+    flex: 0 0 auto;
+    font: inherit;
+    font-weight: 500;
+    margin-right: 0.5rem;
+    padding: 0.5rem;
+}
+
+.clearButton:hover {
+    text-decoration: underline;
+}
+
+.clearButton:focus-visible {
+    border-radius: 0.25rem;
+    outline: 2px solid var(--ifm-color-primary);
+    outline-offset: 1px;
+}
+
+.resultCount {
+    color: var(--global-colors-text-secondary);
+    font-size: var(--global-font-size-small);
+    margin: 0.75rem 0 0;
+    text-align: center;
+}
+
+.emptyState {
+    background: var(--brand-surface-faint);
+    border: 1px solid var(--brand-border-soft);
+    border-radius: var(--global-border-radius);
+    color: var(--global-colors-text-secondary);
+    grid-column: 1 / -1;
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.visuallyHidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+@media (max-width: 996px) {
+    .searchSection {
+        margin-top: 2rem;
+    }
+}

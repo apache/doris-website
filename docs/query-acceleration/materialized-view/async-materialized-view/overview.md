@@ -274,6 +274,6 @@ It cannot detect changes in the base table and is only suitable for manual on-de
 ## See Also
 
 - Create, query, and maintain async materialized views: [Create, Query, and Maintain Async Materialized Views](../async-materialized-view/functions-and-demands.md)
-- Row-level change maintenance: [Incremental View Maintenance (IVM)](../async-materialized-view/incremental-materialized-view.md)
+- Row-level change maintenance: [Incremental View Maintenance (IVM)](../async-materialized-view/incremental-materialized-view.mdx)
 - User guide: [User Guide](../async-materialized-view/use-guide.md)
 - FAQ: [FAQ](../async-materialized-view/faq.md)

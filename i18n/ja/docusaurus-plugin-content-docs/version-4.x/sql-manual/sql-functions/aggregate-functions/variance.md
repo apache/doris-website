@@ -1,0 +1,65 @@
+---
+{
+    "title": "VARIANCE,VAR_POP,VARIANCE_POP",
+    "language": "ja",
+    "description": "VARIANCE 関数は、指定された式の統計的な分散を計算します。"
+}
+---
+
+## 説明
+
+VARIANCE 関数は、指定された式の統計的な分散を計算します。数値の集合が算術平均からどの程度ばらついているかを示します。
+
+## 別名
+
+- VAR_POP
+- VARIANCE_POP
+
+## 構文
+
+```sql
+VARIANCE(<expr>)
+```
+
+## パラメータ
+| パラメータ | 説明 |
+| -- | -- |
+| `<expr>` | 分散を計算する列または式。Double 型をサポートします。 |
+
+## 戻り値
+計算された分散を表す Double 型の値を返します。
+グループ内に有効なデータがない場合は NULL を返します。
+
+## 例
+```sql
+-- Create sample table
+CREATE TABLE student_scores (
+    student_id INT,
+    score DECIMAL(4,1)
+) DISTRIBUTED BY HASH(student_id)
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+-- Insert test data
+INSERT INTO student_scores VALUES
+(1, 85.5),
+(2, 92.0),
+(3, 78.5),
+(4, 88.0),
+(5, 95.5),
+(6, 82.0),
+(7, 90.0),
+(8, 87.5);
+-- Calculate variance of student scores
+SELECT VARIANCE(score) as score_variance
+FROM student_scores;
+```
+
+```text
++-------------------+
+| score_variance    |
++-------------------+
+| 25.73437499999998 |
++-------------------+
+```

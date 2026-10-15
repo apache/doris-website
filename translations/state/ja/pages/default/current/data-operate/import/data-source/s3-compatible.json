@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/s3-compatible",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/s3-compatible.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/data-source/s3-compatible.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "0b356484fc0606c54522d8694d1c3ccb99dbddb58ed2b624c75b07c7871b5043",
+    "sourceTechnicalHash": "97d99b91d9018a797f7f4ac145291e41cf1e5912f5e35ef32be2a1afe3fd507f",
+    "targetHash": "918e67732273e964826cef7c8ff4cf790b63cd4024e800c78cfc910ef3018e98",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:56:43.008Z",
+    "glossaryVersion": "0"
+  }
+}

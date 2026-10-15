@@ -1,15 +1,24 @@
+import { translate } from '@docusaurus/Translate';
 import React, { JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { normalizePathname } from '@site/src/utils/locale';
+import { isTranslatedLocale } from '@site/src/utils/localization';
 import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
 import {
+    allowsSlackNudgeAutoOpen,
     computeMascotPupilOffset,
     getSlackNudgeBenefits,
     isDocumentationFeedbackPath,
     shouldOpenSlackNudge,
 } from './SlackCommunityNudge.logic';
 import './SlackCommunityNudge.scss';
+
+const localizedBenefits = [
+    translate({ id: 'homepage.nudge.benefit1', message: 'Talk with Doris users and developers.' }),
+    translate({ id: 'homepage.nudge.benefit2', message: 'Get the latest Doris community updates, learning resources, and event information.' }),
+    translate({ id: 'homepage.nudge.benefit3', message: 'Join community building, feature discussions, and PR reviews.' }),
+];
 
 const DORIS_SUMMIT_URL = 'https://apache-doris-summit.org/';
 const DOCS_FEEDBACK_URL = 'https://github.com/apache/doris-website/issues/364';
@@ -56,7 +65,7 @@ function storeDismissal(): void {
 export function SlackCommunityNudge(): JSX.Element {
     const { pathname } = useLocation();
     const {
-        i18n: { locales },
+        i18n: { locales, currentLocale },
     } = useDocusaurusContext();
     const [isOpen, setIsOpen] = useState(false);
     const [eyeTrackingEnabled, setEyeTrackingEnabled] = useState(false);
@@ -68,12 +77,16 @@ export function SlackCommunityNudge(): JSX.Element {
     const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
     const normalizedPathname = normalizePathname(pathname, locales);
     const showDocsFeedback = isDocumentationFeedbackPath(normalizedPathname);
+    // The provider outlives client-side navigation, so the timer checks the page it fires on.
+    const autoOpenAllowedRef = useRef(true);
+    autoOpenAllowedRef.current = allowsSlackNudgeAutoOpen(normalizedPathname);
     const slackUrl = buildSlackEntryUrl({
         medium: showDocsFeedback ? 'docs' : 'website',
         content: 'mascot_nudge',
     });
 
     const openAutomatically = useCallback((ecosystemVisible: boolean) => {
+        if (!autoOpenAllowedRef.current) return;
         const mountedAt = mountedAtRef.current ?? Date.now();
         const elapsedMs = Date.now() - mountedAt;
 
@@ -225,32 +238,29 @@ export function SlackCommunityNudge(): JSX.Element {
         <aside
             className={`slack-community-nudge${isOpen ? ' slack-community-nudge--open' : ''}`}
             aria-label={showDocsFeedback
-                ? 'Apache Doris community, Summit, and documentation resources'
-                : 'Apache Doris community and Summit resources'}
+                ? translate({ id: "homepage.slackcommunitynudge.004", message: "Apache Doris community, Summit, and documentation resources" })
+                : translate({ id: "homepage.slackcommunitynudge.005", message: "Apache Doris community and Summit resources" })}
         >
             <div className="slack-community-nudge__bubble" aria-hidden={!isOpen}>
                 <button
                     type="button"
                     className="slack-community-nudge__close"
                     aria-label={showDocsFeedback
-                        ? 'Dismiss community, Summit, and documentation prompt'
-                        : 'Dismiss community and Summit prompt'}
+                        ? translate({ id: "homepage.slackcommunitynudge.006", message: "Dismiss community, Summit, and documentation prompt" })
+                        : translate({ id: "homepage.slackcommunitynudge.007", message: "Dismiss community and Summit prompt" })}
                     onClick={dismissAutoPrompt}
                     tabIndex={isOpen ? undefined : -1}
                 >
                     <span aria-hidden="true">×</span>
                 </button>
                 <div className="slack-community-nudge__eyebrow">
-                    Community help
-                </div>
+                    {translate({ id: "homepage.slackcommunitynudge.008", message: "Community help" })}</div>
                 <p className="slack-community-nudge__title">
-                    Building with Doris?
-                </p>
+                    {translate({ id: "homepage.slackcommunitynudge.009", message: "Building with Doris?" })}</p>
                 <p className="slack-community-nudge__copy">
-                    Join Slack for setup help, performance tips, and answers from Apache Doris users and maintainers.
-                </p>
+                    {translate({ id: "homepage.slackcommunitynudge.010", message: "Join Slack for setup help, performance tips, and answers from Apache Doris users and maintainers." })}</p>
                 <ul className="slack-community-nudge__benefits">
-                    {getSlackNudgeBenefits().map(benefit => (
+                    {(isTranslatedLocale(currentLocale) ? localizedBenefits : getSlackNudgeBenefits()).map(benefit => (
                         <li className="slack-community-nudge__benefit" key={benefit}>
                             {benefit}
                         </li>
@@ -265,8 +275,7 @@ export function SlackCommunityNudge(): JSX.Element {
                     tabIndex={isOpen ? undefined : -1}
                 >
                     <SlackGlyph />
-                    Join Slack
-                </a>
+                    {translate({ id: "homepage.slackcommunitynudge.011", message: "Join Slack" })}</a>
                 <section
                     className="slack-community-nudge__summit"
                     aria-labelledby="slack-community-nudge-summit-title"
@@ -276,8 +285,7 @@ export function SlackCommunityNudge(): JSX.Element {
                             Doris Summit 26
                         </p>
                         <p className="slack-community-nudge__summit-meta">
-                            October 21–22 · Virtual event
-                        </p>
+                            {translate({ id: "homepage.slackcommunitynudge.013", message: "October 21\u201322 \u00b7 Virtual event" })}</p>
                     </div>
                     <a
                         className="slack-community-nudge__cta slack-community-nudge__cta--summit"
@@ -287,8 +295,7 @@ export function SlackCommunityNudge(): JSX.Element {
                         onClick={dismissAutoPrompt}
                         tabIndex={isOpen ? undefined : -1}
                     >
-                        Explore Summit
-                        <span aria-hidden="true">↗</span>
+                        {translate({ id: "homepage.slackcommunitynudge.014", message: "Explore Summit" })}<span aria-hidden="true">↗</span>
                     </a>
                 </section>
                 {showDocsFeedback && (
@@ -300,11 +307,9 @@ export function SlackCommunityNudge(): JSX.Element {
                             id="slack-community-nudge-docs-feedback-title"
                             className="slack-community-nudge__docs-feedback-title"
                         >
-                            Found a documentation issue?
-                        </p>
+                            {translate({ id: "homepage.slackcommunitynudge.015", message: "Found a documentation issue?" })}</p>
                         <p className="slack-community-nudge__docs-feedback-copy">
-                            Share your feedback and help us improve the quality of the Apache Doris documentation.
-                        </p>
+                            {translate({ id: "homepage.slackcommunitynudge.016", message: "Share your feedback and help us improve the quality of the Apache Doris documentation." })}</p>
                         <a
                             className="slack-community-nudge__cta slack-community-nudge__cta--feedback"
                             href={DOCS_FEEDBACK_URL}
@@ -313,8 +318,7 @@ export function SlackCommunityNudge(): JSX.Element {
                             onClick={dismissAutoPrompt}
                             tabIndex={isOpen ? undefined : -1}
                         >
-                            Report a docs issue
-                            <span aria-hidden="true">↗</span>
+                            {translate({ id: "homepage.slackcommunitynudge.017", message: "Report a docs issue" })}<span aria-hidden="true">↗</span>
                         </a>
                     </section>
                 )}
@@ -326,8 +330,8 @@ export function SlackCommunityNudge(): JSX.Element {
                 ref={mascotRef}
                 aria-expanded={isOpen}
                 aria-label={showDocsFeedback
-                    ? `${isOpen ? 'Hide' : 'Open'} community, Summit, and documentation resources`
-                    : `${isOpen ? 'Hide' : 'Open'} community and Summit resources`}
+                    ? translate({ id: 'homepage.nudge.toggleDocs', message: '{action} community, Summit, and documentation resources' }, { action: isOpen ? translate({ id: 'homepage.slackcommunitynudge.018', message: 'Hide' }) : translate({ id: 'homepage.slackcommunitynudge.019', message: 'Open' }) })
+                    : translate({ id: 'homepage.nudge.toggle', message: '{action} community and Summit resources' }, { action: isOpen ? translate({ id: 'homepage.slackcommunitynudge.018', message: 'Hide' }) : translate({ id: 'homepage.slackcommunitynudge.019', message: 'Open' }) })}
                 onClick={() => setIsOpen(open => !open)}
             >
                 <img

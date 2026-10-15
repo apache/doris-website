@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-valued-functions/query",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/query.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/query.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "e7278e658b46d3a85af1e120462814f339613baa628c8ffd792ca677d14d9d39",
+    "sourceTechnicalHash": "2f7116f2f3758b4706bc42cacdda98309696759102736f615539973409c42280",
+    "targetHash": "655bb621d040e11fe1a860a7a18760d3ff2977e695b0bfd8cea7d882b52ddf73",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:30:45.467Z",
+    "glossaryVersion": "0"
+  }
+}

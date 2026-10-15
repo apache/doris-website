@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/database/ALTER-DATABASE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/database/ALTER-DATABASE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/database/ALTER-DATABASE.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "c18426fc5374af5b67eedce528caddcb35cc2f3264ed1f944b4969bfca28764c",
+    "sourceTechnicalHash": "759d18bab855e8ffdd75e39bb3b7d29344333d3b3f2726df97b1f8426b29fc58",
+    "targetHash": "01dbc7aa7ed0130a6e775ef82648d38e822c9c9bfc8c53e98a98f8d9b182eca7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:18:55.553Z",
+    "glossaryVersion": "0"
+  }
+}

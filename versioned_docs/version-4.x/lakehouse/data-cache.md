@@ -28,7 +28,7 @@ Whether data caching can improve query efficiency depends on multiple factors. B
 
 ## Enabling Data Cache
 
-The data cache function is disabled by default and needs to be enabled by setting relevant parameters in FE and BE.
+Data Cache is enabled by default since Doris 4.2: both the BE config `enable_file_cache` and the session variable `enable_file_cache` default to `true`. To use it, configure the cache directory in `be.conf`; use the FE parameter to enable or disable caching for a session or globally.
 
 ### BE Configuration
 
@@ -36,7 +36,7 @@ First, configure the cache path information in `be.conf` and restart the BE node
 
 | Parameter            | Required | Description                              |
 | ------------------- | --- | -------------------------------------- |
-| `enable_file_cache` | Yes   | Whether to enable Data Cache, default is false               |
+| `enable_file_cache` | No   | Whether to enable Data Cache, enabled by default since Doris 4.2.               |
 | `file_cache_path`   | Yes   | Configuration related to the cache directory, in JSON format.                      |
 | `clear_file_cache`  | No   | Default is false. If true, the cache directory will be cleared when the BE node restarts. |
 
@@ -64,7 +64,14 @@ Enable Data Cache globally:
 SET GLOBAL enable_file_cache = true;
 ```
 
-Note that if `enable_file_cache` is not enabled, the cache will not be used even if the BE is configured with a cache directory. Similarly, if the BE is not configured with a cache directory, the cache will not be used even if `enable_file_cache` is enabled.
+An external file scan reads through the cache only when the BE config `enable_file_cache`, the session variable `enable_file_cache`, and cache admission control are all enabled. The session variable has no effect on internal tables.
+
+:::caution[File Cache is enabled by default since Doris 4.2]
+
+- On a storage-compute-coupled BE that does not set `file_cache_path`, the cache is created under `${DORIS_HOME}/file_cache` and, without a `total_size`, may grow until the disk is 85%–88% full. Set `file_cache_path` with a `total_size` to bound it, or set `enable_file_cache = false` in `be.conf` to keep the previous behavior.
+- BE configs are not persisted, so an upgraded BE uses the default compiled into its binary unless `be.conf` sets the key. Session variables are persisted in the FE image, so a cluster upgraded from an older version keeps its previous value; to cache external tables after upgrading, run `SET GLOBAL enable_file_cache = true`.
+
+:::
 
 ## Cache Observability
 

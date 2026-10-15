@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-model/unique",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-model/unique.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/data-model/unique.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "6b378116d758ffa7290561a48d29761a4857c82013f04e7c136523a33fa381e7",
+    "sourceTechnicalHash": "7986b095a15c13d17a9d64c294b536c06f9fa0b319de1b6764e5fe1e55ce5c96",
+    "targetHash": "e1c87c4d5c18cd1d38df1fc43ccd4133cddfb2e391df05ccac79de8a0b7f2bb2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:39:04.817Z",
+    "glossaryVersion": "0"
+  }
+}

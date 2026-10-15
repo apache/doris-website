@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-POLICY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-POLICY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-POLICY.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "f236897614d1d9eab7b942dd26c1e0ed23abd50fd6d8fa463209dc5fdb7628c8",
+    "sourceTechnicalHash": "ccb105b348ce0afa61c085755f3062f465c3ca7797167e23ccc3058e52d591ce",
+    "targetHash": "0606577e21c91fac8967237e3ecf152cca1125f36050b991a5d97798ff5d210b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:47:19.117Z",
+    "glossaryVersion": "0"
+  }
+}

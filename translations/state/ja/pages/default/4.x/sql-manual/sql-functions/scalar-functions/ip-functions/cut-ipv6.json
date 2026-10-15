@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "29ddd9382c119c175e62a229309d62da4c93e397ca7ffe6f89dde057f0a2ad53",
+    "sourceTechnicalHash": "bd9349cced7e8176c85251bae8f76cb1ec3c20c3bfb7bea18c2c7e35a8428029",
+    "targetHash": "2e145848854ccc32d1a72ace95b959e6832a301c58cee0dd3d5b98d17a63ebcb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:06:03.662Z",
+    "glossaryVersion": "0"
+  }
+}

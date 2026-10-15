@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/SHOW-CREATE-USER",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/SHOW-CREATE-USER.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/SHOW-CREATE-USER.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "0900ce9cbb99293818f705e8bc8e6af97e15f734fcacf122255418d51527a5dc",
+    "sourceTechnicalHash": "05991edab559b38f8bd2769320ce5d745463f74fbe5dfe2305e3968969dcaf63",
+    "targetHash": "b1478b1338f89922c7523db0874da25529560934d9377d22a1314abe05fe27a5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:55:32.508Z",
+    "glossaryVersion": "0"
+  }
+}

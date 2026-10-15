@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-percent",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-percent.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-percent.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "09fd31ec61d42d9358650414d9dac519c9a0f33e85e5c4463fb36a8d38116feb",
+    "sourceTechnicalHash": "17ec74bfa38fac9a784437da259f100fd903ac1bc4b73fd483dece1bddf3720a",
+    "targetHash": "dff96d60431f1fd36e9e81fee18c369d45684acc099544bb5c75c6c9ada7cc2d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:02:01.386Z",
+    "glossaryVersion": "0"
+  }
+}

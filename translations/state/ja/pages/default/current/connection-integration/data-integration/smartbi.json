@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/smartbi",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/smartbi.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/smartbi.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "7eaba64470f171a47e11b0d1b7ca02e566bd84b3e902eef039ae275cb8bdb0d9",
+    "sourceTechnicalHash": "66d92197af123c2c79391ac188e81cc1f9c65f0fa2d744b9a4ae8252564c1222",
+    "targetHash": "fd467dd05ca73139d8a50f7bf7daf4acea7ea16439c3853c952e6192a9249517",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:39:04.816Z",
+    "glossaryVersion": "0"
+  }
+}

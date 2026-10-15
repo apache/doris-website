@@ -57,6 +57,14 @@ Set the following in `be.conf` on the read-only compute group:
 enable_warmup_immediately_on_new_rowset = true
 ```
 
+### Cross-Group Peer Cache Read (Fallback)
+
+<!-- Knowledge type: Architecture selection decision -->
+
+Cold reads that warm-up does not cover can fall back to [peer cache read](../file-cache/file-cache-peer-read): on a local cache miss, the read-only compute group first reads the block from the File Cache of a BE in the write compute group and goes to object storage only if that fails. If you set the write compute group as the fill compute group (`peer_cache_fill_compute_group_id`), the write group also fetches missing blocks from object storage on the read-only group's behalf and keeps a copy in its own cache.
+
+Peer cache read is on by default. It is a passive read at query time, not a replacement for warm-up, and it lets read-only queries use the network and cache read capacity of the write compute group. Turn it off if strict isolation is required.
+
 ## Mitigating the Impact of Compaction and Schema Change on Query Performance
 
 <!-- Knowledge type: Operational steps -->
@@ -183,7 +191,7 @@ High-frequency data ingestion (such as `INSERT INTO` and `Stream Load`) continuo
 | Active incremental warm-up + delayed commit (+ optional freshness tolerance) | Extremely high query latency requirements; permission to configure warm-up relationships | None | None | Depends on freshness tolerance configuration |
 | Read-only compute group automatic warm-up + prefer cached data (+ optional freshness tolerance) | No permission to configure warm-up relationships; ineffective for MoW primary key tables when freshness tolerance is not configured | None | Cache Miss | Depends on freshness tolerance configuration |
 
-By applying the cache warm-up strategies and related configurations described above, you can effectively manage cache behavior in Apache Doris under a read-write separation architecture, minimize performance loss from cache misses, and ensure stable and efficient read-only query workloads.
+Both options can be combined with [cross-group peer cache read](../file-cache/file-cache-peer-read) as a fallback that reduces object storage reads for cold data warm-up did not cover. By applying the cache warm-up strategies and related configurations described above, you can effectively manage cache behavior in Apache Doris under a read-write separation architecture, minimize performance loss from cache misses, and ensure stable and efficient read-only query workloads.
 
 ## Frequently Asked Questions
 

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-string",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-string.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-string.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "dd734e96dfe3f6a5fa3561ecc5dd3587a8ab0b1a472bd10b3397b026df5c934e",
+    "sourceTechnicalHash": "a025ca0499823fe99cb4428a8a1c97d46d4ed83409d7c2275d46c8ac3f3a2554",
+    "targetHash": "3e50a859ef73b18447051e88dd9429735a376f4e7c6962ce9bc6d61fe89cf517",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:32:10.980Z",
+    "glossaryVersion": "0"
+  }
+}

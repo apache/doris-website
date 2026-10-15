@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/statistics/KILL-ANALYZE-JOB",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/statistics/KILL-ANALYZE-JOB.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/statistics/KILL-ANALYZE-JOB.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "722ad8feffd110c2bb95fd043c039bfb0be6626ab678871ab882ba47ad4a4e24",
+    "sourceTechnicalHash": "e664b151e42078c4a4d7619b2f6f3b392a2b69c5617d5c37dbf394fa93b179f5",
+    "targetHash": "64939acc9f11a6a9f861ac980f8ec4d0ced24e8c7693f571d07222d6836a67db",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:21:16.659Z",
+    "glossaryVersion": "0"
+  }
+}

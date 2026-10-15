@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-cidr-to-range",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-cidr-to-range.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-cidr-to-range.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "85dc22eb79ed03f574d556fb975cbb4b00f1ac960dd6fd9ff4a36585c271ee74",
+    "sourceTechnicalHash": "aa16cfb36431ea756bc36a6ba570caa30126bf08c1ea6c1789140687c0f940c4",
+    "targetHash": "6bc18ac245aae3f2acc86978a964c08515ae483043b7173d1cb729ef8fcf50ee",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:32:10.970Z",
+    "glossaryVersion": "0"
+  }
+}

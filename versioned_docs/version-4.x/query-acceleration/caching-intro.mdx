@@ -2,13 +2,13 @@
 {
     "title": "Caching",
     "language": "en",
-    "description": "Apache Doris caching acceleration chapter navigation: covers SQL Cache for query results, Condition Cache for filter results, and file data cache for external table queries."
+    "description": "Apache Doris caching acceleration chapter navigation: SQL Cache for query results, Condition Cache for filter results, data cache for external table queries, and the File Cache and peer cache read of compute-storage decoupled mode."
 }
 ---
 
 import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
 
-Apache Doris provides multi-layer caching to accelerate queries: result-level caching reuses query results for identical SQL, segment-level caching reuses computation results of filter conditions, and file-level caching offloads remote lakehouse data to local disks. Choose the appropriate caching strategy based on your workload characteristics.
+Apache Doris provides multi-layer caching to accelerate queries: result-level caching reuses query results for identical SQL, segment-level caching reuses computation results of filter conditions, and file-level caching offloads remote lakehouse data, and internal table data in compute-storage decoupled mode, to local disks. Choose the appropriate caching strategy based on your workload characteristics.
 
 ## Result and Filter Caches
 
@@ -33,5 +33,21 @@ Apache Doris provides multi-layer caching to accelerate queries: result-level ca
     title="Data Cache"
     description="Caches files from HDFS and object storage to local disks, accelerating queries on Hive, Iceberg, Hudi, Paimon, and other external tables. Supports cache warmup, quotas, and admission control."
     link="../lakehouse/data-cache"
+/>
+</div>
+
+## Compute-Storage Decoupled File Cache
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="File Cache (Compute-Storage Decoupled)"
+    description="Caches internal table data from object storage on BE local disks in compute-storage decoupled mode. Covers the multi-queue LRU, cache warmup, cache quotas, and TTL policies."
+    link="../compute-storage-decoupled/file-cache/file-cache"
+/>
+
+<GettingStartedCard
+    title="Peer Cache Read"
+    description="On a local File Cache miss, read the block from another BE (including other compute groups) before falling back to object storage. Speeds up scaling and cross-group cold reads."
+    link="../compute-storage-decoupled/file-cache/file-cache-peer-read"
 />
 </div>

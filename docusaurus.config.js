@@ -7,6 +7,15 @@ const { ssrTemplate } = require('./config/ssrTemplate');
 const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const REDIRECTS_4X = require('./config/redirects-4.x.json');
 const path = require('path');
+const translationDocsPlugin = require('./scripts/i18n/docs-plugin.cjs');
+const translationStatusPlugin = require('./scripts/i18n/status-plugin.cjs');
+const searchPlugin = require('./scripts/i18n/search-plugin.cjs');
+const {enabledLocales, enabledLocaleRecords} = require('./config/i18n');
+const {managedLocales} = require('./scripts/i18n/state.cjs');
+const ENABLED_LOCALES = enabledLocales();
+// Locales with translation state that are enabled in this build. Empty whenever
+// no localized content is being served, which disables the whole render path.
+const MANAGED_LOCALES = managedLocales(__dirname, ENABLED_LOCALES);
 
 const BRAND_THEME_BOOTSTRAP = `(function () {
     var theme = 'doris';
@@ -87,12 +96,14 @@ function buildRedirectIndex() {
         (index[to] = index[to] || []).push(...froms);
     };
 
-    // /docs and /zh-CN/docs land on the default stable version's entry doc.
-    // `lastVersion: '4.x'` makes 4.x the stable version but its `path: '4.x'`
-    // keeps it under /docs/4.x/, so the bare /docs route has no generated
-    // page without this redirect.
-    add('/docs/4.x/getting-started/what-is-apache-doris', '/docs');
-    add('/zh-CN/docs/4.x/getting-started/what-is-apache-doris', '/zh-CN/docs');
+    // Every locale lands its bare docs route on the default stable version's
+    // entry doc. `lastVersion: '4.x'` makes 4.x the stable version but its
+    // `path: '4.x'` keeps it under /docs/4.x/, so the bare /docs route has no
+    // generated page without this redirect.
+    for (const locale of ENABLED_LOCALES) {
+        const prefix = locale === 'en' ? '' : `/${locale}`;
+        add(`${prefix}/docs/4.x/getting-started/what-is-apache-doris`, `${prefix}/docs`);
+    }
 
     // Decommissioned standalone pages whose content moved into the
     // homepage/why-doris/download flows.
@@ -218,6 +229,38 @@ function getLatestVersion() {
     return VERSIONS.includes(DEFAULT_VERSION) ? DEFAULT_VERSION : VERSIONS[0];
 }
 
+const MAIN_DOCS_OPTIONS = {
+    includeCurrentVersion: true,
+    sidebarPath: require.resolve('./sidebars.ts'),
+    ...(ONLY_VERSIONS && { onlyIncludeVersions: ONLY_VERSIONS }),
+    // When filtering versions, lastVersion must be in the
+    // included list. Fall back to the first included version.
+    lastVersion: ONLY_VERSIONS && !ONLY_VERSIONS.includes(getLatestVersion())
+        ? ONLY_VERSIONS[0]
+        : getLatestVersion(),
+    versions: getDocsVersions(),
+    // editUrl: ({ locale, versionDocsDirPath, docPath }) => {
+    //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
+    //     // if (versionDocsDirPath === 'versioned_docs/version-dev') {
+    //     //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
+    //     // }
+    // },
+    showLastUpdateAuthor: false,
+    // Date comes from the injected `last_update` front matter
+    // (markdown.parseFrontMatter). The DocItem layout limits
+    // which versions actually display it (Dev + latest stable).
+    showLastUpdateTime: true,
+    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
+    rehypePlugins: [
+        [
+            require('rehype-katex'),
+            {
+                strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
+            }
+        ]
+    ]
+};
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: 'Apache Doris',
@@ -251,17 +294,9 @@ const config = {
     trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
-        locales: ['en', 'zh-CN'],
-        localeConfigs: {
-            en: {
-                label: 'English',
-                htmlLang: 'en-US',
-            },
-            'zh-CN': {
-                label: '中文',
-                htmlLang: 'zh-Hans-CN',
-            },
-        },
+        locales: ENABLED_LOCALES,
+        localeConfigs: Object.fromEntries(enabledLocaleRecords()
+            .map(({code, label, htmlLang}) => [code, {label, htmlLang}])),
     },
     headTags: [
         {
@@ -307,7 +342,7 @@ const config = {
         // channel keeps linking to https://doris.apache.org/slack and this is
         // the only value to update when the invite is rotated.
         slackInviteUrl:
-            'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3wvgezmm8-lh5XRaLg0~9AF44ojdIBfw',
+            'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-4ce61raf7-LPi99HBnrzHOZ7E0_bQZXA',
         // The public HTTPS reverse proxy is the default browser entry point.
         // Local development can still replace this build-time value when needed.
         profileAnalysisApiBaseUrl: process.env.PROFILE_ANALYSIS_API_BASE_URL ?? 'https://agent.velodb.io',
@@ -315,17 +350,27 @@ const config = {
         // matching secret in this repository or in a Docusaurus environment variable.
         profileAnalysisHCaptchaSiteKey:
             process.env.PROFILE_ANALYSIS_HCAPTCHA_SITE_KEY ?? '40f4820a-dc48-466a-b106-960a57ac5bd0',
+        // Locale facts the browser needs, so UI code reads configuration rather
+        // than naming a language. `translatedLocales` carry per-document
+        // translation state and render its notices; `defaultLocalePageLocales`
+        // show ordinary pages from the default locale, so a link to one must
+        // target it directly.
+        translatedLocales: MANAGED_LOCALES,
+        defaultLocalePageLocales: enabledLocaleRecords()
+            .filter(locale => locale.ordinaryPages === false).map(locale => locale.code),
     },
     future: {
         experimental_faster: true,
     },
     plugins: [
+        SKIP_DOCS ? null : [translationDocsPlugin, MAIN_DOCS_OPTIONS],
+        MANAGED_LOCALES.length ? translationStatusPlugin : null,
         'docusaurus-plugin-sass',
         'docusaurus-plugin-matomo',
         // Use custom blog plugin
         versionsPlugin,
         SKIP_COURSE ? null : [
-            'content-docs',
+            translationDocsPlugin,
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
             ({
                 id: 'course',
@@ -336,7 +381,7 @@ const config = {
             }),
         ],
         SKIP_COMMUNITY ? null : [
-            'content-docs',
+            translationDocsPlugin,
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
             ({
                 id: 'community',
@@ -349,7 +394,7 @@ const config = {
             }),
         ],
         SKIP_RELEASES ? null : [
-            'content-docs',
+            translationDocsPlugin,
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
             ({
                 id: 'releases',
@@ -441,37 +486,7 @@ const config = {
             'classic',
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
-                docs: SKIP_DOCS ? false : {
-                    includeCurrentVersion: true,
-                    sidebarPath: require.resolve('./sidebars.ts'),
-                    ...(ONLY_VERSIONS && { onlyIncludeVersions: ONLY_VERSIONS }),
-                    // When filtering versions, lastVersion must be in the
-                    // included list. Fall back to the first included version.
-                    lastVersion: ONLY_VERSIONS && !ONLY_VERSIONS.includes(getLatestVersion())
-                        ? ONLY_VERSIONS[0]
-                        : getLatestVersion(),
-                    versions: getDocsVersions(),
-                    // editUrl: ({ locale, versionDocsDirPath, docPath }) => {
-                    //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
-                    //     // if (versionDocsDirPath === 'versioned_docs/version-dev') {
-                    //     //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
-                    //     // }
-                    // },
-                    showLastUpdateAuthor: false,
-                    // Date comes from the injected `last_update` front matter
-                    // (markdown.parseFrontMatter). The DocItem layout limits
-                    // which versions actually display it (Dev + latest stable).
-                    showLastUpdateTime: true,
-                    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
-                    rehypePlugins: [
-                        [
-                            require('rehype-katex'),
-                            {
-                                strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
-                            }
-                        ]
-                    ]
-                },
+                docs: false, // The native docs plugin is wrapped below for translation state.
                 blog: SKIP_BLOG ? false : {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',
                     blogDescription:
@@ -517,7 +532,7 @@ const config = {
     ],
     themes: SKIP_SEARCH ? [] : [
         [
-            '@yang1666204/docusaurus-search-local',
+            searchPlugin,
             {
                 hashed: true,
                 language: ['en', 'zh'],

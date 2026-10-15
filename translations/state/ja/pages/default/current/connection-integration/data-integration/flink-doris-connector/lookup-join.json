@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/flink-doris-connector/lookup-join",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/flink-doris-connector/lookup-join.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/flink-doris-connector/lookup-join.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "60713f831ece50b43f30ceb4a0a643c013334e16dd1ec5ade5c63e7baea6f233",
+    "sourceTechnicalHash": "bfdaa832d3a7ef2fa9d0a1882616b991b967bf4ffbd96d129a371c7669195523",
+    "targetHash": "9948f63c88b7b8b58191ef8fb80c108811bc1619e4f54e9591021afdfe5032d9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:19:43.743Z",
+    "glossaryVersion": "0"
+  }
+}

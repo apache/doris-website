@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/choosing-deployment-mode",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/choosing-deployment-mode.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/install/choosing-deployment-mode.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "5ee2a41996bd2bdc24951d57f1c7ca9ae51c0f429e4c775fc53ba255ab2aef4e",
+    "sourceTechnicalHash": "b220d2c623bee3a3087d55976fc482a4e3237c4e1ac6c1c0e925252bb46ae221",
+    "targetHash": "80c43e8205fd4cfc67c597e243a63a6eb4b39044b211c8c5e9891e539e403d27",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:44:44.430Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/SHOW-BROKER",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/SHOW-BROKER.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/SHOW-BROKER.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "a11cc054c2cba7ecd1ff0553e9cb8c05b277016dcd4b23c3cfb80079071c930a",
+    "sourceTechnicalHash": "a49b22b12dde8fa7a2a6d1349f7520d090bb16d26ff14ab87db29394f369be4c",
+    "targetHash": "41bcdf9adb747173c6addea00d8eebb2ee38130eb9ebb4e5957acc511888991c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:35:18.351Z",
+    "glossaryVersion": "0"
+  }
+}

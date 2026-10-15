@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "compute-storage-decoupled/file-cache/file-cache-internals",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/compute-storage-decoupled/file-cache/file-cache-internals.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/compute-storage-decoupled/file-cache/file-cache-internals.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "166732dfa9685d680b1e8b8c6c165d702941ad92f788a9e5d6a10e926bdf5286",
+    "sourceTechnicalHash": "ccaa57c445476f65d7c00e1857cced39d2b3e8db90d872f78af465ed18deeac2",
+    "targetHash": "bae7202717b4c0bf4a42e566e6d4274738c2f1716de544e445e931651735dc1f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T12:26:49.464Z",
+    "glossaryVersion": "0"
+  }
+}

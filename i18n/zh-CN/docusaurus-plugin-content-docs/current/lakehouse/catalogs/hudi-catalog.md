@@ -53,71 +53,69 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 元数据缓存 {#meta-cache}
 
-为了提升访问外部数据源的性能，Apache Doris 会对 Hudi 的元数据进行缓存。元数据包括表结构（Schema）、分区信息、FS View 和 Meta Client 对象等。
+为了提升访问外部数据源的性能，Apache Doris 会缓存 Hudi 表依赖的 Hive Metastore 元数据，包括表对象、分区名、分区对象和列统计信息。
 
 :::tip
-对于 Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详情请参阅[元数据缓存](../meta-cache.md)。
-从 Doris 4.1.x 开始，Hudi 相关外表元数据缓存使用统一键 `meta.cache.*` 进行配置。
+Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详见[元数据缓存](../meta-cache)。
+自 Doris 4.1.x 起，Hudi 相关的外表元数据缓存使用统一的 `meta.cache.*` 键配置。下文的模块描述当前版本；Doris 4.1.x 和 4.2.x 的模块集合与此不同，见本页的 4.x 版本。
 :::
 
-### 缓存属性配置（4.1.x+） {#meta-cache-unified-model}
+### 缓存属性配置 {#meta-cache-unified-model}
 
-各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+每个缓存模块使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`。Hudi Catalog 的缓存在系统表中显示在 `hudi` 引擎下，但它们就是共享的 Hive Metastore 缓存，使用 `hive` 引擎名配置：`meta.cache.hive.<entry>.*`。
 
 | 属性 | 示例 | 含义 |
 |---|---|---|
-| `enable` | `true/false` | 是否启用该缓存模块。 |
-| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
-| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+| `enable` | `true/false` | 是否开启该缓存模块。 |
+| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭该模块（立即生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算的 TTL 秒数。 |
+| `capacity` | `10000` | 缓存条目数上限。`0` 表示关闭该模块。 |
+| `max-weight` | `1GB` | 自 Doris 4.1.4 起支持。可选的模块估算保留内存上限。必须为正数，`0` 会被拒绝。只有下表标注的模块接受该属性。 |
 
-**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
+**生效逻辑：** 模块在 `enable=true`、`ttl-second != 0` 且 `capacity > 0` 时生效。FE 总上限、Catalog 上限或模块上限存在时，还会按估算内存控制准入，详见 [外表元数据缓存内存管理](../external-meta-cache-memory-management)。
 
 ### 缓存模块 {#meta-cache-unified-modules}
 
-Hudi Catalog 包含以下缓存模块：
+Hudi Catalog 包含以下缓存模块，全部接受 `max-weight`。
 
-| 模块 (`<entry>`) | 属性键前缀 | 缓存内容与影响 |
-|---|---|---|
-| `schema` | `meta.cache.hudi.schema.` | 缓存表结构。影响：列新增、删除、类型变更在 Doris 中的可见性。若关闭，每次查询都会拉取最新 Schema。 |
-| `partition` | `meta.cache.hudi.partition.` | 缓存 Hudi 分区相关元数据。影响：分区发现、分区裁剪，以及新增/删除分区何时在 Doris 中可见。 |
-| `fs_view` | `meta.cache.hudi.fs_view.` | 缓存 Hudi 文件系统视图相关元数据。影响：查询规划时选择到的最新 base file / log file 以及 file slice 视图的新鲜度。 |
-| `meta_client` | `meta.cache.hudi.meta_client.` | 缓存 Hudi Meta Client 对象。影响：时间线（timeline）、表配置等底层元数据重新加载的频率，以及提交/表配置变更何时被感知。 |
+| 模块（`<entry>`） | 属性键前缀 | `ENTRY_NAME` | 缓存内容与影响 | 默认 enable / TTL / capacity |
+|---|---|---|---|---|
+| `table` | `meta.cache.hive.table.` | `hive-table` | Hive Metastore 中的表对象。 | `true` / 86400 秒 / 10000 |
+| `partition_names` | `meta.cache.hive.partition_names.` | `hive-partition-names` | 分区名列表。影响：分区发现和裁剪；关闭后可实时看到新分区。 | `true` / 86400 秒 / 10000 |
+| `partition` | `meta.cache.hive.partition.` | `hive-partition` | 分区对象，例如 Location 和输入格式。 | `true` / 86400 秒 / 100000 |
+| `column_stats` | `meta.cache.hive.column_stats.` | `hive-column-stats` | Hive Metastore 中的列统计信息。 | `true` / 86400 秒 / 10000 |
+
+Hudi 表的列结构由共享的 `default` 引擎缓存（`meta.cache.default.schema.*`）。
 
 ### 旧参数映射与转换 {#meta-cache-mapping}
 
-在 4.1.x 之前，Hudi 的 Schema 缓存有 Catalog 兼容属性，分区与表级元数据则主要遵循旧的 FE 全局缓存模型，详见[元数据缓存](../meta-cache.md)。升级到 4.1.x 后，建议统一改写为 `meta.cache.hudi.*`，并分别配置分区、FS View 和 Meta Client。
-
-| 4.1 前属性键/旧模型 | 适用范围 | 4.1.x+ 统一键 | 升级建议与影响 |
-|---|---|---|---|
-| `schema.cache.ttl-second` | 4.1 前 Hudi Catalog 兼容属性 | `meta.cache.hudi.schema.ttl-second` | 控制 Schema 新鲜度。若希望列变更每次查询立即可见，设置为 `0`。 |
-| Hudi 分区旧模型 | 4.1 前 FE 全局缓存策略（见旧版元数据缓存文档） | `meta.cache.hudi.partition.ttl-second` | 控制分区发现与分区可见性。若希望新增/删除分区每次查询立即可见，设置为 `0`。 |
-| 无一一对应的旧 Catalog 键 | 4.1 前未单独暴露 `fs_view` / `meta_client` TTL | `meta.cache.hudi.fs_view.*`、`meta.cache.hudi.meta_client.*` | 这是 4.1.x 中拆分出的新模块。若希望更快感知最新 file slice 或提交时间线，分别调低对应 `ttl-second`。 |
-
-4.1.x 的统一模型把缓存拆分为 `enable`、`ttl-second`、`capacity` 三个维度；旧模型主要描述 TTL/全局缓存行为。升级后如果仍沿用旧理解，容易遗漏 `fs_view`、`meta_client` 这类新模块的单独配置。
+| 旧属性键 | 统一键 | 说明 |
+|---|---|---|
+| `schema.cache.ttl-second` | `meta.cache.default.schema.ttl-second` 和 `meta.cache.hive.table.ttl-second` | 表结构缓存和表对象缓存的过期时间 |
+| `partition.cache.ttl-second` | `meta.cache.hive.partition_names.ttl-second` | 分区名列表的过期时间 |
 
 ### 最佳实践 {#meta-cache-best-practices}
 
-* **实时查看最新数据**：如果您希望每次查询都能看到 Hudi 表的最新数据变动或 Schema 变更，可以将 `schema` 或 `partition` 的 `ttl-second` 设置为 `0`。
+* **实时访问最新数据**：希望每次查询都看到 Hudi 表的最新分区时，将分区名缓存的 TTL 设为 `0`。
   ```sql
-  -- 关闭分区元数据缓存，以感知 Hudi 表的最新分区变动
-  ALTER CATALOG hudi_ctl SET PROPERTIES ("meta.cache.hudi.partition.ttl-second" = "0");
+  -- 关闭分区名缓存，感知 Hudi 表的最新分区
+  ALTER CATALOG hudi_ctl SET PROPERTIES ("meta.cache.hive.partition_names.ttl-second" = "0");
   ```
-* **性能优化**：`ALTER CATALOG ... SET PROPERTIES` 的修改在 Hudi 中支持热生效（通过 HMS catalog 属性更新路径）。
+* **性能优化**：Catalog 属性修改成功后，受影响的元数据缓存会被丢弃，并在下一次访问时按新配置重建。修改 `meta.cache.max-weight` 或 `schema.cache.ttl-second` 会丢弃该 Catalog 的全部缓存；修改 `meta.cache.<engine>.<entry>.*` 只丢弃对应引擎的缓存。正在执行的查询不受影响。
 
 ### 可观测性 {#meta-cache-unified-observability}
 
-可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观测缓存指标：
+可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观察缓存指标。`ENTRY_NAME` 显示上表中列出的名称，`default` 引擎的行是所有 Catalog 共享的表结构缓存：
 
 ```sql
-SELECT catalog_name, engine_name, entry_name,
+SELECT engine_name, entry_name,
        effective_enabled, ttl_second, capacity,
-       estimated_size, hit_rate, load_failure_count, last_error
+       estimated_size, hit_rate, max_weight, estimated_weight
 FROM information_schema.catalog_meta_cache_statistics
-WHERE catalog_name = 'hudi_ctl' AND engine_name = 'hudi'
-ORDER BY entry_name;
+WHERE catalog_name = 'hudi_ctl'
+ORDER BY engine_name, entry_name;
 ```
 
-该系统表文档见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
+系统表说明请参阅 [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics)。
 
 ### 支持的 Hudi 版本
 

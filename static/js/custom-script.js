@@ -32,27 +32,38 @@
         return host && host.shadowRoot ? host : null;
     }
 
+    // A label may carry data-kapa-loading-label / data-kapa-slow-label /
+    // data-kapa-error-label to override the default texts (the navbar's compact
+    // phone label uses these so it never grows past one row).
+    function labelText(label, kind, fallback) {
+        return label.getAttribute('data-kapa-' + kind + '-label') || fallback;
+    }
+
     function syncTriggers() {
         document.querySelectorAll(TRIGGER_SELECTOR).forEach(function (trigger) {
-            var label = trigger.querySelector('[data-kapa-label]');
-            if (label && !label.getAttribute('data-kapa-default-label')) {
-                label.setAttribute('data-kapa-default-label', label.textContent || 'Ask Me');
-            }
-
             var waiting = pendingOpen && state === 'loading';
             trigger.setAttribute('aria-busy', waiting ? 'true' : 'false');
             trigger.setAttribute('aria-disabled', state === 'error' ? 'true' : 'false');
 
-            if (!label) return;
-            var nextLabel;
-            if (waiting) {
-                nextLabel = slow ? 'Still loading…' : 'Loading AI…';
-            } else if (state === 'error') {
-                nextLabel = 'AI unavailable';
-            } else {
-                nextLabel = label.getAttribute('data-kapa-default-label') || 'Ask Me';
-            }
-            if (label.textContent !== nextLabel) label.textContent = nextLabel;
+            // A trigger can hold several labels (e.g. a full and a compact copy
+            // toggled by CSS breakpoints); keep every one of them in sync.
+            trigger.querySelectorAll('[data-kapa-label]').forEach(function (label) {
+                if (!label.getAttribute('data-kapa-default-label')) {
+                    label.setAttribute('data-kapa-default-label', label.textContent || 'Ask Me');
+                }
+
+                var nextLabel;
+                if (waiting) {
+                    nextLabel = slow
+                        ? labelText(label, 'slow', labelText(label, 'loading', 'Still loading…'))
+                        : labelText(label, 'loading', 'Loading AI…');
+                } else if (state === 'error') {
+                    nextLabel = labelText(label, 'error', 'AI unavailable');
+                } else {
+                    nextLabel = label.getAttribute('data-kapa-default-label') || 'Ask Me';
+                }
+                if (label.textContent !== nextLabel) label.textContent = nextLabel;
+            });
         });
     }
 

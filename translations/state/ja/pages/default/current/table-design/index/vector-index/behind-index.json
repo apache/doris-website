@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/vector-index/behind-index",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/vector-index/behind-index.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/vector-index/behind-index.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "658711171d5b3eb3143ff02d3b1d77a44cbffb9be882a5f93f7f4692b301e02f",
+    "sourceTechnicalHash": "fdcc5c4b555c4fb31b67427d343aa974cfc901b4d2742b3d9fd15b6981b5cf2e",
+    "targetHash": "34054b8d70148fd00d1795b2aa8417ee5e548222b37c5de9dd3f9a5f917d42cb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:29:57.402Z",
+    "glossaryVersion": "0"
+  }
+}

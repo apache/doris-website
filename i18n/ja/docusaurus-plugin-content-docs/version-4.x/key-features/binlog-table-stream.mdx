@@ -1,0 +1,121 @@
+---
+title: Apache Doris の Binlog / Table Stream
+description: Doris テーブルがダウンストリームのコンシューマーに公開する予定の、行単位の変更フィード。
+keywords:
+  - binlog
+  - テーブルストリーム
+  - 行単位の CDC
+  - 変更データキャプチャ
+  - Apache Doris CDC
+  - STREAM オブジェクト
+slug: /key-features/binlog-table-stream
+image: /images/next/key-features/binlog-table-stream.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+unlisted: true
+language: ja
+featureCard:
+  tags:
+    - cdc
+    - data-streaming
+    - coming-soon
+---
+
+> **要点** Apache Doris Table Stream は、MySQL の binlog を読み取るのと同じように、Doris テーブルから行単位の変更（挿入、更新、削除）を読み取るための、今後公開予定の API です。基盤となる仕組みはすでにコードベースに存在します。行形式の binlog、パーティションごとのオフセットを保持する `STREAM` オブジェクト、消費状況のメタデータです。この機能はまだ GA（一般提供）ではなく、`binlog.ttl_seconds` のデフォルト値は 86,400 秒（一日）です。Doris からの一般的な CDC には、[Flink Doris Connector](../connection-integration/data-integration/flink-doris-connector) を使用してください。**ステータス: 近日公開（プレビュー）。**
+
+![Apache Doris Binlog / Table Stream: Doris テーブルがダウンストリームのコンシューマーに公開する予定の、行単位の変更フィード。](/images/next/key-features/binlog-table-stream.jpg)
+:::caution ステータス: 近日公開
+ここで説明する `STREAM` オブジェクト、`binlog.format = ROW`、消費状況のメタデータビューは Doris のソースツリーに存在しますが、安定したユーザー向け API としてはまだリリースされていません。構文とセマンティクスは GA 前に変更される可能性があります。現時点で本番環境の CDC パイプラインを構築する場合は、[Kafka と CDC の統合](./kafka-cdc-integration)を使用してください。
+:::
+
+## Apache Doris で Binlog と Table Stream を使用する理由 {#why}
+
+Apache Doris の binlog と table stream は、ダウンストリームのコンシューマーに行単位の変更フィードを提供します。これにより、Flink ジョブ、監査ログ、検索インデックスは、テーブルを再読み込みせずに、すべての挿入、更新、削除に対応できます。Apache Doris は[変更データの取り込み](./kafka-cdc-integration)に適しています。一方、変更データを Doris から取り出すことは容易ではありません。ダウンストリームのシステム（Flink ジョブ、監査ログ、別の Doris クラスター、検索インデックス）がすべての挿入、[更新、削除](./data-update-delete)に対応する必要がある場合、現時点での選択肢は扱いにくいものです。
+
+- 定期的にテーブルを再読み込みして差分を取る。実装は簡単ですが、実行コストが高く、リアルタイムにはなりません。
+- データの生成元から Kafka と Doris の両方に書き込む。書き込み先が二つになり、障害が起こり得る箇所も二つになります。
+
+Binlog と Table Stream は、このギャップを埋めます。binlog はコミットされたすべての変更を行単位で記録します。Table Stream は、そのログに対する名前付きカーソルです。コンシューマーはストリームに接続し、前回のオフセット以降の変更を読み取り、受信を確認します。MySQL の binlog、Snowflake Streams、Postgres の論理レプリケーションスロットと同じ考え方を、Doris の第一級オブジェクトとして表現します。
+
+## Apache Doris の Binlog と Table Stream とは {#what}
+
+Apache Doris の binlog は Doris が維持するテーブルごとの変更ログであり、Apache Doris の table stream は、それを行単位の CDC として公開するコンシューマー向けオブジェクトです。binlog には二つの形式があります。`STATEMENT_AND_SNAPSHOT` は DDL とスナップショットを記録し、`ROW` は汎用 CDC コンシューマー向けにコミットされたすべての行の差分を記録します。
+
+Table stream は、行形式の binlog の上に構築されるコンシューマー向けオブジェクトです。ストリームは `CREATE STREAM <name> ON <base_table>` で作成され、パーティションごとに独自のオフセットを保持します。また、`SHOW CREATE STREAM` と、消費の進捗を示す `information_schema` ビューを SQL インターフェースとして提供します。
+
+**主な用語**
+
+- **`binlog.enable`**: テーブルごとのプロパティ。`true` にすると、そのテーブルの binlog が有効になります。
+- **`binlog.format`**: テーブルごとのプロパティ。`STATEMENT_AND_SNAPSHOT` は DDL とスナップショットを記録します。`ROW` は Table Stream が消費する行の差分形式です。
+- **`binlog.ttl_seconds`** / **`binlog.max_bytes`** / **`binlog.max_history_nums`**: 保持期間、バイト数、履歴数の設定です。TTL のデフォルトは一日で、バイト数と履歴数の上限はデフォルトで事実上無制限です。
+- **`STREAM`**: ベーステーブルを参照し、一つのコンシューマーについてパーティションごとのオフセットを追跡する Doris のカタログオブジェクトです。
+- **ストリームの消費タイプ**: `default`、`append_only`、`min_delta` のいずれかです。ストリームが行の差分全体、挿入のみ、最小限の変更セットのどれを出力するかを制御します。
+- **ストリームのラグ**: パーティションの可視バージョンからストリームに記録されたオフセットを引いた値です。`LAG` 列に表示されます。
+
+## Apache Doris の Binlog と Table Stream の仕組み {#how}
+
+Apache Doris の binlog は BE で行単位の差分を記録します。table stream はそのログをパーティションごとのオフセットとともに扱い、ダウンストリームのコンシューマーが変更を増分的に読み取り、受信を確認できるようにします。
+
+1. **Binlog を有効にする。** `ALTER TABLE t SET ("binlog.enable" = "true", "binlog.format" = "ROW")` を実行します。BE は、`binlog.ttl_seconds` とサイズおよび履歴数の上限に従って、行単位の差分を tablet データとともに保持し始めます。Table Stream には `ROW` 形式が必要です。
+2. **テーブル上にストリームを作成する。** `CREATE STREAM s ON t PROPERTIES ("type" = "default")` を実行します。FE は `STREAM` オブジェクトを実体化し、各パーティションの現在の可視バージョンを開始オフセットとして記録し、データベースに登録します。`show_initial_rows = true` にすると、初回の読み取りで過去の状態が返されるようになります。
+3. **消費する。** ダウンストリームのリーダー（現時点では外部 CDC コネクター、将来的にはネイティブのコンシューマーエンドポイント）がストリームから読み取ります。各バッチでパーティションごとのオフセットが進み、消費時刻が記録されます。
+4. **不要なログを削除する。** すべてのアクティブなストリームが binlog エントリを通過し、そのエントリが `binlog.ttl_seconds` より古くなると、BE がガベージコレクションを行います。保持期間に追いつけなくなったストリームには、理由とともに `IS_STALE = true` が設定されます。
+5. **状態を確認する。** `information_schema.table_streams` には、すべてのストリームとそのベーステーブルが表示されます。`table_stream_consumption` は、パーティションごとの `UNIT`（パーティション）、`CONSUMPTION_STATUS`、`LAG`、`LAST_CONSUMPTION_TIME` を報告します。これらをラグの監視に使用できます。
+
+## クイックスタート {#quick-start}
+
+```sql
+-- 1. Enable row-format binlog on the source table
+ALTER TABLE orders SET (
+  "binlog.enable" = "true",
+  "binlog.format" = "ROW",
+  "binlog.ttl_seconds" = "86400"
+);
+
+-- 2. Create a Table Stream over it (planned syntax, subject to change)
+CREATE STREAM orders_cdc ON orders
+PROPERTIES ("type" = "default", "show_initial_rows" = "false");
+
+-- 3. Inspect the stream and its lag
+SHOW CREATE STREAM orders_cdc;
+SELECT * FROM information_schema.table_stream_consumption
+WHERE STREAM_NAME = 'orders_cdc';
+```
+
+**想定される結果**
+
+```
++---------+------------+-----------+--------------------+-----+----------------------+
+| DB_NAME | STREAM_NAME| STREAM_ID | UNIT (partition)   | LAG | LAST_CONSUMPTION_TIME|
++---------+------------+-----------+--------------------+-----+----------------------+
+| sales   | orders_cdc | 10042     | p_2026_05          | 0   | 2026-05-09 10:14:33  |
++---------+------------+-----------+--------------------+-----+----------------------+
+```
+
+`LAG = 0` は、コンシューマーがパーティションの可視バージョンに追いついていることを意味します。上流で書き込みがコミットされると `LAG` は増え、コンシューマーが読み取ると減ります。`N/A` 以外の値を持つ `STALE_REASON` は、保持範囲がオフセットを通り過ぎたため、スナップショットの再取得が必要であることを示します。
+
+## Apache Doris の Binlog と Table Stream を使用する場面 {#when}
+
+GA になった後は、ダウンストリームのシステムが Doris テーブル全体を再読み込みせずに行単位の変更イベントを必要とする場合に、Apache Doris の binlog と table stream を使用します。
+
+**適した用途（GA 後）**
+
+- テーブルを再読み込みせずに、Doris 側の変更イベントからダウンストリームの Flink または Spark ジョブを動かす。
+- すべての挿入と削除を必要とする外部の検索インデックス、キャッシュ、監査ログを維持する。
+- 明示的なコンシューマーオフセットを必要とする Doris 間レプリケーションを行う。
+- パーティションの `LAG` が変化したときに、外部マテリアライズドビューの再計算を起動する。
+
+**適さない用途（特に現時点）**
+
+- 現時点の本番環境の CDC パイプライン。`STREAM` オブジェクトはソースツリーにありますが、GA として発表されていません。代わりに [Kafka と CDC の統合](./kafka-cdc-integration)を使用してください。
+- binlog の保持期間が短い状態で、コンシューマーを長時間停止する運用。`LAG` が `binlog.ttl_seconds` で保持される範囲を超えると、ストリームは古くなり、コンシューマーは初期データを再取得する必要があります。
+- ストレージとコンピュートを分離したクラスター。この構成での Table Stream のサポート方針は、まだ確定していません。
+- 外部カタログのテーブル（Hive、Iceberg）の読み取り。Table Stream の対象は内部 OLAP テーブルだけです。
+
+## 関連ドキュメント {#further-reading}
+
+- [Kafka と CDC の統合](./kafka-cdc-integration): 現時点で Doris への変更データの取り込みや、Doris を含むシステム間での変更データの移動に利用できる、サポート対象の方法です。
+- [データの更新と削除](./data-update-delete): Unique Key Merge-on-Write テーブルが、行ストリームで扱う削除や順序が前後した更新をどのように表現するかを説明します。
+- [Iceberg](./iceberg): レプリケートされたテーブルの外部保存先です。Doris から離れずに、SQL を使用して CDC データを Iceberg に書き込めます。
+- [Unique Key](./unique-key): ダウンストリームの binlog コンシューマーに適した、キーごとに一行の状態を保持する上流テーブルのモデルです。

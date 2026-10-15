@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/hints/distribute-hint",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/hints/distribute-hint.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/hints/distribute-hint.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "b01667f200e7b585d844941169622f45b8d816a07b41227a5d72d4c9d0d23532",
+    "sourceTechnicalHash": "d5df23d5ab1649e502448f33277e076c9c206c6a0dbfa02384375e08702f48e6",
+    "targetHash": "dd7e937c03be5e6a1102ad84c17275d02216fe2b6a3ced510f79e37fd7154b4e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:33:33.244Z",
+    "glossaryVersion": "0"
+  }
+}

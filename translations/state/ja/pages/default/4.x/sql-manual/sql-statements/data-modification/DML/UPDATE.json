@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-modification/DML/UPDATE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/DML/UPDATE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/DML/UPDATE.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "0d6dbb206a8c7cdb23c1f49f869a33446624bcc0c21c8d4a844c54b7a704d1fd",
+    "sourceTechnicalHash": "4157f3c1e3b67b5d51d9afaf81eeae1a2eba1a0c227bff3ce3cf96a7cd504abd",
+    "targetHash": "7297746c9af493aa40fccae3baa4e0cf44a05bb46dc2039a631521043d5e8170",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:30:45.468Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,14 +1,14 @@
 ---
 {
-    "title": "Temporary Table (Experimental)",
+    "title": "Temporary Table (Deprecated)",
     "language": "en",
-    "description": "A Doris temporary table is a session-scoped materialized internal table used to break down complex SQL queries and store intermediate computation results. It is automatically dropped when the session ends, with no manual cleanup required."
+    "description": "Deprecated: A Doris temporary table is a session-scoped materialized internal table used to break down complex SQL queries and store intermediate computation results."
 }
 ---
 
-:::note
+:::caution Deprecated
 
-The temporary table is an experimental feature. It is not recommended for use in a production environment.
+The temporary table feature is deprecated. It is not recommended for use in a production environment.
 :::
 
 <!-- Knowledge type: Feature -->

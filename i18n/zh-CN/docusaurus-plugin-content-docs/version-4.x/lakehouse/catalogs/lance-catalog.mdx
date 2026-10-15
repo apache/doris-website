@@ -40,15 +40,17 @@ Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lan
 | 数据查询 | 支持列裁剪、并行扫描 Lance Fragment 和当前版本的快照一致性读取 |
 | 谓词下推 | 支持将部分静态标量谓词和 Join Runtime Filter 下推到 Lance 执行 |
 | 文件 TVF | 支持通过 `s3()` 和 `local()` 直接查询 Lance 数据集 |
-| 向量检索 | 使用物理 Lance Index Segment 作为并行 Split，对未覆盖的 Fragment 保留 Flat Search Split，并由 Doris 合并全局 Top-K |
+| 向量检索 | 支持单向量和多向量列，使用物理 Lance Index Segment 作为并行 Split，对未覆盖的 Fragment 保留 Flat Search Split，并由 Doris 合并全局 Top-K |
 | 全文检索 | 通过 `full_text_search()` 使用已有的 Lance FTS 倒排索引，支持 Match OR/AND 和 Phrase 查询，并由 Doris 合并全局 Top-K |
+| Lance Cache | BE 内共享索引、元数据缓存及本地磁盘数据缓存 |
+| TopN 两阶段读取 | 对向量和全文检索中可延迟的输出列默认开启，由 `enable_lance_lazy_materialization` 独立控制 |
 | 写入 Lance | 暂不支持 |
-| Time Travel | 暂不支持 |
+| Time Travel | 支持 `FOR VERSION AS OF`、`FOR TIME AS OF`、`@tag(...)` 和 `@branch(...)`，包括由 REST Namespace 管理版本的表 |
 | Hybrid Search | 暂不支持 |
 
 ## Lance 版本与兼容性
 
-Doris BE 数据读取器使用 `lance-c v0.1.8` 构建，其内置的 Lance Rust crates 固定在 Lance commit `e934cc2c`。Doris FE 使用 `lance-java` 客户端读取 Namespace 和数据集元数据，版本为 `9.1.0-beta.3`（同一 Lance commit）。这些版本表示 Doris 集成的读取器实现版本，与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
+Doris BE 数据读取器使用 `lance-c v0.1.9` 加 Doris 补丁构建，补丁包含多向量检索支持，并将其内置的 Lance Rust crates 升级到 `11.0.0`（commit `ab6b5bbe`）。Doris FE 使用 `org.lance:lance-core:12.0.0` 读取 Namespace 和数据集元数据；FE 只读元数据、不写数据集，因此 FE 采用较新的 Lance 版本不改变 BE 能读取的范围。Dataset 必须同时满足 FE 元数据加载和 BE 数据读取的兼容性要求。这些实现版本与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
 
 当前读取器的文件格式兼容情况如下：
 
@@ -90,6 +92,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | `lance.namespace.parent` | 否 | 空 | 仅访问指定 Lance Namespace 及其子 Namespace。例如默认分隔符下，`production$analytics` 表示两级 Namespace。 |
 | `lance.namespace.delimiter` | 否 | `$` | 用于解析 `lance.namespace.parent`，同时会传递给 REST Namespace 客户端。该配置不改变 Doris 中多级 Namespace 的展示方式。 |
 | `lance.namespace.root_database` | 否 | `default` | Lance 根 Namespace 在 Doris 中映射的数据库名。 |
+| `lance.table_access_cache_ttl_seconds` | 否 | `60` | 非负整数，表示 FE 表访问缓存的最长有效期，单位为秒；`0` 表示禁用。适用于 Filesystem 和 REST Catalog。managed versioning 表、含下发存储配置或携带凭证 URI 的结果不缓存，详见 [FE 表访问缓存](#fe-表访问缓存)。 |
 
 ### Filesystem Catalog
 
@@ -311,9 +314,7 @@ REST 服务认证和对象存储认证是两套独立配置：`lance.rest.*` 用
 
 如果不同表位于不同 Bucket，不要让它们共用上例中固定为 `my-bucket` 的 S3 虚拟主机 endpoint。应由 Namespace 为每张表下发匹配的 endpoint 和访问方式，或为不同 Bucket 分别配置 Catalog。对于支持 Path Style 的服务，也可以使用不带 Bucket 的服务 endpoint，配合 `use_path_style=true`，由客户端从各表 URI 读取 Bucket。
 
-:::caution
-当前 BE Reader 不支持由 REST Namespace 管理版本的 Lance 表（Managed Versioning）。
-:::
+如果 REST Namespace 管理该表的版本（`DescribeTable` 返回 `managed_versioning = true`），Doris 会通过 Namespace 的版本接口解析最新版本和 Time Travel 指定的版本，再从存储读取对应的 manifest。详见 [Time Travel](#time-travel)。
 
 ## Namespace 映射
 
@@ -381,6 +382,60 @@ FROM lance_catalog.default.user_profiles;
 
 普通 Catalog 查询会在规划阶段固定一个 Lance 数据集版本，并按 Fragment 生成扫描任务。因此，同一条查询读取一致的快照，同时可以由多个 Scanner 并行扫描不同 Fragment，不会让每个 Scanner 重复扫描整个数据集。
 
+## Time Travel
+
+Lance 数据集的每次提交都会产生一个新版本，版本号从 1 开始。查询可以读取某个历史版本，而不是最新版本：
+
+```sql
+-- 读取表的版本 2
+SELECT * FROM lance_catalog.db.tbl FOR VERSION AS OF 2;
+
+-- 读取指定时间点之前（含）提交的最新版本
+SELECT * FROM lance_catalog.db.tbl FOR TIME AS OF '2026-09-19 13:06:10';
+```
+
+- `FOR VERSION AS OF` 接受正整数版本号；与 Paimon 表以及 Iceberg 的 tag 名用法一样，也可以写带引号的 tag 名（`FOR VERSION AS OF 'v2'` 等同于 `@tag(v2)`）。
+- `FOR TIME AS OF` 接受会话时区下的时间戳，支持秒或毫秒精度（`yyyy-MM-dd HH:mm:ss` 或 `yyyy-MM-dd HH:mm:ss.SSS`）。Doris 按 manifest 记录的提交时间，在不晚于该时间戳的版本中选择提交时间最晚的一个（提交时间相同的取版本号大的）。和 Iceberg 按时间选快照一样，提交时间按记录的原值比较，不假设它随版本号递增。Lance 记录的提交时间精确到毫秒以下，比较时保留全部精度：Doris 不选在请求的那一毫秒内、晚于请求时间提交的版本。cleanup 删掉版本时，提交时间也一起删掉了，所以 Doris 只在 cleanup 删掉的最新一个版本之后选择，和 Iceberg 在过期快照处截断 snapshot log 的做法一致。时间戳早于这些版本时会报错：它可能早于第一个版本，也可能落在 cleanup 删掉的那段历史里（例如落在被 tag 保留的版本和其后仍存在的版本之间），这时无法确定表在那个时刻的状态。
+- 选中的版本在整条语句内固定：schema、Fragment 规划、谓词下推和 BE 扫描都使用该版本。同一条语句里对同一张表的两次引用可以选择不同版本。`EXPLAIN` 中的 `lanceVersion` 显示选中的版本。
+- 被 Lance `cleanup_old_versions` 清理掉的版本无法读取，报错与从未存在的版本相同。由 REST Namespace 管理版本的表见下文“REST Namespace 管理的版本”。
+- `vector_search()` 和 `full_text_search()` 用自己的 `version`、`timestamp`、`tag`、`branch` 参数选择版本、时间、tag 或 branch，见[检索历史版本或 branch](#search-a-historical-version-or-branch)。它们的 `table` 参数中不能写 `FOR VERSION AS OF`、`@tag` 或 `@branch`。
+- 索引查看（`SHOW INDEX`、`lance_index_entries()`）总是作用于 main 的最新版本，不显示历史版本或 branch 上的索引。
+
+Lance 的 tag 和 branch 使用与 Iceberg、Paimon 表相同的语法：
+
+```sql
+-- 读取 tag "v2" 指向的版本
+SELECT * FROM lance_catalog.db.tbl@tag(v2);
+
+-- 读取 branch "dev" 的最新版本
+SELECT * FROM lance_catalog.db.tbl@branch(dev);
+
+-- 读取 branch "dev" 的版本 2
+SELECT * FROM lance_catalog.db.tbl@branch(dev) FOR VERSION AS OF 2;
+```
+
+- tag 指向某个 branch 上的某个版本，读取时选中的就是该 branch 的该版本：建在 `dev` 上的 tag 读的是 `dev`，而不是 main 上同号的版本。`@tag` 不能再与 `FOR VERSION AS OF` 或 `FOR TIME AS OF` 同时使用。
+- `@branch(main)` 读取 main，与不写 `@branch` 相同。
+- 每个 branch 有自己的版本序列，从创建它时所基于的版本开始。`@branch` 后的 `FOR VERSION AS OF` / `FOR TIME AS OF` 只在该 branch 的版本中选择，因此早于 branch 创建时间的时间戳在 branch 上选不到版本。`@branch` 后（包括 `@branch(main)`）的 `FOR VERSION AS OF` 不能写 tag 名，因为 tag 本身已经确定了 branch。
+- branch 存放在 `<table>/tree/<branch>/` 下，是表的 shallow clone，manifest 以绝对 URI 记录表的位置。因此 branch 只能在创建它的位置读取：把数据集复制或迁移到别处后，main 仍可读，branch 不可读。
+- branch 的元数据已删除，或创建中途失败时，只要 `tree/` 下的目录还没清理，仍可以通过 `@branch` 读到。原因是 Lance SDK 按目录 checkout branch。由 REST Namespace 管理版本的表，branch 是否存在由 Namespace 决定，读取 branch 时直接读它的目录，不读取 `main`。
+- `EXPLAIN` 中的 `lanceBranch` 显示读取的 branch。不存在的 tag 或 branch 会报错。
+
+### REST Namespace 管理的版本（Managed Versioning）
+
+REST Namespace 可以自行管理表的版本（`DescribeTable` 返回 `managed_versioning = true`）。对这类表，哪些版本存在、哪个是最新版本由 Namespace 决定：最新版本和 `FOR VERSION AS OF` 以 Namespace 的记录为准（`ListTableVersions`、`DescribeTableVersion`），`FOR TIME AS OF` 按 manifest 记录的提交时间选择，并且只在 Namespace 列出的版本中选择；tag 与普通 Lance 表一样从数据集的 `_refs/tags/` 读取，它指向的版本必须是 Namespace 记录过的；branch 的版本同样以 Namespace 为准。选定版本后，FE 和 BE 都按表的位置和版本号从存储读取，和其他 Lance 表一样。
+
+- Namespace 没有记录的版本报告为不存在，即使它的 manifest 仍在存储中；最新版本以 Namespace 为准，即使存储中已有更新的 manifest。
+- Namespace 不再记录、但前后版本仍有记录的版本，在 `FOR TIME AS OF` 中视为已删除的历史，和 cleanup 删掉的版本一样：时间戳可能落在这个版本上时报错，不会选择更早的版本。
+- Namespace 对某张表或某个 branch 没有记录任何版本时会报错，即使存储中有它的 manifest。
+- 这类表在 `EXPLAIN` 中显示 `lanceManagedVersioning=true`。
+
+限制：
+
+- Doris 以 `DescribeTable` 返回的 `table_uri` 读取数据集，没有 `table_uri` 时用 `location`，它们必须是完整的存储 URI。`location` 为空，或同时返回的 `table_uri` 指向别的位置时（查询串不算，例如预签名凭证），查询直接报错，不读取数据。`s3+ddb` URI 同样报错：它的 DynamoDB 提交逻辑会在读取时登记并定稿版本。managed 表每次读取都会重新调用 `DescribeTable`，不做缓存；FE 和 BE 都用这次返回的位置和存储配置读取。
+- Doris 按版本号读取版本，读的是表目录（branch 则是 `tree/<branch>/`）下的规范路径 `_versions/<u64::MAX - version>.manifest`，Lance 旧的命名方式下是 `_versions/<version>.manifest`。Namespace 为选中版本记录的 manifest 必须是这个路径，或者它旁边的 staged manifest（`<规范路径>-<id>`）；执行 `FOR TIME AS OF` 时，对应 `main` 或 branch 上记录的每个版本都要满足这一点，因为选择时要比较它们的提交时间。记录在其他位置的版本无法读取，查询会报错，报错信息给出记录的路径和规范路径。查询过程中 Namespace 移动了表时，查询也可能这样报错，重试即可。
+- Namespace 只在 staged manifest 上记录、规范路径上又没有 manifest 的版本无法读取：它的提交没有定稿，或者 cleanup 删掉了这个版本。查询会报错，并说明这两种原因。这个版本的提交时间未知，所以在对应的 `main` 或 branch 上执行 `FOR TIME AS OF` 时，时间戳可能落在它上面就会报错；如果它是最新版本，在写入端或其他使用 Namespace 的读者把它定稿之前，任何时间戳都会报错，不带 `FOR VERSION AS OF` 读取表、加载表结构也会报错。Lance 自带的 Namespace 实现会先定稿再记录版本，只有提交中途中断，或 Namespace 记录的是 staged manifest 时，才会出现未定稿的版本。Doris 读取时不会向表写入任何数据。
+
 ## 查看 Lance 索引
 
 对于 Filesystem Catalog 中的表，`SHOW INDEX` 可以查看 Lance 数据集中记录的逻辑标量索引（包括 FTS 倒排索引）和向量索引。变种语法 `SHOW INDEXES`、`SHOW KEY` 和 `SHOW KEYS` 返回相同结果：
@@ -418,6 +473,8 @@ nested_index   nested_label_btree    1             attributes.`child.with.dot`  
 
 | Lance / Arrow 类型 | Doris 类型 | 说明 |
 |---|---|---|
+| `null`（可空字段） | `NULL` | 所有值均为 SQL NULL；非可空 Null 字段不支持 |
+| `duration(s/ms/us/ns)` | `BIGINT` | 保留字段声明单位的有符号计数，不统一转换为秒 |
 | `bool` | `BOOLEAN` | |
 | `int8` | `TINYINT` | |
 | `uint8` | `SMALLINT` | 无符号整数无损提升 |
@@ -433,6 +490,9 @@ nested_index   nested_label_btree    1             attributes.`child.with.dot`  
 | `decimal128(P,S)` | `DECIMAL(P,S)` | 最大精度为 38 |
 | `decimal256(P,S)` | `DECIMAL(P,S)` | 最大精度为 76 |
 | `utf8`、`large_utf8` | `TEXT` | |
+| `arrow.json` Extension | `JSON` | 底层类型为 `utf8` 或 `large_utf8` |
+| `lance.json` Extension | `JSON` | 底层类型为 `large_binary`；按 JSON 逻辑类型读取 |
+| `lance.bfloat16` Extension | `FLOAT` | 底层类型为 `fixed_size_binary(2)`；无损提升为 Float32 |
 | `binary`、`large_binary` | `VARBINARY(2147483647)` | |
 | `fixed_size_binary(N)` | `VARBINARY(N)` | 保留固定字节宽度 |
 | `date32(day)`、`date64(ms)` | `DATE` | `date64` 应表示完整自然日 |
@@ -447,17 +507,21 @@ nested_index   nested_label_btree    1             attributes.`child.with.dot`  
 | `list`、`large_list`、`fixed_size_list` | `ARRAY` | 元素类型递归映射 |
 | `map` | `MAP` | Key 和 Value 类型递归映射 |
 
+Doris 根据 `ARROW:extension:name` 元数据识别上述扩展类型，并校验其底层存储类型。JSON 扩展映射为 Doris `JSON`（内部类型 `JSONB`），普通 `utf8`/`large_utf8` 列即使包含 JSON 文本，仍映射为 `TEXT`，不会自动变成 JSON。支持 JSON 读取不代表任意 JSON 路径表达式都能下推；下推范围见[谓词下推](#谓词下推)。
+
+JSON、Duration、Null 和 BFloat16 读取需要 FE 与参与查询的 BE 均包含对应类型支持。旧构建可能仍显示不支持；升级时应同时确认 Schema 识别和实际读取能力。
+
 当前不支持以下类型：
 
-- Arrow `null` 和 `duration`。
-- 带有 `ARROW:extension:name` 元数据的 Arrow/Lance Extension 类型，例如 Lance Blob v2、Arrow JSON Extension 和 Lance BFloat16 Extension。
+- 非可空的 Arrow `null` 字段。
+- 未列为支持的 Arrow/Lance Extension 类型，例如 Lance Blob v2；已知扩展类型的底层存储与上表不匹配时也不支持。
 - 无法递归映射其子类型的复杂类型。
 - 保留了 Dictionary 标记的 Arrow Dictionary 类型。
 
 对于不支持的顶层列，Catalog 表的 `DESC` 和 Lance 文件 TVF 的 `DESC FUNCTION` 都会保留该列，并显示 `unknown type: UNSUPPORTED_TYPE`。如果复杂类型的任一子字段无法映射，则整个顶层复杂列会标记为不支持。查询只投影支持的列仍可正常执行；当 SQL 投影不支持的列时，Doris 会在分析阶段报错。例如：
 
 ```sql
-SELECT * EXCEPT(blob_col, json_col)
+SELECT * EXCEPT(blob_col)
 FROM lance_catalog.default.all_types;
 ```
 
@@ -657,6 +721,7 @@ FROM vector_search(
     "metric" = "l2",
     "nprobes" = "20",
     "refine_factor" = "10",
+    "prefilter" = "true",
     "filter" = "category = 'book'",
     "use_index" = "true"
 )
@@ -678,22 +743,71 @@ ORDER BY _distance ASC, user_id;
 | 参数 | 是否必需 | 默认值 | 说明 |
 |---|---|---|---|
 | `table` | 是 | - | 完整的三部分 `catalog.database.table` 名称。多级 Namespace 对应的数据库名包含 `.` 时，必须使用反引号引用数据库部分。该表必须属于 Lance Catalog，用户需要拥有该表的 `SELECT` 权限。 |
-| `column` | 是 | - | 向量列名。当前支持 `fixed_size_list<float16\|float32\|float64\|uint8\|int8>`。 |
-| `query_vector` | 是 | - | JSON 数字数组。维度必须与向量列一致，元素值必须能由向量元素类型表示。 |
+| `column` | 是 | - | 向量列名。支持单向量 `fixed_size_list<float16\|float32\|float64\|uint8\|int8>` 和多向量 `list<fixed_size_list<float16\|float32\|float64, D>>`。详见[多向量检索](#multi-vector-search)。 |
+| `query_vector` | 是 | - | 单向量列使用 JSON 数字数组，多向量列使用非空 JSON 矩阵。每个子向量的维度必须与列一致，元素必须是向量元素类型可表示的有限数值。 |
 | `top_k` | 否 | `10` | 跳过 `offset` 后返回的结果数，必须为正整数。 |
 | `offset` | 否 | `0` | 在向量检索内部跳过的最近邻数量，必须为非负整数。`top_k + offset` 不能超过无符号 32 位整数上限。 |
-| `metric` | 否 | `uint8` 为 `hamming`，其他支持类型为 `l2` | 距离类型：`l2`、`cosine`、`dot` 或 `hamming`。`dot_product` 是 `dot` 的别名。`uint8` 向量仅支持 `hamming`；其他当前支持的向量元素类型支持 `l2`、`cosine` 和 `dot`。Doris 选择向量索引时会把未设置的 `metric` 视为 `l2`，因此查询使用 `cosine` 或 `dot` 创建的索引时必须显式设置 `metric`。 |
-| `filter` | 否 | - | Lance SQL 条件，在生成候选向量之前执行，即 Prefilter。 |
-| `nprobes` | 否 | 最少 `1`，不限制最大值 | IVF 索引探测的分区数量，必须为正整数。不设置时从 1 个分区开始；使用 Prefilter 且候选不足时，Lance 可以继续探测更多分区。显式设置为 `N` 时，最少和最多探测数都会固定为 `N`。 |
-| `refine_factor` | 否 | 不启用精排 | 候选集精排倍数，必须为正整数。不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。**精排会读取这些候选的原始向量数据；`N` 越大，读取和计算的候选越多，可能显著增加 I/O 并降低查询性能。** 即使设置为 `1` 也会执行精排，因此与不设置不同。 |
+| `metric` | 否 | `l2` | 距离类型：`l2`、`cosine`、`dot` 或 `hamming`。`dot_product` 是 `dot` 的别名。`uint8` 向量仅支持 `hamming`；其他当前支持的向量元素类型支持 `l2`、`cosine` 和 `dot`。查询 `cosine`、`dot` 或 `hamming` 索引时必须显式设置 `metric`。不支持整数多向量列及多向量 `hamming` 检索。 |
+| `distance_lower_bound` | 否 | 无下界 | 单向量检索的距离下界，包含边界值，必须是有限的 `FLOAT`。 |
+| `distance_upper_bound` | 否 | 无上界 | 单向量检索的距离上界，不包含边界值，必须是有限的 `FLOAT`。同时设置上下界时，转换为 `FLOAT` 后下界必须小于上界。 |
+| `filter` | 否 | - | 由 Lance 执行的 SQL 条件。执行时机由 `prefilter` 控制。 |
+| `prefilter` | 否 | `false` | 控制 TVF `filter` 的执行时机。`true` 表示在生成向量候选前过滤；`false`（默认值）表示在候选生成后过滤，结果可能少于 `top_k`。该参数不影响外层 Doris `WHERE`。 |
+| `nprobes` | 否 | 最少 `1`，不限制最大值 | IVF 索引探测的分区数量，必须为正整数。不设置时从 1 个分区开始；设置 `prefilter=true` 且候选不足时，Lance 可以继续探测更多分区。显式设置为 `N` 时，最少和最多探测数都会固定为 `N`。 |
+| `refine_factor` | 否 | 单向量不启用；多向量为 `1` | 候选集精排倍数，必须为正整数。对于单向量检索，不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。**精排会读取这些候选的原始向量数据；`N` 越大，读取和计算的候选越多，可能显著增加 I/O 并降低查询性能。** 对于单向量检索，设为 `1` 会执行精排，与不设置不同。多向量检索始终使用原始向量精排，默认倍数为 `1`。 |
 | `ef` | 否 | `floor(1.5 × (top_k + offset))` | HNSW 图索引搜索时保留的候选宽度，必须为正整数。如果同时设置了 `refine_factor`，默认值为 `floor(1.5 × (top_k + offset) × refine_factor)`。对非 HNSW 索引无效。 |
 | `use_index` | 否 | `true` | `true` 表示优先使用与向量列和距离类型兼容的 Lance 向量索引；没有可用索引时自动使用 Flat Search。`false` 表示禁用向量索引，对数据执行 Flat Search。 |
+| `version`、`timestamp`、`tag`、`branch` | 否 | - | 检索历史版本、某个时间点的版本、tag 或 branch，而不是 main 的最新版本。见[检索历史版本或 branch](#search-a-historical-version-or-branch)。 |
 
-以上默认值对应 Doris 当前集成的 Lance Scanner 行为。`metric` 未指定时，Doris 在选择向量索引时按 `l2` 处理，因此不会选中使用 `cosine` 或 `dot` 创建的索引。未选中索引或 `"use_index" = "false"` 时，`uint8` 向量使用 `hamming`，其他当前支持的向量元素类型使用 `l2`。
+不设置 `metric` 时，索引检索和 Flat Search 均使用 `l2`。`uint8` 列必须显式设置 `"metric" = "hamming"`，不支持默认的 `l2`。多向量检索还需要满足下文的[候选预算限制](#multi-vector-search)。
+
+### 半径与范围检索
+
+设置 `distance_upper_bound` 可执行半径检索，同时设置上下界可查询区间 `[lower, upper)`，未设置的一侧不限制距离。距离含义由所选 metric 决定：`l2` 是**欧氏距离的平方**，因此几何半径 `r` 对应的距离上界为 `r * r`。允许负数边界，适用于 `dot` 等度量。即使存储向量为 Float64，边界也使用 `FLOAT` 精度；非有限值、溢出、相等或反向区间都会被拒绝。
+
+例如，已有 Lance Catalog 表 `lance_catalog.default.items` 包含 `user_id` 和三维 Float32 `embedding` 列，数据如下：
+
+| user_id | embedding | 到 `[0, 0, 0]` 的平方 L2 距离 |
+|---|---|---|
+| 1 | `[0, 0, 0]` | 0 |
+| 2 | `[1, 0, 0]` | 1 |
+| 3 | `[2, 0, 0]` | 4 |
+
+```sql
+SELECT user_id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0, 0, 0]",
+    "metric" = "l2",
+    "top_k" = "10",
+    "use_index" = "false",
+    "distance_lower_bound" = "1",
+    "distance_upper_bound" = "4"
+)
+ORDER BY _distance;
+```
+
+```text
++---------+-----------+
+| user_id | _distance |
++---------+-----------+
+|       2 |         1 |
++---------+-----------+
+```
+
+去掉下界后还会返回第 1 行。仅设置上界为 `0` 则返回空结果。`prefilter=true` 时，`filter` 在向量检索前限制候选行；默认 `prefilter=false` 时，它在候选生成后过滤。`offset` 在应用距离范围后跳过结果。输出 Schema 不变，包含表中的列和 `FLOAT` 类型的 `_distance`。`EXPLAIN` 会显示 `lanceDistanceRange=[1.0, 4.0)`。
+
+距离边界支持预编译语句中的 `?` 参数，每次执行都会校验并使用当次绑定值，不接受 NULL。若不限制某一侧距离，请省略对应属性。
+
+该功能仍是 **Top-K 查询**，并非返回半径内所有行的接口：返回行数最多为 `top_k`，也可能不足。
+
+对于范围查询，只有同时提供上下界且选中索引明确为 IVF_FLAT 时，Doris 才使用索引检索。单边范围、量化索引以及子类型不明确的索引均回退到精确 Flat Search，即使设置了 `use_index=true`。因距离范围的正确性要求而未选择索引时，`EXPLAIN` 显示 `lanceVectorIndexStatus=DISTANCE_RANGE_FALLBACK`。回退可能增加扫描开销。
+
+IVF_FLAT 索引查询的候选仍取决于 `nprobes` 选择的分区；需要遍历全部候选时使用 `use_index=false`。索引未覆盖的追加数据使用 Flat Search。多向量列不支持距离边界。
 
 ### 支持的向量索引类型
 
-当前内置 `lance-c v0.1.8` 明确支持以下 Lance 向量索引组合：
+对于单向量列，Doris 支持以下 Lance 向量索引组合。多向量的索引限制见[多向量检索](#multi-vector-search)。
 
 | 索引类型 | 说明 | 主要查询参数 |
 |---|---|---|
@@ -706,9 +820,11 @@ ORDER BY _distance ASC, user_id;
 
 `vector_search()` 只使用 Lance 中已有的向量索引，不负责创建索引，也不能指定索引类型或索引名称。当 `use_index=true` 时，Doris 自动选择与向量列和距离类型兼容的索引；没有可用索引或索引未覆盖的数据会自动使用 Flat Search，不会被遗漏。当 `use_index=false` 时，所有数据都使用 Flat Search。
 
+列上有多个兼容的索引时，Doris 每次查询只选其中一个，按索引名排在最前的那个。这个索引未覆盖的 Fragment 使用 Flat Search，即使另一个索引覆盖了它们，所以实际执行和 `EXPLAIN` 显示的索引覆盖情况始终一致。Doris 无法用于规划的索引完全不使用，整个检索按 Flat Search 执行，例如没有 Fragment 覆盖元数据的索引（`lanceVectorIndexStatus=UNKNOWN_COVERAGE`）、没有记录距离类型的索引（`METRIC_MISMATCH`），以及缺少索引详情、Lance 也无法从索引文件推断出详情而被 Doris 跳过的旧索引（`NO_MATCH`）。旧版写入端创建、Lance 能推断出详情的索引照常使用。
+
 ### 支持的向量元素类型和距离类型
 
-向量索引支持的距离类型取决于向量元素类型。请选择下表中支持的组合；不支持的组合无法使用向量索引。
+对于单向量列，向量索引支持的距离类型取决于向量元素类型。请选择下表中支持的组合；不支持的组合无法使用向量索引。
 
 | 向量元素类型 | `l2` | `cosine` | `dot` | `hamming` |
 |---|---|---|---|---|
@@ -726,13 +842,122 @@ ORDER BY _distance ASC, user_id;
 
 #### 查询距离类型必须与索引一致
 
-查询指定的 `metric` 必须与索引创建时使用的距离类型一致，否则 Doris 会改用 Flat Search。结果仍然正确，但由于需要直接扫描向量，性能通常更低。
+查询指定的 `metric` 必须与索引创建时使用的距离类型一致；否则，如果列类型支持该查询距离，Doris 会改用 Flat Search。结果仍然正确，但由于需要直接扫描向量，性能通常更低。
 
-不设置 `metric` 时，Doris 在选择索引时按 `l2` 处理。因此，使用 `cosine`、`dot` 或 `hamming` 索引时必须显式设置 `metric`。例如，查询 `uint8` 向量索引时必须设置 `"metric" = "hamming"`，否则不会使用索引。
+不设置 `metric` 时，Doris 在选择索引时按 `l2` 处理。因此，使用 `cosine`、`dot` 或 `hamming` 索引时必须显式设置 `metric`。例如，查询 `uint8` 向量索引时必须设置 `"metric" = "hamming"`，否则查询使用不支持的 `l2` 距离并报错。
 
 可以通过 `EXPLAIN` 确认是否使用索引：`lanceSearchIndexSegments` 大于 `0` 表示使用了索引，等于 `0` 表示使用 Flat Search。
 
 Doris 对每个向量列只考虑一个向量索引。建议每个向量列最多创建一个向量索引，避免多个不同距离类型的索引导致选择不明确。
+
+### 多向量检索 {#multi-vector-search}
+
+多向量列在每条表记录中保存多个子向量，例如一篇文档的多个 token embedding。一个查询矩阵产生一组按表记录排序的结果，不是批量执行多个独立向量查询，也不是同时检索多个列。
+
+#### 准备数据并执行查询
+
+使用上文的 AWS S3 Filesystem Catalog 示例，Catalog 名称为 `lance_fs_s3`，warehouse 为 `s3://my-bucket/lance`。在写入环境中安装 Lance Python SDK（`pylance`）和 `pyarrow`，配置 S3 凭证和 region，例如设置 `AWS_ACCESS_KEY_ID`、`AWS_SECRET_ACCESS_KEY` 和 `AWS_DEFAULT_REGION`。写入端需要写权限，Doris 需要同一位置的读权限。使用自定义 endpoint 或其他认证方式时，按 Catalog 配置对应的 SDK [对象存储选项](https://lance.org/guide/object_store/)。
+
+将 `documents.lance` 直接写在 warehouse 下，Doris 会将其发现为 `lance_fs_s3.default.documents`。请同时替换 Catalog 和 Python 示例中的 bucket，并使用尚不存在的数据集路径：
+
+```python
+import lance
+import pyarrow as pa
+
+vector_type = pa.list_(pa.float32(), 2)
+schema = pa.schema([
+    pa.field("id", pa.int64()),
+    pa.field("embeddings", pa.list_(
+        pa.field("item", vector_type, nullable=False)
+    )),
+])
+data = pa.Table.from_pylist([
+    {"id": 1, "embeddings": [[1.0, 0.0], [0.0, 1.0]]},
+    {"id": 2, "embeddings": [[1.0, 0.0]]},
+    {"id": 3, "embeddings": []},
+    {"id": 4, "embeddings": None},
+], schema=schema)
+lance.write_dataset(
+    data,
+    "s3://my-bucket/lance/documents.lance",
+    data_storage_version="2.1",
+)
+```
+
+外层 list 允许每条记录保存不同数量的子向量。内层的 `nullable=False` 是必需的，表示子向量本身不能为 null。使用二维 JSON 数组查询：
+
+```sql
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_fs_s3.default.documents",
+    "column" = "embeddings",
+    "query_vector" = "[[1,0],[0,1]]",
+    "top_k" = "2",
+    "metric" = "l2",
+    "use_index" = "false"
+)
+ORDER BY _distance, id;
+```
+
+预期结果：
+
+| id | _distance |
+|---|---|
+| 1 | 0.0 |
+| 2 | 2.0 |
+
+记录 1 为每个查询子向量都提供了完全匹配。记录 2 与第一个查询子向量的距离为 `0`，与第二个的平方 L2 距离为 `2`。外层为空数组或 null 的记录不参与排名。增加 `"offset" = "1"` 并将 `"top_k" = "1"` 后，仅返回记录 2。增加 `"filter" = "id > 1"` 并设置 `"prefilter" = "true"`，会先限制候选检索的记录范围；对此数据集也仅返回记录 2。
+
+#### 行级评分
+
+设查询子向量集合为 `Q`，某条记录的子向量集合为 `V`：
+
+```text
+_distance = sum(q in Q, min(v in V, distance(q, v)))
+```
+
+| `metric` | 两个子向量之间的距离 |
+|---|---|
+| `l2`（默认） | 欧氏距离的平方 |
+| `cosine` | `1 - cosine_similarity` |
+| `dot` 或 `dot_product` | `1 - dot_product`，结果可以为负数 |
+
+`_distance` 越小越好。每个查询子向量贡献一次评分，同一个存储子向量可以匹配多个查询子向量。评分取总和而非平均值，重复查询子向量会重复计算其贡献。`_distance` 的 Doris 类型始终为 `FLOAT`，包括输入为 Float64 的情况。`top_k` 和 `offset` 按表记录计数，不按子向量计数。Top-K 边界上同分记录的入选情况和顺序不保证确定；外层 `ORDER BY` 只能排序已经返回的记录。
+
+#### 类型、维度与空值
+
+| 项目 | 要求 |
+|---|---|
+| Lance 列类型 | `list<fixed_size_list<T, D>>`，其中 `D > 0`，`T` 为 `float16`、`float32` 或 `float64` |
+| Doris 类型 | Float16/Float32 对应 `ARRAY<ARRAY<FLOAT>>`，Float64 对应 `ARRAY<ARRAY<DOUBLE>>` |
+| 查询形状 | 非空 JSON 矩阵，每个内层数组必须恰好包含 `D` 个元素。即使只有一个查询子向量，也必须写成 `[[...]]`；普通单向量列仍要求使用 `[...]`。 |
+| 查询元素 | 必须是 `T` 可表示的有限数值。空矩阵、维度不一致、null、非数值元素及超出类型范围的值会被拒绝。 |
+| 存储元素 | 子向量必须声明为不可空，内部元素必须是非 null 的有限数值。评分路径遇到实际的 null 或非有限元素时会报错；仅有元素级的 nullable schema 标记是允许的。 |
+| 空记录 | 外层为 null 或 `[]` 时没有可匹配的子向量，该记录不返回。 |
+| Cosine 零范数 | 零范数向量对的 cosine 距离无定义，不能形成匹配。如果某个查询子向量在一条记录中找不到任何有效匹配，该记录被排除。因此，查询中包含零范数子向量时结果为空。 |
+| 不支持的形状和类型 | 不支持外层为 `large_list` 或 `fixed_size_list`、内层为变长 list、整数多向量元素、extension/dictionary 编码，以及多向量 `hamming` 检索。 |
+
+#### 参数限制
+
+设 `M` 为查询子向量数量，`K = top_k`，`O = offset`，`R = refine_factor`（多向量检索默认为 `1`）。
+
+| 约束 | 限制 |
+|---|---|
+| 查询子向量数量 | `1 <= M <= 128` |
+| 返回记录数与偏移量 | `K > 0`，`O >= 0` |
+| 查询候选预算 | `M × (K + O) <= 100000` |
+| 精排候选预算 | `R × (K + O) <= 100000`，且 `R > 0` |
+| 显式设置的 `nprobes`、`ef` 或 `refine_factor` | 必须为正的 32 位有符号整数，最大 `2147483647`；`refine_factor` 还受候选预算约束 |
+
+两个候选预算分别校验，包括 `use_index=false` 的情况。例如，`M=128, K=1000, O=0` 超过查询候选预算，会被拒绝；`M=4, K=1000, O=0, R=10` 同时满足两个预算。这些限制用于约束候选处理规模，不代表对内存使用量或查询耗时的保证。
+
+#### 索引使用与精排
+
+当前集成的 Lance 版本支持使用 **cosine** 距离的多向量索引。要使用已有的兼容索引，例如 cosine `IVF_FLAT` 或 `IVF_PQ`，请设置 `"metric" = "cosine"` 并保持 `use_index=true`。不设置 `metric` 时使用 `l2`；L2 和 dot 查询没有兼容索引时执行 Flat Search。Doris 不通过此函数创建索引。可以用 `SHOW INDEX`（仅 Filesystem Catalog）查看索引元数据，并通过 `EXPLAIN` 确认 `lanceSearchIndexSegments > 0`。
+
+索引检索的候选选择是近似的。多向量候选**始终使用原始向量精排**，包括不设置 `refine_factor` 或将其设为 `1` 的情况，从而使有索引与无索引的记录使用相同的行级评分。增大 `refine_factor` 会扩大候选集，增加原始向量读取和计算，但不保证完整召回。`nprobes` 控制 IVF 探测范围，`ef` 对 HNSW 索引生效；调参时应同时测量召回率与耗时。索引创建后追加的记录会通过 Flat Search 纳入检索。
+
+如需对选定记录进行穷举评分，使用 `"use_index" = "false"`。需要在检索前缩小候选范围时，使用 TVF 的 `filter` 并设置 `prefilter=true`；默认 `prefilter=false` 会在候选生成后应用该条件。外层 SQL `WHERE` 始终由 Doris 过滤已生成的候选，不会补齐对应 split 的结果。下一节的过滤规则同时适用于单向量和多向量查询。
 
 ### Prefilter 和 Post-filter
 
@@ -745,6 +970,7 @@ FROM vector_search(
     "column" = "embedding",
     "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
     "top_k" = "10",
+    "prefilter" = "true",
     "filter" = "category = 'book'"
 )
 WHERE user_id > 100
@@ -753,12 +979,104 @@ ORDER BY _distance ASC, user_id;
 
 | 过滤方式 | 示例条件 | 执行时机 | 对结果的影响 |
 |---|---|---|---|
-| Prefilter | TVF 参数 `"filter" = "category = 'book'"` | Lance 生成向量候选之前 | 只在 `category = 'book'` 的数据中搜索最近邻。 |
-| Post-filter | 外层 `WHERE user_id > 100` | Lance 生成候选之后、Doris 执行最终 TopN 之前 | 从已生成的候选中删除不满足条件的行，不会补充新的候选，因此最终结果可能少于 `top_k`。 |
+| TVF Prefilter | TVF 参数 `"filter" = "category = 'book'"` 且 `"prefilter" = "true"` | Lance 生成向量候选之前 | 只在 `category = 'book'` 的数据中搜索最近邻。 |
+| TVF Post-filter | TVF 参数 `"filter" = "category = 'book'"`，且 `prefilter` 缺省或为 `false` | Lance 生成候选之后 | 从已生成的候选中删除不满足条件的行，不会补充新的候选，因此结果可能少于 `top_k`。 |
+| Doris Scan Post-filter | 外层 `WHERE user_id > 100` | Lance 生成候选之后、Doris 执行最终 TopN 之前 | 从已生成的候选中删除不满足条件的行，不会补充新的候选，因此最终结果可能少于 `top_k`。 |
 
-如果 `user_id > 100` 也必须参与最近邻候选生成，应将它合并到 `filter` 中，例如 `"filter" = "category = 'book' AND user_id > 100"`，而不是使用外层 `WHERE`。即使优化器将外层 `WHERE` 下移到 Doris 的 Lance Scan，它仍然是 Post-filter，不会转换成 Lance Prefilter。
+如果 `user_id > 100` 也必须参与最近邻候选生成，应将它合并到 TVF `filter` 中并设置 `prefilter=true`，例如 `"filter" = "category = 'book' AND user_id > 100"`。如果 `prefilter` 为默认值 `false`，该条件会在候选生成后过滤。外层 `WHERE` 即使被优化器下推到 Doris 的 Lance Scan，也仍是 Doris Scan Post-filter，不会转换成 Lance Prefilter。
 
 `filter` 中引用的列由 Lance 内部读取和计算；如果该列未被 `SELECT` 或其他 Doris 表达式引用，则不需要返回给 Doris。
+
+## FE 表访问缓存
+
+该配置要求 Doris 构建版本包含[表访问缓存变更](https://github.com/apache/doris/pull/68305)。
+
+每个 FE 可以在 Catalog 内缓存表解析后的 Dataset URI 和访问配置，避免查询规划时重复执行文件系统发现或 REST `describeTable` 请求。每个 Catalog 客户端最多保留 10,000 个条目。`lance.table_access_cache_ttl_seconds` 默认为 `60` 秒，命中缓存不会延长有效期。此缓存不保存 Dataset 版本：每次读取仍会打开 Dataset 并选择快照。
+
+由 Namespace 管理版本（managed versioning）的表在每次读取时重新解析，FE 和 BE 都使用这次返回的位置和存储配置。如果响应包含下发的存储配置，即使提供了 `expires_at_millis`，也会在每次读取时重新解析。包含用户信息、查询参数（包括预签名或 SAS 凭证）或片段的 URI 同样不缓存。固定的凭证到期余量无法保证凭证在整个扫描期间有效，BE 也无法在扫描过程中更新这些凭证。响应不含这些字段的 REST Catalog 可以使用缓存。
+
+显式刷新表或数据库会清除该 Catalog 的全部表访问缓存；Follower FE 重放刷新时，即使对应的本地数据库或表对象已被淘汰，也会清除缓存。普通的本地数据库对象淘汰不会清除此缓存。启用缓存失效的 Catalog 刷新、Namespace 移除或 Catalog 配置变更也会使访问缓存失效。索引检查和索引任务目标校验始终重新解析访问配置。
+
+远端表 URI 或访问配置变更后，可显式刷新，避免等待 TTL 到期。以已有表 `example_lance.default.items` 为例：
+
+```sql
+REFRESH TABLE example_lance.default.items;
+```
+
+下一次读取会重新解析表访问配置。该操作不会清除 Lance 原生 Session 缓存；在相同 URI 下替换 Dataset 后，应刷新 Catalog 并启用缓存失效。这样只清除 FE 的 Lance Session，不清除 BE 的缓存，见[检索历史版本或 branch](#search-a-historical-version-or-branch)。
+
+要禁用已有 Catalog 的表访问缓存：
+
+```sql
+ALTER CATALOG example_lance SET PROPERTIES (
+    "lance.table_access_cache_ttl_seconds" = "0"
+);
+```
+
+后续每次读取都会重新解析表访问配置。下文介绍的 BE 缓存仍独立配置。
+
+## Lance Cache
+
+Lance Cache 复用已读取的索引、元数据和数据文件内容，减少重复查询的读取开销。缓存由每个 BE 独立管理，同一 BE 内的 Lance 查询共享缓存；不同 BE 不共享缓存容量或内容。普通扫描、向量检索、全文检索和两阶段读取的回读都可以复用相应缓存，无需在 `CREATE CATALOG` 中增加属性。
+
+### 缓存类型和范围
+
+| 缓存 | 存储位置 | 缓存内容 |
+|---|---|---|
+| 索引缓存 | BE 内存 | Lance 已加载的索引内容，减少重复加载索引的开销。 |
+| 元数据缓存 | BE 内存 | Lance reader 使用的元数据，减少重复读取和解析。 |
+| 数据缓存 | BE 本地磁盘，附带一个读取块大小的内存缓存层 | Dataset 的 `data/` 目录下直接以 `.lance` 结尾的数据文件，按块缓存读取内容。 |
+
+数据缓存由 Lance reader 内的 Foyer 缓存实现，使用独立目录和容量，通过下面的 `lance_*` BE 参数配置。它不使用 Doris 通用 File Cache 的目录和容量配置。索引文件、manifest 和删除文件不进入该磁盘数据缓存；它们仍使用 Lance 原有的读取及缓存路径。
+
+数据缓存按需填充，不会预先下载整个 Dataset。未命中时读取源存储，并将数据交给后台写入磁盘缓存；首次读取仍会产生源存储 I/O 和缓存填充开销。缓存命中可以减少后续读取的源存储访问，但不消除解码、过滤和排序开销。
+
+### BE 配置
+
+以下参数均为可选项，在每个 BE 的 `be.conf` 中配置，修改后需要重启对应 BE。容量均为单个 BE 的容量，单位为字节。
+
+| 参数 | 类型 | 默认值 | 说明 |
+|---|---|---|---|
+| `lance_index_cache_size_bytes` | Int64 | `10737418240`（10 GiB） | 索引内存缓存容量；设为 `0` 表示零容量。 |
+| `lance_metadata_cache_size_bytes` | Int64 | `1073741824`（1 GiB） | 元数据内存缓存容量；设为 `0` 表示零容量。 |
+| `enable_lance_data_cache` | Boolean | `true` | 是否启用磁盘数据缓存；关闭后仍保留索引和元数据缓存。 |
+| `lance_data_cache_path` | String | `${DORIS_HOME}/lance_data_cache` | 数据缓存目录。BE 进程需要有创建目录和读写文件的权限，不同 BE 进程应使用独立目录。 |
+| `lance_data_cache_disk_capacity_bytes` | Int64 | `107374182400`（100 GiB） | 磁盘缓存容量。必须是 `4096` 的整数倍，且至少为读取块大小的两倍。 |
+| `lance_data_cache_read_block_size_bytes` | Int64 | `1048576`（1 MiB） | 数据缓存的读取块大小。必须为正数且是 `4096` 的整数倍；同时决定数据缓存内存层的容量。 |
+
+例如，显式配置默认容量，并将缓存放在独立的本地磁盘目录：
+
+```properties
+lance_index_cache_size_bytes = 10737418240
+lance_metadata_cache_size_bytes = 1073741824
+enable_lance_data_cache = true
+lance_data_cache_path = /mnt/ssd/lance_data_cache
+lance_data_cache_disk_capacity_bytes = 107374182400
+lance_data_cache_read_block_size_bytes = 1048576
+```
+
+重启 BE 后，首次打开 Lance Dataset 时初始化共享缓存。启用数据缓存时，如果目录不可用或容量、块大小不合法，初始化会失败并导致 Lance 查询报错，不会自动退回到禁用数据缓存的模式。需要关闭磁盘数据缓存时，将 `enable_lance_data_cache` 设为 `false` 后重启 BE。
+
+配置容量时应同时考虑索引缓存、元数据缓存和查询工作内存。上述容量不是 Lance 查询总内存的上限，也不是 BE 进程内存的上限。磁盘缓存还需要本地磁盘空间和文件描述符资源；增大读取块可以减少块数量，但小范围读取可能产生更多额外 I/O。调整读取块大小或磁盘布局时使用新的缓存目录。
+
+按场景估算缓存、选择配置、分析共享缓存竞争以及确定 Index Segment 粒度，请参阅 [Lance 查询最佳实践](../best-practices/doris-lance.mdx)。过滤与检索组合的调优方法参见 [Lance 混合检索性能最佳实践](../best-practices/lance-hybrid-search.mdx)。
+
+### 查看缓存效果
+
+在已完成查询的 Profile 中，索引缓存计数位于 `LanceReader` → `LanceIndex`，数据文件缓存计数位于 `LanceReader` → `LanceDataCache`：
+
+| 计数器 | 含义 |
+|---|---|
+| `LanceIndexCacheHits`、`LanceIndexCacheMisses` | 已埋点索引路径报告的本次执行缓存查询，与 BE 共享 Session 指标不同。 |
+| `LanceIndexObjectLoads`、`LanceIndexComponentsLoaded` | 加载的顶层索引对象及内部部件数，均不能替代缓存未命中计数。 |
+| `LanceDataCacheBytesReadFromCache` | 当前 Dataset handle 的数据文件缓存提供的逻辑请求字节数。 |
+| `LanceDataCacheBytesReadFromRemote` | 缓存未命中或回退后由源存储提供的逻辑请求字节数，源存储也可以是本地文件。 |
+
+两个数据缓存字节计数不包含按块读取的放大，也不覆盖索引、manifest 等绕过数据缓存的 I/O，因此不能代替完整的远端流量统计，两者之和也不要求等于 `LanceIOReadBytes`。关闭数据缓存时两个计数均为 `0`，不代表没有读取源存储。Doris 在关闭 Dataset handle 前记录其累计快照。第二阶段回表具有单独的读取器统计，并导出到 Row ID Fetch/Materialization Profile 信息中；仅有扫描计数不能覆盖全查询的回表 I/O。采集时机和指标范围见[Lance 查询 Profile 指标参考](../best-practices/lance-query-profile.md)。
+
+BE 的 `/metrics` 还提供以 `doris_be_lance_session_index_cache_` 和 `doris_be_lance_session_metadata_cache_` 为前缀的指标，后缀分别为 `capacity_bytes`、`usage_bytes`、`entries`、`hits_total` 和 `misses_total`，表示配置容量、当前使用量、条目数、累计命中和累计未命中。这些是 BE 共享缓存指标，初始化共享 Lance Session 后注册，不能直接归属于某一条查询。
+
+比较缓存效果时，应使用相同 Dataset 版本和查询参数，确保查询实际执行并落到相同 BE，同时记录首次读取和重复读取的耗时、缓存计数及源存储 I/O。只查看总耗时不足以区分缓存收益与索引搜索、解码或第二阶段回读的开销。
 
 ## TopN 两阶段读取和延迟物化
 
@@ -775,14 +1093,14 @@ ORDER BY _distance ASC, user_id;
 
 满足以下条件时，Doris 才会使用两阶段读取：
 
-1. `topn_lazy_materialization_threshold` 大于 `0`，默认值为 `1024`。
-2. `top_k` 不超过该阈值。
+1. 查询通过 `vector_search()` 或 `full_text_search()` 读取 Lance，且执行计划中存在可进行延迟物化的 TopN。普通 Lance 表扫描和 Lance 文件 TVF 当前不适用此开关。
+2. Boolean 类型的会话变量 `enable_lance_lazy_materialization` 为 `true`，默认开启。
 3. 查询至少包含一个可以延迟读取的顶层列。仅用于最终 `SELECT` 输出的列可以延迟；Post-filter、`ORDER BY` 或其他 TopN 前表达式使用的列必须在第一阶段读取。嵌套子列当前不能延迟读取。
 
 例如，以下查询中的 `category` 必须在第一阶段用于 Post-filter，而 `user_id`、`title` 和 `payload` 可以在 TopN 完成后读取：
 
 ```sql
-SET topn_lazy_materialization_threshold = 1024;
+SET enable_lance_lazy_materialization = true;
 
 SELECT user_id, title, payload, _distance
 FROM vector_search(
@@ -795,17 +1113,21 @@ FROM vector_search(
 WHERE category = 'book';
 ```
 
-TVF `filter` 中引用的 Prefilter 列由 Lance 在搜索内部使用，不会仅因为出现在 `filter` 字符串中就作为第一阶段结果列返回给 Doris。
+TVF `filter` 中引用的列由 Lance 在搜索内部使用，不会仅因为出现在 `filter` 字符串中就作为第一阶段结果列返回给 Doris；`prefilter` 只改变该条件相对候选生成的执行时机。
+
+### 验证是否生效
+
+在上述查询前加上 `EXPLAIN VERBOSE`。两阶段读取生效时，计划中可见 `VMaterializeNode`，其中 `column_descs_lists` 列出第二阶段回读的列。关闭开关后，对同一条简单检索查询再次执行 `EXPLAIN VERBOSE`，对应的物化节点应消失。如果开启后仍未出现，应检查输出列是否参与过滤、排序或其他 TopN 前计算，以及计划是否支持该优化。
 
 ### 关闭两阶段读取
 
 设置以下会话变量可以关闭两阶段读取：
 
 ```sql
-SET topn_lazy_materialization_threshold = -1;
+SET enable_lance_lazy_materialization = false;
 ```
 
-当 `top_k` 大于阈值或没有可延迟列时，Doris 会自动使用单阶段读取，通常不需要手动关闭。以下情况可以考虑关闭并进行性能对比：
+没有可延迟列或计划不支持该优化时，Doris 会使用单阶段读取。Lance 不会仅因为 `top_k` 较大就自动关闭两阶段读取；以下情况可以考虑关闭并进行性能对比：
 
 - `top_k` 很大，第二阶段仍需读取大部分候选行。
 - 查询只返回少量窄列，两阶段能够减少的 I/O 很少。
@@ -833,6 +1155,7 @@ FROM full_text_search(
     "operator" = "and",
     "top_k" = "10",
     "offset" = "0",
+    "prefilter" = "true",
     "filter" = "category = 'storage'",
     "coverage_mode" = "strict"
 )
@@ -840,7 +1163,7 @@ WHERE published = true
 ORDER BY _score DESC, document_id;
 ```
 
-上例使用 Match AND，只返回同时包含分词结果 `lance` 和 `database` 的文档。`filter` 是 Lance 在生成 FTS 候选结果前执行的 Prefilter；外层 `WHERE` 是生成候选结果后执行的 Post-filter。Post-filter 不会补充被过滤掉的候选行，因此最终结果可能少于 `top_k`。如果 `published = true` 也必须参与候选生成，应将它合并到 `filter` 中。
+上例使用 Match AND，只返回同时包含分词结果 `lance` 和 `database` 的文档。`prefilter=true` 时，Lance 在生成 FTS 候选结果前执行 `filter`；缺省 `prefilter=false` 时，Lance 在候选生成后应用 `filter`，结果可能少于 `top_k`。外层 `WHERE` 是由 Doris 执行的 Post-filter，也不会补充被过滤掉的候选行。如果 `published = true` 必须参与候选生成，应将它合并到 `filter` 中并设置 `prefilter=true`。
 
 下面的查询使用 Phrase，并允许相邻查询词之间最多存在一个其他 token。例如，它可以匹配 `lance search engine`：
 
@@ -871,8 +1194,10 @@ ORDER BY _score DESC, document_id;
 | `slop` | 否 | `0` | 仅用于 Phrase 查询，必须是 `0` 到 `2147483647` 之间的整数。`0` 要求精确短语，正数表示相邻查询词之间允许存在的最大 token 数。Match 查询不能设置该参数。 |
 | `top_k` | 否 | `10` | 跳过 `offset` 后返回的结果数，必须为正整数。 |
 | `offset` | 否 | `0` | 按相关性跳过的结果数，必须为非负整数；`top_k + offset` 不能超过无符号 32 位整数的最大值。 |
-| `filter` | 否 | - | 生成全文检索候选结果前由 Lance 执行的 SQL 条件，即 Prefilter。 |
+| `filter` | 否 | - | 由 Lance 执行的 SQL 条件。执行时机由 `prefilter` 控制。 |
+| `prefilter` | 否 | `false` | 控制 TVF `filter` 的执行时机。`true` 表示在生成全文检索候选结果前过滤；`false`（默认值）表示在候选生成后过滤，结果可能少于 `top_k`。该参数不影响外层 Doris `WHERE`。 |
 | `coverage_mode` | 否 | `strict` | FTS 索引未覆盖当前快照全部 Fragment 时的处理方式，可选值为 `strict` 或 `index_only`。 |
+| `version`、`timestamp`、`tag`、`branch` | 否 | - | 检索历史版本、某个时间点的版本、tag 或 branch，而不是 main 的最新版本。见[检索历史版本或 branch](#search-a-historical-version-or-branch)。 |
 
 ### 查询类型
 
@@ -895,16 +1220,61 @@ ORDER BY _score DESC, document_id;
 
 使用 `EXPLAIN` 可以确认执行方式：`lanceFtsQueryType` 显示 Match 或 Phrase，`lanceFtsMatchOperator` 显示 Match 的 OR/AND 操作符，`lanceFtsPhraseSlop` 显示 Phrase 间隔；`lanceFtsCoverageMode` 显示覆盖模式，`lanceSearchIndexSegments` 显示使用的物理 FTS Index Segment 数，`lanceSearchUnindexedFragments` 显示当前快照中未被索引覆盖的 Fragment 数。
 
+## 检索历史版本或 branch {#search-a-historical-version-or-branch}
+
+`vector_search()` 和 `full_text_search()` 默认检索 main 的最新版本。四个可选参数可以选择其他快照，含义和表的 [Time Travel](#time-travel) 语法相同：
+
+| 参数 | 取值 | 对应的表语法 | 可以同时使用 |
+|---|---|---|---|
+| `version` | 正整数版本号 | `FOR VERSION AS OF N` | `branch` |
+| `timestamp` | 会话时区下的 `yyyy-MM-dd HH:mm:ss` 或 `yyyy-MM-dd HH:mm:ss.SSS` | `FOR TIME AS OF '...'` | `branch` |
+| `tag` | tag 名 | `@tag(name)` | 无 |
+| `branch` | branch 名，`main` 表示 main | `@branch(name)` | `version` 或 `timestamp` |
+
+```sql
+-- 检索版本 3
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.db.documents",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3]",
+    "version" = "3")
+ORDER BY _distance;
+
+-- 检索 branch "dev" 在某个时间点的状态
+SELECT id, _score
+FROM full_text_search(
+    "table" = "lance_catalog.db.documents",
+    "column" = "content",
+    "query" = "database",
+    "branch" = "dev",
+    "timestamp" = "2026-09-20 12:00:00")
+ORDER BY _score DESC;
+```
+
+- 快照的选择规则与表语法相同，包括指向 branch 的 tag 和由 REST Namespace 管理版本的表。`version` 只接受版本号。和 `FOR VERSION AS OF` 不同，它不接受 tag 名，因为 `tag` 参数可以无歧义地指定 tag：名为 `123` 的 tag 用 `"tag" = "123"` 选择。
+- `version` 和 `timestamp` 不能同时使用，`tag` 不能和另外三个同时使用。参数值为空时报错，不会当作没有设置。
+- 输出 schema、检索列、向量索引和 FTS 索引的元数据、Fragment 都来自选中的快照；候选生成、过滤、Top-K 和两阶段读取也都读这个快照。历史版本使用该版本提交的索引：创建向量索引之前的版本使用 Flat Search，创建 FTS 索引之前的版本不能用 `full_text_search()` 检索，`coverage_mode` 按该版本的 Fragment 检查。
+- 选不到快照，或快照的索引文件缺失时报错，不会回退到最新版本。被 Lance cleanup 删掉的版本报告为不存在。被 tag 保留的版本在 cleanup 时保留索引文件；用其他方式删掉索引文件时，执行阶段报错，报错信息给出数据集版本。
+- 每次执行都会重新选择快照，prepared statement 每次 `EXECUTE` 也一样。因此最新版本、未来的时间点、branch 和移动过的 tag 每次可能选到不同的版本。这四个参数只能是常量：prepared statement 中，`vector_search()` 只有 `query_vector`、`top_k`、`offset`、`filter` 可以用占位符（`?`），`full_text_search()` 的参数都不能用占位符。
+- 每个检索 relation 各自选择快照。同一条语句中对同一张表的两个 relation，例如 `vector_search()` 和表本身做 join，期间有新版本提交时可能读到不同版本。要读同一个版本，两边都要固定：检索函数写 `version`，表写 `FOR VERSION AS OF`。
+- `CREATE TABLE AS SELECT` 会规划两次查询，一次推导新表的结构，一次写入数据，所以会移动的选择器两次可能选到不同的版本。要精确复制某个版本，写 `version`。
+- `EXPLAIN` 中 `lanceVersion` 显示选中的版本，`lanceBranch` 显示 branch，`lanceManagedVersioning` 显示版本是否由 REST Namespace 管理。`EXPLAIN` 会重新选择快照，所以一次执行实际读到的快照记录在查询 Profile 中：`LanceDatasetVersion` 和 `LanceDatasetUri`，和 `LanceSearchType` 等 Lance scanner 信息显示在一起。URI 包含 branch 目录，不包含查询串和密码。
+- 从另一个 branch 或 shallow clone 创建的 branch，可能找不到继承来的索引文件，因为 13 之前的 Lance 写入端把它们记录在中间那个 branch 下。这时检索报错，branch 自己创建的索引不受影响。
+- branch 删掉后同名重建，或在同一 URI 下替换 Dataset 后，新数据会重复使用旧的版本号。BE 可能继续使用为这些版本号缓存的内容，直到缓存淘汰或 BE 重启。开启 stable row ID 的 Dataset 上，向量检索和全文检索可能按旧数据的存活行过滤，结果中可能出现新数据已删除的行，或缺少存活的行。manifest 使用 Lance 旧的命名方式（`_versions/<version>.manifest`），或对象存储不返回 ETag 时，BE 和 FE 还可能使用旧的索引元数据，FE 在刷新 Catalog 后恢复。重建的 branch 请换一个名字，或者重启 BE。刷新 Catalog 不会清除这些 BE 缓存。
+- 没有存储 token 位置的 FTS 索引不能执行 Phrase 查询。旧版写入端创建的索引通常不带位置，历史版本可能仍在使用这类索引。
+
 ## 当前执行方式
 
 `vector_search()` 和 `full_text_search()` 的执行顺序如下：
 
 ```text
-固定数据集快照
+按 version / timestamp / tag / branch 选中的数据集快照，或 main 的最新版本
   -> FE 规划检索 Split
        -> 向量检索：物理向量 Index Segment + 未覆盖 Fragment 的 Flat Search
        -> 全文检索：物理 FTS Index Segment（按 coverage_mode 检查覆盖情况）
-  -> 每个 Split：Lance Prefilter -> 向量/全文检索 -> 最多 K+n 个候选
+  -> 每个 Split：向量/全文检索；TVF filter 在 prefilter=true 时于候选生成前应用，缺省 false 时于候选生成后应用
+       -> 最多 K+n 个候选
   -> Doris Scan Post-filter
   -> Doris 局部 TopN
   -> Exchange
@@ -912,10 +1282,13 @@ ORDER BY _score DESC, document_id;
   -> 可选的延迟物化 Fetch
 ```
 
+## 查询 Profile {#query-profile}
+
+Profile 的采集和查看方法见 [Query Profile 分析指南](../../query-acceleration/query-profile.md)。Lance 专用分组、计数器、计时边界和第二阶段回表统计见 [Lance 查询 Profile 指标参考](../best-practices/lance-query-profile.md)。
+
 ## 当前限制和建议
 
 - Lance Catalog 和 Lance TVF 当前仅支持读取，不支持 `CREATE TABLE`、`INSERT`、`UPDATE`、`DELETE`、`TRUNCATE TABLE` 或写回 Lance。
-- 查询总是读取规划时选择的当前版本，不支持通过 SQL 指定 Version 或执行 Time Travel。
 - 使用不支持的列类型时，建议显式列出需要读取的列，避免 `SELECT *` 投影到不支持的列。
 - 对普通扫描使用 `EXPLAIN` 检查 `lancePushdownPredicate`，确认目标条件是否已下推。
 - 向量检索前应在 Lance 中创建与查询方式匹配的索引；小数据集或验证场景可以设置 `"use_index" = "false"` 使用 Flat Search。
@@ -924,5 +1297,5 @@ ORDER BY _score DESC, document_id;
 - 可以使用 `SHOW INDEX` 查看 Filesystem Catalog 表的 Lance 逻辑索引，例如在执行向量或全文检索前确认索引名、索引类型和被索引字段；REST Catalog 不支持 `SHOW INDEX`。
 - 向量查询需要稳定顺序时，显式使用 `ORDER BY _distance ASC` 并增加唯一 Tie-breaker。
 - 全文查询需要稳定顺序时，显式使用 `ORDER BY _score DESC` 并增加唯一 Tie-breaker。
-- 需要在向量或全文候选生成前过滤时使用 TVF 的 `filter`；外层 `WHERE` 只过滤每个搜索 Split 已生成的候选，并在 Doris 全局 TopN 之前执行，应允许其最终结果少于 `top_k`。
+- 需要在向量或全文候选生成前过滤时，设置 TVF 的 `filter` 和 `prefilter=true`；默认 `prefilter=false` 时，TVF `filter` 在候选生成后应用。外层 `WHERE` 则由 Doris 过滤每个搜索 Split 已生成的候选，并在 Doris 全局 TopN 之前执行，最终结果可能少于 `top_k`。
 - 使用 `EXPLAIN` 检查 `lanceSearchFragments` 和 `lanceSearchIndexSegments`。前者表示固定快照中的可见 Fragment 数量，后者表示 FE 选择的物理 Index Segment Split 数量。向量检索还可能包含回退的 Flat Search Fragment Split；全文检索不会回退到 Flat Search。

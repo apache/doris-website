@@ -10,9 +10,15 @@
 
 The MAP_AGG function is used to form a mapping structure based on key-value pairs from multiple rows of data.
 
+For duplicate keys, `MAP_AGG` keeps the value encountered first during aggregation and ignores subsequent values for a key that already exists. When partial aggregate states are merged, the value already present in the destination state is also retained.
+
+“Encountered first” refers to processing order, not insertion order. Scanning, parallel execution, and the order in which partial states are merged can affect which value is retained, so the value selected for a duplicate key is not guaranteed to be the same across queries. An outer `ORDER BY` only sorts result rows; it does not determine which value is retained for a duplicate key.
+
 ## Syntax
 
-`MAP_AGG(<expr1>, <expr2>)`
+```sql
+MAP_AGG(<expr1>, <expr2>)
+```
 
 ## Parameters
 
@@ -107,4 +113,23 @@ select n_regionkey, map_agg(`n_name`, `n_nationkey` % 5) from `nation` group by 
 |           1 | {"ARGENTINA":1, "BRAZIL":2, "CANADA":3, "PERU":2, "UNITED STATES":4}   |
 |           4 | {"EGYPT":4, "IRAN":0, "IRAQ":1, "JORDAN":3, "SAUDI ARABIA":0}          |
 +-------------+------------------------------------------------------------------------+
+```
+
+The following query contains a duplicate key, so the result contains only one key-value pair. The result can be `{1:"a"}` or `{1:"b"}`, depending on which value is processed first. One possible output is:
+
+```sql
+SELECT MAP_AGG(k, v) AS result
+FROM (
+    SELECT 1 AS k, 'a' AS v
+    UNION ALL
+    SELECT 1 AS k, 'b' AS v
+) AS input;
+```
+
+```text
++---------+
+| result  |
++---------+
+| {1:"a"} |
++---------+
 ```

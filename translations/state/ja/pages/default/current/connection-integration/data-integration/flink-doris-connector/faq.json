@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/flink-doris-connector/faq",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/flink-doris-connector/faq.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/flink-doris-connector/faq.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "141e4df33b402c84b52cd1d9657d39d354a8ca519123a7146a37ca1765110946",
+    "sourceTechnicalHash": "bbcd2447092ca823374ed174ec5e5e8b5bbecf814b6716929046f311e968e653",
+    "targetHash": "478eacd620e386da2e4738a1eade275474fcb33c27c193d61d705dec568aa8a2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:19:43.743Z",
+    "glossaryVersion": "0"
+  }
+}

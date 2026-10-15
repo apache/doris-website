@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/incremental/table-stream",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/incremental/table-stream.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/incremental/table-stream.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "ff945cba7f91a8a1a435bfef8af3aac3f21c33881d8d2169b773398caec984aa",
+    "sourceTechnicalHash": "b3f3e7301dcfb5743e9c3d30d768cd8ba5ab9bec02c4e251d0e9018096ee204d",
+    "targetHash": "d812de8c6074f9b5db1f5245bd4f3135b7cc51c3a32ef51cfde8452a36199880",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T16:06:57.645Z",
+    "glossaryVersion": "0"
+  }
+}

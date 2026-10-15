@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/data-model",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/data-model.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/data-model.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "2ff3b4cf58a821fded3a6272d359bd3d27af7ec29979c20289875fb15d4cad4c",
+    "sourceTechnicalHash": "6174b5563b7a63d289478c210d01ab1bda47f1edd4ac219439244c5168a00955",
+    "targetHash": "2f8e1f17ae7101d819eb6972c6da191e0af4059a52b6507139559a6fe098473a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:36:53.452Z",
+    "glossaryVersion": "0"
+  }
+}

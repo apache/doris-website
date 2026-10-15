@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/job/CREATE-JOB",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/job/CREATE-JOB.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/job/CREATE-JOB.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "dca80109fd31c0888b4353fada4dc7832a1fe20b331b5f5ce0df2f69a1c4b7e1",
+    "sourceTechnicalHash": "9dd674a835047f8bb3c4aebdc1e4aebfa6f27e8947d0c65b3fd43357a0aa0d3a",
+    "targetHash": "b46214a58aae0e7e662a2487e020724b9377cbab6fd81b1060e3e9791d7fbbef",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:58:17.484Z",
+    "glossaryVersion": "0"
+  }
+}

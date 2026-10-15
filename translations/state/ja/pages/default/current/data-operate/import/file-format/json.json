@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/file-format/json",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/file-format/json.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/file-format/json.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "46efd94f39c4060074f7669b90e84a6e6efb2174d67a9a34ed1f59f737dcf2bc",
+    "sourceTechnicalHash": "5c45d3d9ee9918e07825589e94314715cedd4983d4a3b2c89b16f62a23dcd6a3",
+    "targetHash": "1697b75f27b61cb07fa64cf66413e024d50467f6354d39ff77855996f604f10e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T15:42:24.382Z",
+    "glossaryVersion": "0"
+  }
+}

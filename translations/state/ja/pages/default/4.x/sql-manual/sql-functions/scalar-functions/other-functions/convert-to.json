@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/other-functions/convert-to",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/other-functions/convert-to.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/other-functions/convert-to.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "0c2a92a5fe1b5c0e3ed998b82bcb93d5bdb04bb9661f8616527acf74984baac2",
+    "sourceTechnicalHash": "83c04925654d85173138efdd42dd34d09f13abb2036f424f2e09f3b0123856d7",
+    "targetHash": "93c9ebb3eea803b121719aa348196f6add498a09abd28ec408ca6611420e592e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:02:01.386Z",
+    "glossaryVersion": "0"
+  }
+}

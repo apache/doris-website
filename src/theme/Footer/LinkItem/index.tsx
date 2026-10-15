@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Link from '@docusaurus/Link';
+import Link from '@site/src/components/home-next/LocalizedLink';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import isInternalUrl from '@docusaurus/isInternalUrl';
 import IconExternalLink from '@theme/Icon/ExternalLink';

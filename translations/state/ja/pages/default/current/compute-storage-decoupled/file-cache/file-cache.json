@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "compute-storage-decoupled/file-cache/file-cache",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/compute-storage-decoupled/file-cache/file-cache.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/compute-storage-decoupled/file-cache/file-cache.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "321e4b12913ce25199f5c49dbf3c57e9395b89fc059a7fadf9d87b1fc0ac67dc",
+    "sourceTechnicalHash": "985de34754eaf3131aa0cc8c98b97eaa24130f6b66934f23fddf9fe74b3b0a6d",
+    "targetHash": "db1b41be962558cae4b87bea8f21703cd9ba451bc0782d338c54088427c80f5c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T12:26:49.464Z",
+    "glossaryVersion": "0"
+  }
+}

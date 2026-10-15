@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/SHOW-BACKEND-CONFIG",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/SHOW-BACKEND-CONFIG.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/SHOW-BACKEND-CONFIG.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "83818a9fc9884d3cdc108860973179aa47e8e112332bf095075e2bf11dcf9ff2",
+    "sourceTechnicalHash": "ce39dbd8decae392ad96ab72927cdb2ff6e587a454c2a942c6c5c2c2886a4431",
+    "targetHash": "879afafa6a51c46b660438e6de878eb73c78fa5a3de17cb63337e8901faff7a3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:35:18.350Z",
+    "glossaryVersion": "0"
+  }
+}

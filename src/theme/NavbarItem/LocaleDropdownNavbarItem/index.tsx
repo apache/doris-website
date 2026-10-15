@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { useAlternatePageUtils } from '@docusaurus/theme-common/internal';
 import { translate } from '@docusaurus/Translate';
@@ -6,6 +6,7 @@ import { useLocation } from '@docusaurus/router';
 import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 import type { LinkLikeNavbarItemProps } from '@theme/NavbarItem';
 import type { Props } from '@theme/NavbarItem/LocaleDropdownNavbarItem';
+import {useTranslationRoutes} from '@site/src/utils/translation';
 
 import './styles.scss';
 export default function LocaleDropdownNavbarItem({
@@ -19,6 +20,7 @@ export default function LocaleDropdownNavbarItem({
         i18n: { currentLocale, locales, localeConfigs },
     } = useDocusaurusContext();
     const alternatePageUtils = useAlternatePageUtils();
+    const {group, translatedLocales} = useTranslationRoutes();
     const { search, hash } = useLocation();
 
     // Locales listed here render in the dropdown with a "Coming Soon" badge and
@@ -26,10 +28,14 @@ export default function LocaleDropdownNavbarItem({
     const COMING_SOON_LOCALES = new Set<string>([]);
 
     const localeItems = locales.map((locale): LinkLikeNavbarItemProps => {
-        const baseTo = `pathname://${alternatePageUtils.createUrl({
+        const nativeTo = alternatePageUtils.createUrl({
             locale,
             fullyQualified: false,
-        })}`;
+        });
+        // Switching to or from a translated locale prefers the page's exact
+        // counterpart route over the locale's default route.
+        const isTranslatedSwitch = translatedLocales.includes(locale) || translatedLocales.includes(currentLocale);
+        const baseTo = `pathname://${isTranslatedSwitch && group?.[locale] ? group[locale] : nativeTo}`;
         // preserve ?search#hash suffix on locale switches
         const to = `${baseTo}${search}${hash}${queryString}`;
         const isComingSoon = COMING_SOON_LOCALES.has(locale);
@@ -103,6 +109,7 @@ export default function LocaleDropdownNavbarItem({
                             strokeWidth="1.25"
                         />
                     </svg>
+                    <span className="locale-current-label">{localeConfigs[currentLocale]!.label}</span>
                 </>
             }
             items={items}

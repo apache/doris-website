@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/data-pruning",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/data-pruning.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/data-pruning.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "c6bb00499fd6a1ff9a28cf3756f55f22f85d25aebdff2e6c8b19314d87c1ee74",
+    "sourceTechnicalHash": "a7d8d0090790aa260ab1fab226369cb38b005e51a3ad4cfcfeba87f8b25b5b48",
+    "targetHash": "7bdf4e115c8d09cb69afc84cb52f7ad5f8d26da7feb0307233f684f0c0b9d2aa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:36:53.452Z",
+    "glossaryVersion": "0"
+  }
+}

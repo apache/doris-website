@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-valued-functions/s3",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/s3.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/s3.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "1c2666fa6086626dce7206667f50b34d0c868a680776e0c30f0bb0150dea10e7",
+    "sourceTechnicalHash": "b0c9b25feb16cb1bc87d5bd293870f53dc948b1e4e73943dc33c5a3a926efc8d",
+    "targetHash": "048e01b36e4ebb1ea17e74836a979473b48bb4450415c5df9165df16c3b75342",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:30:45.468Z",
+    "glossaryVersion": "0"
+  }
+}

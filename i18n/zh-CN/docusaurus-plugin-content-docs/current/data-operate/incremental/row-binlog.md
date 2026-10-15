@@ -2,7 +2,7 @@
 {
     "title": "Row Binlog",
     "language": "zh-CN",
-    "description": "Doris Row Binlog 记录内表的行级增删改：建表时如何开启、binlog.* 属性、支持的表模型与限制、before/after 镜像与 TSO 的记录模型、对 DDL 的约束、写入开销与常见报错。",
+    "description": "Doris Row Binlog 记录内表的行级增删改：建表属性、TTL 保留策略、自动清理、支持的表模型与限制、before/after 镜像与 TSO 的记录模型、对 DDL 的约束、写入开销与常见报错。",
     "keywords": [
         "Row Binlog",
         "行级 Binlog",
@@ -10,6 +10,8 @@
         "binlog.enable",
         "binlog.format ROW",
         "binlog.need_historical_value",
+        "binlog.ttl_seconds",
+        "Row Binlog TTL",
         "before 镜像",
         "historical value",
         "commit TSO",
@@ -35,6 +37,8 @@
 
 Row Binlog 是 Doris 内表的行级变更日志。开启后，每一次写入产生的行级变化（新增、更新、删除）都会连同变更前后的值、提交时间戳一起持久化，作为 [Table Stream](table-stream)、[增量查询](incremental-query) 和 [物化视图增量维护（IVM）](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view) 的数据来源，也可以通过 [Flink Doris Connector](../../connection-integration/data-integration/flink-doris-connector/incremental-read)（26.3.0 及以上版本）在 Flink 中消费。
 
+变更记录默认保留一天。请通过 `binlog.ttl_seconds` 设置能覆盖最长预期消费延迟的保留时长；变更记录过期不会删除基表中的数据。
+
 :::caution 实验性功能
 该功能自 5.0.0 版本起提供，目前处于实验阶段，需要在 FE 中开启 `enable_feature_binlog = true`。
 :::
@@ -45,6 +49,7 @@ Row Binlog 是 Doris 内表的行级变更日志。开启后，每一次写入�
 
 - Doris 5.0.0 及以上版本。
 - FE 已在 `fe.conf` 中开启 `enable_feature_binlog = true`（非动态配置，需重启 FE）。
+- 如需自动清理，BE 也需在 `be.conf` 中开启 `enable_feature_binlog = true`（非动态配置，需重启 BE）。
 - 表模型为 Duplicate Key，或 Unique Key Merge-on-Write（MoW）且没有 cluster key，详见 [支持范围与限制](#支持范围与限制)。
 - Row Binlog 只能在建表时开启，请在建表前完成评估。
 
@@ -76,7 +81,8 @@ PROPERTIES (
     "enable_unique_key_merge_on_write" = "true",
     "binlog.enable" = "true",
     "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "binlog.need_historical_value" = "true",
+    "binlog.ttl_seconds" = "86400"
 );
 ```
 
@@ -89,7 +95,7 @@ PROPERTIES (
 | `binlog.enable` | `true` / `false` | `false` | 开启后不可关闭 | 是否开启 binlog，需与 `binlog.format = "ROW"` 同时设置 |
 | `binlog.format` | `ROW` | - | 不可修改 | 必须为 `ROW`，表示记录行级变更。取值区分大小写，小写的 `row` 会报 `Invalid binlog format value: row` |
 | `binlog.need_historical_value` | `true` / `false` | `false` | 不可修改 | 是否记录变更前的值（before 镜像）。仅 Unique Key MoW 表可设为 `true`；`min_delta` / `detail` 类型的 Table Stream、`MIN_DELTA` 增量查询和需要处理更新或删除的 IVM 都依赖它 |
-| `binlog.ttl_seconds` | 整数（秒） | `86400` | 可修改 | 保留时长。**当前版本不生效**，见 [保留与清理](#保留与清理) |
+| `binlog.ttl_seconds` | 正整数（秒） | `86400`（一天） | 可修改 | 变更记录的保留时长。增量读取会过滤过期记录，后台 compaction 会回收过期记录的存储空间；不允许设置为 `0` 或负数。见 [保留与清理](#保留与清理) |
 | `binlog.max_bytes` | 整数（字节） | 无限制 | 可修改 | 保留大小上限。**当前版本不生效** |
 | `binlog.max_history_nums` | 整数 | 无限制 | 可修改 | 保留条数上限。**当前版本不生效** |
 
@@ -258,11 +264,111 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 ## 保留与清理
 
 <!-- 知识类型: 行为规则 -->
-<!-- 适用场景: 容量规划 -->
+<!-- 适用场景: 设置保留时长 / 处理过期位点 / 容量规划 -->
 
-当前版本不会自动清理 Row Binlog 数据，变更记录随表一直保留，`binlog.ttl_seconds`、`binlog.max_bytes`、`binlog.max_history_nums` 三个属性可以设置但暂不生效。基于时间和大小的自动清理正在开发中，将在下个版本支持。
+自 Doris 5.0.0 起，`binlog.ttl_seconds` 控制 Row Binlog 的保留时长，存算一体和存算分离模式均支持。保留时长按提交 TSO 中的物理时间计算，以当前 Master FE 的 TSO 为基准。提交时间小于等于「基准时间减去 TTL」的记录视为过期。即使表没有新写入，保留窗口也会随时间推进。
 
-在此之前，请为开启 Row Binlog 的表预留额外的存储空间：变更记录的体积与写入量成正比，对开启 before 镜像的 MoW 表，每次更新会额外记录一份旧值。
+### 配置保留时长
+
+TTL 默认值为 `86400` 秒（一天）。如果数据库显式设置了 `binlog.ttl_seconds`，新建表会继承该值，表属性中的显式设置优先。修改数据库配置不会改变已有表的 TTL。`CREATE TABLE ... LIKE` 会复制源表的 TTL。
+
+例如，将上文创建的 `orders` 表的保留时长改为七天：
+
+```sql
+ALTER TABLE orders SET ("binlog.ttl_seconds" = "604800");
+```
+
+语句成功后，`SHOW CREATE TABLE orders` 的输出包含：
+
+```text
+"binlog.ttl_seconds" = "604800"
+```
+
+TTL 必须大于 `0`，不能通过 `0` 或 `-1` 关闭过期机制。缩短 TTL 可能立即使已有记录过期；延长 TTL 可以使尚未被物理清理的记录重新可读，但无法恢复已被清理的记录。如果 `ALTER TABLE` 在向分区下发配置时失败，较短的 TTL 可能已经生效，请检查 `SHOW CREATE TABLE` 并重试同一条语句，完成配置更新。
+
+### 对读取的影响
+
+增量读取在生成执行计划时应用保留窗口，不需要等待物理清理完成。同一条语句使用同一个基准 TSO，每条新语句都会重新计算窗口。
+
+| 读取方式 | 请求的起点已过期时的行为 |
+|---|---|
+| 未指定 `startTimestamp` 的 `@incr` | 仅读取保留窗口内的变更，`MIN_DELTA` 模式也适用 |
+| 显式指定 `startTimestamp` 的 `@incr`，且 `incrementType = MIN_DELTA` | 报 `Row binlog offset has expired according to binlog.ttl_seconds`，避免返回不完整的净变化 |
+| `incrementType = DETAIL` 或 `APPEND_ONLY` 的 `@incr` | 将实际起点推进到第一个仍保留的 TSO，仅返回请求窗口内尚未过期的部分 |
+| `type = min_delta` 的 Table Stream | 任一分区的消费位点已过期时，报相同错误 |
+| `type = detail` 或 `append_only` 的 Table Stream | 跳过过期变更，从第一个仍保留的 TSO 开始读取 |
+| MoW 表的快照读取（`FOR TIME AS OF`、`FOR VERSION AS OF` 或 Stream 的 `@snapshot()`） | 重建需要读取 Row Binlog 时，已过期的目标快照报相同错误，因为所需的 before 镜像已不在保留窗口内 |
+| `binlog()` 表函数 | 不应用 TTL 过滤；物理清理前仍可能读到已过期的原始记录 |
+
+过期机制不会等待消费者。即使 `IS_STALE` / `STALE_REASON` 仍显示 Stream 可用，也应在保留窗口内完成消费：当前实现不会通过这两个字段报告 TTL 过期。所需变更过期后，需要从全量快照重建下游数据。对于 Table Stream，可按 [reset 流程](table-stream-advanced#重置-reset) 全量重载下游并推进位点。IVM 的内部 Stream 请通过 [物化视图刷新任务](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#内部-table-stream) 管理。
+
+### 示例：变更过期后基表数据仍保留
+
+在已有数据库中执行以下示例。执行用户需具备建表所需的 `CREATE` 权限、写入所需的 `LOAD` 权限，以及查询所需的 `SELECT` 权限：
+
+```sql
+CREATE TABLE row_binlog_ttl_demo (id INT, value INT)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.ttl_seconds" = "30"
+);
+
+INSERT INTO row_binlog_ttl_demo VALUES (1, 10);
+
+SELECT COUNT(*) AS change_count
+FROM row_binlog_ttl_demo@incr("incrementType" = "DETAIL");
+```
+
+写入后立即查询，结果为：
+
+```text
++--------------+
+| change_count |
++--------------+
+|            1 |
++--------------+
+```
+
+等待超过 30 秒后，再次执行增量查询：
+
+```sql
+SELECT COUNT(*) AS change_count
+FROM row_binlog_ttl_demo@incr("incrementType" = "DETAIL");
+```
+
+```text
++--------------+
+| change_count |
++--------------+
+|            0 |
++--------------+
+```
+
+基表中的行仍然存在：
+
+```sql
+SELECT id, value FROM row_binlog_ttl_demo;
+```
+
+```text
++------+-------+
+| id   | value |
++------+-------+
+|    1 |    10 |
++------+-------+
+```
+
+### 物理清理与容量规划
+
+后台 compaction 会回收 Row Binlog 中已全部过期的 Rowset，即使表没有新写入也会执行。包含未过期记录的 Rowset 会保留到其中所有记录都过期。清理会保留基表数据和版本连续性。存储空间异步回收，因此 TTL 不代表文件必须在该时刻消失，也不构成严格的存储大小上限。
+
+自动清理要求 BE 开启 `enable_feature_binlog = true`，且自动 compaction 未被关闭。将 BE 配置或表属性 `disable_auto_compaction` 设为 `true` 会暂停自动清理，但增量读取仍会过滤过期记录。BE 重启后，清理会等待 Master FE 心跳下发有效的基准 TSO。
+
+`binlog.max_bytes` 和 `binlog.max_history_nums` 对 Row Binlog 仍不生效。请根据写入量、TTL 和清理延迟预留存储空间；对开启 before 镜像的 MoW 表，每次更新还会额外记录一份旧值。TTL 应覆盖最长消费延迟、刷新间隔和预期故障停机时间，并为恢复预留余量。
 
 ## 写入开销
 
@@ -305,7 +411,7 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 | `partition` | 否 | 分区名，多个用逗号分隔，默认全部分区 |
 | `tablet` | 否 | tablet ID，多个用逗号分隔，默认全部 tablet |
 
-`binlog()` 直接读取存储的原始记录，不做任何折叠或过滤，返回的 `__DORIS_BINLOG_OP__` 使用原始编码（`0` 新增、`1` 更新、`2` 删除）。完整语法见 [BINLOG 表函数](../../sql-manual/sql-functions/table-valued-functions/binlog)。
+`binlog()` 直接读取存储的原始记录，不做变更折叠或 TTL 过滤，返回的 `__DORIS_BINLOG_OP__` 使用原始编码（`0` 新增、`1` 更新、`2` 删除）。物理清理完成前，这里仍可能看到过期记录。完整语法见 [BINLOG 表函数](../../sql-manual/sql-functions/table-valued-functions/binlog)。
 
 ## 常见错误对照
 
@@ -314,6 +420,8 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
 | 错误信息 | 原因 | 处理 |
 |---|---|---|
 | `Invalid binlog format value: row` | `binlog.format` 使用了小写 `row` | 取值区分大小写，改为大写 `ROW` |
+| `ROW binlog.ttl_seconds must be greater than 0` | TTL 为 `0` 或负数 | 设置以秒为单位的正整数，默认值为 `86400` |
+| `Row binlog offset has expired according to binlog.ttl_seconds` | `MIN_DELTA` 起点或 MoW 快照超出保留窗口 | 从全量快照重建下游数据并重新对齐消费位点，见 [对读取的影响](#对读取的影响) |
 | `not support change binlog format from STATEMENT_AND_SNAPSHOT to ROW` | 对已有表用 `ALTER TABLE` 开启 Row Binlog | Row Binlog 只能在建表时开启。新建开启 Row Binlog 的表并导入数据，再用 `ALTER TABLE ... REPLACE WITH TABLE` 原子替换 |
 | `can't disable binlog when format is [Row]` | 尝试在已开启 Row Binlog 的表上设置 `binlog.enable = false` | Row Binlog 开启后不可关闭 |
 | `not support change binlog.need_historical_value from true to false` | 尝试修改 `binlog.need_historical_value` | 该属性建表后不可修改 |

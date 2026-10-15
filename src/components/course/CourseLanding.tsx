@@ -1,42 +1,73 @@
-import React, { JSX } from 'react';
+import React, { JSX, useRef } from 'react';
 import { LayoutNext } from '@site/src/components/home-next/LayoutNext';
 import { COURSE_101_MODULES } from './courseModules';
+import { HACKATHON_COURSE_TRACK_ENABLED } from './hackathon/hackathonEvent';
+import {
+    CourseTrackSwitch,
+    HackathonTrackPanel,
+    useCourseTrack,
+    useRevealTrackCard,
+} from './hackathon/HackathonCourseTrack';
 import './CourseLanding.scss';
 
 function CoursePath(): JSX.Element {
+    const cardRef = useRef<HTMLElement>(null);
+    const [track, setTrack] = useCourseTrack();
+    useRevealTrackCard(cardRef);
+    const hackathonOn = HACKATHON_COURSE_TRACK_ENABLED && track === 'hackathon';
+
+    const courseList = (
+        <ol className="course-landing__path-list">
+            {COURSE_101_MODULES.map((module, index) => (
+                <li key={module.number}>
+                    <a
+                        className={`course-landing__path-step${index === 0 ? ' course-landing__path-step--current' : ''}`}
+                        href={module.href}
+                    >
+                        <span className="course-landing__path-number">{module.number}</span>
+                        <span className="course-landing__path-name">{module.shortTitle}</span>
+                        <span className="course-landing__path-arrow" aria-hidden="true">→</span>
+                    </a>
+                </li>
+            ))}
+            <li>
+                <div
+                    className="course-landing__path-coming"
+                    aria-label="More Doris 101 courses coming soon"
+                >
+                    <span className="course-landing__path-number" aria-hidden="true">+</span>
+                    <span className="course-landing__path-name">
+                        More courses
+                        <small>Coming soon</small>
+                    </span>
+                    <span className="course-landing__path-more-mark" aria-hidden="true">···</span>
+                </div>
+            </li>
+        </ol>
+    );
+
     return (
-        <aside className="course-landing__path-card" aria-labelledby="course-path-title">
+        <aside
+            className="course-landing__path-card"
+            aria-labelledby="course-path-title"
+            data-track={hackathonOn ? 'hackathon' : 'course'}
+            ref={cardRef}
+        >
             <div className="course-landing__path-header">
                 <h2 id="course-path-title">Your Doris path</h2>
                 <span>6 available · more to come</span>
             </div>
-            <ol className="course-landing__path-list">
-                {COURSE_101_MODULES.map((module, index) => (
-                    <li key={module.number}>
-                        <a
-                            className={`course-landing__path-step${index === 0 ? ' course-landing__path-step--current' : ''}`}
-                            href={module.href}
-                        >
-                            <span className="course-landing__path-number">{module.number}</span>
-                            <span className="course-landing__path-name">{module.shortTitle}</span>
-                            <span className="course-landing__path-arrow" aria-hidden="true">→</span>
-                        </a>
-                    </li>
-                ))}
-                <li>
-                    <div
-                        className="course-landing__path-coming"
-                        aria-label="More Doris 101 courses coming soon"
-                    >
-                        <span className="course-landing__path-number" aria-hidden="true">+</span>
-                        <span className="course-landing__path-name">
-                            More courses
-                            <small>Coming soon</small>
-                        </span>
-                        <span className="course-landing__path-more-mark" aria-hidden="true">···</span>
+            {HACKATHON_COURSE_TRACK_ENABLED ? (
+                <>
+                    <CourseTrackSwitch track={track} onSelect={setTrack} />
+                    <div id="hk-panel-course" role="tabpanel" aria-labelledby="hk-tab-course" hidden={hackathonOn}>
+                        {courseList}
                     </div>
-                </li>
-            </ol>
+                    <HackathonTrackPanel hidden={!hackathonOn} />
+                </>
+            ) : (
+                courseList
+            )}
         </aside>
     );
 }

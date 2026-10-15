@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/normalize-json-numbers-to-double",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/normalize-json-numbers-to-double.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/normalize-json-numbers-to-double.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "ba669573c14bdef01775207921d1b475296f889627dffbe506f44a14e4e72066",
+    "sourceTechnicalHash": "5196b415ff51e517ecc966ce00ff15631ec17108907a4709c804908e4e038fbc",
+    "targetHash": "d62b7ae546b65252d9d7a1152dd7d90f58a8596c073a1193c45b0d7d1fa964eb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:06:03.642Z",
+    "glossaryVersion": "0"
+  }
+}

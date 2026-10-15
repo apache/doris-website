@@ -5,6 +5,9 @@ import {useDoc, useDocsVersion} from '@docusaurus/plugin-content-docs/client';
 import Heading from '@theme/Heading';
 import MDXContent from '@theme/MDXContent';
 import type {Props} from '@theme/DocItem/Content';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import { isFallbackSource, isTranslatedLocale } from '@site/src/utils/localization';
+import {docTranslation} from '@site/src/utils/translation';
 
 /**
  Title can be declared inside md content or declared through
@@ -29,13 +32,18 @@ function useSyntheticTitle(): string | null {
 export default function DocItemContent({children}: Props): JSX.Element {
   const syntheticTitle = useSyntheticTitle();
   const {pluginId} = useDocsVersion();
+  const {metadata} = useDoc();
+  const {i18n: {currentLocale}} = useDocusaurusContext();
+  const contentLanguage = isTranslatedLocale(currentLocale)
+    ? docTranslation(metadata)?.contentLocale ?? (isFallbackSource(metadata.source, currentLocale) ? 'en' : currentLocale)
+    : undefined;
 
   if (pluginId === 'course') {
-    return <div className="course-doc-content"><MDXContent>{children}</MDXContent></div>;
+    return <div className="course-doc-content" lang={contentLanguage}><MDXContent>{children}</MDXContent></div>;
   }
 
   return (
-    <div className={clsx(ThemeClassNames.docs.docMarkdown, 'markdown')}>
+    <div className={clsx(ThemeClassNames.docs.docMarkdown, 'markdown')} lang={contentLanguage}>
       {syntheticTitle && (
         <header>
           <Heading as="h1">{syntheticTitle}</Heading>

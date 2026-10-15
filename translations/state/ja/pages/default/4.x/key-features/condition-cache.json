@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/condition-cache",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/condition-cache.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/condition-cache.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "97196341b35ad004d6a5f000363e4565de57d38600c832e58523e9fcbe24ff54",
+    "sourceTechnicalHash": "feb850e910d7eb7d0e8fb0b5e55598dda190d7f09c7a42dd6ee2d78e05479939",
+    "targetHash": "147c13cde7b611978ab54350a9b7cfa85ae6ad2c4ade164a0a6ca33b8f9d5503",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:36:53.451Z",
+    "glossaryVersion": "0"
+  }
+}

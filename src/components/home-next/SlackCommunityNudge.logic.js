@@ -41,6 +41,12 @@ function getSlackNudgeBenefits() {
     ];
 }
 
+// Pages whose layout the bubble would cover (the hackathon task pages keep a
+// sticky code panel in the bottom-right corner). The mascot still opens it.
+function allowsSlackNudgeAutoOpen(pathname) {
+    return !(pathname === '/course/hackathon' || pathname.startsWith('/course/hackathon/'));
+}
+
 function isDocumentationFeedbackPath(pathname) {
     return (
         pathname === '/docs' ||
@@ -51,6 +57,7 @@ function isDocumentationFeedbackPath(pathname) {
 }
 
 module.exports = {
+    allowsSlackNudgeAutoOpen,
     computeMascotPupilOffset,
     getSlackNudgeBenefits,
     isDocumentationFeedbackPath,

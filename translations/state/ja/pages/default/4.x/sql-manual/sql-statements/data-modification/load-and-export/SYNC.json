@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/SYNC",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/load-and-export/SYNC.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/load-and-export/SYNC.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "bddfa669cfd1dd3a9142a0c31c6e2e53668c9483b83289cd9589cdc5cb00d2c6",
+    "sourceTechnicalHash": "d7e8ace5f170e30d3bed6d96ba3c71dad70ae0a1cf9f88dba6c8800ff8ad92d7",
+    "targetHash": "dd4fd7c7803d92b5934f77588f16cba520e7c974c9cb1bd9166f0c2d68e725a9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:48:32.828Z",
+    "glossaryVersion": "0"
+  }
+}

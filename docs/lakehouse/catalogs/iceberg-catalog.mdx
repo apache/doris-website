@@ -99,72 +99,79 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## Metadata Cache {#meta-cache}
 
-To improve the performance of accessing external data sources, Apache Doris caches Iceberg metadata. Metadata includes table structure (Schema), table objects, view objects, and manifest details.
+To improve the performance of accessing external data sources, Apache Doris caches Iceberg metadata. Metadata includes loaded table metadata, partition data, manifests, derived partition projections, the latest snapshot id, and the inferred file format.
 
 :::tip
 For versions before Doris 4.1.x, metadata caching is mainly controlled globally by FE configuration items. For details, see [Metadata Cache](../meta-cache.md).
-Starting from Doris 4.1.x, Iceberg Catalog's external metadata cache is configured using the unified `meta.cache.*` keys.
+Starting from Doris 4.1.x, Iceberg Catalog's external metadata cache is configured using the unified `meta.cache.*` keys. The entries below describe the current version; Doris 4.1.x and 4.2.x use a different set of entries, described in the 4.x version of this page.
 :::
 
-### Cache Property Configuration (4.1.x+) {#meta-cache-unified-model}
+### Cache Property Configuration {#meta-cache-unified-model}
 
-Each engine's cache entry uses a unified configuration key format: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`.
+Each cache entry uses a unified configuration key format: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`. For Iceberg the `<engine>` is `iceberg`. `meta.cache.iceberg.table.ttl-second` is the shared TTL knob: it is the default TTL of the `table` and `partition` entries and the TTL of the caches without their own `<entry>` token. A value of `0` disables all of them, so every query reads the latest snapshot live.
 
 | Property | Example | Meaning |
 |---|---|---|
-| `enable` | `true/false` | Whether to enable this cache module. |
-| `ttl-second` | `600`, `0`, `-1` | `0` means disable cache (takes effect immediately, can be used to see the latest data); `-1` means never expire; other positive integers mean TTL in seconds based on access time. |
-| `capacity` | `10000` | Maximum number of cache entries (by count). `0` means disable. |
+| `enable` | `true/false` | Whether to enable this cache entry. |
+| `ttl-second` | `600`, `0`, `-1` | `0` disables the entry (takes effect immediately, can be used to see the latest data); `-1` means never expire; other positive integers mean TTL in seconds based on access time. |
+| `capacity` | `10000` | Maximum number of cache entries by count. `0` disables the entry. |
+| `max-weight` | `1GB` | Supported since Doris 4.1.4. Optional estimated retained-memory limit of the entry. Must be positive; `0` is rejected. Accepted only by the entries marked below. |
 
-**Effective Logic:** The module cache only takes effect when `enable=true`, `ttl-second != 0`, and `capacity > 0`.
+**Effective Logic:** The entry takes effect when `enable=true`, `ttl-second != 0`, and `capacity > 0`. An FE-wide, Catalog, or entry memory limit additionally governs admission by estimated memory; see [External Metadata Cache Memory Management](../external-meta-cache-memory-management).
 
 ### Cache Modules {#meta-cache-unified-modules}
 
-Iceberg Catalog includes the following cache modules:
+The following entries have their own configuration keys and accept `max-weight`:
 
-| Module (`<entry>`) | Property Key Prefix | Cached Content and Impact |
-|---|---|---|
-| `schema` | `meta.cache.iceberg.schema.` | Caches table structure. Impact: Visibility of table column information. If disabled, the latest Schema is pulled for each query. |
-| `table` | `meta.cache.iceberg.table.` | Caches Iceberg table metadata objects. Impact: Reduces Catalog/Metastore round-trips. |
-| `view` | `meta.cache.iceberg.view.` | Caches Iceberg View metadata objects. |
-| `manifest` | `meta.cache.iceberg.manifest.` | Caches manifest details. Impact: Reduces repeated manifest access overhead. Note: This module is disabled by default and must be enabled manually. |
+| Entry (`<entry>`) | Property Key Prefix | `ENTRY_NAME` | Cached Content and Impact | Default enable / TTL / capacity |
+|---|---|---|---|---|
+| `table` | `meta.cache.iceberg.table.` | `iceberg-table` | Loaded Iceberg table metadata. Impact: reduces Catalog round-trips and metadata file reads. | `true` / 86400 s / 1000 |
+| `partition` | `meta.cache.iceberg.partition.` | `iceberg-partition` | Raw partition data of a table snapshot. | `true` / same as `table` / 1000 |
+| `manifest` | `meta.cache.iceberg.manifest.` | `iceberg-manifest` | Parsed manifest contents. Scan planning uses it only when `enable` is `true`; the default is `false`. | `true` for the cache itself, `false` for its use / no expiration / 100000 |
+| `partition_view` | `meta.cache.iceberg.partition_view.` | `iceberg.mvcc-partition-view`, `iceberg.list-partitions-view` | Two derived partition projections that share one entry limit. | `true` / 86400 s / 1000 |
+
+The following caches have no `<entry>` token. They follow the Catalog and FE-wide memory limits and take their TTL from `meta.cache.iceberg.table.ttl-second`: `iceberg-latest-snapshot` (latest snapshot id), `iceberg-format` (inferred file format), `iceberg-comment` (table comments; created only for REST Catalogs with vended credentials), and `iceberg-equality-delete-field-ids`.
+
+The column schema of Iceberg tables is cached by the shared `default` engine (`meta.cache.default.schema.*`).
+
+:::note
+When `iceberg.rest.session` is `user`, the `table`, `partition`, `partition_view`, latest-snapshot, and format caches are not created, because a shared cache would bypass per-user authorization. A REST Catalog with vended credentials does not create the `table` cache either.
+:::
 
 ### Legacy Parameter Mapping and Conversion {#meta-cache-mapping}
 
-In version 4.1.x and later, unified keys are recommended. The following is the mapping between legacy Catalog properties and 4.1.x+ unified keys:
-
-| Legacy Property Key | 4.1.x+ Unified Key | Description |
+| Legacy Property Key | Unified Key | Description |
 |---|---|---|
-| `schema.cache.ttl-second` | `meta.cache.iceberg.schema.ttl-second` | Expiration time of table structure cache |
+| `schema.cache.ttl-second` | `meta.cache.default.schema.ttl-second` | Expiration time of the table schema cache |
 
 ### Best Practices {#meta-cache-best-practices}
 
-* **Real-time access to the latest data**: If you want each query to see the latest snapshots or schema changes for Iceberg tables, you can set the `ttl-second` for `schema` or `table` to `0`.
+* **Real-time access to the latest data**: If you want each query to see the latest snapshot of Iceberg tables, set `meta.cache.iceberg.table.ttl-second` to `0`.
   ```sql
-  -- Disable table object cache to detect snapshot changes
+  -- Disable the table, partition, latest-snapshot, and format caches to read the latest snapshot live
   ALTER CATALOG iceberg_ctl SET PROPERTIES ("meta.cache.iceberg.table.ttl-second" = "0");
   ```
 * **Performance optimization**:
-    * Enabling manifest cache can significantly speed up query planning for large tables:
+    * Enabling the manifest cache can significantly speed up query planning for large tables. Bound its memory with `max-weight` when manifests are large:
       ```sql
       ALTER CATALOG iceberg_ctl SET PROPERTIES (
         "meta.cache.iceberg.manifest.enable" = "true",
-        "meta.cache.iceberg.manifest.ttl-second" = "600"
+        "meta.cache.iceberg.manifest.max-weight" = "1GB"
       );
       ```
-    * Changes via `ALTER CATALOG ... SET PROPERTIES` support hot-reload in Iceberg Catalog.
+    * A successful Catalog property change drops the affected metadata caches and rebuilds them with the new configuration on the next access. Changing `meta.cache.max-weight` or `schema.cache.ttl-second` drops every cache of the Catalog; changing `meta.cache.<engine>.<entry>.*` drops the caches of that engine. Queries already in progress are not affected.
 
 ### Observability {#meta-cache-unified-observability}
 
-Cache metrics can be observed through the `information_schema.catalog_meta_cache_statistics` system table:
+Cache metrics can be observed through the `information_schema.catalog_meta_cache_statistics` system table. `ENTRY_NAME` shows the names listed in the table above, and the `default` engine row is the shared table-schema cache:
 
 ```sql
-SELECT catalog_name, engine_name, entry_name,
+SELECT engine_name, entry_name,
        effective_enabled, ttl_second, capacity,
-       estimated_size, hit_rate, load_failure_count, last_error
+       estimated_size, hit_rate, max_weight, estimated_weight
 FROM information_schema.catalog_meta_cache_statistics
-WHERE catalog_name = 'iceberg_ctl' AND engine_name = 'iceberg'
-ORDER BY entry_name;
+WHERE catalog_name = 'iceberg_ctl'
+ORDER BY engine_name, entry_name;
 ```
 
 See the documentation for this system table: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
@@ -177,6 +184,7 @@ See the documentation for this system table: [catalog_meta_cache_statistics](../
 | 3.0 | 1.6.1 |
 | 3.1 | 1.9.1 |
 | 4.0 | 1.9.1 |
+| 4.1 (4.1.4+) | 1.10.1 |
 
 ### Supported Iceberg Formats
 

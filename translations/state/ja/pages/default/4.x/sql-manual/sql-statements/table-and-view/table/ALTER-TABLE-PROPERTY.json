@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "fddafbe4b2907d1f97f3eb7a968f0181f7f354a75144143c0e53463b874fe9d7",
+    "sourceTechnicalHash": "9f97bb399004cf29cc5eb91e614691e81620b8deb2dec2ec43e28f2f9131f59e",
+    "targetHash": "e5182fcb4efe3669082b34c42cf0353c286492d499bf8edbd4bcdb2a79827683",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:18:55.554Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -49,32 +49,6 @@
         border-left: 1px solid #dfe5f0;
     }
 
-    .title_level_1 {
-        color: #0D0D12;
-        font-size: 15px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 20px;
-        letter-spacing: 0.4px;
-        display: flex;
-        padding: 20px 10px 12px 10px;
-        align-items: baseline;
-        gap: 8px;
-        align-self: stretch;
-        margin: 0;
-    }
-
-    .title_level_1__label {
-        font-weight: 600;
-        color: #0D0D12;
-    }
-
-    @media (max-width: 996px) {
-        .title_level_1{
-            font-size: 1.125rem !important;
-        }
-    }
-
     .menu__list_level_2 {
         padding-left: 0 !important;
         margin-top: 0 !important;

@@ -10,6 +10,22 @@
 
 This document lists Doris Flink Connector release notes in reverse chronological order.
 
+## 26.3.0
+
+Source: [Release Note 26.3.0](https://github.com/apache/doris-flink-connector/issues/699)
+
+### Features and Improvements
+
+- Refined Doris Source logging and offset validation. [#692](https://github.com/apache/doris-flink-connector/pull/692)
+- Added support for Flink 2.3. [#696](https://github.com/apache/doris-flink-connector/pull/696)
+- Improved CDC TSO handling and S3 TVF upload efficiency. [#694](https://github.com/apache/doris-flink-connector/pull/694)
+- Retried incremental reads after visibility wait timeouts. [#697](https://github.com/apache/doris-flink-connector/pull/697)
+- Added IAM role and gzip compression support for the S3 TVF sink. [#698](https://github.com/apache/doris-flink-connector/pull/698)
+
+### Thanks
+
+- @JNSimba
+
 ## 26.2.0
 
 Source: [Release Note 26.2.0](https://github.com/apache/doris-flink-connector/issues/691)

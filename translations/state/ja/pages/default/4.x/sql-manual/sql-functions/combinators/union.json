@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/combinators/union",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/combinators/union.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/combinators/union.md",
+    "sourceCommit": "8d395e5202c28020ca7b4d581deb5cf72df59370",
+    "sourceHash": "408309954448f8eb006fa521c2df0bd702a29fc1939d1a787048f05ecd0bc08a",
+    "sourceTechnicalHash": "f657e80485e81a1457c64e6ed52ffe74946b976f7165bf87a0f73e2c0ad74ce2",
+    "targetHash": "d8382e67a93eb56270c0819d2353be618d7c3deb0e24d50380e265e1292d170c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:36:14.112Z",
+    "glossaryVersion": "0"
+  }
+}

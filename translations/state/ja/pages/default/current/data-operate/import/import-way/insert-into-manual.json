@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/insert-into-manual",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/insert-into-manual.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/insert-into-manual.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "961c22142059b06ed9afed00c63ca7eeda1e8c9f746cb40ff64ba55438f55bba",
+    "sourceTechnicalHash": "aafbe862faafb879d27048e0ffbf1af4024d94f395bd9dbfc14dd913e9e1c2e6",
+    "targetHash": "e7d4119ed3c5ad5ca82772edb86589f17d67d896d9fdcc68ff286d162abbb372",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:56:43.009Z",
+    "glossaryVersion": "0"
+  }
+}

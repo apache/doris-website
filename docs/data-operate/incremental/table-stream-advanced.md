@@ -245,14 +245,15 @@ The internal Streams created by IVM also appear in these system tables. You can 
 | Watch | Source | Notes |
 |---|---|---|
 | Backlog | `LAG` in `information_schema.table_stream_consumption` | Query it regularly and alert on partitions where it stays non-zero or keeps growing |
-| State | `ENABLED`, `IS_STALE`, and `STALE_REASON` in `information_schema.table_streams` | Show whether a Stream is usable. The current version never cleans up Row Binlog, so a Stream does not become unusable by being left unconsumed; once automatic cleanup is available, a Stream whose change records were cleaned up will be marked stale and must be re-aligned with `@reset()` |
+| State | `ENABLED`, `IS_STALE`, and `STALE_REASON` in `information_schema.table_streams` | Show the Stream's state, but do not report TTL expiration in the current implementation. Monitor consumption delay against the base table's `binlog.ttl_seconds` and check for expired-offset errors; see [Retention and cleanup](row-binlog#retention-and-cleanup) |
 | Consumption history | `LAST_CONSUMPTION_TIME` in `information_schema.table_stream_consumption` | Tells whether the consumption job runs as scheduled |
 
 ### Recovery
 
 | Situation | Action |
 |---|---|
-| The consuming statement failed | The offset is unchanged; simply rerun it and no change is skipped |
+| The consuming statement failed | The offset is unchanged; rerun it while the required changes are still within the retention window |
+| Required changes have expired according to `binlog.ttl_seconds` | Reload downstream in full with `@reset()` and realign the offsets. `min_delta` reads fail on expired offsets; `detail` and `append_only` skip expired changes |
 | Consumption succeeded but the scheduler did not record it | A rerun reads the next batch of changes and does not consume the previous batch again. To make repeated runs completely free of side effects, use a Unique Key model for the target table (writes by primary key are naturally idempotent) |
 | Downstream data is wrong and must be rebuilt | Restore the state corresponding to the consumption offset with `@snapshot()` and continue incremental consumption, or reload in full with `@reset()` which also advances the offset to the current point |
 | FE restart or master switch | Offsets are persisted in the metadata and consumption continues after a restart |

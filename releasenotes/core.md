@@ -11,7 +11,7 @@ This document presents Apache Doris Core release notes in reverse chronological 
 ## Doris Core Release Notes
 
 :::tip Latest Release
-🎉 Version 4.1.4 is released. Check out the 🔗[Release Notes](./v4.1/release-4.1.4.md) here. Apache Doris 4.1.4 adds ANN indexes on Merge-on-Write tables, multimodal file embedding, adaptive global runtime filter publishing for large clusters, OceanBase CDC streaming jobs, and TLS for internal communication. It also includes fixes across query execution, storage, load, cloud-native deployments, lakehouse, and authentication.
+🎉 Version 4.1.4.1 is released. Check out the 🔗[Release Notes](./v4.1/release-4.1.4.1.md) here. Apache Doris 4.1.4.1 is a hotfix release for 4.1.4. It fixes a BE crash when logical `OR` processes nullable Boolean values, full refreshes of partitioned MTMVs when a base table adds a partition, WAL read failures with `VARIANT` columns, and a BE startup crash on aarch64 Linux systems with 64 KiB memory pages. For what 4.1.4 brings, including ANN indexes on Merge-on-Write tables, multimodal file embedding, OceanBase CDC streaming jobs, and TLS for internal communication, check out the 🔗[4.1.4 Release Notes](./v4.1/release-4.1.4.md).
 
 <br />
 
@@ -33,6 +33,8 @@ This document presents Apache Doris Core release notes in reverse chronological 
 
 
 <br />
+
+- [2026-09-29, Apache Doris 4.1.4.1 is released](./v4.1/release-4.1.4.1.md)
 
 - [2026-09-10, Apache Doris 4.1.4 is released](./v4.1/release-4.1.4.md)
 

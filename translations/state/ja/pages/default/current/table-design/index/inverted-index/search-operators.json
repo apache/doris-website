@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/inverted-index/search-operators",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/inverted-index/search-operators.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/search-operators.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "ed2911734ed12b19dda81a7ffab09b65762a003b711300bf5368426efb3b5f8a",
+    "sourceTechnicalHash": "ca95a54626d2ef3db27c4b43a828dc480a5571bef9fb5c7e156634c1fc0f598b",
+    "targetHash": "a4710b174a50a2678e74bc39370f873ebe883e7b471800456552046354ab60c2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:05:28.127Z",
+    "glossaryVersion": "0"
+  }
+}

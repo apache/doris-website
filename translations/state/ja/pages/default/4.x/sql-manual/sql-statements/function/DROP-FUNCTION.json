@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/function/DROP-FUNCTION",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/function/DROP-FUNCTION.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/function/DROP-FUNCTION.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "285c8ca04a4fb477fbe0181672a6b4fdf47cd90139004b9d4795a0c620abd43c",
+    "sourceTechnicalHash": "6582b68e69c305b32c99436530261f0a5bc839846f816583bf8bf2514ce7fbe5",
+    "targetHash": "baf789dda63fb17088505f85adc781e1a149b7138853962e0e0a97de121b9c00",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:21:16.658Z",
+    "glossaryVersion": "0"
+  }
+}

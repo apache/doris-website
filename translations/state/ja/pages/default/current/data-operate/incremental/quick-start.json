@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/incremental/quick-start",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/incremental/quick-start.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/incremental/quick-start.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "84c6fd2c6738bfc28b3e903e349b21f1d320c16e51c1cdefa24cda75e44d1217",
+    "sourceTechnicalHash": "65fee7497d773f28d1f85d87e96022f67aca75c902f378a84d513ec94c955a71",
+    "targetHash": "2d1b2cb3b050e149886226cbd5b40ee93583573ec21e4a2d6294822a8a852bea",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T16:06:57.644Z",
+    "glossaryVersion": "0"
+  }
+}

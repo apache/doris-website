@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/analytic-functions",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/analytic-functions.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/analytic-functions.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "2f7ad400e06c8f2653cc59afe3f95b73ac7c254c9232d3e5667a08b57d09ffa8",
+    "sourceTechnicalHash": "d3b70f24f39465e774e7b77ae3ca8c020ad50f34bcf5b7d02e636170da13aae8",
+    "targetHash": "da635b21da7c135a4aaa83214d857ca7962de96721f4c9268ffe0f11ff0a0e36",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:15:40.237Z",
+    "glossaryVersion": "0"
+  }
+}

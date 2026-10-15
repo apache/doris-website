@@ -48,7 +48,7 @@ For example, modifying the grace_period of mv1 to 3000ms
 ALTER MATERIALIZED VIEW mv1 set("grace_period"="3000");
 ```
 
-Among the IVM properties, `ivm_use_full_keys` can only be set at creation time and cannot be modified. `ivm_partition_window_limit` can be modified; after widening the window or removing the limit, the next refresh must run `COMPLETE` to rebuild the baseline. See [Incremental View Maintenance (IVM)](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#ivm-properties).
+Among the IVM properties, `ivm_use_full_keys` can only be set at creation time and cannot be modified. `ivm_partition_window_limit` can be modified; widening the window or removing the limit invalidates the baseline of the materialized view, and the next refresh rebuilds the whole materialized view. See [Incremental View Maintenance (IVM)](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#ivm-properties).
 
 ##### REPLACE
 ```sql

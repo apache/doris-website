@@ -31,6 +31,18 @@
 - 环境中使用了自签名证书、私有 CA，或者会重签 TLS 流量的企业代理或网关。
 - 访问 Azure Blob Storage 时出现 `Problem with the SSL CA cert` 或 `curl 77: Problem with the SSL CA cert (path? access rights?)` 等错误。
 
+> **对于不支持 `ca_cert_file_paths` 的版本：** `ca_cert_file_paths` 参数自 Doris 3.1.5 和 4.0.5 起可用。如果你使用的是更早的版本并遇到 SSL CA 证书错误，需要确保系统 CA 证书已正确安装，并且 CA 证书包位于 `/etc/ssl/certs/ca-certificates.crt`：
+>
+> - **RHEL / CentOS / RockyLinux：**
+>   ```bash
+>   yum install -y ca-certificates
+>   update-ca-trust
+>   ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-certificates.crt
+>   ```
+> - **Debian / Ubuntu：** `apt-get install -y ca-certificates`
+>
+> 然后重启所有 BE 节点。更多证书相关问题，请参阅 [数据湖 FAQ - 证书问题](../../faq/lakehouse-faq.md#证书问题)。
+
 示例：
 
 ```properties

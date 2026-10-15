@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/conditional-functions/greatest",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/conditional-functions/greatest.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/conditional-functions/greatest.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "e78ad91474820fedfa71798a860fe183ab8d720f20994362c88141a7636604a1",
+    "sourceTechnicalHash": "ec9e197379ce7524db075b449aa8e4db28494bb6c0dab71a5a295ab0498e8040",
+    "targetHash": "3292891b165fb3967bf58c2eeda7371f2e7a866886aafb263ff34bad4aa186d6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:02:01.386Z",
+    "glossaryVersion": "0"
+  }
+}

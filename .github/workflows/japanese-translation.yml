@@ -1,0 +1,240 @@
+name: Japanese translation discovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Read-only dry run, one-page live validation, or enabled batch
+        type: choice
+        options: [dry-run, validate, generate]
+        default: dry-run
+        required: true
+      plugin:
+        description: Optional plugin filter (default or community)
+        type: string
+      version:
+        description: Optional version filter (current or 4.x)
+        type: string
+      path:
+        description: Optional repository-relative source path prefix
+        type: string
+      locale:
+        description: Optional translation locale; required once several are managed
+        type: string
+  push:
+    branches: [master]
+    paths:
+      - 'docs/**'
+      - 'versioned_docs/version-4.x/**'
+      - 'community/**'
+      - 'i18n/zh-CN/docusaurus-plugin-content-docs/current/**'
+      - 'i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/**'
+      - 'i18n/zh-CN/docusaurus-plugin-content-docs-community/current/**'
+      - 'translations/config.json'
+      - 'translations/scope/**'
+      - 'translations/glossary/**'
+      - 'sidebars.ts'
+      - 'sidebarsCommunity.json'
+      - 'versioned_sidebars/version-4.x-sidebars.json'
+      - 'docusaurus.config.js'
+      - 'config/i18n.js'
+  schedule:
+    - cron: '23 4 * * *'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: japanese-translation-ja
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      I18N_LOCALE: ${{ inputs.locale }}
+    outputs:
+      can_generate: ${{ steps.scan.outputs.can_generate }}
+      source_commit: ${{ steps.scan.outputs.source_commit }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+      - run: yarn --frozen-lockfile
+      - name: Reconcile every open master PR with managed Japanese files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node scripts/i18n/workflow-prs.cjs "$RUNNER_TEMP/japanese-translation"
+      - name: Plan all current and historical pending documents
+        id: scan
+        env:
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+          I18N_MODE: ${{ inputs.mode || 'dry-run' }}
+          I18N_PLUGIN: ${{ inputs.plugin }}
+          I18N_VERSION: ${{ inputs.version }}
+          I18N_PATH: ${{ inputs.path }}
+          I18N_LIMIT: '20'
+        run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/japanese-translation"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: japanese-translation-plan-${{ github.run_id }}
+          path: ${{ runner.temp }}/japanese-translation/
+          if-no-files-found: warn
+          retention-days: 30
+
+  generate:
+    needs: discover
+    env:
+      I18N_LOCALE: ${{ inputs.locale }}
+    if: needs.discover.outputs.can_generate == 'true' && ((github.event_name == 'workflow_dispatch' && inputs.mode == 'validate') || (vars.I18N_AUTO_TRANSLATE_ENABLED == 'true' && vars.I18N_LIVE_VERIFIED == 'true'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.discover.outputs.source_commit }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+      - run: yarn --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: japanese-translation-plan-${{ github.run_id }}
+          path: ${{ runner.temp }}/japanese-translation
+      - name: Check external configuration
+        id: config
+        env:
+          OSS_AK: ${{ secrets.OSS_AK }}
+          OSS_SK: ${{ secrets.OSS_SK }}
+          APP_ID: ${{ secrets.I18N_GITHUB_APP_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.I18N_GITHUB_APP_PRIVATE_KEY }}
+          I18N_GITHUB_PAT: ${{ secrets.I18N_GITHUB_PAT }}
+          I18N_MODE: ${{ inputs.mode || 'dry-run' }}
+        run: |
+          if [[ -n "$APP_ID" && -n "$APP_PRIVATE_KEY" ]]; then
+            echo 'auth_kind=app' >> "$GITHUB_OUTPUT"
+          elif [[ -n "$I18N_GITHUB_PAT" ]]; then
+            echo 'auth_kind=pat' >> "$GITHUB_OUTPUT"
+          else
+            echo 'auth_kind=none' >> "$GITHUB_OUTPUT"
+          fi
+          if [[ -n "$OSS_AK" && -n "$OSS_SK" && ( -n "$APP_ID" && -n "$APP_PRIVATE_KEY" || -n "$I18N_GITHUB_PAT" || "$I18N_MODE" == 'validate' ) ]]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'OSS Codex auth or a GitHub write credential is missing. No model call or PR write was attempted.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Verify personal token identity before model calls
+        if: steps.config.outputs.auth_kind == 'pat'
+        env:
+          GH_TOKEN: ${{ secrets.I18N_GITHUB_PAT }}
+        run: gh api user --jq '.login' > /dev/null
+      - name: Reconcile again immediately before model calls
+        if: steps.config.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node scripts/i18n/workflow-prs.cjs "$RUNNER_TEMP/japanese-translation"
+      - name: Replan exact source and open PRs
+        if: steps.config.outputs.ready == 'true'
+        id: fresh
+        env:
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+          I18N_MODE: ${{ inputs.mode || 'dry-run' }}
+          I18N_PLUGIN: ${{ inputs.plugin }}
+          I18N_VERSION: ${{ inputs.version }}
+          I18N_PATH: ${{ inputs.path }}
+          I18N_LIMIT: '20'
+        run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/japanese-translation"
+      - name: Install ossutil for the pinned Codex package and auth pool
+        if: steps.fresh.outputs.can_generate == 'true'
+        run: |
+          temp_dir="$(mktemp -d)"
+          trap 'rm -rf "$temp_dir"' EXIT
+          curl -fsSL -o "$temp_dir/ossutil.zip" https://gosspublic.alicdn.com/ossutil/1.7.19/ossutil-v1.7.19-linux-amd64.zip
+          unzip -q "$temp_dir/ossutil.zip" -d "$temp_dir"
+          sudo install -m 0755 "$temp_dir/ossutil-v1.7.19-linux-amd64/ossutil" /usr/local/bin/ossutil
+      - name: Install the verified Codex runtime used by Doris review
+        if: steps.fresh.outputs.can_generate == 'true'
+        env:
+          OSS_AK: ${{ secrets.OSS_AK }}
+          OSS_SK: ${{ secrets.OSS_SK }}
+        run: |
+          archive="$RUNNER_TEMP/codex-exec-goal.tar.gz"
+          package="$RUNNER_TEMP/codex-exec-goal"
+          ossutil -i "$OSS_AK" -k "$OSS_SK" -e oss-cn-hongkong.aliyuncs.com \
+            cp -f oss://doris-community-ci/codex/releases/codex-exec-goal-0.156.1-a310d33f7ebb-x86_64-unknown-linux-gnu.tar.gz "$archive"
+          echo "2ee3073479bc8c94436684b55a13d7a3f299e768d04436d90e0427814a3954bc  $archive" | sha256sum --check
+          mkdir -p "$package"
+          tar -xzf "$archive" -C "$package"
+          (cd "$package" && sha256sum --check SHA256SUMS)
+          test "$(jq -r .version "$package/codex-package.json")" = 0.156.1
+          "$package/bin/codex" exec --help | grep -q -- '--output-schema'
+          "$package/bin/codex" exec --help | grep -q -- '--disable'
+          "$package/bin/codex" exec --help | grep -q -- '--ignore-user-config'
+          "$package/bin/codex" exec --help | grep -q -- '--ephemeral'
+          echo "CODEX_BIN=$package/bin/codex" >> "$GITHUB_ENV"
+      - name: Load an eligible Codex auth snapshot
+        if: steps.fresh.outputs.can_generate == 'true'
+        id: auth
+        env:
+          OSS_AK: ${{ secrets.OSS_AK }}
+          OSS_SK: ${{ secrets.OSS_SK }}
+        run: node scripts/i18n/codex-auth.cjs load
+      - name: Generate a bounded, validated batch
+        if: steps.auth.outcome == 'success'
+        id: translation
+        env:
+          I18N_CODEX_MODEL: ${{ vars.I18N_CODEX_MODEL || 'gpt-6-sol' }}
+          I18N_AUTO_TRANSLATE_ENABLED: ${{ vars.I18N_AUTO_TRANSLATE_ENABLED }}
+          I18N_LIVE_VERIFIED: ${{ vars.I18N_LIVE_VERIFIED }}
+          I18N_VALIDATION_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'validate' }}
+          I18N_PATH: ${{ inputs.path }}
+          I18N_MAX_PAGES: ${{ inputs.mode == 'validate' && '1' || '2' }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node scripts/i18n/workflow-generate.cjs "$RUNNER_TEMP/japanese-translation"
+      - uses: actions/create-github-app-token@v2
+        if: steps.translation.outputs.created == 'true' && steps.config.outputs.auth_kind == 'app'
+        id: app
+        with:
+          app-id: ${{ secrets.I18N_GITHUB_APP_ID }}
+          private-key: ${{ secrets.I18N_GITHUB_APP_PRIVATE_KEY }}
+          owner: apache
+          repositories: doris-website
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Open draft PR with the configured write identity
+        if: steps.translation.outputs.created == 'true' && steps.config.outputs.auth_kind != 'none'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token || secrets.I18N_GITHUB_PAT }}
+          I18N_PR_AUTH_KIND: ${{ steps.config.outputs.auth_kind }}
+        run: node scripts/i18n/workflow-publish.cjs "$RUNNER_TEMP/japanese-translation"
+      - name: Report staged validation without GitHub write credentials
+        if: steps.translation.outputs.created == 'true' && steps.config.outputs.auth_kind == 'none'
+        run: echo 'One-page Codex candidate is in the generation artifact. A GitHub App or personal token is required for a draft PR.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Sync refreshed Codex auth without overwriting a newer snapshot
+        if: always() && steps.auth.outcome == 'success'
+        env:
+          OSS_AK: ${{ secrets.OSS_AK }}
+          OSS_SK: ${{ secrets.OSS_SK }}
+        run: node scripts/i18n/codex-auth.cjs sync
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: japanese-translation-generation-${{ github.run_id }}
+          path: ${{ runner.temp }}/japanese-translation/
+          if-no-files-found: warn
+          retention-days: 30

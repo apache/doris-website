@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/hybrid-search",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/hybrid-search.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/hybrid-search.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "74856103a72e6be68fecfe66956660b212112b8d839d02caf1f8558168d15ca0",
+    "sourceTechnicalHash": "908ed0833ef67aa24ef470f75e5f2e364a7e02ec6f36447c31e2881fd16f04c6",
+    "targetHash": "b3c3496fe0a3baf375d96a6a1b226566f315eee47c6e5f32f980c113219a54c0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:36:53.452Z",
+    "glossaryVersion": "0"
+  }
+}

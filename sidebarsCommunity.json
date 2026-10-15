@@ -17,6 +17,7 @@
             "label": "How to Contribute",
             "items": [
                 "how-to-contribute/contribute-to-doris",
+                "how-to-contribute/community-badges",
                 "how-to-contribute/pull-request",
                 "how-to-contribute/review-and-ci",
                 {

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/REFRESH-LDAP",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/REFRESH-LDAP.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/REFRESH-LDAP.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "0b18b3c938a0f8e72362162da6daedfaa204d2d4cb40587842d8de31e85187ca",
+    "sourceTechnicalHash": "e01303025a3583fa3ba7cbb97a9af27a4eacfec5c819930ccb28a5672090cb9f",
+    "targetHash": "5b09ece9ce61665c5271ac662cb903e1a9af105adf5d8b9f8cad46087e931794",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:55:32.509Z",
+    "glossaryVersion": "0"
+  }
+}

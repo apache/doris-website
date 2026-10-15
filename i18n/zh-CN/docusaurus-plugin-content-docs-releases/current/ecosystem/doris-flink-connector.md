@@ -10,6 +10,22 @@
 
 本文按版本倒序列出 Doris Flink Connector 的版本发布说明。
 
+## 26.3.0
+
+来源：[Release Note 26.3.0](https://github.com/apache/doris-flink-connector/issues/699)
+
+### 功能与改进
+
+- 优化 Doris Source 日志和 offset 校验。[#692](https://github.com/apache/doris-flink-connector/pull/692)
+- 支持 Flink 2.3。[#696](https://github.com/apache/doris-flink-connector/pull/696)
+- 优化 CDC TSO 处理和 S3 TVF 上传效率。[#694](https://github.com/apache/doris-flink-connector/pull/694)
+- visibility wait 超时后重试增量读取。[#697](https://github.com/apache/doris-flink-connector/pull/697)
+- S3 TVF Sink 支持 IAM Role 和 gzip 压缩。[#698](https://github.com/apache/doris-flink-connector/pull/698)
+
+### 致谢
+
+- @JNSimba
+
 ## 26.2.0
 
 来源：[Release Note 26.2.0](https://github.com/apache/doris-flink-connector/issues/691)

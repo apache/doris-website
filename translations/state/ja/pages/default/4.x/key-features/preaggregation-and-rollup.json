@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/preaggregation-and-rollup",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/preaggregation-and-rollup.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/preaggregation-and-rollup.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "e2e100e6c25aed1b21c17447ee129cd727fe656570fde0c65b009195ceae94cd",
+    "sourceTechnicalHash": "93d71f431b9f8681fe875d6fac4b1fda704f08c08945ee8ac8a4bb19cdcf6052",
+    "targetHash": "57f3a194ff21404b07cd5397720696205040f5373946fcacf49fe58e80100793",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:20:55.868Z",
+    "glossaryVersion": "0"
+  }
+}

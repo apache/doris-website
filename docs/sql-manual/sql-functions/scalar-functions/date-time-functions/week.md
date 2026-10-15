@@ -37,16 +37,32 @@ WEEK(`<date_or_time_expr>`, `<mode>`)
 | Parameter | Description |
 |-----------|-------------|
 | `<date_or_time_expr>` | Input datetime value, supports DATE/DATETIME/TIMESTAMP_NS types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
-| `mode` | Specified calculation method for the first week of the year, type INT, range 0-7 |
+| `<mode>` | Optional INT, default 0. The calculation rule is determined by `mode & 7`, selecting mode 0-7 from the table above. |
 
 ## Return Value
 Returns INT type, representing the week number for the specified date, with specific range determined by `<mode>` (0-53 or 1-53).
 
-- If `<mode>` is an integer outside 0-7, calculation is performed using Mode 7;
+- If `<mode>` is an integer outside 0-7, its lowest three bits (`mode & 7`) determine the calculation mode. For example, 8 selects mode 0, 9 selects mode 1, and -1 selects mode 7;
 - If any parameter is NULL, returns NULL;
 - Cross-year dates may return the last week of the previous year (e.g., January 1, 2023 belongs to week 52 of 2022 in some modes).
 
 ## Examples
+
+Out-of-range modes use their lowest three bits. For example, 8 selects mode 0:
+
+```sql
+SELECT WEEK('2021-01-01', 8) AS mode_8,
+       WEEK('2021-01-01', 0) AS mode_0,
+       WEEK('2021-01-01', 7) AS mode_7;
+```
+```text
++--------+--------+--------+
+| mode_8 | mode_0 | mode_7 |
++--------+--------+--------+
+|      0 |      0 |     52 |
++--------+--------+--------+
+```
+
 ```sql
 -- 2020-01-01 is Wednesday, the first Sunday of the year is 2020-01-05, so it belongs to week 0
 SELECT WEEK('2020-01-01') AS week_result;
@@ -74,7 +90,7 @@ SELECT
 |      1 |     52 |
 +--------+--------+
 
--- Input outside 0-7 range, processed as mode 7
+-- -1 & 7 = 7, so mode 7 is used
 SELECT WEEK('2023-01-01', -1) AS week_result;
 +-------------+
 | week_result |

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/separating-storage-compute/install-fdb",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/install-fdb.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/install-fdb.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "5e1c2edefcbc11390a7aa9cb2f8c86c8c7e09ff026151069676421cfb8077b06",
+    "sourceTechnicalHash": "06d8f72da6b9057486d4727f59ff55cfa2f155859ffcb3302e86c32c7e5fa26a",
+    "targetHash": "8e7a2bf730b1904cd1eeb10376adac30464652e5dcc28fada44ef83a7d70538b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T12:03:12.436Z",
+    "glossaryVersion": "0"
+  }
+}

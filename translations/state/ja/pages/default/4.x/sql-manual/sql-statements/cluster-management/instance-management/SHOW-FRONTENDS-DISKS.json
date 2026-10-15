@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTENDS-DISKS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTENDS-DISKS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTENDS-DISKS.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "c0e2db4a21c57821ed1c82c8f7e5a5f069b6a61478dfef4b578c71808a1d430f",
+    "sourceTechnicalHash": "6131a95a8e7fa561ad50fc7b0da8f4c941b5d76ed0623cc734ea94f4bc8f67cb",
+    "targetHash": "8b448f6332aff526cebefe20aa9acf1afa2889130e2576ae61049b86c91084a8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:35:18.350Z",
+    "glossaryVersion": "0"
+  }
+}

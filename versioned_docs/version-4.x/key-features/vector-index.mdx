@@ -11,7 +11,7 @@ keywords:
 slug: /key-features/vector-index
 image: /images/next/key-features/vector-index.jpg
 last_update:
-  date: 2026-05-10
+  date: 2026-10-07
   author: Apache Doris
 featureCard:
   tags:
@@ -79,13 +79,13 @@ FROM docs ORDER BY dist LIMIT 3;
 **Expected result**
 
 ```
-+----+--------------------+
-| id | dist               |
-+----+--------------------+
-|  1 | 0.0                |
-|  2 | 0.5196152329444885 |
-|  3 | 13.928388595581055 |
-+----+--------------------+
++------+-----------+
+| id   | dist      |
++------+-----------+
+|    1 |         0 |
+|    2 | 0.5196152 |
+|    3 |  13.92839 |
++------+-----------+
 ```
 
 The query against `id=1` is exact (distance 0). The ANN index ranks the two close neighbors first and the outlier last. The same query shape against the SIFT-1M dataset (1 million 128-dim vectors) runs in about 20 ms with the index, versus about 290 ms without; both numbers are from the [Vector Search overview](../table-design/index/vector-index/overview).

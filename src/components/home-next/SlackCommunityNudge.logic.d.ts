@@ -20,6 +20,8 @@ export interface MascotPupilOffset {
     y: number;
 }
 
+export function allowsSlackNudgeAutoOpen(pathname: string): boolean;
+
 export function computeMascotPupilOffset(input: MascotPupilOffsetInput): MascotPupilOffset;
 
 export function getSlackNudgeBenefits(): string[];

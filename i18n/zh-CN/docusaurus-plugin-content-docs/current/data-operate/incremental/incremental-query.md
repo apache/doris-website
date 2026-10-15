@@ -73,11 +73,11 @@ SELECT ... FROM <table_name>@incr(
 
 | 参数 | 默认值 | 说明 |
 |---|---|---|
-| `startTimestamp` | 不限 | 可选。窗口起点，格式 `yyyy-MM-dd HH:mm:ss`，按会话 `time_zone` 解析。返回提交时间 **大于等于** 起点的变更 |
+| `startTimestamp` | 第一个仍保留的 TSO | 可选。窗口起点，格式 `yyyy-MM-dd HH:mm:ss`，按会话 `time_zone` 解析。返回提交时间 **大于等于** 起点的变更，受基表 `binlog.ttl_seconds` 限制 |
 | `endTimestamp` | 不限 | 可选。窗口终点，格式同上。返回提交时间 **小于** 终点的变更 |
 | `incrementType` | `MIN_DELTA` | 可选。增量模式，见 [三种增量模式](#三种增量模式) |
 
-三个参数都可以省略，`t@incr()` 等价于按 `MIN_DELTA` 读取全部变更历史。窗口为左闭右开区间 `[startTimestamp, endTimestamp)`，起点晚于终点或起点在未来时返回空结果。
+三个参数都可以省略，`t@incr()` 按 `MIN_DELTA` 读取保留窗口内的变更。显式起点超出保留窗口时，`MIN_DELTA` 报错，`DETAIL` 和 `APPEND_ONLY` 将实际起点推进到第一个仍保留的 TSO，见 [保留与清理](row-binlog#保留与清理)。窗口为左闭右开区间 `[startTimestamp, endTimestamp)`；起点通过保留窗口校验后，若晚于终点或位于未来，则返回空结果。
 
 ### 结果列
 
@@ -206,6 +206,8 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__, op;
 
 ### 不指定窗口：从表创建至今的净变化
 
+本例假设建表以来的全部变更仍处于保留窗口内；否则，省略窗口仅读取尚未过期的变更。
+
 ```sql
 SELECT order_id, status, amount, __DORIS_BINLOG_OP__ AS op
 FROM orders@incr()
@@ -229,7 +231,7 @@ ORDER BY order_id;
 <!-- 知识类型: 使用建议 -->
 <!-- 适用场景: 用外部调度系统做周期性增量 -->
 
-- 用外部调度系统做增量时，把上一次的 `endTimestamp` 作为下一次的 `startTimestamp`，窗口左闭右开保证不重不漏。要注意窗口是按提交时间划分的，正在执行、尚未提交的事务不会出现在当前窗口，而会出现在它提交后的窗口里。
+- 用外部调度系统做增量时，把上一次的 `endTimestamp` 作为下一次的 `startTimestamp`，在保留窗口内，左闭右开的时间窗口保证不重不漏。请将消费延迟控制在 `binlog.ttl_seconds` 以内。要注意窗口是按提交时间划分的，正在执行、尚未提交的事务不会出现在当前窗口，而会出现在它提交后的窗口里。
 - 只需要最新值、不需要更新前的值时，可以只保留 `__DORIS_BINLOG_OP__ IN (0, 1, 3)` 的行。
 - `@incr` 查询会读取窗口内的全部变更记录，窗口越大、读取越多，请尽量指定窗口。
 

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "227355c040db02e38d4ca76b887bb80f5abac246ff336faba79bf90cc9c5a9c9",
+    "sourceTechnicalHash": "003aad5e9744df9b86732398cd0c54aba5b936b07782c202bbbf1c647d630c0b",
+    "targetHash": "86ca9730575ef6873d3c222c3f19a12cdcf2e97057dbf901b864cb3f3a2ae4cf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:24:55.485Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-STATUS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-STATUS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-STATUS.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "6972ea03879b2abf007edfe0a9e9c1dd577ff2d1f501350b2eb673225ee8a3be",
+    "sourceTechnicalHash": "64fab725f813f6fe20c208c2482132372dbd9fc6aecdee80baa950eed578f178",
+    "targetHash": "892f976ff86d2f1f5028c682a2d307a294bd630494501e2390b6a1e570d6a3e6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:10:39.745Z",
+    "glossaryVersion": "0"
+  }
+}

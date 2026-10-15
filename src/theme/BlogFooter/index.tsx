@@ -21,12 +21,10 @@ export default function BlogListFooter({
             <Pagination
                 responsive
                 onChange={page => {
-                    history.push(
-                        `${location.pathname}?currentPage=${page ? page : ''}&currentCategory=${encodeURIComponent(
-                            currentCategory ? currentCategory : '',
-                        )}#blog`,
-                        location.state,
-                    );
+                    const params = new URLSearchParams(location.search);
+                    params.set('currentPage', String(page || 1));
+                    params.set('currentCategory', currentCategory || 'All');
+                    history.push(`${location.pathname}?${params.toString()}#blog`, location.state);
                 }}
                 defaultPageSize={9}
                 current={currentPage}

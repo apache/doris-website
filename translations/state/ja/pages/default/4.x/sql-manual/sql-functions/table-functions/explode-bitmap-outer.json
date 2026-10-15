@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-functions/explode-bitmap-outer",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-functions/explode-bitmap-outer.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-functions/explode-bitmap-outer.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "39e036cc88c6d66fa301cee5cd7b6bf4c345f1eaefe1e40891b58331a3ab7738",
+    "sourceTechnicalHash": "1e48fb069f10bddf4c510aa85802fc5d0a0e0805c22dd35dfd31202c838d7b70",
+    "targetHash": "8e6af591ec582b0648b231fdc37539857751d2dc1145ad0d8b2feb79492e1f79",
+    "reviewStatus": "unverified",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:53:51.000Z",
+    "glossaryVersion": "0"
+  }
+}

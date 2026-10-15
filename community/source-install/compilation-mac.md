@@ -55,15 +55,16 @@ Install the base dependencies with Homebrew:
 
 ```Shell
 brew install automake autoconf libtool pkg-config texinfo coreutils gnu-getopt \
-python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@20 openjdk@17 npm
+python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@22 llvm@20 openjdk@17 npm
 ```
+
+> Both LLVM versions are needed. `llvm@22` compiles the BE (LLVM 22.1.8 is the first release whose AddressSanitizer runtime starts on macOS 26.4 and later). `llvm@20` compiles the third-party libraries when they are built from source: `thirdparty/build-thirdparty.sh` stops if it is missing, and `build.sh` starts such a build by itself when `thirdparty/installed` lacks a library it needs. The build scripts find both through Homebrew, so neither has to be added to `PATH`.
 
 > The arm64 version of brew on macOS does not include JDK 8 by default, so `openjdk@17` is recommended. If you need JDK 8, install [Zulu JDK 8](https://www.azul.com/downloads/?version=java-8-lts&os=macos&package=jdk#zulu) manually. Maven can also be downloaded separately from the [Maven website](https://maven.apache.org/download.cgi) and configured via environment variables.
 
 Some dependencies on Apple Silicon also require manual environment variable configuration:
 
 ```Shell
-export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/bison/bin:$PATH"
 export PATH="/opt/homebrew/opt/texinfo/bin:$PATH"
 ln -s -f /opt/homebrew/bin/python3 /opt/homebrew/bin/python

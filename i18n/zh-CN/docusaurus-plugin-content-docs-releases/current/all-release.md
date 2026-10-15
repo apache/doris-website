@@ -12,7 +12,7 @@
 
 | 项目 | 版本发布说明 | 仓库 |
 | --- | --- | --- |
-| Doris Core | [Doris Core 版本发布说明](./core.md) | [apache/doris](https://github.com/apache/doris) |
+| Doris Core | [Release Notes](./core.md) | [apache/doris](https://github.com/apache/doris) |
 | Doris Flink Connector | [Release Notes](./ecosystem/doris-flink-connector.md) | [apache/doris-flink-connector](https://github.com/apache/doris-flink-connector) |
 | Doris Spark Connector | [Release Notes](./ecosystem/doris-spark-connector.md) | [apache/doris-spark-connector](https://github.com/apache/doris-spark-connector) |
 | Doris Kafka Connector | [Release Notes](./ecosystem/doris-kafka-connector.md) | [apache/doris-kafka-connector](https://github.com/apache/doris-kafka-connector) |

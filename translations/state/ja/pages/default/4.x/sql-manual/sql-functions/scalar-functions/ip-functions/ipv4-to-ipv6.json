@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-to-ipv6",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-to-ipv6.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-to-ipv6.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "628c3f6a0bf3c9ad8fafb6fc633e950583132b1b7a54d9d275ad3584b84d20b5",
+    "sourceTechnicalHash": "f0ec29cd737bb015a5696b34147c1ae8fbae219baeee2666b54a39dc0c517eaa",
+    "targetHash": "9373fc0bc57cbba0a4cc0ce2652d6a83fdc50fff3760ad5a5aea011a43f47fbe",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:32:10.968Z",
+    "glossaryVersion": "0"
+  }
+}

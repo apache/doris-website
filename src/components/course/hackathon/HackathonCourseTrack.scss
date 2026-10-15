@@ -1,0 +1,378 @@
+// Temporary hackathon track inside the /course "Your Doris path" card: a
+// two-position switch (Doris 101 | Hackathon) and the hackathon panel. Remove
+// the switch, the panel and this file and the card is exactly today's card.
+
+.course-landing {
+    .hk-switch {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        margin: -6px 0 20px;
+        padding: 5px;
+        border: 2px solid var(--brand-ink);
+        border-radius: 16px;
+        background: var(--brand-surface-soft);
+    }
+
+    .hk-switch__tab {
+        position: relative;
+        display: grid;
+        min-height: 54px;
+        align-content: center;
+        gap: 5px;
+        margin: 0;
+        padding: 8px 14px;
+        border: 2px solid transparent;
+        border-radius: 11px;
+        background: transparent;
+        color: var(--brand-ink);
+        cursor: pointer;
+        font-family: var(--font-family-base);
+        text-align: left;
+        transition:
+            background-color 0.12s,
+            box-shadow 0.12s,
+            transform 0.12s;
+
+        strong {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--brand-ink);
+            font: 800 13px/1 var(--font-mono);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        small {
+            color: var(--brand-ink-soft);
+            font: 600 12px/1.2 var(--font-family-base);
+        }
+
+        &:hover {
+            background: var(--brand-paper);
+        }
+
+        &[aria-selected='true'] {
+            border-color: var(--brand-ink);
+            background: var(--brand-accent);
+            box-shadow: 0 3px 0 var(--brand-ink);
+            transform: translateY(-1px);
+        }
+
+        &:focus-visible {
+            outline: 3px solid var(--brand-primary-glow);
+            outline-offset: 3px;
+        }
+    }
+
+    // "Live" LED on the hackathon side.
+    .hk-switch__led {
+        width: 9px;
+        height: 9px;
+        flex: none;
+        border-radius: 50%;
+        background: var(--brand-primary);
+        box-shadow: 0 0 0 3px var(--brand-primary-soft);
+    }
+
+    .hk-nw {
+        white-space: nowrap;
+    }
+
+    // `hidden` must win over the panel's own display value.
+    .hk-track[hidden] {
+        display: none;
+    }
+
+    .hk-track {
+        display: grid;
+        gap: 14px;
+    }
+
+    .hk-track__kicker {
+        margin: 0;
+        color: var(--brand-primary-deep);
+        font: 800 12px/1.3 var(--font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .hk-track__headline {
+        margin: 8px 0 0;
+        color: var(--brand-ink);
+        font: 800 21px/1.2 var(--font-family-base);
+        letter-spacing: -0.015em;
+        text-wrap: balance;
+    }
+
+    a.hk-ticket {
+        display: grid;
+        grid-template-columns: auto auto minmax(0, 1fr);
+        margin-top: 14px;
+        border: 2px solid var(--brand-ink);
+        border-radius: 12px;
+        background: var(--brand-paper);
+        box-shadow: 0 3px 0 var(--brand-ink);
+        color: var(--brand-ink);
+        text-decoration: none;
+        transition:
+            transform 0.12s,
+            box-shadow 0.12s;
+
+        &:hover {
+            color: var(--brand-ink);
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        &:active {
+            box-shadow: 0 0 0 var(--brand-ink);
+            transform: translateY(3px);
+        }
+
+        span {
+            padding: 10px 12px;
+            font: 800 12px/1.2 var(--font-mono);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            white-space: nowrap;
+
+            + span {
+                border-left: 2px dashed var(--brand-border-soft);
+            }
+        }
+
+        i {
+            color: var(--brand-primary-deep);
+            font-style: normal;
+        }
+    }
+
+    .hk-track__sub {
+        margin: 10px 0 0;
+        color: var(--brand-ink-soft);
+        font-size: 14px;
+        line-height: 1.45;
+    }
+
+    .hk-track__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 4px;
+        padding-top: 14px;
+        border-top: 1px dashed var(--brand-border-soft);
+
+        h4 {
+            margin: 0;
+            color: var(--brand-ink);
+            font: 800 13px/1 var(--font-mono);
+            text-transform: uppercase;
+        }
+
+        span {
+            padding: 7px 10px;
+            border-radius: 999px;
+            background: var(--brand-surface-note);
+            color: var(--brand-ink);
+            font: 700 12px/1 var(--font-mono);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+    }
+
+    // Four parallel choices: a 2×2 pad grid, no connecting line.
+    .hk-track__pads {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    a.hk-pad {
+        display: grid;
+        min-height: 92px;
+        align-content: space-between;
+        gap: 10px;
+        padding: 10px 12px 12px 10px;
+        border: 1px solid var(--brand-border-soft);
+        border-radius: 16px;
+        background: var(--brand-paper);
+        color: var(--brand-ink);
+        text-decoration: none;
+        transition:
+            border-color 0.15s,
+            transform 0.15s;
+
+        &:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-ink);
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+        &:hover .hk-pad__code,
+        &:focus-visible .hk-pad__code {
+            border-color: var(--brand-ink);
+            background: var(--brand-accent);
+            box-shadow: 0 3px 0 var(--brand-ink);
+            color: var(--brand-ink);
+        }
+
+        em {
+            color: var(--brand-primary-deep);
+            font: 700 12px/1 var(--font-mono);
+            font-style: normal;
+            white-space: nowrap;
+        }
+
+        strong {
+            color: var(--brand-ink);
+            font-size: 15px;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+    }
+
+    .hk-pad__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .hk-pad__code {
+        display: grid;
+        width: 38px;
+        height: 38px;
+        flex: none;
+        place-items: center;
+        border: 2px solid var(--brand-border-soft);
+        border-radius: 12px;
+        background: var(--brand-paper);
+        color: var(--brand-primary-deep);
+        font: 800 13px/1 var(--font-mono);
+        transition:
+            background-color 0.15s,
+            border-color 0.15s,
+            box-shadow 0.15s;
+    }
+
+    a.hk-track__b {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        padding: 0 4px 0 8px;
+        color: var(--brand-ink-soft);
+        font-size: 14px;
+        line-height: 1.4;
+        text-decoration: none;
+
+        .hk-nw {
+            color: var(--brand-primary-deep);
+            font-weight: 700;
+        }
+
+        &:hover {
+            color: var(--brand-ink);
+            text-decoration: none;
+
+            .hk-nw {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .hk-track__bkey {
+        display: grid;
+        width: 26px;
+        height: 26px;
+        flex: none;
+        place-items: center;
+        border: 1.5px dashed var(--brand-ink-soft);
+        border-radius: 8px;
+        color: var(--brand-ink);
+        font: 800 12px/1 var(--font-mono);
+    }
+
+    .hk-track__badge {
+        display: grid;
+        grid-template-columns: 52px minmax(0, 1fr);
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px 10px 10px;
+        border: 2px solid var(--brand-ink);
+        border-radius: 16px;
+        background: var(--brand-surface-note);
+
+        img {
+            display: block;
+            width: 52px;
+            height: 52px;
+        }
+
+        p {
+            margin: 0;
+            color: var(--brand-ink);
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+    }
+}
+
+// The pill counts Doris 101 courses; hide it while the hackathon track is on.
+.course-landing__path-card[data-track='hackathon'] .course-landing__path-header > span {
+    visibility: hidden;
+}
+
+@media (max-width: 640px) {
+    .course-landing {
+        .hk-switch {
+            margin-top: -10px;
+        }
+
+        .hk-switch__tab {
+            min-height: 56px;
+            padding: 8px 10px;
+        }
+
+        .hk-track__headline {
+            font-size: 19px;
+        }
+
+        a.hk-ticket {
+            grid-template-columns: auto minmax(0, 1fr);
+
+            span:first-child {
+                grid-column: 1 / -1;
+                border-bottom: 2px dashed var(--brand-border-soft);
+            }
+
+            span:nth-child(2) {
+                border-left: 0;
+            }
+        }
+
+        a.hk-pad {
+            min-height: 100px;
+            padding: 10px;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .course-landing {
+        .hk-switch__tab,
+        a.hk-ticket,
+        a.hk-pad,
+        .hk-pad__code {
+            transition: none;
+        }
+    }
+}

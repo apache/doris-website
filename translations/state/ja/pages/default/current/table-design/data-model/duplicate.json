@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-model/duplicate",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-model/duplicate.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/data-model/duplicate.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "bf6283b4e2b10542ef36767454bf1031f0eb8deb6df59747230942a81ad3e49e",
+    "sourceTechnicalHash": "e8d8c79808fd9279a401e442aaccf00dec582df89b70abe80221ad5268c0c2e0",
+    "targetHash": "49f45cb98294e942b4821b3b057a19ef7422890b7f0d1c00929fa80076967505",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:39:04.817Z",
+    "glossaryVersion": "0"
+  }
+}

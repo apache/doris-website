@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/view/SHOW-CREATE-VIEW",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/view/SHOW-CREATE-VIEW.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/view/SHOW-CREATE-VIEW.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "b82a03b4bc5863fdc5c77cdb02735e9622d777b7a218a9cf6cafb6143f2a515c",
+    "sourceTechnicalHash": "a229d4eba2d999b032da5cd82547eb1cb7ae6bdbc46e051be45579e174a4bf84",
+    "targetHash": "c6c6967f863b312281d9c43e7ac1f43f024d60ff44c0b1c565c1581d422969a2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:35:06.362Z",
+    "glossaryVersion": "0"
+  }
+}

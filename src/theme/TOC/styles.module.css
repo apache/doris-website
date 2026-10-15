@@ -1,8 +1,8 @@
 .tableOfContents {
-  max-height: calc(100vh - (var(--ifm-navbar-height) + 2rem));
+  max-height: calc(100vh - (var(--docs-navigation-offset, var(--ifm-navbar-height)) + 2rem));
   overflow-y: auto;
   position: sticky;
-  top: calc(var(--ifm-navbar-height) + 1rem);
+  top: calc(var(--docs-navigation-offset, var(--ifm-navbar-height)) + 1rem);
 }
 
 @media (max-width: 996px) {

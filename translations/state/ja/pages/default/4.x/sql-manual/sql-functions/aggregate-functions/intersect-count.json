@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/intersect-count",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/intersect-count.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/intersect-count.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "a6337de4cbf28c3d4db12a83c4b300d609e5652ec91f698b09d938652939fc17",
+    "sourceTechnicalHash": "26f01d44406058afa0132381e81f5f118c252f0cd5e7a7ca8df28c1ff3278955",
+    "targetHash": "9302babfe757ead17772d96174c768969f8cf55c7ae044e73c3c2adf4006a88f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:12:57.464Z",
+    "glossaryVersion": "0"
+  }
+}

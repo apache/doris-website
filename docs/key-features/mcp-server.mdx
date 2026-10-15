@@ -1,18 +1,18 @@
 ---
 title: MCP Server
-description: A Model Context Protocol server for Apache Doris that lets Claude Desktop, Cursor, Cline, and other AI clients query a cluster through tool calls.
+description: Doris MCP Server 1.0 gives Claude Desktop, Cursor, and other MCP clients read-only access to an Apache Doris cluster through eight tool domains and 55 capabilities.
 keywords:
   - MCP server
   - Model Context Protocol
+  - doris-mcp-server
   - Claude Desktop
   - Cursor integration
-  - Cline
   - Apache Doris AI tools
   - tool calling
 slug: /key-features/mcp-server
 image: /images/next/key-features/mcp-server.jpg
 last_update:
-  date: 2026-05-10
+  date: 2026-10-07
   author: Apache Doris
 featureCard:
   tags:
@@ -20,52 +20,83 @@ featureCard:
     - integration
 ---
 
-> **TL;DR** The Apache Doris MCP Server is a Python service that speaks the [Model Context Protocol](https://modelcontextprotocol.io/specification/2025-11-25). The server exposes Apache Doris as a set of tools an AI assistant can call, including listing tables, running SQL, fetching schemas, and reading audit logs. Point Claude Desktop, Cursor, or any MCP client at the server and the model can work against a real cluster without a custom integration.
+> **TL;DR** The Apache Doris MCP Server (`doris-mcp-server` 1.0) is a Python service that speaks the [Model Context Protocol](https://modelcontextprotocol.io/specification/2026-07-28) over stdio or Streamable HTTP. It exposes Apache Doris to AI assistants as eight read-only tool domains (catalog, query, cluster, pipeline, search, governance, lakehouse, and semantic) holding 55 capabilities that the assistant discovers when it needs them. Install it with `pip`, point Claude Desktop, Cursor, or any MCP client at it, and the model can explore schemas and run bounded, read-only SQL against a real cluster without a custom integration.
 
-![Apache Doris MCP Server: A Model Context Protocol server for Apache Doris that lets Claude Desktop, Cursor, Cline, and other AI clients query a cluster through tool calls.](/images/next/key-features/mcp-server.jpg)
+![Apache Doris MCP Server: Doris MCP Server 1.0 gives Claude Desktop, Cursor, and other MCP clients read-only access to an Apache Doris cluster through eight tool domains and 55 capabilities.](/images/next/key-features/mcp-server.jpg)
 ## Why use the Apache Doris MCP Server? {#why}
 
 The Apache Doris MCP Server replaces the same chat-assistant-to-database integration that every company would otherwise build from scratch. You would otherwise stand up a small Python service, wrap a few SQL helpers, handle credentials, timeouts, result truncation, and read-only enforcement, and then rewrite client-specific glue for Claude Desktop, Cursor, and whatever shows up next month. The work is mostly boilerplate, but the bug surface is large: an over-eager `DELETE` from an LLM is a real outage. The in-database AI surface, [LLM SQL functions](./llm-sql-functions) and [embeddings](./embedding), complements this card from the SQL side.
 
 [Anthropic released MCP](https://www.anthropic.com/news/model-context-protocol) in November 2024 to standardize that work. Servers expose tools with typed inputs and outputs; clients (Claude Desktop, Cursor, Cline, Continue, Zed, and others) speak the same protocol; the model decides when to call. Database vendors have followed: ClickHouse, Snowflake, MotherDuck, BigQuery, and Supabase all ship official servers.
 
-The Apache Doris MCP Server is the equivalent for Apache Doris. It lives in a separate repo (`apache/doris-mcp-server`), it ships under Apache 2.0, and you launch it from any MCP client config in a few lines.
+The Apache Doris MCP Server is the equivalent for Apache Doris. It lives in a separate repository ([`apache/doris-mcp-server`](https://github.com/apache/doris-mcp-server)), ships on PyPI under Apache 2.0, and you launch it from any MCP client config in a few lines.
 
 ## What is the Apache Doris MCP Server? {#what}
 
-The Apache Doris MCP Server is a Python 3.12 service built on FastAPI. It connects to Apache Doris over the MySQL protocol, registers a fixed set of MCP tools, and serves them over `stdio`, Server-Sent Events, or the streamable HTTP transport. AI assistants treat each tool as a function call. The server logs every call, applies a SQL security filter, and returns JSON.
+The Apache Doris MCP Server is a Python 3.12+ service that connects to Apache Doris 2.0 or later over the MySQL protocol. Version 1.0 replaces the earlier flat list of tools with eight stable domains: each domain is one MCP tool, and the operations inside it are discovered on demand, so the model starts from eight entries instead of 55. The server checks which operations the connected cluster can actually serve, runs only read-only work, and returns schema-validated JSON.
 
 **Key terms**
 
 - **MCP (Model Context Protocol)**: an open JSON-RPC 2.0 protocol for connecting LLM clients to external tools and data. Tools are typed functions; resources are read-only data; prompts are reusable templates.
-- **Tool**: one Python function decorated with `@mcp.tool()`. The Apache Doris server ships eight: `exec_query`, `get_db_list`, `get_db_table_list`, `get_table_schema`, `get_table_comment`, `get_table_column_comments`, `get_table_indexes`, and `get_recent_audit_logs`.
-- **Transport**: how the client and server talk. `stdio` runs the server as a subprocess (the default for Claude Desktop). SSE and Streamable HTTP are for remote deployments.
-- **SQL security filter**: a server-side guard, on by default, that blocks `DROP`, `DELETE`, `INSERT`, `UPDATE`, `ALTER`, and `CREATE`, and adds an automatic `LIMIT` to bare `SELECT` statements.
+- **Domain**: one of the eight tools the server registers: `doris_catalog`, `doris_query`, `doris_cluster`, `doris_pipeline`, `doris_search`, `doris_governance`, `doris_lakehouse`, and `doris_semantic`.
+- **Child capability**: an operation inside a domain, such as `list_tables` in `doris_catalog`, `execute_query` and `explain_query` in `doris_query`, or `search_data` in `doris_search`. There are 55; the [tool registry](https://github.com/apache/doris-mcp-server/blob/master/docs/tool-registry.md) lists them all.
+- **Progressive disclosure**: the default `hierarchical` mode. The assistant calls a domain with an empty object to get its children, their input schemas, and whether each one is available on this cluster, then calls the same domain again with `child_tool` and `arguments`. Clients that cannot make the two-step call can set `MCP_TOOL_EXPOSURE_MODE=flat`, which exposes all 55 children as tools.
+- **Transport**: `stdio` runs the server as a subprocess of a local client. Streamable HTTP runs it as a long-lived service with an `/mcp` endpoint plus `/live` and `/ready` health checks; an HTTP listener beyond loopback requires authentication (static tokens, JWT, or OAuth/OIDC).
+- **Read-only runtime**: the built-in capabilities never write. Statements that would modify data are refused, and every result is capped in rows, bytes, and time before it leaves the server. Doris privileges still decide what the connected account can see.
 
 ## How does the Apache Doris MCP Server work? {#how}
 
-The Apache Doris MCP Server runs through a five-step loop: the client launches the server, the server connects to the cluster, the model picks a tool, the server filters and runs the SQL, and results return as JSON.
+The Apache Doris MCP Server runs through a five-step loop: the client connects to the server, the server connects to the cluster, the model discovers a domain, it calls a child capability, and bounded results return as JSON.
 
-1. **The client launches the server.** In `stdio` mode, Claude Desktop or Cursor spawns the server as a subprocess and communicates over stdin/stdout. In SSE or HTTP mode, you run the server long-lived and the client connects over the network.
-2. **The server connects to Apache Doris.** It reads `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_DATABASE` from environment variables, then opens a MySQL-protocol connection on port 9030. No JDBC URL, no driver setup.
-3. **The model calls a tool.** The assistant decides, given the user's prompt, which tool to invoke. For "what tables hold order data?", that is `get_db_table_list`. For "summarize yesterday's slow queries," that is `get_recent_audit_logs`. The user typically approves each call before it runs.
-4. **The server filters and runs the query.** `exec_query` parses the statement, rejects anything that mutates data when `ENABLE_SQL_SECURITY_CHECK=true`, and appends a `LIMIT` if the query has none. A 30-second timeout (configurable per call) caps runtime.
-5. **Results return as JSON.** The client renders them inline in the chat. Large result sets are truncated by `max_rows`, default 100, so a careless `SELECT *` does not blow up the model's context window.
+1. **The client connects to the server.** In `stdio` mode, the MCP client spawns `doris-mcp-server --transport stdio` as a subprocess and talks over stdin/stdout. In HTTP mode, you run `doris-mcp-server --transport http --host 127.0.0.1 --port 3000` and the client sends requests to `http://127.0.0.1:3000/mcp`.
+2. **The server connects to Apache Doris.** It reads `DORIS_HOST`, `DORIS_PORT`, `DORIS_USER`, `DORIS_PASSWORD`, and `DORIS_DATABASE` from the environment (or the matching `--doris-*` flags), opens a MySQL-protocol connection to the FE on port 9030, and checks which capabilities the cluster's version and configuration support.
+3. **The model discovers what it needs.** The client lists eight domain tools. For "what tables hold order data?", the model calls `doris_catalog` with `{}` and gets back its five children, including `list_tables` and `get_table_context`, each with its status on this cluster. Capabilities that depend on optional integrations, such as MetricFlow in `doris_semantic`, report `misconfigured` until you set them up; they stay visible but fail closed when called.
+4. **The model calls a child capability.** It calls `doris_catalog` again with `child_tool: "list_tables"`, then `doris_query` with `child_tool: "execute_query"` and the SQL it wrote. The server validates the arguments against the child's schema and rejects anything that is not read-only: a `DELETE` comes back as `SQL operation DELETE is not read-only.`
+5. **Bounded results return as JSON.** By default a query returns at most 100 rows and 1 MB and runs for at most 30 seconds. A call can ask for more within the server's limits (`max_rows` up to 100,000, `timeout_ms` up to 300,000), so a careless `SELECT *` does not blow up the model's context window.
 
 ## Quick start {#quick-start}
+
+Install the server (Python 3.12 or later), then create some data and a read-only account for it:
+
+```bash
+pip install doris-mcp-server==1.0.0
+which doris-mcp-server        # note the absolute path
+```
+
+```sql
+CREATE DATABASE demo;
+CREATE TABLE demo.orders (
+  order_id   INT NOT NULL,
+  region     VARCHAR(16) NOT NULL,
+  amount     DECIMAL(10, 2) NOT NULL,
+  created_at DATETIME NOT NULL
+) DUPLICATE KEY(order_id) DISTRIBUTED BY HASH(order_id) BUCKETS 1;
+
+INSERT INTO demo.orders VALUES
+  (1, 'emea', 120.00, '2026-10-01 09:00:00'),
+  (2, 'apac',  80.50, '2026-10-01 10:30:00'),
+  (3, 'emea',  42.25, '2026-10-02 14:10:00'),
+  (4, 'amer', 310.00, '2026-10-03 08:45:00');
+
+-- Never hand an LLM a write-capable account
+CREATE USER 'mcp_reader'@'%' IDENTIFIED BY 'replace-me';
+GRANT SELECT_PRIV ON internal.demo.* TO 'mcp_reader'@'%';
+```
+
+Register the server in your MCP client's configuration (the file and its location depend on the client). Use the absolute path from `which doris-mcp-server`: GUI clients do not inherit your shell's `PATH` or virtual environment.
 
 ```json
 {
   "mcpServers": {
     "doris": {
-      "command": "uv",
-      "args": ["--project", "/path/to/doris-mcp-server", "run", "doris-mcp"],
+      "command": "/absolute/path/to/doris-mcp-server",
+      "args": ["--transport", "stdio"],
       "env": {
-        "DB_HOST":     "127.0.0.1",
-        "DB_PORT":     "9030",
-        "DB_USER":     "root",
-        "DB_PASSWORD": "your_password",
-        "DB_DATABASE": "your_db"
+        "DORIS_HOST": "127.0.0.1",
+        "DORIS_PORT": "9030",
+        "DORIS_USER": "mcp_reader",
+        "DORIS_PASSWORD": "replace-me",
+        "DORIS_DATABASE": "demo"
       }
     }
   }
@@ -74,37 +105,57 @@ The Apache Doris MCP Server runs through a five-step loop: the client launches t
 
 **Expected result**
 
-Save the snippet as `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS), restart Claude Desktop, and the `doris` server appears in the tools menu. Ask "what databases do we have?" and the assistant calls `get_db_list`, returning something like:
+After a restart, the client lists one `doris` server with eight tools: `doris_catalog`, `doris_cluster`, `doris_governance`, `doris_lakehouse`, `doris_pipeline`, `doris_query`, `doris_search`, and `doris_semantic`. Ask "what is the revenue per region in demo.orders?" and the assistant calls `doris_query` with `{}` to discover `execute_query`, then calls it:
 
-```
-information_schema, mysql, ssb, tpch_100
+```json
+{
+  "child_tool": "execute_query",
+  "arguments": {
+    "database": "demo",
+    "sql": "SELECT region, SUM(amount) AS revenue FROM orders GROUP BY region ORDER BY revenue DESC"
+  }
+}
 ```
 
-The assistant can now compose follow-up calls: `get_db_table_list('ssb')`, then `get_table_schema('lineorder', 'ssb')`, then a plain `exec_query` once it has the column names.
+The rows come back together with the limits that applied:
+
+```json
+"rows": [
+  {"region": "amer", "revenue": "310.00"},
+  {"region": "emea", "revenue": "162.25"},
+  {"region": "apac", "revenue": "80.50"}
+],
+"limits": {"max_bytes": 1048576, "max_rows": 100, "timeout_seconds": 30}
+```
+
+Ask it to "delete the apac orders" and the same call returns the error `SQL operation DELETE is not read-only.`; `mcp_reader` has no write privilege either.
 
 ## When should you use the Apache Doris MCP Server? {#when}
 
-The Apache Doris MCP Server fits read-mostly AI assistant scenarios, especially schema discovery, ad-hoc analysis, and on-call investigation against a real cluster.
+The Apache Doris MCP Server fits read-mostly AI assistant scenarios, especially schema discovery, ad-hoc analysis, search, and on-call investigation against a real cluster.
 
 **Good fit**
 
-- AI-assisted SQL authoring inside Cursor or Claude Code, where the assistant inspects the schema and drafts a query against your real cluster instead of guessing column names.
+- AI-assisted SQL authoring inside Cursor or Claude Code, where the assistant reads the real schema (`doris_catalog` → `get_table_context`) and drafts a query instead of guessing column names.
 - Ad-hoc "ask your data" sessions in Claude Desktop, especially for engineers who would otherwise paste schemas into the chat by hand.
-- On-call assistants that read audit logs (`get_recent_audit_logs`) to find the slow query that broke a dashboard.
-- Schema discovery and BI prototyping, where the assistant chains `get_db_list` → `get_db_table_list` → `get_table_schema` to sketch a model before anyone writes a query.
+- On-call assistants: `doris_query` lists slow queries, explains plans, and reads profiles, and `doris_cluster` reports nodes, compaction, and workload groups, so the assistant can narrow down why a dashboard broke.
+- Search-aware assistants: `doris_search` runs text, vector, and hybrid search through `search_data` and inspects analyzers and indexes, so the model does not have to hand-write `MATCH_*` or ANN SQL.
 
 **Not a good fit**
 
-- Production write paths. The server is preview-grade, the SQL filter is an allowlist, and an LLM in the loop is not the right place for `INSERT` or `UPDATE`. Use a real application for writes.
+- Production write paths. The 1.0 server is read-only by design, and an LLM in the loop is not the right place for `INSERT` or `UPDATE`. Use a real application for writes.
 - Untrusted data. An attacker who can put text into a row your assistant later reads can attempt prompt injection. The community has documented real incidents on Postgres MCP servers; treat anything the model fetches as data, not instructions, and review tool calls before running them. See [MCP security best practices](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices).
-- Browsing multi-million-row tables. Tool results land in the model's context window, and the per-token bill scales accordingly. Cap `max_rows`, ask the model to write aggregations, and reach for a notebook for anything beyond a sample.
-- Multi-tenant clusters with no row-level scoping. The server connects with one MySQL account; whatever that account can see, the model can see. Create a dedicated read-only user, restrict its database grants, and never reuse a power-user account.
-- Workloads that need fine-grained, programmable tool access. The eight tools cover schema and read paths well, but anything beyond that (custom workflows, batch jobs, NL2SQL with user-defined prompts) belongs in a custom integration that calls Apache Doris directly.
+- Browsing multi-million-row tables. Tool results land in the model's context window, and the per-token bill scales accordingly. Keep the default row cap, ask the model to write aggregations, and reach for a notebook for anything beyond a sample.
+- Multi-tenant clusters with no row-level scoping. The server connects with the Doris account you configure; whatever that account can see, the model can see. Create a dedicated read-only user, restrict its database grants, and never reuse a power-user account.
+- Workflows beyond reading. The 55 capabilities cover schema, query, operations, and search paths, but custom workflows, batch jobs, or NL2SQL with your own prompts belong in an integration that calls Apache Doris directly, or in a [custom tool provider](https://github.com/apache/doris-mcp-server/blob/master/docs/custom-tool-providers.md).
 
 ## Further reading {#further-reading}
 
 - [AI on Doris](../ai/ai-overview): how the MCP server fits alongside `AI_*` SQL functions, embeddings, and vector search.
 - [LLM SQL Functions](./llm-sql-functions): the in-database side of the AI story, for batch enrichment of text columns.
-- [Doris MCP Server repository](https://github.com/apache/doris-mcp-server): source, install instructions, and the full property list for each tool.
-- [Model Context Protocol specification](https://modelcontextprotocol.io/specification/2025-11-25): the protocol Apache Doris speaks, including transport details and security guidance.
+- [Doris MCP Server repository](https://github.com/apache/doris-mcp-server): source, documentation, and the 1.0 release notes.
+- [Tool registry](https://github.com/apache/doris-mcp-server/blob/master/docs/tool-registry.md): the eight domains and 55 child capabilities with their schemas.
+- [Migrating to 1.0](https://github.com/apache/doris-mcp-server/blob/master/docs/migration-1.0.0.md): how the pre-1.0 tools and settings map to the 1.0 domains.
+- [Configuration reference](https://github.com/apache/doris-mcp-server/blob/master/docs/reference/configuration.md) and [security model](https://github.com/apache/doris-mcp-server/blob/master/docs/security/security-model.md): every setting, including authentication for HTTP deployments.
+- [Model Context Protocol specification](https://modelcontextprotocol.io/specification/2026-07-28): the protocol version the server speaks, including transport details and security guidance.
 - [Anthropic's MCP announcement](https://www.anthropic.com/news/model-context-protocol): the original problem statement and the design choices behind tools, resources, and prompts.

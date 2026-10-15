@@ -34,7 +34,7 @@ Splitting rules:
 
 Special cases:
 - If any parameter is NULL, returns NULL
-- If str is empty string, returns array with one empty string [""]
+- If str is an empty string, returns an empty array `[]`
 - If separator is empty string, str is split by characters (each character becomes an array element)
 - If separator doesn't exist in str, returns array containing the original string
 - If str contains only separators, returns corresponding number of empty strings based on separator count
@@ -97,7 +97,7 @@ SELECT SPLIT_BY_STRING('', ','), SPLIT_BY_STRING('hello', 'xyz');
 +---------------------------+----------------------------------+
 | SPLIT_BY_STRING('', ',')  | SPLIT_BY_STRING('hello', 'xyz')  |
 +---------------------------+----------------------------------+
-| [""]                      | ["hello"]                       |
+| []                        | ["hello"]                       |
 +---------------------------+----------------------------------+
 ```
 

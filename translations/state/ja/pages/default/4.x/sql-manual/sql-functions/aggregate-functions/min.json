@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/min",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "ea9314225e5aac71833957e9d7f0bdef77a80c02644904c407a82f816304a113",
+    "sourceTechnicalHash": "64a572978d4ce39ba0e657632feaf0b4f9a2086765ff89f0b23b1aab2a254912",
+    "targetHash": "d70c2d919a1a39dfd1fb40dc93537029570d7f3805182d5c1a76d0ec05a79757",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:12:57.465Z",
+    "glossaryVersion": "0"
+  }
+}

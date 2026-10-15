@@ -245,14 +245,15 @@ IVM 创建的内部 Stream 也会出现在相关系统表中。可以观察其�
 | 关注点 | 数据来源 | 说明 |
 |---|---|---|
 | 积压 | `information_schema.table_stream_consumption` 的 `LAG` | 定期查询，对长时间不为 `0` 或持续增长的分区告警 |
-| 状态 | `information_schema.table_streams` 的 `ENABLED`、`IS_STALE`、`STALE_REASON` | 反映 Stream 是否可用。当前版本 Row Binlog 不会自动清理，Stream 不会因为长期不消费而失效；自动清理能力上线后，变更记录已被清理的 Stream 会被标记为 stale，需要通过 `@reset()` 重新对齐 |
+| 状态 | `information_schema.table_streams` 的 `ENABLED`、`IS_STALE`、`STALE_REASON` | 反映 Stream 状态，但当前实现不会报告 TTL 过期。需将消费延迟与基表的 `binlog.ttl_seconds` 对比，并关注位点过期报错，见 [保留与清理](row-binlog#保留与清理) |
 | 消费历史 | `information_schema.table_stream_consumption` 的 `LAST_CONSUMPTION_TIME` | 判断消费任务是否按计划运行 |
 
 ### 故障恢复
 
 | 场景 | 处理 |
 |---|---|
-| 消费语句失败 | 位点不变，直接重跑即可，不会漏掉变更 |
+| 消费语句失败 | 位点不变，请在所需变更仍处于保留窗口内时重跑 |
+| 所需变更已因 `binlog.ttl_seconds` 过期 | 用 `@reset()` 全量重载下游并重新对齐位点。位点过期时 `min_delta` 读取报错，`detail` 和 `append_only` 跳过过期变更 |
 | 消费成功但调度系统没记录到 | 如果重跑，本轮读到的是下一批变更，不会重复消费上一批。要让重复执行完全无副作用，目标表建议使用 Unique Key 模型（按主键写入天然幂等） |
 | 下游数据错误需要重建 | 用 `@snapshot()` 恢复到消费位点对应的状态后继续增量消费；或者用 `@reset()` 全量重刷并把位点推进到当前 |
 | FE 重启、主从切换 | 位点持久化在元数据中，重启后继续消费 |

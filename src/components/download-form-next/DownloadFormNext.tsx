@@ -27,6 +27,7 @@ import { LayoutNext } from '@site/src/components/home-next/LayoutNext';
 const KEYS_URL = 'https://downloads.apache.org/doris/KEYS';
 const VERIFY_URL = '/community/release-and-verify/release-verify';
 const VERSIONING_URL = '/community/release-and-verify/release-versioning';
+const UPGRADE_NOTES_URL = '/docs/dev/admin-manual/cluster-management/upgrade#per-version-upgrade-notes';
 const SECURITY_URL = '/community/security';
 const ASF_ARCHIVE_URL = 'https://archive.apache.org/dist/doris/';
 
@@ -36,6 +37,58 @@ const CPU_OPTIONS = [CPUEnum.X64, CPUEnum.X64NoAvx2, CPUEnum.ARM64];
 function releaseNotePath(branch: string, version: string) {
     return `/releases/v${branch}/release-${version}`;
 }
+
+const GUIDE_ICON = { width: 18, height: 18, viewBox: '0 0 18 18', fill: 'none' } as const;
+const GUIDE_STROKE = {
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+} as const;
+
+/**
+ * What to read next, shown as one strip under the quick download card so the
+ * versioning policy, the per-version upgrade notes and the archive are found
+ * together rather than in a footnote.
+ */
+const GUIDES = [
+    {
+        to: VERSIONING_URL,
+        title: 'Which version to choose',
+        desc: 'What X.Y.Z means, how Latest differs from Stable, and which binary fits your CPU.',
+        icon: (
+            <svg {...GUIDE_ICON}>
+                <circle cx="5" cy="4" r="1.8" {...GUIDE_STROKE} />
+                <circle cx="5" cy="14" r="1.8" {...GUIDE_STROKE} />
+                <circle cx="13" cy="5" r="1.8" {...GUIDE_STROKE} />
+                <path d="M5 5.8v6.4M13 6.8c0 3.7-8 1.7-8 5.4" {...GUIDE_STROKE} />
+            </svg>
+        ),
+    },
+    {
+        to: UPGRADE_NOTES_URL,
+        title: 'Upgrade notes',
+        desc: 'Per-version precautions to read before moving a cluster to a new release.',
+        icon: (
+            <svg {...GUIDE_ICON}>
+                <path d="M9 12.5V3.5M5.5 7 9 3.5 12.5 7" {...GUIDE_STROKE} />
+                <path d="M3.5 11.5v2A1.5 1.5 0 0 0 5 15h8a1.5 1.5 0 0 0 1.5-1.5v-2" {...GUIDE_STROKE} />
+            </svg>
+        ),
+    },
+    {
+        to: '#archive',
+        title: 'Archived releases',
+        desc: 'Older branches receive no further releases of any kind, security patches included.',
+        archive: true,
+        icon: (
+            <svg {...GUIDE_ICON}>
+                <rect x="2.5" y="3.5" width="13" height="3.5" rx="1" {...GUIDE_STROKE} />
+                <path d="M4 7v6.5A1.5 1.5 0 0 0 5.5 15h7a1.5 1.5 0 0 0 1.5-1.5V7M7.5 10.5h3" {...GUIDE_STROKE} />
+            </svg>
+        ),
+    },
+];
 
 export default function DownloadFormNext(): JSX.Element {
     const defaultHead = ACTIVE_HEADS[0];
@@ -298,11 +351,41 @@ export default function DownloadFormNext(): JSX.Element {
                                 </div>
                             )}
 
-                            <p className="download-next__quick-note">
-                                Apache Doris maintains the two most recent minor branches, labelled Latest and Stable —
-                                see <Link to={VERSIONING_URL}>release versioning</Link>. Releases from older branches
-                                are <Link to="#archive">archived</Link>.
-                            </p>
+                            <div className="download-next__guides">
+                                {GUIDES.map(guide => (
+                                    <Link
+                                        key={guide.title}
+                                        to={guide.to}
+                                        className={clsx('download-next__guide', { 'is-archive': guide.archive })}
+                                    >
+                                        <span className="download-next__guide-icon" aria-hidden="true">
+                                            {guide.icon}
+                                        </span>
+                                        <span className="download-next__guide-body">
+                                            <span className="download-next__guide-title">
+                                                {guide.title}
+                                                <svg
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="14"
+                                                    height="14"
+                                                    viewBox="0 0 14 14"
+                                                    fill="none"
+                                                >
+                                                    <path
+                                                        d="M2.5 7h9M7.5 3l4 4-4 4"
+                                                        stroke="currentColor"
+                                                        strokeWidth="1.6"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                            </span>
+                                            <span className="download-next__guide-desc">{guide.desc}</span>
+                                        </span>
+                                    </Link>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </section>

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-functions/explode-json-array-int",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-functions/explode-json-array-int.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-functions/explode-json-array-int.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "787c5bbaa6411f2a77bad5b6eb6de9178a30d219996d379354f0f7228b8ce2eb",
+    "sourceTechnicalHash": "3788a29d178b9476c12647b6524f5b67bc30c4a6d1c9f8d9a7fedb4ecc2aceea",
+    "targetHash": "4c26c2e5ae1d57bb8a07812dfee1a3da6c469b2fc4c7571ca7d31879f020da5a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:53:51.001Z",
+    "glossaryVersion": "0"
+  }
+}

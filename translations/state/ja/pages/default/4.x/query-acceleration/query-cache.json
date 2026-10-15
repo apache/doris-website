@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/query-cache",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/query-cache.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/query-cache.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "9ec56debf4f9bf08432a77994d82e4e1d706c5c6cf345546dfdf68f3667fc466",
+    "sourceTechnicalHash": "f274bb7738b74344693df2daf5f994454edb7463c2d9d1e98f5c3b05cd5f8c6b",
+    "targetHash": "a41446a3f96ba3f104ed6fb80e6f280ee88dc8c599dadf732e626bd1d8f8d70c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:33:33.244Z",
+    "glossaryVersion": "0"
+  }
+}

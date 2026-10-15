@@ -29,7 +29,7 @@ import re
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import lru_cache
-from urllib.parse import urlparse
+from urllib.parse import urlparse, unquote
 
 try:
     import urllib.request
@@ -113,7 +113,7 @@ def _candidates_for(full: str):
 
 def resolve_internal(base_dir: str, target: str):
     """Return the resolved file path if target exists, else None."""
-    path_part = target.split("#", 1)[0]
+    path_part = unquote(target.split("#", 1)[0].split("?", 1)[0])
     if path_part == "":
         return "anchor-only"
 
@@ -129,6 +129,19 @@ def resolve_internal(base_dir: str, target: str):
         if site_root is None:
             return None
         rel = path_part.lstrip("/")
+        localized = re.match(r"ja/(docs/(dev|[^/]+)|community|releases|course)/(.*)", rel)
+        if localized:
+            route, version, rest = localized.groups()
+            if route.startswith("docs/"):
+                source = "docs" if version == "dev" else "versioned_docs/version-" + version
+                localized_root = "i18n/ja/docusaurus-plugin-content-docs/" + ("current" if version == "dev" else "version-" + version)
+            else:
+                source = ROUTE_PREFIX_REMAP.get(route, route)
+                localized_root = "i18n/ja/docusaurus-plugin-content-docs-" + route + "/current"
+            for root in (localized_root, source):
+                for candidate in _candidates_for(os.path.join(site_root, root, rest.rstrip("/"))):
+                    if os.path.isfile(candidate):
+                        return candidate
         head, _, rest = rel.partition("/")
         if head in ROUTE_PREFIX_REMAP and rest:
             remapped = os.path.normpath(
@@ -147,6 +160,18 @@ def resolve_internal(base_dir: str, target: str):
     for c in _candidates_for(full):
         if os.path.isfile(c):
             return c
+    site_root, _ = _find_site_roots(base_dir)
+    if site_root:
+        relative = os.path.relpath(full, site_root).replace(os.sep, "/")
+        localized = re.match(r"i18n/ja/docusaurus-plugin-content-docs(-[^/]+)?/(current|version-([^/]+))/(.*)", relative)
+        if localized:
+            suffix, _, version, rest = localized.groups()
+            roots = {None: "docs", "-community": "community", "-releases": "releasenotes", "-course": "course"}
+            source = "versioned_docs/version-" + version if version and suffix is None else roots.get(suffix) if not version else None
+            if source:
+                for candidate in _candidates_for(os.path.join(site_root, source, rest)):
+                    if os.path.isfile(candidate):
+                        return candidate
     return None
 
 

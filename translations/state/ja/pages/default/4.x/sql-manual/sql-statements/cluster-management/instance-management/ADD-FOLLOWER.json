@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "2300e0b173869de08acb9b46450f8ecaa13ab5df8ba9bfafccc3feac811203cc",
+    "sourceTechnicalHash": "52b818eab3f84bb776d409b8b42f4ddd5a8c1ea3d60abd00caee4cd0eec3aa93",
+    "targetHash": "5f126ca965133fd7f6218e32653632ca7eddbaaedc61d3d3f325563dc6c6ddbc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:21:16.659Z",
+    "glossaryVersion": "0"
+  }
+}

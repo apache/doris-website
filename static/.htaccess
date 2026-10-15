@@ -11,19 +11,28 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    RewriteCond %{REQUEST_URI} ^/docs/dev/
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^docs/dev(/.+)$ /docs/dev/getting-started/what-is-apache-doris [R=301,L]
 
+    RewriteCond %{REQUEST_URI} ^/zh-CN/docs/dev/
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^zh-CN/docs/dev(/.+)$ /zh-CN/docs/dev/getting-started/what-is-apache-doris [R=301,L]
+    RewriteRule ^(zh-CN/)?docs/dev(/.+)$ /zh-CN/docs/dev/getting-started/what-is-apache-doris [R=301,L]
 
-    # Other zh-CN misses — render the zh-CN-locale 404 so the chrome/i18n
-    # context (header/footer) is Chinese. URL is preserved.
+    # Preserve a real 404 status for missing Chinese routes.
     RewriteCond %{REQUEST_URI} ^/zh-CN/
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^ /zh-CN/404.html [L]
+    RewriteRule ^ - [R=404,L]
 </IfModule>
+# The file is also copied inside each locale directory. Select the error page
+# by the original request URI while keeping the HTTP 404 status.
 ErrorDocument 404 /404.html
+<If "%{REQUEST_URI} =~ m#^/zh-CN/#">
+    ErrorDocument 404 /zh-CN/404.html
+</If>
+<If "%{REQUEST_URI} =~ m#^/ja/# && -f '%{DOCUMENT_ROOT}/ja/404.html'">
+    ErrorDocument 404 /ja/404.html
+</If>

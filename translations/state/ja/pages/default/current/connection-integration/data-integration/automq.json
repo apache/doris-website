@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/automq",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/automq.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/automq.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "207136b159139d1dcf415500385704de4d083dc079fce2b65ef25e4c6bebfb98",
+    "sourceTechnicalHash": "1411efbe5c62cf962b7eb4c69bcc0fa14c19703f1f7747624412d0aa2eb5042f",
+    "targetHash": "1a97a7519bdc7df4fbdaa68812ee6108785b0411cb040fee9abf5dfd1ce47715",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T12:26:49.465Z",
+    "glossaryVersion": "0"
+  }
+}

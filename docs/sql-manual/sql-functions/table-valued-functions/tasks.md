@@ -66,6 +66,7 @@ TASKS(
    | **LastQueryId** | Query ID of the SQL statement executed by the refresh task. Use this ID to search FE or BE logs when troubleshooting task failures. It can be empty when no refresh SQL was executed. This field is supported since Doris 3.0.0. |
    | **ComputeGroup** | Compute Group used by the refresh task. It can be empty when none is specified or in non-compute-storage-decoupled deployments. |
    | **IvmFallbackReason** | Stable reason recorded when IVM cannot run and falls back, or when a strict IVM refresh fails. Empty when no IVM fallback happened. |
+   | **IvmRebuiltPartitions** | Number of partitions of an IVM materialized view that this refresh rebuilt in full although the refresh request did not ask for a rebuild, because the materialized view was refreshed for the first time or its baseline was invalidated. It is 0 when a `COMPLETE` refresh was requested or the materialized view is not an IVM. See [First refresh and baseline rebuild](../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#first-refresh-and-baseline-rebuild) for when this happens. |
 
 ### MV task enum fields
 
@@ -90,7 +91,7 @@ The following enum fields are commonly used when checking materialized view refr
   - `COMPLETE`: all materialized view partitions that belong to the MV were selected for refresh.
   - `PARTIAL`: only some materialized view partitions were selected for refresh.
   - `NOT_REFRESH`: no partition needed refresh. In this case, `NeedRefreshPartitions` is usually empty and `Progress` can be `\N`.
-- `IvmFallbackReason`: the reason why an IVM pre-execution fell back or a strict incremental refresh failed, for example `BINLOG_BROKEN`, `MIN_MAX_BOUNDARY_HIT`, `BITMAP_AGG_DELETE` or `PLAN_SIGNATURE_MISMATCH`. See [Incremental View Maintenance (IVM)](../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#fallback-order) for troubleshooting.
+- `IvmFallbackReason`: the reason why an IVM pre-execution fell back or a strict incremental refresh failed, for example `STREAM_UNSUPPORTED`, `MIN_MAX_BOUNDARY_HIT`, `BITMAP_AGG_DELETE` or `PLAN_SIGNATURE_MISMATCH`. See [Incremental View Maintenance (IVM)](../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#fallback-order) for troubleshooting.
 
 :::info Version
 
@@ -133,6 +134,7 @@ NeedRefreshPartitions: ["p_20210101_MAXVALUE","p_20200101_20210101"]
           LastQueryId: 7965b4ddce8a4480-8884e9701679c1c4
           ComputeGroup: \N
      IvmFallbackReason: \N
+  IvmRebuiltPartitions: 0
 ```
 
 In this result:
@@ -149,6 +151,7 @@ In this result:
 - `LastQueryId` is the query ID of the refresh SQL. Use it to search Doris logs when the task fails or runs slowly.
 - `ComputeGroup` is empty, which means no dedicated Compute Group was recorded in this example.
 - `IvmFallbackReason` is empty, which means no IVM fallback happened in this task.
+- `IvmRebuiltPartitions` is 0, which means this task did not rebuild any extra partition.
 
 :::info Note
 

@@ -141,7 +141,7 @@ With Row Binlog enabled, every write additionally generates and persists change 
 | Creating a Stream fails with `Table Stream is experimental. Please set enable_table_stream=true to enable it.` | `enable_table_stream` is not enabled on the FE; update `fe.conf` and restart the FE |
 | Does it work in the compute-storage decoupled mode? | Row Binlog and Table Stream do; use `@incr` in the integrated storage-compute mode for now |
 | How does Row Binlog affect writes? | Every write additionally generates and persists change records, and MoW tables also read the old values, so load throughput drops noticeably. Enable it only on tables that need incremental consumption and evaluate with a realistic workload |
-| Are change records cleaned up automatically? | Not in the current version; reserve extra storage for tables with Row Binlog, see [Retention and cleanup](row-binlog#retention-and-cleanup) |
+| Are change records cleaned up automatically? | Yes. `binlog.ttl_seconds` controls retention (one day by default); incremental reads filter expired records, and background compaction reclaims their storage. Consume changes within the retention window; see [Retention and cleanup](row-binlog#retention-and-cleanup) |
 
 ## Reading guide
 

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/avg-weighted",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/avg-weighted.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/avg-weighted.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "2f39788ba916b589823833f7484e5ff01b86cc6632aad3e67c9b836dc7f55869",
+    "sourceTechnicalHash": "29a07a8534f559a7e567b8161b90d5b197e21b5c6bb60cacbbcacd1abba19f13",
+    "targetHash": "72302129622e9b8c55526fb8de20ec52f1d95588b6a838ea3cae034adc0348ae",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:30:24.920Z",
+    "glossaryVersion": "0"
+  }
+}

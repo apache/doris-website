@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/count-by-enum",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/count-by-enum.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/count-by-enum.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "bdf1b49e663a0e54e7dead3800d90a8bb3b0548af1102a77aef301617b75bd20",
+    "sourceTechnicalHash": "80b7fbb5eaf4d5d411914d60f0a9b450572daa5618b54f7daa383815be8e49e3",
+    "targetHash": "e3b0722c89c2ab9fdb7504816813632ff591ffabf0b843f9240f67257863023b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T20:45:36.248Z",
+    "glossaryVersion": "0"
+  }
+}

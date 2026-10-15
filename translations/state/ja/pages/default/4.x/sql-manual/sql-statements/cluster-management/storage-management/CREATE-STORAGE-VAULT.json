@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "c32be7cdea3c5906280001ba1f50457cf147894354d6759022d0c884e84365c8",
+    "sourceTechnicalHash": "b4ebe210555bfdf23b515860edfe0478fedb9c94460dfd0a93fa3245c5e087ca",
+    "targetHash": "3c35c8ac7c49a845cc1ae00008a2e302fba43e6e327b61d22311ea530ef4330e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:47:19.117Z",
+    "glossaryVersion": "0"
+  }
+}

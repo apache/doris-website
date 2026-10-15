@@ -1,0 +1,127 @@
+---
+title: マルチカタログ
+description: 一つの Doris クラスターから、三部構成の名前を使って内部データウェアハウスと外部システム（Hive、Iceberg、JDBC、ES など）を横断するクエリを実行できます。
+keywords:
+  - マルチカタログ
+  - フェデレーテッドクエリ
+  - 外部カタログ
+  - 三部構成の名前
+  - Hive Iceberg JDBC
+  - Apache Doris フェデレーション
+slug: /key-features/multi-catalog
+image: /images/next/key-features/multi-catalog.jpg
+language: ja
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - lakehouse
+    - federation
+    - external-catalog
+---
+
+> **要約** Apache Doris のマルチカタログでは、一つのクラスターに外部システム（Hive、Iceberg、Hudi、Paimon、Delta Lake、MySQL、PostgreSQL、Oracle、Elasticsearch、BigQuery、MaxCompute など）を名前付きカタログとして登録し、横断してクエリを実行できます。各テーブルは `<catalog>.<db>.<table>` で参照でき、一つの SQL 文で異なるカタログのテーブルを結合できます。内部データウェアハウスも `internal` というカタログの 一つです。そのため、データのコピー処理や別のクエリエンジンを使わずに、すべてのデータソースを 一つの権限モデルで扱えます。
+
+![Apache Doris マルチカタログ: 一つの Doris クラスターから、三部構成の名前を使って内部データウェアハウスと外部システム（Hive、Iceberg、JDBC、ES など）を横断してクエリを実行します。](/images/next/key-features/multi-catalog.jpg)
+## Apache Doris のマルチカタログを使う理由 {#why}
+
+Apache Doris のマルチカタログを使うと、複数のストレージシステムを横断してクエリを実行するために通常必要となるデータのコピー処理、CDC パイプライン、別のクエリエンジンを省けます。多くの分析チームは、すでに複数のストレージシステムを運用しています。ファクトテーブルはオブジェクトストレージ上の Hive や Iceberg に、ディメンションや業務データの状態は MySQL や PostgreSQL にあります。テキストを多用するワークロードは Elasticsearch に置かれ、整備済みのデータマートはデータウェアハウスにあります。これらのうち 二つをまたぐ問いに答えようとすると、通常はデータの鮮度かコスト、あるいはその両方が犠牲になります。[カタログ連携](./catalog-integrations)を通じて新しいシステムを接続すれば、[メタデータキャッシュ](./metadata-cache)を有効に活用しながら、SQL から離れずに[レイクテーブルを管理](./managing-lake-table)できます。
+
+Apache Doris は各システムへの接続を一度設定すると、そのデータベースとテーブルの情報を取得し、指定した名前の下で公開します。それ以降、そのテーブルは `<catalog>.<db>.<table>` に配置され、クエリ内でほかのテーブルと同じように扱えます。
+
+- Iceberg のファクトテーブルと MySQL のディメンションテーブルを結合するには、パイプラインではなく 一つの SELECT を使います。
+- データウェアハウスとデータレイクで、同じ SQL インターフェース、ユーザー、権限モデルを共有できます。
+- 新しいデータソースの追加には、デプロイではなく `CREATE CATALOG` を使います。
+
+## Apache Doris のマルチカタログとは {#what}
+
+Apache Doris のマルチカタログは、メタデータ層の最上位にあるフェデレーション層です。カタログ、データベース、テーブルという 三階層の名前空間ですべてを整理します。組み込みの `internal` カタログには、Apache Doris 自身のテーブルが格納されます。それ以外のカタログは外部カタログで、データソースの種類に応じたコネクターを使います。コネクターは、メタデータの検出、型のマッピング、パーティションプルーニング、読み取り操作、そして対応範囲が拡大している書き込み操作を処理します。クエリオプティマイザーはすべてのカタログを横断して一度にプランを作成します。そのため、Iceberg テーブルと Apache Doris テーブルの結合も、二つの内部テーブルの結合と同じ MPP エンジンで実行されます。
+
+**主な用語**
+
+- **`internal`**: Apache Doris のネイティブテーブルを保持する組み込みカタログです。作成、名前変更、削除はできません。
+- **外部カタログ**: `CREATE CATALOG ... PROPERTIES ("type" = "...")` で作成するカタログです。Apache Doris には、`hms`（Hive および Hive 互換のメタストア）、`iceberg`、`hudi`、`paimon`、`jdbc`、`es`、`max_compute`、`bigquery`、`kafka`、`trino-connector` などのコネクターが用意されています。
+- **三部構成の名前**: `catalog.db.table` です。一つのカタログ内で参照する場合も、カタログを横断して参照する場合も、同じ方法で解決されます。
+- **`SWITCH` と `USE`**: `SWITCH iceberg_ctl` はセッションの現在のカタログを切り替えます（データベースに対する `USE` と同様です）。`USE iceberg_ctl.iceberg_db` は、一つの文でカタログとデータベースを切り替えます。
+- **メタデータキャッシュ**: 外部カタログのスキーマ、パーティション一覧、ファイル一覧を保持し、プラン作成を高速にする FE 側のキャッシュです。TTL、データソース側のイベント、または `REFRESH CATALOG` によって更新されます。
+
+## Apache Doris のマルチカタログの仕組み {#how}
+
+Apache Doris のマルチカタログは、各外部データソースを FE 上で名前付きコネクターとして記録します。各テーブル参照を 三部構成の名前として解決し、オプティマイザーがそれらを横断する 一つの MPP クエリを計画します。
+
+1. **カタログを登録します。** `CREATE CATALOG <name> PROPERTIES ("type" = "<type>", ...)` は接続情報を FE に記録します。プロパティは FE の edit log に永続化されますが、それ以外のデータは移動しません。Apache Doris はスキーマやデータをコピーしません。
+2. **必要になったときに検出します。** セッションからそのカタログに初めてアクセスすると、コネクターがデータベースとテーブルの一覧を取得し、スキーマを読み込んで、メタデータキャッシュに格納します。キャッシュ対象と保持期間については、[メタデータキャッシュ](./metadata-cache)を参照してください。
+3. **三部構成の名前を解決します。** 各テーブル参照は `catalog.db.table` として解析されます。カタログやデータベースを省略した名前には、セッションの現在のカタログとデータベースが使われます。`SWITCH`、`USE`、ユーザープロパティ `default_init_catalog` によって、省略した名前の参照先が決まります。
+4. **一つのクエリを計画します。** オプティマイザーは各カタログのコネクターから統計情報を取得し、結合順序と述語のプッシュダウンを選択して、一つの分散実行プランを生成します。このプランでは、`internal` の Apache Doris タブレット、Iceberg のマニフェスト、MySQL JDBC による取得、ES クエリに対するスキャンを同じフラグメントグラフ内に組み込めます。
+5. **最新の状態を保ちます。** TTL とデータソース側のイベント（Hive Metastore イベント、Iceberg スナップショットのポインター、Paimon スナップショットの再読み込み）によって、キャッシュとデータソースの状態を揃えます。それ以外の場合には、`REFRESH CATALOG`、`REFRESH DATABASE`、`REFRESH TABLE` を使用できます。
+
+## クイックスタート {#quick-start}
+
+```sql
+-- Register a Hive catalog
+CREATE CATALOG hive_ctl PROPERTIES (
+  "type" = "hms",
+  "hive.metastore.uris" = "thrift://hms:9083"
+);
+
+-- Register a MySQL catalog for dimension tables
+CREATE CATALOG mysql_ctl PROPERTIES (
+  "type" = "jdbc",
+  "user" = "doris", "password" = "xxx",
+  "jdbc_url" = "jdbc:mysql://mysql:3306/dim",
+  "driver_url" = "mysql-connector-j-8.4.0.jar",
+  "driver_class" = "com.mysql.cj.jdbc.Driver"
+);
+
+-- One federated query, three catalogs
+SELECT o.region, SUM(f.amount), d.name
+FROM hive_ctl.sales.orders f
+JOIN internal.curated.region o ON f.region_id = o.id
+JOIN mysql_ctl.dim.product   d ON f.sku       = d.sku
+WHERE f.dt = CURRENT_DATE() GROUP BY 1, 3;
+```
+
+**期待される結果**
+
+```
++--------+-------------+----------+
+| region | SUM(amount) | name     |
++--------+-------------+----------+
+| EMEA   |     112_490 | Widget A |
+| APAC   |      87_310 | Widget B |
++--------+-------------+----------+
+```
+
+`SHOW CATALOGS` を実行すると、`internal`、`hive_ctl`、`mysql_ctl` が一覧に表示されます。このクエリは 一つの MPP ジョブとして計画・実行されるため、中間テーブルは不要です。
+
+## Apache Doris のマルチカタログを使う場面 {#when}
+
+中間の ETL 処理を挟まずに、データウェアハウスと 一つ以上の外部データソースを参照するクエリには、Apache Doris のマルチカタログを使用できます。
+
+**適している用途**
+
+- データを先に Apache Doris に ETL で取り込むことなく、データレイク（Hive、Iceberg、Hudi、Paimon、Delta Lake）と Apache Doris のデータウェアハウスを横断する分析。
+- データウェアハウスのファクトデータと、MySQL、PostgreSQL、Oracle、SQL Server などの JDBC データソースにある業務用ディメンションの結合。
+- 構造化データのフィルターとともに、Elasticsearch のテキスト検索結果を SQL の処理に取り込む場合。
+- 移行期間中の並行運用。既存の Hive または外部データウェアハウスを Doris から参照し、Doris 経由でクエリを実行しながら、ワークロードを段階的に移行できます。
+- ZeroETL によるデータ統合。`INSERT INTO internal.x SELECT ... FROM hive_ctl.y` で、別のローダーを使わずに Apache Doris に取り込めます。
+
+**適していない用途**
+
+- 外部カタログを、書き込み負荷の高い OLTP の書き込み先として使う場合。Hive、Iceberg、JDBC のカタログには書き戻し機能がありますが、スループットはデータソース側の制約を受け、`internal` の Apache Doris テーブルへの書き込みと同等ではありません。頻繁な書き込みは `internal` に保存し、書き戻しはバッチで行ってください。
+- 外部データソースに対するトランザクション更新。Apache Doris はカタログをまたぐトランザクションを提供しません。また、ほとんどの外部カタログは内部カタログのような行単位の更新をサポートしません。この用途にはデータソース自体の DML を使用してください。
+- カタログをまたぐ DDL。`CREATE TABLE ... AS SELECT` によってカタログ間でデータをコピーできますが、二つのカタログに*同じ*テーブルを作成する作業は利用者の責任です。
+- 一つのクエリで 二つのコンピュートプールをつなぐ場合。フェデレーションの対象はデータソースであり、コンピュートではありません。コンピュートの分離については、[Compute Group](./compute-group)を参照してください。
+- 各コネクターの詳細な設定をこのページで確認したい場合。データソース固有の設定（AWS Glue、Iceberg REST、個別の JDBC 方言、S3 互換ストレージ、Kerberos、IAM）については、専用の[カタログ連携](./catalog-integrations)ページと各カタログのリファレンスを参照してください。
+
+## 関連資料 {#further-reading}
+
+- [カタログ連携](./catalog-integrations): データソース別のコネクターのリファレンス（Glue、Iceberg REST、JDBC 方言、オブジェクトストレージ、認証方式）。
+- [レイクテーブルの管理](./managing-lake-table): マルチカタログ経由で公開される Hive、Iceberg、Paimon テーブルに対する書き戻し、スキーマの変更、DML。
+- [メタデータキャッシュ](./metadata-cache): FE が外部スキーマ、パーティション、ファイル一覧をキャッシュする仕組みと、その更新方法。
+- [データカタログの概要](../lakehouse/catalog-overview): すべてのカタログに共通する `CREATE`、`SWITCH`、`REFRESH`、大文字と小文字の区別に関するプロパティのユーザーガイド。
+- [レイクハウスの概要](../lakehouse/lakehouse-overview): Doris のレイクハウスにおけるマルチカタログの位置付け。
+- [CREATE CATALOG リファレンス](../sql-manual/sql-statements/catalog/CREATE-CATALOG): DDL の完全な構文、対応するタイプ、プロパティのリファレンス。
+- [SWITCH CATALOG リファレンス](../sql-manual/sql-statements/session/context/SWITCH-CATALOG): セッションでの切り替えの動作。
+- [Iceberg](./iceberg): Doris のフェデレーテッドカタログで最も充実した第一級のコネクター。読み取り専用ではなく、完全な読み書きエンジンを提供します。

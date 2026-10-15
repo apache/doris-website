@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-valid",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-valid.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-valid.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "2b037fc55b7d387b50f8cd19d8bf915dc2a6ffdf6d7f7863a55f1cf0fdb2912c",
+    "sourceTechnicalHash": "185ecdd511fc6e060479ed264d5410b0f3b467acf4899688a9e7503c1509abfa",
+    "targetHash": "c785ad840122775ebdffba37e7c76e6cde0defa3bde092999abb01ed0123cc09",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:06:03.639Z",
+    "glossaryVersion": "0"
+  }
+}

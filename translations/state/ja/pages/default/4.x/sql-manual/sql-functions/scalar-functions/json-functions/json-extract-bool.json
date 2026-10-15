@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-bool",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-bool.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-bool.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "de031dab37c2864add1f2e2ae02b8dbc6d89f04cce2bf6827b585dd176136d8b",
+    "sourceTechnicalHash": "f4c47e156abcd3075f09d4ff301a4cd8864ccb1f5b3dec18f07e6878ff762cb0",
+    "targetHash": "1b2e8a027d62f91d023fc970b640dea2333d81f0f21caa017017b8861ba46987",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T12:42:57.798Z",
+    "glossaryVersion": "0"
+  }
+}

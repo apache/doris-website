@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/regr-count",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/regr-count.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/regr-count.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "95048aee088018038e52eb3480a1ca44cf07119e77485cc04b38b59814a050f1",
+    "sourceTechnicalHash": "4fe267f19a7d65fbbfed1b5850c36d003fe48cc0853f0ef9ec702d13cc0da65f",
+    "targetHash": "5920373ab0901fe981f041c8d1d42d626254e4d5003d7ee986065e8fe5e2b29f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:27:19.786Z",
+    "glossaryVersion": "0"
+  }
+}

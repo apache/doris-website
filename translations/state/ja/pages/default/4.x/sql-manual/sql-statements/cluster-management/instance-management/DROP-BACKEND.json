@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "526c9244e2b3bc1a8d828b7776c69109f81690d7a0b289365bdfd1715342de82",
+    "sourceTechnicalHash": "2d2972caa067f56079f21e54d329be2dbd22cb05cc821640d739b9cf715c5c0e",
+    "targetHash": "5be0888a30d8dd112c532a05115e9683673ad64968fc4e6429abe238b12601d2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:35:18.350Z",
+    "glossaryVersion": "0"
+  }
+}

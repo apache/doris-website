@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/function/SHOW-CREATE-FUNCTION",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/function/SHOW-CREATE-FUNCTION.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/function/SHOW-CREATE-FUNCTION.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "d3ca6fbd54a1b286efeed9f80187dfb09217ff06fe0836bf69e071fad4908669",
+    "sourceTechnicalHash": "f93d7110cf1dd5e4c1f8bbc46fd2b0280f88cb8cfd17dc98333313f2b4791049",
+    "targetHash": "ca6f17863865abd6636014f3943f3b4c6d8a142842e57ff74f90bd3734c6af61",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:21:16.658Z",
+    "glossaryVersion": "0"
+  }
+}

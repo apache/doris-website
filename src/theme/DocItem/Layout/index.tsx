@@ -18,6 +18,10 @@ import LastUpdated from '@theme/LastUpdated';
 import type { Props } from '@theme/DocItem/Layout';
 import { DocsEdit } from '../../../components/Icons/docs-edit';
 import MobileSidebarDrawer from './MobileSidebarDrawer';
+import SourceFallback from './SourceFallback';
+import TranslationStatus from './TranslationStatus';
+import {docTranslation} from '@site/src/utils/translation';
+import { isFallbackSource as usesEnglishFallback, isTranslatedLocale } from '@site/src/utils/localization';
 
 import styles from './styles.module.css';
 
@@ -58,6 +62,21 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
     } = useDocusaurusContext();
     const [isNew, setIsNew] = useState(true);
     const isZH = currentLocale === 'zh-CN';
+    // metadata.source is the file actually selected by the content plugin,
+    // including its per-file fallback. Do not infer translation from the URL.
+    const isFallbackSource = usesEnglishFallback(metadata.source, currentLocale);
+    const translation = isTranslatedLocale(currentLocale) ? docTranslation(metadata) : undefined;
+    const docContent = translation ? (
+        <>
+            <TranslationStatus state={translation} />
+            <DocItemContent>{children}</DocItemContent>
+        </>
+    ) : isFallbackSource ? (
+        <>
+            <SourceFallback permalink={metadata.permalink} />
+            <DocItemContent>{children}</DocItemContent>
+        </>
+    ) : <DocItemContent>{children}</DocItemContent>;
 
     // Older versioned docs keep their timestamp metadata for indexing, but only
     // Dev, the latest stable version, community docs, and course lessons display it.
@@ -78,7 +97,7 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
         return (
             <>
                 <ContentVisibility metadata={metadata} />
-                <DocItemContent>{children}</DocItemContent>
+                {docContent}
             </>
         );
     }
@@ -104,14 +123,15 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
                                 />
                             </div>
                         )}
-                        <DocItemContent>{children}</DocItemContent>
+                        {docContent}
                         <DocItemFooter />
                     </article>
                     <div className={`flex items-center text-sm lg:text-base justify-end lg:col mt-10`}>
                         {isNew ? (
                             <></>
                         ) : (
-                            <Link to={sourceToEditUrl(metadata.source)} className={`mr-6 ${styles.footerBtn}`}>
+                            <Link to={sourceToEditUrl(translation ? `@site/${translation.useTarget ? translation.targetPath
+                                : translation.contentLocale === 'en' ? translation.englishPath : translation.sourcePath}` : metadata.source)} className={`mr-6 ${styles.footerBtn}`}>
                                 <DocsEdit /> <span className="ml-2">{isZH ? '编辑本页' : 'Edit this page'}</span>
                             </Link>
                         )}

@@ -11,7 +11,7 @@
 ## Doris Core 版本发布说明
 
 :::tip 最新发布
-🎉 4.1.4 版本已于 2026 年 09 月 10 日正式发布，详情可查看[版本发布](./v4.1/release-4.1.4.md)。Apache Doris 4.1.4 新增 Merge-on-Write 表 ANN 索引、多模态文件 Embedding、面向大规模集群的自适应全局 Runtime Filter 下发、OceanBase CDC Streaming Job 以及内部通信 TLS 支持，并修复查询执行、存储、导入、存算分离、湖仓一体与安全认证方面的多项问题。
+🎉 4.1.4.1 版本已于 2026 年 09 月 29 日正式发布，详情可查看[版本发布](./v4.1/release-4.1.4.1.md)。Apache Doris 4.1.4.1 是基于 4.1.4 的 Hotfix 版本，修复了逻辑 `OR` 处理可空 Boolean 值时 BE 崩溃、基表新增分区时分区 MTMV 执行全量刷新、含 `VARIANT` 列的 WAL 读取失败，以及 aarch64 BE 在 64 KiB 内存页的 Linux 系统上启动崩溃的问题。4.1.4 带来的 Merge-on-Write 表 ANN 索引、多模态文件 Embedding、OceanBase CDC Streaming Job、内部通信 TLS 等新功能与问题修复，详情可查看 [4.1.4 版本发布](./v4.1/release-4.1.4.md)。
 <br />
 
 🎉 4.0.8 版本已于 2026 年 08 月 14 日正式发布，详情可查看[版本发布](./v4.0/release-4.0.8.md)。Apache Doris 4.0.8 是 4.0 系列维护版本，聚焦存算分离部署、导入与事务稳定性、File Cache 行为、内部接口安全加固以及湖仓兼容性。建议所有 4.0.x 用户升级。
@@ -29,6 +29,8 @@
 :::
 
 <br />
+
+- [2026-09-29, Apache Doris 4.1.4.1 版本发布](./v4.1/release-4.1.4.1.md)
 
 - [2026-09-10, Apache Doris 4.1.4 版本发布](./v4.1/release-4.1.4.md)
 

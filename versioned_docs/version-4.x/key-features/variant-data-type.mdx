@@ -11,7 +11,7 @@ keywords:
 slug: /key-features/variant-data-type
 image: /images/next/key-features/variant-data-type.jpg
 last_update:
-  date: 2026-05-10
+  date: 2026-10-07
   author: Apache Doris
 featureCard:
   tags:
@@ -82,11 +82,11 @@ GROUP BY action;
 **Expected result**
 
 ```
-+--------+---+
-| action | n |
-+--------+---+
-| opened | 1 |
-+--------+---+
++--------+------+
+| action | n    |
++--------+------+
+| opened |    1 |
++--------+------+
 ```
 
 The filter reads one subcolumn, hits the inverted index, and never touches the `commits` array. Run `SET describe_extend_variant_column = true; DESC github_events;` to see the inferred subcolumns (`payload.action`, `payload.commits`, `payload.issue.number`, ...) as if you had declared them by hand.

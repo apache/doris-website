@@ -1,13 +1,30 @@
 name: Cron Deploy
 
 on:
+    push:
+        branches:
+            - master
     schedule:
-        - cron: '0 */2 * * *' # Runs every 2 hours.
+        # Refresh dynamic data, such as the GitHub star count, and recover from
+        # a missed push deployment without rebuilding an unchanged site 12
+        # times per day.
+        - cron: '0 1 * * *' # Daily at 01:00 UTC.
 permissions: write-all
+# One deploy at a time. A run whose OSS upload crawls (the 2026-09-21 12:05
+# run spent two hours on it) must not overlap a newer push or cron trigger: both
+# would push the same objects through the same slow pipe and race for the
+# bucket's .actioninfo manifest. Queue the newer run instead of cancelling
+# the running one - killing it mid-upload discards the manifest it writes at
+# the end, and the next run starts the whole upload over.
+concurrency:
+    group: cron-deploy-website
+    cancel-in-progress: false
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         environment: Production
+        env:
+            DORIS_ENABLE_JA: 'true'
         steps:
             - name: Checkout
               # v4 (the pinned @master commit predates the `filter` input) with
@@ -69,12 +86,22 @@ jobs:
                   yarn
                   node ./scripts/update_github_info.js
                   yarn key-features:generate
-                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build --locale en --locale zh-CN
+                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn build:locales
                   touch build/.dummy
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/
                   ls build
-                  export DORIS_COMMIT=`git rev-parse HEAD`
+                  echo "DORIS_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+            - name: Verify localized publishing artifacts
+              # Publishing builds every enabled locale, so every managed locale
+              # must be present and pass the strict cross-locale verification.
+              run: |
+                  for LOCALE in $(node scripts/i18n/managed-locales.cjs); do
+                      test -s "build/${LOCALE}/index.html"
+                      node scripts/i18n/verify-static.cjs \
+                        --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
+                  done
 
             #     - name: Generate PDF
             #       run: |
@@ -85,13 +112,40 @@ jobs:
             #         ls ./build/assets/files/
 
             - name: Upload files to OSS
+              id: oss-upload
+              # The action has no per-request retry (the OSS SDK it embeds never
+              # reads its RetryTimes), so a single PUT hitting the SDK's 60s
+              # timeout among tens of thousands fails the whole step - on
+              # 2026-09-21 that was 6 of 12,320 uploads after two hours on a slow
+              # link. It does write its .actioninfo manifest before exiting
+              # non-zero, so the retry below only re-sends the objects that
+              # failed, plus the manifest. continue-on-error keeps the job alive
+              # for that retry; the retry step fails the job if it fails too.
+              continue-on-error: true
               uses: ./.github/actions/aliyun-oss-website-action
               with:
                   accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
                   accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
                   bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-                  # use your own endpoint
-                  endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
+                  # Transfer-acceleration endpoint of the website bucket (enabled
+                  # on the bucket on 2026-09-21): the runner enters Alibaba's
+                  # backbone at the nearest PoP instead of crossing the public
+                  # internet to the bucket's region. Uploads only - the CDN keeps
+                  # its regional origin for downloads.
+                  endpoint: oss-accelerate.aliyuncs.com
+                  folder: build
+                  onlyUpload: true
+                  otherCacheControl: 0
+                  skipSetting: true
+
+            - name: Upload files to OSS (retry)
+              if: steps.oss-upload.outcome == 'failure'
+              uses: ./.github/actions/aliyun-oss-website-action
+              with:
+                  accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+                  accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+                  bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+                  endpoint: oss-accelerate.aliyuncs.com
                   folder: build
                   onlyUpload: true
                   otherCacheControl: 0
@@ -101,7 +155,6 @@ jobs:
               run: rm -rf ./build/assets/files/*.pdf
 
             - name: Deploy Website
-              if: ${{ github.event.inputs.branch == 'master' }}
               uses: peaceiris/actions-gh-pages@v3
               with:
                   github_token: ${{ github.token }}
@@ -111,17 +164,4 @@ jobs:
                   destination_dir: ./
                   user_name: 'github-actions[bot]'
                   user_email: 'github-actions[bot]@users.noreply.github.com'
-                  commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
-
-            - name: Deploy Branch
-              if: ${{ github.event.inputs.branch != 'master' }}
-              uses: peaceiris/actions-gh-pages@v3
-              with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_branch: asf-site
-                  publish_dir: ./build
-                  force_orphan: true
-                  destination_dir: ${{ github.event.inputs.branch }}
-                  user_name: 'github-actions[bot]'
-                  user_email: 'github-actions[bot]@users.noreply.github.com'
-                  commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
+                  commit_message: 'Automated deployment with doris master@${{ env.DORIS_COMMIT }}'

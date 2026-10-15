@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/full-text-search",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/full-text-search.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/full-text-search.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "faf92571eb8326bf27cba0354aea6fc5b624e137a015d3e95566e14f50d23076",
+    "sourceTechnicalHash": "1e008e0c9e9310b28c9c06cb9875cb5da70fa8cbf55688cdce54c82b280cc206",
+    "targetHash": "fe227296c73addb23286a6abb199374044c76009633296d67bdb92104353bee2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:36:53.452Z",
+    "glossaryVersion": "0"
+  }
+}

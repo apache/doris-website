@@ -116,62 +116,62 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## Metadata Cache {#meta-cache}
 
-To improve the performance of accessing external data sources, Apache Doris caches MaxCompute metadata. Metadata includes table structure (Schema) and partition lists.
+To improve the performance of accessing external data sources, Apache Doris caches MaxCompute metadata. Metadata includes table schemas and partition listings.
 
 :::tip
 For versions before Doris 4.1.x, metadata caching is mainly controlled globally by FE configuration items. For details, see [Metadata Cache](../meta-cache.md).
-Starting from Doris 4.1.x, MaxCompute Catalog's external metadata cache is configured using the unified `meta.cache.*` keys.
+Starting from Doris 4.1.x, MaxCompute Catalog's external metadata cache is configured using the unified `meta.cache.*` keys. The entries below describe the current version; Doris 4.1.x and 4.2.x use a different set of entries, described in the 4.x version of this page.
 :::
 
-### Cache Property Configuration (4.1.x+) {#meta-cache-unified-model}
+### Cache Property Configuration {#meta-cache-unified-model}
 
-Each engine's cache entry uses a unified configuration key format: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`.
+Each cache entry uses a unified configuration key format: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`. For MaxCompute the `<engine>` is `max_compute`.
 
 | Property | Example | Meaning |
 |---|---|---|
-| `enable` | `true/false` | Whether to enable this cache module. |
-| `ttl-second` | `600`, `0`, `-1` | `0` means disable cache (takes effect immediately, can be used to see the latest data); `-1` means never expire; other positive integers mean TTL in seconds based on access time. |
-| `capacity` | `10000` | Maximum number of cache entries (by count). `0` means disable. |
+| `enable` | `true/false` | Whether to enable this cache entry. |
+| `ttl-second` | `600`, `0`, `-1` | `0` disables the entry (takes effect immediately, can be used to see the latest data); `-1` means never expire; other positive integers mean TTL in seconds based on access time. |
+| `capacity` | `10000` | Maximum number of cache entries by count. `0` disables the entry. |
+| `max-weight` | `1GB` | Supported since Doris 4.1.4. Optional estimated retained-memory limit of the entry. Must be positive; `0` is rejected. Accepted only by the entries marked below. |
 
-**Effective Logic:** The module cache only takes effect when `enable=true`, `ttl-second != 0`, and `capacity > 0`.
+**Effective Logic:** The entry takes effect when `enable=true`, `ttl-second != 0`, and `capacity > 0`. An FE-wide, Catalog, or entry memory limit additionally governs admission by estimated memory; see [External Metadata Cache Memory Management](../external-meta-cache-memory-management).
 
 ### Cache Modules {#meta-cache-unified-modules}
 
-MaxCompute Catalog includes the following cache modules:
+MaxCompute Catalog includes the following cache entry, which accepts `max-weight`:
 
-| Module (`<entry>`) | Property Key Prefix | Cached Content and Impact |
-|---|---|---|
-| `schema` | `meta.cache.maxcompute.schema.` | Caches table structure. Impact: Visibility of table column information. If disabled, the latest Schema is pulled for each query. |
-| `partition_values` | `meta.cache.maxcompute.partition_values.` | Caches partition value lists. Impact: Partition pruning and enumeration. If disabled, new external partitions can be seen in real-time. |
+| Entry (`<entry>`) | Property Key Prefix | `ENTRY_NAME` | Cached Content and Impact | Default enable / TTL / capacity |
+|---|---|---|---|---|
+| `partition` | `meta.cache.max_compute.partition.` | `max-compute-partition` | Partition listings of a table. Impact: partition pruning and enumeration; if disabled, new partitions are visible immediately. | `true` / 600 s / 10000 |
+
+The column schema of MaxCompute tables is cached by the shared `default` engine (`meta.cache.default.schema.*`).
 
 ### Legacy Parameter Mapping and Conversion {#meta-cache-mapping}
 
-In version 4.1.x and later, unified keys are recommended. The following is the mapping between legacy Catalog properties and 4.1.x+ unified keys:
-
-| Legacy Property Key | 4.1.x+ Unified Key | Description |
+| Legacy Property Key | Unified Key | Description |
 |---|---|---|
-| `schema.cache.ttl-second` | `meta.cache.maxcompute.schema.ttl-second` | Expiration time of table structure cache |
+| `schema.cache.ttl-second` | `meta.cache.default.schema.ttl-second` | Expiration time of the table schema cache |
 
 ### Best Practices {#meta-cache-best-practices}
 
-* **Real-time access to the latest data**: If you want each query to see the latest partition or schema changes for MaxCompute tables, you can set the `ttl-second` for `schema` or `partition_values` to `0`.
+* **Real-time access to the latest data**: If you want each query to see the latest partitions of MaxCompute tables, set the partition cache TTL to `0`.
   ```sql
-  -- Disable partition value cache to detect the latest partitions in MaxCompute tables
-  ALTER CATALOG mc_ctl SET PROPERTIES ("meta.cache.maxcompute.partition_values.ttl-second" = "0");
+  -- Disable the partition listing cache to detect the latest partitions of MaxCompute tables
+  ALTER CATALOG mc_ctl SET PROPERTIES ("meta.cache.max_compute.partition.ttl-second" = "0");
   ```
-* **Note**: `meta.cache.maxcompute.*` currently does not have a dedicated hot-reload hook. After changing the configuration, it is recommended to recreate the Catalog or restart FE to ensure it takes effect.
+* **Note**: A successful Catalog property change drops the affected metadata caches and rebuilds them with the new configuration on the next access. Changing `meta.cache.max-weight` or `schema.cache.ttl-second` drops every cache of the Catalog; changing `meta.cache.<engine>.<entry>.*` drops the caches of that engine. Queries already in progress are not affected.
 
 ### Observability {#meta-cache-unified-observability}
 
-Cache metrics can be observed through the `information_schema.catalog_meta_cache_statistics` system table:
+Cache metrics can be observed through the `information_schema.catalog_meta_cache_statistics` system table. `ENTRY_NAME` shows the names listed in the table above, and the `default` engine row is the shared table-schema cache:
 
 ```sql
-SELECT catalog_name, engine_name, entry_name,
+SELECT engine_name, entry_name,
        effective_enabled, ttl_second, capacity,
-       estimated_size, hit_rate, load_failure_count, last_error
+       estimated_size, hit_rate, max_weight, estimated_weight
 FROM information_schema.catalog_meta_cache_statistics
-WHERE catalog_name = 'mc_ctl' AND engine_name = 'maxcompute'
-ORDER BY entry_name;
+WHERE catalog_name = 'mc_ctl'
+ORDER BY engine_name, entry_name;
 ```
 
 See the documentation for this system table: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
