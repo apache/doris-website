@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-nessie",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-nessie.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-nessie.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "ea0ca2b7fd780eeea6eefa749ba4e62f5e25d281eb7dc2fa42a9c0c85bb181d7",
+    "sourceTechnicalHash": "6c5568fc49c1f32f59ed2f6612d246c3171acda79db879ca1f1e777348ffb1be",
+    "targetHash": "76f2e14f8fba232bcf557854ea992896641f1b56375a4f9a1b4497eb5e8bb316",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.225Z",
+    "glossaryVersion": "0"
+  }
+}

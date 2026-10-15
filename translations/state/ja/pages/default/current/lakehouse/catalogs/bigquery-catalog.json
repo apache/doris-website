@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/bigquery-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/bigquery-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/bigquery-catalog.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "1335118b58ba841b70db9e30cc29f78dd403bf9836da1381a692feeafb8ce848",
+    "sourceTechnicalHash": "9862365cda1d4c28e9db920bac6180036dd92dd74aee7af46882b9297edd190a",
+    "targetHash": "bee77614366326acda7df3d3c11f48a2eef79edb413d30ac21fb047c41ce6676",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.226Z",
+    "glossaryVersion": "0"
+  }
+}

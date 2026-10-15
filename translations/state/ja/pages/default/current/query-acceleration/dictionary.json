@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/dictionary",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/dictionary.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/dictionary.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "6df3023c9ca855bd36f445ad68a8e78238d17106ff0b0912d46bb63a04d4cffa",
+    "sourceTechnicalHash": "23f027aef9d7900b5588020f8a5ca7886b17f52db6693837b6416b03580c6c9f",
+    "targetHash": "f6a89588c9884d6384e7a519130a02e1dd9c93d41fb62a1f2b516e096937bce4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.224Z",
+    "glossaryVersion": "0"
+  }
+}

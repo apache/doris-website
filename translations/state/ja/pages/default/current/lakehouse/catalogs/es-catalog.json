@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/es-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/es-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/es-catalog.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "75b3ff0fc8ed8bfc79c972598022a4449beb323cd75336e74eff18951336e189",
+    "sourceTechnicalHash": "d40a9e016db97de704b47359f720e5367365f3aa5dea28a659eebbabd4a615fa",
+    "targetHash": "398fe466bbaa97f47cbf084be49e105dee2fec94a216dd7c7834eeec3803b6e1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.226Z",
+    "glossaryVersion": "0"
+  }
+}

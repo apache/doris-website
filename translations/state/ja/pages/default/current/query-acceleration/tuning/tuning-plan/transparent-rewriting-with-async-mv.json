@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "92e43ba2e38ced23186fcaad3e3011bc7ecc63aa2d3c0662a67e471551a99047",
+    "sourceTechnicalHash": "a7de17c1ca6022a523bc79562a476f1d6cf3637f33d58b1a0dc8b95166aab116",
+    "targetHash": "3052427be28d5a5a9079c57cf1d65c3266cb43fb9a125096ae39499b0141037a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.222Z",
+    "glossaryVersion": "0"
+  }
+}

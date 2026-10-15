@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-data/window-function",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-data/window-function.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-data/window-function.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "8b1cb2ca215046ac1ba23ac5574bc3c446cfa24bb2c18f77dd74cf41437391d4",
+    "sourceTechnicalHash": "8176e53c744a077666aff1af9d22e0dc17982fafeeb6a09ad42227bac6548679",
+    "targetHash": "32331c87745bb8554d71495ca4f83015d4101c095cf021798095adfbbb505fe0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.221Z",
+    "glossaryVersion": "0"
+  }
+}

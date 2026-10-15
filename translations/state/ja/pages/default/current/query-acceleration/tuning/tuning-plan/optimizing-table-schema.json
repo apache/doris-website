@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/tuning/tuning-plan/optimizing-table-schema",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/tuning/tuning-plan/optimizing-table-schema.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-plan/optimizing-table-schema.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "ff8d9ebe258cb3fa73a7dc65637864a9de986cfb85a18550c31413a0e9972ff3",
+    "sourceTechnicalHash": "f888651e542769af5adbd946df70b002bb7f24226fcc0565132ac30f69055b1b",
+    "targetHash": "5ff3e6c1f427389327c1c107bf64d9c3751d56f2665efe4fc1055bc0d6ced97d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.223Z",
+    "glossaryVersion": "0"
+  }
+}

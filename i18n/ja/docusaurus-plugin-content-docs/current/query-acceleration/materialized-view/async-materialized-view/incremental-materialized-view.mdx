@@ -1,0 +1,1420 @@
+---
+{
+    "title": "インクリメンタルビュー保守（IVM）",
+    "language": "ja",
+    "description": "Doris 5.0 のインクリメンタルビュー保守（IVM）がベーステーブルの行単位の挿入、更新、削除を処理する仕組みと、更新、フォールバック、診断、本番運用の設定方法。",
+    "keywords": [
+        "インクリメンタルビュー保守",
+        "IVM",
+        "Doris IVM",
+        "非同期マテリアライズドビュー",
+        "マテリアライズドビューの増分保守",
+        "マテリアライズドビューの行単位の更新",
+        "IVM の増分更新",
+        "IVM の更新間隔",
+        "IVM の定期更新",
+        "IVM のフォールバック",
+        "IvmFallbackReason",
+        "IVM がサポートするクエリ",
+        "IVM の集約関数",
+        "内部 Table Stream",
+        "行単位の増分更新",
+        "REFRESH INCREMENTAL",
+        "INCREMENTAL FALLBACK",
+        "Row Binlog",
+        "Table Stream"
+    ]
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+{/* Knowledge type: Feature description / How-to guide / Parameter reference / Troubleshooting */}
+{/* Use cases: Frequent base table inserts, updates and deletes / Small share of changed rows / Expensive full or partition recomputation */}
+
+インクリメンタルビュー保守（IVM）は、ベーステーブルの行単位の変更に基づいて非同期マテリアライズドビューを保守します。通常の非同期マテリアライズドビューは全データまたは影響を受ける各パーティションを再計算します。IVM は、二回の更新の間にベーステーブルで挿入、更新、削除された行だけを計算し、その変更をマテリアライズドビューに適用します。
+
+:::caution 実験的な機能
+IVM は Doris 5.0.0 以降で利用できます。実験的な機能であり、デフォルトでは無効です。使用前に FE の設定で Row Binlog と Table Stream を有効にしてください。[前提条件](#prerequisites)を参照してください。
+:::
+
+{/* Knowledge type: Scenario selection */}
+{/* Use cases: Choosing IVM / Estimating refresh cost */}
+
+## IVM を使用する場面
+
+更新方法を選ぶ前に、更新ごとの変更行数、影響を受けるパーティションのサイズ、整合性要件を比較してください。
+
+| シナリオ | 推奨 | 理由 |
+|---|---|---|
+| ベーステーブルで挿入、更新、削除が頻繁に発生し、変更行がテーブルまたはパーティションの一部にすぎない | IVM を使用 | 二回の更新の間に発生した行単位の変更だけを計算し、パーティション全体を再計算しないため |
+| 変更が少数のパーティションに集中し、それらの再計算が許容できる | `PARTITIONS` を使用 | 設定が簡単で、影響を受けるパーティションを再計算するため |
+| 最初のベースラインの構築、データ量が少ない場合、IVM のベースラインの復旧 | `COMPLETE` を使用 | マテリアライズドビューの全データを再計算するため |
+| 結果をベーステーブルとリアルタイムにトランザクション整合させる必要がある | 非同期マテリアライズドビューを使用しない | IVM も非同期タスクで更新し、リアルタイムの整合性を保証しないため |
+
+{/* Knowledge type: Architecture decision */}
+{/* Use cases: Choosing between INCREMENTAL / PARTITIONS / COMPLETE / AUTO */}
+
+## パーティション単位の増分更新との違い
+
+Doris は非同期マテリアライズドビューに 四種類の更新方法を提供します。IVM は `INCREMENTAL` に対応します。`PARTITIONS` が提供するパーティション単位の増分更新とは区別してください。
+
+| 更新方法 | 計算の粒度 | 適した場面 | 条件を満たさない場合の動作 |
+|---|---|---|---|
+| `INCREMENTAL` | 行単位の変更 | 変更行数がテーブル全体または影響を受けるパーティションより大幅に少ない場合 | デフォルトでは失敗し、`FALLBACK` を指定するとフォールバックできる |
+| `PARTITIONS` | 影響を受けるマテリアライズドビューパーティションごと | 変更が少数のパーティションに集中し、再計算が許容できる場合 | デフォルトでは失敗し、`COMPLETE` へのフォールバックは `FALLBACK` を指定した場合に行われる |
+| `COMPLETE` | 全データ | データ量が少ない場合、最初のベースライン、IVM のベースラインの復旧 | 常に全データを再計算する |
+| `AUTO` | Doris が自動選択 | 利用可能な方法を Doris に選ばせたい場合 | IVM、パーティション更新、完全更新の順に、利用できる方法を試す |
+
+`INCREMENTAL FALLBACK` が変えるのは、更新時の失敗への対処方法だけです。マテリアライズドビューの作成時には、定義 SQL が IVM の要件を満たす必要があります。`FALLBACK` を指定しても、サポート対象外の定義は作成時の検査を通過できません。
+
+{/* Knowledge type: How it works */}
+{/* Use cases: Understanding the IVM data flow / Consistency mechanism */}
+
+## 仕組み
+
+IVM は Doris の Row Binlog と Table Stream の機能を再利用します。
+
+![IVM の仕組み：ベーステーブルの変更は Row Binlog から内部 Table Stream に流れ、差分プランは未消費の変更と整合したスナップショットを組み合わせてマテリアライズドビューを更新し、同じトランザクションで消費オフセットを進めます](/images/next/query-acceleration/ivm-workflow.jpg)
+
+IVM をサポートするマテリアライズドビューを作成すると、Doris は増分保守に参加するベーステーブルごとに内部 Table Stream を作成します。内部 Stream の名前は `__doris_ivm_stream_` で始まります。これらの Stream を手動で作成、消費、削除する必要はありません。
+
+更新時に、Doris は各ベーステーブルの未消費の変更から差分プランを生成します。結合クエリでは、複数テーブルの計算に整合したデータ境界を使うため、消費オフセットに対応するベーステーブルのスナップショットも読み取ります。マテリアライズドビューのデータと消費オフセットは同じトランザクションでコミットされます。トランザクションが失敗した場合、どちらもコミットされません。
+
+{/* Knowledge type: Pre-deployment checklist */}
+{/* Use cases: Enabling IVM / Evaluating tables before creation */}
+
+## 前提条件 {#prerequisites}
+
+### バージョンと FE の設定
+
+1. Doris 5.0.0 以降を使用します。
+2. すべての FE の `fe.conf` に次の設定を指定し、FE を再起動します。
+
+    ```text
+    enable_feature_binlog = true
+    enable_table_stream = true
+    ```
+
+どちらも静的な（動的に変更できない）設定です。`enable_feature_binlog` は Row Binlog とグローバルコミットタイムスタンプを有効にします。`enable_table_stream` は Table Stream の DDL と内部 Stream の管理を有効にします。
+
+### ベーステーブルの要件
+
+増分保守に参加するベーステーブルは、Internal Catalog 内の Doris OLAP 内部テーブルであり、次の要件を満たす必要があります。
+
+| ベーステーブルのモデル | サポート | 要件と動作 |
+|---|---|---|
+| Unique Key Merge-on-Write | 対応 | Row Binlog と変更前の値を有効にする必要がある。挿入、更新、削除を処理できる |
+| Duplicate Key | 対応 | Row Binlog を有効にする必要がある。追記された変更だけが提供され、削除述語による削除は記録されない |
+| Unique Key Merge-on-Read | 非対応 | 代わりに Merge-on-Write を使用する |
+| Aggregate Key | 増分保守の対象外 | 増分更新をトリガーしない `excluded_trigger_tables` に列挙されたテーブルとしてのみ使用できる |
+| 外部テーブル | 非対応 | IVM の増分ベーステーブルは Doris の内部テーブルである必要がある |
+
+更新と削除を扱うワークロードでは、Unique Key Merge-on-Write テーブルを使用し、作成時に次のプロパティを設定してください。
+
+```sql
+PROPERTIES (
+    "enable_unique_key_merge_on_write" = "true",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+);
+```
+
+Row Binlog はテーブル作成時にのみ有効にでき、その後は無効にできません。テーブルモデル、列の型、書き込み方法、DDL の制約の完全な一覧については、[Row Binlog](../../../data-operate/incremental/row-binlog)を参照してください。
+
+{/* Knowledge type: Step-by-step guide */}
+{/* Use cases: First-time setup / Feature verification */}
+
+## クイックスタート {#quick-start}
+
+次の例では、注文をステータス別に集約する IVM を作成します。最初の更新では `COMPLETE` で完全なベースラインを構築し、以降は `INCREMENTAL FALLBACK` で行単位の変更を処理します。
+
+手順は次のとおりです。
+
+1. Row Binlog を有効にした Unique Key Merge-on-Write ベーステーブルを作成します。
+2. `REFRESH INCREMENTAL FALLBACK` を指定して IVM を作成します。
+3. `COMPLETE` 更新を実行して完全なベースラインを構築します。
+4. ベーステーブルのデータを変更し、増分更新を実行します。
+5. 更新タスクを照会して、結果とフォールバック理由を確認します。
+
+### ステップ 1：ベーステーブルを作成して初期データをロードする
+
+更新と削除に対応し、Row Binlog と変更前の値を有効にしたベーステーブルを作成します。
+
+```sql
+CREATE DATABASE IF NOT EXISTS ivm_demo;
+USE ivm_demo;
+
+CREATE TABLE orders (
+    order_id BIGINT,
+    order_status VARCHAR(16),
+    amount DECIMAL(10, 2)
+)
+UNIQUE KEY(order_id)
+DISTRIBUTED BY HASH(order_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+);
+
+INSERT INTO orders VALUES
+    (1, 'created', 100.00),
+    (2, 'created', 200.00),
+    (3, 'paid',    300.00);
+```
+
+### ステップ 2：IVM を作成する
+
+`REFRESH INCREMENTAL` を `CREATE MATERIALIZED VIEW` に指定します。この例では、変更を安全に増分計算できない場合に Doris がパーティション更新または完全更新へ切り替えられるよう、`FALLBACK` も指定します。各更新を順に確認できるようトリガーを `ON MANUAL` にしています。本番環境では通常、定期実行またはコミット時のトリガーに切り替えます。[自動更新の間隔を設定する](#setting-the-automatic-refresh-interval)を参照してください。
+
+```sql
+CREATE MATERIALIZED VIEW orders_by_status
+BUILD DEFERRED
+REFRESH INCREMENTAL FALLBACK ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+)
+AS
+SELECT
+    order_status,
+    COUNT(*) AS order_count,
+    SUM(amount) AS total_amount
+FROM orders
+GROUP BY order_status;
+```
+
+ビューを作成すると、Doris は対応する内部 Table Stream を自動作成します。`mv_infos` で対応関係を確認できます。
+
+```sql
+SELECT Name, RefreshInfo, IvmBaseTableStreams
+FROM mv_infos("database" = "ivm_demo")
+WHERE Name = "orders_by_status";
+```
+
+### ステップ 3：完全なベースラインを構築する
+
+最初の更新には `COMPLETE` を使用し、以降の増分保守のためのベースラインを構築します。
+
+```sql
+REFRESH MATERIALIZED VIEW orders_by_status COMPLETE;
+```
+
+更新タスクは非同期で実行されます。タスクが成功したら、マテリアライズドビューを照会します。
+
+```sql
+SELECT order_status, order_count, total_amount
+FROM orders_by_status
+ORDER BY order_status;
+```
+
+```text
++--------------+-------------+--------------+
+| order_status | order_count | total_amount |
++--------------+-------------+--------------+
+| created      |           2 |       300.00 |
+| paid         |           1 |       300.00 |
++--------------+-------------+--------------+
+```
+
+### ステップ 4：変更を書き込んで増分更新を実行する
+
+次の文は注文 1 を更新し、注文 2 を削除し、注文 4 を挿入します。
+
+```sql
+INSERT INTO orders VALUES (1, 'paid', 100.00);
+DELETE FROM orders WHERE order_id = 2;
+INSERT INTO orders VALUES (4, 'created', 400.00);
+
+REFRESH MATERIALIZED VIEW orders_by_status INCREMENTAL FALLBACK;
+```
+
+更新タスクが成功すると、IVM は上記の行単位の変更だけを処理済みです。この時点でマテリアライズドビューには次のデータが含まれます。
+
+```sql
+SELECT order_status, order_count, total_amount
+FROM orders_by_status
+ORDER BY order_status;
+```
+
+```text
++--------------+-------------+--------------+
+| order_status | order_count | total_amount |
++--------------+-------------+--------------+
+| created      |           1 |       400.00 |
+| paid         |           2 |       400.00 |
++--------------+-------------+--------------+
+```
+
+### ステップ 5：更新方法とフォールバック理由を確認する
+
+最新の更新タスクを照会し、要求した方法、実際の更新範囲、フォールバック理由を確認します。
+
+```sql
+SELECT Status, TaskContext, RefreshMode, IvmFallbackReason, ErrorMsg
+FROM tasks("type" = "mv")
+WHERE MvDatabaseName = "ivm_demo"
+  AND MvName = "orders_by_status"
+ORDER BY CreateTime DESC, TaskId DESC
+LIMIT 1;
+```
+
+- `TaskContext` には、このタスクが要求した更新方法（例：`INCREMENTAL`）が記録されます。
+- `RefreshMode` には、タスクが実際に更新したパーティションの範囲（`COMPLETE`、`PARTIAL`、`NOT_REFRESH`）が記録されます。
+- `IvmFallbackReason` は IVM のフォールバックが起きていなければ空で、それ以外の場合は安定したフォールバック理由が記録されます。
+- `ErrorMsg` には、厳密な増分更新が失敗した場合の詳細が記録されます。
+
+{/* Knowledge type: Compatibility reference / SQL examples */}
+{/* Use cases: Evaluating SQL before creation / Diagnosing unsupported syntax */}
+
+## サポートするクエリ
+
+IVM はマテリアライズドビューの作成時に定義 SQL を検査します。`REFRESH INCREMENTAL` を明示した場合、サポート対象外の定義は作成に失敗します。この節では、対応する関係演算と集約関数を実行可能な例とともに示し、続いてサポート対象外のクエリ形式を説明します。
+
+### サンプルテーブル
+
+この節の例では、顧客テーブル `customers`、売上テーブル `sales`、返金テーブル `refunds` の 三つを使用します。いずれも Row Binlog と変更前の値を有効にした Unique Key Merge-on-Write テーブルです。`ivm_demo` データベースで実行できます。このデータベースは[クイックスタート](#quick-start)で作成します。
+
+```sql
+CREATE TABLE customers (
+    customer_id BIGINT,
+    name VARCHAR(32),
+    city VARCHAR(16)
+)
+UNIQUE KEY(customer_id)
+DISTRIBUTED BY HASH(customer_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+);
+
+CREATE TABLE sales (
+    sale_id BIGINT,
+    customer_id BIGINT,
+    channel VARCHAR(16),
+    amount DECIMAL(10, 2)
+)
+UNIQUE KEY(sale_id)
+DISTRIBUTED BY HASH(sale_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+);
+
+CREATE TABLE refunds (
+    refund_id BIGINT,
+    sale_id BIGINT,
+    amount DECIMAL(10, 2)
+)
+UNIQUE KEY(refund_id)
+DISTRIBUTED BY HASH(refund_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+);
+
+INSERT INTO customers VALUES
+    (1, 'Alice', 'Beijing'),
+    (2, 'Bob',   'Shanghai'),
+    (3, 'Carol', 'Beijing');
+
+INSERT INTO sales VALUES
+    (101, 1,    'web',   120.00),
+    (102, 1,    'app',    80.00),
+    (103, 2,    'web',   200.00),
+    (104, NULL, 'store',  50.00);
+
+INSERT INTO refunds VALUES
+    (9001, 102, 80.00),
+    (9002, 103, 50.00);
+```
+
+このデータには、結合と集約の例で使う 二つの特殊なケースがあります。店舗注文 104 には顧客がなく、`customer_id` は `NULL` です。また、顧客 Carol にはまだ注文がありません。
+
+各例は同じ手順で実行します。対象の `CREATE MATERIALIZED VIEW` を実行し、`REFRESH MATERIALIZED VIEW <mv_name> COMPLETE` でベースラインを構築します。更新タスクが成功したら、`SELECT * FROM <mv_name>` を実行して結果を確認します。ここに示す結果は先頭列でソートしています。
+
+### サポートする関係演算
+
+| 演算 | 説明 |
+|---|---|
+| 列と式 | 一部の列を選択するか、決定的な式で新しい列を計算する |
+| `WHERE` フィルター | 条件でベーステーブルの行を絞り込む |
+| `FROM` サブクエリ | `FROM` 句内のエイリアス付きサブクエリ。入れ子にできるが、集約を含めることはできない |
+| 定数行 | `SELECT` で `FROM` を使わず、常に定数からなる 一行を返す。例：`SELECT -1, 'unknown'`。`UNION ALL` の分岐、結合の片側、定義全体として使用できる |
+| `GROUP BY` 集約 | 集約はクエリの最も外側の演算で、上位には射影だけを置ける。グループ化列と集約結果に対する決定的な式にも対応する |
+| `GROUPING SETS`、`ROLLUP`、`CUBE` | `GROUPING()` および `GROUPING_ID()` と併用できる。`GROUP BY` と同じ制約が適用される |
+| `SELECT DISTINCT` | 集約関数のない `GROUP BY` として処理する。`GROUP BY` と同じ制約が適用される |
+| `INNER JOIN`、`CROSS JOIN` | 複数テーブルの結合と自己結合に対応する |
+| `LEFT OUTER JOIN`、`RIGHT OUTER JOIN`、`FULL OUTER JOIN` | すべての行を保持する側（LEFT JOIN の左側、RIGHT JOIN の右側、FULL JOIN の両側）には、`excluded_trigger_tables` に列挙された Row Binlog のない Duplicate Key テーブルを置けない。そのようなテーブルの行には固定の行識別子がないため |
+| 入れ子の外部結合 | `NULL` で埋められる可能性がある外部結合の片側が、さらに結合になっているもの。その側が複雑なほど増分更新プランは大きくなる |
+| `UNION ALL` | 分岐には、異なるテーブル、同じテーブル、定数行を使用できる |
+| 連鎖した IVM | 別の IVM をベーステーブルとして使用する。ベーステーブルになる IVM では Row Binlog と変更前の値を有効にする必要がある |
+
+以下の例はカテゴリ別にまとめています。
+
+#### 単一テーブルのクエリ
+
+<Tabs>
+<TabItem value="projection" label="列と式" default>
+
+必要な列を選択するか、式で新しい列を計算します。式は決定的である必要があります。つまり、同じ入力から常に同じ結果を生成する必要があります。たとえば、`NOW()` と `RAND()` は使用できません。
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_projection
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT sale_id, channel, amount, amount * 0.9 AS discounted_amount
+FROM sales;
+```
+
+結果：
+
+```text
++---------+---------+--------+-------------------+
+| sale_id | channel | amount | discounted_amount |
++---------+---------+--------+-------------------+
+|     101 | web     | 120.00 |           108.000 |
+|     102 | app     |  80.00 |            72.000 |
+|     103 | web     | 200.00 |           180.000 |
+|     104 | store   |  50.00 |            45.000 |
++---------+---------+--------+-------------------+
+```
+
+</TabItem>
+<TabItem value="where" label="WHERE フィルター">
+
+条件を満たす行だけを保持します。ベーステーブルの行が更新されると、Doris は新しい値で条件を再評価します。条件を満たさなくなった行はマテリアライズドビューから削除され、条件を満たすようになった行は追加されます。
+
+```sql
+CREATE MATERIALIZED VIEW mv_large_sales
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT sale_id, customer_id, amount
+FROM sales
+WHERE amount >= 100;
+```
+
+結果：
+
+```text
++---------+-------------+--------+
+| sale_id | customer_id | amount |
++---------+-------------+--------+
+|     101 |           1 | 120.00 |
+|     103 |           2 | 200.00 |
++---------+-------------+--------+
+```
+
+</TabItem>
+<TabItem value="subquery" label="FROM サブクエリ">
+
+`FROM` 句でエイリアス付きサブクエリを使用します。たとえば、まず Web 経由の注文を選択し、次に顧客テーブルと結合できます。サブクエリは入れ子にできます。その内部でも、この節に記載された演算だけを使用でき、集約は含められません。
+
+```sql
+CREATE MATERIALIZED VIEW mv_web_sales
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT w.sale_id, c.name, w.amount
+FROM (
+    SELECT sale_id, customer_id, amount
+    FROM sales
+    WHERE channel = 'web'
+) AS w
+INNER JOIN customers AS c ON w.customer_id = c.customer_id;
+```
+
+結果：
+
+```text
++---------+-------+--------+
+| sale_id | name  | amount |
++---------+-------+--------+
+|     101 | Alice | 120.00 |
+|     103 | Bob   | 200.00 |
++---------+-------+--------+
+```
+
+</TabItem>
+<TabItem value="constant-row" label="定数行">
+
+定数行とは、`SELECT` が `FROM` なしで常に返す、定数からなる 一行です。よくある用途は、対応するディメンション行がないデータのために「unknown」メンバーをディメンションテーブルに追加することです。
+
+```sql
+CREATE MATERIALIZED VIEW mv_customers_with_unknown
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT customer_id, name, city
+FROM customers
+UNION ALL
+SELECT -1, 'unknown', 'unknown';
+```
+
+結果：
+
+```text
++-------------+---------+----------+
+| customer_id | name    | city     |
++-------------+---------+----------+
+|          -1 | unknown | unknown  |
+|           1 | Alice   | Beijing  |
+|           2 | Bob     | Shanghai |
+|           3 | Carol   | Beijing  |
++-------------+---------+----------+
+```
+
+定数行を結合の片側にも使用できます。たとえば、`CROSS JOIN (SELECT 0.14 AS usd_rate) r` で各行にパラメータを付加できます。また、`SELECT 1 AS id, 'x' AS name` のように、定数行をマテリアライズドビューの定義全体として使用することもできます。
+
+定数行は変更を生成しません。定数行を含むマテリアライズドビューの最初の更新は必ず `COMPLETE` になり、`INCREMENTAL` を要求した場合も同じです。以降の増分更新では、ベーステーブルの変更だけを処理します。
+
+</TabItem>
+</Tabs>
+
+#### 集約
+
+<Tabs>
+<TabItem value="group-by" label="GROUP BY" default>
+
+グループごとの集約結果を計算します。集約の入力には、単一テーブル、結合、`UNION ALL`、`FROM` サブクエリを使用できます。ただし、集約自体はクエリの最も外側の演算である必要があります。次の例では `sales` と `customers` を結合し、都市別に集約します。注文 104 には顧客がいないため、集計に含まれません。
+
+```sql
+CREATE MATERIALIZED VIEW mv_city_sales
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.city, COUNT(*) AS sale_cnt, SUM(s.amount) AS total_amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id
+GROUP BY c.city;
+```
+
+結果：
+
+```text
++----------+----------+--------------+
+| city     | sale_cnt | total_amount |
++----------+----------+--------------+
+| Beijing  |        2 |       200.00 |
+| Shanghai |        1 |       200.00 |
++----------+----------+--------------+
+```
+
+集約の上位にある射影では、列名や列順を変更したり、決定的な式を使ってグループ化列と集約結果から値を計算したりできます。たとえば、`SUM(amount) * 100`、`MAX(amount) + 1`、`SUM(amount) / COUNT(*)` は、使用する集約関数の制約を満たせば増分更新に対応します。`HAVING` と、サブクエリまたは結合の入力に含まれる集約には対応しません。[サポート対象外のクエリ形式](#unsupported-query-forms)を参照してください。
+
+</TabItem>
+<TabItem value="grouping-sets" label="GROUPING SETS / ROLLUP / CUBE">
+
+一回の集約で複数のディメンションの組み合わせを計算します。次の例では `ROLLUP(c.city, s.channel)` を使用し、都市とチャネルの詳細、都市別の小計、総計を作成します。小計行と総計行では、ロールアップされた列は `NULL` です。`GROUPING SETS`、`CUBE`、小計行を識別する `GROUPING()` と `GROUPING_ID()` も使用できます。
+
+```sql
+CREATE MATERIALIZED VIEW mv_city_channel_rollup
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.city, s.channel, SUM(s.amount) AS total_amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id
+GROUP BY ROLLUP(c.city, s.channel);
+```
+
+結果：
+
+```text
++----------+---------+--------------+
+| city     | channel | total_amount |
++----------+---------+--------------+
+| NULL     | NULL    |       400.00 |
+| Beijing  | NULL    |       200.00 |
+| Beijing  | app     |        80.00 |
+| Beijing  | web     |       120.00 |
+| Shanghai | NULL    |       200.00 |
+| Shanghai | web     |       200.00 |
++----------+---------+--------------+
+```
+
+</TabItem>
+<TabItem value="distinct" label="SELECT DISTINCT">
+
+`SELECT DISTINCT` は集約関数のない `GROUP BY` として処理され、`GROUP BY` と同じ制約が適用されます。ただし、`UNION`（つまり `UNION DISTINCT`）はサポートされません。
+
+```sql
+CREATE MATERIALIZED VIEW mv_channels
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT DISTINCT channel
+FROM sales;
+```
+
+結果：
+
+```text
++---------+
+| channel |
++---------+
+| app     |
+| store   |
+| web     |
++---------+
+```
+
+</TabItem>
+</Tabs>
+
+#### 結合
+
+<Tabs>
+<TabItem value="inner-join" label="INNER JOIN" default>
+
+両側で一致する行だけを保持します。注文 104 には顧客がいないため、結果に含まれません。
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_customer
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT s.sale_id, c.name, c.city, s.amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id;
+```
+
+結果：
+
+```text
++---------+-------+----------+--------+
+| sale_id | name  | city     | amount |
++---------+-------+----------+--------+
+|     101 | Alice | Beijing  | 120.00 |
+|     102 | Alice | Beijing  |  80.00 |
+|     103 | Bob   | Shanghai | 200.00 |
++---------+-------+----------+--------+
+```
+
+</TabItem>
+<TabItem value="cross-join" label="CROSS JOIN">
+
+両側の行のすべての組み合わせ（直積）を返します。次の例では `customers` を自己結合し、顧客のすべての組を列挙します。
+
+```sql
+CREATE MATERIALIZED VIEW mv_customer_pairs
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT a.name AS customer_a, b.name AS customer_b
+FROM customers a
+CROSS JOIN customers b
+WHERE a.customer_id < b.customer_id;
+```
+
+結果：
+
+```text
++------------+------------+
+| customer_a | customer_b |
++------------+------------+
+| Alice      | Bob        |
+| Alice      | Carol      |
+| Bob        | Carol      |
++------------+------------+
+```
+
+</TabItem>
+<TabItem value="outer-join" label="外部結合">
+
+外部結合は片側のすべての行を保持し、一致する行がない場合は反対側を `NULL` で埋めます。`LEFT OUTER JOIN` は左側、`RIGHT OUTER JOIN` は右側、`FULL OUTER JOIN` は両側の行を保持します。
+
+**LEFT OUTER JOIN**：すべての注文を保持します。注文 104 には一致する顧客がないため、`name` は `NULL` です。
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_left
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT s.sale_id, s.amount, c.name
+FROM sales s
+LEFT OUTER JOIN customers c ON s.customer_id = c.customer_id;
+```
+
+結果：
+
+```text
++---------+--------+-------+
+| sale_id | amount | name  |
++---------+--------+-------+
+|     101 | 120.00 | Alice |
+|     102 |  80.00 | Alice |
+|     103 | 200.00 | Bob   |
+|     104 |  50.00 | NULL  |
++---------+--------+-------+
+```
+
+**RIGHT OUTER JOIN**：すべての顧客を保持します。まだ注文のない Carol も結果に含まれます。
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_right
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.name, s.sale_id, s.amount
+FROM sales s
+RIGHT OUTER JOIN customers c ON s.customer_id = c.customer_id;
+```
+
+結果：
+
+```text
++-------+---------+--------+
+| name  | sale_id | amount |
++-------+---------+--------+
+| Alice |     101 | 120.00 |
+| Alice |     102 |  80.00 |
+| Bob   |     103 | 200.00 |
+| Carol |    NULL |   NULL |
++-------+---------+--------+
+```
+
+**FULL OUTER JOIN**：顧客のいない注文 104 と、注文のない Carol の両方を保持します。
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_full
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.name, s.sale_id, s.amount
+FROM customers c
+FULL OUTER JOIN sales s ON c.customer_id = s.customer_id;
+```
+
+結果：
+
+```text
++-------+---------+--------+
+| name  | sale_id | amount |
++-------+---------+--------+
+| NULL  |     104 |  50.00 |
+| Alice |     101 | 120.00 |
+| Alice |     102 |  80.00 |
+| Bob   |     103 | 200.00 |
+| Carol |    NULL |   NULL |
++-------+---------+--------+
+```
+
+</TabItem>
+<TabItem value="nested-outer-join" label="入れ子の外部結合">
+
+外部結合で `NULL` で埋められる可能性がある側を NULL 生成側と呼びます。たとえば LEFT JOIN の右側です。入れ子の外部結合とは、NULL 生成側がさらに結合になっているものです。次の例では、まず `sales LEFT JOIN refunds` で返金情報を付加し、その結合全体を `customers LEFT JOIN` の右側に置きます。
+
+```sql
+CREATE MATERIALIZED VIEW mv_customer_refunds
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.name, s.sale_id, r.refund_id, r.amount AS refund_amount
+FROM customers c
+LEFT OUTER JOIN (
+    sales s
+    LEFT OUTER JOIN refunds r ON s.sale_id = r.sale_id
+) ON c.customer_id = s.customer_id;
+```
+
+結果：
+
+```text
++-------+---------+-----------+---------------+
+| name  | sale_id | refund_id | refund_amount |
++-------+---------+-----------+---------------+
+| Alice |     101 |      NULL |          NULL |
+| Alice |     102 |      9001 |         80.00 |
+| Bob   |     103 |      9002 |         50.00 |
+| Carol |    NULL |      NULL |          NULL |
++-------+---------+-----------+---------------+
+```
+
+増分更新では変更の前後の NULL 生成側を計算する必要があるため、その側が複雑なほど更新プランは大きくなります。プラン作成や更新のコストが高すぎる場合は、まずその側を下位の IVM として作成し、その上に現在のマテリアライズドビューを構築してください。[UNION ALL と連鎖した IVM](#union-all-and-chained-ivm)の例を参照してください。
+
+</TabItem>
+</Tabs>
+
+#### UNION ALL と連鎖した IVM {#union-all-and-chained-ivm}
+
+<Tabs>
+<TabItem value="union-all" label="UNION ALL" default>
+
+重複を除去せずに複数のクエリ結果を結合します。分岐には異なるテーブル、同じテーブル、定数行を使用できます。次の例では売上と返金を 一つの台帳にまとめ、返金額を負の数で記録します。
+
+```sql
+CREATE MATERIALIZED VIEW mv_ledger
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT sale_id AS doc_id, 'sale' AS doc_type, amount
+FROM sales
+UNION ALL
+SELECT refund_id, 'refund', -amount
+FROM refunds;
+```
+
+結果：
+
+```text
++--------+----------+--------+
+| doc_id | doc_type | amount |
++--------+----------+--------+
+|    101 | sale     | 120.00 |
+|    102 | sale     |  80.00 |
+|    103 | sale     | 200.00 |
+|    104 | sale     |  50.00 |
+|   9001 | refund   | -80.00 |
+|   9002 | refund   | -50.00 |
++--------+----------+--------+
+```
+
+</TabItem>
+<TabItem value="chained" label="連鎖した IVM">
+
+ある IVM を別の IVM のベーステーブルとして使用し、複雑な計算を階層に分割します。たとえば、下位の IVM で結合を行い、上位の IVM で集約します。ベーステーブルになる IVM も Unique Key Merge-on-Write テーブルなので、他の Merge-on-Write ベーステーブルと同様に Row Binlog と変更前の値を有効にする必要があります。無効の場合は上位の IVM を作成できません。たとえば Row Binlog が無効な場合、`row binlog is not enabled for table` というエラーで作成に失敗します。
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_city_detail
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "binlog.enable" = "true",
+    "binlog.format" = "ROW",
+    "binlog.need_historical_value" = "true"
+)
+AS
+SELECT s.sale_id, c.city, s.amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id;
+
+CREATE MATERIALIZED VIEW mv_city_total
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT city, COUNT(*) AS sale_cnt, SUM(amount) AS total_amount
+FROM mv_sales_city_detail
+GROUP BY city;
+```
+
+上位の IVM が読み取れるのは、下位の IVM がすでに更新した結果だけです。そのため、下位を先に、上位を後で更新してください。両方を更新した後に `mv_city_total` を照会すると、次の結果が返ります。
+
+```text
++----------+----------+--------------+
+| city     | sale_cnt | total_amount |
++----------+----------+--------------+
+| Beijing  |        2 |       200.00 |
+| Shanghai |        1 |       200.00 |
++----------+----------+--------------+
+```
+
+通常の非同期マテリアライズドビュー（IVM ではないもの）を IVM のベーステーブルとして使用することはできません。
+
+</TabItem>
+</Tabs>
+
+### サポートする集約関数
+
+IVM は次の集約関数をサポートします。引数には列または決定的な式を指定できます。
+
+- `COUNT(*)`, `COUNT(expr)`
+- `SUM`
+- `AVG`
+- `MIN`
+- `MAX`
+- `BITMAP_UNION`
+- `BITMAP_UNION_COUNT`
+- `ARRAY_AGG`
+- `COLLECT_LIST`（引数が 一つの形式のみ）
+
+以下の例はすべて `sales` テーブルをチャネル別にグループ化します。
+
+<Tabs>
+<TabItem value="count" label="COUNT" default>
+
+`COUNT(*)` は行数を数え、`COUNT(expr)` は `expr` が `NULL` でない行だけを数えます。`customer_id` は店舗注文 104 では `NULL` なので、店舗チャネルの `member_sale_cnt` は 0 です。
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_count
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       COUNT(*) AS sale_cnt,
+       COUNT(customer_id) AS member_sale_cnt
+FROM sales
+GROUP BY channel;
+```
+
+結果：
+
+```text
++---------+----------+-----------------+
+| channel | sale_cnt | member_sale_cnt |
++---------+----------+-----------------+
+| app     |        1 |               1 |
+| store   |        1 |               0 |
+| web     |        2 |               2 |
++---------+----------+-----------------+
+```
+
+</TabItem>
+<TabItem value="sum" label="SUM">
+
+合計を計算します。引数には列または決定的な式を指定でき、たとえば 100 以上の注文だけを合計できます。
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_sum
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       SUM(amount) AS total_amount,
+       SUM(IF(amount >= 100, amount, 0)) AS large_amount
+FROM sales
+GROUP BY channel;
+```
+
+結果：
+
+```text
++---------+--------------+--------------+
+| channel | total_amount | large_amount |
++---------+--------------+--------------+
+| app     |        80.00 |         0.00 |
+| store   |        50.00 |         0.00 |
+| web     |       320.00 |       320.00 |
++---------+--------------+--------------+
+```
+
+</TabItem>
+<TabItem value="avg" label="AVG">
+
+平均を計算します。Doris はマテリアライズドビュー内に非表示の合計値と件数も保持し、増分更新時にそれらを使って平均を再計算します。
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_avg
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel, AVG(amount) AS avg_amount
+FROM sales
+GROUP BY channel;
+```
+
+結果：
+
+```text
++---------+------------+
+| channel | avg_amount |
++---------+------------+
+| app     |    80.0000 |
+| store   |    50.0000 |
+| web     |   160.0000 |
++---------+------------+
+```
+
+</TabItem>
+<TabItem value="min-max" label="MIN / MAX">
+
+最小値と最大値を計算します。
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_minmax
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel, MIN(amount) AS min_amount, MAX(amount) AS max_amount
+FROM sales
+GROUP BY channel;
+```
+
+結果：
+
+```text
++---------+------------+------------+
+| channel | min_amount | max_amount |
++---------+------------+------------+
+| app     |      80.00 |      80.00 |
+| store   |      50.00 |      50.00 |
+| web     |     120.00 |     200.00 |
++---------+------------+------------+
+```
+
+新しく書き込まれた値は、現在の最小値および最大値と直接比較できます。しかし、削除または更新された行が現在の最小値または最大値を保持している場合、既存の結果から新しい値を導けないため、全データを再度読み取る必要があります。たとえば、ベースライン構築後に注文 101（120.00、Web チャネルの現在の最小値）を削除すると、厳密な `INCREMENTAL` 更新は `IvmFallbackReason` が `MIN_MAX_BOUNDARY_HIT` となって失敗し、`INCREMENTAL FALLBACK` 更新は `COMPLETE` にフォールバックします。
+
+</TabItem>
+<TabItem value="bitmap" label="Bitmap 集約">
+
+`BITMAP_UNION` はグループ内の Bitmap をマージし、`BITMAP_UNION_COUNT` はマージ結果に含まれる異なる値の数を返します。これらは正確な重複除外カウントによく使われます。次の例では、チャネルごとに異なる顧客数を数えます。`customer_bitmap` は顧客 ID の集合を保持し、`customer_cnt` は異なる顧客数です。注文 104 は `customer_id` が `NULL` のため、数えません。
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_bitmap
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       BITMAP_UNION(TO_BITMAP(customer_id)) AS customer_bitmap,
+       BITMAP_UNION_COUNT(TO_BITMAP(customer_id)) AS customer_cnt
+FROM sales
+GROUP BY channel;
+```
+
+Bitmap 列を表示するには、事前に `BITMAP_TO_STRING` で変換する必要があります。
+
+```sql
+SELECT channel, BITMAP_TO_STRING(customer_bitmap) AS customers, customer_cnt
+FROM mv_agg_bitmap
+ORDER BY channel;
+```
+
+```text
++---------+-----------+--------------+
+| channel | customers | customer_cnt |
++---------+-----------+--------------+
+| app     | 1         |            1 |
+| store   |           |            0 |
+| web     | 1,2       |            2 |
++---------+-----------+--------------+
+```
+
+Bitmap が保持するのはマージ後の結果だけなので、一行が寄与した値だけを差し引くことはできません。集約に参加する行が削除または更新され、そのグループにほかの行が残っている場合は、Bitmap 全体を再計算する必要があります。厳密な `INCREMENTAL` 更新は `IvmFallbackReason` が `BITMAP_AGG_DELETE` となって失敗し、`INCREMENTAL FALLBACK` は `COMPLETE` にフォールバックします。
+
+</TabItem>
+<TabItem value="array" label="配列集約">
+
+`ARRAY_AGG` と `COLLECT_LIST` はグループの値を配列に集めます。`NULL` の扱いは異なり、`ARRAY_AGG` は `NULL` 要素を保持し、`COLLECT_LIST` は `NULL` を除外します。
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_array
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       ARRAY_AGG(customer_id) AS customer_ids,
+       COLLECT_LIST(customer_id) AS member_ids
+FROM sales
+GROUP BY channel;
+```
+
+結果：
+
+```text
++---------+--------------+------------+
+| channel | customer_ids | member_ids |
++---------+--------------+------------+
+| app     | [1]          | [1]        |
+| store   | [null]       | []         |
+| web     | [1, 2]       | [1, 2]     |
++---------+--------------+------------+
+```
+
+増分更新では配列を順序のない多重集合として保守するため、要素の順序は固定されません。`COLLECT_LIST` は引数が 一つの形式だけをサポートし、最大長を指定する `COLLECT_LIST(expr, max_size)` はサポートしません。`ARRAY_AGG` は JSONB または VARIANT 要素をサポートしません。
+
+</TabItem>
+</Tabs>
+
+`DISTINCT` を使う集約関数（`COUNT(DISTINCT customer_id)` など）はサポートされません。非負整数列の正確な重複除外カウントには、代わりに `BITMAP_UNION_COUNT(TO_BITMAP(customer_id))` を使用できます。ただし、その場合は以下のとおり、削除や更新時に Bitmap 全体の再計算が必要です。
+
+行が削除されたとき、一部の集約関数は現在の差分だけから新しい結果を安全に導けません。Unique Key テーブルでの更新は古い行を削除してから新しい行を書き込むため、更新時にも次のケースが発生します。
+
+- 削除された値が現在の `MIN` または `MAX` である可能性がある場合は、全データを再度読み取る必要があります。
+- 削除が Bitmap 集約の結果に影響する場合は、Bitmap 全体を再計算する必要があります。
+
+このような場合、厳密な `INCREMENTAL` は失敗し、`INCREMENTAL FALLBACK` は `COMPLETE` にフォールバックします。
+
+### サポート対象外のクエリ形式 {#unsupported-query-forms}
+
+次の形式はサポートされず、`REFRESH INCREMENTAL` を明示すると作成に失敗します。
+
+- `UNION`（つまり `UNION DISTINCT`）、`INTERSECT`、`EXCEPT`。
+- `ORDER BY`、`LIMIT`、ウィンドウ関数。
+- `HAVING`、および `FROM` サブクエリまたは結合の入力内で記述した集約。集約はクエリの最も外側の演算としてのみ使用できます。集約結果を絞り込むには、マテリアライズドビューへのクエリでフィルターを適用してください。
+- `WHERE` または `SELECT` リスト内のサブクエリ。例：`IN (SELECT ...)`、`EXISTS (SELECT ...)`、スカラーサブクエリ。`IN` サブクエリとスカラーサブクエリは `Multiple columns returned by subquery are not yet supported` というエラーで失敗する場合がありますが、原因はこれらのサブクエリが IVM のサポート対象外であることです。
+- `WITH` 句（CTE）。`FROM` サブクエリに書き換えてください。
+- `LATERAL VIEW`。
+- 通常の非同期マテリアライズドビューをベーステーブルとして使用すること。連鎖した保守では、下位のマテリアライズドビューも IVM である必要があります。
+- 上の表に記載されていないその他の演算。
+
+{/* Knowledge type: Runtime behavior / Failure handling */}
+{/* Use cases: Configuring the refresh strategy / Automatic refresh interval / Diagnosing IVM fallback / Rebuilding the baseline */}
+
+## 更新とフォールバック
+
+### 作成時に更新方法を選択する
+
+| 定義 | 作成時の動作 | 以降の更新時のデフォルト動作 |
+|---|---|---|
+| `REFRESH INCREMENTAL` | IVM のサポート範囲を厳密に検査し、対象外なら作成に失敗する | IVM だけを試し、IVM が失敗するとタスクも失敗する |
+| `REFRESH INCREMENTAL FALLBACK` | 厳密モードと同じく、IVM の検査に通る必要がある | まず IVM を試し、失敗理由に応じてフォールバックする |
+| `REFRESH AUTO` | 定義が IVM をサポートするか調べ、対象外なら通常の非同期マテリアライズドビューを作成する | IVM に対応するビューでは、IVM、パーティション更新、完全更新を順に試す |
+| `REFRESH PARTITIONS [FALLBACK]` | マテリアライズドビューに `PARTITION BY` の定義が必要 | 変更されたパーティションを再計算し、`FALLBACK` を指定した場合は完全更新にフォールバックできる |
+| `REFRESH COMPLETE` | IVM のメタデータを作成しない | 常に完全更新する |
+
+### 自動更新の間隔を設定する {#setting-the-automatic-refresh-interval}
+
+IVM は非同期マテリアライズドビューのトリガー方式を再利用し、独自のトリガー構文はありません。トリガーは `ON` 句で指定し、この句を `REFRESH INCREMENTAL [FALLBACK]` の後に置きます。
+
+| トリガー | 構文 | 説明 |
+|---|---|---|
+| 手動 | `ON MANUAL` | デフォルト。`REFRESH MATERIALIZED VIEW` を実行した場合のみ更新する |
+| 定期実行 | `ON SCHEDULE EVERY <interval> <unit> [STARTS '<start_time>']` | 一定間隔で増分更新を自動実行する |
+| コミット時 | `ON COMMIT` | ベーステーブルへのロードトランザクションのコミット後に増分更新を自動実行する |
+
+定期実行の間隔には、次のルールがあります。
+
+- `<interval>` は正の整数で、`<unit>` には `MINUTE`、`HOUR`、`DAY`、`WEEK` を指定できます。
+- **最短更新間隔は `EVERY 1 MINUTE` です。** `SECOND` を指定すると `interval time unit can not be second` というエラーになります。FE の設定 `enable_job_schedule_second_for_test` では秒単位の間隔を指定できますが、テスト専用なので本番環境では有効にしないでください。
+- `STARTS` は最初のスケジュール時刻を `'yyyy-MM-dd HH:mm:ss'` 形式で設定し、現在時刻より後である必要があります。省略した場合、最初の更新はマテリアライズドビューの作成から 最初の間隔が経過した後に実行されます。以降は前のタスクの終了時刻に関係なく、最初のスケジュール時刻に間隔の整数倍を加えた固定時刻に実行されます。
+
+次の例では 5 分ごとに増分更新を実行し、変更を増分計算できない場合のフォールバックを許可します。
+
+```sql
+CREATE MATERIALIZED VIEW orders_by_status
+BUILD IMMEDIATE
+REFRESH INCREMENTAL FALLBACK ON SCHEDULE EVERY 5 MINUTE
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+)
+AS
+SELECT
+    order_status,
+    COUNT(*) AS order_count,
+    SUM(amount) AS total_amount
+FROM orders
+GROUP BY order_status;
+```
+
+定期実行とコミット時のタスクは、マテリアライズドビューの作成時に定義した更新方法を使います。`INCREMENTAL` は IVM だけを試し、`INCREMENTAL FALLBACK` はまず IVM を試してから理由に応じてフォールバックし、`AUTO` は IVM、パーティション更新、完全更新を順に試します。自動トリガーのタスクには次の動作もあります。
+
+- **最初の自動更新はベースラインを自動で構築します。** マテリアライズドビューがまだ正常に更新されたことがない場合（たとえば、`BUILD DEFERRED` で作成し、まだ更新していない場合）、最初の定期実行またはコミット時のタスクが自動的に `COMPLETE` を実行して完全なベースラインを構築します。手動で `COMPLETE` を実行する必要はありません。以降のタスクは増分更新します。
+- **一つのマテリアライズドビューの更新タスクは直列に実行され、余分なトリガーはスキップされます。** 自動トリガーのタスクは、実行中 一件と待機中 一件まで保持されます。間隔が 一回の更新の所要時間より短い場合や、`ON COMMIT` でベーステーブルのコミットが非常に頻繁な場合、新しいトリガーはスキップされ、FE メトリック `async_materialized_view_task_skip_num` が増加します。待機中のタスクが蓄積されたすべての変更を 一回で消費するため、変更は失われません。ただし、実際の更新遅延は設定した間隔より長くなります。通常負荷で 一回の増分更新が間隔内に終わるよう設定してください。
+- **`ON COMMIT` をトリガーするのは、増分保守に参加するベーステーブルだけです。** `excluded_trigger_tables` に列挙されたテーブルへのコミットでは更新はトリガーされません。[excluded_trigger_tables](#excluded_trigger_tables)を参照してください。
+
+トリガーを変更するときは `ON` 句だけを指定し、`INCREMENTAL` を繰り返さないでください。IVM の更新方法は `ALTER` では変更できないため、`ALTER MATERIALIZED VIEW ... REFRESH INCREMENTAL ...` は拒否されます。トリガーだけなら変更でき、Doris は新しいトリガーでスケジューリングジョブを再作成します。
+
+```sql
+ALTER MATERIALIZED VIEW orders_by_status REFRESH ON SCHEDULE EVERY 1 MINUTE;
+ALTER MATERIALIZED VIEW orders_by_status REFRESH ON COMMIT;
+ALTER MATERIALIZED VIEW orders_by_status REFRESH ON MANUAL;
+```
+
+### 更新方法を手動で上書きする
+
+IVM の作成後、必要に応じて次のいずれかを実行できます。
+
+```sql
+REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL;
+REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL FALLBACK;
+REFRESH MATERIALIZED VIEW <mv_name> PARTITIONS;
+REFRESH MATERIALIZED VIEW <mv_name> PARTITIONS FALLBACK;
+REFRESH MATERIALIZED VIEW <mv_name> COMPLETE;
+```
+
+IVM では、更新対象のパーティション名を指定する従来の `PARTITION (<partition_name>)` または `PARTITIONS (<partition_name>, ...)` 構文を使用できません。`PARTITIONS` キーワードで更新が必要なパーティションを Doris に計算させるか、`COMPLETE` で全データを更新してください。
+
+### フォールバックの順序 {#fallback-order}
+
+フォールバックを許可する要求では、Doris はデフォルトで次の順序を試します。
+
+```text
+IVM -> PARTITIONS -> COMPLETE
+```
+
+障害によっては、既存の IVM ベースラインを安全に使用できなくなります。その場合、Doris はパーティション更新を飛ばして直接 `COMPLETE` を実行します。主な理由は次のとおりです。
+
+| `IvmFallbackReason` | 意味 | 復旧方法 |
+|---|---|---|
+| `STREAM_UNSUPPORTED` | 内部 Stream が存在しないか、使用できなくなった | 完全更新を実行する。内部 Stream の再構築と消費オフセットの再調整も行われる |
+| `MIN_MAX_BOUNDARY_HIT` | 削除によって現在の `MIN` または `MAX` が変わる可能性がある | 集約結果を完全に再計算する |
+| `BITMAP_AGG_DELETE` | 削除が Bitmap 集約に影響する | Bitmap 全体を再計算する |
+| `PLAN_SIGNATURE_MISMATCH` | 現在のクエリプランと保存済みの IVM レイアウトが一致しない | 完全更新して新しいベースラインを構築する |
+| `INCOMPLETE_REFRESH_SNAPSHOT` | フォールバックの連鎖に必要な完全更新スナップショットがまだない | 完全更新してベースラインを構築する |
+
+厳密な `INCREMENTAL` はフォールバックしません。タスクが失敗すると、マテリアライズドビューには更新前のデータが残り、内部 Stream の消費オフセットも進みません。エラーを修正した後、増分更新を再実行するか、`COMPLETE` でベースラインを再構築できます。
+
+### 最初の更新とベースラインの再構築 {#first-refresh-and-baseline-rebuild}
+
+増分更新で処理できるのは、ベースライン以降の変更だけです。ベースラインは、マテリアライズドビューを最後に完全計算した結果と、それに対応する内部 Stream の消費オフセットからなります。Doris はマテリアライズドビューパーティションごとにベースラインの有効性を追跡します。無効なパーティションは全体を再構築し、ほかのパーティションは増分更新を続けます。
+
+**最初の更新**
+
+マテリアライズドビューが正常に更新されるまでは、どのパーティションにもベースラインがありません。要求した更新方法にかかわらず、最初の更新では全データを計算します。
+
+| 更新要求 | 最初の更新の動作 |
+|---|---|
+| `COMPLETE` | 全データを完全更新する |
+| `INCREMENTAL` | まず全パーティションを再構築し、その後差分を処理する |
+| `INCREMENTAL FALLBACK`、`AUTO` | 直接 `COMPLETE` を実行する |
+| 定期実行またはコミット時のトリガー | `COMPLETE` を実行する。[自動更新の間隔を設定する](#setting-the-automatic-refresh-interval)を参照 |
+
+これらすべてのタスクで `RefreshMode` は `COMPLETE` となり、`IvmFallbackReason` は空です。そのため、IVM の作成後に別途 `COMPLETE` を実行する必要はありません。[クイックスタート](#quick-start)では、ベースライン構築の手順を明確にするためだけに `COMPLETE` を明示的に実行しています。
+
+**一部のパーティションのベースラインが無効になる場合**
+
+次のベーステーブル操作はメタデータだけを変更し、Row Binlog を生成しません。そのため、増分更新では削除または置換された行を変更情報から判別できません。これらのベーステーブルパーティションを読み取るマテリアライズドビューパーティションは再構築が必要です。
+
+- `TRUNCATE TABLE`。一部のパーティションだけを切り詰める場合も含む
+- `ALTER TABLE ... DROP PARTITION`
+- `RECOVER PARTITION`
+- デフォルトの厳密な範囲一致を指定した `ALTER TABLE ... REPLACE PARTITION`
+
+マテリアライズドビューがベーステーブルのパーティション列でパーティション分割されている場合、Doris は影響を受けるマテリアライズドビューパーティションだけをマークします。次の更新では、厳密な `INCREMENTAL` の場合も、まずこれらのパーティションを再構築し、その後ほかのパーティションを増分更新します。`IvmRebuiltPartitions` 列は `tasks("type"="mv")` で確認でき、更新で追加的に再構築されたパーティション数を記録します。ベーステーブルのパーティションが削除された場合は、対応するマテリアライズドビューパーティションもパーティション同期時に削除されるため、再構築は不要です。
+
+マテリアライズドビューがパーティション分割されていない場合や、Doris が影響を受けるマテリアライズドビューパーティションを特定できない場合は、以下のとおりビュー全体のベースラインが無効になります。`excluded_trigger_tables` に列挙されたベーステーブルに対するこれらの操作は、ベースラインを無効にしません。
+
+**マテリアライズドビュー全体のベースラインが無効になる場合**
+
+次の状況では、マテリアライズドビュー全体のベースラインが無効になり、状態が `SCHEMA_CHANGE` になります。`State` と `SchemaChangeDetail` の各列を `mv_infos` で確認できます。
+
+- ベーステーブルで `DROP COLUMN`、`MODIFY COLUMN`、`RENAME COLUMN`、`RENAME`（テーブル名の変更）、または `REPLACE WITH TABLE` を実行した場合。`ADD COLUMN` はベースラインを無効にしません。Row Binlog を有効にしたテーブルでは `MODIFY COLUMN` と `RENAME COLUMN` は許可されません。[Row Binlog の DDL 制約](../../../data-operate/incremental/row-binlog#ddl-restrictions)を参照してください。
+- ベーステーブルで厳密な範囲一致を使わずに `REPLACE PARTITION` を実行した場合、または前の一覧にあるパーティション操作を特定のマテリアライズドビューパーティションに対応付けられない場合。
+- プロパティの変更によってマテリアライズドビューの保守対象が広がる場合。たとえば、`excluded_trigger_tables` からベーステーブルを削除する、`ivm_partition_window_limit` を広げるか削除する、`partition_sync_limit` の範囲を広げる場合です。
+
+マテリアライズドビューが `SCHEMA_CHANGE` 状態の間、次の `INCREMENTAL`、`INCREMENTAL FALLBACK`、`AUTO`、`COMPLETE`、`PARTITIONS FALLBACK` 更新ではビュー全体が再構築され、成功すると状態が `NORMAL` に戻ります。`PARTITIONS` 更新で `FALLBACK` を指定しない場合は失敗し、代わりに `COMPLETE`、`AUTO`、`PARTITIONS FALLBACK` の使用を求められます。
+
+ベーステーブルの変更後に定義 SQL を解析できなくなった場合、たとえばマテリアライズドビューが使用する列を削除した場合は、すべての更新が失敗します。その場合はマテリアライズドビューを削除して作り直す必要があります。
+
+**内部 Stream が使用できない場合**
+
+内部 Stream が存在しないか使用できなくなった場合、`INCREMENTAL FALLBACK` と `AUTO` は直接 `COMPLETE` を実行し、`IvmFallbackReason` に `STREAM_UNSUPPORTED` を記録します。`COMPLETE` 更新では内部 Stream を再構築し、消費オフセットを再調整します。厳密な `INCREMENTAL` は失敗するため、`COMPLETE` または `AUTO` を 一回実行する必要があります。
+
+{/* Knowledge type: Troubleshooting */}
+{/* Use cases: Verifying the delta plan / Previewing refresh data */}
+
+## 差分プランのプレビューと説明
+
+### EXPLAIN で更新プランを表示する
+
+次のコマンドはプランを生成するだけです。マテリアライズドビューのデータ、内部 Stream のオフセット、IVM のメタデータは変更しません。
+
+```sql
+EXPLAIN REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL;
+```
+
+デフォルトでは、プランには現在未消費のデータがある Stream だけが含まれます。差分プランの全体構造を確認するには、次を使用します。
+
+```sql
+EXPLAIN REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL WITH ALL STREAMS;
+```
+
+`WITH ALL STREAMS` は、すでにすべて消費した Stream もプランに含めます。複数テーブルを結合する完全な増分プランの構造を調べる際に役立ちます。永続化された状態は変更しません。
+
+完全更新のプランも説明できます。
+
+```sql
+EXPLAIN REFRESH MATERIALIZED VIEW <mv_name> COMPLETE;
+```
+
+### DRY RUN で書き込み予定の行を表示する
+
+`WITH DRY RUN` は、次回の増分更新で使う差分クエリを実行して結果をクライアントに返します。マテリアライズドビューへの書き込みや Stream のオフセットの進行は行いません。
+
+```sql
+REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL WITH DRY RUN;
+REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL WITH DRY RUN LIMIT 100;
+REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL WITH DRY RUN LIMIT 100 OFFSET 200;
+```
+
+結果には、更新で実際に書き込む予定の行が含まれます。そのため、業務用の列に加えて、IVM 列、Sequence 列、Delete Sign 列などの内部列も含まれます。ベーステーブルのデータが変わらなければ、繰り返し実行しても同じ結果が返ります。
+
+`DRY RUN` は IVM の `INCREMENTAL` 更新だけをサポートします。`COMPLETE`、`EXPLAIN`、パーティション更新とは組み合わせられません。
+
+{/* Knowledge type: Operations */}
+{/* Use cases: Monitoring internal Streams / Lifecycle management */}
+
+## 内部 Table Stream
+
+IVM は内部 Table Stream のライフサイクル全体を自動管理します。
+
+- IVM の作成時、増分保守に参加するベーステーブルごとに内部 Stream を作成します。
+- `excluded_trigger_tables` を変更すると、新しいベーステーブルの集合に応じて内部 Stream を追加または削除します。
+- IVM の削除時、そのマテリアライズドビューが所有する内部 Stream をクリーンアップします。
+- 更新時、ベーステーブルのパーティションごとに消費オフセットを記録して進めます。
+
+`mv_infos` でベーステーブルと内部 Stream の対応関係を直接確認できます。
+
+```sql
+SELECT Name, IvmBaseTableStreams
+FROM mv_infos("database" = "<database_name>")
+WHERE Name = "<mv_name>";
+```
+
+`information_schema.table_streams` と `information_schema.table_stream_consumption` では、Stream の状態とパーティションの未処理量も確認できます。
+
+:::warning 内部 Stream を手動で管理しないでください
+内部 Stream は `__doris_ivm_stream_` で始まる名前を持ち、IVM 専用です。`INSERT INTO ... SELECT` で消費したり、手動で削除または再作成したりしないでください。Doris は内部 Stream に対する通常の `INSERT INTO` 消費を拒否します。
+:::
+
+Table Stream のオフセット、スナップショット、並行処理の意味については、[Table Stream の基本](../../../data-operate/incremental/table-stream)と[Table Stream の応用](../../../data-operate/incremental/table-stream-advanced)を参照してください。
+
+{/* Knowledge type: Configuration parameters */}
+{/* Use cases: IVM key design / Incremental partition window / Refresh resource control */}
+
+## IVM のプロパティ
+
+まず行識別子、パーティションウィンドウ、トリガーの関係に基づいてプロパティを選び、その後で以下の節を使って詳細な影響を確認してください。
+
+| プロパティ | デフォルト | 変更可能 | 効果 |
+|---|---|---|---|
+| `ivm_use_full_keys` | `false` | いいえ | 元の行の識別キーをマテリアライズドビューの Unique Key に追加し、ハッシュ衝突のリスクを下げる |
+| `ivm_partition_window_limit` | 制限なし | はい | 指定したベーステーブルについて、パーティション値の順で直近 N 個のパーティションだけを保守する |
+| `excluded_trigger_tables` | なし | はい | 内部 Stream を作成せず、そのテーブル単独では増分更新をトリガーしないベーステーブル |
+
+### ivm_use_full_keys
+
+`ivm_use_full_keys` は、マテリアライズドビューの Unique Key に元の行の識別キーも含めるかを制御します。
+
+| 項目 | 説明 |
+|---|---|
+| 型 | Boolean |
+| デフォルト | `false` |
+| 変更可能 | いいえ。IVM の作成時にのみ設定できる |
+| 効果 | 複合行識別子をハッシュ化する場合の衝突リスクを下げる |
+| コスト | マテリアライズドビューのキー幅とストレージ使用量が増える |
+
+```sql
+PROPERTIES (
+    "ivm_use_full_keys" = "true"
+)
+```
+
+クエリに複数テーブルの結合、`UNION ALL`、連鎖した IVM が含まれ、行識別子のハッシュ衝突を避けることがワークロードで重要な場合は、このプロパティを有効にしてください。有効にする前に、元のキーの型と合計長が Doris の Unique Key の制限を満たすことを確認してください。
+
+### ivm_partition_window_limit
+
+`ivm_partition_window_limit` は、指定したベーステーブルについて、パーティション値の順で直近 N 個のパーティションに各 IVM 更新を制限します。形式は `<table_name>:<partition_count>` で、複数のテーブルはカンマで区切ります。
+
+```sql
+PROPERTIES (
+    "ivm_partition_window_limit" = "orders:7,users:1"
+)
+```
+
+このプロパティが制限するのは、IVM の増分更新で読み取るパーティションだけです。マテリアライズドビューのパーティション保持ポリシーではありません。`COMPLETE` は引き続きベーステーブル全体を読み取り、完全な結果を構築します。ウィンドウから除外された古いパーティションの変更は、以降の IVM の結果に取り込まれません。このため情報が失われる設定であり、直近のパーティションだけを明示的に必要とするワークロードにのみ適しています。
+
+このプロパティは `ALTER MATERIALIZED VIEW ... SET` で変更できます。ウィンドウを広げるか制限を解除すると、以前に無視した変更は既存のオフセットから復元できないため、マテリアライズドビューのベースラインが無効になり、次の更新でビュー全体が再構築されます。[最初の更新とベースラインの再構築](#first-refresh-and-baseline-rebuild)を参照してください。
+
+### excluded_trigger_tables {#excluded_trigger_tables}
+
+`excluded_trigger_tables` に列挙されたベーステーブルには内部 Stream が作成されず、そのテーブル単独では増分更新をトリガーしません。ほかのベーステーブルの変更で更新がトリガーされた場合、Doris は計算時にこれらのテーブルの現在のデータも読み取ります。
+
+変更がまれなディメンションテーブル、またはほかのベーステーブルが更新をトリガーするまで変更の反映を待てるテーブルだけを除外してください。変更が頻繁なテーブルを除外すると、そのテーブルだけが変わった後はマテリアライズドビューの結果が古いままになります。
+
+### リソースとパーティションのプロパティ
+
+- `workload_group`：更新タスクが使用する Workload Group。CPU とメモリの使用量を制限するために使用します。
+- `partition_sync_limit`、`partition_sync_time_unit`：マテリアライズドビューが保持し、同期するパーティションの範囲を制御します。`ivm_partition_window_limit` の増分読み取りウィンドウとは異なります。
+- `refresh_partition_num`：パーティション更新とフォールバック時に 一回の `INSERT` で処理するパーティション数を制御します。IVM 差分の行数は制御しません。
+
+マテリアライズドビューのすべてのプロパティについては、[CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW)を参照してください。
+
+{/* Knowledge type: Limitations */}
+{/* Use cases: Production readiness / Performance risk review */}
+
+## 制約と注意事項
+
+- IVM を有効にできるのはマテリアライズドビューの作成時だけです。`ALTER MATERIALIZED VIEW` で通常のマテリアライズドビューを IVM に変更したり、IVM のデフォルト更新方法を別の方法に変更したりすることはできません。切り替えるにはビューを作り直してください。
+- Row Binlog を有効にすると、書き込みとストレージの負荷が増えます。Unique Key MoW テーブルでは、各更新前の値も読み取って保存する必要があります。本当に IVM が必要なベーステーブルだけで有効にし、本番環境への導入前に実際のワークロードに近い条件でロードスループットを評価してください。
+- IVM は非同期タスクで更新するため、ベーステーブルのトランザクションとのリアルタイム整合性を保証しません。更新遅延はトリガー方式、キューの待ち時間、差分プランの実行時間に左右されます。最短の定期実行間隔は 1 分です。[自動更新の間隔を設定する](#setting-the-automatic-refresh-interval)を参照してください。
+- 複雑な入れ子の外部結合は、特に NULL 生成側に複雑な部分木がある場合、差分プランを大きくします。プラン作成や更新のコストが高すぎる場合は、結合を単純化するか、複雑な部分木を先に下位の IVM としてマテリアライズしてください。
+- `MIN`、`MAX`、Bitmap 集約では、削除の状況によって完全な再計算が必要です。本番環境では `INCREMENTAL FALLBACK` または `AUTO` を使用し、`IvmFallbackReason` を監視してください。
+- Row Binlog のテーブルモデル、列の型、スキーマ変更、削除に関する制約は IVM にも直接適用されます。[Row Binlog のサポート範囲と制約](../../../data-operate/incremental/row-binlog#supported-scope-and-limitations)を参照してください。
+
+{/* Knowledge type: FAQ / Troubleshooting */}
+{/* Use cases: Creation failure / Refresh fallback / Baseline rebuild / Data latency */}
+
+## FAQ
+
+作成に失敗した場合、更新がフォールバックした場合、またはデータが更新されない場合は、次の表で原因を調べてください。
+
+| 問題 | 診断と対処 |
+|---|---|
+| `CREATE MATERIALIZED VIEW ... REFRESH INCREMENTAL` が失敗する | FE で `enable_feature_binlog` と `enable_table_stream` が有効であること、ベーステーブルがテーブルモデルと Row Binlog の要件を満たすこと、定義 SQL が IVM のサポート範囲内であることを確認する |
+| 厳密な増分更新タスクの `RefreshMode` が `COMPLETE` になるか、`IvmRebuiltPartitions` が 0 より大きい | 最初の更新、または無効になったベースラインの自動再構築であり、エラーではない。発生条件については[最初の更新とベースラインの再構築](#first-refresh-and-baseline-rebuild)を参照 |
+| `PARTITIONS` 更新が `FALLBACK` なしで `The refresh baseline of MV ... was invalidated` により失敗する | マテリアライズドビュー全体のベースラインが無効。代わりに `COMPLETE`、`AUTO`、`PARTITIONS FALLBACK` で更新する |
+| `ON SCHEDULE EVERY 30 SECOND` が `interval time unit can not be second` で失敗する | 最短の定期実行間隔は `EVERY 1 MINUTE` で、単位には `MINUTE`、`HOUR`、`DAY`、`WEEK` だけを指定できる。遅延を減らす必要がある場合は `ON COMMIT` を使用する。[自動更新の間隔を設定する](#setting-the-automatic-refresh-interval)を参照 |
+| 定期更新の実際の遅延が設定間隔より長い | 一つのマテリアライズドビューのタスクは直列に実行され、一回の更新が設定間隔より長い場合は余分なトリガーがスキップされる。`tasks("type"="mv")` のタスク所要時間と FE メトリック `async_materialized_view_task_skip_num` を確認し、間隔を延ばすか、定義を単純化するか、`workload_group` を使って更新により多くのリソースを割り当てる |
+| 更新タスクが `COMPLETE` にフォールバックする | `IvmFallbackReason` を `tasks("type"="mv")` で照会し、[フォールバックの順序](#fallback-order)に記載された理由に応じて対処する |
+| 除外したベーステーブルだけが変更されてもビューが更新されない | `excluded_trigger_tables` のテーブル単独では更新がトリガーされない。ほかのベーステーブルによる更新を待つか、`COMPLETE` 更新を実行する。テーブルを `excluded_trigger_tables` から削除すると、次の更新でマテリアライズドビュー全体が再構築される |
+| 内部 Stream を手動で消費またはリセットできるか | できない。内部 Stream は IVM 専用であり、Doris がライフサイクルと消費オフセットを管理する |
+
+{/* Knowledge type: Best practices */}
+{/* Use cases: Production deployment / Resource planning / Ongoing operations */}
+
+## ベストプラクティス
+
+1. **まず変更行数とパーティションサイズを比較します。** 変更がパーティションの一部にすぎない場合は IVM を優先します。変更がパーティションの大部分に及ぶ場合は、`PARTITIONS` のほうが簡単な場合があります。
+2. **本番環境では安全なフォールバックを有効にします。** 削除やベースラインの問題によって更新が長時間失敗し続けないよう、`INCREMENTAL FALLBACK` または `AUTO` を使用してください。
+3. **更新の所要時間に基づいてトリガーと間隔を選びます。** 最短の定期実行間隔は 1 分です。通常負荷で 一回の増分更新が終わる時間より長い間隔を設定してください。低遅延が必要で、ベーステーブルのコミットが過度に頻繁ではない場合は `ON COMMIT` を使用します。
+4. **最初にベースラインを確認します。** 最初の更新では全データを計算します。増分更新に保守を任せる前に、結果を検証してください。
+5. **更新と削除を伴うワークロードには Unique Key MoW を使用します。** Duplicate Key テーブルは追記専用データにだけ適しています。
+6. **更新タスクのリソースを分離します。** `workload_group` を使用し、複雑な差分プランがオンラインクエリとリソースを奪い合わないようにします。
+7. **タスクと Stream の未処理量を監視します。** `tasks("type"="mv")`、`mv_infos`、`information_schema.table_stream_consumption` を併せて確認してください。
+8. **フォールバック理由を定期的に確認します。** ときどき発生するフォールバックは正しさを保つためのものです。継続的に発生する場合は、クエリの構造、Binlog の連続性、またはベースラインに対処が必要です。
+
+{/* Knowledge type: Step-by-step guide */}
+{/* Use cases: Cleaning up the example environment */}
+
+## サンプル環境のクリーンアップ
+
+```sql
+DROP MATERIALIZED VIEW orders_by_status;
+DROP TABLE orders;
+DROP DATABASE ivm_demo;
+```
+
+IVM を削除すると、Doris は内部 Table Stream もクリーンアップします。別途 `DROP STREAM` を実行する必要はありません。
+
+{/* Knowledge type: Navigation */}
+
+## 関連項目
+
+- 非同期マテリアライズドビューの機能とユースケース：[非同期マテリアライズドビューの概要](overview)
+- 非同期マテリアライズドビューの作成、照会、保守：[非同期マテリアライズドビューの管理と照会](functions-and-demands)
+- 更新方法の選択とリソース計画：[非同期マテリアライズドビューのベストプラクティス](use-guide)
+- Row Binlog の有効化方法と制約：[Row Binlog](../../../data-operate/incremental/row-binlog)
+- Table Stream の消費、オフセット、スナップショットの意味：[Table Stream の基本](../../../data-operate/incremental/table-stream)
+- 手動更新の構文：[REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW)
+- IVM と内部 Stream の対応関係の確認：[MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv_infos)
+- 更新範囲とフォールバック理由の確認：[TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks)

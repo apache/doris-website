@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/performance-tuning-intro",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/performance-tuning-intro.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/performance-tuning-intro.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "09bd7e1c963e30c0fa148b57dee95fbfbe92e53072175467c6bcfda7ecafaef6",
+    "sourceTechnicalHash": "fe34c18d60fc54d3746809de5efe174821d755507753d8a36b3616e2f26edd80",
+    "targetHash": "6afeeb41611be25f793da7f255ac76c42ccd50f63d7b470dbd4d01e7be493912",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.222Z",
+    "glossaryVersion": "0"
+  }
+}

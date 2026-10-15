@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/colocation-join",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/colocation-join.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/colocation-join.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "134c5f3373e0a1c44b862a5bbab7e3027449287b982f8ed663b2f06bc3527311",
+    "sourceTechnicalHash": "f902f87bc2bdf034bff8750dbd158a6d48d47c028f2e7fa0a2547d2543bf3156",
+    "targetHash": "bcc1045f4c4062fc57fc119971201787e64bbe08bb164ec1c21b65bb4f0fbbbb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.223Z",
+    "glossaryVersion": "0"
+  }
+}

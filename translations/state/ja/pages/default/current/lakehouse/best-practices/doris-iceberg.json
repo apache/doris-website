@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-iceberg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-iceberg.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-iceberg.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "25332d82eb124649b01b6ef4f670da32a40b59f60191ce1def3470439cd74775",
+    "sourceTechnicalHash": "cf1725b244e421138a6e021937a83771d3f82216974bff3079283761d5c37614",
+    "targetHash": "4cdfc736c312efcb32e46fcfeac8687fa88d3de96b42736c2e9217f59114de4a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.225Z",
+    "glossaryVersion": "0"
+  }
+}

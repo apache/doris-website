@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/tuning/tuning-plan/adjusting-join-shuffle",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/tuning/tuning-plan/adjusting-join-shuffle.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-plan/adjusting-join-shuffle.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "4cd3c4b1c0898008e2ed6127c5fd9836fa5d05a5e4e3731b7f9954b078fecbe3",
+    "sourceTechnicalHash": "1df75a95b22ed22c5b773c66850a09fa3797a4eb4d03ac18f93ac980f47a0abc",
+    "targetHash": "f5755f0611af30a9439f0c2c9fcdf344d426a1b7bab896879b6f8cf51255b259",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.223Z",
+    "glossaryVersion": "0"
+  }
+}

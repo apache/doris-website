@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/hive-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/hive-catalog.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/hive-catalog.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "2ae47f5269dddbfdcdace451156a22b131002928aea486417e4bece229b5cebd",
+    "sourceTechnicalHash": "2ba7a85326261c29e90fba3fa3b2315c3c72c6fd61468bee0cb004d55d58d877",
+    "targetHash": "8f07d4f0d1af6d8cec124cdbc80380c3416fcb2e9bf9c0f6873bd385d70b4dc0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.225Z",
+    "glossaryVersion": "0"
+  }
+}

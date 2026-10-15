@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-data/multi-dimensional-analytics",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-data/multi-dimensional-analytics.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-data/multi-dimensional-analytics.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "e8c9fd2da35dbb32f63ad32d4efcbd0d298b3d4b28764d1cd81303ace1dd0eee",
+    "sourceTechnicalHash": "770a313c03c06b26a389c1a437c09bb74292c5f59be2c07d65338cdde22acb06",
+    "targetHash": "89f163a4249d8b4d411e80541a0c52b12ce3fc7f17d1f324e4ff804fe92db160",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.221Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/hudi-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/hudi-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/hudi-catalog.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "f4e364ac067539c80a723612c253b2f4c33268ca75ab5527d797708e93a5f483",
+    "sourceTechnicalHash": "49983b95e94654d34aad0dd996bff0ea908d192cbf2c3785024bb31e69592376",
+    "targetHash": "55124b278bcccc82f45fcb03483fa24adbae79d8f1c05d26d2e8fe673460b7d5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.226Z",
+    "glossaryVersion": "0"
+  }
+}
