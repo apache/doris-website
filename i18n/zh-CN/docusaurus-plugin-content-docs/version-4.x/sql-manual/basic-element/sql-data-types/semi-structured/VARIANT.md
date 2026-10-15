@@ -36,6 +36,15 @@ CREATE TABLE IF NOT EXISTS ${table_name} (
 PROPERTIES("replication_num" = "1");
 ```
 
+VARIANT 顶层列名不能包含点号（`.`），使用反引号引用也不允许，例如 `` `v.x` VARIANT `` 是非法列定义。该限制适用于 `CREATE TABLE` 和 `ALTER TABLE`，不限制 VARIANT 值中的 JSON 字段名。
+
+`ADD COLUMN`（含批量添加）、`MODIFY COLUMN` 和 `RENAME COLUMN` 同样要求 VARIANT 顶层列名不含点号。例如，以下语句会被拒绝：
+
+```sql
+ALTER TABLE ${table_name} ADD COLUMN `v.x` VARIANT;
+-- ERROR: Cannot use `VARIANT` type column named with a `.` character: v.x
+```
+
 通过 Schema Template 约束部分 Path 的类型（更多见“扩展类型”）：
 
 ```sql
