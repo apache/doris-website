@@ -1,0 +1,31 @@
+---
+{
+    "title": "ストレージレイアウトの最適化",
+    "language": "ja",
+    "description": "Apache Doris のストレージレイアウトの概要。列指向圧縮、行・列ハイブリッドストレージ、ホット・コールドデータの階層化などを利用して、ストレージコスト、ポイントクエリのレイテンシー、履歴データの保存コストを最適化します。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris は、ディスク上のストレージレイアウトをユーザーが調整できるパラメータとして公開しています。ストレージレイアウトを適切に設定すると、テーブルモデルやクエリを変更せずに、ストレージコストを削減し、ワイドテーブルに対するポイントクエリを高速化し、履歴データやコールドデータのストレージ負荷を軽減できます。
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="データ圧縮"
+    description="列ごとに圧縮アルゴリズム（LZ4、ZSTD、Snappy、Zlib など）を選び、ストレージコストとクエリ実行時の CPU 使用量や展開速度のバランスを柔軟に調整できます。"
+    link="column-compression"
+/>
+
+<GettingStartedCard
+    title="行・列ハイブリッドストレージ"
+    description="列指向ストレージに行ストアのコピーを追加し、複数列を取得するポイントルックアップを 1 回の IO にまとめます。これにより、同時実行数の多い主キーポイントクエリやワイドテーブルでの SELECT * を大幅に高速化できます。"
+    link="row-store"
+/>
+
+<GettingStartedCard
+    title="ホット・コールドデータの階層化"
+    description="ホットデータを高性能ストレージに保持しながら、コールドデータを低コストのメディア（HDD、オブジェクトストレージ、HDFS）に移します。ストレージとコンピュートの分離、ローカル階層化、リモート階層化の 3 つのモードを扱います。"
+    link="tiered-storage/overview"
+/>
+</div>

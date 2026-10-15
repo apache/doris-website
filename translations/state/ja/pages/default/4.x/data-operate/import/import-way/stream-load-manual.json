@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/stream-load-manual",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/stream-load-manual.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/stream-load-manual.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "02acf9e4e47c71f94a2d3554725f0db4bb09fe728130bf246b94d52c7a0f4e83",
+    "sourceTechnicalHash": "2e9f4c474a5b0d205921ba7b91220ad4d79157499bfbb6b653db0ae726ac3901",
+    "targetHash": "e3f707e7087f69e8ae3f6ad0fde820a3355fbae62c99a980f7f833fb04b80b53",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.604Z",
+    "glossaryVersion": "0"
+  }
+}

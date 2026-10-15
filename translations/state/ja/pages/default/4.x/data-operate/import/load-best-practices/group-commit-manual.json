@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/load-best-practices/group-commit-manual",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/load-best-practices/group-commit-manual.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/load-best-practices/group-commit-manual.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "c368e4c4dd13a61a2dd3f365f7388576de352cdf6513601fb4e9d6349ea49ad3",
+    "sourceTechnicalHash": "454a375e8ed846c58c0f24f1ae2ef3efb1babe7e93130b2cafac8b5c79855e74",
+    "targetHash": "47f8e77f4539eb94b5998f094636e5f48ea4b82a655789fac24652fe52b2a6d0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.606Z",
+    "glossaryVersion": "0"
+  }
+}

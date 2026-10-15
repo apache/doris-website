@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-mysql-database",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-database.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-database.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "4e0998cbe0c8dfa5f6c76c883bfc7280d3ebd8fbe8cf3f6aafdc7644fd0e582a",
+    "sourceTechnicalHash": "ea90cac5285d38f34ed3c25d62a87c758da50de50f85bef24d0a8caca0e9c834",
+    "targetHash": "4739227165adb7b33a9dd66d906b08b37625ae2c9fc822b7edfb1890554fd5d9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.604Z",
+    "glossaryVersion": "0"
+  }
+}

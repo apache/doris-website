@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/update/partial-column-update",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/update/partial-column-update.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/update/partial-column-update.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "30052012a8457a9a9bdd6291ec54fccfb64487b834dc42db8f8a5728f1a5c9e5",
+    "sourceTechnicalHash": "fda45a3da5148c51482071e8cebb2c764f4edbf5d36c4df66bdfc3bfac203349",
+    "targetHash": "e127766c289e9eca46c6310e6db228668d9c6481db9bdb59d21861405b6f6e9c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.606Z",
+    "glossaryVersion": "0"
+  }
+}

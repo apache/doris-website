@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/index/inverted-index/search-function",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/index/inverted-index/search-function.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/index/inverted-index/search-function.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "9bba18ad86f25fa602eddd3ff8e2e4ca7bf4dcad678baa8fe6339501da90b811",
+    "sourceTechnicalHash": "5599b98df98dcc32ca2624e91c869352226956dfd0f096499194845f6c83621f",
+    "targetHash": "5649f53d5c6c1751f6bd4607b7f083838305462798c651c8b6a09a081b2e612f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.601Z",
+    "glossaryVersion": "0"
+  }
+}

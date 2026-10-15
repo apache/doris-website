@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "3c863f744dd4c9850eaa0cd8b6257415c40b3c036d7fe41df5ce6e53880d4fa2",
+    "sourceTechnicalHash": "b00c95043720a730a1789753bd2ed86c27d57a9e8c4d53216eea68950335f26e",
+    "targetHash": "9d588a05a5c5b1ed8be6cdabdfa1f187fe31826650fddbe2b734c1070c39a62f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.604Z",
+    "glossaryVersion": "0"
+  }
+}

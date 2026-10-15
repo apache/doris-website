@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/local-file",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/local-file.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/local-file.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "3f011b79fad8df7fd2102589a89d5ddfa9aa240c829144a3cada733f4df150b0",
+    "sourceTechnicalHash": "24b3727d5e6559a678e97136f6da07f709f2c64a1ef3ec6ba0c75fb551c7c416",
+    "targetHash": "437d358b9339c70939879267d52ec1a38342881f04417a527a54ef3a32df2552",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

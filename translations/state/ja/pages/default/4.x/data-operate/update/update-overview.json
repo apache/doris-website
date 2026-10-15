@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/update/update-overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/update/update-overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/update/update-overview.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "a5fdc425fd27bf3f3d58f5456ce952907d5fb5f9fab885e445fbb0aff029f9b5",
+    "sourceTechnicalHash": "a86de6c2bc5b2e504290072d570497441f710c8799a319e994bae53ecb2c25ae",
+    "targetHash": "ad17191ba599bcd3885cf1c07d6a9ff562eae24df9a3db519265be3564e59c60",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.606Z",
+    "glossaryVersion": "0"
+  }
+}

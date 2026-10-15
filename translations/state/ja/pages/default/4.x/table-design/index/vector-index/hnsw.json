@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/index/vector-index/hnsw",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/index/vector-index/hnsw.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/index/vector-index/hnsw.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "a2526ad820a5b5bd4764c054b5dd7d9cb1e6b75881dcec4ea2651a2e8e02bd97",
+    "sourceTechnicalHash": "7f35111b541a645d133ab561be6d63dbb00c11f79217ec08e3a734894005eabb",
+    "targetHash": "25548297b995df34e575611526396e907654c631335752a269733a97b2cb7534",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.601Z",
+    "glossaryVersion": "0"
+  }
+}

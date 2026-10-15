@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/snowflake",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/snowflake.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/snowflake.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "fd4d3a2788660f4466b5e724ba224f41a12392824044925924e1a01dcf7b26fb",
+    "sourceTechnicalHash": "87fd6b8c930b75c66d1c26f5f2c86331cf1c250c51dadd396799133493ab7e75",
+    "targetHash": "7e6838def43df0cca3ec6466d4a3cdc88eb443c581e2b38a61226f651ab8979b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

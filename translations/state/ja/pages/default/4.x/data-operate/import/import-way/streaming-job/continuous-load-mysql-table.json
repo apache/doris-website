@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-mysql-table",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "fd0df854ee8804ca79d3a4abe48fd84074bc50afb8d3b534821f7a59ccc5eb75",
+    "sourceTechnicalHash": "b55a161f48a22529890dcc0e1f1fe21c2c03df2c82f2f38bb814921850fffa42",
+    "targetHash": "0a10b94854330b8f68c2b725940f2396aa7ac6d4bd7b4d062c186690a023dd19",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.604Z",
+    "glossaryVersion": "0"
+  }
+}

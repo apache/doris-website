@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/complex-types/struct",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/complex-types/struct.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/complex-types/struct.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "e5fa7d4c3e7a547069bf94ee244062ff4500d27a36e68c77d7c519d2ebab50b8",
+    "sourceTechnicalHash": "fc39112471a1ef3dc1f20f04c9d10bc17a3148851b79c01666db57a08621de21",
+    "targetHash": "bc9b6214929ffdf4b69410d1acdb0db9a44b3352c98fac4e001d2481606222ee",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.605Z",
+    "glossaryVersion": "0"
+  }
+}

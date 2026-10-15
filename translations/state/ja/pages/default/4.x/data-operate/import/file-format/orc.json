@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/file-format/orc",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/file-format/orc.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/file-format/orc.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "dc24d17af311b9a5c4d528b6ce53930a81c5648ee288d701af2f2d317de479a8",
+    "sourceTechnicalHash": "caf6cb9ac324e2350c10fc621b633a2aa8f56b4374a3e2c705547e2ae48a4d32",
+    "targetHash": "d68ed7acbf9d4705c2f8923c52ed49bb1987ebaed928536beab57321c07dc787",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.605Z",
+    "glossaryVersion": "0"
+  }
+}

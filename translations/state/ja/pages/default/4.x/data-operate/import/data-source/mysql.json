@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/mysql",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/mysql.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/mysql.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "586dd227680e67c2fba62ff784f9ebc1912a0200786f7c4afaf3d124ed128a6b",
+    "sourceTechnicalHash": "3b898864f8dbef2900c5fedd1b38095a2a53c8a0ec0345cbc871bb752f9208b7",
+    "targetHash": "bd9ed24ff12ebeaa60247effa2be9e350c9564eb4f6e118137df060bd509fc6a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/column-compression",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/column-compression.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/column-compression.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "6049a098a9edde869604aedae7ca396c2b9447f002e273efbaaa31d5fc773715",
+    "sourceTechnicalHash": "5bff5d36241df75dc5cb2d266b3858811523cb6758e84376281a4c8139671e60",
+    "targetHash": "014eb764b40f14f50f5da53a9e692928226581d2050577a4d7c83c783ce21468",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.602Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/mysql-load-manual",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/mysql-load-manual.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/mysql-load-manual.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "4c22bfffd8598bdff898febaf78fd8d7f4db7f031aef73651635c8d8c0b6cddd",
+    "sourceTechnicalHash": "fa8663a6a681e7c55376678848e79e1f4f2faeaf02e4eb72d5af682f3dc6ec64",
+    "targetHash": "52bf26a2c8e03f954f12c766741c89e1694a121b7539d58737245ac8a16bfc9b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.604Z",
+    "glossaryVersion": "0"
+  }
+}

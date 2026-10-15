@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/data-type-mapping-mysql",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "1fa11c2e4608bb7b8c229643df07d87ef4b229bbf869d11a2e58b103ce17b925",
+    "sourceTechnicalHash": "3be5cc57570c78ee9a7493fc3d24d6e1d7f2bfa69bb5e26588a2a226cc9e1103",
+    "targetHash": "2ee2db074d8c047185751241bc00e712740b9c3c5fe5b03d38cc180531ae8200",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.604Z",
+    "glossaryVersion": "0"
+  }
+}

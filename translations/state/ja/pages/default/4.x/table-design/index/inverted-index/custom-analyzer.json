@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/index/inverted-index/custom-analyzer",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/index/inverted-index/custom-analyzer.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/index/inverted-index/custom-analyzer.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "61532386bb644b88a6e4d61e684396605e9e750f2040ef048cacc1cde602bca0",
+    "sourceTechnicalHash": "3015b62c38e782b0dedfc53cf10bfede8219ccc81c59df9b05fb1fa2a5c6966a",
+    "targetHash": "af3a1318687a8d2fb9969cf094cce8f500f57aa20955f220d3ade9425b5b6dc6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.600Z",
+    "glossaryVersion": "0"
+  }
+}
