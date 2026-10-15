@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/log-management/fe-log",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/log-management/fe-log.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/log-management/fe-log.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "644da2ff342ed74713935a54f2521fd99a96e77acedb586f5adf892eae84d7e8",
+    "sourceTechnicalHash": "072ac97a8f3a636630306bcc98138111545611eb24a4456debd41df8e0ff27a5",
+    "targetHash": "8c96a75fdd4d4e0066668ba3126231ab4ee1d61fea89aa2ca533c8aa61ae62d7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.874Z",
+    "glossaryVersion": "0"
+  }
+}

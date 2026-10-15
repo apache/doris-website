@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "ai/ai-function-overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/ai/ai-function-overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/ai/ai-function-overview.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "5cbcf71720c2c5ae0b4502f3a3fb3e99e1d40a044838470024cb3149cce6e100",
+    "sourceTechnicalHash": "3001a20159aeb47f42108af480abb173193fa80d2386dace1cdb20cbd4dae4ac",
+    "targetHash": "0cce4cb1e1efe5f6512accc1b6b44594e09e8419ec32bb8b80078b24e58466ef",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.868Z",
+    "glossaryVersion": "0"
+  }
+}

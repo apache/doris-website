@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/file-formats/lance",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/file-formats/lance.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/file-formats/lance.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "82cbc465d87e877327c56f28493068253b286724a7379cb0423f95b1c0109543",
+    "sourceTechnicalHash": "e18ecbc2895c5ca9fb4292d3857de209c86bc656c4932b4b567b0b16f69d5720",
+    "targetHash": "1a0464d6899cf65dcb89359d1ebef2ee1ddfaca2498f23c85bcde20a1cfa875b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.867Z",
+    "glossaryVersion": "0"
+  }
+}

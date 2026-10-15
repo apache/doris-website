@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/maint-monitor/metrics",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/maint-monitor/metrics.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/maint-monitor/metrics.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "b98bce4c2099e4c60ab37fb3326da083488394ddac018f3efd54f8a3691ee668",
+    "sourceTechnicalHash": "445a1cb3342a5eb608c15b4562b2c8d7b428a8d242840c19ef1d0c74659f6d7a",
+    "targetHash": "abfa6408a9837be60686210f2101aa57bf6e70bf26bf3238f8ff7b93452459be",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.874Z",
+    "glossaryVersion": "0"
+  }
+}

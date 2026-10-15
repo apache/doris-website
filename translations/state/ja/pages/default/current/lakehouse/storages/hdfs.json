@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/storages/hdfs",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/storages/hdfs.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/storages/hdfs.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "49fc36f58407bbe35fdf2ea00b5b5edd32411ffcc8999043457298ecc7f09e02",
+    "sourceTechnicalHash": "65743d97d383e794c69efc2455591a8342fe28e511dfc3ccf4954517d0c2fece",
+    "targetHash": "4f73096f5633769a6ba284e726644d5c9f5f1547fe0ee0bcf1b12a12ca648f0c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.866Z",
+    "glossaryVersion": "0"
+  }
+}

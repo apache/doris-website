@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/storages/tencent-cos",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/storages/tencent-cos.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/storages/tencent-cos.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "e3fdb0333784205ce12a4103c1c5e89a43f6cfff45c92f7b0eb536e63c0f4fb7",
+    "sourceTechnicalHash": "eff59180777620208201deedf25fd18b32cc6f0ce62c39670aaa0e63049b08e0",
+    "targetHash": "3c0c74cccfa4e5216a61268f477fc2b3542c4fd3981f3be34e1967e75bd99011",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.867Z",
+    "glossaryVersion": "0"
+  }
+}

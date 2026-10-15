@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/log-management/intro",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/log-management/intro.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/log-management/intro.mdx",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "9ea46af7a5ae4c57f302126815e88ac6d735d3cf013d5965b9bded6d6385f329",
+    "sourceTechnicalHash": "d06303522e3bf8bf6c87559e2d6d53766e46ae98859ae293747e9d61845d3ba2",
+    "targetHash": "bf2907fe4b3b8d05273ef8b5b5d233d56925b98268d42ae15dba1c507ca89a64",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.874Z",
+    "glossaryVersion": "0"
+  }
+}
