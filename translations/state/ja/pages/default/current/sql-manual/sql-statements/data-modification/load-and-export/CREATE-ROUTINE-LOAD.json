@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c8b3adee00f02b03fcc80a2cff5a0d0ae627bbc93a444ae78ad833c2f7c657e8",
+    "sourceTechnicalHash": "eeeef574b568e4246fe4a405549f0cf011e8a9b12c88c3284204837345070716",
+    "targetHash": "9735cfb465a2446f89b8e029cebfb33ea5985cc60270dffc537ce0e02999bae9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.626Z",
+    "glossaryVersion": "0"
+  }
+}

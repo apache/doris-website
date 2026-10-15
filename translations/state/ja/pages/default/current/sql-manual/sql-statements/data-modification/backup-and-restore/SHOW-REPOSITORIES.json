@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-REPOSITORIES",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-REPOSITORIES.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-REPOSITORIES.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "27c59b63bf784498ba1edca7f25d5b02325175765ebaccb5c41950f42b8d1541",
+    "sourceTechnicalHash": "1e7bf62c33e2b6da60b1e1c11b059ff1c020336a23c1a0c61a8b4290b22d4bd8",
+    "targetHash": "0fb4dda71f21bd80f0a1ab343fa21267865a6bf537f97a41b657c695d5bcc061",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.627Z",
+    "glossaryVersion": "0"
+  }
+}

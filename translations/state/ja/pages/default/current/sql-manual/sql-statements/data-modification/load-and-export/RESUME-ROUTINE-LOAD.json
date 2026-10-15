@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "8550ecec06c3e035968e8f748f043121527c5170fa7c37156df6184fe636faff",
+    "sourceTechnicalHash": "3c55aed926ab4c13685940a8ff20a99dedbba6b6ca70b751e0874ed5c8842387",
+    "targetHash": "b51026073a814a2aa06194f6b9ec0b31ba5bc3dcac3ccf05ad431427ab29b174",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.626Z",
+    "glossaryVersion": "0"
+  }
+}

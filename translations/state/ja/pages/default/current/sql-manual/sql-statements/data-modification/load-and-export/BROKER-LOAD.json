@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e73841fb748d54d0625b5a1d6e21cea5021b5e9d54f42b59d0f8c9056a36feb7",
+    "sourceTechnicalHash": "e04b8c0476c2bb92791fdcb39416355b9c4cff5ca768dcbf001db72c59df4052",
+    "targetHash": "ad4e86f762f80683cb7f89154781dd6db748e1f2c976dd9a81f51dcfca0664d5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.626Z",
+    "glossaryVersion": "0"
+  }
+}

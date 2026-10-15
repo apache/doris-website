@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/CLEAN-LABEL",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/CLEAN-LABEL.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/CLEAN-LABEL.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "d63253640be082c31763cb5fc3ef634c1e6b6da1d9355e810a47aa1094f279ba",
+    "sourceTechnicalHash": "26b8072303b48c45e9c0754565193c83d6abb1214fb1e1ad6da242ef1af0b13e",
+    "targetHash": "bbe33167adf12aa662b199c3f5d9f646caa6ec11eb9d51361200706ca7faa998",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.627Z",
+    "glossaryVersion": "0"
+  }
+}

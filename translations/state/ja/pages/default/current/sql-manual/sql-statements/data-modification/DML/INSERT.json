@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/DML/INSERT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/DML/INSERT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/DML/INSERT.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "8f7e7a7bd0a33fdfe819f40886000448884bdc49dc180c0861a3e5e5b42c4310",
+    "sourceTechnicalHash": "276a6d811601098fc4043d4775fad1e19c66dddf001278e29e64e50c03da40ea",
+    "targetHash": "84b1e8513c46d3a6e513fba388dd93bf88c787fbbf410fcb4bd203d81c4e3dff",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.625Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/catalog/SHOW-CATALOG",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/catalog/SHOW-CATALOG.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/catalog/SHOW-CATALOG.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "407f5625cdb2ff7d97bc14965dc64c7822c3ec2d05007950a667e01ce33dff76",
+    "sourceTechnicalHash": "bfe0557270e79c334c32133a7a1860cff6ae2bd52976a9daa10d67e460d912c2",
+    "targetHash": "b073b04696e1026927d1f1d0c376b0e8af49f61f2b6c09b48345228ae084dd2b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.629Z",
+    "glossaryVersion": "0"
+  }
+}

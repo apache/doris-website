@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/CREATE-TABLE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "417ff10f91e7d3d4524feb55afad4bd81f7f3163fd268fd45e79fc3c55cb288d",
+    "sourceTechnicalHash": "f0b426889805ba7ca7075a4e8592fba6dabee19da72e07efc472d4d06e2e31e1",
+    "targetHash": "0ca09dd5841bfcbcd20e58f18bb44ba4d65fb106bbb47980bbf962f9d88f18c0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.629Z",
+    "glossaryVersion": "0"
+  }
+}

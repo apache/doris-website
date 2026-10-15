@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/session/queries/SHOW-QUERY-STATS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/session/queries/SHOW-QUERY-STATS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/session/queries/SHOW-QUERY-STATS.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "663413a48bddcd8929128109868d734c2451bb0117103d48d94d59b0635d6886",
+    "sourceTechnicalHash": "2441ffe2217c75e95a332ec9e8fe9f431a31b15d42e9d6428d203a473cb47640",
+    "targetHash": "2c3e054b137e85a2cb65dfb87527957abd892775e7fe87fd280c742b1871b60f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.628Z",
+    "glossaryVersion": "0"
+  }
+}

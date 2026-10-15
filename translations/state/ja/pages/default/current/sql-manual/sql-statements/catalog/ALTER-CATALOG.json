@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/catalog/ALTER-CATALOG",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/catalog/ALTER-CATALOG.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/catalog/ALTER-CATALOG.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "1e77822ff370cfa2468461a2d5ec6d3642f5e9df708764415da4e278b0f0b42d",
+    "sourceTechnicalHash": "a0db26be21abc437bcd0e283204572b9f05a024d87c55ff91eccd7efcde34031",
+    "targetHash": "24fd41541cbbd42b36bde8685656a6e55116ff2f8aed94ed94cb42dea2c99475",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.628Z",
+    "glossaryVersion": "0"
+  }
+}
