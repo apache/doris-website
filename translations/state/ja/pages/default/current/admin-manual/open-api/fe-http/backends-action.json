@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/backends-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/backends-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/backends-action.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "2def1fc6b6f1d5a46d19893dc639d2736df5bb6cabc35d9b0f14672a8aeaf9dd",
+    "sourceTechnicalHash": "852628364800e64bb69311328ebee40b531cd6db9288997094d88a2fb571a884",
+    "targetHash": "db4b8ad71d9d097704e440ac9eaf0513ee18c99137ad39176b169884a149e91a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.289Z",
+    "glossaryVersion": "0"
+  }
+}

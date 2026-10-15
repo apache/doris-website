@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/backend_active_tasks",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/backend_active_tasks.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/backend_active_tasks.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "7a3af538b3dd6b4e4fded87b5afd39c4eab42a1393a4808a0babc745a32616db",
+    "sourceTechnicalHash": "2a487ef0b4db3f160f22c328c63e90b9b7c58c9db51e6c16001a52bb1b53193f",
+    "targetHash": "5a9d1e8f9a031d7bef1a9d62d7560407bc58802f2dbbf38c0ff965dfe19ecd26",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.283Z",
+    "glossaryVersion": "0"
+  }
+}

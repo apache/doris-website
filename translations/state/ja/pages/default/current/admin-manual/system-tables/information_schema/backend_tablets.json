@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/backend_tablets",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/backend_tablets.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/backend_tablets.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "1b28d6c2e020ac13887ab386936513e90bf867379230cda9b4447bee26bb7055",
+    "sourceTechnicalHash": "e3867cd54de845c875afbfd38720e952d2d33e7fe266b4b070345a66a2b01cf9",
+    "targetHash": "24de7348d50f66cbc711a5bb11ec58876c382b061790426e36e36d737c92f64a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.284Z",
+    "glossaryVersion": "0"
+  }
+}

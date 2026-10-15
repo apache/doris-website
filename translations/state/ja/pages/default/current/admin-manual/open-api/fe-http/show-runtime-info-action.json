@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/show-runtime-info-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/show-runtime-info-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/show-runtime-info-action.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "9a93d43d499d97dc31ff90a714be8b0c86c0a78234cbd5201cfd8043f425b2a6",
+    "sourceTechnicalHash": "5749c6774485394cc3642f0dfa7a63459c4cf54df2cd83d5964466018db3848e",
+    "targetHash": "c45f272196a72002e3c4626735d871d92fa75ee276f266cc81aa316e46467418",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.292Z",
+    "glossaryVersion": "0"
+  }
+}

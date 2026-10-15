@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/query-schema-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/query-schema-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/query-schema-action.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "58e330bcfd1cf2434a73c981e177cc3ff552f3e1e2f8feccf9c7adbe811e2d24",
+    "sourceTechnicalHash": "a2715e5ae49e02e6e29c06ef2f18a92497ab9b5ac29b70ad493e6fea7d5e44ec",
+    "targetHash": "44833c2c7fb1084b12003feb9045dc3db6705954fc5646c116f5747fcb573466",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.291Z",
+    "glossaryVersion": "0"
+  }
+}

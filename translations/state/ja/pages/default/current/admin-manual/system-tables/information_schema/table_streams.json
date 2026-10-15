@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/table_streams",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/table_streams.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/table_streams.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "93cbb59b1a20fbbae6218a55d5f26297c5a2cc63a2063625e149edba364732a3",
+    "sourceTechnicalHash": "d2c6074dc6b18252870e2c260a149b9fe2cc996bb4c14f8ac30ba96e3eed3e55",
+    "targetHash": "1b0aba2d8baf78a798549a1cc555399f9dfb5bb1e75d57a490fd0355e83d4d82",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.288Z",
+    "glossaryVersion": "0"
+  }
+}

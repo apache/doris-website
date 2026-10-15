@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/column_privileges",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/column_privileges.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/column_privileges.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "4cbb194470bade032177c97b515fd8f77757a506aec37ace3fb29c4a5f61decc",
+    "sourceTechnicalHash": "014492b072a367d388c821f41ce0fbaf6b7d93a22dcdc709c255518e8a5cd347",
+    "targetHash": "8305044120abc77e09abdbf8a326d6fc097c7fe66761a688b55e3ed6e3be4c05",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.284Z",
+    "glossaryVersion": "0"
+  }
+}
