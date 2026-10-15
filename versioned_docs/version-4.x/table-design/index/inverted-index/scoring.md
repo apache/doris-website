@@ -111,6 +111,20 @@ Where:
 
 When a query contains multiple terms, **the final score is the sum of the scores of each term**.
 
+### Record Length and the `norms` Property
+
+The `norms` index property and the `inverted_index_skip_norms_for_variant` BE config are supported since Doris 4.1.0.
+
+`|d|` comes from norms, which cost one byte per row per indexed field, including rows with no value for that field. Tokenized indexes write norms by default (`"norms" = "true"`); non-tokenized indexes do not. For indexes used only for filtering, set `"norms" = "false"` to save space:
+
+```sql
+INDEX idx_content(content) USING INVERTED PROPERTIES("parser" = "english", "norms" = "false")
+```
+
+VARIANT subpaths inherit the index's `norms` property, costing `rows × paths` bytes. Setting the BE config `inverted_index_skip_norms_for_variant` (default `false`, changeable at runtime) to `true` disables norms for all VARIANT path indexes, overriding the index property.
+
+Disabling norms does not affect `MATCH_*` filtering, but `score()` returns an error if it reads any segment without norms. These settings affect newly written segments; existing segments remain unchanged until compaction rewrites them. Upgrade all BEs to a version supporting these settings before changing them.
+
 ## Interpreting the Results
 
 Understanding the scoring results helps you use relevance ranking more accurately:

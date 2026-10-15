@@ -670,7 +670,7 @@ SELECT * FROM tbl WHERE v['id_2'] MATCH 'Apache';
 可为 VARIANT 的部分子列单独指定索引属性，甚至在同一路径上同时配置“分词与不分词”的两种倒排索引。指定路径索引需要在 Schema Template 中声明该路径的类型。
 
 ```sql
--- 常用属性：field_pattern（目标子路径）、analyzer、parser、support_phrase 等
+-- 常用属性：field_pattern（目标子路径）、analyzer、parser、support_phrase、norms 等
 CREATE TABLE IF NOT EXISTS tbl (
     k BIGINT,
     v VARIANT<'content' : STRING>,
@@ -696,6 +696,18 @@ CREATE TABLE IF NOT EXISTS tbl (
 SELECT * FROM tbl WHERE v['pattern_1'] MATCH 'Doris';
 SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
 ```
+
+VARIANT 路径上的分词索引默认写入 BM25 norms，每行每路径占 1 字节，包括该路径没有值的行。仅用于过滤的路径可通过 `"norms" = "false"` 关闭；不带 `field_pattern` 时，该属性作用于索引覆盖的所有子路径：
+
+```sql
+CREATE TABLE IF NOT EXISTS tbl (
+    k BIGINT,
+    v VARIANT<'body_*' : STRING>,
+    INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*", "norms" = "false")
+);
+```
+
+关闭 norms 不影响 `MATCH` 过滤，但 `score()` 读到缺少 norms 的段时会报错。BE 配置项 `inverted_index_skip_norms_for_variant` 可统一关闭 VARIANT 路径的 norms，详见[记录长度与 norms 属性](../../../../table-design/index/inverted-index/scoring.md#记录长度与-norms-属性)。
 
 ### 索引失效问题 {#when-indexes-dont-work}
 

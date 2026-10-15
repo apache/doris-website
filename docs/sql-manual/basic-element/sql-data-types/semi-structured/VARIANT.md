@@ -670,7 +670,7 @@ SELECT * FROM tbl WHERE v['id_2'] MATCH 'Apache';
 You can specify index properties for certain VARIANT subpaths, and even configure both tokenized and non-tokenized inverted indexes for the same path. Path-specific indexes require the path type to be declared via Schema Template.
 
 ```sql
--- Common properties: field_pattern (target path), analyzer, parser, support_phrase, etc.
+-- Common properties: field_pattern (target path), analyzer, parser, support_phrase, norms, etc.
 CREATE TABLE IF NOT EXISTS tbl (
     k BIGINT,
     v VARIANT<'content' : STRING>,
@@ -696,6 +696,18 @@ CREATE TABLE IF NOT EXISTS tbl (
 SELECT * FROM tbl WHERE v['pattern_1'] MATCH 'Doris';
 SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
 ```
+
+Tokenized indexes on VARIANT paths write BM25 norms by default, costing one byte per row per path, including rows with no value for that path. For paths used only for filtering, disable norms with `"norms" = "false"`. Without `field_pattern`, this property applies to all subpaths covered by the index:
+
+```sql
+CREATE TABLE IF NOT EXISTS tbl (
+    k BIGINT,
+    v VARIANT<'body_*' : STRING>,
+    INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*", "norms" = "false")
+);
+```
+
+Disabling norms does not affect `MATCH` filtering, but `score()` returns an error when it reads a segment without norms. The BE config `inverted_index_skip_norms_for_variant` disables norms for all VARIANT paths. See [Record Length and the norms Property](../../../../table-design/index/inverted-index/scoring.md#record-length-and-the-norms-property) for details.
 
 ### When indexes don’t work
 
