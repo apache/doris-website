@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/table_constraints",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/table_constraints.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/table_constraints.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "506c02bc053ccf85b9a7358d7f0638d2f8afd7263511d0da03a65a124f85a618",
+    "sourceTechnicalHash": "0f7a08d3829dd808ff21ed1bfff07d62acfbf419f35d9185123ff55564865724",
+    "targetHash": "2d24ec124aac6600521291916414bd6fd47a6474ea7e67a152143f1b248edc0f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.745Z",
+    "glossaryVersion": "0"
+  }
+}

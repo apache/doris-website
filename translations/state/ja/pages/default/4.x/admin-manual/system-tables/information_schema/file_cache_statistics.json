@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/file_cache_statistics",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/file_cache_statistics.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/file_cache_statistics.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "9147f2c8b8c57d62a0b7ce91c9424b23c390d64e891b47e840de9d5d8881f8bb",
+    "sourceTechnicalHash": "9df750f43bfd1a1af0d536bd058ed776776ed143bca1f33c00cc8dfdf7b93eaa",
+    "targetHash": "a8c165a762a750027fbf8bd37018598564227bf990a5d9699b4526c06965e8e0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.744Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/character_sets",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/character_sets.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/character_sets.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "e711baf27dcbec7d103bf7d70b50ec22cf4d0dd7e548354bbf6354ff29976358",
+    "sourceTechnicalHash": "0031b8ba3d6c57cdd26878295f1a655ff3c708df17cdfbd6608e863e128329fe",
+    "targetHash": "c60c4837609382ca1c76871e7daf6ab09a37a767f67b6dd2c83ecfe315406636",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.744Z",
+    "glossaryVersion": "0"
+  }
+}
