@@ -55,7 +55,8 @@ async function verify({site,devOnly = false}) {
             catch (error) {throw new Error(`${item.ctx}: ${error.message}; requests=${requests}; errors=${errors}; body=${(await page.locator('body').innerText()).slice(0,500)}`);}
             const links = await page.locator('section article a').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')));
             assert(links.length && links.every(link => link.startsWith(item.path)),`${item.ctx} leaked a result: ${links.join(',')}`);
-            assert(requests.some(request => request.includes(`search-index-${item.ctx.replace(/\//g,'-')}`)),`Wrong worker index: ${requests}`);
+            // A page searching one context loads only that context's index.
+            assert(requests.length && requests.every(request => request.includes(`search-index-${item.ctx.replace(/\//g,'-')}`)),`Wrong worker index: ${requests}`);
             assert.deepEqual(errors,[],`Search page errors: ${item.ctx}`);
             results.push({...item,indexRequests:requests,results:links.length});
             await page.close();
@@ -86,7 +87,7 @@ async function verify({site,devOnly = false}) {
         await input.fill('query_vector');
         const suggestion = bar.locator('[class*="suggestion_"]');
         await suggestion.first().waitFor({timeout:30000});
-        assert(barRequests.some(request => request.includes('search-index-docs-dev')),`SearchBar used wrong index: ${barRequests}`);
+        assert(barRequests.length && barRequests.every(request => request.includes('search-index-docs-dev')),`SearchBar used wrong index: ${barRequests}`);
         results.push({searchBarQuery:'query_vector',suggestions:await suggestion.count(),indexRequests:barRequests});
         await bar.close();
 
@@ -99,7 +100,9 @@ async function verify({site,devOnly = false}) {
         await mobile.close();
 
         const page = await browser.newPage();
-        await page.goto(`${origin}/ja/search/?q=zzzzzzzz_t04_nomatch_98765&ctx=docs/dev`);
+        // An identifier with no results is retried part by part, and every part
+        // is a prefix query: "nomatch" from an earlier query found NoMatchingRule.
+        await page.goto(`${origin}/ja/search/?q=zzzzqqqq_xxxxwwww&ctx=docs/dev`);
         try {await page.getByRole('link',{name:'英語の原文を検索'}).waitFor({timeout:30000});}
         catch (error) {throw new Error(`Missing original-language search link: ${(await page.locator('body').innerText()).slice(-600)}; ${error.message}`);}
         const original = await page.getByRole('link',{name:'英語の原文を検索'}).getAttribute('href');

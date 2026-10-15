@@ -388,6 +388,11 @@ export default function SearchBar({ handleSearchBarToggle }) {
         }
     }, [location.pathname]);
     useEffect(() => {
+        // On mount the page's search context is not resolved yet, and an empty
+        // one would load every context index. Leave that to focus or hover.
+        if (!searchContext && useAllContextsWithNoSearchContext) {
+            return;
+        }
         loadIndex(true);
     }, [curVersion]);
     useEffect(() => {

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import useIsBrowser from "@docusaurus/useIsBrowser";
 import Layout from "@theme/Layout";
 import Head from "@docusaurus/Head";
 import Link from "@docusaurus/Link";
@@ -29,6 +30,7 @@ export default function SearchPage() {
 }
 function SearchPageContent() {
     const { siteConfig: { baseUrl }, i18n: { currentLocale }, } = useDocusaurusContext();
+    const isBrowser = useIsBrowser();
     const { selectMessage } = usePluralForm();
     const { searchValue, searchContext, searchVersion, updateSearchPath, updateSearchContext, } = useSearchQuery();
     const [searchQuery, setSearchQuery] = useState(searchValue);
@@ -86,8 +88,12 @@ function SearchPageContent() {
             }
             setSearchWorkerReady(true);
         }
-        doFetchIndexes();
-    }, [searchContext, versionUrl]);
+        // The context comes from the query string, which is only read in the
+        // browser; before that an empty one would load every context index.
+        if (isBrowser) {
+            doFetchIndexes();
+        }
+    }, [isBrowser, searchContext, versionUrl]);
     return (<React.Fragment>
       <Head>
         {/*
