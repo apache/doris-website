@@ -89,12 +89,12 @@ TO DATABASE target_test_db (
 ```sql
 select * from jobs("type"="insert") where ExecuteType = "STREAMING"
              Id: 1765332859199
-             Name: mysql_db_sync
+             Name: multi_table_sync
           Definer: root
       ExecuteType: STREAMING
 RecurringStrategy: \N
            Status: RUNNING
-       ExecuteSql: FROM MYSQL('include_tables'='user_info','database'='test','driver_class'='com.mysql.cj.jdbc.Driver','driver_url'='mysql-connector-java-8.0.25.jar','offset'='initial','jdbc_url'='jdbc:mysql://127.0.0.1:3306','user'='root' ) TO DATABASE target_test_db ('table.create.properties.replication_num'='1')
+       ExecuteSql: FROM MYSQL('include_tables'='user_info,order_info','database'='test','driver_class'='com.mysql.cj.jdbc.Driver','driver_url'='mysql-connector-java-8.0.25.jar','offset'='initial','jdbc_url'='jdbc:mysql://127.0.0.1:3306','user'='root' ) TO DATABASE target_test_db ('table.create.properties.replication_num'='1')
        CreateTime: 2025-12-10 10:19:35
  SucceedTaskCount: 1
   FailedTaskCount: 0
@@ -148,6 +148,7 @@ MySQL 源端（`FROM MYSQL`）支持以下参数。连接信息、数据库名�
 | `table.<table_name>.target_table` | 否 | 源表名 | 自 4.1.0 版本起支持。为指定源表设置 Doris 目标表名，`<table_name>` 使用源表名。 |
 | `table.<table_name>.exclude_columns` | 否 | - | 自 4.1.0 版本起支持。指定源表中不同步的列，多个列用逗号分隔。列必须存在，且不能排除主键列。 |
 | `offset` | 否 | `latest` | 启动位点。`initial`：全量 + 增量同步；`earliest`：从当前可用的最早 Binlog 位点开始；`latest`：仅同步作业启动后的增量；也可设置 JSON 精确位点，例如 `{"file":"binlog.000001","pos":"154"}` 或 `{"gtids":"<gtid_set>"}`。自 4.1.0 版本起支持 `snapshot`，表示仅全量同步。 |
+| `schema_change_behavior` | 否 | `evolve` | 字符串，不区分大小写。`evolve` 自动同步支持的列变更，`ignore` 关闭结构同步。可暂停后通过 `ALTER JOB` 修改；支持范围及暂停处理见 [Schema Change 同步](./schema-change-mysql.md)。 |
 | `snapshot_split_size` | 否 | `40960`（4.1.4 之前为 `8096`） | split 的大小（行数）。全量同步时，表会被切分成多个 split。必须为正整数。 |
 | `snapshot_parallelism` | 否 | `1` | 全量阶段的并行度，即单次 Task 最多调度的 split 数量。必须为正整数。 |
 | `server_id` | 否 | 自动生成 | 自 4.1.0 版本起支持。MySQL CDC reader 的 server ID。支持单值（如 `5400`）或闭区间（如 `5400-5408`）；区间宽度必须大于等于 `snapshot_parallelism`。 |

@@ -129,6 +129,7 @@ SELECT * FROM target_db.users ORDER BY id;
 | `table.<table_name>.target_table` | 否 | 源表名 | 为指定源表设置 Doris 目标表名。 |
 | `table.<table_name>.exclude_columns` | 否 | - | 排除指定源表中的非主键列，多个列用逗号分隔。列必须存在，且不能排除主键列。 |
 | `offset` | 否 | `latest` | `initial`：全量 + 增量；`snapshot`：仅全量；`earliest`：从当前可用的最早 Binlog 位点开始；`latest`：仅同步作业启动后的增量；也可使用 `{"file":"binlog.000001","pos":"154"}` 形式的精确位点。 |
+| `schema_change_behavior` | 否 | `evolve` | 字符串，不区分大小写。`evolve` 自动同步支持的列变更，`ignore` 关闭结构同步。可暂停后通过 `ALTER JOB` 修改；支持范围及暂停处理见 [Schema Change 同步](./schema-change-oceanbase.md)。 |
 | `snapshot_split_size` | 否 | `40960` | 全量阶段每个 split 包含的行数，必须为正整数。 |
 | `snapshot_parallelism` | 否 | `1` | 全量阶段单个 Task 最多并行调度的 split 数，必须为正整数。 |
 | `skip_snapshot_backfill` | 否 | `true` | 是否跳过快照期间的 Binlog 回填。自动建表同步采用 at-least-once 语义。 |
