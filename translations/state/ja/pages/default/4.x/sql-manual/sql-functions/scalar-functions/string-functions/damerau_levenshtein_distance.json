@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/damerau_levenshtein_distance",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/damerau_levenshtein_distance.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/damerau_levenshtein_distance.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "965ed037a23ca135fa7ca70d0a151db08f313b4943653ef735f1796a1202d168",
+    "sourceTechnicalHash": "b928bb2aaccb1f71d540a6faba19f61f45ace7018b5f78bbd42a7181c110f19a",
+    "targetHash": "63c2643eb4bc5e6142e3fbed6155f876e25de2081aa88d6b55a7a4309fbce89a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.830Z",
+    "glossaryVersion": "0"
+  }
+}

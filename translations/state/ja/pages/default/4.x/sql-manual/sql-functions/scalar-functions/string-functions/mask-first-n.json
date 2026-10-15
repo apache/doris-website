@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/mask-first-n",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/mask-first-n.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/mask-first-n.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "e9a719d23326121b07f440411554d3f9da5f4e97c05d6f0a591cdfeb845f153b",
+    "sourceTechnicalHash": "13d31eac94e0631c99547c66aa66024735651e10ae18669f903aac3b87607bd1",
+    "targetHash": "52c91adcea8562c05084382080e2f3f225b9cd8c5cc07f93fd1d6ea5b7102668",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.833Z",
+    "glossaryVersion": "0"
+  }
+}

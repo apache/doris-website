@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/ngram-search",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/ngram-search.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/ngram-search.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "ae3f40cd6d893d150123dadd4d3684ebb3df7d6fbe3b85689c615298aecc41b2",
+    "sourceTechnicalHash": "da4100ea37dac6e42cc15a1657930ab9f553540ce7824a83394a1992897902dc",
+    "targetHash": "7013dafcbfaf72143f936bb76cc539b1d2161a85253feb28511b09312fd61218",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.833Z",
+    "glossaryVersion": "0"
+  }
+}

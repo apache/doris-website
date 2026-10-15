@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/domain-without-www",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/domain-without-www.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/domain-without-www.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "a9de900099ccafe281a89ab5a1f23fd56fa8f5122269ee4317670e4706375eaa",
+    "sourceTechnicalHash": "51580149a86f96b076e714d37dbe281ba71f390da43bde80d078d1cb5d009e5a",
+    "targetHash": "0f1d138fa24cf534c62e6f7be9caf7dffae5ae66b473b41818e2f860018f8b58",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.830Z",
+    "glossaryVersion": "0"
+  }
+}

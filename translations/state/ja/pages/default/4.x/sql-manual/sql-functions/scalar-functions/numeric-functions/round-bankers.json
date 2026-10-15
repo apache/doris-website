@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/round-bankers",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/round-bankers.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/round-bankers.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "18e3e4c1bd9d6ddb0b294989dd5979c7bc4dbc03188bc5a5c301866d4bb815a5",
+    "sourceTechnicalHash": "9bdf9e00a841205989b5fc8223fe715e63ce0affb05dc3734706f8b4041f8429",
+    "targetHash": "dc295d87f51a8b40e48475296e2c184891de9dd9002533c6a024d1189db43de3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.824Z",
+    "glossaryVersion": "0"
+  }
+}

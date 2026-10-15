@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "729ef324163d98e5416b3c878920243796ff942c45585ead7b1f4104114a5c0b",
+    "sourceTechnicalHash": "1945d5343842ea36b573296f22e0c832cb9f836e01dad825c3e4bbe3377716a4",
+    "targetHash": "bd5bb0759b0267ce0bad7394612420f0a1dbcb6b96e7879ad0b082da65905055",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.833Z",
+    "glossaryVersion": "0"
+  }
+}

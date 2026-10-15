@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/replace-empty",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/replace-empty.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/replace-empty.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "e5138c6d8db8a15c99430b3fe0655dea226a2fe34ddab7d5d2c295e1fbd78465",
+    "sourceTechnicalHash": "c05b47113743dd225fffdd5cfdb4cdf43b1ce99e4e9a3b05adb5881a20f2eca8",
+    "targetHash": "a1c1ce48daa7449a53006529d4555ec5e39f232414b2349d84e8ba27ad685a92",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.834Z",
+    "glossaryVersion": "0"
+  }
+}

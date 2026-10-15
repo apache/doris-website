@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "b6b90a95c5d072fe6833fd97b106fe8d0f86e3e081d46a2f1235e8e6b995f2a2",
+    "sourceTechnicalHash": "15ff5ebfac132d1150c6d5d7cfbb6d3e62141b01b6d71834cedcc2efba159ff6",
+    "targetHash": "91dfe119d7f534fe2fe546e486b1b9c3c27dd7827a4ada46d1cd398818a89d2c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.832Z",
+    "glossaryVersion": "0"
+  }
+}

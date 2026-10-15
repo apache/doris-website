@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/xor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/xor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/xor.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "286e610edcdabd5b89cd892d7cb751139b6bfbb77604df92abfb9363224ca32c",
+    "sourceTechnicalHash": "dc4418cfba977259349347598b8c9a5e4547cd57762a5db996198a3d9f8ee8d9",
+    "targetHash": "2a6205c30d7f764d9d35eff3091842ae62592413707b9e7434f3287db2864f5b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.829Z",
+    "glossaryVersion": "0"
+  }
+}

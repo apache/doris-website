@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/gcd",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/gcd.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/gcd.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "b95bb5db92961783be1407e9e62a215543d3e8f4b4ed1d1d3592966591a5c7c9",
+    "sourceTechnicalHash": "6db1d18a012830c861fd4870e0b8dd470e215ade4ed1f5265dc7b476816ba273",
+    "targetHash": "794b3d8221cc279bc7a1b3878b1ba0bd7af2d4d1db8dc3c6c16b0b869a8a5060",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.829Z",
+    "glossaryVersion": "0"
+  }
+}

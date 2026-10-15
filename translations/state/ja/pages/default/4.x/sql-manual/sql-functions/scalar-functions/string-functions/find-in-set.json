@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/find-in-set",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/find-in-set.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/find-in-set.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "937320abcf7d98cfcb6d47060c12fe9760cc1a426da519e122e5cd90e9a0ee14",
+    "sourceTechnicalHash": "cf2cbfe1003b464304e8ddad7cfcfd425fb4b1e1f30ffd4e41590120f8662ddd",
+    "targetHash": "6a08f2e0b1d42342017e2909dd2240d0abce920cb66462810624e74878a67281",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.831Z",
+    "glossaryVersion": "0"
+  }
+}
