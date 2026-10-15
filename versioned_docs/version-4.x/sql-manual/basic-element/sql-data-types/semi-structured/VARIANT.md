@@ -36,6 +36,15 @@ CREATE TABLE IF NOT EXISTS ${table_name} (
 PROPERTIES("replication_num" = "1");
 ```
 
+A top-level VARIANT column name cannot contain a dot (`.`), even when quoted with backticks: for example, `` `v.x` VARIANT `` is invalid. This restriction applies to `CREATE TABLE` and `ALTER TABLE`; it does not restrict JSON field names inside a VARIANT value.
+
+`ADD COLUMN` (including batch additions), `MODIFY COLUMN`, and `RENAME COLUMN` must also use a top-level VARIANT column name without dots. For example, the following statement is rejected:
+
+```sql
+ALTER TABLE ${table_name} ADD COLUMN `v.x` VARIANT;
+-- ERROR: Cannot use `VARIANT` type column named with a `.` character: v.x
+```
+
 Constrain certain paths with a Schema Template (see “Extended types”):
 
 ```sql

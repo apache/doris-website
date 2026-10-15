@@ -81,6 +81,7 @@ field_definition:
 - The `field_definition` list is the [Schema Template](#schema-template). It fixes the storage type of selected paths.
 - `properties(...)` sets column-level storage properties. See [Column properties](#column-properties).
 - A VARIANT column can be `NULL` or `NOT NULL`. Its only allowed default value is `NULL`.
+- A top-level VARIANT column name cannot contain a dot (`.`), even when quoted with backticks: for example, `` `v.x` VARIANT `` is invalid. This restriction applies to `CREATE TABLE` and `ALTER TABLE`; it does not restrict JSON field names inside a VARIANT value.
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl (
@@ -542,6 +543,13 @@ Matched paths participate in Subcolumnization by default. If too many paths matc
 The Schema Template cannot be changed after the column is created. See [ALTER TABLE](#alter-table).
 
 ## ALTER TABLE
+
+`ADD COLUMN` (including batch additions), `MODIFY COLUMN`, and `RENAME COLUMN` must also use a top-level VARIANT column name without dots. For example, the following statement is rejected:
+
+```sql
+ALTER TABLE example_tbl ADD COLUMN `v.x` VARIANT;
+-- ERROR: Cannot use `VARIANT` type column named with a `.` character: v.x
+```
 
 `ALTER TABLE` supports:
 
