@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/optimization-technology-principle/topn-optimization",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/optimization-technology-principle/topn-optimization.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/optimization-technology-principle/topn-optimization.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "42b95df505229d91bdf1c66b3e324485566602e3aab688eee22cf30b3041488f",
+    "sourceTechnicalHash": "9e1b391349df0120b9812e9951feaaa79e500e51e75c882710c7dfe2215340fe",
+    "targetHash": "552047bc204899138c6fe751a3e03b645c453a0eecf54eb90c4da97961afa033",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.711Z",
+    "glossaryVersion": "0"
+  }
+}

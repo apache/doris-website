@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "223d57211fd9494299651b2060c08ba89d7b208a40c7437e864f8c3e858c3c5d",
+    "sourceTechnicalHash": "f8cd45f7310e4886d85148cdf51d6672c32d087df33d260b4cef1f1a06b1c9fe",
+    "targetHash": "2d5e6d899519466db7bda5e03d6e50dd3b90a0203280ea1603f73af9cba2f142",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.711Z",
+    "glossaryVersion": "0"
+  }
+}

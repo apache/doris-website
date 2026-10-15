@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/maxcompute-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/maxcompute-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/maxcompute-catalog.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "4235105182809ad99d5494c2270de52c27ed9b2057c434a5e6841068c945397c",
+    "sourceTechnicalHash": "03a34ffc8f175a94041cc3e907674c1947668ac2483348e6381e5045108260cd",
+    "targetHash": "7355db3bbc8708a1a91287741db79557af4efd5638dbdc40f19f0c096f755628",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.713Z",
+    "glossaryVersion": "0"
+  }
+}

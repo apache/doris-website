@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/lance-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/lance-catalog.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/lance-catalog.mdx",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "6d8419ee297022e20dbc12b3962051d5fc826eebe053499380a4f4f284d6d776",
+    "sourceTechnicalHash": "1c09f9621de6ff15e6488c9c508cb30fd042e9edfe9e20a8bcb0e5c7b68cd4de",
+    "targetHash": "ad38618cc7fa6847d1afe4f65977d38abe9afbdfa39629111acb63efa28fc292",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.712Z",
+    "glossaryVersion": "0"
+  }
+}

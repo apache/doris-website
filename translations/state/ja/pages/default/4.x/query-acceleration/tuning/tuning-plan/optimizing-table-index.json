@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/tuning/tuning-plan/optimizing-table-index",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/tuning/tuning-plan/optimizing-table-index.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/tuning/tuning-plan/optimizing-table-index.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "e2645b3c98f0a872aeb1e1306247097d44b07c7da82313dc22c97153c40789b0",
+    "sourceTechnicalHash": "f1a496184b7170c450e85f4527dbc1eb4a70f665bc09b996cde50d63f5eaac9f",
+    "targetHash": "f7adc03fa4f7c2af3db247c966e7aeadf0a6bf573718a3026befd25622cd7005",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.710Z",
+    "glossaryVersion": "0"
+  }
+}

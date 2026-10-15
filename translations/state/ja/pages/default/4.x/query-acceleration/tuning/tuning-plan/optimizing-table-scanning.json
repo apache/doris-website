@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/tuning/tuning-plan/optimizing-table-scanning",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/tuning/tuning-plan/optimizing-table-scanning.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/tuning/tuning-plan/optimizing-table-scanning.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "4ad9cfd21122082f64b84972891a12ad031b65e4ba42a65926256626b1cf6b00",
+    "sourceTechnicalHash": "6e97e7e07fe9572186130aba79d97bd58937fb8079f608441939b238491c6eb8",
+    "targetHash": "73622708d6e25c4255b5cfa40d5cac619a39b1e4b108456ab08e5254128786e6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.710Z",
+    "glossaryVersion": "0"
+  }
+}

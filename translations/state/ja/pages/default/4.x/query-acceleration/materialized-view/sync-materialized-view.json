@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/materialized-view/sync-materialized-view",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/materialized-view/sync-materialized-view.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/materialized-view/sync-materialized-view.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "44622e5d7d8a6d9f131f44f9ae4a388007da705a660bdc509ca10568cffde98b",
+    "sourceTechnicalHash": "5b3ca70f9b7645b6c7414ead0e113ad7b8b817fdf6b61de610cd5c7215923b4c",
+    "targetHash": "e45265514e24501f008c0c823e87821024ced3f13e845981af1206309fd5e7d2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.709Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-data/udf/alias-function",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-data/udf/alias-function.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-data/udf/alias-function.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "8e18de8457fea3a9dbd10487d8e6794d38bdb1edc5629697e9067725a2aa9c7f",
+    "sourceTechnicalHash": "4670ea223a2db2c4e2853961a0fd17b74cd36c93f31754bc40b7876172587d4b",
+    "targetHash": "924a6b6b76922a808edf7aa332a0a00079eb8362834fc5629cb6506e52f8253c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.708Z",
+    "glossaryVersion": "0"
+  }
+}

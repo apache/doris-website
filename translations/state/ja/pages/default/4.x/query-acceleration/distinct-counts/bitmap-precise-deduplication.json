@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/distinct-counts/bitmap-precise-deduplication",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/distinct-counts/bitmap-precise-deduplication.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/distinct-counts/bitmap-precise-deduplication.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "1a5c4473d3ec05390e8bf9743ffb9adfe98525f4cf36bce2b3cedc7e24ade3da",
+    "sourceTechnicalHash": "cedb811b90efe87560ff8d714071fe9b8b5378c19c7e2759fab1facdf8636144",
+    "targetHash": "eb526982da7555f2dc8f42cd31a85fbc862e6d1e9eb5362accc32b04906d95c4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.711Z",
+    "glossaryVersion": "0"
+  }
+}

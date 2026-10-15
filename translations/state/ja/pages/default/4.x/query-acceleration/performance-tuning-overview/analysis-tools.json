@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/performance-tuning-overview/analysis-tools",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/performance-tuning-overview/analysis-tools.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/performance-tuning-overview/analysis-tools.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "46435172727e10414dd4414fa28ef91ae56ddb67a30fdb2178941cb010b1ebd2",
+    "sourceTechnicalHash": "db827015ae0ae7efe49000725477898946bf1a705710785a8c3ff5daa2f11079",
+    "targetHash": "30b8ae42045fb471f170e6f5d199451ea3893d427b4d9dfe4c210be368519ac4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.709Z",
+    "glossaryVersion": "0"
+  }
+}

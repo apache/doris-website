@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/jdbc-catalog-overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/jdbc-catalog-overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/jdbc-catalog-overview.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "1067d4e4060e5203cf362fbbd0a8dbba9e471500db9facfb854afaadffe98e51",
+    "sourceTechnicalHash": "112a93d7d4370cbe098935dc2b4912af7a18bf6c0bfa492b4695b91ca5d64979",
+    "targetHash": "63f12ea7a78212ecccada3f54db75e039e41e5a91fa73d9a6aba60440d6e8b4c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.713Z",
+    "glossaryVersion": "0"
+  }
+}

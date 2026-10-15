@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "ff1419cbde6af2dc569afe11d57f82358b0949c72dd72450786696955ef8efa0",
+    "sourceTechnicalHash": "82c1c5396c36797e5986fbced1ecdfc0ffdbd83b2bb3cfe0fc1a9de4ccf5d202",
+    "targetHash": "6ccb5af6454ccbf80323702c55190ea94db384981fed117d6fe190ae49b16d67",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.710Z",
+    "glossaryVersion": "0"
+  }
+}

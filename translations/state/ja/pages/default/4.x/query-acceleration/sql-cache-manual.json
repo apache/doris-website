@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/sql-cache-manual",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/sql-cache-manual.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/sql-cache-manual.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "59f514c081dc12477ef6a0bca9daa8a192dab71f0f4bb5cf45cfdf005cebe2a7",
+    "sourceTechnicalHash": "821bc55e32eee4eaaa01b14c34062360acd9c00d8ab2684fb76163ce40ecee0c",
+    "targetHash": "0eeff3e10662a0980b22b727eef9b41ee71bd542486c040d07f576305e1060ec",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.710Z",
+    "glossaryVersion": "0"
+  }
+}

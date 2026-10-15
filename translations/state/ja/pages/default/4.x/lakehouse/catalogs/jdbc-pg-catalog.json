@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/jdbc-pg-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/jdbc-pg-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/jdbc-pg-catalog.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "4aeaaac0be3b07633a2d3ba18dc8568873b98bef994ad93a8d70259f63e0e5d0",
+    "sourceTechnicalHash": "189c1e77d4fab0aeb7fb1ecffd2b074906127fe3c4c244ae7a25dd9e384b76e4",
+    "targetHash": "3d476b2fca279dc0d53452d6f67e80d7fe92cb5b9251c7cbefebe6b401b2b57c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.714Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,31 @@
+---
+{
+    "title": "高並行ポイントクエリ",
+    "language": "ja",
+    "description": "高並行処理とポイントクエリに関する Apache Doris の案内ページ。行ストアとショートパスによる主キーのポイントクエリの最適化、および辞書を使ったメモリ内キーバリュー参照によるディメンションテーブル結合の高速化を扱います。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+分析向けの列指向ストレージに加え、Doris は高い同時実行性と低レイテンシーが求められるオンラインのポイントクエリやキーバリュー参照向けに、専用の最適化経路を提供します。行ストアとショートパスにより、Unique テーブルの主キーに対するポイントクエリで高い QPS と低レイテンシーを実現します。辞書はディメンションテーブル結合をメモリ内のキーバリュー参照に書き換えます。
+
+## 主キーのポイントクエリ
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="高並行ポイントクエリ"
+    description="Unique 主キーテーブルで行ストア、ショートパス、PreparedStatement を有効にし、主キーのポイントクエリの QPS と応答レイテンシーをオンラインサービスに適した水準にします。"
+    link="high-concurrent-point-query"
+/>
+</div>
+
+## キーバリュー参照
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="辞書による高速化"
+    description="ディメンションカラムをメモリに事前ロードし、LEFT OUTER JOIN の代わりに dict_get 関数を使用して、キーバリュー参照が頻繁に発生する場面でクエリ性能を大幅に向上させます。"
+    link="dictionary"
+/>
+</div>

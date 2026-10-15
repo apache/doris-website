@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/jdbc-sqlserver-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/jdbc-sqlserver-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/jdbc-sqlserver-catalog.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "e4f2c79061892cd0d5cc98abe1cb7bcf1f0151d7e5b5db1d54fe888e6434367a",
+    "sourceTechnicalHash": "d3633a5c461d931c15b930df41259630dfd40d2263f49b3eda7ddf59543c90eb",
+    "targetHash": "41ab0cb0d92330e7b7984ffa6b89074a1d6b3171a2a1b0b80d9b325f39c601c1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.714Z",
+    "glossaryVersion": "0"
+  }
+}

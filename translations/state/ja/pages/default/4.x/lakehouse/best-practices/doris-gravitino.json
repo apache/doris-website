@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-gravitino",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-gravitino.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-gravitino.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "bfd12a3768a39511e5facfc1b39b1bb7c3e90f65dd522da4c6b0a2d6b2691e4a",
+    "sourceTechnicalHash": "c51090b28b105062b7c80cd5d586756fdd11ead020042b90eab7e5dc1c516c5f",
+    "targetHash": "d11b9f9ad7e7780e69e94546d6bc54e6fd8367c0341a8603c35044335ca7758f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.712Z",
+    "glossaryVersion": "0"
+  }
+}

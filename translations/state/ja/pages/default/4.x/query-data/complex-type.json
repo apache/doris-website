@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-data/complex-type",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-data/complex-type.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-data/complex-type.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "98a1f39f95547db68a2ef351ea6e210d75ff57a8545eecb432a865bdf1dd6c9f",
+    "sourceTechnicalHash": "f2f55dc85a0c0992a0917ce00e6a493e5c56368206855d8a23568f8ba23a94f9",
+    "targetHash": "8e1a908ff73cc6fdf22eec3da6830c2a9e725795f070f90b1ee597e2508d8010",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.708Z",
+    "glossaryVersion": "0"
+  }
+}
