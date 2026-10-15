@@ -29,7 +29,7 @@ Lance 支持自 Apache Doris 4.2 版本开始提供。
 | Time Travel | 暂不支持 |
 | Full-Text Search / Hybrid Search | 暂不支持 |
 
-Catalog 配置、类型映射、谓词下推和向量检索的详细说明请参见 [Lance Catalog（4.x）](/zh-CN/docs/4.x/lakehouse/catalogs/lance-catalog)。
+Catalog 配置、类型映射、谓词下推和向量检索的详细说明请参见 [Lance Catalog（4.x）](https://doris.apache.org/zh-CN/docs/4.x/lakehouse/catalogs/lance-catalog)。
 
 ## 通过文件 TVF 查询 Lance 数据集
 
@@ -63,5 +63,5 @@ WHERE user_id > 100;
 
 ## 参考资料
 
-- [Lance Catalog（4.x）](/zh-CN/docs/4.x/lakehouse/catalogs/lance-catalog)
+- [Lance Catalog（4.x）](https://doris.apache.org/zh-CN/docs/4.x/lakehouse/catalogs/lance-catalog)
 - [Lance 格式官方文档](https://docs.lancedb.com/lance)
