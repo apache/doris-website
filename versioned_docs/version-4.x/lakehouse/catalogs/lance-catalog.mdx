@@ -35,8 +35,8 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 |---|---|
 | Filesystem Catalog | Supports warehouses on a local file system, `file://`, `s3://`, or `oss://` |
 | REST Catalog | Supports Lance REST Namespace with no authentication, Bearer Token, API Key, or custom HTTP headers |
-| Metadata access | Supports `SHOW DATABASES`, `SHOW TABLES`, `DESC`, and `SHOW INDEX` (Filesystem Catalogs only) |
-| System tables (`table$...`) | Not supported; use `SHOW INDEX` for index metadata |
+| Metadata access | Supports `SHOW DATABASES`, `SHOW TABLES`, `DESC`, `SHOW INDEX`, and the `lance_index_entries` TVF (the last two only for Filesystem Catalogs) |
+| System tables (`table$...`) | Not supported; use `SHOW INDEX` and the `lance_index_entries` TVF for index metadata |
 | Data queries | Supports column pruning, parallel Lance Fragment scans, and snapshot-consistent reads of the current version |
 | Predicate pushdown | Supports pushing compatible static scalar predicates and join Runtime Filters down to Lance |
 | File TVFs | Supports querying Lance datasets directly through `s3()` and `local()` |
@@ -468,6 +468,39 @@ nested_index   nested_label_btree    1             attributes.`child.with.dot`  
 `SHOW INDEX` only inspects existing indexes; it does not create one. Create Lance indexes with the Lance SDK or another Lance writer outside Doris. If the recorded index metadata is inconsistent, for example when an index references an unknown field or two indexes share an identical name, the statement fails instead of returning partial metadata.
 
 `SHOW INDEX` requires the `SHOW` privilege on the table. For a REST Catalog, the statement is rejected with the error `SHOW INDEX is not supported for Lance REST catalogs`.
+
+### List Physical Index Entries with lance_index_entries
+
+`SHOW INDEX` provides the logical view of the indexes of a Lance table: index name, indexed columns, index type, and properties, in the fixed MySQL-style 13-column result set. The physical identity of an index entry, its UUID and dataset version, does not fit into that fixed schema. The read-only table-valued function `lance_index_entries` provides this physical view. It returns one row for each physical index entry recorded in the latest dataset snapshot:
+
+```sql
+SELECT *
+FROM lance_index_entries("table" = "lance_catalog.default.vs_ivf_pq_f32");
+```
+
+`table` must be a fully qualified, three-part `catalog.database.table` name. Identifiers support backtick quoting, so if a multilevel Namespace maps to a database name containing `.`, quote the database part with backticks.
+
+The TVF returns the following fixed columns:
+
+| Column | Type | Description |
+|---|---|---|
+| `CatalogName` | STRING | Catalog name. |
+| `DatabaseName` | STRING | Database name. |
+| `TableName` | STRING | Table name. |
+| `IndexName` | STRING | Name of the Lance logical index. One logical index produces multiple rows when it has several physical entries with different UUIDs. |
+| `IndexUuid` | STRING | UUID of this physical index entry. |
+| `DatasetVersion` | BIGINT | Dataset version recorded on this physical index entry, that is, the dataset version at which the entry was written. Physical entries of the same logical index can carry different dataset versions. It is always `1` or greater. |
+
+The following row illustrates the result for the `IVF_PQ` index shown above. `IndexUuid` and `DatasetVersion` are illustrative values:
+
+```text
+CatalogName    DatabaseName  TableName      IndexName             IndexUuid                             DatasetVersion
+lance_catalog  default       vs_ivf_pq_f32  embedding_ivf_pq_f32  3f9c2a1e-7b4d-4e6f-9a1c-2d5e8f0b3a47  12
+```
+
+`lance_index_entries` only reads index metadata through `Dataset.getIndexes()`. It does not read row counts or statistics, and it does not modify the dataset. The result can be filtered with ordinary predicates, for example `WHERE IndexName = ...`. Rows are sorted by `(IndexName, IndexUuid)`. The read is fully validated and all-or-error: a blank or overlong name, a missing UUID, a non-positive `DatasetVersion`, a duplicate UUID, or a raw entry count above 16,384 fails the entire query instead of returning a truncated result. The reserved system indexes that Lance maintains internally, `__lance_frag_reuse` and `__lance_mem_wal`, are validated but not displayed.
+
+`lance_index_entries` requires the `SHOW` privilege on the table. For a REST Catalog, the TVF is rejected with the error `lance_index_entries is not supported for Lance REST catalogs`.
 
 ## Type Mapping
 
