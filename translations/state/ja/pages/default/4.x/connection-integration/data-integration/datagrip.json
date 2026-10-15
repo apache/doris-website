@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/datagrip",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/datagrip.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/datagrip.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "29365b8903f7ef2bee35f5a564ae1f3f76ed8369cac58cbc38f17490749e81f8",
+    "sourceTechnicalHash": "ca7b44491a812c444c2ab334f55ba4deacc17992879e3ccf420fa80a2880d828",
+    "targetHash": "a4341c8639fc7790a5c6886cd2e44605fe14bdd72974ca02086f22fa5aa352e4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.630Z",
+    "glossaryVersion": "0"
+  }
+}

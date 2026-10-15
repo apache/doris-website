@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/metabase",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/metabase.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/metabase.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "ab451bf871a5f6c785845009a5bef7c96bdffa54f5f476d9ca1258403e25aae0",
+    "sourceTechnicalHash": "a7810245d248c3160c900827d0ddfed4fc6c5845dd2d0461985d1d1096206e2a",
+    "targetHash": "f54acfeb1df69744b4a344927f6853f67c359f59271018753d14cd9450b2f71f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.630Z",
+    "glossaryVersion": "0"
+  }
+}

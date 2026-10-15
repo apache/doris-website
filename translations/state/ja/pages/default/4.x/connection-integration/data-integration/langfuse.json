@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/langfuse",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/langfuse.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/langfuse.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "7925a7536000561de9559970b7d16d329ec1ba14bb0ad18a6583a627efc06c29",
+    "sourceTechnicalHash": "b6d69269d4b6578148f2351a7bc1a1ac202f111711ce2cfe229c06351927517b",
+    "targetHash": "e6add8d8cbdfd9e64ef4d952afa098e54f6181cf786902fa109645bb3866eceb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.630Z",
+    "glossaryVersion": "0"
+  }
+}

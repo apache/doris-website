@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/opentelemetry",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/opentelemetry.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/opentelemetry.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "e2758b6238934e3ca0f05ddb690ef4729d2774af1bc1528a05ff05eeb2bfb4e3",
+    "sourceTechnicalHash": "be997022421946186289f35b90327fea9d248d1c64be317d56dd45dd792ae888",
+    "targetHash": "0ce347b5197e30508f9b70d637d1ed3f11577fcdfe9515f71146d311b0ba3315",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.631Z",
+    "glossaryVersion": "0"
+  }
+}

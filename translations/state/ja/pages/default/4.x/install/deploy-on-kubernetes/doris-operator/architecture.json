@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-on-kubernetes/doris-operator/architecture",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/doris-operator/architecture.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/doris-operator/architecture.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "9148843b2ba08a27887d6877061b1fb5356968f92468706902e7d5f314523486",
+    "sourceTechnicalHash": "42f7b26de91b54a807b6714110db4ba13ad836fb4656733357728f350627eb90",
+    "targetHash": "d19c2a0d0e09262cde7e997299845e6b30a8cacbb4f79db95ae827759c461a16",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.628Z",
+    "glossaryVersion": "0"
+  }
+}

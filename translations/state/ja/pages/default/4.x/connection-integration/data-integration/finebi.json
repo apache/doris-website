@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/finebi",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/finebi.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/finebi.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "4c1df0ff4ffb02654abefc0a69c8291acd3f2218d649df6468d027595cbe028c",
+    "sourceTechnicalHash": "9790e1a28e4e5d1ad347169a2fe303df835de399133620daa443cd0440f4a02e",
+    "targetHash": "38a9ff7c3dcd07a7076e909231297083c43db66fab8c82cd01bccb77af8b7a82",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.630Z",
+    "glossaryVersion": "0"
+  }
+}

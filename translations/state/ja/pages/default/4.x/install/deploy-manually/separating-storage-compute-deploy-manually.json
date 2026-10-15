@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-manually/separating-storage-compute-deploy-manually",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-manually/separating-storage-compute-deploy-manually.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/deploy-manually/separating-storage-compute-deploy-manually.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "c6aa94409756fa57e2cfbad37f1d3dffa1f8d35893672ab96276c51071e6734b",
+    "sourceTechnicalHash": "7f7e8e56fb12cbe4de374510046bec428be3eb6fa10cd290d797c5f27ca598a1",
+    "targetHash": "f661b1d21604f2f59ceab709273547147588e38ff52b17a3e327a33819a5a4ad",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.627Z",
+    "glossaryVersion": "0"
+  }
+}

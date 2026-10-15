@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/fluentbit",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/fluentbit.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/fluentbit.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "3c79723365f02526d28e68d0a5ebbf90df78bf9f3315a7512219b4f2943badd8",
+    "sourceTechnicalHash": "dce101b53d477d2308ed64fd0aed8dee6250eabf51d2482309eba4c01335a462",
+    "targetHash": "ee98f965a5eab0c94a21c4a23ea2a4b10f7d9f9b7b60ac8be4eb8c2ea335c560",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.630Z",
+    "glossaryVersion": "0"
+  }
+}

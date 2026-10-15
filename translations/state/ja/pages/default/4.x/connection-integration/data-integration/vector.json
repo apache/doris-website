@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/vector",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/vector.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/vector.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "9f3695100683dc063f1a0f51792423f192eefd1b3de5d30f7555d173d925d91c",
+    "sourceTechnicalHash": "1741354c768d09071f95e185a74958a040a2981219263d8e37a004341071e223",
+    "targetHash": "337b2b051023674c4375aa64dc7a787cac752ec128eb24bdba36c023384c15db",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.631Z",
+    "glossaryVersion": "0"
+  }
+}

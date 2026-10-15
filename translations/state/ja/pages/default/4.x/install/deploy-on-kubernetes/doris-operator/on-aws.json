@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-on-kubernetes/doris-operator/on-aws",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/doris-operator/on-aws.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/doris-operator/on-aws.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "13aa32656161461b924d436bc24a705dddfc9e4cf06d6f7b462f439a85ad13b4",
+    "sourceTechnicalHash": "a6b0ab16cba389dbac95e24d0ff03da8e2330bf5b91aa37df1654725f8b3d09a",
+    "targetHash": "311d0c6acc24e386bd8effe62feb525f7be9e35fd39a63c3ea16b11e75f69cda",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.628Z",
+    "glossaryVersion": "0"
+  }
+}

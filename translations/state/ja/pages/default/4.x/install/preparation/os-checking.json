@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/preparation/os-checking",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/preparation/os-checking.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/preparation/os-checking.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "9fca792023c144bedbfba0cf91d1c802c0ae34a02180657d9807f6336d0f8493",
+    "sourceTechnicalHash": "3e3622c892a15dbd2aad098b0f87cfcec9d902ad8554221c9de0f081f5b3cb1e",
+    "targetHash": "7bcdd67d03ee8f95c9a2e4f44a236782ffd7aaf41898d4e06c10ccd73e3efec8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.627Z",
+    "glossaryVersion": "0"
+  }
+}

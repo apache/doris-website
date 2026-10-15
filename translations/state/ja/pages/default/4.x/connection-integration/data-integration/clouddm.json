@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/clouddm",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/clouddm.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/clouddm.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "06d1bc592dab17e7d5aa98d258e72477b2dcdf6a0479c15036703a02510db72e",
+    "sourceTechnicalHash": "fe8917db61bc44e73f3262208aaa36816aaf2da67ccaeb3e9389a8198b76dbfd",
+    "targetHash": "1c50816f84a41bff7ecac2b8c4cc69b332b5528f7f2e4d250479a82420edbfbf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.630Z",
+    "glossaryVersion": "0"
+  }
+}

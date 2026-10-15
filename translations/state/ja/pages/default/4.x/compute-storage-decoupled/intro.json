@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "compute-storage-decoupled/intro",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/compute-storage-decoupled/intro.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/compute-storage-decoupled/intro.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "c2af015e291bbdf0266078bae9ea342d6142079a5c4aec867d24832fb1d8ee76",
+    "sourceTechnicalHash": "c9c6f9c58e64c690067c961f933bdd349fe96e4c72880ee26eeffd1cfa01ad97",
+    "targetHash": "f1b2ba53fa2b8688715b1e7c0f61b04bb2fe5518c223da01edd4451eebcee347",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.629Z",
+    "glossaryVersion": "0"
+  }
+}
