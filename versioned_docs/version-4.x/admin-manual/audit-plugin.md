@@ -18,7 +18,7 @@ Doris has included a built-in audit log plugin since version 2.1.0; no separate 
 | 3.1.2 and later 3.1.x releases | `true` (enabled) |
 | 4.0.0 and later releases | `true` (enabled) |
 
-In the 3.1 series, the audit log plugin is enabled by default in 3.1.2 and later 3.1.x releases. It is also enabled by default in 4.0.0 and later releases. In these versions, `enable_audit_plugin` defaults to `true`.
+The audit log plugin is enabled by default in 3.1.2 and later 3.1.x releases. It is also enabled by default in 4.0.0 and later releases. In these versions, `enable_audit_plugin` defaults to `true`.
 
 Check the current value on your cluster:
 
