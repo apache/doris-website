@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-reverse-split",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-reverse-split.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-reverse-split.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "e19e7046b6d23910e71d53a06058ead1ca0bea33fd7aec1f5523a77ddc2873bd",
+    "sourceTechnicalHash": "cba4152773a142ca253bf5ed73cf8a2c518135f1757e70952bdac97366594261",
+    "targetHash": "d8e38f73f4730913510a6ec94bb35d2932c50f958b84878fc111c26f07172f21",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:59:59.331Z",
+    "glossaryVersion": "0"
+  }
+}
