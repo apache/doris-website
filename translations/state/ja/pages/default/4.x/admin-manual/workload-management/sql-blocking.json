@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/workload-management/sql-blocking",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/workload-management/sql-blocking.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/workload-management/sql-blocking.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "eb3f4ae8106d14d8bc2376293fefbb87a76a0d4d3aece7326330ad541fb64da6",
+    "sourceTechnicalHash": "3190c0ce120b072f49fc2d74844006f49b3dc531ec10a8408686b4d2dec89a48",
+    "targetHash": "5519ef4a97356dc213a86068d885918f2df2ca2d13cf38a6ef4514e161dcb3dc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.112Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "observability/log",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/observability/log.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/observability/log.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "76932378bc5d338825ea7d3a4264426095656f2a6f14f0f95de15f9de99b0047",
+    "sourceTechnicalHash": "84f4a03f54d5181a2e0e085218f6f9862224e4d696c544d3b2370e9dabd8abb3",
+    "targetHash": "c86e6139dbf3ffcf5765f87981da2cd670a7f230978a82424940a0037b773b76",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.110Z",
+    "glossaryVersion": "0"
+  }
+}

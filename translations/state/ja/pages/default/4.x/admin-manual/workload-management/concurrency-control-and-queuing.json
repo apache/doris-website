@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/workload-management/concurrency-control-and-queuing",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/workload-management/concurrency-control-and-queuing.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/workload-management/concurrency-control-and-queuing.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "927cc4f64a4058e980bcaaa029a4914f2344180eac27c7d548512709f2cd16e0",
+    "sourceTechnicalHash": "1c29bcff5afe79d8eeae56647de0aed55b8e64ecffaea4a16c742b0f2837d438",
+    "targetHash": "297d89edfb20db29a70f7ffbfd81fc3b8d73d86509d282fc542679881c8645f4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.112Z",
+    "glossaryVersion": "0"
+  }
+}

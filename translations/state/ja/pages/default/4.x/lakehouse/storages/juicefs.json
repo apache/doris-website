@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/juicefs",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/juicefs.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/juicefs.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "fb2c69dc58ea2fa8814ecdf996502fa6b5bc345329d98b7e7835ee2bae8880a3",
+    "sourceTechnicalHash": "1a467d7ba92e5f8f12f0bf0f1948ded3372158e7756043e79d8475fb667a6ec9",
+    "targetHash": "0435d425b2be2bb75586160431ea02a9d26148a3f40bf086a727204f32183775",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.108Z",
+    "glossaryVersion": "0"
+  }
+}

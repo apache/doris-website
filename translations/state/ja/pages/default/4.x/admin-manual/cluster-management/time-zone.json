@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/cluster-management/time-zone",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/cluster-management/time-zone.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/cluster-management/time-zone.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "11aba19a318141afa7e2a3a4025ae3f8861dd32a7ec771d6f4778e4d2eb1e96f",
+    "sourceTechnicalHash": "c3c67a21b1c6dd17cc0faea4e062fdae9c02c4b65eca6ba7e1ae80e5b6cc7616",
+    "targetHash": "80e7b11b300754acd552666bc86f21107b9a45f8cc05a8a905ad6ce08896f3c7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.111Z",
+    "glossaryVersion": "0"
+  }
+}

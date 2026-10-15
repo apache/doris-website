@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/integrations/aws-iam-role",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/integrations/aws-iam-role.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/integrations/aws-iam-role.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "5fa2e37e21fc665b36e342c9eb1b7f4483f9d0b7e37df9af5d372e32cbea3bc8",
+    "sourceTechnicalHash": "9acc14fff6705932f0ebd5caa1134b3abab35f1aa65a4fd9c4d104c6be74f720",
+    "targetHash": "dc1a68f4931f421a884c1639e11c0e7af92f38a2d749ea964619112be7f0055f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.112Z",
+    "glossaryVersion": "0"
+  }
+}

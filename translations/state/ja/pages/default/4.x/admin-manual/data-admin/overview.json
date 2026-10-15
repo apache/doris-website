@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/data-admin/overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/data-admin/overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/data-admin/overview.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "b578f5d0182d44fd20dc455d8f81de30c3c877138cc70df5b760e65037cef40b",
+    "sourceTechnicalHash": "925527a8e759287d0f2e86e50d76169ea661881aca4e7f4003eef6b9c717d56e",
+    "targetHash": "5d11460daa2a6221d6aab5cfabb01eb889e6ff423087aae1fa2a5e457298f182",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.113Z",
+    "glossaryVersion": "0"
+  }
+}

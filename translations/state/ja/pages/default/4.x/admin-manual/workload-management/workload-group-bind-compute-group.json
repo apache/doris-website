@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/workload-management/workload-group-bind-compute-group",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/workload-management/workload-group-bind-compute-group.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/workload-management/workload-group-bind-compute-group.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "0259a3550cd29d03bfd37912b27268d7d04383f1b216cfe9628b87a28b793734",
+    "sourceTechnicalHash": "5ee753482ba505ba53c248cd0bb23336ae373e7f6ca43823edbe91e03856d08e",
+    "targetHash": "fb5c0f993facd41f3e3f508042173eb003467a9f81c0903cc3591b88f8ba7951",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.112Z",
+    "glossaryVersion": "0"
+  }
+}

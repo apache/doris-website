@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/cluster-management/fqdn",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/cluster-management/fqdn.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/cluster-management/fqdn.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "7d4ab23543024ceac15b7899c1ef5c029560cd05e4c0c740fe9c56ae49e13c1b",
+    "sourceTechnicalHash": "ec91cd72bfe2943b500e28472debd76bf09e641e7ceed828571ca47762bf410e",
+    "targetHash": "2a85173b98ff665cc66aaeceec8eff39bb40fd98a1a3cbc7eeec890a1267fcc6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.111Z",
+    "glossaryVersion": "0"
+  }
+}

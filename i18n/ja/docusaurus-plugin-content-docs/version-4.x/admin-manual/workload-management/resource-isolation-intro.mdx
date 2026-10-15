@@ -1,0 +1,43 @@
+---
+{
+    "title": "リソース分離",
+    "language": "ja",
+    "description": "Apache Doris のリソース分離に関する章への案内。物理的分離のためのリソースグループとコンピュートグループ、および同一プロセス内での論理的分離のためのワークロードグループを扱います。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Doris には、ノード単位の物理的分離と、単一プロセス内での論理的分離という、相補的な二つのリソース分離方法があります。デプロイ構成と分離要件に応じて適切な仕組みを選択してください。
+
+## 物理的分離
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="リソースグループ"
+    description="ストレージとコンピュートを統合したアーキテクチャでは、BE ノードにタグを付けて分離されたノードグループに分け、読み書きの分離やマルチテナント構成に対応します。"
+    link="resource-group"
+/>
+
+<GettingStartedCard
+    title="コンピュートグループ"
+    description="ストレージとコンピュートを分離したアーキテクチャでは、名前付きのコンピュートグループを作成・管理し、コンピュート層で異なるワークロード間を物理的に分離します。"
+    link="compute-group"
+/>
+</div>
+
+## 論理的分離
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="ワークロードグループ"
+    description="ノードを追加せずに、単一の BE プロセス内でクエリやユーザーセッションが使用する CPU、メモリ、I/O リソースを制限します。"
+    link="workload-group"
+/>
+
+<GettingStartedCard
+    title="ワークロードグループをコンピュートグループに紐付ける"
+    description="ワークロードグループを指定したコンピュートグループに紐付け、物理的なリソース制御と論理的なリソース制御を組み合わせて、きめ細かなマルチテナント分離を実現します。"
+    link="workload-group-bind-compute-group"
+/>
+</div>

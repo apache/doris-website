@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/fe-certificate",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/fe-certificate.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/fe-certificate.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "d5bf68e5f09c16df7c00dc8ec94e31fdfc42726f32249bca2ad61e6f0bcfc41d",
+    "sourceTechnicalHash": "3674bfde8eef1b0789af1027e6d74c35488ecaaaa8c20b161844893b0c454fa2",
+    "targetHash": "57eaa77a4d60c567944a823bc4b23f51018ccee4789c22e440c5f4aa1af0a0ca",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.112Z",
+    "glossaryVersion": "0"
+  }
+}

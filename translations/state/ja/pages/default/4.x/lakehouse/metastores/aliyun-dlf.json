@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/metastores/aliyun-dlf",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/metastores/aliyun-dlf.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/metastores/aliyun-dlf.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "6f6310aa02ff8eaea187abd55173551fdd296c2eb80b3d44bf51c7307e47b48f",
+    "sourceTechnicalHash": "4576f879b43f5f1a7f914bdab2686ff29fa0e441255aaa5611ede6bbe455333b",
+    "targetHash": "1058a59f63f6b438828b55e01811c1ae85eb504a3e22542e580e1ca61bed1983",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.107Z",
+    "glossaryVersion": "0"
+  }
+}

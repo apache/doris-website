@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/data-cache",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/data-cache.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/data-cache.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "0a99866a53017a4dcd4ea64d56e7d24f886e0568ae36dd4cd51c7060f77b0c97",
+    "sourceTechnicalHash": "513d51d21c4592ae1faf88f34143ec24b6c42909f39cc0969e2daf9d3b69c5fd",
+    "targetHash": "dc656ccf9256d184af47f0d2b9d5e82b18a2a10a47a42f8bbf3a793003b1f193",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.109Z",
+    "glossaryVersion": "0"
+  }
+}

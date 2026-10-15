@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/file-analysis",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/file-analysis.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/file-analysis.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "7d8cb370d1895a05f7610a75938e02a841ec52b5833d3c4d469d1858af46d42e",
+    "sourceTechnicalHash": "dc7c976d32054486e1561b802f74e24d96b0cedf5833a5015038b1ca39247536",
+    "targetHash": "72adcecb7fa4d152292d029cb390105ef92475c47656d18c6216997c3c02aa34",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.107Z",
+    "glossaryVersion": "0"
+  }
+}
