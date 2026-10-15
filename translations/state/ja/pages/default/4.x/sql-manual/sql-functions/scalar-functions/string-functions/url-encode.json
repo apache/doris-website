@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/url-encode",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/url-encode.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/url-encode.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "c9a648dc9e57a0d1c291bae4dfefd97fe9f48aebdddd2000ff42290a5492b32c",
+    "sourceTechnicalHash": "ed7f18abcfefa8f8d0811da73b3d16fe127a13bf061a29eab0461abd434de479",
+    "targetHash": "1987437ca8ebab185ce03ebf93aae368e0cff1a7832a9598add5f90b71c05d7d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.696Z",
+    "glossaryVersion": "0"
+  }
+}

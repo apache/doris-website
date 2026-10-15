@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/previous-day",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/previous-day.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/previous-day.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "725287fed916928a02de96526e2ee21e57f63edda99454c4ae59257d72846217",
+    "sourceTechnicalHash": "024bbf08d46c97952f5bb20cd56674c9535279c7011c6a3676798121324088f8",
+    "targetHash": "7fe11c79ced323b18e7a1d0f67529ebe30a2fed4258c47d70e5ee81ada82566e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.703Z",
+    "glossaryVersion": "0"
+  }
+}

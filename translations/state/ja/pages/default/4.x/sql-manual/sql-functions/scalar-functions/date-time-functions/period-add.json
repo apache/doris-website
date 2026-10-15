@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/period-add",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/period-add.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/period-add.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "bb07294c2a5dcf36bc035b0b61db728b29823eb4f18824a056127a8f351c22f7",
+    "sourceTechnicalHash": "e84b110c633c6f510443559e49946fca11a77c858ecc54d7e2eba98638d18fda",
+    "targetHash": "df4067d5a5efe0658ee4142be27fabc56c7e797e19790e331322f5bde21f5a98",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.702Z",
+    "glossaryVersion": "0"
+  }
+}

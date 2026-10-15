@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/curdate",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/curdate.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/curdate.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "6e1c4e79d07ba3f0c28b17e39b06d5a0ca3f7cfc70b5ef5dfbeb75ef8a584457",
+    "sourceTechnicalHash": "50544b07ca8326934c6e5ac4de492880f3a32f4826b70543fec9c03217204fdf",
+    "targetHash": "cef44b77323b6061ace741a0601a2b8e2743078dd95bf3355e97c6271755a201",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.697Z",
+    "glossaryVersion": "0"
+  }
+}

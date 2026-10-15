@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/second",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/second.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/second.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "ee2a08f6f4151283c6ea4b2ea9bbc0d980f0be1e928130111a25fdb577925ccf",
+    "sourceTechnicalHash": "146c1bc2228cf06098e646e331659dad3a8eae97dae8abc23c0c230db10083d6",
+    "targetHash": "d84a3a698196305d67a0df485264e4ff654165831fddbaff17124d8c1a66ceeb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.703Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/strcmp",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/strcmp.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/strcmp.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "b3514d33281a8946965b2344749c23304b8441e8c7730004f1d979c248859d06",
+    "sourceTechnicalHash": "72345bf61d589d6074888b02898e236a990a17cf836a1abc991e1633d9591f09",
+    "targetHash": "e1952d6545f0ac361bd0bc56fee8ad50685d10b756e93b3fe71e074afdbb183d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.694Z",
+    "glossaryVersion": "0"
+  }
+}

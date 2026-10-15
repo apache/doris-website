@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/to-base64",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/to-base64.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/to-base64.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "bd927b4b86b7b1b1c4b34721994f99044b975ea4a6a62ec869beb69b77b27b44",
+    "sourceTechnicalHash": "2758558e3230a699e1887bf66c6370c0aa69b0f116ddafb333cb5ec131012697",
+    "targetHash": "3195e0e268b62ac343ef8e67133c21de08a8eb46432514e6faee7d2ebb1fffdb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.695Z",
+    "glossaryVersion": "0"
+  }
+}

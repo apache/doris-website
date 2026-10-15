@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/day",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/day.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/day.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "95370990b7a4c4632e7d4f67008e8bc3491ea93fedc029ca7a6c6498fe7e839d",
+    "sourceTechnicalHash": "f0e26ef61c94b1193c2bbcd61e7bfaf5ee404e622d099c4c0beef6b7546f4e78",
+    "targetHash": "eb0d1bd3b186ca09a99925058eb5c012b569e4dbef8b62a2126955228bd05933",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.698Z",
+    "glossaryVersion": "0"
+  }
+}
