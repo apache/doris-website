@@ -29,8 +29,6 @@ Lance のサポートは Apache Doris 4.2 以降で利用できます。
 | Time Travel | 非対応 |
 | 全文検索 / ハイブリッド検索 | 非対応 |
 
-Catalog の設定、型のマッピング、述語プッシュダウン、ベクトル検索の詳細については、[Lance Catalog](../catalogs/lance-catalog.mdx) を参照してください。
-
 ## ファイル TVF で Lance データセットをクエリする
 
 `uri` または `file_path` は、`data/*.lance` のような内部ファイルではなく、**単一の Lance データセットのルートディレクトリ**を直接指す必要があります。
@@ -63,5 +61,4 @@ WHERE user_id > 100;
 
 ## 参考資料
 
-- [Lance Catalog](../catalogs/lance-catalog.mdx)
 - [Lance 形式のドキュメント](https://docs.lancedb.com/lance)
