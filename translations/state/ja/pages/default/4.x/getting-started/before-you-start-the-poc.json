@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "getting-started/before-you-start-the-poc",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/getting-started/before-you-start-the-poc.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/getting-started/before-you-start-the-poc.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "e717192eda8e5ae3eee2bd55c779fe74a854223daed3821541e2dc94d8611d36",
+    "sourceTechnicalHash": "db7c5a3a849fe00a332a026b6437039ef6430d793ec120f884668da624911495",
+    "targetHash": "c74715097f4c0b7ff880ed8f830d278d458e7733d42a5c2269b56e14432a6192",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.627Z",
+    "glossaryVersion": "0"
+  }
+}

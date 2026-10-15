@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "getting-started/quick-start",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/getting-started/quick-start.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/getting-started/quick-start.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "c1f1c82c39f02f2368e4f214b72a7be258983de46fcb04615078a1dd8d35a60b",
+    "sourceTechnicalHash": "9c1b0c02f50f363922e3fa34e6e59b15977943a1ada12454ef9ea76ad9bf6367",
+    "targetHash": "1340a796070ffbe49ec953f4123ae48a83fb4ec8deb41b32ea1ee43a429861ae",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.626Z",
+    "glossaryVersion": "0"
+  }
+}

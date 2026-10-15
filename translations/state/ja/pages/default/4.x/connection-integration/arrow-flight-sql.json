@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/arrow-flight-sql",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/arrow-flight-sql.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/arrow-flight-sql.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "f9bd173d613fc8d03491c7adb68f779737c056ea16dd3de1f3289f95ed177960",
+    "sourceTechnicalHash": "d49aba5ad0b41ce681dfcd6591cc2770e2ab7c34502e3cb3019cb3da42ebaf4a",
+    "targetHash": "3bb4cb244de9f3f08b56fa18e347cd8e0ddb9140423fb6f2c74e0ebf598341db",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.629Z",
+    "glossaryVersion": "0"
+  }
+}

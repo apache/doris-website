@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/intro",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/intro.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/intro.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "94cf9e5ac5dfa295b24073bf9111a052c5b5f7b20409fd905622ddaa279f99e8",
+    "sourceTechnicalHash": "d4b8d681d1217b450cba0870dc25c1d87b93a2e9dd2589f1a7033e5ed1eefa18",
+    "targetHash": "1b2927192ca3abee65b0feb62ba151d16f8904bc89413b3cd0ab1d05a45f53f6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.627Z",
+    "glossaryVersion": "0"
+  }
+}

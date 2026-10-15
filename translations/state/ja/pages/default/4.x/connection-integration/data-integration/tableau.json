@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/tableau",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/tableau.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/tableau.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "7712fe8c0436809309f66b9c4902e0a8a56ed678472e562d957026fee28f5b34",
+    "sourceTechnicalHash": "1e416e9d3bb4fc4b3201ce80dd1de6ac487bce2a4ddc7b5fc6e3ffbfd79d54d8",
+    "targetHash": "2ec2c9c7e1a04a7c21b956269de4e20e9d23cf37a368203335e05b8e1624f76c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.631Z",
+    "glossaryVersion": "0"
+  }
+}

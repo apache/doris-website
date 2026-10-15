@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/dbt-doris-adapter",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/dbt-doris-adapter.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/dbt-doris-adapter.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "ac6294e703bb2ba08540423fafff061d276fa2be0d626d45eb0b47e7b368c4b4",
+    "sourceTechnicalHash": "698f1cd7707c15efb95a0c79234f5bafe246c050b4ea82c58a672703444381b4",
+    "targetHash": "a31de3b4db8d895b9785e37a2a0e3ec5a6f2c2b091bd648e18745de05827c3ff",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.630Z",
+    "glossaryVersion": "0"
+  }
+}

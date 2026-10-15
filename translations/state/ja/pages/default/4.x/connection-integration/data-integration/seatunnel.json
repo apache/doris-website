@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/seatunnel",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/seatunnel.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/seatunnel.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "4e06235afb88b4e81a795e22def4f6824fed7f877318222616d631d89556adf9",
+    "sourceTechnicalHash": "d3ce1c10291ed05379ea45c5d6bf77d2882d16a47b76bf8ae3f740ae862c3fd4",
+    "targetHash": "13b86fb0442a4c574a831cfeb581c0c7565355e4c1b6115c4fcbb461042f8c44",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.631Z",
+    "glossaryVersion": "0"
+  }
+}

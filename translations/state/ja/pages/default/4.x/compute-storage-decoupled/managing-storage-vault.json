@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "compute-storage-decoupled/managing-storage-vault",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/compute-storage-decoupled/managing-storage-vault.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/compute-storage-decoupled/managing-storage-vault.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "3a8a92c5477c428c3adca52963bc51cc9ae564d2b7d17d833997a7dcae05444d",
+    "sourceTechnicalHash": "1ad06b172a97a8985dd4dbb61ab793cdbc46564a29d577c4df9fc01b9d44656d",
+    "targetHash": "c7fb31a0aafd2289393dcf7a50c615db039c5f7e7ef420d15f16cfdf80a9bd78",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.629Z",
+    "glossaryVersion": "0"
+  }
+}

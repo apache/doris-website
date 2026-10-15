@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "compute-storage-decoupled/file-cache/file-cache-peer-read",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/compute-storage-decoupled/file-cache/file-cache-peer-read.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/compute-storage-decoupled/file-cache/file-cache-peer-read.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "7ef9dd79f8350236e36b3d53467720fc956a28fd4d28bf99081b9fd0337cd2ba",
+    "sourceTechnicalHash": "1c92c153fddb551ba12616f54cdbc288c6d3803515eae1803146a77c742b1439",
+    "targetHash": "e2efc3aaee3465d8d21ce8c6bba1e71f65744f7b71a63d74afa7d95e37f63cfc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.629Z",
+    "glossaryVersion": "0"
+  }
+}

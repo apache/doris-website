@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/loongcollector",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/loongcollector.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/loongcollector.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "00ed20c11ebc6e12395f9964da71dc5327084134c41154f1e591d3c564176bad",
+    "sourceTechnicalHash": "86bb1a5abb39c710ea3547de892da2f9ffd25afd1f2cd93b1db27809a4bbc1e8",
+    "targetHash": "c034a3187e1c1f31b04a54fd72c8d330f38df481fafe145b5f621de459f0d84e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.630Z",
+    "glossaryVersion": "0"
+  }
+}

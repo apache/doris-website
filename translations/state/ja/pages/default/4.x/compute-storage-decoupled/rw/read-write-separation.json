@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "compute-storage-decoupled/rw/read-write-separation",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/compute-storage-decoupled/rw/read-write-separation.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/compute-storage-decoupled/rw/read-write-separation.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "6c1aa1c02d5c678b0766994591e116cf59fedc6197c8acb9b126d8fde770254f",
+    "sourceTechnicalHash": "8f9703fe0f9f5d339972a587b320353f55403a2d1eb7ad0764ed93a7229d47a8",
+    "targetHash": "038c2878efde7f58826d2cc004045bfae1aacd5e300755cc16fee949d2d58676",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.629Z",
+    "glossaryVersion": "0"
+  }
+}

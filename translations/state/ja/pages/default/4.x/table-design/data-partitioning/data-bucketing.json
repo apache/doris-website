@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/data-partitioning/data-bucketing",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/data-partitioning/data-bucketing.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/data-partitioning/data-bucketing.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "58291839133e329fa9f5cf8a7f786078ec5e2976ab5cf3e8fba62a7624943a05",
+    "sourceTechnicalHash": "b5258fa3ea20b88e3418b0cb93a756ed8d254aeeef526a406b460a3f186fdff7",
+    "targetHash": "31114d9f228cf1b624980191f5801ca7bd117184aed3faa032aedef118023afa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.632Z",
+    "glossaryVersion": "0"
+  }
+}

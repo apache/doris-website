@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "getting-started/intro",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/getting-started/intro.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/getting-started/intro.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "5c870a2583db46c203dcd610b575d3888bf2ba442e41a58a8acb7177d9db4abe",
+    "sourceTechnicalHash": "691b2315e50a90059f94a53fe7ffa14602ebfe5d0069d69053bf44580d12aa42",
+    "targetHash": "7b759880571be86dfa613ef71ea4b018e2c9b7f323eb9873c9596c1dafb0b33b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.626Z",
+    "glossaryVersion": "0"
+  }
+}

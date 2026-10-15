@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/kettle",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/kettle.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/kettle.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "43e3bf09f826041e41e2594502df8d97ae6a947dc70ffa804cf21af66f3ce387",
+    "sourceTechnicalHash": "5da4b0e8925284b19a189e830c9d494d381547a94d2caa94dc070d52ffae5968",
+    "targetHash": "6d72cd16884beb2d98595ceac08b25221ba3541a513054c09821f9f158f87b9c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.630Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-on-kubernetes/separating-storage-compute/config-cluster",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-cluster.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-cluster.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "12e35bb31b75712c10032544126ec066a25aff379b194126108cbd9fc5519611",
+    "sourceTechnicalHash": "15e1488765f0925ff9b1eab0ec013b221beea9cb5c0d1efa3c757a4460d92067",
+    "targetHash": "8356db5e9b5f0dba028186903f49952e209a8452d5072b34ce42a02743d3a280",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.629Z",
+    "glossaryVersion": "0"
+  }
+}

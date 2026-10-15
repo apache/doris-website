@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-on-cloud/doris-on-aws",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-on-cloud/doris-on-aws.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-cloud/doris-on-aws.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "402ccffe67666655d93a38689119f4311238afa675278575cedd5b986e64a8d4",
+    "sourceTechnicalHash": "3c93f81e155b32342d2cf529e8928f65c333a382e6ce958ceb56c3262c6e3175",
+    "targetHash": "f4ca95e1bcebda979d6bbcb97b2a176e1708441773b032cef0c0ca38986800ba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.629Z",
+    "glossaryVersion": "0"
+  }
+}
