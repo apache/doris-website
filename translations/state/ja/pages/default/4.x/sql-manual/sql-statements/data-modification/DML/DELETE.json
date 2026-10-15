@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/DML/DELETE.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/DML/DELETE.md",
-    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
     "sourceHash": "ad0f907374106a3e561cb83e1ac7ca75d3b58afbc44953fea9661331396d39b0",
     "sourceTechnicalHash": "c27fddea7d3f78e062ce8cc15162d2ddf410f3ee44e94f7f9cce2dacdb62b1eb",
     "targetHash": "7658b8b8d0d0712821438460b41a054ef7f7715e7faf2f8879eb1ba770342738",
-    "reviewStatus": "unverified",
+    "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T07:30:45.468Z",
+    "translatedAt": "2026-10-15T08:51:31.315Z",
     "glossaryVersion": "0"
   }
 }
