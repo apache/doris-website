@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "docs/connection-integration/data-integration/doris-kafka-connector.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/doris-kafka-connector.md",
-    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
     "sourceHash": "82a388700a960309e4ed2e27b35e2c2b72adb142c60451055931e1f2e1593698",
     "sourceTechnicalHash": "5b34e93e0a63911d89774df2c3c287cc0760399e413a2b8fb5c21f038b8fd3ea",
     "targetHash": "b87c0c26cf22f0b97ce3f3e68c0ddb64a7d826a1786fe27de0b7623dd414d336",
-    "reviewStatus": "unverified",
+    "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T12:26:49.466Z",
+    "translatedAt": "2026-10-15T08:48:13.766Z",
     "glossaryVersion": "0"
   }
 }
