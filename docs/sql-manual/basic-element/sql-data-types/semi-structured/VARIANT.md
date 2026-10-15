@@ -697,22 +697,17 @@ SELECT * FROM tbl WHERE v['pattern_1'] MATCH 'Doris';
 SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
 ```
 
-BM25 norms on VARIANT paths:
-
-A tokenized index on a VARIANT path writes BM25 norms just like one on an ordinary column. Norms store the record length used by BM25 and cost one byte per row for every indexed field, written even for rows that hold no value for that path. One segment keeps one index per path, so norms on a VARIANT column with many paths cost `rows × paths` bytes. Turning on the BE config `inverted_index_skip_norms_for_variant` (default `false`, changeable at runtime) drops them for every index on a VARIANT path, whatever that index's `norms` property says. Without norms, `MATCH` filtering still works, but a query that computes `score()` on that path returns an error, also while only some of the table's segments lack norms.
-
-Add `"norms" = "false"` to a path index that is never ranked with `score()`, and it stops paying for norms. An index without `field_pattern` passes the property to every subpath it covers:
+Tokenized indexes on VARIANT paths write BM25 norms by default, costing one byte per row per path, including rows with no value for that path. For paths used only for filtering, disable norms with `"norms" = "false"`. Without `field_pattern`, this property applies to all subpaths covered by the index:
 
 ```sql
 CREATE TABLE IF NOT EXISTS tbl (
     k BIGINT,
-    v VARIANT<'title' : STRING, 'body_*' : STRING>,
-    -- title keeps the default: norms, so it can be ranked with score()
-    INDEX idx_title(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "title"),
-    -- body_* is only filtered, never ranked: no norms, one byte less per row per path
+    v VARIANT<'body_*' : STRING>,
     INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*", "norms" = "false")
 );
 ```
+
+Disabling norms does not affect `MATCH` filtering, but `score()` returns an error when it reads a segment without norms. The BE config `inverted_index_skip_norms_for_variant` disables norms for all VARIANT paths. See [Record Length and the norms Property](../../../../table-design/index/inverted-index/scoring.md#record-length-and-the-norms-property) for details.
 
 ### When indexes don’t work
 

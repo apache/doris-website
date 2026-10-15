@@ -697,22 +697,17 @@ SELECT * FROM tbl WHERE v['pattern_1'] MATCH 'Doris';
 SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
 ```
 
-VARIANT 路径上的 BM25 norms：
-
-VARIANT 路径上的分词索引和普通列上的一样会写 BM25 norms。norms 保存 BM25 使用的记录长度，按行存储，每个被索引的字段每行 1 字节，即使该行在这个路径上没有值也会写入。一个段中每个路径各有一份索引，因此在路径数很多的 VARIANT 列上写 norms 的代价是 `行数 × 路径数` 字节。打开 BE 配置项 `inverted_index_skip_norms_for_variant`（默认 `false`，可动态修改）之后，VARIANT 路径上的所有索引都不再写 norms，无论该索引的 `norms` 属性如何。没有 norms 时 `MATCH` 过滤照常可用，但在该路径上计算 `score()` 的查询会报错；表中只有部分段缺少 norms 时也一样。
-
-如果某个路径从不用 `score()` 排序，给它的索引加上 `"norms" = "false"` 即可省下这部分空间。不带 `field_pattern` 的索引会把该属性传给自己覆盖的每个子路径：
+VARIANT 路径上的分词索引默认写入 BM25 norms，每行每路径占 1 字节，包括该路径没有值的行。仅用于过滤的路径可通过 `"norms" = "false"` 关闭；不带 `field_pattern` 时，该属性作用于索引覆盖的所有子路径：
 
 ```sql
 CREATE TABLE IF NOT EXISTS tbl (
     k BIGINT,
-    v VARIANT<'title' : STRING, 'body_*' : STRING>,
-    -- title 保持默认：写 norms，可以用 score() 排序
-    INDEX idx_title(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "title"),
-    -- body_* 只做过滤、不排序：不写 norms，每行每路径省 1 字节
+    v VARIANT<'body_*' : STRING>,
     INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*", "norms" = "false")
 );
 ```
+
+关闭 norms 不影响 `MATCH` 过滤，但 `score()` 读到缺少 norms 的段时会报错。BE 配置项 `inverted_index_skip_norms_for_variant` 可统一关闭 VARIANT 路径的 norms，详见[记录长度与 norms 属性](../../../../table-design/index/inverted-index/scoring.md#记录长度与-norms-属性)。
 
 ### 索引失效问题 {#when-indexes-dont-work}
 
