@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/to-days",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/to-days.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/to-days.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "522c27640dacf80936b20f5a66c4f0fd1c9329cdf9b0f9976ddb51639966ad5b",
+    "sourceTechnicalHash": "9792d442f12aee3c1d76aec300626fc9e822901f3a5e82a48171f2e390efe9e3",
+    "targetHash": "c34d2db41aa043cbd5d53a30a3df0edcdc6f270e95323e69d9b43e83a414a4f4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.918Z",
+    "glossaryVersion": "0"
+  }
+}

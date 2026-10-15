@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "f543edf6cb062daa751657652f3bdd5df06f671602e7f53919a7581a19b768d3",
+    "sourceTechnicalHash": "0cd16bb8f5d2d8c4c1300299f019a2bb6b90ee5b54a8ee480500315b52eff913",
+    "targetHash": "2cdb537feb6842198e58ff8eb5c20a8089ee933f02a9f697daa6c1e4baec1386",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.922Z",
+    "glossaryVersion": "0"
+  }
+}

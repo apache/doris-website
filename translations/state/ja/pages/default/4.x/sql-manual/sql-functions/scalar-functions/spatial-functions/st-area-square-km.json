@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-km",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-km.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-km.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "cce69ccd8b658c8dc643469890a43ad73b47c97a518e6b3e2a0fe7d248330eb3",
+    "sourceTechnicalHash": "9f71c9cc5b194dae3c51cdf6bcb3a3bc9fab6a32001853dfbbdf438f43a37db2",
+    "targetHash": "579cae969174539b52dd22f2a93e430fe4e8f116238f6f9de7e8a075eb0ce309",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.920Z",
+    "glossaryVersion": "0"
+  }
+}

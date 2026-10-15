@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-contains",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-contains.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-contains.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "4c73c47e33dbe72f7d0226c557c68dbad07b45e3e20c0256bc195b15f8bd3161",
+    "sourceTechnicalHash": "a0f80e644a8401219ff926eb281ec09fe0869c793518f1223ebe97df1ad3ffd4",
+    "targetHash": "f25b822dd9a997d4153f515971b119257ffb5da4afa2dd5609f4f716c7b403ae",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.924Z",
+    "glossaryVersion": "0"
+  }
+}

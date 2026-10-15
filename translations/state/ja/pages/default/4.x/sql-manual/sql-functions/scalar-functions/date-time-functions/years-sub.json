@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/years-sub",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/years-sub.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/years-sub.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "671951a757d78868b115ce2bae9e8a3aa0f6fc19dfc01a0c853cfe50adc99fa6",
+    "sourceTechnicalHash": "38403a5125e7288e2b5837ee3f3842315e823a0442e9e6be12e24ee7b6fb634d",
+    "targetHash": "1e6e80c5cc37f78081e6bbf5860ad52ca0766684d0345ce4aea469ad9ef23a6c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.920Z",
+    "glossaryVersion": "0"
+  }
+}

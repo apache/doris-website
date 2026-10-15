@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "cec14bd166f111636db4deaa01762ad89f2a13d430196774c3994669a2a46ac7",
+    "sourceTechnicalHash": "d1fe00ff2f32cd9761635afb85772b1fc61228325511b531c18867f0fbb2d5ca",
+    "targetHash": "7bd6a6dc6670739cc542f860f2b1521258cc84f17e4667065b7d17da15c36dd5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.922Z",
+    "glossaryVersion": "0"
+  }
+}

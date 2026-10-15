@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/time-to-sec",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/time-to-sec.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/time-to-sec.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "bf40540db1127d1f5af40b9d8bddd66ba656dbe225d2a33a6e70b3caf2643a14",
+    "sourceTechnicalHash": "d99fec937385c68ddfdeb3d18f806315bdd9aac5b8bbe7226840698d2e445622",
+    "targetHash": "cd1e330be725482d23ada3d6ea04517d377bd66ff56c4afb68432c31112baa23",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.918Z",
+    "glossaryVersion": "0"
+  }
+}

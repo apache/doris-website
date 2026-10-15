@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftleft",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftleft.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftleft.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "257f42d9b7445f9a8953a6ea6280e2842f86759237522ff1d0fe18bde04cde07",
+    "sourceTechnicalHash": "9892233b55d908563e893c541aaf3bbc0e2d2932f9e02a15b373eef14214bcde",
+    "targetHash": "c2517bcf5789b886872b28c21d07bc4c755aedbd09b6f2225da37d5061a1c62b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.923Z",
+    "glossaryVersion": "0"
+  }
+}

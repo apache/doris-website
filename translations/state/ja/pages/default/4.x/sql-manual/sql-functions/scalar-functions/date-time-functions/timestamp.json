@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/timestamp",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/timestamp.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/timestamp.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "d9b3f6cbbb4eb7ab822a237a0514b49215dd3005594ce9c4d9dda3070d08b7c8",
+    "sourceTechnicalHash": "665f2802651979ffe86cae3b89046b5155818599642f078fa7f77603ecd47ac4",
+    "targetHash": "b19a4bb7484b8fd8dce0574bd200d5bd375e5ac085a597aaa0825361c5afe0d0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.918Z",
+    "glossaryVersion": "0"
+  }
+}

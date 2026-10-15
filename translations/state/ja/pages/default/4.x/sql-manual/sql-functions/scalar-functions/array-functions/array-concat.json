@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-concat",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-concat.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-concat.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "fba0ad984d31569632e4c51ba7ad9fe73576c283978e1ef903128184b8dea8a9",
+    "sourceTechnicalHash": "b588420d965aacd4144f548192d5e8f4a2447b15d724eec0252ada4596e7c644",
+    "targetHash": "eca17c0f32021b4cb886de1baaf4f945e61c2234e564736eb5fa844924322047",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.924Z",
+    "glossaryVersion": "0"
+  }
+}

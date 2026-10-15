@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-length",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-length.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-length.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "d8c24f26095fb2394b6a517b0d1dea9f8a59f2dcddd080c60a088e3b22f8e557",
+    "sourceTechnicalHash": "27eba7044475ad9445d5c7e3d5eebf040eae1637275058836ae159f1e2ad579b",
+    "targetHash": "b2d12c187fba466870ea948a7b65d2152800d4a88328fc1cc872e471d3d2cf96",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.923Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-decrypt",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-decrypt.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-decrypt.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "1da31e44ee8757506f5a77fa621d987546a61803bc13bdb61cc714f0d1432e59",
+    "sourceTechnicalHash": "bcf2b5e88514ad93c43e6ea378f522c2f7e13306e9d5aeb0764267e5a5dd9b88",
+    "targetHash": "ae50802b2509b8101d6da6e720ee7b4dbd8a766bec9adc98c7b619700e885334",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.922Z",
+    "glossaryVersion": "0"
+  }
+}

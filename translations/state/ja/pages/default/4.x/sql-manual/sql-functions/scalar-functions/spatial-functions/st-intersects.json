@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "c6502b4dc6ba0f2593e576439eac30a9f137121bc598fe98d0226950ce3b69ee",
+    "sourceTechnicalHash": "0701f0418056eb764c82e80eb5fb0cc917b4f171ca0441ed11f1f33b64addcf4",
+    "targetHash": "4b0b2ba68056a9895ebc68ff7b36054beb4cbca7c26d9ae0512f9aabc5b3f53c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.921Z",
+    "glossaryVersion": "0"
+  }
+}

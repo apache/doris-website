@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "1118879b1938801594a2ec2708ca35d417eab04fb34a2de4b58f39b38311fb01",
+    "sourceTechnicalHash": "0a680ef88fa368c1e62d5d0f0593d205aaed6eb05d4cb975fe911b85e4b010d8",
+    "targetHash": "100044f0b163e49571e89fb2281335aaa0d99f190f0ee3addc1e5f990ec68c7f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.921Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/md5sum",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/md5sum.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/md5sum.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "225c9d23f776b81f9f616ef27d8dd007021295b8d757e7795da44b1318b50466",
+    "sourceTechnicalHash": "b6a44fa5eeb1b346d3518845cff86e8bf1cb3a5c57515df270ffcca185315229",
+    "targetHash": "a03397a82a3e3c1b71dca3683f652170d890430cf12d2c5bb4dac503148f96eb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.922Z",
+    "glossaryVersion": "0"
+  }
+}

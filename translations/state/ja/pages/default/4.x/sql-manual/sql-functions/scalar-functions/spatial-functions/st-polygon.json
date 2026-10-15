@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "47045fad7aaa2ce14f070a48d573dda414a9c1ed5ee52042c533da3ea40d7fd2",
+    "sourceTechnicalHash": "84f425f0ee391cc511daee5c8cd284bd664391b6b224fb6eeb5bfad96160ec9b",
+    "targetHash": "4bd8dab45a5fa6402ac3733ce48c8ef4df8f216ad663b8b5437a95dcfe3271d3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.921Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm3sum",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm3sum.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm3sum.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "553b14aefc87c7a23b52c9375cc3635e4372bac56fa386b50fec4c0d12fd4a99",
+    "sourceTechnicalHash": "4462f7538fc81834b1dfddf094047e22e91dc9bb12f118a37dc249f351dd1e1b",
+    "targetHash": "dea563d898a4eed570bdd41f2f5349d6e64a1cbfea71ec4cbab37d899bd6c142",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.922Z",
+    "glossaryVersion": "0"
+  }
+}

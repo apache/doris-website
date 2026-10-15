@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/xor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitwise-functions/xor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitwise-functions/xor.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "1eeb55b5b40b48d4b668e3ebd276939b448c63d39f1689e9531700a4a913b55a",
+    "sourceTechnicalHash": "8bb534ce56dc9b3c2810b18f170dd9a19d7c2f7795482ffc76b69aba30fe5da2",
+    "targetHash": "e5e0e1061428233f66894cdbf52637ae452f2697c88f51a956b8d06c68450ab2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.923Z",
+    "glossaryVersion": "0"
+  }
+}
