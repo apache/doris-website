@@ -1,5 +1,5 @@
 import {usesSegmenterTokenizer} from './tokenize';
-import {language} from './proxiedGenerated';
+import {language} from './proxiedGeneratedConstants';
 
 // The segmenter behind some languages emits standalone '_' and '-' tokens for
 // SQL identifiers, but lunr removes those punctuation tokens from its index.
