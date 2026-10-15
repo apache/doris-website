@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/broker-load-manual",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/broker-load-manual.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/broker-load-manual.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "897a1ab20b043ecdd36d8494bc3b403d023f2cd2ade37a64500089aaf2a90de4",
+    "sourceTechnicalHash": "bea10f138a89cbc25603ace5e88b9f41c9afa9627a8f78063f0987bf65f4fa98",
+    "targetHash": "5b07e980a59d5d8fa72cec9c8bd48fd482cb8282ed3b7b2fe66054df9dfd26ba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.604Z",
+    "glossaryVersion": "0"
+  }
+}

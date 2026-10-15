@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/amazon-s3",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/amazon-s3.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/amazon-s3.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "ca94f799c99260becf89bd1419e5abb4db3fa11137043d53a616a9176523d8f4",
+    "sourceTechnicalHash": "5f352f21821df1430ddd72b2efc2356480c487e7a6f6673eb052ba12175c2e96",
+    "targetHash": "b181a5927970c69f8c96c74a3ec64c2d2ece2962a1cc08239239373240047708",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

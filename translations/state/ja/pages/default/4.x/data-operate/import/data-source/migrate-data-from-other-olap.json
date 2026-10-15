@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/migrate-data-from-other-olap",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-olap.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-olap.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "c8ac2f1bbef43f68c42ecf21a65f3c55ddb8b6096b5bc37e7131c99e9e306fce",
+    "sourceTechnicalHash": "917e1980f00abba35588cb4ecccc6d3e4bbeba0702c0fe07a6fdddc201788732",
+    "targetHash": "793f22e7f1713d7259acab9ef056a515dc3081ef96df72d862ebb2b8b8dd2618",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

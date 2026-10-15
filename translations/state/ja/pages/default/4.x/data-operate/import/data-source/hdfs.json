@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/hdfs",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/hdfs.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/hdfs.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "cfd9711925f5f963a8cbe255a9c8c2d7e8190b46b36332aeed89f14b044ac021",
+    "sourceTechnicalHash": "9b104a1b5ec184e8e9c849e7a27e14c6c19c25ecb825be2147a56ccaf9235863",
+    "targetHash": "ca4da76e5ef95274aa8438ffc82f4f7dc9f884a17b88f9c23bbab3b5695940a3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

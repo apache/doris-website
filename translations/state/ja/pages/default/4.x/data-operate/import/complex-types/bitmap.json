@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/complex-types/bitmap",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/complex-types/bitmap.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/complex-types/bitmap.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "fa118828337fc4e1767005c286f1b26ba9a467350b0f20f45bcfec41e8d577a2",
+    "sourceTechnicalHash": "f4360b4119de2ecc36a597f1e4410fe465ce7546f24b7b16cbe9d4704f6a3ec4",
+    "targetHash": "a0dfa46a0b3feff0437488ab412f82a659da76708586eb8018d5a4110b3f221b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.605Z",
+    "glossaryVersion": "0"
+  }
+}

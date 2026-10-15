@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/kafka",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/kafka.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/kafka.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "27019d66b8780ecfe2b3922f4886a9cbd2bb89992c3ec77dc1859a09433d0c85",
+    "sourceTechnicalHash": "b6d1ffd1567d4fa4078d5d986e7723a47db6cfd9f3b24538072805d3a42b5f8c",
+    "targetHash": "d3a261f8c6f2d8b8e5c93e0ced8cfc038a3e79067ca8e8432713369176260786",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

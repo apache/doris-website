@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/delete/delete-manual",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/delete/delete-manual.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/delete/delete-manual.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "7a6feacad14ada402f7adb1162bd11380ef5ee1bd238a1ca8c0c9675c57f3c08",
+    "sourceTechnicalHash": "41da9fdba7965bce9c24f3560c148c7dc27a66e5738c2aaf7b99138a749074d6",
+    "targetHash": "6d9d2dba2ebde6d6fa85564c813f1335a70b7b3778a01590e23dda69ab5f80d5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.606Z",
+    "glossaryVersion": "0"
+  }
+}

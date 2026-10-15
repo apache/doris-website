@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/azure-storage",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/azure-storage.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/azure-storage.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "215614aa3636568b042e71678e6890b2bd4b7402a9e796699a013a78468d7e36",
+    "sourceTechnicalHash": "e2765d0af602c56c87610d34335a1c0e0f424e67c4e233251526cd2583b11a4a",
+    "targetHash": "a5b2bc51512aae1f8684fd042c9c0ceba34c93c71d1a8a517607faed40dc0925",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/aliyun-oss",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/aliyun-oss.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/aliyun-oss.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "4d983d9d7b138aab64193319f32189ae898a28294d9a888b15c8dddddd28d42e",
+    "sourceTechnicalHash": "98d3f9049b4174b4590ba941647acb6ad4c8dcc64f47e1b6bfb73925a14d2eff",
+    "targetHash": "7343d689db760ce8746e8a3af155bbb04955957ada90a33efa04b304555db6e2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

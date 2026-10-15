@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/index/vector-index/performance",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/index/vector-index/performance.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/index/vector-index/performance.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "698d0345b867ccb4921d0b5d45eef70ab17e67a1dd4cf90622bc48322d7ce3da",
+    "sourceTechnicalHash": "e0d8e20fe1b807b94e7596505ab9145a1066adfeb2dfee6ca64e90c7231b1742",
+    "targetHash": "c68deca27240f05c93a637ed3740a06706da070168b34441a97c971e89c3eece",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.602Z",
+    "glossaryVersion": "0"
+  }
+}

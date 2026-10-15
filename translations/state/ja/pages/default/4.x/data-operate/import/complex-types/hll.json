@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/complex-types/hll",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/complex-types/hll.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/complex-types/hll.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "b4fba5973bc58d67e4ff65cc6863951597fc25fd7b1cb1d5ea35412b926f9111",
+    "sourceTechnicalHash": "840f8f9b2a3ee2bce1e8adee06b6317a18ca29cfb650d74fc6ce20813b252d88",
+    "targetHash": "574d6a2eb16f144dc41cf579026400123bc04328e56d61f7b9a92fb3373becf0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.605Z",
+    "glossaryVersion": "0"
+  }
+}

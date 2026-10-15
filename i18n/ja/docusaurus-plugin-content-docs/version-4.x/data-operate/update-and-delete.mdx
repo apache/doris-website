@@ -1,0 +1,33 @@
+---
+{
+    "title": "データの更新と削除",
+    "language": "ja",
+    "description": "Apache Doris のデータを更新・削除し、トランザクションを通じて書き込み操作を管理します。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# データの更新と削除
+
+Apache Doris は、データを更新・削除するための柔軟な仕組みを提供します。また、トランザクション機能によって、書き込み操作の信頼性と一貫性を確保します。
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="データの更新"
+    description="SQL UPDATE、列の部分更新、Unique Key モデルの Upsert を使用して既存のデータを更新します"
+    link="./update/update-overview"
+/>
+
+<GettingStartedCard
+    title="データの削除"
+    description="DELETE、一括削除、TRUNCATE、アトミックな上書き、一時パーティションを使用してデータを削除します"
+    link="./delete/delete-overview"
+/>
+
+<GettingStartedCard
+    title="トランザクション"
+    description="明示的トランザクションと暗黙的トランザクションを使用して、複数の書き込み操作を単一のアトミックな単位にまとめます"
+    link="./transaction"
+/>
+</div>

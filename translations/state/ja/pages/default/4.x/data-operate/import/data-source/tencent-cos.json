@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/tencent-cos",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/tencent-cos.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/tencent-cos.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "ef59f346e2b29daf6c3e8fcd340bb972614102b50d0f6249f0576bcf2733c77d",
+    "sourceTechnicalHash": "79b83b3f2db687dc203961665adc0e31419694d76f6cf9ef56d05567c1398335",
+    "targetHash": "105988a496a9f5affadc7ad800e094df25150bb63a46ca6da107eed90a4cfaba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

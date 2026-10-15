@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/index/vector-index/practical-guide",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/index/vector-index/practical-guide.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/index/vector-index/practical-guide.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "2b35afccd21be8e8eb7e5cb705d8b4db19a687c9805ef88b67dbd03623c0b468",
+    "sourceTechnicalHash": "0564f66877a2d0aeb7ff44bb49761ee828cd8340b3c1879f101a3812225afd7e",
+    "targetHash": "55ab3f1750cc5fe8f5e482af271379d2b54a287e9cbe9ac5399b96590bb58aa3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.601Z",
+    "glossaryVersion": "0"
+  }
+}

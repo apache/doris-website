@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/delete/batch-delete-manual",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/delete/batch-delete-manual.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/delete/batch-delete-manual.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "c713aa523f5fe8bed0f6334a527fa7cee14cc8fc57f9dcb6c86ccdb5e36a24c2",
+    "sourceTechnicalHash": "24e4d6280643d23ca444f49b567bf59ffaacd41c4cd2a70a91875d78c13e2a9d",
+    "targetHash": "a27871901f69ecdebaacdef033db67b71be3a6c17a58138dce040dfa7e1a052e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.606Z",
+    "glossaryVersion": "0"
+  }
+}
