@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {randomUUID} = require('node:crypto');
 const {execFileSync} = require('node:child_process');
-const {hash, identity, loadConfig, pipelineLocale} = require('./state.cjs');
+const {hash, identity, relative, loadConfig, pipelineLocale, stateFileFor, listShardFiles, collectRecords} = require('./state.cjs');
 const {structure} = require('./structure.cjs');
 const {protectionSignature} = require('./protection.cjs');
 const {checkedTask, safeFile, openAIAdapter, mockAdapter, translateDocument} = require('./translation-engine.cjs');
@@ -47,11 +47,32 @@ function scopeFile(root, locale) { return path.join(root, `translations/scope/${
 function glossaryFile(root, locale) { return path.join(root, `translations/glossary/${locale}.json`); }
 
 function readState(root, locale) {
-    const file = path.join(root, `translations/state/${locale}/docs.json`);
-    const raw = fs.readFileSync(file, 'utf8');
-    const data = JSON.parse(raw);
-    assert(data.schemaVersion === 1 && Array.isArray(data.pages), 'Invalid translation state');
-    return {file, raw, data};
+    root = path.resolve(root);
+    const file = safeFile(root, `translations/state/${locale}/docs.json`);
+    const raw = readOptional(file);
+    const legacy = raw === null ? {schemaVersion: 1, pages: []} : JSON.parse(raw);
+    const shards = new Map(listShardFiles(root, locale)
+        .map(name => [name, fs.readFileSync(safeFile(root, name), 'utf8')]));
+    const schemaFile = safeFile(root, `translations/state/${locale}/shards.schema.json`);
+    const schemaRaw = readOptional(schemaFile);
+    if (schemaRaw !== null) {
+        const schema = JSON.parse(schemaRaw);
+        assert(schema.schemaVersion === 1 && schema.format === 'page-record-v1', 'Unsupported translation shard schema');
+    }
+    // Build the effective view from the same bytes we retain for write guards.
+    const data = {...legacy, pages: [...collectRecords(locale, legacy, shards).values()]};
+    return {root, locale, file, raw, legacy, shards, schemaFile, schemaRaw, sharded: schemaRaw !== null, data};
+}
+
+function readOptional(file) {
+    try {return fs.readFileSync(file, 'utf8');}
+    catch (error) {if (error.code === 'ENOENT') return null; throw error;}
+}
+
+function statePathForRecord(state, record) {
+    assert.equal(record.locale, state.locale, 'Candidate state locale changed');
+    const shard = stateFileFor(record);
+    return state.sharded || state.shards.has(shard) ? shard : relative(state.root, state.file);
 }
 
 function writeAtomic(file, value) {
@@ -65,6 +86,7 @@ function writeAtomic(file, value) {
 async function prepare({root, plan, taskId, scope, state, adapter, glossary, target, maxDocumentChars, maxChunkChars}) {
     const {task, source} = checkedTask(plan, taskId, scope, root);
     const existing = state.data.pages.find(item => identity(item) === identity(task));
+    assert(!existing || existing.ownership === 'machine', 'Human maintained target requires manual review');
     const targetFile = safeFile(root, task.targetPath);
     const previousTarget = fs.existsSync(targetFile) ? fs.readFileSync(targetFile, 'utf8') : null;
     assert(!previousTarget || existing, 'Untracked target needs human review');
@@ -99,29 +121,50 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, tar
 }
 
 function applyCandidates(state, candidates) {
-    assert.equal(fs.readFileSync(state.file, 'utf8'), state.raw, 'State changed during generation');
+    assert.equal(readOptional(state.file), state.raw, 'State changed during generation');
+    if (state.schemaFile) assert.equal(readOptional(state.schemaFile), state.schemaRaw, 'State changed during generation');
+    assert.equal(new Set(candidates.map(item => identity(item.record))).size, candidates.length, 'Duplicate candidate identity');
+    assert.equal(new Set(candidates.map(item => item.targetFile)).size, candidates.length, 'Duplicate candidate target');
     for (const candidate of candidates) {
-        const actual = fs.existsSync(candidate.targetFile) ? fs.readFileSync(candidate.targetFile, 'utf8') : null;
+        const actual = readOptional(candidate.targetFile);
         assert.equal(actual, candidate.previousTarget, `Target changed during generation: ${candidate.task.targetPath}`);
+        const existing = state.data.pages.find(item => identity(item) === identity(candidate.record));
+        assert(!existing || existing.ownership === 'machine', 'Human maintained target requires manual review');
     }
-    const pages = state.data.pages.filter(page => !candidates.some(item => identity(item.record) === identity(page)));
-    pages.push(...candidates.map(item => item.record));
-    pages.sort((a, b) => identity(a).localeCompare(identity(b), 'en'));
-    const nextState = JSON.stringify({...state.data, pages}, null, 2) + '\n';
+    const writes = candidates.map(item => ({file: item.targetFile, before: item.previousTarget, after: item.target}));
+    const legacyCandidates = [];
+    for (const candidate of candidates) {
+        const name = statePathForRecord(state, candidate.record);
+        if (name === relative(state.root, state.file)) {
+            legacyCandidates.push(candidate);
+            // A new shard must not silently supersede the legacy record we read.
+            assert.equal(readOptional(safeFile(state.root, stateFileFor(candidate.record))), null,
+                'State changed during generation');
+            continue;
+        }
+        const file = safeFile(state.root, name);
+        const before = state.shards.get(name) ?? null;
+        assert.equal(readOptional(file), before, 'State changed during generation');
+        writes.push({file, before, after: JSON.stringify({schemaVersion: 1, page: candidate.record}, null, 2) + '\n'});
+    }
+    if (legacyCandidates.length) {
+        const pages = state.legacy.pages.filter(page => !legacyCandidates.some(item => identity(item.record) === identity(page)));
+        pages.push(...legacyCandidates.map(item => item.record));
+        pages.sort((a, b) => identity(a).localeCompare(identity(b), 'en'));
+        writes.push({file: state.file, before: state.raw, after: JSON.stringify({...state.legacy, pages}, null, 2) + '\n'});
+    }
     const written = [];
     try {
-        for (const candidate of candidates) {
-            fs.mkdirSync(path.dirname(candidate.targetFile), {recursive: true});
-            writeAtomic(candidate.targetFile, candidate.target);
-            written.push(candidate);
+        for (const write of writes) {
+            fs.mkdirSync(path.dirname(write.file), {recursive: true});
+            writeAtomic(write.file, write.after);
+            written.push(write);
         }
-        writeAtomic(state.file, nextState);
     } catch (error) {
-        for (const candidate of written.reverse()) {
-            if (candidate.previousTarget === null) fs.rmSync(candidate.targetFile, {force: true});
-            else writeAtomic(candidate.targetFile, candidate.previousTarget);
+        for (const write of written.reverse()) {
+            if (write.before === null) fs.rmSync(write.file, {force: true});
+            else writeAtomic(write.file, write.before);
         }
-        writeAtomic(state.file, state.raw);
         throw error;
     }
 }
@@ -242,4 +285,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(error => {console.error(error.message); process.exitCode = 1;});
-module.exports = {optionsFrom, prepare, applyCandidates, applyStaged, readState, targetFor, scopeFile, glossaryFile};
+module.exports = {optionsFrom, prepare, applyCandidates, applyStaged, readState, statePathForRecord, targetFor, scopeFile, glossaryFile};

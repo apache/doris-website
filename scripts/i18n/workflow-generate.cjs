@@ -7,7 +7,7 @@ const {execFileSync} = require('node:child_process');
 const {hash, identity, languageName, pipelineLocale} = require('./state.cjs');
 const {checkedTask, managedPath, safeFile} = require('./translation-engine.cjs');
 const {codexAdapter} = require('./codex-adapter.cjs');
-const {prepare, applyCandidates, readState, targetFor} = require('./translate-docs.cjs');
+const {prepare, applyCandidates, readState, statePathForRecord, targetFor} = require('./translate-docs.cjs');
 const {replaceableBotPr} = require('./workflow-scan.cjs');
 const {markerPrefixFor} = require('./automation-naming.cjs');
 
@@ -130,6 +130,7 @@ async function generate({plan, reconciliation, maxPages = 2, target,
             pluginId: item.task.pluginId, version: item.task.version, docId: item.task.docId,
             sourcePath: item.task.sourcePath, sourceHash: item.task.sourceHash,
             targetPath: item.task.targetPath, targetHash: item.record.targetHash,
+            statePath: statePathForRecord(state, item.record),
             reusedFrom: item.reusedFrom || null, requests: item.requests})), failures};
     fs.mkdirSync(output, {recursive: true});
     fs.writeFileSync(path.join(output, 'generation.json'), JSON.stringify(manifest, null, 2) + '\n');

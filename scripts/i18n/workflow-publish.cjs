@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {languageName, pipelineLocale} = require('./state.cjs');
+const {languageName, pipelineLocale, stateFileFor} = require('./state.cjs');
 const {managedPath} = require('./translation-engine.cjs');
 const {statePathFor} = require('./workflow-prs.cjs');
 const {botBranchFor, botBranchPattern} = require('./automation-naming.cjs');
@@ -15,12 +15,16 @@ function expectedFiles(manifest, scope) {
     assert(manifest.schemaVersion === 1 && manifest.provider === 'codex'
         && manifest.candidates.length > 0 && manifest.candidates.length <= scope.maxBatchPages,
     'Invalid live candidate manifest');
-    const files = manifest.candidates.map(candidate => {
+    const files = manifest.candidates.flatMap(candidate => {
         managedPath(scope, {...candidate, locale: scope.locale});
-        return candidate.targetPath;
+        // Older manifests use the shared ledger; new ones name one exact shard.
+        const statePath = candidate.statePath ?? statePathFor(scope.locale);
+        assert(statePath === statePathFor(scope.locale)
+            || statePath === stateFileFor({...candidate, locale: scope.locale}), 'Invalid candidate state path');
+        return [candidate.targetPath, statePath];
     });
-    assert.equal(new Set(files).size, files.length, 'Duplicate target path');
-    return [statePathFor(scope.locale), ...files].sort();
+    assert.equal(new Set(manifest.candidates.map(item => item.targetPath)).size, manifest.candidates.length, 'Duplicate target path');
+    return [...new Set(files)].sort();
 }
 
 function checkStaged(manifest, scope) {
@@ -54,7 +58,7 @@ function main() {
     const language = languageName(root, locale);
     const scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'));
     assert.equal(git('rev-parse', 'HEAD'), manifest.sourceCommit, 'Source checkout changed before publishing');
-    const expected = checkStaged(manifest, scope);
+    checkStaged(manifest, scope);
     const branch = `${botBranchFor(locale)}${process.env.GITHUB_RUN_ID}`;
     assert(botBranchPattern(locale).test(branch), 'Unsafe run ID');
     const user = kind === 'pat' ? JSON.parse(execFileSync('gh', ['api', 'user', '--jq', '{login,id}'],
@@ -90,7 +94,7 @@ function main() {
         '--head', branch, '--draft', '--title', `docs(i18n): machine ${language} translation candidates`,
         '--body-file', bodyFile], {cwd: root, encoding: 'utf8'}).trim();
     if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
-        `\nOpened draft translation PR: ${url}; ${expected.length - 1} candidate pages.\n`);
+        `\nOpened draft translation PR: ${url}; ${manifest.candidates.length} candidate pages.\n`);
     process.stdout.write(`${url}\n`);
 }
 

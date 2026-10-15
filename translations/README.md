@@ -26,7 +26,17 @@ Each file contains `{"schemaVersion":1,"page":<record>}`. The loader combines
 both locations; a page file supersedes a legacy entry with the same identity.
 The path must match the record's native identity, so independent translation PRs
 modify distinct state files. `state/ja/shards.schema.json` marks the repository
-as ready for page files. Each record contains these fields:
+as ready for page files. The manual and automated translation tools read the
+same merged state as the site, with page files taking precedence over legacy
+entries. Once the marker is present, updates and new translations write their
+own page files and leave the legacy ledger unchanged. Repositories without the
+marker retain legacy writes, while existing page files are always updated in
+place. Generation records the exact state path for each candidate so publication
+can stage only its translation and corresponding state. Before applying a batch,
+the tools check the original target and state bytes and reject concurrent edits;
+a failed write rolls back all files already written by that batch.
+
+Each record contains these fields:
 
 | Field | Meaning |
 | --- | --- |
