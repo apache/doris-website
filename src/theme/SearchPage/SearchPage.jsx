@@ -92,7 +92,7 @@ function SearchPageContent() {
          We should not index search pages
           See https://github.com/facebook/docusaurus/pull/3233
         */}
-        <meta property="robots" content="noindex, follow"/>
+        <meta name="robots" content="noindex, follow"/>
         <title>{pageTitle}</title>
       </Head>
 

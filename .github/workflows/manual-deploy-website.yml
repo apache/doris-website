@@ -28,6 +28,9 @@ jobs:
                   persist-credentials: false
                   submodules: recursive
                   ref: ${{ inputs.branch }}
+                  # Sitemap lastmod comes from each file's last commit, so a
+                  # shallow clone would date every page to the same commit.
+                  fetch-depth: 0
 
             - name: Add Chinese Fonts
               run: |
