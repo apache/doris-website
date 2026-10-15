@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "source-install/compilation-arm",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/source-install/compilation-arm.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/source-install/compilation-arm.mdx",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "c3616ed425c1546529429a3c1f9f42ee5b7af25d1e5b51a53e826399dc0843cf",
+    "sourceTechnicalHash": "66b43b7674487b55940a8dac03184b1db09f46bf859b3ad290ee6bc809b966a6",
+    "targetHash": "feba1d664311156cca97357459b3842833bc8c2e537d5e3347809209c98f98a7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.552Z",
+    "glossaryVersion": "0"
+  }
+}

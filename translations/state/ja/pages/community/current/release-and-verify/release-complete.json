@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "release-and-verify/release-complete",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/release-and-verify/release-complete.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/release-and-verify/release-complete.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "f55e0c2d595675fb42c828264aec37b18a7e7365b11a1be8da6f2b4f072d1b93",
+    "sourceTechnicalHash": "2f5e4fb744fa45169b4c9418ec795925254225c3380ee21b2a8dd909ad2d6984",
+    "targetHash": "6ec813473817231910e5874fec532b76c9f080b44ae0af18664545325d00a145",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.555Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/data-source-extension/jdbc-catalog-developer-guide",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/data-source-extension/jdbc-catalog-developer-guide.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/data-source-extension/jdbc-catalog-developer-guide.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "6d8e0fb68f696d001f98da9895f97df3ffa9fbbe9b429d25e60bf8024ffee58a",
+    "sourceTechnicalHash": "523f67bdd5334cfcabe7928648f62c73460497337b940ff9741f54e6f44a2e1b",
+    "targetHash": "65457249b023075119b87f7504eb6062b9e5b6e4cd42f4cac579e5b8491d3e53",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.554Z",
+    "glossaryVersion": "0"
+  }
+}

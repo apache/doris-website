@@ -11,6 +11,8 @@ Behavior:
 - Skips autolinks/anchor-only/empty/mailto/tel/javascript schemes (anchor-only is reported as info).
 - Internal/relative links:
     * Resolves relative to the file's directory.
+    * Maps versioned site routes such as `/docs/dev/...` to their source tree.
+    * Follows explicit doc redirects only when their target source file exists.
     * If the path has no extension, tries the path itself, then `.md`, then `.mdx`,
       and also `<path>/index.md` / `<path>/index.mdx` (Docusaurus directory links).
 - External links (http/https):
@@ -24,6 +26,7 @@ Exit code:
 """
 
 import argparse
+import json
 import os
 import re
 import sys
@@ -111,6 +114,19 @@ def _candidates_for(full: str):
             os.path.join(full, "index.mdx")]
 
 
+@lru_cache(maxsize=None)
+def _doc_redirects(site_root: str):
+    """Read the same explicit doc redirects as docusaurus.config.js."""
+    redirects = {}
+    for name in ("redirects-dev.json", "redirects-4.x.json"):
+        config = os.path.join(site_root, "config", name)
+        if os.path.isfile(config):
+            with open(config, encoding="utf-8") as f:
+                redirects.update((entry["from"].rstrip("/"), entry["to"])
+                                 for entry in json.load(f))
+    return redirects
+
+
 def resolve_internal(base_dir: str, target: str):
     """Return the resolved file path if target exists, else None."""
     path_part = unquote(target.split("#", 1)[0].split("?", 1)[0])
@@ -118,27 +134,30 @@ def resolve_internal(base_dir: str, target: str):
         return "anchor-only"
 
     if path_part.startswith("/"):
-        # Docusaurus site-absolute path. Try, in order:
-        #   1) static/<path>            — assets like /images/foo.png
-        #   2) <site_root>/<path>       — plugin routes whose dir == prefix
-        #                                 (e.g. /community/X → community/X.md)
-        #   3) <site_root>/<remapped>/<rest>
-        #                               — plugin routes whose dir ≠ prefix
-        #                                 (e.g. /releases/X → releasenotes/X.md)
+        # Resolve explicit redirects and version/locale routes before trying
+        # static assets and paths relative to the site root.
         site_root, static_root = _find_site_roots(base_dir)
         if site_root is None:
             return None
+        # createRedirects emits an alias only when its target is a real page;
+        # another redirect alone is not sufficient.
+        path_part = _doc_redirects(site_root).get(path_part.rstrip("/"), path_part)
         rel = path_part.lstrip("/")
-        localized = re.match(r"ja/(docs/(dev|[^/]+)|community|releases|course)/(.*)", rel)
-        if localized:
-            route, version, rest = localized.groups()
+        routed = re.match(r"(?:(ja|zh-CN)/)?(docs/(dev|[^/]+)|community|releases|course)/(.*)", rel)
+        if routed:
+            locale, route, version, rest = routed.groups()
             if route.startswith("docs/"):
                 source = "docs" if version == "dev" else "versioned_docs/version-" + version
-                localized_root = "i18n/ja/docusaurus-plugin-content-docs/" + ("current" if version == "dev" else "version-" + version)
+                plugin = "docusaurus-plugin-content-docs"
+                content_version = "current" if version == "dev" else "version-" + version
             else:
                 source = ROUTE_PREFIX_REMAP.get(route, route)
-                localized_root = "i18n/ja/docusaurus-plugin-content-docs-" + route + "/current"
-            for root in (localized_root, source):
+                plugin = "docusaurus-plugin-content-docs-" + route
+                content_version = "current"
+            roots = [source]
+            if locale:
+                roots.insert(0, f"i18n/{locale}/{plugin}/{content_version}")
+            for root in roots:
                 for candidate in _candidates_for(os.path.join(site_root, root, rest.rstrip("/"))):
                     if os.path.isfile(candidate):
                         return candidate

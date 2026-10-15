@@ -13,8 +13,9 @@ function withoutPositions(value) {
 }
 
 async function structure(raw, extension, anchorsMaintainCase = false) {
-    const [{unified}, {default: parse}, {default: gfm}, {default: mdx}, {visit}] = await Promise.all([
+    const [{unified}, {default: parse}, {default: gfm}, {default: mdx}, {visit}, {default: directive}] = await Promise.all([
         import('unified'), import('remark-parse'), import('remark-gfm'), import('remark-mdx'), import('unist-util-visit'),
+        import('remark-directive'),
     ]);
     // Use native format detection, including front-matter MDX overrides.
     const {data, content} = matter(raw, {});
@@ -31,11 +32,19 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
     }
     offsets[parseContent.length] = content.length;
     const tree = processor.parse(parseContent);
+    // Keep the raw tree for protected tokens: directive-like prose such as
+    // `:s3` must retain its number even though native directive parsing hides it.
+    await headingsPlugin({anchorsMaintainCase})(tree);
+    // Docusaurus parses directives before generating heading IDs. For example,
+    // the directive name in `error:protocol version` is absent from its slug.
+    const headingProcessor = unified().use(parse).use(directive).use(gfm);
+    if (format === 'mdx') headingProcessor.use(mdx);
+    const headingTree = headingProcessor.parse(parseContent);
     const headings = [];
     // Use the installed framework's heading transform, including its duplicate
     // slug order and explicit-ID behavior, instead of a second slug algorithm.
-    await headingsPlugin({anchorsMaintainCase})(tree);
-    visit(tree, 'heading', node => {
+    await headingsPlugin({anchorsMaintainCase})(headingTree);
+    visit(headingTree, 'heading', node => {
         headings.push({depth: node.depth, id: node.data.id, position: {
             start: {...node.position.start, offset: offsets[node.position.start.offset]},
             end: {...node.position.end, offset: offsets[node.position.end.offset]},

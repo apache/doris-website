@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "release-and-verify/release-doris-sdk",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/release-and-verify/release-doris-sdk.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/release-and-verify/release-doris-sdk.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "20183394ab27a49a04696f8707091c78e8b999da3575c745f2bf6e147a075cda",
+    "sourceTechnicalHash": "53b75d060de160abd970711249f950ea25471e47dfe612833b0b233f4d9d386a",
+    "targetHash": "fc5482c9f3176f2975ae8ace5c42d752cc6a80dc698a7bc31c139aac04f2d1f1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.555Z",
+    "glossaryVersion": "0"
+  }
+}

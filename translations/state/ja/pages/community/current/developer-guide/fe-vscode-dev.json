@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/fe-vscode-dev",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/fe-vscode-dev.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/fe-vscode-dev.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "9a062b190b54b238911c0f7e00fc92de5f6bab12138e28f603037a7476e7639c",
+    "sourceTechnicalHash": "4dfd9846f1445e70efb9867c45b525a54b0d300ad179c92cdc4a5a13b2b8d4e4",
+    "targetHash": "9da6e0c15f6eab6c510c6d4042f210306b8e045c9b69c4aa785d962612196006",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.553Z",
+    "glossaryVersion": "0"
+  }
+}

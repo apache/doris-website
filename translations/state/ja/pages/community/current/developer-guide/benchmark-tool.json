@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/benchmark-tool",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/benchmark-tool.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/benchmark-tool.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "89de2ee64a969ee4ba46db8bf3d2a757469ef73e153df3f36f256a26ae2c9bb4",
+    "sourceTechnicalHash": "7dc3b1e54c2b06f76100366f236e7fa05b2b14419d645cb621fcd11d7a21b91d",
+    "targetHash": "951bd8d5dba50a42efef779b88c94b4e7dab317b9dbf88ac02b746a4b59c2cf2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.554Z",
+    "glossaryVersion": "0"
+  }
+}

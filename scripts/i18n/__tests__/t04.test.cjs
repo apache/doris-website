@@ -81,6 +81,24 @@ test('protected Japanese changes reject SQL and route edits but allow translated
     assert.notEqual(protectionSignature(wrongLink),protectionSignature(source));
 });
 
+test('translated heading IDs follow native directive parsing', async () => {
+    for (const extension of ['.md', '.mdx']) {
+        const source = await structure('## SSL error:protocol version mismatch\n', extension);
+        assert.equal(source.headings[0].id, 'ssl-error-version-mismatch');
+        const target = await alignHeadings(source, '## SSL 接続エラー\n', extension);
+        assert.equal((await structure(target, extension)).headings[0].id, source.headings[0].id);
+        const ordinary = await structure('## SSL error: protocol version mismatch\n', extension);
+        assert.equal(ordinary.headings[0].id, 'ssl-error-protocol-version-mismatch');
+    }
+});
+
+test('directive-like prose preserves protected technical numbers', async () => {
+    const source = await structure('## Options\n\n- `s3.region`:s3 region\n', '.md');
+    const target = await structure(await alignHeadings(source, '## オプション\n\n- `s3.region`: s3 リージョン\n', '.md'), '.md');
+    assert.equal(protectionSignature(target), protectionSignature(source));
+    assert(source.protectedNodes.some(node => node[0] === 'numbers' && node[1].includes('3')));
+});
+
 test('full audit finds documents and sidebar keys added after the T03 snapshot', async () => {
     const {execFileSync} = require('node:child_process');
     const {hash} = require('../state.cjs');
