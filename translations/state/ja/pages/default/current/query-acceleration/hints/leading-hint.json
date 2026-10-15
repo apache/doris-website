@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/hints/leading-hint",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/hints/leading-hint.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/hints/leading-hint.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "f96fc4d71ac53793f0bf27eca12d58e9eb96cd392106c6f459cf360aa13e78ea",
+    "sourceTechnicalHash": "086a3e325b82ced90ccc7d497cc46ac9b9c3e5383960857ffdb5b8785adfce40",
+    "targetHash": "95de18aa9664b3c0540924ab0ab2c95495e236570a303e9be538a9431ceae7b2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:58:39.582Z",
+    "glossaryVersion": "0"
+  }
+}

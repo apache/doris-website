@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-diff",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-diff.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-diff.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "8928bdd7c5430c581ccd94d416934eb0ca9a6c526ae4b46ab88b0dfa6d69f508",
+    "sourceTechnicalHash": "7ac32c7804625d36d3fb44dd737e50acd1228b4c3262b2d664c515a28accc8d0",
+    "targetHash": "cbe99122555bb561441a0efcb9c0c8b4528f2aab9b0077de9abe526edbcf7204",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:58:39.583Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-floor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-floor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-floor.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "1cff31dfc8e325c44027adc677417ac5b743c49ed232b2fd6d27b8adca8244fd",
+    "sourceTechnicalHash": "19ce6babacb0f77fd48b53c893899ec88c1b62e2b37357f2ffa73a24e6afba26",
+    "targetHash": "60dfa8fada670ffc6c019636d8b8735b3544ce699c6edd7d268c9b5eb5c974d7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:58:39.583Z",
+    "glossaryVersion": "0"
+  }
+}
