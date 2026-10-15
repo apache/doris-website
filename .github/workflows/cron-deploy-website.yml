@@ -103,6 +103,16 @@ jobs:
                         --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
                   done
 
+            - name: Check file sizes for asf-site
+              # GitHub rejects a push holding any file over 100 MiB. Checking
+              # before the OSS upload stops such a build before anything is
+              # published. The PDFs under assets/files are removed before the push.
+              run: |
+                  if find build -type f -size +100M ! -path 'build/assets/files/*.pdf' -exec ls -l {} + | grep .; then
+                      echo "::error::The files above exceed GitHub's 100 MiB file limit; the asf-site push would be rejected."
+                      exit 1
+                  fi
+
             #     - name: Generate PDF
             #       run: |
             #         npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (English)" --outputPDFFilename="Apache Doris Docs (English).pdf" --tocOnlyH1=true

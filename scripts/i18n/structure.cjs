@@ -32,18 +32,22 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
     }
     offsets[parseContent.length] = content.length;
     const tree = processor.parse(parseContent);
-    // Keep the raw tree for protected tokens: directive-like prose such as
-    // `:s3` must retain its number even though native directive parsing hides it.
+    // Existing state records fingerprint this original parse. Keep its IDs and
+    // protected nodes stable so a rendering fix does not invalidate translations;
+    // directive-like prose such as `:s3` also keeps its protected number here.
+    const fingerprintHeadings = [];
     await headingsPlugin({anchorsMaintainCase})(tree);
-    // Docusaurus parses directives before generating heading IDs. For example,
-    // the directive name in `error:protocol version` is absent from its slug.
-    const headingProcessor = unified().use(parse).use(directive).use(gfm);
-    if (format === 'mdx') headingProcessor.use(mdx);
-    const headingTree = headingProcessor.parse(parseContent);
-    const headings = [];
-    // Use the installed framework's heading transform, including its duplicate
+    visit(tree, 'heading', node => {
+        fingerprintHeadings.push({depth: node.depth, id: node.data.id});
+    });
+    // Docusaurus parses directives before assigning heading IDs. In particular,
+    // `error:protocol` contains a textDirective whose name is absent from the ID.
+    // Parse the original content again to preserve its raw heading offsets, and
+    // use the installed framework's heading transform, including its duplicate
     // slug order and explicit-ID behavior, instead of a second slug algorithm.
+    const headingTree = processor().use(directive).parse(parseContent);
     await headingsPlugin({anchorsMaintainCase})(headingTree);
+    const headings = [];
     visit(headingTree, 'heading', node => {
         headings.push({depth: node.depth, id: node.data.id, position: {
             start: {...node.position.start, offset: offsets[node.position.start.offset]},
@@ -71,7 +75,7 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
         .sort(([a], [b]) => a.localeCompare(b)));
     return {
         content, headings, format, protectedNodes, technicalMetadata,
-        technicalHash: hash(JSON.stringify([technicalMetadata, protectedNodes, headings.map(({depth, id}) => ({depth, id}))])),
+        technicalHash: hash(JSON.stringify([technicalMetadata, protectedNodes, fingerprintHeadings])),
         // A secondary comparison for planning only. The state sourceHash stays
         // byte-sensitive, so a formatting edit still needs an explicit review.
         semanticHash: hash(JSON.stringify([Object.fromEntries(Object.entries(data).sort(([a], [b]) => a.localeCompare(b))),

@@ -8,6 +8,7 @@
 import React, {type JSX} from 'react';
 import Head from '@docusaurus/Head';
 import {useTranslationRoutes} from '@site/src/utils/translation';
+import {isDefaultLocaleBlogRoute} from '@site/src/utils/localization';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import {PageMetadata, useThemeConfig} from '@docusaurus/theme-common';
@@ -124,6 +125,7 @@ export default function SiteMetadata(): JSX.Element {
   const {
     i18n: {currentLocale},
   } = useDocusaurusContext();
+  const {pathname} = useLocation();
 
   // TODO maybe move these 2 themeConfig to siteConfig?
   // These seems useful for other themes as well
@@ -141,6 +143,18 @@ export default function SiteMetadata(): JSX.Element {
       {defaultImage && <PageMetadata image={defaultImage} />}
 
       <CanonicalUrlHeaders />
+
+      {/* A locale without a translated blog serves the default locale's
+          articles under its own /blog routes. The section stays browsable, but
+          it is a second copy of /blog, so it stays out of the index — and out
+          of that locale's sitemap, which skips noindex routes. The rule lives
+          here rather than in a blog component because the archive renders
+          through the plain layout. */}
+      {isDefaultLocaleBlogRoute(pathname) && (
+        <Head>
+          <meta name="robots" content="noindex, follow" />
+        </Head>
+      )}
 
       <AlternateLangHeaders />
 
