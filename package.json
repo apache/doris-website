@@ -71,6 +71,7 @@
         "react-github-button": "^0.1.11",
         "react-markdown": "^10.1.0",
         "rehype-katex": "7",
+        "remark-directive": "^3.0.0",
         "remark-gfm": "^4.0.1",
         "remark-math": "6",
         "sass": "^1.63.2",
