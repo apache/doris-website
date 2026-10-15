@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/ip/IPV6",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/ip/IPV6.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/ip/IPV6.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "3c52ab31c8095057e5823b811920cf2cc92208f1b34c01b79292b9d17f086ed9",
+    "sourceTechnicalHash": "5be5d2f832b9152dc4e45848b14c3906cb6530529befcde8c96f706f6c9d58f1",
+    "targetHash": "358944b669278fff7e91810adff272d01ac64d0f5acf5b3b7a5be631743893fc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.669Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-generate",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/ai-generate.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/ai-generate.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "935e5e2a6719ceda072c6d0cbac167d396f532b176610fe6aecc22327f6ed3d2",
+    "sourceTechnicalHash": "a8de13d111fead8636c9b54d8d24c4259720de542875ed3425e0c37f4cf6c8f5",
+    "targetHash": "f675cabfe87dc4d5e9ea097a01e209f12720ef3def33ea40e530e934c1868547",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.672Z",
+    "glossaryVersion": "0"
+  }
+}

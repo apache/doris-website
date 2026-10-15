@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/reserved-keywords",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/reserved-keywords.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/reserved-keywords.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "de04309261acafdf729f4357f9d3cc422b2813f3c67f19ef1b87f904e2479e2e",
+    "sourceTechnicalHash": "cd6d749f88a1d92f4d5e439defe28f76b765ecf6b4f6cd306f644761f74dbba8",
+    "targetHash": "5db3f62f359b443fbd4c13eb7b7377e221f3ee0f159df374bafb860ab571ff47",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.670Z",
+    "glossaryVersion": "0"
+  }
+}

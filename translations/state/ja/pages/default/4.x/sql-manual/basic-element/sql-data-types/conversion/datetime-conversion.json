@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/datetime-conversion",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "487e98d8ca9f8dcb77075f1b4d1a1ffb07a2bae308cda506f2c463f0b188c520",
+    "sourceTechnicalHash": "01cc6cd65743da36ed767ea98827b3f04984af690e2cda0a593ec2cc54cae513",
+    "targetHash": "f51c0a57c7e6da9cc861fa704f41c92279110ab72bb1b4446d94893db840d262",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.669Z",
+    "glossaryVersion": "0"
+  }
+}

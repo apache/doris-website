@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/operators/conditional-operators/exists-operators",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/exists-operators.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/exists-operators.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "9643b03904c1731c7567f692b22c734ee6ea7dbb28a891cbedb6d7b7b567a043",
+    "sourceTechnicalHash": "5c7d377ba1eb5d75123eb4582dd3b06f11ac78a35336905b40a9902a8a68fad0",
+    "targetHash": "520814377a2c8c08c1ae0407c6d264ed76e68db51b771f2cbcb8ef5ea17f9a14",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.671Z",
+    "glossaryVersion": "0"
+  }
+}

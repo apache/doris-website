@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/string-type/CHAR",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/string-type/CHAR.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/string-type/CHAR.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "f205ede2f8ec31efd7e7207ef069e72fad407d2747f975db42030bf8abb377ac",
+    "sourceTechnicalHash": "9d2d581a58cd9a6b280d3d6ed62a8ea5df8504d4d12566bd17858a4be88de42d",
+    "targetHash": "a6bfade2058c32f739f9f5d51de2679e8271d68795ad29db283cc74387357900",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.668Z",
+    "glossaryVersion": "0"
+  }
+}

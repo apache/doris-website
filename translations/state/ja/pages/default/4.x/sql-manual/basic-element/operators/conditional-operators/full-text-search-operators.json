@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/operators/conditional-operators/full-text-search-operators",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/full-text-search-operators.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/full-text-search-operators.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "12dac40073c99aca5697f3f048d92231b3d6a33d43706731ca8d0ea36b6f6fff",
+    "sourceTechnicalHash": "081f08d27065d9d619631c3203007d3ed3fb1f90751306d707d6cb0d62c1dd9f",
+    "targetHash": "ce119e3ea193189efc41e3c667628157cf44d08dc92aa088dd53ed01c36a0888",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.671Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/exp",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/exp.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/exp.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "640b68b822b793f18a644fca6eeb488e445fa9aad807aed1ccc3c0bc282ff23f",
+    "sourceTechnicalHash": "34012b1ffd7a3303c69e3132573f55ca59abf1e4fdc45365a2acf49fa7178daf",
+    "targetHash": "a9ad48db9989029a9f08d843d662e844c59177f9398f7b66edd1e09dcb3b0d5c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.673Z",
+    "glossaryVersion": "0"
+  }
+}

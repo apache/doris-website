@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/file-path-pattern",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/file-path-pattern.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/file-path-pattern.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "23a258f4a132c193b8b38e2e26d4f7308310acecfc63c72bd0257e9183c60b65",
+    "sourceTechnicalHash": "ce12160761d1228abd8e65d3295619e60b11aa482df2d6b613d5428c5ca38d34",
+    "targetHash": "a3ffa840c148001ba4231082a0de3a009244b8bcbcefb32b10e9b868d5ee60f2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.670Z",
+    "glossaryVersion": "0"
+  }
+}

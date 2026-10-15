@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/conv",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/conv.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/conv.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "28fa89347deb4203cbcf2b2aed81e172bd203684ed424d05e8de19f3c52cb561",
+    "sourceTechnicalHash": "3c1035aee39708f0396736c335dba5287cb205d08cf031b4c61266496146ced1",
+    "targetHash": "eb94fdff87311e0b9beb6caafb4d3fd59e40e44228f21f03f0f4e299cc6cec3b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.673Z",
+    "glossaryVersion": "0"
+  }
+}

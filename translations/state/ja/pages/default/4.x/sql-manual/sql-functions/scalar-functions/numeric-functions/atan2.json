@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/atan2",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/atan2.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/atan2.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "4c18e6a974e5499cdb30f33eb93dddd61008fd6f05d103933858a96145c78411",
+    "sourceTechnicalHash": "69cfa209e5065ae758edfcd71675ab5cbf79f7a60b831d762ed673ed36bc72b3",
+    "targetHash": "02f2eba5ac5f471b6b432977f32b0c3c57beeb1096be74b8110f97f4f5fdd1ff",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.672Z",
+    "glossaryVersion": "0"
+  }
+}

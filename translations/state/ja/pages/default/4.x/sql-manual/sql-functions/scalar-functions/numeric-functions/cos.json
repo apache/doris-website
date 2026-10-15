@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/cos",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/cos.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/cos.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "94ecb3cd883c1f53624e76ecbb471d1863cabdb9b1739d7acc2b68c05aabfc8a",
+    "sourceTechnicalHash": "e801a910f9ffedd235cc398d1563c7f437da5d0ae021b86a90794bbda86aac64",
+    "targetHash": "7c313cfdf74a38f5879378df6021bb2c4a8454caae7fa3f519cefba20ec112e2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.673Z",
+    "glossaryVersion": "0"
+  }
+}
