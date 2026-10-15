@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/contribute-to-doris",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/contribute-to-doris.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/how-to-contribute/contribute-to-doris.mdx",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "6de310022dcecf60f26d4f9bf575fd961e4d2bdc3c6bc36cd8c2eb9bd831f75b",
+    "sourceTechnicalHash": "17c8e44a80a46dbba12d80f0886dd352023b1acb5d43c98d681c4bdfe941fe6e",
+    "targetHash": "bf04a17a6549a0f6904d0d7efd6989cba761c8066623f631fdec3cdcdc37c7be",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.551Z",
+    "glossaryVersion": "0"
+  }
+}

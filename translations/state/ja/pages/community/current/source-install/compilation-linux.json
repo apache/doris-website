@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "source-install/compilation-linux",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/source-install/compilation-linux.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/source-install/compilation-linux.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "bdda7f9142db9fb755410dfbd8b6b700228ecc3d3e3fcf6cea3894fe1bc68fad",
+    "sourceTechnicalHash": "a8011d0cfb5628eed22197edc4cd828c65748db5cfc9ba13eb28853d6a7ce8f5",
+    "targetHash": "6014becdc0bb3167e75f87ed534d6038e3ad11a92ad2c92e35a8b9fd502763aa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.552Z",
+    "glossaryVersion": "0"
+  }
+}

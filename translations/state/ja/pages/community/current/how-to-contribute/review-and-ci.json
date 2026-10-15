@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/review-and-ci",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/review-and-ci.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/how-to-contribute/review-and-ci.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "bf5837b2b202c767dea45e9378f8bdde135e89eacc69f4c96c5762a844493616",
+    "sourceTechnicalHash": "d3aae0f09ebdb50e4a890f3f97229e868c6cf61e6fd3721892175882517dbc86",
+    "targetHash": "894860acb0185f04b9afe6f7b6043caf42dd0ef39089cbd58aca5f2fa924c66f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.551Z",
+    "glossaryVersion": "0"
+  }
+}

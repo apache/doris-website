@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "security",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/security.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/security.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "64393453ccf596107b99ab55a98765754f3ce836864e81dcdbd03b4fddf603bd",
+    "sourceTechnicalHash": "52817136ab5e0e4fde1a73e7888291cf18698e66c9ba2e0e7d99e8428d2b2b84",
+    "targetHash": "ca68b06d1ccfc433a6327dfb21bd931bd4c13ccf22dd389954694c7e7ee6924f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.551Z",
+    "glossaryVersion": "0"
+  }
+}

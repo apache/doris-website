@@ -1,0 +1,926 @@
+---
+title: Apache Doris コミュニティバッジを受け取る
+sidebar_label: コミュニティバッジ
+language: ja
+description: Apache Doris のコントリビューターが Holopin でデジタルの Contributor バッジを受け取る方法、コミッターと PMC メンバーが PMC からバッジを受け取る方法、GitHub と LinkedIn でのバッジの表示方法、実物のバッジの申請方法を説明します。五種類の Apache Doris コミュニティバッジも紹介します。
+keywords:
+    - Apache Doris
+    - コミュニティバッジ
+    - Contributor バッジ
+    - Committer バッジ
+    - PMC Member バッジ
+    - Holopin
+    - 実物のバッジ
+    - コントリビューターの表彰
+    - オープンソースへの貢献
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
+
+{/*
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+*/}
+
+<style>{`
+/* ---------- hero ---------- */
+.badge-hero {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 8px 32px;
+  align-items: center;
+  margin: 8px 0 32px;
+  padding: 28px 32px 24px 28px;
+  border: 1px solid var(--brand-border-soft, #D9EEE8);
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--brand-surface-soft, #F4FBF8), var(--brand-surface-note, #E8FAF5));
+}
+
+.badge-hero-image {
+  width: 230px;
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(6, 70, 50, 0.18));
+}
+
+.badge-hero-eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brand-primary-deep, #0B7A58);
+}
+
+.badge-hero-lead {
+  margin: 0 0 10px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ifm-font-color-base);
+}
+
+.badge-hero-desc {
+  margin: 0 0 16px;
+  max-width: 52ch;
+  line-height: 1.6;
+}
+
+.badge-eligibility {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--brand-border-soft, #D9EEE8);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+}
+
+.badge-eligibility-tick {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.badge-eligibility strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.badge-eligibility span:not(.badge-eligibility-tick) {
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.badge-hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.badge-hero-note {
+  flex-basis: 100%;
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.badge-journey {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--brand-border-soft, #D9EEE8);
+  font-size: 0.85rem;
+}
+
+.badge-journey-stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px 5px 6px;
+  border: 1px solid var(--brand-border-soft, #D9EEE8);
+  border-radius: 999px;
+  background: var(--ifm-background-surface-color);
+}
+
+.badge-journey-stage i {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--brand-surface-note, #E8FAF5);
+  color: var(--brand-primary-deep, #0B7A58);
+  font-style: normal;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.badge-journey-arrow {
+  color: var(--ifm-color-primary);
+  font-weight: 700;
+}
+
+.badge-journey-hint {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+/* ---------- badge family ---------- */
+.badge-family {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0 8px;
+}
+
+.badge-card {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 6px;
+  justify-items: center;
+  padding: 16px 10px 14px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  text-align: center;
+  text-decoration: none;
+}
+
+.markdown a.badge-card,
+.markdown a.badge-card:hover {
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+}
+
+a.badge-card:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+.badge-card--open {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px var(--brand-surface-note, #E8FAF5);
+}
+
+.badge-card img {
+  width: 104px;
+  height: 104px;
+}
+
+.badge-card strong {
+  font-size: 0.9rem;
+  line-height: 1.25;
+}
+
+.badge-card span {
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.badge-chip {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 3px 9px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-700);
+  font-style: normal;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badge-chip--open {
+  border-color: var(--ifm-color-primary);
+  background: var(--ifm-color-primary);
+  color: #fff;
+}
+
+/* ---------- step cards ---------- */
+.badge-steps {
+  display: grid;
+  margin: 8px 0 24px;
+}
+
+.badge-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 0 18px;
+  padding-bottom: 22px;
+}
+
+.badge-step::before {
+  content: "";
+  position: absolute;
+  left: 25px;
+  top: 52px;
+  bottom: 0;
+  width: 2px;
+  background: var(--ifm-color-emphasis-300);
+}
+
+.badge-step:last-child {
+  padding-bottom: 0;
+}
+
+.badge-step:last-child::before {
+  display: none;
+}
+
+.badge-step-number {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 800;
+  box-shadow: 0 0 0 5px var(--ifm-background-color);
+}
+
+.badge-steps--optional .badge-step-number {
+  border: 3px solid var(--ifm-color-primary);
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-color-primary);
+}
+
+.badge-step-body {
+  padding: 18px 22px 20px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+  background: var(--ifm-background-surface-color);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.markdown .badge-step-body h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem !important;
+  font-size: 1.1rem;
+}
+
+.markdown .badge-step-body > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.badge-step-action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 0;
+}
+
+.badge-step-action span {
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.badge-step-why {
+  margin: 12px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.badge-step-scope {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--brand-surface-note, #E8FAF5);
+  color: var(--brand-primary-deep, #0B7A58);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* where committers and PMC members join the timeline */
+.badge-step--entry .badge-step-number {
+  border: 3px solid var(--ifm-color-primary);
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-color-primary);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.badge-step--entry .badge-step-body {
+  border-color: var(--brand-border-soft, #D9EEE8);
+  background: var(--brand-surface-soft, #F4FBF8);
+}
+
+/* checklist */
+.markdown .badge-checklist {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 0 !important;
+  padding: 12px 16px;
+  border: 1px solid var(--brand-border-soft, #D9EEE8);
+  border-radius: 8px;
+  background: var(--brand-surface-soft, #F4FBF8);
+  list-style: none;
+}
+
+.markdown .badge-checklist li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.95rem;
+}
+
+.markdown .badge-checklist li::before {
+  content: "✓";
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 3px;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.markdown .badge-checklist li.badge-checklist-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-primary-deep, #0B7A58);
+}
+
+.markdown .badge-checklist li.badge-checklist-label::before {
+  display: none;
+}
+
+.markdown .badge-linkedin {
+  color: #0A66C2;
+  font-weight: 600;
+}
+
+/* screenshots */
+.badge-shot {
+  margin: 14px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+}
+
+.badge-shot img {
+  display: block;
+  width: 100%;
+}
+
+.badge-shot figcaption {
+  padding: 6px 10px;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  font-size: 0.78rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.badge-shot--narrow {
+  width: 360px;
+  max-width: 100%;
+}
+
+.badge-shots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0 0;
+}
+
+.badge-shots .badge-shot {
+  margin: 0;
+}
+
+/* show-off tabs */
+.markdown .badge-ministeps ol {
+  display: grid;
+  gap: 8px;
+  padding-left: 0;
+  list-style: none;
+  counter-reset: badge-ministep;
+}
+
+.markdown .badge-ministeps li {
+  position: relative;
+  padding-left: 36px;
+  counter-increment: badge-ministep;
+}
+
+.markdown .badge-ministeps li::before {
+  content: counter(badge-ministep, lower-alpha);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--ifm-color-primary);
+  border-radius: 50%;
+  color: var(--ifm-color-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.markdown .badge-where {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 0 !important;
+  padding: 0;
+  list-style: none;
+}
+
+.markdown .badge-where li {
+  padding: 4px 12px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  background: var(--ifm-background-surface-color);
+  font-size: 0.875rem;
+}
+
+/* questions */
+.badge-questions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  margin: 0 0 8px;
+  padding: 16px 20px;
+  border-radius: 10px;
+}
+
+.badge-questions {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-color-emphasis-100);
+}
+
+.badge-questions-title {
+  display: block;
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+}
+
+.badge-questions-text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* buttons: the site's .markdown a rule (markdown.scss) outranks Infima's .button color, so restate it */
+.markdown .badge-button,
+.markdown .badge-button:hover,
+.markdown .badge-button:active {
+  color: var(--ifm-button-color);
+}
+
+/* Infima's primary hover uses --ifm-color-primary-dark, which is a blue leftover on this site */
+.badge-button.button--primary:not(.button--outline):hover,
+.badge-button.button--primary:not(.button--outline):active {
+  --ifm-button-background-color: var(--brand-primary-deep, #0B7A58);
+  --ifm-button-border-color: var(--brand-primary-deep, #0B7A58);
+}
+
+.markdown .badge-questions-text,
+.markdown .badge-closing-signature {
+  margin-bottom: 0 !important;
+}
+
+.markdown .badge-closing-text {
+  margin-bottom: 8px !important;
+}
+
+/* closing */
+.badge-closing {
+  margin: 40px 0 0;
+  padding: 6px 0 6px 22px;
+  border-left: 4px solid var(--ifm-color-primary);
+}
+
+.badge-closing-text {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.badge-closing-signature {
+  margin: 10px 0 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+}
+
+@media (max-width: 996px) {
+  .badge-family {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .badge-card {
+    flex: 0 0 190px;
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 700px) {
+  .badge-hero {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    padding: 22px 20px;
+  }
+
+  .badge-hero-image {
+    width: 170px;
+  }
+
+  .badge-step {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 0 12px;
+  }
+
+  .badge-step-number {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .badge-step::before {
+    left: 19px;
+    top: 40px;
+  }
+
+  .badge-step-body {
+    padding: 14px 16px 16px;
+  }
+
+  .badge-shots,
+  .badge-questions {
+    grid-template-columns: 1fr;
+  }
+}
+`}</style>
+
+<div className="badge-hero">
+  <img className="badge-hero-image" src="/images/community-badges/badge-contributor.png" alt="Apache Doris Contributor バッジ" width="230" height="230" />
+  <div>
+    <div className="badge-hero-eyebrow">Apache Doris コミュニティバッジ · 申請期限なし</div>
+    <div className="badge-hero-lead">Apache Doris にプルリクエストがマージされましたか？ Contributor バッジを受け取りましょう。</div>
+    <div className="badge-hero-desc">Apache Doris に貢献した方のためのデジタルバッジです。Holopin で無料で受け取れます。受け取った後に LinkedIn に投稿すれば、実物のバッジも郵送します。</div>
+    <div className="badge-eligibility">
+      <span className="badge-eligibility-tick" aria-hidden="true">✓</span>
+      <div>
+        <strong>Apache Doris プロジェクトでプルリクエストが一件でもマージされていれば対象です。</strong>
+        <span>PR の件数やマージされた時期は問いません。三年前のドキュメント修正も対象です。</span>
+      </div>
+    </div>
+    <div className="badge-hero-cta">
+      <a className="badge-button button button--primary button--lg" href="#step-1">デジタルバッジを受け取る →</a>
+      <span className="badge-hero-note">すでに Holopin の招待メールを受け取っている場合は、<a href="#step-3">ステップ 3</a> に進んでください。</span>
+    </div>
+  </div>
+  <div className="badge-journey" aria-label="プログラムの流れ">
+    <span className="badge-journey-stage"><i>ステップ 1～3</i> デジタルバッジ</span>
+    <span className="badge-journey-arrow" aria-hidden="true">→</span>
+    <span className="badge-journey-stage"><i>ステップ 4</i> バッジを公開</span>
+    <span className="badge-journey-arrow" aria-hidden="true">→</span>
+    <span className="badge-journey-stage"><i>ステップ 5～6</i> 実物のバッジ</span>
+    <span className="badge-journey-hint">ステップ 5 と 6 は任意です。デジタルバッジを受け取った後に進めます。</span>
+  </div>
+</div>
+
+## 五種類のコミュニティバッジ {#badges}
+
+それぞれのバッジは、異なる形の貢献をたたえるものです。Contributor バッジは現在受け取れます。Committer バッジと PMC Member バッジは PMC から送られるため、申請は不要です。2026 年の二種類のバッジはコミュニティが授与します。授与基準と手順が決まり次第、このページに追記します。
+
+<div className="badge-family">
+  <a className="badge-card badge-card--open" href="#digital-badge">
+    <img src="/images/community-badges/badge-contributor.png" alt="Apache Doris Contributor バッジ" width="104" height="104" />
+    <strong>Contributor</strong>
+    <span>コード、ドキュメント、アイデアなどで貢献し、PR が少なくとも一件マージされた方。</span>
+    <em className="badge-chip badge-chip--open">提供中</em>
+  </a>
+  <a className="badge-card badge-card--open" href="#committer-pmc-badges">
+    <img src="/images/community-badges/badge-committer.png" alt="Apache Doris Committer バッジ" width="104" height="104" />
+    <strong>Committer</strong>
+    <span>継続的で信頼される貢献によって得られるコミット権限を持つ方。</span>
+    <em className="badge-chip badge-chip--open">提供中</em>
+  </a>
+  <a className="badge-card badge-card--open" href="#committer-pmc-badges">
+    <img src="/images/community-badges/badge-pmc-member.png" alt="Apache Doris PMC Member バッジ" width="104" height="104" />
+    <strong>PMC Member</strong>
+    <span>プロジェクトの技術的な方向性とコミュニティの運営を担う方。</span>
+    <em className="badge-chip badge-chip--open">提供中</em>
+  </a>
+  <div className="badge-card">
+    <img src="/images/community-badges/badge-active-contributor-2026.png" alt="Apache Doris Active Contributor 2026 バッジ" width="104" height="104" />
+    <strong>Active Contributor 2026</strong>
+    <span>年間を通じて継続的かつ大きな影響を与える貢献をした方。</span>
+    <em className="badge-chip">近日公開</em>
+  </div>
+  <div className="badge-card">
+    <img src="/images/community-badges/badge-community-champion-2026.png" alt="Apache Doris Community Champion 2026 バッジ" width="104" height="104" />
+    <strong>Community Champion 2026</strong>
+    <span>主要機能、ユーザー事例、講演、イベントなどのコミュニティ活動に貢献した方。</span>
+    <em className="badge-chip">近日公開</em>
+  </div>
+</div>
+
+{/* TODO: publish the criteria and claim process for Active Contributor 2026 and Community Champion 2026. Each badge gets its own section; turn its card above into a link (like the Contributor card) once the section exists. */}
+
+## デジタルバッジを受け取る {#digital-badge}
+
+Contributor バッジを受け取る方は、四つのステップをすべて行ってください。Holopin が招待メールを送る前に各申請を手作業で確認するため、最初の二つのステップで GitHub アカウントが本人のものか確認します。コミッターと PMC メンバーは、PMC から招待メールが届くため、最初の二つのステップを省略し、[ステップ 3 から](#committer-pmc-badges)始めます。
+
+<div className="badge-steps">
+
+<div className="badge-step">
+<span className="badge-step-number" aria-hidden="true">1</span>
+<div className="badge-step-body">
+
+<span className="badge-step-scope">Contributor バッジのみ</span>
+
+### GitHub プロフィールの README に確認用フレーズを追加する {#step-1}
+
+プロフィールの README（`username/username` リポジトリ）の任意の場所に、次の行を一時的に追加してください。
+
+```text
+Apache Doris Community Badge
+```
+
+<div className="badge-step-why"><strong>理由：</strong> フォームには誰でも GitHub ID を入力できるため、アカウントが本人のものであることを確認する必要があります。バッジを受け取ったら、この行を削除して代わりにバッジを掲載できます。</div>
+
+</div>
+</div>
+
+<div className="badge-step">
+<span className="badge-step-number" aria-hidden="true">2</span>
+<div className="badge-step-body">
+
+<span className="badge-step-scope">Contributor バッジのみ</span>
+
+### 申請フォームに入力する {#step-2}
+
+マージされた PR を確認するための GitHub ID と、バッジの招待メールを送るためのメールアドレスを入力してください。
+
+<div className="badge-step-action">
+  <a className="badge-button button button--primary" href="https://forms.gle/xTcnWLqDuBeFfnAD8" target="_blank" rel="noopener noreferrer">申請フォームを開く →</a>
+  <span>所要時間は一分ほどです。</span>
+</div>
+
+</div>
+</div>
+
+<div className="badge-step badge-step--entry">
+<span className="badge-step-number" aria-hidden="true">PMC</span>
+<div className="badge-step-body">
+
+### コミッターまたは PMC メンバーの方はこちらから {#committer-pmc-badges}
+
+この二種類のバッジには申請が必要ありません。Doris PMC は公式の[コミッター一覧](https://people.apache.org/committers-by-project.html#doris)と[PMC メンバー一覧](https://projects.apache.org/committee.html?doris)を確認し、掲載されている方全員に Holopin の招待メールを直接送ります。コミッターには Committer バッジ、PMC メンバーには PMC Member バッジと Committer バッジの両方が届きます。メールが届いたらステップ 3 から進んでください。その後のバッジの公開方法と実物のバッジの申請方法は、Contributor バッジと同じです。
+
+Contributor バッジも希望しますか？ マージ済みのプルリクエストがあれば対象となるので、ステップ 1 と 2 から申請してください。
+
+<div className="badge-step-why">まだメールが届いていない場合は、まずプロモーションタブと迷惑メールフォルダーを確認し、その後 <a href="#questions">Slack</a> でお問い合わせください。</div>
+
+</div>
+</div>
+
+<div className="badge-step">
+<span className="badge-step-number" aria-hidden="true">3</span>
+<div className="badge-step-body">
+
+### Holopin でバッジを受け取る {#step-3}
+
+Holopin から招待メールが届きます。Contributor バッジの場合は PR の確認後、Committer バッジと PMC Member バッジの場合は PMC が招待を送った後です。**Claim Badge** をクリックしてください。Holopin のアカウントは無料で作成できます。
+
+<Admonition type="tip" title="メールアドレスでサインイン">
+  <p>現在、GitHub から直接サインインする際に問題があるため、ご自身のメールアドレスで Holopin に登録し、サインインすることをお勧めします。</p>
+</Admonition>
+
+メールが見つからない場合は、プロモーションタブまたは迷惑メールフォルダーを確認してください。Holopin の招待メールがそこに振り分けられることがあります。
+
+<figure className="badge-shot badge-shot--narrow">
+  <img src="/images/community-badges/holopin-claim.jpg" alt="Apache Doris バッジと受け取りボタンが表示された Holopin の受け取り画面" />
+  <figcaption>Holopin のバッジ受け取り画面</figcaption>
+</figure>
+
+<div className="badge-step-why">受け取ったバッジは Holopin の認証情報ページに表示されます。このページは誰でも開いて確認できるため、好きな場所からリンクできます。</div>
+
+</div>
+</div>
+
+<div className="badge-step">
+<span className="badge-step-number" aria-hidden="true">4</span>
+<div className="badge-step-body">
+
+### バッジを公開する {#step-4}
+
+このバッジには、あなたの貢献をコミュニティが評価しているという意味があります。好きな場所に掲載してください。
+
+<Tabs groupId="badge-showoff">
+<TabItem value="github" label="GitHub プロフィール" default>
+
+<div className="badge-ministeps">
+
+1. Holopin で **Your Profile** を開きます。
+2. Apache Doris のバッジを **Board** に追加します。複数のバッジがある場合は、移動、サイズ変更、回転ができます。
+3. Board の下に表示されるコードをコピーし、GitHub プロフィールの README に貼り付けます。
+
+</div>
+
+コードは一行の Markdown です。次は `morningman` アカウントの例です。自分のコードには自分のユーザー名が入ります。
+
+```markdown
+[![An image of @morningman's Holopin badges, which is a link to view their full Holopin profile](https://holopin.me/morningman)](https://holopin.io/@morningman)
+```
+
+表示例は [github.com/morningman](https://github.com/morningman) と、その元となる [README](https://github.com/morningman/morningman/blob/main/README.md) で確認できます。
+
+<div className="badge-shots">
+  <figure className="badge-shot">
+    <img src="/images/community-badges/holopin-board-embed-code.jpg" alt="下部に埋め込みコードが表示された Holopin の Board" />
+    <figcaption>Board の下にある埋め込みコードをコピー</figcaption>
+  </figure>
+  <figure className="badge-shot">
+    <img src="/images/community-badges/github-profile-badge.jpg" alt="Apache Doris Contributor バッジが表示された GitHub プロフィールの README" />
+    <figcaption>GitHub プロフィールに表示されたバッジ</figcaption>
+  </figure>
+</div>
+
+</TabItem>
+<TabItem value="linkedin" label="LinkedIn">
+
+LinkedIn プロフィールの **Licenses & Certifications** に追加します。
+
+- 名前：Apache Doris Contributor（または、お持ちのバッジに応じて Committer / PMC Member）
+- 発行組織：Apache Doris
+- 資格情報の URL：Holopin のバッジへのリンク
+
+<figure className="badge-shot">
+  <img src="/images/community-badges/linkedin-certification.jpg" alt="Apache Doris Contributor バッジの LinkedIn Licenses & Certifications の登録内容" />
+  <figcaption>LinkedIn の Licenses &amp; Certifications</figcaption>
+</figure>
+
+投稿で紹介することもできます。たとえば、バッジ画像を添えて次のように一行書くだけで十分です。
+
+> <a className="badge-linkedin" href="https://www.linkedin.com/company/doris-apache">@Apache Doris</a> コミュニティから Contributor バッジをいただきました。 <span className="badge-linkedin">#ApacheDoris</span> <span className="badge-linkedin">#ApacheDorisCommunityBadge</span>
+
+受け取ったバッジが Committer または PMC Member の場合は、名称を置き換えてください。実物のバッジも希望する場合、この投稿が[ステップ 5](#step-5)で必要になります。
+
+</TabItem>
+<TabItem value="anywhere" label="その他の場所">
+
+Holopin の認証情報ページは、誰でも確認できる固定リンクです。貢献の記録が役立つ場所に追加してください。
+
+<ul className="badge-where">
+  <li>履歴書 / CV</li>
+  <li>個人のウェブサイトやポートフォリオ</li>
+  <li>その他の開発者プロフィールやコミュニティプロフィール</li>
+  <li>カンファレンスの登壇者紹介</li>
+</ul>
+
+</TabItem>
+</Tabs>
+
+</div>
+</div>
+
+</div>
+
+## 実物のバッジも希望する場合：あと二ステップ {#physical-badge}
+
+デジタルバッジを受け取ったら、すぐに申請できます。ステップ 5 の LinkedIn 投稿では、そのバッジを表示する必要があります。Contributor、Committer、PMC Member のいずれかのデジタルバッジを持つ方は全員対象です。デジタルバッジを複数持っている場合も、実物のバッジはお一人につき一個お送りします。
+
+<div className="badge-steps badge-steps--optional">
+
+<div className="badge-step">
+<span className="badge-step-number" aria-hidden="true">5</span>
+<div className="badge-step-body">
+
+### LinkedIn でバッジを共有する {#step-5}
+
+新しいバッジについて LinkedIn に投稿してください。作成・修正したものや、コミュニティに参加したきっかけなど、内容は自由です。必要な条件は以下の三つだけです。短い投稿にしたい場合は、[ステップ 4](#step-4) の LinkedIn タブにある投稿例にバッジ画像を添えるだけで構いません。
+
+<ul className="badge-checklist">
+  <li className="badge-checklist-label">投稿に必要なもの</li>
+  <li><span>公式 LinkedIn ページ <a className="badge-linkedin" href="https://www.linkedin.com/company/doris-apache">@Apache Doris</a> へのメンション</span></li>
+  <li><span>ハッシュタグ <span className="badge-linkedin">#ApacheDorisCommunityBadge</span></span></li>
+  <li><span>バッジ画像または Holopin のバッジへのリンク</span></li>
+</ul>
+
+<div className="badge-shots">
+  <figure className="badge-shot">
+    <img src="/images/community-badges/holopin-share.jpg" alt="LinkedIn で共有するボタンが表示された Holopin のバッジページ" />
+    <figcaption>Holopin から直接共有するか…</figcaption>
+  </figure>
+  <figure className="badge-shot">
+    <img src="/images/community-badges/linkedin-post.jpg" alt="バッジ画像を添付した LinkedIn の投稿作成画面" />
+    <figcaption>…自分で投稿を作成します</figcaption>
+  </figure>
+</div>
+
+</div>
+</div>
+
+<div className="badge-step">
+<span className="badge-step-number" aria-hidden="true">6</span>
+<div className="badge-step-body">
+
+### 配送先情報を送信する {#step-6}
+
+投稿を公開したら、実物のバッジの申請フォームに投稿へのリンクと配送先住所を入力してください。
+
+<div className="badge-step-action">
+  <a className="badge-button button button--primary" href="https://forms.gle/cqG5SchErhoMDDB87" target="_blank" rel="noopener noreferrer">実物のバッジを申請する →</a>
+</div>
+
+<div className="badge-step-why">投稿を確認した後、発送の準備を始める際にメールでお知らせします。</div>
+
+</div>
+</div>
+
+</div>
+
+:::info 世界各地に発送しますが、お届けを保証するものではありません
+
+配送にかかる時間は国によって大きく異なります。税関の規則や配送業者の制限により、荷物をお届けできない地域もあります。できる限りお届けできるよう努めますが、すべての住所への到着は保証できません。
+
+:::
+
+## ご質問がある場合 {#questions}
+
+<div className="badge-questions">
+  <div>
+    <span className="badge-questions-title">Apache Doris の Slack に参加してご質問ください。</span>
+    <p className="badge-questions-text">コミュニティチームが、フォームや配送を含むバッジに関する質問に Slack で回答します。</p>
+  </div>
+  <a className="badge-button button button--primary" href="https://doris.apache.org/slack?utm_source=website&utm_medium=docs&utm_content=community_badge">Slack コミュニティに参加する →</a>
+</div>
+
+<div className="badge-closing">
+  <p className="badge-closing-text">大きく目立つ貢献もあれば、誰かの日々の作業を少し楽にする小さな修正もあります。そのすべてがオープンソースを支えています。このバッジには、そうした貢献への感謝を込めています。</p>
+  <p className="badge-closing-text">このプログラムに終了日はありません。いつでも貢献できます。プルリクエストがマージされたら、バッジを受け取ってください。</p>
+  <p className="badge-closing-signature">Apache Doris コミュニティ</p>
+</div>

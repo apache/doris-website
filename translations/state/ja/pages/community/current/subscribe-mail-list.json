@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "subscribe-mail-list",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/subscribe-mail-list.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/subscribe-mail-list.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "4ccda3a3258f033d15102695cddfc90df24acd5c0870940e51d5f64b5af3d0db",
+    "sourceTechnicalHash": "407337e516093740d76c39f04e1da017aab47e2d79b57ba1721d0b4a56f4f3ec",
+    "targetHash": "3c2a7698bc06d2d1bed06dfa3de43ac0f7b2028609d33bcb6c2bbdd6821c535d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.550Z",
+    "glossaryVersion": "0"
+  }
+}
