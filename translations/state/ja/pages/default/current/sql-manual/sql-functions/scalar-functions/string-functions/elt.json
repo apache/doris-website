@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/elt",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/elt.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/elt.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "57ad66b757435060dd5a6e50be20812d0d07f3875dca3e2182ca6c9990a22195",
+    "sourceTechnicalHash": "68a098072c1b93ca3a75ce641339a69fc1dea45fe3dcc3cf54cb5e36bba41d70",
+    "targetHash": "27e2536dd0f384767b896cc411bc583af27d19028c67efbe81a8f09402bae437",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.807Z",
+    "glossaryVersion": "0"
+  }
+}

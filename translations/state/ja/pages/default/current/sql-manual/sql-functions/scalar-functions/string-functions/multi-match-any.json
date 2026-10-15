@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/multi-match-any",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/multi-match-any.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/multi-match-any.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "406f52c620405f3eff61b0dc5df8eb4caa5bcf31fabdaae6a843d153a639d0f1",
+    "sourceTechnicalHash": "315812bfff67d5b167dbeb20d0d1cbf3543af66212d8dda53f1999d6e2212488",
+    "targetHash": "492de970cfeb4a87eaf41684ea2124d5074ae602447d449c7040c955aae83271",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.808Z",
+    "glossaryVersion": "0"
+  }
+}

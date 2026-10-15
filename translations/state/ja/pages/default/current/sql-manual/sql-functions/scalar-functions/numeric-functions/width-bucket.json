@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "ab0b6819a4d3a8b5a7a4497f30cc19971a05daa6db6c86ec5a07bcd39e3a0942",
+    "sourceTechnicalHash": "c0f05ad0848d05d750591cf19a89daa6c2964c06d19eb2b729753589dc6bc314",
+    "targetHash": "90f8d194ebdb95f5509eb6ca5d4d0b73e68090454aa3c76dc236da8c7042a3cc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.805Z",
+    "glossaryVersion": "0"
+  }
+}

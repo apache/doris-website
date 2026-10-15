@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/char-length",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/char-length.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/char-length.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "71087c749ced75d6e43e937c4b6f16e4f864a89102900135417ba2a7b84fa405",
+    "sourceTechnicalHash": "d32f577ab7856ecce1a9ef2af23d0ad34fb850ad9243909cc03d3405f5ac11be",
+    "targetHash": "cfaa8508156436081e8fe981a07154c90b195555cbf3c017a5a291c7452b450d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.806Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "fdf9759d1c3bdf9563699e42757bfd3a7c978f73d38414c15a7bcd4f38ef0af3",
+    "sourceTechnicalHash": "411373435bf47e545bf9fd2e433453f6e4d1c193eef7766ee32b336bafada5fc",
+    "targetHash": "56340405dc2a87f8458a85b8fd78d6e8d257ea01f58742b3f5154554241cddf1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.809Z",
+    "glossaryVersion": "0"
+  }
+}

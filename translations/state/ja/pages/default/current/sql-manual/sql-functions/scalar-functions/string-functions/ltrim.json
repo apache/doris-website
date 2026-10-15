@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/ltrim",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/ltrim.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/ltrim.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "80b583050f391ac642e364bb73a52fb5e0f25f38acc2606f47a6228250d864da",
+    "sourceTechnicalHash": "c3eb018b3e453de1f8b737779d63e2d1d9546907c7f1ef1e8d98fdd53084e7fe",
+    "targetHash": "8eacce4aedb08e501b5c7871c32a0ff92569df11fa90b8c9b578ca4052882146",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.808Z",
+    "glossaryVersion": "0"
+  }
+}

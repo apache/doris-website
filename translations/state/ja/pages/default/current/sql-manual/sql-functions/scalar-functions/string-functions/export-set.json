@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/export-set",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/export-set.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/export-set.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e2615b26129a73082d1f5c23abf6561787a537a8001030d11a223a4b47a2079d",
+    "sourceTechnicalHash": "bf2b2b93476cee9f5dd60da0168b7468ebf892062968c5bd4d3eaa8a969428b6",
+    "targetHash": "69959b8a8e81f666178eaf1c9df7317b465910971f0d34ca4470bcc43500bc94",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.807Z",
+    "glossaryVersion": "0"
+  }
+}

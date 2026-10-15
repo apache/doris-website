@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/signbit",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/signbit.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/signbit.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "2b4fa504b1e3077a78aa6e3004ce2852e1d8b50fa585f777c89a834ce9216865",
+    "sourceTechnicalHash": "e6434e831eec6222a4930e69a1b289be8c0390d8ede4bc643f4b27fa50300988",
+    "targetHash": "42e4d591cffbc82fb1af6e8bf144144ed331cdb83a55a71532b6bbe37dc216f6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.805Z",
+    "glossaryVersion": "0"
+  }
+}

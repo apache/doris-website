@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/add-time",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/add-time.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/add-time.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "6f6581d07ae56be4d3b1cfb471eb5eaf4af1db212f97250e1944ff665592d225",
+    "sourceTechnicalHash": "587d8ef94754ebd9d9cca5f2c42a72de0f9aabdcdae3af5542c043577cd149c9",
+    "targetHash": "2f1f3c1c9bb0c8fc69a434c4f76c681e24ef7450f790ed3d6d23c3de3a760cd5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.811Z",
+    "glossaryVersion": "0"
+  }
+}

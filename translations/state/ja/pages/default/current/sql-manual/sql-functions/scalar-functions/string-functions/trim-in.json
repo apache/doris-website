@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/trim-in",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/trim-in.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/trim-in.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f434ce6edabbf1adf37492a5a2e17974ed085ff04714ecff200d4040628a13f4",
+    "sourceTechnicalHash": "8e43ba0a1172004b94d7422079bbcbe31c1c2ef0938d420665c41f7ce1b1bd60",
+    "targetHash": "dd4c1ca723e663d0971d2eba91d6215d735a4c46be4bf6c310184ca53bfcbb7b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.810Z",
+    "glossaryVersion": "0"
+  }
+}

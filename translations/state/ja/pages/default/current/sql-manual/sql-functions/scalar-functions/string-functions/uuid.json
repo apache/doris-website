@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/uuid",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/uuid.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/uuid.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0cbcefb4109070bcc3c5089acfdfdee7a27b641f505cb7c936324ba6d4be26e4",
+    "sourceTechnicalHash": "34bf3cf3a850313b90f58308e1d4471e0df1327fc6e408253d449092bdb10188",
+    "targetHash": "c0694daeb4ef4b01ec57515f6dff6aa0e229e180d32154e111aec7768d805261",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.811Z",
+    "glossaryVersion": "0"
+  }
+}

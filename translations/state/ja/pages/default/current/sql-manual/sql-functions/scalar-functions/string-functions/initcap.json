@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/initcap",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/initcap.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/initcap.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "a26e9e257b158f440528febef0900b04fe3012565f1f9238b79770afd53518e2",
+    "sourceTechnicalHash": "8ac08a8fcb97ebd4c71fe1ed49a2ba6a161e3b63c07ccb9737de252272973f14",
+    "targetHash": "40eb0b800ca5e65d829f1ca84b13184ed729dd9b7feeb784779c32c4c483db2b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.807Z",
+    "glossaryVersion": "0"
+  }
+}
