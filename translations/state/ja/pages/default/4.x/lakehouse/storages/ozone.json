@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/ozone",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/ozone.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/ozone.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "b39d091c3635b5ca793809a46f4472a510f07aad8e519cec94e394addcac5bd3",
+    "sourceTechnicalHash": "9204aa52e57bef44686b89db2a5c2dfe5e4f5f248cff25ef9abe8abf12a90c28",
+    "targetHash": "3da0657ef6cf30c85c6b68f469691c69abac4100d69e325862aad5d1fc5dc058",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.108Z",
+    "glossaryVersion": "0"
+  }
+}

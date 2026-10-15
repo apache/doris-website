@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/config/be-config",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/config/be-config.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/config/be-config.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "dfb19a391c020dacdc6c71bdfadb6b6974d5dd1d79b022a4c827ea972b0b991f",
+    "sourceTechnicalHash": "a7926d06c00ba93d209209370d932a767bd3af01f9ec6398819fc7aa3a2f079d",
+    "targetHash": "05ec2ce72b83d4d2ca58374bd79079ff08af876585fb62dd604f34d6e7a72987",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.111Z",
+    "glossaryVersion": "0"
+  }
+}

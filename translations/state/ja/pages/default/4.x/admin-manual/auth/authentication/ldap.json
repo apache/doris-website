@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/authentication/ldap",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/authentication/ldap.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/authentication/ldap.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "a21febd795c9269f97523e47da3618890e3329a1c44c996685be8f5f0deb0b92",
+    "sourceTechnicalHash": "ef42811b044058a596eba61ea17834d94d756e43fb64ca04b9f4a1b34ac64bd6",
+    "targetHash": "c9266419430da3dbd1f2615422ec35b20fcb1cacb271ea707737ddc4d9e2e43b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.111Z",
+    "glossaryVersion": "0"
+  }
+}

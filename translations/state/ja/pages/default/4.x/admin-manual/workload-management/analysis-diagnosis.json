@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/workload-management/analysis-diagnosis",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/workload-management/analysis-diagnosis.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/workload-management/analysis-diagnosis.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "592e609505451698c8040d3d946e5bb4b2ae215d2a56572bfb99f20401ebe0db",
+    "sourceTechnicalHash": "3fa616c63f32f14754edde91575d7d8996d789ea820d7dadf8e46f61216f6081",
+    "targetHash": "bb02698dd0477f005a75fda5df296a8a4ecfb1eec68a3e410ff7b6cad67186fd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.112Z",
+    "glossaryVersion": "0"
+  }
+}

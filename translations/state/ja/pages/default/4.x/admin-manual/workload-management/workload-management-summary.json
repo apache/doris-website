@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/workload-management/workload-management-summary",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/workload-management/workload-management-summary.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/workload-management/workload-management-summary.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "953bef6c894202a558838e55f42dc8986482294f1579778c6e679afdea9091da",
+    "sourceTechnicalHash": "9c51015031ac32938556b3318200bdf16a83974903980222dfcb124797b8abf1",
+    "targetHash": "997214b7cb5ff6270256a2e9dec174e54f0844e769f94149d3f9bc8443c7f7b1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.112Z",
+    "glossaryVersion": "0"
+  }
+}

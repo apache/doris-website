@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/cluster-management/load-balancing",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/cluster-management/load-balancing.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/cluster-management/load-balancing.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "486f80a5da5e2d73ab7d357dcd8113ec8c0ef12f971aefe41d4ec0a281d9bbb4",
+    "sourceTechnicalHash": "b62a3916983f83673afff98efc7fb25e4f7adf3d11e47943ab9c2e73aaf512b2",
+    "targetHash": "0b3fd4cb63225e39947ae8935095a3b2eb4b8a87ce5624245ef8de74884de0c8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.110Z",
+    "glossaryVersion": "0"
+  }
+}

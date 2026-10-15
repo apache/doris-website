@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/metastores/iceberg-jdbc",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/metastores/iceberg-jdbc.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/metastores/iceberg-jdbc.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "8c2b202a71f6a4e91b1eddf872606abdbe650770a9e7fb624729e72429b6078e",
+    "sourceTechnicalHash": "6b52b05b31ba3f535df841a299dbaaab891b2bfee224f738df7efc02a0a256bb",
+    "targetHash": "b062e0562f838ea5e5c86b7ffa9f54636149ebfa27c8c591b3fd53ecff1b3376",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.108Z",
+    "glossaryVersion": "0"
+  }
+}

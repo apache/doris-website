@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/authorization/ranger",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/authorization/ranger.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/authorization/ranger.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "edc920bd4a6a15e8575f2f3f40efd5e2771dd50caff194ec908ce13da35e210a",
+    "sourceTechnicalHash": "c1404ac49dd74b937abec990e0a43b325e4613d35e276b6d709255ec6bd3674a",
+    "targetHash": "8809ddc4d28d91a713bb93e07b15de5d0bfdd7c5b800d935221c98cf8f6949e1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.111Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/integrations/aws-authentication-and-authorization",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/integrations/aws-authentication-and-authorization.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/integrations/aws-authentication-and-authorization.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "c8164e0662b9952b58da4a78af3acd7ba8b33163cb42eb71a19ddb3ed5d4125e",
+    "sourceTechnicalHash": "71be24afa3c907b3acc72a92909127fb22f41ccd21692e916450ffe45522278b",
+    "targetHash": "64a7804b9392579ce93d0369c07cb10b70e47d5c5f8586519c7a916fc5fd8c94",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.112Z",
+    "glossaryVersion": "0"
+  }
+}

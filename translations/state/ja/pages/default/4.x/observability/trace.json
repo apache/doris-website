@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "observability/trace",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/observability/trace.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/observability/trace.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "faa116c4dc9343bf4a4dc81df1806cb510a9759e5aaa82c6604077c0384b9a1f",
+    "sourceTechnicalHash": "63aefe9a5fc4fccc5775effe7c9d95e2950b2e596306be9ddbc75c5a5c6f9075",
+    "targetHash": "6cd5c8048cfc2ef24b5b72f433ce576df1edbeb8adbe5976b675a984fe159306",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.110Z",
+    "glossaryVersion": "0"
+  }
+}

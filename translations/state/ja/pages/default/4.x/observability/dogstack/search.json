@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "observability/dogstack/search",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/observability/dogstack/search.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/observability/dogstack/search.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "8ec1a30970ab94883c55836aff861cbd338f234b3ab22e77c601c0525b4ceb7f",
+    "sourceTechnicalHash": "ddda46e7f5c746a7ecd83c01c35958c5cb1bcd057fd2f235c271bf38d0edf0f8",
+    "targetHash": "ba70a8272fdaa7ba5a0fac94fd8aff3cc2671b4dc7f5903202039db79b8cf144",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.110Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/jdbc-ibmdb2-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/jdbc-ibmdb2-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/jdbc-ibmdb2-catalog.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "7b5b77e1670474399eff58ff75558f48e09361e4f96ced6972915a278fd6e514",
+    "sourceTechnicalHash": "41489201fc1741d94cbbdb6a2652ae4584356557ab37fa57d4519b09f67e6044",
+    "targetHash": "c50840fa67cf4a4707863c2254bd8f73d7dffa69675497c2de17cd97b82d3ad8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.106Z",
+    "glossaryVersion": "0"
+  }
+}

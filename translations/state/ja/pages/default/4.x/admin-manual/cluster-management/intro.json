@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/cluster-management/intro",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/cluster-management/intro.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/cluster-management/intro.mdx",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "d0d82e16cab529bd2bc4c60fe18470405354c662e900ce5f90177ccecd8885db",
+    "sourceTechnicalHash": "2a146254f50f407db2d442dd78412e70eeff8e8205c1d25b2c57f8fbe219f458",
+    "targetHash": "97b388592c7da8f92e66c6468c3b72fe62af8c09bd3bfbdcf71c68f3eaf88d09",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.110Z",
+    "glossaryVersion": "0"
+  }
+}
