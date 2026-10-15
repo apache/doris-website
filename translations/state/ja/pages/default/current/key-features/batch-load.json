@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/batch-load",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/batch-load.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/batch-load.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "4df549d984ae39a2ead1f79a197edaa14e115ff8e82b31c408c5f0af74e91883",
+    "sourceTechnicalHash": "0227ad1b742e4745390f8c64c1390daa69a2d65e32543f92f9ab19d563aa0886",
+    "targetHash": "761a5ebfdc6326bbc72f4bd68f0a887168115ec3782bac3efef604ed823919d4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.613Z",
+    "glossaryVersion": "0"
+  }
+}

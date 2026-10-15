@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/job/CANCEL-TASK",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/job/CANCEL-TASK.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/CANCEL-TASK.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "e4c644c1af39f5839807a59d7996874a30e1fe04a7429ed8bd6d3a77c07f9745",
+    "sourceTechnicalHash": "078f979635d6b7df5f2e1c490559d936aaf7e5188ca0f15029c435f43afb4206",
+    "targetHash": "774b4fa2e70426f55130d8115ae5e73baf90ef40f9bf7c97626c991758eec217",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.612Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/pluggable-auth",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/pluggable-auth.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/pluggable-auth.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "ccfc5e2a156ae8fb3b74ae3eb6d5a1df0a4ba04dc28bc11856dd794b919c49fb",
+    "sourceTechnicalHash": "ea2f3aabb603b6087be1ea658e7ab98f887b2cdb7c91512c51f318e3341f9e54",
+    "targetHash": "e7f676e93b663bc07528967a7652131eb90b1c2b2bd1ffa3aaaa3631e3f90459",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.614Z",
+    "glossaryVersion": "0"
+  }
+}

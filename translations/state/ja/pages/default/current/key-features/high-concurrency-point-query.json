@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/high-concurrency-point-query",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/high-concurrency-point-query.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/high-concurrency-point-query.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "f27485d05bbbbab58808dd27da93f459eb13732ee62f2b835a655da801db7f19",
+    "sourceTechnicalHash": "e46a58c8f4226af59ed5d644d62f64fa1aceb416f1aada8ac9510418c4650187",
+    "targetHash": "148cd609d43318dbafd19085b7d926edbe82bc7aad6474115610303d87a58e41",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.614Z",
+    "glossaryVersion": "0"
+  }
+}

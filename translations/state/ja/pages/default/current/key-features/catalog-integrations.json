@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/catalog-integrations",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/catalog-integrations.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/catalog-integrations.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "90a42dc24853f80d59a3774569b882b737982e8bbf07bf5c031fdc989136e84e",
+    "sourceTechnicalHash": "6c0b710c498777b2dbc5b877ca46ef403a9a496f472df289cdcf37240b594399",
+    "targetHash": "5dcbb62ebeedcbc01ae96e254c4779006d1fe7b18b64ee0308fb48932d164ef0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.613Z",
+    "glossaryVersion": "0"
+  }
+}

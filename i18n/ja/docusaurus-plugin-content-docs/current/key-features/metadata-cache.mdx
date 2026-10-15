@@ -1,0 +1,131 @@
+---
+title: メタデータキャッシュ
+description: "外部カタログのメタデータ（テーブル一覧、スキーマ、パーティション、ファイル一覧、Iceberg マニフェスト）を多層でキャッシュし、クエリプランニングをミリ秒単位に抑えます。"
+keywords:
+  - メタデータキャッシュ
+  - Iceberg マニフェストキャッシュ
+  - スキーマキャッシュ
+  - ファイル一覧キャッシュ
+  - Apache Doris レイクハウス
+  - クエリプランニング
+slug: /key-features/metadata-cache
+image: /images/next/key-features/metadata-cache.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - lakehouse
+    - caching
+    - performance
+language: ja
+---
+
+> **要約** Apache Doris が [Hive、Iceberg、Hudi、Paimon](./multi-catalog) にクエリを実行するとき、経過時間の大半がパーティションの列挙、マニフェストの解析、Hive Metastore への問い合わせに費やされることがあります。Apache Doris のメタデータキャッシュは、スキーマ、パーティション値、ファイル一覧、Iceberg マニフェストのエントリ、Paimon スナップショットを保持します。キャッシュには TTL が設定されており、デフォルトは名前一覧が 24 時間、パーティションとファイルが 8 時間です。Hive Metastore のイベントから更新すれば遅延を秒単位に抑えられ、`REFRESH CATALOG` で明示的に無効化することもできます。Iceberg と Paimon ではフォーマットに応じて無効化するため、不変のマニフェストは参照されている間キャッシュに保持されます。
+
+![Apache Doris メタデータキャッシュ：外部カタログのメタデータ（テーブル一覧、スキーマ、パーティション、ファイル一覧、Iceberg マニフェスト）を多層でキャッシュし、クエリプランニングをミリ秒単位に抑えます。](/images/next/key-features/metadata-cache.jpg)
+## Apache Doris のメタデータキャッシュを使う理由 {#why}
+
+Apache Doris のメタデータキャッシュは、通常は経過時間の大部分を占める HMS との通信、S3/HDFS の LIST 操作、Iceberg マニフェストの読み取りを吸収し、レイクハウスのクエリプランニングを数秒から数ミリ秒に短縮します。レイクハウスのクエリプランニングで支配的なのはデータではなくメタデータです。[パーティション分割された](./partitioning-and-bucketing) Hive テーブルへのクエリには、次の処理が必要です。
+
+- データベース一覧、テーブル一覧、カラムスキーマ、パーティション一覧を取得するために Hive Metastore と通信する。
+- 絞り込み後に残った各パーティションのパスに対して S3 または HDFS の LIST 操作を実行し、データファイルを検出する。
+- Iceberg では、`metadata.json`、マニフェスト一覧、N 個のマニフェストファイルを順に読み取る（各マニフェストファイルでリモート読み取りが必要）。
+- Hudi では、タイムラインを取得して `FileSystemView` を構築し、クエリ時点で可視のファイルスライスを特定する。
+
+10K 個のパーティションを持つコールド状態のカタログでは、実行よりプランニングに時間がかかることがあります。典型的な例を示します。
+
+- 日付で絞り込むダッシュボードが毎分新たなパーティション検索をプランナーに要求し、HMS に負荷をかけ続けて停止に追い込む。
+- 30 個のマニフェストを持つ Iceberg テーブルで、データの読み取りに加えて、クエリごとにマニフェストのメタデータを取得するための S3 GET が 30 回発生する。
+- デプロイ後に新しい FE が起動し、最初のクエリ群が `getPartitionsByNames` に数秒を費やす。
+
+メタデータキャッシュはこれらを吸収し、元データが実際に変更されたときには更新の仕組みによって正しい状態に戻します。
+
+## Apache Doris のメタデータキャッシュとは {#what}
+
+Apache Doris のメタデータキャッシュは、ファイルのバイト列そのものを除き、外部カタログから取得できる情報を FE のメモリ内に保持するキャッシュです。各バックエンド（Hive、Iceberg、Hudi、Paimon、JDBC）は共通フレームワークをそれぞれ実装しています。そのため、ユーザーから見た仕組みは共通で、キャッシュごとの TTL とサイズ上限、および少数の更新操作で管理できます。
+
+**主な用語**
+
+- **`Schema cache`**（スキーマキャッシュ）：カラム一覧、型、テーブル識別情報を保持します。テーブル識別子と、Iceberg/Paimon ではスキーマ ID をキーにします。
+- **`Partition cache`**（パーティションキャッシュ）：Hive または Hudi テーブルのパーティション一覧を、パーティション値と格納場所を含めて保持します。
+- **`File cache (FE-side)`**（ファイルキャッシュ、FE 側）：S3/HDFS の LIST 操作で取得した、パーティションパスのファイル一覧と基本的なファイルメタデータを保持します。BE 側の [Data Cache](./data-cache-page-cache) とは異なります。
+- **`Manifest cache`**（マニフェストキャッシュ）：解析済みの Iceberg マニフェストエントリ（マニフェスト内のデータファイルと削除ファイルの一覧）を保持します。TTL ではなくエントリ数で上限を設定します。
+- **`HMS event listener`**（HMS イベントリスナー）：Hive Metastore の通知イベントを取り込み、影響を受けるエントリを段階的に無効化するポーリングクライアントです。
+
+## Apache Doris のメタデータキャッシュの仕組み {#how}
+
+Apache Doris の各クエリは、外部 RPC を発行する前にキャッシュを参照します。検索、TTL による削除、サイズ上限による削除、フォーマットに応じた無効化、HMS イベントのポーリング、明示的な `REFRESH` によって、よく使うメタデータをメモリに保持し、古いエントリを取り除きます。
+
+1. **検索。** プランナーがテーブルのスキーマ、パーティション、ファイルを要求すると、まず Caffeine を使用したローダー経由でキャッシュを確認します。キャッシュミスが発生すると、基になるカタログから取得し（HMS の Thrift 呼び出し、Iceberg メタデータの読み取り、Hudi タイムラインの走査など）、結果を保存します。
+2. **TTL による削除。** キャッシュモジュールごとに TTL が設定されています。3.0.7 より後では、アクセスのたびにタイマーがリセットされるため、頻繁にクエリされるテーブルはキャッシュに残ります。デフォルト値は控えめで、名前一覧は 24 時間（10 分ごとに更新）、パーティションとファイルのキャッシュは 8 時間です。
+3. **サイズ上限による削除。** キャッシュはサイズ上限（`max_external_schema_cache_num`、`max_external_file_cache_num` など）の下で LRU を使用します。そのため、アクセス頻度の低いテーブルが大量にあっても、よく使うテーブルがいつまでも押し出されることはありません。
+4. **フォーマットに応じた無効化。** Iceberg マニフェストキャッシュのエントリはマニフェストのパスをキーとし、TTL なしで保持されます。解析済みのマニフェストは、いずれかのスナップショットから参照されている限り正しいためです。Paimon は最新スナップショットへの参照をキャッシュし、テーブルが次の状態に進んだときだけ再読み込みします。Hive では同じ方法を使えないため、HMS イベントで補います。
+5. **HMS イベントに基づく更新。** `enable_hms_events_incremental_sync` が有効な場合、FE は `hms_events_polling_interval_ms` ごとに Hive Metastore の通知ログをポーリングし、CREATE / ALTER / DROP / INSERT イベントを再生します。全体を消去せずに、影響を受けるエントリを数秒以内に無効化します。
+6. **明示的な更新。** `REFRESH CATALOG`、`REFRESH DATABASE`、`REFRESH TABLE` は、HMS を経由しない書き込み（ファイルの直接アップロードや Apache Doris 以外からの Iceberg コミット）やテストのための手段です。
+
+通常時はメモリへのアクセス速度でメタデータを提供します。元データが変更された場合は、更新の仕組みが数秒で追いつきます。
+
+## クイックスタート {#quick-start}
+
+```sql
+-- Inspect cache state.
+SELECT * FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'hive_ctl';
+
+-- Refresh just the table whose partition you just added.
+REFRESH TABLE hive_ctl.sales.orders;
+
+-- For a fast-changing fact table, disable the file listing cache.
+ALTER CATALOG hive_ctl SET PROPERTIES (
+  "meta.cache.hive.file.ttl-second" = "0"
+);
+
+-- For seconds-level auto-refresh on Hive, turn on the HMS event listener
+-- (FE config; restart required):
+--   enable_hms_events_incremental_sync = true
+--   hms_events_polling_interval_ms = 10000
+```
+
+**期待される結果**
+
+```
++--------------+-------------+-----------+---------+----------+
+| catalog_name | cache_name  | hit_count | miss_count | size  |
++--------------+-------------+-----------+---------+----------+
+| hive_ctl     | schema      |     12480 |       7 |       42 |
+| hive_ctl     | partition   |      9821 |      14 |       28 |
+| hive_ctl     | file        |      9520 |      31 |      612 |
++--------------+-------------+-----------+---------+----------+
+```
+
+ウォームアップ後、スキーマキャッシュとパーティションキャッシュのヒット率は 99% を超えます。ミスは、新しいテーブルへの初回アクセス、または有効期間が切れたエントリに対応します。
+
+## Apache Doris のメタデータキャッシュを使うべき場面 {#when}
+
+Apache Doris のメタデータキャッシュは、すべての外部カタログでデフォルトで有効です。実際に検討すべきなのは、ワークロードごとの調整方法と、完全に無効化すべき場面です。
+
+**適している場面**
+
+- スキーマが安定し、書き込み頻度が中程度の Hive テーブル。デフォルトの TTL と HMS イベントリスナーを組み合わせると、鮮度を秒単位で維持できます。
+- あらゆる規模の Iceberg、Paimon、Hudi テーブル。スナップショットが不変であるため、キャッシュはマニフェストエントリを無期限に保持できます。無効化が必要なのは現在のスナップショットへのポインターだけで、Apache Doris はクエリごとにこれを行います。
+- 数千のカタログとテーブルを持つマルチテナントのレイクハウス。オブジェクトの総数がメモリ容量を超えても、スキーマキャッシュとパーティションキャッシュがプランニングを高速に保ちます。よく使うものは残り、使われないものは削除されます。
+- 同時実行数の多いダッシュボード。キャッシュがなければ、同時に実行される各クエリが同じパーティションを再列挙します。キャッシュがあれば一覧は一度だけ作成され、共有されます。
+
+**適していない場面**
+
+- HMS を経由せずに書き込まれる Hive テーブル（`hadoop fs -put`、S3 への直接アップロード）。HMS は変更を認識しないため、イベントリスナーでも検出できません。書き込みを HMS 経由にするか、ファイルキャッシュの TTL を 0 に設定するか、バッチごとに `REFRESH TABLE` を呼び出してください。
+- 数秒ごとに変更され、強い鮮度保証が必要なテーブル。TTL ベースのキャッシュは適しません。そのテーブルに関係するキャッシュモジュールを無効化する（`ttl-second = 0`）か、イベントリスナーによる最大 N 秒の遅延を受け入れてください。
+- メモリに余裕がない状態で数百万のテーブルを含むカタログ。`max_external_schema_cache_num` を FE ヒープに見合わない値まで増やすと、OOM が発生する可能性があります。上限を適切に設定し、`catalog_meta_cache_statistics` を監視してください。
+- Iceberg を Hive と同じように扱う場合。Iceberg に対して毎分 `REFRESH CATALOG` を実行すると、有効な不変のマニフェストエントリまで破棄されます。スナップショットの仕組みに任せ、キャッシュを活用してください。
+
+## 関連資料 {#further-reading}
+
+- [メタデータキャッシュのリファレンス](../lakehouse/meta-cache)：モジュールごとの TTL、サイズ上限、更新方法の詳細。
+- [REFRESH 文](../sql-manual/sql-statements/catalog/REFRESH)：`REFRESH CATALOG`、`REFRESH DATABASE`、`REFRESH TABLE` の SQL 構文と `invalid_cache` プロパティ。
+- [Hive カタログ](../lakehouse/catalogs/hive-catalog)：キャッシュごとの `meta.cache.*` プロパティと HMS イベントリスナーの設定（`enable_hms_events_incremental_sync`）。
+- [Iceberg カタログ](../lakehouse/catalogs/iceberg-catalog)：マニフェストキャッシュの設定と、スナップショットを考慮した無効化。
+- [Data Cache と Page Cache](./data-cache-page-cache)：メタデータキャッシュの下位にある、バイト単位のストレージキャッシュ。
+- [Parquet Reader の最適化](./parquet-reader-optimization)：メタデータによって読み取るファイルが決まった後に、そのファイルを効率的に読み取る仕組み。
+- [次世代データレイクハウスの構築（Apache Doris ブログ）](https://doris.apache.org/blog/Building-the-Next-Generation-Data-Lakehouse-10X-Performance/)：Meta Cache と HMS イベントリスナーを紹介するアーキテクチャの概要。
+- [Iceberg](./iceberg)：リモートオブジェクトストアで、マニフェスト一覧とスナップショットメタデータがメタデータキャッシュの恩恵を特に受けるカタログ。

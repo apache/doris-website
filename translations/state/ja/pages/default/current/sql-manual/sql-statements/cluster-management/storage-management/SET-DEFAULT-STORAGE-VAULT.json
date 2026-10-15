@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/SET-DEFAULT-STORAGE-VAULT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/SET-DEFAULT-STORAGE-VAULT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/SET-DEFAULT-STORAGE-VAULT.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "9ee2d588ee460f959389c4e72e643e7ea3a94de69fc055a807bdaee48bca1544",
+    "sourceTechnicalHash": "ef847567cbcf3871f75f7a74c65ada2faaeb22dcf330efb9661a5a32550475f2",
+    "targetHash": "72cbaec52688f676467fea93baf8010486d82c46a35ae44419f2ee8be5c4c99f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.610Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/SHOW-WARM-UP-JOB",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/SHOW-WARM-UP-JOB.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/SHOW-WARM-UP-JOB.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "b084ffc5491352129af2194fa94672f83e3feee01cbd3e99eed2c776a2dc13e3",
+    "sourceTechnicalHash": "b6eb3eb37145efea33e106158b8114b677413199ce2b82aa31bda8ac0b28c34c",
+    "targetHash": "23117f5cb875b07679870702f58f1beb668776f1ae61fbdba0b591d8838a0bd8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.611Z",
+    "glossaryVersion": "0"
+  }
+}

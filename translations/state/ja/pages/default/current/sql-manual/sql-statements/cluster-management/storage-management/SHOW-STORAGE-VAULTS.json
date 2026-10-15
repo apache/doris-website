@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-VAULTS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-VAULTS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-VAULTS.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "13a09cde36746891099a2009fb1baad10b751b5148786544c33ac41d7741cb47",
+    "sourceTechnicalHash": "8cf75255c094f7e448e22d7a501ec135691e73c003f62f7ee21b512d91c17cc4",
+    "targetHash": "aa2655f2aff749b034210442999c7ed3ef73664ec93e25735cf6dfede129ffb5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.610Z",
+    "glossaryVersion": "0"
+  }
+}

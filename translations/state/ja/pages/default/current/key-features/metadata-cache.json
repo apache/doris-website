@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/metadata-cache",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/metadata-cache.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/metadata-cache.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "89e067434a360fead54a0a220eed56e45976f9099e8468eb59eff5eeeda55511",
+    "sourceTechnicalHash": "06adb59bb5c6a2e0b933e1821025064c05d92015a2632a7c33fcfa18caf94fd4",
+    "targetHash": "06d26eab796925bfaca4da49a728e194cb5b70b2c7bb974b4f06f760f149cb90",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.614Z",
+    "glossaryVersion": "0"
+  }
+}

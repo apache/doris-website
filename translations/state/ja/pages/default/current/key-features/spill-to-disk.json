@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/spill-to-disk",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/spill-to-disk.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/spill-to-disk.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "242b51f77f4ad0a3e85cac18549d43acde925037131e8e2c76c845630f5162bd",
+    "sourceTechnicalHash": "17f58ac20c15ceda4f47738776c87d54f2ae07a72948232826ac3f473f659282",
+    "targetHash": "67dfd44dd1e6f0fd29a140c700a8a5a88dd6fb12bb6bfc559a4403cb39ae6480",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.615Z",
+    "glossaryVersion": "0"
+  }
+}

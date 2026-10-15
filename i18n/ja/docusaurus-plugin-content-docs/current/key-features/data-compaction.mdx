@@ -1,0 +1,117 @@
+---
+title: データコンパクション
+description: バックグラウンドでのマージにより、高頻度のデータ取り込みでも Doris の性能を維持します。一般的な OLAP と追記専用の時系列ワークロードに合わせたポリシーを利用できます。
+keywords:
+  - コンパクション
+  - 累積コンパクション
+  - ベースコンパクション
+  - 時系列コンパクション
+  - rowset のマージ
+  - Apache Doris のストレージ保守
+slug: /key-features/data-compaction
+image: /images/next/key-features/data-compaction.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - storage
+    - performance
+language: ja
+---
+
+> **要約** Apache Doris では、データを取り込むたびに変更不可能な rowset が新しく作られます。コンパクションはこれらの rowset をバックグラウンドでマージし、クエリが何百ものバージョンをたどらずに済むようにします。二つのポリシー（`size_based` と `time_series`）に加え、[垂直コンパクション](./vertical-compaction)とセグメントコンパクションを使って、テーブルごとに書き込み増幅と読み取り増幅のバランスを調整できます。
+
+![Apache Doris のデータコンパクション：バックグラウンドでのマージにより、高頻度のデータ取り込みでも Doris の性能を維持します。一般的な OLAP と追記専用の時系列ワークロードに合わせたポリシーを利用できます。](/images/next/key-features/data-compaction.jpg)
+## Apache Doris のコンパクションを使う理由 {#why}
+
+Apache Doris のコンパクションは、書き込みごとに作られる変更不可能な rowset をマージし、高頻度のデータ取り込みでもクエリ性能を維持します。これにより、バージョンが積み重なって取り込みエラー `-235` が発生するのを防ぎます。Apache Doris は LSM ツリーと同様にデータを保存し、書き込み時にファイルを直接更新しません。書き込みは新しい rowset として保存されるため、整理しない限りタブレットの rowset 数は増え続けます。[Stream Load](./stream-load) や [Group Commit](./group-commit) のような高頻度の取り込み方法では、特に増加が速くなります。コンパクションを行わない場合、次の問題が生じます。
+
+- タブレットのバージョン数が `max_tablet_version_num`（デフォルトは 500）を超えると、エラー -235 でデータ取り込みに失敗します。これは Doris ユーザーの間でよく報告される本番環境の問題の一つです。
+- クエリごとに、タブレットのすべての rowset を実行時にマージする必要があります。rowset が 5 個から 50 個に増えると、クエリで参照する対象もそれに応じて増えます。
+- 削除された行はトゥームストーンとして残り、小さなファイルではデータ本体よりメタデータのコストが大きくなります。
+
+Apache Doris のコンパクションは、これら三つの問題をバックグラウンドで処理します。提供されるポリシーは、データ取り込みが遅くなるほど CPU を使わずに処理するために用意されています。
+
+## Apache Doris のコンパクションとは {#what}
+
+Apache Doris のコンパクションは、タブレット内で対象の rowset 群を選び、その行をマージして削除を反映し、置き換え用の rowset を一つ書き込む処理です。Backend（BE）はスレッドプールでこの処理を実行します。タブレットごとに整理が必要な度合いをスコア化し、スコアが高いものから処理します。
+
+**主な用語**
+
+- **`Rowset`**：一回のデータ取り込みで作られる、変更不可能なファイル群です。rowset にはバージョンがあり、クエリは読み取り時に複数の rowset の内容をマージします。
+- **`Cumulative compaction`**：頻繁に実行される、比較的高速なコンパクションです。累積ポイントより上にある、最近作られた小さな rowset をマージします。
+- **`Base compaction`**：ときどき実行される、比較的時間のかかるコンパクションです。累積ポイントより下にあるすべての rowset を一つのベース rowset にマージします。
+- **`Compaction score`**：そのタブレットのクエリがたどるマージ経路の数をおおまかに表す値です。スコアが高いほど優先度が高くなります。
+- **`Compaction policy`**：テーブルごとに選ぶ `size_based`（デフォルト）または `time_series` のポリシーです。どの rowset をいつマージするかを決めます。
+- **`Vertical compaction`**：幅の広いテーブルに対して列グループ単位でマージする方式です。行単位のマージと比べ、約 10 倍少ないメモリで処理します。
+
+## Apache Doris のコンパクションの仕組み {#how}
+
+Apache Doris のコンパクションは、すべてのタブレットについてバージョン数の増加に基づくスコアを計算し、有効なポリシーに従って rowset を選びます。その後、処理中のクエリが元のファイルを読み取れる状態を保ちながら、BE のスレッドプールでマージします。
+
+1. **各タブレットをスコア化します。** BE は、累積ポイントより上にある rowset の数に基づき、タブレットごとのコンパクションスコアを継続的に管理します。スコアの高いタブレットから処理をスケジュールします。
+2. **rowset を選びます。** 有効なポリシーがマージ対象の範囲を決めます。`size_based` は二の累乗に基づくサイズでグループ化します。`time_series` は、パーティション内の rowset が目標サイズ、ファイル数、経過時間のいずれかのしきい値に達するまで待ち、まとめて処理します。
+3. **マージして書き込みます。** タスクは入力元から行を読み取り、重複を除去し、保留中の削除を反映して、結果を新しい rowset に書き込みます。幅の広いテーブルでは垂直コンパクションを使い、列をグループ単位で処理してメモリ使用量を抑えます。
+4. **ベースに昇格させます。** 累積コンパクションの出力が `compaction_promotion_size_mbytes`（デフォルトは 1 GB）を超えると、次の処理でベースコンパクションの対象になります。
+5. **置き換えて後片付けします。** タブレットのメタデータ上で、出力 rowset が入力元の rowset に置き換わります。古いファイルは、クエリがまだ読み取っている場合に備えて一定期間保持され、その後削除されます。
+
+## クイックスタート {#quick-start}
+
+```sql
+CREATE TABLE access_log (
+  ts DATETIME, user_id BIGINT, url VARCHAR(512)
+)
+DUPLICATE KEY(ts, user_id)
+PARTITION BY RANGE(ts) (
+  PARTITION p202605 VALUES LESS THAN ("2026-06-01")
+)
+DISTRIBUTED BY HASH(user_id) BUCKETS 4
+PROPERTIES (
+  "compaction_policy" = "time_series",
+  "time_series_compaction_goal_size_mbytes" = "1024",
+  "time_series_compaction_file_count_threshold" = "2000",
+  "time_series_compaction_time_threshold_seconds" = "3600"
+);
+
+ADMIN COMPACT TABLE access_log PARTITION (p202605) WHERE TYPE = "cumulative";
+```
+
+**期待される結果**
+
+```
+Query OK, 0 rows affected
+```
+
+これで、時系列ポリシーを使用するパーティション分割されたログテーブルが作成されます。小さな rowset は、合計サイズが 1 GB を超えるか、ファイル数が 2000 に達するか、一時間経過するとマージされます。`ADMIN COMPACT` の行は、対象のパーティションで累積コンパクションを手動実行します。これはベンチマークやデータ取り込み後のクリーンアップに役立ちます。進捗状況は `SELECT * FROM information_schema.doris_be_compaction_tasks WHERE TABLE_ID = ...` で確認できます。
+
+## Apache Doris のコンパクションはいつ使うべきか {#when}
+
+Apache Doris のコンパクションは、すべてのテーブルでデフォルトで実行されます。実際に選ぶ必要があるのは、どのポリシーを設定し、いつデフォルトを変更するかです。
+
+**適しているケース**
+
+- データを頻繁に取り込むすべてのテーブル。デフォルト設定でも動作しますが、ポリシーを切り替えるかどうかを検討します。
+- 追記専用のログやメトリクス。`time_series` では、各 rowset がサイズ別の複数の階層で繰り返しコンパクションされず、一度だけ参加するため、書き込み増幅を抑えられます。
+- 幅の広いテーブル（列数が数十以上）。大きなマージでメモリ使用量が急増しないよう、`enable_vertical_compaction = true` を維持します。
+
+**適していないケース**
+
+- 「コンパクションの負荷テスト」を目的とする高頻度の単一行 INSERT。調べようとしているバージョンの積み重なりを自ら引き起こすことになります。取り込み側では代わりに [Group Commit](../data-operate/import/load-best-practices/group-commit-manual) を使います。
+- 「CPU を節約する」ために本番環境で自動コンパクションを無効にすること。タブレットのバージョン数が気付かないうちに増え、やがてエラー -235 で取り込みが失敗します。代わりにスレッド数（`max_cumu_compaction_threads`、`max_base_compaction_threads`）を調整します。
+- 主キーによる行の更新や削除があるワークロードで `time_series` ポリシーを使うこと。このポリシーは追記専用の動作を前提とします。更新が頻繁に発生する Unique Key テーブルでは、`size_based` を使用します。
+- 不適切なバケット分割の解決策としてコンパクションを使うこと。特定のタブレットに負荷が集中してバージョン数が増え続ける場合は、コンパクション用スレッドを増やすのではなく、バケット数を増やします。
+
+## 性能と数値 {#performance}
+
+- **垂直コンパクション**：行単位のコンパクションに比べてメモリ使用量が約 1/10 で、幅の広いテーブルでは約 15% 高速です。出典：[Doris のコンパクション調整ドキュメント](https://doris.apache.org/docs/3.x/admin-manual/trouble-shooting/compaction/)。
+- **コンパクションのスループット**：デフォルト設定ではタスクごとに毎秒約 300,000 行を処理し、継続的な負荷のもとで累積スコアを約 50 に保ちます。出典：[3 分でわかるデータコンパクション](https://doris.apache.org/blog/Understanding-Data-Compaction-in-3-Minutes/)。
+
+## 関連資料 {#further-reading}
+
+- [垂直コンパクション](./vertical-compaction)：列グループ単位のマージにより、コンパクション時に約 10 倍少ないメモリで処理し、幅の広いテーブルでのマージを約 15% 高速化します。
+- [コンパクションの原理、種類、スケジューリング](../admin-manual/trouble-shooting/compaction-principles)
+- [コンパクションの調整：垂直、セグメント、単一レプリカ、時系列](../admin-manual/trouble-shooting/compaction)
+- [`ADMIN COMPACT TABLE` の構文リファレンス](../sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE)
+- [3 分でわかるデータコンパクション（ブログ）](https://doris.apache.org/blog/Understanding-Data-Compaction-in-3-Minutes/)
+- [Unique Key](./unique-key)：コンパクションによって、rowset ごとの削除ビットマップで削除済みとマークされた行を回収するテーブルモデルです。

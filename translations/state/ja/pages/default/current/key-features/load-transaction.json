@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/load-transaction",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/load-transaction.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/load-transaction.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "7b5601c86d1ce2a2bfc3c2290bc2854fc642599a92c4101c161a5d5628e41d26",
+    "sourceTechnicalHash": "71023aabc3388ec189105bbb98fae42a33dde9f03512efe2a2e80fb2531f8a26",
+    "targetHash": "fc3359f8039d96c10eb116ada45475e6df9b2258934653df441c9652a2cc014c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.614Z",
+    "glossaryVersion": "0"
+  }
+}

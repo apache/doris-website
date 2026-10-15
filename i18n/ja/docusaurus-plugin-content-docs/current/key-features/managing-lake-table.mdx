@@ -1,0 +1,123 @@
+---
+title: レイクテーブルの管理
+description: Doris は SQL を通じて Iceberg、Hive、Paimon のテーブルに書き込み、管理します。CREATE、INSERT、UPDATE、DELETE、スキーマとパーティションの進化、ブランチ、スナップショットに対応します。
+keywords:
+  - レイクテーブルへの書き込み
+  - Iceberg への書き込み
+  - Hive への書き込み
+  - Paimon への書き込み
+  - スキーマ進化
+  - Iceberg ブランチ
+  - Apache Doris レイクハウス
+slug: /key-features/managing-lake-table
+image: /images/next/key-features/managing-lake-table.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - lakehouse
+    - iceberg
+    - data-management
+language: ja
+---
+
+> **要約** レイクカタログを接続すると、Apache Doris では Iceberg、Hive、Paimon のテーブルを標準的な管理対象として扱えます。サポートされる操作には、`CREATE TABLE`、`INSERT`、`INSERT OVERWRITE`、`UPDATE`、`DELETE`、スキーマとパーティションの進化、Iceberg のブランチとタグ、スナップショットを使ったタイムトラベル、`expire_snapshots` や `rewrite_data_files` などのメンテナンスが含まれます。すべてのメタデータコミットはカタログ（HMS、Glue、REST、JDBC）を経由するため、Trino、Spark、Flink からも同じ書き込み結果が見えます。
+
+![Apache Doris によるレイクテーブルの管理：Doris は SQL を通じて Iceberg、Hive、Paimon のテーブルに書き込み、管理します。CREATE、INSERT、UPDATE、DELETE、スキーマとパーティションの進化、ブランチ、スナップショットに対応します。](/images/next/key-features/managing-lake-table.jpg)
+## Apache Doris でレイクテーブルを管理する理由 {#why}
+
+Apache Doris のレイクテーブル管理機能を使うと、一つのクラスタで SQL によるフェデレーション読み取りとレイクへの書き込みの両方を行えます。Iceberg、Hive、Paimon のテーブルを更新するためだけに、別の Spark または Flink クラスタを稼働させる必要がなくなります。多くのレイクハウスエンジンは読み取り機能から始まります。Iceberg カタログに接続してテーブルをクエリした後、書き込みはすべて Spark または Flink で行わなければならないという壁に突き当たります。その結果、同じデータのために二つのクラスタを運用し、二種類の SQL 方言を覚え、二組の権限を整合させることになります。[Multi-catalog](./multi-catalog) によるフェデレーションは、[カタログ連携](./catalog-integrations)を基盤とする読み取り側の機能です。このページでは書き込み側を扱います。
+
+Apache Doris は両方に対応します。Doris の内部テーブルをクエリするのと同じ SQL で、Iceberg テーブルの作成、行の追加、パーティションの上書き、スキーマの進化、ブランチの作成、古いスナップショットの削除、小さなファイルのコンパクションを実行できます。ダッシュボードを支えるクラスタでレイクのメンテナンスも行えます。
+
+- フェデレーション読み取りとレイクへの書き込みを一つのエンジンで処理できるため、ETL の各ステップに Spark ジョブを割り当てる必要がありません。
+- Iceberg、Hive、Paimon に対して標準的な SQL DDL と DML を使用できるため、フォーマットごとに新しい方言を覚える必要がありません。
+- カタログを介したネイティブなコミットを行います。Apache Doris から Iceberg に `INSERT` した結果は、追加の同期処理なしで Trino、Spark、Flink に反映されます。
+
+## Apache Doris のレイクテーブル管理とは {#what}
+
+Apache Doris のレイクテーブル管理とは、外部カタログ上でエンジンが提供する書き込みとライフサイクル管理の機能です。DDL、DML、スキーマ進化、ブランチ、タグ、テーブルアクションによるメンテナンスを扱います。`CREATE CATALOG` で Apache Doris を HMS、Glue、REST、JDBC、S3 Tables、DLF に接続すると、カタログを使って書き込み可能な名前空間を利用できます。Apache Doris は、`CREATE TABLE`、`ALTER TABLE`、`INSERT`、`UPDATE`、`DELETE`、`MERGE INTO` を、各フォーマットに応じたマニフェストへの書き込み、スナップショットのコミット、メタストアの呼び出しに変換します。
+
+接続レイヤー自体については、[Multi Catalog](./multi-catalog) と[レイクハウスの概要](../lakehouse/lakehouse-overview)を参照してください。このページでは、カタログに接続した*後*にできることを説明します。
+
+**主な用語**
+
+- **`Catalog`**：Apache Doris をメタストアとストレージシステムに接続するオブジェクトです。書き込みはカタログの API を通じてコミットされます。
+- **`Snapshot`**：Iceberg または Paimon テーブルの変更不可のバージョンです。書き込みごとに新しいスナップショットが作成され、読み取り時に特定のスナップショットを指定できます。
+- **`Branch` と `Tag`**：Iceberg と Paimon でスナップショットを指す名前付き参照です。ブランチは新しいコミットに応じて移動し、タグは固定されます。
+- **`Schema evolution`**：データファイルを書き直さずに列を追加、削除、名前変更、または型の昇格を行うことです。
+- **`Table action`**：`ALTER TABLE ... EXECUTE` で呼び出すメンテナンス操作です。`expire_snapshots`、`rewrite_data_files`、`rewrite_manifests` などがあります。
+
+## Apache Doris によるレイクテーブル管理の仕組み {#how}
+
+Apache Doris によるレイクテーブル管理は、カタログへの接続、適切なフォーマットに応じたプランニング、BE 上でのデータファイルのステージング、カタログ API を介したアトミックなコミット、SQL によるテーブルのメンテナンスという五段階で進みます。
+
+1. **カタログに接続する。** `CREATE CATALOG iceberg_ctl PROPERTIES (...)` でメタストアとストレージバックエンドを登録します。Apache Doris はメタデータをキャッシュしますが、他のエンジンとの同期を保つため、書き込みは必ずカタログの API を通じてコミットします。
+2. **フォーマットに応じてプランニングする。** Nereids プランナーは外部テーブルを認識し、ステートメントをフォーマット別の書き込み処理に振り分けます。Iceberg ではマニフェストのコミット、Paimon ではデルタのコミット、Hive ではパーティションの書き直しを行います。
+3. **データファイルをステージングする。** BE の書き込み処理は、テーブルの保存先に Parquet（Hive の場合は ORC も可）のデータファイルを生成します。Iceberg V2 の削除データは Position Delete ファイル、V3 の削除データは Puffin Deletion Vector に格納され、Paimon の書き込みでは LSM-tree セグメントが生成されます。
+4. **アトミックにコミットする。** FE はマニフェストリストを組み立て、カタログにテーブルポインタの切り替えを要求します。同時書き込みとの競合が発生した場合、Apache Doris はスナップショットの不一致を検出し、ステートメントは失敗します。
+5. **その場でメンテナンスする。** 同じクラスタ上で、`EXECUTE expire_snapshots`、`EXECUTE rewrite_data_files`、`EXECUTE rewrite_manifests`、`ALTER TABLE ... CREATE BRANCH` などのメンテナンスを SQL で実行します。
+
+サポートされる機能はフォーマットによって異なります。Iceberg は最も機能が充実しており、DDL と DML の全般、V2 と V3 の削除方式、ブランチ、タグ、パーティション進化、テーブルアクションをサポートします。Apache Doris では Paimon の読み取り、タイムトラベル、ブランチ、タグを利用できますが、主キーベースの Paimon テーブルへの書き込みには引き続き Flink が必要です。Hive は `CREATE`、`INSERT`、`INSERT OVERWRITE`、CTAS をサポートします。ただし、特定のパーティションを対象とした書き込みや、同じパーティションへの同時 `INSERT OVERWRITE` には、Spark や Hive 自体で操作する場合と同様の注意が必要です。現時点で Hudi は読み取り専用です。
+
+## クイックスタート {#quick-start}
+
+```sql
+SWITCH iceberg_ctl;
+CREATE DATABASE IF NOT EXISTS sales;
+CREATE TABLE sales.orders (
+  order_id BIGINT, region STRING, amount DECIMAL(10,2), ts DATETIME
+) PARTITION BY LIST (day(ts), region) ();
+
+INSERT INTO sales.orders VALUES (1, 'bj', 99.50, '2026-05-08 10:00:00');
+ALTER TABLE sales.orders CREATE BRANCH dev;
+INSERT INTO sales.orders@branch(dev) VALUES (2, 'sh', 12.00, '2026-05-08 11:00:00');
+
+SELECT COUNT(*) FROM sales.orders;             -- main branch
+SELECT COUNT(*) FROM sales.orders@branch(dev); -- dev branch
+ALTER TABLE sales.orders EXECUTE expire_snapshots ("retain_last" = "5");
+```
+
+**期待される結果**
+
+```
++----------+
+| count(*) |
++----------+
+|        1 |   -- main
+|        2 |   -- dev
++----------+
+```
+
+main ブランチには本番用の行が残り、dev ブランチには追加の行が含まれます。`expire_snapshots` は古いメタデータを削除します。同じ REST または HMS カタログを参照する Trino や Spark からは、Doris が生成した同じスナップショットを読み取れます。
+
+## Apache Doris のレイクテーブル管理を使う場面 {#when}
+
+Apache Doris のレイクテーブル管理は、Iceberg や Hive へのフェデレーション ELT、開発ワークフロー向けの git スタイルの Iceberg ブランチ、再現可能なタイムトラベル読み取り、`expire_snapshots` や `rewrite_data_files` などの定期メンテナンス、SQL によるスキーマとパーティションの進化に適しています。同時実行数の多い単一行の OLTP 更新、通常の Hive テーブルへのリアルタイム CDC、Hudi への書き込み（現時点では読み取り専用）には適していません。
+
+**適した用途**
+
+- JDBC または Kafka カタログから読み取ったデータを、Apache Doris の外に出さずに整えて Iceberg または Hive に格納するフェデレーション ELT パイプライン。書き戻しのパターンについては、[レイクハウスの概要](../lakehouse/lakehouse-overview)を参照してください。
+- Iceberg 上で git スタイルの分離が必要なチームのワークフロー。`ALTER TABLE ... CREATE BRANCH dev` でブランチを作成し、dev ブランチで検証してから、`EXECUTE fast_forward` で公開できます。
+- Iceberg、Paimon、Hudi で `FOR VERSION AS OF` または `FOR TIME AS OF` を使うタイムトラベル読み取りと、再現可能なバックフィル。
+- 定期メンテナンス。夜間の `expire_snapshots`、ストリーミングジョブが生成した小さなファイルをまとめるための毎時の `rewrite_data_files`、大規模なパーティション再編成後の定期的な `rewrite_manifests` など。
+- 使い慣れた SQL によるスキーマとパーティションの進化。`ADD COLUMN`、`MODIFY COLUMN`、`ADD PARTITION KEY day(ts)`、`REPLACE PARTITION KEY ts_day WITH day(ts)` など。
+
+**適さない用途**
+
+- 同時実行数の多い単一行の OLTP 型更新。レイクへのコミットはスナップショットに基づくため、ステートメントごとのオーバーヘッドが大きすぎます。このワークロードには Apache Doris の [Unique Key テーブル](./data-update-delete)を使用してください。
+- Hive でのリアルタイムな行単位の upsert。Hive には削除ファイルや merge-on-read がありません。CDC のデータを行単位で取り込む必要がある場合は、Iceberg V2 または V3、あるいは Paimon の主キーテーブルを使用してください。
+- Hive で特定のパーティションを指定する `INSERT INTO`。Apache Doris は `PARTITION (...)` 句ではなく列の値に基づいてパーティションへ書き込みます。Hive で明示的にパーティションを指定する必要がある場合は、`INSERT OVERWRITE` を使用するか、Spark でロードしてください。
+- 複数の書き込み元から同じ Hive パーティションに対して `INSERT OVERWRITE` を同時実行すること。Hive にはパーティションデータのアトミックな切り替えがないため、結果が部分的なものになる可能性があります。書き込みを直列化するか、そのテーブルを Iceberg に移行してください。
+- Hudi への書き込み。現時点で Apache Doris は Hudi の読み取りに対応しています。Hudi への書き込みには Spark または Flink を使用してください。
+
+## 関連資料 {#further-reading}
+
+- [Multi Catalog](./multi-catalog)：Doris が外部カタログをフェデレーションし、クエリを振り分ける仕組み。
+- [Iceberg カタログのリファレンス](../lakehouse/catalogs/iceberg-catalog)：DDL、DML、ブランチとタグ、テーブルアクションの完全な構文とバージョン別の注意事項。
+- [Hive カタログのリファレンス](../lakehouse/catalogs/hive-catalog)：書き込みの動作、トランザクショナルテーブルのサポート、同時書き込みのルール。
+- [Paimon カタログのリファレンス](../lakehouse/catalogs/paimon-catalog)：読み取り、タイムトラベル、バッチ増分処理、ブランチとタグ、システムテーブル。
+- [レイクハウスの概要](../lakehouse/lakehouse-overview)：管理対象のレイクテーブルがフェデレーション分析全体の中で担う役割。
+- [データの更新と削除](./data-update-delete)：高頻度の行単位の変更に対応する内部テーブル側の機能。
+- [Iceberg](./iceberg)：七種類のカタログバックエンド、V2/V3 の削除、ブランチ、タグ、タイムトラベルなど、Iceberg 固有の機能。

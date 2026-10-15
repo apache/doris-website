@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/variant-data-type",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/variant-data-type.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/variant-data-type.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "5ea74cb0b91b395a3ce76c72efe0c6e4062c1097c2b3bf0aa70a90256300b288",
+    "sourceTechnicalHash": "23e15fc9eb7d28fd52b39b4ee493e1926666460bad978b9fc261e05f63b8550a",
+    "targetHash": "23d347fc47a50dd608ccf12fba4df91b1bcb1458bcc2407e03cb977d3fc4041f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.615Z",
+    "glossaryVersion": "0"
+  }
+}

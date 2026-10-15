@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/binlog-table-stream",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/binlog-table-stream.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/binlog-table-stream.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "356bc83db9d7493df3a685acc7e3abda565764fd25d27fb502355eea3b5b6adf",
+    "sourceTechnicalHash": "30b84f352abc423fe71636857936bcfd1537b385163ddae9065350be335f1ea8",
+    "targetHash": "43c0b50cad19df83499eeeeb974004b2577ce6e0d2b1d1f9c5b14b17e6785721",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.613Z",
+    "glossaryVersion": "0"
+  }
+}

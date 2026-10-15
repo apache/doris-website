@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/character-set/SHOW-CHARSET",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/character-set/SHOW-CHARSET.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/character-set/SHOW-CHARSET.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "f01b6aa6d1f29d4b9e1450b2529520e72dd2c28d804c6fdc4d738b922653a3c2",
+    "sourceTechnicalHash": "0472fd0dfa1403fcb46fab0ce76f2a6adc4d02bcfb4582eee585882ea17cdde5",
+    "targetHash": "9fea0a33e12642be69e193ee2915eb1501da492e9b72ae6c8fdb860710a04690",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.612Z",
+    "glossaryVersion": "0"
+  }
+}

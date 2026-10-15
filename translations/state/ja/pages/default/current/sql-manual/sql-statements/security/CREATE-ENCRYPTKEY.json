@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/security/CREATE-ENCRYPTKEY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/security/CREATE-ENCRYPTKEY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/security/CREATE-ENCRYPTKEY.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "0437e78e5a680dbbb0252b6bc9e9b26b2d27f5fafebf1ca2c9f021730a3fbe92",
+    "sourceTechnicalHash": "860b920073f90b9fe921dafba3d6c6232674ce54bf033fc2829f6437767f2220",
+    "targetHash": "45e220c65741633b78fa835771a1d6b82be38ac059eff969b338431a086b920a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.611Z",
+    "glossaryVersion": "0"
+  }
+}

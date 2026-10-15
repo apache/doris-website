@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/kafka-cdc-integration",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/kafka-cdc-integration.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/kafka-cdc-integration.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "069040d369e31122d3f64af3d83bd5241c1ebdf55dd13623131c42446b93e145",
+    "sourceTechnicalHash": "8ac814551f9c096eb40eaa2a034475becc58b29ca9cc85a4565fcdd3db47743a",
+    "targetHash": "ee7129dc59209a21108fb54a2dd4ed60003ff0e412025d226e97097fc18f5d6a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.614Z",
+    "glossaryVersion": "0"
+  }
+}
