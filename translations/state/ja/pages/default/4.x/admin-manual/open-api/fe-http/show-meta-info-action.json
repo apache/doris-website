@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/show-meta-info-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/show-meta-info-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/show-meta-info-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "9bb6e703bc0777b74fb50345f6fee9e3e0302a07df8a3a1c348171087c40d656",
+    "sourceTechnicalHash": "0f394b2a803ae778780c8321db29759a77ba795bb19872e426bf35a51a5e6b90",
+    "targetHash": "ccbb75986b0a2d51c0f353ed65f7136e7914809cc9d4c723202550dee82d1b7b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.552Z",
+    "glossaryVersion": "0"
+  }
+}

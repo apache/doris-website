@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/show-proc-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/show-proc-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/show-proc-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "7325b5936a711688066824a9d57862ff453040dfa0b83d7c1ae0fd61e3a8f7b1",
+    "sourceTechnicalHash": "b5f1f45cd2c76f2108baf6ba02885f8aee259abeac251b74975bf2600a51afd0",
+    "targetHash": "9ec159584553bda53c4687514ec995dd79a3c687c4a91dd9e66a90cf8f6ffade",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.552Z",
+    "glossaryVersion": "0"
+  }
+}

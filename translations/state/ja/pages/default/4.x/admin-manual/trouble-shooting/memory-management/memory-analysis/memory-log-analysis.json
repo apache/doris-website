@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/memory-log-analysis",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/memory-log-analysis.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/memory-log-analysis.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "f165688fb3f20669ddfc4011f6a16a9215a507372e4e4343907f0332edf56157",
+    "sourceTechnicalHash": "296dd4eb962aaf913d8f37692908dda76219b72328563bbbe374332f804c1543",
+    "targetHash": "c97bc826b8dc559d2f453edfeaa5d565169cc9432b6a3b4a40c3879c2d647fc7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.555Z",
+    "glossaryVersion": "0"
+  }
+}

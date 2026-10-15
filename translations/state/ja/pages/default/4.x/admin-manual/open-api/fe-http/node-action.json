@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/node-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/node-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/node-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "8dd23530da2e17d4ca2068689b37b3885b616a8290baea7f1b81ff9e19ea8f27",
+    "sourceTechnicalHash": "8fcc9008929cf2196cb29e52885d8e781df6b4027e3ec26fa12b4721cff39842",
+    "targetHash": "8b0d2e3cf08cfff77b31b33a15d190eb276419ff5274e145b1dab1c7637861ca",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.550Z",
+    "glossaryVersion": "0"
+  }
+}

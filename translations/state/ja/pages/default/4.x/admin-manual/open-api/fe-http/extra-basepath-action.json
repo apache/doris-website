@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/extra-basepath-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/extra-basepath-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/extra-basepath-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "94f307289ee8eeb51db3433c8c18aca5502625dc76b117a4224d63ba32ebae17",
+    "sourceTechnicalHash": "c2e1f87212cc3d1bb6800d981d41fa4e417482f718fc146e77a91aecfa6acaa1",
+    "targetHash": "b9e7afa5a4771455222dc61aca6b09613cdbac4367976a3d0cd750b9b8c6462b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.551Z",
+    "glossaryVersion": "0"
+  }
+}

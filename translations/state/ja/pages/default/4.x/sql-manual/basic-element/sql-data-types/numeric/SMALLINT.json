@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/SMALLINT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/SMALLINT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/SMALLINT.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "3f348b9077480998b3a14cd13c3995ed111f2ba34c66d1833480a0fa19ca07de",
+    "sourceTechnicalHash": "ab8e2f412735b9fd460d47e21a00034d3f6ca3b75870629abe617d7cac27a859",
+    "targetHash": "7a6daf844583c28cf5f57e264d1497e253c2521580e5af25a9c1ab76c258fcb2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.556Z",
+    "glossaryVersion": "0"
+  }
+}

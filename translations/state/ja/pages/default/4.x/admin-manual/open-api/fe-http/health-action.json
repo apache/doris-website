@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/health-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/health-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/health-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "ab3b3cb61ac3043c4fcc33097022b0f7d002c78e1ff7fa4c234f14924ff788ee",
+    "sourceTechnicalHash": "c84a6e5fb302c1d724b980c75e3c979fe9f846483620d702a91641d6cf4b81b1",
+    "targetHash": "d558eaf2804bf17cb24052c93db03c57685a1281d30cbab86b06dc87a125e9b6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.551Z",
+    "glossaryVersion": "0"
+  }
+}

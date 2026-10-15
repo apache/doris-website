@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/session-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/session-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/session-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "47a561a605f18ae94382733814487d004f2c3159bb806396427d3dadfe598064",
+    "sourceTechnicalHash": "471552a45516d6df1461f7192b955a157f710bd0a2392c60960dd6c4347aa060",
+    "targetHash": "607c3541d2cab00d2009af8cefdb98fc188b28c52085f2fb48840306f52465fc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.550Z",
+    "glossaryVersion": "0"
+  }
+}

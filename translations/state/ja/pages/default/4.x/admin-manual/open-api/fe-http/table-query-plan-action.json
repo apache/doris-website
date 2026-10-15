@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/table-query-plan-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/table-query-plan-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/table-query-plan-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "3129ea36fae5676d3b70499a070050c3ac7ded86ecd6933a06df01d978a373e6",
+    "sourceTechnicalHash": "c30980a52cea16858ba2215cee021e01559a47b2b35173637c5d810dabf91840",
+    "targetHash": "be42936502c1bed8df1176b620c7f128ec6973e05edf2fae1964da476766eca8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.552Z",
+    "glossaryVersion": "0"
+  }
+}
