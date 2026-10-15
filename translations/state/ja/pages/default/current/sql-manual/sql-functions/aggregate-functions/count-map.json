@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/count-map",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/count-map.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/count-map.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "520adba0733c4c4054f13b930235804e053ad18c49775b047b7dfc006fc7c05a",
+    "sourceTechnicalHash": "0b32eefeee0119fedb33f717f8a71c47d509d2a45d8ccca4d34fbabbd9581c21",
+    "targetHash": "c7ca0cab6ed0d3e8ab67637b68d1e01ca478ba2212a77cdc14858433d20083f1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.054Z",
+    "glossaryVersion": "0"
+  }
+}

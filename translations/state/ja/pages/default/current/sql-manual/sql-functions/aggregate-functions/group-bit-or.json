@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/group-bit-or",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/group-bit-or.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/group-bit-or.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "919ae27ec7a9d6eb0f8fed1aacbe70af5cf7f1bbd64176e7b113d44f67a10aa6",
+    "sourceTechnicalHash": "c2ccec673fd10900fc6031ce96db304812ae8d1a83f8f7c63f532ec50e9c5296",
+    "targetHash": "10c75392f6c6705fa5fe7822e39d9eb74288b7c83622e0649756dac12d6480dc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.054Z",
+    "glossaryVersion": "0"
+  }
+}

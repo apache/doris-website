@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/kurt",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/kurt.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/kurt.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "1a42a827120d6bc2b2086c8dd8c52a5f26f9792e2b25cf321f28f43ff7e46c09",
+    "sourceTechnicalHash": "52df1499df385f2c6fdaa8e699d49b24a64730f32425ef9974983d1005a7dcd1",
+    "targetHash": "57aa9c66648b03b317117a1000b3d43176bef8a55e9fb7888eaee7df98267ce2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.055Z",
+    "glossaryVersion": "0"
+  }
+}

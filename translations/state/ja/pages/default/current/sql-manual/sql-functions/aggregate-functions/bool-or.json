@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/bool-or",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/bool-or.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/bool-or.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f37641a9a43b0f4697b9e84cbf625ded63229346e0a5b953a94ac70047b66ff7",
+    "sourceTechnicalHash": "38d794e55e75cffa65ecb8f90bde13595b20b2ebd33db11cc7829f37c01a6f20",
+    "targetHash": "277305ec7f35150cd942e0071ad429b171dba74aeca372be1ff5765f87fb5117",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.053Z",
+    "glossaryVersion": "0"
+  }
+}

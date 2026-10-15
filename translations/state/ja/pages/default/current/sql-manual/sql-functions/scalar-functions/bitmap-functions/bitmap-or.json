@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-or",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-or.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-or.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b0840bdb69e861e21eb3beb7a09dcf40279023edc6b79870eec0905181ce561f",
+    "sourceTechnicalHash": "a7551e8392750dacb26e8f33f5381336ecb3c2b2a67898c30c0ca6f6a4e04352",
+    "targetHash": "858117e1eb270960e89867873d09d1c9c68223293753914750331ba8c113bc21",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.052Z",
+    "glossaryVersion": "0"
+  }
+}
