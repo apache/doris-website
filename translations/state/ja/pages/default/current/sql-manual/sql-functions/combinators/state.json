@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/combinators/state",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/combinators/state.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/combinators/state.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "dfddde7371e2f39f3d06ab6b262bbde7d648bd1cefde71dc746002b997bfdbdb",
+    "sourceTechnicalHash": "e8c2ca892ee7930aa866dfc3ada22440c3bdd2099f147f5d2281f7b4b3a46ec7",
+    "targetHash": "327b33b1c16e3ee5cf4a95db53c6657b4584dab41db426f35c933f3d0de54a3e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.704Z",
+    "glossaryVersion": "0"
+  }
+}

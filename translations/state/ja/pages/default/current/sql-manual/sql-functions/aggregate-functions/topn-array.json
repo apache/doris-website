@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/topn-array",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/topn-array.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/topn-array.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "642b250ba1d5e55103d7756c4d86b7fc8a54b0d95457791b981a4da4efe9da80",
+    "sourceTechnicalHash": "8925d653b28bfb58f76ab48df6a5bf092994665edf93a22c6cf7d4e3c5107864",
+    "targetHash": "61e9e30f974345f51bb62792522bab8dbb53b777dfc58c3899c6dc975fc299d7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.703Z",
+    "glossaryVersion": "0"
+  }
+}

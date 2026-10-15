@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/window-functions/lead",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/window-functions/lead.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/window-functions/lead.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "9814b62ff4b61448865709cad2ddc7432356a7c3d10d1074d18cc5d1d5fa0c1b",
+    "sourceTechnicalHash": "9cfed6c497f56f440cf6303af0bc85dfc9ab66fcaaeed14ab980abd6259adf60",
+    "targetHash": "fec8efa3975f4244d28bfa1b70b22646688d5e36342a83a104c87a1c8a31ae8b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.704Z",
+    "glossaryVersion": "0"
+  }
+}

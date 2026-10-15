@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/explode-map-outer",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/explode-map-outer.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/explode-map-outer.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "476f8a8aba30587103c38ef437dab255f86c291e61946b40c65bef6888073653",
+    "sourceTechnicalHash": "892644dd5dfbbdf846840b7eb09da8caa55a0643cd64f9f88ab9bbac58d4472c",
+    "targetHash": "92f39cb601857ab190e552e556eabd48b1f18f019ffc04893ce8539091098491",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.705Z",
+    "glossaryVersion": "0"
+  }
+}

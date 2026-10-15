@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/mv_infos",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/mv_infos.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/mv_infos.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "758c469b894f1b3c0eae104192c713a162f3115028e5111689c3e0df96fdf85f",
+    "sourceTechnicalHash": "47eb6f304f4ef3324851bc773fd333be32d15412172f8ae81f787e62aef0eca8",
+    "targetHash": "0b7d2b932cc34ea0b37df276c338de974faa1dff3633632066911534035f4c4b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.707Z",
+    "glossaryVersion": "0"
+  }
+}

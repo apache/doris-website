@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/frontends",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/frontends.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/frontends.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e26a862e6523354d3daaabc25dfbf0adc37cbf1596732436a9d8a83864591b31",
+    "sourceTechnicalHash": "9d1f6e6e5f9be9bab4ee3da37cb4ca215fa37a52f38114c1c353a08d8f306ce6",
+    "targetHash": "eca99e122df6c4f61bb1a020ffa901ec3a9023335f2a02aefaff0d2516b5e715",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.706Z",
+    "glossaryVersion": "0"
+  }
+}

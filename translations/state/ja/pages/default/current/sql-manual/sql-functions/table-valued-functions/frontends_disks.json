@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/frontends_disks",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/frontends_disks.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/frontends_disks.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "82c63621e77e4f8ed3ea5c4e79658f00bf9a8af1e5c8cb5709df0c1478e7cec5",
+    "sourceTechnicalHash": "12eb977444aafa12f7085fd6e8ee97d3a2fcae4ccafa0b781c4f622837e2e384",
+    "targetHash": "38be5f4c2d6495917fc273103e9128ad854ed94b5ef14293e8804edf3590bfea",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.706Z",
+    "glossaryVersion": "0"
+  }
+}

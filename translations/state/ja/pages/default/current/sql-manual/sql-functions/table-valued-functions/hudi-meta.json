@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/hudi-meta",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/hudi-meta.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/hudi-meta.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "adcef4cbccb0205841440f5636598dc2e8652fa03f2478ce20f8fc72a1ecc745",
+    "sourceTechnicalHash": "fd02c1e7ef30070b0d8528d1c765cd6a74df71a237cf8e8dade8cd6e3ce5857d",
+    "targetHash": "72fd259d20bbe20ff66bd458b9b5870c80f1f6bef58159331b303c2c9c9f0985",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.706Z",
+    "glossaryVersion": "0"
+  }
+}
