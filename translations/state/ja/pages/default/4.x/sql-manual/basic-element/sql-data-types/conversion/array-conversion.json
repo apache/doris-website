@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/array-conversion",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/array-conversion.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/array-conversion.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "4acae3bd9f08c048ae91bb25b3fe0ac868e81734e04940854f2ca9f5d56e6be2",
+    "sourceTechnicalHash": "32d451fb2c9d15b62ef2e9ea93f3fc14f4605bf7a2528b943fbde1fa686c23b7",
+    "targetHash": "4165d06871170555086209e7e4bf80988741beda8b8328b0999d8ae0ca8e6679",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.669Z",
+    "glossaryVersion": "0"
+  }
+}

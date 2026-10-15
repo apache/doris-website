@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/FLOATING-POINT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/FLOATING-POINT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/FLOATING-POINT.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "b742ab54bb1e8f17672df238666aa7a7ff9cb78b96444da8d9f4be04003375aa",
+    "sourceTechnicalHash": "f9bd22f7b5c92db4e91e0619ed5f13e6ffb2188b497d545b7e4fe410f623de9e",
+    "targetHash": "f4343493135b076b80fdbef94e08d8e63b6c30369ca36e72f4aec94615405cb4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.667Z",
+    "glossaryVersion": "0"
+  }
+}

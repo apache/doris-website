@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/distance-functions/inner-product",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/inner-product.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/inner-product.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "45dbaf7e7fcae8b96fe52dc273b5391d799256a8b937d44daad07abdec3d3ec3",
+    "sourceTechnicalHash": "c0af91c5ca20e09da77d05c590ddac8d69a096c7f1b814f922223c1e92607d8f",
+    "targetHash": "7e896c603ea46482182183a2c1a5d166cb93362592fc988e589763d226cde215",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.671Z",
+    "glossaryVersion": "0"
+  }
+}

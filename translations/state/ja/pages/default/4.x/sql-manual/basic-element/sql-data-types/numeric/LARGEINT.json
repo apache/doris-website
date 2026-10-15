@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/LARGEINT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/LARGEINT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/LARGEINT.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "4e5767b9859fab9bb27088e01eef31e46122d5e087e8bbdb7d9974ea0dfb9573",
+    "sourceTechnicalHash": "810b5a1373a25bb147ed2078f9bc962c2b70f08beef88f69883d718fedc3e5fa",
+    "targetHash": "0dac5bf307de430373a65aa7f8817387ffcb65aa542f45a4de6f9b8524195b6e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.667Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/json-conversion",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/json-conversion.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/json-conversion.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "be9d3d54c8302dee146fcc6feef3d15b01aef63511ea505343db5887a4570fa6",
+    "sourceTechnicalHash": "83155041e35f1433273f39aa66c88cb1bc87a443d0d14f5701217bb80e760497",
+    "targetHash": "6dc2f259944e1505cd88c2dc7de8434ae86cc4b18f538f8f1c5b70e05f2d07d6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.670Z",
+    "glossaryVersion": "0"
+  }
+}

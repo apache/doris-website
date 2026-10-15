@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/STRUCT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "dd09845dc643de42dd1ec54196b6d3fdf62cf048ac474656e9d04700f21204f8",
+    "sourceTechnicalHash": "b59bb36bac8b8f86e8e8615935bbcdf9e6b95bb6928a4b9e488ef371d63cca6f",
+    "targetHash": "688f123d3b6c9d65e8c22b1c969c829d7006e6e9a7c33b90bbdbc2da98caeab9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.668Z",
+    "glossaryVersion": "0"
+  }
+}

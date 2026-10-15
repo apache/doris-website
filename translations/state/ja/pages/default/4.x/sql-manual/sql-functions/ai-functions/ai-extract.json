@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-extract",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/ai-extract.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/ai-extract.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "3c8c643ecea9165fd4df989c1385c3000ff37846f9df64c6843352eb0662c0ba",
+    "sourceTechnicalHash": "ec9f9a5d2635df4da5d4e35676e0f3f2f847ca9cd663f3b5520b3d5dba504df6",
+    "targetHash": "f32e0fb21a6680a1c5be98fee6bc34751ae8dd6bbf1eaccc6179fe0a850d58a7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.672Z",
+    "glossaryVersion": "0"
+  }
+}

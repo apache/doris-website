@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/degrees",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/degrees.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/degrees.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "47296d3d6eaf8ee017e1b08eda62fccef1bd32f4ece239d037fef867273a06a1",
+    "sourceTechnicalHash": "cb416c9259dd247685f175e157108a75dcf54ad1d420f66b1bc4b8f2d01ae8e1",
+    "targetHash": "b648d17655e392a39079e15e859350818c3702b5350cdcc8ee76f5f57d23fd17",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.673Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/operators/conditional-operators/in-operators",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/in-operators.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/in-operators.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "3978d283c30f3877a83bbeb95a332715553d9572944bdba48de8bbcf4de2738c",
+    "sourceTechnicalHash": "01ce510e13230e0c5687f7fe2cb5cf7b14e20ef14bfbec6cd8070ce05a0fc970",
+    "targetHash": "3eb34c5a7a4d7d0a828c8c1f02a2e5495d9c03d04f2db86bc394d1c62f20955e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.671Z",
+    "glossaryVersion": "0"
+  }
+}

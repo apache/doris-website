@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-sentiment",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/ai-sentiment.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/ai-sentiment.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "168188bf1e51e81df4b209cb340985677deee8df2046a8294c8d4caa470b6e9d",
+    "sourceTechnicalHash": "853c52a03e5e84cd2e744133928d9b10602380d4575b17ad6adcd3250afd11dc",
+    "targetHash": "8c2d2195d413752db58bcd4aba78990b9c7cd8196edd7742bd2b19e690c92a04",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.672Z",
+    "glossaryVersion": "0"
+  }
+}

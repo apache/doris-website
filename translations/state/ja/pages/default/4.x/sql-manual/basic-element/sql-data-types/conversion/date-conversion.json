@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/date-conversion",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/date-conversion.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/date-conversion.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "e97fee1f0d5bb162cbb75876be80bb594ad6099b41abb54305d7a6dc0eb8548d",
+    "sourceTechnicalHash": "68eb4cea05075bc66f61b64d9f86d86ee300180575309bd0eadc830463097ba1",
+    "targetHash": "8028303b4b3172a7a641ad1de1d85f3d5d076de274265347a2ba5b636bb50a4c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.669Z",
+    "glossaryVersion": "0"
+  }
+}

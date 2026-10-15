@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/date-time/DATE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/DATE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/DATE.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "e1efe0685e075e454811a66bb037325134480ca25e4cba05c156d4895ad987a1",
+    "sourceTechnicalHash": "fb2aeb78433ca67d1961de4d2084e98dc500009ba64aeb589d92e03bc842fa29",
+    "targetHash": "0433b3bb7dde01b6c246b57146c0d1b2fa3692d44e3cd62c3e4c16712a8cd6ba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.668Z",
+    "glossaryVersion": "0"
+  }
+}

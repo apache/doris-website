@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/operators/conditional-operators/pattern-matching-operators",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/pattern-matching-operators.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/pattern-matching-operators.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "9660f3e2e6ec8d97761e6e322d16f76781fdf9417bfb861953ad366e84892434",
+    "sourceTechnicalHash": "ae40ab3dab0480fcb70c43275bf4e918c8b1e05894e406d3a553e4ce0023d8e6",
+    "targetHash": "ec17a29c00d110441a445021bd6c1f491737674cfb319962e746950682948c1b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.671Z",
+    "glossaryVersion": "0"
+  }
+}

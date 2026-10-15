@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-translate",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/ai-translate.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/ai-translate.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "43738adf3659de81b78eff5da99a2bc083ca9e6b04b337cb1bedf979a5379a61",
+    "sourceTechnicalHash": "41c77e6d9f1d090c2bcc9603f65e04eaff1e8cb91de63c850698bbb119e0431e",
+    "targetHash": "2aef57413c59eaecd0909edf9472d9562107660b2ee2eb033c01d3d04c7df801",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.672Z",
+    "glossaryVersion": "0"
+  }
+}

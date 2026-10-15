@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/ceil",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/ceil.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/ceil.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "c2aff17d5b3468b6dc1396c0a638b14cccba3e0576019d80b9d2e9ce2ce1d9d9",
+    "sourceTechnicalHash": "585e57475222792a42ee5050a80fb427d46ea30eb70fc3c6c206c1d1475124ba",
+    "targetHash": "d1b3dd650d2972342dba0f2a44d7eb47275ae9ce3f7451a3568ad577a02e9729",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.673Z",
+    "glossaryVersion": "0"
+  }
+}

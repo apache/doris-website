@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/operators/bitwise-operators",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/operators/bitwise-operators.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/operators/bitwise-operators.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "837be4b3c8876304787e8208c2cc5ada08d09d240ba6a6d05140c4cf366ca813",
+    "sourceTechnicalHash": "2a66c2b0540d94c595e140f0a9619bd7daa99177b84e9b92e530f2ca1e21fe27",
+    "targetHash": "7eaa202531b6239e5ed9d24c05b3af7596e334b35f8cd078fc6aa5ee56b9380c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.671Z",
+    "glossaryVersion": "0"
+  }
+}

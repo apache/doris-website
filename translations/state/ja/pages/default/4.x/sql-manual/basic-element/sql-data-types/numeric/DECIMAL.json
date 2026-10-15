@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/DECIMAL",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/DECIMAL.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/DECIMAL.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "88f74fd65db09ff5c2ec6a57340d20a16133b251ec534a3dcd21b435995ecb39",
+    "sourceTechnicalHash": "00ab5c05612f3a61fea4233e35fdd0c564f7298061550ab7727ea820d6996292",
+    "targetHash": "ad01c400f192133cc6045b2e1374480b8a398e2be00fa024b154c3964adcc389",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.667Z",
+    "glossaryVersion": "0"
+  }
+}
