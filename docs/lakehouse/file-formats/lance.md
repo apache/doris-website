@@ -29,7 +29,7 @@ Lance support is available starting from Apache Doris 4.2.
 | Time Travel | Not supported |
 | Full-Text Search / Hybrid Search | Not supported |
 
-For Catalog configuration, type mapping, predicate pushdown, and vector search details, see [Lance Catalog](../catalogs/lance-catalog.mdx).
+For Catalog configuration, type mapping, predicate pushdown, and vector search details, see [Lance Catalog guide (4.x)](/docs/4.x/lakehouse/catalogs/lance-catalog).
 
 ## Query a Lance Dataset with a File TVF
 
@@ -63,5 +63,5 @@ To read a local dataset, use `local()` and specify the dataset root with `file_p
 
 ## References
 
-- [Lance Catalog](../catalogs/lance-catalog.mdx)
+- [Lance Catalog guide (4.x)](/docs/4.x/lakehouse/catalogs/lance-catalog)
 - [Lance Format Documentation](https://docs.lancedb.com/lance)
