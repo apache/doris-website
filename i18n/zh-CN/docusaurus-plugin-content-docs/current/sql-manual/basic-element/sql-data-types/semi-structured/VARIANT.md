@@ -81,6 +81,7 @@ field_definition:
 - `field_definition` 列表就是 [Schema Template](#schema-template)，用于固定部分路径的存储类型。
 - `properties(...)` 用于设置列级存储属性，参见[列属性](#column-properties)。
 - VARIANT 列可以是 `NULL` 或 `NOT NULL`，默认值只能是 `NULL`。
+- VARIANT 顶层列名不能包含点号（`.`），使用反引号引用也不允许，例如 `` `v.x` VARIANT `` 是非法列定义。该限制适用于 `CREATE TABLE` 和 `ALTER TABLE`，不限制 VARIANT 值中的 JSON 字段名。
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl (
@@ -542,6 +543,13 @@ v1 VARIANT<
 列创建后不能修改 Schema Template，参见 [ALTER TABLE](#alter-table)。
 
 ## ALTER TABLE {#alter-table}
+
+`ADD COLUMN`（含批量添加）、`MODIFY COLUMN` 和 `RENAME COLUMN` 同样要求 VARIANT 顶层列名不含点号。例如，以下语句会被拒绝：
+
+```sql
+ALTER TABLE example_tbl ADD COLUMN `v.x` VARIANT;
+-- ERROR: Cannot use `VARIANT` type column named with a `.` character: v.x
+```
 
 `ALTER TABLE` 支持：
 
